@@ -98,11 +98,10 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS */\n
+/*global window, rJS, RSVP */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
 (function (window, rJS, RSVP) {\n
   "use strict";\n
-\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // api\n
@@ -117,7 +116,7 @@
 \n
   var HARDCODED_GRID_LIST = [\n
     [{\n
-      "gadget_href": "gadget_erp5_field_listbox_widget.html",\n
+      "gadget_href": "gadget_e5g_eproject_field_listbox_widget.html",\n
       "gadget_portal_link": "#jio_key=project_module&view=view",\n
       "gadget_title": "Projects",\n
       "gadget_portal": "Project",\n
@@ -127,7 +126,7 @@
         "limit": [0, 5]\n
       }\n
     }, {\n
-      "gadget_href": "gadget_erp5_field_listbox_widget.html",\n
+      "gadget_href": "gadget_e5g_eproject_field_listbox_widget.html",\n
       "gadget_portal_link": "#jio_key=task_module&view=view",\n
       "gadget_title": "Tasks",\n
       "gadget_portal": "Task",\n
@@ -148,17 +147,14 @@
   /////////////////////////////////////////////////////////////////\n
 \n
   rJS(window)\n
-  \n
-    /////////////////////////////////////////////////////////////////\n
-    // ready\n
-    /////////////////////////////////////////////////////////////////\n
+\n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
     /////////////////////////////////////////////////////////////////\n
     .ready(function (my_gadget) {\n
       my_gadget.property_dict = {};\n
     })\n
-    \n
+\n
     .ready(function (my_gadget) {\n
       return my_gadget.getElement()\n
         .push(function (my_element) {\n
@@ -177,15 +173,15 @@
     /////////////////////////////////////////////////////////////////\n
     // published methods\n
     /////////////////////////////////////////////////////////////////\n
-  \n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    \n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared service\n
     /////////////////////////////////////////////////////////////////\n
-    .declareMethod("render", function (my_option_dict) {\n
+    .declareMethod("render", function () {\n
       var gadget = this;\n
       return new RSVP.Queue()\n
         .push(function () {\n
@@ -205,10 +201,8 @@
           );\n
         });\n
     });\n
-    \n
 \n
 }(window, rJS, RSVP));\n
-\n
 
 
 ]]></string> </value>
@@ -332,7 +326,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -346,7 +340,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.11653.29366.8516</string> </value>
+                <value> <string>943.10897.37416.8362</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -364,7 +358,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428413212.46</float>
+                        <float>1432213573.87</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

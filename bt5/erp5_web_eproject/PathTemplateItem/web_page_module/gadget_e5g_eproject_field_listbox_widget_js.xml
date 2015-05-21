@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_e5g_eproject_panel.js</string> </value>
+            <value> <string>gadget_e5g_eproject_field_listbox_widget.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -78,7 +78,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_e5g_eproject_panel_js</string> </value>
+            <value> <string>gadget_e5g_eproject_field_listbox_widget_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -98,195 +98,180 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*jslint nomen: true, indent: 2, maxerr: 3 */\n
-/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener */\n
-(function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
+/*global window, rJS, RSVP, Handlebars */\n
+/*jslint nomen: true, indent: 2 */\n
+(function (window, rJS, RSVP, Handlebars) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
-  // temlates\n
+  // api handlebars\n
   /////////////////////////////////////////////////////////////////\n
-  // Precompile templates while loading the first gadget instance\n
+\n
+  // listbox_widget_header = {\n
+  //   "left_link_list": [\n
+  //     {"link_title": [string], "link_href": [string]}\n
+  //   ],\n
+  //   "listbox_title": [string],\n
+  //   "right_link_list": [\n
+  //     {"link_title": [string], "link_href": [string]}\n
+  //   ]\n
+  // }\n
+  // listbox_widget_search = {\n
+  //   "search_title": [string]\n
+  // }\n
+  // listbox_widget_table = {\n
+  //   "column_list": [\n
+  //     {"column_title": [string]}\n
+  //   ]\n
+  // }\n
+  // listbox_widget_table_partial = {\n
+  //   "table_row_list": [{\n
+  //     "table_cell_list": [\n
+  //       {{"cell_title": [string], "cell_href": [string]}\n
+  //     ]\n
+  //   }]\n
+  // }\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // templates\n
+  /////////////////////////////////////////////////////////////////\n
   var gadget_klass = rJS(window),\n
-    source_header = gadget_klass.__template_element\n
-                         .getElementById("panel-template-header")\n
-                         .innerHTML,\n
-    panel_template_header = Handlebars.compile(source_header),\n
-    source_body = gadget_klass.__template_element\n
-                         .getElementById("panel-template-body")\n
-                         .innerHTML,\n
-    panel_template_body = Handlebars.compile(source_body);\n
+    templater = gadget_klass.__template_element,\n
+\n
+    listbox_widget_header = Handlebars.compile(\n
+      templater.getElementById("listbox-widget-header").innerHTML\n
+    ),\n
+    listbox_widget_table = Handlebars.compile(\n
+      templater.getElementById("listbox-widget-table").innerHTML\n
+    ),\n
+    listbox_widget_table_partial = Handlebars.registerPartial(\n
+      "listbox-widget-table-partial",\n
+      templater.getElementById("listbox-widget-table-partial").innerHTML\n
+    );\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // some methods\n
+  /////////////////////////////////////////////////////////////////\n
 \n
   gadget_klass\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
     /////////////////////////////////////////////////////////////////\n
-    // Init local properties\n
-    .ready(function (g) {\n
-      g.props = {};\n
+    .ready(function (my_gadget) {\n
+      my_gadget.property_dict = {};\n
     })\n
 \n
-    //////////////////////////////////////////////\n
-    // acquired method\n
-    //////////////////////////////////////////////\n
+    .ready(function (my_gadget) {\n
+      return my_gadget.getElement()\n
+        .push(function (my_element) {\n
+          my_gadget.property_dict.element = my_element;\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // published methods\n
+    /////////////////////////////////////////////////////////////////\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // acquired methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("changeLanguage", "changeLanguage")\n
-    .declareAcquiredMethod("getLanguageList", "getLanguageList")\n
-    .declareAcquiredMethod(\n
-      "whoWantToDisplayThisFrontPage",\n
-      "whoWantToDisplayThisFrontPage"\n
-    )\n
-\n
-    // Assign the element to a variable\n
-    .ready(function (g) {\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-          g.props.jelement = $(element.querySelector("div"));\n
-        });\n
-    })\n
-\n
-    .ready(function (g) {\n
-      g.props.jelement.panel({\n
-        display: "overlay",\n
-        position: "left",\n
-        theme: "d"\n
-        // animate: false\n
-      });\n
-    })\n
-\n
-    .ready(function (g) {\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return RSVP.all([\n
-            g.whoWantToDisplayThisFrontPage("front"),\n
-            g.whoWantToDisplayThisFrontPage("history"),\n
-            g.getLanguageList()\n
-          ]);\n
-        })\n
-        .push(function (all_result) {\n
-          var raw_language_list = JSON.parse(all_result[2]),\n
-            len = raw_language_list.length,\n
-            i,\n
-            i_len,\n
-            language_list,\n
-            tmp;\n
-\n
-          // XXX: Customize panel header!\n
-          tmp = panel_template_header();\n
-\n
-          // languages\n
-          if (len > 0) {\n
-            language_list = [];\n
-            for (i = 0, i_len = len; i < i_len; i += 1) {\n
-              language_list.push({"count": i, "lang": language_list[i]});\n
-            }\n
-          }\n
-\n
-          tmp += panel_template_body({\n
-            "module_href": all_result[0],\n
-            "history_href": all_result[1],\n
-            "language_list": language_list\n
-          });\n
-          return tmp;\n
-        })\n
-        .push(function (my_translated_or_plain_html) {\n
-          g.props.jelement.html(my_translated_or_plain_html);\n
-          g.props.jelement.trigger("create");\n
-        });\n
-    })\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareMethod(\'toggle\', function () {\n
-      this.props.jelement.panel("toggle");\n
-    })\n
+    .declareMethod(\'render\', function (my_option_dict) {\n
+      var gadget = this,\n
+        content = \'\',\n
+        result;\n
 \n
-    .declareMethod(\'render\', function () {\n
-      var panel_gadget = this;\n
-\n
-      if (panel_gadget.props.set_search === true) {\n
-        return panel_gadget;\n
-      }\n
+      // store initial configuration and query\n
+      gadget.property_dict.initial_query\n
+        = gadget.property_dict.initial_query || my_option_dict.gadget_query;\n
+      gadget.property_dict.option_dict =\n
+        gadget.property_dict.option_dict || my_option_dict;\n
 \n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return panel_gadget.declareGadget("gadget_erp5_searchfield.html", {\n
-            "scope": "search"\n
+          return gadget.jio_allDocs(my_option_dict.gadget_query);\n
+        })\n
+        .push(function (my_result) {\n
+          var link_list = [],\n
+            i_len,\n
+            i;\n
+\n
+          result = my_result;\n
+\n
+          for (i = 0, i_len = result.data.total_rows; i < i_len; i += 1) {\n
+            link_list.push(gadget.whoWantToDisplayThis(result.data.rows[i].id));\n
+          }\n
+\n
+          return RSVP.all(link_list);\n
+        })\n
+        .push(function (my_link_list) {\n
+          var query = gadget.property_dict.option_dict.gadget_query,\n
+            column_list = [],\n
+            table_row_list = [],\n
+            table_cell_list,\n
+            i_len,\n
+            i,\n
+            j_len,\n
+            j;\n
+\n
+          // build handlebars object\n
+\n
+          // loop select_list to build columns\n
+          for (i = 0, i_len = query.select_list.length; i < i_len; i += 1) {\n
+            column_list.push({"column_title": query.select_list[i]});\n
+          }\n
+\n
+          for (j = 0, j_len = result.data.total_rows; j < j_len; j += 1) {\n
+            table_cell_list = [];\n
+            for (i = 0, i_len = query.select_list.length; i < i_len; i += 1) {\n
+              table_cell_list.push({\n
+                "cell_href": my_link_list[j],\n
+                "cell_title": result.data.rows[j].value[query.select_list[i]]\n
+              });\n
+            }\n
+            table_row_list.push({"table_cell_list": table_cell_list});\n
+          }\n
+          content += listbox_widget_header({\n
+            "listbox_title": my_option_dict.gadget_title,\n
+            "right_link_list": [{\n
+              "link_title": "All",\n
+              "link_href": gadget.property_dict.option_dict.gadget_portal_link\n
+            }]\n
           });\n
+          content += listbox_widget_table({\n
+            "column_list": column_list,\n
+            "table_row_list": table_row_list\n
+          });\n
+\n
+          return gadget.translateHtml(content);\n
         })\n
-        .push(function (my_search_gadget) {\n
-          var parent_node, search_option_dict = {};\n
-\n
-          panel_gadget.props.set_search = true;\n
-\n
-          // XXX disable for now\n
-          search_option_dict.disabled = true;\n
-          search_option_dict.theme = "d";\n
-          search_option_dict.extended_search = "";\n
-          parent_node = panel_gadget.__element.querySelector(".ui-content");\n
-\n
-          parent_node.insertBefore(\n
-            my_search_gadget.__element,\n
-            parent_node.firstChild\n
-          );\n
-          return my_search_gadget.render(search_option_dict);\n
-        })\n
-        .push(function () {\n
-          return panel_gadget;\n
-        });\n
-    })\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // declared services\n
-    /////////////////////////////////////////////////////////////////\n
-    .declareService(function () {\n
-      var panel_gadget,\n
-        form_list,\n
-        event_list,\n
-        handler,\n
-        i,\n
-        len;\n
-\n
-      function translate(my_event) {\n
-        return panel_gadget.changeLanguage(my_event.target.lang.value);\n
-      }\n
-\n
-      function formSubmit() {\n
-        panel_gadget.toggle();\n
-      }\n
-\n
-      panel_gadget = this;\n
-      form_list = panel_gadget.props.element.querySelectorAll(\'form\');\n
-      event_list = [];\n
-      handler = [formSubmit];\n
-\n
-      // XXX: not robust - Will break when search field is active\n
-      for (i = 0, len = form_list.length; i < len; i += 1) {\n
-        event_list[i] = loopEventListener(\n
-          form_list[i],\n
-          \'submit\',\n
-          false,\n
-          handler[i] || translate\n
-        );\n
-      }\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return RSVP.all(event_list);\n
+        .push(function (my_translated_html) {\n
+          gadget.property_dict.element.querySelector(".custom-grid .ui-body-c")\n
+            .innerHTML = my_translated_html;\n
+          return gadget;\n
         });\n
     });\n
 \n
-}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared service\n
+    /////////////////////////////////////////////////////////////////\n
+\n
+}(window, rJS, RSVP, Handlebars));\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget E5G Eproject Panel JS</string> </value>
+            <value> <string>Gadget E5G Eproject Field Listbox Widget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -350,7 +335,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -372,7 +357,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428487373.54</float>
+                        <float>1432213409.94</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -417,7 +402,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.10881.65296.43776</string> </value>
+                <value> <string>943.10893.44316.9966</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -435,7 +420,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432213723.7</float>
+                        <float>1432213311.81</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -462,7 +447,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -492,7 +477,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428487332.24</float>
+                        <float>1432213300.55</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
