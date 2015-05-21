@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal =  context.getPortalObject()\n
+\n
+"""Delete objects we are about to create """\n
+for i in range(start, start + num):\n
+  if getattr(portal.product_module, \'product_\' + str(i), None) is not None:\n
+    portal.product_module.deleteContent(\'product_\' + str(i))\n
+\n
+"""Create objects with given parameters"""\n
+for i in range(start, start + num):\n
+  portal.product_module.newContent(id = \'product_\' + str(i), title = \'Super Product %d\' % i, portal_type=\'Product\')\n
+\n
+return \'Created Successfully.\'\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>start = 0, num = 1</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testE5gEcommerce_CreateDataSample</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Create Objects</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
