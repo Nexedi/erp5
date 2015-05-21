@@ -761,7 +761,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       state_dict = {}
       for wf in self.portal_workflow.objectValues():
         state_list = wf.getStateValueList()
-        for state_id in wf.getStateValueList():
+        for state_id in state_list.keys():
           state = state_list[state_id]
           if group in getattr(state, 'type_list', ()):
             state_dict[state.getReference()] = None
@@ -1286,7 +1286,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       for wf in self.portal_workflow.objectValues():
         if wf.getVariableValueList() and wf.getStateVariable() == 'simulation_state':
           state_list = wf.getStateValueList()
-          for state_id in state_list:
+          for state_id in state_list.keys():
             state = state_list[state_id]
             if getattr(state, 'type_list', None):
               state_dict[state.getReference()] = None
