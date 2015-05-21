@@ -212,7 +212,9 @@
 \n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return panel_gadget.declareGadget("gadget_erp5_searchfield.html", {"scope": "search"});\n
+          return panel_gadget.declareGadget("gadget_erp5_searchfield.html", {\n
+            "scope": "search"\n
+          });\n
         })\n
         .push(function (my_search_gadget) {\n
           var parent_node, search_option_dict = {};\n
@@ -225,7 +227,10 @@
           search_option_dict.extended_search = "";\n
           parent_node = panel_gadget.__element.querySelector(".ui-content");\n
 \n
-          parent_node.insertBefore(my_search_gadget.__element, parent_node.firstChild);\n
+          parent_node.insertBefore(\n
+            my_search_gadget.__element,\n
+            parent_node.firstChild\n
+          );\n
           return my_search_gadget.render(search_option_dict);\n
         })\n
         .push(function () {\n
@@ -273,7 +278,8 @@
         });\n
     });\n
 \n
-}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));
+}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));\n
+
 
 ]]></string> </value>
         </item>
@@ -396,7 +402,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -410,7 +416,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.13008.17686.37973</string> </value>
+                <value> <string>943.10686.32775.12612</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -428,7 +434,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428494426.21</float>
+                        <float>1432201806.27</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

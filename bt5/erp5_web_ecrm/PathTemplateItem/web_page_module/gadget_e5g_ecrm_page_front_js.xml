@@ -98,11 +98,10 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS */\n
+/*global window, rJS, RSVP */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
 (function (window, rJS, RSVP) {\n
   "use strict";\n
-\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // api\n
@@ -138,17 +137,14 @@
   /////////////////////////////////////////////////////////////////\n
 \n
   rJS(window)\n
-  \n
-    /////////////////////////////////////////////////////////////////\n
-    // ready\n
-    /////////////////////////////////////////////////////////////////\n
+\n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
     /////////////////////////////////////////////////////////////////\n
     .ready(function (my_gadget) {\n
       my_gadget.property_dict = {};\n
     })\n
-    \n
+\n
     .ready(function (my_gadget) {\n
       return my_gadget.getElement()\n
         .push(function (my_element) {\n
@@ -167,15 +163,15 @@
     /////////////////////////////////////////////////////////////////\n
     // published methods\n
     /////////////////////////////////////////////////////////////////\n
-  \n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    \n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared service\n
     /////////////////////////////////////////////////////////////////\n
-    .declareMethod("render", function (my_option_dict) {\n
+    .declareMethod("render", function () {\n
       var gadget = this;\n
       return new RSVP.Queue()\n
         .push(function () {\n
@@ -195,10 +191,8 @@
           );\n
         });\n
     });\n
-    \n
 \n
 }(window, rJS, RSVP));\n
-\n
 
 
 ]]></string> </value>
@@ -322,7 +316,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -336,7 +330,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.11654.37592.32153</string> </value>
+                <value> <string>943.10699.20549.61815</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -354,7 +348,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428413201.98</float>
+                        <float>1432201659.15</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
