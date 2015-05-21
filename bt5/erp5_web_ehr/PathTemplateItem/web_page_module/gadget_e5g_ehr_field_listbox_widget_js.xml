@@ -10,11 +10,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -24,8 +21,10 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -42,7 +41,10 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -50,11 +52,8 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -68,7 +67,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_e5g_ehr_page_front.js</string> </value>
+            <value> <string>gadget_e5g_ehr_field_listbox_widget.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -78,7 +77,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_e5g_ehr_page_front_js</string> </value>
+            <value> <string>gadget_e5g_ehr_field_listbox_widget_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -98,65 +97,62 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP */\n
-/*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP) {\n
+/*global window, rJS, RSVP, Handlebars */\n
+/*jslint nomen: true, indent: 2 */\n
+(function (window, rJS, RSVP, Handlebars) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
-  // api\n
+  // api handlebars\n
   /////////////////////////////////////////////////////////////////\n
 \n
-  // temporary options:\n
-  //  gadget_href         [string]  url of gadget to load into a cell\n
-  //  gadget_portal_link  [string]  portal type url (to avoid fetching)\n
-  //  gadget_query        [object]  query parameters for data to display\n
-  //  gadegt_title        [string]  title for listbox\n
-  //  gadget_portal       [string]  portal type to link to\n
+  // listbox_widget_header = {\n
+  //   "left_link_list": [\n
+  //     {"link_title": [string], "link_href": [string]}\n
+  //   ],\n
+  //   "listbox_title": [string],\n
+  //   "right_link_list": [\n
+  //     {"link_title": [string], "link_href": [string]}\n
+  //   ]\n
+  // }\n
+  // listbox_widget_search = {\n
+  //   "search_title": [string]\n
+  // }\n
+  // listbox_widget_table = {\n
+  //   "column_list": [\n
+  //     {"column_title": [string]}\n
+  //   ]\n
+  // }\n
+  // listbox_widget_table_partial = {\n
+  //   "table_row_list": [{\n
+  //     "table_cell_list": [\n
+  //       {{"cell_title": [string], "cell_href": [string]}\n
+  //     ]\n
+  //   }]\n
+  // }\n
 \n
-  var HARDCODED_GRID_LIST = [\n
-    [{\n
-      "gadget_href": "gadget_e5g_ecrm_field_listbox_widget.html",\n
-      "gadget_portal_link": "#jio_key=position_opportunity_module&view=view",\n
-      "gadget_title": "Open Positions",\n
-      "gadget_portal": "Position Opportunity",\n
-      "gadget_query": {\n
-        "query": \'portal_type: "Position Opportunity"\',\n
-        "select_list": ["title"],\n
-        "limit": [0, 5]\n
-      }\n
-    }, {\n
-      "gadget_href": "gadget_e5g_ecrm_field_listbox_widget.html",\n
-      "gadget_portal_link": "#jio_key=position_announcement_module&view=view",\n
-      "gadget_title": "Position Announcements",\n
-      "gadget_portal": "Position Announcement",\n
-      "gadget_query": {\n
-        "query": \'portal_type: "Position Announcement"\',\n
-        "select_list": ["title"],\n
-        "limit": [0, 5]\n
-      }\n
-    }, {\n
-      "gadget_href": "gadget_e5g_ecrm_field_listbox_widget.html",\n
-      "gadget_portal_link": "#jio_key=position_module&view=view",\n
-      "gadget_title": "Positions",\n
-      "gadget_portal": "Position",\n
-      "gadget_query": {\n
-        "query": \'portal_type: "Position"\',\n
-        "select_list": ["title"],\n
-        "limit": [0, 5]\n
-      }\n
-    }]\n
-  ];\n
+  /////////////////////////////////////////////////////////////////\n
+  // templates\n
+  /////////////////////////////////////////////////////////////////\n
+  var gadget_klass = rJS(window),\n
+    templater = gadget_klass.__template_element,\n
+\n
+    listbox_widget_header = Handlebars.compile(\n
+      templater.getElementById("listbox-widget-header").innerHTML\n
+    ),\n
+    listbox_widget_table = Handlebars.compile(\n
+      templater.getElementById("listbox-widget-table").innerHTML\n
+    ),\n
+    listbox_widget_table_partial = Handlebars.registerPartial(\n
+      "listbox-widget-table-partial",\n
+      templater.getElementById("listbox-widget-table-partial").innerHTML\n
+    );\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // some methods\n
   /////////////////////////////////////////////////////////////////\n
 \n
-  /////////////////////////////////////////////////////////////////\n
-  // RJS\n
-  /////////////////////////////////////////////////////////////////\n
-\n
-  rJS(window)\n
+  gadget_klass\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
@@ -179,47 +175,102 @@
     /////////////////////////////////////////////////////////////////\n
     // acquired methods\n
     /////////////////////////////////////////////////////////////////\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // published methods\n
-    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
+    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'render\', function (my_option_dict) {\n
+      var gadget = this,\n
+        content = \'\',\n
+        result;\n
+\n
+      // store initial configuration and query\n
+      gadget.property_dict.initial_query\n
+        = gadget.property_dict.initial_query || my_option_dict.gadget_query;\n
+      gadget.property_dict.option_dict =\n
+        gadget.property_dict.option_dict || my_option_dict;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.jio_allDocs(my_option_dict.gadget_query);\n
+        })\n
+        .push(function (my_result) {\n
+          var link_list = [],\n
+            i_len,\n
+            i;\n
+\n
+          result = my_result;\n
+\n
+          for (i = 0, i_len = result.data.total_rows; i < i_len; i += 1) {\n
+            link_list.push(gadget.whoWantToDisplayThis(result.data.rows[i].id));\n
+          }\n
+\n
+          return RSVP.all(link_list);\n
+        })\n
+        .push(function (my_link_list) {\n
+          var query = gadget.property_dict.option_dict.gadget_query,\n
+            column_list = [],\n
+            table_row_list = [],\n
+            table_cell_list,\n
+            i_len,\n
+            i,\n
+            j_len,\n
+            j;\n
+\n
+          // build handlebars object\n
+\n
+          // loop select_list to build columns\n
+          for (i = 0, i_len = query.select_list.length; i < i_len; i += 1) {\n
+            column_list.push({"column_title": query.select_list[i]});\n
+          }\n
+\n
+          for (j = 0, j_len = result.data.total_rows; j < j_len; j += 1) {\n
+            table_cell_list = [];\n
+            for (i = 0, i_len = query.select_list.length; i < i_len; i += 1) {\n
+              table_cell_list.push({\n
+                "cell_href": my_link_list[j],\n
+                "cell_title": result.data.rows[j].value[query.select_list[i]]\n
+              });\n
+            }\n
+            table_row_list.push({"table_cell_list": table_cell_list});\n
+          }\n
+          content += listbox_widget_header({\n
+            "listbox_title": my_option_dict.gadget_title,\n
+            "right_link_list": [{\n
+              "link_title": "All",\n
+              "link_href": gadget.property_dict.option_dict.gadget_portal_link\n
+            }]\n
+          });\n
+          content += listbox_widget_table({\n
+            "column_list": column_list,\n
+            "table_row_list": table_row_list\n
+          });\n
+\n
+          return gadget.translateHtml(content);\n
+        })\n
+        .push(function (my_translated_html) {\n
+          gadget.property_dict.element.querySelector(".custom-grid .ui-body-c")\n
+            .innerHTML = my_translated_html;\n
+          return gadget;\n
+        });\n
+    });\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared service\n
     /////////////////////////////////////////////////////////////////\n
-    .declareMethod("render", function () {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return gadget.declareGadget("gadget_erp5_grid.html", {\n
-            "scope": "grid"\n
-          });\n
-        })\n
-        .push(function () {\n
-          return gadget.getDeclaredGadget("grid");\n
-        })\n
-        .push(function (my_grid_gadget) {\n
-          return my_grid_gadget.render({"layout": HARDCODED_GRID_LIST});\n
-        })\n
-        .push(function (my_content_gadget) {\n
-          gadget.property_dict.element.appendChild(\n
-            my_content_gadget.property_dict.element\n
-          );\n
-        });\n
-    });\n
 \n
-}(window, rJS, RSVP));\n
+}(window, rJS, RSVP, Handlebars));\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget E5G Ehr Frontpage JS</string> </value>
+            <value> <string>Gadget E5G Ehr Field Listbox Widget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -279,11 +330,13 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -305,7 +358,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1427380229.7</float>
+                        <float>1432204108.51</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -314,7 +367,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>draft</string> </value>
             </item>
           </dictionary>
         </list>
@@ -350,7 +403,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.10739.23810.12168</string> </value>
+                <value> <string>943.10740.31168.26675</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -368,7 +421,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432204059.88</float>
+                        <float>1432204171.08</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -395,7 +448,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -425,7 +478,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1427380176.21</float>
+                        <float>1432204108.51</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
