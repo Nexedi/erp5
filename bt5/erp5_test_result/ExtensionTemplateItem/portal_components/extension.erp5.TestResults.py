@@ -338,10 +338,16 @@ def TestResultModule_viewTestResultChart(self, REQUEST,
   os.environ['HOME'] = '/tmp'
 
   # use a backend that doesn't need a $DISPLAY
-  import matplotlib
+  try:
+    import matplotlib
+  except ImportError:
+    return
   matplotlib.use('Cairo')
-  import pylab
-
+  try:
+    import pylab
+  except ImportError:
+    return
+  
   revision_list = []
   all_test_list = []
   success_list = []
