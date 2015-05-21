@@ -78,7 +78,8 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
     if transition not in self.getAvailableTransitionList(document):
       raise StateError
     else:
-      transition.execute(document, form_kw=form_kw)
+      self.getParent()._executeTransition(document, transition, form_kw=form_kw)
+      #transition.execute(document, form_kw=form_kw)
       self.getParent().updateRoleMappingsFor(document)
 
   def undoTransition(self, document):
