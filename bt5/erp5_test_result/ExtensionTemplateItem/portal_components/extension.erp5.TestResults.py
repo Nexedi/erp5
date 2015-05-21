@@ -100,7 +100,7 @@ def parseTestSuiteResults(file_handler):
       test_case = '%s (--save)' % test_case
     if 'runFunctionalTest' in cmdline or \
        'runExpressFunctionalTest' in cmdline or \
-       'Firefox running' in stderr:
+       'Firefox running' in test_log:
       test_case = 'Functional Tests'
       is_zelenium_test_suite = 1
 
