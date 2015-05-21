@@ -43,6 +43,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
 from TranslationProviderBase import TranslationProviderBase
+from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TRANSLATION
 
 from sys import exc_info
 from zLOG import LOG, ERROR
@@ -518,7 +519,8 @@ class ERP5TypeInformation(XMLObject,
       """
       Return all the properties of the Portal Type
       """
-      cls = self.getPortalObject().portal_types.getPortalTypeClass(self.getId())
+      portal = self.getPortalObject()
+      cls = portal.portal_types.getPortalTypeClass(self.getId())
       return_set = set()
       for property_dict in cls.getAccessorHolderPropertyList(content=True):
         if property_dict['type'] == 'content':
@@ -529,6 +531,17 @@ class ERP5TypeInformation(XMLObject,
 
         if property_dict['storage_id']:
           return_set.add(property_dict['storage_id'])
+
+        if property_dict['translatable']:
+          domain_dict = self.getPropertyTranslationDomainDict()
+          domain = domain_dict.get(property_dict['id'])
+          if domain is None:
+            continue
+          if domain.getDomainName() == TRANSLATION_DOMAIN_CONTENT_TRANSLATION:
+            for language in portal.Localizer.get_languages():
+              return_set.add('%s_translated_%s' %
+                  (language.replace('-', '_'),
+                   property_dict['id']))
 
       return return_set
 

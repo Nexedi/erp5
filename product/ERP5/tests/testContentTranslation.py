@@ -233,6 +233,12 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.assertEqual(address.getTranslatedStreetAddress(language='ja-kana'), '東京都 台東区')
 
 
+  def test_getInstancePropertySet(self):
+    """Translatable properies are returned by getInstancePropertySet
+    """
+    self.assertTrue('en_translated_first_name' in
+      self.portal.portal_types.Person.getInstancePropertySet())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestContentTranslation))
