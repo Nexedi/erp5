@@ -47,6 +47,21 @@ import threading
 import time
 import xmlrpclib
 
+
+# XXX disable ssl certificate check, because vifib does not provide valid certificates yet
+import ssl
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    # Legacy Python that doesn't verify HTTPS certificates by default
+    pass
+else:
+    # Handle target environment that doesn't support HTTPS verification
+    ssl._create_default_https_context = _create_unverified_https_context
+
+
+
 __all__ = ['TaskDistributionTool', 'TestResultProxy', 'TestResultLineProxy', 'patchRPCParser']
 
 # Depending on used xmlrpc backend, different exceptions can be thrown.
