@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -67,8 +67,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_e5g_ecrm_page_front.js</string> </value>
+            <value> <string>gadget_e5g_ecrm_field_listbox_widget.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -78,7 +82,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_e5g_ecrm_page_front_js</string> </value>
+            <value> <string>gadget_e5g_ecrm_field_listbox_widget_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -86,7 +90,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -98,108 +102,88 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP */\n
-/*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP) {\n
-  "use strict";\n
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta charset="utf-8" />\n
+    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
+    <title>Listbox Compact Widget</title>\n
 \n
-  /////////////////////////////////////////////////////////////////\n
-  // api\n
-  /////////////////////////////////////////////////////////////////\n
+    <!-- renderjs -->\n
+    <script src="rsvp.js" type="text/javascript"></script>\n
+    <script src="renderjs.js" type="text/javascript"></script>\n
+    <script src="handlebars.js"></script>\n
 \n
-  // temporary options:\n
-  //  gadget_href         [string]  url of gadget to load into a cell\n
-  //  gadget_portal_link  [string]  portal type url (to avoid fetching)\n
-  //  gadget_query        [object]  query parameters for data to display\n
-  //  gadegt_title        [string]  title for listbox\n
-  //  gadget_portal       [string]  portal type to link to\n
+    <script id="listbox-widget-header" type="text/x-handlebars-template">\n
+      <div class="ui-header ui-table-header ui-bar-c ui-corner-all">\n
+        {{#if left_link_list}}\n
+          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
+            <div class="ui-controlgroup-controls">\n
+            {{#each left_link_list}}\n
+              <a href="{{link_href}}" data-i18n="{{link_title}} class="ui-responsive ui-btn ui-btn-icon-right ui-icon-carat-r ui-first-child ui-last-child">{{link_title}}</a>\n
+            {{/each}}\n
+            </div>\n
+          </div>\n
+        {{/if}}\n
+        <h1 class="ui-title">{{listbox_title}}</h1>\n
+        {{#if right_link_list}}\n
+          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
+            <div class="ui-controlgroup-controls">\n
+            {{#each right_link_list}}\n
+              <a href="{{link_href}}" data-i18n="{{link_title}}" class="ui-responsive ui-btn ui-btn-icon-right ui-icon-carat-r ui-first-child ui-last-child">{{link_title}}</a>\n
+            {{/each}}\n
+          </div>\n
+        </div>\n
+        {{/if}}\n
+      </div>\n
+    </script>\n
 \n
-  var HARDCODED_GRID_LIST = [\n
-    [{\n
-      "gadget_href": "gadget_e5g_ecrm_field_listbox_widget.html",\n
-      "gadget_portal_link": "#jio_key=bug_module&view=view",\n
-      "gadget_title": "Bugs",\n
-      "gadget_portal": "Bug",\n
-      "gadget_query": {\n
-        "query": \'portal_type: "Bug"\',\n
-        "select_list": ["title"],\n
-        "limit": [0, 5]\n
-      }\n
-    }]\n
-  ];\n
+    <script id="listbox-widget-table" type="text/x-handlebars-template">\n
+      <table class="ui-responsive ui-body-c ui-table-inset custom-force-list">\n
+        <thead class="ui-bar-inherit">\n
+          <tr>\n
+            {{#each column_list}}\n
+              <th>{{column_title}}</th>\n
+            {{/each}}\n
+          </tr>\n
+        </thead>\n
+        {{> listbox-widget-table-partial}}\n
+        <tfoot class="ui-bar-inherit"></tfoot>\n
+      </table>\n
+    </script>\n
 \n
-  /////////////////////////////////////////////////////////////////\n
-  // some methods\n
-  /////////////////////////////////////////////////////////////////\n
+    <script id="listbox-widget-table-partial" type="text/x-handlebars-template">\n
+      <tbody>\n
+      {{#each table_row_list}}\n
+        <tr>\n
+        {{#each table_cell_list}}\n
+          <td><a class="ui-link" href="{{cell_href}}">{{cell_title}}</a></td>\n
+        {{/each}}\n
+        </tr>\n
+      {{/each}}\n
+      </tbody>\n
+    </script>\n
 \n
-  /////////////////////////////////////////////////////////////////\n
-  // RJS\n
-  /////////////////////////////////////////////////////////////////\n
+    <!-- custom script -->\n
+    <script src="gadget_global.js"></script>\n
+    <script src="gadget_e5g_ecrm_field_listbox_widget.js" type="text/javascript"></script>\n
 \n
-  rJS(window)\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // ready\n
-    /////////////////////////////////////////////////////////////////\n
-    .ready(function (my_gadget) {\n
-      my_gadget.property_dict = {};\n
-    })\n
-\n
-    .ready(function (my_gadget) {\n
-      return my_gadget.getElement()\n
-        .push(function (my_element) {\n
-          my_gadget.property_dict.element = my_element;\n
-        });\n
-    })\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // published methods\n
-    /////////////////////////////////////////////////////////////////\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // acquired methods\n
-    /////////////////////////////////////////////////////////////////\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // published methods\n
-    /////////////////////////////////////////////////////////////////\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // declared methods\n
-    /////////////////////////////////////////////////////////////////\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // declared service\n
-    /////////////////////////////////////////////////////////////////\n
-    .declareMethod("render", function () {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return gadget.declareGadget("gadget_erp5_grid.html", {\n
-            "scope": "grid"\n
-          });\n
-        })\n
-        .push(function () {\n
-          return gadget.getDeclaredGadget("grid");\n
-        })\n
-        .push(function (my_grid_gadget) {\n
-          return my_grid_gadget.render({"layout": HARDCODED_GRID_LIST});\n
-        })\n
-        .push(function (my_content_gadget) {\n
-          gadget.property_dict.element.appendChild(\n
-            my_content_gadget.property_dict.element\n
-          );\n
-        });\n
-    });\n
-\n
-}(window, rJS, RSVP));\n
+    </head>\n
+  <body>\n
+    <div class="custom-grid-wrap">\n
+      <div class="custom-grid ui-corner-all ui-body-inherit ui-shadow ui-corner-all">\n
+        <div class="ui-body-c ui-corner-all"></div>\n
+      </div>\n
+    </div>\n
+  </body>\n
+</html>\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget E5G Ecrm Frontpage JS</string> </value>
+            <value> <string>Gadget E5G Ecrm Field Listbox Widget</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -285,7 +269,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1427381662.25</float>
+                        <float>1427813489.46</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -330,7 +314,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.10699.42778.24576</string> </value>
+                <value> <string>943.10714.65040.56234</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -348,7 +332,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432202644.33</float>
+                        <float>1432202604.93</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -405,7 +389,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1427381629.94</float>
+                        <float>1427813455.33</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
