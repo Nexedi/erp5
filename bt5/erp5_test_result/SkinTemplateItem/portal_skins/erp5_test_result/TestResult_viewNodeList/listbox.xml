@@ -347,6 +347,14 @@
                           <string>translated_simulation_state_title</string>
                           <string>Status</string>
                         </tuple>
+                        <tuple>
+                          <string>log_viewer</string>
+                          <string>Log Viewer</string>
+                        </tuple>
+                        <tuple>
+                          <string>debug_shell</string>
+                          <string>Debug Shell</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -447,6 +455,10 @@
                 <item>
                     <key> <string>page_navigation_mode</string> </key>
                     <value> <string>slider</string> </value>
+                </item>
+                <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
