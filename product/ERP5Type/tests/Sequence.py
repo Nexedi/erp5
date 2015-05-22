@@ -51,7 +51,7 @@ def special_extract_tb(tb, limit = None):
         filename = co.co_filename
         name = co.co_name
         linecache.checkcache(filename)
-        line = linecache.getline(filename, lineno)
+        line = linecache.getline(filename, lineno, f.f_globals)
         if line: line = line.strip()
         else: line = None
 
