@@ -38,6 +38,8 @@ Fax | view
 File | download
 File | update_content_from_url
 File | view
+Geographical Location | go_to
+Geographical Location | view
 Image | change_function
 Image | download
 Image | fullsize_view
