@@ -32,12 +32,15 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
 
-class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
+from inspect import getargspec
+from Products.ERP5Type.Base import Base
+edit_args_list = getargspec(Base._edit).args
+
+class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
     """
       A DeliveryLine object allows to implement lines in
       Deliveries (packing list, order, invoice, etc.)
@@ -74,8 +77,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
     updateRelatedContent = XMLMatrix.updateRelatedContent
 
     # Force in _edit to modify variation_base_category_list first
-    security.declarePrivate( '_edit' )
-    def _edit(self, REQUEST=None, force_update = 0, **kw):
+    def _edit(self, edit_order=(), **kw):
       # XXX FIXME For now, special cases are handled in _edit methods in many
       # documents : DeliveryLine, DeliveryCell ... Ideally, to prevent code
       # duplication, it should be handled in a _edit method present only in
@@ -83,16 +85,15 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
 
       # If variations and resources are set at the same time, resource must be
       # set before any variation.
-      if kw.has_key('resource_value'):
-        self._setResourceValue( kw['resource_value'] )
-      # We must first prepare the variation_base_category_list before we do the edit of the rest
-      #LOG('in edit', 0, str(kw))
-      if kw.has_key('variation_base_category_list'):
-        self._setVariationBaseCategoryList( kw['variation_base_category_list'] )
-      if kw.has_key('variation_category_list'):
-        self._setVariationCategoryList( kw['variation_category_list'] )
-      Movement._edit(self, REQUEST=REQUEST,
-                       force_update = force_update, **kw)
+      before_order = ('resource', 'resource_value',
+                      'variation_base_category_list',
+                      'variation_category_list')
+      before_kw = {k: kw.pop(k) for k in before_order if k in kw}
+      if before_kw:
+        before_kw.update((k, kw[k]) for k in edit_args_list if k in kw)
+        Base._edit(self, edit_order=before_order, **before_kw)
+      if kw:
+        Movement._edit(self, edit_order=edit_order, **kw)
 
     # We must check if the user has changed the resource of particular line
     security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
