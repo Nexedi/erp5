@@ -190,3 +190,4 @@ Workflow
 XMLObject
 AttributeBlacklistedConstraint
 CaptchaPreference
+GeographicalPoint
