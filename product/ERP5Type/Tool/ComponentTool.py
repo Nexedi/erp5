@@ -48,6 +48,7 @@ from DateTime import DateTime
 DEFAULT_TEST_TEMPLATE_COPYRIGHT = "Copyright (c) 2002-%s Nexedi SA and " \
     "Contributors. All Rights Reserved." % DateTime().year()
 
+live_test_running = False
 last_sync = -1
 class ComponentTool(BaseTool):
   """
@@ -277,6 +278,12 @@ class Test(ERP5TypeTestCase):
     """
     from StringIO import StringIO
     global global_stream
+    global live_test_running
+    self.serialize()
+    if live_test_running:
+      LOG('ComponentTool', INFO, 'Live test already running')
+      return ''
+
     global_stream = StringIO()
     test_list = self._getCommaSeparatedParameterList(test_list)
     if not test_list:
@@ -289,18 +296,22 @@ class Test(ERP5TypeTestCase):
     run_only = self._getCommaSeparatedParameterList(run_only)
     verbosity = verbose and 2 or 1
 
-    from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
     try:
-      result = runLiveTest(test_list,
-                           run_only=run_only,
-                           debug=debug,
-                           stream=global_stream,
-                           verbosity=verbosity)
-    except ImportError:
-      import traceback
-      traceback.print_exc(file=global_stream)
-    global_stream.seek(0)
-    return global_stream.read()
+      live_test_running = True
+      from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
+      try:
+        result = runLiveTest(test_list,
+                             run_only=run_only,
+                             debug=debug,
+                             stream=global_stream,
+                             verbosity=verbosity)
+      except ImportError:
+        import traceback
+        traceback.print_exc(file=global_stream)
+      global_stream.seek(0)
+      return global_stream.read()
+    finally:
+      live_test_running = False
 
   security.declareProtected(Permissions.ManagePortal, 'readTestOutput')
   def readTestOutput(self, position=0):
