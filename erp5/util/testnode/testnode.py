@@ -107,6 +107,7 @@ class TestNode(object):
 
   def constructProfile(self, node_test_suite, test_type, use_relative_path=False):
     config = self.config
+    software_link = config['software_link']
     profile_content = ''
     assert len(node_test_suite.vcs_repository_list), "we must have at least one repository"
     profile_path_count = 0
@@ -133,9 +134,13 @@ class TestNode(object):
 
 
         profile_content_list.append("""
+# Testnode generated buildout
 [buildout]
-extends = %(software_config_path)s
-""" %  {'software_config_path': software_config_path})
+extends =
+  %(software_config_path)s
+  %(software_link)s
+
+""" % locals())
 
       # Construct sections
       if not(buildout_section_id is None):

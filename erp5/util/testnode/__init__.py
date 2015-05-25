@@ -79,7 +79,7 @@ def main(*args):
               'proxy_port', 'git_binary','zip_binary','node_quantity',
               'test_node_title', 'ipv4_address','ipv6_address','test_suite_master_url',
               'slapos_binary', 'httpd_ip', 'httpd_port', 'httpd_software_access_port',
-              'computer_id', 'server_url'):
+              'computer_id', 'server_url', 'software_link'):
     CONFIG[key] = config.get('testnode',key)
 
   for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
