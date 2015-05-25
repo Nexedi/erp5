@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- Taken from https://github.com/ukhas/js-logtail -->
+<!-- Copyright (c) 2012 Daniel Richman; GNU GPL 3 -->
+<html>
+    <head>
+        <title>Test suite log viewer</title>
+        <script type="text/javascript" src="jquery.min.js"></script>
+        <script type="text/javascript" src="logtail.js"></script>
+    </head>
+    <body>
+        <div id="header">
+            Test Suite Log
+            <a href="logtail.html">Reversed</a> or
+            <a href="logtail.html?noreverse">chronological</a> view.
+            <a id="pause" href='#'>Pause</a>.
+            <a href="suite.log">Full log file</a> or
+        </div>
+        <pre id="data" style="font-size: xx-small;">Loading...</pre>
+    </body>
+</html>
