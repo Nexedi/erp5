@@ -435,6 +435,40 @@ def checkPythonSourceCode(source_code_str):
     return []
 
   try:
+    compile(source_code_str, '<string>', 'exec')
+  except Exception, error:
+    if isinstance(error, SyntaxError):
+      message = {'type': 'F',
+                 'row': error.lineno,
+                 'column': error.offset,
+                 'text': error.message}
+    else:
+      message = {'type': 'F',
+                 'row': -1,
+                 'column': -1,
+                 'text': str(error)}
+
+    return [message]
+
+  import pyflakes.reporter
+  import pyflakes.api
+
+  message_list = []
+  class ERP5FlakesReporter(pyflakes.reporter.Reporter):
+    __init__ = unexpectedError = syntaxError = lambda *args, **kw: None # errors are handled by compile
+    def flake(self, message):
+      message_list.append(
+        {'type': 'W',
+         'row': message.lineno,
+         'column': message.col,
+         'text': message.message % message.message_args })
+
+  pyflakes.api.check(source_code_str, '<string>', ERP5FlakesReporter())
+  return message_list
+
+  # XXX pylint disabled because it is slow
+
+  try:
     from pylint.lint import Run
     from pylint.reporters.text import TextReporter
   except ImportError, error:
