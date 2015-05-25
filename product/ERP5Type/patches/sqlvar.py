@@ -72,17 +72,15 @@ def SQLVar_render(self, md):
                     'Invalid datetime value for <em>%s</em>: %r' % (name, v))
 
         try:
-            if getattr(v, 'ISO', None) is not None:
-                v=v.toZone('UTC').ISO()
-            else:
-                v = DateTime(v)
-                v=v.toZone('UTC').ISO()
+            v = (v if isinstance(v, DateTime) else DateTime(v)).toZone('UTC')
+            # For subsecond precision in MySQL, use 'datetime(N)' type,
+            # where N is the number of digits after the decimal point.
+            v = "'%s.%06u'" % (v.ISO(), v.micros() % 1000000)
         except:
             if not v and args.has_key('optional') and args['optional']:
                 return 'null'
             raise ValueError, (
                 'Invalid datetime value for <em>%s</em>: %r' % (name, v))
-        v=md.getitem('sql_quote__',0)(v)
     # End of patch
     else:
         # Patched by yo
