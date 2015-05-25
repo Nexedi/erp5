@@ -29,8 +29,10 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Url import Url
+from Products.ERP5.Document.Node import Node
 
-class GeographicalArea(Url):
+
+class GeographicalArea(Node, Url):
   """
   A Geographical Area represent an area of the Earth which is address by its Geographical Points.
   """
