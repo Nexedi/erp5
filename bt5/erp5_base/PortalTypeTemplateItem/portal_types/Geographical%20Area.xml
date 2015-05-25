@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string> A Geographical Location represent a point on the surface of the Earth which is address by its coordinates.</string> </value>
+            <value> <string> A Geographical Area represent an area of the Earth which is address by its Geographical Points.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Geographical Location</string> </value>
+            <value> <string>Geographical Area</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -73,7 +73,7 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>Geographical Location</string> </value>
+            <value> <string>Geographical Area</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>GeographicalPoint</string> </value>
+            <value> <string>GeographicalArea</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>

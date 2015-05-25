@@ -23,6 +23,7 @@ Fax | edit_workflow
 File | document_conversion_interaction_workflow
 File | document_security_interaction_workflow
 File | edit_workflow
+Geographical Area | edit_workflow
 Geographical Location | edit_workflow
 Image | document_conversion_interaction_workflow
 Image | document_security_interaction_workflow
