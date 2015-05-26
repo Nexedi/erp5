@@ -32,6 +32,7 @@ import shutil
 import sys
 import subprocess
 import time
+import transaction
 import struct
 import cPickle
 import urllib2
@@ -67,6 +68,7 @@ from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
 from sets import ImmutableSet
 from tempfile import mkstemp, mkdtemp
@@ -94,7 +96,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
   title         = 'ERP5 Workflow Tool'
   meta_type     = 'ERP5 Workflow Tool'
   portal_type   = 'ERP5 Workflow Tool'
-  allowed_types = ('Workflow', 'Interaction Workflow', )
+  allowed_types = ('Workflow', 'Interaction Workflow', 'Configuration Workflow' )
   all_meta_types = OriginalWorkflowTool.all_meta_types
 
   # This stores information on repositories.
@@ -115,6 +117,26 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     PropertySheet.CategoryCore,
     PropertySheet.DublinCore,
   )
+
+  def _isBootstrapRequired(self):
+    return True
+
+  def _bootstrap(self):
+    bt_name = 'erp5_workflow'
+    from Products.ERP5.ERP5Site import ERP5Generator
+    ERP5Generator.bootstrap(self, bt_name, 'WorkflowTemplateItem', [])
+    def install():
+      from ZPublisher.BaseRequest import RequestContainer
+      from Products.ERP5Type.Globals import get_request
+      portal = self.getPortalObject()
+      # BusinessTemplate.install needs a request
+      template_tool = portal.aq_base.__of__(portal.aq_parent.__of__(
+        RequestContainer(REQUEST=get_request()))).portal_templates
+      if template_tool.getInstalledBusinessTemplate(bt_name) is None:
+        from Products.ERP5.ERP5Site import getBootstrapBusinessTemplateUrl
+        url = getBootstrapBusinessTemplateUrl(bt_name)
+        template_tool.download(url).install()
+    transaction.get().addBeforeCommitHook(unrestricted_apply, (install,))
 
   def _jumpToStateFor(self, ob, state_id, wf_id=None, *args, **kw):
     """Inspired from doActionFor.
@@ -178,43 +200,44 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
       workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
   def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
-      workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
+    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
 
-      if wf_id is None:
-          if workflow_list == []:
-              if default is _marker:
-                  raise WorkflowException(_(u'No workflows found.'))
-              else:
-                  return default
-          found = 0
-          for workflow in workflow_list:
-              if workflow.isInfoSuported(ob, name):
-                found = 1
-                break
-          if not found:
-              if default is _marker:
-                  msg = _(u"No workflow provides '${name}' information.",
-                          mapping={'name': name})
-                  raise WorkflowException(msg)
-              else:
-                  return default
-      else:
-          wf = self.getWorkflowById(wf_id)
-          if wf is None:
-              if default is _marker:
-                  raise WorkflowException(
-                      _(u'Requested workflow definition not found.'))
-              else:
-                  return default
+    if wf_id is None:
+        if workflow_list == []:
+            if default is _marker:
+                raise WorkflowException(_(u'No workflows found.'))
+            else:
+                return default
+        found = 0
+        for workflow in workflow_list:
+            if workflow.isInfoSuported(ob, name):
+              found = 1
+              break
+        if not found:
+            if default is _marker:
+                msg = _(u"No workflow provides '${name}' information.",
+                        mapping={'name': name})
+                raise WorkflowException(msg)
+            else:
+                return default
+    else:
+        wf = self.getWorkflowById(wf_id)
+        if wf is None:
+            if default is _marker:
+                raise WorkflowException(
+                    _(u'Requested workflow definition not found.'))
+            else:
+                return default
 
-      res = wf.getInfoFor(ob, name, default, *args, **kw)
-      if res is _marker:
-          msg = _(u'Could not get info: ${name}', mapping={'name': name})
-          raise WorkflowException(msg)
-      return res
+    res = wf.getInfoFor(ob, name, default, *args, **kw)
+    if res is _marker:
+        msg = _(u'Could not get info: ${name}', mapping={'name': name})
+        raise WorkflowException(msg)
+    return res
 
   def getWorkflowTempObjectList(self):
-    """ Return a list of converted temporary workflows.
+    """ Return a list of converted temporary workflows. Only necessary in
+        ERP5 Workflow Tool to get temporarilly converted DCWorkflow.
     """
     temp_workflow_list = []
     temp_workflow_id_list = []
