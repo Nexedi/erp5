@@ -104,7 +104,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <!DOCTYPE html>\n
-<html manifest="gadget_erp5.appcache">\n
+<html manifest="${manifest_url}">\n
   <head>\n
     <meta charset="utf-8">\n
     <meta name="viewport" content="width=device-width, initial-scale=1">\n
@@ -275,7 +275,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -289,7 +289,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.12881.1847.42734</string> </value>
+                <value> <string>942.36154.23606.2679</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -307,7 +307,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428487030.04</float>
+                        <float>1432630986.89</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
