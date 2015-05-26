@@ -8002,10 +8002,17 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
       .push(function (evt) {\n
         var form_data = JSON.parse(evt.target.result),\n
           data = new FormData(),\n
+          i,\n
           key;\n
         for (key in form_data) {\n
           if (form_data.hasOwnProperty(key)) {\n
-            data.append(key, form_data[key]);\n
+            if (Array.isArray(form_data[key])) {\n
+              for (i = 0; i < form_data[key].length; i += 1) {\n
+                data.append(key, form_data[key][i]);\n
+              }\n
+            } else {\n
+              data.append(key, form_data[key]);\n
+            }\n
           }\n
         }\n
         return jIO.util.ajax({\n
@@ -9252,7 +9259,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.40553.20339.32529</string> </value>
+                <value> <string>943.12409.47687.33177</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -9270,7 +9277,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1430410922.96</float>
+                        <float>1432304271.29</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
