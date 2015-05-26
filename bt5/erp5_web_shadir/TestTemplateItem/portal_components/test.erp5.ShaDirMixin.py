@@ -72,7 +72,7 @@ class ShaDirMixin(object):
 
     self.header_dict = {
       'Content-Type': 'application/json',
-      'Authorization': 'Basic %s' % (base64.encodestring('ERP5TypeTestCase:'))
+      'Authorization': 'Basic %s' % (base64.encodestring('ERP5TypeTestCase:').strip())
     }
 
     module = self.portal.web_site_module
