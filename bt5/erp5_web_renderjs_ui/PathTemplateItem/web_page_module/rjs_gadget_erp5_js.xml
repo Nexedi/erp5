@@ -119,6 +119,19 @@
   /////////////////////////////////////////////////////////////////\n
   // Some functions\n
   /////////////////////////////////////////////////////////////////\n
+  function route(my_root_gadget, my_scope, my_method, my_param_list) {\n
+    return RSVP.Queue()\n
+      .push(function () {\n
+        return my_root_gadget.getDeclaredGadget(my_scope);\n
+      })\n
+      .push(function (my_gadget) {\n
+        if (my_param_list) {\n
+          return my_gadget[my_method].apply(my_gadget, my_param_list);\n
+        }\n
+        return my_gadget[my_method]();\n
+      });\n
+  }\n
+\n
   function createJio(gadget) {\n
     return gadget.getDeclaredGadget("jio_gadget")\n
       .push(function (jio_gadget) {\n
@@ -270,43 +283,29 @@
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
 \n
+    /////////////////////////////////////////////////////////////////\n
+    // published methods\n
+    /////////////////////////////////////////////////////////////////\n
     // bridge translation gadget\n
+    // XXX: fix translations, getTranslationMethod not used, no?\n
     .allowPublicAcquisition("getTranslationMethod", function () {\n
       var root = (new URI(this.props.hateoas_url)).absoluteTo(location.href).toString();\n
       return root + this.props.translation_lookup;\n
     })\n
     .allowPublicAcquisition("changeLanguage", function (param_list) {\n
       if (this.setLanguage) {\n
-        return this.getDeclaredGadget("translate")\n
-          .push(function (translation_gadget) {\n
-            return translation_gadget.changeLanguage.apply(\n
-              translation_gadget,\n
-              param_list\n
-            );\n
-          });\n
+        return route(this, "translate", "changeLanguage", param_list);\n
       }\n
     })\n
     .allowPublicAcquisition("getLanguageList", function (param_list) {\n
       if (this.setLanguage) {\n
-        return this.getDeclaredGadget("translate")\n
-          .push(function (translation_gadget) {\n
-            return translation_gadget.getLanguageList.apply(\n
-              translation_gadget,\n
-              param_list\n
-            );\n
-          });\n
+        return route(this, "translate", "getLanguageList", param_list);\n
       }\n
       return JSON.stringify([]);\n
     })\n
     .allowPublicAcquisition("translateHtml", function (param_list) {\n
       if (this.setLanguage) {\n
-        return this.getDeclaredGadget("translate")\n
-          .push(function (translation_gadget) {\n
-            return translation_gadget.translateHtml.apply(\n
-              translation_gadget,\n
-              param_list\n
-            );\n
-          });\n
+        return route(this, "translate", "translateHtml", param_list);\n
       }\n
       return param_list;\n
     })\n
@@ -341,14 +340,12 @@
         .push(function (jio_gadget) {\n
           return jio_gadget.getAttachment(\n
             param_list[0]._id,\n
-            param_list[0]._attachment\n
+            param_list[0]._attachment,\n
+            {format: "json"}\n
           );\n
         })\n
-        .push(function (response) {\n
-          return jIO.util.readBlobAsText(response);\n
-        })\n
-        .push(function (event) {\n
-          return {data: JSON.parse(event.target.result)};\n
+        .push(function (json) {\n
+          return {data: json};\n
         });\n
     })\n
     .allowPublicAcquisition("whoWantToDisplayThis", function (param_list) {\n
@@ -413,45 +410,38 @@
       }\n
       return displayError(this, param_list[0]);\n
     })\n
-    // XXX translate: while header calls render on ready, this is needed to\n
-    // update the header once translations are available\n
+\n
+    // bridge notifications\n
+    // XXX: called twice, 2nd time after header loaded to translate header\n
     .allowPublicAcquisition(\'notifyUpdate\', function () {\n
-      return this.getDeclaredGadget("header")\n
-        .push(function (header_gadget) {\n
-          return header_gadget.notifyUpdate();\n
-        });\n
+      return route(this, "header", \'notifyUpdate\');\n
     })\n
     .allowPublicAcquisition(\'notifySubmitting\', function () {\n
-      return this.getDeclaredGadget("header")\n
-        .push(function (header_gadget) {\n
-          return header_gadget.notifySubmitting();\n
-        });\n
+      return route(this, "header", \'notifySubmitting\');\n
     })\n
 \n
     .allowPublicAcquisition(\'notifySubmitted\', function () {\n
-      return this.getDeclaredGadget("header")\n
-        .push(function (header_gadget) {\n
-          return header_gadget.notifySubmitted();\n
-        });\n
+      return route(this, "header", "notifySubmitted");\n
     })\n
     .allowPublicAcquisition(\'notifyChange\', function () {\n
-      return this.getDeclaredGadget("header")\n
-        .push(function (header_gadget) {\n
-          return header_gadget.notifyChange();\n
-        });\n
+      return route(this, "header", \'notifyChange\');\n
+    })\n
+    .allowPublicAcquisition(\'notifyLoading\', function () {\n
+      return route(this, "pg", "notifyLoading");\n
+    })\n
+    .allowPublicAcquisition(\'notifyLoaded\', function () {\n
+      return route(this, "pg", "notifyLoaded");\n
     })\n
     .allowPublicAcquisition(\'triggerSubmit\', function () {\n
-      return this.getDeclaredGadget("pg")\n
-        .push(function (page_gadget) {\n
-          return page_gadget.triggerSubmit();\n
-        });\n
+      return route(this, "pg", "triggerSubmit");\n
     })\n
+\n
+    // bridge panel\n
     .allowPublicAcquisition(\'triggerPanel\', function () {\n
-      return this.getDeclaredGadget("panel")\n
-        .push(function (panel_gadget) {\n
-          return panel_gadget.toggle();\n
-        });\n
+      return route(this, "panel", "toggle");\n
     })\n
+\n
+    // root\n
     .allowPublicAcquisition(\'getSiteRoot\', function () {\n
       return this.getSiteRoot();\n
     })\n
@@ -735,7 +725,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -749,7 +739,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.21393.17345.64221</string> </value>
+                <value> <string>943.18096.34625.39714</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -767,8 +757,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428997594.5</float>
-                        <string>UTC</string>
+                        <float>1432645716.45</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
