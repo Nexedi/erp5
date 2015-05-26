@@ -511,6 +511,10 @@
     lint: lint_option\n
     });\n
  //cm.foldCode(CodeMirror.Pos(8, 0));\n
+ var parent_height = getTextareaField()[0].parentNode.clientHeight\n
+ if(parent_height !== undefined && parent_height > (300 * 0.8)) {\n
+   cm.setSize(undefined, parent_height);\n
+ }\n
 \n
  updateErrorWarningMessageDivWithJump();\n
 \n
