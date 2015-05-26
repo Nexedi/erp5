@@ -100,7 +100,7 @@ class PreviousCausalityMovementGroup(FirstCausalityMovementGroup):
     previous_explanation = self._searchUpperInTree(movement)
     if previous_explanation is None:
       movement = movement.getRootAppliedRule()
-      previous_explanation = self._searchThroughDelivery(movement.getExplanationValue())
+      previous_explanation = self._searchThroughDelivery(movement.getCausalityValue())
     property_dict = {}
     if previous_explanation is not None:
       property_dict["_previous_explanation"] = previous_explanation.getRelativeUrl()
