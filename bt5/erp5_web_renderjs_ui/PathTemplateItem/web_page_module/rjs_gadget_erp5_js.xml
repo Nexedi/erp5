@@ -441,6 +441,16 @@
       return route(this, "panel", "toggle");\n
     })\n
 \n
+    // bridge configuration panel\n
+    .allowPublicAcquisition(\'setPanelContent\', function (param_list) {\n
+      return route(this, "configuration", "setPanelContent", param_list);\n
+    })\n
+    .allowPublicAcquisition(\'setPanelHeader\', function (param_list) {\n
+      return route(this, "configuration", "setPanelHeader", param_list);\n
+    })\n
+    .allowPublicAcquisition(\'togglePanel\', function () {\n
+      return route(this, "configuration", "togglePanel");\n
+    })\n
     // root\n
     .allowPublicAcquisition(\'getSiteRoot\', function () {\n
       return this.getSiteRoot();\n
@@ -497,7 +507,6 @@
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
         header_gadget,\n
-        panel_gadget,\n
         main_gadget;\n
 \n
       gadget.props.options = options;\n
@@ -505,15 +514,16 @@
         .push(function () {\n
           return RSVP.all([\n
             gadget.getDeclaredGadget("header"),\n
-            gadget.getDeclaredGadget("panel")\n
+            gadget.getDeclaredGadget("panel"),\n
+            gadget.getDeclaredGadget("configuration")\n
           ]);\n
         })\n
         .push(function (my_gadget_list) {\n
           header_gadget = my_gadget_list[0];\n
-          panel_gadget = my_gadget_list[1];\n
           return RSVP.all([\n
-            panel_gadget.render({}),\n
-            header_gadget.notifyLoading()\n
+            header_gadget.notifyLoading(),\n
+            my_gadget_list[1].render({}),\n
+            my_gadget_list[2].render({})\n
           ]);\n
         })\n
         .push(function () {\n
@@ -739,7 +749,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.18096.34625.39714</string> </value>
+                <value> <string>943.18121.53382.40174</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -757,7 +767,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432645716.45</float>
+                        <float>1432647072.98</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

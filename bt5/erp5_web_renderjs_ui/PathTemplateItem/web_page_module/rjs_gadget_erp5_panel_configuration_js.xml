@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -70,20 +67,18 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5.html</string> </value>
+            <value> <string>gadget_erp5_panel_configuration.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Starting Point</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_html</string> </value>
+            <value> <string>rjs_gadget_erp5_panel_configuration_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -91,7 +86,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,66 +98,213 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html>\n
-<html manifest="${manifest_url}">\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-    <title>${application_title}</title>\n
-    <link rel="shortcut icon" href="favicon.ico">\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener */\n
+(function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
+  "use strict";\n
 \n
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />\n
-    <link rel="stylesheet" href="jquerymobile.css">\n
-    <link rel="stylesheet" href="gadget_erp5.css">\n
-\n
-    <script data-renderjs-configuration="application_title" type="text/x-renderjs-configuration">${application_title}</script>\n
-    <script data-renderjs-configuration="frontpage_gadget" type="text/x-renderjs-configuration">${frontpage_gadget}</script>\n
-    <script data-renderjs-configuration="panel_gadget" type="text/x-renderjs-configuration">${panel_gadget}</script>\n
-    <script data-renderjs-configuration="action_view" type="text/x-renderjs-configuration">${action_view}</script>\n
-    <script data-renderjs-configuration="default_view_reference" type="text/x-renderjs-configuration">${default_view_reference}</script>\n
-    <script data-renderjs-configuration="hateoas_url" type="text/x-renderjs-configuration">${hateoas_url}</script>\n
-\n
-    <script src="rsvp.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
-    <script src="URI.js" type="text/javascript"></script>\n
-    <script src="jquery.js" type="text/javascript"></script>\n
-    <script src="jquerymobile.js" type="text/javascript"></script>\n
-    <script src="gadget_global.js" type="text/javascript"></script>\n
-    <script src="gadget_erp5.js" type="text/javascript"></script>\n
-\n
-  </head>\n
-  <body>\n
-\n
-  <div data-gadget-url="gadget_jio.html"\n
-          data-gadget-scope="jio_gadget"\n
-          data-gadget-sandbox="public"></div>\n
-\n
-  <div data-gadget-url="gadget_erp5_header.html"\n
-          data-gadget-scope="header"\n
-          data-gadget-sandbox="public"></div>\n
+  /////////////////////////////////////////////////////////////////\n
+  // TEMPLATE API\n
+  /////////////////////////////////////////////////////////////////\n
   \n
-  <div data-gadget-url="${panel_gadget}"\n
-          data-gadget-scope="panel"\n
-          data-gadget-sandbox="public"></div>\n
+  // panel_category_list_header\n
+  // {\n
+  //  "close_i18n":       [SET],\n
+  //  "i18n":             [title],\n
+  //  "clear_i18n":       [SET],\n
+  //  "update_i18n":      [SET]\n
+  //  "tag_list":         [{\n
+  //    "type_i18n":      [type of filter|create|...],\n
+  //    "value_i18n":     [value to create or filter for, eg. region:foo]\n
+  //  }]\n
   \n
-  <div data-gadget-url="gadget_erp5_panel_configuration.html"\n
-          data-gadget-scope="configuration"\n
-          data-gadget-sandbox="public"></div>\n
+  // panel_category_list_partial\n
+  // {\n
+  //    "i18n":           [category title],\n
+  //    "tree":  [{\n
+  //      "multiple":     [true to make checkbox],\n
+  //      "search":       [search term, like "filter:region=France"],\n
+  //      "i18n":"        [text to display]\n
+  //    }]\n
+  //  }]\n
+  // } \n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // some methods\n
+  /////////////////////////////////////////////////////////////////\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Handlebars\n
+  /////////////////////////////////////////////////////////////////\n
+  var gadget_klass = rJS(window),\n
+    templater = gadget_klass.__template_element,\n
+    \n
+    // pre-compile \n
+    panel_category_list_header = Handlebars.compile(\n
+      templater.getElementById("panel-category-list-header").innerHTML\n
+    )\n
+    /*\n
+    ,panel_category_list_partial = Handlebars.registerPartial(\n
+      "category-taglist-partial",\n
+      templater.getElementById("category-taglist-partial").innerHTML\n
+    )*/;\n
   \n
-  <article></article>\n
-          \n
-  </body>\n
-</html>
+  gadget_klass\n
+    \n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    .ready(function (my_gadget) {\n
+      my_gadget.property_dict = {};\n
+    })\n
+\n
+    .ready(function (my_gadget) {\n
+      return my_gadget.getElement()\n
+        .push(function (my_element) {\n
+          my_gadget.property_dict.element = my_element;\n
+          my_gadget.property_dict.defer = new RSVP.defer();\n
+          my_gadget.property_dict.panel_element =\n
+            my_element.querySelector(".jqm-configuration-panel");\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // acquired methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    .declareAcquiredMethod("changeLanguage", "changeLanguage")\n
+    .declareAcquiredMethod("getLanguageList", "getLanguageList")\n
+    .declareAcquiredMethod(\n
+      "whoWantToDisplayThisFrontPage",\n
+      "whoWantToDisplayThisFrontPage"\n
+    )\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'setPanelHeader\', function (my_option_dict) {\n
+      var gadget = this,\n
+        panel_element = gadget.property_dict.panel_element;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.translateHtml(\n
+            panel_category_list_header(my_option_dict)\n
+          );\n
+        })\n
+        .push(function (my_panel_header) {\n
+          panel_element.innerHTML = my_panel_header;\n
+          $(panel_element).enhanceWithin();\n
+          return gadget;\n
+        })\n
+        .push(function () {\n
+          return gadget.property_dict.defer.resolve();\n
+        });\n
+    })\n
+    .declareMethod(\'setPanelContent\', function (my_option_dict) {\n
+      /*\n
+        so Romain requested to have a gadget depending on use case of this\n
+        panel. In our case it should be  a domain tree and it should load a \n
+        certain amount  or type of domains/categories\n
+        Alternatively we can load something else. Question is whether this\n
+        should be a domain tree per ... app or if every domaintree can be \n
+        different depending on a parameter passed into intialization.\n
+        \n
+        Also, we must make clear that the content can be dumped to make space \n
+        for new content!\n
+        \n
+        Do this.\n
+      */\n
+    })\n
+\n
+    .declareMethod(\'togglePanel\', function () {\n
+      var gadget = this;\n
+\n
+      $(gadget.property_dict.panel_element).panel("toggle");\n
+    })\n
+\n
+    .declareMethod(\'render\', function (my_option_dict) {\n
+      var gadget = this,\n
+        panel_element = gadget.property_dict.panel_element;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          $(panel_element).panel({\n
+            display: "overlay",\n
+            position: "right",\n
+            theme: "c"\n
+          });\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared services\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareService(function () {\n
+      var gadget = this,\n
+        $panel_element = $(gadget.property_dict.panel_element);\n
+\n
+      function formSubmit() {\n
+        return gadget.togglePanel();\n
+      }\n
+    \n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.property_dict.defer.promise;\n
+        })\n
+        .push(function () {\n
+          $panel_element.enhanceWithin();\n
+          var form_list = gadget.property_dict.element.querySelectorAll(\'form\'),\n
+            event_list = [],\n
+            i,\n
+            len;\n
+\n
+          for (i = 0, len = form_list.length; i < len; i += 1) {\n
+            event_list[i] = loopEventListener(\n
+              form_list[i],\n
+              \'submit\',\n
+              false,\n
+              formSubmit\n
+            );\n
+          }\n
+          return RSVP.all(event_list);\n
+        })\n
+      \n
+    });\n
+\n
+}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));\n
+\n
+\n
+\n
+  /*\n
+  \n
+        .push(function (my_panel_category_list) {\n
+          return gadget.factoryPanelCategoryList({\n
+            "theme": "a",\n
+            "position": "left",\n
+            "animate_class": "overlay",\n
+            "close_i18n": "gen.close",\n
+            "i18n": "gen.categories",\n
+            "clear_i18n": "gen.clear",\n
+            "update_i18n": "gen.update",\n
+            "tag_list": tag_list,\n
+            "tree": my_panel_category_list\n
+          });\n
+        })\n
+        .push(function (my_panel_content) {\n
+          return gadget.translateHtml(my_panel_content);\n
+        })\n
+        .push(function (my_translated_panel_content) {\n
+          return gadget.setPanel("panel_search", my_translated_panel_content);\n
+        });\n
+  \n
+  */
 
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget ERP5</string> </value>
+            <value> <string>Gadget ERP5 Panel Configuration JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -222,11 +364,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -248,7 +390,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898405.69</float>
+                        <float>1429106462.69</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -257,7 +399,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -279,7 +421,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -293,7 +435,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.17855.7556.25361</string> </value>
+                <value> <string>942.62105.59106.27904</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +453,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432631150.48</float>
+                        <float>1431354245.91</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -338,7 +480,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>sven</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -368,7 +510,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405426440.32</float>
+                        <float>1429105919.74</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
