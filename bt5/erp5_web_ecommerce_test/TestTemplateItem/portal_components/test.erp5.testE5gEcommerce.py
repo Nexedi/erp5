@@ -37,7 +37,6 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
   def getBusinessTemplateList(self):
     return (
       'erp5_web_renderjs_ui',
-      'erp5_web_renderjs_ui_test',
       'erp5_ui_test_core',
       'erp5_web_ecommerce'
       )
