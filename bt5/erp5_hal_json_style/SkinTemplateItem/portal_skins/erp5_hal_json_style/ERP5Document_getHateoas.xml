@@ -78,6 +78,7 @@ url_template_dict = {\n
                      "{&query,select_list*,limit*}",\n
   "custom_search_template": "%(root_url)s/%(script_id)s?mode=search" + \\\n
                      "&relative_url=%(relative_url)s" \\\n
+                     "&form_relative_url=%(form_relative_url)s" \\\n
                      "&list_method=%(list_method)s" \\\n
                      "&default_param_json=%(default_param_json)s" \\\n
                      "{&query,select_list*,limit*}",\n
@@ -104,16 +105,18 @@ def getFieldDefault(field, key):\n
   # REQUEST.get(field.id, field.get_value("default"))\n
   return traversed_document.Field_getDefaultValue(field, key, REQUEST)\n
 \n
-def renderField(field, meta_type=None):\n
+def renderField(field, form_relative_url, meta_type=None, key=None):\n
   if meta_type is None:\n
     meta_type = field.meta_type\n
+  if key is None:\n
+    key = field.generate_field_key()\n
 \n
   if meta_type == "ProxyField":\n
-    result = renderField(field, meta_type=field.getRecursiveTemplateField().meta_type)\n
+    result = renderField(field, form_relative_url, meta_type=field.getRecursiveTemplateField().meta_type, key=key)\n
   elif meta_type == "ListField":\n
     result = {\n
       "type": meta_type,\n
-      "key": field.generate_field_key(),\n
+      "key": key,\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -127,7 +130,7 @@ def renderField(field, meta_type=None):\n
   elif meta_type in ("ParallelListField", "MultiListField"):\n
     result = {\n
       "type": meta_type,\n
-      "key": field.generate_field_key(),\n
+      "key": key,\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -145,7 +148,7 @@ def renderField(field, meta_type=None):\n
                      "PasswordField", "EditorField"):\n
     result = {\n
       "type": meta_type,\n
-      "key": field.generate_field_key(),\n
+      "key": key,\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -159,7 +162,7 @@ def renderField(field, meta_type=None):\n
   elif meta_type == "DateTimeField":\n
     result = {\n
       "type": meta_type,\n
-      "key": field.generate_field_key(),\n
+      "key": key,\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -196,7 +199,7 @@ def renderField(field, meta_type=None):\n
       accessor_name = \'get%sValue\' % \\\n
         \'\'.join([part.capitalize() for part in base_category.split(\'_\')])\n
       jump_reference = getattr(traversed_document, accessor_name)(\n
-        portal_type=map(lambda x:x[0], field.get_value(\'portal_type\')),\n
+        portal_type=[x[0] for x in field.get_value(\'portal_type\')],\n
         filter=kw\n
       )\n
 \n
@@ -213,7 +216,7 @@ def renderField(field, meta_type=None):\n
       # "allow_creation": field.get_value(\'allow_creation\'),\n
       "allow_creation": 0,\n
       "type": meta_type,\n
-      "key": field.generate_field_key(),\n
+      "key": key,\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -238,7 +241,7 @@ def renderField(field, meta_type=None):\n
   elif meta_type == "CheckBoxField":\n
     result = {\n
       "type": meta_type,\n
-      "key": field.generate_field_key(),\n
+      "key": key,\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -249,7 +252,7 @@ def renderField(field, meta_type=None):\n
   elif meta_type == "GadgetField":\n
     result = {\n
       "type": meta_type,\n
-      "key": field.generate_field_key(),\n
+      "key": key,\n
       "editable": field.get_value("editable"),\n
       "css_class": field.get_value("css_class"),\n
       "hidden": field.get_value("hidden"),\n
@@ -261,7 +264,9 @@ def renderField(field, meta_type=None):\n
     result["default"] = getFieldDefault(field, result["key"])\n
   elif meta_type == "ListBox":\n
     # XXX Not implemented\n
-    columns = field.get_value("columns")\n
+    column_list = field.get_value("columns")\n
+    search_column_list = field.get_value(\'search_columns\')\n
+    editable_column_list = field.get_value(\'editable_columns\')\n
 \n
     # XXX \n
 #     list_method = getattr(traversed_document, traversed_document.Listbox_getListMethodName(field))\n
@@ -277,7 +282,17 @@ def renderField(field, meta_type=None):\n
     )\n
     list_method_custom = None\n
 \n
-    if (list_method_name == "portal_catalog"):\n
+    if (editable_column_list):\n
+      list_method_custom = url_template_dict["custom_search_template"] % {\n
+        "root_url": site_root.absolute_url(),\n
+        "script_id": script.id,\n
+        "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),\n
+        "form_relative_url": "%s/%s" % (form_relative_url, field.id),\n
+        "list_method": list_method_name,\n
+        "default_param_json": urlsafe_b64encode(json.dumps(list_method_query_dict))\n
+      }\n
+      list_method_query_dict = {}\n
+    elif (list_method_name == "portal_catalog"):\n
       pass\n
     elif (list_method_name == "searchFolder"):\n
       list_method_query_dict["parent_uid"] = traversed_document.getUid()\n
@@ -313,11 +328,14 @@ def renderField(field, meta_type=None):\n
 \n
     result = {\n
       "type": meta_type,\n
+      "editable": field.get_value("editable"),\n
       # "column_list": [x[1] for x in columns],\n
-      "column_list": columns,\n
+      "column_list": column_list,\n
+      "search_column_list": search_column_list,\n
+      "editable_column_list": editable_column_list,\n
 #       "line_list": line_list,\n
       "title": field.get_value("title"),\n
-      "key": field.generate_field_key(),\n
+      "key": key,\n
       "portal_type": portal_types,\n
       "lines": lines,\n
       "default_params": default_params,\n
@@ -337,7 +355,7 @@ def renderField(field, meta_type=None):\n
       "type": meta_type,\n
       "_debug": "Unsupported field type",\n
       "title": field.get_value("title"),\n
-      "key": field.generate_field_key(),\n
+      "key": key,\n
     }\n
   return result\n
 \n
@@ -367,6 +385,7 @@ def renderForm(form, response_dict):\n
     "title": traversed_document.getTitle()\n
   }\n
 \n
+  form_relative_url = getFormRelativeUrl(form)\n
   response_dict[\'_links\'][\'form_definition\'] = {\n
 #     "href": default_document_uri_template % {\n
 #       "root_url": site_root.absolute_url(),\n
@@ -374,7 +393,7 @@ def renderForm(form, response_dict):\n
 #       "relative_url": getFormRelativeUrl(form)\n
 #     },\n
     "href": default_document_uri_template % {\n
-      "relative_url": getFormRelativeUrl(form)\n
+      "relative_url": form_relative_url\n
     },\n
     \'name\': form.id\n
   }\n
@@ -387,7 +406,7 @@ def renderForm(form, response_dict):\n
 #         field_list.append((field.id, renderRawField(field)))\n
         if field.get_value("enabled"):\n
           try:\n
-            response_dict[field.id] = renderField(field)\n
+            response_dict[field.id] = renderField(field, form_relative_url)\n
             if field_errors.has_key(field.id):\n
               response_dict[field.id]["error_text"] = field_errors[field.id].error_text\n
           except AttributeError:\n
@@ -830,10 +849,22 @@ elif mode == \'search\':\n
 #   else:\n
 \n
   # Cast to list if only one element is provided\n
+  editable_field_dict = {}\n
   if select_list is None:\n
     select_list = []\n
   elif same_type(select_list, ""):\n
     select_list = [select_list]\n
+\n
+  if select_list:\n
+    if (form_relative_url is not None):\n
+      listbox_field = portal.restrictedTraverse(form_relative_url)\n
+      listbox_field_id = listbox_field.id\n
+      # XXX Proxy field are not correctly handled in traversed_document of web site\n
+      listbox_form = getattr(traversed_document, listbox_field.aq_parent.id)\n
+      for select in select_list:\n
+        # See Listbox.py getEditableField method\n
+        if listbox_form.has_field("%s_%s" % (listbox_field_id, select), include_disabled=1):\n
+          editable_field_dict[select] = listbox_form.get_field("%s_%s" % (listbox_field_id, select), include_disabled=1)\n
 \n
   for sql_document in sql_list:\n
     try:\n
@@ -841,6 +872,7 @@ elif mode == \'search\':\n
     except AttributeError:\n
       # XXX ERP5 Site is not an ERP5 document\n
       document = sql_document\n
+    document_uid = document.getUid()\n
     document_result = {\n
 #       \'_relative_url\': sql_document.path[length:],\n
       \'_links\': {\n
@@ -854,8 +886,18 @@ elif mode == \'search\':\n
         },\n
       }\n
     }\n
+    if editable_field_dict:\n
+      document_result[\'listbox_uid:list\'] = {\n
+        \'key\': "%s_uid:list" % listbox_field_id,\n
+        \'value\': document_uid\n
+      }\n
     for select in select_list:\n
-      property_value = document.getProperty(select, d=None)\n
+      if editable_field_dict.has_key(select):\n
+        REQUEST.set(\'cell\', document)\n
+        property_value = renderField(editable_field_dict[select], form_relative_url, key=\'field_%s_%s\' % (editable_field_dict[select].id, document_uid))\n
+        REQUEST.other.pop(\'cell\', None)\n
+      else:\n
+        property_value = document.getProperty(select, d=None)\n
       if property_value is not None:\n
         if same_type(property_value, DateTime()):\n
           # Serialize DateTime\n
@@ -914,7 +956,7 @@ return json.dumps(result_dict, indent=2)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, restricted=0, list_method=None, default_param_json=None</string> </value>
+            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, restricted=0, list_method=None, default_param_json=None, form_relative_url=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

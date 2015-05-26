@@ -118,7 +118,10 @@
     /////////////////////////////////////////////////////////////////\n
     // Init local properties\n
     .ready(function (g) {\n
-      g.props = {};\n
+      g.props = {\n
+        cell_gadget_list: [],\n
+        listbox_uid_dict: {}\n
+      };\n
     })\n
 \n
     // Assign the element to a variable\n
@@ -137,6 +140,7 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
     .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
+    .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
     //////////////////////////////////////////////\n
@@ -263,27 +267,60 @@
           th,\n
           a,\n
           result = result_list[0],\n
-          tmp_url;\n
+          tmp_url,\n
+          value,\n
+          promise_list = [],\n
+          uid_value,\n
+          uid_value_dict = {};\n
+\n
+        function renderSubCell(element, sub_field_json) {\n
+          return gadget.getFieldTypeGadgetUrl(sub_field_json.type)\n
+            .push(function (gadget_url) {\n
+              return gadget.declareGadget(gadget_url, {\n
+                element: element\n
+              });\n
+            })\n
+            .push(function (cell_gadget) {\n
+              gadget.props.cell_gadget_list.push(cell_gadget);\n
+              sub_field_json.editable = sub_field_json.editable && field_json.editable; // XXX \n
+              return cell_gadget.render({field_json: sub_field_json});\n
+            });\n
+        }\n
 \n
         dataset = result;\n
-\n
         for (i = 0; i < counter; i += 1) {\n
           tr = document.createElement("tr");\n
           tmp_url = result_list[i + 1];\n
 \n
           for (j = 0; j < field_json.column_list.length; j += 1) {\n
             th = document.createElement("th");\n
-            a = document.createElement("a");\n
-            a.href = tmp_url;\n
-            a.className = "ui-link";\n
-            a.textContent = (result.data.rows[i]\n
-                .value[field_json.column_list[j][0]] || "");\n
-            th.appendChild(a);\n
+            value = result.data.rows[i].value[field_json.column_list[j][0]] || "";\n
+            if (value.type === undefined) {\n
+              a = document.createElement("a");\n
+              a.href = tmp_url;\n
+              a.className = "ui-link";\n
+              a.textContent = value;\n
+              th.appendChild(a);\n
+            } else {\n
+              if (gadget.props.listbox_uid_dict.key === undefined) {\n
+                gadget.props.listbox_uid_dict.key = result.data.rows[i].value["listbox_uid:list"].key;\n
+                gadget.props.listbox_uid_dict.value = [result.data.rows[i].value["listbox_uid:list"].value];\n
+                uid_value_dict[result.data.rows[i].value["listbox_uid:list"].value] = null;\n
+              } else {\n
+                uid_value = result.data.rows[i].value["listbox_uid:list"].value;\n
+                if (!uid_value_dict.hasOwnProperty(uid_value)) {\n
+                  uid_value_dict[uid_value] = null;\n
+                  gadget.props.listbox_uid_dict.value.push(uid_value);\n
+                }\n
+              }\n
+\n
+              promise_list.push(renderSubCell(th, value));\n
+            }\n
             tr.appendChild(th);\n
           }\n
           tbody.appendChild(tr);\n
         }\n
-\n
+        return RSVP.all(promise_list);\n
       }).push(function () {\n
         var prev_param = {},\n
           next_param = {};\n
@@ -372,19 +409,56 @@
         // NOTE: for passing translations, temp must contain a table\n
         temp_table.appendChild(fragment);\n
         temp.appendChild(temp_table);\n
-        return gadget.translateHtml(temp.innerHTML);\n
+        table.appendChild(temp.querySelector("tbody"));\n
+        return gadget.translateHtml(temp.querySelector("tfoot").innerHTML);\n
       })\n
         .push(function (my_translated_html) {\n
-          var new_body,\n
-            new_foot,\n
-            temp = document.createElement("div");\n
+          var temp = document.createElement("tfoot");\n
           temp.innerHTML = my_translated_html;\n
-          new_body = temp.querySelector("tbody");\n
-          new_foot = temp.querySelector("tfoot");\n
-          table.appendChild(new_body);\n
-          table.appendChild(new_foot);\n
-          return gadget;\n
+          table.appendChild(temp);\n
         });\n
+    })\n
+\n
+\n
+    .declareMethod("getContent", function () {\n
+      var form_gadget = this,\n
+        k,\n
+        field_gadget,\n
+        count = form_gadget.props.cell_gadget_list.length,\n
+        data = {},\n
+        queue = new RSVP.Queue();\n
+\n
+      function extendData(field_data) {\n
+        var key;\n
+        for (key in field_data) {\n
+          if (field_data.hasOwnProperty(key)) {\n
+            data[key] = field_data[key];\n
+          }\n
+        }\n
+      }\n
+\n
+      for (k = 0; k < count; k += 1) {\n
+        field_gadget = form_gadget.props.cell_gadget_list[k];\n
+        // XXX Hack until better defined\n
+        if (field_gadget.getContent !== undefined) {\n
+          queue\n
+            .push(field_gadget.getContent.bind(field_gadget))\n
+            .push(extendData);\n
+        }\n
+      }\n
+      return queue\n
+        .push(function () {\n
+          data[form_gadget.props.listbox_uid_dict.key] = form_gadget.props.listbox_uid_dict.value;\n
+          return data;\n
+        });\n
+    })\n
+\n
+    .allowPublicAcquisition("notifyInvalid", function () {\n
+      return;\n
+    })\n
+\n
+    .allowPublicAcquisition("notifyValid", function () {\n
+      return;\n
     });\n
 \n
 }(window, document, rJS, URI, RSVP, UriTemplate));
@@ -524,7 +598,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.55789.57588.57941</string> </value>
+                <value> <string>943.18213.25268.27562</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -542,7 +616,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1427276913.09</float>
+                        <float>1432652509.88</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

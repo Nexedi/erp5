@@ -112,6 +112,39 @@
   // Precompile the templates while loading the first gadget instance\n
   var gadget_klass = rJS(window);\n
 \n
+  function getFieldTypeGadgetUrl(type) {\n
+    var field_url = \'gadget_erp5_field_readonly.html\';\n
+    if (type === \'ListField\') {\n
+      field_url = \'gadget_erp5_field_list.html\';\n
+    } else if ((type === \'ParallelListField\') ||\n
+               (type === \'MultiListField\')) {\n
+      field_url = \'gadget_erp5_field_multilist.html\';\n
+    } else if (type === \'CheckBoxField\') {\n
+      field_url = \'gadget_erp5_field_checkbox.html\';\n
+    } else if (type === \'StringField\') {\n
+      field_url = \'gadget_erp5_field_string.html\';\n
+    } else if (type === \'RelationStringField\') {\n
+      field_url = \'gadget_erp5_field_relationstring.html\';\n
+    } else if (type === \'TextAreaField\') {\n
+      field_url = \'gadget_erp5_field_textarea.html\';\n
+    } else if (type === \'DateTimeField\') {\n
+      field_url = \'gadget_erp5_field_datetime.html\';\n
+    } else if (type === \'FloatField\') {\n
+      field_url = \'gadget_erp5_field_float.html\';\n
+    } else if (type === \'IntegerField\') {\n
+      field_url = \'gadget_erp5_field_integer.html\';\n
+    } else if (type === \'ListBox\') {\n
+      field_url = \'gadget_erp5_field_listbox.html\';\n
+    } else if (type === \'EditorField\') {\n
+      field_url = \'gadget_erp5_field_textarea.html\';\n
+      // field_url = \'gadget_codemirror.html\';\n
+      // sandbox = \'iframe\';\n
+    } else if (type === \'GadgetField\') {\n
+      field_url = \'gadget_erp5_field_gadget.html\';\n
+    }\n
+    return field_url;\n
+  }\n
+\n
   gadget_klass\n
     /////////////////////////////////////////////////////////////////\n
     // ready\n
@@ -150,6 +183,11 @@
           gadget_element.previousElementSibling.querySelector("span").textContent = "";\n
         });\n
     })\n
+\n
+    .allowPublicAcquisition("getFieldTypeGadgetUrl", function (param_list) {\n
+      return getFieldTypeGadgetUrl(param_list[0]);\n
+    })\n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -191,7 +229,7 @@
                   // Field is enabled in this context\n
                   var field_queue = new RSVP.Queue(),\n
                     sandbox = "public",\n
-                    field_url = \'gadget_erp5_field_readonly.html\',\n
+                    field_url,\n
                     // Don\'t change the structure without changing notifyValid and notifyInvalid\n
                     field_element = document.createElement("div"),\n
                     gadget_element = document.createElement("div"),\n
@@ -213,34 +251,8 @@
                   if (group[0] !== "bottom") {\n
                     field_element.appendChild(label_element);\n
                   }\n
-                  if (renderered_field.type === \'ListField\') {\n
-                    field_url = \'gadget_erp5_field_list.html\';\n
-                  } else if ((renderered_field.type === \'ParallelListField\') ||\n
-                             (renderered_field.type === \'MultiListField\')) {\n
-                    field_url = \'gadget_erp5_field_multilist.html\';\n
-                  } else if (renderered_field.type === \'CheckBoxField\') {\n
-                    field_url = \'gadget_erp5_field_checkbox.html\';\n
-                  } else if (renderered_field.type === \'StringField\') {\n
-                    field_url = \'gadget_erp5_field_string.html\';\n
-                  } else if (renderered_field.type === \'RelationStringField\') {\n
-                    field_url = \'gadget_erp5_field_relationstring.html\';\n
-                  } else if (renderered_field.type === \'TextAreaField\') {\n
-                    field_url = \'gadget_erp5_field_textarea.html\';\n
-                  } else if (renderered_field.type === \'DateTimeField\') {\n
-                    field_url = \'gadget_erp5_field_datetime.html\';\n
-                  } else if (renderered_field.type === \'FloatField\') {\n
-                    field_url = \'gadget_erp5_field_float.html\';\n
-                  } else if (renderered_field.type === \'IntegerField\') {\n
-                    field_url = \'gadget_erp5_field_integer.html\';\n
-                  } else if (renderered_field.type === \'ListBox\') {\n
-                    field_url = \'gadget_erp5_field_listbox.html\';\n
-                  } else if (renderered_field.type === \'EditorField\') {\n
-                    field_url = \'gadget_erp5_field_textarea.html\';\n
-                    // field_url = \'gadget_codemirror.html\';\n
-                    // sandbox = \'iframe\';\n
-                  } else if (renderered_field.type === \'GadgetField\') {\n
-                    field_url = \'gadget_erp5_field_gadget.html\';\n
-                  }\n
+\n
+                  field_url = getFieldTypeGadgetUrl(renderered_field.type);\n
 \n
                   return field_queue\n
                     .push(function () {\n
@@ -480,7 +492,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -494,7 +506,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.60735.27223.48179</string> </value>
+                <value> <string>943.18226.40997.54510</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -512,8 +524,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423755151.34</float>
-                        <string>UTC</string>
+                        <float>1432653451.85</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

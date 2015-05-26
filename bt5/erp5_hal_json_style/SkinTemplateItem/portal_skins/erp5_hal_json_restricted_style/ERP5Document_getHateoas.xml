@@ -71,13 +71,14 @@ return context.ERP5Document_getHateoas(\n
   relative_url=relative_url,\n
   list_method=list_method,\n
   default_param_json=default_param_json,\n
+  form_relative_url=form_relative_url,\n
   restricted=1\n
 )\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, list_method=None, default_param_json=None</string> </value>
+            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, list_method=None, default_param_json=None, form_relative_url=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
