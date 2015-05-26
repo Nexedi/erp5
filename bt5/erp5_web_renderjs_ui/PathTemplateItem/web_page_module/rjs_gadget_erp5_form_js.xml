@@ -125,6 +125,8 @@
       field_url = \'gadget_erp5_field_string.html\';\n
     } else if (type === \'RelationStringField\') {\n
       field_url = \'gadget_erp5_field_relationstring.html\';\n
+    } else if (type === \'MultiRelationStringField\') {\n
+      field_url = \'gadget_erp5_field_multirelationfield.html\';\n
     } else if (type === \'TextAreaField\') {\n
       field_url = \'gadget_erp5_field_textarea.html\';\n
     } else if (type === \'DateTimeField\') {\n
@@ -251,6 +253,7 @@
                   if (group[0] !== "bottom") {\n
                     field_element.appendChild(label_element);\n
                   }\n
+
 \n
                   field_url = getFieldTypeGadgetUrl(renderered_field.type);\n
 \n
@@ -585,7 +588,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.57027.49275.7236</string> </value>
+                <value> <string>943.1808.36899.34116</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -603,7 +606,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1431049784.59</float>
+                        <float>1432174400.48</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

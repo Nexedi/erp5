@@ -189,8 +189,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
     for subkey in ("year", "month", "day", "hour", "minute", "ampm", "timezone"):\n
       result["subfield_%s_key" % subkey] = traversed_document.Field_getSubFieldKeyDict(field, subkey, key=result["key"])\n
 \n
-\n
-  elif meta_type in ("RelationStringField"):\n
+  elif meta_type in ("RelationStringField", "MultiRelationStringField"):\n
     portal_type_list = field.get_value(\'portal_type\')\n
     if portal_type_list:\n
       portal_type_list = [x[0] for x in portal_type_list]\n
@@ -201,13 +200,13 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       for k, v in field.get_value(\'parameter_list\'):\n
         kw[k] = v\n
 \n
-      accessor_name = \'get%sValue\' % \\\n
+      accessor_name = \'get%sValueList\' % \\\n
         \'\'.join([part.capitalize() for part in base_category.split(\'_\')])\n
-      jump_reference = getattr(traversed_document, accessor_name)(\n
+      jump_reference_list = getattr(traversed_document, accessor_name)(\n
         portal_type=[x[0] for x in field.get_value(\'portal_type\')],\n
+\n
         filter=kw\n
       )\n
-\n
     query = url_template_dict["jio_search_template"] % {\n
       "query": make_query({"query": sql_catalog.buildQuery(\n
         {"portal_type": portal_type_list}\n
@@ -239,8 +238,11 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       "item", key=result["key"]\n
     )\n
 \n
-    if jump_reference:\n
-      result["relation_item_relative_url"] = jump_reference.getRelativeUrl()\n
+    if jump_reference_list:\n
+      url = [jump_reference.getRelativeUrl() for jump_reference in jump_reference_list]\n
+      uid = [jump_reference.getUid() for jump_reference in jump_reference_list]\n
+      result["relation_item_relative_url"] = url\n
+      result["relation_item_uid"] = uid\n
 \n
   elif meta_type == "CheckBoxField":\n
     result = {\n
