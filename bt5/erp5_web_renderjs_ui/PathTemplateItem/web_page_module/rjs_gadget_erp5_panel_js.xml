@@ -207,33 +207,7 @@
     })\n
 \n
     .declareMethod(\'render\', function () {\n
-      var panel_gadget = this;\n
-\n
-      if (panel_gadget.props.set_search === true) {\n
-        return panel_gadget;\n
-      }\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return panel_gadget.declareGadget("gadget_erp5_searchfield.html", {"scope": "search"});\n
-        })\n
-        .push(function (my_search_gadget) {\n
-          var parent_node, search_option_dict = {};\n
-\n
-          panel_gadget.props.set_search = true;\n
-\n
-          // XXX disable for now\n
-          search_option_dict.disabled = true;\n
-          search_option_dict.theme = "d";\n
-          search_option_dict.extended_search = "";\n
-          parent_node = panel_gadget.__element.querySelector(".ui-content");\n
-\n
-          parent_node.insertBefore(my_search_gadget.__element, parent_node.firstChild);\n
-          return my_search_gadget.render(search_option_dict);\n
-        })\n
-        .push(function () {\n
-          return panel_gadget;\n
-        });\n
+      return;\n
     })\n
 \n
     /////////////////////////////////////////////////////////////////\n
@@ -399,7 +373,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -413,7 +387,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.11711.24841.37034</string> </value>
+                <value> <string>942.34814.2083.30532</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -431,7 +405,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428416611.09</float>
+                        <float>1432629724.1</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
