@@ -327,8 +327,9 @@ def synchronizeDynamicModules(context, force=False):
       from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
       from Products.ERP5Type.Tool.TypesTool import TypesTool
       from Products.ERP5Type.Tool.ComponentTool import ComponentTool
+      from Products.ERP5.Tool.ERP5WorkflowTool import ERP5WorkflowTool
       try:
-        for tool_class in TypesTool, PropertySheetTool, ComponentTool:
+        for tool_class in TypesTool, PropertySheetTool, ComponentTool, ERP5WorkflowTool:
           # if the instance has no property sheet tool, or incomplete
           # property sheets, we need to import some data to bootstrap
           # (only likely to happen on the first run ever)
