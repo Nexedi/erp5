@@ -61,6 +61,23 @@
   <td>Reset Successfully.</td>\n
   <td></td>\n
 </tr>\n
+<!-- skin list -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_skins/erp5_hal_json_style/ERP5Site_reindexSkinList/</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>skins ok</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities?count=5000</td>\n
+  <td></td>\n
+</tr>\n
+\n
 <!-- create sample data -->\n
 <tr>\n
   <td>open</td>\n
