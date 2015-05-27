@@ -34,7 +34,7 @@ CREATE TABLE `catalog` (
   `int_index` INT,
   `float_index` real,
   `has_cell_content` bool,
-  `creation_date` datetime,
+  `creation_date` datetime(6),
   `modification_date` datetime,
   `indexation_timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY  (`uid`),

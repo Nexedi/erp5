@@ -39,7 +39,7 @@ VALUES
   <dtml-sqlvar expr="getIntIndex[loop_item]" type="int" optional>,
   <dtml-sqlvar expr="getFloatIndex[loop_item]" type="float" optional>,
   <dtml-sqlvar expr="hasCellContent[loop_item]" type="int" optional>,
-  <dtml-sqlvar expr="getCreationDate[loop_item]" type="datetime" optional>,
+  <dtml-sqlvar expr="getCreationDate[loop_item]" type="datetime(6)" optional>,
   <dtml-sqlvar expr="getModificationDate[loop_item]" type="datetime" optional>
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
