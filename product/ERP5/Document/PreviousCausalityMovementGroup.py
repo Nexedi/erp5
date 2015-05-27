@@ -59,7 +59,7 @@ class PreviousCausalityMovementGroup(FirstCausalityMovementGroup):
         return False, {}
     raise NotImplementedError("What should we do ?")
 
-  def testExplanation(self, explanation_value):
+  def _testExplanation(self, explanation_value):
     """
     Check if explanation is valid
 
@@ -79,7 +79,7 @@ class PreviousCausalityMovementGroup(FirstCausalityMovementGroup):
       # created by the root applied rule.
       movement = movement.getParentValue().getParentValue()
       intermediate_explanation_value = movement.getExplanationValue()
-      if self.testExplanation(intermediate_explanation_value):
+      if self._testExplanation(intermediate_explanation_value):
         explanation_value = intermediate_explanation_value
       if explanation_value is None:
         explanation_value = self._searchUpperInTree(movement)
@@ -87,7 +87,7 @@ class PreviousCausalityMovementGroup(FirstCausalityMovementGroup):
 
   def _searchThroughDelivery(self, delivery):
     explanation_value = None
-    if self.testExplanation(delivery):
+    if self._testExplanation(delivery):
       explanation_value = delivery
     else:
       for causality_value in delivery.getCausalityValueList():
