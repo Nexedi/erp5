@@ -126,7 +126,7 @@
     } else if (type === \'RelationStringField\') {\n
       field_url = \'gadget_erp5_field_relationstring.html\';\n
     } else if (type === \'MultiRelationStringField\') {\n
-      field_url = \'gadget_erp5_field_multirelationfield.html\';\n
+      field_url = \'gadget_erp5_field_multirelationstring.html\';\n
     } else if (type === \'TextAreaField\') {\n
       field_url = \'gadget_erp5_field_textarea.html\';\n
     } else if (type === \'DateTimeField\') {\n
@@ -253,7 +253,6 @@
                   if (group[0] !== "bottom") {\n
                     field_element.appendChild(label_element);\n
                   }\n
-
 \n
                   field_url = getFieldTypeGadgetUrl(renderered_field.type);\n
 \n
@@ -574,7 +573,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -588,7 +587,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.1808.36899.34116</string> </value>
+                <value> <string>943.18921.17173.42154</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -606,7 +605,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432174400.48</float>
+                        <float>1432701398.16</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
