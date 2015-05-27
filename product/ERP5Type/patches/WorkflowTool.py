@@ -65,7 +65,7 @@ class ExclusionTuple(tuple):
   """
   pass
 
-def ImmutableId_setId(self):
+def ImmutableId_setId(self, id):
   """ patch which allows modifying the Id of portal_workflow
       for the sake of workflow tool migration.
   """
