@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  Example of ingesting data in ERP5 coming from fluentd.\n
+  Fluentd sends to us a JSON dictionary using msgpack protocol.\n
+  In this implementation we find respective Data Stream and simply\n
+  append data there. We save raw JSON dictionary.\n
+  Ingestion Policy -> Data Supply -> Data Supply Line -> Sensor\n
+    -> Data Stream\n
+"""\n
+request = context.REQUEST\n
+portal_catalog = context.portal_catalog\n
+\n
+# keep backwards compatability\n
+reference = request.get(\'reference\', request.get(\'input_stream_ref\'))\n
+data_chunk = request.get(\'data_chunk\')\n
+\n
+# XXX: add start_data and stop_date so all searches are time aware\n
+default_kw = dict(validation_state = \'validated\')\n
+\n
+if data_chunk is not None and reference is not None:\n
+  # here we rely that fluentd will pass to us its tag which we use\n
+  # as reference but we can extract it sometimes from sensor data\n
+  # it thus depends on sensor and the fluentd topography\n
+  data_supply = portal_catalog.getResultValue( \\\n
+    portal_type = \'Data Supply\', \\\n
+    reference = reference, \\\n
+    **default_kw)\n
+\n
+  #context.log(data_supply)\n
+  # we can have multiple lines for each sensor and we filter out by reference\n
+  # XXX: in future we will use Predicates to find already generate \n
+  # Data Ingestion (Movements)\n
+  if data_supply is not None:\n
+    for data_supply_line in data_supply.objectValues():\n
+      sensor = data_supply_line.getSourceSectionValue()\n
+      if sensor is not None and sensor.getReference() == reference:\n
+        # Sensor is defined as destination\n
+        data_stream = data_supply_line.getDestinationSectionValue()\n
+        break\n
+\n
+    #context.log(sensor)\n
+    #context.log(data_stream)\n
+    if data_stream is not None:\n
+      pretty_data_chunk_list = []\n
+      data_chunk_list = context.unpack(data_chunk)\n
+      \n
+      # in some case we can format data based on content type\n
+      content_type = data_stream.getContentType()\n
+      if content_type in (\'application/csv\',):\n
+        for data_chunk in data_chunk_list:\n
+          pretty_data = \',\'.join([\'"%s"\' %x for x in data_chunk[1].values()])\n
+          pretty_data_chunk_list.append(pretty_data)\n
+        data = \'\\n\'.join(pretty_data_chunk_list)\n
+      else:\n
+        for data_chunk in data_chunk_list:\n
+          pretty_data = str(data_chunk[1])\n
+          pretty_data_chunk_list.append(pretty_data)\n
+        data = \'\\n\'.join(pretty_data_chunk_list)\n
+      # each chunk of data by default should be added with a new line character\n
+      data = \'\\n%s\' %data\n
+      data_stream.appendData(data)\n
+      context.log("Appended %s bytes to %s (%s, %s, %s)"   \n
+                    %(len(data), reference, data_supply, sensor, data_stream))\n
+      # XXX: open question -> we do not store the act of ingestion.\n
+      # one way is to have a business process for who\'s "ingestion" \n
+      # trade_phase / state we generate simulation movements and respective \n
+      # objects in data_ingestion_module. We can use same approach and same \n
+      # business process for analytics stage (just different trade_state / phase)?\n
+      # JP: we should use this approach at a later stage\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_handleDefaultFluentdIngestion</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

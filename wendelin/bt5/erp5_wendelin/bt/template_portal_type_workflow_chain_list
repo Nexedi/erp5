@@ -1,0 +1,34 @@
+Data Acquisition Unit | edit_workflow
+Data Acquisition Unit | validation_workflow
+Data Aggregation Unit | edit_workflow
+Data Aggregation Unit | validation_workflow
+Data Analysis Line | edit_workflow
+Data Analysis | edit_workflow
+Data Analysis | validation_workflow
+Data Array | edit_workflow
+Data Array | validation_workflow
+Data Ingestion Line | edit_workflow
+Data Ingestion | edit_workflow
+Data Ingestion | validation_workflow
+Data License | edit_workflow
+Data License | validation_workflow
+Data Operation | edit_workflow
+Data Operation | validation_workflow
+Data Product | edit_workflow
+Data Product | validation_workflow
+Data Release | edit_workflow
+Data Release | validation_workflow
+Data Set | edit_workflow
+Data Set | validation_workflow
+Data Stream | edit_workflow
+Data Stream | validation_workflow
+Data Supply Line | edit_workflow
+Data Supply Line | edit_workflow
+Data Supply Line | validation_workflow
+Data Supply | edit_workflow
+Data Supply | validation_workflow
+Data Supply | validation_workflow
+Ingestion Policy | edit_workflow
+Ingestion Policy | validation_workflow
+Sensor | edit_workflow
+Sensor | validation_workflow

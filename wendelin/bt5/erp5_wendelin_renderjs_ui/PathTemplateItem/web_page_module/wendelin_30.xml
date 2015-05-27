@@ -1,0 +1,763 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_eexpense.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>wendelin_30</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*globals window, document, RSVP, rJS, Handlebars, promiseEventListener,\n
+          loopEventListener, jQuery, URI, location, console*/\n
+/*jslint indent: 2*/\n
+(function (window, document, RSVP, rJS, Handlebars, promiseEventListener,\n
+           $) {\n
+  "use strict";\n
+\n
+  $.mobile.ajaxEnabled = false;\n
+  $.mobile.linkBindingEnabled = false;\n
+  $.mobile.hashListeningEnabled = false;\n
+  $.mobile.pushStateEnabled = false;\n
+\n
+  var hateoas_url = "hateoas/",\n
+    PAGE_LIST = "list",\n
+    PAGE_NEW_EXPENSE_REPORT = "new_expense_report",\n
+    PAGE_CONNECTION = "connect",\n
+    PAGE_LOGOUT = "logout",\n
+    PAGE_SYNC = "sync",\n
+    PAGE_VIEW_EXPENSE_REPORT = "view",\n
+    DEFAULT_PAGE = PAGE_LIST,\n
+    query = \'portal_type:"Data Stream" OR portal_type:"Data Set" OR \\\n
+      portal_type:"Data Supply" OR portal_type:"Data Acquisition Unit" OR \\\n
+      portal_type:"Data Aggregation Unit" OR portal_type:"Data Analysis" OR \\\n
+      portal_type:"Data Array" OR portal_type:"Data Ingestion" OR \\\n
+      portal_type:"Data License" OR portal_type:"Data Operation" OR \\\n
+      portal_type:"Data Product" OR portal_type:"Data Release" OR \\\n
+      portal_type:"Data Set" OR portal_type:"Ingestion Policy" OR \\\n
+      portal_type:"Sensor"\';\n
+\n
+  //////////////////////////////////////////\n
+  // History Support with Jio\n
+  //////////////////////////////////////////\n
+  function createJio(gadget) {\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget.createJio({\n
+          type: "replicate",\n
+          query: {query: query, limit: [0, 1234567890]},\n
+          use_remote_post: true,\n
+          local_sub_storage: {\n
+            type: "query",\n
+            sub_storage: {\n
+              type: "uuid",\n
+              sub_storage: {\n
+                type: "indexeddb",\n
+                database: "erp5js_test60"\n
+              }\n
+            }\n
+          },\n
+          remote_sub_storage: {\n
+            type: "erp5",\n
+            url: (new URI(hateoas_url)).absoluteTo(location.href).toString(),\n
+            default_view_reference: "view"\n
+          }\n
+        });\n
+\n
+      });\n
+  }\n
+\n
+  //////////////////////////////////////////\n
+  // Page rendering\n
+  //////////////////////////////////////////\n
+  function redirectToDefaultPage(gadget) {\n
+    // Redirect to expected page by default\n
+    return gadget.aq_pleasePublishMyState({page: DEFAULT_PAGE})\n
+      .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+  }\n
+\n
+  function renderSynchroPage(gadget) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return gadget.aq_pleasePublishMyState({page: PAGE_LOGOUT});\n
+      })\n
+      .push(function (url) {\n
+        gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          title: "Synchronize"\n
+        });\n
+        gadget.props.content_element.innerHTML =\n
+          gadget.props.synchro_template({});\n
+        $(gadget.props.element).trigger("create");\n
+        return promiseEventListener(\n
+          gadget.props.content_element.querySelector(\'form.synchro-form\'),\n
+          \'submit\',\n
+          false\n
+        );\n
+      })\n
+      .push(function () {\n
+        gadget.props.content_element.querySelector("input[type=submit]")\n
+                                 .disabled = true;\n
+        return gadget.getDeclaredGadget("jio_gadget");\n
+      })\n
+      .push(function (jio_gadget) {\n
+        // XXX improve later\n
+        gadget.props.header_element.innerHTML = gadget.props.sync_loader_template({\n
+          title: "Synchronize"\n
+        });\n
+          \n
+        // ivan dump to json dict\n
+        //jio_gadget.allDocs(query = query).push(function (response) {\n
+        //  console.log(response.data.total_rows);\n
+        //  for (i = 0; i < response.data.total_rows; i += 1) {\n
+        //    console.log(response.data.rows[i].value.description);\n
+        //  }\n
+        //});\n
+        // eof ivan\n
+\n
+        return jio_gadget.repair()\n
+          .push(function () {\n
+            return redirectToDefaultPage(gadget);\n
+          }, function (error) {\n
+            // XXX improve later\n
+            gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+              title: "Synchronize"\n
+            });\n
+            if (error.target !== undefined) {\n
+              if (error.target.status === 401) {\n
+                // Redirect to the login view\n
+                return gadget.aq_pleasePublishMyState({page: PAGE_CONNECTION})\n
+                  .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+              }\n
+              if (error.target.status === 0) {\n
+                // No network?\n
+                gadget.props.content_element.innerHTML = "Can not sync";\n
+                $(gadget.props.element).trigger("create");\n
+                return;\n
+              }\n
+            }\n
+            throw error;\n
+          });\n
+      })\n
+      .push(function () {\n
+        // XXX improve later\n
+        gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          title: "Synchronize"\n
+        });\n
+      });\n
+  }\n
+\n
+  function renderDocumentListPage(gadget) {\n
+    var documentlist = [];\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio) {\n
+        return RSVP.all([\n
+          gadget.aq_pleasePublishMyState({page: PAGE_SYNC}),\n
+          gadget.aq_pleasePublishMyState({page: PAGE_NEW_EXPENSE_REPORT}),\n
+          jio.allDocs({query: query, \n
+            sort_on: [["reference", "ascending"]], \n
+            select_list: ["reference", "description", "title", \n
+                          "portal_type"], \n
+            limit: [0, 10000000]})\n
+        ]);\n
+      })\n
+      .push(function (result_list) {\n
+        var i,\n
+          promise_list = [],\n
+          result = result_list[2];\n
+        for (i = 0; i < result.data.total_rows; i += 1) {\n
+          documentlist.push({\n
+            description: result.data.rows[i].value.description,\n
+            reference: result.data.rows[i].value.reference,\n
+            title: result.data.rows[i].value.title,\n
+            portal_type: result.data.rows[i].value.portal_type\n
+          });\n
+          if (!result.data.rows[i].value.reference) {\n
+            delete documentlist[documentlist.length - 1].reference;\n
+          }\n
+          promise_list.push(\n
+            gadget.aq_pleasePublishMyState({page: PAGE_VIEW_EXPENSE_REPORT, key: result.data.rows[i].id})\n
+          );\n
+        }\n
+        gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          title: "Data Stream",\n
+          right_url: result_list[1],\n
+          right_title: "New"\n
+        });\n
+        return RSVP.all(promise_list);\n
+      })\n
+      .push(function (result_list) {\n
+        var i, json_dict = [];\n
+        //console.log(documentlist);\n
+        for (i = 0; i < result_list.length; i += 1) {\n
+          documentlist[i].url = result_list[i];\n
+          //add to json_dict\n
+          json_dict[i] = JSON.stringify(\n
+                         {\'title\': documentlist[i].title,\n
+                          \'relative_url\': documentlist[i].relative_url,\n
+                          \'portal_type\': documentlist[i].portal_type,\n
+                          \'description\': documentlist[i].description});\n
+        }\n
+        gadget.props.content_element.innerHTML =\n
+          gadget.props.document_list_template({\n
+            document_list: documentlist,\n
+            json_dict: json_dict,\n
+            // XXX Hardcoded\n
+            sync_url: "#page=sync"\n
+          });\n
+        $(gadget.props.element).trigger("create");\n
+      });\n
+  }\n
+\n
+  function renderConnectPage(gadget) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          title: "Connect"\n
+        });\n
+        gadget.props.content_element.innerHTML =\n
+          gadget.props.login_template({});\n
+        $(gadget.props.element).trigger("create");\n
+        gadget.props.content_element.querySelector("input[type=text]")\n
+                                 .focus();\n
+        gadget.props.content_element.querySelector("input[type=text]")\n
+                                 .select();\n
+        return promiseEventListener(\n
+          gadget.props.content_element.querySelector(\'form.login-form\'),\n
+          \'submit\',\n
+          false\n
+        );\n
+      })\n
+      .push(function (evt) {\n
+        gadget.props.content_element.querySelector("input[type=submit]")\n
+                                 .disabled = true;\n
+        var login = evt.target.elements[0].value,\n
+          passwd = evt.target.elements[1].value;\n
+        document.cookie = "__ac=" + window.btoa(login + ":" + passwd) + "; path=/";\n
+        return redirectToDefaultPage(gadget);\n
+      });\n
+  }\n
+\n
+  function renderLogoutPage(gadget) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          title: "Logout"\n
+        });\n
+        gadget.props.content_element.innerHTML =\n
+          gadget.props.logout_template({});\n
+        $(gadget.props.element).trigger("create");\n
+        return promiseEventListener(\n
+          gadget.props.content_element.querySelector(\'form.logout-form\'),\n
+          \'submit\',\n
+          false\n
+        );\n
+      })\n
+      .push(function () {\n
+        gadget.props.content_element.querySelector("input[type=submit]")\n
+                                 .disabled = true;\n
+        document.cookie = "__ac=; path=/";\n
+        return redirectToDefaultPage(gadget);\n
+      });\n
+  }\n
+\n
+  function renderNewExpenseReportPage(gadget) {\n
+    gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+      title: "New Data Stream"\n
+    });\n
+    gadget.props.content_element.innerHTML =\n
+      gadget.props.new_expense_report_template({});\n
+    $(gadget.props.element).trigger("create");\n
+\n
+    gadget.props.content_element.querySelector("input[type=text]")\n
+                             .focus();\n
+    gadget.props.content_element.querySelector("input[type=text]")\n
+                             .select();\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return RSVP.all([\n
+          promiseEventListener(\n
+            gadget.props.content_element.querySelector(\'form.new-expense-report-form\'),\n
+            \'submit\',\n
+            false\n
+          ),\n
+          gadget.getDeclaredGadget("jio_gadget")\n
+        ]);\n
+      })\n
+      .push(function (result_list) {\n
+        var submit_event = result_list[0],\n
+          jio_gadget = result_list[1],\n
+          i,\n
+          doc = {\n
+            // XXX Hardcoded\n
+            parent_relative_url: "data_stream_module",\n
+            portal_type: "Data Stream"\n
+          }\n
+        gadget.props.content_element.querySelector("input[type=submit]")\n
+                                    .disabled = true;\n
+\n
+        for (i = 0; i < submit_event.target.length; i += 1) {\n
+          // XXX Should check input type instead\n
+          if (submit_event.target[i].name) {\n
+            doc[submit_event.target[i].name] = submit_event.target[i].value;\n
+          }\n
+        }\n
+\n
+        return jio_gadget.post(doc);\n
+      })\n
+      .push(function () {\n
+        return redirectToDefaultPage(gadget);\n
+      });\n
+  }\n
+\n
+\n
+  function renderViewExpenseReportPage(gadget, key) {\n
+    gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+      title: "View Data Stream"\n
+    });\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio) {\n
+        return jio.get(key);\n
+      })\n
+      .push(function (doc) {\n
+        gadget.props.content_element.innerHTML =\n
+          gadget.props.view_expense_report_template(doc);\n
+        $(gadget.props.element).trigger("create");\n
+\n
+        // XXX JP asked to edit documents before sync\n
+        // Ivan: to have full example replace "!doc.reference" -> 1==1\n
+        if (1==1) {\n
+          gadget.props.header_element.innerHTML = gadget.props.edit_template({\n
+            title: "Edit Data Stream",\n
+            right_url: "Save"\n
+          });\n
+            \n
+          return new RSVP.Queue()\n
+            .push(function () {\n
+              return RSVP.all([\n
+                promiseEventListener(\n
+                  gadget.props.header_element.querySelector(\'form.edit-form\'),\n
+                  \'submit\',\n
+                  false\n
+                ),\n
+                gadget.getDeclaredGadget("jio_gadget")\n
+              ]);\n
+            })\n
+            .push(function (result_list) {\n
+              var submit_form = gadget.props.content_element\n
+                  .querySelector(\'.view-expense-report-form\'),\n
+                jio_gadget = result_list[1],\n
+                i,\n
+                doc = {\n
+                  // XXX Hardcoded\n
+                  parent_relative_url: "data_stream_module",\n
+                  portal_type: "Data Stream"\n
+                };\n
+              for (i = 0; i < submit_form.length; i += 1) {\n
+                if (submit_form[i].name) {\n
+                  doc[submit_form[i].name] = submit_form[i].value;\n
+                }\n
+              }\n
+              return jio_gadget.put(key, doc);\n
+            })\n
+            .push(function () {\n
+              return redirectToDefaultPage(gadget);\n
+            });\n
+        }\n
+      });\n
+  }\n
+\n
+\n
+  rJS(window)\n
+    .ready(function (g) {\n
+      g.props = {};\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          $(element).trigger("create");\n
+          g.props.element = element;\n
+          g.props.header_element = element.querySelector(\'.gadget-header\').querySelector(\'div\');\n
+          g.props.content_element = element.querySelector(\'.gadget-content\');\n
+\n
+          g.props.view_expense_report_template = Handlebars.compile(\n
+            document.querySelector(".view-expense-report-template").innerHTML\n
+          );\n
+          g.props.new_expense_report_template = Handlebars.compile(\n
+            document.querySelector(".new-expense-report-template").innerHTML\n
+          );\n
+          g.props.login_template = Handlebars.compile(\n
+            document.querySelector(".login-template").innerHTML\n
+          );\n
+          g.props.logout_template = Handlebars.compile(\n
+            document.querySelector(".logout-template").innerHTML\n
+          );\n
+          g.props.synchro_template = Handlebars.compile(\n
+            document.querySelector(".synchro-template").innerHTML\n
+          );\n
+          g.props.edit_template = Handlebars.compile(\n
+            document.querySelector(".edit-template").innerHTML\n
+          );\n
+          g.props.document_list_template = Handlebars.compile(\n
+            document.querySelector(".document-list-template").innerHTML\n
+          );\n
+          g.props.header_template = Handlebars.compile(\n
+            document.querySelector(".header-template").innerHTML\n
+          );\n
+          g.props.sync_loader_template = Handlebars.compile(\n
+            document.querySelector(".sync-loader-template").innerHTML\n
+          );\n
+        });\n
+    })\n
+    // Configure jIO storage\n
+    .ready(function (g) {\n
+      return createJio(g);\n
+    })\n
+\n
+    //////////////////////////////////////////\n
+    // Acquired method\n
+    //////////////////////////////////////////\n
+    .declareAcquiredMethod(\'pleaseRedirectMyHash\', \'pleaseRedirectMyHash\')\n
+\n
+    //////////////////////////////////////////\n
+    // Declare method\n
+    //////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+      var result,\n
+        gadget = this;\n
+      gadget.props.options = options;\n
+\n
+      if (options.page === undefined) {\n
+        result = redirectToDefaultPage(this);\n
+      } else if (options.page === PAGE_CONNECTION) {\n
+        result = renderConnectPage(this);\n
+      } else if (options.page === PAGE_LIST) {\n
+        result = renderDocumentListPage(this);\n
+      } else if (options.page === PAGE_SYNC) {\n
+        result = renderSynchroPage(this);\n
+      } else if (options.page === PAGE_NEW_EXPENSE_REPORT) {\n
+        result = renderNewExpenseReportPage(this);\n
+      } else if (options.page === PAGE_VIEW_EXPENSE_REPORT) {\n
+        result = renderViewExpenseReportPage(this, options.key);\n
+      } else if (options.page === PAGE_LOGOUT) {\n
+        result = renderLogoutPage(this);\n
+      } else {\n
+        throw new Error("not implemented page " + options.page);\n
+      }\n
+      return result;\n
+    });\n
+\n
+}(window, document, RSVP, rJS, Handlebars, promiseEventListener, jQuery));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>RenderJS Gadget Eexpense JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1430724996.24</float>
+                        <string>GMT+3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>942.53137.9222.52036</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1430815754.89</float>
+                        <string>GMT+3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1430724928.19</float>
+                        <string>GMT+3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

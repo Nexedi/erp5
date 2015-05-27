@@ -1,0 +1,531 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_wendelin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>wendelin_3</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*globals window, document, RSVP, rJS, Handlebars, promiseEventListener,\n
+          loopEventListener, jQuery*/\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, rJS, $) {\n
+  "use strict";\n
+\n
+  $.mobile.ajaxEnabled = false;\n
+  $.mobile.linkBindingEnabled = false;\n
+  $.mobile.hashListeningEnabled = false;\n
+  $.mobile.pushStateEnabled = false;\n
+\n
+  var DEFAULT_PAGE = "upload",\n
+    GADGET_SCOPE = "connection";\n
+\n
+  function redirectToDefaultPage(gadget) {\n
+    // Redirect to expected page by default\n
+    return gadget.aq_pleasePublishMyState({page: DEFAULT_PAGE})\n
+      .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+  }\n
+\n
+  function renderShowPage(gadget) {\n
+    // we create a new show gadget here \n
+    return gadget.declareGadget(\'gadget_wendelin_show.html\', {\n
+      scope: GADGET_SCOPE, // is ok a gadget share same scope as another one ?\n
+      element: gadget.props.connection_element\n
+    })\n
+        // Ivan: when promises of creating a sub gadget is done we call callback in .push\n
+        // we use .push rather than .then due to cancel of RSVP written by romain\n
+        .push(function (sub_gadget) {\n
+          // we call render method which we defined on the gadget in a promise way\n
+          // options already saved in gadgets\' Ram representation\n
+        var options = gadget.props.options;\n
+        return sub_gadget.render(options);\n
+      });\n
+  }\n
+\n
+  function renderUploadPage(gadget) {\n
+    // we create a new Upload gadget here \n
+    return gadget.declareGadget(\'gadget_wendelin_upload.html\', {\n
+      scope: GADGET_SCOPE,\n
+      element: gadget.props.connection_element\n
+    })\n
+      .push(function (sub_gadget) {\n
+        // we call render method which we defined on the gadget in a promise way\n
+        return sub_gadget.render();\n
+      });\n
+  }\n
+\n
+  function renderListboxPage(gadget) {\n
+    // we create a new listbox gadget here \n
+    return gadget.declareGadget(\'gadget_wendelin_listbox.html\', {\n
+      scope: GADGET_SCOPE,\n
+      element: gadget.props.connection_element\n
+    })\n
+      .push(function (sub_gadget) {\n
+        // we call render method which we defined on the gadget in a promise way\n
+        return sub_gadget.render();\n
+      });\n
+  }\n
+\n
+  rJS(window)\n
+    .ready(function (g) {\n
+      g.props = {};\n
+      // g.getElement() is a promise but we need result of it\n
+      return g.getElement()\n
+        .push(function (result) {\n
+          g.props.connection_element = result.querySelector(".gadget-content");\n
+          g.props.link_element = result.querySelector(".alldoclink");\n
+          g.props.upload_link_element = result.querySelector(".uploadlink");\n
+        });\n
+    })\n
+    // Configure jIO to use localstorage\n
+    .ready(function (g) {\n
+      return g.getDeclaredGadget("JIO")\n
+        .push(function (gadget) {\n
+          return gadget.createJio({\n
+            type:  "query",\n
+            sub_storage: {\n
+              type: "indexeddb",\n
+              document_id: "/",\n
+              database: "test_ivan"\n
+            }\n
+          });\n
+        });\n
+    })\n
+    .ready(function (g) {\n
+      return g.aq_pleasePublishMyState({page: \'listbox\'})\n
+        .push(function (url) {\n
+           g.props.link_element.href = url;\n
+         })\n
+         .push (function() {\n
+           return g.aq_pleasePublishMyState({page: \'upload\'})\n
+         })\n
+         .push(function (url) {\n
+           g.props.upload_link_element.href = url;\n
+         });\n
+    })\n
+\n
+    //////////////////////////////////////////\n
+    // Acquired method\n
+    //////////////////////////////////////////\n
+    .declareAcquiredMethod(\'pleaseRedirectMyHash\', \'pleaseRedirectMyHash\')\n
+    .allowPublicAcquisition("goAndSaveToHistory", function (param_list) {\n
+      window.location = param_list[0];\n
+    })\n
+    .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
+      return this.getDeclaredGadget("JIO")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.allDocs.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_post", function (param_list) {\n
+      return this.getDeclaredGadget("JIO")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.post.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_put", function (param_list) {\n
+      return this.getDeclaredGadget("JIO")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.put.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("aq_putAttachment", function (param_list) {\n
+      return this.getDeclaredGadget("JIO")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.putAttachment.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("jio_get", function (param_list) {\n
+      return this.getDeclaredGadget("JIO")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.get.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("aq_getAttachment", function (param_list) {\n
+      return this.getDeclaredGadget("JIO")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.getAttachment.apply(jio_gadget, param_list);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("whoWantsToDisplayThisDocument",\n
+      function (param_list) {\n
+        // Hey, I want to display some jIO document\n
+        var kw = {\n
+            page: param_list[1] || "upload"\n
+          };\n
+        if (param_list[0] !== undefined) {\n
+          kw.id = param_list[0];\n
+        }\n
+        return this.aq_pleasePublishMyState(kw);\n
+      })\n
+\n
+    //////////////////////////////////////////\n
+    // Declare method (methods of the gadget!)\n
+    //////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+      var result,\n
+        gadget = this,\n
+        element = gadget.props.connection_element;\n
+\n
+      gadget.props.options = options;\n
+\n
+      // do clean up old DOM element\'s contents\n
+      while (element.firstChild) {\n
+        element.removeChild(element.firstChild);\n
+      }\n
+\n
+      // based on page parameter show respective sub gadget inside same page\n
+      if (options.page === undefined) {\n
+        result = redirectToDefaultPage(this);\n
+      } else if (options.page === \'upload\') {\n
+        // show an upload page\n
+        result = renderUploadPage(gadget);\n
+      } else if (options.page === \'listbox\') {\n
+        // show an upload page\n
+        result = renderListboxPage(this);\n
+      } else if (options.page === \'show\') {\n
+        // show an upload page (ivan)\n
+        result = renderShowPage(this);\n
+      } else {\n
+        throw new Error(options.page);\n
+      }\n
+\n
+      return result\n
+        // Let JQM know it has to render this\n
+        .push(function () {\n
+          $(gadget.props.element).trigger("create");\n
+        })\n
+        .push(undefined, function (error) {\n
+          // XXX Improve renderJS error class\n
+          if ((error instanceof Error) &&\n
+              (error.message === "Gadget scope \'" +\n
+                                 GADGET_SCOPE +\n
+                                 "\' is not known.")) {\n
+            // redirec to default page\n
+            return gadget.aq_pleasePublishMyState({page: DEFAULT_PAGE})\n
+              .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+          }\n
+          throw error;\n
+        });\n
+    });\n
+\n
+}(window, rJS, jQuery));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Wendelin Root Gadget\'s JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1424860617.55</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>941.49786.18433.51933</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1426842528.52</float>
+                        <string>GMT+2</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1424860599.08</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
