@@ -246,6 +246,18 @@ xxx wait for implementation of catch reponse from erp5 after ajax\n
 </tr>\n
 \n
 <tr>\n
+  <td>storeText</td>\n
+  <td>//body</td>\n
+  <td>debug</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>echo</td>\n
+  <td>${debug}</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
   <td>click</td>\n
   <td>//a[@data-i18n=\'Tabs\']</td>\n
   <td></td>\n
@@ -271,6 +283,12 @@ xxx wait for implementation of catch reponse from erp5 after ajax\n
 \n
 <tr>\n
   <td>verifyValue</td>\n
+  <td>//input[@name=\'field_my_foo_category_title\']</td>\n
+  <td>a1</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
   <td>//input[@name=\'subfield_my_bar_category_title_list_0\']</td>\n
   <td>Title 0</td>\n
 </tr>\n
@@ -281,11 +299,6 @@ xxx wait for implementation of catch reponse from erp5 after ajax\n
   <td>Title 1</td>\n
 </tr>\n
 \n
-<tr>\n
-  <td>verifyValue</td>\n
-  <td>//input[@name=\'field_my_foo_category_title\']</td>\n
-  <td>a1</td>\n
-</tr>\n
 \n
 <tr>\n
   <td>type</td>\n
