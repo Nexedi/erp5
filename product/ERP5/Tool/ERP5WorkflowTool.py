@@ -118,26 +118,6 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     PropertySheet.DublinCore,
   )
 
-  def _isBootstrapRequired(self):
-    return True
-
-  def _bootstrap(self):
-    bt_name = 'erp5_workflow'
-    from Products.ERP5.ERP5Site import ERP5Generator
-    ERP5Generator.bootstrap(self, bt_name, 'WorkflowTemplateItem', [])
-    def install():
-      from ZPublisher.BaseRequest import RequestContainer
-      from Products.ERP5Type.Globals import get_request
-      portal = self.getPortalObject()
-      # BusinessTemplate.install needs a request
-      template_tool = portal.aq_base.__of__(portal.aq_parent.__of__(
-        RequestContainer(REQUEST=get_request()))).portal_templates
-      if template_tool.getInstalledBusinessTemplate(bt_name) is None:
-        from Products.ERP5.ERP5Site import getBootstrapBusinessTemplateUrl
-        url = getBootstrapBusinessTemplateUrl(bt_name)
-        template_tool.download(url).install()
-    transaction.get().addBeforeCommitHook(unrestricted_apply, (install,))
-
   def _jumpToStateFor(self, ob, state_id, wf_id=None, *args, **kw):
     """Inspired from doActionFor.
     This is public method to allow passing meta transition (Jump form
