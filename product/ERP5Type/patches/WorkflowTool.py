@@ -973,6 +973,8 @@ def tool_changeWorkflows(self, default_chain, props=None, REQUEST=None):
 
 WorkflowTool.manage_changeWorkflows = tool_changeWorkflows
 
+WorkflowTool.getWorkflowValueListFor = WorkflowTool.getWorkflowsFor
+
 def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
     workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
     if wf_id is None:
