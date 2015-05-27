@@ -1,3 +1,10 @@
+Configuration State | view
+Configuration Transition | view
+Configuration Workflow | launch_configuration
+Configuration Workflow | state_view
+Configuration Workflow | transition_view
+Configuration Workflow | variable_view
+Configuration Workflow | view
 ERP5 Workflow Tool | view
 Interaction Workflow | interaction_view
 Interaction Workflow | script_view
@@ -14,6 +21,7 @@ Workflow Module | contents
 Workflow Script | proxy_role_view
 Workflow Script | repository_history_view
 Workflow Script | view
+Workflow | configurator_settings
 Workflow | configurator_settings
 Workflow | launch_configuration
 Workflow | permission_view

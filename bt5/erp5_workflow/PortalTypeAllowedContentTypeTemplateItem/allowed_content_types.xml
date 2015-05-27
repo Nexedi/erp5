@@ -1,4 +1,8 @@
 <allowed_content_type_list>
+ <portal_type id="Configuration Workflow">
+  <item>Configuration State</item>
+  <item>Configuration Transition</item>
+ </portal_type>
  <portal_type id="ERP5 Workflow Tool">
   <item>Interaction Workflow</item>
   <item>Workflow</item>
