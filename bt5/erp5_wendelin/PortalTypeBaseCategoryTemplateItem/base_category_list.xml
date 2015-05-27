@@ -1,0 +1,6 @@
+<base_category_list>
+ <portal_type id="Sensor">
+  <item>destination</item>
+  <item>source</item>
+ </portal_type>
+</base_category_list>

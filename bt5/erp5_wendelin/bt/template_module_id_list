@@ -1,0 +1,13 @@
+data_acquisition_unit_module
+data_aggregation_unit_module
+data_analysis_module
+data_array_module
+data_ingestion_module
+data_license_module
+data_operation_module
+data_product_module
+data_release_module
+data_set_module
+data_stream_module
+data_supply_module
+sensor_module

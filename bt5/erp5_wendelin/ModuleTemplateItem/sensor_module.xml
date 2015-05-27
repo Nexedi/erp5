@@ -1,0 +1,7 @@
+<module>
+ <id>sensor_module</id>
+ <permission_list>
+ </permission_list>
+ <portal_type>Sensor Module</portal_type>
+ <title>Sensors</title>
+</module>

@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_graph.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>wendelin_11</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, console, RSVP, Dygraph, DataView, Float32Array,\n
+document */\n
+/*jslint indent: 2, maxerr: 3 */\n
+\n
+(function (rJS) {\n
+  "use strict";\n
+\n
+  rJS(window)\n
+\n
+    .ready(function (gadget) {\n
+      gadget.property_dict = {};\n
+    })\n
+\n
+    .declareMethod(\'draw\', function (data) {\n
+      /* a generic method to call which can draw a diagram */\n
+      var graph_gadget = this;\n
+      return graph_gadget.getElement()\n
+        .push(function (dom_element) {\n
+\n
+          var data_points_per_channel, total_channels, byte_len, i,\n
+            tmp_data, x_value, x_delta, make_shell, start_time, stop_time,\n
+            make_series, make_graph_struct, test_a;\n
+\n
+          // data parameters\n
+          x_value = "time";               // must be passed from header\n
+          x_delta = 0.00000025;           // must be passed from header\n
+          data_points_per_channel = 4000; // must be passed from header\n
+          total_channels = 3;             // must be passed from header\n
+\n
+          start_time = Date.now();\n
+\n
+          data = new DataView(data);\n
+\n
+          byte_len = data.byteLength;\n
+\n
+          tmp_data = new Float32Array(byte_len / Float32Array.BYTES_PER_ELEMENT);\n
+\n
+          // Incoming data is raw floating point values with little-endian byte ordering.\n
+          for (i = 0; i < tmp_data.length; i += 1) {\n
+            tmp_data[i] = data.getFloat32(i * Float32Array.BYTES_PER_ELEMENT, true);\n
+          }\n
+\n
+          // graph shell\n
+          make_shell = function (opts) {\n
+            var x, shell, shell_row;\n
+\n
+            shell = [];\n
+            for (x = 0; x < opts.points; x += 1) {\n
+              shell_row = [];\n
+              shell_row.push(opts.delta * x);\n
+              shell.push(shell_row);\n
+            }\n
+            return shell;\n
+          };\n
+\n
+          // graph data series\n
+          make_series = function (opts) {\n
+            var k, pos;\n
+\n
+            pos = opts.start;\n
+            for (k = 0; k < opts.points; k += 1) {\n
+              opts.shell[k].push(opts.float[k + pos]);\n
+            }\n
+            return opts.shell;\n
+          };\n
+\n
+          // build a row structure for dygraph with series needed\n
+          make_graph_struct = function (opts) {\n
+            var j, k, channel_len, struct, series;\n
+\n
+            for (j = 0, channel_len = opts.total_channels; j < channel_len; j += 1) {\n
+              for (k = 0; k < opts.display.length; k += 1) {\n
+                series = opts.display[k];\n
+                if (series[0] === j) {\n
+                  struct = make_series({\n
+                    "points": opts.points,\n
+                    "float": opts.data,\n
+                    "shell":  make_shell({\n
+                      "points": opts.points,\n
+                      "delta": opts.delta\n
+                    }),\n
+                    "start": series[1]\n
+                  });\n
+                }\n
+              }\n
+            }\n
+            return struct;\n
+          };\n
+\n
+          // dynagraph\n
+          test_a = new Dygraph(\n
+            dom_element.querySelector(".graph-a"),\n
+            make_graph_struct({\n
+              "display": [[0, 0]],\n
+              "total_channels": total_channels,\n
+              "points": data_points_per_channel,\n
+              "data": tmp_data,\n
+              "delta": x_delta\n
+            }),\n
+            {\n
+              "legend": \'always\',\n
+              "title": \'Channel X\',\n
+              "showRoller": true,\n
+              "rollPeriod": 50,\n
+              "labels": [ x_value, "A" ]\n
+            }\n
+          );\n
+\n
+          test_a = new Dygraph(\n
+            dom_element.querySelector(".graph-b"),\n
+            make_graph_struct({\n
+              "display": [[1, data_points_per_channel]],\n
+              "total_channels": total_channels,\n
+              "points": data_points_per_channel,\n
+              "data": tmp_data,\n
+              "delta": x_delta\n
+            }),\n
+            {\n
+              "legend": \'always\',\n
+              "title": \'Channel Y\',\n
+              "showRoller": true,\n
+              "rollPeriod": 50,\n
+              "labels": [ x_value, "B" ]\n
+            }\n
+          );\n
+\n
+          test_a = new Dygraph(\n
+            dom_element.querySelector(".graph-c"),\n
+            make_graph_struct({\n
+              "display": [[2, 2 * data_points_per_channel]],\n
+              "total_channels": total_channels,\n
+              "points": data_points_per_channel,\n
+              "data": tmp_data,\n
+              "delta": x_delta\n
+            }),\n
+            {\n
+              "legend": \'always\',\n
+              "title": \'Channel Z\',\n
+              "showRoller": true,\n
+              "rollPeriod": 50,\n
+              "labels": [ x_value, "C" ]\n
+            }\n
+          );\n
+\n
+          stop_time = Date.now();\n
+          console.log(stop_time - start_time);\n
+        });\n
+    });\n
+}(rJS));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Wendelin gadget_erp5_graph.js</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1424964039.23</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>941.51313.45863.32238</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1426860595.04</float>
+                        <string>GMT+2</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1424964005.47</float>
+                        <string>GMT+1</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
