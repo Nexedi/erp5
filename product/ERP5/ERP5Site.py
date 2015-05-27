@@ -47,7 +47,6 @@ import transaction
 from App.config import getConfiguration
 MARKER = []
 
-
 # Site Creation DTML
 manage_addERP5SiteFormDtml = Globals.HTMLFile('dtml/addERP5Site', globals())
 
@@ -1639,21 +1638,26 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
             for obj in tool.objectValues():
               obj.migrateToPortalTypeClass()
 
-  security.declareProtected(Permissions.ManagePortal,
-                            'migrateToPortalWorkflowClass')
   def migrateToPortalWorkflowClass(self):
-    """ manually called function to migrate dcworkflow to erp5workflow.
-        only for the specific case of workflow migration.
+    """ migrate dcworkflow to erp5workflow.
+        can only be executed after install bt erp5_workflow.
     """
     tool = self.portal_workflow
-    object_id_list = tool.objectIds()
-    object_clipboard = tool.manage_copyObjects(object_id_list)
-    new_tool = self.newContent(id='portal_workflow_new', portal_type='ERP5 Workflow Tool')
-    new_tool.manage_pasteObjects(object_clipboard)
-    new_tool._chains_by_type = tool._chains_by_type
-    self.manage_delObjects(['portal_workflow'])
-    self.manage_renameObject(new_tool.id, 'portal_workflow')
+    if tool.getPortalType() != 'ERP5 Workflow Tool':
+      template_tool = self.getPortalObject().portal_templates
+      if template_tool.getInstalledBusinessTemplate('erp5_workflow') is None:
+        url = getBootstrapBusinessTemplateUrl('erp5_workflow')
+        template_tool.download(url).install()
 
+      object_id_list = tool.objectIds()
+      object_clipboard = tool.manage_copyObjects(object_id_list)
+      new_tool = self.newContent(id='portal_workflow_new', portal_type='ERP5 Workflow Tool')
+      new_tool.manage_pasteObjects(object_clipboard)
+      new_tool._chains_by_type = tool._chains_by_type
+      # backup old type workflow tool
+      self.manage_delObjects('portal_workflow')
+      self.manage_renameObject(new_tool.id, 'portal_workflow')
+      new_tool.id = 'portal_workflow'
 Globals.InitializeClass(ERP5Site)
 
 def getBootstrapDirectory():
@@ -1693,6 +1697,7 @@ class PortalGenerator:
         addCMFCoreTool('CMF Skins Tool', None)
         addCMFCoreTool('CMF Undo Tool', None)
         addCMFCoreTool('CMF URL Tool', None)
+        addCMFCoreTool('CMF Workflow Tool', None)
 
         addCMFDefaultTool = p.manage_addProduct['CMFDefault'].manage_addTool
         addCMFDefaultTool('Default Discussion Tool', None)
@@ -1898,7 +1903,6 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_password', 'Password Tool')
     addERP5Tool(p, 'portal_introspections', 'Introspection Tool')
     addERP5Tool(p, 'portal_acknowledgements', 'Acknowledgement Tool')
-    addERP5Tool(p, 'portal_workflow', 'ERP5 Workflow Tool')
 
     # Add ERP5Type Tool
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
@@ -2169,7 +2173,6 @@ class ERP5Generator(PortalGenerator):
 
   def setup(self, p, create_userfolder, **kw):
     update = kw.get('update', 0)
-
     if getattr(p, 'setDefaultSorting', None) is not None:
       p.setDefaultSorting('id', 0)
 
@@ -2204,7 +2207,8 @@ class ERP5Generator(PortalGenerator):
 
     # Make sure the cache is initialized
     p.portal_caches.updateCache()
-
+    # Migrate Workflow Tool at fresh installation
+    p.migrateToPortalWorkflowClass()
     self.setupLastTools(p, **kw)
 
     # Make sure tools are cleanly indexed with a uid before creating children
