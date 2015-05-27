@@ -58,14 +58,16 @@ def SQLVar_render(self, md):
             return repr(float(v))
         except Exception:
             t = 'floating-point'
-    elif t=='datetime':
+    elif t.startswith('datetime'):
+        # For subsecond precision, use 'datetime(N)' MySQL type,
+        # where N is the number of digits after the decimal point.
+        n = 0 if t == 'datetime' else int(t[9])
         try:
             v = (v if isinstance(v, DateTime) else DateTime(v)).toZone('UTC')
-            # For subsecond precision in MySQL, use 'datetime(N)' type,
-            # where N is the number of digits after the decimal point.
-            return "'%s.%06u'" % (v.ISO(), v.micros() % 1000000)
+            return "'%s%s'" % (v.ISO(),
+                ('.%06u' % (v.micros() % 1000000))[:1+n] if n else '')
         except Exception:
-            pass
+            t = 'datetime'
     elif t=='nb' and not v:
         t = 'empty string'
     else:
@@ -79,7 +81,10 @@ def SQLVar_render(self, md):
                      % (t, self.__name__, v))
 
 # Patched by yo. datetime is added.
-valid_type=('int', 'float', 'string', 'nb', 'datetime').__contains__
+
+valid_type = 'int', 'float', 'string', 'nb', 'datetime'
+valid_type += tuple(map('datetime(%s)'.__mod__, xrange(7)))
+valid_type = valid_type.__contains__
 
 SQLVar.render = SQLVar_render
 SQLVar.__call__ = SQLVar_render
