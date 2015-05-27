@@ -82,6 +82,11 @@ url_template_dict = {\n
                      "&list_method=%(list_method)s" \\\n
                      "&default_param_json=%(default_param_json)s" \\\n
                      "{&query,select_list*,limit*}",\n
+  "custom_search_template_no_editable": "%(root_url)s/%(script_id)s?mode=search" + \\\n
+                     "&relative_url=%(relative_url)s" \\\n
+                     "&list_method=%(list_method)s" \\\n
+                     "&default_param_json=%(default_param_json)s" \\\n
+                     "{&query,select_list*,limit*}",\n
   "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",\n
   # XXX View is set by default to empty\n
   "document_hal": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
@@ -297,7 +302,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
     elif (list_method_name == "searchFolder"):\n
       list_method_query_dict["parent_uid"] = traversed_document.getUid()\n
     else:\n
-      list_method_custom = url_template_dict["custom_search_template"] % {\n
+      list_method_custom = url_template_dict["custom_search_template_no_editable"] % {\n
         "root_url": site_root.absolute_url(),\n
         "script_id": script.id,\n
         "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),\n
