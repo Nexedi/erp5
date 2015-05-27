@@ -126,13 +126,12 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
 
     def _close(self):
       '''Closes the ZODB connection.'''
-      revert = transaction.get().__hash__() != self.initial_transaction_hash
+
       self.abort()
       self._restoreMailHost()
-      if revert:
-        if self.activity_tool_subscribed:
-          self.portal.portal_activities.subscribe()
-          self.commit()
+      if self.activity_tool_subscribed:
+        self.portal.portal_activities.subscribe()
+        self.commit()
 
     def _setup(self):
         '''Change some site properties in order to be ready for live test
@@ -140,7 +139,6 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         # Disabling portal_activities is required in order to avoid
         # conflict with other threads doing tic in the same time
         self.login()
-        self.initial_transaction_hash = transaction.get().__hash__()
         self.activity_tool_subscribed = self.getPortalObject()\
                 .portal_activities.isSubscribed()
         self.portal.portal_activities.unsubscribe()
