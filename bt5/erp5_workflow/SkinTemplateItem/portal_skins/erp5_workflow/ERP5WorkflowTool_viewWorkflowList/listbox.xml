@@ -85,6 +85,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>id</string>
+                          <string>ID</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>

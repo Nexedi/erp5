@@ -146,7 +146,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>workflow_variable_selection</string> </value>
+                    <value> <string>interaction_workflow_variable_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
