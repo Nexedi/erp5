@@ -64,7 +64,7 @@ class ConfigurationState(XMLObject):
     """
     Return available transitions only if they are accessible for document.
     """
-    transition_list = self.getDestinationValueList(portal_type = 'Transition')
+    transition_list = self.getDestinationValueList(portal_type = 'Configuration Transition')
     result_list = []
     for transition in transition_list:
       value = transition._checkPermission(document)
