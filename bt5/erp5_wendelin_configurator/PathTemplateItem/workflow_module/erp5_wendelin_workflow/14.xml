@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>transition_form_id</string> </key>
-            <value> <string>BusinessConfiguration_displayUNGDownloadForm</string> </value>
+            <value> <string>BusinessConfiguration_displayWendelinDownloadForm</string> </value>
         </item>
       </dictionary>
     </pickle>
