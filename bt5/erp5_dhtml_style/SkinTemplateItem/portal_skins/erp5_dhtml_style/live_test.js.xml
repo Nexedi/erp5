@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts09819502.02</string> </value>
+            <value> <string>ts32869305.67</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -24,68 +24,79 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>$(document).ready(function(){\n
-    var my_url_run_test = $(document)[0].baseURI + \'runLiveTest\';\n
-    var my_url_read_test = $(document)[0].baseURI + \'readTestOutput\';\n
-    if (jQuery("*[name=\'field_your_test\']").length===0){\n
-      // not in proper page no need to continue\n
-      return ;\n
-    }\n
+            <value> <string encoding="cdata"><![CDATA[
+
+var live_test_js_already_loaded = false;\n
 \n
-    var test = jQuery("*[name=\'field_your_test\']")[0].defaultValue;\n
-    var run_only = jQuery("*[name=\'field_your_run_only\']")[0].defaultValue;\n
-    var debug = 0;\n
-    var verbose = 0;\n
-    if (jQuery("*[name=\'field_your_debug\']")[0].checked === true) {\n
-      debug = 1;\n
-    }\n
-    if (jQuery("*[name=\'field_your_verbose\']")[0].checked === true) {\n
-      verbose = 1;\n
-    }\n
-    jQuery("*[name=\'field_your_text_output\']")[0].defaultValue = "";\n
-   //launch unit test\n
-    var continue_loop = true;\n
-    $.get(my_url_run_test,\n
-         {\'test_list\':test,\n
-          run_only:run_only,\n
-          debug:debug,\n
-          verbose:verbose,\n
-          }, \n
-          function(data) {\n
-        continue_loop = false;\n
+$(document).ready(function(){\n
+\n
+  if (live_test_js_already_loaded) {\n
+    console.error("Live test already loaded");\n
+    return;\n
+  }\n
+  live_test_js_already_loaded = true;\n
+\n
+\n
+  var my_url_run_test = $(document)[0].baseURI + \'runLiveTest\';\n
+  var my_url_read_test = $(document)[0].baseURI + \'readTestOutput\';\n
+  var paused = false;\n
+\n
+  if (! $("*[name=\'field_your_test\']").val() ){\n
+    // not in proper page no need to continue\n
+    return ;\n
+  }\n
+  var data_textarea = $("*[name=\'field_your_text_output\']");\n
+\n
+  data_textarea.val("");\n
+\n
+  //launch unit test\n
+  var continue_loop = true;\n
+  $.get(my_url_run_test,\n
+        {test_list: $("*[name=\'field_your_test\']").val(),\n
+         run_only: $("*[name=\'field_your_run_only\']").val(),\n
+         debug: $("*[name=\'field_your_debug\']").is(":checked") ? 1 : 0,\n
+         verbose: $("*[name=\'field_your_verbose\']").is(":checked") ? 1: 0\n
+        },\n
+        function(data) {\n
+    continue_loop = false;\n
+  });\n
+  var last_call = false;\n
+  var data_size = 0;\n
+  get_data = function() {\n
+    return $.get(my_url_read_test,\n
+                 {position : data_size},\n
+                 function(data){\n
+      if ( !paused && data.length !== undefined ) {\n
+        data_size = data_size + data.length;\n
+        data_textarea.val( data_textarea.val() + data);\n
+        data_textarea[0].scrollTop = data_textarea[0].scrollHeight;\n
+      }\n
+      if (continue_loop) {\n
+        setTimeout(get_data, 1000);\n
+      }\n
+      if (!continue_loop) {\n
+        if (!last_call) {\n
+          last_call = true;\n
+          setTimeout(get_data, 1000);\n
+        }\n
+      }\n
     });\n
-    var last_call = false;\n
-    var data_size = 0;\n
-    var data_textarea;\n
-    get_data = function() {\n
-      return $.get(my_url_read_test,\n
-              {position : data_size},\n
-              function(data){\n
-                if ( data.length !== undefined ) {\n
-                  data_size = data_size + data.length;\n
-                  data_textarea = jQuery("*[name=\'field_your_text_output\']")[0];\n
-                  data_textarea.defaultValue += data;\n
-                  data_textarea.scrollTop = data_textarea.scrollHeight;\n
-                }\n
-                if (continue_loop === true) {\n
-                  setTimeout(get_data,1000);\n
-                }\n
-                if (continue_loop === false) {\n
-                  if (last_call === false) {\n
-                    last_call = true;\n
-                    setTimeout(get_data,1000);\n
-                  }\n
-                }\n
-                \n
-              });\n
-    };\n
-    var x=0;\n
-    // Not perfect, but the timeout should clearly reduce risk of getting empty result\n
-    // while the runUnitTest command had no time yet to reset global variable\n
-    // on ERP5 side\n
-    setTimeout(get_data,2000);\n
+  };\n
 \n
-});</string> </value>
+  // Not perfect, but the timeout should clearly reduce risk of getting empty result\n
+  // while the runUnitTest command had no time yet to reset global variable\n
+  // on ERP5 side\n
+  setTimeout(get_data,2000);\n
+\n
+  // pause refreshing if user scrolls in the textarea field\n
+  // reactivate refreshing when users scrolls back to bottom\n
+  data_textarea.scroll(function() {\n
+    paused = data_textarea.scrollTop() + data_textarea.height() != data_textarea[0].scrollHeight;\n
+  });\n
+\n
+});
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -93,7 +104,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2134</int> </value>
+            <value> <int>2082</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
