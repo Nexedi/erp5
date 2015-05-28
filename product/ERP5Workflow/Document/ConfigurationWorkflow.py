@@ -155,7 +155,7 @@ class ConfigurationWorkflow(XMLObject):
       transition_dict = {}
       out.append('digraph "%s" {' % self.getTitle())
       transition_with_init_state_list = []
-      for state in self.contentValues(portal_type='State'):
+      for state in self.contentValues(portal_type='Configuration State'):
         out.append('%s [shape=box,label="%s",' \
                      'style="filled",fillcolor="#ffcc99"];' % \
                      (state.getId(), state.getTitle()))
@@ -173,7 +173,7 @@ class ConfigurationWorkflow(XMLObject):
           transition_dict[key] = value
 
       # iterate also on transitions, and add transitions with no initial state
-      for transition in self.contentValues(portal_type='Transition'):
+      for transition in self.contentValues(portal_type='Configuration Transition'):
         trans_id = transition.getId()
         if trans_id not in transition_with_init_state_list:
           destination_state = transition.getDestinationValue()
