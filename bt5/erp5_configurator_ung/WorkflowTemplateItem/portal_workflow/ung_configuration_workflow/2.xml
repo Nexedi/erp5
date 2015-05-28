@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="State" module="erp5.portal_type"/>
+      <global name="Configuration State" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,31 +10,25 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/workflow_ung_configuration_workflow/transition_setup_customer_bt5</string>
+                <string>destination/portal_workflow/ung_configuration_workflow/18</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>standard_bt5</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Enter the data of each user</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>state_standard_bt5</string> </value>
+            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>State</string> </value>
+            <value> <string>Configuration State</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Standard BT5</string> </value>
+            <value> <string>Download</string> </value>
         </item>
       </dictionary>
     </pickle>

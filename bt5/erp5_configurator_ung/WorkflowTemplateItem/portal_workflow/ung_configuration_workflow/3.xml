@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="State" module="erp5.portal_type"/>
+      <global name="Configuration State" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,29 +10,27 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/workflow_ung_configuration_workflow/transition_install</string>
+                <string>destination/portal_workflow/ung_configuration_workflow/15</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>ung_preferences</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>Define some global preferences for your UNG Site.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>state_ung_preferences</string> </value>
+            <value> <string>3</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>State</string> </value>
+            <value> <string>Configuration State</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>UNG Preferences</string> </value>
+            <value> <string>Customer BT</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -80,6 +80,10 @@
             <value> <string>Workflow</string> </value>
         </item>
         <item>
+            <key> <string>ref</string> </key>
+            <value> <string>ung_configuration_workflow</string> </value>
+        </item>
+        <item>
             <key> <string>state_base_category</string> </key>
             <value> <string>current_state</string> </value>
         </item>

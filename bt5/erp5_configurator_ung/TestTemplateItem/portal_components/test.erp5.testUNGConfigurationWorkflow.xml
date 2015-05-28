@@ -45,26 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W:186,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:187,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:188,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:189,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:190,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:191,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:192,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:193,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:194,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:197,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:198,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:199,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:200,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:201,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:202,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:203,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:204,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-                <string>W:205,  0: Bad indentation. Found 5 spaces, expected 4 (bad-indentation)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

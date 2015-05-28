@@ -2,13 +2,17 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="State" module="erp5.portal_type"/>
+      <global name="Configuration Transition" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>end</string> </value>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_workflow/ung_configuration_workflow/2</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -18,15 +22,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>state_end</string> </value>
+            <value> <string>11</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>State</string> </value>
+            <value> <string>Configuration Transition</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>End</string> </value>
+            <value> <string>Install</string> </value>
         </item>
       </dictionary>
     </pickle>
