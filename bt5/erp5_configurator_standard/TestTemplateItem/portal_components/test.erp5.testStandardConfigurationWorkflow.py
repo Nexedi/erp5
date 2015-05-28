@@ -1047,7 +1047,7 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
     Test Live Consulting Configuration Workflow
   """
 
-  CONFIGURATION_WORKFLOW = 'portal_workflow/workflow_erp5_consulting_workflow'
+  CONFIGURATION_WORKFLOW = 'portal_workflow/erp5_consulting_workflow'
 
   DEFAULT_SEQUENCE_LIST = """
       stepSet%(country)sCase
