@@ -118,16 +118,6 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
     PropertySheet.DublinCore,
   )
 
-  def _isBootstrapRequired(self):
-    # migrate after ERP5Tool installed (portal_rules is the first item of setupLastTools
-    # in ERP5Site.py);
-    if self.getPortalObject()._getOb('portal_rules', None) is not None:
-      return True
-    return False
-
-  def _bootstrap(self):
-    self.getPortalObject().migrateToPortalWorkflowClass()
-
   def _jumpToStateFor(self, ob, state_id, wf_id=None, *args, **kw):
     """Inspired from doActionFor.
     This is public method to allow passing meta transition (Jump form
