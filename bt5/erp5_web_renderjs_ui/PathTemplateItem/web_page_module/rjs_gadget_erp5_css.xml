@@ -438,6 +438,11 @@ html.ui-mobile head + body .ui-field-contain fieldset.ui-controlgroup-vertical .
   vertical-align: middle;\n
 }\n
 \n
+/* override JQM forcing 78% on textrea */\n
+.ui-field-contain > label ~ textarea[class*="ui-"] {\n
+  width: 67%;\n
+}\n
+\n
 /* override border-radius for all inputs to match buttons XXX Punting with center */\n
 html.ui-mobile head + body .center .ui-input-text.ui-corner-all {\n
   -webkit-border-radius: .325em;\n
@@ -539,6 +544,26 @@ html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-h
   width: 8%;\n
   vertical-align: middle;\n
 }\n
+/* extend only-child inputs without side icons  */\n
+html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon:only-child {\n
+  width: 100%;\n
+  -webkit-box-sizing: border-box;\n
+  -moz-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+}\n
+\n
+@media (min-width: 62em) {\n
+  /* USED for searchfield + icon */\n
+  /* XXX: this should not be necessary! fullwidth fields need different dimensions */\n
+  html.ui-mobile head + body .field_container .bottom div.ui-field-contain div .ui-input-has-icon {\n
+    width: 87%;\n
+    padding-right: 9%;\n
+  }\n
+  /* icon next to input */\n
+  html.ui-mobile head + body .field_container .bottom div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {\n
+    width: 2%;\n
+  }\n
+}\n
 \n
 /* remove duplicate border on fieldset and set corners XXX IE8*/\n
 html.ui-mobile head + body .ui-field-contain fieldset label {\n
@@ -634,7 +659,8 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
 \n
   /* <label><div.gadget> */\n
   html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,\n
-  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div {\n
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div,\n
+  .ui-field-contain > label ~ textarea[class*="ui-"] {\n
     width: 78%;\n
   }\n
   /* <label><div.gadget><label><div.gadget> \n
@@ -694,7 +720,8 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
 \n
   /* <label><div.gadget> */\n
   html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,\n
-  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div {\n
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div,\n
+  .ui-field-contain > label ~ textarea[class*="ui-"] {\n
     max-width: 88%;\n
   }\n
   /* <label><div.gadget><label><div.gadget> \n
@@ -730,7 +757,7 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   }\n
   /* icon next to input */\n
   html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {\n
-    width: 6%;\n
+    width: 6.5%;\n
   }\n
 \n
   /* extend textarea and fullwidth element container */\n
@@ -797,6 +824,12 @@ html.ui-mobile head + body .ui-field-contain > :last-child {\n
   /* icon next to input */\n
   html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {\n
     width: 8%;\n
+  }\n
+  /* bottom icon (center, too) need different dimensions */\n
+  html.ui-mobile head + body .field_container .bottom div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {\n
+    width: 9.5%;\n
+    padding-top: 1em;\n
+    padding-bottom: 1em;\n
   }\n
   \n
   /* extend textarea and fullwidth element container */\n
@@ -1335,11 +1368,6 @@ html .ui-table-header:before {\n
     padding-bottom: 1.25em;\n
   }\n
 \n
-  /* reset align */\n
-  tfoot .ui-controlgroup {\n
-    text-align: center;\n
-  }\n
-\n
   /* expand to fullwidth */\n
   tfoot .ui-controlgroup-controls {\n
     width: 100%;\n
@@ -1366,8 +1394,9 @@ html .ui-table-header:before {\n
     -moz-box-sizing: border-box;\n
     box-sizing: border-box;\n
   }\n
+}\n
 \n
-\n
+@media (max-width: 48em) {\n
   /* give more space to record counter and move icons to the middle */\n
   tfoot .ui-paging-menu.ui-controlgroup-horizontal .ui-controlgroup-controls > span {\n
     width: 50%;\n
@@ -1381,14 +1410,6 @@ html .ui-table-header:before {\n
   tfoot .ui-paging-menu.ui-controlgroup-horizontal .ui-controlgroup-controls > a.ui-btn-icon-right:after {\n
     left: .5em;\n
   }\n
-\n
-\n
-  /* first cell radio/check */\n
-\n
-  /* first cell img/icon */\n
-\n
-  /* first cell text */\n
-\n
 }\n
 \n
 /*\n
@@ -1525,9 +1546,14 @@ html .ui-panel .ui-header, html .ui-panel .ui-content {\n
     min-height: 39px;\n
 }\n
 */\n
+/* XXX: Romain mini app, remove later */ \n
+html .ui-panel .ui-panel-inner {\n
+  padding: 0;\n
+}\n
 /* position panel content elements */\n
 html .ui-panel .ui-content > .ui-listview,\n
-html .ui-panel .ui-content > form {\n
+html .ui-panel .ui-content > form,\n
+html .ui-panel .ui-panel-inner .ui-panel .ui-content .ui-listview {\n
   margin: 1em -1em auto;\n
 }\n
 html .ui-panel .ui-content .center,\n
@@ -1773,7 +1799,12 @@ html body .ui-listview li.ui-last-child div.ui-checkbox label {\n
   background: none repeat scroll 0 center transparent;\n
 }\n
 \n
-\n
+/* color even odd */\n
+html .ui-listview li:nth-child(even),\n
+html .ui-listview li:nth-child(even) > .ui-btn {\n
+  background-color: #fff;\n
+  background-color: rgba(0,0,0,0);\n
+}\n
 /*\n
    -------------------------------------------------------------------------\n
    ----------------------------- Controlgroup ------------------------------\n
@@ -1791,6 +1822,11 @@ html body .ui-footer .ui-controlgroup .ui-btn-icon-notext {\n
 /* search tag list needs to inline controlgroups */\n
 .ui-tag-list .ui-controlgroup {\n
   display: inline-block;\n
+  vertical-align: top;\n
+}\n
+/* need to overwrite */\n
+html.ui-mobile head + body .ui-field-contain .ui-input-text .ui-tag-list > .ui-controlgroup {\n
+  width: auto;\n
 }\n
 /* set padding if text and notext controlgroups are combined */\n
 html body .ui-controlgroup-horizontal .ui-btn ~ .ui-btn-icon-notext {\n
@@ -1808,6 +1844,13 @@ html body .ui-tag-list-inset {\n
   position: absolute;\n
   top: 0;\n
   right: 0;\n
+  left: 3em;\n
+  white-space: nowrap;\n
+  overflow: hidden;\n
+}\n
+/* indent if there is clear button */\n
+html body .ui-input-has-clear .ui-tag-list-inset {\n
+  right: 2em;\n
 }\n
 html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-controlgroup-controls {\n
   margin-top: .2em;\n
@@ -1818,6 +1861,10 @@ html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-controlgroup-contro
 html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn {\n
   font-size: .75em;\n
   border-right-width: 1px;\n
+}\n
+/* fix size in tag XXX: remove font-size property here */\n
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn span {\n
+  font-size: 100%;\n
 }\n
 /* position input so events can be detected, does not work with label for unknown reason */\n
 /* TODO not sure if this is so smart*/\n
@@ -4777,7 +4824,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.1077.23453.57702</string> </value>
+                <value> <string>943.9410.37394.25582</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4795,7 +4842,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1424105668.83</float>
+                        <float>1432818115.51</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
