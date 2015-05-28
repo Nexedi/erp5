@@ -399,6 +399,19 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
               'category': metadata['action_box_category']})
   return action_list
 
+def WorkflowTool_isBootstrapRequired(self):
+  # migrate after ERP5Tool installed (portal_rules is the first item of setupLastTools
+  # in ERP5Site.py);
+  if self.getPortalObject()._getOb('portal_rules', None) is not None:
+    return True
+  return False
+
+def WorkflowTool_bootstrap(self):
+  self.getPortalObject().migrateToPortalWorkflowClass()
+
+WorkflowTool._isBootstrapRequired = WorkflowTool_isBootstrapRequired
+WorkflowTool._bootstrap = WorkflowTool_bootstrap
+
 def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   """
     Returns a list of actions to be displayed to the user.
