@@ -1646,8 +1646,8 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     if tool.getPortalType() != 'ERP5 Workflow Tool':
       template_tool = self.getPortalObject().portal_templates
       if template_tool.getInstalledBusinessTemplate('erp5_workflow') is None:
-        url = getBootstrapBusinessTemplateUrl('erp5_workflow')
-        template_tool.download(url).install()
+        template_tool.installBusinessTemplateListFromRepository(
+            ['erp5_workflow'], activate=True, install_dependency=True)
 
       object_id_list = tool.objectIds()
       object_clipboard = tool.manage_copyObjects(object_id_list)
