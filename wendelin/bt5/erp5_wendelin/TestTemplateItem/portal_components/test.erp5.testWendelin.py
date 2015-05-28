@@ -109,12 +109,15 @@ class Test(ERP5TypeTestCase):
     data_array.setArray(array)
     self.tic()
     
+    # test array stored and we teturn ZBig Array instance
     persistent_zbig_array = data_array.getArray()
+    self.assertEqual(ZBigArray, persistent_zbig_array.__class__)
     self.assertEquals(array, persistent_zbig_array)
     
     # try to resize it
     #pure_numpy_array = persistent_zbig_array[:,:] # ZBigArray -> ndarray view of it
-    #pure_numpy_array.resize(100, 100)
+    #pure_numpy_array = np.resize(pure_numpy_array, (100,100))
+    #self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
     
-    
-    
+    # resize Zbig Array
+    #persistent_zbig_array.resize(100,100)
