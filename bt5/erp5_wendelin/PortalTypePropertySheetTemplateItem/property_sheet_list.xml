@@ -1,4 +1,7 @@
 <property_sheet_list>
+ <portal_type id="Data Array">
+  <item>DataArray</item>
+ </portal_type>
  <portal_type id="Data Product">
   <item>DefaultImage</item>
  </portal_type>
