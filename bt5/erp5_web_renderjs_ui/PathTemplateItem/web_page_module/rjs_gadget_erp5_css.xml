@@ -1546,7 +1546,7 @@ html .ui-panel .ui-header, html .ui-panel .ui-content {\n
     min-height: 39px;\n
 }\n
 */\n
-/* XXX: Romain mini app, remove later */ \n
+/* we should not need to set this, JQM does it too */\n
 html .ui-panel .ui-panel-inner {\n
   padding: 0;\n
 }\n
@@ -2149,11 +2149,20 @@ html .ui-footer .ui-title {\n
   margin: 0 45px;\n
 }\n
 \n
-/* max width for buttons */ \n
+/* XXX: Original requested max width for buttons, prevents multiple button menu  \n
 .ui-header .ui-controlgroup,\n
 .ui-panel .ui-header .ui-controlgroup {\n
   max-width: 45px;\n
   min-width: 45px;\n
+}\n
+*/\n
+/* I prefer this */\n
+.ui-header .ui-controlgroup, .ui-panel .ui-header .ui-controlgroup {\n
+  min-width: 45px;\n
+  max-width: none;\n
+}\n
+.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn {\n
+  width: auto;\n
 }\n
 \n
 /* logo dimensions, left/right padding needed, because img does not fill space*/\n
@@ -4824,7 +4833,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.9410.37394.25582</string> </value>
+                <value> <string>943.21092.51756.1126</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4842,7 +4851,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432818115.51</float>
+                        <float>1432825565.05</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
