@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="State" module="erp5.portal_type"/>
+      <global name="Configuration Transition" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,29 +10,27 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/workflow_run_my_doc_configuration_workflow/transition_install</string>
+                <string>destination/portal_workflow/run_my_doc_configuration_workflow/7</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>run_my_doc_preferences</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>Define some global preferences for RunMyDoc.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>state_run_my_doc_preferences</string> </value>
+            <value> <string>17</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>State</string> </value>
+            <value> <string>Configuration Transition</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Run my Doc Preferences</string> </value>
+            <value> <string>Finalize</string> </value>
         </item>
       </dictionary>
     </pickle>
