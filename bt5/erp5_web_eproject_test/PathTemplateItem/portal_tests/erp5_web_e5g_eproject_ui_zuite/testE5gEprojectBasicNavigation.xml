@@ -40,13 +40,14 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test EG5 ehr UI</title>\n
+<title>Test EG5 eproject UI</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>\n
-</thead><tbody>\n
+<tr><td rowspan="1" colspan="3">Test EG5 eproject UI</td></tr>\n
+</thead>\n
+<tbody>\n
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
 \n
 <!-- Clean Up -->\n
@@ -60,6 +61,29 @@
   <td>Reset Successfully.</td>\n
   <td></td>\n
 </tr>\n
+<!-- skin list -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_skins/erp5_hal_json_style/ERP5Site_reindexSkinList/</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>skins ok</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+\n
 <!-- create sample data -->\n
 <tr>\n
   <td>open</td>\n
@@ -71,6 +95,18 @@
   <td>Created Successfully</td>\n
   <td></td>\n
 </tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+\n
 \n
 <!-- Initialize -->\n
 <tr>\n
