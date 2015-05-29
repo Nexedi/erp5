@@ -29,6 +29,8 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.BigFile import BigFile
+from wendelin.bigarray.array_zodb import ZBigArray
+import transaction
 
 class DataArray(BigFile):
   """
@@ -46,10 +48,23 @@ class DataArray(BigFile):
   # Declarative properties
   property_sheets = ( PropertySheet.CategoryCore
                     , PropertySheet.SortIndex
+                    , PropertySheet.DataArray
                     )
+
+  def initArray(self, shape, dtype):
+    """
+    Initialise array.
+    """
+    array = ZBigArray(shape, dtype)
+    self._setArray(array)
 
   def _setArray(self, value):
     """
       Set numpy array to this ERP5 Data Array.
     """
     self.array = value
+    
+    # ZBigArray requirement: before we can compute it (with subobject
+    # .zfile) have to be made explicitly known to connection or current
+    # transaction committed (XXX: impossible to use as raises ConflictErrors)
+    transaction.commit()
