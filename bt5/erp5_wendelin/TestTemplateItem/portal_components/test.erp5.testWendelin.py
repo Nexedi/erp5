@@ -28,7 +28,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import msgpack
 import numpy as np
-import transaction
+#import transaction
 
 class Test(ERP5TypeTestCase):
   """
@@ -99,25 +99,31 @@ class Test(ERP5TypeTestCase):
     
     data_array = self.portal.data_array_module.newContent( \
                    portal_type = 'Data Array')
-    array = ZBigArray((60,60), np.uint8)
-    
-    # ZBigArray requirement: before we can compute it (with subobject
-    # .zfile) have to be made explicitly known to connection or current
-    # transaction committed
-    transaction.commit()
-  
-    data_array.setArray(array)
+    data_array.initArray((3, 3), np.uint8)
     self.tic()
     
-    # test array stored and we teturn ZBig Array instance
+    # test array stored and we return ZBig Array instance
     persistent_zbig_array = data_array.getArray()
     self.assertEqual(ZBigArray, persistent_zbig_array.__class__)
-    self.assertEquals(array, persistent_zbig_array)
     
-    # try to resize it
-    #pure_numpy_array = persistent_zbig_array[:,:] # ZBigArray -> ndarray view of it
-    #pure_numpy_array = np.resize(pure_numpy_array, (100,100))
+    # try to resize its numpy "view" and check that persistent one is not saved
+    # as these are differerent objects
+    pure_numpy_array = persistent_zbig_array[:,:] # ZBigArray -> ndarray view of it
+    pure_numpy_array = np.resize(pure_numpy_array, (4, 4))
+    self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
+    
+    # test copy numpy -> wendelin but first resize persistent one (add new one)
+    data_array.initArray((4, 4), np.uint8)
+    persistent_zbig_array = data_array.getArray()
+    rows = [0,1]
+    cols = [2,2]
+    new_array = np.arange(1,17).reshape((4,4))
+    persistent_zbig_array[:,:] = new_array
+    self.assertEquals(new_array.shape, persistent_zbig_array.shape)
+    
+    # (enable when new wendelin.core released as it can kill system)
+    #self.assertTrue(np.array_equal(a, persistent_zbig_array))
+    
+    # resize Zbig Array (enable when new wendelin.core released as it can kill system)
+    #persistent_zbig_array = np.resize(persistent_zbig_array, (100,100))
     #self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
-    
-    # resize Zbig Array
-    #persistent_zbig_array.resize(100,100)
