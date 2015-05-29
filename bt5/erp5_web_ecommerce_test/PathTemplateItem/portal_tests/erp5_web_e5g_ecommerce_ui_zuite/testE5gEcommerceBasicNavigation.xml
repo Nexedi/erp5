@@ -74,7 +74,13 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/Zuite_waitForActivities?count=5000</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -87,6 +93,17 @@
 <tr>\n
   <td>assertTextPresent</td>\n
   <td>Created Successfully</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
   <td></td>\n
 </tr>\n
 \n
