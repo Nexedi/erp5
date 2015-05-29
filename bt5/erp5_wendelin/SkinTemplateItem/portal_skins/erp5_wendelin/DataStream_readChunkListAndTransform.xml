@@ -64,7 +64,8 @@ if transform_script_id is not None:\n
   if transform_script is not None:\n
     start, end = transform_script(data_stream_chunk_list, start, end)\n
 \n
-# store current position offset in Data Stream\n
+# [warning] store current position offset in Data Stream, this can cause easily \n
+# ConflictErrors and it spawns re-index activities on DataStream\n
 data_stream.setOffset(end)\n
 \n
 # start another read in another activity\n

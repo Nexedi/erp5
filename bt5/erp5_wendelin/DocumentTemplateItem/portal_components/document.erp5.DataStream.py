@@ -47,6 +47,7 @@ class DataStream(BigFile):
   # Declarative properties
   property_sheets = ( PropertySheet.CategoryCore
                     , PropertySheet.SortIndex
+                    , PropertySheet.DataStream
                     )
 
   def readChunkList(self, start_offset, end_offset):
