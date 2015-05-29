@@ -128,8 +128,7 @@
   <td>5000</td>\n
   <td></td>\n
 </tr>\n
-<!-- DEBUG -->\n
-<!-- storeEval can pass CSP. And iframe. -->\n
+<!-- DEBUG \n
 <tr>\n
   <td>storeEval</td>\n
   <td>function x(el){var n,a=[],w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{acceptNode:function(m){if(!/^\\\\s*$/.test(m.data)){return NodeFilter.FILTER_ACCEPT;}}},false);while(n=w.nextNode())a.push(n);return a;}var i,len,t="",list=x(document.getElementById("selenium_myiframe").contentDocument.querySelector("body div"));for(i=0,len=list.length;i&lt;len;i++){t+=list[i].nodeValue+" "}</td>\n
@@ -140,6 +139,7 @@
   <td>${my_global_text}</td>\n
   <td></td>\n
 </tr>\n
+-->\n
 <tr>\n
   <td>waitForTextPresent</td>\n
   <td>Super Product</td>\n
