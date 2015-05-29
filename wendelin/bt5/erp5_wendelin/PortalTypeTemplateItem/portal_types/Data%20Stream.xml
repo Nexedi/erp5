@@ -51,7 +51,7 @@ Usually used to store raw data.</string> </value>
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>BigFile</string> </value>
+            <value> <string>DataStream</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>

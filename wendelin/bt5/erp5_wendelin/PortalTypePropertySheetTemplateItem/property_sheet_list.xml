@@ -5,6 +5,9 @@
  <portal_type id="Data Product">
   <item>DefaultImage</item>
  </portal_type>
+ <portal_type id="Data Stream">
+  <item>DataStream</item>
+ </portal_type>
  <portal_type id="Ingestion Policy">
   <item>IngestionPolicy</item>
  </portal_type>
