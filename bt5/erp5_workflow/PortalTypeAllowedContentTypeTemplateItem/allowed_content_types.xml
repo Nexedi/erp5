@@ -5,6 +5,7 @@
   <item>Variable</item>
  </portal_type>
  <portal_type id="ERP5 Workflow Tool">
+  <item>Configuration Workflow</item>
   <item>Interaction Workflow</item>
   <item>Workflow</item>
  </portal_type>
