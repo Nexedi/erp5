@@ -1810,10 +1810,7 @@ html .ui-listview li:nth-child(even) > .ui-btn {\n
    ----------------------------- Controlgroup ------------------------------\n
    -------------------------------------------------------------------------\n
 */\n
-/* fix button height */\n
-.ui-header .ui-controlgroup-controls {\n
-  height: 100%;\n
-}\n
+\n
 /* fix button font-size */\n
 html body .ui-header .ui-controlgroup .ui-btn-icon-notext,\n
 html body .ui-footer .ui-controlgroup .ui-btn-icon-notext {\n
@@ -2142,48 +2139,73 @@ ul.ui-card-deck .ui-li-static .ui-icon-custom:after {\n
    -------------------------------------------------------------------------\n
 */\n
 \n
-/* padding to match font-size (> set to .9em), margin expect single button only */\n
+/* NOTE: height of header will only be set through title (font + padding)! */\n
+/* NOTE: width-% does not work inside clear:left, only px */\n
+\n
+/* padding to match font-size (= .9em) */\n
 html .ui-header .ui-title,\n
 html .ui-footer .ui-title {\n
   padding: 0.7em 0;\n
   margin: 0 45px;\n
 }\n
-\n
-/* XXX: Original requested max width for buttons, prevents multiple button menu  \n
-.ui-header .ui-controlgroup,\n
-.ui-panel .ui-header .ui-controlgroup {\n
-  max-width: 45px;\n
-  min-width: 45px;\n
-}\n
-*/\n
-/* I prefer this */\n
-.ui-header .ui-controlgroup, .ui-panel .ui-header .ui-controlgroup {\n
-  min-width: 45px;\n
-  max-width: none;\n
-}\n
-.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn {\n
-  width: auto;\n
-}\n
-\n
-/* logo dimensions, left/right padding needed, because img does not fill space*/\n
-/* html .ui-header .ui-title img {\n
-  max-height: 1.5em;\n
-  padding: 0;\n
-  margin: -0.15em 0 -0.35em;\n
-}*/\n
+/* logo dimensions  XXX: remove? */\n
 html .ui-header img.ui-title {\n
   max-height: 24px; \n
   padding: 0.5em 1.7em;\n
   margin: 0 30%;\n
 }\n
 \n
-/* fix icon size on title (depends on font size of title) XXX: move up!*/\n
+/* forms in controlgroup must behave like a buttons */\n
+.ui-controlgroup-horizontal .ui-controlgroup-controls > form {\n
+  float: left;\n
+\tclear: none;\n
+}\n
+\n
+/* only-child forms inside controlgroups must stretch to full width, so... */\n
+.ui-controlgroup-horizontal .ui-controlgroup-controls > form:only-child {\n
+  float: none;\n
+}\n
+\n
+/* all controlgroups should at least be 45px, large screen 8% (below) */\n
+.ui-header .ui-controlgroup-horizontal {\n
+  min-width: 45px;\n
+}\n
+\n
+/* controlgroup dimensions (height used to be 100%) */\n
+.ui-header .ui-controlgroup, .ui-panel .ui-header .ui-controlgroup {\n
+  max-width: none;\n
+  height: inherit;\n
+}\n
+.ui-header .ui-controlgroup .ui-controlgroup-controls,\n
+.ui-panel .ui-header .ui-controlgroup .ui-controlgroup-controls {\n
+  height: inherit;\n
+  width: 100%;\n
+  min-width: inherit;\n
+}\n
+\n
+/* sizing for all header buttons  */\n
+.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn,\n
+.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn,\n
+.ui-header .ui-controlgroup-controls .ui-btn-icon-notext {\n
+  -moz-box-sizing: border-box;\n
+  -webkit-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+  min-width: inherit;\n
+}\n
+/* panel button only stretches using 100% */\n
+.ui-panel .ui-header .ui-controlgroup-controls button.ui-btn:only-child,\n
+.ui-panel .ui-header .ui-controlgroup-controls a.ui-btn:only-child,\n
+.ui-panel .ui-header .ui-controlgroup-controls .ui-btn-icon-notext:only-child {\n
+  width: 100%\n
+}\n
+\n
+/* breadcrumb button inside title (depends on font size of title) */\n
 html .ui-title .ui-btn[class*="ui-icon-"]:after, \n
 html .ui-title .ui-btn[class*="ui-icon-"]:after {\n
     font-size: 1.15em;\n
 }\n
 \n
-/* breadcrumb dimensions, unsure negative margin is good to offset padding */\n
+/* breadcrumb button dimensions, not sure negative margin is good with padding */\n
 html .ui-header .ui-title .ui-btn {\n
   display: block;\n
   margin: -0.9em 0;\n
@@ -2194,11 +2216,6 @@ html .ui-header .ui-title .ui-btn {\n
 /* pages with subheader increase padding on ui-content */\n
 .ui-has-subheader {\n
   padding-top: 4.5em;\n
-}\n
-\n
-/* remove border on header */\n
-.ui-header {\n
-  border-width: 0;\n
 }\n
 \n
 /* inset shadow for subheader */\n
@@ -2214,6 +2231,12 @@ html body .ui-mobile-viewport .ui-subheader {\n
   border-top-color:   rgba(0, 0, 0, .25);\n
   border-top-width: 1px;\n
   border-top-style: solid;\n
+}\n
+\n
+\n
+/* remove border on header */\n
+.ui-header {\n
+  border-width: 0;\n
 }\n
 \n
 /* double borders header */\n
@@ -2264,7 +2287,7 @@ html body .ui-header .ui-btn-left .ui-controlgroup-controls .ui-first-child:befo
 .ui-btn-icon-notext:after,\n
 .ui-btn-icon-left:after,\n
 .ui-btn-icon-right:after {\n
-    margin-top: -8px;\n
+  margin-top: -8px;\n
 }\n
 \n
 /* overwrite JQM icons and clear :before for double border */\n
@@ -2287,7 +2310,7 @@ html .ui-header .ui-btn-right .ui-controlgroup-controls .ui-btn.ui-last-child {\
 \n
 /* set button dimensions */\n
 html .ui-header .ui-btn {\n
-  line-height: 3.1em; /* ~ 39px = what\'s needed */\n
+  line-height: 3.1em; /* ~ 40px = what\'s needed */\n
   padding-bottom: 0;\n
   padding-top: 0;\n
   border-top: 0;\n
@@ -2309,20 +2332,6 @@ html .ui-header .ui-btn {\n
   left: .8em;\n
 }\n
 \n
-/* stretch control to available width */\n
-.ui-header .ui-controlgroup-controls {\n
-  width: 100%;\n
-}\n
-/* stretch button elements to available width */\n
-.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn,\n
-.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn,\n
-.ui-header .ui-controlgroup-controls .ui-btn-icon-notext {\n
-  width: 100%;\n
-  -moz-box-sizing: border-box;\n
-  -webkit-box-sizing: border-box;\n
-  box-sizing: border-box;\n
-}\n
-\n
 /* subheader reset formatting for subheader buttons */\n
 .ui-header .ui-subheader .ui-btn.ui-btn-icon-top {\n
     line-height: 3.25em;\n
@@ -2336,22 +2345,29 @@ html .ui-header .ui-btn {\n
       font-size: 1.35em;\n
   }\n
 }\n
+\n
 /* reset on larger screens */\n
 @media (min-width: 48em) {\n
-  \n
-  /* hard-lock margin XXX Thierry: this is to expand title to edge of button */\n
-  html .ui-header .ui-title,\n
-  html .ui-footer .ui-title {\n
+\n
+\n
+  /* hard locked margin for single button (Thierry request) */\n
+  .ui-page > div > .ui-header .ui-controlgroup-horizontal {\n
+    min-width: 8%;\n
+  }\n
+  .ui-page > div > .ui-header .ui-controlgroup-horizontal + .ui-title {\n
     margin: 0 8%;\n
   }\n
+  \n
+  /* stretch single button */ \n
+  .ui-page > div > .ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn:only-child,\n
+  .ui-page > div > .ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn:only-child,\n
+  .ui-page > div > .ui-header .ui-controlgroup-controls .ui-btn-icon-notext:only-child {\n
+    max-width: 100%;\n
+    min-width: 100%;\n
+  }\n
+  \n
   html .ui-header img.ui-title {\n
     margin: 0 30%;\n
-  }\n
-\n
-  /* max width for buttons XXX: assumes single buttons in controlgroup */\n
-  .ui-header .ui-controlgroup {\n
-    max-width: 8%;\n
-    min-width: 8%;\n
   }\n
 \n
   /* unset for everywhere else a header is used.*/\n
@@ -2359,7 +2375,6 @@ html .ui-header .ui-btn {\n
     max-width: none;\n
     min-width: 0;\n
   }\n
-\n
 \n
   .responsive.ui-btn:after,\n
   .ui-header .responsive.ui-btn-icon-left:after,\n
@@ -4833,7 +4848,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.21092.51756.1126</string> </value>
+                <value> <string>943.22243.27325.48349</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4851,7 +4866,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432825565.05</float>
+                        <float>1432894451.41</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
