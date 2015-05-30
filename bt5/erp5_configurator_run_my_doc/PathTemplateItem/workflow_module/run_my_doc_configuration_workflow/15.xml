@@ -10,7 +10,7 @@
             <key> <string>after_script_id</string> </key>
             <value>
               <tuple>
-                <string>BusinessConfiguration_setupRunMyDocUserNumber</string>
+                <string>BusinessConfiguration_setupRunMyDocStandardBT5</string>
               </tuple>
             </value>
         </item>
@@ -18,7 +18,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/run_my_doc_configuration_workflow/6</string>
+                <string>destination/workflow_module/run_my_doc_configuration_workflow/5</string>
               </tuple>
             </value>
         </item>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>16</string> </value>
+            <value> <string>15</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Configure user accounts number</string> </value>
+            <value> <string>Setup standard BT5</string> </value>
         </item>
       </dictionary>
     </pickle>

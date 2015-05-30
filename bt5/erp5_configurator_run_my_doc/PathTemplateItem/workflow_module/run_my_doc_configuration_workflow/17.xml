@@ -7,24 +7,10 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>after_script_id</string> </key>
-            <value>
-              <tuple>
-                <string>BusinessConfiguration_setupRunMyDocList</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>before_script_id</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/run_my_doc_configuration_workflow/9</string>
+                <string>destination/workflow_module/run_my_doc_configuration_workflow/7</string>
               </tuple>
             </value>
         </item>
@@ -36,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>10</string> </value>
+            <value> <string>17</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -44,7 +30,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Configure user accounts</string> </value>
+            <value> <string>Finalize</string> </value>
         </item>
       </dictionary>
     </pickle>

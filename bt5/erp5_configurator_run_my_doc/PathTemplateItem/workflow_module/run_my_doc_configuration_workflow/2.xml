@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/run_my_doc_configuration_workflow/15</string>
+                <string>destination/workflow_module/run_my_doc_configuration_workflow/17</string>
               </tuple>
             </value>
         </item>
@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Start</string> </value>
+            <value> <string>Download</string> </value>
         </item>
       </dictionary>
     </pickle>
