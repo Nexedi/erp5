@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Workflow" module="erp5.portal_type"/>
+      <global name="Configuration Workflow" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19,7 +19,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>state_variable_name</string> </value>
+                      <value> <string>comment</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -29,11 +29,11 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>comment</string> </value>
+                      <value> <string>state_base_category</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
+                      <value> <string>lines</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -77,18 +77,10 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Workflow</string> </value>
-        </item>
-        <item>
-            <key> <string>ref</string> </key>
-            <value> <string>ung_configuration_workflow</string> </value>
+            <value> <string>Configuration Workflow</string> </value>
         </item>
         <item>
             <key> <string>state_base_category</string> </key>
-            <value> <string>current_state</string> </value>
-        </item>
-        <item>
-            <key> <string>state_variable_name</string> </key>
             <value> <string>current_state</string> </value>
         </item>
         <item>

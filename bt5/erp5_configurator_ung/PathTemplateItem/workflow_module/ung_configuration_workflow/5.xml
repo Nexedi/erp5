@@ -10,17 +10,19 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/ung_configuration_workflow/11</string>
+                <string>destination/workflow_module/ung_configuration_workflow/12</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Define some global preferences for your UNG Site.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>4</string> </value>
+            <value> <string>5</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -28,7 +30,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>UNG Preferences</string> </value>
+            <value> <string>Standard BT5</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -7,18 +7,10 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>after_script_id</string> </key>
-            <value>
-              <tuple>
-                <string>BusinessConfiguration_setupUNGPreferences</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/ung_configuration_workflow/4</string>
+                <string>destination/workflow_module/ung_configuration_workflow/7</string>
               </tuple>
             </value>
         </item>
@@ -30,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>14</string> </value>
+            <value> <string>18</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -38,7 +30,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Configure ERP5 Preferences</string> </value>
+            <value> <string>Finalize</string> </value>
         </item>
       </dictionary>
     </pickle>

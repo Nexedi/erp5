@@ -2,23 +2,15 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Configuration Transition" module="erp5.portal_type"/>
+      <global name="Configuration State" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>after_script_id</string> </key>
-            <value>
-              <tuple>
-                <string>BusinessConfiguration_setupCustomerBT5</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/ung_configuration_workflow/3</string>
+                <string>destination/workflow_module/ung_configuration_workflow/15</string>
               </tuple>
             </value>
         </item>
@@ -30,15 +22,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>12</string> </value>
+            <value> <string>3</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Configuration Transition</string> </value>
+            <value> <string>Configuration State</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Setup customer BT5</string> </value>
+            <value> <string>Customer BT</string> </value>
         </item>
       </dictionary>
     </pickle>
