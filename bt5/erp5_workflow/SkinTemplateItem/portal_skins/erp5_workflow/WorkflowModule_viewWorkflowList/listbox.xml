@@ -405,10 +405,6 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
@@ -531,12 +527,7 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Workflow</string>
-                          <string>Workflow</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -569,7 +560,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>workflow_module_selection</string> </value>
+                    <value> <string>configuration_workflow_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

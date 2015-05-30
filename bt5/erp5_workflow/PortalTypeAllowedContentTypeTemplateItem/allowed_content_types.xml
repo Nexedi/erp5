@@ -31,7 +31,6 @@
   <item>Worklist</item>
  </portal_type>
  <portal_type id="Workflow Module">
-  <item>Interaction Workflow</item>
-  <item>Workflow</item>
+  <item>Configuration Workflow</item>
  </portal_type>
 </allowed_content_type_list>
