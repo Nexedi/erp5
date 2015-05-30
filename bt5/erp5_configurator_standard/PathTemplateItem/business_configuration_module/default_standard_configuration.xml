@@ -131,7 +131,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>resource/portal_workflow/workflow_erp5_standard_workflow</string>
+                <string>resource/workflow_module/erp5_standard_workflow</string>
               </tuple>
             </value>
         </item>
