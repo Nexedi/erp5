@@ -45,7 +45,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source/portal_workflow/maxma_demo_configuration_workflow/5</string>
+                <string>source/workflow_module/maxma_demo_configuration_workflow/5</string>
               </tuple>
             </value>
         </item>
