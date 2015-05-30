@@ -127,8 +127,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>resource/portal_workflow/ung_configuration_workflow</string>
-                <string>current_state/portal_workflow/ung_configuration_workflow/7</string>
+                <string>resource/workflow_module/ung_configuration_workflow</string>
+                <string>current_state/workflow_module/ung_configuration_workflow/7</string>
               </tuple>
             </value>
         </item>
