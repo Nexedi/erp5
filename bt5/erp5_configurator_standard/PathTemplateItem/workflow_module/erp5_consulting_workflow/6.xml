@@ -10,17 +10,17 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/workflow_module/erp5_standard_workflow/14</string>
+                <string>destination/workflow_module/erp5_consulting_workflow/13</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Define some global preferences for your ERP5 application.</string> </value>
+            <value> <string>Enter the number of user accounts you want to create. In your company, each person using ERP5 should have his own user account.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>5</string> </value>
+            <value> <string>6</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -28,7 +28,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Application preferences</string> </value>
+            <value> <string>Number of user accounts</string> </value>
         </item>
       </dictionary>
     </pickle>

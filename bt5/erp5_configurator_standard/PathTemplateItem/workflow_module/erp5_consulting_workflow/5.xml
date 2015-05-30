@@ -10,13 +10,15 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/workflow_module/erp5_standard_workflow/14</string>
+                <string>destination/workflow_module/erp5_consulting_workflow/15</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Define some global preferences for your ERP5 application.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -28,7 +30,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Application preferences</string> </value>
+            <value> <string>Standard BT5</string> </value>
         </item>
       </dictionary>
     </pickle>
