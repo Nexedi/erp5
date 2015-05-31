@@ -65,18 +65,6 @@ class ExclusionTuple(tuple):
   """
   pass
 
-def ImmutableId_setId(self, id):
-  """ patch which allows modifying the Id of portal_workflow
-      for the sake of workflow tool migration.
-  """
-  if self.getId() in ['portal_workflow', 'portal_workflow_new']:
-    pass
-  else:
-    if id != self.getId():
-      raise ValueError('Changing the id of this object is forbidden: %s'
-                       % self.getId())
-ImmutableId._setId = ImmutableId_setId
-
 def getValidCriterionDict(worklist_match_dict, sql_catalog,
                           workflow_worklist_key):
   valid_criterion_dict = {}
