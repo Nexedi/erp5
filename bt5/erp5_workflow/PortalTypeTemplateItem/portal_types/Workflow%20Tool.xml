@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5 Workflow Tool</string> </value>
+            <value> <string>Workflow Tool</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

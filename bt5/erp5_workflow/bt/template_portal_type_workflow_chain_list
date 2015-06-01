@@ -1,4 +1,3 @@
-ERP5 Workflow Tool | default_workflow
 Interaction Workflow | default_workflow
 Interaction | default_workflow
 PermissionRoles | default_workflow
@@ -8,5 +7,6 @@ Transition | default_workflow
 Variable | default_workflow
 Workflow Module | default_workflow
 Workflow Script | default_workflow
+Workflow Tool | default_workflow
 Workflow | default_workflow
 Worklist | default_workflow

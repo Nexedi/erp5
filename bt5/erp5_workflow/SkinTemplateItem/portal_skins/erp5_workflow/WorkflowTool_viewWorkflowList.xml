@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5WorkflowTool_viewWorkflowList</string> </value>
+            <value> <string>WorkflowTool_viewWorkflowList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

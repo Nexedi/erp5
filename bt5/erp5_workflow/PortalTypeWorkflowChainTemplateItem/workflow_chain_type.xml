@@ -1,9 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>ERP5 Workflow Tool</type>
-  <workflow>default_workflow</workflow>
- </chain>
- <chain>
   <type>Interaction</type>
   <workflow>default_workflow</workflow>
  </chain>
@@ -41,6 +37,10 @@
  </chain>
  <chain>
   <type>Workflow Script</type>
+  <workflow>default_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Workflow Tool</type>
   <workflow>default_workflow</workflow>
  </chain>
  <chain>

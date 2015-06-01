@@ -1,7 +1,6 @@
 Configuration State
 Configuration Transition
 Configuration Workflow
-ERP5 Workflow Tool
 Interaction
 Interaction Workflow
 PermissionRoles
@@ -12,4 +11,5 @@ Variable
 Workflow
 Workflow Module
 Workflow Script
+Workflow Tool
 Worklist
