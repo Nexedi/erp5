@@ -56,7 +56,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -76,7 +76,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -91,12 +91,12 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -116,7 +116,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -136,12 +136,12 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -161,7 +161,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -176,12 +176,12 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td>Base_callDialogMethod:method</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
