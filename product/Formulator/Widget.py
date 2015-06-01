@@ -1270,6 +1270,10 @@ class MultiCheckBoxWidget(MultiItemsWidget):
 
 MultiCheckBoxWidgetInstance = MultiCheckBoxWidget()
 
+gmt_timezones =  [('GMT%s' %zone, 'GMT%s' %zone,) for zone in range(-12, 0)]\
+                  + [('GMT', 'GMT',),] \
+                  + [('GMT+%s' %zone, 'GMT+%s' %zone,) for zone in range(1, 13)]
+
 class DateTimeWidget(Widget):
   """
     Added support for key in every call to render_sub_field
@@ -1351,6 +1355,15 @@ class DateTimeWidget(Widget):
                                         ("list", "list")],
                                   size=1)
 
+  default_timezone = fields.ListField('default_timezone',
+                                  title="Default Timezone",
+                                  description=(
+      "The default timezone display when inputing a new date"),
+                                  default="GMT",
+                                  items=gmt_timezones,
+                                  required=1,
+                                  size=1)
+
   input_order = fields.ListField('input_order',
                                   title="Input order",
                                   description=(
@@ -1378,8 +1391,8 @@ class DateTimeWidget(Widget):
   property_names = Widget.property_names +\
                     ['default_now', 'date_separator', 'time_separator',
                      'input_style', 'input_order', 'date_only',
-                     'ampm_time_style', 'timezone_style', 'hide_day',
-                     'hidden_day_is_last_day']
+                     'ampm_time_style', 'timezone_style', 'default_timezone',
+                     'hide_day', 'hidden_day_is_last_day']
 
   def getInputOrder(self, field):
     input_order = field.get_value('input_order')
@@ -1437,7 +1450,7 @@ class DateTimeWidget(Widget):
     hour   = None
     minute = None
     ampm   = None
-    timezone = None
+    timezone = field.get_value("default_timezone")
     if isinstance(value, DateTime):
       year = "%04d" % value.year()
       month = "%02d" % value.month()
