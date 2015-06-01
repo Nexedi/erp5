@@ -56,6 +56,14 @@
   <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Geographical Area</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Geographical Location</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Image</type>
   <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
