@@ -96,13 +96,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-html.ui-mobile body .ui-grid-container.ui-responsive > ul > li {\n
-  width: auto;\n
-}
-
-]]></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -239,7 +235,7 @@ html.ui-mobile body .ui-grid-container.ui-responsive > ul > li {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.12430.60990.54289</string> </value>
+                <value> <string>943.12431.32194.1262</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -257,7 +253,7 @@ html.ui-mobile body .ui-grid-container.ui-responsive > ul > li {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432305569.46</float>
+                        <float>1433196413.94</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
