@@ -1513,6 +1513,13 @@ html.ui-mobile body .ui-btn.ui-radio-on:after {\n
   text-shadow: none;\n
 }\n
 \n
+/* fix double borders in groups of radios/checks */\n
+html.ui-mobile body .ui-controlgroup .ui-checkbox label {\n
+  border-bottom-width: 0px;\n
+}\n
+html.ui-mobile body .ui-controlgroup .ui-checkbox:last-child label {\n
+  border-bottom-width: 1px;\n
+}\n
 /*\n
    -------------------------------------------------------------------------\n
    ----------------------------- Select ------------------------------------\n
@@ -1605,6 +1612,7 @@ html .ui-panel .ui-listview .ui-li-has-icon a {\n
    ------------------------------- Grid ------------------------------------\n
    -------------------------------------------------------------------------\n
 */\n
+\n
 /* overwrite copy JQM CSS */\n
 .ui-grid-container > ul, .ui-grid-container > ul li {\n
     list-style: none outside none;\n
@@ -1612,10 +1620,14 @@ html .ui-panel .ui-listview .ui-li-has-icon a {\n
     margin-right: 0;\n
     padding: 0;\n
 }\n
+\n
+/* cutoff overlapping content*/\n
 .ui-grid-container > ul {\n
     overflow: hidden;\n
     margin: 0;\n
 }\n
+\n
+/* box-size */\n
 .ui-grid-container > ul > li {\n
   float: left;\n
   -webkit-box-sizing: border-box;\n
@@ -1623,16 +1635,27 @@ html .ui-panel .ui-listview .ui-li-has-icon a {\n
   -ms-box-sizing: border-box;\n
   box-sizing: border-box;\n
 }\n
+\n
+/* clear out */\n
 .ui-grid-container > ul > li:first-child {\n
   clear: left;\n
 }\n
 \n
 /* thx: Lea Verou - http://bit.ly/1rAhqzm */\n
 /* grid cell width depending on number of elements, up to 10 */\n
+\n
+/* override JQM */\n
 .ui-grid-container > li.ui-block-a,\n
 .ui-grid-container > li.ui-block-b {\n
   clear: none;\n
 }\n
+\n
+/* base width */\n
+.ui-grid-container.ui-responsive > ul > li {\n
+  width: auto;\n
+}\n
+\n
+/* "cell width" */\n
 .ui-grid-container > ul > li:first-child:nth-last-child(1) {\n
   width: 100%;\n
 }\n
@@ -1641,46 +1664,302 @@ html .ui-panel .ui-listview .ui-li-has-icon a {\n
   width: 50%;\n
 }\n
 .ui-grid-container > ul li:first-child:nth-last-child(3),\n
-.ui-grid-container > ul li:first-child:nth-last-child(3) ~ li {\n
+.ui-grid-container > ul li:first-child:nth-last-child(3) ~ li,\n
+.ui-grid-container > ul.ui-grid-column-3 > li:first-child:nth-last-child(n),\n
+.ui-grid-container > ul.ui-grid-column-3 > li:first-child:nth-last-child(n) ~ li  {\n
   width: 33.3333%;\n
 }\n
 .ui-grid-container > ul > li:first-child:nth-last-child(4),\n
-.ui-grid-container > ul > li:first-child:nth-last-child(4) ~ li {\n
+.ui-grid-container > ul > li:first-child:nth-last-child(4) ~ li,\n
+.ui-grid-container > ul.ui-grid-column-4 > li:first-child:nth-last-child(n),\n
+.ui-grid-container > ul.ui-grid-column-4 > li:first-child:nth-last-child(n) ~ li {\n
   width: 25%;\n
 }\n
 .ui-grid-container > ul > li:first-child:nth-last-child(5),\n
-.ui-grid-container > ul > li:first-child:nth-last-child(5) ~ li {\n
+.ui-grid-container > ul > li:first-child:nth-last-child(5) ~ li,\n
+.ui-grid-container > ul.ui-grid-column-5 > li:first-child:nth-last-child(n),\n
+.ui-grid-container > ul.ui-grid-column-5 > li:first-child:nth-last-child(n) ~ li {\n
   width: 20%;\n
 }\n
 .ui-grid-container > ul > li:first-child:nth-last-child(6),\n
-.ui-grid-container > ul > li:first-child:nth-last-child(6) ~ li {\n
+.ui-grid-container > ul > li:first-child:nth-last-child(6) ~ li,\n
+.ui-grid-container > ul.ui-grid-column-6 > li:first-child:nth-last-child(n),\n
+.ui-grid-container > ul.ui-grid-column-6 > li:first-child:nth-last-child(n) ~ li {\n
   width: 16.667%;\n
 }\n
 .ui-grid-container > ul > li:first-child:nth-last-child(7),\n
-.ui-grid-container > ul > li:first-child:nth-last-child(7) ~ li {\n
+.ui-grid-container > ul > li:first-child:nth-last-child(7) ~ li,\n
+.ui-grid-container > ul.ui-grid-column-7 > li:first-child:nth-last-child(n),\n
+.ui-grid-container > ul.ui-grid-column-7 > li:first-child:nth-last-child(n) ~ li {\n
   width: 14,285714286%;\n
 }\n
 .ui-grid-container > ul > li:first-child:nth-last-child(8),\n
-.ui-grid-container > ul > li:first-child:nth-last-child(8) ~ li {\n
+.ui-grid-container > ul > li:first-child:nth-last-child(8) ~ li,\n
+.ui-grid-container > ul.ui-grid-column-8 > li:first-child:nth-last-child(n),\n
+.ui-grid-container > ul.ui-grid-column-8 > li:first-child:nth-last-child(n) ~ li {\n
   width: 12.5%;\n
 }\n
 .ui-grid-container > ul > li:first-child:nth-last-child(9),\n
-.ui-grid-container > ul > li:first-child:nth-last-child(9) ~ li {\n
+.ui-grid-container > ul > li:first-child:nth-last-child(9) ~ li,\n
+.ui-grid-container > ul.ui-grid-column-9 > li:first-child:nth-last-child(n),\n
+.ui-grid-container > ul.ui-grid-column-9 > li:first-child:nth-last-child(n) ~ li {\n
   width: 11.112%;\n
 }\n
 .ui-grid-container > ul > li:first-child:nth-last-child(10),\n
-.ui-grid-container > ul > li:first-child:nth-last-child(10) ~ li {\n
+.ui-grid-container > ul > li:first-child:nth-last-child(10) ~ li,\n
+.ui-grid-container > ul.ui-grid-column-10 > li:first-child:nth-last-child(n),\n
+.ui-grid-container > ul.ui-grid-column-10 > li:first-child:nth-last-child(n) ~ li {\n
   width: 10%;\n
 }\n
 \n
-@media (max-width: 48em) {\n
-  html.ui-mobile body .ui-grid-container.ui-responsive > ul > li {\n
+/* rowspan (1 per row!) */\n
+/* 3 cells */\n
+.ui-grid-container > ul > li:first-child:nth-last-child(2).ui-grid-span-2,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(2) ~ li.ui-grid-span-2 {\n
+  width: 66.666%;\n
+}\n
+/* 4 cells */\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3).ui-grid-span-2,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3) ~ li.ui-grid-span-2 {\n
+  width: 50%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(2).ui-grid-span-3,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(2) ~ li.ui-grid-span-3 {\n
+  width: 75%;\n
+}\n
+/* 5 cells */\n
+.ui-grid-container > ul > li:first-child:nth-last-child(4).ui-grid-span-2,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(4) ~ li.ui-grid-span-2 {\n
+  width: 40%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3).ui-grid-span-3,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3) ~ li.ui-grid-span-3 {\n
+  width: 60%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(2).ui-grid-span-4,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(2) ~ li.ui-grid-span-4 {\n
+  width: 80%;\n
+}\n
+/* 6 cells */\n
+.ui-grid-container > ul > li:first-child:nth-last-child(5).ui-grid-span-2,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(5) ~ li.ui-grid-span-2 {\n
+  width: 33.33%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(4).ui-grid-span-3,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(4) ~ li.ui-grid-span-3 {\n
+  width: 50%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3).ui-grid-span-4,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3) ~ li.ui-grid-span-4 {\n
+  width: 66.66%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(2).ui-grid-span-5,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(2) ~ li.ui-grid-span-5 {\n
+  width: 83.33%;\n
+}\n
+/* 7 cells */\n
+.ui-grid-container > ul > li:first-child:nth-last-child(6).ui-grid-span-2,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(6) ~ li.ui-grid-span-2 {\n
+  width: 28.571428571%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(5).ui-grid-span-3,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(5) ~ li.ui-grid-span-3 {\n
+  width: 42.857142857%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(4).ui-grid-span-4,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(4) ~ li.ui-grid-span-4 {\n
+  width: 57.142857142%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3).ui-grid-span-5,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3) ~ li.ui-grid-span-5 {\n
+  width: 71.428571428%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(2).ui-grid-span-6,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(2) ~ li.ui-grid-span-6 {\n
+  width: 85.714285714%;\n
+}\n
+/* 8 cells */\n
+.ui-grid-container > ul > li:first-child:nth-last-child(7).ui-grid-span-2,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(7) ~ li.ui-grid-span-2 {\n
+  width: 25%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(6).ui-grid-span-3,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(6) ~ li.ui-grid-span-3 {\n
+  width: 37.5%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(5).ui-grid-span-4,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(5) ~ li.ui-grid-span-4 {\n
+  width: 50%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(4).ui-grid-span-5,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(4) ~ li.ui-grid-span-5 {\n
+  width: 62.5%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3).ui-grid-span-6,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3) ~ li.ui-grid-span-6 {\n
+  width: 75%;\n
+}\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3).ui-grid-span-6,\n
+.ui-grid-container > ul > li:first-child:nth-last-child(3) ~ li.ui-grid-span-6 {\n
+  width: 87.5%;\n
+}\n
+/* 9 cells */\n
+\n
+/* 10 cells */\n
+\n
+\n
+@media (max-width: 32em) {\n
+  html.ui-mobile .ui-grid-container.ui-responsive > ul > li,\n
+  html.ui-mobile .ui-grid-container.ui-responsive > ul[class*="ui-grid-column"] > li {\n
     width: 100%;\n
   }\n
 }\n
 \n
+/* spacing for grid content  (3rd party), simulate a table */\n
+/* NOTE: assumes there will be a gadget wrapping grid cell content */\n
+.ui-grid-container li > div {\n
+  display: table;\n
+  border-spacing: .25em;\n
+  width: 100%;\n
+}\n
+.ui-grid-container li > div .ui-grid-content-wrap {\n
+  display: table-row;\n
+}\n
+.ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content {\n
+  display: table-cell;\n
+  border-width: 1px;\n
+  border-style: solid;\n
+  -webkit-box-sizing: border-box;\n
+  -moz-box-sizing: border-box;\n
+  box-sizing: border-box;\n
+}\n
+/* prevent table cells from breaking */\n
+.ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content .ui-link {\n
+  text-overflow: ellipsis;\n
+  white-space: nowrap;\n
+  overflow: hidden;\n
+}\n
+/* hardcode table cell width (needs: table-layout:fixed, not IE) */\n
+@media (min-width: 62em) {\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table {\n
+    table-layout: fixed;\n
+  }\n
+  /* set width depending on number of cols... */\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(1),\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(1) {\n
+    max-width: 100%;\n
+  }\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(2),\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(2) ~ th,\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(2),\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(2) ~ td {\n
+    max-width: 50%;\n
+  }\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(3),\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(3) ~ th,\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(3),\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(3) ~ td {\n
+    max-width: 33.3333%;\n
+  }\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(4),\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(4) ~ th,\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(4),\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(4) ~ td {\n
+    max-width: 25%;\n
+  }\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(5),\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(5) ~ th,\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(5),\n
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(5) ~ td {\n
+    max-width: 20%;\n
+  }\n
+}\n
 \n
+/* set correct border-radius */\n
+.ui-grid-content .ui-header {\n
+  -webkit-border-bottom-left-radius: 0;\n
+  border-bottom-left-radius: 0;\n
+  -webkit-border-bottom-right-radius: 0;\n
+  border-bottom-right-radius: 0;\n
+  -webkit-border-top-left-radius: .3125em;\n
+  border-top-left-radius: .3125em;\n
+  -webkit-border-top-right-radius: .3125em;\n
+  border-top-right-radius: .3125em;\n
+}\n
 \n
+/* reset border-spacing and max-width of header */\n
+.ui-grid-content .ui-header .ui-controlgroup {\n
+  max-width: none;\n
+  min-width: 0;\n
+  border-spacing: 0;\n
+}\n
+/* remove button border */\n
+.ui-grid-content .ui-header .ui-controlgroup-controls .ui-btn {\n
+  border: 0 none;\n
+}\n
+/* remove top borders on tables inside grid */\n
+.ui-grid-content .ui-table-inset {\n
+  -webkit-border-top-left-radius: 0;\n
+  border-top-left-radius: 0;\n
+  -webkit-border-top-right-radius: 0;\n
+  border-top-right-radius: 0;\n
+}\n
+/* remove margin on search field */\n
+.ui-grid-content .ui-field-contain {\n
+  margin: 0;\n
+}\n
+\n
+/* add top border to table with header and search form in between */\n
+.ui-grid-content .ui-table-header ~ form ~ table {\n
+  border-top-width: 1px;\n
+}\n
+/* remove margin from listview and top borders */\n
+.ui-grid-content .ui-table-header ~ .ui-listview {\n
+  margin: 0;\n
+  -webkit-border-top-left-radius: 0;\n
+  border-top-left-radius: 0;\n
+  -webkit-border-top-right-radius: 0;\n
+  border-top-right-radius: 0;\n
+}\n
+.ui-grid-content .ui-table-header ~ .ui-listview > li.ui-first-child > a.ui-btn {\n
+  border-top-width: 0;\n
+}\n
+/* corners again */\n
+.ui-grid-content .ui-controlgroup-controls .ui-btn.ui-corner-all.ui-first-child {\n
+  -webkit-border-top-left-radius: .3125em;\n
+  border-top-left-radius: .3125em;\n
+    -webkit-border-bottom-left-radius: .3125em;\n
+  border-bottom-left-radius: .3125em;\n
+}\n
+.ui-grid-content .ui-controlgroup-controls .ui-btn.ui-corner-all.ui-last-child {\n
+  -webkit-border-top-right-radius: .3125em;\n
+  border-top-right-radius: .3125em;\n
+  -webkit-border-bottom-right-radius: .3125em;\n
+  border-bottom-right-radius: .3125em;\n
+}\n
+\n
+/* ================================ */\n
+/* content spacing \n
+.ui-grid-content-wrap {\n
+  position: relative;\n
+  display: block;\n
+  width: 99%;\n
+  margin: 0 0.5% 1em;    \n
+}\n
+.ui-grid-content-wrap:before {\n
+  content: "";\n
+  padding-top: 100%;\n
+}\n
+.ui-grid-content {\n
+  position: absolute;\n
+  top: 0;\n
+  left: 0;\n
+  bottom: 0;\n
+  right: 0;\n
+  border: 1px solid red;\n
+}\n
+*/\n
+/* ================================ */\n
 /*\n
    -------------------------------------------------------------------------\n
    ----------------------------- Listview ----------------------------------\n
@@ -4848,7 +5127,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.22243.27325.48349</string> </value>
+                <value> <string>943.27359.12099.12646</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4866,7 +5145,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432894451.41</float>
+                        <float>1433201446.85</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
