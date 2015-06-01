@@ -6464,6 +6464,30 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     });\n
 \n
     this._use_remote_post = spec.use_remote_post || false;\n
+    this._check_local_modification = spec.check_local_modification;\n
+    if (this._check_local_modification === undefined) {\n
+      this._check_local_modification = true;\n
+    }\n
+    this._check_local_creation = spec.check_local_creation;\n
+    if (this._check_local_creation === undefined) {\n
+      this._check_local_creation = true;\n
+    }\n
+    this._check_local_deletion = spec.check_local_deletion;\n
+    if (this._check_local_deletion === undefined) {\n
+      this._check_local_deletion = true;\n
+    }\n
+    this._check_remote_modification = spec.check_remote_modification;\n
+    if (this._check_remote_modification === undefined) {\n
+      this._check_remote_modification = true;\n
+    }\n
+    this._check_remote_creation = spec.check_remote_creation;\n
+    if (this._check_remote_creation === undefined) {\n
+      this._check_remote_creation = true;\n
+    }\n
+    this._check_remote_deletion = spec.check_remote_deletion;\n
+    if (this._check_remote_deletion === undefined) {\n
+      this._check_remote_deletion = true;\n
+    }\n
   }\n
 \n
   ReplicateStorage.prototype.remove = function (id) {\n
@@ -6508,26 +6532,45 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     // Do not sync the signature document\n
     skip_document_dict[context._signature_hash] = null;\n
 \n
-    function propagateModification(destination, doc, hash, id, options) {\n
+    function propagateModification(source, destination, doc, hash, id,\n
+                                   options) {\n
       var result,\n
+        post_id,\n
         to_skip = true;\n
       if (options === undefined) {\n
         options = {};\n
       }\n
       if (options.use_post) {\n
         result = destination.post(doc)\n
-          .push(function () {\n
+          .push(function (new_id) {\n
             to_skip = false;\n
+            post_id = new_id;\n
+            return source.put(post_id, doc);\n
+          })\n
+          .push(function () {\n
+            return source.remove(id);\n
+          })\n
+          .push(function () {\n
+            return context._signature_sub_storage.remove(id);\n
+          })\n
+          .push(function () {\n
+            to_skip = true;\n
+            return context._signature_sub_storage.put(post_id, {\n
+              "hash": hash\n
+            });\n
+          })\n
+          .push(function () {\n
+            skip_document_dict[post_id] = null;\n
           });\n
       } else {\n
-        result = destination.put(id, doc);\n
+        result = destination.put(id, doc)\n
+          .push(function () {\n
+            return context._signature_sub_storage.put(id, {\n
+              "hash": hash\n
+            });\n
+          });\n
       }\n
       return result\n
-        .push(function () {\n
-          return context._signature_sub_storage.put(id, {\n
-            "hash": hash\n
-          });\n
-        })\n
         .push(function () {\n
           if (to_skip) {\n
             skip_document_dict[id] = null;\n
@@ -6561,8 +6604,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           var local_hash = generateHash(JSON.stringify(doc)),\n
             remote_hash;\n
           if (remote_doc === undefined) {\n
-            return propagateModification(destination, doc, local_hash, id,\n
-                                         options);\n
+            return propagateModification(source, destination, doc, local_hash,\n
+                                         id, options);\n
           }\n
 \n
           remote_hash = generateHash(JSON.stringify(remote_doc));\n
@@ -6603,7 +6646,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
               }\n
               // Modifications on remote side\n
               // Push them locally\n
-              return propagateModification(source, doc, remote_hash, id);\n
+              return propagateModification(destination, source, doc,\n
+                                           remote_hash, id);\n
             }, function (error) {\n
               if ((error instanceof jIO.util.jIOError) &&\n
                   (error.status_code === 404)) {\n
@@ -6649,13 +6693,14 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                   throw new jIO.util.jIOError("Conflict on \'" + id + "\'",\n
                                               409);\n
                 }\n
-                return propagateModification(destination, doc, local_hash, id);\n
+                return propagateModification(source, destination, doc,\n
+                                             local_hash, id);\n
               }, function (error) {\n
                 if ((error instanceof jIO.util.jIOError) &&\n
                     (error.status_code === 404)) {\n
                   // Document has been deleted remotely\n
-                  return propagateModification(destination, doc, local_hash,\n
-                                               id);\n
+                  return propagateModification(source, destination, doc,\n
+                                               local_hash, id);\n
                 }\n
                 throw error;\n
               });\n
@@ -6694,19 +6739,25 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
               signature_dict[result_list[1].data.rows[i].id] = i;\n
             }\n
           }\n
-          for (key in local_dict) {\n
-            if (local_dict.hasOwnProperty(key)) {\n
-              if (!signature_dict.hasOwnProperty(key)) {\n
-                checkLocalCreation(queue, source, destination, key, options);\n
+          if (options.check_creation === true) {\n
+            for (key in local_dict) {\n
+              if (local_dict.hasOwnProperty(key)) {\n
+                if (!signature_dict.hasOwnProperty(key)) {\n
+                  checkLocalCreation(queue, source, destination, key, options);\n
+                }\n
               }\n
             }\n
           }\n
           for (key in signature_dict) {\n
             if (signature_dict.hasOwnProperty(key)) {\n
               if (local_dict.hasOwnProperty(key)) {\n
-                checkSignatureDifference(queue, source, destination, key);\n
+                if (options.check_modification === true) {\n
+                  checkSignatureDifference(queue, source, destination, key);\n
+                }\n
               } else {\n
-                checkLocalDeletion(queue, destination, key, source);\n
+                if (options.check_deletion === true) {\n
+                  checkLocalDeletion(queue, destination, key, source);\n
+                }\n
               }\n
             }\n
           }\n
@@ -6750,13 +6801,30 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
       })\n
 \n
       .push(function () {\n
-        return pushStorage(context._local_sub_storage,\n
-                           context._remote_sub_storage,\n
-                           {use_post: context._use_remote_post});\n
+        if (context._check_local_modification ||\n
+            context._check_local_creation ||\n
+            context._check_local_deletion) {\n
+          return pushStorage(context._local_sub_storage,\n
+                             context._remote_sub_storage,\n
+                             {\n
+              use_post: context._use_remote_post,\n
+              check_modification: context._check_local_modification,\n
+              check_creation: context._check_local_creation,\n
+              check_deletion: context._check_local_deletion\n
+            });\n
+        }\n
       })\n
       .push(function () {\n
-        return pushStorage(context._remote_sub_storage,\n
-                           context._local_sub_storage, {});\n
+        if (context._check_remote_modification ||\n
+            context._check_remote_creation ||\n
+            context._check_remote_deletion) {\n
+          return pushStorage(context._remote_sub_storage,\n
+                             context._local_sub_storage, {\n
+              check_modification: context._check_remote_modification,\n
+              check_creation: context._check_remote_creation,\n
+              check_deletion: context._check_remote_deletion\n
+            });\n
+        }\n
       });\n
   };\n
 \n
@@ -9259,7 +9327,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.12409.47687.33177</string> </value>
+                <value> <string>943.22425.20634.45158</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -9277,7 +9345,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432304271.29</float>
+                        <float>1433146407.05</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
