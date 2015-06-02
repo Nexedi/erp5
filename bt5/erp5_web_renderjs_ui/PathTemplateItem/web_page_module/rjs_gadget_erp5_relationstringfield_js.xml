@@ -322,7 +322,6 @@ promiseEventListener */\n
         // show "new" tag, clicking it will remove it and reset the field!\n
         // XXX Not active - reset should be handled by a generic reset method!\n
         if (no_results && field_json.allow_creation) {\n
-          props.need_to_refresh = true;\n
           return new RSVP.Queue()\n
             .push(function () {\n
               props.wrapper.appendChild(createNewTag(my_gadget));\n
@@ -350,7 +349,6 @@ promiseEventListener */\n
               return setRelationJump(my_gadget, undefined);\n
             });\n
         }\n
-        props.need_to_refresh = false;\n
         // default autocomplete\n
         return new RSVP.Queue()\n
           .push(function () {\n
@@ -399,7 +397,6 @@ promiseEventListener */\n
     // Init local properties\n
     .ready(function (my_gadget) {\n
       my_gadget.property_dict = {};\n
-      my_gadget.property_dict.need_to_refresh = false;\n
     })\n
 \n
     .ready(function (my_gadget) {\n
@@ -475,20 +472,6 @@ promiseEventListener */\n
           this.property_dict.selected_uid;\n
       }\n
       return result;\n
-    })\n
-    .declareMethod(\'refresh\', function (options) {\n
-      var wrapper = this.property_dict.wrapper,\n
-        tag_list;\n
-      tag_list = wrapper.querySelector(".ui-tag-list");\n
-      if (tag_list !== null) {\n
-        tag_list.parentNode.removeChild(tag_list);\n
-      }\n
-      return this.render(options);\n
-    })\n
-    .declareMethod(\'checkRefresh\', function () {\n
-      var tmp = this.property_dict.need_to_refresh;\n
-      this.property_dict.need_to_refresh = false;\n
-      return tmp;\n
     })\n
     .declareMethod(\'checkValidity\', function () {\n
       var result;\n
@@ -624,7 +607,7 @@ promiseEventListener */\n
   - keyboard speed test\n
   - add generic text and translations\n
   - do multiRelationfield\n
-  - ok find way to digest response of erp5? submit should clean input\n
+  - find way to digest response of erp5? submit should clean input\n
   - add column_list parameter to pass more than title = "John Smith", render?\n
  \n
  \n
@@ -767,7 +750,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.11588.15892.23876</string> </value>
+                <value> <string>943.18921.17173.42154</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -785,7 +768,7 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432255062.93</float>
+                        <float>1433215555.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

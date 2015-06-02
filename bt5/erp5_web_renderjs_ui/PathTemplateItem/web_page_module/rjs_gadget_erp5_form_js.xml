@@ -341,87 +341,6 @@
           return data;\n
         });\n
     })\n
-    .declareMethod("refresh", function (options) {\n
-      var form_gadget = this,\n
-        j,\n
-        i,\n
-        index = 0,\n
-        erp5_document = options.erp5_document,\n
-        form_definition = options.form_definition,\n
-        rendered_form = erp5_document._embedded._view,\n
-        group_list = form_definition.group_list,\n
-        refresh_queue = new RSVP.Queue(),\n
-        suboption_dict = {},\n
-        suboptions,\n
-        renderered_field,\n
-        field,\n
-        refresh_list = this.props.refresh_list;\n
-      delete options.erp5_document;\n
-      delete options.form_definition;\n
-\n
-      form_gadget.state_parameter_dict = options.form_gadget || {};\n
-      // XXX Hardcoded for searchfield - remove later!\n
-      if (form_definition.extended_search) {\n
-        suboption_dict.extended_search = form_definition.extended_search;\n
-      }\n
-\n
-      function refresh_gadget(options, gadget_index) {\n
-        if (form_gadget.props.gadget_list[gadget_index].refresh !== undefined) {\n
-          refresh_queue.push(function () {\n
-            return form_gadget.props.gadget_list[gadget_index].refresh(options);\n
-          });\n
-        }\n
-      }\n
-      for (i = 0; i < group_list.length; i += 1) {\n
-        for (j = 0; j < group_list[i][1].length; j += 1) {\n
-          field = group_list[i][1][j];\n
-          if (rendered_form.hasOwnProperty(field[0])) {\n
-            if (refresh_list[index]) {\n
-              renderered_field = rendered_form[field[0]];\n
-              suboptions = options[renderered_field.key] || suboption_dict;\n
-              suboptions.field_json = renderered_field;\n
-              refresh_gadget(suboptions, index);\n
-            }\n
-            index += 1;\n
-          }\n
-        }\n
-      }\n
-      return refresh_queue;\n
-    })\n
-    .declareMethod("checkRefresh", function () {\n
-      var form_gadget = this,\n
-        k,\n
-        field_gadget,\n
-        count = form_gadget.props.gadget_list.length,\n
-        result = false,\n
-        refresh_list = [],\n
-        queue = new RSVP.Queue();\n
-      function extendData(needToRefresh) {\n
-        result = result || needToRefresh;\n
-        refresh_list[refresh_list.length] = needToRefresh;\n
-      }\n
-      function dontNeedToRefresh() {\n
-        return false;\n
-      }\n
-      for (k = 0; k < count; k += 1) {\n
-        field_gadget = form_gadget.props.gadget_list[k];\n
-        // XXX Hack until better defined\n
-        if (field_gadget.checkRefresh !== undefined) {\n
-          queue\n
-            .push(field_gadget.checkRefresh.bind(field_gadget));\n
-        } else {\n
-          queue\n
-            .push(dontNeedToRefresh);\n
-        }\n
-        queue.push(extendData);\n
-      }\n
-      return queue\n
-        .push(function () {\n
-          form_gadget.props.refresh_list = refresh_list;\n
-          return result;\n
-        });\n
-\n
-    })\n
     .declareMethod("checkValidity", function () {\n
       var form_gadget = this,\n
         k,\n
@@ -587,7 +506,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.18921.17173.42154</string> </value>
+                <value> <string>943.19028.41746.46353</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -605,7 +524,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432701398.16</float>
+                        <float>1433215002.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
