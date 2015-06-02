@@ -1657,7 +1657,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       # copy-paste operation
       for id in tool.objectIds():
         ob = tool._getOb(id)
-        ob = ob._getCopy(tool)
+        ob = ob._getCopy(new_tool)
         ob._setId(id)
         new_tool._setObject(id, ob)
         ob = new_tool._getOb(id)
