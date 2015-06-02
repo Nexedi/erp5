@@ -87,7 +87,7 @@ for line in line_list:\n
     pass \n
   else:\n
     d = json.loads(line)\n
-    # xxx: save this value as a numpy array\n
+    # xxx: save this value as a Data Array identified by data_array_reference\n
 \n
 # start and enf offsets may not match existing record structure in stream\n
 # thus corrections in start and end offsets is needed thus we\n
@@ -102,7 +102,7 @@ return start, end\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>chunk_list, start, end</string> </value>
+            <value> <string>chunk_list, start, end, data_array_reference=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

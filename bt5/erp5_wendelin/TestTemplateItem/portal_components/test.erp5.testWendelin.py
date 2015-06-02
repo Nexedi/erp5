@@ -115,15 +115,17 @@ class Test(ERP5TypeTestCase):
     # test copy numpy -> wendelin but first resize persistent one (add new one)
     data_array.initArray((4, 4), np.uint8)
     persistent_zbig_array = data_array.getArray()
-    rows = [0,1]
-    cols = [2,2]
     new_array = np.arange(1,17).reshape((4,4))
     persistent_zbig_array[:,:] = new_array
     self.assertEquals(new_array.shape, persistent_zbig_array.shape)
-    
+
     # (enable when new wendelin.core released as it can kill system)
-    #self.assertTrue(np.array_equal(a, persistent_zbig_array))
+    #self.assertTrue(np.array_equal(new_array, persistent_zbig_array))
     
+    # test set element in zbig array
+    persistent_zbig_array[:2, 2] = 0
+    #self.assertFalse(np.array_equal(new_array, persistent_zbig_array))
+
     # resize Zbig Array (enable when new wendelin.core released as it can kill system)
     #persistent_zbig_array = np.resize(persistent_zbig_array, (100,100))
     #self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)

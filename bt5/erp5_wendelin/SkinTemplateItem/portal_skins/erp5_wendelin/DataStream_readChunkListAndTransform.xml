@@ -62,7 +62,10 @@ data_stream_chunk_list = data_stream.readChunkList(start, end)\n
 if transform_script_id is not None:\n
   transform_script = getattr(data_stream, transform_script_id, None)\n
   if transform_script is not None:\n
-    start, end = transform_script(data_stream_chunk_list, start, end)\n
+    start, end = transform_script(data_stream_chunk_list, \\\n
+                                  start, \\\n
+                                  end, \\\n
+                                  data_array_reference)\n
 \n
 # [warning] store current position offset in Data Stream, this can cause easily \n
 # ConflictErrors and it spawns re-index activities on DataStream\n
@@ -91,7 +94,7 @@ if start < total_stream_length:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>data_stream_relative_url, start, end, chunk_length, transform_script_id=None</string> </value>
+            <value> <string>data_stream_relative_url, start, end, chunk_length, transform_script_id=None, data_array_reference=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

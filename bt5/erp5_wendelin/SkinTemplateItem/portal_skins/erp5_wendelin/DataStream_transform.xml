@@ -73,7 +73,7 @@ return data_length\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>chunk_length=1048576, transform_script_id=None</string> </value>
+            <value> <string>chunk_length=1048576, transform_script_id=None, data_array_reference=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
