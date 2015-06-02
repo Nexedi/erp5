@@ -284,6 +284,15 @@
           select = this.element.querySelector("select");\n
           result[field_json.subfield_timezone_key] = select.options[select.selectedIndex].value;\n
         }\n
+      } else {\n
+        //if no value, return empty data\n
+        if (field_json.date_only === 0) {\n
+          result[field_json.subfield_hour_key] = "";\n
+          result[field_json.subfield_minute_key] = "";\n
+        }\n
+        result[field_json.subfield_year_key] = "";\n
+        result[field_json.subfield_month_key] = "";\n
+        result[field_json.subfield_day_key] = "";\n
       }\n
       return result;\n
     })\n
@@ -493,7 +502,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -507,7 +516,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.29666.30820.17834</string> </value>
+                <value> <string>943.415.21085.47820</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -525,7 +534,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1425561983.22</float>
+                        <float>1433234446.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
