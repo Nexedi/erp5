@@ -48,8 +48,6 @@
               <tuple>
                 <string>W: 53,  4: Unused variable \'scipy\' (unused-variable)</string>
                 <string>W: 54,  4: Unused variable \'sklearn\' (unused-variable)</string>
-                <string>W:118,  4: Unused variable \'rows\' (unused-variable)</string>
-                <string>W:119,  4: Unused variable \'cols\' (unused-variable)</string>
               </tuple>
             </value>
         </item>
