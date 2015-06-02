@@ -48,6 +48,7 @@
               <tuple>
                 <string>W: 53,  4: Unused variable \'scipy\' (unused-variable)</string>
                 <string>W: 54,  4: Unused variable \'sklearn\' (unused-variable)</string>
+                <string>W: 93,  4: Unused variable \'data_array\' (unused-variable)</string>
               </tuple>
             </value>
         </item>

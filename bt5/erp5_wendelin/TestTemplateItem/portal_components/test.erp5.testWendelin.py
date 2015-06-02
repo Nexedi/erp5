@@ -52,7 +52,8 @@ class Test(ERP5TypeTestCase):
     """ 		 
     import scipy 		 
     import sklearn
-  def test_01_IngestionFfromFluentd(self):
+    
+  def test_01_IngestionFromFluentd(self):
     """
     Test ingestion using a POST Request containing a msgpack encoded message
     simulating input from fluentd
@@ -67,9 +68,19 @@ class Test(ERP5TypeTestCase):
     request.set('reference', 'car')
     request.set('data_chunk', data_chunk)
     
+    # create new Data Stream for test purposes
+    data_stream = portal.data_stream_module.newContent( \
+                   portal_type='Data Stream', \
+                   reference='car')
+    data_stream.validate()
+    
+    # asssign it to Data Supply
+    data_supply_line = portal.restrictedTraverse('data_supply_module/wendelin_3/1')
+    data_supply_line.setDestinationSectionValue(data_stream)
+    self.tic()
+    
     # do real ingestion call
     portal.portal_ingestion_policies.wendelin_car_logs.ingest()
-    data_stream = portal.data_stream_module.wendelin_22
     
     # ingestion handler script saves new data using new line so we 
     # need to remove it, it also stringifies thus we need to
@@ -77,7 +88,15 @@ class Test(ERP5TypeTestCase):
     data_stream_data = data_stream_data.replace('\n', '')
     self.assertEqual(str(real_data_dictionary), data_stream_data)
     
-    # XXX: try sample transformation
+    # try sample transformation
+    reference = 'test-data-array'
+    data_array = portal.data_array_module.newContent(
+                                            portal_type='Data Array',
+                                            reference = reference)
+    data_stream.DataStream_transform( \
+        chunk_length = 10, \
+        transform_script_id = 'DataStream_convertoNumpyArray',
+        data_array_reference = reference)
     
   def test_02_Transformations(self):
     """
