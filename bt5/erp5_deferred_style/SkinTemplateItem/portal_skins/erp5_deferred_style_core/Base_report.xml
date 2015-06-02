@@ -82,9 +82,14 @@ with portal.Localizer.translationContext(localizer_language):\n
                          report_method=dummyReportMethod,\n
                          form=portal.restrictedTraverse(form_path)))\n
 \n
-  attachment_name = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
+  attachment_name_list = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
                         \'content-disposition\') or \'\').split(\';\')\n
-                      if x.startswith(\' filename=\')][0]\n
+                            if x.startswith(\' filename=\')]\n
+  if attachment_name_list:\n
+    attachment_name, = attachment_name_list\n
+  else:\n
+    assert \'inline\' in (request.RESPONSE.getHeader(\'content-disposition\') or \'\')\n
+    attachment_name = \'index.html\'\n
   if attachment_name.startswith(\'"\'):\n
     attachment_name = attachment_name[1:]\n
   if attachment_name.endswith(\'"\'):\n
