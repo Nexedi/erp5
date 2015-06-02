@@ -389,7 +389,7 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
 
 def WorkflowTool_isBootstrapRequired(self):
   # migration requires the installation of tempalte erp5_workflow;
-  if self.getPortalObject().portal_types._getOb('ERP5 Workflow Tool', None) is not None:
+  if self.getPortalObject().portal_types._getOb('Workflow Tool', None) is not None:
     return True
   return False
 
