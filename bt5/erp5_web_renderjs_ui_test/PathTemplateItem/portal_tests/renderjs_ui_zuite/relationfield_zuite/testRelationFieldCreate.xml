@@ -207,10 +207,42 @@
 </tr>\n
 \n
 <tr>\n
+  <td>pause</td>\n
+  <td>3000</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n="Tabs"]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Relation Fields\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n=\'Relation Fields\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@name=\'field_my_successor_title\']</td>\n
+  <td></td>\n
+</tr>\n
+<!--\n
+<tr>\n
   <td>waitForElementPresent</td>\n
   <td>//div[@data-gadget-scope=\'field_my_successor_title\']/a[@class=\'ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline\']</td>\n
   <td></td>\n
 </tr>\n
+-->\n
 \n
 <tr>\n
   <td>verifyValue</td>\n
@@ -224,6 +256,7 @@
   <td>a1</td>\n
 </tr>\n
 \n
+<!--\n
 <tr>\n
   <td>click</td>\n
   <td>//div[@data-gadget-scope=\'field_my_successor_title\']/a</td>\n
@@ -241,6 +274,7 @@
   <td>//input[@name=\'field_my_title\']</td>\n
   <td>A new foo</td>\n
 </tr>\n
+-->\n
 </tbody></table>\n
 </body>\n
 </html>
