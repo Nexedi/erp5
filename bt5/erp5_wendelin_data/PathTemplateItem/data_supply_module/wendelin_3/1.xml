@@ -39,9 +39,9 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source_section/sensor_module/wendelin_1</string>
                 <string>resource/data_product_module/wendelin_4</string>
-                <string>destination_section/data_stream_module/wendelin_22</string>
+                <string>source_section/sensor_module/wendelin_1</string>
+                <string>destination_section/data_stream_module/29</string>
               </tuple>
             </value>
         </item>
@@ -448,6 +448,51 @@
                     <state>
                       <tuple>
                         <float>1432716905.15</float>
+                        <string>GMT+3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>943.27914.35746.3908</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="5.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1433234651.65</float>
                         <string>GMT+3</string>
                       </tuple>
                     </state>
