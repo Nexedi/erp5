@@ -45,7 +45,7 @@ import os
 import warnings
 import transaction
 from App.config import getConfiguration
-from Products.ERP5.Tool.ERP5WorkflowTool import ERP5WorkflowTool
+from Products.ERP5.Tool.WorkflowTool import WorkflowTool
 from zope.lifecycleevent import ObjectCopiedEvent
 from OFS.event import ObjectClonedEvent
 from zope.event import notify
@@ -1647,27 +1647,22 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         can only be executed after install bt erp5_workflow.
     """
     tool = self.portal_workflow
-    if tool.getPortalType() != 'ERP5 Workflow Tool':
+    if tool.getPortalType() != 'Workflow Tool':
 
-      # create new ERP5 Workflow Tool
-      self._setObject('portal_workflow_new', ERP5WorkflowTool())
+      # create new Workflow Tool
+      self._setObject('portal_workflow_new', WorkflowTool())
       new_tool = getattr(self, 'portal_workflow_new')
       new_tool._chains_by_type = tool._chains_by_type
 
       # copy-paste operation
       for id in tool.objectIds():
         ob = tool._getOb(id)
-        orig_id = ob.getId()
-        ob._notifyOfCopyTo(new_tool, op=0)
-        orig_ob = ob
-        ob = ob._getCopy(new_tool)
+        ob = ob._getCopy(tool)
         ob._setId(id)
-        notify(ObjectCopiedEvent(ob, orig_ob))
         new_tool._setObject(id, ob)
         ob = new_tool._getOb(id)
-        ob.wl_clearLocks()
         ob._postCopy(new_tool, op=0)
-        notify(ObjectClonedEvent(ob))
+        ob.wl_clearLocks()
 
       # migration
       self.portal_workflow = new_tool
