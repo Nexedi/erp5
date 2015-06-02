@@ -47,7 +47,6 @@ from Products.DCWorkflowGraph.DCWorkflowGraph import bin_search, getGraph
 from Products.DCWorkflow.utils import Message as _
 from Products.DCWorkflow.utils import modifyRolesForPermission
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition as DCWorkflow
-from Products.ERP5.Tool import ERP5WorkflowTool
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
