@@ -151,13 +151,19 @@
         tr = document.createElement("tr"),\n
         document_table = gadget.props.element.querySelector(\'.document_table\'),\n
         th,\n
+        length_table = field_json.column_list.length,\n
         i;\n
 \n
       gadget.props.field_json = field_json;\n
       gadget.props.begin_from = parseInt(options.begin_from, 10) || 0;\n
       gadget.props.extended_search = options.extended_search;\n
-\n
-      for (i = 0; i < field_json.column_list.length; i += 1) {\n
+      if (field_json.show_anchor) {\n
+        th = document.createElement("th");\n
+        th.textContent = "Jump";\n
+        th.setAttribute("data-i18n", "Jump");\n
+        tr.appendChild(th);\n
+      }\n
+      for (i = 0; i < length_table; i += 1) {\n
         th = document.createElement("th");\n
         th.textContent = field_json.column_list[i][1];\n
         th.setAttribute("data-i18n", field_json.column_list[i][1]);\n
@@ -292,6 +298,14 @@
           tr = document.createElement("tr");\n
           tmp_url = result_list[i + 1];\n
 \n
+          if (field_json.show_anchor) {\n
+            th = document.createElement("th");\n
+            a = document.createElement("a");\n
+            a.href = tmp_url;\n
+            a.className = "ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext";\n
+            th.appendChild(a);\n
+            tr.appendChild(th);\n
+          }\n
           for (j = 0; j < field_json.column_list.length; j += 1) {\n
             th = document.createElement("th");\n
             value = result.data.rows[i].value[field_json.column_list[j][0]] || "";\n
@@ -584,7 +598,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -598,7 +612,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.18213.25268.27562</string> </value>
+                <value> <string>943.26058.11320.20582</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -616,8 +630,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432652509.88</float>
-                        <string>GMT</string>
+                        <float>1433234504.32</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

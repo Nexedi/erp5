@@ -339,6 +339,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       "column_list": column_list,\n
       "search_column_list": search_column_list,\n
       "editable_column_list": editable_column_list,\n
+      "show_anchor": field.get_value("anchor"),\n
 #       "line_list": line_list,\n
       "title": field.get_value("title"),\n
       "key": key,\n
