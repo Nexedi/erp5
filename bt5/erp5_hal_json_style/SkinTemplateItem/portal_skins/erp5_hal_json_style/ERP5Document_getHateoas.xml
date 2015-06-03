@@ -106,18 +106,18 @@ def getFormRelativeUrl(form):\n
     select_dict={\'relative_url\': None}\n
   )[0].relative_url\n
 \n
-def getFieldDefault(field, key):\n
+def getFieldDefault(field, key, value=None):\n
   # REQUEST.get(field.id, field.get_value("default"))\n
-  return traversed_document.Field_getDefaultValue(field, key, REQUEST)\n
+  return traversed_document.Field_getDefaultValue(field, key, value, REQUEST)\n
 \n
-def renderField(field, form_relative_url, meta_type=None, key=None):\n
+def renderField(field, form_relative_url, value=None, meta_type=None, key=None):\n
   if meta_type is None:\n
     meta_type = field.meta_type\n
   if key is None:\n
     key = field.generate_field_key()\n
 \n
   if meta_type == "ProxyField":\n
-    result = renderField(field, form_relative_url, meta_type=field.getRecursiveTemplateField().meta_type, key=key)\n
+    result = renderField(field, form_relative_url, value, meta_type=field.getRecursiveTemplateField().meta_type, key=key)\n
   elif meta_type == "ListField":\n
     result = {\n
       "type": meta_type,\n
@@ -131,7 +131,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       # XXX Message can not be converted to json as is\n
       "items": field.get_value("items"),\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"])\n
+    result["default"] = getFieldDefault(field, result["key"], value)\n
   elif meta_type in ("ParallelListField", "MultiListField"):\n
     result = {\n
       "type": meta_type,\n
@@ -145,7 +145,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       # XXX Message can not be converted to json as is\n
       "items": field.get_value("items"),\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"])\n
+    result["default"] = getFieldDefault(field, result["key"], value)\n
     result["sub_select_key"] = traversed_document.Field_getSubFieldKeyDict(field, \'default:list\', key=result["key"])\n
     result["sub_input_key"] = "default_" + traversed_document.Field_getSubFieldKeyDict(field, \'default:list:int\', key=result["key"])\n
   elif meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",\n
@@ -161,7 +161,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       "title": field.get_value("title"),\n
       "required": field.get_value("required"),\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"])\n
+    result["default"] = getFieldDefault(field, result["key"], value)\n
     if meta_type == "FloatField":\n
       result["precision"] = field.get_value("precision")\n
   elif meta_type == "DateTimeField":\n
@@ -181,7 +181,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       "hide_day": field.get_value(\'hide_day\'),\n
       "hidden_day_is_last_day": field.get_value(\'hidden_day_is_last_day\'),\n
     }\n
-    date_value = getFieldDefault(field, result["key"])\n
+    date_value = getFieldDefault(field, result["key"], value)\n
     if same_type(date_value, DateTime()):\n
       # Serialize DateTime\n
       date_value = date_value.rfc822()\n
@@ -227,7 +227,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       "title": field.get_value("title"),\n
       "required": field.get_value("required")\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"])\n
+    result["default"] = getFieldDefault(field, result["key"], value)\n
     result["relation_field_id"] = traversed_document.Field_getSubFieldKeyDict(\n
       field,\n
       "relation",\n
@@ -254,7 +254,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       "description": field.get_value("description"),\n
       "title": field.get_value("title")\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"])\n
+    result["default"] = getFieldDefault(field, result["key"], value)\n
   elif meta_type == "GadgetField":\n
     result = {\n
       "type": meta_type,\n
@@ -267,7 +267,7 @@ def renderField(field, form_relative_url, meta_type=None, key=None):\n
       "url": field.get_value("gadget_url"),\n
       "sandbox": field.get_value("js_sandbox"),\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"])\n
+    result["default"] = getFieldDefault(field, result["key"], value)\n
   elif meta_type == "ListBox":\n
     # XXX Not implemented\n
     column_list = field.get_value("columns")\n
@@ -908,7 +908,16 @@ elif mode == \'search\':\n
     for select in select_list:\n
       if editable_field_dict.has_key(select):\n
         REQUEST.set(\'cell\', document)\n
-        property_value = renderField(editable_field_dict[select], form_relative_url, key=\'field_%s_%s\' % (editable_field_dict[select].id, document_uid))\n
+\n
+        if (\'default\' in editable_field_dict[select].tales):\n
+          tmp_value = None\n
+        else:\n
+          tmp_value = document.getProperty(select, d=None)\n
+\n
+        property_value = renderField(editable_field_dict[select], form_relative_url,\n
+                                     tmp_value,\n
+                                     key=\'field_%s_%s\' % (editable_field_dict[select].id,\n
+                                     document_uid))\n
         REQUEST.other.pop(\'cell\', None)\n
       else:\n
         property_value = document.getProperty(select, d=None)\n

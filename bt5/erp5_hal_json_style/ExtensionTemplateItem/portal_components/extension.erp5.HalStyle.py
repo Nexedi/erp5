@@ -12,5 +12,5 @@ def Field_getSubFieldKeyDict(self, field, id, key=None):
   """XXX"""
   return field.generate_subfield_key(id, key=key)
 
-def Field_getDefaultValue(self, field, key, REQUEST):
-  return field._get_default(key, None, REQUEST)
+def Field_getDefaultValue(self, field, key, value, REQUEST):
+  return field._get_default(key, value, REQUEST)
