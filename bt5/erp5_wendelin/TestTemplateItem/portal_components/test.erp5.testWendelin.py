@@ -118,6 +118,7 @@ class Test(ERP5TypeTestCase):
     
     data_array = self.portal.data_array_module.newContent( \
                    portal_type = 'Data Array')
+    self.assertEqual(None, data_array.getArray())
     data_array.initArray((3, 3), np.uint8)
     self.tic()
     
