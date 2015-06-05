@@ -68,7 +68,7 @@ data_stream_chunk_list = data_stream.readChunkList(start, end)\n
 if transform_script_id is not None:\n
   transform_script = getattr(data_stream, transform_script_id, None)\n
   if transform_script is not None:\n
-    start, end = transform_script(data_stream_chunk_list, \\\n
+    start, end = transform_script(context, data_stream_chunk_list, \\\n
                                   start, \\\n
                                   end, \\\n
                                   data_array_reference)\n

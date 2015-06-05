@@ -27,7 +27,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/array</string>
+                <string>elementary_type/data</string>
               </tuple>
             </value>
         </item>
