@@ -122,7 +122,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
     line[\'reference\'] = transaction.getReference()\n
     line[\'portal_type\'] = transaction.getTranslatedPortalType()\n
     line[\'date\'] = brain.date\n
-    if brain.mirror_section_uid == movement.getSourceSectionUid():\n
+    if brain.mirror_section_uid == movement.getSourceSectionUid() and brain.mirror_node_uid == movement.getSourceUid():\n
       line[\'specific_reference\'] = transaction.getDestinationReference()\n
       line[\'gap_id\'] = getAccountNumber(movement.getDestination())\n
     else:\n
