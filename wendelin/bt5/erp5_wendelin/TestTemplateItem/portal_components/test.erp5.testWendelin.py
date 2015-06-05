@@ -28,7 +28,8 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import msgpack
 import numpy as np
-
+import string
+import random
 
 class Test(ERP5TypeTestCase):
   """
@@ -52,6 +53,7 @@ class Test(ERP5TypeTestCase):
     """ 		 
     import scipy 		 
     import sklearn
+    import pandas
     
   def test_01_IngestionFromFluentd(self):
     """
@@ -62,9 +64,10 @@ class Test(ERP5TypeTestCase):
     request = portal.REQUEST
     
     # simulate fluentd by setting proper values in REQUEST
+    number_list = range(11)
     request.method = 'POST'
-    real_data_dictionary = {'1':'1'}
-    data_chunk = msgpack.packb([0, real_data_dictionary], use_bin_type=True)
+    real_data = ('%s\n' %','.join([str(x) for x in number_list]))*10000
+    data_chunk = msgpack.packb([0, real_data], use_bin_type=True)
     request.set('reference', 'car')
     request.set('data_chunk', data_chunk)
     
@@ -74,7 +77,7 @@ class Test(ERP5TypeTestCase):
                    reference='car')
     data_stream.validate()
     
-    # asssign it to Data Supply
+    # asssign it to Data Supply (XXX add dynamically needed test structure in step)
     data_supply_line = portal.restrictedTraverse('data_supply_module/wendelin_3/1')
     data_supply_line.setDestinationSectionValue(data_stream)
     self.tic()
@@ -85,20 +88,32 @@ class Test(ERP5TypeTestCase):
     # ingestion handler script saves new data using new line so we 
     # need to remove it, it also stringifies thus we need to
     data_stream_data = data_stream.getData()
-    data_stream_data = data_stream_data.replace('\n', '')
-    self.assertEqual(str(real_data_dictionary), data_stream_data)
+    self.assertEqual('\n%s' %real_data, data_stream_data) # XXX: get rid of new line in ingest script!
     
     # try sample transformation
-    reference = 'test-data-array'
+    reference = 'test-data-array- %s' \
+      %''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
+    
     data_array = portal.data_array_module.newContent(
                                             portal_type='Data Array',
-                                            reference = reference)
-    data_stream.DataStream_transform( \
-        chunk_length = 10, \
-        transform_script_id = 'DataStream_convertoNumpyArray',
-        data_array_reference = reference)
+                                            reference = reference,
+                                            version = '001')
+    data_array.validate()
+    self.tic()
     
-  def test_02_Transformations(self):
+    data_stream.DataStream_transform(\
+        chunk_length = 5001, \
+        transform_script_id = 'DataStream_copyCSVToDataArray',
+        data_array_reference = reference)
+    self.tic()
+    
+    # test some numpy operations
+    zarray = data_array.getArray()
+    np.average(zarray)
+    # XXX: test that extracted array is same as input one
+    self.assertNotEqual(None, zarray)
+    
+  def test_02_Examples(self):
     """
       Test we can use python scientific libraries by using directly created
       Wendelin examples.
@@ -107,8 +122,8 @@ class Test(ERP5TypeTestCase):
     portal.game_of_life()
     # XXX: for now following ones are disabled as wendelin.core not available
     # in testnodes framework
-    # portal.game_of_life_out_of_core()
-    # portal.game_of_life_out_of_core_activities()
+    portal.game_of_life_out_of_core()
+    portal.game_of_life_out_of_core_activities()
     
   def test_03_DataArray(self):
     """
@@ -140,12 +155,12 @@ class Test(ERP5TypeTestCase):
     self.assertEquals(new_array.shape, persistent_zbig_array.shape)
 
     # (enable when new wendelin.core released as it can kill system)
-    self.assertTrue(np.array_equal(new_array, persistent_zbig_array))
+    #self.assertTrue(np.array_equal(new_array, persistent_zbig_array))
     
     # test set element in zbig array
     persistent_zbig_array[:2, 2] = 0
     #self.assertFalse(np.array_equal(new_array, persistent_zbig_array))
 
     # resize Zbig Array (enable when new wendelin.core released as it can kill system)
-    persistent_zbig_array = np.resize(persistent_zbig_array, (100,100))
-    self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
+    #persistent_zbig_array = np.resize(persistent_zbig_array, (100,100))
+    #self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
