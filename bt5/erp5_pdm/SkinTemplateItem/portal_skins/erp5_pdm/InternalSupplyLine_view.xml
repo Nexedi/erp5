@@ -93,6 +93,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_destination_title</string>
                         <string>my_resource_title</string>
                         <string>my_priced_quantity</string>
                         <string>my_base_unit_price</string>

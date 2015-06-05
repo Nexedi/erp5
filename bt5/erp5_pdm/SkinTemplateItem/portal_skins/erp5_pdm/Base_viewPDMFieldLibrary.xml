@@ -200,6 +200,8 @@
                         <string>my_view_mode_trade_phase</string>
                         <string>listbox_purchase_supply_line_destination_account</string>
                         <string>listbox_sale_supply_line_source_account</string>
+                        <string>my_view_mode_supply_line_destination_title</string>
+                        <string>my_view_mode_supply_line_source_title</string>
                       </list>
                     </value>
                 </item>
