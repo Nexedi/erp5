@@ -188,7 +188,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
-  def test_form_view_format(self):
+  def test_form_view_empty_format(self):
     # empty format= does not use oood for conversion
     response = self.publish(
                    '/%s/person_module/pers/Person_view?format='
@@ -199,6 +199,8 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_disposition = response.getHeader('content-disposition')
     self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
+
+  def test_form_view_pdf_format(self):
     # format=pdf uses oood for conversion
     response = self.publish(
                    '/%s/person_module/pers/Person_view?format=pdf'
@@ -208,6 +210,17 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(content_type, 'application/pdf')
     content_disposition = response.getHeader('content-disposition')
     self.assertEqual('attachment', content_disposition.split(';')[0])
+
+  def test_form_view_html_format(self):
+    # format=html is rendered inline
+    response = self.publish(
+                   '/%s/person_module/pers/Person_view?format=html'
+                   % self.portal.getId(), self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertEqual(content_type, 'text/html; charset=utf-8')
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEqual('inline', content_disposition.split(';')[0])
 
   def test_report_view_form_view(self):
     # Test report view rendering forms using form_view
