@@ -55,7 +55,7 @@
 """\n
   Simply a wrapper to real method.\n
 """\n
-data_stream = context.restrictedTraverse(data_stream_relative_url)\n
+data_stream = context\n
 total_stream_length = data_stream.getSize()\n
 \n
 if start > total_stream_length:\n
@@ -88,7 +88,6 @@ if end > total_stream_length:\n
 \n
 # some bytes left ...\n
 data_stream.activate().DataStream_readChunkListAndTransform( \\\n
-    data_stream.getRelativeUrl(), \\\n
     start, \\\n
     end, \\\n
     chunk_length, \\\n
@@ -100,7 +99,7 @@ data_stream.activate().DataStream_readChunkListAndTransform( \\\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>data_stream_relative_url, start, end, chunk_length, transform_script_id=None, data_array_reference=None</string> </value>
+            <value> <string>start, end, chunk_length, transform_script_id=None, data_array_reference=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

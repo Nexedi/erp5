@@ -62,7 +62,6 @@ data_length = context.getSize()\n
 start = 0\n
 end  = chunk_length\n
 context.activate().DataStream_readChunkListAndTransform( \\\n
-  context.getRelativeUrl(), \\\n
   start, \\\n
   end, \\\n
   chunk_length, \\\n

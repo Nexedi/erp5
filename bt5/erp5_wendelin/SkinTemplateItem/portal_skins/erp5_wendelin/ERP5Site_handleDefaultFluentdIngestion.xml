@@ -81,7 +81,7 @@ if data_chunk is not None and reference is not None:\n
 \n
   #context.log(data_supply)\n
   # we can have multiple lines for each sensor and we filter out by reference\n
-  # XXX: in future we will use Predicates to find already generate \n
+  # XXX: in future we will use Predicates to find already generated\n
   # Data Ingestion (Movements)\n
   if data_supply is not None:\n
     for data_supply_line in data_supply.objectValues():\n
@@ -112,8 +112,8 @@ if data_chunk is not None and reference is not None:\n
       # each chunk of data by default should be added with a new line character\n
       data = \'\\n%s\' %data\n
       data_stream.appendData(data)\n
-      context.log("Appended %s bytes to %s (%s, %s, %s)"   \n
-                    %(len(data), reference, data_supply, sensor, data_stream))\n
+      #context.log("Appended %s bytes to %s (%s, %s, %s)"   \n
+      #              %(len(data), reference, data_supply, sensor, data_stream))\n
       # XXX: open question -> we do not store the act of ingestion.\n
       # one way is to have a business process for who\'s "ingestion" \n
       # trade_phase / state we generate simulation movements and respective \n
