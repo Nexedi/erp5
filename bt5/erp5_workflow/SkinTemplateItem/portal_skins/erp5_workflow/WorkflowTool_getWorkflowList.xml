@@ -60,7 +60,7 @@ return workflow_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5WorkflowTool_getWorkflowList</string> </value>
+            <value> <string>WorkflowTool_getWorkflowList</string> </value>
         </item>
       </dictionary>
     </pickle>
