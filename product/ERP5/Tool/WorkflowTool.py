@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import cPickle
 import os
 import shutil
 import sys
@@ -34,7 +35,6 @@ import subprocess
 import time
 import transaction
 import struct
-import cPickle
 import urllib2
 import re
 
@@ -215,23 +215,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         raise WorkflowException(msg)
     return res
 
-  def getWorkflowTempObjectList(self):
-    """ Return a list of converted temporary workflows. Only necessary in
-        Workflow Tool to get temporarilly converted DCWorkflow.
-    """
-    temp_workflow_list = []
-    temp_workflow_id_list = []
-    for dc_workflow_id in self.getPortalObject().portal_workflow:
-      dc_workflow = self.getPortalObject().portal_workflow.get(dc_workflow_id)
-      workflow_type = dc_workflow.__class__.__name__
-      if workflow_type == 'Workflow' or workflow_type == 'Interaction Workflow':
-        continue
-      temp_obj = 1
-      temp_workflow = self.dc_workflow_asERP5Object(self, dc_workflow, temp_obj)
-      temp_workflow_list.append(temp_workflow)
-      temp_workflow_id_list.append(temp_workflow.getTitle())
-    return temp_workflow_list
-
   def getWorkflowValueListFor(self, portal_type_id):
     """ Return a list of workflows bound to selected portal_type.
     """
@@ -264,113 +247,158 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           return wfh[-1]
       return None
 
+  def decodeWorkflowUid(self, uid):
+    return cPickle.loads(b64decode(uid))
+
+  def encodeWorkflowUid(self, id):
+    return b64encode(cPickle.dumps(id))
+
+  def getObjectFromPath(self, path):
+    return self.unrestrictedTraverse(path)
+
+  def getWorkflowTempObjectList(self, temp_obj=1):
+    """ Return a list of converted temporary workflows. Only necessary in
+        Workflow Tool to get temporarilly converted DCWorkflow.
+    """
+    temp_workflow_list = []
+    temp_workflow_id_list = []
+    for dc_workflow in self.getPortalObject().portal_workflow.objectValues():
+      LOG( "Getting workflow '%s'"%dc_workflow.id, WARNING, " in WorkflowTool.py 257")
+      workflow_type = dc_workflow.__class__.__name__
+      if workflow_type == 'Workflow' or workflow_type == 'Interaction Workflow':
+        LOG( "Ingore workflow '%s'"%dc_workflow.id, WARNING, " in WorkflowTool.py 260")
+        continue
+      temp_workflow = self.dc_workflow_asERP5Object(self, dc_workflow, temp_obj)
+      temp_workflow_list.append(temp_workflow)
+      temp_workflow_id_list.append(temp_workflow.getTitle())
+    return temp_workflow_list
+
   def dc_workflow_asERP5Object(self, container, dc_workflow, temp):
     # create a temporary ERP5 Workflow
     workflow_type_id = dc_workflow.__class__.__name__
     if workflow_type_id == 'DCWorkflowDefinition':
       LOG("2.a Workflow '%s' is a DCWorkflow'"%dc_workflow.id,WARNING,' in WorkflowTool.py')
-      workflow = container.newContent(portal_type='Workflow', temp_object=temp)
+      if temp == 0:
+        new_id = 'workflow_' + dc_workflow.id
+      else:
+        new_id = dc_workflow.id
+      uid = self.encodeWorkflowUid(new_id)
+      workflow = container.newContent(id=new_id, portal_type='Workflow', temp_object=temp)
+      LOG(" New workflow created '%s' '%s'"%(workflow.getId(), workflow.getPortalType()), WARNING, "in WorkfowTool.py")
       workflow.setStateVariable(dc_workflow.state_var)
       workflow.setWorkflowManagedPermission(dc_workflow.permissions)
-      workflow.setSource(dc_workflow.initial_state)
+
+
     else:
       LOG("2.b Workflow '%s' is a DC Interaction Workflow"%dc_workflow.getTitle(),WARNING,' in WorkflowTool.py')
-      workflow = container.newContent(portal_type='Interaction Workflow', temp_object=temp)
+      if temp == 0:
+        new_id = 'interactionworkflow_' + dc_workflow.id
+      else:
+        new_id = dc_workflow.id
+      uid = self.encodeWorkflowUid(new_id)
+      workflow = container.newContent(id=new_id, portal_type='Interaction Workflow', temp_object=temp)
+      LOG(" New workflow created '%s' '%s'"%(workflow.getId(), workflow.getPortalType()), WARNING, "in WorkfowTool.py")
       workflow.setManagerBypass(dc_workflow.manager_bypass)
 
-    workflow.setReference(dc_workflow.id)
+    if temp == 1:
+      # give temp workflow an uid for form_dialog.
+      workflow.uid = uid
+    workflow.default_reference = dc_workflow.id
     workflow.edit(title=dc_workflow.title)
     workflow.edit(description=dc_workflow.description)
 
-    # create transitions
-    if workflow_type_id == 'DCWorkflowDefinition':
-      for tid in dc_workflow.transitions:
-        tdef = dc_workflow.transitions.get(tid)
-        LOG("2.1 Convert transition '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
-        transition = workflow.newContent(portal_type='Transition', temp_object=temp)
-        transition.edit(title=tdef.title)
-        transition.setReference(tdef.id)
-        transition.setTriggerType(tdef.trigger_type)
-        transition.setActboxCategory(tdef.actbox_category)
-        transition.setActboxIcon(tdef.actbox_icon)
-        transition.setActboxName(tdef.actbox_name)
-        transition.setActboxUrl(tdef.actbox_url)
-        transition.setAfterScriptId(tdef.after_script_name)
-        transition.setBeforeScriptId(tdef.script_name)
-        transition.setDestination(tdef.new_state_id)
-        transition.guard = tdef.guard
-      # create states (portal_type = State)
-      for sid in dc_workflow.states:
-        sdef = dc_workflow.states.get(sid)
-        LOG("2.2 Convert state '%s' of workflow '%s'"%(sdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
-        state = workflow.newContent(portal_type='State', temp_object=temp)
-        state.edit(title=sdef.title)
-        state.setReference(sdef.id)
-        state.setStatePermissionRoles(sdef.permission_roles)
-        state.setDestinationList(sdef.transitions)
-      # create worklists (portal_type = Worklist)
-      for qid in dc_workflow.worklists:
-        qdef = dc_workflow.worklists.get(qid)
-        LOG("2.3 Convert worklist '%s' of workflow '%s'"%(qdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
-        worklist = workflow.newContent(portal_type='Worklist', temp_object=temp)
-        worklist.edit(title=qdef.title)
-        worklist.setReference(qdef.id)
-        for key, values in qdef.var_matches.items():
-          if key == 'portal_type':
-            worklist.setMatchedPortalTypeList(values)
-          elif key == 'simulation_state':
-            worklist.setMatchedSimulationStateList(values)
-          elif key == 'validation_state':
-            worklist.setMatchedValidationStateList(values)
-        worklist.setActboxCategory(qdef.actbox_category)
-        worklist.setActboxIcon(qdef.actbox_icon)
-        worklist.setActboxName(qdef.actbox_name)
-        worklist.setActboxUrl(qdef.actbox_url)
-        worklist.guard = qdef.guard
-    else:
-      for tid in dc_workflow.interactions:
-        interaction = workflow.newContent(portal_type='Interaction', temp_object=temp)
-        tdef = dc_workflow.interactions.get(tid)
-        LOG("2.4 Convert interaction '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
-        interaction.edit(title=tdef.title)
-        interaction.setReference(tdef.id)
-        interaction.setActivateScriptName(tdef.activate_script_name)
-        interaction.setAfterScriptName(tdef.after_script_name)
-        interaction.setBeforeCommitScriptName(tdef.before_commit_script_name)
-        interaction.setBeforeScriptName(tdef.script_name)
-        interaction.guard = tdef.guard
-        interaction.setPortalTypeFilter(tdef.portal_type_filter)
-        interaction.setPortalTypeGroupFilter(tdef.portal_type_group_filter)
-        interaction.setTemporaryDocumentDisallowed(tdef.temporary_document_disallowed)
-        #interaction.setTransitionFormId() # this is not defined in DC interaction?
-        interaction.setTriggerMethodId(tdef.method_id)
-        interaction.setTriggerOncePerTransaction(tdef.once_per_transaction)
-        interaction.setTriggerType(tdef.trigger_type)
-
-    # create scripts (portal_type = Workflow Script)
-    for script_id in dc_workflow.scripts:
-      script = dc_workflow.scripts.get(script_id)
-      workflow_script = workflow.newContent(portal_type='Workflow Script', temp_object=temp)
-      LOG("2.5 Convert workflow script '%s' of workflow '%s'"%(workflow_script.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
-      workflow_script.edit(title=script.title)
-      workflow_script.setId(script.id)
-      workflow_script.setParameterSignature(script._params)
-      #workflow_script.setCallableType(script.callable_type)# not defined in DC script?
-      workflow_script.setBody(script._body)
-      workflow_script.setProxyRole(script._proxy_roles)
-    # create variables (portal_type = Variable)
-    for vid in dc_workflow.variables:
-      vdef = dc_workflow.variables.get(vid)
-      variable = workflow.newContent(portal_type='Variable', temp_object=temp)
-      LOG("2.6 Convert variable '%s' of workflow '%s'"%(vdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
-      variable.edit(title=vdef.title)
-      variable.setReference(vdef.id)
-      variable.setAutomaticUpdate(vdef.update_always)
-      variable.setDefaultExpr(vdef.default_expr)
-      variable.info_guard = vdef.info_guard
-      variable.setForCatalog(vdef.for_catalog)
-      variable.setForStatus(vdef.for_status)
-      variable.setInitialValue(vdef.default_value)
+    if temp == 0: # convert under request only
+      LOG("Converting DCWorkflow", WARNING, " in WorkflowTool.py") 
+      # create transitions
+      if workflow_type_id == 'DCWorkflowDefinition':
+        for tid in dc_workflow.transitions:
+          tdef = dc_workflow.transitions.get(tid)
+          LOG("2.1 Convert transition '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
+          transition = workflow.newContent(portal_type='Transition', temp_object=temp)
+          transition.edit(title=tdef.title)
+          transition.setReference(tdef.id)
+          transition.setTriggerType(tdef.trigger_type)
+          transition.setActboxCategory(tdef.actbox_category)
+          transition.setActboxIcon(tdef.actbox_icon)
+          transition.setActboxName(tdef.actbox_name)
+          transition.setActboxUrl(tdef.actbox_url)
+          transition.setAfterScriptId(tdef.after_script_name)
+          transition.setBeforeScriptId(tdef.script_name)
+          transition.setDestination(tdef.new_state_id)
+          transition.guard = tdef.guard
+        # create states (portal_type = State)
+        for sid in dc_workflow.states:
+          sdef = dc_workflow.states.get(sid)
+          LOG("2.2 Convert state '%s' of workflow '%s'"%(sdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
+          state = workflow.newContent(portal_type='State', temp_object=temp)
+          state.edit(title=sdef.title)
+          state.setReference(sdef.id)
+          state.setStatePermissionRoles(sdef.permission_roles)
+          state.setDestinationList(sdef.transitions)
+        workflow.setSource(getattr(workflow, 'state_'+dc_workflow.initial_state).getPath())
+        # create worklists (portal_type = Worklist)
+        for qid in dc_workflow.worklists:
+          qdef = dc_workflow.worklists.get(qid)
+          LOG("2.3 Convert worklist '%s' of workflow '%s'"%(qdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
+          worklist = workflow.newContent(portal_type='Worklist', temp_object=temp)
+          worklist.edit(title=qdef.title)
+          worklist.setReference(qdef.id)
+          for key, values in qdef.var_matches.items():
+            if key == 'portal_type':
+              worklist.setMatchedPortalTypeList(values)
+            elif key == 'simulation_state':
+              worklist.setMatchedSimulationStateList(values)
+            elif key == 'validation_state':
+              worklist.setMatchedValidationStateList(values)
+          worklist.setActboxCategory(qdef.actbox_category)
+          worklist.setActboxIcon(qdef.actbox_icon)
+          worklist.setActboxName(qdef.actbox_name)
+          worklist.setActboxUrl(qdef.actbox_url)
+          worklist.guard = qdef.guard
+      else:
+        for tid in dc_workflow.interactions:
+          interaction = workflow.newContent(portal_type='Interaction', temp_object=temp)
+          tdef = dc_workflow.interactions.get(tid)
+          LOG("2.4 Convert interaction '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
+          interaction.edit(title=tdef.title)
+          interaction.setReference(tdef.id)
+          interaction.setActivateScriptName(tdef.activate_script_name)
+          interaction.setAfterScriptName(tdef.after_script_name)
+          interaction.setBeforeCommitScriptName(tdef.before_commit_script_name)
+          interaction.setBeforeScriptName(tdef.script_name)
+          interaction.guard = tdef.guard
+          interaction.setPortalTypeFilter(tdef.portal_type_filter)
+          interaction.setPortalTypeGroupFilter(tdef.portal_type_group_filter)
+          interaction.setTemporaryDocumentDisallowed(tdef.temporary_document_disallowed)
+          #interaction.setTransitionFormId() # this is not defined in DC interaction?
+          interaction.setTriggerMethodId(tdef.method_id)
+          interaction.setTriggerOncePerTransaction(tdef.once_per_transaction)
+          interaction.setTriggerType(tdef.trigger_type)
+  
+      # create scripts (portal_type = Workflow Script)
+      for script_id in dc_workflow.scripts:
+        script = dc_workflow.scripts.get(script_id)
+        workflow_script = workflow.newContent(portal_type='Workflow Script', temp_object=temp)
+        LOG("2.5 Convert workflow script '%s' of workflow '%s'"%(workflow_script.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
+        workflow_script.edit(title=script.title)
+        workflow_script.id = script.id
+        workflow_script.setParameterSignature(script._params)
+        #workflow_script.setCallableType(script.callable_type)# not defined in python script?
+        workflow_script.setBody(script._body)
+        workflow_script.setProxyRole(script._proxy_roles)
+      # create variables (portal_type = Variable)
+      for vid in dc_workflow.variables:
+        vdef = dc_workflow.variables.get(vid)
+        variable = workflow.newContent(portal_type='Variable', temp_object=temp)
+        LOG("2.6 Convert variable '%s' of workflow '%s'"%(vdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
+        variable.edit(title=vdef.title)
+        variable.setReference(vdef.id)
+        variable.setAutomaticUpdate(vdef.update_always)
+        variable.setDefaultExpr(vdef.default_expr)
+        variable.info_guard = vdef.info_guard
+        variable.setForCatalog(vdef.for_catalog)
+        variable.setForStatus(vdef.for_status)
+        variable.setInitialValue(vdef.default_value)
     return workflow
 
   def getChainDict(self):
@@ -534,6 +562,12 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   def _getWorklistIgnoredSecurityColumnSet(self):
     return getattr(self,
       'Base_getWorklistIgnoredSecurityColumnSet', lambda: ())()
+
+  def getTypeCBT(self, pt):
+    return self._chains_by_type.get(pt)
+
+  def delTypeCBT(self, pt, wf_id):
+    self._chains_by_type = tuple(list(self._chains_by_type).remove(wf_id))
 
   def listActions(self, info=None, object=None, src__=False):
     """
