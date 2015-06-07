@@ -324,7 +324,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           transition.setActboxUrl(tdef.actbox_url)
           transition.setAfterScriptId(tdef.after_script_name)
           transition.setBeforeScriptId(tdef.script_name)
-          transition.setDestination(tdef.new_state_id)
           transition.guard = tdef.guard
         # create states (portal_type = State)
         for sid in dc_workflow.states:
@@ -334,8 +333,32 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           state.edit(title=sdef.title)
           state.setReference(sdef.id)
           state.setStatePermissionRoles(sdef.permission_roles)
-          state.setDestinationList(sdef.transitions)
-        workflow.setSource(getattr(workflow, 'state_'+dc_workflow.initial_state).getPath())
+
+        # Set Workflow default state using category setter
+        state_path = getattr(workflow, 'state_'+dc_workflow.initial_state).getPath()
+        state_path = 'source/' + '/'.join(state_path.split('/')[2:])
+        workflow.setCategoryList([state_path])
+
+        # set state's possible transitions:
+        for sid in dc_workflow.states:
+          sdef = workflow._getOb('state_'+sid)
+          new_category = []
+          for transition_id in dc_workflow.states.get(sid).transitions:
+            tr_path = getattr(workflow, 'transition_'+transition_id).getPath()
+            tr_path = 'destination/' + '/'.join(tr_path.split('/')[2:])
+            new_category.append(tr_path)
+          sdef.setCategoryList(new_category)
+
+        # set transition's destination state:
+        for tid in dc_workflow.transitions:
+          tdef = workflow._getOb('transition_'+tid)
+          state = getattr(workflow, 'transition_'+dc_workflow.transitions.get(tid).new_state_id, None)
+          if state is None:
+            # it's a remain in state transition.
+            continue
+          state_path = 'destination/' + '/'.join(state.getPath().split('/')[2:])
+          tdef.setCategoryList([state_path])
+
         # create worklists (portal_type = Worklist)
         for qid in dc_workflow.worklists:
           qdef = dc_workflow.worklists.get(qid)
@@ -378,10 +401,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       # create scripts (portal_type = Workflow Script)
       for script_id in dc_workflow.scripts:
         script = dc_workflow.scripts.get(script_id)
-        workflow_script = workflow.newContent(portal_type='Workflow Script', temp_object=temp)
+        workflow_script = workflow.newContent(id=script_id ,portal_type='Workflow Script', temp_object=temp)
         LOG("2.5 Convert workflow script '%s' of workflow '%s'"%(workflow_script.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
         workflow_script.edit(title=script.title)
-        workflow_script.id = script.id
         workflow_script.setParameterSignature(script._params)
         #workflow_script.setCallableType(script.callable_type)# not defined in python script?
         workflow_script.setBody(script._body)
