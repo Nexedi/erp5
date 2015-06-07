@@ -53,7 +53,10 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>assigned_role_list</string>
+                        <string>permission_role_matrixbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -73,9 +76,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>permission_role_matrixbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
