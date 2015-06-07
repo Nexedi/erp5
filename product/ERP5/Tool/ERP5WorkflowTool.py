@@ -297,7 +297,7 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
         transition.setActboxUrl(tdef.actbox_url)
         transition.setAfterScriptId(tdef.after_script_name)
         transition.setBeforeScriptId(tdef.script_name)
-        transition.setDestination(tdef.new_state_id)
+        transition.setDestination(tdef.new_state_id) # need to be redefined to category setter
         transition.guard = tdef.guard
       # create states (portal_type = State)
       for sid in dc_workflow.states:
@@ -307,7 +307,32 @@ class ERP5WorkflowTool(BaseTool, OriginalWorkflowTool):
         state.edit(title=sdef.title)
         state.setReference(sdef.id)
         state.setStatePermissionRoles(sdef.permission_roles)
-        state.setDestinationList(sdef.transitions)
+        state.setDestinationList(sdef.transitions) # need to be redefined to category setter
+
+      # Set Workflow default state using category setter
+      state_path = getattr(workflow, 'state_'+dc_workflow.initial_state).getPath()
+      state_path = 'source' + '/'.join(state_path.split('/')[2:])
+      LOG("default state path is '%s'"%state_path,WARNING," in WorkflowTool.py")
+      workflow.setCategoryList(workflow.getCategoryList()+(state_path, ))
+
+      # set state possible transitions:
+      for sid in dc_workflow.states:
+        sdef = workflow._getOb('state_'+sid)
+        destination_category_list = []
+        for dc_tr in dc_workflow.states.get(sid).transitions:
+          tr_path = getattr(workflow, 'transition_'+dc_tr).getPath()
+          LOG("possible transition path is '%s'"%state_path,WARNING," in WorkflowTool.py")
+          destination_category_list.append('destination' + '/'.join(tr_path.split('/')[2:]))
+        sdef.setCategoryList(sdef.getCategoryList()+tuple(destination_category_list))
+
+      # set transition destination state:
+      for tid in dc_workflow.transitions:
+        tdef = workflow._getOb('transition_'+tid)
+        state_path = getattr(workflow, 'transition_'+dc_workflow.transitions.get(tid).new_state_id).getPath()
+        state_path = 'destination' + '/'.join(state_path.split('/')[2:])
+        LOG("destination state path is '%s'"%state_path,WARNING," in WorkflowTool.py")
+        tdef.setCategoryList(sdef.getCategoryList()+(state_path, ))
+
       # create worklists (portal_type = Worklist)
       for qid in dc_workflow.worklists:
         qdef = dc_workflow.worklists.get(qid)
