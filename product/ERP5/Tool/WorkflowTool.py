@@ -428,7 +428,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         variable.edit(title=vdef.title)
         variable.setReference(vdef.id)
         variable.setAutomaticUpdate(vdef.update_always)
-        variable.setDefaultExpr(vdef.default_expr)
+        if getattr(vdef, 'default_expr', None) is not None:
+          variable.setDefaultExpr(vdef.default_expr.text)
         variable.info_guard = vdef.info_guard
         variable.setForCatalog(vdef.for_catalog)
         variable.setForStatus(vdef.for_status)
@@ -598,10 +599,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       'Base_getWorklistIgnoredSecurityColumnSet', lambda: ())()
 
   def getTypeCBT(self, pt):
-    return self._chains_by_type.get(pt)
+    return self._chains_by_type[pt]
+
+  def addTypeCBT(self, pt, wf_id):
+    self._chains_by_type[pt] = self._chains_by_type[pt] + (wf_id, )
 
   def delTypeCBT(self, pt, wf_id):
-    self._chains_by_type = tuple(list(self._chains_by_type).remove(wf_id))
+    self._chains_by_type[pt] = tuple(wf for wf in self._chains_by_type[pt] if wf != wf_id)
 
   def listActions(self, info=None, object=None, src__=False):
     """
