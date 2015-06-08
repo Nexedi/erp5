@@ -154,10 +154,11 @@
               </h4>\n
               <div class="ui-collapsible-content ui-collapsible-content-collapsed" aria-hidden="true">\n
                 <fieldset data-role="controlgroup">\n
-                  {{#each document_list}}\n
+                  {{#each language_list}}\n
                   <form method="POST" action="">\n
                     <div class="ui-btn ui-input-btn ui-corner-all ui-shadow ui-btn-icon-right ui-icon-carat-r" data-i18n="[node]{{lang}}">\n
-                      &nbsp;\n
+                       {{lang}}\n
+                       &nbsp;\n
                       <input type="submit" data-enhanced="true" name="lang" id="lang-{{count}}" value="{{lang}}" />\n
                     </div>\n
                     <label class="ui-hidden-accessible" for="lang-{{count}}" data-i18n="{{lang}}"></label>\n
@@ -304,7 +305,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -318,7 +319,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.20332.24952.65262</string> </value>
+                <value> <string>943.36089.56695.38741</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -336,7 +337,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1429861586.7</float>
+                        <float>1433731300.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

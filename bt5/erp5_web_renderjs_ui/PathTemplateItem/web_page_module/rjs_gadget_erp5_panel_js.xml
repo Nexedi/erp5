@@ -183,7 +183,7 @@
           if (len > 0) {\n
             language_list = [];\n
             for (i = 0, i_len = len; i < i_len; i += 1) {\n
-              language_list.push({"count": i, "lang": language_list[i]});\n
+              language_list.push({"count": i, "lang": raw_language_list[i]});\n
             }\n
           }\n
 \n
@@ -193,6 +193,10 @@
             "language_list": language_list,\n
             "logout_href": all_result[3]\n
           });\n
+\n
+          if (len > 0) {\n
+            return g.translateHtml(tmp);\n
+          }\n
           return tmp;\n
         })\n
         .push(function (my_translated_or_plain_html) {\n
@@ -375,7 +379,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -389,7 +393,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.40517.64847.10325</string> </value>
+                <value> <string>943.36081.11434.7048</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -407,7 +411,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1430146351.8</float>
+                        <float>1433732853.87</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
