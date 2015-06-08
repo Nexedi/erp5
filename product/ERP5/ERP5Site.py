@@ -1667,7 +1667,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       # migration
       self.portal_workflow = new_tool
       self.portal_workflow.id = 'portal_workflow'
-      self._delObject(new_tool)
+      self._delObject('portal_workflow_new')
 Globals.InitializeClass(ERP5Site)
 
 def getBootstrapDirectory():
