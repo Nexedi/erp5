@@ -14,6 +14,8 @@
                 <string>editable_columns</string>
                 <string>hide_rows_on_no_search_criterion</string>
                 <string>portal_types</string>
+                <string>sort</string>
+                <string>sort_columns</string>
                 <string>title</string>
               </list>
             </value>
@@ -120,6 +122,28 @@
                         <tuple>
                           <string>Property Sheet</string>
                           <string>Property Sheet</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>Name</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>Name</string>
                         </tuple>
                       </list>
                     </value>

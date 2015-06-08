@@ -1,3 +1,6 @@
+2015-06-08 arnaud.fontaine
+* Sort Property Sheets by ID by default.
+
 2014-02-24 arnaud.fontaine
 * Cosmetic: Fix Pylint warnings.
 
