@@ -1,4 +1,7 @@
 2015-06-08 arnaud.fontaine
+* Allow to jump from a Portal Type to its currently set Property Sheets.
+
+2015-06-08 arnaud.fontaine
 * Sort Property Sheets by ID by default.
 
 2014-02-24 arnaud.fontaine

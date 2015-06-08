@@ -467,6 +467,34 @@ class ERP5TypeInformation(XMLObject,
                                    self.getPortalType(),
                                    type_property_sheet_value_list)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getRecursivePropertySheetValueList')
+    def getRecursivePropertySheetValueList(self):
+      """
+      Get all the Property Sheets for this Portal Type, not only the one set on
+      'type_property_sheet' property but also the ones defined on
+      'property_sheets' property on each parent classes.
+      """
+      import erp5.portal_type
+      portal_type_class = getattr(erp5.portal_type, self.getId())
+      portal_type_class.loadClass()
+
+      # XXX-arnau: There should be no need of checking this property (IOW
+      # checking the MRO should be enough), but this is not enough for Portal
+      # Types Accessor Holder (erp5.accessor_holder.portal_type), used by
+      # Preferences for example (defining getAccessorHolderList() which
+      # returns a single Accessor Holder from several Property
+      # Sheets). Probably this behavior should be changed to have one Accessor
+      # Holder per Property Sheet ?
+      property_sheet_name_set = set(self.getTypePropertySheetList())
+
+      for klass in portal_type_class.mro():
+        if klass.__module__ == 'erp5.accessor_holder.property_sheet':
+          property_sheet_name_set.add(klass.__name__)
+
+      return getPropertySheetValueList(self.getPortalObject(),
+                                       property_sheet_name_set)
+
     # XXX these methods, _baseGetTypeClass, getTypeMixinList, and
     # getTypeInterfaceList, are required for a bootstrap issue that
     # the portal type class Base Type is required for _aq_dynamic on
