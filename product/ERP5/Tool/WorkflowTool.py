@@ -598,11 +598,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return getattr(self,
       'Base_getWorklistIgnoredSecurityColumnSet', lambda: ())()
 
-  def getTypeCBT(self, pt):
-    return self._chains_by_type[pt]
-
-  def addTypeCBT(self, pt, wf_id):
-    self._chains_by_type[pt] = self._chains_by_type[pt] + (wf_id, )
+  def getChainsByType(self):
+    return self._chains_by_type
 
   def delTypeCBT(self, pt, wf_id):
     self._chains_by_type[pt] = tuple(wf for wf in self._chains_by_type[pt] if wf != wf_id)
