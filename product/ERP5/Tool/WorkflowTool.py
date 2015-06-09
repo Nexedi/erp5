@@ -322,8 +322,18 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           transition.setActboxIcon(tdef.actbox_icon)
           transition.setActboxName(tdef.actbox_name)
           transition.setActboxUrl(tdef.actbox_url)
-          transition.setAfterScriptId(tdef.after_script_name)
-          transition.setBeforeScriptId(tdef.script_name)
+          if tdef.after_script_name is not None:
+            # check after script is a Transion or a Script:
+            if tdef.after_script_name in dc_workflow.transitions.objectIds():
+              transition.setAfterScriptId('transition_'+tdef.after_script_name)
+            else:
+              transition.setAfterScriptId('script_'+tdef.after_script_name)
+          if tdef.script_name is not None:
+            # check after script is a Transion or a Script:
+            if tdef.script_name in dc_workflow.transitions.objectIds():
+              transition.setAfterScriptId('transition_'+tdef.script_name)
+            else:
+              transition.setAfterScriptId('script_'+tdef.script_name)
           transition.guard = tdef.guard
         # create states (portal_type = State)
         for sid in dc_workflow.states:
@@ -397,10 +407,26 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           LOG("2.4 Convert interaction '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
           interaction.edit(title=tdef.title)
           interaction.setReference(tdef.id)
-          interaction.setActivateScriptName(tdef.activate_script_name)
-          interaction.setAfterScriptName(tdef.after_script_name)
-          interaction.setBeforeCommitScriptName(tdef.before_commit_script_name)
-          interaction.setBeforeScriptName(tdef.script_name)
+          if tdef.activate_script_name is not None:
+            if tdef.activate_script_name in dc_workflow.interactions.objectIds():
+              interaction.setActivateScriptName('interaction_'+tdef.activate_script_name)
+            else:
+              interaction.setActivateScriptName('script_'+tdef.activate_script_name)
+          if tdef.after_script_name is not None:
+            if tdef.after_script_name in tdef.interactions.objectIds():
+              interaction.setAfterScriptName('interaction_'+tdef.after_script_name)
+            else:
+              interaction.setAfterScriptName('script_'+tdef.after_script_name)
+          if tdef.before_commit_script_name is not None:
+            if tdef.before_commit_script_name in tdef.interactions.objectIds():
+              interaction.setBeforeCommitScriptName('interaction_'+tdef.before_commit_script_name)
+            else:
+              interaction.setBeforeCommitScriptName('script_'+tdef.before_commit_script_name)
+          if tdef.script_name is not None:
+            if tdef.script_name in tdef.interactions.objectIds():
+              interaction.setBeforeScriptName('interaction_'+tdef.script_name)
+            else:
+              interaction.setBeforeScriptName('script_'+tdef.script_name)
           interaction.guard = tdef.guard
           interaction.setPortalTypeFilter(tdef.portal_type_filter)
           interaction.setPortalTypeGroupFilter(tdef.portal_type_group_filter)
@@ -413,7 +439,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       # create scripts (portal_type = Workflow Script)
       for script_id in dc_workflow.scripts:
         script = dc_workflow.scripts.get(script_id)
-        workflow_script = workflow.newContent(id=script_id ,portal_type='Workflow Script', temp_object=temp)
+        workflow_script = workflow.newContent(id='script_'+script_id ,portal_type='Workflow Script', temp_object=temp)
         LOG("2.5 Convert workflow script '%s' of workflow '%s'"%(workflow_script.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
         workflow_script.edit(title=script.title)
         workflow_script.setParameterSignature(script._params)
