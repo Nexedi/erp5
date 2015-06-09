@@ -599,7 +599,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       'Base_getWorklistIgnoredSecurityColumnSet', lambda: ())()
 
   def getChainsByType(self):
-    return self._chains_by_type
+    type_workflow_dict = {}
+    for type_id, workflow_id_list in self._chains_by_type.iteritems():
+        type_workflow_dict.setdefault(type_id, []).append(workflow_id_list)
+    return type_workflow_dict
 
   def delTypeCBT(self, pt, wf_id):
     self._chains_by_type[pt] = tuple(wf for wf in self._chains_by_type[pt] if wf != wf_id)
