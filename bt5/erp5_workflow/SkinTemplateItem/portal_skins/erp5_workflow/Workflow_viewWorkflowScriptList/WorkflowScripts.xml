@@ -109,6 +109,10 @@
                       <list>
                         <tuple>
                           <string>id</string>
+                          <string>ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
@@ -184,6 +188,10 @@
                       <list>
                         <tuple>
                           <string>id</string>
+                          <string>WorkflowScript_getListBoxURL</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
                           <string>WorkflowScript_getListBoxURL</string>
                         </tuple>
                         <tuple>
