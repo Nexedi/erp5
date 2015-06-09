@@ -325,7 +325,7 @@ class TextWidget(Widget):
   """Text widget
   """
   property_names = Widget.property_names +\
-                    ['display_width', 'display_maxwidth', 'extra']
+                    ['display_width', 'display_maxwidth', 'input_type', 'extra']
 
   default = fields.StringField('default',
                                 title='Default',
@@ -352,13 +352,23 @@ class TextWidget(Widget):
                                           default="",
                                           required=0)
 
+  input_type = fields.StringField('input_type',
+                                  title='Input type',
+                                  description=(
+      "The type of the input field like 'color', 'date', 'email' etc."
+      "Note input types, not supported by old web browsers, will behave "
+      "as input type text."),
+                                  default="text",
+                                  required=0)
+
   def render(self, field, key, value, REQUEST, render_prefix=None):
     """Render text input field.
     """
     display_maxwidth = field.get_value('display_maxwidth') or 0
+    input_type = field.get_value('input_type') or 'text'
     if display_maxwidth > 0:
       return render_element("input",
-                            type="text",
+                            type=input_type,
                             name=key,
                             css_class=field.get_value('css_class'),
                             value=value,
@@ -367,7 +377,7 @@ class TextWidget(Widget):
                             extra=field.get_value('extra'))
     else:
       return render_element("input",
-                            type="text",
+                            type=input_type,
                             name=key,
                             css_class=field.get_value('css_class'),
                             value=value,
