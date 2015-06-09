@@ -515,13 +515,13 @@ class MultiRelationEditor:
         else:
           # we could call a generic method which create the setter method name
           if len(relation_object_list) == 1:
-            set_method_name = '_set%sValue' % \
+            set_method_name = 'set%sValue' % \
                          convertToUpperCase(self.base_category)
             getattr(o, set_method_name)(relation_object_list[0],
                                         portal_type=self.portal_type_list,
                                         checked_permission='View')
           else:
-            set_method_name = '_set%sValueList' % \
+            set_method_name = 'set%sValueList' % \
                          convertToUpperCase(self.base_category)
             getattr(o, set_method_name)(relation_object_list,
                                         portal_type=self.portal_type_list,
