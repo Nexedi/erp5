@@ -33,13 +33,13 @@ from Products.ERP5.Document.PythonScript import PythonScript
 from Products.ERP5.Document.Ticket import Ticket
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
-from Products.ERP5Type.XMLObject import XMLObject
-from zLOG import LOG, ERROR, DEBUG, WARNING
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class WorkflowScript(PythonScript):
+class WorkflowScript(PythonScript, IdAsReferenceMixin("script_", "prefix")):
   meta_type = 'ERP5 Python Script'
   portal_type = 'Workflow Script'
   add_permission = Permissions.AddPortalContent
+  default_reference = ''
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -48,6 +48,7 @@ class WorkflowScript(PythonScript):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.Reference
                       , PropertySheet.WorkflowScript
                       )
 
