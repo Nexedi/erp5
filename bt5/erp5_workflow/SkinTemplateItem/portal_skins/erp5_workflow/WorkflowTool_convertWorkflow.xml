@@ -88,8 +88,8 @@ for dc_wf in selected_wf_list:\n
   selected_wf_id_list.append(dc_wf.id)\n
 \n
 \n
-  for ptype in context.getPortalObject().portal_types.objectValues():\n
-\n
+  for ptype_id in context.getChainDict():\n
+    ptype = getattr(context.getPortalObject().portal_types, ptype_id)\n
     # 1. clean DC workflow assignement:\n
     context.delTypeCBT(ptype.id, dc_wf.id)\n
 \n
