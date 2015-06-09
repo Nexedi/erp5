@@ -112,7 +112,6 @@
     <!-- renderjs -->\n
     <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
-    <script src="uritemplate.js"></script>\n
     <script src="handlebars.js"></script>\n
 \n
     <script id="listbox-widget-header" type="text/x-handlebars-template">\n
@@ -301,7 +300,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -315,7 +314,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.11648.37959.39202</string> </value>
+                <value> <string>943.415.21085.47820</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -333,8 +332,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428414872.42</float>
-                        <string>GMT</string>
+                        <float>1433815191.47</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
