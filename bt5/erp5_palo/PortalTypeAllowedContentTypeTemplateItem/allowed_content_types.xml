@@ -1,0 +1,5 @@
+<allowed_content_type_list>
+ <portal_type id="Interface Tool">
+  <item>PALO ETL Connection</item>
+ </portal_type>
+</allowed_content_type_list>

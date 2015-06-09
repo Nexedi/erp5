@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>PALO ETL Connection</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Person</type>
+  <workflow>palo_password_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>

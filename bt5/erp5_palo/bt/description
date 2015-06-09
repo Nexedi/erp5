@@ -1,0 +1,2 @@
+Interfaces ERP5 with PALO's OLAP database ( http://jedox.com ) and its ETL.
+Provides authentication and authorization in PALO from ERP5 credentials.
