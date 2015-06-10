@@ -64,6 +64,7 @@ def getSubstitutionMappingDict():\n
     source_title=event_value.getSourceTitle() or \'\',\n
     image_parameters = "/Base_openEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
     document_parameters = "/Base_readEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
+    unsubscribe_parameters = "/Base_unsubscribeFromEvent?id=%s&hash=%s" %(event_value.getId(), hmac),\n
   )\n
   return kw\n
 \n
