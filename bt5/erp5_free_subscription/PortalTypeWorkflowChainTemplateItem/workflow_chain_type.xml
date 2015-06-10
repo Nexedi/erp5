@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Free Subscription</type>
+  <workflow>edit_workflow, free_subscription_interaction_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Free Subscription Request</type>
+  <workflow>edit_workflow, free_subscription_interaction_workflow, free_subscription_request_validation_workflow</workflow>
+ </chain>
+</workflow_chain>
