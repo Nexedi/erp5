@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,7 +70,10 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_modification_date</string>
+                        <string>listbox_dependency_list</string>
+                        <string>listbox_template_skin_id_list</string>
+                        <string>listbox_template_worklflow_id_list</string>
+                        <string>listbox_test_dependency_list</string>
                       </list>
                     </value>
                 </item>
