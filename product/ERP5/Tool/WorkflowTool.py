@@ -393,9 +393,17 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             if key == 'portal_type':
               worklist.setMatchedPortalTypeList(values)
             elif key == 'simulation_state':
-              worklist.setMatchedSimulationStateList(values)
+              state_id_list = []
+              for value in values:
+                state_id = 'state_'+value
+                state_id_list.append(state_id)
+              worklist.setMatchedSimulationStateList(state_id_list)
             elif key == 'validation_state':
-              worklist.setMatchedValidationStateList(values)
+              state_id_list = []
+              for value in values:
+                state_id = 'state_'+value
+                state_id_list.append(state_id)
+              worklist.setMatchedValidationStateList(state_id_list)
           worklist.setActboxCategory(qdef.actbox_category)
           worklist.setActboxIcon(qdef.actbox_icon)
           worklist.setActboxName(qdef.actbox_name)
