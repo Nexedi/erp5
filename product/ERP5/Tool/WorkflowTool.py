@@ -275,6 +275,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
 
   def dc_workflow_asERP5Object(self, container, dc_workflow, temp):
     # create a temporary ERP5 Workflow
+    # instead of adding prefix toavoid id conflict, prefer to put dcworkflow in portal_trash;
     workflow_type_id = dc_workflow.__class__.__name__
     if workflow_type_id == 'DCWorkflowDefinition':
       LOG("2.a Workflow '%s' is a DCWorkflow'"%dc_workflow.id,WARNING,' in WorkflowTool.py')
@@ -442,6 +443,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         workflow_script = workflow.newContent(id='script_'+script_id ,portal_type='Workflow Script', temp_object=temp)
         LOG("2.5 Convert workflow script '%s' of workflow '%s'"%(workflow_script.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
         workflow_script.edit(title=script.title)
+        workflow_script.default_reference = script_id
         workflow_script.setParameterSignature(script._params)
         #workflow_script.setCallableType(script.callable_type)# not defined in python script?
         workflow_script.setBody(script._body)
@@ -629,6 +631,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     for type_id, workflow_id_list in self._chains_by_type.iteritems():
         type_workflow_dict.setdefault(type_id, []).append(workflow_id_list)
     return type_workflow_dict
+
+  # For Chains By Type Repair Tool:
+  def addTypeCBT(self, pt, wf_id):
+    self._chains_by_type[pt] = self._chains_by_type[pt] + (wf_id, )
 
   def delTypeCBT(self, pt, wf_id):
     self._chains_by_type[pt] = tuple(wf for wf in self._chains_by_type[pt] if wf != wf_id)
