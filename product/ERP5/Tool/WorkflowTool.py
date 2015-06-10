@@ -375,7 +375,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         # set transition's destination state:
         for tid in dc_workflow.transitions:
           tdef = workflow._getOb('transition_'+tid)
-          state = getattr(workflow, 'transition_'+dc_workflow.transitions.get(tid).new_state_id, None)
+          state = getattr(workflow, 'state_'+dc_workflow.transitions.get(tid).new_state_id, None)
           if state is None:
             # it's a remain in state transition.
             continue
