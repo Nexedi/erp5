@@ -1031,7 +1031,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           next_kw['priority'] = 1 + next_kw.get('priority', 1)
           self.activate(activity='SQLQueue', **next_kw) \
               ._searchAndActivate(method_id,method_args, method_kw,
-                                  activate_kw, r[-1].getUid(), **kw)
+                                  activate_kw, r[-1].getUid(),
+                                  group_kw=group_kw, **kw)
         if select_method_id:
           portal_activities = self.getPortalObject().portal_activities
           active_portal_activities = portal_activities.activate(
