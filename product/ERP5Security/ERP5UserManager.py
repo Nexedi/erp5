@@ -69,6 +69,8 @@ def getUserByLogin(portal, login, exact_match=True):
     reference_key = 'ExactMatch'
   else:
     reference_key = 'Keyword'
+  if not (portal.portal_catalog.hasColumn('portal_type') and portal.portal_catalog.hasColumn('reference')):
+    raise RuntimeError('Catalog does not have column information. Make sure RDB is working and disk is not full.')
   result = portal.portal_catalog.unrestrictedSearchResults(
       select_expression='reference',
       portal_type="Person",
