@@ -335,7 +335,12 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
               transition.setBeforeScriptId('transition_'+tdef.script_name)
             elif tdef.script_name in dc_workflow.scripts.objectIds():
               transition.setBeforeScriptId('script_'+tdef.script_name)
-          transition.guard = tdef.guard
+          # configure guard
+          if tdef.guard:
+            transition.setRoleList(tdef.guard.roles)
+            transition.setPermissionList(tdef.guard.permissions)
+            transition.setGroupList(tdef.guard.groups)
+            transition.setExpression(tdef.guard.expr)
         # create states (portal_type = State)
         for sid in dc_workflow.states:
           sdef = dc_workflow.states.get(sid)
@@ -408,7 +413,12 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           worklist.setActboxIcon(qdef.actbox_icon)
           worklist.setActboxName(qdef.actbox_name)
           worklist.setActboxUrl(qdef.actbox_url)
-          worklist.guard = qdef.guard
+          # configure guard
+          if qdef.guard:
+            worklist.setRoleList(qdef.guard.roles)
+            worklist.setPermissionList(qdef.guard.permissions)
+            worklist.setGroupList(qdef.guard.groups)
+            worklist.setExpression(qdef.guard.expr)
       else:
         for tid in dc_workflow.interactions:
           interaction = workflow.newContent(portal_type='Interaction', temp_object=temp)
@@ -436,7 +446,12 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
               interaction.setBeforeScriptName('interaction_'+tdef.script_name)
             elif tdef.script_name in dc_workflow.scripts.objectIds():
               interaction.setBeforeScriptName('script_'+tdef.script_name)
-          interaction.guard = tdef.guard
+          # configure guard
+          if tdef.guard:
+            interaction.setRoleList(tdef.guard.roles)
+            interaction.setPermissionList(tdef.guard.permissions)
+            interaction.setGroupList(tdef.guard.groups)
+            interaction.setExpression(tdef.guard.expr)
           interaction.setPortalTypeFilter(tdef.portal_type_filter)
           interaction.setPortalTypeGroupFilter(tdef.portal_type_group_filter)
           interaction.setTemporaryDocumentDisallowed(tdef.temporary_document_disallowed)
