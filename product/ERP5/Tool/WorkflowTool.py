@@ -629,7 +629,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   def getChainsByType(self):
     type_workflow_dict = {}
     for type_id, workflow_id_list in self._chains_by_type.iteritems():
-        type_workflow_dict.setdefault(type_id, []).append(workflow_id_list)
+        type_workflow_dict.setdefault(type_id, ())
+        type_workflow_dict[type_id] = type_workflow_dict[type_id] + workflow_id_list
     return type_workflow_dict
 
   # For Chains By Type Repair Tool:
