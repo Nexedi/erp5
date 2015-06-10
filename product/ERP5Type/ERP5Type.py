@@ -470,6 +470,10 @@ class ERP5TypeInformation(XMLObject,
       """ allow to modify workflow assignment from script. """
       self.erp5workflow_list = tuple(wf for wf in self.erp5workflow_list if wf != wf_id)
 
+    def addTypeERP5WorkflowList(self, wf_id):
+      """ allow to modify workflow assignment from script. """
+      self.erp5workflow_list = self.erp5workflow_list + (wf_id, )
+
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()
       if not type_property_sheet_list:
