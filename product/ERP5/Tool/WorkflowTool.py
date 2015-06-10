@@ -327,14 +327,14 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             # check after script is a Transion or a Script:
             if tdef.after_script_name in dc_workflow.transitions.objectIds():
               transition.setAfterScriptId('transition_'+tdef.after_script_name)
-            else:
+            elif tdef.after_script_name in dc_workflow.scripts.objectIds():
               transition.setAfterScriptId('script_'+tdef.after_script_name)
           if tdef.script_name is not None:
             # check after script is a Transion or a Script:
             if tdef.script_name in dc_workflow.transitions.objectIds():
-              transition.setAfterScriptId('transition_'+tdef.script_name)
-            else:
-              transition.setAfterScriptId('script_'+tdef.script_name)
+              transition.setBeforeScriptId('transition_'+tdef.script_name)
+            elif tdef.script_name in dc_workflow.scripts.objectIds():
+              transition.setBeforeScriptId('script_'+tdef.script_name)
           transition.guard = tdef.guard
         # create states (portal_type = State)
         for sid in dc_workflow.states:
@@ -411,22 +411,22 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           if tdef.activate_script_name is not None:
             if tdef.activate_script_name in dc_workflow.interactions.objectIds():
               interaction.setActivateScriptName('interaction_'+tdef.activate_script_name)
-            else:
+            elif tdef.activate_script_name in dc_workflow.scripts.objectIds():
               interaction.setActivateScriptName('script_'+tdef.activate_script_name)
           if tdef.after_script_name is not None:
-            if tdef.after_script_name in tdef.interactions.objectIds():
+            if tdef.after_script_name in dc_workflow.interactions.objectIds():
               interaction.setAfterScriptName('interaction_'+tdef.after_script_name)
-            else:
+            elif tdef.after_script_name in dc_workflow.scripts.objectIds():
               interaction.setAfterScriptName('script_'+tdef.after_script_name)
           if tdef.before_commit_script_name is not None:
-            if tdef.before_commit_script_name in tdef.interactions.objectIds():
+            if tdef.before_commit_script_name in dc_workflow.interactions.objectIds():
               interaction.setBeforeCommitScriptName('interaction_'+tdef.before_commit_script_name)
-            else:
+            elif tdef.before_commit_script_name in dc_workflow.scripts.objectIds():
               interaction.setBeforeCommitScriptName('script_'+tdef.before_commit_script_name)
           if tdef.script_name is not None:
-            if tdef.script_name in tdef.interactions.objectIds():
+            if tdef.script_name in dc_workflow.interactions.objectIds():
               interaction.setBeforeScriptName('interaction_'+tdef.script_name)
-            else:
+            elif tdef.script_name in dc_workflow.scripts.objectIds():
               interaction.setBeforeScriptName('script_'+tdef.script_name)
           interaction.guard = tdef.guard
           interaction.setPortalTypeFilter(tdef.portal_type_filter)
