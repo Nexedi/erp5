@@ -323,6 +323,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           transition.setActboxIcon(tdef.actbox_icon)
           transition.setActboxName(tdef.actbox_name)
           transition.setActboxUrl(tdef.actbox_url)
+          transition.setDescription(tdef.description)
           if tdef.after_script_name is not None:
             # check after script is a Transion or a Script:
             if tdef.after_script_name in dc_workflow.transitions.objectIds():
@@ -348,6 +349,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           state = workflow.newContent(portal_type='State', temp_object=temp)
           state.edit(title=sdef.title)
           state.setReference(sdef.id)
+          state.setDescription(sdef.description)
           permission_roles = sdef.permission_roles
           state.setStatePermissionRoles(permission_roles)
           LOG("permission_roles is '%s'"%permission_roles,WARNING,"in WorkflowTool.py")
@@ -394,6 +396,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           worklist = workflow.newContent(portal_type='Worklist', temp_object=temp)
           worklist.edit(title=qdef.title)
           worklist.setReference(qdef.id)
+          worklist.setDescription(qdef.description)
           for key, values in qdef.var_matches.items():
             if key == 'portal_type':
               worklist.setMatchedPortalTypeList(values)
@@ -459,6 +462,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           interaction.setTriggerMethodId(tdef.method_id)
           interaction.setTriggerOncePerTransaction(tdef.once_per_transaction)
           interaction.setTriggerType(tdef.trigger_type)
+          interaction.setDescription(tdef.description)
   
       # create scripts (portal_type = Workflow Script)
       for script_id in dc_workflow.scripts:
@@ -485,6 +489,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         variable.setForCatalog(vdef.for_catalog)
         variable.setForStatus(vdef.for_status)
         variable.setInitialValue(vdef.default_value)
+        variable.setDescription(vdef.description)
     return workflow
 
   def getChainDict(self):
