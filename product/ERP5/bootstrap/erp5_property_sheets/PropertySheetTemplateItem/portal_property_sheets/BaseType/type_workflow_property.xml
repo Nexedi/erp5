@@ -52,6 +52,10 @@
             </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>type_workflow</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
@@ -59,7 +63,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>type_erp5workflow_property</string> </value>
+            <value> <string>type_workflow_property</string> </value>
         </item>
         <item>
             <key> <string>label</string> </key>
@@ -85,7 +89,7 @@
         </item>
         <item>
             <key> <string>storage_id</string> </key>
-            <value> <string>erp5workflow_list</string> </value>
+            <value> <string>workflow_list</string> </value>
         </item>
       </dictionary>
     </pickle>
