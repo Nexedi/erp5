@@ -73,7 +73,7 @@ if user is None:\n
           event_id=request[\'id\'], \n
           hmac=request["hash"])\n
 \n
-# serve the image\n
+# serve the web-page that will display a "Sucessfully unsubscribe" message\n
 return context.index_html(request, request.RESPONSE, format=None)\n
 </string> </value>
         </item>

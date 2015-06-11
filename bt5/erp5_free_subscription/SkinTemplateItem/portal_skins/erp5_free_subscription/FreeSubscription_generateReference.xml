@@ -51,14 +51,23 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-group_reference = context.getSourceValue().getGroupReference()\n
-counter = portal.portal_ids.generateNewId(\n
-    id_generator="uid",\n
-    id_group=\'.\'.join((\'free_subscription\', \'reference\', group_reference)),\n
-    default=1)\n
-\n
-source_reference = \'FS-%s-%05d\' % (group_reference, counter)\n
-context.setReference(source_reference)\n
+if context.getSource():\n
+  if context.getPortalType() == "Free Subscription":\n
+    generator_base = "free_subscription"\n
+    reference_base = "FS"\n
+  elif context.getPortalType() == "Free Subscription Request":\n
+    generator_base = "free_subscription_request"\n
+    reference_base = "FSR"\n
+  else:\n
+    raise ValueError("Should not be called for %s" %(context.getPortalType(),))\n
+  group_reference = context.getSourceValue().getGroupReference()\n
+  counter = portal.portal_ids.generateNewId(\n
+      id_generator="uid",\n
+      id_group=\'.\'.join((generator_base, \'reference\', group_reference)),\n
+      default=1)\n
+    \n
+  source_reference = \'%s-%s-%05d\' % (reference_base, group_reference, counter)\n
+  context.setReference(source_reference)\n
 </string> </value>
         </item>
         <item>
