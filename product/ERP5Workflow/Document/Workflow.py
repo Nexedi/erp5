@@ -367,7 +367,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         workflow_tool = portal.portal_workflow
         result = []
         append = result.append
-        for workflow_id in info.object.getTypeInfo().getTypeERP5WorkflowList():
+        for workflow_id in info.object.getTypeInfo().getTypeWorkflowList():
             append(info.object.getTypeInfo().getId())
         return result
 
