@@ -253,7 +253,7 @@ class ERP5TypeInformation(XMLObject,
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
-    erp5workflow_list = ()
+    workflow_list = ()
     init_script = ''
     product = 'ERP5Type'
     hidden_content_type_list = ()
@@ -461,18 +461,18 @@ class ERP5TypeInformation(XMLObject,
       return list(self.base_category_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypeERP5WorkflowList')
-    def getTypeERP5WorkflowList(self):
+                              'getTypeWorkflowList')
+    def getTypeWorkflowList(self):
       """Getter for 'type_workflow' property"""
-      return list(self.erp5workflow_list)
+      return list(self.workflow_list)
 
-    def delTypeERP5WorkflowList(self, wf_id):
+    def delTypeWorkflowList(self, wf_id):
       """ allow to modify workflow assignment from script. """
-      self.erp5workflow_list = tuple(wf for wf in self.erp5workflow_list if wf != wf_id)
+      self.workflow_list = tuple(wf for wf in self.workflow_list if wf != wf_id)
 
-    def addTypeERP5WorkflowList(self, wf_id):
+    def addTypeWorkflowList(self, wf_id):
       """ allow to modify workflow assignment from script. """
-      self.erp5workflow_list = self.erp5workflow_list + (wf_id, )
+      self.workflow_list = self.workflow_list + (wf_id, )
 
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()
@@ -610,7 +610,7 @@ class ERP5TypeInformation(XMLObject,
                             self.getTypeInitScriptId()]
       search_source_list += self.getTypePropertySheetList()
       search_source_list += self.getTypeBaseCategoryList()
-      search_source_list += self.getTypeERP5WorkflowList()
+      search_source_list += self.getTypeWorkflowList()
       return ' '.join(filter(None, search_source_list))
 
     security.declareProtected(Permissions.AccessContentsInformation,
