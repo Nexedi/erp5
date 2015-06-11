@@ -223,7 +223,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     portal_type = self.getPortalObject().getDefaultModule(portal_type="portal_types")._getOb(portal_type_id, None)
     workflow_list = []
     if portal_type is not None:
-      for workflow_id in portal_type.getTypeERP5WorkflowList():
+      for workflow_id in portal_type.getTypeWorkflowList():
         workflow_list.append(self._getOb(workflow_id))
 
     for wf in self.getWorkflowsFor(portal_type_id):
@@ -711,7 +711,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     if document is not None:
       document_pt = document.getTypeInfo()
       if document_pt is not None:
-        workflow_list = document_pt.getTypeERP5WorkflowList()
+        workflow_list = document_pt.getTypeWorkflowList()
         if (workflow_list is not None) and (workflow_list is not []):
           for wf_id in workflow_list:
             did[wf_id] = None
