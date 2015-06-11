@@ -57,6 +57,7 @@ free_subscription = context.getPortalObject().free_subscription_module.newConten
   source=source,\n
   resource=resource,\n
   effective_date=start_date,\n
+  start_date=start_date,\n
   title=title)\n
 \n
 free_subscription.validate()\n
