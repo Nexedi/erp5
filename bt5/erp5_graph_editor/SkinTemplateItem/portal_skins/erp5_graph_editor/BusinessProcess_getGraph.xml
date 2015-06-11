@@ -63,7 +63,9 @@ visited_business_process_set = set() # prevent infinite recurisions\n
 \n
 def getBusinessProcessGraph(business_process):\n
   graph = dict(node=dict(start=dict(_class=\'erp5.business_process.start\',\n
-                                    name=str(translateString(\'Start\'))),),\n
+                                    name=str(translateString(\'Start\'))),\n
+                         end=dict(_class=\'erp5.business_process.end\',\n
+                                  name=str(translateString(\'End\'))),),\n
                edge=dict())\n
 \n
 \n
