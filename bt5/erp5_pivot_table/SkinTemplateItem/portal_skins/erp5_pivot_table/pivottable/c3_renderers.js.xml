@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts32626242.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>c3_renderers.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+  var callWithJQuery;\n
+\n
+  callWithJQuery = function(pivotModule) {\n
+    if (typeof exports === "object" && typeof module === "object") {\n
+      return pivotModule(require("jquery"));\n
+    } else if (typeof define === "function" && define.amd) {\n
+      return define(["jquery"], pivotModule);\n
+    } else {\n
+      return pivotModule(jQuery);\n
+    }\n
+  };\n
+\n
+  callWithJQuery(function($) {\n
+    var makeC3Chart;\n
+    makeC3Chart = function(chartOpts) {\n
+      if (chartOpts == null) {\n
+        chartOpts = {};\n
+      }\n
+      return function(pivotData, opts) {\n
+        var agg, colKey, colKeys, columns, dataArray, datum, defaults, fullAggName, h, hAxisTitle, headers, i, j, len, len1, params, ref, renderArea, result, row, rowHeader, rowKey, rowKeys, tree2, vAxisTitle, val, x, y;\n
+        defaults = {\n
+          localeStrings: {\n
+            vs: "vs",\n
+            by: "by"\n
+          },\n
+          c3: {\n
+            width: function() {\n
+              return window.innerWidth / 1.4;\n
+            },\n
+            height: function() {\n
+              return window.innerHeight / 1.4;\n
+            }\n
+          }\n
+        };\n
+        opts = $.extend(defaults, opts);\n
+        if (chartOpts.type == null) {\n
+          chartOpts.type = "line";\n
+        }\n
+        rowKeys = pivotData.getRowKeys();\n
+        if (rowKeys.length === 0) {\n
+          rowKeys.push([]);\n
+        }\n
+        colKeys = pivotData.getColKeys();\n
+        if (colKeys.length === 0) {\n
+          colKeys.push([]);\n
+        }\n
+        headers = (function() {\n
+          var i, len, results;\n
+          results = [];\n
+          for (i = 0, len = colKeys.length; i < len; i++) {\n
+            h = colKeys[i];\n
+            results.push(h.join("-"));\n
+          }\n
+          return results;\n
+        })();\n
+        fullAggName = pivotData.aggregatorName;\n
+        if (pivotData.valAttrs.length) {\n
+          fullAggName += "(" + (pivotData.valAttrs.join(", ")) + ")";\n
+        }\n
+        if (chartOpts.type === "scatter") {\n
+          dataArray = [];\n
+          hAxisTitle = pivotData.colAttrs.join("-");\n
+          vAxisTitle = pivotData.rowAttrs.join("-");\n
+          ref = pivotData.tree;\n
+          for (y in ref) {\n
+            tree2 = ref[y];\n
+            for (x in tree2) {\n
+              agg = tree2[x];\n
+              datum = {};\n
+              datum[hAxisTitle] = parseFloat(x);\n
+              datum[vAxisTitle] = parseFloat(y);\n
+              datum["tooltip"] = agg.format(agg.value());\n
+              dataArray.push(datum);\n
+            }\n
+          }\n
+        } else {\n
+          columns = [];\n
+          for (i = 0, len = rowKeys.length; i < len; i++) {\n
+            rowKey = rowKeys[i];\n
+            rowHeader = rowKey.join("-");\n
+            row = [rowHeader === "" ? pivotData.aggregatorName : rowHeader];\n
+            for (j = 0, len1 = colKeys.length; j < len1; j++) {\n
+              colKey = colKeys[j];\n
+              agg = pivotData.getAggregator(rowKey, colKey);\n
+              if (agg.value() != null) {\n
+                val = agg.value();\n
+                if ($.isNumeric(val)) {\n
+                  if (val < 1) {\n
+                    row.push(parseFloat(val.toPrecision(3)));\n
+                  } else {\n
+                    row.push(parseFloat(val.toFixed(3)));\n
+                  }\n
+                } else {\n
+                  row.push(val);\n
+                }\n
+              } else {\n
+                row.push(null);\n
+              }\n
+            }\n
+            columns.push(row);\n
+          }\n
+          vAxisTitle = pivotData.aggregatorName + (pivotData.valAttrs.length ? "(" + (pivotData.valAttrs.join(", ")) + ")" : "");\n
+          hAxisTitle = pivotData.colAttrs.join("-");\n
+        }\n
+        params = {\n
+          size: {\n
+            height: opts.c3.height(),\n
+            width: opts.c3.width()\n
+          },\n
+          axis: {\n
+            y: {\n
+              label: vAxisTitle\n
+            },\n
+            x: {\n
+              label: hAxisTitle\n
+            }\n
+          },\n
+          data: {\n
+            type: chartOpts.type\n
+          },\n
+          tooltip: {\n
+            grouped: false\n
+          }\n
+        };\n
+        if (chartOpts.type === "scatter") {\n
+          params.data.x = hAxisTitle;\n
+          params.axis.x.tick = {\n
+            fit: false\n
+          };\n
+          params.data.json = dataArray;\n
+          params.data.keys = {\n
+            value: [hAxisTitle, vAxisTitle]\n
+          };\n
+          params.legend = {\n
+            show: false\n
+          };\n
+          params.tooltip.format = {\n
+            title: function() {\n
+              return fullAggName;\n
+            },\n
+            name: function() {\n
+              return "";\n
+            },\n
+            value: function(a, b, c, d) {\n
+              return dataArray[d].tooltip;\n
+            }\n
+          };\n
+        } else {\n
+          params.axis.x.type = \'category\';\n
+          params.axis.x.categories = headers;\n
+          params.data.columns = columns;\n
+        }\n
+        if (chartOpts.stacked != null) {\n
+          params.data.groups = [\n
+            (function() {\n
+              var k, len2, results;\n
+              results = [];\n
+              for (k = 0, len2 = rowKeys.length; k < len2; k++) {\n
+                x = rowKeys[k];\n
+                results.push(x.join("-"));\n
+              }\n
+              return results;\n
+            })()\n
+          ];\n
+        }\n
+        renderArea = $("<div>", {\n
+          style: "display:none;"\n
+        }).appendTo($("body"));\n
+        result = $("<div>").appendTo(renderArea);\n
+        params.bindto = result[0];\n
+        c3.generate(params);\n
+        result.detach();\n
+        renderArea.remove();\n
+        return result;\n
+      };\n
+    };\n
+    return $.pivotUtilities.c3_renderers = {\n
+      "Line Chart": makeC3Chart(),\n
+      "Bar Chart": makeC3Chart({\n
+        type: "bar"\n
+      }),\n
+      "Stacked Bar Chart": makeC3Chart({\n
+        type: "bar",\n
+        stacked: true\n
+      }),\n
+      "Area Chart": makeC3Chart({\n
+        type: "area",\n
+        stacked: true\n
+      }),\n
+      "Scatter Chart": makeC3Chart({\n
+        type: "scatter"\n
+      })\n
+    };\n
+  });\n
+\n
+}).call(this);\n
+\n
+//# sourceMappingURL=c3_renderers.js.map
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5972</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
