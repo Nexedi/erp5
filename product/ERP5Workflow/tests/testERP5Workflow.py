@@ -76,7 +76,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     # set initial state
     workflow.setSourceValue(s1)
     # create a document and associate it to this workflow
-    self.getPortalObject().portal_types._getOb('Folder').edit(type_erp5workflow_list=('workflow_wf'))
+    self.getPortalObject().portal_types._getOb('Folder').edit(type_workflow_list=('workflow_wf'))
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
     self.assertEqual('s1', workflow._getWorkflowStateOf(doc, id_only=1))
 
@@ -103,7 +103,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     t2.setReference('t2')
     s1.setDestinationValueList([t1, t2])
 
-    self.getPortalObject().portal_types._getOb('Folder').edit(type_erp5workflow_list=('workflow_wf'))
+    self.getPortalObject().portal_types._getOb('Folder').edit(type_workflow_list=('workflow_wf'))
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
     self.assertEqual([t1, t2], s1.getDestinationValueList())
 
@@ -127,7 +127,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
                              title='actor')
     v1.setReference('actor')
     v1.default_expr = 'user/getUserName'
-    self.getPortalObject().portal_types._getOb('Folder').edit(type_erp5workflow_list=('workflow_wf'))
+    self.getPortalObject().portal_types._getOb('Folder').edit(type_workflow_list=('workflow_wf'))
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
     workflow._executeTransition(doc,t1)
     current_state = workflow.getCurrentStatusDict(doc)
@@ -163,7 +163,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     script.setParameterSignature("state_change")
     script.setParameterSignature("state_change")
     script.setBody("state_change['object'].setDescription('After script was executed.')")
-    self.getPortalObject().portal_types._getOb('Folder').edit(type_erp5workflow_list=('workflow_wf'))
+    self.getPortalObject().portal_types._getOb('Folder').edit(type_workflow_list=('workflow_wf'))
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
 
     workflow._executeTransition(doc, t1)
@@ -194,7 +194,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
     script.setParameterSignature("state_change")
     script.setBody("state_change['object'].setDescription('Before script was executed.')")
 
-    self.getPortalObject().portal_types._getOb('Folder').edit(type_erp5workflow_list=('workflow_wf'))
+    self.getPortalObject().portal_types._getOb('Folder').edit(type_workflow_list=('workflow_wf'))
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
 
     workflow._executeTransition(doc, t1)
