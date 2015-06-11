@@ -50,12 +50,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].getTypeBasedMethod(\'generateReference\')()\n
+            <value> <string>portal = context.getPortalObject()\n
+if context.getSource():\n
+  generator_base = "free_subscription_request"\n
+  reference_base = "FSR"\n
+  group_reference = context.getSourceValue().getGroupReference("")\n
+  counter = portal.portal_ids.generateNewId(\n
+      id_generator="uid",\n
+      id_group=\'.\'.join((generator_base, \'reference\', group_reference)),\n
+      default=1)\n
+    \n
+  source_reference = \'%s-%s-%05d\' % (reference_base, group_reference, counter)\n
+  context.setReference(source_reference)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -67,7 +78,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>setReference</string> </value>
+            <value> <string>FreeSubscriptionRequest_generateReference</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -46,7 +46,7 @@ if use_verbose_security:
 class TestFreeSubscription(ERP5TypeTestCase):
 
   def getTitle(self):
-    return "ERP5 Credential"
+    return "Free Subscription"
 
   def getBusinessTemplateList(self):
     return (
@@ -101,6 +101,7 @@ class TestFreeSubscription(ERP5TypeTestCase):
         self.portal.getDefaultModule('Free Subscription'),
         self.portal.getDefaultModule('Organisation'),
         self.portal.getDefaultModule('Service'),
+        self.portal.getDefaultModule('Letter'),
         self.portal.getDefaultModule('Person'))
     for module in module_list:
       module.manage_delObjects(list(module.objectIds()))
@@ -166,6 +167,7 @@ class TestFreeSubscription(ERP5TypeTestCase):
     self.assertNotEquals(request.getFollowUp(), None)
     subscription = request.getFollowUpValue()
     self.assertEquals(subscription.getValidationState(), "validated")
+    self.assertNotEquals(subscription.getReference(), None)
 
   def stepSubmitFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
@@ -174,6 +176,7 @@ class TestFreeSubscription(ERP5TypeTestCase):
   def stepCheckSubmittedFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
     self.assertEquals(request.getValidationState(), 'submitted')
+    self.assertNotEquals(request.getReference(), None)
 
   def stepAcceptFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
@@ -182,6 +185,7 @@ class TestFreeSubscription(ERP5TypeTestCase):
   def stepCheckAcceptedFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']
     self.assertEquals(request.getValidationState(), 'accepted')
+    self.assertNotEquals(request.getReference(), None)
 
   def stepRejectFreeSubscriptionRequest(self, sequence=None, sequence_list=None):
     request = sequence['free_subscription_request']

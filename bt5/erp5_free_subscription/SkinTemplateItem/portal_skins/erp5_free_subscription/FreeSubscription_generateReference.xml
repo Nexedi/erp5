@@ -52,15 +52,9 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 if context.getSource():\n
-  if context.getPortalType() == "Free Subscription":\n
-    generator_base = "free_subscription"\n
-    reference_base = "FS"\n
-  elif context.getPortalType() == "Free Subscription Request":\n
-    generator_base = "free_subscription_request"\n
-    reference_base = "FSR"\n
-  else:\n
-    raise ValueError("Should not be called for %s" %(context.getPortalType(),))\n
-  group_reference = context.getSourceValue().getGroupReference()\n
+  generator_base = "free_subscription"\n
+  reference_base = "FS"\n
+  group_reference = context.getSourceValue().getGroupReference("")\n
   counter = portal.portal_ids.generateNewId(\n
       id_generator="uid",\n
       id_group=\'.\'.join((generator_base, \'reference\', group_reference)),\n
