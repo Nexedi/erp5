@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts31928462.63</string> </value>
+            <value> <string>ts33995381.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -325,10 +325,10 @@
        ];\n
      }\n
      if (gadget.props.data.graph.node[edge_data.source] === undefined) {\n
-       throw new Error("Edge Source " + edge_data.source + " does not exist");\n
+       throw new Error("Error adding edge " +  edge_id + " Source " + edge_data.source + " does not exist");\n
      }\n
-     if (gadget.props.data.graph.node[edge_data.source] === undefined) {\n
-       throw new Error("Edge Destination " + edge_data.source + " does not exist");\n
+     if (gadget.props.data.graph.node[edge_data.destination] === undefined) {\n
+       throw new Error("Edge adding edge " +  edge_id + " Destination " + edge_data.destination + " does not exist");\n
      }\n
      // If an edge has this data:\n
      // { _class: \'Edge\',\n
@@ -821,7 +821,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>29366</int> </value>
+            <value> <int>29435</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
