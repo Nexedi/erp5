@@ -94,9 +94,9 @@ for dc_wf in selected_wf_list:\n
     context.delTypeCBT(ptype.id, dc_wf.id)\n
 \n
     # 2. assign ERP5 Workflow to portal type:\n
-    type_erp5workflow_list = ptype.getTypeERP5WorkflowList()\n
-    if workflow.getId() not in type_erp5workflow_list:\n
-      ptype.addTypeERP5WorkflowList(workflow.getId())\n
+    type_workflow_list = ptype.getTypeWorkflowList()\n
+    if workflow.getId() not in type_workflow_list:\n
+      ptype.addTypeWorkflowList(workflow.getId())\n
 \n
 return RESPONSE.redirect("%s/view?portal_status_message=Workflow+%s+converted"\n
                          %(context.absolute_url(), \',+\'.join(selected_wf_id_list)))\n
