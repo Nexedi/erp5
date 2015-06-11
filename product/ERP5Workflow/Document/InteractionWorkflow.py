@@ -91,7 +91,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     wf_tool = getToolByName(self, 'portal_workflow')
     types_tool = getToolByName(self, 'portal_types')
     for ptype in types_tool.objectValues():
-      if self.getId() in ptype.getTypeERP5WorkflowList():
+      if self.getId() in ptype.getTypeWorkflowList():
         chained_ptype_list.append(ptype.getId())
     return chained_ptype_list
 
