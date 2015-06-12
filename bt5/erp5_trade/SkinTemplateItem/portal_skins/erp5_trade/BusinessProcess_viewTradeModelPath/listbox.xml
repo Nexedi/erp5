@@ -95,7 +95,7 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>trade_phase_title</string>
+                          <string>trade_phase_title_list</string>
                           <string>Trade Phase</string>
                         </tuple>
                         <tuple>
@@ -226,7 +226,7 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>trade_phase_title</string>
+                          <string>trade_phase_title_list</string>
                           <string>Trade Phase</string>
                         </tuple>
                         <tuple>

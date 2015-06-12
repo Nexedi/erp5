@@ -1,4 +1,7 @@
 2015-06-12 arnaud.fontaine
+* As there may be several trade_phase which could be set on a Trade Model Path, all of them should be displayed in ListBox and not only the first one.
+
+2015-06-12 arnaud.fontaine
 * Remove fields which have never been used on TradeModelPath view.
 
 2015-06-12 arnaud.fontaine
