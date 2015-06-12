@@ -217,11 +217,24 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
   """
   def afterSetUp(self):
     self.portal = self.getPortal()
-    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ())
     self.workflow_module = self.portal.portal_workflow
+    dc_wf_id_list = ['testing_workflow', 'testing_interaction_workflow']
+    ptype_id = 'ERP5Workflow Test Document'
+    type_test_object = self.portal.portal_types._getOb(ptype_id)
+
+    for dc_wf_id in dc_wf_id_list:
+      if hasattr(self.workflow_module, 'workflow_'+dc_wf_id) or hasattr(self.workflow_module, 'interactionworkflow_'+dc_wf_id):
+        # already existed converted workflow
+        continue
+      # clean _chain_by_type assignment
+      self.workflow_module.delTypeCBT(ptype_id, dc_wf_id)
+      # convert DC workflow to workflow:
+      dc_wf = self.workflow_module._getOb(dc_wf_id)
+      workflow = self.workflow_module.dc_workflow_asERP5Object(self.workflow_module, dc_wf, temp=0)
+      # assign new converted workflow;
+      type_test_object.addTypeWorkflowList(workflow.getId())
+
     self.wf = self.workflow_module._getOb('workflow_testing_workflow') # workflow id comes with suffix
-    type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
-    type_test_object.edit(type_workflow_list=('workflow_testing_workflow', 'interactionworkflow_testing_interaction_workflow', ))
     self.resetComponentTool()
     self.assertFalse('testing_workflow' in self.getWorkflowTool().getChainFor(type_test_object.getId()))
     self.login()
@@ -230,7 +243,7 @@ class TestERP5Workflow(TestERP5WorkflowMixin):
     return getattr(document, 'getValidationState')()
 
   def doActionFor(self, document, action):
-    user_action = 'transition_' + action
+    user_action = action
     self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'workflow_testing_workflow')
 
 class TestDCWorkflow(TestERP5WorkflowMixin):
@@ -246,7 +259,7 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
     type_test_object.edit(type_workflow_list=())
     self.resetComponentTool()
-    self.assertEqual(type_test_object.getTypeworkflowList(), [])
+    self.assertEqual(type_test_object.getTypeWorkflowList(), [])
     self.login()
 
   def getStateFor(self, document):
