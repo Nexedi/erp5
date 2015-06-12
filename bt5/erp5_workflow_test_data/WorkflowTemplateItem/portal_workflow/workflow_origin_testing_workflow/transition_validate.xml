@@ -27,7 +27,9 @@
         <item>
             <key> <string>after_script_id</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>after_script</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -40,13 +42,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/workflow_testing_workflow/state_deleted</string>
+                <string>destination/portal_workflow/workflow_origin_testing_workflow/state_validated</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>delete</string> </value>
+            <value> <string>validate</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -60,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>transition_delete</string> </value>
+            <value> <string>transition_validate</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -74,7 +76,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Delete</string> </value>
+            <value> <string>Validate</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

@@ -33,6 +33,12 @@ erp5workflow_test_module/view?validation_state=state_draft&local_roles:list=Assi
             <value> <string>Document to Validate</string> </value>
         </item>
         <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>worklist_1_draft_document_list</string> </value>
         </item>
@@ -75,7 +81,21 @@ erp5workflow_test_module/view?validation_state=state_draft&local_roles:list=Assi
             <key> <string>title</string> </key>
             <value> <string>Draft Documents</string> </value>
         </item>
+        <item>
+            <key> <string>var_matches</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary/>
     </pickle>
   </record>
 </ZopeData>

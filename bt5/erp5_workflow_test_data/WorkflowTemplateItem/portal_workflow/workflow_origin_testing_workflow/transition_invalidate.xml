@@ -42,7 +42,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/portal_workflow/workflow_testing_workflow/state_invalidated</string>
+                <string>destination/portal_workflow/workflow_origin_testing_workflow/state_invalidated</string>
               </tuple>
             </value>
         </item>

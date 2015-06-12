@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Workflow" module="erp5.portal_type"/>
+      <global name="Interaction Workflow" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25,47 +25,34 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>source/portal_workflow/workflow_testing_workflow/state_draft</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testing_workflow</string> </value>
+            <value> <string>origin_testing_interaction_workflow</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This workflow is for the unittest testWorkflowAndDCWorkflow.</string> </value>
+            <value> <string>Including a test validate interaction, which will set object\'s title after action "validate".</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>workflow_testing_workflow</string> </value>
-        </item>
-        <item>
-            <key> <string>managed_permission_list</string> </key>
-            <value>
-              <tuple>
-                <string>Access contents information</string>
-                <string>View</string>
-                <string>Add portal content</string>
-                <string>Modify portal content</string>
-              </tuple>
-            </value>
+            <value> <string>interactionworkflow_origin_testing_interaction_workflow</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Workflow</string> </value>
+            <value> <string>Interaction Workflow</string> </value>
         </item>
         <item>
-            <key> <string>state_variable</string> </key>
-            <value> <string>validation_state</string> </value>
+            <key> <string>ref</string> </key>
+            <value> <string>testing_interaction_workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>role</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Testing Workflow</string> </value>
+            <value> <string>Testing Interaction Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>
