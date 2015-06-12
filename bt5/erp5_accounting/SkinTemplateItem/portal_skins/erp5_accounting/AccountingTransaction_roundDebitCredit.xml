@@ -78,6 +78,13 @@ for line in line_list:\n
   line.setQuantity(line_quantity)\n
   total_quantity += line_quantity\n
 \n
+# If no "line" found (eg no SIT line), then do nothing. This is in the case where a SIT\n
+# has only Invoice Line and no SIT Line. Otherwise account_type_dict will be empty =>\n
+# asset_line = None => the assert below will fail because getTotalPrice() will returns the\n
+# price of all Invoice Lines...\n
+if not line_list:\n
+  return\n
+\n
 abs_total_quantity = abs(round(total_quantity, precision))\n
 # The total quantity should be zero with a little error, if simulation has been\n
 # completely applied, because the debit and the credit must be balanced. However,\n
