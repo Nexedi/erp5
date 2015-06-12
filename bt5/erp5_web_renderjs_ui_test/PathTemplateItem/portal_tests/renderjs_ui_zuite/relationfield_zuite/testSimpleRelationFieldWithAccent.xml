@@ -190,13 +190,13 @@
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//li[@data-relative-url=\'foo_category/a/a1\']</td>\n
+  <td>//li[@data-relative-url=\'portal_categories/foo_category/a/a1\']</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tr>\n
   <td>click</td>\n
-  <td>//li[@data-relative-url=\'foo_category/a/a1\']</td>\n
+  <td>//li[@data-relative-url=\'portal_categories/foo_category/a/a1\']</td>\n
   <td></td>\n
 </tr>\n
 \n
