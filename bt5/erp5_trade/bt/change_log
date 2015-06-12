@@ -1,4 +1,7 @@
 2015-06-12 arnaud.fontaine
+* Remove fields which have never been used on TradeModelPath view.
+
+2015-06-12 arnaud.fontaine
 * Allow to set ID in several Simulation-related views.
 
 2014-02-19 Arnaud Fontaine
