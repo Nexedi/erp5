@@ -266,9 +266,16 @@ promiseEventListener */\n
   function setRelationJump(my_gadget, my_initial_call, my_selected_value) {\n
     var props = my_gadget.property_dict,\n
       field_json = props.field_json,\n
-      target_url = my_selected_value || field_json.relation_item_relative_url[0],\n
+      target_url = false,\n
       is_init = my_initial_call === true;\n
 \n
+    if (my_selected_value) {\n
+      target_url = my_selected_value;\n
+    } else {\n
+      if (field_json.relation_item_relative_url) {\n
+        target_url = field_json.relation_item_relative_url[0];\n
+      }\n
+    }\n
     if (target_url && field_json.allow_jump) {\n
       return new RSVP.Queue()\n
         .push(function () {\n
@@ -428,8 +435,11 @@ promiseEventListener */\n
       var field_gadget = this,\n
         input = field_gadget.element.querySelector(\'input\'),\n
         field_json = options.field_json || {},\n
-        value = field_json.value || field_json.default;\n
+        value;\n
 \n
+      if (field_json.relation_item_relative_url) {\n
+        value = field_json.value || field_json.default;\n
+      }\n
       // expose field_json and keep last value to prevent trigger on no-change\n
       field_gadget.property_dict.field_json = field_json;\n
       field_gadget.property_dict.last_value = value || "";\n
@@ -448,7 +458,7 @@ promiseEventListener */\n
         // input.setAttribute(\'disabled\', \'disabled\');\n
       }\n
 \n
-      if (value) {\n
+      if (field_json.relation_item_relative_url) {\n
         return setRelationJump(field_gadget, true);\n
       }\n
     })\n
@@ -750,7 +760,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.18921.17173.42154</string> </value>
+                <value> <string>943.42133.40166.22033</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -768,7 +778,7 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1433215555.91</float>
+                        <float>1434088187.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
