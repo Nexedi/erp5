@@ -112,6 +112,10 @@
                           <string>Event</string>
                           <string>Event</string>
                         </tuple>
+                        <tuple>
+                          <string>Credential Request</string>
+                          <string>Credential Request</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -121,7 +125,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Event</string> </value>
+                    <value> <string>Causality</string> </value>
                 </item>
               </dictionary>
             </value>
