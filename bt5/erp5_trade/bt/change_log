@@ -1,3 +1,6 @@
+2015-06-12 arnaud.fontaine
+* Allow to set ID in several Simulation-related views.
+
 2014-02-19 Arnaud Fontaine
 * Portal Types of ZODB Property Sheets Constraint should be in 'constraint' 'group'.
 
