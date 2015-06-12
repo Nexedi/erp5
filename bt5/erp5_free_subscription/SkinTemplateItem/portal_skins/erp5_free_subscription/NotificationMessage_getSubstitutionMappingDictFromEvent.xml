@@ -54,7 +54,6 @@
 
 from Products.ERP5Type.Message import translateString\n
 portal = context.getPortalObject()\n
-format_address = portal.ERP5Site_formatFrenchAddressText\n
 \n
 def getSubstitutionMappingDict():\n
   destination = event_value.getDestinationValue()\n
@@ -67,7 +66,7 @@ def getSubstitutionMappingDict():\n
     kw[\'telephone\'] = destination.getDefaultTelephoneText() or \'\'\n
     kw[\'mobile\'] = destination.getMobileTelephoneText() or \'\'\n
     kw[\'creation_date\'] = destination.getCreationDate()\n
-    kw[\'origin_campaign\'] = destination.getOriginReference()\n
+    #kw[\'origin_campaign\'] = destination.getOriginReference()\n
 \n
     if destination.getPortalType() == \'Person\':\n
       kw[\'first_name\'] = destination.getFirstName()\n
