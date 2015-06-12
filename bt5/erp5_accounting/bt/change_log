@@ -1,3 +1,6 @@
+2015-06-12 arnaud.fontaine
+* Rounding debit/credit only makes sense if there is SIT Line.
+
 2014-08-21 Gabriel Monnerat
 * Improve Delivery_localBuild to call invoice_builder_alarm only if exist, because in some projects this alarm does not exist
 
