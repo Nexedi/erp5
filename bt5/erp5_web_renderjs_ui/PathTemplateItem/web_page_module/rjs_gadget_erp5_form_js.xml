@@ -143,6 +143,8 @@
       // sandbox = \'iframe\';\n
     } else if (type === \'GadgetField\') {\n
       field_url = \'gadget_erp5_field_gadget.html\';\n
+    } else if (type === \'RadioField\') {\n
+      field_url = \'gadget_erp5_field_radio.html\';\n
     }\n
     return field_url;\n
   }\n
@@ -506,7 +508,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.19028.41746.46353</string> </value>
+                <value> <string>943.40750.19186.4829</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -524,7 +526,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1433215002.43</float>
+                        <float>1434006006.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

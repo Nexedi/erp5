@@ -132,6 +132,21 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
       "items": field.get_value("items"),\n
     }\n
     result["default"] = getFieldDefault(field, result["key"], value)\n
+  elif meta_type == "RadioField":\n
+    result = {\n
+      "type": meta_type,\n
+      "key": key,\n
+      "editable": field.get_value("editable"),\n
+      "css_class": field.get_value("css_class"),\n
+      "hidden": field.get_value("hidden"),\n
+      "description": field.get_value("description"),\n
+      "title": field.get_value("title"),\n
+      "required": field.get_value("required"),\n
+      "items": field.get_value("items"),\n
+      "select_first_item": field.get_value("first_item"),\n
+      "orientation": field.get_value("orientation"),\n
+    }\n
+    result["default"] = getFieldDefault(field, result["key"], value)\n
   elif meta_type in ("ParallelListField", "MultiListField"):\n
     result = {\n
       "type": meta_type,\n
