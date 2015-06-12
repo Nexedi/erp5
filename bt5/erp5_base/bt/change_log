@@ -1,3 +1,6 @@
+2015-06-12 arnaud.fontaine
+* Allow to set ID in several Simulation-related views.
+
 2013-09-03 arnaud.fontaine
 * ZODB Components: Workflow History must always be kept, so avoid an extra step for developers.
 
