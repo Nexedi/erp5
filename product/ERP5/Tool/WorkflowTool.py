@@ -160,6 +160,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return False
 
   def doActionFor(self, ob, action, wf_id=None, *args, **kw):
+    action = 'transition_' + action
     LOG(" Call user_action '%s' "%action, WARNING, " in WorkflowTool.py 163")
     workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
     if wf_id is None:
@@ -324,12 +325,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           transition.setActboxCategory(tdef.actbox_category)
           transition.setActboxIcon(tdef.actbox_icon)
           transition.setActboxName(tdef.actbox_name)
-          # alter actbox_url to gain compatibility of erp5 workflow
-          compatible_url = tdef.actbox_url
-          if compatible_url is not '':
-            index_action_id = compatible_url.find(tdef.id)
-            compatible_url = compatible_url[:index_action_id] + 'transition_' + compatible_url[index_action_id:]
-            transition.setActboxUrl(compatible_url)
+          transition.setActboxUrl(tdef.actbox_url)
           transition.setDescription(tdef.description)
           if tdef.after_script_name is not None:
             # check after script is a Transion or a Script:
@@ -413,24 +409,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
                 state_id = 'state_'+value
                 state_id_list.append(state_id)
               worklist.setMatchedSimulationStateList(state_id_list)
-              # alter url:
-              if qdef.actbox_url is not '':
-                compatible_url = qdef.actbox_url
-                index_state_id = compatible_url.find(value)
-                compatible_url = compatible_url[:index_state_id] + 'state_' + compatible_url[index_state_id:]
-                worklist.setActboxUrl(compatible_url)
             elif key == 'validation_state':
               state_id_list = []
               for value in values:
                 state_id = 'state_'+value
                 state_id_list.append(state_id)
               worklist.setMatchedValidationStateList(state_id_list)
-              # alter url:
-              if qdef.actbox_url is not '':
-                compatible_url = qdef.actbox_url
-                index_state_id = compatible_url.find(value)
-                compatible_url = compatible_url[:index_state_id] + 'state_' + compatible_url[index_state_id:]
-                worklist.setActboxUrl(compatible_url)
+          worklist.setActboxUrl(qdef.actbox_url)
           worklist.setActboxCategory(qdef.actbox_category)
           worklist.setActboxIcon(qdef.actbox_icon)
           worklist.setActboxName(qdef.actbox_name)
