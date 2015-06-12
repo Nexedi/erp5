@@ -97,6 +97,9 @@ url_template_dict = {\n
 \n
 default_document_uri_template = url_template_dict["jio_get_template"]\n
 \n
+def getRealRelativeUrl(document):\n
+  return \'/\'.join(portal.portal_url.getRelativeContentPath(document))\n
+\n
 def getFormRelativeUrl(form):\n
   return portal.portal_catalog(\n
     portal_type="ERP5 Form",\n
@@ -909,7 +912,7 @@ elif mode == \'search\':\n
           "href": default_document_uri_template % {\n
             "root_url": site_root.absolute_url(),\n
             # XXX ERP5 Site is not an ERP5 document\n
-            "relative_url": document.getRelativeUrl() or document.getId(), \n
+            "relative_url": getRealRelativeUrl(document) or document.getId(), \n
             "script_id": script.id\n
           },\n
         },\n
