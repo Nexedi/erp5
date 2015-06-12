@@ -336,7 +336,7 @@ promiseEventListener */\n
         url_list = options.field_json.relation_item_relative_url,\n
         value_list = options.field_json.value || options.field_json.default;\n
       gadget.props.field_json = options.field_json || {};\n
-      for (i = 0; i < value_list.length && url_list[i] !== undefined; i += 1) {\n
+      for (i = 0; i < value_list.length && url_list !== undefined && url_list[i] !== undefined; i += 1) {\n
         gadget.props.select_uid_list[i] = options.field_json.relation_item_uid[i];\n
         createSingleRelationField(gadget, i, true);\n
       }\n
@@ -670,7 +670,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -684,7 +684,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.18921.17173.42154</string> </value>
+                <value> <string>943.32225.48051.5563</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -702,7 +702,7 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1433493223.96</float>
+                        <float>1434097633.56</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
