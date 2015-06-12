@@ -246,7 +246,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
   def _cleanupTestResult(self):
     self.tic()
     cleanup_state_list = ['started', 'stopped']
-    test_list =  self.test_result_module.searchFolder(title="TEST FOO",
+    test_list =  self.test_result_module.searchFolder(title='"TEST FOO" OR "test suite %"',
                simulation_state=cleanup_state_list)
     for test_result in test_list:
       if test_result.getSimulationState() in cleanup_state_list:
