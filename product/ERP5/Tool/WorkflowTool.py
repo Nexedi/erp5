@@ -160,17 +160,17 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return False
 
   def doActionFor(self, ob, action, wf_id=None, *args, **kw):
-    action = 'transition_' + action
-    LOG(" Call user_action '%s' "%action, WARNING, " in WorkflowTool.py 163")
     workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
     if wf_id is None:
       if workflow_list == []:
         raise WorkflowException(_(u'No workflows found.'))
       found = 0
       for wf in workflow_list:
+        if wf.getPortalType() == 'Workflow':
+          # workflow compatibility
+          action = 'transition_' + action
         if wf.isActionSupported(ob, action, **kw):
           found = 1
-          LOG(" user_action is from workflow '%s'"%wf.getId(), WARNING, " in WorkflowTool.py, 172")
           break
       if not found:
         msg = _(u"No workflow provides the '${action_id}' action.",mapping={'action_id': action})
@@ -179,6 +179,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       wf = self.getWorkflowById(wf_id)
       if wf is None:
         raise WorkflowException(_(u'Requested workflow definition not found.'))
+      if wf.getPortalType() == 'Workflow':
+        # workflow compatibility
+        action = 'transition_' + action
     return self._invokeWithNotification(
       workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
