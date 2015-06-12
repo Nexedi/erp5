@@ -92,8 +92,6 @@
                     <value>
                       <list>
                         <string>listbox_int_index</string>
-                        <string>listbox_order_builder_title_list</string>
-                        <string>listbox_delivery_builder_title_list</string>
                       </list>
                     </value>
                 </item>
