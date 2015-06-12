@@ -56,8 +56,8 @@ if portal.Base_getHMACHexdigest(portal.Base_getEventHMACKey(), event_id) != hmac
   raise Unauthorized\n
 \n
 event = portal.event_module[event_id]\n
-if portal.portal_workflow.isTransitionPossible(event, \'receive\'):\n
-  event.receive()\n
+if portal.portal_workflow.isTransitionPossible(event, \'stop\'):\n
+  event.stop()\n
 </string> </value>
         </item>
         <item>
