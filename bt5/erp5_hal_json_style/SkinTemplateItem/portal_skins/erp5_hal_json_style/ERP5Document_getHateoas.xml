@@ -182,6 +182,19 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
     result["default"] = getFieldDefault(field, result["key"], value)\n
     if meta_type == "FloatField":\n
       result["precision"] = field.get_value("precision")\n
+    if meta_type == "ImageField":\n
+      options = {}\n
+      options[\'display\'] = field.get_value(\'image_display\')\n
+      options[\'format\'] = field.get_value(\'image_format\')\n
+      options[\'quality\'] = field.get_value(\'image_quality\')\n
+      pre_converted_only = field.get_value(\'image_pre_converted_only\')\n
+      if pre_converted_only:\n
+        options[\'pre_converted_only\'] = pre_converted_only\n
+      parameters = \'&\'.join([\'%s=%s\' % (k, v) for k, v in options.items() \\\n
+                            if v])\n
+      if parameters:\n
+        result["default"] = \'%s?%s\' % (result["default"], parameters)\n
+\n
   elif meta_type == "DateTimeField":\n
     result = {\n
       "type": meta_type,\n

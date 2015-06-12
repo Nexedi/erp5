@@ -145,6 +145,8 @@
       field_url = \'gadget_erp5_field_gadget.html\';\n
     } else if (type === \'RadioField\') {\n
       field_url = \'gadget_erp5_field_radio.html\';\n
+    } else if (type === \'ImageField\') {\n
+      field_url = \'gadget_erp5_field_image.html\';\n
     }\n
     return field_url;\n
   }\n
@@ -508,7 +510,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.40750.19186.4829</string> </value>
+                <value> <string>943.40772.7493.11212</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -526,7 +528,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1434006006.8</float>
+                        <float>1434089456.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
