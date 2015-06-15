@@ -240,32 +240,7 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>uid_activity</string>
-                          <string>UID</string>
-                        </tuple>
-                        <tuple>
-                          <string>str_object_path</string>
-                          <string>Object</string>
-                        </tuple>
-                        <tuple>
-                          <string>method_id</string>
-                          <string>Method ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>processing_node</string>
-                          <string>Processing Node</string>
-                        </tuple>
-                        <tuple>
-                          <string>retry</string>
-                          <string>Retry</string>
-                        </tuple>
-                        <tuple>
-                          <string>processing</string>
-                          <string>Processing</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

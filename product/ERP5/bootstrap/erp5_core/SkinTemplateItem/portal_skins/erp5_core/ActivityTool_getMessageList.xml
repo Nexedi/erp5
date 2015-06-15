@@ -57,8 +57,13 @@
 if kw.get(\'processing_node\', None) == \'\':\n
   del kw[\'processing_node\']\n
 \n
-#key_list_to_search = [x for (x,y) in [(k,kw[k]) for k in [\'uid_activity\',\'str_object_path\',\'method_id\',\'retry\',\'processing\']] if y != \'\']\n
-message_kw = dict([(k,kw[k]) for k in [\'uid_activity\',\'str_object_path\',\'method_id\',\'args\',\'retry\',\'processing\'] if not(kw.get(k) in (\'\',None))])\n
+message_kw = dict([(k,kw[k]) for k in [\'uid_activity\',\'str_object_path\',\'method_id\',\n
+                                       \'args\',\'retry\',\'processing_node\',\n
+                                       \'processing\'] if not(kw.get(k) in (\'\',None))])\n
+if message_kw.has_key("str_object_path"):\n
+  message_kw["path"] = message_kw.pop("str_object_path")\n
+if message_kw.has_key("uid_activity"):\n
+  message_kw["uid"] = message_kw.pop("uid_activity")\n
 \n
 message_list = context.getMessageTempObjectList(**message_kw)\n
 message_list_to_show = []\n
@@ -67,18 +72,9 @@ while len(message_list) > 0:\n
   message.edit(str_object_path = \'/\'.join(str(i) for i in message.object_path))\n
   message.edit(uid_activity = str(message.uid) + \' (\'+ message.activity[3:] +\')\')\n
   message.edit(arguments = str(message.args))\n
-#  # search filter\n
-#  try:\n
-#    for k in key_list_to_search:\n
-#      str(getattr(message,k,None)).index(kw[k])\n
-#  except ValueError:\n
-#    continue\n
   message.edit(delete = \'[Delete]\')\n
   message.edit(restart = \'[Restart]\')\n
   message_list_to_show.append(message)\n
-\n
-## sort\n
-## XXX\n
 \n
 return message_list_to_show\n
 

@@ -84,6 +84,7 @@ def sqltest_dict():
   _('processing_node')
   _('serialization_tag')
   _('tag')
+  _('retry')
   _('to_date', column="date", op="<=")
   _('uid')
   return sqltest_dict
