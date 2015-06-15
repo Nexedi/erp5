@@ -103,8 +103,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
 
   def test_06_testCheckPermissionAreWellSet(self):
     new_object = self.getTestObject()
-    self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor',
-      'Associate', 'Auditor', 'Author', 'Manager', 'Owner'))
+    self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager', 'Owner'))
     self.doActionFor(new_object, "validate_action")
     self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor',
       'Associate', 'Auditor', 'Manager'))
@@ -195,12 +194,6 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     self.assertEqual(self.getStateFor(new_object), 'validated')
     self.assertEqual(workflow_tool.isTransitionPossible(new_object, 'invalidate'), 1)
 
-  def test_13_testDCWorkflowMigrationScript(self):
-    new_object = self.getTestObject()
-    portal_type = new_object.getTypeInfo()
-    self.portal = self.getPortal()
-    workflow_tool = self.portal.portal_workflow
-    workflow_tool.getWorkflowValueListFor(portal_type)
   """
   def beforeTearDown(self):
     self.portal = self.getPortal()
@@ -211,28 +204,30 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     #self.commit()
   """
 
-class TestERP5Workflow(TestERP5WorkflowMixin):
+class TestConvertedWorkflow(TestERP5WorkflowMixin):
   """
-    Tests ERP5 Workflow.
+    Tests Converted Workflow.
   """
   def afterSetUp(self):
     self.portal = self.getPortal()
     self.workflow_module = self.portal.portal_workflow
     dc_wf_id_list = ['testing_workflow', 'testing_interaction_workflow']
+    # clean the workflow_list assignment
+    type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
+    type_test_object.edit(type_workflow_list=())
     ptype_id = 'ERP5Workflow Test Document'
     type_test_object = self.portal.portal_types._getOb(ptype_id)
 
     for dc_wf_id in dc_wf_id_list:
-      if hasattr(self.workflow_module, 'workflow_'+dc_wf_id) or hasattr(self.workflow_module, 'interactionworkflow_'+dc_wf_id):
-        # already existed converted workflow
-        continue
-      # clean _chain_by_type assignment
       self.workflow_module.delTypeCBT(ptype_id, dc_wf_id)
-      # convert DC workflow to workflow:
-      dc_wf = self.workflow_module._getOb(dc_wf_id)
-      workflow = self.workflow_module.dc_workflow_asERP5Object(self.workflow_module, dc_wf, temp=0)
-      # assign new converted workflow;
-      type_test_object.addTypeWorkflowList(workflow.getId())
+      if not hasattr(self.workflow_module, 'workflow_'+dc_wf_id) and not hasattr(self.workflow_module, 'interactionworkflow_'+dc_wf_id):
+        # convert DC workflow to workflow:
+        dc_wf = self.workflow_module._getOb(dc_wf_id)
+        self.workflow_module.dc_workflow_asERP5Object(self.workflow_module, dc_wf, temp=0)
+        #type_test_object.addTypeWorkflowList(workflow.id)
+
+    type_test_object.addTypeWorkflowList('interactionworkflow_testing_interaction_workflow')
+    type_test_object.addTypeWorkflowList('workflow_testing_workflow') 
 
     self.wf = self.workflow_module._getOb('workflow_testing_workflow') # workflow id comes with suffix
     self.resetComponentTool()
@@ -271,6 +266,6 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Workflow))
+  suite.addTest(unittest.makeSuite(TestConvertedWorkflow))
   suite.addTest(unittest.makeSuite(TestDCWorkflow))
   return suite
