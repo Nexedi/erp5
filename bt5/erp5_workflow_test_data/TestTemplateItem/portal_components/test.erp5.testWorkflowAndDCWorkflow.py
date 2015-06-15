@@ -63,6 +63,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     # self.assertEqual(new_object.getDescription(), "After script was executed.")
     ### zwj: mechanism: validate => validate interaction =>
     ### setTitle => setTitle interaction => setDescription
+    self.tic()
     self.assertEqual(new_object.getDescription(), "Interaction of setTitle executed. setTitle is appeared in after validate script.")
 
   def test_02_testBeforeScript(self):
@@ -105,8 +106,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     new_object = self.getTestObject()
     self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager', 'Owner'))
     self.doActionFor(new_object, "validate_action")
-    self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor',
-      'Associate', 'Auditor', 'Manager'))
+    self.assertEqual(new_object._View_Permission, ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Manager'))
 
   def test_07_testUserTransitionRaiseValidationFailed(self):
     """
@@ -157,6 +157,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     checkLine({'state': 'draft'}, 0)
     checkLine({'state': 'draft'}, 1)
     checkLine({'state': 'validated'}, 2)
+
   """
   def test_10_testSimpleWorklist(self):
     
@@ -173,6 +174,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     result = workflow_tool.listActions(object=new_object)
     self.checkWorklist(result, 'Document', 1)
   """
+
   def test_11_testValidationInteraction(self):
     """
     check the validate interaction which changes the title of the object.
@@ -183,6 +185,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     self.assertEqual(new_object.getTitle(), "After validate interaction.")
     self.assertEqual(self.getStateFor(new_object), 'validated')
     new_object.setTitle("tictic")
+    self.tic()
     self.assertEqual(new_object.getDescription(), "Interaction of setTitle executed. setTitle is appeared in after validate script.")
 
   def test_12_testIsTransitionPossible(self):
