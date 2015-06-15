@@ -435,26 +435,26 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           LOG("2.4 Convert interaction '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
           interaction.edit(title=tdef.title)
           interaction.setReference(tdef.id)
-          if tdef.activate_script_name is not None:
-            if tdef.activate_script_name in dc_workflow.interactions.objectIds():
-              interaction.setActivateScriptName('interaction_'+tdef.activate_script_name)
-            elif tdef.activate_script_name in dc_workflow.scripts.objectIds():
-              interaction.setActivateScriptName('script_'+tdef.activate_script_name)
-          if tdef.after_script_name is not None:
-            if tdef.after_script_name in dc_workflow.interactions.objectIds():
-              interaction.setAfterScriptName('interaction_'+tdef.after_script_name)
-            elif tdef.after_script_name in dc_workflow.scripts.objectIds():
-              interaction.setAfterScriptName('script_'+tdef.after_script_name)
-          if tdef.before_commit_script_name is not None:
-            if tdef.before_commit_script_name in dc_workflow.interactions.objectIds():
-              interaction.setBeforeCommitScriptName('interaction_'+tdef.before_commit_script_name)
-            elif tdef.before_commit_script_name in dc_workflow.scripts.objectIds():
-              interaction.setBeforeCommitScriptName('script_'+tdef.before_commit_script_name)
-          if tdef.script_name is not None:
-            if tdef.script_name in dc_workflow.interactions.objectIds():
-              interaction.setBeforeScriptName('interaction_'+tdef.script_name)
-            elif tdef.script_name in dc_workflow.scripts.objectIds():
-              interaction.setBeforeScriptName('script_'+tdef.script_name)
+          for script_name in tdef.activate_script_name:
+            if script_name in dc_workflow.interactions.objectIds():
+              interaction.setActivateScriptName(('interaction_'+script_name,))
+            elif script_name in dc_workflow.scripts.objectIds():
+              interaction.setActivateScriptName(('script_'+script_name,))
+          for script_name in tdef.after_script_name:
+            if script_name in dc_workflow.interactions.objectIds():
+              interaction.setAfterScriptName(('interaction_'+script_name,))
+            elif script_name in dc_workflow.scripts.objectIds():
+              interaction.setAfterScriptName(('script_'+script_name,))
+          for script_name in tdef.before_commit_script_name:
+            if script_name in dc_workflow.interactions.objectIds():
+              interaction.setBeforeCommitScriptName(('interaction_'+script_name,))
+            elif script_name in dc_workflow.scripts.objectIds():
+              interaction.setBeforeCommitScriptName(('script_'+script_name,))
+          for script_name in tdef.script_name:
+            if script_name in dc_workflow.interactions.objectIds():
+              interaction.setBeforeScriptName(('interaction_'+script_name,))
+            elif script_name in dc_workflow.scripts.objectIds():
+              interaction.setBeforeScriptName(('script_'+script_name,))
           # configure guard
           if tdef.guard:
             interaction.setRoleList(tdef.guard.roles)
