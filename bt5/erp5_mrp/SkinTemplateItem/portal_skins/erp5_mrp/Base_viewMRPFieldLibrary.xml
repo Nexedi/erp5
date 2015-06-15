@@ -122,6 +122,8 @@
                         <string>my_specialise</string>
                         <string>my_variation_category_list</string>
                         <string>my_view_mode_listbox_start_date</string>
+                        <string>my_view_mode_aggregate_title_list</string>
+                        <string>my_view_mode_movement_quantity</string>
                       </list>
                     </value>
                 </item>
