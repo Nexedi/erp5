@@ -63,7 +63,6 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     # self.assertEqual(new_object.getDescription(), "After script was executed.")
     ### zwj: mechanism: validate => validate interaction =>
     ### setTitle => setTitle interaction => setDescription
-    self.tic()
     self.assertEqual(new_object.getDescription(), "Interaction of setTitle executed. setTitle is appeared in after validate script.")
 
   def test_02_testBeforeScript(self):
@@ -185,7 +184,6 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     self.assertEqual(new_object.getTitle(), "After validate interaction.")
     self.assertEqual(self.getStateFor(new_object), 'validated')
     new_object.setTitle("tictic")
-    self.tic()
     self.assertEqual(new_object.getDescription(), "Interaction of setTitle executed. setTitle is appeared in after validate script.")
 
   def test_12_testIsTransitionPossible(self):
@@ -217,7 +215,7 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     dc_wf_id_list = ['testing_workflow', 'testing_interaction_workflow']
     # clean the workflow_list assignment
     type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
-    type_test_object.edit(type_workflow_list=())
+    type_test_object.workflow_list = ()
     ptype_id = 'ERP5Workflow Test Document'
     type_test_object = self.portal.portal_types._getOb(ptype_id)
 
@@ -255,7 +253,7 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ('testing_workflow', 'testing_interaction_workflow', 'edit_workflow', ))
     self.wf = self.workflow_module._getOb('testing_workflow')
     type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
-    type_test_object.edit(type_workflow_list=())
+    type_test_object.workflow_list = ()
     self.resetComponentTool()
     self.assertEqual(type_test_object.getTypeWorkflowList(), [])
     self.login()
