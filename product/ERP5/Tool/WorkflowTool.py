@@ -360,7 +360,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           state.setStatePermissionRoles(permission_roles)
           LOG("permission_roles is '%s'"%permission_roles,WARNING,"in WorkflowTool.py")
           i = -1
-          for permission in workflow.getWorkflowManagedPermissionList():
+          for permission in sorted(workflow.getWorkflowManagedPermissionList()):
             i = i + 1
             j = -1
             for role in workflow.getRoleList():
