@@ -71,6 +71,7 @@ class TransformationSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
     return (movement.getSource() is None or movement.getDestination() is None)
 
   def testTransformationSourcing(self, context):
+    # make sure to ignore produced resources to keep consumed resources
     if context.getReference().split('/', 1)[0] == 'pr':
       return False
     # context consumes a resource: maybe sourcing is required.
@@ -156,8 +157,10 @@ class TransformationRuleMovementGenerator(MovementGeneratorMixin):
         return movement
       for phase in phase_set:
         for previous in phase_dict[phase]:
+          # for consumed resource
           yield newIntermediateMovement('cr/', previous, quantity=cr_quantity)
         if phase not in final_set:
+          # for produced resource
           yield newIntermediateMovement('pr/', phase)
     movement = newMovement('pr')
     movement._setTradePhaseList(final_set)
