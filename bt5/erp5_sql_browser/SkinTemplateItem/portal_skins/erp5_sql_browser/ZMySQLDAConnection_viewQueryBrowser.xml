@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts34503950.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ZMySQLDAConnection_viewQueryBrowser</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <title>SQL Browser</title>\n
+\n
+    <script type="text/javascript" src="jquery/core/jquery-1.9.min.js"></script>\n
+    <script type="text/javascript" src="jquery/ui/js/jquery-ui.min.js"></script>\n
+\n
+    <!-- "local" handsontable TODO make a bt ? -->\n
+    <script src="sql_browser/handsontable.full.js"></script>\n
+    <link rel="stylesheet" media="screen" href="sql_browser/handsontable.full.css">\n
+\n
+    <!-- "local" jquery noty -->\n
+    <script type="text/javascript" src="sql_browser/jquery.noty.packaged.js"></script>\n
+\n
+    <!-- "local" c3.js (0.4.10) and d3.js (3.5.5) -->\n
+    <link rel="stylesheet" type="text/css" href="sql_browser/c3.min.css">\n
+    <script type="text/javascript" src="sql_browser/d3.min.js"></script>\n
+    <script type="text/javascript" src="sql_browser/c3.min.js"></script>\n
+\n
+    <!-- PivotTable.js libs from erp5_pivot_table -->\n
+    <link rel="stylesheet" type="text/css" href="pivottable/pivot.css">\n
+    <script type="text/javascript" src="pivottable/pivot.js"></script>\n
+    <script type="text/javascript" src="pivottable/gchart_renderers.js"></script>\n
+    <script type="text/javascript" src="pivottable/c3_renderers.js"></script>\n
+\n
+\n
+    <!-- code mirror from erp5_code_mirror bt5 -->\n
+    <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>\n
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css">\n
+    <script type="text/javascript" src="codemirror/mode/sql/sql.js"></script>\n
+    <script type="text/javascript" src="codemirror/addon/cm_edit/matchbrackets.js"></script>\n
+    <link rel="stylesheet" href="codemirror/addon/dialog/dialog.css">\n
+    <script type="text/javascript" src="codemirror/addon/dialog/dialog.js"></script>\n
+    <script type="text/javascript" src="codemirror/addon/search/searchcursor.js"></script>\n
+    <script type="text/javascript" src="codemirror/addon/search/search.js"></script>\n
+    <link rel="stylesheet" href="codemirror/addon/hint/show-hint.css">\n
+    <script src="codemirror/addon/hint/show-hint.js"></script>\n
+    <script src="codemirror/addon/hint/anyword-hint.js"></script>\n
+    <script src="codemirror/addon/hint/sql-hint.js"></script>\n
+\n
+\n
+    <style>\n
+      .CodeMirror {height: 80px;}\n
+      body {font-family: Verdana;}\n
+      .c3-line {stroke-width: 3px;}\n
+      .c3 circle {stroke: white;}\n
+      .c3 text { font-size: 12px;}\n
+      .c3 text { font-size: 12px;}\n
+      .tick line {stroke: white;}\n
+    </style>\n
+  </head>\n
+\n
+  <body>\n
+    <script type="text/javascript">\n
+      $(function() {\n
+        var editor,\n
+            ht = new Handsontable(document.getElementById(\'table_container\'), { data: [[0]], rowHeaders: true, colHeaders: true}),\n
+            redraw = function(){\n
+\n
+              var derivers = $.pivotUtilities.derivers;\n
+              var renderers = $.extend($.pivotUtilities.renderers,\n
+                                       $.pivotUtilities.c3_renderers);\n
+              var dateFormat = $.pivotUtilities.derivers.dateFormat;\n
+              var sortAs = $.pivotUtilities.sortAs;\n
+              var tpl = $.pivotUtilities.aggregatorTemplates;\n
+              var sum = $.pivotUtilities.aggregatorTemplates.sum;\n
+              var numberFormat = $.pivotUtilities.numberFormat;\n
+              var intFormat = numberFormat({digitsAfterDecimal: 0});\n
+              var notification = noty({type: "info", text: "Refreshing data", layout: "bottom"});\n
+\n
+              $.getJSON("ZMySQLDAConnection_getQueryResultAsJSON", {query: editor.getValue()}, function(mps) {\n
+\n
+                ht.clear();\n
+                if (mps.length > 1) {\n
+                  ht.updateSettings({\n
+                    data: mps.slice(1),\n
+                    colHeaders: mps[0]\n
+                  });\n
+                } else {\n
+                  ht.updateSettings({ data: [[0]], colHeaders: true})\n
+                }\n
+\n
+\n
+                $("#output").pivotUI(mps, {\n
+                  renderers: renderers,\n
+\n
+                  hiddenAttributes: [],\n
+\n
+                  onRefresh: function(config) {\n
+                      // TODO save properties\n
+                    var config_copy = JSON.parse(JSON.stringify(config));\n
+                    //delete some values which are functions\n
+                    delete config_copy["aggregators"];\n
+                    delete config_copy["renderers"];\n
+                    delete config_copy["derivedAttributes"];\n
+                    //delete some bulky default values\n
+                    delete config_copy["rendererOptions"];\n
+                    delete config_copy["localeStrings"];\n
+                    $("#config_json").text(JSON.stringify(config_copy, undefined, 2));\n
+                  }\n
+                });\n
+                notification.close();\n
+              }\n
+                       ).fail(function(jqXHR, textStatus, errorThrown) {\n
+                notification.close();\n
+                noty({type: "error", text: jqXHR.responseText, timeout: 5000, layout: "bottom" });\n
+              });\n
+            };\n
+\n
+        $(function() {\n
+          editor = CodeMirror.fromTextArea(document.getElementById("query"), {\n
+            lineNumbers: true,\n
+            viewportMargin: Infinity,\n
+            extraKeys: {"Ctrl-Space": "autocomplete", "Ctrl-Enter": redraw, "Alt-Space": redraw},\n
+            mode: "text/x-mariadb"\n
+          });\n
+          $.getJSON("ZMySQLDAConnection_getSchemaAsJSON").then(\n
+            function(schema) {\n
+              CodeMirror.commands.autocomplete = function(cm) {\n
+                CodeMirror.showHint(cm, CodeMirror.hint.sql, {\n
+                  tables: schema\n
+                } );\n
+              }\n
+            });\n
+\n
+          $(\'button[name="Query"]\').click(redraw);\n
+\n
+          // TODO: save presets in JIO\n
+          // ( also include pivot table config in preset )\n
+          $(\'button[name="Save"]\').click(function(){alert("TODO");});\n
+\n
+          $(\'#presets\')\n
+          .append($(\'<option>\', {\n
+            value: "select * from message_queue where processing_node = -2",\n
+            text: \'Select failed message_queue activities\'\n
+          }))\n
+          .append($(\'<option>\', {\n
+            value: "update message_queue set processing_node=-1\\n  where processing_node=-2\\  and method_id=\'XXX\'",\n
+            text: \'Restart message_queue\'\n
+          })).change(function(){editor.setValue($("#presets").val()); redraw();});\n
+\n
+          redraw();\n
+        });\n
+      });\n
+    </script>\n
+\n
+    Presets: <select id="presets"><option selected="selected" value=""></option></select>\n
+    <button name="Save">Save Preset</button>\n
+    <br/>\n
+    <textarea name="query" id="query"></textarea>\n
+    <button name="Query">Run Query</button>\n
+\n
+\n
+    <div id="table_container" style="margin: 10px; height: 300px; overflow: hidden"></div>\n
+    <div id="output" style="margin: 10px;"></div>\n
+\n
+    <!-- TODO: debug saved configuration -->\n
+    <div style="display: none">\n
+      <pre id="config_json"></pre>\n
+    </div>\n
+\n
+  </body>\n
+\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6813</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

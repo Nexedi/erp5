@@ -1,0 +1,2 @@
+"Quick and dirty" web interface to run queries on a ZMySQLDA Connection.
+Control + Enter to run query and Control + Space to complete.
