@@ -1879,9 +1879,14 @@ class RegisteredVersionPrioritySelectionTemplateItem(BaseTemplateItem):
   def build(self, context, **kw):
     self._fillObjectDictFromArchive()
 
+  def beforeInstall(self):
+    self.__is_new_version_priority_installed = False
+
   def install(self, context, trashbin, **kw):
     if not self._objects:
       return
+
+    self.beforeInstall()
 
     portal = context.getPortalObject()
     registered_tuple_list = []
@@ -1928,8 +1933,17 @@ class RegisteredVersionPrioritySelectionTemplateItem(BaseTemplateItem):
       if not inserted:
         registered_tuple_list.append((new_version, new_priority))
 
+      self.__is_new_version_priority_installed = True
+
     portal.setVersionPriorityList(('%s | %s' % (version, priority)
                                    for version, priority in registered_tuple_list))
+
+    self.afterInstall()
+
+  def afterInstall(self):
+    if self.__is_new_version_priority_installed:
+      self.portal_components.reset(force=True,
+                                   reset_portal_type_at_transaction_boundary=True)
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
