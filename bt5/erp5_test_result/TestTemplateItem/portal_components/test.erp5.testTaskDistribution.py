@@ -328,8 +328,9 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
   def test_07_reportTaskFailure(self):
     test_result_path, revision = self._createTestResult(node_title="Node0")
-    test_result_path, revision = self._createTestResult(node_title="Node1")
-    test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)    
+    next_test_result_path, revision = self._createTestResult(node_title="Node1")
+    self.assertEqual(test_result_path, next_test_result_path)
+    test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
     self.assertEqual("started", test_result.getSimulationState())
     node_list = test_result.objectValues(portal_type="Test Result Node",
                                          sort_on=[("title", "ascending")])
@@ -803,3 +804,4 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
     def test_19_testMultiDistributor(self):
       pass
+

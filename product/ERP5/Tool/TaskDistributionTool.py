@@ -30,7 +30,7 @@ import random
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
 from zLOG import LOG
 from xmlrpclib import Binary
 
@@ -129,6 +129,7 @@ class TaskDistributionTool(BaseTool):
                          portal_type="Test Result",
                          title=SimpleQuery(comparison_operator='=', title=test_title),
                          sort_on=(("creation_date","descending"),),
+                         query=NegatedQuery(SimpleQuery(simulation_state="cancelled")),
                          limit=1)
     if result_list:
       test_result = result_list[0].getObject()
