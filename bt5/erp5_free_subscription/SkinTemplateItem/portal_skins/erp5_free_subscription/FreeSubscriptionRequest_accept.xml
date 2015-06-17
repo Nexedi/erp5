@@ -54,8 +54,27 @@
 Intent is to ignore accept/accept race conditions but complain about\n
 any other race condition (ex: accept/reject).\n
 """\n
-if context.getValidationState() != \'accepted\':\n
+if context.getValidationState() != \'submitted\':\n
+  return\n
+if context.getDestination():\n
   context.accept()\n
+elif hasattr(context, \'destination_person_default_email_text\'):\n
+  email = context.destination_person_default_email_text\n
+  portal = context.getPortalObject()\n
+  person_list = portal.portal_catalog.getResultValue(\n
+    portal_type="Person",\n
+    default_email_text=email,\n
+    )\n
+  if person_list:\n
+    context.reject(comment="Person already in the user data base")\n
+  else:\n
+    person = portal.person_module.newContent(\n
+      portal_type="Person",\n
+      default_email_text=email,\n
+      title=email,\n
+      )\n
+    context.setDestination(person.getRelativeUrl())\n
+    context.accept()\n
 </string> </value>
         </item>
         <item>
