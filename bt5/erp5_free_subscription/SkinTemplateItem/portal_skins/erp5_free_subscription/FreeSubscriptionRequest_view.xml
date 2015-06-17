@@ -79,6 +79,8 @@
                         <string>my_resource_title</string>
                         <string>my_causality_title</string>
                         <string>my_follow_up_title</string>
+                        <string>my_default_email_coordinate_text</string>
+                        <string>my_default_email_url_string</string>
                       </list>
                     </value>
                 </item>
