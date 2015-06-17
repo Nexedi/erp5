@@ -241,102 +241,76 @@ class ComponentDynamicPackage(ModuleType):
     As per PEP-302, raise an ImportError if the Loader could not load the
     module for any reason...
     """
-    # In Python < 3.3, the import lock is a global lock for all modules:
-    # http://bugs.python.org/issue9260
-    #
-    # So, release the import lock acquired by import statement on all hooks to
-    # load objects from ZODB. When an object is requested from ZEO, it sends a
-    # RPC request and lets the asyncore thread gets the reply. This reply may
-    # be a tuple (PICKLE, TID), sent directly to the first thread, or an
-    # Exception, which tries to import a ZODB module and thus creates a
-    # deadlock because of the global import lock
-    #
-    # Also, handle the case where find_module() may be called without import
-    # statement as it does change anything in sys.modules
-    import_lock_held = True
-    try:
-      imp.release_lock()
-    except RuntimeError:
-      import_lock_held = False
+    site = getSite()
+    name = fullname[len(self._namespace_prefix):]
 
-    try:
-      site = getSite()
-      name = fullname[len(self._namespace_prefix):]
+    # if only Version package (erp5.component.XXX.VERSION_version) is
+    # requested to be loaded, then create it if necessary
+    if name.endswith('_version'):
+      version = name[:-self.__version_suffix_len]
+      return (version in site.getVersionPriorityNameList() and
+              self._getVersionPackage(version) or None)
 
-      # if only Version package (erp5.component.XXX.VERSION_version) is
-      # requested to be loaded, then create it if necessary
-      if name.endswith('_version'):
-        version = name[:-self.__version_suffix_len]
-        return (version in site.getVersionPriorityNameList() and
-                self._getVersionPackage(version) or None)
+    module_fullname_alias = None
+    version_package_name = name[:-self.__version_suffix_len]
 
-      module_fullname_alias = None
-      version_package_name = name[:-self.__version_suffix_len]
+    # If a specific version of the Component has been requested
+    if '.' in name:
+      try:
+        version, name = name.split('.')
+        version = version[:-self.__version_suffix_len]
+      except ValueError, error:
+        raise ImportError("%s: should be %s.VERSION.COMPONENT_REFERENCE (%s)" % \
+                            (fullname, self._namespace, error))
 
-      # If a specific version of the Component has been requested
-      if '.' in name:
-        try:
-          version, name = name.split('.')
-          version = version[:-self.__version_suffix_len]
-        except ValueError, error:
-          raise ImportError("%s: should be %s.VERSION.COMPONENT_REFERENCE (%s)" % \
-                              (fullname, self._namespace, error))
+      try:
+        component_id = self._registry_dict[name][version][0]
+      except KeyError:
+        raise ImportError("%s: version %s of Component %s could not be found" % \
+                            (fullname, version, name))
 
-        try:
-          component_id = self._registry_dict[name][version][0]
-        except KeyError:
-          raise ImportError("%s: version %s of Component %s could not be found" % \
-                              (fullname, version, name))
+    # Otherwise, find the Component with the highest version priority
+    else:
+      try:
+        component_version_dict = self._registry_dict[name]
+      except KeyError:
+        raise ImportError("%s: Component %s could not be found" % (fullname,
+                                                                   name))
 
-      # Otherwise, find the Component with the highest version priority
+      # Version priority name list is ordered in descending order
+      for version in site.getVersionPriorityNameList():
+        component_id_uid_tuple = component_version_dict.get(version)
+        if component_id_uid_tuple is not None:
+          component_id = component_id_uid_tuple[0]
+          break
       else:
-        try:
-          component_version_dict = self._registry_dict[name]
-        except KeyError:
-          raise ImportError("%s: Component %s could not be found" % (fullname,
-                                                                     name))
+        raise ImportError("%s: no version of Component %s in Site priority" % \
+                            (fullname, name))
 
-        # Version priority name list is ordered in descending order
-        for version in site.getVersionPriorityNameList():
-          component_id_uid_tuple = component_version_dict.get(version)
-          if component_id_uid_tuple is not None:
-            component_id = component_id_uid_tuple[0]
-            break
-        else:
-          raise ImportError("%s: no version of Component %s in Site priority" % \
-                              (fullname, name))
+      # Check whether this module has already been loaded before for a
+      # specific version, if so, just add it to the upper level
+      try:
+        module = getattr(getattr(self, version + '_version'), name)
+      except AttributeError:
+        pass
+      else:
+        setattr(self, name, module)
+        return module
 
-        # Check whether this module has already been loaded before for a
-        # specific version, if so, just add it to the upper level
-        try:
-          module = getattr(getattr(self, version + '_version'), name)
-        except AttributeError:
-          pass
-        else:
-          setattr(self, name, module)
-          return module
+      module_fullname_alias = self._namespace + '.' + name
 
-        module_fullname_alias = self._namespace + '.' + name
+    component = getattr(site.portal_components, component_id)
+    relative_url = component.getRelativeUrl()
 
-      component = getattr(site.portal_components, component_id)
-      relative_url = component.getRelativeUrl()
+    module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
+    module = ModuleType(module_fullname, component.getDescription())
 
-      module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
-      module = ModuleType(module_fullname, component.getDescription())
-
-      source_code_str = component.getTextContent(validated_only=True)
-      version_package = self._getVersionPackage(version)
-
-    finally:
-      # Internal release of import lock at the end of import machinery will
-      # fail if the hook is not acquired
-      if import_lock_held:
-        imp.acquire_lock()
+    source_code_str = component.getTextContent(validated_only=True)
+    version_package = self._getVersionPackage(version)
 
     # All the required objects have been loaded, acquire import lock to modify
     # sys.modules and execute PEP302 requisites
-    if not import_lock_held:
-      imp.acquire_lock()
+    imp.acquire_lock()
     try:
       # The module *must* be in sys.modules before executing the code in case
       # the module code imports (directly or indirectly) itself (see PEP 302)
@@ -393,19 +367,41 @@ class ComponentDynamicPackage(ModuleType):
 
       return module
     finally:
-      # load_module() can be called outside of import machinery, for example
-      # to check first if the module can be handled by Component and then try
-      # to load it without going through the same code again
-      if not import_lock_held:
-        imp.release_lock()
+      imp.release_lock()
 
   def load_module(self, fullname):
     """
     Make sure that loading module is thread-safe using aq_method_lock to make
     sure that modules do not disappear because of an ongoing reset
     """
-    with aq_method_lock:
+    # In Python < 3.3, the import lock is a global lock for all modules:
+    # http://bugs.python.org/issue9260
+    #
+    # So, release the import lock acquired by import statement on all hooks to
+    # load objects from ZODB. When an object is requested from ZEO, it sends a
+    # RPC request and lets the asyncore thread gets the reply. This reply may
+    # be a tuple (PICKLE, TID), sent directly to the first thread, or an
+    # Exception, which tries to import a ZODB module and thus creates a
+    # deadlock because of the global import lock
+    #
+    # Also, handle the case where find_module() may be called without import
+    # statement as it does change anything in sys.modules
+    import_lock_held = True
+    try:
+      imp.release_lock()
+    except RuntimeError:
+      import_lock_held = False
+
+    aq_method_lock.acquire()
+    try:
       return self.__load_module(fullname)
+    finally:
+      aq_method_lock.release()
+
+      # Internal release of import lock at the end of import machinery will
+      # fail if the hook is not acquired
+      if import_lock_held:
+        imp.acquire_lock()
 
   def find_load_module(self, name):
     """
