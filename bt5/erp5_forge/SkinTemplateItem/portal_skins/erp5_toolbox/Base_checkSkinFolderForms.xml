@@ -50,16 +50,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>skin_folder = getattr(context.portal_skins, original_skin_name)\n
+            <value> <string encoding="cdata"><![CDATA[
+
+skin_folder = getattr(context.portal_skins, original_skin_name)\n
 new_skin_folder = getattr(context.portal_skins, new_skin_name)\n
 \n
+output_list = []\n
+output_append = output_list.append\n
+output_append("<html>")\n
+output_append("  <body>")\n
 for original_form in skin_folder.objectValues():\n
   if (original_form.meta_type==\'ERP5 Form\' or original_form.meta_type==\'ERP5 Report\') and not original_form.getId().endswith(\'FieldLibrary\'):\n
     new_form = getattr(new_skin_folder, original_form.id)\n
     for original_field in original_form.objectValues():\n
       new_field = getattr(new_form, original_field.id, None)\n
       if new_field is None:\n
-        print "Missing %s in %s" % (original_field.id, new_form)\n
+        output_append("Missing %s in %s" % (original_field.id, new_form))\n
 \n
       else:\n
 \n
@@ -69,29 +75,38 @@ for original_form in skin_folder.objectValues():\n
           new_value_dict, new_value_tales = context.Base_getFieldData(new_field)\n
         except AttributeError:\n
           new_value_dict = new_value_tales = None\n
-          print "Dead proxy field %s %s" % (original_field.id, new_form)\n
+          output_append("Dead proxy field %s %s" % (original_field.id, new_form))\n
 \n
         if new_value_dict is not None:\n
 \n
           if (original_value_dict != new_value_dict) or \\\n
             (original_value_tales != new_value_tales):\n
 \n
-            print new_form.id, new_field.id\n
+            output_append("%s %s <a href=\'%s\'>old</a> <a href=\'%s\'>new</a>" % (\n
+                new_form.id, new_field.id,\n
+                original_field.absolute_url() + \'/manage_main\',\n
+                new_field.absolute_url() + \'/manage_main\'))\n
+            output_append("<blockquote><ul>")\n
 \n
 \n
             for key, original_value in original_value_dict.items():\n
               if original_value != new_value_dict[key]:\n
-                print "  ", key, \'Origin: %s \' % original_value, \'New: %s \' % new_value_dict[key]\n
+                output_append("  <li>" + key + \' Origin: %s \' % original_value \\\n
+                              + \' New: %s</li>\' % new_value_dict[key])\n
 \n
             for key, original_value in original_value_tales.items():\n
               if original_value != new_value_tales[key]:\n
-                print "  ", key, \'Origin: %s \' % original_value, \'New: %s \' % new_value_tales[key]\n
-        \n
-        # print \'\\n\'\n
+                output_append("  <li>" + key + \' Origin: %s \' % original_value \\\n
+                              + \' New: %s<br></li>\' % new_value_tales[key])\n
+            output_append("</ul></blockquote>")\n
 \n
-print \'OK\'      \n
-return printed\n
-</string> </value>
+output_append("Finished<br>")\n
+output_append("  </body>")\n
+output_append("</html>")\n
+return "\\n".join(output_list)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
