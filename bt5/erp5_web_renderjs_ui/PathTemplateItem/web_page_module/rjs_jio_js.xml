@@ -8306,10 +8306,11 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           if (is_manual_query_needed) {\n
             len = result.length;\n
             for (i = 0; i < len; i += 1) {\n
+              result[i].doc.__id = result[i].id;\n
               data_rows.push(result[i].doc);\n
             }\n
             if (options.select_list) {\n
-              options.select_list.push("_id");\n
+              options.select_list.push("__id");\n
             }\n
             result = jIO.QueryFactory.create(options.query || "",\n
                                              context._key_schema).\n
@@ -8328,13 +8329,13 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             len = result.length;\n
             for (i = 0; i < len; i += 1) {\n
               element = {\n
-                id: result[i]._id,\n
+                id: result[i].__id,\n
                 value: options.select_list ? result[i] : {},\n
                 doc: {}\n
               };\n
               if (options.select_list) {\n
-                // Does not work if user manually request _id\n
-                delete element.value._id;\n
+                // Does not work if user manually request __id\n
+                delete element.value.__id;\n
               }\n
               if (options.include_docs) {\n
                 // XXX To implement\n
@@ -8801,7 +8802,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   }\n
 \n
   IndexedDBStorage.prototype.hasCapacity = function (name) {\n
-    return (name === "list");\n
+    return ((name === "list") || (name === "include"));\n
   };\n
 \n
   function buildKeyPath(key_list) {\n
@@ -8925,8 +8926,16 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return new RSVP.Promise(resolver);\n
   }\n
 \n
-  IndexedDBStorage.prototype.buildQuery = function () {\n
+  IndexedDBStorage.prototype.buildQuery = function (options) {\n
     var result_list = [];\n
+\n
+    function pushIncludedMetadata(cursor) {\n
+      result_list.push({\n
+        "id": cursor.key,\n
+        "value": {},\n
+        "doc": cursor.value.doc\n
+      });\n
+    }\n
 \n
     function pushMetadata(cursor) {\n
       result_list.push({\n
@@ -8937,6 +8946,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return openIndexedDB(this)\n
       .push(function (db) {\n
         var tx = openTransaction(db, ["metadata"], "readonly");\n
+        if (options.include_docs === true) {\n
+          return handleCursor(tx.objectStore("metadata").index("_id")\n
+                              .openCursor(), pushIncludedMetadata);\n
+        }\n
         return handleCursor(tx.objectStore("metadata").index("_id")\n
                             .openKeyCursor(), pushMetadata);\n
       })\n
@@ -9328,7 +9341,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.26445.29550.22613</string> </value>
+                <value> <string>943.49454.19396.29678</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -9346,7 +9359,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1433838072.86</float>
+                        <float>1434614537.29</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
