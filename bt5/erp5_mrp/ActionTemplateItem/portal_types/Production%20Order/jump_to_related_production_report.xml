@@ -30,7 +30,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -73,7 +75,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${portal_url}/production_report_module/view?reset:int=1&causality_uid=${object/getUid}
+string:${object_url}/Base_jumpToRelatedObject?base_category=causality&portal_type=Production+Report
 
 ]]></string> </value>
         </item>
