@@ -50,27 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = state_change["object"]\n
+            <value> <string>free_subscription_request = state_change["object"]\n
 \n
-if request.getFreeSubscriptionRequestType() == "unsubscription":\n
-  free_subscription = request.getFollowUpValue()\n
-  if free_subscription.getValidationState() != "invalidated":\n
-    free_subscription.invalidate()\n
-elif request.getFreeSubscriptionRequestType() == "subscription":\n
-  from DateTime import DateTime\n
-  portal = request.getPortalObject()\n
-  destination_value = request.getDestinationValue()\n
-  free_subscription = portal.free_subscription_module.newContent(\n
-    source=request.getSource(),\n
-    destination_value=destination_value,\n
-    resource=request.getResource(),\n
-    effective_date=DateTime())\n
-  free_subscription.validate()\n
-  request.setFollowUpValue(free_subscription)\n
-  career_role_list = destination_value.getCareerRoleList([])\n
-  if not any([x.split("/")[0] == "newsletter_subscriber" for x in career_role_list]):\n
-    career_role_list.append(\'newsletter_subscriber\')\n
-    destination_value.setCareerRoleList(career_role_list)\n
+free_subscription_request.FreeSubscriptionRequest_generateReference()\n
 </string> </value>
         </item>
         <item>
@@ -79,7 +61,7 @@ elif request.getFreeSubscriptionRequestType() == "subscription":\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Request_updateFreeSubscription</string> </value>
+            <value> <string>FreeSubscriptionRequest_updateReference</string> </value>
         </item>
       </dictionary>
     </pickle>

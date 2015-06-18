@@ -29,6 +29,7 @@
             <value>
               <list>
                 <string>Call_alarmActiveSense</string>
+                <string>FreeSubscriptionRequest_updateReference</string>
               </list>
             </value>
         </item>
