@@ -38,7 +38,7 @@ Usually used when processed by activities.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>offset_property</string> </value>
+            <value> <string>int_offset_index_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
