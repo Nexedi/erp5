@@ -6,7 +6,7 @@
   <item>DefaultImage</item>
  </portal_type>
  <portal_type id="Data Stream">
-  <item>DataStream</item>
+  <item>OffsetIndex</item>
  </portal_type>
  <portal_type id="Ingestion Policy">
   <item>IngestionPolicy</item>

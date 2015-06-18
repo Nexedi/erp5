@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DataStream</string> </value>
+            <value> <string>OffsetIndex</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
