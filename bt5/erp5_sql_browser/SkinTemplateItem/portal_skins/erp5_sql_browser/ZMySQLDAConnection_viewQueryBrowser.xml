@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts34503950.54</string> </value>
+            <value> <string>ts34602970.42</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -66,6 +66,7 @@
 \n
     <style>\n
       .CodeMirror {height: 80px;}\n
+      .CodeMirror-hints {z-index: 100;} /* above handsontable header */\n
       body {font-family: Verdana;}\n
       .c3-line {stroke-width: 3px;}\n
       .c3 circle {stroke: white;}\n
@@ -168,15 +169,16 @@
         });\n
       });\n
     </script>\n
-\n
+<!--\n
     Presets: <select id="presets"><option selected="selected" value=""></option></select>\n
     <button name="Save">Save Preset</button>\n
     <br/>\n
-    <textarea name="query" id="query"></textarea>\n
+-->\n
+<textarea name="query" id="query"></textarea>\n
     <button name="Query">Run Query</button>\n
 \n
 \n
-    <div id="table_container" style="margin: 10px; height: 300px; overflow: hidden"></div>\n
+    <div id="table_container" style="margin: 10px; height: 300px; overflow: hidden; z-index: -1;"></div>\n
     <div id="output" style="margin: 10px;"></div>\n
 \n
     <!-- TODO: debug saved configuration -->\n
@@ -197,7 +199,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>6813</int> </value>
+            <value> <int>6903</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

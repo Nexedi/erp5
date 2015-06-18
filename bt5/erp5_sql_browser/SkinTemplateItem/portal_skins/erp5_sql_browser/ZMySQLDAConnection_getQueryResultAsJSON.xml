@@ -50,7 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>import datetime\n
+            <value> <string>#from decimal import Decimal\n
+import datetime\n
 import json\n
 from DateTime import DateTime\n
 \n
@@ -64,7 +65,7 @@ except Exception, e:\n
   response.setStatus(500)\n
   try:\n
     response.write(str(e[1]))\n
-  except Exception, _:\n
+  except Exception:\n
     response.write(str(e))\n
   return\n
 \n
@@ -75,48 +76,12 @@ for line in data[1:]:\n
   for v in line:\n
     if isinstance(v, DateTime):\n
       v = v.ISO()\n
-    if isinstance(v, datetime.datetime):\n
+    elif isinstance(v, datetime.datetime):\n
       v = v.isoformat()\n
+    elif "Decimal" in repr(v): # XXX decimal is not allowed in restricted environment\n
+      v = float(v)\n
     new_line.append(v)\n
   new_data.append(new_line)\n
-\n
-response.setHeader(\'Content-Type\', \'application/json\')\n
-return json.dumps(new_data, indent=2)\n
-\n
-\n
-\n
-\n
-\n
-\n
-import datetime\n
-import json\n
-from DateTime import DateTime\n
-\n
-response = container.REQUEST.RESPONSE\n
-\n
-try:\n
-  results = context.manage_test(query)\n
-  data = [ results.names() ]\n
-  data.extend(results.dictionaries())\n
-except Exception, e:\n
-  response.setStatus(500)\n
-  try:\n
-    response.write(str(e[1]))\n
-  except Exception, _:\n
-    response.write(str(e))\n
-  return\n
-\n
-# handle non JSON serializable data\n
-new_data = [data[0]]\n
-for line in data[1:]:\n
-  new_line = {}\n
-  for k, v in line.items():\n
-    if isinstance(v, DateTime):\n
-      v = v.ISO()\n
-    if isinstance(v, datetime.datetime):\n
-      v = v.isoformat()\n
-    line[k] = v#new_line.append(v)\n
-  new_data.append(line)\n
 \n
 response.setHeader(\'Content-Type\', \'application/json\')\n
 return json.dumps(new_data, indent=2)\n
