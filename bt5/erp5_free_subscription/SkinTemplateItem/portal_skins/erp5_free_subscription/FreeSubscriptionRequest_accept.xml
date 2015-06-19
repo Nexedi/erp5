@@ -54,6 +54,8 @@
 Intent is to ignore accept/accept race conditions but complain about\n
 any other race condition (ex: accept/reject).\n
 """\n
+if not context.getReference():\n
+  context.FreeSubscriptionRequest_generateReference()\n
 if context.getValidationState() != \'submitted\':\n
   return\n
 if context.getDestination():\n
