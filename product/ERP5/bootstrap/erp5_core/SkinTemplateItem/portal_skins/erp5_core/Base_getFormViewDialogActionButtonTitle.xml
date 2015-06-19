@@ -58,12 +58,9 @@ if button_title is not None:\n
 \n
 wf_actions =  context.portal_actions.portal_actions.listFilteredActionsFor(context)[\'workflow\']\n
 workflow_action = request.get(\'workflow_action\', None) or request.get(\'field_my_workflow_action\', None)\n
-\n
 if workflow_action:\n
   for action in wf_actions:\n
-    # extract action reference from the url predefined\n
-    action_reference  = action[\'url\'][action[\'url\'].find(\'workflow_action\')+16:]\n
-    if action_reference == workflow_action:\n
+    if action[\'id\'] == workflow_action:\n
       return action[\'name\']\n
 \n
 if workflow_action:\n
