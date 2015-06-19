@@ -61,7 +61,13 @@ from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC,\
                                     TRIGGER_USER_ACTION, TRIGGER_WORKFLOW_METHOD
 from tempfile import mktemp
 from types import StringTypes
+from xml.sax.saxutils import escape, unescape
+from xml_marshaller.xml_marshaller import Marshaller
 from zLOG import LOG, INFO, WARNING
+
+MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
+marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
+                                                            as_tree=True).dumps
 
 class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
   """
@@ -160,7 +166,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     workflow_key = self._generateHistoryKey()
 
     # Copy is requested
-    LOG(" workflow_history is '%s', object is '%s'"%(document.workflow_history, document.getId()), WARNING, " in Workflow.py 162.")
     result = document.workflow_history[workflow_key][-1].copy()
     return result
 
@@ -632,7 +637,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         except ObjectMoved, moved_exc:
           ob = moved_exc.getNewObject()
           # Re-raise after transition
-        LOG("Executing transition '%s' before script '%s'"%(tdef.getId(), script_id), WARNING, " in Workflows.py 631.")
 
     # update variables
     state_values = None
@@ -725,7 +729,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           script.execute(sci)  # May throw an exception.
         else:
           raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getReference()))
-      LOG("Executing transition '%s' after script '%s'"%(tdef.getId(), script_id), WARNING, " in Workflows.py 726.")
     # Return the new state object.
     if moved_exc is not None:
         # Propagate the notification that the object has moved.
@@ -734,22 +737,170 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         return new_sdef
 
   def showAsXML(self, root=None):
-    workflow_prop_list = ['id', 'configuration_after_script_id', 'state_base_category',
-                  'state_variable', 'workflow_managed_permission_list']
     if root is None:
-      root = Element('ERP5Workflow')
+      root = Element('erp5')
       return_as_object = False
 
-    object = SubElement(root, 'object',
+    # workflow as XML, need to rename DC workflow's portal_type before comparison.
+    workflow = SubElement(root, 'workflow',
                         attrib=dict(id=self.getId(),
                         portal_type=self.getPortalType()))
+    """
+    for prop_id in sorted(self.propertyIds()):
+      # In most case, we should not synchronize acquired properties
+      if prop_id not in ('uid', 'workflow_history', 'id', 'portal_type',):
+        value = self.getProperty(prop_id)
+        if value is None:
+          # not registered if not defined.
+          continue
+        else:
+          prop_type = self.getPropertyType(prop_id)
+        sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
+        if prop_type in ('object',):
+          # We may have very long lines, so we should split
+          value = aq_base(value)
+          value = dumps(value)
+          sub_object.text = standard_b64encode(value)
+        elif prop_type in ('data',):
+          # Create blocks to represent data
+          # <data><block>ZERD</block><block>OEJJM</block></data>
+          size_block = 60
+          if isinstance(value, str):
+            for index in xrange(0, len(value), size_block):
+              content = value[index:index + size_block]
+              data_encoded = standard_b64encode(content)
+              block = SubElement(sub_object, 'block_data')
+              block.text = data_encoded
+          else:
+            raise ValueError("XMLExportImport failed, the data is undefined")
+        elif prop_type in ('lines', 'tokens',):
+          value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
+              for word in value]
+          sub_object.append(marshaller(value))
+        elif prop_type in ('text', 'string',):
+          if type(value) in (tuple, list, dict):
+            sub_object.text = str(value)
+          else:
+            sub_object.text = unicode(escape(value), 'utf-8')
+        elif prop_type != 'None':
+          sub_object.text = str(value)
+    # We should now describe security settings
+    for user_role in self.get_local_roles():
+      local_role_node = SubElement(workflow, 'local_role',
+                                   attrib=dict(id=user_role[0], type='tokens'))
+      #convert local_roles in string because marshaller can't do it
+      role_list = []
+      for role in user_role[1]:
+        if isinstance(role, unicode):
+          role = role.encode('utf-8')
+        role_list.append(role)
+      local_role_node.append(marshaller(tuple(role_list)))
+    if getattr(self, 'get_local_permissions', None) is not None:
+      for user_permission in self.get_local_permissions():
+        local_permission_node = SubElement(workflow, 'local_permission',
+                                attrib=dict(id=user_permission[0], type='tokens'))
+        local_permission_node.append(marshaller(user_permission[1]))
+    # Sometimes theres is roles specified for groups, like with CPS
+    if getattr(self, 'get_local_group_roles', None) is not None:
+      for group_role in self.get_local_group_roles():
+        local_group_node = SubElement(workflow, 'local_group',
+                                      attrib=dict(id=group_role[0], type='tokens'))
+        local_group_node.append(marshaller(group_role[1]))
+    """
+    # 1. State as XML
+    state_reference_list = []
+    state_list = self.objectValues(portal_type='State')
 
-    for prop_id in workflow_prop_list:
-      value = self.getProperty(prop_id)
-      if value is None:
-        continue
-      # build a structure to show in XML
-      sub_object = SubElemente(object, prop_id, prop_value=value)
+    for sdef in state_list:
+      state_reference_list.append(sdef.getReference())
+    states = SubElement(workflow, 'states', attrib=dict(state_list=str(state_reference_list),
+                        number_of_element=str(len(state_reference_list))))
+
+    for sdef in state_list:
+      state = SubElement(states, 'state', attrib=dict(reference=sdef.getReference()))
+      for property_id in sorted(sdef.propertyIds()):
+        property_value = sdef.getProperty(property_id)
+        if property_value is None:
+          # do not register if not defined.
+          continue
+        else:
+          property_type = sdef.getPropertyType(property_id)
+        sub_object = SubElement(state, property_id, attrib=dict(type=property_type))
+        if property_type in ('object',):
+          # We may have very long lines, so we should split
+          property_value = aq_base(property_value)
+          property_value = dumps(property_value)
+          sub_object.text = standard_b64encode(property_value)
+        elif property_type in ('data',):
+          # Create blocks to represent data
+          # <data><block>ZERD</block><block>OEJJM</block></data>
+          size_block = 60
+          if isinstance(property_value, str):
+            for index in xrange(0, len(property_value), size_block):
+              content = property_value[index:index + size_block]
+              data_encoded = standard_b64encode(content)
+              block = SubElement(sub_object, 'block_data')
+              block.text = data_encoded
+          else:
+            raise ValueError("XMLExportImport failed, the data is undefined")
+        elif property_type in ('lines', 'tokens',):
+          property_value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
+              for word in property_value]
+          sub_object.append(marshaller(property_value))
+        elif property_type in ('text', 'string',):
+          if type(property_value) in (tuple, list, dict):
+            sub_object.text = str(property_value)
+          else:
+            sub_object.text = unicode(escape(property_value), 'utf-8')
+        elif property_type != 'None':
+          sub_object.text = str(property_value)
+
+    # 2. Transition as XML
+    transition_reference_list = []
+    transition_list = self.objectValues(portal_type='Transition')
+    for tdef in self.objectValues(portal_type='Transition'):
+      transition_reference_list.append(tdef.getReference())
+    transitions = SubElement(workflow, 'transitions', attrib=dict(transition_list=str(transition_reference_list),
+                        number_of_element=str(len(transition_reference_list))))
+    for tdef in transition_list:
+      transition = SubElement(transitions, 'transition', attrib=dict(reference=tdef.getReference()))
+
+    # 3. Variable as XML
+    variable_reference_list = []
+    variable_list = self.objectValues(portal_type='Variable')
+    for vdef in variable_list:
+      variable_reference_list.append(vdef.getReference())
+    variables = SubElement(workflow, 'variables', attrib=dict(variable_list=str(variable_reference_list),
+                        number_of_element=str(len(variable_reference_list))))
+    for vdef in variable_list:
+      variable = SubElement(variables, 'variable', attrib=dict(reference=vdef.getReference()))
+
+    # 4. Worklist as XML
+    worklist_reference_list = []
+    worklist_list = self.objectValues(portal_type='Worklist')
+    for qdef in worklist_list:
+      worklist_reference_list.append(qdef.getReference())
+    worklists = SubElement(workflow, 'worklists', attrib=dict(worklist_list=str(worklist_reference_list),
+                        number_of_element=str(len(worklist_reference_list))))
+    for qdef in worklist_list:
+      worklist = SubElement(worklists, 'worklist', attrib=dict(reference=qdef.getReference()))
+
+    # 5. Script as XML
+    script_reference_list = []
+    script_list = self.objectValues(portal_type='Workflow Script')
+    for sdef in script_list:
+      script_reference_list.append(sdef.getReference())
+    scripts = SubElement(workflow, 'scripts', attrib=dict(script_list=str(script_reference_list),
+                        number_of_element=str(len(script_reference_list))))
+    for sdef in script_list:
+      script = SubElement(scripts, 'script', attrib=dict(reference=sdef.getReference()))
+
+    if return_as_object:
+      return root
+    return etree.tostring(root, encoding='utf-8',
+                          xml_declaration=True, pretty_print=True)
+
+
 
   ###########
   ## Graph ##
