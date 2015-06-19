@@ -325,9 +325,9 @@ for section in section_list:\n
       balance_transaction.deliver()\n
     continue\n
 \n
-  assert roundCurrency(profit_and_loss_accounts_balance, section_currency) == (\n
+  assert roundCurrency(profit_and_loss_accounts_balance, section_currency) == roundCurrency(\n
        - roundCurrency(selected_profit_and_loss_account_balance, section_currency)\n
-       - roundCurrency(profit_and_loss_quantity, section_currency))\n
+       - roundCurrency(profit_and_loss_quantity, section_currency), section_currency)\n
   \n
   # add a final line for p&l\n
   balance_transaction.newContent(\n
