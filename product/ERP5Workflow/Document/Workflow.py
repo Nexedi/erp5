@@ -33,9 +33,11 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.unauthorized import Unauthorized
 from AccessControl.SecurityManagement import getSecurityManager
 from Acquisition import aq_base, aq_inner, aq_parent
-from DateTime import DateTime
 from copy import deepcopy
+from DateTime import DateTime
 from DocumentTemplate.DT_Util import TemplateDict
+from lxml import etree
+from lxml.etree import Element, SubElement
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowException, ObjectDeleted,\
@@ -59,6 +61,7 @@ from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC,\
                                     TRIGGER_USER_ACTION, TRIGGER_WORKFLOW_METHOD
 from tempfile import mktemp
 from types import StringTypes
+from zLOG import LOG, INFO, WARNING
 
 class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
   """
@@ -157,6 +160,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     workflow_key = self._generateHistoryKey()
 
     # Copy is requested
+    LOG(" workflow_history is '%s', object is '%s'"%(document.workflow_history, document.getId()), WARNING, " in Workflow.py 162.")
     result = document.workflow_history[workflow_key][-1].copy()
     return result
 
@@ -337,7 +341,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
                 fmt_data._push(info)
             fmt_data._push({'transition_id': tid})
             res.append((tid, {
-                'id': tid,
+                'id': tdef.getReference(),
                 'name': tdef.actbox_name % fmt_data,
                 'url': str(tdef.actbox_url) % fmt_data,
                 'icon': str(tdef.actbox_icon) % fmt_data,
@@ -628,6 +632,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         except ObjectMoved, moved_exc:
           ob = moved_exc.getNewObject()
           # Re-raise after transition
+        LOG("Executing transition '%s' before script '%s'"%(tdef.getId(), script_id), WARNING, " in Workflows.py 631.")
 
     # update variables
     state_values = None
@@ -683,7 +688,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       tool.setStatusOf(self.getReference(), document, status_dict)
       sci = StateChangeInfo(
         document, self, former_status, tdef, old_sdef, new_sdef, kwargs)
-        # put the error message in the workflow history
+      # put the error message in the workflow history
       sci.setWorkflowVariable(error_message=before_script_error_message)
       if validation_exc :
         # reraise validation failed exception
@@ -720,12 +725,31 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           script.execute(sci)  # May throw an exception.
         else:
           raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getReference()))
+      LOG("Executing transition '%s' after script '%s'"%(tdef.getId(), script_id), WARNING, " in Workflows.py 726.")
     # Return the new state object.
     if moved_exc is not None:
         # Propagate the notification that the object has moved.
         raise moved_exc
     else:
         return new_sdef
+
+  def showAsXML(self, root=None):
+    workflow_prop_list = ['id', 'configuration_after_script_id', 'state_base_category',
+                  'state_variable', 'workflow_managed_permission_list']
+    if root is None:
+      root = Element('ERP5Workflow')
+      return_as_object = False
+
+    object = SubElement(root, 'object',
+                        attrib=dict(id=self.getId(),
+                        portal_type=self.getPortalType()))
+
+    for prop_id in workflow_prop_list:
+      value = self.getProperty(prop_id)
+      if value is None:
+        continue
+      # build a structure to show in XML
+      sub_object = SubElemente(object, prop_id, prop_value=value)
 
   ###########
   ## Graph ##
