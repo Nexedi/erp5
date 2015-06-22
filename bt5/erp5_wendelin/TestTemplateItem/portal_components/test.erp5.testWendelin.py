@@ -26,6 +26,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from DateTime import DateTime
 import msgpack
 import numpy as np
 import string
@@ -60,6 +61,7 @@ class Test(ERP5TypeTestCase):
     Test ingestion using a POST Request containing a msgpack encoded message
     simulating input from fluentd
     """
+    now = DateTime()
     portal = self.portal
     request = portal.REQUEST
     
@@ -71,19 +73,32 @@ class Test(ERP5TypeTestCase):
     request.set('reference', 'car')
     request.set('data_chunk', data_chunk)
     
+    ingestion_policy = portal.portal_ingestion_policies.wendelin_car_logs
+    
     # create new Data Stream for test purposes
     data_stream = portal.data_stream_module.newContent( \
                    portal_type='Data Stream', \
                    reference='car')
     data_stream.validate()
     
-    # asssign it to Data Supply (XXX add dynamically needed test structure in step)
-    data_supply_line = portal.restrictedTraverse('data_supply_module/wendelin_3/1')
-    data_supply_line.setDestinationSectionValue(data_stream)
+    # create Data Supply
+    resource = portal.restrictedTraverse('data_product_module/wendelin_4')
+    sensor = portal.restrictedTraverse('sensor_module/wendelin_1')
+    data_supply_kw = {'reference': 'car',
+                      'version': '001',
+                      'start_date': now,
+                      'stop_date': now + 365}
+    data_supply_line_kw = {'resource_value': resource,
+                           'source_section_value': sensor,
+                           'destination_section_value': data_stream}
+                                       
+    data_supply = ingestion_policy.PortalIngestionPolicy_addDataSupply( \
+                                      data_supply_kw, \
+                                      data_supply_line_kw)
     self.tic()
     
     # do real ingestion call
-    portal.portal_ingestion_policies.wendelin_car_logs.ingest()
+    ingestion_policy.ingest()
     
     # ingestion handler script saves new data using new line so we 
     # need to remove it, it also stringifies thus we need to
