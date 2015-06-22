@@ -741,21 +741,36 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       root = Element('erp5')
       return_as_object = False
 
+    # Define a list of property to show to users:
+    workflow_prop_id_to_show = ['title', 'description', 'state_var',
+      'permissions', 'initial_state']
+
     # workflow as XML, need to rename DC workflow's portal_type before comparison.
     workflow = SubElement(root, 'workflow',
-                        attrib=dict(id=self.getId(),
+                        attrib=dict(id=self.getReference(),
                         portal_type=self.getPortalType()))
-    """
-    for prop_id in sorted(self.propertyIds()):
+
+    for prop_id in sorted(workflow_prop_id_to_show):
       # In most case, we should not synchronize acquired properties
       if prop_id not in ('uid', 'workflow_history', 'id', 'portal_type',):
-        value = self.getProperty(prop_id)
-        if value is None:
-          # not registered if not defined.
-          continue
+        if prop_id == 'permissions':
+          value = self.getProperty('workflow_managed_permission_list')
+          prop_type = self.getPropertyType('workflow_managed_permission_list')
+          sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
+        elif prop_id == 'initial_state':
+          value = self.getSourceValue().getReference()
+          sub_object = SubElement(workflow, prop_id, attrib=dict(type='string'))
+        elif prop_id =='state_var':
+          value = self.getProperty('state_variable')
+          sub_object = SubElement(workflow, prop_id, attrib=dict(type='string'))
         else:
-          prop_type = self.getPropertyType(prop_id)
-        sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
+          value = self.getProperty(prop_id)
+          if value is None:
+            # not registered if not defined.
+            continue
+          else:
+            prop_type = self.getPropertyType(prop_id)
+          sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
         if prop_type in ('object',):
           # We may have very long lines, so we should split
           value = aq_base(value)
@@ -774,9 +789,13 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           else:
             raise ValueError("XMLExportImport failed, the data is undefined")
         elif prop_type in ('lines', 'tokens',):
-          value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
-              for word in value]
-          sub_object.append(marshaller(value))
+          if prop_id == 'initial_state':
+            if self.getSourceValue():
+              sub_object.text = self.getSourceValue().getReference()
+          else:
+            value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
+                for word in value]
+            sub_object.append(marshaller(value))
         elif prop_type in ('text', 'string',):
           if type(value) in (tuple, list, dict):
             sub_object.text = str(value)
@@ -784,6 +803,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             sub_object.text = unicode(escape(value), 'utf-8')
         elif prop_type != 'None':
           sub_object.text = str(value)
+    """
     # We should now describe security settings
     for user_role in self.get_local_roles():
       local_role_node = SubElement(workflow, 'local_role',
@@ -806,19 +826,20 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         local_group_node = SubElement(workflow, 'local_group',
                                       attrib=dict(id=group_role[0], type='tokens'))
         local_group_node.append(marshaller(group_role[1]))
-    """
+
     # 1. State as XML
     state_reference_list = []
     state_list = self.objectValues(portal_type='State')
-
+    # show reference instead of id
+    state_prop_id_to_show = ['reference', 'title', 'description',
+      'categories_list', 'is_selected', 'state_permission_roles']
     for sdef in state_list:
       state_reference_list.append(sdef.getReference())
     states = SubElement(workflow, 'states', attrib=dict(state_list=str(state_reference_list),
                         number_of_element=str(len(state_reference_list))))
-
     for sdef in state_list:
       state = SubElement(states, 'state', attrib=dict(reference=sdef.getReference()))
-      for property_id in sorted(sdef.propertyIds()):
+      for property_id in sorted(state_prop_id_to_show):
         property_value = sdef.getProperty(property_id)
         if property_value is None:
           # do not register if not defined.
@@ -894,7 +915,9 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
                         number_of_element=str(len(script_reference_list))))
     for sdef in script_list:
       script = SubElement(scripts, 'script', attrib=dict(reference=sdef.getReference()))
+    """
 
+    # return xml object
     if return_as_object:
       return root
     return etree.tostring(root, encoding='utf-8',
