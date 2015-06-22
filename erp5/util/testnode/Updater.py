@@ -205,6 +205,9 @@ class Updater(object):
           self._git('fetch', '--all', '--prune')
           if self.branch and \
             not ("* %s" % self.branch in self._git('branch').split("\n")):
+              # Delete branch if already exists
+              if self.branch in self._git('branch'):
+                self._git('branch', '-D', self.branch)
               self._git('checkout',  'origin/%s' % self.branch, '-b',
                         self.branch)
           self._git('update-index', '--refresh') # see note above
