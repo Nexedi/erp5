@@ -747,14 +747,14 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
 
     # workflow as XML, need to rename DC workflow's portal_type before comparison.
     workflow = SubElement(root, 'workflow',
-                        attrib=dict(id=self.getReference(),
+                        attrib=dict(reference=self.getReference(),
                         portal_type=self.getPortalType()))
 
     for prop_id in sorted(workflow_prop_id_to_show):
       # In most case, we should not synchronize acquired properties
       if prop_id not in ('uid', 'workflow_history', 'id', 'portal_type',):
         if prop_id == 'permissions':
-          value = self.getProperty('workflow_managed_permission_list')
+          value = tuple(self.getProperty('workflow_managed_permission_list'))
           prop_type = self.getPropertyType('workflow_managed_permission_list')
           sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
         elif prop_id == 'initial_state':
@@ -826,27 +826,37 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         local_group_node = SubElement(workflow, 'local_group',
                                       attrib=dict(id=group_role[0], type='tokens'))
         local_group_node.append(marshaller(group_role[1]))
-
+    """
     # 1. State as XML
     state_reference_list = []
     state_list = self.objectValues(portal_type='State')
     # show reference instead of id
-    state_prop_id_to_show = ['reference', 'title', 'description',
-      'categories_list', 'is_selected', 'state_permission_roles']
+    state_prop_id_to_show = ['title', 'description',
+      'transitions', 'permission_roles']
     for sdef in state_list:
       state_reference_list.append(sdef.getReference())
     states = SubElement(workflow, 'states', attrib=dict(state_list=str(state_reference_list),
                         number_of_element=str(len(state_reference_list))))
     for sdef in state_list:
-      state = SubElement(states, 'state', attrib=dict(reference=sdef.getReference()))
+      state = SubElement(states, 'state', attrib=dict(reference=sdef.getReference(), portal_type=sdef.getPortalType()))
       for property_id in sorted(state_prop_id_to_show):
-        property_value = sdef.getProperty(property_id)
-        if property_value is None:
-          # do not register if not defined.
-          continue
+        if property_id == 'permission_roles':
+          property_value = sdef.getProperty('state_permission_roles')
+          property_type = sdef.getPropertyType('state_permission_roles')
+          sub_object = SubElement(state, property_id, attrib=dict(type='string'))
+        elif property_id == 'transitions':
+          property_value = sdef.getDestinationValueList()
+          property_type = sdef.getPropertyType('categories_list')
+          sub_object = SubElement(state, property_id, attrib=dict(type='multiple selection'))
         else:
-          property_type = sdef.getPropertyType(property_id)
-        sub_object = SubElement(state, property_id, attrib=dict(type=property_type))
+          property_value = sdef.getProperty(property_id)
+          if property_value is None:
+            # do not register if not defined.
+            continue
+          else:
+            property_type = sdef.getPropertyType(property_id)
+          sub_object = SubElement(state, property_id, attrib=dict(type=property_type))
+
         if property_type in ('object',):
           # We may have very long lines, so we should split
           property_value = aq_base(property_value)
@@ -865,9 +875,16 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           else:
             raise ValueError("XMLExportImport failed, the data is undefined")
         elif property_type in ('lines', 'tokens',):
-          property_value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
-              for word in property_value]
-          sub_object.append(marshaller(property_value))
+          if property_id == 'transitions':
+            value_list = property_value
+            value_reference_list = []
+            for value in value_list:
+              value_reference_list.append(value.getReference())
+            sub_object.text = str(tuple(value_reference_list))
+          else:
+            property_value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
+                for word in property_value]
+            sub_object.append(marshaller(property_value))
         elif property_type in ('text', 'string',):
           if type(property_value) in (tuple, list, dict):
             sub_object.text = str(property_value)
@@ -875,7 +892,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             sub_object.text = unicode(escape(property_value), 'utf-8')
         elif property_type != 'None':
           sub_object.text = str(property_value)
-
+    """
     # 2. Transition as XML
     transition_reference_list = []
     transition_list = self.objectValues(portal_type='Transition')
