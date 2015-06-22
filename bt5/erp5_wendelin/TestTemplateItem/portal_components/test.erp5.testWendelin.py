@@ -32,6 +32,10 @@ import numpy as np
 import string
 import random
 
+def getRandomString():
+  return 'test_%s' %''.join([random.choice(string.ascii_letters + string.digits) \
+    for n in xrange(32)])
+
 class Test(ERP5TypeTestCase):
   """
   Wendelin Test
@@ -66,32 +70,43 @@ class Test(ERP5TypeTestCase):
     request = portal.REQUEST
     
     # simulate fluentd by setting proper values in REQUEST
+    reference = getRandomString()
     number_list = range(11)
     request.method = 'POST'
     real_data = ('%s\n' %','.join([str(x) for x in number_list]))*10000
     data_chunk = msgpack.packb([0, real_data], use_bin_type=True)
-    request.set('reference', 'car')
+    request.set('reference', reference)
     request.set('data_chunk', data_chunk)
     
-    ingestion_policy = portal.portal_ingestion_policies.wendelin_car_logs
+    # create ingestion policy
+    ingestion_policy = portal.portal_ingestion_policies.newContent( \
+      portal_type ='Ingestion Policy',
+      reference = reference,
+      version = '001',
+      script_id = 'ERP5Site_handleDefaultFluentdIngestion')
+    ingestion_policy.validate()
     
+    # create sensor
+    sensor = portal.sensor_module.newContent( \
+                            portal_type='Sensor', 
+                            reference = reference)
+    sensor.validate()
+
     # create new Data Stream for test purposes
     data_stream = portal.data_stream_module.newContent( \
                    portal_type='Data Stream', \
-                   reference='car')
+                   reference=reference)
     data_stream.validate()
     
     # create Data Supply
     resource = portal.restrictedTraverse('data_product_module/wendelin_4')
-    sensor = portal.restrictedTraverse('sensor_module/wendelin_1')
-    data_supply_kw = {'reference': 'car',
+    data_supply_kw = {'reference': reference,
                       'version': '001',
                       'start_date': now,
                       'stop_date': now + 365}
     data_supply_line_kw = {'resource_value': resource,
                            'source_section_value': sensor,
                            'destination_section_value': data_stream}
-                                       
     data_supply = ingestion_policy.PortalIngestionPolicy_addDataSupply( \
                                       data_supply_kw, \
                                       data_supply_line_kw)
@@ -106,8 +121,7 @@ class Test(ERP5TypeTestCase):
     self.assertEqual('\n%s' %real_data, data_stream_data) # XXX: get rid of new line in ingest script!
     
     # try sample transformation
-    reference = 'test-data-array- %s' \
-      %''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
+    reference = 'test-data-array- %s' %getRandomString()
     
     data_array = portal.data_array_module.newContent(
                                             portal_type='Data Array',
