@@ -892,17 +892,62 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             sub_object.text = unicode(escape(property_value), 'utf-8')
         elif property_type != 'None':
           sub_object.text = str(property_value)
-    """
+
     # 2. Transition as XML
     transition_reference_list = []
     transition_list = self.objectValues(portal_type='Transition')
+    transition_prop_id_to_show = ['title', 'description', 'new_state_id',
+      'trigger_type', 'script_name', 'after_script_name', 'actbox_category',
+      'actbox_icon', 'actbox_name', 'actbox_url', 'role_list', 'group_list',
+      'permission_list', 'expression']
     for tdef in self.objectValues(portal_type='Transition'):
       transition_reference_list.append(tdef.getReference())
-    transitions = SubElement(workflow, 'transitions', attrib=dict(transition_list=str(transition_reference_list),
-                        number_of_element=str(len(transition_reference_list))))
+    transitions = SubElement(workflow, 'transitions',
+          attrib=dict(transition_list=str(transition_reference_list),
+          number_of_element=str(len(transition_reference_list))))
     for tdef in transition_list:
-      transition = SubElement(transitions, 'transition', attrib=dict(reference=tdef.getReference()))
+      transition = SubElement(transitions, 'transition',
+            attrib=dict(reference=tdef.getReference(),
+            portal_type=tdef.getPortalType()))
+      guard = SubElement(transition, 'guard', attrib=dict(type='string'))
+      for property_id in sorted(transition_prop_id_to_show):
+        if property_id == 'new_state_id':
+          if tdef.getDestinationValue() is not None:
+            property_value = tdef.getDestinationValue().getReference()
+          else:
+            property_value = ''
+          sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
+        elif property_id == 'script_name':
+          property_value = tdef.getBeforeScriptIdList()
+          if property_value == [] or property_value is None:
+            property_value = ''
+          else:
+            property_value = self._getOb(tdef.getBeforeScriptIdList()[0]).getReference()
+          sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
+        elif property_id == 'after_script_name':
+          property_value = tdef.getAfterScriptIdList()
+          if property_value == [] or property_value is None:
+            property_value = ''
+          else:
+            property_value = self._getOb(tdef.getAfterScriptIdList()[0]).getReference()
+          sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
+        # show guard configuration:
+        elif property_id in ('role_list', 'group_list', 'permission_list',
+              'expression',):
+          property_value = tdef.getProperty(property_id)
+          if property_value is None or property_value == []:
+            property_value = ''
+          sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
+        else:
+          property_value = tdef.getProperty(property_id)
+          if property_value is None:
+            property_value = ''
+          else:
+            property_type = tdef.getPropertyType(property_id)
+          sub_object = SubElement(transition, property_id, attrib=dict(type=property_type))
+        sub_object.text = str(property_value)
 
+    """
     # 3. Variable as XML
     variable_reference_list = []
     variable_list = self.objectValues(portal_type='Variable')
