@@ -40,7 +40,7 @@ from Products.DCWorkflow.Guard import Guard, _checkPermission
 from Products.DCWorkflow.States import StateDefinition
 from Products.DCWorkflow.Variables import VariableDefinition
 from Products.DCWorkflow.Worklists import WorklistDefinition
-
+from zLOG import LOG, INFO, WARNING
 # Libraries related to showAsXML
 from lxml import etree
 from lxml.etree import Element, SubElement
@@ -854,7 +854,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
 
   # workflow as XML, need to rename DC workflow's portal_type before comparison.
   workflow = SubElement(root, 'workflow',
-                      attrib=dict(id=self.id,
+                      attrib=dict(reference=self.id,
                       portal_type=self.__class__.__name__))
 
   for prop_id in sorted(workflow_prop_id_to_show):
@@ -896,6 +896,59 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
       elif prop_type != 'None':
         sub_object.text = str(value)
 
+  # 1. State as XML
+  state_reference_list = []
+  state_id_list = sorted(self.states.keys())
+  # show reference instead of id
+  state_prop_id_to_show = {'title':'string', 'description':'text',
+    'transitions':'multiple selection', 'permission_roles':'string'}
+  for sid in state_id_list:
+    state_reference_list.append(sid)
+  states = SubElement(workflow, 'states', attrib=dict(state_list=str(state_reference_list),
+                      number_of_element=str(len(state_reference_list))))
+  for sid in state_id_list:
+    sdef = self.states[sid]
+    state = SubElement(states, 'state', attrib=dict(reference=sid,portal_type=sdef.__class__.__name__))
+    for property_id in sorted(state_prop_id_to_show):
+      property_value = sdef.__dict__[property_id]
+      if property_value is None:
+        # do not register if not defined.
+        continue
+      else:
+        property_type = state_prop_id_to_show[property_id]
+      sub_object = SubElement(state, property_id, attrib=dict(type=property_type))
+
+      if property_type in ('object',):
+        # We may have very long lines, so we should split
+        property_value = aq_base(property_value)
+        property_value = dumps(property_value)
+        sub_object.text = standard_b64encode(property_value)
+      elif property_type in ('data',):
+        # Create blocks to represent data
+        # <data><block>ZERD</block><block>OEJJM</block></data>
+        size_block = 60
+        if isinstance(property_value, str):
+          for index in xrange(0, len(property_value), size_block):
+            content = property_value[index:index + size_block]
+            data_encoded = standard_b64encode(content)
+            block = SubElement(sub_object, 'block_data')
+            block.text = data_encoded
+        else:
+          raise ValueError("XMLExportImport failed, the data is undefined")
+      elif property_type in ('lines', 'tokens',):
+        property_value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
+            for word in property_value]
+        sub_object.append(marshaller(property_value))
+      elif property_type in ('text', 'string',):
+        if property_id == 'permission_roles':
+          sub_object.text = str(property_value)
+        elif type(property_value) in (tuple, list, dict):
+          sub_object.text = str(property_value)
+        else:
+          sub_object.text = unicode(escape(property_value), 'utf-8')
+      elif property_type != 'None':
+        sub_object.text = str(property_value)
+
   # return xml object
   if return_as_object:
     return root
@@ -908,13 +961,8 @@ def DCWorkflowDefinition_propertyIds(self):
 def DCWorkflowDefinition_getProperty(self,prop_id):
   return self.__dict__[prop_id]
 
+
 DCWorkflowDefinition.getReference = method_getReference
-TransitionDefinition.getReference = method_getReference
-StateDefinition.getReference = method_getReference
-StateDefinition.getDestinationIdList = StateDefinition_getDestinationIdList
-StateDefinition.getDestinationReferenceList = StateDefinition_getDestinationIdList
-VariableDefinition.getReference = method_getReference
-WorklistDefinition.getReference = method_getReference
 DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
 DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
 DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
@@ -931,6 +979,17 @@ DCWorkflowDefinition.showAsXML = DCWorkflowDefinition_showAsXML
 DCWorkflowDefinition.showDict = DCWorkflowDefinition_showDict
 DCWorkflowDefinition.propertyIds = DCWorkflowDefinition_propertyIds
 DCWorkflowDefinition.getProperty = DCWorkflowDefinition_getProperty
+StateDefinition.getReference = method_getReference
+StateDefinition.getDestinationIdList = StateDefinition_getDestinationIdList
+StateDefinition.getDestinationReferenceList = StateDefinition_getDestinationIdList
+StateDefinition.showDict = DCWorkflowDefinition_showDict
+TransitionDefinition.getReference = method_getReference
+TransitionDefinition.showDict = DCWorkflowDefinition_showDict
+VariableDefinition.getReference = method_getReference
+VariableDefinition.showDict = DCWorkflowDefinition_showDict
+WorklistDefinition.getReference = method_getReference
+WorklistDefinition.showDict = DCWorkflowDefinition_showDict
+
 # This patch allows to use workflowmethod as an after_script
 # However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD
 # as well as workflow inheritance. This way, different user actions and dialogs can be specified easliy
