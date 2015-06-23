@@ -855,7 +855,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
   # workflow as XML, need to rename DC workflow's portal_type before comparison.
   workflow = SubElement(root, 'workflow',
                       attrib=dict(reference=self.id,
-                      portal_type=self.__class__.__name__))
+                      portal_type='Workflow'))
 
   for prop_id in sorted(workflow_prop_id_to_show):
     # In most case, we should not synchronize acquired properties
@@ -908,7 +908,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
                       number_of_element=str(len(state_reference_list))))
   for sid in state_id_list:
     sdef = self.states[sid]
-    state = SubElement(states, 'state', attrib=dict(reference=sid,portal_type=sdef.__class__.__name__))
+    state = SubElement(states, 'state', attrib=dict(reference=sid,portal_type='State'))
     for property_id in sorted(state_prop_id_to_show):
       property_value = sdef.__dict__[property_id]
       if property_value is None:
@@ -949,6 +949,54 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
       elif property_type != 'None':
         sub_object.text = str(property_value)
 
+  # 2. Transition as XML
+  transition_reference_list = []
+  transition_id_list = sorted(self.transitions.keys())
+  transition_prop_id_to_show = {'title':'string', 'description':'text',
+    'new_state_id':'string', 'trigger_type':'int', 'script_name':'string',
+    'after_script_name':'string', 'actbox_category':'string', 'actbox_icon':'string',
+    'actbox_name':'string', 'actbox_url':'string', 'guard':'string'}
+
+  for tid in transition_id_list:
+    transition_reference_list.append(tid)
+  transitions = SubElement(workflow, 'transitions',
+        attrib=dict(transition_list=str(transition_reference_list),
+        number_of_element=str(len(transition_reference_list))))
+  for tid in transition_id_list:
+    tdef = self.transitions[tid]
+    transition = SubElement(transitions, 'transition',
+          attrib=dict(reference=tid, portal_type='Transition'))
+    guard = SubElement(transition, 'guard', attrib=dict(type='string'))
+    for property_id in sorted(transition_prop_id_to_show):
+      if property_id == 'new_state_id':
+        property_value = tdef.__dict__['new_state_id']
+        sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
+      elif property_id == 'script_name':
+        property_value = tdef.__dict__['script_name']
+        sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
+      elif property_id == 'after_script_name':
+        property_value = tdef.__dict__['after_script_name']
+        sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
+      # show guard configuration:
+      elif property_id == 'guard':
+        guard_obj = getattr(tdef, 'guard', None)
+        guard_prop_to_show = sorted({'roles':'guard configuration',
+            'groups':'guard configuration', 'permissions':'guard configuration',
+            'expr':'guard configuration'})
+        for prop_id in guard_prop_to_show:
+          if guard_obj is not None:
+            prop_value = getattr(guard_obj, prop_id, '')
+          else:
+            prop_value = ''
+          guard_config = SubElement(guard, prop_id, attrib=dict(type='guard configuration'))
+          if prop_value is None or prop_value == ():
+            prop_value = ''
+          guard_config.text = str(prop_value)
+      else:
+        property_value = getattr(tdef, property_id)
+        property_type = transition_prop_id_to_show[property_id]
+        sub_object = SubElement(transition, property_id, attrib=dict(type=property_type))
+      sub_object.text = str(property_value)
   # return xml object
   if return_as_object:
     return root
