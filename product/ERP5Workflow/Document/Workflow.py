@@ -1007,17 +1007,22 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           sub_object = SubElement(worklist, property_id, attrib=dict(type=property_type))
         sub_object.text = str(property_value)
 
-    """
     # 5. Script as XML
     script_reference_list = []
     script_list = self.objectValues(portal_type='Workflow Script')
+    script_prop_id_to_show = sorted(['title', 'body', 'parameter_signature'])
     for sdef in script_list:
       script_reference_list.append(sdef.getReference())
     scripts = SubElement(workflow, 'scripts', attrib=dict(script_list=str(script_reference_list),
                         number_of_element=str(len(script_reference_list))))
     for sdef in script_list:
-      script = SubElement(scripts, 'script', attrib=dict(reference=sdef.getReference()))
-    """
+      script = SubElement(scripts, 'script', attrib=dict(reference=sdef.getReference(),
+        portal_type=sdef.getPortalType()))
+      for property_id in script_prop_id_to_show:
+        property_value = sdef.getProperty(property_id)
+        property_type = sdef.getPropertyType(property_id)
+        sub_object = SubElement(script, property_id, attrib=dict(type=property_type))
+        sub_object.text = str(property_value)
 
     # return xml object
     if return_as_object:
