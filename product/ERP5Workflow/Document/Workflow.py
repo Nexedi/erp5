@@ -758,7 +758,10 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           prop_type = self.getPropertyType('workflow_managed_permission_list')
           sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
         elif prop_id == 'initial_state':
-          value = self.getSourceValue().getReference()
+          if self.getSourceValue() is not None:
+            value = self.getSourceValue().getReference()
+          else:
+            value = ''
           sub_object = SubElement(workflow, prop_id, attrib=dict(type='string'))
         elif prop_id =='state_var':
           value = self.getProperty('state_variable')
