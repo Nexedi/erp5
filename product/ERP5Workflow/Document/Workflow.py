@@ -898,8 +898,8 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     transition_list = self.objectValues(portal_type='Transition')
     transition_prop_id_to_show = ['title', 'description', 'new_state_id',
       'trigger_type', 'script_name', 'after_script_name', 'actbox_category',
-      'actbox_icon', 'actbox_name', 'actbox_url', 'role_list', 'group_list',
-      'permission_list', 'expression']
+      'actbox_icon', 'actbox_name', 'actbox_url', 'roles', 'groups',
+      'permissions', 'expr']
     for tdef in self.objectValues(portal_type='Transition'):
       transition_reference_list.append(tdef.getReference())
     transitions = SubElement(workflow, 'transitions',
@@ -932,9 +932,15 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             property_value = self._getOb(tdef.getAfterScriptIdList()[0]).getReference()
           sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
         # show guard configuration:
-        elif property_id in ('role_list', 'group_list', 'permission_list',
-              'expression',):
-          property_value = tdef.getProperty(property_id)
+        elif property_id in ('roles', 'groups', 'permissions', 'expr',):
+          if property_id == 'roles':
+            property_value = tdef.getRoleList()
+          if property_id == 'groups':
+            property_value = tdef.getGroupList()
+          if property_id == 'permissions':
+            property_value = tdef.getPermissionList()
+          if property_id == 'expr':
+            property_value = tdef.getExpression()
           if property_value is None or property_value == []:
             property_value = ''
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
