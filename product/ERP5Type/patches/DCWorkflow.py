@@ -997,6 +997,35 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
         property_type = transition_prop_id_to_show[property_id]
         sub_object = SubElement(transition, property_id, attrib=dict(type=property_type))
       sub_object.text = str(property_value)
+
+  # 3. Variable as XML
+  variable_reference_list = []
+  variable_id_list = sorted(self.variables.keys())
+  variable_prop_id_to_show = {'description':'text',
+        'default_expr':'string', 'for_catalog':'int', 'for_status':'int',
+        'update_always':'int'}
+  for vid in variable_id_list:
+    variable_reference_list.append(vid)
+  variables = SubElement(workflow, 'variables', attrib=dict(variable_list=str(variable_reference_list),
+                      number_of_element=str(len(variable_reference_list))))
+  for vid in variable_id_list:
+    vdef = self.variables[vid]
+    variable = SubElement(variables, 'variable', attrib=dict(reference=vdef.getReference(),
+          portal_type='Variable'))
+    for property_id in sorted(variable_prop_id_to_show):
+      if property_id == 'default_expr':
+        expression = getattr(vdef, property_id, None)
+        if expression is not None:
+          property_value = expression.text
+        else:
+          property_value = ''
+        sub_object = SubElement(variable, property_id, attrib=dict(type='string'))
+      else:
+        property_value = vdef.__dict__[property_id]
+        property_type = variable_prop_id_to_show[property_id]
+        sub_object = SubElement(variable, property_id, attrib=dict(type=property_type))
+      sub_object.text = str(property_value)
+
   # return xml object
   if return_as_object:
     return root
