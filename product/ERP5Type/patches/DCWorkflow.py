@@ -1077,6 +1077,30 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
         property_type = worklist_prop_id_to_show[property_id]
         sub_object = SubElement(worklist, property_id, attrib=dict(type=property_type))
       sub_object.text = str(property_value)
+
+  # 5. Script as XML
+  script_reference_list = []
+  script_id_list = sorted(self.scripts.keys())
+  script_prop_id_to_show = {'title':'string', 'body':'string', 'parameter_signature':'string'}
+  for sid in script_id_list:
+    script_reference_list.append(sid)
+  scripts = SubElement(workflow, 'scripts', attrib=dict(script_list=str(script_reference_list),
+                      number_of_element=str(len(script_reference_list))))
+  for sid in script_id_list:
+    sdef = self.scripts[sid]
+    script = SubElement(scripts, 'script', attrib=dict(reference=sid,
+      portal_type='Workflow Script'))
+    for property_id in sorted(script_prop_id_to_show):
+      if property_id == 'body':
+        property_value = sdef.getBody()
+      elif property_id == 'parameter_signature':
+        property_value = sdef.getParams()
+      else:
+        property_value = getattr(sdef, property_id)
+      property_type = script_prop_id_to_show[property_id]
+      sub_object = SubElement(script, property_id, attrib=dict(type=property_type))
+      sub_object.text = str(property_value)
+
   # return xml object
   if return_as_object:
     return root
