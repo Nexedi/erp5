@@ -886,7 +886,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       transition = SubElement(transitions, 'transition',
             attrib=dict(reference=tdef.getReference(),
             portal_type=tdef.getPortalType()))
-      guard = SubElement(transition, 'guard', attrib=dict(type='string'))
+      guard = SubElement(transition, 'guard', attrib=dict(type='object'))
       for property_id in sorted(transition_prop_id_to_show):
         if property_id == 'new_state_id':
           if tdef.getDestinationValue() is not None:
@@ -961,17 +961,53 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           sub_object = SubElement(variable, property_id, attrib=dict(type=property_type))
         sub_object.text = str(property_value)
 
-    """
     # 4. Worklist as XML
     worklist_reference_list = []
     worklist_list = self.objectValues(portal_type='Worklist')
+    worklist_prop_id_to_show = ['description', 'matched_portal_type_list',
+          'matched_validation_state_list', 'matched_simulation_state_list',
+          'actbox_category', 'actbox_name', 'actbox_url', 'actbox_icon',
+          'roles', 'groups', 'permissions', 'expr']
     for qdef in worklist_list:
       worklist_reference_list.append(qdef.getReference())
     worklists = SubElement(workflow, 'worklists', attrib=dict(worklist_list=str(worklist_reference_list),
                         number_of_element=str(len(worklist_reference_list))))
     for qdef in worklist_list:
-      worklist = SubElement(worklists, 'worklist', attrib=dict(reference=qdef.getReference()))
+      worklist = SubElement(worklists, 'worklist', attrib=dict(reference=qdef.getReference(),
+      portal_type=qdef.getPortalType()))
+      guard = SubElement(worklist, 'guard', attrib=dict(type='object'))
+      for property_id in sorted(worklist_prop_id_to_show):
+         # show guard configuration:
+        if property_id in ('roles', 'groups', 'permissions', 'expr',):
+          if property_id == 'roles':
+            property_value = qdef.getRoleList()
+          if property_id == 'groups':
+            property_value = qdef.getGroupList()
+          if property_id == 'permissions':
+            property_value = qdef.getPermissionList()
+          if property_id == 'expr':
+            property_value = qdef.getExpression()
+          if property_value is None or property_value == []:
+            property_value = ''
+          sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
+        else:
+          property_value = qdef.getProperty(property_id)
+          state_ref_list = []
+          if property_id in ('matched_validation_state_list',
+              'matched_simulation_state_list',) and property_value is not None:
+            for sid in property_value:
+              state_ref = self._getOb(sid).getReference()
+              state_ref_list.append(state_ref)
+            property_value = tuple(state_ref_list)
+          if property_id == 'matched_portal_type_list':
+            property_value = tuple(property_value)
+          if property_value is None:
+            property_value = ''
+          property_type = qdef.getPropertyType(property_id)
+          sub_object = SubElement(worklist, property_id, attrib=dict(type=property_type))
+        sub_object.text = str(property_value)
 
+    """
     # 5. Script as XML
     script_reference_list = []
     script_list = self.objectValues(portal_type='Workflow Script')
