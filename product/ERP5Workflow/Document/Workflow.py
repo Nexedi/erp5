@@ -803,30 +803,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             sub_object.text = unicode(escape(value), 'utf-8')
         elif prop_type != 'None':
           sub_object.text = str(value)
-    """
-    # We should now describe security settings
-    for user_role in self.get_local_roles():
-      local_role_node = SubElement(workflow, 'local_role',
-                                   attrib=dict(id=user_role[0], type='tokens'))
-      #convert local_roles in string because marshaller can't do it
-      role_list = []
-      for role in user_role[1]:
-        if isinstance(role, unicode):
-          role = role.encode('utf-8')
-        role_list.append(role)
-      local_role_node.append(marshaller(tuple(role_list)))
-    if getattr(self, 'get_local_permissions', None) is not None:
-      for user_permission in self.get_local_permissions():
-        local_permission_node = SubElement(workflow, 'local_permission',
-                                attrib=dict(id=user_permission[0], type='tokens'))
-        local_permission_node.append(marshaller(user_permission[1]))
-    # Sometimes theres is roles specified for groups, like with CPS
-    if getattr(self, 'get_local_group_roles', None) is not None:
-      for group_role in self.get_local_group_roles():
-        local_group_node = SubElement(workflow, 'local_group',
-                                      attrib=dict(id=group_role[0], type='tokens'))
-        local_group_node.append(marshaller(group_role[1]))
-    """
+
     # 1. State as XML
     state_reference_list = []
     state_list = self.objectValues(portal_type='State')
@@ -953,17 +930,38 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           sub_object = SubElement(transition, property_id, attrib=dict(type=property_type))
         sub_object.text = str(property_value)
 
-    """
     # 3. Variable as XML
     variable_reference_list = []
     variable_list = self.objectValues(portal_type='Variable')
+    variable_prop_id_to_show = ['description', 'default_expr',
+          'for_catalog', 'for_status', 'update_always']
     for vdef in variable_list:
       variable_reference_list.append(vdef.getReference())
     variables = SubElement(workflow, 'variables', attrib=dict(variable_list=str(variable_reference_list),
                         number_of_element=str(len(variable_reference_list))))
     for vdef in variable_list:
-      variable = SubElement(variables, 'variable', attrib=dict(reference=vdef.getReference()))
+      variable = SubElement(variables, 'variable', attrib=dict(reference=vdef.getReference(),
+            portal_type=vdef.getPortalType()))
+      for property_id in sorted(variable_prop_id_to_show):
+        if property_id == 'update_always':
+          property_value = vdef.getAutomaticUpdate()
+          sub_object = SubElement(variable, property_id, attrib=dict(type='int'))
+        elif property_id == 'default_value':
+          property_value = vdef.getInitialValue()
+          if vdef.getInitialValue() is not None:
+            property_value = vdef.getInitialValue()
+          else:
+            property_value = ''
+          sub_object = SubElement(variable, property_id, attrib=dict(type='string'))
+        else:
+          property_value = vdef.getProperty(property_id)
+          if property_value is None:
+            property_value = ''
+          property_type = vdef.getPropertyType(property_id)
+          sub_object = SubElement(variable, property_id, attrib=dict(type=property_type))
+        sub_object.text = str(property_value)
 
+    """
     # 4. Worklist as XML
     worklist_reference_list = []
     worklist_list = self.objectValues(portal_type='Worklist')
