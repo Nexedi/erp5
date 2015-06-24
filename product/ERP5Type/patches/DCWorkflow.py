@@ -1026,7 +1026,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
         sub_object = SubElement(variable, property_id, attrib=dict(type=property_type))
       sub_object.text = str(property_value)
 
-  # 3. Worklist as XML
+  # 4. Worklist as XML
   worklist_reference_list = []
   worklist_id_list = sorted(self.worklists.keys())
   worklist_prop_id_to_show = {'description':'text',
