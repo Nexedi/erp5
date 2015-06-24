@@ -76,7 +76,7 @@ if transform_script_id is not None:\n
 # [warning] store current position offset in Data Stream, this can cause easily \n
 # ConflictErrors and it spawns re-index activities on DataStream. Thus \n
 # disable for now.\n
-#data_stream.setOffset(end)\n
+#data_stream.setIntOffsetIndex(end)\n
 \n
 # start another read in another activity\n
 start += chunk_length\n

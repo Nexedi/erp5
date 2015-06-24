@@ -58,8 +58,11 @@
   In this implementation we find respective Data Stream and simply\n
   append data there. We save raw JSON dictionary.\n
   Ingestion Policy -> Data Supply -> Data Supply Line -> Sensor\n
-    -> Data Stream\n
+                                                      -> Data Stream\n
 """\n
+from DateTime import DateTime\n
+\n
+now = DateTime()\n
 request = context.REQUEST\n
 portal_catalog = context.portal_catalog\n
 \n
@@ -108,10 +111,11 @@ if data_chunk is not None and reference is not None:\n
         for data_chunk in data_chunk_list:\n
           pretty_data = str(data_chunk[1])\n
           pretty_data_chunk_list.append(pretty_data)\n
-        data = \'\\n\'.join(pretty_data_chunk_list)\n
-      # each chunk of data by default should be added with a new line character\n
-      data = \'\\n%s\' %data\n
+        data = \'\'.join(pretty_data_chunk_list)\n
+\n
+      # append data\n
       data_stream.appendData(data)\n
+\n
       #context.log("Appended %s bytes to %s (%s, %s, %s)"   \n
       #              %(len(data), reference, data_supply, sensor, data_stream))\n
       # XXX: open question -> we do not store the act of ingestion.\n

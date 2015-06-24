@@ -50,7 +50,7 @@
                 <string>W: 59,  4: Unused variable \'scipy\' (unused-variable)</string>
                 <string>W: 61,  4: Unused variable \'pandas\' (unused-variable)</string>
                 <string>W: 60,  4: Unused variable \'sklearn\' (unused-variable)</string>
-                <string>W:110,  4: Unused variable \'data_supply\' (unused-variable)</string>
+                <string>W:112,  4: Unused variable \'data_supply\' (unused-variable)</string>
               </tuple>
             </value>
         </item>
