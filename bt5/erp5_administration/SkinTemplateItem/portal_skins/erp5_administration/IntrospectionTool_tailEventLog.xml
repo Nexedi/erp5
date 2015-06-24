@@ -56,10 +56,10 @@
             } \n
           }\n
         }\n
-      if (request == null)\n
+      if (request == null) {\n
         alert("Error creating request object!");\n
-   \n
-      request = createRequest();\n
+      }\n
+\n
       }\n
 \n
       function getLog(timer) {\n
@@ -88,12 +88,23 @@
       function updatePage() {\n
         var logDiv = document.getElementById("log"), logLine; today = new Date();\n
         var message_div = document.getElementById("message");\n
+        var current_value;\n
+        var regexp = document.getElementById("regexp").value;\n
         if (request.readyState == 4) {\n
           if (request.status == 200) {\n
             var currentLogValue = request.responseText.split("\\n");\n
             var logLine = \' \';\n
             for (i=0; i < currentLogValue.length - 1; i++) {\n
-              logLine += currentLogValue[i] + \'\\n\';\n
+              current_value = currentLogValue[i];\n
+              add_line = true;\n
+              if (regexp !== "") {\n
+                if (current_value.match(regexp) === null) {\n
+                  add_line = false;\n
+                }\n
+              }\n
+              if (add_line === true) {\n
+                logLine += currentLogValue[i] + \'\\n\';\n
+              }\n
             }\n
             logDiv.innerHTML=logLine;\n
             logDiv.scrollTop = logDiv.scrollHeight;\n
@@ -112,6 +123,7 @@
     <div id="toolbar">\n
       <button tal:attributes="onclick string:getLog(\'start\')">Start Log</button>\n
       <button onclick="stopTail();">Stop Log</button>\n
+      <label>Regexp</label><input type="text" id="regexp" size="20">\n
       <span id="message">Press Start...</span>\n
     </div>\n
     <textarea id="log" style="border:solid 1px #dddddd; margin-left:25px; font-size:9px;\n

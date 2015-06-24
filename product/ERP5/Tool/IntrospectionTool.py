@@ -211,7 +211,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     Tail the Event Log.
     """
-    return escape(self._tailFile(self.__getEventLogPath(), 50))
+    return escape(self._tailFile(self.__getEventLogPath(), 500))
 
   security.declareProtected(Permissions.ManagePortal, 'tailAccessLog')
   def tailAccessLog(self):
