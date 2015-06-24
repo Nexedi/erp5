@@ -389,6 +389,49 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
       sub_object.text = str(prop_value)
 
     # 1. Interaction as XML
+    interaction_reference_list = []
+    interaction_id_list = sorted(self.interactions.keys())
+    interaction_prop_id_to_show = {'actbox_category':'string', 'actbox_url':'string',
+    'actbox_name':'string', 'activate_script_name':'string',
+    'after_script_name':'string', 'before_commit_script_name':'string',
+    'description':'text', 'guard':'object', 'method_id':'string',
+    'once_per_transaction':'string', 'portal_type_filter':'string',
+    'portal_type_group_filter':'string', 'script_name':'string',
+    'temporary_document_disallowed':'string', 'trigger_type':'string'}
+    for tid in interaction_id_list:
+      interaction_reference_list.append(tid)
+    interactions = SubElement(interaction_workflow, 'interactions', attrib=dict(
+      interaction_list=str(interaction_reference_list),
+      number_of_element=str(len(interaction_reference_list))))
+    for tid in interaction_id_list:
+      tdef = self.interactions[tid]
+      interaction = SubElement(interactions, 'interaction', attrib=dict(
+            reference=tdef.getReference(),portal_type='Interaction'))
+      guard = SubElement(interaction, 'guard', attrib=dict(type='object'))
+      for property_id in sorted(interaction_prop_id_to_show):
+        # creationg guard
+        if property_id == 'guard':
+          for prop_id in sorted(['groups', 'permissions', 'expr', 'roles']):
+            guard_obj = getattr(tdef, 'guard')
+            if guard_obj is not None:
+              prop_value = guard_obj.__dict__[prop_id]
+            else:
+              prop_value = ''
+            guard_config = SubElement(guard, prop_id, attrib=dict(type='guard configuration'))
+            if prop_value is None or prop_value == ():
+              prop_value = ''
+            guard_config.text = str(prop_value)
+        # no-property definded action box configuration
+        elif property_id in sorted(['actbox_name', 'actbox_url', 'actbox_category']):
+          property_value = getattr(tdef, property_id, None)
+          sub_object = SubElement(interaction, property_id, attrib=dict(type='string'))
+        else:
+          property_value = tdef.__dict__[property_id]
+          property_type = interaction_prop_id_to_show[property_id]
+          sub_object = SubElement(interaction, property_id, attrib=dict(type=property_type))
+        if property_value is None or property_value == [] or property_value == ():
+          property_value = ''
+        sub_object.text = str(property_value)
 
     # 2. Variable as XML
     variable_reference_list = []
