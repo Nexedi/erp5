@@ -461,59 +461,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
           sub_object = SubElement(variable, property_id, attrib=dict(type=property_type))
         sub_object.text = str(property_value)
 
-    # 3. Worklist as XML
-    worklist_reference_list = []
-    worklist_id_list = sorted(self.worklists.keys())
-    worklist_prop_id_to_show = {'description':'text',
-            'matched_portal_type_list':'text',
-            'matched_validation_state_list':'string',
-            'matched_simulation_state_list':'string', 'actbox_category':'string',
-          'actbox_name':'string', 'actbox_url':'string', 'actbox_icon':'string',
-          'guard':'object'}
-    for qid in worklist_id_list:
-      worklist_reference_list.append(qid)
-    worklists = SubElement(interaction_workflow, 'worklists', attrib=dict(worklist_list=str(worklist_reference_list),
-                        number_of_element=str(len(worklist_reference_list))))
-    for qid in worklist_id_list:
-      qdef = self.worklists[qid]
-      worklist = SubElement(worklists, 'worklist', attrib=dict(reference=qdef.getReference(),
-            portal_type='Worklist'))
-      guard = SubElement(worklist, 'guard', attrib=dict(type='object'))
-      var_matches = qdef.__dict__['var_matches']
-      for property_id in sorted(worklist_prop_id_to_show):
-        if property_id == 'guard':
-          guard_obj = getattr(qdef, 'guard', None)
-          guard_prop_to_show = sorted({'roles':'guard configuration',
-              'groups':'guard configuration', 'permissions':'guard configuration',
-              'expr':'guard configuration'})
-          for prop_id in guard_prop_to_show:
-            if guard_obj is not None:
-              prop_value = getattr(guard_obj, prop_id, '')
-            else:
-              prop_value = ''
-            guard_config = SubElement(guard, prop_id, attrib=dict(type='guard configuration'))
-            if prop_value is None or prop_value == ():
-              prop_value = ''
-            guard_config.text = str(prop_value)
-        else:
-          if property_id == 'matched_portal_type_list':
-            var_id = 'portal_type'
-            property_value = var_matches.get(var_id)
-          elif property_id == 'matched_validation_state_list':
-            var_id = 'validation_state'
-            property_value = var_matches.get(var_id)
-          elif property_id == 'matched_simulation_state_list':
-            var_id = 'simulation_state'
-            property_value = var_matches.get(var_id)
-          else:
-            property_value = getattr(qdef, property_id)
-          if property_value is None:
-            property_value = ''
-          property_type = worklist_prop_id_to_show[property_id]
-          sub_object = SubElement(worklist, property_id, attrib=dict(type=property_type))
-        sub_object.text = str(property_value)
-
-    # 4. Script as XML
+    # 3. Script as XML
     script_reference_list = []
     script_id_list = sorted(self.scripts.keys())
     script_prop_id_to_show = {'title':'string', 'body':'string', 'parameter_signature':'string'}
