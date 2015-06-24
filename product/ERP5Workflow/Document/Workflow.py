@@ -1033,8 +1033,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     return etree.tostring(root, encoding='utf-8',
                           xml_declaration=True, pretty_print=True)
 
-
-
   ###########
   ## Graph ##
   ###########
