@@ -259,6 +259,16 @@ class InteractionDefinition (SimpleItem):
     def getReference(self):
         return self.id
 
+    def showDict(self):
+      attr_dict = {}
+      for attr in sorted(self.__dict__.keys()):
+        value = getattr(self, attr)
+        if value is not None:
+          attr_dict[attr] = value
+        else:
+          attr_dict[attr] = ''
+      return attr_dict
+
 Globals.InitializeClass(InteractionDefinition)
 
 
