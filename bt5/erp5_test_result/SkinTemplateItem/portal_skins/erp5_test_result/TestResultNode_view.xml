@@ -101,13 +101,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-<<<<<<< HEAD
                         <string>your_log_link</string>
                         <string>your_shellinabox_link</string>
-=======
                         <string>your_log_viewer_link</string>
                         <string>your_debug_shell_link</string>
->>>>>>> 1e2bfae... test_result: introduce view for test result node, with links to log viewer & debug shell
                       </list>
                     </value>
                 </item>
