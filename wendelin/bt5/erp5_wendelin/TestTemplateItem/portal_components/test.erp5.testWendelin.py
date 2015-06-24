@@ -35,6 +35,11 @@ import random
 def getRandomString():
   return 'test_%s' %''.join([random.choice(string.ascii_letters + string.digits) \
     for n in xrange(32)])
+    
+def chunks(l, n):
+  """Yield successive n-sized chunks from l."""
+  for i in xrange(0, len(l), n):
+    yield l[i:i+n]
 
 class Test(ERP5TypeTestCase):
   """
@@ -69,10 +74,10 @@ class Test(ERP5TypeTestCase):
     portal = self.portal
     request = portal.REQUEST
     
-    # simulate fluentd by setting proper values in REQUEST
     reference = getRandomString()
-    number_string = ','.join([str(x) for x in range(11)])
-    number_string_list = [number_string]*10000
+    number_string_list = []
+    for my_list in list(chunks(range(0, 100001), 10)):
+      number_string_list.append(','.join([str(x) for x in my_list]))
     real_data = '\n'.join(number_string_list)
 
     # create ingestion policy
@@ -109,7 +114,7 @@ class Test(ERP5TypeTestCase):
                                       data_supply_line_kw)
     self.tic()
     
-    # do real ingestion call
+    # simulate fluentd by setting proper values in REQUEST
     request.method = 'POST'
     data_chunk = msgpack.packb([0, real_data], use_bin_type=True)
     request.set('reference', reference)
@@ -131,7 +136,7 @@ class Test(ERP5TypeTestCase):
     self.tic()
     
     data_stream.DataStream_transform(\
-        chunk_length = 52001, \
+        chunk_length = 10450, \
         transform_script_id = 'DataStream_copyCSVToDataArray',
         data_array_reference = reference)
 
@@ -141,9 +146,12 @@ class Test(ERP5TypeTestCase):
     zarray = data_array.getArray()
     np.average(zarray)
     
-    # XXX: test that extracted array is same as input one
+    # test that extracted array contains same values as input CSV
     self.assertNotEqual(None, zarray)
-    #self.assertEqual(1, zarray.shape)
+    self.assertEqual(99999.0, np.amax(zarray, axis=0))
+    self.assertEqual(0.0, np.amin(zarray, axis=0))
+    # failing in array shape, not investigated why
+    self.assertEqual((99999,), zarray.shape)
     
   def test_02_Examples(self):
     """

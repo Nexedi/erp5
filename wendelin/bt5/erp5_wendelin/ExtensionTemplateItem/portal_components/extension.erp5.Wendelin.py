@@ -11,14 +11,15 @@ def DataStream_copyCSVToDataArray(self, chunk_list, start, end, \
     Receive CSV data and transform it to a numpy array of floats.
   """
   chunk_text = ''.join(chunk_list)
-  
+
   # compensate possible offset mistmatch
   last_new_line_index = chunk_text.rfind('\n')
   offset_mismatch = len(chunk_text) - last_new_line_index -1
   start = start - offset_mismatch
   end = end - offset_mismatch
-  #self.log('%s %s %s' %(len(chunk_list), chunk_text.rfind('\n'), chunk_list))
   
+  #self.log(chunk_text)
+
   # remove offset line which is to be processed next call
   chunk_text = chunk_text[:len(chunk_text) - offset_mismatch - 1]
   
@@ -29,9 +30,8 @@ def DataStream_copyCSVToDataArray(self, chunk_list, start, end, \
     line_item_list = line.split(',')
     size_list.extend([x for x in line_item_list])
 
-  self.log(size_list)
-
   # save this value as a numpy array (for testing, only create ZBigArray for one variable)
+  #self.log(size_list)
   size_list = [float(x) for x in size_list]
   ndarray = np.array(size_list)
 
