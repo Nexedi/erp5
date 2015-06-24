@@ -452,12 +452,72 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
       sub_object.text = str(prop_value)
 
     # 1. Interaction as XML
+    interaction_reference_list = []
+    interaction_list = self.objectValues(portal_type='Interaction')
+    interaction_prop_id_to_show = sorted(['actbox_category', 'actbox_url', 'actbox_name',
+    'activate_script_name', 'after_script_name', 'before_commit_script_name',
+    'description', 'groups', 'roles', 'expr', 'permissions', 'method_id',
+    'once_per_transaction', 'portal_type_filter', 'portal_type_group_filter',
+    'script_name', 'temporary_document_disallowed', 'trigger_type'])
+    for tdef in interaction_list:
+      interaction_reference_list.append(tdef.getReference())
+    interactions = SubElement(interaction_workflow, 'interactions', attrib=dict(
+      interaction_list=str(interaction_reference_list),
+      number_of_element=str(len(interaction_reference_list))))
+    for tdef in interaction_list:
+      interaction = SubElement(interactions, 'interaction', attrib=dict(
+            reference=tdef.getReference(),portal_type=tdef.getPortalType()))
+      guard = SubElement(interaction, 'guard', attrib=dict(type='object'))
+      for property_id in interaction_prop_id_to_show:
+        # creationg guard
+        if property_id in ['groups', 'permissions', 'expr', 'roles']:
+          if property_id == 'groups': prop_id = 'group_list'
+          if property_id == 'permissions': prop_id = 'permission_list'
+          if property_id == 'roles': prop_id = 'role_list'
+          property_value = tdef.getProperty(prop_id)
+          sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
+        # no-property definded action box configuration
+        elif property_id in ['actbox_name', 'actbox_url', 'actbox_category', 'trigger_type']:
+          property_value = getattr(tdef, property_id, None)
+          sub_object = SubElement(interaction, property_id, attrib=dict(type='string'))
+        elif property_id in ['activate_script_name', 'after_script_name', 'before_commit_script_name',
+              'method_id', 'once_per_transaction', 'portal_type_filter', 'portal_type_group_filter',
+              'script_name', 'temporary_document_disallowed']:
+          if property_id == 'activate_script_name': prop_id = 'activate_script_name_list'
+          if property_id == 'after_script_name': prop_id = 'after_script_name_list'
+          if property_id == 'before_commit_script_name': prop_id = 'before_commit_script_name_list'
+          if property_id == 'method_id': prop_id = 'trigger_method_id_list'
+          if property_id == 'once_per_transaction': prop_id = 'trigger_once_per_transaction'
+          if property_id == 'portal_type_filter': prop_id = 'portal_type_filter_list'
+          if property_id == 'portal_type_group_filter': prop_id = 'portal_type_group_filter_list'
+          if property_id == 'script_name': prop_id = 'before_script_name_list'
+          if property_id == 'temporary_document_disallowed': prop_id = 'temporary_document_disallowed'
+          property_value = tdef.getProperty(prop_id)
+
+          if property_id in ['activate_script_name', 'after_script_name',
+            'before_commit_script_name','script_name'] and property_value is not None:
+            list_temp =[]
+            for value in property_value:
+              list_temp.append(self._getOb(value).getReference())
+            property_value = list_temp
+          if property_id in ['once_per_transaction', 'temporary_document_disallowed']:
+            if property_value == 0:
+              property_value = False
+            else: property_value = True
+          sub_object = SubElement(interaction, property_id, attrib=dict(type='string'))
+        else:
+          property_value = tdef.getProperty(property_id)
+          property_type = tdef.getPropertyType(property_id)
+          sub_object = SubElement(interaction, property_id, attrib=dict(type=property_type))
+        if property_value is None or property_value == []:
+          property_value = ''
+        sub_object.text = str(property_value)
 
     # 2. Variable as XML
     variable_reference_list = []
     variable_list = self.objectValues(portal_type='Variable')
-    variable_prop_id_to_show = ['description', 'default_expr',
-          'for_catalog', 'for_status', 'update_always']
+    variable_prop_id_to_show = ['description', 'default_expr', 'for_catalog',
+          'for_status', 'update_always']
     for vdef in variable_list:
       variable_reference_list.append(vdef.getReference())
     variables = SubElement(interaction_workflow, 'variables', attrib=dict(variable_list=str(variable_reference_list),

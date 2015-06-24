@@ -71,6 +71,12 @@ class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
   guard = None
   default_reference = ''
 
+  # these attributes are definded in old interaction but no evidence that
+  # they are in use
+  actbox_name = ''
+  actbox_url = ''
+  actbox_category = 'workflow'
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
