@@ -71,9 +71,11 @@ class Test(ERP5TypeTestCase):
     
     # simulate fluentd by setting proper values in REQUEST
     reference = getRandomString()
-    number_list = range(11)
     request.method = 'POST'
-    real_data = ('%s\n' %','.join([str(x) for x in number_list]))*10000
+    number_string = ','.join([str(x) for x in range(11)])
+    number_string_list = [number_string]*10000
+    real_data = '\n'.join(number_string_list)
+
     data_chunk = msgpack.packb([0, real_data], use_bin_type=True)
     request.set('reference', reference)
     request.set('data_chunk', data_chunk)
@@ -118,7 +120,7 @@ class Test(ERP5TypeTestCase):
     # ingestion handler script saves new data using new line so we 
     # need to remove it, it also stringifies thus we need to
     data_stream_data = data_stream.getData()
-    self.assertEqual('\n%s' %real_data, data_stream_data) # XXX: get rid of new line in ingest script!
+    self.assertEqual(real_data, data_stream_data)
     
     # try sample transformation
     reference = 'test-data-array- %s' %getRandomString()
