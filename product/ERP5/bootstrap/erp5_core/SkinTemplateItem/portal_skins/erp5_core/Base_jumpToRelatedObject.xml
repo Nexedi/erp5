@@ -112,18 +112,25 @@ else:\n
   if len(portal_type) == 1:\n
     module_id = portal.getDefaultModuleId(portal_type[0], None)\n
     if module_id is not None:\n
+      module = portal.getDefaultModule(portal_type[0])\n
       if related:\n
-        return portal.getDefaultModule(portal_type[0]).Base_redirect(\n
+        return module.Base_redirect(\n
                  \'view\', keep_items={\'default_%s_uid\' % base_category: relation.getUid(),\n
                                      \'ignore_hide_rows\': 1,\n
                                      \'reset\': 1})\n
+      # We can not pass parameters through url, otherwise we might have too long urls (if many uids).\n
+      # Therefore check if we are in usual case of module form having a listbox, and update\n
+      # selection for it\n
       get_uid_method = getattr(relation, \'get%sUidList\' % getter_base_name)\n
-      return context.getPortalObject().getDefaultModule(portal_type[0]).Base_redirect(\n
-                 \'view\', keep_items=dict(\n
-                           reset=1,\n
-                           ignore_hide_rows=1,\n
-                           uid=get_uid_method(portal_type=portal_type,\n
-                                              checked_permission=\'View\')))\n
+      portal_type_object = portal.portal_types[module.getPortalType()]\n
+      module_form = portal_type_object.getDefaultViewFor(module)\n
+      if "listbox" in [x for x in module_form.objectIds()]:\n
+        listbox = module_form.listbox\n
+        selection_name = listbox.get_value("selection_name")\n
+        portal.portal_selections.setSelectionToAll(selection_name)\n
+        uid_list = get_uid_method(portal_type=portal_type, checked_permission="View")\n
+        portal.portal_selections.setSelectionParamsFor(selection_name, {"uid": uid_list})\n
+        return module.Base_redirect(\'view\', keep_items=dict(ignore_hide_rows=1))\n
 \n
   # compute the list of objects we are actually authorised to view\n
   related_object_list = []\n

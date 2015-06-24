@@ -588,7 +588,8 @@ class ERP5TypeInformation(XMLObject,
       search_source_list += self.getTypeBaseCategoryList()
       return ' '.join(filter(None, search_source_list))
 
-    security.declarePrivate('getDefaultViewFor')
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getDefaultViewFor')
     def getDefaultViewFor(self, ob, view='view'):
       """Return the object that renders the default view for the given object
       """
