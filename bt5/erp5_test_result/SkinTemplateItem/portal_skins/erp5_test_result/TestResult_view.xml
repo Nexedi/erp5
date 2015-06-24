@@ -82,6 +82,7 @@
                     <value>
                       <list>
                         <string>listbox_string_index</string>
+                        <string>listbox_start_date</string>
                       </list>
                     </value>
                 </item>
@@ -92,7 +93,6 @@
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_id</string>
-                        <string>my_buildslave_name</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                       </list>
