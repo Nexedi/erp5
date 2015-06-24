@@ -8,23 +8,37 @@ import numpy as np
 def DataStream_copyCSVToDataArray(self, chunk_list, start, end, \
                                   data_array_reference=None):
   """
-    Recieve CSV data and transform it to a numpy array of int.
+    Receive CSV data and transform it to a numpy array of floats.
   """
   chunk_text = ''.join(chunk_list)
-  data_array = self.portal_catalog.getResultValue( \
-                      portal_type='Data Array', \
-                      reference = data_array_reference, \
-                      validation_state = 'validated')
+  
+  # compensate possible offset mistmatch
+  last_new_line_index = chunk_text.rfind('\n')
+  offset_mismatch = len(chunk_text) - last_new_line_index -1
+  start = start - offset_mismatch
+  end = end - offset_mismatch
+  #self.log('%s %s %s' %(len(chunk_list), chunk_text.rfind('\n'), chunk_list))
+  
+  # remove offset line which is to be processed next call
+  chunk_text = chunk_text[:len(chunk_text) - offset_mismatch - 1]
+  
+  # process left data
   line_list = chunk_text.split('\n')
   size_list = []
   for line in line_list:
     line_item_list = line.split(',')
-    size_list.extend([x.strip() for x in line_item_list])
+    size_list.extend([x for x in line_item_list])
+
+  self.log(size_list)
 
   # save this value as a numpy array (for testing, only create ZBigArray for one variable)
-  size_list = [float(x) for x in size_list if x not in ('',)]
+  size_list = [float(x) for x in size_list]
   ndarray = np.array(size_list)
 
+  data_array = self.portal_catalog.getResultValue( \
+                      portal_type='Data Array', \
+                      reference = data_array_reference, \
+                      validation_state = 'validated')
   zarray = data_array.getArray()
   if zarray is None:
     # first time init

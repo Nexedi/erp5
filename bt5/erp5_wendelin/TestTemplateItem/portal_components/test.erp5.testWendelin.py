@@ -50,7 +50,7 @@ class Test(ERP5TypeTestCase):
     """
     # here, you can create the categories and objects your test will depend on
     pass
-
+  
   def test_0_import(self): 		 
     """ 		 
     Test we can import certain libraries but still failure to do so should be a  		 
@@ -71,15 +71,10 @@ class Test(ERP5TypeTestCase):
     
     # simulate fluentd by setting proper values in REQUEST
     reference = getRandomString()
-    request.method = 'POST'
     number_string = ','.join([str(x) for x in range(11)])
     number_string_list = [number_string]*10000
     real_data = '\n'.join(number_string_list)
 
-    data_chunk = msgpack.packb([0, real_data], use_bin_type=True)
-    request.set('reference', reference)
-    request.set('data_chunk', data_chunk)
-    
     # create ingestion policy
     ingestion_policy = portal.portal_ingestion_policies.newContent( \
       portal_type ='Ingestion Policy',
@@ -115,6 +110,10 @@ class Test(ERP5TypeTestCase):
     self.tic()
     
     # do real ingestion call
+    request.method = 'POST'
+    data_chunk = msgpack.packb([0, real_data], use_bin_type=True)
+    request.set('reference', reference)
+    request.set('data_chunk', data_chunk)
     ingestion_policy.ingest()
     
     # ingestion handler script saves new data using new line so we 
@@ -123,8 +122,7 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(real_data, data_stream_data)
     
     # try sample transformation
-    reference = 'test-data-array- %s' %getRandomString()
-    
+    reference = 'test-data-array- %s' %reference
     data_array = portal.data_array_module.newContent(
                                             portal_type='Data Array',
                                             reference = reference,
@@ -133,16 +131,19 @@ class Test(ERP5TypeTestCase):
     self.tic()
     
     data_stream.DataStream_transform(\
-        chunk_length = 5001, \
+        chunk_length = 52001, \
         transform_script_id = 'DataStream_copyCSVToDataArray',
         data_array_reference = reference)
+
     self.tic()
     
     # test some numpy operations
     zarray = data_array.getArray()
     np.average(zarray)
+    
     # XXX: test that extracted array is same as input one
     self.assertNotEqual(None, zarray)
+    #self.assertEqual(1, zarray.shape)
     
   def test_02_Examples(self):
     """
