@@ -101,8 +101,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>your_log_link</string>
-                        <string>your_shellinabox_link</string>
                         <string>your_log_viewer_link</string>
                         <string>your_debug_shell_link</string>
                       </list>
