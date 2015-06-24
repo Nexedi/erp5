@@ -284,27 +284,23 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     # instead of adding prefix toavoid id conflict, prefer to put dcworkflow in portal_trash;
     workflow_type_id = dc_workflow.__class__.__name__
     if workflow_type_id == 'DCWorkflowDefinition':
-      LOG("2.a Workflow '%s' is a DCWorkflow'"%dc_workflow.id,WARNING,' in WorkflowTool.py')
       if temp == 0:
         new_id = 'workflow_' + dc_workflow.id
       else:
         new_id = dc_workflow.id
       uid = self.encodeWorkflowUid(new_id)
       workflow = container.newContent(id=new_id, portal_type='Workflow', temp_object=temp)
-      LOG(" New workflow created '%s' '%s'"%(workflow.getId(), workflow.getPortalType()), WARNING, "in WorkfowTool.py")
       workflow.setStateVariable(dc_workflow.state_var)
       workflow.setWorkflowManagedPermission(dc_workflow.permissions)
 
 
     else:
-      LOG("2.b Workflow '%s' is a DC Interaction Workflow"%dc_workflow.getTitle(),WARNING,' in WorkflowTool.py')
       if temp == 0:
         new_id = 'interactionworkflow_' + dc_workflow.id
       else:
         new_id = dc_workflow.id
       uid = self.encodeWorkflowUid(new_id)
       workflow = container.newContent(id=new_id, portal_type='Interaction Workflow', temp_object=temp)
-      LOG(" New workflow created '%s' '%s'"%(workflow.getId(), workflow.getPortalType()), WARNING, "in WorkfowTool.py")
       workflow.setManagerBypass(dc_workflow.manager_bypass)
 
     if temp == 1:
@@ -315,12 +311,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     workflow.edit(description=dc_workflow.description)
 
     if temp == 0: # convert under request only
-      LOG("Converting DCWorkflow", WARNING, " in WorkflowTool.py") 
       # create transitions
       if workflow_type_id == 'DCWorkflowDefinition':
         for tid in dc_workflow.transitions:
           tdef = dc_workflow.transitions.get(tid)
-          LOG("2.1 Convert transition '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
           transition = workflow.newContent(portal_type='Transition', temp_object=temp)
           transition.edit(title=tdef.title)
           transition.setReference(tdef.id)
@@ -351,14 +345,12 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         # create states (portal_type = State)
         for sid in dc_workflow.states:
           sdef = dc_workflow.states.get(sid)
-          LOG("2.2 Convert state '%s' of workflow '%s'"%(sdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
           state = workflow.newContent(portal_type='State', temp_object=temp)
           state.edit(title=sdef.title)
           state.setReference(sdef.id)
           state.setDescription(sdef.description)
           permission_roles = sdef.permission_roles
           state.setStatePermissionRoles(permission_roles)
-          LOG("permission_roles is '%s'"%permission_roles,WARNING,"in WorkflowTool.py")
           i = -1
           for permission in sorted(workflow.getWorkflowManagedPermissionList()):
             i = i + 1
@@ -368,7 +360,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
               pr_cell = state.newContent(id='cell_%s_%s'%(i,j), portal_type='PermissionRoles')
               if permission in permission_roles and role in permission_roles[permission]:
                 pr_cell.is_selected = 1
-              LOG("cell id is '%s, %s', permission role is '%s, %s', is_selected is %s"%(i,j,permission,role,pr_cell.is_selected),WARNING,"in WorkflowTool.py 344")
 
         # Set Workflow default state using category setter
         state_path = getattr(workflow, 'state_'+dc_workflow.initial_state).getPath()
@@ -398,7 +389,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         # create worklists (portal_type = Worklist)
         for qid in dc_workflow.worklists:
           qdef = dc_workflow.worklists.get(qid)
-          LOG("2.3 Convert worklist '%s' of workflow '%s'"%(qdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
           worklist = workflow.newContent(portal_type='Worklist', temp_object=temp)
           worklist.edit(title=qdef.title)
           worklist.setReference(qdef.id)
@@ -432,7 +422,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for tid in dc_workflow.interactions:
           interaction = workflow.newContent(portal_type='Interaction', temp_object=temp)
           tdef = dc_workflow.interactions.get(tid)
-          LOG("2.4 Convert interaction '%s' of workflow '%s'"%(tdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
           interaction.edit(title=tdef.title)
           interaction.setReference(tdef.id)
           for script_name in tdef.activate_script_name:
@@ -474,7 +463,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       for script_id in dc_workflow.scripts:
         script = dc_workflow.scripts.get(script_id)
         workflow_script = workflow.newContent(id='script_'+script_id ,portal_type='Workflow Script', temp_object=temp)
-        LOG("2.5 Convert workflow script '%s' of workflow '%s'"%(workflow_script.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
         workflow_script.edit(title=script.title)
         workflow_script.default_reference = script_id
         workflow_script.setParameterSignature(script._params)
@@ -485,7 +473,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       for vid in dc_workflow.variables:
         vdef = dc_workflow.variables.get(vid)
         variable = workflow.newContent(portal_type='Variable', temp_object=temp)
-        LOG("2.6 Convert variable '%s' of workflow '%s'"%(vdef.id,workflow.getTitle()),WARNING,' in WorkflowTool.py')
         variable.edit(title=vdef.title)
         variable.setReference(vdef.id)
         variable.setAutomaticUpdate(vdef.update_always)
@@ -856,6 +843,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           cache_factory = 'erp5_ui_short')
         actions.extend(_getWorklistActionList())
     return actions
+
+  def _finalizeWorkflowConversion(self):
+    """ Put old dc workflow into trash bin, and remove prefix?"""
+    pass
 
 InitializeClass(WorkflowTool)
 
