@@ -47,6 +47,15 @@ from Products.ERP5Workflow.Document.Workflow import Workflow
 from types import StringTypes
 from zLOG import LOG, INFO, WARNING
 
+# show as xml library
+from lxml import etree
+from lxml.etree import Element, SubElement
+from xml.sax.saxutils import escape, unescape
+from xml_marshaller.xml_marshaller import Marshaller
+MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
+marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
+                                                            as_tree=True).dumps
+
 _MARKER = []
 
 class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), XMLObject):
@@ -427,138 +436,31 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
       return_as_object = False
 
     # Define a list of property to show to users:
-    workflow_prop_id_to_show = ['title', 'description']
-
+    # It seems even in DC interaction workflow, creation guard hasn't been configured;
+    # so it is not used? thus I didn't show creation guard as xml here. (zwj)
+    interaction_workflow_prop_id_to_show = sorted(['title', 'description',
+          'manager_bypass'])
     # workflow as XML, need to rename DC workflow's portal_type before comparison.
-    workflow = SubElement(root, 'workflow',
+    interaction_workflow = SubElement(root, 'interaction_workflow',
                         attrib=dict(reference=self.getReference(),
                         portal_type=self.getPortalType()))
 
-    for prop_id in sorted(workflow_prop_id_to_show):
-      # In most case, we should not synchronize acquired properties
-      if prop_id not in ('uid', 'workflow_history', 'id', 'portal_type',):
-        if prop_id == 'permissions':
-          value = tuple(self.getProperty('workflow_managed_permission_list'))
-          prop_type = self.getPropertyType('workflow_managed_permission_list')
-          sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
-        elif prop_id == 'initial_state':
-          if self.getSourceValue() is not None:
-            value = self.getSourceValue().getReference()
-          else:
-            value = ''
-          sub_object = SubElement(workflow, prop_id, attrib=dict(type='string'))
-        elif prop_id =='state_var':
-          value = self.getProperty('state_variable')
-          sub_object = SubElement(workflow, prop_id, attrib=dict(type='string'))
-        else:
-          value = self.getProperty(prop_id)
-          if value is None:
-            # not registered if not defined.
-            continue
-          else:
-            prop_type = self.getPropertyType(prop_id)
-          sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
-        if prop_type in ('object',):
-          # We may have very long lines, so we should split
-          value = aq_base(value)
-          value = dumps(value)
-          sub_object.text = standard_b64encode(value)
-        elif prop_type in ('data',):
-          # Create blocks to represent data
-          # <data><block>ZERD</block><block>OEJJM</block></data>
-          size_block = 60
-          if isinstance(value, str):
-            for index in xrange(0, len(value), size_block):
-              content = value[index:index + size_block]
-              data_encoded = standard_b64encode(content)
-              block = SubElement(sub_object, 'block_data')
-              block.text = data_encoded
-          else:
-            raise ValueError("XMLExportImport failed, the data is undefined")
-        elif prop_type in ('lines', 'tokens',):
-          if prop_id == 'initial_state':
-            if self.getSourceValue():
-              sub_object.text = self.getSourceValue().getReference()
-          else:
-            value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
-                for word in value]
-            sub_object.append(marshaller(value))
-        elif prop_type in ('text', 'string',):
-          if type(value) in (tuple, list, dict):
-            sub_object.text = str(value)
-          else:
-            sub_object.text = unicode(escape(value), 'utf-8')
-        elif prop_type != 'None':
-          sub_object.text = str(value)
+    for prop_id in sorted(interaction_workflow_prop_id_to_show):
+      prop_value = self.getProperty(prop_id)
+      prop_type = self.getPropertyType(prop_id)
+      sub_object = SubElement(interaction_workflow, prop_id, attrib=dict(type=prop_type))
+      sub_object.text = str(prop_value)
 
     # 1. Interaction as XML
-    interaction_reference_list = []
-    interaction_list = self.objectValues(portal_type='Interaction')
-    interaction_prop_id_to_show = ['title', 'description', 'new_state_id',
-      'trigger_type', 'script_name', 'after_script_name', 'actbox_category',
-      'actbox_icon', 'actbox_name', 'actbox_url', 'roles', 'groups',
-      'permissions', 'expr']
-    for tdef in self.objectValues(portal_type='Interaction'):
-      interaction_reference_list.append(tdef.getReference())
-    interactions = SubElement(workflow, 'interactions',
-          attrib=dict(interaction_list=str(interaction_reference_list),
-          number_of_element=str(len(interaction_reference_list))))
-    for tdef in interaction_list:
-      interaction = SubElement(interactions, 'interaction',
-            attrib=dict(reference=tdef.getReference(),
-            portal_type=tdef.getPortalType()))
-      guard = SubElement(interaction, 'guard', attrib=dict(type='object'))
-      for property_id in sorted(interaction_prop_id_to_show):
-        if property_id == 'new_state_id':
-          if tdef.getDestinationValue() is not None:
-            property_value = tdef.getDestinationValue().getReference()
-          else:
-            property_value = ''
-          sub_object = SubElement(interaction, property_id, attrib=dict(type='string'))
-        elif property_id == 'script_name':
-          property_value = tdef.getBeforeScriptIdList()
-          if property_value == [] or property_value is None:
-            property_value = ''
-          else:
-            property_value = self._getOb(tdef.getBeforeScriptIdList()[0]).getReference()
-          sub_object = SubElement(interaction, property_id, attrib=dict(type='string'))
-        elif property_id == 'after_script_name':
-          property_value = tdef.getAfterScriptIdList()
-          if property_value == [] or property_value is None:
-            property_value = ''
-          else:
-            property_value = self._getOb(tdef.getAfterScriptIdList()[0]).getReference()
-          sub_object = SubElement(interaction, property_id, attrib=dict(type='string'))
-        # show guard configuration:
-        elif property_id in ('roles', 'groups', 'permissions', 'expr',):
-          if property_id == 'roles':
-            property_value = tdef.getRoleList()
-          if property_id == 'groups':
-            property_value = tdef.getGroupList()
-          if property_id == 'permissions':
-            property_value = tdef.getPermissionList()
-          if property_id == 'expr':
-            property_value = tdef.getExpression()
-          if property_value is None or property_value == []:
-            property_value = ''
-          sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
-        else:
-          property_value = tdef.getProperty(property_id)
-          if property_value is None:
-            property_value = ''
-          else:
-            property_type = tdef.getPropertyType(property_id)
-          sub_object = SubElement(interaction, property_id, attrib=dict(type=property_type))
-        sub_object.text = str(property_value)
 
-    # 3. Variable as XML
+    # 2. Variable as XML
     variable_reference_list = []
     variable_list = self.objectValues(portal_type='Variable')
     variable_prop_id_to_show = ['description', 'default_expr',
           'for_catalog', 'for_status', 'update_always']
     for vdef in variable_list:
       variable_reference_list.append(vdef.getReference())
-    variables = SubElement(workflow, 'variables', attrib=dict(variable_list=str(variable_reference_list),
+    variables = SubElement(interaction_workflow, 'variables', attrib=dict(variable_list=str(variable_reference_list),
                         number_of_element=str(len(variable_reference_list))))
     for vdef in variable_list:
       variable = SubElement(variables, 'variable', attrib=dict(reference=vdef.getReference(),
@@ -582,7 +484,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
           sub_object = SubElement(variable, property_id, attrib=dict(type=property_type))
         sub_object.text = str(property_value)
 
-    # 4. Worklist as XML
+    # 3. Worklist as XML
     worklist_reference_list = []
     worklist_list = self.objectValues(portal_type='Worklist')
     worklist_prop_id_to_show = ['description', 'matched_portal_type_list',
@@ -591,7 +493,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
           'roles', 'groups', 'permissions', 'expr']
     for qdef in worklist_list:
       worklist_reference_list.append(qdef.getReference())
-    worklists = SubElement(workflow, 'worklists', attrib=dict(worklist_list=str(worklist_reference_list),
+    worklists = SubElement(interaction_workflow, 'worklists', attrib=dict(worklist_list=str(worklist_reference_list),
                         number_of_element=str(len(worklist_reference_list))))
     for qdef in worklist_list:
       worklist = SubElement(worklists, 'worklist', attrib=dict(reference=qdef.getReference(),
@@ -628,13 +530,13 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
           sub_object = SubElement(worklist, property_id, attrib=dict(type=property_type))
         sub_object.text = str(property_value)
 
-    # 5. Script as XML
+    # 4. Script as XML
     script_reference_list = []
     script_list = self.objectValues(portal_type='Workflow Script')
     script_prop_id_to_show = sorted(['title', 'body', 'parameter_signature'])
     for sdef in script_list:
       script_reference_list.append(sdef.getReference())
-    scripts = SubElement(workflow, 'scripts', attrib=dict(script_list=str(script_reference_list),
+    scripts = SubElement(interaction_workflow, 'scripts', attrib=dict(script_list=str(script_reference_list),
                         number_of_element=str(len(script_reference_list))))
     for sdef in script_list:
       script = SubElement(scripts, 'script', attrib=dict(reference=sdef.getReference(),
