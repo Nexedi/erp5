@@ -86,6 +86,7 @@ for dc_wf in selected_wf_list:\n
   # conversion\n
   workflow = context.dc_workflow_asERP5Object(context, dc_wf, temp=0)\n
   selected_wf_id_list.append(dc_wf.id)\n
+  assert workflow.showAsXML() == dc_wf.showAsXML()\n
 \n
   type_workflow_dict = context.getChainsByType()\n
   for ptype_id in type_workflow_dict:\n
