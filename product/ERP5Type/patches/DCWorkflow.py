@@ -45,10 +45,6 @@ from zLOG import LOG, INFO, WARNING
 from lxml import etree
 from lxml.etree import Element, SubElement
 from xml.sax.saxutils import escape, unescape
-from xml_marshaller.xml_marshaller import Marshaller
-MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
-marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
-                                                            as_tree=True).dumps
 
 ACTIVITY_GROUPING_COUNT = 100
 
@@ -858,43 +854,12 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
                       portal_type='Workflow'))
 
   for prop_id in sorted(workflow_prop_id_to_show):
-    # In most case, we should not synchronize acquired properties
-    if prop_id not in ('uid', 'workflow_history', 'id', 'portal_type',):
-      value = self.__dict__[prop_id]
-      if value is None:
-        # not registered if not defined.
-        continue
-      else:
-        prop_type = workflow_prop_id_to_show[prop_id]
-      sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
-      if prop_type in ('object',):
-        # We may have very long lines, so we should split
-        value = aq_base(value)
-        value = dumps(value)
-        sub_object.text = standard_b64encode(value)
-      elif prop_type in ('data',):
-        # Create blocks to represent data
-        # <data><block>ZERD</block><block>OEJJM</block></data>
-        size_block = 60
-        if isinstance(value, str):
-          for index in xrange(0, len(value), size_block):
-            content = value[index:index + size_block]
-            data_encoded = standard_b64encode(content)
-            block = SubElement(sub_object, 'block_data')
-            block.text = data_encoded
-        else:
-          raise ValueError("XMLExportImport failed, the data is undefined")
-      elif prop_type in ('lines', 'tokens',):
-        value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
-            for word in value]
-        sub_object.append(marshaller(value))
-      elif prop_type in ('text', 'string',):
-        if type(value) in (tuple, list, dict):
-          sub_object.text = str(value)
-        else:
-          sub_object.text = unicode(escape(value), 'utf-8')
-      elif prop_type != 'None':
-        sub_object.text = str(value)
+    value = getattr(self, prop_id, '')
+    if value == () or value == []:
+      value = ''
+    prop_type = workflow_prop_id_to_show[prop_id]
+    sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
+    sub_object.text = str(value)
 
   # 1. State as XML
   state_reference_list = []
@@ -910,44 +875,12 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
     sdef = self.states[sid]
     state = SubElement(states, 'state', attrib=dict(reference=sid,portal_type='State'))
     for property_id in sorted(state_prop_id_to_show):
-      property_value = sdef.__dict__[property_id]
-      if property_value is None:
-        # do not register if not defined.
-        continue
-      else:
-        property_type = state_prop_id_to_show[property_id]
+      property_value = getattr(sdef, property_id, '')
+      if property_value is None or property_value == [] or property_value ==():
+        property_value = ''
+      property_type = state_prop_id_to_show[property_id]
       sub_object = SubElement(state, property_id, attrib=dict(type=property_type))
-
-      if property_type in ('object',):
-        # We may have very long lines, so we should split
-        property_value = aq_base(property_value)
-        property_value = dumps(property_value)
-        sub_object.text = standard_b64encode(property_value)
-      elif property_type in ('data',):
-        # Create blocks to represent data
-        # <data><block>ZERD</block><block>OEJJM</block></data>
-        size_block = 60
-        if isinstance(property_value, str):
-          for index in xrange(0, len(property_value), size_block):
-            content = property_value[index:index + size_block]
-            data_encoded = standard_b64encode(content)
-            block = SubElement(sub_object, 'block_data')
-            block.text = data_encoded
-        else:
-          raise ValueError("XMLExportImport failed, the data is undefined")
-      elif property_type in ('lines', 'tokens',):
-        property_value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
-            for word in property_value]
-        sub_object.append(marshaller(property_value))
-      elif property_type in ('text', 'string',):
-        if property_id == 'permission_roles':
-          sub_object.text = str(property_value)
-        elif type(property_value) in (tuple, list, dict):
-          sub_object.text = str(property_value)
-        else:
-          sub_object.text = unicode(escape(property_value), 'utf-8')
-      elif property_type != 'None':
-        sub_object.text = str(property_value)
+      sub_object.text = str(property_value)
 
   # 2. Transition as XML
   transition_reference_list = []
@@ -968,17 +901,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
           attrib=dict(reference=tid, portal_type='Transition'))
     guard = SubElement(transition, 'guard', attrib=dict(type='object'))
     for property_id in sorted(transition_prop_id_to_show):
-      if property_id == 'new_state_id':
-        property_value = tdef.__dict__['new_state_id']
-        sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
-      elif property_id == 'script_name':
-        property_value = tdef.__dict__['script_name']
-        sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
-      elif property_id == 'after_script_name':
-        property_value = tdef.__dict__['after_script_name']
-        sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
-      # show guard configuration:
-      elif property_id == 'guard':
+      if property_id == 'guard':
         guard_obj = getattr(tdef, 'guard', None)
         guard_prop_to_show = sorted({'roles':'guard configuration',
             'groups':'guard configuration', 'permissions':'guard configuration',
@@ -988,15 +911,17 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
             prop_value = getattr(guard_obj, prop_id, '')
           else:
             prop_value = ''
-          guard_config = SubElement(guard, prop_id, attrib=dict(type='guard configuration'))
-          if prop_value is None or prop_value == ():
+          sub_object = SubElement(guard, prop_id, attrib=dict(type='guard configuration'))
+          if prop_value is None or prop_value == [] or prop_value ==():
             prop_value = ''
-          guard_config.text = str(prop_value)
+          sub_object.text = str(prop_value)
       else:
         property_value = getattr(tdef, property_id)
         property_type = transition_prop_id_to_show[property_id]
         sub_object = SubElement(transition, property_id, attrib=dict(type=property_type))
-      sub_object.text = str(property_value)
+        if property_value is None or property_value == [] or property_value ==():
+          property_value = ''
+        sub_object.text = str(property_value)
 
   # 3. Variable as XML
   variable_reference_list = []
@@ -1019,11 +944,12 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
           property_value = expression.text
         else:
           property_value = ''
-        sub_object = SubElement(variable, property_id, attrib=dict(type='string'))
       else:
-        property_value = vdef.__dict__[property_id]
-        property_type = variable_prop_id_to_show[property_id]
-        sub_object = SubElement(variable, property_id, attrib=dict(type=property_type))
+        property_value = getattr(vdef, property_id, '')
+      if property_value is None or property_value == [] or property_value ==():
+        property_value = ''
+      property_type = variable_prop_id_to_show[property_id]
+      sub_object = SubElement(variable, property_id, attrib=dict(type=property_type))
       sub_object.text = str(property_value)
 
   # 4. Worklist as XML
@@ -1044,7 +970,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
     worklist = SubElement(worklists, 'worklist', attrib=dict(reference=qdef.getReference(),
           portal_type='Worklist'))
     guard = SubElement(worklist, 'guard', attrib=dict(type='object'))
-    var_matches = qdef.__dict__['var_matches']
+    var_matches = getattr(qdef, 'var_matches')
     for property_id in sorted(worklist_prop_id_to_show):
       if property_id == 'guard':
         guard_obj = getattr(qdef, 'guard', None)
@@ -1056,10 +982,11 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
             prop_value = getattr(guard_obj, prop_id, '')
           else:
             prop_value = ''
-          guard_config = SubElement(guard, prop_id, attrib=dict(type='guard configuration'))
-          if prop_value is None or prop_value == ():
+          property_type='guard configuration'
+          sub_object = SubElement(guard, prop_id, attrib=dict(type=property_type))
+          if prop_value is None or prop_value == [] or prop_value ==():
             prop_value = ''
-          guard_config.text = str(prop_value)
+          sub_object.text = str(prop_value)
       else:
         if property_id == 'matched_portal_type_list':
           var_id = 'portal_type'
@@ -1072,16 +999,17 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
           property_value = var_matches.get(var_id)
         else:
           property_value = getattr(qdef, property_id)
-        if property_value is None:
-          property_value = ''
         property_type = worklist_prop_id_to_show[property_id]
         sub_object = SubElement(worklist, property_id, attrib=dict(type=property_type))
-      sub_object.text = str(property_value)
+
+        if property_value is None or property_value == [] or property_value ==():
+          property_value = ''
+        sub_object.text = str(property_value)
 
   # 5. Script as XML
   script_reference_list = []
   script_id_list = sorted(self.scripts.keys())
-  script_prop_id_to_show = {'title':'string', 'body':'string', 'parameter_signature':'string'}
+  script_prop_id_to_show = {'body':'string', 'parameter_signature':'string'}
   for sid in script_id_list:
     script_reference_list.append(sid)
   scripts = SubElement(workflow, 'scripts', attrib=dict(script_list=str(script_reference_list),
