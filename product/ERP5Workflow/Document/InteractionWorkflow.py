@@ -234,7 +234,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getReference()
     return history_key
 
-  security.declarePrivate('getWorklistVariableMatchDict')
+  security.declarePrivate('getinteraction_workflowVariableMatchDict')
   def getWorklistVariableMatchDict(self, info, check_guard=True):
     return None
 
@@ -516,8 +516,8 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     # 2. Variable as XML
     variable_reference_list = []
     variable_list = self.objectValues(portal_type='Variable')
-    variable_prop_id_to_show = ['description', 'default_expr', 'for_catalog',
-          'for_status', 'update_always']
+    variable_prop_id_to_show = ['description', 'default_expr',
+          'for_catalog', 'for_status', 'update_always']
     for vdef in variable_list:
       variable_reference_list.append(vdef.getReference())
     variables = SubElement(interaction_workflow, 'variables', attrib=dict(variable_list=str(variable_reference_list),
@@ -533,21 +533,19 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
           property_value = vdef.getInitialValue()
           if vdef.getInitialValue() is not None:
             property_value = vdef.getInitialValue()
-          else:
-            property_value = ''
           sub_object = SubElement(variable, property_id, attrib=dict(type='string'))
         else:
           property_value = vdef.getProperty(property_id)
-          if property_value is None:
-            property_value = ''
           property_type = vdef.getPropertyType(property_id)
           sub_object = SubElement(variable, property_id, attrib=dict(type=property_type))
+        if property_value is None or property_value ==() or property_value == []:
+          property_value = ''
         sub_object.text = str(property_value)
 
     # 3. Script as XML
     script_reference_list = []
     script_list = self.objectValues(portal_type='Workflow Script')
-    script_prop_id_to_show = sorted(['title', 'body', 'parameter_signature'])
+    script_prop_id_to_show = sorted(['body', 'parameter_signature'])
     for sdef in script_list:
       script_reference_list.append(sdef.getReference())
     scripts = SubElement(interaction_workflow, 'scripts', attrib=dict(script_list=str(script_reference_list),
