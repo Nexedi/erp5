@@ -161,6 +161,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
 
   def doActionFor(self, ob, action, wf_id=None, *args, **kw):
     workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
+    action_ref = action
     if wf_id is None:
       if workflow_list == []:
         raise WorkflowException(_(u'No workflows found.'))
@@ -169,6 +170,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         if wf.getPortalType() == 'Workflow':
           # workflow compatibility
           action = 'transition_' + action
+        else: action = action_ref
         if wf.isActionSupported(ob, action, **kw):
           found = 1
           break
