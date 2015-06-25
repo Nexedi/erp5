@@ -62,12 +62,7 @@ from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC,\
 from tempfile import mktemp
 from types import StringTypes
 from xml.sax.saxutils import escape, unescape
-from xml_marshaller.xml_marshaller import Marshaller
 from zLOG import LOG, INFO, WARNING
-
-MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
-marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
-                                                            as_tree=True).dumps
 
 class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
   """
@@ -756,56 +751,22 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         if prop_id == 'permissions':
           value = tuple(self.getProperty('workflow_managed_permission_list'))
           prop_type = self.getPropertyType('workflow_managed_permission_list')
-          sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
         elif prop_id == 'initial_state':
           if self.getSourceValue() is not None:
             value = self.getSourceValue().getReference()
           else:
             value = ''
-          sub_object = SubElement(workflow, prop_id, attrib=dict(type='string'))
+          prop_type = 'string'
         elif prop_id =='state_var':
           value = self.getProperty('state_variable')
-          sub_object = SubElement(workflow, prop_id, attrib=dict(type='string'))
+          prop_type = self.getPropertyType('state_variable')
         else:
           value = self.getProperty(prop_id)
-          if value is None:
-            # not registered if not defined.
-            continue
-          else:
-            prop_type = self.getPropertyType(prop_id)
-          sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
-        if prop_type in ('object',):
-          # We may have very long lines, so we should split
-          value = aq_base(value)
-          value = dumps(value)
-          sub_object.text = standard_b64encode(value)
-        elif prop_type in ('data',):
-          # Create blocks to represent data
-          # <data><block>ZERD</block><block>OEJJM</block></data>
-          size_block = 60
-          if isinstance(value, str):
-            for index in xrange(0, len(value), size_block):
-              content = value[index:index + size_block]
-              data_encoded = standard_b64encode(content)
-              block = SubElement(sub_object, 'block_data')
-              block.text = data_encoded
-          else:
-            raise ValueError("XMLExportImport failed, the data is undefined")
-        elif prop_type in ('lines', 'tokens',):
-          if prop_id == 'initial_state':
-            if self.getSourceValue():
-              sub_object.text = self.getSourceValue().getReference()
-          else:
-            value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
-                for word in value]
-            sub_object.append(marshaller(value))
-        elif prop_type in ('text', 'string',):
-          if type(value) in (tuple, list, dict):
-            sub_object.text = str(value)
-          else:
-            sub_object.text = unicode(escape(value), 'utf-8')
-        elif prop_type != 'None':
-          sub_object.text = str(value)
+          prop_type = self.getPropertyType(prop_id)
+        if value is None or value ==() or value == ():
+          value = ''
+        sub_object = SubElement(workflow, prop_id, attrib=dict(type=prop_type))
+        sub_object.text = str(value)
 
     # 1. State as XML
     state_reference_list = []
@@ -823,55 +784,21 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         if property_id == 'permission_roles':
           property_value = sdef.getProperty('state_permission_roles')
           property_type = sdef.getPropertyType('state_permission_roles')
-          sub_object = SubElement(state, property_id, attrib=dict(type='string'))
         elif property_id == 'transitions':
-          property_value = sdef.getDestinationValueList()
-          property_type = sdef.getPropertyType('categories_list')
-          sub_object = SubElement(state, property_id, attrib=dict(type='multiple selection'))
+          property_value = sdef.getDestinationIdList()
+          destination_list = []
+          for tr_id in property_value:
+            destination_list.append(self._getOb(tr_id).getReference())
+          property_value = destination_list
+          property_type = 'multiple selection'
         else:
           property_value = sdef.getProperty(property_id)
-          if property_value is None:
-            # do not register if not defined.
-            continue
-          else:
-            property_type = sdef.getPropertyType(property_id)
-          sub_object = SubElement(state, property_id, attrib=dict(type=property_type))
+          property_type = sdef.getPropertyType(property_id)
 
-        if property_type in ('object',):
-          # We may have very long lines, so we should split
-          property_value = aq_base(property_value)
-          property_value = dumps(property_value)
-          sub_object.text = standard_b64encode(property_value)
-        elif property_type in ('data',):
-          # Create blocks to represent data
-          # <data><block>ZERD</block><block>OEJJM</block></data>
-          size_block = 60
-          if isinstance(property_value, str):
-            for index in xrange(0, len(property_value), size_block):
-              content = property_value[index:index + size_block]
-              data_encoded = standard_b64encode(content)
-              block = SubElement(sub_object, 'block_data')
-              block.text = data_encoded
-          else:
-            raise ValueError("XMLExportImport failed, the data is undefined")
-        elif property_type in ('lines', 'tokens',):
-          if property_id == 'transitions':
-            value_list = property_value
-            value_reference_list = []
-            for value in value_list:
-              value_reference_list.append(value.getReference())
-            sub_object.text = str(tuple(value_reference_list))
-          else:
-            property_value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
-                for word in property_value]
-            sub_object.append(marshaller(property_value))
-        elif property_type in ('text', 'string',):
-          if type(property_value) in (tuple, list, dict):
-            sub_object.text = str(property_value)
-          else:
-            sub_object.text = unicode(escape(property_value), 'utf-8')
-        elif property_type != 'None':
-          sub_object.text = str(property_value)
+        if property_value is None or property_value ==() or property_value == []:
+          property_value = ''
+        sub_object = SubElement(state, property_id, attrib=dict(type=property_type))
+        sub_object.text = str(property_value)
 
     # 2. Transition as XML
     transition_reference_list = []
@@ -891,28 +818,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             portal_type=tdef.getPortalType()))
       guard = SubElement(transition, 'guard', attrib=dict(type='object'))
       for property_id in sorted(transition_prop_id_to_show):
-        if property_id == 'new_state_id':
-          if tdef.getDestinationValue() is not None:
-            property_value = tdef.getDestinationValue().getReference()
-          else:
-            property_value = ''
-          sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
-        elif property_id == 'script_name':
-          property_value = tdef.getBeforeScriptIdList()
-          if property_value == [] or property_value is None:
-            property_value = ''
-          else:
-            property_value = self._getOb(tdef.getBeforeScriptIdList()[0]).getReference()
-          sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
-        elif property_id == 'after_script_name':
-          property_value = tdef.getAfterScriptIdList()
-          if property_value == [] or property_value is None:
-            property_value = ''
-          else:
-            property_value = self._getOb(tdef.getAfterScriptIdList()[0]).getReference()
-          sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
-        # show guard configuration:
-        elif property_id in ('roles', 'groups', 'permissions', 'expr',):
+        if property_id in ('roles', 'groups', 'permissions', 'expr',):
           if property_id == 'roles':
             property_value = tdef.getRoleList()
           if property_id == 'groups':
@@ -925,12 +831,32 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             property_value = ''
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
         else:
-          property_value = tdef.getProperty(property_id)
-          if property_value is None:
-            property_value = ''
+          if property_id == 'new_state_id':
+            if tdef.getDestinationValue() is not None:
+              property_value = tdef.getDestinationValue().getReference()
+            else:
+              property_value = ''
+            sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
+          elif property_id == 'script_name':
+            property_value = tdef.getBeforeScriptIdList()
+            if property_value == [] or property_value is None:
+              property_value = ''
+            else:
+              property_value = self._getOb(tdef.getBeforeScriptIdList()[0]).getReference()
+            sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
+          elif property_id == 'after_script_name':
+            property_value = tdef.getAfterScriptIdList()
+            if property_value == [] or property_value is None:
+              property_value = ''
+            else:
+              property_value = self._getOb(tdef.getAfterScriptIdList()[0]).getReference()
+            sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
           else:
+            property_value = tdef.getProperty(property_id)
             property_type = tdef.getPropertyType(property_id)
-          sub_object = SubElement(transition, property_id, attrib=dict(type=property_type))
+            sub_object = SubElement(transition, property_id, attrib=dict(type=property_type))
+        if property_value is None or property_value ==() or property_value == []:
+          property_value = ''
         sub_object.text = str(property_value)
 
     # 3. Variable as XML
@@ -953,15 +879,13 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           property_value = vdef.getInitialValue()
           if vdef.getInitialValue() is not None:
             property_value = vdef.getInitialValue()
-          else:
-            property_value = ''
           sub_object = SubElement(variable, property_id, attrib=dict(type='string'))
         else:
           property_value = vdef.getProperty(property_id)
-          if property_value is None:
-            property_value = ''
           property_type = vdef.getPropertyType(property_id)
           sub_object = SubElement(variable, property_id, attrib=dict(type=property_type))
+        if property_value is None or property_value ==() or property_value == []:
+          property_value = ''
         sub_object.text = str(property_value)
 
     # 4. Worklist as XML
@@ -990,8 +914,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             property_value = qdef.getPermissionList()
           if property_id == 'expr':
             property_value = qdef.getExpression()
-          if property_value is None or property_value == []:
-            property_value = ''
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
         else:
           property_value = qdef.getProperty(property_id)
@@ -1004,16 +926,16 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             property_value = tuple(state_ref_list)
           if property_id == 'matched_portal_type_list':
             property_value = tuple(property_value)
-          if property_value is None:
-            property_value = ''
           property_type = qdef.getPropertyType(property_id)
           sub_object = SubElement(worklist, property_id, attrib=dict(type=property_type))
+        if property_value is None or property_value ==() or property_value == []:
+          property_value = ''
         sub_object.text = str(property_value)
 
     # 5. Script as XML
     script_reference_list = []
     script_list = self.objectValues(portal_type='Workflow Script')
-    script_prop_id_to_show = sorted(['title', 'body', 'parameter_signature'])
+    script_prop_id_to_show = sorted(['body', 'parameter_signature'])
     for sdef in script_list:
       script_reference_list.append(sdef.getReference())
     scripts = SubElement(workflow, 'scripts', attrib=dict(script_list=str(script_reference_list),
