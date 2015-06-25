@@ -635,6 +635,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
 
     # update variables
     state_values = None
+    object = self.getStateChangeInformation(document, self.getSourceValue())
     if new_sdef is not None:
       state_values = getattr(new_sdef,'var_values', None)
     if state_values is None:
@@ -660,11 +661,11 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         # Preserve former value
         value = former_status[id]
       else:
-        if vdef.default_expr is not None:
-          expr = vdef.default_expr
+        if vdef.getDefaultExpr() is not None:
+          expr = vdef.getDefaultExpr()
         else:
-          value = vdef.default_value
-      if expr is not None:
+          value = vdef.getInitialValue(object=object)
+      if expr is not None and expr != '':
         # Evaluate an expression.
         if econtext is None:
           # Lazily create the expression context.
@@ -676,10 +677,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           econtext = Expression_createExprContext(sci)
         expr = Expression(expr)
         value = expr(econtext)
-      if id_no_suffix == "action":
-        status_dict[id_no_suffix] = '_'.join(value.split('_')[1:])
-      else:
-        status_dict[id_no_suffix] = value
+      status_dict[id_no_suffix] = value
 
     # Do not proceed in case of failure of before script
     if not before_script_success:
