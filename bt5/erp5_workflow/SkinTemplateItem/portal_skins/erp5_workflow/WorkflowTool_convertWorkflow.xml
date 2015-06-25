@@ -90,7 +90,7 @@ for dc_wf in selected_wf_list:\n
   type_workflow_dict = context.getChainsByType()\n
   for ptype_id in type_workflow_dict:\n
     ptype = getattr(context.getPortalObject().portal_types, ptype_id, None)\n
-    if ptype is not None:\n
+    if ptype is not None and dc_wf.id in context.getChainsByType()[ptype_id]:\n
       # 1. clean DC workflow assignement:\n
       context.delTypeCBT(ptype.id, dc_wf.id)\n
       # 2. assign ERP5 Workflow to portal type:\n
