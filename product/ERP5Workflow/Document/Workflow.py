@@ -789,7 +789,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           destination_list = []
           for tr_id in property_value:
             destination_list.append(self._getOb(tr_id).getReference())
-          property_value = destination_list
+          property_value = tuple(destination_list)
           property_type = 'multiple selection'
         else:
           property_value = sdef.getProperty(property_id)
