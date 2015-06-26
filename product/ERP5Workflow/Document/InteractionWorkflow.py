@@ -505,10 +505,6 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
             for value in property_value:
               list_temp.append(self._getOb(value).getReference())
             property_value = list_temp
-          if property_id in ['once_per_transaction', 'temporary_document_disallowed']:
-            if property_value == 0:
-              property_value = False
-            else: property_value = True
           sub_object = SubElement(interaction, property_id, attrib=dict(type='string'))
         else:
           property_value = tdef.getProperty(property_id)
@@ -550,7 +546,7 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
     # 3. Script as XML
     script_reference_list = []
     script_list = self.objectValues(portal_type='Workflow Script')
-    script_prop_id_to_show = sorted(['body', 'parameter_signature'])
+    script_prop_id_to_show = sorted(['body', 'parameter_signature','proxy_roles'])
     for sdef in script_list:
       script_reference_list.append(sdef.getReference())
     scripts = SubElement(interaction_workflow, 'scripts', attrib=dict(script_list=str(script_reference_list),
@@ -559,8 +555,12 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
       script = SubElement(scripts, 'script', attrib=dict(reference=sdef.getReference(),
         portal_type=sdef.getPortalType()))
       for property_id in script_prop_id_to_show:
-        property_value = sdef.getProperty(property_id)
-        property_type = sdef.getPropertyType(property_id)
+        if property_id == 'proxy_roles':
+          property_value = tuple(sdef.getProperty('proxy_role_list'))
+          property_type = sdef.getPropertyType('proxy_role_list')
+        else:
+          property_value = sdef.getProperty(property_id)
+          property_type = sdef.getPropertyType(property_id)
         sub_object = SubElement(script, property_id, attrib=dict(type=property_type))
         sub_object.text = str(property_value)
 
