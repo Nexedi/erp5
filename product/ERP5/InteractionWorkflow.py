@@ -465,7 +465,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     # 3. Script as XML
     script_reference_list = []
     script_id_list = sorted(self.scripts.keys())
-    script_prop_id_to_show = {'body':'string', 'parameter_signature':'string'}
+    script_prop_id_to_show = {'body':'string', 'parameter_signature':'string',
+          'proxy_roles':'tokens'}
     for sid in script_id_list:
       script_reference_list.append(sid)
     scripts = SubElement(interaction_workflow, 'scripts', attrib=dict(script_list=str(script_reference_list),
@@ -479,6 +480,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
           property_value = sdef.getBody()
         elif property_id == 'parameter_signature':
           property_value = sdef.getParams()
+        elif property_id == 'proxy_roles':
+          property_value = sdef.getProxyRole()
         else:
           property_value = getattr(sdef, property_id)
         property_type = script_prop_id_to_show[property_id]
