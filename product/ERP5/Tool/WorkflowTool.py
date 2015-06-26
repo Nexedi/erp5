@@ -169,8 +169,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       for wf in workflow_list:
         if wf.getPortalType() == 'Workflow':
           # workflow compatibility
-          action = 'transition_' + action
+          action = 'transition_' + action_ref
         else: action = action_ref
+        LOG(" wf is '%s', action is '%s'"%(wf.getId(), action),WARNING, " in WOrkfkowTool.py 174")
         if wf.isActionSupported(ob, action, **kw):
           found = 1
           break
