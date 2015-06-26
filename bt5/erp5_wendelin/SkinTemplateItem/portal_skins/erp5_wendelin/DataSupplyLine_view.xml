@@ -81,8 +81,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_source_section_title_list</string>
-                        <string>my_destination_section_title_list</string>
+                        <string>my_source_title_list</string>
+                        <string>my_destination_title_list</string>
                       </list>
                     </value>
                 </item>
