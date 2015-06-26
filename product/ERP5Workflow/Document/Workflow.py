@@ -827,6 +827,8 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             property_value = tdef.getExpression()
           if property_value is None or property_value == []:
             property_value = ''
+          else:
+            property_value = tuple(property_value)
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
         else:
           if property_id == 'new_state_id':
@@ -912,6 +914,8 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             property_value = qdef.getPermissionList()
           if property_id == 'expr':
             property_value = qdef.getExpression()
+          if property_value is not None:
+            property_value = tuple(property_value)
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
         else:
           property_value = qdef.getProperty(property_id)
