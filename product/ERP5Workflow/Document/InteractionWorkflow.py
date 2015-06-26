@@ -470,10 +470,15 @@ class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), 
       guard = SubElement(interaction, 'guard', attrib=dict(type='object'))
       for property_id in interaction_prop_id_to_show:
         # creationg guard
-        if property_id in ['groups', 'permissions', 'expr', 'roles']:
+        if property_id in ['groups', 'permissions', 'roles']:
           if property_id == 'groups': prop_id = 'group_list'
           if property_id == 'permissions': prop_id = 'permission_list'
           if property_id == 'roles': prop_id = 'role_list'
+          property_value = tdef.getProperty(prop_id)
+          if property_value is not None:
+            property_value = tuple(property_value)
+          sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
+        elif property_id == 'expr':
           property_value = tdef.getProperty(prop_id)
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
         # no-property definded action box configuration
