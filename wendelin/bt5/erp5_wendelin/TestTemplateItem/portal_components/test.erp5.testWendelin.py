@@ -107,8 +107,8 @@ class Test(ERP5TypeTestCase):
                       'start_date': now,
                       'stop_date': now + 365}
     data_supply_line_kw = {'resource_value': resource,
-                           'source_section_value': sensor,
-                           'destination_section_value': data_stream}
+                           'source_value': sensor,
+                           'destination_value': data_stream}
     data_supply = ingestion_policy.PortalIngestionPolicy_addDataSupply( \
                                       data_supply_kw, \
                                       data_supply_line_kw)

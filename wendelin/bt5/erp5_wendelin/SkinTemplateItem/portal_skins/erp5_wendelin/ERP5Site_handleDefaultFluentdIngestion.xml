@@ -88,10 +88,10 @@ if data_chunk is not None and reference is not None:\n
   # Data Ingestion (Movements)\n
   if data_supply is not None:\n
     for data_supply_line in data_supply.objectValues():\n
-      sensor = data_supply_line.getSourceSectionValue()\n
+      sensor = data_supply_line.getSourceValue()\n
       if sensor is not None and sensor.getReference() == reference:\n
         # Sensor is defined as destination\n
-        data_stream = data_supply_line.getDestinationSectionValue()\n
+        data_stream = data_supply_line.getDestinationValue()\n
         break\n
 \n
     #context.log(sensor)\n
