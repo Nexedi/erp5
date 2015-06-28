@@ -183,7 +183,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         raise WorkflowException(_(u'Requested workflow definition not found.'))
       if wf.getPortalType() == 'Workflow':
         # workflow compatibility
-        action = 'transition_' + action
+        action = 'transition_' + action_ref
     return self._invokeWithNotification(
       workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
@@ -485,6 +485,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         variable.setForStatus(vdef.for_status)
         variable.setInitialValue(vdef.default_value)
         variable.setDescription(vdef.description)
+        # for a very specific case, action return the reference of transition
+        # in order to generation correct workflow history.
+        if vid == 'action':
+          variable.setDefaultExpr('transition/getReference|nothing')
     return workflow
 
   def getChainDict(self):
