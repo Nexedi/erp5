@@ -39,7 +39,8 @@
             <key> <string>type_list</string> </key>
             <value>
               <tuple>
-                <string>draft_order</string>
+                <string>planned_order</string>
+                <string>future_inventory</string>
               </tuple>
             </value>
         </item>
