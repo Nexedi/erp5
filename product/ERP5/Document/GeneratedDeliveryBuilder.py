@@ -90,3 +90,20 @@ class GeneratedDeliveryBuilder(BuilderMixin):
                     , PropertySheet.Comment
                     , PropertySheet.DeliveryBuilder
                     )
+
+  def _setDeliveryMovementProperties(self, delivery_movement,
+                                     simulation_movement, property_dict,
+                                     update_existing_movement=0,
+                                     force_update=0, activate_kw=None):
+    """
+    Initialize or update delivery movement properties.
+    """
+    if getattr(simulation_movement, 'getMappedProperty', None) is not None:
+      property_dict['quantity'] = simulation_movement.getMappedProperty('quantity')
+    else:
+      property_dict['quantity'] = simulation_movement.getQuantity()
+    property_dict['price'] = simulation_movement.getPrice()
+    if update_existing_movement:
+      property_dict['quantity'] = (delivery_movement.getQuantity() or 0.0) + property_dict['quantity']
+    # Update properties on object (quantity, price...)
+    delivery_movement._edit(force_update=1, **property_dict)

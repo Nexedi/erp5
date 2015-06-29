@@ -64,6 +64,10 @@ class TestOrderBuilderMixin(TestOrderMixin):
     self.createCategories()
     self.validateRules()
 
+  def assertDateAlmostEquals(self, first_date, second_date):
+    self.assertTrue(abs(first_date - second_date) < 1.0/86400,
+                    "%r != %r" % (first_date, second_date))
+
   def stepSetMaxDelayOnResource(self, sequence):
     """
     Sets max_delay on resource
@@ -137,8 +141,8 @@ class TestOrderBuilderMixin(TestOrderMixin):
     # XXX: add support for more generated documents
     order, = sequence.get('generated_document_list')
     self.assertEqual(order.getDestinationValue(), organisation)
-    self.assertEqual(order.getStartDate(), self.wanted_start_date)
-    self.assertEqual(order.getStopDate(), self.wanted_stop_date)
+    self.assertDateAlmostEquals(order.getStartDate(), self.wanted_start_date)
+    self.assertDateAlmostEquals(order.getStopDate(), self.wanted_stop_date)
 
     # XXX: ... and for more lines/cells too
     order_line, = order.contentValues(portal_type=self.order_line_portal_type)
@@ -163,8 +167,8 @@ class TestOrderBuilderMixin(TestOrderMixin):
     # XXX: add support for more generated documents
     order, = sequence.get('generated_document_list')
     self.assertEqual(order.getDestinationValue(), organisation)
-    self.assertEqual(order.getStartDate(), self.wanted_start_date)
-    self.assertEqual(order.getStopDate(), self.wanted_stop_date)
+    self.assertDateAlmostEquals(self.wanted_start_date, order.getStartDate())
+    self.assertDateAlmostEquals(self.wanted_stop_date, order.getStopDate())
 
     # XXX: ... and for more lines/cells too
     order_line, = order.contentValues(portal_type=self.order_line_portal_type)
@@ -322,8 +326,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
 
     self.wanted_quantity = 1.0
     self.wanted_start_date = DateTime(
-      str(self.datetime.earliestTime()
-          + self.order_builder_hardcoded_time_diff))
+      str(self.datetime + self.order_builder_hardcoded_time_diff))
 
     self.wanted_stop_date = self.wanted_start_date
 
@@ -355,7 +358,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
 
     self.wanted_quantity = 1.0
     self.wanted_start_date = DateTime(
-      str(self.datetime.earliestTime() +
+      str(self.datetime +
           self.order_builder_hardcoded_time_diff))
 
     self.wanted_stop_date = self.wanted_start_date
@@ -374,13 +377,11 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
 
     self.wanted_quantity = 1.0
     self.wanted_start_date = DateTime(
-      str(self.datetime.earliestTime()
-          - self.max_delay
+      str(self.datetime - self.max_delay
           + self.order_builder_hardcoded_time_diff))
 
     self.wanted_stop_date = DateTime(
-      str(self.datetime.earliestTime()
-          + self.order_builder_hardcoded_time_diff))
+      str(self.datetime + self.order_builder_hardcoded_time_diff))
 
     sequence_list = SequenceList()
     sequence_list.addSequenceString(self.common_sequence_string)
@@ -394,8 +395,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
 
     self.wanted_quantity = 1.0
     self.wanted_start_date = DateTime(
-      str(self.datetime.earliestTime()
-          + self.order_builder_hardcoded_time_diff))
+      str(self.datetime + self.order_builder_hardcoded_time_diff))
 
     self.wanted_stop_date = self.wanted_start_date
 

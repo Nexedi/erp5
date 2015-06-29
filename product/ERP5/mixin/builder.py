@@ -182,7 +182,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                                    group_by_node=1,
                                                    group_by_section=0,
                                                    **kw)
-    id_count = 0
     # min_flow and max_delay are stored on a supply line. By default
     # we can get them through a method having the right supply type prefix
     # like getPurchaseSupplyLineMinFlow. So we need to guess the supply prefix
@@ -195,25 +194,30 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       supply_prefix = 'sale'
     else:
       supply_prefix = 'internal'
+
+    resource_portal_type_list = self.getResourcePortalTypeList()
+    def newMovement(inventory_item, resource):
+      # Create temporary movement
+      movement = newTempMovement(self.getPortalObject(), "temp")
+      dumb_movement = inventory_item.getObject()
+      resource_portal_type = resource.getPortalType()
+      assert resource_portal_type in (resource_portal_type_list), \
+        "Builder %r does not support resource of type : %r" % (
+        self.getRelativeUrl(), resource_portal_type)
+      movement.edit(
+          resource=inventory_item.resource_relative_url,
+          # XXX FIXME define on a supply line
+          # quantity_unit
+          quantity_unit=resource.getQuantityUnit(),
+          variation_category_list=dumb_movement.getVariationCategoryList(),
+          destination_value=self.getDestinationValue(),
+          resource_portal_type=resource_portal_type,
+          destination_section_value=self.getDestinationSectionValue())
+      return movement
+
     for inventory_item in sql_list:
       if (inventory_item.inventory is not None):
-        dumb_movement = inventory_item.getObject()
-        # Create temporary movement
-        movement = newTempMovement(self.getPortalObject(),
-                                   str(id_count))
-        id_count += 1
-        resource_portal_type_list = self.getResourcePortalTypeList()
         resource = portal.portal_catalog.getObject(inventory_item.resource_uid)
-        resource_portal_type = resource.getPortalType()
-        assert resource_portal_type in (resource_portal_type_list), \
-          "Builder %r does not support resource of type : %r" % (
-          self.getRelativeUrl(), resource_portal_type)
-        movement.edit(
-            resource=inventory_item.resource_relative_url,
-            variation_category_list=dumb_movement.getVariationCategoryList(),
-            destination_value=self.getDestinationValue(),
-            resource_portal_type=resource_portal_type,
-            destination_section_value=self.getDestinationSectionValue())
         # Get min_flow, max_delay on supply line
         min_flow = 0
         max_delay = 0
@@ -225,20 +229,38 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         if round(inventory_item.inventory, 5) < min_stock:
           stop_date = resource.getNextAlertInventoryDate(
                                reference_quantity=min_stock,
-                               variation_text=movement.getVariationText(),
+                               variation_text=inventory_item.variation_text,
                                from_date=DateTime(),
                                **kw)
           if stop_date != None:
+            movement = newMovement(inventory_item, resource)
             max_delay = resource.getMaxDelay(0)
             movement.edit(
-              start_date=DateTime(((stop_date-max_delay).Date())),
-              stop_date=DateTime(stop_date.Date()),
+              start_date=stop_date-max_delay,
+              stop_date=stop_date,
               quantity=max(min_flow, -inventory_item.inventory),
-              quantity_unit=resource.getQuantityUnit()
-              # XXX FIXME define on a supply line
-              # quantity_unit
             )
             movement_list.append(movement)
+        # We could need to cancel automated stock optimization if for some reasons
+        # previous optimisations are obsolete
+        elif round(inventory_item.inventory, 5) > min_stock:
+          delta = inventory_item.inventory - min_stock
+          optimized_inventory_list = portal.portal_simulation.getInventoryList(
+                               resource_uid=inventory_item.resource_uid,
+                               node_uid=inventory_item.node_uid,
+                               variation_text=inventory_item.variation_text,
+                               simulation_state="auto_planned",
+                               sort_on=[("date", "descending")],
+                               )
+          for optimized_inventory in optimized_inventory_list:
+            movement = newMovement(inventory_item, resource)
+            quantity = min(delta, optimized_inventory.inventory)
+            delta = delta - quantity
+            movement.edit(start_date=optimized_inventory.date,
+                          quantity=-quantity)
+            movement_list.append(movement)
+            if delta <= 0:
+              break
     return movement_list
 
   def _searchMovementList(self, **kw):
