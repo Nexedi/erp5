@@ -42,7 +42,7 @@ def DataStream_copyCSVToDataArray(self, chunk_list, start, end, \
   zarray = data_array.getArray()
   if zarray is None:
     # first time init
-    zarray = ZBigArray(ndarray.shape, ndarray.dtype)
+    zarray = ZBigArray((0,), ndarray.dtype)
     data_array.setArray(zarray)
     zarray = data_array.getArray()
 
