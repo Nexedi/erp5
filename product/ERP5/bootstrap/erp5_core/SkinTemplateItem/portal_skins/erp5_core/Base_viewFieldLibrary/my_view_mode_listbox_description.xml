@@ -12,6 +12,7 @@
               <list>
                 <string>css_class</string>
                 <string>default</string>
+                <string>editable</string>
                 <string>title</string>
               </list>
             </value>
@@ -96,6 +97,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_string_field</string> </value>
                 </item>
@@ -127,7 +132,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: (lambda x, y: x[:y-1] + [x[y-1]+"[...]"] if y < len(x) else x)(cell.getDescription().splitlines(), 5)
+python: (lambda x, y: "\\n".join(x[:y-1] + [x[y-1]+"[...]"] if y < len(x) else x))(cell.getDescription().splitlines(), 5)
 
 ]]></string> </value>
         </item>
