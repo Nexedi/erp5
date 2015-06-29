@@ -79,6 +79,8 @@ class Test(ERP5TypeTestCase):
     for my_list in list(chunks(range(0, 100001), 10)):
       number_string_list.append(','.join([str(x) for x in my_list]))
     real_data = '\n'.join(number_string_list)
+    # make sure real_data tail is also a full line
+    real_data += '\n'
 
     # create ingestion policy
     ingestion_policy = portal.portal_ingestion_policies.newContent( \
@@ -148,9 +150,9 @@ class Test(ERP5TypeTestCase):
     
     # test that extracted array contains same values as input CSV
     self.assertNotEqual(None, zarray)
-    self.assertEqual(99999.0, np.amax(zarray, axis=0))
+    self.assertEqual(100000.0, np.amax(zarray, axis=0))
     self.assertEqual(0.0, np.amin(zarray, axis=0))
-    self.assertEqual((100000,), zarray.shape)
+    self.assertEqual((100001,), zarray.shape)
     
   def test_02_Examples(self):
     """
