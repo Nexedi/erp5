@@ -889,7 +889,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         sub_object.text = str(property_value)
         # for a very specific case, action return the reference of transition,
         # but in XML should show the same expression as in DC workflow.
-        if vdef.getId() == 'variable_action' and property_id == 'default_expr':
+        if vdef.getId() == 'variable_action' and property_id == 'default_expr' and property_value != '':
           sub_object.text = str('transition/getId|nothing')
 
     # 4. Worklist as XML
