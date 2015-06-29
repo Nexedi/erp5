@@ -479,16 +479,17 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         variable.setReference(vdef.id)
         variable.setAutomaticUpdate(vdef.update_always)
         if getattr(vdef, 'default_expr', None) is not None:
-          variable.setDefaultExpr(vdef.default_expr.text)
+          # for a very specific case, action return the reference of transition
+          # in order to generation correct workflow history.
+          if vid == 'action':
+            LOG(" variable is '%s'"%vid, WARNING, " in WorkflowTool.py 485.")
+            variable.setDefaultExpr('transition/getReference|nothing')
+          else: variable.setDefaultExpr(vdef.default_expr.text)
         variable.info_guard = vdef.info_guard
         variable.setForCatalog(vdef.for_catalog)
         variable.setForStatus(vdef.for_status)
         variable.setInitialValue(vdef.default_value)
         variable.setDescription(vdef.description)
-        # for a very specific case, action return the reference of transition
-        # in order to generation correct workflow history.
-        if vid == 'action':
-          variable.setDefaultExpr('transition/getReference|nothing')
     return workflow
 
   def getChainDict(self):
