@@ -5739,6 +5739,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return argument_list[0];\n
   });\n
   declareMethod(JioProxyStorage, "get", checkId);\n
+  declareMethod(JioProxyStorage, "bulk");\n
   declareMethod(JioProxyStorage, "remove", checkId, function (argument_list) {\n
     return argument_list[0];\n
   });\n
@@ -5884,7 +5885,11 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   };\n
 \n
   JioProxyStorage.prototype.hasCapacity = function (name) {\n
-    var storage_method = this.__storage.hasCapacity;\n
+    var storage_method = this.__storage.hasCapacity,\n
+      capacity_method = this.__storage[name];\n
+    if (capacity_method !== undefined) {\n
+      return true;\n
+    }\n
     if ((storage_method === undefined) ||\n
         !storage_method.apply(this.__storage, arguments)) {\n
       throw new jIO.util.jIOError(\n
@@ -6578,7 +6583,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         });\n
     }\n
 \n
-    function checkLocalCreation(queue, source, destination, id, options) {\n
+    function checkLocalCreation(queue, source, destination, id, options,\n
+                                getMethod) {\n
       var remote_doc;\n
       queue\n
         .push(function () {\n
@@ -6598,7 +6604,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         .push(function () {\n
           // This document was never synced.\n
           // Push it to the remote storage and store sync information\n
-          return source.get(id);\n
+          return getMethod(id);\n
         })\n
         .push(function (doc) {\n
           var local_hash = generateHash(JSON.stringify(doc)),\n
@@ -6621,6 +6627,34 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           // Already exists on destination\n
           throw new jIO.util.jIOError("Conflict on \'" + id + "\'",\n
                                       409);\n
+        });\n
+    }\n
+\n
+    function checkBulkLocalCreation(queue, source, destination, id_list,\n
+                                    options) {\n
+      queue\n
+        .push(function () {\n
+          return source.bulk(id_list);\n
+        })\n
+        .push(function (result_list) {\n
+          var i,\n
+            sub_queue = new RSVP.Queue();\n
+\n
+          function getResult(j) {\n
+            return function (id) {\n
+              if (id !== id_list[j].parameter_list[0]) {\n
+                throw new Error("Does not access expected ID " + id);\n
+              }\n
+              return result_list[j];\n
+            };\n
+          }\n
+\n
+          for (i = 0; i < result_list.length; i += 1) {\n
+            checkLocalCreation(sub_queue, source, destination,\n
+                               id_list[i].parameter_list[0],\n
+                               options, getResult(i));\n
+          }\n
+          return sub_queue;\n
         });\n
     }\n
 \n
@@ -6723,6 +6757,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         .push(function (result_list) {\n
           var i,\n
             local_dict = {},\n
+            new_list = [],\n
             signature_dict = {},\n
             key;\n
           for (i = 0; i < result_list[0].data.total_rows; i += 1) {\n
@@ -6739,13 +6774,26 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
               signature_dict[result_list[1].data.rows[i].id] = i;\n
             }\n
           }\n
+\n
           if (options.check_creation === true) {\n
             for (key in local_dict) {\n
               if (local_dict.hasOwnProperty(key)) {\n
                 if (!signature_dict.hasOwnProperty(key)) {\n
-                  checkLocalCreation(queue, source, destination, key, options);\n
+                  if (options.use_bulk_get === true) {\n
+                    new_list.push({\n
+                      method: "get",\n
+                      parameter_list: [key]\n
+                    });\n
+                  } else {\n
+                    checkLocalCreation(queue, source, destination, key,\n
+                                       options, source.get.bind(source));\n
+                  }\n
                 }\n
               }\n
+            }\n
+            if ((options.use_bulk_get === true) && (new_list.length !== 0)) {\n
+              checkBulkLocalCreation(queue, source, destination, new_list,\n
+                                     options);\n
             }\n
           }\n
           for (key in signature_dict) {\n
@@ -6815,11 +6863,23 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         }\n
       })\n
       .push(function () {\n
+        // Autoactivate bulk if substorage implements it\n
+        // Keep it like this until the bulk API is stabilized\n
+        var use_bulk_get = false;\n
+        try {\n
+          use_bulk_get = context._remote_sub_storage.hasCapacity("bulk");\n
+        } catch (error) {\n
+          if (!((error instanceof jIO.util.jIOError) &&\n
+               (error.status_code === 501))) {\n
+            throw error;\n
+          }\n
+        }\n
         if (context._check_remote_modification ||\n
             context._check_remote_creation ||\n
             context._check_remote_deletion) {\n
           return pushStorage(context._remote_sub_storage,\n
                              context._local_sub_storage, {\n
+              use_bulk_get: use_bulk_get,\n
               check_modification: context._check_remote_modification,\n
               check_creation: context._check_remote_creation,\n
               check_deletion: context._check_remote_deletion\n
@@ -7841,15 +7901,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     "TextAreaField": null\n
   };\n
 \n
-  function extractPropertyFromForm(context, id) {\n
-    return context.getAttachment(id, "view")\n
-      .push(function (blob) {\n
-        return jIO.util.readBlobAsText(blob);\n
-      })\n
-      .push(function (evt) {\n
-        return JSON.parse(evt.target.result);\n
-      })\n
-      .push(function (json) {\n
+  function extractPropertyFromFormJSON(json) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
         var form = json._embedded._view,\n
           converted_json = {\n
             portal_type: json.portal_type\n
@@ -7887,6 +7941,19 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
       });\n
   }\n
 \n
+  function extractPropertyFromForm(context, id) {\n
+    return context.getAttachment(id, "view")\n
+      .push(function (blob) {\n
+        return jIO.util.readBlobAsText(blob);\n
+      })\n
+      .push(function (evt) {\n
+        return JSON.parse(evt.target.result);\n
+      })\n
+      .push(function (json) {\n
+        return extractPropertyFromFormJSON(json);\n
+      });\n
+  }\n
+\n
   // XXX docstring\n
   function ERP5Storage(spec) {\n
     if (typeof spec.url !== "string" || !spec.url) {\n
@@ -7897,20 +7964,75 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     this._default_view_reference = spec.default_view_reference;\n
   }\n
 \n
+  function convertJSONToGet(json) {\n
+    var key,\n
+      result = json.data;\n
+    // Remove all ERP5 hateoas links / convert them into jIO ID\n
+    for (key in result) {\n
+      if (result.hasOwnProperty(key)) {\n
+        if (!result[key]) {\n
+          delete result[key];\n
+        }\n
+      }\n
+    }\n
+    return result;\n
+  }\n
+\n
   ERP5Storage.prototype.get = function (id) {\n
     return extractPropertyFromForm(this, id)\n
       .push(function (result) {\n
-        var key;\n
-        result = result.data;\n
-        // Remove all ERP5 hateoas links / convert them into jIO ID\n
-        for (key in result) {\n
-          if (result.hasOwnProperty(key)) {\n
-            if (!result[key]) {\n
-              delete result[key];\n
-            }\n
+        return convertJSONToGet(result);\n
+      });\n
+  };\n
+\n
+  ERP5Storage.prototype.bulk = function (request_list) {\n
+    var i,\n
+      storage = this,\n
+      bulk_list = [];\n
+\n
+\n
+    for (i = 0; i < request_list.length; i += 1) {\n
+      if (request_list[i].method !== "get") {\n
+        throw new Error("ERP5Storage: not supported " +\n
+                        request_list[i].method + " in bulk");\n
+      }\n
+      bulk_list.push({\n
+        relative_url: request_list[i].parameter_list[0],\n
+        view: storage._default_view_reference\n
+      });\n
+    }\n
+    return getSiteDocument(storage)\n
+      .push(function (site_hal) {\n
+        var form_data = new FormData();\n
+        form_data.append("bulk_list", JSON.stringify(bulk_list));\n
+        return jIO.util.ajax({\n
+          "type": "POST",\n
+          "url": site_hal._actions.bulk.href,\n
+          "data": form_data,\n
+//           "headers": {\n
+//             "Content-Type": "application/json"\n
+//           },\n
+          "xhrFields": {\n
+            withCredentials: true\n
           }\n
+        });\n
+      })\n
+      .push(function (response) {\n
+        var result_list = [],\n
+          hateoas = JSON.parse(response.target.responseText);\n
+\n
+        function pushResult(json) {\n
+          json.portal_type = json._links.type.name;\n
+          return extractPropertyFromFormJSON(json)\n
+            .push(function (json2) {\n
+              return convertJSONToGet(json2);\n
+            });\n
         }\n
-        return result;\n
+\n
+        for (i = 0; i < hateoas.result_list.length; i += 1) {\n
+          result_list.push(pushResult(hateoas.result_list[i]));\n
+        }\n
+        return RSVP.all(result_list);\n
       });\n
   };\n
 \n
@@ -9341,7 +9463,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.49454.19396.29678</string> </value>
+                <value> <string>943.59862.59095.15223</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -9359,7 +9481,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1434614537.29</float>
+                        <float>1435594150.39</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
