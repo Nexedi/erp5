@@ -88,6 +88,7 @@ url_template_dict = {\n
                      "&default_param_json=%(default_param_json)s" \\\n
                      "{&query,select_list*,limit*}",\n
   "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",\n
+  "bulk_action": "%(root_url)s/%(script_id)s?mode=bulk",\n
   # XXX View is set by default to empty\n
   "document_hal": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
                   "&relative_url=%(relative_url)s",\n
@@ -109,18 +110,18 @@ def getFormRelativeUrl(form):\n
     select_dict={\'relative_url\': None}\n
   )[0].relative_url\n
 \n
-def getFieldDefault(field, key, value=None):\n
+def getFieldDefault(traversed_document, field, key, value=None):\n
   # REQUEST.get(field.id, field.get_value("default"))\n
   return traversed_document.Field_getDefaultValue(field, key, value, REQUEST)\n
 \n
-def renderField(field, form_relative_url, value=None, meta_type=None, key=None):\n
+def renderField(traversed_document, field, form_relative_url, value=None, meta_type=None, key=None):\n
   if meta_type is None:\n
     meta_type = field.meta_type\n
   if key is None:\n
     key = field.generate_field_key()\n
 \n
   if meta_type == "ProxyField":\n
-    result = renderField(field, form_relative_url, value, meta_type=field.getRecursiveTemplateField().meta_type, key=key)\n
+    result = renderField(traversed_document, field, form_relative_url, value, meta_type=field.getRecursiveTemplateField().meta_type, key=key)\n
   elif meta_type == "ListField":\n
     result = {\n
       "type": meta_type,\n
@@ -134,7 +135,7 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
       # XXX Message can not be converted to json as is\n
       "items": field.get_value("items"),\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"], value)\n
+    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)\n
   elif meta_type == "RadioField":\n
     result = {\n
       "type": meta_type,\n
@@ -149,7 +150,7 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
       "select_first_item": field.get_value("first_item"),\n
       "orientation": field.get_value("orientation"),\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"], value)\n
+    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)\n
   elif meta_type in ("ParallelListField", "MultiListField"):\n
     result = {\n
       "type": meta_type,\n
@@ -163,7 +164,7 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
       # XXX Message can not be converted to json as is\n
       "items": field.get_value("items"),\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"], value)\n
+    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)\n
     result["sub_select_key"] = traversed_document.Field_getSubFieldKeyDict(field, \'default:list\', key=result["key"])\n
     result["sub_input_key"] = "default_" + traversed_document.Field_getSubFieldKeyDict(field, \'default:list:int\', key=result["key"])\n
   elif meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",\n
@@ -179,7 +180,7 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
       "title": field.get_value("title"),\n
       "required": field.get_value("required"),\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"], value)\n
+    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)\n
     if meta_type == "FloatField":\n
       result["precision"] = field.get_value("precision")\n
     if meta_type == "ImageField":\n
@@ -212,7 +213,7 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
       "hide_day": field.get_value(\'hide_day\'),\n
       "hidden_day_is_last_day": field.get_value(\'hidden_day_is_last_day\'),\n
     }\n
-    date_value = getFieldDefault(field, result["key"], value)\n
+    date_value = getFieldDefault(traversed_document, field, result["key"], value)\n
     if same_type(date_value, DateTime()):\n
       # Serialize DateTime\n
       date_value = date_value.rfc822()\n
@@ -258,7 +259,7 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
       "title": field.get_value("title"),\n
       "required": field.get_value("required")\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"], value)\n
+    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)\n
     result["relation_field_id"] = traversed_document.Field_getSubFieldKeyDict(\n
       field,\n
       "relation",\n
@@ -285,7 +286,7 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
       "description": field.get_value("description"),\n
       "title": field.get_value("title")\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"], value)\n
+    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)\n
   elif meta_type == "GadgetField":\n
     result = {\n
       "type": meta_type,\n
@@ -298,7 +299,7 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
       "url": field.get_value("gadget_url"),\n
       "sandbox": field.get_value("js_sandbox"),\n
     }\n
-    result["default"] = getFieldDefault(field, result["key"], value)\n
+    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)\n
   elif meta_type == "ListBox":\n
     # XXX Not implemented\n
     column_list = field.get_value("columns")\n
@@ -398,7 +399,7 @@ def renderField(field, form_relative_url, value=None, meta_type=None, key=None):
   return result\n
 \n
 \n
-def renderForm(form, response_dict):\n
+def renderForm(traversed_document, form, response_dict):\n
   REQUEST.set(\'here\', traversed_document)\n
   field_errors = REQUEST.get(\'field_errors\', {})\n
 \n
@@ -451,7 +452,7 @@ def renderForm(form, response_dict):\n
 #         field_list.append((field.id, renderRawField(field)))\n
         if field.get_value("enabled"):\n
           try:\n
-            response_dict[field.id] = renderField(field, form_relative_url)\n
+            response_dict[field.id] = renderField(traversed_document, field, form_relative_url)\n
             if field_errors.has_key(field.id):\n
               response_dict[field.id]["error_text"] = field_errors[field.id].error_text\n
           except AttributeError:\n
@@ -543,12 +544,6 @@ def renderFormDefinition(form, response_dict):\n
   response_dict["action"] = form.action\n
 \n
 \n
-  \n
-  \n
-\n
-\n
-context.Base_prepareCorsResponse(RESPONSE=response)\n
-\n
 mime_type = \'application/hal+json\'\n
 portal = context.getPortalObject()\n
 sql_catalog = portal.portal_catalog.getSQLCatalog()\n
@@ -563,454 +558,500 @@ else:\n
   site_root = portal\n
   view_action_type = "object_view"\n
 \n
+context.Base_prepareCorsResponse(RESPONSE=response)\n
+\n
 # Check if traversed_document is the site_root\n
 if relative_url:\n
-  traversed_document = site_root.restrictedTraverse(relative_url, None)\n
-  if (traversed_document is None):\n
+  temp_traversed_document = site_root.restrictedTraverse(relative_url, None)\n
+  if (temp_traversed_document is None):\n
     response.setStatus(404)\n
     return ""\n
 else:\n
-  traversed_document = context\n
-is_site_root = (traversed_document.getPath() == site_root.getPath())\n
-is_portal = (traversed_document.getPath() == portal.getPath())\n
+  temp_traversed_document = context\n
+temp_is_site_root = (temp_traversed_document.getPath() == site_root.getPath())\n
+temp_is_portal = (temp_traversed_document.getPath() == portal.getPath())\n
 \n
-result_dict = {\n
-  \'_debug\': mode,\n
-  \'_links\': {\n
-    "self": {\n
-      # XXX Include query parameters\n
-      "href": traversed_document.Base_getRequestUrl()\n
-    },\n
-    # Always inform about site root\n
-    "site_root": {\n
-      "href": default_document_uri_template % {\n
-        "root_url": site_root.absolute_url(),\n
-        "relative_url": site_root.getRelativeUrl(),\n
-        "script_id": script.id\n
+def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None, REQUEST=None,\n
+                     response=None, view=None, mode=None, query=None,\n
+                     select_list=None, limit=None, form=None,\n
+                     relative_url=None, restricted=None, list_method=None,\n
+                     default_param_json=None, form_relative_url=None):\n
+\n
+  if relative_url:\n
+    try:\n
+      traversed_document = site_root.restrictedTraverse(str(relative_url))\n
+      view = str(view)\n
+      is_site_root = False\n
+    except:\n
+      raise NotImplementedError(relative_url)\n
+  result_dict = {\n
+    \'_debug\': mode,\n
+    \'_links\': {\n
+      "self": {\n
+        # XXX Include query parameters\n
+        # FIXME does not work in case of bulk queries\n
+        "href": traversed_document.Base_getRequestUrl()\n
       },\n
-      "name": site_root.getTitle(),\n
-    },\n
-    # Always inform about portal\n
-    "portal": {\n
-      "href": default_document_uri_template % {\n
-        "root_url": portal.absolute_url(),\n
-        # XXX the portal has an empty getRelativeUrl. Make it still compatible\n
-        # with restrictedTraverse\n
-        "relative_url": portal.getId(),\n
-        "script_id": script.id\n
+      # Always inform about site root\n
+      "site_root": {\n
+        "href": default_document_uri_template % {\n
+          "root_url": site_root.absolute_url(),\n
+          "relative_url": site_root.getRelativeUrl(),\n
+          "script_id": script.id\n
+        },\n
+        "name": site_root.getTitle(),\n
       },\n
-      "name": portal.getTitle(),\n
+      # Always inform about portal\n
+      "portal": {\n
+        "href": default_document_uri_template % {\n
+          "root_url": portal.absolute_url(),\n
+          # XXX the portal has an empty getRelativeUrl. Make it still compatible\n
+          # with restrictedTraverse\n
+          "relative_url": portal.getId(),\n
+          "script_id": script.id\n
+        },\n
+        "name": portal.getTitle(),\n
+      }\n
     }\n
   }\n
-}\n
-\n
-if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):\n
-  response.setStatus(401)\n
-\n
-elif mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):\n
-  response.setStatus(406)\n
-  return ""\n
-\n
-\n
-elif (mode == \'root\') or (mode == \'traverse\'):\n
-  #################################################\n
-  # Raw document\n
-  #################################################\n
-  if REQUEST.other[\'method\'] != "GET":\n
-    response.setStatus(405)\n
+  \n
+  \n
+  if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):\n
+    response.setStatus(401)\n
+  \n
+  elif mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):\n
+    response.setStatus(406)\n
     return ""\n
-  # Default properties shared by all ERP5 Document and Site\n
-  action_dict = {}\n
-#   result_dict[\'_relative_url\'] = traversed_document.getRelativeUrl()\n
-  result_dict[\'title\'] = traversed_document.getTitle()\n
-\n
-  # Add a link to the portal type if possible\n
-  if not is_portal:\n
-    result_dict[\'_links\'][\'type\'] = {\n
-      "href": default_document_uri_template % {\n
-        "root_url": site_root.absolute_url(),\n
-        "relative_url": portal.portal_types[traversed_document.getPortalType()]\\\n
-                          .getRelativeUrl(), \n
-        "script_id": script.id\n
-      },\n
-      "name": traversed_document.getPortalType(),\n
-    }\n
-    \n
-  # Return info about container\n
-  if not is_portal:\n
-    container = traversed_document.getParentValue()\n
-    if container != portal:\n
-      # Jio does not support fetching the root document for now\n
-      result_dict[\'_links\'][\'parent\'] = {\n
+  \n
+  \n
+  elif (mode == \'root\') or (mode == \'traverse\'):\n
+    #################################################\n
+    # Raw document\n
+    #################################################\n
+    if (REQUEST is not None) and (REQUEST.other[\'method\'] != "GET"):\n
+      response.setStatus(405)\n
+      return ""\n
+    # Default properties shared by all ERP5 Document and Site\n
+    action_dict = {}\n
+  #   result_dict[\'_relative_url\'] = traversed_document.getRelativeUrl()\n
+    result_dict[\'title\'] = traversed_document.getTitle()\n
+  \n
+    # Add a link to the portal type if possible\n
+    if not is_portal:\n
+      result_dict[\'_links\'][\'type\'] = {\n
         "href": default_document_uri_template % {\n
           "root_url": site_root.absolute_url(),\n
-          "relative_url": container.getRelativeUrl(), \n
+          "relative_url": portal.portal_types[traversed_document.getPortalType()]\\\n
+                            .getRelativeUrl(), \n
           "script_id": script.id\n
         },\n
-        "name": container.getTitle(),\n
+        "name": traversed_document.getPortalType(),\n
       }\n
-\n
-  # XXX Loop on form rendering\n
-  erp5_action_dict = portal.Base_filterDuplicateActions(\n
-    portal.portal_actions.listFilteredActionsFor(traversed_document))\n
-\n
-  embedded_url = None\n
-  # XXX See ERP5Type.getDefaultViewFor\n
-  for erp5_action_key in erp5_action_dict.keys():\n
-    erp5_action_list = []\n
-    for view_action in erp5_action_dict[erp5_action_key]:\n
-      # Action condition is probably checked in Base_filterDuplicateActions\n
-      erp5_action_list.append({\n
-        \'href\': \'%s\' % view_action[\'url\'],\n
-        \'name\': view_action[\'id\'],\n
-        \'title\': view_action[\'title\']\n
-      })\n
-      # Try to embed the form in the result\n
-      if (view == view_action[\'id\']):\n
-        embedded_url = \'%s\' % view_action[\'url\']\n
-        \n
-      if (erp5_action_key in (view_action_type, "view", "workflow", "object_new_content_action")):\n
-        erp5_action_list[-1][\'href\'] = url_template_dict["traverse_generator"] % {\n
-              "root_url": site_root.absolute_url(),\n
-              "script_id": script.id,\n
-              "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),\n
-              "view": erp5_action_list[-1][\'name\']\n
-            }\n
-\n
-    if erp5_action_list:\n
-      if len(erp5_action_list) == 1:\n
-        erp5_action_list = erp5_action_list[0]\n
-        \n
-      if erp5_action_key == view_action_type:\n
-        # Configure view tabs on server level\n
-        result_dict[\'_links\']["view"] = erp5_action_list\n
-        \n
-      # XXX Put a prefix to prevent conflict\n
-      result_dict[\'_links\']["action_" + erp5_action_key] = erp5_action_list\n
-\n
-#   for view_action in erp5_action_dict.get(\'object_view\', []):\n
-#     traversed_document.log(view_action)\n
-#     # XXX Check the action condition\n
-# #     if (view is None) or (view != view_action[\'name\']):\n
-#     object_view_list.append({\n
-#       \'href\': \'%s\' % view_action[\'url\'],\n
-#       \'name\': view_action[\'name\']\n
-#     })\n
-\n
-\n
-#   if (renderer_form is not None):\n
-#     traversed_document_property_dict, renderer_form_json = traversed_document.Base_renderFormAsSomething(renderer_form)\n
-#     result_dict[\'_embedded\'] = {\n
-#       \'object_view\': renderer_form_json\n
-#     }\n
-#     result_dict.update(traversed_document_property_dict)\n
-\n
-  # XXX XXX XXX XXX\n
-  if (embedded_url is not None):\n
-    # XXX Try to fetch the form in the traversed_document of the document\n
-    # Of course, this code will completely crash in many cases (page template\n
-    # instead of form, unexpected action TALES expression). Happy debugging.\n
-    # renderer_form_relative_url = view_action[\'url\'][len(portal.absolute_url()):]\n
-    form_id = embedded_url.split(\'?\', 1)[0].split("/")[-1]\n
-    # renderer_form = traversed_document.restrictedTraverse(form_id, None)\n
-    # XXX Proxy field are not correctly handled in traversed_document of web site\n
-    renderer_form = getattr(traversed_document, form_id)\n
-#     traversed_document.log(form_id)\n
-    if (renderer_form is not None):\n
-      embedded_dict = {\n
-        \'_links\': {\n
-          \'self\': {\n
-            \'href\': embedded_url\n
-          }\n
-        }\n
-      }\n
-      # Put all query parameters (?reset:int=1&workflow_action=start_action) in request to mimic usual form display\n
-      query_split = embedded_url.split(\'?\', 1)\n
-      if len(query_split) == 2:\n
-        for query_parameter in query_split[1].split("&"):\n
-          query_key, query_value = query_parameter.split("=")\n
-          REQUEST.set(query_key, query_value)\n
-\n
-      renderForm(renderer_form, embedded_dict)\n
-      result_dict[\'_embedded\'] = {\n
-        \'_view\': embedded_dict\n
-        # embedded_action_key: embedded_dict\n
-      }\n
-#       result_dict[\'_links\']["_view"] = {"href": embedded_url}\n
-\n
-      # Include properties in document JSON\n
-      # XXX Extract from renderer form?\n
-      """\n
-      for group in renderer_form.Form_getGroupTitleAndId():\n
-        for field in renderer_form.get_fields_in_group(group[\'goid\']):\n
-          field_id = field.id\n
-#           traversed_document.log(field_id)\n
-          if field_id.startswith(\'my_\'):\n
-            property_name = field_id[len(\'my_\'):]\n
-#             traversed_document.log(property_name)\n
-            property_value = traversed_document.getProperty(property_name, d=None)\n
-            if (property_value is not None):\n
-              if same_type(property_value, DateTime()):\n
-                # Serialize DateTime\n
-                property_value = property_value.rfc822()\n
-              result_dict[property_name] = property_value \n
-              """\n
-\n
-  ##############\n
-  # XXX Custom slapos code\n
-  ##############\n
-  if is_site_root:\n
-\n
-    result_dict[\'default_view\'] = \'view\'\n
-    # XXX Hardcoded cache for 30 minutes. Should only bother developers but speed up Jio access\n
-    response.setHeader("Cache-Control", "public, max-age=1800")\n
-    response.setHeader("Vary", "Cookie")\n
-    response.setHeader("Last-Modified", DateTime().rfc822())\n
-    REQUEST.set("X-HATEOAS-CACHE", 1)\n
-\n
-    # Global action users for the jIO plugin\n
-    # XXX Would be better to not hardcode them but put them as portal type\n
-    # "actions" (search could be on portal_catalog document, traverse on all\n
-    # documents, newContent on all, etc)\n
-#     result_dict[\'_links\'][\'object_search\'] = {\n
-#       \'href\': \'%s/ERP5Site_viewSearchForm?portal_skin=Hal\' % absolute_url,\n
-#       \'name\': \'Global Search\'\n
-#     }\n
-    result_dict[\'_links\'][\'raw_search\'] = {\n
-      "href": url_template_dict["search_template"] % {\n
-        "root_url": site_root.absolute_url(),\n
-        "script_id": script.id\n
-      },\n
-      \'name\': \'Raw Search\',\n
-      \'templated\': True\n
-    }\n
-    result_dict[\'_links\'][\'traverse\'] = {\n
-      "href": url_template_dict["traverse_template"] % {\n
-        "root_url": site_root.absolute_url(),\n
-        "script_id": script.id\n
-      },\n
-      \'name\': \'Traverse\',\n
-      \'templated\': True\n
-    }\n
-    action_dict[\'add\'] = {\n
-      "href": url_template_dict["new_content_action"] % {\n
-        "root_url": site_root.absolute_url(),\n
-        "script_id": script.id\n
-      },\n
-      \'method\': \'POST\',\n
-      \'name\': \'New Content\',\n
-    }\n
-\n
-    # Handle also other kind of users: instance, computer, master\n
-    person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-    if person is not None:\n
-      result_dict[\'_links\'][\'me\'] = {\n
-        "href": default_document_uri_template % {\n
-          "root_url": site_root.absolute_url(),\n
-          "relative_url": person.getRelativeUrl(), \n
-          "script_id": script.id\n
-        },\n
-#         \'_relative_url\': person.getRelativeUrl()\n
-      }\n
-\n
-  else:\n
-    traversed_document_portal_type = traversed_document.getPortalType()\n
-    if traversed_document_portal_type == "ERP5 Form":\n
-      renderFormDefinition(traversed_document, result_dict)\n
-      REQUEST.set("X-HATEOAS-CACHE", 1)\n
-\n
-  # Define document action\n
-  if action_dict:\n
-    result_dict[\'_actions\'] = action_dict\n
-\n
-\n
-elif mode == \'search\':\n
-  #################################################\n
-  # Portal catalog search\n
-  #################################################\n
-  if REQUEST.other[\'method\'] != "GET":\n
-    response.setStatus(405)\n
-    return ""\n
-\n
-  if query == "__root__":\n
-    # XXX Hardcoded behaviour to get root object with jIO\n
-    sql_list = [site_root]\n
-\n
-  elif query == "__portal__":\n
-    # XXX Hardcoded behaviour to get portal object with jIO\n
-    sql_list = [portal]\n
-\n
-#     document = site_root\n
-#     document_result = {\n
-# #       \'_relative_url\': site_root.getRelativeUrl(),\n
-#       \'_links\': {\n
-#         \'self\': {\n
-#           "href": default_document_uri_template % {\n
-#             "root_url": site_root.absolute_url(),\n
-#             "relative_url": document.getRelativeUrl(), \n
-#             "script_id": script.id\n
-#           },\n
-#         },\n
-#       }\n
-#     }\n
-#     for select in select_list:\n
-#       document_result[select] = document.getProperty(select, d=None)\n
-#     result_dict[\'_embedded\'] = {"contents": [document_result]}\n
-  else:\n
-#     raise NotImplementedError("Unsupported query: %s" % query)\n
-    \n
-\n
-#   # XXX\n
-#   length = len(\'/%s/\' % portal.getId())\n
-#   # context.log(portal.portal_catalog(full_text=query, limit=limit, src__=1))\n
-#   context.log(query)\n
-    catalog_kw = {}\n
-    if (default_param_json is not None):\n
-      catalog_kw = json.loads(urlsafe_b64decode(default_param_json))\n
-    if (list_method is None):\n
-      callable_list_method = portal.portal_catalog\n
-    else:\n
-      callable_list_method = getattr(traversed_document, list_method)\n
-    if query:\n
-      sql_list = callable_list_method(full_text=query, limit=limit, **catalog_kw)\n
-    else:\n
-      sql_list = callable_list_method(limit=limit, **catalog_kw)\n
-\n
-  result_list = []\n
-\n
-#   if (select_list is None):\n
-#     # Only include links\n
-#     for sql_document in sql_list:\n
-#       document = sql_document.getObject()\n
-#       result_list.append({\n
-#         "href": default_document_uri_template % {\n
-#           "root_url": site_root.absolute_url(),\n
-#           "relative_url": document.getRelativeUrl(), \n
-#           "script_id": script.id\n
-#         },\n
-#       })\n
-#     result_dict[\'_links\'][\'contents\'] = result_list\n
-# \n
-#   else:\n
-\n
-  # Cast to list if only one element is provided\n
-  editable_field_dict = {}\n
-  if select_list is None:\n
-    select_list = []\n
-  elif same_type(select_list, ""):\n
-    select_list = [select_list]\n
-\n
-  if select_list:\n
-    if (form_relative_url is not None):\n
-      listbox_field = portal.restrictedTraverse(form_relative_url)\n
-      listbox_field_id = listbox_field.id\n
-      # XXX Proxy field are not correctly handled in traversed_document of web site\n
-      listbox_form = getattr(traversed_document, listbox_field.aq_parent.id)\n
-      for select in select_list:\n
-        # See Listbox.py getEditableField method\n
-        if listbox_form.has_field("%s_%s" % (listbox_field_id, select), include_disabled=1):\n
-          editable_field_dict[select] = listbox_form.get_field("%s_%s" % (listbox_field_id, select), include_disabled=1)\n
-\n
-  for sql_document in sql_list:\n
-    try:\n
-      document = sql_document.getObject()\n
-    except AttributeError:\n
-      # XXX ERP5 Site is not an ERP5 document\n
-      document = sql_document\n
-    document_uid = document.getUid()\n
-    document_result = {\n
-#       \'_relative_url\': sql_document.path[length:],\n
-      \'_links\': {\n
-        \'self\': {\n
+      \n
+    # Return info about container\n
+    if not is_portal:\n
+      container = traversed_document.getParentValue()\n
+      if container != portal:\n
+        # Jio does not support fetching the root document for now\n
+        result_dict[\'_links\'][\'parent\'] = {\n
           "href": default_document_uri_template % {\n
             "root_url": site_root.absolute_url(),\n
-            # XXX ERP5 Site is not an ERP5 document\n
-            "relative_url": getRealRelativeUrl(document) or document.getId(), \n
+            "relative_url": container.getRelativeUrl(), \n
             "script_id": script.id\n
           },\n
+          "name": container.getTitle(),\n
+        }\n
+  \n
+    # XXX Loop on form rendering\n
+    erp5_action_dict = portal.Base_filterDuplicateActions(\n
+      portal.portal_actions.listFilteredActionsFor(traversed_document))\n
+  \n
+    embedded_url = None\n
+    # XXX See ERP5Type.getDefaultViewFor\n
+    for erp5_action_key in erp5_action_dict.keys():\n
+      erp5_action_list = []\n
+      for view_action in erp5_action_dict[erp5_action_key]:\n
+        # Action condition is probably checked in Base_filterDuplicateActions\n
+        erp5_action_list.append({\n
+          \'href\': \'%s\' % view_action[\'url\'],\n
+          \'name\': view_action[\'id\'],\n
+          \'title\': view_action[\'title\']\n
+        })\n
+        # Try to embed the form in the result\n
+        if (view == view_action[\'id\']):\n
+          embedded_url = \'%s\' % view_action[\'url\']\n
+          \n
+        if (erp5_action_key in (view_action_type, "view", "workflow", "object_new_content_action")):\n
+          erp5_action_list[-1][\'href\'] = url_template_dict["traverse_generator"] % {\n
+                "root_url": site_root.absolute_url(),\n
+                "script_id": script.id,\n
+                "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),\n
+                "view": erp5_action_list[-1][\'name\']\n
+              }\n
+  \n
+      if erp5_action_list:\n
+        if len(erp5_action_list) == 1:\n
+          erp5_action_list = erp5_action_list[0]\n
+          \n
+        if erp5_action_key == view_action_type:\n
+          # Configure view tabs on server level\n
+          result_dict[\'_links\']["view"] = erp5_action_list\n
+          \n
+        # XXX Put a prefix to prevent conflict\n
+        result_dict[\'_links\']["action_" + erp5_action_key] = erp5_action_list\n
+  \n
+  #   for view_action in erp5_action_dict.get(\'object_view\', []):\n
+  #     traversed_document.log(view_action)\n
+  #     # XXX Check the action condition\n
+  # #     if (view is None) or (view != view_action[\'name\']):\n
+  #     object_view_list.append({\n
+  #       \'href\': \'%s\' % view_action[\'url\'],\n
+  #       \'name\': view_action[\'name\']\n
+  #     })\n
+  \n
+  \n
+  #   if (renderer_form is not None):\n
+  #     traversed_document_property_dict, renderer_form_json = traversed_document.Base_renderFormAsSomething(renderer_form)\n
+  #     result_dict[\'_embedded\'] = {\n
+  #       \'object_view\': renderer_form_json\n
+  #     }\n
+  #     result_dict.update(traversed_document_property_dict)\n
+  \n
+    # XXX XXX XXX XXX\n
+    if (embedded_url is not None):\n
+      # XXX Try to fetch the form in the traversed_document of the document\n
+      # Of course, this code will completely crash in many cases (page template\n
+      # instead of form, unexpected action TALES expression). Happy debugging.\n
+      # renderer_form_relative_url = view_action[\'url\'][len(portal.absolute_url()):]\n
+      form_id = embedded_url.split(\'?\', 1)[0].split("/")[-1]\n
+      # renderer_form = traversed_document.restrictedTraverse(form_id, None)\n
+      # XXX Proxy field are not correctly handled in traversed_document of web site\n
+      renderer_form = getattr(traversed_document, form_id)\n
+  #     traversed_document.log(form_id)\n
+      if (renderer_form is not None):\n
+        embedded_dict = {\n
+          \'_links\': {\n
+            \'self\': {\n
+              \'href\': embedded_url\n
+            }\n
+          }\n
+        }\n
+        # Put all query parameters (?reset:int=1&workflow_action=start_action) in request to mimic usual form display\n
+        query_split = embedded_url.split(\'?\', 1)\n
+        if len(query_split) == 2:\n
+          for query_parameter in query_split[1].split("&"):\n
+            query_key, query_value = query_parameter.split("=")\n
+            REQUEST.set(query_key, query_value)\n
+  \n
+        renderForm(traversed_document, renderer_form, embedded_dict)\n
+        result_dict[\'_embedded\'] = {\n
+          \'_view\': embedded_dict\n
+          # embedded_action_key: embedded_dict\n
+        }\n
+  #       result_dict[\'_links\']["_view"] = {"href": embedded_url}\n
+  \n
+        # Include properties in document JSON\n
+        # XXX Extract from renderer form?\n
+        """\n
+        for group in renderer_form.Form_getGroupTitleAndId():\n
+          for field in renderer_form.get_fields_in_group(group[\'goid\']):\n
+            field_id = field.id\n
+  #           traversed_document.log(field_id)\n
+            if field_id.startswith(\'my_\'):\n
+              property_name = field_id[len(\'my_\'):]\n
+  #             traversed_document.log(property_name)\n
+              property_value = traversed_document.getProperty(property_name, d=None)\n
+              if (property_value is not None):\n
+                if same_type(property_value, DateTime()):\n
+                  # Serialize DateTime\n
+                  property_value = property_value.rfc822()\n
+                result_dict[property_name] = property_value \n
+                """\n
+  \n
+    ##############\n
+    # XXX Custom slapos code\n
+    ##############\n
+    if is_site_root:\n
+  \n
+      result_dict[\'default_view\'] = \'view\'\n
+      # XXX Hardcoded cache for 30 minutes. Should only bother developers but speed up Jio access\n
+      response.setHeader("Cache-Control", "public, max-age=1800")\n
+      response.setHeader("Vary", "Cookie")\n
+      response.setHeader("Last-Modified", DateTime().rfc822())\n
+      REQUEST.set("X-HATEOAS-CACHE", 1)\n
+  \n
+      # Global action users for the jIO plugin\n
+      # XXX Would be better to not hardcode them but put them as portal type\n
+      # "actions" (search could be on portal_catalog document, traverse on all\n
+      # documents, newContent on all, etc)\n
+  #     result_dict[\'_links\'][\'object_search\'] = {\n
+  #       \'href\': \'%s/ERP5Site_viewSearchForm?portal_skin=Hal\' % absolute_url,\n
+  #       \'name\': \'Global Search\'\n
+  #     }\n
+      result_dict[\'_links\'][\'raw_search\'] = {\n
+        "href": url_template_dict["search_template"] % {\n
+          "root_url": site_root.absolute_url(),\n
+          "script_id": script.id\n
         },\n
+        \'name\': \'Raw Search\',\n
+        \'templated\': True\n
       }\n
-    }\n
-    if editable_field_dict:\n
-      document_result[\'listbox_uid:list\'] = {\n
-        \'key\': "%s_uid:list" % listbox_field_id,\n
-        \'value\': document_uid\n
+      result_dict[\'_links\'][\'traverse\'] = {\n
+        "href": url_template_dict["traverse_template"] % {\n
+          "root_url": site_root.absolute_url(),\n
+          "script_id": script.id\n
+        },\n
+        \'name\': \'Traverse\',\n
+        \'templated\': True\n
       }\n
-    for select in select_list:\n
-      if editable_field_dict.has_key(select):\n
-        REQUEST.set(\'cell\', document)\n
-\n
-        if (\'default\' in editable_field_dict[select].tales):\n
-          tmp_value = None\n
-        else:\n
-          tmp_value = document.getProperty(select, d=None)\n
-\n
-        property_value = renderField(editable_field_dict[select], form_relative_url,\n
-                                     tmp_value,\n
-                                     key=\'field_%s_%s\' % (editable_field_dict[select].id,\n
-                                     document_uid))\n
-        REQUEST.other.pop(\'cell\', None)\n
+      action_dict[\'add\'] = {\n
+        "href": url_template_dict["new_content_action"] % {\n
+          "root_url": site_root.absolute_url(),\n
+          "script_id": script.id\n
+        },\n
+        \'method\': \'POST\',\n
+        \'name\': \'New Content\',\n
+      }\n
+      action_dict[\'bulk\'] = {\n
+        "href": url_template_dict["bulk_action"] % {\n
+          "root_url": site_root.absolute_url(),\n
+          "script_id": script.id\n
+        },\n
+        \'method\': \'POST\',\n
+        \'name\': \'Bulk\'\n
+      }\n
+  \n
+      # Handle also other kind of users: instance, computer, master\n
+      person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+      if person is not None:\n
+        result_dict[\'_links\'][\'me\'] = {\n
+          "href": default_document_uri_template % {\n
+            "root_url": site_root.absolute_url(),\n
+            "relative_url": person.getRelativeUrl(), \n
+            "script_id": script.id\n
+          },\n
+  #         \'_relative_url\': person.getRelativeUrl()\n
+        }\n
+  \n
+    else:\n
+      traversed_document_portal_type = traversed_document.getPortalType()\n
+      if traversed_document_portal_type == "ERP5 Form":\n
+        renderFormDefinition(traversed_document, result_dict)\n
+        REQUEST.set("X-HATEOAS-CACHE", 1)\n
+  \n
+    # Define document action\n
+    if action_dict:\n
+      result_dict[\'_actions\'] = action_dict\n
+  \n
+  \n
+  elif mode == \'search\':\n
+    #################################################\n
+    # Portal catalog search\n
+    #################################################\n
+    if REQUEST.other[\'method\'] != "GET":\n
+      response.setStatus(405)\n
+      return ""\n
+  \n
+    if query == "__root__":\n
+      # XXX Hardcoded behaviour to get root object with jIO\n
+      sql_list = [site_root]\n
+  \n
+    elif query == "__portal__":\n
+      # XXX Hardcoded behaviour to get portal object with jIO\n
+      sql_list = [portal]\n
+  \n
+  #     document = site_root\n
+  #     document_result = {\n
+  # #       \'_relative_url\': site_root.getRelativeUrl(),\n
+  #       \'_links\': {\n
+  #         \'self\': {\n
+  #           "href": default_document_uri_template % {\n
+  #             "root_url": site_root.absolute_url(),\n
+  #             "relative_url": document.getRelativeUrl(), \n
+  #             "script_id": script.id\n
+  #           },\n
+  #         },\n
+  #       }\n
+  #     }\n
+  #     for select in select_list:\n
+  #       document_result[select] = document.getProperty(select, d=None)\n
+  #     result_dict[\'_embedded\'] = {"contents": [document_result]}\n
+    else:\n
+  #     raise NotImplementedError("Unsupported query: %s" % query)\n
+      \n
+  \n
+  #   # XXX\n
+  #   length = len(\'/%s/\' % portal.getId())\n
+  #   # context.log(portal.portal_catalog(full_text=query, limit=limit, src__=1))\n
+  #   context.log(query)\n
+      catalog_kw = {}\n
+      if (default_param_json is not None):\n
+        catalog_kw = json.loads(urlsafe_b64decode(default_param_json))\n
+      if (list_method is None):\n
+        callable_list_method = portal.portal_catalog\n
       else:\n
-        property_value = document.getProperty(select, d=None)\n
-      if property_value is not None:\n
-        if same_type(property_value, DateTime()):\n
-          # Serialize DateTime\n
-          property_value = property_value.rfc822()\n
-        document_result[select] = property_value\n
-    result_list.append(document_result)\n
-  result_dict[\'_embedded\'] = {"contents": result_list}\n
-\n
-  result_dict[\'_query\'] = query\n
-  result_dict[\'_limit\'] = limit\n
-  result_dict[\'_select_list\'] = select_list\n
-\n
-elif mode == \'form\':\n
-  #################################################\n
-  # Calculate form value\n
-  #################################################\n
-  if REQUEST.other[\'method\'] != "POST":\n
-    response.setStatus(405)\n
-    return ""\n
-\n
-  renderForm(form, result_dict)\n
-\n
-elif mode == \'newContent\':\n
-  #################################################\n
-  # Create new document\n
-  #################################################\n
-  if REQUEST.other[\'method\'] != "POST":\n
-    response.setStatus(405)\n
-    return ""\n
-  portal_type = REQUEST.form["portal_type"]\n
-  parent_relative_url = REQUEST.form["parent_relative_url"]\n
-  # First, try to validate the data on a temp document\n
-  parent = portal.restrictedTraverse(parent_relative_url)\n
-  # module = portal.getDefaultModule(portal_type=portal_type)\n
-  document = parent.newContent(\n
-    portal_type=portal_type\n
-  )\n
-  # http://en.wikipedia.org/wiki/Post/Redirect/Get\n
-  response.setStatus(201)\n
-  response.setHeader("X-Location",\n
-    default_document_uri_template % {\n
-      "root_url": site_root.absolute_url(),\n
-      "relative_url": document.getRelativeUrl(),\n
-      "script_id": script.id\n
-    })\n
-  return \'\'\n
-\n
-else:\n
-  raise NotImplementedError("Unsupported mode %s" % mode)\n
+        callable_list_method = getattr(traversed_document, list_method)\n
+      if query:\n
+        sql_list = callable_list_method(full_text=query, limit=limit, **catalog_kw)\n
+      else:\n
+        sql_list = callable_list_method(limit=limit, **catalog_kw)\n
+  \n
+    result_list = []\n
+  \n
+  #   if (select_list is None):\n
+  #     # Only include links\n
+  #     for sql_document in sql_list:\n
+  #       document = sql_document.getObject()\n
+  #       result_list.append({\n
+  #         "href": default_document_uri_template % {\n
+  #           "root_url": site_root.absolute_url(),\n
+  #           "relative_url": document.getRelativeUrl(), \n
+  #           "script_id": script.id\n
+  #         },\n
+  #       })\n
+  #     result_dict[\'_links\'][\'contents\'] = result_list\n
+  # \n
+  #   else:\n
+  \n
+    # Cast to list if only one element is provided\n
+    editable_field_dict = {}\n
+    if select_list is None:\n
+      select_list = []\n
+    elif same_type(select_list, ""):\n
+      select_list = [select_list]\n
+  \n
+    if select_list:\n
+      if (form_relative_url is not None):\n
+        listbox_field = portal.restrictedTraverse(form_relative_url)\n
+        listbox_field_id = listbox_field.id\n
+        # XXX Proxy field are not correctly handled in traversed_document of web site\n
+        listbox_form = getattr(traversed_document, listbox_field.aq_parent.id)\n
+        for select in select_list:\n
+          # See Listbox.py getEditableField method\n
+          if listbox_form.has_field("%s_%s" % (listbox_field_id, select), include_disabled=1):\n
+            editable_field_dict[select] = listbox_form.get_field("%s_%s" % (listbox_field_id, select), include_disabled=1)\n
+  \n
+    for sql_document in sql_list:\n
+      try:\n
+        document = sql_document.getObject()\n
+      except AttributeError:\n
+        # XXX ERP5 Site is not an ERP5 document\n
+        document = sql_document\n
+      document_uid = document.getUid()\n
+      document_result = {\n
+  #       \'_relative_url\': sql_document.path[length:],\n
+        \'_links\': {\n
+          \'self\': {\n
+            "href": default_document_uri_template % {\n
+              "root_url": site_root.absolute_url(),\n
+              # XXX ERP5 Site is not an ERP5 document\n
+              "relative_url": getRealRelativeUrl(document) or document.getId(), \n
+              "script_id": script.id\n
+            },\n
+          },\n
+        }\n
+      }\n
+      if editable_field_dict:\n
+        document_result[\'listbox_uid:list\'] = {\n
+          \'key\': "%s_uid:list" % listbox_field_id,\n
+          \'value\': document_uid\n
+        }\n
+      for select in select_list:\n
+        if editable_field_dict.has_key(select):\n
+          REQUEST.set(\'cell\', document)\n
+  \n
+          if (\'default\' in editable_field_dict[select].tales):\n
+            tmp_value = None\n
+          else:\n
+            tmp_value = document.getProperty(select, d=None)\n
+  \n
+          property_value = renderField(traversed_document, editable_field_dict[select], form_relative_url,\n
+                                       tmp_value,\n
+                                       key=\'field_%s_%s\' % (editable_field_dict[select].id,\n
+                                       document_uid))\n
+          REQUEST.other.pop(\'cell\', None)\n
+        else:\n
+          property_value = document.getProperty(select, d=None)\n
+        if property_value is not None:\n
+          if same_type(property_value, DateTime()):\n
+            # Serialize DateTime\n
+            property_value = property_value.rfc822()\n
+          document_result[select] = property_value\n
+      result_list.append(document_result)\n
+    result_dict[\'_embedded\'] = {"contents": result_list}\n
+  \n
+    result_dict[\'_query\'] = query\n
+    result_dict[\'_limit\'] = limit\n
+    result_dict[\'_select_list\'] = select_list\n
+  \n
+  elif mode == \'form\':\n
+    #################################################\n
+    # Calculate form value\n
+    #################################################\n
+    if REQUEST.other[\'method\'] != "POST":\n
+      response.setStatus(405)\n
+      return ""\n
+  \n
+    renderForm(traversed_document, form, result_dict)\n
+  \n
+  elif mode == \'newContent\':\n
+    #################################################\n
+    # Create new document\n
+    #################################################\n
+    if REQUEST.other[\'method\'] != "POST":\n
+      response.setStatus(405)\n
+      return ""\n
+    portal_type = REQUEST.form["portal_type"]\n
+    parent_relative_url = REQUEST.form["parent_relative_url"]\n
+    # First, try to validate the data on a temp document\n
+    parent = portal.restrictedTraverse(parent_relative_url)\n
+    # module = portal.getDefaultModule(portal_type=portal_type)\n
+    document = parent.newContent(\n
+      portal_type=portal_type\n
+    )\n
+    # http://en.wikipedia.org/wiki/Post/Redirect/Get\n
+    response.setStatus(201)\n
+    response.setHeader("X-Location",\n
+      default_document_uri_template % {\n
+        "root_url": site_root.absolute_url(),\n
+        "relative_url": document.getRelativeUrl(),\n
+        "script_id": script.id\n
+      })\n
+    return \'\'\n
+  \n
+  elif mode == \'bulk\':\n
+    #################################################\n
+    # Return multiple documents in one request\n
+    #################################################\n
+    if REQUEST.other[\'method\'] != "POST":\n
+      response.setStatus(405)\n
+      return ""\n
+    result_dict["result_list"] = [calculateHateoas(mode="traverse", **x) for x in json.loads(bulk_list)]\n
+  \n
+  else:\n
+    raise NotImplementedError("Unsupported mode %s" % mode)\n
+  \n
+  return result_dict\n
 \n
 response.setHeader(\'Content-Type\', mime_type)\n
-return json.dumps(result_dict, indent=2)\n
+hateoas = calculateHateoas(is_portal=temp_is_portal, is_site_root=temp_is_site_root,\n
+                           traversed_document=temp_traversed_document,\n
+                           REQUEST=REQUEST, response=response, view=view, mode=mode,\n
+                           query=query, select_list=select_list, limit=limit, form=form,\n
+                           restricted=restricted, list_method=list_method,\n
+                           default_param_json=default_param_json,\n
+                           form_relative_url=form_relative_url)\n
+if hateoas == "":\n
+  return hateoas\n
+else:\n
+  return json.dumps(hateoas, indent=2)\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, restricted=0, list_method=None, default_param_json=None, form_relative_url=None</string> </value>
+            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, restricted=0, list_method=None, default_param_json=None, form_relative_url=None, bulk_list="[]"</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
