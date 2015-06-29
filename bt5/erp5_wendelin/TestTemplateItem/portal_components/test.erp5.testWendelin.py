@@ -150,8 +150,7 @@ class Test(ERP5TypeTestCase):
     self.assertNotEqual(None, zarray)
     self.assertEqual(99999.0, np.amax(zarray, axis=0))
     self.assertEqual(0.0, np.amin(zarray, axis=0))
-    # failing in array shape, not investigated why
-    self.assertEqual((99999,), zarray.shape)
+    self.assertEqual((100000,), zarray.shape)
     
   def test_02_Examples(self):
     """
