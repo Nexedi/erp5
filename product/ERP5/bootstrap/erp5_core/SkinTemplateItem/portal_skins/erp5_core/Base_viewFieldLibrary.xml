@@ -145,6 +145,7 @@
                         <string>my_dialog_mode_title</string>
                         <string>my_dialog_mode_text_content</string>
                         <string>my_view_mode_listbox_category</string>
+                        <string>my_view_mode_listbox_description</string>
                       </list>
                     </value>
                 </item>
