@@ -149,11 +149,8 @@ class Test(ERP5TypeTestCase):
     np.average(zarray)
     
     # test that extracted array contains same values as input CSV
-    self.assertNotEqual(None, zarray)
-    self.assertEqual(100000.0, np.amax(zarray, axis=0))
-    self.assertEqual(0.0, np.amin(zarray, axis=0))
-    self.assertEqual((100001,), zarray.shape)
-    
+    self.assertTrue(np.array_equal(zarray, np.arange(100001)))
+
   def test_02_Examples(self):
     """
       Test we can use python scientific libraries by using directly created
