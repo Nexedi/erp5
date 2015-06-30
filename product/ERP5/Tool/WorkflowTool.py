@@ -271,10 +271,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     temp_workflow_list = []
     temp_workflow_id_list = []
     for dc_workflow in self.getPortalObject().portal_workflow.objectValues():
-      LOG( "Getting workflow '%s'"%dc_workflow.id, WARNING, " in WorkflowTool.py 257")
       workflow_type = dc_workflow.__class__.__name__
       if workflow_type == 'Workflow' or workflow_type == 'Interaction Workflow':
-        LOG( "Ingore workflow '%s'"%dc_workflow.id, WARNING, " in WorkflowTool.py 260")
         continue
       temp_workflow = self.dc_workflow_asERP5Object(self, dc_workflow, temp_obj)
       temp_workflow_list.append(temp_workflow)
@@ -294,8 +292,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       workflow = container.newContent(id=new_id, portal_type='Workflow', temp_object=temp)
       workflow.setStateVariable(dc_workflow.state_var)
       workflow.setWorkflowManagedPermission(dc_workflow.permissions)
-
-
     else:
       if temp == 0:
         new_id = 'interactionworkflow_' + dc_workflow.id
@@ -312,7 +308,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     workflow.edit(title=dc_workflow.title)
     workflow.edit(description=dc_workflow.description)
 
-    if temp == 0: # convert under request only
+    if temp == 0:
       # create transitions
       if workflow_type_id == 'DCWorkflowDefinition':
         for tid in dc_workflow.transitions:
@@ -362,12 +358,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
               pr_cell = state.newContent(id='cell_%s_%s'%(i,j), portal_type='PermissionRoles')
               if permission in permission_roles and role in permission_roles[permission]:
                 pr_cell.is_selected = 1
-
         # Set Workflow default state using category setter
         state_path = getattr(workflow, 'state_'+dc_workflow.initial_state).getPath()
         state_path = 'source/' + '/'.join(state_path.split('/')[2:])
         workflow.setCategoryList([state_path])
-
         # set state's possible transitions:
         for sid in dc_workflow.states:
           sdef = workflow._getOb('state_'+sid)
@@ -377,7 +371,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             tr_path = 'destination/' + '/'.join(tr_path.split('/')[2:])
             new_category.append(tr_path)
           sdef.setCategoryList(new_category)
-
         # set transition's destination state:
         for tid in dc_workflow.transitions:
           tdef = workflow._getOb('transition_'+tid)
@@ -387,7 +380,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             continue
           state_path = 'destination/' + '/'.join(state.getPath().split('/')[2:])
           tdef.setCategoryList([state_path])
-
         # create worklists (portal_type = Worklist)
         for qid in dc_workflow.worklists:
           qdef = dc_workflow.worklists.get(qid)
@@ -460,7 +452,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           interaction.setTriggerOncePerTransaction(tdef.once_per_transaction)
           interaction.setTriggerType(tdef.trigger_type)
           interaction.setDescription(tdef.description)
-  
       # create scripts (portal_type = Workflow Script)
       for script_id in dc_workflow.scripts:
         script = dc_workflow.scripts.get(script_id)
@@ -482,7 +473,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           # for a very specific case, action return the reference of transition
           # in order to generation correct workflow history.
           if vid == 'action':
-            LOG(" variable is '%s'"%vid, WARNING, " in WorkflowTool.py 485.")
             variable.setDefaultExpr('transition/getReference|nothing')
           else: variable.setDefaultExpr(vdef.default_expr.text)
         variable.info_guard = vdef.info_guard
@@ -490,6 +480,22 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         variable.setForStatus(vdef.for_status)
         variable.setInitialValue(vdef.default_value)
         variable.setDescription(vdef.description)
+      # configure transition variable
+      for tid in dc_workflow.transitions:
+        origin_tdef = dc_workflow.transitions[tid]
+        transition = workflow._getOb('transition_'+tid)
+        new_category = []
+        if origin_tdef.var_exprs is None:
+          var_exprs = {}
+        else: var_exprs = origin_tdef.var_exprs
+        LOG("transition '%s' has var_exprs '%s'"%(origin_tdef.__dict__, var_exprs), WARNING, " in WorkflowTool.py 496")
+        for key in var_exprs:
+          tr_var = transition.newContent(portal_type='Transition Variable', temp_object=temp)
+          tr_var.setDefaultExpr(var_exprs[key])
+          tr_var_path = getattr(workflow, 'variable_'+key).getPath()
+          tr_var_path = 'causality/' + '/'.join(tr_path.split('/')[2:])
+          new_category.append(tr_var_path)
+          tr_var.setCausalityList(tr_var_path_list)
     return workflow
 
   def getChainDict(self):
