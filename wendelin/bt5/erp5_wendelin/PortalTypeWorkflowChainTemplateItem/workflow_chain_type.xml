@@ -49,7 +49,7 @@
  </chain>
  <chain>
   <type>Data Stream</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>data_stream_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Data Supply</type>
