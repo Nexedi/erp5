@@ -491,11 +491,11 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         LOG("transition '%s' has var_exprs '%s'"%(origin_tdef.__dict__, var_exprs), WARNING, " in WorkflowTool.py 496")
         for key in var_exprs:
           tr_var = transition.newContent(portal_type='Transition Variable', temp_object=temp)
-          tr_var.setDefaultExpr(var_exprs[key])
+          tr_var.setDefaultExpr(var_exprs[key].text)
           tr_var_path = getattr(workflow, 'variable_'+key).getPath()
-          tr_var_path = 'causality/' + '/'.join(tr_path.split('/')[2:])
+          tr_var_path = '/'.join(tr_var_path.split('/')[2:])
           new_category.append(tr_var_path)
-          tr_var.setCausalityList(tr_var_path_list)
+          tr_var.setCausalityList(new_category)
     return workflow
 
   def getChainDict(self):
