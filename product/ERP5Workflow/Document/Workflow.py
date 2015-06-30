@@ -810,7 +810,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     transition_prop_id_to_show = ['title', 'description', 'new_state_id',
       'trigger_type', 'script_name', 'after_script_name', 'actbox_category',
       'actbox_icon', 'actbox_name', 'actbox_url', 'roles', 'groups',
-      'permissions', 'expr']
+      'permissions', 'expr', 'transition_variable']
     for tdef in self.objectValues(portal_type='Transition'):
       transition_reference_list.append(tdef.getReference())
     transitions = SubElement(workflow, 'transitions',
@@ -821,6 +821,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             attrib=dict(reference=tdef.getReference(),
             portal_type=tdef.getPortalType()))
       guard = SubElement(transition, 'guard', attrib=dict(type='object'))
+      transition_variables = SubElement(transition, 'transition_variables', attrib=dict(type='object'))
       for property_id in sorted(transition_prop_id_to_show):
         if property_id in ('roles', 'groups', 'permissions', 'expr',):
           if property_id == 'roles':
@@ -857,6 +858,12 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
             else:
               property_value = self._getOb(tdef.getAfterScriptIdList()[0]).getReference()
             sub_object = SubElement(transition, property_id, attrib=dict(type='string'))
+          elif property_id =='transition_variable':
+            tr_var_list = tdef.objectValues(portal_type='Transition Variable')
+            for tr_var in tr_var_list:
+              reference = self._getOb(tr_var.getCausalityId()).getReference()
+              transition_variable = SubElement(transition_variables, property_id, attrib=dict(id=reference,type='variable'))
+              transition_variable.text = str(tr_var.getDefaultExpr())
           else:
             property_value = tdef.getProperty(property_id)
             property_type = tdef.getPropertyType(property_id)
