@@ -99,6 +99,7 @@ class Test(ERP5TypeTestCase):
     # create new Data Stream for test purposes
     data_stream = portal.data_stream_module.newContent( \
                    portal_type='Data Stream', \
+                   version = '001', \
                    reference=reference)
     data_stream.validate()
     
@@ -129,7 +130,6 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(real_data, data_stream_data)
     
     # try sample transformation
-    reference = 'test-data-array- %s' %reference
     data_array = portal.data_array_module.newContent(
                                             portal_type='Data Array',
                                             reference = reference,
@@ -150,7 +150,7 @@ class Test(ERP5TypeTestCase):
     
     # test that extracted array contains same values as input CSV
     self.assertTrue(np.array_equal(zarray, np.arange(100001)))
-
+    
   def test_02_Examples(self):
     """
       Test we can use python scientific libraries by using directly created
