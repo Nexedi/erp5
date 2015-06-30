@@ -20,6 +20,7 @@ Data Release | edit_workflow
 Data Release | validation_workflow
 Data Set | edit_workflow
 Data Set | validation_workflow
+Data Stream | data_stream_interaction_workflow
 Data Stream | edit_workflow
 Data Stream | validation_workflow
 Data Supply Line | edit_workflow
