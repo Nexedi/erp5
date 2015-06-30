@@ -278,8 +278,13 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
 
   security.declarePrivate('doActionFor')
-  def doActionFor(self, document, action, *args, **kw):
+  def doActionFor(self, document, action, comment='', **kw):
+    '''
+    Allows the user to request a workflow action.  This method
+    must perform its own security checks.
+    '''
     sdef = self._getWorkflowStateOf(document, id_only=0)
+    kw['comment'] = comment
     if sdef is None:
       raise WorkflowException(_(u'Object is in an undefined state.'))
     if self.isActionSupported(document, action, **kw):
@@ -297,7 +302,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       raise WorkflowException(msg)
     if not self._checkTransitionGuard(tdef, document, **kw):
       raise Unauthorized(action)
-    self._changeStateOf(document, tdef)
+    self._changeStateOf(document, tdef, kw)
 
   def _changeStateOf(self, document, tdef=None, kwargs=None):
     '''
@@ -642,11 +647,18 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
       state_values = {}
 
     if state_values is None: state_values = {}
-    tdef_exprs = None
+    tdef_exprs = {}
     if tdef is not None:
-      tdef_exprs = tdef.objectValues(portal_type='Variable')
-    if tdef_exprs is None: tdef_exprs = {}
+      transition_variable_list = tdef.objectValues(portal_type='Transition Variable')
+    for transition_variable in transition_variable_list:
+      tdef_exprs[transition_variable.getCausalityId()] = transition_variable.getDefaultExpr()
+      if tdef_exprs[transition_variable.getCausalityId()] is None:
+        tdef_exprs[transition_variable.getCausalityId()] = self._getOb(transition_variable.getCausalityId()).getDefaultExpr()
 
+    # Update all transition variables
+    if form_kw is not None:
+      object.REQUEST.other.update(form_kw)
+      kwargs = form_kw
     for vdef in self.objectValues(portal_type='Variable'):
       id = vdef.getId()
       id_no_suffix = vdef.getReference()
@@ -657,9 +669,9 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         value = state_values[id_no_suffix]
       elif id in tdef_exprs:
         expr = tdef_exprs[id]
-      elif not vdef.update_always and id in former_status:
+      elif not vdef.update_always and id_no_suffix in former_status:
         # Preserve former value
-        value = former_status[id]
+        value = former_status[id_no_suffix]
       else:
         if vdef.getDefaultExpr() is not None:
           expr = vdef.getDefaultExpr()
@@ -695,12 +707,6 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
     # update state
     status_dict[state_var] = new_state
     object = self.getStateChangeInformation(document, current_state_value, transition=self)
-    # Update all transition variables
-    if form_kw is not None:
-      object.REQUEST.other.update(form_kw)
-
-    for variable in self.objectValues(portal_type='Transition Variable'):
-      status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
 
     tool.setStatusOf(self.getReference(), document, status_dict)
     self.updateRoleMappingsFor(document)
