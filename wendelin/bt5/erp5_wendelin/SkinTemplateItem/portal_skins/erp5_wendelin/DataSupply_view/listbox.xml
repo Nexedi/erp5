@@ -86,11 +86,11 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>source_section_title</string>
+                          <string>source_title</string>
                           <string>Source</string>
                         </tuple>
                         <tuple>
-                          <string>destination_section_title</string>
+                          <string>destination_title</string>
                           <string>Destination</string>
                         </tuple>
                       </list>
