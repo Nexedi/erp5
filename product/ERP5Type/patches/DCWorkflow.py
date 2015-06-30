@@ -888,7 +888,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
   transition_prop_id_to_show = {'title':'string', 'description':'text',
     'new_state_id':'string', 'trigger_type':'int', 'script_name':'string',
     'after_script_name':'string', 'actbox_category':'string', 'actbox_icon':'string',
-    'actbox_name':'string', 'actbox_url':'string', 'guard':'string'}
+    'actbox_name':'string', 'actbox_url':'string', 'guard':'string', 'transition_variable':'object'}
 
   for tid in transition_id_list:
     transition_reference_list.append(tid)
@@ -900,6 +900,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
     transition = SubElement(transitions, 'transition',
           attrib=dict(reference=tid, portal_type='Transition'))
     guard = SubElement(transition, 'guard', attrib=dict(type='object'))
+    transition_variables = SubElement(transition, 'transition_variables', attrib=dict(type='object'))
     for property_id in sorted(transition_prop_id_to_show):
       if property_id == 'guard':
         guard_obj = getattr(tdef, 'guard', None)
@@ -915,6 +916,14 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
           if prop_value is None or prop_value == [] or prop_value ==():
             prop_value = ''
           sub_object.text = str(prop_value)
+      elif property_id == 'transition_variable':
+        if tdef.var_exprs is not None:
+          tr_var_list = tdef.var_exprs
+        else:
+          tr_var_list = {}
+        for tr_var in tr_var_list:
+          transition_variable = SubElement(transition_variables, property_id, attrib=dict(id=tr_var,type='variable'))
+          transition_variable.text = str(tr_var_list[tr_var].text)
       else:
         property_value = getattr(tdef, property_id)
         property_type = transition_prop_id_to_show[property_id]
