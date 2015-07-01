@@ -213,7 +213,7 @@ class CaptchaWidget(Widget.TextWidget):
                                    css_class=field.get_value('css_class'),
                                    size=10)
     # HTML page having a captcha field should never be cached.
-    REQUEST.RESPONSE.setHeader('Cache-Control', 'max-age=0')
+    REQUEST.RESPONSE.setHeader('Cache-Control', 'max-age=0, no-store')
     return captcha_field + key_field + splitter + answer
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
