@@ -1,4 +1,7 @@
 Data Array | DataArray
+Data Operation | Predicate
 Data Product | DefaultImage
+Data Release | Predicate
+Data Set | Predicate
 Data Stream | OffsetIndex
 Ingestion Policy | IngestionPolicy
