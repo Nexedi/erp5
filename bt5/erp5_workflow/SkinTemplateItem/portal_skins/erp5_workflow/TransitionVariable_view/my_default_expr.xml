@@ -237,7 +237,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Expression (Override Default Value If Set)</string> </value>
+                    <value> <string>Expression (Override Default Value if Set)</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
