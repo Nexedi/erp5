@@ -58,7 +58,6 @@ class Test(ERP5TypeTestCase):
     # here, you can create the categories and objects your test will depend on
     pass
   
-  
   def stepSetupIngestion(self, reference):
     """
       Generic step.
@@ -106,7 +105,7 @@ class Test(ERP5TypeTestCase):
                                             version = '001')
     data_array.validate()
     self.tic()
-                                      
+
     return ingestion_policy, data_supply, data_stream, data_array
   
   def test_0_import(self): 		 
@@ -168,32 +167,48 @@ class Test(ERP5TypeTestCase):
 
     reference = getRandomString()
     number_string_list = []
-    for my_list in list(chunks(range(0, 100001), 10)):
+    for my_list in list(chunks(range(0, 10001), 10)):
       number_string_list.append(','.join([str(x) for x in my_list]))
     real_data = '\n'.join(number_string_list)
     # make sure real_data tail is also a full line
     real_data += '\n'
 
     ingestion_policy, data_supply, data_stream, data_array = self.stepSetupIngestion(reference)
+    data_stream.appendData(real_data)
+    self.tic()
     
+    self.assertEqual(None, data_array.getArray())
+
     # override DataStream_transformTail to actually do transformation on appenData
+    start = data_stream.getSize()
     script_id = 'DataStream_transformTail'
-    script_content_list = ['**kw', """
+    script_content_list = ['', """
 # created by testWendelin.test_01_1_IngestionTail
-context.DataStream_transform(\
-        chunk_length = 10450, \
-        transform_script_id = 'DataStream_copyCSVToDataArray',
-        data_array_reference = context.getReference())"""]
+start = %s
+end  = %s
+context.activate().DataStream_readChunkListAndTransform( \
+  start, \
+  end, \
+  %s, \
+  transform_script_id = 'DataStream_copyCSVToDataArray', \
+  data_array_reference=context.getReference())""" %(start, start + 10450, 10450)]
     createZODBPythonScript(portal.portal_skins.custom, script_id, *script_content_list)
+    
+    number_string_list = []
+    for my_list in list(chunks(range(10001, 200001), 10)):
+      number_string_list.append(','.join([str(x) for x in my_list]))
+    real_data = '\n'.join(number_string_list)
+    # make sure real_data tail is also a full line
+    real_data += '\n'
       
-    # append data to Data Stream and check array.
+    # append data to Data Stream and check array which should be feed now.
     data_stream.appendData(real_data)
     self.tic()
     
     # test that extracted array contains same values as input CSV
     zarray = data_array.getArray()
-    self.assertEqual(np.average(zarray), np.average(np.arange(100001)))
-    self.assertTrue(np.array_equal(zarray, np.arange(100001)))
+    self.assertEqual(np.average(zarray), np.average(np.arange(10001, 200001)))
+    self.assertTrue(np.array_equal(zarray, np.arange(10001, 200001)))
     
     # clean up script
     portal.portal_skins.custom.manage_delObjects([script_id,])
@@ -235,14 +250,12 @@ context.DataStream_transform(\
     new_array = np.arange(1,17).reshape((4,4))
     persistent_zbig_array[:,:] = new_array
     self.assertEquals(new_array.shape, persistent_zbig_array.shape)
-
-    # (enable when new wendelin.core released as it can kill system)
     self.assertTrue(np.array_equal(new_array, persistent_zbig_array))
     
     # test set element in zbig array
     persistent_zbig_array[:2, 2] = 0
     self.assertFalse(np.array_equal(new_array, persistent_zbig_array))
 
-    # resize Zbig Array (enable when new wendelin.core released as it can kill system)
+    # resize Zbig Array
     persistent_zbig_array = np.resize(persistent_zbig_array, (100,100))
     self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
