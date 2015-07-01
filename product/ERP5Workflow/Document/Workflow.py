@@ -689,6 +689,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           econtext = Expression_createExprContext(sci)
         expr = Expression(expr)
         value = expr(econtext)
+      if value is None or value == 'None': value = ''
       status_dict[id_no_suffix] = value
 
     # Do not proceed in case of failure of before script
