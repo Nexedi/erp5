@@ -26,6 +26,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from wendelin.bigarray.array_zodb import ZBigArray
 from DateTime import DateTime
 import msgpack
@@ -57,31 +58,13 @@ class Test(ERP5TypeTestCase):
     # here, you can create the categories and objects your test will depend on
     pass
   
-  def test_0_import(self): 		 
-    """ 		 
-    Test we can import certain libraries but still failure to do so should be a  		 
-    a test step failure rather than global test failure. 		 
-    """ 		 
-    import scipy 		 
-    import sklearn
-    import pandas
-    
-  def test_01_IngestionFromFluentd(self):
+  
+  def stepSetupIngestion(self, reference):
     """
-    Test ingestion using a POST Request containing a msgpack encoded message
-    simulating input from fluentd
+      Generic step.
     """
     now = DateTime()
     portal = self.portal
-    request = portal.REQUEST
-    
-    reference = getRandomString()
-    number_string_list = []
-    for my_list in list(chunks(range(0, 100001), 10)):
-      number_string_list.append(','.join([str(x) for x in my_list]))
-    real_data = '\n'.join(number_string_list)
-    # make sure real_data tail is also a full line
-    real_data += '\n'
 
     # create ingestion policy
     ingestion_policy = portal.portal_ingestion_policies.newContent( \
@@ -116,7 +99,43 @@ class Test(ERP5TypeTestCase):
     data_supply = ingestion_policy.PortalIngestionPolicy_addDataSupply( \
                                       data_supply_kw, \
                                       data_supply_line_kw)
+    
+    data_array = portal.data_array_module.newContent(
+                                            portal_type='Data Array',
+                                            reference = reference,
+                                            version = '001')
+    data_array.validate()
     self.tic()
+                                      
+    return ingestion_policy, data_supply, data_stream, data_array
+  
+  def test_0_import(self): 		 
+    """ 		 
+    Test we can import certain libraries but still failure to do so should be a  		 
+    a test step failure rather than global test failure. 		 
+    """ 		 
+    import scipy 		 
+    import sklearn
+    import pandas
+    
+  def test_01_IngestionFromFluentd(self):
+    """
+    Test ingestion using a POST Request containing a msgpack encoded message
+    simulating input from fluentd.
+    """
+    portal = self.portal
+    request = portal.REQUEST
+    
+    reference = getRandomString()
+    number_string_list = []
+    for my_list in list(chunks(range(0, 100001), 10)):
+      number_string_list.append(','.join([str(x) for x in my_list]))
+    real_data = '\n'.join(number_string_list)
+    # make sure real_data tail is also a full line
+    real_data += '\n'
+
+    ingestion_policy, data_supply, data_stream, data_array = \
+      self.stepSetupIngestion(reference)
     
     # simulate fluentd by setting proper values in REQUEST
     request.method = 'POST'
@@ -125,19 +144,10 @@ class Test(ERP5TypeTestCase):
     request.set('data_chunk', data_chunk)
     ingestion_policy.ingest()
     
-    # ingestion handler script saves new data using new line so we 
-    # need to remove it, it also stringifies thus we need to
     data_stream_data = data_stream.getData()
     self.assertEqual(real_data, data_stream_data)
     
     # try sample transformation
-    data_array = portal.data_array_module.newContent(
-                                            portal_type='Data Array',
-                                            reference = reference,
-                                            version = '001')
-    data_array.validate()
-    self.tic()
-    
     data_stream.DataStream_transform(\
         chunk_length = 10450, \
         transform_script_id = 'DataStream_copyCSVToDataArray',
@@ -145,12 +155,49 @@ class Test(ERP5TypeTestCase):
 
     self.tic()
     
-    # test some numpy operations
+    # test that extracted array contains same values as input CSV
     zarray = data_array.getArray()
-    np.average(zarray)
+    self.assertEqual(np.average(zarray), np.average(np.arange(100001)))
+    self.assertTrue(np.array_equal(zarray, np.arange(100001)))
+    
+  def test_01_1_IngestionTail(self):
+    """
+    Test real time convertion to a numpy array by appending data to a data stream.
+    """
+    portal = self.portal
+
+    reference = getRandomString()
+    number_string_list = []
+    for my_list in list(chunks(range(0, 100001), 10)):
+      number_string_list.append(','.join([str(x) for x in my_list]))
+    real_data = '\n'.join(number_string_list)
+    # make sure real_data tail is also a full line
+    real_data += '\n'
+
+    ingestion_policy, data_supply, data_stream, data_array = self.stepSetupIngestion(reference)
+    
+    # override DataStream_transformTail to actually do transformation on appenData
+    script_id = 'DataStream_transformTail'
+    script_content_list = ['**kw', """
+# created by testWendelin.test_01_1_IngestionTail
+context.DataStream_transform(\
+        chunk_length = 10450, \
+        transform_script_id = 'DataStream_copyCSVToDataArray',
+        data_array_reference = context.getReference())"""]
+    createZODBPythonScript(portal.portal_skins.custom, script_id, *script_content_list)
+      
+    # append data to Data Stream and check array.
+    data_stream.appendData(real_data)
+    self.tic()
     
     # test that extracted array contains same values as input CSV
+    zarray = data_array.getArray()
+    self.assertEqual(np.average(zarray), np.average(np.arange(100001)))
     self.assertTrue(np.array_equal(zarray, np.arange(100001)))
+    
+    # clean up script
+    portal.portal_skins.custom.manage_delObjects([script_id,])
+    self.tic()
     
   def test_02_Examples(self):
     """
