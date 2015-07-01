@@ -481,21 +481,22 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         variable.setInitialValue(vdef.default_value)
         variable.setDescription(vdef.description)
       # configure transition variable
-      for tid in dc_workflow.transitions:
-        origin_tdef = dc_workflow.transitions[tid]
-        transition = workflow._getOb('transition_'+tid)
-        new_category = []
-        if origin_tdef.var_exprs is None:
-          var_exprs = {}
-        else: var_exprs = origin_tdef.var_exprs
-        LOG("transition '%s' has var_exprs '%s'"%(origin_tdef.__dict__, var_exprs), WARNING, " in WorkflowTool.py 496")
-        for key in var_exprs:
-          tr_var = transition.newContent(portal_type='Transition Variable', temp_object=temp)
-          tr_var.setDefaultExpr(var_exprs[key].text)
-          tr_var_path = getattr(workflow, 'variable_'+key).getPath()
-          tr_var_path = '/'.join(tr_var_path.split('/')[2:])
-          new_category.append(tr_var_path)
-          tr_var.setCausalityList(new_category)
+      if dc_workflow.transitions is not None:
+        for tid in dc_workflow.transitions:
+          origin_tdef = dc_workflow.transitions[tid]
+          transition = workflow._getOb('transition_'+tid)
+          new_category = []
+          if origin_tdef.var_exprs is None:
+            var_exprs = {}
+          else: var_exprs = origin_tdef.var_exprs
+          LOG("transition '%s' has var_exprs '%s'"%(origin_tdef.__dict__, var_exprs), WARNING, " in WorkflowTool.py 496")
+          for key in var_exprs:
+            tr_var = transition.newContent(portal_type='Transition Variable', temp_object=temp)
+            tr_var.setDefaultExpr(var_exprs[key].text)
+            tr_var_path = getattr(workflow, 'variable_'+key).getPath()
+            tr_var_path = '/'.join(tr_var_path.split('/')[2:])
+            new_category.append(tr_var_path)
+            tr_var.setCausalityList(new_category)
     return workflow
 
   def getChainDict(self):
