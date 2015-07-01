@@ -124,6 +124,7 @@
     PAGE_DIALOG = "dialog",\n
     PAGE_HISTORY = "history",\n
     PAGE_NEW_CONTACT = "subscribe",\n
+    PAGE_PASSWORD = "password",\n
     DEFAULT_PAGE = PAGE_CONTACT,\n
     CONNECTION_GADGET_URL = "./gadget_jabberconnection.html",\n
     CONNECTION_GADGET_SCOPE = "connection",\n
@@ -139,6 +140,10 @@
       result = -1;\n
     } else if (b.new_message && (!a.new_message)) {\n
       result = 1;\n
+    } else if (a.status && (!b.status)) {\n
+      result = -1;\n
+    } else if (b.status && (!a.status)) {\n
+      result = 1;\n
     } else if (b.jid < a.jid) {\n
       result = 1;\n
     } else if (a.jid < b.jid) {\n
@@ -149,6 +154,13 @@
     return result;\n
   }\n
 \n
+  function validatePassword(password1, password2) {\n
+    if(password1 === password2) {\n
+      return true;\n
+    } else {\n
+      return false;\n
+    }\n
+  }\n
   function initializeContact(gadget, jid) {\n
     if (!(gadget.props.contact_dict.hasOwnProperty(jid))) {\n
       gadget.props.contact_dict[jid] = {\n
@@ -296,39 +308,36 @@
     return RSVP.Queue()\n
       .push(function () {\n
         var promise_list = [\n
+          gadget.aq_pleasePublishMyState({page: PAGE_PASSWORD}),\n
           gadget.aq_pleasePublishMyState({page: PAGE_NEW_CONTACT})\n
         ],\n
           key;\n
         for (key in contact_dict) {\n
-          if (contact_dict.hasOwnProperty(key) &&\n
-              ((!contact_dict[key].offline) || (!contact_dict[key].read))) {\n
-            promise_list.push(\n
-              gadget.aq_pleasePublishMyState({page: PAGE_DIALOG, jid: key})\n
-            );\n
-          }\n
+          promise_list.push(\n
+            gadget.aq_pleasePublishMyState({page: PAGE_DIALOG, jid: key})\n
+          );\n
         }\n
         return RSVP.all(promise_list);\n
       })\n
       .push(function (result_list) {\n
-        var i = 1,\n
+        var i = 2,\n
           parameter = {contact: []},\n
           key2;\n
         for (key2 in contact_dict) {\n
-          if (contact_dict.hasOwnProperty(key2) &&\n
-              ((!contact_dict[key2].offline) || (!contact_dict[key2].read))) {\n
-            parameter.contact.push({\n
-              jid: key2,\n
-              url: result_list[i],\n
-              new_message: !contact_dict[key2].read\n
-            });\n
-            i += 1;\n
-          }\n
+          parameter.contact.push({\n
+            jid: key2,\n
+            url: result_list[i],\n
+            new_message: !contact_dict[key2].read,\n
+            status: !contact_dict[key2].offline\n
+          });\n
+          i += 1;\n
         }\n
         parameter.contact.sort(compareContact);\n
-        // XXX sort\n
         gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          left_url: result_list[0],\n
+          left_title: "Reset Password",\n
           title: "Contact",\n
-          right_url: result_list[0],\n
+          right_url: result_list[1],\n
           right_title: "New"\n
         });\n
         gadget.props.content_element.innerHTML =\n
@@ -400,6 +409,25 @@
         });\n
         gadget.props.content_element.innerHTML = gadget.props.history_template({\n
           text: result.history\n
+        });\n
+        $(gadget.props.element).trigger("create");\n
+      });\n
+  }\n
+\n
+  function renderErrorPage(gadget, error) {\n
+    var error_text = error;\n
+    return RSVP.Queue()\n
+      .push(function () {\n
+        return gadget.aq_pleasePublishMyState({page: PAGE_CONNECTION});\n
+      })\n
+      .push(function (connection_url) {\n
+        gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          left_url: connection_url,\n
+          left_title: "Login",\n
+          title: "Error Message"\n
+        });\n
+        gadget.props.content_element.innerHTML = gadget.props.error_template({\n
+          error_message: error_text\n
         });\n
         $(gadget.props.element).trigger("create");\n
       });\n
@@ -484,10 +512,8 @@
         gadget.props.content_element.innerHTML =\n
           gadget.props.login_template({});\n
         $(gadget.props.element).trigger("create");\n
-        gadget.props.content_element.querySelector("input[type=password]")\n
+        gadget.props.content_element.querySelector("input[name=jid]")\n
                                  .focus();\n
-        gadget.props.content_element.querySelector("input[type=password]")\n
-                                 .select();\n
         return promiseEventListener(\n
           gadget.props.content_element.querySelector(\'form.login-form\'),\n
           \'submit\',\n
@@ -518,19 +544,26 @@
   }\n
 \n
   function renderNewContactPage(gadget, connection_gadget) {\n
-    gadget.props.header_element.innerHTML = gadget.props.header_template({\n
-      title: "New Contact"\n
-    });\n
-    gadget.props.content_element.innerHTML =\n
-      gadget.props.new_contact_template({});\n
-    $(gadget.props.element).trigger("create");\n
-\n
-    gadget.props.content_element.querySelector("input[type=text]")\n
-                             .focus();\n
-    gadget.props.content_element.querySelector("input[type=text]")\n
-                             .select();\n
+    var contact_url;\n
     return new RSVP.Queue()\n
       .push(function () {\n
+        return gadget.aq_pleasePublishMyState({page: PAGE_CONTACT});\n
+      })\n
+      .push(function (contact) {\n
+        contact_url = contact;\n
+        gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          left_url: contact_url,\n
+          left_title: "Back",\n
+          title: "New Contact"\n
+        });\n
+        gadget.props.content_element.innerHTML =\n
+          gadget.props.new_contact_template({});\n
+        $(gadget.props.element).trigger("create");\n
+\n
+        gadget.props.content_element.querySelector("input[type=text]")\n
+                             .focus();\n
+        gadget.props.content_element.querySelector("input[type=text]")\n
+                             .select();\n
         return promiseEventListener(\n
           gadget.props.content_element.querySelector(\'form.new-contact-form\'),\n
           \'submit\',\n
@@ -546,6 +579,65 @@
       })\n
       .push(function () {\n
         return redirectToDefaultPage(gadget);\n
+      });\n
+  }\n
+\n
+  function renderResetPasswordPage(gadget, connection_gadget, status) {\n
+    if(!status) {\n
+      status = "";\n
+    }\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return gadget.aq_pleasePublishMyState({page: PAGE_CONTACT});\n
+      })\n
+      .push(function (contact_url) {\n
+        gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          left_url: contact_url,\n
+          left_title: "Back",\n
+          title: "Reset Password"\n
+        });\n
+        gadget.props.content_element.innerHTML =\n
+          gadget.props.reset_password_template({\n
+            message: status\n
+          });\n
+        $(gadget.props.element).trigger("create");\n
+        gadget.props.content_element.querySelector("input[type=submit]")\n
+                                 .disabled = false;\n
+        gadget.props.content_element.querySelector("input[name=new_passwd]")\n
+                             .value = "";\n
+        gadget.props.content_element.querySelector("input[name=repeat_passwd]")\n
+                             .value = "";\n
+        gadget.props.content_element.querySelector("input[name=new_passwd]")\n
+                             .focus();\n
+        return promiseEventListener(\n
+          gadget.props.content_element.querySelector(\'form.reset-password-form\'),\n
+          \'submit\',\n
+          false\n
+        );\n
+      })\n
+      .push(function (submit_event) {\n
+        var matched = false;\n
+        gadget.props.content_element.querySelector("input[type=submit]")\n
+                                 .disabled = true;\n
+        matched = validatePassword(\n
+          submit_event.target[1].value,\n
+          submit_event.target[2].value\n
+        );\n
+        if(matched) {\n
+          return connection_gadget.resetPassword(\n
+            submit_event.target[0].value,\n
+            submit_event.target[1].value\n
+            )\n
+            .push(function (status) {\n
+              return renderResetPasswordPage(gadget, connection_gadget, status);\n
+            }, function (error) {\n
+              var message = "Password Reset Failed.";\n
+              return renderResetPasswordPage(gadget, connection_gadget, message);\n
+          });\n
+        } else {\n
+          var message = "Password does not match.";\n
+          return renderResetPasswordPage(gadget, connection_gadget, message);\n
+        }\n
       });\n
   }\n
 \n
@@ -575,6 +667,12 @@
           g.props.history_template = Handlebars.compile(\n
             document.querySelector(".history-template").innerHTML\n
           );\n
+          g.props.error_template = Handlebars.compile(\n
+            document.querySelector(".error-template").innerHTML\n
+          );\n
+          g.props.reset_password_template = Handlebars.compile(\n
+            document.querySelector(".reset-password-template").innerHTML\n
+          );\n
           g.props.message_template = Handlebars.compile(\n
             document.querySelector(".message-template").innerHTML\n
           );\n
@@ -596,6 +694,21 @@
       return gadget.getDeclaredGadget(CONNECTION_GADGET_SCOPE)\n
         .push(function (connection_gadget) {\n
           return connection_gadget.sendPresence();\n
+        })\n
+        .push(function (){\n
+          return gadget.getDeclaredGadget(CONNECTION_GADGET_SCOPE);\n
+        })\n
+        .push(function (connection_gadget) {\n
+          return connection_gadget.fetchRoster();\n
+        })\n
+        .push(function(all_contacts){\n
+          var key;\n
+          for (key in all_contacts) {\n
+            initializeContact(gadget, all_contacts[key].jid);\n
+          }\n
+        }, function (error) {\n
+          var error_text = "Roster Fetching Failed";\n
+          return renderErrorPage(gadget, error_text);\n
         });\n
     })\n
     .allowPublicAcquisition("notifyXMPPConnecting", function () {\n
@@ -673,6 +786,26 @@
                                   argument_list[2], true);\n
       })\n
 \n
+    .allowPublicAcquisition("notifyXMPPConnectingFail", function () {\n
+      var gadget = this,\n
+        error_text = \'XMPPConnectingFail\';\n
+      return renderErrorPage(gadget, error_text);\n
+    })\n
+    .allowPublicAcquisition("notifyXMPPDisconnecting", function () {\n
+      var gadget = this,\n
+        error_text = \'XMPPDisconnecting\';\n
+      return renderErrorPage(gadget, error_text);\n
+    })\n
+    .allowPublicAcquisition("notifyXMPPDisconnected", function () {\n
+      var gadget = this,\n
+        error_text = \'XMPPDisconnected\';\n
+      return renderErrorPage(gadget, error_text);\n
+    })\n
+    .allowPublicAcquisition("notifyXMPPAuthenticatingFailed", function (error_data) {\n
+      var gadget = this,\n
+        error_text = \'XMPPAuthenticatingFailed\';\n
+      return renderErrorPage(gadget, error_text);\n
+    })\n
     .declareService(function () {\n
 \n
       function dropNotification() {\n
@@ -715,6 +848,8 @@
           method = renderDialogPage;\n
         } else if (options.page === PAGE_HISTORY) {\n
           method = renderHistoryPage;\n
+        } else if (options.page === PAGE_PASSWORD) {\n
+          method = renderResetPasswordPage;\n
         } else {\n
           throw new Error("not implemented page " + options.page);\n
         }\n
@@ -863,7 +998,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -877,7 +1012,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.15804.3325.32187</string> </value>
+                <value> <string>944.5545.36219.41881</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -895,8 +1030,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428663088.08</float>
-                        <string>UTC</string>
+                        <float>1435744547.72</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
