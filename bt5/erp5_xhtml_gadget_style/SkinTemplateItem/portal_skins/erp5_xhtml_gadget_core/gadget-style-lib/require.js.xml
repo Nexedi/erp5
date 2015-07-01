@@ -11,6 +11,10 @@
             <value> <string>anonymous_http_cache</string> </value>
         </item>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_EtagSupport__etag</string> </key>
             <value> <string>ts62728867.75</string> </value>
         </item>
