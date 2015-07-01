@@ -59,7 +59,7 @@
   As transformation is quite specific we leave this script empty so developers\n
   can hook in and add needed transformations.\n
   \n
-  Interesting here ti to use OffsetIndex property sheet which allows to place\n
+  Interesting here is to use OffsetIndex property sheet which allows to place\n
   marker till where a Data Stream has been processed.\n
 """\n
 </string> </value>

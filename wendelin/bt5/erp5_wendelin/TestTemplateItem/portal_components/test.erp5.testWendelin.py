@@ -26,6 +26,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from wendelin.bigarray.array_zodb import ZBigArray
 from DateTime import DateTime
 import msgpack
 import numpy as np
@@ -158,8 +159,6 @@ class Test(ERP5TypeTestCase):
     """
     portal = self.portal
     portal.game_of_life()
-    # XXX: for now following ones are disabled as wendelin.core not available
-    # in testnodes framework
     portal.game_of_life_out_of_core()
     portal.game_of_life_out_of_core_activities()
     
@@ -167,8 +166,6 @@ class Test(ERP5TypeTestCase):
     """
       Test persistently saving a ZBig Array to a Data Array.
     """
-    from wendelin.bigarray.array_zodb import ZBigArray
-    
     data_array = self.portal.data_array_module.newContent( \
                    portal_type = 'Data Array')
     self.assertEqual(None, data_array.getArray())

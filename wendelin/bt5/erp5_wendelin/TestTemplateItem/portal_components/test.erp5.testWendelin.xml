@@ -46,11 +46,11 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 37,  8: Unused variable \'n\' (unused-variable)</string>
-                <string>W: 64,  4: Unused variable \'scipy\' (unused-variable)</string>
-                <string>W: 66,  4: Unused variable \'pandas\' (unused-variable)</string>
-                <string>W: 65,  4: Unused variable \'sklearn\' (unused-variable)</string>
-                <string>W:115,  4: Unused variable \'data_supply\' (unused-variable)</string>
+                <string>W: 38,  8: Unused variable \'n\' (unused-variable)</string>
+                <string>W: 65,  4: Unused variable \'scipy\' (unused-variable)</string>
+                <string>W: 67,  4: Unused variable \'pandas\' (unused-variable)</string>
+                <string>W: 66,  4: Unused variable \'sklearn\' (unused-variable)</string>
+                <string>W:116,  4: Unused variable \'data_supply\' (unused-variable)</string>
               </tuple>
             </value>
         </item>
