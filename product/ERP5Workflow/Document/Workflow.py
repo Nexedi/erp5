@@ -117,6 +117,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
         value = expr(ec)
       else:
         value = variable.getInitialValue(object=object)
+      if value is None: value = ''
       status_dict[variable.getReference()] = value
 
     self._updateWorkflowHistory(document, status_dict)
@@ -689,7 +690,7 @@ class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
           econtext = Expression_createExprContext(sci)
         expr = Expression(expr)
         value = expr(econtext)
-      if value is None or value == 'None': value = ''
+      if value is None: value = ''
       status_dict[id_no_suffix] = value
 
     # Do not proceed in case of failure of before script
