@@ -82,6 +82,7 @@ from Products.ERP5Type.patches import ExceptionFormatter
 from Products.ERP5Type.patches import WebDAV
 from Products.ERP5Type.patches import DTMLMethod
 from Products.ERP5Type.patches import DTMLDocument
+from Products.ERP5Type.patches import CMFCoreUtils
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
