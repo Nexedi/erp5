@@ -57,8 +57,6 @@
     * transform_script_id - the script which will transform data\n
     * chunk_length - the length of a chunk\n
 """\n
-data_length = context.getSize()\n
-  \n
 start = 0\n
 end  = chunk_length\n
 context.activate().DataStream_readChunkListAndTransform( \\\n
@@ -67,8 +65,6 @@ context.activate().DataStream_readChunkListAndTransform( \\\n
   chunk_length, \\\n
   transform_script_id, \\\n
   data_array_reference)\n
-\n
-return data_length\n
 </string> </value>
         </item>
         <item>
