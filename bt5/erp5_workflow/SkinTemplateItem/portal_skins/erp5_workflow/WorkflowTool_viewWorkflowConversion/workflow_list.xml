@@ -528,7 +528,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>DC Workflows to Convert</string> </value>
+                    <value> <string>Workflow Conversion</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>
