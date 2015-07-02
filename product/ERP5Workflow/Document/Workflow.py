@@ -64,7 +64,7 @@ from types import StringTypes
 from xml.sax.saxutils import escape, unescape
 from zLOG import LOG, INFO, WARNING
 
-class Workflow(IdAsReferenceMixin("workflow_", "prefix"), XMLObject):
+class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
   """
   A ERP5 Workflow.
   """
