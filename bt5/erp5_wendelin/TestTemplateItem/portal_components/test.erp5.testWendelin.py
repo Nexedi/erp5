@@ -259,3 +259,24 @@ context.activate().DataStream_readChunkListAndTransform( \
     # resize Zbig Array
     persistent_zbig_array = np.resize(persistent_zbig_array, (100,100))
     self.assertNotEquals(pure_numpy_array.shape, persistent_zbig_array.shape)
+    
+    # get array slice (fails)
+    data_array = self.portal.data_array_module.newContent( \
+                   portal_type = 'Data Array')
+    shape = (1000,)
+    data_array.initArray(shape, np.uint8)
+    self.tic()
+    
+    persistent_zbig_array = data_array.getArray()
+    new_array = np.arange(1000)
+    new_array.resize(shape)
+
+    self.assertEquals(new_array.shape, persistent_zbig_array.shape)
+        
+    persistent_zbig_array[:,] = new_array
+    self.tic()
+
+    self.assertTrue(
+           np.array_equal(data_array.getArraySlice(0,100), \
+                          new_array[:100]))
+    
