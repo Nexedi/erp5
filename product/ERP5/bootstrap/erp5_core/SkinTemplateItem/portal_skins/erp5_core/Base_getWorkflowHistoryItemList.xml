@@ -90,9 +90,10 @@ for history_name in [\'history\', \'building_history\', \'installation_history\'
   if workflow_item_list != []:\n
     break\n
 \n
-wf_state_var = portal_workflow[workflow_id].variables.getStateVar()\n
-wf_states = portal_workflow[workflow_id].states\n
-wf_transitions = portal_workflow[workflow_id].transitions\n
+workflow = getattr(portal_workflow, workflow_id)\n
+wf_state_var = workflow.getStateVariable()\n
+wf_states = workflow.getStateValueList()\n
+wf_transitions = workflow.getTransitionValueList()\n
 \n
 next_serial = None\n
 previous_obj = None\n
