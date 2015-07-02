@@ -68,7 +68,7 @@ from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply, UnrestrictedMethod
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
 from sets import ImmutableSet
 from tempfile import mkstemp, mkdtemp
@@ -285,7 +285,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     workflow_type_id = dc_workflow.__class__.__name__
     if workflow_type_id == 'DCWorkflowDefinition':
       if temp == 0:
-        new_id = 'workflow_' + dc_workflow.id
+        new_id = 'converting_'+dc_workflow.id
       else:
         new_id = dc_workflow.id
       uid = self.encodeWorkflowUid(new_id)
@@ -294,7 +294,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       workflow.setWorkflowManagedPermission(dc_workflow.permissions)
     else:
       if temp == 0:
-        new_id = 'interactionworkflow_' + dc_workflow.id
+        new_id = 'converting_'+dc_workflow.id
       else:
         new_id = dc_workflow.id
       uid = self.encodeWorkflowUid(new_id)
@@ -489,7 +489,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           if origin_tdef.var_exprs is None:
             var_exprs = {}
           else: var_exprs = origin_tdef.var_exprs
-          LOG("transition '%s' has var_exprs '%s'"%(origin_tdef.__dict__, var_exprs), WARNING, " in WorkflowTool.py 496")
           for key in var_exprs:
             tr_var = transition.newContent(portal_type='Transition Variable', temp_object=temp)
             tr_var.setDefaultExpr(var_exprs[key].text)
@@ -497,6 +496,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             tr_var_path = '/'.join(tr_var_path.split('/')[2:])
             new_category.append(tr_var_path)
             tr_var.setCausalityList(new_category)
+      self._finalizeWorkflowConversion(dc_workflow)
+      workflow.setId(workflow.default_reference)
     return workflow
 
   def getChainDict(self):
@@ -858,9 +859,14 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         actions.extend(_getWorklistActionList())
     return actions
 
-  def _finalizeWorkflowConversion(self):
-    """ Put old dc workflow into trash bin, and remove prefix?"""
-    pass
+  def _finalizeWorkflowConversion(self, dc_wf):
+    trash_tool = getattr(self.getPortalObject(), 'portal_trash', None)
+    if trash_tool is not None:
+      # move old workflow to trash tool
+      LOG('WorkflowTool', WARNING, "Move old workflow '%s' into a trash bin."%dc_wf.id)
+      self._delOb(dc_wf.id)
+      trashbin = UnrestrictedMethod(trash_tool.newTrashBin)(dc_wf.id)
+      trashbin._setOb(dc_wf.id, dc_wf)
 
 InitializeClass(WorkflowTool)
 
