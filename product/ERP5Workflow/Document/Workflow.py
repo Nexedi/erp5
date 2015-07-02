@@ -456,7 +456,10 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       if name == state_var:
           return ob._getDefaultAcquiredValue(state_var).getId()
 
-      vdef = self._getOb(name)
+      for x in self.objectValues(portal_type='Variable'):
+        if x.getReference() == name:
+          vdef = x
+          break
 
       status_dict = self.getCurrentStatusDict(ob)
       former_status = self._getOb(status_dict[state_var], None)
