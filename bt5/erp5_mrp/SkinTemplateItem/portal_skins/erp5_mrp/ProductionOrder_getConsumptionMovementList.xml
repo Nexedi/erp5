@@ -86,7 +86,7 @@ kwargs[\'resource_uid\'] = [resource.getUid() for resource in consumed_resource_
 kwargs[\'group_by_section\'] = 0\n
 kwargs[\'group_by_node\'] = 1\n
 kwargs[\'group_by_variation\'] = 1\n
-kwargs[\'section_uid\'] = context.getSourceSectionUid()\n
+kwargs[\'section_uid\'] = context.getDestinationSectionUid()\n
 \n
 inventory_dict = {}\n
 for inventory in portal.portal_simulation.getFutureInventoryList(*args,**kwargs):\n
@@ -104,7 +104,7 @@ for movement in movement_list:\n
 \n
     inventory_dict_key = (material_resource,\n
                           \'\\n\'.join(sorted(material.getVariationCategoryList())),\n
-                          movement.getSource())\n
+                          movement.getDestination())\n
 \n
     quantity = material.getQuantity()\n
 \n
@@ -122,7 +122,8 @@ for movement in movement_list:\n
                                                                inventory_quantity_unit)\n
 \n
     if quantity:\n
-      consumption_dict[obj.getUid()] = quantity * (movement.getQuantity() or 0)\n
+      consumption_dict[obj.getUid()] = consumption_dict.get(obj.getUid(), 0) + \\\n
+                       quantity * (movement.getQuantity() or 0)\n
 \n
 # sort result_list\n
 transformation_allowed_content_type_list = context.portal_types[\'Transformation\'].getTypeAllowedContentTypeList()\n
