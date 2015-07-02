@@ -110,12 +110,11 @@
   <head>\n
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
     <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 Stringfield</title>\n
+    <title>ERP5 CheckBoxField</title>\n
 \n
     <!-- renderjs -->\n
     <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
-    <script src="gadget_global.js" type="text/javascript"></script>\n
     <!-- custom script -->\n
     <script src="gadget_erp5_field_checkbox.js" type="text/javascript"></script>\n
 \n
@@ -123,7 +122,7 @@
 \n
   </head>\n
   <body>\n
-    <input type="checkbox"  class="checkboxradio"/>\n
+    <input type="checkbox"  class="ui-btn"/>\n
   </body>\n
 </html>
 
@@ -248,7 +247,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -262,7 +261,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.56153.13336.11758</string> </value>
+                <value> <string>944.6819.59898.35293</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -280,8 +279,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423479292.73</float>
-                        <string>UTC</string>
+                        <float>1435814886.24</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
