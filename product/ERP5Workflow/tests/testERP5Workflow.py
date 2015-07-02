@@ -134,7 +134,6 @@ class TestERP5Workflow(ERP5TypeTestCase):
     self.assertTrue(isinstance(current_state, dict))
     self.assertEqual(s1.getReference(), current_state.get('current_state'))
     self.assertEqual('ERP5TypeTestCase', current_state.get('actor'))
-    self.assertEqual(0, current_state.get('undo'))
 
     history = doc.workflow_history['wf']
     self.assertEqual(len(history), 2)# create, t1
