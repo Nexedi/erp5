@@ -753,31 +753,6 @@ class TestInvoiceMixin(TestPackingListMixin):
     new_invoice.edit(start_date=self.datetime,
                  stop_date=self.datetime+1)
 
-  def stepRemoveDateMovementGroupForTransactionBuilder(self, sequence=None,
-            sequence_list=None, **kw):
-    """
-    Remove DateMovementGroup
-    """
-    portal = self.getPortal()
-    builder = portal.portal_deliveries.sale_invoice_transaction_builder
-    delivery_movement_group_list = builder.getDeliveryMovementGroupList()
-    uf = self.getPortal().acl_users
-    uf._doAddUser('admin', '', ['Manager'], [])
-    user = uf.getUserById('admin').__of__(uf)
-    newSecurityManager(None, user)
-    for movement_group in delivery_movement_group_list:
-      if movement_group.getPortalType() == 'Property Movement Group':
-        # it contains 'start_date' and 'stop_date' only, so we remove
-        # movement group itself.
-        builder.deleteContent(movement_group.getId())
-    builder.newContent(
-      portal_type = 'Parent Explanation Movement Group',
-      collect_order_group='delivery',
-      int_index=len(delivery_movement_group_list)+1
-      )
-    user = uf.getUserById('test_invoice_user').__of__(uf)
-    newSecurityManager(None, user)
-
   def stepEditInvoice(self, sequence=None, sequence_list=None, **kw):
     """Edit the current invoice, to trigger updateSimulation."""
     invoice = sequence.get('invoice')
@@ -2698,7 +2673,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         stepInvoiceBuilderAlarm
         stepTic
         stepCheckTwoInvoices
-        stepRemoveDateMovementGroupForTransactionBuilder
         stepStartTwoInvoices
         stepTic
         stepInvoiceBuilderAlarm
@@ -3599,6 +3573,43 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       self.tic()
     self.assertEqual('solved', packing_list.getCausalityState())
     self.assertEqual('solved', invoice.getCausalityState())
+
+  def test_19_SimpleInvoiceModifyArrow(self):
+    """
+    Check we can modify arrow on an invoice without having building issues
+    of transaction lines
+    """
+    sequence_list = SequenceList()
+    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+      sequence_list.addSequenceString(
+        base_sequence +
+      """
+        stepSetReadyPackingList
+        stepTic
+        stepStartPackingList
+        stepCheckInvoicingRule
+        stepTic
+        stepInvoiceBuilderAlarm
+        stepTic
+        stepCheckInvoiceBuilding
+      """)
+    sequence_list.play(self)
+    sequence = sequence_list.getSequenceList()[0]
+    invoice = sequence.get("invoice")
+    self.assertEqual("confirmed", invoice.getSimulationState())
+    self.assertEqual("solved", invoice.getCausalityState())
+    self.portal.portal_workflow.doActionFor(invoice, "start_action")
+    other_client = sequence.get("organisation3")
+    invoice.setDestinationSectionValue(other_client)
+    self.tic()
+    self.assertEqual("diverged", invoice.getCausalityState())
+    self.assertEqual(set([("411", -65714.22),
+                         ("44571", 10769.22),
+                         ("70712", 54945.00)]),
+                     set([(x.getSourceValue().getGapId(),
+                           x.getQuantity()) for x in \
+                           invoice.objectValues(
+                    portal_type="Sale Invoice Transaction Line")]))
 
 class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
   """Tests for purchase invoice.
