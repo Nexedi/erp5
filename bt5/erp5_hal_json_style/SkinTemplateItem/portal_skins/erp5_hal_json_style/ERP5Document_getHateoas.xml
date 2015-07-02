@@ -287,6 +287,20 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "title": field.get_value("title")\n
     }\n
     result["default"] = getFieldDefault(traversed_document, field, result["key"], value)\n
+  elif meta_type == "MultiCheckBoxField":\n
+    result = {\n
+      "type": meta_type,\n
+      "key": key,\n
+      "editable": field.get_value("editable"),\n
+      "css_class": field.get_value("css_class"),\n
+      "hidden": field.get_value("hidden"),\n
+      "description": field.get_value("description"),\n
+      "title": field.get_value("title"),\n
+      "required": field.get_value("required"),\n
+      # XXX Message can not be converted to json as is\n
+      "items": field.get_value("items"),\n
+    }\n
+    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)\n
   elif meta_type == "GadgetField":\n
     result = {\n
       "type": meta_type,\n

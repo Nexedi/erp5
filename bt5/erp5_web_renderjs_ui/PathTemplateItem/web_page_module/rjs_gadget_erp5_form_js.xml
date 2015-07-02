@@ -121,6 +121,8 @@
       field_url = \'gadget_erp5_field_multilist.html\';\n
     } else if (type === \'CheckBoxField\') {\n
       field_url = \'gadget_erp5_field_checkbox.html\';\n
+    } else if (type === \'MultiCheckBoxField\') {\n
+      field_url = \'gadget_erp5_field_multicheckbox.html\';\n
     } else if (type === \'StringField\') {\n
       field_url = \'gadget_erp5_field_string.html\';\n
     } else if (type === \'RelationStringField\') {\n
@@ -510,7 +512,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.40772.7493.11212</string> </value>
+                <value> <string>943.62898.42115.10666</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -528,8 +530,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1434089456.97</float>
-                        <string>UTC</string>
+                        <float>1435744171.38</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
