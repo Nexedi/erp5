@@ -57,7 +57,7 @@ class DataArray(BigFile):
     """
     array = ZBigArray(shape, dtype)
     self._setArray(array)
-    
+
   def getArray(self, default=None):
     """
     Get numpy array value.
@@ -74,3 +74,11 @@ class DataArray(BigFile):
     # .zfile) have to be made explicitly known to connection or current
     # transaction committed (XXX: impossible to use as raises ConflictErrors)
     transaction.commit()
+  
+  def getArraySlice(self, start, end):
+    """
+      Implement array slicing in its most simple list alike form.
+      Any other advanced slicing techniques currently possible by getting
+      array reference directly.
+    """
+    return self.getArray()[start:end] 
