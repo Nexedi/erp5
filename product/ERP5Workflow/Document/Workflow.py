@@ -602,7 +602,6 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     state_var = self.getStateVariable()
     status_dict = self.getCurrentStatusDict(document)
     current_state_value = self._getWorkflowStateOf(document, id_only=0)
-    status_dict['undo'] = 0
 
     if current_state_value == None:
       current_state_value = self.getSourceValue()
