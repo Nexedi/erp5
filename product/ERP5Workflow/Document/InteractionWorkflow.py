@@ -58,7 +58,7 @@ marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
 
 _MARKER = []
 
-class InteractionWorkflow(IdAsReferenceMixin("interactionworkflow_", "prefix"), XMLObject):
+class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
   """
   An ERP5 Interaction Workflow.
   """
