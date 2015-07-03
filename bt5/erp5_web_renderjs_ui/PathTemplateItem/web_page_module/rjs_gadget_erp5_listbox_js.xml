@@ -315,6 +315,7 @@
               a.className = "ui-link";\n
               a.textContent = value;\n
               th.appendChild(a);\n
+              tr.appendChild(th);\n
             } else {\n
               if (gadget.props.listbox_uid_dict.key === undefined) {\n
                 gadget.props.listbox_uid_dict.key = result.data.rows[i].value["listbox_uid:list"].key;\n
@@ -329,9 +330,21 @@
               }\n
 \n
               promise_list.push(renderSubCell(th, value));\n
+\n
+              //when a sub field is not editable but it\'s in listbox\'s editable colummn \n
+              //then create link, see ListBox.py line 2518\n
+              if (value.editable === 0) {\n
+                a = document.createElement("a");\n
+                a.href = tmp_url;\n
+                a.className = "ui-link";\n
+                a.appendChild(th);\n
+                tr.appendChild(a);\n
+              } else {\n
+                tr.appendChild(th);\n
+              }\n
             }\n
-            tr.appendChild(th);\n
           }\n
+\n
           tbody.appendChild(tr);\n
         }\n
         return RSVP.all(promise_list);\n
@@ -598,7 +611,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -612,7 +625,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.26058.11320.20582</string> </value>
+                <value> <string>944.8265.37712.58112</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -630,8 +643,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1433234504.32</float>
-                        <string>UTC</string>
+                        <float>1435902335.94</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
