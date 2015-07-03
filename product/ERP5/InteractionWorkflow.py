@@ -431,6 +431,11 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
           sub_object = SubElement(interaction, property_id, attrib=dict(type=property_type))
         if property_value is None or property_value == [] or property_value == ():
           property_value = ''
+        if property_id in ['once_per_transaction', 'temporary_document_disallowed']:
+          if property_value == True:
+            property_value = '1'
+          elif property_value == False:
+            property_value ='0'
         sub_object.text = str(property_value)
 
     # 2. Variable as XML
