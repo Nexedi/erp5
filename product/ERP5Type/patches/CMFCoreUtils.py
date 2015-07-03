@@ -39,13 +39,23 @@ def _setCacheHeaders(obj, extra_context):
                           content, view_name, extra_context
                           )
         RESPONSE = REQUEST['RESPONSE']
-        # PATCH BEGIN: do not override existing headers
-        ignore_list = [y[0].lower() for y in RESPONSE.headers.iteritems()]
-        headers = [x for x in headers if x[0].lower() not in ignore_list]
-        # PATCH END
         for key, value in headers:
             if key == 'ETag':
                 RESPONSE.setHeader(key, value, literal=1)
+            # PATCH BEGIN: respect existing Cache-Control header if exists
+            if key.lower() == 'cache-control':
+                cache_control = RESPONSE.getHeader('cache-control')
+                if cache_control:
+                    existing_key_list = \
+                        [e.split('=', 2)[0].strip().lower() for e in \
+                         cache_control.split(',')]
+                    for e in value.split(','):
+                        if e.split('=', 2)[0].strip().lower() not in existing_key_list:
+                            cache_control += ', %s' % e.strip()
+                else:
+                    cache_control = value
+                RESPONSE.setHeader(key, cache_control)
+            # PATCH END
             else:
                 RESPONSE.setHeader(key, value)
         if headers:
