@@ -66,8 +66,6 @@ context.activate().DataStream_readChunkListAndTransform( \\\n
   transform_script_id, \\\n
   data_array_reference,\\\n
   **kw)\n
-\n
-return data_length\n
 </string> </value>
         </item>
         <item>
