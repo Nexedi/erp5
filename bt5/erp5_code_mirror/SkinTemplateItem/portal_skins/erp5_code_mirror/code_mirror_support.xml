@@ -157,7 +157,7 @@
   <div id="view" style="display: none;"></div>\n
 \n
 <dtml-if field_id>\n
-<textarea id="&dtml-field_id;" name="&dtml-field_id;" style="display: none;"><dtml-var content></textarea>\n
+<textarea id="&dtml-field_id;" name="&dtml-field_id;" style="display: none;"><dtml-var content html_quote></textarea>\n
 </dtml-if>\n
 \n
 </div>\n
