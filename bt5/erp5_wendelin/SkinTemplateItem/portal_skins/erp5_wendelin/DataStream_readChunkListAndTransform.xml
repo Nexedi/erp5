@@ -71,7 +71,8 @@ if transform_script_id is not None:\n
     start, end = transform_script(context, data_stream_chunk_list, \\\n
                                   start, \\\n
                                   end, \\\n
-                                  data_array_reference)\n
+                                  data_array_reference, \\\n
+                                  **kw)\n
 \n
 # [warning] store current position offset in Data Stream, this can cause easily \n
 # ConflictErrors and it spawns re-index activities on DataStream. Thus \n
@@ -91,15 +92,16 @@ data_stream.activate().DataStream_readChunkListAndTransform( \\\n
     start, \\\n
     end, \\\n
     chunk_length, \\\n
-    transform_script_id,\n
-    data_array_reference)\n
+    transform_script_id,\\\n
+    data_array_reference,\\\n
+    **kw)\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>start, end, chunk_length, transform_script_id=None, data_array_reference=None</string> </value>
+            <value> <string>start, end, chunk_length, transform_script_id=None, data_array_reference=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
