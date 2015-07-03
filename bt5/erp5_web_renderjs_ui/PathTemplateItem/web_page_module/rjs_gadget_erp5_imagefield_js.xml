@@ -115,6 +115,7 @@
     .declareMethod(\'render\', function (options) {\n
       var image = this.props.element.querySelector(".image");\n
       image.src = options.field_json.default;\n
+      image.alt = options.field_json.description || options.field_json.title;\n
     });\n
 }(window, rJS));</string> </value>
         </item>
@@ -237,7 +238,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -251,7 +252,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.42173.14880.32290</string> </value>
+                <value> <string>944.8309.29615.33689</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -269,8 +270,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1434092058.65</float>
-                        <string>UTC</string>
+                        <float>1435904292.92</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
