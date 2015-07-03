@@ -207,12 +207,39 @@ context.activate().DataStream_readChunkListAndTransform( \
     
     # test that extracted array contains same values as input CSV
     zarray = data_array.getArray()
-    self.assertEqual(np.average(zarray), np.average(np.arange(10001, 200001)))
-    self.assertTrue(np.array_equal(zarray, np.arange(10001, 200001)))
+    expected_numpy_array = np.arange(10001, 200001)
+    self.assertEqual(np.average(zarray), np.average(expected_numpy_array))
+    self.assertTrue(np.array_equal(zarray, expected_numpy_array))
     
     # clean up script
     portal.portal_skins.custom.manage_delObjects([script_id,])
     self.tic()
+    
+    # analyze numpy array using activities.
+    active_process = portal.portal_activities.newActiveProcess()
+    zarray = data_array.getArray()
+    max_elements = zarray.shape[0]
+    expected_result_list = []
+    jobs = 15
+    offset = max_elements / jobs
+    start = 0
+    end = start + offset
+    for i in range(jobs):
+      # calculate directly expectations
+      expected_result_list.append(np.average(expected_numpy_array[start:end]))
+      data_array.activate(
+                   active_process = active_process.getPath(),  \
+                   activity='SQLQueue').DataArray_calculateArraySliceAverageAndStore(start, end)
+      data_array.log('%s %s' %(start, end))
+      start += offset
+      end += offset
+    self.tic()
+    
+    result_list = [x.getResult() for x in active_process.getResultList()]
+    self.assertSameSet(result_list, expected_result_list)
+    # final reduce job to a number
+    sum(result_list)
+
     
   def test_02_Examples(self):
     """
