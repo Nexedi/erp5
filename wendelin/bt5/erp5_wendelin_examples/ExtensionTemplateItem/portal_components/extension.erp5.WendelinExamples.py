@@ -212,5 +212,12 @@ def game_of_life(self):
   for i in range(4): 
     iterate_2(Z)
     print_list.append(str(Z))
-  
+
   return '\n\n'.join(print_list)
+  
+def DataArray_calculateArraySliceAverageAndStore(self, start, end):
+  """
+    Compute average on a data array slice and store result on an Active Process.
+  """
+  zarray = self.getArray()
+  return np.average(zarray[start:end])
