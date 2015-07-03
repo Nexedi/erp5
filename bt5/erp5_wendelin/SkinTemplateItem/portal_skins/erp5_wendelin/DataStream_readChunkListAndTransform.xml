@@ -92,8 +92,8 @@ data_stream.activate().DataStream_readChunkListAndTransform( \\\n
     start, \\\n
     end, \\\n
     chunk_length, \\\n
-    transform_script_id,\n
-    data_array_reference,\n
+    transform_script_id,\\\n
+    data_array_reference,\\\n
     **kw)\n
 
 
