@@ -110,6 +110,12 @@
 \n
 <!-- Initialize -->\n
 <tr>\n
+  <td>storeEval</td>\n
+  <td>var myLog = console.log; window.dump_log = [];console.log = function(value) {window.dump_log.push(value);myLog.call(console, value);}</td>\n
+  <td>my_temp_console</td>\n
+</tr>\n
+\n
+<tr>\n
   <td>open</td>\n
   <td>${base_url}/web_site_module/e5g_ehr/</td>\n
   <td></td>\n
@@ -126,7 +132,17 @@
   <td>${my_global_text}</td>\n
   <td></td>\n
 </tr>\n
-\n
+<tr>\n
+  <td>storeEval</td>\n
+  <td>window.dump_log</td>\n
+  <td>${my_console}</td>\n
+</tr>\n
+<tr>\n
+  <td>echo</td>\n
+  <td>${my_console}</td>\n
+  <td></td>\n
+</tr>\n
+<!-- DEBUG -->\n
 <tr>\n
   <td>waitForTextPresent</td>\n
   <td>E-HR</td>\n
