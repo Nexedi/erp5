@@ -64,12 +64,15 @@ context.activate().DataStream_readChunkListAndTransform( \\\n
   end, \\\n
   chunk_length, \\\n
   transform_script_id, \\\n
-  data_array_reference)\n
+  data_array_reference,\\\n
+  **kw)\n
+\n
+return data_length\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>chunk_length=1048576, transform_script_id=None, data_array_reference=None</string> </value>
+            <value> <string>chunk_length=1048576, transform_script_id=None, data_array_reference=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
