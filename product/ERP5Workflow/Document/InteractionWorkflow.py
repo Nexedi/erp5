@@ -121,7 +121,11 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     '''
     Returns a true value if the given info name is supported.
     '''
-    vdef = self._getOb(name, None)
+    for x in self.objectValues(portal_type='Variable'):
+      if x.getReference() == name:
+        vdef = x
+        break
+
     if vdef is not None:
       if vdef.getTypeInfo().getId() == 'Variable':
         return 1
@@ -134,7 +138,10 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     Allows the user to request information provided by the
     workflow.  This method must perform its own security checks.
     '''
-    vdef = self._getOb(name, _MARKER)
+    for x in self.objectValues(portal_type='Variable'):
+      if x.getReference() == name:
+        vdef = x
+        break
     if vdef is _MARKER:
       return default
     if vdef.info_guard is not None and not vdef.info_guard.check(
@@ -245,7 +252,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
   def getScriptValueList(self):
     scripts = {}
     for script in self.objectValues(portal_type='Workflow Script'):
-      scripts[script.getId()] = script
+      scripts[script.getReference()] = script
     return scripts
 
   security.declarePrivate('getTransitionValueList')
