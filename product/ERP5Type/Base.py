@@ -592,6 +592,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   for wf_id, v in interaction_workflow_dict.iteritems():
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
+
       # Check portal type filter
       if (tdef.portal_type_filter is not None and \
           portal_type not in tdef.portal_type_filter):
@@ -604,7 +605,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
                    portal_type_group in tdef.portal_type_group_filter):
           continue
 
-      for imethod_id in tdef.method_id:
+      for imethod_id in tdef.getTriggerMethodIdList():
         if wildcard_interaction_method_id_match(imethod_id):
           # Interactions workflows can use regexp based wildcard methods
           # XXX What happens if exception ?
