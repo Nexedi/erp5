@@ -16,10 +16,8 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     pass
 
   def doActionFor(self, document, action):
-    """
-    Need to be overidden
-    """
-    pass
+    user_action = action
+    self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'testing_workflow')
 
   def getWorklistDocumentCountFromActionName(self, action_name):
     self.assertEqual(action_name[-1], ')')
@@ -195,16 +193,23 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     self.assertEqual(self.getStateFor(new_object), 'validated')
     self.assertEqual(workflow_tool.isTransitionPossible(new_object, 'invalidate'), 1)
 
+  def test_13_testWorkflowHistroyBeforeAndAfterConversion(self):
+    pass
+
   """
   def beforeTearDown(self):
+    self.abort()
     self.portal = self.getPortal()
-    self.getWorkflowTool().setChainForPortalTypes(['ERP5Workflow Test Document'], ())
-    type_test_object = self.portal.portal_types._getOb('ERP5Workflow Test Document')
-    type_test_object.edit(type_base_category_list=('validation_state',))
-    type_test_object.edit(type_workflow_list=('testing_workflow',))
-    #self.commit()
-  """
+    workflow_module = self.portal.portal_workflow
+    workflow_module._delObject('testing_workflow')
+    workflow_module._delObject('testing_interaction_workflow')
+    workflow_module.testing_workflow = workflow_module.get('testing_workflow_backup')
+    workflow_module.testing_workflow.id = 'testing_workflow'
+    workflow_module.testing_interaction_workflow = workflow_module.get('testing_interaction_workflow_backup')
+    workflow_module.testing_interaction_workflow.id = 'testing_interaction_workflow'
 
+    super(TestERP5WorkflowMixin, self).beforeTearDown()
+  """
 class TestConvertedWorkflow(TestERP5WorkflowMixin):
   """
     Tests Converted Workflow.
@@ -221,26 +226,21 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
 
     for dc_wf_id in dc_wf_id_list:
       self.workflow_module.delTypeCBT(ptype_id, dc_wf_id)
-      if not hasattr(self.workflow_module, 'workflow_'+dc_wf_id) and not hasattr(self.workflow_module, 'interactionworkflow_'+dc_wf_id):
-        # convert DC workflow to workflow:
-        dc_wf = self.workflow_module._getOb(dc_wf_id)
+      dc_wf = self.workflow_module._getOb(dc_wf_id)
+      if dc_wf.getPortalType() not in ['Workflow', 'Interaction Workflow']:
         self.workflow_module.dc_workflow_asERP5Object(self.workflow_module, dc_wf, temp=0)
-        #type_test_object.addTypeWorkflowList(workflow.id)
+      #type_test_object.addTypeWorkflowList(workflow.id)
 
-    type_test_object.addTypeWorkflowList('interactionworkflow_testing_interaction_workflow')
-    type_test_object.addTypeWorkflowList('workflow_testing_workflow') 
+    type_test_object.addTypeWorkflowList('testing_interaction_workflow')
+    type_test_object.addTypeWorkflowList('testing_workflow') 
 
-    self.wf = self.workflow_module._getOb('workflow_testing_workflow') # workflow id comes with suffix
+    self.wf = self.workflow_module._getOb('testing_workflow')
     self.resetComponentTool()
     self.assertFalse('testing_workflow' in self.getWorkflowTool().getChainFor(type_test_object.getId()))
     self.login()
 
   def getStateFor(self, document):
     return getattr(document, 'getValidationState')()
-
-  def doActionFor(self, document, action):
-    user_action = action
-    self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'workflow_testing_workflow')
 
 class TestDCWorkflow(TestERP5WorkflowMixin):
   """
@@ -261,12 +261,8 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
   def getStateFor(self, document):
     return self.wf._getWorkflowStateOf(document, id_only=True)
 
-  def doActionFor(self, document, action):
-    user_action = action
-    self.portal.portal_workflow.doActionFor(document, user_action, wf_id = 'testing_workflow')
-
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestConvertedWorkflow))
   suite.addTest(unittest.makeSuite(TestDCWorkflow))
+  suite.addTest(unittest.makeSuite(TestConvertedWorkflow))
   return suite
