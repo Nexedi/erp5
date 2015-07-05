@@ -371,13 +371,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     if root is None:
       root = Element('erp5')
       return_as_object = False
-
-    # Define a list of __dict__.keys to show to users:
-    # It seems even in DC interaction workflow, creation guard hasn't been configured;
-    # so it is not used? thus I didn't show creation guard as xml here. (zwj)
     interaction_workflow_prop_id_to_show = {'title':'string',
           'description':'text', 'manager_bypass':'int'}
-    # workflow as XML, need to rename DC workflow's portal_type before comparison.
     interaction_workflow = SubElement(root, 'interaction_workflow',
                         attrib=dict(reference=self.getReference(),
                         portal_type='Interaction Workflow'))
