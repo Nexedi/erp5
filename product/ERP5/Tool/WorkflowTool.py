@@ -446,6 +446,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             interaction.setExpression(tdef.guard.expr)
           interaction.setPortalTypeFilter(tdef.portal_type_filter)
           interaction.setPortalTypeGroupFilter(tdef.portal_type_group_filter)
+
+          # following 2 if are due to workflow migration compatibilities
+          if interaction.portal_type_filter == ():
+            interaction.portal_type_filter = None
+          if interaction.portal_type_group_filter == ():
+            interaction.portal_type_group_filter = None
+
           interaction.setTemporaryDocumentDisallowed(tdef.temporary_document_disallowed)
           #interaction.setTransitionFormId() # this is not defined in DC interaction?
           interaction.setTriggerMethodId(tdef.method_id)
@@ -862,11 +869,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   def _finalizeWorkflowConversion(self, dc_wf):
     trash_tool = getattr(self.getPortalObject(), 'portal_trash', None)
     if trash_tool is not None:
-      # move old workflow to trash tool
+      # 1. move old workflow to trash tool;
+      # 2. reinitialize workflow accessor.
       LOG('WorkflowTool', WARNING, "Move old workflow '%s' into a trash bin."%dc_wf.id)
       self._delOb(dc_wf.id)
       trashbin = UnrestrictedMethod(trash_tool.newTrashBin)(dc_wf.id)
       trashbin._setOb(dc_wf.id, dc_wf)
+    #self.reset()
 
 InitializeClass(WorkflowTool)
 
