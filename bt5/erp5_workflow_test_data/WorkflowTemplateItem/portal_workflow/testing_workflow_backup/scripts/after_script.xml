@@ -50,21 +50,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-raise ValidationFailed ("foo error")\n
+            <value> <string>document = state_change[\'object\']\n
+document.setDescription("After script was executed.")\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>self</string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>fail_message</string> </value>
+            <value> <string>after_script</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>fail_message</string> </value>
+            <value> <string>after_script</string> </value>
         </item>
       </dictionary>
     </pickle>
