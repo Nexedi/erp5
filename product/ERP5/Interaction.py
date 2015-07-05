@@ -106,6 +106,9 @@ class InteractionDefinition (SimpleItem):
     def getAvailableVarIds(self):
         return self.getWorkflow().variables.keys()
 
+    def getTriggerMethodIdList(self):
+      return self.method_id
+
     _properties_form = DTMLFile('interaction_properties', _dtmldir)
 
     def manage_properties(self, REQUEST, manage_tabs_message=None):
