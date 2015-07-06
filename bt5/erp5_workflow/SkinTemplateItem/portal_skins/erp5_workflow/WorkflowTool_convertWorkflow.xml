@@ -56,7 +56,7 @@ REQUEST = container.REQUEST\n
 RESPONSE = REQUEST.RESPONSE\n
 workflow_list = kw.get(\'workflow_list\')\n
 selected_workflow_list = []\n
-selected_wf_id_list = []\n
+selected_workflow_id_list = []\n
 \n
 if batch_mode == False and workflow_id_list is None:\n
   if workflow_list:\n
@@ -88,7 +88,7 @@ for workflow in selected_workflow_list:\n
   # conversion\n
   dc_workflow_xml = workflow.showAsXML()\n
   new_workflow = context.dc_workflow_asERP5Object(context, workflow, temp=0)\n
-  selected_wf_id_list.append(workflow.id)\n
+  selected_workflow_id_list.append(workflow.id)\n
   assert new_workflow.showAsXML() == dc_workflow_xml\n
 \n
   type_workflow_dict = context.getChainsByType()\n
@@ -106,7 +106,7 @@ if batch_mode:\n
   return\n
 \n
 return RESPONSE.redirect("%s/view?portal_status_message=Workflow+%s+converted"\n
-                         %(context.absolute_url(), \',+\'.join(selected_wf_id_list)))\n
+                         %(context.absolute_url(), \',+\'.join(selected_workflow_id_list)))\n
 </string> </value>
         </item>
         <item>
