@@ -274,6 +274,7 @@
           a,\n
           result = result_list[0],\n
           tmp_url,\n
+          tmp_div,\n
           value,\n
           promise_list = [],\n
           uid_value,\n
@@ -315,8 +316,8 @@
               a.className = "ui-link";\n
               a.textContent = value;\n
               th.appendChild(a);\n
-              tr.appendChild(th);\n
             } else {\n
+              tmp_div = document.createElement("div");\n
               if (gadget.props.listbox_uid_dict.key === undefined) {\n
                 gadget.props.listbox_uid_dict.key = result.data.rows[i].value["listbox_uid:list"].key;\n
                 gadget.props.listbox_uid_dict.value = [result.data.rows[i].value["listbox_uid:list"].value];\n
@@ -329,7 +330,7 @@
                 }\n
               }\n
 \n
-              promise_list.push(renderSubCell(th, value));\n
+              promise_list.push(renderSubCell(tmp_div, value));\n
 \n
               //when a sub field is not editable but it\'s in listbox\'s editable colummn \n
               //then create link, see ListBox.py line 2518\n
@@ -337,12 +338,13 @@
                 a = document.createElement("a");\n
                 a.href = tmp_url;\n
                 a.className = "ui-link";\n
-                a.appendChild(th);\n
-                tr.appendChild(a);\n
+                a.appendChild(tmp_div);\n
+                th.appendChild(a);\n
               } else {\n
-                tr.appendChild(th);\n
+                th.appendChild(tmp_div);\n
               }\n
             }\n
+            tr.appendChild(th);\n
           }\n
 \n
           tbody.appendChild(tr);\n
@@ -625,7 +627,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.8265.37712.58112</string> </value>
+                <value> <string>944.12333.61899.20616</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -643,7 +645,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1435902335.94</float>
+                        <float>1436145492.07</float>
                         <string>GMT+2</string>
                       </tuple>
                     </state>
