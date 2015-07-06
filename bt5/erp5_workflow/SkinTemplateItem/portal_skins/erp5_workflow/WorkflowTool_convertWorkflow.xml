@@ -54,50 +54,56 @@
 \n
 REQUEST = container.REQUEST\n
 RESPONSE = REQUEST.RESPONSE\n
-\n
-workflow_list = kw[\'workflow_list\']\n
-selected_wf_list = []\n
+workflow_list = kw.get(\'workflow_list\')\n
+selected_workflow_list = []\n
 selected_wf_id_list = []\n
 \n
-for wf in workflow_list:\n
-  if wf.get(\'listbox_selected\'):\n
-    selected_wf_list.append(context.getObjectFromPath(wf.get(\'listbox_key\')))\n
+if batch_mode == False and workflow_id_list is None:\n
+  if workflow_list:\n
+    for workflow in workflow_list:\n
+      if workflow.get(\'listbox_selected\'):\n
+        selected_workflow_list.append(context.getObjectFromPath(workflow.get(\'listbox_key\')))\n
+  \n
+  if len(selected_workflow_list) == 0:\n
+    return context.REQUEST.RESPONSE.redirect(\n
+             \'%s/WorkflowTool_viewWorkflowConversion?\'\n
+             \'portal_status_message=%s\' % ( context.absolute_url(),\n
+                                 url_quote(\'No Workflow Selected.\')))\n
+else:\n
+  for workflow_id in workflow_id_list:\n
+    selected_workflow_list.append(getattr(context, workflow_id))\n
 \n
-if len(selected_wf_list) == 0:\n
-  return context.REQUEST.RESPONSE.redirect(\n
-           \'%s/WorkflowTool_viewWorkflowConversion?\'\n
-           \'portal_status_message=%s\' % ( context.absolute_url(),\n
-                               url_quote(\'No Workflow Selected.\')))\n
-\n
-for dc_wf in selected_wf_list:\n
-  workflow = getattr(context, "workflow_"+dc_wf.id, None)\n
-  interaction_workflow = getattr(context, "interactionworkflow_"+dc_wf.id, None)\n
-  if workflow is not None and not workflow.isTempObject():\n
+for workflow in selected_workflow_list:\n
+  if workflow is not None and not workflow.isTempObject() and workflow.getPortalType() == \'Workflow\':\n
     return context.REQUEST.RESPONSE.redirect(\n
              \'%s/WorkflowTool_viewWorkflowConversion?\'\n
              \'portal_status_message=%s\' % ( context.absolute_url(),\n
                                  url_quote(\'workflow(s) is already exist.\')))\n
-  if interaction_workflow is not None and not interaction_workflow.isTempObject():\n
+  if workflow is not None and not workflow.isTempObject() and workflow.getPortalType() == \'Interaction Workflow\':\n
     return context.REQUEST.RESPONSE.redirect(\n
              \'%s/WorkflowTool_viewWorkflowConversion?\'\n
              \'portal_status_message=%s\' % ( context.absolute_url(),\n
                                  url_quote(\'workflow(s) is already exist.\')))\n
 \n
   # conversion\n
-  workflow = context.dc_workflow_asERP5Object(context, dc_wf, temp=0)\n
-  selected_wf_id_list.append(dc_wf.id)\n
-  assert workflow.showAsXML() == dc_wf.showAsXML()\n
+  dc_workflow_xml = workflow.showAsXML()\n
+  new_workflow = context.dc_workflow_asERP5Object(context, workflow, temp=0)\n
+  selected_wf_id_list.append(workflow.id)\n
+  assert new_workflow.showAsXML() == dc_workflow_xml\n
 \n
   type_workflow_dict = context.getChainsByType()\n
   for ptype_id in type_workflow_dict:\n
     ptype = getattr(context.getPortalObject().portal_types, ptype_id, None)\n
-    if ptype is not None and dc_wf.id in context.getChainsByType()[ptype_id]:\n
+    if ptype is not None and workflow.id in context.getChainsByType()[ptype_id]:\n
       # 1. clean DC workflow assignement:\n
-      context.delTypeCBT(ptype.id, dc_wf.id)\n
+      context.delTypeCBT(ptype.id, workflow.id)\n
       # 2. assign ERP5 Workflow to portal type:\n
       type_workflow_list = ptype.getTypeWorkflowList()\n
-      if workflow.getId() not in type_workflow_list:\n
-        ptype.addTypeWorkflowList(workflow.getId())\n
+      if new_workflow.getId() not in type_workflow_list:\n
+        ptype.addTypeWorkflowList(new_workflow.getId())\n
+\n
+if batch_mode:\n
+  return\n
 \n
 return RESPONSE.redirect("%s/view?portal_status_message=Workflow+%s+converted"\n
                          %(context.absolute_url(), \',+\'.join(selected_wf_id_list)))\n
@@ -105,7 +111,7 @@ return RESPONSE.redirect("%s/view?portal_status_message=Workflow+%s+converted"\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>batch_mode=False, workflow_id_list=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
