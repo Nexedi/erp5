@@ -182,11 +182,11 @@
             }\n
             // XXX add first + last class, needs to be improved\n
             if (i === 0) {\n
-              wrapper_class_string = wrapper_class_string || ""; \n
+              wrapper_class_string = wrapper_class_string || "";\n
               wrapper_class_string += \'ui-first-child\';\n
             }\n
             if (i === translated_htmls.length - 1) {\n
-              wrapper_class_string = wrapper_class_string || ""; \n
+              wrapper_class_string = wrapper_class_string || "";\n
               wrapper_class_string += \'ui-last-child\';\n
             }\n
             if (wrapper_class_string) {\n
@@ -199,11 +199,14 @@
     .declareMethod(\'getContent\', function () {\n
       var gadget = this,\n
         result = {},\n
+        tmp = [],\n
         selects = this.props.element.querySelectorAll(\'select\'),\n
         i;\n
+\n
       for (i = 0; i < selects.length; i += 1) {\n
-        result[gadget.props.field_json.sub_select_key + "_" + i] = selects[i].options[selects[i].selectedIndex].value;\n
+        tmp.push(selects[i].options[selects[i].selectedIndex].value);\n
       }\n
+      result[gadget.props.field_json.sub_select_key] = tmp;\n
       result[gadget.props.field_json.sub_input_key] = 0;\n
       return result;\n
     });\n
@@ -330,7 +333,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -344,7 +347,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>941.1091.39269.24183</string> </value>
+                <value> <string>944.12751.13272.54476</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -362,8 +365,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1424106460.96</float>
-                        <string>GMT</string>
+                        <float>1436170826.41</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
