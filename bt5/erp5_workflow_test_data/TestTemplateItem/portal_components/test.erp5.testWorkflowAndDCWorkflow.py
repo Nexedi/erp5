@@ -44,7 +44,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     self.portal.portal_caches.clearAllCache()
 
   def getStateFor(self, document):
-    return self.wf._getWorkflowStateOf(document, id_only=True)
+    return self.workflow._getWorkflowStateOf(document, id_only=True)
 
   def resetComponentTool(self):
     # Force reset of portal_components to regenerate accessors
@@ -196,31 +196,13 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
   """
   def afterSetUp(self):
     self.portal = self.getPortal()
-
-    # reinstall erp5_workflow_test_data template:
-    template_tool = self.portal.portal_templates
-    template_tool.installBusinessTemplateListFromRepository(['erp5_workflow_test_data'])
-
     workflow_module = self.portal.portal_workflow
-    dc_wf_id_list = ['testing_workflow', 'testing_interaction_workflow']
-    # clean the workflow_list assignment
     type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
-    type_test_object.workflow_list = ()
-    ptype_id = 'ERP5Workflow Test Document'
-    type_test_object = self.portal.portal_types._getOb(ptype_id)
-
-
-    for dc_wf_id in dc_wf_id_list:
-      workflow_module.delTypeCBT(ptype_id, dc_wf_id)
-      dc_wf = workflow_module._getOb(dc_wf_id)
-      if dc_wf.getPortalType() not in ['Workflow', 'Interaction Workflow']:
-        workflow_module.dc_workflow_asERP5Object(workflow_module, dc_wf, temp=0)
-      #type_test_object.addTypeWorkflowList(workflow.id)
-
-    type_test_object.addTypeWorkflowList('testing_interaction_workflow')
-    type_test_object.addTypeWorkflowList('testing_workflow') 
+    dc_workflow_id_list = ['testing_workflow', 'testing_interaction_workflow']
+    workflow_module.WorkflowTool_convertWorkflow(batch_mode=True, workflow_id_list = dc_workflow_id_list)
     self.resetComponentTool()
-    self.assertFalse('testing_workflow' in self.getWorkflowTool().getChainFor(type_test_object.getId()))
+    self.assertFalse('testing_workflow' in workflow_module.getChainFor(type_test_object.getId()))
+    self.workflow = workflow_module._getOb('testing_workflow')
     self.login()
 
 class TestDCWorkflow(TestERP5WorkflowMixin):
@@ -229,15 +211,11 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
   """
   def afterSetUp(self):
     self.portal = self.getPortal()
-
-    # reinstall erp5_workflow_test_data template:
-    template_tool = self.portal.portal_templates
-    template_tool.installBusinessTemplateListFromRepository(['erp5_workflow_test_data'])
-
     workflow_module = self.portal.portal_workflow
     workflow_module.setChainForPortalTypes(['ERP5Workflow Test Document'], ('testing_workflow', 'testing_interaction_workflow', 'edit_workflow', ))
     type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
     type_test_object.workflow_list = ()
+    self.workflow = workflow_module._getOb('testing_workflow')
     self.resetComponentTool()
     self.assertEqual(type_test_object.getTypeWorkflowList(), [])
     self.login()
@@ -249,11 +227,11 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     migrated workflow
     """
     self.portal = self.getPortal()
-    self.workflow_module = self.portal.portal_workflow
+    workflow_module = self.portal.portal_workflow
     # Move to state "validated"
     document = self.test_05_testCheckHistoryStateAndActionForASingleTransition()
     # Do conversion
-    self.workflow_module.WorkflowTool_convertWorkflow(batch_mode=True, workflow_id_list=["testing_workflow"])
+    workflow_module.WorkflowTool_convertWorkflow(batch_mode=True, workflow_id_list=["testing_workflow"])
     # Check we can invalidate
     self.doActionFor(document, "invalidate_action")
     # check if history is ok and if we are in state "invalidated"
