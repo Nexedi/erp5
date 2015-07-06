@@ -690,6 +690,10 @@ def updateRoleMappings(self, REQUEST=None):
 
 DCWorkflowDefinition.updateRoleMappings = updateRoleMappings
 
+def DCWorkflowDefinition_getPortalType(self):
+  return self.__class__.__name__
+DCWorkflowDefinition.getPortalType = DCWorkflowDefinition_getPortalType
+
 # this patch allows to get list of portal types for workflow
 def getPortalTypeListForWorkflow(self):
   """
