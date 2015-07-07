@@ -291,6 +291,12 @@ class TestTradeReports(ERP5ReportTestCase):
     request['aggregation_level'] = "year"
     request['group_by'] = "both"
     request['simulation_state'] = ['cancelled', 'draft']
+    request['section_category'] = 'group/g2'
+
+    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
+    request['active_process'] = active_process.getPath()
+    self.tic()
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
     self.assertEqual(1, len(report_section_list))
@@ -300,10 +306,14 @@ class TestTradeReports(ERP5ReportTestCase):
     self.assertEqual(0, len(data_line_list))
 
     #
-    # Year 2005 + 2006, all documents
+    # Year 2005 + 2006, first document for g2
     #
     request['from_date'] = DateTime(2005, 2, 2)
     request['at_date'] = DateTime("2006-12-31")
+    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
+    request['active_process'] = active_process.getPath()
+    self.tic()
 
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
@@ -312,7 +322,7 @@ class TestTradeReports(ERP5ReportTestCase):
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     stat_line_list = [l for l in line_list if l.isStatLine()]
-    self.assertEqual(6, len(data_line_list))
+    self.assertEqual(3, len(data_line_list))
     self.assertEqual(1, len(stat_line_list))
 
     # test columns values
@@ -366,6 +376,39 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 42.0,
                  'total quantity': 7.0}
     self.checkLineProperties(data_line_list[2],**d)
+    # stat line
+    d = {'Amount 2005': None,
+                 'Amount 2006': 75.0,
+                 'Quantity 2005': None,
+                 'Quantity 2006': None,
+                 'Quantity Unit 2005': None,
+                 'Quantity Unit 2006': None,
+                 'client': 'Total',
+                 'product': None,
+                 'total amount': 75.0,
+                 'total quantity': None}
+    self.checkLineProperties(stat_line_list[0],**d)
+
+    #
+    # Year 2005 + 2006, first document for g1
+    #
+    request['from_date'] = DateTime(2005, 2, 2)
+    request['at_date'] = DateTime("2006-12-31")
+    request['section_category'] = 'group/g1'
+    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
+    request['active_process'] = active_process.getPath()
+    self.tic()
+
+    report_section_list = self.getReportSectionList(self.sale_order_module,
+                                                    'OrderModule_viewOrderReport')
+    self.assertEqual(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    stat_line_list = [l for l in line_list if l.isStatLine()]
+    self.assertEqual(3, len(data_line_list))
+    self.assertEqual(1, len(stat_line_list))
 
     # Second organisation
     d = {'Amount 2005': 0,
@@ -378,7 +421,7 @@ class TestTradeReports(ERP5ReportTestCase):
                  'product': None,
                  'total amount': 21.0,
                  'total quantity': None}
-    self.checkLineProperties(data_line_list[3],**d)
+    self.checkLineProperties(data_line_list[0],**d)
 
     # Product one for second organisation
     d = {'Amount 2005': 0,
@@ -391,7 +434,7 @@ class TestTradeReports(ERP5ReportTestCase):
                  'product': 'product_A',
                  'total amount': 15.0,
                  'total quantity': 5.0}
-    self.checkLineProperties(data_line_list[4],**d)
+    self.checkLineProperties(data_line_list[1],**d)
 
     # Product two for second organisation
     d = {'Amount 2005': 0,
@@ -404,18 +447,18 @@ class TestTradeReports(ERP5ReportTestCase):
                  'product': 'product_B',
                  'total amount': 6.0,
                  'total quantity': 1.0}
-    self.checkLineProperties(data_line_list[5],**d)
+    self.checkLineProperties(data_line_list[2],**d)
 
     # stat line
     d = {'Amount 2005': None,
-                 'Amount 2006': 96.0,
+                 'Amount 2006': 21.0,
                  'Quantity 2005': None,
                  'Quantity 2006': None,
                  'Quantity Unit 2005': None,
                  'Quantity Unit 2006': None,
                  'client': 'Total',
                  'product': None,
-                 'total amount': 96.0,
+                 'total amount': 21.0,
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
 
@@ -427,6 +470,10 @@ class TestTradeReports(ERP5ReportTestCase):
     request['at_date'] = DateTime(2007, 12, 31)
     request['simulation_state'] = ['draft',]
     request['section_category'] = 'group/g2'
+    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
+    request['active_process'] = active_process.getPath()
+    self.tic()
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
     self.assertEqual(1, len(report_section_list))
@@ -486,18 +533,22 @@ class TestTradeReports(ERP5ReportTestCase):
     self.checkLineProperties(stat_line_list[0],**d)
 
     # weekly aggregation level
+    # first for g2
     request['from_date'] = DateTime(2006, 2, 1)
     request['at_date'] = DateTime(2006, 2, 28)
     request['aggregation_level'] = "week"
-    request['section_category'] = None
     request['group_by'] = "client"
     request['simulation_state'] = ['cancelled', 'draft']
+    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
+    request['active_process'] = active_process.getPath()
+    self.tic()
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
     self.assertEqual(1, len(report_section_list))
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEqual(2, len(data_line_list))
+    self.assertEqual(1, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0],
                    **{'Amount 2006-05': 11*3 + 7*6,
@@ -507,7 +558,36 @@ class TestTradeReports(ERP5ReportTestCase):
                       'Amount 2006-09': 0,
                       'client': 'Organisation_1',
                       'total amount': 3*11 + 7*6})
-    self.checkLineProperties(data_line_list[1],
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+                   **{'Amount 2006-05': 11*3 + 7*6,
+                      'Amount 2006-06': None,
+                      'Amount 2006-07': None,
+                      'Amount 2006-08': None,
+                      'Amount 2006-09': None,
+                      'client': 'Total',
+                      'total amount': 3*11 + 7*6})
+
+    # weekly aggregation level
+    # first for g2
+    request['from_date'] = DateTime(2006, 2, 1)
+    request['at_date'] = DateTime(2006, 2, 28)
+    request['aggregation_level'] = "week"
+    request['group_by'] = "client"
+    request['simulation_state'] = ['cancelled', 'draft']
+    request['section_category'] = 'group/g1'
+    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
+    request['active_process'] = active_process.getPath()
+    self.tic()
+    report_section_list = self.getReportSectionList(self.sale_order_module,
+                                                    'OrderModule_viewOrderReport')
+    self.assertEqual(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
                    **{'Amount 2006-05': 0,
                       'Amount 2006-06': 0,
                       'Amount 2006-07': 0,
@@ -518,13 +598,15 @@ class TestTradeReports(ERP5ReportTestCase):
 
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1],
-                   **{'Amount 2006-05': 11*3 + 7*6,
+                   **{'Amount 2006-05': None,
                       'Amount 2006-06': None,
                       'Amount 2006-07': None,
                       'Amount 2006-08': 5*3 + 6,
                       'Amount 2006-09': None,
                       'client': 'Total',
-                      'total amount': 3*11 + 7*6 + 5*3 + 6})
+                      'total amount': 5*3 + 6})
+
+
 
 
     # dates not specified -> they should be guessed
@@ -534,6 +616,10 @@ class TestTradeReports(ERP5ReportTestCase):
     request['aggregation_level'] = "year"
     request['group_by'] = "both"
     request['section_category'] = 'group/g2'
+    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
+    request['active_process'] = active_process.getPath()
+    self.tic()
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
     self.assertEqual(1, len(report_section_list))
@@ -597,6 +683,10 @@ class TestTradeReports(ERP5ReportTestCase):
     request['aggregation_level'] = "year"
     request['group_by'] = "both"
     request['section_category'] = 'group/g3'
+    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
+    request['active_process'] = active_process.getPath()
+    self.tic()
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
     self.assertEqual(1, len(report_section_list))
