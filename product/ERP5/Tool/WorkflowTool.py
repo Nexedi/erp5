@@ -126,7 +126,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
     from Products.ERP5Workflow.Document.InteractionWorkflow import InteractionWorkflow
     workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
-    if workflow_id is None:
+    if wf_id is None:
       if not workflow_list:
         raise WorkflowException('No workflows found.')
       found = False
@@ -140,7 +140,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         raise WorkflowException('No workflow provides the destination state %r'\
                                                                       % state_id)
     else:
-      workflow = self.getWorkflowById(workflow_id)
+      workflow = self.getWorkflowById(wf_id)
       if workflow is None:
         raise WorkflowException('Requested workflow definition not found.')
 
