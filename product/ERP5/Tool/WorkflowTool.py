@@ -349,6 +349,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           state.setDescription(sdef.description)
           permission_roles = sdef.permission_roles
           state.setStatePermissionRoles(permission_roles)
+          state.setCellRange(sorted(sdef.permission_roles.keys()),
+                sorted(workflow.getRoleList()),
+                base_id='cell')
           i = -1
           for permission in sorted(workflow.getWorkflowManagedPermissionList()):
             i = i + 1
