@@ -53,132 +53,62 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.PythonScripts.standard import Object\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
+from json import loads\n
 \n
 portal = context.getPortalObject()\n
-category_tool = portal.portal_categories\n
 \n
 request = container.REQUEST\n
-from_date = request.get(\'from_date\', None)\n
-to_date = request.get(\'at_date\', None)\n
-aggregation_level = request.get(\'aggregation_level\', None)\n
 report_group_by = request.get(\'group_by\', None)\n
-# get all category\n
-incoterm = request.get(\'incoterm\', None)\n
-section_category = request.get(\'section_category\', None)\n
-order = request.get(\'order\', None)\n
-delivery_mode = request.get(\'delivery_mode\', None)\n
+active_process_path = request.get(\'active_process\')\n
 \n
-catalog_params = {}\n
-\n
-# get all organisations for the selected section category\n
-if section_category:\n
-  group_uid = category_tool.getCategoryValue(section_category).getUid()\n
-  organisation_uid_list = [x.uid for x in portal.portal_catalog(\n
-                                            portal_type="Organisation",\n
-                                            default_group_uid=group_uid)]\n
-  if report_type == "sale":\n
-    catalog_params[\'default_source_section_uid\'] = organisation_uid_list or -1\n
-  elif report_type:\n
-    catalog_params[\'default_destination_section_uid\'] = organisation_uid_list or -1\n
-\n
-# add category params if defined\n
-if incoterm not in (\'\', None):\n
-  incoterm_uid = category_tool.incoterm.restrictedTraverse(incoterm).getUid()\n
-  catalog_params[\'default_incoterm_uid\'] = incoterm_uid\n
-if order not in (\'\', None):\n
-  order_uid = category_tool.order.restrictedTraverse(order).getUid()\n
-  catalog_params[\'default_order_uid\'] = order_uid\n
-if delivery_mode not in (\'\', None):\n
-  delivery_mode_uid = category_tool.delivery_mode.restrictedTraverse(delivery_mode).getUid()\n
-  catalog_params[\'default_delivery_mode_uid\'] = delivery_mode_uid\n
-\n
-# compute sql params, we group and order by date and portal type\n
-if aggregation_level == "year":\n
-  date_format = "%Y"\n
-elif aggregation_level == "month":\n
-  date_format = "%Y-%m"\n
-elif aggregation_level == "week":\n
-  date_format = "%Y-%U"\n
-elif aggregation_level == "day":\n
-  date_format = "%Y-%m-%d"\n
-\n
-params = {"delivery.start_date":(from_date, to_date)}\n
-query=None\n
-if from_date is not None and to_date is not None:\n
-  params = {"delivery.start_date":(from_date, to_date)}\n
-  query = Query(range="minngt", **params)\n
-elif from_date is not None:\n
-  params = {"delivery.start_date":from_date}\n
-  query = Query(range="min", **params)\n
-elif to_date is not None:\n
-  params = {"delivery.start_date":to_date}\n
-  query = Query(range="ngt", **params)\n
-\n
-sort_on_list = [ (\'delivery.destination_section_uid\', \'ASC\'), (\'delivery.start_date\',\'ASC\')]\n
-\n
-if request.get(\'use_selection\'):\n
-  selection_name = request[\'selection_name\']\n
-  result_list = \\\n
-        context.portal_selections.callSelectionFor(request[\'selection_name\'])\n
-else:\n
-  result_list = context.portal_catalog.searchResults(limit=None,query=query,\n
-                                                   portal_type=doc_portal_type,\n
-                                                   simulation_state=simulation_state,\n
-                                                   sort_on=sort_on_list,\n
-                                                   **catalog_params)\n
-\n
-\n
-# we build two dict, one that store amount per period per client\n
-# and another that either store amount per period per product and per client\n
-# or only amount per period per product dependings on choosen group by\n
-client_dict = {}\n
-product_dict = {}\n
-for result in result_list:\n
-  result = result.getObject()\n
-  period = result.getStartDate()\n
-  if period is not None:\n
-    period = period.strftime(date_format)\n
-  if report_group_by in ("client", "both"):\n
-    # client_title -> period -> amount\n
-    if report_type == "sale":\n
-      client_title = result.getDestinationSectionTitle()\n
-    else:\n
-      client_title = result.getSourceSectionTitle()\n
-    # FIXME: if two clients have the same title, do we want to group ?\n
-    if not client_dict.has_key(client_title):\n
-      client_dict[client_title] = {}\n
-    if client_dict[client_title].has_key(period):\n
-      client_dict[client_title][period][\'amount\'] = client_dict[client_title][period][\'amount\'] + result.getTotalPrice()\n
-    else:\n
-      client_dict[client_title][period] = {\'amount\' : result.getTotalPrice()}\n
-    if not product_dict.has_key(client_title):\n
-      line_dict = product_dict[client_title] = {}\n
-    else:\n
-      line_dict = product_dict[client_title]\n
+# We have to sum product_dict and client_dict from the results of active process\n
+def _addDict(global_dict, local_dict, only_amount=False):\n
+  if report_group_by == "both" and not only_amount:\n
+    # we have client -> product -> period -> amount\n
+    for local_title, local_product_dict in local_dict.iteritems():\n
+      product_dict = global_dict.setdefault(local_title, {})\n
+      for local_product, local_period_dict in local_product_dict.iteritems():\n
+        period_dict = product_dict.setdefault(local_product, {})\n
+        for period, local_amount_dict in local_period_dict.iteritems():\n
+          amount_dict = period_dict.setdefault(period, {\'amount\' : 0, \'quantity\' : 0, \'quantity_unit\' : \'\'})\n
+          amount_dict[\'amount\'] = amount_dict[\'amount\'] + local_amount_dict[\'amount\']\n
+          amount_dict[\'quantity\'] = amount_dict[\'quantity\'] + local_amount_dict[\'quantity\']\n
+          amount_dict[\'quantity_unit\'] = local_amount_dict[\'quantity_unit\']\n
   else:\n
-    line_dict = product_dict\n
+    # We have client or product -> period -> amount\n
+    for local_title, local_period_dict in local_dict.iteritems():\n
+      period_dict = global_dict.setdefault(local_title, {})\n
+      for period, local_amount_dict in local_period_dict.iteritems():\n
+        amount_dict = period_dict.setdefault(period, {\'amount\' : 0, \'quantity\' : 0, \'quantity_unit\' : \'\'})\n
+        amount_dict[\'amount\'] = amount_dict[\'amount\'] + local_amount_dict[\'amount\']\n
+        if not only_amount:\n
+          amount_dict[\'quantity\'] = amount_dict[\'quantity\'] + local_amount_dict[\'quantity\']\n
+          amount_dict[\'quantity_unit\'] = local_amount_dict[\'quantity_unit\']\n
 \n
-  if report_group_by != "client":\n
-    # client_title -> product_title -> period -> amount/quantity...\n
-    # or product_title -> period -> amount/quantity...\n
-    for line in result.contentValues(filter = {\'portal_type\':line_portal_type}):\n
-      # FIXME: if two resources have the same title, do we want to group ?\n
-      product_title = line.getResourceTitle()\n
-      if not line_dict.has_key(product_title):\n
-        line_dict[product_title] = {period :{"amount" : line.getTotalPrice(),\n
-                                             "quantity" : line.getTotalQuantity(),\n
-                                             "quantity_unit" : line.getQuantityUnitTranslatedTitle()}}\n
-      else:\n
-        if not line_dict[product_title].has_key(period):\n
-          line_dict[product_title][period] = {"amount" : line.getTotalPrice(),\n
-                                               "quantity" : line.getTotalQuantity(),\n
-                                               "quantity_unit" : line.getQuantityUnitTranslatedTitle()}\n
-        else:\n
-          line_dict[product_title][period][\'amount\'] = line_dict[product_title][period][\'amount\'] + line.getTotalPrice()\n
-          line_dict[product_title][period][\'quantity\'] = line_dict[product_title][period][\'quantity\'] + line.getTotalQuantity()\n
-\n
-\n
+product_dict = {}\n
+client_dict = {}\n
+if active_process_path:\n
+  active_process = portal.restrictedTraverse(active_process_path)\n
+  for result in active_process.getResultList():\n
+    if result.summary:\n
+      continue\n
+    detail = loads(result.detail)\n
+    if detail[\'type\'] == "result":\n
+      result_product_dict = detail[\'product_dict\']\n
+      result_client_dict = detail["client_dict"]  \n
+    else:\n
+      continue\n
+    if not len(client_dict) and len(result_client_dict):\n
+      client_dict = result_client_dict.copy()\n
+    else:\n
+      _addDict(client_dict, result_client_dict, only_amount=True)\n
+    \n
+    if not len(product_dict) and len(result_product_dict):\n
+      product_dict = result_product_dict.copy()\n
+    else:\n
+      _addDict(product_dict, result_product_dict)\n
+else:\n
+  raise ValueError("No active process found to process report")\n
 \n
 def sortProduct(a, b):\n
   return cmp(a[\'product\'], b[\'product\'])\n
@@ -311,6 +241,14 @@ return line_list\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>period_list, report_type, doc_portal_type, line_portal_type, simulation_state,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

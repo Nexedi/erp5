@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from json import dumps\n
+from Products.CMFActivity.ActiveResult import ActiveResult\n
+\n
+# we build two dict, one that store amount per period per lient\n
+# and another that either store amount per period per product and per client\n
+# or only amount per period per product dependings on choosen group by\n
+client_dict = {}\n
+product_dict = {}\n
+portal = context.getPortalObject()\n
+translate = portal.Base_translateString\n
+# Retrieve all lines related to documents\n
+line_list = portal.portal_catalog(explanation_uid=[x[\'uid\'] for x in document_list],\n
+    select_list=[\'total_price\', \'quantity\', \'resource_title\', \'strict_quantity_unit_title\', \'explanation_uid\'],\n
+    **line_params)\n
+\n
+doc_line_dict = {}\n
+for line in line_list:\n
+  doc_lines = doc_line_dict.setdefault(line.explanation_uid, [])\n
+  doc_lines.append(line)\n
+  \n
+for result in document_list:\n
+  try:\n
+    line_list = doc_line_dict[result[\'uid\']]\n
+  except KeyError:\n
+    line_list = []\n
+  \n
+  period = result[\'start_date\']\n
+  if period is not None:\n
+    period = period.strftime(date_format)\n
+  if report_group_by in ("client", "both"):\n
+    total_price = sum([(x.total_price or 0) for x in line_list])\n
+    # client_title -> period -> amount\n
+    if report_type == "sale":\n
+      client_title = result[\'destination_section_title\']\n
+    else:\n
+      client_title = result[\'source_section_title\']\n
+    # FIXME: if two clients have the same title, do we want to group ?\n
+    if not client_dict.has_key(client_title):\n
+      client_dict[client_title] = {}\n
+    if client_dict[client_title].has_key(period):\n
+      client_dict[client_title][period][\'amount\'] = client_dict[client_title][period][\'amount\'] + (total_price or 0)\n
+    else:\n
+      client_dict[client_title][period] = {\'amount\' : total_price or 0}\n
+    if not product_dict.has_key(client_title):\n
+      line_dict = product_dict[client_title] = {}\n
+    else:\n
+      line_dict = product_dict[client_title]\n
+  else:\n
+    line_dict = product_dict\n
+    \n
+  if report_group_by != "client":\n
+    # client_title -> product_title -> period -> amount/quantity...\n
+    # or product_title -> period -> amount/quantity...\n
+    for line in line_list: \n
+      # FIXME: if two resources have the same title, do we want to group ?\n
+      product_title = line.resource_title\n
+      if not line_dict.has_key(product_title):\n
+        line_dict[product_title] = {period :{"amount" : line.total_price or 0,\n
+                                             "quantity" : line.quantity or 0,\n
+                                             "quantity_unit" : translate(line.strict_quantity_unit_title)}}\n
+      else:\n
+        if not line_dict[product_title].has_key(period):\n
+          line_dict[product_title][period] = {"amount" : line.total_price or 0,\n
+                                               "quantity" : line.quantity or 0,\n
+                                               "quantity_unit" : translate(line.strict_quantity_unit_title)}\n
+        else:\n
+          line_dict[product_title][period][\'amount\'] = line_dict[product_title][period][\'amount\'] + (line.total_price or 0)\n
+          line_dict[product_title][period][\'quantity\'] = line_dict[product_title][period][\'quantity\'] + (line.quantity or 0)\n
+\n
+active_process_value = portal.restrictedTraverse(active_process)\n
+active_process_value.postResult(ActiveResult(\n
+  sevrity=1,\n
+  detail=dumps({\n
+      \'type\' : "result",\n
+      \'client_dict\' : client_dict,\n
+      \'product_dict\' : product_dict,\n
+      })\n
+      ))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>document_list, active_process, line_params, date_format, report_type, report_group_by</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>OrderModule_processOrderStat</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

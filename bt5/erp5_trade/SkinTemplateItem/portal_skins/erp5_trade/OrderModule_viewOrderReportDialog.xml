@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>OrderModule_viewOrderReport</string> </value>
+            <value> <string>OrderModule_getOrderReport</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,7 +83,6 @@
                       <list>
                         <string>your_portal_skin</string>
                         <string>your_format</string>
-                        <string>your_deferred_style</string>
                       </list>
                     </value>
                 </item>
@@ -104,7 +103,6 @@
                         <string>your_incoterm</string>
                         <string>your_order</string>
                         <string>your_landscape</string>
-                        <string>your_use_selection</string>
                       </list>
                     </value>
                 </item>
@@ -155,6 +153,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

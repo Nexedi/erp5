@@ -50,31 +50,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Form.Report import ReportSection\n
-from DateTime import DateTime\n
-\n
-params, stat_columns, selection_columns = context.OrderModule_getOrderReportParameterDict()\n
-\n
-context.REQUEST.set(\'stat_columns\', stat_columns)\n
-result=[]\n
-result.append(ReportSection(\n
-              path=context.getPhysicalPath(),\n
-              selection_columns=selection_columns,\n
-              listbox_display_mode=\'FlatListMode\',\n
-              selection_params=params,\n
-              form_id=\'OrderModule_viewOrderStatList\'))\n
-\n
-\n
-return result\n
+            <value> <string>return context.OrderModule_launchOrderReport(\n
+  report_method_id = "OrderModule_viewOrderReport",\n
+  *args,\n
+  **kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OrderModule_getOrderReportSectionList</string> </value>
+            <value> <string>OrderModule_getOrderReport</string> </value>
         </item>
       </dictionary>
     </pickle>
