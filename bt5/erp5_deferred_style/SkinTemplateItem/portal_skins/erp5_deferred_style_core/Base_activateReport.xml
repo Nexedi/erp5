@@ -51,7 +51,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>request = container.REQUEST\n
-RESPONSE =  request.RESPONSE\n
 \n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
@@ -92,7 +91,7 @@ for k, v in request.items():\n
 \n
 \n
 \n
-context.activate(activity="SQLQueue", tag=tag, \n
+context.activate(activity="SQLQueue", tag=tag, after_tag=after_tag,\n
   priority=priority).Base_computeReportSection(\n
     form=form.getId(), \n
     request_other=request_other, \n
@@ -112,7 +111,7 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form, **kw</string> </value>
+            <value> <string>form, after_tag=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
