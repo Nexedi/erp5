@@ -6438,7 +6438,11 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 (function (jIO, RSVP, Rusha) {\n
   "use strict";\n
 \n
-  var rusha = new Rusha();\n
+  var rusha = new Rusha(),\n
+    CONFLICT_THROW = 0,\n
+    CONFLICT_KEEP_LOCAL = 1,\n
+    CONFLICT_KEEP_REMOTE = 2,\n
+    CONFLICT_CONTINUE = 3;\n
 \n
   /****************************************************\n
    Use a local jIO to read/write/search documents\n
@@ -6469,6 +6473,24 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     });\n
 \n
     this._use_remote_post = spec.use_remote_post || false;\n
+\n
+    this._conflict_handling = spec.conflict_handling || 0;\n
+    // 0: no resolution (ie, throw an Error)\n
+    // 1: keep the local state\n
+    //    (overwrites the remote document with local content)\n
+    //    (delete remote document if local is deleted)\n
+    // 2: keep the remote state\n
+    //    (overwrites the local document with remote content)\n
+    //    (delete local document if remote is deleted)\n
+    // 3: keep both copies (leave documents untouched, no signature update)\n
+    if ((this._conflict_handling !== CONFLICT_THROW) &&\n
+        (this._conflict_handling !== CONFLICT_KEEP_LOCAL) &&\n
+        (this._conflict_handling !== CONFLICT_KEEP_REMOTE) &&\n
+        (this._conflict_handling !== CONFLICT_CONTINUE)) {\n
+      throw new jIO.util.jIOError("Unsupported conflict handling: " +\n
+                                  this._conflict_handling, 400);\n
+    }\n
+\n
     this._check_local_modification = spec.check_local_modification;\n
     if (this._check_local_modification === undefined) {\n
       this._check_local_modification = true;\n
@@ -6624,6 +6646,13 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                 skip_document_dict[id] = null;\n
               });\n
           }\n
+          if (options.conflict_ignore === true) {\n
+            return;\n
+          }\n
+          if (options.conflict_force === true) {\n
+            return propagateModification(source, destination, doc, local_hash,\n
+                                         id, options);\n
+          }\n
           // Already exists on destination\n
           throw new jIO.util.jIOError("Conflict on \'" + id + "\'",\n
                                       409);\n
@@ -6695,7 +6724,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         });\n
     }\n
 \n
-    function checkSignatureDifference(queue, source, destination, id) {\n
+    function checkSignatureDifference(queue, source, destination, id,\n
+                                      conflict_force, conflict_ignore) {\n
       queue\n
         .push(function () {\n
           return RSVP.all([\n
@@ -6724,8 +6754,13 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                         skip_document_dict[id] = null;\n
                       });\n
                   }\n
-                  throw new jIO.util.jIOError("Conflict on \'" + id + "\'",\n
-                                              409);\n
+                  if (conflict_ignore === true) {\n
+                    return;\n
+                  }\n
+                  if (conflict_force !== true) {\n
+                    throw new jIO.util.jIOError("Conflict on \'" + id + "\'",\n
+                                                409);\n
+                  }\n
                 }\n
                 return propagateModification(source, destination, doc,\n
                                              local_hash, id);\n
@@ -6800,7 +6835,9 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             if (signature_dict.hasOwnProperty(key)) {\n
               if (local_dict.hasOwnProperty(key)) {\n
                 if (options.check_modification === true) {\n
-                  checkSignatureDifference(queue, source, destination, key);\n
+                  checkSignatureDifference(queue, source, destination, key,\n
+                                           options.conflict_force,\n
+                                           options.conflict_ignore);\n
                 }\n
               } else {\n
                 if (options.check_deletion === true) {\n
@@ -6856,6 +6893,12 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                              context._remote_sub_storage,\n
                              {\n
               use_post: context._use_remote_post,\n
+              conflict_force: (context._conflict_handling ===\n
+                               CONFLICT_KEEP_LOCAL),\n
+              conflict_ignore: ((context._conflict_handling ===\n
+                                 CONFLICT_CONTINUE) ||\n
+                                (context._conflict_handling ===\n
+                                 CONFLICT_KEEP_REMOTE)),\n
               check_modification: context._check_local_modification,\n
               check_creation: context._check_local_creation,\n
               check_deletion: context._check_local_deletion\n
@@ -6880,6 +6923,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           return pushStorage(context._remote_sub_storage,\n
                              context._local_sub_storage, {\n
               use_bulk_get: use_bulk_get,\n
+              conflict_force: (context._conflict_handling ===\n
+                               CONFLICT_KEEP_REMOTE),\n
+              conflict_ignore: (context._conflict_handling ===\n
+                                CONFLICT_CONTINUE),\n
               check_modification: context._check_remote_modification,\n
               check_creation: context._check_remote_creation,\n
               check_deletion: context._check_remote_deletion\n
@@ -9463,7 +9510,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.59862.59095.15223</string> </value>
+                <value> <string>944.14671.54706.17698</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -9481,7 +9528,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1435594150.39</float>
+                        <float>1436285852.98</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
