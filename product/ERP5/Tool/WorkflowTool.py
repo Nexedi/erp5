@@ -118,6 +118,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     PropertySheet.DublinCore,
   )
 
+  def filtered_meta_types(self):
+    return False
+
   def _jumpToStateFor(self, ob, state_id, wf_id=None, *args, **kw):
     """Inspired from doActionFor.
     This is public method to allow passing meta transition (Jump form
