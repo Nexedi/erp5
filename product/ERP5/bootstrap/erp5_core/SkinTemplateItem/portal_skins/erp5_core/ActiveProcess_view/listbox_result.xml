@@ -10,15 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>list_method</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listbox_result</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,41 +72,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>summary</string>
-                          <string>Summary</string>
-                        </tuple>
-                        <tuple>
-                          <string>severity</string>
-                          <string>Severity</string>
-                        </tuple>
-                        <tuple>
-                          <string>detail</string>
-                          <string>Details</string>
-                        </tuple>
-                        <tuple>
-                          <string>result</string>
-                          <string>Result</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_text_area_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -116,23 +85,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Results</string> </value>
+                    <value> <string>Result</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>ActiveProcess_getResultList</string> </value>
         </item>
       </dictionary>
     </pickle>
