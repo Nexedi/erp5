@@ -402,19 +402,13 @@ WorkflowTool._bootstrap = WorkflowTool_bootstrap
 def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   """
     Returns a list of actions to be displayed to the user.
-
         o Invoked by the portal_actions tool.
-
         o Allows workflows to include actions to be displayed in the
           actions box.
-
         o Object actions are supplied by workflows that apply to the object.
-
         o Global actions are supplied by all workflows.
-
     This patch attemps to make listGlobalActions aware of worklists,
     which allows factorizing them into one single SQL query.
-
     Related keys are supported.
     Warning: the worklist cache does not support them.
   """
@@ -430,20 +424,20 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   if document is not None:
     document_pt = document.getTypeInfo()
     if document_pt is not None:
-      workflow_list = document_pt.getTypeERP5WorkflowList()
+      workflow_list = document_pt.getTypeWorkflowList()
       if (workflow_list is not None) and (workflow_list is not []):
         for wf_id in workflow_list:
           did[wf_id] = None
-          wf = self.getPortalObject().getDefaultModule('Workflow')._getOb(wf_id, None)
+          wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
           if wf is None:
             raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
           a = wf.listObjectActions(info)
-          if a is not None:
+          if a is not None and a != []:
             actions.extend(a)
           a = wf.getWorklistVariableMatchDict(info)
           if a is not None:
             worklist_dict[wf_id] = a
-
+  # DC workflow compatibility
   for wf_id in chain:
     did[wf_id] = None
     wf = self.getWorkflowById(wf_id)
@@ -508,6 +502,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
       worklist_result_dict = {}
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible
       # conditions
+
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
@@ -576,6 +571,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           key=lambda x: '/'.join((x['workflow_id'], x['worklist_id'])),
         )
       return action_list
+
     user = str(_getAuthenticatedUser(self))
     if src__:
       actions = _getWorklistActionList()
@@ -585,7 +581,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         cache_factory = 'erp5_ui_short')
       actions.extend(_getWorklistActionList())
   return actions
-
 WorkflowTool.listActions = WorkflowTool_listActions
 
 def _getWorklistIgnoredSecurityColumnSet(self):
