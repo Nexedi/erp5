@@ -30,12 +30,9 @@
 
 from zLOG import LOG
 from Products.ZSQLCatalog.interfaces.operator import IOperator
+from Products.ZSQLCatalog.Utils import sqlquote as escapeString
 from zope.interface.verify import verifyClass
 from zope.interface import implements
-
-def escapeString(value):
-  # Inspired from ERP5Type/Utils:sqlquote, but this product must not depend on it.
-  return "'" + value.replace('\\', '\\\\').replace("'", "''") + "'"
 
 def valueFloatRenderer(value):
   if isinstance(value, basestring):

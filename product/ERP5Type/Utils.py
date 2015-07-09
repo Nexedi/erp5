@@ -1490,28 +1490,6 @@ def mergeZRDBResults(results, key_column, edit_result):
     ]))
 
 #####################################################
-# SQL text escaping
-#####################################################
-def sqlquote(x):
-  """
-  Escape data suitable for inclusion in generated ANSI SQL92 code for
-  cases where bound variables are not suitable.
-
-  Inspired from zope/app/rdb/__init__.py:sqlquote, modified to:
-   - use isinstance instead of type equality
-   - use string member methods instead of string module
-  """
-  if isinstance(x, basestring):
-    x = "'" + x.replace('\\', '\\\\').replace("'", "''") + "'"
-  elif isinstance(x, (int, long, float)):
-    pass
-  elif x is None:
-    x = 'NULL'
-  else:
-    raise TypeError, 'do not know how to handle type %s' % type(x)
-  return x
-
-#####################################################
 # Hashing
 #####################################################
 

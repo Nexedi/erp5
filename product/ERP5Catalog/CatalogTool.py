@@ -49,7 +49,7 @@ from MethodObject import Method
 
 from Products.ERP5Security import mergedLocalRoles
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
-from Products.ERP5Type.Utils import sqlquote
+from Products.ZSQLCatalog.Utils import sqlquote
 
 import warnings
 from zLOG import LOG, PROBLEM, WARNING, INFO
