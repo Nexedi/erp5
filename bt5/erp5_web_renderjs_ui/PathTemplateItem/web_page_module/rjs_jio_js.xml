@@ -3885,7 +3885,7 @@ switch( state )\n
 \n
 \tcase 15:\n
 \t\tif( info.src.charCodeAt( pos ) == 34 ) state = 7;\n
-\t\telse if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 33 ) || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 91 ) || ( info.src.charCodeAt( pos ) >= 93 && info.src.charCodeAt( pos ) <= 254 ) ) state = 15;\n
+\telse if( ( info.src.charCodeAt( pos ) >= 0 && info.src.charCodeAt( pos ) <= 33 ) || ( info.src.charCodeAt( pos ) >= 35 && info.src.charCodeAt( pos ) <= 91 ) || ( info.src.charCodeAt( pos ) >= 93 && info.src.charCodeAt( pos ) <= 254 ) || info.src.charCodeAt( pos ) > 255 ) state = 15;\n
 \t\telse if( info.src.charCodeAt( pos ) == 92 ) state = 17;\n
 \t\telse state = -1;\n
 \t\tbreak;\n
@@ -9496,7 +9496,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -9510,7 +9510,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.14671.54706.17698</string> </value>
+                <value> <string>944.18505.23776.13585</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -9528,8 +9528,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1436285852.98</float>
-                        <string>GMT</string>
+                        <float>1436516024.47</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
