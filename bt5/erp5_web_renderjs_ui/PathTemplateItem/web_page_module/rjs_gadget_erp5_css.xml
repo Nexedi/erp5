@@ -190,6 +190,26 @@ html.ui-mobile body .ui-header .ui-title .ui-btn {\n
 \n
 /*\n
    =========================================================================\n
+   =========================  panel f&$* up  ===============================\n
+   =========================================================================\n
+*/\n
+/*\n
+@media (min-width: 64em) { \n
+  div[data-gadget-scope=\'header\'] > div,\n
+  article {\n
+    margin-left: 17em;\n
+    width: auto;\n
+  }\n
+  html body button.responsive[data-i18n=\'Menu\'] {\n
+    display: none;\n
+  }\n
+  .jqm-navmenu-panel .ui-header .ui-controlgroup-controls form .ui-btn {\n
+    display: none;\n
+  }\n
+}\n
+*/\n
+/*\n
+   =========================================================================\n
    ======================== overwriting widgets  ===========================\n
    =========================================================================\n
 */\n
@@ -367,8 +387,9 @@ html body .ui-content-header-plain ~ .ui-content-section {\n
   }\n
 }\n
 \n
-/* section header */\n
-html body section ~ .ui-content-section .ui-content-header-inline {\n
+/* section and form section header */\n
+html body section ~ .ui-content-section .ui-content-header-inline,\n
+html.ui-mobile body form .ui-content-header-inline {\n
   display: block;\n
   font-weight: 700;\n
   border-bottom: 1px solid rgb(115, 115, 115);\n
@@ -5107,7 +5128,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.27958.38361.32614</string> </value>
+                <value> <string>944.18481.169.54254</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -5125,7 +5146,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1433237227.31</float>
+                        <float>1436538928.6</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
