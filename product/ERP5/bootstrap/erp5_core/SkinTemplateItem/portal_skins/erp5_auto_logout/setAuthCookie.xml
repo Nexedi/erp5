@@ -172,29 +172,25 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-from DateTime import DateTime\n
-kw = {\'name\': cookie_name,\n
-      \'value\': cookie_value,\n
-      \'path\': \'/\'}\n
-ac_session_key_pattern = \'ac_cookie_%s\'\n
-user_name = context.REQUEST.get(\'__ac_name\', None)\n
-expire_interval = context.ERP5Site_getMaxUserInactivityDuration(user_name)\n
-\n
-# set cookie expire argument only if it\'s defined for current user\n
-if expire_interval not in (\'\', None):\n
-  expire_interval /= 86400. # seconds -> days\n
-  ac_expires = DateTime() + expire_interval\n
-  ac_renew = DateTime() + expire_interval / 2\n
-  kw[\'expires\'] = ac_expires.toZone(\'GMT\').rfc822()\n
-  # save next \'__ac\' renew time\n
-  context.portal_sessions[ac_session_key_pattern %user_name][\'ac_renew\'] = ac_renew.millis()\n
+portal = context.getPortalObject()\n
+kw = {}\n
+expire_interval = portal.portal_preferences.getPreferredMaxUserInactivityDuration()\n
+if expire_interval in (\'\', None):\n
+  ac_renew = float(\'inf\')\n
 else:\n
-  # cookie will expire at client browser end of session, \n
-  # mark it at server side with zero (0)\n
-  context.portal_sessions[ac_session_key_pattern %user_name][\'ac_renew\'] = 0\n
-\n
-# set cookie\n
-resp.setCookie(**kw)\n
+  expire_interval /= 86400. # seconds -> days\n
+  now = DateTime()\n
+  kw[\'expires\'] = (now + expire_interval).toZone(\'GMT\').rfc822()\n
+  ac_renew = (now + expire_interval / 2).millis()\n
+portal.portal_sessions[portal.Base_getAutoLogoutSessionKey()][\'ac_renew\'] = ac_renew\n
+resp.setCookie(\n
+  name=cookie_name,\n
+  value=cookie_value,\n
+  path=\'/\',\n
+  secure=getattr(portal, \'REQUEST\', {}).get(\'SERVER_URL\', \'\').startswith(\'https:\'),\n
+  http_only=True,\n
+  **kw\n
+)\n
 
 
 ]]></string> </value>

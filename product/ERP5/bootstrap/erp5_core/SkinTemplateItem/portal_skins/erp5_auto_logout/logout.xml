@@ -170,41 +170,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# check if required to renew cookie from sessios\n
-ac_session_key_pattern = \'ac_cookie_%s\'\n
-user_name = context.REQUEST.cookies.get(\'__ac_name\', None)\n
-try:\n
-  session = context.portal_sessions[ac_session_key_pattern %user_name]\n
-except KeyError:\n
-  session = None\n
-if session is not None:\n
-  from DateTime import DateTime\n
-  now = DateTime()\n
-  ac_renew = session.get(\'ac_renew\', None)\n
-  if ac_renew not in (0, None) and now.millis() >= ac_renew:\n
-    # renew cookie (cookies without expire value  will not be renewed)\n
-    context.setAuthCookie(resp, cookie_name, cookie_value)\n
-  elif ac_renew is None:\n
-    # our portal_session at server side might have expired, either\n
-    # due to a cache expire or server restart, renew cookie anyway\n
-    context.setAuthCookie(resp, cookie_name, cookie_value)\n
-
-
-]]></string> </value>
+            <value> <string>portal = context.getPortalObject()\n
+portal.portal_sessions.manage_delObjects(portal.Base_getAutoLogoutSessionKey())\n
+# XXX: I would like to use skinSuper, but this may not be defined on context (it\'s defined on ERP5Type.Base, and context may be ERP5.ERP5Site).\n
+# As a result, hardcode expected logout location (which is marginally better than duplicating it).\n
+return portal.portal_skins.zpt_control.logout()\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>resp, cookie_name, cookie_value</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>twiddleAuthCookie</string> </value>
+            <value> <string>logout</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Renew authentication cookie</string> </value>
+            <value> <string>Logout handler</string> </value>
         </item>
       </dictionary>
     </pickle>

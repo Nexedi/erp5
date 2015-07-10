@@ -170,27 +170,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>REQUEST = context.REQUEST\n
-# delete session\n
-context.portal_sessions.manage_delObjects(\'ac_cookie_%s\' \\\n
-                                            %REQUEST.get(\'__ac_name\', None))\n
-if REQUEST.has_key(\'portal_skin\'):\n
-   context.portal_skins.clearSkinCookie()\n
-REQUEST.RESPONSE.expireCookie(\'__ac\', path=\'/\')\n
-return REQUEST.RESPONSE.redirect(REQUEST.URL1+\'/logged_out\')\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()\n
+if DateTime().millis() >= portal.portal_sessions[portal.Base_getAutoLogoutSessionKey()].get(\'ac_renew\', 0):\n
+  portal.setAuthCookie(resp, cookie_name, cookie_value)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>resp, cookie_name, cookie_value</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>logout</string> </value>
+            <value> <string>twiddleAuthCookie</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Logout handler</string> </value>
+            <value> <string>Renew authentication cookie</string> </value>
         </item>
       </dictionary>
     </pickle>
