@@ -131,6 +131,7 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
         return key_list
 
     def getVarMatch(self, id):
+        """ return value of matched keys"""
         self.var_matches = {}
         matches = ''
         if id == 'portal_type':
@@ -142,9 +143,17 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
             v = [ var.strip() for var in self.getMatchedPortalTypeList() ]
             matches = tuple(v)
         elif id == 'validation_state':
-          matches = tuple([self.getMatchedValidationStateList()])
+          matches_id_list = self.getMatchedValidationStateList()
+          matches_ref_list = []
+          for state_id in matches_id_list:
+            matches_ref_list.append(self.getParent()._getOb(state_id).getReference())
+          matches = tuple(matches_ref_list)
         elif id == 'simulation_stae':
-          matches = tuple([self.getMatchedSimulationStateList()])
+          matches_id_list = self.getMatchedSimulationStateList()
+          matches_ref_list = []
+          for state_id in matches_id_list:
+            matches_ref_list.append(self.getParent()._getOb(state_id).getReference())
+          matches = tuple(matches_ref_list)
         else:
           raise NotImplementedError ("Cataloged variable matching error in Worklist.py")
         if matches is not None:
