@@ -365,10 +365,6 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       (worklist id as key) and which value is a dict composed of
       variable matches.
     """
-    if not info.object.getPortalType() in ['Workflow', 'Interaction Workflow']:
-      # avoid getting DC workflow
-      return
-
     if not self.objectValues(portal_type='Worklist'):
       return None
 
