@@ -389,7 +389,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     workflow_id = self.id
     workflow_title = self.getTitle()
     for worklist_definition in self.objectValues(portal_type='Worklist'):
-      worklist_id = worklist_definition.getId()
+      worklist_id = worklist_definition.getReference()
       action_box_name = worklist_definition.getActboxName()
       guard = worklist_definition.getGuard()
       if action_box_name:
