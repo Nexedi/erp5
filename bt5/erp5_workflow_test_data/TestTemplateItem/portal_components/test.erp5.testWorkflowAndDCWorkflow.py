@@ -192,6 +192,8 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
   """
   def afterSetUp(self):
     self.portal = self.getPortal()
+    module = self.portal.erp5workflow_test_module
+    module.manage_delObjects(list(module.objectIds()))
     workflow_module = self.portal.portal_workflow
     type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
     dc_workflow_id_list = ['testing_workflow', 'testing_interaction_workflow']
@@ -207,6 +209,8 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
   """
   def afterSetUp(self):
     self.portal = self.getPortal()
+    module = self.portal.erp5workflow_test_module
+    module.manage_delObjects(list(module.objectIds()))
     workflow_module = self.portal.portal_workflow
     workflow_module.setChainForPortalTypes(['ERP5Workflow Test Document'], ('testing_workflow', 'testing_interaction_workflow', 'edit_workflow', ))
     type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
