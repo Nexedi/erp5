@@ -125,6 +125,7 @@ dependency_list
 test_dependency_list
 provision_list
 copyright_list
+force_install
 '''.split())
 
   def __init__(self):

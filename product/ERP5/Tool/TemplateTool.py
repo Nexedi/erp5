@@ -495,7 +495,8 @@ class TemplateTool (BaseTool):
       """
       self.repository_dict = PersistentMapping()
       property_list = ('title', 'version', 'revision', 'description', 'license',
-                       'dependency', 'test_dependency', 'provision', 'copyright')
+                       'dependency', 'test_dependency', 'provision', 'copyright',
+                       'force_install')
       #LOG('updateRepositoryBusiessTemplateList', 0,
       #    'repository_list = %r' % (repository_list,))
       for repository in repository_list:
@@ -562,6 +563,8 @@ class TemplateTool (BaseTool):
                   temp_property_dict.get('provision', ())
               property_dict['copyright_list'] = \
                   temp_property_dict.get('copyright', ())
+              property_dict['force_install'] = \
+                  int(temp_property_dict.get('force_install', [0])[0])
 
               property_dict_list.append(property_dict)
           finally:
@@ -1298,8 +1301,8 @@ class TemplateTool (BaseTool):
                        This is useful if we want to keep an old business
                        template without updating it and without removing it
 
-      deprecated_reinstall_set: this parameter needs to be removed
-                                by setting it at business template level.
+      deprecated_reinstall_set: this parameter is obsolete, please set
+                                force_install property at business template level
                                 It list all business templates who needs
                                 reinstall
 
@@ -1323,7 +1326,7 @@ class TemplateTool (BaseTool):
         template_list=dependency_list)
       update_bt5_list.sort(key=lambda x: dependency_list.index(x.title))
       for bt5 in update_bt5_list:
-        reinstall = bt5.title in deprecated_reinstall_set
+        reinstall = bt5.title in deprecated_reinstall_set or bt5.force_install
         if (not(reinstall) and bt5.version_state == 'present') or \
             bt5.title in keep_bt5_id_set:
           continue
