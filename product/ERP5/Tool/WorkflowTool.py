@@ -711,7 +711,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
 
     document = info.object
 
-    if document is not None:
+    if document:
       document_pt = document.getTypeInfo()
       if document_pt is not None:
         workflow_list = document_pt.getTypeWorkflowList()
