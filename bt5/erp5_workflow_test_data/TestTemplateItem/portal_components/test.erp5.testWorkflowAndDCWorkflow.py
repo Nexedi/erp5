@@ -21,7 +21,6 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
 
   def checkWorklist(self, result, name, count, url_parameter_dict=None):
     entry_list = [x for x in result if x['name'].startswith(name)]
-    #raise NotImplementedError (result)
     self.assertEqual(len(entry_list), count and 1)
     if count:
       self.assertEqual(count,
@@ -153,21 +152,17 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     checkLine({'state': 'draft'}, 1)
     checkLine({'state': 'validated'}, 2)
 
-  """
   def test_10_testSimpleWorklist(self):
-    #check the counter from worklist action_name.
-    # need another way to check, because worklist update every 5 mins
-
+    # check the counter from worklist action_name.
     self.login("workflow_development")
     self.portal = self.getPortal()
     new_object = self.getTestObject()
     workflow_tool = self.portal.portal_workflow
-    self.clearCache()
-    new_object.reindexObject()
+    self.tic() # reindexing for security
     self.clearCache()
     result = workflow_tool.listActions(object=new_object)
     self.checkWorklist(result, 'Document', 1)
-  """
+
 
   def test_11_testValidationInteraction(self):
     """
@@ -187,6 +182,7 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
     workflow_tool = self.portal.portal_workflow
     self.assertEqual(workflow_tool.isTransitionPossible(new_object, 'invalidate'), 0)
     self.doActionFor(new_object, "validate_action")
+    self.clearCache()
     self.assertEqual(self.getStateFor(new_object), 'validated')
     self.assertEqual(workflow_tool.isTransitionPossible(new_object, 'invalidate'), 1)
 
@@ -199,7 +195,7 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     workflow_module = self.portal.portal_workflow
     type_test_object = self.portal.portal_types['ERP5Workflow Test Document']
     dc_workflow_id_list = ['testing_workflow', 'testing_interaction_workflow']
-    workflow_module.WorkflowTool_convertWorkflow(batch_mode=True, workflow_id_list = dc_workflow_id_list)
+    workflow_module.WorkflowTool_convertWorkflow(batch_mode=True, workflow_id_list=dc_workflow_id_list)
     self.resetComponentTool()
     self.assertFalse('testing_workflow' in workflow_module.getChainFor(type_test_object.getId()))
     self.workflow = workflow_module._getOb('testing_workflow')
