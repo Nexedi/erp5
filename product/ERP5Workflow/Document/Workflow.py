@@ -1036,3 +1036,49 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
       out.append('}')
       return '\n'.join(out)
+
+def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
+    """Checks conditions in this guard.
+       This function is the same as Guard.check, but roles are not taken
+       into account here (but taken into account as local roles). This version
+       is for worklist guards.
+
+       Note that this patched version is not a monkey patch on the class,
+       because we only want this specific behaviour for worklists (Guards are
+       also used in transitions).
+    """
+    u_roles = None
+    if wf_def.manager_bypass:
+        # Possibly bypass.
+        u_roles = sm.getUser().getRolesInContext(ob)
+        if 'Manager' in u_roles:
+            return 1
+    if self.permissions:
+        for p in self.permissions:
+            if _checkPermission(p, ob):
+                break
+        else:
+            return 0
+    if self.groups:
+        # Require at least one of the specified groups.
+        u = sm.getUser()
+        b = aq_base( u )
+        if hasattr( b, 'getGroupsInContext' ):
+            u_groups = u.getGroupsInContext( ob )
+        elif hasattr( b, 'getGroups' ):
+            u_groups = u.getGroups()
+        else:
+            u_groups = ()
+        for group in self.groups:
+            if group in u_groups:
+                break
+        else:
+            return 0
+    expr = self.expr
+    if expr is not None:
+        econtext = createExprContext(
+            StateChangeInfo(ob, wf_def, kwargs=kw))
+        res = expr(econtext)
+        if not res:
+            return 0
+    return 1
