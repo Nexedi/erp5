@@ -714,9 +714,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     if document:
       document_pt = document.getTypeInfo()
       if document_pt is not None:
-        workflow_list = document_pt.getTypeWorkflowList()
+        workflow_list = self.getWorkflowValueListFor(document.getPortalType())
         if (workflow_list is not None) and (workflow_list is not []):
-          for wf_id in workflow_list:
+          for wf in workflow_list:
+            wf_id = wf.getReference()
             did[wf_id] = None
             wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
             if wf is None:
@@ -727,26 +728,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             a = wf.getWorklistVariableMatchDict(info)
             if a is not None:
               worklist_dict[wf_id] = a
-    # DC workflow compatibility
-    for wf_id in chain:
-      did[wf_id] = None
-      wf = self.getWorkflowById(wf_id)
-      if wf is not None:
-        a = wf.listObjectActions(info)
-        if a is not None:
-          actions.extend(a)
-        a = wf.getWorklistVariableMatchDict(info)
-        if a is not None:
-          worklist_dict[wf_id] = a
-
-    wf_ids = self.getWorkflowIds()
-    for wf_id in wf_ids:
-      if not did.has_key(wf_id):
-        wf = self.getWorkflowById(wf_id)
-        if wf is not None:
-          a = wf.getWorklistVariableMatchDict(info)
-          if a is not None:
-            worklist_dict[wf_id] = a
 
     if worklist_dict:
       portal = self.getPortalObject()
