@@ -547,6 +547,7 @@
           </div>\n
         </div>\n
         <div class="ui-form-center center">\n
+          <h3 class="ui-content-header-inline">Form inline header</h3>\n
           <div class="ui-field-contain">\n
             <label for"message">Messsage</label>\n
             <textarea id="message" name="message"></textarea>\n
@@ -707,7 +708,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.12495.1203.23586</string> </value>
+                <value> <string>944.18907.37688.62737</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -725,7 +726,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432309736.66</float>
+                        <float>1436539952.0</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
