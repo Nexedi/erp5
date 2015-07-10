@@ -112,7 +112,7 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
         res = []
         res.append(self.getParentValue().getStateVariable())
         for vdef in self.getParentValue().contentValues(portal_type="Variable"):
-            id = vdef.getId()
+            id = vdef.getReference()
             if vdef.for_catalog:
                 res.append(id)
         res.sort()
