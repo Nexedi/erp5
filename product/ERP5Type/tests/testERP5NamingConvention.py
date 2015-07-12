@@ -46,7 +46,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       'erp5_dummy_movement', 'erp5_forge', 'erp5_promise', 'erp5_mobile',
       'erp5_payroll', 'erp5_credential', 'erp5_jquery_ui', 'erp5_payroll_ui_test',
       'erp5_pdf_editor', 'erp5_publication', 'erp5_dms_ui_test', 'erp5_administration',
-      'erp5_advanced_invoicing', 'erp5_apparel', 'erp5_archive', 'erp5_auto_logout',
+      'erp5_advanced_invoicing', 'erp5_apparel', 'erp5_archive',
       'erp5_barcode', 'erp5_budget', 'erp5_calendar', 'erp5_knowledge_pad', 'erp5_km',
       'erp5_oauth', 'erp5_ods_style', 'erp5_odt_style', 'erp5_ooo_import',
       'erp5_open_trade', 'erp5_open_trade_periodicity_line', 'erp5_payment_mean',
