@@ -488,7 +488,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
             property_value = tuple(property_value)
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
         elif property_id == 'expr':
-          property_value = tdef.getProperty(prop_id)
+          property_value = tdef.getProperty(property_id)
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
         # no-property definded action box configuration
         elif property_id in ['actbox_name', 'actbox_url', 'actbox_category', 'trigger_type']:
