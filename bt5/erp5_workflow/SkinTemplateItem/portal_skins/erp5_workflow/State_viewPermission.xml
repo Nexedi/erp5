@@ -54,7 +54,6 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>assigned_role_list</string>
                         <string>permission_role_matrixbox</string>
                       </list>
                     </value>
