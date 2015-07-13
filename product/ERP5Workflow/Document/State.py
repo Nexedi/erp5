@@ -74,26 +74,6 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
         result_list.append(transition)
     return result_list
 
-  def executeTransition(self, transition, document, form_kw=None):
-    if transition not in self.getAvailableTransitionList(document):
-      raise StateError
-    else:
-      self.getParent()._executeTransition(document, transition, form_kw=form_kw)
-      #transition.execute(document, form_kw=form_kw)
-      self.getParent().updateRoleMappingsFor(document)
-
-  def undoTransition(self, document):
-    wh = self.getWorkflowHistory(document, remove_undo=1)
-    status_dict = wh[-2]
-    # Update workflow state
-    state_var = self.getParentValue().getStateVariable()
-    document.setCategoryMembership(state_var, status_dict[state_var])
-    # Update workflow history
-    status_dict['undo'] = 1
-    self.getParentValue()._updateWorkflowHistory(document, status_dict)
-    # XXX
-    LOG("State, undo", ERROR, "Variable (like DateTime) need to be updated!")
-
   def getWorkflowHistory(self, document, remove_undo=0, remove_not_displayed=0):
     """
     Return history tuple
@@ -118,49 +98,6 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
     """
     status_dict = self.getParentValue().getCurrentStatusDict(document)
     return status_dict[variable_name]
-
-  # Multiple inheritance definition
-  updateRelatedContent = XMLMatrix.updateRelatedContent
-  security.declareProtected(Permissions.AccessContentsInformation,
-                              'hasCellContent')
-  def hasCellContent(self, base_id='movement'):
-    """Return true if the object contains cells.
-    """
-    # Do not use XMLMatrix.hasCellContent, because it can generate
-    # inconsistency in catalog
-    # Exemple: define a line and set the matrix cell range, but do not create
-    # cell.
-    # Line was in this case consider like a movement, and was catalogued.
-    # But, getVariationText of the line was not empty.
-    # So, in ZODB, resource as without variation, but in catalog, this was
-    # the contrary...
-    cell_range = XMLMatrix.getCellRange(self, base_id=base_id)
-    return (cell_range is not None and len(cell_range) > 0)
-    # DeliveryLine can be a movement when it does not content any cell and
-    # matrix cell range is not empty.
-    # Better implementation is needed.
-    # We want to define a line without cell, defining a variated resource.
-    # If we modify the cell range, we need to move the quantity to a new
-    # cell, which define the same variated resource.
-#       return XMLMatrix.hasCellContent(self, base_id=base_id)
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getCell' )
-  def getCell(self, *kw , **kwd):
-    """
-        This method can be overriden
-    """
-    if 'base_id' not in kwd:
-      kwd['base_id'] = 'movement'
-    return XMLMatrix.getCell(self, *kw, **kwd)
-
-  security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
-  def newCell(self, *kw, **kwd):
-    """
-        This method creates a new cell
-    """
-    if 'base_id' not in kwd:
-      kwd['base_id'] = 'movement'
-    return XMLMatrix.newCell(self, *kw, **kwd)
 
   def setPermission(self, permission, acquired, roles, REQUEST=None):
       """Set a permission for this State."""
@@ -205,4 +142,3 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
       RESPONSE.redirect(
             "%s/manage_groups?manage_tabs_message=Groups+changed."
             % self.absolute_url())
-
