@@ -352,18 +352,19 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           state.setDescription(sdef.description)
           permission_roles = sdef.permission_roles
           state.setStatePermissionRoles(permission_roles)
-          state.setCellRange(sorted(sdef.permission_roles.keys()),
-                sorted(workflow.getRoleList()),
-                base_id='cell')
-          i = -1
-          for permission in sorted(workflow.getWorkflowManagedPermissionList()):
-            i = i + 1
-            j = -1
-            for role in workflow.getRoleList():
-              j = j + 1
-              pr_cell = state.newContent(id='cell_%s_%s'%(i,j), portal_type='PermissionRoles')
-              if permission in permission_roles and role in permission_roles[permission]:
-                pr_cell.is_selected = 1
+          if sdef.permission_roles is not None:
+            state.setCellRange(sorted(sdef.permission_roles.keys()),
+                  sorted(workflow.getRoleList()),
+                  base_id='cell')
+            i = -1
+            for permission in sorted(workflow.getWorkflowManagedPermissionList()):
+              i = i + 1
+              j = -1
+              for role in workflow.getRoleList():
+                j = j + 1
+                pr_cell = state.newContent(id='cell_%s_%s'%(i,j), portal_type='PermissionRoles')
+                if permission in permission_roles and role in permission_roles[permission]:
+                  pr_cell.is_selected = 1
         # Set Workflow default state using category setter
         state_path = getattr(workflow, 'state_'+dc_workflow.initial_state).getPath()
         state_path = 'source/' + '/'.join(state_path.split('/')[2:])
