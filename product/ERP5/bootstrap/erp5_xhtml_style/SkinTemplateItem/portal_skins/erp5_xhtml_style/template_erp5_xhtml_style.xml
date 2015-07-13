@@ -61,6 +61,7 @@ DEPRECATION:\n
           <tal:block metal:use-macro="global_definitions_macros/header_boilerplate" />\n
           <meta name="generator" content="ERP5 - Copyright (C) 2001 - 2015. All rights reserved." />\n
           <meta name="robots" content="index, follow" />\n
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">\n
           <tal:block metal:use-macro="global_definitions_macros/render_css_js" />\n
           <tal:block metal:define-slot="head"></tal:block>\n
         </head>\n
