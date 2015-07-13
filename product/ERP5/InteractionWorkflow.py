@@ -411,11 +411,14 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
           for prop_id in sorted(['groups', 'permissions', 'expr', 'roles']):
             guard_obj = getattr(tdef, 'guard')
             if guard_obj is not None:
-              prop_value = guard_obj.__dict__[prop_id]
+              if prop_id in guard_obj.__dict__:
+                prop_value = guard_obj.__dict__[prop_id]
+              else:
+                prop_value = ''
             else:
               prop_value = ''
             guard_config = SubElement(guard, prop_id, attrib=dict(type='guard configuration'))
-            if prop_value is None or prop_value == ():
+            if prop_value is None or prop_value == () or prop_value == []:
               prop_value = ''
             guard_config.text = str(prop_value)
         # no-property definded action box configuration
