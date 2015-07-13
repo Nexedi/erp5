@@ -379,6 +379,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
 
     for prop_id in sorted(interaction_workflow_prop_id_to_show):
       prop_value = self.__dict__[prop_id]
+      if prop_value is None or prop_value == [] or prop_value == ():
+        prop_value = ''
       prop_type = interaction_workflow_prop_id_to_show[prop_id]
       sub_object = SubElement(interaction_workflow, prop_id, attrib=dict(type=prop_type))
       sub_object.text = str(prop_value)
@@ -421,7 +423,10 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
           property_value = getattr(tdef, property_id, None)
           sub_object = SubElement(interaction, property_id, attrib=dict(type='string'))
         else:
-          property_value = tdef.__dict__[property_id]
+          if property_id in tdef.__dict__:
+            property_value = tdef.__dict__[property_id]
+          else:
+            property_value = ''
           property_type = interaction_prop_id_to_show[property_id]
           sub_object = SubElement(interaction, property_id, attrib=dict(type=property_type))
         if property_value is None or property_value == [] or property_value == ():
@@ -429,8 +434,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         if property_id in ['once_per_transaction', 'temporary_document_disallowed']:
           if property_value == True:
             property_value = '1'
-          elif property_value == False:
-            property_value ='0'
+          elif property_value == False or property_value is '':
+            property_value = '0'
         sub_object.text = str(property_value)
 
     # 2. Variable as XML
@@ -486,6 +491,8 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
           property_value = getattr(sdef, property_id)
         property_type = script_prop_id_to_show[property_id]
         sub_object = SubElement(script, property_id, attrib=dict(type=property_type))
+        if property_value is None or property_value == [] or property_value == ():
+          property_value = ''
         sub_object.text = str(property_value)
 
     # return xml object
