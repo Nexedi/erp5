@@ -456,6 +456,8 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       prop_value = self.getProperty(prop_id)
       prop_type = self.getPropertyType(prop_id)
       sub_object = SubElement(interaction_workflow, prop_id, attrib=dict(type=prop_type))
+      if prop_value is None or prop_value == [] or prop_value == ():
+        prop_value = ''
       sub_object.text = str(prop_value)
 
     # 1. Interaction as XML
@@ -569,6 +571,8 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
           property_value = sdef.getProperty(property_id)
           property_type = sdef.getPropertyType(property_id)
         sub_object = SubElement(script, property_id, attrib=dict(type=property_type))
+        if property_value is None or property_value == [] or property_value == ():
+          property_value = ''
         sub_object.text = str(property_value)
 
     # return xml object
