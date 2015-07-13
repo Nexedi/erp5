@@ -76,6 +76,50 @@
            global selected_language    portal/Localizer/get_selected_language;\n
            " />\n
   </tal:block>\n
+  <tal:block metal:define-macro="header_boilerplate">\n
+    <base tal:attributes="href string:${url}/" />\n
+    <meta name="description" tal:attributes="content description | title | string:ERP5 Free Open Source ERP and CRM" />\n
+    <meta name="keywords" tal:attributes="content python:\', \'.join(subject_list)" />\n
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />\n
+    <meta http-equiv="Content-Style-Type" content="text/css" />\n
+    <title\n
+      tal:define="\n
+        title title | string:ERP5;\n
+        header_title header_title | nothing;\n
+      "\n
+      tal:content="python: header_title or \'%s | %s\' % (title, here.getPortalObject().title_or_id())"\n
+    ></title>\n
+  </tal:block>\n
+  <tal:block metal:define-macro="render_css_js">\n
+    <link\n
+      tal:repeat="css python: css_list"\n
+      tal:attributes="href python: css"\n
+      type="text/css"\n
+      rel="stylesheet"\n
+    />\n
+    <tal:block\n
+      tal:condition="python: form is not None"\n
+      tal:repeat="field python: [field for group in form.get_groups(include_empty=0) if group != \'hidden\' for field in form.get_fields_in_group(group)]"\n
+    >\n
+      <style\n
+        tal:define="css python: field.render_css(REQUEST=request)"\n
+        tal:condition="python: css"\n
+        tal:content="python: css"\n
+        type="text/css"></style>\n
+      <tal:block tal:define="dummy python: js_list.extend(field.get_javascript_list(REQUEST=request))" />\n
+    </tal:block>\n
+    <tal:block\n
+      tal:define="known python: set()"\n
+      tal:repeat="js python: js_list"\n
+    ><tal:block\n
+      tal:condition="python: js not in known"\n
+    ><script\n
+      tal:define="dummy python: known.add(js)"\n
+      tal:attributes="src js"\n
+      type="text/javascript"\n
+    ></script></tal:block></tal:block>\n
+  </tal:block>\n
   <tal:block metal:define-macro="http_definitions">\n
     <tal:block tal:replace="structure python: modules[\'ZTUtils\'].make_hidden_input(**http_parameter_list)" />\n
   </tal:block>\n
