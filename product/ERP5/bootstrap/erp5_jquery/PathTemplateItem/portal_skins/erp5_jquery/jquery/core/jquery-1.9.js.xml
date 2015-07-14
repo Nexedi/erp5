@@ -7361,8 +7361,8 @@ jQuery(function() {\n
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
- ] = {\n
-\t\t\t\tget: function( elem, computed ) {\n
+] = {\n
+ \t\t\t\tget: function( elem, computed ) {\n
 \t\t\t\t\tif ( computed ) {\n
 \t\t\t\t\t\tcomputed = curCSS( elem, prop );\n
 \t\t\t\t\t\t// if curCSS returns percentage, fallback to offset\n
