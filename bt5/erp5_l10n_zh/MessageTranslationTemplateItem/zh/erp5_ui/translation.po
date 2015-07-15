@@ -15972,10 +15972,10 @@ msgstr ""
 msgid "VCS Status"
 msgstr ""
 
-msgid "Valid From"
+msgid "Valid from"
 msgstr "生效日期"
 
-msgid "Valid Until"
+msgid "Valid until"
 msgstr "失效日期"
 
 msgid "Validate"

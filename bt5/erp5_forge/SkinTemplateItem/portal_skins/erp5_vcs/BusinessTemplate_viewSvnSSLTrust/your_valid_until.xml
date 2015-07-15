@@ -239,7 +239,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Valid Until</string> </value>
+                    <value> <string>Valid until</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

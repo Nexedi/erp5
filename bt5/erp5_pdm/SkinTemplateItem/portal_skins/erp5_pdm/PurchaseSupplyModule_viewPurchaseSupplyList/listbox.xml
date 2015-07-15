@@ -83,11 +83,11 @@
                       <list>
                         <tuple>
                           <string>start_date_range_min</string>
-                          <string>Valid From</string>
+                          <string>Valid from</string>
                         </tuple>
                         <tuple>
                           <string>start_date_range_max</string>
-                          <string>Valid Until</string>
+                          <string>Valid until</string>
                         </tuple>
                       </list>
                     </value>
