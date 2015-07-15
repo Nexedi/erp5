@@ -913,7 +913,9 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
             'expr':'guard configuration'})
         for prop_id in guard_prop_to_show:
           if guard_obj is not None:
-            prop_value = getattr(guard_obj, prop_id, '')
+            if prop_id == 'expr':
+              prop_value = getattr(guard_obj.expr, 'text', '')
+            else: prop_value = getattr(guard_obj, prop_id, '')
           else:
             prop_value = ''
           sub_object = SubElement(guard, prop_id, attrib=dict(type='guard configuration'))
