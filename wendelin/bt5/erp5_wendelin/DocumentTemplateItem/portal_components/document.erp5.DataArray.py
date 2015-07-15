@@ -74,12 +74,12 @@ class DataArray(BigFile):
       Set numpy array to this ERP5 Data Array.
     """
     self.array = value
-    
+
     # ZBigArray requirement: before we can compute it (with subobject
     # .zfile) have to be made explicitly known to connection or current
     # transaction committed (XXX: impossible to use as raises ConflictErrors)
     transaction.commit()
-  
+
   def getArraySlice(self, start, end):
     """
       Implement array slicing in its most simple list alike form.
@@ -87,14 +87,14 @@ class DataArray(BigFile):
       array reference directly.
     """
     return self.getArray()[start:end]
-  
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSize')
   def getSize(self, default=None):
     """
        Implement getSize interface for ndarray
     """
     return self.getArray().nbytes
-    
+
   security.declareProtected(Permissions.View, 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
     """
@@ -104,10 +104,10 @@ class DataArray(BigFile):
       # we served a chunk of content in response to a range request.
       return ''
 
-    # XXX: what we do? We can not transmit entire Big Array?
     return ''
-    
+
   def _range_request_handler(self, REQUEST, RESPONSE):
+    RESPONSE.setHeader("Content-Type", "application/octet-stream")
     # HTTP Range header handling: return True if we've served a range
     # chunk out of our data.
     range = REQUEST.get_header('Range', None)
@@ -122,7 +122,7 @@ class DataArray(BigFile):
 
       # get byte view of array because we interpret ranges in bytes
       data = self.getArray()[:].view("uint8").ravel()
-      
+
       if if_range is not None:
         # Only send ranges if the data isn't modified, otherwise send
         # the whole object. Support both ETags and Last-Modified dates!
@@ -182,8 +182,7 @@ class DataArray(BigFile):
           RESPONSE.setHeader('Content-Range',
               'bytes %d-%d/%d' % (start, end - 1, self.getSize()))
           RESPONSE.setStatus(206) # Partial content
-          
-          self.log(data[start:end].tobytes())
+
           RESPONSE.write(data[start:end].tobytes())
         else:
           boundary = choose_boundary()
