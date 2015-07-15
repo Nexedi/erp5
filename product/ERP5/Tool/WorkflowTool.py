@@ -308,8 +308,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       # give temp workflow an uid for form_dialog.
       workflow.uid = uid
     workflow.default_reference = dc_workflow.id
-    workflow.edit(title=dc_workflow.title)
-    workflow.edit(description=dc_workflow.description)
+    workflow.setTitle(dc_workflow.title)
+    workflow.setDescription(dc_workflow.description)
 
     if temp == 0:
       # create transitions
@@ -317,7 +317,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for tid in dc_workflow.transitions:
           tdef = dc_workflow.transitions.get(tid)
           transition = workflow.newContent(portal_type='Transition', temp_object=temp)
-          transition.edit(title=tdef.title)
+          transition.setTitle(tdef.title)
+          if tdef.title == '' or tdef.title is None:
+            raise NotImplementedError("Error. Please define a title for transition '%s' of '%s'"%(tdef, dc_workflow.id))
           transition.setReference(tdef.id)
           transition.setTriggerType(tdef.trigger_type)
           transition.setActboxCategory(tdef.actbox_category)
@@ -347,7 +349,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for sid in dc_workflow.states:
           sdef = dc_workflow.states.get(sid)
           state = workflow.newContent(portal_type='State', temp_object=temp)
-          state.edit(title=sdef.title)
+          state.setTitle(sdef.title)
+          if sdef.title == '' or sdef.title is None:
+            raise NotImplementedError("Error. Please define a title for state '%s' of '%s'"%(sid, dc_workflow.id))
           state.setReference(sdef.id)
           state.setDescription(sdef.description)
           permission_roles = sdef.permission_roles
@@ -391,7 +395,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for qid in dc_workflow.worklists:
           qdef = dc_workflow.worklists.get(qid)
           worklist = workflow.newContent(portal_type='Worklist', temp_object=temp)
-          worklist.edit(title=qdef.title)
+          worklist.setTitle(qdef.title)
           worklist.setReference(qdef.id)
           worklist.setDescription(qdef.description)
           for key, values in qdef.var_matches.items():
@@ -423,7 +427,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for tid in dc_workflow.interactions:
           interaction = workflow.newContent(portal_type='Interaction', temp_object=temp)
           tdef = dc_workflow.interactions.get(tid)
-          interaction.edit(title=tdef.title)
+          interaction.setTitle(tdef.title)
           interaction.setReference(tdef.id)
           for script_name in tdef.activate_script_name:
             if script_name in dc_workflow.interactions.objectIds():
@@ -470,7 +474,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       for script_id in dc_workflow.scripts:
         script = dc_workflow.scripts.get(script_id)
         workflow_script = workflow.newContent(id='script_'+script_id ,portal_type='Workflow Script', temp_object=temp)
-        workflow_script.edit(title=script.title)
+        workflow_script.setTitle(script.title)
         workflow_script.default_reference = script_id
         workflow_script.setParameterSignature(script._params)
         #workflow_script.setCallableType(script.callable_type)# not defined in python script?
@@ -480,7 +484,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       for vid in dc_workflow.variables:
         vdef = dc_workflow.variables.get(vid)
         variable = workflow.newContent(portal_type='Variable', temp_object=temp)
-        variable.edit(title=vdef.title)
+        variable.setTitle(vdef.title)
         variable.setReference(vdef.id)
         variable.setAutomaticUpdate(vdef.update_always)
         if getattr(vdef, 'default_expr', None) is not None:
@@ -688,7 +692,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     self._chains_by_type[pt] = self._chains_by_type[pt] + (wf_id, )
 
   def delTypeCBT(self, pt, wf_id):
-    self._chains_by_type[pt] = tuple(wf for wf in self._chains_by_type[pt] if wf != wf_id)
+    self._chains_by_type[pt] = tuple(wf for wf in self._chains_by_type[pt] if wf!=wf_id)
 
   def listActions(self, info=None, object=None, src__=False):
     """
@@ -857,13 +861,11 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   def _finalizeWorkflowConversion(self, dc_wf):
     trash_tool = getattr(self.getPortalObject(), 'portal_trash', None)
     if trash_tool is not None:
-      # 1. move old workflow to trash tool;
-      # 2. reinitialize workflow accessor.
+      # move old workflow to trash tool;
       LOG('WorkflowTool', WARNING, "Move old workflow '%s' into a trash bin."%dc_wf.id)
       self._delOb(dc_wf.id)
       trashbin = UnrestrictedMethod(trash_tool.newTrashBin)(dc_wf.id)
       trashbin._setOb(dc_wf.id, dc_wf)
-    #self.reset()
 
 InitializeClass(WorkflowTool)
 
