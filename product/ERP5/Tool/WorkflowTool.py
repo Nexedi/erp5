@@ -344,7 +344,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             transition.setRoleList(tdef.guard.roles)
             transition.setPermissionList(tdef.guard.permissions)
             transition.setGroupList(tdef.guard.groups)
-            transition.setExpression(tdef.guard.expr)
+            if tdef.guard.expr is not None:
+              transition.setExpression(tdef.guard.expr.text)
+            else: transition.setExpression('')
         # create states (portal_type = State)
         for sid in dc_workflow.states:
           sdef = dc_workflow.states.get(sid)
