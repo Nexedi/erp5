@@ -94,16 +94,6 @@ class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
       self.generateGuard()
     return self.guard
 
-  def getVarExprText(self, id):
-    if not self.var_exprs:
-      return ''
-    else:
-      expr = self.var_exprs.get(id, None)
-      if expr is not None:
-        return expr.text
-      else:
-        return ''
-
   def generateGuard(self):
     if self.trigger_type == TRIGGER_USER_ACTION:
       if self.guard == None:

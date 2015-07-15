@@ -121,24 +121,3 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
     for tr in self.getDestinationValueList():
       ref_list.append(tr.getReference())
     return ref_list
-
-  def setGroups(self, REQUEST, RESPONSE=None):
-    """Set the group to role mappings in REQUEST for this State.
-    """
-    map = self.group_roles
-    if map is None:
-      self.group_roles = map = PersistentMapping()
-    map.clear()
-    all_roles = self.getWorkflow().getRoles()
-    for group in self.getWorkflow().getGroups():
-      roles = []
-      for role in all_roles:
-        if REQUEST.get('%s|%s' % (group, role), 0):
-          roles.append(role)
-      roles.sort()
-      roles = tuple(roles)
-      map[group] = roles
-    if RESPONSE is not None:
-      RESPONSE.redirect(
-            "%s/manage_groups?manage_tabs_message=Groups+changed."
-            % self.absolute_url())

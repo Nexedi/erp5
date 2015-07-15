@@ -3006,7 +3006,7 @@ class Base( CopyContainer,
         local_permission_list = (local_permission_list,)
       setattr(self,permission_name,tuple(local_permission_list))
 
-  ### Content accessor methods
+  # Content accessor methods
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
       """

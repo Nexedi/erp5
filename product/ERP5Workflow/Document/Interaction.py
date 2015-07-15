@@ -102,16 +102,6 @@ class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
       self.generateGuard()
     return self.guard
 
-  def getVarExprText(self, id):
-    if not self.var_exprs:
-      return ''
-    else:
-      expr = self.var_exprs.get(id, None)
-      if expr is not None:
-        return expr.text
-      else:
-        return ''
-
   def generateGuard(self):
     if self.trigger_type == TRIGGER_USER_ACTION:
       if self.guard == None:
@@ -119,7 +109,6 @@ class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
                       roles=self.getRoleList(),
                       groups=self.getGroupList(),
                       expr=self.getExpression())
-
       if self.guard.roles != self.getRoleList():
         self.guard.roles = self.getRoleList()
       elif self.guard.permissions != self.getPermissionList():
@@ -133,16 +122,3 @@ class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
     if type(self.method_id) is type(''):
       self.method_id = self.method_id.split()
     return self.method_id
-
-  def getVarExprText(self, id):
-    if not self.var_exprs:
-      return ''
-    else:
-      expr = self.var_exprs.get(id, None)
-      if expr is not None:
-        return expr.text
-      else:
-        return ''
-
-  def getWorkflow(self):
-      return aq_parent(aq_inner(aq_parent(aq_inner(self))))
