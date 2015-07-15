@@ -412,7 +412,9 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
             guard_obj = getattr(tdef, 'guard')
             if guard_obj is not None:
               if prop_id in guard_obj.__dict__:
-                prop_value = guard_obj.__dict__[prop_id]
+                if prop_id == 'expr':
+                  prop_value =  getattr(guard_obj.expr, 'text', '')
+                else: prop_value = guard_obj.__dict__[prop_id]
               else:
                 prop_value = ''
             else:
