@@ -30,6 +30,7 @@
 ##############################################################################
 
 import errno, glob, os, re, shutil
+from pysvn import ClientError, Revision, opt_revision_kind, svn_err
 import threading
 from ZTUtils import make_query
 from Products.ERP5Type.Message import translateString
@@ -71,7 +72,6 @@ class Subversion(WorkingCopy):
       path = self.working_copy
     except AttributeError:
       return
-    from pysvn import ClientError
     try:
       self.getRevision()
     except (ClientError, KeyError):
@@ -145,7 +145,6 @@ class Subversion(WorkingCopy):
     return self.aq_parent.download('.')
 
   def showOld(self, path):
-    from pysvn import ClientError, Revision, opt_revision_kind, svn_err
     try:
       return self._getClient().cat(os.path.join(self.working_copy, path),
                                    Revision(opt_revision_kind.base))
