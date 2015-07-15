@@ -178,7 +178,7 @@
     <button name="Query">Run Query</button>\n
 \n
 \n
-    <div id="table_container" style="margin: 10px; height: 300px; overflow: hidden; z-index: -1;"></div>\n
+    <div id="table_container" style="margin: 10px; height: 300px; overflow: hidden; z-index: 1;"></div>\n
     <div id="output" style="margin: 10px;"></div>\n
 \n
     <!-- TODO: debug saved configuration -->\n
