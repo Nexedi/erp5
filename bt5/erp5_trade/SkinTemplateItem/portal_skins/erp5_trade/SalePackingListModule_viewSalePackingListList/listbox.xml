@@ -109,6 +109,10 @@
                           <string>translated_causality_state_title</string>
                           <string>Causality State</string>
                         </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
