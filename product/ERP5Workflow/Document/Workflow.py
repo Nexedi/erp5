@@ -834,7 +834,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
             property_value = tdef.getExpression()
           if property_value is None or property_value == []:
             property_value = ''
-          else:
+          elif property_id != 'expr':
             property_value = tuple(property_value)
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
         else:
