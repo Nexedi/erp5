@@ -431,32 +431,42 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           tdef = dc_workflow.interactions.get(tid)
           interaction.setTitle(tdef.title)
           interaction.setReference(tdef.id)
+          script_list = []
           for script_name in tdef.activate_script_name:
             if script_name in dc_workflow.interactions.objectIds():
-              interaction.setActivateScriptName(('interaction_'+script_name,))
+              script_list.append('interaction_'+script_name)
             elif script_name in dc_workflow.scripts.objectIds():
-              interaction.setActivateScriptName(('script_'+script_name,))
+              script_list.append('script_'+script_name)
+          interaction.setActivateScriptNameList(tuple(script_list))
+          script_list = []
           for script_name in tdef.after_script_name:
             if script_name in dc_workflow.interactions.objectIds():
-              interaction.setAfterScriptName(('interaction_'+script_name,))
+              script_list.append('interaction_'+script_name)
             elif script_name in dc_workflow.scripts.objectIds():
-              interaction.setAfterScriptName(('script_'+script_name,))
+              script_list.append('script_'+script_name)
+          interaction.setAfterScriptNameList(tuple(script_list))
+          script_list = []
           for script_name in tdef.before_commit_script_name:
             if script_name in dc_workflow.interactions.objectIds():
-              interaction.setBeforeCommitScriptName(('interaction_'+script_name,))
+              script_list.append('interaction_'+script_name)
             elif script_name in dc_workflow.scripts.objectIds():
-              interaction.setBeforeCommitScriptName(('script_'+script_name,))
+              script_list.append('script_'+script_name)
+          interaction.setBeforeCommitScriptNameList(tuple(script_list))
+          script_list = []
           for script_name in tdef.script_name:
             if script_name in dc_workflow.interactions.objectIds():
-              interaction.setBeforeScriptName(('interaction_'+script_name,))
+              script_list.append('interaction_'+script_name)
             elif script_name in dc_workflow.scripts.objectIds():
-              interaction.setBeforeScriptName(('script_'+script_name,))
+              script_list.append('script_'+script_name)
+          interaction.setBeforeScriptNameList(tuple(script_list))
           # configure guard
           if tdef.guard:
             interaction.setRoleList(tdef.guard.roles)
             interaction.setPermissionList(tdef.guard.permissions)
             interaction.setGroupList(tdef.guard.groups)
-            interaction.setExpression(tdef.guard.expr)
+            if tdef.guard.expr is not None:
+              interaction.setExpression(tdef.guard.expr.text)
+            else: interaction.setExpression('')
           interaction.setPortalTypeFilter(tdef.portal_type_filter)
           interaction.setPortalTypeGroupFilter(tdef.portal_type_group_filter)
 
