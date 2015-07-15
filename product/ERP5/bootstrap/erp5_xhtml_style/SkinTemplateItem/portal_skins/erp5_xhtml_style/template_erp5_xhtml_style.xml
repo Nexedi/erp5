@@ -50,6 +50,7 @@ DEPRECATION:\n
   </tal:block>\n
   <tal:block metal:define-macro="master">\n
     <tal:block tal:define="\n
+        dummy python: here.Base_checkUserCanViewERP5XHTMLStyleOrRaise();\n
         global_definitions_macros here/global_definitions/macros;\n
         subject_list subject_list | python:here.getProperty(\'subject_list\', []) or [];\n
       ">\n
