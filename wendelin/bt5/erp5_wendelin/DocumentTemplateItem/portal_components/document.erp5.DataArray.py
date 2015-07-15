@@ -106,6 +106,8 @@ class DataArray(BigFile):
 
     return ''
 
+  # FIXME this duplicates a lot of code from ERP5's BigFile
+  # -> TODO reuse BigFile streaming capability without copying its code
   def _range_request_handler(self, REQUEST, RESPONSE):
     RESPONSE.setHeader("Content-Type", "application/octet-stream")
     # HTTP Range header handling: return True if we've served a range
