@@ -832,7 +832,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
             property_value = tdef.getPermissionList()
           if property_id == 'expr':
             property_value = tdef.getExpression()
-          if property_value is None or property_value == []:
+          if property_value is None or property_value == [] or property_value == ():
             property_value = ''
           elif property_id != 'expr':
             property_value = tuple(property_value)
