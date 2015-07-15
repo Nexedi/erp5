@@ -110,39 +110,10 @@
 \n
 <!-- Initialize -->\n
 <tr>\n
-  <td>storeEval</td>\n
-  <td>var myLog = console.log; window.dump_log = [];console.log = function(value) {window.dump_log.push(value);myLog.call(console, value);}</td>\n
-  <td>my_temp_console</td>\n
-</tr>\n
-\n
-<tr>\n
   <td>open</td>\n
   <td>${base_url}/web_site_module/e5g_ehr/</td>\n
   <td></td>\n
 </tr>\n
-\n
-<!-- DEBUG -->\n
-<tr>\n
-  <td>storeEval</td>\n
-  <td>function x(el){var n,a=[],w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{acceptNode:function(m){if(!/^\\\\s*$/.test(m.data)){return NodeFilter.FILTER_ACCEPT;}}},false);while(n=w.nextNode())a.push(n);return a;}var i,len,t="",list=x(document.getElementById("selenium_myiframe").contentDocument.querySelector("body div"));for(i=0,len=list.length;i&lt;len;i++){t+=list[i].nodeValue+" "}</td>\n
-  <td>my_global_text</td>\n
-</tr>\n
-<tr>\n
-  <td>echo</td>\n
-  <td>${my_global_text}</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>storeEval</td>\n
-  <td>window.dump_log</td>\n
-  <td>${my_console}</td>\n
-</tr>\n
-<tr>\n
-  <td>echo</td>\n
-  <td>${my_console}</td>\n
-  <td></td>\n
-</tr>\n
-<!-- DEBUG -->\n
 <tr>\n
   <td>waitForTextPresent</td>\n
   <td>E-HR</td>\n
