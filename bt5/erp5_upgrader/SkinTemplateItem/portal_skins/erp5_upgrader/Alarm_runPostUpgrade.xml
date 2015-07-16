@@ -58,7 +58,7 @@ active_process = context.newActiveProcess()\n
 \n
 # We should not run post upgrade if upgrader was not solved or never executed\n
 alarm = getattr(portal_alarms, \'upgrader_check_upgrader\')\n
-if alarm.sense() in (None, True):\n
+if not(force) and alarm.sense() in (None, True):\n
   active_process.postActiveResult(summary=context.getTitle(),\n
       severity=1,\n
       detail="Is required run upgrade before solve it. " +\\\n
@@ -66,6 +66,7 @@ if alarm.sense() in (None, True):\n
   return\n
 \n
 context.ERP5Site_checkUpgraderConsistency(fixit=True,\n
+  activate_kw=activate_kw,\n
   active_process=active_process,\n
   filter_dict={"constraint_type": "post_upgrade"})\n
 \n
@@ -75,7 +76,7 @@ return\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>force=0, activate_kw={}, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

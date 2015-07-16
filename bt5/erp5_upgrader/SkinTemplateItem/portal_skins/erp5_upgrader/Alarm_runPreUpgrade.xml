@@ -54,6 +54,7 @@
   Run Pre upgrade\n
 """\n
 context.ERP5Site_checkUpgraderConsistency(fixit=True,\n
+  activate_kw=activate_kw,\n
   active_process=context.newActiveProcess(),\n
   filter_dict={"constraint_type": "pre_upgrade"})\n
 \n
@@ -63,7 +64,7 @@ return\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>force=0, activate_kw={}, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
