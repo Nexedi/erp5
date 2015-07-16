@@ -89,7 +89,7 @@ class DataArray(BigFile):
     return self.getArray()[start:end]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSize')
-  def getSize(self, default=None):
+  def getSize(self):
     """
        Implement getSize interface for ndarray
     """
