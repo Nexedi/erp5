@@ -248,12 +248,14 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     checkLine({'state': 'validated'}, 2)
     checkLine({'state': 'validated'}, 3)
     checkLine({'state': 'invalidated'}, 4)
+    expected_validated_item_dict = {'comment': '', 'error_message': '', 'actor': 'ERP5TypeTestCase', 'state': 'validated', 'action': 'validate'}
+    expected_invalidated_item_dict = {'comment': '', 'error_message': '', 'actor': 'ERP5TypeTestCase', 'state': 'invalidated', 'action': 'invalidate'}
     # check history keys are identical before and after conversion.
     self.assertEqual(sorted(item_list[2].keys()),sorted(item_list[4].keys()))
     # check key values are shown as expected; 
-    expected_item_dict = {'comment': '', 'error_message': '', 'actor': 'ERP5TypeTestCase', 'state': 'invalidated', 'action': 'invalidate'}
-    for key in expected_item_dict:
-      self.assertEqual(item_list[4].getProperty(key), expected_item_dict[key])
+    for key in expected_invalidated_item_dict:
+      self.assertEqual(item_list[2].getProperty(key), expected_validated_item_dict[key])
+      self.assertEqual(item_list[4].getProperty(key), expected_invalidated_item_dict[key])
     # check date time is generated
     self.assertTrue(item_list[4].getProperty('time') is not None)
 
