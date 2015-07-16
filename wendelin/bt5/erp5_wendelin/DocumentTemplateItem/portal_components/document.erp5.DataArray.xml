@@ -47,8 +47,8 @@
             <value>
               <tuple>
                 <string>W: 99, 42: Redefining built-in \'format\' (redefined-builtin)</string>
-                <string>W:113,  4: Redefining built-in \'range\' (redefined-builtin)</string>
-                <string>W:140, 10: No exception type(s) specified (bare-except)</string>
+                <string>W:115,  4: Redefining built-in \'range\' (redefined-builtin)</string>
+                <string>W:142, 10: No exception type(s) specified (bare-except)</string>
               </tuple>
             </value>
         </item>
