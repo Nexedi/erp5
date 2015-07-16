@@ -25,8 +25,12 @@
   <item>Task</item>
  </portal_type>
  <portal_type id="Test Result Line">
+  <item>CommandLineResult</item>
   <item>SortIndex</item>
   <item>Task</item>
+ </portal_type>
+ <portal_type id="Test Result Node">
+  <item>CommandLineResult</item>
  </portal_type>
  <portal_type id="Test Suite">
   <item>Arrow</item>

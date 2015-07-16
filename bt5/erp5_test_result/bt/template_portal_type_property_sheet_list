@@ -8,8 +8,10 @@ Scalability Test Suite | ScalabilityTestSuite
 Scalability Test Suite | TestSuite
 Test Node | DublinCore
 Test Node | TestNode
+Test Result Line | CommandLineResult
 Test Result Line | SortIndex
 Test Result Line | Task
+Test Result Node | CommandLineResult
 Test Result | Comment
 Test Result | SortIndex
 Test Result | Task
