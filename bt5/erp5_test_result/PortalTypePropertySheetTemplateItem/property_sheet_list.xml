@@ -31,6 +31,7 @@
  </portal_type>
  <portal_type id="Test Result Node">
   <item>CommandLineResult</item>
+  <item>Task</item>
  </portal_type>
  <portal_type id="Test Suite">
   <item>Arrow</item>

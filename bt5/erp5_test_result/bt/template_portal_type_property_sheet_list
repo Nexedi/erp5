@@ -12,6 +12,7 @@ Test Result Line | CommandLineResult
 Test Result Line | SortIndex
 Test Result Line | Task
 Test Result Node | CommandLineResult
+Test Result Node | Task
 Test Result | Comment
 Test Result | SortIndex
 Test Result | Task
