@@ -690,10 +690,6 @@ def updateRoleMappings(self, REQUEST=None):
 
 DCWorkflowDefinition.updateRoleMappings = updateRoleMappings
 
-def DCWorkflowDefinition_getPortalType(self):
-  return self.__class__.__name__
-DCWorkflowDefinition.getPortalType = DCWorkflowDefinition_getPortalType
-
 # this patch allows to get list of portal types for workflow
 def getPortalTypeListForWorkflow(self):
   """
@@ -729,10 +725,6 @@ def DCWorkflowDefinition_getFutureStateSet(self, state, ignore=(),
   return _future_state_set
 
 DCWorkflowDefinition.getFutureStateSet = DCWorkflowDefinition_getFutureStateSet
-
-def DCWorkflowDefinition_getStateVariable(self):
-  return self.state_var
-DCWorkflowDefinition.getStateVariable = DCWorkflowDefinition_getStateVariable
 
 def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     '''
@@ -780,58 +772,57 @@ def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=N
     '''
     pass
 
-def method_getReference(self):
-  return self.id
-
+# following 15 patches are required for the new workflow tool compatibility.
 def DCWorkflowDefinition_getVariableValueList(self):
   if self.variables is not None:
     return self.variables
   return {}
-
 def DCWorkflowDefinition_getVariableIdList(self):
   if self.variables is not None:
     return self.variables.objectIds()
   return []
-
+def DCWorkflowDefinition_getStateVariable(self):
+  return self.state_var
 def DCWorkflowDefinition_getStateValueList(self):
   if self.states is not None:
     return self.states
   return {}
-
 def DCWorkflowDefinition_getStateIdList(self):
   if self.states is not None:
     return self.states.objectIds()
   return []
-
 def DCWorkflowDefinition_getTransitionValueList(self):
   if self.transitions is not None:
     return self.transitions
   else:
     return {}
-
 def DCWorkflowDefinition_getTransitionIdList(self):
   if self.transitions is not None:
     return self.transitions.objectIds()
   return []
-
 def DCWorkflowDefinition_getWorklistValueList(self):
   if self.worklists is not None:
     return self.worklists
   return {}
-
 def DCWorkflowDefinition_getWorklistIdList(self):
   if self.worklists is not None:
     return self.worklists.objectIds()
   return []
-
+def DCWorkflowDefinition_propertyIds(self):
+  return sorted(self.__dict__.keys())
+def DCWorkflowDefinition_getProperty(self,prop_id):
+  return self.__dict__[prop_id]
 def DCWorkflowDefinition_getScriptValueList(self):
   if self.scripts is not None:
     return self.scripts
   return {}
-
 def StateDefinition_getDestinationIdList(self):
   return self.transitions
-
+def DCWorkflowDefinition_getPortalType(self):
+  return self.__class__.__name__
+def method_getReference(self):
+  return self.id
+# a necessary funtion in Base_viewDict
 def DCWorkflowDefinition_showDict(self):
   attr_dict = {}
   for attr in sorted(self.__dict__.keys()):
@@ -841,7 +832,8 @@ def DCWorkflowDefinition_showDict(self):
     else:
       continue
   return attr_dict
-
+# generate XML file for the workflow contents comparison between DCWorkflow
+# and converted workflow.
 def DCWorkflowDefinition_showAsXML(self, root=None):
   if root is None:
     root = Element('erp5')
@@ -1053,13 +1045,6 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
   return etree.tostring(root, encoding='utf-8',
                         xml_declaration=True, pretty_print=True)
 
-def DCWorkflowDefinition_propertyIds(self):
-  return sorted(self.__dict__.keys())
-
-def DCWorkflowDefinition_getProperty(self,prop_id):
-  return self.__dict__[prop_id]
-
-
 DCWorkflowDefinition.getReference = method_getReference
 DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
 DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
@@ -1077,6 +1062,8 @@ DCWorkflowDefinition.showAsXML = DCWorkflowDefinition_showAsXML
 DCWorkflowDefinition.showDict = DCWorkflowDefinition_showDict
 DCWorkflowDefinition.propertyIds = DCWorkflowDefinition_propertyIds
 DCWorkflowDefinition.getProperty = DCWorkflowDefinition_getProperty
+DCWorkflowDefinition.getStateVariable = DCWorkflowDefinition_getStateVariable
+DCWorkflowDefinition.getPortalType = DCWorkflowDefinition_getPortalType
 StateDefinition.getReference = method_getReference
 StateDefinition.getDestinationIdList = StateDefinition_getDestinationIdList
 StateDefinition.getDestinationReferenceList = StateDefinition_getDestinationIdList
