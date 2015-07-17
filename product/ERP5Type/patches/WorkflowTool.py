@@ -12,7 +12,7 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
- 
+
 import sys
 from zLOG import LOG, WARNING
 from types import StringTypes
@@ -24,11 +24,11 @@ from Products.CMFCore.WorkflowTool import WorkflowTool
 from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
-from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
+from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
-from Products.CMFCore.utils import _getAuthenticatedUser, ImmutableId
+from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.ERP5Type.Cache import CachingMethod
 from sets import ImmutableSet
 from Acquisition import aq_base
@@ -37,11 +37,6 @@ from Products.ERP5Type.Globals import PersistentMapping
 from itertools import izip
 from MySQLdb import ProgrammingError, OperationalError
 from DateTime import DateTime
-from Products.CMFCore.utils import Message as _
-from Products.DCWorkflow.Variables import VariableDefinition
-from Products.DCWorkflow.Worklists import WorklistDefinition
-
-_marker = []  # Create a new marker object.
 
 WORKLIST_METADATA_KEY = 'metadata'
 SECURITY_PARAMETER_ID = 'local_roles'
@@ -387,6 +382,7 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
               'category': metadata['action_box_category']})
   return action_list
 
+# following 2 functions are necessary for workflow tool dynamic migration
 def WorkflowTool_isBootstrapRequired(self):
   # migration requires the installation of tempalte erp5_workflow;
   if self.getPortalObject().portal_types._getOb('Workflow Tool', None) is not None:
@@ -402,13 +398,19 @@ WorkflowTool._bootstrap = WorkflowTool_bootstrap
 def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   """
     Returns a list of actions to be displayed to the user.
+
         o Invoked by the portal_actions tool.
+
         o Allows workflows to include actions to be displayed in the
           actions box.
+
         o Object actions are supplied by workflows that apply to the object.
+
         o Global actions are supplied by all workflows.
+
     This patch attemps to make listGlobalActions aware of worklists,
     which allows factorizing them into one single SQL query.
+
     Related keys are supported.
     Warning: the worklist cache does not support them.
   """
@@ -419,25 +421,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   actions = []
   worklist_dict = {}
 
-  document = info.object
-
-  if document is not None:
-    document_pt = document.getTypeInfo()
-    if document_pt is not None:
-      workflow_list = document_pt.getTypeWorkflowList()
-      if (workflow_list is not None) and (workflow_list is not []):
-        for wf_id in workflow_list:
-          did[wf_id] = None
-          wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
-          if wf is None:
-            raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
-          a = wf.listObjectActions(info)
-          if a is not None and a != []:
-            actions.extend(a)
-          a = wf.getWorklistVariableMatchDict(info)
-          if a is not None:
-            worklist_dict[wf_id] = a
-  # DC workflow compatibility
   for wf_id in chain:
     did[wf_id] = None
     wf = self.getWorkflowById(wf_id)
@@ -502,7 +485,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
       worklist_result_dict = {}
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible
       # conditions
-
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
@@ -571,7 +553,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           key=lambda x: '/'.join((x['workflow_id'], x['worklist_id'])),
         )
       return action_list
-
     user = str(_getAuthenticatedUser(self))
     if src__:
       actions = _getWorklistActionList()
@@ -581,6 +562,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         cache_factory = 'erp5_ui_short')
       actions.extend(_getWorklistActionList())
   return actions
+
 WorkflowTool.listActions = WorkflowTool_listActions
 
 def _getWorklistIgnoredSecurityColumnSet(self):
@@ -806,9 +788,9 @@ WorkflowTool.getFutureStateSetFor = lambda self, wf_id, *args, **kw: \
 def WorkflowTool_isTransitionPossible(self, ob, transition_id, wf_id=None):
     """Test if the given transition exist from the current state.
     """
-    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
+    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob)):
       state = workflow._getWorkflowStateOf(ob)
-      if state and transition_id in state.getDestinationIdList():
+      if state and transition_id in state.transitions:
         return 1
     return 0
 
@@ -915,107 +897,5 @@ def _isJumpToStatePossibleFor(self, ob, state_id, wf_id=None):
       return True
   return False
 
-def _doActionFor(self, ob, action, wf_id=None, *args, **kw):
-  workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
-  if wf_id is None:
-    if workflow_list == []:
-      raise WorkflowException(_(u'No workflows found.'))
-    found = 0
-    for wf in workflow_list:
-      if wf.isActionSupported(ob, action, **kw):
-        found = 1
-        break
-    if not found:
-      msg = _(u"No workflow provides the '${action_id}' action.",mapping={'action_id': action})
-      raise WorkflowException(msg)
-  else:
-    wf = self.getWorkflowById(wf_id)
-    if wf is None:
-      raise WorkflowException(_(u'Requested workflow definition not found.'))
-  return self._invokeWithNotification(
-    workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
-
-def tool_changeWorkflows(self, default_chain, props=None, REQUEST=None):
-    """ Changes which workflows apply to objects of which type.
-    """
-    if props is None:
-        props = REQUEST
-    cbt = self._chains_by_type
-    if cbt is None:
-        self._chains_by_type = cbt = PersistentMapping()
-    ti = self._listTypeInfo()
-    # Set up the chains by type.
-    if not (props is None):
-        for t in ti:
-            id = t.getId()
-            field_name = 'chain_%s' % id
-            chain = props.get(field_name, '(Default)').strip()
-            if chain == '(Default)' or chain =='default_workflow':
-                # Remove from cbt.
-                if cbt.has_key(id):
-                    del cbt[id]
-            else:
-                chain = chain.replace(',', ' ')
-                ids = []
-                for wf_id in chain.split(' '):
-                    if wf_id:
-                        if not self.getWorkflowById(wf_id):
-                            raise ValueError, (
-                                '"%s" is not a workflow ID.' % wf_id)
-                        ids.append(wf_id)
-                cbt[id] = tuple(ids)
-    # Set up the default chain.
-    default_chain = default_chain.replace(',', ' ')
-    ids = []
-    for wf_id in default_chain.split(' '):
-        if wf_id:
-            if not self.getWorkflowById(wf_id):
-                raise ValueError, (
-                    '"%s" is not a workflow ID.' % wf_id)
-            ids.append(wf_id)
-    self._default_chain = tuple(ids)
-    if REQUEST is not None:
-        return self.manage_selectWorkflows(REQUEST,
-                        manage_tabs_message='Changed.')
-
-WorkflowTool.manage_changeWorkflows = tool_changeWorkflows
-
-WorkflowTool.getWorkflowValueListFor = WorkflowTool.getWorkflowsFor
-
-def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
-    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
-    if wf_id is None:
-        if workflow_list == []:
-            if default is _marker:
-                raise WorkflowException(_(u'No workflows found.'))
-            else:
-                return default
-        found = 0
-        for workflow in workflow_list:
-            if workflow.isInfoSuported(ob, name):
-              found = 1
-              break
-        if not found:
-            if default is _marker:
-                msg = _(u"No workflow provides '${name}' information.",
-                        mapping={'name': name})
-                raise WorkflowException(msg)
-            else:
-                return default
-    else:
-        wf = self.getWorkflowById(wf_id)
-        if wf is None:
-            if default is _marker:
-                raise WorkflowException(
-                    _(u'Requested workflow definition not found.'))
-            else:
-                return default
-
-    res = wf.getInfoFor(ob, name, default, *args, **kw)
-    if res is _marker:
-        msg = _(u'Could not get info: ${name}', mapping={'name': name})
-        raise WorkflowException(msg)
-    return res
 WorkflowTool._jumpToStateFor = _jumpToStateFor
 WorkflowTool._isJumpToStatePossibleFor = _isJumpToStatePossibleFor
-WorkflowTool.doActionFor = _doActionFor

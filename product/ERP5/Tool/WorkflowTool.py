@@ -190,42 +190,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return self._invokeWithNotification(
       workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
-  def _getInfoFor(self, ob, name, default=_marker, wf_id=None, *args, **kw):
-    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
-
-    if wf_id is None:
-        if workflow_list == []:
-            if default is _marker:
-                raise WorkflowException(_(u'No workflows found.'))
-            else:
-                return default
-        found = 0
-        for workflow in workflow_list:
-            if workflow.isInfoSuported(ob, name):
-              found = 1
-              break
-        if not found:
-            if default is _marker:
-                msg = _(u"No workflow provides '${name}' information.",
-                        mapping={'name': name})
-                raise WorkflowException(msg)
-            else:
-                return default
-    else:
-        wf = self.getWorkflowById(wf_id)
-        if wf is None:
-            if default is _marker:
-                raise WorkflowException(
-                    _(u'Requested workflow definition not found.'))
-            else:
-                return default
-
-    res = wf.getInfoFor(ob, name, default, *args, **kw)
-    if res is _marker:
-        msg = _(u'Could not get info: ${name}', mapping={'name': name})
-        raise WorkflowException(msg)
-    return res
-
   def getWorkflowValueListFor(self, portal_type_id):
     """ Return a list of workflows bound to selected portal_type.
     """
