@@ -50,35 +50,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-vcs_tool = context.getVcsTool()\n
-if do_extract:\n
-  vcs_tool.extractBT(context)\n
+            <value> <string>def respond(v):\n
+  if REQUEST is None:\n
+    return v\n
+  REQUEST.RESPONSE.setHeader("Content-Type", "text/html")\n
+  REQUEST.RESPONSE.write(v)\n
+  raise ValueError("Abort Transaction")\n
 \n
-context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/xml; charset=utf-8\')\n
-\n
-root = vcs_tool.getModifiedTree(show_unmodified)\n
-if not root:\n
-  return \'\'\'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n
-<tree id=\'0\'></tree>\'\'\'\n
-\n
-if REQUEST is not None: # XXX workaround to prevent zodb bloat (bt build)\n
-  # This script is mostly used by javascript, we can abort the transaction\n
-  REQUEST.RESPONSE.write(vcs_tool.treeToXML(root))\n
-  raise ValueError("Abort transaction")\n
-return vcs_tool.treeToXML(root)\n
-
-
-]]></string> </value>
+return respond(context.Base_formatDiffObjectListToHTML(context.BusinessTemplate_getDiffObjectListFromZODB(detailed=detailed)))\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>show_unmodified=False, do_extract=True, REQUEST=None</string> </value>
+            <value> <string>REQUEST=None, detailed=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tree.xml</string> </value>
+            <value> <string>BusinessTemplate_getDiffWithZODBAsHTML</string> </value>
         </item>
       </dictionary>
     </pickle>

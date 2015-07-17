@@ -50,35 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-vcs_tool = context.getVcsTool()\n
-if do_extract:\n
-  vcs_tool.extractBT(context)\n
+            <value> <string>if REQUEST is not None:\n
+  raise ValueError("This script cannot be called from the web")\n
 \n
-context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/xml; charset=utf-8\')\n
+installed_bt_for_diff = context.Base_createCloneDocument(clone=1, batch_mode=1)\n
 \n
-root = vcs_tool.getModifiedTree(show_unmodified)\n
-if not root:\n
-  return \'\'\'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n
-<tree id=\'0\'></tree>\'\'\'\n
-\n
-if REQUEST is not None: # XXX workaround to prevent zodb bloat (bt build)\n
-  # This script is mostly used by javascript, we can abort the transaction\n
-  REQUEST.RESPONSE.write(vcs_tool.treeToXML(root))\n
-  raise ValueError("Abort transaction")\n
-return vcs_tool.treeToXML(root)\n
-
-
-]]></string> </value>
+installed_bt_for_diff.setId("installed_bt_for_diff")\n
+installed_bt_for_diff.build()\n
+diff_object_list = context.Base_getBusinessTemplateDiffObjectList(context, installed_bt_for_diff, detailed=detailed)\n
+# XXX replace context.getPortalObject().portal_templates by something like context.getParentObject\n
+context.getPortalObject().portal_templates.manage_delObjects(ids=[installed_bt_for_diff.getId()])\n
+return diff_object_list\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>show_unmodified=False, do_extract=True, REQUEST=None</string> </value>
+            <value> <string>REQUEST=None, detailed=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tree.xml</string> </value>
+            <value> <string>BusinessTemplate_getDiffObjectListFromZODB</string> </value>
         </item>
       </dictionary>
     </pickle>
