@@ -1,4 +1,8 @@
 <module>
+ <category_list>
+  <category>business_field/base</category>
+  <category>business_application/6</category>
+ </category_list>
  <id>person_module</id>
  <permission_list>
   <permission type='tuple'>
