@@ -26,6 +26,10 @@
             <key> <string>id</string> </key>
             <value> <string>Agent Privilege</string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>AgentPrivilege</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
