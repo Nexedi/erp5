@@ -764,7 +764,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       state_dict = {}
       for wf in self.portal_workflow.objectValues():
         state_list = wf.getStateValueList()
-        for state_id in state_list.keys():
+        for state_id in state_list:
           state = state_list[state_id]
           if group in getattr(state, 'type_list', ()):
             state_dict[state.getReference()] = None
@@ -1289,7 +1289,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       for wf in self.portal_workflow.objectValues():
         if wf.getVariableValueList() and wf.getStateVariable() == 'simulation_state':
           state_list = wf.getStateValueList()
-          for state_id in state_list.keys():
+          for state_id in state_list:
             state = state_list[state_id]
             if getattr(state, 'type_list', None):
               state_dict[state.getReference()] = None
@@ -1668,6 +1668,10 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       self.portal_workflow = new_tool
       self.portal_workflow.id = 'portal_workflow'
       self._delObject('portal_workflow_new')
+
+      # check action provider list
+      if 'portal_workflow' not in self.portal_actions.listActionProviders():
+        self.portal_actions.addActionProvider('portal_workflow')
 Globals.InitializeClass(ERP5Site)
 
 def getBootstrapDirectory():
