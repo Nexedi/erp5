@@ -43,7 +43,10 @@
         <item>
             <key> <string>permissions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>View</string>
+                <string>Access contents information</string>
+              </tuple>
             </value>
         </item>
         <item>
