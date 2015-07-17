@@ -55,11 +55,7 @@ def listFilteredActionsFor(self, object=None):
     actions = []
 
     # Include actions from specific tools.
-    listActionProviderlist = list(self.listActionProviders())
-    if 'portal_workflow' not in listActionProviderlist:
-      listActionProviderlist.append('portal_workflow')
-
-    for provider_name in listActionProviderlist:
+    for provider_name in self.listActionProviders():
         provider = getattr(self, provider_name)
         if hasattr(provider, 'getActionListFor'):
             from Products.ERP5Type.Utils import createExpressionContext
