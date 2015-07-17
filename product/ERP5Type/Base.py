@@ -166,7 +166,7 @@ class WorkflowMethod(Method):
       # already better than what we had. I (JPS) would prefer to use
       # critical sections in this part of the code and a
       # thread variable which tells in which semantic context the code
-      # should be executed. - XXX
+      # should ne executed. - XXX
       return self._m(instance, *args, **kw)
 
     # New implementation does not use any longer wrapWorkflowMethod
@@ -3006,7 +3006,7 @@ class Base( CopyContainer,
         local_permission_list = (local_permission_list,)
       setattr(self,permission_name,tuple(local_permission_list))
 
-  # Content accessor methods
+  ### Content accessor methods
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
       """
