@@ -144,7 +144,9 @@ class ActionInformation(GenerateIdFromReferenceMixin('action'), XMLObject):
                            icon=self.getIconText(),
                            action=self.getActionText(),
                            condition=self.getConditionText(),
-                           permission_list=self.getActionPermissionList())
+                           permission_list=self.getActionPermissionList(),
+                           visible=self.isVisible(),
+                           )
 
 
 class CacheableAction(object):
