@@ -536,6 +536,13 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                             if x.getReference() == action_id]
     object_type._delObject(action_id)
 
+  def stepRemoveFirstActionFromPath(self, sequence=None, **kw):
+    bt = sequence.get('current_bt', None)
+    self.assertTrue(bt is not None)
+    path_list = list(bt.getTemplatePathList())
+    path_list.remove('portal_types/Geek Object/action_become_geek')
+    bt.setTemplatePathList(path_list)
+
   def stepCheckPortalTypeExists(self, sequence=None, **kw):
     """
     Check presence of portal type
@@ -1287,7 +1294,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     bc_id = sequence.get('bc_id')
     bt = sequence.get('current_bt')
     path = 'portal_categories/'+bc_id+'/**'
-    bt.edit(template_path_list=[path])
+    path_list = list(bt.getTemplatePathList())
+    path_list.append(path)
+    bt.edit(template_path_list=path_list)
 
   def stepCheckSubCategoriesExists(self, sequence=None, **kw):
     bc_id = sequence.get('bc_id')
@@ -2579,7 +2588,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def stepCheckBeforeReinstall(self, sequence=None, **kw):
     import_bt = sequence.get('current_bt')
     diff_list = import_bt.BusinessTemplate_getModifiedObject()
-    self.assertTrue('portal_types/Geek Object/become_geek'
+    self.assertTrue('portal_types/Geek Object/action_become_geek'
                     in [line.object_id for line in diff_list])
 
   def stepInstallCurrentBusinessTemplate(self, sequence=None, **kw):
@@ -5923,6 +5932,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        InstallCurrentBusinessTemplate Tic \
                        Tic \
                        RemoveFirstAction \
+                       RemoveFirstActionFromPath \
                        CheckBeforeReinstall \
                        ReinstallBusinessTemplate Tic \
                        \
@@ -6572,20 +6582,19 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
   def test_global_action(self):
     # Tests that global actions are properly exported and reimported
-    self.portal.portal_actions.addAction(
-          id='test_global_action',
-          name='Test Global Action',
-          action='',
-          condition='',
-          permission='',
-          category='object_view')
-    action_idx = len(self.portal.portal_actions._actions)
+    portal_actions = self.portal.portal_actions
+    portal_actions.newContent(
+          portal_type='Action Information',
+          reference='test_global_action',
+          title='Test Global Action',
+          action_type='object_view')
+    action_id = 'action_test_global_action'
 
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
                           title='test_bt_%s' % self.id(),
-                          template_action_path_list=(
-                             'portal_actions | test_global_action',),)
+                          template_path_list=(
+                             'portal_actions/action_test_global_action',),)
     self.tic()
     bt.build()
     self.tic()
@@ -6597,14 +6606,14 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       # tool
       self.assertEqual(['portal_actions'],
             [os.path.basename(f) for f in
-              glob.glob('%s/ActionTemplateItem/portal_types/*' % (export_dir, ))])
+              glob.glob('%s/PathTemplateItem/*' % (export_dir, ))])
       new_bt = self.portal.portal_templates.download(
                         url='file:/%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
 
     # manually uninstall the action
-    self.portal.portal_actions.deleteActions(selections=[action_idx])
+    portal_actions._delObject(action_id)
     self.tic()
 
     # install the business template and make sure the action is properly
@@ -6612,7 +6621,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     new_bt.install()
     self.tic()
     self.assertNotEquals(None,
-        self.portal.portal_actions.getActionInfo('object_view/test_global_action'))
+                         portal_actions._getOb(action_id, None))
 
   def test_indexation_of_updated_path_item(self):
     """Tests indexation on updated paths item.
