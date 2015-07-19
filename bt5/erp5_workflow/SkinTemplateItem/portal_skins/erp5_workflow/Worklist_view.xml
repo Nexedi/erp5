@@ -104,8 +104,8 @@
                     <value>
                       <list>
                         <string>my_group_list</string>
-                        <string>my_expression</string>
                         <string>my_permission_list</string>
+                        <string>my_expression</string>
                         <string>my_role_list</string>
                       </list>
                     </value>
