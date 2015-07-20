@@ -99,27 +99,3 @@ class Variable(IdAsReferenceMixin("variable_", "prefix"), XMLObject):
         if self.info_guard is not None:
             res = self.info_guard.getSummary()
         return res
-
-    # zwj: originated from DC workflow; seems useless here?
-    def setProperties(self, description,
-                      default_value='', default_expr='',
-                      for_catalog=0, for_status=0,
-                      update_always=0,
-                      props=None, REQUEST=None):
-        self.description = str(description)
-        self.default_value = str(default_value)
-        if default_expr:
-            self.default_expr = Expression(default_expr)
-        else:
-            self.default_expr = None
-
-        g = Guard()
-        if g.changeFromProperties(props or REQUEST):
-            self.info_guard = g
-        else:
-            self.info_guard = None
-        self.for_catalog = bool(for_catalog)
-        self.for_status = bool(for_status)
-        self.update_always = bool(update_always)
-        if REQUEST is not None:
-            return self.manage_properties(REQUEST, 'Properties changed.')

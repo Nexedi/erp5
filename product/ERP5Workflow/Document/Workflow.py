@@ -977,61 +977,6 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     return etree.tostring(root, encoding='utf-8',
                           xml_declaration=True, pretty_print=True)
 
-  ###########
-  ## Graph ##
-  ###########
-
-  getGraph = getGraph
-
-  def getPOT(self, *args, **kwargs):
-      """
-      get the pot, copy from:
-      "dcworkfow2dot.py":http://awkly.org/Members/sidnei/weblog_storage/blog_27014
-      and Sidnei da Silva owns the copyright of the this function
-      """
-      out = []
-      transition_dict = {}
-      out.append('digraph "%s" {' % self.getTitle())
-      transition_with_init_state_list = []
-      for state in self.objectValues(portal_type='State'):
-        out.append('%s [shape=box,label="%s",' \
-                     'style="filled",fillcolor="#ffcc99"];' % \
-                     (state.getId(), state.getTitle()))
-        # XXX Use API instead of getDestinationValueList
-        for available_transition in state.getDestinationValueList():
-          transition_with_init_state_list.append(available_transition.getId())
-          destination_state = available_transition.getDestinationValue()
-          if destination_state is None:
-            # take care of 'remain in state' transitions
-            destination_state = state
-          #
-          key = (state.getId(), destination_state.getId())
-          value = transition_dict.get(key, [])
-          value.append(available_transition.getTitle())
-          transition_dict[key] = value
-
-      # iterate also on transitions, and add transitions with no initial state
-      for transition in self.objectValues(portal_type='Transition'):
-        trans_id = transition.getId()
-        if trans_id not in transition_with_init_state_list:
-          destination_state = transition.getDestinationValue()
-          if destination_state is None:
-            dest_state_id = None
-          else:
-            dest_state_id = destination_state.getId()
-
-          key = (None, dest_state_id)
-          value = transition_dict.get(key, [])
-          value.append(transition.getTitle())
-          transition_dict[key] = value
-
-      for k, v in transition_dict.items():
-          out.append('%s -> %s [label="%s"];' % (k[0], k[1],
-                                                 ',\\n'.join(v)))
-
-      out.append('}')
-      return '\n'.join(out)
-
 def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
     """Checks conditions in this guard.
        This function is the same as Guard.check, but roles are not taken

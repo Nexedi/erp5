@@ -108,17 +108,3 @@ class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
           self.guard.groups = self.getGroupList()
         if self.guard.expr != self.getExpression():
           self.guard.expr = self.getExpression()
-
-  def _checkPermission(self, document):
-    """
-    Check if transition is allowed.
-    """
-    expr_value = self.getGuardExpression(evaluate=0)
-    if expr_value is not None:
-      # do not use 'getGuardExpression' to calculate tales because
-      # it caches value which is bad. Instead do it manually
-      value = _evaluateTales(document, expr_value)
-    else:
-      value = True
-    #print "CALC", expr_value, '-->', value
-    return value

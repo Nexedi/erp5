@@ -65,56 +65,19 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
              PropertySheet.Reference,
              PropertySheet.State,)
 
-  def getAvailableTransitionList(self, document):
-    transition_list = self.getDestinationValueList(portal_type = 'Transition')
-    result_list = []
-    for transition in transition_list:
-      value = transition._checkPermission(document)
-      if value:
-        result_list.append(transition)
-    return result_list
-
-  def getWorkflowHistory(self, document, remove_undo=0, remove_not_displayed=0):
-    """
-    Return history tuple
-    """
-    wh = document.workflow_history[self.getParentValue()._generateHistoryKey()]
-    result = []
-    # Remove undo
-    if not remove_undo:
-      result = [x.copy() for x in wh]
-    else:
-      result = []
-      for x in wh:
-        if x.has_key('undo') and x['undo'] == 1:
-          result.pop()
-        else:
-          result.append(x.copy())
-    return result
-
-  def getVariableValue(self, document, variable_name):
-    """
-    Get current value of the variable from the object
-    """
-    status_dict = self.getParentValue().getCurrentStatusDict(document)
-    return status_dict[variable_name]
-
   def setPermission(self, permission, acquired, roles, REQUEST=None):
       """Set a permission for this State."""
-      pr = self.erp5_permission_roles
-      if pr is None:
-          self.erp5_permission_roles = pr = PersistentMapping()
+      permission_role = self.erp5_permission_roles
+      if permission_role is None:
+          self.erp5_permission_roles = permission_role = PersistentMapping()
       if acquired:
           roles = list(roles)
       else:
           roles = tuple(roles)
-      pr[permission] = roles
+      permission_role[permission] = roles
 
   def getPermissionRoleList(self):
     return self.erp5_permission_roles
-
-  def getWorkflow(self):
-    return aq_parent(aq_inner(aq_parent(aq_inner(self))))
 
   def getDestinationReferenceList(self):
     ref_list = []
