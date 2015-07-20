@@ -115,6 +115,7 @@
                         <string>my_language</string>
                         <string>my_int_index</string>
                         <string>my_effective_date</string>
+                        <string>my_content_type</string>
                         <string>my_revision</string>
                       </list>
                     </value>
