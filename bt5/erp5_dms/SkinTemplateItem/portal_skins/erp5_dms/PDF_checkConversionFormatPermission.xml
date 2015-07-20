@@ -75,8 +75,8 @@ if format in VALID_IMAGE_FORMAT_LIST:\n
 \n
   # Max surface allowed to convert an image,\n
   # value is surface of A3 (11.7 inchs * 72 dpi * 16.5 inchs * 72 dpi)\n
-  maximum_surface = 1000772\n
-\n
+  maximum_surface = 1000772*2 # Ivan\n
+  #context.log(str(width * height) + \'  \' +  str(maximum_surface) + context.getRelativeUrl())\n
   if (width * height) > maximum_surface:\n
     return False\n
 \n

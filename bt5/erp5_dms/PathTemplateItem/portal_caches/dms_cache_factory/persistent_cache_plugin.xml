@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>specialise/portal_memcached/persistent_memcached_plugin</string>
+                <string>specialise/portal_memcached/1</string>
               </tuple>
             </value>
         </item>
