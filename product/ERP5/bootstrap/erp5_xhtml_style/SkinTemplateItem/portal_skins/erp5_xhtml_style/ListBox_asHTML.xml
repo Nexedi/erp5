@@ -473,7 +473,7 @@
             <tr tal:repeat="line line_list"  \n
                 tal:attributes="                \n
                   class python: line.getRowCSSClassName() or \'%s %s\' %(\'%s-data-line-%s\' %(field_id, repeat[\'line\'].index) ,test(repeat[\'line\'].index % 2, \'DataB\', \'DataA\'));">\n
-              \n
+\n
               <tal:block tal:define="render_result line/render">\n
 \n
                   <!--Report tree column -->\n
