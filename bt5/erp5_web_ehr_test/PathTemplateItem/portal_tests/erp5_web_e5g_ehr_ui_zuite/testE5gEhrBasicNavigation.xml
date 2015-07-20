@@ -109,6 +109,8 @@
 \n
 \n
 <!-- Initialize -->\n
+<!-- DISABLE FOR NOW -->\n
+<!--\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/web_site_module/e5g_ehr/</td>\n
@@ -154,7 +156,7 @@
   <td>//a[@href="#jio_key=position_module%2Fposition_0&amp;view=view"]</td>\n
   <td>Super Position 0</td>\n
 </tr>\n
-\n
+-->\n
 \n
 </tbody>\n
 </table>\n
