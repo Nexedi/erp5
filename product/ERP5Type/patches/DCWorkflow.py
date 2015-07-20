@@ -44,7 +44,6 @@ from zLOG import LOG, INFO, WARNING
 # Libraries related to showAsXML
 from lxml import etree
 from lxml.etree import Element, SubElement
-from xml.sax.saxutils import escape, unescape
 
 ACTIVITY_GROUPING_COUNT = 100
 

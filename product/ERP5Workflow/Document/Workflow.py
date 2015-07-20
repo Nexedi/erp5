@@ -61,7 +61,6 @@ from Products.ERP5Workflow.Document.Transition import TRIGGER_AUTOMATIC,\
                                     TRIGGER_USER_ACTION, TRIGGER_WORKFLOW_METHOD
 from tempfile import mktemp
 from types import StringTypes
-from xml.sax.saxutils import escape, unescape
 from zLOG import LOG, INFO, WARNING
 
 class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):

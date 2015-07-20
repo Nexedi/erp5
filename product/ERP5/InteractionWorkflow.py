@@ -35,11 +35,6 @@ from Products.ERP5Type import Permissions
 # show as xml library
 from lxml import etree
 from lxml.etree import Element, SubElement
-from xml.sax.saxutils import escape, unescape
-from xml_marshaller.xml_marshaller import Marshaller
-MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
-marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
-                                                            as_tree=True).dumps
 
 _MARKER = []
 
