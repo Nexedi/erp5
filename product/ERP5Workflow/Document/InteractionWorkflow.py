@@ -39,7 +39,7 @@ from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.ERP5Type import Permissions, PropertySheet, Globals
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.Globals import PersistentMapping
-from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.ERP5Type.patches.Expression import createExprContext
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Workflow import addWorkflowFactory
 from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
@@ -152,7 +152,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       value = status[name]
     # Not set yet.  Use a default.
     elif vdef.default_expr is not None:
-      ec = Expression_createExprContext(StateChangeInfo(ob, self, status))
+      ec = createExprContext(StateChangeInfo(ob, self, status))
       value = vdef.default_expr(ec)
     else:
       value = vdef.default_value
@@ -354,7 +354,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
               sci = StateChangeInfo(
                   ob, self, former_status, tdef,
                   None, None, None)
-            econtext = Expression_createExprContext(sci)
+            econtext = createExprContext(sci)
           value = expr(econtext)
         status[id] = value
 

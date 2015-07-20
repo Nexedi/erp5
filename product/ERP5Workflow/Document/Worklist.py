@@ -35,7 +35,7 @@ from Persistence import PersistentMapping
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
-from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.ERP5Type.patches.Expression import createExprContext
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.DCWorkflow.Expression import Expression, StateChangeInfo
 from Products.DCWorkflow.Guard import Guard
@@ -231,7 +231,7 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
             if isinstance(values, Expression):
                 wf = self.getParent()
                 portal = wf._getPortalRoot()
-                context = Expression_createExprContext(StateChangeInfo(portal, wf))
+                context = createExprContext(StateChangeInfo(portal, wf))
                 criteria[key] = values(context)
             else:
                 criteria[key] = [x % info for x in values]

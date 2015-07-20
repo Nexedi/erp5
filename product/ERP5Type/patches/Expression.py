@@ -15,6 +15,7 @@
 # Expression patch
 
 from Products.CMFCore.Expression import Expression
+from Products.DCWorkflow.Expression import createExprContext
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from Products.PageTemplates.Expressions import getEngine
@@ -27,8 +28,9 @@ def Expression_hash(self):
 
 Expression.__hash__ = Expression_hash
 
-
-def Expression_createExprContext(sci):
+# compatibility according to the new structure of workflow:
+# deploy script getter to return a list of script.
+def createExprContext(sci):
     '''
     An expression context provides names for TALES expressions.
     '''
@@ -54,21 +56,3 @@ def Expression_createExprContext(sci):
         'scripts':      scripts,
         }
     return getEngine().getContext(data)
-
-Expression.createExprContext = Expression_createExprContext
-
-def StateChangeInfo_getHistory(self):
-    wf = self.workflow
-    if getattr(wf, 'getTypeInfo'):
-      tool = wf.getPortalObject().portal_workflow
-      wf_id = wf.getReference()
-    else:
-      tool = aq_parent(aq_inner(wf))
-      wf_id = wf.id
-    h = tool.getHistoryOf(wf_id, self.object)
-    if h:
-        return map(lambda dict: dict.copy(), h)  # Don't allow mutation
-    else:
-        return ()
-
-StateChangeInfo.getHistory = StateChangeInfo_getHistory

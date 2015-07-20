@@ -52,7 +52,7 @@ from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition as DCWorkflow
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
-from Products.ERP5Type.patches.Expression import Expression_createExprContext
+from Products.ERP5Type.patches.Expression import createExprContext
 from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID,\
                                                           WORKLIST_METADATA_KEY
 from Products.ERP5Type.Utils import UpperCase, convertToMixedCase
@@ -107,7 +107,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     status_dict = {state_var: state_id}
     variable_list = self.objectValues(portal_type='Variable')
     former_status = self._getOb(status_dict[state_var], None)
-    ec = Expression_createExprContext(StateChangeInfo(document, self, former_status))
+    ec = createExprContext(StateChangeInfo(document, self, former_status))
 
     for variable in variable_list:
       if variable.for_status == 0:
@@ -393,7 +393,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         for key in worklist_definition.getVarMatchKeys():
           var = worklist_definition.getVarMatch(key)
           if isinstance(var, Expression):
-            evaluated_value = var(Expression_createExprContext(StateChangeInfo(portal,
+            evaluated_value = var(createExprContext(StateChangeInfo(portal,
                                   self, kwargs=info.__dict__.copy())))
             if isinstance(evaluated_value, (str, int, long)):
               evaluated_value = [str(evaluated_value)]
@@ -471,7 +471,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
           value = status_dict[name]
       # Not set yet.  Use a default.
       if vdef.default_expr is not None:
-          ec = Expression_createExprContext(StateChangeInfo(ob, self, former_status))
+          ec = createExprContext(StateChangeInfo(ob, self, former_status))
           expr = Expression(vdef.default_expr)
           value = expr(ec)
       else:
@@ -685,7 +685,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
             sci = StateChangeInfo(
                 document, self, former_status, tdef,
                 old_sdef, new_sdef, kwargs)
-          econtext = Expression_createExprContext(sci)
+          econtext = createExprContext(sci)
         expr = Expression(expr)
         value = expr(econtext)
       if value is None: value = ''

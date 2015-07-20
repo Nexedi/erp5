@@ -34,14 +34,12 @@ from copy import deepcopy
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
-from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.DCWorkflow.Guard import Guard
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Base import _evaluateTales
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.patches.DCWorkflow import ValidationFailed
-from Products.ERP5Type.patches.Expression import Expression_createExprContext
 from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.XMLObject import XMLObject
