@@ -191,15 +191,18 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
   def getWorkflowValueListFor(self, portal_type_id):
-    """ Return a list of workflows bound to selected portal_type.
+    """ Return a list of workflows bound to selected portal_type, this workflow
+        list may contain both DC Workflow and Workflow.
     """
     portal_type = self.getPortalObject().getDefaultModule(portal_type="portal_types")._getOb(portal_type_id, None)
     workflow_list = []
     if portal_type is not None:
+      # checking Workflow assignment:
       for workflow_id in portal_type.getTypeWorkflowList():
         workflow_list.append(self._getOb(workflow_id))
 
     for wf in self.getWorkflowsFor(portal_type_id):
+      # checking DC Workflow assignment
       if wf is not None:
         workflow_list.append(wf)
     return workflow_list
@@ -696,19 +699,27 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       document_pt = document.getTypeInfo()
       if document_pt is not None:
         workflow_list = self.getWorkflowValueListFor(document.getPortalType())
-        if (workflow_list is not None) and (workflow_list is not []):
-          for wf in workflow_list:
-            wf_id = wf.getReference()
-            did[wf_id] = None
-            wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
-            if wf is None:
-              raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
-            a = wf.listObjectActions(info)
-            if a is not None and a != []:
-              actions.extend(a)
-            a = wf.getWorklistVariableMatchDict(info)
-            if a is not None:
-              worklist_dict[wf_id] = a
+        for wf in workflow_list:
+          wf_id = wf.getReference()
+          did[wf_id] = None
+          wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
+          if wf is None:
+            raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
+          a = wf.listObjectActions(info)
+          if a is not None and a != []:
+            actions.extend(a)
+          a = wf.getWorklistVariableMatchDict(info)
+          if a is not None:
+            worklist_dict[wf_id] = a
+
+        wf_ids = self.getWorkflowIds()
+        for wf_id in wf_ids:
+          if not did.has_key(wf_id):
+            wf = self.getWorkflowById(wf_id)
+            if wf is not None:
+              a = wf.getWorklistVariableMatchDict(info)
+              if a is not None:
+                worklist_dict[wf_id] = a
 
     if worklist_dict:
       portal = self.getPortalObject()
