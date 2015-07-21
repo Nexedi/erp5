@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>table_existence_constraint</string> </value>
+            <value> <string>table_consistency_constraint</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>script_id</string> </key>
-            <value> <string>TemplateTool_checkTableExistence</string> </value>
+            <value> <string>TemplateTool_checkTableConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TemplateToolTableExistenceConstraint</string> </value>
+            <value> <string>TemplateToolTableConsistencyConstraint</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
