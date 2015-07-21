@@ -139,16 +139,50 @@ account_type_to_group_by_payment = [ \'account_type/asset/cash/bank\' ]\n
 account_type_payable_receivable = [\n
                   \'account_type/asset/receivable\',\n
                   \'account_type/liability/payable\', ]\n
+\n
+\n
+# For initial balance of third party accounts, we want the same bottom line figure for initial\n
+# debit and initial debit wether or not we expand accounts.\n
+#\n
+# For example if we have this balance when enabling the detailed breakdown\n
+# by third party for payable & recievable accounts:\n
+#\n
+# Account | Third Party | Initial Debit Balance | Initial Credit Balance |\n
+# --------+-------------+-----------------------+------------------------|\n
+#   A1    | P1          |                   100 |                        |\n
+#   A1    | P2          |                       |                     30 |\n
+#\n
+# When the breakdown is disabled, we still want to have:\n
+#\n
+# Account | Initial Debit Balance | Initial Credit Balance |\n
+# --------+-----------------------+------------------------|\n
+#   A1    |                   100 |                     30 |\n
+#\n
+# and not an initial debit balance of 70.\n
+# This behaviour applies to initial balances, not movements in the period.\n
+#\n
+# Inventory API does not provide such feature of a getInventory(omit_input/output=True) that\n
+# does a sum of getInventoryList(omit_input/output=True, group_by_node=True), so we sum this up\n
+# in python, which becomes heavy when there are a lot of third parties (even if we do not\n
+# enable the break down).\n
+# If user does not enable detailed columns, then there is only one column for initial balance,\n
+# so the complexity described above does not apply.\n
 if expand_accounts:\n
   account_type_to_group_by_mirror_section = account_type_payable_receivable\n
+  account_type_to_group_by_mirror_section_previous_period = account_type_payable_receivable\n
 else:\n
   account_type_to_group_by_mirror_section = []\n
+  account_type_to_group_by_mirror_section_previous_period = []\n
+  if show_detailed_balance_columns:\n
+    account_type_to_group_by_mirror_section_previous_period = account_type_payable_receivable\n
+\n
 \n
 account_type_to_group_by_node = [at for at in balance_sheet_account_type_list\n
   if at not in account_type_to_group_by_payment\n
   and at not in account_type_to_group_by_mirror_section]\n
 \n
-account_type_to_group_by_node_previous_period = [at for at in account_type_to_group_by_node if at not in account_type_payable_receivable]\n
+account_type_to_group_by_node_previous_period = [at for at in account_type_to_group_by_node\n
+  if at not in account_type_to_group_by_mirror_section_previous_period]\n
 \n
 \n
 total_debit = 0\n
@@ -468,7 +502,7 @@ for node in getInventoryList(\n
 # payable / receivable accounts {{{\n
 # initial balance\n
 for node in getInventoryList(\n
-                node_category_strict_membership=account_type_payable_receivable,\n
+                node_category_strict_membership=account_type_to_group_by_mirror_section_previous_period,\n
                 group_by_mirror_section=1,\n
                 group_by_node=1,\n
                 to_date=period_start_date,\n
@@ -478,7 +512,7 @@ for node in getInventoryList(\n
   mirror_section_key = MARKER\n
   if expand_accounts:\n
     mirror_section_key = node[\'mirror_section_uid\']\n
-  \n
+\n
   account_props = line_per_account.setdefault(\n
                     getKey(node, mirror_section=mirror_section_key),\n
                            dict(debit=0, credit=0))\n
@@ -491,7 +525,7 @@ for node in getInventoryList(\n
 found_balance=False\n
 # Balance Transactions\n
 for node in getInventoryList(\n
-                node_category_strict_membership=account_type_payable_receivable,\n
+                node_category_strict_membership=account_type_to_group_by_mirror_section_previous_period,\n
                 group_by_mirror_section=1,\n
                 group_by_node=1,\n
                 from_date=from_date,\n
@@ -801,7 +835,7 @@ return new_line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, gap_root=None, per_account_class_summary=0, portal_type=None, function=None, funding=None, project=None, group_analytic=[], mirror_section_category=None, **kw</string> </value>
+            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, gap_root=None, per_account_class_summary=0, portal_type=None, function=None, funding=None, project=None, group_analytic=[], mirror_section_category=None, show_detailed_balance_columns=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
