@@ -1,4 +1,8 @@
 <module>
+ <category_list>
+  <category>business_field/accounting</category>
+  <category>business_application/5</category>
+ </category_list>
  <id>accounting_module</id>
  <permission_list>
   <permission type='tuple'>
