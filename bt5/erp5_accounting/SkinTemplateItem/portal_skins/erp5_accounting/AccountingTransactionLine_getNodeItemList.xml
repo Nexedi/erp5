@@ -130,7 +130,7 @@ def getItemList(category=None, portal_path=None, mirror=0, omit_filter=0,\n
 # wrap the previous method in a cache\n
 getItemList = CachingMethod(getItemList,\n
                             id=\'AccountingTransactionLine_getNodeItemList\',\n
-                            cache_factory=\'erp5_content_long\')\n
+                            cache_factory=\'erp5_content_short\')\n
 \n
 # the cache vary with the simulation state of the current transaction,\n
 # to display all accounts when the transaction is already delivered.\n
