@@ -20,7 +20,33 @@
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
-      <none/>
+      <tuple>
+        <tuple>
+          <tuple>
+            <tuple>
+              <string>url_reference_mapping</string>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </tuple>
+          </tuple>
+        </tuple>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <tuple>
+          <tuple>
+            <tuple>
+              <string>http://www.erp5.org/GuidelinesForNamingConvention</string>
+              <string>developer-Naming.Conventions</string>
+            </tuple>
+          </tuple>
+        </tuple>
+      </tuple>
     </pickle>
   </record>
 </ZopeData>
