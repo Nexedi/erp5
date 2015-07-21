@@ -87,6 +87,7 @@
                         <string>listbox_source_credit</string>
                         <string>listbox_destination_credit</string>
                         <string>listbox_destination_debit</string>
+                        <string>listbox_title</string>
                       </list>
                     </value>
                 </item>
