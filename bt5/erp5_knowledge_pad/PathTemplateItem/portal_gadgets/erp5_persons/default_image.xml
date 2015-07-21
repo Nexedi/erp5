@@ -57,6 +57,15 @@
             <value> <string>image/jpeg</string> </value>
         </item>
         <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>superi</string>
+                <string>superseb</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>data</string> </key>
             <value> <string encoding="base64">/9j/4AAQSkZJRgABAQIAHAAcAAD/4QAWRXhpZgAATU0AKgAAAAgAAAAAAAD/2wBDAAEBAQEBAQEB
 AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/
@@ -560,8 +569,8 @@ xhhxxxxhhxxxxhhxxxxhhxxxxhhxxxxhhxxxxhhxxxxhhxxxxhhxxxxhhxxxxhhxxxxhhzxnzflD
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1219397428.12</float>
-                    <string>GMT+3</string>
+                    <float>1362829030.22</float>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>

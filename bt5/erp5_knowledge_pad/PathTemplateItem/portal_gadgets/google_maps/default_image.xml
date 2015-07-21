@@ -73,6 +73,7 @@
             <value>
               <tuple>
                 <string>zope</string>
+                <string>superseb</string>
               </tuple>
             </value>
         </item>
@@ -112,8 +113,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1259228221.07</float>
-                    <string>GMT+1</string>
+                    <float>1362829030.78</float>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>

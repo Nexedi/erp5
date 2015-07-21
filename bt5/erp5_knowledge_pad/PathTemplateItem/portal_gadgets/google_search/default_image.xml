@@ -74,6 +74,7 @@
               <tuple>
                 <string>zope</string>
                 <string>ERP5TypeTestCase</string>
+                <string>superseb</string>
               </tuple>
             </value>
         </item>
@@ -186,8 +187,8 @@ qQkTiJCaMIEIqQkTiJCa/h9bl4K4cfIN9AAAAABJRU5ErkJggg==</string> </value>
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1266307569.33</float>
-                    <string>GMT+2</string>
+                    <float>1362829031.0</float>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>
