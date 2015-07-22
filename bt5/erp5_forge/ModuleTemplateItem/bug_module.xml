@@ -1,4 +1,7 @@
 <module>
+ <category_list>
+  <category>business_application/10</category>
+ </category_list>
  <id>bug_module</id>
  <permission_list>
   <permission type='tuple'>
