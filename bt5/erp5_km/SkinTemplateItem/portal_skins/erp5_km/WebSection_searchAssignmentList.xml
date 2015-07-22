@@ -51,6 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>section = context.REQUEST.get(\'current_web_section\', context)\n
+kw[\'portal_type\'] = \'Assignment\' # XXX Quick fix by JPS because the PT is not passed to gadget\n
 \n
 membership_criterion_category = section.getMembershipCriterionCategory()\n
 if membership_criterion_category is not None:\n
