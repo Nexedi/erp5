@@ -45,6 +45,15 @@
             <value> <string>image/jpeg</string> </value>
         </item>
         <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>superi</string>
+                <string>superseb</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>data</string> </key>
             <value> <string encoding="base64">/9j/4AAQSkZJRgABAQEAgQCBAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB
 AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEB
@@ -468,6 +477,25 @@ yuOOOZdbdOOOOOnTjjjjp044446dOOOOOnTjjjjp044446df/9k=</string> </value>
         <item>
             <key> <string>id</string> </key>
             <value> <string>default_image</string> </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1362829033.74</float>
+                    <string>GMT</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

@@ -62,6 +62,7 @@
               <tuple>
                 <string>admin</string>
                 <string>jp</string>
+                <string>superseb</string>
               </tuple>
             </value>
         </item>
@@ -417,8 +418,8 @@ rr8/GuPX09B5z/Vj+3+N/S9LP9WP7f439L1Ivq9/IH//2Q==</string> </value>
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1233315528.09</float>
-                    <string>GMT+1</string>
+                    <float>1362829031.54</float>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>
