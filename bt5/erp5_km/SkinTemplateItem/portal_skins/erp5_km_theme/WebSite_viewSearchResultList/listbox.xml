@@ -66,6 +66,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -96,6 +100,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -113,6 +129,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
