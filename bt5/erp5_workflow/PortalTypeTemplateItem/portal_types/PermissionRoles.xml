@@ -15,6 +15,12 @@
             <value> <string>An ERP5 permission roles bonder.</string> </value>
         </item>
         <item>
+            <key> <string>erp5workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>PermissionRoles</string> </value>
         </item>
@@ -46,6 +52,12 @@
         </item>
         <item>
             <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
             <value>
               <tuple/>
             </value>

@@ -1,8 +1,12 @@
 <allowed_content_type_list>
+ <portal_type id="Configuration Transition">
+  <item>Transition Variable</item>
+ </portal_type>
  <portal_type id="Configuration Workflow">
   <item>Configuration State</item>
   <item>Configuration Transition</item>
   <item>Variable</item>
+  <item>Worklist</item>
  </portal_type>
  <portal_type id="Interaction">
   <item>Transition Variable</item>

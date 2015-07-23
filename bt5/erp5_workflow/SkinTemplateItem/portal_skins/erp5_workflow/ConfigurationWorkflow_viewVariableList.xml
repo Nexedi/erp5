@@ -86,7 +86,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_state_variable_name</string>
+                        <string>my_state_base_category</string>
                       </list>
                     </value>
                 </item>

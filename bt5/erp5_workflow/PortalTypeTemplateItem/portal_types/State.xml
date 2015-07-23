@@ -40,6 +40,12 @@
 </string> </value>
         </item>
         <item>
+            <key> <string>erp5workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>factory</string> </key>
             <value> <string>addState</string> </value>
         </item>
@@ -75,6 +81,12 @@
         </item>
         <item>
             <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
             <value>
               <tuple/>
             </value>

@@ -1,6 +1,8 @@
+Configuration Transition | Transition Variable
 Configuration Workflow | Configuration State
 Configuration Workflow | Configuration Transition
 Configuration Workflow | Variable
+Configuration Workflow | Worklist
 Interaction Workflow | Interaction
 Interaction Workflow | Variable
 Interaction Workflow | Workflow Script

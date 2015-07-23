@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_state_variable_name</string> </value>
+            <value> <string>my_state_base_category</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x.getId(), x.getId()) for x in here.getPortalObject().portal_categories.objectValues()]</string> </value>
+            <value> <string>python: [(x.getTitleOrId(), x.getId()) for x in here.getPortalObject().portal_categories.objectValues()]</string> </value>
         </item>
       </dictionary>
     </pickle>

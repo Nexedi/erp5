@@ -64,7 +64,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -85,9 +87,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_title</string>
                         <string>my_destination_title</string>
+                        <string>my_guard_expression</string>
                       </list>
                     </value>
                 </item>
@@ -95,6 +97,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_transition_form_id</string>
                         <string>my_before_script_id</string>
                         <string>my_after_script_id</string>
                       </list>
