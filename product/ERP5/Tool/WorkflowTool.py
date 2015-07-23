@@ -201,11 +201,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       for workflow_id in portal_type.getTypeWorkflowList():
         workflow_list.append(self._getOb(workflow_id))
 
-    for wf in self.getWorkflowsFor(portal_type_id):
-      # checking DC Workflow assignment
-      if wf is not None:
-        workflow_list.append(wf)
+      for wf_id in self.getChainFor(portal_type_id):
+        wf = self.getWorkflowById(wf_id)
+        if wf is not None:
+          workflow_list.append(wf)
     return workflow_list
+
+  getWorkflowsFor = getWorkflowValueListFor
 
   security.declarePrivate('getHistoryOf')
   def getHistoryOf(self, wf_id, ob):
