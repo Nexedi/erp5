@@ -1,4 +1,7 @@
 <module>
+ <category_list>
+  <category>business_application/8</category>
+ </category_list>
  <id>task_report_module</id>
  <permission_list>
   <permission type='tuple'>
