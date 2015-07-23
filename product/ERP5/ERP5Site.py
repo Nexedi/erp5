@@ -1669,9 +1669,6 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       self.portal_workflow.id = 'portal_workflow'
       self._delObject('portal_workflow_new')
 
-      # check action provider list
-      if 'portal_workflow' not in self.portal_actions.listActionProviders():
-        self.portal_actions.addActionProvider('portal_workflow')
 Globals.InitializeClass(ERP5Site)
 
 def getBootstrapDirectory():
