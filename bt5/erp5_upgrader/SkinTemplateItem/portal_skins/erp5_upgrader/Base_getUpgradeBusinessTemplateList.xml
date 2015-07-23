@@ -57,7 +57,7 @@
    a old business template without updating it and without removing it\n
 """\n
 \n
-return (\'erp5_base\',), []\n
+return (\'erp5_base\',), ["erp5_upgrader"]\n
 </string> </value>
         </item>
         <item>
