@@ -72,7 +72,6 @@ from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply, Unrestricte
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
 from sets import ImmutableSet
 from tempfile import mkstemp, mkdtemp
-from types import StringTypes
 from urllib import pathname2url, urlopen, splittype, urlretrieve
 from xml.dom.minidom import parse
 from xml.parsers.expat import ExpatError
