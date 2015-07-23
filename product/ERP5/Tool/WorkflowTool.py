@@ -696,32 +696,32 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     worklist_dict = {}
 
     document = info.object
+    document_pt = document.getTypeInfo()
 
-    if document:
-      document_pt = document.getTypeInfo()
-      if document_pt is not None:
-        workflow_list = self.getWorkflowValueListFor(document.getPortalType())
-        for wf in workflow_list:
-          wf_id = wf.getReference()
-          did[wf_id] = None
-          wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
-          if wf is None:
-            raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
-          a = wf.listObjectActions(info)
-          if a is not None and a != []:
-            actions.extend(a)
+    if document_pt is not None:
+      workflow_list = self.getWorkflowValueListFor(document.getPortalType())
+      for wf in workflow_list:
+        LOG("Check workflow '%s' action list"%wf.id,WARNING," in WorkflowTool.py 705")
+        wf_id = wf.getReference()
+        did[wf_id] = None
+        wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
+        if wf is None:
+          raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
+        a = wf.listObjectActions(info)
+        if a is not None and a != []:
+          actions.extend(a)
+        a = wf.getWorklistVariableMatchDict(info)
+        if a is not None:
+          worklist_dict[wf_id] = a
+
+    wf_ids = self.getWorkflowIds()
+    for wf_id in wf_ids:
+      if not did.has_key(wf_id):
+        wf = self.getWorkflowById(wf_id)
+        if wf is not None:
           a = wf.getWorklistVariableMatchDict(info)
           if a is not None:
             worklist_dict[wf_id] = a
-
-        wf_ids = self.getWorkflowIds()
-        for wf_id in wf_ids:
-          if not did.has_key(wf_id):
-            wf = self.getWorkflowById(wf_id)
-            if wf is not None:
-              a = wf.getWorklistVariableMatchDict(info)
-              if a is not None:
-                worklist_dict[wf_id] = a
 
     if worklist_dict:
       portal = self.getPortalObject()
@@ -1288,56 +1288,6 @@ class WorkflowHistoryList(Persistent):
         else:
             self._prev = self.__class__(self._slots, prev=self._prev)
             self._slots = [value]
-
-def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
-    '''
-    Allows the system to request a workflow action.  This method
-    must perform its own security checks.
-    '''
-    if type(transition_list) in StringTypes:
-      method_id = transition_list
-    elif len(transition_list) == 1:
-      method_id = transition_list[0]
-    else:
-      raise ValueError('WorkflowMethod should be attached to exactly 1 transition per DCWorkflow instance.')
-    sdef = self._getWorkflowStateOf(ob)
-    if sdef is None:
-        raise WorkflowException, 'Object is in an undefined state'
-    if method_id not in sdef.transitions:
-        raise Unauthorized(method_id)
-    tdef = self.transitions.get(method_id, None)
-    if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
-        raise WorkflowException, (
-            'Transition %s is not triggered by a workflow method'
-            % method_id)
-    if not self._checkTransitionGuard(tdef, ob):
-        raise Unauthorized(method_id)
-    self._changeStateOf(ob, tdef, kw)
-    if getattr(ob, 'reindexObject', None) is not None:
-        if kw is not None:
-            activate_kw = kw.get('activate_kw', {})
-        else:
-            activate_kw = {}
-        ob.reindexObject(activate_kw=activate_kw)
-
-def DCWorkflowDefinition_notifyBefore(self, ob, transition_list, args=None, kw=None):
-    '''
-    Notifies this workflow of an action before it happens,
-    allowing veto by exception.  Unless an exception is thrown, either
-    a notifySuccess() or notifyException() can be expected later on.
-    The action usually corresponds to a method name.
-    '''
-    pass
-
-def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=None, kw=None):
-    '''
-    Notifies this workflow that an action has taken place.
-    '''
-    pass
-
-DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
-DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
-DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
 
 WORKLIST_METADATA_KEY = 'metadata'
 SECURITY_PARAMETER_ID = 'local_roles'
