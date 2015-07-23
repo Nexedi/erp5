@@ -117,7 +117,7 @@
     <script src="renderjs.js" type="text/javascript"></script>\n
     <script src="handlebars.js" type="text/javascript"></script>\n
     <script src="gadget_global.js" type="text/javascript"></script>\n
-    <script src="jquery/core/jquery-2.1.min.js" type="text/javascript"></script>\n
+    <script src="jquery.js" type="text/javascript"></script>\n
     <script src="jquerymobile.js" type="text/javascript"></script>\n
 \n
     <script id="panel-template-header" type="text/x-handlebars-template">\n
@@ -319,7 +319,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.23995.20237.27067</string> </value>
+                <value> <string>944.36243.6132.18568</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -337,8 +337,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1436852011.47</float>
-                        <string>GMT+9</string>
+                        <float>1437641090.96</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
