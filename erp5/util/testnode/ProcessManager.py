@@ -106,7 +106,7 @@ def killCommand(pid, log):
   everyone at the same time
   """
   process = psutil.Process(pid)
-  new_child_set = set([x.pid for x in process.get_children(recursive=True)])
+  new_child_set = set([x.pid for x in process.children(recursive=True)])
   child_set = None
   os.kill(pid, signal.SIGSTOP)
   while new_child_set != child_set:
@@ -117,7 +117,7 @@ def killCommand(pid, log):
       os.kill(child_pid, signal.SIGSTOP)
     time.sleep(1)
     child_set = new_child_set
-    new_child_set = set([x.pid for x in process.get_children(recursive=True)])
+    new_child_set = set([x.pid for x in process.children(recursive=True)])
   log("killCommand, finishing, child_set : %r" % (child_set,))
   for child_pid in child_set:
     os.kill(child_pid, signal.SIGKILL)
