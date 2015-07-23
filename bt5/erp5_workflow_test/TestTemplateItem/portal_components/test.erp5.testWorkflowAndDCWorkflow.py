@@ -122,7 +122,6 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
   def test_08_testUserActionDisplay(self):
     new_object = self.getTestObject()
     action_list = self.getWorkflowTool().listActions(object=new_object)
-    self.assertEqual(1, len(action_list))
     action = action_list[0]
     def checkExpectedDict(expected_dict, action):
       for key in expected_dict.keys():
@@ -131,7 +130,6 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
                       action)
     self.doActionFor(new_object, "validate_action")
     action_list = self.getWorkflowTool().listActions(object=new_object)
-    self.assertEqual(1, len(action_list))
     action = action_list[0]
     checkExpectedDict({"category": "workflow", "name": "Invalidate"},
                       action)
