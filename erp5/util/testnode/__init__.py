@@ -75,8 +75,8 @@ def main(*args):
   config.readfp(parsed_argument.configuration_file[0])
   for key in ('slapos_directory','working_directory','test_suite_directory',
               'log_directory','run_directory', 'srv_directory', 'proxy_host',
-              'software_directory',
-              'proxy_port', 'git_binary','zip_binary','node_quantity',
+	      'software_directory', 'proxy_port', 'git_binary','zip_binary',
+              'firefox_binary', 'xvfb_binary', 'node_quantity',
               'test_node_title', 'ipv4_address','ipv6_address','test_suite_master_url',
               'slapos_binary', 'httpd_ip', 'httpd_port', 'httpd_software_access_port',
               'computer_id', 'server_url', 'software_link'):

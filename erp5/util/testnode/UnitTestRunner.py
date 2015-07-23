@@ -122,7 +122,6 @@ class UnitTestRunner():
 
   def runTestSuite(self, node_test_suite, portal_url, log=None):
     config = self.testnode.config
-    parameter_list = []
     slapos_controler = self._getSlapOSControler(self.testnode.working_directory)
     run_test_suite_path_list = sorted(glob.glob("%s/*/bin/runTestSuite" % \
         slapos_controler.instance_root))
@@ -140,18 +139,20 @@ class UnitTestRunner():
                            '--master_url', portal_url])
     firefox_bin_list = glob.glob("%s/soft/*/parts/firefox/firefox-slapos" % \
         config["slapos_directory"])
-    if len(firefox_bin_list):
-      parameter_list.append('--firefox_bin')
+    if self.testnode.config.get('firefox_binary'):
+      firefox_bin_list = self.testnode.config['firefox_binary'],
     xvfb_bin_list = glob.glob("%s/soft/*/parts/xserver/bin/Xvfb" % \
         config["slapos_directory"])
-    if len(xvfb_bin_list):
-      parameter_list.append('--xvfb_bin')
+    if self.testnode.config.get('xvfb_binary'):
+      xvfb_bin_list = self.testnode.config['xvfb_binary'],
+
     supported_paramater_set = self.testnode.process_manager.getSupportedParameterSet(
-                           run_test_suite_path, parameter_list)
-    if '--firefox_bin' in supported_paramater_set:
+                           run_test_suite_path, ['--firefox_bin', '--xvfb_bin'])
+    if firefox_bin_list and '--firefox_bin' in supported_paramater_set:
       invocation_list.extend(["--firefox_bin", firefox_bin_list[0]])
-    if '--xvfb_bin' in supported_paramater_set:
+    if xvfb_bin_list and '--xvfb_bin' in supported_paramater_set:
       invocation_list.extend(["--xvfb_bin", xvfb_bin_list[0]])
+
     # TODO : include testnode correction ( b111682f14890bf )
     if hasattr(node_test_suite,'additional_bt5_repository_id'):
       additional_bt5_path = os.path.join(
