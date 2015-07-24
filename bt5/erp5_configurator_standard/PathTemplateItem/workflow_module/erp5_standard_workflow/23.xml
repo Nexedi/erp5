@@ -40,6 +40,10 @@
             <key> <string>title</string> </key>
             <value> <string>Configure accounting</string> </value>
         </item>
+        <item>
+            <key> <string>transition_form_id</string> </key>
+            <value> <string>BusinessConfiguration_setupAccountingForm</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

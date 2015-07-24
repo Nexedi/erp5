@@ -1350,7 +1350,7 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
   """
     Test Live Standard Configuration Workflow.
   """
-  CONFIGURATION_WORKFLOW = 'workflow_module/workflow_erp5_standard_workflow'
+  CONFIGURATION_WORKFLOW = 'workflow_module/erp5_standard_workflow'
 
   DEFAULT_SEQUENCE_LIST = """
       stepSet%(country)sCase
