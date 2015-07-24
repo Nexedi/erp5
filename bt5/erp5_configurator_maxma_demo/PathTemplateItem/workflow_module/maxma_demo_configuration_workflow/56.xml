@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Workflow" module="erp5.portal_type"/>
+      <global name="Transition" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19,7 +19,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>state_variable_name</string> </value>
+                      <value> <string>comment</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -42,40 +42,48 @@
             </value>
         </item>
         <item>
+            <key> <string>after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_setupMaxmaDemoStandardBT5</string> </value>
+        </item>
+        <item>
+            <key> <string>before_script_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source/workflow_module/maxma_demo_configuration_workflow/1</string>
+                <string>destination/workflow_module/maxma_demo_configuration_workflow/55</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>configuration_after_script_id</string> </key>
-            <value> <string>BusinessConfiguration_afterMaxmaDemoConfiguration</string> </value>
+            <key> <string>comment</string> </key>
+            <value> <string>Setup all standard bt for ERP5</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Maxma Demo is a pré-build configuration which the user can experiment the most common modules provided by ERP5.</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>maxma_demo_configuration_workflow</string> </value>
+            <value> <string>56</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Workflow</string> </value>
-        </item>
-        <item>
-            <key> <string>state_base_category</string> </key>
-            <value> <string>current_state</string> </value>
-        </item>
-        <item>
-            <key> <string>state_variable_name</string> </key>
-            <value> <string>current_state</string> </value>
+            <value> <string>Transition</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Maxma Demo Configuration Workflow</string> </value>
+            <value> <string>Setup standard BT5</string> </value>
         </item>
       </dictionary>
     </pickle>
