@@ -23,6 +23,12 @@
             <value> <string> Setup user. </string> </value>
         </item>
         <item>
+            <key> <string>erp5workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>factory</string> </key>
             <value> <string>addPersonConfiguratorItem</string> </value>
         </item>
@@ -55,6 +61,12 @@
         <item>
             <key> <string>type_class</string> </key>
             <value> <string>PersonConfiguratorItem</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>
