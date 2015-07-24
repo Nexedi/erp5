@@ -1,0 +1,6 @@
+web_page_module/interface_demo*
+web_page_module/interface_gadget*
+web_page_module/gadget_interfacedemo*
+web_page_module/interface_test_correct*
+web_site_module/interface_demo
+web_site_module/interface_demo/**
