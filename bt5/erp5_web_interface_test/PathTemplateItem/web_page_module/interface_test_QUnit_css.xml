@@ -1,0 +1,620 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Style" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>qunit.css</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>interface_test_QUnit_css</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Style</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*!\n
+ * QUnit 1.18.0\n
+ * http://qunitjs.com/\n
+ *\n
+ * Copyright jQuery Foundation and other contributors\n
+ * Released under the MIT license\n
+ * http://jquery.org/license\n
+ *\n
+ * Date: 2015-04-03T10:23Z\n
+ */\n
+\n
+/** Font Family and Sizes */\n
+\n
+#qunit-tests, #qunit-header, #qunit-banner, #qunit-testrunner-toolbar, #qunit-userAgent, #qunit-testresult {\n
+\tfont-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;\n
+}\n
+\n
+#qunit-testrunner-toolbar, #qunit-userAgent, #qunit-testresult, #qunit-tests li { font-size: small; }\n
+#qunit-tests { font-size: smaller; }\n
+\n
+\n
+/** Resets */\n
+\n
+#qunit-tests, #qunit-header, #qunit-banner, #qunit-userAgent, #qunit-testresult, #qunit-modulefilter {\n
+\tmargin: 0;\n
+\tpadding: 0;\n
+}\n
+\n
+\n
+/** Header */\n
+\n
+#qunit-header {\n
+\tpadding: 0.5em 0 0.5em 1em;\n
+\n
+\tcolor: #8699A4;\n
+\tbackground-color: #0D3349;\n
+\n
+\tfont-size: 1.5em;\n
+\tline-height: 1em;\n
+\tfont-weight: 400;\n
+\n
+\tborder-radius: 5px 5px 0 0;\n
+}\n
+\n
+#qunit-header a {\n
+\ttext-decoration: none;\n
+\tcolor: #C2CCD1;\n
+}\n
+\n
+#qunit-header a:hover,\n
+#qunit-header a:focus {\n
+\tcolor: #FFF;\n
+}\n
+\n
+#qunit-testrunner-toolbar label {\n
+\tdisplay: inline-block;\n
+\tpadding: 0 0.5em 0 0.1em;\n
+}\n
+\n
+#qunit-banner {\n
+\theight: 5px;\n
+}\n
+\n
+#qunit-testrunner-toolbar {\n
+\tpadding: 0.5em 1em 0.5em 1em;\n
+\tcolor: #5E740B;\n
+\tbackground-color: #EEE;\n
+\toverflow: hidden;\n
+}\n
+\n
+#qunit-userAgent {\n
+\tpadding: 0.5em 1em 0.5em 1em;\n
+\tbackground-color: #2B81AF;\n
+\tcolor: #FFF;\n
+\ttext-shadow: rgba(0, 0, 0, 0.5) 2px 2px 1px;\n
+}\n
+\n
+#qunit-modulefilter-container {\n
+\tfloat: right;\n
+\tpadding: 0.2em;\n
+}\n
+\n
+.qunit-url-config {\n
+\tdisplay: inline-block;\n
+\tpadding: 0.1em;\n
+}\n
+\n
+.qunit-filter {\n
+\tdisplay: block;\n
+\tfloat: right;\n
+\tmargin-left: 1em;\n
+}\n
+\n
+/** Tests: Pass/Fail */\n
+\n
+#qunit-tests {\n
+\tlist-style-position: inside;\n
+}\n
+\n
+#qunit-tests li {\n
+\tpadding: 0.4em 1em 0.4em 1em;\n
+\tborder-bottom: 1px solid #FFF;\n
+\tlist-style-position: inside;\n
+}\n
+\n
+#qunit-tests > li {\n
+\tdisplay: none;\n
+}\n
+\n
+#qunit-tests li.running,\n
+#qunit-tests li.pass,\n
+#qunit-tests li.fail,\n
+#qunit-tests li.skipped {\n
+\tdisplay: list-item;\n
+}\n
+\n
+#qunit-tests.hidepass li.running,\n
+#qunit-tests.hidepass li.pass {\n
+\tvisibility: hidden;\n
+\tposition: absolute;\n
+\twidth:   0px;\n
+\theight:  0px;\n
+\tpadding: 0;\n
+\tborder:  0;\n
+\tmargin:  0;\n
+}\n
+\n
+#qunit-tests li strong {\n
+\tcursor: pointer;\n
+}\n
+\n
+#qunit-tests li.skipped strong {\n
+\tcursor: default;\n
+}\n
+\n
+#qunit-tests li a {\n
+\tpadding: 0.5em;\n
+\tcolor: #C2CCD1;\n
+\ttext-decoration: none;\n
+}\n
+\n
+#qunit-tests li p a {\n
+\tpadding: 0.25em;\n
+\tcolor: #6B6464;\n
+}\n
+#qunit-tests li a:hover,\n
+#qunit-tests li a:focus {\n
+\tcolor: #000;\n
+}\n
+\n
+#qunit-tests li .runtime {\n
+\tfloat: right;\n
+\tfont-size: smaller;\n
+}\n
+\n
+.qunit-assert-list {\n
+\tmargin-top: 0.5em;\n
+\tpadding: 0.5em;\n
+\n
+\tbackground-color: #FFF;\n
+\n
+\tborder-radius: 5px;\n
+}\n
+\n
+.qunit-collapsed {\n
+\tdisplay: none;\n
+}\n
+\n
+#qunit-tests table {\n
+\tborder-collapse: collapse;\n
+\tmargin-top: 0.2em;\n
+}\n
+\n
+#qunit-tests th {\n
+\ttext-align: right;\n
+\tvertical-align: top;\n
+\tpadding: 0 0.5em 0 0;\n
+}\n
+\n
+#qunit-tests td {\n
+\tvertical-align: top;\n
+}\n
+\n
+#qunit-tests pre {\n
+\tmargin: 0;\n
+\twhite-space: pre-wrap;\n
+\tword-wrap: break-word;\n
+}\n
+\n
+#qunit-tests del {\n
+\tbackground-color: #E0F2BE;\n
+\tcolor: #374E0C;\n
+\ttext-decoration: none;\n
+}\n
+\n
+#qunit-tests ins {\n
+\tbackground-color: #FFCACA;\n
+\tcolor: #500;\n
+\ttext-decoration: none;\n
+}\n
+\n
+/*** Test Counts */\n
+\n
+#qunit-tests b.counts                       { color: #000; }\n
+#qunit-tests b.passed                       { color: #5E740B; }\n
+#qunit-tests b.failed                       { color: #710909; }\n
+\n
+#qunit-tests li li {\n
+\tpadding: 5px;\n
+\tbackground-color: #FFF;\n
+\tborder-bottom: none;\n
+\tlist-style-position: inside;\n
+}\n
+\n
+/*** Passing Styles */\n
+\n
+#qunit-tests li li.pass {\n
+\tcolor: #3C510C;\n
+\tbackground-color: #FFF;\n
+\tborder-left: 10px solid #C6E746;\n
+}\n
+\n
+#qunit-tests .pass                          { color: #528CE0; background-color: #D2E0E6; }\n
+#qunit-tests .pass .test-name               { color: #366097; }\n
+\n
+#qunit-tests .pass .test-actual,\n
+#qunit-tests .pass .test-expected           { color: #999; }\n
+\n
+#qunit-banner.qunit-pass                    { background-color: #C6E746; }\n
+\n
+/*** Failing Styles */\n
+\n
+#qunit-tests li li.fail {\n
+\tcolor: #710909;\n
+\tbackground-color: #FFF;\n
+\tborder-left: 10px solid #EE5757;\n
+\twhite-space: pre;\n
+}\n
+\n
+#qunit-tests > li:last-child {\n
+\tborder-radius: 0 0 5px 5px;\n
+}\n
+\n
+#qunit-tests .fail                          { color: #000; background-color: #EE5757; }\n
+#qunit-tests .fail .test-name,\n
+#qunit-tests .fail .module-name             { color: #000; }\n
+\n
+#qunit-tests .fail .test-actual             { color: #EE5757; }\n
+#qunit-tests .fail .test-expected           { color: #008000; }\n
+\n
+#qunit-banner.qunit-fail                    { background-color: #EE5757; }\n
+\n
+/*** Skipped tests */\n
+\n
+#qunit-tests .skipped {\n
+\tbackground-color: #EBECE9;\n
+}\n
+\n
+#qunit-tests .qunit-skipped-label {\n
+\tbackground-color: #F4FF77;\n
+\tdisplay: inline-block;\n
+\tfont-style: normal;\n
+\tcolor: #366097;\n
+\tline-height: 1.8em;\n
+\tpadding: 0 0.5em;\n
+\tmargin: -0.4em 0.4em -0.4em 0;\n
+}\n
+\n
+/** Result */\n
+\n
+#qunit-testresult {\n
+\tpadding: 0.5em 1em 0.5em 1em;\n
+\n
+\tcolor: #2B81AF;\n
+\tbackground-color: #D2E0E6;\n
+\n
+\tborder-bottom: 1px solid #FFF;\n
+}\n
+#qunit-testresult .module-name {\n
+\tfont-weight: 700;\n
+}\n
+\n
+/** Fixture */\n
+\n
+#qunit-fixture {\n
+\tposition: absolute;\n
+\ttop: -10000px;\n
+\tleft: -10000px;\n
+\twidth: 1000px;\n
+\theight: 1000px;\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>QUnit CSS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>1.18.0</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope1</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1437140887.3</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>944.38933.24121.22408</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1437741532.03</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1437140128.02</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

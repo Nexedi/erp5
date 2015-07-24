@@ -1,0 +1,686 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_interfaces.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>interface_gadget_interfaces_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*\n
+ * DOMParser HTML extension\n
+ * 2012-09-04\n
+ *\n
+ * By Eli Grey, http://eligrey.com\n
+ * Public domain.\n
+ * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.\n
+ */\n
+/*! @source https://gist.github.com/1129031 */\n
+(function (DOMParser) {\n
+  "use strict";\n
+  var DOMParser_proto = DOMParser.prototype,\n
+    real_parseFromString = DOMParser_proto.parseFromString;\n
+\n
+  // Firefox/Opera/IE throw errors on unsupported types\n
+  try {\n
+    // WebKit returns null on unsupported types\n
+    if ((new DOMParser()).parseFromString("", "text/html")) {\n
+      // text/html parsing is natively supported\n
+      return;\n
+    }\n
+  } catch (ignore) {}\n
+\n
+  DOMParser_proto.parseFromString = function (markup, type) {\n
+    var result, doc, doc_elt, first_elt;\n
+    if (/^\\s*text\\/html\\s*(?:;|$)/i.test(type)) {\n
+      doc = document.implementation.createHTMLDocument("");\n
+      doc_elt = doc.documentElement;\n
+\n
+      doc_elt.innerHTML = markup;\n
+      first_elt = doc_elt.firstElementChild;\n
+\n
+      if (doc_elt.childElementCount === 1\n
+          && first_elt.localName.toLowerCase() === "html") {\n
+        doc.replaceChild(first_elt, doc_elt);\n
+      }\n
+\n
+      result = doc;\n
+    } else {\n
+      result = real_parseFromString.apply(this, arguments);\n
+    }\n
+    return result;\n
+  };\n
+}(DOMParser));\n
+\n
+/*global window, rJS, RSVP */\n
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+(function (window, rJS, $, jQuery, RSVP, DOMParser) {\n
+  "use strict";\n
+\n
+  var VERIFY_GADGET_SCOPE = "verify_gadget";\n
+\n
+  function getVerifyGadget(gadget_url, interface_gadget) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return interface_gadget.declareGadget(gadget_url, {\n
+          scope: VERIFY_GADGET_SCOPE,\n
+          element: interface_gadget.__element\n
+        });\n
+      })\n
+      .push(function () {\n
+        return interface_gadget.getDeclaredGadget(VERIFY_GADGET_SCOPE);\n
+      });\n
+  }\n
+\n
+  function verifyInterfaceDefinition(interface_url) {\n
+  //to verify if interface definition follows the correct template.\n
+    return RSVP.Queue()\n
+      .push(function () {\n
+        return jQuery.get(interface_url);\n
+      })\n
+      .push(function(file_data) {\n
+        var doc = (new DOMParser()).parseFromString(file_data, \'text/html\').body,\n
+          dl_list = doc.getElementsByTagName(\'dl\'),\n
+          next_element = dl_list[0].firstElementChild,\n
+          method_len = dl_list.length - 1,\n
+          defer = RSVP.defer();\n
+        if (dl_list[0].childElementCount !== 3*method_len) {\n
+          throw new Error("Interface Definition Incorrect.");\n
+        }  \n
+        try {\n
+          for (var i=0; i<method_len; i+=1) {\n
+            if ((!next_element || next_element.localName.toLowerCase() !== \'dt\') ||\n
+              (!(next_element = next_element.nextElementSibling) || next_element.localName.toLowerCase() !== \'dd\') ||\n
+              (!(next_element = next_element.nextElementSibling)  || next_element.localName.toLowerCase() !== \'dl\')) {\n
+              throw new Error("Interface Definition Incorrect.");\n
+            }\n
+            if(next_element.getElementsByTagName(\'dt\').length !== next_element.getElementsByTagName(\'dd\').length) {\n
+              throw new Error("Interface Definition Incorrect.");\n
+            }\n
+            var argument_len = next_element.getElementsByTagName(\'dt\').length,\n
+              next_child_element = next_element.firstElementChild;\n
+            for (var j=0; j<argument_len; j+=1) {\n
+              if ((!next_child_element || next_child_element.localName.toLowerCase() !== \'dt\') ||\n
+                (!(next_child_element = next_child_element.nextElementSibling) || next_child_element.localName.toLowerCase() !== \'dd\')) {\n
+                throw new Error("Interface Definition Incorrect.");\n
+              }\n
+              next_child_element = next_child_element.nextElementSibling;\n
+            }\n
+            next_element = next_element.nextElementSibling;\n
+          }\n
+          defer.resolve("Success");\n
+        } catch(error) {\n
+          defer.reject(error);\n
+        }  \n
+        return defer.promise;\n
+      });\n
+  }\n
+\n
+  function verifyInterfaceDeclaration(interface_url, declared_interface_list) {\n
+  //to verify if gadget declares the interface.\n
+    var defer = RSVP.defer();\n
+    try {\n
+      if (declared_interface_list.indexOf(interface_url) > -1) {\n
+        defer.resolve("Success");\n
+      } else {\n
+        throw new Error("Interface not declared.");\n
+      }\n
+    } catch(error) {\n
+      defer.reject(error);\n
+    }\n
+    return defer.promise;\n
+  }\n
+\n
+  function verifyAllMethod(interface_method_list, gadget_method_list) {\n
+    var defer = RSVP.defer();\n
+    return RSVP.Queue()\n
+      .push(function() {\n
+        return verifyAllMethodDeclared(interface_method_list, gadget_method_list[0]);\n
+      })\n
+      .push(function() {\n
+        return verifyAllMethodSignature(interface_method_list, gadget_method_list[1]);\n
+      })\n
+      .push (function() {\n
+        defer.resolve("Success");\n
+        return defer.promise;\n
+      }, function(error) {\n
+        defer.reject(error);\n
+        return defer.promise;\n
+      });\n
+  }\n
+\n
+  function verifyAllMethodDeclared(interface_method_list, gadget_method_list) {\n
+  //to verify if all the interface methods are declared by the gadget.\n
+    var defer = RSVP.defer(),\n
+      gadget_method_name_list = gadget_method_list,\n
+      interface_method_name_list = [];\n
+    for (var i=0; i<interface_method_list.length; i+=1) {\n
+      interface_method_name_list.push(interface_method_list[i].name);\n
+    }\n
+    try {\n
+      for (var j=0; j<interface_method_name_list.length; j+=1) {\n
+        if(gadget_method_name_list.indexOf(interface_method_name_list[j]) < 0) {\n
+          throw new Error("All methods are not declared.");\n
+        }\n
+      }\n
+      defer.resolve("Success");\n
+    } catch(error) {\n
+      defer.reject(error);\n
+    }\n
+    return defer.promise;\n
+  }\n
+\n
+  function verifyAllMethodSignature(interface_method_list, gadget_method_list) {\n
+  //to verify if all the declared methods match the signature of the interface methods.\n
+    var defer = RSVP.defer(),\n
+      interface_method_dict = {},\n
+      gadget_method_name_list = [],\n
+      index;\n
+    for(var i=0; i<interface_method_list.length; i+=1) {\n
+      interface_method_dict[interface_method_list[i].name] = interface_method_list[i];\n
+    }\n
+    for(var j=0; j<gadget_method_list.length; j+=1) {\n
+      gadget_method_name_list.push(gadget_method_list[j].name);\n
+    }\n
+    try {\n
+      for(var item in interface_method_dict) {\n
+        index = gadget_method_name_list.lastIndexOf(item);\n
+        if(!verifyMethodSignature(interface_method_dict[item], gadget_method_list[index])) {\n
+          throw new Error("All methods signature do not match.");\n
+        }\n
+      }\n
+      defer.resolve("Success");\n
+    } catch(error) {\n
+      defer.reject(error);\n
+    }\n
+    return defer.promise;\n
+  }\n
+\n
+  function verifyMethodSignature(interface_method, gadget_method) {\n
+  //to verify if two methods have the same signature\n
+    var max_arg_len = interface_method.argument_list.length,\n
+      min_arg_len = 0;\n
+    if (max_arg_len) {\n
+      var argument_list = interface_method.argument_list;\n
+      for (var i=0; i<argument_list.length; i+=1) {\n
+        if (argument_list[i].required) {\n
+          min_arg_len += 1;\n
+        }\n
+      }\n
+    }\n
+    return (gadget_method.arg_len >= min_arg_len && gadget_method.arg_len <= max_arg_len);\n
+  }\n
+\n
+  rJS(window)\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+\n
+    .declareMethod("getDeclaredGadgetInterfaceList", function (gadget) {\n
+      return gadget.getInterfaceList();\n
+    })\n
+\n
+    .declareMethod("getDeclaredGadgetMethodList", function (gadget) {\n
+      var declared_method_dict = {},\n
+        declared_method_list = [],\n
+        item;\n
+      for (item in gadget) {\n
+        if (!(/__/).test(item)) {\n
+          declared_method_dict[item] = gadget[item];\n
+        }\n
+      }\n
+      for(item in declared_method_dict) {\n
+        declared_method_list.push(item);\n
+      }  \n
+      return RSVP.all([\n
+        declared_method_list,\n
+        gadget.getDeclaredMethodList()]); \n
+    })\n
+\n
+    .declareMethod("getInterfaceData", function (interface_url) {\n
+      var interface_data = {\n
+          name: "",\n
+          description: "",\n
+          method_list: []\n
+        };\n
+      return RSVP.Queue()\n
+        .push(function() {\n
+          return jQuery.get(interface_url);\n
+        })\n
+        .push(function(file_data) {\n
+          var doc = (new DOMParser()).parseFromString(file_data, \'text/html\').body,\n
+            dl_list = doc.getElementsByTagName(\'dl\'),\n
+            dt_list = doc.getElementsByTagName(\'dt\'),\n
+            dd_list = doc.getElementsByTagName(\'dd\'),\n
+            method_len = dl_list.length - 1,\n
+            dt_count = 0, \n
+            dl_count = 1;\n
+          interface_data.name = doc.getElementsByTagName(\'h1\')[0].innerText;\n
+          interface_data.description = doc.getElementsByTagName(\'h3\')[0].innerText;\n
+          for (var i=0; i<method_len; i+=1) {\n
+            var method = {\n
+              name: dt_list[dt_count].innerText,\n
+              description: dd_list[dt_count].innerText,\n
+              argument_list: []\n
+              },\n
+              argument_len = dl_list[dl_count].getElementsByTagName(\'dt\').length;\n
+            dt_count += 1;\n
+            dl_count += 1;\n
+            for (var j=0; j<argument_len; j+=1) {\n
+              var argument_item = {\n
+                name: dt_list[dt_count].innerText,\n
+                description: dd_list[dt_count].innerText,\n
+                required: dt_list[dt_count].getAttribute("data-parameter-required") === "optional" ? false:true,\n
+                type: dt_list[dt_count].getAttribute("data-parameter-type")\n
+                };\n
+              dt_count += 1;\n
+              method.argument_list.push(argument_item);\n
+            }\n
+            interface_data.method_list.push(method);\n
+          }\n
+          return interface_data;\n
+        });\n
+    })\n
+\n
+    .declareMethod("getDefinedInterfaceMethodList", function (interface_url) {\n
+      return this.getInterfaceData(interface_url)\n
+        .push(function(interface_data) {\n
+          return interface_data.method_list;\n
+        });\n
+    })\n
+\n
+    .declareMethod("verifyGadgetInterfaceImplementation", function (gadget_url, interface_url) {\n
+      var interface_gadget = this;\n
+      return RSVP.Queue()\n
+        .push(function () {\n
+          if(!gadget_url || !interface_url) {\n
+            throw new Error("Invalid Inputs");\n
+          }\n
+          return verifyInterfaceDefinition(interface_url);\n
+        })\n
+        .push(function () {\n
+          return getVerifyGadget(gadget_url, interface_gadget);\n
+        })\n
+        .push(function (gadget) {\n
+          return interface_gadget.getDeclaredGadgetInterfaceList(gadget);\n
+        })\n
+        .push(function (declared_interface_list) {\n
+          return verifyInterfaceDeclaration(interface_url, declared_interface_list);\n
+        })\n
+        .push(function () {\n
+          return interface_gadget.getDeclaredGadget(VERIFY_GADGET_SCOPE);\n
+        })\n
+        .push(function (gadget) {\n
+          return RSVP.all([\n
+            interface_gadget.getDefinedInterfaceMethodList(interface_url),\n
+            interface_gadget.getDeclaredGadgetMethodList(gadget)\n
+          ]);\n
+        })\n
+        .push(function(method_list) {\n
+          return verifyAllMethod(method_list[0], method_list[1]);\n
+        })\n
+        .push (function() {\n
+          return true;\n
+        }, function(error) {\n
+          console.log("Verified : Failure", error);\n
+          return false;\n
+        });\n
+    })\n
+\n
+    .declareMethod("verifyGadgetAllInterfaceImplementation", function (gadget_url) {\n
+      var interface_gadget = this;\n
+      return RSVP.Queue()\n
+        .push(function () {\n
+          if(!gadget_url) {\n
+            throw new Error("Invalid Input");\n
+          }\n
+          return getVerifyGadget(gadget_url, interface_gadget);\n
+        })\n
+        .push(function (gadget) {\n
+          return interface_gadget.getDeclaredGadgetInterfaceList(gadget);\n
+        })\n
+        .push(function (declared_interface_list) {\n
+          var interface_url,\n
+            result_list = [];\n
+          for (var item in declared_interface_list) {\n
+            interface_url = declared_interface_list[item];\n
+            result_list.push(interface_gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url));\n
+          }\n
+          return RSVP.all(result_list);\n
+        })\n
+        .push(function(result_list) {\n
+          for(var item in result_list) {\n
+            if (!result_list[item]) {\n
+              throw new Error("Interface Implementation Failure.");\n
+            }\n
+          }\n
+        })\n
+        .push (function() {\n
+          return true;\n
+        }, function(error) {\n
+          return false;\n
+        });\n
+    });\n
+\n
+}(window, rJS, $, jQuery, RSVP, DOMParser));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget Interfaces JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope1</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1436193838.09</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>944.38727.51823.5973</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1437739303.69</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1436191092.18</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

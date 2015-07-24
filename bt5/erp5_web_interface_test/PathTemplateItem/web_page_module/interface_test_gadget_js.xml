@@ -1,0 +1,500 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>renderjs_interface_test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>interface_test_gadget_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>/*jslint nomen: true*/\n
+(function (document, renderJS, QUnit, sinon, URI) {\n
+  "use strict";\n
+  var test = QUnit.test,\n
+    stop = QUnit.stop,\n
+    start = QUnit.start,\n
+    ok = QUnit.ok,\n
+    equal = QUnit.equal,\n
+    throws = QUnit.throws,\n
+    deepEqual = QUnit.deepEqual,\n
+    module = QUnit.module,\n
+    root_gadget_klass = renderJS(window),\n
+    root_gadget_defer = RSVP.defer(),\n
+    RenderJSGadget = __RenderJSGadget,\n
+    RenderJSEmbeddedGadget = __RenderJSEmbeddedGadget,\n
+    RenderJSIframeGadget = __RenderJSIframeGadget;\n
+\n
+  // Keep track of the root gadget\n
+  renderJS(window).ready(function (g) {\n
+    root_gadget_defer.resolve(g);\n
+  });\n
+\n
+  QUnit.config.testTimeout = 5000;\n
+\n
+  module("RJSInterfaceCorrectImplementationTest");\n
+\n
+  test("verify correctly implemented gadget test", function() {\n
+    var gadget_url = "./interface_test_correct_implemented_gadget.html",\n
+      interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/rjs_interface_test/demo_interface1.html";\n
+    return new RSVP.Queue()\n
+      .push(function() {\n
+        return root_gadget_defer.promise;\n
+      })\n
+      .push(function(gadget) {\n
+        return gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url);\n
+      })\n
+      .push(function(result) {\n
+        equal(result, true, "verify correctly implemented gadget test - expected true - success");\n
+      });\n
+\n
+  });\n
+\n
+  module("RJSMissingInterfaceDeclarationTest");\n
+  \n
+  test("verify missing interface declaration gadget test", function() {\n
+    var gadget_url = "./interface_test_missing_interface_declaration_gadget.html",\n
+      interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/rjs_interface_test/demo_interface1.html";\n
+    return new RSVP.Queue()\n
+      .push(function() {\n
+        return root_gadget_defer.promise;\n
+      })\n
+      .push(function(gadget) {\n
+        return gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url);\n
+      })\n
+      .push(function(result) {\n
+        equal(result, false, "verify missing interface declaration gadget test - expected false - success");\n
+      });\n
+\n
+  });\n
+\n
+  module("RJSMissingMethodDeclarationTest");\n
+  \n
+  test("verify missing method declaration gadget test", function() {\n
+    var gadget_url = "./interface_test_missing_method_declaration_gadget.html",\n
+      interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/rjs_interface_test/demo_interface1.html";\n
+    return new RSVP.Queue()\n
+      .push(function() {\n
+        return root_gadget_defer.promise;\n
+      })\n
+      .push(function(gadget) {\n
+        return gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url);\n
+      })\n
+      .push(function(result) {\n
+        equal(result, false, "verify missing method declaration gadget test - expected false - success");\n
+      });\n
+\n
+  });\n
+\n
+  module("RJSMismatchedMethodArgumentTest");\n
+  \n
+  test("verify mismatched method argument gadget test", function() {\n
+    var gadget_url = "./interface_test_mismatched_argument_gadget.html",\n
+      interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/rjs_interface_test/demo_interface1.html";\n
+    return new RSVP.Queue()\n
+      .push(function() {\n
+        return root_gadget_defer.promise;\n
+      })\n
+      .push(function(gadget) {\n
+        return gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url);\n
+      })\n
+      .push(function(result) {\n
+        equal(result, false, "verify mismatched method argument gadget test - expected false - success");\n
+      });\n
+\n
+  });\n
+\n
+  module("RJSMultipleInterfaceCorrectImplementationTest");\n
+  \n
+  test("verify multiple interface correct gadget test", function() {\n
+    var gadget_url = "./interface_test_multiple_interface_correct_gadget.html";\n
+    return new RSVP.Queue()\n
+      .push(function() {\n
+        return root_gadget_defer.promise;\n
+      })\n
+      .push(function(gadget) {\n
+        return gadget.verifyGadgetAllInterfaceImplementation(gadget_url);\n
+      })\n
+      .push(function(result) {\n
+        equal(result, true, "verify multiple interface correct gadget test - expected true - success");\n
+      });\n
+\n
+  });\n
+\n
+  module("RJSMultipleInterfaceMissingMethodDeclarationTest");\n
+  \n
+  test("verify multiple interface missing method declaration gadget test", function() {\n
+    var gadget_url = "./interface_test_multiple_interface_missing_method_declaration_gadget.html";\n
+    return new RSVP.Queue()\n
+      .push(function() {\n
+        return root_gadget_defer.promise;\n
+      })\n
+      .push(function(gadget) {\n
+        return gadget.verifyGadgetAllInterfaceImplementation(gadget_url);\n
+      })\n
+      .push(function(result) {\n
+        equal(result, false, "verify multiple interface missing method declaration gadget test - expected false - success");\n
+      });\n
+\n
+  });\n
+\n
+  module("RJSMultipleInterfaceMismatchedArgumentTest");\n
+  \n
+  test("verify multiple interface mismatched argument gadget test", function() {\n
+    var gadget_url = "./interface_test_multiple_interface_mismached_argument_gadget.html";\n
+    return new RSVP.Queue()\n
+      .push(function() {\n
+        return root_gadget_defer.promise;\n
+      })\n
+      .push(function(gadget) {\n
+        return gadget.verifyGadgetAllInterfaceImplementation(gadget_url);\n
+      })\n
+      .push(function(result) {\n
+        equal(result, false, "verify multiple interface mismatched argument gadget test - expected false - success");\n
+      });\n
+\n
+  });\n
+\n
+  module("RJSInvalidInterfaceDefinitionTest");\n
+  \n
+  test("verify invalid interface definition gadget test", function() {\n
+    var gadget_url = "./interface_test_missing_interface_declaration_gadget.html",\n
+      interface_url1 = "https://softinst60317.host.vifib.net/erp5/web_site_module/rjs_interface_test/demo_interface_invalid1.html",\n
+      interface_url2 = "https://softinst60317.host.vifib.net/erp5/web_site_module/rjs_interface_test/demo_interface_invalid2.html",\n
+      interface_url3 = "https://softinst60317.host.vifib.net/erp5/web_site_module/rjs_interface_test/demo_interface_invalid3.html";\n
+    return new RSVP.Queue()\n
+      .push(function() {\n
+        return root_gadget_defer.promise;\n
+      })\n
+      .push(function(gadget) {\n
+        return RSVP.all([\n
+          gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url1),\n
+          gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url2),\n
+          gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url3)\n
+        ]);\n
+      })\n
+      .push(function(result) {\n
+        equal(result[0], false, "verify invalid interface definition - missing method name tag - gadget test - expected false - success");\n
+        equal(result[1], false, "verify invalid interface definition - missing param list tag - gadget test - expected false - success");\n
+        equal(result[2], false, "verify invalid interface definition - missing param description tag - gadget test - expected false - success");\n
+      });\n
+\n
+  });\n
+ \n
+}(document, renderJS, QUnit, sinon, URI));\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>RenderJS Interface Test JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope1</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1437551332.33</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>944.38769.26131.52548</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1437739501.09</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1437551146.99</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
