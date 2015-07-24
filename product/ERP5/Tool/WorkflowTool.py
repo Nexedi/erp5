@@ -699,8 +699,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
 
     if document_pt is not None:
       workflow_list = document_pt.getTypeWorkflowList()
-      for wf in workflow_list:
-        wf_id = wf.getReference()
+      for wf_id in workflow_list:
         did[wf_id] = None
         wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
         if wf is None:
