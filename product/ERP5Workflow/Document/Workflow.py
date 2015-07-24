@@ -372,9 +372,9 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         workflow_tool = portal.portal_workflow
         result = []
         append = result.append
-        if info.object.getTypeInfo() is not None:
-          for workflow_id in info.object.getTypeInfo().getTypeWorkflowList():
-              append(info.object.getTypeInfo().getId())
+
+        for workflow_id in info.object.getTypeInfo().getTypeWorkflowList():
+            append(info.object.getTypeInfo().getId())
         return result
 
     portal_type_list = getPortalTypeListForWorkflow(self.id)
@@ -977,6 +977,75 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       return root
     return etree.tostring(root, encoding='utf-8',
                           xml_declaration=True, pretty_print=True)
+
+  def _executeMetaTransition(self, ob, new_state_id):
+    """
+    Allow jumping from state to another without triggering any hooks.
+    Must be used only under certain conditions.
+    """
+    sci = None
+    econtext = None
+    tdef = None
+    kwargs = None
+    new_state_id_no_prefix = new_state_id
+    new_state_id = 'state_' + new_state_id
+    # Figure out the old and new states.
+    old_sdef = self._getWorkflowStateOf(ob)
+    if old_sdef is None:
+      old_state = self._getWorkflowStateOf(ob, id_only=True)
+    else:
+      old_state = old_sdef.getId()
+    if old_state == new_state_id:
+      # Object is already in expected state
+      return
+    former_status = self._getStatusOf(ob)
+
+    new_sdef = self._getOb(new_state_id, None)
+    if new_sdef is None:
+      raise WorkflowException, ('Destination state undefined: ' + new_state_id)
+
+    # Update variables.
+    state_values = self.contentValues(portal_type='Variable')
+    if state_values is None:
+      state_values = {}
+
+    tdef_exprs = {}
+    status = {}
+    for id, vdef in self.getVariableValueList():
+      if not vdef.for_status:
+        continue
+      expr = None
+      if state_values.has_key(id):
+        value = state_values[id]
+      elif tdef_exprs.has_key(id):
+        expr = tdef_exprs[id]
+      elif not vdef.update_always and former_status.has_key(id):
+        # Preserve former value
+        value = former_status[id]
+      else:
+        if vdef.default_expr is not None:
+          expr = vdef.default_expr
+        else:
+          value = vdef.default_value
+      if expr is not None:
+        # Evaluate an expression.
+        if econtext is None:
+          # Lazily create the expression context.
+          if sci is None:
+            sci = StateChangeInfo(ob, self, former_status, tdef, old_sdef,
+                                  new_sdef, kwargs)
+          econtext = createExprContext(sci)
+        value = expr(econtext)
+      status[id] = value
+
+    status['comment'] = 'Jump from %r to %r' % (old_state, new_state_id_no_prefix,)
+    status[self.getStateVariable()] = new_state_id_no_prefix
+    tool = self.getParent()
+    tool.setStatusOf(self.getId(), ob, status)
+
+    # Update role to permission assignments.
+    self.updateRoleMappingsFor(ob)
+    return new_sdef
 
 def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
     """Checks conditions in this guard.
