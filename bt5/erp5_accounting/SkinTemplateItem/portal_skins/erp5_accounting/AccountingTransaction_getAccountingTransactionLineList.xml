@@ -63,7 +63,7 @@ sort_dict = { \'income\': 0,\n
 def getAccountingTransactionLineSortKey(line):\n
   return sort_dict.get(line.getId(), line.getIntIndex() or line.getIntId())\n
 \n
-return sorted(context.contentValues(portal_type=portal_type), key=getAccountingTransactionLineSortKey)\n
+return sorted(context.contentValues(portal_type=portal_type, checked_permission="View"), key=getAccountingTransactionLineSortKey)\n
 </string> </value>
         </item>
         <item>

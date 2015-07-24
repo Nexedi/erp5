@@ -181,7 +181,8 @@ return [ ReportSection(\n
                                           mirror_section_category,\n
                                   per_account_class_summary=\n
                                           per_account_class_summary,\n
-                                  gap_root=gap_root,), )]\n
+                                  gap_root=gap_root,\n
+                                  show_detailed_balance_columns=show_detailed_balance_columns), )]\n
 </string> </value>
         </item>
         <item>

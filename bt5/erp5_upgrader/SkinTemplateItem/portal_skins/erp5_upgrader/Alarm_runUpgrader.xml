@@ -67,7 +67,7 @@ active_process = context.newActiveProcess()\n
 \n
 # We should not run upgrader if pre upgrade was not solved or never executed \n
 alarm = getattr(portal_alarms, \'upgrader_check_pre_upgrade\')\n
-if alarm.sense() in (None, True):\n
+if not(force) and alarm.sense() in (None, True):\n
   active_process.postActiveResult(summary=context.getTitle(),\n
       severity=1,\n
       detail="Is required solve Pre Upgrade first. " +\\\n
@@ -90,6 +90,7 @@ for portal_type in portal_type_list:\n
   if portal.portal_catalog.countResults(\n
       portal_type=portal_type_list)[0][0] > REINDEX_SPLIT_COUNT:\n
     portal.portal_catalog.searchAndActivate(\'Base_postCheckConsistencyResult\',\n
+      activate_kw=activate_kw,\n
       portal_type=portal_type,\n
       method_kw=method_kw)\n
   else:\n
@@ -104,7 +105,7 @@ return\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>force=0, activate_kw={}, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

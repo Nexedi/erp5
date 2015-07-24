@@ -232,10 +232,12 @@ extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 [rep1]
 repository = %(temp_dir)s/testnode/foo/rep1
 branch = master
+develop = false
 
 [rep2]
 repository = %(temp_dir)s/testnode/foo/rep2
 branch = foo
+develop = false
 """ % {'temp_dir': self._temp_dir}
     else:
       revision1 = "azerty"

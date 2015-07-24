@@ -60,6 +60,10 @@ portal = period.getPortalObject()\n
 \n
 period.Base_checkConsistency()\n
 \n
+# This tag is used in AccountingPeriod_createBalanceTransaction\n
+if portal.portal_activities.countMessageWithTag(\'BalanceTransactionCreation\'):\n
+  raise ValidationFailed(translateString("Balance transaction creation already in progress. Please try again later."))\n
+\n
 valid_simulation_state_list = [\'cancelled\', \'delivered\', \'deleted\', \'rejected\']\n
 all_state_list = [x[1] for x in\n
   portal.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')]\n

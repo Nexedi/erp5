@@ -276,7 +276,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         as a translation for unknown messages.
         """
         if not isinstance(message, basestring):
-            raise TypeError, 'only strings can be translated.'
+            raise TypeError('only strings can be translated, not: %r' % (message,))
 
         if default is None:
             default = message

@@ -339,7 +339,7 @@ develop = false
           except:
             log("testnode, error during requesting getTestType() method \
 from the distributor.")
-            raise NotImplementedError
+            raise
           # Select runner according to the test type
           if my_test_type == 'UnitTest':
             runner = UnitTestRunner(self)

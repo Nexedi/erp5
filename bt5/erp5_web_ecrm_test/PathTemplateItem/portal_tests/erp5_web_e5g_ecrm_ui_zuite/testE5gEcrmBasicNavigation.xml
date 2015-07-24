@@ -108,6 +108,8 @@
 </tr>\n
 \n
 <!-- Initialize -->\n
+<!-- DISABLE FOR NOW -->\n
+<!--\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/web_site_module/e5g_ecrm/</td>\n
@@ -133,6 +135,7 @@
   <td>//a[@href="#jio_key=bug_module%2Fbug_0&amp;view=view"]</td>\n
   <td>Super Bug 0</td>\n
 </tr>\n
+-->\n
 \n
 \n
 </tbody>\n

@@ -82,7 +82,10 @@ for _, bt5_id in resolved_list:\n
     workflow_id = group_dict[\'workflow_id\']\n
     workflow_id_list = portal_type_dict.setdefault("%s" % portal_type, [])\n
     if workflow_id.startswith(\'-\'):\n
-      workflow_id_list.remove(workflow_id.replace(\'-\', \'\'))\n
+      try:\n
+        workflow_id_list.remove(workflow_id.replace(\'-\', \'\'))\n
+      except ValueError:\n
+        pass\n
       continue\n
     elif workflow_id in workflow_id_list:\n
       continue\n

@@ -1,4 +1,5 @@
 TestSuite
+CommandLineResult
 TestSuiteRepository
 TestSuiteRepositoryConstraint
 TestSuiteConstraint

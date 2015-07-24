@@ -132,6 +132,7 @@ class Browser:
 
   def run(self, url, display):
     self.clean()
+    self.environ = os.environ.copy()
     self._setEnviron()
     self._setDisplay(display)
     self._run(url)
@@ -151,21 +152,25 @@ class Browser:
 
   def _setDisplay(self, display):
     if display:
-      os.environ["DISPLAY"] = display
+      self.environ["DISPLAY"] = display
+    else:
+      xauth = os.path.expanduser('~/.Xauthority')
+      if os.path.exists(xauth):
+        self.environ["XAUTHORITY"] = xauth
 
   def _runCommand(self, *args):
     print " ".join(args)
-    self.process = subprocess.Popen(args, close_fds=True)
+    self.process = subprocess.Popen(args, close_fds=True, env=self.environ)
 
 class Firefox(Browser):
   """ Use firefox to open run all the tests"""
 
   def _setEnviron(self):
-    os.environ['MOZ_NO_REMOTE'] = '1'
-    os.environ['HOME'] = self.profile_dir
-    os.environ['LC_ALL'] = 'C'
-    os.environ["MOZ_CRASHREPORTER_DISABLE"] = "1"
-    os.environ["NO_EM_RESTART"] = "1"
+    self.environ['MOZ_NO_REMOTE'] = '1'
+    self.environ['HOME'] = self.profile_dir
+    self.environ['LC_ALL'] = 'C'
+    self.environ["MOZ_CRASHREPORTER_DISABLE"] = "1"
+    self.environ["NO_EM_RESTART"] = "1"
 
     # This disables unwanted SCIM as it fails with Xvfb, at least on Mandriva
     # 2010.0, because Firefox tries to start scim-bridge which SIGSEGV and
@@ -174,7 +179,7 @@ class Firefox(Browser):
                                         'XIM_PROGRAM',
                                         'XMODIFIERS',
                                         'QT_IM_MODULE'):
-      os.environ.pop(remove_environment_variable, None)
+      self.environ.pop(remove_environment_variable, None)
 
   def _run(self, url):
     # Prepare to run
@@ -182,8 +187,6 @@ class Firefox(Browser):
     firefox_bin = os.environ.get("firefox_bin", "firefox")
     self._runCommand(firefox_bin, "-no-remote",
                      "-profile", self.profile_dir, url)
-
-    os.environ['MOZ_NO_REMOTE'] = '0'
 
   def getPrefJs(self):
     from App.config import getConfiguration

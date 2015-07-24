@@ -2499,6 +2499,40 @@ class TestClosingPeriod(AccountingTestCase):
                               section_uid=self.section.getUid(),
                               node_uid=self.account_module.receivable.getUid()))
 
+  def test_ParrallelClosingRefused(self):
+    organisation_module = self.organisation_module
+    stool = self.portal.portal_simulation
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+    period.start()
+    period2 = self.section.newContent(portal_type='Accounting Period')
+    period2.setStartDate(DateTime(2007, 1, 1))
+    period2.setStopDate(DateTime(2007, 12, 31))
+    period2.start()
+
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        destination_section_value=organisation_module.client_1,
+        portal_type='Sale Invoice Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_credit=100),
+               dict(source_value=self.account_module.receivable,
+                    source_debit=100)))
+
+    self.portal.portal_workflow.doActionFor(
+           period, 'stop_action',
+           profit_and_loss_account=pl.getRelativeUrl())
+
+    self.assertRaises(ValidationFailed,
+          self.getPortal().portal_workflow.doActionFor,
+          period2, 'stop_action' )
+
 
 
 class TestAccountingExport(AccountingTestCase):
