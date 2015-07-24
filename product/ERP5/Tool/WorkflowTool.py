@@ -193,20 +193,20 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     """ Return a list of workflows bound to selected portal_type, this workflow
         list may contain both DC Workflow and Workflow.
     """
-    portal_type = self.getPortalObject().getDefaultModule(portal_type="portal_types")._getOb(portal_type_id, None)
+    portal_type = self.getPortalObject().portal_types._getOb(portal_type_id, None)
     workflow_list = []
     if portal_type is not None:
       # checking Workflow assignment:
       for workflow_id in portal_type.getTypeWorkflowList():
         workflow_list.append(self._getOb(workflow_id))
 
-      for wf_id in self.getChainFor(portal_type_id):
-        wf = self.getWorkflowById(wf_id)
-        if wf is not None:
-          workflow_list.append(wf)
+    for wf_id in self.getChainFor(portal_type_id):
+      wf = self.getWorkflowById(wf_id)
+      if wf is not None:
+        workflow_list.append(wf)
     return workflow_list
 
-  #getWorkflowsFor = getWorkflowValueListFor
+  getWorkflowsFor = getWorkflowValueListFor
 
   security.declarePrivate('getHistoryOf')
   def getHistoryOf(self, wf_id, ob):
@@ -698,9 +698,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     document_pt = document.getTypeInfo()
 
     if document_pt is not None:
-      workflow_list = self.getWorkflowValueListFor(document.getPortalType())
+      workflow_list = document_pt.getTypeWorkflowList()
       for wf in workflow_list:
-        LOG("Check workflow '%s' action list"%wf.id,WARNING," in WorkflowTool.py 705")
         wf_id = wf.getReference()
         did[wf_id] = None
         wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
@@ -708,6 +707,17 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
         a = wf.listObjectActions(info)
         if a is not None and a != []:
+          actions.extend(a)
+        a = wf.getWorklistVariableMatchDict(info)
+        if a is not None:
+          worklist_dict[wf_id] = a
+
+    for wf_id in chain:
+      did[wf_id] = None
+      wf = self.getWorkflowById(wf_id)
+      if wf is not None:
+        a = wf.listObjectActions(info)
+        if a is not None:
           actions.extend(a)
         a = wf.getWorklistVariableMatchDict(info)
         if a is not None:
