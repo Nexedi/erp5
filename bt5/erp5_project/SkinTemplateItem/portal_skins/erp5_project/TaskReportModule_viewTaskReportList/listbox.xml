@@ -176,11 +176,15 @@
                       <list>
                         <tuple>
                           <string>region</string>
-                          <string>region</string>
+                          <string>Region</string>
+                        </tuple>
+                        <tuple>
+                          <string>journal</string>
+                          <string>Journal</string>
                         </tuple>
                         <tuple>
                           <string>validated_project_domain</string>
-                          <string>Open Project</string>
+                          <string>Open Projects</string>
                         </tuple>
                         <tuple>
                           <string>preferred_group_person_list_domain</string>
@@ -233,7 +237,7 @@
                       <list>
                         <tuple>
                           <string>region</string>
-                          <string>region</string>
+                          <string>Region</string>
                         </tuple>
                         <tuple>
                           <string>preferred_group_person_list_domain</string>
