@@ -3375,7 +3375,7 @@ class Base( CopyContainer,
     for workflow in workflow_tool.getWorkflowValueListFor(self):
       if not isinstance(workflow, InteractionWorkflowDefinition) and \
           not isinstance(workflow, InteractionWorkflow):
-        worflow_variable_list.append(self.getProperty(workflow.state_var))
+        worflow_variable_list.append(self.getProperty(workflow.getStateVariable()))
 
     # then restart ingestion with new portal_type
     # XXX Contribution Tool accept only document which are containing
