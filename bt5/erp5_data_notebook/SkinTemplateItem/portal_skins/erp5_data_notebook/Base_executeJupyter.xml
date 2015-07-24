@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
+import json\n
+\n
+selection_id = \'python_shell_selection\'\n
+portal = context.getPortalObject()\n
+portal_selections = portal.portal_selections\n
+\n
+if not portal.Base_checkPermission(\'portal_components\', \'Manage portal\'):\n
+  return "User doesn\'t have permission to execute code remotely"\n
+\n
+# The boolean values via requests are received as \n
+request_reference = {\'True\': True, \'False\': False}.get(request_reference, False)\n
+if request_reference:\n
+  data_notebook_list = portal.portal_catalog(portal_type=\'Data Notebook\')\n
+  notebook_detail_list = [{\'reference\': obj.getReference(), \'title\': obj.getTitle()} for obj in data_notebook_list]\n
+  return notebook_detail_list\n
+\n
+if not reference:\n
+  message = "Please set or use reference for the notebook you want to use"\n
+  return message\n
+\n
+if not python_expression:\n
+  python_expression = \'\'\n
+\n
+data_notebook_list = portal.portal_catalog(portal_type=\'Data Notebook\',\n
+                      reference=reference)\n
+\n
+if data_notebook_list:\n
+  data_notebook = data_notebook_list[0]\n
+else:\n
+  notebook_module = portal.getDefaultModule(portal_type=\'Data Notebook\')\n
+  data_notebook = notebook_module.DataNotebookModule_addDataNotebook(\n
+    title=title,\n
+    reference=reference,\n
+    batch_mode=True\n
+  )\n
+\n
+data_notebook_message = data_notebook.DataNotebook_addDataNotebookMessage(\n
+  notebook_code=python_expression,\n
+  batch_mode=True\n
+)\n
+\n
+#Getting active_process associated with data_notebook object\n
+process_id = data_notebook.getProcess()\n
+active_process = portal.portal_activities[process_id]\n
+result_list = active_process.getResultList()\n
+\n
+old_local_variable_dict = result_list[0].summary\n
+if not old_local_variable_dict:\n
+  old_local_variable_dict = context.Base_addPersistentMapping()\n
+\n
+# pass all to code runner\n
+final_result = context.Base_runJupyter(python_expression, old_local_variable_dict)\n
+code_result = final_result[\'result_string\']\n
+new_local_variable_dict = final_result[\'local_variable_dict\']\n
+ename = final_result[\'ename\']\n
+evalue = final_result[\'evalue\']\n
+traceback = final_result[\'traceback\']\n
+status = final_result[\'status\']\n
+\n
+new_dict = context.Base_updatePersistentMapping(new_local_variable_dict)\n
+result_list[0].edit(summary=new_dict)\n
+\n
+result = {\n
+  u\'code_result\': code_result,\n
+  u\'ename\': ename,\n
+  u\'evalue\': evalue,\n
+  u\'traceback\': traceback,\n
+  u\'status\': status\n
+}\n
+\n
+data_notebook_message.edit(notebook_code_result=code_result)\n
+\n
+return json.dumps(result)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>python_expression=None, reference=None, title=None, request_reference=False, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_executeJupyter</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
