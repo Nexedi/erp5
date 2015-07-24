@@ -149,6 +149,15 @@ AAA=</string> </value>
             <text:p text:style-name=\'Comment\'\n
               tal:condition="python: request.get(\'show_comment\') and requirement.getTranslatedComment()"\n
               tal:content="requirement/getTranslatedComment">Comment here</text:p>\n
+              <tal:block tal:repeat="image python:here.portal_catalog(follow_up_uid=requirement.getUid(), portal_type=\'Image\')">\n
+                <text:p text:style-name="P1">\n
+                  <draw:frame draw:style-name="fr1" draw:name="Image1" text:anchor-type="as-char" svg:width="3in" draw:z-index="0"\n
+                              tal:attributes="draw:name python:\'embedded_erp5_image_%s\' % image.getId();\n
+                                              svg:height python: \'%1.1fin\' % (3.0 * image.getHeight() / (image.getWidth() or 1.0))">\n
+                    <draw:image><office:binary-data tal:content="python:str(image.convert(format=\'png\')[1]).encode(\'base64\')" /></draw:image>\n
+                  </draw:frame>\n
+                </text:p>\n
+              </tal:block>\n
           </table:table-cell>\n
         </table:table-row>\n
         </tal:block>\n
