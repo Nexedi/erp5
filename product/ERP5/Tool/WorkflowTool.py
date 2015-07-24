@@ -206,7 +206,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           workflow_list.append(wf)
     return workflow_list
 
-  getWorkflowsFor = getWorkflowValueListFor
+  #getWorkflowsFor = getWorkflowValueListFor
 
   security.declarePrivate('getHistoryOf')
   def getHistoryOf(self, wf_id, ob):
