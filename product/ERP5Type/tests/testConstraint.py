@@ -28,6 +28,7 @@
 ##############################################################################
 
 import unittest
+from unittest import expectedFailure
 
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -65,6 +66,9 @@ class TestConstraint(PropertySheetTestCase):
     self.portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
     self.createCategories()
+    portal_property_sheets = self.portal.portal_property_sheets
+    if getattr(portal_property_sheets, "test_constraint", None) != None:
+      portal_property_sheets.manage_delObjects(ids=["test_constraint"])
 
   def beforeTearDown(self):
     self.login()
@@ -72,6 +76,11 @@ class TestConstraint(PropertySheetTestCase):
     module = self.portal.organisation_module
     module.manage_delObjects(list(module.objectIds()))
     super(TestConstraint, self).beforeTearDown()
+    portal_type = self.portal.portal_types[self.object_portal_type]
+    if "TestConstraint" in portal_type.getTypePropertySheetList():
+      portal_type.setTypePropertySheetList(
+       [x for x in portal_type.getTypePropertySheetList() \
+        if x != "TestConstraint"])
 
   def createCategories(self):
     """
@@ -110,10 +119,12 @@ class TestConstraint(PropertySheetTestCase):
     module = portal.getDefaultModule(self.object_portal_type)
     object = module.newContent(portal_type=self.object_portal_type)
     group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
-    sequence.edit(
-        object=object,
-        group=group1,
-    )
+    if sequence:
+      sequence.edit(
+          object=object,
+          group=group1,
+      )
+    return object
 
   def stepSetObjectGroup(self, sequence=None,
                          sequence_list=None, **kw):
@@ -1580,6 +1591,33 @@ class TestConstraint(PropertySheetTestCase):
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
+
+  def createConstraintThatMustBeCalledOnce(self):
+    """
+      Create a default allowing the check if they are called once
+    """
+    property_sheet = self.portal.portal_property_sheets.newContent(
+                        id="TestConstraint", title="Test Constraint")
+    constraint = property_sheet.newContent(portal_type="TALES Constraint",
+                   id="check_title_constraint",
+                   expression="python: object.setTitle(object.getTitle() + 'a')")
+    portal_type = self.portal.portal_types[self.object_portal_type]
+    if "TestConstraint" not in portal_type.getTypePropertySheetList():
+      portal_type.setTypePropertySheetList(
+       portal_type.getTypePropertySheetList() + ["TestConstraint"])
+
+  # Expected failure until checkConsistency is reviewed to not execute
+  # twice constraints
+  @expectedFailure
+  def test_09_CheckConstraintAreCalledOnce(self):
+    """
+    Make sure we call only one time a constraint in a particular object
+    """
+    self.createConstraintThatMustBeCalledOnce()
+    document = self.stepCreateObject()
+    document.setTitle("Foo")
+    document.checkConsistency()
+    self.assertEqual("Fooa", document.getTitle())
 
 def test_suite():
   suite = unittest.TestSuite()
