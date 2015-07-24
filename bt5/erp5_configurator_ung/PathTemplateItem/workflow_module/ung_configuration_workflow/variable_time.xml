@@ -7,12 +7,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>default_expr</string> </key>
+            <value> <string>object/getDateTime</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>time</string> </value>
         </item>
         <item>
             <key> <string>default_value</string> </key>
-            <value> <string>python: None</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>

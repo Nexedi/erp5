@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/workflow_module/ung_configuration_workflow/7</string>
+                <string>destination/workflow_module/ung_configuration_workflow/2</string>
               </tuple>
             </value>
         </item>
@@ -31,6 +31,10 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Install</string> </value>
+        </item>
+        <item>
+            <key> <string>transition_form_id</string> </key>
+            <value> <string>BusinessConfiguration_displayUNGDownloadForm</string> </value>
         </item>
       </dictionary>
     </pickle>
