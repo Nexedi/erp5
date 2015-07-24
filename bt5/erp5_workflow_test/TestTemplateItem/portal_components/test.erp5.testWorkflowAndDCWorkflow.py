@@ -153,9 +153,10 @@ class TestERP5WorkflowMixin(ERP5TypeTestCase):
 
   def test_10_testSimpleWorklist(self):
     # check the counter from worklist action_name.
+    self.portal.workflow_test_module.updateLocalRolesOnSecurityGroups()
     self.login("workflow_development")
-    self.portal = self.getPortal()
     new_object = self.getTestObject()
+    self.portal = self.getPortal()
     workflow_tool = self.portal.portal_workflow
     self.tic() # reindexing for security
     self.clearCache()
