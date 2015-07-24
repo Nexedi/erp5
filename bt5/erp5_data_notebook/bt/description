@@ -1,0 +1,2 @@
+Interaction between Jupyter(IPython Notebook) and ERP5.
+This business template is unsafe to install on a public server as one of the extensions uses eval.
