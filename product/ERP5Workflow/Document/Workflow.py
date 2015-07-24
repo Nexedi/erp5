@@ -418,7 +418,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         elif (not check_guard) or \
             Guard_checkWithoutRoles(guard, security_manager, self, portal):
           is_permitted_worklist = 1
-          variable_match[SECURITY_PARAMETER_ID] = guard.roles
+          variable_match[SECURITY_PARAMETER_ID] = worklist_definition.getRoleList()
 
         if is_permitted_worklist:
           fmt_data = TemplateDict()
