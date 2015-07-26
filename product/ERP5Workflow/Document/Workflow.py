@@ -1047,6 +1047,47 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     self.updateRoleMappingsFor(ob)
     return new_sdef
 
+  security.declarePrivate('allowCreate')
+  def allowCreate(self, container, type_name):
+      """Returns true if the user is allowed to create a workflow instance.
+
+      The object passed to the guard is the prospective container.
+
+      wenjie: This is a compatibility related patch.
+
+      More detail see TypeTool.pyline 360.
+      """
+      return 1
+
+  security.declarePrivate('getCatalogVariablesFor')
+  def getCatalogVariablesFor(self, ob):
+      '''
+      Allows this workflow to make workflow-specific variables
+      available to the catalog, making it possible to implement
+      worklists in a simple way.
+      Returns a mapping containing the catalog variables
+      that apply to ob.
+      '''
+      res = {}
+      status = self._getStatusOf(ob)
+      for id, vdef in self.getVariableValueList():
+          if vdef.for_catalog:
+              if status.has_key(id):
+                  value = status[id]
+
+              # Not set yet.  Use a default.
+              elif vdef.default_expr is not None:
+                  ec = createExprContext(StateChangeInfo(ob, self, status))
+                  value = vdef.default_expr(ec)
+              else:
+                  value = vdef.default_value
+
+              res[id] = value
+      # Always provide the state variable.
+      state_var = self.state_var
+      res[state_var] = status.get(state_var, self.initial_state)
+      return res
+
 def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
     """Checks conditions in this guard.
        This function is the same as Guard.check, but roles are not taken
