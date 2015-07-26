@@ -139,6 +139,21 @@ class ConfigurationWorkflow(XMLObject):
                           transition_url=transition_url,
                           state=state)
 
+  def _getWorkflowStateOf(self, ob, id_only=0):
+      tool = self.getPortalObject().portal_workflow
+      id = self.getId()
+      status = tool.getStatusOf(id, ob)
+      if status is None:
+          state = self.getSourceValue()
+      else:
+          state_id = status.get(self.getStateVariable(), None)
+          state = self._getOb(state_id)
+          if state is None:
+              state = self.getSourceValue()
+      if id_only:
+          return state.getId()
+      else:
+          return state
   ###########
   ## Graph ##
   ############
