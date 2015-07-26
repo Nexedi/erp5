@@ -120,3 +120,6 @@ class ConfigurationState(XMLObject):
     """
     status_dict = self.getParentValue().getCurrentStatusDict(document)
     return status_dict[variable_name]
+
+  def getDestinationReferenceList(self):
+    return self.getDestinationIdList()
