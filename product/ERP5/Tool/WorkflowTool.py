@@ -189,18 +189,30 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return self._invokeWithNotification(
       workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
-  def getWorkflowValueListFor(self, portal_type_id):
-    """ Return a list of workflows bound to selected portal_type, this workflow
+  def getWorkflowValueListFor(self, ob):
+    """ Return a list of workflows bound to selected object, this workflow
         list may contain both DC Workflow and Workflow.
     """
-    portal_type = self.getPortalObject().portal_types._getOb(portal_type_id, None)
     workflow_list = []
+
+    if isinstance(ob, basestring):
+        portal_type_id = ob
+    elif hasattr(aq_base(ob), 'getPortalType'):
+        portal_type_id = ob.getPortalType()
+    else:
+        portal_type_id = None
+
+    if portal_type_id is None:
+        workflow_list
+
+    portal_type = self.getPortalObject().portal_types._getOb(portal_type_id, None)
+
+    # Workflow assignment:
     if portal_type is not None:
-      # checking Workflow assignment:
       for workflow_id in portal_type.getTypeWorkflowList():
         workflow_list.append(self._getOb(workflow_id))
-
-    for wf_id in self.getChainFor(portal_type_id):
+    # DCWorkflow assignment
+    for wf_id in self.getChainFor(ob):
       wf = self.getWorkflowById(wf_id)
       if wf is not None:
         workflow_list.append(wf)
@@ -216,15 +228,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           wfh = ob.workflow_history
           return wfh.get(wf_id, None)
       return ()
-
-  security.declarePrivate('getStatusOf')
-  def getStatusOf(self, wf_id, ob):
-      """ Get the last element of a workflow history for a given workflow.
-      """
-      wfh = self.getHistoryOf(wf_id, ob)
-      if wfh:
-          return wfh[-1]
-      return None
 
   def decodeWorkflowUid(self, uid):
     return cPickle.loads(b64decode(uid))
