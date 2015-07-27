@@ -195,11 +195,9 @@ class TestConvertedWorkflow(TestERP5WorkflowMixin):
     module = self.portal.workflow_test_module
     module.manage_delObjects(list(module.objectIds()))
     workflow_module = self.portal.portal_workflow
-    type_test_object = self.portal.portal_types['Workflow Test Document']
     dc_workflow_id_list = ['testing_workflow', 'testing_interaction_workflow']
     workflow_module.WorkflowTool_convertWorkflow(batch_mode=True, workflow_id_list=dc_workflow_id_list)
     self.resetComponentTool()
-    self.assertFalse('testing_workflow' in workflow_module.getChainFor(type_test_object.getId()))
     self.workflow = workflow_module._getOb('testing_workflow')
     self.login()
 
@@ -217,7 +215,6 @@ class TestDCWorkflow(TestERP5WorkflowMixin):
     type_test_object.workflow_list = ()
     self.workflow = workflow_module._getOb('testing_workflow')
     self.resetComponentTool()
-    self.assertEqual(type_test_object.getTypeWorkflowList(), [])
     self.login()
 
   def test_DC01_testWorkflowMigrationForExistingDocument(self):
