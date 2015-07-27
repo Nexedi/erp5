@@ -37,7 +37,6 @@ class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
 
   standard_bt5_list = ('erp5_ingestion_mysql_innodb_catalog',
                        'erp5_simulation',
-                       'erp5_workflow',
                        'erp5_dhtml_style',
                        'erp5_jquery',
                        'erp5_jquery_ui',
