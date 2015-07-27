@@ -53,7 +53,7 @@ from lxml.etree import Element, SubElement
 
 _MARKER = []
 
-class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
+class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
   """
   An ERP5 Interaction Workflow.
   """
@@ -300,7 +300,6 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
           script.execute(sci)
     return filtered_transition_list
 
-  security.declarePrivate('notifySuccess')
   def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
     """
     Notifies this workflow that an action has taken place.
@@ -408,7 +407,6 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
           ob, self, former_status, tdef, None, None, kwargs=kw)
     script.execute(sci)
 
-  security.declarePrivate('isActionSupported')
   def isActionSupported(self, document, action, **kw):
     '''
     Returns a true value if the given action name
@@ -431,12 +429,6 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
   def getManagedRoleList(self):
     return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
-
-  def notifyException(self, ob, action, exc):
-      '''
-      Notifies this workflow that an action failed.
-      '''
-      pass
 
   def showAsXML(self, root=None):
     if root is None:
