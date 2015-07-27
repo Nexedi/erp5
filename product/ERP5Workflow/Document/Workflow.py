@@ -1004,7 +1004,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     if old_state == new_state_id:
       # Object is already in expected state
       return
-    former_status = self._getStatusOf(ob)
+    former_status = self.getCurrentStatusDict(ob)
 
     new_sdef = self._getOb(new_state_id, None)
     if new_sdef is None:
@@ -1065,7 +1065,6 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       """
       return 1
 
-  security.declarePrivate('getCatalogVariablesFor')
   def getCatalogVariablesFor(self, ob):
       '''
       Allows this workflow to make workflow-specific variables
@@ -1075,8 +1074,8 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       that apply to ob.
       '''
       res = {}
-      status = self._getStatusOf(ob)
-      for id, vdef in self.getVariableValueList():
+      status = self.getCurrentStatusDict(ob)
+      for id, vdef in self.getVariableValueList().iteritems():
           if vdef.for_catalog:
               if status.has_key(id):
                   value = status[id]
@@ -1090,8 +1089,14 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
               res[id] = value
       # Always provide the state variable.
-      state_var = self.state_var
-      res[state_var] = status.get(state_var, self.initial_state)
+      state_var = self.getStateVariable()
+      if state_var is not None:
+        res[state_var] = status[state_var]
+      elif hasattr(self, 'getSourceValue'):
+        if self.getSourceValue() is not None:
+          res[state_var] = self.getSourceValue().getReference()
+      else:
+        res[state_var] = None
       return res
 
 def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
