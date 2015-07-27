@@ -203,7 +203,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         portal_type_id = None
 
     if portal_type_id is None:
-        workflow_list
+        return workflow_list
 
     portal_type = self.getPortalObject().portal_types._getOb(portal_type_id, None)
 
