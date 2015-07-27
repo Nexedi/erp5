@@ -584,6 +584,12 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
   def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
     pass
 
+  def notifyException(self, ob, action, exc):
+      '''
+      Notifies this workflow that an action failed.
+      '''
+      pass
+
   def _executeTransition(self, document, tdef=None, form_kw=None):
     """
     Execute transition.
