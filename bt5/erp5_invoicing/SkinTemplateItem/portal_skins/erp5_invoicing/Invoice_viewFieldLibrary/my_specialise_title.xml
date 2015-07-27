@@ -96,6 +96,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>Sale Trade Condition</string>
+                          <string>Sale Trade Condition</string>
+                        </tuple>
+                        <tuple>
                           <string>Purchase Trade Condition</string>
                           <string>Purchase Trade Condition</string>
                         </tuple>
