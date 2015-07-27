@@ -189,51 +189,37 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return self._invokeWithNotification(
       workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
-  def getWorkflowValueListForChain(self, ob):
-    """ add type assigned workflows to _chain_by_type.
+  def getWorkflowValueListFor(self, ob):
+    """ Return a list of workflows bound to selected object, this workflow
+        list may contain both DC Workflow and Workflow.
     """
+    workflow_list = []
+
     if isinstance(ob, basestring):
         portal_type_id = ob
     elif hasattr(aq_base(ob), 'getPortalType'):
         portal_type_id = ob.getPortalType()
     else:
         portal_type_id = None
-    if portal_type_id is not None:
-      portal_type = self.getPortalObject().portal_types._getOb(portal_type_id, None)
-      if portal_type is not None:
-        for workflow_id in portal_type.getTypeWorkflowList():
-          if portal_type_id in self._chains_by_type:
-            if workflow_id not in self._chains_by_type[portal_type_id]:
-              self.addTypeCBT(portal_type_id, workflow_id)
-          else:
-            self._chains_by_type[portal_type_id] = (workflow_id,)
 
-  def getChainFor(self, ob):
-      """ Get the chain that applies to the given object.
-      """
-      # add type assigned workflows to _chain_by_type.
-      self.getWorkflowValueListForChain(ob)
-      cbt = self._chains_by_type
-      if isinstance(ob, basestring):
-          pt = ob
-      elif hasattr(aq_base(ob), 'getPortalTypeName'):
-          pt = ob.getPortalTypeName()
-      else:
-          pt = None
+    if portal_type_id is None:
+        return workflow_list
 
-      if pt is None:
-          return ()
+    portal_type = self.getPortalObject().portal_types._getOb(portal_type_id, None)
 
-      chain = None
-      if cbt is not None:
-          chain = cbt.get(pt, None)
-          # Note that if chain is not in cbt or has a value of
-          # None, we use a default chain.
-      if chain is None:
-          return self.getDefaultChain()
-      return chain
+    # Workflow assignment:
+    if portal_type is not None:
+      for workflow_id in portal_type.getTypeWorkflowList():
+        workflow_list.append(self._getOb(workflow_id))
+    # DCWorkflow assignment
+    for wf_id in self.getChainFor(ob):
+      wf = self.getWorkflowById(wf_id)
+      if wf is not None:
+        workflow_list.append(wf)
+    return workflow_list
 
-  security.declarePrivate('getHistoryOf')
+  getWorkflowsFor = getWorkflowValueListFor
+
   def getHistoryOf(self, wf_id, ob):
       """ Get the history of an object for a given workflow.
       """
