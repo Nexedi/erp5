@@ -202,8 +202,11 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       portal_type = self.getPortalObject().portal_types._getOb(portal_type_id, None)
       if portal_type is not None:
         for workflow_id in portal_type.getTypeWorkflowList():
-          if workflow_id not in self._chains_by_type[portal_type_id]:
-            self.addTypeCBT(portal_type_id, workflow_id)
+          if portal_type_id in self._chains_by_type:
+            if workflow_id not in self._chains_by_type[portal_type_id]:
+              self.addTypeCBT(portal_type_id, workflow_id)
+          else:
+            self._chains_by_type[portal_type_id] = (workflow_id,)
 
   def getChainFor(self, ob):
       """ Get the chain that applies to the given object.
