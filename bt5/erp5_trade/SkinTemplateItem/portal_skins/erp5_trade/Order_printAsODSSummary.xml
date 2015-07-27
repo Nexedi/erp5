@@ -85,10 +85,10 @@ line_list.sort(sortMovement)\n
 \n
 order_type_list = context.getPortalOrderTypeList()\n
 def getMovementTitle(movement):\n
-  title = movement.getTitle()\n
+  title = movement.getTranslatedTitle()\n
   parent_value = movement.getParentValue()\n
   while parent_value.getPortalType() not in order_type_list:\n
-    title = parent_value.getTitle() + \' / \' + title\n
+    title = parent_value.getTranslatedTitle() + \' / \' + title\n
     log(\'parent_value\', parent_value)\n
     parent_value = parent_value.getParentValue()\n
   return title\n
@@ -100,8 +100,8 @@ else:\n
   default_quantity_unit_title = context.portal_categories.\\\n
       restrictedTraverse(\'quantity_unit/\' + default_quantity_unit).getTitle()\n
 \n
-column_list = [(\'reference\', \'Reference\'), (\'title\', \'Title\'), \\\n
-    (\'description\', \'Description\'), (\'start_date\', \'Shipping Date\'), \\\n
+column_list = [(\'reference\', \'Reference\'), (\'translated_title\', \'Title\'), \\\n
+    (\'translated_description\', \'Description\'), (\'start_date\', \'Shipping Date\'), \\\n
     (\'stop_date\', \'Delivery Date\'), (\'per_line_total_price\', \'Total Price\')]\n
 if error is None:\n
   for line in line_list:\n
