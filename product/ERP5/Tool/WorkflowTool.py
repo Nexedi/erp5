@@ -127,7 +127,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     """
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
     from Products.ERP5Workflow.Document.InteractionWorkflow import InteractionWorkflow
-    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
+    workflow_list = self.getWorkflowsFor(ob.getPortalType())
     if wf_id is None:
       if not workflow_list:
         raise WorkflowException('No workflows found.')
@@ -154,7 +154,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     """
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
     from Products.ERP5Workflow.Document.InteractionWorkflow import InteractionWorkflow
-    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
+    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob.getPortalType())):
       if not isinstance(workflow, InteractionWorkflowDefinition) and \
           not isinstance(workflow, InteractionWorkflow):
         if state_id in workflow.getStateIdList():
@@ -162,7 +162,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return False
 
   def doActionFor(self, ob, action, wf_id=None, *args, **kw):
-    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
+    workflow_list = self.getWorkflowsFor(ob.getPortalType())
     action_ref = action
     if wf_id is None:
       if workflow_list == []:
@@ -189,36 +189,46 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return self._invokeWithNotification(
       workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
-  def getWorkflowValueListFor(self, ob):
-    """ Return a list of workflows bound to selected object, this workflow
-        list may contain both DC Workflow and Workflow.
+  def getWorkflowValueListForChain(self, ob):
+    """ add type assigned workflows to _chain_by_type.
     """
-    workflow_list = []
-
     if isinstance(ob, basestring):
         portal_type_id = ob
     elif hasattr(aq_base(ob), 'getPortalType'):
         portal_type_id = ob.getPortalType()
     else:
         portal_type_id = None
+    if portal_type_id is not None:
+      portal_type = self.getPortalObject().portal_types._getOb(portal_type_id, None)
+      if portal_type is not None:
+        for workflow_id in portal_type.getTypeWorkflowList():
+          if workflow_id not in self._chains_by_type[portal_type_id]:
+            self.addTypeCBT(portal_type_id, workflow_id)
 
-    if portal_type_id is None:
-        return workflow_list
+  def getChainFor(self, ob):
+      """ Get the chain that applies to the given object.
+      """
+      # add type assigned workflows to _chain_by_type.
+      self.getWorkflowValueListForChain(ob)
+      cbt = self._chains_by_type
+      if isinstance(ob, basestring):
+          pt = ob
+      elif hasattr(aq_base(ob), 'getPortalTypeName'):
+          pt = ob.getPortalTypeName()
+      else:
+          pt = None
 
-    portal_type = self.getPortalObject().portal_types._getOb(portal_type_id, None)
+      if pt is None:
+          return ()
 
-    # Workflow assignment:
-    if portal_type is not None:
-      for workflow_id in portal_type.getTypeWorkflowList():
-        workflow_list.append(self._getOb(workflow_id))
-    # DCWorkflow assignment
-    for wf_id in self.getChainFor(ob):
-      wf = self.getWorkflowById(wf_id)
-      if wf is not None:
-        workflow_list.append(wf)
-    return workflow_list
-
-  #getWorkflowsFor = getWorkflowValueListFor
+      chain = None
+      if cbt is not None:
+          chain = cbt.get(pt, None)
+          # Note that if chain is not in cbt or has a value of
+          # None, we use a default chain.
+      if chain is None:
+          return self.getDefaultChain()
+      return chain
 
   security.declarePrivate('getHistoryOf')
   def getHistoryOf(self, wf_id, ob):
@@ -246,7 +256,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     temp_workflow_id_list = []
     for dc_workflow in self.getPortalObject().portal_workflow.objectValues():
       workflow_type = dc_workflow.__class__.__name__
-      if workflow_type == 'Workflow' or workflow_type == 'Interaction Workflow':
+      if workflow_type in ['Workflow', 'Interaction Workflow']:
         continue
       temp_workflow = self.dc_workflow_asERP5Object(self, dc_workflow, temp_obj)
       temp_workflow_list.append(temp_workflow)
@@ -527,7 +537,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   def isTransitionPossible(self, ob, transition_id, wf_id=None):
     """Test if the given transition exist from the current state.
     """
-    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
+    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob.getPortalType())):
       state = workflow._getWorkflowStateOf(ob)
       if state and transition_id in state.getDestinationReferenceList():
         return 1
