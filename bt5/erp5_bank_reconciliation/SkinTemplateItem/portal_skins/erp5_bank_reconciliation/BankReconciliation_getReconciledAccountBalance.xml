@@ -59,7 +59,7 @@ kw = {\n
   \'section_uid\': context.getSourceSectionUid(),\n
   \'payment_uid\': context.getSourcePaymentUid(),\n
   \'node_category\': \'account_type/asset/cash/bank\',\n
-  \'simulation_state\': (\'stopped\', \'delivered\', ),\n
+  \'simulation_state\': (\'stopped\', \'delivered\', \'confirmed\' ),\n
   \'portal_type\': portal.getPortalAccountingMovementTypeList(),\n
 }\n
 \n
