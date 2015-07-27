@@ -112,7 +112,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>predicate=None</string> </value>
+            <value> <string>predicate=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
