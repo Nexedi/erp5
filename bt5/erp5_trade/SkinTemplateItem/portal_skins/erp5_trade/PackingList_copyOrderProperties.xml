@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-packing_list = context\n
+            <value> <string>packing_list = context\n
 related_order = packing_list.getCausalityValue()\n
 \n
 if packing_list.getSimulationState() == \'draft\':\n
@@ -60,10 +58,7 @@ if packing_list.getSimulationState() == \'draft\':\n
     comment = related_order.getComment(),\n
     title = related_order.getTitle()\n
   )\n
-\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
