@@ -432,6 +432,12 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), XMLObject):
   def getManagedRoleList(self):
     return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
 
+  def notifyException(self, ob, action, exc):
+      '''
+      Notifies this workflow that an action failed.
+      '''
+      pass
+
   def showAsXML(self, root=None):
     if root is None:
       root = Element('erp5')
