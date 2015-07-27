@@ -155,6 +155,7 @@
   var VERIFY_GADGET_SCOPE = "verify_gadget";\n
 \n
   function getVerifyGadget(gadget_url, interface_gadget) {\n
+  //to declare and get the gadget to be verified.\n
     return new RSVP.Queue()\n
       .push(function () {\n
         return interface_gadget.declareGadget(gadget_url, {\n
@@ -227,6 +228,7 @@
   }\n
 \n
   function verifyAllMethod(interface_method_list, gadget_method_list) {\n
+  //to verify all methods of gadget and interface.\n
     var defer = RSVP.defer();\n
     return RSVP.Queue()\n
       .push(function() {\n
@@ -391,9 +393,6 @@
           if(!gadget_url || !interface_url) {\n
             throw new Error("Invalid Inputs");\n
           }\n
-          return verifyInterfaceDefinition(interface_url);\n
-        })\n
-        .push(function () {\n
           return getVerifyGadget(gadget_url, interface_gadget);\n
         })\n
         .push(function (gadget) {\n
@@ -401,6 +400,9 @@
         })\n
         .push(function (declared_interface_list) {\n
           return verifyInterfaceDeclaration(interface_url, declared_interface_list);\n
+        })\n
+        .push(function () {\n
+          return verifyInterfaceDefinition(interface_url);\n
         })\n
         .push(function () {\n
           return interface_gadget.getDeclaredGadget(VERIFY_GADGET_SCOPE);\n
@@ -417,7 +419,7 @@
         .push (function() {\n
           return true;\n
         }, function(error) {\n
-          console.log("Verified : Failure", error);\n
+          console.log("Verified : Failure", error.message);\n
           return false;\n
         });\n
     })\n
@@ -594,7 +596,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.38727.51823.5973</string> </value>
+                <value> <string>944.43313.24628.20019</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -612,7 +614,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1437739303.69</float>
+                        <float>1438006033.5</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -101,7 +101,7 @@
             <key> <string>text_content</string> </key>
             <value> <string>/*global window, rJS, RSVP */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, Handlebars, $, jQuery, RSVP) {\n
+(function (window, rJS, Handlebars, promiseEventListener, $, jQuery, RSVP) {\n
   "use strict";\n
 \n
   var INTERFACE_GADGET_URL = "./gadget_interfaces.html",\n
@@ -125,46 +125,60 @@
         });\n
     })\n
 \n
-    .declareMethod("interfaceGadgetTest", function (gadget_url, interface_url) {\n
+    .declareMethod("interfaceGadgetTest", function (display_data) {\n
       var gadget = this;\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return gadget.getDeclaredGadget(INTERFACE_GADGET_SCOPE);\n
+          gadget.props.content_element.innerHTML =\n
+            gadget.props.interface_list_template({});\n
+          gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+            title: "Interface Implementation Verification"\n
+          });\n
+          if(display_data) {\n
+            gadget.props.content_element.innerHTML =\n
+              gadget.props.interface_list_template(display_data);\n
+          }\n
+          $(gadget.props.element).trigger("create");\n
+          return RSVP.all([\n
+            gadget.getDeclaredGadget(INTERFACE_GADGET_SCOPE),\n
+            promiseEventListener(\n
+              gadget.props.content_element.querySelector(\'form.interface-verify-form\'),\n
+              \'submit\',\n
+              false\n
+            )\n
+          ]);\n
         })\n
-        .push(function (interface_gadget) {\n
+        .push(function (test_data) {\n
           var status_list = [],\n
-            key;\n
-          status_list.push(interface_gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url));\n
+            interface_gadget = test_data[0],\n
+            submit_event = test_data[1],\n
+            gadget_url = submit_event.target[0].value,\n
+            interface_url = submit_event.target[1].value;\n
+          gadget.props.content_element.querySelector("input[type=submit]")\n
+                                   .disabled = true;\n
+          status_list.push(gadget_url);\n
+          if (interface_url !== "") {\n
+            status_list.push(interface_url);\n
+            status_list.push(interface_gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url));\n
+          } else {\n
+            status_list.push("All declared interfaces.");\n
+            status_list.push(interface_gadget.verifyGadgetAllInterfaceImplementation(gadget_url));\n
+          }\n
           return RSVP.all(status_list);\n
         })\n
         .push(function (result_list) {\n
-          var parameter = {interface_item: []},\n
-            key,\n
-            i = 0;\n
+          var parameter = {interface_item: []};\n
           parameter.interface_item.push({\n
-            interface_name: interface_url, \n
-            status: (result_list[0] ? "Verified Success":"Verified Failure")\n
+            gadget_name: result_list[0],\n
+            interface_name: result_list[1], \n
+            status: (result_list[2] ? "Verified Success.":"Verified Failure.")\n
           });\n
-          gadget.props.header_element.innerHTML = gadget.props.header_template({\n
-            title: "Interface List"\n
-          });\n
-          gadget.props.content_element.innerHTML =\n
-            gadget.props.interface_list_template(parameter);\n
-          $(gadget.props.element).trigger("create");\n
+          return gadget.interfaceGadgetTest(parameter);\n
         });\n
     })\n
 \n
-    .declareMethod("render", function (url_list) {\n
-      var gadget = this,\n
-        gadget_url = url_list.gadget_url,\n
-        interface_url = url_list.interface_url;\n
-      //temperoray hardcoded\n
-       if(!gadget_url) {\n
-         gadget_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/interface_test_correct_implemented_gadget.html";\n
-       }\n
-       if(!interface_url) {\n
-         interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/demo_interface1.html";\n
-       }\n
+    .declareMethod("render", function () {\n
+      var gadget = this;\n
       return new RSVP.Queue()\n
         .push(function () {\n
           return gadget.declareGadget(INTERFACE_GADGET_URL, {\n
@@ -173,11 +187,11 @@
           });\n
         })\n
         .push(function () {\n
-          return gadget.interfaceGadgetTest(gadget_url, interface_url);\n
+          return gadget.interfaceGadgetTest();\n
         });\n
     });\n
 \n
-}(window, rJS, Handlebars, $, jQuery, RSVP));</string> </value>
+}(window, rJS, Handlebars, promiseEventListener, $, jQuery, RSVP));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -312,7 +326,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.38973.25767.57053</string> </value>
+                <value> <string>944.43061.11797.41233</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -330,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1437743948.99</float>
+                        <float>1437989200.53</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
