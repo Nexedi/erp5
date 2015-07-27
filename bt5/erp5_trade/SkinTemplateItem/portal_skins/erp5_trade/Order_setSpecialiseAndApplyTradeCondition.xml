@@ -53,6 +53,7 @@
             <value> <string>context.setSpecialiseValueList(relation_value_list, portal_type=portal_type)\n
 \n
 if relation_value_list:\n
+  context.setSpecialiseValue(relation_value_list[0])\n
   context.Order_applyTradeCondition(context.getSpecialiseValue(), force=1)\n
 </string> </value>
         </item>
