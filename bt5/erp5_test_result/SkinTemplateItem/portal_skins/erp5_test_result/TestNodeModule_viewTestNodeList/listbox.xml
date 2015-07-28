@@ -126,6 +126,10 @@
                           <string>master</string>
                           <string>Is Master</string>
                         </tuple>
+                        <tuple>
+                          <string>create_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
