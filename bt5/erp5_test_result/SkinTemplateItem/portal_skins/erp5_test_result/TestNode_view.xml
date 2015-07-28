@@ -96,6 +96,8 @@
                         <string>my_title</string>
                         <string>my_aggregate_title</string>
                         <string>my_specialise_title</string>
+                        <string>my_reference</string>
+                        <string>my_master</string>
                       </list>
                     </value>
                 </item>
