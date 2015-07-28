@@ -24,9 +24,12 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Finalize configuration and get ready for installation process.\n
+We don\'t use ExpressConfiguration_displayDownload script, because it would create categories and default roles which we do not want here.</string> </value>
+        </item>
+        <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

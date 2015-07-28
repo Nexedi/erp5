@@ -7,12 +7,33 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>comment</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
                 <string>destination/workflow_module/erp5_standard_workflow/18</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value> <string>Configure Roles</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

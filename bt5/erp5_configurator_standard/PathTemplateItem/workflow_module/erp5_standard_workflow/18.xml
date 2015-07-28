@@ -29,6 +29,10 @@
             </value>
         </item>
         <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: True</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>18</string> </value>
         </item>
@@ -42,7 +46,7 @@
         </item>
         <item>
             <key> <string>transition_form_id</string> </key>
-            <value> <string>BusinessConfiguration_viewConsultingConfigureOrganisationDialog</string> </value>
+            <value> <string>BusinessConfiguration_setupOrganisationForm</string> </value>
         </item>
       </dictionary>
     </pickle>

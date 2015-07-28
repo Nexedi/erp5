@@ -7,12 +7,35 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>comment</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>text</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
                 <string>destination/workflow_module/erp5_standard_workflow/21</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value> <string>Omit enetring number of users.\n
+BEFORE for possible transitions was:  E\n
+nter Number of User</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
