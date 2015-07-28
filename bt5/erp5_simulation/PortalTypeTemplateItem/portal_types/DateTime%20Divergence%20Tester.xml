@@ -49,6 +49,10 @@
             <key> <string>type_acquire_local_rules</string> </key>
             <value> <int>1</int> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>DateTimeEquivalenceTester</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
