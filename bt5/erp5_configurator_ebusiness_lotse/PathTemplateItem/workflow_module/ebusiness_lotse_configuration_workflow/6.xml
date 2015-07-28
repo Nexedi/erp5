@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Configuration Transition" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>after_script_id</string> </key>
+            <value>
+              <tuple>
+                <string>BusinessConfiguration_displayEBusinessLotseDownload</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/workflow_module/ebusiness_lotse_configuration_workflow/2</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: True</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>6</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Configuration Transition</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Install</string> </value>
+        </item>
+        <item>
+            <key> <string>transition_form_id</string> </key>
+            <value> <string>BusinessConfiguration_displayEBusinessLotseDownloadForm</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
