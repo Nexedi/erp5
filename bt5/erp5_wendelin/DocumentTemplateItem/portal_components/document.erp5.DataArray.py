@@ -104,7 +104,8 @@ class DataArray(BigFile):
       # we served a chunk of content in response to a range request.
       return ''
 
-    return ''
+    # return default view
+    return self.view()
 
   # FIXME this duplicates a lot of code from ERP5's BigFile
   # -> TODO reuse BigFile streaming capability without copying its code
