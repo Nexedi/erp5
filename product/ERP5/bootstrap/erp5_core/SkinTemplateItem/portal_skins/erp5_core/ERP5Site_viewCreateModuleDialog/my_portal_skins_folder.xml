@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(x, x) for x in here.getPortalObject().portal_skins.objectIds(spec=\'Folder\')]</string> </value>
+            <value> <string>python: sorted([(x, x) for x in here.getPortalObject().portal_skins.objectIds(spec=\'Folder\')])</string> </value>
         </item>
       </dictionary>
     </pickle>
