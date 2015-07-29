@@ -51,25 +51,16 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-Check for some table existence according to the create table list.\n
-If `fixit` is True, then it uses the associated sql_method to create it.\n
+Check for some table consistency according to the create table list.\n
+If `fixit` is True, then it will create/drop table or alter existing tables\n
 """\n
-create_table_list = [\n
-  # ("category", "z_create_category"), # example\n
-  ("catalog_full_text", "z_create_catalog_fulltext"),\n
-]\n
-sql_catalog = context.portal_catalog.getSQLCatalog()\n
-table_list = [r[0] for r in sql_catalog.z_show_tables(table="not needed so far")]\n
-report_list = []\n
-for create_table_information in create_table_list:\n
-  if not callable(getattr(sql_catalog, create_table_information[1], None)):\n
-    continue\n
-  if create_table_information[0] not in table_list:\n
-    if fixit:\n
-      getattr(sql_catalog, create_table_information[1], None)()\n
-    else:\n
-      report_list.append("Table `%s` not created (%s)" % create_table_information)\n
-return report_list\n
+portal = context.getPortalObject()\n
+show_source = not(fixit)\n
+sql_src = portal.portal_catalog.upgradeSchema(src__=show_source)\n
+result = []\n
+if sql_src:\n
+  result.append(sql_src)\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -78,7 +69,7 @@ return report_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TemplateTool_checkTableExistence</string> </value>
+            <value> <string>TemplateTool_checkTableConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>

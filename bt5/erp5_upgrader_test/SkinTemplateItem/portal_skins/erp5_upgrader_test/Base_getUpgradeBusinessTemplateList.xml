@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return (\'erp5_web\',), []\n
+            <value> <string>return (\'erp5_web\',), ["erp5_upgrader", "erp5_upgrader_test"]\n
 </string> </value>
         </item>
         <item>
