@@ -196,16 +196,11 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     workflow_list = []
 
     if isinstance(ob, basestring):
-        portal_type_id = ob
+        portal_type = self.getPortalObject().portal_types._getOb(ob, None)
     elif hasattr(aq_base(ob), 'getPortalType'):
-        portal_type_id = ob.getPortalType()
+        portal_type = self.getPortalObject().portal_types._getOb(ob.getPortalType(), None)
     else:
-        portal_type_id = None
-
-    if portal_type_id is None:
-        return workflow_list
-
-    portal_type = self.getPortalObject().portal_types._getOb(portal_type_id, None)
+        portal_type = None
 
     # Workflow assignment:
     if portal_type is not None:
@@ -704,14 +699,13 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       for wf_id in workflow_list:
         did[wf_id] = None
         wf = self.getPortalObject().portal_workflow._getOb(wf_id, None)
-        if wf is None:
-          raise NotImplementedError ("Can not find workflow: %s, please check if the workflow exists."%wf_id)
-        a = wf.listObjectActions(info)
-        if a is not None and a != []:
-          actions.extend(a)
-        a = wf.getWorklistVariableMatchDict(info)
-        if a is not None:
-          worklist_dict[wf_id] = a
+        if wf is not None:
+          a = wf.listObjectActions(info)
+          if a is not None and a != []:
+            actions.extend(a)
+          a = wf.getWorklistVariableMatchDict(info)
+          if a is not None:
+            worklist_dict[wf_id] = a
 
     for wf_id in chain:
       did[wf_id] = None
