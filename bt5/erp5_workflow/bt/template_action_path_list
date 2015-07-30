@@ -21,6 +21,7 @@ Workflow Script | proxy_role_view
 Workflow Script | repository_history_view
 Workflow Script | view
 Workflow Tool | conversion
+Workflow Tool | pre_configured_workflow
 Workflow Tool | view
 Workflow | configurator_settings
 Workflow | configurator_settings
