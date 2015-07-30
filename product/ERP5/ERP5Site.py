@@ -1716,6 +1716,7 @@ class PortalGenerator:
         addCMFDefaultTool('Default Properties Tool', None)
         addCMFDefaultTool('Default Metadata Tool', None)
         addCMFDefaultTool('Default Syndication Tool', None)
+        addERP5Tool(p, 'portal_workflow', 'Workflow Tool')
 
         # try to install CMFUid without raising exceptions if not available
         try:
