@@ -344,7 +344,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
             if fmt_data is None:
                 fmt_data = TemplateDict()
                 fmt_data._push(info)
-            fmt_data._push({'transition_id': tid})
+            fmt_data._push({'transition_id': tdef.getReference()})
             res.append((tid, {
                 'id': tdef.getReference(),
                 'name': tdef.actbox_name % fmt_data,
