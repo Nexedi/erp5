@@ -279,6 +279,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     if temp == 0:
       # create transitions
       if workflow_type_id == 'DCWorkflowDefinition':
+        # remove default state and variables
+        for def_var in workflow.objectValues(portal_type='Variable'):
+          workflow._delObject(def_var.getId())
+        workflow._delObject('state_draft')
         for tid in dc_workflow.transitions:
           tdef = dc_workflow.transitions.get(tid)
           transition = workflow.newContent(portal_type='Transition', temp_object=temp)
