@@ -138,11 +138,10 @@
       .push(function(result) {\n
         equal(result, true, "verify correctly implemented gadget test - expected true - success");\n
       });\n
-\n
   });\n
 \n
   module("RJSMissingInterfaceDeclarationTest");\n
-  \n
+\n
   test("verify missing interface declaration gadget test", function() {\n
     var gadget_url = "./interface_test_missing_interface_declaration_gadget.html",\n
       interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface1.html";\n
@@ -156,11 +155,10 @@
       .push(function(result) {\n
         equal(result, false, "verify missing interface declaration gadget test - expected false - success");\n
       });\n
-\n
   });\n
 \n
   module("RJSMissingMethodDeclarationTest");\n
-  \n
+\n
   test("verify missing method declaration gadget test", function() {\n
     var gadget_url = "./interface_test_missing_method_declaration_gadget.html",\n
       interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface1.html";\n
@@ -174,11 +172,10 @@
       .push(function(result) {\n
         equal(result, false, "verify missing method declaration gadget test - expected false - success");\n
       });\n
-\n
   });\n
 \n
   module("RJSMismatchedMethodArgumentTest");\n
-  \n
+\n
   test("verify mismatched method argument gadget test", function() {\n
     var gadget_url = "./interface_test_mismatched_argument_gadget.html",\n
       interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface1.html";\n
@@ -192,11 +189,10 @@
       .push(function(result) {\n
         equal(result, false, "verify mismatched method argument gadget test - expected false - success");\n
       });\n
-\n
   });\n
 \n
   module("RJSMultipleInterfaceCorrectImplementationTest");\n
-  \n
+\n
   test("verify multiple interface correct gadget test", function() {\n
     var gadget_url = "./interface_test_multiple_interface_correct_gadget.html";\n
     return new RSVP.Queue()\n
@@ -209,11 +205,10 @@
       .push(function(result) {\n
         equal(result, true, "verify multiple interface correct gadget test - expected true - success");\n
       });\n
-\n
   });\n
 \n
   module("RJSMultipleInterfaceMissingMethodDeclarationTest");\n
-  \n
+\n
   test("verify multiple interface missing method declaration gadget test", function() {\n
     var gadget_url = "./interface_test_multiple_interface_missing_method_declaration_gadget.html";\n
     return new RSVP.Queue()\n
@@ -226,11 +221,10 @@
       .push(function(result) {\n
         equal(result, false, "verify multiple interface missing method declaration gadget test - expected false - success");\n
       });\n
-\n
   });\n
 \n
   module("RJSMultipleInterfaceMismatchedArgumentTest");\n
-  \n
+\n
   test("verify multiple interface mismatched argument gadget test", function() {\n
     var gadget_url = "./interface_test_multiple_interface_mismached_argument_gadget.html";\n
     return new RSVP.Queue()\n
@@ -243,11 +237,10 @@
       .push(function(result) {\n
         equal(result, false, "verify multiple interface mismatched argument gadget test - expected false - success");\n
       });\n
-\n
   });\n
 \n
   module("RJSInvalidInterfaceDefinitionTest");\n
-  \n
+\n
   test("verify invalid interface definition gadget test", function() {\n
     var gadget_url = "./interface_test_missing_interface_declaration_gadget.html",\n
       interface_url1 = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface_invalid1.html",\n
@@ -269,9 +262,8 @@
         equal(result[1], false, "verify invalid interface definition - missing param list tag - gadget test - expected false - success");\n
         equal(result[2], false, "verify invalid interface definition - missing param description tag - gadget test - expected false - success");\n
       });\n
-\n
   });\n
- \n
+\n
 }(document, renderJS, QUnit, sinon, URI));\n
 </string> </value>
         </item>
@@ -408,7 +400,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.38901.1195.26897</string> </value>
+                <value> <string>944.43375.6436.61201</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -426,7 +418,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1437747711.99</float>
+                        <float>1438008031.04</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

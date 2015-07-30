@@ -133,7 +133,7 @@
       \n
       <!--Missing <dl></dl> tag for arguments--> \n
       \n
-    </dl>  \n
+    </dl>\n
   </body>\n
 </html>
 
@@ -272,7 +272,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.38751.9712.8123</string> </value>
+                <value> <string>944.38763.45191.41369</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -290,7 +290,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1437730590.39</float>
+                        <float>1438007084.42</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

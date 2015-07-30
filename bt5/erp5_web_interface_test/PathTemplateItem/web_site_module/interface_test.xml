@@ -167,7 +167,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/gadget_rjs_itest_index_html</string>
+                <string>aggregate/web_page_module/interface_test_gadget</string>
               </tuple>
             </value>
         </item>
@@ -388,7 +388,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.38987.49759.34713</string> </value>
+                <value> <string>944.38988.2596.37649</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -406,7 +406,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1437744722.37</float>
+                        <float>1438007850.47</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

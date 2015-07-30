@@ -132,8 +132,8 @@
       </dd>\n
       <dt>method3</dt>\n
       <dd>description of method3</dd>\n
-      <dl></dl>  \n
-    </dl>  \n
+      <dl></dl>\n
+    </dl>\n
   </body>\n
 </html>
 
@@ -272,7 +272,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.38747.4525.18602</string> </value>
+                <value> <string>944.38763.51422.46455</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -290,7 +290,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1437730636.54</float>
+                        <float>1438007018.31</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

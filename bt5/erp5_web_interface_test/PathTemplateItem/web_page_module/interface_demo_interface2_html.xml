@@ -115,7 +115,7 @@
     <dl>\n
       <dt>testmethod1</dt>\n
       <dd>description of testmethod1</dd>\n
-      <dl></dl>  \n
+      <dl></dl>\n
       <dt>testmethod2</dt>\n
       <dd>description of testmethod2</dd>\n
       <dl>\n
@@ -131,7 +131,7 @@
         <dt data-parameter-required="optional">param2</dt>\n
         <dd>description of param2</dd>\n
       </dl>\n
-    </dl>  \n
+    </dl>\n
   </body>\n
 </html>
 
@@ -270,7 +270,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.22909.64597.48196</string> </value>
+                <value> <string>944.38727.37060.50432</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -288,7 +288,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1437729093.91</float>
+                        <float>1438006945.77</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

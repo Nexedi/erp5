@@ -112,7 +112,7 @@
     .declareMethod("method1", function (param1, param2) {\n
       return;\n
     })\n
-    // method2 - argument mismatched -  expects param1.   \n
+    // method2 - argument mismatched -  expects param1.\n
     .declareMethod("method2", function () {\n
       return;\n
     })\n
@@ -258,7 +258,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.37539.18747.48452</string> </value>
+                <value> <string>944.37543.12889.41096</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -276,7 +276,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1437657935.47</float>
+                        <float>1438008051.98</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

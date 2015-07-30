@@ -106,7 +106,7 @@
 \n
   var INTERFACE_GADGET_URL = "./gadget_interfaces.html",\n
     INTERFACE_GADGET_SCOPE = "interface";\n
-  \n
+\n
   rJS(window)\n
     .ready(function (g) {\n
       g.props = {};\n
@@ -326,7 +326,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.43061.11797.41233</string> </value>
+                <value> <string>944.43062.44277.6144</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1437989200.53</float>
+                        <float>1438007247.03</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

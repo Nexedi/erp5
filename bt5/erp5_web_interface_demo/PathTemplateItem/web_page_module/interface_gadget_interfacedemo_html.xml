@@ -113,9 +113,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />\n
     <link rel="stylesheet" href="jquerymobile.css">\n
 \n
-    <link rel="http://www.renderjs.org/rel/interface" href="demo_interface1.html">\n
-    <link rel="http://www.renderjs.org/rel/interface" href="demo_interface2.html">\n
-\n
     <!-- renderjs -->\n
     <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
@@ -323,7 +320,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.43289.51727.28569</string> </value>
+                <value> <string>944.43346.53030.10871</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -341,7 +338,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438006248.54</float>
+                        <float>1438073929.05</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
