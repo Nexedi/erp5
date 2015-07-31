@@ -871,7 +871,13 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
     sdef = self.states[sid]
     state = SubElement(states, 'state', attrib=dict(reference=sid,portal_type='State'))
     for property_id in sorted(state_prop_id_to_show):
-      property_value = getattr(sdef, property_id, '')
+      # do not put non-exist transition id in xml:
+      if property_id == 'transitions':
+        property_value = ()
+        for transition_id in getattr(sdef, property_id, ''):
+          if transition_id in self.transitions.keys():
+            property_value = property_value + (transition_id, )
+      else: property_value = getattr(sdef, property_id, '')
       if property_value is None or property_value == [] or property_value ==():
         property_value = ''
       property_type = state_prop_id_to_show[property_id]
