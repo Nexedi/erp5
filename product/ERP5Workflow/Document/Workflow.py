@@ -950,7 +950,8 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
               state_ref_list.append(state_ref)
             property_value = tuple(state_ref_list)
           if property_id == 'matched_portal_type_list':
-            property_value = tuple(property_value)
+            if property_value is not None:
+              property_value = tuple(property_value)
           property_type = qdef.getPropertyType(property_id)
           sub_object = SubElement(worklist, property_id, attrib=dict(type=property_type))
         if property_value is None or property_value ==() or property_value == []:
