@@ -57,7 +57,6 @@ for state_id, state_title in ((\'draft\', \'Draft\'),):\n
   state.setReference(state_id)\n
   state.setTitle(state_title)\n
 context.setSourceValue(state)\n
-\n
 for v, property_dict in (\n
       (\'action\', {\n
           \'description\': \'Transition id\',\n
@@ -100,7 +99,6 @@ for v, property_dict in (\n
   variable = context.newContent(portal_type=\'Variable\')\n
   variable.setReference(v)\n
   variable.edit(**property_dict)\n
-\n
 context.setStateVariable(\'simulation_state\')\n
 </string> </value>
         </item>
