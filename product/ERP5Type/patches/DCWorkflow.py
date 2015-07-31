@@ -840,7 +840,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
     return_as_object = False
 
   # Define a list of __dict__.keys to show to users:
-  workflow_prop_id_to_show = {'title':'string', 'description':'text',
+  workflow_prop_id_to_show = {'description':'text',
   'state_var':'string', 'permissions':'multiple selection',
   'initial_state':'string'}
 
@@ -861,7 +861,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
   state_reference_list = []
   state_id_list = sorted(self.states.keys())
   # show reference instead of id
-  state_prop_id_to_show = {'title':'string', 'description':'text',
+  state_prop_id_to_show = {'description':'text',
     'transitions':'multiple selection', 'permission_roles':'string'}
   for sid in state_id_list:
     state_reference_list.append(sid)
@@ -881,7 +881,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
   # 2. Transition as XML
   transition_reference_list = []
   transition_id_list = sorted(self.transitions.keys())
-  transition_prop_id_to_show = {'title':'string', 'description':'text',
+  transition_prop_id_to_show = {'description':'text',
     'new_state_id':'string', 'trigger_type':'int', 'script_name':'string',
     'after_script_name':'string', 'actbox_category':'string', 'actbox_icon':'string',
     'actbox_name':'string', 'actbox_url':'string', 'guard':'string', 'transition_variable':'object'}
