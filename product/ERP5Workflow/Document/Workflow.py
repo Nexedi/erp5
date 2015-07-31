@@ -1099,59 +1099,6 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         res[state_var] = None
       return res
 
-  def initialDefaultWorkflow(self):
-    """Sets up an Workflow with defaults variables needed by ERP5.
-    """
-    for state_id, state_title in (('draft', 'Draft'),):
-      state = self.newContent(portal_type='State')
-      state.setReference(state_id)
-      state.setTitle(state_title)
-    self.setSourceValue(state)
-
-    for v, property_dict in (
-          ('action', {
-              'description': 'Transition id',
-              'default_expr': 'transition/getReference|nothing',
-              'for_status': 1,
-              'update_always': 1,
-            }),
-          ('actor', {
-              'description': 'Name of the user who performed transition',
-              'default_expr': 'user/getUserName',
-              'for_status': 1,
-              'update_always': 1,
-            }),
-          ('comment', {
-              'description': 'Comment about transition',
-              'default_expr': "python:state_change.kwargs.get('comment', '')",
-              'for_status': 1,
-              'update_always': 1,
-            }),
-          ('history', {
-              'description': 'Provides access to workflow history',
-              'default_expr': 'state_change/getHistory',
-            }),
-          ('time', {
-              'description': 'Transition timestamp',
-              'default_expr': 'state_change/getDateTime',
-              'for_status': 1,
-              'update_always': 1,
-            }),
-          ('error_message', {
-              'description': 'Error message if validation failed',
-              'for_status': 1,
-              'update_always': 1,
-            }),
-          ('portal_type', {
-              'description': 'Portal type (used as filter for worklists)',
-              'for_catalog': 1,
-            }),
-        ):
-      variable = self.newContent(portal_type='Variable')
-      variable.setReference(v)
-      variable.setProperties(**property_dict)
-    self.setStateVariable('simulation_state')
-
 def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
     """Checks conditions in this guard.
        This function is the same as Guard.check, but roles are not taken
