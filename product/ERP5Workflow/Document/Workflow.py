@@ -747,7 +747,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       return_as_object = False
 
     # Define a list of property to show to users:
-    workflow_prop_id_to_show = ['title', 'description', 'state_var',
+    workflow_prop_id_to_show = ['description', 'state_var',
       'permissions', 'initial_state']
 
     # workflow as XML, need to rename DC workflow's portal_type before comparison.
@@ -782,7 +782,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     state_reference_list = []
     state_list = self.objectValues(portal_type='State')
     # show reference instead of id
-    state_prop_id_to_show = ['title', 'description',
+    state_prop_id_to_show = ['description',
       'transitions', 'permission_roles']
     for sdef in state_list:
       state_reference_list.append(sdef.getReference())
@@ -813,7 +813,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     # 2. Transition as XML
     transition_reference_list = []
     transition_list = self.objectValues(portal_type='Transition')
-    transition_prop_id_to_show = ['title', 'description', 'new_state_id',
+    transition_prop_id_to_show = ['description', 'new_state_id',
       'trigger_type', 'script_name', 'after_script_name', 'actbox_category',
       'actbox_icon', 'actbox_name', 'actbox_url', 'roles', 'groups',
       'permissions', 'expr', 'transition_variable']
