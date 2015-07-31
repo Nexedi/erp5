@@ -91,7 +91,7 @@ class Variable(IdAsReferenceMixin("variable_", "prefix"), XMLObject):
 
     def getInfoGuard(self):
         if self.info_guard is not None:
-            self.generateGuard()
+            self.generateInfoGuard()
         return self.info_guard
 
     def getInfoGuardSummary(self):
@@ -99,26 +99,3 @@ class Variable(IdAsReferenceMixin("variable_", "prefix"), XMLObject):
         if self.info_guard is not None:
             res = self.info_guard.getSummary()
         return res
-
-    # initial pre-configured workflow's variables
-    def setProperties(self, description,
-                      default_value='', default_expr='',
-                      for_catalog=0, for_status=0,
-                      update_always=0,
-                      props=None, REQUEST=None):
-        self.setDescription(str(description))
-        self.setInitialValue(str(default_value))
-        if default_expr:
-          self.setDefaultExpr(default_expr)
-        else:
-          self.default_expr = None
-        g = Guard()
-        if g.changeFromProperties(props or REQUEST):
-            self.info_guard = g
-        else:
-            self.info_guard = None
-        self.setForCatalog(bool(for_catalog))
-        self.setForStatus(bool(for_status))
-        self.setAutomaticUpdate(bool(update_always))
-        if REQUEST is not None:
-            return self.manage_properties(REQUEST, 'Properties changed.')

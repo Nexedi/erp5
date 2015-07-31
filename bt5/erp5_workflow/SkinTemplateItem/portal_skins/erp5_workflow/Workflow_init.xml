@@ -50,7 +50,58 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.initialDefaultWorkflow()\n
+            <value> <string>"""Sets up an Workflow with defaults variables needed by ERP5.\n
+"""\n
+for state_id, state_title in ((\'draft\', \'Draft\'),):\n
+  state = context.newContent(portal_type=\'State\')\n
+  state.setReference(state_id)\n
+  state.setTitle(state_title)\n
+context.setSourceValue(state)\n
+\n
+for v, property_dict in (\n
+      (\'action\', {\n
+          \'description\': \'Transition id\',\n
+          \'default_expr\': \'transition/getReference|nothing\',\n
+          \'for_status\': 1,\n
+          \'automatic_update\': 1,\n
+        }),\n
+      (\'actor\', {\n
+          \'description\': \'Name of the user who performed transition\',\n
+          \'default_expr\': \'user/getUserName\',\n
+          \'for_status\': 1,\n
+          \'automatic_update\': 1,\n
+        }),\n
+      (\'comment\', {\n
+          \'description\': \'Comment about transition\',\n
+          \'default_expr\': "python:state_change.kwargs.get(\'comment\', \'\')",\n
+          \'for_status\': 1,\n
+          \'automatic_update\': 1,\n
+        }),\n
+      (\'history\', {\n
+          \'description\': \'Provides access to workflow history\',\n
+          \'default_expr\': \'state_change/getHistory\',\n
+        }),\n
+      (\'time\', {\n
+          \'description\': \'Transition timestamp\',\n
+          \'default_expr\': \'state_change/getDateTime\',\n
+          \'for_status\': 1,\n
+          \'automatic_update\': 1,\n
+        }),\n
+      (\'error_message\', {\n
+          \'description\': \'Error message if validation failed\',\n
+          \'for_status\': 1,\n
+          \'automatic_update\': 1,\n
+        }),\n
+      (\'portal_type\', {\n
+          \'description\': \'Portal type (used as filter for worklists)\',\n
+          \'for_catalog\': 1,\n
+        }),\n
+    ):\n
+  variable = context.newContent(portal_type=\'Variable\')\n
+  variable.setReference(v)\n
+  variable.edit(**property_dict)\n
+\n
+context.setStateVariable(\'simulation_state\')\n
 </string> </value>
         </item>
         <item>
