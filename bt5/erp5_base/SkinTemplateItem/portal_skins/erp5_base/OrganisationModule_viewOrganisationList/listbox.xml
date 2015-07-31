@@ -90,7 +90,11 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Name</string>
+                          <string>Usual Name</string>
+                        </tuple>
+                        <tuple>
+                          <string>corporate_name</string>
+                          <string>Corporate Name</string>
                         </tuple>
                         <tuple>
                           <string>site_translated_title</string>
@@ -135,6 +139,10 @@
                         <tuple>
                           <string>price_currency_reference</string>
                           <string>Accounting Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -256,7 +264,7 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Name</string>
+                          <string>Usual Name</string>
                         </tuple>
                         <tuple>
                           <string>child_telephone_SearchableText</string>
@@ -307,7 +315,7 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Usual Name</string>
                         </tuple>
                       </list>
                     </value>
