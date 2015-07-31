@@ -366,7 +366,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     if root is None:
       root = Element('erp5')
       return_as_object = False
-    interaction_workflow_prop_id_to_show = {'title':'string',
+    interaction_workflow_prop_id_to_show = {
           'description':'text', 'manager_bypass':'int'}
     interaction_workflow = SubElement(root, 'interaction_workflow',
                         attrib=dict(reference=self.getReference(),
