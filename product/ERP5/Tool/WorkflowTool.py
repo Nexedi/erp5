@@ -350,9 +350,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           sdef = workflow._getOb('state_'+sid)
           new_category = []
           for transition_id in dc_workflow.states.get(sid).transitions:
-            tr_path = getattr(workflow, 'transition_'+transition_id).getPath()
-            tr_path = 'destination/' + '/'.join(tr_path.split('/')[2:])
-            new_category.append(tr_path)
+            tr = getattr(workflow, 'transition_'+transition_id, None)
+            if tr is not None:
+              tr_path = 'destination/' + '/'.join(tr.getPath().split('/')[2:])
+              new_category.append(tr_path)
           sdef.setCategoryList(new_category)
         # set transition's destination state:
         for tid in dc_workflow.transitions:
