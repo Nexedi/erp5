@@ -69,6 +69,7 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMappi
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply, UnrestrictedMethod
+from Products.ERP5Type.Utils import UpperCase
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, AutoQuery, ComplexQuery, NegatedQuery
 from sets import ImmutableSet
 from tempfile import mkstemp, mkdtemp
@@ -286,9 +287,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for tid in dc_workflow.transitions:
           tdef = dc_workflow.transitions.get(tid)
           transition = workflow.newContent(portal_type='Transition', temp_object=temp)
-          transition.setTitle(tdef.title)
           if tdef.title == '' or tdef.title is None:
-            raise NotImplementedError("Error. Please define a title for transition '%s' of '%s'"%(tdef, dc_workflow.id))
+            tdef.title = UpperCase(tdef.id)
+          transition.setTitle(tdef.title)
           transition.setReference(tdef.id)
           transition.setTriggerType(tdef.trigger_type)
           transition.setActboxCategory(tdef.actbox_category)
@@ -320,9 +321,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for sid in dc_workflow.states:
           sdef = dc_workflow.states.get(sid)
           state = workflow.newContent(portal_type='State', temp_object=temp)
-          state.setTitle(sdef.title)
           if sdef.title == '' or sdef.title is None:
-            raise NotImplementedError("Error. Please define a title for state '%s' of '%s'"%(sid, dc_workflow.id))
+            sdef.title = UpperCase(sdef.id)
+          state.setTitle(sdef.title)
           state.setReference(sdef.id)
           state.setDescription(sdef.description)
           permission_roles = sdef.permission_roles
@@ -398,6 +399,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         for tid in dc_workflow.interactions:
           interaction = workflow.newContent(portal_type='Interaction', temp_object=temp)
           tdef = dc_workflow.interactions.get(tid)
+          if tdef.title == '' or tdef.title is None:
+            tdef.title = UpperCase(tdef.id)
           interaction.setTitle(tdef.title)
           interaction.setReference(tdef.id)
           script_list = []
