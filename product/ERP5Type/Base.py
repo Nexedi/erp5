@@ -507,7 +507,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
   workflow_dict = {}
   interaction_workflow_dict = {}
-  for wf in portal_workflow.getWorkflowsFor(portal_type):
+  for wf in portal_workflow.getWorkflowValueListFor(portal_type):
     wf_id = wf.getId()
     wf_type = wf.__class__.__name__
     if wf_type == "DCWorkflowDefinition" or wf_type == "Workflow":
@@ -2687,7 +2687,7 @@ class Base( CopyContainer,
                             'isDeleted')
   def isDeleted(self):
     """Test if the context is in 'deleted' state"""
-    for wf in self.getPortalObject().portal_workflow.getWorkflowsFor(self):
+    for wf in self.getPortalObject().portal_workflow.getWorkflowValueListFor(self):
       state = wf._getWorkflowStateOf(self)
       if state is not None and state.getReference() == 'deleted':
         return True
@@ -2729,7 +2729,7 @@ class Base( CopyContainer,
       Returns a list of tuples {id:workflow_id, state:workflow_state}
     """
     result = []
-    for wf in self.portal_workflow.getWorkflowsFor(self.getPortalType()):
+    for wf in self.portal_workflow.getWorkflowValueListFor(self.getPortalType()):
       result += [(wf.getReference(), wf._getWorkflowStateOf(self, id_only=1))]
     return result
 
@@ -3097,7 +3097,7 @@ class Base( CopyContainer,
     # Check if edit_workflow defined
     portal_workflow = self.getPortalObject().portal_workflow
     wf = portal_workflow.getWorkflowById('edit_workflow')
-    wf_list = portal_workflow.getWorkflowsFor(self)
+    wf_list = portal_workflow.getWorkflowValueListFor(self)
     if wf is not None:
       wf_list = [wf] + wf_list
     for wf in wf_list:
@@ -3372,7 +3372,7 @@ class Base( CopyContainer,
     portal = self.getPortalObject()
     workflow_tool = portal.portal_workflow
     worflow_variable_list = []
-    for workflow in workflow_tool.getWorkflowsFor(self):
+    for workflow in workflow_tool.getWorkflowValueListFor(self):
       if not isinstance(workflow, InteractionWorkflowDefinition) and \
           not isinstance(workflow, InteractionWorkflow):
         worflow_variable_list.append(self.getProperty(workflow.getStateVariable()))
