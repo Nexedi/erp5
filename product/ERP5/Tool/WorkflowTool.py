@@ -128,7 +128,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     """
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
     from Products.ERP5Workflow.Document.InteractionWorkflow import InteractionWorkflow
-    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
+    workflow_list = self.getWorkflowsFor(ob.getPortalType())
     if wf_id is None:
       if not workflow_list:
         raise WorkflowException('No workflows found.')
@@ -155,7 +155,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     """
     from Products.ERP5.InteractionWorkflow import InteractionWorkflowDefinition
     from Products.ERP5Workflow.Document.InteractionWorkflow import InteractionWorkflow
-    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
+    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob.getPortalType())):
       if not isinstance(workflow, InteractionWorkflowDefinition) and \
           not isinstance(workflow, InteractionWorkflow):
         if state_id in workflow.getStateIdList():
@@ -163,7 +163,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return False
 
   def doActionFor(self, ob, action, wf_id=None, *args, **kw):
-    workflow_list = self.getWorkflowValueListFor(ob.getPortalType())
+    workflow_list = self.getWorkflowsFor(ob.getPortalType())
     action_ref = action
     if wf_id is None:
       if workflow_list == []:
@@ -214,7 +214,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         workflow_list.append(wf)
     return workflow_list
 
-  #getWorkflowsFor = getWorkflowValueListFor
+  getWorkflowsFor = getWorkflowValueListFor
 
   def getHistoryOf(self, wf_id, ob):
       """ Get the history of an object for a given workflow.
@@ -529,7 +529,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   def isTransitionPossible(self, ob, transition_id, wf_id=None):
     """Test if the given transition exist from the current state.
     """
-    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowValueListFor(ob.getPortalType())):
+    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob.getPortalType())):
       state = workflow._getWorkflowStateOf(ob)
       if state and transition_id in state.getDestinationReferenceList():
         return 1
