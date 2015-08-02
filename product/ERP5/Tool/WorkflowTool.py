@@ -214,7 +214,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         workflow_list.append(wf)
     return workflow_list
 
-  #getWorkflowsFor = getWorkflowValueListFor
+  getWorkflowsFor = getWorkflowValueListFor
 
   def getHistoryOf(self, wf_id, ob):
       """ Get the history of an object for a given workflow.
