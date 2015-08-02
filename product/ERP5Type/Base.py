@@ -3262,7 +3262,14 @@ class Base( CopyContainer,
   def serialize(self):
     """Make the transaction accessing to this object atomic
     """
-    self._p_changed = 1
+    # we don't have anything to do if this is a newly created object, never
+    # committed and thus not yet registered to Connection - if it is reachable
+    # from database root, the object will be stored to database on commit.
+    if self._p_jar is None:
+        return
+
+    # ask ZODB to make sure the object stays unchanged at commit
+    self._p_jar.readCurrent(self)
 
   # Helpers
   def getQuantityPrecisionFromResource(self, resource, d=2):
