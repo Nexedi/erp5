@@ -240,7 +240,33 @@ context.activate().DataStream_readChunkListAndTransform( \
     # final reduce job to a number
     sum(result_list)
 
+  def test_01_02_ParallelTransformation(self):
+    """
+    test parallel execution.
+    Note: determining row length is important in this case
+    """
+    portal = self.portal
+    reference = getRandomString()
     
+    row = ','.join(['%s' %x for x in range(1000)])
+    number_string_list = [row]*20
+    real_data = '\n'.join(number_string_list)
+
+    portal.log( real_data)
+    
+    ingestion_policy, data_supply, data_stream, data_array = self.stepSetupIngestion(reference)
+    data_stream.appendData(real_data)
+    self.tic()
+    
+    data_stream.DataStream_transform(\
+        chunk_length = len(row), \
+        transform_script_id = 'DataStream_copyCSVToDataArray',
+        data_array_reference = reference,
+        parallelize = 1)
+
+    self.tic()
+
+
   def test_02_Examples(self):
     """
       Test we can use python scientific libraries by using directly created

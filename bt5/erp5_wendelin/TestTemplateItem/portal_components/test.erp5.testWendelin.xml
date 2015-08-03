@@ -54,6 +54,9 @@
                 <string>W:176, 22: Unused variable \'data_supply\' (unused-variable)</string>
                 <string>W:227,  8: Unused variable \'i\' (unused-variable)</string>
                 <string>W:176,  4: Unused variable \'ingestion_policy\' (unused-variable)</string>
+                <string>W:257,  4: Unused variable \'ingestion_policy\' (unused-variable)</string>
+                <string>W:257, 22: Unused variable \'data_supply\' (unused-variable)</string>
+                <string>W:257, 48: Unused variable \'data_array\' (unused-variable)</string>
               </tuple>
             </value>
         </item>
