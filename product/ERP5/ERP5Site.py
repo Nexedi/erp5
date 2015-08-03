@@ -1708,6 +1708,7 @@ class PortalGenerator:
         addCMFCoreTool('CMF Skins Tool', None)
         addCMFCoreTool('CMF Undo Tool', None)
         addCMFCoreTool('CMF URL Tool', None)
+        addERP5Tool(p, 'portal_workflow', 'Workflow Tool')
 
         addCMFDefaultTool = p.manage_addProduct['CMFDefault'].manage_addTool
         addCMFDefaultTool('Default Discussion Tool', None)
@@ -1716,7 +1717,6 @@ class PortalGenerator:
         addCMFDefaultTool('Default Properties Tool', None)
         addCMFDefaultTool('Default Metadata Tool', None)
         addCMFDefaultTool('Default Syndication Tool', None)
-        addERP5Tool(p, 'portal_workflow', 'Workflow Tool')
 
         # try to install CMFUid without raising exceptions if not available
         try:
