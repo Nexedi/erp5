@@ -810,8 +810,6 @@ def DCWorkflowDefinition_getWorklistIdList(self):
   return []
 def DCWorkflowDefinition_propertyIds(self):
   return sorted(self.__dict__.keys())
-def DCWorkflowDefinition_getProperty(self,prop_id):
-  return self.__dict__[prop_id]
 def DCWorkflowDefinition_getScriptValueList(self):
   if self.scripts is not None:
     return self.scripts
@@ -1061,7 +1059,6 @@ DCWorkflowDefinition.getWorklistIdList = DCWorkflowDefinition_getWorklistIdList
 DCWorkflowDefinition.showAsXML = DCWorkflowDefinition_showAsXML
 DCWorkflowDefinition.showDict = DCWorkflowDefinition_showDict
 DCWorkflowDefinition.propertyIds = DCWorkflowDefinition_propertyIds
-DCWorkflowDefinition.getProperty = DCWorkflowDefinition_getProperty
 DCWorkflowDefinition.getStateVariable = DCWorkflowDefinition_getStateVariable
 DCWorkflowDefinition.getPortalType = DCWorkflowDefinition_getPortalType
 StateDefinition.getReference = method_getReference
