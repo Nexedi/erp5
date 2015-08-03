@@ -362,6 +362,9 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
       return self.interactions.objectIds()
     return None
 
+  def getPortalType(self):
+    return self.__class__.__name__
+
   def showAsXML(self, root=None):
     if root is None:
       root = Element('erp5')
