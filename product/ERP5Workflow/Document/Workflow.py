@@ -163,7 +163,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     # Copy is requested
     if workflow_history:
       return workflow_history[-1].copy()
-    return None
+    return {}
 
   def getDateTime(self):
     """
