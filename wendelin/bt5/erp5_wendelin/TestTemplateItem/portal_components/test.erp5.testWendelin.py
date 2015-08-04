@@ -62,52 +62,15 @@ class Test(ERP5TypeTestCase):
     """
       Generic step.
     """
-    now = DateTime()
-    portal = self.portal
-
-    # create ingestion policy
-    ingestion_policy = portal.portal_ingestion_policies.newContent( \
-      portal_type ='Ingestion Policy',
-      reference = reference,
-      version = '001',
-      script_id = 'ERP5Site_handleDefaultFluentdIngestion')
-    ingestion_policy.validate()
-    
-    # create sensor
-    sensor = portal.sensor_module.newContent( \
-                            portal_type='Sensor', 
-                            reference = reference)
-    sensor.validate()
-
-    # create new Data Stream for test purposes
-    data_stream = portal.data_stream_module.newContent( \
-                   portal_type='Data Stream', \
-                   version = '001', \
-                   reference=reference)
-    data_stream.validate()
-    
-    # create Data Supply
-    resource = portal.restrictedTraverse('data_product_module/wendelin_4')
-    data_supply_kw = {'reference': reference,
-                      'version': '001',
-                      'start_date': now,
-                      'stop_date': now + 365}
-    data_supply_line_kw = {'resource_value': resource,
-                           'source_value': sensor,
-                           'destination_value': data_stream}
-    data_supply = ingestion_policy.PortalIngestionPolicy_addDataSupply( \
-                                      data_supply_kw, \
-                                      data_supply_line_kw)
-    
-    data_array = portal.data_array_module.newContent(
-                                            portal_type='Data Array',
-                                            reference = reference,
-                                            version = '001')
-    data_array.validate()
+    ingestion_policy, data_supply, data_stream, data_array = \
+      self.portal.portal_ingestion_policies.IngestionPolicyTool_addIngestionPolicy( \
+        reference  = reference, \
+        batch_mode = 1)
     self.tic()
-
+    
     return ingestion_policy, data_supply, data_stream, data_array
-  
+    
+   
   def test_0_import(self): 		 
     """ 		 
     Test we can import certain libraries but still failure to do so should be a  		 
