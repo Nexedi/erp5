@@ -216,26 +216,6 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
                           transition_url=transition_url,
                           state=state)
 
-  security.declarePrivate('getCurrentStatusDict')
-  def getCurrentStatusDict(self, document):
-    """
-    Get the current status dict.
-    """
-    workflow_key = self._generateHistoryKey()
-    hist = document.workflow_history
-    # Copy is requested
-    result = hist.get(hist.keys()[-1])
-    #result = document.workflow_history[workflow_key][-1].copy()
-    return result
-
-  security.declarePrivate('_generateHistoryKey')
-  def _generateHistoryKey(self):
-    """
-    Generate a key used in the workflow history.
-    """
-    history_key = self.unrestrictedTraverse(self.getRelativeUrl()).getReference()
-    return history_key
-
   security.declarePrivate('getinteraction_workflowVariableMatchDict')
   def getWorklistVariableMatchDict(self, info, check_guard=True):
     return None
@@ -272,7 +252,6 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
 
   security.declarePrivate('notifyBefore')
   def notifyBefore(self, ob, transition_list, args=None, kw=None):
-    status_dict = self.getCurrentStatusDict(ob)
     if type(transition_list) in StringTypes:
       return
 
@@ -370,7 +349,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
       before_commit_script_list.append(tdef.getBeforeCommitScriptName())
       if before_commit_script_list != [] and tdef.getBeforeCommitScriptName() is not None:
         for script_name in before_commit_script_list:
-          transaction.get().addBeforeCommitHook(tdef._before_commit,
+          transaction.get().addBeforeCommitHook(self._before_commit,
                                                 (sci, script_name, sm))
 
       # Execute "activity" scripts
@@ -395,7 +374,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
         # between here and when the interaction was executed... So we
         # need to switch to the security manager as it was back then
         setSecurityManager(security_manager)
-        self._getOb(script_name)(sci)
+        self._getOb(script_name).execute(sci)
       finally:
         setSecurityManager(current_security_manager)
 
