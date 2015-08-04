@@ -159,10 +159,11 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     Get the current status dict.
     """
     workflow_key = self._generateHistoryKey()
-
+    workflow_history = self.getHistoryOf(workflow_key, document)
     # Copy is requested
-    result = document.workflow_history[workflow_key][-1].copy()
-    return result
+    if workflow_history:
+      return workflow_history[-1].copy()
+    return None
 
   def getDateTime(self):
     """
