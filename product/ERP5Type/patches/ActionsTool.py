@@ -52,8 +52,11 @@ def listFilteredActionsFor(self, object=None):
     Finally, this patch detects tools that are no longer action providers and
     invokes the migration of their actions to portal_actions
     """
-
-    for provider_name in listActionProviders():
+    actions = []
+    listActionProviderlist = list(self.listActionProviders())
+    if 'portal_workflow' not in listActionProviderlist:
+      listActionProviderlist.append('portal_workflow')
+    for provider_name in listActionProviderlist:
     # Include actions from specific tools.
         provider = getattr(self, provider_name)
         if hasattr(provider, 'getActionListFor'):
