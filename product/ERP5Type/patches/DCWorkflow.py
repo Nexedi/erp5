@@ -772,7 +772,7 @@ def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=N
     '''
     pass
 
-# following patches are required for the new workflow tool compatibility.
+# following 15 patches are required for the new workflow tool compatibility.
 def DCWorkflowDefinition_getVariableValueList(self):
   if self.variables is not None:
     return self.variables
@@ -820,7 +820,7 @@ def DCWorkflowDefinition_getPortalType(self):
   return self.__class__.__name__
 def method_getReference(self):
   return self.id
-# return infomation to Base_viewDict
+# a necessary funtion in Base_viewDict
 def DCWorkflowDefinition_showDict(self):
   attr_dict = {}
   for attr in sorted(self.__dict__.keys()):
