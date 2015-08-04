@@ -1075,7 +1075,10 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       Returns a mapping containing the catalog variables
       that apply to ob.
       '''
+      initial_state = None
       res = {}
+      # Always provide the state variable.
+      state_var = self.getStateVariable()
       status = self.getCurrentStatusDict(ob)
       for id, vdef in self.getVariableValueList().iteritems():
           if vdef.for_catalog:
@@ -1088,17 +1091,12 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
                   value = vdef.default_expr(ec)
               else:
                   value = vdef.default_value
-
               res[id] = value
-      # Always provide the state variable.
-      state_var = self.getStateVariable()
-      if state_var is not None:
-        res[state_var] = status[state_var]
-      elif hasattr(self, 'getSourceValue'):
+      if hasattr(self, 'getSourceValue'):
         if self.getSourceValue() is not None:
-          res[state_var] = self.getSourceValue().getReference()
-      else:
-        res[state_var] = None
+          initial_state = self.getSourceValue().getReference()
+      if state_var is not None:
+        res[state_var] = status.get(state_var, initial_state)
       return res
 
 def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
