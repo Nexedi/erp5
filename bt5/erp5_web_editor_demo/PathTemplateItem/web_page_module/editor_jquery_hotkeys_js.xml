@@ -1,0 +1,429 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>jquery.hotkeys.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>editor_jquery_hotkeys_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * jQuery Hotkeys Plugin\n
+ * Copyright 2010, John Resig\n
+ * Dual licensed under the MIT or GPL Version 2 licenses.\n
+ *\n
+ * Based upon the plugin by Tzury Bar Yochay:\n
+ * http://github.com/tzuryby/hotkeys\n
+ *\n
+ * Original idea by:\n
+ * Binny V A, http://www.openjs.com/scripts/events/keyboard_shortcuts/\n
+*/\n
+\n
+(function(jQuery){\n
+\t\n
+\tjQuery.hotkeys = {\n
+\t\tversion: "0.8",\n
+\n
+\t\tspecialKeys: {\n
+\t\t\t8: "backspace", 9: "tab", 13: "return", 16: "shift", 17: "ctrl", 18: "alt", 19: "pause",\n
+\t\t\t20: "capslock", 27: "esc", 32: "space", 33: "pageup", 34: "pagedown", 35: "end", 36: "home",\n
+\t\t\t37: "left", 38: "up", 39: "right", 40: "down", 45: "insert", 46: "del", \n
+\t\t\t96: "0", 97: "1", 98: "2", 99: "3", 100: "4", 101: "5", 102: "6", 103: "7",\n
+\t\t\t104: "8", 105: "9", 106: "*", 107: "+", 109: "-", 110: ".", 111 : "/", \n
+\t\t\t112: "f1", 113: "f2", 114: "f3", 115: "f4", 116: "f5", 117: "f6", 118: "f7", 119: "f8", \n
+\t\t\t120: "f9", 121: "f10", 122: "f11", 123: "f12", 144: "numlock", 145: "scroll", 191: "/", 224: "meta"\n
+\t\t},\n
+\t\n
+\t\tshiftNums: {\n
+\t\t\t"`": "~", "1": "!", "2": "@", "3": "#", "4": "$", "5": "%", "6": "^", "7": "&", \n
+\t\t\t"8": "*", "9": "(", "0": ")", "-": "_", "=": "+", ";": ": ", "\'": "\\"", ",": "<", \n
+\t\t\t".": ">",  "/": "?",  "\\\\": "|"\n
+\t\t}\n
+\t};\n
+\n
+\tfunction keyHandler( handleObj ) {\n
+\t\t// Only care when a possible input has been specified\n
+\t\tif ( typeof handleObj.data !== "string" ) {\n
+\t\t\treturn;\n
+\t\t}\n
+\t\t\n
+\t\tvar origHandler = handleObj.handler,\n
+\t\t\tkeys = handleObj.data.toLowerCase().split(" "),\n
+\t\t\ttextAcceptingInputTypes = ["text", "password", "number", "email", "url", "range", "date", "month", "week", "time", "datetime", "datetime-local", "search", "color"];\n
+\t\n
+\t\thandleObj.handler = function( event ) {\n
+\t\t\t// Don\'t fire in text-accepting inputs that we didn\'t directly bind to\n
+\t\t\tif ( this !== event.target && (/textarea|select/i.test( event.target.nodeName ) ||\n
+\t\t\t\tjQuery.inArray(event.target.type, textAcceptingInputTypes) > -1 ) ) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\t// Keypress represents characters, not special keys\n
+\t\t\tvar special = event.type !== "keypress" && jQuery.hotkeys.specialKeys[ event.which ],\n
+\t\t\t\tcharacter = String.fromCharCode( event.which ).toLowerCase(),\n
+\t\t\t\tkey, modif = "", possible = {};\n
+\n
+\t\t\t// check combinations (alt|ctrl|shift+anything)\n
+\t\t\tif ( event.altKey && special !== "alt" ) {\n
+\t\t\t\tmodif += "alt+";\n
+\t\t\t}\n
+\n
+\t\t\tif ( event.ctrlKey && special !== "ctrl" ) {\n
+\t\t\t\tmodif += "ctrl+";\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\t// TODO: Need to make sure this works consistently across platforms\n
+\t\t\tif ( event.metaKey && !event.ctrlKey && special !== "meta" ) {\n
+\t\t\t\tmodif += "meta+";\n
+\t\t\t}\n
+\n
+\t\t\tif ( event.shiftKey && special !== "shift" ) {\n
+\t\t\t\tmodif += "shift+";\n
+\t\t\t}\n
+\n
+\t\t\tif ( special ) {\n
+\t\t\t\tpossible[ modif + special ] = true;\n
+\n
+\t\t\t} else {\n
+\t\t\t\tpossible[ modif + character ] = true;\n
+\t\t\t\tpossible[ modif + jQuery.hotkeys.shiftNums[ character ] ] = true;\n
+\n
+\t\t\t\t// "$" can be triggered as "Shift+4" or "Shift+$" or just "$"\n
+\t\t\t\tif ( modif === "shift+" ) {\n
+\t\t\t\t\tpossible[ jQuery.hotkeys.shiftNums[ character ] ] = true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfor ( var i = 0, l = keys.length; i < l; i++ ) {\n
+\t\t\t\tif ( possible[ keys[i] ] ) {\n
+\t\t\t\t\treturn origHandler.apply( this, arguments );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+\n
+\tjQuery.each([ "keydown", "keyup", "keypress" ], function() {\n
+\t\tjQuery.event.special[ this ] = { add: keyHandler };\n
+\t});\n
+\n
+})( jQuery );
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Editor Jquery Hotkeys JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>0.8</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope1</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1438594083.64</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>944.53131.64080.34781</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1438593384.86</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1438593297.76</float>
+                        <string>GMT</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
