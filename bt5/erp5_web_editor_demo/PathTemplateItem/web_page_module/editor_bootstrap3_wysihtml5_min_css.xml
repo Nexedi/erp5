@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>editor_test_gadget.js</string> </value>
+            <value> <string>bootstrap3-wysihtml5.min.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>editor_test_gadget_js</string> </value>
+            <value> <string>editor_bootstrap3_wysihtml5_min_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Style</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,92 +99,17 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*jslint indent: 2, maxlen: 80, nomen: true */\n
-/*global console, window, document, rJS, RSVP, $ */\n
-(function (window, document, rJS) {\n
-  "use strict";\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*! bootstrap3-wysihtml5-bower 2014-06-11 */\n
 \n
-  var EDITOR_GADGET = "./bootstrap-wysiwyg.html";\n
-//  var EDITOR_GADGET = "./bootstrap3-wysiwyg.html";\n
-  // block JQM auto-start\n
-  $(document)\n
-    .on("mobileinit", function () {\n
-      $.mobile.autoInitializePage = false;\n
-    });\n
-\n
-  rJS(window)\n
-\n
-    .ready(function (g) {\n
-      g.state_parameter_dict = {};\n
-      console.log("calling render");\n
-    })\n
-\n
-    .declareMethod(\'render\', function () {\n
-      var gadget, page_list, page;\n
-\n
-      gadget = this;\n
-      page_list = document.body.querySelectorAll("[data-role=page]");\n
-      console.log("page_list", page_list);\n
-      page = page_list[page_list.length - 1];\n
-      console.log("page", page);\n
-\n
-      // helper: declare edtior\n
-      function declareEditorGadget() {\n
-        return gadget.declareGadget(EDITOR_GADGET, {\n
-          sandbox: \'iframe\',\n
-          element: page.querySelector("div.ui-content"),\n
-          scope: "editor"\n
-        });\n
-      }\n
-\n
-      // helper: set Editor Gadget\n
-      function setEditorGadget() {\n
-        var iframe, editor;\n
-\n
-        iframe = gadget.__element.getElementsByTagName("IFRAME")[0];\n
-        editor = iframe.contentDocument.getElementById("editor");\n
-        editor.style.overflow = "auto";\n
-        return gadget.editor_setContent(gadget.state_parameter_dict.temp);\n
-      }\n
-\n
-      // helper: run chain - separate method to make the chain callable\n
-      function runChain() {\n
-        return new RSVP.Queue()\n
-          .push(function() {\n
-            return declareEditorGadget(this);\n
-          });\n
-\n
-      }\n
-\n
-      // START: fetch document\n
-      return runChain();      \n
-    })\n
-\n
-    /* ============================ EDITOR =============================== */\n
-    .declareMethod("editor_getContent", function (param_list) {\n
-      return this.getDeclaredGadget("editor")\n
-        .then(function (editor) {\n
-          return editor.getContent.apply(editor, param_list);\n
-        });\n
-    })\n
-    .declareMethod("editor_setContent", function (param_list) {\n
-      return this.getDeclaredGadget("editor")\n
-        .then(function (editor) {\n
-          return editor.setContent.apply(editor, param_list);\n
-        });\n
-    })\n
-    .declareMethod("editor_clearContent", function (param_list) {\n
-      return this.getDeclaredGadget("editor")\n
-        .then(function (editor) {\n
-          return editor.clearContent.apply(editor, param_list);\n
-        });\n
-    });\n
-\n
-}(window, document, rJS));</string> </value>
+ul.wysihtml5-toolbar{margin:0;padding:0;display:block}ul.wysihtml5-toolbar::after{clear:both;display:table;content:""}ul.wysihtml5-toolbar>li{float:left;display:list-item;list-style:none;margin:0 5px 10px 0}ul.wysihtml5-toolbar a[data-wysihtml5-command=bold]{font-weight:700}ul.wysihtml5-toolbar a[data-wysihtml5-command=italic]{font-style:italic}ul.wysihtml5-toolbar a[data-wysihtml5-command=underline]{text-decoration:underline}ul.wysihtml5-toolbar a.btn.wysihtml5-command-active{background-image:none;-webkit-box-shadow:inset 0 2px 4px rgba(0,0,0,.15),0 1px 2px rgba(0,0,0,.05);-moz-box-shadow:inset 0 2px 4px rgba(0,0,0,.15),0 1px 2px rgba(0,0,0,.05);box-shadow:inset 0 2px 4px rgba(0,0,0,.15),0 1px 2px rgba(0,0,0,.05);background-color:#E6E6E6;background-color:#D9D9D9;outline:0}ul.wysihtml5-commands-disabled .dropdown-menu{display:none!important}ul.wysihtml5-toolbar div.wysihtml5-colors{display:block;width:50px;height:20px;margin-top:2px;margin-left:5px;position:absolute;pointer-events:none}ul.wysihtml5-toolbar a.wysihtml5-colors-title{padding-left:70px}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=black]{background:#000!important}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=silver]{background:silver!important}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=gray]{background:gray!important}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=maroon]{background:maroon!important}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=red]{background:red!important}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=purple]{background:purple!important}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=green]{background:green!important}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=olive]{background:olive!important}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=navy]{background:navy!important}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=blue]{background:#00f!important}ul.wysihtml5-toolbar div[data-wysihtml5-command-value=orange]{background:orange!important}.glyphicon-quote:before{content:"\\201C";font-family:Georgia,serif;font-size:50px;position:absolute;top:-4px;left:-3px;max-height:100%}.glyphicon-quote:after{content:"\\0000a0"}
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Editor Test Gadget JS</string> </value>
+            <value> <string>Editor Bootstrap3-wysihtml5 Min CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -270,7 +195,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438594081.2</float>
+                        <float>1438681392.46</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -315,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.54775.35271.2508</string> </value>
+                <value> <string>944.54581.16061.53282</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -333,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438693295.63</float>
+                        <float>1438680346.78</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -362,7 +287,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>zope1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -392,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438330895.73</float>
+                        <float>1438680240.12</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

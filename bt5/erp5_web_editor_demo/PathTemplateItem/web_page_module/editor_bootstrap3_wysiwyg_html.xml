@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,8 +70,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>editor_test_gadget.js</string> </value>
+            <value> <string>bootstrap3-wysiwyg.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>editor_test_gadget_js</string> </value>
+            <value> <string>editor_bootstrap3_wysiwyg_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,92 +103,56 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*jslint indent: 2, maxlen: 80, nomen: true */\n
-/*global console, window, document, rJS, RSVP, $ */\n
-(function (window, document, rJS) {\n
-  "use strict";\n
+            <value> <string encoding="cdata"><![CDATA[
+
 \n
-  var EDITOR_GADGET = "./bootstrap-wysiwyg.html";\n
-//  var EDITOR_GADGET = "./bootstrap3-wysiwyg.html";\n
-  // block JQM auto-start\n
-  $(document)\n
-    .on("mobileinit", function () {\n
-      $.mobile.autoInitializePage = false;\n
-    });\n
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">\n
+<meta charset="utf-8">\n
 \n
-  rJS(window)\n
+<title>bootstrap-wysihtml5</title>\n
 \n
-    .ready(function (g) {\n
-      g.state_parameter_dict = {};\n
-      console.log("calling render");\n
-    })\n
 \n
-    .declareMethod(\'render\', function () {\n
-      var gadget, page_list, page;\n
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"></link>\n
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"></link>\n
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"></link>\n
+<link rel="stylesheet" type="text/css" href="bootstrap3-wysihtml5.min.css"></link>\n
 \n
-      gadget = this;\n
-      page_list = document.body.querySelectorAll("[data-role=page]");\n
-      console.log("page_list", page_list);\n
-      page = page_list[page_list.length - 1];\n
-      console.log("page", page);\n
 \n
-      // helper: declare edtior\n
-      function declareEditorGadget() {\n
-        return gadget.declareGadget(EDITOR_GADGET, {\n
-          sandbox: \'iframe\',\n
-          element: page.querySelector("div.ui-content"),\n
-          scope: "editor"\n
-        });\n
-      }\n
+</head>\n
+<body>\n
+<div class="container" style="margin: 10px; padding: 4px; width: 1858px; height: 600px;">\n
+  <div class="jumbotron" style="margin-left:0px">\n
+    <textarea class="textarea" placeholder="Enter text ..." style="width: 100%; height: 200px; font-size: 14px; line-height: 18px;"></textarea>\n
+  </div>\n
+</div>\n
 \n
-      // helper: set Editor Gadget\n
-      function setEditorGadget() {\n
-        var iframe, editor;\n
 \n
-        iframe = gadget.__element.getElementsByTagName("IFRAME")[0];\n
-        editor = iframe.contentDocument.getElementById("editor");\n
-        editor.style.overflow = "auto";\n
-        return gadget.editor_setContent(gadget.state_parameter_dict.temp);\n
-      }\n
+<script src="wysihtml5x-toolbar.min.js"></script>\n
+<script src="jquery.js"></script>\n
+<script src="bootstrap.min.js"></script>\n
+<script src="handlebars.runtime.min.js"></script>\n
+<script src="bootstrap3-wysihtml5.min.js"></script>\n
 \n
-      // helper: run chain - separate method to make the chain callable\n
-      function runChain() {\n
-        return new RSVP.Queue()\n
-          .push(function() {\n
-            return declareEditorGadget(this);\n
-          });\n
+<script>\n
+  $(\'.textarea\').wysihtml5({\n
+    toolbar: {\n
+      fa: true\n
+    }\n
+  });\n
+</script>\n
 \n
-      }\n
-\n
-      // START: fetch document\n
-      return runChain();      \n
-    })\n
-\n
-    /* ============================ EDITOR =============================== */\n
-    .declareMethod("editor_getContent", function (param_list) {\n
-      return this.getDeclaredGadget("editor")\n
-        .then(function (editor) {\n
-          return editor.getContent.apply(editor, param_list);\n
-        });\n
-    })\n
-    .declareMethod("editor_setContent", function (param_list) {\n
-      return this.getDeclaredGadget("editor")\n
-        .then(function (editor) {\n
-          return editor.setContent.apply(editor, param_list);\n
-        });\n
-    })\n
-    .declareMethod("editor_clearContent", function (param_list) {\n
-      return this.getDeclaredGadget("editor")\n
-        .then(function (editor) {\n
-          return editor.clearContent.apply(editor, param_list);\n
-        });\n
-    });\n
-\n
-}(window, document, rJS));</string> </value>
+</body>\n
+</html>\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Editor Test Gadget JS</string> </value>
+            <value> <string>Editor Bootstrap3-wysiwyg</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -270,7 +238,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438594081.2</float>
+                        <float>1438681364.0</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -315,7 +283,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.54775.35271.2508</string> </value>
+                <value> <string>944.54809.19650.59255</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -333,7 +301,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438693295.63</float>
+                        <float>1438694025.97</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -362,7 +330,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>zope1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -392,7 +360,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438330895.73</float>
+                        <float>1438678805.87</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
