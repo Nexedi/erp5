@@ -7,7 +7,8 @@ from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.ERP5Type.Document import newTempOOoDocument
 from zLOG import LOG, INFO
 
-def dumpWorkflowChain(self):
+def dumpWorkflowChain(self, ignore_default=False,
+                      ignore_id_set=None, keep_order=False, batch_mode=False):
   # This method outputs the workflow chain in the format that you can
   # easily get diff like the following:
   # ---
@@ -15,6 +16,13 @@ def dumpWorkflowChain(self):
   # Account,edit_workflow
   # ...
   # ---
+  # Parameters :
+  # - ignore_id_set : a set with workflow ids to exclude
+  # - keep_order : set to True if you would like to keep original order,
+  #                default is to sort alphabetically
+  # - batch_mode : used to directly return the sctructure instead of return string
+  if ignore_id_set is None:
+    ignore_id_set = set()
   workflow_tool = self.getPortalObject().portal_workflow
   cbt = workflow_tool._chains_by_type
   ti = workflow_tool._listTypeInfo()
@@ -24,15 +32,25 @@ def dumpWorkflowChain(self):
     title = t.Title()
     if title == id_:
       title = None
+    chain = None
     if cbt is not None and cbt.has_key(id_):
-      chain = sorted(cbt[id_])
+      cbt_list = [x for x in cbt[id_] if not(x in ignore_id_set)]
+      if keep_order:
+        chain = cbt_list
+      else:
+        chain = sorted(cbt_list)
     else:
-      chain = ['(Default)']
-    types_info.append({'id': id_,
+      if not(ignore_default):
+        chain = ['(Default)']
+    if chain:
+      types_info.append({'id': id_,
                        'title': title,
                        'chain': chain})
+  types_info.sort(key=lambda x:x['id'])
+  if batch_mode:
+    return types_info
   output = []
-  for i in sorted(types_info, key=lambda x:x['id']):
+  for i in types_info:
     for chain in i['chain']:
       output.append('%s,%s' % (i['id'], chain))
   return '\n'.join(output)
