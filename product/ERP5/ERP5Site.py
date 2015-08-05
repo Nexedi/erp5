@@ -2219,8 +2219,6 @@ class ERP5Generator(PortalGenerator):
 
     # Make sure the cache is initialized
     p.portal_caches.updateCache()
-    # Migrate Workflow Tool at fresh installation
-    p.migrateToPortalWorkflowClass()
     self.setupLastTools(p, **kw)
 
     # Make sure tools are cleanly indexed with a uid before creating children
