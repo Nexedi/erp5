@@ -95,32 +95,14 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
   )
 
   def notifyCreated(self, document):
+
+    """Notifies this workflow after an object has been created and added.
     """
-    Set initial state on the Document
-    """
-    state_var = self.getStateVariable()
-    object = self.getStateChangeInformation(document, self.getSourceValue())
-
-    # Initialize workflow history
-    state_id = self.getSourceValue().getReference()
-    status_dict = {state_var: state_id}
-    variable_list = self.objectValues(portal_type='Variable')
-    former_status = self._getOb(status_dict[state_var], None)
-    ec = createExprContext(StateChangeInfo(document, self, former_status))
-
-    for variable in variable_list:
-      if variable.for_status == 0:
-        continue
-      if variable.default_expr is not None:
-        expr = Expression(variable.default_expr)
-        value = expr(ec)
-      else:
-        value = variable.getInitialValue(object=object)
-      if value is None: value = ''
-      status_dict[variable.getReference()] = value
-
-    self._updateWorkflowHistory(document, status_dict)
-    self.updateRoleMappingsFor(document)
+    try:
+        self._changeStateOf(document, None)
+    except ( ObjectDeleted, ObjectMoved ):
+        # Swallow.
+        pass
 
   initializeDocument = notifyCreated
 
@@ -613,7 +595,8 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
     if tdef is None:
       new_sdef = self.getSourceValue()
-      if not new_state:
+      new_state = new_sdef.getReference()
+      if not new_sdef:
         return
       former_status = {}
     else:
@@ -654,6 +637,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
     if state_values is None: state_values = {}
     tdef_exprs = {}
+    transition_variable_list = []
     if tdef is not None:
       transition_variable_list = tdef.objectValues(portal_type='Transition Variable')
     for transition_variable in transition_variable_list:
@@ -719,22 +703,23 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     self.updateRoleMappingsFor(document)
 
     # Execute the "after" script.
-    script_id = getattr(tdef, 'getAfterScriptId')()
-    if script_id is not None:
-      kwargs = form_kw
-      # Script can be either script or workflow method
-      if script_id in old_sdef.getDestinationIdList() and \
-          self._getOb(script_id).trigger_type == TRIGGER_WORKFLOW_METHOD:
-        getattr(document, convertToMixedCase(self._getOb(script_id).getReference()))()
-      else:
-        script = self._getOb(script_id)
-        # Pass lots of info to the script in a single parameter.
-        if script.getTypeInfo().getId() == 'Workflow Script':
-          sci = StateChangeInfo(
-              document, self, former_status, tdef, old_sdef, new_sdef, kwargs)
-          script.execute(sci)  # May throw an exception.
+    if tdef is not None:
+      script_id = getattr(tdef, 'getAfterScriptId')()
+      if script_id is not None:
+        kwargs = form_kw
+        # Script can be either script or workflow method
+        if script_id in old_sdef.getDestinationIdList() and \
+            self._getOb(script_id).trigger_type == TRIGGER_WORKFLOW_METHOD:
+          getattr(document, convertToMixedCase(self._getOb(script_id).getReference()))()
         else:
-          raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getReference()))
+          script = self._getOb(script_id)
+          # Pass lots of info to the script in a single parameter.
+          if script.getTypeInfo().getId() == 'Workflow Script':
+            sci = StateChangeInfo(
+                document, self, former_status, tdef, old_sdef, new_sdef, kwargs)
+            script.execute(sci)  # May throw an exception.
+          else:
+            raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getReference()))
     # Return the new state object.
     if moved_exc is not None:
         # Propagate the notification that the object has moved.
