@@ -123,9 +123,9 @@
 \n
 </head>\n
 <body>\n
-<div class="container" style="margin: 10px; padding: 4px; width: 1858px; height: 600px;">\n
-  <div class="jumbotron" style="margin-left:0px">\n
-    <textarea class="textarea" placeholder="Enter text ..." style="width: 100%; height: 200px; font-size: 14px; line-height: 18px;"></textarea>\n
+<div class="container" style=" width: 100%; height: 600px;">\n
+  <div class="jumbotron" style="margin-left:0px; height: 600px;">\n
+    <textarea class="textarea" placeholder="Enter text ..." style="width: 100%; height: 400px; font-size: 14px; line-height: 18px;"></textarea>\n
   </div>\n
 </div>\n
 \n
@@ -135,15 +135,9 @@
 <script src="bootstrap.min.js"></script>\n
 <script src="handlebars.runtime.min.js"></script>\n
 <script src="bootstrap3-wysihtml5.min.js"></script>\n
-\n
-<script>\n
-  $(\'.textarea\').wysihtml5({\n
-    toolbar: {\n
-      fa: true\n
-    }\n
-  });\n
-</script>\n
-\n
+<script src="rsvp.js"></script>\n
+<script src="renderjs.js"></script>\n
+<script src="gadget_bootstrap3-wysiwyg.js"></script>\n
 </body>\n
 </html>\n
 
@@ -269,7 +263,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope1</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -283,7 +277,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.54809.19650.59255</string> </value>
+                <value> <string>944.56196.65369.51899</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -301,7 +295,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438694025.97</float>
+                        <float>1438777350.44</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

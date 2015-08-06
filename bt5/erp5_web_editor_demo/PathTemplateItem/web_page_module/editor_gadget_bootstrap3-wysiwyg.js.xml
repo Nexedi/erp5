@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>editor_test_gadget.js</string> </value>
+            <value> <string>gadget_bootstrap3-wysiwyg.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>editor_test_gadget_js</string> </value>
+            <value> <string>editor_gadget_bootstrap3-wysiwyg.js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,77 +99,36 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*jslint indent: 2, maxlen: 80, nomen: true */\n
-/*global console, window, document, rJS, RSVP, $ */\n
-(function (window, document, rJS) {\n
-  "use strict";\n
+            <value> <string>/*jslint indent: 2 */\n
+/*global window, jQuery, rJS*/\n
+"use strict";\n
 \n
-  var EDITOR_GADGET_1 = "./bootstrap-wysiwyg.html";\n
-  var EDITOR_GADGET_2 = "./bootstrap3-wysiwyg.html";\n
-  // block JQM auto-start\n
-  $(document)\n
-    .on("mobileinit", function () {\n
-      $.mobile.autoInitializePage = false;\n
-    });\n
+(function (window, $, rJS) {\n
 \n
-  rJS(window)\n
-\n
+  rJS(window).\n
+    declareMethod(\'getContent\', function () {\n
+      return rJS(this).editor.html();\n
+    })\n
+    .declareMethod(\'setContent\', function (content) {\n
+      rJS(this).editor.html(content);\n
+    })\n
+    .declareMethod(\'clearContent\', function () {\n
+      rJS(this).editor.html(\'\');\n
+    })\n
     .ready(function (g) {\n
-    })\n
-\n
-    .declareMethod(\'render\', function () {\n
-      var gadget, page_list, page;\n
-\n
-      gadget = this;\n
-      page_list = document.body.querySelectorAll("[data-role=page]");\n
-      page = page_list[page_list.length - 1];\n
-\n
-      // helper: declare edtior\n
-      function declareEditorGadget(editor_g) {\n
-        return gadget.declareGadget(editor_g, {\n
-          sandbox: \'iframe\',\n
-          element: page.querySelector("div.ui-content"),\n
-          scope: "editor"\n
-        });\n
-      }\n
-\n
-      return new RSVP.Queue()\n
-        .push(function() {\n
-          console.log("first gadget");\n
-          return declareEditorGadget(EDITOR_GADGET_1);\n
-        })\n
-        .push(function(){\n
-          page.querySelector("div.ui-content").innerHTML = "";\n
-          return declareEditorGadget(EDITOR_GADGET_2);\n
-        });\n
-\n
-    })\n
-\n
-    /* ============================ EDITOR =============================== */\n
-    .declareMethod("editor_getContent", function (param_list) {\n
-      return this.getDeclaredGadget("editor")\n
-        .then(function (editor) {\n
-          return editor.getContent.apply(editor, param_list);\n
-        });\n
-    })\n
-    .declareMethod("editor_setContent", function (param_list) {\n
-      return this.getDeclaredGadget("editor")\n
-        .then(function (editor) {\n
-          return editor.setContent.apply(editor, param_list);\n
-        });\n
-    })\n
-    .declareMethod("editor_clearContent", function (param_list) {\n
-      return this.getDeclaredGadget("editor")\n
-        .then(function (editor) {\n
-          return editor.clearContent.apply(editor, param_list);\n
-        });\n
+      g.editor = $(\'.textarea\');\n
+      g.editor.wysihtml5({\n
+        toolbar: {\n
+          fa: true\n
+        }\n
+      });\n
     });\n
 \n
-}(window, document, rJS));</string> </value>
+}(window, jQuery, rJS));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Editor Test Gadget JS</string> </value>
+            <value> <string>Editor Gadget Bootstrap3 wysiwyg JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -255,7 +214,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438594081.2</float>
+                        <float>1438768024.7</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -300,7 +259,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.56235.17061.26624</string> </value>
+                <value> <string>944.56186.56926.29952</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -318,7 +277,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438780043.78</float>
+                        <float>1438777746.45</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -377,7 +336,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438330895.73</float>
+                        <float>1438767532.07</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

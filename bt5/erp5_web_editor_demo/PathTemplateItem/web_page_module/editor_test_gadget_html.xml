@@ -130,8 +130,22 @@
   </head>\n
   <body>\n
     <div data-role="page" id="document">\n
-      <div class="ui-content">\n
-      </div>\n
+      <div class="ui-grid-a ui-responsive">\n
+        <div class="ui-block-a" style="width:60%">\n
+          <div class="ui-content"></div>\n
+        </div>\n
+        <div class="ui-block-b" style="width:30%">\n
+          <form class="gadget-select-form">\n
+            <div data-role="fieldcontain">\n
+              <label for="gadget_selector" class="select"></label>\n
+              <select name="gadget_selector">\n
+                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/editor_demo/bootstrap-wysiwyg.html">Text Editor 1</option>\n
+                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/editor_demo/bootstrap3-wysiwyg.html">Text Editor 2</option>\n
+              </select>\n
+            </div>\n
+          </form>\n
+        </div>\n
+      </div>  \n
     </div>\n
   </body>\n
 </html>\n
@@ -273,7 +287,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.53477.50307.41949</string> </value>
+                <value> <string>944.56298.5921.30532</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -291,7 +305,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438615471.66</float>
+                        <float>1438783361.36</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
