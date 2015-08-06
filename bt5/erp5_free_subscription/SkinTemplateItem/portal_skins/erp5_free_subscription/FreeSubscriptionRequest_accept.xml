@@ -80,6 +80,7 @@ elif context.getDefaultEmailCoordinateText():\n
         default_email_text=email,\n
         title=email,\n
         )\n
+      person.validate()\n
     elif person.getReference():\n
       context.reject(comment="Person already in the user data base")\n
       return\n
