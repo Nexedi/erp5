@@ -127,7 +127,7 @@
 \n
   test("verify correctly implemented gadget test", function() {\n
     var gadget_url = "./interface_test_correct_implemented_gadget.html",\n
-      interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface1.html";\n
+      interface_url = "./demo_interface1.html";\n
     return new RSVP.Queue()\n
       .push(function() {\n
         return root_gadget_defer.promise;\n
@@ -144,7 +144,7 @@
 \n
   test("verify missing interface declaration gadget test", function() {\n
     var gadget_url = "./interface_test_missing_interface_declaration_gadget.html",\n
-      interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface1.html";\n
+      interface_url = "./demo_interface1.html";\n
     return new RSVP.Queue()\n
       .push(function() {\n
         return root_gadget_defer.promise;\n
@@ -161,7 +161,7 @@
 \n
   test("verify missing method declaration gadget test", function() {\n
     var gadget_url = "./interface_test_missing_method_declaration_gadget.html",\n
-      interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface1.html";\n
+      interface_url = "./demo_interface1.html";\n
     return new RSVP.Queue()\n
       .push(function() {\n
         return root_gadget_defer.promise;\n
@@ -178,7 +178,7 @@
 \n
   test("verify mismatched method argument gadget test", function() {\n
     var gadget_url = "./interface_test_mismatched_argument_gadget.html",\n
-      interface_url = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface1.html";\n
+      interface_url = "./demo_interface1.html";\n
     return new RSVP.Queue()\n
       .push(function() {\n
         return root_gadget_defer.promise;\n
@@ -243,9 +243,9 @@
 \n
   test("verify invalid interface definition gadget test", function() {\n
     var gadget_url = "./interface_test_missing_interface_declaration_gadget.html",\n
-      interface_url1 = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface_invalid1.html",\n
-      interface_url2 = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface_invalid2.html",\n
-      interface_url3 = "https://softinst60317.host.vifib.net/erp5/web_site_module/interface_test/demo_interface_invalid3.html";\n
+      interface_url1 = "./demo_interface_invalid1.html",\n
+      interface_url2 = "./demo_interface_invalid2.html",\n
+      interface_url3 = "./demo_interface_invalid3.html";\n
     return new RSVP.Queue()\n
       .push(function() {\n
         return root_gadget_defer.promise;\n
@@ -400,7 +400,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.43375.6436.61201</string> </value>
+                <value> <string>944.57664.29654.42888</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -418,7 +418,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438008031.04</float>
+                        <float>1438865358.09</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

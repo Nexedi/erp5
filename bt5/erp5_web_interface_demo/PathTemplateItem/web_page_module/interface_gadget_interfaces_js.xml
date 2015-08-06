@@ -340,6 +340,16 @@
         gadget.getDeclaredMethodList()]); \n
     })\n
 \n
+    .declareMethod("getAbsoluteURL", function (gadget, url) {\n
+      return RSVP.Queue()\n
+        .push(function() {\n
+          return gadget.getPath(); \n
+        })\n
+        .push(function(base_url) {\n
+          return rJS.getAbsoluteURL(url, base_url);\n
+        });\n
+    })\n
+\n
     .declareMethod("getInterfaceData", function (interface_url) {\n
       var interface_data = {\n
           name: "",\n
@@ -395,7 +405,8 @@
     })\n
 \n
     .declareMethod("verifyGadgetInterfaceImplementation", function (gadget_url, interface_url) {\n
-      var interface_gadget = this;\n
+      var interface_gadget = this,\n
+        absolute_interface_url;\n
       return RSVP.Queue()\n
         .push(function () {\n
           if(!gadget_url || !interface_url) {\n
@@ -404,20 +415,25 @@
           return getVerifyGadget(gadget_url, interface_gadget);\n
         })\n
         .push(function (gadget) {\n
-          return interface_gadget.getDeclaredGadgetInterfaceList(gadget);\n
+          return RSVP.all([ \n
+            interface_gadget.getDeclaredGadgetInterfaceList(gadget),\n
+            interface_gadget.getAbsoluteURL(gadget, interface_url)\n
+          ]);\n
         })\n
-        .push(function (declared_interface_list) {\n
-          return verifyInterfaceDeclaration(interface_url, declared_interface_list);\n
+        .push(function (interface_detail) {\n
+          var declared_interface_list = interface_detail[0];\n
+          absolute_interface_url = interface_detail[1];\n
+          return verifyInterfaceDeclaration(absolute_interface_url, declared_interface_list);\n
         })\n
         .push(function () {\n
-          return verifyInterfaceDefinition(interface_url);\n
+          return verifyInterfaceDefinition(absolute_interface_url);\n
         })\n
         .push(function () {\n
           return interface_gadget.getDeclaredGadget(VERIFY_GADGET_SCOPE);\n
         })\n
         .push(function (gadget) {\n
           return RSVP.all([\n
-            interface_gadget.getDefinedInterfaceMethodList(interface_url),\n
+            interface_gadget.getDefinedInterfaceMethodList(absolute_interface_url),\n
             interface_gadget.getDeclaredGadgetMethodList(gadget)\n
           ]);\n
         })\n
@@ -606,7 +622,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.46238.52656.22988</string> </value>
+                <value> <string>944.57659.15074.42513</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -624,7 +640,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438180072.6</float>
+                        <float>1438865256.18</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

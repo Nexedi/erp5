@@ -132,25 +132,25 @@
             <div data-role="fieldcontain">\n
               <label for="gadget_selector" class="select">Select Gadget</label>\n
               <select name="gadget_selector">\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/interface_test_correct_implemented_gadget.html">Gadget: Implements Interface 1 Correctly</option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/interface_test_missing_interface_declaration_gadget.html">Gadget: Missing Interface Declaration of Interface 1</option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/interface_test_missing_method_declaration_gadget.html">Gadget: Missing Method Declaration of Interface 1 </option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/interface_test_mismatched_argument_gadget.html">Gadget: Mismatched Method Argument of Interface 1 </option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/interface_test_multiple_interface_correct_gadget.html">Gadget: Multiple Interfaces Correctly Implements Interface 1 and 2</option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/interface_test_multiple_interface_mismached_argument_gadget.html">Gadget: Multiple Interfaces Mismatched Argument of Interface 2 </option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/interface_test_multiple_interface_missing_method_declaration_gadget.html">Gadget: Multiple Interfaces Missing Method Declaration of Interface 2</option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/interface_test_invalid_interface_gadget.html">Gadget: Implements All Invalid Interfaces</option>\n
+                <option value="./interface_test_correct_implemented_gadget.html">Gadget: Implements Interface 1 Correctly</option>\n
+                <option value="./interface_test_missing_interface_declaration_gadget.html">Gadget: Missing Interface Declaration of Interface 1</option>\n
+                <option value="./interface_test_missing_method_declaration_gadget.html">Gadget: Missing Method Declaration of Interface 1 </option>\n
+                <option value="./interface_test_mismatched_argument_gadget.html">Gadget: Mismatched Method Argument of Interface 1 </option>\n
+                <option value="./interface_test_multiple_interface_correct_gadget.html">Gadget: Multiple Interfaces Correctly Implements Interface 1 and 2</option>\n
+                <option value="./interface_test_multiple_interface_mismached_argument_gadget.html">Gadget: Multiple Interfaces Mismatched Argument of Interface 2 </option>\n
+                <option value="./interface_test_multiple_interface_missing_method_declaration_gadget.html">Gadget: Multiple Interfaces Missing Method Declaration of Interface 2</option>\n
+                <option value="./interface_test_invalid_interface_gadget.html">Gadget: Implements All Invalid Interfaces</option>\n
               </select>\n
             </div>\n
             <div data-role="fieldcontain">\n
               <label for="interface_selector" class="select">Select Interface</label>\n
               <select name="interface_selector">\n
                 <option value="">Default: Test all declared interfaces</option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/demo_interface1.html">Demo Interface 1</option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/demo_interface2.html">Demo Interface 2</option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/demo_interface_invalid1.html">Demo Interface Invalid 1</option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/demo_interface_invalid2.html">Demo Interface Invalid 2</option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/interface_demo/demo_interface_invalid3.html">Demo Interface Invalid 3</option>\n
+                <option value="./demo_interface1.html">Demo Interface 1</option>\n
+                <option value="./demo_interface2.html">Demo Interface 2</option>\n
+                <option value="./demo_interface_invalid1.html">Demo Interface Invalid 1</option>\n
+                <option value="./demo_interface_invalid2.html">Demo Interface Invalid 2</option>\n
+                <option value="./demo_interface_invalid3.html">Demo Interface Invalid 3</option>\n
               </select>\n
             </div>\n
             <input data-inline="true" type="submit" value="Submit" data-theme="b">\n
@@ -320,7 +320,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.43346.53030.10871</string> </value>
+                <value> <string>944.57639.28561.28313</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -338,7 +338,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438073929.05</float>
+                        <float>1438864164.25</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
