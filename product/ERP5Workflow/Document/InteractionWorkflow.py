@@ -122,7 +122,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
         break
 
     if vdef is not None:
-      if vdef.getTypeInfo().getId() == 'Variable':
+      if vdef.getPortalType() == 'Variable':
         return 1
       return 0
     return 0
