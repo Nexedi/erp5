@@ -77,7 +77,12 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>default_email_coordinate_text</string>
+                          <string>Recipient Email</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
