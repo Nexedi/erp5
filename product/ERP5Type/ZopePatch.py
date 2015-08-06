@@ -49,6 +49,7 @@ from Products.ERP5Type.patches import PropertySheets
 from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
 from Products.ERP5Type.patches import CMFBTreeFolder
+from Products.ERP5Type.patches import OFSFile
 from Products.ERP5Type.patches import OFSFolder
 from Products.ERP5Type.patches import OFSUninstalled
 from Products.ERP5Type.patches import PersistentMapping
