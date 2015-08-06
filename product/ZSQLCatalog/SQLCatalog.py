@@ -28,6 +28,7 @@ from AccessControl.SimpleObjectPolicies import ContainerAssertions
 from BTrees.OIBTree import OIBTree
 from App.config import getConfiguration
 from BTrees.Length import Length
+from Shared.DC.ZRDB.DA import DatabaseError
 from Shared.DC.ZRDB.TM import TM
 
 from Acquisition import aq_parent, aq_inner, aq_base
@@ -1076,19 +1077,22 @@ class Catalog(Folder,
     return self.sql_search_result_keys
 
   def _getCatalogSchema(self, table=None):
-    result_list = []
+    method_name = self.sql_catalog_schema
     try:
-      method_name = self.sql_catalog_schema
       method = getattr(self, method_name)
-      search_result = method(table=table)
-      for c in search_result:
-        result_list.append(c.Field)
-    except ConflictError:
-      raise
-    except:
-      LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s' % method_name, error=sys.exc_info())
+    except AttributeError:
       pass
-    return tuple(result_list)
+    else:
+      try:
+        return tuple(c.Field for c in method(table=table))
+      except (ConflictError, DatabaseError):
+        raise
+      except Exception:
+        pass
+
+    LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s'
+        % method_name, error=sys.exc_info())
+    return ()
 
   @transactional_cache_decorator('SQLCatalog.getColumnIds')
   def _getColumnIds(self):
@@ -1160,18 +1164,22 @@ class Catalog(Folder,
     Calls the show table method and returns dictionnary of
     Field Ids
     """
-    keys = []
     method_name = self.sql_catalog_tables
     try:
-      method = getattr(self,  method_name)
-      search_result = method()
-      for c in search_result:
-        keys.append(c[0])
-    except ConflictError:
-      raise
-    except:
+      method = getattr(self, method_name)
+    except AttributeError:
       pass
-    return keys
+    else:
+      try:
+        return [c[0] for c in method()]
+      except (ConflictError, DatabaseError):
+        raise
+      except Exception:
+        pass
+
+    LOG('SQLCatalog', WARNING, 'getTableIds failed with the method %s'
+        % method_name, error=sys.exc_info())
+    return []
 
   security.declarePrivate('getUIDBuffer')
   def getUIDBuffer(self, force_new_buffer=False):
