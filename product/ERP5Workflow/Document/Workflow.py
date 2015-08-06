@@ -355,9 +355,11 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         workflow_tool = portal.portal_workflow
         result = []
         append = result.append
-        if info.object.getTypeInfo() is not None:
-          for workflow_id in info.object.getTypeInfo().getTypeWorkflowList():
-              append(info.object.getTypeInfo().getId())
+        document = info.object
+        if document  is not None:
+          if document.getTypeInfo() is not None:
+            for workflow_id in document.getTypeInfo().getTypeWorkflowList():
+                append(document.getTypeInfo().getId())
         return result
 
     portal_type_list = getPortalTypeListForWorkflow(self.id)
