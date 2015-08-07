@@ -58,7 +58,11 @@ if not context.getReference():\n
   context.FreeSubscriptionRequest_generateReference()\n
 if context.getValidationState() != \'submitted\':\n
   return\n
-if context.getDestination():\n
+person = context.getDestinationValue()\n
+if person:\n
+  email = person.getDefaultEmailCoordinateText()\n
+  if email and not context.getDefaultEmailCoordinateText():  # XXX workaround to fill the email field if not already set\n
+    context.setDefaultEmailCoordinateText(email)\n
   context.accept()\n
 elif context.getDefaultEmailCoordinateText():\n
   email = context.getDefaultEmailCoordinateText()\n
