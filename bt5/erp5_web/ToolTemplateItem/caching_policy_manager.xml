@@ -22,6 +22,7 @@
                 <string>public-conversion-result</string>
                 <string>unauthenticated no language</string>
                 <string>unauthenticated</string>
+                <string>hateoas</string>
                 <string>authenticated</string>
               </tuple>
             </value>
@@ -147,7 +148,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>no-cache</string> </key>
+                    <key> <string>hateoas</string> </key>
                     <value>
                       <object>
                         <klass> <reference id="2.1"/> </klass>
@@ -166,6 +167,111 @@
                             </item>
                             <item>
                                 <key> <string>_last_modified</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_max_age_secs</string> </key>
+                                <value> <int>1800</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_mtime_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_must_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_cache</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_store</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_transform</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_policy_id</string> </key>
+                                <value> <string>hateoas</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>_post_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_pre_check</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_predicate</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_private</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_proxy_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_public</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_s_max_age_secs</string> </key>
+                                <value>
+                                  <none/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_if_error_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_stale_while_revalidate_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_vary</string> </key>
+                                <value> <string>Cookie, Authorization</string> </value>
+                            </item>
+                          </dictionary>
+                        </state>
+                      </object>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>no-cache</string> </key>
+                    <value>
+                      <object>
+                        <klass> <reference id="2.1"/> </klass>
+                        <tuple/>
+                        <state>
+                          <dictionary>
+                            <item>
+                                <key> <string>_enable_304s</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_etag_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_last_modified</string> </key>
                                 <value> <int>0</int> </value>
                             </item>
                             <item>
@@ -175,7 +281,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -213,7 +319,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -266,7 +372,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -280,7 +386,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -318,7 +424,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -371,7 +477,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -385,7 +491,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -423,7 +529,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -476,7 +582,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -490,7 +596,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -528,7 +634,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABQ=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -581,7 +687,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABI=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABU=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -595,7 +701,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABM=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABY=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -633,7 +739,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABQ=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABc=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -686,7 +792,7 @@
                             <item>
                                 <key> <string>_etag_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABU=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABg=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -700,7 +806,7 @@
                             <item>
                                 <key> <string>_mtime_func</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABY=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABk=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -738,7 +844,7 @@
                             <item>
                                 <key> <string>_predicate</string> </key>
                                 <value>
-                                  <persistent> <string encoding="base64">AAAAAAAAABc=</string> </persistent>
+                                  <persistent> <string encoding="base64">AAAAAAAAABo=</string> </persistent>
                                 </value>
                             </item>
                             <item>
@@ -842,7 +948,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>object/modified</string> </value>
+            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -855,7 +961,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: member is None and (lambda x: x is not None and x.getCachingPolicy() == \'no-cache\')(object.getWebSectionValue())</string> </value>
+            <value> <string>python: member is not None and (lambda x: x is not None and x.getCachingPolicy() =="hateoas")(object.getWebSectionValue()) and request.get("X-HATEOAS-CACHE")</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -881,7 +987,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: max(getattr(object, \'Base_getWebDocumentDrivenModificationDate\', object.modified)(), DateTime().earliestTime())</string> </value>
+            <value> <string>object/modified</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -894,7 +1000,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: member is None and (lambda x: x is not None and x.getCachingPolicy() == \'one-day-max-modification-date\')(object.getWebSectionValue())</string> </value>
+            <value> <string>python: member is None and (lambda x: x is not None and x.getCachingPolicy() == \'no-cache\')(object.getWebSectionValue())</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -920,7 +1026,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
+            <value> <string>python: max(getattr(object, \'Base_getWebDocumentDrivenModificationDate\', object.modified)(), DateTime().earliestTime())</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -933,7 +1039,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.Base_isPublicConvertionResult() and (lambda x: x is not None and not (len(x.getAvailableLanguageSet()) == 1 or x.getStaticLanguageSelection()))(object.getWebSectionValue())</string> </value>
+            <value> <string>python: member is None and (lambda x: x is not None and x.getCachingPolicy() == \'one-day-max-modification-date\')(object.getWebSectionValue())</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -972,7 +1078,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.Base_isPublicConvertionResult() and (lambda x: x is not None and (len(x.getAvailableLanguageSet()) == 1 or x.getStaticLanguageSelection()))(object.getWebSectionValue())</string> </value>
+            <value> <string>python: object.Base_isPublicConvertionResult() and (lambda x: x is not None and not (len(x.getAvailableLanguageSet()) == 1 or x.getStaticLanguageSelection()))(object.getWebSectionValue())</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -998,7 +1104,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'Base_getWebDocumentDrivenModificationDate\', object.modified)()</string> </value>
+            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1011,7 +1117,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: member is None and (lambda x: x is not None and not (len(x.getAvailableLanguageSet()) == 1 or x.getStaticLanguageSelection()))(object.getWebSectionValue())</string> </value>
+            <value> <string>python: object.Base_isPublicConvertionResult() and (lambda x: x is not None and (len(x.getAvailableLanguageSet()) == 1 or x.getStaticLanguageSelection()))(object.getWebSectionValue())</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -1043,6 +1149,45 @@
     </pickle>
   </record>
   <record id="23" aka="AAAAAAAAABc=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: member is None and (lambda x: x is not None and not (len(x.getAvailableLanguageSet()) == 1 or x.getStaticLanguageSelection()))(object.getWebSectionValue())</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="24" aka="AAAAAAAAABg=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="25" aka="AAAAAAAAABk=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: getattr(object, \'Base_getWebDocumentDrivenModificationDate\', object.modified)()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="26" aka="AAAAAAAAABo=">
     <pickle>
       <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
