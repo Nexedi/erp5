@@ -517,7 +517,7 @@
       .push(function (result_list) {\n
         var connection_gadget = result_list[0],\n
           submit_event = result_list[1];\n
-        gadget.props.my_server = submit_event.target[0].value;  \n
+        gadget.props.my_server = submit_event.target[0].value;\n
         gadget.props.my_jid = submit_event.target[1].value;\n
         gadget.props.my_password = submit_event.target[2].value;\n
         return connection_gadget.connect(\n
@@ -585,13 +585,13 @@
           });\n
         $(gadget.props.element).trigger("create");\n
         gadget.props.content_element.querySelector("input[type=submit]")\n
-                                 .disabled = false;\n
+                                    .disabled = false;\n
         gadget.props.content_element.querySelector("input[name=new_passwd]")\n
-                             .value = "";\n
+                                    .value = "";\n
         gadget.props.content_element.querySelector("input[name=repeat_passwd]")\n
-                             .value = "";\n
+                                    .value = "";\n
         gadget.props.content_element.querySelector("input[name=new_passwd]")\n
-                             .focus();\n
+                                    .focus();\n
         return promiseEventListener(\n
           gadget.props.content_element.querySelector(\'form.reset-password-form\'),\n
           \'submit\',\n
@@ -599,15 +599,15 @@
         );\n
       })\n
       .push(function (submit_event) {\n
-        var matched = false;\n
+        var validated = false;\n
         new_password = submit_event.target[1].value;\n
         gadget.props.content_element.querySelector("input[type=submit]")\n
-                                 .disabled = true;\n
-        matched = validatePassword(\n
+                                    .disabled = true;\n
+        validated = validatePassword(\n
           submit_event.target[1].value,\n
           submit_event.target[2].value\n
         );\n
-        if(matched) {\n
+        if(validated) {\n
           return connection_gadget.resetPassword(\n
             submit_event.target[0].value,\n
             submit_event.target[1].value\n
@@ -618,7 +618,7 @@
             }, function (error) {\n
               var message = "Password Reset Failed.";\n
               return renderResetPasswordPage(gadget, connection_gadget, message);\n
-          });\n
+            });\n
         } else {\n
           var message = "Password does not match.";\n
           return renderResetPasswordPage(gadget, connection_gadget, message);\n
@@ -674,10 +674,7 @@
     .allowPublicAcquisition("notifyXMPPConnected", function () {\n
       var gadget = this;\n
       gadget.props.connected = true;\n
-      return redirectToDefaultPage(gadget)\n
-        .push(function() {\n
-          return gadget.getDeclaredGadget(CONNECTION_GADGET_SCOPE);\n
-        })\n
+      return gadget.getDeclaredGadget(CONNECTION_GADGET_SCOPE)\n
         .push(function (connection_gadget) {\n
           return connection_gadget.sendPresence();\n
         })\n
@@ -692,8 +689,11 @@
           for (key in all_contacts) {\n
             initializeContact(gadget, all_contacts[key].jid);\n
           }\n
+        })\n
+        .push(function() {\n
+          return redirectToDefaultPage(gadget);\n
         }, function (error) {\n
-          var error_text = "Fetching Contact List Failed. Please login again.";\n
+          var error_text = "Contact List Update Failed. Please login again.";\n
           return renderConnectPage(gadget, error_text);\n
         });\n
     })\n
@@ -998,7 +998,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope1</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -1012,7 +1012,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.54834.23868.16998</string> </value>
+                <value> <string>944.63442.46785.34730</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1030,7 +1030,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438696276.38</float>
+                        <float>1439212776.16</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
