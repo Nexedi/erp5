@@ -65,6 +65,7 @@ if subscription_type == "unsubscription":\n
     resource = event.getResource(),\n
     free_subscription_request_type="unsubscription",\n
     causality_value=event,\n
+    default_email_coordinate_text=event.getDestinationValue().getDefaultEmailCoordinateText(),\n
     )\n
     \n
   free_subscription_list = portal.portal_catalog(portal_type="Free Subscription",\n
@@ -85,6 +86,7 @@ else:\n
     resource=resource,\n
     free_subscription_request_type="subscription",\n
     causality=causality,\n
+    default_email_coordinate_text=portal.restrictedTraverse(destination).getDefaultEmailCoordinateText(),\n
     )\n
 \n
 request.submit()\n
