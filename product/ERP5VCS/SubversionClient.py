@@ -158,9 +158,7 @@ try:
       if not self.client.trustSSLServer(trust_dict):
         self.client.setException(SubversionSSLTrustError(trust_dict))
         return False, 0, False
-      # XXX SSL server certificate failure bits are not defined in pysvn.
-      # 0x8 means that the CA is unknown.
-      return True, 0x8, False
+      return True, trust_dict['failures'], False
 
   class SSLServerPromptCallback(Callback):
     def __call__(self):
