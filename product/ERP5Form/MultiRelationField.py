@@ -35,11 +35,9 @@ from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.Message import translateString
 from AccessControl import ClassSecurityInfo
 from types import StringType
-from zLOG import LOG
 from Products.Formulator.DummyField import fields
 from Products.ERP5Type.Globals import get_request
-from AccessControl import Unauthorized
-from AccessControl import getSecurityManager
+import json
 
 # Max. number of catalog result
 MAX_SELECT = 30
@@ -369,7 +367,6 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     only erp5_autocompletion_ui bt5 to be installed
     """
     # XXX: Allow to specify more parameters to jquery-ui autocomplete widget?
-    import json
     return """
 <script type="text/javascript">
 $(document).ready(function() {
