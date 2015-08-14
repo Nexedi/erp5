@@ -109,7 +109,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              description=(
       "The method to call to set the relation. Required."),
                              default="",
-                             required=1)
+                             required=0)
 
   allow_creation = fields.CheckBoxField('allow_creation',
                              title='Allow Creation',
