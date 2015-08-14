@@ -1517,54 +1517,78 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
-  def getDefaultModuleId(self, portal_type, default=MARKER):
+  def getDefaultModuleId(self, portal_type, default=MARKER, only_visible=False):
     """
     Return default module id where a object with portal_type can
     be created.
     """
-    portal_object = self
-    module_id = None
-    # first try to find by naming convention
-    expected_module_id = portal_type.lower().replace(' ','_')
-    if portal_object._getOb(expected_module_id, None) is not None:
-      module_id = expected_module_id
+    try:
+      module = self.getDefaultModuleValue(portal_type, only_visible=False)
+    except ValueError:
+      if default is MARKER:
+        raise ValueError('Unable to find module for portal_type: ' + portal_type)
+      return default
     else:
-      expected_module_id += '_module'
-      if portal_object._getOb(expected_module_id, None) is not None:
-        module_id = expected_module_id
-      # then look for module where the type is allowed
-      else:
-        for expected_module_id in portal_object.objectIds(('ERP5 Folder',)):
-          module = portal_object._getOb(expected_module_id, None)
-          if module is not None:
-            if portal_type in self.portal_types[module.getPortalType()].\
-                                      allowed_content_types:
-              module_id = expected_module_id
-              break
-
-    if module_id is None:
-      if default is not MARKER:
-        return default
-      else:
-        # now we fail
-        LOG('ERP5Site, getDefaultModuleId', 0,
-            'Unable to find default module for portal_type: %s' % \
-             portal_type)
-        raise ValueError, 'Unable to find module for portal_type: %s' % \
-               portal_type
-
-    return module_id
+      return module.getId()
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getDefaultModule')
+                            'getDefaultModuleValue')
+  def getDefaultModuleValue(self, portal_type, default=MARKER, only_visible=False):
+    """
+    Return default module where a object with portal_type can be created
+    portal_type (str)
+      Module or top-level document portal type.
+    default (anything)
+      Value to return if no module can be found from given portal type.
+      If not given and module is not found, ValueError is raised.
+    only_visible (bool)
+      When true, check that given portal type is part of module's visible
+      content types, else return default.
+    """
+    # first try to find by naming convention
+    expected_module_id = portal_type.lower().replace(' ','_')
+    module = self._getOb(expected_module_id, None)
+    if module is not None:
+      return module
+    if only_visible:
+      allowed = lambda x: (
+        x is not None and
+        portal_type in x.getVisibleAllowedContentTypeList()
+      )
+    else:
+      allowed = lambda x: (
+        x is not None and
+        portal_type in (y.id for y in x.allowedContentTypes())
+      )
+    expected_module_id += '_module'
+    module = self._getOb(expected_module_id, None)
+    if allowed(module):
+      return module
+    # then look for module where the type is allowed
+    for expected_module_id in self.objectIds(('ERP5 Folder',)):
+      module = self._getOb(expected_module_id, None)
+      if allowed(module):
+        return module
+    if default is MARKER:
+      raise ValueError('Unable to find module for portal_type: ' + portal_type)
+    return default
+
+  # BBB
+  security.declareProtected(
+    Permissions.AccessContentsInformation,
+    'getDefaultModule',
+  )
   def getDefaultModule(self, portal_type, default=MARKER):
     """
-      Return default module where a object with portal_type can be created
+    For backward-compatibility.
+    Use getDefaultModuleValue (beware of slight "default" semantic change !).
     """
-    module_id = self.getDefaultModuleId(portal_type, default)
-    if module_id:
-      return getattr(self, module_id, None)
-    return None
+    try:
+      return self.getDefaultModuleValue(portal_type)
+    except ValueError:
+      if default is MARKER:
+        raise ValueError('Unable to find module for portal_type: ' + portal_type)
+      return self._getOb(default)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, **kw):
