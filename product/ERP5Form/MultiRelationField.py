@@ -791,7 +791,6 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                 menu_item_list.append(('', ''))
                 # If the length is 0, raise an error
                 if field.get_value('allow_creation') == 1 :
-                  user = getSecurityManager().getUser()
                   getDefaultModule = field.getDefaultModule
                   # XXX
                   for portal_type in portal_type_list:
