@@ -30,6 +30,7 @@
 #
 ##############################################################################
 
+import os
 import string
 import struct
 import subprocess
@@ -342,7 +343,10 @@ class Image(TextConvertableMixin, File, OFSImage):
     if self.getContentType() == "image/svg+xml":
       data = transformUrlToDataURI(data)
 
+    env = os.environ.copy()
+    env.update({'LC_NUMERIC':'C'})
     process = subprocess.Popen(parameter_list,
+                               env=env,
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE,

@@ -1,4 +1,5 @@
 from Products.PortalTransforms.interfaces import ITransform
+import os
 import subprocess
 from zope.interface import implements
 
@@ -26,7 +27,10 @@ class ImageMagickTransforms:
         if depth:
             parameter_list.extend(['-depth', '%s' % depth, '-type', 'Palette'])
         parameter_list.append('%s:-' % self.format)
+        env = os.environ.copy()
+        env.update({'LC_NUMERIC':'C'})
         p = subprocess.Popen(parameter_list,
+                             env=env,
                              stdin=subprocess.PIPE,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
