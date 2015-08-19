@@ -1523,7 +1523,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     be created.
     """
     try:
-      module = self.getDefaultModuleValue(portal_type, only_visible=False)
+      module = self.getDefaultModuleValue(portal_type, only_visible=only_visible)
     except ValueError:
       if default is MARKER:
         raise ValueError('Unable to find module for portal_type: ' + portal_type)
@@ -1556,9 +1556,10 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         portal_type in x.getVisibleAllowedContentTypeList()
       )
     else:
+      getTypeInfo = self.portal_types.getTypeInfo
       allowed = lambda x: (
         x is not None and
-        portal_type in (y.id for y in x.allowedContentTypes())
+        portal_type in getTypeInfo(x).getTypeAllowedContentTypeList()
       )
     expected_module_id += '_module'
     module = self._getOb(expected_module_id, None)
@@ -1583,12 +1584,9 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     For backward-compatibility.
     Use getDefaultModuleValue (beware of slight "default" semantic change !).
     """
-    try:
-      return self.getDefaultModuleValue(portal_type)
-    except ValueError:
-      if default is MARKER:
-        raise ValueError('Unable to find module for portal_type: ' + portal_type)
-      return self._getOb(default)
+    module_id = self.getDefaultModuleId(portal_type, default)
+    if module_id:
+      return getattr(self, module_id, None)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, **kw):

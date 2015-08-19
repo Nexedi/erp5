@@ -404,6 +404,11 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
         portal.getDefaultModule(portal_type, default=module_id)
       )
       self.assertIs(
+        None,
+        portal.getDefaultModule(portal_type, default=None)
+      )
+
+      self.assertIs(
         default,
         portal.getDefaultModuleValue(portal_type, default=default),
       )
