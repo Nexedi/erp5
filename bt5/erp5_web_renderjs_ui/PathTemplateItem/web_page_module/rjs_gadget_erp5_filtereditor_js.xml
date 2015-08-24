@@ -1,0 +1,658 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_erp5_filter_editor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rjs_gadget_erp5_filtereditor_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener, document */\n
+(function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
+  "use strict";\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // templates\n
+  /////////////////////////////////////////////////////////////////\n
+  // Precompile templates while loading the first gadget instance\n
+  var gadget_klass = rJS(window),\n
+    option_source = gadget_klass.__template_element\n
+                      .getElementById("option-template")\n
+                      .innerHTML,\n
+    option_template = Handlebars.compile(option_source),\n
+\n
+    selected_option_source = gadget_klass.__template_element\n
+                      .getElementById("selected-option-template")\n
+                      .innerHTML,\n
+    selected_option_template = Handlebars.compile(selected_option_source),\n
+\n
+    filter_source = gadget_klass.__template_element\n
+                         .getElementById("filter-template")\n
+                         .innerHTML,\n
+    filter_template = Handlebars.compile(filter_source);\n
+\n
+\n
+\n
+  function submitFilterQuery(gadget) {\n
+    var i,\n
+      operator,\n
+      query = "",\n
+      value,\n
+      select,\n
+      filterforms = gadget.props.element.querySelectorAll(".filterForm"),\n
+      and = gadget.props.element.querySelector(".and");\n
+    operator = and.checked ? " AND " : " OR ";\n
+    for (i = 0; i < filterforms.length; i += 1) {\n
+      if (filterforms[i][3].value !== "") {\n
+        if (i !== 0) {\n
+          query += operator;\n
+        }\n
+        value = filterforms[i][3].value;\n
+        select = filterforms[i][2][filterforms[i][2].selectedIndex].value;\n
+        if (select === "keyword" && filterforms[i][1][filterforms[i][1].selectedIndex].value !== "Searchable Text") {\n
+          value = "%" + value + "%";\n
+        } else {\n
+          value = select + value;\n
+        }\n
+        if (filterforms[i][1][filterforms[i][1].selectedIndex].value === "Searchable Text") {\n
+          query += value;\n
+        } else {\n
+          query += filterforms[i][1][filterforms[i][1].selectedIndex].value + ":" + value;\n
+        }\n
+      }\n
+    }\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return gadget.pleasePublishMyState({\n
+          "extended_search": query\n
+        });\n
+      })\n
+      .push(function (url) {\n
+        gadget.props.jelement.panel("toggle");\n
+        return gadget.pleaseRedirectMyHash(url);\n
+      });\n
+  }\n
+\n
+\n
+\n
+\n
+\n
+  function createFilterItem(gadget, select, input_value) {\n
+    var container = document.createElement("form"),\n
+      minus_button = document.createElement("input"),\n
+      select_reference = document.createElement("select"),\n
+      i,\n
+      tmp = "",\n
+      default_select = "Searchable Text",\n
+      select_options,\n
+      select_options_value,\n
+      options_map = {\n
+        "date_float": ["Equals To", "Greater Than", "Less Than", "Not Greater Than", "Not Less Than"],\n
+        "date_float_value": ["", ">", "<", "<=", ">="],\n
+        "searchable_text": ["Contain"],\n
+        "searchable_text_value": [""],\n
+        "other": ["Exact Match", "keyword"],\n
+        "other_value": ["", "keyword"]\n
+      },\n
+\n
+      text = document.createElement("input"),\n
+      select_operator = document.createElement("select");\n
+\n
+    container.appendChild(minus_button);\n
+    container.appendChild(select_reference);\n
+    container.appendChild(select_operator);\n
+    text.setAttribute("type", "text");\n
+    text.setAttribute("value", input_value || "");\n
+    minus_button.setAttribute("class", "minus_button");\n
+    minus_button.setAttribute("type", "button");\n
+    container.appendChild(text);\n
+    container.setAttribute("class", "filterForm");\n
+\n
+\n
+\n
+\n
+    function createSelectOperator(event) {\n
+      var html = "",\n
+        j;\n
+      if (event.target.value.indexOf(\'date\') !== -1 ||\n
+          event.target.value.indexOf(\'quantity\') !== -1 ||\n
+          event.target.value.indexOf(\'price\') !== -1) {\n
+        select_options = options_map.date_float;\n
+        select_options_value = options_map.date_float_value;\n
+      } else if (event.target.value === "Searchable Text") {\n
+        select_options = options_map.searchable_text;\n
+        select_options_value = options_map.searchable_text_value;\n
+      } else {\n
+        select_options = options_map.other;\n
+        select_options_value = options_map.other_value;\n
+      }\n
+\n
+      for (j = 0; j < select_options.length; j += 1) {\n
+        html += option_template({\n
+          value: select_options_value[j],\n
+          text: select_options[j]\n
+        });\n
+      }\n
+      select_operator.innerHTML = html;\n
+    }\n
+\n
+\n
+    tmp = "";\n
+    tmp += option_template({\n
+      value: "Searchable Text",\n
+      text: "Searchable Text"\n
+    });\n
+    for (i = 0; i < gadget.props.options.length; i += 1) {\n
+      if (select === gadget.props.options[i][0]) {\n
+        default_select = gadget.props.options[i][1];\n
+        tmp += selected_option_template({\n
+          value: gadget.props.options[i][0],\n
+          text: gadget.props.options[i][1]\n
+        });\n
+      } else {\n
+        tmp += option_template({\n
+          value: gadget.props.options[i][0],\n
+          text: gadget.props.options[i][1]\n
+        });\n
+      }\n
+    }\n
+\n
+    select_reference.innerHTML = tmp;\n
+\n
+    createSelectOperator({"target": {"value": default_select}});\n
+    loopEventListener(\n
+      minus_button,\n
+      "click",\n
+      false,\n
+      function () {\n
+        container.parentElement.removeChild(container);\n
+      }\n
+    );\n
+    loopEventListener(\n
+      select_reference,\n
+      "change",\n
+      false,\n
+      createSelectOperator\n
+    );\n
+    loopEventListener(\n
+      container,\n
+      "submit",\n
+      false,\n
+      function () {\n
+        return submitFilterQuery(gadget);\n
+      }\n
+    );\n
+    return container;\n
+  }\n
+\n
+\n
+  gadget_klass\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+\n
+    //////////////////////////////////////////////\n
+    // acquired method\n
+    //////////////////////////////////////////////\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    .declareAcquiredMethod("whoWantToDisplayThisFrontPage", "whoWantToDisplayThisFrontPage")\n
+    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
+    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+\n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+          g.props.jelement = $(element.querySelector("div"));\n
+        });\n
+    })\n
+\n
+    .ready(function (g) {\n
+      g.props.jelement.panel({\n
+        display: "overlay",\n
+        position: "right",\n
+        theme: "c"\n
+      });\n
+    })\n
+\n
+    .ready(function (g) {\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          var tmp = filter_template();\n
+          return g.translateHtml(tmp);\n
+        })\n
+        .push(function (translated_html) {\n
+          g.props.jelement.html(translated_html);\n
+          g.props.jelement.trigger("create");\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
+    .declareMethod(\'toggle\', function () {\n
+      var gadget = this,\n
+        options = gadget.props.options;\n
+      gadget.props.jelement.panel("toggle");\n
+      if (gadget.props.element.querySelector(".filterForm") === null || gadget.props.change) {\n
+        gadget.props.change = false;\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
+          })\n
+          .push(function (result) {\n
+            gadget.props.options = result.data._embedded._view.listbox.column_list;\n
+            return createFilterItem(gadget);\n
+          })\n
+          .push(function (item) {\n
+            var container = gadget.props.element.querySelector(".filter_item_container");\n
+            container.insertBefore(item, container.lastChild);\n
+          });\n
+      }\n
+    })\n
+\n
+    .declareMethod(\'render\', function (options) {\n
+      var container = this.props.element.querySelector(".filter_item_container"),\n
+        i,\n
+        gadget = this,\n
+        item,\n
+        select_list,\n
+        query;\n
+      while (container.firstChild !==  container.lastChild) {\n
+        container.removeChild(container.firstChild);\n
+      }\n
+      this.props.options = options;\n
+      if (options.filterEditor !== undefined || options.pg !== undefined) {\n
+\n
+        query = options.filterEditor ? options.filterEditor.extended_search : options.pg.fg.erp5_searchfield.extended_search;\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
+          })\n
+          .push(function (result) {\n
+            gadget.props.options = result.data._embedded._view.listbox.column_list;\n
+            var query_list = query.split(" AND ");\n
+\n
+            for (i = 0; i < query_list.length; i += 1) {\n
+              select_list = query_list[i].split(":");\n
+              if (select_list.length === 1) {\n
+                item = createFilterItem(gadget, "Searchable Text", query_list[i]);\n
+              } else {\n
+                item = createFilterItem(gadget, select_list[0], select_list[1]);\n
+              }\n
+              container.insertBefore(item, container.lastChild);\n
+            }\n
+          });\n
+      }\n
+\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared services\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareService(function () {\n
+      var gadget = this;\n
+      function closeFilterEditor() {\n
+        gadget.props.jelement.panel("toggle");\n
+      }\n
+      function plusItem() {\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return createFilterItem(gadget);\n
+          })\n
+          .push(function (item) {\n
+            var container = gadget.props.element.querySelector(".filter_item_container");\n
+            container.insertBefore(item, container.lastChild);\n
+          });\n
+      }\n
+\n
+      loopEventListener(\n
+        gadget.props.element.querySelector(".plus"),\n
+        "submit",\n
+        false,\n
+        plusItem\n
+      );\n
+      loopEventListener(\n
+        gadget.props.element.querySelector(".delete"),\n
+        "submit",\n
+        false,\n
+        closeFilterEditor\n
+      );\n
+      loopEventListener(\n
+        gadget.props.element.querySelector(".submit"),\n
+        "submit",\n
+        false,\n
+        function () {\n
+          return submitFilterQuery(gadget);\n
+        }\n
+      );\n
+    });\n
+\n
+}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gadget Erp5 Filter Editor JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1439819594.24</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>945.18296.32311.54766</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1440435953.88</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1439819567.59</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

@@ -158,6 +158,13 @@
           data-gadget-scope="panel"\n
           data-gadget-sandbox="public"></div>\n
 \n
+
+
+      <div data-gadget-url="gadget_erp5_filter_editor.html"\n
+          data-gadget-scope="filterEditor"\n
+          data-gadget-sandbox="public"></div>\n
+  \n
+
       <div role="main" class="ui-content gadget-content"></div>\n
     </div>\n
 \n
@@ -303,7 +310,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.54056.18010.56797</string> </value>
+                <value> <string>945.18332.59164.9181</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -321,8 +328,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442581000.11</float>
-                        <string>GMT</string>
+                        <float>1440437597.42</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
