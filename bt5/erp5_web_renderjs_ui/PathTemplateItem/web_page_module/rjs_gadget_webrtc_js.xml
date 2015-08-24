@@ -199,6 +199,12 @@
 \n
   }\n
 \n
+  function listenToChannelEvents(gadget) {\n
+    gadget.props.channel.onopen = deferDataChannelOnOpen.bind(gadget);\n
+    gadget.props.channel.onclose = deferDataChannelOnClose.bind(gadget);\n
+    gadget.props.channel.onmessage = deferDataChannelOnMessage.bind(gadget);\n
+    gadget.props.channel.onerror = deferErrorHandler.bind(gadget);\n
+  }\n
 \n
   rJS(window)\n
     .ready(function (g) {\n
@@ -211,6 +217,8 @@
                            \'notifyDataChannelOpened\')\n
     .declareAcquiredMethod(\'notifyDataChannelMessage\',\n
                            \'notifyDataChannelMessage\')\n
+    .declareAcquiredMethod(\'notifyDataChannelClosed\',\n
+                           \'notifyDataChannelClosed\')\n
 \n
     .declareService(function () {\n
       /////////////////////////\n
@@ -242,16 +250,17 @@
     .declareMethod(\'createConnection\', function (configuration, constraints) {\n
       this.props.connection = new RTCPeerConnection(configuration, constraints);\n
       this.props.connection.onicecandidate = deferOnIceCandidate.bind(this);\n
+      var context = this;\n
+      this.props.connection.ondatachannel = function (evt) {\n
+        context.props.channel = evt.channel;\n
+        listenToChannelEvents(context);\n
+      };\n
     })\n
 \n
     .declareMethod(\'createDataChannel\', function (title, options) {\n
       // XXX Improve to support multiple data channel\n
       this.props.channel = this.props.connection.createDataChannel(title, options);\n
-\n
-      this.props.channel.onopen = deferDataChannelOnOpen.bind(this);\n
-      this.props.channel.onclose = deferDataChannelOnClose.bind(this);\n
-      this.props.channel.onmessage = deferDataChannelOnMessage.bind(this);\n
-      this.props.channel.onerror = deferErrorHandler.bind(this);\n
+      listenToChannelEvents(this);\n
       // console.log("Channel type: " + this.props.channel.binarytype);\n
     })\n
 \n
@@ -447,7 +456,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.9471.8579.37853</string> </value>
+                <value> <string>945.18239.14794.40840</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -465,7 +474,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439905903.84</float>
+                        <float>1440432050.86</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -10,8 +10,11 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -24,7 +27,6 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -44,7 +46,6 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -52,8 +53,11 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -106,8 +110,7 @@
         iceServers: []\n
       },\n
       {\n
-        \'optional\': [{DtlsSrtpKeyAgreement: true},\n
-                     {RtpDataChannels: true}]\n
+        \'optional\': [{DtlsSrtpKeyAgreement: true}]\n
       }\n
     ],\n
     data_channel_options = {reliable: true},\n
@@ -134,10 +137,6 @@
     })\n
 \n
     .allowPublicAcquisition("notifyDataChannelOpened", function () {\n
-      this.props.channel_defer.resolve();\n
-    })\n
-\n
-    .allowPublicAcquisition("notifyDataChannelMessage", function () {\n
       this.props.channel_defer.resolve();\n
     })\n
 \n
@@ -171,9 +170,6 @@
       var gadget = this,\n
         webrtc = this.props.webrtc;\n
       return webrtc.createConnection.apply(webrtc, connection_options)\n
-        .push(function () {\n
-          return webrtc.createDataChannel(title, data_channel_options);\n
-        })\n
         .push(function () {\n
           return webrtc.setRemoteDescription(description);\n
         })\n
@@ -265,9 +261,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -293,7 +287,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439906478.8</float>
+                        <float>1440161500.96</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -302,7 +296,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>draft</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -338,7 +332,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.9516.40380.20821</string> </value>
+                <value> <string>945.18037.6464.41250</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -356,7 +350,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439908875.61</float>
+                        <float>1440430718.64</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
