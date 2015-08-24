@@ -73,6 +73,7 @@ bt5_installation_list = (\'erp5_full_text_mroonga_catalog\',\n
                          \'erp5_ace_editor\',\n
                          \'erp5_forge\',\n
                          \'erp5_development_wizard\',\n
+                         \'erp5_dhtml_style\',\n
                          # install later UI bt5s as broken now\n
                          #\'erp5_wendelin_renderjs_ui\',\n
                          \'erp5_hal_json_style\',\n
