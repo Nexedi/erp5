@@ -53,8 +53,8 @@
             <value> <string>request = container.REQUEST\n
 \n
 # XXX this is a restricted environment available reimplementation of ListboxRenderer.getEditableField\n
-editable_columns = set(context.get_value(\'columns\', REQUEST=request)\n
-  + context.get_value(\'all_columns\', REQUEST=request))\n
+editable_columns = set(tuple(context.get_value(\'columns\', REQUEST=request))\n
+  + tuple(context.get_value(\'all_columns\', REQUEST=request)))\n
 \n
 editable_fields = {}\n
 \n
