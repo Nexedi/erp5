@@ -99,7 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*jslint indent: 2*/\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent: 2*/\n
 /*global rJS, window, WebSocket, RSVP*/\n
 (function (rJS, window, WebSocket, RSVP) {\n
   "use strict";\n
@@ -162,9 +164,13 @@
   }\n
 \n
   function deferErrorHandler(error) {\n
-    enqueueDefer(this, function () {\n
-      throw error;\n
-    });\n
+    if ((!this.props.socket_defer.isFulfilled) && (!this.props.socket_defer.isRejected)) {\n
+      this.props.socket_defer.reject(error);\n
+    } else {\n
+      enqueueDefer(this, function () {\n
+        throw error;\n
+      });\n
+    }\n
   }\n
 \n
   function deferServerConnection(gadget) {\n
@@ -231,7 +237,9 @@
     });\n
 \n
 }(rJS, window, WebSocket, RSVP));\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -366,7 +374,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.9453.27218.15667</string> </value>
+                <value> <string>945.18210.63502.24746</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -384,7 +392,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439904827.73</float>
+                        <float>1440430322.74</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
