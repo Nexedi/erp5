@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>solver_process = state_change[\'object\'].getParentValue()\n
+            <value> <string>solver_process = state_change[\'object\'].aq_parent\n
 if solver_process.getValidationState() == \'draft\':\n
   solver_process.startSolving()\n
 </string> </value>
@@ -58,6 +58,14 @@ if solver_process.getValidationState() == \'draft\':\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Auditor</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
