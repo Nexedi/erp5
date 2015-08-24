@@ -769,7 +769,52 @@ if (typeof document.contains !== \'function\') {\n
  }\n
 }\n
 ;/*! RenderJs */\n
+/*global console*/\n
 /*jslint nomen: true*/\n
+function loopEventListener(target, type, useCapture, callback) {\n
+  "use strict";\n
+  //////////////////////////\n
+  // Infinite event listener (promise is never resolved)\n
+  // eventListener is removed when promise is cancelled/rejected\n
+  //////////////////////////\n
+  var handle_event_callback,\n
+    callback_promise;\n
+\n
+  function cancelResolver() {\n
+    if ((callback_promise !== undefined) &&\n
+        (typeof callback_promise.cancel === "function")) {\n
+      callback_promise.cancel();\n
+    }\n
+  }\n
+\n
+  function canceller() {\n
+    if (handle_event_callback !== undefined) {\n
+      target.removeEventListener(type, handle_event_callback, useCapture);\n
+    }\n
+    cancelResolver();\n
+  }\n
+  function itsANonResolvableTrap(resolve, reject) {\n
+\n
+    handle_event_callback = function (evt) {\n
+      evt.stopPropagation();\n
+      evt.preventDefault();\n
+      cancelResolver();\n
+      callback_promise = new RSVP.Queue()\n
+        .push(function () {\n
+          return callback(evt);\n
+        })\n
+        .push(undefined, function (error) {\n
+          if (!(error instanceof RSVP.CancellationError)) {\n
+            canceller();\n
+            reject(error);\n
+          }\n
+        });\n
+    };\n
+\n
+    target.addEventListener(type, handle_event_callback, useCapture);\n
+  }\n
+  return new RSVP.Promise(itsANonResolvableTrap, canceller);\n
+}\n
 \n
 /*\n
  * renderJs - Generic Gadget library renderer.\n
@@ -844,6 +889,71 @@ if (typeof document.contains !== \'function\') {\n
   /////////////////////////////////////////////////////////////////\n
   // Helper functions\n
   /////////////////////////////////////////////////////////////////\n
+  function listenHashChange(gadget) {\n
+\n
+    function extractHashAndDispatch(evt) {\n
+      var hash = (evt.newURL || window.location.toString()).split(\'#\')[1],\n
+        subhashes,\n
+        subhash,\n
+        keyvalue,\n
+        index,\n
+        options = {};\n
+      if (hash === undefined) {\n
+        hash = "";\n
+      } else {\n
+        hash = hash.split(\'?\')[0];\n
+      }\n
+\n
+      function optionalize(key, value, dict) {\n
+        var key_list = key.split("."),\n
+          kk,\n
+          i;\n
+        for (i = 0; i < key_list.length; i += 1) {\n
+          kk = key_list[i];\n
+          if (i === key_list.length - 1) {\n
+            dict[kk] = value;\n
+          } else {\n
+            if (!dict.hasOwnProperty(kk)) {\n
+              dict[kk] = {};\n
+            }\n
+            dict = dict[kk];\n
+          }\n
+        }\n
+      }\n
+\n
+      subhashes = hash.split(\'&\');\n
+      for (index in subhashes) {\n
+        if (subhashes.hasOwnProperty(index)) {\n
+          subhash = subhashes[index];\n
+          if (subhash !== \'\') {\n
+            keyvalue = subhash.split(\'=\');\n
+            if (keyvalue.length === 2) {\n
+\n
+              optionalize(decodeURIComponent(keyvalue[0]),\n
+                decodeURIComponent(keyvalue[1]),\n
+                options);\n
+\n
+            }\n
+          }\n
+        }\n
+      }\n
+\n
+      if (gadget.render !== undefined) {\n
+        return gadget.render(options);\n
+      }\n
+    }\n
+\n
+    var result = loopEventListener(window, \'hashchange\', false,\n
+                                   extractHashAndDispatch),\n
+      event = document.createEvent("Event");\n
+\n
+    event.initEvent(\'hashchange\', true, true);\n
+    event.newURL = window.location.toString();\n
+    window.dispatchEvent(event);\n
+    return result;\n
+  }\n
+\n
+\n
   function removeHash(url) {\n
     var index = url.indexOf(\'#\');\n
     if (index > 0) {\n
@@ -1173,6 +1283,8 @@ if (typeof document.contains !== \'function\') {\n
     };\n
   RenderJSGadget.declareAcquiredMethod("aq_reportServiceError",\n
                                        "reportServiceError");\n
+  RenderJSGadget.declareAcquiredMethod("aq_pleasePublishMyState",\n
+                                       "pleasePublishMyState");\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // RenderJSGadget.allowPublicAcquisition\n
@@ -1191,6 +1303,22 @@ if (typeof document.contains !== \'function\') {\n
       return acquire.apply(parent_gadget, [gadget_instance, method_name,\n
                                            argument_list]);\n
     };\n
+  }\n
+\n
+  function pleasePublishMyState(param_list, child_gadget_scope) {\n
+    var new_param = {},\n
+      key;\n
+    for (key in this.state_parameter_dict) {\n
+      if (this.state_parameter_dict.hasOwnProperty(key)) {\n
+        new_param[key] = this.state_parameter_dict[key];\n
+      }\n
+    }\n
+    if (child_gadget_scope === undefined) {\n
+      throw new Error("gadget scope is mandatory");\n
+    }\n
+    new_param[child_gadget_scope] = param_list[0];\n
+    param_list = [new_param];\n
+    return this.aq_pleasePublishMyState.apply(this, param_list);\n
   }\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -1660,6 +1788,8 @@ if (typeof document.contains !== \'function\') {\n
         tmp_constructor.prototype.constructor = tmp_constructor;\n
         tmp_constructor.prototype.__path = url;\n
         tmp_constructor.prototype.__acquired_method_dict = {};\n
+        tmp_constructor.allowPublicAcquisition("pleasePublishMyState",\n
+                                               pleasePublishMyState);\n
         // https://developer.mozilla.org/en-US/docs/HTML_in_XMLHttpRequest\n
         // https://developer.mozilla.org/en-US/docs/Web/API/DOMParser\n
         // https://developer.mozilla.org/en-US/docs/Code_snippets/HTML_to_DOM\n
@@ -1770,6 +1900,39 @@ if (typeof document.contains !== \'function\') {\n
   // Bootstrap process. Register the self gadget.\n
   ///////////////////////////////////////////////////\n
 \n
+  function mergeSubDict(dict) {\n
+    var subkey,\n
+      subkey2,\n
+      subresult2,\n
+      value,\n
+      result = {};\n
+    for (subkey in dict) {\n
+      if (dict.hasOwnProperty(subkey)) {\n
+        value = dict[subkey];\n
+        if (value instanceof Object) {\n
+          subresult2 = mergeSubDict(value);\n
+          for (subkey2 in subresult2) {\n
+            if (subresult2.hasOwnProperty(subkey2)) {\n
+              // XXX key should not have an . inside\n
+              if (result.hasOwnProperty(subkey + "." + subkey2)) {\n
+                throw new Error("Key " + subkey + "." +\n
+                                subkey2 + " already present");\n
+              }\n
+              result[subkey + "." + subkey2] = subresult2[subkey2];\n
+            }\n
+          }\n
+        } else {\n
+          if (result.hasOwnProperty(subkey)) {\n
+            throw new Error("Key " + subkey + " already present");\n
+          }\n
+          result[subkey] = value;\n
+        }\n
+      }\n
+    }\n
+    return result;\n
+\n
+  }\n
+\n
   function bootstrap() {\n
     var url = removeHash(window.location.href),\n
       tmp_constructor,\n
@@ -1796,6 +1959,26 @@ if (typeof document.contains !== \'function\') {\n
         },\n
         reportServiceError: function (param_list) {\n
           letsCrash(param_list[0]);\n
+        },\n
+        pleaseRedirectMyHash: function (param_list) {\n
+          window.location.replace(param_list[0]);\n
+        },\n
+        pleasePublishMyState: function (param_list) {\n
+          var key,\n
+            first = true,\n
+            hash = "#";\n
+          param_list[0] = mergeSubDict(param_list[0]);\n
+          for (key in param_list[0]) {\n
+            if (param_list[0].hasOwnProperty(key)) {\n
+              if (!first) {\n
+                hash += "&";\n
+              }\n
+              hash += encodeURIComponent(key) + "=" +\n
+                encodeURIComponent(param_list[0][key]);\n
+              first = false;\n
+            }\n
+          }\n
+          return hash;\n
         }\n
       };\n
       // Stop acquisition on the last acquisition gadget\n
@@ -1836,6 +2019,10 @@ if (typeof document.contains !== \'function\') {\n
 \n
         // Create the root gadget instance and put it in the loading stack\n
         root_gadget = new gadget_model_dict[url]();\n
+\n
+        tmp_constructor.declareService(function () {\n
+          return listenHashChange(this);\n
+        });\n
 \n
         setAqParent(root_gadget, last_acquisition_gadget);\n
 \n
@@ -1923,6 +2110,8 @@ if (typeof document.contains !== \'function\') {\n
       }\n
 \n
       tmp_constructor.prototype.__acquired_method_dict = {};\n
+      tmp_constructor.allowPublicAcquisition("pleasePublishMyState",\n
+                                             pleasePublishMyState);\n
       gadget_loading_klass = tmp_constructor;\n
 \n
       function init() {\n
@@ -2075,6 +2264,9 @@ if (typeof document.contains !== \'function\') {\n
                   //we consider current gadget is parent gadget\n
                   //redifine last acquisition gadget\n
                   iframe_top_gadget = true;\n
+                  tmp_constructor.declareService(function () {\n
+                    return listenHashChange(this);\n
+                  });\n
                   setAqParent(root_gadget, last_acquisition_gadget);\n
                 } else {\n
                   throw error;\n
@@ -2261,7 +2453,7 @@ if (typeof document.contains !== \'function\') {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18151.43412.19831</string> </value>
+                <value> <string>945.18175.15872.23910</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -2279,7 +2471,7 @@ if (typeof document.contains !== \'function\') {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440428114.52</float>
+                        <float>1440435854.75</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
