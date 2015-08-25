@@ -138,21 +138,21 @@
       and = gadget.props.element.querySelector(".and");\n
     operator = and.checked ? " AND " : " OR ";\n
     for (i = 0; i < filterforms.length; i += 1) {\n
-      if (filterforms[i][3].value !== "") {\n
+      if (filterforms[i][2].value !== "") {\n
         if (i !== 0) {\n
           query += operator;\n
         }\n
-        value = filterforms[i][3].value;\n
-        select = filterforms[i][2][filterforms[i][2].selectedIndex].value;\n
-        if (select === "keyword" && filterforms[i][1][filterforms[i][1].selectedIndex].value !== "Searchable Text") {\n
+        value = filterforms[i][2].value;\n
+        select = filterforms[i][1][filterforms[i][1].selectedIndex].value;\n
+        if (select === "keyword" && filterforms[i][0][filterforms[i][0].selectedIndex].value !== "Searchable Text") {\n
           value = "%" + value + "%";\n
         } else {\n
-          value = select + value;\n
+          value = select + " " + value;\n
         }\n
-        if (filterforms[i][1][filterforms[i][1].selectedIndex].value === "Searchable Text") {\n
+        if (filterforms[i][0][filterforms[i][0].selectedIndex].value === "Searchable Text") {\n
           query += value;\n
         } else {\n
-          query += filterforms[i][1][filterforms[i][1].selectedIndex].value + ":" + value;\n
+          query += filterforms[i][0][filterforms[i][0].selectedIndex].value + ":" + value;\n
         }\n
       }\n
     }\n
@@ -173,7 +173,8 @@
 \n
 \n
   function createFilterItem(gadget, select, input_value) {\n
-    var container = document.createElement("form"),\n
+    var div = document.createElement("div"),\n
+      container = document.createElement("form"),\n
       minus_button = document.createElement("input"),\n
       select_reference = document.createElement("select"),\n
       i,\n
@@ -181,6 +182,7 @@
       default_select = "Searchable Text",\n
       select_options,\n
       select_options_value,\n
+      value_list = [" ", " "],\n
       options_map = {\n
         "date_float": ["Equals To", "Greater Than", "Less Than", "Not Greater Than", "Not Less Than"],\n
         "date_float_value": ["", ">", "<", "<=", ">="],\n
@@ -192,23 +194,26 @@
 \n
       text = document.createElement("input"),\n
       select_operator = document.createElement("select");\n
+    minus_button.setAttribute("type", "button");\n
 \n
-    container.appendChild(minus_button);\n
     container.appendChild(select_reference);\n
     container.appendChild(select_operator);\n
-    text.setAttribute("type", "text");\n
-    text.setAttribute("value", input_value || "");\n
-    minus_button.setAttribute("class", "minus_button");\n
-    minus_button.setAttribute("type", "button");\n
     container.appendChild(text);\n
+    container.appendChild(minus_button);\n
     container.setAttribute("class", "filterForm");\n
-\n
-\n
-\n
-\n
+    div.appendChild(container);\n
     function createSelectOperator(event) {\n
       var html = "",\n
         j;\n
+      if (input_value !== undefined) {\n
+        value_list = input_value.split(" ");\n
+      }\n
+      if (event.target.value.indexOf(\'date\') !== -1) {\n
+        text.setAttribute("type", "date");\n
+      } else {\n
+        text.setAttribute("type", "text");\n
+      }\n
+      text.setAttribute("value", value_list[value_list.length - 1] || "");\n
       if (event.target.value.indexOf(\'date\') !== -1 ||\n
           event.target.value.indexOf(\'quantity\') !== -1 ||\n
           event.target.value.indexOf(\'price\') !== -1) {\n
@@ -223,12 +228,21 @@
       }\n
 \n
       for (j = 0; j < select_options.length; j += 1) {\n
-        html += option_template({\n
-          value: select_options_value[j],\n
-          text: select_options[j]\n
-        });\n
+        if (value_list[0] === select_options_value[j]) {\n
+          html += selected_option_template({\n
+            value: select_options_value[j],\n
+            text: select_options[j]\n
+          });\n
+        } else {\n
+          html += option_template({\n
+            value: select_options_value[j],\n
+            text: select_options[j]\n
+          });\n
+        }\n
       }\n
       select_operator.innerHTML = html;\n
+      $(select_operator).selectmenu();\n
+      $(select_operator).selectmenu(\'refresh\');\n
     }\n
 \n
 \n
@@ -239,7 +253,7 @@
     });\n
     for (i = 0; i < gadget.props.options.length; i += 1) {\n
       if (select === gadget.props.options[i][0]) {\n
-        default_select = gadget.props.options[i][1];\n
+        default_select = gadget.props.options[i][0];\n
         tmp += selected_option_template({\n
           value: gadget.props.options[i][0],\n
           text: gadget.props.options[i][1]\n
@@ -253,8 +267,9 @@
     }\n
 \n
     select_reference.innerHTML = tmp;\n
-\n
     createSelectOperator({"target": {"value": default_select}});\n
+\n
+    $(select_reference).selectmenu();\n
     loopEventListener(\n
       minus_button,\n
       "click",\n
@@ -277,7 +292,7 @@
         return submitFilterQuery(gadget);\n
       }\n
     );\n
-    return container;\n
+    return div;\n
   }\n
 \n
 \n
@@ -342,12 +357,9 @@
             return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
           })\n
           .push(function (result) {\n
-            gadget.props.options = result.data._embedded._view.listbox.column_list;\n
-            return createFilterItem(gadget);\n
-          })\n
-          .push(function (item) {\n
             var container = gadget.props.element.querySelector(".filter_item_container");\n
-            container.insertBefore(item, container.lastChild);\n
+            gadget.props.options = result.data._embedded._view.listbox.column_list;\n
+            container.insertBefore(createFilterItem(gadget), container.lastChild);\n
           });\n
       }\n
     })\n
@@ -357,6 +369,8 @@
         i,\n
         gadget = this,\n
         item,\n
+        and = gadget.props.element.querySelector(".and"),\n
+        or = gadget.props.element.querySelector(".or"),\n
         select_list,\n
         query;\n
       while (container.firstChild !==  container.lastChild) {\n
@@ -372,7 +386,15 @@
           })\n
           .push(function (result) {\n
             gadget.props.options = result.data._embedded._view.listbox.column_list;\n
-            var query_list = query.split(" AND ");\n
+            var query_list = query.split(" OR ");\n
+            if (query_list.length === 1) {\n
+              query_list = query.split(" AND ");\n
+              and.checked = true;\n
+              and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
+            } else {\n
+              or.checked = true;\n
+              or.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
+            }\n
 \n
             for (i = 0; i < query_list.length; i += 1) {\n
               select_list = query_list[i].split(":");\n
@@ -566,7 +588,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18296.32311.54766</string> </value>
+                <value> <string>945.19828.51016.30276</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -584,7 +606,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440435953.88</float>
+                        <float>1440527609.31</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

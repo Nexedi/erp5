@@ -138,37 +138,70 @@
     </script>\n
     \n
     <script id="filter-template" type="text/x-handlebars-template">\n
-        <div class="header">\n
-           <form class="delete">\n
-              <button type="submit" class="close ui-btn-c ui-override-theme ui-btn ui-icon-delete ui-btn-icon-notext"></button>\n
-           </form>\n
-           <h1 data-i18n="Filter Editor">Filter Editor</h1>\n
-           \n
-           <form class="submit">\n
-             <button type="submit" class="submit ui-btn-c ui-override-theme ui-btn ui-icon-reorder ui-btn-icon-notext"></button>\n
-           </form>\n
-        </div>\n
+      <div class="ui-panel-inner">\n
       \n
-      <div class="container">\n
-        <h1 data-i18n="Custom Filter">Custom Filter</h1>\n
-            \n
-        <fieldset data-role="ui_controlgroup">\n
-            <label for="radio-a">All criterions(AND)</label>\n
-            <input type="radio" name="radio_filter" id="radio_a" class="and" checked></input>\n
-            <label for="radio-b">At least one(OR)</label>\n
-            <input type="radio" name="radio_filter" id="radio_b" class="or"></input>\n
-        </fieldset>\n
-        <div class="filter_item_container">\n
-        <form class="plus">\n
-          <button type="submit" class="plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-notext"></button>\n
+        <div data-role="header" role="banner" class="ui-header ui-bar-inherit">\n
+          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
+           <div class="ui-controlgroup-controls">\n
+            <form class="delete">\n
+              <button data-rel="close" type="submit" class="close responsive ui-first-child ui-btn ui-btn-icon-left ui-icon-times">Close</button>\n
+            </form>\n
+           </div>\n
+          </div>\n
+         \n
+         <h1 class="ui-title" role="heading" aria-level="1">Filter Editor</h1>\n
+         <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
+           <div class="ui-controlgroup-controls">\n
+            <form class="submit">\n
+             <button data-rel="save" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-right ui-icon-check">Save</button>\n
+           </form>\n
+           </div>\n
+         </div>\n
         </div>\n
-        </form>\n
-      </div>\n
-      \n
-      <div class="predefined_filter">\n
-        <h1 data-i18n="Predefined Filter">Predefined Filter</h1>\n
-      </div>\n
 \n
+    \n
+         <section class="ui-content-header-plain">\n
+           <h3 class="ui-content-title ui-body-c">\n
+            <span class="ui-icon ui-icon-custom">&nbsp;</span>\n
+              Custom Filter\n
+            </h3>\n
+         </section>\n
+         <section class="ui-body-c ui-content-section">\n
+          <fieldset data-role="controlgroup" class="ui-controlgroup ui-corner-all">\n
+           \n
+                <div class="ui-radio">\n
+                  <label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-on">All criterions(AND)</label>\n
+                  <input type="radio" value="Off" name="heard_about" id="heard_about_a" class="and checkboxradio" data-cacheval="true" data-enhanced="true">\n
+                </div>\n
+                \n
+                <div class="ui-radio">\n
+                  <label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-off">At lease one(OR)</label>\n
+                  <input type="radio" value="Off" name="heard_about" id="heard_about_b" class="or checkboxradio" data-cacheval="false" data-enhanced="true">\n
+                </div>\n
+\n
+           </fieldset>\n
+         \n
+\n
+           <div class="filter_item_container">\n
+           </div>\n
+           <form class="plus">\n
+             <button type="submit" class="plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-notext"></button>\n
+           </form>\n
+         </section>\n
+      \n
+      \n
+      \n
+      <section class="ui-content-header-plain">\n
+           <h3 class="ui-content-title ui-body-c">\n
+            <span class="ui-icon ui-icon-custom">&nbsp;</span>\n
+              Predefined Filter\n
+            </h3>\n
+         </section>\n
+      <section class="ui-body-c ui-content-section">\n
+        <div class="predefined_filter">\n
+        </div>\n
+      </section>\n
+     </div>\n
     </script>\n
     \n
   </head>\n
@@ -312,7 +345,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.13851.42970.21913</string> </value>
+                <value> <string>945.19755.27628.12919</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -330,7 +363,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440425765.38</float>
+                        <float>1440523041.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
