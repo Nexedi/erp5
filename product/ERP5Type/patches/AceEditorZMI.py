@@ -24,8 +24,8 @@ def manage_page_footer(self):
 
   # REQUEST['PUBLISHED'] can be the form in the acquisition context of the
   # document, or a method bound to the document (after a POST it is a bound method)
-  published = self.REQUEST['PUBLISHED']
-  document = getattr(published, 'im_self', None) # bound mehtod
+  published = self.REQUEST.get('PUBLISHED')
+  document = getattr(published, 'im_self', None) # bound method
   if document is None:
     document = aq_parent(published)
 
