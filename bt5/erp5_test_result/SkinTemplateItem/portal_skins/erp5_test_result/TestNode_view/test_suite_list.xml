@@ -221,7 +221,11 @@
                     <key> <string>default</string> </key>
                     <value>
                       <list>
-                        <string>Bonjour</string>
+                        <string encoding="cdata"><![CDATA[
+
+<< Cannot get test suites >>
+
+]]></string>
                       </list>
                     </value>
                 </item>
