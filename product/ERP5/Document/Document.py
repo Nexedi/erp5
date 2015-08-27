@@ -48,7 +48,6 @@ from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.ERP5.mixin.downloadable import DownloadableMixin
 from Products.ERP5.mixin.document import DocumentMixin
-from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
 from Products.ERP5.mixin.crawlable import CrawlableMixin
 from Products.ERP5.mixin.discoverable import DiscoverableMixin
 from Products.ERP5.mixin.url import UrlMixin
@@ -79,6 +78,8 @@ class DocumentProxyError(Exception):pass
 
 class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
+
+from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
 
 class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
                CachedConvertableMixin, CrawlableMixin, TextConvertableMixin,

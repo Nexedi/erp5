@@ -42,13 +42,11 @@ from warnings import warn
 import sys
 from base64 import decodestring
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
-
+from Products.ERP5.Document.Document import ConversionError, NotConvertedError
 
 # XXX: these duplicate ones in ERP5.Document
 _MARKER = []
 EMBEDDED_FORMAT = '_embedded'
-class ConversionError(Exception):pass
-class NotConvertedError(Exception):pass
 
 class BaseExtensibleTraversableMixin(ExtensibleTraversableMixIn):
   """
