@@ -53,7 +53,6 @@
             <value> <string>from Products.ERP5Type.Utils import UpperCase\n
 from ZODB.POSException import ConflictError\n
 from zExceptions import Unauthorized\n
-from Products.ERP5.Document.Document import NotConvertedError\n
 \n
 method = context.z_catalog_fulltext_list\n
 property_list = method.arguments_src.split()\n
@@ -78,8 +77,6 @@ for path in path_list:\n
   except ConflictError:\n
     raise\n
   except Unauthorized: # should happen in tricky testERP5Catalog tests only \n
-    continue\n
-  except NotConvertedError:\n
     continue\n
   except Exception, e:\n
     exception = e\n
