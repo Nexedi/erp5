@@ -165,6 +165,10 @@
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>Portal Type</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -199,6 +203,10 @@
                         <tuple>
                           <string>int_index</string>
                           <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>Portal Type</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
