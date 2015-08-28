@@ -134,7 +134,10 @@
       query = "",\n
       value,\n
       select,\n
+      last_uid,\n
+      tmp,\n
       filterforms = gadget.props.element.querySelectorAll(".filterForm"),\n
+      domain_tree_map = gadget.props.domain_tree_map,\n
       and = gadget.props.element.querySelector(".and");\n
     operator = and.checked ? " AND " : " OR ";\n
     for (i = 0; i < filterforms.length; i += 1) {\n
@@ -156,6 +159,27 @@
         }\n
       }\n
     }\n
+    \n
+   \n
+    \n
+    if (gadget.props.tree_path[0] !== "--") {\n
+      if (query !== "") {\n
+        query += operator;\n
+      }\n
+      query += "category.base_category_uid: " + domain_tree_map[gadget.props.tree_path[0]].uid;\n
+      domain_tree_map = domain_tree_map[gadget.props.tree_path[0]].sub_categories;\n
+      for (i = 1; i < gadget.props.tree_path.length - 1; i += 1) {\n
+        last_uid = domain_tree_map[gadget.props.tree_path[i]].uid;\n
+        domain_tree_map = domain_tree_map[gadget.props.tree_path[i]].sub_categories;\n
+      }\n
+      if (gadget.props.tree_path[i] !== "--") {\n
+        query += operator;\n
+        query += "category.category_uid: " + domain_tree_map[gadget.props.tree_path[i]].uid;\n
+      } else if (i !== 1) {\n
+        query += operator;\n
+        query += "category.category_uid: " + last_uid;\n
+      }\n
+    }\n
     return new RSVP.Queue()\n
       .push(function () {\n
         return gadget.pleasePublishMyState({\n
@@ -172,7 +196,6 @@
   function createDomainTree(gadget, options_tree_map) {\n
     var select = document.createElement("select"),\n
       div_container = document.createElement("div"),\n
-      first,\n
       domain_tree_map = gadget.props.domain_tree_map,\n
       domain_tree_container = gadget.props.element.querySelector(".domain_tree_container"),\n
       tmp = "",\n
@@ -212,16 +235,13 @@
     });\n
     for (key in domain_tree_map) {\n
       if (domain_tree_map.hasOwnProperty(key)) {\n
-        if (first === undefined) {\n
-          first = key;\n
-        }\n
         tmp += option_template({\n
           value: key,\n
           text: domain_tree_map[key].title\n
         });\n
       }\n
     }\n
-    gadget.props.tree_path.push(first);\n
+    gadget.props.tree_path.push("--");\n
     select.setAttribute("class", "domain_tree_select");\n
     select.innerHTML = tmp;\n
     div_container.setAttribute("class", "domain_tree");\n
@@ -249,7 +269,7 @@
       default_select = "Searchable Text",\n
       select_options,\n
       select_options_value,\n
-      value_list = [" ", " "],\n
+      value_list = ["", ""],\n
       options_map = {\n
         "date_float": ["Equals To", "Greater Than", "Less Than", "Not Greater Than", "Not Less Than"],\n
         "date_float_value": ["", ">", "<", "<=", ">="],\n
@@ -476,12 +496,17 @@
 \n
             for (i = 0; i < query_list.length; i += 1) {\n
               select_list = query_list[i].split(":");\n
-              if (select_list.length === 1) {\n
-                item = createFilterItem(gadget, "Searchable Text", query_list[i]);\n
-              } else {\n
-                item = createFilterItem(gadget, select_list[0], select_list[1]);\n
+              if (select_list[0] !== "category.base_category_uid" && select_list[0] !== "category.category_uid") {\n
+                if (select_list.length === 1) {\n
+                  item = createFilterItem(gadget, "Searchable Text", query_list[i]);\n
+                } else {\n
+                  item = createFilterItem(gadget, select_list[0], select_list[1]);\n
+                }\n
+                container.insertBefore(item, container.lastChild);\n
               }\n
-              container.insertBefore(item, container.lastChild);\n
+            }\n
+            if (gadget.props.element.querySelector(".filterForm") === null) {\n
+              container.insertBefore(createFilterItem(gadget), container.lastChild);\n
             }\n
             createDomainTree(gadget);\n
           });\n
@@ -653,7 +678,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>test</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -667,7 +692,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.23700.50924.1689</string> </value>
+                <value> <string>945.24035.38716.460</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -685,7 +710,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440760231.23</float>
+                        <float>1440780460.61</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
