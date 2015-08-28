@@ -190,7 +190,7 @@
          </section>\n
       \n
       \n
-      \n
+   \n
       <section class="ui-content-header-plain">\n
            <h3 class="ui-content-title ui-body-c">\n
             <span class="ui-icon ui-icon-custom">&nbsp;</span>\n
@@ -198,7 +198,7 @@
             </h3>\n
          </section>\n
       <section class="ui-body-c ui-content-section">\n
-        <div class="predefined_filter">\n
+        <div class="domain_tree_container">\n
         </div>\n
       </section>\n
      </div>\n
@@ -345,7 +345,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.19755.27628.12919</string> </value>
+                <value> <string>945.22508.10889.31197</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -363,7 +363,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440523041.2</float>
+                        <float>1440760242.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

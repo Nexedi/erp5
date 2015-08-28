@@ -98,6 +98,16 @@ url_template_dict = {\n
 \n
 default_document_uri_template = url_template_dict["jio_get_template"]\n
 \n
+def getAllSubCategoriesAsMap(root):\n
+  result = {}\n
+  sub_categories_list = root.objectValues()\n
+  if len(sub_categories_list) != 0:\n
+    for grain in sub_categories_list:\n
+      result[grain.getId()] = {"sub_categories": getAllSubCategoriesAsMap(grain),\n
+                               "title": grain.getTitle()}\n
+\n
+  return result\n
+\n
 def getRealRelativeUrl(document):\n
   return \'/\'.join(portal.portal_url.getRelativeContentPath(document))\n
 \n
@@ -377,6 +387,12 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
 #         line[title] = prop\n
 #         line["_relative_url"] = document.getRelativeUrl()\n
 #       line_list.append(line)\n
+    domain_tree_map = {} \n
+    domain_tree = field.get_value("domain_root_list")\n
+    for tree in domain_tree:\n
+      if hasattr(portal_categories, tree[0]):\n
+        domain_tree_map[tree[0]] = {"sub_categories":getAllSubCategoriesAsMap(portal_categories[tree[0]]),\n
+                                    "title": tree[1]}\n
 \n
     result = {\n
       "type": meta_type,\n
@@ -392,6 +408,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "portal_type": portal_types,\n
       "lines": lines,\n
       "default_params": default_params,\n
+      "domain_tree_map": domain_tree_map,\n
       "list_method": list_method_name\n
     }\n
     if (list_method_custom is not None):\n
@@ -560,6 +577,7 @@ def renderFormDefinition(form, response_dict):\n
 \n
 mime_type = \'application/hal+json\'\n
 portal = context.getPortalObject()\n
+portal_categories = portal.portal_categories\n
 sql_catalog = portal.portal_catalog.getSQLCatalog()\n
 \n
 # Calculate the site root to prevent unexpected browsing\n

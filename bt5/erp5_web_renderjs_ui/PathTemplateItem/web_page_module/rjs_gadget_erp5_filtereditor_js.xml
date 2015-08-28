@@ -169,7 +169,74 @@
   }\n
 \n
 \n
+  function createDomainTree(gadget, options_tree_map) {\n
+    var select = document.createElement("select"),\n
+      div_container = document.createElement("div"),\n
+      first,\n
+      domain_tree_map = gadget.props.domain_tree_map,\n
+      domain_tree_container = gadget.props.element.querySelector(".domain_tree_container"),\n
+      tmp = "",\n
+      key,\n
+      i;\n
+    if (options_tree_map) {\n
+      domain_tree_map = options_tree_map;\n
+    }\n
 \n
+    function updateDomainTree(gadget, event) {\n
+      var domain_tree_list = domain_tree_container.querySelectorAll(\'.domain_tree\'),\n
+        update_domain_tree_map = gadget.props.domain_tree_map;\n
+      for (i = domain_tree_list.length - 1; i > 0; i -= 1) {\n
+        if (domain_tree_list[i] !== event.target.parentElement.parentElement.parentElement) {\n
+          gadget.props.tree_path.pop();\n
+          domain_tree_list[i].parentElement.removeChild(domain_tree_list[i]);\n
+        } else {\n
+          break;\n
+        }\n
+      }\n
+      if (event.target.value !== \'--\') {\n
+        gadget.props.tree_path[gadget.props.tree_path.length - 1] = event.target.value;\n
+        for (i = 0; i < gadget.props.tree_path.length; i += 1) {\n
+          update_domain_tree_map = update_domain_tree_map[gadget.props.tree_path[i]];\n
+          update_domain_tree_map = update_domain_tree_map.sub_categories;\n
+        }\n
+        if (Object.keys(update_domain_tree_map).length !== 0) {\n
+          createDomainTree(gadget, update_domain_tree_map);\n
+        }\n
+      }\n
+    }\n
+\n
+\n
+    tmp += option_template({\n
+      value: "--",\n
+      text: "--"\n
+    });\n
+    for (key in domain_tree_map) {\n
+      if (domain_tree_map.hasOwnProperty(key)) {\n
+        if (first === undefined) {\n
+          first = key;\n
+        }\n
+        tmp += option_template({\n
+          value: key,\n
+          text: domain_tree_map[key].title\n
+        });\n
+      }\n
+    }\n
+    gadget.props.tree_path.push(first);\n
+    select.setAttribute("class", "domain_tree_select");\n
+    select.innerHTML = tmp;\n
+    div_container.setAttribute("class", "domain_tree");\n
+    loopEventListener(\n
+      select,\n
+      "change",\n
+      false,\n
+      function (event) {\n
+        updateDomainTree(gadget, event);\n
+      }\n
+    );\n
+    div_container.appendChild(select);\n
+    domain_tree_container.appendChild(div_container);\n
+    $(select).selectmenu();\n
+  }\n
 \n
 \n
   function createFilterItem(gadget, select, input_value) {\n
@@ -210,6 +277,7 @@
       }\n
       if (event.target.value.indexOf(\'date\') !== -1) {\n
         text.setAttribute("type", "date");\n
+        value_list[value_list.length - 1] = value_list[value_list.length - 1].replace(/\\//g, "-");\n
       } else {\n
         text.setAttribute("type", "text");\n
       }\n
@@ -303,6 +371,7 @@
     // Init local properties\n
     .ready(function (g) {\n
       g.props = {};\n
+      g.props.tree_path = [];\n
     })\n
 \n
     //////////////////////////////////////////////\n
@@ -351,6 +420,7 @@
         options = gadget.props.options;\n
       gadget.props.jelement.panel("toggle");\n
       if (gadget.props.element.querySelector(".filterForm") === null || gadget.props.change) {\n
+        gadget.props.tree_path = [];\n
         gadget.props.change = false;\n
         return new RSVP.Queue()\n
           .push(function () {\n
@@ -359,13 +429,16 @@
           .push(function (result) {\n
             var container = gadget.props.element.querySelector(".filter_item_container");\n
             gadget.props.options = result.data._embedded._view.listbox.column_list;\n
+            gadget.props.domain_tree_map = result.data._embedded._view.listbox.domain_tree_map;\n
             container.insertBefore(createFilterItem(gadget), container.lastChild);\n
+            createDomainTree(gadget);\n
           });\n
       }\n
     })\n
 \n
     .declareMethod(\'render\', function (options) {\n
       var container = this.props.element.querySelector(".filter_item_container"),\n
+        domain_tree_container = this.props.element.querySelector(".domain_tree_container"),\n
         i,\n
         gadget = this,\n
         item,\n
@@ -376,9 +449,13 @@
       while (container.firstChild !==  container.lastChild) {\n
         container.removeChild(container.firstChild);\n
       }\n
+      while (domain_tree_container.firstChild) {\n
+        domain_tree_container.removeChild(domain_tree_container.firstChild);\n
+      }\n
+\n
       this.props.options = options;\n
       if (options.filterEditor !== undefined || options.pg !== undefined) {\n
-\n
+        gadget.props.tree_path = [];\n
         query = options.filterEditor ? options.filterEditor.extended_search : options.pg.fg.erp5_searchfield.extended_search;\n
         return new RSVP.Queue()\n
           .push(function () {\n
@@ -386,6 +463,7 @@
           })\n
           .push(function (result) {\n
             gadget.props.options = result.data._embedded._view.listbox.column_list;\n
+            gadget.props.domain_tree_map = result.data._embedded._view.listbox.domain_tree_map;\n
             var query_list = query.split(" OR ");\n
             if (query_list.length === 1) {\n
               query_list = query.split(" AND ");\n
@@ -405,6 +483,7 @@
               }\n
               container.insertBefore(item, container.lastChild);\n
             }\n
+            createDomainTree(gadget);\n
           });\n
       }\n
 \n
@@ -588,7 +667,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.19828.51016.30276</string> </value>
+                <value> <string>945.23700.50924.1689</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -606,7 +685,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440527609.31</float>
+                        <float>1440760231.23</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
