@@ -112,7 +112,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getAvailableBudget()</string> </value>
+            <value> <string>cell/getAvailableBudget</string> </value>
         </item>
       </dictionary>
     </pickle>

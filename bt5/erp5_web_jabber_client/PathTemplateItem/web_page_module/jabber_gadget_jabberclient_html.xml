@@ -135,14 +135,26 @@
           <ul data-role="listview" data-inset="true">\n
             {{#each contact}}\n
               <li>\n
-              {{#if url}}\n
-                <a href="{{url}}">\n
-                {{#if new_message}}\n
-                  <span class="ui-li-count">!</span>\n
+              {{#if status}}\n
+                {{#if url}}\n
+                  <a href="{{url}}" class="ui-btn ui-btn-icon-left ui-icon-check">\n
+                  {{#if new_message}}\n
+                    <span class="ui-li-count">!</span>\n
+                  {{/if}}\n
+                  {{jid}}</a>\n
+                {{else}}\n
+                  {{jid}}\n
                 {{/if}}\n
-                {{jid}}</a>\n
               {{else}}\n
-                {{jid}}\n
+                {{#if url}}\n
+                  <a href="{{url}}" class="ui-btn ui-btn-icon-left ui-icon-forbidden">\n
+                  {{#if new_message}}\n
+                    <span class="ui-li-count">!</span>\n
+                  {{/if}}\n
+                  {{jid}}</a>\n
+                {{else}}\n
+                  {{jid}}\n
+                {{/if}}\n
               {{/if}}\n
               </li>\n
             {{/each}}\n
@@ -188,6 +200,7 @@
             </div>\n
             <input data-inline="true" type="submit" value="Log In" data-theme="b">\n
           </form>\n
+          <pre style="white-space: pre-wrap;">{{message}}</pre>\n
         </div>\n
         <div class="ui-block-c"></div>\n
       </div>\n
@@ -207,6 +220,32 @@
       </div>\n
     </script>\n
 \n
+    <script class="reset-password-template" type="text/x-handlebars-template">\n
+      <div class="ui-grid-b ui-responsive">\n
+        <div class="ui-block-a"></div>\n
+        <div class="ui-block-b">\n
+          <h2>Reset Password</h2>\n
+          <form class="reset-password-form">\n
+            <div class="ui-field-contain">\n
+              <label>Server URL</label>\n
+              <input type="text" name="server" placeholder="Server URL" value="tiolive.com" required>\n
+            </div>\n
+            <div class="ui-field-contain">\n
+              <label>New Password</label>\n
+              <input type="password" name="new_passwd" placeholder="New Password" value="" required>\n
+            </div>\n
+            <div class="ui-field-contain">\n
+              <label>Repeat Password</label>\n
+              <input type="password" name="repeat_passwd" placeholder="Repeat Password" value="" required>\n
+            </div>\n
+            <input data-inline="true" type="submit" value="Submit" data-theme="b">\n
+          </form>\n
+          <pre style="white-space: pre-wrap;">{{message}}</pre>\n
+        </div>\n
+        <div class="ui-block-c">\n
+        </div>\n
+      </div>\n
+    </script>\n
     <script class="message-template" type="text/x-handlebars-template"><li data-theme="{{theme}}" style="{{style}}"><pre style="white-space: pre-wrap;">{{text}}</pre></li></script>\n
     \n
     <script class="history-template" type="text/x-handlebars-template"><pre style="white-space: pre-wrap;">{{text}}</pre></script>\n
@@ -368,7 +407,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>zope1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -382,7 +421,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.15924.54448.8823</string> </value>
+                <value> <string>944.54830.54261.27972</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -400,8 +439,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1428669417.76</float>
-                        <string>UTC</string>
+                        <float>1438695309.09</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

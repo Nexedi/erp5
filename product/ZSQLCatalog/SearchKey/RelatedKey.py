@@ -133,7 +133,8 @@ class RelatedKey(SearchKey):
     # value of the "group" variable) to be the same as the table used
     # in join_condition.
     if table_alias_list is not None:
-      assert len(self.table_list) == len(table_alias_list)
+      assert len(self.table_list) == len(table_alias_list), (self.table_list,
+        table_alias_list)
       # XXX-Leo: remove the rest of this 'if' branch after making sure
       # that ColumnMap.addRelatedKeyJoin() can handle collapsing
       # chains of inner-joins that are subsets of one another based on
@@ -150,13 +151,13 @@ class RelatedKey(SearchKey):
       if table_alias_list is not None:
         # Pre-resolve all tables with given aliases
         given_name, given_alias = table_alias_list[table_position]
-        assert table_name == given_name
+        assert table_name == given_name, (table_name, given_name)
         column_map.resolveTable(table_name, given_alias, group=local_group)
     table_name = self.table_list[-1]
     column_map.registerTable(table_name, group=group)
     if table_alias_list is not None:
       given_name, given_alias = table_alias_list[-1]
-      assert table_name == given_name
+      assert table_name == given_name, (table_name, given_name)
       column_map.resolveTable(table_name, given_alias, group=group)
     # Resolve (and register) related key column in related key group with its last table.
     column_map.registerColumn(self.real_column, group=group)
@@ -171,7 +172,7 @@ class RelatedKey(SearchKey):
     right = column_map.makeTableAliasDefinition(table, alias)
     if not join_query_list:
       # nothing to do, just return the table alias
-      assert len(table_alias_list) == 1
+      assert len(table_alias_list) == 1, table_alias_list
       return right
     else:
       # create an InnerJoin of the last element of the alias list with
@@ -214,7 +215,8 @@ class RelatedKey(SearchKey):
     table_alias_dict = {'table_%s' % index: alias[0]
                         for index, alias in enumerate(table_alias_list)}
 
-    assert len(table_alias_list) == len(table_alias_dict)
+    assert len(table_alias_list) == len(table_alias_dict), (table_alias_list,
+      table_alias_dict)
 
     query_table=column_map.getCatalogTableAlias()
     rendered_related_key = related_key(

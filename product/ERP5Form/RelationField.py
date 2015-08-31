@@ -29,19 +29,10 @@
 
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
-from Products.Formulator.DummyField import fields
-from Products.ERP5Type.Utils import convertToUpperCase
-from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.Utility import allow_class
-from Products.ERP5Type.Message import Message
 from Products.ERP5Form import MultiRelationField
-from Products.ERP5Form.MultiRelationField import MAX_SELECT, \
-                                            NEW_CONTENT_PREFIX, \
-                                            SUB_FIELD_ID, ITEM_ID, \
-                                            NO_VALUE
-from types import StringType
+from Products.ERP5Form.MultiRelationField import SUB_FIELD_ID, ITEM_ID
 from AccessControl import ClassSecurityInfo
-from zLOG import LOG
 
 class RelationStringFieldWidget(
                   MultiRelationField.MultiRelationStringFieldWidget):
@@ -58,8 +49,6 @@ class RelationStringFieldWidget(
   default = Widget.TextWidget.default
 
   def _generateRenderValueList(self, field, key, value, REQUEST):
-#     value = value or NO_VALUE
-
     if REQUEST.get(
         'read_only_%s' % REQUEST.get(
            'field__proxyfield_%s_%s_default' % (field.id, field._p_oid),

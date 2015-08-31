@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>solver_process = state_change[\'object\'].getParentValue()\n
+            <value> <string>solver_process = state_change[\'object\'].aq_parent\n
 for solver in solver_process.objectValues(\n
     portal_type=solver_process.getPortalObject().getPortalTargetSolverTypeList()):\n
   if solver.getValidationState() != \'solved\':\n
@@ -61,6 +61,14 @@ solver_process.succeed()\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Auditor</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

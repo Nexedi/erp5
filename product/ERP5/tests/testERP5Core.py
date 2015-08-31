@@ -334,47 +334,115 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_03_getDefaultModule(self, quiet=quiet, run=run_all_test):
     """
-    test getDefaultModule method
+    test getDefaultModule(|Id|Value) methods
     """
     if not run:
       return
-    portal_id = self.getPortal().getId()
-    object_portal_type = ' '.join([part.capitalize() for part \
-                                    in portal_id.split('_')])
-    module_portal_type='%s Module' % object_portal_type
-    portal_skins_folder='erp5_unittest'
-    object_title=object_portal_type
-    module_id="%s_module" % portal_id
-    module_title='%ss' % object_portal_type
+    portal = self.portal
+    portal_id = portal.getId()
+    object_portal_type = ' '.join(
+      part.capitalize() for part in portal_id.split('_')
+    )
+    module_portal_type = object_portal_type + ' Module'
+    portal_skins_folder = 'erp5_unittest'
+    module_id = portal_id + "_module"
 
     # Create module for testing
-    self.assertFalse(self.portal._getOb(module_id, None) is not None)
-    self.assertEqual(self.portal.portal_skins._getOb(portal_skins_folder, None),
-                     None)
-    self.assertEqual(self.portal.portal_types.getTypeInfo(module_portal_type),
-                     None)
-    self.assertEqual(self.portal.portal_types.getTypeInfo(object_portal_type),
-                     None)
-    self.portal.ERP5Site_createModule(module_portal_type=module_portal_type,
-                                      portal_skins_folder=portal_skins_folder,
-                                      object_portal_type=object_portal_type,
-                                      object_title=object_title,
-                                      module_id=module_id,
-                                      module_title=module_title)
+    self.assertEqual(portal._getOb(module_id, None), None)
+    self.assertEqual(
+      portal.portal_skins._getOb(portal_skins_folder, None),
+      None,
+    )
+    self.assertEqual(
+      portal.portal_types.getTypeInfo(module_portal_type),
+      None,
+    )
+    self.assertEqual(
+      portal.portal_types.getTypeInfo(object_portal_type),
+      None,
+    )
+    portal.ERP5Site_createModule(
+      module_portal_type=module_portal_type,
+      portal_skins_folder=portal_skins_folder,
+      object_portal_type=object_portal_type,
+      object_title=object_portal_type,
+      module_id=module_id,
+      module_title=object_portal_type + 's',
+    )
+    module = portal._getOb(module_id)
 
     # Test
-    self.assertEqual(
+
+    for portal_type in (object_portal_type, module_portal_type):
+      self.assertEqual(
+        module,
+        portal.getDefaultModule(portal_type),
+      )
+      self.assertEqual(
+        module,
+        portal.getDefaultModuleValue(portal_type),
+      )
+      self.assertEqual(
         module_id,
-        self.portal.getDefaultModule(object_portal_type).getId())
-    self.assertEqual(
-        module_portal_type,
-        self.portal.getDefaultModule(object_portal_type).getPortalType())
-    self.assertEqual(
-        module_id,
-        self.portal.getDefaultModule(module_portal_type).getId())
-    self.assertEqual(
-        module_portal_type,
-        self.portal.getDefaultModule(module_portal_type).getPortalType())
+        portal.getDefaultModuleId(portal_type),
+      )
+
+    default = object()
+    for portal_type in (
+          object_portal_type + ' DoesNotExist',
+          module_portal_type + ' DoesNotExist',
+        ):
+      self.assertRaises(
+        ValueError,
+        portal.getDefaultModule,
+        portal_type,
+      )
+      # XXX: this behaviour may not be intentional, and differs a lot from how
+      # typical default values behave.
+      self.assertEqual(
+        module,
+        portal.getDefaultModule(portal_type, default=module_id)
+      )
+      self.assertIs(
+        None,
+        portal.getDefaultModule(portal_type, default=None)
+      )
+
+      self.assertIs(
+        default,
+        portal.getDefaultModuleValue(portal_type, default=default),
+      )
+      self.assertEqual(
+        default,
+        portal.getDefaultModuleId(portal_type, default=default),
+      )
+
+    # XXX: only_visible not testable here, because manager can see hidden
+    # allowed content types.
+    '''
+    module_portal_type_value = portal.portal_types[module_portal_type]
+    module_portal_type_value.setTypeHiddenContentTypeList(
+      module_portal_type_value.getTypeAllowedContentTypeList()
+    )
+    for portal_type in (object_portal_type, module_portal_type):
+      # Note: getDefaultModule does not support this semantic.
+      self.assertIs(
+        default,
+        portal.getDefaultModuleValue(
+          portal_type,
+          default=default,
+          only_visible=True,
+        ),
+      )
+      self.assertIs(
+        default,
+        portal.getDefaultModuleId(
+          portal_type,
+          default=default,
+          only_visible=True,
+        ),
+      )
+    '''
 
   def test_catalog_with_very_long_login_name(self, quiet=quiet, run=run_all_test):
     """Make sure that user with very long login name can find his document by catalog"""

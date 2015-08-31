@@ -66,6 +66,7 @@ return default_web_page.WebPage_viewAsWeb(mapping_dict={\n
   "default_view_reference": web_section.getLayoutProperty("configuration_default_view_action_reference", default="view"),\n
   "hateoas_url": web_section.getLayoutProperty("configuration_hateoas_url", default="hateoas/"),\n
   "panel_gadget": web_section.getLayoutProperty("configuration_panel_gadget_url", default="gadget_erp5_panel.html"),\n
+  "jio_gadget": web_section.getLayoutProperty("configuration_jio_gadget_url", default="gadget_jio.html"),\n
   "manifest_url": web_section.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache")\n
 })\n
 </string> </value>

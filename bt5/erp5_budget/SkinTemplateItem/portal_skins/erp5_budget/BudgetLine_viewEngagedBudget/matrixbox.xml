@@ -81,7 +81,7 @@
                 </item>
                 <item>
                     <key> <string>cell_getter_method</string> </key>
-                    <value> <string>BudgetLine_getEngagedBudgetCell</string> </value>
+                    <value> <string>getEngagedBudgetCell</string> </value>
                 </item>
                 <item>
                     <key> <string>editable_attributes</string> </key>

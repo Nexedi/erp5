@@ -134,15 +134,25 @@ class TestTemplateTool(ERP5TypeTestCase):
     """
       Function used to trust in svn.erp5.org.
     """
-    trust_dict = dict(realm="https://svn.erp5.org:443",
-      hostname="roundcube.nexedi.com",
-      issuer_dname="Nexedi SA, Marcq en Baroeul, Nord Pas de Calais, FR",
-      valid_from="Thu, 22 May 2008 13:43:01 GMT",
-      valid_until="Sun, 20 May 2018 13:43:01 GMT",
-      finger_print=\
-        "a1:f7:c6:bb:51:69:84:28:ac:58:af:9d:05:73:de:24:45:4d:a1:bb",
-      failures=8)
-    getVcsTool("svn").__of__(self.portal).acceptSSLServer(trust_dict)
+    for trust_dict in [
+      # for subversion 1.6
+      {'failures': 8,
+        'finger_print': 'a1:f7:c6:bb:51:69:84:28:ac:58:af:9d:05:73:de:24:45:4d:a1:bb',
+        'hostname': 'roundcube.nexedi.com',
+        'issuer_dname': 'Nexedi SA, Marcq en Baroeul, Nord Pas de Calais, FR',
+        'realm': 'https://svn.erp5.org:443',
+        'valid_from': 'Thu, 22 May 2008 13:43:01 GMT',
+        'valid_until': 'Sun, 20 May 2018 13:43:01 GMT'},
+      # for subversion 1.8
+      {'failures': 8,
+        'finger_print': 'A1:F7:C6:BB:51:69:84:28:AC:58:AF:9D:05:73:DE:24:45:4D:A1:BB',
+        'hostname': 'mail.nexedi.com',
+        'issuer_dname': 'Nexedi SA, Marcq en Baroeul, Nord Pas de Calais, FR(webmaster@nexedi.com)',
+        'realm': 'https://svn.erp5.org:443',
+        'valid_from': 'May 22 13:43:01 2008 GMT',
+        'valid_until': 'May 20 13:43:01 2018 GMT'}
+      ]:
+      getVcsTool("svn").__of__(self.portal).acceptSSLServer(trust_dict)
 
   def test_download_svn(self):
     # if the page looks like a svn repository, template tool will use pysvn to

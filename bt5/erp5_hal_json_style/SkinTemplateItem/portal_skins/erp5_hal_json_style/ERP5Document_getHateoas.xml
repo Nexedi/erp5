@@ -788,10 +788,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if is_site_root:\n
   \n
       result_dict[\'default_view\'] = \'view\'\n
-      # XXX Hardcoded cache for 30 minutes. Should only bother developers but speed up Jio access\n
-      response.setHeader("Cache-Control", "public, max-age=1800")\n
-      response.setHeader("Vary", "Cookie")\n
-      response.setHeader("Last-Modified", DateTime().rfc822())\n
       REQUEST.set("X-HATEOAS-CACHE", 1)\n
   \n
       # Global action users for the jIO plugin\n

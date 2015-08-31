@@ -57,6 +57,23 @@ item_list = filter(lambda x: x not in [(\'\',\'\'), [\'\',\'\']],\\\n
 sub_field_dict = {}\n
 split_depth = 1\n
 \n
+# Build a dict of title to display, based on the titles of corresponding\n
+# budget variations, and a dict of indexes for sorting.\n
+base_category_title_dict = {}\n
+base_category_int_index_dict = {}\n
+budget = container.REQUEST.get(\'here\')\n
+if budget is not None:\n
+  budget_model =budget.getSpecialiseValue()\n
+  if budget_model is not None:\n
+    for budget_variation in budget_model.contentValues():\n
+      if budget_variation.hasTitle():\n
+        base_category_title_dict[\n
+          budget_variation.getProperty(\'variation_base_category\')\n
+          ] =  budget_variation.getTranslatedTitle()\n
+      base_category_int_index_dict[\n
+          budget_variation.getProperty(\'variation_base_category\')\n
+          ] =  budget_variation.getIntIndex()\n
+\n
 resolveCategory = context.getPortalObject().portal_categories.resolveCategory\n
 \n
 for item in item_list:\n
@@ -67,42 +84,44 @@ for item in item_list:\n
   item_split = string.split(item_value, \'/\')\n
   item_key = string.join(item_split[:split_depth] , \'/\' )\n
   base_category = item_split[0]\n
+  multi = False # XXX or now budget level are only single value.\n
 \n
   if not sub_field_dict.has_key(item_key):\n
     # Create property dict\n
     sub_field_property_dict = default_sub_field_property_dict.copy()\n
     sub_field_property_dict[\'key\'] = item_key\n
     sub_field_property_dict[\'required\'] = 0\n
-\n
-    # XXX for each "item_key" we must check if it can be multivaluated or not\n
-    if 0:\n
-      sub_field_property_dict[\'field_type\'] = \'MultiListField\'\n
-      sub_field_property_dict[\'size\'] = 5\n
-    sub_field_property_dict[\'field_type\'] = \'ListField\'\n
-    sub_field_property_dict[\'size\'] = 1\n
-\n
+    sub_field_property_dict[\'field_type\'] = multi and \'MultiListField\' or \'ListField\'\n
+    sub_field_property_dict[\'size\'] = multi and 15 or 1\n
     sub_field_property_dict[\'item_list\'] = [(\'\',\'\')]\n
     sub_field_property_dict[\'value\'] = []\n
     sub_field_dict[item_key] = sub_field_property_dict\n
 \n
   sub_field_dict[item_key][\'item_list\'] =\\\n
      sub_field_dict[item_key][\'item_list\'] + [item]\n
+\n
   if item_value in value_list:\n
-    # XXX for each "item_key" we must check if it can be multivaluated or not\n
-    if 0:\n
+    if multi:\n
       sub_field_dict[item_key][\'value\'] =\\\n
         sub_field_dict[item_key][\'value\'] + [item_value]\n
+    else:\n
+      sub_field_dict[item_key][\'value\'] = item_value\n
 \n
-    sub_field_dict[item_key][\'value\'] = item_value\n
+  sub_field_dict[item_key][\'int_index\'] = base_category_int_index_dict.get(\n
+                                                    base_category, -1)\n
 \n
-\n
-  base_category_value = resolveCategory(base_category)\n
-  if base_category_value is not None:\n
-    sub_field_dict[item_key][\'title\'] = base_category_value.getTranslatedTitle()\n
+  if base_category in base_category_title_dict:\n
+    sub_field_dict[item_key][\'title\'] = base_category_title_dict[base_category]\n
   else:\n
-    sub_field_dict[item_key][\'title\'] = base_category\n
-   \n
-return sub_field_dict.values()\n
+    base_category_value = resolveCategory(base_category)\n
+    if base_category_value is not None:\n
+      sub_field_dict[item_key][\'title\'] = base_category_value.getTranslatedTitle()\n
+    else:\n
+      sub_field_dict[item_key][\'title\'] = base_category\n
+\n
+sub_field_values = sub_field_dict.values()\n
+sub_field_values.sort(key=lambda d:d[\'int_index\'])\n
+return sub_field_values\n
 </string> </value>
         </item>
         <item>

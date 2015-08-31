@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts39831393.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>templates.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\r\n
+Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.\r\n
+For licensing, see LICENSE.md or http://ckeditor.com/license\r\n
+*/\r\n
+\r\n
+.cke_tpl_list\r\n
+{\r\n
+\tborder: #dcdcdc 2px solid;\r\n
+\tbackground-color: #ffffff;\r\n
+\toverflow-y: auto;\r\n
+\toverflow-x: hidden;\r\n
+\twidth: 100%;\r\n
+\theight: 220px;\r\n
+}\r\n
+\r\n
+.cke_tpl_item\r\n
+{\r\n
+\tmargin: 5px;\r\n
+\tpadding: 7px;\r\n
+\tborder: #eeeeee 1px solid;\r\n
+\t*width: 88%;\r\n
+}\r\n
+\r\n
+.cke_tpl_preview\r\n
+{\r\n
+\tborder-collapse: separate;\r\n
+\ttext-indent:0;\r\n
+\twidth: 100%;\r\n
+}\r\n
+.cke_tpl_preview td\r\n
+{\r\n
+\tpadding: 2px;\r\n
+\tvertical-align: middle;\r\n
+}\r\n
+.cke_tpl_preview .cke_tpl_preview_img\r\n
+{\r\n
+\twidth: 100px;\r\n
+}\r\n
+.cke_tpl_preview span\r\n
+{\r\n
+\twhite-space: normal;\r\n
+}\r\n
+\r\n
+.cke_tpl_title\r\n
+{\r\n
+\tfont-weight: bold;\r\n
+}\r\n
+\r\n
+.cke_tpl_list a:hover .cke_tpl_item,\r\n
+.cke_tpl_list a:focus .cke_tpl_item,\r\n
+.cke_tpl_list a:active .cke_tpl_item\r\n
+{\r\n
+\tborder: #ff9933 1px solid;\r\n
+\tbackground-color: #fffacd;\r\n
+}\r\n
+\r\n
+.cke_tpl_list a:hover *,\r\n
+.cke_tpl_list a:focus *,\r\n
+.cke_tpl_list a:active *\r\n
+{\r\n
+\tcursor: pointer;\r\n
+}\r\n
+\r\n
+/* IE Quirks contextual selectors children will not get :hover transition until\r\n
+\tthe hover style of the link itself contains certain CSS declarations. */\r\n
+.cke_browser_quirks .cke_tpl_list a:active,\r\n
+.cke_browser_quirks .cke_tpl_list a:hover,\r\n
+.cke_browser_quirks .cke_tpl_list a:focus\r\n
+{\r\n
+\tbackground-position: 0 0;\r\n
+}\r\n
+\r\n
+.cke_hc .cke_tpl_list a:hover .cke_tpl_item,\r\n
+.cke_hc .cke_tpl_list a:focus .cke_tpl_item,\r\n
+.cke_hc .cke_tpl_list a:active .cke_tpl_item\r\n
+{\r\n
+\tborder-width: 3px;\r\n
+}\r\n
+\r\n
+.cke_tpl_empty, .cke_tpl_loading\r\n
+{\r\n
+\ttext-align: center;\r\n
+\tpadding: 5px;\r\n
+}\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1570</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

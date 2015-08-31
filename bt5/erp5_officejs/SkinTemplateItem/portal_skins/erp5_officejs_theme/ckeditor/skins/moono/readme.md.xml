@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts39831393.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>readme.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-genesis-rom</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>"Moono" Skin\r\n
+====================\r\n
+\r\n
+This skin has been chosen for the **default skin** of CKEditor 4.x, elected from the CKEditor\r\n
+[skin contest](http://ckeditor.com/blog/new_ckeditor_4_skin) and further shaped by\r\n
+the CKEditor team. "Moono" is maintained by the core developers.\r\n
+\r\n
+For more information about skins, please check the [CKEditor Skin SDK](http://docs.cksource.com/CKEditor_4.x/Skin_SDK)\r\n
+documentation.\r\n
+\r\n
+Features\r\n
+-------------------\r\n
+"Moono" is a monochromatic skin, which offers a modern look coupled with gradients and transparency.\r\n
+It comes with the following features:\r\n
+\r\n
+- Chameleon feature with brightness,\r\n
+- high-contrast compatibility,\r\n
+- graphics source provided in SVG.\r\n
+\r\n
+Directory Structure\r\n
+-------------------\r\n
+\r\n
+CSS parts:\r\n
+- **editor.css**: the main CSS file. It\'s simply loading several other files, for easier maintenance,\r\n
+- **mainui.css**: the file contains styles of entire editor outline structures,\r\n
+- **toolbar.css**: the file contains styles of the editor toolbar space (top),\r\n
+- **richcombo.css**: the file contains styles of the rich combo ui elements on toolbar,\r\n
+- **panel.css**: the file contains styles of the rich combo drop-down, it\'s not loaded\r\n
+until the first panel open up,\r\n
+- **elementspath.css**: the file contains styles of the editor elements path bar (bottom),\r\n
+- **menu.css**: the file contains styles of all editor menus including context menu and button drop-down,\r\n
+it\'s not loaded until the first menu open up,\r\n
+- **dialog.css**: the CSS files for the dialog UI, it\'s not loaded until the first dialog open,\r\n
+- **reset.css**: the file defines the basis of style resets among all editor UI spaces,\r\n
+- **preset.css**: the file defines the default styles of some UI elements reflecting the skin preference,\r\n
+- **editor_XYZ.css** and **dialog_XYZ.css**: browser specific CSS hacks.\r\n
+\r\n
+Other parts:\r\n
+- **skin.js**: the only JavaScript part of the skin that registers the skin, its browser specific files and its icons and defines the Chameleon feature,\r\n
+- **icons/**: contains all skin defined icons,\r\n
+- **images/**: contains a fill general used images,\r\n
+- **dev/**: contains SVG source of the skin icons.\r\n
+\r\n
+License\r\n
+-------\r\n
+\r\n
+Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.\r\n
+\r\n
+Licensed under the terms of any of the following licenses at your choice: [GPL](http://www.gnu.org/licenses/gpl.html), [LGPL](http://www.gnu.org/licenses/lgpl.html) and [MPL](http://www.mozilla.org/MPL/MPL-1.1.html).\r\n
+\r\n
+See LICENSE.md for more information.\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2529</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

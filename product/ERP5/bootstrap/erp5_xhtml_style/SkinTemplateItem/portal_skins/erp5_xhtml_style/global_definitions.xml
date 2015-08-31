@@ -90,6 +90,8 @@
       "\n
       tal:content="python: header_title or \'%s | %s\' % (title, here.getPortalObject().title_or_id())"\n
     ></title>\n
+    <link rel="icon" tal:attributes="href python: portal_path + \'/favicon.ico\'" type="image/x-icon" />\n
+    <link rel="shortcut icon" tal:attributes="href python: portal_path + \'/favicon.ico\'" type="image/x-icon" />\n
   </tal:block>\n
   <tal:block metal:define-macro="render_css_js">\n
     <link\n

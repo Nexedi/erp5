@@ -87,27 +87,23 @@ class IdTool(BaseTool):
       Use the low-level to create a site without catalog
     """
     assert reference
-    id_tool = self.getPortalObject().portal_ids
     id_last_generator = None
     version_last_generator = 0
-    for generator in id_tool.objectValues():
+    for generator in self.objectValues():
       if generator.getReference() == reference:
         version = generator.getVersion()
         if version > version_last_generator:
           id_last_generator = generator.getId()
-          version_last_generator = generator.getVersion()
+          version_last_generator = version
     if id_last_generator is None:
-      raise KeyError, 'The generator %s is not present' % (reference,)
+      raise KeyError(repr(reference))
     return id_last_generator
 
   def _getLatestGeneratorValue(self, id_generator):
     """
       Return the last generator with the reference
     """
-    id_tool = self.getPortalObject().portal_ids
-    last_id_generator = self._getLatestIdGenerator(id_generator)
-    last_generator = id_tool._getOb(last_id_generator)
-    return last_generator
+    return self._getOb(self._getLatestIdGenerator(id_generator))
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'generateNewId')
