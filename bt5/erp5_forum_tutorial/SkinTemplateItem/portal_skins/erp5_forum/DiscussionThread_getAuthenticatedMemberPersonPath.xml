@@ -50,31 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>person_path = context.DiscussionThread_getAuthenticatedMemberPersonPath()\n
-\n
-discussion_post = context.newContent(\n
-title=title,\n
-text_content=text_content,\n
-source_value=person_path,\n
-portal_type=\'Discussion Post\'\n
-)\n
-\n
-if batch_mode:\n
-  return discussion_post\n
-\n
-translateString = context.Base_translateString\n
-\n
-portal_status_message = translateString(\'New reply created.\')\n
-context.Base_redirect(\'view\',keep_items=dict(portal_status_message=portal_status_message))\n
+            <value> <string>user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
+found_user_list = context.getPortalObject().portal_catalog(portal_type=\'Person\',\n
+reference=user_name)\n
+found_users = len(found_user_list)\n
+if found_users != 1:\n
+   person_path = "#"\n
+else:\n
+   # or set it at # if nothing is found\n
+   person = found_user_list[0].getObject()\n
+   person_path = person.getRelativeUrl()\n
+return person_path\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id, batch_mode=False, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionThreadModule_addReply</string> </value>
+            <value> <string>DiscussionThread_getAuthenticatedMemberPersonPath</string> </value>
         </item>
       </dictionary>
     </pickle>

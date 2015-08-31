@@ -79,7 +79,6 @@
    <role>Assignor</role>
    <role>Associate</role>
    <role>Auditor</role>
-   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -93,5 +92,5 @@
   </permission>
  </permission_list>
  <portal_type>Discussion Thread Module</portal_type>
- <title>Discussion Threads</title>
+ <title>Discussions Threads</title>
 </module>

@@ -82,6 +82,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>context_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -127,6 +131,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -241,6 +249,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>context_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -286,6 +298,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -385,7 +401,7 @@
                 </item>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>Source</string> </value>
+                    <value> <string>source</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -399,6 +415,10 @@
                 </item>
                 <item>
                     <key> <string>container_getter_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>context_getter_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -450,6 +470,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
+                </item>
+                <item>
                     <key> <string>items</string> </key>
                     <value>
                       <list/>
@@ -486,7 +510,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>person</string>
+                          <string>Person</string>
                           <string>Person</string>
                         </tuple>
                       </list>

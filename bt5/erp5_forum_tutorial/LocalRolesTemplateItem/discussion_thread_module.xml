@@ -1,15 +1,19 @@
 <local_roles_item>
  <local_roles>
   <role id='ADM'>
+   <item>Assignor</item>
+   <item>Auditor</item>
    <item>Author</item>
   </role>
   <role id='USR'>
+   <item>Assignor</item>
+   <item>Auditor</item>
    <item>Author</item>
   </role>
-  <role id='VSR'>
+  <role id='VST'>
    <item>Auditor</item>
   </role>
-  <role id='lm1tnw5i0d'>
+  <role id='zope'>
    <item>Owner</item>
   </role>
  </local_roles>

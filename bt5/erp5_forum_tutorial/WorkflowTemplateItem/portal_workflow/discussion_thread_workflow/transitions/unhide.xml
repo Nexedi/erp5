@@ -28,7 +28,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Cancel a draft thread.</string> </value>
+            <value> <string>Turns a hidden thread public.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -38,11 +38,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>cancel</string> </value>
+            <value> <string>unhide</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>cancelled</string> </value>
+            <value> <string>public</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cancel</string> </value>
+            <value> <string>Unhide</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

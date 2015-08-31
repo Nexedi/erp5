@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>DiscussionThreadModule_addThread</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -53,9 +53,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -67,16 +65,16 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_count</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>listbox_subject</string>
+                        <string>your_title</string>
+                        <string>your_text_content</string>
+                        <string>your_subject_list</string>
                       </list>
                     </value>
                 </item>
@@ -91,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionThreadModule_viewDiscussionThreadList</string> </value>
+            <value> <string>DiscussionThreadModule_viewAddThreadDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -99,11 +97,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiscussionThreadModule_viewDiscussionThreadList</string> </value>
+            <value> <string>DicussionThreadModule_viewAddThreadDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -115,7 +113,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Discussions Threads</string> </value>
+            <value> <string>New Threads</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

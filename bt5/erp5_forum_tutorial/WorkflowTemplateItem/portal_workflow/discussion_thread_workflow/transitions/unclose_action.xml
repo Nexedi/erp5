@@ -11,8 +11,12 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Unclosed</string> </value>
+            <value> <string>Unclose</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -20,11 +24,11 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>unclose</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Unclose the thread.</string> </value>
+            <value> <string>Unclose a public thread.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -38,7 +42,7 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -57,10 +61,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
       <dictionary>

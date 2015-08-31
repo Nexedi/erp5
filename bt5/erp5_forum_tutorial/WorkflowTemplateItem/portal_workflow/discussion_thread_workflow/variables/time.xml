@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Time of the last transition</string> </value>
+            <value> <string>Transition timestamp</string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>
@@ -47,10 +47,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>

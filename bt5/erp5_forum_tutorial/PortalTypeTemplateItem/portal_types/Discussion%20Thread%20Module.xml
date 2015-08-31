@@ -9,29 +9,12 @@
         <item>
             <key> <string>_property_domain_dict</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>short_title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-              </dictionary>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>content_icon</string> </key>
             <value> <string>folder_icon.gif</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -46,40 +29,12 @@
             </value>
         </item>
         <item>
-            <key> <string>icon</string> </key>
-            <value> <string>document_icon.gif</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Discussion Thread Module</string> </value>
         </item>
         <item>
-            <key> <string>immediate_view</string> </key>
-            <value> <string>Folder_view</string> </value>
-        </item>
-        <item>
-            <key> <string>init_script</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>meta_type</string> </key>
-            <value> <string>ERP5 Folder</string> </value>
-        </item>
-        <item>
-            <key> <string>permission</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Base Type</string> </value>
-        </item>
-        <item>
-            <key> <string>product</string> </key>
-            <value> <string>ERP5Type</string> </value>
         </item>
         <item>
             <key> <string>type_class</string> </key>
@@ -90,10 +45,35 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>short_title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -108,12 +88,9 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="3" aka="AAAAAAAAAAM=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>

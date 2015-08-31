@@ -94,15 +94,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>full_text_search_key</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>full_text_search_key_script</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>global_attributes</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>global_search_column</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -130,7 +126,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>page_navigation_mode</string> </key>
+                    <key> <string>page_navigation_template</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -183,6 +179,10 @@
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -269,15 +269,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>full_text_search_key</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>full_text_search_key_script</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>global_attributes</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>global_search_column</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -305,7 +301,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>page_navigation_mode</string> </key>
+                    <key> <string>page_navigation_template</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -361,6 +357,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>style_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -402,12 +402,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>rating</string>
-                          <string>Rating</string>
+                          <string>creation_date</string>
+                          <string>Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -454,7 +450,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>
@@ -471,18 +467,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>full_text_search_key</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>full_text_search_key_script</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -513,17 +505,22 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>page_navigation_mode</string> </key>
+                    <key> <string>page_navigation_template</string> </key>
                     <value> <string>slider</string> </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>ListBox_ThreadAsHTML</string> </value>
+                    <value> <string>ListBox_threadAsHTML</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Discussion Post</string>
+                          <string>Discussion Post</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -556,7 +553,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>search_selection</string> </value>
+                    <value> <string>discussion_post_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -579,6 +576,12 @@
                 <item>
                     <key> <string>stat_method</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -604,10 +607,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -620,10 +620,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
