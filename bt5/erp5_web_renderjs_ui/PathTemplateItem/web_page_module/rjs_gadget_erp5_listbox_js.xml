@@ -201,9 +201,16 @@
         lines = field_json.lines,\n
         select_list = [],\n
         dataset,\n
+        last_uid,\n
         counter,\n
-        i;\n
-\n
+        tmp_query,\n
+        domain_query,\n
+        domain_tree_map,\n
+        operator,\n
+        i,\n
+        list_method_promise = function () {\n
+          return gadget.jio_allDocs.apply(gadget, arguments);\n
+        };\n
       if (field_json.query === undefined) {\n
         original_tfoot.textContent = "Unsupported list method: \'" + field_json.list_method + "\'";\n
         return;\n
@@ -211,8 +218,44 @@
      // function buildQueryString(previous, next) {\n
      //   return previous + next[0] + \':= "\' + url_query + \'" OR \';\n
      // }\n
-\n
+     //rebuild query\n
+     //don\'t know a good idea\n
       if (url_query) {\n
+        domain_tree_map = props.field_json.domain_tree_map;\n
+        tmp_query = url_query.split(" OR ");\n
+        operator = " OR ";\n
+        if (tmp_query.length === 1) {\n
+          tmp_query = url_query.split(" AND ");\n
+          operator = " AND ";\n
+        }\n
+        url_query = "";\n
+        for (i = 0; i < tmp_query.length; i += 1) {\n
+          if (i !== 0) {\n
+            url_query += operator;\n
+          }\n
+          if (tmp_query[i].indexOf("Domain:") !== -1) {\n
+            domain_query = tmp_query[i].split(":")[1].split("/");\n
+            if (domain_query[0] !== "--") {\n
+              url_query += "category.base_category_uid: " + domain_tree_map[domain_query[0]].uid;\n
+              domain_tree_map = domain_tree_map[domain_query[0]].sub_categories;\n
+              for (i = 1; i < domain_query.length - 1; i += 1) {\n
+                last_uid = domain_tree_map[domain_query[i]].uid;\n
+                domain_tree_map = domain_tree_map[domain_query[i]].sub_categories;\n
+              }\n
+              if (i < domain_query.length && domain_query[i] !== "--") {\n
+                url_query += operator;\n
+                url_query += "category.category_uid: " + domain_tree_map[domain_query[i]].uid;\n
+              } else if (i !== 1) {\n
+                url_query += operator;\n
+                url_query += "category.category_uid: " + last_uid;\n
+              }\n
+            }\n
+          } else {\n
+            url_query += tmp_query[i];\n
+          }\n
+        }\n
+\n
+\n
         //query_string = field_json.column_list.reduce(buildQueryString, \' AND (\').replace(new RegExp("OR " + \'$\'), \')\');\n
         if (field_json.list_method_template === undefined) {\n
           query_string = \' AND \' + url_query;\n
@@ -608,7 +651,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18094.21629.29286</string> </value>
+                <value> <string>945.28372.10785.47223</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -626,7 +669,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440435604.51</float>
+                        <float>1441041243.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -134,10 +134,7 @@
       query = "",\n
       value,\n
       select,\n
-      last_uid,\n
-      tmp,\n
       filterforms = gadget.props.element.querySelectorAll(".filterForm"),\n
-      domain_tree_map = gadget.props.domain_tree_map,\n
       and = gadget.props.element.querySelector(".and");\n
     operator = and.checked ? " AND " : " OR ";\n
     for (i = 0; i < filterforms.length; i += 1) {\n
@@ -159,27 +156,24 @@
         }\n
       }\n
     }\n
-    \n
-   \n
-    \n
+\n
+\n
     if (gadget.props.tree_path[0] !== "--") {\n
       if (query !== "") {\n
         query += operator;\n
       }\n
-      query += "category.base_category_uid: " + domain_tree_map[gadget.props.tree_path[0]].uid;\n
-      domain_tree_map = domain_tree_map[gadget.props.tree_path[0]].sub_categories;\n
-      for (i = 1; i < gadget.props.tree_path.length - 1; i += 1) {\n
-        last_uid = domain_tree_map[gadget.props.tree_path[i]].uid;\n
-        domain_tree_map = domain_tree_map[gadget.props.tree_path[i]].sub_categories;\n
+      query += "Domain:";\n
+      for (i = 0; i < gadget.props.tree_path.length - 1; i += 1) {\n
+        if (i !== 0) {\n
+          query += "/";\n
+        }\n
+        query += gadget.props.tree_path[i];\n
       }\n
-      if (gadget.props.tree_path[i] !== "--") {\n
-        query += operator;\n
-        query += "category.category_uid: " + domain_tree_map[gadget.props.tree_path[i]].uid;\n
-      } else if (i !== 1) {\n
-        query += operator;\n
-        query += "category.category_uid: " + last_uid;\n
+      if (gadget.props.tree_path[gadget.props.tree_path.length - 1] !== \'--\') {\n
+        query += "/" + gadget.props.tree_path[gadget.props.tree_path.length - 1];\n
       }\n
     }\n
+\n
     return new RSVP.Queue()\n
       .push(function () {\n
         return gadget.pleasePublishMyState({\n
@@ -193,7 +187,7 @@
   }\n
 \n
 \n
-  function createDomainTree(gadget, options_tree_map) {\n
+  function createDomainTree(gadget, options_tree_map, selected_value) {\n
     var select = document.createElement("select"),\n
       div_container = document.createElement("div"),\n
       domain_tree_map = gadget.props.domain_tree_map,\n
@@ -201,6 +195,9 @@
       tmp = "",\n
       key,\n
       i;\n
+    if (selected_value === undefined) {\n
+      selected_value = "--";\n
+    }\n
     if (options_tree_map) {\n
       domain_tree_map = options_tree_map;\n
     }\n
@@ -216,8 +213,8 @@
           break;\n
         }\n
       }\n
+      gadget.props.tree_path[gadget.props.tree_path.length - 1] = event.target.value;\n
       if (event.target.value !== \'--\') {\n
-        gadget.props.tree_path[gadget.props.tree_path.length - 1] = event.target.value;\n
         for (i = 0; i < gadget.props.tree_path.length; i += 1) {\n
           update_domain_tree_map = update_domain_tree_map[gadget.props.tree_path[i]];\n
           update_domain_tree_map = update_domain_tree_map.sub_categories;\n
@@ -235,13 +232,20 @@
     });\n
     for (key in domain_tree_map) {\n
       if (domain_tree_map.hasOwnProperty(key)) {\n
-        tmp += option_template({\n
-          value: key,\n
-          text: domain_tree_map[key].title\n
-        });\n
+        if (key === selected_value) {\n
+          tmp += selected_option_template({\n
+            value: key,\n
+            text: key\n
+          });\n
+        } else {\n
+          tmp += option_template({\n
+            value: key,\n
+            text: key\n
+          });\n
+        }\n
       }\n
     }\n
-    gadget.props.tree_path.push("--");\n
+    gadget.props.tree_path.push(selected_value);\n
     select.setAttribute("class", "domain_tree_select");\n
     select.innerHTML = tmp;\n
     div_container.setAttribute("class", "domain_tree");\n
@@ -482,9 +486,13 @@
             return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
           })\n
           .push(function (result) {\n
+            var query_list = query.split(" OR "),\n
+              j = 0,\n
+              domain_tree_map = result.data._embedded._view.listbox.domain_tree_map,\n
+              domain_tree_list;\n
             gadget.props.options = result.data._embedded._view.listbox.column_list;\n
             gadget.props.domain_tree_map = result.data._embedded._view.listbox.domain_tree_map;\n
-            var query_list = query.split(" OR ");\n
+\n
             if (query_list.length === 1) {\n
               query_list = query.split(" AND ");\n
               and.checked = true;\n
@@ -496,22 +504,32 @@
 \n
             for (i = 0; i < query_list.length; i += 1) {\n
               select_list = query_list[i].split(":");\n
-              if (select_list[0] !== "category.base_category_uid" && select_list[0] !== "category.category_uid") {\n
+              if (select_list[0] !== "Domain") {\n
                 if (select_list.length === 1) {\n
                   item = createFilterItem(gadget, "Searchable Text", query_list[i]);\n
                 } else {\n
                   item = createFilterItem(gadget, select_list[0], select_list[1]);\n
                 }\n
                 container.insertBefore(item, container.lastChild);\n
+              } else {\n
+                domain_tree_list = select_list[1].split("/");\n
+                createDomainTree(gadget, domain_tree_map, domain_tree_list[0]);\n
+                for (j = 0; j < domain_tree_list.length; j += 1) {\n
+                  domain_tree_map = domain_tree_map[domain_tree_list[j]].sub_categories;\n
+                  if (Object.keys(domain_tree_map).length !== 0) {\n
+                    createDomainTree(gadget, domain_tree_map, domain_tree_list[j + 1]);\n
+                  }\n
+                }\n
               }\n
             }\n
             if (gadget.props.element.querySelector(".filterForm") === null) {\n
               container.insertBefore(createFilterItem(gadget), container.lastChild);\n
             }\n
-            createDomainTree(gadget);\n
+            if (gadget.props.element.querySelector(".domain_tree") === null) {\n
+              createDomainTree(gadget);\n
+            }\n
           });\n
       }\n
-\n
     })\n
 \n
     /////////////////////////////////////////////////////////////////\n
@@ -678,7 +696,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>test</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -692,7 +710,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.24035.38716.460</string> </value>
+                <value> <string>945.28374.52028.3822</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -710,7 +728,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440780460.61</float>
+                        <float>1441041247.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

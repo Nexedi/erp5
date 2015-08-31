@@ -103,9 +103,9 @@ def getAllSubCategoriesAsMap(root):\n
   sub_categories_list = root.objectValues()\n
   if len(sub_categories_list) != 0:\n
     for grain in sub_categories_list:\n
-      result[grain.getId()] = {"sub_categories": getAllSubCategoriesAsMap(grain),\n
-                               "title": grain.getTitle(),\n
-                               "uid": grain.getUid()}\n
+      result[grain.getTitle()] = {"sub_categories": getAllSubCategoriesAsMap(grain),\n
+                                  "id": grain.getId(),\n
+                                  "uid": grain.getUid()}\n
 \n
   return result\n
 \n
@@ -392,8 +392,8 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
     domain_tree = field.get_value("domain_root_list")\n
     for tree in domain_tree:\n
       if hasattr(portal_categories, tree[0]):\n
-        domain_tree_map[tree[0]] = {"sub_categories":getAllSubCategoriesAsMap(portal_categories[tree[0]]),\n
-                                    "title": tree[1],\n
+        domain_tree_map[tree[1]] = {"sub_categories":getAllSubCategoriesAsMap(portal_categories[tree[0]]),\n
+                                    "id": tree[0],\n
                                     "uid": portal_categories[tree[0]].getUid()}\n
 \n
     result = {\n
