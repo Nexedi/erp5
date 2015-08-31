@@ -267,7 +267,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Tags</string> </value>
+                    <value> <string>Subject List</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -277,8 +277,7 @@
                     <key> <string>view_separator</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<br />\n
-
+<br />
 
 ]]></string> </value>
                 </item>
