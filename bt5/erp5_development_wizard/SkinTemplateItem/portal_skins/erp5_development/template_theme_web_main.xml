@@ -41,7 +41,6 @@
      <tal:block tal:define="website here/getWebSiteValue;\n
                             enctype string:multipart/form-data;\n
                             portal_path python:website.absolute_url();\n
-                            current_main_section here/WebSite_getMainSection;\n
                             editable request/editable_mode | python: 0;\n
                             list_mode list_mode | nothing;\n
                             dialog_mode dialog_mode | nothing;\n

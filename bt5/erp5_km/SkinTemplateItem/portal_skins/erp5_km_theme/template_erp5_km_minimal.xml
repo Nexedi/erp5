@@ -54,7 +54,6 @@
       section python: here.getWebSectionValue();\n
       section_url python: section.absolute_url();\n
       editable python: request.get(\'editable_mode\', 0);\n
-      current_main_section python: here.WebSite_getMainSection();\n
       list_mode list_mode | nothing;\n
       dialog_mode dialog_mode | nothing;\n
       has_no_layout python: layout_form is None;\n

@@ -43,7 +43,6 @@
                         portal_path website/absolute_url;\n
                         section here/getWebSectionValue;\n
                         section_url section/absolute_url;\n
-                        current_main_section here/WebSite_getMainSection;\n
                         has_no_layout python: layout_form is None;\n
                         aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
                                           [\'section\']);\n

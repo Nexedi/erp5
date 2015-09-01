@@ -43,7 +43,6 @@
                         portal_path website/absolute_url;\n
                         section here/getWebSectionValue;\n
                         section_url section/absolute_url;\n
-                        current_main_section here/WebSite_getMainSection;\n
                         editable request/editable_mode | python: 0;\n
                         list_mode list_mode | nothing;\n
                         dialog_mode dialog_mode | nothing;\n
