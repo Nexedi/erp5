@@ -28,7 +28,6 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from wendelin.bigarray.array_zodb import ZBigArray
-from DateTime import DateTime
 import msgpack
 import numpy as np
 import string
@@ -79,7 +78,7 @@ class Test(ERP5TypeTestCase):
     import scipy 		 
     import sklearn
     import pandas
-    
+
   def test_01_IngestionFromFluentd(self):
     """
     Test ingestion using a POST Request containing a msgpack encoded message
