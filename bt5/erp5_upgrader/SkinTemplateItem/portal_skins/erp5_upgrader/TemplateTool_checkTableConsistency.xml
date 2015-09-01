@@ -56,11 +56,7 @@ If `fixit` is True, then it will create/drop table or alter existing tables\n
 """\n
 portal = context.getPortalObject()\n
 show_source = not(fixit)\n
-sql_src = portal.portal_catalog.upgradeSchema(src__=show_source)\n
-result = []\n
-if sql_src:\n
-  result.append(sql_src)\n
-return result\n
+return portal.portal_catalog.upgradeSchema(src__=show_source)\n
 </string> </value>
         </item>
         <item>
