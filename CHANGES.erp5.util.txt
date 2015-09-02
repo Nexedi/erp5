@@ -1,6 +1,17 @@
 Changes
 =======
 
+0.4.43 (2015-09-02)
+-------------------
+
+ * erp5.util
+
+   - Make services much more reactive when server is back [Sebastien Robin] 
+
+ * erp5.util.testnode 
+   - Simple log viewer app not to download the whole suite.log [Jérôme Perrin]
+   - Make code more robust when checkout git files [Sebastien Robin]
+
 0.4.42 (2014-12-02)
 -------------------
 
