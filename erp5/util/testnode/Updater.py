@@ -189,16 +189,12 @@ class Updater(object):
         else:
           h = revision[1]
         if h != self._git('rev-parse', 'HEAD'):
-          self.deletePycFiles(self.repository_path)
-          # For performance reasons, 'reset --merge' only looks at mtime & ctime
-          # to check is the index is correct and conflicts immediately if
-          # contents or metadata changed. Even hardlinking a file changes its
-          # ctime, so at least for buildout (local download), we need to
-          # refresh index first.
-          self._git('update-index', '--refresh')
-          self._git('reset', '--merge', h)
+          self._git('clean', '-fdx')
+          # For performance, it is ok to use 'git reset --hard',
+          # theses days it is not slow like it was long time ago.
+          self._git('reset', '--hard', h)
       else:
-        self.deletePycFiles(self.repository_path)
+        self._git('clean', '-fdx')
         if os.path.exists('.git/svn'):
           self._git('svn', 'rebase')
         else:
@@ -211,7 +207,6 @@ class Updater(object):
               self._git('checkout',  'origin/%s' % self.branch, '-b',
                         self.branch)
           self._git('reset', '--hard', '@{u}')
-          self._git('clean', '-fdx')
         self.revision = self._git_find_rev(self._git('rev-parse', 'HEAD'))
     elif self.getRepositoryType() == SVN_TYPE:
       # following code allows sparse checkout
