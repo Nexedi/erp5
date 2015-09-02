@@ -210,8 +210,8 @@ class Updater(object):
                 self._git('branch', '-D', self.branch)
               self._git('checkout',  'origin/%s' % self.branch, '-b',
                         self.branch)
-          self._git('update-index', '--refresh') # see note above
-          self._git('reset', '--merge', '@{u}')
+          self._git('reset', '--hard', '@{u}')
+          self._git('clean', '-fdx')
         self.revision = self._git_find_rev(self._git('rev-parse', 'HEAD'))
     elif self.getRepositoryType() == SVN_TYPE:
       # following code allows sparse checkout

@@ -356,6 +356,35 @@ ignore-ssl-certificate = true
     finally:
       Updater.deleteRepository = original_deleteRepository
 
+  def test_05d_LocalModifcationOnRepository(self):
+    """
+    It could happen that there is local modification to to either bug of
+    git or any manual operation.
+    Testnode must be able reset the repository to make sure we have no failures
+    when updating repository
+    """
+    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    self.assertEquals(2, len(rev_list))
+    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    rep0_clone_path = [x['repository_path'] for x in \
+                   node_test_suite.vcs_repository_list \
+                   if x['repository_path'].endswith("rep0")][0]
+    my_file = open(os.path.join(rep0_clone_path, 'first_file'), 'w')
+    my_file.write("next_content")
+    my_file.close()
+    # make sure code still works
+    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    self.assertEqual(2, len(rev_list))
+    self.assertEqual(2, len(node_test_suite.vcs_repository_list))
+    # and check local change was resetted
+    my_file = open(os.path.join(rep0_clone_path, 'first_file'), 'r')
+    self.assertEqual("initial_content0", my_file.read())
+    my_file.close()
+
   def test_06_checkRevision(self):
     """
     Check if we are able to restore older commit hash if master decide so
