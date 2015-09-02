@@ -2369,19 +2369,6 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     # Generate page selection methods based on the Listbox id
     createFolderMixInPageSelectionMethod(field_id)
 
-    # Check is there is a validation error at the level of the listbox
-    # as a whole. This will be required later to decide wherer to
-    # display values from (ie. from the REQUEST or from the object)
-    has_error = 0
-    for key in error_dict.keys():
-      for editable_id in editable_column_id_set:
-        candidate_field_key = "%s_%s" % (field_id, editable_id)
-        if key.startswith(candidate_field_key):
-          has_error = 1
-          break
-      if has_error:
-        break
-
     for (original_value, processed_value), (sql, title), alias \
       in zip(self.getValueList(), renderer.getSelectedColumnList(), renderer.getColumnAliasList()):
       # By default, no error.
@@ -2462,20 +2449,15 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         key = '%s_%s' % (editable_field.getId(), self.getUid())
         if sql in editable_column_id_set:
           listbox_defines_column_as_editable = True
-          if has_error: # If there is any error on listbox, we should use what the user has typed
-            display_value = None
-          else:
-            validated_value_dict = request.get(field_id, None)
-            if validated_value_dict is None:
-              # If this is neither an error nor a validated listbox
-              # we should use the original value
-              display_value = original_value
-            else:
-              # If the listbox has been validated (ie. as it is the
-              # case whenever a relation field displays a popup menu)
-              # we have to use the value entered by the user
-              display_value = None #
-          if error_dict.has_key(key): # If error on current field, we should display message
+          # Like any other field in ERP5, always use the value entered by the
+          # user if any. This duplicates some work done by field.render
+          try:
+            display_value = editable_field._get_user_input_value(
+              editable_field.generate_field_key(key=key), request)
+          except (KeyError, AttributeError):
+            display_value = original_value
+          # If error on current field, we should display message
+          if key in error_dict:
             error_text = error_dict[key].error_text
             error_text = cgi.escape(error_text)
             if isinstance(error_text, str):
