@@ -270,6 +270,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>default_timezone</string> </key>
+                    <value> <string>GMT</string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
                     <value> <string>The Date</string> </value>
                 </item>
@@ -341,13 +345,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.Form</string>
-          <string>BasicForm</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="BasicForm" module="Products.Formulator.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -398,9 +396,15 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>year</string> </key>
+                    <key> <string>timezone</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>year</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -443,6 +447,7 @@
                         <string>hour</string>
                         <string>minute</string>
                         <string>ampm</string>
+                        <string>timezone</string>
                       </list>
                     </value>
                 </item>
@@ -569,6 +574,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -641,6 +650,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -717,6 +730,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -834,6 +851,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -902,6 +923,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -974,6 +999,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -1083,6 +1112,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -1151,6 +1184,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -1223,6 +1260,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -1332,6 +1373,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -1400,6 +1445,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -1472,6 +1521,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -1581,6 +1634,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -1649,6 +1706,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -1723,6 +1784,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -1745,6 +1810,366 @@
     </pickle>
   </record>
   <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <global name="ListField" module="Products.Formulator.StandardFields"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>timezone</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>date_field</string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string>GMT</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>GMT-12</string>
+                          <string>GMT-12</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-11</string>
+                          <string>GMT-11</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-10</string>
+                          <string>GMT-10</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-9</string>
+                          <string>GMT-9</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-8</string>
+                          <string>GMT-8</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-7</string>
+                          <string>GMT-7</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-6</string>
+                          <string>GMT-6</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-5</string>
+                          <string>GMT-5</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-4</string>
+                          <string>GMT-4</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-3</string>
+                          <string>GMT-3</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-2</string>
+                          <string>GMT-2</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT-1</string>
+                          <string>GMT-1</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT</string>
+                          <string>GMT</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+1</string>
+                          <string>GMT+1</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+2</string>
+                          <string>GMT+2</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+3</string>
+                          <string>GMT+3</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+4</string>
+                          <string>GMT+4</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+5</string>
+                          <string>GMT+5</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+6</string>
+                          <string>GMT+6</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+7</string>
+                          <string>GMT+7</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+8</string>
+                          <string>GMT+8</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+9</string>
+                          <string>GMT+9</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+10</string>
+                          <string>GMT+10</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+11</string>
+                          <string>GMT+11</string>
+                        </tuple>
+                        <tuple>
+                          <string>GMT+12</string>
+                          <string>GMT+12</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Timezone</string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
       <global name="IntegerField" module="Products.Formulator.StandardFields"/>
     </pickle>
@@ -1830,6 +2255,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -1898,6 +2327,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -1970,6 +2403,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>

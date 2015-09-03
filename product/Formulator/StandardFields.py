@@ -184,10 +184,6 @@ class DateTimeField(ZMIField):
     if REQUEST.form['subfield_%s_%s' % (key, 'year')]:
       return None
 
-gmt_timezones =  [('GMT%s' %zone, 'GMT%s' %zone,) for zone in range(-12, 0)]\
-                  + [('GMT', 'GMT',),] \
-                  + [('GMT+%s' %zone, 'GMT+%s' %zone,) for zone in range(1, 13)]
-
 def create_datetime_text_sub_form():
   sub_form = BasicForm()
 
@@ -238,7 +234,7 @@ def create_datetime_text_sub_form():
                         title = "Timezone",
                         required = 0,
                         default = 'GMT',
-                        items = gmt_timezones,
+                        items = Widget.gmt_timezones,
                         size = 1)
   sub_form.add_fields([hour, minute, ampm, timezone], "time")
   return sub_form
@@ -296,7 +292,7 @@ def create_datetime_list_sub_form():
                         title = "Timezone",
                         required = 0,
                         default = 'GMT',
-                        items = gmt_timezones,
+                        items = Widget.gmt_timezones,
                         size = 1)
   sub_form.add_group("time")
 
