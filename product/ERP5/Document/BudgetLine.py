@@ -36,7 +36,8 @@ from Products.ERP5.mixin.variated import VariatedMixin
 from Products.ERP5Type.Cache import transactional_cached
 from ZTUtils import make_query
 
-class TempBudgetCell:
+class TempBudgetCell(object):
+  __allow_access_to_unprotected_subobjects__ = 1
   __slots__ = ('amount', 'cell_index', 'url', 'engaged_budget')
   def __init__(self, amount, cell_index, url, engaged_budget):
     self.amount = amount
@@ -48,15 +49,15 @@ class TempBudgetCell:
     return self.amount
 
   def getAvailableBudget(self):
-      return self.amount
-  
+    return self.amount
+
   def getEngagedBudget(self):
-      return self.amount
+    return self.amount
 
   def getExplanationUrl(self, *args, **w):
     return '%s/BudgetLine_viewConsumedBudgetMovementList?%s' % (
-                 self.url,
-                 make_query(dict(cell_index=list(self.cell_index), engaged_budget=self.engaged_budget)))
+      self.url,
+      make_query(dict(cell_index=list(self.cell_index), engaged_budget=self.engaged_budget)))
 
 
 class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
@@ -82,7 +83,6 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
   meta_type='ERP5 Budget Line'
   portal_type='Budget Line'
   add_permission = Permissions.AddPortalContent
-  __allow_access_to_unprotected_subobjects__ = 1
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -165,19 +165,19 @@ class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
                             'getConsumedBudgetCell')
   def getConsumedBudgetCell(self, *cell_index, **kw):
     consumed_budget_dict = self.getConsumedBudgetDict()
-    return TempBudgetCell(consumed_budget_dict.get(cell_index), 
-      cell_index, self.absolute_url(), False) 
-    
+    return TempBudgetCell(consumed_budget_dict.get(cell_index),
+      cell_index, self.absolute_url(), False)
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAvailableBudgetCell')
   def getAvailableBudgetCell(self, *cell_index, **kw):
     available_budget_dict = self.getAvailableBudgetDict()
-    return TempBudgetCell(available_budget_dict.get(cell_index), 
-      cell_index, self.absolute_url(), True) 
+    return TempBudgetCell(available_budget_dict.get(cell_index),
+      cell_index, self.absolute_url(), True)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getEngagedBudgetCell')
   def getEngagedBudgetCell(self, *cell_index, **kw):
     engaged_budget_dict = self.getEngagedBudgetDict()
-    return TempBudgetCell(engaged_budget_dict.get(cell_index), 
-      cell_index, self.absolute_url(), True) 
+    return TempBudgetCell(engaged_budget_dict.get(cell_index),
+      cell_index, self.absolute_url(), True)
