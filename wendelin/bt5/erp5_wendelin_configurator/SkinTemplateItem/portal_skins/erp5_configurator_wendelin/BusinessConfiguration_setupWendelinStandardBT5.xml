@@ -80,7 +80,8 @@ bt5_installation_list = (\'erp5_full_text_mroonga_catalog\',\n
                          \'erp5_web_renderjs_ui\',\n
                          \'erp5_wendelin\',\n
                          \'erp5_wendelin_examples\',\n
-                         \'erp5_wendelin_data\'\n
+                         \'erp5_wendelin_data\',\n
+                         \'erp5_wendelin_development\'\n
                         )\n
 \n
 bt5_update_catalog = (\'erp5_ingestion_mysql_innodb_catalog\',)\n
