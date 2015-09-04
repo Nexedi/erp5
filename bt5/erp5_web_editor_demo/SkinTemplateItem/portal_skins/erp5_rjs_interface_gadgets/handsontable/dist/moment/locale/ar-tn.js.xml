@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272772.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ar-tn.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale  : Tunisian Arabic (ar-tn)\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var ar_tn = moment.defineLocale(\'ar-tn\', {\n
+        months: \'جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر\'.split(\'_\'),\n
+        monthsShort: \'جانفي_فيفري_مارس_أفريل_ماي_جوان_جويلية_أوت_سبتمبر_أكتوبر_نوفمبر_ديسمبر\'.split(\'_\'),\n
+        weekdays: \'الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت\'.split(\'_\'),\n
+        weekdaysShort: \'أحد_إثنين_ثلاثاء_أربعاء_خميس_جمعة_سبت\'.split(\'_\'),\n
+        weekdaysMin: \'ح_ن_ث_ر_خ_ج_س\'.split(\'_\'),\n
+        longDateFormat: {\n
+            LT: \'HH:mm\',\n
+            LTS: \'HH:mm:ss\',\n
+            L: \'DD/MM/YYYY\',\n
+            LL: \'D MMMM YYYY\',\n
+            LLL: \'D MMMM YYYY HH:mm\',\n
+            LLLL: \'dddd D MMMM YYYY HH:mm\'\n
+        },\n
+        calendar: {\n
+            sameDay: \'[اليوم على الساعة] LT\',\n
+            nextDay: \'[غدا على الساعة] LT\',\n
+            nextWeek: \'dddd [على الساعة] LT\',\n
+            lastDay: \'[أمس على الساعة] LT\',\n
+            lastWeek: \'dddd [على الساعة] LT\',\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime: {\n
+            future: \'في %s\',\n
+            past: \'منذ %s\',\n
+            s: \'ثوان\',\n
+            m: \'دقيقة\',\n
+            mm: \'%d دقائق\',\n
+            h: \'ساعة\',\n
+            hh: \'%d ساعات\',\n
+            d: \'يوم\',\n
+            dd: \'%d أيام\',\n
+            M: \'شهر\',\n
+            MM: \'%d أشهر\',\n
+            y: \'سنة\',\n
+            yy: \'%d سنوات\'\n
+        },\n
+        week: {\n
+            dow: 1, // Monday is the first day of the week.\n
+            doy: 4 // The week that contains Jan 4th is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return ar_tn;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2201</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ar-tn.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

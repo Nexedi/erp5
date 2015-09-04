@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272794.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>me.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : Montenegrin (me)\n
+//! author : Miodrag Nikač <miodrag@restartit.me> : https://github.com/miodragnikac\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var translator = {\n
+        words: { //Different grammatical cases\n
+            m: [\'jedan minut\', \'jednog minuta\'],\n
+            mm: [\'minut\', \'minuta\', \'minuta\'],\n
+            h: [\'jedan sat\', \'jednog sata\'],\n
+            hh: [\'sat\', \'sata\', \'sati\'],\n
+            dd: [\'dan\', \'dana\', \'dana\'],\n
+            MM: [\'mjesec\', \'mjeseca\', \'mjeseci\'],\n
+            yy: [\'godina\', \'godine\', \'godina\']\n
+        },\n
+        correctGrammaticalCase: function (number, wordKey) {\n
+            return number === 1 ? wordKey[0] : (number >= 2 && number <= 4 ? wordKey[1] : wordKey[2]);\n
+        },\n
+        translate: function (number, withoutSuffix, key) {\n
+            var wordKey = translator.words[key];\n
+            if (key.length === 1) {\n
+                return withoutSuffix ? wordKey[0] : wordKey[1];\n
+            } else {\n
+                return number + \' \' + translator.correctGrammaticalCase(number, wordKey);\n
+            }\n
+        }\n
+    };\n
+\n
+    var me = moment.defineLocale(\'me\', {\n
+        months: [\'januar\', \'februar\', \'mart\', \'april\', \'maj\', \'jun\', \'jul\', \'avgust\', \'septembar\', \'oktobar\', \'novembar\', \'decembar\'],\n
+        monthsShort: [\'jan.\', \'feb.\', \'mar.\', \'apr.\', \'maj\', \'jun\', \'jul\', \'avg.\', \'sep.\', \'okt.\', \'nov.\', \'dec.\'],\n
+        weekdays: [\'nedjelja\', \'ponedjeljak\', \'utorak\', \'srijeda\', \'četvrtak\', \'petak\', \'subota\'],\n
+        weekdaysShort: [\'ned.\', \'pon.\', \'uto.\', \'sri.\', \'čet.\', \'pet.\', \'sub.\'],\n
+        weekdaysMin: [\'ne\', \'po\', \'ut\', \'sr\', \'če\', \'pe\', \'su\'],\n
+        longDateFormat: {\n
+            LT: \'H:mm\',\n
+            LTS : \'H:mm:ss\',\n
+            L: \'DD. MM. YYYY\',\n
+            LL: \'D. MMMM YYYY\',\n
+            LLL: \'D. MMMM YYYY H:mm\',\n
+            LLLL: \'dddd, D. MMMM YYYY H:mm\'\n
+        },\n
+        calendar: {\n
+            sameDay: \'[danas u] LT\',\n
+            nextDay: \'[sjutra u] LT\',\n
+\n
+            nextWeek: function () {\n
+                switch (this.day()) {\n
+                case 0:\n
+                    return \'[u] [nedjelju] [u] LT\';\n
+                case 3:\n
+                    return \'[u] [srijedu] [u] LT\';\n
+                case 6:\n
+                    return \'[u] [subotu] [u] LT\';\n
+                case 1:\n
+                case 2:\n
+                case 4:\n
+                case 5:\n
+                    return \'[u] dddd [u] LT\';\n
+                }\n
+            },\n
+            lastDay  : \'[juče u] LT\',\n
+            lastWeek : function () {\n
+                var lastWeekDays = [\n
+                    \'[prošle] [nedjelje] [u] LT\',\n
+                    \'[prošlog] [ponedjeljka] [u] LT\',\n
+                    \'[prošlog] [utorka] [u] LT\',\n
+                    \'[prošle] [srijede] [u] LT\',\n
+                    \'[prošlog] [četvrtka] [u] LT\',\n
+                    \'[prošlog] [petka] [u] LT\',\n
+                    \'[prošle] [subote] [u] LT\'\n
+                ];\n
+                return lastWeekDays[this.day()];\n
+            },\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'za %s\',\n
+            past   : \'prije %s\',\n
+            s      : \'nekoliko sekundi\',\n
+            m      : translator.translate,\n
+            mm     : translator.translate,\n
+            h      : translator.translate,\n
+            hh     : translator.translate,\n
+            d      : \'dan\',\n
+            dd     : translator.translate,\n
+            M      : \'mjesec\',\n
+            MM     : translator.translate,\n
+            y      : \'godinu\',\n
+            yy     : translator.translate\n
+        },\n
+        ordinalParse: /\\d{1,2}\\./,\n
+        ordinal : \'%d.\',\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 7  // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return me;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4082</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>me.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

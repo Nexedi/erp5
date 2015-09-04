@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272818.26</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>he.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : Hebrew (he)\n
+//! author : Tomer Cohen : https://github.com/tomer\n
+//! author : Moshe Simantov : https://github.com/DevelopmentIL\n
+//! author : Tal Ater : https://github.com/TalAter\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var he = moment.defineLocale(\'he\', {\n
+        months : \'ינואר_פברואר_מרץ_אפריל_מאי_יוני_יולי_אוגוסט_ספטמבר_אוקטובר_נובמבר_דצמבר\'.split(\'_\'),\n
+        monthsShort : \'ינו׳_פבר׳_מרץ_אפר׳_מאי_יוני_יולי_אוג׳_ספט׳_אוק׳_נוב׳_דצמ׳\'.split(\'_\'),\n
+        weekdays : \'ראשון_שני_שלישי_רביעי_חמישי_שישי_שבת\'.split(\'_\'),\n
+        weekdaysShort : \'א׳_ב׳_ג׳_ד׳_ה׳_ו׳_ש׳\'.split(\'_\'),\n
+        weekdaysMin : \'א_ב_ג_ד_ה_ו_ש\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD/MM/YYYY\',\n
+            LL : \'D [ב]MMMM YYYY\',\n
+            LLL : \'D [ב]MMMM YYYY HH:mm\',\n
+            LLLL : \'dddd, D [ב]MMMM YYYY HH:mm\',\n
+            l : \'D/M/YYYY\',\n
+            ll : \'D MMM YYYY\',\n
+            lll : \'D MMM YYYY HH:mm\',\n
+            llll : \'ddd, D MMM YYYY HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay : \'[היום ב־]LT\',\n
+            nextDay : \'[מחר ב־]LT\',\n
+            nextWeek : \'dddd [בשעה] LT\',\n
+            lastDay : \'[אתמול ב־]LT\',\n
+            lastWeek : \'[ביום] dddd [האחרון בשעה] LT\',\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'בעוד %s\',\n
+            past : \'לפני %s\',\n
+            s : \'מספר שניות\',\n
+            m : \'דקה\',\n
+            mm : \'%d דקות\',\n
+            h : \'שעה\',\n
+            hh : function (number) {\n
+                if (number === 2) {\n
+                    return \'שעתיים\';\n
+                }\n
+                return number + \' שעות\';\n
+            },\n
+            d : \'יום\',\n
+            dd : function (number) {\n
+                if (number === 2) {\n
+                    return \'יומיים\';\n
+                }\n
+                return number + \' ימים\';\n
+            },\n
+            M : \'חודש\',\n
+            MM : function (number) {\n
+                if (number === 2) {\n
+                    return \'חודשיים\';\n
+                }\n
+                return number + \' חודשים\';\n
+            },\n
+            y : \'שנה\',\n
+            yy : function (number) {\n
+                if (number === 2) {\n
+                    return \'שנתיים\';\n
+                } else if (number % 10 === 0 && number !== 10) {\n
+                    return number + \' שנה\';\n
+                }\n
+                return number + \' שנים\';\n
+            }\n
+        }\n
+    });\n
+\n
+    return he;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3002</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>he.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272771.23</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fa.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : Persian (fa)\n
+//! author : Ebrahim Byagowi : https://github.com/ebraminio\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var symbolMap = {\n
+        \'1\': \'۱\',\n
+        \'2\': \'۲\',\n
+        \'3\': \'۳\',\n
+        \'4\': \'۴\',\n
+        \'5\': \'۵\',\n
+        \'6\': \'۶\',\n
+        \'7\': \'۷\',\n
+        \'8\': \'۸\',\n
+        \'9\': \'۹\',\n
+        \'0\': \'۰\'\n
+    }, numberMap = {\n
+        \'۱\': \'1\',\n
+        \'۲\': \'2\',\n
+        \'۳\': \'3\',\n
+        \'۴\': \'4\',\n
+        \'۵\': \'5\',\n
+        \'۶\': \'6\',\n
+        \'۷\': \'7\',\n
+        \'۸\': \'8\',\n
+        \'۹\': \'9\',\n
+        \'۰\': \'0\'\n
+    };\n
+\n
+    var fa = moment.defineLocale(\'fa\', {\n
+        months : \'ژانویه_فوریه_مارس_آوریل_مه_ژوئن_ژوئیه_اوت_سپتامبر_اکتبر_نوامبر_دسامبر\'.split(\'_\'),\n
+        monthsShort : \'ژانویه_فوریه_مارس_آوریل_مه_ژوئن_ژوئیه_اوت_سپتامبر_اکتبر_نوامبر_دسامبر\'.split(\'_\'),\n
+        weekdays : \'یک\\u200cشنبه_دوشنبه_سه\\u200cشنبه_چهارشنبه_پنج\\u200cشنبه_جمعه_شنبه\'.split(\'_\'),\n
+        weekdaysShort : \'یک\\u200cشنبه_دوشنبه_سه\\u200cشنبه_چهارشنبه_پنج\\u200cشنبه_جمعه_شنبه\'.split(\'_\'),\n
+        weekdaysMin : \'ی_د_س_چ_پ_ج_ش\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD/MM/YYYY\',\n
+            LL : \'D MMMM YYYY\',\n
+            LLL : \'D MMMM YYYY HH:mm\',\n
+            LLLL : \'dddd, D MMMM YYYY HH:mm\'\n
+        },\n
+        meridiemParse: /قبل از ظهر|بعد از ظهر/,\n
+        isPM: function (input) {\n
+            return /بعد از ظهر/.test(input);\n
+        },\n
+        meridiem : function (hour, minute, isLower) {\n
+            if (hour < 12) {\n
+                return \'قبل از ظهر\';\n
+            } else {\n
+                return \'بعد از ظهر\';\n
+            }\n
+        },\n
+        calendar : {\n
+            sameDay : \'[امروز ساعت] LT\',\n
+            nextDay : \'[فردا ساعت] LT\',\n
+            nextWeek : \'dddd [ساعت] LT\',\n
+            lastDay : \'[دیروز ساعت] LT\',\n
+            lastWeek : \'dddd [پیش] [ساعت] LT\',\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'در %s\',\n
+            past : \'%s پیش\',\n
+            s : \'چندین ثانیه\',\n
+            m : \'یک دقیقه\',\n
+            mm : \'%d دقیقه\',\n
+            h : \'یک ساعت\',\n
+            hh : \'%d ساعت\',\n
+            d : \'یک روز\',\n
+            dd : \'%d روز\',\n
+            M : \'یک ماه\',\n
+            MM : \'%d ماه\',\n
+            y : \'یک سال\',\n
+            yy : \'%d سال\'\n
+        },\n
+        preparse: function (string) {\n
+            return string.replace(/[۰-۹]/g, function (match) {\n
+                return numberMap[match];\n
+            }).replace(/،/g, \',\');\n
+        },\n
+        postformat: function (string) {\n
+            return string.replace(/\\d/g, function (match) {\n
+                return symbolMap[match];\n
+            }).replace(/,/g, \'،\');\n
+        },\n
+        ordinalParse: /\\d{1,2}م/,\n
+        ordinal : \'%dم\',\n
+        week : {\n
+            dow : 6, // Saturday is the first day of the week.\n
+            doy : 12 // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return fa;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3561</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>fa.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

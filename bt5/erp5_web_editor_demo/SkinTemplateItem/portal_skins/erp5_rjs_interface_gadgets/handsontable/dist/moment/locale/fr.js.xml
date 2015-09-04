@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272809.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fr.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : french (fr)\n
+//! author : John Fischer : https://github.com/jfroffice\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var fr = moment.defineLocale(\'fr\', {\n
+        months : \'janvier_février_mars_avril_mai_juin_juillet_août_septembre_octobre_novembre_décembre\'.split(\'_\'),\n
+        monthsShort : \'janv._févr._mars_avr._mai_juin_juil._août_sept._oct._nov._déc.\'.split(\'_\'),\n
+        weekdays : \'dimanche_lundi_mardi_mercredi_jeudi_vendredi_samedi\'.split(\'_\'),\n
+        weekdaysShort : \'dim._lun._mar._mer._jeu._ven._sam.\'.split(\'_\'),\n
+        weekdaysMin : \'Di_Lu_Ma_Me_Je_Ve_Sa\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD/MM/YYYY\',\n
+            LL : \'D MMMM YYYY\',\n
+            LLL : \'D MMMM YYYY HH:mm\',\n
+            LLLL : \'dddd D MMMM YYYY HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay: \'[Aujourd\\\'hui à] LT\',\n
+            nextDay: \'[Demain à] LT\',\n
+            nextWeek: \'dddd [à] LT\',\n
+            lastDay: \'[Hier à] LT\',\n
+            lastWeek: \'dddd [dernier à] LT\',\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'dans %s\',\n
+            past : \'il y a %s\',\n
+            s : \'quelques secondes\',\n
+            m : \'une minute\',\n
+            mm : \'%d minutes\',\n
+            h : \'une heure\',\n
+            hh : \'%d heures\',\n
+            d : \'un jour\',\n
+            dd : \'%d jours\',\n
+            M : \'un mois\',\n
+            MM : \'%d mois\',\n
+            y : \'un an\',\n
+            yy : \'%d ans\'\n
+        },\n
+        ordinalParse: /\\d{1,2}(er|)/,\n
+        ordinal : function (number) {\n
+            return number + (number === 1 ? \'er\' : \'\');\n
+        },\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 4  // The week that contains Jan 4th is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return fr;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2138</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>fr.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

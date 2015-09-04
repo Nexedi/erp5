@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272789.43</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>eu.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : euskara (eu)\n
+//! author : Eneko Illarramendi : https://github.com/eillarra\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var eu = moment.defineLocale(\'eu\', {\n
+        months : \'urtarrila_otsaila_martxoa_apirila_maiatza_ekaina_uztaila_abuztua_iraila_urria_azaroa_abendua\'.split(\'_\'),\n
+        monthsShort : \'urt._ots._mar._api._mai._eka._uzt._abu._ira._urr._aza._abe.\'.split(\'_\'),\n
+        weekdays : \'igandea_astelehena_asteartea_asteazkena_osteguna_ostirala_larunbata\'.split(\'_\'),\n
+        weekdaysShort : \'ig._al._ar._az._og._ol._lr.\'.split(\'_\'),\n
+        weekdaysMin : \'ig_al_ar_az_og_ol_lr\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'YYYY-MM-DD\',\n
+            LL : \'YYYY[ko] MMMM[ren] D[a]\',\n
+            LLL : \'YYYY[ko] MMMM[ren] D[a] HH:mm\',\n
+            LLLL : \'dddd, YYYY[ko] MMMM[ren] D[a] HH:mm\',\n
+            l : \'YYYY-M-D\',\n
+            ll : \'YYYY[ko] MMM D[a]\',\n
+            lll : \'YYYY[ko] MMM D[a] HH:mm\',\n
+            llll : \'ddd, YYYY[ko] MMM D[a] HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay : \'[gaur] LT[etan]\',\n
+            nextDay : \'[bihar] LT[etan]\',\n
+            nextWeek : \'dddd LT[etan]\',\n
+            lastDay : \'[atzo] LT[etan]\',\n
+            lastWeek : \'[aurreko] dddd LT[etan]\',\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'%s barru\',\n
+            past : \'duela %s\',\n
+            s : \'segundo batzuk\',\n
+            m : \'minutu bat\',\n
+            mm : \'%d minutu\',\n
+            h : \'ordu bat\',\n
+            hh : \'%d ordu\',\n
+            d : \'egun bat\',\n
+            dd : \'%d egun\',\n
+            M : \'hilabete bat\',\n
+            MM : \'%d hilabete\',\n
+            y : \'urte bat\',\n
+            yy : \'%d urte\'\n
+        },\n
+        ordinalParse: /\\d{1,2}\\./,\n
+        ordinal : \'%d.\',\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 7  // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return eu;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2284</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>eu.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

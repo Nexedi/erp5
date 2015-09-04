@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272814.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>hr.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : hrvatski (hr)\n
+//! author : Bojan Marković : https://github.com/bmarkovic\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    function translate(number, withoutSuffix, key) {\n
+        var result = number + \' \';\n
+        switch (key) {\n
+        case \'m\':\n
+            return withoutSuffix ? \'jedna minuta\' : \'jedne minute\';\n
+        case \'mm\':\n
+            if (number === 1) {\n
+                result += \'minuta\';\n
+            } else if (number === 2 || number === 3 || number === 4) {\n
+                result += \'minute\';\n
+            } else {\n
+                result += \'minuta\';\n
+            }\n
+            return result;\n
+        case \'h\':\n
+            return withoutSuffix ? \'jedan sat\' : \'jednog sata\';\n
+        case \'hh\':\n
+            if (number === 1) {\n
+                result += \'sat\';\n
+            } else if (number === 2 || number === 3 || number === 4) {\n
+                result += \'sata\';\n
+            } else {\n
+                result += \'sati\';\n
+            }\n
+            return result;\n
+        case \'dd\':\n
+            if (number === 1) {\n
+                result += \'dan\';\n
+            } else {\n
+                result += \'dana\';\n
+            }\n
+            return result;\n
+        case \'MM\':\n
+            if (number === 1) {\n
+                result += \'mjesec\';\n
+            } else if (number === 2 || number === 3 || number === 4) {\n
+                result += \'mjeseca\';\n
+            } else {\n
+                result += \'mjeseci\';\n
+            }\n
+            return result;\n
+        case \'yy\':\n
+            if (number === 1) {\n
+                result += \'godina\';\n
+            } else if (number === 2 || number === 3 || number === 4) {\n
+                result += \'godine\';\n
+            } else {\n
+                result += \'godina\';\n
+            }\n
+            return result;\n
+        }\n
+    }\n
+\n
+    var hr = moment.defineLocale(\'hr\', {\n
+        months : \'siječanj_veljača_ožujak_travanj_svibanj_lipanj_srpanj_kolovoz_rujan_listopad_studeni_prosinac\'.split(\'_\'),\n
+        monthsShort : \'sij._velj._ožu._tra._svi._lip._srp._kol._ruj._lis._stu._pro.\'.split(\'_\'),\n
+        weekdays : \'nedjelja_ponedjeljak_utorak_srijeda_četvrtak_petak_subota\'.split(\'_\'),\n
+        weekdaysShort : \'ned._pon._uto._sri._čet._pet._sub.\'.split(\'_\'),\n
+        weekdaysMin : \'ne_po_ut_sr_če_pe_su\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'H:mm\',\n
+            LTS : \'H:mm:ss\',\n
+            L : \'DD. MM. YYYY\',\n
+            LL : \'D. MMMM YYYY\',\n
+            LLL : \'D. MMMM YYYY H:mm\',\n
+            LLLL : \'dddd, D. MMMM YYYY H:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay  : \'[danas u] LT\',\n
+            nextDay  : \'[sutra u] LT\',\n
+            nextWeek : function () {\n
+                switch (this.day()) {\n
+                case 0:\n
+                    return \'[u] [nedjelju] [u] LT\';\n
+                case 3:\n
+                    return \'[u] [srijedu] [u] LT\';\n
+                case 6:\n
+                    return \'[u] [subotu] [u] LT\';\n
+                case 1:\n
+                case 2:\n
+                case 4:\n
+                case 5:\n
+                    return \'[u] dddd [u] LT\';\n
+                }\n
+            },\n
+            lastDay  : \'[jučer u] LT\',\n
+            lastWeek : function () {\n
+                switch (this.day()) {\n
+                case 0:\n
+                case 3:\n
+                    return \'[prošlu] dddd [u] LT\';\n
+                case 6:\n
+                    return \'[prošle] [subote] [u] LT\';\n
+                case 1:\n
+                case 2:\n
+                case 4:\n
+                case 5:\n
+                    return \'[prošli] dddd [u] LT\';\n
+                }\n
+            },\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'za %s\',\n
+            past   : \'prije %s\',\n
+            s      : \'par sekundi\',\n
+            m      : translate,\n
+            mm     : translate,\n
+            h      : translate,\n
+            hh     : translate,\n
+            d      : \'dan\',\n
+            dd     : translate,\n
+            M      : \'mjesec\',\n
+            MM     : translate,\n
+            y      : \'godinu\',\n
+            yy     : translate\n
+        },\n
+        ordinalParse: /\\d{1,2}\\./,\n
+        ordinal : \'%d.\',\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 7  // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return hr;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4569</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>hr.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

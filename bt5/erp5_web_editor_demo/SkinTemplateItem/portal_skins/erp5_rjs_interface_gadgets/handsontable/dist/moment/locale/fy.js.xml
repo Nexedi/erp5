@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272791.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fy.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : frisian (fy)\n
+//! author : Robin van der Vliet : https://github.com/robin0van0der0v\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var monthsShortWithDots = \'jan._feb._mrt._apr._mai_jun._jul._aug._sep._okt._nov._des.\'.split(\'_\'),\n
+        monthsShortWithoutDots = \'jan_feb_mrt_apr_mai_jun_jul_aug_sep_okt_nov_des\'.split(\'_\');\n
+\n
+    var fy = moment.defineLocale(\'fy\', {\n
+        months : \'jannewaris_febrewaris_maart_april_maaie_juny_july_augustus_septimber_oktober_novimber_desimber\'.split(\'_\'),\n
+        monthsShort : function (m, format) {\n
+            if (/-MMM-/.test(format)) {\n
+                return monthsShortWithoutDots[m.month()];\n
+            } else {\n
+                return monthsShortWithDots[m.month()];\n
+            }\n
+        },\n
+        weekdays : \'snein_moandei_tiisdei_woansdei_tongersdei_freed_sneon\'.split(\'_\'),\n
+        weekdaysShort : \'si._mo._ti._wo._to._fr._so.\'.split(\'_\'),\n
+        weekdaysMin : \'Si_Mo_Ti_Wo_To_Fr_So\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD-MM-YYYY\',\n
+            LL : \'D MMMM YYYY\',\n
+            LLL : \'D MMMM YYYY HH:mm\',\n
+            LLLL : \'dddd D MMMM YYYY HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay: \'[hjoed om] LT\',\n
+            nextDay: \'[moarn om] LT\',\n
+            nextWeek: \'dddd [om] LT\',\n
+            lastDay: \'[juster om] LT\',\n
+            lastWeek: \'[ôfrûne] dddd [om] LT\',\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'oer %s\',\n
+            past : \'%s lyn\',\n
+            s : \'in pear sekonden\',\n
+            m : \'ien minút\',\n
+            mm : \'%d minuten\',\n
+            h : \'ien oere\',\n
+            hh : \'%d oeren\',\n
+            d : \'ien dei\',\n
+            dd : \'%d dagen\',\n
+            M : \'ien moanne\',\n
+            MM : \'%d moannen\',\n
+            y : \'ien jier\',\n
+            yy : \'%d jierren\'\n
+        },\n
+        ordinalParse: /\\d{1,2}(ste|de)/,\n
+        ordinal : function (number) {\n
+            return number + ((number === 1 || number === 8 || number >= 20) ? \'ste\' : \'de\');\n
+        },\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 4  // The week that contains Jan 4th is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return fy;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2538</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>fy.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

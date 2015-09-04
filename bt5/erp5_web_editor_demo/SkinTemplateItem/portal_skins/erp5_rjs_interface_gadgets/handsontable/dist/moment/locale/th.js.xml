@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272779.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>th.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : thai (th)\n
+//! author : Kridsada Thanabulpong : https://github.com/sirn\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var th = moment.defineLocale(\'th\', {\n
+        months : \'มกราคม_กุมภาพันธ์_มีนาคม_เมษายน_พฤษภาคม_มิถุนายน_กรกฎาคม_สิงหาคม_กันยายน_ตุลาคม_พฤศจิกายน_ธันวาคม\'.split(\'_\'),\n
+        monthsShort : \'มกรา_กุมภา_มีนา_เมษา_พฤษภา_มิถุนา_กรกฎา_สิงหา_กันยา_ตุลา_พฤศจิกา_ธันวา\'.split(\'_\'),\n
+        weekdays : \'อาทิตย์_จันทร์_อังคาร_พุธ_พฤหัสบดี_ศุกร์_เสาร์\'.split(\'_\'),\n
+        weekdaysShort : \'อาทิตย์_จันทร์_อังคาร_พุธ_พฤหัส_ศุกร์_เสาร์\'.split(\'_\'), // yes, three characters difference\n
+        weekdaysMin : \'อา._จ._อ._พ._พฤ._ศ._ส.\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'H นาฬิกา m นาที\',\n
+            LTS : \'H นาฬิกา m นาที s วินาที\',\n
+            L : \'YYYY/MM/DD\',\n
+            LL : \'D MMMM YYYY\',\n
+            LLL : \'D MMMM YYYY เวลา H นาฬิกา m นาที\',\n
+            LLLL : \'วันddddที่ D MMMM YYYY เวลา H นาฬิกา m นาที\'\n
+        },\n
+        meridiemParse: /ก่อนเที่ยง|หลังเที่ยง/,\n
+        isPM: function (input) {\n
+            return input === \'หลังเที่ยง\';\n
+        },\n
+        meridiem : function (hour, minute, isLower) {\n
+            if (hour < 12) {\n
+                return \'ก่อนเที่ยง\';\n
+            } else {\n
+                return \'หลังเที่ยง\';\n
+            }\n
+        },\n
+        calendar : {\n
+            sameDay : \'[วันนี้ เวลา] LT\',\n
+            nextDay : \'[พรุ่งนี้ เวลา] LT\',\n
+            nextWeek : \'dddd[หน้า เวลา] LT\',\n
+            lastDay : \'[เมื่อวานนี้ เวลา] LT\',\n
+            lastWeek : \'[วัน]dddd[ที่แล้ว เวลา] LT\',\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'อีก %s\',\n
+            past : \'%sที่แล้ว\',\n
+            s : \'ไม่กี่วินาที\',\n
+            m : \'1 นาที\',\n
+            mm : \'%d นาที\',\n
+            h : \'1 ชั่วโมง\',\n
+            hh : \'%d ชั่วโมง\',\n
+            d : \'1 วัน\',\n
+            dd : \'%d วัน\',\n
+            M : \'1 เดือน\',\n
+            MM : \'%d เดือน\',\n
+            y : \'1 ปี\',\n
+            yy : \'%d ปี\'\n
+        }\n
+    });\n
+\n
+    return th;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3217</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>th.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

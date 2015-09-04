@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272801.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>pt.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : portuguese (pt)\n
+//! author : Jefferson : https://github.com/jalex79\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var pt = moment.defineLocale(\'pt\', {\n
+        months : \'Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro\'.split(\'_\'),\n
+        monthsShort : \'Jan_Fev_Mar_Abr_Mai_Jun_Jul_Ago_Set_Out_Nov_Dez\'.split(\'_\'),\n
+        weekdays : \'Domingo_Segunda-Feira_Terça-Feira_Quarta-Feira_Quinta-Feira_Sexta-Feira_Sábado\'.split(\'_\'),\n
+        weekdaysShort : \'Dom_Seg_Ter_Qua_Qui_Sex_Sáb\'.split(\'_\'),\n
+        weekdaysMin : \'Dom_2ª_3ª_4ª_5ª_6ª_Sáb\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD/MM/YYYY\',\n
+            LL : \'D [de] MMMM [de] YYYY\',\n
+            LLL : \'D [de] MMMM [de] YYYY HH:mm\',\n
+            LLLL : \'dddd, D [de] MMMM [de] YYYY HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay: \'[Hoje às] LT\',\n
+            nextDay: \'[Amanhã às] LT\',\n
+            nextWeek: \'dddd [às] LT\',\n
+            lastDay: \'[Ontem às] LT\',\n
+            lastWeek: function () {\n
+                return (this.day() === 0 || this.day() === 6) ?\n
+                    \'[Último] dddd [às] LT\' : // Saturday + Sunday\n
+                    \'[Última] dddd [às] LT\'; // Monday - Friday\n
+            },\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'em %s\',\n
+            past : \'há %s\',\n
+            s : \'segundos\',\n
+            m : \'um minuto\',\n
+            mm : \'%d minutos\',\n
+            h : \'uma hora\',\n
+            hh : \'%d horas\',\n
+            d : \'um dia\',\n
+            dd : \'%d dias\',\n
+            M : \'um mês\',\n
+            MM : \'%d meses\',\n
+            y : \'um ano\',\n
+            yy : \'%d anos\'\n
+        },\n
+        ordinalParse: /\\d{1,2}º/,\n
+        ordinal : \'%dº\',\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 4  // The week that contains Jan 4th is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return pt;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2287</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>pt.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

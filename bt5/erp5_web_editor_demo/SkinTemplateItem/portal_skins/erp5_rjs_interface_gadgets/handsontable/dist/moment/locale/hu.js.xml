@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272764.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>hu.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : hungarian (hu)\n
+//! author : Adam Brunner : https://github.com/adambrunner\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var weekEndings = \'vasárnap hétfőn kedden szerdán csütörtökön pénteken szombaton\'.split(\' \');\n
+    function translate(number, withoutSuffix, key, isFuture) {\n
+        var num = number,\n
+            suffix;\n
+        switch (key) {\n
+        case \'s\':\n
+            return (isFuture || withoutSuffix) ? \'néhány másodperc\' : \'néhány másodperce\';\n
+        case \'m\':\n
+            return \'egy\' + (isFuture || withoutSuffix ? \' perc\' : \' perce\');\n
+        case \'mm\':\n
+            return num + (isFuture || withoutSuffix ? \' perc\' : \' perce\');\n
+        case \'h\':\n
+            return \'egy\' + (isFuture || withoutSuffix ? \' óra\' : \' órája\');\n
+        case \'hh\':\n
+            return num + (isFuture || withoutSuffix ? \' óra\' : \' órája\');\n
+        case \'d\':\n
+            return \'egy\' + (isFuture || withoutSuffix ? \' nap\' : \' napja\');\n
+        case \'dd\':\n
+            return num + (isFuture || withoutSuffix ? \' nap\' : \' napja\');\n
+        case \'M\':\n
+            return \'egy\' + (isFuture || withoutSuffix ? \' hónap\' : \' hónapja\');\n
+        case \'MM\':\n
+            return num + (isFuture || withoutSuffix ? \' hónap\' : \' hónapja\');\n
+        case \'y\':\n
+            return \'egy\' + (isFuture || withoutSuffix ? \' év\' : \' éve\');\n
+        case \'yy\':\n
+            return num + (isFuture || withoutSuffix ? \' év\' : \' éve\');\n
+        }\n
+        return \'\';\n
+    }\n
+    function week(isFuture) {\n
+        return (isFuture ? \'\' : \'[múlt] \') + \'[\' + weekEndings[this.day()] + \'] LT[-kor]\';\n
+    }\n
+\n
+    var hu = moment.defineLocale(\'hu\', {\n
+        months : \'január_február_március_április_május_június_július_augusztus_szeptember_október_november_december\'.split(\'_\'),\n
+        monthsShort : \'jan_feb_márc_ápr_máj_jún_júl_aug_szept_okt_nov_dec\'.split(\'_\'),\n
+        weekdays : \'vasárnap_hétfő_kedd_szerda_csütörtök_péntek_szombat\'.split(\'_\'),\n
+        weekdaysShort : \'vas_hét_kedd_sze_csüt_pén_szo\'.split(\'_\'),\n
+        weekdaysMin : \'v_h_k_sze_cs_p_szo\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'H:mm\',\n
+            LTS : \'H:mm:ss\',\n
+            L : \'YYYY.MM.DD.\',\n
+            LL : \'YYYY. MMMM D.\',\n
+            LLL : \'YYYY. MMMM D. H:mm\',\n
+            LLLL : \'YYYY. MMMM D., dddd H:mm\'\n
+        },\n
+        meridiemParse: /de|du/i,\n
+        isPM: function (input) {\n
+            return input.charAt(1).toLowerCase() === \'u\';\n
+        },\n
+        meridiem : function (hours, minutes, isLower) {\n
+            if (hours < 12) {\n
+                return isLower === true ? \'de\' : \'DE\';\n
+            } else {\n
+                return isLower === true ? \'du\' : \'DU\';\n
+            }\n
+        },\n
+        calendar : {\n
+            sameDay : \'[ma] LT[-kor]\',\n
+            nextDay : \'[holnap] LT[-kor]\',\n
+            nextWeek : function () {\n
+                return week.call(this, true);\n
+            },\n
+            lastDay : \'[tegnap] LT[-kor]\',\n
+            lastWeek : function () {\n
+                return week.call(this, false);\n
+            },\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'%s múlva\',\n
+            past : \'%s\',\n
+            s : translate,\n
+            m : translate,\n
+            mm : translate,\n
+            h : translate,\n
+            hh : translate,\n
+            d : translate,\n
+            dd : translate,\n
+            M : translate,\n
+            MM : translate,\n
+            y : translate,\n
+            yy : translate\n
+        },\n
+        ordinalParse: /\\d{1,2}\\./,\n
+        ordinal : \'%d.\',\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 7  // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return hu;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4018</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>hu.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272781.2</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ka.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : Georgian (ka)\n
+//! author : Irakli Janiashvili : https://github.com/irakli-janiashvili\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    function monthsCaseReplace(m, format) {\n
+        var months = {\n
+            \'nominative\': \'იანვარი_თებერვალი_მარტი_აპრილი_მაისი_ივნისი_ივლისი_აგვისტო_სექტემბერი_ოქტომბერი_ნოემბერი_დეკემბერი\'.split(\'_\'),\n
+            \'accusative\': \'იანვარს_თებერვალს_მარტს_აპრილის_მაისს_ივნისს_ივლისს_აგვისტს_სექტემბერს_ოქტომბერს_ნოემბერს_დეკემბერს\'.split(\'_\')\n
+        },\n
+        nounCase = (/D[oD] *MMMM?/).test(format) ?\n
+            \'accusative\' :\n
+            \'nominative\';\n
+        return months[nounCase][m.month()];\n
+    }\n
+    function weekdaysCaseReplace(m, format) {\n
+        var weekdays = {\n
+            \'nominative\': \'კვირა_ორშაბათი_სამშაბათი_ოთხშაბათი_ხუთშაბათი_პარასკევი_შაბათი\'.split(\'_\'),\n
+            \'accusative\': \'კვირას_ორშაბათს_სამშაბათს_ოთხშაბათს_ხუთშაბათს_პარასკევს_შაბათს\'.split(\'_\')\n
+        },\n
+        nounCase = (/(წინა|შემდეგ)/).test(format) ?\n
+            \'accusative\' :\n
+            \'nominative\';\n
+        return weekdays[nounCase][m.day()];\n
+    }\n
+\n
+    var ka = moment.defineLocale(\'ka\', {\n
+        months : monthsCaseReplace,\n
+        monthsShort : \'იან_თებ_მარ_აპრ_მაი_ივნ_ივლ_აგვ_სექ_ოქტ_ნოე_დეკ\'.split(\'_\'),\n
+        weekdays : weekdaysCaseReplace,\n
+        weekdaysShort : \'კვი_ორშ_სამ_ოთხ_ხუთ_პარ_შაბ\'.split(\'_\'),\n
+        weekdaysMin : \'კვ_ორ_სა_ოთ_ხუ_პა_შა\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'h:mm A\',\n
+            LTS : \'h:mm:ss A\',\n
+            L : \'DD/MM/YYYY\',\n
+            LL : \'D MMMM YYYY\',\n
+            LLL : \'D MMMM YYYY h:mm A\',\n
+            LLLL : \'dddd, D MMMM YYYY h:mm A\'\n
+        },\n
+        calendar : {\n
+            sameDay : \'[დღეს] LT[-ზე]\',\n
+            nextDay : \'[ხვალ] LT[-ზე]\',\n
+            lastDay : \'[გუშინ] LT[-ზე]\',\n
+            nextWeek : \'[შემდეგ] dddd LT[-ზე]\',\n
+            lastWeek : \'[წინა] dddd LT-ზე\',\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : function (s) {\n
+                return (/(წამი|წუთი|საათი|წელი)/).test(s) ?\n
+                    s.replace(/ი$/, \'ში\') :\n
+                    s + \'ში\';\n
+            },\n
+            past : function (s) {\n
+                if ((/(წამი|წუთი|საათი|დღე|თვე)/).test(s)) {\n
+                    return s.replace(/(ი|ე)$/, \'ის წინ\');\n
+                }\n
+                if ((/წელი/).test(s)) {\n
+                    return s.replace(/წელი$/, \'წლის წინ\');\n
+                }\n
+            },\n
+            s : \'რამდენიმე წამი\',\n
+            m : \'წუთი\',\n
+            mm : \'%d წუთი\',\n
+            h : \'საათი\',\n
+            hh : \'%d საათი\',\n
+            d : \'დღე\',\n
+            dd : \'%d დღე\',\n
+            M : \'თვე\',\n
+            MM : \'%d თვე\',\n
+            y : \'წელი\',\n
+            yy : \'%d წელი\'\n
+        },\n
+        ordinalParse: /0|1-ლი|მე-\\d{1,2}|\\d{1,2}-ე/,\n
+        ordinal : function (number) {\n
+            if (number === 0) {\n
+                return number;\n
+            }\n
+            if (number === 1) {\n
+                return number + \'-ლი\';\n
+            }\n
+            if ((number < 20) || (number <= 100 && (number % 20 === 0)) || (number % 100 === 0)) {\n
+                return \'მე-\' + number;\n
+            }\n
+            return number + \'-ე\';\n
+        },\n
+        week : {\n
+            dow : 1,\n
+            doy : 7\n
+        }\n
+    });\n
+\n
+    return ka;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4613</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ka.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

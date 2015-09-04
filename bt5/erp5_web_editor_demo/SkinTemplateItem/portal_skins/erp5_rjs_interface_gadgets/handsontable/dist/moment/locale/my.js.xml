@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272784.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>my.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : Burmese (my)\n
+//! author : Squar team, mysquar.com\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var symbolMap = {\n
+        \'1\': \'၁\',\n
+        \'2\': \'၂\',\n
+        \'3\': \'၃\',\n
+        \'4\': \'၄\',\n
+        \'5\': \'၅\',\n
+        \'6\': \'၆\',\n
+        \'7\': \'၇\',\n
+        \'8\': \'၈\',\n
+        \'9\': \'၉\',\n
+        \'0\': \'၀\'\n
+    }, numberMap = {\n
+        \'၁\': \'1\',\n
+        \'၂\': \'2\',\n
+        \'၃\': \'3\',\n
+        \'၄\': \'4\',\n
+        \'၅\': \'5\',\n
+        \'၆\': \'6\',\n
+        \'၇\': \'7\',\n
+        \'၈\': \'8\',\n
+        \'၉\': \'9\',\n
+        \'၀\': \'0\'\n
+    };\n
+\n
+    var my = moment.defineLocale(\'my\', {\n
+        months: \'ဇန်နဝါရီ_ဖေဖော်ဝါရီ_မတ်_ဧပြီ_မေ_ဇွန်_ဇူလိုင်_သြဂုတ်_စက်တင်ဘာ_အောက်တိုဘာ_နိုဝင်ဘာ_ဒီဇင်ဘာ\'.split(\'_\'),\n
+        monthsShort: \'ဇန်_ဖေ_မတ်_ပြီ_မေ_ဇွန်_လိုင်_သြ_စက်_အောက်_နို_ဒီ\'.split(\'_\'),\n
+        weekdays: \'တနင်္ဂနွေ_တနင်္လာ_အင်္ဂါ_ဗုဒ္ဓဟူး_ကြာသပတေး_သောကြာ_စနေ\'.split(\'_\'),\n
+        weekdaysShort: \'နွေ_လာ_ဂါ_ဟူး_ကြာ_သော_နေ\'.split(\'_\'),\n
+        weekdaysMin: \'နွေ_လာ_ဂါ_ဟူး_ကြာ_သော_နေ\'.split(\'_\'),\n
+\n
+        longDateFormat: {\n
+            LT: \'HH:mm\',\n
+            LTS: \'HH:mm:ss\',\n
+            L: \'DD/MM/YYYY\',\n
+            LL: \'D MMMM YYYY\',\n
+            LLL: \'D MMMM YYYY HH:mm\',\n
+            LLLL: \'dddd D MMMM YYYY HH:mm\'\n
+        },\n
+        calendar: {\n
+            sameDay: \'[ယနေ.] LT [မှာ]\',\n
+            nextDay: \'[မနက်ဖြန်] LT [မှာ]\',\n
+            nextWeek: \'dddd LT [မှာ]\',\n
+            lastDay: \'[မနေ.က] LT [မှာ]\',\n
+            lastWeek: \'[ပြီးခဲ့သော] dddd LT [မှာ]\',\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime: {\n
+            future: \'လာမည့် %s မှာ\',\n
+            past: \'လွန်ခဲ့သော %s က\',\n
+            s: \'စက္ကန်.အနည်းငယ်\',\n
+            m: \'တစ်မိနစ်\',\n
+            mm: \'%d မိနစ်\',\n
+            h: \'တစ်နာရီ\',\n
+            hh: \'%d နာရီ\',\n
+            d: \'တစ်ရက်\',\n
+            dd: \'%d ရက်\',\n
+            M: \'တစ်လ\',\n
+            MM: \'%d လ\',\n
+            y: \'တစ်နှစ်\',\n
+            yy: \'%d နှစ်\'\n
+        },\n
+        preparse: function (string) {\n
+            return string.replace(/[၁၂၃၄၅၆၇၈၉၀]/g, function (match) {\n
+                return numberMap[match];\n
+            });\n
+        },\n
+        postformat: function (string) {\n
+            return string.replace(/\\d/g, function (match) {\n
+                return symbolMap[match];\n
+            });\n
+        },\n
+        week: {\n
+            dow: 1, // Monday is the first day of the week.\n
+            doy: 4 // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return my;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3386</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>my.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

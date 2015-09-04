@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272771.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ja.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : japanese (ja)\n
+//! author : LI Long : https://github.com/baryon\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var ja = moment.defineLocale(\'ja\', {\n
+        months : \'1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月\'.split(\'_\'),\n
+        monthsShort : \'1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月\'.split(\'_\'),\n
+        weekdays : \'日曜日_月曜日_火曜日_水曜日_木曜日_金曜日_土曜日\'.split(\'_\'),\n
+        weekdaysShort : \'日_月_火_水_木_金_土\'.split(\'_\'),\n
+        weekdaysMin : \'日_月_火_水_木_金_土\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'Ah時m分\',\n
+            LTS : \'Ah時m分s秒\',\n
+            L : \'YYYY/MM/DD\',\n
+            LL : \'YYYY年M月D日\',\n
+            LLL : \'YYYY年M月D日Ah時m分\',\n
+            LLLL : \'YYYY年M月D日Ah時m分 dddd\'\n
+        },\n
+        meridiemParse: /午前|午後/i,\n
+        isPM : function (input) {\n
+            return input === \'午後\';\n
+        },\n
+        meridiem : function (hour, minute, isLower) {\n
+            if (hour < 12) {\n
+                return \'午前\';\n
+            } else {\n
+                return \'午後\';\n
+            }\n
+        },\n
+        calendar : {\n
+            sameDay : \'[今日] LT\',\n
+            nextDay : \'[明日] LT\',\n
+            nextWeek : \'[来週]dddd LT\',\n
+            lastDay : \'[昨日] LT\',\n
+            lastWeek : \'[前週]dddd LT\',\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'%s後\',\n
+            past : \'%s前\',\n
+            s : \'数秒\',\n
+            m : \'1分\',\n
+            mm : \'%d分\',\n
+            h : \'1時間\',\n
+            hh : \'%d時間\',\n
+            d : \'1日\',\n
+            dd : \'%d日\',\n
+            M : \'1ヶ月\',\n
+            MM : \'%dヶ月\',\n
+            y : \'1年\',\n
+            yy : \'%d年\'\n
+        }\n
+    });\n
+\n
+    return ja;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2104</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ja.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272777.55</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>nn.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : norwegian nynorsk (nn)\n
+//! author : https://github.com/mechuwind\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var nn = moment.defineLocale(\'nn\', {\n
+        months : \'januar_februar_mars_april_mai_juni_juli_august_september_oktober_november_desember\'.split(\'_\'),\n
+        monthsShort : \'jan_feb_mar_apr_mai_jun_jul_aug_sep_okt_nov_des\'.split(\'_\'),\n
+        weekdays : \'sundag_måndag_tysdag_onsdag_torsdag_fredag_laurdag\'.split(\'_\'),\n
+        weekdaysShort : \'sun_mån_tys_ons_tor_fre_lau\'.split(\'_\'),\n
+        weekdaysMin : \'su_må_ty_on_to_fr_lø\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD.MM.YYYY\',\n
+            LL : \'D MMMM YYYY\',\n
+            LLL : \'D MMMM YYYY HH:mm\',\n
+            LLLL : \'dddd D MMMM YYYY HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay: \'[I dag klokka] LT\',\n
+            nextDay: \'[I morgon klokka] LT\',\n
+            nextWeek: \'dddd [klokka] LT\',\n
+            lastDay: \'[I går klokka] LT\',\n
+            lastWeek: \'[Føregåande] dddd [klokka] LT\',\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'om %s\',\n
+            past : \'for %s sidan\',\n
+            s : \'nokre sekund\',\n
+            m : \'eit minutt\',\n
+            mm : \'%d minutt\',\n
+            h : \'ein time\',\n
+            hh : \'%d timar\',\n
+            d : \'ein dag\',\n
+            dd : \'%d dagar\',\n
+            M : \'ein månad\',\n
+            MM : \'%d månader\',\n
+            y : \'eit år\',\n
+            yy : \'%d år\'\n
+        },\n
+        ordinalParse: /\\d{1,2}\\./,\n
+        ordinal : \'%d.\',\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 4  // The week that contains Jan 4th is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return nn;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2050</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>nn.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

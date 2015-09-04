@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272815.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>nl.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : dutch (nl)\n
+//! author : Joris Röling : https://github.com/jjupiter\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var monthsShortWithDots = \'jan._feb._mrt._apr._mei_jun._jul._aug._sep._okt._nov._dec.\'.split(\'_\'),\n
+        monthsShortWithoutDots = \'jan_feb_mrt_apr_mei_jun_jul_aug_sep_okt_nov_dec\'.split(\'_\');\n
+\n
+    var nl = moment.defineLocale(\'nl\', {\n
+        months : \'januari_februari_maart_april_mei_juni_juli_augustus_september_oktober_november_december\'.split(\'_\'),\n
+        monthsShort : function (m, format) {\n
+            if (/-MMM-/.test(format)) {\n
+                return monthsShortWithoutDots[m.month()];\n
+            } else {\n
+                return monthsShortWithDots[m.month()];\n
+            }\n
+        },\n
+        weekdays : \'zondag_maandag_dinsdag_woensdag_donderdag_vrijdag_zaterdag\'.split(\'_\'),\n
+        weekdaysShort : \'zo._ma._di._wo._do._vr._za.\'.split(\'_\'),\n
+        weekdaysMin : \'Zo_Ma_Di_Wo_Do_Vr_Za\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD-MM-YYYY\',\n
+            LL : \'D MMMM YYYY\',\n
+            LLL : \'D MMMM YYYY HH:mm\',\n
+            LLLL : \'dddd D MMMM YYYY HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay: \'[vandaag om] LT\',\n
+            nextDay: \'[morgen om] LT\',\n
+            nextWeek: \'dddd [om] LT\',\n
+            lastDay: \'[gisteren om] LT\',\n
+            lastWeek: \'[afgelopen] dddd [om] LT\',\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'over %s\',\n
+            past : \'%s geleden\',\n
+            s : \'een paar seconden\',\n
+            m : \'één minuut\',\n
+            mm : \'%d minuten\',\n
+            h : \'één uur\',\n
+            hh : \'%d uur\',\n
+            d : \'één dag\',\n
+            dd : \'%d dagen\',\n
+            M : \'één maand\',\n
+            MM : \'%d maanden\',\n
+            y : \'één jaar\',\n
+            yy : \'%d jaar\'\n
+        },\n
+        ordinalParse: /\\d{1,2}(ste|de)/,\n
+        ordinal : function (number) {\n
+            return number + ((number === 1 || number === 8 || number >= 20) ? \'ste\' : \'de\');\n
+        },\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 4  // The week that contains Jan 4th is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return nl;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2536</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>nl.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

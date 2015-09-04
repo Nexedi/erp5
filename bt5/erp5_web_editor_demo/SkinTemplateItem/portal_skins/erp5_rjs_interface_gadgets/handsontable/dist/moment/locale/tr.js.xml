@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272797.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tr.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : turkish (tr)\n
+//! authors : Erhan Gundogan : https://github.com/erhangundogan,\n
+//!           Burak Yiğit Kaya: https://github.com/BYK\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var suffixes = {\n
+        1: \'\\\'inci\',\n
+        5: \'\\\'inci\',\n
+        8: \'\\\'inci\',\n
+        70: \'\\\'inci\',\n
+        80: \'\\\'inci\',\n
+        2: \'\\\'nci\',\n
+        7: \'\\\'nci\',\n
+        20: \'\\\'nci\',\n
+        50: \'\\\'nci\',\n
+        3: \'\\\'üncü\',\n
+        4: \'\\\'üncü\',\n
+        100: \'\\\'üncü\',\n
+        6: \'\\\'ncı\',\n
+        9: \'\\\'uncu\',\n
+        10: \'\\\'uncu\',\n
+        30: \'\\\'uncu\',\n
+        60: \'\\\'ıncı\',\n
+        90: \'\\\'ıncı\'\n
+    };\n
+\n
+    var tr = moment.defineLocale(\'tr\', {\n
+        months : \'Ocak_Şubat_Mart_Nisan_Mayıs_Haziran_Temmuz_Ağustos_Eylül_Ekim_Kasım_Aralık\'.split(\'_\'),\n
+        monthsShort : \'Oca_Şub_Mar_Nis_May_Haz_Tem_Ağu_Eyl_Eki_Kas_Ara\'.split(\'_\'),\n
+        weekdays : \'Pazar_Pazartesi_Salı_Çarşamba_Perşembe_Cuma_Cumartesi\'.split(\'_\'),\n
+        weekdaysShort : \'Paz_Pts_Sal_Çar_Per_Cum_Cts\'.split(\'_\'),\n
+        weekdaysMin : \'Pz_Pt_Sa_Ça_Pe_Cu_Ct\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD.MM.YYYY\',\n
+            LL : \'D MMMM YYYY\',\n
+            LLL : \'D MMMM YYYY HH:mm\',\n
+            LLLL : \'dddd, D MMMM YYYY HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay : \'[bugün saat] LT\',\n
+            nextDay : \'[yarın saat] LT\',\n
+            nextWeek : \'[haftaya] dddd [saat] LT\',\n
+            lastDay : \'[dün] LT\',\n
+            lastWeek : \'[geçen hafta] dddd [saat] LT\',\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'%s sonra\',\n
+            past : \'%s önce\',\n
+            s : \'birkaç saniye\',\n
+            m : \'bir dakika\',\n
+            mm : \'%d dakika\',\n
+            h : \'bir saat\',\n
+            hh : \'%d saat\',\n
+            d : \'bir gün\',\n
+            dd : \'%d gün\',\n
+            M : \'bir ay\',\n
+            MM : \'%d ay\',\n
+            y : \'bir yıl\',\n
+            yy : \'%d yıl\'\n
+        },\n
+        ordinalParse: /\\d{1,2}\'(inci|nci|üncü|ncı|uncu|ıncı)/,\n
+        ordinal : function (number) {\n
+            if (number === 0) {  // special case for zero\n
+                return number + \'\\\'ıncı\';\n
+            }\n
+            var a = number % 10,\n
+                b = number % 100 - a,\n
+                c = number >= 100 ? 100 : null;\n
+            return number + (suffixes[a] || suffixes[b] || suffixes[c]);\n
+        },\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 7  // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return tr;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2902</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>tr.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

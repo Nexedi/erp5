@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272817.42</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>km.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : khmer (km)\n
+//! author : Kruy Vanna : https://github.com/kruyvanna\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var km = moment.defineLocale(\'km\', {\n
+        months: \'មករា_កុម្ភៈ_មិនា_មេសា_ឧសភា_មិថុនា_កក្កដា_សីហា_កញ្ញា_តុលា_វិច្ឆិកា_ធ្នូ\'.split(\'_\'),\n
+        monthsShort: \'មករា_កុម្ភៈ_មិនា_មេសា_ឧសភា_មិថុនា_កក្កដា_សីហា_កញ្ញា_តុលា_វិច្ឆិកា_ធ្នូ\'.split(\'_\'),\n
+        weekdays: \'អាទិត្យ_ច័ន្ទ_អង្គារ_ពុធ_ព្រហស្បតិ៍_សុក្រ_សៅរ៍\'.split(\'_\'),\n
+        weekdaysShort: \'អាទិត្យ_ច័ន្ទ_អង្គារ_ពុធ_ព្រហស្បតិ៍_សុក្រ_សៅរ៍\'.split(\'_\'),\n
+        weekdaysMin: \'អាទិត្យ_ច័ន្ទ_អង្គារ_ពុធ_ព្រហស្បតិ៍_សុក្រ_សៅរ៍\'.split(\'_\'),\n
+        longDateFormat: {\n
+            LT: \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L: \'DD/MM/YYYY\',\n
+            LL: \'D MMMM YYYY\',\n
+            LLL: \'D MMMM YYYY HH:mm\',\n
+            LLLL: \'dddd, D MMMM YYYY HH:mm\'\n
+        },\n
+        calendar: {\n
+            sameDay: \'[ថ្ងៃនៈ ម៉ោង] LT\',\n
+            nextDay: \'[ស្អែក ម៉ោង] LT\',\n
+            nextWeek: \'dddd [ម៉ោង] LT\',\n
+            lastDay: \'[ម្សិលមិញ ម៉ោង] LT\',\n
+            lastWeek: \'dddd [សប្តាហ៍មុន] [ម៉ោង] LT\',\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime: {\n
+            future: \'%sទៀត\',\n
+            past: \'%sមុន\',\n
+            s: \'ប៉ុន្មានវិនាទី\',\n
+            m: \'មួយនាទី\',\n
+            mm: \'%d នាទី\',\n
+            h: \'មួយម៉ោង\',\n
+            hh: \'%d ម៉ោង\',\n
+            d: \'មួយថ្ងៃ\',\n
+            dd: \'%d ថ្ងៃ\',\n
+            M: \'មួយខែ\',\n
+            MM: \'%d ខែ\',\n
+            y: \'មួយឆ្នាំ\',\n
+            yy: \'%d ឆ្នាំ\'\n
+        },\n
+        week: {\n
+            dow: 1, // Monday is the first day of the week.\n
+            doy: 4 // The week that contains Jan 4th is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return km;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2697</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>km.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

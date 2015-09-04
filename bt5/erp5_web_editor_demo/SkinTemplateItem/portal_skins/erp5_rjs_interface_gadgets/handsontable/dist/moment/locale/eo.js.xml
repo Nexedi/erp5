@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272803.16</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>eo.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : esperanto (eo)\n
+//! author : Colin Dean : https://github.com/colindean\n
+//! komento: Mi estas malcerta se mi korekte traktis akuzativojn en tiu traduko.\n
+//!          Se ne, bonvolu korekti kaj avizi min por ke mi povas lerni!\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var eo = moment.defineLocale(\'eo\', {\n
+        months : \'januaro_februaro_marto_aprilo_majo_junio_julio_aŭgusto_septembro_oktobro_novembro_decembro\'.split(\'_\'),\n
+        monthsShort : \'jan_feb_mar_apr_maj_jun_jul_aŭg_sep_okt_nov_dec\'.split(\'_\'),\n
+        weekdays : \'Dimanĉo_Lundo_Mardo_Merkredo_Ĵaŭdo_Vendredo_Sabato\'.split(\'_\'),\n
+        weekdaysShort : \'Dim_Lun_Mard_Merk_Ĵaŭ_Ven_Sab\'.split(\'_\'),\n
+        weekdaysMin : \'Di_Lu_Ma_Me_Ĵa_Ve_Sa\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'YYYY-MM-DD\',\n
+            LL : \'D[-an de] MMMM, YYYY\',\n
+            LLL : \'D[-an de] MMMM, YYYY HH:mm\',\n
+            LLLL : \'dddd, [la] D[-an de] MMMM, YYYY HH:mm\'\n
+        },\n
+        meridiemParse: /[ap]\\.t\\.m/i,\n
+        isPM: function (input) {\n
+            return input.charAt(0).toLowerCase() === \'p\';\n
+        },\n
+        meridiem : function (hours, minutes, isLower) {\n
+            if (hours > 11) {\n
+                return isLower ? \'p.t.m.\' : \'P.T.M.\';\n
+            } else {\n
+                return isLower ? \'a.t.m.\' : \'A.T.M.\';\n
+            }\n
+        },\n
+        calendar : {\n
+            sameDay : \'[Hodiaŭ je] LT\',\n
+            nextDay : \'[Morgaŭ je] LT\',\n
+            nextWeek : \'dddd [je] LT\',\n
+            lastDay : \'[Hieraŭ je] LT\',\n
+            lastWeek : \'[pasinta] dddd [je] LT\',\n
+            sameElse : \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'je %s\',\n
+            past : \'antaŭ %s\',\n
+            s : \'sekundoj\',\n
+            m : \'minuto\',\n
+            mm : \'%d minutoj\',\n
+            h : \'horo\',\n
+            hh : \'%d horoj\',\n
+            d : \'tago\',//ne \'diurno\', ĉar estas uzita por proksimumo\n
+            dd : \'%d tagoj\',\n
+            M : \'monato\',\n
+            MM : \'%d monatoj\',\n
+            y : \'jaro\',\n
+            yy : \'%d jaroj\'\n
+        },\n
+        ordinalParse: /\\d{1,2}a/,\n
+        ordinal : \'%da\',\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 7  // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return eo;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2641</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>eo.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

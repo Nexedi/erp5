@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273091.34</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>chartist.scss</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+@import "settings/chartist-settings";\n
+\n
+@mixin ct-responsive-svg-container($width: 100%, $ratio: $ct-container-ratio) {\n
+  display: block;\n
+  position: relative;\n
+  width: $width;\n
+\n
+  &:before {\n
+    display: block;\n
+    float: left;\n
+    content: "";\n
+    width: 0;\n
+    height: 0;\n
+    padding-bottom: $ratio * 100%;\n
+  }\n
+\n
+  &:after {\n
+    content: "";\n
+    display: table;\n
+    clear: both;\n
+  }\n
+\n
+  > svg {\n
+    display: block;\n
+    position: absolute;\n
+    top: 0;\n
+    left: 0;\n
+  }\n
+}\n
+\n
+@mixin ct-align-justify($ct-text-align: $ct-text-align, $ct-text-justify: $ct-text-justify) {\n
+  -webkit-box-align: $ct-text-align;\n
+  -webkit-align-items: $ct-text-align;\n
+  -ms-flex-align: $ct-text-align;\n
+  align-items: $ct-text-align;\n
+  -webkit-box-pack: $ct-text-justify;\n
+  -webkit-justify-content: $ct-text-justify;\n
+  -ms-flex-pack: $ct-text-justify;\n
+  justify-content: $ct-text-justify;\n
+  // Fallback to text-align for non-flex browsers\n
+  @if($ct-text-justify == \'flex-start\') {\n
+    text-align: left;\n
+  } @else if ($ct-text-justify == \'flex-end\') {\n
+    text-align: right;\n
+  } @else {\n
+    text-align: center;\n
+  }\n
+}\n
+\n
+@mixin ct-flex() {\n
+  // Fallback to block\n
+  display: block;\n
+  display: -webkit-box;\n
+  display: -moz-box;\n
+  display: -ms-flexbox;\n
+  display: -webkit-flex;\n
+  display: flex;\n
+}\n
+\n
+@mixin ct-chart-label($ct-text-color: $ct-text-color, $ct-text-size: $ct-text-size, $ct-text-line-height: $ct-text-line-height) {\n
+  fill: $ct-text-color;\n
+  color: $ct-text-color;\n
+  font-size: $ct-text-size;\n
+  line-height: $ct-text-line-height;\n
+}\n
+\n
+@mixin ct-chart-grid($ct-grid-color: $ct-grid-color, $ct-grid-width: $ct-grid-width, $ct-grid-dasharray: $ct-grid-dasharray) {\n
+  stroke: $ct-grid-color;\n
+  stroke-width: $ct-grid-width;\n
+\n
+  @if ($ct-grid-dasharray) {\n
+    stroke-dasharray: $ct-grid-dasharray;\n
+  }\n
+}\n
+\n
+@mixin ct-chart-point($ct-point-size: $ct-point-size, $ct-point-shape: $ct-point-shape) {\n
+  stroke-width: $ct-point-size;\n
+  stroke-linecap: $ct-point-shape;\n
+}\n
+\n
+@mixin ct-chart-line($ct-line-width: $ct-line-width, $ct-line-dasharray: $ct-line-dasharray) {\n
+  fill: none;\n
+  stroke-width: $ct-line-width;\n
+\n
+  @if ($ct-line-dasharray) {\n
+    stroke-dasharray: $ct-line-dasharray;\n
+  }\n
+}\n
+\n
+@mixin ct-chart-area($ct-area-opacity: $ct-area-opacity) {\n
+  stroke: none;\n
+  fill-opacity: $ct-area-opacity;\n
+}\n
+\n
+@mixin ct-chart-bar($ct-bar-width: $ct-bar-width) {\n
+  fill: none;\n
+  stroke-width: $ct-bar-width;\n
+}\n
+\n
+@mixin ct-chart-donut($ct-donut-width: $ct-donut-width) {\n
+  fill: none;\n
+  stroke-width: $ct-donut-width;\n
+}\n
+\n
+@mixin ct-chart-series-color($color) {\n
+  .#{$ct-class-point}, .#{$ct-class-line}, .#{$ct-class-bar}, .#{$ct-class-slice-donut} {\n
+    stroke: $color;\n
+  }\n
+\n
+  .#{$ct-class-slice-pie}, .#{$ct-class-area} {\n
+    fill: $color;\n
+  }\n
+}\n
+\n
+@mixin ct-chart($ct-container-ratio: $ct-container-ratio, $ct-text-color: $ct-text-color, $ct-text-size: $ct-text-size, $ct-grid-color: $ct-grid-color, $ct-grid-width: $ct-grid-width, $ct-grid-dasharray: $ct-grid-dasharray, $ct-point-size: $ct-point-size, $ct-point-shape: $ct-point-shape, $ct-line-width: $ct-line-width, $ct-bar-width: $ct-bar-width, $ct-donut-width: $ct-donut-width, $ct-series-names: $ct-series-names, $ct-series-colors: $ct-series-colors) {\n
+\n
+  .#{$ct-class-label} {\n
+    @include ct-chart-label($ct-text-color, $ct-text-size);\n
+  }\n
+\n
+  .#{$ct-class-chart-line} .#{$ct-class-label},\n
+  .#{$ct-class-chart-bar} .#{$ct-class-label} {\n
+    @include ct-flex();\n
+  }\n
+\n
+  .#{$ct-class-label}.#{$ct-class-horizontal}.#{$ct-class-start} {\n
+    @include ct-align-justify(flex-end, flex-start);\n
+    // Fallback for browsers that don\'t support foreignObjects\n
+    text-anchor: start;\n
+  }\n
+\n
+  .#{$ct-class-label}.#{$ct-class-horizontal}.#{$ct-class-end} {\n
+    @include ct-align-justify(flex-start, flex-start);\n
+    // Fallback for browsers that don\'t support foreignObjects\n
+    text-anchor: start;\n
+  }\n
+\n
+  .#{$ct-class-label}.#{$ct-class-vertical}.#{$ct-class-start} {\n
+    @include ct-align-justify(flex-end, flex-end);\n
+    // Fallback for browsers that don\'t support foreignObjects\n
+    text-anchor: end;\n
+  }\n
+\n
+  .#{$ct-class-label}.#{$ct-class-vertical}.#{$ct-class-end} {\n
+    @include ct-align-justify(flex-end, flex-start);\n
+    // Fallback for browsers that don\'t support foreignObjects\n
+    text-anchor: start;\n
+  }\n
+\n
+  .#{$ct-class-chart-bar} .#{$ct-class-label}.#{$ct-class-horizontal}.#{$ct-class-start} {\n
+    @include ct-align-justify(flex-end, center);\n
+    // Fallback for browsers that don\'t support foreignObjects\n
+    text-anchor: start;\n
+  }\n
+\n
+  .#{$ct-class-chart-bar} .#{$ct-class-label}.#{$ct-class-horizontal}.#{$ct-class-end} {\n
+    @include ct-align-justify(flex-start, center);\n
+    // Fallback for browsers that don\'t support foreignObjects\n
+    text-anchor: start;\n
+  }\n
+\n
+  .#{$ct-class-chart-bar}.#{$ct-class-horizontal-bars} .#{$ct-class-label}.#{$ct-class-horizontal}.#{$ct-class-start} {\n
+    @include ct-align-justify(flex-end, flex-start);\n
+    // Fallback for browsers that don\'t support foreignObjects\n
+    text-anchor: start;\n
+  }\n
+\n
+  .#{$ct-class-chart-bar}.#{$ct-class-horizontal-bars} .#{$ct-class-label}.#{$ct-class-horizontal}.#{$ct-class-end} {\n
+    @include ct-align-justify(flex-start, flex-start);\n
+    // Fallback for browsers that don\'t support foreignObjects\n
+    text-anchor: start;\n
+  }\n
+\n
+  .#{$ct-class-chart-bar}.#{$ct-class-horizontal-bars} .#{$ct-class-label}.#{$ct-class-vertical}.#{$ct-class-start} {\n
+    //@include ct-chart-label($ct-text-color, $ct-text-size, center, $ct-vertical-text-justify);\n
+    @include ct-align-justify(center, flex-end);\n
+    // Fallback for browsers that don\'t support foreignObjects\n
+    text-anchor: end;\n
+  }\n
+\n
+  .#{$ct-class-chart-bar}.#{$ct-class-horizontal-bars} .#{$ct-class-label}.#{$ct-class-vertical}.#{$ct-class-end} {\n
+    @include ct-align-justify(center, flex-start);\n
+    // Fallback for browsers that don\'t support foreignObjects\n
+    text-anchor: end;\n
+  }\n
+\n
+  .#{$ct-class-grid} {\n
+    @include ct-chart-grid($ct-grid-color, $ct-grid-width, $ct-grid-dasharray);\n
+  }\n
+\n
+  .#{$ct-class-point} {\n
+    @include ct-chart-point($ct-point-size, $ct-point-shape);\n
+  }\n
+\n
+  .#{$ct-class-line} {\n
+    @include ct-chart-line($ct-line-width);\n
+  }\n
+\n
+  .#{$ct-class-area} {\n
+    @include ct-chart-area();\n
+  }\n
+\n
+  .#{$ct-class-bar} {\n
+    @include ct-chart-bar($ct-bar-width);\n
+  }\n
+\n
+  .#{$ct-class-slice-donut} {\n
+    @include ct-chart-donut($ct-donut-width);\n
+  }\n
+\n
+  @if $ct-include-colored-series {\n
+    @for $i from 0 to length($ct-series-names) {\n
+      .#{$ct-class-series}-#{nth($ct-series-names, $i + 1)} {\n
+        $color: nth($ct-series-colors, $i + 1);\n
+\n
+        @include ct-chart-series-color($color);\n
+      }\n
+    }\n
+  }\n
+}\n
+\n
+@if $ct-include-classes {\n
+  @include ct-chart();\n
+\n
+  @if $ct-include-alternative-responsive-containers {\n
+    @for $i from 0 to length($ct-scales-names) {\n
+      .#{nth($ct-scales-names, $i + 1)} {\n
+        @include ct-responsive-svg-container($ratio: nth($ct-scales, $i + 1));\n
+      }\n
+    }\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6857</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>chartist.scss</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

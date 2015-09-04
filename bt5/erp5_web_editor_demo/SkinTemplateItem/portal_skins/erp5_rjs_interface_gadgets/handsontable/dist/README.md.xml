@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272822.56</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>README.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Handsontable distributions\n
+\n
+## Full distribution (recommended)\n
+\n
+The full distribution allows you to use Handsontable by just including 2 files:\n
+```html\n
+<script src="dist/handsontable.full.js"></script>\n
+<link rel="stylesheet" media="screen" href="dist/handsontable.full.css">\n
+```\n
+(It may also require Pikaday and moment.js, if you\'re using the Datepicker for date input)\n
+\n
+**handsontable.full.js** and **handsontable.full.css** are compiled with ___all___ the needed dependencies.\n
+\n
+Using this has the same effect as loading all the dependencies from the Bare distribution (see below).\n
+\n
+## Bare distribution\n
+\n
+If you are a "Bob the Builder" kind of hacker, you will need to load Handsontable JS, CSS and their dependencies:\n
+```html\n
+<script src="dist/handsontable.js"></script>\n
+<script src="lib/numeral.js"></script>\n
+<link rel="stylesheet" media="screen" href="dist/handsontable.css">\n
+```\n
+\n
+**handsontable.js** and **handsontable.css** are compiled ___without___ the needed dependencies.\n
+\n
+## Custom distribution\n
+\n
+If you want to build your own custom Handsontable package distribution check out our [tool](https://github.com/handsontable/hot-builder) designed for this.\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1165</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>README.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

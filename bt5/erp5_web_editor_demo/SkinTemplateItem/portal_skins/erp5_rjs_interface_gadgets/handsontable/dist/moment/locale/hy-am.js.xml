@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272769.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>hy-am.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : Armenian (hy-am)\n
+//! author : Armendarabyan : https://github.com/armendarabyan\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    function monthsCaseReplace(m, format) {\n
+        var months = {\n
+            \'nominative\': \'հունվար_փետրվար_մարտ_ապրիլ_մայիս_հունիս_հուլիս_օգոստոս_սեպտեմբեր_հոկտեմբեր_նոյեմբեր_դեկտեմբեր\'.split(\'_\'),\n
+            \'accusative\': \'հունվարի_փետրվարի_մարտի_ապրիլի_մայիսի_հունիսի_հուլիսի_օգոստոսի_սեպտեմբերի_հոկտեմբերի_նոյեմբերի_դեկտեմբերի\'.split(\'_\')\n
+        },\n
+        nounCase = (/D[oD]?(\\[[^\\[\\]]*\\]|\\s+)+MMMM?/).test(format) ?\n
+            \'accusative\' :\n
+            \'nominative\';\n
+        return months[nounCase][m.month()];\n
+    }\n
+    function monthsShortCaseReplace(m, format) {\n
+        var monthsShort = \'հնվ_փտր_մրտ_ապր_մյս_հնս_հլս_օգս_սպտ_հկտ_նմբ_դկտ\'.split(\'_\');\n
+        return monthsShort[m.month()];\n
+    }\n
+    function weekdaysCaseReplace(m, format) {\n
+        var weekdays = \'կիրակի_երկուշաբթի_երեքշաբթի_չորեքշաբթի_հինգշաբթի_ուրբաթ_շաբաթ\'.split(\'_\');\n
+        return weekdays[m.day()];\n
+    }\n
+\n
+    var hy_am = moment.defineLocale(\'hy-am\', {\n
+        months : monthsCaseReplace,\n
+        monthsShort : monthsShortCaseReplace,\n
+        weekdays : weekdaysCaseReplace,\n
+        weekdaysShort : \'կրկ_երկ_երք_չրք_հնգ_ուրբ_շբթ\'.split(\'_\'),\n
+        weekdaysMin : \'կրկ_երկ_երք_չրք_հնգ_ուրբ_շբթ\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD.MM.YYYY\',\n
+            LL : \'D MMMM YYYY թ.\',\n
+            LLL : \'D MMMM YYYY թ., HH:mm\',\n
+            LLLL : \'dddd, D MMMM YYYY թ., HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay: \'[այսօր] LT\',\n
+            nextDay: \'[վաղը] LT\',\n
+            lastDay: \'[երեկ] LT\',\n
+            nextWeek: function () {\n
+                return \'dddd [օրը ժամը] LT\';\n
+            },\n
+            lastWeek: function () {\n
+                return \'[անցած] dddd [օրը ժամը] LT\';\n
+            },\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'%s հետո\',\n
+            past : \'%s առաջ\',\n
+            s : \'մի քանի վայրկյան\',\n
+            m : \'րոպե\',\n
+            mm : \'%d րոպե\',\n
+            h : \'ժամ\',\n
+            hh : \'%d ժամ\',\n
+            d : \'օր\',\n
+            dd : \'%d օր\',\n
+            M : \'ամիս\',\n
+            MM : \'%d ամիս\',\n
+            y : \'տարի\',\n
+            yy : \'%d տարի\'\n
+        },\n
+        meridiemParse: /գիշերվա|առավոտվա|ցերեկվա|երեկոյան/,\n
+        isPM: function (input) {\n
+            return /^(ցերեկվա|երեկոյան)$/.test(input);\n
+        },\n
+        meridiem : function (hour) {\n
+            if (hour < 4) {\n
+                return \'գիշերվա\';\n
+            } else if (hour < 12) {\n
+                return \'առավոտվա\';\n
+            } else if (hour < 17) {\n
+                return \'ցերեկվա\';\n
+            } else {\n
+                return \'երեկոյան\';\n
+            }\n
+        },\n
+        ordinalParse: /\\d{1,2}|\\d{1,2}-(ին|րդ)/,\n
+        ordinal: function (number, period) {\n
+            switch (period) {\n
+            case \'DDD\':\n
+            case \'w\':\n
+            case \'W\':\n
+            case \'DDDo\':\n
+                if (number === 1) {\n
+                    return number + \'-ին\';\n
+                }\n
+                return number + \'-րդ\';\n
+            default:\n
+                return number;\n
+            }\n
+        },\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 7  // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return hy_am;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4202</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>hy-am.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

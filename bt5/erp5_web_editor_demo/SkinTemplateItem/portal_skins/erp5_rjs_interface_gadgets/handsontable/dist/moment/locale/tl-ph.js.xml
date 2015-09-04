@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272773.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tl-ph.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : Tagalog/Filipino (tl-ph)\n
+//! author : Dan Hagman\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var tl_ph = moment.defineLocale(\'tl-ph\', {\n
+        months : \'Enero_Pebrero_Marso_Abril_Mayo_Hunyo_Hulyo_Agosto_Setyembre_Oktubre_Nobyembre_Disyembre\'.split(\'_\'),\n
+        monthsShort : \'Ene_Peb_Mar_Abr_May_Hun_Hul_Ago_Set_Okt_Nob_Dis\'.split(\'_\'),\n
+        weekdays : \'Linggo_Lunes_Martes_Miyerkules_Huwebes_Biyernes_Sabado\'.split(\'_\'),\n
+        weekdaysShort : \'Lin_Lun_Mar_Miy_Huw_Biy_Sab\'.split(\'_\'),\n
+        weekdaysMin : \'Li_Lu_Ma_Mi_Hu_Bi_Sab\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'MM/D/YYYY\',\n
+            LL : \'MMMM D, YYYY\',\n
+            LLL : \'MMMM D, YYYY HH:mm\',\n
+            LLLL : \'dddd, MMMM DD, YYYY HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay: \'[Ngayon sa] LT\',\n
+            nextDay: \'[Bukas sa] LT\',\n
+            nextWeek: \'dddd [sa] LT\',\n
+            lastDay: \'[Kahapon sa] LT\',\n
+            lastWeek: \'dddd [huling linggo] LT\',\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'sa loob ng %s\',\n
+            past : \'%s ang nakalipas\',\n
+            s : \'ilang segundo\',\n
+            m : \'isang minuto\',\n
+            mm : \'%d minuto\',\n
+            h : \'isang oras\',\n
+            hh : \'%d oras\',\n
+            d : \'isang araw\',\n
+            dd : \'%d araw\',\n
+            M : \'isang buwan\',\n
+            MM : \'%d buwan\',\n
+            y : \'isang taon\',\n
+            yy : \'%d taon\'\n
+        },\n
+        ordinalParse: /\\d{1,2}/,\n
+        ordinal : function (number) {\n
+            return number;\n
+        },\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 4  // The week that contains Jan 4th is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return tl_ph;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2097</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>tl-ph.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

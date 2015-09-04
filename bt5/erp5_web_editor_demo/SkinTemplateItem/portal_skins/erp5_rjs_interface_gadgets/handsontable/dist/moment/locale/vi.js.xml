@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272798.74</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>vi.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : vietnamese (vi)\n
+//! author : Bang Nguyen : https://github.com/bangnk\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var vi = moment.defineLocale(\'vi\', {\n
+        months : \'tháng 1_tháng 2_tháng 3_tháng 4_tháng 5_tháng 6_tháng 7_tháng 8_tháng 9_tháng 10_tháng 11_tháng 12\'.split(\'_\'),\n
+        monthsShort : \'Th01_Th02_Th03_Th04_Th05_Th06_Th07_Th08_Th09_Th10_Th11_Th12\'.split(\'_\'),\n
+        weekdays : \'chủ nhật_thứ hai_thứ ba_thứ tư_thứ năm_thứ sáu_thứ bảy\'.split(\'_\'),\n
+        weekdaysShort : \'CN_T2_T3_T4_T5_T6_T7\'.split(\'_\'),\n
+        weekdaysMin : \'CN_T2_T3_T4_T5_T6_T7\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD/MM/YYYY\',\n
+            LL : \'D MMMM [năm] YYYY\',\n
+            LLL : \'D MMMM [năm] YYYY HH:mm\',\n
+            LLLL : \'dddd, D MMMM [năm] YYYY HH:mm\',\n
+            l : \'DD/M/YYYY\',\n
+            ll : \'D MMM YYYY\',\n
+            lll : \'D MMM YYYY HH:mm\',\n
+            llll : \'ddd, D MMM YYYY HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay: \'[Hôm nay lúc] LT\',\n
+            nextDay: \'[Ngày mai lúc] LT\',\n
+            nextWeek: \'dddd [tuần tới lúc] LT\',\n
+            lastDay: \'[Hôm qua lúc] LT\',\n
+            lastWeek: \'dddd [tuần rồi lúc] LT\',\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'%s tới\',\n
+            past : \'%s trước\',\n
+            s : \'vài giây\',\n
+            m : \'một phút\',\n
+            mm : \'%d phút\',\n
+            h : \'một giờ\',\n
+            hh : \'%d giờ\',\n
+            d : \'một ngày\',\n
+            dd : \'%d ngày\',\n
+            M : \'một tháng\',\n
+            MM : \'%d tháng\',\n
+            y : \'một năm\',\n
+            yy : \'%d năm\'\n
+        },\n
+        ordinalParse: /\\d{1,2}/,\n
+        ordinal : function (number) {\n
+            return number;\n
+        },\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 4  // The week that contains Jan 4th is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return vi;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2339</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>vi.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273080.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>LICENSE</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE\n
+                    Version 2, December 2004\n
+\n
+ Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>\n
+\n
+ Everyone is permitted to copy and distribute verbatim or modified\n
+ copies of this license document, and changing it is allowed as long\n
+ as the name is changed.\n
+\n
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE\n
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n
+\n
+  0. You just DO WHAT THE FUCK YOU WANT TO.\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>483</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>LICENSE</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

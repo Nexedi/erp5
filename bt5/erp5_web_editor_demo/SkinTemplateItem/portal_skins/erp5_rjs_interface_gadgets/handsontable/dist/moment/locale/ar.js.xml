@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272768.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! Locale: Arabic (ar)\n
+//! Author: Abdel Said: https://github.com/abdelsaid\n
+//! Changes in months, weekdays: Ahmed Elkhatib\n
+//! Native plural forms: forabi https://github.com/forabi\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var symbolMap = {\n
+        \'1\': \'١\',\n
+        \'2\': \'٢\',\n
+        \'3\': \'٣\',\n
+        \'4\': \'٤\',\n
+        \'5\': \'٥\',\n
+        \'6\': \'٦\',\n
+        \'7\': \'٧\',\n
+        \'8\': \'٨\',\n
+        \'9\': \'٩\',\n
+        \'0\': \'٠\'\n
+    }, numberMap = {\n
+        \'١\': \'1\',\n
+        \'٢\': \'2\',\n
+        \'٣\': \'3\',\n
+        \'٤\': \'4\',\n
+        \'٥\': \'5\',\n
+        \'٦\': \'6\',\n
+        \'٧\': \'7\',\n
+        \'٨\': \'8\',\n
+        \'٩\': \'9\',\n
+        \'٠\': \'0\'\n
+    }, pluralForm = function (n) {\n
+        return n === 0 ? 0 : n === 1 ? 1 : n === 2 ? 2 : n % 100 >= 3 && n % 100 <= 10 ? 3 : n % 100 >= 11 ? 4 : 5;\n
+    }, plurals = {\n
+        s : [\'أقل من ثانية\', \'ثانية واحدة\', [\'ثانيتان\', \'ثانيتين\'], \'%d ثوان\', \'%d ثانية\', \'%d ثانية\'],\n
+        m : [\'أقل من دقيقة\', \'دقيقة واحدة\', [\'دقيقتان\', \'دقيقتين\'], \'%d دقائق\', \'%d دقيقة\', \'%d دقيقة\'],\n
+        h : [\'أقل من ساعة\', \'ساعة واحدة\', [\'ساعتان\', \'ساعتين\'], \'%d ساعات\', \'%d ساعة\', \'%d ساعة\'],\n
+        d : [\'أقل من يوم\', \'يوم واحد\', [\'يومان\', \'يومين\'], \'%d أيام\', \'%d يومًا\', \'%d يوم\'],\n
+        M : [\'أقل من شهر\', \'شهر واحد\', [\'شهران\', \'شهرين\'], \'%d أشهر\', \'%d شهرا\', \'%d شهر\'],\n
+        y : [\'أقل من عام\', \'عام واحد\', [\'عامان\', \'عامين\'], \'%d أعوام\', \'%d عامًا\', \'%d عام\']\n
+    }, pluralize = function (u) {\n
+        return function (number, withoutSuffix, string, isFuture) {\n
+            var f = pluralForm(number),\n
+                str = plurals[u][pluralForm(number)];\n
+            if (f === 2) {\n
+                str = str[withoutSuffix ? 0 : 1];\n
+            }\n
+            return str.replace(/%d/i, number);\n
+        };\n
+    }, months = [\n
+        \'كانون الثاني يناير\',\n
+        \'شباط فبراير\',\n
+        \'آذار مارس\',\n
+        \'نيسان أبريل\',\n
+        \'أيار مايو\',\n
+        \'حزيران يونيو\',\n
+        \'تموز يوليو\',\n
+        \'آب أغسطس\',\n
+        \'أيلول سبتمبر\',\n
+        \'تشرين الأول أكتوبر\',\n
+        \'تشرين الثاني نوفمبر\',\n
+        \'كانون الأول ديسمبر\'\n
+    ];\n
+\n
+    var ar = moment.defineLocale(\'ar\', {\n
+        months : months,\n
+        monthsShort : months,\n
+        weekdays : \'الأحد_الإثنين_الثلاثاء_الأربعاء_الخميس_الجمعة_السبت\'.split(\'_\'),\n
+        weekdaysShort : \'أحد_إثنين_ثلاثاء_أربعاء_خميس_جمعة_سبت\'.split(\'_\'),\n
+        weekdaysMin : \'ح_ن_ث_ر_خ_ج_س\'.split(\'_\'),\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'D/\\u200FM/\\u200FYYYY\',\n
+            LL : \'D MMMM YYYY\',\n
+            LLL : \'D MMMM YYYY HH:mm\',\n
+            LLLL : \'dddd D MMMM YYYY HH:mm\'\n
+        },\n
+        meridiemParse: /ص|م/,\n
+        isPM : function (input) {\n
+            return \'م\' === input;\n
+        },\n
+        meridiem : function (hour, minute, isLower) {\n
+            if (hour < 12) {\n
+                return \'ص\';\n
+            } else {\n
+                return \'م\';\n
+            }\n
+        },\n
+        calendar : {\n
+            sameDay: \'[اليوم عند الساعة] LT\',\n
+            nextDay: \'[غدًا عند الساعة] LT\',\n
+            nextWeek: \'dddd [عند الساعة] LT\',\n
+            lastDay: \'[أمس عند الساعة] LT\',\n
+            lastWeek: \'dddd [عند الساعة] LT\',\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'بعد %s\',\n
+            past : \'منذ %s\',\n
+            s : pluralize(\'s\'),\n
+            m : pluralize(\'m\'),\n
+            mm : pluralize(\'m\'),\n
+            h : pluralize(\'h\'),\n
+            hh : pluralize(\'h\'),\n
+            d : pluralize(\'d\'),\n
+            dd : pluralize(\'d\'),\n
+            M : pluralize(\'M\'),\n
+            MM : pluralize(\'M\'),\n
+            y : pluralize(\'y\'),\n
+            yy : pluralize(\'y\')\n
+        },\n
+        preparse: function (string) {\n
+            return string.replace(/\\u200f/g, \'\').replace(/[١٢٣٤٥٦٧٨٩٠]/g, function (match) {\n
+                return numberMap[match];\n
+            }).replace(/،/g, \',\');\n
+        },\n
+        postformat: function (string) {\n
+            return string.replace(/\\d/g, function (match) {\n
+                return symbolMap[match];\n
+            }).replace(/,/g, \'،\');\n
+        },\n
+        week : {\n
+            dow : 6, // Saturday is the first day of the week.\n
+            doy : 12  // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return ar;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5092</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ar.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

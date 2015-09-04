@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272796.44</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>el.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : modern greek (el)\n
+//! author : Aggelos Karalias : https://github.com/mehiel\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    var el = moment.defineLocale(\'el\', {\n
+        monthsNominativeEl : \'Ιανουάριος_Φεβρουάριος_Μάρτιος_Απρίλιος_Μάιος_Ιούνιος_Ιούλιος_Αύγουστος_Σεπτέμβριος_Οκτώβριος_Νοέμβριος_Δεκέμβριος\'.split(\'_\'),\n
+        monthsGenitiveEl : \'Ιανουαρίου_Φεβρουαρίου_Μαρτίου_Απριλίου_Μαΐου_Ιουνίου_Ιουλίου_Αυγούστου_Σεπτεμβρίου_Οκτωβρίου_Νοεμβρίου_Δεκεμβρίου\'.split(\'_\'),\n
+        months : function (momentToFormat, format) {\n
+            if (/D/.test(format.substring(0, format.indexOf(\'MMMM\')))) { // if there is a day number before \'MMMM\'\n
+                return this._monthsGenitiveEl[momentToFormat.month()];\n
+            } else {\n
+                return this._monthsNominativeEl[momentToFormat.month()];\n
+            }\n
+        },\n
+        monthsShort : \'Ιαν_Φεβ_Μαρ_Απρ_Μαϊ_Ιουν_Ιουλ_Αυγ_Σεπ_Οκτ_Νοε_Δεκ\'.split(\'_\'),\n
+        weekdays : \'Κυριακή_Δευτέρα_Τρίτη_Τετάρτη_Πέμπτη_Παρασκευή_Σάββατο\'.split(\'_\'),\n
+        weekdaysShort : \'Κυρ_Δευ_Τρι_Τετ_Πεμ_Παρ_Σαβ\'.split(\'_\'),\n
+        weekdaysMin : \'Κυ_Δε_Τρ_Τε_Πε_Πα_Σα\'.split(\'_\'),\n
+        meridiem : function (hours, minutes, isLower) {\n
+            if (hours > 11) {\n
+                return isLower ? \'μμ\' : \'ΜΜ\';\n
+            } else {\n
+                return isLower ? \'πμ\' : \'ΠΜ\';\n
+            }\n
+        },\n
+        isPM : function (input) {\n
+            return ((input + \'\').toLowerCase()[0] === \'μ\');\n
+        },\n
+        meridiemParse : /[ΠΜ]\\.?Μ?\\.?/i,\n
+        longDateFormat : {\n
+            LT : \'h:mm A\',\n
+            LTS : \'h:mm:ss A\',\n
+            L : \'DD/MM/YYYY\',\n
+            LL : \'D MMMM YYYY\',\n
+            LLL : \'D MMMM YYYY h:mm A\',\n
+            LLLL : \'dddd, D MMMM YYYY h:mm A\'\n
+        },\n
+        calendarEl : {\n
+            sameDay : \'[Σήμερα {}] LT\',\n
+            nextDay : \'[Αύριο {}] LT\',\n
+            nextWeek : \'dddd [{}] LT\',\n
+            lastDay : \'[Χθες {}] LT\',\n
+            lastWeek : function () {\n
+                switch (this.day()) {\n
+                    case 6:\n
+                        return \'[το προηγούμενο] dddd [{}] LT\';\n
+                    default:\n
+                        return \'[την προηγούμενη] dddd [{}] LT\';\n
+                }\n
+            },\n
+            sameElse : \'L\'\n
+        },\n
+        calendar : function (key, mom) {\n
+            var output = this._calendarEl[key],\n
+                hours = mom && mom.hours();\n
+            if (typeof output === \'function\') {\n
+                output = output.apply(mom);\n
+            }\n
+            return output.replace(\'{}\', (hours % 12 === 1 ? \'στη\' : \'στις\'));\n
+        },\n
+        relativeTime : {\n
+            future : \'σε %s\',\n
+            past : \'%s πριν\',\n
+            s : \'λίγα δευτερόλεπτα\',\n
+            m : \'ένα λεπτό\',\n
+            mm : \'%d λεπτά\',\n
+            h : \'μία ώρα\',\n
+            hh : \'%d ώρες\',\n
+            d : \'μία μέρα\',\n
+            dd : \'%d μέρες\',\n
+            M : \'ένας μήνας\',\n
+            MM : \'%d μήνες\',\n
+            y : \'ένας χρόνος\',\n
+            yy : \'%d χρόνια\'\n
+        },\n
+        ordinalParse: /\\d{1,2}η/,\n
+        ordinal: \'%dη\',\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 4  // The week that contains Jan 4st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return el;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4024</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>el.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

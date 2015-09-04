@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272819.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ru.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//! moment.js locale configuration\n
+//! locale : russian (ru)\n
+//! author : Viktorminator : https://github.com/Viktorminator\n
+//! Author : Menelion Elensúle : https://github.com/Oire\n
+\n
+(function (global, factory) {\n
+   typeof exports === \'object\' && typeof module !== \'undefined\' ? factory(require(\'../moment\')) :\n
+   typeof define === \'function\' && define.amd ? define([\'moment\'], factory) :\n
+   factory(global.moment)\n
+}(this, function (moment) { \'use strict\';\n
+\n
+\n
+    function plural(word, num) {\n
+        var forms = word.split(\'_\');\n
+        return num % 10 === 1 && num % 100 !== 11 ? forms[0] : (num % 10 >= 2 && num % 10 <= 4 && (num % 100 < 10 || num % 100 >= 20) ? forms[1] : forms[2]);\n
+    }\n
+    function relativeTimeWithPlural(number, withoutSuffix, key) {\n
+        var format = {\n
+            \'mm\': withoutSuffix ? \'минута_минуты_минут\' : \'минуту_минуты_минут\',\n
+            \'hh\': \'час_часа_часов\',\n
+            \'dd\': \'день_дня_дней\',\n
+            \'MM\': \'месяц_месяца_месяцев\',\n
+            \'yy\': \'год_года_лет\'\n
+        };\n
+        if (key === \'m\') {\n
+            return withoutSuffix ? \'минута\' : \'минуту\';\n
+        }\n
+        else {\n
+            return number + \' \' + plural(format[key], +number);\n
+        }\n
+    }\n
+    function monthsCaseReplace(m, format) {\n
+        var months = {\n
+            \'nominative\': \'январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь\'.split(\'_\'),\n
+            \'accusative\': \'января_февраля_марта_апреля_мая_июня_июля_августа_сентября_октября_ноября_декабря\'.split(\'_\')\n
+        },\n
+        nounCase = (/D[oD]?(\\[[^\\[\\]]*\\]|\\s+)+MMMM?/).test(format) ?\n
+            \'accusative\' :\n
+            \'nominative\';\n
+        return months[nounCase][m.month()];\n
+    }\n
+    function monthsShortCaseReplace(m, format) {\n
+        var monthsShort = {\n
+            \'nominative\': \'янв_фев_март_апр_май_июнь_июль_авг_сен_окт_ноя_дек\'.split(\'_\'),\n
+            \'accusative\': \'янв_фев_мар_апр_мая_июня_июля_авг_сен_окт_ноя_дек\'.split(\'_\')\n
+        },\n
+        nounCase = (/D[oD]?(\\[[^\\[\\]]*\\]|\\s+)+MMMM?/).test(format) ?\n
+            \'accusative\' :\n
+            \'nominative\';\n
+        return monthsShort[nounCase][m.month()];\n
+    }\n
+    function weekdaysCaseReplace(m, format) {\n
+        var weekdays = {\n
+            \'nominative\': \'воскресенье_понедельник_вторник_среда_четверг_пятница_суббота\'.split(\'_\'),\n
+            \'accusative\': \'воскресенье_понедельник_вторник_среду_четверг_пятницу_субботу\'.split(\'_\')\n
+        },\n
+        nounCase = (/\\[ ?[Вв] ?(?:прошлую|следующую|эту)? ?\\] ?dddd/).test(format) ?\n
+            \'accusative\' :\n
+            \'nominative\';\n
+        return weekdays[nounCase][m.day()];\n
+    }\n
+\n
+    var ru = moment.defineLocale(\'ru\', {\n
+        months : monthsCaseReplace,\n
+        monthsShort : monthsShortCaseReplace,\n
+        weekdays : weekdaysCaseReplace,\n
+        weekdaysShort : \'вс_пн_вт_ср_чт_пт_сб\'.split(\'_\'),\n
+        weekdaysMin : \'вс_пн_вт_ср_чт_пт_сб\'.split(\'_\'),\n
+        monthsParse : [/^янв/i, /^фев/i, /^мар/i, /^апр/i, /^ма[й|я]/i, /^июн/i, /^июл/i, /^авг/i, /^сен/i, /^окт/i, /^ноя/i, /^дек/i],\n
+        longDateFormat : {\n
+            LT : \'HH:mm\',\n
+            LTS : \'HH:mm:ss\',\n
+            L : \'DD.MM.YYYY\',\n
+            LL : \'D MMMM YYYY г.\',\n
+            LLL : \'D MMMM YYYY г., HH:mm\',\n
+            LLLL : \'dddd, D MMMM YYYY г., HH:mm\'\n
+        },\n
+        calendar : {\n
+            sameDay: \'[Сегодня в] LT\',\n
+            nextDay: \'[Завтра в] LT\',\n
+            lastDay: \'[Вчера в] LT\',\n
+            nextWeek: function () {\n
+                return this.day() === 2 ? \'[Во] dddd [в] LT\' : \'[В] dddd [в] LT\';\n
+            },\n
+            lastWeek: function (now) {\n
+                if (now.week() !== this.week()) {\n
+                    switch (this.day()) {\n
+                    case 0:\n
+                        return \'[В прошлое] dddd [в] LT\';\n
+                    case 1:\n
+                    case 2:\n
+                    case 4:\n
+                        return \'[В прошлый] dddd [в] LT\';\n
+                    case 3:\n
+                    case 5:\n
+                    case 6:\n
+                        return \'[В прошлую] dddd [в] LT\';\n
+                    }\n
+                } else {\n
+                    if (this.day() === 2) {\n
+                        return \'[Во] dddd [в] LT\';\n
+                    } else {\n
+                        return \'[В] dddd [в] LT\';\n
+                    }\n
+                }\n
+            },\n
+            sameElse: \'L\'\n
+        },\n
+        relativeTime : {\n
+            future : \'через %s\',\n
+            past : \'%s назад\',\n
+            s : \'несколько секунд\',\n
+            m : relativeTimeWithPlural,\n
+            mm : relativeTimeWithPlural,\n
+            h : \'час\',\n
+            hh : relativeTimeWithPlural,\n
+            d : \'день\',\n
+            dd : relativeTimeWithPlural,\n
+            M : \'месяц\',\n
+            MM : relativeTimeWithPlural,\n
+            y : \'год\',\n
+            yy : relativeTimeWithPlural\n
+        },\n
+        meridiemParse: /ночи|утра|дня|вечера/i,\n
+        isPM : function (input) {\n
+            return /^(дня|вечера)$/.test(input);\n
+        },\n
+        meridiem : function (hour, minute, isLower) {\n
+            if (hour < 4) {\n
+                return \'ночи\';\n
+            } else if (hour < 12) {\n
+                return \'утра\';\n
+            } else if (hour < 17) {\n
+                return \'дня\';\n
+            } else {\n
+                return \'вечера\';\n
+            }\n
+        },\n
+        ordinalParse: /\\d{1,2}-(й|го|я)/,\n
+        ordinal: function (number, period) {\n
+            switch (period) {\n
+            case \'M\':\n
+            case \'d\':\n
+            case \'DDD\':\n
+                return number + \'-й\';\n
+            case \'D\':\n
+                return number + \'-го\';\n
+            case \'w\':\n
+            case \'W\':\n
+                return number + \'-я\';\n
+            default:\n
+                return number;\n
+            }\n
+        },\n
+        week : {\n
+            dow : 1, // Monday is the first day of the week.\n
+            doy : 7  // The week that contains Jan 1st is the first week of the year.\n
+        }\n
+    });\n
+\n
+    return ru;\n
+\n
+}));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6613</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ru.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
