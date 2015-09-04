@@ -152,8 +152,6 @@
 (function (window, rJS, jQuery, RSVP, DOMParser) {\n
   "use strict";\n
 \n
-  var VERIFY_GADGET_SCOPE = "verify_gadget";\n
-\n
   function verifyInterfaceDefinition(interface_url) {\n
     //to verify if interface definition follows the correct template.\n
     return RSVP.Queue()\n
@@ -310,8 +308,8 @@
       return new RSVP.Queue()\n
         .push(function () {\n
           return interface_gadget.declareGadget(gadget_url, {\n
-            scope: gadget_url,\n
-            element: interface_gadget.__element\n
+//            sandbox: \'iframe\',\n
+            scope: gadget_url\n
           });\n
         })\n
         .push(function () {\n
@@ -369,12 +367,12 @@
             dt_count = 0,\n
             dl_count = 1,\n
             i;\n
-          interface_data.name = doc.getElementsByTagName(\'h1\')[0].innerText;\n
-          interface_data.description = doc.getElementsByTagName(\'h3\')[0].innerText;\n
+          interface_data.name = doc.getElementsByTagName(\'h1\')[0].innerHTML;\n
+          interface_data.description = doc.getElementsByTagName(\'h3\')[0].innerHTML;\n
           for (i = 0; i < method_len; i += 1) {\n
             var method = {\n
-                name: dt_list[dt_count].innerText,\n
-                description: dd_list[dt_count].innerText,\n
+                name: dt_list[dt_count].innerHTML,\n
+                description: dd_list[dt_count].innerHTML,\n
                 argument_list: []\n
               },\n
               argument_len = dl_list[dl_count].getElementsByTagName(\'dt\').length,\n
@@ -383,8 +381,8 @@
             dl_count += 1;\n
             for (j = 0; j < argument_len; j += 1) {\n
               var argument_item = {\n
-                  name: dt_list[dt_count].innerText,\n
-                  description: dd_list[dt_count].innerText,\n
+                  name: dt_list[dt_count].innerHTML,\n
+                  description: dd_list[dt_count].innerHTML,\n
                   required: dt_list[dt_count].getAttribute("data-parameter-required") === "optional" ? false:true,\n
                   type: dt_list[dt_count].getAttribute("data-parameter-type")\n
                 };\n
@@ -404,20 +402,14 @@
         });\n
     })\n
 \n
-    .declareMethod("verifyGadgetInterfaceImplementation", function (gadget_url, interface_url) {\n
+    .declareMethod("verifyGadgetSingleInterfaceImplementation", function (verify_gadget, interface_url) {\n
       var interface_gadget = this,\n
         absolute_interface_url;\n
       return RSVP.Queue()\n
         .push(function () {\n
-          if(!gadget_url || !interface_url) {\n
-            throw new Error("Invalid Inputs");\n
-          }\n
-          return interface_gadget.getVerifyGadget(gadget_url);\n
-        })\n
-        .push(function (gadget) {\n
           return RSVP.all([ \n
-            interface_gadget.getDeclaredGadgetInterfaceList(gadget),\n
-            interface_gadget.getAbsoluteURL(gadget, interface_url)\n
+            interface_gadget.getDeclaredGadgetInterfaceList(verify_gadget),\n
+            interface_gadget.getAbsoluteURL(verify_gadget, interface_url)\n
           ]);\n
         })\n
         .push(function (interface_detail) {\n
@@ -428,13 +420,10 @@
         .push(function () {\n
           return verifyInterfaceDefinition(absolute_interface_url);\n
         })\n
-        .push(function () {\n
-          return interface_gadget.getDeclaredGadget(gadget_url);\n
-        })\n
         .push(function (gadget) {\n
           return RSVP.all([\n
             interface_gadget.getDefinedInterfaceMethodList(absolute_interface_url),\n
-            interface_gadget.getDeclaredGadgetMethodList(gadget)\n
+            interface_gadget.getDeclaredGadgetMethodList(verify_gadget)\n
           ]);\n
         })\n
         .push(function(method_list) {\n
@@ -447,60 +436,44 @@
           return false;\n
         });\n
     })\n
-\n
-    .declareMethod("verifyGadgetAllInterfaceImplementation", function (gadget_url) {\n
-      var interface_gadget = this;\n
+    .declareMethod("verifyGadgetInterfaceImplementation", function (gadget_data, interface_data) {\n
+      var interface_gadget = this,\n
+        verify_gadget,\n
+        interface_list,\n
+        declared_gadget = false;\n
       return RSVP.Queue()\n
         .push(function () {\n
-          if(!gadget_url) {\n
+          var required_gadget;\n
+          if(!gadget_data) {\n
             throw new Error("Invalid Input");\n
+          } else if(gadget_data.constructor === String) {\n
+            required_gadget = interface_gadget.getVerifyGadget(gadget_data);\n
+            declared_gadget = true;\n
+          } else {\n
+            required_gadget = gadget_data;\n
           }\n
-          return interface_gadget.getVerifyGadget(gadget_url);\n
+          return required_gadget;\n
         })\n
-        .push(function (gadget) {\n
-          return interface_gadget.getDeclaredGadgetInterfaceList(gadget);\n
+        .push(function (required_gadget) {\n
+          var required_interface_list = [];\n
+          verify_gadget = required_gadget;\n
+          if(!interface_data) {\n
+            required_interface_list = interface_gadget.getDeclaredGadgetInterfaceList(verify_gadget);\n
+          } else if(interface_data.constructor === Array) {\n
+            required_interface_list = interface_data;\n
+          } else if(interface_data.constructor === String) {\n
+            required_interface_list.push(interface_data);\n
+          }\n
+          return required_interface_list;\n
         })\n
-        .push(function (declared_interface_list) {\n
+        .push(function (required_interface_list) {\n
           var interface_url,\n
             result_list = [],\n
             item;\n
-          for (item in declared_interface_list) {\n
-            interface_url = declared_interface_list[item];\n
-            result_list.push(interface_gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url));\n
-          }\n
-          return RSVP.all(result_list);\n
-        })\n
-        .push(function(result_list) {\n
-          var item;\n
-          for(item in result_list) {\n
-            if (!result_list[item]) {\n
-              throw new Error("Interface Implementation Failure.");\n
-            }\n
-          }\n
-        })\n
-        .push (function() {\n
-          return true;\n
-        }, function(error) {\n
-          return false;\n
-        });\n
-    })\n
-\n
-    .declareMethod("verifyGadgetInterfaceListImplementation", function (gadget_url, interface_url_list) {\n
-      var interface_gadget = this;\n
-      return RSVP.Queue()\n
-        .push(function () {\n
-          if(!gadget_url) {\n
-            throw new Error("Invalid Input");\n
-          }\n
-          return interface_gadget.getVerifyGadget(gadget_url);\n
-        })\n
-        .push(function (gadget) {\n
-          var interface_url,\n
-            result_list = [],\n
-            item;\n
-          for (item in interface_url_list) {\n
-            interface_url = interface_url_list[item];\n
-            result_list.push(interface_gadget.verifyGadgetInterfaceImplementation(gadget_url, interface_url));\n
+          interface_list = required_interface_list;\n
+          for (item in interface_list) {\n
+            interface_url = interface_list[item];\n
+            result_list.push(interface_gadget.verifyGadgetSingleInterfaceImplementation(verify_gadget, interface_url));\n
           }\n
           return RSVP.all(result_list);\n
         })\n
@@ -519,7 +492,8 @@
         });\n
     });\n
 \n
-}(window, rJS, jQuery, RSVP, DOMParser));
+}(window, rJS, jQuery, RSVP, DOMParser));\n
+
 
 ]]></string> </value>
         </item>
@@ -656,7 +630,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.3616.25517.61337</string> </value>
+                <value> <string>945.3617.50497.56388</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -674,7 +648,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439554666.23</float>
+                        <float>1441292695.71</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

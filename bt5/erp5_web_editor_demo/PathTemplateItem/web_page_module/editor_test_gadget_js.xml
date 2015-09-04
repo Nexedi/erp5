@@ -106,7 +106,7 @@
 (function (window, document, rJS, promiseEventListener) {\n
   "use strict";\n
 \n
-  var DEFAULT_GADGET_URL = "interface_bootstrap3_wysiwyg.html";\n
+  var DEFAULT_GADGET_URL = "interface_gadget_bootstrap3_wysiwyg.html";\n
 \n
   function declareSubGadget(gadget, sub_gadget_url) {\n
     return gadget.declareGadget(sub_gadget_url, {\n
@@ -442,7 +442,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.2278.56594.14933</string> </value>
+                <value> <string>945.33605.45148.55005</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -460,7 +460,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441290071.66</float>
+                        <float>1441354709.61</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

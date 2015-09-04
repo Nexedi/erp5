@@ -10,8 +10,11 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -24,7 +27,6 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -44,7 +46,6 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -52,8 +53,11 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -111,10 +115,10 @@
 \n
     <link rel="http://www.renderjs.org/rel/interface" href="editor_interface.html"></link>\n
 \n
+    <script src="tinymce/js/tinymce/tinymce.js"></script>\n
     <script src="jquery.js"></script>\n
-    <script src="rsvp"></script>\n
+    <script src="rsvp.js"></script>\n
     <script src="renderjs.js"></script>\n
-    <script src="tinymce/tinymce.min.js"></script>\n
     <script src="interface_gadget_tinymce.js" type="text/javascript"></script>\n
   </head>\n
   <body>\n
@@ -189,13 +193,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>zope1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -217,7 +219,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441286114.79</float>
+                        <float>1441290713.54</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -226,7 +228,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>draft</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -262,7 +264,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.32518.7195.50585</string> </value>
+                <value> <string>945.33600.34754.53230</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -280,7 +282,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441288747.31</float>
+                        <float>1441353714.75</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

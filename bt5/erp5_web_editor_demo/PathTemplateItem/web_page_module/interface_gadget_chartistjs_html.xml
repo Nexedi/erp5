@@ -10,8 +10,11 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -24,7 +27,6 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -44,7 +46,6 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -52,8 +53,11 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -187,13 +191,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>zope1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -215,7 +217,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441288062.55</float>
+                        <float>1441290712.16</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -224,7 +226,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>draft</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>

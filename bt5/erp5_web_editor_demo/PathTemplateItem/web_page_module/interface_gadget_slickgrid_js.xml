@@ -10,8 +10,11 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -24,7 +27,6 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -44,7 +46,6 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -52,8 +53,11 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -98,18 +102,28 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2 */\n
-/*global window, jQuery, rJS*/\n
+/*global window, jQuery, rJS, Slick*/\n
 "use strict";\n
 \n
-(function (window, $, rJS) {\n
+(function (window, $, rJS, Slick) {\n
 \n
   function requiredFieldValidator(value) {\n
-    if (value == null || value == undefined || !value.length) {\n
+    if (value === null || value === undefined || !value.length) {\n
       return {valid: false, msg: "This is a required field"};\n
     } else {\n
       return {valid: true, msg: null};\n
     }\n
   }\n
+  function getNameFromNumber(num) {\n
+    var numeric = num % 26,\n
+      letter = String.fromCharCode(65 + numeric),\n
+      num2 = Math.floor(num / 26);\n
+    if (num2 > 0) {\n
+        return getNameFromNumber(num2 - 1) + letter;\n
+    } else {\n
+        return letter;\n
+    }\n
+}\n
 \n
   rJS(window).\n
     declareMethod(\'getContent\', function () {\n
@@ -140,7 +154,7 @@
         columns.push({\n
           title: title,\n
           id: i\n
-        })\n
+        });\n
         column_index_dict[temp_columns[i].field] = grid.getColumnIndex(temp_columns[i].id);\n
       }\n
       for(i = 0; i < temp_data.length; i += 1) {\n
@@ -172,7 +186,7 @@
           "id": i,\n
           "field": i,\n
           "editor": Slick.Editors.Text \n
-        })\n
+        });\n
       }\n
       for(i = 0; i < content.length; i += 1) {\n
         var d = (data[i] = {});\n
@@ -193,8 +207,8 @@
         data = [],\n
         columns = [],\n
         k;\n
-      for(k = 1; k < 7; k += 1) {\n
-        columns.push({id: k, name: "", field: k, editor: Slick.Editors.Text});\n
+      for(k = 0; k < 100; k += 1) {\n
+        columns.push({id: k, name: getNameFromNumber(k), field: k, editor: Slick.Editors.Text});\n
       } \n
       $(function () {\n
         var i, j;\n
@@ -228,7 +242,7 @@
       g.props = {};\n
     });\n
 \n
-}(window, jQuery, rJS));\n
+}(window, jQuery, rJS, Slick));\n
 
 
 ]]></string> </value>
@@ -295,13 +309,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>zope1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -323,7 +335,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441286636.0</float>
+                        <float>1441290719.83</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -332,7 +344,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>draft</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -368,7 +380,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.32484.60257.63197</string> </value>
+                <value> <string>945.33860.24768.49083</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -386,7 +398,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441286734.84</float>
+                        <float>1441369486.01</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
