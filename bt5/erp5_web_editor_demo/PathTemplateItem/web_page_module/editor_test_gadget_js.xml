@@ -106,15 +106,8 @@
 (function (window, document, rJS, promiseEventListener) {\n
   "use strict";\n
 \n
-  var DEFAULT_GADGET_URL = "./bootstrap3-wysiwyg.html",\n
-    INTERFACE_GADGET_URL = "./gadget_interfaces.html";\n
+  var DEFAULT_GADGET_URL = "interface_bootstrap3_wysiwyg.html";\n
 \n
-  function declareInterfaceGadget(gadget) {\n
-    return gadget.declareGadget(INTERFACE_GADGET_URL, {\n
-      element: gadget.__element,\n
-      scope: "interface"\n
-    });\n
-  }\n
   function declareSubGadget(gadget, sub_gadget_url) {\n
     return gadget.declareGadget(sub_gadget_url, {\n
       sandbox: \'iframe\',\n
@@ -130,35 +123,31 @@
     for(i = 0; i < gadget_option_list.length; i += 1) {\n
       gadget_list.push({\n
         url: gadget_option_list[i].value,\n
-        display_name: gadget_option_list[i].innerText\n
+        display_name: gadget_option_list[i].innerHTML\n
       });\n
     }\n
     return gadget_list;\n
   }\n
   function filterSimilarSubGadgetList(gadget, sub_gadget_url) {\n
-    var interface_gadget,\n
-      available_subgadget_list;\n
+    var available_subgadget_list,\n
+      interface_url_list;\n
     return RSVP.Queue()\n
       .push(function() {\n
-        return gadget.getDeclaredGadget("interface");\n
-      })\n
-      .push(function(i_gadget) {\n
-        interface_gadget = i_gadget;\n
-        return interface_gadget.getVerifyGadget(sub_gadget_url);\n
+        return gadget.getVerifyGadget(sub_gadget_url);\n
       })\n
       .push(function(sub_gadget) {\n
         return RSVP.all([\n
-          interface_gadget.getDeclaredGadgetInterfaceList(sub_gadget),\n
+          gadget.getDeclaredGadgetInterfaceList(sub_gadget),\n
           getAvailableSubGadgetList(gadget)\n
         ]);\n
       })\n
       .push(function(result_data) {\n
-        var interface_url_list = result_data[0],\n
-          item,\n
+        var item,\n
           status_list = [];\n
+        interface_url_list = result_data[0],\n
         available_subgadget_list = result_data[1];\n
         for(item in available_subgadget_list) {\n
-          status_list.push(interface_gadget.verifyGadgetInterfaceListImplementation(available_subgadget_list[item].url, interface_url_list));\n
+          status_list.push(gadget.verifyGadgetInterfaceImplementation(available_subgadget_list[item].url, interface_url_list));\n
         }\n
         return RSVP.all(status_list);\n
       })\n
@@ -172,9 +161,9 @@
         return filterSimilarSubGadgetList(gadget, sub_gadget_url);\n
       })\n
       .push(function(filtered_list) {\n
-        var select = gadget.props.content_element.querySelector(\'form.similar-gadget-select-form\').similar_gadget_selector;\n
+        var select = gadget.props.content_element.querySelector(\'form.similar-gadget-select-form\').similar_gadget_selector,\n
+          i;\n
         select.innerHTML = "";\n
-        var i;\n
         for(i = 0; i < filtered_list[1].length; i += 1) {\n
           if(filtered_list[1][i]) {\n
             var option = document.createElement("option");\n
@@ -183,41 +172,56 @@
             select.appendChild(option);\n
           }\n
         }\n
+        select.value = filtered_list[0][0].url;\n
         return;\n
       });\n
   }\n
   function gadgetSwitchHandler(gadget) {\n
+    var current_state = "",\n
+      selected_gadget,\n
+      submit_source;\n
     return new RSVP.Queue()\n
       .push(function() {\n
         return RSVP.any([\n
-            promiseEventListener(\n
+          promiseEventListener(\n
             gadget.props.content_element.querySelector(\'form.main-gadget-select-form\'),\n
             \'submit\',\n
             false\n
           ),\n
-            promiseEventListener(\n
+          promiseEventListener(\n
             gadget.props.content_element.querySelector(\'form.similar-gadget-select-form\'),\n
             \'submit\',\n
             false\n
           )\n
-       ]);\n
-     })\n
+        ]);\n
+      })\n
       .push(function(submit_event) {\n
-        var submit_source = submit_event.target.className;\n
+        submit_source = submit_event.target.className;\n
+        selected_gadget = submit_event.target[0].value;\n
         gadget.props.content_element.querySelector("input[type=submit]")\n
           .disabled = true;\n
-        gadget.props.content_element.querySelector("div.ui-content").innerHTML = "";\n
         if(submit_source === \'main-gadget-select-form\') {\n
-          return RSVP.all([\n
-            declareSubGadget(gadget,submit_event.target[0].value),\n
-            updateSimilarGadgetOptionList(gadget, submit_event.target[0].value)\n
-          ]);\n
+          return updateSimilarGadgetOptionList(gadget, selected_gadget);\n
         } else {\n
-          return declareSubGadget(gadget,submit_event.target[0].value);\n
+          return gadget.subgadget_initStateTransfer();\n
         }\n
       })\n
+      .push(function(form_data) {\n
+        gadget.props.content_element.querySelector("div.ui-content").innerHTML = "";\n
+        if(submit_source === \'similar-gadget-select-form\') {\n
+          current_state = form_data;\n
+        } \n
+        return declareSubGadget(gadget, selected_gadget);\n
+      })\n
       .push(function() {\n
-        return gadget.editor_setEditor();\n
+        return gadget.subgadget_initSubGadget();\n
+      })\n
+      .push(function() {\n
+        if(submit_source === \'similar-gadget-select-form\') {\n
+          return gadget.subgadget_finishStateTransfer([current_state]);\n
+        } else {\n
+          return;\n
+        } \n
       })\n
       .push(function(){\n
         gadget.props.content_element.querySelector("input[type=submit]")\n
@@ -226,68 +230,82 @@
       });\n
   }\n
   \n
-  // block JQM auto-start\n
-  $(document)\n
-    .on("mobileinit", function () {\n
-      $.mobile.autoInitializePage = false;\n
-    });\n
-\n
   rJS(window)\n
 \n
     .ready(function (g) {\n
-      console.log("test gadget ready");\n
       g.props = {};\n
       return g.getElement()\n
         .push(function (element) {\n
           $(element).trigger("create");\n
           g.props.element = element;\n
           g.props.content_element = element.querySelector(\'.gadget-content\');\n
+          $.getJSON("gadget_info.json", function(data) {\n
+            var select = g.props.content_element.querySelector(\'form.main-gadget-select-form\').main_gadget_selector,\n
+              key;\n
+            select.innerHTML = "";\n
+            for(key in data) {\n
+              var option = document.createElement("option");\n
+              option.text = key;\n
+              option.value = data[key];\n
+              select.appendChild(option);\n
+            }\n
+          });\n
         });\n
     })\n
     .declareMethod(\'render\', function () {\n
       var gadget = this;\n
       return new RSVP.Queue()\n
         .push(function() {\n
-          return declareInterfaceGadget(gadget, DEFAULT_GADGET_URL);\n
-        })\n
-        .push(function() {\n
           return declareSubGadget(gadget, DEFAULT_GADGET_URL);\n
         })\n
         .push(function() {\n
-          return gadget.editor_setEditor();\n
+          return gadget.subgadget_initSubGadget();\n
         })\n
-        .push(function(){\n
+        .push(function() {\n
           return gadgetSwitchHandler(gadget);\n
         });\n
     })\n
 \n
-    /* ============================ EDITOR =============================== */\n
-    .declareMethod("editor_getContent", function (param_list) {\n
+    /* ============================ SUBGADGET =============================== */\n
+    .declareMethod("subgadget_getContent", function (param_list) {\n
       return this.getDeclaredGadget("sub_gadget")\n
-        .then(function (editor) {\n
-          return editor.getContent.apply(editor, param_list);\n
+        .then(function (sub_gadget) {\n
+          return sub_gadget.getContent.apply(sub_gadget, param_list);\n
         });\n
     })\n
-    .declareMethod("editor_setContent", function (param_list) {\n
+    .declareMethod("subgadget_setContent", function (param_list) {\n
       return this.getDeclaredGadget("sub_gadget")\n
-        .then(function (editor) {\n
-          return editor.setContent.apply(editor, param_list);\n
+        .then(function (sub_gadget) {\n
+          return sub_gadget.setContent.apply(sub_gadget, param_list);\n
         });\n
     })\n
-    .declareMethod("editor_clearContent", function (param_list) {\n
+    .declareMethod("subgadget_clearContent", function (param_list) {\n
       return this.getDeclaredGadget("sub_gadget")\n
-        .then(function (editor) {\n
-          return editor.clearContent.apply(editor, param_list);\n
+        .then(function (sub_gadget) {\n
+          return sub_gadget.clearContent.apply(sub_gadget, param_list);\n
         });\n
     })\n
-    .declareMethod("editor_setEditor", function (param_list) {\n
+    .declareMethod("subgadget_initStateTransfer", function (param_list) {\n
       return this.getDeclaredGadget("sub_gadget")\n
-        .then(function (editor) {\n
-          return editor.setEditor.apply(editor, param_list);\n
+        .then(function (sub_gadget) {\n
+          return sub_gadget.initStateTransfer.apply(sub_gadget, param_list);\n
+        });\n
+    })\n
+    .declareMethod("subgadget_finishStateTransfer", function (param_list) {\n
+      return this.getDeclaredGadget("sub_gadget")\n
+        .then(function (sub_gadget) {\n
+          return sub_gadget.finishStateTransfer.apply(sub_gadget, param_list);\n
+        });\n
+    })\n
+    .declareMethod("subgadget_initSubGadget", function (param_list) {\n
+      return this.getDeclaredGadget("sub_gadget")\n
+        .then(function (sub_gadget) {\n
+          return sub_gadget.initSubGadget.apply(sub_gadget, param_list);\n
         });\n
     });\n
 \n
-}(window, document, rJS, promiseEventListener));
+}(window, document, rJS, promiseEventListener));\n
+
 
 ]]></string> </value>
         </item>
@@ -424,7 +442,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.2225.65299.39441</string> </value>
+                <value> <string>945.2278.56594.14933</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -442,7 +460,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439471855.78</float>
+                        <float>1441290071.66</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

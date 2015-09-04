@@ -10,11 +10,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -27,6 +24,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -46,6 +44,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -53,11 +52,8 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -122,13 +118,25 @@
         <dt data-parameter-required="required" data-parameter-type="string">content</dt>\n
         <dd>the content to be set in the text editor</dd>\n
       </dl>\n
-      </dd>\n
       <dt>clearContent</dt>\n
       <dd>to clear the contect of the text editor</dd>\n
       <dl></dl>\n
+      <dt>initSubGadget</dt>\n
+      <dd>to initiate the current gadget</dd>\n
+      <dl></dl>\n
+      <dt>initStateTransfer</dt>\n
+      <dd>to initiate state transfer before gadget switch</dd>\n
+      <dl></dl>\n
+      <dt>finishStateTransfer</dt>\n
+      <dd>to finish state transfer after gadget switch</dd>\n
+      <dl>\n
+        <dt data-parameter-required="required" data-parameter-type="string">current_state</dt>\n
+        <dd>the current state to be transfer to next gadget</dd>\n
+      </dl>\n
     </dl>\n
   </body>\n
-</html>
+</html>\n
+
 
 ]]></string> </value>
         </item>
@@ -194,11 +202,13 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope1</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -220,7 +230,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438594082.15</float>
+                        <float>1441284333.1</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -229,7 +239,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>draft</string> </value>
             </item>
           </dictionary>
         </list>
@@ -265,7 +275,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.53144.2367.52957</string> </value>
+                <value> <string>945.32448.54149.26265</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -283,7 +293,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439192630.9</float>
+                        <float>1441284657.06</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -342,7 +352,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438344898.3</float>
+                        <float>1441284333.1</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
