@@ -34,6 +34,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
+from Products.ERP5Type.Errors import SimulationError
 
 ROUNDING_OPTION_DICT = {name: value
                         for name, value in decimal.__dict__.items()
@@ -117,6 +118,13 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
              value=absolute_tolerance_max))
 
     tolerance_base = self.getProperty('tolerance_base')
+    if (absolute_tolerance_min is None and
+        absolute_tolerance_max is None and
+        tolerance_base is None):
+      raise SimulationError(
+        "%r: Either Absolute Tolerance (Min) or Absolute Tolerance (Max) or "
+        "Relative Tolerance Base *must* be defined." % self)
+
     base = None
     if tolerance_base == 'resource_quantity_precision':
       # Precision of this movement's resource base unit quantity
@@ -170,6 +178,12 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
             'The difference of ${property_name} between decision and prevision is greater than ${value} times of the prevision value.',
             dict(property_name=tested_property,
                  value=relative_tolerance_max))
+
+      if (relative_tolerance_min is None and
+          relative_tolerance_max is None):
+        raise SimulationError(
+          "%r: Either Relative Tolerance (Min) or Relative Tolerance"
+          "(Max) *must* be defined." % self)
 
   def _round(self, value):
     rounding_option = ROUNDING_OPTION_DICT[self.getDecimalRoundingOption()]

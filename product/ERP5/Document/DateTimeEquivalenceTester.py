@@ -31,6 +31,7 @@ from DateTime import DateTime
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
+from Products.ERP5Type.Errors import SimulationError
 
 class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
   """
@@ -92,3 +93,9 @@ class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
         'The difference of ${property_name} between decision and prevision is larger than ${value}.',
         dict(property_name=tested_property,
              value=absolute_tolerance_max))
+
+    if (absolute_tolerance_max is None and
+        absolute_tolerance_min is None):
+      raise SimulationError(
+        "%r: Either Absolute Tolerance, Absolute Tolerance (Min) or Absolute Tolerance"
+        "(Max) *must* be defined on a DateTime Divergence Tester" % self)
