@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271312.63</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>01-Line-Chart.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+---\n
+title: Line Chart\n
+anchor: line-chart\n
+---\n
+###Introduction\n
+A line chart is a way of plotting data points on a line.\n
+\n
+Often, it is used to show trend data, and the comparison of two data sets.\n
+\n
+<div class="canvas-holder">\n
+\t<canvas width="250" height="125"></canvas>\n
+</div>\n
+\n
+###Example usage\n
+```javascript\n
+var myLineChart = new Chart(ctx).Line(data, options);\n
+```\n
+###Data structure\n
+\n
+```javascript\n
+var data = {\n
+\tlabels: ["January", "February", "March", "April", "May", "June", "July"],\n
+\tdatasets: [\n
+\t\t{\n
+\t\t\tlabel: "My First dataset",\n
+\t\t\tfillColor: "rgba(220,220,220,0.2)",\n
+\t\t\tstrokeColor: "rgba(220,220,220,1)",\n
+\t\t\tpointColor: "rgba(220,220,220,1)",\n
+\t\t\tpointStrokeColor: "#fff",\n
+\t\t\tpointHighlightFill: "#fff",\n
+\t\t\tpointHighlightStroke: "rgba(220,220,220,1)",\n
+\t\t\tdata: [65, 59, 80, 81, 56, 55, 40]\n
+\t\t},\n
+\t\t{\n
+\t\t\tlabel: "My Second dataset",\n
+\t\t\tfillColor: "rgba(151,187,205,0.2)",\n
+\t\t\tstrokeColor: "rgba(151,187,205,1)",\n
+\t\t\tpointColor: "rgba(151,187,205,1)",\n
+\t\t\tpointStrokeColor: "#fff",\n
+\t\t\tpointHighlightFill: "#fff",\n
+\t\t\tpointHighlightStroke: "rgba(151,187,205,1)",\n
+\t\t\tdata: [28, 48, 40, 19, 86, 27, 90]\n
+\t\t}\n
+\t]\n
+};\n
+```\n
+\n
+The line chart requires an array of labels for each of the data points. This is shown on the X axis.\n
+The data for line charts is broken up into an array of datasets. Each dataset has a colour for the fill, a colour for the line and colours for the points and strokes of the points. These colours are strings just like CSS. You can use RGBA, RGB, HEX or HSL notation.\n
+\n
+The label key on each dataset is optional, and can be used when generating a scale for the chart.\n
+\n
+### Chart options\n
+\n
+These are the customisation options specific to Line charts. These options are merged with the [global chart configuration options](#getting-started-global-chart-configuration), and form the options of the chart.\n
+\n
+```javascript\n
+{\n
+\n
+\t///Boolean - Whether grid lines are shown across the chart\n
+\tscaleShowGridLines : true,\n
+\n
+\t//String - Colour of the grid lines\n
+\tscaleGridLineColor : "rgba(0,0,0,.05)",\n
+\n
+\t//Number - Width of the grid lines\n
+\tscaleGridLineWidth : 1,\n
+\n
+\t//Boolean - Whether to show horizontal lines (except X axis)\n
+\tscaleShowHorizontalLines: true,\n
+\n
+\t//Boolean - Whether to show vertical lines (except Y axis)\n
+\tscaleShowVerticalLines: true,\n
+\n
+\t//Boolean - Whether the line is curved between points\n
+\tbezierCurve : true,\n
+\n
+\t//Number - Tension of the bezier curve between points\n
+\tbezierCurveTension : 0.4,\n
+\n
+\t//Boolean - Whether to show a dot for each point\n
+\tpointDot : true,\n
+\n
+\t//Number - Radius of each point dot in pixels\n
+\tpointDotRadius : 4,\n
+\n
+\t//Number - Pixel width of point dot stroke\n
+\tpointDotStrokeWidth : 1,\n
+\n
+\t//Number - amount extra to add to the radius to cater for hit detection outside the drawn point\n
+\tpointHitDetectionRadius : 20,\n
+\n
+\t//Boolean - Whether to show a stroke for datasets\n
+\tdatasetStroke : true,\n
+\n
+\t//Number - Pixel width of dataset stroke\n
+\tdatasetStrokeWidth : 2,\n
+\n
+\t//Boolean - Whether to fill the dataset with a colour\n
+\tdatasetFill : true,\n
+\t{% raw %}\n
+\t//String - A legend template\n
+\tlegendTemplate : "<ul class=\\"<%=name.toLowerCase()%>-legend\\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\\"background-color:<%=datasets[i].strokeColor%>\\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"\n
+\t{% endraw %}\n
+\n
+\t//Boolean - Whether to horizontally center the label and point dot inside the grid\n
+\toffsetGridLines : false\n
+};\n
+```\n
+\n
+You can override these for your `Chart` instance by passing a second argument into the `Line` method as an object with the keys you want to override.\n
+\n
+For example, we could have a line chart without bezier curves between points by doing the following:\n
+\n
+```javascript\n
+new Chart(ctx).Line(data, {\n
+\tbezierCurve: false\n
+});\n
+// This will create a chart with all of the default options, merged from the global config,\n
+// and the Line chart defaults, but this particular instance will have `bezierCurve` set to false.\n
+```\n
+\n
+We can also change these defaults values for each Line type that is created, this object is available at `Chart.defaults.Line`.\n
+\n
+\n
+### Prototype methods\n
+\n
+#### .getPointsAtEvent( event )\n
+\n
+Calling `getPointsAtEvent(event)` on your Chart instance passing an argument of an event, or jQuery event, will return the point elements that are at that the same position of that event.\n
+\n
+```javascript\n
+canvas.onclick = function(evt){\n
+\tvar activePoints = myLineChart.getPointsAtEvent(evt);\n
+\t// => activePoints is an array of points on the canvas that are at the same position as the click event.\n
+};\n
+```\n
+\n
+This functionality may be useful for implementing DOM based tooltips, or triggering custom behaviour in your application.\n
+\n
+#### .update( )\n
+\n
+Calling `update()` on your Chart instance will re-render the chart with any updated values, allowing you to edit the value of multiple existing points, then render those in one animated render loop.\n
+\n
+```javascript\n
+myLineChart.datasets[0].points[2].value = 50;\n
+// Would update the first dataset\'s value of \'March\' to be 50\n
+myLineChart.update();\n
+// Calling update now animates the position of March from 90 to 50.\n
+```\n
+\n
+#### .addData( valuesArray, label )\n
+\n
+Calling `addData(valuesArray, label)` on your Chart instance passing an array of values for each dataset, along with a label for those points.\n
+\n
+```javascript\n
+// The values array passed into addData should be one for each dataset in the chart\n
+myLineChart.addData([40, 60], "August");\n
+// This new data will now animate at the end of the chart.\n
+```\n
+\n
+#### .removeData( )\n
+\n
+Calling `removeData()` on your Chart instance will remove the first value for all datasets on the chart.\n
+\n
+```javascript\n
+myLineChart.removeData();\n
+// The chart will remove the first point and animate other points into place\n
+```\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5680</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>01-Line-Chart.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

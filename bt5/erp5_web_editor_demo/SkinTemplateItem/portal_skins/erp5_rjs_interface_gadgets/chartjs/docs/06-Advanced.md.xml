@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271310.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>06-Advanced.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+---\n
+title: Advanced usage\n
+anchor: advanced-usage\n
+---\n
+\n
+\n
+### Prototype methods\n
+\n
+For each chart, there are a set of global prototype methods on the shared `ChartType` which you may find useful. These are available on all charts created with Chart.js, but for the examples, let\'s use a line chart we\'ve made.\n
+\n
+```javascript\n
+// For example:\n
+var myLineChart = new Chart(ctx).Line(data);\n
+```\n
+\n
+#### .clear()\n
+\n
+Will clear the chart canvas. Used extensively internally between animation frames, but you might find it useful.\n
+\n
+```javascript\n
+// Will clear the canvas that myLineChart is drawn on\n
+myLineChart.clear();\n
+// => returns \'this\' for chainability\n
+```\n
+\n
+#### .stop()\n
+\n
+Use this to stop any current animation loop. This will pause the chart during any current animation frame. Call `.render()` to re-animate.\n
+\n
+```javascript\n
+// Stops the charts animation loop at its current frame\n
+myLineChart.stop();\n
+// => returns \'this\' for chainability\n
+```\n
+\n
+#### .resize()\n
+\n
+Use this to manually resize the canvas element. This is run each time the browser is resized, but you can call this method manually if you change the size of the canvas nodes container element.\n
+\n
+```javascript\n
+// Resizes & redraws to fill its container element\n
+myLineChart.resize();\n
+// => returns \'this\' for chainability\n
+```\n
+\n
+#### .destroy()\n
+\n
+Use this to destroy any chart instances that are created. This will clean up any references stored to the chart object within Chart.js, along with any associated event listeners attached by Chart.js.\n
+\n
+```javascript\n
+// Destroys a specific chart instance\n
+myLineChart.destroy();\n
+```\n
+\n
+#### .toBase64Image()\n
+\n
+This returns a base 64 encoded string of the chart in it\'s current state.\n
+\n
+```javascript\n
+myLineChart.toBase64Image();\n
+// => returns png data url of the image on the canvas\n
+```\n
+\n
+#### .generateLegend()\n
+\n
+Returns an HTML string of a legend for that chart. The template for this legend is at `legendTemplate` in the chart options.\n
+\n
+```javascript\n
+myLineChart.generateLegend();\n
+// => returns HTML string of a legend for this chart\n
+```\n
+\n
+### External Tooltips\n
+\n
+You can enable custom tooltips in the global or chart configuration like so:\n
+\n
+```javascript\n
+var myPieChart = new Chart(ctx).Pie(data, {\n
+\tcustomTooltips: function(tooltip) {\n
+\n
+        // tooltip will be false if tooltip is not visible or should be hidden\n
+        if (!tooltip) {\n
+            return;\n
+        }\n
+\n
+        // Otherwise, tooltip will be an object with all tooltip properties like:\n
+\n
+        // tooltip.caretHeight\n
+        // tooltip.caretPadding\n
+        // tooltip.chart\n
+        // tooltip.cornerRadius\n
+        // tooltip.fillColor\n
+        // tooltip.font...\n
+        // tooltip.text\n
+        // tooltip.x\n
+        // tooltip.y\n
+        // etc...\n
+\n
+    };\n
+});\n
+```\n
+\n
+See files `sample/pie-customTooltips.html` and `sample/line-customTooltips.html` for examples on how to get started.\n
+\n
+\n
+### Writing new chart types\n
+\n
+Chart.js 1.0 has been rewritten to provide a platform for developers to create their own custom chart types, and be able to share and utilise them through the Chart.js API.\n
+\n
+The format is relatively simple, there are a set of utility helper methods under `Chart.helpers`, including things such as looping over collections, requesting animation frames, and easing equations.\n
+\n
+On top of this, there are also some simple base classes of Chart elements, these all extend from `Chart.Element`, and include things such as points, bars and scales.\n
+\n
+```javascript\n
+Chart.Type.extend({\n
+\t// Passing in a name registers this chart in the Chart namespace\n
+\tname: "Scatter",\n
+\t// Providing a defaults will also register the deafults in the chart namespace\n
+\tdefaults : {\n
+\t\toptions: "Here",\n
+\t\tavailable: "at this.options"\n
+\t},\n
+\t// Initialize is fired when the chart is initialized - Data is passed in as a parameter\n
+\t// Config is automatically merged by the core of Chart.js, and is available at this.options\n
+\tinitialize:  function(data){\n
+\t\tthis.chart.ctx // The drawing context for this chart\n
+\t\tthis.chart.canvas // the canvas node for this chart\n
+\t},\n
+\t// Used to draw something on the canvas\n
+\tdraw: function() {\n
+\t}\n
+});\n
+\n
+// Now we can create a new instance of our chart, using the Chart.js API\n
+new Chart(ctx).Scatter(data);\n
+// initialize is now run\n
+```\n
+\n
+### Extending existing chart types\n
+\n
+We can also extend existing chart types, and expose them to the API in the same way. Let\'s say for example, we might want to run some more code when we initialize every Line chart.\n
+\n
+```javascript\n
+// Notice now we\'re extending the particular Line chart type, rather than the base class.\n
+Chart.types.Line.extend({\n
+\t// Passing in a name registers this chart in the Chart namespace in the same way\n
+\tname: "LineAlt",\n
+\tinitialize: function(data){\n
+\t\tconsole.log(\'My Line chart extension\');\n
+\t\tChart.types.Line.prototype.initialize.apply(this, arguments);\n
+\t}\n
+});\n
+\n
+// Creates a line chart in the same way\n
+new Chart(ctx).LineAlt(data);\n
+// but this logs \'My Line chart extension\' in the console.\n
+```\n
+\n
+### Community extensions\n
+\n
+- <a href="https://github.com/Regaddi/Chart.StackedBar.js" target="_blank">Stacked Bar Chart</a> by <a href="https://twitter.com/Regaddi" target="_blank">@Regaddi</a>\n
+- <a href="https://github.com/tannerlinsley/Chart.StackedArea.js" target="_blank">Stacked Bar Chart</a> by <a href="https://twitter.com/tannerlinsley" target="_blank">@tannerlinsley</a>\n
+- <a href="https://github.com/CAYdenberg/Chart.js" target="_blank">Error bars (bar and line charts)</a> by <a href="https://twitter.com/CAYdenberg" target="_blank">@CAYdenberg</a>\n
+- <a href="http://dima117.github.io/Chart.Scatter/" target="_blank">Scatter chart (number & date scales are supported)</a> by <a href="https://github.com/dima117" target="_blank">@dima117</a>\n
+\n
+### Creating custom builds\n
+\n
+Chart.js uses <a href="http://gulpjs.com/" target="_blank">gulp</a> to build the library into a single JavaScript file. We can use this same build script with custom parameters in order to build a custom version.\n
+\n
+Firstly, we need to ensure development dependencies are installed. With node and npm installed, after cloning the Chart.js repo to a local directory, and navigating to that directory in the command line, we can run the following:\n
+\n
+```bash\n
+npm install\n
+npm install -g gulp\n
+```\n
+\n
+This will install the local development dependencies for Chart.js, along with a CLI for the JavaScript task runner <a href="http://gulpjs.com/" target="_blank">gulp</a>.\n
+\n
+Now, we can run the `gulp build` task, and pass in a comma-separated list of types as an argument to build a custom version of Chart.js with only specified chart types.\n
+\n
+Here we will create a version of Chart.js with only Line, Radar and Bar charts included:\n
+\n
+```bash\n
+gulp build --types=Line,Radar,Bar\n
+```\n
+\n
+This will output to the `/custom` directory, and write two files, Chart.js, and Chart.min.js with only those chart types included.\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6803</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>06-Advanced.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

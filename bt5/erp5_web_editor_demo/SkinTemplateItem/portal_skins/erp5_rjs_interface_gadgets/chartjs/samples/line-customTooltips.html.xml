@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271275.53</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>line-customTooltips.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+\n
+<head>\n
+    <title>Line Chart with Custom Tooltips</title>\n
+    <script src="../Chart.js"></script>\n
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>\n
+\n
+    <style>\n
+    #canvas-holder1 {\n
+        width: 300px;\n
+        margin: 20px auto;\n
+    }\n
+    #canvas-holder2 {\n
+        width: 50%;\n
+        margin: 20px 25%;\n
+    }\n
+    #chartjs-tooltip {\n
+        opacity: 1;\n
+        position: absolute;\n
+        background: rgba(0, 0, 0, .7);\n
+        color: white;\n
+        padding: 3px;\n
+        border-radius: 3px;\n
+        -webkit-transition: all .1s ease;\n
+        transition: all .1s ease;\n
+        pointer-events: none;\n
+        -webkit-transform: translate(-50%, 0);\n
+        transform: translate(-50%, 0);\n
+    }\n
+   \t.chartjs-tooltip-key{\n
+   \t\tdisplay:inline-block;\n
+   \t\twidth:10px;\n
+   \t\theight:10px;\n
+   \t}\n
+    </style>\n
+</head>\n
+\n
+<body>\n
+    <div id="canvas-holder1">\n
+        <canvas id="chart1" width="300" height="30" />\n
+    </div>\n
+    <div id="canvas-holder2">\n
+        <canvas id="chart2" width="450" height="600" />\n
+    </div>\n
+\n
+    <div id="chartjs-tooltip"></div>\n
+\n
+\n
+    <script>\n
+\n
+    Chart.defaults.global.pointHitDetectionRadius = 1;\n
+    Chart.defaults.global.customTooltips = function(tooltip) {\n
+\n
+        var tooltipEl = $(\'#chartjs-tooltip\');\n
+\n
+        if (!tooltip) {\n
+            tooltipEl.css({\n
+                opacity: 0\n
+            });\n
+            return;\n
+        }\n
+\n
+        tooltipEl.removeClass(\'above below\');\n
+        tooltipEl.addClass(tooltip.yAlign);\n
+\n
+        var innerHtml = \'\';\n
+        for (var i = tooltip.labels.length - 1; i >= 0; i--) {\n
+        \tinnerHtml += [\n
+        \t\t\'<div class="chartjs-tooltip-section">\',\n
+        \t\t\'\t<span class="chartjs-tooltip-key" style="background-color:\' + tooltip.legendColors[i].fill + \'"></span>\',\n
+        \t\t\'\t<span class="chartjs-tooltip-value">\' + tooltip.labels[i] + \'</span>\',\n
+        \t\t\'</div>\'\n
+        \t].join(\'\');\n
+        }\n
+        tooltipEl.html(innerHtml);\n
+\n
+        tooltipEl.css({\n
+            opacity: 1,\n
+            left: tooltip.chart.canvas.offsetLeft + tooltip.x + \'px\',\n
+            top: tooltip.chart.canvas.offsetTop + tooltip.y + \'px\',\n
+            fontFamily: tooltip.fontFamily,\n
+            fontSize: tooltip.fontSize,\n
+            fontStyle: tooltip.fontStyle,\n
+        });\n
+    };\n
+    var randomScalingFactor = function() {\n
+        return Math.round(Math.random() * 100);\n
+    };\n
+    var lineChartData = {\n
+        labels: ["January", "February", "March", "April", "May", "June", "July"],\n
+        datasets: [{\n
+            label: "My First dataset",\n
+            fillColor: "rgba(220,220,220,0.2)",\n
+            strokeColor: "rgba(220,220,220,1)",\n
+            pointColor: "rgba(220,220,220,1)",\n
+            pointStrokeColor: "#fff",\n
+            pointHighlightFill: "#fff",\n
+            pointHighlightStroke: "rgba(220,220,220,1)",\n
+            data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]\n
+        }, {\n
+            label: "My Second dataset",\n
+            fillColor: "rgba(151,187,205,0.2)",\n
+            strokeColor: "rgba(151,187,205,1)",\n
+            pointColor: "rgba(151,187,205,1)",\n
+            pointStrokeColor: "#fff",\n
+            pointHighlightFill: "#fff",\n
+            pointHighlightStroke: "rgba(151,187,205,1)",\n
+            data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]\n
+        }]\n
+    };\n
+\n
+    window.onload = function() {\n
+        var ctx1 = document.getElementById("chart1").getContext("2d");\n
+        window.myLine = new Chart(ctx1).Line(lineChartData, {\n
+        \tshowScale: false,\n
+        \tpointDot : true,\n
+            responsive: true\n
+        });\n
+\n
+        var ctx2 = document.getElementById("chart2").getContext("2d");\n
+        window.myLine = new Chart(ctx2).Line(lineChartData, {\n
+            responsive: true\n
+        });\n
+    };\n
+    </script>\n
+</body>\n
+\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4024</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>line-customTooltips.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

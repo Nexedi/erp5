@@ -1,0 +1,347 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271278.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Chart.Bar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function(){\n
+\t"use strict";\n
+\n
+\tvar root = this,\n
+\t\tChart = root.Chart,\n
+\t\thelpers = Chart.helpers;\n
+\n
+\n
+\tvar defaultConfig = {\n
+\t\t//Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value\n
+\t\tscaleBeginAtZero : true,\n
+\n
+\t\t//Boolean - Whether grid lines are shown across the chart\n
+\t\tscaleShowGridLines : true,\n
+\n
+\t\t//String - Colour of the grid lines\n
+\t\tscaleGridLineColor : "rgba(0,0,0,.05)",\n
+\n
+\t\t//Number - Width of the grid lines\n
+\t\tscaleGridLineWidth : 1,\n
+\n
+\t\t//Boolean - Whether to show horizontal lines (except X axis)\n
+\t\tscaleShowHorizontalLines: true,\n
+\n
+\t\t//Boolean - Whether to show vertical lines (except Y axis)\n
+\t\tscaleShowVerticalLines: true,\n
+\n
+\t\t//Boolean - If there is a stroke on each bar\n
+\t\tbarShowStroke : true,\n
+\n
+\t\t//Number - Pixel width of the bar stroke\n
+\t\tbarStrokeWidth : 2,\n
+\n
+\t\t//Number - Spacing between each of the X value sets\n
+\t\tbarValueSpacing : 5,\n
+\n
+\t\t//Number - Spacing between data sets within X values\n
+\t\tbarDatasetSpacing : 1,\n
+\n
+\t\t//String - A legend template\n
+\t\tlegendTemplate : "<ul class=\\"<%=name.toLowerCase()%>-legend\\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\\"background-color:<%=datasets[i].fillColor%>\\"><%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>"\n
+\n
+\t};\n
+\n
+\n
+\tChart.Type.extend({\n
+\t\tname: "Bar",\n
+\t\tdefaults : defaultConfig,\n
+\t\tinitialize:  function(data){\n
+\n
+\t\t\t//Expose options as a scope variable here so we can access it in the ScaleClass\n
+\t\t\tvar options = this.options;\n
+\n
+\t\t\tthis.ScaleClass = Chart.Scale.extend({\n
+\t\t\t\toffsetGridLines : true,\n
+\t\t\t\tcalculateBarX : function(datasetCount, datasetIndex, barIndex){\n
+\t\t\t\t\t//Reusable method for calculating the xPosition of a given bar based on datasetIndex & width of the bar\n
+\t\t\t\t\tvar xWidth = this.calculateBaseWidth(),\n
+\t\t\t\t\t\txAbsolute = this.calculateX(barIndex) - (xWidth/2),\n
+\t\t\t\t\t\tbarWidth = this.calculateBarWidth(datasetCount);\n
+\n
+\t\t\t\t\treturn xAbsolute + (barWidth * datasetIndex) + (datasetIndex * options.barDatasetSpacing) + barWidth/2;\n
+\t\t\t\t},\n
+\t\t\t\tcalculateBaseWidth : function(){\n
+\t\t\t\t\treturn (this.calculateX(1) - this.calculateX(0)) - (2*options.barValueSpacing);\n
+\t\t\t\t},\n
+\t\t\t\tcalculateBarWidth : function(datasetCount){\n
+\t\t\t\t\t//The padding between datasets is to the right of each bar, providing that there are more than 1 dataset\n
+\t\t\t\t\tvar baseWidth = this.calculateBaseWidth() - ((datasetCount - 1) * options.barDatasetSpacing);\n
+\n
+\t\t\t\t\treturn (baseWidth / datasetCount);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tthis.datasets = [];\n
+\n
+\t\t\t//Set up tooltip events on the chart\n
+\t\t\tif (this.options.showTooltips){\n
+\t\t\t\thelpers.bindEvents(this, this.options.tooltipEvents, function(evt){\n
+\t\t\t\t\tvar activeBars = (evt.type !== \'mouseout\') ? this.getBarsAtEvent(evt) : [];\n
+\n
+\t\t\t\t\tthis.eachBars(function(bar){\n
+\t\t\t\t\t\tbar.restore([\'fillColor\', \'strokeColor\']);\n
+\t\t\t\t\t});\n
+\t\t\t\t\thelpers.each(activeBars, function(activeBar){\n
+\t\t\t\t\t\tactiveBar.fillColor = activeBar.highlightFill;\n
+\t\t\t\t\t\tactiveBar.strokeColor = activeBar.highlightStroke;\n
+\t\t\t\t\t});\n
+\t\t\t\t\tthis.showTooltip(activeBars);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t//Declare the extension of the default point, to cater for the options passed in to the constructor\n
+\t\t\tthis.BarClass = Chart.Rectangle.extend({\n
+\t\t\t\tstrokeWidth : this.options.barStrokeWidth,\n
+\t\t\t\tshowStroke : this.options.barShowStroke,\n
+\t\t\t\tctx : this.chart.ctx\n
+\t\t\t});\n
+\n
+\t\t\t//Iterate through each of the datasets, and build this into a property of the chart\n
+\t\t\thelpers.each(data.datasets,function(dataset,datasetIndex){\n
+\n
+\t\t\t\tvar datasetObject = {\n
+\t\t\t\t\tlabel : dataset.label || null,\n
+\t\t\t\t\tfillColor : dataset.fillColor,\n
+\t\t\t\t\tstrokeColor : dataset.strokeColor,\n
+\t\t\t\t\tbars : []\n
+\t\t\t\t};\n
+\n
+\t\t\t\tthis.datasets.push(datasetObject);\n
+\n
+\t\t\t\thelpers.each(dataset.data,function(dataPoint,index){\n
+\t\t\t\t\t//Add a new point for each piece of data, passing any required data to draw.\n
+\t\t\t\t\tdatasetObject.bars.push(new this.BarClass({\n
+\t\t\t\t\t\tvalue : dataPoint,\n
+\t\t\t\t\t\tlabel : data.labels[index],\n
+\t\t\t\t\t\tdatasetLabel: dataset.label,\n
+\t\t\t\t\t\tstrokeColor : dataset.strokeColor,\n
+\t\t\t\t\t\tfillColor : dataset.fillColor,\n
+\t\t\t\t\t\thighlightFill : dataset.highlightFill || dataset.fillColor,\n
+\t\t\t\t\t\thighlightStroke : dataset.highlightStroke || dataset.strokeColor\n
+\t\t\t\t\t}));\n
+\t\t\t\t},this);\n
+\n
+\t\t\t},this);\n
+\n
+\t\t\tthis.buildScale(data.labels);\n
+\n
+\t\t\tthis.BarClass.prototype.base = this.scale.endPoint;\n
+\n
+\t\t\tthis.eachBars(function(bar, index, datasetIndex){\n
+\t\t\t\thelpers.extend(bar, {\n
+\t\t\t\t\twidth : this.scale.calculateBarWidth(this.datasets.length),\n
+\t\t\t\t\tx: this.scale.calculateBarX(this.datasets.length, datasetIndex, index),\n
+\t\t\t\t\ty: this.scale.endPoint\n
+\t\t\t\t});\n
+\t\t\t\tbar.save();\n
+\t\t\t}, this);\n
+\n
+\t\t\tthis.render();\n
+\t\t},\n
+\t\tupdate : function(){\n
+\t\t\tthis.scale.update();\n
+\t\t\t// Reset any highlight colours before updating.\n
+\t\t\thelpers.each(this.activeElements, function(activeElement){\n
+\t\t\t\tactiveElement.restore([\'fillColor\', \'strokeColor\']);\n
+\t\t\t});\n
+\n
+\t\t\tthis.eachBars(function(bar){\n
+\t\t\t\tbar.save();\n
+\t\t\t});\n
+\t\t\tthis.render();\n
+\t\t},\n
+\t\teachBars : function(callback){\n
+\t\t\thelpers.each(this.datasets,function(dataset, datasetIndex){\n
+\t\t\t\thelpers.each(dataset.bars, callback, this, datasetIndex);\n
+\t\t\t},this);\n
+\t\t},\n
+\t\tgetBarsAtEvent : function(e){\n
+\t\t\tvar barsArray = [],\n
+\t\t\t\teventPosition = helpers.getRelativePosition(e),\n
+\t\t\t\tdatasetIterator = function(dataset){\n
+\t\t\t\t\tbarsArray.push(dataset.bars[barIndex]);\n
+\t\t\t\t},\n
+\t\t\t\tbarIndex;\n
+\n
+\t\t\tfor (var datasetIndex = 0; datasetIndex < this.datasets.length; datasetIndex++) {\n
+\t\t\t\tfor (barIndex = 0; barIndex < this.datasets[datasetIndex].bars.length; barIndex++) {\n
+\t\t\t\t\tif (this.datasets[datasetIndex].bars[barIndex].inRange(eventPosition.x,eventPosition.y)){\n
+\t\t\t\t\t\thelpers.each(this.datasets, datasetIterator);\n
+\t\t\t\t\t\treturn barsArray;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn barsArray;\n
+\t\t},\n
+\t\tbuildScale : function(labels){\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tvar dataTotal = function(){\n
+\t\t\t\tvar values = [];\n
+\t\t\t\tself.eachBars(function(bar){\n
+\t\t\t\t\tvalues.push(bar.value);\n
+\t\t\t\t});\n
+\t\t\t\treturn values;\n
+\t\t\t};\n
+\n
+\t\t\tvar scaleOptions = {\n
+\t\t\t\ttemplateString : this.options.scaleLabel,\n
+\t\t\t\theight : this.chart.height,\n
+\t\t\t\twidth : this.chart.width,\n
+\t\t\t\tctx : this.chart.ctx,\n
+\t\t\t\ttextColor : this.options.scaleFontColor,\n
+\t\t\t\tfontSize : this.options.scaleFontSize,\n
+\t\t\t\tfontStyle : this.options.scaleFontStyle,\n
+\t\t\t\tfontFamily : this.options.scaleFontFamily,\n
+\t\t\t\tvaluesCount : labels.length,\n
+\t\t\t\tbeginAtZero : this.options.scaleBeginAtZero,\n
+\t\t\t\tintegersOnly : this.options.scaleIntegersOnly,\n
+\t\t\t\tcalculateYRange: function(currentHeight){\n
+\t\t\t\t\tvar updatedRanges = helpers.calculateScaleRange(\n
+\t\t\t\t\t\tdataTotal(),\n
+\t\t\t\t\t\tcurrentHeight,\n
+\t\t\t\t\t\tthis.fontSize,\n
+\t\t\t\t\t\tthis.beginAtZero,\n
+\t\t\t\t\t\tthis.integersOnly\n
+\t\t\t\t\t);\n
+\t\t\t\t\thelpers.extend(this, updatedRanges);\n
+\t\t\t\t},\n
+\t\t\t\txLabels : labels,\n
+\t\t\t\tfont : helpers.fontString(this.options.scaleFontSize, this.options.scaleFontStyle, this.options.scaleFontFamily),\n
+\t\t\t\tlineWidth : this.options.scaleLineWidth,\n
+\t\t\t\tlineColor : this.options.scaleLineColor,\n
+\t\t\t\tshowHorizontalLines : this.options.scaleShowHorizontalLines,\n
+\t\t\t\tshowVerticalLines : this.options.scaleShowVerticalLines,\n
+\t\t\t\tgridLineWidth : (this.options.scaleShowGridLines) ? this.options.scaleGridLineWidth : 0,\n
+\t\t\t\tgridLineColor : (this.options.scaleShowGridLines) ? this.options.scaleGridLineColor : "rgba(0,0,0,0)",\n
+\t\t\t\tpadding : (this.options.showScale) ? 0 : (this.options.barShowStroke) ? this.options.barStrokeWidth : 0,\n
+\t\t\t\tshowLabels : this.options.scaleShowLabels,\n
+\t\t\t\tdisplay : this.options.showScale\n
+\t\t\t};\n
+\n
+\t\t\tif (this.options.scaleOverride){\n
+\t\t\t\thelpers.extend(scaleOptions, {\n
+\t\t\t\t\tcalculateYRange: helpers.noop,\n
+\t\t\t\t\tsteps: this.options.scaleSteps,\n
+\t\t\t\t\tstepValue: this.options.scaleStepWidth,\n
+\t\t\t\t\tmin: this.options.scaleStartValue,\n
+\t\t\t\t\tmax: this.options.scaleStartValue + (this.options.scaleSteps * this.options.scaleStepWidth)\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tthis.scale = new this.ScaleClass(scaleOptions);\n
+\t\t},\n
+\t\taddData : function(valuesArray,label){\n
+\t\t\t//Map the values array for each of the datasets\n
+\t\t\thelpers.each(valuesArray,function(value,datasetIndex){\n
+\t\t\t\t//Add a new point for each piece of data, passing any required data to draw.\n
+\t\t\t\tthis.datasets[datasetIndex].bars.push(new this.BarClass({\n
+\t\t\t\t\tvalue : value,\n
+\t\t\t\t\tlabel : label,\n
+\t\t\t\t\tdatasetLabel: this.datasets[datasetIndex].label,\n
+\t\t\t\t\tx: this.scale.calculateBarX(this.datasets.length, datasetIndex, this.scale.valuesCount+1),\n
+\t\t\t\t\ty: this.scale.endPoint,\n
+\t\t\t\t\twidth : this.scale.calculateBarWidth(this.datasets.length),\n
+\t\t\t\t\tbase : this.scale.endPoint,\n
+\t\t\t\t\tstrokeColor : this.datasets[datasetIndex].strokeColor,\n
+\t\t\t\t\tfillColor : this.datasets[datasetIndex].fillColor\n
+\t\t\t\t}));\n
+\t\t\t},this);\n
+\n
+\t\t\tthis.scale.addXLabel(label);\n
+\t\t\t//Then re-render the chart.\n
+\t\t\tthis.update();\n
+\t\t},\n
+\t\tremoveData : function(){\n
+\t\t\tthis.scale.removeXLabel();\n
+\t\t\t//Then re-render the chart.\n
+\t\t\thelpers.each(this.datasets,function(dataset){\n
+\t\t\t\tdataset.bars.shift();\n
+\t\t\t},this);\n
+\t\t\tthis.update();\n
+\t\t},\n
+\t\treflow : function(){\n
+\t\t\thelpers.extend(this.BarClass.prototype,{\n
+\t\t\t\ty: this.scale.endPoint,\n
+\t\t\t\tbase : this.scale.endPoint\n
+\t\t\t});\n
+\t\t\tvar newScaleProps = helpers.extend({\n
+\t\t\t\theight : this.chart.height,\n
+\t\t\t\twidth : this.chart.width\n
+\t\t\t});\n
+\t\t\tthis.scale.update(newScaleProps);\n
+\t\t},\n
+\t\tdraw : function(ease){\n
+\t\t\tvar easingDecimal = ease || 1;\n
+\t\t\tthis.clear();\n
+\n
+\t\t\tvar ctx = this.chart.ctx;\n
+\n
+\t\t\tthis.scale.draw(easingDecimal);\n
+\n
+\t\t\t//Draw all the bars for each dataset\n
+\t\t\thelpers.each(this.datasets,function(dataset,datasetIndex){\n
+\t\t\t\thelpers.each(dataset.bars,function(bar,index){\n
+\t\t\t\t\tif (bar.hasValue()){\n
+\t\t\t\t\t\tbar.base = this.scale.endPoint;\n
+\t\t\t\t\t\t//Transition then draw\n
+\t\t\t\t\t\tbar.transition({\n
+\t\t\t\t\t\t\tx : this.scale.calculateBarX(this.datasets.length, datasetIndex, index),\n
+\t\t\t\t\t\t\ty : this.scale.calculateY(bar.value),\n
+\t\t\t\t\t\t\twidth : this.scale.calculateBarWidth(this.datasets.length)\n
+\t\t\t\t\t\t}, easingDecimal).draw();\n
+\t\t\t\t\t}\n
+\t\t\t\t},this);\n
+\n
+\t\t\t},this);\n
+\t\t}\n
+\t});\n
+\n
+\n
+}).call(this);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9743</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Chart.Bar.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271272.71</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>doughnut.color.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+\t<head>\n
+\t\t<title>Doughnut Chart</title>\n
+\t\t<script src="../src/Chart.Core.js"></script>\n
+\t\t<script src="../src/Chart.Doughnut.js"></script>\n
+\t\t<style>\n
+\t\t\tbody{\n
+\t\t\t\tpadding: 0;\n
+\t\t\t\tmargin: 0;\n
+\t\t\t}\n
+\t\t\t#canvas-holder{\n
+\t\t\t\twidth:30%;\n
+\t\t\t}\n
+\t\t</style>\n
+\t</head>\n
+\t<body>\n
+\t\t<div id="canvas-holder">\n
+\t\t\t<canvas id="chart-area" width="500" height="500"/>\n
+\t\t</div>\n
+\n
+\n
+\t<script>\n
+\n
+\t\tvar doughnutData = [\n
+\t\t\t\t{\n
+\t\t\t\t\tvalue: 1,\n
+\t\t\t\t\tlabel: "One"\n
+\t\t\t\t},\n
+\t\t\t\t{\n
+\t\t\t\t\tvalue: 2,\n
+\t\t\t\t\tlabel: "Two"\n
+\t\t\t\t},\n
+\t\t\t\t{\n
+\t\t\t\t\tvalue: 3,\n
+\t\t\t\t\tlabel: "Three"\n
+\t\t\t\t},\n
+\t\t\t\t{\n
+\t\t\t\t\tvalue: 4,\n
+\t\t\t\t\tlabel: "Four"\n
+\t\t\t\t},\n
+\t\t\t\t{\n
+\t\t\t\t\tvalue: 5,\n
+\t\t\t\t\tlabel: "Five"\n
+\t\t\t\t}\n
+\n
+\t\t\t];\n
+\n
+\t\t\twindow.onload = function(){\n
+\t\t\t\tvar ctx = document.getElementById("chart-area").getContext("2d");\n
+\t\t\t\twindow.myDoughnut = new Chart(ctx).Doughnut(doughnutData, {responsive : true});\n
+\t\t\t};\n
+\n
+\n
+\n
+\t</script>\n
+\t</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>872</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>doughnut.color.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

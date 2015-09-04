@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271308.52</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>07-Notes.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+---\n
+title: Notes\n
+anchor: notes\n
+---\n
+\n
+### Browser support\n
+Browser support for the canvas element is available in all modern & major mobile browsers <a href="http://caniuse.com/canvas" target="_blank">(caniuse.com/canvas)</a>.\n
+\n
+For IE8 & below, I would recommend using the polyfill ExplorerCanvas - available at <a href="https://code.google.com/p/explorercanvas/" target="_blank">https://code.google.com/p/explorercanvas/</a>. It falls back to Internet explorer\'s format VML when canvas support is not available. Example use:\n
+\n
+```html\n
+<head>\n
+\t<!--[if lte IE 8]>\n
+\t\t<script src="excanvas.js"></script>\n
+\t<![endif]-->\n
+</head>\n
+```\n
+\n
+Usually I would recommend feature detection to choose whether or not to load a polyfill, rather than IE conditional comments, however in this case, VML is a Microsoft proprietary format, so it will only work in IE.\n
+\n
+Some important points to note in my experience using ExplorerCanvas as a fallback.\n
+\n
+- Initialise charts on load rather than DOMContentReady when using the library, as sometimes a race condition will occur, and it will result in an error when trying to get the 2d context of a canvas.\n
+- New VML DOM elements are being created for each animation frame and there is no hardware acceleration. As a result animation is usually slow and jerky, with flashing text. It is a good idea to dynamically turn off animation based on canvas support. I recommend using the excellent <a href="http://modernizr.com/" target="_blank">Modernizr</a> to do this.\n
+- When declaring fonts, the library explorercanvas requires the font name to be in single quotes inside the string. For example, instead of your scaleFontFamily property being simply "Arial", explorercanvas support, use "\'Arial\'" instead. Chart.js does this for default values.\n
+\n
+### Bugs & issues\n
+\n
+Please report these on the GitHub page - at <a href="https://github.com/nnnick/Chart.js" target="_blank">github.com/nnnick/Chart.js</a>. If you could include a link to a simple <a href="http://jsbin.com/" target="_blank">jsbin</a> or similar to demonstrate the issue, that\'d be really helpful.\n
+\n
+\n
+### Contributing\n
+New contributions to the library are welcome, just a couple of guidelines:\n
+\n
+- Tabs for indentation, not spaces please.\n
+- Please ensure you\'re changing the individual files in `/src`, not the concatenated output in the `Chart.js` file in the root of the repo.\n
+- Please check that your code will pass `jshint` code standards, `gulp jshint` will run this for you.\n
+- Please keep pull requests concise, and document new functionality in the relevant `.md` file.\n
+- Consider whether your changes are useful for all users, or if creating a Chart.js extension would be more appropriate.\n
+\n
+### License\n
+Chart.js is open source and available under the <a href="http://opensource.org/licenses/MIT" target="_blank">MIT license</a>.
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2808</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>07-Notes.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

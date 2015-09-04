@@ -1,0 +1,262 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271311.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>00-Getting-Started.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+---\n
+title: Getting started\n
+anchor: getting-started\n
+---\n
+\n
+###Include Chart.js\n
+\n
+First we need to include the Chart.js library on the page. The library occupies a global variable of `Chart`.\n
+\n
+```html\n
+<script src="Chart.js"></script>\n
+```\n
+\n
+Alternatively, if you\'re using an AMD loader for JavaScript modules, that is also supported in the Chart.js core. Please note: the library will still occupy a global variable of `Chart`, even if it detects `define` and `define.amd`. If this is a problem, you can call `noConflict` to restore the global Chart variable to its previous owner.\n
+\n
+```javascript\n
+// Using requirejs\n
+require([\'path/to/Chartjs\'], function(Chart){\n
+\t// Use Chart.js as normal here.\n
+\n
+\t// Chart.noConflict restores the Chart global variable to its previous owner\n
+\t// The function returns what was previously Chart, allowing you to reassign.\n
+\tvar Chartjs = Chart.noConflict();\n
+\n
+});\n
+```\n
+\n
+You can also grab Chart.js using bower:\n
+\n
+```bash\n
+bower install Chart.js --save\n
+```\n
+\n
+Also, Chart.js is available from CDN:\n
+\n
+https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js\n
+\n
+###Creating a chart\n
+\n
+To create a chart, we need to instantiate the `Chart` class. To do this, we need to pass in the 2d context of where we want to draw the chart. Here\'s an example.\n
+\n
+```html\n
+<canvas id="myChart" width="400" height="400"></canvas>\n
+```\n
+\n
+```javascript\n
+// Get the context of the canvas element we want to select\n
+var ctx = document.getElementById("myChart").getContext("2d");\n
+var myNewChart = new Chart(ctx).PolarArea(data);\n
+```\n
+\n
+We can also get the context of our canvas with jQuery. To do this, we need to get the DOM node out of the jQuery collection, and call the `getContext("2d")` method on that.\n
+\n
+```javascript\n
+// Get context with jQuery - using jQuery\'s .get() method.\n
+var ctx = $("#myChart").get(0).getContext("2d");\n
+// This will get the first returned node in the jQuery collection.\n
+var myNewChart = new Chart(ctx);\n
+```\n
+\n
+After we\'ve instantiated the Chart class on the canvas we want to draw on, Chart.js will handle the scaling for retina displays.\n
+\n
+With the Chart class set up, we can go on to create one of the charts Chart.js has available. In the example below, we would be drawing a Polar area chart.\n
+\n
+```javascript\n
+new Chart(ctx).PolarArea(data, options);\n
+```\n
+\n
+We call a method of the name of the chart we want to create. We pass in the data for that chart type, and the options for that chart as parameters. Chart.js will merge the global defaults with chart type specific defaults, then merge any options passed in as a second argument after data.\n
+\n
+###Global chart configuration\n
+\n
+This concept was introduced in Chart.js 1.0 to keep configuration DRY, and allow for changing options globally across chart types, avoiding the need to specify options for each instance, or the default for a particular chart type.\n
+\n
+```javascript\n
+Chart.defaults.global = {\n
+\t// Boolean - Whether to animate the chart\n
+\tanimation: true,\n
+\n
+\t// Number - Number of animation steps\n
+\tanimationSteps: 60,\n
+\n
+\t// String - Animation easing effect\n
+\t// Possible effects are:\n
+\t// [easeInOutQuart, linear, easeOutBounce, easeInBack, easeInOutQuad,\n
+\t//  easeOutQuart, easeOutQuad, easeInOutBounce, easeOutSine, easeInOutCubic,\n
+\t//  easeInExpo, easeInOutBack, easeInCirc, easeInOutElastic, easeOutBack,\n
+\t//  easeInQuad, easeInOutExpo, easeInQuart, easeOutQuint, easeInOutCirc,\n
+\t//  easeInSine, easeOutExpo, easeOutCirc, easeOutCubic, easeInQuint,\n
+\t//  easeInElastic, easeInOutSine, easeInOutQuint, easeInBounce,\n
+\t//  easeOutElastic, easeInCubic]\n
+\tanimationEasing: "easeOutQuart",\n
+\n
+\t// Boolean - If we should show the scale at all\n
+\tshowScale: true,\n
+\n
+\t// Boolean - If we want to override with a hard coded scale\n
+\tscaleOverride: false,\n
+\n
+\t// ** Required if scaleOverride is true **\n
+\t// Number - The number of steps in a hard coded scale\n
+\tscaleSteps: null,\n
+\t// Number - The value jump in the hard coded scale\n
+\tscaleStepWidth: null,\n
+\t// Number - The scale starting value\n
+\tscaleStartValue: null,\n
+\n
+\t// String - Colour of the scale line\n
+\tscaleLineColor: "rgba(0,0,0,.1)",\n
+\n
+\t// Number - Pixel width of the scale line\n
+\tscaleLineWidth: 1,\n
+\n
+\t// Boolean - Whether to show labels on the scale\n
+\tscaleShowLabels: true,\n
+\n
+\t// Interpolated JS string - can access value\n
+\tscaleLabel: "<%=value%>",\n
+\n
+\t// Boolean - Whether the scale should stick to integers, not floats even if drawing space is there\n
+\tscaleIntegersOnly: true,\n
+\n
+\t// Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value\n
+\tscaleBeginAtZero: false,\n
+\n
+\t// String - Scale label font declaration for the scale label\n
+\tscaleFontFamily: "\'Helvetica Neue\', \'Helvetica\', \'Arial\', sans-serif",\n
+\n
+\t// Number - Scale label font size in pixels\n
+\tscaleFontSize: 12,\n
+\n
+\t// String - Scale label font weight style\n
+\tscaleFontStyle: "normal",\n
+\n
+\t// String - Scale label font colour\n
+\tscaleFontColor: "#666",\n
+\n
+\t// Boolean - whether or not the chart should be responsive and resize when the browser does.\n
+\tresponsive: false,\n
+\n
+\t// Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container\n
+\tmaintainAspectRatio: true,\n
+\n
+\t// Boolean - Determines whether to draw tooltips on the canvas or not\n
+\tshowTooltips: true,\n
+\n
+\t// Function - Determines whether to execute the customTooltips function instead of drawing the built in tooltips (See [Advanced - External Tooltips](#advanced-usage-external-tooltips))\n
+\tcustomTooltips: false,\n
+\n
+\t// Array - Array of string names to attach tooltip events\n
+\ttooltipEvents: ["mousemove", "touchstart", "touchmove"],\n
+\n
+\t// String - Tooltip background colour\n
+\ttooltipFillColor: "rgba(0,0,0,0.8)",\n
+\n
+\t// String - Tooltip label font declaration for the scale label\n
+\ttooltipFontFamily: "\'Helvetica Neue\', \'Helvetica\', \'Arial\', sans-serif",\n
+\n
+\t// Number - Tooltip label font size in pixels\n
+\ttooltipFontSize: 14,\n
+\n
+\t// String - Tooltip font weight style\n
+\ttooltipFontStyle: "normal",\n
+\n
+\t// String - Tooltip label font colour\n
+\ttooltipFontColor: "#fff",\n
+\n
+\t// String - Tooltip title font declaration for the scale label\n
+\ttooltipTitleFontFamily: "\'Helvetica Neue\', \'Helvetica\', \'Arial\', sans-serif",\n
+\n
+\t// Number - Tooltip title font size in pixels\n
+\ttooltipTitleFontSize: 14,\n
+\n
+\t// String - Tooltip title font weight style\n
+\ttooltipTitleFontStyle: "bold",\n
+\n
+\t// String - Tooltip title font colour\n
+\ttooltipTitleFontColor: "#fff",\n
+\n
+\t// String - Tooltip title template\n
+\ttooltipTitleTemplate: "<%= label%>",\n
+\n
+\t// Number - pixel width of padding around tooltip text\n
+\ttooltipYPadding: 6,\n
+\n
+\t// Number - pixel width of padding around tooltip text\n
+\ttooltipXPadding: 6,\n
+\n
+\t// Number - Size of the caret on the tooltip\n
+\ttooltipCaretSize: 8,\n
+\n
+\t// Number - Pixel radius of the tooltip border\n
+\ttooltipCornerRadius: 6,\n
+\n
+\t// Number - Pixel offset from point x to tooltip edge\n
+\ttooltipXOffset: 10,\n
+\t{% raw %}\n
+\t// String - Template string for single tooltips\n
+\ttooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",\n
+\t{% endraw %}\n
+\t// String - Template string for multiple tooltips\n
+\tmultiTooltipTemplate: "<%= value %>",\n
+\n
+\t// Function - Will fire on animation progression.\n
+\tonAnimationProgress: function(){},\n
+\n
+\t// Function - Will fire on animation completion.\n
+\tonAnimationComplete: function(){}\n
+}\n
+```\n
+\n
+If for example, you wanted all charts created to be responsive, and resize when the browser window does, the following setting can be changed:\n
+\n
+```javascript\n
+Chart.defaults.global.responsive = true;\n
+```\n
+\n
+Now, every time we create a chart, `options.responsive` will be `true`.\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7470</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>00-Getting-Started.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

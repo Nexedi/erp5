@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271309.31</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>04-Polar-Area-Chart.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+---\n
+title: Polar Area Chart\n
+anchor: polar-area-chart\n
+---\n
+### Introduction\n
+Polar area charts are similar to pie charts, but each segment has the same angle - the radius of the segment differs depending on the value.\n
+\n
+This type of chart is often useful when we want to show a comparison data similar to a pie chart, but also show a scale of values for context.\n
+\n
+<div class="canvas-holder">\n
+\t<canvas width="250" height="125"></canvas>\n
+</div>\n
+\n
+### Example usage\n
+\n
+```javascript\n
+new Chart(ctx).PolarArea(data, options);\n
+```\n
+\n
+### Data structure\n
+\n
+```javascript\n
+var data = [\n
+\t{\n
+\t\tvalue: 300,\n
+\t\tcolor:"#F7464A",\n
+\t\thighlight: "#FF5A5E",\n
+\t\tlabel: "Red"\n
+\t},\n
+\t{\n
+\t\tvalue: 50,\n
+\t\tcolor: "#46BFBD",\n
+\t\thighlight: "#5AD3D1",\n
+\t\tlabel: "Green"\n
+\t},\n
+\t{\n
+\t\tvalue: 100,\n
+\t\tcolor: "#FDB45C",\n
+\t\thighlight: "#FFC870",\n
+\t\tlabel: "Yellow"\n
+\t},\n
+\t{\n
+\t\tvalue: 40,\n
+\t\tcolor: "#949FB1",\n
+\t\thighlight: "#A8B3C5",\n
+\t\tlabel: "Grey"\n
+\t},\n
+\t{\n
+\t\tvalue: 120,\n
+\t\tcolor: "#4D5360",\n
+\t\thighlight: "#616774",\n
+\t\tlabel: "Dark Grey"\n
+\t}\n
+\n
+];\n
+```\n
+As you can see, for the chart data you pass in an array of objects, with a value and a colour. The value attribute should be a number, while the color attribute should be a string. Similar to CSS, for this string you can use HEX notation, RGB, RGBA or HSL.\n
+\n
+### Chart options\n
+\n
+These are the customisation options specific to Polar Area charts. These options are merged with the [global chart configuration options](#getting-started-global-chart-configuration), and form the options of the chart.\n
+\n
+```javascript\n
+{\n
+\t//Boolean - Show a backdrop to the scale label\n
+\tscaleShowLabelBackdrop : true,\n
+\n
+\t//String - The colour of the label backdrop\n
+\tscaleBackdropColor : "rgba(255,255,255,0.75)",\n
+\n
+\t// Boolean - Whether the scale should begin at zero\n
+\tscaleBeginAtZero : true,\n
+\n
+\t//Number - The backdrop padding above & below the label in pixels\n
+\tscaleBackdropPaddingY : 2,\n
+\n
+\t//Number - The backdrop padding to the side of the label in pixels\n
+\tscaleBackdropPaddingX : 2,\n
+\n
+\t//Boolean - Show line for each value in the scale\n
+\tscaleShowLine : true,\n
+\n
+\t//Boolean - Stroke a line around each segment in the chart\n
+\tsegmentShowStroke : true,\n
+\n
+\t//String - The colour of the stroke on each segment.\n
+\tsegmentStrokeColor : "#fff",\n
+\n
+\t//Number - The width of the stroke value in pixels\n
+\tsegmentStrokeWidth : 2,\n
+\n
+\t//Number - Amount of animation steps\n
+\tanimationSteps : 100,\n
+\n
+\t//String - Animation easing effect.\n
+\tanimationEasing : "easeOutBounce",\n
+\n
+\t//Boolean - Whether to animate the rotation of the chart\n
+\tanimateRotate : true,\n
+\n
+\t//Boolean - Whether to animate scaling the chart from the centre\n
+\tanimateScale : false,\n
+\t{% raw %}\n
+\t//String - A legend template\n
+\tlegendTemplate : "<ul class=\\"<%=name.toLowerCase()%>-legend\\"><% for (var i=0; i<segments.length; i++){%><li><span style=\\"background-color:<%=segments[i].fillColor%>\\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"\n
+\t{% endraw %}\n
+}\n
+```\n
+\n
+You can override these for your `Chart` instance by passing a second argument into the `PolarArea` method as an object with the keys you want to override.\n
+\n
+For example, we could have a polar area chart with a black stroke on each segment like so:\n
+\n
+```javascript\n
+new Chart(ctx).PolarArea(data, {\n
+\tsegmentStrokeColor: "#000000"\n
+});\n
+// This will create a chart with all of the default options, merged from the global config,\n
+// and the PolarArea chart defaults but this particular instance will have `segmentStrokeColor` set to `"#000000"`.\n
+```\n
+\n
+We can also change these defaults values for each PolarArea type that is created, this object is available at `Chart.defaults.PolarArea`.\n
+\n
+### Prototype methods\n
+\n
+#### .getSegmentsAtEvent( event )\n
+\n
+Calling `getSegmentsAtEvent(event)` on your Chart instance passing an argument of an event, or jQuery event, will return the segment elements that are at that the same position of that event.\n
+\n
+```javascript\n
+canvas.onclick = function(evt){\n
+\tvar activePoints = myPolarAreaChart.getSegmentsAtEvent(evt);\n
+\t// => activePoints is an array of segments on the canvas that are at the same position as the click event.\n
+};\n
+```\n
+\n
+This functionality may be useful for implementing DOM based tooltips, or triggering custom behaviour in your application.\n
+\n
+#### .update( )\n
+\n
+Calling `update()` on your Chart instance will re-render the chart with any updated values, allowing you to edit the value of multiple existing points, then render those in one animated render loop.\n
+\n
+```javascript\n
+myPolarAreaChart.segments[1].value = 10;\n
+// Would update the first dataset\'s value of \'Green\' to be 10\n
+myPolarAreaChart.update();\n
+// Calling update now animates the position of Green from 50 to 10.\n
+```\n
+\n
+#### .addData( segmentData, index )\n
+\n
+Calling `addData(segmentData, index)` on your Chart instance passing an object in the same format as in the constructor. There is an option second argument of \'index\', this determines at what index the new segment should be inserted into the chart.\n
+\n
+```javascript\n
+// An object in the same format as the original data source\n
+myPolarAreaChart.addData({\n
+\tvalue: 130,\n
+\tcolor: "#B48EAD",\n
+\thighlight: "#C69CBE",\n
+\tlabel: "Purple"\n
+});\n
+// The new segment will now animate in.\n
+```\n
+\n
+#### .removeData( index )\n
+\n
+Calling `removeData(index)` on your Chart instance will remove segment at that particular index. If none is provided, it will default to the last segment.\n
+\n
+```javascript\n
+myPolarAreaChart.removeData();\n
+// Other segments will update to fill the empty space left.\n
+```\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5401</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>04-Polar-Area-Chart.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

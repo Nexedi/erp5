@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271266.67</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>gulpfile.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var gulp = require(\'gulp\'),\n
+\tconcat = require(\'gulp-concat\'),\n
+\tuglify = require(\'gulp-uglify\'),\n
+\tutil = require(\'gulp-util\'),\n
+\tjshint = require(\'gulp-jshint\'),\n
+\tsize = require(\'gulp-size\'),\n
+\tconnect = require(\'gulp-connect\'),\n
+\treplace = require(\'gulp-replace\'),\n
+\thtmlv = require(\'gulp-html-validator\'),\n
+\tinquirer = require(\'inquirer\'),\n
+\tsemver = require(\'semver\'),\n
+\texec = require(\'child_process\').exec,\n
+\tfs = require(\'fs\'),\n
+\tpackage = require(\'./package.json\'),\n
+\tbower = require(\'./bower.json\');\n
+\n
+var srcDir = \'./src/\';\n
+/*\n
+ *\tUsage : gulp build --types=Bar,Line,Doughnut\n
+ *\tOutput: - A built Chart.js file with Core and types Bar, Line and Doughnut concatenated together\n
+ *\t\t\t- A minified version of this code, in Chart.min.js\n
+ */\n
+\n
+gulp.task(\'build\', function(){\n
+\n
+\t// Default to all of the chart types, with Chart.Core first\n
+\tvar srcFiles = [FileName(\'Core\')],\n
+\t\tisCustom = !!(util.env.types),\n
+\t\toutputDir = (isCustom) ? \'custom\' : \'.\';\n
+\tif (isCustom){\n
+\t\tutil.env.types.split(\',\').forEach(function(type){ return srcFiles.push(FileName(type));});\n
+\t}\n
+\telse{\n
+\t\t// Seems gulp-concat remove duplicates - nice!\n
+\t\t// So we can use this to sort out dependency order - aka include Core first!\n
+\t\tsrcFiles.push(srcDir+\'*\');\n
+\t}\n
+\n
+\treturn gulp.src(srcFiles)\n
+\t\t.pipe(concat(\'Chart.js\'))\n
+\t\t.pipe(replace(\'{{ version }}\', package.version))\n
+\t\t.pipe(gulp.dest(outputDir))\n
+\t\t.pipe(uglify({preserveComments:\'some\'}))\n
+\t\t.pipe(concat(\'Chart.min.js\'))\n
+\t\t.pipe(gulp.dest(outputDir));\n
+\n
+\tfunction FileName(moduleName){\n
+\t\treturn srcDir+\'Chart.\'+moduleName+\'.js\';\n
+\t}\n
+});\n
+\n
+/*\n
+ *\tUsage : gulp bump\n
+ *\tPrompts: Version increment to bump\n
+ *\tOutput: - New version number written into package.json & bower.json\n
+ */\n
+\n
+gulp.task(\'bump\', function(complete){\n
+\tutil.log(\'Current version:\', util.colors.cyan(package.version));\n
+\tvar choices = [\'major\', \'premajor\', \'minor\', \'preminor\', \'patch\', \'prepatch\', \'prerelease\'].map(function(versionType){\n
+\t\treturn versionType + \' (v\' + semver.inc(package.version, versionType) + \')\';\n
+\t});\n
+\tinquirer.prompt({\n
+\t\ttype: \'list\',\n
+\t\tname: \'version\',\n
+\t\tmessage: \'What version update would you like?\',\n
+\t\tchoices: choices\n
+\t}, function(res){\n
+\t\tvar increment = res.version.split(\' \')[0],\n
+\t\t\tnewVersion = semver.inc(package.version, increment);\n
+\n
+\t\t// Set the new versions into the bower/package object\n
+\t\tpackage.version = newVersion;\n
+\t\tbower.version = newVersion;\n
+\n
+\t\t// Write these to their own files, then build the output\n
+\t\tfs.writeFileSync(\'package.json\', JSON.stringify(package, null, 2));\n
+\t\tfs.writeFileSync(\'bower.json\', JSON.stringify(bower, null, 2));\n
+\n
+\t\tcomplete();\n
+\t});\n
+});\n
+\n
+gulp.task(\'release\', [\'build\'], function(){\n
+\texec(\'git tag -a v\' + package.version);\n
+});\n
+\n
+gulp.task(\'jshint\', function(){\n
+\treturn gulp.src(srcDir + \'*.js\')\n
+\t\t.pipe(jshint())\n
+\t\t.pipe(jshint.reporter(\'default\'));\n
+});\n
+\n
+gulp.task(\'valid\', function(){\n
+\treturn gulp.src(\'samples/*.html\')\n
+    .pipe(htmlv());\n
+});\n
+\n
+gulp.task(\'library-size\', function(){\n
+\treturn gulp.src(\'Chart.min.js\')\n
+\t\t.pipe(size({\n
+\t\t\tgzip: true\n
+\t\t}));\n
+});\n
+\n
+gulp.task(\'module-sizes\', function(){\n
+\treturn gulp.src(srcDir + \'*.js\')\n
+\t.pipe(uglify({preserveComments:\'some\'}))\n
+\t.pipe(size({\n
+\t\tshowFiles: true,\n
+\t\tgzip: true\n
+\t}));\n
+});\n
+\n
+gulp.task(\'watch\', function(){\n
+\tgulp.watch(\'./src/*\', [\'build\']);\n
+});\n
+\n
+gulp.task(\'test\', [\'jshint\', \'valid\']);\n
+\n
+gulp.task(\'size\', [\'library-size\', \'module-sizes\']);\n
+\n
+gulp.task(\'default\', [\'build\', \'watch\']);\n
+\n
+gulp.task(\'server\', function(){\n
+\tconnect.server({\n
+\t\tport: 8000\n
+\t});\n
+});\n
+\n
+// Convenience task for opening the project straight from the command line\n
+gulp.task(\'_open\', function(){\n
+\texec(\'open http://localhost:8000\');\n
+\texec(\'subl .\');\n
+});\n
+\n
+gulp.task(\'dev\', [\'server\', \'default\']);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3651</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>gulpfile.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

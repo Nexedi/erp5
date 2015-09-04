@@ -1,0 +1,427 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271301.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Chart.Line.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function(){\n
+\t"use strict";\n
+\n
+\tvar root = this,\n
+\t\tChart = root.Chart,\n
+\t\thelpers = Chart.helpers;\n
+\n
+\tvar defaultConfig = {\n
+\n
+\t\t///Boolean - Whether grid lines are shown across the chart\n
+\t\tscaleShowGridLines : true,\n
+\n
+\t\t//String - Colour of the grid lines\n
+\t\tscaleGridLineColor : "rgba(0,0,0,.05)",\n
+\n
+\t\t//Number - Width of the grid lines\n
+\t\tscaleGridLineWidth : 1,\n
+\n
+\t\t//Boolean - Whether to show horizontal lines (except X axis)\n
+\t\tscaleShowHorizontalLines: true,\n
+\n
+\t\t//Boolean - Whether to show vertical lines (except Y axis)\n
+\t\tscaleShowVerticalLines: true,\n
+\n
+\t\t//Boolean - Whether the line is curved between points\n
+\t\tbezierCurve : true,\n
+\n
+\t\t//Number - Tension of the bezier curve between points\n
+\t\tbezierCurveTension : 0.4,\n
+\n
+\t\t//Boolean - Whether to show a dot for each point\n
+\t\tpointDot : true,\n
+\n
+\t\t//Number - Radius of each point dot in pixels\n
+\t\tpointDotRadius : 4,\n
+\n
+\t\t//Number - Pixel width of point dot stroke\n
+\t\tpointDotStrokeWidth : 1,\n
+\n
+\t\t//Number - amount extra to add to the radius to cater for hit detection outside the drawn point\n
+\t\tpointHitDetectionRadius : 20,\n
+\n
+\t\t//Boolean - Whether to show a stroke for datasets\n
+\t\tdatasetStroke : true,\n
+\n
+\t\t//Number - Pixel width of dataset stroke\n
+\t\tdatasetStrokeWidth : 2,\n
+\n
+\t\t//Boolean - Whether to fill the dataset with a colour\n
+\t\tdatasetFill : true,\n
+\n
+\t\t//String - A legend template\n
+\t\tlegendTemplate : "<ul class=\\"<%=name.toLowerCase()%>-legend\\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\\"background-color:<%=datasets[i].strokeColor%>\\"><%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>",\n
+\n
+\t\t//Boolean - Whether to horizontally center the label and point dot inside the grid\n
+\t\toffsetGridLines : false\n
+\n
+\t};\n
+\n
+\n
+\tChart.Type.extend({\n
+\t\tname: "Line",\n
+\t\tdefaults : defaultConfig,\n
+\t\tinitialize:  function(data){\n
+\t\t\t//Declare the extension of the default point, to cater for the options passed in to the constructor\n
+\t\t\tthis.PointClass = Chart.Point.extend({\n
+\t\t\t\toffsetGridLines : this.options.offsetGridLines,\n
+\t\t\t\tstrokeWidth : this.options.pointDotStrokeWidth,\n
+\t\t\t\tradius : this.options.pointDotRadius,\n
+\t\t\t\tdisplay: this.options.pointDot,\n
+\t\t\t\thitDetectionRadius : this.options.pointHitDetectionRadius,\n
+\t\t\t\tctx : this.chart.ctx,\n
+\t\t\t\tinRange : function(mouseX){\n
+\t\t\t\t\treturn (Math.pow(mouseX-this.x, 2) < Math.pow(this.radius + this.hitDetectionRadius,2));\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tthis.datasets = [];\n
+\n
+\t\t\t//Set up tooltip events on the chart\n
+\t\t\tif (this.options.showTooltips){\n
+\t\t\t\thelpers.bindEvents(this, this.options.tooltipEvents, function(evt){\n
+\t\t\t\t\tvar activePoints = (evt.type !== \'mouseout\') ? this.getPointsAtEvent(evt) : [];\n
+\t\t\t\t\tthis.eachPoints(function(point){\n
+\t\t\t\t\t\tpoint.restore([\'fillColor\', \'strokeColor\']);\n
+\t\t\t\t\t});\n
+\t\t\t\t\thelpers.each(activePoints, function(activePoint){\n
+\t\t\t\t\t\tactivePoint.fillColor = activePoint.highlightFill;\n
+\t\t\t\t\t\tactivePoint.strokeColor = activePoint.highlightStroke;\n
+\t\t\t\t\t});\n
+\t\t\t\t\tthis.showTooltip(activePoints);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t//Iterate through each of the datasets, and build this into a property of the chart\n
+\t\t\thelpers.each(data.datasets,function(dataset){\n
+\n
+\t\t\t\tvar datasetObject = {\n
+\t\t\t\t\tlabel : dataset.label || null,\n
+\t\t\t\t\tfillColor : dataset.fillColor,\n
+\t\t\t\t\tstrokeColor : dataset.strokeColor,\n
+\t\t\t\t\tpointColor : dataset.pointColor,\n
+\t\t\t\t\tpointStrokeColor : dataset.pointStrokeColor,\n
+\t\t\t\t\tpoints : []\n
+\t\t\t\t};\n
+\n
+\t\t\t\tthis.datasets.push(datasetObject);\n
+\n
+\n
+\t\t\t\thelpers.each(dataset.data,function(dataPoint,index){\n
+\t\t\t\t\t//Add a new point for each piece of data, passing any required data to draw.\n
+\t\t\t\t\tdatasetObject.points.push(new this.PointClass({\n
+\t\t\t\t\t\tvalue : dataPoint,\n
+\t\t\t\t\t\tlabel : data.labels[index],\n
+\t\t\t\t\t\tdatasetLabel: dataset.label,\n
+\t\t\t\t\t\tstrokeColor : dataset.pointStrokeColor,\n
+\t\t\t\t\t\tfillColor : dataset.pointColor,\n
+\t\t\t\t\t\thighlightFill : dataset.pointHighlightFill || dataset.pointColor,\n
+\t\t\t\t\t\thighlightStroke : dataset.pointHighlightStroke || dataset.pointStrokeColor\n
+\t\t\t\t\t}));\n
+\t\t\t\t},this);\n
+\n
+\t\t\t\tthis.buildScale(data.labels);\n
+\n
+\n
+\t\t\t\tthis.eachPoints(function(point, index){\n
+\t\t\t\t\thelpers.extend(point, {\n
+\t\t\t\t\t\tx: this.scale.calculateX(index),\n
+\t\t\t\t\t\ty: this.scale.endPoint\n
+\t\t\t\t\t});\n
+\t\t\t\t\tpoint.save();\n
+\t\t\t\t}, this);\n
+\n
+\t\t\t},this);\n
+\n
+\n
+\t\t\tthis.render();\n
+\t\t},\n
+\t\tupdate : function(){\n
+\t\t\tthis.scale.update();\n
+\t\t\t// Reset any highlight colours before updating.\n
+\t\t\thelpers.each(this.activeElements, function(activeElement){\n
+\t\t\t\tactiveElement.restore([\'fillColor\', \'strokeColor\']);\n
+\t\t\t});\n
+\t\t\tthis.eachPoints(function(point){\n
+\t\t\t\tpoint.save();\n
+\t\t\t});\n
+\t\t\tthis.render();\n
+\t\t},\n
+\t\teachPoints : function(callback){\n
+\t\t\thelpers.each(this.datasets,function(dataset){\n
+\t\t\t\thelpers.each(dataset.points,callback,this);\n
+\t\t\t},this);\n
+\t\t},\n
+\t\tgetPointsAtEvent : function(e){\n
+\t\t\tvar pointsArray = [],\n
+\t\t\t\teventPosition = helpers.getRelativePosition(e);\n
+\t\t\thelpers.each(this.datasets,function(dataset){\n
+\t\t\t\thelpers.each(dataset.points,function(point){\n
+\t\t\t\t\tif (point.inRange(eventPosition.x,eventPosition.y)) pointsArray.push(point);\n
+\t\t\t\t});\n
+\t\t\t},this);\n
+\t\t\treturn pointsArray;\n
+\t\t},\n
+\t\tbuildScale : function(labels){\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tvar dataTotal = function(){\n
+\t\t\t\tvar values = [];\n
+\t\t\t\tself.eachPoints(function(point){\n
+\t\t\t\t\tvalues.push(point.value);\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn values;\n
+\t\t\t};\n
+\n
+\t\t\tvar scaleOptions = {\n
+\t\t\t\ttemplateString : this.options.scaleLabel,\n
+\t\t\t\theight : this.chart.height,\n
+\t\t\t\twidth : this.chart.width,\n
+\t\t\t\tctx : this.chart.ctx,\n
+\t\t\t\ttextColor : this.options.scaleFontColor,\n
+\t\t\t\toffsetGridLines : this.options.offsetGridLines,\n
+\t\t\t\tfontSize : this.options.scaleFontSize,\n
+\t\t\t\tfontStyle : this.options.scaleFontStyle,\n
+\t\t\t\tfontFamily : this.options.scaleFontFamily,\n
+\t\t\t\tvaluesCount : labels.length,\n
+\t\t\t\tbeginAtZero : this.options.scaleBeginAtZero,\n
+\t\t\t\tintegersOnly : this.options.scaleIntegersOnly,\n
+\t\t\t\tcalculateYRange : function(currentHeight){\n
+\t\t\t\t\tvar updatedRanges = helpers.calculateScaleRange(\n
+\t\t\t\t\t\tdataTotal(),\n
+\t\t\t\t\t\tcurrentHeight,\n
+\t\t\t\t\t\tthis.fontSize,\n
+\t\t\t\t\t\tthis.beginAtZero,\n
+\t\t\t\t\t\tthis.integersOnly\n
+\t\t\t\t\t);\n
+\t\t\t\t\thelpers.extend(this, updatedRanges);\n
+\t\t\t\t},\n
+\t\t\t\txLabels : labels,\n
+\t\t\t\tfont : helpers.fontString(this.options.scaleFontSize, this.options.scaleFontStyle, this.options.scaleFontFamily),\n
+\t\t\t\tlineWidth : this.options.scaleLineWidth,\n
+\t\t\t\tlineColor : this.options.scaleLineColor,\n
+\t\t\t\tshowHorizontalLines : this.options.scaleShowHorizontalLines,\n
+\t\t\t\tshowVerticalLines : this.options.scaleShowVerticalLines,\n
+\t\t\t\tgridLineWidth : (this.options.scaleShowGridLines) ? this.options.scaleGridLineWidth : 0,\n
+\t\t\t\tgridLineColor : (this.options.scaleShowGridLines) ? this.options.scaleGridLineColor : "rgba(0,0,0,0)",\n
+\t\t\t\tpadding: (this.options.showScale) ? 0 : this.options.pointDotRadius + this.options.pointDotStrokeWidth,\n
+\t\t\t\tshowLabels : this.options.scaleShowLabels,\n
+\t\t\t\tdisplay : this.options.showScale\n
+\t\t\t};\n
+\n
+\t\t\tif (this.options.scaleOverride){\n
+\t\t\t\thelpers.extend(scaleOptions, {\n
+\t\t\t\t\tcalculateYRange: helpers.noop,\n
+\t\t\t\t\tsteps: this.options.scaleSteps,\n
+\t\t\t\t\tstepValue: this.options.scaleStepWidth,\n
+\t\t\t\t\tmin: this.options.scaleStartValue,\n
+\t\t\t\t\tmax: this.options.scaleStartValue + (this.options.scaleSteps * this.options.scaleStepWidth)\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\n
+\t\t\tthis.scale = new Chart.Scale(scaleOptions);\n
+\t\t},\n
+\t\taddData : function(valuesArray,label){\n
+\t\t\t//Map the values array for each of the datasets\n
+\n
+\t\t\thelpers.each(valuesArray,function(value,datasetIndex){\n
+\t\t\t\t//Add a new point for each piece of data, passing any required data to draw.\n
+\t\t\t\tthis.datasets[datasetIndex].points.push(new this.PointClass({\n
+\t\t\t\t\tvalue : value,\n
+\t\t\t\t\tlabel : label,\n
+\t\t\t\t\tdatasetLabel: this.datasets[datasetIndex].label,\n
+\t\t\t\t\tx: this.scale.calculateX(this.scale.valuesCount+1),\n
+\t\t\t\t\ty: this.scale.endPoint,\n
+\t\t\t\t\tstrokeColor : this.datasets[datasetIndex].pointStrokeColor,\n
+\t\t\t\t\tfillColor : this.datasets[datasetIndex].pointColor\n
+\t\t\t\t}));\n
+\t\t\t},this);\n
+\n
+\t\t\tthis.scale.addXLabel(label);\n
+\t\t\t//Then re-render the chart.\n
+\t\t\tthis.update();\n
+\t\t},\n
+\t\tremoveData : function(){\n
+\t\t\tthis.scale.removeXLabel();\n
+\t\t\t//Then re-render the chart.\n
+\t\t\thelpers.each(this.datasets,function(dataset){\n
+\t\t\t\tdataset.points.shift();\n
+\t\t\t},this);\n
+\t\t\tthis.update();\n
+\t\t},\n
+\t\treflow : function(){\n
+\t\t\tvar newScaleProps = helpers.extend({\n
+\t\t\t\theight : this.chart.height,\n
+\t\t\t\twidth : this.chart.width\n
+\t\t\t});\n
+\t\t\tthis.scale.update(newScaleProps);\n
+\t\t},\n
+\t\tdraw : function(ease){\n
+\t\t\tvar easingDecimal = ease || 1;\n
+\t\t\tthis.clear();\n
+\n
+\t\t\tvar ctx = this.chart.ctx;\n
+\n
+\t\t\t// Some helper methods for getting the next/prev points\n
+\t\t\tvar hasValue = function(item){\n
+\t\t\t\treturn item.value !== null;\n
+\t\t\t},\n
+\t\t\tnextPoint = function(point, collection, index){\n
+\t\t\t\treturn helpers.findNextWhere(collection, hasValue, index) || point;\n
+\t\t\t},\n
+\t\t\tpreviousPoint = function(point, collection, index){\n
+\t\t\t\treturn helpers.findPreviousWhere(collection, hasValue, index) || point;\n
+\t\t\t};\n
+\n
+\t\t\tif (!this.scale) return;\n
+\t\t\tthis.scale.draw(easingDecimal);\n
+\n
+\n
+\t\t\thelpers.each(this.datasets,function(dataset){\n
+\t\t\t\tvar pointsWithValues = helpers.where(dataset.points, hasValue);\n
+\n
+\t\t\t\t//Transition each point first so that the line and point drawing isn\'t out of sync\n
+\t\t\t\t//We can use this extra loop to calculate the control points of this dataset also in this loop\n
+\n
+\t\t\t\thelpers.each(dataset.points, function(point, index){\n
+\t\t\t\t\tif (point.hasValue()){\n
+\t\t\t\t\t\tpoint.transition({\n
+\t\t\t\t\t\t\ty : this.scale.calculateY(point.value),\n
+\t\t\t\t\t\t\tx : this.scale.calculateX(index)\n
+\t\t\t\t\t\t}, easingDecimal);\n
+\t\t\t\t\t}\n
+\t\t\t\t},this);\n
+\n
+\n
+\t\t\t\t// Control points need to be calculated in a separate loop, because we need to know the current x/y of the point\n
+\t\t\t\t// This would cause issues when there is no animation, because the y of the next point would be 0, so beziers would be skewed\n
+\t\t\t\tif (this.options.bezierCurve){\n
+\t\t\t\t\thelpers.each(pointsWithValues, function(point, index){\n
+\t\t\t\t\t\tvar tension = (index > 0 && index < pointsWithValues.length - 1) ? this.options.bezierCurveTension : 0;\n
+\t\t\t\t\t\tpoint.controlPoints = helpers.splineCurve(\n
+\t\t\t\t\t\t\tpreviousPoint(point, pointsWithValues, index),\n
+\t\t\t\t\t\t\tpoint,\n
+\t\t\t\t\t\t\tnextPoint(point, pointsWithValues, index),\n
+\t\t\t\t\t\t\ttension\n
+\t\t\t\t\t\t);\n
+\n
+\t\t\t\t\t\t// Prevent the bezier going outside of the bounds of the graph\n
+\n
+\t\t\t\t\t\t// Cap puter bezier handles to the upper/lower scale bounds\n
+\t\t\t\t\t\tif (point.controlPoints.outer.y > this.scale.endPoint){\n
+\t\t\t\t\t\t\tpoint.controlPoints.outer.y = this.scale.endPoint;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\telse if (point.controlPoints.outer.y < this.scale.startPoint){\n
+\t\t\t\t\t\t\tpoint.controlPoints.outer.y = this.scale.startPoint;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Cap inner bezier handles to the upper/lower scale bounds\n
+\t\t\t\t\t\tif (point.controlPoints.inner.y > this.scale.endPoint){\n
+\t\t\t\t\t\t\tpoint.controlPoints.inner.y = this.scale.endPoint;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\telse if (point.controlPoints.inner.y < this.scale.startPoint){\n
+\t\t\t\t\t\t\tpoint.controlPoints.inner.y = this.scale.startPoint;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t},this);\n
+\t\t\t\t}\n
+\n
+\n
+\t\t\t\t//Draw the line between all the points\n
+\t\t\t\tctx.lineWidth = this.options.datasetStrokeWidth;\n
+\t\t\t\tctx.strokeStyle = dataset.strokeColor;\n
+\t\t\t\tctx.beginPath();\n
+\n
+\t\t\t\thelpers.each(pointsWithValues, function(point, index){\n
+\t\t\t\t\tif (index === 0){\n
+\t\t\t\t\t\tctx.moveTo(point.x, point.y);\n
+\t\t\t\t\t}\n
+\t\t\t\t\telse{\n
+\t\t\t\t\t\tif(this.options.bezierCurve){\n
+\t\t\t\t\t\t\tvar previous = previousPoint(point, pointsWithValues, index);\n
+\n
+\t\t\t\t\t\t\tctx.bezierCurveTo(\n
+\t\t\t\t\t\t\t\tprevious.controlPoints.outer.x,\n
+\t\t\t\t\t\t\t\tprevious.controlPoints.outer.y,\n
+\t\t\t\t\t\t\t\tpoint.controlPoints.inner.x,\n
+\t\t\t\t\t\t\t\tpoint.controlPoints.inner.y,\n
+\t\t\t\t\t\t\t\tpoint.x,\n
+\t\t\t\t\t\t\t\tpoint.y\n
+\t\t\t\t\t\t\t);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\telse{\n
+\t\t\t\t\t\t\tctx.lineTo(point.x,point.y);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}, this);\n
+\n
+\t\t\t\tif (this.options.datasetStroke) {\n
+\t\t\t\t\tctx.stroke();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (this.options.datasetFill && pointsWithValues.length > 0){\n
+\t\t\t\t\t//Round off the line by going to the base of the chart, back to the start, then fill.\n
+\t\t\t\t\tctx.lineTo(pointsWithValues[pointsWithValues.length - 1].x, this.scale.endPoint);\n
+\t\t\t\t\tctx.lineTo(pointsWithValues[0].x, this.scale.endPoint);\n
+\t\t\t\t\tctx.fillStyle = dataset.fillColor;\n
+\t\t\t\t\tctx.closePath();\n
+\t\t\t\t\tctx.fill();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t//Now draw the points over the line\n
+\t\t\t\t//A little inefficient double looping, but better than the line\n
+\t\t\t\t//lagging behind the point positions\n
+\t\t\t\thelpers.each(pointsWithValues,function(point){\n
+\t\t\t\t\tpoint.draw();\n
+\t\t\t\t});\n
+\t\t\t},this);\n
+\t\t}\n
+\t});\n
+\n
+\n
+}).call(this);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12132</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Chart.Line.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

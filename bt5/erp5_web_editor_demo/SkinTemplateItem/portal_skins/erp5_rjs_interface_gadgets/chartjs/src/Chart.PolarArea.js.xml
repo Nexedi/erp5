@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271279.2</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Chart.PolarArea.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function(){\n
+\t"use strict";\n
+\n
+\tvar root = this,\n
+\t\tChart = root.Chart,\n
+\t\t//Cache a local reference to Chart.helpers\n
+\t\thelpers = Chart.helpers;\n
+\n
+\tvar defaultConfig = {\n
+\t\t//Boolean - Show a backdrop to the scale label\n
+\t\tscaleShowLabelBackdrop : true,\n
+\n
+\t\t//String - The colour of the label backdrop\n
+\t\tscaleBackdropColor : "rgba(255,255,255,0.75)",\n
+\n
+\t\t// Boolean - Whether the scale should begin at zero\n
+\t\tscaleBeginAtZero : true,\n
+\n
+\t\t//Number - The backdrop padding above & below the label in pixels\n
+\t\tscaleBackdropPaddingY : 2,\n
+\n
+\t\t//Number - The backdrop padding to the side of the label in pixels\n
+\t\tscaleBackdropPaddingX : 2,\n
+\n
+\t\t//Boolean - Show line for each value in the scale\n
+\t\tscaleShowLine : true,\n
+\n
+\t\t//Boolean - Stroke a line around each segment in the chart\n
+\t\tsegmentShowStroke : true,\n
+\n
+\t\t//String - The colour of the stroke on each segment.\n
+\t\tsegmentStrokeColor : "#fff",\n
+\n
+\t\t//Number - The width of the stroke value in pixels\n
+\t\tsegmentStrokeWidth : 2,\n
+\n
+\t\t//Number - Amount of animation steps\n
+\t\tanimationSteps : 100,\n
+\n
+\t\t//String - Animation easing effect.\n
+\t\tanimationEasing : "easeOutBounce",\n
+\n
+\t\t//Boolean - Whether to animate the rotation of the chart\n
+\t\tanimateRotate : true,\n
+\n
+\t\t//Boolean - Whether to animate scaling the chart from the centre\n
+\t\tanimateScale : false,\n
+\n
+\t\t//String - A legend template\n
+\t\tlegendTemplate : "<ul class=\\"<%=name.toLowerCase()%>-legend\\"><% for (var i=0; i<segments.length; i++){%><li><span style=\\"background-color:<%=segments[i].fillColor%>\\"><%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"\n
+\t};\n
+\n
+\n
+\tChart.Type.extend({\n
+\t\t//Passing in a name registers this chart in the Chart namespace\n
+\t\tname: "PolarArea",\n
+\t\t//Providing a defaults will also register the deafults in the chart namespace\n
+\t\tdefaults : defaultConfig,\n
+\t\t//Initialize is fired when the chart is initialized - Data is passed in as a parameter\n
+\t\t//Config is automatically merged by the core of Chart.js, and is available at this.options\n
+\t\tinitialize:  function(data){\n
+\t\t\tthis.segments = [];\n
+\t\t\t//Declare segment class as a chart instance specific class, so it can share props for this instance\n
+\t\t\tthis.SegmentArc = Chart.Arc.extend({\n
+\t\t\t\tshowStroke : this.options.segmentShowStroke,\n
+\t\t\t\tstrokeWidth : this.options.segmentStrokeWidth,\n
+\t\t\t\tstrokeColor : this.options.segmentStrokeColor,\n
+\t\t\t\tctx : this.chart.ctx,\n
+\t\t\t\tinnerRadius : 0,\n
+\t\t\t\tx : this.chart.width/2,\n
+\t\t\t\ty : this.chart.height/2\n
+\t\t\t});\n
+\t\t\tthis.scale = new Chart.RadialScale({\n
+\t\t\t\tdisplay: this.options.showScale,\n
+\t\t\t\tfontStyle: this.options.scaleFontStyle,\n
+\t\t\t\tfontSize: this.options.scaleFontSize,\n
+\t\t\t\tfontFamily: this.options.scaleFontFamily,\n
+\t\t\t\tfontColor: this.options.scaleFontColor,\n
+\t\t\t\tshowLabels: this.options.scaleShowLabels,\n
+\t\t\t\tshowLabelBackdrop: this.options.scaleShowLabelBackdrop,\n
+\t\t\t\tbackdropColor: this.options.scaleBackdropColor,\n
+\t\t\t\tbackdropPaddingY : this.options.scaleBackdropPaddingY,\n
+\t\t\t\tbackdropPaddingX: this.options.scaleBackdropPaddingX,\n
+\t\t\t\tlineWidth: (this.options.scaleShowLine) ? this.options.scaleLineWidth : 0,\n
+\t\t\t\tlineColor: this.options.scaleLineColor,\n
+\t\t\t\tlineArc: true,\n
+\t\t\t\twidth: this.chart.width,\n
+\t\t\t\theight: this.chart.height,\n
+\t\t\t\txCenter: this.chart.width/2,\n
+\t\t\t\tyCenter: this.chart.height/2,\n
+\t\t\t\tctx : this.chart.ctx,\n
+\t\t\t\ttemplateString: this.options.scaleLabel,\n
+\t\t\t\tvaluesCount: data.length\n
+\t\t\t});\n
+\n
+\t\t\tthis.updateScaleRange(data);\n
+\n
+\t\t\tthis.scale.update();\n
+\n
+\t\t\thelpers.each(data,function(segment,index){\n
+\t\t\t\tthis.addData(segment,index,true);\n
+\t\t\t},this);\n
+\n
+\t\t\t//Set up tooltip events on the chart\n
+\t\t\tif (this.options.showTooltips){\n
+\t\t\t\thelpers.bindEvents(this, this.options.tooltipEvents, function(evt){\n
+\t\t\t\t\tvar activeSegments = (evt.type !== \'mouseout\') ? this.getSegmentsAtEvent(evt) : [];\n
+\t\t\t\t\thelpers.each(this.segments,function(segment){\n
+\t\t\t\t\t\tsegment.restore(["fillColor"]);\n
+\t\t\t\t\t});\n
+\t\t\t\t\thelpers.each(activeSegments,function(activeSegment){\n
+\t\t\t\t\t\tactiveSegment.fillColor = activeSegment.highlightColor;\n
+\t\t\t\t\t});\n
+\t\t\t\t\tthis.showTooltip(activeSegments);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tthis.render();\n
+\t\t},\n
+\t\tgetSegmentsAtEvent : function(e){\n
+\t\t\tvar segmentsArray = [];\n
+\n
+\t\t\tvar location = helpers.getRelativePosition(e);\n
+\n
+\t\t\thelpers.each(this.segments,function(segment){\n
+\t\t\t\tif (segment.inRange(location.x,location.y)) segmentsArray.push(segment);\n
+\t\t\t},this);\n
+\t\t\treturn segmentsArray;\n
+\t\t},\n
+\t\taddData : function(segment, atIndex, silent){\n
+\t\t\tvar index = atIndex || this.segments.length;\n
+\n
+\t\t\tthis.segments.splice(index, 0, new this.SegmentArc({\n
+\t\t\t\tfillColor: segment.color,\n
+\t\t\t\thighlightColor: segment.highlight || segment.color,\n
+\t\t\t\tlabel: segment.label,\n
+\t\t\t\tvalue: segment.value,\n
+\t\t\t\touterRadius: (this.options.animateScale) ? 0 : this.scale.calculateCenterOffset(segment.value),\n
+\t\t\t\tcircumference: (this.options.animateRotate) ? 0 : this.scale.getCircumference(),\n
+\t\t\t\tstartAngle: Math.PI * 1.5\n
+\t\t\t}));\n
+\t\t\tif (!silent){\n
+\t\t\t\tthis.reflow();\n
+\t\t\t\tthis.update();\n
+\t\t\t}\n
+\t\t},\n
+\t\tremoveData: function(atIndex){\n
+\t\t\tvar indexToDelete = (helpers.isNumber(atIndex)) ? atIndex : this.segments.length-1;\n
+\t\t\tthis.segments.splice(indexToDelete, 1);\n
+\t\t\tthis.reflow();\n
+\t\t\tthis.update();\n
+\t\t},\n
+\t\tcalculateTotal: function(data){\n
+\t\t\tthis.total = 0;\n
+\t\t\thelpers.each(data,function(segment){\n
+\t\t\t\tthis.total += segment.value;\n
+\t\t\t},this);\n
+\t\t\tthis.scale.valuesCount = this.segments.length;\n
+\t\t},\n
+\t\tupdateScaleRange: function(datapoints){\n
+\t\t\tvar valuesArray = [];\n
+\t\t\thelpers.each(datapoints,function(segment){\n
+\t\t\t\tvaluesArray.push(segment.value);\n
+\t\t\t});\n
+\n
+\t\t\tvar scaleSizes = (this.options.scaleOverride) ?\n
+\t\t\t\t{\n
+\t\t\t\t\tsteps: this.options.scaleSteps,\n
+\t\t\t\t\tstepValue: this.options.scaleStepWidth,\n
+\t\t\t\t\tmin: this.options.scaleStartValue,\n
+\t\t\t\t\tmax: this.options.scaleStartValue + (this.options.scaleSteps * this.options.scaleStepWidth)\n
+\t\t\t\t} :\n
+\t\t\t\thelpers.calculateScaleRange(\n
+\t\t\t\t\tvaluesArray,\n
+\t\t\t\t\thelpers.min([this.chart.width, this.chart.height])/2,\n
+\t\t\t\t\tthis.options.scaleFontSize,\n
+\t\t\t\t\tthis.options.scaleBeginAtZero,\n
+\t\t\t\t\tthis.options.scaleIntegersOnly\n
+\t\t\t\t);\n
+\n
+\t\t\thelpers.extend(\n
+\t\t\t\tthis.scale,\n
+\t\t\t\tscaleSizes,\n
+\t\t\t\t{\n
+\t\t\t\t\tsize: helpers.min([this.chart.width, this.chart.height]),\n
+\t\t\t\t\txCenter: this.chart.width/2,\n
+\t\t\t\t\tyCenter: this.chart.height/2\n
+\t\t\t\t}\n
+\t\t\t);\n
+\n
+\t\t},\n
+\t\tupdate : function(){\n
+\t\t\tthis.calculateTotal(this.segments);\n
+\n
+\t\t\thelpers.each(this.segments,function(segment){\n
+\t\t\t\tsegment.save();\n
+\t\t\t});\n
+\t\t\t\n
+\t\t\tthis.reflow();\n
+\t\t\tthis.render();\n
+\t\t},\n
+\t\treflow : function(){\n
+\t\t\thelpers.extend(this.SegmentArc.prototype,{\n
+\t\t\t\tx : this.chart.width/2,\n
+\t\t\t\ty : this.chart.height/2\n
+\t\t\t});\n
+\t\t\tthis.updateScaleRange(this.segments);\n
+\t\t\tthis.scale.update();\n
+\n
+\t\t\thelpers.extend(this.scale,{\n
+\t\t\t\txCenter: this.chart.width/2,\n
+\t\t\t\tyCenter: this.chart.height/2\n
+\t\t\t});\n
+\n
+\t\t\thelpers.each(this.segments, function(segment){\n
+\t\t\t\tsegment.update({\n
+\t\t\t\t\touterRadius : this.scale.calculateCenterOffset(segment.value)\n
+\t\t\t\t});\n
+\t\t\t}, this);\n
+\n
+\t\t},\n
+\t\tdraw : function(ease){\n
+\t\t\tvar easingDecimal = ease || 1;\n
+\t\t\t//Clear & draw the canvas\n
+\t\t\tthis.clear();\n
+\t\t\thelpers.each(this.segments,function(segment, index){\n
+\t\t\t\tsegment.transition({\n
+\t\t\t\t\tcircumference : this.scale.getCircumference(),\n
+\t\t\t\t\touterRadius : this.scale.calculateCenterOffset(segment.value)\n
+\t\t\t\t},easingDecimal);\n
+\n
+\t\t\t\tsegment.endAngle = segment.startAngle + segment.circumference;\n
+\n
+\t\t\t\t// If we\'ve removed the first segment we need to set the first one to\n
+\t\t\t\t// start at the top.\n
+\t\t\t\tif (index === 0){\n
+\t\t\t\t\tsegment.startAngle = Math.PI * 1.5;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t//Check to see if it\'s the last segment, if not get the next and update the start angle\n
+\t\t\t\tif (index < this.segments.length - 1){\n
+\t\t\t\t\tthis.segments[index+1].startAngle = segment.endAngle;\n
+\t\t\t\t}\n
+\t\t\t\tsegment.draw();\n
+\t\t\t}, this);\n
+\t\t\tthis.scale.draw();\n
+\t\t}\n
+\t});\n
+\n
+}).call(this);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7641</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Chart.PolarArea.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

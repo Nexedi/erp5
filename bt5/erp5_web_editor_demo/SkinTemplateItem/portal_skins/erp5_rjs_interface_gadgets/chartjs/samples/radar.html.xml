@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271275.11</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>radar.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+\t<head>\n
+\t\t<title>Radar Chart</title>\n
+\t\t<script src="../Chart.js"></script>\n
+\t\t<meta name = "viewport" content = "initial-scale = 1, user-scalable = no">\n
+\t\t<style>\n
+\t\t\tcanvas{\n
+\t\t\t}\n
+\t\t</style>\n
+\t</head>\n
+\t<body>\n
+\t\t<div style="width:30%">\n
+\t\t\t<canvas id="canvas" height="450" width="450"></canvas>\n
+\t\t</div>\n
+\n
+\n
+\t<script>\n
+\tvar radarChartData = {\n
+\t\tlabels: ["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"],\n
+\t\tdatasets: [\n
+\t\t\t{\n
+\t\t\t\tlabel: "My First dataset",\n
+\t\t\t\tfillColor: "rgba(220,220,220,0.2)",\n
+\t\t\t\tstrokeColor: "rgba(220,220,220,1)",\n
+\t\t\t\tpointColor: "rgba(220,220,220,1)",\n
+\t\t\t\tpointStrokeColor: "#fff",\n
+\t\t\t\tpointHighlightFill: "#fff",\n
+\t\t\t\tpointHighlightStroke: "rgba(220,220,220,1)",\n
+\t\t\t\tdata: [65,59,90,81,56,55,40]\n
+\t\t\t},\n
+\t\t\t{\n
+\t\t\t\tlabel: "My Second dataset",\n
+\t\t\t\tfillColor: "rgba(151,187,205,0.2)",\n
+\t\t\t\tstrokeColor: "rgba(151,187,205,1)",\n
+\t\t\t\tpointColor: "rgba(151,187,205,1)",\n
+\t\t\t\tpointStrokeColor: "#fff",\n
+\t\t\t\tpointHighlightFill: "#fff",\n
+\t\t\t\tpointHighlightStroke: "rgba(151,187,205,1)",\n
+\t\t\t\tdata: [28,48,40,19,96,27,100]\n
+\t\t\t}\n
+\t\t]\n
+\t};\n
+\n
+\twindow.onload = function(){\n
+\t\twindow.myRadar = new Chart(document.getElementById("canvas").getContext("2d")).Radar(radarChartData, {\n
+\t\t\tresponsive: true\n
+\t\t});\n
+\t}\n
+\n
+\t</script>\n
+\t</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1275</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>radar.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

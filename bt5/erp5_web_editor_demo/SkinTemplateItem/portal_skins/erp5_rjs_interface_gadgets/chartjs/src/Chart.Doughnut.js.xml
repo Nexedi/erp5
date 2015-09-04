@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271278.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Chart.Doughnut.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function(){\n
+\t"use strict";\n
+\n
+\tvar root = this,\n
+\t\tChart = root.Chart,\n
+\t\t//Cache a local reference to Chart.helpers\n
+\t\thelpers = Chart.helpers;\n
+\n
+\tvar defaultConfig = {\n
+\t\t//Boolean - Whether we should show a stroke on each segment\n
+\t\tsegmentShowStroke : true,\n
+\n
+\t\t//String - The colour of each segment stroke\n
+\t\tsegmentStrokeColor : "#fff",\n
+\n
+\t\t//Number - The width of each segment stroke\n
+\t\tsegmentStrokeWidth : 2,\n
+\n
+\t\t//The percentage of the chart that we cut out of the middle.\n
+\t\tpercentageInnerCutout : 50,\n
+\n
+\t\t//Number - Amount of animation steps\n
+\t\tanimationSteps : 100,\n
+\n
+\t\t//String - Animation easing effect\n
+\t\tanimationEasing : "easeOutBounce",\n
+\n
+\t\t//Boolean - Whether we animate the rotation of the Doughnut\n
+\t\tanimateRotate : true,\n
+\n
+\t\t//Boolean - Whether we animate scaling the Doughnut from the centre\n
+\t\tanimateScale : false,\n
+\n
+\t\t//String - A legend template\n
+\t\tlegendTemplate : "<ul class=\\"<%=name.toLowerCase()%>-legend\\"><% for (var i=0; i<segments.length; i++){%><li><span style=\\"background-color:<%=segments[i].fillColor%>\\"><%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"\n
+\n
+\t};\n
+\n
+\tChart.Type.extend({\n
+\t\t//Passing in a name registers this chart in the Chart namespace\n
+\t\tname: "Doughnut",\n
+\t\t//Providing a defaults will also register the deafults in the chart namespace\n
+\t\tdefaults : defaultConfig,\n
+\t\t//Initialize is fired when the chart is initialized - Data is passed in as a parameter\n
+\t\t//Config is automatically merged by the core of Chart.js, and is available at this.options\n
+\t\tinitialize:  function(data){\n
+\n
+\t\t\t//Declare segments as a static property to prevent inheriting across the Chart type prototype\n
+\t\t\tthis.segments = [];\n
+\t\t\tthis.outerRadius = (helpers.min([this.chart.width,this.chart.height]) -\tthis.options.segmentStrokeWidth/2)/2;\n
+\n
+\t\t\tthis.SegmentArc = Chart.Arc.extend({\n
+\t\t\t\tctx : this.chart.ctx,\n
+\t\t\t\tx : this.chart.width/2,\n
+\t\t\t\ty : this.chart.height/2\n
+\t\t\t});\n
+\n
+\t\t\t//Set up tooltip events on the chart\n
+\t\t\tif (this.options.showTooltips){\n
+\t\t\t\thelpers.bindEvents(this, this.options.tooltipEvents, function(evt){\n
+\t\t\t\t\tvar activeSegments = (evt.type !== \'mouseout\') ? this.getSegmentsAtEvent(evt) : [];\n
+\n
+\t\t\t\t\thelpers.each(this.segments,function(segment){\n
+\t\t\t\t\t\tsegment.restore(["fillColor"]);\n
+\t\t\t\t\t});\n
+\t\t\t\t\thelpers.each(activeSegments,function(activeSegment){\n
+\t\t\t\t\t\tactiveSegment.fillColor = activeSegment.highlightColor;\n
+\t\t\t\t\t});\n
+\t\t\t\t\tthis.showTooltip(activeSegments);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t\tthis.calculateTotal(data);\n
+\n
+\t\t\thelpers.each(data,function(datapoint, index){\n
+\t\t\t\tif (!datapoint.color) {\n
+\t\t\t\t\tdatapoint.color = \'hsl(\' + (360 * index / data.length) + \', 100%, 50%)\';\n
+\t\t\t\t}\n
+\t\t\t\tthis.addData(datapoint, index, true);\n
+\t\t\t},this);\n
+\n
+\t\t\tthis.render();\n
+\t\t},\n
+\t\tgetSegmentsAtEvent : function(e){\n
+\t\t\tvar segmentsArray = [];\n
+\n
+\t\t\tvar location = helpers.getRelativePosition(e);\n
+\n
+\t\t\thelpers.each(this.segments,function(segment){\n
+\t\t\t\tif (segment.inRange(location.x,location.y)) segmentsArray.push(segment);\n
+\t\t\t},this);\n
+\t\t\treturn segmentsArray;\n
+\t\t},\n
+\t\taddData : function(segment, atIndex, silent){\n
+\t\t\tvar index = atIndex !== undefined ? atIndex : this.segments.length;\n
+\t\t\tthis.segments.splice(index, 0, new this.SegmentArc({\n
+\t\t\t\tvalue : segment.value,\n
+\t\t\t\touterRadius : (this.options.animateScale) ? 0 : this.outerRadius,\n
+\t\t\t\tinnerRadius : (this.options.animateScale) ? 0 : (this.outerRadius/100) * this.options.percentageInnerCutout,\n
+\t\t\t\tfillColor : segment.color,\n
+\t\t\t\thighlightColor : segment.highlight || segment.color,\n
+\t\t\t\tshowStroke : this.options.segmentShowStroke,\n
+\t\t\t\tstrokeWidth : this.options.segmentStrokeWidth,\n
+\t\t\t\tstrokeColor : this.options.segmentStrokeColor,\n
+\t\t\t\tstartAngle : Math.PI * 1.5,\n
+\t\t\t\tcircumference : (this.options.animateRotate) ? 0 : this.calculateCircumference(segment.value),\n
+\t\t\t\tlabel : segment.label\n
+\t\t\t}));\n
+\t\t\tif (!silent){\n
+\t\t\t\tthis.reflow();\n
+\t\t\t\tthis.update();\n
+\t\t\t}\n
+\t\t},\n
+\t\tcalculateCircumference : function(value) {\n
+\t\t\tif ( this.total > 0 ) {\n
+\t\t\t\treturn (Math.PI*2)*(value / this.total);\n
+\t\t\t} else {\n
+\t\t\t\treturn 0;\n
+\t\t\t}\n
+\t\t},\n
+\t\tcalculateTotal : function(data){\n
+\t\t\tthis.total = 0;\n
+\t\t\thelpers.each(data,function(segment){\n
+\t\t\t\tthis.total += Math.abs(segment.value);\n
+\t\t\t},this);\n
+\t\t},\n
+\t\tupdate : function(){\n
+\t\t\tthis.calculateTotal(this.segments);\n
+\n
+\t\t\t// Reset any highlight colours before updating.\n
+\t\t\thelpers.each(this.activeElements, function(activeElement){\n
+\t\t\t\tactiveElement.restore([\'fillColor\']);\n
+\t\t\t});\n
+\n
+\t\t\thelpers.each(this.segments,function(segment){\n
+\t\t\t\tsegment.save();\n
+\t\t\t});\n
+\t\t\tthis.render();\n
+\t\t},\n
+\n
+\t\tremoveData: function(atIndex){\n
+\t\t\tvar indexToDelete = (helpers.isNumber(atIndex)) ? atIndex : this.segments.length-1;\n
+\t\t\tthis.segments.splice(indexToDelete, 1);\n
+\t\t\tthis.reflow();\n
+\t\t\tthis.update();\n
+\t\t},\n
+\n
+\t\treflow : function(){\n
+\t\t\thelpers.extend(this.SegmentArc.prototype,{\n
+\t\t\t\tx : this.chart.width/2,\n
+\t\t\t\ty : this.chart.height/2\n
+\t\t\t});\n
+\t\t\tthis.outerRadius = (helpers.min([this.chart.width,this.chart.height]) -\tthis.options.segmentStrokeWidth/2)/2;\n
+\t\t\thelpers.each(this.segments, function(segment){\n
+\t\t\t\tsegment.update({\n
+\t\t\t\t\touterRadius : this.outerRadius,\n
+\t\t\t\t\tinnerRadius : (this.outerRadius/100) * this.options.percentageInnerCutout\n
+\t\t\t\t});\n
+\t\t\t}, this);\n
+\t\t},\n
+\t\tdraw : function(easeDecimal){\n
+\t\t\tvar animDecimal = (easeDecimal) ? easeDecimal : 1;\n
+\t\t\tthis.clear();\n
+\t\t\thelpers.each(this.segments,function(segment,index){\n
+\t\t\t\tsegment.transition({\n
+\t\t\t\t\tcircumference : this.calculateCircumference(segment.value),\n
+\t\t\t\t\touterRadius : this.outerRadius,\n
+\t\t\t\t\tinnerRadius : (this.outerRadius/100) * this.options.percentageInnerCutout\n
+\t\t\t\t},animDecimal);\n
+\n
+\t\t\t\tsegment.endAngle = segment.startAngle + segment.circumference;\n
+\n
+\t\t\t\tsegment.draw();\n
+\t\t\t\tif (index === 0){\n
+\t\t\t\t\tsegment.startAngle = Math.PI * 1.5;\n
+\t\t\t\t}\n
+\t\t\t\t//Check to see if it\'s the last segment, if not get the next and update the start angle\n
+\t\t\t\tif (index < this.segments.length-1){\n
+\t\t\t\t\tthis.segments[index+1].startAngle = segment.endAngle;\n
+\t\t\t\t}\n
+\t\t\t},this);\n
+\n
+\t\t}\n
+\t});\n
+\n
+\tChart.types.Doughnut.extend({\n
+\t\tname : "Pie",\n
+\t\tdefaults : helpers.merge(defaultConfig,{percentageInnerCutout : 0})\n
+\t});\n
+\n
+}).call(this);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6022</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Chart.Doughnut.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
