@@ -1,3 +1,6 @@
 web_page_module/editor*
+web_page_module/interface_gadget_interfaces*
+web_page_module/interface_test_correct_implemented_gadget*
+web_page_module/interface_test_multiple_interface_correct_gadget*
 web_site_module/editor_demo
 web_site_module/editor_demo/**

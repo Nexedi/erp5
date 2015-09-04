@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,8 +70,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>editor_test_gadget.js</string> </value>
+            <value> <string>interface_test_multiple_interface_correct_gadget.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>editor_test_gadget_js</string> </value>
+            <value> <string>interface_test_multiple_interface_correct_gadget_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -101,199 +105,33 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*jslint indent: 2, maxlen: 80, nomen: true */\n
-/*global console, window, document, rJS, RSVP, $ */\n
-(function (window, document, rJS, promiseEventListener) {\n
-  "use strict";\n
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta charset="utf-8" />\n
+    <title>Test Gadget</title>\n
+    <meta name="viewport" content="width=device-width, initial-scale=1" />\n
 \n
-  var DEFAULT_GADGET_URL = "./bootstrap3-wysiwyg.html",\n
-    INTERFACE_GADGET_URL = "./gadget_interfaces.html";\n
+    <link rel="http://www.renderjs.org/rel/interface" href="demo_interface1.html">\n
+    <link rel="http://www.renderjs.org/rel/interface" href="demo_interface2.html">\n
 \n
-  function declareInterfaceGadget(gadget) {\n
-    return gadget.declareGadget(INTERFACE_GADGET_URL, {\n
-      element: gadget.__element,\n
-      scope: "interface"\n
-    });\n
-  }\n
-  function declareSubGadget(gadget, sub_gadget_url) {\n
-    return gadget.declareGadget(sub_gadget_url, {\n
-      sandbox: \'iframe\',\n
-      element: gadget.props.content_element.querySelector("div.ui-content"),\n
-      scope: "sub_gadget"\n
-    });\n
-  }\n
-  function getAvailableSubGadgetList(gadget) {\n
-    var main_gadget = gadget.props.content_element.querySelector(\'form.main-gadget-select-form\'),\n
-      gadget_option_list = main_gadget.main_gadget_selector.querySelectorAll(\'option\'),\n
-      gadget_list = [],\n
-      i;\n
-    for(i = 0; i < gadget_option_list.length; i += 1) {\n
-      gadget_list.push({\n
-        url: gadget_option_list[i].value,\n
-        display_name: gadget_option_list[i].innerText\n
-      });\n
-    }\n
-    return gadget_list;\n
-  }\n
-  function filterSimilarSubGadgetList(gadget, sub_gadget_url) {\n
-    var interface_gadget,\n
-      available_subgadget_list;\n
-    return RSVP.Queue()\n
-      .push(function() {\n
-        return gadget.getDeclaredGadget("interface");\n
-      })\n
-      .push(function(i_gadget) {\n
-        interface_gadget = i_gadget;\n
-        return interface_gadget.getVerifyGadget(sub_gadget_url);\n
-      })\n
-      .push(function(sub_gadget) {\n
-        return RSVP.all([\n
-          interface_gadget.getDeclaredGadgetInterfaceList(sub_gadget),\n
-          getAvailableSubGadgetList(gadget)\n
-        ]);\n
-      })\n
-      .push(function(result_data) {\n
-        var interface_url_list = result_data[0],\n
-          item,\n
-          status_list = [];\n
-        available_subgadget_list = result_data[1];\n
-        for(item in available_subgadget_list) {\n
-          status_list.push(interface_gadget.verifyGadgetInterfaceListImplementation(available_subgadget_list[item].url, interface_url_list));\n
-        }\n
-        return RSVP.all(status_list);\n
-      })\n
-      .push(function(result_list) {\n
-        return [available_subgadget_list, result_list];\n
-      });\n
-  }\n
-  function updateSimilarGadgetOptionList(gadget, sub_gadget_url) {\n
-    return RSVP.Queue()\n
-      .push(function() {\n
-        return filterSimilarSubGadgetList(gadget, sub_gadget_url);\n
-      })\n
-      .push(function(filtered_list) {\n
-        var select = gadget.props.content_element.querySelector(\'form.similar-gadget-select-form\').similar_gadget_selector;\n
-        select.innerHTML = "";\n
-        var i;\n
-        for(i = 0; i < filtered_list[1].length; i += 1) {\n
-          if(filtered_list[1][i]) {\n
-            var option = document.createElement("option");\n
-            option.text = filtered_list[0][i].display_name;\n
-            option.value = filtered_list[0][i].url;\n
-            select.appendChild(option);\n
-          }\n
-        }\n
-        return;\n
-      });\n
-  }\n
-  function gadgetSwitchHandler(gadget) {\n
-    return new RSVP.Queue()\n
-      .push(function() {\n
-        return RSVP.any([\n
-            promiseEventListener(\n
-            gadget.props.content_element.querySelector(\'form.main-gadget-select-form\'),\n
-            \'submit\',\n
-            false\n
-          ),\n
-            promiseEventListener(\n
-            gadget.props.content_element.querySelector(\'form.similar-gadget-select-form\'),\n
-            \'submit\',\n
-            false\n
-          )\n
-       ]);\n
-     })\n
-      .push(function(submit_event) {\n
-        var submit_source = submit_event.target.className;\n
-        gadget.props.content_element.querySelector("input[type=submit]")\n
-          .disabled = true;\n
-        gadget.props.content_element.querySelector("div.ui-content").innerHTML = "";\n
-        if(submit_source === \'main-gadget-select-form\') {\n
-          return RSVP.all([\n
-            declareSubGadget(gadget,submit_event.target[0].value),\n
-            updateSimilarGadgetOptionList(gadget, submit_event.target[0].value)\n
-          ]);\n
-        } else {\n
-          return declareSubGadget(gadget,submit_event.target[0].value);\n
-        }\n
-      })\n
-      .push(function() {\n
-        return gadget.editor_setEditor();\n
-      })\n
-      .push(function(){\n
-        gadget.props.content_element.querySelector("input[type=submit]")\n
-          .disabled = false;\n
-        return gadgetSwitchHandler(gadget);\n
-      });\n
-  }\n
-  \n
-  // block JQM auto-start\n
-  $(document)\n
-    .on("mobileinit", function () {\n
-      $.mobile.autoInitializePage = false;\n
-    });\n
+    <!-- renderjs -->\n
+    <script src="rsvp.js" type="text/javascript"></script>\n
+    <script src="renderjs.js" type="text/javascript"></script>\n
+    <script src="handlebars.js" type="text/javascript"></script>\n
+    <script src="jquery.js" type="text/javascript"></script>\n
 \n
-  rJS(window)\n
-\n
-    .ready(function (g) {\n
-      console.log("test gadget ready");\n
-      g.props = {};\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          $(element).trigger("create");\n
-          g.props.element = element;\n
-          g.props.content_element = element.querySelector(\'.gadget-content\');\n
-        });\n
-    })\n
-    .declareMethod(\'render\', function () {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function() {\n
-          return declareInterfaceGadget(gadget, DEFAULT_GADGET_URL);\n
-        })\n
-        .push(function() {\n
-          return declareSubGadget(gadget, DEFAULT_GADGET_URL);\n
-        })\n
-        .push(function() {\n
-          return gadget.editor_setEditor();\n
-        })\n
-        .push(function(){\n
-          return gadgetSwitchHandler(gadget);\n
-        });\n
-    })\n
-\n
-    /* ============================ EDITOR =============================== */\n
-    .declareMethod("editor_getContent", function (param_list) {\n
-      return this.getDeclaredGadget("sub_gadget")\n
-        .then(function (editor) {\n
-          return editor.getContent.apply(editor, param_list);\n
-        });\n
-    })\n
-    .declareMethod("editor_setContent", function (param_list) {\n
-      return this.getDeclaredGadget("sub_gadget")\n
-        .then(function (editor) {\n
-          return editor.setContent.apply(editor, param_list);\n
-        });\n
-    })\n
-    .declareMethod("editor_clearContent", function (param_list) {\n
-      return this.getDeclaredGadget("sub_gadget")\n
-        .then(function (editor) {\n
-          return editor.clearContent.apply(editor, param_list);\n
-        });\n
-    })\n
-    .declareMethod("editor_setEditor", function (param_list) {\n
-      return this.getDeclaredGadget("sub_gadget")\n
-        .then(function (editor) {\n
-          return editor.setEditor.apply(editor, param_list);\n
-        });\n
-    });\n
-\n
-}(window, document, rJS, promiseEventListener));
+    <!-- custom script -->\n
+    <script src="interface_test_multiple_interface_correct_gadget.js" type="text/javascript"></script>\n
+  </head>\n
+  <body> </body>\n
+</html>
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Editor Test Gadget JS</string> </value>
+            <value> <string>Multiple Interfaces Correct Implemented Test Gadget</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -379,7 +217,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438594081.2</float>
+                        <float>1436977227.21</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -424,7 +262,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.2225.65299.39441</string> </value>
+                <value> <string>944.37655.14678.64614</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -442,7 +280,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439471855.78</float>
+                        <float>1437664771.46</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -501,7 +339,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438330895.73</float>
+                        <float>1436974282.2</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

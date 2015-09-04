@@ -99,7 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*jslint indent: 2 */\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent: 2 */\n
 /*global window, jQuery, rJS*/\n
 "use strict";\n
 \n
@@ -115,16 +117,26 @@
     .declareMethod(\'clearContent\', function () {\n
       rJS(this).editor.html(\'\');\n
     })\n
-    .ready(function (g) {\n
-      g.editor = $(\'.textarea\');\n
-      g.editor.wysihtml5({\n
+    .declareMethod(\'setEditor\', function () {\n
+      document.body.innerHTML =\'<div class="container" style=" width: 100%; height: 600px;">\'\n
+                              +\'<div class="jumbotron" style="margin-left:0px; height: 600px;">\'\n
+                              +\'<textarea class="textarea" placeholder="Enter text ..." \'\n
+                              +\'style="width: 100%; height: 400px; font-size: 14px; line-height: 18px;">\'\n
+                              +\'</textarea></div</div>\';\n
+      this.editor = $(\'.textarea\');\n
+      this.editor.wysihtml5({\n
         toolbar: {\n
           fa: true\n
         }\n
       });\n
+    })\n
+\n
+    .ready(function (g) {\n
     });\n
 \n
-}(window, jQuery, rJS));</string> </value>
+}(window, jQuery, rJS));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -259,7 +271,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.56186.56926.29952</string> </value>
+                <value> <string>945.1997.11510.44544</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -277,7 +289,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438777746.45</float>
+                        <float>1439471143.4</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

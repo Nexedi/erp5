@@ -112,7 +112,21 @@
   <body>\n
     <h1>Editor Interface</h1>\n
     <h3>An interface defining the methods for text editor.</h3>\n
-    <dl></dl>\n
+    <dl>\n
+      <dt>getContent</dt>\n
+      <dd>to fetch the contect from the text editor</dd>\n
+      <dl></dl>\n
+      <dt>setContent</dt>\n
+      <dd>to set the contect to the text editor</dd>\n
+      <dl>\n
+        <dt data-parameter-required="required" data-parameter-type="string">content</dt>\n
+        <dd>the content to be set in the text editor</dd>\n
+      </dl>\n
+      </dd>\n
+      <dt>clearContent</dt>\n
+      <dd>to clear the contect of the text editor</dd>\n
+      <dl></dl>\n
+    </dl>\n
   </body>\n
 </html>
 
@@ -251,7 +265,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.48991.52289.15735</string> </value>
+                <value> <string>944.53144.2367.52957</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -269,7 +283,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438345024.7</float>
+                        <float>1439192630.9</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

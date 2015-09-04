@@ -105,7 +105,6 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-\n
 <!DOCTYPE html>\n
 <html>\n
   <head>\n
@@ -121,6 +120,7 @@
     <script type="text/javascript" src="jquery.js"></script>\n
     <script type="text/javascript" src="rsvp.js"></script>\n
     <script type="text/javascript" src="renderjs.js"></script>\n
+    <script src="gadget_global.js" ></script>\n
     <script type="text/javascript" src="jquerymobile.js"></script>\n
     <script type="text/javascript" src="i18next.js"></script>\n
 \n
@@ -129,27 +129,36 @@
 \n
   </head>\n
   <body>\n
-    <div data-role="page" id="document">\n
+    <div data-role="page" class="ui-content gadget-content">\n
       <div class="ui-grid-a ui-responsive">\n
         <div class="ui-block-a" style="width:60%">\n
           <div class="ui-content"></div>\n
         </div>\n
         <div class="ui-block-b" style="width:30%">\n
-          <form class="gadget-select-form">\n
+          <form class="main-gadget-select-form">\n
             <div data-role="fieldcontain">\n
-              <label for="gadget_selector" class="select"></label>\n
-              <select name="gadget_selector">\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/editor_demo/bootstrap-wysiwyg.html">Text Editor 1</option>\n
-                <option value="https://softinst60317.host.vifib.net/erp5/web_site_module/editor_demo/bootstrap3-wysiwyg.html">Text Editor 2</option>\n
+              <label for="main_gadget_selector" >Main Gadget</label>\n
+              <select name="main_gadget_selector" class="select">\n
+                <option value="./bootstrap3-wysiwyg.html">Text Editor 2</option>\n
+                <option value="./interface_test_correct_implemented_gadget.html">Dummy Gadget 1</option>\n
+                <option value="./interface_test_multiple_interface_correct_gadget.html">Dummy Gadget 2</option>\n
               </select>\n
             </div>\n
+            <input data-inline="true" type="submit" value="Submit" data-theme="b">\n
+          </form>\n
+          <form class="similar-gadget-select-form">\n
+            <div data-role="fieldcontain">\n
+              <label for="similar_gadget_selector" >Similar Gadgets</label>\n
+              <select name="similar_gadget_selector" class="select">\n
+              </select>\n
+            </div>\n
+            <input data-inline="true" type="submit" value="Submit" data-theme="b">\n
           </form>\n
         </div>\n
-      </div>  \n
+      </div>\n
     </div>\n
   </body>\n
 </html>\n
-\n
 
 
 ]]></string> </value>
@@ -287,7 +296,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.56298.5921.30532</string> </value>
+                <value> <string>945.2226.34067.16605</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -305,7 +314,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438783361.36</float>
+                        <float>1439471929.19</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

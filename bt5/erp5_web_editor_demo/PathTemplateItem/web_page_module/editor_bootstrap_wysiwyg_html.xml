@@ -110,19 +110,21 @@
 <html lang="en">\n
   <head>\n
     <meta charset="utf-8">\n
-    <title>title</title>\n
+    <title>bootstrap-wysiwhg</title>\n
     \n
     <link rel="stylesheet" href="bootstrap-combined.no-icons.min.css">\n
     <link rel="stylesheet" href="bootstrap-responsive.css">\n
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css">\n
 \n
-    <script src="jquery.js"></script>\n
-    <script src="jquery.hotkeys.js"></script>\n
+    <link rel="http://www.renderjs.org/rel/interface" href="editor_interface.html">\n
+\n
+    <script src="jquery.js" type="text/javascript"></script>\n
+    <script src="jquery.hotkeys.js" type="text/javascript"></script>\n
     <script src="bootstrap.min.js"></script>\n
     <script src="bootstrap-wysiwyg.js"></script>\n
     <script src="rsvp.js"></script>\n
     <script src="renderjs.js"></script>\n
-    <script src="gadget_bootstrap_wysiwyg.js"></script>\n
+    <script src="gadget_bootstrap_wysiwyg.js" type="text/javascript"></script>\n
    \n
   </head>\n
   <body>\n
@@ -333,7 +335,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.53506.33548.17937</string> </value>
+                <value> <string>945.2156.1335.48469</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -351,7 +353,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438615893.56</float>
+                        <float>1439467063.04</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

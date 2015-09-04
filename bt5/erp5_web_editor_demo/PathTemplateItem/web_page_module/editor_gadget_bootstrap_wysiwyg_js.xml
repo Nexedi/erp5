@@ -157,12 +157,14 @@
     .declareMethod(\'clearContent\', function () {\n
       rJS(this).editor.html(\'\');\n
     })\n
-    .ready(function (g) {\n
-      g.editor = $(\'#editor\');\n
+    .declareMethod(\'setEditor\', function () {\n
       initToolbarBootstrapBindings();\n
-      g.editor.wysiwyg({\n
+      this.editor.wysiwyg({\n
         fileUploadError: showErrorAlert\n
       });\n
+    })\n
+    .ready(function (g) {\n
+      g.editor = $(\'#editor\');\n
     });\n
 \n
 }(window, jQuery, rJS));
@@ -302,7 +304,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.53151.60155.61457</string> </value>
+                <value> <string>944.63600.63717.14984</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -320,7 +322,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438594704.78</float>
+                        <float>1439467049.96</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
