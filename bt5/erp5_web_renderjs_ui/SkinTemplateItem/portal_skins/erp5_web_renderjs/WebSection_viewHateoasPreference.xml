@@ -79,6 +79,9 @@
                         <string>my_configuration_application_title</string>
                         <string>my_configuration_hateoas_url</string>
                         <string>my_configuration_manifest_url</string>
+                        <string>my_configuration_jio_gadget_url</string>
+                        <string>my_configuration_translation_gadget_url</string>
+                        <string>my_configuration_router_gadget_url</string>
                       </list>
                     </value>
                 </item>
