@@ -236,6 +236,9 @@
     // Display it to the user for now,\n
     // and allow user to go back to the frontpage\n
     var error_text = "";\n
+    if (error instanceof RSVP.CancellationError) {\n
+      return;\n
+    }\n
 \n
     if (error instanceof XMLHttpRequest) {\n
       error_text = error.toString() + " " +\n
@@ -669,7 +672,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.33658.35295.955</string> </value>
+                <value> <string>945.33659.5064.30310</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -687,7 +690,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441357144.63</float>
+                        <float>1441377487.05</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
