@@ -231,7 +231,9 @@
     })\n
 \n
     .declareMethod(\'close\', function () {\n
-      // XXX Of course, this will fail if connection is not open yet...\n
+      if (this.props.socket === undefined) {\n
+        return;\n
+      }\n
       this.props.socket.close();\n
       delete this.props.socket;\n
     });\n
@@ -374,7 +376,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18210.63502.24746</string> </value>
+                <value> <string>945.33605.10741.21811</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -392,7 +394,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440430322.74</float>
+                        <float>1441353954.68</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
