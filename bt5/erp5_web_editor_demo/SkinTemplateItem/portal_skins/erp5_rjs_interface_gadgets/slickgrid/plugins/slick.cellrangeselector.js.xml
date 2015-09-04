@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271190.44</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.cellrangeselector.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>(function ($) {\n
+  // register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "CellRangeSelector": CellRangeSelector\n
+    }\n
+  });\n
+\n
+\n
+  function CellRangeSelector(options) {\n
+    var _grid;\n
+    var _canvas;\n
+    var _dragging;\n
+    var _decorator;\n
+    var _self = this;\n
+    var _handler = new Slick.EventHandler();\n
+    var _defaults = {\n
+      selectionCss: {\n
+        "border": "2px dashed blue"\n
+      }\n
+    };\n
+\n
+\n
+    function init(grid) {\n
+      options = $.extend(true, {}, _defaults, options);\n
+      _decorator = new Slick.CellRangeDecorator(grid, options);\n
+      _grid = grid;\n
+      _canvas = _grid.getCanvasNode();\n
+      _handler\n
+        .subscribe(_grid.onDragInit, handleDragInit)\n
+        .subscribe(_grid.onDragStart, handleDragStart)\n
+        .subscribe(_grid.onDrag, handleDrag)\n
+        .subscribe(_grid.onDragEnd, handleDragEnd);\n
+    }\n
+\n
+    function destroy() {\n
+      _handler.unsubscribeAll();\n
+    }\n
+\n
+    function handleDragInit(e, dd) {\n
+      // prevent the grid from cancelling drag\'n\'drop by default\n
+      e.stopImmediatePropagation();\n
+    }\n
+\n
+    function handleDragStart(e, dd) {\n
+      var cell = _grid.getCellFromEvent(e);\n
+      if (_self.onBeforeCellRangeSelected.notify(cell) !== false) {\n
+        if (_grid.canCellBeSelected(cell.row, cell.cell)) {\n
+          _dragging = true;\n
+          e.stopImmediatePropagation();\n
+        }\n
+      }\n
+      if (!_dragging) {\n
+        return;\n
+      }\n
+\n
+      _grid.focus();\n
+\n
+      var start = _grid.getCellFromPoint(\n
+          dd.startX - $(_canvas).offset().left,\n
+          dd.startY - $(_canvas).offset().top);\n
+\n
+      dd.range = {start: start, end: {}};\n
+\n
+      return _decorator.show(new Slick.Range(start.row, start.cell));\n
+    }\n
+\n
+    function handleDrag(e, dd) {\n
+      if (!_dragging) {\n
+        return;\n
+      }\n
+      e.stopImmediatePropagation();\n
+\n
+      var end = _grid.getCellFromPoint(\n
+          e.pageX - $(_canvas).offset().left,\n
+          e.pageY - $(_canvas).offset().top);\n
+\n
+      if (!_grid.canCellBeSelected(end.row, end.cell)) {\n
+        return;\n
+      }\n
+\n
+      dd.range.end = end;\n
+      _decorator.show(new Slick.Range(dd.range.start.row, dd.range.start.cell, end.row, end.cell));\n
+    }\n
+\n
+    function handleDragEnd(e, dd) {\n
+      if (!_dragging) {\n
+        return;\n
+      }\n
+\n
+      _dragging = false;\n
+      e.stopImmediatePropagation();\n
+\n
+      _decorator.hide();\n
+      _self.onCellRangeSelected.notify({\n
+        range: new Slick.Range(\n
+            dd.range.start.row,\n
+            dd.range.start.cell,\n
+            dd.range.end.row,\n
+            dd.range.end.cell\n
+        )\n
+      });\n
+    }\n
+\n
+    $.extend(this, {\n
+      "init": init,\n
+      "destroy": destroy,\n
+\n
+      "onBeforeCellRangeSelected": new Slick.Event(),\n
+      "onCellRangeSelected": new Slick.Event()\n
+    });\n
+  }\n
+})(jQuery);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2739</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.cellrangeselector.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

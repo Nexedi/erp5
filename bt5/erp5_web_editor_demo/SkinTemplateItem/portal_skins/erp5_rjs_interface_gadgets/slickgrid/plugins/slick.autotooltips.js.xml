@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271192.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.autotooltips.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  // Register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "AutoTooltips": AutoTooltips\n
+    }\n
+  });\n
+\n
+  /**\n
+   * AutoTooltips plugin to show/hide tooltips when columns are too narrow to fit content.\n
+   * @constructor\n
+   * @param {boolean} [options.enableForCells=true]        - Enable tooltip for grid cells\n
+   * @param {boolean} [options.enableForHeaderCells=false] - Enable tooltip for header cells\n
+   * @param {number}  [options.maxToolTipLength=null]      - The maximum length for a tooltip\n
+   */\n
+  function AutoTooltips(options) {\n
+    var _grid;\n
+    var _self = this;\n
+    var _defaults = {\n
+      enableForCells: true,\n
+      enableForHeaderCells: false,\n
+      maxToolTipLength: null\n
+    };\n
+    \n
+    /**\n
+     * Initialize plugin.\n
+     */\n
+    function init(grid) {\n
+      options = $.extend(true, {}, _defaults, options);\n
+      _grid = grid;\n
+      if (options.enableForCells) _grid.onMouseEnter.subscribe(handleMouseEnter);\n
+      if (options.enableForHeaderCells) _grid.onHeaderMouseEnter.subscribe(handleHeaderMouseEnter);\n
+    }\n
+    \n
+    /**\n
+     * Destroy plugin.\n
+     */\n
+    function destroy() {\n
+      if (options.enableForCells) _grid.onMouseEnter.unsubscribe(handleMouseEnter);\n
+      if (options.enableForHeaderCells) _grid.onHeaderMouseEnter.unsubscribe(handleHeaderMouseEnter);\n
+    }\n
+    \n
+    /**\n
+     * Handle mouse entering grid cell to add/remove tooltip.\n
+     * @param {jQuery.Event} e - The event\n
+     */\n
+    function handleMouseEnter(e) {\n
+      var cell = _grid.getCellFromEvent(e);\n
+      if (cell) {\n
+        var $node = $(_grid.getCellNode(cell.row, cell.cell));\n
+        var text;\n
+        if ($node.innerWidth() < $node[0].scrollWidth) {\n
+          text = $.trim($node.text());\n
+          if (options.maxToolTipLength && text.length > options.maxToolTipLength) {\n
+            text = text.substr(0, options.maxToolTipLength - 3) + "...";\n
+          }\n
+        } else {\n
+          text = "";\n
+        }\n
+        $node.attr("title", text);\n
+      }\n
+    }\n
+    \n
+    /**\n
+     * Handle mouse entering header cell to add/remove tooltip.\n
+     * @param {jQuery.Event} e     - The event\n
+     * @param {object} args.column - The column definition\n
+     */\n
+    function handleHeaderMouseEnter(e, args) {\n
+      var column = args.column,\n
+          $node = $(e.target).closest(".slick-header-column");\n
+      if (!column.toolTip) {\n
+        $node.attr("title", ($node.innerWidth() < $node[0].scrollWidth) ? column.name : "");\n
+      }\n
+    }\n
+    \n
+    // Public API\n
+    $.extend(this, {\n
+      "init": init,\n
+      "destroy": destroy\n
+    });\n
+  }\n
+})(jQuery);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2567</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.autotooltips.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

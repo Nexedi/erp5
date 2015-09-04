@@ -1,0 +1,511 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271199.04</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.core.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/***\n
+ * Contains core SlickGrid classes.\n
+ * @module Core\n
+ * @namespace Slick\n
+ */\n
+\n
+(function ($) {\n
+  // register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "Event": Event,\n
+      "EventData": EventData,\n
+      "EventHandler": EventHandler,\n
+      "Range": Range,\n
+      "NonDataRow": NonDataItem,\n
+      "Group": Group,\n
+      "GroupTotals": GroupTotals,\n
+      "EditorLock": EditorLock,\n
+\n
+      /***\n
+       * A global singleton editor lock.\n
+       * @class GlobalEditorLock\n
+       * @static\n
+       * @constructor\n
+       */\n
+      "GlobalEditorLock": new EditorLock()\n
+    }\n
+  });\n
+\n
+  /***\n
+   * An event object for passing data to event handlers and letting them control propagation.\n
+   * <p>This is pretty much identical to how W3C and jQuery implement events.</p>\n
+   * @class EventData\n
+   * @constructor\n
+   */\n
+  function EventData() {\n
+    var isPropagationStopped = false;\n
+    var isImmediatePropagationStopped = false;\n
+\n
+    /***\n
+     * Stops event from propagating up the DOM tree.\n
+     * @method stopPropagation\n
+     */\n
+    this.stopPropagation = function () {\n
+      isPropagationStopped = true;\n
+    };\n
+\n
+    /***\n
+     * Returns whether stopPropagation was called on this event object.\n
+     * @method isPropagationStopped\n
+     * @return {Boolean}\n
+     */\n
+    this.isPropagationStopped = function () {\n
+      return isPropagationStopped;\n
+    };\n
+\n
+    /***\n
+     * Prevents the rest of the handlers from being executed.\n
+     * @method stopImmediatePropagation\n
+     */\n
+    this.stopImmediatePropagation = function () {\n
+      isImmediatePropagationStopped = true;\n
+    };\n
+\n
+    /***\n
+     * Returns whether stopImmediatePropagation was called on this event object.\\\n
+     * @method isImmediatePropagationStopped\n
+     * @return {Boolean}\n
+     */\n
+    this.isImmediatePropagationStopped = function () {\n
+      return isImmediatePropagationStopped;\n
+    }\n
+  }\n
+\n
+  /***\n
+   * A simple publisher-subscriber implementation.\n
+   * @class Event\n
+   * @constructor\n
+   */\n
+  function Event() {\n
+    var handlers = [];\n
+\n
+    /***\n
+     * Adds an event handler to be called when the event is fired.\n
+     * <p>Event handler will receive two arguments - an <code>EventData</code> and the <code>data</code>\n
+     * object the event was fired with.<p>\n
+     * @method subscribe\n
+     * @param fn {Function} Event handler.\n
+     */\n
+    this.subscribe = function (fn) {\n
+      handlers.push(fn);\n
+    };\n
+\n
+    /***\n
+     * Removes an event handler added with <code>subscribe(fn)</code>.\n
+     * @method unsubscribe\n
+     * @param fn {Function} Event handler to be removed.\n
+     */\n
+    this.unsubscribe = function (fn) {\n
+      for (var i = handlers.length - 1; i >= 0; i--) {\n
+        if (handlers[i] === fn) {\n
+          handlers.splice(i, 1);\n
+        }\n
+      }\n
+    };\n
+\n
+    /***\n
+     * Fires an event notifying all subscribers.\n
+     * @method notify\n
+     * @param args {Object} Additional data object to be passed to all handlers.\n
+     * @param e {EventData}\n
+     *      Optional.\n
+     *      An <code>EventData</code> object to be passed to all handlers.\n
+     *      For DOM events, an existing W3C/jQuery event object can be passed in.\n
+     * @param scope {Object}\n
+     *      Optional.\n
+     *      The scope ("this") within which the handler will be executed.\n
+     *      If not specified, the scope will be set to the <code>Event</code> instance.\n
+     */\n
+    this.notify = function (args, e, scope) {\n
+      e = e || new EventData();\n
+      scope = scope || this;\n
+\n
+      var returnValue;\n
+      for (var i = 0; i < handlers.length && !(e.isPropagationStopped() || e.isImmediatePropagationStopped()); i++) {\n
+        returnValue = handlers[i].call(scope, e, args);\n
+      }\n
+\n
+      return returnValue;\n
+    };\n
+  }\n
+\n
+  function EventHandler() {\n
+    var handlers = [];\n
+\n
+    this.subscribe = function (event, handler) {\n
+      handlers.push({\n
+        event: event,\n
+        handler: handler\n
+      });\n
+      event.subscribe(handler);\n
+\n
+      return this;  // allow chaining\n
+    };\n
+\n
+    this.unsubscribe = function (event, handler) {\n
+      var i = handlers.length;\n
+      while (i--) {\n
+        if (handlers[i].event === event &&\n
+            handlers[i].handler === handler) {\n
+          handlers.splice(i, 1);\n
+          event.unsubscribe(handler);\n
+          return;\n
+        }\n
+      }\n
+\n
+      return this;  // allow chaining\n
+    };\n
+\n
+    this.unsubscribeAll = function () {\n
+      var i = handlers.length;\n
+      while (i--) {\n
+        handlers[i].event.unsubscribe(handlers[i].handler);\n
+      }\n
+      handlers = [];\n
+\n
+      return this;  // allow chaining\n
+    }\n
+  }\n
+\n
+  /***\n
+   * A structure containing a range of cells.\n
+   * @class Range\n
+   * @constructor\n
+   * @param fromRow {Integer} Starting row.\n
+   * @param fromCell {Integer} Starting cell.\n
+   * @param toRow {Integer} Optional. Ending row. Defaults to <code>fromRow</code>.\n
+   * @param toCell {Integer} Optional. Ending cell. Defaults to <code>fromCell</code>.\n
+   */\n
+  function Range(fromRow, fromCell, toRow, toCell) {\n
+    if (toRow === undefined && toCell === undefined) {\n
+      toRow = fromRow;\n
+      toCell = fromCell;\n
+    }\n
+\n
+    /***\n
+     * @property fromRow\n
+     * @type {Integer}\n
+     */\n
+    this.fromRow = Math.min(fromRow, toRow);\n
+\n
+    /***\n
+     * @property fromCell\n
+     * @type {Integer}\n
+     */\n
+    this.fromCell = Math.min(fromCell, toCell);\n
+\n
+    /***\n
+     * @property toRow\n
+     * @type {Integer}\n
+     */\n
+    this.toRow = Math.max(fromRow, toRow);\n
+\n
+    /***\n
+     * @property toCell\n
+     * @type {Integer}\n
+     */\n
+    this.toCell = Math.max(fromCell, toCell);\n
+\n
+    /***\n
+     * Returns whether a range represents a single row.\n
+     * @method isSingleRow\n
+     * @return {Boolean}\n
+     */\n
+    this.isSingleRow = function () {\n
+      return this.fromRow == this.toRow;\n
+    };\n
+\n
+    /***\n
+     * Returns whether a range represents a single cell.\n
+     * @method isSingleCell\n
+     * @return {Boolean}\n
+     */\n
+    this.isSingleCell = function () {\n
+      return this.fromRow == this.toRow && this.fromCell == this.toCell;\n
+    };\n
+\n
+    /***\n
+     * Returns whether a range contains a given cell.\n
+     * @method contains\n
+     * @param row {Integer}\n
+     * @param cell {Integer}\n
+     * @return {Boolean}\n
+     */\n
+    this.contains = function (row, cell) {\n
+      return row >= this.fromRow && row <= this.toRow &&\n
+          cell >= this.fromCell && cell <= this.toCell;\n
+    };\n
+\n
+    /***\n
+     * Returns a readable representation of a range.\n
+     * @method toString\n
+     * @return {String}\n
+     */\n
+    this.toString = function () {\n
+      if (this.isSingleCell()) {\n
+        return "(" + this.fromRow + ":" + this.fromCell + ")";\n
+      }\n
+      else {\n
+        return "(" + this.fromRow + ":" + this.fromCell + " - " + this.toRow + ":" + this.toCell + ")";\n
+      }\n
+    }\n
+  }\n
+\n
+\n
+  /***\n
+   * A base class that all special / non-data rows (like Group and GroupTotals) derive from.\n
+   * @class NonDataItem\n
+   * @constructor\n
+   */\n
+  function NonDataItem() {\n
+    this.__nonDataRow = true;\n
+  }\n
+\n
+\n
+  /***\n
+   * Information about a group of rows.\n
+   * @class Group\n
+   * @extends Slick.NonDataItem\n
+   * @constructor\n
+   */\n
+  function Group() {\n
+    this.__group = true;\n
+\n
+    /**\n
+     * Grouping level, starting with 0.\n
+     * @property level\n
+     * @type {Number}\n
+     */\n
+    this.level = 0;\n
+\n
+    /***\n
+     * Number of rows in the group.\n
+     * @property count\n
+     * @type {Integer}\n
+     */\n
+    this.count = 0;\n
+\n
+    /***\n
+     * Grouping value.\n
+     * @property value\n
+     * @type {Object}\n
+     */\n
+    this.value = null;\n
+\n
+    /***\n
+     * Formatted display value of the group.\n
+     * @property title\n
+     * @type {String}\n
+     */\n
+    this.title = null;\n
+\n
+    /***\n
+     * Whether a group is collapsed.\n
+     * @property collapsed\n
+     * @type {Boolean}\n
+     */\n
+    this.collapsed = false;\n
+\n
+    /***\n
+     * GroupTotals, if any.\n
+     * @property totals\n
+     * @type {GroupTotals}\n
+     */\n
+    this.totals = null;\n
+\n
+    /**\n
+     * Rows that are part of the group.\n
+     * @property rows\n
+     * @type {Array}\n
+     */\n
+    this.rows = [];\n
+\n
+    /**\n
+     * Sub-groups that are part of the group.\n
+     * @property groups\n
+     * @type {Array}\n
+     */\n
+    this.groups = null;\n
+\n
+    /**\n
+     * A unique key used to identify the group.  This key can be used in calls to DataView\n
+     * collapseGroup() or expandGroup().\n
+     * @property groupingKey\n
+     * @type {Object}\n
+     */\n
+    this.groupingKey = null;\n
+  }\n
+\n
+  Group.prototype = new NonDataItem();\n
+\n
+  /***\n
+   * Compares two Group instances.\n
+   * @method equals\n
+   * @return {Boolean}\n
+   * @param group {Group} Group instance to compare to.\n
+   */\n
+  Group.prototype.equals = function (group) {\n
+    return this.value === group.value &&\n
+        this.count === group.count &&\n
+        this.collapsed === group.collapsed &&\n
+        this.title === group.title;\n
+  };\n
+\n
+  /***\n
+   * Information about group totals.\n
+   * An instance of GroupTotals will be created for each totals row and passed to the aggregators\n
+   * so that they can store arbitrary data in it.  That data can later be accessed by group totals\n
+   * formatters during the display.\n
+   * @class GroupTotals\n
+   * @extends Slick.NonDataItem\n
+   * @constructor\n
+   */\n
+  function GroupTotals() {\n
+    this.__groupTotals = true;\n
+\n
+    /***\n
+     * Parent Group.\n
+     * @param group\n
+     * @type {Group}\n
+     */\n
+    this.group = null;\n
+\n
+    /***\n
+     * Whether the totals have been fully initialized / calculated.\n
+     * Will be set to false for lazy-calculated group totals.\n
+     * @param initialized\n
+     * @type {Boolean}\n
+     */\n
+    this.initialized = false;\n
+  }\n
+\n
+  GroupTotals.prototype = new NonDataItem();\n
+\n
+  /***\n
+   * A locking helper to track the active edit controller and ensure that only a single controller\n
+   * can be active at a time.  This prevents a whole class of state and validation synchronization\n
+   * issues.  An edit controller (such as SlickGrid) can query if an active edit is in progress\n
+   * and attempt a commit or cancel before proceeding.\n
+   * @class EditorLock\n
+   * @constructor\n
+   */\n
+  function EditorLock() {\n
+    var activeEditController = null;\n
+\n
+    /***\n
+     * Returns true if a specified edit controller is active (has the edit lock).\n
+     * If the parameter is not specified, returns true if any edit controller is active.\n
+     * @method isActive\n
+     * @param editController {EditController}\n
+     * @return {Boolean}\n
+     */\n
+    this.isActive = function (editController) {\n
+      return (editController ? activeEditController === editController : activeEditController !== null);\n
+    };\n
+\n
+    /***\n
+     * Sets the specified edit controller as the active edit controller (acquire edit lock).\n
+     * If another edit controller is already active, and exception will be thrown.\n
+     * @method activate\n
+     * @param editController {EditController} edit controller acquiring the lock\n
+     */\n
+    this.activate = function (editController) {\n
+      if (editController === activeEditController) { // already activated?\n
+        return;\n
+      }\n
+      if (activeEditController !== null) {\n
+        throw "SlickGrid.EditorLock.activate: an editController is still active, can\'t activate another editController";\n
+      }\n
+      if (!editController.commitCurrentEdit) {\n
+        throw "SlickGrid.EditorLock.activate: editController must implement .commitCurrentEdit()";\n
+      }\n
+      if (!editController.cancelCurrentEdit) {\n
+        throw "SlickGrid.EditorLock.activate: editController must implement .cancelCurrentEdit()";\n
+      }\n
+      activeEditController = editController;\n
+    };\n
+\n
+    /***\n
+     * Unsets the specified edit controller as the active edit controller (release edit lock).\n
+     * If the specified edit controller is not the active one, an exception will be thrown.\n
+     * @method deactivate\n
+     * @param editController {EditController} edit controller releasing the lock\n
+     */\n
+    this.deactivate = function (editController) {\n
+      if (activeEditController !== editController) {\n
+        throw "SlickGrid.EditorLock.deactivate: specified editController is not the currently active one";\n
+      }\n
+      activeEditController = null;\n
+    };\n
+\n
+    /***\n
+     * Attempts to commit the current edit by calling "commitCurrentEdit" method on the active edit\n
+     * controller and returns whether the commit attempt was successful (commit may fail due to validation\n
+     * errors, etc.).  Edit controller\'s "commitCurrentEdit" must return true if the commit has succeeded\n
+     * and false otherwise.  If no edit controller is active, returns true.\n
+     * @method commitCurrentEdit\n
+     * @return {Boolean}\n
+     */\n
+    this.commitCurrentEdit = function () {\n
+      return (activeEditController ? activeEditController.commitCurrentEdit() : true);\n
+    };\n
+\n
+    /***\n
+     * Attempts to cancel the current edit by calling "cancelCurrentEdit" method on the active edit\n
+     * controller and returns whether the edit was successfully cancelled.  If no edit controller is\n
+     * active, returns true.\n
+     * @method cancelCurrentEdit\n
+     * @return {Boolean}\n
+     */\n
+    this.cancelCurrentEdit = function cancelCurrentEdit() {\n
+      return (activeEditController ? activeEditController.cancelCurrentEdit() : true);\n
+    };\n
+  }\n
+})(jQuery);\n
+\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12990</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.core.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

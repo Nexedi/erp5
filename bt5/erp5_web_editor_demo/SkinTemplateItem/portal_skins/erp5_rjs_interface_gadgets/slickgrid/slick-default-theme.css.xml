@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271193.63</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick-default-theme.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\n
+IMPORTANT:\n
+In order to preserve the uniform grid appearance, all cell styles need to have padding, margin and border sizes.\n
+No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) or user-specified CSS\n
+classes should alter those!\n
+*/\n
+\n
+.slick-header-columns {\n
+  background: url(\'images/header-columns-bg.gif\') repeat-x center bottom;\n
+  border-bottom: 1px solid silver;\n
+}\n
+\n
+.slick-header-column {\n
+  background: url(\'images/header-columns-bg.gif\') repeat-x center bottom;\n
+  border-right: 1px solid silver;\n
+}\n
+\n
+.slick-header-column:hover, .slick-header-column-active {\n
+  background: white url(\'images/header-columns-over-bg.gif\') repeat-x center bottom;\n
+}\n
+\n
+.slick-headerrow {\n
+  background: #fafafa;\n
+}\n
+\n
+.slick-headerrow-column {\n
+  background: #fafafa;\n
+  border-bottom: 0;\n
+  height: 100%;\n
+}\n
+\n
+.slick-row.ui-state-active {\n
+  background: #F5F7D7;\n
+}\n
+\n
+.slick-row {\n
+  position: absolute;\n
+  background: white;\n
+  border: 0px;\n
+  line-height: 20px;\n
+}\n
+\n
+.slick-row.selected {\n
+  z-index: 10;\n
+  background: #DFE8F6;\n
+}\n
+\n
+.slick-cell {\n
+  padding-left: 4px;\n
+  padding-right: 4px;\n
+}\n
+\n
+.slick-group {\n
+  border-bottom: 2px solid silver;\n
+}\n
+\n
+.slick-group-toggle {\n
+  width: 9px;\n
+  height: 9px;\n
+  margin-right: 5px;\n
+}\n
+\n
+.slick-group-toggle.expanded {\n
+  background: url(images/collapse.gif) no-repeat center center;\n
+}\n
+\n
+.slick-group-toggle.collapsed {\n
+  background: url(images/expand.gif) no-repeat center center;\n
+}\n
+\n
+.slick-group-totals {\n
+  color: gray;\n
+  background: white;\n
+}\n
+\n
+.slick-cell.selected {\n
+  background-color: beige;\n
+}\n
+\n
+.slick-cell.active {\n
+  border-color: gray;\n
+  border-style: solid;\n
+}\n
+\n
+.slick-sortable-placeholder {\n
+  background: silver !important;\n
+}\n
+\n
+.slick-row.odd {\n
+  background: #fafafa;\n
+}\n
+\n
+.slick-row.ui-state-active {\n
+  background: #F5F7D7;\n
+}\n
+\n
+.slick-row.loading {\n
+  opacity: 0.5;\n
+  filter: alpha(opacity = 50);\n
+}\n
+\n
+.slick-cell.invalid {\n
+  border-color: red;\n
+  -moz-animation-duration: 0.2s;\n
+  -webkit-animation-duration: 0.2s;\n
+  -moz-animation-name: slickgrid-invalid-hilite;\n
+  -webkit-animation-name: slickgrid-invalid-hilite;  \n
+}\n
+\n
+@-moz-keyframes slickgrid-invalid-hilite {\n
+  from { box-shadow: 0 0 6px red; }\n
+  to { box-shadow: none; }\n
+}\n
+\n
+@-webkit-keyframes slickgrid-invalid-hilite {\n
+  from { box-shadow: 0 0 6px red; }\n
+  to { box-shadow: none; }\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2261</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick-default-theme.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

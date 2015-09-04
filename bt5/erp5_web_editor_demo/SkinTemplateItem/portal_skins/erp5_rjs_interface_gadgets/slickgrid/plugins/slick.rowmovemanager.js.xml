@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271189.13</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.rowmovemanager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  // register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "RowMoveManager": RowMoveManager\n
+    }\n
+  });\n
+\n
+  function RowMoveManager(options) {\n
+    var _grid;\n
+    var _canvas;\n
+    var _dragging;\n
+    var _self = this;\n
+    var _handler = new Slick.EventHandler();\n
+    var _defaults = {\n
+      cancelEditOnDrag: false\n
+    };\n
+\n
+    function init(grid) {\n
+      options = $.extend(true, {}, _defaults, options);\n
+      _grid = grid;\n
+      _canvas = _grid.getCanvasNode();\n
+      _handler\n
+        .subscribe(_grid.onDragInit, handleDragInit)\n
+        .subscribe(_grid.onDragStart, handleDragStart)\n
+        .subscribe(_grid.onDrag, handleDrag)\n
+        .subscribe(_grid.onDragEnd, handleDragEnd);\n
+    }\n
+\n
+    function destroy() {\n
+      _handler.unsubscribeAll();\n
+    }\n
+\n
+    function handleDragInit(e, dd) {\n
+      // prevent the grid from cancelling drag\'n\'drop by default\n
+      e.stopImmediatePropagation();\n
+    }\n
+\n
+    function handleDragStart(e, dd) {\n
+      var cell = _grid.getCellFromEvent(e);\n
+\n
+      if (options.cancelEditOnDrag && _grid.getEditorLock().isActive()) {\n
+        _grid.getEditorLock().cancelCurrentEdit();\n
+      }\n
+\n
+      if (_grid.getEditorLock().isActive() || !/move|selectAndMove/.test(_grid.getColumns()[cell.cell].behavior)) {\n
+        return false;\n
+      }\n
+\n
+      _dragging = true;\n
+      e.stopImmediatePropagation();\n
+\n
+      var selectedRows = _grid.getSelectedRows();\n
+\n
+      if (selectedRows.length == 0 || $.inArray(cell.row, selectedRows) == -1) {\n
+        selectedRows = [cell.row];\n
+        _grid.setSelectedRows(selectedRows);\n
+      }\n
+\n
+      var rowHeight = _grid.getOptions().rowHeight;\n
+\n
+      dd.selectedRows = selectedRows;\n
+\n
+      dd.selectionProxy = $("<div class=\'slick-reorder-proxy\'/>")\n
+          .css("position", "absolute")\n
+          .css("zIndex", "99999")\n
+          .css("width", $(_canvas).innerWidth())\n
+          .css("height", rowHeight * selectedRows.length)\n
+          .appendTo(_canvas);\n
+\n
+      dd.guide = $("<div class=\'slick-reorder-guide\'/>")\n
+          .css("position", "absolute")\n
+          .css("zIndex", "99998")\n
+          .css("width", $(_canvas).innerWidth())\n
+          .css("top", -1000)\n
+          .appendTo(_canvas);\n
+\n
+      dd.insertBefore = -1;\n
+    }\n
+\n
+    function handleDrag(e, dd) {\n
+      if (!_dragging) {\n
+        return;\n
+      }\n
+\n
+      e.stopImmediatePropagation();\n
+\n
+      var top = e.pageY - $(_canvas).offset().top;\n
+      dd.selectionProxy.css("top", top - 5);\n
+\n
+      var insertBefore = Math.max(0, Math.min(Math.round(top / _grid.getOptions().rowHeight), _grid.getDataLength()));\n
+      if (insertBefore !== dd.insertBefore) {\n
+        var eventData = {\n
+          "rows": dd.selectedRows,\n
+          "insertBefore": insertBefore\n
+        };\n
+\n
+        if (_self.onBeforeMoveRows.notify(eventData) === false) {\n
+          dd.guide.css("top", -1000);\n
+          dd.canMove = false;\n
+        } else {\n
+          dd.guide.css("top", insertBefore * _grid.getOptions().rowHeight);\n
+          dd.canMove = true;\n
+        }\n
+\n
+        dd.insertBefore = insertBefore;\n
+      }\n
+    }\n
+\n
+    function handleDragEnd(e, dd) {\n
+      if (!_dragging) {\n
+        return;\n
+      }\n
+      _dragging = false;\n
+      e.stopImmediatePropagation();\n
+\n
+      dd.guide.remove();\n
+      dd.selectionProxy.remove();\n
+\n
+      if (dd.canMove) {\n
+        var eventData = {\n
+          "rows": dd.selectedRows,\n
+          "insertBefore": dd.insertBefore\n
+        };\n
+        // TODO:  _grid.remapCellCssClasses ?\n
+        _self.onMoveRows.notify(eventData);\n
+      }\n
+    }\n
+\n
+    $.extend(this, {\n
+      "onBeforeMoveRows": new Slick.Event(),\n
+      "onMoveRows": new Slick.Event(),\n
+\n
+      "init": init,\n
+      "destroy": destroy\n
+    });\n
+  }\n
+})(jQuery);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3654</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.rowmovemanager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

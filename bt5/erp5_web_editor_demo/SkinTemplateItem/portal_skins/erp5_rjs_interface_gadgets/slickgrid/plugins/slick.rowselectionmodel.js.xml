@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271186.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.rowselectionmodel.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  // register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "RowSelectionModel": RowSelectionModel\n
+    }\n
+  });\n
+\n
+  function RowSelectionModel(options) {\n
+    var _grid;\n
+    var _ranges = [];\n
+    var _self = this;\n
+    var _handler = new Slick.EventHandler();\n
+    var _inHandler;\n
+    var _options;\n
+    var _defaults = {\n
+      selectActiveRow: true\n
+    };\n
+\n
+    function init(grid) {\n
+      _options = $.extend(true, {}, _defaults, options);\n
+      _grid = grid;\n
+      _handler.subscribe(_grid.onActiveCellChanged,\n
+          wrapHandler(handleActiveCellChange));\n
+      _handler.subscribe(_grid.onKeyDown,\n
+          wrapHandler(handleKeyDown));\n
+      _handler.subscribe(_grid.onClick,\n
+          wrapHandler(handleClick));\n
+    }\n
+\n
+    function destroy() {\n
+      _handler.unsubscribeAll();\n
+    }\n
+\n
+    function wrapHandler(handler) {\n
+      return function () {\n
+        if (!_inHandler) {\n
+          _inHandler = true;\n
+          handler.apply(this, arguments);\n
+          _inHandler = false;\n
+        }\n
+      };\n
+    }\n
+\n
+    function rangesToRows(ranges) {\n
+      var rows = [];\n
+      for (var i = 0; i < ranges.length; i++) {\n
+        for (var j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {\n
+          rows.push(j);\n
+        }\n
+      }\n
+      return rows;\n
+    }\n
+\n
+    function rowsToRanges(rows) {\n
+      var ranges = [];\n
+      var lastCell = _grid.getColumns().length - 1;\n
+      for (var i = 0; i < rows.length; i++) {\n
+        ranges.push(new Slick.Range(rows[i], 0, rows[i], lastCell));\n
+      }\n
+      return ranges;\n
+    }\n
+\n
+    function getRowsRange(from, to) {\n
+      var i, rows = [];\n
+      for (i = from; i <= to; i++) {\n
+        rows.push(i);\n
+      }\n
+      for (i = to; i < from; i++) {\n
+        rows.push(i);\n
+      }\n
+      return rows;\n
+    }\n
+\n
+    function getSelectedRows() {\n
+      return rangesToRows(_ranges);\n
+    }\n
+\n
+    function setSelectedRows(rows) {\n
+      setSelectedRanges(rowsToRanges(rows));\n
+    }\n
+\n
+    function setSelectedRanges(ranges) {\n
+      _ranges = ranges;\n
+      _self.onSelectedRangesChanged.notify(_ranges);\n
+    }\n
+\n
+    function getSelectedRanges() {\n
+      return _ranges;\n
+    }\n
+\n
+    function handleActiveCellChange(e, data) {\n
+      if (_options.selectActiveRow && data.row != null) {\n
+        setSelectedRanges([new Slick.Range(data.row, 0, data.row, _grid.getColumns().length - 1)]);\n
+      }\n
+    }\n
+\n
+    function handleKeyDown(e) {\n
+      var activeRow = _grid.getActiveCell();\n
+      if (activeRow && e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && (e.which == 38 || e.which == 40)) {\n
+        var selectedRows = getSelectedRows();\n
+        selectedRows.sort(function (x, y) {\n
+          return x - y\n
+        });\n
+\n
+        if (!selectedRows.length) {\n
+          selectedRows = [activeRow.row];\n
+        }\n
+\n
+        var top = selectedRows[0];\n
+        var bottom = selectedRows[selectedRows.length - 1];\n
+        var active;\n
+\n
+        if (e.which == 40) {\n
+          active = activeRow.row < bottom || top == bottom ? ++bottom : ++top;\n
+        } else {\n
+          active = activeRow.row < bottom ? --bottom : --top;\n
+        }\n
+\n
+        if (active >= 0 && active < _grid.getDataLength()) {\n
+          _grid.scrollRowIntoView(active);\n
+          _ranges = rowsToRanges(getRowsRange(top, bottom));\n
+          setSelectedRanges(_ranges);\n
+        }\n
+\n
+        e.preventDefault();\n
+        e.stopPropagation();\n
+      }\n
+    }\n
+\n
+    function handleClick(e) {\n
+      var cell = _grid.getCellFromEvent(e);\n
+      if (!cell || !_grid.canCellBeActive(cell.row, cell.cell)) {\n
+        return false;\n
+      }\n
+\n
+      if (!_grid.getOptions().multiSelect || (\n
+          !e.ctrlKey && !e.shiftKey && !e.metaKey)) {\n
+        return false;\n
+      }\n
+\n
+      var selection = rangesToRows(_ranges);\n
+      var idx = $.inArray(cell.row, selection);\n
+\n
+      if (idx === -1 && (e.ctrlKey || e.metaKey)) {\n
+        selection.push(cell.row);\n
+        _grid.setActiveCell(cell.row, cell.cell);\n
+      } else if (idx !== -1 && (e.ctrlKey || e.metaKey)) {\n
+        selection = $.grep(selection, function (o, i) {\n
+          return (o !== cell.row);\n
+        });\n
+        _grid.setActiveCell(cell.row, cell.cell);\n
+      } else if (selection.length && e.shiftKey) {\n
+        var last = selection.pop();\n
+        var from = Math.min(cell.row, last);\n
+        var to = Math.max(cell.row, last);\n
+        selection = [];\n
+        for (var i = from; i <= to; i++) {\n
+          if (i !== last) {\n
+            selection.push(i);\n
+          }\n
+        }\n
+        selection.push(last);\n
+        _grid.setActiveCell(cell.row, cell.cell);\n
+      }\n
+\n
+      _ranges = rowsToRanges(selection);\n
+      setSelectedRanges(_ranges);\n
+      e.stopImmediatePropagation();\n
+\n
+      return true;\n
+    }\n
+\n
+    $.extend(this, {\n
+      "getSelectedRows": getSelectedRows,\n
+      "setSelectedRows": setSelectedRows,\n
+\n
+      "getSelectedRanges": getSelectedRanges,\n
+      "setSelectedRanges": setSelectedRanges,\n
+\n
+      "init": init,\n
+      "destroy": destroy,\n
+\n
+      "onSelectedRangesChanged": new Slick.Event()\n
+    });\n
+  }\n
+})(jQuery);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4948</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.rowselectionmodel.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

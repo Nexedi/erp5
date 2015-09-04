@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271195.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.pager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  function SlickGridPager(dataView, grid, $container) {\n
+    var $status;\n
+\n
+    function init() {\n
+      dataView.onPagingInfoChanged.subscribe(function (e, pagingInfo) {\n
+        updatePager(pagingInfo);\n
+      });\n
+\n
+      constructPagerUI();\n
+      updatePager(dataView.getPagingInfo());\n
+    }\n
+\n
+    function getNavState() {\n
+      var cannotLeaveEditMode = !Slick.GlobalEditorLock.commitCurrentEdit();\n
+      var pagingInfo = dataView.getPagingInfo();\n
+      var lastPage = pagingInfo.totalPages - 1;\n
+\n
+      return {\n
+        canGotoFirst: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum > 0,\n
+        canGotoLast: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum != lastPage,\n
+        canGotoPrev: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum > 0,\n
+        canGotoNext: !cannotLeaveEditMode && pagingInfo.pageSize != 0 && pagingInfo.pageNum < lastPage,\n
+        pagingInfo: pagingInfo\n
+      }\n
+    }\n
+\n
+    function setPageSize(n) {\n
+      dataView.setRefreshHints({\n
+        isFilterUnchanged: true\n
+      });\n
+      dataView.setPagingOptions({pageSize: n});\n
+    }\n
+\n
+    function gotoFirst() {\n
+      if (getNavState().canGotoFirst) {\n
+        dataView.setPagingOptions({pageNum: 0});\n
+      }\n
+    }\n
+\n
+    function gotoLast() {\n
+      var state = getNavState();\n
+      if (state.canGotoLast) {\n
+        dataView.setPagingOptions({pageNum: state.pagingInfo.totalPages - 1});\n
+      }\n
+    }\n
+\n
+    function gotoPrev() {\n
+      var state = getNavState();\n
+      if (state.canGotoPrev) {\n
+        dataView.setPagingOptions({pageNum: state.pagingInfo.pageNum - 1});\n
+      }\n
+    }\n
+\n
+    function gotoNext() {\n
+      var state = getNavState();\n
+      if (state.canGotoNext) {\n
+        dataView.setPagingOptions({pageNum: state.pagingInfo.pageNum + 1});\n
+      }\n
+    }\n
+\n
+    function constructPagerUI() {\n
+      $container.empty();\n
+\n
+      var $nav = $("<span class=\'slick-pager-nav\' />").appendTo($container);\n
+      var $settings = $("<span class=\'slick-pager-settings\' />").appendTo($container);\n
+      $status = $("<span class=\'slick-pager-status\' />").appendTo($container);\n
+\n
+      $settings\n
+          .append("<span class=\'slick-pager-settings-expanded\' style=\'display:none\'>Show: <a data=0>All</a><a data=\'-1\'>Auto</a><a data=25>25</a><a data=50>50</a><a data=100>100</a></span>");\n
+\n
+      $settings.find("a[data]").click(function (e) {\n
+        var pagesize = $(e.target).attr("data");\n
+        if (pagesize != undefined) {\n
+          if (pagesize == -1) {\n
+            var vp = grid.getViewport();\n
+            setPageSize(vp.bottom - vp.top);\n
+          } else {\n
+            setPageSize(parseInt(pagesize));\n
+          }\n
+        }\n
+      });\n
+\n
+      var icon_prefix = "<span class=\'ui-state-default ui-corner-all ui-icon-container\'><span class=\'ui-icon ";\n
+      var icon_suffix = "\' /></span>";\n
+\n
+      $(icon_prefix + "ui-icon-lightbulb" + icon_suffix)\n
+          .click(function () {\n
+            $(".slick-pager-settings-expanded").toggle()\n
+          })\n
+          .appendTo($settings);\n
+\n
+      $(icon_prefix + "ui-icon-seek-first" + icon_suffix)\n
+          .click(gotoFirst)\n
+          .appendTo($nav);\n
+\n
+      $(icon_prefix + "ui-icon-seek-prev" + icon_suffix)\n
+          .click(gotoPrev)\n
+          .appendTo($nav);\n
+\n
+      $(icon_prefix + "ui-icon-seek-next" + icon_suffix)\n
+          .click(gotoNext)\n
+          .appendTo($nav);\n
+\n
+      $(icon_prefix + "ui-icon-seek-end" + icon_suffix)\n
+          .click(gotoLast)\n
+          .appendTo($nav);\n
+\n
+      $container.find(".ui-icon-container")\n
+          .hover(function () {\n
+            $(this).toggleClass("ui-state-hover");\n
+          });\n
+\n
+      $container.children().wrapAll("<div class=\'slick-pager\' />");\n
+    }\n
+\n
+\n
+    function updatePager(pagingInfo) {\n
+      var state = getNavState();\n
+\n
+      $container.find(".slick-pager-nav span").removeClass("ui-state-disabled");\n
+      if (!state.canGotoFirst) {\n
+        $container.find(".ui-icon-seek-first").addClass("ui-state-disabled");\n
+      }\n
+      if (!state.canGotoLast) {\n
+        $container.find(".ui-icon-seek-end").addClass("ui-state-disabled");\n
+      }\n
+      if (!state.canGotoNext) {\n
+        $container.find(".ui-icon-seek-next").addClass("ui-state-disabled");\n
+      }\n
+      if (!state.canGotoPrev) {\n
+        $container.find(".ui-icon-seek-prev").addClass("ui-state-disabled");\n
+      }\n
+\n
+      if (pagingInfo.pageSize == 0) {\n
+        var totalRowsCount = dataView.getItems().length;\n
+        var visibleRowsCount = pagingInfo.totalRows;\n
+        if (visibleRowsCount < totalRowsCount) {\n
+          $status.text("Showing " + visibleRowsCount + " of " + totalRowsCount + " rows");\n
+        } else {\n
+          $status.text("Showing all " + totalRowsCount + " rows");\n
+        }\n
+        $status.text("Showing all " + pagingInfo.totalRows + " rows");\n
+      } else {\n
+        $status.text("Showing page " + (pagingInfo.pageNum + 1) + " of " + pagingInfo.totalPages);\n
+      }\n
+    }\n
+\n
+    init();\n
+  }\n
+\n
+  // Slick.Controls.Pager\n
+  $.extend(true, window, { Slick:{ Controls:{ Pager:SlickGridPager }}});\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5023</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.pager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

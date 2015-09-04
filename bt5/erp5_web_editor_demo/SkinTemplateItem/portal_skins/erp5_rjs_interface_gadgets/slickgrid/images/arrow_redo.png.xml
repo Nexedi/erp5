@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271222.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>arrow_redo.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACA0lEQVQ4y6WST0iUURTFzzeOhlqk
+Y2Y5DoSC1NpV1KLc2KoJZhEFEWS7UGxRCtlSyJUFbtpF0CLDoIQ2hWUtciOFYX9wnMFkoDZZkWN8
+95z7tdBsRBdlFx6Pe3nvwLnnF0RRhP+p2L88PjOS6Tt150TZlgUY6jSNN0tnQamF7medKadnJHWI
+ahNVTwoygRQaa5JwCnOF3I2xC4971gl0P+08KKk3WdWUrq1MoLq8GvFYHIoEucNdYCSYiDfZaWQ/
+zg08ufSiPw4AXePnUi7v3Z84kG6o3oNlFhELykAXtHo80lpvRtBYAQBxABCVSW5vStdX7QadCElk
+P79D/lMeaxaMaNyVhCTMzeeGJ668vFwq0LFzWw2KtgTJMf52fEHU6MjZsYulC2sfPDwt49RE/2TX
+uhRItVWWVyFADIUvBdC44fNKCrxrxvOlszgA0AiKCIIAJoIhN43x+dXJgU1BYqipxR+LWLYiEjvq
+YMbMsetHh/6GjSCKIpy8fbynsTY51LK3BYocS8tLmJ2fRX4hD9ofDkSt9BJmhj8EaxbMOJor5I5U
+lFWk6xMNCBGitbkVzfta4JHg7qALDofc8fDe2HoL9zsfLVjIwVfvXz+Yyc7g29fvKP4sruxDgrmg
+SOAqUKI2R7n92qEUTRmSHTK1kaqTKSYKkuP37XLkbs0HGwS2Ur8Aicdo641Z/7sAAAAASUVORK5C
+YII=</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>572</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>arrow_redo.png</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

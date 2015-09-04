@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271255.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.grid.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\n
+IMPORTANT:\n
+In order to preserve the uniform grid appearance, all cell styles need to have padding, margin and border sizes.\n
+No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) or user-specified CSS\n
+classes should alter those!\n
+*/\n
+\n
+.slick-header.ui-state-default, .slick-headerrow.ui-state-default {\n
+  width: 100%;\n
+  overflow: hidden;\n
+  border-left: 0px;\n
+}\n
+\n
+.slick-header-columns, .slick-headerrow-columns {\n
+  position: relative;\n
+  white-space: nowrap;\n
+  cursor: default;\n
+  overflow: hidden;\n
+}\n
+\n
+.slick-header-column.ui-state-default {\n
+  position: relative;\n
+  display: inline-block;\n
+  overflow: hidden;\n
+  -o-text-overflow: ellipsis;\n
+  text-overflow: ellipsis;\n
+  height: 16px;\n
+  line-height: 16px;\n
+  margin: 0;\n
+  padding: 4px;\n
+  border-right: 1px solid silver;\n
+  border-left: 0px;\n
+  border-top: 0px;\n
+  border-bottom: 0px;\n
+  float: left;\n
+}\n
+\n
+.slick-headerrow-column.ui-state-default {\n
+  padding: 4px;\n
+}\n
+\n
+.slick-header-column-sorted {\n
+  font-style: italic;\n
+}\n
+\n
+.slick-sort-indicator {\n
+  display: inline-block;\n
+  width: 8px;\n
+  height: 5px;\n
+  margin-left: 4px;\n
+  margin-top: 6px;\n
+  float: left;\n
+}\n
+\n
+.slick-sort-indicator-desc {\n
+  background: url(images/sort-desc.gif);\n
+}\n
+\n
+.slick-sort-indicator-asc {\n
+  background: url(images/sort-asc.gif);\n
+}\n
+\n
+.slick-resizable-handle {\n
+  position: absolute;\n
+  font-size: 0.1px;\n
+  display: block;\n
+  cursor: col-resize;\n
+  width: 4px;\n
+  right: 0px;\n
+  top: 0;\n
+  height: 100%;\n
+}\n
+\n
+.slick-sortable-placeholder {\n
+  background: silver;\n
+}\n
+\n
+.grid-canvas {\n
+  position: relative;\n
+  outline: 0;\n
+}\n
+\n
+.slick-row.ui-widget-content, .slick-row.ui-state-active {\n
+  position: absolute;\n
+  border: 0px;\n
+  width: 100%;\n
+}\n
+\n
+.slick-cell, .slick-headerrow-column {\n
+  position: absolute;\n
+  border: 1px solid transparent;\n
+  border-right: 1px dotted silver;\n
+  border-bottom-color: silver;\n
+  overflow: hidden;\n
+  -o-text-overflow: ellipsis;\n
+  text-overflow: ellipsis;\n
+  vertical-align: middle;\n
+  z-index: 1;\n
+  padding: 1px 2px 2px 1px;\n
+  margin: 0;\n
+  white-space: nowrap;\n
+  cursor: default;\n
+}\n
+\n
+.slick-group {\n
+}\n
+\n
+.slick-group-toggle {\n
+  display: inline-block;\n
+}\n
+\n
+.slick-cell.highlighted {\n
+  background: lightskyblue;\n
+  background: rgba(0, 0, 255, 0.2);\n
+  -webkit-transition: all 0.5s;\n
+  -moz-transition: all 0.5s;\n
+  -o-transition: all 0.5s;\n
+  transition: all 0.5s;\n
+}\n
+\n
+.slick-cell.flashing {\n
+  border: 1px solid red !important;\n
+}\n
+\n
+.slick-cell.editable {\n
+  z-index: 11;\n
+  overflow: visible;\n
+  background: white;\n
+  border-color: black;\n
+  border-style: solid;\n
+}\n
+\n
+.slick-cell:focus {\n
+  outline: none;\n
+}\n
+\n
+.slick-reorder-proxy {\n
+  display: inline-block;\n
+  background: blue;\n
+  opacity: 0.15;\n
+  filter: alpha(opacity = 15);\n
+  cursor: move;\n
+}\n
+\n
+.slick-reorder-guide {\n
+  display: inline-block;\n
+  height: 2px;\n
+  background: blue;\n
+  opacity: 0.7;\n
+  filter: alpha(opacity = 70);\n
+}\n
+\n
+.slick-selection {\n
+  z-index: 10;\n
+  position: absolute;\n
+  border: 2px dashed black;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2872</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.grid.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

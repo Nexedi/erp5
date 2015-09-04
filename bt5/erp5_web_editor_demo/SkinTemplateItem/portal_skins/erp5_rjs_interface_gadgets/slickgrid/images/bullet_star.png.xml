@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271224.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>bullet_star.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA3klEQVQ4y2NgGL6gqalJC4jroFiL
+HAP+L1qUB8RZ/0FsUjVfAml68sQBiI3BBoDEiNLY1tbwf8GCov+HDkX9//8/GIjt/x854gwUS/7f
+1laL3yCQTWfPJgI1RQJxJhDPAuJ2IDYBYhGgnDl+74BMb25u/H/jhg9QQzYQzwHiTiC2AIpp/29u
+biDsFZANM2YUAzXpQTWXAzE/UCyHuMAEKlqxdGkGUJP+/58/BYCYB+z8pUvjQAasICog16+PBQac
+2/+urkowPnLE4f/69SFEx4QWNNrANkIxjK81DPMMADePzQymn2U/AAAAAElFTkSuQmCC</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>279</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>bullet_star.png</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

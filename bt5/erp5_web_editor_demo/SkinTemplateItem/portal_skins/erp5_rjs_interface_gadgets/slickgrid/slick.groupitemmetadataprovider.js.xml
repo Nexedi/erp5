@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271199.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.groupitemmetadataprovider.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  $.extend(true, window, {\n
+    Slick: {\n
+      Data: {\n
+        GroupItemMetadataProvider: GroupItemMetadataProvider\n
+      }\n
+    }\n
+  });\n
+\n
+\n
+  /***\n
+   * Provides item metadata for group (Slick.Group) and totals (Slick.Totals) rows produced by the DataView.\n
+   * This metadata overrides the default behavior and formatting of those rows so that they appear and function\n
+   * correctly when processed by the grid.\n
+   *\n
+   * This class also acts as a grid plugin providing event handlers to expand & collapse groups.\n
+   * If "grid.registerPlugin(...)" is not called, expand & collapse will not work.\n
+   *\n
+   * @class GroupItemMetadataProvider\n
+   * @module Data\n
+   * @namespace Slick.Data\n
+   * @constructor\n
+   * @param options\n
+   */\n
+  function GroupItemMetadataProvider(options) {\n
+    var _grid;\n
+    var _defaults = {\n
+      groupCssClass: "slick-group",\n
+      groupTitleCssClass: "slick-group-title",\n
+      totalsCssClass: "slick-group-totals",\n
+      groupFocusable: true,\n
+      totalsFocusable: false,\n
+      toggleCssClass: "slick-group-toggle",\n
+      toggleExpandedCssClass: "expanded",\n
+      toggleCollapsedCssClass: "collapsed",\n
+      enableExpandCollapse: true,\n
+      groupFormatter: defaultGroupCellFormatter,\n
+      totalsFormatter: defaultTotalsCellFormatter\n
+    };\n
+\n
+    options = $.extend(true, {}, _defaults, options);\n
+\n
+\n
+    function defaultGroupCellFormatter(row, cell, value, columnDef, item) {\n
+      if (!options.enableExpandCollapse) {\n
+        return item.title;\n
+      }\n
+\n
+      var indentation = item.level * 15 + "px";\n
+\n
+      return "<span class=\'" + options.toggleCssClass + " " +\n
+          (item.collapsed ? options.toggleCollapsedCssClass : options.toggleExpandedCssClass) +\n
+          "\' style=\'margin-left:" + indentation +"\'>" +\n
+          "</span>" +\n
+          "<span class=\'" + options.groupTitleCssClass + "\' level=\'" + item.level + "\'>" +\n
+            item.title +\n
+          "</span>";\n
+    }\n
+\n
+    function defaultTotalsCellFormatter(row, cell, value, columnDef, item) {\n
+      return (columnDef.groupTotalsFormatter && columnDef.groupTotalsFormatter(item, columnDef)) || "";\n
+    }\n
+\n
+\n
+    function init(grid) {\n
+      _grid = grid;\n
+      _grid.onClick.subscribe(handleGridClick);\n
+      _grid.onKeyDown.subscribe(handleGridKeyDown);\n
+\n
+    }\n
+\n
+    function destroy() {\n
+      if (_grid) {\n
+        _grid.onClick.unsubscribe(handleGridClick);\n
+        _grid.onKeyDown.unsubscribe(handleGridKeyDown);\n
+      }\n
+    }\n
+\n
+    function handleGridClick(e, args) {\n
+      var item = this.getDataItem(args.row);\n
+      if (item && item instanceof Slick.Group && $(e.target).hasClass(options.toggleCssClass)) {\n
+        var range = _grid.getRenderedRange();\n
+        this.getData().setRefreshHints({\n
+          ignoreDiffsBefore: range.top,\n
+          ignoreDiffsAfter: range.bottom\n
+        });\n
+\n
+        if (item.collapsed) {\n
+          this.getData().expandGroup(item.groupingKey);\n
+        } else {\n
+          this.getData().collapseGroup(item.groupingKey);\n
+        }\n
+\n
+        e.stopImmediatePropagation();\n
+        e.preventDefault();\n
+      }\n
+    }\n
+\n
+    // TODO:  add -/+ handling\n
+    function handleGridKeyDown(e, args) {\n
+      if (options.enableExpandCollapse && (e.which == $.ui.keyCode.SPACE)) {\n
+        var activeCell = this.getActiveCell();\n
+        if (activeCell) {\n
+          var item = this.getDataItem(activeCell.row);\n
+          if (item && item instanceof Slick.Group) {\n
+            var range = _grid.getRenderedRange();\n
+            this.getData().setRefreshHints({\n
+              ignoreDiffsBefore: range.top,\n
+              ignoreDiffsAfter: range.bottom\n
+            });\n
+\n
+            if (item.collapsed) {\n
+              this.getData().expandGroup(item.groupingKey);\n
+            } else {\n
+              this.getData().collapseGroup(item.groupingKey);\n
+            }\n
+\n
+            e.stopImmediatePropagation();\n
+            e.preventDefault();\n
+          }\n
+        }\n
+      }\n
+    }\n
+\n
+    function getGroupRowMetadata(item) {\n
+      return {\n
+        selectable: false,\n
+        focusable: options.groupFocusable,\n
+        cssClasses: options.groupCssClass,\n
+        columns: {\n
+          0: {\n
+            colspan: "*",\n
+            formatter: options.groupFormatter,\n
+            editor: null\n
+          }\n
+        }\n
+      };\n
+    }\n
+\n
+    function getTotalsRowMetadata(item) {\n
+      return {\n
+        selectable: false,\n
+        focusable: options.totalsFocusable,\n
+        cssClasses: options.totalsCssClass,\n
+        formatter: options.totalsFormatter,\n
+        editor: null\n
+      };\n
+    }\n
+\n
+\n
+    return {\n
+      "init": init,\n
+      "destroy": destroy,\n
+      "getGroupRowMetadata": getGroupRowMetadata,\n
+      "getTotalsRowMetadata": getTotalsRowMetadata\n
+    };\n
+  }\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4659</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.groupitemmetadataprovider.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

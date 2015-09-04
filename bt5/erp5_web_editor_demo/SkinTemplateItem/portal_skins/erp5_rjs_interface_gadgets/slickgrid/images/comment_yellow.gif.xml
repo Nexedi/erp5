@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271222.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>comment_yellow.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhEAAQAMQAAP/99v/qaOvOSem4M+zSSv/ypf/ug//1w//2zP/xnv/te//zrf/0uv/41/nW
+dufBMP/vkevTVf/rcv/0s//wlv/57OvRM//vi+/OQtaXIuuYEuvTLNyhJ+vHUP///////yH5BAEA
+AB8ALAAAAAAQABAAAAV+4CeOZEl6aKqWHhG9BIFZ1uaNnqN6QHMgCNsn50EwJotCIkGBHCoWlO6Y
+ZEIuBgPggSIAkEoKVkE+cD2YClhsUEjelAEK06hC2pKAXsFBCRBJbHl6AQYZN2gIBw2KDHoUDIc4
+ApQdHQNIGpInOwMVGjcmLAOgoiYepaYsoR8hADs=</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>257</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>comment_yellow.gif</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

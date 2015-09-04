@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271194.11</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.remotemodel.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  /***\n
+   * A sample AJAX data store implementation.\n
+   * Right now, it\'s hooked up to load Hackernews stories, but can\n
+   * easily be extended to support any JSONP-compatible backend that accepts paging parameters.\n
+   */\n
+  function RemoteModel() {\n
+    // private\n
+    var PAGESIZE = 50;\n
+    var data = {length: 0};\n
+    var searchstr = "";\n
+    var sortcol = null;\n
+    var sortdir = 1;\n
+    var h_request = null;\n
+    var req = null; // ajax request\n
+\n
+    // events\n
+    var onDataLoading = new Slick.Event();\n
+    var onDataLoaded = new Slick.Event();\n
+\n
+\n
+    function init() {\n
+    }\n
+\n
+\n
+    function isDataLoaded(from, to) {\n
+      for (var i = from; i <= to; i++) {\n
+        if (data[i] == undefined || data[i] == null) {\n
+          return false;\n
+        }\n
+      }\n
+\n
+      return true;\n
+    }\n
+\n
+\n
+    function clear() {\n
+      for (var key in data) {\n
+        delete data[key];\n
+      }\n
+      data.length = 0;\n
+    }\n
+\n
+\n
+    function ensureData(from, to) {\n
+      if (req) {\n
+        req.abort();\n
+        for (var i = req.fromPage; i <= req.toPage; i++)\n
+          data[i * PAGESIZE] = undefined;\n
+      }\n
+\n
+      if (from < 0) {\n
+        from = 0;\n
+      }\n
+\n
+      if (data.length > 0) {\n
+        to = Math.min(to, data.length - 1);\n
+      }\n
+\n
+      var fromPage = Math.floor(from / PAGESIZE);\n
+      var toPage = Math.floor(to / PAGESIZE);\n
+\n
+      while (data[fromPage * PAGESIZE] !== undefined && fromPage < toPage)\n
+        fromPage++;\n
+\n
+      while (data[toPage * PAGESIZE] !== undefined && fromPage < toPage)\n
+        toPage--;\n
+\n
+      if (fromPage > toPage || ((fromPage == toPage) && data[fromPage * PAGESIZE] !== undefined)) {\n
+        // TODO:  look-ahead\n
+        onDataLoaded.notify({from: from, to: to});\n
+        return;\n
+      }\n
+\n
+      var url = "http://api.thriftdb.com/api.hnsearch.com/items/_search?filter[fields][type][]=submission&q=" + searchstr + "&start=" + (fromPage * PAGESIZE) + "&limit=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE);\n
+\n
+      if (sortcol != null) {\n
+          url += ("&sortby=" + sortcol + ((sortdir > 0) ? "+asc" : "+desc"));\n
+      }\n
+\n
+      if (h_request != null) {\n
+        clearTimeout(h_request);\n
+      }\n
+\n
+      h_request = setTimeout(function () {\n
+        for (var i = fromPage; i <= toPage; i++)\n
+          data[i * PAGESIZE] = null; // null indicates a \'requested but not available yet\'\n
+\n
+        onDataLoading.notify({from: from, to: to});\n
+\n
+        req = $.jsonp({\n
+          url: url,\n
+          callbackParameter: "callback",\n
+          cache: true,\n
+          success: onSuccess,\n
+          error: function () {\n
+            onError(fromPage, toPage)\n
+          }\n
+        });\n
+        req.fromPage = fromPage;\n
+        req.toPage = toPage;\n
+      }, 50);\n
+    }\n
+\n
+\n
+    function onError(fromPage, toPage) {\n
+      alert("error loading pages " + fromPage + " to " + toPage);\n
+    }\n
+\n
+    function onSuccess(resp) {\n
+      var from = resp.request.start, to = from + resp.results.length;\n
+      data.length = Math.min(parseInt(resp.hits),1000); // limitation of the API\n
+\n
+      for (var i = 0; i < resp.results.length; i++) {\n
+        var item = resp.results[i].item;\n
+\n
+        // Old IE versions can\'t parse ISO dates, so change to universally-supported format.\n
+        item.create_ts = item.create_ts.replace(/^(\\d+)-(\\d+)-(\\d+)T(\\d+:\\d+:\\d+)Z$/, "$2/$3/$1 $4 UTC"); \n
+        item.create_ts = new Date(item.create_ts);\n
+\n
+        data[from + i] = item;\n
+        data[from + i].index = from + i;\n
+      }\n
+\n
+      req = null;\n
+\n
+      onDataLoaded.notify({from: from, to: to});\n
+    }\n
+\n
+\n
+    function reloadData(from, to) {\n
+      for (var i = from; i <= to; i++)\n
+        delete data[i];\n
+\n
+      ensureData(from, to);\n
+    }\n
+\n
+\n
+    function setSort(column, dir) {\n
+      sortcol = column;\n
+      sortdir = dir;\n
+      clear();\n
+    }\n
+\n
+    function setSearch(str) {\n
+      searchstr = str;\n
+      clear();\n
+    }\n
+\n
+\n
+    init();\n
+\n
+    return {\n
+      // properties\n
+      "data": data,\n
+\n
+      // methods\n
+      "clear": clear,\n
+      "isDataLoaded": isDataLoaded,\n
+      "ensureData": ensureData,\n
+      "reloadData": reloadData,\n
+      "setSort": setSort,\n
+      "setSearch": setSearch,\n
+\n
+      // events\n
+      "onDataLoading": onDataLoading,\n
+      "onDataLoaded": onDataLoaded\n
+    };\n
+  }\n
+\n
+  // Slick.Data.RemoteModel\n
+  $.extend(true, window, { Slick: { Data: { RemoteModel: RemoteModel }}});\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4276</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.remotemodel.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

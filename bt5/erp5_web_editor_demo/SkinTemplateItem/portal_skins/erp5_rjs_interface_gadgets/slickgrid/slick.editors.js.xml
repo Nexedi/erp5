@@ -1,0 +1,556 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271200.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.editors.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/***\n
+ * Contains basic SlickGrid editors.\n
+ * @module Editors\n
+ * @namespace Slick\n
+ */\n
+\n
+(function ($) {\n
+  // register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "Editors": {\n
+        "Text": TextEditor,\n
+        "Integer": IntegerEditor,\n
+        "Date": DateEditor,\n
+        "YesNoSelect": YesNoSelectEditor,\n
+        "Checkbox": CheckboxEditor,\n
+        "PercentComplete": PercentCompleteEditor,\n
+        "LongText": LongTextEditor\n
+      }\n
+    }\n
+  });\n
+\n
+  function TextEditor(args) {\n
+    var $input;\n
+    var defaultValue;\n
+    var scope = this;\n
+\n
+    this.init = function () {\n
+      $input = $("<INPUT type=text class=\'editor-text\' />")\n
+          .appendTo(args.container)\n
+          .bind("keydown.nav", function (e) {\n
+            if (e.keyCode === $.ui.keyCode.LEFT || e.keyCode === $.ui.keyCode.RIGHT) {\n
+              e.stopImmediatePropagation();\n
+            }\n
+          })\n
+          .focus()\n
+          .select();\n
+    };\n
+\n
+    this.destroy = function () {\n
+      $input.remove();\n
+    };\n
+\n
+    this.focus = function () {\n
+      $input.focus();\n
+    };\n
+\n
+    this.getValue = function () {\n
+      return $input.val();\n
+    };\n
+\n
+    this.setValue = function (val) {\n
+      $input.val(val);\n
+    };\n
+\n
+    this.loadValue = function (item) {\n
+      defaultValue = item[args.column.field] || "";\n
+      $input.val(defaultValue);\n
+      $input[0].defaultValue = defaultValue;\n
+      $input.select();\n
+    };\n
+\n
+    this.serializeValue = function () {\n
+      return $input.val();\n
+    };\n
+\n
+    this.applyValue = function (item, state) {\n
+      item[args.column.field] = state;\n
+    };\n
+\n
+    this.isValueChanged = function () {\n
+      return (!($input.val() == "" && defaultValue == null)) && ($input.val() != defaultValue);\n
+    };\n
+\n
+    this.validate = function () {\n
+      if (args.column.validator) {\n
+        var validationResults = args.column.validator($input.val());\n
+        if (!validationResults.valid) {\n
+          return validationResults;\n
+        }\n
+      }\n
+\n
+      return {\n
+        valid: true,\n
+        msg: null\n
+      };\n
+    };\n
+\n
+    this.init();\n
+  }\n
+\n
+  function IntegerEditor(args) {\n
+    var $input;\n
+    var defaultValue;\n
+    var scope = this;\n
+\n
+    this.init = function () {\n
+      $input = $("<INPUT type=text class=\'editor-text\' />");\n
+\n
+      $input.bind("keydown.nav", function (e) {\n
+        if (e.keyCode === $.ui.keyCode.LEFT || e.keyCode === $.ui.keyCode.RIGHT) {\n
+          e.stopImmediatePropagation();\n
+        }\n
+      });\n
+\n
+      $input.appendTo(args.container);\n
+      $input.focus().select();\n
+    };\n
+\n
+    this.destroy = function () {\n
+      $input.remove();\n
+    };\n
+\n
+    this.focus = function () {\n
+      $input.focus();\n
+    };\n
+\n
+    this.loadValue = function (item) {\n
+      defaultValue = item[args.column.field];\n
+      $input.val(defaultValue);\n
+      $input[0].defaultValue = defaultValue;\n
+      $input.select();\n
+    };\n
+\n
+    this.serializeValue = function () {\n
+      return parseInt($input.val(), 10) || 0;\n
+    };\n
+\n
+    this.applyValue = function (item, state) {\n
+      item[args.column.field] = state;\n
+    };\n
+\n
+    this.isValueChanged = function () {\n
+      return (!($input.val() == "" && defaultValue == null)) && ($input.val() != defaultValue);\n
+    };\n
+\n
+    this.validate = function () {\n
+      if (isNaN($input.val())) {\n
+        return {\n
+          valid: false,\n
+          msg: "Please enter a valid integer"\n
+        };\n
+      }\n
+\n
+      return {\n
+        valid: true,\n
+        msg: null\n
+      };\n
+    };\n
+\n
+    this.init();\n
+  }\n
+\n
+  function DateEditor(args) {\n
+    var $input;\n
+    var defaultValue;\n
+    var scope = this;\n
+    var calendarOpen = false;\n
+\n
+    this.init = function () {\n
+      $input = $("<INPUT type=text class=\'editor-text\' />");\n
+      $input.appendTo(args.container);\n
+      $input.focus().select();\n
+      $input.datepicker({\n
+        showOn: "button",\n
+        buttonImageOnly: true,\n
+        buttonImage: "../images/calendar.gif",\n
+        beforeShow: function () {\n
+          calendarOpen = true\n
+        },\n
+        onClose: function () {\n
+          calendarOpen = false\n
+        }\n
+      });\n
+      $input.width($input.width() - 18);\n
+    };\n
+\n
+    this.destroy = function () {\n
+      $.datepicker.dpDiv.stop(true, true);\n
+      $input.datepicker("hide");\n
+      $input.datepicker("destroy");\n
+      $input.remove();\n
+    };\n
+\n
+    this.show = function () {\n
+      if (calendarOpen) {\n
+        $.datepicker.dpDiv.stop(true, true).show();\n
+      }\n
+    };\n
+\n
+    this.hide = function () {\n
+      if (calendarOpen) {\n
+        $.datepicker.dpDiv.stop(true, true).hide();\n
+      }\n
+    };\n
+\n
+    this.position = function (position) {\n
+      if (!calendarOpen) {\n
+        return;\n
+      }\n
+      $.datepicker.dpDiv\n
+          .css("top", position.top + 30)\n
+          .css("left", position.left);\n
+    };\n
+\n
+    this.focus = function () {\n
+      $input.focus();\n
+    };\n
+\n
+    this.loadValue = function (item) {\n
+      defaultValue = item[args.column.field];\n
+      $input.val(defaultValue);\n
+      $input[0].defaultValue = defaultValue;\n
+      $input.select();\n
+    };\n
+\n
+    this.serializeValue = function () {\n
+      return $input.val();\n
+    };\n
+\n
+    this.applyValue = function (item, state) {\n
+      item[args.column.field] = state;\n
+    };\n
+\n
+    this.isValueChanged = function () {\n
+      return (!($input.val() == "" && defaultValue == null)) && ($input.val() != defaultValue);\n
+    };\n
+\n
+    this.validate = function () {\n
+      return {\n
+        valid: true,\n
+        msg: null\n
+      };\n
+    };\n
+\n
+    this.init();\n
+  }\n
+\n
+  function YesNoSelectEditor(args) {\n
+    var $select;\n
+    var defaultValue;\n
+    var scope = this;\n
+\n
+    this.init = function () {\n
+      $select = $("<SELECT tabIndex=\'0\' class=\'editor-yesno\'><OPTION value=\'yes\'>Yes</OPTION><OPTION value=\'no\'>No</OPTION></SELECT>");\n
+      $select.appendTo(args.container);\n
+      $select.focus();\n
+    };\n
+\n
+    this.destroy = function () {\n
+      $select.remove();\n
+    };\n
+\n
+    this.focus = function () {\n
+      $select.focus();\n
+    };\n
+\n
+    this.loadValue = function (item) {\n
+      $select.val((defaultValue = item[args.column.field]) ? "yes" : "no");\n
+      $select.select();\n
+    };\n
+\n
+    this.serializeValue = function () {\n
+      return ($select.val() == "yes");\n
+    };\n
+\n
+    this.applyValue = function (item, state) {\n
+      item[args.column.field] = state;\n
+    };\n
+\n
+    this.isValueChanged = function () {\n
+      return ($select.val() != defaultValue);\n
+    };\n
+\n
+    this.validate = function () {\n
+      return {\n
+        valid: true,\n
+        msg: null\n
+      };\n
+    };\n
+\n
+    this.init();\n
+  }\n
+\n
+  function CheckboxEditor(args) {\n
+    var $select;\n
+    var defaultValue;\n
+    var scope = this;\n
+\n
+    this.init = function () {\n
+      $select = $("<INPUT type=checkbox value=\'true\' class=\'editor-checkbox\' hideFocus>");\n
+      $select.appendTo(args.container);\n
+      $select.focus();\n
+    };\n
+\n
+    this.destroy = function () {\n
+      $select.remove();\n
+    };\n
+\n
+    this.focus = function () {\n
+      $select.focus();\n
+    };\n
+\n
+    this.loadValue = function (item) {\n
+      defaultValue = !!item[args.column.field];\n
+      if (defaultValue) {\n
+        $select.prop(\'checked\', true);\n
+      } else {\n
+        $select.prop(\'checked\', false);\n
+      }\n
+    };\n
+\n
+    this.serializeValue = function () {\n
+      return $select.prop(\'checked\');\n
+    };\n
+\n
+    this.applyValue = function (item, state) {\n
+      item[args.column.field] = state;\n
+    };\n
+\n
+    this.isValueChanged = function () {\n
+      return (this.serializeValue() !== defaultValue);\n
+    };\n
+\n
+    this.validate = function () {\n
+      return {\n
+        valid: true,\n
+        msg: null\n
+      };\n
+    };\n
+\n
+    this.init();\n
+  }\n
+\n
+  function PercentCompleteEditor(args) {\n
+    var $input, $picker;\n
+    var defaultValue;\n
+    var scope = this;\n
+\n
+    this.init = function () {\n
+      $input = $("<INPUT type=text class=\'editor-percentcomplete\' />");\n
+      $input.width($(args.container).innerWidth() - 25);\n
+      $input.appendTo(args.container);\n
+\n
+      $picker = $("<div class=\'editor-percentcomplete-picker\' />").appendTo(args.container);\n
+      $picker.append("<div class=\'editor-percentcomplete-helper\'><div class=\'editor-percentcomplete-wrapper\'><div class=\'editor-percentcomplete-slider\' /><div class=\'editor-percentcomplete-buttons\' /></div></div>");\n
+\n
+      $picker.find(".editor-percentcomplete-buttons").append("<button val=0>Not started</button><br/><button val=50>In Progress</button><br/><button val=100>Complete</button>");\n
+\n
+      $input.focus().select();\n
+\n
+      $picker.find(".editor-percentcomplete-slider").slider({\n
+        orientation: "vertical",\n
+        range: "min",\n
+        value: defaultValue,\n
+        slide: function (event, ui) {\n
+          $input.val(ui.value)\n
+        }\n
+      });\n
+\n
+      $picker.find(".editor-percentcomplete-buttons button").bind("click", function (e) {\n
+        $input.val($(this).attr("val"));\n
+        $picker.find(".editor-percentcomplete-slider").slider("value", $(this).attr("val"));\n
+      })\n
+    };\n
+\n
+    this.destroy = function () {\n
+      $input.remove();\n
+      $picker.remove();\n
+    };\n
+\n
+    this.focus = function () {\n
+      $input.focus();\n
+    };\n
+\n
+    this.loadValue = function (item) {\n
+      $input.val(defaultValue = item[args.column.field]);\n
+      $input.select();\n
+    };\n
+\n
+    this.serializeValue = function () {\n
+      return parseInt($input.val(), 10) || 0;\n
+    };\n
+\n
+    this.applyValue = function (item, state) {\n
+      item[args.column.field] = state;\n
+    };\n
+\n
+    this.isValueChanged = function () {\n
+      return (!($input.val() == "" && defaultValue == null)) && ((parseInt($input.val(), 10) || 0) != defaultValue);\n
+    };\n
+\n
+    this.validate = function () {\n
+      if (isNaN(parseInt($input.val(), 10))) {\n
+        return {\n
+          valid: false,\n
+          msg: "Please enter a valid positive number"\n
+        };\n
+      }\n
+\n
+      return {\n
+        valid: true,\n
+        msg: null\n
+      };\n
+    };\n
+\n
+    this.init();\n
+  }\n
+\n
+  /*\n
+   * An example of a "detached" editor.\n
+   * The UI is added onto document BODY and .position(), .show() and .hide() are implemented.\n
+   * KeyDown events are also handled to provide handling for Tab, Shift-Tab, Esc and Ctrl-Enter.\n
+   */\n
+  function LongTextEditor(args) {\n
+    var $input, $wrapper;\n
+    var defaultValue;\n
+    var scope = this;\n
+\n
+    this.init = function () {\n
+      var $container = $("body");\n
+\n
+      $wrapper = $("<DIV style=\'z-index:10000;position:absolute;background:white;padding:5px;border:3px solid gray; -moz-border-radius:10px; border-radius:10px;\'/>")\n
+          .appendTo($container);\n
+\n
+      $input = $("<TEXTAREA hidefocus rows=5 style=\'backround:white;width:250px;height:80px;border:0;outline:0\'>")\n
+          .appendTo($wrapper);\n
+\n
+      $("<DIV style=\'text-align:right\'><BUTTON>Save</BUTTON><BUTTON>Cancel</BUTTON></DIV>")\n
+          .appendTo($wrapper);\n
+\n
+      $wrapper.find("button:first").bind("click", this.save);\n
+      $wrapper.find("button:last").bind("click", this.cancel);\n
+      $input.bind("keydown", this.handleKeyDown);\n
+\n
+      scope.position(args.position);\n
+      $input.focus().select();\n
+    };\n
+\n
+    this.handleKeyDown = function (e) {\n
+      if (e.which == $.ui.keyCode.ENTER && e.ctrlKey) {\n
+        scope.save();\n
+      } else if (e.which == $.ui.keyCode.ESCAPE) {\n
+        e.preventDefault();\n
+        scope.cancel();\n
+      } else if (e.which == $.ui.keyCode.TAB && e.shiftKey) {\n
+        e.preventDefault();\n
+        args.grid.navigatePrev();\n
+      } else if (e.which == $.ui.keyCode.TAB) {\n
+        e.preventDefault();\n
+        args.grid.navigateNext();\n
+      }\n
+    };\n
+\n
+    this.save = function () {\n
+      args.commitChanges();\n
+    };\n
+\n
+    this.cancel = function () {\n
+      $input.val(defaultValue);\n
+      args.cancelChanges();\n
+    };\n
+\n
+    this.hide = function () {\n
+      $wrapper.hide();\n
+    };\n
+\n
+    this.show = function () {\n
+      $wrapper.show();\n
+    };\n
+\n
+    this.position = function (position) {\n
+      $wrapper\n
+          .css("top", position.top - 5)\n
+          .css("left", position.left - 5)\n
+    };\n
+\n
+    this.destroy = function () {\n
+      $wrapper.remove();\n
+    };\n
+\n
+    this.focus = function () {\n
+      $input.focus();\n
+    };\n
+\n
+    this.loadValue = function (item) {\n
+      $input.val(defaultValue = item[args.column.field]);\n
+      $input.select();\n
+    };\n
+\n
+    this.serializeValue = function () {\n
+      return $input.val();\n
+    };\n
+\n
+    this.applyValue = function (item, state) {\n
+      item[args.column.field] = state;\n
+    };\n
+\n
+    this.isValueChanged = function () {\n
+      return (!($input.val() == "" && defaultValue == null)) && ($input.val() != defaultValue);\n
+    };\n
+\n
+    this.validate = function () {\n
+      return {\n
+        valid: true,\n
+        msg: null\n
+      };\n
+    };\n
+\n
+    this.init();\n
+  }\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12379</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.editors.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

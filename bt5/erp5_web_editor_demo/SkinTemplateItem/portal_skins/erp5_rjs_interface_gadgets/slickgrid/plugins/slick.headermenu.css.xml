@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271190.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.headermenu.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Menu button */\n
+.slick-header-menubutton {\n
+  position: absolute;\n
+  right: 0;\n
+  top: 0;\n
+  bottom: 0;\n
+  width: 14px;\n
+  background-repeat: no-repeat;\n
+  background-position: left center;\n
+  background-image: url(../images/down.gif);\n
+  cursor: pointer;\n
+\n
+  display: none;\n
+  border-left: thin ridge silver;\n
+}\n
+\n
+.slick-header-column:hover > .slick-header-menubutton,\n
+.slick-header-column-active .slick-header-menubutton {\n
+  display: inline-block;\n
+}\n
+\n
+/* Menu */\n
+.slick-header-menu {\n
+  position: absolute;\n
+  display: inline-block;\n
+  margin: 0;\n
+  padding: 2px;\n
+  cursor: default;\n
+}\n
+\n
+\n
+/* Menu items */\n
+.slick-header-menuitem {\n
+  list-style: none;\n
+  margin: 0;\n
+  padding: 0;\n
+  cursor: pointer;\n
+}\n
+\n
+.slick-header-menuicon {\n
+  display: inline-block;\n
+  width: 16px;\n
+  height: 16px;\n
+  vertical-align: middle;\n
+  margin-right: 4px;\n
+  background-repeat: no-repeat;\n
+  background-position: center center;\n
+}\n
+\n
+.slick-header-menucontent {\n
+  display: inline-block;\n
+  vertical-align: middle;\n
+}\n
+\n
+\n
+/* Disabled */\n
+.slick-header-menuitem-disabled {\n
+  color: silver;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1036</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.headermenu.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

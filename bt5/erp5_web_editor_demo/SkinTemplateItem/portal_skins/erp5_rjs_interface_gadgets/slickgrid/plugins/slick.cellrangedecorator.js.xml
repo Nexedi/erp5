@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271187.04</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.cellrangedecorator.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  // register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "CellRangeDecorator": CellRangeDecorator\n
+    }\n
+  });\n
+\n
+  /***\n
+   * Displays an overlay on top of a given cell range.\n
+   *\n
+   * TODO:\n
+   * Currently, it blocks mouse events to DOM nodes behind it.\n
+   * Use FF and WebKit-specific "pointer-events" CSS style, or some kind of event forwarding.\n
+   * Could also construct the borders separately using 4 individual DIVs.\n
+   *\n
+   * @param {Grid} grid\n
+   * @param {Object} options\n
+   */\n
+  function CellRangeDecorator(grid, options) {\n
+    var _elem;\n
+    var _defaults = {\n
+      selectionCssClass: \'slick-range-decorator\',\n
+      selectionCss: {\n
+        "zIndex": "9999",\n
+        "border": "2px dashed red"\n
+      }\n
+    };\n
+\n
+    options = $.extend(true, {}, _defaults, options);\n
+\n
+\n
+    function show(range) {\n
+      if (!_elem) {\n
+        _elem = $("<div></div>", {css: options.selectionCss})\n
+            .addClass(options.selectionCssClass)\n
+            .css("position", "absolute")\n
+            .appendTo(grid.getCanvasNode());\n
+      }\n
+\n
+      var from = grid.getCellNodeBox(range.fromRow, range.fromCell);\n
+      var to = grid.getCellNodeBox(range.toRow, range.toCell);\n
+\n
+      _elem.css({\n
+        top: from.top - 1,\n
+        left: from.left - 1,\n
+        height: to.bottom - from.top - 2,\n
+        width: to.right - from.left - 2\n
+      });\n
+\n
+      return _elem;\n
+    }\n
+\n
+    function hide() {\n
+      if (_elem) {\n
+        _elem.remove();\n
+        _elem = null;\n
+      }\n
+    }\n
+\n
+    $.extend(this, {\n
+      "show": show,\n
+      "hide": hide\n
+    });\n
+  }\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1570</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.cellrangedecorator.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

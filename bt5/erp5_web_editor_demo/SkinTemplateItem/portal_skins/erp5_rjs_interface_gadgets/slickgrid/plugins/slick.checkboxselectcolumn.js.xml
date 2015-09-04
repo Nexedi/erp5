@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271184.56</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.checkboxselectcolumn.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  // register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "CheckboxSelectColumn": CheckboxSelectColumn\n
+    }\n
+  });\n
+\n
+\n
+  function CheckboxSelectColumn(options) {\n
+    var _grid;\n
+    var _self = this;\n
+    var _handler = new Slick.EventHandler();\n
+    var _selectedRowsLookup = {};\n
+    var _defaults = {\n
+      columnId: "_checkbox_selector",\n
+      cssClass: null,\n
+      toolTip: "Select/Deselect All",\n
+      width: 30\n
+    };\n
+\n
+    var _options = $.extend(true, {}, _defaults, options);\n
+\n
+    function init(grid) {\n
+      _grid = grid;\n
+      _handler\n
+        .subscribe(_grid.onSelectedRowsChanged, handleSelectedRowsChanged)\n
+        .subscribe(_grid.onClick, handleClick)\n
+        .subscribe(_grid.onHeaderClick, handleHeaderClick)\n
+        .subscribe(_grid.onKeyDown, handleKeyDown);\n
+    }\n
+\n
+    function destroy() {\n
+      _handler.unsubscribeAll();\n
+    }\n
+\n
+    function handleSelectedRowsChanged(e, args) {\n
+      var selectedRows = _grid.getSelectedRows();\n
+      var lookup = {}, row, i;\n
+      for (i = 0; i < selectedRows.length; i++) {\n
+        row = selectedRows[i];\n
+        lookup[row] = true;\n
+        if (lookup[row] !== _selectedRowsLookup[row]) {\n
+          _grid.invalidateRow(row);\n
+          delete _selectedRowsLookup[row];\n
+        }\n
+      }\n
+      for (i in _selectedRowsLookup) {\n
+        _grid.invalidateRow(i);\n
+      }\n
+      _selectedRowsLookup = lookup;\n
+      _grid.render();\n
+\n
+      if (selectedRows.length && selectedRows.length == _grid.getDataLength()) {\n
+        _grid.updateColumnHeader(_options.columnId, "<input type=\'checkbox\' checked=\'checked\'>", _options.toolTip);\n
+      } else {\n
+        _grid.updateColumnHeader(_options.columnId, "<input type=\'checkbox\'>", _options.toolTip);\n
+      }\n
+    }\n
+\n
+    function handleKeyDown(e, args) {\n
+      if (e.which == 32) {\n
+        if (_grid.getColumns()[args.cell].id === _options.columnId) {\n
+          // if editing, try to commit\n
+          if (!_grid.getEditorLock().isActive() || _grid.getEditorLock().commitCurrentEdit()) {\n
+            toggleRowSelection(args.row);\n
+          }\n
+          e.preventDefault();\n
+          e.stopImmediatePropagation();\n
+        }\n
+      }\n
+    }\n
+\n
+    function handleClick(e, args) {\n
+      // clicking on a row select checkbox\n
+      if (_grid.getColumns()[args.cell].id === _options.columnId && $(e.target).is(":checkbox")) {\n
+        // if editing, try to commit\n
+        if (_grid.getEditorLock().isActive() && !_grid.getEditorLock().commitCurrentEdit()) {\n
+          e.preventDefault();\n
+          e.stopImmediatePropagation();\n
+          return;\n
+        }\n
+\n
+        toggleRowSelection(args.row);\n
+        e.stopPropagation();\n
+        e.stopImmediatePropagation();\n
+      }\n
+    }\n
+\n
+    function toggleRowSelection(row) {\n
+      if (_selectedRowsLookup[row]) {\n
+        _grid.setSelectedRows($.grep(_grid.getSelectedRows(), function (n) {\n
+          return n != row\n
+        }));\n
+      } else {\n
+        _grid.setSelectedRows(_grid.getSelectedRows().concat(row));\n
+      }\n
+    }\n
+\n
+    function handleHeaderClick(e, args) {\n
+      if (args.column.id == _options.columnId && $(e.target).is(":checkbox")) {\n
+        // if editing, try to commit\n
+        if (_grid.getEditorLock().isActive() && !_grid.getEditorLock().commitCurrentEdit()) {\n
+          e.preventDefault();\n
+          e.stopImmediatePropagation();\n
+          return;\n
+        }\n
+\n
+        if ($(e.target).is(":checked")) {\n
+          var rows = [];\n
+          for (var i = 0; i < _grid.getDataLength(); i++) {\n
+            rows.push(i);\n
+          }\n
+          _grid.setSelectedRows(rows);\n
+        } else {\n
+          _grid.setSelectedRows([]);\n
+        }\n
+        e.stopPropagation();\n
+        e.stopImmediatePropagation();\n
+      }\n
+    }\n
+\n
+    function getColumnDefinition() {\n
+      return {\n
+        id: _options.columnId,\n
+        name: "<input type=\'checkbox\'>",\n
+        toolTip: _options.toolTip,\n
+        field: "sel",\n
+        width: _options.width,\n
+        resizable: false,\n
+        sortable: false,\n
+        cssClass: _options.cssClass,\n
+        formatter: checkboxSelectionFormatter\n
+      };\n
+    }\n
+\n
+    function checkboxSelectionFormatter(row, cell, value, columnDef, dataContext) {\n
+      if (dataContext) {\n
+        return _selectedRowsLookup[row]\n
+            ? "<input type=\'checkbox\' checked=\'checked\'>"\n
+            : "<input type=\'checkbox\'>";\n
+      }\n
+      return null;\n
+    }\n
+\n
+    $.extend(this, {\n
+      "init": init,\n
+      "destroy": destroy,\n
+\n
+      "getColumnDefinition": getColumnDefinition\n
+    });\n
+  }\n
+})(jQuery);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4456</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.checkboxselectcolumn.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

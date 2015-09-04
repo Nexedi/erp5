@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271183.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.cellcopymanager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  // register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "CellCopyManager": CellCopyManager\n
+    }\n
+  });\n
+\n
+\n
+  function CellCopyManager() {\n
+    var _grid;\n
+    var _self = this;\n
+    var _copiedRanges;\n
+\n
+    function init(grid) {\n
+      _grid = grid;\n
+      _grid.onKeyDown.subscribe(handleKeyDown);\n
+    }\n
+\n
+    function destroy() {\n
+      _grid.onKeyDown.unsubscribe(handleKeyDown);\n
+    }\n
+\n
+    function handleKeyDown(e, args) {\n
+      var ranges;\n
+      if (!_grid.getEditorLock().isActive()) {\n
+        if (e.which == $.ui.keyCode.ESCAPE) {\n
+          if (_copiedRanges) {\n
+            e.preventDefault();\n
+            clearCopySelection();\n
+            _self.onCopyCancelled.notify({ranges: _copiedRanges});\n
+            _copiedRanges = null;\n
+          }\n
+        }\n
+\n
+        if (e.which == 67 && (e.ctrlKey || e.metaKey)) {\n
+          ranges = _grid.getSelectionModel().getSelectedRanges();\n
+          if (ranges.length != 0) {\n
+            e.preventDefault();\n
+            _copiedRanges = ranges;\n
+            markCopySelection(ranges);\n
+            _self.onCopyCells.notify({ranges: ranges});\n
+          }\n
+        }\n
+\n
+        if (e.which == 86 && (e.ctrlKey || e.metaKey)) {\n
+          if (_copiedRanges) {\n
+            e.preventDefault();\n
+            clearCopySelection();\n
+            ranges = _grid.getSelectionModel().getSelectedRanges();\n
+            _self.onPasteCells.notify({from: _copiedRanges, to: ranges});\n
+            _copiedRanges = null;\n
+          }\n
+        }\n
+      }\n
+    }\n
+\n
+    function markCopySelection(ranges) {\n
+      var columns = _grid.getColumns();\n
+      var hash = {};\n
+      for (var i = 0; i < ranges.length; i++) {\n
+        for (var j = ranges[i].fromRow; j <= ranges[i].toRow; j++) {\n
+          hash[j] = {};\n
+          for (var k = ranges[i].fromCell; k <= ranges[i].toCell; k++) {\n
+            hash[j][columns[k].id] = "copied";\n
+          }\n
+        }\n
+      }\n
+      _grid.setCellCssStyles("copy-manager", hash);\n
+    }\n
+\n
+    function clearCopySelection() {\n
+      _grid.removeCellCssStyles("copy-manager");\n
+    }\n
+\n
+    $.extend(this, {\n
+      "init": init,\n
+      "destroy": destroy,\n
+      "clearCopySelection": clearCopySelection,\n
+\n
+      "onCopyCells": new Slick.Event(),\n
+      "onCopyCancelled": new Slick.Event(),\n
+      "onPasteCells": new Slick.Event()\n
+    });\n
+  }\n
+})(jQuery);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2301</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.cellcopymanager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

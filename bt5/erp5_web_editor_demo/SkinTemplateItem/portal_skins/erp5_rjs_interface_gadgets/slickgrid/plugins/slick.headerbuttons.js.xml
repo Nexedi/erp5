@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271188.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.headerbuttons.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  // register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "Plugins": {\n
+        "HeaderButtons": HeaderButtons\n
+      }\n
+    }\n
+  });\n
+\n
+\n
+  /***\n
+   * A plugin to add custom buttons to column headers.\n
+   *\n
+   * USAGE:\n
+   *\n
+   * Add the plugin .js & .css files and register it with the grid.\n
+   *\n
+   * To specify a custom button in a column header, extend the column definition like so:\n
+   *\n
+   *   var columns = [\n
+   *     {\n
+   *       id: \'myColumn\',\n
+   *       name: \'My column\',\n
+   *\n
+   *       // This is the relevant part\n
+   *       header: {\n
+   *          buttons: [\n
+   *              {\n
+   *                // button options\n
+   *              },\n
+   *              {\n
+   *                // button options\n
+   *              }\n
+   *          ]\n
+   *       }\n
+   *     }\n
+   *   ];\n
+   *\n
+   * Available button options:\n
+   *    cssClass:     CSS class to add to the button.\n
+   *    image:        Relative button image path.\n
+   *    tooltip:      Button tooltip.\n
+   *    showOnHover:  Only show the button on hover.\n
+   *    handler:      Button click handler.\n
+   *    command:      A command identifier to be passed to the onCommand event handlers.\n
+   *\n
+   * The plugin exposes the following events:\n
+   *    onCommand:    Fired on button click for buttons with \'command\' specified.\n
+   *        Event args:\n
+   *            grid:     Reference to the grid.\n
+   *            column:   Column definition.\n
+   *            command:  Button command identified.\n
+   *            button:   Button options.  Note that you can change the button options in your\n
+   *                      event handler, and the column header will be automatically updated to\n
+   *                      reflect them.  This is useful if you want to implement something like a\n
+   *                      toggle button.\n
+   *\n
+   *\n
+   * @param options {Object} Options:\n
+   *    buttonCssClass:   a CSS class to use for buttons (default \'slick-header-button\')\n
+   * @class Slick.Plugins.HeaderButtons\n
+   * @constructor\n
+   */\n
+  function HeaderButtons(options) {\n
+    var _grid;\n
+    var _self = this;\n
+    var _handler = new Slick.EventHandler();\n
+    var _defaults = {\n
+      buttonCssClass: "slick-header-button"\n
+    };\n
+\n
+\n
+    function init(grid) {\n
+      options = $.extend(true, {}, _defaults, options);\n
+      _grid = grid;\n
+      _handler\n
+        .subscribe(_grid.onHeaderCellRendered, handleHeaderCellRendered)\n
+        .subscribe(_grid.onBeforeHeaderCellDestroy, handleBeforeHeaderCellDestroy);\n
+\n
+      // Force the grid to re-render the header now that the events are hooked up.\n
+      _grid.setColumns(_grid.getColumns());\n
+    }\n
+\n
+\n
+    function destroy() {\n
+      _handler.unsubscribeAll();\n
+    }\n
+\n
+\n
+    function handleHeaderCellRendered(e, args) {\n
+      var column = args.column;\n
+\n
+      if (column.header && column.header.buttons) {\n
+        // Append buttons in reverse order since they are floated to the right.\n
+        var i = column.header.buttons.length;\n
+        while (i--) {\n
+          var button = column.header.buttons[i];\n
+          var btn = $("<div></div>")\n
+            .addClass(options.buttonCssClass)\n
+            .data("column", column)\n
+            .data("button", button);\n
+\n
+          if (button.showOnHover) {\n
+            btn.addClass("slick-header-button-hidden");\n
+          }\n
+\n
+          if (button.image) {\n
+            btn.css("backgroundImage", "url(" + button.image + ")");\n
+          }\n
+\n
+          if (button.cssClass) {\n
+            btn.addClass(button.cssClass);\n
+          }\n
+\n
+          if (button.tooltip) {\n
+            btn.attr("title", button.tooltip);\n
+          }\n
+\n
+          if (button.command) {\n
+            btn.data("command", button.command);\n
+          }\n
+\n
+          if (button.handler) {\n
+            btn.bind("click", button.handler);\n
+          }\n
+\n
+          btn\n
+            .bind("click", handleButtonClick)\n
+            .appendTo(args.node);\n
+        }\n
+      }\n
+    }\n
+\n
+\n
+    function handleBeforeHeaderCellDestroy(e, args) {\n
+      var column = args.column;\n
+\n
+      if (column.header && column.header.buttons) {\n
+        // Removing buttons via jQuery will also clean up any event handlers and data.\n
+        // NOTE: If you attach event handlers directly or using a different framework,\n
+        //       you must also clean them up here to avoid memory leaks.\n
+        $(args.node).find("." + options.buttonCssClass).remove();\n
+      }\n
+    }\n
+\n
+\n
+    function handleButtonClick(e) {\n
+      var command = $(this).data("command");\n
+      var columnDef = $(this).data("column");\n
+      var button = $(this).data("button");\n
+\n
+      if (command != null) {\n
+        _self.onCommand.notify({\n
+            "grid": _grid,\n
+            "column": columnDef,\n
+            "command": command,\n
+            "button": button\n
+          }, e, _self);\n
+\n
+        // Update the header in case the user updated the button definition in the handler.\n
+        _grid.updateColumnHeader(columnDef.id);\n
+      }\n
+\n
+      // Stop propagation so that it doesn\'t register as a header click event.\n
+      e.preventDefault();\n
+      e.stopPropagation();\n
+    }\n
+\n
+    $.extend(this, {\n
+      "init": init,\n
+      "destroy": destroy,\n
+\n
+      "onCommand": new Slick.Event()\n
+    });\n
+  }\n
+})(jQuery);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5126</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.headerbuttons.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

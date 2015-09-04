@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271185.65</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.cellselectionmodel.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  // register namespace\n
+  $.extend(true, window, {\n
+    "Slick": {\n
+      "CellSelectionModel": CellSelectionModel\n
+    }\n
+  });\n
+\n
+\n
+  function CellSelectionModel(options) {\n
+    var _grid;\n
+    var _canvas;\n
+    var _ranges = [];\n
+    var _self = this;\n
+    var _selector = new Slick.CellRangeSelector({\n
+      "selectionCss": {\n
+        "border": "2px solid black"\n
+      }\n
+    });\n
+    var _options;\n
+    var _defaults = {\n
+      selectActiveCell: true\n
+    };\n
+\n
+\n
+    function init(grid) {\n
+      _options = $.extend(true, {}, _defaults, options);\n
+      _grid = grid;\n
+      _canvas = _grid.getCanvasNode();\n
+      _grid.onActiveCellChanged.subscribe(handleActiveCellChange);\n
+      _grid.onKeyDown.subscribe(handleKeyDown);\n
+      grid.registerPlugin(_selector);\n
+      _selector.onCellRangeSelected.subscribe(handleCellRangeSelected);\n
+      _selector.onBeforeCellRangeSelected.subscribe(handleBeforeCellRangeSelected);\n
+    }\n
+\n
+    function destroy() {\n
+      _grid.onActiveCellChanged.unsubscribe(handleActiveCellChange);\n
+      _grid.onKeyDown.unsubscribe(handleKeyDown);\n
+      _selector.onCellRangeSelected.unsubscribe(handleCellRangeSelected);\n
+      _selector.onBeforeCellRangeSelected.unsubscribe(handleBeforeCellRangeSelected);\n
+      _grid.unregisterPlugin(_selector);\n
+    }\n
+\n
+    function removeInvalidRanges(ranges) {\n
+      var result = [];\n
+\n
+      for (var i = 0; i < ranges.length; i++) {\n
+        var r = ranges[i];\n
+        if (_grid.canCellBeSelected(r.fromRow, r.fromCell) && _grid.canCellBeSelected(r.toRow, r.toCell)) {\n
+          result.push(r);\n
+        }\n
+      }\n
+\n
+      return result;\n
+    }\n
+\n
+    function setSelectedRanges(ranges) {\n
+      _ranges = removeInvalidRanges(ranges);\n
+      _self.onSelectedRangesChanged.notify(_ranges);\n
+    }\n
+\n
+    function getSelectedRanges() {\n
+      return _ranges;\n
+    }\n
+\n
+    function handleBeforeCellRangeSelected(e, args) {\n
+      if (_grid.getEditorLock().isActive()) {\n
+        e.stopPropagation();\n
+        return false;\n
+      }\n
+    }\n
+\n
+    function handleCellRangeSelected(e, args) {\n
+      setSelectedRanges([args.range]);\n
+    }\n
+\n
+    function handleActiveCellChange(e, args) {\n
+      if (_options.selectActiveCell && args.row != null && args.cell != null) {\n
+        setSelectedRanges([new Slick.Range(args.row, args.cell)]);\n
+      }\n
+    }\n
+    \n
+    function handleKeyDown(e) {\n
+      /***\n
+       * Кey codes\n
+       * 37 left\n
+       * 38 up\n
+       * 39 right\n
+       * 40 down                     \n
+       */                                         \n
+      var ranges, last;\n
+      var active = _grid.getActiveCell(); \n
+\n
+      if ( active && e.shiftKey && !e.ctrlKey && !e.altKey && \n
+          (e.which == 37 || e.which == 39 || e.which == 38 || e.which == 40) ) {\n
+      \n
+        ranges = getSelectedRanges();\n
+        if (!ranges.length)\n
+         ranges.push(new Slick.Range(active.row, active.cell));\n
+         \n
+        // keyboard can work with last range only          \n
+        last = ranges.pop();\n
+        \n
+        // can\'t handle selection out of active cell\n
+        if (!last.contains(active.row, active.cell))\n
+          last = new Slick.Range(active.row, active.cell);\n
+        \n
+        var dRow = last.toRow - last.fromRow,\n
+            dCell = last.toCell - last.fromCell,\n
+            // walking direction\n
+            dirRow = active.row == last.fromRow ? 1 : -1,\n
+            dirCell = active.cell == last.fromCell ? 1 : -1;\n
+                 \n
+        if (e.which == 37) {\n
+          dCell -= dirCell; \n
+        } else if (e.which == 39) {\n
+          dCell += dirCell ; \n
+        } else if (e.which == 38) {\n
+          dRow -= dirRow; \n
+        } else if (e.which == 40) {\n
+          dRow += dirRow; \n
+        }\n
+        \n
+        // define new selection range \n
+        var new_last = new Slick.Range(active.row, active.cell, active.row + dirRow*dRow, active.cell + dirCell*dCell);\n
+        if (removeInvalidRanges([new_last]).length) {\n
+          ranges.push(new_last);\n
+          var viewRow = dirRow > 0 ? new_last.toRow : new_last.fromRow;\n
+          var viewCell = dirCell > 0 ? new_last.toCell : new_last.fromCell;\n
+         _grid.scrollRowIntoView(viewRow);\n
+         _grid.scrollCellIntoView(viewRow, viewCell);\n
+        }\n
+        else \n
+          ranges.push(last);\n
+\n
+        setSelectedRanges(ranges);  \n
+       \n
+        e.preventDefault();\n
+        e.stopPropagation();        \n
+      }           \n
+    }\n
+\n
+    $.extend(this, {\n
+      "getSelectedRanges": getSelectedRanges,\n
+      "setSelectedRanges": setSelectedRanges,\n
+\n
+      "init": init,\n
+      "destroy": destroy,\n
+\n
+      "onSelectedRangesChanged": new Slick.Event()\n
+    });\n
+  }\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4564</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.cellselectionmodel.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

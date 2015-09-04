@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271215.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>calendar.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhEAAQAPcAAAAAAG2taG6vam+va3GwbHKxbnOxb3Syb3WzcHi0c3m1dHq1dVKEw1SGxFWG
+xlaHx16KxVyKxl+MxlmKyFuKyV+NyF6Oy2OSzmSTzmmW0W+b1HSd1HWh13ei2Hyh0Hqk2X2l3H6o
+3f99O/9/Pf+EQv+LR/+QTf+UUv+VVP+WVP+YV/+ZWP+aWv+dXP+eXf+fX/+nVP+rWv+gYP+hYf+i
+Yv+jZP+kZP+kZf+wYf+zaP+4bf+5cf+7df+9eYCp3YKq35K034Ss4Ieu4Yiv4oyx44yy5I+05ZC1
+5pO355W24ZS355a66Zi66Zq8652+656/7JXSjpvUlJ/A7abD6anE6KrG6ajF76zH6KzG6azH6q7I
+6K7J6a7J6qzH8LDI6LDJ6bDJ6rPL6bLL6rPM6rXM6LXN6rfO6rrP6rrQ673R677S68DT68jW6svY
+68zZ683Z7Nji8Nvk8dzl8t3m8t7n8+Lq9Obt9urw9+3y+O7y+fDz+fDz+vD0+vH2+vL2+/T3+///
+/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAQABAA
+AAjoAP8JHEiw4MAuUpw0WYLkSJEhQXyASCLQyp+LGDNe7CDwyZ8bNWS4WJHCRAkSI/5oENjkj40e
+PHboyIEjBgwRfzIIZPKxBo0ZL1qwUIHixB8MApX8mQKICqAqgK4A8gLojgWBRvpUwZIFy5YvBAQE
+IDNngkAifbgAAgMoDCADUAYAiuNAoBA+YsYsUJDADIIDBbSwaSDwRx4zgBZEUQDojJ89beZUEBgi
+Dxo0CzKnKcPHTRw+EQR+yKMGUOk1gLK8iaMnjwSBHPDcsVOHThw4bOTw0cMHgkAgGzJcsEDhAYPj
+yD0YXE4wIAA7</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1035</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>calendar.gif</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

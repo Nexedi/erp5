@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271197.04</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>gadget_slickgrid.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint indent: 2 */\n
+/*global window, jQuery, rJS*/\n
+"use strict";\n
+\n
+(function (window, $, rJS) {\n
+\n
+  function requiredFieldValidator(value) {\n
+    if (value == null || value == undefined || !value.length) {\n
+      return {valid: false, msg: "This is a required field"};\n
+    } else {\n
+      return {valid: true, msg: null};\n
+    }\n
+  }\n
+\n
+  rJS(window).\n
+    declareMethod(\'getContent\', function () {\n
+      return this.props.grid.getData();\n
+    })\n
+\n
+    .declareMethod(\'setContent\', function (content) {\n
+      return;\n
+    })\n
+\n
+    .declareMethod(\'clearContent\', function () {\n
+      return;\n
+    })\n
+\n
+    .declareMethod(\'initStateTransfer\', function () {\n
+      var gadget = this,\n
+        current_state = {},\n
+        grid = gadget.props.grid,\n
+        temp_data = grid.getData(),\n
+        temp_columns = grid.getColumns(),\n
+        columns = [],\n
+        data = [],\n
+        column_index_dict = {},\n
+        temp_row,\n
+        i, j;\n
+      for(i = 0; i < temp_columns.length; i += 1) {\n
+        var title = (temp_columns[i].name === null ? \'\' : temp_columns[i].name);\n
+        columns.push({\n
+          title: title,\n
+          id: i\n
+        })\n
+        column_index_dict[temp_columns[i].field] = grid.getColumnIndex(temp_columns[i].id);\n
+      }\n
+      for(i = 0; i < temp_data.length; i += 1) {\n
+        var d = (data[i] = {}),\n
+          item;\n
+        temp_row = temp_data[i];\n
+        for(item in temp_row) {  \n
+          d[column_index_dict[item]] = temp_row[item];\n
+        }\n
+      }\n
+      current_state.columns = columns;\n
+      current_state.content = data;\n
+      return current_state;\n
+    })\n
+\n
+    .declareMethod(\'finishStateTransfer\', function (current_state) {\n
+      var gadget = this,\n
+        content = current_state.content,\n
+        temp_columns = current_state.columns,\n
+        grid = gadget.props.grid,\n
+        columns = [],\n
+        data = [],\n
+        temp_row,\n
+        i, j;\n
+      for(i = 0; i < temp_columns.length; i += 1) {\n
+        var name = temp_columns[i].title;\n
+        columns.push({\n
+          "name": name,\n
+          "id": i,\n
+          "field": i,\n
+          "editor": Slick.Editors.Text \n
+        })\n
+      }\n
+      for(i = 0; i < content.length; i += 1) {\n
+        var d = (data[i] = {});\n
+        temp_row = content[i];\n
+        for(j = 0; j < Object.keys(temp_row).length; j += 1) {\n
+          d[columns[j].field] = temp_row[j];\n
+        }\n
+      }\n
+      grid.setColumns(columns);\n
+      grid.setData(data);\n
+      grid.render();\n
+      return;\n
+    })\n
+    .declareMethod(\'initSubGadget\', function () {\n
+      var gadget = this;\n
+      var grid,\n
+        options,\n
+        data = [],\n
+        columns = [],\n
+        k;\n
+      for(k = 1; k < 7; k += 1) {\n
+        columns.push({id: k, name: "", field: k, editor: Slick.Editors.Text});\n
+      } \n
+      $(function () {\n
+        var i, j;\n
+        for (i = 0; i < 20; i += 1) {\n
+          var d = (data[i] = {});\n
+          for (j = 1; j < 7; j += 1) {\n
+            d[j] = "";\n
+          }\n
+        }\n
+        gadget.props.options = {\n
+          editable: true,\n
+          enableAddRow: true,\n
+          enableCellNavigation: true,\n
+          asyncEditorLoading: false,\n
+          autoEdit: false\n
+        };\n
+        gadget.props.grid = new Slick.Grid("#myGrid", data, columns, gadget.props.options);\n
+        grid = gadget.props.grid;\n
+        grid.setSelectionModel(new Slick.CellSelectionModel());\n
+        grid.onAddNewRow.subscribe(function (e, args) {\n
+          var item = args.item;\n
+          grid.invalidateRow(data.length);\n
+          data.push(item);\n
+          grid.updateRowCount();\n
+          grid.render();\n
+        });\n
+      })\n
+    })\n
+    \n
+    .ready(function (g) {\n
+      g.props = {};\n
+    });\n
+\n
+}(window, jQuery, rJS));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3628</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>gadget_slickgrid.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271196.25</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.pager.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>.slick-pager {\n
+  width: 100%;\n
+  height: 26px;\n
+  border: 1px solid gray;\n
+  border-top: 0;\n
+  background: url(\'../images/header-columns-bg.gif\') repeat-x center bottom;\n
+  vertical-align: middle;\n
+}\n
+\n
+.slick-pager .slick-pager-status {\n
+  display: inline-block;\n
+  padding: 6px;\n
+}\n
+\n
+.slick-pager .ui-icon-container {\n
+  display: inline-block;\n
+  margin: 2px;\n
+  border-color: gray;\n
+}\n
+\n
+.slick-pager .slick-pager-nav {\n
+  display: inline-block;\n
+  float: left;\n
+  padding: 2px;\n
+}\n
+\n
+.slick-pager .slick-pager-settings {\n
+  display: block;\n
+  float: right;\n
+  padding: 2px;\n
+}\n
+\n
+.slick-pager .slick-pager-settings * {\n
+  vertical-align: middle;\n
+}\n
+\n
+.slick-pager .slick-pager-settings a {\n
+  padding: 2px;\n
+  text-decoration: underline;\n
+  cursor: pointer;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>728</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.pager.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

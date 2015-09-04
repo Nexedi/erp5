@@ -1,0 +1,445 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271243.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.event.drag-2.2.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*! \n
+ * jquery.event.drag - v 2.2\n
+ * Copyright (c) 2010 Three Dub Media - http://threedubmedia.com\n
+ * Open Source MIT License - http://threedubmedia.com/code/license\n
+ */\n
+// Created: 2008-06-04 \n
+// Updated: 2012-05-21\n
+// REQUIRES: jquery 1.7.x\n
+\n
+;(function( $ ){\n
+\n
+// add the jquery instance method\n
+$.fn.drag = function( str, arg, opts ){\n
+\t// figure out the event type\n
+\tvar type = typeof str == "string" ? str : "",\n
+\t// figure out the event handler...\n
+\tfn = $.isFunction( str ) ? str : $.isFunction( arg ) ? arg : null;\n
+\t// fix the event type\n
+\tif ( type.indexOf("drag") !== 0 ) \n
+\t\ttype = "drag"+ type;\n
+\t// were options passed\n
+\topts = ( str == fn ? arg : opts ) || {};\n
+\t// trigger or bind event handler\n
+\treturn fn ? this.bind( type, opts, fn ) : this.trigger( type );\n
+};\n
+\n
+// local refs (increase compression)\n
+var $event = $.event, \n
+$special = $event.special,\n
+// configure the drag special event \n
+drag = $special.drag = {\n
+\t\n
+\t// these are the default settings\n
+\tdefaults: {\n
+\t\twhich: 1, // mouse button pressed to start drag sequence\n
+\t\tdistance: 0, // distance dragged before dragstart\n
+\t\tnot: \':input\', // selector to suppress dragging on target elements\n
+\t\thandle: null, // selector to match handle target elements\n
+\t\trelative: false, // true to use "position", false to use "offset"\n
+\t\tdrop: true, // false to suppress drop events, true or selector to allow\n
+\t\tclick: false // false to suppress click events after dragend (no proxy)\n
+\t},\n
+\t\n
+\t// the key name for stored drag data\n
+\tdatakey: "dragdata",\n
+\t\n
+\t// prevent bubbling for better performance\n
+\tnoBubble: true,\n
+\t\n
+\t// count bound related events\n
+\tadd: function( obj ){ \n
+\t\t// read the interaction data\n
+\t\tvar data = $.data( this, drag.datakey ),\n
+\t\t// read any passed options \n
+\t\topts = obj.data || {};\n
+\t\t// count another realted event\n
+\t\tdata.related += 1;\n
+\t\t// extend data options bound with this event\n
+\t\t// don\'t iterate "opts" in case it is a node \n
+\t\t$.each( drag.defaults, function( key, def ){\n
+\t\t\tif ( opts[ key ] !== undefined )\n
+\t\t\t\tdata[ key ] = opts[ key ];\n
+\t\t});\n
+\t},\n
+\t\n
+\t// forget unbound related events\n
+\tremove: function(){\n
+\t\t$.data( this, drag.datakey ).related -= 1;\n
+\t},\n
+\t\n
+\t// configure interaction, capture settings\n
+\tsetup: function(){\n
+\t\t// check for related events\n
+\t\tif ( $.data( this, drag.datakey ) ) \n
+\t\t\treturn;\n
+\t\t// initialize the drag data with copied defaults\n
+\t\tvar data = $.extend({ related:0 }, drag.defaults );\n
+\t\t// store the interaction data\n
+\t\t$.data( this, drag.datakey, data );\n
+\t\t// bind the mousedown event, which starts drag interactions\n
+\t\t$event.add( this, "touchstart mousedown", drag.init, data );\n
+\t\t// prevent image dragging in IE...\n
+\t\tif ( this.attachEvent ) \n
+\t\t\tthis.attachEvent("ondragstart", drag.dontstart ); \n
+\t},\n
+\t\n
+\t// destroy configured interaction\n
+\tteardown: function(){\n
+\t\tvar data = $.data( this, drag.datakey ) || {};\n
+\t\t// check for related events\n
+\t\tif ( data.related ) \n
+\t\t\treturn;\n
+\t\t// remove the stored data\n
+\t\t$.removeData( this, drag.datakey );\n
+\t\t// remove the mousedown event\n
+\t\t$event.remove( this, "touchstart mousedown", drag.init );\n
+\t\t// enable text selection\n
+\t\tdrag.textselect( true ); \n
+\t\t// un-prevent image dragging in IE...\n
+\t\tif ( this.detachEvent ) \n
+\t\t\tthis.detachEvent("ondragstart", drag.dontstart ); \n
+\t},\n
+\t\t\n
+\t// initialize the interaction\n
+\tinit: function( event ){ \n
+\t\t// sorry, only one touch at a time\n
+\t\tif ( drag.touched ) \n
+\t\t\treturn;\n
+\t\t// the drag/drop interaction data\n
+\t\tvar dd = event.data, results;\n
+\t\t// check the which directive\n
+\t\tif ( event.which != 0 && dd.which > 0 && event.which != dd.which ) \n
+\t\t\treturn; \n
+\t\t// check for suppressed selector\n
+\t\tif ( $( event.target ).is( dd.not ) ) \n
+\t\t\treturn;\n
+\t\t// check for handle selector\n
+\t\tif ( dd.handle && !$( event.target ).closest( dd.handle, event.currentTarget ).length ) \n
+\t\t\treturn;\n
+\n
+\t\tdrag.touched = event.type == \'touchstart\' ? this : null;\n
+\t\tdd.propagates = 1;\n
+\t\tdd.mousedown = this;\n
+\t\tdd.interactions = [ drag.interaction( this, dd ) ];\n
+\t\tdd.target = event.target;\n
+\t\tdd.pageX = event.pageX;\n
+\t\tdd.pageY = event.pageY;\n
+\t\tdd.dragging = null;\n
+\t\t// handle draginit event... \n
+\t\tresults = drag.hijack( event, "draginit", dd );\n
+\t\t// early cancel\n
+\t\tif ( !dd.propagates )\n
+\t\t\treturn;\n
+\t\t// flatten the result set\n
+\t\tresults = drag.flatten( results );\n
+\t\t// insert new interaction elements\n
+\t\tif ( results && results.length ){\n
+\t\t\tdd.interactions = [];\n
+\t\t\t$.each( results, function(){\n
+\t\t\t\tdd.interactions.push( drag.interaction( this, dd ) );\n
+\t\t\t});\n
+\t\t}\n
+\t\t// remember how many interactions are propagating\n
+\t\tdd.propagates = dd.interactions.length;\n
+\t\t// locate and init the drop targets\n
+\t\tif ( dd.drop !== false && $special.drop ) \n
+\t\t\t$special.drop.handler( event, dd );\n
+\t\t// disable text selection\n
+\t\tdrag.textselect( false ); \n
+\t\t// bind additional events...\n
+\t\tif ( drag.touched )\n
+\t\t\t$event.add( drag.touched, "touchmove touchend", drag.handler, dd );\n
+\t\telse \n
+\t\t\t$event.add( document, "mousemove mouseup", drag.handler, dd );\n
+\t\t// helps prevent text selection or scrolling\n
+\t\tif ( !drag.touched || dd.live )\n
+\t\t\treturn false;\n
+\t},\t\n
+\t\n
+\t// returns an interaction object\n
+\tinteraction: function( elem, dd ){\n
+\t\tvar offset = $( elem )[ dd.relative ? "position" : "offset" ]() || { top:0, left:0 };\n
+\t\treturn {\n
+\t\t\tdrag: elem, \n
+\t\t\tcallback: new drag.callback(), \n
+\t\t\tdroppable: [],\n
+\t\t\toffset: offset\n
+\t\t};\n
+\t},\n
+\t\n
+\t// handle drag-releatd DOM events\n
+\thandler: function( event ){ \n
+\t\t// read the data before hijacking anything\n
+\t\tvar dd = event.data;\t\n
+\t\t// handle various events\n
+\t\tswitch ( event.type ){\n
+\t\t\t// mousemove, check distance, start dragging\n
+\t\t\tcase !dd.dragging && \'touchmove\': \n
+\t\t\t\tevent.preventDefault();\n
+\t\t\tcase !dd.dragging && \'mousemove\':\n
+\t\t\t\t//  drag tolerance, x≤ + y≤ = distance≤\n
+\t\t\t\tif ( Math.pow(  event.pageX-dd.pageX, 2 ) + Math.pow(  event.pageY-dd.pageY, 2 ) < Math.pow( dd.distance, 2 ) ) \n
+\t\t\t\t\tbreak; // distance tolerance not reached\n
+\t\t\t\tevent.target = dd.target; // force target from "mousedown" event (fix distance issue)\n
+\t\t\t\tdrag.hijack( event, "dragstart", dd ); // trigger "dragstart"\n
+\t\t\t\tif ( dd.propagates ) // "dragstart" not rejected\n
+\t\t\t\t\tdd.dragging = true; // activate interaction\n
+\t\t\t// mousemove, dragging\n
+\t\t\tcase \'touchmove\':\n
+\t\t\t\tevent.preventDefault();\n
+\t\t\tcase \'mousemove\':\n
+\t\t\t\tif ( dd.dragging ){\n
+\t\t\t\t\t// trigger "drag"\t\t\n
+\t\t\t\t\tdrag.hijack( event, "drag", dd );\n
+\t\t\t\t\tif ( dd.propagates ){\n
+\t\t\t\t\t\t// manage drop events\n
+\t\t\t\t\t\tif ( dd.drop !== false && $special.drop )\n
+\t\t\t\t\t\t\t$special.drop.handler( event, dd ); // "dropstart", "dropend"\t\t\t\t\t\t\t\n
+\t\t\t\t\t\tbreak; // "drag" not rejected, stop\t\t\n
+\t\t\t\t\t}\n
+\t\t\t\t\tevent.type = "mouseup"; // helps "drop" handler behave\n
+\t\t\t\t}\n
+\t\t\t// mouseup, stop dragging\n
+\t\t\tcase \'touchend\': \n
+\t\t\tcase \'mouseup\': \n
+\t\t\tdefault:\n
+\t\t\t\tif ( drag.touched )\n
+\t\t\t\t\t$event.remove( drag.touched, "touchmove touchend", drag.handler ); // remove touch events\n
+\t\t\t\telse \n
+\t\t\t\t\t$event.remove( document, "mousemove mouseup", drag.handler ); // remove page events\t\n
+\t\t\t\tif ( dd.dragging ){\n
+\t\t\t\t\tif ( dd.drop !== false && $special.drop )\n
+\t\t\t\t\t\t$special.drop.handler( event, dd ); // "drop"\n
+\t\t\t\t\tdrag.hijack( event, "dragend", dd ); // trigger "dragend"\t\n
+\t\t\t\t}\n
+\t\t\t\tdrag.textselect( true ); // enable text selection\n
+\t\t\t\t// if suppressing click events...\n
+\t\t\t\tif ( dd.click === false && dd.dragging )\n
+\t\t\t\t\t$.data( dd.mousedown, "suppress.click", new Date().getTime() + 5 );\n
+\t\t\t\tdd.dragging = drag.touched = false; // deactivate element\t\n
+\t\t\t\tbreak;\n
+\t\t}\n
+\t},\n
+\t\t\n
+\t// re-use event object for custom events\n
+\thijack: function( event, type, dd, x, elem ){\n
+\t\t// not configured\n
+\t\tif ( !dd ) \n
+\t\t\treturn;\n
+\t\t// remember the original event and type\n
+\t\tvar orig = { event:event.originalEvent, type:event.type },\n
+\t\t// is the event drag related or drog related?\n
+\t\tmode = type.indexOf("drop") ? "drag" : "drop",\n
+\t\t// iteration vars\n
+\t\tresult, i = x || 0, ia, $elems, callback,\n
+\t\tlen = !isNaN( x ) ? x : dd.interactions.length;\n
+\t\t// modify the event type\n
+\t\tevent.type = type;\n
+\t\t// remove the original event\n
+\t\tevent.originalEvent = null;\n
+\t\t// initialize the results\n
+\t\tdd.results = [];\n
+\t\t// handle each interacted element\n
+\t\tdo if ( ia = dd.interactions[ i ] ){\n
+\t\t\t// validate the interaction\n
+\t\t\tif ( type !== "dragend" && ia.cancelled )\n
+\t\t\t\tcontinue;\n
+\t\t\t// set the dragdrop properties on the event object\n
+\t\t\tcallback = drag.properties( event, dd, ia );\n
+\t\t\t// prepare for more results\n
+\t\t\tia.results = [];\n
+\t\t\t// handle each element\n
+\t\t\t$( elem || ia[ mode ] || dd.droppable ).each(function( p, subject ){\n
+\t\t\t\t// identify drag or drop targets individually\n
+\t\t\t\tcallback.target = subject;\n
+\t\t\t\t// force propagtion of the custom event\n
+\t\t\t\tevent.isPropagationStopped = function(){ return false; };\n
+\t\t\t\t// handle the event\t\n
+\t\t\t\tresult = subject ? $event.dispatch.call( subject, event, callback ) : null;\n
+\t\t\t\t// stop the drag interaction for this element\n
+\t\t\t\tif ( result === false ){\n
+\t\t\t\t\tif ( mode == "drag" ){\n
+\t\t\t\t\t\tia.cancelled = true;\n
+\t\t\t\t\t\tdd.propagates -= 1;\n
+\t\t\t\t\t}\n
+\t\t\t\t\tif ( type == "drop" ){\n
+\t\t\t\t\t\tia[ mode ][p] = null;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t\t// assign any dropinit elements\n
+\t\t\t\telse if ( type == "dropinit" )\n
+\t\t\t\t\tia.droppable.push( drag.element( result ) || subject );\n
+\t\t\t\t// accept a returned proxy element \n
+\t\t\t\tif ( type == "dragstart" )\n
+\t\t\t\t\tia.proxy = $( drag.element( result ) || ia.drag )[0];\n
+\t\t\t\t// remember this result\t\n
+\t\t\t\tia.results.push( result );\n
+\t\t\t\t// forget the event result, for recycling\n
+\t\t\t\tdelete event.result;\n
+\t\t\t\t// break on cancelled handler\n
+\t\t\t\tif ( type !== "dropinit" )\n
+\t\t\t\t\treturn result;\n
+\t\t\t});\t\n
+\t\t\t// flatten the results\t\n
+\t\t\tdd.results[ i ] = drag.flatten( ia.results );\t\n
+\t\t\t// accept a set of valid drop targets\n
+\t\t\tif ( type == "dropinit" )\n
+\t\t\t\tia.droppable = drag.flatten( ia.droppable );\n
+\t\t\t// locate drop targets\n
+\t\t\tif ( type == "dragstart" && !ia.cancelled )\n
+\t\t\t\tcallback.update(); \n
+\t\t}\n
+\t\twhile ( ++i < len )\n
+\t\t// restore the original event & type\n
+\t\tevent.type = orig.type;\n
+\t\tevent.originalEvent = orig.event;\n
+\t\t// return all handler results\n
+\t\treturn drag.flatten( dd.results );\n
+\t},\n
+\t\t\n
+\t// extend the callback object with drag/drop properties...\n
+\tproperties: function( event, dd, ia ){\t\t\n
+\t\tvar obj = ia.callback;\n
+\t\t// elements\n
+\t\tobj.drag = ia.drag;\n
+\t\tobj.proxy = ia.proxy || ia.drag;\n
+\t\t// starting mouse position\n
+\t\tobj.startX = dd.pageX;\n
+\t\tobj.startY = dd.pageY;\n
+\t\t// current distance dragged\n
+\t\tobj.deltaX = event.pageX - dd.pageX;\n
+\t\tobj.deltaY = event.pageY - dd.pageY;\n
+\t\t// original element position\n
+\t\tobj.originalX = ia.offset.left;\n
+\t\tobj.originalY = ia.offset.top;\n
+\t\t// adjusted element position\n
+\t\tobj.offsetX = obj.originalX + obj.deltaX; \n
+\t\tobj.offsetY = obj.originalY + obj.deltaY;\n
+\t\t// assign the drop targets information\n
+\t\tobj.drop = drag.flatten( ( ia.drop || [] ).slice() );\n
+\t\tobj.available = drag.flatten( ( ia.droppable || [] ).slice() );\n
+\t\treturn obj;\t\n
+\t},\n
+\t\n
+\t// determine is the argument is an element or jquery instance\n
+\telement: function( arg ){\n
+\t\tif ( arg && ( arg.jquery || arg.nodeType == 1 ) )\n
+\t\t\treturn arg;\n
+\t},\n
+\t\n
+\t// flatten nested jquery objects and arrays into a single dimension array\n
+\tflatten: function( arr ){\n
+\t\treturn $.map( arr, function( member ){\n
+\t\t\treturn member && member.jquery ? $.makeArray( member ) : \n
+\t\t\t\tmember && member.length ? drag.flatten( member ) : member;\n
+\t\t});\n
+\t},\n
+\t\n
+\t// toggles text selection attributes ON (true) or OFF (false)\n
+\ttextselect: function( bool ){ \n
+\t\t$( document )[ bool ? "unbind" : "bind" ]("selectstart", drag.dontstart )\n
+\t\t\t.css("MozUserSelect", bool ? "" : "none" );\n
+\t\t// .attr("unselectable", bool ? "off" : "on" )\n
+\t\tdocument.unselectable = bool ? "off" : "on"; \n
+\t},\n
+\t\n
+\t// suppress "selectstart" and "ondragstart" events\n
+\tdontstart: function(){ \n
+\t\treturn false; \n
+\t},\n
+\t\n
+\t// a callback instance contructor\n
+\tcallback: function(){}\n
+\t\n
+};\n
+\n
+// callback methods\n
+drag.callback.prototype = {\n
+\tupdate: function(){\n
+\t\tif ( $special.drop && this.available.length )\n
+\t\t\t$.each( this.available, function( i ){\n
+\t\t\t\t$special.drop.locate( this, i );\n
+\t\t\t});\n
+\t}\n
+};\n
+\n
+// patch $.event.$dispatch to allow suppressing clicks\n
+var $dispatch = $event.dispatch;\n
+$event.dispatch = function( event ){\n
+\tif ( $.data( this, "suppress."+ event.type ) - new Date().getTime() > 0 ){\n
+\t\t$.removeData( this, "suppress."+ event.type );\n
+\t\treturn;\n
+\t}\n
+\treturn $dispatch.apply( this, arguments );\n
+};\n
+\n
+// event fix hooks for touch events...\n
+var touchHooks = \n
+$event.fixHooks.touchstart = \n
+$event.fixHooks.touchmove = \n
+$event.fixHooks.touchend =\n
+$event.fixHooks.touchcancel = {\n
+\tprops: "clientX clientY pageX pageY screenX screenY".split( " " ),\n
+\tfilter: function( event, orig ) {\n
+\t\tif ( orig ){\n
+\t\t\tvar touched = ( orig.touches && orig.touches[0] )\n
+\t\t\t\t|| ( orig.changedTouches && orig.changedTouches[0] )\n
+\t\t\t\t|| null; \n
+\t\t\t// iOS webkit: touchstart, touchmove, touchend\n
+\t\t\tif ( touched ) \n
+\t\t\t\t$.each( touchHooks.props, function( i, prop ){\n
+\t\t\t\t\tevent[ prop ] = touched[ prop ];\n
+\t\t\t\t});\n
+\t\t}\n
+\t\treturn event;\n
+\t}\n
+};\n
+\n
+// share the same special event configuration with related events...\n
+$special.draginit = $special.dragstart = $special.dragend = drag;\n
+\n
+})( jQuery );
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12832</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery.event.drag-2.2.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

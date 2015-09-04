@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41271195.44</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>slick.columnpicker.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function ($) {\n
+  function SlickColumnPicker(columns, grid, options) {\n
+    var $menu;\n
+    var columnCheckboxes;\n
+\n
+    var defaults = {\n
+      fadeSpeed:250\n
+    };\n
+\n
+    function init() {\n
+      grid.onHeaderContextMenu.subscribe(handleHeaderContextMenu);\n
+      grid.onColumnsReordered.subscribe(updateColumnOrder);\n
+      options = $.extend({}, defaults, options);\n
+\n
+      $menu = $("<span class=\'slick-columnpicker\' style=\'display:none;position:absolute;z-index:20;\' />").appendTo(document.body);\n
+\n
+      $menu.bind("mouseleave", function (e) {\n
+        $(this).fadeOut(options.fadeSpeed)\n
+      });\n
+      $menu.bind("click", updateColumn);\n
+\n
+    }\n
+\n
+    function destroy() {\n
+      grid.onHeaderContextMenu.unsubscribe(handleHeaderContextMenu);\n
+      grid.onColumnsReordered.unsubscribe(updateColumnOrder);\n
+      $menu.remove();\n
+    }\n
+\n
+    function handleHeaderContextMenu(e, args) {\n
+      e.preventDefault();\n
+      $menu.empty();\n
+      updateColumnOrder();\n
+      columnCheckboxes = [];\n
+\n
+      var $li, $input;\n
+      for (var i = 0; i < columns.length; i++) {\n
+        $li = $("<li />").appendTo($menu);\n
+        $input = $("<input type=\'checkbox\' />").data("column-id", columns[i].id);\n
+        columnCheckboxes.push($input);\n
+\n
+        if (grid.getColumnIndex(columns[i].id) != null) {\n
+          $input.attr("checked", "checked");\n
+        }\n
+\n
+        $("<label />")\n
+            .text(columns[i].name)\n
+            .prepend($input)\n
+            .appendTo($li);\n
+      }\n
+\n
+      $("<hr/>").appendTo($menu);\n
+      $li = $("<li />").appendTo($menu);\n
+      $input = $("<input type=\'checkbox\' />").data("option", "autoresize");\n
+      $("<label />")\n
+          .text("Force fit columns")\n
+          .prepend($input)\n
+          .appendTo($li);\n
+      if (grid.getOptions().forceFitColumns) {\n
+        $input.attr("checked", "checked");\n
+      }\n
+\n
+      $li = $("<li />").appendTo($menu);\n
+      $input = $("<input type=\'checkbox\' />").data("option", "syncresize");\n
+      $("<label />")\n
+          .text("Synchronous resize")\n
+          .prepend($input)\n
+          .appendTo($li);\n
+      if (grid.getOptions().syncColumnCellResize) {\n
+        $input.attr("checked", "checked");\n
+      }\n
+\n
+      $menu\n
+          .css("top", e.pageY - 10)\n
+          .css("left", e.pageX - 10)\n
+          .fadeIn(options.fadeSpeed);\n
+    }\n
+\n
+    function updateColumnOrder() {\n
+      // Because columns can be reordered, we have to update the `columns`\n
+      // to reflect the new order, however we can\'t just take `grid.getColumns()`,\n
+      // as it does not include columns currently hidden by the picker.\n
+      // We create a new `columns` structure by leaving currently-hidden\n
+      // columns in their original ordinal position and interleaving the results\n
+      // of the current column sort.\n
+      var current = grid.getColumns().slice(0);\n
+      var ordered = new Array(columns.length);\n
+      for (var i = 0; i < ordered.length; i++) {\n
+        if ( grid.getColumnIndex(columns[i].id) === undefined ) {\n
+          // If the column doesn\'t return a value from getColumnIndex,\n
+          // it is hidden. Leave it in this position.\n
+          ordered[i] = columns[i];\n
+        } else {\n
+          // Otherwise, grab the next visible column.\n
+          ordered[i] = current.shift();\n
+        }\n
+      }\n
+      columns = ordered;\n
+    }\n
+\n
+    function updateColumn(e) {\n
+      if ($(e.target).data("option") == "autoresize") {\n
+        if (e.target.checked) {\n
+          grid.setOptions({forceFitColumns:true});\n
+          grid.autosizeColumns();\n
+        } else {\n
+          grid.setOptions({forceFitColumns:false});\n
+        }\n
+        return;\n
+      }\n
+\n
+      if ($(e.target).data("option") == "syncresize") {\n
+        if (e.target.checked) {\n
+          grid.setOptions({syncColumnCellResize:true});\n
+        } else {\n
+          grid.setOptions({syncColumnCellResize:false});\n
+        }\n
+        return;\n
+      }\n
+\n
+      if ($(e.target).is(":checkbox")) {\n
+        var visibleColumns = [];\n
+        $.each(columnCheckboxes, function (i, e) {\n
+          if ($(this).is(":checked")) {\n
+            visibleColumns.push(columns[i]);\n
+          }\n
+        });\n
+\n
+        if (!visibleColumns.length) {\n
+          $(e.target).attr("checked", "checked");\n
+          return;\n
+        }\n
+\n
+        grid.setColumns(visibleColumns);\n
+      }\n
+    }\n
+\n
+    function getAllColumns() {\n
+      return columns;\n
+    }\n
+\n
+    init();\n
+\n
+    return {\n
+      "getAllColumns": getAllColumns,\n
+      "destroy": destroy\n
+    };\n
+  }\n
+\n
+  // Slick.Controls.ColumnPicker\n
+  $.extend(true, window, { Slick:{ Controls:{ ColumnPicker:SlickColumnPicker }}});\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4522</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>slick.columnpicker.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
