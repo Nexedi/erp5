@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273049.01</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-plugin-sketchy.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>new Chartist.Bar(\'.ct-chart\', {\n
+  labels: [\'Q1\', \'Q2\', \'Q3\', \'Q4\'],\n
+  series: [\n
+    [800000, 1200000, 1400000, 1300000],\n
+    [200000, 400000, 500000, 300000],\n
+    [100000, 200000, 400000, 600000]\n
+  ]\n
+}, {\n
+  plugins: [\n
+    Chartist.plugins.ctSketchy({\n
+      overrides: {\n
+        grid: {\n
+          baseFrequency: 0.2,\n
+          scale: 5,\n
+          numOctaves: 1\n
+        },\n
+        bar: {\n
+          baseFrequency: 0.02,\n
+          scale: 10\n
+        },\n
+        label: false\n
+      }\n
+    })\n
+  ],\n
+  stackBars: true,\n
+  axisY: {\n
+    labelInterpolationFnc: function(value) {\n
+      return (value / 1000) + \'k\';\n
+    }\n
+  }\n
+}).on(\'draw\', function(data) {\n
+  if(data.type === \'bar\') {\n
+    data.element.attr({\n
+      style: \'stroke-width: 30px\'\n
+    });\n
+  }\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>742</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-plugin-sketchy.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

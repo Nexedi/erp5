@@ -1,0 +1,463 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273075.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>bar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * The bar chart module of Chartist that can be used to draw unipolar or bipolar bar and grouped bar charts.\n
+ *\n
+ * @module Chartist.Bar\n
+ */\n
+/* global Chartist */\n
+(function(window, document, Chartist){\n
+  \'use strict\';\n
+\n
+  /**\n
+   * Default options in bar charts. Expand the code view to see a detailed list of options with comments.\n
+   *\n
+   * @memberof Chartist.Bar\n
+   */\n
+  var defaultOptions = {\n
+    // Options for X-Axis\n
+    axisX: {\n
+      // The offset of the chart drawing area to the border of the container\n
+      offset: 30,\n
+      // Position where labels are placed. Can be set to `start` or `end` where `start` is equivalent to left or top on vertical axis and `end` is equivalent to right or bottom on horizontal axis.\n
+      position: \'end\',\n
+      // Allows you to correct label positioning on this axis by positive or negative x and y offset.\n
+      labelOffset: {\n
+        x: 0,\n
+        y: 0\n
+      },\n
+      // If labels should be shown or not\n
+      showLabel: true,\n
+      // If the axis grid should be drawn or not\n
+      showGrid: true,\n
+      // Interpolation function that allows you to intercept the value from the axis label\n
+      labelInterpolationFnc: Chartist.noop,\n
+      // This value specifies the minimum width in pixel of the scale steps\n
+      scaleMinSpace: 30,\n
+      // Use only integer values (whole numbers) for the scale steps\n
+      onlyInteger: false\n
+    },\n
+    // Options for Y-Axis\n
+    axisY: {\n
+      // The offset of the chart drawing area to the border of the container\n
+      offset: 40,\n
+      // Position where labels are placed. Can be set to `start` or `end` where `start` is equivalent to left or top on vertical axis and `end` is equivalent to right or bottom on horizontal axis.\n
+      position: \'start\',\n
+      // Allows you to correct label positioning on this axis by positive or negative x and y offset.\n
+      labelOffset: {\n
+        x: 0,\n
+        y: 0\n
+      },\n
+      // If labels should be shown or not\n
+      showLabel: true,\n
+      // If the axis grid should be drawn or not\n
+      showGrid: true,\n
+      // Interpolation function that allows you to intercept the value from the axis label\n
+      labelInterpolationFnc: Chartist.noop,\n
+      // This value specifies the minimum height in pixel of the scale steps\n
+      scaleMinSpace: 20,\n
+      // Use only integer values (whole numbers) for the scale steps\n
+      onlyInteger: false\n
+    },\n
+    // Specify a fixed width for the chart as a string (i.e. \'100px\' or \'50%\')\n
+    width: undefined,\n
+    // Specify a fixed height for the chart as a string (i.e. \'100px\' or \'50%\')\n
+    height: undefined,\n
+    // Overriding the natural high of the chart allows you to zoom in or limit the charts highest displayed value\n
+    high: undefined,\n
+    // Overriding the natural low of the chart allows you to zoom in or limit the charts lowest displayed value\n
+    low: undefined,\n
+    // Use only integer values (whole numbers) for the scale steps\n
+    onlyInteger: false,\n
+    // Padding of the chart drawing area to the container element and labels as a number or padding object {top: 5, right: 5, bottom: 5, left: 5}\n
+    chartPadding: {\n
+      top: 15,\n
+      right: 15,\n
+      bottom: 5,\n
+      left: 10\n
+    },\n
+    // Specify the distance in pixel of bars in a group\n
+    seriesBarDistance: 15,\n
+    // If set to true this property will cause the series bars to be stacked and form a total for each series point. This will also influence the y-axis and the overall bounds of the chart. In stacked mode the seriesBarDistance property will have no effect.\n
+    stackBars: false,\n
+    // Inverts the axes of the bar chart in order to draw a horizontal bar chart. Be aware that you also need to invert your axis settings as the Y Axis will now display the labels and the X Axis the values.\n
+    horizontalBars: false,\n
+    // If set to true then each bar will represent a series and the data array is expected to be a one dimensional array of data values rather than a series array of series. This is useful if the bar chart should represent a profile rather than some data over time.\n
+    distributeSeries: false,\n
+    // If true the whole data is reversed including labels, the series order as well as the whole series data arrays.\n
+    reverseData: false,\n
+    // Override the class names that get used to generate the SVG structure of the chart\n
+    classNames: {\n
+      chart: \'ct-chart-bar\',\n
+      horizontalBars: \'ct-horizontal-bars\',\n
+      label: \'ct-label\',\n
+      labelGroup: \'ct-labels\',\n
+      series: \'ct-series\',\n
+      bar: \'ct-bar\',\n
+      grid: \'ct-grid\',\n
+      gridGroup: \'ct-grids\',\n
+      vertical: \'ct-vertical\',\n
+      horizontal: \'ct-horizontal\',\n
+      start: \'ct-start\',\n
+      end: \'ct-end\'\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Creates a new chart\n
+   *\n
+   */\n
+  function createChart(options) {\n
+    var data = {\n
+      raw: this.data,\n
+      normalized: options.distributeSeries ? Chartist.getDataArray(this.data, options.reverseData, options.horizontalBars ? \'x\' : \'y\').map(function(value) {\n
+        return [value];\n
+      }) : Chartist.getDataArray(this.data, options.reverseData, options.horizontalBars ? \'x\' : \'y\')\n
+    };\n
+\n
+    var highLow;\n
+\n
+    // Create new svg element\n
+    this.svg = Chartist.createSvg(\n
+      this.container,\n
+      options.width,\n
+      options.height,\n
+      options.classNames.chart + (options.horizontalBars ? \' \' + options.classNames.horizontalBars : \'\')\n
+    );\n
+\n
+    // Drawing groups in correct order\n
+    var gridGroup = this.svg.elem(\'g\').addClass(options.classNames.gridGroup);\n
+    var seriesGroup = this.svg.elem(\'g\');\n
+    var labelGroup = this.svg.elem(\'g\').addClass(options.classNames.labelGroup);\n
+\n
+    if(options.stackBars) {\n
+      // If stacked bars we need to calculate the high low from stacked values from each series\n
+      var serialSums = Chartist.serialMap(data.normalized, function serialSums() {\n
+        return Array.prototype.slice.call(arguments).map(function(value) {\n
+          return value;\n
+        }).reduce(function(prev, curr) {\n
+          return {\n
+            x: prev.x + curr.x || 0,\n
+            y: prev.y + curr.y || 0\n
+          };\n
+        }, {x: 0, y: 0});\n
+      });\n
+\n
+      highLow = Chartist.getHighLow([serialSums], Chartist.extend({}, options, {\n
+        referenceValue: 0\n
+      }), options.horizontalBars ? \'x\' : \'y\');\n
+    } else {\n
+      highLow = Chartist.getHighLow(data.normalized, Chartist.extend({}, options, {\n
+        referenceValue: 0\n
+      }), options.horizontalBars ? \'x\' : \'y\');\n
+    }\n
+    // Overrides of high / low from settings\n
+    highLow.high = +options.high || (options.high === 0 ? 0 : highLow.high);\n
+    highLow.low = +options.low || (options.low === 0 ? 0 : highLow.low);\n
+\n
+    var chartRect = Chartist.createChartRect(this.svg, options, defaultOptions.padding);\n
+\n
+    var valueAxis,\n
+      labelAxisTicks,\n
+      labelAxis,\n
+      axisX,\n
+      axisY;\n
+\n
+    // We need to set step count based on some options combinations\n
+    if(options.distributeSeries && options.stackBars) {\n
+      // If distributed series are enabled and bars need to be stacked, we\'ll only have one bar and therefore should\n
+      // use only the first label for the step axis\n
+      labelAxisTicks = data.raw.labels.slice(0, 1);\n
+    } else {\n
+      // If distributed series are enabled but stacked bars aren\'t, we should use the series labels\n
+      // If we are drawing a regular bar chart with two dimensional series data, we just use the labels array\n
+      // as the bars are normalized\n
+      labelAxisTicks = data.raw.labels;\n
+    }\n
+\n
+    // Set labelAxis and valueAxis based on the horizontalBars setting. This setting will flip the axes if necessary.\n
+    if(options.horizontalBars) {\n
+      if(options.axisX.type === undefined) {\n
+        valueAxis = axisX = new Chartist.AutoScaleAxis(Chartist.Axis.units.x, data, chartRect, Chartist.extend({}, options.axisX, {\n
+          highLow: highLow,\n
+          referenceValue: 0\n
+        }));\n
+      } else {\n
+        valueAxis = axisX = options.axisX.type.call(Chartist, Chartist.Axis.units.x, data, chartRect, Chartist.extend({}, options.axisX, {\n
+          highLow: highLow,\n
+          referenceValue: 0\n
+        }));\n
+      }\n
+\n
+      if(options.axisY.type === undefined) {\n
+        labelAxis = axisY = new Chartist.StepAxis(Chartist.Axis.units.y, data, chartRect, {\n
+          ticks: labelAxisTicks\n
+        });\n
+      } else {\n
+        labelAxis = axisY = options.axisY.type.call(Chartist, Chartist.Axis.units.y, data, chartRect, options.axisY);\n
+      }\n
+    } else {\n
+      if(options.axisX.type === undefined) {\n
+        labelAxis = axisX = new Chartist.StepAxis(Chartist.Axis.units.x, data, chartRect, {\n
+          ticks: labelAxisTicks\n
+        });\n
+      } else {\n
+        labelAxis = axisX = options.axisX.type.call(Chartist, Chartist.Axis.units.x, data, chartRect, options.axisX);\n
+      }\n
+\n
+      if(options.axisY.type === undefined) {\n
+        valueAxis = axisY = new Chartist.AutoScaleAxis(Chartist.Axis.units.y, data, chartRect, Chartist.extend({}, options.axisY, {\n
+          highLow: highLow,\n
+          referenceValue: 0\n
+        }));\n
+      } else {\n
+        valueAxis = axisY = options.axisY.type.call(Chartist, Chartist.Axis.units.y, data, chartRect, Chartist.extend({}, options.axisY, {\n
+          highLow: highLow,\n
+          referenceValue: 0\n
+        }));\n
+      }\n
+    }\n
+\n
+    // Projected 0 point\n
+    var zeroPoint = options.horizontalBars ? (chartRect.x1 + valueAxis.projectValue(0)) : (chartRect.y1 - valueAxis.projectValue(0));\n
+    // Used to track the screen coordinates of stacked bars\n
+    var stackedBarValues = [];\n
+\n
+    labelAxis.createGridAndLabels(gridGroup, labelGroup, this.supportsForeignObject, options, this.eventEmitter);\n
+    valueAxis.createGridAndLabels(gridGroup, labelGroup, this.supportsForeignObject, options, this.eventEmitter);\n
+\n
+    // Draw the series\n
+    data.raw.series.forEach(function(series, seriesIndex) {\n
+      // Calculating bi-polar value of index for seriesOffset. For i = 0..4 biPol will be -1.5, -0.5, 0.5, 1.5 etc.\n
+      var biPol = seriesIndex - (data.raw.series.length - 1) / 2;\n
+      // Half of the period width between vertical grid lines used to position bars\n
+      var periodHalfLength;\n
+      // Current series SVG element\n
+      var seriesElement;\n
+\n
+      // We need to set periodHalfLength based on some options combinations\n
+      if(options.distributeSeries && !options.stackBars) {\n
+        // If distributed series are enabled but stacked bars aren\'t, we need to use the length of the normaizedData array\n
+        // which is the series count and divide by 2\n
+        periodHalfLength = labelAxis.axisLength / data.normalized.length / 2;\n
+      } else if(options.distributeSeries && options.stackBars) {\n
+        // If distributed series and stacked bars are enabled we\'ll only get one bar so we should just divide the axis\n
+        // length by 2\n
+        periodHalfLength = labelAxis.axisLength / 2;\n
+      } else {\n
+        // On regular bar charts we should just use the series length\n
+        periodHalfLength = labelAxis.axisLength / data.normalized[seriesIndex].length / 2;\n
+      }\n
+\n
+      // Adding the series group to the series element\n
+      seriesElement = seriesGroup.elem(\'g\');\n
+\n
+      // Write attributes to series group element. If series name or meta is undefined the attributes will not be written\n
+      seriesElement.attr({\n
+        \'series-name\': series.name,\n
+        \'meta\': Chartist.serialize(series.meta)\n
+      }, Chartist.xmlNs.uri);\n
+\n
+      // Use series class from series data or if not set generate one\n
+      seriesElement.addClass([\n
+        options.classNames.series,\n
+        (series.className || options.classNames.series + \'-\' + Chartist.alphaNumerate(seriesIndex))\n
+      ].join(\' \'));\n
+\n
+      data.normalized[seriesIndex].forEach(function(value, valueIndex) {\n
+        var projected,\n
+          bar,\n
+          previousStack,\n
+          labelAxisValueIndex;\n
+\n
+        // We need to set labelAxisValueIndex based on some options combinations\n
+        if(options.distributeSeries && !options.stackBars) {\n
+          // If distributed series are enabled but stacked bars aren\'t, we can use the seriesIndex for later projection\n
+          // on the step axis for label positioning\n
+          labelAxisValueIndex = seriesIndex;\n
+        } else if(options.distributeSeries && options.stackBars) {\n
+          // If distributed series and stacked bars are enabled, we will only get one bar and therefore always use\n
+          // 0 for projection on the label step axis\n
+          labelAxisValueIndex = 0;\n
+        } else {\n
+          // On regular bar charts we just use the value index to project on the label step axis\n
+          labelAxisValueIndex = valueIndex;\n
+        }\n
+\n
+        // We need to transform coordinates differently based on the chart layout\n
+        if(options.horizontalBars) {\n
+          projected = {\n
+            x: chartRect.x1 + valueAxis.projectValue(value && value.x ? value.x : 0, valueIndex, data.normalized[seriesIndex]),\n
+            y: chartRect.y1 - labelAxis.projectValue(value && value.y ? value.y : 0, labelAxisValueIndex, data.normalized[seriesIndex])\n
+          };\n
+        } else {\n
+          projected = {\n
+            x: chartRect.x1 + labelAxis.projectValue(value && value.x ? value.x : 0, labelAxisValueIndex, data.normalized[seriesIndex]),\n
+            y: chartRect.y1 - valueAxis.projectValue(value && value.y ? value.y : 0, valueIndex, data.normalized[seriesIndex])\n
+          }\n
+        }\n
+\n
+        // If the label axis is a step based axis we will offset the bar into the middle of between two steps using\n
+        // the periodHalfLength value. Also we do arrange the different series so that they align up to each other using\n
+        // the seriesBarDistance. If we don\'t have a step axis, the bar positions can be chosen freely so we should not\n
+        // add any automated positioning.\n
+        if(labelAxis instanceof Chartist.StepAxis) {\n
+          // Offset to center bar between grid lines, but only if the step axis is not stretched\n
+          if(!labelAxis.options.stretch) {\n
+            projected[labelAxis.units.pos] += periodHalfLength * (options.horizontalBars ? -1 : 1);\n
+          }\n
+          // Using bi-polar offset for multiple series if no stacked bars or series distribution is used\n
+          projected[labelAxis.units.pos] += (options.stackBars || options.distributeSeries) ? 0 : biPol * options.seriesBarDistance * (options.horizontalBars ? -1 : 1);\n
+        }\n
+\n
+        // Enter value in stacked bar values used to remember previous screen value for stacking up bars\n
+        previousStack = stackedBarValues[valueIndex] || zeroPoint;\n
+        stackedBarValues[valueIndex] = previousStack - (zeroPoint - projected[labelAxis.counterUnits.pos]);\n
+\n
+        // Skip if value is undefined\n
+        if(value === undefined) {\n
+          return;\n
+        }\n
+\n
+        var positions = {};\n
+        positions[labelAxis.units.pos + \'1\'] = projected[labelAxis.units.pos];\n
+        positions[labelAxis.units.pos + \'2\'] = projected[labelAxis.units.pos];\n
+        // If bars are stacked we use the stackedBarValues reference and otherwise base all bars off the zero line\n
+        positions[labelAxis.counterUnits.pos + \'1\'] = options.stackBars ? previousStack : zeroPoint;\n
+        positions[labelAxis.counterUnits.pos + \'2\'] = options.stackBars ? stackedBarValues[valueIndex] : projected[labelAxis.counterUnits.pos];\n
+\n
+        // Limit x and y so that they are within the chart rect\n
+        positions.x1 = Math.min(Math.max(positions.x1, chartRect.x1), chartRect.x2);\n
+        positions.x2 = Math.min(Math.max(positions.x2, chartRect.x1), chartRect.x2);\n
+        positions.y1 = Math.min(Math.max(positions.y1, chartRect.y2), chartRect.y1);\n
+        positions.y2 = Math.min(Math.max(positions.y2, chartRect.y2), chartRect.y1);\n
+\n
+        // Create bar element\n
+        bar = seriesElement.elem(\'line\', positions, options.classNames.bar).attr({\n
+          \'value\': [value.x, value.y].filter(function(v) {\n
+            return v;\n
+          }).join(\',\'),\n
+          \'meta\': Chartist.getMetaData(series, valueIndex)\n
+        }, Chartist.xmlNs.uri);\n
+\n
+        this.eventEmitter.emit(\'draw\', Chartist.extend({\n
+          type: \'bar\',\n
+          value: value,\n
+          index: valueIndex,\n
+          meta: Chartist.getMetaData(series, valueIndex),\n
+          series: series,\n
+          seriesIndex: seriesIndex,\n
+          axisX: axisX,\n
+          axisY: axisY,\n
+          chartRect: chartRect,\n
+          group: seriesElement,\n
+          element: bar\n
+        }, positions));\n
+      }.bind(this));\n
+    }.bind(this));\n
+\n
+    this.eventEmitter.emit(\'created\', {\n
+      bounds: valueAxis.bounds,\n
+      chartRect: chartRect,\n
+      axisX: axisX,\n
+      axisY: axisY,\n
+      svg: this.svg,\n
+      options: options\n
+    });\n
+  }\n
+\n
+  /**\n
+   * This method creates a new bar chart and returns API object that you can use for later changes.\n
+   *\n
+   * @memberof Chartist.Bar\n
+   * @param {String|Node} query A selector query string or directly a DOM element\n
+   * @param {Object} data The data object that needs to consist of a labels and a series array\n
+   * @param {Object} [options] The options object with options that override the default options. Check the examples for a detailed list.\n
+   * @param {Array} [responsiveOptions] Specify an array of responsive option arrays which are a media query and options object pair => [[mediaQueryString, optionsObject],[more...]]\n
+   * @return {Object} An object which exposes the API for the created chart\n
+   *\n
+   * @example\n
+   * // Create a simple bar chart\n
+   * var data = {\n
+   *   labels: [\'Mon\', \'Tue\', \'Wed\', \'Thu\', \'Fri\'],\n
+   *   series: [\n
+   *     [5, 2, 4, 2, 0]\n
+   *   ]\n
+   * };\n
+   *\n
+   * // In the global name space Chartist we call the Bar function to initialize a bar chart. As a first parameter we pass in a selector where we would like to get our chart created and as a second parameter we pass our data object.\n
+   * new Chartist.Bar(\'.ct-chart\', data);\n
+   *\n
+   * @example\n
+   * // This example creates a bipolar grouped bar chart where the boundaries are limitted to -10 and 10\n
+   * new Chartist.Bar(\'.ct-chart\', {\n
+   *   labels: [1, 2, 3, 4, 5, 6, 7],\n
+   *   series: [\n
+   *     [1, 3, 2, -5, -3, 1, -6],\n
+   *     [-5, -2, -4, -1, 2, -3, 1]\n
+   *   ]\n
+   * }, {\n
+   *   seriesBarDistance: 12,\n
+   *   low: -10,\n
+   *   high: 10\n
+   * });\n
+   *\n
+   */\n
+  function Bar(query, data, options, responsiveOptions) {\n
+    Chartist.Bar.super.constructor.call(this,\n
+      query,\n
+      data,\n
+      defaultOptions,\n
+      Chartist.extend({}, defaultOptions, options),\n
+      responsiveOptions);\n
+  }\n
+\n
+  // Creating bar chart type in Chartist namespace\n
+  Chartist.Bar = Chartist.Base.extend({\n
+    constructor: Bar,\n
+    createChart: createChart\n
+  });\n
+\n
+}(window, document, Chartist));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18536</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>bar.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

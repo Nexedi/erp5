@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273022.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dox-section.hbs</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<section class="documentation-section full">\n
+  <header>\n
+    <h3>{{fileName}}</h3>\n
+  </header>\n
+  <div class="content">\n
+    {{#each modules}}\n
+      {{>dox-module}}\n
+    {{/each}}\n
+  </div>\n
+\n
+  <aside class="side-notes">\n
+\n
+  </aside>\n
+</section>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>237</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dox-section.hbs</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

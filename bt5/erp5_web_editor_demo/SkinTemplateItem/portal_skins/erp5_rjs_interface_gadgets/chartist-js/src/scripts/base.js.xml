@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273076.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>base.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Base for all chart types. The methods in Chartist.Base are inherited to all chart types.\n
+ *\n
+ * @module Chartist.Base\n
+ */\n
+/* global Chartist */\n
+(function(window, document, Chartist) {\n
+  \'use strict\';\n
+\n
+  // TODO: Currently we need to re-draw the chart on window resize. This is usually very bad and will affect performance.\n
+  // This is done because we can\'t work with relative coordinates when drawing the chart because SVG Path does not\n
+  // work with relative positions yet. We need to check if we can do a viewBox hack to switch to percentage.\n
+  // See http://mozilla.6506.n7.nabble.com/Specyfing-paths-with-percentages-unit-td247474.html\n
+  // Update: can be done using the above method tested here: http://codepen.io/gionkunz/pen/KDvLj\n
+  // The problem is with the label offsets that can\'t be converted into percentage and affecting the chart container\n
+  /**\n
+   * Updates the chart which currently does a full reconstruction of the SVG DOM\n
+   *\n
+   * @param {Object} [data] Optional data you\'d like to set for the chart before it will update. If not specified the update method will use the data that is already configured with the chart.\n
+   * @param {Object} [options] Optional options you\'d like to add to the previous options for the chart before it will update. If not specified the update method will use the options that have been already configured with the chart.\n
+   * @param {Boolean} [override] If set to true, the passed options will be used to extend the options that have been configured already. Otherwise the chart default options will be used as the base\n
+   * @memberof Chartist.Base\n
+   */\n
+  function update(data, options, override) {\n
+    if(data) {\n
+      this.data = data;\n
+      // Event for data transformation that allows to manipulate the data before it gets rendered in the charts\n
+      this.eventEmitter.emit(\'data\', {\n
+        type: \'update\',\n
+        data: this.data\n
+      });\n
+    }\n
+\n
+    if(options) {\n
+      this.options = Chartist.extend({}, override ? this.options : this.defaultOptions, options);\n
+\n
+      // If chartist was not initialized yet, we just set the options and leave the rest to the initialization\n
+      // Otherwise we re-create the optionsProvider at this point\n
+      if(!this.initializeTimeoutId) {\n
+        this.optionsProvider.removeMediaQueryListeners();\n
+        this.optionsProvider = Chartist.optionsProvider(this.options, this.responsiveOptions, this.eventEmitter);\n
+      }\n
+    }\n
+\n
+    // Only re-created the chart if it has been initialized yet\n
+    if(!this.initializeTimeoutId) {\n
+      this.createChart(this.optionsProvider.getCurrentOptions());\n
+    }\n
+\n
+    // Return a reference to the chart object to chain up calls\n
+    return this;\n
+  }\n
+\n
+  /**\n
+   * This method can be called on the API object of each chart and will un-register all event listeners that were added to other components. This currently includes a window.resize listener as well as media query listeners if any responsive options have been provided. Use this function if you need to destroy and recreate Chartist charts dynamically.\n
+   *\n
+   * @memberof Chartist.Base\n
+   */\n
+  function detach() {\n
+    // Only detach if initialization already occurred on this chart. If this chart still hasn\'t initialized (therefore\n
+    // the initializationTimeoutId is still a valid timeout reference, we will clear the timeout\n
+    if(!this.initializeTimeoutId) {\n
+      window.removeEventListener(\'resize\', this.resizeListener);\n
+      this.optionsProvider.removeMediaQueryListeners();\n
+    } else {\n
+      window.clearTimeout(this.initializeTimeoutId);\n
+    }\n
+\n
+    return this;\n
+  }\n
+\n
+  /**\n
+   * Use this function to register event handlers. The handler callbacks are synchronous and will run in the main thread rather than the event loop.\n
+   *\n
+   * @memberof Chartist.Base\n
+   * @param {String} event Name of the event. Check the examples for supported events.\n
+   * @param {Function} handler The handler function that will be called when an event with the given name was emitted. This function will receive a data argument which contains event data. See the example for more details.\n
+   */\n
+  function on(event, handler) {\n
+    this.eventEmitter.addEventHandler(event, handler);\n
+    return this;\n
+  }\n
+\n
+  /**\n
+   * Use this function to un-register event handlers. If the handler function parameter is omitted all handlers for the given event will be un-registered.\n
+   *\n
+   * @memberof Chartist.Base\n
+   * @param {String} event Name of the event for which a handler should be removed\n
+   * @param {Function} [handler] The handler function that that was previously used to register a new event handler. This handler will be removed from the event handler list. If this parameter is omitted then all event handlers for the given event are removed from the list.\n
+   */\n
+  function off(event, handler) {\n
+    this.eventEmitter.removeEventHandler(event, handler);\n
+    return this;\n
+  }\n
+\n
+  function initialize() {\n
+    // Add window resize listener that re-creates the chart\n
+    window.addEventListener(\'resize\', this.resizeListener);\n
+\n
+    // Obtain current options based on matching media queries (if responsive options are given)\n
+    // This will also register a listener that is re-creating the chart based on media changes\n
+    this.optionsProvider = Chartist.optionsProvider(this.options, this.responsiveOptions, this.eventEmitter);\n
+    // Register options change listener that will trigger a chart update\n
+    this.eventEmitter.addEventHandler(\'optionsChanged\', function() {\n
+      this.update();\n
+    }.bind(this));\n
+\n
+    // Before the first chart creation we need to register us with all plugins that are configured\n
+    // Initialize all relevant plugins with our chart object and the plugin options specified in the config\n
+    if(this.options.plugins) {\n
+      this.options.plugins.forEach(function(plugin) {\n
+        if(plugin instanceof Array) {\n
+          plugin[0](this, plugin[1]);\n
+        } else {\n
+          plugin(this);\n
+        }\n
+      }.bind(this));\n
+    }\n
+\n
+    // Event for data transformation that allows to manipulate the data before it gets rendered in the charts\n
+    this.eventEmitter.emit(\'data\', {\n
+      type: \'initial\',\n
+      data: this.data\n
+    });\n
+\n
+    // Create the first chart\n
+    this.createChart(this.optionsProvider.getCurrentOptions());\n
+\n
+    // As chart is initialized from the event loop now we can reset our timeout reference\n
+    // This is important if the chart gets initialized on the same element twice\n
+    this.initializeTimeoutId = undefined;\n
+  }\n
+\n
+  /**\n
+   * Constructor of chart base class.\n
+   *\n
+   * @param query\n
+   * @param data\n
+   * @param defaultOptions\n
+   * @param options\n
+   * @param responsiveOptions\n
+   * @constructor\n
+   */\n
+  function Base(query, data, defaultOptions, options, responsiveOptions) {\n
+    this.container = Chartist.querySelector(query);\n
+    this.data = data;\n
+    this.defaultOptions = defaultOptions;\n
+    this.options = options;\n
+    this.responsiveOptions = responsiveOptions;\n
+    this.eventEmitter = Chartist.EventEmitter();\n
+    this.supportsForeignObject = Chartist.Svg.isSupported(\'Extensibility\');\n
+    this.supportsAnimations = Chartist.Svg.isSupported(\'AnimationEventsAttribute\');\n
+    this.resizeListener = function resizeListener(){\n
+      this.update();\n
+    }.bind(this);\n
+\n
+    if(this.container) {\n
+      // If chartist was already initialized in this container we are detaching all event listeners first\n
+      if(this.container.__chartist__) {\n
+        this.container.__chartist__.detach();\n
+      }\n
+\n
+      this.container.__chartist__ = this;\n
+    }\n
+\n
+    // Using event loop for first draw to make it possible to register event listeners in the same call stack where\n
+    // the chart was created.\n
+    this.initializeTimeoutId = setTimeout(initialize.bind(this), 0);\n
+  }\n
+\n
+  // Creating the chart base class\n
+  Chartist.Base = Chartist.Class.extend({\n
+    constructor: Base,\n
+    optionsProvider: undefined,\n
+    container: undefined,\n
+    svg: undefined,\n
+    eventEmitter: undefined,\n
+    createChart: function() {\n
+      throw new Error(\'Base chart type can\\\'t be instantiated!\');\n
+    },\n
+    update: update,\n
+    detach: detach,\n
+    on: on,\n
+    off: off,\n
+    version: Chartist.version,\n
+    supportsForeignObject: false\n
+  });\n
+\n
+}(window, document, Chartist));\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8187</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>base.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

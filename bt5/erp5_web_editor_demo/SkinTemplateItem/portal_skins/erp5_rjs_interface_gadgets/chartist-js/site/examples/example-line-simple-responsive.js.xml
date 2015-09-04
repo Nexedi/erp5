@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273044.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-line-simple-responsive.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* Add a basic data series with six labels and values */\n
+var data = {\n
+  labels: [\'1\', \'2\', \'3\', \'4\', \'5\', \'6\'],\n
+  series: [\n
+    {\n
+      data: [1, 2, 3, 5, 8, 13]\n
+    }\n
+  ]\n
+};\n
+\n
+/* Set some base options (settings will override the default settings in Chartist.js *see default settings*). We are adding a basic label interpolation function for the xAxis labels. */\n
+var options = {\n
+  axisX: {\n
+    labelInterpolationFnc: function(value) {\n
+      return \'Calendar Week \' + value;\n
+    }\n
+  }\n
+};\n
+\n
+/* Now we can specify multiple responsive settings that will override the base settings based on order and if the media queries match. In this example we are changing the visibility of dots and lines as well as use different label interpolations for space reasons. */\n
+var responsiveOptions = [\n
+  [\'screen and (min-width: 641px) and (max-width: 1024px)\', {\n
+    showPoint: false,\n
+    axisX: {\n
+      labelInterpolationFnc: function(value) {\n
+        return \'Week \' + value;\n
+      }\n
+    }\n
+  }],\n
+  [\'screen and (max-width: 640px)\', {\n
+    showLine: false,\n
+    axisX: {\n
+      labelInterpolationFnc: function(value) {\n
+        return \'W\' + value;\n
+      }\n
+    }\n
+  }]\n
+];\n
+\n
+/* Initialize the chart with the above settings */\n
+new Chartist.Line(\'#my-chart\', data, options, responsiveOptions);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1263</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-line-simple-responsive.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

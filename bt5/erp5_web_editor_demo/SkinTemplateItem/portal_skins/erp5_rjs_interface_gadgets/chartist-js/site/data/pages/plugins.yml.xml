@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272983.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugins.yml</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+sections:\n
+  - title: Overview\n
+    level: 3\n
+    items:\n
+      - type: sub-section\n
+        data:\n
+          title: What\'s a plugin?\n
+          level: 4\n
+          items:\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        Plugins allow you to extend the basic functionality of your charts. You can develop your own\n
+                        plugins or use plugins that others have already developed.\n
+\n
+      - type: sub-section\n
+        data:\n
+          title: How to use plugins\n
+          level: 4\n
+          items:\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        Once you have included a plugin in your project you can use it in your chart by specifying it explicitly\n
+                        in the plugins section of your chart configuration. Check the <a href="#available-plugins">List of plugins</a>\n
+                        section to see what plugins you can use.\n
+\n
+            - type: code-snippet\n
+              data:\n
+                id: plugin-include\n
+                lang: js\n
+\n
+            - type: hint\n
+              data:\n
+                title: Order of specification\n
+                text: >\n
+                        Plugins are chainable and the order of specification in the plugins array of your configuration\n
+                        is important for the end result.\n
+\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        Chartist.js expects an array of plugin functions to be present in the <code>plugins</code> array\n
+                        of the chart configuration. Usually plugins should be written as function factories so you\n
+                        can pass additional parameters and options to the factory which is creating the plugin function and returns it.\n
+\n
+  - title: Available plugins\n
+    level: 3\n
+    items:\n
+      - type: text\n
+        data:\n
+          text: >\n
+                  Here you can find a list of known plugins. Usually plugins should be available from both Bower and NPM for\n
+                  installation. If you have developed your own plugin but can\'t find it here, you should create a\n
+                  <a href="https://github.com/gionkunz/chartist-js/blob/develop/site/data/pages/examples.yml" target="_blank">pull request\n
+                  for this page</a> and add your plugin to the list.\n
+\n
+      - type: sub-section\n
+        data:\n
+          title: Accessibility Plugin\n
+          level: 4\n
+          items:\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        285 million people are estimated to be visually impaired worldwide: 39 million are blind and 246 have low vision.\n
+                        We should stop the discrimination against our fellow human and, by fairly little effort and following best\n
+                        practices, make our content on the web accessible.\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        The accessibility plugin makes your chart accessible for blind people. It automatically generates\n
+                        visually hidden accessibility tables that allow you to describe your chart for blind people easily.\n
+                        This plugin was tested with NVDA and JAWS, and provides all necessary things for building an accessible chart.\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        By simply including this plugin with default configurations you will already make your charts\n
+                        accessible to blind people! If you put in 5 minutes effort in customizing the configuration with\n
+                        meaningful content, you will actually even make them enjoy your charts!\n
+            - type: live-example\n
+              data:\n
+                id: example-plugin-accessibility\n
+                classes: ct-golden-section\n
+                intro: >\n
+                         Creating an accessible chart that shows some fiscal year figures. This example overrides the visuallyHiddenStyles\n
+                         configuration property so you can actually see the "invisible" table.\n
+            - type: table\n
+              data:\n
+                rows:\n
+                  -\n
+                    - \'<strong>Author:</strong>\'\n
+                    - Gion Kunz\n
+                  -\n
+                    - \'<strong>Link:</strong>\'\n
+                    - \'<a href="https://github.com/gionkunz/chartist-plugin-accessibility" target="_blank">chartist-plugin-accessibility</a>\'\n
+\n
+      - type: sub-section\n
+        data:\n
+          title: Tooltip Plugin\n
+          level: 4\n
+          items:\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        The tooltip plugin makes it super simple to add tooltips to most of your charts which can often\n
+                        increase it\'s usability.\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        By simply including this plugin with default configurations you will already make your charts\n
+                        get some tooltips showing.\n
+            - type: live-example\n
+              data:\n
+                id: example-plugin-tooltip\n
+                classes: ct-golden-section\n
+                intro: >\n
+                         Creating a simple line chart showing how the tooltips work.\n
+            - type: table\n
+              data:\n
+                rows:\n
+                  -\n
+                    - \'<strong>Author:</strong>\'\n
+                    - Markus Padourek\n
+                  -\n
+                    - \'<strong>Link:</strong>\'\n
+                    - \'<a href="https://github.com/Globegitter/chartist-plugin-tooltip" target="_blank">chartist-plugin-tooltip</a>\'\n
+\n
+      - type: sub-section\n
+        data:\n
+          title: Point Label Plugin\n
+          level: 4\n
+          items:\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        The point label plugin can be used if you like to add simple labels on top of your data points\n
+                        on line charts. This is usefull if you\'d like the user to see the exact values of the data without\n
+                        any additional interaction.\n
+            - type: live-example\n
+              data:\n
+                id: example-plugin-pointlabel\n
+                classes: ct-golden-section\n
+                intro: >\n
+                         The point label plugin draws labels on top of your line chart points.\n
+            - type: table\n
+              data:\n
+                rows:\n
+                  -\n
+                    - \'<strong>Author:</strong>\'\n
+                    - Gion Kunz\n
+                  -\n
+                    - \'<strong>Link:</strong>\'\n
+                    - \'<a href="https://github.com/gionkunz/chartist-plugin-pointlabels" target="_blank">chartist-plugin-pointlabels</a>\'\n
+\n
+      - type: sub-section\n
+        data:\n
+          title: Sketchy Plugin\n
+          level: 4\n
+          items:\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        The sketchy plugin makes your charts look like they have been drawn by hand. This plugin makes use\n
+                        of SVG filters and works on IE10+, Safari 7+ and Android 4.4+. Also note that SVG filters are not\n
+                        very performant and they will eat your users mobile battery quickly for sure.\n
+            - type: live-example\n
+              data:\n
+                id: example-plugin-sketchy\n
+                classes: ct-golden-section\n
+                intro: >\n
+                         Create beautiful hand drawn charts using the Chartist Sketchy plugin.\n
+            - type: table\n
+              data:\n
+                rows:\n
+                  -\n
+                    - \'<strong>Author:</strong>\'\n
+                    - Gion Kunz\n
+                  -\n
+                    - \'<strong>Link:</strong>\'\n
+                    - \'<a href="https://github.com/gionkunz/chartist-plugin-sketchy" target="_blank">chartist-plugin-sketchy</a>\'\n
+      - type: sub-section\n
+        data:\n
+          title: Axis Title Plugin\n
+          level: 4\n
+          items:\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        The axis title plugin allows you to add simple titles to your axes.\n
+            - type: live-example\n
+              data:\n
+                id: example-plugin-axistitle\n
+                classes: ct-golden-section\n
+                intro: >\n
+                          While not a core functionality, this plugin makes it absolutely easy to add axis titles to your chart.\n
+            - type: table\n
+              data:\n
+                rows:\n
+                  -\n
+                    - \'<strong>Author:</strong>\'\n
+                    - Alex Stanbury\n
+                  -\n
+                    - \'<strong>Link:</strong>\'\n
+                    - \'<a href="https://github.com/alexstanbury/chartist-plugin-axistitle" target="_blank">chartist-plugin-axistitle</a>\'\n
+      - type: sub-section\n
+        data:\n
+          title: Threshold Plugin\n
+          level: 4\n
+          items:\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        This Chartist plugin can be used to divide your Line or Bar chart with a threshold.\n
+            - type: live-example\n
+              data:\n
+                id: example-plugin-threshold\n
+                classes: ct-golden-section\n
+                intro: >\n
+                          Everything above and below the\n
+                          threshold will be tagged with a special class, in order for your to apply different styling where appropriate.\n
+            - type: table\n
+              data:\n
+                rows:\n
+                  -\n
+                    - \'<strong>Author:</strong>\'\n
+                    - Gion Kunz\n
+                  -\n
+                    - \'<strong>Link:</strong>\'\n
+                    - \'<a href="https://github.com/gionkunz/chartist-plugin-threshold" target="_blank">chartist-plugin-threshold</a>\'\n
+  - title: Develop a plugin\n
+    level: 3\n
+    items:\n
+\n
+      - type: text\n
+        data:\n
+          text: >\n
+                  Plugins are functions that will be called for each chart that is created with the plugin enabled\n
+                  (specified in the <code>plugins</code> configuration of a chart). The plugin function will be called with one\n
+                  argument which is the chart that is registering itself for the plugin. If you wish to use some additional\n
+                  parameters or configuration for your plugin initialization, it\'s recommended to use a function factory.\n
+                  You can check the example plugin for an implementation using a function factory.\n
+\n
+      - type: code-snippet\n
+        data:\n
+          id: plugin-signature\n
+          lang: js\n
+\n
+      - type: text\n
+        data:\n
+          text: >\n
+                  From the chart object <code>options</code>, <code>svg</code> (root SVG element) and the\n
+                  <code>eventEmitter</code> can be used to manipulate the behaviour of the chart. It\'s the\n
+                  responsibility of the plugin to decide if it should be activated on a given chart (i.e. by checking\n
+                  the chart type <code>chart instanceof Chartist.Line</code> etc.).\n
+\n
+      - type: text\n
+        data:\n
+          text: >\n
+                  It\'s recommended to use the events of Chartist.js (like <code>draw</code>) to manipulate the\n
+                  underlying elements. Using the events, plugins can chain up in a natural way and work independently\n
+                   on extending the functionality of the chart.\n
+\n
+      - type: text\n
+        data:\n
+          text: >\n
+                  Plugins should contain their own default settings and use <code>Chartist.extend</code> to override\n
+                  the settings specified in the options passed to the plugin factory function. Using\n
+                  the <code>optionsProvider</code> of the chart object one could also implement functioanlity based on\n
+                  the chart configuration as well as responsive configuration.\n
+\n
+      - type: sub-section\n
+        data:\n
+          title: Example Plugin\n
+          level: 4\n
+          items:\n
+            - type: text\n
+              data:\n
+                text: >\n
+                        The following code shows an example plugin that is also available for download and installation.\n
+                        You can also use the <a href="https://github.com/gionkunz/chartist-plugin-pointlabels" target="_blank">repository\n
+                        of the example plugin</a> to start your own awesome Chartist.js plugin.\n
+\n
+      - type: code-snippet\n
+        data:\n
+          id: plugin-example\n
+          lang: js\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12629</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugins.yml</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

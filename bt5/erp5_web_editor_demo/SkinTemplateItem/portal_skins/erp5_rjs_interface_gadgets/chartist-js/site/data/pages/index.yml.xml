@@ -1,0 +1,340 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272973.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>index.yml</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+gallery-examples:\n
+  - id: example-gallery-one\n
+    classes: ct-golden-section\n
+  - id: example-gallery-two\n
+    classes: ct-golden-section\n
+  - id: example-gallery-three\n
+    classes: ct-golden-section\n
+  - id: example-gallery-four\n
+    classes: ct-golden-section\n
+\n
+sections:\n
+  - title: Browser compatibility\n
+    level: 4\n
+    items:\n
+      - type: browser-support-table\n
+        data:\n
+          browsers:\n
+            - IE9\n
+            - IE10\n
+            - IE11\n
+            - Firefox 31\n
+            - Chrome 35\n
+            - Safari 7\n
+            - Safari 8\n
+            - Android 4.3\n
+            - Android 4.4\n
+            - iOS Safari 6\n
+            - iOS Safari 7\n
+          features:\n
+            - name: Overall Browser Support\n
+              browsers:\n
+                - name: IE9\n
+                  status: supported\n
+                  text: Supported\n
+                - name: IE10\n
+                  status: supported\n
+                  text: Supported\n
+                - name: IE11\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Firefox 31\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Chrome 35\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Safari 7\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Safari 8\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Android 4.3\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Android 4.4\n
+                  status: supported\n
+                  text: Supported\n
+                - name: iOS Safari 6\n
+                  status: supported\n
+                  text: Supported\n
+                - name: iOS Safari 7\n
+                  status: supported\n
+                  text: Supported\n
+            - name: Multi-line Labels (foreignObject)\n
+              browsers:\n
+                - name: IE9\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: IE10\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: IE11\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: Firefox 31\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Chrome 35\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Safari 7\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: Safari 8\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Android 4.3\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: Android 4.4\n
+                  status: supported\n
+                  text: Supported\n
+                - name: iOS Safari 6\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: iOS Safari 7\n
+                  status: supported\n
+                  text: Supported\n
+            - name: Advanced CSS Animations\n
+              browsers:\n
+                - name: IE9\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: IE10\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: IE11\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: Firefox 31\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Chrome 35\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Safari 7\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: Safari 8\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Android 4.3\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: Android 4.4\n
+                  status: supported\n
+                  text: Supported\n
+                - name: iOS Safari 6\n
+                  status: supported\n
+                  text: Supported\n
+                - name: iOS Safari 7\n
+                  status: supported\n
+                  text: Supported\n
+            - name: SVG Animations with SMIL\n
+              browsers:\n
+                - name: IE9\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: IE10\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: IE11\n
+                  status: not-supported\n
+                  text: Not supported\n
+                - name: Firefox 31\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Chrome 35\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Safari 7\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Safari 8\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Android 4.3\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Android 4.4\n
+                  status: supported\n
+                  text: Supported\n
+                - name: iOS Safari 6\n
+                  status: supported\n
+                  text: Supported\n
+                - name: iOS Safari 7\n
+                  status: supported\n
+                  text: Supported\n
+            - name: Reponsive Options Override\n
+              browsers:\n
+                - name: IE9*\n
+                  status: supported\n
+                  text: Supported with polyfill\n
+                - name: IE10\n
+                  status: supported\n
+                  text: Supported\n
+                - name: IE11\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Firefox 31\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Chrome 35\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Safari 7\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Safari 8\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Android 4.3\n
+                  status: supported\n
+                  text: Supported\n
+                - name: Android 4.4\n
+                  status: supported\n
+                  text: Supported\n
+                - name: iOS Safari 6\n
+                  status: supported\n
+                  text: Supported\n
+                - name: iOS Safari 7\n
+                  status: supported\n
+                  text: Supported\n
+\n
+  - title: Projects / Wrapper libraries\n
+    level: 4\n
+    items:\n
+      - type: text\n
+        data:\n
+          text: These projects and wrapper libraries are known to me right now that either use Chartist.js or wrap them into a library for usage in a framework. <strong>If you know other projects that use Chartist.js please let us know or make a <a href="https://github.com/gionkunz/chartist-js/blob/develop/site/data/pages/index.yml#L206" target="_blank">pull request for this file</a>.</strong>\n
+      - type: table\n
+        data:\n
+          id: chartist-projects-table\n
+          header:\n
+            - Project\n
+            - Type\n
+          rows:\n
+            -\n
+              - \'<a href="https://github.com/paradox41/ng-chartist.js" target="_blank">ng-chartist.js</a>\'\n
+              - Angular Directive\n
+            -\n
+              - \'<a href="https://github.com/gruberb/chartistAngularDirective" target="_blank">chartistAngularDirective.js</a>\'\n
+              - Angular Directive\n
+            -\n
+              - \'<a href="https://fraserxu.me/react-chartist" target="_blank">react-chartist</a>\'\n
+              - React Component\n
+            -\n
+              - \'<a href="https://github.com/mfpierre/meteor-chartist-js" target="_blank">meteor-chartist-js</a>\'\n
+              - Meteor Package\n
+            -\n
+              - \'<a href="https://github.com/soderlind/tablepress_chartist" target="_blank">tablepress_chartist</a>\'\n
+              - Wordpress / Tablepress Extension\n
+            -\n
+              - \'<a href="https://github.com/tylergaw/ember-cli-chartist" target="_blank">ember-cli-chartist</a>\'\n
+              - Ember Addon\n
+            -\n
+              - \'<a href="https://github.com/hatemalimam/ChartistJSF" target="_blank">ChartistJSF</a>\'\n
+              - Java Server Faces (Prime Faces) Component\n
+  - title: Chart CSS animation example\n
+    level: 3\n
+    items:\n
+      - type: example-chart\n
+        data:\n
+          id: example-line-months-interpolation\n
+          classes: ct-golden-section dark\n
+      - type: hint\n
+        data:\n
+          title: Cross-browser support\n
+          classes: hint-cross-browser\n
+          text: Note that CSS3 animations on SVG CSS attributes are not supported on all browsers and the appearance may vary.\n
+    side-notes:\n
+      - type: text\n
+        data:\n
+          text: Specifying the style of your chart in CSS is not only cleaner but also enables you to use awesome CSS animations and transitions to be applied to your SVG elements!\n
+\n
+  - title: Crazy Animations with SMIL!\n
+    level: 3\n
+    items:\n
+      - type: example-chart\n
+        data:\n
+          id: example-line-svg-animation\n
+          classes: ct-golden-section\n
+    side-notes:\n
+      - type: text\n
+        data:\n
+          text: >\n
+                  Almost limitless animation possibilities with the Chartist.Svg animation API. Checkout the\n
+                  <a href="getting-started.html#animations-using-chartistsvg">advanced getting started guide about SVG\n
+                  animations</a> with SMIL.\n
+\n
+  - title: Responsive charts configuration\n
+    level: 3\n
+    items:\n
+      - type: example-chart\n
+        data:\n
+          id: example-line-simple-responsive\n
+          classes: ct-golden-section\n
+          show-code-button: Show code\n
+      - type: sub-section\n
+        data:\n
+          title: Configuration overrides based on media queries\n
+          level: 4\n
+          items:\n
+            - type: text\n
+              data:\n
+                text: Configuring different chart behavior for various media is made simple with an override mechanism. The priority of the override mechanism is based on order of specification of the matching media queries.\n
+            - type: hint\n
+              data:\n
+                title: Cross-browser support\n
+                classes: hint-cross-browser\n
+                text: For IE9 you need to use a matchMedia polyfill. You should take a look at <a href="https://github.com/paulirish/matchMedia.js/">Paul Irish\'s matchMedia polyfill</a>.\n
+    side-notes:\n
+      - type: text\n
+        data:\n
+          text: With the clear separation of concerns within Chartist.js you\'re able to style your charts with CSS in @media queries. However, sometimes it requires to also control the behaviour of your charts depending on the media. For this purpose Chartist.js provides you with a simple configuration override mechanism based on media queries.\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11167</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>index.yml</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

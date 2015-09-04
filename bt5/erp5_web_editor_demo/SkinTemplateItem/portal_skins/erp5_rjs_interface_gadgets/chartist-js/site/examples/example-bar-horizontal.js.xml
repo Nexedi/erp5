@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273043.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-bar-horizontal.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>new Chartist.Bar(\'.ct-chart\', {\n
+  labels: [\'Monday\', \'Tuesday\', \'Wednesday\', \'Thursday\', \'Friday\', \'Saturday\', \'Sunday\'],\n
+  series: [\n
+    [5, 4, 3, 7, 5, 10, 3],\n
+    [3, 2, 9, 5, 4, 6, 4]\n
+  ]\n
+}, {\n
+  seriesBarDistance: 10,\n
+  reverseData: true,\n
+  horizontalBars: true,\n
+  axisY: {\n
+    offset: 70\n
+  }\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>301</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-bar-horizontal.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273070.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>step-axis.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * The step axis for step based charts like bar chart or step based line charts. It uses a fixed amount of ticks that will be equally distributed across the whole axis length. The projection is done using the index of the data value rather than the value itself and therefore it\'s only useful for distribution purpose.\n
+ * **Options**\n
+ * The following options are used by this axis in addition to the default axis options outlined in the axis configuration of the chart default settings.\n
+ * ```javascript\n
+ * var options = {\n
+ *   // Ticks to be used to distribute across the axis length. As this axis type relies on the index of the value rather than the value, arbitrary data that can be converted to a string can be used as ticks.\n
+ *   ticks: [\'One\', \'Two\', \'Three\'],\n
+ *   // If set to true the full width will be used to distribute the values where the last value will be at the maximum of the axis length. If false the spaces between the ticks will be evenly distributed instead.\n
+ *   stretch: true\n
+ * };\n
+ * ```\n
+ *\n
+ * @module Chartist.StepAxis\n
+ */\n
+/* global Chartist */\n
+(function (window, document, Chartist) {\n
+  \'use strict\';\n
+\n
+  function StepAxis(axisUnit, data, chartRect, options) {\n
+    Chartist.StepAxis.super.constructor.call(this,\n
+      axisUnit,\n
+      chartRect,\n
+      options.ticks,\n
+      options);\n
+\n
+    this.stepLength = this.axisLength / (options.ticks.length - (options.stretch ? 1 : 0));\n
+  }\n
+\n
+  function projectValue(value, index) {\n
+    return this.stepLength * index;\n
+  }\n
+\n
+  Chartist.StepAxis = Chartist.Axis.extend({\n
+    constructor: StepAxis,\n
+    projectValue: projectValue\n
+  });\n
+\n
+}(window, document, Chartist));\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1634</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>step-axis.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273103.03</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>connect.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * connect\n
+ * =======\n
+ *\n
+ * Starting a localserver for development.\n
+ *\n
+ * Link: https://github.com/gruntjs/grunt-contrib-connect\n
+ */\n
+\n
+\'use strict\';\n
+\n
+module.exports = function (grunt) {\n
+  return {\n
+    options: {\n
+      port: 9000,\n
+      // Change this to \'0.0.0.0\' to access the server from outside.\n
+      hostname: \'localhost\',\n
+      livereload: 35729\n
+    },\n
+    livereload: {\n
+      options: {\n
+        open: true,\n
+        base: [\n
+          \'<%= pkg.config.tmp %>\',\n
+          \'<%= pkg.config.src %>\',\n
+          \'<%= pkg.config.site %>\'\n
+        ]\n
+      }\n
+    },\n
+    test: {\n
+      options: {\n
+        port: 9001,\n
+        base: [\n
+          \'<%= pkg.config.tmp %>\',\n
+          \'<%= pkg.config.test %>\',\n
+          \'<%= pkg.config.site %>\'\n
+        ]\n
+      }\n
+    },\n
+    public: {\n
+      options: {\n
+        open: true,\n
+        keepalive: true,\n
+        base: \'<%= pkg.config.public %>\'\n
+      }\n
+    }\n
+  };\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>898</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>connect.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272939.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Gruntfile.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Grunt Configurations\n
+ * ====================\n
+ *\n
+ * Seperate tasks and configurations are declared in \'/tasks\'.\n
+ *\n
+ * Link: https://github.com/firstandthird/load-grunt-config\n
+ */\n
+\n
+\'use strict\';\n
+\n
+module.exports = function (grunt) {\n
+\n
+  // tracks how long a tasks take\n
+  require(\'time-grunt\')(grunt);\n
+\n
+  // load task and configurations\n
+  require(\'load-grunt-config\')(grunt, {\n
+    configPath: __dirname +  \'/tasks\',\n
+    data: {\n
+      pkg: grunt.file.readJSON(\'package.json\'),\n
+      year: new Date().getFullYear()\n
+    },\n
+    jitGrunt: {\n
+      staticMappings: {\n
+        \'useminPrepare\': \'grunt-usemin\',\n
+        \'assemble\': \'assemble\'\n
+      }\n
+    }\n
+  });\n
+};\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>657</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gruntfile.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

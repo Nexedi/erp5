@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273062.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin-example.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>function ctPointLabels(options) {\n
+  return function ctPointLabels(chart) {\n
+    var defaultOptions = {\n
+      labelClass: \'ct-label\',\n
+      labelOffset: {\n
+        x: 0,\n
+        y: -10\n
+      },\n
+      textAnchor: \'middle\'\n
+    };\n
+\n
+    options = Chartist.extend({}, defaultOptions, options);\n
+\n
+    if(chart instanceof Chartist.Line) {\n
+      chart.on(\'draw\', function(data) {\n
+        if(data.type === \'point\') {\n
+          data.group.elem(\'text\', {\n
+            x: data.x + options.labelOffset.x,\n
+            y: data.y + options.labelOffset.y,\n
+            style: \'text-anchor: \' + options.textAnchor\n
+          }, options.labelClass).text(data.value);\n
+        }\n
+      });\n
+    }\n
+  }\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>673</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin-example.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

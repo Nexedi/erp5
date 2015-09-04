@@ -1,0 +1,2559 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273110.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CODINGSTYLE.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>65822</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>CODINGSTYLE.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Web Styleguide - Style guide to harmonize HTML, Javascript and CSS / Sass coding style\n
+\n
+This document defines formatting and style rules for HTML, Javascript and CSS / SCSS. It aims at improving\n
+collaboration, code quality, and enabling supporting infrastructure. It applies to raw, working files that use HTML,\n
+Javascript and CSS, including Sass (SCSS) files.\n
+\n
+If a group of developers start to use a style guide, errors become more obvious. If a certain parts of code are not\n
+complying with the style guide it could be a style error but it could also be a bug. This makes it easier to review\n
+code and to ensure errors are spotted more easily.\n
+\n
+Tools are free to obfuscate, minify, and compile as long as the general code quality is maintained\n
+and the raw files developers need to work with comply with the style guide.\n
+\n
+You can also contribute to this style guide!\n
+\n
+***\n
+\n
+## General style rules\n
+\n
+This section covers some general style rules that can be applied for HTML, Javascript and CSS / SCSS.\n
+\n
+***\n
+\n
+### File / Resource names\n
+\n
+All file names in a web project should follow the same naming conventions. For readability purpose the minus (-) sign\n
+is ideal for separating parts in a file name. Also it\'s a common separator in canonical URL and URL slugs\n
+(i.e. `//example.com/blog/my-blog-entry` or `//s.example.com/images/big-black-background.jpg`). Therefore it\'s quite obvious\n
+that the minus sign should be used to separate parts in a resource name.\n
+\n
+Always start a file name with a letter and avoid numbers (except versions in the post-fix as outlined in the post-fix\n
+note) where possible. There are special allowed cases where you need to start a filename with a special sign in order to\n
+flag it for a special purpose (i.e. underscore for compass to ignore a certain file for direct css compilation).\n
+\n
+All letters in a resource name should be lower case. This is a best practice as some operating systems support case\n
+sensitive file names and we should not mix the cases to minimize confusion and possible sources for human errors.\n
+\n
+There are cases where you will need to include some post- or pre-fixes or extensions (i.e. .min.js, .min.css) or\n
+reeving which includes some pre-fixes (i.e. file hashes like 3fa89b.main.min.css). In those cases we recommend to use\n
+dot\'s to separate the clear purpose of this additional meta-data in a filename.\n
+\n
+**Not recommended**\n
+```\n
+MyScript.js\n
+myCamelCaseName.css\n
+i_love_underscores.html\n
+1001-scripts.js\n
+my-file-min.css\n
+```\n
+\n
+**Recommended**\n
+```\n
+my-script.js\n
+my-camel-case-name.css\n
+i-love-underscores.html\n
+thousand-and-one-scripts.js\n
+my-file.min.css\n
+```\n
+\n
+***\n
+\n
+### Protocol\n
+\n
+Omit the protocol from embedded resources.\n
+\n
+Omit the protocol portion (`http:`, `https:`) from URLs pointing to images and other media files, style sheets, and\n
+scripts unless the respective files are not available over both protocols.\n
+\n
+Omitting the protocol—which makes the URL relative—prevents mixed content issues and results in minor file size savings.\n
+\n
+**Not recommended**\n
+```\n
+<script src="http://cdn.com/foundation.min.js"></script>\n
+```\n
+\n
+**Recommended**\n
+```\n
+<script src="//cdn.com/foundation.min.js"></script>\n
+```\n
+\n
+**Not recommended**\n
+```\n
+.example {\n
+  background: url(http://static.example.com/images/bg.jpg);\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+.example {\n
+  background: url(//static.example.com/images/bg.jpg);\n
+}\n
+```\n
+\n
+***\n
+\n
+### Text indentation\n
+\n
+Indent by 2 spaces at a time.\n
+\n
+```\n
+<ul>\n
+  <li>Fantastic</li>\n
+  <li>Great</li>\n
+  <li>\n
+    <a href="#">Test</a>\n
+  </li>\n
+</ul>\n
+```\n
+\n
+```\n
+@media screen and (min-width: 1100px) {\n
+  body {\n
+    font-size: 100%;\n
+  }\n
+}\n
+```\n
+\n
+```\n
+(function(){\n
+  var x = 10;\n
+\n
+  function y(a, b) {\n
+    return {\n
+      result: (a + b) * x\n
+    }\n
+\n
+  }\n
+}());\n
+```\n
+\n
+***\n
+\n
+### Comments\n
+\n
+Comments are the only way others and **YOURSELF** know why a particular code was written and why it was written in the\n
+way it was. It\'s crucial that you comment your code parts and specially code that is not trivial.\n
+\n
+Self explaining code is a **MYTH**. There is no such thing as self explaining code. Also there is no such thing as too\n
+many comments. There is only too little comments.\n
+\n
+When you comment code don\'t comment what\'s coded, comment why it was coded this way and comment the thinking behind.\n
+Also include links in your comments to open issues, specifications etc.\n
+\n
+**Not recommended**\n
+```\n
+var offset = 0;\n
+\n
+if(includeLabels) {\n
+  // Add offset of 20\n
+  offset = 20;\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+var offset = 0;\n
+\n
+if(includeLabels) {\n
+  // If the labels are included we need to have a minimum offset of 20 pixels\n
+  // We need to set it explicitly because of the following bug: http://somebrowservendor.com/issue-tracker/ISSUE-1\n
+  offset = 20;\n
+}\n
+```\n
+\n
+Consider using annotations in your comments that help to structure commends and add meta information. For Javascript\n
+use [JSDoc](http://usejsdoc.org/) or [YUIDoc](http://yui.github.io/yuidoc/). You can also use tools to generate\n
+documentation from these comments. This is also a great way to encourage developers to write comments. Once comments\n
+will be used to generate a living documentation they often start to spend more time for detailed comments.\n
+\n
+***\n
+\n
+### Code linting\n
+\n
+For programming languages with less strictness it\'s important to enforce style rules and formatting guidelines.\n
+Writing and following a style guide is a good practice but having an automated process that is enforcing it is even\n
+better. Trust is good, control is better.\n
+\n
+For Javascript we recommend to use JSLint / JSHint. In the repository for this styleguide you can also find a\n
+[dotfile for jshint (.jshintrc)](.jshintrc). You can use this file with JSHint to enforce style\n
+checking in your Javascript projects.\n
+\n
+***\n
+\n
+## HTML style rules\n
+\n
+***\n
+\n
+### Document type\n
+\n
+HTML5 (HTML syntax) is preferred for all HTML documents: `<!DOCTYPE html>`.\n
+\n
+(It’s recommended to use HTML, as text/html. Do not use XHTML. XHTML, as application/xhtml+xml,\n
+lacks both browser and infrastructure support and offers less room for optimization than HTML.)\n
+\n
+Although fine with HTML, do not close void elements, i.e. write `<br>`, not `<br />`.\n
+\n
+***\n
+\n
+### HTML validity\n
+\n
+Use valid HTML code unless that is not possible due to otherwise unattainable performance goals regarding file size.\n
+\n
+Use tools such as the W3C HTML validator to test.\n
+\n
+Using valid HTML is a measurable baseline quality attribute that contributes to learning about technical requirements\n
+and constraints, and that ensures proper HTML usage.\n
+\n
+**Not recommended**\n
+```\n
+<title>Test</title>\n
+<article>This is only a test.\n
+```\n
+\n
+**Recommended**\n
+```\n
+<!DOCTYPE html>\n
+<meta charset="utf-8">\n
+<title>Test</title>\n
+<article>This is only a test.</article>\n
+```\n
+\n
+***\n
+\n
+### Optional Tags\n
+\n
+The HTML5 specification defines what tags can be omitted in the HTML markup. For readability purpose the raw source\n
+file should **NOT** omit optional tags. Omitting optional tags can lead to readability and scannability issues, and\n
+therefore should not be used in the raw source files.\n
+\n
+Omitting tags can lead to significant page size reductions specially on large scale sites. For this purpose you should\n
+consider an HTML minification post processing of your raw files for distribution purpose.\n
+\n
+***\n
+\n
+### Script loading\n
+\n
+For performance reasons it\'s important to load scripts asynchronously. A script loaded in the `<head>` like this\n
+`<script src="main.js"></script>` will block the whole DOM parsing until the script has fully loaded and executed. This\n
+will delay the page to be displayed until the script has fully loaded. With larger scripts this can have a big impact\n
+on user experience.\n
+\n
+Asynchronous script loading helps to minimize this performance impact. If browser support is only concerned about IE10+\n
+the HTML5 async attribute on scripts should be used. This will prevent DOM parser blocking and you can even place your\n
+script element into the `<head>` element.\n
+\n
+If you need to support older browsers it\'s common practice to use script loaders that will make use of dynamic script\n
+injection. You should consider [yepnope](http://yepnopejs.com/) or [labjs](http://labjs.com/). The problem with injected\n
+scripts though is that [they will not start loading until CSS Object Model is ready](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/)\n
+(shortly after the CSS from the head is loaded). This can also load to delay of your behavior added by these javascript\n
+which can again affect the user experience.\n
+\n
+As a result of the above described behaviors you should always consider the following best practice if you need to\n
+support old browsers (IE9-).\n
+\n
+Add your script element just before the body close tag and add them with a async attribute. This will not load the\n
+scripts asynchronously on old browsers but they will only block the DOM parser just before the body close which is not\n
+affecting the user experience too much. On modern browsers this will delay the script load until the DOM parser\n
+discovers the script element at the end of the body, but they will then asynchronously load the script and don\'t wait\n
+for CSSOM to complete before loading (execution will still happen after CSSOM).\n
+\n
+**Recommended for modern and old browsers**\n
+```\n
+<html>\n
+  <head>\n
+    <link rel="stylesheet" href="main.css">\n
+  </head>\n
+  <body>\n
+    <!-- body goes here -->\n
+\n
+    <script src="main.js" async></script>\n
+  </body>\n
+</html>\n
+```\n
+\n
+**Recommended for only modern browsers**\n
+```\n
+<html>\n
+  <head>\n
+    <link rel="stylesheet" href="main.css">\n
+    <script src="main.js" async></script>\n
+  </head>\n
+  <body>\n
+    <!-- body goes here -->\n
+  </body>\n
+</html>\n
+```\n
+\n
+***\n
+\n
+### Semantics\n
+\n
+Use elements (sometimes incorrectly called “tags”) for what they have been created for. For example, use heading\n
+elements for headings, p elements for paragraphs, a elements for anchors, etc.\n
+\n
+Using HTML according to its purpose is important for accessibility, reuse, and code efficiency reasons.\n
+\n
+The following bad / good example should outline some of the major important semantic HTML cases:\n
+\n
+**Not recommended**\n
+```\n
+<b>My page title</b>\n
+<div class="top-navigation">\n
+  <div class="nav-item"><a href="#home">Home</a></div>\n
+  <div class="nav-item"><a href="#news">News</a></div>\n
+  <div class="nav-item"><a href="#about">About</a></div>\n
+</div>\n
+\n
+<div class="news-page">\n
+  <div class="page-section news">\n
+    <div class="title">All news articles</div>\n
+    <div class="news-article">\n
+      <h2>Bad article</h2>\n
+      <div class="intro">Introduction sub-title</div>\n
+      <div class="content">This is a very bad example for HTML semantics</div>\n
+      <div class="article-side-notes">I think I\'m more on the side and should not receive the main credits</div>\n
+      <div class="article-foot-notes">\n
+        This article was created by David <div class="time">2014-01-01 00:00</div>\n
+      </div>\n
+    </div>\n
+\n
+    <div class="section-footer">\n
+      Related sections: Events, Public holidays\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div class="page-footer">\n
+  Copyright 2014\n
+</div>\n
+```\n
+\n
+**Recommended**\n
+```\n
+<!-- The page header should go into a header element -->\n
+<header>\n
+  <!-- As this title belongs to the page structure it\'s a heading and h1 should be used -->\n
+  <h1>My page title</h1>\n
+</header>\n
+\n
+<!-- All navigation should go into a nav element -->\n
+<nav class="top-navigation">\n
+  <!-- A listing of elements should always go to UL (OL for ordered listings) -->\n
+  <ul>\n
+    <li class="nav-item"><a href="#home">Home</a></li>\n
+    <li class="nav-item"><a href="#news">News</a></li>\n
+    <li class="nav-item"><a href="#about">About</a></li>\n
+  </ul>\n
+</nav>\n
+\n
+<!-- The main part of the page should go into a main element (also use role="main" for accessibility) -->\n
+<main class="news-page" role="main">\n
+  <!-- A section of a page should go into a section element. Divide a page into sections with semantic elements. -->\n
+  <section class="page-section news">\n
+    <!-- A section header should go into a section element -->\n
+    <header>\n
+      <!-- As a page section belongs to the page structure heading elements should be used (in this case h2) -->\n
+      <h2 class="title">All news articles</h2>\n
+    </header>\n
+\n
+    <!-- If a section / module can be seen as an article (news article, blog entry, products teaser, any other\n
+     re-usable module / section that can occur multiple times on a page) a article element should be used -->\n
+    <article class="news-article">\n
+      <!-- An article can contain a header that contains the summary / introduction information of the article -->\n
+      <header>\n
+        <!-- As a article title does not belong to the overall page structure there should not be any heading tag! -->\n
+        <div class="article-title">Good article</div>\n
+        <!-- Small can optionally be used to reduce importance -->\n
+        <small class="intro">Introduction sub-title</small>\n
+      </header>\n
+\n
+      <!-- For the main content in a section or article there is no semantic element -->\n
+      <div class="content">\n
+        <p>This is a good example for HTML semantics</p>\n
+      </div>\n
+      <!-- For content that is represented as side note or less important information in a given context use aside -->\n
+      <aside class="article-side-notes">\n
+        <p>I think I\'m more on the side and should not receive the main credits</p>\n
+      </aside>\n
+      <!-- Articles can also contain footers. If you have footnotes for an article place them into a footer element -->\n
+      <footer class="article-foot-notes">\n
+        <!-- The time element can be used to annotate a timestamp. Use the datetime attribute to specify ISO time\n
+         while the actual text in the time element can also be more human readable / relative -->\n
+        <p>This article was created by David <time datetime="2014-01-01 00:00" class="time">1 month ago</time></p>\n
+      </footer>\n
+    </article>\n
+\n
+    <!-- In a section, footnotes or similar information can also go into a footer element -->\n
+    <footer class="section-footer">\n
+      <p>Related sections: Events, Public holidays</p>\n
+    </footer>\n
+  </section>\n
+</main>\n
+\n
+<!-- Your page footer should go into a global footer element -->\n
+<footer class="page-footer">\n
+  Copyright 2014\n
+</footer>\n
+\n
+```\n
+\n
+***\n
+\n
+### Multimedia fallback\n
+\n
+For multimedia, such as images, videos, animated objects via canvas, make sure to offer alternative access. For images\n
+that means use of meaningful alternative text (alt) and for video and audio transcripts and captions, if available.\n
+\n
+Providing alternative contents is important for accessibility reasons: A blind user has few cues to tell what an\n
+image is about without @alt, and other users may have no way of understanding what video or audio contents are about\n
+either.\n
+\n
+(For images whose alt attributes would introduce redundancy, and for images whose purpose is purely decorative which\n
+you cannot immediately use CSS for, use no alternative text, as in alt="".)\n
+\n
+**Not recommended**\n
+```\n
+<img src="luke-skywalker.jpg">\n
+```\n
+\n
+**Recommended**\n
+```\n
+<img src="luke-skywalker.jpg" alt="Luke skywalker riding an alien horse">\n
+```\n
+\n
+When writing alt tags always try to describe the image as if you\'d need to describe what\'s on the image to somebody\n
+over the phone or who can\'t see the real picture.\n
+\n
+**Not recommended**\n
+```\n
+<img src="huge-spaceship-approaching-earth.jpg" alt="Header image">\n
+```\n
+\n
+**Recommended**\n
+```\n
+<img src="huge-spaceship-approaching-earth.jpg" alt="A huge spaceship that is approaching the earth">\n
+```\n
+\n
+***\n
+\n
+### Separation of Concerns\n
+\n
+It\'s very important that you understand the different concerns in web and that you know how to and why to separate them.\n
+In the web we have information (html markup), appearance (css) and behavior (Javascript) and we need to separate them as\n
+far as possible in order to keep a maintainable and clean code.\n
+\n
+Strictly keep structure (markup), presentation (styling), and behavior (scripting) apart, and try to keep the\n
+interaction between the three to an absolute minimum.\n
+\n
+That is, make sure documents and templates contain only HTML and HTML that is solely serving structural purposes.\n
+Move everything presentational into style sheets, and everything behavioral into scripts.\n
+\n
+In addition, keep the contact area as small as possible by linking as few style sheets and scripts as possible from\n
+documents and templates.\n
+\n
+Clean separation of concerns implies the following things:\n
+\n
+1.  Don\'t use more than one or two stylesheets (i.e. main.css, vendor.css)\n
+1.  Don\'t use more than one or two scripts (use concatination)\n
+1.  Don\'t use inline styles (`<style>.no-good {}</style>`)\n
+1.  Don\'t use element style attributes (`<hr style="border-top: 5px solid black">`)\n
+1.  Don\'t use inline scripts (`<script>alert(\'no good\')</script>`)\n
+1.  Don\'t use presentational elements (i.e. `<b>`, `<u>`, `<center>`, `<font>`, `<b>`\n
+1.  Don\'t use presentational class names (i.e. red, left, center)\n
+\n
+**Not recommended**\n
+```\n
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+  <link rel="stylesheet" href="base.css">\n
+  <link rel="stylesheet" href="grid.css">\n
+  <link rel="stylesheet" href="type.css">\n
+  <link rel="stylesheet" href="modules/teaser.css">\n
+</head>\n
+<body>\n
+  <h1 style="font-size: 3rem"></h1>\n
+  <b>I\'m a subtitle and I\'m bold!</b>\n
+  <center>Dare you center me!</center>\n
+  <script>\n
+    alert(\'Just dont...\');\n
+  </script>\n
+  <div class="red">I\'m important!</div>\n
+</body>\n
+</html>\n
+```\n
+\n
+**Recommended**\n
+```\n
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+  <!-- Concatinate your style sheets into a single one -->\n
+  <link rel="stylesheet" href="main.css">\n
+</head>\n
+<body>\n
+  <!-- Don\'t use style attributes but assign sensible classes and apply styles in the stylesheet -->\n
+  <h1 class="title"></h1>\n
+  <!-- Don\'t use presentational elements and assign sensible classes -->\n
+  <div class="sub-title">I\'m a subtitle and I\'m bold!</div>\n
+  <!-- Maybe your comments get centered in your presentation but that decision is up to the stylesheet -->\n
+  <span class="comment">Dare you center me!</span>\n
+  <!-- You wanted to make it red because it\'s important so then also name the class important and decide in the stylesheet\n
+   what you want to do with it -->\n
+  <div class="important">I\'m important!</div>\n
+\n
+  <!-- Put all your scripts into files and concatinate them into a single one -->\n
+  <script async src="main.js"></script>\n
+</body>\n
+</html>\n
+```\n
+\n
+***\n
+\n
+### HTML is content only\n
+\n
+Don\'t pollute your HTML markup with non-content information. There is a tendency to solve design problems at\n
+the information\'s cost. The HTML markup should only contain content relevant information and design problems should\n
+never be solved within the markup.\n
+\n
+The only purpose of HTML markup is to represent content information.\n
+\n
+- Don\'t introduce a specific HTML structure just to solve some visual design problems\n
+- Don\'t use `<img>` elements for visual design elements\n
+\n
+The following examples show two common things that are done wrong when it comes to solving design problems.\n
+\n
+**Not recommended**\n
+```\n
+<!-- We should not introduce an additional element just to solve a design problem  -->\n
+<span class="text-box">\n
+  <span class="square"></span>\n
+  See the square next to me?\n
+</span>\n
+\n
+```\n
+```\n
+.text-box > .square {\n
+  display: inline-block;\n
+  width: 1rem;\n
+  height: 1rem;\n
+  background-color: red;\n
+}\n
+```\n
+\n
+\n
+**Recommended**\n
+```\n
+<!-- That\'s clean markup! -->\n
+<span class="text-box">\n
+  See the square next to me?\n
+</span>\n
+\n
+```\n
+```\n
+// We use a :before pseudo element to solve the design problem of placing a colored square in front of the text content\n
+.text-box:before {\n
+  content: "";\n
+  display: inline-block;\n
+  width: 1rem;\n
+  height: 1rem;\n
+  background-color: red;\n
+}\n
+```\n
+\n
+The only reason for images and svg graphics to be included in the markup is because they represent content relevant\n
+information.\n
+\n
+**Not recommended**\n
+```\n
+<!-- Content images should never be used for design elements!  -->\n
+<span class="text-box">\n
+  <img src="square.svg" alt="Square" />\n
+  See the square next to me?\n
+</span>\n
+```\n
+\n
+**Recommended**\n
+```\n
+<!-- That\'s clean markup! -->\n
+<span class="text-box">\n
+  See the square next to me?\n
+</span>\n
+\n
+```\n
+```\n
+// We use a :before pseudo element with a background image to solve the problem\n
+.text-box:before {\n
+  content: "";\n
+  display: inline-block;\n
+  width: 1rem;\n
+  height: 1rem;\n
+  background: url(square.svg) no-repeat;\n
+  background-size: 100%;\n
+}\n
+```\n
+\n
+***\n
+\n
+### Type attributes\n
+\n
+Omit type attributes for style sheets and scripts. Do not use type attributes for style sheets (unless not using CSS)\n
+and scripts (unless not using JavaScript). Specifying type attributes in these contexts is not necessary as\n
+HTML5 implies text/css and text/javascript as defaults. This can be safely done even for older browsers.\n
+\n
+**Not recommended**\n
+```\n
+<link rel="stylesheet" href="main.css" type="text/css">\n
+<script src="main.js" type="text/javascript"></script>\n
+```\n
+\n
+**Recommended**\n
+```\n
+<link rel="stylesheet" href="main.css">\n
+<script src="main.js"></script>\n
+```\n
+\n
+***\n
+\n
+### General Accessibility\n
+\n
+If you use proper HTML5 semantics a lot of accessibility issues are already solved. ARIA is using some default roles\n
+for most of the semantic elements which, if used correctly, solves a lot of the issues already. If you use `nav`,\n
+`aside`, `main`, `footer` etc. ARIA will use some related default roles. For more details you can reference the\n
+[ARIA specification](http://rawgit.com/w3c/aria-in-html/master/index.html#recommendations-table) recommendation table\n
+which contains the defaults for the HTML semantic elements.\n
+\n
+Additional roles can be used to give more accessibility context (i.e. `role="tab"`).\n
+\n
+***\n
+\n
+### Tab Index for Accessibility\n
+\n
+Check your document for tab order and assign tabindex values in order to change the tab flow based on priority. You\n
+can disable the tab index of an element by setting `tabindex="-1"` on any element.\n
+\n
+If you add functionality to a element that is not focusable by default, you should always add a `tabindex` in order to\n
+make the element focusable. This will also enable the CSS pseudo selector `:focus`. Choose an appropriate index value\n
+for `tabindex` or use `tabindex="0"` to group elements into one tab order level and enforce ordering in natural reading\n
+order.\n
+\n
+***\n
+\n
+### Microdata for SEO and Accessibility\n
+\n
+If the SEO relevance and / or accessibility environment is given then you should consider to use microdata where\n
+possible. Microdata is a way to annotate your data in your markup that follows some specific semantics.\n
+\n
+Google, Microsoft and Yahoo! have more or less agreed on how to use this additional data and using it correctly has\n
+great influence on your searches.\n
+\n
+You can visit [schema.org](http://schema.org/) for more details.\n
+\n
+Simple example of a movie on a web page:\n
+\n
+**Without microdata**\n
+```\n
+<div>\n
+ <h1>Avatar</h1>\n
+ <span>Director: James Cameron (born August 16, 1954)</span>\n
+ <span>Science fiction</span>\n
+ <a href="../movies/avatar-theatrical-trailer.html">Trailer</a>\n
+</div>\n
+```\n
+\n
+**With microdata**\n
+```\n
+<div itemscope itemtype ="http://schema.org/Movie">\n
+  <h1 itemprop="name">Avatar</h1>\n
+  <div itemprop="director" itemscope itemtype="http://schema.org/Person">\n
+  Director: <span itemprop="name">James Cameron</span> (born <span itemprop="birthDate">August 16, 1954)</span>\n
+  </div>\n
+  <span itemprop="genre">Science fiction</span>\n
+  <a href="../movies/avatar-theatrical-trailer.html" itemprop="trailer">Trailer</a>\n
+</div>\n
+```\n
+\n
+***\n
+\n
+### IDs for anchors\n
+\n
+It\'s generally a good practice to give all headings on a page a ID. With these ID\'s on headings you can use the\n
+browsers default behavior and include the ID names as hash tags in the URL. By default this causes the browser to scroll\n
+to the position this element.\n
+\n
+If you\'d enter the URL `http://your-site.com/about#best-practices` in your browser then the browser would scroll down\n
+so that the H3 below would be scrolled into the view.\n
+\n
+```\n
+<h3 id="best-practices">Best practices</h3>\n
+```\n
+\n
+***\n
+\n
+### General formatting\n
+\n
+Use a new line for every block, list, or table element, and indent every such child element.\n
+Independent of the styling of an element (as CSS allows elements to assume a different role per display property),\n
+put every block, list, or table element on a new line.\n
+\n
+Also, indent them if they are child elements of a block, list, or table element.\n
+\n
+(If you run into issues around whitespace between list items it’s acceptable to put all li elements in one line.\n
+A linter is encouraged to throw a warning instead of an error.)\n
+\n
+**Recommended**\n
+```\n
+<blockquote>\n
+  <p><em>Space</em>, the final frontier.</p>\n
+</blockquote>\n
+\n
+<ul>\n
+  <li>Moe</li>\n
+  <li>Larry</li>\n
+  <li>Curly</li>\n
+</ul>\n
+\n
+<table>\n
+  <thead>\n
+    <tr>\n
+      <th scope="col">Income</th>\n
+      <th scope="col">Taxes</th>\n
+    </tr>\n
+  </thead>\n
+  <tbody>\n
+    <tr>\n
+      <td>$ 5.00</td>\n
+      <td>$ 4.50</td>\n
+    </tr>\n
+  </tbody>\n
+</table>\n
+```\n
+\n
+***\n
+\n
+### HTML quotation marks\n
+\n
+When quoting attributes values, use double quotation marks. Use double ("") rather than single quotation marks (\'\')\n
+around attribute values.\n
+\n
+**Not recommended**\n
+```\n
+<div class=\'news-article\'></div>\n
+```\n
+\n
+**Recommended**\n
+```\n
+<div class="news-article"></div>\n
+```\n
+\n
+***\n
+\n
+## Javascript style guide\n
+\n
+***\n
+\n
+### Global namespace pollution and IIFE\n
+\n
+Always wrap your code into a IIFE (Immediately-Invoked Function Expression) in order to create an isolated closure\n
+scope. This prevents you from polluting the global namespace.\n
+\n
+IIFE can also secure your code from modifications that happened in the global namespace (i.e. 3rd party libraries,\n
+window reference, overridden undefined keyword etc.)\n
+\n
+**Not recommended**\n
+```\n
+var x = 10,\n
+    y = 100;\n
+\n
+// Declaring variables in the global scope is resulting in global scope pollution. All variables declared like this\n
+// will be stored in the window object. This is very unclean and needs to be avoided.\n
+console.log(window.x + \' \' + window.y);\n
+```\n
+\n
+**Recommended**\n
+```\n
+// We declare a IIFE and pass parameters into the function that we will use from the global space\n
+(function(log, w, undefined){\n
+  \'use strict\';\n
+\n
+  var x = 10,\n
+      y = 100;\n
+\n
+  // Will output \'true true\'\n
+  log((w.x === undefined) + \' \' + (w.y === undefined));\n
+\n
+}(window.console.log, window));\n
+```\n
+\n
+***\n
+\n
+### IIFE (Immediately-Executed Function Expression)\n
+\n
+Use IIFE whenever you want to create a new closure scope. This can be used to create privacy and to keep memory clean.\n
+\n
+Every javascript file should start with an IIFE.\n
+\n
+The IIFE should be written so you\'re keeping the execution brackets inside of the surrounding brackets. Although the\n
+writing the executing brackets outside of the surrounding brackets is valid the second example should be used as this\n
+sets clear boundaries for the IIFE as the surrounding brackets isolate the whole IIFE.\n
+\n
+**Not recommended**\n
+```\n
+(function(){})();\n
+```\n
+\n
+**Recommended**\n
+```\n
+(function(){}());\n
+```\n
+\n
+The following pattern should be used to format your IIFE:\n
+\n
+```\n
+(function(){\n
+  \'use strict\';\n
+\n
+  // Code goes here\n
+\n
+}());\n
+```\n
+\n
+If you want to use global variables or variables form an outer IIFE you should pass them as parameters to your IIFE:\n
+```\n
+(function($, w, d){\n
+  \'use strict\';\n
+\n
+  $(function() {\n
+    w.alert(d.querySelectorAll(\'div\').length);\n
+  });\n
+}(jQuery, window, document));\n
+```\n
+\n
+***\n
+\n
+### Strict mode\n
+\n
+ECMAScript 5 strict mode can be enabled globally in your script or on function level. It enables more strict error\n
+handling as well different javascript semantics. Strict mode also enforces a syntax that allows engines to optimize\n
+the javascript better and strict more scripts can run faster than normal scripts.\n
+\n
+Strict mode also blocks the usage of reserved words that possibly get introduced in the future.\n
+\n
+You should always enforce strict mode in your scripts. Do so by applying it in your isolation IIFE. Don\'t apply it to\n
+your whole script by include it as first statement in your script. This could possibly cause issues with 3rd party\n
+libraries.\n
+\n
+**Not recommended**\n
+```\n
+// Script starts here\n
+\'use strict\';\n
+\n
+(function(){\n
+\n
+  // Your code starts here\n
+\n
+}());\n
+```\n
+\n
+**Recommended**\n
+```\n
+(function(){\n
+  \'use strict\';\n
+\n
+  // Your code starts here\n
+\n
+}());\n
+```\n
+\n
+***\n
+\n
+### Variable declarations\n
+\n
+Always use `var` to declare your variables. When you fail to specify var, the variable gets placed in the global\n
+context, potentially clobbering existing values. Also, if there\'s no declaration, it\'s hard to tell in what scope a\n
+variable lives (e.g., it could be in the Document or Window just as easily as in the local scope).\n
+So always declare with var.\n
+\n
+Using strict mode can help to identify issues where you might mistyped a variable name resulting in a ReferenceError.\n
+\n
+**Not recommended**\n
+```\n
+x = 10;\n
+y = 100;\n
+```\n
+\n
+**Recommended**\n
+```\n
+var x = 10,\n
+    y = 100;\n
+```\n
+\n
+***\n
+\n
+### Understand Javascript scope and hoisting\n
+\n
+In Javascript variable and function declarations will be hoisted before execution. Javascript only knows function scope\n
+and there is no block scope as you know it from other programming languages. This means that if you declare a variable\n
+inside a if statement or for loop this variable is declared for the whole function scope and not only locally in the\n
+block statement.\n
+\n
+To illustrate this check the following example that will show how a javascript interpreter is hoisting the declarations\n
+in a function scope:\n
+\n
+**Raw function**\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  var a = 10;\n
+\n
+  for(var i = 0; i < a; i++) {\n
+    var b = i * i;\n
+    log(b);\n
+  }\n
+\n
+  if(a === 10) {\n
+    var f = function() {\n
+      log(a);\n
+    };\n
+    f();\n
+  }\n
+\n
+  function x() {\n
+    log(\'Mr. X!\');\n
+  }\n
+  x();\n
+\n
+}(window.console.log));\n
+```\n
+\n
+**Hoisted by Javscript engine**\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+  // All variables used in the closure will be hoisted to the top of the function\n
+  var a,\n
+      i,\n
+      b,\n
+      f;\n
+  // All functions in the closure will be hoisted to the top\n
+  function x() {\n
+    log(\'Mr. X!\');\n
+  }\n
+\n
+  a = 10;\n
+\n
+  for(i = 0; i < a; i++) {\n
+    b = i * i;\n
+    log(b);\n
+  }\n
+\n
+  if(a === 10) {\n
+    // Function assignments will only result in hoisted variables but the function body will not be hoisted\n
+    // Only by using a real function declaration the whole function will be hoisted with its body\n
+    f = function() {\n
+      log(a);\n
+    };\n
+    f();\n
+  }\n
+\n
+  x();\n
+\n
+}(window.console.log));\n
+```\n
+\n
+Considering now the hoisting above you can now see that you could also run the following code without any exceptions:\n
+\n
+**Valid code**\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  var a = 10;\n
+\n
+  i = 5;\n
+\n
+  x();\n
+\n
+  for(var i; i < a; i++) {\n
+    log(b);\n
+    var b = i * i;\n
+  }\n
+\n
+  if(a === 10) {\n
+    f = function() {\n
+      log(a);\n
+    };\n
+    f();\n
+\n
+    var f;\n
+  }\n
+\n
+  function x() {\n
+    log(\'Mr. X!\');\n
+  }\n
+\n
+}(window.console.log));\n
+```\n
+\n
+As you can see this looks very confusing and misunderstanding hoisting can lead to unexpected results. To minimize the\n
+risk of errors and bugs that resulted from misunderstanding hoisting your should follow the style rule of hoisted\n
+declarations in the next section.\n
+\n
+***\n
+\n
+### Use hoisted declarations\n
+\n
+To minimize risk of misunderstanding and misinterpreting results from hoisted variable and function declarations (see\n
+previous section) you should always try to hoist your variable and function declarations manually. This means that\n
+you should declare all your variables that you\'re using in a function as a fist statement in the function.\n
+\n
+Use only one `var` keyword and comma separate multiple declarations.\n
+\n
+**Not recommended**\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  var a = 10;\n
+  var b = 10;\n
+\n
+  for(var i = 0; i < 10; i++) {\n
+    var c = a * b * i;\n
+  }\n
+\n
+  function f() {\n
+\n
+  }\n
+\n
+  var d = 100;\n
+  var x = function() {\n
+    return d * d;\n
+  };\n
+  log(x());\n
+\n
+}(window.console.log));\n
+```\n
+\n
+**Recommended**\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  var a = 10,\n
+      b = 10,\n
+      i,\n
+      c,\n
+      d,\n
+      x;\n
+\n
+  function f() {\n
+\n
+  }\n
+\n
+  for(i = 0; i < 10; i++) {\n
+    c = a * b * i;\n
+  }\n
+\n
+\n
+\n
+  d = 100;\n
+  x = function() {\n
+    return d * d;\n
+  };\n
+  log(x());\n
+\n
+}(window.console.log));\n
+```\n
+\n
+Being pragmatic you should directly initialize your variables during hoisted declaration.\n
+\n
+**Not recommended**\n
+```\n
+var a,\n
+    b,\n
+    c;\n
+\n
+a = 10;\n
+b = 10;\n
+c = 100;\n
+```\n
+\n
+**Recommended**\n
+```\n
+var a = 10,\n
+    b = 10,\n
+    c = 100;\n
+```\n
+\n
+***\n
+\n
+### Always use strict equal\n
+\n
+Always use `===` explicit comparison operators and avoid the hassle you can go through by debugging issues resulted\n
+from the very much overcomplicated javascript type coercion.\n
+\n
+If you\'re using `===` operators both operands need to be from the same type in order to be valid and there will no\n
+type coercion be performed.\n
+\n
+If you\'d like to get more information on type coercion you should read\n
+[this article by Dmitry Soshnikov](http://dmitrysoshnikov.com/notes/note-2-ecmascript-equality-operators/).\n
+\n
+By using only `==` you\'re telling javascript to use type coercion where needed which can be very complicated to trace\n
+down. A few examples can be seen below that should give you a indication how strange type coercion can feel:\n
+\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  log(\'0\' == 0); // true\n
+  log(\'\' == false); // true\n
+  log(\'1\' == true); // true\n
+  log(null == undefined); // true\n
+\n
+  var x = {\n
+    valueOf: function() {\n
+      return \'X\';\n
+    }\n
+  };\n
+\n
+  log(x == \'X\');\n
+\n
+}(window.console.log));\n
+```\n
+\n
+***\n
+\n
+### Use truthy / falsy checks wisely\n
+\n
+By only putting one variable or expression into a if statement you\'re creating a truthy / falsy check. The expression\n
+`if(a == true)` is not the same as `if(a)`. The later expression is creating a special check which is called truthy /\n
+falsy check. This check performs some special operations in order to evaluate to true or false. The following\n
+expressions are falsy in javascript `false`, `0`, `undefined`, `null`, `NaN`, `\'\'` (empty string).\n
+\n
+Truthy / falsy checks are very helpful as they allow you to quickly react on a group of conditions that you\'d like to\n
+take care of but you need to be sure about what you actually want to do.\n
+\n
+The following example shows how truthy / falsy checks work:\n
+\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  function logTruthyFalsy(expr) {\n
+    if(expr) {\n
+      log(\'truthy\');\n
+    } else {\n
+      log(\'falsy\');\n
+    }\n
+  }\n
+\n
+  logTruthyFalsy(true); // truthy\n
+  logTruthyFalsy(1); // truthy\n
+  logTruthyFalsy({}); // truthy\n
+  logTruthyFalsy([]); // truthy\n
+  logTruthyFalsy(\'0\'); // truthy\n
+\n
+  logTruthyFalsy(false); // falsy\n
+  logTruthyFalsy(0); // falsy\n
+  logTruthyFalsy(undefined); // falsy\n
+  logTruthyFalsy(null); // falsy\n
+  logTruthyFalsy(NaN); // falsy\n
+  logTruthyFalsy(\'\'); // falsy\n
+\n
+}(window.console.log));\n
+```\n
+\n
+***\n
+\n
+### Logical operators for variable assignments\n
+\n
+The logical operators `||` and `&&` can also be used to return non-boolean values. If used with non booleans the\n
+operands will evaluate each expression from left to right and performs a falsy check. Depending on the operation, one\n
+of the expressions will be returned. This can be very helpful for variable assignments and should be considered in\n
+order to simplify your code.\n
+\n
+**Not recommended**\n
+```\n
+if(!x) {\n
+  if(!y) {\n
+    x = 1;\n
+  } else {\n
+    x = y;\n
+  }\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+x = x || y || 1;\n
+```\n
+\n
+This shorthand is often used to validated function parameters. The following example illustrates one usage example:\n
+\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  function multiply(a, b) {\n
+    a = a || 1;\n
+    b = b || 1;\n
+\n
+    log(\'Result \' + a * b);\n
+  }\n
+\n
+  multiply(); // Result 1\n
+  multiply(10); // Result 10\n
+  multiply(3, NaN); // Result 3\n
+  multiply(9, 5); // Result 45\n
+\n
+}(window.console.log));\n
+```\n
+\n
+***\n
+\n
+### Semicolons\n
+\n
+Always use semicolons. Relying on implicit insertion can cause subtle, hard to debug problems. Don\'t do it.\n
+You\'re better than that. There are a couple places where missing semicolons are particularly dangerous:\n
+\n
+```\n
+// 1.\n
+MyClass.prototype.myMethod = function() {\n
+  return 42;\n
+}  // No semicolon here.\n
+\n
+(function() {\n
+  // Some initialization code wrapped in a function to create a scope for locals.\n
+})();\n
+\n
+\n
+var x = {\n
+  \'i\': 1,\n
+  \'j\': 2\n
+}  // No semicolon here.\n
+\n
+// 2.  Trying to do one thing on Internet Explorer and another on Firefox.\n
+// I know you\'d never write code like this, but throw me a bone.\n
+[ffVersion, ieVersion][isIE]();\n
+\n
+\n
+var THINGS_TO_EAT = [apples, oysters, sprayOnCheese]  // No semicolon here.\n
+\n
+// 3. conditional execution a la bash\n
+-1 == resultOfOperation() || die();\n
+```\n
+\n
+**So what happens?**\n
+\n
+1.  JavaScript error - first the function returning 42 is called with the second function as a parameter, then\n
+the number 42 is "called" resulting in an error.\n
+1.  You will most likely get a \'no such property in undefined\' error at runtime as it tries to\n
+call `x[ffVersion, ieVersion][isIE]()`.\n
+1.  `die` is always called since the array minus 1 is `NaN` which is never equal to anything (not even if\n
+`resultOfOperation()` returns `NaN`) and `THINGS_TO_EAT` gets assigned the result of `die()`.\n
+\n
+**Why?**\n
+\n
+JavaScript requires statements to end with a semicolon, except when it thinks it can safely infer their existence.\n
+In each of these examples, a function declaration or object or array literal is used inside a statement. The closing\n
+brackets are not enough to signal the end of the statement. Javascript never ends a statement if the next token is an\n
+infix or bracket operator.\n
+\n
+This has really surprised people, so make sure your assignments end with semicolons.\n
+\n
+**Clarification: Semicolons and functions**\n
+\n
+Semicolons should be included at the end of function expressions, but not at the end of function declarations.\n
+The distinction is best illustrated with an example:\n
+\n
+```\n
+var foo = function() {\n
+  return true;\n
+};  // semicolon here.\n
+\n
+function foo() {\n
+  return true;\n
+}  // no semicolon here.\n
+```\n
+\n
+***\n
+\n
+### Nested functions\n
+\n
+Nested functions can be very useful, for example in the creation of continuations and for the task of hiding helper\n
+functions. Feel free to use them.\n
+\n
+***\n
+\n
+### Function declaration within blocks\n
+\n
+Do not declare functions in blocks. This is not valid in ECMAScript 5 strict mode. Functions should be declared on\n
+top level. Don\'t hesitate to use variables initialized with function expressions inside of blocks though:\n
+\n
+**Not recommended**\n
+```\n
+if (x) {\n
+  function foo() {}\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+if (x) {\n
+  var foo = function() {};\n
+}\n
+```\n
+\n
+***\n
+\n
+### Exceptions\n
+\n
+You basically can\'t avoid exceptions if you\'re doing something non-trivial (using an application development framework,\n
+etc.).\n
+\n
+Without custom exceptions, returning error information from a function that also returns a value can be tricky, not to\n
+mention inelegant. Bad solutions include passing in a reference type to hold error information or always returning\n
+Objects with a potential error member. These basically amount to a primitive exception handling hack.\n
+Feel free to use custom exceptions when appropriate.\n
+\n
+In complex environments you should consider throwing objects rather than just strings (default throws).\n
+\n
+```\n
+if(name === undefined) {\n
+  throw {\n
+    name: \'System Error\',\n
+    message: \'A name should always be specified!\'\n
+  }\n
+}\n
+```\n
+\n
+***\n
+\n
+### Standard features\n
+\n
+Always preferred over non-standards features. For maximum portability and compatibility, always prefer standards\n
+features over non-standards features (e.g., `string.charAt(3)` over `string[3]` and element access with DOM functions\n
+instead of using an application-specific shorthand).\n
+\n
+***\n
+\n
+### Simple prototypical inheritance\n
+\n
+If you need inheritance of your objects in Javascript follow a simple pattern to create inheritance. If you know that\n
+you\'ll end up with complex object inheritance consider a inheritance library like\n
+[Proto.js by Axel Rauschmayer](https://github.com/rauschma/proto-js).\n
+\n
+For simple cases use  like the bellow.\n
+\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  // Constructor function\n
+  function Apple(name) {\n
+    this.name = name;\n
+  }\n
+  // Defining a method of apple\n
+  Apple.prototype.eat = function() {\n
+    log(\'Eating \' + this.name);\n
+  };\n
+\n
+  // Constructor function\n
+  function GrannySmithApple() {\n
+    // Invoking parent constructor\n
+    Apple.prototype.constructor.call(this, \'Granny Smith\');\n
+  }\n
+  // Set parent prototype while creating a copy with Object.create\n
+  GrannySmithApple.prototype = Object.create(Apple.prototype);\n
+  // Set constructor to the sub type, otherwise points to Apple\n
+  GrannySmithApple.prototype.constructor = GrannySmithApple;\n
+\n
+  // Calling a super method\n
+  GrannySmithApple.prototype.eat = function() {\n
+    // Be sure to apply it onto our current object with call(this)\n
+    Apple.prototype.eat.call(this);\n
+\n
+    log(\'Poor Grany Smith\');\n
+  };\n
+\n
+  // Instantiation\n
+  var apple = new Apple(\'Test Apple\');\n
+  var grannyApple = new GrannySmithApple();\n
+\n
+  log(apple.name); // Test Apple\n
+  log(grannyApple.name); // Granny Smith\n
+\n
+  // Instance checks\n
+  log(apple instanceof Apple); // true\n
+  log(apple instanceof GrannySmithApple); // false\n
+\n
+  log(grannyApple instanceof Apple); // true\n
+  log(grannyApple instanceof GrannySmithApple); // true\n
+\n
+  // Calling method that calls super method\n
+  grannyApple.eat(); // Eating Granny Smith\\nPoor Grany Smith\n
+\n
+}(window.console.log));\n
+```\n
+\n
+***\n
+\n
+### Use Closures\n
+\n
+The ability to create closures is perhaps the most useful and often overlooked feature of JS.\n
+Here is [a good description of how closures work](http://jibbering.com/faq/faq_notes/closures.html).\n
+\n
+***\n
+\n
+### Don\'t create functions in loops\n
+\n
+It\'s generally a potential source for bugs if you write functions that create a closure inside of simple loops. The\n
+following example illustrates a common pitfall.\n
+\n
+**Not recommended**\n
+```\n
+(function(log, w){\n
+  \'use strict\';\n
+\n
+  // numbers and i is defined in the current function closure\n
+  var numbers = [1, 2, 3],\n
+      i;\n
+\n
+  for(i = 0; i < numbers.length; i++) {\n
+    w.setTimeout(function() {\n
+      // At the moment when this gets executed the i variable, coming from the outer function scope\n
+      // is set to 3 and the current program is alerting the message 3 times\n
+      // \'Index 3 with number undefined\n
+      // If you understand closures in javascript you know how to deal with those cases\n
+      // It\'s best to just avoid functions / new closures in loops as this prevents those issues\n
+\n
+      w.alert(\'Index \' + i + \' with number \' + numbers[i]);\n
+    }, 0);\n
+  }\n
+\n
+}(window.console.log, window));\n
+```\n
+\n
+The following variation of the above example solves our problem / bug but still violates our policy to not create\n
+functions / closures inside of loops.\n
+\n
+**Not recommended**\n
+```\n
+(function(log, w){\n
+  \'use strict\';\n
+\n
+  // numbers and i is defined in the current function closure\n
+  var numbers = [1, 2, 3],\n
+      i;\n
+\n
+  for(i = 0; i < numbers.length; i++) {\n
+    // Creating a new closure scope with an IIFE solves the problem\n
+    // The delayed function will use index and number which are\n
+    // in their own closure scope (one closure per loop iteration).\n
+    // ---\n
+    // Still this is not recommended as we violate our rule to not\n
+    // create functions within loops and we are creating two!\n
+\n
+    (function(index, number){\n
+      w.setTimeout(function() {\n
+        // Will output as expected 0 > 1, 1 > 2, 2 > 3\n
+        w.alert(\'Index \' + index + \' with number \' + number);\n
+      }, 0);\n
+    }(i, numbers[i]));\n
+  }\n
+\n
+}(window.console.log, window));\n
+```\n
+\n
+The following variation solves our problem / bug and we also comply with our style guide. However, this seems to be\n
+heavily overcomplicated and we should look for a better / easier way.\n
+\n
+**Partially recommended**\n
+```\n
+(function(log, w){\n
+  \'use strict\';\n
+\n
+  // numbers and i is defined in the current function closure\n
+  var numbers = [1, 2, 3],\n
+      i;\n
+\n
+  // Create a function outside of the loop that will accept arguments to create a\n
+  // function closure scope. This function will return a function that executes in this\n
+  // closure parent scope.\n
+  function alertIndexWithNumber(index, number) {\n
+    return function() {\n
+      w.alert(\'Index \' + index + \' with number \' + number);\n
+    };\n
+  }\n
+\n
+  // First parameter is a function call that returns a function.\n
+  // ---\n
+  // This solves our problem and we don\'t create a function inside our loop\n
+  for(i = 0; i < numbers.length; i++) {\n
+    w.setTimeout(alertIndexWithNumber(i, numbers[i]), 0);\n
+  }\n
+\n
+}(window.console.log, window));\n
+```\n
+\n
+By using a functional approach for our loop we solve the problem immediately as we create a new closure with every loop.\n
+Functional style is recommended and will also lead to more natural and expected results.\n
+\n
+**Recommended**\n
+```\n
+(function(log, w){\n
+  \'use strict\';\n
+\n
+  // numbers and i is defined in the current function closure\n
+  var numbers = [1, 2, 3],\n
+      i;\n
+\n
+  numbers.forEach(function(number, index) {\n
+    w.setTimeout(function() {\n
+      w.alert(\'Index \' + index + \' with number \' + number);\n
+    }, 0);\n
+  });\n
+\n
+}(window.console.log, window));\n
+```\n
+\n
+***\n
+\n
+### The (evil) eval function\n
+\n
+`eval()` makes for confusing semantics and is dangerous to use if the string being eval()\'d contains user input.\n
+There\'s usually a better, clearer, and safer way to write your code, so its use is generally not permitted.\n
+\n
+***\n
+\n
+### The this keyword\n
+\n
+Use the `this` keyword only in object constructors, methods, and in setting up closures. The semantics of this can be\n
+tricky. At times it refers to the global object (in most places), the scope of the caller (in eval), a node in the DOM\n
+tree (when attached using an event handler HTML attribute), a newly created object (in a constructor), or some other\n
+object (if function was call()ed or apply()ed).\n
+\n
+Because this is so easy to get wrong, limit its use to those places where it is required:\n
+\n
+- in constructors\n
+- in methods of objects (including in the creation of closures)\n
+\n
+***\n
+\n
+### Functional is preferred\n
+\n
+Using functional style programming you can simplify your code and reduce maintenance cost by gaining easy re-usability,\n
+proper isolation and less dependencies.\n
+\n
+The following example compares two solutions for the same problem of summing up all number elements in an array. The\n
+first example is a classical procedural approach while the second one makes use of functional style programming and the\n
+ECMA Script 5.1 array functions.\n
+\n
+Exception: In situations where performance is considered to be more important than maintainability then you might\n
+consider the most performant solution over the most maintainable (i.e. using simple for loop over forEach)\n
+\n
+**Not recommended**\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  var arr = [10, 3, 7, 9, 100, 20],\n
+      sum = 0,\n
+      i;\n
+\n
+\n
+  for(i = 0; i < arr.length; i++) {\n
+    sum += arr[i];\n
+  }\n
+\n
+  log(\'The sum of array \' + arr + \' is: \' + sum)\n
+\n
+}(window.console.log));\n
+```\n
+\n
+**Recommended**\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  var arr = [10, 3, 7, 9, 100, 20];\n
+\n
+  var sum = arr.reduce(function(prevValue, currentValue) {\n
+    return prevValue + currentValue;\n
+  }, 0);\n
+\n
+  log(\'The sum of array \' + arr + \' is: \' + sum);\n
+\n
+}(window.console.log));\n
+```\n
+\n
+An other example would be to filter an array for certain criteria so that we can create a new array that only contains\n
+those elements that match the criteria.\n
+\n
+**Not recommended**\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  var numbers = [11, 3, 7, 9, 100, 20, 14, 10],\n
+      numbersGreaterTen = [],\n
+      i;\n
+\n
+\n
+  for(i = 0; i < numbers.length; i++) {\n
+    if(numbers[i] > 10) {\n
+      numbersGreaterTen.push(numbers[i]);\n
+    }\n
+  }\n
+\n
+  log(\'From the list of numbers \' + numbers + \' only \' + numbersGreaterTen + \' are greater than ten\');\n
+\n
+}(window.console.log));\n
+```\n
+\n
+**Recommended**\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  var numbers = [11, 3, 7, 9, 100, 20, 14, 10];\n
+\n
+  var numbersGreaterTen = numbers.filter(function(element) {\n
+    return element > 10;\n
+  });\n
+\n
+  log(\'From the list of numbers \' + numbers + \' only \' + numbersGreaterTen + \' are greater than ten\');\n
+\n
+}(window.console.log));\n
+```\n
+\n
+***\n
+\n
+### Use ECMA Script 5\n
+\n
+Use the syntactical sugar and functional style that was added with ECMA Script 5. It\'s simplifying your programming\n
+style and makes your code more flexible and re-usable.\n
+\n
+***\n
+\n
+### Array and object property iteration\n
+\n
+The ECMA5 way to iterate over an array is preferred. Use Array.forEach or Array.every if you would like to cancel the\n
+iteration at a certain condition.\n
+\n
+```\n
+(function(log){\n
+  \'use strict\';\n
+\n
+  // Iterate over an array and break at a certain condition\n
+  [1, 2, 3, 4, 5].every(function(element, index, arr) {\n
+    log(element + \' at index \' + index + \' in array \' + arr);\n
+\n
+    if(index !== 5) {\n
+      return true;\n
+    }\n
+  });\n
+\n
+  // Defining a simple javascript object\n
+  var obj = {\n
+    a: \'A\',\n
+    b: \'B\',\n
+    \'c-d-e\': \'CDE\'\n
+  };\n
+\n
+  // Iterating over the object keys\n
+  Object.keys(obj).forEach(function(element, index, arr) {\n
+    log(\'Key \' + element + \' has value \' + obj[element]);\n
+  });\n
+\n
+}(window.console.log));\n
+```\n
+\n
+***\n
+\n
+### Don\'t use switch\n
+\n
+switch is a very error prone control statement in every programming language. Use if else if instead.\n
+\n
+***\n
+\n
+### Array and Object literals\n
+\n
+Use Array and Object literals instead of Array and Object constructors. Array constructors are error-prone due to their\n
+arguments.\n
+\n
+**Not recommended**\n
+```\n
+// Length is 3.\n
+var a1 = new Array(x1, x2, x3);\n
+\n
+// Length is 2.\n
+var a2 = new Array(x1, x2);\n
+\n
+// If x1 is a number and it is a natural number the length will be x1.\n
+// If x1 is a number but not a natural number this will throw an exception.\n
+// Otherwise the array will have one element with x1 as its value.\n
+var a3 = new Array(x1);\n
+\n
+// Length is 0.\n
+var a4 = new Array();\n
+```\n
+\n
+Because of this, if someone changes the code to pass 1 argument instead of 2 arguments, the array might not have the\n
+expected length. To avoid these kinds of weird cases, always use the more readable array literal.\n
+\n
+**Recommended**\n
+```\n
+var a = [x1, x2, x3];\n
+var a2 = [x1, x2];\n
+var a3 = [x1];\n
+var a4 = [];\n
+```\n
+\n
+Object constructors don\'t have the same problems, but for readability and consistency object literals should be used.\n
+\n
+**Not recommended**\n
+```\n
+var o = new Object();\n
+\n
+var o2 = new Object();\n
+o2.a = 0;\n
+o2.b = 1;\n
+o2.c = 2;\n
+o2[\'strange key\'] = 3;\n
+```\n
+\n
+Should be written as:\n
+\n
+**Recommended**\n
+```\n
+var o = {};\n
+\n
+var o2 = {\n
+  a: 0,\n
+  b: 1,\n
+  c: 2,\n
+  \'strange key\': 3\n
+};\n
+```\n
+\n
+***\n
+\n
+### Modifying prototypes of builtin objects\n
+\n
+Modifying builtins like `Object.prototype` and `Array.prototype` are strictly forbidden. Modifying other builtins like\n
+`Function.prototype` is less dangerous but still leads to hard to debug issues in production and should be avoided.\n
+\n
+***\n
+\n
+### Custom toString() methods\n
+\n
+You can control how your objects string-ify themselves by defining a custom `toString()` method. This is fine, but you\n
+need to ensure that your method (1) always succeeds and (2) does not have side-effects. If your method doesn\'t meet\n
+these criteria, it\'s very easy to run into serious problems. For example, if `toString()` calls a method that does an\n
+assert, assert might try to output the name of the object in which it failed, which of course requires\n
+calling `toString()`.\n
+\n
+***\n
+\n
+### Parentheses\n
+\n
+Use sparingly and in general only where required by the syntax and semantics. Never use parentheses for unary\n
+operators such as `delete`, `typeof` and `void` or after keywords such as `return`, `throw` as well\n
+as others (`case`, in or `new`).\n
+\n
+***\n
+\n
+### Strings\n
+\n
+For consistency single-quotes (\') are preferred to double-quotes ("). This is helpful when creating\n
+strings that include HTML:\n
+\n
+```\n
+var msg = \'This is some HTML <div class="makes-sense"></div>\';\n
+```\n
+\n
+***\n
+\n
+### Conditional Ternary Operator (shorthand if)\n
+\n
+Use the ternary operator for assignments or return statements. Use it only in simple conditions and avoid it in complex\n
+ones. No body likes to wrap his brain around 10 lines of nested ternary operators.\n
+\n
+**Not recommended**\n
+```\n
+if(x === 10) {\n
+  return \'valid\';\n
+} else {\n
+  return \'invalid\';\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+return x === 10 ? \'valid\' : \'invalid\';\n
+```\n
+\n
+***\n
+\n
+## CSS and Sass (SCSS) style rules\n
+\n
+***\n
+\n
+### ID and class naming\n
+\n
+Instead of presentational or cryptic names, always use ID and class names that reflect the purpose of the element in\n
+question, or that are otherwise generic.\n
+\n
+Names that are specific and reflect the purpose of the element should be preferred as these are most understandable\n
+and the least likely to change.\n
+\n
+Generic names are simply a fallback for elements that have no particular or no meaning different from their siblings.\n
+They are typically needed as “helpers.”\n
+\n
+Even though class names and ID\'s have no semantic meaning to computer interpreters, semantic names are often the right\n
+choice as they represent the information meaning and don\'t introduce presentational constraints.\n
+\n
+**Not recommended**\n
+```\n
+.fw-800 {\n
+  font-weight: 800;\n
+}\n
+\n
+.red {\n
+  color: red;\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+.heavy {\n
+  font-weight: 800;\n
+}\n
+\n
+.important {\n
+  color: red;\n
+}\n
+```\n
+\n
+***\n
+\n
+### Avoid ID\'s where possible\n
+\n
+In general ID\'s should not be used to apply style. Styles on ID\'s can\'t be re-used and you can only use them once per\n
+page. The only valid location for using an ID would be to identify a page or a whole site. Still you should always\n
+consider using a class that you use once instead of an id.\n
+\n
+**Not recommended**\n
+```\n
+#content .title {\n
+  font-size: 2em;\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+.content .title {\n
+  font-size: 2em;\n
+}\n
+```\n
+\n
+One other argument against using ID\'s would be that selector chains containing ID\'s are over-prioritized. A selector\n
+containing just one ID is weighted higher than a selector containing 1000 class names only which makes it very odd.\n
+\n
+```\n
+// This selecor is considered with higher priority\n
+#content .title {\n
+  color: red;\n
+}\n
+\n
+// than this selector!\n
+html body div.content.news-content .title.content-title.important {\n
+  color: blue;\n
+}\n
+```\n
+\n
+***\n
+\n
+### Avoid elements in CSS selectors\n
+\n
+When building your selectors use clear, precise and sensible class names. Don\'t use element selectors. If you\'re only\n
+concerned about your class names and not about your elements your code gets a lot more maintainable.\n
+\n
+From a separation of concerns perspective you don\'t want to dictate the markup / semantics from the presentation layer.\n
+It might be that a ordered list needs to be changed to an unordered list or that a div will be converted to an article.\n
+If you only care about sensible class names and don\'t use element selectors you\'d only need to change your markup and\n
+not your css.\n
+\n
+**Not recommended**\n
+```\n
+div.content > header.content-header > h2.title {\n
+  font-size: 2em;\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+.content > .content-header > .title {\n
+  font-size: 2em;\n
+}\n
+```\n
+\n
+***\n
+\n
+### Be as precise as possible\n
+\n
+A lot of front-end developers don\'t use direct child selectors when they write their selector chains. Sometimes this\n
+can cause painful design issues and other times it\'s just a performance eater. However, in any case, it\'s a very bad\n
+practice. If you don\'t write very generic selectors that need to match down to the bottom of the DOM you should always\n
+consider direct child selectors.\n
+\n
+Consider the following DOM:\n
+\n
+```\n
+<article class="content news-content">\n
+  <span class="title">News event</span>\n
+  <div class="content-body">\n
+    <div class="title content-title">\n
+      Check this out\n
+    </div>\n
+\n
+    <p>This is a news article content</p>\n
+\n
+    <div class="teaser">\n
+      <div class="title">Buy this</div>\n
+      <div class="teaser-content">Yey!</div>\n
+    </div>\n
+  </div>\n
+</article>\n
+```\n
+\n
+The following CSS would apply to all three elements that have a title class. This then would need to be overridden again\n
+with more granular selectors in order to fix the content title and the teaser title.\n
+\n
+**Not recommended**\n
+```\n
+.content .title {\n
+  font-size: 2rem;\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+.content > .title {\n
+  font-size: 2rem;\n
+}\n
+\n
+.content > .content-body > .title {\n
+  font-size: 1.5rem;\n
+}\n
+\n
+.content > .content-body > .teaser > .title {\n
+  font-size: 1.2rem;\n
+}\n
+```\n
+\n
+***\n
+\n
+### Shorthand Properties\n
+\n
+CSS offers a variety of shorthand properties (like font) that should be used whenever possible, even in cases where\n
+only one value is explicitly set.\n
+\n
+Using shorthand properties is useful for code efficiency and understandability.\n
+\n
+**Not recommended**\n
+```\n
+border-top-style: none;\n
+font-family: palatino, georgia, serif;\n
+font-size: 100%;\n
+line-height: 1.6;\n
+padding-bottom: 2em;\n
+padding-left: 1em;\n
+padding-right: 1em;\n
+padding-top: 0;\n
+```\n
+\n
+**Recommended**\n
+```\n
+border-top: 0;\n
+font: 100%/1.6 palatino, georgia, serif;\n
+padding: 0 1em 2em;\n
+```\n
+\n
+***\n
+\n
+### 0 and units\n
+\n
+Omit unit specification after “0” values. Do not use units after 0 values unless they are required.\n
+\n
+**Not recommended**\n
+```\n
+padding-bottom: 0px;\n
+margin: 0em;\n
+```\n
+\n
+**Recommended**\n
+```\n
+padding-bottom: 0;\n
+margin: 0;\n
+```\n
+\n
+***\n
+\n
+### Hexadecimal Notation\n
+\n
+Use 3 character hexadecimal notation where possible. For color values that permit it, 3 character hexadecimal notation\n
+is shorter and more succinct.\n
+\n
+Always use lower case hex digits.\n
+\n
+**Not recommended**\n
+```\n
+color: #FF33AA;\n
+```\n
+\n
+**Recommended**\n
+```\n
+color: #f3a;\n
+```\n
+\n
+***\n
+\n
+### ID and Class Name Delimiters\n
+\n
+Separate words in ID and class names by a hyphen. Do not concatenate words and abbreviations in selectors by any\n
+characters (including none at all) other than hyphens, in order to improve understanding and scannability.\n
+\n
+Also as the standard foresees attribute selectors that recognise hyphens as separator of words `[attribute|=value]`\n
+it\'s best to stick to the hyphen as separator.\n
+\n
+**Not recommended**\n
+```\n
+.demoimage {}\n
+.error_status {}\n
+```\n
+\n
+**Recommended**\n
+```\n
+#video-id {}\n
+.ads-sample {}\n
+```\n
+\n
+***\n
+\n
+### Hacks\n
+\n
+Avoid user agent detection as well as CSS “hacks”—try a different approach first. It’s tempting to address styling\n
+differences over user agent detection or special CSS filters, workarounds, and hacks. Both approaches should be\n
+considered last resort in order to achieve and maintain an efficient and manageable code base. Put another way, giving\n
+detection and hacks a free pass will hurt projects in the long run as projects tend to take the way of least\n
+resistance. That is, allowing and making it easy to use detection and hacks means using detection and hacks more\n
+frequently—and more frequently is too frequently.\n
+\n
+***\n
+\n
+### Declaration Order\n
+\n
+This example should give a rough outline of how to order CSS properties within a selector. This is important in order\n
+to guarantee better readability and better scannability.\n
+\n
+As a best practice we should follow the following ordering (in the same order as the listing):\n
+\n
+1.  structural\n
+  1.  display\n
+  1.  position, left, top, right etc.\n
+  1.  overflow, float, clear etc.\n
+  1.  margin, padding\n
+1.  skin\n
+  1.  background, border etc.\n
+  1.  font, text\n
+\n
+**Not recommended**\n
+```\n
+.box {\n
+  font-family: \'Arial\', sans-serif;\n
+  border: 3px solid #ddd;\n
+  left: 30%;\n
+  position: absolute;\n
+  text-transform: uppercase;\n
+  background-color: #eee;\n
+  right: 30%;\n
+  isplay: block;\n
+  font-size: 1.5rem;\n
+  overflow: hidden;\n
+  padding: 1em;\n
+  margin: 1em;\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+.box {\n
+  display: block;\n
+  position: absolute;\n
+  left: 30%;\n
+  right: 30%;\n
+  overflow: hidden;\n
+  margin: 1em;\n
+  padding: 1em;\n
+  background-color: #eee;\n
+  border: 3px solid #ddd;\n
+  font-family: \'Arial\', sans-serif;\n
+  font-size: 1.5rem;\n
+  text-transform: uppercase;\n
+}\n
+```\n
+\n
+***\n
+\n
+### Declaration Stops\n
+\n
+End every declaration with a semicolon for consistency and extensibility reasons and put each declaration on a new line.\n
+\n
+**Not recommended**\n
+```\n
+.test {\n
+  display: block; height: 100px\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+.test {\n
+  display: block;\n
+  height: 100px;\n
+}\n
+```\n
+\n
+***\n
+\n
+### Property Name Stops\n
+\n
+Use a space after a property name’s colon. Always use a single space between property and value (but no space between\n
+property and colon) for consistency reasons.\n
+\n
+**Not recommended**\n
+```\n
+h3 {\n
+  font-weight:bold;\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+h3 {\n
+  font-weight: bold;\n
+}\n
+```\n
+\n
+***\n
+\n
+### Selector and Declaration Separation\n
+\n
+Always start a new line for each selector and declaration.\n
+\n
+**Not recommended**\n
+```\n
+a:focus, a:active {\n
+  position: relative; top: 1px;\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+h1,\n
+h2,\n
+h3 {\n
+  font-weight: normal;\n
+  line-height: 1.2;\n
+}\n
+```\n
+\n
+***\n
+\n
+### Rule Separation\n
+\n
+Always put a blank line (two line breaks) between rules.\n
+\n
+**Recommended**\n
+```\n
+html {\n
+  background: #fff;\n
+}\n
+\n
+body {\n
+  margin: auto;\n
+  width: 50%;\n
+}\n
+```\n
+\n
+***\n
+\n
+### CSS Quotation Marks\n
+\n
+Use double ("") rather than single (\'\') quotation marks for attribute selectors or property values.\n
+Do not use quotation marks in URI values (url()).\n
+\n
+**Not recommended**\n
+```\n
+@import url(\'//cdn.com/foundation.css\');\n
+\n
+html {\n
+  font-family: \'open sans\', arial, sans-serif;\n
+}\n
+\n
+body:after {\n
+  content: \'pause\';\n
+}\n
+```\n
+\n
+**Recommended**\n
+```\n
+@import url(//cdn.com/foundation.css);\n
+\n
+html {\n
+  font-family: "open sans", arial, sans-serif;\n
+}\n
+\n
+body:after {\n
+  content: "pause";\n
+}\n
+```\n
+\n
+***\n
+\n
+### Nested selectors (SCSS)\n
+\n
+In Sass you can nest selectors which is much cleaner and the code becomes much more readable. Nest all selectors but\n
+try to avoid nesting without any content. If you need to specify some style attributes for a child element where the\n
+parent element will not receive any styling use a regular CSS selector chain. This will prevent your script to look\n
+overcomplicated.\n
+\n
+**Not recommended**\n
+```scss\n
+// Not a good example by not making use of nesting at all\n
+.content {\n
+  display: block;\n
+}\n
+\n
+.content > .news-article > .title {\n
+  font-size: 1.2em;\n
+}\n
+```\n
+\n
+**Not recommended**\n
+```scss\n
+// Using nesting is better but not in all cases\n
+// Avoid nesting when there is no attributes and use selector chains instead\n
+.content {\n
+  display: block;\n
+\n
+  > .news-article {\n
+    > .title {\n
+      font-size: 1.2em;\n
+    }\n
+  }\n
+}\n
+```\n
+\n
+**Recommended**\n
+```scss\n
+// This example takes the best approach while nesting but use selector chains where possible\n
+.content {\n
+  display: block;\n
+\n
+  > .news-article > .title {\n
+    font-size: 1.2em;\n
+  }\n
+}\n
+```\n
+\n
+***\n
+\n
+### Introducing space while nesting (SCSS)\n
+\n
+If you nest your selectors introduce blank line between your nested selectors and the css attributes.\n
+\n
+**Not recommended**\n
+```scss\n
+.content {\n
+  display: block;\n
+  > .news-article {\n
+    background-color: #eee;\n
+    > .title {\n
+      font-size: 1.2em;\n
+    }\n
+    > .article-footnote {\n
+      font-size: 0.8em;\n
+    }\n
+  }\n
+}\n
+```\n
+\n
+**Recommended**\n
+```scss\n
+.content {\n
+  display: block;\n
+\n
+  > .news-article {\n
+    background-color: #eee;\n
+\n
+    > .title {\n
+      font-size: 1.2em;\n
+    }\n
+\n
+    > .article-footnote {\n
+      font-size: 0.8em;\n
+    }\n
+  }\n
+}\n
+```\n
+\n
+***\n
+\n
+### Contextual media queries (SCSS)\n
+\n
+While nesting your selectors you can also make use of contextual media queries within Sass. With Sass you can use media\n
+queries at any given nesting level. The resulting CSS will be converted so that the media query gets rendered around the\n
+selector.\n
+\n
+This technique is very handy and helps to keep media queries in the context where they belong to. With a mobile first\n
+approach this allows you to write your mobile styles first and then use contextual media queries where ever you need\n
+them in order to provide the desktop styles.\n
+\n
+**Not recommended**\n
+```scss\n
+// This mobile first example looks like plain CSS where the whole structure of SCSS is repeated\n
+// on the bottom in a media query. This is error prone and makes maintenance harder as it\'s not so easy to relate\n
+// the content in the media query to the content in the upper part (mobile style)\n
+\n
+.content-page {\n
+  font-size: 1.2rem;\n
+\n
+  > .main {\n
+    background-color: whitesmoke;\n
+\n
+    > .latest-news {\n
+      padding: 1rem;\n
+\n
+      > .news-article {\n
+        padding: 1rem;\n
+\n
+        > .title {\n
+          font-size: 2rem;\n
+        }\n
+      }\n
+    }\n
+\n
+    > .content {\n
+      margin-top: 2rem;\n
+      padding: 1rem;\n
+    }\n
+  }\n
+\n
+  > .page-footer {\n
+    margin-top: 2rem;\n
+    font-size: 1rem;\n
+  }\n
+}\n
+\n
+@media screen and (min-width: 641px) {\n
+  .content-page {\n
+    font-size: 1rem;\n
+\n
+    > .main > .latest-news > .news-article > .title {\n
+      font-size: 3rem;\n
+    }\n
+\n
+    > .page-footer {\n
+      font-size: 0.8rem;\n
+    }\n
+  }\n
+}\n
+```\n
+\n
+**Recommended**\n
+```scss\n
+// This is the same example as above but here we use contextual media queries in order to put the different styles\n
+// for different media into the right context.\n
+\n
+.content-page {\n
+  font-size: 1.2rem;\n
+\n
+  @media screen and (min-width: 641px) {\n
+    font-size: 1rem;\n
+  }\n
+\n
+  > .main {\n
+    background-color: whitesmoke;\n
+\n
+    > .latest-news {\n
+      padding: 1rem;\n
+\n
+      > .news-article {\n
+        padding: 1rem;\n
+\n
+        > .title {\n
+          font-size: 2rem;\n
+\n
+          @media screen and (min-width: 641px) {\n
+            font-size: 3rem;\n
+          }\n
+        }\n
+      }\n
+    }\n
+\n
+    > .content {\n
+      margin-top: 2rem;\n
+      padding: 1rem;\n
+    }\n
+  }\n
+\n
+  > .page-footer {\n
+    margin-top: 2rem;\n
+    font-size: 1rem;\n
+\n
+    @media screen and (min-width: 641px) {\n
+      font-size: 0.8rem;\n
+    }\n
+  }\n
+}\n
+```\n
+\n
+***\n
+\n
+### Nesting order and the parent selector (SCSS)\n
+\n
+While using the nesting features of Sass it\'s important to have a clear order to put your nesting in. A SCSS block\n
+should have the following content order.\n
+\n
+1.  Current selector\'s style attributes\n
+1.  Pseudo selectors with parent selector (:first-letter, :hover, :active etc)\n
+1.  Pseudo elements (:before and :after)\n
+1.  State classe with parent selector (.selected, .active, .enlarged etc.)\n
+1.  Contextual media queries with Sass\n
+1.  Sub selectors as the last part\n
+\n
+The following example should illustrate how this ordering will achieve a clear structure while making use of the Sass\n
+parent selector.\n
+\n
+**Recommended**\n
+```scss\n
+.product-teaser {\n
+  // 1. Style attributes\n
+  display: inline-block;\n
+  padding: 1rem;\n
+  background-color: whitesmoke;\n
+  color: grey;\n
+\n
+  // 2. Pseudo selectors with parent selector\n
+  &:hover {\n
+    color: black;\n
+  }\n
+\n
+  // 3. Pseudo elements with parent selector\n
+  &:before {\n
+    content: "";\n
+    display: block;\n
+    border-top: 1px solid grey;\n
+  }\n
+\n
+  &:after {\n
+    content: "";\n
+    display: block;\n
+    border-top: 1px solid grey;\n
+  }\n
+\n
+  // 4. State classes with parent selector\n
+  &.active {\n
+    background-color: pink;\n
+    color: red;\n
+\n
+    // 4.2. Pseuso selector in state class selector\n
+    &:hover {\n
+      color: darkred;\n
+    }\n
+  }\n
+\n
+  // 5. Contextual media queries\n
+  @media screen and (max-width: 640px) {\n
+    display: block;\n
+    font-size: 2em;\n
+  }\n
+\n
+  // 6. Sub selectors\n
+  > .content > .title {\n
+    font-size: 1.2em;\n
+\n
+    // 6.5. Contextual media queries in sub selector\n
+    @media screen and (max-width: 640px) {\n
+      letter-spacing: 0.2em;\n
+      text-transform: uppercase;\n
+    }\n
+  }\n
+}\n
+```\n
+\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

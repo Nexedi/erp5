@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273040.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-bar-with-circle-modify-drawing.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// Create a simple bi-polar bar chart\n
+var chart = new Chartist.Bar(\'.ct-chart\', {\n
+  labels: [\'W1\', \'W2\', \'W3\', \'W4\', \'W5\', \'W6\', \'W7\', \'W8\', \'W9\', \'W10\'],\n
+  series: [\n
+    [1, 2, 4, 8, 6, -2, -1, -4, -6, -2]\n
+  ]\n
+}, {\n
+  high: 10,\n
+  low: -10,\n
+  axisX: {\n
+    labelInterpolationFnc: function(value, index) {\n
+      return index % 2 === 0 ? value : null;\n
+    }\n
+  }\n
+});\n
+\n
+// Listen for draw events on the bar chart\n
+chart.on(\'draw\', function(data) {\n
+  // If this draw event is of type bar we can use the data to create additional content\n
+  if(data.type === \'bar\') {\n
+    // We use the group element of the current series to append a simple circle with the bar peek coordinates and a circle radius that is depending on the value\n
+    data.group.append(new Chartist.Svg(\'circle\', {\n
+      cx: data.x2,\n
+      cy: data.y2,\n
+      r: Math.abs(Chartist.getMultiValue(data.value)) * 2 + 5\n
+    }, \'ct-slice-pie\'));\n
+  }\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>901</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-bar-with-circle-modify-drawing.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

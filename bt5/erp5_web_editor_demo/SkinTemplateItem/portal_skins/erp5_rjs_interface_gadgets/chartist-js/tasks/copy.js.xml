@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273108.61</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>copy.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * copy\n
+ * ====\n
+ *\n
+ * Copies remaining files to places other tasks can use.\n
+ *\n
+ * Link: https://github.com/gruntjs/grunt-contrib-copy\n
+ */\n
+\n
+\'use strict\';\n
+\n
+module.exports = function (grunt) {\n
+  return {\n
+    public: {\n
+      files: [\n
+        {\n
+          expand: true,\n
+          dot: true,\n
+          cwd: \'<%= pkg.config.site %>\',\n
+          dest: \'<%= pkg.config.public %>\',\n
+          src: [\n
+            \'*.{ico,png,txt}\',\n
+            \'.htaccess\',\n
+            \'*.html\',\n
+            \'bower_components/**/*\',\n
+            \'images/{,*/}*.{webp}\',\n
+            \'fonts/*\'\n
+          ]\n
+        },\n
+        {\n
+          expand: true,\n
+          cwd: \'<%= pkg.config.tmp %>/images\',\n
+          dest: \'<%= pkg.config.public %>/images\',\n
+          src: [\'generated/*\']\n
+        },\n
+        {\n
+          expand: true,\n
+          cwd: \'<%= pkg.config.tmp %>\',\n
+          dest: \'<%= pkg.config.public %>\',\n
+          src: [\n
+            \'*.html\'\n
+          ]\n
+        }\n
+      ]\n
+    },\n
+    dist: {\n
+      files: [\n
+        {\n
+          expand: true,\n
+          cwd: \'<%= pkg.config.src %>/styles\',\n
+          dest: \'<%= pkg.config.dist %>/scss/\',\n
+          src: [\n
+            \'modules/**/*.scss\',\n
+            \'settings/**/*.scss\',\n
+            \'*.scss\'\n
+          ]\n
+        },\n
+        {\n
+          dest: \'<%= pkg.config.dist %>/\',\n
+          src: \'LICENSE\'\n
+        }\n
+      ]\n
+    }\n
+  };\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1348</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>copy.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

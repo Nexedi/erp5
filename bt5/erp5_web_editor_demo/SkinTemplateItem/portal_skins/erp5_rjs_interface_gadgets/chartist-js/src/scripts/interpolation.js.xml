@@ -1,0 +1,362 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273070.04</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>interpolation.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Chartist path interpolation functions.\n
+ *\n
+ * @module Chartist.Interpolation\n
+ */\n
+/* global Chartist */\n
+(function(window, document, Chartist) {\n
+  \'use strict\';\n
+\n
+  Chartist.Interpolation = {};\n
+\n
+  /**\n
+   * This interpolation function does not smooth the path and the result is only containing lines and no curves.\n
+   *\n
+   * @memberof Chartist.Interpolation\n
+   * @return {Function}\n
+   */\n
+  Chartist.Interpolation.none = function() {\n
+    return function none(pathCoordinates, valueData) {\n
+      var path = new Chartist.Svg.Path();\n
+      // We need to assume that the first value is a "hole"\n
+      var hole = true;\n
+\n
+      for(var i = 1; i < pathCoordinates.length; i += 2) {\n
+        var data = valueData[(i - 1) / 2];\n
+\n
+        // If the current value is undefined we should treat it as a hole start\n
+        if(data.value === undefined) {\n
+          hole = true;\n
+        } else {\n
+          // If this value is valid we need to check if we\'re coming out of a hole\n
+          if(hole) {\n
+            // If we are coming out of a hole we should first make a move and also reset the hole flag\n
+            path.move(pathCoordinates[i - 1], pathCoordinates[i], false, data);\n
+            hole = false;\n
+          } else {\n
+            path.line(pathCoordinates[i - 1], pathCoordinates[i], false, data);\n
+          }\n
+        }\n
+      }\n
+\n
+      return path;\n
+    };\n
+  };\n
+\n
+  /**\n
+   * Simple smoothing creates horizontal handles that are positioned with a fraction of the length between two data points. You can use the divisor option to specify the amount of smoothing.\n
+   *\n
+   * Simple smoothing can be used instead of `Chartist.Smoothing.cardinal` if you\'d like to get rid of the artifacts it produces sometimes. Simple smoothing produces less flowing lines but is accurate by hitting the points and it also doesn\'t swing below or above the given data point.\n
+   *\n
+   * All smoothing functions within Chartist are factory functions that accept an options parameter. The simple interpolation function accepts one configuration parameter `divisor`, between 1 and ∞, which controls the smoothing characteristics.\n
+   *\n
+   * @example\n
+   * var chart = new Chartist.Line(\'.ct-chart\', {\n
+   *   labels: [1, 2, 3, 4, 5],\n
+   *   series: [[1, 2, 8, 1, 7]]\n
+   * }, {\n
+   *   lineSmooth: Chartist.Interpolation.simple({\n
+   *     divisor: 2\n
+   *   })\n
+   * });\n
+   *\n
+   *\n
+   * @memberof Chartist.Interpolation\n
+   * @param {Object} options The options of the simple interpolation factory function.\n
+   * @return {Function}\n
+   */\n
+  Chartist.Interpolation.simple = function(options) {\n
+    var defaultOptions = {\n
+      divisor: 2\n
+    };\n
+    options = Chartist.extend({}, defaultOptions, options);\n
+\n
+    var d = 1 / Math.max(1, options.divisor);\n
+\n
+    return function simple(pathCoordinates, valueData) {\n
+      var path = new Chartist.Svg.Path();\n
+      var hole = true;\n
+\n
+      for(var i = 2; i < pathCoordinates.length; i += 2) {\n
+        var prevX = pathCoordinates[i - 2];\n
+        var prevY = pathCoordinates[i - 1];\n
+        var currX = pathCoordinates[i];\n
+        var currY = pathCoordinates[i + 1];\n
+        var length = (currX - prevX) * d;\n
+        var prevData = valueData[(i / 2) - 1];\n
+        var currData = valueData[i / 2];\n
+\n
+        if(prevData.value === undefined) {\n
+          hole = true;\n
+        } else {\n
+\n
+          if(hole) {\n
+            path.move(prevX, prevY, false, prevData);\n
+          }\n
+\n
+          if(currData.value !== undefined) {\n
+            path.curve(\n
+              prevX + length,\n
+              prevY,\n
+              currX - length,\n
+              currY,\n
+              currX,\n
+              currY,\n
+              false,\n
+              currData\n
+            );\n
+\n
+            hole = false;\n
+          }\n
+        }\n
+      }\n
+\n
+      return path;\n
+    };\n
+  };\n
+\n
+  /**\n
+   * Cardinal / Catmull-Rome spline interpolation is the default smoothing function in Chartist. It produces nice results where the splines will always meet the points. It produces some artifacts though when data values are increased or decreased rapidly. The line may not follow a very accurate path and if the line should be accurate this smoothing function does not produce the best results.\n
+   *\n
+   * Cardinal splines can only be created if there are more than two data points. If this is not the case this smoothing will fallback to `Chartist.Smoothing.none`.\n
+   *\n
+   * All smoothing functions within Chartist are factory functions that accept an options parameter. The cardinal interpolation function accepts one configuration parameter `tension`, between 0 and 1, which controls the smoothing intensity.\n
+   *\n
+   * @example\n
+   * var chart = new Chartist.Line(\'.ct-chart\', {\n
+   *   labels: [1, 2, 3, 4, 5],\n
+   *   series: [[1, 2, 8, 1, 7]]\n
+   * }, {\n
+   *   lineSmooth: Chartist.Interpolation.cardinal({\n
+   *     tension: 1\n
+   *   })\n
+   * });\n
+   *\n
+   * @memberof Chartist.Interpolation\n
+   * @param {Object} options The options of the cardinal factory function.\n
+   * @return {Function}\n
+   */\n
+  Chartist.Interpolation.cardinal = function(options) {\n
+    var defaultOptions = {\n
+      tension: 1\n
+    };\n
+\n
+    options = Chartist.extend({}, defaultOptions, options);\n
+\n
+    var t = Math.min(1, Math.max(0, options.tension)),\n
+      c = 1 - t;\n
+\n
+    // This function will help us to split pathCoordinates and valueData into segments that also contain pathCoordinates\n
+    // and valueData. This way the existing functions can be reused and the segment paths can be joined afterwards.\n
+    // This functionality is necessary to treat "holes" in the line charts\n
+    function splitIntoSegments(pathCoordinates, valueData) {\n
+      var segments = [];\n
+      var hole = true;\n
+\n
+      for(var i = 0; i < pathCoordinates.length; i += 2) {\n
+        // If this value is a "hole" we set the hole flag\n
+        if(valueData[i / 2].value === undefined) {\n
+          hole = true;\n
+        } else {\n
+          // If it\'s a valid value we need to check if we\'re coming out of a hole and create a new empty segment\n
+          if(hole) {\n
+            segments.push({\n
+              pathCoordinates: [],\n
+              valueData: []\n
+            });\n
+            // As we have a valid value now, we are not in a "hole" anymore\n
+            hole = false;\n
+          }\n
+\n
+          // Add to the segment pathCoordinates and valueData\n
+          segments[segments.length - 1].pathCoordinates.push(pathCoordinates[i], pathCoordinates[i + 1]);\n
+          segments[segments.length - 1].valueData.push(valueData[i / 2]);\n
+        }\n
+      }\n
+\n
+      return segments;\n
+    }\n
+\n
+    return function cardinal(pathCoordinates, valueData) {\n
+      // First we try to split the coordinates into segments\n
+      // This is necessary to treat "holes" in line charts\n
+      var segments = splitIntoSegments(pathCoordinates, valueData);\n
+\n
+      // If the split resulted in more that one segment we need to interpolate each segment individually and join them\n
+      // afterwards together into a single path.\n
+      if(segments.length > 1) {\n
+        var paths = [];\n
+        // For each segment we will recurse the cardinal function\n
+        segments.forEach(function(segment) {\n
+          paths.push(cardinal(segment.pathCoordinates, segment.valueData));\n
+        });\n
+        // Join the segment path data into a single path and return\n
+        return Chartist.Svg.Path.join(paths);\n
+      } else {\n
+        // If there was only one segment we can proceed regularly by using pathCoordinates and valueData from the first\n
+        // segment\n
+        pathCoordinates = segments[0].pathCoordinates;\n
+        valueData = segments[0].valueData;\n
+\n
+        // If less than two points we need to fallback to no smoothing\n
+        if(pathCoordinates.length <= 4) {\n
+          return Chartist.Interpolation.none()(pathCoordinates, valueData);\n
+        }\n
+\n
+        var path = new Chartist.Svg.Path().move(pathCoordinates[0], pathCoordinates[1], false, valueData[0]),\n
+          z;\n
+\n
+        for (var i = 0, iLen = pathCoordinates.length; iLen - 2 * !z > i; i += 2) {\n
+          var p = [\n
+            {x: +pathCoordinates[i - 2], y: +pathCoordinates[i - 1]},\n
+            {x: +pathCoordinates[i], y: +pathCoordinates[i + 1]},\n
+            {x: +pathCoordinates[i + 2], y: +pathCoordinates[i + 3]},\n
+            {x: +pathCoordinates[i + 4], y: +pathCoordinates[i + 5]}\n
+          ];\n
+          if (z) {\n
+            if (!i) {\n
+              p[0] = {x: +pathCoordinates[iLen - 2], y: +pathCoordinates[iLen - 1]};\n
+            } else if (iLen - 4 === i) {\n
+              p[3] = {x: +pathCoordinates[0], y: +pathCoordinates[1]};\n
+            } else if (iLen - 2 === i) {\n
+              p[2] = {x: +pathCoordinates[0], y: +pathCoordinates[1]};\n
+              p[3] = {x: +pathCoordinates[2], y: +pathCoordinates[3]};\n
+            }\n
+          } else {\n
+            if (iLen - 4 === i) {\n
+              p[3] = p[2];\n
+            } else if (!i) {\n
+              p[0] = {x: +pathCoordinates[i], y: +pathCoordinates[i + 1]};\n
+            }\n
+          }\n
+\n
+          path.curve(\n
+            (t * (-p[0].x + 6 * p[1].x + p[2].x) / 6) + (c * p[2].x),\n
+            (t * (-p[0].y + 6 * p[1].y + p[2].y) / 6) + (c * p[2].y),\n
+            (t * (p[1].x + 6 * p[2].x - p[3].x) / 6) + (c * p[2].x),\n
+            (t * (p[1].y + 6 * p[2].y - p[3].y) / 6) + (c * p[2].y),\n
+            p[2].x,\n
+            p[2].y,\n
+            false,\n
+            valueData[(i + 2) / 2]\n
+          );\n
+        }\n
+\n
+        return path;\n
+      }\n
+    };\n
+  };\n
+\n
+  /**\n
+   * Step interpolation will cause the line chart to move in steps rather than diagonal or smoothed lines. This interpolation will create additional points that will also be drawn when the `showPoint` option is enabled.\n
+   *\n
+   * All smoothing functions within Chartist are factory functions that accept an options parameter. The step interpolation function accepts one configuration parameter `postpone`, that can be `true` or `false`. The default value is `true` and will cause the step to occur where the value actually changes. If a different behaviour is needed where the step is shifted to the left and happens before the actual value, this option can be set to `false`.\n
+   *\n
+   * @example\n
+   * var chart = new Chartist.Line(\'.ct-chart\', {\n
+   *   labels: [1, 2, 3, 4, 5],\n
+   *   series: [[1, 2, 8, 1, 7]]\n
+   * }, {\n
+   *   lineSmooth: Chartist.Interpolation.step({\n
+   *     postpone: true\n
+   *   })\n
+   * });\n
+   *\n
+   * @memberof Chartist.Interpolation\n
+   * @param options\n
+   * @returns {Function}\n
+   */\n
+  Chartist.Interpolation.step = function(options) {\n
+    var defaultOptions = {\n
+      postpone: true\n
+    };\n
+\n
+    options = Chartist.extend({}, defaultOptions, options);\n
+\n
+    return function step(pathCoordinates, valueData) {\n
+      var path = new Chartist.Svg.Path();\n
+      var hole = true;\n
+\n
+      for (var i = 2; i < pathCoordinates.length; i += 2) {\n
+        var prevX = pathCoordinates[i - 2];\n
+        var prevY = pathCoordinates[i - 1];\n
+        var currX = pathCoordinates[i];\n
+        var currY = pathCoordinates[i + 1];\n
+        var prevData = valueData[(i / 2) - 1];\n
+        var currData = valueData[i / 2];\n
+\n
+        // If last point is a "hole"\n
+        if(prevData.value === undefined) {\n
+          hole = true;\n
+        } else {\n
+          // If last point is not a "hole" but we just came back out of a "hole" we need to move first\n
+          if(hole) {\n
+            path.move(prevX, prevY, false, prevData);\n
+          }\n
+\n
+          // If the current point is also not a hole we can draw the step lines\n
+          if(currData.value !== undefined) {\n
+            if(options.postpone) {\n
+              // If postponed we should draw the step line with the value of the previous value\n
+              path.line(currX, prevY, false, prevData);\n
+            } else {\n
+              // If not postponed we should draw the step line with the value of the current value\n
+              path.line(prevX, currY, false, currData);\n
+            }\n
+            // Line to the actual point (this should only be a Y-Axis movement\n
+            path.line(currX, currY, false, currData);\n
+            // Reset the "hole" flag as previous and current point have valid values\n
+            hole = false;\n
+          }\n
+        }\n
+      }\n
+\n
+      return path;\n
+    };\n
+  };\n
+\n
+}(window, document, Chartist));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12080</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>interpolation.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

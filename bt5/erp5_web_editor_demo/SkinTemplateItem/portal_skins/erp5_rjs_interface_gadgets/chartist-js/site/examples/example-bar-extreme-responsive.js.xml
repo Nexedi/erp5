@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273051.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-bar-extreme-responsive.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+new Chartist.Bar(\'.ct-chart\', {\n
+  labels: [\'Quarter 1\', \'Quarter 2\', \'Quarter 3\', \'Quarter 4\'],\n
+  series: [\n
+    [5, 4, 3, 7],\n
+    [3, 2, 9, 5],\n
+    [1, 5, 8, 4],\n
+    [2, 3, 4, 6],\n
+    [4, 1, 2, 1]\n
+  ]\n
+}, {\n
+  // Default mobile configuration\n
+  stackBars: true,\n
+  axisX: {\n
+    labelInterpolationFnc: function(value) {\n
+      return value.split(/\\s+/).map(function(word) {\n
+        return word[0];\n
+      }).join(\'\');\n
+    }\n
+  },\n
+  axisY: {\n
+    offset: 20\n
+  }\n
+}, [\n
+  // Options override for media > 400px\n
+  [\'screen and (min-width: 400px)\', {\n
+    reverseData: true,\n
+    horizontalBars: true,\n
+    axisX: {\n
+      labelInterpolationFnc: Chartist.noop\n
+    },\n
+    axisY: {\n
+      offset: 60\n
+    }\n
+  }],\n
+  // Options override for media > 800px\n
+  [\'screen and (min-width: 800px)\', {\n
+    stackBars: false,\n
+    seriesBarDistance: 10\n
+  }],\n
+  // Options override for media > 1000px\n
+  [\'screen and (min-width: 1000px)\', {\n
+    reverseData: false,\n
+    horizontalBars: false,\n
+    seriesBarDistance: 15\n
+  }]\n
+]);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>987</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-bar-extreme-responsive.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

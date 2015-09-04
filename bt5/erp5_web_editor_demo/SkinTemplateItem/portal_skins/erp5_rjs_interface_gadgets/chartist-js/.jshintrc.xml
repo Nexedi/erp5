@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273110.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>.jshintrc</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\n
+  "node": true,\n
+  "browser": true,\n
+  "esnext": true,\n
+  "bitwise": true,\n
+  "camelcase": false,\n
+  "curly": true,\n
+  "eqeqeq": true,\n
+  "immed": true,\n
+  "indent": 2,\n
+  "latedef": true,\n
+  "newcap": false,\n
+  "noarg": true,\n
+  "quotmark": "single",\n
+  "regexp": true,\n
+  "undef": true,\n
+  "unused": true,\n
+  "strict": true,\n
+  "validthis": true,\n
+  "trailing": true,\n
+  "smarttabs": true,\n
+  "globals": {\n
+    "angular": false,\n
+    "jQuery": false,\n
+    "$": false,\n
+    "SVG": false,\n
+    "Snap": false,\n
+    "Foundation": false\n
+  }\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>516</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>.jshintrc</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273049.61</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-line-svg-animation.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var chart = new Chartist.Line(\'.ct-chart\', {\n
+  labels: [\'1\', \'2\', \'3\', \'4\', \'5\', \'6\', \'7\', \'8\', \'9\', \'10\', \'11\', \'12\'],\n
+  series: [\n
+    [12, 9, 7, 8, 5, 4, 6, 2, 3, 3, 4, 6],\n
+    [4,  5, 3, 7, 3, 5, 5, 3, 4, 4, 5, 5],\n
+    [5,  3, 4, 5, 6, 3, 3, 4, 5, 6, 3, 4],\n
+    [3,  4, 5, 6, 7, 6, 4, 5, 6, 7, 6, 3]\n
+  ]\n
+}, {\n
+  low: 0\n
+});\n
+\n
+// Let\'s put a sequence number aside so we can use it in the event callbacks\n
+var seq = 0,\n
+  delays = 80,\n
+  durations = 500;\n
+\n
+// Once the chart is fully created we reset the sequence\n
+chart.on(\'created\', function() {\n
+  seq = 0;\n
+});\n
+\n
+// On each drawn element by Chartist we use the Chartist.Svg API to trigger SMIL animations\n
+chart.on(\'draw\', function(data) {\n
+  seq++;\n
+\n
+  if(data.type === \'line\') {\n
+    // If the drawn element is a line we do a simple opacity fade in. This could also be achieved using CSS3 animations.\n
+    data.element.animate({\n
+      opacity: {\n
+        // The delay when we like to start the animation\n
+        begin: seq * delays + 1000,\n
+        // Duration of the animation\n
+        dur: durations,\n
+        // The value where the animation should start\n
+        from: 0,\n
+        // The value where it should end\n
+        to: 1\n
+      }\n
+    });\n
+  } else if(data.type === \'label\' && data.axis === \'x\') {\n
+    data.element.animate({\n
+      y: {\n
+        begin: seq * delays,\n
+        dur: durations,\n
+        from: data.y + 100,\n
+        to: data.y,\n
+        // We can specify an easing function from Chartist.Svg.Easing\n
+        easing: \'easeOutQuart\'\n
+      }\n
+    });\n
+  } else if(data.type === \'label\' && data.axis === \'y\') {\n
+    data.element.animate({\n
+      x: {\n
+        begin: seq * delays,\n
+        dur: durations,\n
+        from: data.x - 100,\n
+        to: data.x,\n
+        easing: \'easeOutQuart\'\n
+      }\n
+    });\n
+  } else if(data.type === \'point\') {\n
+    data.element.animate({\n
+      x1: {\n
+        begin: seq * delays,\n
+        dur: durations,\n
+        from: data.x - 10,\n
+        to: data.x,\n
+        easing: \'easeOutQuart\'\n
+      },\n
+      x2: {\n
+        begin: seq * delays,\n
+        dur: durations,\n
+        from: data.x - 10,\n
+        to: data.x,\n
+        easing: \'easeOutQuart\'\n
+      },\n
+      opacity: {\n
+        begin: seq * delays,\n
+        dur: durations,\n
+        from: 0,\n
+        to: 1,\n
+        easing: \'easeOutQuart\'\n
+      }\n
+    });\n
+  } else if(data.type === \'grid\') {\n
+    // Using data.axis we get x or y which we can use to construct our animation definition objects\n
+    var pos1Animation = {\n
+      begin: seq * delays,\n
+      dur: durations,\n
+      from: data[data.axis.units.pos + \'1\'] - 30,\n
+      to: data[data.axis.units.pos + \'1\'],\n
+      easing: \'easeOutQuart\'\n
+    };\n
+\n
+    var pos2Animation = {\n
+      begin: seq * delays,\n
+      dur: durations,\n
+      from: data[data.axis.units.pos + \'2\'] - 100,\n
+      to: data[data.axis.units.pos + \'2\'],\n
+      easing: \'easeOutQuart\'\n
+    };\n
+\n
+    var animations = {};\n
+    animations[data.axis.units.pos + \'1\'] = pos1Animation;\n
+    animations[data.axis.units.pos + \'2\'] = pos2Animation;\n
+    animations[\'opacity\'] = {\n
+      begin: seq * delays,\n
+      dur: durations,\n
+      from: 0,\n
+      to: 1,\n
+      easing: \'easeOutQuart\'\n
+    };\n
+\n
+    data.element.animate(animations);\n
+  }\n
+});\n
+\n
+// For the sake of the example we update the chart every time it\'s created with a delay of 10 seconds\n
+chart.on(\'created\', function() {\n
+  if(window.__exampleAnimateTimeout) {\n
+    clearTimeout(window.__exampleAnimateTimeout);\n
+    window.__exampleAnimateTimeout = null;\n
+  }\n
+  window.__exampleAnimateTimeout = setTimeout(chart.update.bind(chart), 12000);\n
+});\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3495</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-line-svg-animation.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

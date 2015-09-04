@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272965.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dox-helpers.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\'use strict\';\n
+\n
+var path = require(\'path\'),\n
+  _ = require(\'lodash\');\n
+\n
+// Export helpers\n
+module.exports.register = function (Handlebars, opt, params)  {\n
+  // The helpers to be exported\n
+  var helpers = {\n
+\n
+    doxTag: function(doxElement, doxTagType) {\n
+      return _.find(doxElement.tags, {type: doxTagType});\n
+    },\n
+\n
+    doxTagProperty: function(doxElement, doxTagType, doxTagProperty) {\n
+      var doxTag = helpers.doxTag(doxElement, doxTagType);\n
+\n
+      if(doxTag) {\n
+        return doxTag[doxTagProperty];\n
+      } else {\n
+        return doxTag;\n
+      }\n
+    },\n
+\n
+    doxHash: function(doxElement) {\n
+      return [helpers.doxTagProperty(doxElement, \'memberof\', \'string\'),\n
+        doxElement.ctx.type,\n
+        doxElement.ctx.name].join(\' \')\n
+        .toLowerCase()\n
+        .replace(/[^\\w ]+/g,\'\')\n
+        .replace(/ +/g,\'-\');\n
+    },\n
+\n
+    doxTagsOfType: function(doxElement, doxTagType) {\n
+      return _.filter(doxElement.tags, {type: doxTagType});\n
+    },\n
+\n
+    doxTransform: function(dox) {\n
+      return dox.map(function(doxFile) {\n
+        return {\n
+          fileName: path.basename(doxFile.file),\n
+          modules: doxFile.comments.reduce(function(arr, doxElement) {\n
+            var doxModuleName = helpers.doxTagProperty(doxElement, \'module\', \'string\');\n
+\n
+            if(doxModuleName) {\n
+              arr.push({\n
+                name: doxModuleName,\n
+                description: doxElement.description.summary,\n
+                isPrivate: doxElement.isPrivate,\n
+                members: doxFile.comments.filter(function(doxFilterElement) {\n
+                  return helpers.doxTagProperty(doxFilterElement, \'memberof\', \'string\') === doxModuleName;\n
+                })\n
+              });\n
+            }\n
+\n
+            return arr;\n
+          }, [])\n
+        };\n
+      });\n
+    }\n
+\n
+  };\n
+\n
+  opt = opt || {};\n
+  for (var helper in helpers) {\n
+    if (helpers.hasOwnProperty(helper)) {\n
+      Handlebars.registerHelper(helper, helpers[helper]);\n
+    }\n
+  }\n
+};\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1929</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dox-helpers.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

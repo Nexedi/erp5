@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273020.03</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>browser-support-table.hbs</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<table class="brwsrsup">\n
+  <thead>\n
+  <tr>\n
+    <td></td>\n
+    {{#each browsers}}\n
+      <th class="brwsrsup__browser">{{this}}</th>\n
+    {{/each}}\n
+  </tr>\n
+  </thead>\n
+  <tbody>\n
+  {{#each features}}\n
+    <tr>\n
+      <th class="brwsrsup__feature">{{name}}</th>\n
+      {{#each browsers}}\n
+      <td data-browser="{{name}}" class="brwsrsup__support brwsrsup__support--{{status}}">\n
+        <span class="brwsrsup__visually-hidden">{{text}}</span>\n
+      </td>\n
+      {{/each}}\n
+    </tr>\n
+  {{/each}}\n
+  </tbody>\n
+</table>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>501</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>browser-support-table.hbs</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

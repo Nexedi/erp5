@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272950.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>spec-bar-chart.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Bar chart tests\', function() {\n
+  \'use strict\';\n
+\n
+  beforeEach(function() {\n
+\n
+  });\n
+\n
+  afterEach(function() {\n
+\n
+  });\n
+\n
+  describe(\'Meta data tests\', function () {\n
+    it(\'should render meta data correctly with mixed value array\', function(done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var meta = {\n
+        test: \'Serialized Test\'\n
+      };\n
+\n
+      var data = {\n
+        labels: [\'Sun\', \'Mon\', \'Tue\', \'Wed\', \'Thu\'],\n
+        series: [\n
+          [5, 2, 4, {\n
+            value: 2,\n
+            meta: meta\n
+          }, 0]\n
+        ]\n
+      };\n
+\n
+      var chart = new Chartist.Bar(\'.ct-chart\', data);\n
+\n
+      chart.on(\'created\', function() {\n
+        expect(Chartist.deserialize($(\'.ct-bar\').eq(3).attr(\'ct:meta\'))).toEqual(meta);\n
+        done();\n
+      });\n
+    });\n
+\n
+    it(\'should render meta data correctly with mixed value array and different normalized data length\', function(done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var meta = {\n
+        test: \'Serialized Test\'\n
+      };\n
+\n
+      var data = {\n
+        labels: [\'Sun\', \'Mon\', \'Tue\', \'Wed\', \'Thu\', \'Fri\', \'Sat\', \'Sun\'],\n
+        series: [\n
+          [5, 2, 4, {\n
+            value: 2,\n
+            meta: meta\n
+          }, 0]\n
+        ]\n
+      };\n
+\n
+      var chart = new Chartist.Bar(\'.ct-chart\', data);\n
+\n
+      chart.on(\'created\', function() {\n
+        expect(Chartist.deserialize($(\'.ct-bar\').eq(3).attr(\'ct:meta\'))).toEqual(meta);\n
+        done();\n
+      });\n
+    });\n
+\n
+    it(\'should render meta data correctly with mixed value array and mixed series notation\', function(done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var seriesMeta = 9999,\n
+        valueMeta = {\n
+          test: \'Serialized Test\'\n
+        };\n
+\n
+      var data = {\n
+        labels: [\'Sun\', \'Mon\', \'Tue\', \'Wed\', \'Thu\', \'Fri\', \'Sat\', \'Sun\'],\n
+        series: [\n
+          [5, 2, 4, {\n
+            value: 2,\n
+            meta: valueMeta\n
+          }, 0],\n
+          {\n
+            meta: seriesMeta,\n
+            data: [5, 2, {\n
+              value: 2,\n
+              meta: valueMeta\n
+            }, 0]\n
+          }\n
+        ]\n
+      };\n
+\n
+      var chart = new Chartist.Bar(\'.ct-chart\', data);\n
+\n
+      chart.on(\'created\', function() {\n
+        expect(Chartist.deserialize($(\'.ct-series-a .ct-bar\').eq(3).attr(\'ct:meta\'))).toEqual(valueMeta);\n
+        expect(Chartist.deserialize($(\'.ct-series-b\')).attr(\'ct:meta\')).toEqual(\'\'+seriesMeta);\n
+        expect(Chartist.deserialize($(\'.ct-series-b .ct-bar\').eq(2).attr(\'ct:meta\'))).toEqual(valueMeta);\n
+        done();\n
+      });\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2618</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>spec-bar-chart.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

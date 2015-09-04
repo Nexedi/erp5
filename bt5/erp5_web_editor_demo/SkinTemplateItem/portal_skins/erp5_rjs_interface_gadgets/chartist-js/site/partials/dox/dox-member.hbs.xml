@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273023.11</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dox-member.hbs</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<article class="module-member {{ctx.type}}">\n
+  <header class="member-header">\n
+    <h5 class="member-title" id="{{doxHash this}}"><span class="member-tag">{{ctx.type}}</span> {{ctx.string}}</h5>\n
+    <button class="api-code-button" data-toggle-visible="#{{concat (doxHash this) \'-code\'}}">Show code</button>\n
+  </header>\n
+  <pre id="{{concat (doxHash this) \'-code\'}}">\n
+    <code class="javascript">{{code}}</code>\n
+  </pre>\n
+  <div class="member-content">\n
+    <div class="description">{{{description.summary}}}</div>\n
+\n
+    {{#if (doxTagsOfType this \'param\')}}\n
+      <h6>Parameters</h6>\n
+      {{#each (doxTagsOfType this \'param\')}}\n
+        <div class="param">\n
+          <code>{{name}}</code>\n
+          ({{#each types}}\n
+            <span class="param-type"><code>{{this}}</code></span>\n
+          {{/each}})\n
+          <div class="param-description">{{description}}</div>\n
+        </div>\n
+      {{/each}}\n
+    {{/if}}\n
+\n
+    {{#if (doxTagsOfType this \'return\')}}\n
+      {{#with (doxTag this \'return\')}}\n
+        <h6>Returns</h6>\n
+\n
+        <div class="return">\n
+          ({{#each types}}\n
+            <span class="param-type"><code>{{this}}</code></span>\n
+          {{/each}})\n
+          <div class="param-description">{{description}}</div>\n
+        </div>\n
+      {{/with}}\n
+    {{/if}}\n
+\n
+    {{#if (doxTagsOfType this \'example\')}}\n
+      <h6>Examples</h6>\n
+      {{#each (doxTagsOfType this \'example\')}}\n
+        <pre class="api-example"><code class="js">{{string}}</code></pre>\n
+      {{/each}}\n
+    {{/if}}\n
+\n
+  </div>\n
+\n
+</article>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1499</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dox-member.hbs</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

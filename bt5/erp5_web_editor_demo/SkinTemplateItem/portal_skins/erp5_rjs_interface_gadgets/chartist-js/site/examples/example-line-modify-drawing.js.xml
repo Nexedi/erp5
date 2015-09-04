@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273048.01</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-line-modify-drawing.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>var chart = new Chartist.Line(\'.ct-chart\', {\n
+  labels: [1, 2, 3, 4, 5],\n
+  series: [\n
+    [12, 9, 7, 8, 5]\n
+  ]\n
+});\n
+\n
+// Listening for draw events that get emitted by the Chartist chart\n
+chart.on(\'draw\', function(data) {\n
+  // If the draw event was triggered from drawing a point on the line chart\n
+  if(data.type === \'point\') {\n
+    // We are creating a new path SVG element that draws a triangle around the point coordinates\n
+    var triangle = new Chartist.Svg(\'path\', {\n
+      d: [\'M\',\n
+        data.x,\n
+        data.y - 15,\n
+        \'L\',\n
+        data.x - 15,\n
+        data.y + 8,\n
+        \'L\',\n
+        data.x + 15,\n
+        data.y + 8,\n
+        \'z\'].join(\' \'),\n
+      style: \'fill-opacity: 1\'\n
+    }, \'ct-area\');\n
+\n
+    // With data.element we get the Chartist SVG wrapper and we can replace the original point drawn by Chartist with our newly created triangle\n
+    data.element.replace(triangle);\n
+  }\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>889</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-line-modify-drawing.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

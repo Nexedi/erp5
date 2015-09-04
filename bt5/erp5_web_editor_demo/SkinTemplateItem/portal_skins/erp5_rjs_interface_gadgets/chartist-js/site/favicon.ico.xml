@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273012.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>favicon.ico</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/vnd.microsoft.icon</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAA
+AAAAAAD///8A////AP///wDt8vkfnLjetnqf0/d2nNL/dpzS/3ac0v+FptbjqcHjn9zm8z////8A
+////AP///wD///8A////AP///wD///8Apr7fn2uRx/9wlsz/dpzS/3ac0v92nNL/dpzS/3ac0v92
+nNL/wdLqcv///wD///8A////AP///wD///8A////AM7b7ld6nc7nb5TJ/2qHyf9sicv/dZrR/3ac
+0v92nNL/dpzS/7vN6H7///8A////AP///wD///8A////AMjIyEOdnZ17nZ2de8HCwkvS0+c6S1SR
+7kRQef9UaIP/WnKS/2+Sw/+7zeh+////AP///wD///8A////AHl6eqczNDX/MzQ1/zM0Nf8zNDX/
+QUNG7jY3OPozNDX/MzQ1/zM0Nf82OTz/e5a83uLq9TL///8A////AP///wCWl5eDy8vMP5OTlIc2
+Nzj6MzQ1/zM0Nf8zNDX/MzQ1/z5GUP9he6H/YXuh/194nP+9z+l7////AP///wD///8A////APz9
+/gOCpdbnaYi0/05edP9VaYX/Tl50/1ZriP90mM3/dpzS/3ac0v+yx+WO+vv9B////wD///8A////
+AP///wD///8Av9Hqd3ac0v92nNL/dpzS/3ac0v92nNL/dpzS/3ac0v92nNL/u83ofv///wD///8A
+////AP///wD///8A////APT3+xR6n9P3Z4u9/z1Zf/9skcT/PVl//2OGt/92nNL/dpzS/7vN6H7/
+//8A////AP///wD///8A////AP///wD///8Ap73dl2mPxf9pj8X/aY/F/2mPxf9pj8X/aY/F/2mP
+xf+0x+J+////AP///wD///8A////AP///wB3d3mbHx8i/yIkKf8nLDX/Jyw1/ycsNf8nLDX/Jyw1
+/ycsNf8nLDX/IyUr/y0tL+5TU1bCiIiKh////wD///8A////AObm5hy2trdTHx8i/x8fIv8fHyL/
+Hx8i/x8fIv8fHyL/Hx8i/3BwcqP///8A////AP///wD///8A////AP///wD///8A8PDxDx8fIv8f
+HyL/Hx8i/x8fIv8fHyL/Hx8i/x8fIv9zc3Wf////AP///wD///8A////AP///wD///8A////AM3N
+zjcfHyL/Hx8i/x8fIv8fHyL/Hx8i/x8fIv8fHyL/c3N1n////wD///8A////AP///wD///8A////
+AP///wCBgYOOHx8i/x8fIv8fHyL/Hx8i/x8fIv8fHyL/Hx8i/0lJS8////8A////AP///wD///8A
+////AP///wD///8Ah4eIiEVFSNM7Oz3eHx8i/x8fIv8fHyL/JiYo9zs7Pd5XV1m/////AP///wD/
+//8A8B8AAOAPAADwDwAA/g8AAIAHAACgBwAA4AcAAPAPAADwDwAA8A8AAMAAAAD4BwAA+AcAAPgH
+AADwBwAA8AcAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1150</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>favicon.ico</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

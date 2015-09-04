@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272943.46</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>package.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "name": "chartist",\n
+  "title": "Chartist.js",\n
+  "description": "Simple, responsive charts",\n
+  "version": "0.9.4",\n
+  "author": "Gion Kunz",\n
+  "homepage": "https://gionkunz.github.io/chartist-js",\n
+  "repository": {\n
+    "type": "git",\n
+    "url": "https://github.com/gionkunz/chartist-js.git"\n
+  },\n
+  "bugs": {\n
+    "url": "https://github.com/gionkunz/chartist-js/issues"\n
+  },\n
+  "keywords": [\n
+    "chartist",\n
+    "responsive charts",\n
+    "charts",\n
+    "charting"\n
+  ],\n
+  "files": [\n
+    "dist",\n
+    "LICENSE",\n
+    "package.json",\n
+    "README.md"\n
+  ],\n
+  "main": "dist/chartist.js",\n
+  "browser": "dist/chartist.js",\n
+  "licenses": [\n
+    {\n
+      "type": "WTFPL",\n
+      "url": "https://github.com/gionkunz/chartist-js/blob/master/LICENSE"\n
+    }\n
+  ],\n
+  "dependencies": {},\n
+  "devDependencies": {\n
+    "assemble": "~0.4.42",\n
+    "assemble-dox": "0.0.2",\n
+    "grunt": "^0.4.5",\n
+    "grunt-concurrent": "^1.0.0",\n
+    "grunt-contrib-clean": "^0.6.0",\n
+    "grunt-contrib-concat": "^0.5.0",\n
+    "grunt-contrib-connect": "~0.9.0",\n
+    "grunt-contrib-copy": "^0.7.0",\n
+    "grunt-contrib-cssmin": "^0.12.1",\n
+    "grunt-contrib-htmlmin": "~0.4.0",\n
+    "grunt-contrib-imagemin": "~0.9.3",\n
+    "grunt-contrib-jasmine": "~0.8.2",\n
+    "grunt-contrib-jshint": "~0.11.0",\n
+    "grunt-contrib-uglify": "^0.7.0",\n
+    "grunt-contrib-watch": "^0.6.1",\n
+    "grunt-critical": "0.1.1",\n
+    "grunt-newer": "^1.1.0",\n
+    "grunt-sass": "^0.18.0",\n
+    "grunt-svgmin": "~2.0.0",\n
+    "grunt-template": "^0.2.3",\n
+    "grunt-umd": "~2.3.1",\n
+    "grunt-usemin": "~3.0.0",\n
+    "handlebars-helpers": "~0.5.8",\n
+    "jasmine-jquery": "~2.0.6",\n
+    "jshint-stylish": "~1.0.0",\n
+    "load-grunt-config": "^0.16.0",\n
+    "lodash": "~2.4.1",\n
+    "seed-random": "~2.2.0",\n
+    "time-grunt": "^1.0.0"\n
+  },\n
+  "engines": {\n
+    "node": ">=0.8.0"\n
+  },\n
+  "scripts": {\n
+    "test": "grunt test"\n
+  },\n
+  "config": {\n
+    "banner": "/* Chartist.js <%= pkg.version %>\\n * Copyright © <%= year %> Gion Kunz\\n * Free to use under the WTFPL license.\\n * http://www.wtfpl.net/\\n */\\n",\n
+    "src": "src",\n
+    "dist": "dist",\n
+    "site": "site",\n
+    "tmp": ".tmp",\n
+    "public": ".public",\n
+    "test": "test"\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2141</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>package.json</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

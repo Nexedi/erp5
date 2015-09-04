@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273045.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-axis-fixed-and-auto.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>new Chartist.Line(\'.ct-chart\', {\n
+  series: [[\n
+    {x: 1, y: 100},\n
+    {x: 2, y: 50},\n
+    {x: 3, y: 25},\n
+    {x: 5, y: 12.5},\n
+    {x: 8, y: 6.25}\n
+  ]]\n
+}, {\n
+  axisX: {\n
+    type: Chartist.AutoScaleAxis,\n
+    onlyInteger: true\n
+  },\n
+  axisY: {\n
+    type: Chartist.FixedScaleAxis,\n
+    ticks: [0, 50, 75, 87.5, 100],\n
+    low: 0\n
+  },\n
+  lineSmooth: Chartist.Interpolation.step(),\n
+  showPoint: false\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>392</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-axis-fixed-and-auto.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

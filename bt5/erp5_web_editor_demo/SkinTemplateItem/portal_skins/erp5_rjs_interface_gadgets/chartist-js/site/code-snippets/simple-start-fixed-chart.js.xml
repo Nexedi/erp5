@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273060.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>simple-start-fixed-chart.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>var data = {\n
+  // A labels array that can contain any sort of values\n
+  labels: [\'Mon\', \'Tue\', \'Wed\', \'Thu\', \'Fri\'],\n
+  // Our series array that contains series objects or in this case series data arrays\n
+  series: [\n
+    [5, 2, 4, 2, 0]\n
+  ]\n
+};\n
+\n
+// As options we currently only set a static size of 300x200 px. We can also omit this and use aspect ratio containers\n
+// as you saw in the previous example\n
+var options = {\n
+  width: 300,\n
+  height: 200\n
+};\n
+\n
+// Create a new line chart object where as first parameter we pass in a selector\n
+// that is resolving to our chart container element. The Second parameter\n
+// is the actual data object. As a third parameter we pass in our custom options.\n
+new Chartist.Bar(\'.ct-chart\', data, options);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>729</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>simple-start-fixed-chart.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273072.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>auto-scale-axis.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * The auto scale axis uses standard linear scale projection of values along an axis. It uses order of magnitude to find a scale automatically and evaluates the available space in order to find the perfect amount of ticks for your chart.\n
+ * **Options**\n
+ * The following options are used by this axis in addition to the default axis options outlined in the axis configuration of the chart default settings.\n
+ * ```javascript\n
+ * var options = {\n
+ *   // If high is specified then the axis will display values explicitly up to this value and the computed maximum from the data is ignored\n
+ *   high: 100,\n
+ *   // If low is specified then the axis will display values explicitly down to this value and the computed minimum from the data is ignored\n
+ *   low: 0,\n
+ *   // This option will be used when finding the right scale division settings. The amount of ticks on the scale will be determined so that as many ticks as possible will be displayed, while not violating this minimum required space (in pixel).\n
+ *   scaleMinSpace: 20,\n
+ *   // Can be set to true or false. If set to true, the scale will be generated with whole numbers only.\n
+ *   onlyInteger: true,\n
+ *   // The reference value can be used to make sure that this value will always be on the chart. This is especially useful on bipolar charts where the bipolar center always needs to be part of the chart.\n
+ *   referenceValue: 5\n
+ * };\n
+ * ```\n
+ *\n
+ * @module Chartist.AutoScaleAxis\n
+ */\n
+/* global Chartist */\n
+(function (window, document, Chartist) {\n
+  \'use strict\';\n
+\n
+  function AutoScaleAxis(axisUnit, data, chartRect, options) {\n
+    // Usually we calculate highLow based on the data but this can be overriden by a highLow object in the options\n
+    var highLow = options.highLow || Chartist.getHighLow(data.normalized, options, axisUnit.pos);\n
+    this.bounds = Chartist.getBounds(chartRect[axisUnit.rectEnd] - chartRect[axisUnit.rectStart], highLow, options.scaleMinSpace || 20, options.onlyInteger);\n
+    this.range = {\n
+      min: this.bounds.min,\n
+      max: this.bounds.max\n
+    };\n
+\n
+    Chartist.AutoScaleAxis.super.constructor.call(this,\n
+      axisUnit,\n
+      chartRect,\n
+      this.bounds.values,\n
+      options);\n
+  }\n
+\n
+  function projectValue(value) {\n
+    return this.axisLength * (+Chartist.getMultiValue(value, this.units.pos) - this.bounds.min) / this.bounds.range;\n
+  }\n
+\n
+  Chartist.AutoScaleAxis = Chartist.Axis.extend({\n
+    constructor: AutoScaleAxis,\n
+    projectValue: projectValue\n
+  });\n
+\n
+}(window, document, Chartist));\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2479</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>auto-scale-axis.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

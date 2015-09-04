@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273099.23</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CHANGELOG.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>v0.9.4 - 06 Aug 2015\n
+--------------------\n
+- Added axes to all events where they are available in context to provide better API convenience when developing plugins\n
+- Consider additional parameters of SVG elem when called with DOM node\n
+\n
+v0.9.3 - 05 Aug 2015\n
+--------------------\n
+- Added better check for undefined values in bar chart, fixes #400\n
+- Fixed issue with SVG feature check within Svg module (Thanks to Markus Gruber !)\n
+\n
+v0.9.2 - 02 Aug 2015\n
+--------------------\n
+- Enabled bar charts to use dynamic axes fixes #363, fixes #355\n
+- Added axis title plugin to plugins page (Thanks to @alexstanbury !)\n
+- Added a label group for Pie charts to prevent occlusion by slices (Thanks to Anthony Jimenez!)\n
+- Added better handling for multi values when writing custom attributes, fixes #379\n
+\n
+v0.9.1 - 24 Jun 2015\n
+--------------------\n
+- Fixed bug with areaBase narrowing process in area charts, fixes #364\n
+- Fixed bug on bar chart where wrong offset was used (axis offset), fixes #347 (Thanks to @amsardesai !)\n
+- Fixed bug with namespace attributes that caused duplication of SVG element on updates in old browsers (Thanks to @radist2s !)\n
+\n
+v0.9.0 - 10 Jun 2015\n
+--------------------\n
+- Major refactoring of axis and projection code, added possibility to configure axes when creating a chart\n
+- Added areaBase to series options override in line chart, fixes #342\n
+- Throwing up in infinite loop for edge cases and during development\n
+- Documentation: Added documentation for axis configuration and getting started guide for custom axes\n
+\n
+v0.8.3 - 07 Jun 2015\n
+--------------------\n
+- Greatly reduced CSS selector complexity and split slice into slice-pie and slice-donut\n
+- Added more robust detach mechanism that takes async initialization into account\n
+- Added better handling for area drawing with segmented paths, fixes #340\n
+- Documentation: Added getting started guide for styling charts\n
+\n
+v0.8.2 - 02 Jun 2015\n
+--------------------\n
+- Fixed broken release 0.8.1\n
+\n
+v0.8.1 - 02 Jun 2015 (BROKEN!)\n
+------------------------------\n
+- Added new option labelPosition for Pie charts to have better control over label placement, fixes #315\n
+- Added default styles for alignment-baseline\n
+- Added better support for undefined values in bar charts\n
+- Refactored getHighLow to use recursion in order to enable more dynamic array structures and better edge case management\n
+- Fixed issue with Chartist.rho that caused endless loop when called with 1, fixes #318\n
+\n
+v0.8.0 - 10 May 2015\n
+--------------------\n
+- Added new option to bar charts to allow a series distribution and use a simple one dimensional array for data (#209)\n
+- Added option for label placement and refactored label positioning code (#302)\n
+- Added option to only use integer numbers in linear scale axis (#77)\n
+- Added possibility to add series configuration on line chart to override specific options on series level (#289, #168)\n
+- Added functionality to handle holes in line charts (#294)\n
+- Added step interpolation for line charts\n
+- Added default styles for bar and horizontal bar labels that make more sense (#303)\n
+- Added series data and meta information to events (#293)\n
+- Changed line chart behavior to draw points from interpolated values (#295)\n
+- Removed restriction to SVGElements so Chartist.Svg can be used for HTML DOM elements (#261)\n
+- Refactored and simplified axis creation, also includes updated CSS label handling\n
+- Refactored getDataArray for simplification and fixed type conversion issue with data arrays for pie charts\n
+- Centralized high/low calculations in getHighLow() method and added support for empty charts. Thanks @scthi !\n
+- Fixed bug in pie chart where meta was only added when series name was specified\n
+- Fixed bug where special condition to check single value should also include object value notation (#265)\n
+- Fixed bug with Chartist.extend when null property is extended\n
+- Fixed bug with Firefox dying with a DOM exception when calling getBBox() on an invisible node. Thanks @scthi !\n
+- Switched from object literal accessor definition to regular function (#278)\n
+\n
+v0.7.4 - 19 Apr 2015\n
+--------------------\n
+- Enhanced documentation site (Accessibility plugin, live example eval, fixed path to Sass settings, better HTML example of how to include Chartist, example how to include multiple charts on one page)\n
+- Added Arc to Chartist.Svg.Path\n
+- Refactored Chartist.Pie to make use of Svg.Path and expose path in events\n
+- Closing path of Pie if not a donut for correct strokes\n
+- Exposing axis objects in created event\n
+- Changed grid event to use axis object instead of string\n
+\n
+v0.7.3 - 27 Feb 2015\n
+--------------------\n
+- Fixed bugs in the chart.update method \n
+- Fixed rounding precision issues in order of magnitude calculation\n
+- Fixed bug in Chartist.extend which caused merge problems from object properties into non-objects\n
+- Added possibility to use chartPadding with a padding object that contains top, right, bottom and left properties\n
+\n
+v0.7.2 - 12 Feb 2015\n
+--------------------\n
+- Added new line smoothing / interpolation module for configurable line smoothing\n
+- Added simple line smoothing. Thanks @danieldiekmeier !\n
+- Removed some unused internal code\n
+\n
+v0.7.1 - 02 Feb 2015\n
+--------------------\n
+- Bug fix where some files where not included in dist version of Chartist which made v0.7.0 unusable.\n
+\n
+v0.7.0 - 01 Feb 2015\n
+--------------------\n
+- This version introduces a new option in the bar charts to draw them horizontally\n
+- Underlying changes for axis model that allows flexible value projection and removes code duplication\n
+- Added SVG Path API for manipulating SVG paths. This can be used in animations or to transform the output by Chartist further.\n
+- The fullWidth and centerBars options were removed from the bar chart\n
+- Updating chart after options update enables the use of \'print\' media query in responsive options to have a quick redraw before printing. This only works in Chrome 40 so far\n
+- Fixed issues with 0 values in series object data notation\n
+\n
+v0.6.1 - 23 Jan 2015\n
+--------------------\n
+- Fixed bug that prevented data events to be captured\n
+- Fixed bug with update function called in the same call stack as chart constructor\n
+\n
+v0.6.0 - 17 Jan 2015\n
+--------------------\n
+- Added 14 default colors for colored series\n
+- Added data event that allows you to transform the data before it gets rendered in Chartist. This is also useful for plugin authors that would like to create plugins which modify data.\n
+- Possibility to specify meta data in the data object passed to Chartist that will be written to custom attributes into the DOM.\n
+- Possibility to specify options when calling chart.update in order to override the current options with new ones\n
+- Fixed some missing entries in the bower ignore section to exclude the documentation site as well as the grunt tasks\n
+- Fixed issue when Chartist is initialized in a container that already contains SVG\n
+\n
+v0.5.0 - 14 Dec 2014\n
+--------------------\n
+- Added new option for line and bar chart to use full width of the chart area by skipping the last grid line\n
+- Added new option for bar chart to create stacked bar charts\n
+- All chart update functions now accepts an optional data parameter that allows to update an existing chart with new data\n
+- Fix for an error when charts get re-constructed on the same element and in the same call stack\n
+\n
+v0.4.4 - 11 Dec 2014\n
+--------------------\n
+- Fixed NS_ERROR_FAILURE error in Firefox and added graceful handling of unsupported SMIL animations (i.e. in foreignObjects)\n
+\n
+v0.4.3 - 27 Nov 2014\n
+--------------------\n
+- Updated plugin architecture for convenience reasons and better support for modularization\n
+\n
+v0.4.2 - 27 Nov 2014\n
+--------------------\n
+\n
+- Included first version of Chartist.js Plugin mechanism\n
+- Major refactoring of development stack (thanks @Autarc !)\n
+- Removed unused functions in Chartist.Core\n
+\n
+v0.4.1 - 21 Nov 2014\n
+--------------------\n
+\n
+- Added more functionality to Chartist.Svg: select child elements, parent, root as well as a Svg list wrapper with delegation functions\n
+- Fixed bug in strip unit\n
+- Added classes to the label and grid gorups\n
+- Added this as return value so calls to chart can be chained up easily\n
+\n
+\n
+v0.4.0 - 17 Nov 2014\n
+--------------------\n
+\n
+- Added new animation API for SMIL animations\n
+- Added possibility to add event handlers with asterisk that will be triggerd on all events including the event name in the cb function\n
+- Added possibility to pass DOM node to SVG constructor so you can wrap existing SVG nodes into a Chartist.Svg element\n
+- Fixed svg recycling on re-creation\n
+- Fixed resize listener detach that wasn\'t working properly\n
+- Refactored Chartist.Svg to use Chartist.Class\n
+- Including event when line and area is drawn\n
+- Changed default scaleMinSpace to 20 to be more mobile friendly\n
+- Fixed bug with line area base\n
+\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8726</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>CHANGELOG.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273107.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>watch.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * watch\n
+ * =====\n
+ *\n
+ * Watches files for changes and runs tasks based on the changed files.\n
+ *\n
+ * Link: https://github.com/gruntjs/grunt-contrib-watch\n
+ */\n
+\n
+\'use strict\';\n
+\n
+module.exports = function (grunt) {\n
+  return {\n
+    assemble: {\n
+      files: [\'<%= pkg.config.site %>/**/*.{hbs,yml,json,js}\'],\n
+      tasks: [\'assemble\']\n
+    },\n
+    doxication: {\n
+      files: [\'<%= pkg.config.tmp %>/data/**/*.{yml,json}\'],\n
+      tasks: [\'assemble\']\n
+    },\n
+    js: {\n
+      files: [\n
+        \'<%= pkg.config.site %>/scripts/**/*.js\',\n
+        \'<%= pkg.config.src %>/scripts/**/*.js\'\n
+      ],\n
+      tasks: [\'newer:jshint:all\'],\n
+      options: {\n
+        livereload: true\n
+      }\n
+    },\n
+    jsTest: {\n
+      files: [\'<%= pkg.config.test %>/spec/{,*/}*.js\'],\n
+      tasks: [\'newer:jshint:test\', \'jasmine\']\n
+    },\n
+    sass: {\n
+      files: [\n
+        \'<%= pkg.config.site %>/styles/{,*/}*.{scss,sass}\',\n
+        \'<%= pkg.config.src %>/styles/{,*/}*.{scss,sass}\'\n
+      ],\n
+      tasks: [\'sass:public\']\n
+    },\n
+    gruntfile: {\n
+      files: [\'Gruntfile.js\']\n
+    },\n
+    livereload: {\n
+      options: {\n
+        livereload: \'<%= connect.options.livereload %>\'\n
+      },\n
+      files: [\n
+        \'<%= pkg.config.tmp %>/{,*/}*.html\',\n
+        \'<%= pkg.config.tmp %>/styles/{,*/}*.css\',\n
+        \'<%= pkg.config.site %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}\'\n
+      ]\n
+    }\n
+  };\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1347</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>watch.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

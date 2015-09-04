@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273072.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>event.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * A very basic event module that helps to generate and catch events.\n
+ *\n
+ * @module Chartist.Event\n
+ */\n
+/* global Chartist */\n
+(function (window, document, Chartist) {\n
+  \'use strict\';\n
+\n
+  Chartist.EventEmitter = function () {\n
+    var handlers = [];\n
+\n
+    /**\n
+     * Add an event handler for a specific event\n
+     *\n
+     * @memberof Chartist.Event\n
+     * @param {String} event The event name\n
+     * @param {Function} handler A event handler function\n
+     */\n
+    function addEventHandler(event, handler) {\n
+      handlers[event] = handlers[event] || [];\n
+      handlers[event].push(handler);\n
+    }\n
+\n
+    /**\n
+     * Remove an event handler of a specific event name or remove all event handlers for a specific event.\n
+     *\n
+     * @memberof Chartist.Event\n
+     * @param {String} event The event name where a specific or all handlers should be removed\n
+     * @param {Function} [handler] An optional event handler function. If specified only this specific handler will be removed and otherwise all handlers are removed.\n
+     */\n
+    function removeEventHandler(event, handler) {\n
+      // Only do something if there are event handlers with this name existing\n
+      if(handlers[event]) {\n
+        // If handler is set we will look for a specific handler and only remove this\n
+        if(handler) {\n
+          handlers[event].splice(handlers[event].indexOf(handler), 1);\n
+          if(handlers[event].length === 0) {\n
+            delete handlers[event];\n
+          }\n
+        } else {\n
+          // If no handler is specified we remove all handlers for this event\n
+          delete handlers[event];\n
+        }\n
+      }\n
+    }\n
+\n
+    /**\n
+     * Use this function to emit an event. All handlers that are listening for this event will be triggered with the data parameter.\n
+     *\n
+     * @memberof Chartist.Event\n
+     * @param {String} event The event name that should be triggered\n
+     * @param {*} data Arbitrary data that will be passed to the event handler callback functions\n
+     */\n
+    function emit(event, data) {\n
+      // Only do something if there are event handlers with this name existing\n
+      if(handlers[event]) {\n
+        handlers[event].forEach(function(handler) {\n
+          handler(data);\n
+        });\n
+      }\n
+\n
+      // Emit event to star event handlers\n
+      if(handlers[\'*\']) {\n
+        handlers[\'*\'].forEach(function(starHandler) {\n
+          starHandler(event, data);\n
+        });\n
+      }\n
+    }\n
+\n
+    return {\n
+      addEventHandler: addEventHandler,\n
+      removeEventHandler: removeEventHandler,\n
+      emit: emit\n
+    };\n
+  };\n
+\n
+}(window, document, Chartist));\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2542</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>event.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

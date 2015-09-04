@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273045.23</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-gallery-three.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>var data = {\n
+  labels: [\'Day one\', \'Day two\', \'Day three\', \'Day four\'],\n
+  series: [20, 15, 40, 10]\n
+};\n
+\n
+var options = {\n
+  labelInterpolationFnc: function(value) {\n
+    return value.split(/\\s+/).reduce(function(str, elem) {\n
+      return str + elem[0] + \'.\';\n
+    }, \'\');\n
+  }\n
+};\n
+\n
+var responsiveOptions = [\n
+  [\n
+    Foundation.media_queries.medium,\n
+    {\n
+      chartPadding: 30,\n
+      labelOffset: 50,\n
+      labelDirection: \'explode\',\n
+      labelInterpolationFnc: function(value) {\n
+        return value;\n
+      }\n
+    }\n
+  ],\n
+  [\n
+    Foundation.media_queries.large,\n
+    {\n
+      labelOffset: 80\n
+    }\n
+  ],\n
+  [\n
+    Foundation.media_queries.xlarge,\n
+    {\n
+      labelOffset: 100\n
+    }\n
+  ]\n
+];\n
+\n
+new Chartist.Pie(\'.ct-chart\', data, options, responsiveOptions);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>743</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-gallery-three.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

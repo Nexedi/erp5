@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273025.53</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>live-example.hbs</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<section class="live-example"{{#if id}} id="{{id}}"{{/if}}\n
+         data-live-example="{{exampleCode id}}">\n
+  {{#if title}}\n
+    <header class="live-example-header">\n
+      <h{{level}}>{{title}}</h{{level}}>\n
+    </header>\n
+  {{/if}}\n
+  <div class="chart">\n
+    <div class="ct-chart{{#if classes}} {{classes}}{{/if}}"></div>\n
+  </div>\n
+  <aside class="live-code">\n
+    <div class="introduction">\n
+      <p class="text">{{{intro}}}</p>\n
+      <button class="edit-button">Edit Example</button>\n
+    </div>\n
+    <div class="editor-area">\n
+      <textarea class="code-editor"></textarea>\n
+      <button class="close-edit-button">Close Editor</button>\n
+    </div>\n
+  </aside>\n
+</section>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>665</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>live-example.hbs</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273055.24</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>main.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\'use strict\';\n
+\n
+// Initialize highlight.js\n
+window.hljs.initHighlightingOnLoad();\n
+\n
+function evalChartistCode(code, chartElement) {\n
+  // Modify the code to use a proper selector using the ID of the example as well as return the Chartist object\n
+  var modified = code.replace(/.*Chartist\\s*\\.\\s*(.+)\\(\\s*[\'"](.+)[\'"]/, function(match, type) {\n
+    return [\'var chart = new Chartist.\', type, \'(chartElement\'].join(\'\');\n
+  }) + \'; return chart;\';\n
+\n
+  // Remove any declaration of $chart as we are passing $chart to our function eval\n
+  modified = modified.replace(/var \\$chart.+;/, \'\');\n
+\n
+  var $chartElement = $(chartElement).empty();\n
+\n
+  try {\n
+    // Create function from the modified code and execute it\n
+    return (new Function([\'chartElement\', \'$chart\'], modified)(chartElement, $chartElement)); // jshint ignore:line\n
+  } catch(err) {\n
+    // Maybe show error in the future\n
+  }\n
+}\n
+\n
+// Generic data-* driven control behaviour\n
+$(function() {\n
+  $(\'[data-toggle-visible]\').each(function() {\n
+    var $element = $(this),\n
+      $target = $($element.data(\'toggleVisible\'));\n
+\n
+    $target.addClass(\'invisible\');\n
+    $element.on(\'click\', function(e) {\n
+      $target.toggleClass(\'invisible\');\n
+      e.preventDefault();\n
+    });\n
+  });\n
+\n
+  $(\'[data-sticky]\').each(function() {\n
+    var $element = $(this),\n
+      initialOffset = $element.offset().top,\n
+      margin = $element.data(\'sticky\') || 0;\n
+\n
+    $(window).on(\'scroll\', function() {\n
+      var scrollTop = $(window).scrollTop();\n
+\n
+      if(scrollTop > initialOffset - margin) {\n
+        $element.css({\n
+          position: \'relative\',\n
+          top: scrollTop + margin - initialOffset\n
+        });\n
+      } else {\n
+        $element.css({\n
+          position: \'\',\n
+          top: \'\'\n
+        });\n
+      }\n
+    });\n
+  });\n
+\n
+  $(\'[data-example]\').each(function() {\n
+    var $element = $(this),\n
+      code = window.atob($element.data(\'example\'));\n
+\n
+    // Execute the Chartist code immediately\n
+    evalChartistCode(code, $element.get(0));\n
+  });\n
+\n
+  $(\'[data-live-example]\').each(function() {\n
+    var $element = $(this),\n
+      $editor = $element.find(\'.code-editor\'),\n
+      initialCode = window.atob($element.data(\'liveExample\')),\n
+      chartist,\n
+      cm;\n
+\n
+    function updateChart() {\n
+      if(chartist) {\n
+        chartist.update();\n
+      }\n
+    }\n
+\n
+    function initializeCodeMirror() {\n
+      if(cm) {\n
+        return;\n
+      }\n
+\n
+      cm = window.CodeMirror.fromTextArea($editor.get(0), {\n
+        mode: \'javascript\',\n
+        theme: \'chartist\',\n
+        lineWrapping: true,\n
+        indentUnit: 2,\n
+        tabSize: 2\n
+      });\n
+\n
+      cm.on(\'change\', function(event) {\n
+        // Execute the Chartist code once the code gets updated\n
+        chartist = evalChartistCode(event.doc.getValue(), $element.find(\'.ct-chart\').get(0));\n
+      });\n
+    }\n
+\n
+    $element.find(\'.edit-button\').on(\'click\', function() {\n
+      $element.addClass(\'edit-mode\');\n
+      updateChart();\n
+      initializeCodeMirror();\n
+    });\n
+\n
+    $element.find(\'.close-edit-button\').on(\'click\', function() {\n
+      $element.removeClass(\'edit-mode\');\n
+      updateChart();\n
+    });\n
+\n
+    $editor.val(initialCode);\n
+\n
+    // Execute the Chartist code immediately\n
+    chartist = evalChartistCode(initialCode, $element.find(\'.ct-chart\').get(0));\n
+  });\n
+});\n
+\n
+// Initialize foundation\n
+$(document).foundation({\n
+  topbar: {\n
+    scrolltop: false\n
+  }\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3296</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>main.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273077.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>class.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * This module provides some basic prototype inheritance utilities.\n
+ *\n
+ * @module Chartist.Class\n
+ */\n
+/* global Chartist */\n
+(function(window, document, Chartist) {\n
+  \'use strict\';\n
+\n
+  function listToArray(list) {\n
+    var arr = [];\n
+    if (list.length) {\n
+      for (var i = 0; i < list.length; i++) {\n
+        arr.push(list[i]);\n
+      }\n
+    }\n
+    return arr;\n
+  }\n
+\n
+  /**\n
+   * Method to extend from current prototype.\n
+   *\n
+   * @memberof Chartist.Class\n
+   * @param {Object} properties The object that serves as definition for the prototype that gets created for the new class. This object should always contain a constructor property that is the desired constructor for the newly created class.\n
+   * @param {Object} [superProtoOverride] By default extens will use the current class prototype or Chartist.class. With this parameter you can specify any super prototype that will be used.\n
+   * @return {Function} Constructor function of the new class\n
+   *\n
+   * @example\n
+   * var Fruit = Class.extend({\n
+     * color: undefined,\n
+     *   sugar: undefined,\n
+     *\n
+     *   constructor: function(color, sugar) {\n
+     *     this.color = color;\n
+     *     this.sugar = sugar;\n
+     *   },\n
+     *\n
+     *   eat: function() {\n
+     *     this.sugar = 0;\n
+     *     return this;\n
+     *   }\n
+     * });\n
+   *\n
+   * var Banana = Fruit.extend({\n
+     *   length: undefined,\n
+     *\n
+     *   constructor: function(length, sugar) {\n
+     *     Banana.super.constructor.call(this, \'Yellow\', sugar);\n
+     *     this.length = length;\n
+     *   }\n
+     * });\n
+   *\n
+   * var banana = new Banana(20, 40);\n
+   * console.log(\'banana instanceof Fruit\', banana instanceof Fruit);\n
+   * console.log(\'Fruit is prototype of banana\', Fruit.prototype.isPrototypeOf(banana));\n
+   * console.log(\'bananas prototype is Fruit\', Object.getPrototypeOf(banana) === Fruit.prototype);\n
+   * console.log(banana.sugar);\n
+   * console.log(banana.eat().sugar);\n
+   * console.log(banana.color);\n
+   */\n
+  function extend(properties, superProtoOverride) {\n
+    var superProto = superProtoOverride || this.prototype || Chartist.Class;\n
+    var proto = Object.create(superProto);\n
+\n
+    Chartist.Class.cloneDefinitions(proto, properties);\n
+\n
+    var constr = function() {\n
+      var fn = proto.constructor || function () {},\n
+        instance;\n
+\n
+      // If this is linked to the Chartist namespace the constructor was not called with new\n
+      // To provide a fallback we will instantiate here and return the instance\n
+      instance = this === Chartist ? Object.create(proto) : this;\n
+      fn.apply(instance, Array.prototype.slice.call(arguments, 0));\n
+\n
+      // If this constructor was not called with new we need to return the instance\n
+      // This will not harm when the constructor has been called with new as the returned value is ignored\n
+      return instance;\n
+    };\n
+\n
+    constr.prototype = proto;\n
+    constr.super = superProto;\n
+    constr.extend = this.extend;\n
+\n
+    return constr;\n
+  }\n
+\n
+  // Variable argument list clones args > 0 into args[0] and retruns modified args[0]\n
+  function cloneDefinitions() {\n
+    var args = listToArray(arguments);\n
+    var target = args[0];\n
+\n
+    args.splice(1, args.length - 1).forEach(function (source) {\n
+      Object.getOwnPropertyNames(source).forEach(function (propName) {\n
+        // If this property already exist in target we delete it first\n
+        delete target[propName];\n
+        // Define the property with the descriptor from source\n
+        Object.defineProperty(target, propName,\n
+          Object.getOwnPropertyDescriptor(source, propName));\n
+      });\n
+    });\n
+\n
+    return target;\n
+  }\n
+\n
+  Chartist.Class = {\n
+    extend: extend,\n
+    cloneDefinitions: cloneDefinitions\n
+  };\n
+\n
+}(window, document, Chartist));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3671</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>class.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

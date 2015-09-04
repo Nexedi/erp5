@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273063.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>content.hbs</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+---\n
+layout: default\n
+---\n
+<section class="page-content {{page-class}}">\n
+  {{>navigation}}\n
+  <article class="main" role="main">\n
+    <header>\n
+      <h2>{{title}}</h2>\n
+    </header>\n
+\n
+    {{#if page.side-nav}}\n
+      {{partial page.side-nav this}}\n
+    {{else}}\n
+      {{>side-navigation}}\n
+    {{/if}}\n
+\n
+    <div class="content">\n
+      {{>body}}\n
+    </div>\n
+  </article>\n
+</section>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>370</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>content.hbs</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273038.63</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>overlapping-bars.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>var data = {\n
+  labels: [\'Jan\', \'Feb\', \'Mar\', \'Apr\', \'Mai\', \'Jun\', \'Jul\', \'Aug\', \'Sep\', \'Oct\', \'Nov\', \'Dec\'],\n
+  series: [\n
+    [5, 4, 3, 7, 5, 10, 3, 4, 8, 10, 6, 8],\n
+    [3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4]\n
+  ]\n
+};\n
+\n
+var options = {\n
+  seriesBarDistance: 10\n
+};\n
+\n
+var responsiveOptions = [\n
+  [\'screen and (max-width: 640px)\', {\n
+    seriesBarDistance: 5,\n
+    axisX: {\n
+      labelInterpolationFnc: function (value) {\n
+        return value[0];\n
+      }\n
+    }\n
+  }]\n
+];\n
+\n
+new Chartist.Bar(\'.ct-chart\', data, options, responsiveOptions);</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>521</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>overlapping-bars.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

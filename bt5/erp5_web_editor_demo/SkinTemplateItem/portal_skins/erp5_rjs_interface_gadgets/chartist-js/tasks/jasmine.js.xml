@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273101.08</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jasmine.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * jasmine\n
+ * =======\n
+ *\n
+ * Test settings\n
+ *\n
+ * Link: https://github.com/gruntjs/grunt-contrib-jasmine\n
+ */\n
+\n
+\'use strict\';\n
+\n
+module.exports = function (grunt) {\n
+  return {\n
+    dist: {\n
+      src: [\n
+        \'<%= pkg.config.src %>/scripts/core.js\',\n
+        \'<%= pkg.config.src %>/scripts/interpolation.js\',\n
+        \'<%= pkg.config.src %>/scripts/event.js\',\n
+        \'<%= pkg.config.src %>/scripts/class.js\',\n
+        \'<%= pkg.config.src %>/scripts/base.js\',\n
+        \'<%= pkg.config.src %>/scripts/svg.js\',\n
+        \'<%= pkg.config.src %>/scripts/svg-path.js\',\n
+        \'<%= pkg.config.src %>/scripts/axes/axis.js\',\n
+        \'<%= pkg.config.src %>/scripts/axes/step-axis.js\',\n
+        \'<%= pkg.config.src %>/scripts/axes/auto-scale-axis.js\',\n
+        \'<%= pkg.config.src %>/scripts/axes/fixed-scale-axis.js\',\n
+        \'<%= pkg.config.src %>/scripts/charts/line.js\',\n
+        \'<%= pkg.config.src %>/scripts/charts/bar.js\',\n
+        \'<%= pkg.config.src %>/scripts/charts/pie.js\'\n
+      ],\n
+      options: {\n
+        specs: \'<%= pkg.config.test %>/spec/**/spec-*.js\',\n
+        helpers: \'<%= pkg.config.test %>/spec/**/helper-*.js\',\n
+        vendor: [\n
+          \'http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\',\n
+          \'node_modules/jasmine-jquery/lib/jasmine-jquery.js\'\n
+        ],\n
+        styles: [\n
+          \'.tmp/styles/main.css\'\n
+        ],\n
+        phantomjs: {\n
+          \'ignore-ssl-errors\': true\n
+        }\n
+      }\n
+    }\n
+  };\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1432</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jasmine.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273055.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>chartist-guy.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function(){\n
+  \'use strict\';\n
+\n
+  // Chartist guy data chart data and options\n
+  var optionsChartistGuy = {\n
+    width: 195,\n
+    height: 137,\n
+    chartPadding: {\n
+      top: 15,\n
+      right: 10,\n
+      bottom: 10,\n
+      left: 10\n
+    },\n
+    axisX: {\n
+      offset: 15,\n
+      showLabel: true,\n
+      showGrid: true,\n
+      labelInterpolationFnc: function(n) {\n
+        return n;\n
+      }\n
+    },\n
+    axisY: {\n
+      offset: 25,\n
+      showLabel: true,\n
+      labelOffset: {\n
+        y: 5\n
+      },\n
+      showGrid: true,\n
+      scaleMinSpace: 15,\n
+      labelInterpolationFnc: function(n) {\n
+        return Math.round(n / 100000) / 10 + \'m.\';\n
+      }\n
+    }\n
+  };\n
+\n
+  var chartistGuyData = {\n
+    labels: [\'1st\', \'2nd\', \'3rd\'],\n
+    series: [\n
+      {\n
+        name: \'Workers\',\n
+        data: [1283000, 1500000, 5706000]\n
+      },\n
+      {\n
+        name: \'Nobles\',\n
+        data: [1883000, 2050000, 3706000]\n
+      }\n
+    ]\n
+  };\n
+\n
+  var $chartistGuyElement = $(\'#chartist-guy\');\n
+  if($chartistGuyElement.length > 0) {\n
+\n
+    // Create new snap object from SVG\n
+    var chartistGuySnap = Snap($chartistGuyElement.get(0));\n
+    // Load Chartist guy SVG\n
+    Snap.load($chartistGuyElement.data(\'svgSrc\'), function (fragment) {\n
+      chartistGuySnap.append(fragment);\n
+\n
+      // Add line chart to canvas of Chartist guy :-)\n
+      window.Chartist.Line($chartistGuyElement.find(\'#chart-canvas\').get(0), chartistGuyData, optionsChartistGuy);\n
+    });\n
+  }\n
+}());\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1409</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>chartist-guy.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

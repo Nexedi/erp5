@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273056.34</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>custom-style-bar-chart.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* Use this selector to override bar styles on bar charts. Bars are also strokes so you have maximum freedom in styling them. */\n
+.ct-series-a .ct-bar {\n
+  /* Colour of your bars */\n
+  stroke: red;\n
+  /* The width of your bars */\n
+  stroke-width: 20px;\n
+  /* Yes! Dashed bars! */\n
+  stroke-dasharray: 20px;\n
+  /* Maybe you like round corners on your bars? */\n
+  stroke-linecap: round;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>378</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>custom-style-bar-chart.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

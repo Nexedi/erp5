@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273100.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>aliases.yml</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string># Grunt Commands\n
+# ==============\n
+#\n
+# Use `grunt` in the root directory to select and run a specific task.\n
+\n
+default:\n
+  - \'newer:jshint\'\n
+  - \'test\'\n
+  - \'build\'\n
+  - \'dev\'\n
+\n
+# create the library\n
+build:\n
+  - \'clean:dist\'\n
+  - \'copy:dist\'\n
+  - \'concat:dist\'\n
+  - \'template:dist\'\n
+  - \'umd\'\n
+  - \'uglify:dist\'\n
+  - \'sass:dist\'\n
+  - \'cssmin\'\n
+\n
+# prepare the website\n
+public:\n
+  - \'clean:public\'\n
+  - \'assemble\'\n
+  - \'useminPrepare\'\n
+  - \'concurrent:public\'\n
+  - \'concat:generated\'\n
+  - \'copy:public\'\n
+  - \'cssmin:generated\'\n
+  - \'uglify:generated\'\n
+  - \'usemin\'\n
+  - \'critical\'\n
+  - \'htmlmin\'\n
+\n
+# tests\n
+test:\n
+  - \'clean:tmp\'\n
+  - \'concurrent:test\'\n
+  - \'connect:test\'\n
+  - \'jasmine\'\n
+\n
+# local version with livereload\n
+dev:\n
+  - \'assemble\'\n
+  - \'sass:tmp\'\n
+  - \'connect:livereload\'\n
+  - \'watch\'\n
+\n
+# online version\n
+preview:\n
+  - \'public\'\n
+  - \'connect:public\'\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>816</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>aliases.yml</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

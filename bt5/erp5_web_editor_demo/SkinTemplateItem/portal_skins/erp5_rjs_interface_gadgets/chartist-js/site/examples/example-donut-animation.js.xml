@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273040.6</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-donut-animation.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>var chart = new Chartist.Pie(\'.ct-chart\', {\n
+  series: [10, 20, 50, 20, 5, 50, 15],\n
+  labels: [1, 2, 3, 4, 5, 6, 7]\n
+}, {\n
+  donut: true,\n
+  showLabel: false\n
+});\n
+\n
+chart.on(\'draw\', function(data) {\n
+  if(data.type === \'slice\') {\n
+    // Get the total path length in order to use for dash array animation\n
+    var pathLength = data.element._node.getTotalLength();\n
+\n
+    // Set a dasharray that matches the path length as prerequisite to animate dashoffset\n
+    data.element.attr({\n
+      \'stroke-dasharray\': pathLength + \'px \' + pathLength + \'px\'\n
+    });\n
+\n
+    // Create animation definition while also assigning an ID to the animation for later sync usage\n
+    var animationDefinition = {\n
+      \'stroke-dashoffset\': {\n
+        id: \'anim\' + data.index,\n
+        dur: 1000,\n
+        from: -pathLength + \'px\',\n
+        to:  \'0px\',\n
+        easing: Chartist.Svg.Easing.easeOutQuint,\n
+        // We need to use `fill: \'freeze\'` otherwise our animation will fall back to initial (not visible)\n
+        fill: \'freeze\'\n
+      }\n
+    };\n
+\n
+    // If this was not the first slice, we need to time the animation so that it uses the end sync event of the previous animation\n
+    if(data.index !== 0) {\n
+      animationDefinition[\'stroke-dashoffset\'].begin = \'anim\' + (data.index - 1) + \'.end\';\n
+    }\n
+\n
+    // We need to set an initial value before the animation starts as we are not in guided mode which would do that for us\n
+    data.element.attr({\n
+      \'stroke-dashoffset\': -pathLength + \'px\'\n
+    });\n
+\n
+    // We can\'t use guided mode as the animations need to rely on setting begin manually\n
+    // See http://gionkunz.github.io/chartist-js/api-documentation.html#chartistsvg-function-animate\n
+    data.element.animate(animationDefinition, false);\n
+  }\n
+});\n
+\n
+// For the sake of the example we update the chart every time it\'s created with a delay of 8 seconds\n
+chart.on(\'created\', function() {\n
+  if(window.__anim21278907124) {\n
+    clearTimeout(window.__anim21278907124);\n
+    window.__anim21278907124 = null;\n
+  }\n
+  window.__anim21278907124 = setTimeout(chart.update.bind(chart), 10000);\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2048</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-donut-animation.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

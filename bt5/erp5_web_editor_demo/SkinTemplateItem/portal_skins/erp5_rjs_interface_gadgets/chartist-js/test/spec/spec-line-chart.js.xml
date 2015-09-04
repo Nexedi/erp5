@@ -1,0 +1,314 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272949.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>spec-line-chart.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Line chart tests\', function () {\n
+  \'use strict\';\n
+\n
+  beforeEach(function () {\n
+\n
+  });\n
+\n
+  afterEach(function () {\n
+\n
+  });\n
+\n
+  describe(\'Meta data tests\', function () {\n
+    it(\'should render meta data correctly with mixed value array\', function (done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var meta = {\n
+        test: \'Serialized Test\'\n
+      };\n
+\n
+      var data = {\n
+        labels: [\'Sun\', \'Mon\', \'Tue\', \'Wed\', \'Thu\'],\n
+        series: [\n
+          [5, 2, 4, {\n
+            value: 2,\n
+            meta: meta\n
+          }, 0]\n
+        ]\n
+      };\n
+\n
+      var chart = new Chartist.Line(\'.ct-chart\', data);\n
+\n
+      chart.on(\'created\', function () {\n
+        expect(Chartist.deserialize($(\'.ct-point\').eq(3).attr(\'ct:meta\'))).toEqual(meta);\n
+        done();\n
+      });\n
+    });\n
+\n
+    it(\'should render meta data correctly with mixed value array and different normalized data length\', function (done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var meta = {\n
+        test: \'Serialized Test\'\n
+      };\n
+\n
+      var data = {\n
+        labels: [\'Sun\', \'Mon\', \'Tue\', \'Wed\', \'Thu\', \'Fri\', \'Sat\', \'Sun\'],\n
+        series: [\n
+          [5, 2, 4, {\n
+            value: 2,\n
+            meta: meta\n
+          }, 0]\n
+        ]\n
+      };\n
+\n
+      var chart = new Chartist.Line(\'.ct-chart\', data);\n
+\n
+      chart.on(\'created\', function () {\n
+        expect(Chartist.deserialize($(\'.ct-point\').eq(3).attr(\'ct:meta\'))).toEqual(meta);\n
+        done();\n
+      });\n
+    });\n
+\n
+    it(\'should render meta data correctly with mixed value array and mixed series notation\', function (done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var seriesMeta = 9999,\n
+        valueMeta = {\n
+          test: \'Serialized Test\'\n
+        };\n
+\n
+      var data = {\n
+        labels: [\'Sun\', \'Mon\', \'Tue\', \'Wed\', \'Thu\', \'Fri\', \'Sat\', \'Sun\'],\n
+        series: [\n
+          [5, 2, 4, {\n
+            value: 2,\n
+            meta: valueMeta\n
+          }, 0],\n
+          {\n
+            meta: seriesMeta,\n
+            data: [5, 2, {\n
+              value: 2,\n
+              meta: valueMeta\n
+            }, 0]\n
+          }\n
+        ]\n
+      };\n
+\n
+      var chart = new Chartist.Line(\'.ct-chart\', data);\n
+\n
+      chart.on(\'created\', function () {\n
+        expect(Chartist.deserialize($(\'.ct-series-a .ct-point\').eq(3).attr(\'ct:meta\'))).toEqual(valueMeta);\n
+        expect(Chartist.deserialize($(\'.ct-series-b\')).attr(\'ct:meta\')).toEqual(\'\' + seriesMeta);\n
+        expect(Chartist.deserialize($(\'.ct-series-b .ct-point\').eq(2).attr(\'ct:meta\'))).toEqual(valueMeta);\n
+        done();\n
+      });\n
+    });\n
+  });\n
+\n
+  describe(\'Line charts with holes\', function () {\n
+    it(\'should render correctly with Interpolation.none and holes everywhere\', function (done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var chart = new Chartist.Line(\'.ct-chart\', {\n
+        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],\n
+        series: [\n
+          [NaN, 15, 0, null, 2, 3, 4, undefined, {value: 1, meta: \'meta data\'}, null]\n
+        ]\n
+      }, {\n
+        lineSmooth: false\n
+      });\n
+\n
+      chart.on(\'draw\', function (context) {\n
+        if (context.type === \'line\') {\n
+          expect(context.path.pathElements.map(function (pathElement) {\n
+            return {\n
+              command: pathElement.command,\n
+              data: pathElement.data\n
+            };\n
+          })).toEqual([\n
+            {command: \'M\', data: {valueIndex: 1, value: {x: undefined, y: 15}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 2, value: {x: undefined, y: 0}, meta: undefined}},\n
+            {command: \'M\', data: {valueIndex: 4, value: {x: undefined, y: 2}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 5, value: {x: undefined, y: 3}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 6, value: {x: undefined, y: 4}, meta: undefined}},\n
+            {command: \'M\', data: {valueIndex: 8, value: {x: undefined, y: 1}, meta: \'meta data\'}}\n
+          ]);\n
+          done();\n
+        }\n
+      });\n
+    });\n
+\n
+    it(\'should render correctly with Interpolation.cardinal and holes everywhere\', function (done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var chart = new Chartist.Line(\'.ct-chart\', {\n
+        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],\n
+        series: [\n
+          [NaN, 15, 0, null, 2, 3, 4, undefined, {value: 1, meta: \'meta data\'}, null]\n
+        ]\n
+      }, {\n
+        lineSmooth: true\n
+      });\n
+\n
+      chart.on(\'draw\', function (context) {\n
+        if (context.type === \'line\') {\n
+          expect(context.path.pathElements.map(function (pathElement) {\n
+            return {\n
+              command: pathElement.command,\n
+              data: pathElement.data\n
+            };\n
+          })).toEqual([\n
+            {command: \'M\', data: {valueIndex: 1, value: {x: undefined, y: 15}, meta: undefined}},\n
+            // Cardinal should create Line path segment if only one connection\n
+            {command: \'L\', data: {valueIndex: 2, value: {x: undefined, y: 0}, meta: undefined}},\n
+            {command: \'M\', data: {valueIndex: 4, value: {x: undefined, y: 2}, meta: undefined}},\n
+            // Cardinal should create Curve path segment for 2 or more connections\n
+            {command: \'C\', data: {valueIndex: 5, value: {x: undefined, y: 3}, meta: undefined}},\n
+            {command: \'C\', data: {valueIndex: 6, value: {x: undefined, y: 4}, meta: undefined}},\n
+            {command: \'M\', data: {valueIndex: 8, value: {x: undefined, y: 1}, meta: \'meta data\'}}\n
+          ]);\n
+          done();\n
+        }\n
+      });\n
+    });\n
+\n
+    it(\'should render correctly with Interpolation.simple and holes everywhere\', function (done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var chart = new Chartist.Line(\'.ct-chart\', {\n
+        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],\n
+        series: [\n
+          [NaN, 15, 0, null, 2, 3, 4, undefined, {value: 1, meta: \'meta data\'}, null]\n
+        ]\n
+      }, {\n
+        lineSmooth: Chartist.Interpolation.simple()\n
+      });\n
+\n
+      chart.on(\'draw\', function (context) {\n
+        if (context.type === \'line\') {\n
+          expect(context.path.pathElements.map(function (pathElement) {\n
+            return {\n
+              command: pathElement.command,\n
+              data: pathElement.data\n
+            };\n
+          })).toEqual([\n
+            {command: \'M\', data: {valueIndex: 1, value: {x: undefined, y: 15}, meta: undefined}},\n
+            {command: \'C\', data: {valueIndex: 2, value: {x: undefined, y: 0}, meta: undefined}},\n
+            {command: \'M\', data: {valueIndex: 4, value: {x: undefined, y: 2}, meta: undefined}},\n
+            {command: \'C\', data: {valueIndex: 5, value: {x: undefined, y: 3}, meta: undefined}},\n
+            {command: \'C\', data: {valueIndex: 6, value: {x: undefined, y: 4}, meta: undefined}},\n
+            {command: \'M\', data: {valueIndex: 8, value: {x: undefined, y: 1}, meta: \'meta data\'}}\n
+          ]);\n
+          done();\n
+        }\n
+      });\n
+    });\n
+\n
+    it(\'should render correctly with postponed Interpolation.step and holes everywhere\', function (done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var chart = new Chartist.Line(\'.ct-chart\', {\n
+        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],\n
+        series: [\n
+          [NaN, 15, 0, null, 2, 3, 4, undefined, {value: 1, meta: \'meta data\'}, null]\n
+        ]\n
+      }, {\n
+        lineSmooth: Chartist.Interpolation.step()\n
+      });\n
+\n
+      chart.on(\'draw\', function (context) {\n
+        if (context.type === \'line\') {\n
+          expect(context.path.pathElements.map(function (pathElement) {\n
+            return {\n
+              command: pathElement.command,\n
+              data: pathElement.data\n
+            };\n
+          })).toEqual([\n
+            {command: \'M\', data: {valueIndex: 1, value: {x: undefined, y: 15}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 1, value: {x: undefined, y: 15}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 2, value: {x: undefined, y: 0}, meta: undefined}},\n
+            {command: \'M\', data: {valueIndex: 4, value: {x: undefined, y: 2}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 4, value: {x: undefined, y: 2}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 5, value: {x: undefined, y: 3}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 5, value: {x: undefined, y: 3}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 6, value: {x: undefined, y: 4}, meta: undefined}},\n
+            {command: \'M\', data: {valueIndex: 8, value: {x: undefined, y: 1}, meta: \'meta data\'}}\n
+          ]);\n
+          done();\n
+        }\n
+      });\n
+    });\n
+\n
+    it(\'should render correctly with preponed Interpolation.step and holes everywhere\', function (done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var chart = new Chartist.Line(\'.ct-chart\', {\n
+        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],\n
+        series: [\n
+          [NaN, 15, 0, null, 2, 3, 4, undefined, {value: 1, meta: \'meta data\'}, null]\n
+        ]\n
+      }, {\n
+        lineSmooth: Chartist.Interpolation.step({\n
+          postpone: false\n
+        })\n
+      });\n
+\n
+      chart.on(\'draw\', function (context) {\n
+        if (context.type === \'line\') {\n
+          expect(context.path.pathElements.map(function (pathElement) {\n
+            return {\n
+              command: pathElement.command,\n
+              data: pathElement.data\n
+            };\n
+          })).toEqual([\n
+            {command: \'M\', data: {valueIndex: 1, value: {x: undefined, y: 15}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 2, value: {x: undefined, y: 0}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 2, value: {x: undefined, y: 0}, meta: undefined}},\n
+            {command: \'M\', data: {valueIndex: 4, value: {x: undefined, y: 2}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 5, value: {x: undefined, y: 3}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 5, value: {x: undefined, y: 3}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 6, value: {x: undefined, y: 4}, meta: undefined}},\n
+            {command: \'L\', data: {valueIndex: 6, value: {x: undefined, y: 4}, meta: undefined}},\n
+            {command: \'M\', data: {valueIndex: 8, value: {x: undefined, y: 1}, meta: \'meta data\'}}\n
+          ]);\n
+          done();\n
+        }\n
+      });\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10498</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>spec-line-chart.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

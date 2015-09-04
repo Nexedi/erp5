@@ -1,0 +1,315 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272954.34</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>spec-base-chart.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Base chart tests\', function() {\n
+  \'use strict\';\n
+\n
+  beforeEach(function() {\n
+\n
+  });\n
+\n
+  afterEach(function() {\n
+\n
+  });\n
+\n
+  it(\'should fire initial data event correctly\', function(done) {\n
+    jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+    var chart = new Chartist.Line(\'.ct-chart\', {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[0, 1, 2, 3]]\n
+    });\n
+\n
+    chart.on(\'data\', function(data) {\n
+      expect(data.type).toEqual(\'initial\');\n
+      expect(data.data.series[0]).toEqual([0, 1, 2, 3]);\n
+      done();\n
+    });\n
+  });\n
+\n
+  it(\'should fire update data event correctly\', function(done) {\n
+    jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+    var chart = new Chartist.Line(\'.ct-chart\', {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[0, 1, 2, 3]]\n
+    });\n
+\n
+    chart.on(\'data\', function(data) {\n
+      if(data.type === \'update\') {\n
+        expect(data.data.series[0]).toEqual([3, 2, 1, 0]);\n
+        done();\n
+      }\n
+    });\n
+\n
+    chart.update({\n
+      labels: [1, 2, 3, 4],\n
+      series: [[3, 2, 1, 0]]\n
+    });\n
+  });\n
+\n
+  it(\'should transform data before rendering with data event\', function(done) {\n
+    jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+    var chart = new Chartist.Line(\'.ct-chart\', {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[0, 1, 2, 3]]\n
+    });\n
+\n
+    chart.on(\'data\', function(data) {\n
+      data.data.series[0] = data.data.series[0].reverse();\n
+    });\n
+\n
+    chart.on(\'created\', function() {\n
+      expect(chart.data.series[0]).toEqual([3, 2, 1, 0]);\n
+      done();\n
+    });\n
+  });\n
+\n
+  it(\'should update correctly with data only in same call stack\', function(done) {\n
+    jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+    var dataEventsSpy = jasmine.createSpy(\'dataEventSpy\');\n
+\n
+    var chart = new Chartist.Line(\'.ct-chart\', {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[0, 1, 2, 3]]\n
+    });\n
+\n
+    var updatedData = {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[3, 2, 1, 0]]\n
+    };\n
+\n
+    chart.update(updatedData);\n
+\n
+    chart.on(\'data\', dataEventsSpy);\n
+\n
+    chart.on(\'created\', function() {\n
+      expect(chart.data.series[0]).toEqual([3, 2, 1, 0]);\n
+      // As called in same call stack we should only have one data event (the initial one)\n
+      expect(dataEventsSpy.calls.count()).toBe(1);\n
+      expect(dataEventsSpy.calls.argsFor(0)[0].type).toBe(\'initial\');\n
+      done();\n
+    });\n
+  });\n
+\n
+  it(\'should update correctly with data only in a different call stack\', function(done) {\n
+    jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+    var dataEventsSpy = jasmine.createSpy(\'dataEventSpy\');\n
+\n
+    var createdCount = 0;\n
+\n
+    var initialData = {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[0, 1, 2, 3]]\n
+    };\n
+\n
+    var updatedData = {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[3, 2, 1, 0]]\n
+    };\n
+\n
+    var chart = new Chartist.Line(\'.ct-chart\', initialData);\n
+\n
+    setTimeout(function() {\n
+      chart.update(updatedData);\n
+    });\n
+\n
+    chart.on(\'data\', dataEventsSpy);\n
+\n
+    // On the second created event we will finish and evaluate the test\n
+    chart.on(\'created\', function() {\n
+      createdCount++;\n
+\n
+      if(createdCount === 2) {\n
+        expect(chart.data.series[0]).toEqual([3, 2, 1, 0]);\n
+        // Called from a later call stack in the event loop, there should be two data update counts now\n
+        expect(dataEventsSpy.calls.count()).toBe(2);\n
+        expect(dataEventsSpy.calls.argsFor(0)[0].type).toBe(\'initial\');\n
+        expect(dataEventsSpy.calls.argsFor(0)[0].data).toEqual(initialData);\n
+        expect(dataEventsSpy.calls.argsFor(1)[0].type).toBe(\'update\');\n
+        expect(dataEventsSpy.calls.argsFor(1)[0].data).toEqual(updatedData);\n
+        done();\n
+      }\n
+    });\n
+  });\n
+\n
+  it(\'should update correctly with options only in same call stack\', function(done) {\n
+    jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+    var dataEventsSpy = jasmine.createSpy(\'dataEventSpy\');\n
+    var optionsChangedEventsSpy = jasmine.createSpy(\'optionsChangedEventsSpy\');\n
+\n
+    var chart = new Chartist.Line(\'.ct-chart\', {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[0, 1, 2, 3]]\n
+    }, {\n
+      showArea: true,\n
+      showPoint: false\n
+    });\n
+\n
+    var updatedOptions = {\n
+      showArea: false,\n
+      showPoint: true\n
+    };\n
+\n
+    chart.update(null, updatedOptions);\n
+\n
+    chart.on(\'data\', dataEventsSpy);\n
+    chart.on(\'optionsChanged\', optionsChangedEventsSpy);\n
+\n
+    chart.on(\'created\', function() {\n
+      // Data has not been updated and only initialized, therefore the initial type and only 1 call\n
+      expect(dataEventsSpy.calls.count()).toBe(1);\n
+      expect(dataEventsSpy.calls.argsFor(0)[0].type).toBe(\'initial\');\n
+\n
+      // Options changed should not be fired as called in same call stack\n
+      expect(optionsChangedEventsSpy.calls.count()).toBe(0);\n
+\n
+      // Updated options should be present as we updated it in same call stack before chart creation\n
+      expect(chart.optionsProvider.getCurrentOptions().showArea).toBe(false);\n
+      expect(chart.optionsProvider.getCurrentOptions().showPoint).toBe(true);\n
+      done();\n
+    });\n
+  });\n
+\n
+  it(\'should update correctly with options only in a different call stack\', function(done) {\n
+    jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+    var createdCount = 0;\n
+    var dataEventsSpy = jasmine.createSpy(\'dataEventSpy\');\n
+    var optionsChangedEventsSpy = jasmine.createSpy(\'optionsChangedEventsSpy\');\n
+\n
+    var initialData = {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[0, 1, 2, 3]]\n
+    };\n
+\n
+    var chart = new Chartist.Line(\'.ct-chart\', initialData, {\n
+      showArea: true,\n
+      showPoint: false\n
+    });\n
+\n
+    var updatedOptions = {\n
+      showArea: false,\n
+      showPoint: true\n
+    };\n
+\n
+    setTimeout(function() {\n
+      chart.update(null, updatedOptions);\n
+    });\n
+\n
+    chart.on(\'data\', dataEventsSpy);\n
+    chart.on(\'optionsChanged\', optionsChangedEventsSpy);\n
+\n
+    chart.on(\'created\', function() {\n
+      createdCount++;\n
+\n
+      // On the second created event we will finish and evaluate the test\n
+      if(createdCount === 2) {\n
+        // Called from a later call stack in the event loop, there should be two data update counts now\n
+        expect(dataEventsSpy.calls.count()).toBe(1);\n
+        expect(dataEventsSpy.calls.argsFor(0)[0].type).toBe(\'initial\');\n
+        expect(dataEventsSpy.calls.argsFor(0)[0].data).toEqual(initialData);\n
+\n
+        // Update should not cause any optionsChanged event\n
+        expect(optionsChangedEventsSpy.calls.count()).toBe(0);\n
+\n
+        done();\n
+      }\n
+    });\n
+  });\n
+\n
+  it(\'should update options with override=false correctly\', function(done) {\n
+    jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+    var chart = new Chartist.Line(\'.ct-chart\', {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[0, 1, 2, 3]]\n
+    }, {\n
+      showArea: true\n
+    });\n
+\n
+    var updatedOptions = {\n
+      showPoint: false\n
+    };\n
+\n
+    // With override set to true, the previous option showArea=true should still be available on chart creation\n
+    chart.update(null, updatedOptions);\n
+\n
+    chart.on(\'created\', function() {\n
+      // showArea is false in the default settings and as we didn\'t use current options and override option it should\n
+      // be back to default.\n
+      expect(chart.optionsProvider.getCurrentOptions().showArea).toBe(false);\n
+      expect(chart.optionsProvider.getCurrentOptions().showPoint).toBe(false);\n
+      done();\n
+    });\n
+  });\n
+\n
+  it(\'should update options with override=true correctly\', function(done) {\n
+    jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+    var chart = new Chartist.Line(\'.ct-chart\', {\n
+      labels: [1, 2, 3, 4],\n
+      series: [[0, 1, 2, 3]]\n
+    }, {\n
+      showArea: true\n
+    });\n
+\n
+    var updatedOptions = {\n
+      showPoint: false\n
+    };\n
+\n
+    // With override set to true, the previous option showArea=true should still be available on chart creation\n
+    chart.update(null, updatedOptions, true);\n
+\n
+    chart.on(\'created\', function() {\n
+      expect(chart.optionsProvider.getCurrentOptions().showArea).toBe(true);\n
+      expect(chart.optionsProvider.getCurrentOptions().showPoint).toBe(false);\n
+      done();\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8179</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>spec-base-chart.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273071.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>axis.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* global Chartist */\n
+(function (window, document, Chartist) {\n
+  \'use strict\';\n
+\n
+  var axisUnits = {\n
+    x: {\n
+      pos: \'x\',\n
+      len: \'width\',\n
+      dir: \'horizontal\',\n
+      rectStart: \'x1\',\n
+      rectEnd: \'x2\',\n
+      rectOffset: \'y2\'\n
+    },\n
+    y: {\n
+      pos: \'y\',\n
+      len: \'height\',\n
+      dir: \'vertical\',\n
+      rectStart: \'y2\',\n
+      rectEnd: \'y1\',\n
+      rectOffset: \'x1\'\n
+    }\n
+  };\n
+\n
+  function Axis(units, chartRect, ticks, options) {\n
+    this.units = units;\n
+    this.counterUnits = units === axisUnits.x ? axisUnits.y : axisUnits.x;\n
+    this.chartRect = chartRect;\n
+    this.axisLength = chartRect[units.rectEnd] - chartRect[units.rectStart];\n
+    this.gridOffset = chartRect[units.rectOffset];\n
+    this.ticks = ticks;\n
+    this.options = options;\n
+  }\n
+\n
+  function createGridAndLabels(gridGroup, labelGroup, useForeignObject, chartOptions, eventEmitter) {\n
+    var axisOptions = chartOptions[\'axis\' + this.units.pos.toUpperCase()];\n
+    var projectedValues = this.ticks.map(this.projectValue.bind(this));\n
+    var labelValues = this.ticks.map(axisOptions.labelInterpolationFnc);\n
+\n
+    projectedValues.forEach(function(projectedValue, index) {\n
+      var labelOffset = {\n
+        x: 0,\n
+        y: 0\n
+      };\n
+\n
+      // TODO: Find better solution for solving this problem\n
+      // Calculate how much space we have available for the label\n
+      var labelLength;\n
+      if(projectedValues[index + 1]) {\n
+        // If we still have one label ahead, we can calculate the distance to the next tick / label\n
+        labelLength = projectedValues[index + 1] - projectedValue;\n
+      } else {\n
+        // If we don\'t have a label ahead and we have only two labels in total, we just take the remaining distance to\n
+        // on the whole axis length. We limit that to a minimum of 30 pixel, so that labels close to the border will\n
+        // still be visible inside of the chart padding.\n
+        labelLength = Math.max(this.axisLength - projectedValue, 30);\n
+      }\n
+\n
+      // Skip grid lines and labels where interpolated label values are falsey (execpt for 0)\n
+      if(!labelValues[index] && labelValues[index] !== 0) {\n
+        return;\n
+      }\n
+\n
+      // Transform to global coordinates using the chartRect\n
+      // We also need to set the label offset for the createLabel function\n
+      if(this.units.pos === \'x\') {\n
+        projectedValue = this.chartRect.x1 + projectedValue;\n
+        labelOffset.x = chartOptions.axisX.labelOffset.x;\n
+\n
+        // If the labels should be positioned in start position (top side for vertical axis) we need to set a\n
+        // different offset as for positioned with end (bottom)\n
+        if(chartOptions.axisX.position === \'start\') {\n
+          labelOffset.y = this.chartRect.padding.top + chartOptions.axisX.labelOffset.y + (useForeignObject ? 5 : 20);\n
+        } else {\n
+          labelOffset.y = this.chartRect.y1 + chartOptions.axisX.labelOffset.y + (useForeignObject ? 5 : 20);\n
+        }\n
+      } else {\n
+        projectedValue = this.chartRect.y1 - projectedValue;\n
+        labelOffset.y = chartOptions.axisY.labelOffset.y - (useForeignObject ? labelLength : 0);\n
+\n
+        // If the labels should be positioned in start position (left side for horizontal axis) we need to set a\n
+        // different offset as for positioned with end (right side)\n
+        if(chartOptions.axisY.position === \'start\') {\n
+          labelOffset.x = useForeignObject ? this.chartRect.padding.left + chartOptions.axisY.labelOffset.x : this.chartRect.x1 - 10;\n
+        } else {\n
+          labelOffset.x = this.chartRect.x2 + chartOptions.axisY.labelOffset.x + 10;\n
+        }\n
+      }\n
+\n
+      if(axisOptions.showGrid) {\n
+        Chartist.createGrid(projectedValue, index, this, this.gridOffset, this.chartRect[this.counterUnits.len](), gridGroup, [\n
+          chartOptions.classNames.grid,\n
+          chartOptions.classNames[this.units.dir]\n
+        ], eventEmitter);\n
+      }\n
+\n
+      if(axisOptions.showLabel) {\n
+        Chartist.createLabel(projectedValue, labelLength, index, labelValues, this, axisOptions.offset, labelOffset, labelGroup, [\n
+          chartOptions.classNames.label,\n
+          chartOptions.classNames[this.units.dir],\n
+          chartOptions.classNames[axisOptions.position]\n
+        ], useForeignObject, eventEmitter);\n
+      }\n
+    }.bind(this));\n
+  }\n
+\n
+  Chartist.Axis = Chartist.Class.extend({\n
+    constructor: Axis,\n
+    createGridAndLabels: createGridAndLabels,\n
+    projectValue: function(value, index, data) {\n
+      throw new Error(\'Base axis can\\\'t be instantiated!\');\n
+    }\n
+  });\n
+\n
+  Chartist.Axis.units = axisUnits;\n
+\n
+}(window, document, Chartist));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4545</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>axis.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

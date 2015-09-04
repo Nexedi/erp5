@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273051.16</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>example-dynamic-colours.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>var count = 45;\n
+var max = 100;\n
+\n
+// Creating a bar chart with no labels and a series array with one series. For the series we generate random data with `count` elements and random data ranging from 0 to `max`.\n
+var chart = new Chartist.Bar(\'.ct-chart\', {\n
+  labels: Chartist.times(count),\n
+  series: [\n
+    Chartist.times(count).map(Math.random).map(Chartist.mapMultiply(max))\n
+  ]\n
+}, {\n
+  axisX: {\n
+    showLabel: false\n
+  },\n
+  axisY: {\n
+    onlyInteger: true\n
+  }\n
+});\n
+\n
+// This is the bit we are actually interested in. By registering a callback for `draw` events, we can actually intercept the drawing process of each element on the chart.\n
+chart.on(\'draw\', function(context) {\n
+  // First we want to make sure that only do something when the draw event is for bars. Draw events do get fired for labels and grids too.\n
+  if(context.type === \'bar\') {\n
+    // With the Chartist.Svg API we can easily set an attribute on our bar that just got drawn\n
+    context.element.attr({\n
+      // Now we set the style attribute on our bar to override the default color of the bar. By using a HSL colour we can easily set the hue of the colour dynamically while keeping the same saturation and lightness. From the context we can also get the current value of the bar. We use that value to calculate a hue between 0 and 100 degree. This will make our bars appear green when close to the maximum and red when close to zero.\n
+      style: \'stroke: hsl(\' + Math.floor(Chartist.getMultiValue(context.value) / max * 100) + \', 50%, 50%);\'\n
+    });\n
+  }\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1518</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>example-dynamic-colours.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

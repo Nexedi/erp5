@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273041.42</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>bi-polar-bar-interpolated.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>var data = {\n
+  labels: [\'W1\', \'W2\', \'W3\', \'W4\', \'W5\', \'W6\', \'W7\', \'W8\', \'W9\', \'W10\'],\n
+  series: [\n
+    [1, 2, 4, 8, 6, -2, -1, -4, -6, -2]\n
+  ]\n
+};\n
+\n
+var options = {\n
+  high: 10,\n
+  low: -10,\n
+  axisX: {\n
+    labelInterpolationFnc: function(value, index) {\n
+      return index % 2 === 0 ? value : null;\n
+    }\n
+  }\n
+};\n
+\n
+new Chartist.Bar(\'.ct-chart\', data, options);\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>354</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>bi-polar-bar-interpolated.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

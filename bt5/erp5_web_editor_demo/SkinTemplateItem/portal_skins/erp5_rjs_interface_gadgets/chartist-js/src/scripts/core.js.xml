@@ -1,0 +1,978 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273073.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>core.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * The core module of Chartist that is mainly providing static functions and higher level functions for chart modules.\n
+ *\n
+ * @module Chartist.Core\n
+ */\n
+var Chartist = {\n
+  version: \'<%= pkg.version %>\'\n
+};\n
+\n
+(function (window, document, Chartist) {\n
+  \'use strict\';\n
+\n
+  /**\n
+   * Helps to simplify functional style code\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {*} n This exact value will be returned by the noop function\n
+   * @return {*} The same value that was provided to the n parameter\n
+   */\n
+  Chartist.noop = function (n) {\n
+    return n;\n
+  };\n
+\n
+  /**\n
+   * Generates a-z from a number 0 to 26\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Number} n A number from 0 to 26 that will result in a letter a-z\n
+   * @return {String} A character from a-z based on the input number n\n
+   */\n
+  Chartist.alphaNumerate = function (n) {\n
+    // Limit to a-z\n
+    return String.fromCharCode(97 + n % 26);\n
+  };\n
+\n
+  /**\n
+   * Simple recursive object extend\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Object} target Target object where the source will be merged into\n
+   * @param {Object...} sources This object (objects) will be merged into target and then target is returned\n
+   * @return {Object} An object that has the same reference as target but is extended and merged with the properties of source\n
+   */\n
+  Chartist.extend = function (target) {\n
+    target = target || {};\n
+\n
+    var sources = Array.prototype.slice.call(arguments, 1);\n
+    sources.forEach(function(source) {\n
+      for (var prop in source) {\n
+        if (typeof source[prop] === \'object\' && source[prop] !== null && !(source[prop] instanceof Array)) {\n
+          target[prop] = Chartist.extend({}, target[prop], source[prop]);\n
+        } else {\n
+          target[prop] = source[prop];\n
+        }\n
+      }\n
+    });\n
+\n
+    return target;\n
+  };\n
+\n
+  /**\n
+   * Replaces all occurrences of subStr in str with newSubStr and returns a new string.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {String} str\n
+   * @param {String} subStr\n
+   * @param {String} newSubStr\n
+   * @return {String}\n
+   */\n
+  Chartist.replaceAll = function(str, subStr, newSubStr) {\n
+    return str.replace(new RegExp(subStr, \'g\'), newSubStr);\n
+  };\n
+\n
+  /**\n
+   * Converts a string to a number while removing the unit if present. If a number is passed then this will be returned unmodified.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {String|Number} value\n
+   * @return {Number} Returns the string as number or NaN if the passed length could not be converted to pixel\n
+   */\n
+  Chartist.stripUnit = function(value) {\n
+    if(typeof value === \'string\') {\n
+      value = value.replace(/[^0-9\\+-\\.]/g, \'\');\n
+    }\n
+\n
+    return +value;\n
+  };\n
+\n
+  /**\n
+   * Converts a number to a string with a unit. If a string is passed then this will be returned unmodified.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Number} value\n
+   * @param {String} unit\n
+   * @return {String} Returns the passed number value with unit.\n
+   */\n
+  Chartist.ensureUnit = function(value, unit) {\n
+    if(typeof value === \'number\') {\n
+      value = value + unit;\n
+    }\n
+\n
+    return value;\n
+  };\n
+\n
+  /**\n
+   * This is a wrapper around document.querySelector that will return the query if it\'s already of type Node\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {String|Node} query The query to use for selecting a Node or a DOM node that will be returned directly\n
+   * @return {Node}\n
+   */\n
+  Chartist.querySelector = function(query) {\n
+    return query instanceof Node ? query : document.querySelector(query);\n
+  };\n
+\n
+  /**\n
+   * Functional style helper to produce array with given length initialized with undefined values\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param length\n
+   * @return {Array}\n
+   */\n
+  Chartist.times = function(length) {\n
+    return Array.apply(null, new Array(length));\n
+  };\n
+\n
+  /**\n
+   * Sum helper to be used in reduce functions\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param previous\n
+   * @param current\n
+   * @return {*}\n
+   */\n
+  Chartist.sum = function(previous, current) {\n
+    return previous + (current ? current : 0);\n
+  };\n
+\n
+  /**\n
+   * Multiply helper to be used in `Array.map` for multiplying each value of an array with a factor.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Number} factor\n
+   * @returns {Function} Function that can be used in `Array.map` to multiply each value in an array\n
+   */\n
+  Chartist.mapMultiply = function(factor) {\n
+    return function(num) {\n
+      return num * factor;\n
+    };\n
+  };\n
+\n
+  /**\n
+   * Add helper to be used in `Array.map` for adding a addend to each value of an array.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Number} addend\n
+   * @returns {Function} Function that can be used in `Array.map` to add a addend to each value in an array\n
+   */\n
+  Chartist.mapAdd = function(addend) {\n
+    return function(num) {\n
+      return num + addend;\n
+    };\n
+  };\n
+\n
+  /**\n
+   * Map for multi dimensional arrays where their nested arrays will be mapped in serial. The output array will have the length of the largest nested array. The callback function is called with variable arguments where each argument is the nested array value (or undefined if there are no more values).\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param arr\n
+   * @param cb\n
+   * @return {Array}\n
+   */\n
+  Chartist.serialMap = function(arr, cb) {\n
+    var result = [],\n
+        length = Math.max.apply(null, arr.map(function(e) {\n
+          return e.length;\n
+        }));\n
+\n
+    Chartist.times(length).forEach(function(e, index) {\n
+      var args = arr.map(function(e) {\n
+        return e[index];\n
+      });\n
+\n
+      result[index] = cb.apply(null, args);\n
+    });\n
+\n
+    return result;\n
+  };\n
+\n
+  /**\n
+   * This helper function can be used to round values with certain precision level after decimal. This is used to prevent rounding errors near float point precision limit.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Number} value The value that should be rounded with precision\n
+   * @param {Number} [digits] The number of digits after decimal used to do the rounding\n
+   * @returns {number} Rounded value\n
+   */\n
+  Chartist.roundWithPrecision = function(value, digits) {\n
+    var precision = Math.pow(10, digits || Chartist.precision);\n
+    return Math.round(value * precision) / precision;\n
+  };\n
+\n
+  /**\n
+   * Precision level used internally in Chartist for rounding. If you require more decimal places you can increase this number.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @type {number}\n
+   */\n
+  Chartist.precision = 8;\n
+\n
+  /**\n
+   * A map with characters to escape for strings to be safely used as attribute values.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @type {Object}\n
+   */\n
+  Chartist.escapingMap = {\n
+    \'&\': \'&amp;\',\n
+    \'<\': \'&lt;\',\n
+    \'>\': \'&gt;\',\n
+    \'"\': \'&quot;\',\n
+    \'\\\'\': \'&#039;\'\n
+  };\n
+\n
+  /**\n
+   * This function serializes arbitrary data to a string. In case of data that can\'t be easily converted to a string, this function will create a wrapper object and serialize the data using JSON.stringify. The outcoming string will always be escaped using Chartist.escapingMap.\n
+   * If called with null or undefined the function will return immediately with null or undefined.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Number|String|Object} data\n
+   * @return {String}\n
+   */\n
+  Chartist.serialize = function(data) {\n
+    if(data === null || data === undefined) {\n
+      return data;\n
+    } else if(typeof data === \'number\') {\n
+      data = \'\'+data;\n
+    } else if(typeof data === \'object\') {\n
+      data = JSON.stringify({data: data});\n
+    }\n
+\n
+    return Object.keys(Chartist.escapingMap).reduce(function(result, key) {\n
+      return Chartist.replaceAll(result, key, Chartist.escapingMap[key]);\n
+    }, data);\n
+  };\n
+\n
+  /**\n
+   * This function de-serializes a string previously serialized with Chartist.serialize. The string will always be unescaped using Chartist.escapingMap before it\'s returned. Based on the input value the return type can be Number, String or Object. JSON.parse is used with try / catch to see if the unescaped string can be parsed into an Object and this Object will be returned on success.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {String} data\n
+   * @return {String|Number|Object}\n
+   */\n
+  Chartist.deserialize = function(data) {\n
+    if(typeof data !== \'string\') {\n
+      return data;\n
+    }\n
+\n
+    data = Object.keys(Chartist.escapingMap).reduce(function(result, key) {\n
+      return Chartist.replaceAll(result, Chartist.escapingMap[key], key);\n
+    }, data);\n
+\n
+    try {\n
+      data = JSON.parse(data);\n
+      data = data.data !== undefined ? data.data : data;\n
+    } catch(e) {}\n
+\n
+    return data;\n
+  };\n
+\n
+  /**\n
+   * Create or reinitialize the SVG element for the chart\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Node} container The containing DOM Node object that will be used to plant the SVG element\n
+   * @param {String} width Set the width of the SVG element. Default is 100%\n
+   * @param {String} height Set the height of the SVG element. Default is 100%\n
+   * @param {String} className Specify a class to be added to the SVG element\n
+   * @return {Object} The created/reinitialized SVG element\n
+   */\n
+  Chartist.createSvg = function (container, width, height, className) {\n
+    var svg;\n
+\n
+    width = width || \'100%\';\n
+    height = height || \'100%\';\n
+\n
+    // Check if there is a previous SVG element in the container that contains the Chartist XML namespace and remove it\n
+    // Since the DOM API does not support namespaces we need to manually search the returned list http://www.w3.org/TR/selectors-api/\n
+    Array.prototype.slice.call(container.querySelectorAll(\'svg\')).filter(function filterChartistSvgObjects(svg) {\n
+      return svg.getAttributeNS(\'http://www.w3.org/2000/xmlns/\', Chartist.xmlNs.prefix);\n
+    }).forEach(function removePreviousElement(svg) {\n
+      container.removeChild(svg);\n
+    });\n
+\n
+    // Create svg object with width and height or use 100% as default\n
+    svg = new Chartist.Svg(\'svg\').attr({\n
+      width: width,\n
+      height: height\n
+    }).addClass(className).attr({\n
+      style: \'width: \' + width + \'; height: \' + height + \';\'\n
+    });\n
+\n
+    // Add the DOM node to our container\n
+    container.appendChild(svg._node);\n
+\n
+    return svg;\n
+  };\n
+\n
+\n
+  /**\n
+   * Reverses the series, labels and series data arrays.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param data\n
+   */\n
+  Chartist.reverseData = function(data) {\n
+    data.labels.reverse();\n
+    data.series.reverse();\n
+    for (var i = 0; i < data.series.length; i++) {\n
+      if(typeof(data.series[i]) === \'object\' && data.series[i].data !== undefined) {\n
+        data.series[i].data.reverse();\n
+      } else if(data.series[i] instanceof Array) {\n
+        data.series[i].reverse();\n
+      }\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Convert data series into plain array\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Object} data The series object that contains the data to be visualized in the chart\n
+   * @param {Boolean} reverse If true the whole data is reversed by the getDataArray call. This will modify the data object passed as first parameter. The labels as well as the series order is reversed. The whole series data arrays are reversed too.\n
+   * @param {Boolean} multi Create a multi dimensional array from a series data array where a value object with `x` and `y` values will be created.\n
+   * @return {Array} A plain array that contains the data to be visualized in the chart\n
+   */\n
+  Chartist.getDataArray = function (data, reverse, multi) {\n
+    // If the data should be reversed but isn\'t we need to reverse it\n
+    // If it\'s reversed but it shouldn\'t we need to reverse it back\n
+    // That\'s required to handle data updates correctly and to reflect the responsive configurations\n
+    if(reverse && !data.reversed || !reverse && data.reversed) {\n
+      Chartist.reverseData(data);\n
+      data.reversed = !data.reversed;\n
+    }\n
+\n
+    // Recursively walks through nested arrays and convert string values to numbers and objects with value properties\n
+    // to values. Check the tests in data core -> data normalization for a detailed specification of expected values\n
+    function recursiveConvert(value) {\n
+      if(Chartist.isFalseyButZero(value)) {\n
+        // This is a hole in data and we should return undefined\n
+        return undefined;\n
+      } else if((value.data || value) instanceof Array) {\n
+        return (value.data || value).map(recursiveConvert);\n
+      } else if(value.hasOwnProperty(\'value\')) {\n
+        return recursiveConvert(value.value);\n
+      } else {\n
+        if(multi) {\n
+          var multiValue = {};\n
+\n
+          // Single series value arrays are assumed to specify the Y-Axis value\n
+          // For example: [1, 2] => [{x: undefined, y: 1}, {x: undefined, y: 2}]\n
+          // If multi is a string then it\'s assumed that it specified which dimension should be filled as default\n
+          if(typeof multi === \'string\') {\n
+            multiValue[multi] = Chartist.getNumberOrUndefined(value);\n
+          } else {\n
+            multiValue.y = Chartist.getNumberOrUndefined(value);\n
+          }\n
+\n
+          multiValue.x = value.hasOwnProperty(\'x\') ? Chartist.getNumberOrUndefined(value.x) : multiValue.x;\n
+          multiValue.y = value.hasOwnProperty(\'y\') ? Chartist.getNumberOrUndefined(value.y) : multiValue.y;\n
+\n
+          return multiValue;\n
+\n
+        } else {\n
+          return Chartist.getNumberOrUndefined(value);\n
+        }\n
+      }\n
+    }\n
+\n
+    return data.series.map(recursiveConvert);\n
+  };\n
+\n
+  /**\n
+   * Converts a number into a padding object.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Object|Number} padding\n
+   * @param {Number} [fallback] This value is used to fill missing values if a incomplete padding object was passed\n
+   * @returns {Object} Returns a padding object containing top, right, bottom, left properties filled with the padding number passed in as argument. If the argument is something else than a number (presumably already a correct padding object) then this argument is directly returned.\n
+   */\n
+  Chartist.normalizePadding = function(padding, fallback) {\n
+    fallback = fallback || 0;\n
+\n
+    return typeof padding === \'number\' ? {\n
+      top: padding,\n
+      right: padding,\n
+      bottom: padding,\n
+      left: padding\n
+    } : {\n
+      top: typeof padding.top === \'number\' ? padding.top : fallback,\n
+      right: typeof padding.right === \'number\' ? padding.right : fallback,\n
+      bottom: typeof padding.bottom === \'number\' ? padding.bottom : fallback,\n
+      left: typeof padding.left === \'number\' ? padding.left : fallback\n
+    };\n
+  };\n
+\n
+  Chartist.getMetaData = function(series, index) {\n
+    var value = series.data ? series.data[index] : series[index];\n
+    return value ? Chartist.serialize(value.meta) : undefined;\n
+  };\n
+\n
+  /**\n
+   * Calculate the order of magnitude for the chart scale\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Number} value The value Range of the chart\n
+   * @return {Number} The order of magnitude\n
+   */\n
+  Chartist.orderOfMagnitude = function (value) {\n
+    return Math.floor(Math.log(Math.abs(value)) / Math.LN10);\n
+  };\n
+\n
+  /**\n
+   * Project a data length into screen coordinates (pixels)\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Object} axisLength The svg element for the chart\n
+   * @param {Number} length Single data value from a series array\n
+   * @param {Object} bounds All the values to set the bounds of the chart\n
+   * @return {Number} The projected data length in pixels\n
+   */\n
+  Chartist.projectLength = function (axisLength, length, bounds) {\n
+    return length / bounds.range * axisLength;\n
+  };\n
+\n
+  /**\n
+   * Get the height of the area in the chart for the data series\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Object} svg The svg element for the chart\n
+   * @param {Object} options The Object that contains all the optional values for the chart\n
+   * @return {Number} The height of the area in the chart for the data series\n
+   */\n
+  Chartist.getAvailableHeight = function (svg, options) {\n
+    return Math.max((Chartist.stripUnit(options.height) || svg.height()) - (options.chartPadding.top +  options.chartPadding.bottom) - options.axisX.offset, 0);\n
+  };\n
+\n
+  /**\n
+   * Get highest and lowest value of data array. This Array contains the data that will be visualized in the chart.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Array} data The array that contains the data to be visualized in the chart\n
+   * @param {Object} options The Object that contains the chart options\n
+   * @param {String} dimension Axis dimension \'x\' or \'y\' used to access the correct value and high / low configuration\n
+   * @return {Object} An object that contains the highest and lowest value that will be visualized on the chart.\n
+   */\n
+  Chartist.getHighLow = function (data, options, dimension) {\n
+    // TODO: Remove workaround for deprecated global high / low config. Axis high / low configuration is preferred\n
+    options = Chartist.extend({}, options, dimension ? options[\'axis\' + dimension.toUpperCase()] : {});\n
+\n
+    var highLow = {\n
+        high: options.high === undefined ? -Number.MAX_VALUE : +options.high,\n
+        low: options.low === undefined ? Number.MAX_VALUE : +options.low\n
+      };\n
+    var findHigh = options.high === undefined;\n
+    var findLow = options.low === undefined;\n
+\n
+    // Function to recursively walk through arrays and find highest and lowest number\n
+    function recursiveHighLow(data) {\n
+      if(data === undefined) {\n
+        return undefined;\n
+      } else if(data instanceof Array) {\n
+        for (var i = 0; i < data.length; i++) {\n
+          recursiveHighLow(data[i]);\n
+        }\n
+      } else {\n
+        var value = dimension ? +data[dimension] : +data;\n
+\n
+        if (findHigh && value > highLow.high) {\n
+          highLow.high = value;\n
+        }\n
+\n
+        if (findLow && value < highLow.low) {\n
+          highLow.low = value;\n
+        }\n
+      }\n
+    }\n
+\n
+    // Start to find highest and lowest number recursively\n
+    if(findHigh || findLow) {\n
+      recursiveHighLow(data);\n
+    }\n
+\n
+    // Overrides of high / low based on reference value, it will make sure that the invisible reference value is\n
+    // used to generate the chart. This is useful when the chart always needs to contain the position of the\n
+    // invisible reference value in the view i.e. for bipolar scales.\n
+    if (options.referenceValue || options.referenceValue === 0) {\n
+      highLow.high = Math.max(options.referenceValue, highLow.high);\n
+      highLow.low = Math.min(options.referenceValue, highLow.low);\n
+    }\n
+\n
+    // If high and low are the same because of misconfiguration or flat data (only the same value) we need\n
+    // to set the high or low to 0 depending on the polarity\n
+    if (highLow.high <= highLow.low) {\n
+      // If both values are 0 we set high to 1\n
+      if (highLow.low === 0) {\n
+        highLow.high = 1;\n
+      } else if (highLow.low < 0) {\n
+        // If we have the same negative value for the bounds we set bounds.high to 0\n
+        highLow.high = 0;\n
+      } else {\n
+        // If we have the same positive value for the bounds we set bounds.low to 0\n
+        highLow.low = 0;\n
+      }\n
+    }\n
+\n
+    return highLow;\n
+  };\n
+\n
+  /**\n
+   * Checks if the value is a valid number or string with a number.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param value\n
+   * @returns {Boolean}\n
+   */\n
+  Chartist.isNum = function(value) {\n
+    return !isNaN(value) && isFinite(value);\n
+  };\n
+\n
+  /**\n
+   * Returns true on all falsey values except the numeric value 0.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param value\n
+   * @returns {boolean}\n
+   */\n
+  Chartist.isFalseyButZero = function(value) {\n
+    return !value && value !== 0;\n
+  };\n
+\n
+  /**\n
+   * Returns a number if the passed parameter is a valid number or the function will return undefined. On all other values than a valid number, this function will return undefined.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param value\n
+   * @returns {*}\n
+   */\n
+  Chartist.getNumberOrUndefined = function(value) {\n
+    return isNaN(+value) ? undefined : +value;\n
+  };\n
+\n
+  /**\n
+   * Gets a value from a dimension `value.x` or `value.y` while returning value directly if it\'s a valid numeric value. If the value is not numeric and it\'s falsey this function will return undefined.\n
+   *\n
+   * @param value\n
+   * @param dimension\n
+   * @returns {*}\n
+   */\n
+  Chartist.getMultiValue = function(value, dimension) {\n
+    if(Chartist.isNum(value)) {\n
+      return +value;\n
+    } else if(value) {\n
+      return value[dimension || \'y\'] || 0;\n
+    } else {\n
+      return 0;\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Pollard Rho Algorithm to find smallest factor of an integer value. There are more efficient algorithms for factorization, but this one is quite efficient and not so complex.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Number} num An integer number where the smallest factor should be searched for\n
+   * @returns {Number} The smallest integer factor of the parameter num.\n
+   */\n
+  Chartist.rho = function(num) {\n
+    if(num === 1) {\n
+      return num;\n
+    }\n
+\n
+    function gcd(p, q) {\n
+      if (p % q === 0) {\n
+        return q;\n
+      } else {\n
+        return gcd(q, p % q);\n
+      }\n
+    }\n
+\n
+    function f(x) {\n
+      return x * x + 1;\n
+    }\n
+\n
+    var x1 = 2, x2 = 2, divisor;\n
+    if (num % 2 === 0) {\n
+      return 2;\n
+    }\n
+\n
+    do {\n
+      x1 = f(x1) % num;\n
+      x2 = f(f(x2)) % num;\n
+      divisor = gcd(Math.abs(x1 - x2), num);\n
+    } while (divisor === 1);\n
+\n
+    return divisor;\n
+  };\n
+\n
+  /**\n
+   * Calculate and retrieve all the bounds for the chart and return them in one array\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Number} axisLength The length of the Axis used for\n
+   * @param {Object} highLow An object containing a high and low property indicating the value range of the chart.\n
+   * @param {Number} scaleMinSpace The minimum projected length a step should result in\n
+   * @param {Boolean} onlyInteger\n
+   * @return {Object} All the values to set the bounds of the chart\n
+   */\n
+  Chartist.getBounds = function (axisLength, highLow, scaleMinSpace, onlyInteger) {\n
+    var i,\n
+      optimizationCounter = 0,\n
+      newMin,\n
+      newMax,\n
+      bounds = {\n
+        high: highLow.high,\n
+        low: highLow.low\n
+      };\n
+\n
+    bounds.valueRange = bounds.high - bounds.low;\n
+    bounds.oom = Chartist.orderOfMagnitude(bounds.valueRange);\n
+    bounds.step = Math.pow(10, bounds.oom);\n
+    bounds.min = Math.floor(bounds.low / bounds.step) * bounds.step;\n
+    bounds.max = Math.ceil(bounds.high / bounds.step) * bounds.step;\n
+    bounds.range = bounds.max - bounds.min;\n
+    bounds.numberOfSteps = Math.round(bounds.range / bounds.step);\n
+\n
+    // Optimize scale step by checking if subdivision is possible based on horizontalGridMinSpace\n
+    // If we are already below the scaleMinSpace value we will scale up\n
+    var length = Chartist.projectLength(axisLength, bounds.step, bounds);\n
+    var scaleUp = length < scaleMinSpace;\n
+    var smallestFactor = onlyInteger ? Chartist.rho(bounds.range) : 0;\n
+\n
+    // First check if we should only use integer steps and if step 1 is still larger than scaleMinSpace so we can use 1\n
+    if(onlyInteger && Chartist.projectLength(axisLength, 1, bounds) >= scaleMinSpace) {\n
+      bounds.step = 1;\n
+    } else if(onlyInteger && smallestFactor < bounds.step && Chartist.projectLength(axisLength, smallestFactor, bounds) >= scaleMinSpace) {\n
+      // If step 1 was too small, we can try the smallest factor of range\n
+      // If the smallest factor is smaller than the current bounds.step and the projected length of smallest factor\n
+      // is larger than the scaleMinSpace we should go for it.\n
+      bounds.step = smallestFactor;\n
+    } else {\n
+      // Trying to divide or multiply by 2 and find the best step value\n
+      while (true) {\n
+        if (scaleUp && Chartist.projectLength(axisLength, bounds.step, bounds) <= scaleMinSpace) {\n
+          bounds.step *= 2;\n
+        } else if (!scaleUp && Chartist.projectLength(axisLength, bounds.step / 2, bounds) >= scaleMinSpace) {\n
+          bounds.step /= 2;\n
+          if(onlyInteger && bounds.step % 1 !== 0) {\n
+            bounds.step *= 2;\n
+            break;\n
+          }\n
+        } else {\n
+          break;\n
+        }\n
+\n
+        if(optimizationCounter++ > 1000) {\n
+          throw new Error(\'Exceeded maximum number of iterations while optimizing scale step!\');\n
+        }\n
+      }\n
+    }\n
+\n
+    // Narrow min and max based on new step\n
+    newMin = bounds.min;\n
+    newMax = bounds.max;\n
+    while(newMin + bounds.step <= bounds.low) {\n
+      newMin += bounds.step;\n
+    }\n
+    while(newMax - bounds.step >= bounds.high) {\n
+      newMax -= bounds.step;\n
+    }\n
+    bounds.min = newMin;\n
+    bounds.max = newMax;\n
+    bounds.range = bounds.max - bounds.min;\n
+\n
+    bounds.values = [];\n
+    for (i = bounds.min; i <= bounds.max; i += bounds.step) {\n
+      bounds.values.push(Chartist.roundWithPrecision(i));\n
+    }\n
+\n
+    return bounds;\n
+  };\n
+\n
+  /**\n
+   * Calculate cartesian coordinates of polar coordinates\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Number} centerX X-axis coordinates of center point of circle segment\n
+   * @param {Number} centerY X-axis coordinates of center point of circle segment\n
+   * @param {Number} radius Radius of circle segment\n
+   * @param {Number} angleInDegrees Angle of circle segment in degrees\n
+   * @return {Number} Coordinates of point on circumference\n
+   */\n
+  Chartist.polarToCartesian = function (centerX, centerY, radius, angleInDegrees) {\n
+    var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;\n
+\n
+    return {\n
+      x: centerX + (radius * Math.cos(angleInRadians)),\n
+      y: centerY + (radius * Math.sin(angleInRadians))\n
+    };\n
+  };\n
+\n
+  /**\n
+   * Initialize chart drawing rectangle (area where chart is drawn) x1,y1 = bottom left / x2,y2 = top right\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Object} svg The svg element for the chart\n
+   * @param {Object} options The Object that contains all the optional values for the chart\n
+   * @param {Number} [fallbackPadding] The fallback padding if partial padding objects are used\n
+   * @return {Object} The chart rectangles coordinates inside the svg element plus the rectangles measurements\n
+   */\n
+  Chartist.createChartRect = function (svg, options, fallbackPadding) {\n
+    var hasAxis = !!(options.axisX || options.axisY);\n
+    var yAxisOffset = hasAxis ? options.axisY.offset : 0;\n
+    var xAxisOffset = hasAxis ? options.axisX.offset : 0;\n
+    // If width or height results in invalid value (including 0) we fallback to the unitless settings or even 0\n
+    var width = svg.width() || Chartist.stripUnit(options.width) || 0;\n
+    var height = svg.height() || Chartist.stripUnit(options.height) || 0;\n
+    var normalizedPadding = Chartist.normalizePadding(options.chartPadding, fallbackPadding);\n
+\n
+    // If settings were to small to cope with offset (legacy) and padding, we\'ll adjust\n
+    width = Math.max(width, yAxisOffset + normalizedPadding.left + normalizedPadding.right);\n
+    height = Math.max(height, xAxisOffset + normalizedPadding.top + normalizedPadding.bottom);\n
+\n
+    var chartRect = {\n
+      padding: normalizedPadding,\n
+      width: function () {\n
+        return this.x2 - this.x1;\n
+      },\n
+      height: function () {\n
+        return this.y1 - this.y2;\n
+      }\n
+    };\n
+\n
+    if(hasAxis) {\n
+      if (options.axisX.position === \'start\') {\n
+        chartRect.y2 = normalizedPadding.top + xAxisOffset;\n
+        chartRect.y1 = Math.max(height - normalizedPadding.bottom, chartRect.y2 + 1);\n
+      } else {\n
+        chartRect.y2 = normalizedPadding.top;\n
+        chartRect.y1 = Math.max(height - normalizedPadding.bottom - xAxisOffset, chartRect.y2 + 1);\n
+      }\n
+\n
+      if (options.axisY.position === \'start\') {\n
+        chartRect.x1 = normalizedPadding.left + yAxisOffset;\n
+        chartRect.x2 = Math.max(width - normalizedPadding.right, chartRect.x1 + 1);\n
+      } else {\n
+        chartRect.x1 = normalizedPadding.left;\n
+        chartRect.x2 = Math.max(width - normalizedPadding.right - yAxisOffset, chartRect.x1 + 1);\n
+      }\n
+    } else {\n
+      chartRect.x1 = normalizedPadding.left;\n
+      chartRect.x2 = Math.max(width - normalizedPadding.right, chartRect.x1 + 1);\n
+      chartRect.y2 = normalizedPadding.top;\n
+      chartRect.y1 = Math.max(height - normalizedPadding.bottom, chartRect.y2 + 1);\n
+    }\n
+\n
+    return chartRect;\n
+  };\n
+\n
+  /**\n
+   * Creates a grid line based on a projected value.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param position\n
+   * @param index\n
+   * @param axis\n
+   * @param offset\n
+   * @param length\n
+   * @param group\n
+   * @param classes\n
+   * @param eventEmitter\n
+   */\n
+  Chartist.createGrid = function(position, index, axis, offset, length, group, classes, eventEmitter) {\n
+    var positionalData = {};\n
+    positionalData[axis.units.pos + \'1\'] = position;\n
+    positionalData[axis.units.pos + \'2\'] = position;\n
+    positionalData[axis.counterUnits.pos + \'1\'] = offset;\n
+    positionalData[axis.counterUnits.pos + \'2\'] = offset + length;\n
+\n
+    var gridElement = group.elem(\'line\', positionalData, classes.join(\' \'));\n
+\n
+    // Event for grid draw\n
+    eventEmitter.emit(\'draw\',\n
+      Chartist.extend({\n
+        type: \'grid\',\n
+        axis: axis,\n
+        index: index,\n
+        group: group,\n
+        element: gridElement\n
+      }, positionalData)\n
+    );\n
+  };\n
+\n
+  /**\n
+   * Creates a label based on a projected value and an axis.\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param position\n
+   * @param length\n
+   * @param index\n
+   * @param labels\n
+   * @param axis\n
+   * @param axisOffset\n
+   * @param labelOffset\n
+   * @param group\n
+   * @param classes\n
+   * @param useForeignObject\n
+   * @param eventEmitter\n
+   */\n
+  Chartist.createLabel = function(position, length, index, labels, axis, axisOffset, labelOffset, group, classes, useForeignObject, eventEmitter) {\n
+    var labelElement;\n
+    var positionalData = {};\n
+\n
+    positionalData[axis.units.pos] = position + labelOffset[axis.units.pos];\n
+    positionalData[axis.counterUnits.pos] = labelOffset[axis.counterUnits.pos];\n
+    positionalData[axis.units.len] = length;\n
+    positionalData[axis.counterUnits.len] = axisOffset - 10;\n
+\n
+    if(useForeignObject) {\n
+      // We need to set width and height explicitly to px as span will not expand with width and height being\n
+      // 100% in all browsers\n
+      var content = \'<span class="\' + classes.join(\' \') + \'" style="\' +\n
+        axis.units.len + \': \' + Math.round(positionalData[axis.units.len]) + \'px; \' +\n
+        axis.counterUnits.len + \': \' + Math.round(positionalData[axis.counterUnits.len]) + \'px">\' +\n
+        labels[index] + \'</span>\';\n
+\n
+      labelElement = group.foreignObject(content, Chartist.extend({\n
+        style: \'overflow: visible;\'\n
+      }, positionalData));\n
+    } else {\n
+      labelElement = group.elem(\'text\', positionalData, classes.join(\' \')).text(labels[index]);\n
+    }\n
+\n
+    eventEmitter.emit(\'draw\', Chartist.extend({\n
+      type: \'label\',\n
+      axis: axis,\n
+      index: index,\n
+      group: group,\n
+      element: labelElement,\n
+      text: labels[index]\n
+    }, positionalData));\n
+  };\n
+\n
+  /**\n
+   * Helper to read series specific options from options object. It automatically falls back to the global option if\n
+   * there is no option in the series options.\n
+   *\n
+   * @param {Object} series Series object\n
+   * @param {Object} options Chartist options object\n
+   * @param {string} key The options key that should be used to obtain the options\n
+   * @returns {*}\n
+   */\n
+  Chartist.getSeriesOption = function(series, options, key) {\n
+    if(series.name && options.series && options.series[series.name]) {\n
+      var seriesOptions = options.series[series.name];\n
+      return seriesOptions.hasOwnProperty(key) ? seriesOptions[key] : options[key];\n
+    } else {\n
+      return options[key];\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Provides options handling functionality with callback for options changes triggered by responsive options and media query matches\n
+   *\n
+   * @memberof Chartist.Core\n
+   * @param {Object} options Options set by user\n
+   * @param {Array} responsiveOptions Optional functions to add responsive behavior to chart\n
+   * @param {Object} eventEmitter The event emitter that will be used to emit the options changed events\n
+   * @return {Object} The consolidated options object from the defaults, base and matching responsive options\n
+   */\n
+  Chartist.optionsProvider = function (options, responsiveOptions, eventEmitter) {\n
+    var baseOptions = Chartist.extend({}, options),\n
+      currentOptions,\n
+      mediaQueryListeners = [],\n
+      i;\n
+\n
+    function updateCurrentOptions(preventChangedEvent) {\n
+      var previousOptions = currentOptions;\n
+      currentOptions = Chartist.extend({}, baseOptions);\n
+\n
+      if (responsiveOptions) {\n
+        for (i = 0; i < responsiveOptions.length; i++) {\n
+          var mql = window.matchMedia(responsiveOptions[i][0]);\n
+          if (mql.matches) {\n
+            currentOptions = Chartist.extend(currentOptions, responsiveOptions[i][1]);\n
+          }\n
+        }\n
+      }\n
+\n
+      if(eventEmitter && !preventChangedEvent) {\n
+        eventEmitter.emit(\'optionsChanged\', {\n
+          previousOptions: previousOptions,\n
+          currentOptions: currentOptions\n
+        });\n
+      }\n
+    }\n
+\n
+    function removeMediaQueryListeners() {\n
+      mediaQueryListeners.forEach(function(mql) {\n
+        mql.removeListener(updateCurrentOptions);\n
+      });\n
+    }\n
+\n
+    if (!window.matchMedia) {\n
+      throw \'window.matchMedia not found! Make sure you\\\'re using a polyfill.\';\n
+    } else if (responsiveOptions) {\n
+\n
+      for (i = 0; i < responsiveOptions.length; i++) {\n
+        var mql = window.matchMedia(responsiveOptions[i][0]);\n
+        mql.addListener(updateCurrentOptions);\n
+        mediaQueryListeners.push(mql);\n
+      }\n
+    }\n
+    // Execute initially so we get the correct options\n
+    updateCurrentOptions(true);\n
+\n
+    return {\n
+      removeMediaQueryListeners: removeMediaQueryListeners,\n
+      getCurrentOptions: function getCurrentOptions() {\n
+        return Chartist.extend({}, currentOptions);\n
+      }\n
+    };\n
+  };\n
+\n
+}(window, document, Chartist));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>33352</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>core.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

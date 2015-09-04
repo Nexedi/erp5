@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273060.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>custom-style-line-chart.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* Use this selector to override the line style on a given series */\n
+.ct-series-a .ct-line {\n
+  /* Set the colour of this series line */\n
+  stroke: red;\n
+  /* Control the thikness of your lines */\n
+  stroke-width: 5px;\n
+  /* Create a dashed line with a pattern */\n
+  stroke-dasharray: 10px 20px;\n
+}\n
+\n
+/* This selector overrides the points style on line charts. Points on line charts are actually just very short strokes. This allows you to customize even the point size in CSS */\n
+.ct-series-a .ct-point {\n
+  /* Colour of your points */\n
+  stroke: red;\n
+  /* Size of your points */\n
+  stroke-width: 20px;\n
+  /* Make your points appear as squares */\n
+  stroke-linecap: square;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>663</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>custom-style-line-chart.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

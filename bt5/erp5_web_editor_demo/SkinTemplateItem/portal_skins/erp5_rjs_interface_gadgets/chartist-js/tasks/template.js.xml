@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273104.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>template.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * template\n
+ * ===\n
+ *\n
+ * Replaces template variables inside of files using build stage variables.\n
+ *\n
+ * Link: https://github.com/mathiasbynens/grunt-template\n
+ */\n
+\n
+\'use strict\';\n
+\n
+var pkg = require(\'../package.json\');\n
+\n
+module.exports = function (grunt) {\n
+  return {\n
+    dist: {\n
+      options: {\n
+        data: {\n
+          pkg: pkg\n
+        }\n
+      },\n
+      files: {\n
+        \'<%= pkg.config.dist %>/chartist.js\': \'<%= pkg.config.dist %>/chartist.js\'\n
+      }\n
+    }\n
+  };\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>471</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>template.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

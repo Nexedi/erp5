@@ -1,0 +1,326 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272952.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>spec-core.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Chartist core\', function() {\n
+  \'use strict\';\n
+\n
+  beforeEach(function() {\n
+\n
+  });\n
+\n
+  afterEach(function() {\n
+\n
+  });\n
+\n
+  describe(\'createSvg tests\', function () {\n
+    it(\'should not remove non-chartist svg elements\', function() {\n
+      jasmine.getFixtures().set(\'<div id="chart-container"><svg id="foo"></svg><div><svg id="bar"></svg></div></div>\');\n
+\n
+      var container = $(\'#chart-container\'),\n
+        // We use get(0) because we want the DOMElement, not the jQuery object.\n
+        svg = Chartist.createSvg(container.get(0), \'500px\', \'400px\', \'ct-fish-bar\');\n
+\n
+      expect(svg).toBeDefined();\n
+      expect(svg.classes()).toContain(\'ct-fish-bar\');\n
+      expect(container).toContainElement(\'#foo\');\n
+      expect(container).toContainElement(\'#bar\');\n
+    });\n
+\n
+    it(\'should remove previous chartist svg elements\', function() {\n
+      jasmine.getFixtures().set(\'<div id="chart-container"></div>\');\n
+\n
+      var container = $(\'#chart-container\'),\n
+        // We use get(0) because we want the DOMElement, not the jQuery object.\n
+        svg1 = Chartist.createSvg(container.get(0), \'500px\', \'400px\', \'ct-fish-bar\'),\n
+        svg2 = Chartist.createSvg(container.get(0), \'800px\', \'200px\', \'ct-snake-bar\');\n
+\n
+      expect(svg1).toBeDefined();\n
+      expect(svg1.classes()).toContain(\'ct-fish-bar\');\n
+      expect(svg2).toBeDefined();\n
+      expect(svg2.classes()).toContain(\'ct-snake-bar\');\n
+      expect(container).not.toContainElement(\'.ct-fish-bar\');\n
+      expect(container).toContainElement(\'.ct-snake-bar\');\n
+    });\n
+  });\n
+\n
+  describe(\'serialization tests\', function () {\n
+    it(\'should serialize and deserialize regular strings\', function() {\n
+      var input = \'String test\';\n
+      expect(input).toMatch(Chartist.deserialize(Chartist.serialize(input)));\n
+    });\n
+\n
+    it(\'should serialize and deserialize strings with critical characters\', function() {\n
+      var input = \'String test with critical characters " < > \\\' & &amp;\';\n
+      expect(input).toMatch(Chartist.deserialize(Chartist.serialize(input)));\n
+    });\n
+\n
+    it(\'should serialize and deserialize numbers\', function() {\n
+      var input = 12345.6789;\n
+      expect(input).toEqual(Chartist.deserialize(Chartist.serialize(input)));\n
+    });\n
+\n
+    it(\'should serialize and deserialize dates\', function() {\n
+      var input = new Date(0);\n
+      expect(+input).toEqual(+new Date(Chartist.deserialize(Chartist.serialize(input))));\n
+    });\n
+\n
+    it(\'should serialize and deserialize complex object types\', function() {\n
+      var input = {\n
+        a: {\n
+          b: 100,\n
+          c: \'String test\',\n
+          d: \'String test with critical characters " < > \\\' & &amp;\',\n
+          e: {\n
+            f: \'String test\'\n
+          }\n
+        }\n
+      };\n
+\n
+      expect(input).toEqual(Chartist.deserialize(Chartist.serialize(input)));\n
+    });\n
+\n
+    it(\'should serialize and deserialize null, undefined and NaN\', function() {\n
+      expect(null).toEqual(Chartist.deserialize(Chartist.serialize(null)));\n
+      expect(undefined).toEqual(Chartist.deserialize(Chartist.serialize(undefined)));\n
+      expect(NaN).toMatch(Chartist.deserialize(Chartist.serialize(\'NaN\')));\n
+    });\n
+  });\n
+\n
+  describe(\'data normalization tests\', function () {\n
+\n
+    it(\'normalize mixed series types correctly\', function() {\n
+      var data = {\n
+        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],\n
+        series: [\n
+          {data: [1, 0, 3, 4, 5, 6]},\n
+          [1, {value: 0}, 3, {value: 4}, 5, 6, 7, 8],\n
+          {data: [1, 0, {value: 3}]}\n
+        ]\n
+      };\n
+\n
+      expect(Chartist.getDataArray(data)).toEqual(\n
+        [\n
+          [1, 0, 3, 4, 5, 6],\n
+          [1, 0, 3, 4, 5, 6, 7, 8],\n
+          [1, 0, 3]\n
+        ]\n
+      );\n
+    });\n
+\n
+    it(\'normalize mixed series for pie chart correctly\', function() {\n
+      var data = {\n
+        series: [1, {value: 0}, 3, {value: 4}, 5, 6, 7, 8]\n
+      };\n
+\n
+      expect(Chartist.getDataArray(data)).toEqual(\n
+        [1, 0, 3, 4, 5, 6, 7, 8]\n
+      );\n
+    });\n
+\n
+    it(\'normalize mixed series with string values for pie chart correctly\', function() {\n
+      var data = {\n
+        series: [\'1\', {value: \'0\'}, \'3\', {value: \'4\'}, \'5\', \'6\', \'7\', \'8\']\n
+      };\n
+\n
+      expect(Chartist.getDataArray(data)).toEqual(\n
+        [1, 0, 3, 4, 5, 6, 7, 8]\n
+      );\n
+    });\n
+\n
+    it(\'normalize mixed series types with string values correctly\', function() {\n
+      var data = {\n
+        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],\n
+        series: [\n
+          {data: [\'1\', \'0\', \'3\', \'4\', \'5\', \'6\']},\n
+          [\'1\', {value: \'0\'}, \'3\', {value: \'4\'}, \'5\', \'6\', \'7\', \'8\'],\n
+          {data: [\'1\', \'0\', {value: \'3\'}]}\n
+        ]\n
+      };\n
+\n
+      expect(Chartist.getDataArray(data)).toEqual(\n
+        [\n
+          [1, 0, 3, 4, 5, 6],\n
+          [1, 0, 3, 4, 5, 6, 7, 8],\n
+          [1, 0, 3]\n
+        ]\n
+      );\n
+    });\n
+\n
+    it(\'normalize mixed series types with weird values correctly\', function() {\n
+      var data = {\n
+        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],\n
+        series: [\n
+          {data: [null, NaN, undefined, \'4\', \'5\', \'6\']},\n
+          [\'1\', {value: null}, \'3\', {value: NaN}, \'5\', \'6\', \'7\', \'8\'],\n
+          {data: [\'1\', \'0\', {value: undefined}]}\n
+        ]\n
+      };\n
+\n
+      expect(Chartist.getDataArray(data)).toEqual(\n
+        [\n
+          [undefined, undefined, undefined, 4, 5, 6],\n
+          [1, undefined, 3, undefined, 5, 6, 7, 8],\n
+          [1, 0, undefined]\n
+        ]\n
+      );\n
+    });\n
+\n
+    it(\'should normalize correctly with 0 values in data series array objects\', function() {\n
+      var data = {\n
+        labels: [\'Mon\', \'Tue\', \'Wed\', \'Thu\', \'Fri\'],\n
+        series: [{\n
+          data: [\n
+            { value: 1 },\n
+            { value: 4 },\n
+            { value: 2 },\n
+            { value: 7 },\n
+            { value: 2 },\n
+            { value: 0 }\n
+          ]\n
+        }]\n
+      };\n
+\n
+      expect(Chartist.getDataArray(data)).toEqual(\n
+        [[1, 4, 2, 7, 2, 0]]\n
+      );\n
+    });\n
+\n
+    it(\'should normalize correctly with mixed dimensional input into multi dimensional output\', function() {\n
+      var data = {\n
+        labels: [\'Mon\', \'Tue\', \'Wed\', \'Thu\', \'Fri\'],\n
+        series: [{\n
+          data: [\n
+            { value: 1 },\n
+            { value: {y: 4, x: 1}},\n
+            { y: 2, x: 2},\n
+            NaN,\n
+            null,\n
+            { value: 7 },\n
+            { value: 2 },\n
+            { value: null },\n
+            { y: undefined, x: NaN }\n
+          ]\n
+        }]\n
+      };\n
+\n
+      expect(Chartist.getDataArray(data, false, true)).toEqual(\n
+        [[\n
+          {x: undefined, y: 1},\n
+          {x: 1, y: 4},\n
+          {x: 2, y: 2},\n
+          undefined,\n
+          undefined,\n
+          {x: undefined, y: 7},\n
+          {x: undefined, y: 2},\n
+          undefined,\n
+          {x: undefined, y: undefined}\n
+        ]]\n
+      );\n
+    });\n
+  });\n
+\n
+  describe(\'padding normalization tests\', function () {\n
+    it(\'should normalize number padding\', function() {\n
+      expect(Chartist.normalizePadding(10)).toEqual({\n
+        top: 10,\n
+        right: 10,\n
+        bottom: 10,\n
+        left: 10\n
+      });\n
+    });\n
+\n
+    it(\'should normalize number padding when 0 is passed\', function() {\n
+      expect(Chartist.normalizePadding(0)).toEqual({\n
+        top: 0,\n
+        right: 0,\n
+        bottom: 0,\n
+        left: 0\n
+      });\n
+    });\n
+\n
+    it(\'should normalize empty padding object with default fallback\', function() {\n
+      expect(Chartist.normalizePadding({})).toEqual({\n
+        top: 0,\n
+        right: 0,\n
+        bottom: 0,\n
+        left: 0\n
+      });\n
+    });\n
+\n
+    it(\'should normalize empty padding object with specified fallback\', function() {\n
+      expect(Chartist.normalizePadding({}, 10)).toEqual({\n
+        top: 10,\n
+        right: 10,\n
+        bottom: 10,\n
+        left: 10\n
+      });\n
+    });\n
+\n
+    it(\'should normalize partial padding object with specified fallback\', function() {\n
+      expect(Chartist.normalizePadding({\n
+        top: 5,\n
+        left: 5\n
+      }, 10)).toEqual({\n
+        top: 5,\n
+        right: 10,\n
+        bottom: 10,\n
+        left: 5\n
+      });\n
+    });\n
+\n
+    it(\'should not modify complete padding object\', function() {\n
+      expect(Chartist.normalizePadding({\n
+        top: 5,\n
+        right: 5,\n
+        bottom: 5,\n
+        left: 5\n
+      }, 10)).toEqual({\n
+        top: 5,\n
+        right: 5,\n
+        bottom: 5,\n
+        left: 5\n
+      });\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8129</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>spec-core.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

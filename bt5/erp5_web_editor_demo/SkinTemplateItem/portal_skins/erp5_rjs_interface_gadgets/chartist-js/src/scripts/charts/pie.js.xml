@@ -1,0 +1,376 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273074.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>pie.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * The pie chart module of Chartist that can be used to draw pie, donut or gauge charts\n
+ *\n
+ * @module Chartist.Pie\n
+ */\n
+/* global Chartist */\n
+(function(window, document, Chartist) {\n
+  \'use strict\';\n
+\n
+  /**\n
+   * Default options in line charts. Expand the code view to see a detailed list of options with comments.\n
+   *\n
+   * @memberof Chartist.Pie\n
+   */\n
+  var defaultOptions = {\n
+    // Specify a fixed width for the chart as a string (i.e. \'100px\' or \'50%\')\n
+    width: undefined,\n
+    // Specify a fixed height for the chart as a string (i.e. \'100px\' or \'50%\')\n
+    height: undefined,\n
+    // Padding of the chart drawing area to the container element and labels as a number or padding object {top: 5, right: 5, bottom: 5, left: 5}\n
+    chartPadding: 5,\n
+    // Override the class names that are used to generate the SVG structure of the chart\n
+    classNames: {\n
+      chartPie: \'ct-chart-pie\',\n
+      chartDonut: \'ct-chart-donut\',\n
+      series: \'ct-series\',\n
+      slicePie: \'ct-slice-pie\',\n
+      sliceDonut: \'ct-slice-donut\',\n
+      label: \'ct-label\'\n
+    },\n
+    // The start angle of the pie chart in degrees where 0 points north. A higher value offsets the start angle clockwise.\n
+    startAngle: 0,\n
+    // An optional total you can specify. By specifying a total value, the sum of the values in the series must be this total in order to draw a full pie. You can use this parameter to draw only parts of a pie or gauge charts.\n
+    total: undefined,\n
+    // If specified the donut CSS classes will be used and strokes will be drawn instead of pie slices.\n
+    donut: false,\n
+    // Specify the donut stroke width, currently done in javascript for convenience. May move to CSS styles in the future.\n
+    donutWidth: 60,\n
+    // If a label should be shown or not\n
+    showLabel: true,\n
+    // Label position offset from the standard position which is half distance of the radius. This value can be either positive or negative. Positive values will position the label away from the center.\n
+    labelOffset: 0,\n
+    // This option can be set to \'inside\', \'outside\' or \'center\'. Positioned with \'inside\' the labels will be placed on half the distance of the radius to the border of the Pie by respecting the \'labelOffset\'. The \'outside\' option will place the labels at the border of the pie and \'center\' will place the labels in the absolute center point of the chart. The \'center\' option only makes sense in conjunction with the \'labelOffset\' option.\n
+    labelPosition: \'inside\',\n
+    // An interpolation function for the label value\n
+    labelInterpolationFnc: Chartist.noop,\n
+    // Label direction can be \'neutral\', \'explode\' or \'implode\'. The labels anchor will be positioned based on those settings as well as the fact if the labels are on the right or left side of the center of the chart. Usually explode is useful when labels are positioned far away from the center.\n
+    labelDirection: \'neutral\',\n
+    // If true the whole data is reversed including labels, the series order as well as the whole series data arrays.\n
+    reverseData: false\n
+  };\n
+\n
+  /**\n
+   * Determines SVG anchor position based on direction and center parameter\n
+   *\n
+   * @param center\n
+   * @param label\n
+   * @param direction\n
+   * @return {string}\n
+   */\n
+  function determineAnchorPosition(center, label, direction) {\n
+    var toTheRight = label.x > center.x;\n
+\n
+    if(toTheRight && direction === \'explode\' ||\n
+      !toTheRight && direction === \'implode\') {\n
+      return \'start\';\n
+    } else if(toTheRight && direction === \'implode\' ||\n
+      !toTheRight && direction === \'explode\') {\n
+      return \'end\';\n
+    } else {\n
+      return \'middle\';\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Creates the pie chart\n
+   *\n
+   * @param options\n
+   */\n
+  function createChart(options) {\n
+    var seriesGroups = [],\n
+      labelsGroup,\n
+      chartRect,\n
+      radius,\n
+      labelRadius,\n
+      totalDataSum,\n
+      startAngle = options.startAngle,\n
+      dataArray = Chartist.getDataArray(this.data, options.reverseData);\n
+\n
+    // Create SVG.js draw\n
+    this.svg = Chartist.createSvg(this.container, options.width, options.height,options.donut ? options.classNames.chartDonut : options.classNames.chartPie);\n
+    // Calculate charting rect\n
+    chartRect = Chartist.createChartRect(this.svg, options, defaultOptions.padding);\n
+    // Get biggest circle radius possible within chartRect\n
+    radius = Math.min(chartRect.width() / 2, chartRect.height() / 2);\n
+    // Calculate total of all series to get reference value or use total reference from optional options\n
+    totalDataSum = options.total || dataArray.reduce(function(previousValue, currentValue) {\n
+      return previousValue + currentValue;\n
+    }, 0);\n
+\n
+    // If this is a donut chart we need to adjust our radius to enable strokes to be drawn inside\n
+    // Unfortunately this is not possible with the current SVG Spec\n
+    // See this proposal for more details: http://lists.w3.org/Archives/Public/www-svg/2003Oct/0000.html\n
+    radius -= options.donut ? options.donutWidth / 2  : 0;\n
+\n
+    // If labelPosition is set to `outside` or a donut chart is drawn then the label position is at the radius,\n
+    // if regular pie chart it\'s half of the radius\n
+    if(options.labelPosition === \'outside\' || options.donut) {\n
+      labelRadius = radius;\n
+    } else if(options.labelPosition === \'center\') {\n
+      // If labelPosition is center we start with 0 and will later wait for the labelOffset\n
+      labelRadius = 0;\n
+    } else {\n
+      // Default option is \'inside\' where we use half the radius so the label will be placed in the center of the pie\n
+      // slice\n
+      labelRadius = radius / 2;\n
+    }\n
+    // Add the offset to the labelRadius where a negative offset means closed to the center of the chart\n
+    labelRadius += options.labelOffset;\n
+\n
+    // Calculate end angle based on total sum and current data value and offset with padding\n
+    var center = {\n
+      x: chartRect.x1 + chartRect.width() / 2,\n
+      y: chartRect.y2 + chartRect.height() / 2\n
+    };\n
+\n
+    // Check if there is only one non-zero value in the series array.\n
+    var hasSingleValInSeries = this.data.series.filter(function(val) {\n
+      return val.hasOwnProperty(\'value\') ? val.value !== 0 : val !== 0;\n
+    }).length === 1;\n
+\n
+    //if we need to show labels we create the label group now\n
+    if(options.showLabel) {\n
+      labelsGroup = this.svg.elem(\'g\', null, null, true);\n
+    }\n
+\n
+    // Draw the series\n
+    // initialize series groups\n
+    for (var i = 0; i < this.data.series.length; i++) {\n
+      var series = this.data.series[i];\n
+      seriesGroups[i] = this.svg.elem(\'g\', null, null, true);\n
+\n
+      // If the series is an object and contains a name or meta data we add a custom attribute\n
+      seriesGroups[i].attr({\n
+        \'series-name\': series.name\n
+      }, Chartist.xmlNs.uri);\n
+\n
+      // Use series class from series data or if not set generate one\n
+      seriesGroups[i].addClass([\n
+        options.classNames.series,\n
+        (series.className || options.classNames.series + \'-\' + Chartist.alphaNumerate(i))\n
+      ].join(\' \'));\n
+\n
+      var endAngle = startAngle + dataArray[i] / totalDataSum * 360;\n
+      // If we need to draw the arc for all 360 degrees we need to add a hack where we close the circle\n
+      // with Z and use 359.99 degrees\n
+      if(endAngle - startAngle === 360) {\n
+        endAngle -= 0.01;\n
+      }\n
+\n
+      var start = Chartist.polarToCartesian(center.x, center.y, radius, startAngle - (i === 0 || hasSingleValInSeries ? 0 : 0.2)),\n
+        end = Chartist.polarToCartesian(center.x, center.y, radius, endAngle);\n
+\n
+      // Create a new path element for the pie chart. If this isn\'t a donut chart we should close the path for a correct stroke\n
+      var path = new Chartist.Svg.Path(!options.donut)\n
+        .move(end.x, end.y)\n
+        .arc(radius, radius, 0, endAngle - startAngle > 180, 0, start.x, start.y);\n
+\n
+      // If regular pie chart (no donut) we add a line to the center of the circle for completing the pie\n
+      if(!options.donut) {\n
+        path.line(center.x, center.y);\n
+      }\n
+\n
+      // Create the SVG path\n
+      // If this is a donut chart we add the donut class, otherwise just a regular slice\n
+      var pathElement = seriesGroups[i].elem(\'path\', {\n
+        d: path.stringify()\n
+      }, options.donut ? options.classNames.sliceDonut : options.classNames.slicePie);\n
+\n
+      // Adding the pie series value to the path\n
+      pathElement.attr({\n
+        \'value\': dataArray[i],\n
+        \'meta\': Chartist.serialize(series.meta)\n
+      }, Chartist.xmlNs.uri);\n
+\n
+      // If this is a donut, we add the stroke-width as style attribute\n
+      if(options.donut) {\n
+        pathElement.attr({\n
+          \'style\': \'stroke-width: \' + (+options.donutWidth) + \'px\'\n
+        });\n
+      }\n
+\n
+      // Fire off draw event\n
+      this.eventEmitter.emit(\'draw\', {\n
+        type: \'slice\',\n
+        value: dataArray[i],\n
+        totalDataSum: totalDataSum,\n
+        index: i,\n
+        meta: series.meta,\n
+        series: series,\n
+        group: seriesGroups[i],\n
+        element: pathElement,\n
+        path: path.clone(),\n
+        center: center,\n
+        radius: radius,\n
+        startAngle: startAngle,\n
+        endAngle: endAngle\n
+      });\n
+\n
+      // If we need to show labels we need to add the label for this slice now\n
+      if(options.showLabel) {\n
+        // Position at the labelRadius distance from center and between start and end angle\n
+        var labelPosition = Chartist.polarToCartesian(center.x, center.y, labelRadius, startAngle + (endAngle - startAngle) / 2),\n
+          interpolatedValue = options.labelInterpolationFnc(this.data.labels ? this.data.labels[i] : dataArray[i], i);\n
+\n
+        if(interpolatedValue || interpolatedValue === 0) {\n
+          var labelElement = labelsGroup.elem(\'text\', {\n
+            dx: labelPosition.x,\n
+            dy: labelPosition.y,\n
+            \'text-anchor\': determineAnchorPosition(center, labelPosition, options.labelDirection)\n
+          }, options.classNames.label).text(\'\' + interpolatedValue);\n
+\n
+          // Fire off draw event\n
+          this.eventEmitter.emit(\'draw\', {\n
+            type: \'label\',\n
+            index: i,\n
+            group: labelsGroup,\n
+            element: labelElement,\n
+            text: \'\' + interpolatedValue,\n
+            x: labelPosition.x,\n
+            y: labelPosition.y\n
+          });\n
+        }\n
+      }\n
+\n
+      // Set next startAngle to current endAngle. Use slight offset so there are no transparent hairline issues\n
+      // (except for last slice)\n
+      startAngle = endAngle;\n
+    }\n
+\n
+    this.eventEmitter.emit(\'created\', {\n
+      chartRect: chartRect,\n
+      svg: this.svg,\n
+      options: options\n
+    });\n
+  }\n
+\n
+  /**\n
+   * This method creates a new pie chart and returns an object that can be used to redraw the chart.\n
+   *\n
+   * @memberof Chartist.Pie\n
+   * @param {String|Node} query A selector query string or directly a DOM element\n
+   * @param {Object} data The data object in the pie chart needs to have a series property with a one dimensional data array. The values will be normalized against each other and don\'t necessarily need to be in percentage. The series property can also be an array of value objects that contain a value property and a className property to override the CSS class name for the series group.\n
+   * @param {Object} [options] The options object with options that override the default options. Check the examples for a detailed list.\n
+   * @param {Array} [responsiveOptions] Specify an array of responsive option arrays which are a media query and options object pair => [[mediaQueryString, optionsObject],[more...]]\n
+   * @return {Object} An object with a version and an update method to manually redraw the chart\n
+   *\n
+   * @example\n
+   * // Simple pie chart example with four series\n
+   * new Chartist.Pie(\'.ct-chart\', {\n
+   *   series: [10, 2, 4, 3]\n
+   * });\n
+   *\n
+   * @example\n
+   * // Drawing a donut chart\n
+   * new Chartist.Pie(\'.ct-chart\', {\n
+   *   series: [10, 2, 4, 3]\n
+   * }, {\n
+   *   donut: true\n
+   * });\n
+   *\n
+   * @example\n
+   * // Using donut, startAngle and total to draw a gauge chart\n
+   * new Chartist.Pie(\'.ct-chart\', {\n
+   *   series: [20, 10, 30, 40]\n
+   * }, {\n
+   *   donut: true,\n
+   *   donutWidth: 20,\n
+   *   startAngle: 270,\n
+   *   total: 200\n
+   * });\n
+   *\n
+   * @example\n
+   * // Drawing a pie chart with padding and labels that are outside the pie\n
+   * new Chartist.Pie(\'.ct-chart\', {\n
+   *   series: [20, 10, 30, 40]\n
+   * }, {\n
+   *   chartPadding: 30,\n
+   *   labelOffset: 50,\n
+   *   labelDirection: \'explode\'\n
+   * });\n
+   *\n
+   * @example\n
+   * // Overriding the class names for individual series as well as a name and meta data.\n
+   * // The name will be written as ct:series-name attribute and the meta data will be serialized and written\n
+   * // to a ct:meta attribute.\n
+   * new Chartist.Pie(\'.ct-chart\', {\n
+   *   series: [{\n
+   *     value: 20,\n
+   *     name: \'Series 1\',\n
+   *     className: \'my-custom-class-one\',\n
+   *     meta: \'Meta One\'\n
+   *   }, {\n
+   *     value: 10,\n
+   *     name: \'Series 2\',\n
+   *     className: \'my-custom-class-two\',\n
+   *     meta: \'Meta Two\'\n
+   *   }, {\n
+   *     value: 70,\n
+   *     name: \'Series 3\',\n
+   *     className: \'my-custom-class-three\',\n
+   *     meta: \'Meta Three\'\n
+   *   }]\n
+   * });\n
+   */\n
+  function Pie(query, data, options, responsiveOptions) {\n
+    Chartist.Pie.super.constructor.call(this,\n
+      query,\n
+      data,\n
+      defaultOptions,\n
+      Chartist.extend({}, defaultOptions, options),\n
+      responsiveOptions);\n
+  }\n
+\n
+  // Creating pie chart type in Chartist namespace\n
+  Chartist.Pie = Chartist.Base.extend({\n
+    constructor: Pie,\n
+    createChart: createChart,\n
+    determineAnchorPosition: determineAnchorPosition\n
+  });\n
+\n
+}(window, document, Chartist));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13500</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>pie.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

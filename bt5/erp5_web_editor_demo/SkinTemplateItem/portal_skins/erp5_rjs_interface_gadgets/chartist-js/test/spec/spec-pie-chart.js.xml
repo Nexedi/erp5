@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272954.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>spec-pie-chart.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Pie chart tests\', function() {\n
+  \'use strict\';\n
+\n
+  beforeEach(function() {\n
+\n
+  });\n
+\n
+  afterEach(function() {\n
+\n
+  });\n
+\n
+  describe(\'Meta data tests\', function() {\n
+    it(\'should render meta data correctly on slice with mixed value array\', function (done) {\n
+      jasmine.getFixtures().set(\'<div class="ct-chart ct-golden-section"></div>\');\n
+\n
+      var meta = {\n
+        test: \'Serialized Test\'\n
+      };\n
+\n
+      var data = {\n
+        labels: [\'A\', \'B\', \'C\'],\n
+        series: [5, {\n
+          value: 8,\n
+          meta: meta\n
+        }, 1]\n
+      };\n
+\n
+      var chart = new Chartist.Pie(\'.ct-chart\', data);\n
+\n
+      chart.on(\'created\', function() {\n
+        expect(Chartist.deserialize($(\'.ct-slice-pie\').eq(1).attr(\'ct:meta\'))).toEqual(meta);\n
+        done();\n
+      });\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>779</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>spec-pie-chart.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272967.3</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lorem-helper.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Lorem Handlebars Helpers\n
+ * Copyright (c) 2014 Gion Kunz\n
+ * Licensed under the WTFPL License (WTFPL).\n
+ */\n
+\'use strict\';\n
+\n
+var seed = require(\'seed-random\');\n
+\n
+// Export helpers\n
+module.exports.register = function (Handlebars, opt, params)  {\n
+  var loremText = \'Lorem ipsum dolor sit amet, consectetur adipiscing elit Nullam in pharetra nisl Mauris dictum fermentum malesuada Donec tincidunt, lectus nec tempor eleifend, sem enim rhoncus nibh, nec ultricies ante lectus sit amet mi Proin cursus dolor in nisl varius elementum Aliquam blandit lobortis adipiscing Proin euismod est non feugiat venenatis Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam ac neque consectetur, ullamcorper neque quis, commodo ligula In ornare tempus feugiat Suspendisse ut pretium dui, at egestas velit Etiam ultricies, nisl quis gravida condimentum, dui nisl congue ligula, porta consectetur est sapien viverra est Donec quis ipsum quis metus luctus porttitor sed id justo Proin ultricies adipiscing dolor, luctus interdum urna ullamcorper sit amet Phasellus mollis erat egestas urna tincidunt viverra Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas Nam est ante, blandit vitae porta sed, consectetur vitae libero Sed sit amet auctor diam, eu ullamcorper nulla Aenean interdum, augue nec ullamcorper aliquam, libero justo pellentesque libero, vitae venenatis velit justo pellentesque enim Nam lobortis tortor non sagittis mollis Integer commodo eget nulla vel tincidunt Cras vitae vestibulum ipsum, a sollicitudin erat Cras feugiat vehicula magna, nec vehicula massa lacinia in Nam cursus arcu cursus felis feugiat, vel tincidunt eros aliquet Sed magna est, tincidunt a porta id, aliquam eu orci Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus Donec nec tempus eros Mauris placerat, nisi sit amet varius venenatis, arcu felis cursus risus, ut ultricies tortor lorem nec massa Integer molestie mattis tortor, nec pretium augue accumsan at Mauris nisi risus, hendrerit in libero a, accumsan tincidunt nunc Ut id volutpat massa Duis mattis tellus ut massa ultricies volutpat Curabitur non ante vel odio tempor condimentum Duis eu sollicitudin risus Pellentesque eget metus\';\n
+  var loremWords = loremText.split(\' \');\n
+  var random = seed(loremText);\n
+\n
+  function initCap(str) {\n
+    return str.toLowerCase().replace(/(?:^|\\s)[a-z]/g, function (m) {\n
+      return m.toUpperCase();\n
+    });\n
+  }\n
+\n
+  function randomInt(min, max) {\n
+    min = min || (min === 0 ? 0 : -Math.pow(2, 53));\n
+    max = max || (max === 0 ? 0 : Math.pow(2, 53));\n
+\n
+    return Math.floor(random() * (max - min + 1)) + min;\n
+  }\n
+\n
+  function n(c, fnc) {\n
+    for(var i = 0; i < c; i++) fnc(i, c);\n
+  }\n
+\n
+  function validifyNumber(number, fallback) {\n
+    // If valid number in string, will be converted\n
+    number = +number;\n
+    // undefined, Object, NaN, null etc is not > 0\n
+    if(number > 0) {\n
+      return number;\n
+    } else {\n
+      return fallback;\n
+    }\n
+  }\n
+\n
+  // The helpers to be exported\n
+  var helpers = {\n
+\n
+    loremWord: function () {\n
+      return initCap(loremWords[randomInt(0) % loremWords.length].replace(/[,]/g, \'\'));\n
+    },\n
+\n
+    loremWords: function (count) {\n
+      count = validifyNumber(count, 1);\n
+\n
+      var words = [];\n
+      n(count, function() {\n
+        words.push(loremWords[randomInt(0, loremWords.length)]);\n
+      });\n
+\n
+      return words.join(\' \');\n
+    },\n
+\n
+    loremSentence: function() {\n
+      return helpers.loremWords(randomInt(5, 20)).replace(/^[a-z]/, function(m) {\n
+        return m.toUpperCase();\n
+      }) + \'.\';\n
+    },\n
+\n
+    loremSentences: function(count) {\n
+      count = validifyNumber(count, 1);\n
+\n
+      var sentences = [];\n
+\n
+      n(count, function() {\n
+        sentences.push(helpers.loremSentence());\n
+      });\n
+\n
+      return sentences.join(\' \');\n
+    },\n
+\n
+    loremParagraph: function () {\n
+      return helpers.loremSentences(randomInt(4, 10));\n
+    }\n
+  };\n
+\n
+  opt = opt || {};\n
+  for (var helper in helpers) {\n
+    if (helpers.hasOwnProperty(helper)) {\n
+      Handlebars.registerHelper(helper, helpers[helper]);\n
+    }\n
+  }\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4115</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>lorem-helper.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41273019.37</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>navigation.hbs</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div class="contain-to-grid sticky">\n
+  <nav class="top-bar" data-topbar data-options="sticky_on: large">\n
+    <ul class="title-area">\n
+      <li class="name">\n
+        <h1><a href="index.html">Chartist.js</a></h1>\n
+      </li>\n
+      <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>\n
+    </ul>\n
+\n
+    <section class="top-bar-section">\n
+      <ul class="right">\n
+        <li><a href="//github.com/gionkunz/chartist-js/tree/master/dist" target="_blank">Download</a></li>\n
+      </ul>\n
+\n
+      <ul class="left">\n
+        <li><a href="getting-started.html">Getting started</a></li>\n
+        <li><a href="api-documentation.html">API Documentation</a></li>\n
+        <li><a href="examples.html">Examples</a></li>\n
+        <li><a href="plugins.html">Plugins</a></li>\n
+        <li><a href="//github.com/gionkunz/chartist-js" target="_blank">Contribute</a></li>\n
+      </ul>\n
+    </section>\n
+  </nav>\n
+</div>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>890</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>navigation.hbs</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

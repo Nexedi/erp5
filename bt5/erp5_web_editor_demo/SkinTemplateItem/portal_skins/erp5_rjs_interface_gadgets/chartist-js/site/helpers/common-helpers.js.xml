@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272963.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>common-helpers.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Common Handlebars Helpers\n
+ * Copyright (c) 2014 Gion Kunz\n
+ * Licensed under the WTFPL License (WTFPL).\n
+ */\n
+\'use strict\';\n
+\n
+var path = require(\'path\');\n
+var fs = require(\'fs\');\n
+\n
+// Export helpers\n
+module.exports.register = function (Handlebars, opt, params)  {\n
+  // Loading package.json for later use\n
+  var pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), \'package.json\')));\n
+\n
+  function slugify(str) {\n
+    return str\n
+      .toLowerCase()\n
+      .replace(/[^\\w ]+/g,\'\')\n
+      .replace(/ +/g,\'-\');\n
+  }\n
+\n
+  // The helpers to be exported\n
+  var helpers = {\n
+\n
+    pkg: function (key) {\n
+      return pkg[key];\n
+    },\n
+\n
+    escape: function(str) {\n
+      return Handlebars.Utils.escapeExpression(str);\n
+    },\n
+\n
+    jsonStringify: function(obj) {\n
+      return JSON.stringify(obj);\n
+    },\n
+\n
+    slugify: function(str) {\n
+      return slugify(str);\n
+    },\n
+\n
+    concat: function() {\n
+      var arr = [];\n
+      for(var i = 0; i < arguments.length - 1; i++) {\n
+        arr[i] = arguments[i];\n
+      }\n
+\n
+      return arr.join(\'\');\n
+    },\n
+\n
+    partial: function(name, context) {\n
+      var partial = Handlebars.partials[name];\n
+\n
+      // Check if partial is not found, invalid or un-compiled and handle accordingly\n
+      if(!partial) {\n
+        throw \'Could not find partial with name "\' + name + \'".\';\n
+      } else if(typeof partial === \'string\') {\n
+        // Compile partial as its still a string and update Handlebars\n
+        partial = Handlebars.partials[name] = Handlebars.compile(Handlebars.partials[name]);\n
+      } else if(typeof partial !== \'function\') {\n
+        throw \'Found unknown type of partial "\' + name + \'" (\' + typeof Handlebars.partials[name] +\n
+          \') in Handlebars partial Array => \' + Handlebars.partials;\n
+      }\n
+\n
+      return new Handlebars.SafeString(partial(context || this));\n
+    },\n
+\n
+    atob: function(a) {\n
+      return new Buffer(a, \'base64\').toString(\'utf8\');\n
+    },\n
+\n
+    btoa: function(b) {\n
+      return new Buffer(b, \'utf8\').toString(\'base64\');\n
+    }\n
+  };\n
+\n
+  opt = opt || {};\n
+  for (var helper in helpers) {\n
+    if (helpers.hasOwnProperty(helper)) {\n
+      Handlebars.registerHelper(helper, helpers[helper]);\n
+    }\n
+  }\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2138</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>common-helpers.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
