@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts39831393.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lock-open.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAABJElEQVQoz13Qzy4DARDH8e/Nof5E
+iMMSkV4aEnEUB5IKaUnbWKR4Ak/Tp3HpI3gIu1a3GkpsInEola9Dq1nyu818MjMZIkaJSejSo0eP
+LgnxuD5pd8hwkozOmIxBwivCATdk3FKVjCQPHniHHe44ZnHherZDVVLi/IQ+X5MF89fcyuMvGJ33
+xCtvZHwgTJcG0ichhoiEF75zB4rsKvJCAhEpQ2j/FSci7SEpxHSRZU+99GqcSy8MXVa6v2DLmmee
+27Rp03NPrbmVB+tWbBi62ZoKNluhDSuu50HJQ+uGFgIpBKF1Dy3lQdGyRzacaRHMtBoeWbaYB4Hb
+7rnvhnNuuO+e2wYjEJEygPaSgSuuuuaqKwYuSXtAChH3PPP571Einzxzzw+UAvaic4IMLwAAAABJ
+RU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>349</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
