@@ -1,0 +1,611 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268370.2</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EventUtils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * EventUtils.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*jshint loopfunc:true*/\n
+/*eslint no-loop-func:0 */\n
+\n
+/**\n
+ * This class wraps the browsers native event logic with more convenient methods.\n
+ *\n
+ * @class tinymce.dom.EventUtils\n
+ */\n
+define("tinymce/dom/EventUtils", [], function() {\n
+\t"use strict";\n
+\n
+\tvar eventExpandoPrefix = "mce-data-";\n
+\tvar mouseEventRe = /^(?:mouse|contextmenu)|click/;\n
+\tvar deprecated = {keyLocation: 1, layerX: 1, layerY: 1, returnValue: 1, webkitMovementX: 1, webkitMovementY: 1};\n
+\n
+\t/**\n
+\t * Binds a native event to a callback on the speified target.\n
+\t */\n
+\tfunction addEvent(target, name, callback, capture) {\n
+\t\tif (target.addEventListener) {\n
+\t\t\ttarget.addEventListener(name, callback, capture || false);\n
+\t\t} else if (target.attachEvent) {\n
+\t\t\ttarget.attachEvent(\'on\' + name, callback);\n
+\t\t}\n
+\t}\n
+\n
+\t/**\n
+\t * Unbinds a native event callback on the specified target.\n
+\t */\n
+\tfunction removeEvent(target, name, callback, capture) {\n
+\t\tif (target.removeEventListener) {\n
+\t\t\ttarget.removeEventListener(name, callback, capture || false);\n
+\t\t} else if (target.detachEvent) {\n
+\t\t\ttarget.detachEvent(\'on\' + name, callback);\n
+\t\t}\n
+\t}\n
+\n
+\t/**\n
+\t * Normalizes a native event object or just adds the event specific methods on a custom event.\n
+\t */\n
+\tfunction fix(originalEvent, data) {\n
+\t\tvar name, event = data || {}, undef;\n
+\n
+\t\t// Dummy function that gets replaced on the delegation state functions\n
+\t\tfunction returnFalse() {\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\t// Dummy function that gets replaced on the delegation state functions\n
+\t\tfunction returnTrue() {\n
+\t\t\treturn true;\n
+\t\t}\n
+\n
+\t\t// Copy all properties from the original event\n
+\t\tfor (name in originalEvent) {\n
+\t\t\t// layerX/layerY is deprecated in Chrome and produces a warning\n
+\t\t\tif (!deprecated[name]) {\n
+\t\t\t\tevent[name] = originalEvent[name];\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Normalize target IE uses srcElement\n
+\t\tif (!event.target) {\n
+\t\t\tevent.target = event.srcElement || document;\n
+\t\t}\n
+\n
+\t\t// Calculate pageX/Y if missing and clientX/Y available\n
+\t\tif (originalEvent && mouseEventRe.test(originalEvent.type) && originalEvent.pageX === undef && originalEvent.clientX !== undef) {\n
+\t\t\tvar eventDoc = event.target.ownerDocument || document;\n
+\t\t\tvar doc = eventDoc.documentElement;\n
+\t\t\tvar body = eventDoc.body;\n
+\n
+\t\t\tevent.pageX = originalEvent.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) -\n
+\t\t\t\t(doc && doc.clientLeft || body && body.clientLeft || 0);\n
+\n
+\t\t\tevent.pageY = originalEvent.clientY + (doc && doc.scrollTop || body && body.scrollTop || 0) -\n
+\t\t\t\t(doc && doc.clientTop || body && body.clientTop || 0);\n
+\t\t}\n
+\n
+\t\t// Add preventDefault method\n
+\t\tevent.preventDefault = function() {\n
+\t\t\tevent.isDefaultPrevented = returnTrue;\n
+\n
+\t\t\t// Execute preventDefault on the original event object\n
+\t\t\tif (originalEvent) {\n
+\t\t\t\tif (originalEvent.preventDefault) {\n
+\t\t\t\t\toriginalEvent.preventDefault();\n
+\t\t\t\t} else {\n
+\t\t\t\t\toriginalEvent.returnValue = false; // IE\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\t// Add stopPropagation\n
+\t\tevent.stopPropagation = function() {\n
+\t\t\tevent.isPropagationStopped = returnTrue;\n
+\n
+\t\t\t// Execute stopPropagation on the original event object\n
+\t\t\tif (originalEvent) {\n
+\t\t\t\tif (originalEvent.stopPropagation) {\n
+\t\t\t\t\toriginalEvent.stopPropagation();\n
+\t\t\t\t} else {\n
+\t\t\t\t\toriginalEvent.cancelBubble = true; // IE\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\t// Add stopImmediatePropagation\n
+\t\tevent.stopImmediatePropagation = function() {\n
+\t\t\tevent.isImmediatePropagationStopped = returnTrue;\n
+\t\t\tevent.stopPropagation();\n
+\t\t};\n
+\n
+\t\t// Add event delegation states\n
+\t\tif (!event.isDefaultPrevented) {\n
+\t\t\tevent.isDefaultPrevented = returnFalse;\n
+\t\t\tevent.isPropagationStopped = returnFalse;\n
+\t\t\tevent.isImmediatePropagationStopped = returnFalse;\n
+\t\t}\n
+\n
+\t\t// Add missing metaKey for IE 8\n
+\t\tif (typeof event.metaKey == \'undefined\') {\n
+\t\t\tevent.metaKey = false;\n
+\t\t}\n
+\n
+\t\treturn event;\n
+\t}\n
+\n
+\t/**\n
+\t * Bind a DOMContentLoaded event across browsers and executes the callback once the page DOM is initialized.\n
+\t * It will also set/check the domLoaded state of the event_utils instance so ready isn\'t called multiple times.\n
+\t */\n
+\tfunction bindOnReady(win, callback, eventUtils) {\n
+\t\tvar doc = win.document, event = {type: \'ready\'};\n
+\n
+\t\tif (eventUtils.domLoaded) {\n
+\t\t\tcallback(event);\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t// Gets called when the DOM is ready\n
+\t\tfunction readyHandler() {\n
+\t\t\tif (!eventUtils.domLoaded) {\n
+\t\t\t\teventUtils.domLoaded = true;\n
+\t\t\t\tcallback(event);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction waitForDomLoaded() {\n
+\t\t\t// Check complete or interactive state if there is a body\n
+\t\t\t// element on some iframes IE 8 will produce a null body\n
+\t\t\tif (doc.readyState === "complete" || (doc.readyState === "interactive" && doc.body)) {\n
+\t\t\t\tremoveEvent(doc, "readystatechange", waitForDomLoaded);\n
+\t\t\t\treadyHandler();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction tryScroll() {\n
+\t\t\ttry {\n
+\t\t\t\t// If IE is used, use the trick by Diego Perini licensed under MIT by request to the author.\n
+\t\t\t\t// http://javascript.nwbox.com/IEContentLoaded/\n
+\t\t\t\tdoc.documentElement.doScroll("left");\n
+\t\t\t} catch (ex) {\n
+\t\t\t\tsetTimeout(tryScroll, 0);\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\treadyHandler();\n
+\t\t}\n
+\n
+\t\t// Use W3C method\n
+\t\tif (doc.addEventListener) {\n
+\t\t\tif (doc.readyState === "complete") {\n
+\t\t\t\treadyHandler();\n
+\t\t\t} else {\n
+\t\t\t\taddEvent(win, \'DOMContentLoaded\', readyHandler);\n
+\t\t\t}\n
+\t\t} else {\n
+\t\t\t// Use IE method\n
+\t\t\taddEvent(doc, "readystatechange", waitForDomLoaded);\n
+\n
+\t\t\t// Wait until we can scroll, when we can the DOM is initialized\n
+\t\t\tif (doc.documentElement.doScroll && win.self === win.top) {\n
+\t\t\t\ttryScroll();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Fallback if any of the above methods should fail for some odd reason\n
+\t\taddEvent(win, \'load\', readyHandler);\n
+\t}\n
+\n
+\t/**\n
+\t * This class enables you to bind/unbind native events to elements and normalize it\'s behavior across browsers.\n
+\t */\n
+\tfunction EventUtils() {\n
+\t\tvar self = this, events = {}, count, expando, hasFocusIn, hasMouseEnterLeave, mouseEnterLeave;\n
+\n
+\t\texpando = eventExpandoPrefix + (+new Date()).toString(32);\n
+\t\thasMouseEnterLeave = "onmouseenter" in document.documentElement;\n
+\t\thasFocusIn = "onfocusin" in document.documentElement;\n
+\t\tmouseEnterLeave = {mouseenter: \'mouseover\', mouseleave: \'mouseout\'};\n
+\t\tcount = 1;\n
+\n
+\t\t// State if the DOMContentLoaded was executed or not\n
+\t\tself.domLoaded = false;\n
+\t\tself.events = events;\n
+\n
+\t\t/**\n
+\t\t * Executes all event handler callbacks for a specific event.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Event} evt Event object.\n
+\t\t * @param {String} id Expando id value to look for.\n
+\t\t */\n
+\t\tfunction executeHandlers(evt, id) {\n
+\t\t\tvar callbackList, i, l, callback, container = events[id];\n
+\n
+\t\t\tcallbackList = container && container[evt.type];\n
+\t\t\tif (callbackList) {\n
+\t\t\t\tfor (i = 0, l = callbackList.length; i < l; i++) {\n
+\t\t\t\t\tcallback = callbackList[i];\n
+\n
+\t\t\t\t\t// Check if callback exists might be removed if a unbind is called inside the callback\n
+\t\t\t\t\tif (callback && callback.func.call(callback.scope, evt) === false) {\n
+\t\t\t\t\t\tevt.preventDefault();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Should we stop propagation to immediate listeners\n
+\t\t\t\t\tif (evt.isImmediatePropagationStopped()) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Binds a callback to an event on the specified target.\n
+\t\t *\n
+\t\t * @method bind\n
+\t\t * @param {Object} target Target node/window or custom object.\n
+\t\t * @param {String} names Name of the event to bind.\n
+\t\t * @param {function} callback Callback function to execute when the event occurs.\n
+\t\t * @param {Object} scope Scope to call the callback function on, defaults to target.\n
+\t\t * @return {function} Callback function that got bound.\n
+\t\t */\n
+\t\tself.bind = function(target, names, callback, scope) {\n
+\t\t\tvar id, callbackList, i, name, fakeName, nativeHandler, capture, win = window;\n
+\n
+\t\t\t// Native event handler function patches the event and executes the callbacks for the expando\n
+\t\t\tfunction defaultNativeHandler(evt) {\n
+\t\t\t\texecuteHandlers(fix(evt || win.event), id);\n
+\t\t\t}\n
+\n
+\t\t\t// Don\'t bind to text nodes or comments\n
+\t\t\tif (!target || target.nodeType === 3 || target.nodeType === 8) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Create or get events id for the target\n
+\t\t\tif (!target[expando]) {\n
+\t\t\t\tid = count++;\n
+\t\t\t\ttarget[expando] = id;\n
+\t\t\t\tevents[id] = {};\n
+\t\t\t} else {\n
+\t\t\t\tid = target[expando];\n
+\t\t\t}\n
+\n
+\t\t\t// Setup the specified scope or use the target as a default\n
+\t\t\tscope = scope || target;\n
+\n
+\t\t\t// Split names and bind each event, enables you to bind multiple events with one call\n
+\t\t\tnames = names.split(\' \');\n
+\t\t\ti = names.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tname = names[i];\n
+\t\t\t\tnativeHandler = defaultNativeHandler;\n
+\t\t\t\tfakeName = capture = false;\n
+\n
+\t\t\t\t// Use ready instead of DOMContentLoaded\n
+\t\t\t\tif (name === "DOMContentLoaded") {\n
+\t\t\t\t\tname = "ready";\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// DOM is already ready\n
+\t\t\t\tif (self.domLoaded && name === "ready" && target.readyState == \'complete\') {\n
+\t\t\t\t\tcallback.call(scope, fix({type: name}));\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Handle mouseenter/mouseleaver\n
+\t\t\t\tif (!hasMouseEnterLeave) {\n
+\t\t\t\t\tfakeName = mouseEnterLeave[name];\n
+\n
+\t\t\t\t\tif (fakeName) {\n
+\t\t\t\t\t\tnativeHandler = function(evt) {\n
+\t\t\t\t\t\t\tvar current, related;\n
+\n
+\t\t\t\t\t\t\tcurrent = evt.currentTarget;\n
+\t\t\t\t\t\t\trelated = evt.relatedTarget;\n
+\n
+\t\t\t\t\t\t\t// Check if related is inside the current target if it\'s not then the event should\n
+\t\t\t\t\t\t\t// be ignored since it\'s a mouseover/mouseout inside the element\n
+\t\t\t\t\t\t\tif (related && current.contains) {\n
+\t\t\t\t\t\t\t\t// Use contains for performance\n
+\t\t\t\t\t\t\t\trelated = current.contains(related);\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\twhile (related && related !== current) {\n
+\t\t\t\t\t\t\t\t\trelated = related.parentNode;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Fire fake event\n
+\t\t\t\t\t\t\tif (!related) {\n
+\t\t\t\t\t\t\t\tevt = fix(evt || win.event);\n
+\t\t\t\t\t\t\t\tevt.type = evt.type === \'mouseout\' ? \'mouseleave\' : \'mouseenter\';\n
+\t\t\t\t\t\t\t\tevt.target = current;\n
+\t\t\t\t\t\t\t\texecuteHandlers(evt, id);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t};\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Fake bubbeling of focusin/focusout\n
+\t\t\t\tif (!hasFocusIn && (name === "focusin" || name === "focusout")) {\n
+\t\t\t\t\tcapture = true;\n
+\t\t\t\t\tfakeName = name === "focusin" ? "focus" : "blur";\n
+\t\t\t\t\tnativeHandler = function(evt) {\n
+\t\t\t\t\t\tevt = fix(evt || win.event);\n
+\t\t\t\t\t\tevt.type = evt.type === \'focus\' ? \'focusin\' : \'focusout\';\n
+\t\t\t\t\t\texecuteHandlers(evt, id);\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Setup callback list and bind native event\n
+\t\t\t\tcallbackList = events[id][name];\n
+\t\t\t\tif (!callbackList) {\n
+\t\t\t\t\tevents[id][name] = callbackList = [{func: callback, scope: scope}];\n
+\t\t\t\t\tcallbackList.fakeName = fakeName;\n
+\t\t\t\t\tcallbackList.capture = capture;\n
+\t\t\t\t\t//callbackList.callback = callback;\n
+\n
+\t\t\t\t\t// Add the nativeHandler to the callback list so that we can later unbind it\n
+\t\t\t\t\tcallbackList.nativeHandler = nativeHandler;\n
+\n
+\t\t\t\t\t// Check if the target has native events support\n
+\n
+\t\t\t\t\tif (name === "ready") {\n
+\t\t\t\t\t\tbindOnReady(target, nativeHandler, self);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\taddEvent(target, fakeName || name, nativeHandler, capture);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif (name === "ready" && self.domLoaded) {\n
+\t\t\t\t\t\tcallback({type: name});\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// If it already has an native handler then just push the callback\n
+\t\t\t\t\t\tcallbackList.push({func: callback, scope: scope});\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\ttarget = callbackList = 0; // Clean memory for IE\n
+\n
+\t\t\treturn callback;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Unbinds the specified event by name, name and callback or all events on the target.\n
+\t\t *\n
+\t\t * @method unbind\n
+\t\t * @param {Object} target Target node/window or custom object.\n
+\t\t * @param {String} names Optional event name to unbind.\n
+\t\t * @param {function} callback Optional callback function to unbind.\n
+\t\t * @return {EventUtils} Event utils instance.\n
+\t\t */\n
+\t\tself.unbind = function(target, names, callback) {\n
+\t\t\tvar id, callbackList, i, ci, name, eventMap;\n
+\n
+\t\t\t// Don\'t bind to text nodes or comments\n
+\t\t\tif (!target || target.nodeType === 3 || target.nodeType === 8) {\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\t// Unbind event or events if the target has the expando\n
+\t\t\tid = target[expando];\n
+\t\t\tif (id) {\n
+\t\t\t\teventMap = events[id];\n
+\n
+\t\t\t\t// Specific callback\n
+\t\t\t\tif (names) {\n
+\t\t\t\t\tnames = names.split(\' \');\n
+\t\t\t\t\ti = names.length;\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tname = names[i];\n
+\t\t\t\t\t\tcallbackList = eventMap[name];\n
+\n
+\t\t\t\t\t\t// Unbind the event if it exists in the map\n
+\t\t\t\t\t\tif (callbackList) {\n
+\t\t\t\t\t\t\t// Remove specified callback\n
+\t\t\t\t\t\t\tif (callback) {\n
+\t\t\t\t\t\t\t\tci = callbackList.length;\n
+\t\t\t\t\t\t\t\twhile (ci--) {\n
+\t\t\t\t\t\t\t\t\tif (callbackList[ci].func === callback) {\n
+\t\t\t\t\t\t\t\t\t\tvar nativeHandler = callbackList.nativeHandler;\n
+\t\t\t\t\t\t\t\t\t\tvar fakeName = callbackList.fakeName, capture = callbackList.capture;\n
+\n
+\t\t\t\t\t\t\t\t\t\t// Clone callbackList since unbind inside a callback would otherwise break the handlers loop\n
+\t\t\t\t\t\t\t\t\t\tcallbackList = callbackList.slice(0, ci).concat(callbackList.slice(ci + 1));\n
+\t\t\t\t\t\t\t\t\t\tcallbackList.nativeHandler = nativeHandler;\n
+\t\t\t\t\t\t\t\t\t\tcallbackList.fakeName = fakeName;\n
+\t\t\t\t\t\t\t\t\t\tcallbackList.capture = capture;\n
+\n
+\t\t\t\t\t\t\t\t\t\teventMap[name] = callbackList;\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Remove all callbacks if there isn\'t a specified callback or there is no callbacks left\n
+\t\t\t\t\t\t\tif (!callback || callbackList.length === 0) {\n
+\t\t\t\t\t\t\t\tdelete eventMap[name];\n
+\t\t\t\t\t\t\t\tremoveEvent(target, callbackList.fakeName || name, callbackList.nativeHandler, callbackList.capture);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// All events for a specific element\n
+\t\t\t\t\tfor (name in eventMap) {\n
+\t\t\t\t\t\tcallbackList = eventMap[name];\n
+\t\t\t\t\t\tremoveEvent(target, callbackList.fakeName || name, callbackList.nativeHandler, callbackList.capture);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teventMap = {};\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Check if object is empty, if it isn\'t then we won\'t remove the expando map\n
+\t\t\t\tfor (name in eventMap) {\n
+\t\t\t\t\treturn self;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Delete event object\n
+\t\t\t\tdelete events[id];\n
+\n
+\t\t\t\t// Remove expando from target\n
+\t\t\t\ttry {\n
+\t\t\t\t\t// IE will fail here since it can\'t delete properties from window\n
+\t\t\t\t\tdelete target[expando];\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// IE will set it to null\n
+\t\t\t\t\ttarget[expando] = null;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Fires the specified event on the specified target.\n
+\t\t *\n
+\t\t * @method fire\n
+\t\t * @param {Object} target Target node/window or custom object.\n
+\t\t * @param {String} name Event name to fire.\n
+\t\t * @param {Object} args Optional arguments to send to the observers.\n
+\t\t * @return {EventUtils} Event utils instance.\n
+\t\t */\n
+\t\tself.fire = function(target, name, args) {\n
+\t\t\tvar id;\n
+\n
+\t\t\t// Don\'t bind to text nodes or comments\n
+\t\t\tif (!target || target.nodeType === 3 || target.nodeType === 8) {\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\t// Build event object by patching the args\n
+\t\t\targs = fix(null, args);\n
+\t\t\targs.type = name;\n
+\t\t\targs.target = target;\n
+\n
+\t\t\tdo {\n
+\t\t\t\t// Found an expando that means there is listeners to execute\n
+\t\t\t\tid = target[expando];\n
+\t\t\t\tif (id) {\n
+\t\t\t\t\texecuteHandlers(args, id);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Walk up the DOM\n
+\t\t\t\ttarget = target.parentNode || target.ownerDocument || target.defaultView || target.parentWindow;\n
+\t\t\t} while (target && !args.isPropagationStopped());\n
+\n
+\t\t\treturn self;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Removes all bound event listeners for the specified target. This will also remove any bound\n
+\t\t * listeners to child nodes within that target.\n
+\t\t *\n
+\t\t * @method clean\n
+\t\t * @param {Object} target Target node/window object.\n
+\t\t * @return {EventUtils} Event utils instance.\n
+\t\t */\n
+\t\tself.clean = function(target) {\n
+\t\t\tvar i, children, unbind = self.unbind;\n
+\n
+\t\t\t// Don\'t bind to text nodes or comments\n
+\t\t\tif (!target || target.nodeType === 3 || target.nodeType === 8) {\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\t// Unbind any element on the specificed target\n
+\t\t\tif (target[expando]) {\n
+\t\t\t\tunbind(target);\n
+\t\t\t}\n
+\n
+\t\t\t// Target doesn\'t have getElementsByTagName it\'s probably a window object then use it\'s document to find the children\n
+\t\t\tif (!target.getElementsByTagName) {\n
+\t\t\t\ttarget = target.document;\n
+\t\t\t}\n
+\n
+\t\t\t// Remove events from each child element\n
+\t\t\tif (target && target.getElementsByTagName) {\n
+\t\t\t\tunbind(target);\n
+\n
+\t\t\t\tchildren = target.getElementsByTagName(\'*\');\n
+\t\t\t\ti = children.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\ttarget = children[i];\n
+\n
+\t\t\t\t\tif (target[expando]) {\n
+\t\t\t\t\t\tunbind(target);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Destroys the event object. Call this on IE to remove memory leaks.\n
+\t\t */\n
+\t\tself.destroy = function() {\n
+\t\t\tevents = {};\n
+\t\t};\n
+\n
+\t\t// Legacy function for canceling events\n
+\t\tself.cancel = function(e) {\n
+\t\t\tif (e) {\n
+\t\t\t\te.preventDefault();\n
+\t\t\t\te.stopImmediatePropagation();\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t};\n
+\t}\n
+\n
+\tEventUtils.Event = new EventUtils();\n
+\tEventUtils.Event.bind(window, \'ready\', function() {});\n
+\n
+\treturn EventUtils;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16340</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EventUtils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

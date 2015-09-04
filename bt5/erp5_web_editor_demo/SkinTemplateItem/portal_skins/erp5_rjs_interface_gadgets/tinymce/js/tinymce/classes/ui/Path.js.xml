@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268312.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Path.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Path.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Creates a new path control.\n
+ *\n
+ * @-x-less Path.less\n
+ * @class tinymce.ui.Path\n
+ * @extends tinymce.ui.Widget\n
+ */\n
+define("tinymce/ui/Path", [\n
+\t"tinymce/ui/Widget"\n
+], function(Widget) {\n
+\t"use strict";\n
+\n
+\treturn Widget.extend({\n
+\t\t/**\n
+\t\t * Constructs a instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {String} delimiter Delimiter to display between row in path.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (!settings.delimiter) {\n
+\t\t\t\tsettings.delimiter = \'\\u00BB\';\n
+\t\t\t}\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tself.classes.add(\'path\');\n
+\t\t\tself.canFocus = true;\n
+\n
+\t\t\tself.on(\'click\', function(e) {\n
+\t\t\t\tvar index, target = e.target;\n
+\n
+\t\t\t\tif ((index = target.getAttribute(\'data-index\'))) {\n
+\t\t\t\t\tself.fire(\'select\', {value: self.row()[index], index: index});\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself.row(self.settings.row);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Focuses the current control.\n
+\t\t *\n
+\t\t * @method focus\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tfocus: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.getEl().firstChild.focus();\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the data to be used for the path.\n
+\t\t *\n
+\t\t * @method row\n
+\t\t * @param {Array} row Array with row name is rendered to path.\n
+\t\t */\n
+\t\trow: function(row) {\n
+\t\t\tif (!arguments.length) {\n
+\t\t\t\treturn this.state.get(\'row\');\n
+\t\t\t}\n
+\n
+\t\t\tthis.state.set(\'row\', row);\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + self._id + \'" class="\' + self.classes + \'">\' +\n
+\t\t\t\t\tself._getDataPathHtml(self.state.get(\'row\')) +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.state.on(\'change:row\', function(e) {\n
+\t\t\t\tself.innerHtml(self._getDataPathHtml(e.value));\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t},\n
+\n
+\t\t_getDataPathHtml: function(data) {\n
+\t\t\tvar self = this, parts = data || [], i, l, html = \'\', prefix = self.classPrefix;\n
+\n
+\t\t\tfor (i = 0, l = parts.length; i < l; i++) {\n
+\t\t\t\thtml += (\n
+\t\t\t\t\t(i > 0 ? \'<div class="\' + prefix + \'divider" aria-hidden="true"> \' + self.settings.delimiter + \' </div>\' : \'\') +\n
+\t\t\t\t\t\'<div role="button" class="\' + prefix + \'path-item\' + (i == l - 1 ? \' \' + prefix + \'last\' : \'\') + \'" data-index="\' +\n
+\t\t\t\t\ti + \'" tabindex="-1" id="\' + self._id + \'-\' + i + \'" aria-level="\' + i + \'">\' + parts[i].name + \'</div>\'\n
+\t\t\t\t);\n
+\t\t\t}\n
+\n
+\t\t\tif (!html) {\n
+\t\t\t\thtml = \'<div class="\' + prefix + \'path-item">\\u00a0</div>\';\n
+\t\t\t}\n
+\n
+\t\t\treturn html;\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2827</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Path.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

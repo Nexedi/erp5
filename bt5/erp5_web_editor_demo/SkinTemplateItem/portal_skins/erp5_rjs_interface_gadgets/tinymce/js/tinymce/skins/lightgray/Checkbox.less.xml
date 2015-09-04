@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268661.22</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Checkbox.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// Checkbox\n
+\n
+.@{prefix}-checkbox {\n
+\tcursor: pointer;\n
+}\n
+\n
+i.@{prefix}-i-checkbox {\n
+\tmargin: 0 3px 0 0;\n
+\tborder: 1px solid @checkbox-border;\n
+\t.border-radius(3px);\n
+\t.box-shadow(@checkbox-box-shadow);\n
+\t.vertical-gradient(@checkbox-bg, @checkbox-bg-hlight);\n
+\ttext-indent: -10em;\n
+\t*font-size: 0;\n
+\t*line-height: 0;\n
+\t*text-indent: 0;\n
+\toverflow: hidden;\n
+}\n
+\n
+.@{prefix}-checked i.@{prefix}-i-checkbox {\n
+\tcolor: @btn-text;\n
+\tfont-size: 16px;\n
+\tline-height: 16px;\n
+\ttext-indent: 0;\n
+}\n
+\n
+.@{prefix}-checkbox:focus i.@{prefix}-i-checkbox, .@{prefix}-checkbox.@{prefix}-focus i.@{prefix}-i-checkbox {\n
+\tborder: 1px solid @checkbox-border-focus;\n
+\t.box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px fadeout(@checkbox-border-focus, 15%));\n
+}\n
+\n
+.@{prefix}-checkbox.@{prefix}-disabled .@{prefix}-label, .@{prefix}-checkbox.@{prefix}-disabled i.@{prefix}-i-checkbox {\n
+\tcolor: mix(@text, @panel-bg, 40%);\n
+}\n
+\n
+.@{prefix}-checkbox .@{prefix}-label {\n
+\tvertical-align: middle;\n
+}\n
+\n
+// RTL\n
+\n
+.@{prefix}-rtl .@{prefix}-checkbox {\n
+\tdirection: rtl;\n
+\ttext-align: right;\n
+}\n
+\n
+.@{prefix}-rtl i.@{prefix}-i-checkbox {\n
+\tmargin: 0 0 0 3px;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1096</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Checkbox.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,407 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268288.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Styles.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Styles.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class is used to parse CSS styles it also compresses styles to reduce the output size.\n
+ *\n
+ * @example\n
+ * var Styles = new tinymce.html.Styles({\n
+ *    url_converter: function(url) {\n
+ *       return url;\n
+ *    }\n
+ * });\n
+ *\n
+ * styles = Styles.parse(\'border: 1px solid red\');\n
+ * styles.color = \'red\';\n
+ *\n
+ * console.log(new tinymce.html.StyleSerializer().serialize(styles));\n
+ *\n
+ * @class tinymce.html.Styles\n
+ * @version 3.4\n
+ */\n
+define("tinymce/html/Styles", [], function() {\n
+\treturn function(settings, schema) {\n
+\t\t/*jshint maxlen:255 */\n
+\t\t/*eslint max-len:0 */\n
+\t\tvar rgbRegExp = /rgb\\s*\\(\\s*([0-9]+)\\s*,\\s*([0-9]+)\\s*,\\s*([0-9]+)\\s*\\)/gi,\n
+\t\t\turlOrStrRegExp = /(?:url(?:(?:\\(\\s*\\"([^\\"]+)\\"\\s*\\))|(?:\\(\\s*\\\'([^\\\']+)\\\'\\s*\\))|(?:\\(\\s*([^)\\s]+)\\s*\\))))|(?:\\\'([^\\\']+)\\\')|(?:\\"([^\\"]+)\\")/gi,\n
+\t\t\tstyleRegExp = /\\s*([^:]+):\\s*([^;]+);?/g,\n
+\t\t\ttrimRightRegExp = /\\s+$/,\n
+\t\t\tundef, i, encodingLookup = {}, encodingItems, validStyles, invalidStyles, invisibleChar = \'\\uFEFF\';\n
+\n
+\t\tsettings = settings || {};\n
+\n
+\t\tif (schema) {\n
+\t\t\tvalidStyles = schema.getValidStyles();\n
+\t\t\tinvalidStyles = schema.getInvalidStyles();\n
+\t\t}\n
+\n
+\t\tencodingItems = (\'\\\\" \\\\\\\' \\\\; \\\\: ; : \' + invisibleChar).split(\' \');\n
+\t\tfor (i = 0; i < encodingItems.length; i++) {\n
+\t\t\tencodingLookup[encodingItems[i]] = invisibleChar + i;\n
+\t\t\tencodingLookup[invisibleChar + i] = encodingItems[i];\n
+\t\t}\n
+\n
+\t\tfunction toHex(match, r, g, b) {\n
+\t\t\tfunction hex(val) {\n
+\t\t\t\tval = parseInt(val, 10).toString(16);\n
+\n
+\t\t\t\treturn val.length > 1 ? val : \'0\' + val; // 0 -> 00\n
+\t\t\t}\n
+\n
+\t\t\treturn \'#\' + hex(r) + hex(g) + hex(b);\n
+\t\t}\n
+\n
+\t\treturn {\n
+\t\t\t/**\n
+\t\t\t * Parses the specified RGB color value and returns a hex version of that color.\n
+\t\t\t *\n
+\t\t\t * @method toHex\n
+\t\t\t * @param {String} color RGB string value like rgb(1,2,3)\n
+\t\t\t * @return {String} Hex version of that RGB value like #FF00FF.\n
+\t\t\t */\n
+\t\t\ttoHex: function(color) {\n
+\t\t\t\treturn color.replace(rgbRegExp, toHex);\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Parses the specified style value into an object collection. This parser will also\n
+\t\t\t * merge and remove any redundant items that browsers might have added. It will also convert non hex\n
+\t\t\t * colors to hex values. Urls inside the styles will also be converted to absolute/relative based on settings.\n
+\t\t\t *\n
+\t\t\t * @method parse\n
+\t\t\t * @param {String} css Style value to parse for example: border:1px solid red;.\n
+\t\t\t * @return {Object} Object representation of that style like {border: \'1px solid red\'}\n
+\t\t\t */\n
+\t\t\tparse: function(css) {\n
+\t\t\t\tvar styles = {}, matches, name, value, isEncoded, urlConverter = settings.url_converter;\n
+\t\t\t\tvar urlConverterScope = settings.url_converter_scope || this;\n
+\n
+\t\t\t\tfunction compress(prefix, suffix, noJoin) {\n
+\t\t\t\t\tvar top, right, bottom, left;\n
+\n
+\t\t\t\t\ttop = styles[prefix + \'-top\' + suffix];\n
+\t\t\t\t\tif (!top) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tright = styles[prefix + \'-right\' + suffix];\n
+\t\t\t\t\tif (!right) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tbottom = styles[prefix + \'-bottom\' + suffix];\n
+\t\t\t\t\tif (!bottom) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tleft = styles[prefix + \'-left\' + suffix];\n
+\t\t\t\t\tif (!left) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tvar box = [top, right, bottom, left];\n
+\t\t\t\t\ti = box.length - 1;\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tif (box[i] !== box[i + 1]) {\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (i > -1 && noJoin) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tstyles[prefix + suffix] = i == -1 ? box[0] : box.join(\' \');\n
+\t\t\t\t\tdelete styles[prefix + \'-top\' + suffix];\n
+\t\t\t\t\tdelete styles[prefix + \'-right\' + suffix];\n
+\t\t\t\t\tdelete styles[prefix + \'-bottom\' + suffix];\n
+\t\t\t\t\tdelete styles[prefix + \'-left\' + suffix];\n
+\t\t\t\t}\n
+\n
+\t\t\t\t/**\n
+\t\t\t\t * Checks if the specific style can be compressed in other words if all border-width are equal.\n
+\t\t\t\t */\n
+\t\t\t\tfunction canCompress(key) {\n
+\t\t\t\t\tvar value = styles[key], i;\n
+\n
+\t\t\t\t\tif (!value) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tvalue = value.split(\' \');\n
+\t\t\t\t\ti = value.length;\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tif (value[i] !== value[0]) {\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tstyles[key] = value[0];\n
+\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t/**\n
+\t\t\t\t * Compresses multiple styles into one style.\n
+\t\t\t\t */\n
+\t\t\t\tfunction compress2(target, a, b, c) {\n
+\t\t\t\t\tif (!canCompress(a)) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!canCompress(b)) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!canCompress(c)) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Compress\n
+\t\t\t\t\tstyles[target] = styles[a] + \' \' + styles[b] + \' \' + styles[c];\n
+\t\t\t\t\tdelete styles[a];\n
+\t\t\t\t\tdelete styles[b];\n
+\t\t\t\t\tdelete styles[c];\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Encodes the specified string by replacing all \\" \\\' ; : with _<num>\n
+\t\t\t\tfunction encode(str) {\n
+\t\t\t\t\tisEncoded = true;\n
+\n
+\t\t\t\t\treturn encodingLookup[str];\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Decodes the specified string by replacing all _<num> with it\'s original value \\" \\\' etc\n
+\t\t\t\t// It will also decode the \\" \\\' if keep_slashes is set to fale or omitted\n
+\t\t\t\tfunction decode(str, keep_slashes) {\n
+\t\t\t\t\tif (isEncoded) {\n
+\t\t\t\t\t\tstr = str.replace(/\\uFEFF[0-9]/g, function(str) {\n
+\t\t\t\t\t\t\treturn encodingLookup[str];\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!keep_slashes) {\n
+\t\t\t\t\t\tstr = str.replace(/\\\\([\\\'\\";:])/g, "$1");\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn str;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction processUrl(match, url, url2, url3, str, str2) {\n
+\t\t\t\t\tstr = str || str2;\n
+\n
+\t\t\t\t\tif (str) {\n
+\t\t\t\t\t\tstr = decode(str);\n
+\n
+\t\t\t\t\t\t// Force strings into single quote format\n
+\t\t\t\t\t\treturn "\'" + str.replace(/\\\'/g, "\\\\\'") + "\'";\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\turl = decode(url || url2 || url3);\n
+\n
+\t\t\t\t\tif (!settings.allow_script_urls) {\n
+\t\t\t\t\t\tvar scriptUrl = url.replace(/[\\s\\r\\n]+/, \'\');\n
+\n
+\t\t\t\t\t\tif (/(java|vb)script:/i.test(scriptUrl)) {\n
+\t\t\t\t\t\t\treturn "";\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (!settings.allow_svg_data_urls && /^data:image\\/svg/i.test(scriptUrl)) {\n
+\t\t\t\t\t\t\treturn "";\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Convert the URL to relative/absolute depending on config\n
+\t\t\t\t\tif (urlConverter) {\n
+\t\t\t\t\t\turl = urlConverter.call(urlConverterScope, url, \'style\');\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Output new URL format\n
+\t\t\t\t\treturn "url(\'" + url.replace(/\\\'/g, "\\\\\'") + "\')";\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (css) {\n
+\t\t\t\t\tcss = css.replace(/[\\u0000-\\u001F]/g, \'\');\n
+\n
+\t\t\t\t\t// Encode \\" \\\' % and ; and : inside strings so they don\'t interfere with the style parsing\n
+\t\t\t\t\tcss = css.replace(/\\\\[\\"\\\';:\\uFEFF]/g, encode).replace(/\\"[^\\"]+\\"|\\\'[^\\\']+\\\'/g, function(str) {\n
+\t\t\t\t\t\treturn str.replace(/[;:]/g, encode);\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// Parse styles\n
+\t\t\t\t\twhile ((matches = styleRegExp.exec(css))) {\n
+\t\t\t\t\t\tname = matches[1].replace(trimRightRegExp, \'\').toLowerCase();\n
+\t\t\t\t\t\tvalue = matches[2].replace(trimRightRegExp, \'\');\n
+\n
+\t\t\t\t\t\t// Decode escaped sequences like \\65 -> e\n
+\t\t\t\t\t\t/*jshint loopfunc:true*/\n
+\t\t\t\t\t\t/*eslint no-loop-func:0 */\n
+\t\t\t\t\t\tvalue = value.replace(/\\\\[0-9a-f]+/g, function(e) {\n
+\t\t\t\t\t\t\treturn String.fromCharCode(parseInt(e.substr(1), 16));\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\tif (name && value.length > 0) {\n
+\t\t\t\t\t\t\t// Don\'t allow behavior name or expression/comments within the values\n
+\t\t\t\t\t\t\tif (!settings.allow_script_urls && (name == "behavior" || /expression\\s*\\(|\\/\\*|\\*\\//.test(value))) {\n
+\t\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Opera will produce 700 instead of bold in their style values\n
+\t\t\t\t\t\t\tif (name === \'font-weight\' && value === \'700\') {\n
+\t\t\t\t\t\t\t\tvalue = \'bold\';\n
+\t\t\t\t\t\t\t} else if (name === \'color\' || name === \'background-color\') { // Lowercase colors like RED\n
+\t\t\t\t\t\t\t\tvalue = value.toLowerCase();\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Convert RGB colors to HEX\n
+\t\t\t\t\t\t\tvalue = value.replace(rgbRegExp, toHex);\n
+\n
+\t\t\t\t\t\t\t// Convert URLs and force them into url(\'value\') format\n
+\t\t\t\t\t\t\tvalue = value.replace(urlOrStrRegExp, processUrl);\n
+\t\t\t\t\t\t\tstyles[name] = isEncoded ? decode(value, true) : value;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tstyleRegExp.lastIndex = matches.index + matches[0].length;\n
+\t\t\t\t\t}\n
+\t\t\t\t\t// Compress the styles to reduce it\'s size for example IE will expand styles\n
+\t\t\t\t\tcompress("border", "", true);\n
+\t\t\t\t\tcompress("border", "-width");\n
+\t\t\t\t\tcompress("border", "-color");\n
+\t\t\t\t\tcompress("border", "-style");\n
+\t\t\t\t\tcompress("padding", "");\n
+\t\t\t\t\tcompress("margin", "");\n
+\t\t\t\t\tcompress2(\'border\', \'border-width\', \'border-style\', \'border-color\');\n
+\n
+\t\t\t\t\t// Remove pointless border, IE produces these\n
+\t\t\t\t\tif (styles.border === \'medium none\') {\n
+\t\t\t\t\t\tdelete styles.border;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// IE 11 will produce a border-image: none when getting the style attribute from <p style="border: 1px solid red"></p>\n
+\t\t\t\t\t// So lets asume it shouldn\'t be there\n
+\t\t\t\t\tif (styles[\'border-image\'] === \'none\') {\n
+\t\t\t\t\t\tdelete styles[\'border-image\'];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn styles;\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Serializes the specified style object into a string.\n
+\t\t\t *\n
+\t\t\t * @method serialize\n
+\t\t\t * @param {Object} styles Object to serialize as string for example: {border: \'1px solid red\'}\n
+\t\t\t * @param {String} elementName Optional element name, if specified only the styles that matches the schema will be serialized.\n
+\t\t\t * @return {String} String representation of the style object for example: border: 1px solid red.\n
+\t\t\t */\n
+\t\t\tserialize: function(styles, elementName) {\n
+\t\t\t\tvar css = \'\', name, value;\n
+\n
+\t\t\t\tfunction serializeStyles(name) {\n
+\t\t\t\t\tvar styleList, i, l, value;\n
+\n
+\t\t\t\t\tstyleList = validStyles[name];\n
+\t\t\t\t\tif (styleList) {\n
+\t\t\t\t\t\tfor (i = 0, l = styleList.length; i < l; i++) {\n
+\t\t\t\t\t\t\tname = styleList[i];\n
+\t\t\t\t\t\t\tvalue = styles[name];\n
+\n
+\t\t\t\t\t\t\tif (value !== undef && value.length > 0) {\n
+\t\t\t\t\t\t\t\tcss += (css.length > 0 ? \' \' : \'\') + name + \': \' + value + \';\';\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction isValid(name, elementName) {\n
+\t\t\t\t\tvar styleMap;\n
+\n
+\t\t\t\t\tstyleMap = invalidStyles[\'*\'];\n
+\t\t\t\t\tif (styleMap && styleMap[name]) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tstyleMap = invalidStyles[elementName];\n
+\t\t\t\t\tif (styleMap && styleMap[name]) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Serialize styles according to schema\n
+\t\t\t\tif (elementName && validStyles) {\n
+\t\t\t\t\t// Serialize global styles and element specific styles\n
+\t\t\t\t\tserializeStyles(\'*\');\n
+\t\t\t\t\tserializeStyles(elementName);\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// Output the styles in the order they are inside the object\n
+\t\t\t\t\tfor (name in styles) {\n
+\t\t\t\t\t\tvalue = styles[name];\n
+\n
+\t\t\t\t\t\tif (value !== undef && value.length > 0) {\n
+\t\t\t\t\t\t\tif (!invalidStyles || isValid(name, elementName)) {\n
+\t\t\t\t\t\t\t\tcss += (css.length > 0 ? \' \' : \'\') + name + \': \' + value + \';\';\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn css;\n
+\t\t\t}\n
+\t\t};\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10220</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Styles.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

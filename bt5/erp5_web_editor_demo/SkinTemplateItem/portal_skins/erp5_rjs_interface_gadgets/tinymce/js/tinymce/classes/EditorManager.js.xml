@@ -1,0 +1,720 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268360.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EditorManager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * EditorManager.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class used as a factory for manager for tinymce.Editor instances.\n
+ *\n
+ * @example\n
+ * tinymce.EditorManager.init({});\n
+ *\n
+ * @class tinymce.EditorManager\n
+ * @mixes tinymce.util.Observable\n
+ * @static\n
+ */\n
+define("tinymce/EditorManager", [\n
+\t"tinymce/Editor",\n
+\t"tinymce/dom/DomQuery",\n
+\t"tinymce/dom/DOMUtils",\n
+\t"tinymce/util/URI",\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/util/Observable",\n
+\t"tinymce/util/I18n",\n
+\t"tinymce/FocusManager"\n
+], function(Editor, $, DOMUtils, URI, Env, Tools, Observable, I18n, FocusManager) {\n
+\tvar DOM = DOMUtils.DOM;\n
+\tvar explode = Tools.explode, each = Tools.each, extend = Tools.extend;\n
+\tvar instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;\n
+\n
+\tfunction globalEventDelegate(e) {\n
+\t\teach(EditorManager.editors, function(editor) {\n
+\t\t\teditor.fire(\'ResizeWindow\', e);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction toggleGlobalEvents(editors, state) {\n
+\t\tif (state !== boundGlobalEvents) {\n
+\t\t\tif (state) {\n
+\t\t\t\t$(window).on(\'resize\', globalEventDelegate);\n
+\t\t\t} else {\n
+\t\t\t\t$(window).off(\'resize\', globalEventDelegate);\n
+\t\t\t}\n
+\n
+\t\t\tboundGlobalEvents = state;\n
+\t\t}\n
+\t}\n
+\n
+\tfunction removeEditorFromList(editor) {\n
+\t\tvar editors = EditorManager.editors, removedFromList;\n
+\n
+\t\tdelete editors[editor.id];\n
+\n
+\t\tfor (var i = 0; i < editors.length; i++) {\n
+\t\t\tif (editors[i] == editor) {\n
+\t\t\t\teditors.splice(i, 1);\n
+\t\t\t\tremovedFromList = true;\n
+\t\t\t\tbreak;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Select another editor since the active one was removed\n
+\t\tif (EditorManager.activeEditor == editor) {\n
+\t\t\tEditorManager.activeEditor = editors[0];\n
+\t\t}\n
+\n
+\t\t// Clear focusedEditor if necessary, so that we don\'t try to blur the destroyed editor\n
+\t\tif (EditorManager.focusedEditor == editor) {\n
+\t\t\tEditorManager.focusedEditor = null;\n
+\t\t}\n
+\n
+\t\treturn removedFromList;\n
+\t}\n
+\n
+\tfunction purgeDestroyedEditor(editor) {\n
+\t\t// User has manually destroyed the editor lets clean up the mess\n
+\t\tif (editor && !(editor.getContainer() || editor.getBody()).parentNode) {\n
+\t\t\tremoveEditorFromList(editor);\n
+\t\t\teditor.unbindAllNativeEvents();\n
+\t\t\teditor.destroy(true);\n
+\t\t\teditor = null;\n
+\t\t}\n
+\n
+\t\treturn editor;\n
+\t}\n
+\n
+\tEditorManager = {\n
+\t\t/**\n
+\t\t * Dom query instance.\n
+\t\t *\n
+\t\t * @property $\n
+\t\t * @type tinymce.dom.DomQuery\n
+\t\t */\n
+\t\t$: $,\n
+\n
+\t\t/**\n
+\t\t * Major version of TinyMCE build.\n
+\t\t *\n
+\t\t * @property majorVersion\n
+\t\t * @type String\n
+\t\t */\n
+\t\tmajorVersion: \'@@majorVersion@@\',\n
+\n
+\t\t/**\n
+\t\t * Minor version of TinyMCE build.\n
+\t\t *\n
+\t\t * @property minorVersion\n
+\t\t * @type String\n
+\t\t */\n
+\t\tminorVersion: \'@@minorVersion@@\',\n
+\n
+\t\t/**\n
+\t\t * Release date of TinyMCE build.\n
+\t\t *\n
+\t\t * @property releaseDate\n
+\t\t * @type String\n
+\t\t */\n
+\t\treleaseDate: \'@@releaseDate@@\',\n
+\n
+\t\t/**\n
+\t\t * Collection of editor instances.\n
+\t\t *\n
+\t\t * @property editors\n
+\t\t * @type Object\n
+\t\t * @example\n
+\t\t * for (edId in tinymce.editors)\n
+\t\t *     tinymce.editors[edId].save();\n
+\t\t */\n
+\t\teditors: [],\n
+\n
+\t\t/**\n
+\t\t * Collection of language pack data.\n
+\t\t *\n
+\t\t * @property i18n\n
+\t\t * @type Object\n
+\t\t */\n
+\t\ti18n: I18n,\n
+\n
+\t\t/**\n
+\t\t * Currently active editor instance.\n
+\t\t *\n
+\t\t * @property activeEditor\n
+\t\t * @type tinymce.Editor\n
+\t\t * @example\n
+\t\t * tinyMCE.activeEditor.selection.getContent();\n
+\t\t * tinymce.EditorManager.activeEditor.selection.getContent();\n
+\t\t */\n
+\t\tactiveEditor: null,\n
+\n
+\t\tsetup: function() {\n
+\t\t\tvar self = this, baseURL, documentBaseURL, suffix = "", preInit, src;\n
+\n
+\t\t\t// Get base URL for the current document\n
+\t\t\tdocumentBaseURL = document.location.href;\n
+\n
+\t\t\t// Check if the URL is a document based format like: http://site/dir/file and file:///\n
+\t\t\t// leave other formats like applewebdata://... intact\n
+\t\t\tif (/^[^:]+:\\/\\/\\/?[^\\/]+\\//.test(documentBaseURL)) {\n
+\t\t\t\tdocumentBaseURL = documentBaseURL.replace(/[\\?#].*$/, \'\').replace(/[\\/\\\\][^\\/]+$/, \'\');\n
+\n
+\t\t\t\tif (!/[\\/\\\\]$/.test(documentBaseURL)) {\n
+\t\t\t\t\tdocumentBaseURL += \'/\';\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// If tinymce is defined and has a base use that or use the old tinyMCEPreInit\n
+\t\t\tpreInit = window.tinymce || window.tinyMCEPreInit;\n
+\t\t\tif (preInit) {\n
+\t\t\t\tbaseURL = preInit.base || preInit.baseURL;\n
+\t\t\t\tsuffix = preInit.suffix;\n
+\t\t\t} else {\n
+\t\t\t\t// Get base where the tinymce script is located\n
+\t\t\t\tvar scripts = document.getElementsByTagName(\'script\');\n
+\t\t\t\tfor (var i = 0; i < scripts.length; i++) {\n
+\t\t\t\t\tsrc = scripts[i].src;\n
+\n
+\t\t\t\t\t// Script types supported:\n
+\t\t\t\t\t// tinymce.js tinymce.min.js tinymce.dev.js\n
+\t\t\t\t\t// tinymce.jquery.js tinymce.jquery.min.js tinymce.jquery.dev.js\n
+\t\t\t\t\t// tinymce.full.js tinymce.full.min.js tinymce.full.dev.js\n
+\t\t\t\t\tif (/tinymce(\\.full|\\.jquery|)(\\.min|\\.dev|)\\.js/.test(src)) {\n
+\t\t\t\t\t\tif (src.indexOf(\'.min\') != -1) {\n
+\t\t\t\t\t\t\tsuffix = \'.min\';\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tbaseURL = src.substring(0, src.lastIndexOf(\'/\'));\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// We didn\'t find any baseURL by looking at the script elements\n
+\t\t\t\t// Try to use the document.currentScript as a fallback\n
+\t\t\t\tif (!baseURL && document.currentScript) {\n
+\t\t\t\t\tsrc = document.currentScript.src;\n
+\n
+\t\t\t\t\tif (src.indexOf(\'.min\') != -1) {\n
+\t\t\t\t\t\tsuffix = \'.min\';\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tbaseURL = src.substring(0, src.lastIndexOf(\'/\'));\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t/**\n
+\t\t\t * Base URL where the root directory if TinyMCE is located.\n
+\t\t\t *\n
+\t\t\t * @property baseURL\n
+\t\t\t * @type String\n
+\t\t\t */\n
+\t\t\tself.baseURL = new URI(documentBaseURL).toAbsolute(baseURL);\n
+\n
+\t\t\t/**\n
+\t\t\t * Document base URL where the current document is located.\n
+\t\t\t *\n
+\t\t\t * @property documentBaseURL\n
+\t\t\t * @type String\n
+\t\t\t */\n
+\t\t\tself.documentBaseURL = documentBaseURL;\n
+\n
+\t\t\t/**\n
+\t\t\t * Absolute baseURI for the installation path of TinyMCE.\n
+\t\t\t *\n
+\t\t\t * @property baseURI\n
+\t\t\t * @type tinymce.util.URI\n
+\t\t\t */\n
+\t\t\tself.baseURI = new URI(self.baseURL);\n
+\n
+\t\t\t/**\n
+\t\t\t * Current suffix to add to each plugin/theme that gets loaded for example ".min".\n
+\t\t\t *\n
+\t\t\t * @property suffix\n
+\t\t\t * @type String\n
+\t\t\t */\n
+\t\t\tself.suffix = suffix;\n
+\n
+\t\t\tself.focusManager = new FocusManager(self);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Initializes a set of editors. This method will create editors based on various settings.\n
+\t\t *\n
+\t\t * @method init\n
+\t\t * @param {Object} settings Settings object to be passed to each editor instance.\n
+\t\t * @example\n
+\t\t * // Initializes a editor using the longer method\n
+\t\t * tinymce.EditorManager.init({\n
+\t\t *    some_settings : \'some value\'\n
+\t\t * });\n
+\t\t *\n
+\t\t * // Initializes a editor instance using the shorter version\n
+\t\t * tinyMCE.init({\n
+\t\t *    some_settings : \'some value\'\n
+\t\t * });\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this, editors = [];\n
+\n
+\t\t\tfunction createId(elm) {\n
+\t\t\t\tvar id = elm.id;\n
+\n
+\t\t\t\t// Use element id, or unique name or generate a unique id\n
+\t\t\t\tif (!id) {\n
+\t\t\t\t\tid = elm.name;\n
+\n
+\t\t\t\t\tif (id && !DOM.get(id)) {\n
+\t\t\t\t\t\tid = elm.name;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// Generate unique name\n
+\t\t\t\t\t\tid = DOM.uniqueId();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\telm.setAttribute(\'id\', id);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn id;\n
+\t\t\t}\n
+\n
+\t\t\tfunction createEditor(id, settings, targetElm) {\n
+\t\t\t\tif (!purgeDestroyedEditor(self.get(id))) {\n
+\t\t\t\t\tvar editor = new Editor(id, settings, self);\n
+\n
+\t\t\t\t\teditor.targetElm = editor.targetElm || targetElm;\n
+\t\t\t\t\teditors.push(editor);\n
+\t\t\t\t\teditor.render();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction execCallback(name) {\n
+\t\t\t\tvar callback = settings[name];\n
+\n
+\t\t\t\tif (!callback) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn callback.apply(self, Array.prototype.slice.call(arguments, 2));\n
+\t\t\t}\n
+\n
+\t\t\tfunction hasClass(elm, className) {\n
+\t\t\t\treturn className.constructor === RegExp ? className.test(elm.className) : DOM.hasClass(elm, className);\n
+\t\t\t}\n
+\n
+\t\t\tfunction readyHandler() {\n
+\t\t\t\tvar l, co;\n
+\n
+\t\t\t\tDOM.unbind(window, \'ready\', readyHandler);\n
+\n
+\t\t\t\texecCallback(\'onpageload\');\n
+\n
+\t\t\t\tif (settings.types) {\n
+\t\t\t\t\t// Process type specific selector\n
+\t\t\t\t\teach(settings.types, function(type) {\n
+\t\t\t\t\t\teach(DOM.select(type.selector), function(elm) {\n
+\t\t\t\t\t\t\tcreateEditor(createId(elm), extend({}, settings, type), elm);\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t} else if (settings.selector) {\n
+\t\t\t\t\t// Process global selector\n
+\t\t\t\t\teach(DOM.select(settings.selector), function(elm) {\n
+\t\t\t\t\t\tcreateEditor(createId(elm), settings, elm);\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t} else if (settings.target) {\n
+\t\t\t\t\tcreateEditor(createId(settings.target), settings);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Fallback to old setting\n
+\t\t\t\tswitch (settings.mode) {\n
+\t\t\t\t\tcase "exact":\n
+\t\t\t\t\t\tl = settings.elements || \'\';\n
+\n
+\t\t\t\t\t\tif (l.length > 0) {\n
+\t\t\t\t\t\t\teach(explode(l), function(id) {\n
+\t\t\t\t\t\t\t\tvar elm;\n
+\n
+\t\t\t\t\t\t\t\tif ((elm = DOM.get(id))) {\n
+\t\t\t\t\t\t\t\t\tcreateEditor(id, settings, elm);\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\teach(document.forms, function(f) {\n
+\t\t\t\t\t\t\t\t\t\teach(f.elements, function(e) {\n
+\t\t\t\t\t\t\t\t\t\t\tif (e.name === id) {\n
+\t\t\t\t\t\t\t\t\t\t\t\tid = \'mce_editor_\' + instanceCounter++;\n
+\t\t\t\t\t\t\t\t\t\t\t\tDOM.setAttrib(e, \'id\', id);\n
+\t\t\t\t\t\t\t\t\t\t\t\tcreateEditor(id, settings, e);\n
+\t\t\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\tcase "textareas":\n
+\t\t\t\t\tcase "specific_textareas":\n
+\t\t\t\t\t\teach(DOM.select(\'textarea\'), function(elm) {\n
+\t\t\t\t\t\t\tif (settings.editor_deselector && hasClass(elm, settings.editor_deselector)) {\n
+\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tif (!settings.editor_selector || hasClass(elm, settings.editor_selector)) {\n
+\t\t\t\t\t\t\t\tcreateEditor(createId(elm), settings, elm);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Call onInit when all editors are initialized\n
+\t\t\t\tif (settings.oninit) {\n
+\t\t\t\t\tl = co = 0;\n
+\n
+\t\t\t\t\teach(editors, function(ed) {\n
+\t\t\t\t\t\tco++;\n
+\n
+\t\t\t\t\t\tif (!ed.initialized) {\n
+\t\t\t\t\t\t\t// Wait for it\n
+\t\t\t\t\t\t\ted.on(\'init\', function() {\n
+\t\t\t\t\t\t\t\tl++;\n
+\n
+\t\t\t\t\t\t\t\t// All done\n
+\t\t\t\t\t\t\t\tif (l == co) {\n
+\t\t\t\t\t\t\t\t\texecCallback(\'oninit\');\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tl++;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// All done\n
+\t\t\t\t\t\tif (l == co) {\n
+\t\t\t\t\t\t\texecCallback(\'oninit\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tself.settings = settings;\n
+\n
+\t\t\tDOM.bind(window, \'ready\', readyHandler);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a editor instance by id.\n
+\t\t *\n
+\t\t * @method get\n
+\t\t * @param {String/Number} id Editor instance id or index to return.\n
+\t\t * @return {tinymce.Editor} Editor instance to return.\n
+\t\t * @example\n
+\t\t * // Adds an onclick event to an editor by id (shorter version)\n
+\t\t * tinymce.get(\'mytextbox\').on(\'click\', function(e) {\n
+\t\t *    ed.windowManager.alert(\'Hello world!\');\n
+\t\t * });\n
+\t\t *\n
+\t\t * // Adds an onclick event to an editor by id (longer version)\n
+\t\t * tinymce.EditorManager.get(\'mytextbox\').on(\'click\', function(e) {\n
+\t\t *    ed.windowManager.alert(\'Hello world!\');\n
+\t\t * });\n
+\t\t */\n
+\t\tget: function(id) {\n
+\t\t\tif (!arguments.length) {\n
+\t\t\t\treturn this.editors;\n
+\t\t\t}\n
+\n
+\t\t\treturn id in this.editors ? this.editors[id] : null;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds an editor instance to the editor collection. This will also set it as the active editor.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {tinymce.Editor} editor Editor instance to add to the collection.\n
+\t\t * @return {tinymce.Editor} The same instance that got passed in.\n
+\t\t */\n
+\t\tadd: function(editor) {\n
+\t\t\tvar self = this, editors = self.editors;\n
+\n
+\t\t\t// Add named and index editor instance\n
+\t\t\teditors[editor.id] = editor;\n
+\t\t\teditors.push(editor);\n
+\n
+\t\t\ttoggleGlobalEvents(editors, true);\n
+\n
+\t\t\t// Doesn\'t call setActive method since we don\'t want\n
+\t\t\t// to fire a bunch of activate/deactivate calls while initializing\n
+\t\t\tself.activeEditor = editor;\n
+\n
+\t\t\t/**\n
+\t\t\t * Fires when an editor is added to the EditorManager collection.\n
+\t\t\t *\n
+\t\t\t * @event AddEditor\n
+\t\t\t * @param {Object} e Event arguments.\n
+\t\t\t */\n
+\t\t\tself.fire(\'AddEditor\', {editor: editor});\n
+\n
+\t\t\tif (!beforeUnloadDelegate) {\n
+\t\t\t\tbeforeUnloadDelegate = function() {\n
+\t\t\t\t\tself.fire(\'BeforeUnload\');\n
+\t\t\t\t};\n
+\n
+\t\t\t\tDOM.bind(window, \'beforeunload\', beforeUnloadDelegate);\n
+\t\t\t}\n
+\n
+\t\t\treturn editor;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Creates an editor instance and adds it to the EditorManager collection.\n
+\t\t *\n
+\t\t * @method createEditor\n
+\t\t * @param {String} id Instance id to use for editor.\n
+\t\t * @param {Object} settings Editor instance settings.\n
+\t\t * @return {tinymce.Editor} Editor instance that got created.\n
+\t\t */\n
+\t\tcreateEditor: function(id, settings) {\n
+\t\t\treturn this.add(new Editor(id, settings, this));\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes a editor or editors form page.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * // Remove all editors bound to divs\n
+\t\t * tinymce.remove(\'div\');\n
+\t\t *\n
+\t\t * // Remove all editors bound to textareas\n
+\t\t * tinymce.remove(\'textarea\');\n
+\t\t *\n
+\t\t * // Remove all editors\n
+\t\t * tinymce.remove();\n
+\t\t *\n
+\t\t * // Remove specific instance by id\n
+\t\t * tinymce.remove(\'#id\');\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @param {tinymce.Editor/String/Object} [selector] CSS selector or editor instance to remove.\n
+\t\t * @return {tinymce.Editor} The editor that got passed in will be return if it was found otherwise null.\n
+\t\t */\n
+\t\tremove: function(selector) {\n
+\t\t\tvar self = this, i, editors = self.editors, editor;\n
+\n
+\t\t\t// Remove all editors\n
+\t\t\tif (!selector) {\n
+\t\t\t\tfor (i = editors.length - 1; i >= 0; i--) {\n
+\t\t\t\t\tself.remove(editors[i]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Remove editors by selector\n
+\t\t\tif (typeof selector == "string") {\n
+\t\t\t\tselector = selector.selector || selector;\n
+\n
+\t\t\t\teach(DOM.select(selector), function(elm) {\n
+\t\t\t\t\teditor = editors[elm.id];\n
+\n
+\t\t\t\t\tif (editor) {\n
+\t\t\t\t\t\tself.remove(editor);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Remove specific editor\n
+\t\t\teditor = selector;\n
+\n
+\t\t\t// Not in the collection\n
+\t\t\tif (!editors[editor.id]) {\n
+\t\t\t\treturn null;\n
+\t\t\t}\n
+\n
+\t\t\t/**\n
+\t\t\t * Fires when an editor is removed from EditorManager collection.\n
+\t\t\t *\n
+\t\t\t * @event RemoveEditor\n
+\t\t\t * @param {Object} e Event arguments.\n
+\t\t\t */\n
+\t\t\tif (removeEditorFromList(editor)) {\n
+\t\t\t\tself.fire(\'RemoveEditor\', {editor: editor});\n
+\t\t\t}\n
+\n
+\t\t\tif (!editors.length) {\n
+\t\t\t\tDOM.unbind(window, \'beforeunload\', beforeUnloadDelegate);\n
+\t\t\t}\n
+\n
+\t\t\teditor.remove();\n
+\n
+\t\t\ttoggleGlobalEvents(editors, editors.length > 0);\n
+\n
+\t\t\treturn editor;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Executes a specific command on the currently active editor.\n
+\t\t *\n
+\t\t * @method execCommand\n
+\t\t * @param {String} c Command to perform for example Bold.\n
+\t\t * @param {Boolean} u Optional boolean state if a UI should be presented for the command or not.\n
+\t\t * @param {String} v Optional value parameter like for example an URL to a link.\n
+\t\t * @return {Boolean} true/false if the command was executed or not.\n
+\t\t */\n
+\t\texecCommand: function(cmd, ui, value) {\n
+\t\t\tvar self = this, editor = self.get(value);\n
+\n
+\t\t\t// Manager commands\n
+\t\t\tswitch (cmd) {\n
+\t\t\t\tcase "mceAddEditor":\n
+\t\t\t\t\tif (!self.get(value)) {\n
+\t\t\t\t\t\tnew Editor(value, self.settings, self).render();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn true;\n
+\n
+\t\t\t\tcase "mceRemoveEditor":\n
+\t\t\t\t\tif (editor) {\n
+\t\t\t\t\t\teditor.remove();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn true;\n
+\n
+\t\t\t\tcase \'mceToggleEditor\':\n
+\t\t\t\t\tif (!editor) {\n
+\t\t\t\t\t\tself.execCommand(\'mceAddEditor\', 0, value);\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (editor.isHidden()) {\n
+\t\t\t\t\t\teditor.show();\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\teditor.hide();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\t// Run command on active editor\n
+\t\t\tif (self.activeEditor) {\n
+\t\t\t\treturn self.activeEditor.execCommand(cmd, ui, value);\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Calls the save method on all editor instances in the collection. This can be useful when a form is to be submitted.\n
+\t\t *\n
+\t\t * @method triggerSave\n
+\t\t * @example\n
+\t\t * // Saves all contents\n
+\t\t * tinyMCE.triggerSave();\n
+\t\t */\n
+\t\ttriggerSave: function() {\n
+\t\t\teach(this.editors, function(editor) {\n
+\t\t\t\teditor.save();\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds a language pack, this gets called by the loaded language files like en.js.\n
+\t\t *\n
+\t\t * @method addI18n\n
+\t\t * @param {String} code Optional language code.\n
+\t\t * @param {Object} items Name/value object with translations.\n
+\t\t */\n
+\t\taddI18n: function(code, items) {\n
+\t\t\tI18n.add(code, items);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Translates the specified string using the language pack items.\n
+\t\t *\n
+\t\t * @method translate\n
+\t\t * @param {String/Array/Object} text String to translate\n
+\t\t * @return {String} Translated string.\n
+\t\t */\n
+\t\ttranslate: function(text) {\n
+\t\t\treturn I18n.translate(text);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the active editor instance and fires the deactivate/activate events.\n
+\t\t *\n
+\t\t * @method setActive\n
+\t\t * @param {tinymce.Editor} editor Editor instance to set as the active instance.\n
+\t\t */\n
+\t\tsetActive: function(editor) {\n
+\t\t\tvar activeEditor = this.activeEditor;\n
+\n
+\t\t\tif (this.activeEditor != editor) {\n
+\t\t\t\tif (activeEditor) {\n
+\t\t\t\t\tactiveEditor.fire(\'deactivate\', {relatedTarget: editor});\n
+\t\t\t\t}\n
+\n
+\t\t\t\teditor.fire(\'activate\', {relatedTarget: activeEditor});\n
+\t\t\t}\n
+\n
+\t\t\tthis.activeEditor = editor;\n
+\t\t}\n
+\t};\n
+\n
+\textend(EditorManager, Observable);\n
+\n
+\tEditorManager.setup();\n
+\n
+\t// Export EditorManager as tinymce/tinymce in global namespace\n
+\twindow.tinymce = window.tinyMCE = EditorManager;\n
+\n
+\treturn EditorManager;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16362</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EditorManager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

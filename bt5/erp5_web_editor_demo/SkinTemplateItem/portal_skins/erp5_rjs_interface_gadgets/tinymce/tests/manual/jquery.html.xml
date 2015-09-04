@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268162.23</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>jQuery test file</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<script src="//code.jquery.com/jquery-1.10.1.min.js"></script>\n
+<script src="../../js/tinymce/classes/jquery.tinymce.js"></script>\n
+<script>\n
+$(function() {\n
+\t$(\'textarea\').tinymce({\n
+\t\tscript_url: \'../../js/tinymce/tinymce.jquery.min.js\'\n
+\t});\n
+});\n
+</script>\n
+</head>\n
+<body>\n
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">\n
+\t<div>\n
+\t\t<div>\n
+\t\t\t<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%"></textarea>\n
+\t\t\t<br />\n
+\t\t\t<textarea id="elm2" name="elm2" rows="15" cols="80" style="width: 80%"></textarea>\n
+\t\t</div>\n
+\n
+\t\t<br />\n
+\t\t<input type="submit" name="save" value="Submit" />\n
+\t\t<input type="reset" name="reset" value="Reset" />\n
+\t</div>\n
+</form>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>815</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

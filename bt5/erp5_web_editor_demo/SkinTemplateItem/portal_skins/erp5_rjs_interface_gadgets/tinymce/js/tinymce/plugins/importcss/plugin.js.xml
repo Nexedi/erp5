@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268464.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'importcss\', function(editor) {\n
+\tvar self = this, each = tinymce.each;\n
+\n
+\tfunction compileFilter(filter) {\n
+\t\tif (typeof filter == "string") {\n
+\t\t\treturn function(value) {\n
+\t\t\t\treturn value.indexOf(filter) !== -1;\n
+\t\t\t};\n
+\t\t} else if (filter instanceof RegExp) {\n
+\t\t\treturn function(value) {\n
+\t\t\t\treturn filter.test(value);\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\treturn filter;\n
+\t}\n
+\n
+\tfunction getSelectors(doc, fileFilter) {\n
+\t\tvar selectors = [], contentCSSUrls = {};\n
+\n
+\t\tfunction append(styleSheet, imported) {\n
+\t\t\tvar href = styleSheet.href, rules;\n
+\n
+\t\t\tif (!href || !fileFilter(href, imported)) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\teach(styleSheet.imports, function(styleSheet) {\n
+\t\t\t\tappend(styleSheet, true);\n
+\t\t\t});\n
+\n
+\t\t\ttry {\n
+\t\t\t\trules = styleSheet.cssRules || styleSheet.rules;\n
+\t\t\t} catch (e) {\n
+\t\t\t\t// Firefox fails on rules to remote domain for example:\n
+\t\t\t\t// @import url(//fonts.googleapis.com/css?family=Pathway+Gothic+One);\n
+\t\t\t}\n
+\n
+\t\t\teach(rules, function(cssRule) {\n
+\t\t\t\tif (cssRule.styleSheet) {\n
+\t\t\t\t\tappend(cssRule.styleSheet, true);\n
+\t\t\t\t} else if (cssRule.selectorText) {\n
+\t\t\t\t\teach(cssRule.selectorText.split(\',\'), function(selector) {\n
+\t\t\t\t\t\tselectors.push(tinymce.trim(selector));\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\teach(editor.contentCSS, function(url) {\n
+\t\t\tcontentCSSUrls[url] = true;\n
+\t\t});\n
+\n
+\t\tif (!fileFilter) {\n
+\t\t\tfileFilter = function(href, imported) {\n
+\t\t\t\treturn imported || contentCSSUrls[href];\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\ttry {\n
+\t\t\teach(doc.styleSheets, function(styleSheet) {\n
+\t\t\t\tappend(styleSheet);\n
+\t\t\t});\n
+\t\t} catch (e) {\n
+\t\t\t// Ignore\n
+\t\t}\n
+\n
+\t\treturn selectors;\n
+\t}\n
+\n
+\tfunction convertSelectorToFormat(selectorText) {\n
+\t\tvar format;\n
+\n
+\t\t// Parse simple element.class1, .class1\n
+\t\tvar selector = /^(?:([a-z0-9\\-_]+))?(\\.[a-z0-9_\\-\\.]+)$/i.exec(selectorText);\n
+\t\tif (!selector) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tvar elementName = selector[1];\n
+\t\tvar classes = selector[2].substr(1).split(\'.\').join(\' \');\n
+\t\tvar inlineSelectorElements = tinymce.makeMap(\'a,img\');\n
+\n
+\t\t// element.class - Produce block formats\n
+\t\tif (selector[1]) {\n
+\t\t\tformat = {\n
+\t\t\t\ttitle: selectorText\n
+\t\t\t};\n
+\n
+\t\t\tif (editor.schema.getTextBlockElements()[elementName]) {\n
+\t\t\t\t// Text block format ex: h1.class1\n
+\t\t\t\tformat.block = elementName;\n
+\t\t\t} else if (editor.schema.getBlockElements()[elementName] || inlineSelectorElements[elementName.toLowerCase()]) {\n
+\t\t\t\t// Block elements such as table.class and special inline elements such as a.class or img.class\n
+\t\t\t\tformat.selector = elementName;\n
+\t\t\t} else {\n
+\t\t\t\t// Inline format strong.class1\n
+\t\t\t\tformat.inline = elementName;\n
+\t\t\t}\n
+\t\t} else if (selector[2]) {\n
+\t\t\t// .class - Produce inline span with classes\n
+\t\t\tformat = {\n
+\t\t\t\tinline: \'span\',\n
+\t\t\t\ttitle: selectorText.substr(1),\n
+\t\t\t\tclasses: classes\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\t// Append to or override class attribute\n
+\t\tif (editor.settings.importcss_merge_classes !== false) {\n
+\t\t\tformat.classes = classes;\n
+\t\t} else {\n
+\t\t\tformat.attributes = {"class": classes};\n
+\t\t}\n
+\n
+\t\treturn format;\n
+\t}\n
+\n
+\teditor.on(\'renderFormatsMenu\', function(e) {\n
+\t\tvar settings = editor.settings, selectors = {};\n
+\t\tvar selectorConverter = settings.importcss_selector_converter || convertSelectorToFormat;\n
+\t\tvar selectorFilter = compileFilter(settings.importcss_selector_filter), ctrl = e.control;\n
+\n
+\t\tif (!editor.settings.importcss_append) {\n
+\t\t\tctrl.items().remove();\n
+\t\t}\n
+\n
+\t\t// Setup new groups collection by cloning the configured one\n
+\t\tvar groups = [];\n
+\t\ttinymce.each(settings.importcss_groups, function(group) {\n
+\t\t\tgroup = tinymce.extend({}, group);\n
+\t\t\tgroup.filter = compileFilter(group.filter);\n
+\t\t\tgroups.push(group);\n
+\t\t});\n
+\n
+\t\teach(getSelectors(e.doc || editor.getDoc(), compileFilter(settings.importcss_file_filter)), function(selector) {\n
+\t\t\tif (selector.indexOf(\'.mce-\') === -1) {\n
+\t\t\t\tif (!selectors[selector] && (!selectorFilter || selectorFilter(selector))) {\n
+\t\t\t\t\tvar format = selectorConverter.call(self, selector), menu;\n
+\n
+\t\t\t\t\tif (format) {\n
+\t\t\t\t\t\tvar formatName = format.name || tinymce.DOM.uniqueId();\n
+\n
+\t\t\t\t\t\tif (groups) {\n
+\t\t\t\t\t\t\tfor (var i = 0; i < groups.length; i++) {\n
+\t\t\t\t\t\t\t\tif (!groups[i].filter || groups[i].filter(selector)) {\n
+\t\t\t\t\t\t\t\t\tif (!groups[i].item) {\n
+\t\t\t\t\t\t\t\t\t\tgroups[i].item = {text: groups[i].title, menu: []};\n
+\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\tmenu = groups[i].item.menu;\n
+\t\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\teditor.formatter.register(formatName, format);\n
+\n
+\t\t\t\t\t\tvar menuItem = tinymce.extend({}, ctrl.settings.itemDefaults, {\n
+\t\t\t\t\t\t\ttext: format.title,\n
+\t\t\t\t\t\t\tformat: formatName\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\tif (menu) {\n
+\t\t\t\t\t\t\tmenu.push(menuItem);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tctrl.add(menuItem);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tselectors[selector] = true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teach(groups, function(group) {\n
+\t\t\tctrl.add(group.item);\n
+\t\t});\n
+\n
+\t\te.control.renderNew();\n
+\t});\n
+\n
+\t// Expose default convertSelectorToFormat implementation\n
+\tself.convertSelectorToFormat = convertSelectorToFormat;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4991</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

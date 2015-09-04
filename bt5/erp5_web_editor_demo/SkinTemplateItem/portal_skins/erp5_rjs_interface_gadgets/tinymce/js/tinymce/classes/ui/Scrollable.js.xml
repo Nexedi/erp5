@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268304.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Scrollable.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Scrollable.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This mixin makes controls scrollable using custom scrollbars.\n
+ *\n
+ * @-x-less Scrollable.less\n
+ * @mixin tinymce.ui.Scrollable\n
+ */\n
+define("tinymce/ui/Scrollable", [\n
+\t"tinymce/dom/DomQuery",\n
+\t"tinymce/ui/DragHelper"\n
+], function($, DragHelper) {\n
+\t"use strict";\n
+\n
+\treturn {\n
+\t\tinit: function() {\n
+\t\t\tvar self = this;\n
+\t\t\tself.on(\'repaint\', self.renderScroll);\n
+\t\t},\n
+\n
+\t\trenderScroll: function() {\n
+\t\t\tvar self = this, margin = 2;\n
+\n
+\t\t\tfunction repaintScroll() {\n
+\t\t\t\tvar hasScrollH, hasScrollV, bodyElm;\n
+\n
+\t\t\t\tfunction repaintAxis(axisName, posName, sizeName, contentSizeName, hasScroll, ax) {\n
+\t\t\t\t\tvar containerElm, scrollBarElm, scrollThumbElm;\n
+\t\t\t\t\tvar containerSize, scrollSize, ratio, rect;\n
+\t\t\t\t\tvar posNameLower, sizeNameLower;\n
+\n
+\t\t\t\t\tscrollBarElm = self.getEl(\'scroll\' + axisName);\n
+\t\t\t\t\tif (scrollBarElm) {\n
+\t\t\t\t\t\tposNameLower = posName.toLowerCase();\n
+\t\t\t\t\t\tsizeNameLower = sizeName.toLowerCase();\n
+\n
+\t\t\t\t\t\t$(self.getEl(\'absend\')).css(posNameLower, self.layoutRect()[contentSizeName] - 1);\n
+\n
+\t\t\t\t\t\tif (!hasScroll) {\n
+\t\t\t\t\t\t\t$(scrollBarElm).css(\'display\', \'none\');\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t$(scrollBarElm).css(\'display\', \'block\');\n
+\t\t\t\t\t\tcontainerElm = self.getEl(\'body\');\n
+\t\t\t\t\t\tscrollThumbElm = self.getEl(\'scroll\' + axisName + "t");\n
+\t\t\t\t\t\tcontainerSize = containerElm["client" + sizeName] - (margin * 2);\n
+\t\t\t\t\t\tcontainerSize -= hasScrollH && hasScrollV ? scrollBarElm["client" + ax] : 0;\n
+\t\t\t\t\t\tscrollSize = containerElm["scroll" + sizeName];\n
+\t\t\t\t\t\tratio = containerSize / scrollSize;\n
+\n
+\t\t\t\t\t\trect = {};\n
+\t\t\t\t\t\trect[posNameLower] = containerElm["offset" + posName] + margin;\n
+\t\t\t\t\t\trect[sizeNameLower] = containerSize;\n
+\t\t\t\t\t\t$(scrollBarElm).css(rect);\n
+\n
+\t\t\t\t\t\trect = {};\n
+\t\t\t\t\t\trect[posNameLower] = containerElm["scroll" + posName] * ratio;\n
+\t\t\t\t\t\trect[sizeNameLower] = containerSize * ratio;\n
+\t\t\t\t\t\t$(scrollThumbElm).css(rect);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tbodyElm = self.getEl(\'body\');\n
+\t\t\t\thasScrollH = bodyElm.scrollWidth > bodyElm.clientWidth;\n
+\t\t\t\thasScrollV = bodyElm.scrollHeight > bodyElm.clientHeight;\n
+\n
+\t\t\t\trepaintAxis("h", "Left", "Width", "contentW", hasScrollH, "Height");\n
+\t\t\t\trepaintAxis("v", "Top", "Height", "contentH", hasScrollV, "Width");\n
+\t\t\t}\n
+\n
+\t\t\tfunction addScroll() {\n
+\t\t\t\tfunction addScrollAxis(axisName, posName, sizeName, deltaPosName, ax) {\n
+\t\t\t\t\tvar scrollStart, axisId = self._id + \'-scroll\' + axisName, prefix = self.classPrefix;\n
+\n
+\t\t\t\t\t$(self.getEl()).append(\n
+\t\t\t\t\t\t\'<div id="\' + axisId + \'" class="\' + prefix + \'scrollbar \' + prefix + \'scrollbar-\' + axisName + \'">\' +\n
+\t\t\t\t\t\t\t\'<div id="\' + axisId + \'t" class="\' + prefix + \'scrollbar-thumb"></div>\' +\n
+\t\t\t\t\t\t\'</div>\'\n
+\t\t\t\t\t);\n
+\n
+\t\t\t\t\tself.draghelper = new DragHelper(axisId + \'t\', {\n
+\t\t\t\t\t\tstart: function() {\n
+\t\t\t\t\t\t\tscrollStart = self.getEl(\'body\')["scroll" + posName];\n
+\t\t\t\t\t\t\t$(\'#\' + axisId).addClass(prefix + \'active\');\n
+\t\t\t\t\t\t},\n
+\n
+\t\t\t\t\t\tdrag: function(e) {\n
+\t\t\t\t\t\t\tvar ratio, hasScrollH, hasScrollV, containerSize, layoutRect = self.layoutRect();\n
+\n
+\t\t\t\t\t\t\thasScrollH = layoutRect.contentW > layoutRect.innerW;\n
+\t\t\t\t\t\t\thasScrollV = layoutRect.contentH > layoutRect.innerH;\n
+\t\t\t\t\t\t\tcontainerSize = self.getEl(\'body\')["client" + sizeName] - (margin * 2);\n
+\t\t\t\t\t\t\tcontainerSize -= hasScrollH && hasScrollV ? self.getEl(\'scroll\' + axisName)["client" + ax] : 0;\n
+\n
+\t\t\t\t\t\t\tratio = containerSize / self.getEl(\'body\')["scroll" + sizeName];\n
+\t\t\t\t\t\t\tself.getEl(\'body\')["scroll" + posName] = scrollStart + (e["delta" + deltaPosName] / ratio);\n
+\t\t\t\t\t\t},\n
+\n
+\t\t\t\t\t\tstop: function() {\n
+\t\t\t\t\t\t\t$(\'#\' + axisId).removeClass(prefix + \'active\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.classes.add(\'scroll\');\n
+\n
+\t\t\t\taddScrollAxis("v", "Top", "Height", "Y", "Width");\n
+\t\t\t\taddScrollAxis("h", "Left", "Width", "X", "Height");\n
+\t\t\t}\n
+\n
+\t\t\tif (self.settings.autoScroll) {\n
+\t\t\t\tif (!self._hasScroll) {\n
+\t\t\t\t\tself._hasScroll = true;\n
+\t\t\t\t\taddScroll();\n
+\n
+\t\t\t\t\tself.on(\'wheel\', function(e) {\n
+\t\t\t\t\t\tvar bodyEl = self.getEl(\'body\');\n
+\n
+\t\t\t\t\t\tbodyEl.scrollLeft += (e.deltaX || 0) * 10;\n
+\t\t\t\t\t\tbodyEl.scrollTop += e.deltaY * 10;\n
+\n
+\t\t\t\t\t\trepaintScroll();\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t$(self.getEl(\'body\')).on("scroll", repaintScroll);\n
+\t\t\t\t}\n
+\n
+\t\t\t\trepaintScroll();\n
+\t\t\t}\n
+\t\t}\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4268</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Scrollable.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

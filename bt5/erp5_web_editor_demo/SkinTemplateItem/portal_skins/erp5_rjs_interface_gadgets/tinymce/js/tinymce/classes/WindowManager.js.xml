@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268302.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>WindowManager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * WindowManager.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.\n
+ *\n
+ * @class tinymce.WindowManager\n
+ * @example\n
+ * // Opens a new dialog with the file.htm file and the size 320x240\n
+ * // It also adds a custom parameter this can be retrieved by using tinyMCEPopup.getWindowArg inside the dialog.\n
+ * tinymce.activeEditor.windowManager.open({\n
+ *    url: \'file.htm\',\n
+ *    width: 320,\n
+ *    height: 240\n
+ * }, {\n
+ *    custom_param: 1\n
+ * });\n
+ *\n
+ * // Displays an alert box using the active editors window manager instance\n
+ * tinymce.activeEditor.windowManager.alert(\'Hello world!\');\n
+ *\n
+ * // Displays an confirm box and an alert message will be displayed depending on what you choose in the confirm\n
+ * tinymce.activeEditor.windowManager.confirm("Do you want to do something", function(s) {\n
+ *    if (s)\n
+ *       tinymce.activeEditor.windowManager.alert("Ok");\n
+ *    else\n
+ *       tinymce.activeEditor.windowManager.alert("Cancel");\n
+ * });\n
+ */\n
+define("tinymce/WindowManager", [\n
+\t"tinymce/ui/Window",\n
+\t"tinymce/ui/MessageBox"\n
+], function(Window, MessageBox) {\n
+\treturn function(editor) {\n
+\t\tvar self = this, windows = [];\n
+\n
+\t\tfunction getTopMostWindow() {\n
+\t\t\tif (windows.length) {\n
+\t\t\t\treturn windows[windows.length - 1];\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tself.windows = windows;\n
+\n
+\t\teditor.on(\'remove\', function() {\n
+\t\t\tvar i = windows.length;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\twindows[i].close();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t/**\n
+\t\t * Opens a new window.\n
+\t\t *\n
+\t\t * @method open\n
+\t\t * @param {Object} args Optional name/value settings collection contains things like width/height/url etc.\n
+\t\t * @option {String} title Window title.\n
+\t\t * @option {String} file URL of the file to open in the window.\n
+\t\t * @option {Number} width Width in pixels.\n
+\t\t * @option {Number} height Height in pixels.\n
+\t\t * @option {Boolean} autoScroll Specifies whether the popup window can have scrollbars if required (i.e. content\n
+\t\t * larger than the popup size specified).\n
+\t\t */\n
+\t\tself.open = function(args, params) {\n
+\t\t\tvar win;\n
+\n
+\t\t\teditor.editorManager.setActive(editor);\n
+\n
+\t\t\targs.title = args.title || \' \';\n
+\n
+\t\t\t// Handle URL\n
+\t\t\targs.url = args.url || args.file; // Legacy\n
+\t\t\tif (args.url) {\n
+\t\t\t\targs.width = parseInt(args.width || 320, 10);\n
+\t\t\t\targs.height = parseInt(args.height || 240, 10);\n
+\t\t\t}\n
+\n
+\t\t\t// Handle body\n
+\t\t\tif (args.body) {\n
+\t\t\t\targs.items = {\n
+\t\t\t\t\tdefaults: args.defaults,\n
+\t\t\t\t\ttype: args.bodyType || \'form\',\n
+\t\t\t\t\titems: args.body\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\tif (!args.url && !args.buttons) {\n
+\t\t\t\targs.buttons = [\n
+\t\t\t\t\t{text: \'Ok\', subtype: \'primary\', onclick: function() {\n
+\t\t\t\t\t\twin.find(\'form\')[0].submit();\n
+\t\t\t\t\t}},\n
+\n
+\t\t\t\t\t{text: \'Cancel\', onclick: function() {\n
+\t\t\t\t\t\twin.close();\n
+\t\t\t\t\t}}\n
+\t\t\t\t];\n
+\t\t\t}\n
+\n
+\t\t\twin = new Window(args);\n
+\t\t\twindows.push(win);\n
+\n
+\t\t\twin.on(\'close\', function() {\n
+\t\t\t\tvar i = windows.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tif (windows[i] === win) {\n
+\t\t\t\t\t\twindows.splice(i, 1);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!windows.length) {\n
+\t\t\t\t\teditor.focus();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// Handle data\n
+\t\t\tif (args.data) {\n
+\t\t\t\twin.on(\'postRender\', function() {\n
+\t\t\t\t\tthis.find(\'*\').each(function(ctrl) {\n
+\t\t\t\t\t\tvar name = ctrl.name();\n
+\n
+\t\t\t\t\t\tif (name in args.data) {\n
+\t\t\t\t\t\t\tctrl.value(args.data[name]);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// store args and parameters\n
+\t\t\twin.features = args || {};\n
+\t\t\twin.params = params || {};\n
+\n
+\t\t\t// Takes a snapshot in the FocusManager of the selection before focus is lost to dialog\n
+\t\t\tif (windows.length === 1) {\n
+\t\t\t\teditor.nodeChanged();\n
+\t\t\t}\n
+\n
+\t\t\treturn win.renderTo().reflow();\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Creates a alert dialog. Please don\'t use the blocking behavior of this\n
+\t\t * native version use the callback method instead then it can be extended.\n
+\t\t *\n
+\t\t * @method alert\n
+\t\t * @param {String} message Text to display in the new alert dialog.\n
+\t\t * @param {function} callback Callback function to be executed after the user has selected ok.\n
+\t\t * @param {Object} scope Optional scope to execute the callback in.\n
+\t\t * @example\n
+\t\t * // Displays an alert box using the active editors window manager instance\n
+\t\t * tinymce.activeEditor.windowManager.alert(\'Hello world!\');\n
+\t\t */\n
+\t\tself.alert = function(message, callback, scope) {\n
+\t\t\tMessageBox.alert(message, function() {\n
+\t\t\t\tif (callback) {\n
+\t\t\t\t\tcallback.call(scope || this);\n
+\t\t\t\t} else {\n
+\t\t\t\t\teditor.focus();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Creates a confirm dialog. Please don\'t use the blocking behavior of this\n
+\t\t * native version use the callback method instead then it can be extended.\n
+\t\t *\n
+\t\t * @method confirm\n
+\t\t * @param {String} messageText to display in the new confirm dialog.\n
+\t\t * @param {function} callback Callback function to be executed after the user has selected ok or cancel.\n
+\t\t * @param {Object} scope Optional scope to execute the callback in.\n
+\t\t * @example\n
+\t\t * // Displays an confirm box and an alert message will be displayed depending on what you choose in the confirm\n
+\t\t * tinymce.activeEditor.windowManager.confirm("Do you want to do something", function(s) {\n
+\t\t *    if (s)\n
+\t\t *       tinymce.activeEditor.windowManager.alert("Ok");\n
+\t\t *    else\n
+\t\t *       tinymce.activeEditor.windowManager.alert("Cancel");\n
+\t\t * });\n
+\t\t */\n
+\t\tself.confirm = function(message, callback, scope) {\n
+\t\t\tMessageBox.confirm(message, function(state) {\n
+\t\t\t\tcallback.call(scope || this, state);\n
+\t\t\t});\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Closes the top most window.\n
+\t\t *\n
+\t\t * @method close\n
+\t\t */\n
+\t\tself.close = function() {\n
+\t\t\tif (getTopMostWindow()) {\n
+\t\t\t\tgetTopMostWindow().close();\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns the params of the last window open call. This can be used in iframe based\n
+\t\t * dialog to get params passed from the tinymce plugin.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * var dialogArguments = top.tinymce.activeEditor.windowManager.getParams();\n
+\t\t *\n
+\t\t * @method getParams\n
+\t\t * @return {Object} Name/value object with parameters passed from windowManager.open call.\n
+\t\t */\n
+\t\tself.getParams = function() {\n
+\t\t\treturn getTopMostWindow() ? getTopMostWindow().params : null;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Sets the params of the last opened window.\n
+\t\t *\n
+\t\t * @method setParams\n
+\t\t * @param {Object} params Params object to set for the last opened window.\n
+\t\t */\n
+\t\tself.setParams = function(params) {\n
+\t\t\tif (getTopMostWindow()) {\n
+\t\t\t\tgetTopMostWindow().params = params;\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns the currently opened window objects.\n
+\t\t *\n
+\t\t * @method getWindows\n
+\t\t * @return {Array} Array of the currently opened windows.\n
+\t\t */\n
+\t\tself.getWindows = function() {\n
+\t\t\treturn windows;\n
+\t\t};\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6622</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>WindowManager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

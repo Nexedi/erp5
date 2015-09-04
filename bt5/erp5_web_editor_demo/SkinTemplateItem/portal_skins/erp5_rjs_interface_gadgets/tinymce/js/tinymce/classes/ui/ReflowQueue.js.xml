@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268305.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ReflowQueue.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ReflowQueue.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class will automatically reflow controls on the next animation frame within a few milliseconds on older browsers.\n
+ * If the user manually reflows then the automatic reflow will be cancelled. This class is unsed internally when various control states\n
+ * changes that triggers a reflow.\n
+ *\n
+ * @class tinymce.ui.ReflowQueue\n
+ * @static\n
+ */\n
+define("tinymce/ui/ReflowQueue", [\n
+], function() {\n
+\tvar dirtyCtrls = {}, animationFrameRequested;\n
+\n
+\tfunction requestAnimationFrame(callback, element) {\n
+\t\tvar i, requestAnimationFrameFunc = window.requestAnimationFrame, vendors = [\'ms\', \'moz\', \'webkit\'];\n
+\n
+\t\tfunction featurefill(callback) {\n
+\t\t\twindow.setTimeout(callback, 0);\n
+\t\t}\n
+\n
+\t\tfor (i = 0; i < vendors.length && !requestAnimationFrameFunc; i++) {\n
+\t\t\trequestAnimationFrameFunc = window[vendors[i] + \'RequestAnimationFrame\'];\n
+\t\t}\n
+\n
+\t\tif (!requestAnimationFrameFunc) {\n
+\t\t\trequestAnimationFrameFunc = featurefill;\n
+\t\t}\n
+\n
+\t\trequestAnimationFrameFunc(callback, element);\n
+\t}\n
+\n
+\treturn {\n
+\t\t/**\n
+\t\t * Adds a control to the next automatic reflow call. This is the control that had a state\n
+\t\t * change for example if the control was hidden/shown.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {tinymce.ui.Control} ctrl Control to add to queue.\n
+\t\t */\n
+\t\tadd: function(ctrl) {\n
+\t\t\tvar parent = ctrl.parent();\n
+\n
+\t\t\tif (parent) {\n
+\t\t\t\tif (!parent._layout || parent._layout.isNative()) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!dirtyCtrls[parent._id]) {\n
+\t\t\t\t\tdirtyCtrls[parent._id] = parent;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!animationFrameRequested) {\n
+\t\t\t\t\tanimationFrameRequested = true;\n
+\n
+\t\t\t\t\trequestAnimationFrame(function() {\n
+\t\t\t\t\t\tvar id, ctrl;\n
+\n
+\t\t\t\t\t\tanimationFrameRequested = false;\n
+\n
+\t\t\t\t\t\tfor (id in dirtyCtrls) {\n
+\t\t\t\t\t\t\tctrl = dirtyCtrls[id];\n
+\n
+\t\t\t\t\t\t\tif (ctrl.state.get(\'rendered\')) {\n
+\t\t\t\t\t\t\t\tctrl.reflow();\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tdirtyCtrls = {};\n
+\t\t\t\t\t}, document.body);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the specified control from the automatic reflow. This will happen when for example the user\n
+\t\t * manually triggers a reflow.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @param {tinymce.ui.Control} ctrl Control to remove from queue.\n
+\t\t */\n
+\t\tremove: function(ctrl) {\n
+\t\t\tif (dirtyCtrls[ctrl._id]) {\n
+\t\t\t\tdelete dirtyCtrls[ctrl._id];\n
+\t\t\t}\n
+\t\t}\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2406</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ReflowQueue.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

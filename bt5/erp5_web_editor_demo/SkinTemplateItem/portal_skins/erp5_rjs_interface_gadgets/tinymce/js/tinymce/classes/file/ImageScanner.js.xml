@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268357.46</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ImageScanner.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ImageScanner.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Finds images with data uris or blob uris. If data uris are found it will convert them into blob uris.\n
+ *\n
+ * @private\n
+ * @class tinymce.file.ImageScanner\n
+ */\n
+define("tinymce/file/ImageScanner", [\n
+\t"tinymce/util/Promise",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/file/Conversions"\n
+], function(Promise, Tools, Conversions) {\n
+\tvar count = 0;\n
+\n
+\tfunction mapAsync(array, fn) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar result = [];\n
+\n
+\t\t\tfunction next(index) {\n
+\t\t\t\tfn(array[index], function(value) {\n
+\t\t\t\t\tresult.push(value);\n
+\n
+\t\t\t\t\tif (index < array.length - 1) {\n
+\t\t\t\t\t\tnext(index + 1);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tresolve(result);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tif (array.length === 0) {\n
+\t\t\t\tresolve(result);\n
+\t\t\t} else {\n
+\t\t\t\tnext(0);\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\treturn {\n
+\t\tfindAll: function(elm, blobCache) {\n
+\t\t\tfunction imageToBlobInfo(img, resolve) {\n
+\t\t\t\tvar base64, blobInfo, blobInfoId;\n
+\n
+\t\t\t\tif (img.src.indexOf(\'blob:\') === 0) {\n
+\t\t\t\t\tblobInfo = blobCache.getByUri(img.src);\n
+\n
+\t\t\t\t\tif (blobInfo) {\n
+\t\t\t\t\t\tresolve({\n
+\t\t\t\t\t\t\timage: img,\n
+\t\t\t\t\t\t\tblobInfo: blobInfo\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tblobInfoId = \'blobid\' + (count++);\n
+\t\t\t\tbase64 = Conversions.parseDataUri(img.src).data;\n
+\t\t\t\tblobInfo = blobCache.findFirst(function(cachedBlobInfo) {\n
+\t\t\t\t\treturn cachedBlobInfo.base64() === base64;\n
+\t\t\t\t});\n
+\n
+\t\t\t\tif (blobInfo) {\n
+\t\t\t\t\tresolve({\n
+\t\t\t\t\t\timage: img,\n
+\t\t\t\t\t\tblobInfo: blobInfo\n
+\t\t\t\t\t});\n
+\t\t\t\t} else {\n
+\t\t\t\t\tConversions.uriToBlob(img.src).then(function(blob) {\n
+\t\t\t\t\t\tvar blobInfo = blobCache.create(blobInfoId, blob, base64);\n
+\n
+\t\t\t\t\t\tblobCache.add(blobInfo);\n
+\n
+\t\t\t\t\t\tresolve({\n
+\t\t\t\t\t\t\timage: img,\n
+\t\t\t\t\t\t\tblobInfo: blobInfo\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn mapAsync(Tools.filter(elm.getElementsByTagName(\'img\'), function(img) {\n
+\t\t\t\treturn img.src && (img.src.indexOf(\'data:\') === 0 || img.src.indexOf(\'blob:\') === 0);\n
+\t\t\t}), imageToBlobInfo);\n
+\t\t}\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2057</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ImageScanner.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

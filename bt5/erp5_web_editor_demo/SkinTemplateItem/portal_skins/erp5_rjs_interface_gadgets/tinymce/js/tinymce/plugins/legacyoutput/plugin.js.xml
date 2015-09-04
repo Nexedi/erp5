@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268389.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ *\n
+ * This plugin will force TinyMCE to produce deprecated legacy output such as font elements, u elements, align\n
+ * attributes and so forth. There are a few cases where these old items might be needed for example in email applications or with Flash\n
+ *\n
+ * However you should NOT use this plugin if you are building some system that produces web contents such as a CMS. All these elements are\n
+ * not apart of the newer specifications for HTML and XHTML.\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+(function(tinymce) {\n
+\t// Override inline_styles setting to force TinyMCE to produce deprecated contents\n
+\ttinymce.on(\'AddEditor\', function(e) {\n
+\t\te.editor.settings.inline_styles = false;\n
+\t});\n
+\n
+\ttinymce.PluginManager.add(\'legacyoutput\', function(editor, url, $) {\n
+\t\teditor.on(\'init\', function() {\n
+\t\t\tvar alignElements = \'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img\',\n
+\t\t\t\tfontSizes = tinymce.explode(editor.settings.font_size_style_values),\n
+\t\t\t\tschema = editor.schema;\n
+\n
+\t\t\t// Override some internal formats to produce legacy elements and attributes\n
+\t\t\teditor.formatter.register({\n
+\t\t\t\t// Change alignment formats to use the deprecated align attribute\n
+\t\t\t\talignleft: {selector: alignElements, attributes: {align: \'left\'}},\n
+\t\t\t\taligncenter: {selector: alignElements, attributes: {align: \'center\'}},\n
+\t\t\t\talignright: {selector: alignElements, attributes: {align: \'right\'}},\n
+\t\t\t\talignjustify: {selector: alignElements, attributes: {align: \'justify\'}},\n
+\n
+\t\t\t\t// Change the basic formatting elements to use deprecated element types\n
+\t\t\t\tbold: [\n
+\t\t\t\t\t{inline: \'b\', remove: \'all\'},\n
+\t\t\t\t\t{inline: \'strong\', remove: \'all\'},\n
+\t\t\t\t\t{inline: \'span\', styles: {fontWeight: \'bold\'}}\n
+\t\t\t\t],\n
+\t\t\t\titalic: [\n
+\t\t\t\t\t{inline: \'i\', remove: \'all\'},\n
+\t\t\t\t\t{inline: \'em\', remove: \'all\'},\n
+\t\t\t\t\t{inline: \'span\', styles: {fontStyle: \'italic\'}}\n
+\t\t\t\t],\n
+\t\t\t\tunderline: [\n
+\t\t\t\t\t{inline: \'u\', remove: \'all\'},\n
+\t\t\t\t\t{inline: \'span\', styles: {textDecoration: \'underline\'}, exact: true}\n
+\t\t\t\t],\n
+\t\t\t\tstrikethrough: [\n
+\t\t\t\t\t{inline: \'strike\', remove: \'all\'},\n
+\t\t\t\t\t{inline: \'span\', styles: {textDecoration: \'line-through\'}, exact: true}\n
+\t\t\t\t],\n
+\n
+\t\t\t\t// Change font size and font family to use the deprecated font element\n
+\t\t\t\tfontname: {inline: \'font\', attributes: {face: \'%value\'}},\n
+\t\t\t\tfontsize: {\n
+\t\t\t\t\tinline: \'font\',\n
+\t\t\t\t\tattributes: {\n
+\t\t\t\t\t\tsize: function(vars) {\n
+\t\t\t\t\t\t\treturn tinymce.inArray(fontSizes, vars.value) + 1;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t},\n
+\n
+\t\t\t\t// Setup font elements for colors as well\n
+\t\t\t\tforecolor: {inline: \'font\', attributes: {color: \'%value\'}},\n
+\t\t\t\thilitecolor: {inline: \'font\', styles: {backgroundColor: \'%value\'}}\n
+\t\t\t});\n
+\n
+\t\t\t// Check that deprecated elements are allowed if not add them\n
+\t\t\ttinymce.each(\'b,i,u,strike\'.split(\',\'), function(name) {\n
+\t\t\t\tschema.addValidElements(name + \'[*]\');\n
+\t\t\t});\n
+\n
+\t\t\t// Add font element if it\'s missing\n
+\t\t\tif (!schema.getElementRule("font")) {\n
+\t\t\t\tschema.addValidElements("font[face|size|color|style]");\n
+\t\t\t}\n
+\n
+\t\t\t// Add the missing and depreacted align attribute for the serialization engine\n
+\t\t\ttinymce.each(alignElements.split(\',\'), function(name) {\n
+\t\t\t\tvar rule = schema.getElementRule(name);\n
+\n
+\t\t\t\tif (rule) {\n
+\t\t\t\t\tif (!rule.attributes.align) {\n
+\t\t\t\t\t\trule.attributes.align = {};\n
+\t\t\t\t\t\trule.attributesOrder.push(\'align\');\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t});\n
+\n
+\t\teditor.addButton(\'fontsizeselect\', function() {\n
+\t\t\tvar items = [], defaultFontsizeFormats = \'8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7\';\n
+\t\t\tvar fontsize_formats = editor.settings.fontsize_formats || defaultFontsizeFormats;\n
+\n
+\t\t\teditor.$.each(fontsize_formats.split(\' \'), function(i, item) {\n
+\t\t\t\tvar text = item, value = item;\n
+\t\t\t\tvar values = item.split(\'=\');\n
+\n
+\t\t\t\tif (values.length > 1) {\n
+\t\t\t\t\ttext = values[0];\n
+\t\t\t\t\tvalue = values[1];\n
+\t\t\t\t}\n
+\n
+\t\t\t\titems.push({text: text, value: value});\n
+\t\t\t});\n
+\n
+\t\t\treturn {\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\ttext: \'Font Sizes\',\n
+\t\t\t\ttooltip: \'Font Sizes\',\n
+\t\t\t\tvalues: items,\n
+\t\t\t\tfixedWidth: true,\n
+\t\t\t\tonPostRender: function() {\n
+\t\t\t\t\tvar self = this;\n
+\n
+\t\t\t\t\teditor.on(\'NodeChange\', function() {\n
+\t\t\t\t\t\tvar fontElm;\n
+\n
+\t\t\t\t\t\tfontElm = editor.dom.getParent(editor.selection.getNode(), \'font\');\n
+\t\t\t\t\t\tif (fontElm) {\n
+\t\t\t\t\t\t\tself.value(fontElm.size);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tself.value(\'\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t},\n
+\t\t\t\tonclick: function(e) {\n
+\t\t\t\t\tif (e.control.settings.value) {\n
+\t\t\t\t\t\teditor.execCommand(\'FontSize\', false, e.control.settings.value);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t});\n
+\n
+\t\teditor.addButton(\'fontselect\', function() {\n
+\t\t\tfunction createFormats(formats) {\n
+\t\t\t\tformats = formats.replace(/;$/, \'\').split(\';\');\n
+\n
+\t\t\t\tvar i = formats.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tformats[i] = formats[i].split(\'=\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn formats;\n
+\t\t\t}\n
+\n
+\t\t\tvar defaultFontsFormats =\n
+\t\t\t\t\'Andale Mono=andale mono,monospace;\' +\n
+\t\t\t\t\'Arial=arial,helvetica,sans-serif;\' +\n
+\t\t\t\t\'Arial Black=arial black,sans-serif;\' +\n
+\t\t\t\t\'Book Antiqua=book antiqua,palatino,serif;\' +\n
+\t\t\t\t\'Comic Sans MS=comic sans ms,sans-serif;\' +\n
+\t\t\t\t\'Courier New=courier new,courier,monospace;\' +\n
+\t\t\t\t\'Georgia=georgia,palatino,serif;\' +\n
+\t\t\t\t\'Helvetica=helvetica,arial,sans-serif;\' +\n
+\t\t\t\t\'Impact=impact,sans-serif;\' +\n
+\t\t\t\t\'Symbol=symbol;\' +\n
+\t\t\t\t\'Tahoma=tahoma,arial,helvetica,sans-serif;\' +\n
+\t\t\t\t\'Terminal=terminal,monaco,monospace;\' +\n
+\t\t\t\t\'Times New Roman=times new roman,times,serif;\' +\n
+\t\t\t\t\'Trebuchet MS=trebuchet ms,geneva,sans-serif;\' +\n
+\t\t\t\t\'Verdana=verdana,geneva,sans-serif;\' +\n
+\t\t\t\t\'Webdings=webdings;\' +\n
+\t\t\t\t\'Wingdings=wingdings,zapf dingbats\';\n
+\n
+\t\t\tvar items = [], fonts = createFormats(editor.settings.font_formats || defaultFontsFormats);\n
+\n
+\t\t\t$.each(fonts, function(i, font) {\n
+\t\t\t\titems.push({\n
+\t\t\t\t\ttext: {raw: font[0]},\n
+\t\t\t\t\tvalue: font[1],\n
+\t\t\t\t\ttextStyle: font[1].indexOf(\'dings\') == -1 ? \'font-family:\' + font[1] : \'\'\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\treturn {\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\ttext: \'Font Family\',\n
+\t\t\t\ttooltip: \'Font Family\',\n
+\t\t\t\tvalues: items,\n
+\t\t\t\tfixedWidth: true,\n
+\t\t\t\tonPostRender: function() {\n
+\t\t\t\t\tvar self = this;\n
+\n
+\t\t\t\t\teditor.on(\'NodeChange\', function() {\n
+\t\t\t\t\t\tvar fontElm;\n
+\n
+\t\t\t\t\t\tfontElm = editor.dom.getParent(editor.selection.getNode(), \'font\');\n
+\t\t\t\t\t\tif (fontElm) {\n
+\t\t\t\t\t\t\tself.value(fontElm.face);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tself.value(\'\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t},\n
+\t\t\t\tonselect: function(e) {\n
+\t\t\t\t\tif (e.control.settings.value) {\n
+\t\t\t\t\t\teditor.execCommand(\'FontName\', false, e.control.settings.value);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t});\n
+\t});\n
+})(tinymce);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6461</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

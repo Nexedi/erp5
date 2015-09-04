@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268163.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>paste.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Paste</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />\n
+<script src="../../js/tinymce/tinymce.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>\n
+<script>\n
+\ttinymce.init({\n
+\t\tselector: "#elm1",\n
+\t\ttheme: "modern",\n
+\t\tplugins: [\n
+\t\t\t"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",\n
+\t\t\t"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
+\t\t\t"save table contextmenu directionality emoticons template paste"\n
+\t\t],\n
+\t\tcontent_css: "css/development.css",\n
+\t\tadd_unload_trigger: false,\n
+\n
+\t\ttoolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons",\n
+\n
+\t\tstyle_formats: [\n
+\t\t\t{title: \'Bold text\', format: \'h1\'},\n
+\t\t\t{title: \'Red text\', inline: \'span\', styles: {color: \'#ff0000\'}},\n
+\t\t\t{title: \'Red header\', block: \'h1\', styles: {color: \'#ff0000\'}},\n
+\t\t\t{title: \'Example 1\', inline: \'span\', classes: \'example1\'},\n
+\t\t\t{title: \'Example 2\', inline: \'span\', classes: \'example2\'},\n
+\t\t\t{title: \'Table styles\'},\n
+\t\t\t{title: \'Table row 1\', selector: \'tr\', classes: \'tablerow1\'}\n
+\t\t],\n
+\n
+\t\tsetup: function(ed) {\n
+\t\t\ted.on(\'BeforePastePreProcess PastePreProcess\', function(e) {\n
+\t\t\t\tif (window.console && console.dir) {\n
+\t\t\t\t\tconsole.log(e.type + ": " + e.content);\n
+\t\t\t\t}\n
+\n
+\t\t\t\te.content = e.content.toUpperCase();\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+\n
+\ttinymce.init({\n
+\t\tselector: "#inline",\n
+\t\tplugins: \'paste\',\n
+\t\tinline: true,\n
+\t\tsetup: function(ed) {\n
+\t\t\ted.on(\'BeforePastePreProcess PastePreProcess\', function(e) {\n
+\t\t\t\tif (window.console && console.dir) {\n
+\t\t\t\t\tconsole.log(e.type + ": " + e.content);\n
+\t\t\t\t}\n
+\n
+\t\t\t\te.content = e.content.toUpperCase();\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+</script>\n
+<style>\n
+#styles b {\n
+\tfont-weight: 700;\n
+}\n
+</style>\n
+</head>\n
+<body>\n
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">\n
+\t<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">\n
+\t\t<pre>Pre element</pre>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t</textarea>\n
+\t<div>\n
+\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').show();return false;">[Show]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').hide();return false;">[Hide]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceAddEditor\', false, \'elm1\');return false;">[Add]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').remove();return false;">[Remove]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').execCommand(\'Bold\');return false;">[Bold]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').getContent());return false;">[Get contents]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').getContent({format: \'raw\'}));return false;">[Get raw]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getContent());return false;">[Get selected HTML]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getContent({format: \'text\'}));return false;">[Get selected text]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getNode().nodeName);return false;">[Get selected element]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceInsertContent\',false,\'<b>Hello world!!</b>\');return false;">[Insert HTML]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceReplaceContent\',false,\'<b>{$selection}</b>\');return false;">[Replace selection]</a>\n
+\t</div>\n
+\n
+\t<div id="inline" style="height: 200px; overflow: auto">\n
+\t\t<pre>Pre element</pre>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t\t<p><strong>abc</strong>def</p>\n
+\t</div>\n
+\t\n
+\t<div>\n
+<textarea style="height: 140px">\n
+a\n
+b\n
+c\n
+\n
+d\n
+\n
+e\n
+</textarea>\n
+\t<div id="styles" style="width: 200px">\n
+\t\t<p>\n
+\t\t\t<i>italic</i><b>bold</b>\n
+\t\t\t<img style="float: right" src="data:image/gif;base64,R0lGODlhIAAgAIAAAGB7/wAAACH5BAAAAAAALAAAAAAgACAAAAIehI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC5sFADs=">\n
+\t\t</p>\n
+\t\t<p>\n
+\t\t\tabc\n
+\t\t</p>\n
+\t</div>\n
+\t</div>\n
+</form>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5732</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>paste.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

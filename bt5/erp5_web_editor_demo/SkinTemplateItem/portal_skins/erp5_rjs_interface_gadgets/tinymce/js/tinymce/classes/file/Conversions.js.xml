@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268358.03</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Conversions.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Conversions.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Converts blob/uris back and forth.\n
+ */\n
+define("tinymce/file/Conversions", [\n
+\t"tinymce/util/Promise"\n
+], function(Promise) {\n
+\tfunction blobUriToBlob(url) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar xhr = new XMLHttpRequest();\n
+\n
+\t\t\txhr.open(\'GET\', url, true);\n
+\t\t\txhr.responseType = \'blob\';\n
+\n
+\t\t\txhr.onload = function() {\n
+\t\t\t\tif (this.status == 200) {\n
+\t\t\t\t\tresolve(this.response);\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\txhr.send();\n
+\t\t});\n
+\t}\n
+\n
+\tfunction parseDataUri(uri) {\n
+\t\tvar type, matches;\n
+\n
+\t\turi = decodeURIComponent(uri).split(\',\');\n
+\n
+\t\tmatches = /data:([^;]+)/.exec(uri[0]);\n
+\t\tif (matches) {\n
+\t\t\ttype = matches[1];\n
+\t\t}\n
+\n
+\t\treturn {\n
+\t\t\ttype: type,\n
+\t\t\tdata: uri[1]\n
+\t\t};\n
+\t}\n
+\n
+\tfunction dataUriToBlob(uri) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar str, arr, i;\n
+\n
+\t\t\turi = parseDataUri(uri);\n
+\n
+\t\t\t// Might throw error if data isn\'t proper base64\n
+\t\t\ttry {\n
+\t\t\t\tstr = atob(uri.data);\n
+\t\t\t} catch (e) {\n
+\t\t\t\tresolve(new Blob([]));\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tarr = new Uint8Array(str.length);\n
+\n
+\t\t\tfor (i = 0; i < arr.length; i++) {\n
+\t\t\t\tarr[i] = str.charCodeAt(i);\n
+\t\t\t}\n
+\n
+\t\t\tresolve(new Blob([arr], {type: uri.type}));\n
+\t\t});\n
+\t}\n
+\n
+\tfunction uriToBlob(url) {\n
+\t\tif (url.indexOf(\'blob:\') === 0) {\n
+\t\t\treturn blobUriToBlob(url);\n
+\t\t}\n
+\n
+\t\tif (url.indexOf(\'data:\') === 0) {\n
+\t\t\treturn dataUriToBlob(url);\n
+\t\t}\n
+\n
+\t\treturn null;\n
+\t}\n
+\n
+\tfunction blobToDataUri(blob) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar reader = new FileReader();\n
+\n
+\t\t\treader.onloadend = function() {\n
+\t\t\t\tresolve(reader.result);\n
+\t\t\t};\n
+\n
+\t\t\treader.readAsDataURL(blob);\n
+\t\t});\n
+\t}\n
+\n
+\treturn {\n
+\t\turiToBlob: uriToBlob,\n
+\t\tblobToDataUri: blobToDataUri,\n
+\t\tparseDataUri: parseDataUri\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1830</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Conversions.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

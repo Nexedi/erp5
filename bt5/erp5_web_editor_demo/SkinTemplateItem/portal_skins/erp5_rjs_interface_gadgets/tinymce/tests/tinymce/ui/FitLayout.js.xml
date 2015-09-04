@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268209.9</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FitLayout.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>(function() {\n
+\tvar panel;\n
+\n
+\tmodule("tinymce.ui.FitLayout", {\n
+\t\tsetup: function() {\n
+\t\t\tdocument.getElementById(\'view\').innerHTML = \'\';\n
+\t\t},\n
+\n
+\t\tteardown: function() {\n
+\t\t\ttinymce.dom.Event.clean(document.getElementById(\'view\'));\n
+\t\t}\n
+\t});\n
+\n
+\tfunction createFitPanel(settings) {\n
+\t\treturn tinymce.ui.Factory.create(tinymce.extend({\n
+\t\t\ttype: \'panel\',\n
+\t\t\tlayout: \'fit\',\n
+\t\t\twidth: 200,\n
+\t\t\theight: 200,\n
+\t\t\tborder: 1\n
+\t\t}, settings)).renderTo(document.getElementById(\'view\')).reflow();\n
+\t}\n
+\n
+\ttest("fit with spacer inside", function() {\n
+\t\tpanel = createFitPanel({\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tdeepEqual(Utils.rect(panel), [0, 0, 200, 200]);\n
+\t\tdeepEqual(Utils.rect(panel.find(\'spacer\')[0]), [1, 1, 198, 198]);\n
+\t});\n
+\n
+\ttest("fit with padding and spacer inside", function() {\n
+\t\tpanel = createFitPanel({\n
+\t\t\tpadding: 3,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tdeepEqual(Utils.rect(panel), [0, 0, 200, 200]);\n
+\t\tdeepEqual(Utils.rect(panel.find(\'spacer\')[0]), [4, 4, 192, 192]);\n
+\t});\n
+\n
+\ttest("fit with panel inside", function() {\n
+\t\tpanel = createFitPanel({\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'panel\', border: 1}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tdeepEqual(Utils.rect(panel), [0, 0, 200, 200]);\n
+\t\tdeepEqual(Utils.rect(panel.find(\'panel\')[0]), [1, 1, 198, 198]);\n
+\t});\n
+})();</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1271</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FitLayout.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268525.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'colorpicker\', function(editor) {\n
+\tfunction colorPickerCallback(callback, value) {\n
+\t\tfunction setColor(value) {\n
+\t\t\tvar color = new tinymce.util.Color(value), rgb = color.toRgb();\n
+\n
+\t\t\twin.fromJSON({\n
+\t\t\t\tr: rgb.r,\n
+\t\t\t\tg: rgb.g,\n
+\t\t\t\tb: rgb.b,\n
+\t\t\t\thex: color.toHex().substr(1)\n
+\t\t\t});\n
+\n
+\t\t\tshowPreview(color.toHex());\n
+\t\t}\n
+\n
+\t\tfunction showPreview(hexColor) {\n
+\t\t\twin.find(\'#preview\')[0].getEl().style.background = hexColor;\n
+\t\t}\n
+\n
+\t\tvar win = editor.windowManager.open({\n
+\t\t\ttitle: \'Color\',\n
+\t\t\titems: {\n
+\t\t\t\ttype: \'container\',\n
+\t\t\t\tlayout: \'flex\',\n
+\t\t\t\tdirection: \'row\',\n
+\t\t\t\talign: \'stretch\',\n
+\t\t\t\tpadding: 5,\n
+\t\t\t\tspacing: 10,\n
+\t\t\t\titems: [\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\ttype: \'colorpicker\',\n
+\t\t\t\t\t\tvalue: value,\n
+\t\t\t\t\t\tonchange: function() {\n
+\t\t\t\t\t\t\tvar rgb = this.rgb();\n
+\n
+\t\t\t\t\t\t\tif (win) {\n
+\t\t\t\t\t\t\t\twin.find(\'#r\').value(rgb.r);\n
+\t\t\t\t\t\t\t\twin.find(\'#g\').value(rgb.g);\n
+\t\t\t\t\t\t\t\twin.find(\'#b\').value(rgb.b);\n
+\t\t\t\t\t\t\t\twin.find(\'#hex\').value(this.value().substr(1));\n
+\t\t\t\t\t\t\t\tshowPreview(this.value());\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t},\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\t\tpadding: 0,\n
+\t\t\t\t\t\tlabelGap: 5,\n
+\t\t\t\t\t\tdefaults: {\n
+\t\t\t\t\t\t\ttype: \'textbox\',\n
+\t\t\t\t\t\t\tsize: 7,\n
+\t\t\t\t\t\t\tvalue: \'0\',\n
+\t\t\t\t\t\t\tflex: 1,\n
+\t\t\t\t\t\t\tspellcheck: false,\n
+\t\t\t\t\t\t\tonchange: function() {\n
+\t\t\t\t\t\t\t\tvar colorPickerCtrl = win.find(\'colorpicker\')[0];\n
+\t\t\t\t\t\t\t\tvar name, value;\n
+\n
+\t\t\t\t\t\t\t\tname = this.name();\n
+\t\t\t\t\t\t\t\tvalue = this.value();\n
+\n
+\t\t\t\t\t\t\t\tif (name == "hex") {\n
+\t\t\t\t\t\t\t\t\tvalue = \'#\' + value;\n
+\t\t\t\t\t\t\t\t\tsetColor(value);\n
+\t\t\t\t\t\t\t\t\tcolorPickerCtrl.value(value);\n
+\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\tvalue = {\n
+\t\t\t\t\t\t\t\t\tr: win.find(\'#r\').value(),\n
+\t\t\t\t\t\t\t\t\tg: win.find(\'#g\').value(),\n
+\t\t\t\t\t\t\t\t\tb: win.find(\'#b\').value()\n
+\t\t\t\t\t\t\t\t};\n
+\n
+\t\t\t\t\t\t\t\tcolorPickerCtrl.value(value);\n
+\t\t\t\t\t\t\t\tsetColor(value);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\titems: [\n
+\t\t\t\t\t\t\t{name: \'r\', label: \'R\', autofocus: 1},\n
+\t\t\t\t\t\t\t{name: \'g\', label: \'G\'},\n
+\t\t\t\t\t\t\t{name: \'b\', label: \'B\'},\n
+\t\t\t\t\t\t\t{name: \'hex\', label: \'#\', value: \'000000\'},\n
+\t\t\t\t\t\t\t{name: \'preview\', type: \'container\', border: 1}\n
+\t\t\t\t\t\t]\n
+\t\t\t\t\t}\n
+\t\t\t\t]\n
+\t\t\t},\n
+\t\t\tonSubmit: function() {\n
+\t\t\t\tcallback(\'#\' + this.toJSON().hex);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tsetColor(value);\n
+\t}\n
+\n
+\tif (!editor.settings.color_picker_callback) {\n
+\t\teditor.settings.color_picker_callback = colorPickerCallback;\n
+\t}\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2450</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268445.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Quirks.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Quirks.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class contains various fixes for browsers. These issues can not be feature\n
+ * detected since we have no direct control over the clipboard. However we might be able\n
+ * to remove some of these fixes once the browsers gets updated/fixed.\n
+ *\n
+ * @class tinymce.pasteplugin.Quirks\n
+ * @private\n
+ */\n
+define("tinymce/pasteplugin/Quirks", [\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/pasteplugin/WordFilter",\n
+\t"tinymce/pasteplugin/Utils"\n
+], function(Env, Tools, WordFilter, Utils) {\n
+\t"use strict";\n
+\n
+\treturn function(editor) {\n
+\t\tfunction addPreProcessFilter(filterFunc) {\n
+\t\t\teditor.on(\'BeforePastePreProcess\', function(e) {\n
+\t\t\t\te.content = filterFunc(e.content);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Removes BR elements after block elements. IE9 has a nasty bug where it puts a BR element after each\n
+\t\t * block element when pasting from word. This removes those elements.\n
+\t\t *\n
+\t\t * This:\n
+\t\t *  <p>a</p><br><p>b</p>\n
+\t\t *\n
+\t\t * Becomes:\n
+\t\t *  <p>a</p><p>b</p>\n
+\t\t */\n
+\t\tfunction removeExplorerBrElementsAfterBlocks(html) {\n
+\t\t\t// Only filter word specific content\n
+\t\t\tif (!WordFilter.isWordContent(html)) {\n
+\t\t\t\treturn html;\n
+\t\t\t}\n
+\n
+\t\t\t// Produce block regexp based on the block elements in schema\n
+\t\t\tvar blockElements = [];\n
+\n
+\t\t\tTools.each(editor.schema.getBlockElements(), function(block, blockName) {\n
+\t\t\t\tblockElements.push(blockName);\n
+\t\t\t});\n
+\n
+\t\t\tvar explorerBlocksRegExp = new RegExp(\n
+\t\t\t\t\'(?:<br>&nbsp;[\\\\s\\\\r\\\\n]+|<br>)*(<\\\\/?(\' + blockElements.join(\'|\') + \')[^>]*>)(?:<br>&nbsp;[\\\\s\\\\r\\\\n]+|<br>)*\',\n
+\t\t\t\t\'g\'\n
+\t\t\t);\n
+\n
+\t\t\t// Remove BR:s from: <BLOCK>X</BLOCK><BR>\n
+\t\t\thtml = Utils.filter(html, [\n
+\t\t\t\t[explorerBlocksRegExp, \'$1\']\n
+\t\t\t]);\n
+\n
+\t\t\t// IE9 also adds an extra BR element for each soft-linefeed and it also adds a BR for each word wrap break\n
+\t\t\thtml = Utils.filter(html, [\n
+\t\t\t\t[/<br><br>/g, \'<BR><BR>\'], // Replace multiple BR elements with uppercase BR to keep them intact\n
+\t\t\t\t[/<br>/g, \' \'],            // Replace single br elements with space since they are word wrap BR:s\n
+\t\t\t\t[/<BR><BR>/g, \'<br>\']      // Replace back the double brs but into a single BR\n
+\t\t\t]);\n
+\n
+\t\t\treturn html;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * WebKit has a nasty bug where the all computed styles gets added to style attributes when copy/pasting contents.\n
+\t\t * This fix solves that by simply removing the whole style attribute.\n
+\t\t *\n
+\t\t * The paste_webkit_styles option can be set to specify what to keep:\n
+\t\t *  paste_webkit_styles: "none" // Keep no styles\n
+\t\t *  paste_webkit_styles: "all", // Keep all of them\n
+\t\t *  paste_webkit_styles: "font-weight color" // Keep specific ones\n
+\t\t *\n
+\t\t * @param {String} content Content that needs to be processed.\n
+\t\t * @return {String} Processed contents.\n
+\t\t */\n
+\t\tfunction removeWebKitStyles(content) {\n
+\t\t\t// Passthrough all styles from Word and let the WordFilter handle that junk\n
+\t\t\tif (WordFilter.isWordContent(content)) {\n
+\t\t\t\treturn content;\n
+\t\t\t}\n
+\n
+\t\t\t// Filter away styles that isn\'t matching the target node\n
+\t\t\tvar webKitStyles = editor.settings.paste_webkit_styles;\n
+\n
+\t\t\tif (editor.settings.paste_remove_styles_if_webkit === false || webKitStyles == "all") {\n
+\t\t\t\treturn content;\n
+\t\t\t}\n
+\n
+\t\t\tif (webKitStyles) {\n
+\t\t\t\twebKitStyles = webKitStyles.split(/[, ]/);\n
+\t\t\t}\n
+\n
+\t\t\t// Keep specific styles that doesn\'t match the current node computed style\n
+\t\t\tif (webKitStyles) {\n
+\t\t\t\tvar dom = editor.dom, node = editor.selection.getNode();\n
+\n
+\t\t\t\tcontent = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function(all, before, value, after) {\n
+\t\t\t\t\tvar inputStyles = dom.parseStyle(value, \'span\'), outputStyles = {};\n
+\n
+\t\t\t\t\tif (webKitStyles === "none") {\n
+\t\t\t\t\t\treturn before + after;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tfor (var i = 0; i < webKitStyles.length; i++) {\n
+\t\t\t\t\t\tvar inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);\n
+\n
+\t\t\t\t\t\tif (/color/.test(webKitStyles[i])) {\n
+\t\t\t\t\t\t\tinputValue = dom.toHex(inputValue);\n
+\t\t\t\t\t\t\tcurrentValue = dom.toHex(currentValue);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (currentValue != inputValue) {\n
+\t\t\t\t\t\t\toutputStyles[webKitStyles[i]] = inputValue;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\toutputStyles = dom.serializeStyle(outputStyles, \'span\');\n
+\t\t\t\t\tif (outputStyles) {\n
+\t\t\t\t\t\treturn before + \' style="\' + outputStyles + \'"\' + after;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn before + after;\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\t// Remove all external styles\n
+\t\t\t\tcontent = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, \'$1$3\');\n
+\t\t\t}\n
+\n
+\t\t\t// Keep internal styles\n
+\t\t\tcontent = content.replace(/(<[^>]+) data-mce-style="([^"]+)"([^>]*>)/gi, function(all, before, value, after) {\n
+\t\t\t\treturn before + \' style="\' + value + \'"\' + after;\n
+\t\t\t});\n
+\n
+\t\t\treturn content;\n
+\t\t}\n
+\n
+\t\t// Sniff browsers and apply fixes since we can\'t feature detect\n
+\t\tif (Env.webkit) {\n
+\t\t\taddPreProcessFilter(removeWebKitStyles);\n
+\t\t}\n
+\n
+\t\tif (Env.ie) {\n
+\t\t\taddPreProcessFilter(removeExplorerBrElementsAfterBlocks);\n
+\t\t}\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4963</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Quirks.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

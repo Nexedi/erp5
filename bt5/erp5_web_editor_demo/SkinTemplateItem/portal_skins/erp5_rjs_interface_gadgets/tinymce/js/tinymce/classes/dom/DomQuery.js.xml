@@ -1,0 +1,1612 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268366.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DomQuery.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * DomQuery.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class mimics most of the jQuery API:\n
+ *\n
+ * This is whats currently implemented:\n
+ * - Utility functions\n
+ * - DOM traversial\n
+ * - DOM manipulation\n
+ * - Event binding\n
+ *\n
+ * This is not currently implemented:\n
+ * - Dimension\n
+ * - Ajax\n
+ * - Animation\n
+ * - Advanced chaining\n
+ *\n
+ * @example\n
+ * var $ = tinymce.dom.DomQuery;\n
+ * $(\'p\').attr(\'attr\', \'value\').addClass(\'class\');\n
+ *\n
+ * @class tinymce.dom.DomQuery\n
+ */\n
+define("tinymce/dom/DomQuery", [\n
+\t"tinymce/dom/EventUtils",\n
+\t"tinymce/dom/Sizzle",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/Env"\n
+], function(EventUtils, Sizzle, Tools, Env) {\n
+\tvar doc = document, push = Array.prototype.push, slice = Array.prototype.slice;\n
+\tvar rquickExpr = /^(?:[^#<]*(<[\\w\\W]+>)[^>]*$|#([\\w\\-]*)$)/;\n
+\tvar Event = EventUtils.Event, undef;\n
+\n
+\tfunction isDefined(obj) {\n
+\t\treturn typeof obj !== \'undefined\';\n
+\t}\n
+\n
+\tfunction isString(obj) {\n
+\t\treturn typeof obj === \'string\';\n
+\t}\n
+\n
+\tfunction isWindow(obj) {\n
+\t\treturn obj && obj == obj.window;\n
+\t}\n
+\n
+\tfunction createFragment(html, fragDoc) {\n
+\t\tvar frag, node, container;\n
+\n
+\t\tfragDoc = fragDoc || doc;\n
+\t\tcontainer = fragDoc.createElement(\'div\');\n
+\t\tfrag = fragDoc.createDocumentFragment();\n
+\t\tcontainer.innerHTML = html;\n
+\n
+\t\twhile ((node = container.firstChild)) {\n
+\t\t\tfrag.appendChild(node);\n
+\t\t}\n
+\n
+\t\treturn frag;\n
+\t}\n
+\n
+\tfunction domManipulate(targetNodes, sourceItem, callback, reverse) {\n
+\t\tvar i;\n
+\n
+\t\tif (isString(sourceItem)) {\n
+\t\t\tsourceItem = createFragment(sourceItem, getElementDocument(targetNodes[0]));\n
+\t\t} else if (sourceItem.length && !sourceItem.nodeType) {\n
+\t\t\tsourceItem = DomQuery.makeArray(sourceItem);\n
+\n
+\t\t\tif (reverse) {\n
+\t\t\t\tfor (i = sourceItem.length - 1; i >= 0; i--) {\n
+\t\t\t\t\tdomManipulate(targetNodes, sourceItem[i], callback, reverse);\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tfor (i = 0; i < sourceItem.length; i++) {\n
+\t\t\t\t\tdomManipulate(targetNodes, sourceItem[i], callback, reverse);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn targetNodes;\n
+\t\t}\n
+\n
+\t\tif (sourceItem.nodeType) {\n
+\t\t\ti = targetNodes.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tcallback.call(targetNodes[i], sourceItem);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn targetNodes;\n
+\t}\n
+\n
+\tfunction hasClass(node, className) {\n
+\t\treturn node && className && (\' \' + node.className + \' \').indexOf(\' \' + className + \' \') !== -1;\n
+\t}\n
+\n
+\tfunction wrap(elements, wrapper, all) {\n
+\t\tvar lastParent, newWrapper;\n
+\n
+\t\twrapper = DomQuery(wrapper)[0];\n
+\n
+\t\telements.each(function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (!all || lastParent != self.parentNode) {\n
+\t\t\t\tlastParent = self.parentNode;\n
+\t\t\t\tnewWrapper = wrapper.cloneNode(false);\n
+\t\t\t\tself.parentNode.insertBefore(newWrapper, self);\n
+\t\t\t\tnewWrapper.appendChild(self);\n
+\t\t\t} else {\n
+\t\t\t\tnewWrapper.appendChild(self);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treturn elements;\n
+\t}\n
+\n
+\tvar numericCssMap = Tools.makeMap(\'fillOpacity fontWeight lineHeight opacity orphans widows zIndex zoom\', \' \');\n
+\tvar booleanMap = Tools.makeMap(\'checked compact declare defer disabled ismap multiple nohref noshade nowrap readonly selected\', \' \');\n
+\tvar propFix = {\n
+\t\t\'for\': \'htmlFor\',\n
+\t\t\'class\': \'className\',\n
+\t\t\'readonly\': \'readOnly\'\n
+\t};\n
+\tvar cssFix = {\n
+\t\t\'float\': \'cssFloat\'\n
+\t};\n
+\n
+\tvar attrHooks = {}, cssHooks = {};\n
+\n
+\tfunction DomQuery(selector, context) {\n
+\t\t/*eslint new-cap:0 */\n
+\t\treturn new DomQuery.fn.init(selector, context);\n
+\t}\n
+\n
+\tfunction inArray(item, array) {\n
+\t\tvar i;\n
+\n
+\t\tif (array.indexOf) {\n
+\t\t\treturn array.indexOf(item);\n
+\t\t}\n
+\n
+\t\ti = array.length;\n
+\t\twhile (i--) {\n
+\t\t\tif (array[i] === item) {\n
+\t\t\t\treturn i;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn -1;\n
+\t}\n
+\n
+\tvar whiteSpaceRegExp = /^\\s*|\\s*$/g;\n
+\n
+\tfunction trim(str) {\n
+\t\treturn (str === null || str === undef) ? \'\' : ("" + str).replace(whiteSpaceRegExp, \'\');\n
+\t}\n
+\n
+\tfunction each(obj, callback) {\n
+\t\tvar length, key, i, undef, value;\n
+\n
+\t\tif (obj) {\n
+\t\t\tlength = obj.length;\n
+\n
+\t\t\tif (length === undef) {\n
+\t\t\t\t// Loop object items\n
+\t\t\t\tfor (key in obj) {\n
+\t\t\t\t\tif (obj.hasOwnProperty(key)) {\n
+\t\t\t\t\t\tvalue = obj[key];\n
+\t\t\t\t\t\tif (callback.call(value, key, value) === false) {\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\t// Loop array items\n
+\t\t\t\tfor (i = 0; i < length; i++) {\n
+\t\t\t\t\tvalue = obj[i];\n
+\t\t\t\t\tif (callback.call(value, i, value) === false) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn obj;\n
+\t}\n
+\n
+\tfunction grep(array, callback) {\n
+\t\tvar out = [];\n
+\n
+\t\teach(array, function(i, item) {\n
+\t\t\tif (callback(item, i)) {\n
+\t\t\t\tout.push(item);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treturn out;\n
+\t}\n
+\n
+\tfunction getElementDocument(element) {\n
+\t\tif (!element) {\n
+\t\t\treturn doc;\n
+\t\t}\n
+\n
+\t\tif (element.nodeType == 9) {\n
+\t\t\treturn element;\n
+\t\t}\n
+\n
+\t\treturn element.ownerDocument;\n
+\t}\n
+\n
+\tDomQuery.fn = DomQuery.prototype = {\n
+\t\tconstructor: DomQuery,\n
+\n
+\t\t/**\n
+\t\t * Selector for the current set.\n
+\t\t *\n
+\t\t * @property selector\n
+\t\t * @type String\n
+\t\t */\n
+\t\tselector: "",\n
+\n
+\t\t/**\n
+\t\t * Context used to create the set.\n
+\t\t *\n
+\t\t * @property context\n
+\t\t * @type Element\n
+\t\t */\n
+\t\tcontext: null,\n
+\n
+\t\t/**\n
+\t\t * Number of items in the current set.\n
+\t\t *\n
+\t\t * @property length\n
+\t\t * @type Number\n
+\t\t */\n
+\t\tlength: 0,\n
+\n
+\t\t/**\n
+\t\t * Constructs a new DomQuery instance with the specified selector or context.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @method init\n
+\t\t * @param {String/Array/DomQuery} selector Optional CSS selector/Array or array like object or HTML string.\n
+\t\t * @param {Document/Element} context Optional context to search in.\n
+\t\t */\n
+\t\tinit: function(selector, context) {\n
+\t\t\tvar self = this, match, node;\n
+\n
+\t\t\tif (!selector) {\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\tif (selector.nodeType) {\n
+\t\t\t\tself.context = self[0] = selector;\n
+\t\t\t\tself.length = 1;\n
+\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\tif (context && context.nodeType) {\n
+\t\t\t\tself.context = context;\n
+\t\t\t} else {\n
+\t\t\t\tif (context) {\n
+\t\t\t\t\treturn DomQuery(selector).attr(context);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.context = context = document;\n
+\t\t\t}\n
+\n
+\t\t\tif (isString(selector)) {\n
+\t\t\t\tself.selector = selector;\n
+\n
+\t\t\t\tif (selector.charAt(0) === "<" && selector.charAt(selector.length - 1) === ">" && selector.length >= 3) {\n
+\t\t\t\t\tmatch = [null, selector, null];\n
+\t\t\t\t} else {\n
+\t\t\t\t\tmatch = rquickExpr.exec(selector);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (match) {\n
+\t\t\t\t\tif (match[1]) {\n
+\t\t\t\t\t\tnode = createFragment(selector, getElementDocument(context)).firstChild;\n
+\n
+\t\t\t\t\t\twhile (node) {\n
+\t\t\t\t\t\t\tpush.call(self, node);\n
+\t\t\t\t\t\t\tnode = node.nextSibling;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tnode = getElementDocument(context).getElementById(match[2]);\n
+\n
+\t\t\t\t\t\tif (!node) {\n
+\t\t\t\t\t\t\treturn self;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (node.id !== match[2]) {\n
+\t\t\t\t\t\t\treturn self.find(selector);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tself.length = 1;\n
+\t\t\t\t\t\tself[0] = node;\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\treturn DomQuery(context).find(selector);\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tthis.add(selector, false);\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Converts the current set to an array.\n
+\t\t *\n
+\t\t * @method toArray\n
+\t\t * @param {Array} Array of all nodes in set.\n
+\t\t */\n
+\t\ttoArray: function() {\n
+\t\t\treturn Tools.toArray(this);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds new nodes to the set.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {Array/tinymce.dom.DomQuery} items Array of all nodes to add to set.\n
+\t\t * @return {tinymce.dom.DomQuery} New instance with nodes added.\n
+\t\t */\n
+\t\tadd: function(items, sort) {\n
+\t\t\tvar self = this, nodes, i;\n
+\n
+\t\t\tif (isString(items)) {\n
+\t\t\t\treturn self.add(DomQuery(items));\n
+\t\t\t}\n
+\n
+\t\t\tif (sort !== false) {\n
+\t\t\t\tnodes = DomQuery.unique(self.toArray().concat(DomQuery.makeArray(items)));\n
+\t\t\t\tself.length = nodes.length;\n
+\t\t\t\tfor (i = 0; i < nodes.length; i++) {\n
+\t\t\t\t\tself[i] = nodes[i];\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tpush.apply(self, DomQuery.makeArray(items));\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets/gets attributes on the elements in the current set.\n
+\t\t *\n
+\t\t * @method attr\n
+\t\t * @param {String/Object} name Name of attribute to get or an object with attributes to set.\n
+\t\t * @param {String} value Optional value to set.\n
+\t\t * @return {tinymce.dom.DomQuery/String} Current set or the specified attribute when only the name is specified.\n
+\t\t */\n
+\t\tattr: function(name, value) {\n
+\t\t\tvar self = this, hook;\n
+\n
+\t\t\tif (typeof name === "object") {\n
+\t\t\t\teach(name, function(name, value) {\n
+\t\t\t\t\tself.attr(name, value);\n
+\t\t\t\t});\n
+\t\t\t} else if (isDefined(value)) {\n
+\t\t\t\tthis.each(function() {\n
+\t\t\t\t\tvar hook;\n
+\n
+\t\t\t\t\tif (this.nodeType === 1) {\n
+\t\t\t\t\t\thook = attrHooks[name];\n
+\t\t\t\t\t\tif (hook && hook.set) {\n
+\t\t\t\t\t\t\thook.set(this, value);\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (value === null) {\n
+\t\t\t\t\t\t\tthis.removeAttribute(name, 2);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tthis.setAttribute(name, value, 2);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\tif (self[0] && self[0].nodeType === 1) {\n
+\t\t\t\t\thook = attrHooks[name];\n
+\t\t\t\t\tif (hook && hook.get) {\n
+\t\t\t\t\t\treturn hook.get(self[0], name);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (booleanMap[name]) {\n
+\t\t\t\t\t\treturn self.prop(name) ? name : undef;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tvalue = self[0].getAttribute(name, 2);\n
+\n
+\t\t\t\t\tif (value === null) {\n
+\t\t\t\t\t\tvalue = undef;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn value;\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes attributse on the elements in the current set.\n
+\t\t *\n
+\t\t * @method removeAttr\n
+\t\t * @param {String/Object} name Name of attribute to remove.\n
+\t\t * @return {tinymce.dom.DomQuery/String} Current set.\n
+\t\t */\n
+\t\tremoveAttr: function(name) {\n
+\t\t\treturn this.attr(name, null);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets/gets properties on the elements in the current set.\n
+\t\t *\n
+\t\t * @method attr\n
+\t\t * @param {String/Object} name Name of property to get or an object with properties to set.\n
+\t\t * @param {String} value Optional value to set.\n
+\t\t * @return {tinymce.dom.DomQuery/String} Current set or the specified property when only the name is specified.\n
+\t\t */\n
+\t\tprop: function(name, value) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tname = propFix[name] || name;\n
+\n
+\t\t\tif (typeof name === "object") {\n
+\t\t\t\teach(name, function(name, value) {\n
+\t\t\t\t\tself.prop(name, value);\n
+\t\t\t\t});\n
+\t\t\t} else if (isDefined(value)) {\n
+\t\t\t\tthis.each(function() {\n
+\t\t\t\t\tif (this.nodeType == 1) {\n
+\t\t\t\t\t\tthis[name] = value;\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\tif (self[0] && self[0].nodeType && name in self[0]) {\n
+\t\t\t\t\treturn self[0][name];\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn value;\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets/gets styles on the elements in the current set.\n
+\t\t *\n
+\t\t * @method css\n
+\t\t * @param {String/Object} name Name of style to get or an object with styles to set.\n
+\t\t * @param {String} value Optional value to set.\n
+\t\t * @return {tinymce.dom.DomQuery/String} Current set or the specified style when only the name is specified.\n
+\t\t */\n
+\t\tcss: function(name, value) {\n
+\t\t\tvar self = this, elm, hook;\n
+\n
+\t\t\tfunction camel(name) {\n
+\t\t\t\treturn name.replace(/-(\\D)/g, function(a, b) {\n
+\t\t\t\t\treturn b.toUpperCase();\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tfunction dashed(name) {\n
+\t\t\t\treturn name.replace(/[A-Z]/g, function(a) {\n
+\t\t\t\t\treturn \'-\' + a;\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tif (typeof name === "object") {\n
+\t\t\t\teach(name, function(name, value) {\n
+\t\t\t\t\tself.css(name, value);\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\tif (isDefined(value)) {\n
+\t\t\t\t\tname = camel(name);\n
+\n
+\t\t\t\t\t// Default px suffix on these\n
+\t\t\t\t\tif (typeof value === \'number\' && !numericCssMap[name]) {\n
+\t\t\t\t\t\tvalue += \'px\';\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tself.each(function() {\n
+\t\t\t\t\t\tvar style = this.style;\n
+\n
+\t\t\t\t\t\thook = cssHooks[name];\n
+\t\t\t\t\t\tif (hook && hook.set) {\n
+\t\t\t\t\t\t\thook.set(this, value);\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\ttry {\n
+\t\t\t\t\t\t\tthis.style[cssFix[name] || name] = value;\n
+\t\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t\t// Ignore\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (value === null || value === \'\') {\n
+\t\t\t\t\t\t\tif (style.removeProperty) {\n
+\t\t\t\t\t\t\t\tstyle.removeProperty(dashed(name));\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tstyle.removeAttribute(name);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t} else {\n
+\t\t\t\t\telm = self[0];\n
+\n
+\t\t\t\t\thook = cssHooks[name];\n
+\t\t\t\t\tif (hook && hook.get) {\n
+\t\t\t\t\t\treturn hook.get(elm);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (elm.ownerDocument.defaultView) {\n
+\t\t\t\t\t\ttry {\n
+\t\t\t\t\t\t\treturn elm.ownerDocument.defaultView.getComputedStyle(elm, null).getPropertyValue(dashed(name));\n
+\t\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t\treturn undef;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else if (elm.currentStyle) {\n
+\t\t\t\t\t\treturn elm.currentStyle[camel(name)];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes all nodes in set from the document.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @return {tinymce.dom.DomQuery} Current set with the removed nodes.\n
+\t\t */\n
+\t\tremove: function() {\n
+\t\t\tvar self = this, node, i = this.length;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = self[i];\n
+\t\t\t\tEvent.clean(node);\n
+\n
+\t\t\t\tif (node.parentNode) {\n
+\t\t\t\t\tnode.parentNode.removeChild(node);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Empties all elements in set.\n
+\t\t *\n
+\t\t * @method empty\n
+\t\t * @return {tinymce.dom.DomQuery} Current set with the empty nodes.\n
+\t\t */\n
+\t\tempty: function() {\n
+\t\t\tvar self = this, node, i = this.length;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = self[i];\n
+\t\t\t\twhile (node.firstChild) {\n
+\t\t\t\t\tnode.removeChild(node.firstChild);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets or gets the HTML of the current set or first set node.\n
+\t\t *\n
+\t\t * @method html\n
+\t\t * @param {String} value Optional innerHTML value to set on each element.\n
+\t\t * @return {tinymce.dom.DomQuery/String} Current set or the innerHTML of the first element.\n
+\t\t */\n
+\t\thtml: function(value) {\n
+\t\t\tvar self = this, i;\n
+\n
+\t\t\tif (isDefined(value)) {\n
+\t\t\t\ti = self.length;\n
+\n
+\t\t\t\ttry {\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tself[i].innerHTML = value;\n
+\t\t\t\t\t}\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// Workaround for "Unknown runtime error" when DIV is added to P on IE\n
+\t\t\t\t\tDomQuery(self[i]).empty().append(value);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\treturn self[0] ? self[0].innerHTML : \'\';\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets or gets the text of the current set or first set node.\n
+\t\t *\n
+\t\t * @method text\n
+\t\t * @param {String} value Optional innerText value to set on each element.\n
+\t\t * @return {tinymce.dom.DomQuery/String} Current set or the innerText of the first element.\n
+\t\t */\n
+\t\ttext: function(value) {\n
+\t\t\tvar self = this, i;\n
+\n
+\t\t\tif (isDefined(value)) {\n
+\t\t\t\ti = self.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tif ("innerText" in self[i]) {\n
+\t\t\t\t\t\tself[i].innerText = value;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tself[0].textContent = value;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\treturn self[0] ? (self[0].innerText || self[0].textContent) : \'\';\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Appends the specified node/html or node set to the current set nodes.\n
+\t\t *\n
+\t\t * @method append\n
+\t\t * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to append to each element in set.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\tappend: function() {\n
+\t\t\treturn domManipulate(this, arguments, function(node) {\n
+\t\t\t\tif (this.nodeType === 1) {\n
+\t\t\t\t\tthis.appendChild(node);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Prepends the specified node/html or node set to the current set nodes.\n
+\t\t *\n
+\t\t * @method prepend\n
+\t\t * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to prepend to each element in set.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\tprepend: function() {\n
+\t\t\treturn domManipulate(this, arguments, function(node) {\n
+\t\t\t\tif (this.nodeType === 1) {\n
+\t\t\t\t\tthis.insertBefore(node, this.firstChild);\n
+\t\t\t\t}\n
+\t\t\t}, true);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds the specified elements before current set nodes.\n
+\t\t *\n
+\t\t * @method before\n
+\t\t * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to add before to each element in set.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\tbefore: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (self[0] && self[0].parentNode) {\n
+\t\t\t\treturn domManipulate(self, arguments, function(node) {\n
+\t\t\t\t\tthis.parentNode.insertBefore(node, this);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds the specified elements after current set nodes.\n
+\t\t *\n
+\t\t * @method after\n
+\t\t * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to add after to each element in set.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\tafter: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (self[0] && self[0].parentNode) {\n
+\t\t\t\treturn domManipulate(self, arguments, function(node) {\n
+\t\t\t\t\tthis.parentNode.insertBefore(node, this.nextSibling);\n
+\t\t\t\t}, true);\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Appends the specified set nodes to the specified selector/instance.\n
+\t\t *\n
+\t\t * @method appendTo\n
+\t\t * @param {String/Element/Array/tinymce.dom.DomQuery} val Item to append the current set to.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set with the appended nodes.\n
+\t\t */\n
+\t\tappendTo: function(val) {\n
+\t\t\tDomQuery(val).append(this);\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Prepends the specified set nodes to the specified selector/instance.\n
+\t\t *\n
+\t\t * @method prependTo\n
+\t\t * @param {String/Element/Array/tinymce.dom.DomQuery} val Item to prepend the current set to.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set with the prepended nodes.\n
+\t\t */\n
+\t\tprependTo: function(val) {\n
+\t\t\tDomQuery(val).prepend(this);\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Replaces the nodes in set with the specified content.\n
+\t\t *\n
+\t\t * @method replaceWith\n
+\t\t * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to replace nodes with.\n
+\t\t * @return {tinymce.dom.DomQuery} Set with replaced nodes.\n
+\t\t */\n
+\t\treplaceWith: function(content) {\n
+\t\t\treturn this.before(content).remove();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Wraps all elements in set with the specified wrapper.\n
+\t\t *\n
+\t\t * @method wrap\n
+\t\t * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.\n
+\t\t * @return {tinymce.dom.DomQuery} Set with wrapped nodes.\n
+\t\t */\n
+\t\twrap: function(wrapper) {\n
+\t\t\treturn wrap(this, wrapper);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Wraps all nodes in set with the specified wrapper. If the nodes are siblings all of them\n
+\t\t * will be wrapped in the same wrapper.\n
+\t\t *\n
+\t\t * @method wrapAll\n
+\t\t * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.\n
+\t\t * @return {tinymce.dom.DomQuery} Set with wrapped nodes.\n
+\t\t */\n
+\t\twrapAll: function(wrapper) {\n
+\t\t\treturn wrap(this, wrapper, true);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Wraps all elements inner contents in set with the specified wrapper.\n
+\t\t *\n
+\t\t * @method wrapInner\n
+\t\t * @param {String/Element/Array/tinymce.dom.DomQuery} content Content to wrap nodes with.\n
+\t\t * @return {tinymce.dom.DomQuery} Set with wrapped nodes.\n
+\t\t */\n
+\t\twrapInner: function(wrapper) {\n
+\t\t\tthis.each(function() {\n
+\t\t\t\tDomQuery(this).contents().wrapAll(wrapper);\n
+\t\t\t});\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Unwraps all elements by removing the parent element of each item in set.\n
+\t\t *\n
+\t\t * @method unwrap\n
+\t\t * @return {tinymce.dom.DomQuery} Set with unwrapped nodes.\n
+\t\t */\n
+\t\tunwrap: function() {\n
+\t\t\treturn this.parent().each(function() {\n
+\t\t\t\tDomQuery(this).replaceWith(this.childNodes);\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Clones all nodes in set.\n
+\t\t *\n
+\t\t * @method clone\n
+\t\t * @return {tinymce.dom.DomQuery} Set with cloned nodes.\n
+\t\t */\n
+\t\tclone: function() {\n
+\t\t\tvar result = [];\n
+\n
+\t\t\tthis.each(function() {\n
+\t\t\t\tresult.push(this.cloneNode(true));\n
+\t\t\t});\n
+\n
+\t\t\treturn DomQuery(result);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds the specified class name to the current set elements.\n
+\t\t *\n
+\t\t * @method addClass\n
+\t\t * @param {String} className Class name to add.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\taddClass: function(className) {\n
+\t\t\treturn this.toggleClass(className, true);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the specified class name to the current set elements.\n
+\t\t *\n
+\t\t * @method removeClass\n
+\t\t * @param {String} className Class name to remove.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\tremoveClass: function(className) {\n
+\t\t\treturn this.toggleClass(className, false);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Toggles the specified class name on the current set elements.\n
+\t\t *\n
+\t\t * @method toggleClass\n
+\t\t * @param {String} className Class name to add/remove.\n
+\t\t * @param {Boolean} state Optional state to toggle on/off.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\ttoggleClass: function(className, state) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\t// Functions are not supported\n
+\t\t\tif (typeof className != \'string\') {\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\tif (className.indexOf(\' \') !== -1) {\n
+\t\t\t\teach(className.split(\' \'), function() {\n
+\t\t\t\t\tself.toggleClass(this, state);\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\tself.each(function(index, node) {\n
+\t\t\t\t\tvar existingClassName, classState;\n
+\n
+\t\t\t\t\tclassState = hasClass(node, className);\n
+\t\t\t\t\tif (classState !== state) {\n
+\t\t\t\t\t\texistingClassName = node.className;\n
+\n
+\t\t\t\t\t\tif (classState) {\n
+\t\t\t\t\t\t\tnode.className = trim((" " + existingClassName + " ").replace(\' \' + className + \' \', \' \'));\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tnode.className += existingClassName ? \' \' + className : className;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the first item in set has the specified class.\n
+\t\t *\n
+\t\t * @method hasClass\n
+\t\t * @param {String} className Class name to check for.\n
+\t\t * @return {Boolean} True/false if the set has the specified class.\n
+\t\t */\n
+\t\thasClass: function(className) {\n
+\t\t\treturn hasClass(this[0], className);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Executes the callback function for each item DomQuery collection. If you return false in the\n
+\t\t * callback it will break the loop.\n
+\t\t *\n
+\t\t * @method each\n
+\t\t * @param {function} callback Callback function to execute for each item.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\teach: function(callback) {\n
+\t\t\treturn each(this, callback);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Binds an event with callback function to the elements in set.\n
+\t\t *\n
+\t\t * @method on\n
+\t\t * @param {String} name Name of the event to bind.\n
+\t\t * @param {function} callback Callback function to execute when the event occurs.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\ton: function(name, callback) {\n
+\t\t\treturn this.each(function() {\n
+\t\t\t\tEvent.bind(this, name, callback);\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Unbinds an event with callback function to the elements in set.\n
+\t\t *\n
+\t\t * @method off\n
+\t\t * @param {String} name Optional name of the event to bind.\n
+\t\t * @param {function} callback Optional callback function to execute when the event occurs.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\toff: function(name, callback) {\n
+\t\t\treturn this.each(function() {\n
+\t\t\t\tEvent.unbind(this, name, callback);\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Triggers the specified event by name or event object.\n
+\t\t *\n
+\t\t * @method trigger\n
+\t\t * @param {String/Object} name Name of the event to trigger or event object.\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\ttrigger: function(name) {\n
+\t\t\treturn this.each(function() {\n
+\t\t\t\tif (typeof name == \'object\') {\n
+\t\t\t\t\tEvent.fire(this, name.type, name);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tEvent.fire(this, name);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Shows all elements in set.\n
+\t\t *\n
+\t\t * @method show\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\tshow: function() {\n
+\t\t\treturn this.css(\'display\', \'\');\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Hides all elements in set.\n
+\t\t *\n
+\t\t * @method hide\n
+\t\t * @return {tinymce.dom.DomQuery} Current set.\n
+\t\t */\n
+\t\thide: function() {\n
+\t\t\treturn this.css(\'display\', \'none\');\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Slices the current set.\n
+\t\t *\n
+\t\t * @method slice\n
+\t\t * @param {Number} start Start index to slice at.\n
+\t\t * @param {Number} end Optional ened index to end slice at.\n
+\t\t * @return {tinymce.dom.DomQuery} Sliced set.\n
+\t\t */\n
+\t\tslice: function() {\n
+\t\t\treturn new DomQuery(slice.apply(this, arguments));\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Makes the set equal to the specified index.\n
+\t\t *\n
+\t\t * @method eq\n
+\t\t * @param {Number} index Index to set it equal to.\n
+\t\t * @return {tinymce.dom.DomQuery} Single item set.\n
+\t\t */\n
+\t\teq: function(index) {\n
+\t\t\treturn index === -1 ? this.slice(index) : this.slice(index, +index + 1);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Makes the set equal to first element in set.\n
+\t\t *\n
+\t\t * @method first\n
+\t\t * @return {tinymce.dom.DomQuery} Single item set.\n
+\t\t */\n
+\t\tfirst: function() {\n
+\t\t\treturn this.eq(0);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Makes the set equal to last element in set.\n
+\t\t *\n
+\t\t * @method last\n
+\t\t * @return {tinymce.dom.DomQuery} Single item set.\n
+\t\t */\n
+\t\tlast: function() {\n
+\t\t\treturn this.eq(-1);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Finds elements by the specified selector for each element in set.\n
+\t\t *\n
+\t\t * @method find\n
+\t\t * @param {String} selector Selector to find elements by.\n
+\t\t * @return {tinymce.dom.DomQuery} Set with matches elements.\n
+\t\t */\n
+\t\tfind: function(selector) {\n
+\t\t\tvar i, l, ret = [];\n
+\n
+\t\t\tfor (i = 0, l = this.length; i < l; i++) {\n
+\t\t\t\tDomQuery.find(selector, this[i], ret);\n
+\t\t\t}\n
+\n
+\t\t\treturn DomQuery(ret);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Filters the current set with the specified selector.\n
+\t\t *\n
+\t\t * @method filter\n
+\t\t * @param {String/function} selector Selector to filter elements by.\n
+\t\t * @return {tinymce.dom.DomQuery} Set with filtered elements.\n
+\t\t */\n
+\t\tfilter: function(selector) {\n
+\t\t\tif (typeof selector == \'function\') {\n
+\t\t\t\treturn DomQuery(grep(this.toArray(), function(item, i) {\n
+\t\t\t\t\treturn selector(i, item);\n
+\t\t\t\t}));\n
+\t\t\t}\n
+\n
+\t\t\treturn DomQuery(DomQuery.filter(selector, this.toArray()));\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Gets the current node or any partent matching the specified selector.\n
+\t\t *\n
+\t\t * @method closest\n
+\t\t * @param {String/Element/tinymce.dom.DomQuery} selector Selector or element to find.\n
+\t\t * @return {tinymce.dom.DomQuery} Set with closest elements.\n
+\t\t */\n
+\t\tclosest: function(selector) {\n
+\t\t\tvar result = [];\n
+\n
+\t\t\tif (selector instanceof DomQuery) {\n
+\t\t\t\tselector = selector[0];\n
+\t\t\t}\n
+\n
+\t\t\tthis.each(function(i, node) {\n
+\t\t\t\twhile (node) {\n
+\t\t\t\t\tif (typeof selector == \'string\' && DomQuery(node).is(selector)) {\n
+\t\t\t\t\t\tresult.push(node);\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t} else if (node == selector) {\n
+\t\t\t\t\t\tresult.push(node);\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode = node.parentNode;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn DomQuery(result);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the offset of the first element in set or sets the top/left css properties of all elements in set.\n
+\t\t *\n
+\t\t * @method offset\n
+\t\t * @param {Object} offset Optional offset object to set on each item.\n
+\t\t * @return {Object/tinymce.dom.DomQuery} Returns the first element offset or the current set if you specified an offset.\n
+\t\t */\n
+\t\toffset: function(offset) {\n
+\t\t\tvar elm, doc, docElm;\n
+\t\t\tvar x = 0, y = 0, pos;\n
+\n
+\t\t\tif (!offset) {\n
+\t\t\t\telm = this[0];\n
+\n
+\t\t\t\tif (elm) {\n
+\t\t\t\t\tdoc = elm.ownerDocument;\n
+\t\t\t\t\tdocElm = doc.documentElement;\n
+\n
+\t\t\t\t\tif (elm.getBoundingClientRect) {\n
+\t\t\t\t\t\tpos = elm.getBoundingClientRect();\n
+\t\t\t\t\t\tx = pos.left + (docElm.scrollLeft || doc.body.scrollLeft) - docElm.clientLeft;\n
+\t\t\t\t\t\ty = pos.top + (docElm.scrollTop || doc.body.scrollTop) - docElm.clientTop;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn {\n
+\t\t\t\t\tleft: x,\n
+\t\t\t\t\ttop: y\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\treturn this.css(offset);\n
+\t\t},\n
+\n
+\t\tpush: push,\n
+\t\tsort: [].sort,\n
+\t\tsplice: [].splice\n
+\t};\n
+\n
+\t// Static members\n
+\tTools.extend(DomQuery, {\n
+\t\t/**\n
+\t\t * Extends the specified object with one or more objects.\n
+\t\t *\n
+\t\t * @static\n
+\t\t * @method extend\n
+\t\t * @param {Object} target Target object to extend with new items.\n
+\t\t * @param {Object..} object Object to extend the target with.\n
+\t\t * @return {Object} Extended input object.\n
+\t\t */\n
+\t\textend: Tools.extend,\n
+\n
+\t\t/**\n
+\t\t * Creates an array out of an array like object.\n
+\t\t *\n
+\t\t * @static\n
+\t\t * @method makeArray\n
+\t\t * @param {Object} object Object to convert to array.\n
+\t\t * @return {Arrau} Array produced from object.\n
+\t\t */\n
+\t\tmakeArray: function(array) {\n
+\t\t\tif (isWindow(array) || array.nodeType) {\n
+\t\t\t\treturn [array];\n
+\t\t\t}\n
+\n
+\t\t\treturn Tools.toArray(array);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the index of the specified item inside the array.\n
+\t\t *\n
+\t\t * @static\n
+\t\t * @method inArray\n
+\t\t * @param {Object} item Item to look for.\n
+\t\t * @param {Array} array Array to look for item in.\n
+\t\t * @return {Number} Index of the item or -1.\n
+\t\t */\n
+\t\tinArray: inArray,\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified object is an array or not.\n
+\t\t *\n
+\t\t * @static\n
+\t\t * @method isArray\n
+\t\t * @param {Object} array Object to check if it\'s an array or not.\n
+\t\t * @return {Boolean} True/false if the object is an array.\n
+\t\t */\n
+\t\tisArray: Tools.isArray,\n
+\n
+\t\t/**\n
+\t\t * Executes the callback function for each item in array/object. If you return false in the\n
+\t\t * callback it will break the loop.\n
+\t\t *\n
+\t\t * @static\n
+\t\t * @method each\n
+\t\t * @param {Object} obj Object to iterate.\n
+\t\t * @param {function} callback Callback function to execute for each item.\n
+\t\t */\n
+\t\teach: each,\n
+\n
+\t\t/**\n
+\t\t * Removes whitespace from the beginning and end of a string.\n
+\t\t *\n
+\t\t * @static\n
+\t\t * @method trim\n
+\t\t * @param {String} str String to remove whitespace from.\n
+\t\t * @return {String} New string with removed whitespace.\n
+\t\t */\n
+\t\ttrim: trim,\n
+\n
+\t\t/**\n
+\t\t * Filters out items from the input array by calling the specified function for each item.\n
+\t\t * If the function returns false the item will be excluded if it returns true it will be included.\n
+\t\t *\n
+\t\t * @static\n
+\t\t * @method grep\n
+\t\t * @param {Array} array Array of items to loop though.\n
+\t\t * @param {function} callback Function to call for each item. Include/exclude depends on it\'s return value.\n
+\t\t * @return {Array} New array with values imported and filtered based in input.\n
+\t\t * @example\n
+\t\t * // Filter out some items, this will return an array with 4 and 5\n
+\t\t * var items = DomQuery.grep([1, 2, 3, 4, 5], function(v) {return v > 3;});\n
+\t\t */\n
+\t\tgrep: grep,\n
+\n
+\t\t// Sizzle\n
+\t\tfind: Sizzle,\n
+\t\texpr: Sizzle.selectors,\n
+\t\tunique: Sizzle.uniqueSort,\n
+\t\ttext: Sizzle.getText,\n
+\t\tcontains: Sizzle.contains,\n
+\t\tfilter: function(expr, elems, not) {\n
+\t\t\tvar i = elems.length;\n
+\n
+\t\t\tif (not) {\n
+\t\t\t\texpr = ":not(" + expr + ")";\n
+\t\t\t}\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tif (elems[i].nodeType != 1) {\n
+\t\t\t\t\telems.splice(i, 1);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (elems.length === 1) {\n
+\t\t\t\telems = DomQuery.find.matchesSelector(elems[0], expr) ? [elems[0]] : [];\n
+\t\t\t} else {\n
+\t\t\t\telems = DomQuery.find.matches(expr, elems);\n
+\t\t\t}\n
+\n
+\t\t\treturn elems;\n
+\t\t}\n
+\t});\n
+\n
+\tfunction dir(el, prop, until) {\n
+\t\tvar matched = [], cur = el[prop];\n
+\n
+\t\tif (typeof until != \'string\' && until instanceof DomQuery) {\n
+\t\t\tuntil = until[0];\n
+\t\t}\n
+\n
+\t\twhile (cur && cur.nodeType !== 9) {\n
+\t\t\tif (until !== undefined) {\n
+\t\t\t\tif (cur === until) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (typeof until == \'string\' && DomQuery(cur).is(until)) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (cur.nodeType === 1) {\n
+\t\t\t\tmatched.push(cur);\n
+\t\t\t}\n
+\n
+\t\t\tcur = cur[prop];\n
+\t\t}\n
+\n
+\t\treturn matched;\n
+\t}\n
+\n
+\tfunction sibling(node, siblingName, nodeType, until) {\n
+\t\tvar result = [];\n
+\n
+\t\tif (until instanceof DomQuery) {\n
+\t\t\tuntil = until[0];\n
+\t\t}\n
+\n
+\t\tfor (; node; node = node[siblingName]) {\n
+\t\t\tif (nodeType && node.nodeType !== nodeType) {\n
+\t\t\t\tcontinue;\n
+\t\t\t}\n
+\n
+\t\t\tif (until !== undefined) {\n
+\t\t\t\tif (node === until) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (typeof until == \'string\' && DomQuery(node).is(until)) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tresult.push(node);\n
+\t\t}\n
+\n
+\t\treturn result;\n
+\t}\n
+\n
+\tfunction firstSibling(node, siblingName, nodeType) {\n
+\t\tfor (node = node[siblingName]; node; node = node[siblingName]) {\n
+\t\t\tif (node.nodeType == nodeType) {\n
+\t\t\t\treturn node;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn null;\n
+\t}\n
+\n
+\teach({\n
+\t\t/**\n
+\t\t * Returns a new collection with the parent of each item in current collection matching the optional selector.\n
+\t\t *\n
+\t\t * @method parent\n
+\t\t * @param {String} selector Selector to match parents agains.\n
+\t\t * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.\n
+\t\t */\n
+\t\tparent: function(node) {\n
+\t\t\tvar parent = node.parentNode;\n
+\n
+\t\t\treturn parent && parent.nodeType !== 11 ? parent : null;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a new collection with the all the parents of each item in current collection matching the optional selector.\n
+\t\t *\n
+\t\t * @method parents\n
+\t\t * @param {String} selector Selector to match parents agains.\n
+\t\t * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.\n
+\t\t */\n
+\t\tparents: function(node) {\n
+\t\t\treturn dir(node, "parentNode");\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a new collection with next sibling of each item in current collection matching the optional selector.\n
+\t\t *\n
+\t\t * @method next\n
+\t\t * @param {String} selector Selector to match the next element against.\n
+\t\t * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.\n
+\t\t */\n
+\t\tnext: function(node) {\n
+\t\t\treturn firstSibling(node, \'nextSibling\', 1);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a new collection with previous sibling of each item in current collection matching the optional selector.\n
+\t\t *\n
+\t\t * @method prev\n
+\t\t * @param {String} selector Selector to match the previous element against.\n
+\t\t * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.\n
+\t\t */\n
+\t\tprev: function(node) {\n
+\t\t\treturn firstSibling(node, \'previousSibling\', 1);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns all child elements matching the optional selector.\n
+\t\t *\n
+\t\t * @method children\n
+\t\t * @param {String} selector Selector to match the elements against.\n
+\t\t * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.\n
+\t\t */\n
+\t\tchildren: function(node) {\n
+\t\t\treturn sibling(node.firstChild, \'nextSibling\', 1);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns all child nodes matching the optional selector.\n
+\t\t *\n
+\t\t * @method contents\n
+\t\t * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.\n
+\t\t */\n
+\t\tcontents: function(node) {\n
+\t\t\treturn Tools.toArray((node.nodeName === "iframe" ? node.contentDocument || node.contentWindow.document : node).childNodes);\n
+\t\t}\n
+\t}, function(name, fn) {\n
+\t\tDomQuery.fn[name] = function(selector) {\n
+\t\t\tvar self = this, result = [];\n
+\n
+\t\t\tself.each(function() {\n
+\t\t\t\tvar nodes = fn.call(result, this, selector, result);\n
+\n
+\t\t\t\tif (nodes) {\n
+\t\t\t\t\tif (DomQuery.isArray(nodes)) {\n
+\t\t\t\t\t\tresult.push.apply(result, nodes);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tresult.push(nodes);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// If traversing on multiple elements we might get the same elements twice\n
+\t\t\tif (this.length > 1) {\n
+\t\t\t\tresult = DomQuery.unique(result);\n
+\n
+\t\t\t\tif (name.indexOf(\'parents\') === 0) {\n
+\t\t\t\t\tresult = result.reverse();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tresult = DomQuery(result);\n
+\n
+\t\t\tif (selector) {\n
+\t\t\t\treturn result.filter(selector);\n
+\t\t\t}\n
+\n
+\t\t\treturn result;\n
+\t\t};\n
+\t});\n
+\n
+\teach({\n
+\t\t/**\n
+\t\t * Returns a new collection with the all the parents until the matching selector/element\n
+\t\t * of each item in current collection matching the optional selector.\n
+\t\t *\n
+\t\t * @method parentsUntil\n
+\t\t * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.\n
+\t\t * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching parents.\n
+\t\t */\n
+\t\tparentsUntil: function(node, until) {\n
+\t\t\treturn dir(node, "parentNode", until);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a new collection with all next siblings of each item in current collection matching the optional selector.\n
+\t\t *\n
+\t\t * @method nextUntil\n
+\t\t * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.\n
+\t\t * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.\n
+\t\t */\n
+\t\tnextUntil: function(node, until) {\n
+\t\t\treturn sibling(node, \'nextSibling\', 1, until).slice(1);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a new collection with all previous siblings of each item in current collection matching the optional selector.\n
+\t\t *\n
+\t\t * @method prevUntil\n
+\t\t * @param {String/Element/tinymce.dom.DomQuery} until Until the matching selector or element.\n
+\t\t * @return {tinymce.dom.DomQuery} New DomQuery instance with all matching elements.\n
+\t\t */\n
+\t\tprevUntil: function(node, until) {\n
+\t\t\treturn sibling(node, \'previousSibling\', 1, until).slice(1);\n
+\t\t}\n
+\t}, function(name, fn) {\n
+\t\tDomQuery.fn[name] = function(selector, filter) {\n
+\t\t\tvar self = this, result = [];\n
+\n
+\t\t\tself.each(function() {\n
+\t\t\t\tvar nodes = fn.call(result, this, selector, result);\n
+\n
+\t\t\t\tif (nodes) {\n
+\t\t\t\t\tif (DomQuery.isArray(nodes)) {\n
+\t\t\t\t\t\tresult.push.apply(result, nodes);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tresult.push(nodes);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// If traversing on multiple elements we might get the same elements twice\n
+\t\t\tif (this.length > 1) {\n
+\t\t\t\tresult = DomQuery.unique(result);\n
+\n
+\t\t\t\tif (name.indexOf(\'parents\') === 0 || name === \'prevUntil\') {\n
+\t\t\t\t\tresult = result.reverse();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tresult = DomQuery(result);\n
+\n
+\t\t\tif (filter) {\n
+\t\t\t\treturn result.filter(filter);\n
+\t\t\t}\n
+\n
+\t\t\treturn result;\n
+\t\t};\n
+\t});\n
+\n
+\t/**\n
+\t * Returns true/false if the current set items matches the selector.\n
+\t *\n
+\t * @method is\n
+\t * @param {String} selector Selector to match the elements against.\n
+\t * @return {Boolean} True/false if the current set matches the selector.\n
+\t */\n
+\tDomQuery.fn.is = function(selector) {\n
+\t\treturn !!selector && this.filter(selector).length > 0;\n
+\t};\n
+\n
+\tDomQuery.fn.init.prototype = DomQuery.fn;\n
+\n
+\tDomQuery.overrideDefaults = function(callback) {\n
+\t\tvar defaults;\n
+\n
+\t\tfunction sub(selector, context) {\n
+\t\t\tdefaults = defaults || callback();\n
+\n
+\t\t\tif (arguments.length === 0) {\n
+\t\t\t\tselector = defaults.element;\n
+\t\t\t}\n
+\n
+\t\t\tif (!context) {\n
+\t\t\t\tcontext = defaults.context;\n
+\t\t\t}\n
+\n
+\t\t\treturn new sub.fn.init(selector, context);\n
+\t\t}\n
+\n
+\t\tDomQuery.extend(sub, this);\n
+\n
+\t\treturn sub;\n
+\t};\n
+\n
+\tfunction appendHooks(targetHooks, prop, hooks) {\n
+\t\teach(hooks, function(name, func) {\n
+\t\t\ttargetHooks[name] = targetHooks[name] || {};\n
+\t\t\ttargetHooks[name][prop] = func;\n
+\t\t});\n
+\t}\n
+\n
+\tif (Env.ie && Env.ie < 8) {\n
+\t\tappendHooks(attrHooks, \'get\', {\n
+\t\t\tmaxlength: function(elm) {\n
+\t\t\t\tvar value = elm.maxLength;\n
+\n
+\t\t\t\tif (value === 0x7fffffff) {\n
+\t\t\t\t\treturn undef;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn value;\n
+\t\t\t},\n
+\n
+\t\t\tsize: function(elm) {\n
+\t\t\t\tvar value = elm.size;\n
+\n
+\t\t\t\tif (value === 20) {\n
+\t\t\t\t\treturn undef;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn value;\n
+\t\t\t},\n
+\n
+\t\t\t\'class\': function(elm) {\n
+\t\t\t\treturn elm.className;\n
+\t\t\t},\n
+\n
+\t\t\tstyle: function(elm) {\n
+\t\t\t\tvar value = elm.style.cssText;\n
+\n
+\t\t\t\tif (value.length === 0) {\n
+\t\t\t\t\treturn undef;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn value;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tappendHooks(attrHooks, \'set\', {\n
+\t\t\t\'class\': function(elm, value) {\n
+\t\t\t\telm.className = value;\n
+\t\t\t},\n
+\n
+\t\t\tstyle: function(elm, value) {\n
+\t\t\t\telm.style.cssText = value;\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tif (Env.ie && Env.ie < 9) {\n
+\t\t/*jshint sub:true */\n
+\t\t/*eslint dot-notation: 0*/\n
+\t\tcssFix[\'float\'] = \'styleFloat\';\n
+\n
+\t\tappendHooks(cssHooks, \'set\', {\n
+\t\t\topacity: function(elm, value) {\n
+\t\t\t\tvar style = elm.style;\n
+\n
+\t\t\t\tif (value === null || value === \'\') {\n
+\t\t\t\t\tstyle.removeAttribute(\'filter\');\n
+\t\t\t\t} else {\n
+\t\t\t\t\tstyle.zoom = 1;\n
+\t\t\t\t\tstyle.filter = \'alpha(opacity=\' + (value * 100) + \')\';\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tDomQuery.attrHooks = attrHooks;\n
+\tDomQuery.cssHooks = cssHooks;\n
+\n
+\treturn DomQuery;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>37190</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DomQuery.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

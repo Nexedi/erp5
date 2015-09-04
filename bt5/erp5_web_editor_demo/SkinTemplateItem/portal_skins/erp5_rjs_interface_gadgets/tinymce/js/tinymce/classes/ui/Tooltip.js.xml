@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268317.34</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Tooltip.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Tooltip.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Creates a tooltip instance.\n
+ *\n
+ * @-x-less ToolTip.less\n
+ * @class tinymce.ui.ToolTip\n
+ * @extends tinymce.ui.Control\n
+ * @mixes tinymce.ui.Movable\n
+ */\n
+define("tinymce/ui/Tooltip", [\n
+\t"tinymce/ui/Control",\n
+\t"tinymce/ui/Movable"\n
+], function(Control, Movable) {\n
+\treturn Control.extend({\n
+\t\tMixins: [Movable],\n
+\n
+\t\tDefaults: {\n
+\t\t\tclasses: \'widget tooltip tooltip-n\'\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, prefix = self.classPrefix;\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + self._id + \'" class="\' + self.classes + \'" role="presentation">\' +\n
+\t\t\t\t\t\'<div class="\' + prefix + \'tooltip-arrow"></div>\' +\n
+\t\t\t\t\t\'<div class="\' + prefix + \'tooltip-inner">\' + self.encode(self.state.get(\'text\')) + \'</div>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.state.on(\'change:text\', function(e) {\n
+\t\t\t\tself.getEl().lastChild.innerHTML = self.encode(e.value);\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Repaints the control after a layout operation.\n
+\t\t *\n
+\t\t * @method repaint\n
+\t\t */\n
+\t\trepaint: function() {\n
+\t\t\tvar self = this, style, rect;\n
+\n
+\t\t\tstyle = self.getEl().style;\n
+\t\t\trect = self._layoutRect;\n
+\n
+\t\t\tstyle.left = rect.x + \'px\';\n
+\t\t\tstyle.top = rect.y + \'px\';\n
+\t\t\tstyle.zIndex = 0xFFFF + 0xFFFF;\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1587</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Tooltip.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

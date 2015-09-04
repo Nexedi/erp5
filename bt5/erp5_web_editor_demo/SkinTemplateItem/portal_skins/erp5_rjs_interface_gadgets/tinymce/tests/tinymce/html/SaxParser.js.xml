@@ -1,0 +1,778 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268190.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SaxParser.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>(function() {\n
+\tmodule("tinymce.html.SaxParser");\n
+\n
+\tvar writer = new tinymce.html.Writer(), schema = new tinymce.html.Schema();\n
+\n
+\tfunction createCounter(writer) {\n
+\t\tvar counts = {};\n
+\n
+\t\treturn {\n
+\t\t\tcounts : counts,\n
+\n
+\t\t\tcomment: function(text) {\n
+\t\t\t\tif ("comment" in counts) {\n
+\t\t\t\t\tcounts.comment++;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcounts.comment = 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.comment(text);\n
+\t\t\t},\n
+\n
+\t\t\tcdata: function(text) {\n
+\t\t\t\tif ("cdata" in counts) {\n
+\t\t\t\t\tcounts.cdata++;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcounts.cdata = 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.cdata(text);\n
+\t\t\t},\n
+\n
+\t\t\ttext: function(text, raw) {\n
+\t\t\t\tif ("text" in counts) {\n
+\t\t\t\t\tcounts.text++;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcounts.text = 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.text(text, raw);\n
+\t\t\t},\n
+\n
+\t\t\tstart: function(name, attrs, empty) {\n
+\t\t\t\tif ("start" in counts) {\n
+\t\t\t\t\tcounts.start++;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcounts.start = 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.start(name, attrs, empty);\n
+\t\t\t},\n
+\n
+\t\t\tend: function(name) {\n
+\t\t\t\tif ("end" in counts) {\n
+\t\t\t\t\tcounts.end++;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcounts.end = 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.end(name);\n
+\t\t\t},\n
+\n
+\t\t\tpi: function(name, text) {\n
+\t\t\t\tif ("pi" in counts) {\n
+\t\t\t\t\tcounts.pi++;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcounts.pi = 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.pi(name, text);\n
+\t\t\t},\n
+\n
+\t\t\tdoctype: function(text) {\n
+\t\t\t\tif ("doctype:" in counts) {\n
+\t\t\t\t\tcounts.doctype++;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcounts.doctype = 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.doctype(text);\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+\n
+\ttest(\'Parse elements\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\texpect(48);\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074span id=id1 title="title value" class=\\\'class1 class2\\\' data-value="value1" MYATTR="val1" myns:myattr="val2" disabled empty=""\076\074/span\076\');\n
+\t\tequal(writer.getContent(), \'\074span id="id1" title="title value" class="class1 class2" data-value="value1" myattr="val1" myns:myattr="val2" disabled="disabled" empty=""\076\074/span\076\', \'Parse attribute formats.\');\n
+\t\tdeepEqual(counter.counts, {start:1, end:1}, \'Parse attribute formats counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074b href=\\\'"\046amp;\074\076\\\'\076\074/b\076\');\n
+\t\tequal(writer.getContent(), \'\074b href="\046quot;\046amp;\046lt;\046gt;"\076\074/b\076\', \'Parse attributes with \074\076 in them.\');\n
+\t\tdeepEqual(counter.counts, {start:1, end:1}, \'Parse attributes with \074\076 in them (count).\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074span title=" "class=" "\076\074/span\076\');\n
+\t\tequal(writer.getContent(), \'\074span title=" " class=" "\076\074/span\076\', \'Parse compressed attributes.\');\n
+\t\tdeepEqual(counter.counts, {start:1, end:1}, \'Parse compressed attributes (count).\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074span title\076\074/span\076\');\n
+\t\tequal(writer.getContent(), \'\074span title=""\076\074/span\076\', \'Single empty attribute.\');\n
+\t\tdeepEqual(counter.counts, {start:1, end:1}, \'Single empty attributes (count).\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074span class="class" title\076\074/span\076\');\n
+\t\tequal(writer.getContent(), \'\074span class="class" title=""\076\074/span\076\', \'Empty attribute at end.\');\n
+\t\tdeepEqual(counter.counts, {start:1, end:1}, \'Empty attribute at end (count).\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074span title class="class"\076\074/span\076\');\n
+\t\tequal(writer.getContent(), \'\074span title="" class="class"\076\074/span\076\', \'Empty attribute at start.\');\n
+\t\tdeepEqual(counter.counts, {start:1, end:1}, \'Empty attribute at start (count).\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074img src="test"\076\');\n
+\t\tequal(writer.getContent(), \'\074img src="test" /\076\', \'Parse empty element.\');\n
+\t\tdeepEqual(counter.counts, {start:1}, \'Parse empty element counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074img\\nsrc="test"\\ntitle="row1\\nrow2"\076\');\n
+\t\tequal(writer.getContent(), \'\074img src="test" title="row1\\nrow2" /\076\', \'Parse attributes with linebreak.\');\n
+\t\tdeepEqual(counter.counts, {start: 1}, \'Parse attributes with linebreak counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074img     \\t  \\t   src="test"     \\t  \\t   title="\\t    row1\\t     row2"\076\');\n
+\t\tequal(writer.getContent(), \'\074img src="test" title="\\t    row1\\t     row2" /\076\', \'Parse attributes with whitespace.\');\n
+\t\tdeepEqual(counter.counts, {start: 1}, \'Parse attributes with whitespace counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074myns:mytag\076text\074/myns:mytag\076\');\n
+\t\tequal(writer.getContent(), \'\074myns:mytag\076text\074/myns:mytag\076\', \'Parse element with namespace.\');\n
+\t\tdeepEqual(counter.counts, {start:1, text:1, end: 1}, \'Parse element with namespace counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074myns-mytag\076text\074/myns-mytag\076\');\n
+\t\tequal(writer.getContent(), \'\074myns-mytag\076text\074/myns-mytag\076\', \'Parse element with dash name.\');\n
+\t\tdeepEqual(counter.counts, {start:1, text:1, end:1}, \'Parse element with dash name counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074myns_mytag\076text\074/myns_mytag\076\');\n
+\t\tequal(writer.getContent(), \'\074myns_mytag\076text\074/myns_mytag\076\', \'Parse element with underscore name.\');\n
+\t\tdeepEqual(counter.counts, {start:1, text:1, end:1}, \'Parse element with underscore name counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074p\076text2\074b\076text3\074/p\076text4\074/b\076text5\');\n
+\t\tequal(writer.getContent(), \'text1\074p\076text2\074b\076text3\074/b\076\074/p\076text4text5\', \'Parse tag soup 1.\');\n
+\t\tdeepEqual(counter.counts, {text:5, start: 2, end: 2}, \'Parse tag soup 1 counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074P\076text2\074B\076text3\074/p\076text4\074/b\076text5\');\n
+\t\tequal(writer.getContent(), \'text1\074p\076text2\074b\076text3\074/b\076\074/p\076text4text5\', \'Parse tag soup 2.\');\n
+\t\tdeepEqual(counter.counts, {text: 5, start: 2, end: 2}, \'Parse tag soup 2 counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074P\076text2\074B\076tex\074t3\074/p\076te\076xt4\074/b\076text5\');\n
+\t\tequal(writer.getContent(), \'text1\074p\076text2\074b\076tex\046lt;t3\074/b\076\074/p\076te\046gt;xt4text5\', \'Parse tag soup 3.\');\n
+\t\tdeepEqual(counter.counts, {text: 5, start: 2, end: 2}, \'Parse tag soup 3 counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074p\076text2\074b\076text3\');\n
+\t\tequal(writer.getContent(), \'text1\074p\076text2\074b\076text3\074/b\076\074/p\076\', \'Parse tag soup 4.\');\n
+\t\tdeepEqual(counter.counts, {text: 3, start: 2, end: 2}, \'Parse tag soup 4 counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074script\076text2\');\n
+\t\tequal(writer.getContent(), \'text1\074script\076text2\074/s\' + \'cript\076\', \'Parse tag soup 5.\');\n
+\t\tdeepEqual(counter.counts, {text: 2, start: 1, end: 1}, \'Parse tag soup 5 counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074style\076text2\');\n
+\t\tequal(writer.getContent(), \'text1\074style\076text2\074/st\' + \'yle\076\', \'Parse tag soup 6.\');\n
+\t\tdeepEqual(counter.counts, {text: 2, start: 1, end: 1}, \'Parse tag soup 6 counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074span title="\074test" data-test="test\076"\076\074/span\076\');\n
+\t\tequal(writer.getContent(), \'text1\074span title="\046lt;test" data-test="test\046gt;"\076\074/span\076\', \'Parse element with \074/\076 in attributes.\');\n
+\t\tdeepEqual(counter.counts, {text: 1, start: 1, end: 1}, \'Parse element with \074/\076 in attributes counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse("text\\n\074SC"+"RIPT type=mce-text/javascript\076// \074![CDATA[\\nalert(\'HELLO WORLD!\');\\n// ]]\076\074/SC"+"RIPT\076");\n
+\t\tequal(writer.getContent(), "text\\n\074sc"+"ript type=\\"mce-text/javascript\\"\076// \074![CDATA[\\nalert(\'HELLO WORLD!\');\\n// ]]\076\074/sc"+"ript\076", \'Parse cdata script.\');\n
+\t\tdeepEqual(counter.counts, {text: 2, start: 1, end: 1}, \'Parse cdata script counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074noscript\076te\074br\076xt2\074/noscript\076text3\');\n
+\t\tequal(writer.getContent(), \'text1\074noscript\076te\074br\076xt2\074/noscript\076text3\', \'Parse noscript elements.\');\n
+\t\tdeepEqual(counter.counts, {text: 3, start: 1, end: 1}, \'Parse noscript elements counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074p\076a\074/p\076\074p /\076\074p\076b\074/p\076\');\n
+\t\tequal(writer.getContent(), \'\074p\076a\074/p\076\074p\076\074/p\076\074p\076b\074/p\076\', \'Parse invalid closed element.\');\n
+\t\tdeepEqual(counter.counts, {text: 2, start: 3, end: 3}, \'Parse invalid closed element counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074br\076\074br /\076\074br/\076\');\n
+\t\tequal(writer.getContent(), \'\074br /\076\074br /\076\074br /\076\', \'Parse short ended elements.\');\n
+\t\tdeepEqual(counter.counts, {start: 3}, \'Parse short ended elements counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074p \076\074/p\076\');\n
+\t\tequal(writer.getContent(), \'\074p\076\074/p\076\', \'Parse start elements with whitespace only attribs part.\');\n
+\t\tdeepEqual(counter.counts, {start: 1, end: 1}, \'Parse start elements with whitespace only attribs part (counts).\');\n
+\t});\n
+\n
+\ttest(\'Parse style elements\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\texpect(8);\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074em\076\074style\076// \074b\076tag\074/b\076\074/st\' + \'yle\076text2\074/em\076\');\n
+\t\tequal(writer.getContent(), \'text1\074em\076\074style\076// \074b\076tag\074/b\076\074/st\' + \'yle\076text2\074/em\076\', \'Parse style element.\');\n
+\t\tdeepEqual(counter.counts, {start: 2, end: 2, text: 3}, \'Parse style element counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074em\076\074style id="id"\076// \074b\076tag\074/b\076\074/st\' + \'yle\076text2\074/em\076\');\n
+\t\tequal(writer.getContent(), \'text1\074em\076\074style id="id"\076// \074b\076tag\074/b\076\074/st\' + \'yle\076text2\074/em\076\', \'Parse style element with attributes.\');\n
+\t\tdeepEqual(counter.counts, {text:3, start:2, end:2}, \'Parse style element with attributes counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074em\076\074style\076\074/st\' + \'yle\076text2\074/span\076\');\n
+\t\tequal(writer.getContent(), \'text1\074em\076\074style\076\074/st\' + \'yle\076text2\074/em\076\', \'Parse empty style element.\');\n
+\t\tdeepEqual(counter.counts, {text:2, start:2, end:2}, \'Parse empty style element counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(tinymce.extend({validate : true}, counter), new tinymce.html.Schema({invalid_elements: \'style\'}));\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074em\076\074style\076text2\074/st\' + \'yle\076text3\074/em\076\');\n
+\t\tequal(writer.getContent(), \'text1\074em\076text3\074/em\076\', \'Parse invalid style element.\');\n
+\t\tdeepEqual(counter.counts, {text:2, start:1, end:1}, \'Parse invalid style element (count).\');\n
+\t});\n
+\n
+\ttest(\'Parse script elements\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\texpect(8);\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074em\076\074script\076// \074b\076tag\074/b\076\074/s\' + \'cript\076text2\074/em\076\');\n
+\t\tequal(writer.getContent(), \'text1\074em\076\074script\076// \074b\076tag\074/b\076\074/s\' + \'cript\076text2\074/em\076\', \'Parse script element.\');\n
+\t\tdeepEqual(counter.counts, {start:2, end:2, text:3}, \'Parse script element counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074em\076\074script id="id"\076// \074b\076tag\074/b\076\074/s\' + \'cript\076text2\074/em\076\');\n
+\t\tequal(writer.getContent(), \'text1\074em\076\074script id="id"\076// \074b\076tag\074/b\076\074/s\' + \'cript\076text2\074/em\076\', \'Parse script element with attributes.\');\n
+\t\tdeepEqual(counter.counts, {start:2, end:2, text:3}, \'Parse script element with attributes counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074em\076\074script\076\074/s\' + \'cript\076text2\074/em\076\');\n
+\t\tequal(writer.getContent(), \'text1\074em\076\074script\076\074/s\' + \'cript\076text2\074/em\076\', \'Parse empty script element.\');\n
+\t\tdeepEqual(counter.counts, {text: 2, start:2, end: 2}, \'Parse empty script element counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(tinymce.extend({validate : true}, counter), new tinymce.html.Schema({invalid_elements: \'script\'}));\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074em\076\074s\' + \'cript\076text2\074/s\' + \'cript\076text3\074/em\076\');\n
+\t\tequal(writer.getContent(), \'text1\074em\076text3\074/em\076\', \'Parse invalid script element.\');\n
+\t\tdeepEqual(counter.counts, {text:2, start:1, end:1}, \'Parse invalid script element (count).\');\n
+\t});\n
+\n
+\ttest(\'Parse text\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\texpect(10);\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\');\n
+\t\tequal(writer.getContent(), \'\', \'Parse empty.\');\n
+\t\tdeepEqual(counter.counts, {}, \'Parse empty counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text\');\n
+\t\tequal(writer.getContent(), \'text\', \'Parse single text node.\');\n
+\t\tdeepEqual(counter.counts, {text: 1}, \'Parse single text node counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074b\076text\074/b\076\');\n
+\t\tequal(writer.getContent(), \'\074b\076text\074/b\076\', \'Parse wrapped text.\');\n
+\t\tdeepEqual(counter.counts, {start:1, text:1, end:1}, \'Parse wrapped text counts\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'text1\074b\076text2\074/b\076\');\n
+\t\tequal(writer.getContent(), \'text1\074b\076text2\074/b\076\', \'Parse text at start.\');\n
+\t\tdeepEqual(counter.counts, {start:1, text:2, end:1}, \'Parse text at start counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074b\076text1\074/b\076text2\');\n
+\t\tequal(writer.getContent(), \'\074b\076text1\074/b\076text2\', \'Parse text at end.\');\n
+\t\tdeepEqual(counter.counts, {start:1, end:1, text:2}, \'Parse text at end counts.\');\n
+\t});\n
+\n
+\ttest(\'Parsing comments\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\texpect(8);\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074!-- comment value --\076\');\n
+\t\tequal(writer.getContent(), \'\074!-- comment value --\076\', \'Parse comment with value.\');\n
+\t\tdeepEqual(counter.counts, {comment:1}, \'Parse comment with value count.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074!----\076\');\n
+\t\tequal(writer.getContent(), \'\', \'Parse comment without value.\');\n
+\t\tdeepEqual(counter.counts, {}, \'Parse comment without value count.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074!--\074b\076\074/b\076--\076\');\n
+\t\tequal(writer.getContent(), \'\074!--\074b\076\074/b\076--\076\', \'Parse comment with tag inside.\');\n
+\t\tdeepEqual(counter.counts, {comment:1}, \'Parse comment with tag inside counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074b\076a\074!-- value --\076b\074/b\076\');\n
+\t\tequal(writer.getContent(), \'\074b\076a\074!-- value --\076b\074/b\076\', \'Parse comment with tags around it.\');\n
+\t\tdeepEqual(counter.counts, {comment:1, text:2, start:1, end:1}, \'Parse comment with tags around it counts.\');\n
+\t});\n
+\n
+\ttest(\'Parsing cdata\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\texpect(8);\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074![CDATA[test text]]\076\');\n
+\t\tequal(writer.getContent(), \'\074![CDATA[test text]]\076\', \'Parse cdata with value.\');\n
+\t\tdeepEqual(counter.counts, {cdata:1}, \'Parse cdata with value counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074![CDATA[]]\076\');\n
+\t\tequal(writer.getContent(), \'\', \'Parse cdata without value.\');\n
+\t\tdeepEqual(counter.counts, {}, \'Parse cdata without value counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074![CDATA[\074b\076a\074/b\076]]\076\');\n
+\t\tequal(writer.getContent(), \'\074![CDATA[\074b\076a\074/b\076]]\076\', \'Parse cdata with tag inside.\');\n
+\t\tdeepEqual(counter.counts, {cdata:1}, \'Parse cdata with tag inside counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074b\076a\074![CDATA[value]]\076b\074/b\076\');\n
+\t\tequal(writer.getContent(), \'\074b\076a\074![CDATA[value]]\076b\074/b\076\', \'Parse cdata with tags around it.\');\n
+\t\tdeepEqual(counter.counts, {cdata:1, start:1, end:1, text:2}, \'Parse cdata with tags around it counts.\');\n
+\t});\n
+\n
+\ttest(\'Parse PI\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\texpect(6);\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074?xml version="1.0" encoding="UTF-8" ?\076text1\');\n
+\t\tequal(writer.getContent(), \'\074?xml version="1.0" encoding="UTF-8" ?\076text1\', \'Parse PI with attributes.\');\n
+\t\tdeepEqual(counter.counts, {pi:1, text:1}, \'Parse PI with attributes counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074?xml?\076text1\');\n
+\t\tequal(writer.getContent(), \'\074?xml?\076text1\', \'Parse PI with no data.\');\n
+\t\tdeepEqual(counter.counts, {pi:1, text:1}, \'Parse PI with data counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074?xml somevalue/\076text1\');\n
+\t\tequal(writer.getContent(), \'\074?xml somevalue?\076text1\', \'Parse PI with IE style ending.\');\n
+\t\tdeepEqual(counter.counts, {pi:1, text:1}, \'Parse PI with IE style ending counts.\');\n
+\t});\n
+\n
+\ttest(\'Parse doctype\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\texpect(4);\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"\076text1\');\n
+\t\tequal(writer.getContent(), \'\074!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"\076text1\', \'Parse DOCTYPE.\');\n
+\t\tdeepEqual(counter.counts, {doctype:1, text:1}, \'Parse HTML5 DOCTYPE counts.\');\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074!DOCTYPE html\076text1\');\n
+\t\tequal(writer.getContent(), \'\074!DOCTYPE html\076text1\', \'Parse HTML5 DOCTYPE.\');\n
+\t\tdeepEqual(counter.counts, {doctype:1, text:1}, \'Parse HTML5 DOCTYPE counts.\');\n
+\t});\n
+\n
+\ttest(\'Parse (validate)\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\texpect(2);\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = true;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074invalid1\076123\074invalid2 /\076456\074span title="title" invalid3="value"\076789\074/span\076012\074/invalid1\076\');\n
+\t\tequal(writer.getContent(), \'123456\074span title="title"\076789\074/span\076012\', \'Parse invalid elements and attributes.\');\n
+\t\tdeepEqual(counter.counts, {start:1, end:1, text:4}, \'Parse invalid elements and attributes counts.\');\n
+\t});\n
+\n
+\ttest(\'Self closing\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\texpect(1);\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = true;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074ul\076\074li\0761\074li\076\074b\0762\074/b\076\074li\076\074em\076\074b\0763\074/b\076\074/em\076\074/ul\076\');\n
+\t\tequal(writer.getContent(), \'\074ul\076\074li\0761\074/li\076\074li\076\074b\0762\074/b\076\074/li\076\074li\076\074em\076\074b\0763\074/b\076\074/em\076\074/li\076\074/ul\076\', \'Parse list with self closing items.\');\n
+\t});\n
+\n
+\ttest(\'Preserve internal elements\', function() {\n
+\t\tvar counter, parser, schema;\n
+\n
+\t\texpect(2);\n
+\n
+\t\tschema = new tinymce.html.Schema({valid_elements : \'b\'});\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = true;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074span id="id"\076\074b\076text\074/b\076\074/span\076\074span id="id" data-mce-type="something"\076\074/span\076\');\n
+\t\tequal(writer.getContent(), \'\074b\076text\074/b\076\074span id="id" data-mce-type="something"\076\074/span\076\', \'Preserve internal span element without any span schema rule.\');\n
+\n
+\t\tschema = new tinymce.html.Schema({valid_elements : \'b,span[class]\'});\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = true;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074span id="id" class="class"\076\074b\076text\074/b\076\074/span\076\074span id="id" data-mce-type="something"\076\074/span\076\');\n
+\t\tequal(writer.getContent(), \'\074span class="class"\076\074b\076text\074/b\076\074/span\076\074span id="id" data-mce-type="something"\076\074/span\076\', \'Preserve internal span element with a span schema rule.\');\n
+\t});\n
+\n
+\ttest(\'Remove internal elements\', function() {\n
+\t\tvar counter, parser, schema;\n
+\n
+\t\texpect(2);\n
+\n
+\t\tschema = new tinymce.html.Schema({valid_elements : \'b\'});\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = true;\n
+\t\tcounter.remove_internals = true;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074span id="id"\076\074b\076text\074/b\076\074/span\076\074span id="id" data-mce-type="something"\076\074/span\076\');\n
+\t\tequal(writer.getContent(), \'\074b\076text\074/b\076\', \'Remove internal span element without any span schema rule.\');\n
+\n
+\t\tschema = new tinymce.html.Schema({valid_elements : \'b,span[class]\'});\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = true;\n
+\t\tcounter.remove_internals = true;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074span id="id" class="class"\076\074b\076text\074/b\076\074/span\076\074span id="id" data-mce-type="something"\076\074/span\076\');\n
+\t\tequal(writer.getContent(), \'\074span class="class"\076\074b\076text\074/b\076\074/span\076\', \'Remove internal span element with a span schema rule.\');\n
+\n
+\t\t// Reset\n
+\t\tcounter.remove_internals = false;\n
+\t});\n
+\n
+\ttest(\'Parse attr with backslash #5436\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074a title="\\\\" href="h"\076x\074/a\076\');\n
+\t\tequal(writer.getContent(), \'\074a title="\\\\" href="h"\076x\074/a\076\');\n
+\t});\n
+\n
+\ttest(\'Parse no attributes span before strong\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = true;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074p\076\074span\076A\074/span\076 \074strong\076B\074/strong\076\074/p\076\');\n
+\t\tequal(writer.getContent(), \'\074p\076A \074strong\076B\074/strong\076\074/p\076\');\n
+\t});\n
+\n
+\ttest(\'Conditional comments (allowed)\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = false;\n
+\t\tcounter.allow_conditional_comments = true;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074!--[if gte IE 4]\076alert(1)\074![endif]--\076\');\n
+\t\tequal(writer.getContent(), \'\074!--[if gte IE 4]\076alert(1)\074![endif]--\076\');\n
+\t});\n
+\n
+\ttest(\'Conditional comments (denied)\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = false;\n
+\t\tcounter.allow_conditional_comments = false;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074!--[if gte IE 4]\076alert(1)\074![endif]--\076\');\n
+\t\tequal(writer.getContent(), \'\074!-- [if gte IE 4]\076alert(1)\074![endif]--\076\');\n
+\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074!--[if !IE]\076alert(1)\074![endif]--\076\');\n
+\t\tequal(writer.getContent(), \'\074!-- [if !IE]\076alert(1)\074![endif]--\076\');\n
+\t});\n
+\n
+\ttest(\'Parse script urls (allowed)\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = false;\n
+\t\tcounter.allow_script_urls = true;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\n
+\t\t\t\'\074a href="javascript:alert(1)"\0761\074/a\076\' +\n
+\t\t\t\'\074a href=" 2 "\0762\074/a\076\' +\n
+\t\t\t\'\074a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+"\0763\074/a\076\'\n
+\t\t);\n
+\t\tequal(\n
+\t\t\twriter.getContent(),\n
+\t\t\t\'\074a href="javascript:alert(1)"\0761\074/a\076\074a href=" 2 "\0762\074/a\076\' +\n
+\t\t\t\'\074a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+"\0763\074/a\076\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest(\'Parse script urls (allowed html data uris)\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = false;\n
+\t\tcounter.allow_html_data_urls = true;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\twriter.reset();\n
+\t\tparser.parse(\n
+\t\t\t\'\074a href="javascript:alert(1)"\0761\074/a\076\' +\n
+\t\t\t\'\074a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+"\0762\074/a\076\'\n
+\t\t);\n
+\t\tequal(\n
+\t\t\twriter.getContent(),\n
+\t\t\t\'\074a\0761\074/a\076\' +\n
+\t\t\t\'\074a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+"\0762\074/a\076\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest(\'Parse script urls (denied)\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = false;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\n
+\t\twriter.reset();\n
+\t\tparser.parse(\n
+\t\t\t\'\074a href="jAvaScript:alert(1)"\0761\074/a\076\' +\n
+\t\t\t\'\074a href="vbscript:alert(2)"\0762\074/a\076\' +\n
+\t\t\t\'\074a href="java\\u0000script:alert(3)"\0763\074/a\076\' +\n
+\t\t\t\'\074a href="\\njavascript:alert(4)"\0764\074/a\076\' +\n
+\t\t\t\'\074a href="java\\nscript:alert(5)"\0765\074/a\076\' +\n
+\t\t\t\'\074a href="java\\tscript:alert(6)"\0766\074/a\076\' +\n
+\t\t\t\'\074a href="%6aavascript:alert(7)"\0767\074/a\076\' +\n
+\t\t\t\'\074a href="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+"\0768\074/a\076\' +\n
+\t\t\t\'\074a href=" dAt%61: tExt/html  ; bAse64 , PHN2Zy9vbmxvYWQ9YWxlcnQoMik+"\0769\074/a\076\' +\n
+\t\t\t\'\074object data="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+"\07610\074/object\076\' +\n
+\t\t\t\'\074button formaction="javascript:alert(11)"\07611\074/button\076\' +\n
+\t\t\t\'\074table background="javascript:alert(12)"\076\074tr\076\074tr\07612\074/tr\076\074/tr\076\074/table\076\' +\n
+\t\t\t\'\074a href="mhtml:13"\07613\074/a\076\' +\n
+\t\t\t\'\074img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"\076\' +\n
+\t\t\t\'\074a href="%E3%82%AA%E3%83%BC%E3%83"\076Invalid url\074/a\076\'\n
+\t\t);\n
+\n
+\t\tequal(\n
+\t\t\twriter.getContent(),\n
+\t\t\t\'\074a\0761\074/a\076\074a\0762\074/a\076\074a\0763\074/a\076\074a\0764\074/a\076\074a\0765\074/a\076\074a\0766\074/a\076\074a\0767\074/a\076\074a\0768\074/a\076\074a\0769\074/a\076\' +\n
+\t\t\t\'\074object\07610\074/object\076\074button\07611\074/button\076\074table\076\074tr\076\074/tr\076\074tr\07612\074/tr\076\074/table\076\074a\07613\074/a\076\' +\n
+\t\t\t\'\074img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /\076\' +\n
+\t\t\t\'\074a href="%E3%82%AA%E3%83%BC%E3%83"\076Invalid url\074/a\076\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest(\'Parse away bogus elements\', function() {\n
+\t\tfunction testBogusSaxParse(inputHtml, outputHtml, counters) {\n
+\t\t\tvar counter, parser;\n
+\n
+\t\t\tcounter = createCounter(writer);\n
+\t\t\tcounter.validate = true;\n
+\t\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\t\t\twriter.reset();\n
+\t\t\tparser.parse(inputHtml);\n
+\t\t\tequal(writer.getContent(), outputHtml);\n
+\t\t\tdeepEqual(counter.counts, counters);\n
+\t\t}\n
+\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="1"\076b\074/b\076c\', \'abc\', {text: 3});\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="true"\076b\074/b\076c\', \'abc\', {text: 3});\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="1"\076\074/b\076c\', \'ac\', {text: 2});\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="all"\076b\074/b\076c\', \'ac\', {text: 2});\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="all"\076\074!-- x --\076\074?xml?\076\074/b\076c\', \'ac\', {text: 2});\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="all"\076\074b\076b\074/b\076\074/b\076c\', \'ac\', {text: 2});\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="all"\076\074br\076b\074/b\076\074b\076c\074/b\076\', \'a\074b\076c\074/b\076\', {start: 1, end: 1, text: 2});\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="all"\076\074img\076b\074/b\076\074b\076c\074/b\076\', \'a\074b\076c\074/b\076\', {start: 1, end: 1, text: 2});\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="all"\076\074b attr="x"\076b\074/b\076\074/b\076c\', \'ac\', {text: 2});\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="all"\076\074/b\076c\', \'ac\', {text: 2});\n
+\t\ttestBogusSaxParse(\'a\074b data-mce-bogus="all"\076\074/b\076\074b\076c\074/b\076\', \'a\074b\076c\074/b\076\', {start: 1, end: 1, text:2});\n
+\t});\n
+\n
+\ttest(\'findEndTag\', function() {\n
+\t\tfunction testFindEndTag(html, startIndex, expectedIndex) {\n
+\t\t\tequal(tinymce.html.SaxParser.findEndTag(schema, html, startIndex), expectedIndex);\n
+\t\t}\n
+\n
+\t\ttestFindEndTag(\'\074b\076\', 3, 3);\n
+\t\ttestFindEndTag(\'\074img\076\', 3, 3);\n
+\t\ttestFindEndTag(\'\074b\076\074/b\076\', 3, 7);\n
+\t\ttestFindEndTag(\'\074b\076\074img\076\074/b\076\', 3, 12);\n
+\t\ttestFindEndTag(\'\074b\076\074!-- \074/b\076 --\076\074/b\076\', 3, 20);\n
+\t\ttestFindEndTag(\'\074span\076\074b\076\074i\076a\074img\076b\074/i\076\074b\076c\074/b\076\074/b\076\074/span\076\', 9, 35);\n
+\t});\n
+\n
+\ttest(\'parse XSS PI\', function() {\n
+\t\tvar counter, parser;\n
+\n
+\t\tcounter = createCounter(writer);\n
+\t\tcounter.validate = false;\n
+\t\tparser = new tinymce.html.SaxParser(counter, schema);\n
+\n
+\t\twriter.reset();\n
+\t\tparser.parse(\'\074?xml\076\074iframe SRC=\046#106\046#97\046#118\046#97\046#115\046#99\046#114\046#105\046#112\046#116\046#58\046#97\046#108\046#101\046#114\046#116\046#40\046#39\046#88\046#83\046#83\046#39\046#41\076?\076\');\n
+\n
+\t\tequal(\n
+\t\t\twriter.getContent(),\n
+\t\t\t\'\074?xml \046gt;\046lt;iframe SRC=\046amp;#106\046amp;#97\046amp;#118\046amp;#97\046amp;#115\046amp;#99\046amp;#114\046amp;#105\046amp;#112\046amp;\' +\n
+\t\t\t\'#116\046amp;#58\046amp;#97\046amp;#108\046amp;#101\046amp;#114\046amp;#116\046amp;#40\046amp;#39\046amp;#88\046amp;#83\046amp;#83\046amp;#39\046amp;#41\046gt;?\076\'\n
+\t\t);\n
+\t});\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>29284</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>SaxParser.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

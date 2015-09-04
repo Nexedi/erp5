@@ -1,0 +1,592 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268234.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Range.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tmodule("tinymce.dom.Range", {\n
+\t\tsetup: function() {\n
+\t\t\tdocument.getElementById(\'view\').innerHTML = (\n
+\t\t\t\t\'<div id="sample">\' +\n
+\t\t\t\t\t\'<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p>\' +\n
+\t\t\t\t\t\'<p id="second">bar</p>\' +\n
+\t\t\t\t\t\'<p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p>\' +\n
+\t\t\t\t\t\'<table id="table">\' +\n
+\t\t\t\t\t\t\'<tr>\' +\n
+\t\t\t\t\t\t\t\'<td>1</td>\' +\n
+\t\t\t\t\t\t\t\'<td id="two">abc</td>\' +\n
+\t\t\t\t\t\t\'</tr>\' +\n
+\t\t\t\t\t\t\'<tr>\' +\n
+\t\t\t\t\t\t\t\'<td>3</td>\' +\n
+\t\t\t\t\t\t\t\'<td>4</td>\' +\n
+\t\t\t\t\t\t\'</tr>\' +\n
+\t\t\t\t\t\'</table>\' +\n
+\t\t\t\t\t\'<p id="last">textabc<span>span</span></p>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t}\n
+\t});\n
+\n
+\tfunction createRng() {\n
+\t\treturn document.createRange ? document.createRange() : new tinymce.dom.Range(tinymce.DOM);\n
+\t}\n
+\n
+\tfunction getHTML(co) {\n
+\t\tvar div = document.createElement(\'div\'), h;\n
+\n
+\t\tif (!co) {\n
+\t\t\treturn \'null\';\n
+\t\t}\n
+\n
+\t\tdiv.appendChild(co.cloneNode(true));\n
+\t\th = div.innerHTML.toLowerCase();\n
+\n
+\t\th = h.replace(/[\\r\\n\\t]/g, \'\'); // Remove line feeds and tabs\n
+\t\th = h.replace(/ (\\w+)=([^\\"][^\\s>]*)/gi, \' $1="$2"\'); // Restore attribs on IE\n
+\n
+\t\treturn h;\n
+\t}\n
+\n
+\ttest("Initial state", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(5);\n
+\n
+\t\tequal(r.startContainer, document);\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer, document);\n
+\t\tequal(r.endOffset, 0);\n
+\t\tequal(r.commonAncestorContainer, document);\n
+\t});\n
+\n
+\ttest("setStartSetEnd", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(12);\n
+\n
+\t\tr.setStart(document.getElementById(\'first\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'strong\').firstChild, 3);\n
+\n
+\t\tequal(r.startContainer.nodeValue, \'first\');\n
+\t\tequal(r.startContainer.nodeType, 3);\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endContainer.nodeValue, \'strong\');\n
+\t\tequal(r.endContainer.nodeType, 3);\n
+\t\tequal(r.endOffset, 3);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'P\');\n
+\n
+\t\tr.setStart(document.getElementById(\'first\'), 0);\n
+\t\tr.setEnd(document.getElementById(\'strong\'), 0);\n
+\n
+\t\tequal(r.startContainer.nodeName, \'P\');\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeName, \'STRONG\');\n
+\t\tequal(r.endOffset, 0);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'P\');\n
+\t});\n
+\n
+\ttest("setStartBeforeSetEndAfter", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(5);\n
+\n
+\t\tr.setStartBefore(document.getElementById(\'first\'));\n
+\t\tr.setEndAfter(document.getElementById(\'strong\'));\n
+\n
+\t\tequal(r.startContainer.nodeName, \'DIV\');\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeName, \'P\');\n
+\t\tequal(r.endOffset, 5);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'DIV\');\n
+\t});\n
+\n
+\ttest("test_setStartAfterSetEndBefore", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(5);\n
+\n
+\t\tr.setStartAfter(document.getElementById(\'strong\'));\n
+\t\tr.setEndBefore(document.getElementById(\'em1\'));\n
+\n
+\t\tequal(r.startContainer.nodeName, \'P\');\n
+\t\tequal(r.startOffset, 5);\n
+\t\tequal(r.endContainer.nodeName, \'P\');\n
+\t\tequal(r.endOffset, 6);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'P\');\n
+\t});\n
+\n
+\ttest("test_collapse", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(10);\n
+\n
+\t\tr.setStart(document.getElementById(\'strong\').firstChild, 0);\n
+\t\tr.setEnd(document.getElementById(\'strong\').firstChild, 6);\n
+\n
+\t\tr.collapse(true);\n
+\n
+\t\tequal(r.startContainer.nodeType, 3);\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 3);\n
+\t\tequal(r.endOffset, 0);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 3);\n
+\n
+\t\tr.setStart(document.getElementById(\'strong\').firstChild, 0);\n
+\t\tr.setEnd(document.getElementById(\'strong\').firstChild, 6);\n
+\n
+\t\tr.collapse(false);\n
+\n
+\t\tequal(r.startContainer.nodeType, 3);\n
+\t\tequal(r.startOffset, 6);\n
+\t\tequal(r.endContainer.nodeType, 3);\n
+\t\tequal(r.endOffset, 6);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 3);\n
+\t});\n
+\n
+\ttest("test_selectNode", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(4);\n
+\n
+\t\tr.selectNode(document.getElementById(\'strong\').firstChild);\n
+\n
+\t\tequal(r.startContainer.nodeType, 1);\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 1);\n
+\t});\n
+\n
+\ttest("test_selectNodeContents", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(8);\n
+\n
+\t\tr.selectNodeContents(document.getElementById(\'strong\').firstChild);\n
+\n
+\t\tequal(r.startContainer.nodeType, 3);\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 3);\n
+\t\tequal(r.endOffset, 6);\n
+\n
+\t\tr.selectNodeContents(document.getElementById(\'first\'));\n
+\n
+\t\tequal(r.startContainer.nodeType, 1);\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 8);\n
+\t});\n
+\n
+\ttest("test_insertNode", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(4);\n
+\n
+\t\tr.setStart(document.getElementById(\'first\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'first\').firstChild, 2);\n
+\t\tr.insertNode(document.createTextNode(\'ABC\'));\n
+\n
+\t\tequal(document.getElementById(\'first\').childNodes[0].nodeValue, \'f\');\n
+\t\tequal(document.getElementById(\'first\').childNodes[1].nodeValue, \'ABC\');\n
+\t\tequal(document.getElementById(\'first\').childNodes[2].nodeValue, \'irst\');\n
+\n
+\t\tr.selectNode(document.getElementById(\'strong\'));\n
+\t\tr.insertNode(document.createElement(\'span\'));\n
+\n
+\t\tequal(document.getElementById(\'strong\').previousSibling.nodeName, \'SPAN\');\n
+\t});\n
+\n
+\ttest("test_cloneRange", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(6);\n
+\n
+\t\tr.setStart(document.getElementById(\'first\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'strong\').firstChild, 2);\n
+\n
+\t\tvar r2 = r.cloneRange();\n
+\n
+\t\tequal(r2.startContainer.nodeType, 3);\n
+\t\tequal(r2.startOffset, 1);\n
+\t\tequal(r2.endContainer.nodeType, 3);\n
+\t\tequal(r2.endOffset, 2);\n
+\t\tequal(r2.collapsed, false);\n
+\t\tequal(r2.commonAncestorContainer.nodeName, \'P\');\n
+\t});\n
+\n
+\tif (tinymce.isGecko) {\n
+\t\ttest(\'test_cloneContents (SKIPPED)\', function() {\n
+\t\t\tok(true, \'Before Firefox 3.6 this test fails because of a corner case bug but since the point is to test the IE Range implementation we skip it.\');\n
+\t\t});\n
+\t} else {\n
+\ttest("test_cloneContents", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(77);\n
+\n
+\t\tr.setStart(document.getElementById(\'first\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'two\').firstChild, 2);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">ab</td></tr></tbody></table>\');\n
+\t\tequal(r.startContainer.nodeType, 3);\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endContainer.nodeType, 3);\n
+\t\tequal(r.endOffset, 2);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'DIV\');\n
+\n
+\t\tr.setStart(document.getElementById(\'two\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'last\').firstChild, 2);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'<table id="table"><tbody><tr><td id="two">bc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">te</p>\');\n
+\t\tequal(r.startContainer.nodeType, 3);\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endContainer.nodeType, 3);\n
+\t\tequal(r.endOffset, 2);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'DIV\');\n
+\n
+\t\tr.setStart(document.getElementById(\'first\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'first\').lastChild, 4);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> str\');\n
+\t\tequal(r.startContainer.nodeType, 3);\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endContainer.nodeType, 3);\n
+\t\tequal(r.endOffset, 4);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'P\');\n
+\n
+\t\tr.setStart(document.getElementById(\'first\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'first\').firstChild, 4);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'irs\');\n
+\t\tequal(r.startContainer.nodeType, 3);\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endContainer.nodeType, 3);\n
+\t\tequal(r.endOffset, 4);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 3);\n
+\n
+\t\tr.setStart(document.getElementById(\'first\'), 0);\n
+\t\tr.setEnd(document.getElementById(\'last\'), 0);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\\"last\\"></p>\');\n
+\t\tequal(r.startContainer.nodeType, 1);\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 0);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 1);\n
+\n
+\t\tr.setStart(document.getElementById(\'first\'), 1);\n
+\t\tr.setEnd(document.getElementById(\'last\'), 1);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'<p id="first"><!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc</p>\');\n
+\t\tequal(r.startContainer.nodeType, 1);\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 1);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 1);\n
+\n
+\t\tr.setStart(document.getElementById(\'sample\'), 0);\n
+\t\tr.setEnd(document.getElementById(\'sample\'), document.getElementById(\'sample\').childNodes.length - 1);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>\');\n
+\t\tequal(r.startContainer.nodeType, 1);\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, document.getElementById(\'sample\').childNodes.length - 1);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 1);\n
+\n
+\t\tr.setStart(document.getElementById(\'first\'), 0);\n
+\t\tr.setEnd(document.getElementById(\'last\').firstChild, 1);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">t</p>\');\n
+\t\tequal(r.startContainer.nodeType, 1);\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 3);\n
+\t\tequal(r.endOffset, 1);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 1);\n
+\n
+\t\tr.setStart(document.getElementById(\'first\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'last\'), 0);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'<p id="first">irst<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id=\\"last\\"></p>\');\n
+\t\tequal(r.startContainer.nodeType, 3);\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 0);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 1);\n
+\n
+\t\tr.setStart(document.getElementById(\'sample\'), 0);\n
+\t\tr.setEnd(document.getElementById(\'traverse\'), 2);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em></p>\');\n
+\t\tequal(r.startContainer.nodeType, 1);\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 2);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 1);\n
+\n
+\t\tr.setStart(document.getElementById(\'sample\'), 0);\n
+\t\tr.setEnd(document.getElementById(\'traverse\'), 1);\n
+\n
+\t\tequal(getHTML(r.cloneContents()), \'<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b></p>\');\n
+\t\tequal(r.startContainer.nodeType, 1);\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 1);\n
+\t\tequal(r.collapsed, false);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 1);\n
+\t});\n
+\t}\n
+\n
+\ttest("test_extractContents1", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(10);\n
+\n
+\t\tr.setStart(document.getElementById(\'first\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'first\').firstChild, 4);\n
+\n
+\t\tequal(getHTML(r.extractContents()), \'irs\');\n
+\t\tequal(r.startContainer.nodeType, 3);\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endContainer.nodeType, 3);\n
+\t\tequal(r.endOffset, 1);\n
+\t\tequal(r.collapsed, true);\n
+\t\tequal(r.startContainer == r.endContainer, true);\n
+\t\tequal(r.startOffset == r.endOffset, true);\n
+\t\tequal(r.commonAncestorContainer.nodeType, 3);\n
+\t\tequal(getHTML(document.getElementById(\'first\')), \'<p id="first">ft<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p>\');\n
+\t});\n
+\n
+\ttest("test_extractContents2", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(9);\n
+\n
+\t\tr.setStart(document.getElementById(\'two\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'last\').firstChild, 2);\n
+\n
+\t\tequal(getHTML(r.extractContents()), \'<table id="table"><tbody><tr><td id="two">bc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">te</p>\');\n
+\t\tequal(r.startContainer.nodeType, 1);\n
+\t\tequal(getHTML(r.startContainer), \'<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>\');\n
+\t\tequal(r.startOffset, 4);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 4);\n
+\t\tequal(getHTML(r.endContainer), \'<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>\');\n
+\t\tequal(r.collapsed, true);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'DIV\');\n
+\t});\n
+\n
+\ttest("test_extractContents3", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(9);\n
+\n
+\t\tr.setStart(document.getElementById(\'sample\'), 0);\n
+\t\tr.setEnd(document.getElementById(\'traverse\'), 2);\n
+\n
+\t\tequal(getHTML(r.extractContents()), \'<p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em></p>\');\n
+\t\tequal(getHTML(r.startContainer), \'<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>\');\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 0);\n
+\t\tequal(getHTML(r.endContainer), \'<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>\');\n
+\t\tequal(getHTML(document.getElementById(\'sample\')), \'<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>\');\n
+\t\tequal(r.collapsed, true);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'DIV\');\n
+\t});\n
+\n
+\ttest("test_deleteContents1", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(8);\n
+\n
+\t\tr.setStart(document.getElementById(\'two\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'last\').firstChild, 2);\n
+\t\tr.deleteContents();\n
+\n
+\t\tequal(getHTML(r.startContainer), \'<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>\');\n
+\t\tequal(r.startOffset, 4);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 4);\n
+\t\tequal(getHTML(r.endContainer), \'<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>\');\n
+\t\tequal(getHTML(document.getElementById(\'sample\')), \'<div id="sample"><p id="first">first<!--not--> strong <!-- --><strong id="strong">strong</strong> second <em id="em1">em</em> strong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">a</td></tr></tbody></table><p id="last">xtabc<span>span</span></p></div>\');\n
+\t\tequal(r.collapsed, true);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'DIV\');\n
+\t});\n
+\n
+\ttest("test_deleteContents2", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(8);\n
+\n
+\t\tr.setStart(document.getElementById(\'first\').firstChild, 1);\n
+\t\tr.setEnd(document.getElementById(\'first\').lastChild, 4);\n
+\t\tr.deleteContents();\n
+\n
+\t\tequal(getHTML(r.startContainer), \'<p id="first">fong.</p>\');\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 1);\n
+\t\tequal(getHTML(r.endContainer), \'<p id="first">fong.</p>\');\n
+\t\tequal(getHTML(document.getElementById(\'sample\')), \'<div id="sample"><p id="first">fong.</p><p id="second">bar</p><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>\');\n
+\t\tequal(r.collapsed, true);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'P\');\n
+\t});\n
+\n
+\ttest("test_deleteContents3", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(8);\n
+\n
+\t\tr.setStart(document.getElementById(\'sample\'), 0);\n
+\t\tr.setEnd(document.getElementById(\'sample\'), 2);\n
+\t\tr.deleteContents();\n
+\n
+\t\tequal(getHTML(r.startContainer), \'<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>\');\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 0);\n
+\t\tequal(getHTML(r.endContainer), \'<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>\');\n
+\t\tequal(getHTML(document.getElementById(\'sample\')), \'<div id="sample"><p id="traverse"><b><em id="em2">some text</em></b><em>em text</em>more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>\');\n
+\t\tequal(r.collapsed, true);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'DIV\');\n
+\t});\n
+\n
+\ttest("test_deleteContents4", function() {\n
+\t\tvar r = createRng();\n
+\n
+\t\texpect(8);\n
+\n
+\t\tr.setStart(document.getElementById(\'sample\'), 0);\n
+\t\tr.setEnd(document.getElementById(\'traverse\'), 2);\n
+\t\tr.deleteContents();\n
+\n
+\t\tequal(getHTML(r.startContainer), \'<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>\');\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endContainer.nodeType, 1);\n
+\t\tequal(r.endOffset, 0);\n
+\t\tequal(getHTML(r.endContainer), \'<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>\');\n
+\t\tequal(getHTML(document.getElementById(\'sample\')), \'<div id="sample"><p id="traverse">more text</p><table id="table"><tbody><tr><td>1</td><td id="two">abc</td></tr><tr><td>3</td><td>4</td></tr></tbody></table><p id="last">textabc<span>span</span></p></div>\');\n
+\t\tequal(r.collapsed, true);\n
+\t\tequal(r.commonAncestorContainer.nodeName, \'DIV\');\n
+\t});\n
+\n
+\ttest("test_compareBoundaryPoints", function() {\n
+\t\tvar r1 = createRng(), r2 = createRng(), START_TO_START = 0, START_TO_END = 1, END_TO_END = 2, END_TO_START = 3;\n
+\t\t \n
+\t\tr1.setStartBefore(document.getElementById(\'strong\'));\n
+\t\tr1.setEndAfter(document.getElementById(\'strong\'));\n
+\t\tr2.setStartBefore(document.getElementById(\'strong\'));\n
+\t\tr2.setEndAfter(document.getElementById(\'strong\'));\n
+\t\tequal(r1.compareBoundaryPoints(START_TO_START, r2), 0, \'Start to start for same ranges\');\n
+\t\tequal(r1.compareBoundaryPoints(END_TO_END, r2), 0, \'End to end for same ranges\');\n
+\t\tequal(r1.compareBoundaryPoints(START_TO_END, r1), 1, \'Start to end for same ranges\');\n
+\t\tequal(r1.compareBoundaryPoints(END_TO_START, r2), -1, \'End to start for same ranges\');\n
+\n
+\t\tr1.setStartBefore(document.getElementById(\'strong\'));\n
+\t\tr1.setEndAfter(document.getElementById(\'strong\'));\n
+\t\tr2.setStartBefore(document.getElementById(\'em1\'));\n
+\t\tr2.setEndAfter(document.getElementById(\'em1\'));\n
+\t\tequal(r1.compareBoundaryPoints(START_TO_START, r2), -1, \'Start to start for range before\');\n
+\t\tequal(r1.compareBoundaryPoints(END_TO_END, r2), -1, \'End to end for range before\');\n
+\t\tequal(r1.compareBoundaryPoints(START_TO_END, r2), -1, \'Start to end for range before\');\n
+\t\tequal(r1.compareBoundaryPoints(END_TO_START, r2), -1, \'End to start for range before\');\n
+\n
+\t\tequal(r2.compareBoundaryPoints(START_TO_START, r1), 1, \'Start to start for range after\');\n
+\t\tequal(r2.compareBoundaryPoints(END_TO_END, r1), 1, \'End to end for range after\');\n
+\t\tequal(r2.compareBoundaryPoints(START_TO_END, r1), 1, \'Start to end for range after\');\n
+\t\tequal(r2.compareBoundaryPoints(END_TO_START, r1), 1, \'End to start for range after\');\n
+\n
+\t\tr1.setStartBefore(document.getElementById(\'strong\'));\n
+\t\tr1.setEndAfter(document.getElementById(\'strong\'));\n
+\t\tr2.setStart(document.getElementById(\'strong\').firstChild, 2);\n
+\t\tr2.setEnd(document.getElementById(\'strong\').firstChild, 3);\n
+\t\tequal(r1.compareBoundaryPoints(START_TO_START, r2), -1, \'Start to start for range inside\');\n
+\t\tequal(r1.compareBoundaryPoints(END_TO_END, r2), 1, \'End to end for range inside\');\n
+\t\tequal(r1.compareBoundaryPoints(START_TO_END, r2), 1, \'Start to end for range inside\');\n
+\t\tequal(r1.compareBoundaryPoints(END_TO_START, r2), -1, \'End to start for range inside\');\n
+\t});\n
+\n
+\ttest("toString in part of same text node", function() {\n
+\t\tvar rng = createRng();\n
+\n
+\t\trng.setStart(document.getElementById(\'strong\').firstChild, 1);\n
+\t\trng.setEnd(document.getElementById(\'strong\').firstChild, 3);\n
+\t\tequal(rng.toString(), "tr");\n
+\t});\n
+\n
+\ttest("toString in start/end of same text node", function() {\n
+\t\tvar rng = createRng();\n
+\n
+\t\trng.setStart(document.getElementById(\'strong\').firstChild, 0);\n
+\t\trng.setEnd(document.getElementById(\'strong\').firstChild, 6);\n
+\t\tequal(rng.toString(), "strong");\n
+\t});\n
+\n
+\ttest("toString in start in one text node end in another", function() {\n
+\t\tvar rng = createRng();\n
+\n
+\t\trng.setStart(document.getElementById(\'strong\').firstChild, 1);\n
+\t\trng.setEnd(document.getElementById(\'em1\').firstChild, 1);\n
+\t\tequal(rng.toString(), "trong second e");\n
+\t});\n
+\n
+\t// Run on IE only\n
+\tif (tinymce.isIE) {\n
+\t\ttest("toString in start in one text node end in another", function() {\n
+\t\t\tvar rng = createRng();\n
+\n
+\t\t\trng.setStartBefore(document.getElementById(\'strong\'));\n
+\t\t\trng.setEndAfter(document.getElementById(\'em2\'));\n
+\t\t\tequal(rng.toString().replace(/\\r\\n/g, \'\'), "strong second em strong.barsome text");\n
+\t\t});\n
+\t}\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>24334</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Range.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

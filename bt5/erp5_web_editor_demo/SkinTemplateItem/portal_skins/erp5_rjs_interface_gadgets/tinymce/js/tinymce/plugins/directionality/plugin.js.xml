@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268537.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'directionality\', function(editor) {\n
+\tfunction setDir(dir) {\n
+\t\tvar dom = editor.dom, curDir, blocks = editor.selection.getSelectedBlocks();\n
+\n
+\t\tif (blocks.length) {\n
+\t\t\tcurDir = dom.getAttrib(blocks[0], "dir");\n
+\n
+\t\t\ttinymce.each(blocks, function(block) {\n
+\t\t\t\t// Add dir to block if the parent block doesn\'t already have that dir\n
+\t\t\t\tif (!dom.getParent(block.parentNode, "*[dir=\'" + dir + "\']", dom.getRoot())) {\n
+\t\t\t\t\tif (curDir != dir) {\n
+\t\t\t\t\t\tdom.setAttrib(block, "dir", dir);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tdom.setAttrib(block, "dir", null);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teditor.nodeChanged();\n
+\t\t}\n
+\t}\n
+\n
+\tfunction generateSelector(dir) {\n
+\t\tvar selector = [];\n
+\n
+\t\ttinymce.each(\'h1 h2 h3 h4 h5 h6 div p\'.split(\' \'), function(name) {\n
+\t\t\tselector.push(name + \'[dir=\' + dir + \']\');\n
+\t\t});\n
+\n
+\t\treturn selector.join(\',\');\n
+\t}\n
+\n
+\teditor.addCommand(\'mceDirectionLTR\', function() {\n
+\t\tsetDir("ltr");\n
+\t});\n
+\n
+\teditor.addCommand(\'mceDirectionRTL\', function() {\n
+\t\tsetDir("rtl");\n
+\t});\n
+\n
+\teditor.addButton(\'ltr\', {\n
+\t\ttitle: \'Left to right\',\n
+\t\tcmd: \'mceDirectionLTR\',\n
+\t\tstateSelector: generateSelector(\'ltr\')\n
+\t});\n
+\n
+\teditor.addButton(\'rtl\', {\n
+\t\ttitle: \'Right to left\',\n
+\t\tcmd: \'mceDirectionRTL\',\n
+\t\tstateSelector: generateSelector(\'rtl\')\n
+\t});\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1465</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

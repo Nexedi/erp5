@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268705.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>readme.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>TinyMCE - The JavaScript Rich Text editor\n
+==========================================\n
+\n
+Building TinyMCE\n
+-----------------\n
+1. Install Node.js\n
+2. Open a console and go to the project directory\n
+3. Write "npm i -g grunt-cli" to install the grunt command line tool globally.\n
+4. Write "npm i" to install all package dependencies.\n
+4. Build TinyMCE by writing "grunt"\n
+\n
+Build tasks\n
+------------\n
+`grunt`\n
+Lints, minified, unit tests and creates release packages for TinyMCE.\n
+\n
+`grunt minify`\n
+Minifies all JS and CSS files.\n
+\n
+`grunt test`\n
+Runs all qunit tests on PhantomJS.\n
+\n
+`grunt lint`\n
+Runs all source files though various JS linters.\n
+\n
+`grunt sc-test`\n
+Runs all qunit tests on Saucelabs.\n
+\n
+`grunt watch`\n
+Watches for source code changes and triggers rebuilds and linting.\n
+\n
+`grunt --help`\n
+Displays the various build tasks.\n
+\n
+Bundle themes and plugins into a single file\n
+---------------------------------------------\n
+`grunt bundle --themes modern --plugins table,paste`\n
+Minifies the core, adds the modern theme and adds the table and paste plugin into tinymce.min.js.\n
+\n
+Contributing to the TinyMCE project\n
+------------------------------------\n
+You can read more about how to contribute to this project at [http://www.tinymce.com/develop/contributing.php](http://www.tinymce.com/develop/contributing.php)\n
+\n
+[![Build Status](https://travis-ci.org/tinymce/tinymce.png?branch=master)](https://travis-ci.org/tinymce/tinymce)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1398</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>readme.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

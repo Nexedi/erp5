@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268297.12</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>XHR.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * XHR.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class enables you to send XMLHTTPRequests cross browser.\n
+ * @class tinymce.util.XHR\n
+ * @mixes tinymce.util.Observable\n
+ * @static\n
+ * @example\n
+ * // Sends a low level Ajax request\n
+ * tinymce.util.XHR.send({\n
+ *    url: \'someurl\',\n
+ *    success: function(text) {\n
+ *       console.debug(text);\n
+ *    }\n
+ * });\n
+ *\n
+ * // Add custom header to XHR request\n
+ * tinymce.util.XHR.on(\'beforeSend\', function(e) {\n
+ *     e.xhr.setRequestHeader(\'X-Requested-With\', \'Something\');\n
+ * });\n
+ */\n
+define("tinymce/util/XHR", [\n
+\t"tinymce/util/Observable",\n
+\t"tinymce/util/Tools"\n
+], function(Observable, Tools) {\n
+\tvar XHR = {\n
+\t\t/**\n
+\t\t * Sends a XMLHTTPRequest.\n
+\t\t * Consult the Wiki for details on what settings this method takes.\n
+\t\t *\n
+\t\t * @method send\n
+\t\t * @param {Object} settings Object will target URL, callbacks and other info needed to make the request.\n
+\t\t */\n
+\t\tsend: function(settings) {\n
+\t\t\tvar xhr, count = 0;\n
+\n
+\t\t\tfunction ready() {\n
+\t\t\t\tif (!settings.async || xhr.readyState == 4 || count++ > 10000) {\n
+\t\t\t\t\tif (settings.success && count < 10000 && xhr.status == 200) {\n
+\t\t\t\t\t\tsettings.success.call(settings.success_scope, \'\' + xhr.responseText, xhr, settings);\n
+\t\t\t\t\t} else if (settings.error) {\n
+\t\t\t\t\t\tsettings.error.call(settings.error_scope, count > 10000 ? \'TIMED_OUT\' : \'GENERAL\', xhr, settings);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\txhr = null;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tsetTimeout(ready, 10);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Default settings\n
+\t\t\tsettings.scope = settings.scope || this;\n
+\t\t\tsettings.success_scope = settings.success_scope || settings.scope;\n
+\t\t\tsettings.error_scope = settings.error_scope || settings.scope;\n
+\t\t\tsettings.async = settings.async === false ? false : true;\n
+\t\t\tsettings.data = settings.data || \'\';\n
+\n
+\t\t\txhr = new XMLHttpRequest();\n
+\n
+\t\t\tif (xhr) {\n
+\t\t\t\tif (xhr.overrideMimeType) {\n
+\t\t\t\t\txhr.overrideMimeType(settings.content_type);\n
+\t\t\t\t}\n
+\n
+\t\t\t\txhr.open(settings.type || (settings.data ? \'POST\' : \'GET\'), settings.url, settings.async);\n
+\n
+\t\t\t\tif (settings.crossDomain) {\n
+\t\t\t\t\txhr.withCredentials = true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (settings.content_type) {\n
+\t\t\t\t\txhr.setRequestHeader(\'Content-Type\', settings.content_type);\n
+\t\t\t\t}\n
+\n
+\t\t\t\txhr.setRequestHeader(\'X-Requested-With\', \'XMLHttpRequest\');\n
+\n
+\t\t\t\txhr = XHR.fire(\'beforeSend\', {xhr: xhr, settings: settings}).xhr;\n
+\t\t\t\txhr.send(settings.data);\n
+\n
+\t\t\t\t// Syncronous request\n
+\t\t\t\tif (!settings.async) {\n
+\t\t\t\t\treturn ready();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Wait for response, onReadyStateChange can not be used since it leaks memory in IE\n
+\t\t\t\tsetTimeout(ready, 10);\n
+\t\t\t}\n
+\t\t}\n
+\t};\n
+\n
+\tTools.extend(XHR, Observable);\n
+\n
+\treturn XHR;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2721</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>XHR.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

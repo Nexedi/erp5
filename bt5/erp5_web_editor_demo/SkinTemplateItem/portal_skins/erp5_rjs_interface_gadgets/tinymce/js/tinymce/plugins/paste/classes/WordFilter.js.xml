@@ -1,0 +1,542 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268448.22</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>WordFilter.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * WordFilter.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class parses word HTML into proper TinyMCE markup.\n
+ *\n
+ * @class tinymce.pasteplugin.WordFilter\n
+ * @private\n
+ */\n
+define("tinymce/pasteplugin/WordFilter", [\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/html/DomParser",\n
+\t"tinymce/html/Schema",\n
+\t"tinymce/html/Serializer",\n
+\t"tinymce/html/Node",\n
+\t"tinymce/pasteplugin/Utils"\n
+], function(Tools, DomParser, Schema, Serializer, Node, Utils) {\n
+\t/**\n
+\t * Checks if the specified content is from any of the following sources: MS Word/Office 365/Google docs.\n
+\t */\n
+\tfunction isWordContent(content) {\n
+\t\treturn (\n
+\t\t\t(/<font face="Times New Roman"|class="?Mso|style="[^"]*\\bmso-|style=\'[^\'\']*\\bmso-|w:WordDocument/i).test(content) ||\n
+\t\t\t(/class="OutlineElement/).test(content) ||\n
+\t\t\t(/id="?docs\\-internal\\-guid\\-/.test(content))\n
+\t\t);\n
+\t}\n
+\n
+\t/**\n
+\t * Checks if the specified text starts with "1. " or "a. " etc.\n
+\t */\n
+\tfunction isNumericList(text) {\n
+\t\tvar found, patterns;\n
+\n
+\t\tpatterns = [\n
+\t\t\t/^[IVXLMCD]{1,2}\\.[ \\u00a0]/,  // Roman upper case\n
+\t\t\t/^[ivxlmcd]{1,2}\\.[ \\u00a0]/,  // Roman lower case\n
+\t\t\t/^[a-z]{1,2}[\\.\\)][ \\u00a0]/,  // Alphabetical a-z\n
+\t\t\t/^[A-Z]{1,2}[\\.\\)][ \\u00a0]/,  // Alphabetical A-Z\n
+\t\t\t/^[0-9]+\\.[ \\u00a0]/,          // Numeric lists\n
+\t\t\t/^[\\u3007\\u4e00\\u4e8c\\u4e09\\u56db\\u4e94\\u516d\\u4e03\\u516b\\u4e5d]+\\.[ \\u00a0]/, // Japanese\n
+\t\t\t/^[\\u58f1\\u5f10\\u53c2\\u56db\\u4f0d\\u516d\\u4e03\\u516b\\u4e5d\\u62fe]+\\.[ \\u00a0]/  // Chinese\n
+\t\t];\n
+\n
+\t\ttext = text.replace(/^[\\u00a0 ]+/, \'\');\n
+\n
+\t\tTools.each(patterns, function(pattern) {\n
+\t\t\tif (pattern.test(text)) {\n
+\t\t\t\tfound = true;\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treturn found;\n
+\t}\n
+\n
+\tfunction isBulletList(text) {\n
+\t\treturn /^[\\s\\u00a0]*[\\u2022\\u00b7\\u00a7\\u25CF]\\s*/.test(text);\n
+\t}\n
+\n
+\tfunction WordFilter(editor) {\n
+\t\tvar settings = editor.settings;\n
+\n
+\t\teditor.on(\'BeforePastePreProcess\', function(e) {\n
+\t\t\tvar content = e.content, retainStyleProperties, validStyles;\n
+\n
+\t\t\t// Remove google docs internal guid markers\n
+\t\t\tcontent = content.replace(/<b[^>]+id="?docs-internal-[^>]*>/gi, \'\');\n
+\t\t\tcontent = content.replace(/<br class="?Apple-interchange-newline"?>/gi, \'\');\n
+\n
+\t\t\tretainStyleProperties = settings.paste_retain_style_properties;\n
+\t\t\tif (retainStyleProperties) {\n
+\t\t\t\tvalidStyles = Tools.makeMap(retainStyleProperties.split(/[, ]/));\n
+\t\t\t}\n
+\n
+\t\t\t/**\n
+\t\t\t * Converts fake bullet and numbered lists to real semantic OL/UL.\n
+\t\t\t *\n
+\t\t\t * @param {tinymce.html.Node} node Root node to convert children of.\n
+\t\t\t */\n
+\t\t\tfunction convertFakeListsToProperLists(node) {\n
+\t\t\t\tvar currentListNode, prevListNode, lastLevel = 1;\n
+\n
+\t\t\t\tfunction getText(node) {\n
+\t\t\t\t\tvar txt = \'\';\n
+\n
+\t\t\t\t\tif (node.type === 3) {\n
+\t\t\t\t\t\treturn node.value;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif ((node = node.firstChild)) {\n
+\t\t\t\t\t\tdo {\n
+\t\t\t\t\t\t\ttxt += getText(node);\n
+\t\t\t\t\t\t} while ((node = node.next));\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn txt;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction trimListStart(node, regExp) {\n
+\t\t\t\t\tif (node.type === 3) {\n
+\t\t\t\t\t\tif (regExp.test(node.value)) {\n
+\t\t\t\t\t\t\tnode.value = node.value.replace(regExp, \'\');\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif ((node = node.firstChild)) {\n
+\t\t\t\t\t\tdo {\n
+\t\t\t\t\t\t\tif (!trimListStart(node, regExp)) {\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t} while ((node = node.next));\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction removeIgnoredNodes(node) {\n
+\t\t\t\t\tif (node._listIgnore) {\n
+\t\t\t\t\t\tnode.remove();\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif ((node = node.firstChild)) {\n
+\t\t\t\t\t\tdo {\n
+\t\t\t\t\t\t\tremoveIgnoredNodes(node);\n
+\t\t\t\t\t\t} while ((node = node.next));\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction convertParagraphToLi(paragraphNode, listName, start) {\n
+\t\t\t\t\tvar level = paragraphNode._listLevel || lastLevel;\n
+\n
+\t\t\t\t\t// Handle list nesting\n
+\t\t\t\t\tif (level != lastLevel) {\n
+\t\t\t\t\t\tif (level < lastLevel) {\n
+\t\t\t\t\t\t\t// Move to parent list\n
+\t\t\t\t\t\t\tif (currentListNode) {\n
+\t\t\t\t\t\t\t\tcurrentListNode = currentListNode.parent.parent;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t// Create new list\n
+\t\t\t\t\t\t\tprevListNode = currentListNode;\n
+\t\t\t\t\t\t\tcurrentListNode = null;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!currentListNode || currentListNode.name != listName) {\n
+\t\t\t\t\t\tprevListNode = prevListNode || currentListNode;\n
+\t\t\t\t\t\tcurrentListNode = new Node(listName, 1);\n
+\n
+\t\t\t\t\t\tif (start > 1) {\n
+\t\t\t\t\t\t\tcurrentListNode.attr(\'start\', \'\' + start);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tparagraphNode.wrap(currentListNode);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tcurrentListNode.append(paragraphNode);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tparagraphNode.name = \'li\';\n
+\n
+\t\t\t\t\t// Append list to previous list if it exists\n
+\t\t\t\t\tif (level > lastLevel && prevListNode) {\n
+\t\t\t\t\t\tprevListNode.lastChild.append(currentListNode);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tlastLevel = level;\n
+\n
+\t\t\t\t\t// Remove start of list item "1. " or "&middot; " etc\n
+\t\t\t\t\tremoveIgnoredNodes(paragraphNode);\n
+\t\t\t\t\ttrimListStart(paragraphNode, /^\\u00a0+/);\n
+\t\t\t\t\ttrimListStart(paragraphNode, /^\\s*([\\u2022\\u00b7\\u00a7\\u25CF]|\\w+\\.)/);\n
+\t\t\t\t\ttrimListStart(paragraphNode, /^\\u00a0+/);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Build a list of all root level elements before we start\n
+\t\t\t\t// altering them in the loop below.\n
+\t\t\t\tvar elements = [], child = node.firstChild;\n
+\t\t\t\twhile (typeof child !== \'undefined\' && child !== null) {\n
+\t\t\t\t\telements.push(child);\n
+\n
+\t\t\t\t\tchild = child.walk();\n
+\t\t\t\t\tif (child !== null) {\n
+\t\t\t\t\t\twhile (typeof child !== \'undefined\' && child.parent !== node) {\n
+\t\t\t\t\t\t\tchild = child.walk();\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (var i = 0; i < elements.length; i++) {\n
+\t\t\t\t\tnode = elements[i];\n
+\n
+\t\t\t\t\tif (node.name == \'p\' && node.firstChild) {\n
+\t\t\t\t\t\t// Find first text node in paragraph\n
+\t\t\t\t\t\tvar nodeText = getText(node);\n
+\n
+\t\t\t\t\t\t// Detect unordered lists look for bullets\n
+\t\t\t\t\t\tif (isBulletList(nodeText)) {\n
+\t\t\t\t\t\t\tconvertParagraphToLi(node, \'ul\');\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Detect ordered lists 1., a. or ixv.\n
+\t\t\t\t\t\tif (isNumericList(nodeText)) {\n
+\t\t\t\t\t\t\t// Parse OL start number\n
+\t\t\t\t\t\t\tvar matches = /([0-9]+)\\./.exec(nodeText);\n
+\t\t\t\t\t\t\tvar start = 1;\n
+\t\t\t\t\t\t\tif (matches) {\n
+\t\t\t\t\t\t\t\tstart = parseInt(matches[1], 10);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tconvertParagraphToLi(node, \'ol\', start);\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Convert paragraphs marked as lists but doesn\'t look like anything\n
+\t\t\t\t\t\tif (node._listLevel) {\n
+\t\t\t\t\t\t\tconvertParagraphToLi(node, \'ul\', 1);\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tcurrentListNode = null;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// If the root level element isn\'t a p tag which can be\n
+\t\t\t\t\t\t// processed by convertParagraphToLi, it interrupts the\n
+\t\t\t\t\t\t// lists, causing a new list to start instead of having\n
+\t\t\t\t\t\t// elements from the next list inserted above this tag.\n
+\t\t\t\t\t\tprevListNode = currentListNode;\n
+\t\t\t\t\t\tcurrentListNode = null;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction filterStyles(node, styleValue) {\n
+\t\t\t\tvar outputStyles = {}, matches, styles = editor.dom.parseStyle(styleValue);\n
+\n
+\t\t\t\tTools.each(styles, function(value, name) {\n
+\t\t\t\t\t// Convert various MS styles to W3C styles\n
+\t\t\t\t\tswitch (name) {\n
+\t\t\t\t\t\tcase \'mso-list\':\n
+\t\t\t\t\t\t\t// Parse out list indent level for lists\n
+\t\t\t\t\t\t\tmatches = /\\w+ \\w+([0-9]+)/i.exec(styleValue);\n
+\t\t\t\t\t\t\tif (matches) {\n
+\t\t\t\t\t\t\t\tnode._listLevel = parseInt(matches[1], 10);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Remove these nodes <span style="mso-list:Ignore">o</span>\n
+\t\t\t\t\t\t\t// Since the span gets removed we mark the text node and the span\n
+\t\t\t\t\t\t\tif (/Ignore/i.test(value) && node.firstChild) {\n
+\t\t\t\t\t\t\t\tnode._listIgnore = true;\n
+\t\t\t\t\t\t\t\tnode.firstChild._listIgnore = true;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\t\tcase "horiz-align":\n
+\t\t\t\t\t\t\tname = "text-align";\n
+\t\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\t\tcase "vert-align":\n
+\t\t\t\t\t\t\tname = "vertical-align";\n
+\t\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\t\tcase "font-color":\n
+\t\t\t\t\t\tcase "mso-foreground":\n
+\t\t\t\t\t\t\tname = "color";\n
+\t\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\t\tcase "mso-background":\n
+\t\t\t\t\t\tcase "mso-highlight":\n
+\t\t\t\t\t\t\tname = "background";\n
+\t\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\t\tcase "font-weight":\n
+\t\t\t\t\t\tcase "font-style":\n
+\t\t\t\t\t\t\tif (value != "normal") {\n
+\t\t\t\t\t\t\t\toutputStyles[name] = value;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\treturn;\n
+\n
+\t\t\t\t\t\tcase "mso-element":\n
+\t\t\t\t\t\t\t// Remove track changes code\n
+\t\t\t\t\t\t\tif (/^(comment|comment-list)$/i.test(value)) {\n
+\t\t\t\t\t\t\t\tnode.remove();\n
+\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (name.indexOf(\'mso-comment\') === 0) {\n
+\t\t\t\t\t\tnode.remove();\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Never allow mso- prefixed names\n
+\t\t\t\t\tif (name.indexOf(\'mso-\') === 0) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Output only valid styles\n
+\t\t\t\t\tif (retainStyleProperties == "all" || (validStyles && validStyles[name])) {\n
+\t\t\t\t\t\toutputStyles[name] = value;\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Convert bold style to "b" element\n
+\t\t\t\tif (/(bold)/i.test(outputStyles["font-weight"])) {\n
+\t\t\t\t\tdelete outputStyles["font-weight"];\n
+\t\t\t\t\tnode.wrap(new Node("b", 1));\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Convert italic style to "i" element\n
+\t\t\t\tif (/(italic)/i.test(outputStyles["font-style"])) {\n
+\t\t\t\t\tdelete outputStyles["font-style"];\n
+\t\t\t\t\tnode.wrap(new Node("i", 1));\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Serialize the styles and see if there is something left to keep\n
+\t\t\t\toutputStyles = editor.dom.serializeStyle(outputStyles, node.name);\n
+\t\t\t\tif (outputStyles) {\n
+\t\t\t\t\treturn outputStyles;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn null;\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.paste_enable_default_filters === false) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Detect is the contents is Word junk HTML\n
+\t\t\tif (isWordContent(e.content)) {\n
+\t\t\t\te.wordContent = true; // Mark it for other processors\n
+\n
+\t\t\t\t// Remove basic Word junk\n
+\t\t\t\tcontent = Utils.filter(content, [\n
+\t\t\t\t\t// Word comments like conditional comments etc\n
+\t\t\t\t\t/<!--[\\s\\S]+?-->/gi,\n
+\n
+\t\t\t\t\t// Remove comments, scripts (e.g., msoShowComment), XML tag, VML content,\n
+\t\t\t\t\t// MS Office namespaced tags, and a few other tags\n
+\t\t\t\t\t/<(!|script[^>]*>.*?<\\/script(?=[>\\s])|\\/?(\\?xml(:\\w+)?|img|meta|link|style|\\w:\\w+)(?=[\\s\\/>]))[^>]*>/gi,\n
+\n
+\t\t\t\t\t// Convert <s> into <strike> for line-though\n
+\t\t\t\t\t[/<(\\/?)s>/gi, "<$1strike>"],\n
+\n
+\t\t\t\t\t// Replace nsbp entites to char since it\'s easier to handle\n
+\t\t\t\t\t[/&nbsp;/gi, "\\u00a0"],\n
+\n
+\t\t\t\t\t// Convert <span style="mso-spacerun:yes">___</span> to string of alternating\n
+\t\t\t\t\t// breaking/non-breaking spaces of same length\n
+\t\t\t\t\t[/<span\\s+style\\s*=\\s*"\\s*mso-spacerun\\s*:\\s*yes\\s*;?\\s*"\\s*>([\\s\\u00a0]*)<\\/span>/gi,\n
+\t\t\t\t\t\tfunction(str, spaces) {\n
+\t\t\t\t\t\t\treturn (spaces.length > 0) ?\n
+\t\t\t\t\t\t\t\tspaces.replace(/./, " ").slice(Math.floor(spaces.length / 2)).split("").join("\\u00a0") : "";\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t]\n
+\t\t\t\t]);\n
+\n
+\t\t\t\tvar validElements = settings.paste_word_valid_elements;\n
+\t\t\t\tif (!validElements) {\n
+\t\t\t\t\tvalidElements = (\n
+\t\t\t\t\t\t\'-strong/b,-em/i,-u,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,\' +\n
+\t\t\t\t\t\t\'-p/div,-a[href|name],sub,sup,strike,br,del,table[width],tr,\' +\n
+\t\t\t\t\t\t\'td[colspan|rowspan|width],th[colspan|rowspan|width],thead,tfoot,tbody\'\n
+\t\t\t\t\t);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Setup strict schema\n
+\t\t\t\tvar schema = new Schema({\n
+\t\t\t\t\tvalid_elements: validElements,\n
+\t\t\t\t\tvalid_children: \'-li[p]\'\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Add style/class attribute to all element rules since the user might have removed them from\n
+\t\t\t\t// paste_word_valid_elements config option and we need to check them for properties\n
+\t\t\t\tTools.each(schema.elements, function(rule) {\n
+\t\t\t\t\t/*eslint dot-notation:0*/\n
+\t\t\t\t\tif (!rule.attributes["class"]) {\n
+\t\t\t\t\t\trule.attributes["class"] = {};\n
+\t\t\t\t\t\trule.attributesOrder.push("class");\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!rule.attributes.style) {\n
+\t\t\t\t\t\trule.attributes.style = {};\n
+\t\t\t\t\t\trule.attributesOrder.push("style");\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Parse HTML into DOM structure\n
+\t\t\t\tvar domParser = new DomParser({}, schema);\n
+\n
+\t\t\t\t// Filter styles to remove "mso" specific styles and convert some of them\n
+\t\t\t\tdomParser.addAttributeFilter(\'style\', function(nodes) {\n
+\t\t\t\t\tvar i = nodes.length, node;\n
+\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tnode = nodes[i];\n
+\t\t\t\t\t\tnode.attr(\'style\', filterStyles(node, node.attr(\'style\')));\n
+\n
+\t\t\t\t\t\t// Remove pointess spans\n
+\t\t\t\t\t\tif (node.name == \'span\' && node.parent && !node.attributes.length) {\n
+\t\t\t\t\t\t\tnode.unwrap();\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Check the class attribute for comments or del items and remove those\n
+\t\t\t\tdomParser.addAttributeFilter(\'class\', function(nodes) {\n
+\t\t\t\t\tvar i = nodes.length, node, className;\n
+\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tnode = nodes[i];\n
+\n
+\t\t\t\t\t\tclassName = node.attr(\'class\');\n
+\t\t\t\t\t\tif (/^(MsoCommentReference|MsoCommentText|msoDel)$/i.test(className)) {\n
+\t\t\t\t\t\t\tnode.remove();\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode.attr(\'class\', null);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Remove all del elements since we don\'t want the track changes code in the editor\n
+\t\t\t\tdomParser.addNodeFilter(\'del\', function(nodes) {\n
+\t\t\t\t\tvar i = nodes.length;\n
+\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tnodes[i].remove();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Keep some of the links and anchors\n
+\t\t\t\tdomParser.addNodeFilter(\'a\', function(nodes) {\n
+\t\t\t\t\tvar i = nodes.length, node, href, name;\n
+\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tnode = nodes[i];\n
+\t\t\t\t\t\thref = node.attr(\'href\');\n
+\t\t\t\t\t\tname = node.attr(\'name\');\n
+\n
+\t\t\t\t\t\tif (href && href.indexOf(\'#_msocom_\') != -1) {\n
+\t\t\t\t\t\t\tnode.remove();\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (href && href.indexOf(\'file://\') === 0) {\n
+\t\t\t\t\t\t\thref = href.split(\'#\')[1];\n
+\t\t\t\t\t\t\tif (href) {\n
+\t\t\t\t\t\t\t\thref = \'#\' + href;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (!href && !name) {\n
+\t\t\t\t\t\t\tnode.unwrap();\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t// Remove all named anchors that aren\'t specific to TOC, Footnotes or Endnotes\n
+\t\t\t\t\t\t\tif (name && !/^_?(?:toc|edn|ftn)/i.test(name)) {\n
+\t\t\t\t\t\t\t\tnode.unwrap();\n
+\t\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tnode.attr({\n
+\t\t\t\t\t\t\t\thref: href,\n
+\t\t\t\t\t\t\t\tname: name\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Parse into DOM structure\n
+\t\t\t\tvar rootNode = domParser.parse(content);\n
+\n
+\t\t\t\t// Process DOM\n
+\t\t\t\tif (settings.paste_convert_word_fake_lists !== false) {\n
+\t\t\t\t\tconvertFakeListsToProperLists(rootNode);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Serialize DOM back to HTML\n
+\t\t\t\te.content = new Serializer({}, schema).serialize(rootNode);\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tWordFilter.isWordContent = isWordContent;\n
+\n
+\treturn WordFilter;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13522</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>WordFilter.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268529.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Mime.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Mime.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Returns mime types for uris.\n
+ */\n
+define("tinymce/imagetoolsplugin/Mime", [], function() {\n
+\tfunction getUriPathName(uri) {\n
+\t\tvar a = document.createElement(\'a\');\n
+\n
+\t\ta.href = uri;\n
+\n
+\t\treturn a.pathname;\n
+\t}\n
+\n
+\tfunction guessMimeType(uri) {\n
+\t\tvar parts = getUriPathName(uri).split(\'.\'),\n
+\t\t\text = parts[parts.length - 1],\n
+\t\t\tmimes = {\n
+\t\t\t\t\'jpg\': \'image/jpeg\',\n
+\t\t\t\t\'jpeg\': \'image/jpeg\',\n
+\t\t\t\t\'png\': \'image/png\'\n
+\t\t\t};\n
+\n
+\t\tif (ext) {\n
+\t\t\text = ext.toLowerCase();\n
+\t\t}\n
+\n
+\t\treturn mimes[ext];\n
+\t}\n
+\n
+\treturn {\n
+\t\tguessMimeType: guessMimeType\n
+\t};\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>748</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Mime.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268127.9</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery_initialization.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.plugins.jQueryInitialization", {\n
+\tsetupModule: function() {\n
+\t\tdocument.getElementById(\'view\').innerHTML = (\n
+\t\t\t\'<textarea id="elm1"></textarea>\' +\n
+\t\t\t\'<textarea id="elm2"></textarea>\'\n
+\t\t);\n
+\n
+\t\tthis.val = $.fn.val;\n
+\n
+\t\tQUnit.stop();\n
+\n
+\t\t$(function() {\n
+\t\t\tQUnit.start();\n
+\t\t});\n
+\t},\n
+\n
+\tteardown: function() {\n
+\t\t$.fn.val = this.val;\n
+\t}\n
+});\n
+\n
+test("applyPatch is only called once", function() {\n
+\texpect(1);\n
+\n
+\tvar options = {plugins: [\n
+\t\t\t\t"pagebreak,layer,table,save,emoticons,insertdatetime,preview,media,searchreplace",\n
+\t\t\t\t"print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template"\n
+\t\t\t]},\n
+\t\toldValFn;\n
+\n
+\t$(\'#elm1\').tinymce(options);\n
+\n
+\toldValFn = $.fn.val = function() {\n
+\t\t// no-op\n
+\t};\n
+\n
+\t$(\'#elm2\').tinymce(options);\n
+\n
+\tequal($.fn.val, oldValFn);\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>794</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery_initialization.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

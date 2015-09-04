@@ -1,0 +1,451 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268319.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FloatPanel.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * FloatPanel.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class creates a floating panel.\n
+ *\n
+ * @-x-less FloatPanel.less\n
+ * @class tinymce.ui.FloatPanel\n
+ * @extends tinymce.ui.Panel\n
+ * @mixes tinymce.ui.Movable\n
+ * @mixes tinymce.ui.Resizable\n
+ */\n
+define("tinymce/ui/FloatPanel", [\n
+\t"tinymce/ui/Panel",\n
+\t"tinymce/ui/Movable",\n
+\t"tinymce/ui/Resizable",\n
+\t"tinymce/ui/DomUtils",\n
+\t"tinymce/dom/DomQuery"\n
+], function(Panel, Movable, Resizable, DomUtils, $) {\n
+\t"use strict";\n
+\n
+\tvar documentClickHandler, documentScrollHandler, windowResizeHandler, visiblePanels = [];\n
+\tvar zOrder = [], hasModal;\n
+\n
+\tfunction isChildOf(ctrl, parent) {\n
+\t\twhile (ctrl) {\n
+\t\t\tif (ctrl == parent) {\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tctrl = ctrl.parent();\n
+\t\t}\n
+\t}\n
+\n
+\tfunction skipOrHidePanels(e) {\n
+\t\t// Hide any float panel when a click/focus out is out side that float panel and the\n
+\t\t// float panels direct parent for example a click on a menu button\n
+\t\tvar i = visiblePanels.length;\n
+\n
+\t\twhile (i--) {\n
+\t\t\tvar panel = visiblePanels[i], clickCtrl = panel.getParentCtrl(e.target);\n
+\n
+\t\t\tif (panel.settings.autohide) {\n
+\t\t\t\tif (clickCtrl) {\n
+\t\t\t\t\tif (isChildOf(clickCtrl, panel) || panel.parent() === clickCtrl) {\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\te = panel.fire(\'autohide\', {target: e.target});\n
+\t\t\t\tif (!e.isDefaultPrevented()) {\n
+\t\t\t\t\tpanel.hide();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\tfunction bindDocumentClickHandler() {\n
+\n
+\t\tif (!documentClickHandler) {\n
+\t\t\tdocumentClickHandler = function(e) {\n
+\t\t\t\t// Gecko fires click event and in the wrong order on Mac so lets normalize\n
+\t\t\t\tif (e.button == 2) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tskipOrHidePanels(e);\n
+\t\t\t};\n
+\n
+\t\t\t$(document).on(\'click touchstart\', documentClickHandler);\n
+\t\t}\n
+\t}\n
+\n
+\tfunction bindDocumentScrollHandler() {\n
+\t\tif (!documentScrollHandler) {\n
+\t\t\tdocumentScrollHandler = function() {\n
+\t\t\t\tvar i;\n
+\n
+\t\t\t\ti = visiblePanels.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\trepositionPanel(visiblePanels[i]);\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\t$(window).on(\'scroll\', documentScrollHandler);\n
+\t\t}\n
+\t}\n
+\n
+\tfunction bindWindowResizeHandler() {\n
+\t\tif (!windowResizeHandler) {\n
+\t\t\tvar docElm = document.documentElement, clientWidth = docElm.clientWidth, clientHeight = docElm.clientHeight;\n
+\n
+\t\t\twindowResizeHandler = function() {\n
+\t\t\t\t// Workaround for #7065 IE 7 fires resize events event though the window wasn\'t resized\n
+\t\t\t\tif (!document.all || clientWidth != docElm.clientWidth || clientHeight != docElm.clientHeight) {\n
+\t\t\t\t\tclientWidth = docElm.clientWidth;\n
+\t\t\t\t\tclientHeight = docElm.clientHeight;\n
+\t\t\t\t\tFloatPanel.hideAll();\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\t$(window).on(\'resize\', windowResizeHandler);\n
+\t\t}\n
+\t}\n
+\n
+\t/**\n
+\t * Repositions the panel to the top of page if the panel is outside of the visual viewport. It will\n
+\t * also reposition all child panels of the current panel.\n
+\t */\n
+\tfunction repositionPanel(panel) {\n
+\t\tvar scrollY = DomUtils.getViewPort().y;\n
+\n
+\t\tfunction toggleFixedChildPanels(fixed, deltaY) {\n
+\t\t\tvar parent;\n
+\n
+\t\t\tfor (var i = 0; i < visiblePanels.length; i++) {\n
+\t\t\t\tif (visiblePanels[i] != panel) {\n
+\t\t\t\t\tparent = visiblePanels[i].parent();\n
+\n
+\t\t\t\t\twhile (parent && (parent = parent.parent())) {\n
+\t\t\t\t\t\tif (parent == panel) {\n
+\t\t\t\t\t\t\tvisiblePanels[i].fixed(fixed).moveBy(0, deltaY).repaint();\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tif (panel.settings.autofix) {\n
+\t\t\tif (!panel.state.get(\'fixed\')) {\n
+\t\t\t\tpanel._autoFixY = panel.layoutRect().y;\n
+\n
+\t\t\t\tif (panel._autoFixY < scrollY) {\n
+\t\t\t\t\tpanel.fixed(true).layoutRect({y: 0}).repaint();\n
+\t\t\t\t\ttoggleFixedChildPanels(true, scrollY - panel._autoFixY);\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tif (panel._autoFixY > scrollY) {\n
+\t\t\t\t\tpanel.fixed(false).layoutRect({y: panel._autoFixY}).repaint();\n
+\t\t\t\t\ttoggleFixedChildPanels(false, panel._autoFixY - scrollY);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\tfunction addRemove(add, ctrl) {\n
+\t\tvar i, zIndex = FloatPanel.zIndex || 0xFFFF, topModal;\n
+\n
+\t\tif (add) {\n
+\t\t\tzOrder.push(ctrl);\n
+\t\t} else {\n
+\t\t\ti = zOrder.length;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tif (zOrder[i] === ctrl) {\n
+\t\t\t\t\tzOrder.splice(i, 1);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tif (zOrder.length) {\n
+\t\t\tfor (i = 0; i < zOrder.length; i++) {\n
+\t\t\t\tif (zOrder[i].modal) {\n
+\t\t\t\t\tzIndex++;\n
+\t\t\t\t\ttopModal = zOrder[i];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tzOrder[i].getEl().style.zIndex = zIndex;\n
+\t\t\t\tzOrder[i].zIndex = zIndex;\n
+\t\t\t\tzIndex++;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tvar modalBlockEl = document.getElementById(ctrl.classPrefix + \'modal-block\');\n
+\n
+\t\tif (topModal) {\n
+\t\t\t$(modalBlockEl).css(\'z-index\', topModal.zIndex - 1);\n
+\t\t} else if (modalBlockEl) {\n
+\t\t\tmodalBlockEl.parentNode.removeChild(modalBlockEl);\n
+\t\t\thasModal = false;\n
+\t\t}\n
+\n
+\t\tFloatPanel.currentZIndex = zIndex;\n
+\t}\n
+\n
+\tvar FloatPanel = Panel.extend({\n
+\t\tMixins: [Movable, Resizable],\n
+\n
+\t\t/**\n
+\t\t * Constructs a new control instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {Boolean} autohide Automatically hide the panel.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tself._eventsRoot = self;\n
+\n
+\t\t\tself.classes.add(\'floatpanel\');\n
+\n
+\t\t\t// Hide floatpanes on click out side the root button\n
+\t\t\tif (settings.autohide) {\n
+\t\t\t\tbindDocumentClickHandler();\n
+\t\t\t\tbindWindowResizeHandler();\n
+\t\t\t\tvisiblePanels.push(self);\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.autofix) {\n
+\t\t\t\tbindDocumentScrollHandler();\n
+\n
+\t\t\t\tself.on(\'move\', function() {\n
+\t\t\t\t\trepositionPanel(this);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tself.on(\'postrender show\', function(e) {\n
+\t\t\t\tif (e.control == self) {\n
+\t\t\t\t\tvar $modalBlockEl, prefix = self.classPrefix;\n
+\n
+\t\t\t\t\tif (self.modal && !hasModal) {\n
+\t\t\t\t\t\t$modalBlockEl = $(\'#\' + prefix + \'modal-block\');\n
+\t\t\t\t\t\tif (!$modalBlockEl[0]) {\n
+\t\t\t\t\t\t\t$modalBlockEl = $(\n
+\t\t\t\t\t\t\t\t\'<div id="\' + prefix + \'modal-block" class="\' + prefix + \'reset \' + prefix + \'fade"></div>\'\n
+\t\t\t\t\t\t\t).appendTo(self.getContainerElm());\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\t\t\t$modalBlockEl.addClass(prefix + \'in\');\n
+\t\t\t\t\t\t\t$(self.getEl()).addClass(prefix + \'in\');\n
+\t\t\t\t\t\t}, 0);\n
+\n
+\t\t\t\t\t\thasModal = true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\taddRemove(true, self);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself.on(\'show\', function() {\n
+\t\t\t\tself.parents().each(function(ctrl) {\n
+\t\t\t\t\tif (ctrl.state.get(\'fixed\')) {\n
+\t\t\t\t\t\tself.fixed(true);\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\tif (settings.popover) {\n
+\t\t\t\tself._preBodyHtml = \'<div class="\' + self.classPrefix + \'arrow"></div>\';\n
+\t\t\t\tself.classes.add(\'popover\').add(\'bottom\').add(self.isRtl() ? \'end\' : \'start\');\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tfixed: function(state) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (self.state.get(\'fixed\') != state) {\n
+\t\t\t\tif (self.state.get(\'rendered\')) {\n
+\t\t\t\t\tvar viewport = DomUtils.getViewPort();\n
+\n
+\t\t\t\t\tif (state) {\n
+\t\t\t\t\t\tself.layoutRect().y -= viewport.y;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tself.layoutRect().y += viewport.y;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.classes.toggle(\'fixed\', state);\n
+\t\t\t\tself.state.set(\'fixed\', state);\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Shows the current float panel.\n
+\t\t *\n
+\t\t * @method show\n
+\t\t * @return {tinymce.ui.FloatPanel} Current floatpanel instance.\n
+\t\t */\n
+\t\tshow: function() {\n
+\t\t\tvar self = this, i, state = self._super();\n
+\n
+\t\t\ti = visiblePanels.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tif (visiblePanels[i] === self) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (i === -1) {\n
+\t\t\t\tvisiblePanels.push(self);\n
+\t\t\t}\n
+\n
+\t\t\treturn state;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Hides the current float panel.\n
+\t\t *\n
+\t\t * @method hide\n
+\t\t * @return {tinymce.ui.FloatPanel} Current floatpanel instance.\n
+\t\t */\n
+\t\thide: function() {\n
+\t\t\tremoveVisiblePanel(this);\n
+\t\t\taddRemove(false, this);\n
+\n
+\t\t\treturn this._super();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Hide all visible float panels with he autohide setting enabled. This is for\n
+\t\t * manually hiding floating menus or panels.\n
+\t\t *\n
+\t\t * @method hideAll\n
+\t\t */\n
+\t\thideAll: function() {\n
+\t\t\tFloatPanel.hideAll();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Closes the float panel. This will remove the float panel from page and fire the close event.\n
+\t\t *\n
+\t\t * @method close\n
+\t\t */\n
+\t\tclose: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (!self.fire(\'close\').isDefaultPrevented()) {\n
+\t\t\t\tself.remove();\n
+\t\t\t\taddRemove(false, self);\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the float panel from page.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t */\n
+\t\tremove: function() {\n
+\t\t\tremoveVisiblePanel(this);\n
+\t\t\tthis._super();\n
+\t\t},\n
+\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (self.settings.bodyRole) {\n
+\t\t\t\tthis.getEl(\'body\').setAttribute(\'role\', self.settings.bodyRole);\n
+\t\t\t}\n
+\n
+\t\t\treturn self._super();\n
+\t\t}\n
+\t});\n
+\n
+\t/**\n
+\t * Hide all visible float panels with he autohide setting enabled. This is for\n
+\t * manually hiding floating menus or panels.\n
+\t *\n
+\t * @static\n
+\t * @method hideAll\n
+\t */\n
+\tFloatPanel.hideAll = function() {\n
+\t\tvar i = visiblePanels.length;\n
+\n
+\t\twhile (i--) {\n
+\t\t\tvar panel = visiblePanels[i];\n
+\n
+\t\t\tif (panel && panel.settings.autohide) {\n
+\t\t\t\tpanel.hide();\n
+\t\t\t\tvisiblePanels.splice(i, 1);\n
+\t\t\t}\n
+\t\t}\n
+\t};\n
+\n
+\tfunction removeVisiblePanel(panel) {\n
+\t\tvar i;\n
+\n
+\t\ti = visiblePanels.length;\n
+\t\twhile (i--) {\n
+\t\t\tif (visiblePanels[i] === panel) {\n
+\t\t\t\tvisiblePanels.splice(i, 1);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\ti = zOrder.length;\n
+\t\twhile (i--) {\n
+\t\t\tif (zOrder[i] === panel) {\n
+\t\t\t\tzOrder.splice(i, 1);\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\treturn FloatPanel;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8956</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FloatPanel.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

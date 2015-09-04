@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268639.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>TextBox.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// TextBox\n
+\n
+.@{prefix}-textbox {\n
+\tbackground: @textbox-bg;\n
+\tborder: 1px solid @textbox-border;\n
+\t.border-radius(3px);\n
+\t.box-shadow(@textbox-box-shadow);\n
+\tdisplay: inline-block;\n
+\t.transition(~"border linear .2s, box-shadow linear .2s");\n
+\theight: 28px;\n
+\tresize: none;\n
+\tpadding: 0 4px 0 4px;\n
+\twhite-space: pre-wrap;\n
+\t*white-space: pre;\n
+\tcolor: @text;\n
+}\n
+\n
+.@{prefix}-textbox:focus, .@{prefix}-textbox.@{prefix}-focus {\n
+\tborder-color: @textbox-border-focus;\n
+\t.box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px fadeout(@textbox-border-focus, 15%));\n
+}\n
+\n
+.@{prefix}-placeholder .@{prefix}-textbox {\n
+\tcolor: @textbox-text-placeholder;\n
+}\n
+\n
+.@{prefix}-textbox.@{prefix}-multiline {\n
+\tpadding: 4px;\n
+}\n
+\n
+.@{prefix}-textbox.@{prefix}-disabled {\n
+\tcolor: mix(@text, @textbox-bg, 40%);\n
+}\n
+\n
+// RTL\n
+\n
+.@{prefix}-rtl .@{prefix}-textbox {\n
+\ttext-align: right;\n
+\tdirection: rtl;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>855</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>TextBox.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

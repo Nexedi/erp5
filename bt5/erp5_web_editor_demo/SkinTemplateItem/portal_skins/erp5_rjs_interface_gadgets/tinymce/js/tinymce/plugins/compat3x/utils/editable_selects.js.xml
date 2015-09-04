@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268415.3</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>editable_selects.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * editable_selects.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+var TinyMCE_EditableSelects = {\n
+\teditSelectElm : null,\n
+\n
+\tinit : function() {\n
+\t\tvar nl = document.getElementsByTagName("select"), i, d = document, o;\n
+\n
+\t\tfor (i=0; i<nl.length; i++) {\n
+\t\t\tif (nl[i].className.indexOf(\'mceEditableSelect\') != -1) {\n
+\t\t\t\to = new Option(tinyMCEPopup.editor.translate(\'value\'), \'__mce_add_custom__\');\n
+\n
+\t\t\t\to.className = \'mceAddSelectValue\';\n
+\n
+\t\t\t\tnl[i].options[nl[i].options.length] = o;\n
+\t\t\t\tnl[i].onchange = TinyMCE_EditableSelects.onChangeEditableSelect;\n
+\t\t\t}\n
+\t\t}\n
+\t},\n
+\n
+\tonChangeEditableSelect : function(e) {\n
+\t\tvar d = document, ne, se = window.event ? window.event.srcElement : e.target;\n
+\n
+\t\tif (se.options[se.selectedIndex].value == \'__mce_add_custom__\') {\n
+\t\t\tne = d.createElement("input");\n
+\t\t\tne.id = se.id + "_custom";\n
+\t\t\tne.name = se.name + "_custom";\n
+\t\t\tne.type = "text";\n
+\n
+\t\t\tne.style.width = se.offsetWidth + \'px\';\n
+\t\t\tse.parentNode.insertBefore(ne, se);\n
+\t\t\tse.style.display = \'none\';\n
+\t\t\tne.focus();\n
+\t\t\tne.onblur = TinyMCE_EditableSelects.onBlurEditableSelectInput;\n
+\t\t\tne.onkeydown = TinyMCE_EditableSelects.onKeyDown;\n
+\t\t\tTinyMCE_EditableSelects.editSelectElm = se;\n
+\t\t}\n
+\t},\n
+\n
+\tonBlurEditableSelectInput : function() {\n
+\t\tvar se = TinyMCE_EditableSelects.editSelectElm;\n
+\n
+\t\tif (se) {\n
+\t\t\tif (se.previousSibling.value != \'\') {\n
+\t\t\t\taddSelectValue(document.forms[0], se.id, se.previousSibling.value, se.previousSibling.value);\n
+\t\t\t\tselectByValue(document.forms[0], se.id, se.previousSibling.value);\n
+\t\t\t} else\n
+\t\t\t\tselectByValue(document.forms[0], se.id, \'\');\n
+\n
+\t\t\tse.style.display = \'inline\';\n
+\t\t\tse.parentNode.removeChild(se.previousSibling);\n
+\t\t\tTinyMCE_EditableSelects.editSelectElm = null;\n
+\t\t}\n
+\t},\n
+\n
+\tonKeyDown : function(e) {\n
+\t\te = e || window.event;\n
+\n
+\t\tif (e.keyCode == 13)\n
+\t\t\tTinyMCE_EditableSelects.onBlurEditableSelectInput();\n
+\t}\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1983</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>editable_selects.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268202.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>I18n.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>module("tinymce.util.I18n", {\n
+\tteardown: function() {\n
+\t\ttinymce.util.I18n.rtl = false;\n
+\t}\n
+});\n
+\n
+test("Translate strings", function() {\n
+\ttinymce.util.I18n.add("code", {\n
+\t\t"text": "text translation",\n
+\t\t"value:{0}{1}": "value translation:{0}{1}",\n
+\t\t"text{context:something}": "text translation with context",\n
+\t\t"value:{0}{1}{context:something}": "value translation:{0}{1} with context"\n
+\t});\n
+\n
+\tequal(tinymce.util.I18n.translate("text"), "text translation");\n
+\tequal(tinymce.util.I18n.translate("untranslated text"), "untranslated text");\n
+\tequal(tinymce.util.I18n.translate(["untranslated value:{0}{1}", "a", "b"]), "untranslated value:ab");\n
+\tequal(tinymce.util.I18n.translate(["value:{0}{1}", "a", "b"]), "value translation:ab");\n
+\tequal(tinymce.util.I18n.translate("untranslated text{context:context}"), "untranslated text");\n
+\tequal(tinymce.util.I18n.translate(["untranslated value:{0}{1}{context:something}", "a", "b"]), "untranslated value:ab");\n
+\tequal(tinymce.util.I18n.translate(["value:{0}{1}{context:something}", "a", "b"]), "value translation:ab with context");\n
+});\n
+\n
+test("Switch language", function() {\n
+\tfor (var key in tinymce.util.I18n.data) {\n
+\t\tdelete tinymce.util.I18n.data[key];\n
+\t}\n
+\n
+\ttinymce.util.I18n.add("code1", {\n
+\t\t"text": "translation1"\n
+\t});\n
+\n
+\tequal(tinymce.util.I18n.getCode(), "code1");\n
+\tstrictEqual(tinymce.util.I18n.rtl, false);\n
+\tdeepEqual(tinymce.util.I18n.data, {\n
+\t\t"code1": {\n
+\t\t\t"text": "translation1"\n
+\t\t}\n
+\t });\n
+\n
+\ttinymce.util.I18n.add("code2", {\n
+\t\t"_dir": "rtl",\n
+\t\t"text": "translation2"\n
+\t});\n
+\n
+\tequal(tinymce.util.I18n.getCode(), "code2");\n
+\tstrictEqual(tinymce.util.I18n.rtl, true);\n
+\tdeepEqual(tinymce.util.I18n.data, {\n
+\t\t"code1": {\n
+\t\t\t"text": "translation1"\n
+\t\t},\n
+\n
+\t\t"code2": {\n
+\t\t\t"_dir": "rtl",\n
+\t\t\t"text": "translation2"\n
+\t\t}\n
+\t });\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1756</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>I18n.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

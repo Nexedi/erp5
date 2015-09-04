@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268144.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>noneditable.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Noneditable plugin manual tests</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<script src="../../js/tinymce/tinymce.dev.js"></script>\n
+<script>\n
+\ttinymce.init({\n
+\t\tmode: "textareas",\n
+\t\tplugins: [\n
+\t\t\t"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",\n
+\t\t\t"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
+\t\t\t"save table contextmenu directionality emoticons template paste noneditable"\n
+\t\t],\n
+\t\tadd_unload_trigger: false,\n
+\t\tcontent_css: "css/noneditable_manual.css",\n
+\t\tnoneditable_regexp: /\\[\\[[^\\]]+\\]\\]/g\n
+\t});\n
+</script>\n
+</head>\n
+<body>\n
+\n
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">\n
+\t<div>\n
+\t\t<h3>Noneditable plugin manual tests</h3>\n
+\n
+\t\t<div>\n
+\t\t\t<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">\n
+\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\tEditable &lt;span class="mceNonEditable"&gt;[non editable]&lt;/span&gt; editable.\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t&lt;p class="mceNonEditable"&gt;\n
+\t\t\t\t\tNon editable block &lt;span class="mceEditable"&gt;[editable]&lt;/span&gt; with more text.\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t&lt;p&gt;&lt;span class="mceNonEditable"&gt;[non editable]&lt;/span&gt;&lt;span class="mceNonEditable"&gt;[non editable]&lt;/span&gt;&lt;/p&gt;\n
+\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\tEditable &lt;span class="mceNonEditable"&gt;[non editable]&lt;/span&gt;&lt;span class="mceNonEditable"&gt;[non editable]&lt;/span&gt; editable.\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t&lt;p&gt;[[item1]][[item2]]&lt;/p&gt;\n
+\t\t\t</textarea>\n
+\t\t</div>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').getContent());return false;">[Get contents]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').getContent({format: \'raw\'}));return false;">[Get contents raw]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getContent());return false;">[Get selected]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getContent({format: \'raw\'}));return false;">[Get selected raw]</a>\n
+\t</div>\n
+</form>\n
+\n
+<script>\n
+if (document.location.protocol == \'file:\') {\n
+\talert("The examples might not work properly on the local file system due to security settings in your browser. Please use a real webserver.");\n
+}\n
+</script>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2275</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>noneditable.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

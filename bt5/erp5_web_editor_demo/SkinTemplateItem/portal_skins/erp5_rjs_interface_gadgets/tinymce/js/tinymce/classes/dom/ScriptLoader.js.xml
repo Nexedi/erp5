@@ -1,0 +1,299 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268363.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ScriptLoader.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ScriptLoader.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*globals console*/\n
+\n
+/**\n
+ * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks\n
+ * when various items gets loaded. This class is useful to load external JavaScript files.\n
+ *\n
+ * @class tinymce.dom.ScriptLoader\n
+ * @example\n
+ * // Load a script from a specific URL using the global script loader\n
+ * tinymce.ScriptLoader.load(\'somescript.js\');\n
+ *\n
+ * // Load a script using a unique instance of the script loader\n
+ * var scriptLoader = new tinymce.dom.ScriptLoader();\n
+ *\n
+ * scriptLoader.load(\'somescript.js\');\n
+ *\n
+ * // Load multiple scripts\n
+ * var scriptLoader = new tinymce.dom.ScriptLoader();\n
+ *\n
+ * scriptLoader.add(\'somescript1.js\');\n
+ * scriptLoader.add(\'somescript2.js\');\n
+ * scriptLoader.add(\'somescript3.js\');\n
+ *\n
+ * scriptLoader.loadQueue(function() {\n
+ *    alert(\'All scripts are now loaded.\');\n
+ * });\n
+ */\n
+define("tinymce/dom/ScriptLoader", [\n
+\t"tinymce/dom/DOMUtils",\n
+\t"tinymce/util/Tools"\n
+], function(DOMUtils, Tools) {\n
+\tvar DOM = DOMUtils.DOM;\n
+\tvar each = Tools.each, grep = Tools.grep;\n
+\n
+\tfunction ScriptLoader() {\n
+\t\tvar QUEUED = 0,\n
+\t\t\tLOADING = 1,\n
+\t\t\tLOADED = 2,\n
+\t\t\tstates = {},\n
+\t\t\tqueue = [],\n
+\t\t\tscriptLoadedCallbacks = {},\n
+\t\t\tqueueLoadedCallbacks = [],\n
+\t\t\tloading = 0,\n
+\t\t\tundef;\n
+\n
+\t\t/**\n
+\t\t * Loads a specific script directly without adding it to the load queue.\n
+\t\t *\n
+\t\t * @method load\n
+\t\t * @param {String} url Absolute URL to script to add.\n
+\t\t * @param {function} callback Optional callback function to execute ones this script gets loaded.\n
+\t\t * @param {Object} scope Optional scope to execute callback in.\n
+\t\t */\n
+\t\tfunction loadScript(url, callback) {\n
+\t\t\tvar dom = DOM, elm, id;\n
+\n
+\t\t\t// Execute callback when script is loaded\n
+\t\t\tfunction done() {\n
+\t\t\t\tdom.remove(id);\n
+\n
+\t\t\t\tif (elm) {\n
+\t\t\t\t\telm.onreadystatechange = elm.onload = elm = null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcallback();\n
+\t\t\t}\n
+\n
+\t\t\tfunction error() {\n
+\t\t\t\t/*eslint no-console:0 */\n
+\n
+\t\t\t\t// Report the error so it\'s easier for people to spot loading errors\n
+\t\t\t\tif (typeof console !== "undefined" && console.log) {\n
+\t\t\t\t\tconsole.log("Failed to load: " + url);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// We can\'t mark it as done if there is a load error since\n
+\t\t\t\t// A) We don\'t want to produce 404 errors on the server and\n
+\t\t\t\t// B) the onerror event won\'t fire on all browsers.\n
+\t\t\t\t// done();\n
+\t\t\t}\n
+\n
+\t\t\tid = dom.uniqueId();\n
+\n
+\t\t\t// Create new script element\n
+\t\t\telm = document.createElement(\'script\');\n
+\t\t\telm.id = id;\n
+\t\t\telm.type = \'text/javascript\';\n
+\t\t\telm.src = Tools._addCacheSuffix(url);\n
+\n
+\t\t\t// Seems that onreadystatechange works better on IE 10 onload seems to fire incorrectly\n
+\t\t\tif ("onreadystatechange" in elm) {\n
+\t\t\t\telm.onreadystatechange = function() {\n
+\t\t\t\t\tif (/loaded|complete/.test(elm.readyState)) {\n
+\t\t\t\t\t\tdone();\n
+\t\t\t\t\t}\n
+\t\t\t\t};\n
+\t\t\t} else {\n
+\t\t\t\telm.onload = done;\n
+\t\t\t}\n
+\n
+\t\t\t// Add onerror event will get fired on some browsers but not all of them\n
+\t\t\telm.onerror = error;\n
+\n
+\t\t\t// Add script to document\n
+\t\t\t(document.getElementsByTagName(\'head\')[0] || document.body).appendChild(elm);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if a script has been loaded or not.\n
+\t\t *\n
+\t\t * @method isDone\n
+\t\t * @param {String} url URL to check for.\n
+\t\t * @return {Boolean} true/false if the URL is loaded.\n
+\t\t */\n
+\t\tthis.isDone = function(url) {\n
+\t\t\treturn states[url] == LOADED;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Marks a specific script to be loaded. This can be useful if a script got loaded outside\n
+\t\t * the script loader or to skip it from loading some script.\n
+\t\t *\n
+\t\t * @method markDone\n
+\t\t * @param {string} u Absolute URL to the script to mark as loaded.\n
+\t\t */\n
+\t\tthis.markDone = function(url) {\n
+\t\t\tstates[url] = LOADED;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Adds a specific script to the load queue of the script loader.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {String} url Absolute URL to script to add.\n
+\t\t * @param {function} callback Optional callback function to execute ones this script gets loaded.\n
+\t\t * @param {Object} scope Optional scope to execute callback in.\n
+\t\t */\n
+\t\tthis.add = this.load = function(url, callback, scope) {\n
+\t\t\tvar state = states[url];\n
+\n
+\t\t\t// Add url to load queue\n
+\t\t\tif (state == undef) {\n
+\t\t\t\tqueue.push(url);\n
+\t\t\t\tstates[url] = QUEUED;\n
+\t\t\t}\n
+\n
+\t\t\tif (callback) {\n
+\t\t\t\t// Store away callback for later execution\n
+\t\t\t\tif (!scriptLoadedCallbacks[url]) {\n
+\t\t\t\t\tscriptLoadedCallbacks[url] = [];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tscriptLoadedCallbacks[url].push({\n
+\t\t\t\t\tfunc: callback,\n
+\t\t\t\t\tscope: scope || this\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Starts the loading of the queue.\n
+\t\t *\n
+\t\t * @method loadQueue\n
+\t\t * @param {function} callback Optional callback to execute when all queued items are loaded.\n
+\t\t * @param {Object} scope Optional scope to execute the callback in.\n
+\t\t */\n
+\t\tthis.loadQueue = function(callback, scope) {\n
+\t\t\tthis.loadScripts(queue, callback, scope);\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Loads the specified queue of files and executes the callback ones they are loaded.\n
+\t\t * This method is generally not used outside this class but it might be useful in some scenarios.\n
+\t\t *\n
+\t\t * @method loadScripts\n
+\t\t * @param {Array} scripts Array of queue items to load.\n
+\t\t * @param {function} callback Optional callback to execute ones all items are loaded.\n
+\t\t * @param {Object} scope Optional scope to execute callback in.\n
+\t\t */\n
+\t\tthis.loadScripts = function(scripts, callback, scope) {\n
+\t\t\tvar loadScripts;\n
+\n
+\t\t\tfunction execScriptLoadedCallbacks(url) {\n
+\t\t\t\t// Execute URL callback functions\n
+\t\t\t\teach(scriptLoadedCallbacks[url], function(callback) {\n
+\t\t\t\t\tcallback.func.call(callback.scope);\n
+\t\t\t\t});\n
+\n
+\t\t\t\tscriptLoadedCallbacks[url] = undef;\n
+\t\t\t}\n
+\n
+\t\t\tqueueLoadedCallbacks.push({\n
+\t\t\t\tfunc: callback,\n
+\t\t\t\tscope: scope || this\n
+\t\t\t});\n
+\n
+\t\t\tloadScripts = function() {\n
+\t\t\t\tvar loadingScripts = grep(scripts);\n
+\n
+\t\t\t\t// Current scripts has been handled\n
+\t\t\t\tscripts.length = 0;\n
+\n
+\t\t\t\t// Load scripts that needs to be loaded\n
+\t\t\t\teach(loadingScripts, function(url) {\n
+\t\t\t\t\t// Script is already loaded then execute script callbacks directly\n
+\t\t\t\t\tif (states[url] == LOADED) {\n
+\t\t\t\t\t\texecScriptLoadedCallbacks(url);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Is script not loading then start loading it\n
+\t\t\t\t\tif (states[url] != LOADING) {\n
+\t\t\t\t\t\tstates[url] = LOADING;\n
+\t\t\t\t\t\tloading++;\n
+\n
+\t\t\t\t\t\tloadScript(url, function() {\n
+\t\t\t\t\t\t\tstates[url] = LOADED;\n
+\t\t\t\t\t\t\tloading--;\n
+\n
+\t\t\t\t\t\t\texecScriptLoadedCallbacks(url);\n
+\n
+\t\t\t\t\t\t\t// Load more scripts if they where added by the recently loaded script\n
+\t\t\t\t\t\t\tloadScripts();\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// No scripts are currently loading then execute all pending queue loaded callbacks\n
+\t\t\t\tif (!loading) {\n
+\t\t\t\t\teach(queueLoadedCallbacks, function(callback) {\n
+\t\t\t\t\t\tcallback.func.call(callback.scope);\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\tqueueLoadedCallbacks.length = 0;\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\tloadScripts();\n
+\t\t};\n
+\t}\n
+\n
+\tScriptLoader.ScriptLoader = new ScriptLoader();\n
+\n
+\treturn ScriptLoader;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6858</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ScriptLoader.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

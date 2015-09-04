@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268217.25</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Button.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tmodule("tinymce.ui.Button", {\n
+\t\tsetup: function() {\n
+\t\t\tdocument.getElementById(\'view\').innerHTML = \'\';\n
+\t\t},\n
+\n
+\t\tteardown: function() {\n
+\t\t\ttinymce.dom.Event.clean(document.getElementById(\'view\'));\n
+\t\t}\n
+\t});\n
+\n
+\tfunction createButton(settings) {\n
+\t\treturn tinymce.ui.Factory.create(tinymce.extend({\n
+\t\t\ttype: \'button\'\n
+\t\t}, settings)).renderTo(document.getElementById(\'view\'));\n
+\t}\n
+\n
+\ttest("button text, size default", function() {\n
+\t\tvar button = createButton({text: \'X\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(button), [0, 0, 27, 30], 4);\n
+\t});\n
+\n
+\ttest("button text, size large", function() {\n
+\t\tvar button = createButton({text: \'X\', size: \'large\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(button), [0, 0, 41, 39], 4);\n
+\t});\n
+\n
+\ttest("button text, size small", function() {\n
+\t\tvar button = createButton({text: \'X\', size: \'small\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(button), [0, 0, 19, 23], 4);\n
+\t});\n
+\n
+\ttest("button text, width 100, height 100", function() {\n
+\t\tvar button = createButton({text: \'X\', width: 100, height: 100});\n
+\n
+\t\tdeepEqual(Utils.rect(button), [0, 0, 100, 100]);\n
+\t\tdeepEqual(Utils.rect(button.getEl().firstChild), [1, 1, 98, 98]);\n
+\t});\n
+\n
+\ttest("button icon, size default", function() {\n
+\t\tvar button = createButton({icon: \'test\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(button), [0, 0, 34, 30], 4);\n
+\t});\n
+\n
+\ttest("button icon, size small", function() {\n
+\t\tvar button = createButton({icon: \'test\', size: \'small\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(button), [0, 0, 28, 24], 4);\n
+\t});\n
+\n
+\ttest("button icon, size large", function() {\n
+\t\tvar button = createButton({icon: \'test\', size: \'large\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(button), [0, 0, 44, 40], 4);\n
+\t});\n
+\n
+\ttest("button icon, width 100, height 100", function() {\n
+\t\tvar button = createButton({icon: \'test\', width: 100, height: 100});\n
+\n
+\t\tdeepEqual(Utils.rect(button), [0, 0, 100, 100]);\n
+\t\tdeepEqual(Utils.rect(button.getEl().firstChild), [1, 1, 98, 98]);\n
+\t});\n
+\n
+\ttest("button text & icon, size default", function() {\n
+\t\tvar button = createButton({text: \'X\', icon: \'test\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(button), [0, 0, 47, 30], 4);\n
+\t});\n
+\n
+\ttest("button text & icon, size large", function() {\n
+\t\tvar button = createButton({text: \'X\', icon: \'test\', size: \'large\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(button), [0, 0, 59, 40], 4);\n
+\t});\n
+\n
+\ttest("button text & icon, size small", function() {\n
+\t\tvar button = createButton({text: \'X\', icon: \'test\', size: \'small\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(button), [0, 0, 38, 24], 4);\n
+\t});\n
+\n
+\ttest("button text & icon, width 100, height 100", function() {\n
+\t\tvar button = createButton({text: \'X\', icon: \'test\', width: 100, height: 100});\n
+\n
+\t\tdeepEqual(Utils.rect(button), [0, 0, 100, 100]);\n
+\t\tdeepEqual(Utils.rect(button.getEl().firstChild), [1, 1, 98, 98]);\n
+\t});\n
+\n
+\ttest("button click event", function() {\n
+\t\tvar button, clicks = {};\n
+\n
+\t\tbutton = createButton({text: \'X\', onclick: function() {clicks.a = \'a\';}});\n
+\t\tbutton.on(\'click\', function() {clicks.b = \'b\';});\n
+\t\tbutton.on(\'click\', function() {clicks.c = \'c\';});\n
+\t\tbutton.fire(\'click\');\n
+\n
+\t\tdeepEqual(clicks, {a: \'a\', b: \'b\', c: \'c\'});\n
+\t});\n
+})();\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3104</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Button.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

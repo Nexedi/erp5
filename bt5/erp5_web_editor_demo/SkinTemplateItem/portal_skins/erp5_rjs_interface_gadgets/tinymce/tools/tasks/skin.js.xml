@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268107.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>skin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Task for creating a skin.dev.less files for each of the skin directories located in the path. It will automatically import\n
+ * the used less files based on the JS components found in the importFrom file. It will look for -x-less JSDoc comments and include\n
+ * these into the output less file.\n
+ */\n
+\n
+var path = require(\'path\');\n
+var fs = require(\'fs\');\n
+\n
+module.exports = function(grunt) {\n
+\t/**\n
+\t * Compiles a less file with imports for all the specified paths.\n
+\t */\n
+\tfunction compileLessFile(paths, lessFilePath) {\n
+\t\tvar lessImportCode = "";\n
+\n
+\t\tpaths.forEach(function(filePath) {\n
+\t\t\tlessImportCode += \'@import "\' + filePath + \'";\\n\';\n
+\t\t});\n
+\n
+\t\tfs.writeFileSync(lessFilePath, lessImportCode);\n
+\t}\n
+\n
+\t/**\n
+\t * Compiles a less source file from all the specified paths.\n
+\t */\n
+\tfunction compileLessSourceFile(paths, lessFilePath) {\n
+\t\tvar lessSourceCode = "";\n
+\n
+\t\tpaths.forEach(function(filePath) {\n
+\t\t\tlessSourceCode += "\\n" + fs.readFileSync(path.join(path.dirname(lessFilePath), filePath)) + "\\n";\n
+\t\t});\n
+\n
+\t\tfs.writeFileSync(lessFilePath, lessSourceCode);\n
+\t}\n
+\n
+\t/**\n
+\t * Parses the JS doc comments for -x-less items and include returns them as an array.\n
+\t */\n
+\tfunction parseLessDocs(filePath) {\n
+\t\tvar matches, docCommentRegExp = /\\/\\*\\*([\\s\\S]+?)\\*\\//g, lessFiles = [];\n
+\t\tvar source = grunt.file.read(filePath).toString();\n
+\n
+\t\tfor (matches = docCommentRegExp.exec(source); matches; matches = docCommentRegExp.exec(source)) {\n
+\t\t\tvar docComment = matches[1];\n
+\n
+\t\t\tvar lessMatch = /\\@\\-x\\-less\\s+(.+)/g.exec(docComment);\n
+\t\t\tif (lessMatch) {\n
+\t\t\t\tlessFiles.push(lessMatch[1]);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn lessFiles;\n
+\t}\n
+\n
+\tgrunt.registerMultiTask("skin", "Creates skin less files out of registred UI components.", function() {\n
+\t\tvar options = grunt.config([this.name, this.target]).options;\n
+\n
+\t\tfs.readdirSync(options.path).forEach(function(dirName) {\n
+\t\t\tvar skinDirPath = path.join(options.path, dirName);\n
+\n
+\t\t\tif (fs.statSync(skinDirPath).isDirectory()) {\n
+\t\t\t\tvar lessFiles = options.prepend || [];\n
+\n
+\t\t\t\tif (options.importFrom) {\n
+\t\t\t\t\tlessFiles = lessFiles.concat(parseLessDocs(options.importFrom));\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (options.append) {\n
+\t\t\t\t\tlessFiles = lessFiles.concat(options.append);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcompileLessFile(lessFiles, path.join(skinDirPath, options.devLess));\n
+\t\t\t\tcompileLessSourceFile(lessFiles, path.join(skinDirPath, options.srcLess));\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+};\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2333</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>skin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

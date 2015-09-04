@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268208.53</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Control.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tmodule("tinymce.ui.Control");\n
+\n
+\ttest("Initial states", function() {\n
+\t\tvar ctrl;\n
+\n
+\t\tctrl = new tinymce.ui.Control({});\n
+\n
+\t\t// Check inital states\n
+\t\tequal(ctrl.disabled(), false);\n
+\t\tequal(ctrl.active(), false);\n
+\t\tequal(ctrl.visible(), true);\n
+\t\tequal(ctrl.text(), undefined);\n
+\t\tequal(ctrl.name(), undefined);\n
+\t\tequal(ctrl.title(), undefined);\n
+\t\tequal(ctrl.parent(), undefined);\n
+\t\tdeepEqual(ctrl.settings, {});\n
+\t});\n
+\n
+\ttest("Settings", function() {\n
+\t\tvar ctrl = new tinymce.ui.Control({\n
+\t\t\tdisabled: true,\n
+\t\t\tactive: true,\n
+\t\t\tvisible: true,\n
+\t\t\ttext: \'Text\',\n
+\t\t\ttitle: \'Title\',\n
+\t\t\tname: \'Name\'\n
+\t\t});\n
+\n
+\t\t// Check settings states\n
+\t\tequal(ctrl.disabled(), true);\n
+\t\tequal(ctrl.active(), true);\n
+\t\tequal(ctrl.visible(), true);\n
+\t\tequal(ctrl.text(), "Text");\n
+\t\tequal(ctrl.name(), "Name");\n
+\t\tequal(ctrl.title(), "Title");\n
+\t\tequal(ctrl.parent(), undefined);\n
+\t\tdeepEqual(ctrl.settings, {\n
+\t\t\tdisabled: true,\n
+\t\t\tactive: true,\n
+\t\t\tvisible: true,\n
+\t\t\ttext: \'Text\',\n
+\t\t\ttitle: \'Title\',\n
+\t\t\tname: \'Name\'\n
+\t\t});\n
+\t});\n
+\n
+\ttest("Properties", function() {\n
+\t\tvar ctrl, cont;\n
+\n
+\t\tcont = new tinymce.ui.Container({});\n
+\t\tctrl = new tinymce.ui.Control({});\n
+\n
+\t\t// Set all states\n
+\t\tctrl = ctrl.\n
+\t\t\tdisabled(true).\n
+\t\t\tactive(true).\n
+\t\t\tvisible(true).\n
+\t\t\ttext("Text").\n
+\t\t\ttitle("Title").\n
+\t\t\tname("Name").parent(cont);\n
+\n
+\t\t// Check states\n
+\t\tequal(ctrl.disabled(), true);\n
+\t\tequal(ctrl.active(), true);\n
+\t\tequal(ctrl.visible(), true);\n
+\t\tequal(ctrl.text(), "Text");\n
+\t\tequal(ctrl.name(), "Name");\n
+\t\tequal(ctrl.title(), "Title");\n
+\t\tequal(ctrl.parent(), cont);\n
+\t\tdeepEqual(ctrl.settings, {});\n
+\t});\n
+\n
+\ttest("Chained methods", function() {\n
+\t\tvar ctrl = new tinymce.ui.Control({});\n
+\n
+\t\t// Set all states\n
+\t\tctrl = ctrl.\n
+\t\t\ton(\'click\', function() {}).\n
+\t\t\toff().\n
+\t\t\trenderTo(document.getElementById(\'view\')).\n
+\t\t\tremove();\n
+\n
+\t\t// Check so that the chain worked\n
+\t\tok(ctrl instanceof tinymce.ui.Control);\n
+\t});\n
+\n
+\ttest("Events", function() {\n
+\t\tvar ctrl = new tinymce.ui.Control({\n
+\t\t\tonMyEvent: function() {\n
+\t\t\t\tcount++;\n
+\t\t\t},\n
+\t\t\tcallbacks: {\n
+\t\t\t\thandler1: function() {\n
+\t\t\t\t\tcount++;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}), count;\n
+\n
+\t\tctrl.on(\'MyEvent\', function(args) {\n
+\t\t\tequal(ctrl, args.control);\n
+\t\t\tequal(ctrl, this);\n
+\t\t\tequal(args.myKey, \'myVal\');\n
+\t\t});\n
+\n
+\t\tctrl.fire(\'MyEvent\', {myKey: \'myVal\'});\n
+\n
+\t\tfunction countAndBreak() {\n
+\t\t\tcount++;\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\t// Bind two events\n
+\t\tctrl.on(\'MyEvent2\', countAndBreak);\n
+\t\tctrl.on(\'MyEvent2\', countAndBreak);\n
+\n
+\t\t// Check if only one of them was called\n
+\t\tcount = 0;\n
+\t\tctrl.fire(\'MyEvent2\', {myKey: \'myVal\'});\n
+\t\tequal(count, 1);\n
+\n
+\t\t// Fire unbound event\n
+\t\tctrl.fire(\'MyEvent3\', {myKey: \'myVal\'});\n
+\n
+\t\t// Unbind all\n
+\t\tctrl.off();\n
+\t\tcount = 0;\n
+\t\tctrl.fire(\'MyEvent2\', {myKey: \'myVal\'});\n
+\t\tequal(count, 0, \'Unbind all\');\n
+\n
+\t\t// Unbind by name\n
+\t\tctrl.on(\'MyEvent1\', countAndBreak);\n
+\t\tctrl.on(\'MyEvent2\', countAndBreak);\n
+\t\tctrl.off(\'MyEvent2\');\n
+\t\tcount = 0;\n
+\t\tctrl.fire(\'MyEvent1\', {myKey: \'myVal\'});\n
+\t\tctrl.fire(\'MyEvent2\', {myKey: \'myVal\'});\n
+\t\tequal(count, 1);\n
+\n
+\t\t// Unbind by name callback\n
+\t\tctrl.on(\'MyEvent1\', countAndBreak);\n
+\t\tctrl.on(\'MyEvent1\', function() {count++;});\n
+\t\tctrl.off(\'MyEvent1\', countAndBreak);\n
+\t\tcount = 0;\n
+\t\tctrl.fire(\'MyEvent1\', {myKey: \'myVal\'});\n
+\t\tequal(count, 1);\n
+\n
+\t\t// Bind by named handler\n
+\t\tctrl.off();\n
+\t\tctrl.on(\'MyEvent\', \'handler1\');\n
+\t\tcount = 0;\n
+\t\tctrl.fire(\'MyEvent\', {myKey: \'myVal\'});\n
+\t\tequal(count, 1);\n
+\t});\n
+\n
+\ttest("hasClass,addClass,removeClass", function() {\n
+\t\tvar ctrl = new tinymce.ui.Control({classes: \'class1 class2 class3\'});\n
+\n
+\t\tequal(ctrl.classes, \'mce-class1 mce-class2 mce-class3\');\n
+\t\tok(ctrl.classes.contains(\'class1\'));\n
+\t\tok(ctrl.classes.contains(\'class2\'));\n
+\t\tok(ctrl.classes.contains(\'class3\'));\n
+\t\tok(!ctrl.classes.contains(\'class4\'));\n
+\n
+\t\tctrl.classes.add(\'class4\');\n
+\t\tequal(ctrl.classes, \'mce-class1 mce-class2 mce-class3 mce-class4\');\n
+\t\tok(ctrl.classes.contains(\'class1\'));\n
+\t\tok(ctrl.classes.contains(\'class2\'));\n
+\t\tok(ctrl.classes.contains(\'class3\'));\n
+\t\tok(ctrl.classes.contains(\'class4\'));\n
+\n
+\t\tctrl.classes.remove(\'class4\');\n
+\t\tequal(ctrl.classes, \'mce-class1 mce-class2 mce-class3\');\n
+\t\tok(ctrl.classes.contains(\'class1\'));\n
+\t\tok(ctrl.classes.contains(\'class2\'));\n
+\t\tok(ctrl.classes.contains(\'class3\'));\n
+\t\tok(!ctrl.classes.contains(\'class4\'));\n
+\n
+\t\tctrl.classes.remove(\'class3\').remove(\'class2\');\n
+\t\tequal(ctrl.classes, \'mce-class1\');\n
+\t\tok(ctrl.classes.contains(\'class1\'));\n
+\t\tok(!ctrl.classes.contains(\'class2\'));\n
+\t\tok(!ctrl.classes.contains(\'class3\'));\n
+\n
+\t\tctrl.classes.remove(\'class3\').remove(\'class1\');\n
+\t\tequal(ctrl.classes, \'\');\n
+\t\tok(!ctrl.classes.contains(\'class1\'));\n
+\t\tok(!ctrl.classes.contains(\'class2\'));\n
+\t\tok(!ctrl.classes.contains(\'class3\'));\n
+\t});\n
+\n
+\ttest("encode", function() {\n
+\t\ttinymce.i18n.add(\'en\', {\'old\': \'"new"\'});\n
+\t\tequal(new tinymce.ui.Control({}).encode(\'<>"&\'), \'&#60;&#62;&#34;&#38;\');\n
+\t\tequal(new tinymce.ui.Control({}).encode(\'old\'), \'&#34;new&#34;\');\n
+\t\tequal(new tinymce.ui.Control({}).encode(\'old\', false), \'old\');\n
+\t});\n
+\n
+\ttest("translate", function() {\n
+\t\ttinymce.i18n.add(\'en\', {\'old\': \'new\'});\n
+\t\tequal(new tinymce.ui.Control({}).translate(\'old\'), \'new\');\n
+\t\tequal(new tinymce.ui.Control({}).translate(\'old2\'), \'old2\');\n
+\t});\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5070</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Control.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

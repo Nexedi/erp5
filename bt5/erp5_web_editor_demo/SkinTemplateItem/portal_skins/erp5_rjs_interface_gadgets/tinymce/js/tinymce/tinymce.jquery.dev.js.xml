@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268572.3</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tinymce.jquery.dev.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Inline development version. Only to be used while developing since it uses document.write to load scripts.\n
+ */\n
+\n
+/*jshint smarttabs:true, undef:true, latedef:true, curly:true, bitwise:true, camelcase:true */\n
+/*globals $code */\n
+\n
+(function(exports) {\n
+\t"use strict";\n
+\n
+\tvar html = "", baseDir;\n
+\tvar modules = {}, exposedModules = [], moduleCount = 0;\n
+\n
+\tvar scripts = document.getElementsByTagName(\'script\');\n
+\tfor (var i = 0; i < scripts.length; i++) {\n
+\t\tvar src = scripts[i].src;\n
+\n
+\t\tif (src.indexOf(\'/tinymce.jquery.dev.js\') != -1) {\n
+\t\t\tbaseDir = src.substring(0, src.lastIndexOf(\'/\'));\n
+\t\t}\n
+\t}\n
+\n
+\tfunction require(ids, callback) {\n
+\t\tvar module, defs = [];\n
+\n
+\t\tfor (var i = 0; i < ids.length; ++i) {\n
+\t\t\tmodule = modules[ids[i]] || resolve(ids[i]);\n
+\t\t\tif (!module) {\n
+\t\t\t\tthrow \'module definition dependecy not found: \' + ids[i];\n
+\t\t\t}\n
+\n
+\t\t\tdefs.push(module);\n
+\t\t}\n
+\n
+\t\tcallback.apply(null, defs);\n
+\t}\n
+\n
+\tfunction resolve(id) {\n
+\t\tvar target = exports;\n
+\t\tvar fragments = id.split(/[.\\/]/);\n
+\n
+\t\tfor (var fi = 0; fi < fragments.length; ++fi) {\n
+\t\t\tif (!target[fragments[fi]]) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\ttarget = target[fragments[fi]];\n
+\t\t}\n
+\n
+\t\treturn target;\n
+\t}\n
+\n
+\tfunction register(id) {\n
+\t\tvar target = exports;\n
+\t\tvar fragments = id.split(/[.\\/]/);\n
+\n
+\t\tfor (var fi = 0; fi < fragments.length - 1; ++fi) {\n
+\t\t\tif (target[fragments[fi]] === undefined) {\n
+\t\t\t\ttarget[fragments[fi]] = {};\n
+\t\t\t}\n
+\n
+\t\t\ttarget = target[fragments[fi]];\n
+\t\t}\n
+\n
+\t\ttarget[fragments[fragments.length - 1]] = modules[id];\n
+\t}\n
+\n
+\tfunction define(id, dependencies, definition) {\n
+\t\tif (typeof id !== \'string\') {\n
+\t\t\tthrow \'invalid module definition, module id must be defined and be a string\';\n
+\t\t}\n
+\n
+\t\tif (dependencies === undefined) {\n
+\t\t\tthrow \'invalid module definition, dependencies must be specified\';\n
+\t\t}\n
+\n
+\t\tif (definition === undefined) {\n
+\t\t\tthrow \'invalid module definition, definition function must be specified\';\n
+\t\t}\n
+\n
+\t\trequire(dependencies, function() {\n
+\t\t\tmodules[id] = definition.apply(null, arguments);\n
+\t\t});\n
+\n
+\t\tif (--moduleCount === 0) {\n
+\t\t\tfor (var i = 0; i < exposedModules.length; i++) {\n
+\t\t\t\tregister(exposedModules[i]);\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\tfunction expose(ids) {\n
+\t\texposedModules = ids;\n
+\t}\n
+\n
+\tfunction writeScripts() {\n
+\t\tdocument.write(html);\n
+\t}\n
+\n
+\tfunction load(path) {\n
+\t\thtml += \'<script type="text/javascript" src="\' + baseDir + \'/\' + path + \'"></script>\\n\';\n
+\t\tmoduleCount++;\n
+\t}\n
+\n
+\t// Expose globally\n
+\texports.define = define;\n
+\texports.require = require;\n
+\n
+\texpose(["tinymce/dom/EventUtils","tinymce/dom/Sizzle","tinymce/Env","tinymce/util/Tools","tinymce/dom/DomQuery","tinymce/html/Styles","tinymce/dom/TreeWalker","tinymce/dom/Range","tinymce/html/Entities","tinymce/dom/DOMUtils","tinymce/dom/ScriptLoader","tinymce/AddOnManager","tinymce/dom/RangeUtils","tinymce/html/Node","tinymce/html/Schema","tinymce/html/SaxParser","tinymce/html/DomParser","tinymce/html/Writer","tinymce/html/Serializer","tinymce/dom/Serializer","tinymce/dom/TridentSelection","tinymce/util/VK","tinymce/dom/ControlSelection","tinymce/dom/BookmarkManager","tinymce/dom/Selection","tinymce/dom/ElementUtils","tinymce/Formatter","tinymce/UndoManager","tinymce/EnterKey","tinymce/ForceBlocks","tinymce/EditorCommands","tinymce/util/URI","tinymce/util/Class","tinymce/util/EventDispatcher","tinymce/data/Binding","tinymce/util/Observable","tinymce/data/ObservableObject","tinymce/ui/Selector","tinymce/ui/Collection","tinymce/ui/DomUtils","tinymce/ui/BoxUtils","tinymce/ui/ClassList","tinymce/ui/ReflowQueue","tinymce/ui/Control","tinymce/ui/Factory","tinymce/ui/KeyboardNavigation","tinymce/ui/Container","tinymce/ui/DragHelper","tinymce/ui/Scrollable","tinymce/ui/Panel","tinymce/ui/Movable","tinymce/ui/Resizable","tinymce/ui/FloatPanel","tinymce/ui/Window","tinymce/ui/MessageBox","tinymce/WindowManager","tinymce/util/Quirks","tinymce/EditorObservable","tinymce/Shortcuts","tinymce/util/Promise","tinymce/file/Conversions","tinymce/Editor","tinymce/util/I18n","tinymce/FocusManager","tinymce/EditorManager","tinymce/LegacyInput","tinymce/util/XHR","tinymce/util/JSON","tinymce/util/JSONRequest","tinymce/util/JSONP","tinymce/util/LocalStorage","tinymce/Compat","tinymce/ui/Layout","tinymce/ui/AbsoluteLayout","tinymce/ui/Tooltip","tinymce/ui/Widget","tinymce/ui/Button","tinymce/ui/ButtonGroup","tinymce/ui/Checkbox","tinymce/ui/ComboBox","tinymce/ui/ColorBox","tinymce/ui/PanelButton","tinymce/ui/ColorButton","tinymce/util/Color","tinymce/ui/ColorPicker","tinymce/ui/Path","tinymce/ui/ElementPath","tinymce/ui/FormItem","tinymce/ui/Form","tinymce/ui/FieldSet","tinymce/ui/FilePicker","tinymce/ui/FitLayout","tinymce/ui/FlexLayout","tinymce/ui/FlowLayout","tinymce/ui/FormatControls","tinymce/ui/GridLayout","tinymce/ui/Iframe","tinymce/ui/Label","tinymce/ui/Toolbar","tinymce/ui/MenuBar","tinymce/ui/MenuButton","tinymce/ui/MenuItem","tinymce/ui/Menu","tinymce/ui/ListBox","tinymce/ui/Radio","tinymce/ui/Rect","tinymce/ui/ResizeHandle","tinymce/ui/Slider","tinymce/ui/Spacer","tinymce/ui/SplitButton","tinymce/ui/StackLayout","tinymce/ui/TabPanel","tinymce/ui/TextBox","tinymce/ui/Throbber"]);\n
+\n
+\tload(\'classes/dom/EventUtils.js\');\n
+\tload(\'classes/dom/Sizzle.jQuery.js\');\n
+\tload(\'classes/Env.js\');\n
+\tload(\'classes/util/Tools.js\');\n
+\tload(\'classes/dom/DomQuery.js\');\n
+\tload(\'classes/html/Styles.js\');\n
+\tload(\'classes/dom/TreeWalker.js\');\n
+\tload(\'classes/dom/Range.js\');\n
+\tload(\'classes/html/Entities.js\');\n
+\tload(\'classes/dom/StyleSheetLoader.js\');\n
+\tload(\'classes/dom/DOMUtils.js\');\n
+\tload(\'classes/dom/ScriptLoader.js\');\n
+\tload(\'classes/AddOnManager.js\');\n
+\tload(\'classes/dom/RangeUtils.js\');\n
+\tload(\'classes/NodeChange.js\');\n
+\tload(\'classes/html/Node.js\');\n
+\tload(\'classes/html/Schema.js\');\n
+\tload(\'classes/html/SaxParser.js\');\n
+\tload(\'classes/html/DomParser.js\');\n
+\tload(\'classes/html/Writer.js\');\n
+\tload(\'classes/html/Serializer.js\');\n
+\tload(\'classes/dom/Serializer.js\');\n
+\tload(\'classes/dom/TridentSelection.js\');\n
+\tload(\'classes/util/VK.js\');\n
+\tload(\'classes/dom/ControlSelection.js\');\n
+\tload(\'classes/dom/BookmarkManager.js\');\n
+\tload(\'classes/dom/Selection.js\');\n
+\tload(\'classes/dom/ElementUtils.js\');\n
+\tload(\'classes/fmt/Preview.js\');\n
+\tload(\'classes/Formatter.js\');\n
+\tload(\'classes/UndoManager.js\');\n
+\tload(\'classes/EnterKey.js\');\n
+\tload(\'classes/ForceBlocks.js\');\n
+\tload(\'classes/EditorCommands.js\');\n
+\tload(\'classes/util/URI.js\');\n
+\tload(\'classes/util/Class.js\');\n
+\tload(\'classes/util/EventDispatcher.js\');\n
+\tload(\'classes/data/Binding.js\');\n
+\tload(\'classes/util/Observable.js\');\n
+\tload(\'classes/data/ObservableObject.js\');\n
+\tload(\'classes/ui/Selector.js\');\n
+\tload(\'classes/ui/Collection.js\');\n
+\tload(\'classes/ui/DomUtils.js\');\n
+\tload(\'classes/ui/BoxUtils.js\');\n
+\tload(\'classes/ui/ClassList.js\');\n
+\tload(\'classes/ui/ReflowQueue.js\');\n
+\tload(\'classes/ui/Control.js\');\n
+\tload(\'classes/ui/Factory.js\');\n
+\tload(\'classes/ui/KeyboardNavigation.js\');\n
+\tload(\'classes/ui/Container.js\');\n
+\tload(\'classes/ui/DragHelper.js\');\n
+\tload(\'classes/ui/Scrollable.js\');\n
+\tload(\'classes/ui/Panel.js\');\n
+\tload(\'classes/ui/Movable.js\');\n
+\tload(\'classes/ui/Resizable.js\');\n
+\tload(\'classes/ui/FloatPanel.js\');\n
+\tload(\'classes/ui/Window.js\');\n
+\tload(\'classes/ui/MessageBox.js\');\n
+\tload(\'classes/WindowManager.js\');\n
+\tload(\'classes/util/Quirks.js\');\n
+\tload(\'classes/EditorObservable.js\');\n
+\tload(\'classes/Shortcuts.js\');\n
+\tload(\'classes/util/Promise.js\');\n
+\tload(\'classes/file/Uploader.js\');\n
+\tload(\'classes/file/Conversions.js\');\n
+\tload(\'classes/file/ImageScanner.js\');\n
+\tload(\'classes/file/BlobCache.js\');\n
+\tload(\'classes/EditorUpload.js\');\n
+\tload(\'classes/Editor.js\');\n
+\tload(\'classes/util/I18n.js\');\n
+\tload(\'classes/FocusManager.js\');\n
+\tload(\'classes/EditorManager.js\');\n
+\tload(\'classes/LegacyInput.js\');\n
+\tload(\'classes/util/XHR.js\');\n
+\tload(\'classes/util/JSON.js\');\n
+\tload(\'classes/util/JSONRequest.js\');\n
+\tload(\'classes/util/JSONP.js\');\n
+\tload(\'classes/util/LocalStorage.js\');\n
+\tload(\'classes/Compat.js\');\n
+\tload(\'classes/ui/Layout.js\');\n
+\tload(\'classes/ui/AbsoluteLayout.js\');\n
+\tload(\'classes/ui/Tooltip.js\');\n
+\tload(\'classes/ui/Widget.js\');\n
+\tload(\'classes/ui/Button.js\');\n
+\tload(\'classes/ui/ButtonGroup.js\');\n
+\tload(\'classes/ui/Checkbox.js\');\n
+\tload(\'classes/ui/ComboBox.js\');\n
+\tload(\'classes/ui/ColorBox.js\');\n
+\tload(\'classes/ui/PanelButton.js\');\n
+\tload(\'classes/ui/ColorButton.js\');\n
+\tload(\'classes/util/Color.js\');\n
+\tload(\'classes/ui/ColorPicker.js\');\n
+\tload(\'classes/ui/Path.js\');\n
+\tload(\'classes/ui/ElementPath.js\');\n
+\tload(\'classes/ui/FormItem.js\');\n
+\tload(\'classes/ui/Form.js\');\n
+\tload(\'classes/ui/FieldSet.js\');\n
+\tload(\'classes/ui/FilePicker.js\');\n
+\tload(\'classes/ui/FitLayout.js\');\n
+\tload(\'classes/ui/FlexLayout.js\');\n
+\tload(\'classes/ui/FlowLayout.js\');\n
+\tload(\'classes/ui/FormatControls.js\');\n
+\tload(\'classes/ui/GridLayout.js\');\n
+\tload(\'classes/ui/Iframe.js\');\n
+\tload(\'classes/ui/Label.js\');\n
+\tload(\'classes/ui/Toolbar.js\');\n
+\tload(\'classes/ui/MenuBar.js\');\n
+\tload(\'classes/ui/MenuButton.js\');\n
+\tload(\'classes/ui/MenuItem.js\');\n
+\tload(\'classes/ui/Menu.js\');\n
+\tload(\'classes/ui/ListBox.js\');\n
+\tload(\'classes/ui/Radio.js\');\n
+\tload(\'classes/ui/Rect.js\');\n
+\tload(\'classes/ui/ResizeHandle.js\');\n
+\tload(\'classes/ui/Slider.js\');\n
+\tload(\'classes/ui/Spacer.js\');\n
+\tload(\'classes/ui/SplitButton.js\');\n
+\tload(\'classes/ui/StackLayout.js\');\n
+\tload(\'classes/ui/TabPanel.js\');\n
+\tload(\'classes/ui/TextBox.js\');\n
+\tload(\'classes/ui/Throbber.js\');\n
+\n
+\twriteScripts();\n
+})(this);\n
+\n
+// $hash: 2f5a6f5a60f4d426c3be4206f6ad709d
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9211</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>tinymce.jquery.dev.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

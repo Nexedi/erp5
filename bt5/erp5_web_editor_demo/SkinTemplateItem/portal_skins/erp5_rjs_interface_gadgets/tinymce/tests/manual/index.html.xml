@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268165.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Manual test files</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+</head>\n
+<body>\n
+<h1>Manual tests</h1>\n
+<ul>\n
+\t<li><a href="accessibility.html">accessibility.html</a></li>\n
+\t<li><a href="classic.html">classic.html</a></li>\n
+\t<li><a href="custom_theme.html">custom_theme.html</a></li>\n
+\t<li><a href="development.html">development.html</a></li>\n
+\t<li><a href="gecko_caret.html">gecko_caret.html</a></li>\n
+\t<li><a href="inline.html">inline.html</a></li>\n
+\t<li><a href="jquery.html">jquery.html</a></li>\n
+\t<li><a href="media.html">media.html</a></li>\n
+\t<li><a href="noneditable.html">noneditable.html</a></li>\n
+\t<li><a href="paste.html">paste.html</a></li>\n
+\t<li><a href="performance.html">performance.html</a></li>\n
+\t<li><a href="removeformat.html">removeformat.html</a></li>\n
+\t<li><a href="resize.html">resize.html</a></li>\n
+\t<li><a href="visualblocks.html">visualblocks.html</a></li>\n
+\t<li><a href="focus.html">focus.html</a></li>\n
+\t<li><a href="dirty.html">dirty.html</a></li>\n
+\t<li><a href="inline-toolbars.html">inline-toolbars.html</a></li>\n
+\t<li><a href="imagetools.html">imagetools.html</a></li>\n
+\t<li><a href="skin.html">skin.html</a></li>\n
+\t<li><a href="dragdrop.html">dragdrop.html</a></li>\n
+</ul>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1253</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

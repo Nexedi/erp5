@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268139.46</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>media.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.plugins.Media", {\n
+\tsetupModule: function() {\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "textarea",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tskin: false,\n
+\t\t\tplugins: \'media\',\n
+\t\t\tdocument_base_url: \'/tinymce/tinymce/trunk/tests/\',\n
+\t\t\textended_valid_elements: \'script[src|type]\',\n
+\t\t\tmedia_scripts: [\n
+\t\t\t\t{filter: \'http://media1.tinymce.com\'},\n
+\t\t\t\t{filter: \'http://media2.tinymce.com\', width: 100, height: 200}\n
+\t\t\t],\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}\n
+\t\t});\n
+\t},\n
+\n
+\tteardown: function() {\n
+\t\tdelete editor.settings.media_filter_html;\n
+\t}\n
+});\n
+\n
+test("Object retain as is", function() {\n
+\teditor.setContent(\n
+\t\t\'<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355">\' +\n
+\t\t\t\'<param name="movie" value="someurl">\' +\n
+\t\t\t\'<param name="wmode" value="transparent">\' +\n
+\t\t\t\'<embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355" />\' +\n
+\t\t\'</object>\'\n
+\t);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p><object width="425" height="355" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000">\' +\n
+\t\t\t\'<param name="movie" value="someurl" />\' +\n
+\t\t\t\'<param name="wmode" value="transparent" />\' +\n
+\t\t\t\'<embed src="someurl" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355" />\' +\n
+\t\t\'</object></p>\'\n
+\t);\n
+});\n
+\n
+test("Embed retain as is", function() {\n
+\teditor.setContent(\n
+\t\t\'<embed src="320x240.ogg" width="100" height="200">text<a href="#">link</a></embed>\'\n
+\t);\n
+\n
+\tequal(\n
+\t\teditor.getContent(),\n
+\t\t\'<p><embed src="320x240.ogg" width="100" height="200"></embed>text<a href="#">link</a></p>\'\n
+\t);\n
+});\n
+\n
+test("Video retain as is", function() {\n
+\teditor.setContent(\n
+\t\t\'<video src="320x240.ogg" autoplay loop controls>text<a href="#">link</a></video>\'\n
+\t);\n
+\n
+\tequal(\n
+\t\teditor.getContent(),\n
+\t\t\'<p><video src="320x240.ogg" autoplay="autoplay" loop="loop" controls="controls" width="300" height="150">text<a href="#">link</a></video></p>\'\n
+\t);\n
+});\n
+\n
+test("Iframe retain as is", function() {\n
+\teditor.setContent(\n
+\t\t\'<iframe src="320x240.ogg" allowfullscreen>text<a href="#">link</a></iframe>\'\n
+\t);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p><iframe src="320x240.ogg" width="300" height="150" allowfullscreen="allowfullscreen">text<a href="#">link</a></iframe></p>\'\n
+\t);\n
+});\n
+\n
+test("Audio retain as is", function() {\n
+\teditor.setContent(\n
+\t\t\'<audio src="sound.mp3">\' +\n
+\t\t\t\'<track kind="captions" src="foo.en.vtt" srclang="en" label="English">\' +\n
+\t\t\t\'<track kind="captions" src="foo.sv.vtt" srclang="sv" label="Svenska">\' +\n
+\t\t\t\'text<a href="#">link</a>\' +\n
+\t\t\'</audio>\'\n
+\t);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>\' +\n
+\t\t\t\'<audio src="sound.mp3">\' +\n
+\t\t\t\t\'<track kind="captions" src="foo.en.vtt" srclang="en" label="English" />\' +\n
+\t\t\t\t\'<track kind="captions" src="foo.sv.vtt" srclang="sv" label="Svenska" />\' +\n
+\t\t\t\t\'text<a href="#">link</a>\' +\n
+\t\t\t\'</audio>\' +\n
+\t\t\'</p>\'\n
+\t);\n
+});\n
+\n
+test("Resize complex object", function() {\n
+\teditor.setContent(\n
+\t\t\'<video width="300" height="150" controls="controls">\' +\n
+\t\t\t\'<source src="s" />\' +\n
+\t\t\t\'<object type="application/x-shockwave-flash" data="../../js/tinymce/plugins/media/moxieplayer.swf" width="300" height="150">\' +\n
+\t\t\t\t\'<param name="allowfullscreen" value="true" />\' +\n
+\t\t\t\t\'<param name="allowscriptaccess" value="always" />\' +\n
+\t\t\t\t\'<param name="flashvars" value="video_src=s" />\' +\n
+\t\t\t\t\'<!--[if IE]><param name="movie" value="../../js/tinymce/plugins/media/moxieplayer.swf" /><![endif]-->\' +\n
+\t\t\t\'</object>\' +\n
+\t\t\'</video>\'\n
+\t);\n
+\n
+\tvar placeholderElm = editor.getBody().firstChild.firstChild;\n
+\tplaceholderElm.width = 100;\n
+\tplaceholderElm.height = 200;\n
+\teditor.fire(\'objectResized\', {target: placeholderElm, width: placeholderElm.width, height: placeholderElm.height});\n
+\teditor.settings.media_filter_html = false;\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>\' +\n
+\t\t\t\'<video controls="controls" width="100" height="200">\' +\n
+\t\t\t\t\'<source src="s" />\' +\n
+\t\t\t\t\'<object type="application/x-shockwave-flash" data="../../js/tinymce/plugins/media/moxieplayer.swf" width="100" height="200">\' +\n
+\t\t\t\t\t\'<param name="allowfullscreen" value="true" />\' +\n
+\t\t\t\t\t\'<param name="allowscriptaccess" value="always" />\' +\n
+\t\t\t\t\t\'<param name="flashvars" value="video_src=s" />\' +\n
+\t\t\t\t\t\'<!--[if IE]>\' +\n
+\t\t\t\t\t\t\'<param name="movie" value="../../js/tinymce/plugins/media/moxieplayer.swf" />\' +\n
+\t\t\t\t\t\'<![endif]-->\' +\n
+\t\t\t\t\'</object>\' +\n
+\t\t\t\'</video>\' +\n
+\t\t\'</p>\'\n
+\t);\n
+});\n
+\n
+test("Media script elements", function() {\n
+\teditor.setContent(\n
+\t\t\'<script src="http://media1.tinymce.com/123456"></sc\'+\'ript>\' +\n
+\t\t\'<script src="http://media2.tinymce.com/123456"></sc\'+\'ript>\'\n
+\t);\n
+\n
+\tequal(editor.getBody().getElementsByTagName(\'img\')[0].className, \'mce-object mce-object-script\');\n
+\tequal(editor.getBody().getElementsByTagName(\'img\')[0].width, 300);\n
+\tequal(editor.getBody().getElementsByTagName(\'img\')[0].height, 150);\n
+\tequal(editor.getBody().getElementsByTagName(\'img\')[1].className, \'mce-object mce-object-script\');\n
+\tequal(editor.getBody().getElementsByTagName(\'img\')[1].width, 100);\n
+\tequal(editor.getBody().getElementsByTagName(\'img\')[1].height, 200);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>\\n\' +\n
+\t\t\t\'<script src="http://media1.tinymce.com/123456" type="text/javascript"></sc\'+\'ript>\\n\' +\n
+\t\t\t\'<script src="http://media2.tinymce.com/123456" type="text/javascript"></sc\'+\'ript>\\n\' +\n
+\t\t\'</p>\'\n
+\t);\n
+});\n
+\n
+test("XSS content", function() {\n
+\tfunction testXss(input, expectedOutput) {\n
+\t\teditor.setContent(input);\n
+\t\tequal(editor.getContent(), expectedOutput);\n
+\t}\n
+\n
+\ttestXss(\'<video><a href="javascript:alert(1);">a</a></video>\', \'<p><video width="300" height="150"><a>a</a></video></p>\');\n
+\ttestXss(\'<video><img src="x" onload="alert(1)"></video>\', \'<p><video width="300" height=\\"150\\"></video></p>\');\n
+\ttestXss(\'<video><img src="x"></video>\', \'<p><video width="300" height="150"><img src="x" /></video></p>\');\n
+\ttestXss(\'<video><!--[if IE]><img src="x"><![endif]--></video>\', \'<p><video width="300" height="150"><!-- [if IE]><img src="x"><![endif]--></video></p>\');\n
+\ttestXss(\'<p><p><audio><audio src=x onerror=alert(1)>\', \'<p><audio></audio></p>\');\n
+\ttestXss(\'<p><html><audio><br /><audio src=x onerror=alert(1)></p>\', \'\');\n
+\ttestXss(\'<p><audio><img src="javascript:alert(1)"></audio>\', \'<p><audio><img /></audio></p>\');\n
+\ttestXss(\'<p><audio><img src="x" style="behavior:url(x); width: 1px"></audio>\', \'<p><audio><img src="x" style="width: 1px;" /></audio></p>\');\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6319</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>media.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

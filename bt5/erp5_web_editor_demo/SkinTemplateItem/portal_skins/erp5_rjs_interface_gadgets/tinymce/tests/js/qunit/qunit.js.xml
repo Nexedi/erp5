@@ -1,0 +1,2332 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268180.42</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>qunit.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*!\n
+ * QUnit 1.14.0\n
+ * http://qunitjs.com/\n
+ *\n
+ * Copyright 2013 jQuery Foundation and other contributors\n
+ * Released under the MIT license\n
+ * http://jquery.org/license\n
+ *\n
+ * Date: 2014-01-31T16:40Z\n
+ */\n
+\n
+(function( window ) {\n
+\n
+var QUnit,\n
+\tassert,\n
+\tconfig,\n
+\tonErrorFnPrev,\n
+\ttestId = 0,\n
+\tfileName = (sourceFromStacktrace( 0 ) || "" ).replace(/(:\\d+)+\\)?/, "").replace(/.+\\//, ""),\n
+\ttoString = Object.prototype.toString,\n
+\thasOwn = Object.prototype.hasOwnProperty,\n
+\t// Keep a local reference to Date (GH-283)\n
+\tDate = window.Date,\n
+\tsetTimeout = window.setTimeout,\n
+\tclearTimeout = window.clearTimeout,\n
+\tdefined = {\n
+\t\tdocument: typeof window.document !== "undefined",\n
+\t\tsetTimeout: typeof window.setTimeout !== "undefined",\n
+\t\tsessionStorage: (function() {\n
+\t\t\tvar x = "qunit-test-string";\n
+\t\t\ttry {\n
+\t\t\t\tsessionStorage.setItem( x, x );\n
+\t\t\t\tsessionStorage.removeItem( x );\n
+\t\t\t\treturn true;\n
+\t\t\t} catch( e ) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\t\t}())\n
+\t},\n
+\t/**\n
+\t * Provides a normalized error string, correcting an issue\n
+\t * with IE 7 (and prior) where Error.prototype.toString is\n
+\t * not properly implemented\n
+\t *\n
+\t * Based on http://es5.github.com/#x15.11.4.4\n
+\t *\n
+\t * @param {String|Error} error\n
+\t * @return {String} error message\n
+\t */\n
+\terrorString = function( error ) {\n
+\t\tvar name, message,\n
+\t\t\terrorString = error.toString();\n
+\t\tif ( errorString.substring( 0, 7 ) === "[object" ) {\n
+\t\t\tname = error.name ? error.name.toString() : "Error";\n
+\t\t\tmessage = error.message ? error.message.toString() : "";\n
+\t\t\tif ( name && message ) {\n
+\t\t\t\treturn name + ": " + message;\n
+\t\t\t} else if ( name ) {\n
+\t\t\t\treturn name;\n
+\t\t\t} else if ( message ) {\n
+\t\t\t\treturn message;\n
+\t\t\t} else {\n
+\t\t\t\treturn "Error";\n
+\t\t\t}\n
+\t\t} else {\n
+\t\t\treturn errorString;\n
+\t\t}\n
+\t},\n
+\t/**\n
+\t * Makes a clone of an object using only Array or Object as base,\n
+\t * and copies over the own enumerable properties.\n
+\t *\n
+\t * @param {Object} obj\n
+\t * @return {Object} New object with only the own properties (recursively).\n
+\t */\n
+\tobjectValues = function( obj ) {\n
+\t\t// Grunt 0.3.x uses an older version of jshint that still has jshint/jshint#392.\n
+\t\t/*jshint newcap: false */\n
+\t\tvar key, val,\n
+\t\t\tvals = QUnit.is( "array", obj ) ? [] : {};\n
+\t\tfor ( key in obj ) {\n
+\t\t\tif ( hasOwn.call( obj, key ) ) {\n
+\t\t\t\tval = obj[key];\n
+\t\t\t\tvals[key] = val === Object(val) ? objectValues(val) : val;\n
+\t\t\t}\n
+\t\t}\n
+\t\treturn vals;\n
+\t};\n
+\n
+\n
+// Root QUnit object.\n
+// `QUnit` initialized at top of scope\n
+QUnit = {\n
+\n
+\t// call on start of module test to prepend name to all tests\n
+\tmodule: function( name, testEnvironment ) {\n
+\t\tconfig.currentModule = name;\n
+\t\tconfig.currentModuleTestEnvironment = testEnvironment;\n
+\t\tconfig.modules[name] = true;\n
+\t},\n
+\n
+\tasyncTest: function( testName, expected, callback ) {\n
+\t\tif ( arguments.length === 2 ) {\n
+\t\t\tcallback = expected;\n
+\t\t\texpected = null;\n
+\t\t}\n
+\n
+\t\tQUnit.test( testName, expected, callback, true );\n
+\t},\n
+\n
+\ttest: function( testName, expected, callback, async ) {\n
+\t\tvar test,\n
+\t\t\tnameHtml = "<span class=\'test-name\'>" + escapeText( testName ) + "</span>";\n
+\n
+\t\tif ( arguments.length === 2 ) {\n
+\t\t\tcallback = expected;\n
+\t\t\texpected = null;\n
+\t\t}\n
+\n
+\t\tif ( config.currentModule ) {\n
+\t\t\tnameHtml = "<span class=\'module-name\'>" + escapeText( config.currentModule ) + "</span>: " + nameHtml;\n
+\t\t}\n
+\n
+\t\ttest = new Test({\n
+\t\t\tnameHtml: nameHtml,\n
+\t\t\ttestName: testName,\n
+\t\t\texpected: expected,\n
+\t\t\tasync: async,\n
+\t\t\tcallback: callback,\n
+\t\t\tmodule: config.currentModule,\n
+\t\t\tmoduleTestEnvironment: config.currentModuleTestEnvironment,\n
+\t\t\tstack: sourceFromStacktrace( 2 )\n
+\t\t});\n
+\n
+\t\tif ( !validTest( test ) ) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\ttest.queue();\n
+\t},\n
+\n
+\t// Specify the number of expected assertions to guarantee that failed test (no assertions are run at all) don\'t slip through.\n
+\texpect: function( asserts ) {\n
+\t\tif (arguments.length === 1) {\n
+\t\t\tconfig.current.expected = asserts;\n
+\t\t} else {\n
+\t\t\treturn config.current.expected;\n
+\t\t}\n
+\t},\n
+\n
+\tstart: function( count ) {\n
+\t\t// QUnit hasn\'t been initialized yet.\n
+\t\t// Note: RequireJS (et al) may delay onLoad\n
+\t\tif ( config.semaphore === undefined ) {\n
+\t\t\tQUnit.begin(function() {\n
+\t\t\t\t// This is triggered at the top of QUnit.load, push start() to the event loop, to allow QUnit.load to finish first\n
+\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\tQUnit.start( count );\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tconfig.semaphore -= count || 1;\n
+\t\t// don\'t start until equal number of stop-calls\n
+\t\tif ( config.semaphore > 0 ) {\n
+\t\t\treturn;\n
+\t\t}\n
+\t\t// ignore if start is called more often then stop\n
+\t\tif ( config.semaphore < 0 ) {\n
+\t\t\tconfig.semaphore = 0;\n
+\t\t\tQUnit.pushFailure( "Called start() while already started (QUnit.config.semaphore was 0 already)", null, sourceFromStacktrace(2) );\n
+\t\t\treturn;\n
+\t\t}\n
+\t\t// A slight delay, to avoid any current callbacks\n
+\t\tif ( defined.setTimeout ) {\n
+\t\t\tsetTimeout(function() {\n
+\t\t\t\tif ( config.semaphore > 0 ) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t\tif ( config.timeout ) {\n
+\t\t\t\t\tclearTimeout( config.timeout );\n
+\t\t\t\t}\n
+\n
+\t\t\t\tconfig.blocking = false;\n
+\t\t\t\tprocess( true );\n
+\t\t\t}, 13);\n
+\t\t} else {\n
+\t\t\tconfig.blocking = false;\n
+\t\t\tprocess( true );\n
+\t\t}\n
+\t},\n
+\n
+\tstop: function( count ) {\n
+\t\tconfig.semaphore += count || 1;\n
+\t\tconfig.blocking = true;\n
+\n
+\t\tif ( config.testTimeout && defined.setTimeout ) {\n
+\t\t\tclearTimeout( config.timeout );\n
+\t\t\tconfig.timeout = setTimeout(function() {\n
+\t\t\t\tQUnit.ok( false, "Test timed out" );\n
+\t\t\t\tconfig.semaphore = 1;\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}, config.testTimeout );\n
+\t\t}\n
+\t}\n
+};\n
+\n
+// We use the prototype to distinguish between properties that should\n
+// be exposed as globals (and in exports) and those that shouldn\'t\n
+(function() {\n
+\tfunction F() {}\n
+\tF.prototype = QUnit;\n
+\tQUnit = new F();\n
+\t// Make F QUnit\'s constructor so that we can add to the prototype later\n
+\tQUnit.constructor = F;\n
+}());\n
+\n
+/**\n
+ * Config object: Maintain internal state\n
+ * Later exposed as QUnit.config\n
+ * `config` initialized at top of scope\n
+ */\n
+config = {\n
+\t// The queue of tests to run\n
+\tqueue: [],\n
+\n
+\t// block until document ready\n
+\tblocking: true,\n
+\n
+\t// when enabled, show only failing tests\n
+\t// gets persisted through sessionStorage and can be changed in UI via checkbox\n
+\thidepassed: false,\n
+\n
+\t// by default, run previously failed tests first\n
+\t// very useful in combination with "Hide passed tests" checked\n
+\treorder: true,\n
+\n
+\t// by default, modify document.title when suite is done\n
+\taltertitle: true,\n
+\n
+\t// by default, scroll to top of the page when suite is done\n
+\tscrolltop: true,\n
+\n
+\t// when enabled, all tests must call expect()\n
+\trequireExpects: false,\n
+\n
+\t// add checkboxes that are persisted in the query-string\n
+\t// when enabled, the id is set to `true` as a `QUnit.config` property\n
+\turlConfig: [\n
+\t\t{\n
+\t\t\tid: "noglobals",\n
+\t\t\tlabel: "Check for Globals",\n
+\t\t\ttooltip: "Enabling this will test if any test introduces new properties on the `window` object. Stored as query-strings."\n
+\t\t},\n
+\t\t{\n
+\t\t\tid: "notrycatch",\n
+\t\t\tlabel: "No try-catch",\n
+\t\t\ttooltip: "Enabling this will run tests outside of a try-catch block. Makes debugging exceptions in IE reasonable. Stored as query-strings."\n
+\t\t}\n
+\t],\n
+\n
+\t// Set of all modules.\n
+\tmodules: {},\n
+\n
+\t// logging callback queues\n
+\tbegin: [],\n
+\tdone: [],\n
+\tlog: [],\n
+\ttestStart: [],\n
+\ttestDone: [],\n
+\tmoduleStart: [],\n
+\tmoduleDone: []\n
+};\n
+\n
+// Initialize more QUnit.config and QUnit.urlParams\n
+(function() {\n
+\tvar i, current,\n
+\t\tlocation = window.location || { search: "", protocol: "file:" },\n
+\t\tparams = location.search.slice( 1 ).split( "&" ),\n
+\t\tlength = params.length,\n
+\t\turlParams = {};\n
+\n
+\tif ( params[ 0 ] ) {\n
+\t\tfor ( i = 0; i < length; i++ ) {\n
+\t\t\tcurrent = params[ i ].split( "=" );\n
+\t\t\tcurrent[ 0 ] = decodeURIComponent( current[ 0 ] );\n
+\n
+\t\t\t// allow just a key to turn on a flag, e.g., test.html?noglobals\n
+\t\t\tcurrent[ 1 ] = current[ 1 ] ? decodeURIComponent( current[ 1 ] ) : true;\n
+\t\t\tif ( urlParams[ current[ 0 ] ] ) {\n
+\t\t\t\turlParams[ current[ 0 ] ] = [].concat( urlParams[ current[ 0 ] ], current[ 1 ] );\n
+\t\t\t} else {\n
+\t\t\t\turlParams[ current[ 0 ] ] = current[ 1 ];\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\tQUnit.urlParams = urlParams;\n
+\n
+\t// String search anywhere in moduleName+testName\n
+\tconfig.filter = urlParams.filter;\n
+\n
+\t// Exact match of the module name\n
+\tconfig.module = urlParams.module;\n
+\n
+\tconfig.testNumber = [];\n
+\tif ( urlParams.testNumber ) {\n
+\n
+\t\t// Ensure that urlParams.testNumber is an array\n
+\t\turlParams.testNumber = [].concat( urlParams.testNumber );\n
+\t\tfor ( i = 0; i < urlParams.testNumber.length; i++ ) {\n
+\t\t\tcurrent = urlParams.testNumber[ i ];\n
+\t\t\tconfig.testNumber.push( parseInt( current, 10 ) );\n
+\t\t}\n
+\t}\n
+\n
+\t// Figure out if we\'re running the tests from a server or not\n
+\tQUnit.isLocal = location.protocol === "file:";\n
+}());\n
+\n
+extend( QUnit, {\n
+\n
+\tconfig: config,\n
+\n
+\t// Initialize the configuration options\n
+\tinit: function() {\n
+\t\textend( config, {\n
+\t\t\tstats: { all: 0, bad: 0 },\n
+\t\t\tmoduleStats: { all: 0, bad: 0 },\n
+\t\t\tstarted: +new Date(),\n
+\t\t\tupdateRate: 1000,\n
+\t\t\tblocking: false,\n
+\t\t\tautostart: true,\n
+\t\t\tautorun: false,\n
+\t\t\tfilter: "",\n
+\t\t\tqueue: [],\n
+\t\t\tsemaphore: 1\n
+\t\t});\n
+\n
+\t\tvar tests, banner, result,\n
+\t\t\tqunit = id( "qunit" );\n
+\n
+\t\tif ( qunit ) {\n
+\t\t\tqunit.innerHTML =\n
+\t\t\t\t"<h1 id=\'qunit-header\'>" + escapeText( document.title ) + "</h1>" +\n
+\t\t\t\t"<h2 id=\'qunit-banner\'></h2>" +\n
+\t\t\t\t"<div id=\'qunit-testrunner-toolbar\'></div>" +\n
+\t\t\t\t"<h2 id=\'qunit-userAgent\'></h2>" +\n
+\t\t\t\t"<ol id=\'qunit-tests\'></ol>";\n
+\t\t}\n
+\n
+\t\ttests = id( "qunit-tests" );\n
+\t\tbanner = id( "qunit-banner" );\n
+\t\tresult = id( "qunit-testresult" );\n
+\n
+\t\tif ( tests ) {\n
+\t\t\ttests.innerHTML = "";\n
+\t\t}\n
+\n
+\t\tif ( banner ) {\n
+\t\t\tbanner.className = "";\n
+\t\t}\n
+\n
+\t\tif ( result ) {\n
+\t\t\tresult.parentNode.removeChild( result );\n
+\t\t}\n
+\n
+\t\tif ( tests ) {\n
+\t\t\tresult = document.createElement( "p" );\n
+\t\t\tresult.id = "qunit-testresult";\n
+\t\t\tresult.className = "result";\n
+\t\t\ttests.parentNode.insertBefore( result, tests );\n
+\t\t\tresult.innerHTML = "Running...<br/>&nbsp;";\n
+\t\t}\n
+\t},\n
+\n
+\t// Resets the test setup. Useful for tests that modify the DOM.\n
+\t/*\n
+\tDEPRECATED: Use multiple tests instead of resetting inside a test.\n
+\tUse testStart or testDone for custom cleanup.\n
+\tThis method will throw an error in 2.0, and will be removed in 2.1\n
+\t*/\n
+\treset: function() {\n
+\t\tvar fixture = id( "qunit-fixture" );\n
+\t\tif ( fixture ) {\n
+\t\t\tfixture.innerHTML = config.fixture;\n
+\t\t}\n
+\t},\n
+\n
+\t// Safe object type checking\n
+\tis: function( type, obj ) {\n
+\t\treturn QUnit.objectType( obj ) === type;\n
+\t},\n
+\n
+\tobjectType: function( obj ) {\n
+\t\tif ( typeof obj === "undefined" ) {\n
+\t\t\treturn "undefined";\n
+\t\t}\n
+\n
+\t\t// Consider: typeof null === object\n
+\t\tif ( obj === null ) {\n
+\t\t\treturn "null";\n
+\t\t}\n
+\n
+\t\tvar match = toString.call( obj ).match(/^\\[object\\s(.*)\\]$/),\n
+\t\t\ttype = match && match[1] || "";\n
+\n
+\t\tswitch ( type ) {\n
+\t\t\tcase "Number":\n
+\t\t\t\tif ( isNaN(obj) ) {\n
+\t\t\t\t\treturn "nan";\n
+\t\t\t\t}\n
+\t\t\t\treturn "number";\n
+\t\t\tcase "String":\n
+\t\t\tcase "Boolean":\n
+\t\t\tcase "Array":\n
+\t\t\tcase "Date":\n
+\t\t\tcase "RegExp":\n
+\t\t\tcase "Function":\n
+\t\t\t\treturn type.toLowerCase();\n
+\t\t}\n
+\t\tif ( typeof obj === "object" ) {\n
+\t\t\treturn "object";\n
+\t\t}\n
+\t\treturn undefined;\n
+\t},\n
+\n
+\tpush: function( result, actual, expected, message ) {\n
+\t\tif ( !config.current ) {\n
+\t\t\tthrow new Error( "assertion outside test context, was " + sourceFromStacktrace() );\n
+\t\t}\n
+\n
+\t\tvar output, source,\n
+\t\t\tdetails = {\n
+\t\t\t\tmodule: config.current.module,\n
+\t\t\t\tname: config.current.testName,\n
+\t\t\t\tresult: result,\n
+\t\t\t\tmessage: message,\n
+\t\t\t\tactual: actual,\n
+\t\t\t\texpected: expected\n
+\t\t\t};\n
+\n
+\t\tmessage = escapeText( message ) || ( result ? "okay" : "failed" );\n
+\t\tmessage = "<span class=\'test-message\'>" + message + "</span>";\n
+\t\toutput = message;\n
+\n
+\t\tif ( !result ) {\n
+\t\t\texpected = escapeText( QUnit.jsDump.parse(expected) );\n
+\t\t\tactual = escapeText( QUnit.jsDump.parse(actual) );\n
+\t\t\toutput += "<table><tr class=\'test-expected\'><th>Expected: </th><td><pre>" + expected + "</pre></td></tr>";\n
+\n
+\t\t\tif ( actual !== expected ) {\n
+\t\t\t\toutput += "<tr class=\'test-actual\'><th>Result: </th><td><pre>" + actual + "</pre></td></tr>";\n
+\t\t\t\toutput += "<tr class=\'test-diff\'><th>Diff: </th><td><pre>" + QUnit.diff( expected, actual ) + "</pre></td></tr>";\n
+\t\t\t}\n
+\n
+\t\t\tsource = sourceFromStacktrace();\n
+\n
+\t\t\tif ( source ) {\n
+\t\t\t\tdetails.source = source;\n
+\t\t\t\toutput += "<tr class=\'test-source\'><th>Source: </th><td><pre>" + escapeText( source ) + "</pre></td></tr>";\n
+\t\t\t}\n
+\n
+\t\t\toutput += "</table>";\n
+\t\t}\n
+\n
+\t\trunLoggingCallbacks( "log", QUnit, details );\n
+\n
+\t\tconfig.current.assertions.push({\n
+\t\t\tresult: !!result,\n
+\t\t\tmessage: output\n
+\t\t});\n
+\t},\n
+\n
+\tpushFailure: function( message, source, actual ) {\n
+\t\tif ( !config.current ) {\n
+\t\t\tthrow new Error( "pushFailure() assertion outside test context, was " + sourceFromStacktrace(2) );\n
+\t\t}\n
+\n
+\t\tvar output,\n
+\t\t\tdetails = {\n
+\t\t\t\tmodule: config.current.module,\n
+\t\t\t\tname: config.current.testName,\n
+\t\t\t\tresult: false,\n
+\t\t\t\tmessage: message\n
+\t\t\t};\n
+\n
+\t\tmessage = escapeText( message ) || "error";\n
+\t\tmessage = "<span class=\'test-message\'>" + message + "</span>";\n
+\t\toutput = message;\n
+\n
+\t\toutput += "<table>";\n
+\n
+\t\tif ( actual ) {\n
+\t\t\toutput += "<tr class=\'test-actual\'><th>Result: </th><td><pre>" + escapeText( actual ) + "</pre></td></tr>";\n
+\t\t}\n
+\n
+\t\tif ( source ) {\n
+\t\t\tdetails.source = source;\n
+\t\t\toutput += "<tr class=\'test-source\'><th>Source: </th><td><pre>" + escapeText( source ) + "</pre></td></tr>";\n
+\t\t}\n
+\n
+\t\toutput += "</table>";\n
+\n
+\t\trunLoggingCallbacks( "log", QUnit, details );\n
+\n
+\t\tconfig.current.assertions.push({\n
+\t\t\tresult: false,\n
+\t\t\tmessage: output\n
+\t\t});\n
+\t},\n
+\n
+\turl: function( params ) {\n
+\t\tparams = extend( extend( {}, QUnit.urlParams ), params );\n
+\t\tvar key,\n
+\t\t\tquerystring = "?";\n
+\n
+\t\tfor ( key in params ) {\n
+\t\t\tif ( hasOwn.call( params, key ) ) {\n
+\t\t\t\tquerystring += encodeURIComponent( key ) + "=" +\n
+\t\t\t\t\tencodeURIComponent( params[ key ] ) + "&";\n
+\t\t\t}\n
+\t\t}\n
+\t\treturn window.location.protocol + "//" + window.location.host +\n
+\t\t\twindow.location.pathname + querystring.slice( 0, -1 );\n
+\t},\n
+\n
+\textend: extend,\n
+\tid: id,\n
+\taddEvent: addEvent,\n
+\taddClass: addClass,\n
+\thasClass: hasClass,\n
+\tremoveClass: removeClass\n
+\t// load, equiv, jsDump, diff: Attached later\n
+});\n
+\n
+/**\n
+ * @deprecated: Created for backwards compatibility with test runner that set the hook function\n
+ * into QUnit.{hook}, instead of invoking it and passing the hook function.\n
+ * QUnit.constructor is set to the empty F() above so that we can add to it\'s prototype here.\n
+ * Doing this allows us to tell if the following methods have been overwritten on the actual\n
+ * QUnit object.\n
+ */\n
+extend( QUnit.constructor.prototype, {\n
+\n
+\t// Logging callbacks; all receive a single argument with the listed properties\n
+\t// run test/logs.html for any related changes\n
+\tbegin: registerLoggingCallback( "begin" ),\n
+\n
+\t// done: { failed, passed, total, runtime }\n
+\tdone: registerLoggingCallback( "done" ),\n
+\n
+\t// log: { result, actual, expected, message }\n
+\tlog: registerLoggingCallback( "log" ),\n
+\n
+\t// testStart: { name }\n
+\ttestStart: registerLoggingCallback( "testStart" ),\n
+\n
+\t// testDone: { name, failed, passed, total, runtime }\n
+\ttestDone: registerLoggingCallback( "testDone" ),\n
+\n
+\t// moduleStart: { name }\n
+\tmoduleStart: registerLoggingCallback( "moduleStart" ),\n
+\n
+\t// moduleDone: { name, failed, passed, total }\n
+\tmoduleDone: registerLoggingCallback( "moduleDone" )\n
+});\n
+\n
+if ( !defined.document || document.readyState === "complete" ) {\n
+\tconfig.autorun = true;\n
+}\n
+\n
+QUnit.load = function() {\n
+\trunLoggingCallbacks( "begin", QUnit, {} );\n
+\n
+\t// Initialize the config, saving the execution queue\n
+\tvar banner, filter, i, j, label, len, main, ol, toolbar, val, selection,\n
+\t\turlConfigContainer, moduleFilter, userAgent,\n
+\t\tnumModules = 0,\n
+\t\tmoduleNames = [],\n
+\t\tmoduleFilterHtml = "",\n
+\t\turlConfigHtml = "",\n
+\t\toldconfig = extend( {}, config );\n
+\n
+\tQUnit.init();\n
+\textend(config, oldconfig);\n
+\n
+\tconfig.blocking = false;\n
+\n
+\tlen = config.urlConfig.length;\n
+\n
+\tfor ( i = 0; i < len; i++ ) {\n
+\t\tval = config.urlConfig[i];\n
+\t\tif ( typeof val === "string" ) {\n
+\t\t\tval = {\n
+\t\t\t\tid: val,\n
+\t\t\t\tlabel: val\n
+\t\t\t};\n
+\t\t}\n
+\t\tconfig[ val.id ] = QUnit.urlParams[ val.id ];\n
+\t\tif ( !val.value || typeof val.value === "string" ) {\n
+\t\t\turlConfigHtml += "<input id=\'qunit-urlconfig-" + escapeText( val.id ) +\n
+\t\t\t\t"\' name=\'" + escapeText( val.id ) +\n
+\t\t\t\t"\' type=\'checkbox\'" +\n
+\t\t\t\t( val.value ? " value=\'" + escapeText( val.value ) + "\'" : "" ) +\n
+\t\t\t\t( config[ val.id ] ? " checked=\'checked\'" : "" ) +\n
+\t\t\t\t" title=\'" + escapeText( val.tooltip ) +\n
+\t\t\t\t"\'><label for=\'qunit-urlconfig-" + escapeText( val.id ) +\n
+\t\t\t\t"\' title=\'" + escapeText( val.tooltip ) + "\'>" + val.label + "</label>";\n
+\t\t} else {\n
+\t\t\turlConfigHtml += "<label for=\'qunit-urlconfig-" + escapeText( val.id ) +\n
+\t\t\t\t"\' title=\'" + escapeText( val.tooltip ) +\n
+\t\t\t\t"\'>" + val.label +\n
+\t\t\t\t": </label><select id=\'qunit-urlconfig-" + escapeText( val.id ) +\n
+\t\t\t\t"\' name=\'" + escapeText( val.id ) +\n
+\t\t\t\t"\' title=\'" + escapeText( val.tooltip ) +\n
+\t\t\t\t"\'><option></option>";\n
+\t\t\tselection = false;\n
+\t\t\tif ( QUnit.is( "array", val.value ) ) {\n
+\t\t\t\tfor ( j = 0; j < val.value.length; j++ ) {\n
+\t\t\t\t\turlConfigHtml += "<option value=\'" + escapeText( val.value[j] ) + "\'" +\n
+\t\t\t\t\t\t( config[ val.id ] === val.value[j] ?\n
+\t\t\t\t\t\t\t(selection = true) && " selected=\'selected\'" :\n
+\t\t\t\t\t\t\t"" ) +\n
+\t\t\t\t\t\t">" + escapeText( val.value[j] ) + "</option>";\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tfor ( j in val.value ) {\n
+\t\t\t\t\tif ( hasOwn.call( val.value, j ) ) {\n
+\t\t\t\t\t\turlConfigHtml += "<option value=\'" + escapeText( j ) + "\'" +\n
+\t\t\t\t\t\t\t( config[ val.id ] === j ?\n
+\t\t\t\t\t\t\t\t(selection = true) && " selected=\'selected\'" :\n
+\t\t\t\t\t\t\t\t"" ) +\n
+\t\t\t\t\t\t\t">" + escapeText( val.value[j] ) + "</option>";\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\tif ( config[ val.id ] && !selection ) {\n
+\t\t\t\turlConfigHtml += "<option value=\'" + escapeText( config[ val.id ] ) +\n
+\t\t\t\t\t"\' selected=\'selected\' disabled=\'disabled\'>" +\n
+\t\t\t\t\tescapeText( config[ val.id ] ) +\n
+\t\t\t\t\t"</option>";\n
+\t\t\t}\n
+\t\t\turlConfigHtml += "</select>";\n
+\t\t}\n
+\t}\n
+\tfor ( i in config.modules ) {\n
+\t\tif ( config.modules.hasOwnProperty( i ) ) {\n
+\t\t\tmoduleNames.push(i);\n
+\t\t}\n
+\t}\n
+\tnumModules = moduleNames.length;\n
+\tmoduleNames.sort( function( a, b ) {\n
+\t\treturn a.localeCompare( b );\n
+\t});\n
+\tmoduleFilterHtml += "<label for=\'qunit-modulefilter\'>Module: </label><select id=\'qunit-modulefilter\' name=\'modulefilter\'><option value=\'\' " +\n
+\t\t( config.module === undefined  ? "selected=\'selected\'" : "" ) +\n
+\t\t">< All Modules ></option>";\n
+\n
+\n
+\tfor ( i = 0; i < numModules; i++) {\n
+\t\t\tmoduleFilterHtml += "<option value=\'" + escapeText( encodeURIComponent(moduleNames[i]) ) + "\' " +\n
+\t\t\t\t( config.module === moduleNames[i] ? "selected=\'selected\'" : "" ) +\n
+\t\t\t\t">" + escapeText(moduleNames[i]) + "</option>";\n
+\t}\n
+\tmoduleFilterHtml += "</select>";\n
+\n
+\t// `userAgent` initialized at top of scope\n
+\tuserAgent = id( "qunit-userAgent" );\n
+\tif ( userAgent ) {\n
+\t\tuserAgent.innerHTML = navigator.userAgent;\n
+\t}\n
+\n
+\t// `banner` initialized at top of scope\n
+\tbanner = id( "qunit-header" );\n
+\tif ( banner ) {\n
+\t\tbanner.innerHTML = "<a href=\'" + QUnit.url({ filter: undefined, module: undefined, testNumber: undefined }) + "\'>" + banner.innerHTML + "</a> ";\n
+\t}\n
+\n
+\t// `toolbar` initialized at top of scope\n
+\ttoolbar = id( "qunit-testrunner-toolbar" );\n
+\tif ( toolbar ) {\n
+\t\t// `filter` initialized at top of scope\n
+\t\tfilter = document.createElement( "input" );\n
+\t\tfilter.type = "checkbox";\n
+\t\tfilter.id = "qunit-filter-pass";\n
+\n
+\t\taddEvent( filter, "click", function() {\n
+\t\t\tvar tmp,\n
+\t\t\t\tol = id( "qunit-tests" );\n
+\n
+\t\t\tif ( filter.checked ) {\n
+\t\t\t\tol.className = ol.className + " hidepass";\n
+\t\t\t} else {\n
+\t\t\t\ttmp = " " + ol.className.replace( /[\\n\\t\\r]/g, " " ) + " ";\n
+\t\t\t\tol.className = tmp.replace( / hidepass /, " " );\n
+\t\t\t}\n
+\t\t\tif ( defined.sessionStorage ) {\n
+\t\t\t\tif (filter.checked) {\n
+\t\t\t\t\tsessionStorage.setItem( "qunit-filter-passed-tests", "true" );\n
+\t\t\t\t} else {\n
+\t\t\t\t\tsessionStorage.removeItem( "qunit-filter-passed-tests" );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tif ( config.hidepassed || defined.sessionStorage && sessionStorage.getItem( "qunit-filter-passed-tests" ) ) {\n
+\t\t\tfilter.checked = true;\n
+\t\t\t// `ol` initialized at top of scope\n
+\t\t\tol = id( "qunit-tests" );\n
+\t\t\tol.className = ol.className + " hidepass";\n
+\t\t}\n
+\t\ttoolbar.appendChild( filter );\n
+\n
+\t\t// `label` initialized at top of scope\n
+\t\tlabel = document.createElement( "label" );\n
+\t\tlabel.setAttribute( "for", "qunit-filter-pass" );\n
+\t\tlabel.setAttribute( "title", "Only show tests and assertions that fail. Stored in sessionStorage." );\n
+\t\tlabel.innerHTML = "Hide passed tests";\n
+\t\ttoolbar.appendChild( label );\n
+\n
+\t\turlConfigContainer = document.createElement("span");\n
+\t\turlConfigContainer.innerHTML = urlConfigHtml;\n
+\t\t// For oldIE support:\n
+\t\t// * Add handlers to the individual elements instead of the container\n
+\t\t// * Use "click" instead of "change" for checkboxes\n
+\t\t// * Fallback from event.target to event.srcElement\n
+\t\taddEvents( urlConfigContainer.getElementsByTagName("input"), "click", function( event ) {\n
+\t\t\tvar params = {},\n
+\t\t\t\ttarget = event.target || event.srcElement;\n
+\t\t\tparams[ target.name ] = target.checked ?\n
+\t\t\t\ttarget.defaultValue || true :\n
+\t\t\t\tundefined;\n
+\t\t\twindow.location = QUnit.url( params );\n
+\t\t});\n
+\t\taddEvents( urlConfigContainer.getElementsByTagName("select"), "change", function( event ) {\n
+\t\t\tvar params = {},\n
+\t\t\t\ttarget = event.target || event.srcElement;\n
+\t\t\tparams[ target.name ] = target.options[ target.selectedIndex ].value || undefined;\n
+\t\t\twindow.location = QUnit.url( params );\n
+\t\t});\n
+\t\ttoolbar.appendChild( urlConfigContainer );\n
+\n
+\t\tif (numModules > 1) {\n
+\t\t\tmoduleFilter = document.createElement( "span" );\n
+\t\t\tmoduleFilter.setAttribute( "id", "qunit-modulefilter-container" );\n
+\t\t\tmoduleFilter.innerHTML = moduleFilterHtml;\n
+\t\t\taddEvent( moduleFilter.lastChild, "change", function() {\n
+\t\t\t\tvar selectBox = moduleFilter.getElementsByTagName("select")[0],\n
+\t\t\t\t\tselectedModule = decodeURIComponent(selectBox.options[selectBox.selectedIndex].value);\n
+\n
+\t\t\t\twindow.location = QUnit.url({\n
+\t\t\t\t\tmodule: ( selectedModule === "" ) ? undefined : selectedModule,\n
+\t\t\t\t\t// Remove any existing filters\n
+\t\t\t\t\tfilter: undefined,\n
+\t\t\t\t\ttestNumber: undefined\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t\ttoolbar.appendChild(moduleFilter);\n
+\t\t}\n
+\t}\n
+\n
+\t// `main` initialized at top of scope\n
+\tmain = id( "qunit-fixture" );\n
+\tif ( main ) {\n
+\t\tconfig.fixture = main.innerHTML;\n
+\t}\n
+\n
+\tif ( config.autostart ) {\n
+\t\tQUnit.start();\n
+\t}\n
+};\n
+\n
+if ( defined.document ) {\n
+\taddEvent( window, "load", QUnit.load );\n
+}\n
+\n
+// `onErrorFnPrev` initialized at top of scope\n
+// Preserve other handlers\n
+onErrorFnPrev = window.onerror;\n
+\n
+// Cover uncaught exceptions\n
+// Returning true will suppress the default browser handler,\n
+// returning false will let it run.\n
+window.onerror = function ( error, filePath, linerNr ) {\n
+\tvar ret = false;\n
+\tif ( onErrorFnPrev ) {\n
+\t\tret = onErrorFnPrev( error, filePath, linerNr );\n
+\t}\n
+\n
+\t// Treat return value as window.onerror itself does,\n
+\t// Only do our handling if not suppressed.\n
+\tif ( ret !== true ) {\n
+\t\tif ( QUnit.config.current ) {\n
+\t\t\tif ( QUnit.config.current.ignoreGlobalErrors ) {\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\t\t\tQUnit.pushFailure( error, filePath + ":" + linerNr );\n
+\t\t} else {\n
+\t\t\tQUnit.test( "global failure", extend( function() {\n
+\t\t\t\tQUnit.pushFailure( error, filePath + ":" + linerNr );\n
+\t\t\t}, { validTest: validTest } ) );\n
+\t\t}\n
+\t\treturn false;\n
+\t}\n
+\n
+\treturn ret;\n
+};\n
+\n
+function done() {\n
+\tconfig.autorun = true;\n
+\n
+\t// Log the last module results\n
+\tif ( config.previousModule ) {\n
+\t\trunLoggingCallbacks( "moduleDone", QUnit, {\n
+\t\t\tname: config.previousModule,\n
+\t\t\tfailed: config.moduleStats.bad,\n
+\t\t\tpassed: config.moduleStats.all - config.moduleStats.bad,\n
+\t\t\ttotal: config.moduleStats.all\n
+\t\t});\n
+\t}\n
+\tdelete config.previousModule;\n
+\n
+\tvar i, key,\n
+\t\tbanner = id( "qunit-banner" ),\n
+\t\ttests = id( "qunit-tests" ),\n
+\t\truntime = +new Date() - config.started,\n
+\t\tpassed = config.stats.all - config.stats.bad,\n
+\t\thtml = [\n
+\t\t\t"Tests completed in ",\n
+\t\t\truntime,\n
+\t\t\t" milliseconds.<br/>",\n
+\t\t\t"<span class=\'passed\'>",\n
+\t\t\tpassed,\n
+\t\t\t"</span> assertions of <span class=\'total\'>",\n
+\t\t\tconfig.stats.all,\n
+\t\t\t"</span> passed, <span class=\'failed\'>",\n
+\t\t\tconfig.stats.bad,\n
+\t\t\t"</span> failed."\n
+\t\t].join( "" );\n
+\n
+\tif ( banner ) {\n
+\t\tbanner.className = ( config.stats.bad ? "qunit-fail" : "qunit-pass" );\n
+\t}\n
+\n
+\tif ( tests ) {\n
+\t\tid( "qunit-testresult" ).innerHTML = html;\n
+\t}\n
+\n
+\tif ( config.altertitle && defined.document && document.title ) {\n
+\t\t// show ✖ for good, ✔ for bad suite result in title\n
+\t\t// use escape sequences in case file gets loaded with non-utf-8-charset\n
+\t\tdocument.title = [\n
+\t\t\t( config.stats.bad ? "\\u2716" : "\\u2714" ),\n
+\t\t\tdocument.title.replace( /^[\\u2714\\u2716] /i, "" )\n
+\t\t].join( " " );\n
+\t}\n
+\n
+\t// clear own sessionStorage items if all tests passed\n
+\tif ( config.reorder && defined.sessionStorage && config.stats.bad === 0 ) {\n
+\t\t// `key` & `i` initialized at top of scope\n
+\t\tfor ( i = 0; i < sessionStorage.length; i++ ) {\n
+\t\t\tkey = sessionStorage.key( i++ );\n
+\t\t\tif ( key.indexOf( "qunit-test-" ) === 0 ) {\n
+\t\t\t\tsessionStorage.removeItem( key );\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\t// scroll back to top to show results\n
+\tif ( config.scrolltop && window.scrollTo ) {\n
+\t\twindow.scrollTo(0, 0);\n
+\t}\n
+\n
+\trunLoggingCallbacks( "done", QUnit, {\n
+\t\tfailed: config.stats.bad,\n
+\t\tpassed: passed,\n
+\t\ttotal: config.stats.all,\n
+\t\truntime: runtime\n
+\t});\n
+}\n
+\n
+/** @return Boolean: true if this test should be ran */\n
+function validTest( test ) {\n
+\tvar include,\n
+\t\tfilter = config.filter && config.filter.toLowerCase(),\n
+\t\tmodule = config.module && config.module.toLowerCase(),\n
+\t\tfullName = ( test.module + ": " + test.testName ).toLowerCase();\n
+\n
+\t// Internally-generated tests are always valid\n
+\tif ( test.callback && test.callback.validTest === validTest ) {\n
+\t\tdelete test.callback.validTest;\n
+\t\treturn true;\n
+\t}\n
+\n
+\tif ( config.testNumber.length > 0 ) {\n
+\t\tif ( inArray( test.testNumber, config.testNumber ) < 0 ) {\n
+\t\t\treturn false;\n
+\t\t}\n
+\t}\n
+\n
+\tif ( module && ( !test.module || test.module.toLowerCase() !== module ) ) {\n
+\t\treturn false;\n
+\t}\n
+\n
+\tif ( !filter ) {\n
+\t\treturn true;\n
+\t}\n
+\n
+\tinclude = filter.charAt( 0 ) !== "!";\n
+\tif ( !include ) {\n
+\t\tfilter = filter.slice( 1 );\n
+\t}\n
+\n
+\t// If the filter matches, we need to honour include\n
+\tif ( fullName.indexOf( filter ) !== -1 ) {\n
+\t\treturn include;\n
+\t}\n
+\n
+\t// Otherwise, do the opposite\n
+\treturn !include;\n
+}\n
+\n
+// so far supports only Firefox, Chrome and Opera (buggy), Safari (for real exceptions)\n
+// Later Safari and IE10 are supposed to support error.stack as well\n
+// See also https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error/Stack\n
+function extractStacktrace( e, offset ) {\n
+\toffset = offset === undefined ? 3 : offset;\n
+\n
+\tvar stack, include, i;\n
+\n
+\tif ( e.stacktrace ) {\n
+\t\t// Opera\n
+\t\treturn e.stacktrace.split( "\\n" )[ offset + 3 ];\n
+\t} else if ( e.stack ) {\n
+\t\t// Firefox, Chrome\n
+\t\tstack = e.stack.split( "\\n" );\n
+\t\tif (/^error$/i.test( stack[0] ) ) {\n
+\t\t\tstack.shift();\n
+\t\t}\n
+\t\tif ( fileName ) {\n
+\t\t\tinclude = [];\n
+\t\t\tfor ( i = offset; i < stack.length; i++ ) {\n
+\t\t\t\tif ( stack[ i ].indexOf( fileName ) !== -1 ) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t\tinclude.push( stack[ i ] );\n
+\t\t\t}\n
+\t\t\tif ( include.length ) {\n
+\t\t\t\treturn include.join( "\\n" );\n
+\t\t\t}\n
+\t\t}\n
+\t\treturn stack[ offset ];\n
+\t} else if ( e.sourceURL ) {\n
+\t\t// Safari, PhantomJS\n
+\t\t// hopefully one day Safari provides actual stacktraces\n
+\t\t// exclude useless self-reference for generated Error objects\n
+\t\tif ( /qunit.js$/.test( e.sourceURL ) ) {\n
+\t\t\treturn;\n
+\t\t}\n
+\t\t// for actual exceptions, this is useful\n
+\t\treturn e.sourceURL + ":" + e.line;\n
+\t}\n
+}\n
+function sourceFromStacktrace( offset ) {\n
+\ttry {\n
+\t\tthrow new Error();\n
+\t} catch ( e ) {\n
+\t\treturn extractStacktrace( e, offset );\n
+\t}\n
+}\n
+\n
+/**\n
+ * Escape text for attribute or text content.\n
+ */\n
+function escapeText( s ) {\n
+\tif ( !s ) {\n
+\t\treturn "";\n
+\t}\n
+\ts = s + "";\n
+\t// Both single quotes and double quotes (for attributes)\n
+\treturn s.replace( /[\'"<>&]/g, function( s ) {\n
+\t\tswitch( s ) {\n
+\t\t\tcase "\'":\n
+\t\t\t\treturn "&#039;";\n
+\t\t\tcase "\\"":\n
+\t\t\t\treturn "&quot;";\n
+\t\t\tcase "<":\n
+\t\t\t\treturn "&lt;";\n
+\t\t\tcase ">":\n
+\t\t\t\treturn "&gt;";\n
+\t\t\tcase "&":\n
+\t\t\t\treturn "&amp;";\n
+\t\t}\n
+\t});\n
+}\n
+\n
+function synchronize( callback, last ) {\n
+\tconfig.queue.push( callback );\n
+\n
+\tif ( config.autorun && !config.blocking ) {\n
+\t\tprocess( last );\n
+\t}\n
+}\n
+\n
+function process( last ) {\n
+\tfunction next() {\n
+\t\tprocess( last );\n
+\t}\n
+\tvar start = new Date().getTime();\n
+\tconfig.depth = config.depth ? config.depth + 1 : 1;\n
+\n
+\twhile ( config.queue.length && !config.blocking ) {\n
+\t\tif ( !defined.setTimeout || config.updateRate <= 0 || ( ( new Date().getTime() - start ) < config.updateRate ) ) {\n
+\t\t\tconfig.queue.shift()();\n
+\t\t} else {\n
+\t\t\tsetTimeout( next, 13 );\n
+\t\t\tbreak;\n
+\t\t}\n
+\t}\n
+\tconfig.depth--;\n
+\tif ( last && !config.blocking && !config.queue.length && config.depth === 0 ) {\n
+\t\tdone();\n
+\t}\n
+}\n
+\n
+function saveGlobal() {\n
+\tconfig.pollution = [];\n
+\n
+\tif ( config.noglobals ) {\n
+\t\tfor ( var key in window ) {\n
+\t\t\tif ( hasOwn.call( window, key ) ) {\n
+\t\t\t\t// in Opera sometimes DOM element ids show up here, ignore them\n
+\t\t\t\tif ( /^qunit-test-output/.test( key ) ) {\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\t\t\t\tconfig.pollution.push( key );\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+}\n
+\n
+function checkPollution() {\n
+\tvar newGlobals,\n
+\t\tdeletedGlobals,\n
+\t\told = config.pollution;\n
+\n
+\tsaveGlobal();\n
+\n
+\tnewGlobals = diff( config.pollution, old );\n
+\tif ( newGlobals.length > 0 ) {\n
+\t\tQUnit.pushFailure( "Introduced global variable(s): " + newGlobals.join(", ") );\n
+\t}\n
+\n
+\tdeletedGlobals = diff( old, config.pollution );\n
+\tif ( deletedGlobals.length > 0 ) {\n
+\t\tQUnit.pushFailure( "Deleted global variable(s): " + deletedGlobals.join(", ") );\n
+\t}\n
+}\n
+\n
+// returns a new Array with the elements that are in a but not in b\n
+function diff( a, b ) {\n
+\tvar i, j,\n
+\t\tresult = a.slice();\n
+\n
+\tfor ( i = 0; i < result.length; i++ ) {\n
+\t\tfor ( j = 0; j < b.length; j++ ) {\n
+\t\t\tif ( result[i] === b[j] ) {\n
+\t\t\t\tresult.splice( i, 1 );\n
+\t\t\t\ti--;\n
+\t\t\t\tbreak;\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\treturn result;\n
+}\n
+\n
+function extend( a, b ) {\n
+\tfor ( var prop in b ) {\n
+\t\tif ( hasOwn.call( b, prop ) ) {\n
+\t\t\t// Avoid "Member not found" error in IE8 caused by messing with window.constructor\n
+\t\t\tif ( !( prop === "constructor" && a === window ) ) {\n
+\t\t\t\tif ( b[ prop ] === undefined ) {\n
+\t\t\t\t\tdelete a[ prop ];\n
+\t\t\t\t} else {\n
+\t\t\t\t\ta[ prop ] = b[ prop ];\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\treturn a;\n
+}\n
+\n
+/**\n
+ * @param {HTMLElement} elem\n
+ * @param {string} type\n
+ * @param {Function} fn\n
+ */\n
+function addEvent( elem, type, fn ) {\n
+\tif ( elem.addEventListener ) {\n
+\n
+\t\t// Standards-based browsers\n
+\t\telem.addEventListener( type, fn, false );\n
+\t} else if ( elem.attachEvent ) {\n
+\n
+\t\t// support: IE <9\n
+\t\telem.attachEvent( "on" + type, fn );\n
+\t} else {\n
+\n
+\t\t// Caller must ensure support for event listeners is present\n
+\t\tthrow new Error( "addEvent() was called in a context without event listener support" );\n
+\t}\n
+}\n
+\n
+/**\n
+ * @param {Array|NodeList} elems\n
+ * @param {string} type\n
+ * @param {Function} fn\n
+ */\n
+function addEvents( elems, type, fn ) {\n
+\tvar i = elems.length;\n
+\twhile ( i-- ) {\n
+\t\taddEvent( elems[i], type, fn );\n
+\t}\n
+}\n
+\n
+function hasClass( elem, name ) {\n
+\treturn (" " + elem.className + " ").indexOf(" " + name + " ") > -1;\n
+}\n
+\n
+function addClass( elem, name ) {\n
+\tif ( !hasClass( elem, name ) ) {\n
+\t\telem.className += (elem.className ? " " : "") + name;\n
+\t}\n
+}\n
+\n
+function removeClass( elem, name ) {\n
+\tvar set = " " + elem.className + " ";\n
+\t// Class name may appear multiple times\n
+\twhile ( set.indexOf(" " + name + " ") > -1 ) {\n
+\t\tset = set.replace(" " + name + " " , " ");\n
+\t}\n
+\t// If possible, trim it for prettiness, but not necessarily\n
+\telem.className = typeof set.trim === "function" ? set.trim() : set.replace(/^\\s+|\\s+$/g, "");\n
+}\n
+\n
+function id( name ) {\n
+\treturn defined.document && document.getElementById && document.getElementById( name );\n
+}\n
+\n
+function registerLoggingCallback( key ) {\n
+\treturn function( callback ) {\n
+\t\tconfig[key].push( callback );\n
+\t};\n
+}\n
+\n
+// Supports deprecated method of completely overwriting logging callbacks\n
+function runLoggingCallbacks( key, scope, args ) {\n
+\tvar i, callbacks;\n
+\tif ( QUnit.hasOwnProperty( key ) ) {\n
+\t\tQUnit[ key ].call(scope, args );\n
+\t} else {\n
+\t\tcallbacks = config[ key ];\n
+\t\tfor ( i = 0; i < callbacks.length; i++ ) {\n
+\t\t\tcallbacks[ i ].call( scope, args );\n
+\t\t}\n
+\t}\n
+}\n
+\n
+// from jquery.js\n
+function inArray( elem, array ) {\n
+\tif ( array.indexOf ) {\n
+\t\treturn array.indexOf( elem );\n
+\t}\n
+\n
+\tfor ( var i = 0, length = array.length; i < length; i++ ) {\n
+\t\tif ( array[ i ] === elem ) {\n
+\t\t\treturn i;\n
+\t\t}\n
+\t}\n
+\n
+\treturn -1;\n
+}\n
+\n
+function Test( settings ) {\n
+\textend( this, settings );\n
+\tthis.assertions = [];\n
+\tthis.testNumber = ++Test.count;\n
+}\n
+\n
+Test.count = 0;\n
+\n
+Test.prototype = {\n
+\tinit: function() {\n
+\t\tvar a, b, li,\n
+\t\t\ttests = id( "qunit-tests" );\n
+\n
+\t\tif ( tests ) {\n
+\t\t\tb = document.createElement( "strong" );\n
+\t\t\tb.innerHTML = this.nameHtml;\n
+\n
+\t\t\t// `a` initialized at top of scope\n
+\t\t\ta = document.createElement( "a" );\n
+\t\t\ta.innerHTML = "Rerun";\n
+\t\t\ta.href = QUnit.url({ testNumber: this.testNumber });\n
+\n
+\t\t\tli = document.createElement( "li" );\n
+\t\t\tli.appendChild( b );\n
+\t\t\tli.appendChild( a );\n
+\t\t\tli.className = "running";\n
+\t\t\tli.id = this.id = "qunit-test-output" + testId++;\n
+\n
+\t\t\ttests.appendChild( li );\n
+\t\t}\n
+\t},\n
+\tsetup: function() {\n
+\t\tif (\n
+\t\t\t// Emit moduleStart when we\'re switching from one module to another\n
+\t\t\tthis.module !== config.previousModule ||\n
+\t\t\t\t// They could be equal (both undefined) but if the previousModule property doesn\'t\n
+\t\t\t\t// yet exist it means this is the first test in a suite that isn\'t wrapped in a\n
+\t\t\t\t// module, in which case we\'ll just emit a moduleStart event for \'undefined\'.\n
+\t\t\t\t// Without this, reporters can get testStart before moduleStart  which is a problem.\n
+\t\t\t\t!hasOwn.call( config, "previousModule" )\n
+\t\t) {\n
+\t\t\tif ( hasOwn.call( config, "previousModule" ) ) {\n
+\t\t\t\trunLoggingCallbacks( "moduleDone", QUnit, {\n
+\t\t\t\t\tname: config.previousModule,\n
+\t\t\t\t\tfailed: config.moduleStats.bad,\n
+\t\t\t\t\tpassed: config.moduleStats.all - config.moduleStats.bad,\n
+\t\t\t\t\ttotal: config.moduleStats.all\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t\tconfig.previousModule = this.module;\n
+\t\t\tconfig.moduleStats = { all: 0, bad: 0 };\n
+\t\t\trunLoggingCallbacks( "moduleStart", QUnit, {\n
+\t\t\t\tname: this.module\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tconfig.current = this;\n
+\n
+\t\tthis.testEnvironment = extend({\n
+\t\t\tsetup: function() {},\n
+\t\t\tteardown: function() {}\n
+\t\t}, this.moduleTestEnvironment );\n
+\n
+\t\tthis.started = +new Date();\n
+\t\trunLoggingCallbacks( "testStart", QUnit, {\n
+\t\t\tname: this.testName,\n
+\t\t\tmodule: this.module\n
+\t\t});\n
+\n
+\t\t/*jshint camelcase:false */\n
+\n
+\n
+\t\t/**\n
+\t\t * Expose the current test environment.\n
+\t\t *\n
+\t\t * @deprecated since 1.12.0: Use QUnit.config.current.testEnvironment instead.\n
+\t\t */\n
+\t\tQUnit.current_testEnvironment = this.testEnvironment;\n
+\n
+\t\t/*jshint camelcase:true */\n
+\n
+\t\tif ( !config.pollution ) {\n
+\t\t\tsaveGlobal();\n
+\t\t}\n
+\t\tif ( config.notrycatch ) {\n
+\t\t\tthis.testEnvironment.setup.call( this.testEnvironment, QUnit.assert );\n
+\t\t\treturn;\n
+\t\t}\n
+\t\ttry {\n
+\t\t\tthis.testEnvironment.setup.call( this.testEnvironment, QUnit.assert );\n
+\t\t} catch( e ) {\n
+\t\t\tQUnit.pushFailure( "Setup failed on " + this.testName + ": " + ( e.message || e ), extractStacktrace( e, 1 ) );\n
+\t\t}\n
+\t},\n
+\trun: function() {\n
+\t\tconfig.current = this;\n
+\n
+\t\tvar running = id( "qunit-testresult" );\n
+\n
+\t\tif ( running ) {\n
+\t\t\trunning.innerHTML = "Running: <br/>" + this.nameHtml;\n
+\t\t}\n
+\n
+\t\tif ( this.async ) {\n
+\t\t\tQUnit.stop();\n
+\t\t}\n
+\n
+\t\tthis.callbackStarted = +new Date();\n
+\n
+\t\tif ( config.notrycatch ) {\n
+\t\t\tthis.callback.call( this.testEnvironment, QUnit.assert );\n
+\t\t\tthis.callbackRuntime = +new Date() - this.callbackStarted;\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\ttry {\n
+\t\t\tthis.callback.call( this.testEnvironment, QUnit.assert );\n
+\t\t\tthis.callbackRuntime = +new Date() - this.callbackStarted;\n
+\t\t} catch( e ) {\n
+\t\t\tthis.callbackRuntime = +new Date() - this.callbackStarted;\n
+\n
+\t\t\tQUnit.pushFailure( "Died on test #" + (this.assertions.length + 1) + " " + this.stack + ": " + ( e.message || e ), extractStacktrace( e, 0 ) );\n
+\t\t\t// else next test will carry the responsibility\n
+\t\t\tsaveGlobal();\n
+\n
+\t\t\t// Restart the tests if they\'re blocking\n
+\t\t\tif ( config.blocking ) {\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}\n
+\t\t}\n
+\t},\n
+\tteardown: function() {\n
+\t\tconfig.current = this;\n
+\t\tif ( config.notrycatch ) {\n
+\t\t\tif ( typeof this.callbackRuntime === "undefined" ) {\n
+\t\t\t\tthis.callbackRuntime = +new Date() - this.callbackStarted;\n
+\t\t\t}\n
+\t\t\tthis.testEnvironment.teardown.call( this.testEnvironment, QUnit.assert );\n
+\t\t\treturn;\n
+\t\t} else {\n
+\t\t\ttry {\n
+\t\t\t\tthis.testEnvironment.teardown.call( this.testEnvironment, QUnit.assert );\n
+\t\t\t} catch( e ) {\n
+\t\t\t\tQUnit.pushFailure( "Teardown failed on " + this.testName + ": " + ( e.message || e ), extractStacktrace( e, 1 ) );\n
+\t\t\t}\n
+\t\t}\n
+\t\tcheckPollution();\n
+\t},\n
+\tfinish: function() {\n
+\t\tconfig.current = this;\n
+\t\tif ( config.requireExpects && this.expected === null ) {\n
+\t\t\tQUnit.pushFailure( "Expected number of assertions to be defined, but expect() was not called.", this.stack );\n
+\t\t} else if ( this.expected !== null && this.expected !== this.assertions.length ) {\n
+\t\t\tQUnit.pushFailure( "Expected " + this.expected + " assertions, but " + this.assertions.length + " were run", this.stack );\n
+\t\t} else if ( this.expected === null && !this.assertions.length ) {\n
+\t\t\tQUnit.pushFailure( "Expected at least one assertion, but none were run - call expect(0) to accept zero assertions.", this.stack );\n
+\t\t}\n
+\n
+\t\tvar i, assertion, a, b, time, li, ol,\n
+\t\t\ttest = this,\n
+\t\t\tgood = 0,\n
+\t\t\tbad = 0,\n
+\t\t\ttests = id( "qunit-tests" );\n
+\n
+\t\tthis.runtime = +new Date() - this.started;\n
+\t\tconfig.stats.all += this.assertions.length;\n
+\t\tconfig.moduleStats.all += this.assertions.length;\n
+\n
+\t\tif ( tests ) {\n
+\t\t\tol = document.createElement( "ol" );\n
+\t\t\tol.className = "qunit-assert-list";\n
+\n
+\t\t\tfor ( i = 0; i < this.assertions.length; i++ ) {\n
+\t\t\t\tassertion = this.assertions[i];\n
+\n
+\t\t\t\tli = document.createElement( "li" );\n
+\t\t\t\tli.className = assertion.result ? "pass" : "fail";\n
+\t\t\t\tli.innerHTML = assertion.message || ( assertion.result ? "okay" : "failed" );\n
+\t\t\t\tol.appendChild( li );\n
+\n
+\t\t\t\tif ( assertion.result ) {\n
+\t\t\t\t\tgood++;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tbad++;\n
+\t\t\t\t\tconfig.stats.bad++;\n
+\t\t\t\t\tconfig.moduleStats.bad++;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// store result when possible\n
+\t\t\tif ( QUnit.config.reorder && defined.sessionStorage ) {\n
+\t\t\t\tif ( bad ) {\n
+\t\t\t\t\tsessionStorage.setItem( "qunit-test-" + this.module + "-" + this.testName, bad );\n
+\t\t\t\t} else {\n
+\t\t\t\t\tsessionStorage.removeItem( "qunit-test-" + this.module + "-" + this.testName );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif ( bad === 0 ) {\n
+\t\t\t\taddClass( ol, "qunit-collapsed" );\n
+\t\t\t}\n
+\n
+\t\t\t// `b` initialized at top of scope\n
+\t\t\tb = document.createElement( "strong" );\n
+\t\t\tb.innerHTML = this.nameHtml + " <b class=\'counts\'>(<b class=\'failed\'>" + bad + "</b>, <b class=\'passed\'>" + good + "</b>, " + this.assertions.length + ")</b>";\n
+\n
+\t\t\taddEvent(b, "click", function() {\n
+\t\t\t\tvar next = b.parentNode.lastChild,\n
+\t\t\t\t\tcollapsed = hasClass( next, "qunit-collapsed" );\n
+\t\t\t\t( collapsed ? removeClass : addClass )( next, "qunit-collapsed" );\n
+\t\t\t});\n
+\n
+\t\t\taddEvent(b, "dblclick", function( e ) {\n
+\t\t\t\tvar target = e && e.target ? e.target : window.event.srcElement;\n
+\t\t\t\tif ( target.nodeName.toLowerCase() === "span" || target.nodeName.toLowerCase() === "b" ) {\n
+\t\t\t\t\ttarget = target.parentNode;\n
+\t\t\t\t}\n
+\t\t\t\tif ( window.location && target.nodeName.toLowerCase() === "strong" ) {\n
+\t\t\t\t\twindow.location = QUnit.url({ testNumber: test.testNumber });\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// `time` initialized at top of scope\n
+\t\t\ttime = document.createElement( "span" );\n
+\t\t\ttime.className = "runtime";\n
+\t\t\ttime.innerHTML = this.runtime + " ms";\n
+\n
+\t\t\t// `li` initialized at top of scope\n
+\t\t\tli = id( this.id );\n
+\t\t\tli.className = bad ? "fail" : "pass";\n
+\t\t\tli.removeChild( li.firstChild );\n
+\t\t\ta = li.firstChild;\n
+\t\t\tli.appendChild( b );\n
+\t\t\tli.appendChild( a );\n
+\t\t\tli.appendChild( time );\n
+\t\t\tli.appendChild( ol );\n
+\n
+\t\t} else {\n
+\t\t\tfor ( i = 0; i < this.assertions.length; i++ ) {\n
+\t\t\t\tif ( !this.assertions[i].result ) {\n
+\t\t\t\t\tbad++;\n
+\t\t\t\t\tconfig.stats.bad++;\n
+\t\t\t\t\tconfig.moduleStats.bad++;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\trunLoggingCallbacks( "testDone", QUnit, {\n
+\t\t\tname: this.testName,\n
+\t\t\tmodule: this.module,\n
+\t\t\tfailed: bad,\n
+\t\t\tpassed: this.assertions.length - bad,\n
+\t\t\ttotal: this.assertions.length,\n
+\t\t\truntime: this.runtime,\n
+\t\t\t// DEPRECATED: this property will be removed in 2.0.0, use runtime instead\n
+\t\t\tduration: this.runtime\n
+\t\t});\n
+\n
+\t\tQUnit.reset();\n
+\n
+\t\tconfig.current = undefined;\n
+\t},\n
+\n
+\tqueue: function() {\n
+\t\tvar bad,\n
+\t\t\ttest = this;\n
+\n
+\t\tsynchronize(function() {\n
+\t\t\ttest.init();\n
+\t\t});\n
+\t\tfunction run() {\n
+\t\t\t// each of these can by async\n
+\t\t\tsynchronize(function() {\n
+\t\t\t\ttest.setup();\n
+\t\t\t});\n
+\t\t\tsynchronize(function() {\n
+\t\t\t\ttest.run();\n
+\t\t\t});\n
+\t\t\tsynchronize(function() {\n
+\t\t\t\ttest.teardown();\n
+\t\t\t});\n
+\t\t\tsynchronize(function() {\n
+\t\t\t\ttest.finish();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// `bad` initialized at top of scope\n
+\t\t// defer when previous test run passed, if storage is available\n
+\t\tbad = QUnit.config.reorder && defined.sessionStorage &&\n
+\t\t\t\t\t\t+sessionStorage.getItem( "qunit-test-" + this.module + "-" + this.testName );\n
+\n
+\t\tif ( bad ) {\n
+\t\t\trun();\n
+\t\t} else {\n
+\t\t\tsynchronize( run, true );\n
+\t\t}\n
+\t}\n
+};\n
+\n
+// `assert` initialized at top of scope\n
+// Assert helpers\n
+// All of these must either call QUnit.push() or manually do:\n
+// - runLoggingCallbacks( "log", .. );\n
+// - config.current.assertions.push({ .. });\n
+assert = QUnit.assert = {\n
+\t/**\n
+\t * Asserts rough true-ish result.\n
+\t * @name ok\n
+\t * @function\n
+\t * @example ok( "asdfasdf".length > 5, "There must be at least 5 chars" );\n
+\t */\n
+\tok: function( result, msg ) {\n
+\t\tif ( !config.current ) {\n
+\t\t\tthrow new Error( "ok() assertion outside test context, was " + sourceFromStacktrace(2) );\n
+\t\t}\n
+\t\tresult = !!result;\n
+\t\tmsg = msg || ( result ? "okay" : "failed" );\n
+\n
+\t\tvar source,\n
+\t\t\tdetails = {\n
+\t\t\t\tmodule: config.current.module,\n
+\t\t\t\tname: config.current.testName,\n
+\t\t\t\tresult: result,\n
+\t\t\t\tmessage: msg\n
+\t\t\t};\n
+\n
+\t\tmsg = "<span class=\'test-message\'>" + escapeText( msg ) + "</span>";\n
+\n
+\t\tif ( !result ) {\n
+\t\t\tsource = sourceFromStacktrace( 2 );\n
+\t\t\tif ( source ) {\n
+\t\t\t\tdetails.source = source;\n
+\t\t\t\tmsg += "<table><tr class=\'test-source\'><th>Source: </th><td><pre>" +\n
+\t\t\t\t\tescapeText( source ) +\n
+\t\t\t\t\t"</pre></td></tr></table>";\n
+\t\t\t}\n
+\t\t}\n
+\t\trunLoggingCallbacks( "log", QUnit, details );\n
+\t\tconfig.current.assertions.push({\n
+\t\t\tresult: result,\n
+\t\t\tmessage: msg\n
+\t\t});\n
+\t},\n
+\n
+\t/**\n
+\t * Assert that the first two arguments are equal, with an optional message.\n
+\t * Prints out both actual and expected values.\n
+\t * @name equal\n
+\t * @function\n
+\t * @example equal( format( "Received {0} bytes.", 2), "Received 2 bytes.", "format() replaces {0} with next argument" );\n
+\t */\n
+\tequal: function( actual, expected, message ) {\n
+\t\t/*jshint eqeqeq:false */\n
+\t\tQUnit.push( expected == actual, actual, expected, message );\n
+\t},\n
+\n
+\t/**\n
+\t * @name notEqual\n
+\t * @function\n
+\t */\n
+\tnotEqual: function( actual, expected, message ) {\n
+\t\t/*jshint eqeqeq:false */\n
+\t\tQUnit.push( expected != actual, actual, expected, message );\n
+\t},\n
+\n
+\t/**\n
+\t * @name propEqual\n
+\t * @function\n
+\t */\n
+\tpropEqual: function( actual, expected, message ) {\n
+\t\tactual = objectValues(actual);\n
+\t\texpected = objectValues(expected);\n
+\t\tQUnit.push( QUnit.equiv(actual, expected), actual, expected, message );\n
+\t},\n
+\n
+\t/**\n
+\t * @name notPropEqual\n
+\t * @function\n
+\t */\n
+\tnotPropEqual: function( actual, expected, message ) {\n
+\t\tactual = objectValues(actual);\n
+\t\texpected = objectValues(expected);\n
+\t\tQUnit.push( !QUnit.equiv(actual, expected), actual, expected, message );\n
+\t},\n
+\n
+\t/**\n
+\t * @name deepEqual\n
+\t * @function\n
+\t */\n
+\tdeepEqual: function( actual, expected, message ) {\n
+\t\tQUnit.push( QUnit.equiv(actual, expected), actual, expected, message );\n
+\t},\n
+\n
+\t/**\n
+\t * @name notDeepEqual\n
+\t * @function\n
+\t */\n
+\tnotDeepEqual: function( actual, expected, message ) {\n
+\t\tQUnit.push( !QUnit.equiv(actual, expected), actual, expected, message );\n
+\t},\n
+\n
+\t/**\n
+\t * @name strictEqual\n
+\t * @function\n
+\t */\n
+\tstrictEqual: function( actual, expected, message ) {\n
+\t\tQUnit.push( expected === actual, actual, expected, message );\n
+\t},\n
+\n
+\t/**\n
+\t * @name notStrictEqual\n
+\t * @function\n
+\t */\n
+\tnotStrictEqual: function( actual, expected, message ) {\n
+\t\tQUnit.push( expected !== actual, actual, expected, message );\n
+\t},\n
+\n
+\t"throws": function( block, expected, message ) {\n
+\t\tvar actual,\n
+\t\t\texpectedOutput = expected,\n
+\t\t\tok = false;\n
+\n
+\t\t// \'expected\' is optional\n
+\t\tif ( !message && typeof expected === "string" ) {\n
+\t\t\tmessage = expected;\n
+\t\t\texpected = null;\n
+\t\t}\n
+\n
+\t\tconfig.current.ignoreGlobalErrors = true;\n
+\t\ttry {\n
+\t\t\tblock.call( config.current.testEnvironment );\n
+\t\t} catch (e) {\n
+\t\t\tactual = e;\n
+\t\t}\n
+\t\tconfig.current.ignoreGlobalErrors = false;\n
+\n
+\t\tif ( actual ) {\n
+\n
+\t\t\t// we don\'t want to validate thrown error\n
+\t\t\tif ( !expected ) {\n
+\t\t\t\tok = true;\n
+\t\t\t\texpectedOutput = null;\n
+\n
+\t\t\t// expected is an Error object\n
+\t\t\t} else if ( expected instanceof Error ) {\n
+\t\t\t\tok = actual instanceof Error &&\n
+\t\t\t\t\t actual.name === expected.name &&\n
+\t\t\t\t\t actual.message === expected.message;\n
+\n
+\t\t\t// expected is a regexp\n
+\t\t\t} else if ( QUnit.objectType( expected ) === "regexp" ) {\n
+\t\t\t\tok = expected.test( errorString( actual ) );\n
+\n
+\t\t\t// expected is a string\n
+\t\t\t} else if ( QUnit.objectType( expected ) === "string" ) {\n
+\t\t\t\tok = expected === errorString( actual );\n
+\n
+\t\t\t// expected is a constructor\n
+\t\t\t} else if ( actual instanceof expected ) {\n
+\t\t\t\tok = true;\n
+\n
+\t\t\t// expected is a validation function which returns true is validation passed\n
+\t\t\t} else if ( expected.call( {}, actual ) === true ) {\n
+\t\t\t\texpectedOutput = null;\n
+\t\t\t\tok = true;\n
+\t\t\t}\n
+\n
+\t\t\tQUnit.push( ok, actual, expectedOutput, message );\n
+\t\t} else {\n
+\t\t\tQUnit.pushFailure( message, null, "No exception was thrown." );\n
+\t\t}\n
+\t}\n
+};\n
+\n
+/**\n
+ * @deprecated since 1.8.0\n
+ * Kept assertion helpers in root for backwards compatibility.\n
+ */\n
+extend( QUnit.constructor.prototype, assert );\n
+\n
+/**\n
+ * @deprecated since 1.9.0\n
+ * Kept to avoid TypeErrors for undefined methods.\n
+ */\n
+QUnit.constructor.prototype.raises = function() {\n
+\tQUnit.push( false, false, false, "QUnit.raises has been deprecated since 2012 (fad3c1ea), use QUnit.throws instead" );\n
+};\n
+\n
+/**\n
+ * @deprecated since 1.0.0, replaced with error pushes since 1.3.0\n
+ * Kept to avoid TypeErrors for undefined methods.\n
+ */\n
+QUnit.constructor.prototype.equals = function() {\n
+\tQUnit.push( false, false, false, "QUnit.equals has been deprecated since 2009 (e88049a0), use QUnit.equal instead" );\n
+};\n
+QUnit.constructor.prototype.same = function() {\n
+\tQUnit.push( false, false, false, "QUnit.same has been deprecated since 2009 (e88049a0), use QUnit.deepEqual instead" );\n
+};\n
+\n
+// Test for equality any JavaScript type.\n
+// Author: Philippe Rathé <prathe@gmail.com>\n
+QUnit.equiv = (function() {\n
+\n
+\t// Call the o related callback with the given arguments.\n
+\tfunction bindCallbacks( o, callbacks, args ) {\n
+\t\tvar prop = QUnit.objectType( o );\n
+\t\tif ( prop ) {\n
+\t\t\tif ( QUnit.objectType( callbacks[ prop ] ) === "function" ) {\n
+\t\t\t\treturn callbacks[ prop ].apply( callbacks, args );\n
+\t\t\t} else {\n
+\t\t\t\treturn callbacks[ prop ]; // or undefined\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\t// the real equiv function\n
+\tvar innerEquiv,\n
+\t\t// stack to decide between skip/abort functions\n
+\t\tcallers = [],\n
+\t\t// stack to avoiding loops from circular referencing\n
+\t\tparents = [],\n
+\t\tparentsB = [],\n
+\n
+\t\tgetProto = Object.getPrototypeOf || function ( obj ) {\n
+\t\t\t/*jshint camelcase:false */\n
+\t\t\treturn obj.__proto__;\n
+\t\t},\n
+\t\tcallbacks = (function () {\n
+\n
+\t\t\t// for string, boolean, number and null\n
+\t\t\tfunction useStrictEquality( b, a ) {\n
+\t\t\t\t/*jshint eqeqeq:false */\n
+\t\t\t\tif ( b instanceof a.constructor || a instanceof b.constructor ) {\n
+\t\t\t\t\t// to catch short annotation VS \'new\' annotation of a\n
+\t\t\t\t\t// declaration\n
+\t\t\t\t\t// e.g. var i = 1;\n
+\t\t\t\t\t// var j = new Number(1);\n
+\t\t\t\t\treturn a == b;\n
+\t\t\t\t} else {\n
+\t\t\t\t\treturn a === b;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn {\n
+\t\t\t\t"string": useStrictEquality,\n
+\t\t\t\t"boolean": useStrictEquality,\n
+\t\t\t\t"number": useStrictEquality,\n
+\t\t\t\t"null": useStrictEquality,\n
+\t\t\t\t"undefined": useStrictEquality,\n
+\n
+\t\t\t\t"nan": function( b ) {\n
+\t\t\t\t\treturn isNaN( b );\n
+\t\t\t\t},\n
+\n
+\t\t\t\t"date": function( b, a ) {\n
+\t\t\t\t\treturn QUnit.objectType( b ) === "date" && a.valueOf() === b.valueOf();\n
+\t\t\t\t},\n
+\n
+\t\t\t\t"regexp": function( b, a ) {\n
+\t\t\t\t\treturn QUnit.objectType( b ) === "regexp" &&\n
+\t\t\t\t\t\t// the regex itself\n
+\t\t\t\t\t\ta.source === b.source &&\n
+\t\t\t\t\t\t// and its modifiers\n
+\t\t\t\t\t\ta.global === b.global &&\n
+\t\t\t\t\t\t// (gmi) ...\n
+\t\t\t\t\t\ta.ignoreCase === b.ignoreCase &&\n
+\t\t\t\t\t\ta.multiline === b.multiline &&\n
+\t\t\t\t\t\ta.sticky === b.sticky;\n
+\t\t\t\t},\n
+\n
+\t\t\t\t// - skip when the property is a method of an instance (OOP)\n
+\t\t\t\t// - abort otherwise,\n
+\t\t\t\t// initial === would have catch identical references anyway\n
+\t\t\t\t"function": function() {\n
+\t\t\t\t\tvar caller = callers[callers.length - 1];\n
+\t\t\t\t\treturn caller !== Object && typeof caller !== "undefined";\n
+\t\t\t\t},\n
+\n
+\t\t\t\t"array": function( b, a ) {\n
+\t\t\t\t\tvar i, j, len, loop, aCircular, bCircular;\n
+\n
+\t\t\t\t\t// b could be an object literal here\n
+\t\t\t\t\tif ( QUnit.objectType( b ) !== "array" ) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tlen = a.length;\n
+\t\t\t\t\tif ( len !== b.length ) {\n
+\t\t\t\t\t\t// safe and faster\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// track reference to avoid circular references\n
+\t\t\t\t\tparents.push( a );\n
+\t\t\t\t\tparentsB.push( b );\n
+\t\t\t\t\tfor ( i = 0; i < len; i++ ) {\n
+\t\t\t\t\t\tloop = false;\n
+\t\t\t\t\t\tfor ( j = 0; j < parents.length; j++ ) {\n
+\t\t\t\t\t\t\taCircular = parents[j] === a[i];\n
+\t\t\t\t\t\t\tbCircular = parentsB[j] === b[i];\n
+\t\t\t\t\t\t\tif ( aCircular || bCircular ) {\n
+\t\t\t\t\t\t\t\tif ( a[i] === b[i] || aCircular && bCircular ) {\n
+\t\t\t\t\t\t\t\t\tloop = true;\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\tparents.pop();\n
+\t\t\t\t\t\t\t\t\tparentsB.pop();\n
+\t\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\tif ( !loop && !innerEquiv(a[i], b[i]) ) {\n
+\t\t\t\t\t\t\tparents.pop();\n
+\t\t\t\t\t\t\tparentsB.pop();\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t\tparents.pop();\n
+\t\t\t\t\tparentsB.pop();\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t},\n
+\n
+\t\t\t\t"object": function( b, a ) {\n
+\t\t\t\t\t/*jshint forin:false */\n
+\t\t\t\t\tvar i, j, loop, aCircular, bCircular,\n
+\t\t\t\t\t\t// Default to true\n
+\t\t\t\t\t\teq = true,\n
+\t\t\t\t\t\taProperties = [],\n
+\t\t\t\t\t\tbProperties = [];\n
+\n
+\t\t\t\t\t// comparing constructors is more strict than using\n
+\t\t\t\t\t// instanceof\n
+\t\t\t\t\tif ( a.constructor !== b.constructor ) {\n
+\t\t\t\t\t\t// Allow objects with no prototype to be equivalent to\n
+\t\t\t\t\t\t// objects with Object as their constructor.\n
+\t\t\t\t\t\tif ( !(( getProto(a) === null && getProto(b) === Object.prototype ) ||\n
+\t\t\t\t\t\t\t( getProto(b) === null && getProto(a) === Object.prototype ) ) ) {\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// stack constructor before traversing properties\n
+\t\t\t\t\tcallers.push( a.constructor );\n
+\n
+\t\t\t\t\t// track reference to avoid circular references\n
+\t\t\t\t\tparents.push( a );\n
+\t\t\t\t\tparentsB.push( b );\n
+\n
+\t\t\t\t\t// be strict: don\'t ensure hasOwnProperty and go deep\n
+\t\t\t\t\tfor ( i in a ) {\n
+\t\t\t\t\t\tloop = false;\n
+\t\t\t\t\t\tfor ( j = 0; j < parents.length; j++ ) {\n
+\t\t\t\t\t\t\taCircular = parents[j] === a[i];\n
+\t\t\t\t\t\t\tbCircular = parentsB[j] === b[i];\n
+\t\t\t\t\t\t\tif ( aCircular || bCircular ) {\n
+\t\t\t\t\t\t\t\tif ( a[i] === b[i] || aCircular && bCircular ) {\n
+\t\t\t\t\t\t\t\t\tloop = true;\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\teq = false;\n
+\t\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\taProperties.push(i);\n
+\t\t\t\t\t\tif ( !loop && !innerEquiv(a[i], b[i]) ) {\n
+\t\t\t\t\t\t\teq = false;\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tparents.pop();\n
+\t\t\t\t\tparentsB.pop();\n
+\t\t\t\t\tcallers.pop(); // unstack, we are done\n
+\n
+\t\t\t\t\tfor ( i in b ) {\n
+\t\t\t\t\t\tbProperties.push( i ); // collect b\'s properties\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Ensures identical properties name\n
+\t\t\t\t\treturn eq && innerEquiv( aProperties.sort(), bProperties.sort() );\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t}());\n
+\n
+\tinnerEquiv = function() { // can take multiple arguments\n
+\t\tvar args = [].slice.apply( arguments );\n
+\t\tif ( args.length < 2 ) {\n
+\t\t\treturn true; // end transition\n
+\t\t}\n
+\n
+\t\treturn (function( a, b ) {\n
+\t\t\tif ( a === b ) {\n
+\t\t\t\treturn true; // catch the most you can\n
+\t\t\t} else if ( a === null || b === null || typeof a === "undefined" ||\n
+\t\t\t\t\ttypeof b === "undefined" ||\n
+\t\t\t\t\tQUnit.objectType(a) !== QUnit.objectType(b) ) {\n
+\t\t\t\treturn false; // don\'t lose time with error prone cases\n
+\t\t\t} else {\n
+\t\t\t\treturn bindCallbacks(a, callbacks, [ b, a ]);\n
+\t\t\t}\n
+\n
+\t\t\t// apply transition with (1..n) arguments\n
+\t\t}( args[0], args[1] ) && innerEquiv.apply( this, args.splice(1, args.length - 1 )) );\n
+\t};\n
+\n
+\treturn innerEquiv;\n
+}());\n
+\n
+/**\n
+ * jsDump Copyright (c) 2008 Ariel Flesler - aflesler(at)gmail(dot)com |\n
+ * http://flesler.blogspot.com Licensed under BSD\n
+ * (http://www.opensource.org/licenses/bsd-license.php) Date: 5/15/2008\n
+ *\n
+ * @projectDescription Advanced and extensible data dumping for Javascript.\n
+ * @version 1.0.0\n
+ * @author Ariel Flesler\n
+ * @link {http://flesler.blogspot.com/2008/05/jsdump-pretty-dump-of-any-javascript.html}\n
+ */\n
+QUnit.jsDump = (function() {\n
+\tfunction quote( str ) {\n
+\t\treturn "\\"" + str.toString().replace( /"/g, "\\\\\\"" ) + "\\"";\n
+\t}\n
+\tfunction literal( o ) {\n
+\t\treturn o + "";\n
+\t}\n
+\tfunction join( pre, arr, post ) {\n
+\t\tvar s = jsDump.separator(),\n
+\t\t\tbase = jsDump.indent(),\n
+\t\t\tinner = jsDump.indent(1);\n
+\t\tif ( arr.join ) {\n
+\t\t\tarr = arr.join( "," + s + inner );\n
+\t\t}\n
+\t\tif ( !arr ) {\n
+\t\t\treturn pre + post;\n
+\t\t}\n
+\t\treturn [ pre, inner + arr, base + post ].join(s);\n
+\t}\n
+\tfunction array( arr, stack ) {\n
+\t\tvar i = arr.length, ret = new Array(i);\n
+\t\tthis.up();\n
+\t\twhile ( i-- ) {\n
+\t\t\tret[i] = this.parse( arr[i] , undefined , stack);\n
+\t\t}\n
+\t\tthis.down();\n
+\t\treturn join( "[", ret, "]" );\n
+\t}\n
+\n
+\tvar reName = /^function (\\w+)/,\n
+\t\tjsDump = {\n
+\t\t\t// type is used mostly internally, you can fix a (custom)type in advance\n
+\t\t\tparse: function( obj, type, stack ) {\n
+\t\t\t\tstack = stack || [ ];\n
+\t\t\t\tvar inStack, res,\n
+\t\t\t\t\tparser = this.parsers[ type || this.typeOf(obj) ];\n
+\n
+\t\t\t\ttype = typeof parser;\n
+\t\t\t\tinStack = inArray( obj, stack );\n
+\n
+\t\t\t\tif ( inStack !== -1 ) {\n
+\t\t\t\t\treturn "recursion(" + (inStack - stack.length) + ")";\n
+\t\t\t\t}\n
+\t\t\t\tif ( type === "function" )  {\n
+\t\t\t\t\tstack.push( obj );\n
+\t\t\t\t\tres = parser.call( this, obj, stack );\n
+\t\t\t\t\tstack.pop();\n
+\t\t\t\t\treturn res;\n
+\t\t\t\t}\n
+\t\t\t\treturn ( type === "string" ) ? parser : this.parsers.error;\n
+\t\t\t},\n
+\t\t\ttypeOf: function( obj ) {\n
+\t\t\t\tvar type;\n
+\t\t\t\tif ( obj === null ) {\n
+\t\t\t\t\ttype = "null";\n
+\t\t\t\t} else if ( typeof obj === "undefined" ) {\n
+\t\t\t\t\ttype = "undefined";\n
+\t\t\t\t} else if ( QUnit.is( "regexp", obj) ) {\n
+\t\t\t\t\ttype = "regexp";\n
+\t\t\t\t} else if ( QUnit.is( "date", obj) ) {\n
+\t\t\t\t\ttype = "date";\n
+\t\t\t\t} else if ( QUnit.is( "function", obj) ) {\n
+\t\t\t\t\ttype = "function";\n
+\t\t\t\t} else if ( typeof obj.setInterval !== undefined && typeof obj.document !== "undefined" && typeof obj.nodeType === "undefined" ) {\n
+\t\t\t\t\ttype = "window";\n
+\t\t\t\t} else if ( obj.nodeType === 9 ) {\n
+\t\t\t\t\ttype = "document";\n
+\t\t\t\t} else if ( obj.nodeType ) {\n
+\t\t\t\t\ttype = "node";\n
+\t\t\t\t} else if (\n
+\t\t\t\t\t// native arrays\n
+\t\t\t\t\ttoString.call( obj ) === "[object Array]" ||\n
+\t\t\t\t\t// NodeList objects\n
+\t\t\t\t\t( typeof obj.length === "number" && typeof obj.item !== "undefined" && ( obj.length ? obj.item(0) === obj[0] : ( obj.item( 0 ) === null && typeof obj[0] === "undefined" ) ) )\n
+\t\t\t\t) {\n
+\t\t\t\t\ttype = "array";\n
+\t\t\t\t} else if ( obj.constructor === Error.prototype.constructor ) {\n
+\t\t\t\t\ttype = "error";\n
+\t\t\t\t} else {\n
+\t\t\t\t\ttype = typeof obj;\n
+\t\t\t\t}\n
+\t\t\t\treturn type;\n
+\t\t\t},\n
+\t\t\tseparator: function() {\n
+\t\t\t\treturn this.multiline ?\tthis.HTML ? "<br />" : "\\n" : this.HTML ? "&nbsp;" : " ";\n
+\t\t\t},\n
+\t\t\t// extra can be a number, shortcut for increasing-calling-decreasing\n
+\t\t\tindent: function( extra ) {\n
+\t\t\t\tif ( !this.multiline ) {\n
+\t\t\t\t\treturn "";\n
+\t\t\t\t}\n
+\t\t\t\tvar chr = this.indentChar;\n
+\t\t\t\tif ( this.HTML ) {\n
+\t\t\t\t\tchr = chr.replace( /\\t/g, "   " ).replace( / /g, "&nbsp;" );\n
+\t\t\t\t}\n
+\t\t\t\treturn new Array( this.depth + ( extra || 0 ) ).join(chr);\n
+\t\t\t},\n
+\t\t\tup: function( a ) {\n
+\t\t\t\tthis.depth += a || 1;\n
+\t\t\t},\n
+\t\t\tdown: function( a ) {\n
+\t\t\t\tthis.depth -= a || 1;\n
+\t\t\t},\n
+\t\t\tsetParser: function( name, parser ) {\n
+\t\t\t\tthis.parsers[name] = parser;\n
+\t\t\t},\n
+\t\t\t// The next 3 are exposed so you can use them\n
+\t\t\tquote: quote,\n
+\t\t\tliteral: literal,\n
+\t\t\tjoin: join,\n
+\t\t\t//\n
+\t\t\tdepth: 1,\n
+\t\t\t// This is the list of parsers, to modify them, use jsDump.setParser\n
+\t\t\tparsers: {\n
+\t\t\t\twindow: "[Window]",\n
+\t\t\t\tdocument: "[Document]",\n
+\t\t\t\terror: function(error) {\n
+\t\t\t\t\treturn "Error(\\"" + error.message + "\\")";\n
+\t\t\t\t},\n
+\t\t\t\tunknown: "[Unknown]",\n
+\t\t\t\t"null": "null",\n
+\t\t\t\t"undefined": "undefined",\n
+\t\t\t\t"function": function( fn ) {\n
+\t\t\t\t\tvar ret = "function",\n
+\t\t\t\t\t\t// functions never have name in IE\n
+\t\t\t\t\t\tname = "name" in fn ? fn.name : (reName.exec(fn) || [])[1];\n
+\n
+\t\t\t\t\tif ( name ) {\n
+\t\t\t\t\t\tret += " " + name;\n
+\t\t\t\t\t}\n
+\t\t\t\t\tret += "( ";\n
+\n
+\t\t\t\t\tret = [ ret, QUnit.jsDump.parse( fn, "functionArgs" ), "){" ].join( "" );\n
+\t\t\t\t\treturn join( ret, QUnit.jsDump.parse(fn,"functionCode" ), "}" );\n
+\t\t\t\t},\n
+\t\t\t\tarray: array,\n
+\t\t\t\tnodelist: array,\n
+\t\t\t\t"arguments": array,\n
+\t\t\t\tobject: function( map, stack ) {\n
+\t\t\t\t\t/*jshint forin:false */\n
+\t\t\t\t\tvar ret = [ ], keys, key, val, i;\n
+\t\t\t\t\tQUnit.jsDump.up();\n
+\t\t\t\t\tkeys = [];\n
+\t\t\t\t\tfor ( key in map ) {\n
+\t\t\t\t\t\tkeys.push( key );\n
+\t\t\t\t\t}\n
+\t\t\t\t\tkeys.sort();\n
+\t\t\t\t\tfor ( i = 0; i < keys.length; i++ ) {\n
+\t\t\t\t\t\tkey = keys[ i ];\n
+\t\t\t\t\t\tval = map[ key ];\n
+\t\t\t\t\t\tret.push( QUnit.jsDump.parse( key, "key" ) + ": " + QUnit.jsDump.parse( val, undefined, stack ) );\n
+\t\t\t\t\t}\n
+\t\t\t\t\tQUnit.jsDump.down();\n
+\t\t\t\t\treturn join( "{", ret, "}" );\n
+\t\t\t\t},\n
+\t\t\t\tnode: function( node ) {\n
+\t\t\t\t\tvar len, i, val,\n
+\t\t\t\t\t\topen = QUnit.jsDump.HTML ? "&lt;" : "<",\n
+\t\t\t\t\t\tclose = QUnit.jsDump.HTML ? "&gt;" : ">",\n
+\t\t\t\t\t\ttag = node.nodeName.toLowerCase(),\n
+\t\t\t\t\t\tret = open + tag,\n
+\t\t\t\t\t\tattrs = node.attributes;\n
+\n
+\t\t\t\t\tif ( attrs ) {\n
+\t\t\t\t\t\tfor ( i = 0, len = attrs.length; i < len; i++ ) {\n
+\t\t\t\t\t\t\tval = attrs[i].nodeValue;\n
+\t\t\t\t\t\t\t// IE6 includes all attributes in .attributes, even ones not explicitly set.\n
+\t\t\t\t\t\t\t// Those have values like undefined, null, 0, false, "" or "inherit".\n
+\t\t\t\t\t\t\tif ( val && val !== "inherit" ) {\n
+\t\t\t\t\t\t\t\tret += " " + attrs[i].nodeName + "=" + QUnit.jsDump.parse( val, "attribute" );\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t\tret += close;\n
+\n
+\t\t\t\t\t// Show content of TextNode or CDATASection\n
+\t\t\t\t\tif ( node.nodeType === 3 || node.nodeType === 4 ) {\n
+\t\t\t\t\t\tret += node.nodeValue;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn ret + open + "/" + tag + close;\n
+\t\t\t\t},\n
+\t\t\t\t// function calls it internally, it\'s the arguments part of the function\n
+\t\t\t\tfunctionArgs: function( fn ) {\n
+\t\t\t\t\tvar args,\n
+\t\t\t\t\t\tl = fn.length;\n
+\n
+\t\t\t\t\tif ( !l ) {\n
+\t\t\t\t\t\treturn "";\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\targs = new Array(l);\n
+\t\t\t\t\twhile ( l-- ) {\n
+\t\t\t\t\t\t// 97 is \'a\'\n
+\t\t\t\t\t\targs[l] = String.fromCharCode(97+l);\n
+\t\t\t\t\t}\n
+\t\t\t\t\treturn " " + args.join( ", " ) + " ";\n
+\t\t\t\t},\n
+\t\t\t\t// object calls it internally, the key part of an item in a map\n
+\t\t\t\tkey: quote,\n
+\t\t\t\t// function calls it internally, it\'s the content of the function\n
+\t\t\t\tfunctionCode: "[code]",\n
+\t\t\t\t// node calls it internally, it\'s an html attribute value\n
+\t\t\t\tattribute: quote,\n
+\t\t\t\tstring: quote,\n
+\t\t\t\tdate: quote,\n
+\t\t\t\tregexp: literal,\n
+\t\t\t\tnumber: literal,\n
+\t\t\t\t"boolean": literal\n
+\t\t\t},\n
+\t\t\t// if true, entities are escaped ( <, >, \\t, space and \\n )\n
+\t\t\tHTML: false,\n
+\t\t\t// indentation unit\n
+\t\t\tindentChar: "  ",\n
+\t\t\t// if true, items in a collection, are separated by a \\n, else just a space.\n
+\t\t\tmultiline: true\n
+\t\t};\n
+\n
+\treturn jsDump;\n
+}());\n
+\n
+/*\n
+ * Javascript Diff Algorithm\n
+ *  By John Resig (http://ejohn.org/)\n
+ *  Modified by Chu Alan "sprite"\n
+ *\n
+ * Released under the MIT license.\n
+ *\n
+ * More Info:\n
+ *  http://ejohn.org/projects/javascript-diff-algorithm/\n
+ *\n
+ * Usage: QUnit.diff(expected, actual)\n
+ *\n
+ * QUnit.diff( "the quick brown fox jumped over", "the quick fox jumps over" ) == "the  quick <del>brown </del> fox <del>jumped </del><ins>jumps </ins> over"\n
+ */\n
+QUnit.diff = (function() {\n
+\t/*jshint eqeqeq:false, eqnull:true */\n
+\tfunction diff( o, n ) {\n
+\t\tvar i,\n
+\t\t\tns = {},\n
+\t\t\tos = {};\n
+\n
+\t\tfor ( i = 0; i < n.length; i++ ) {\n
+\t\t\tif ( !hasOwn.call( ns, n[i] ) ) {\n
+\t\t\t\tns[ n[i] ] = {\n
+\t\t\t\t\trows: [],\n
+\t\t\t\t\to: null\n
+\t\t\t\t};\n
+\t\t\t}\n
+\t\t\tns[ n[i] ].rows.push( i );\n
+\t\t}\n
+\n
+\t\tfor ( i = 0; i < o.length; i++ ) {\n
+\t\t\tif ( !hasOwn.call( os, o[i] ) ) {\n
+\t\t\t\tos[ o[i] ] = {\n
+\t\t\t\t\trows: [],\n
+\t\t\t\t\tn: null\n
+\t\t\t\t};\n
+\t\t\t}\n
+\t\t\tos[ o[i] ].rows.push( i );\n
+\t\t}\n
+\n
+\t\tfor ( i in ns ) {\n
+\t\t\tif ( hasOwn.call( ns, i ) ) {\n
+\t\t\t\tif ( ns[i].rows.length === 1 && hasOwn.call( os, i ) && os[i].rows.length === 1 ) {\n
+\t\t\t\t\tn[ ns[i].rows[0] ] = {\n
+\t\t\t\t\t\ttext: n[ ns[i].rows[0] ],\n
+\t\t\t\t\t\trow: os[i].rows[0]\n
+\t\t\t\t\t};\n
+\t\t\t\t\to[ os[i].rows[0] ] = {\n
+\t\t\t\t\t\ttext: o[ os[i].rows[0] ],\n
+\t\t\t\t\t\trow: ns[i].rows[0]\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfor ( i = 0; i < n.length - 1; i++ ) {\n
+\t\t\tif ( n[i].text != null && n[ i + 1 ].text == null && n[i].row + 1 < o.length && o[ n[i].row + 1 ].text == null &&\n
+\t\t\t\t\t\tn[ i + 1 ] == o[ n[i].row + 1 ] ) {\n
+\n
+\t\t\t\tn[ i + 1 ] = {\n
+\t\t\t\t\ttext: n[ i + 1 ],\n
+\t\t\t\t\trow: n[i].row + 1\n
+\t\t\t\t};\n
+\t\t\t\to[ n[i].row + 1 ] = {\n
+\t\t\t\t\ttext: o[ n[i].row + 1 ],\n
+\t\t\t\t\trow: i + 1\n
+\t\t\t\t};\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfor ( i = n.length - 1; i > 0; i-- ) {\n
+\t\t\tif ( n[i].text != null && n[ i - 1 ].text == null && n[i].row > 0 && o[ n[i].row - 1 ].text == null &&\n
+\t\t\t\t\t\tn[ i - 1 ] == o[ n[i].row - 1 ]) {\n
+\n
+\t\t\t\tn[ i - 1 ] = {\n
+\t\t\t\t\ttext: n[ i - 1 ],\n
+\t\t\t\t\trow: n[i].row - 1\n
+\t\t\t\t};\n
+\t\t\t\to[ n[i].row - 1 ] = {\n
+\t\t\t\t\ttext: o[ n[i].row - 1 ],\n
+\t\t\t\t\trow: i - 1\n
+\t\t\t\t};\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn {\n
+\t\t\to: o,\n
+\t\t\tn: n\n
+\t\t};\n
+\t}\n
+\n
+\treturn function( o, n ) {\n
+\t\to = o.replace( /\\s+$/, "" );\n
+\t\tn = n.replace( /\\s+$/, "" );\n
+\n
+\t\tvar i, pre,\n
+\t\t\tstr = "",\n
+\t\t\tout = diff( o === "" ? [] : o.split(/\\s+/), n === "" ? [] : n.split(/\\s+/) ),\n
+\t\t\toSpace = o.match(/\\s+/g),\n
+\t\t\tnSpace = n.match(/\\s+/g);\n
+\n
+\t\tif ( oSpace == null ) {\n
+\t\t\toSpace = [ " " ];\n
+\t\t}\n
+\t\telse {\n
+\t\t\toSpace.push( " " );\n
+\t\t}\n
+\n
+\t\tif ( nSpace == null ) {\n
+\t\t\tnSpace = [ " " ];\n
+\t\t}\n
+\t\telse {\n
+\t\t\tnSpace.push( " " );\n
+\t\t}\n
+\n
+\t\tif ( out.n.length === 0 ) {\n
+\t\t\tfor ( i = 0; i < out.o.length; i++ ) {\n
+\t\t\t\tstr += "<del>" + out.o[i] + oSpace[i] + "</del>";\n
+\t\t\t}\n
+\t\t}\n
+\t\telse {\n
+\t\t\tif ( out.n[0].text == null ) {\n
+\t\t\t\tfor ( n = 0; n < out.o.length && out.o[n].text == null; n++ ) {\n
+\t\t\t\t\tstr += "<del>" + out.o[n] + oSpace[n] + "</del>";\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfor ( i = 0; i < out.n.length; i++ ) {\n
+\t\t\t\tif (out.n[i].text == null) {\n
+\t\t\t\t\tstr += "<ins>" + out.n[i] + nSpace[i] + "</ins>";\n
+\t\t\t\t}\n
+\t\t\t\telse {\n
+\t\t\t\t\t// `pre` initialized at top of scope\n
+\t\t\t\t\tpre = "";\n
+\n
+\t\t\t\t\tfor ( n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++ ) {\n
+\t\t\t\t\t\tpre += "<del>" + out.o[n] + oSpace[n] + "</del>";\n
+\t\t\t\t\t}\n
+\t\t\t\t\tstr += " " + out.n[i].text + nSpace[i] + pre;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn str;\n
+\t};\n
+}());\n
+\n
+// For browser, export only select globals\n
+if ( typeof window !== "undefined" ) {\n
+\textend( window, QUnit.constructor.prototype );\n
+\twindow.QUnit = QUnit;\n
+}\n
+\n
+// For CommonJS environments, export everything\n
+if ( typeof module !== "undefined" && module.exports ) {\n
+\tmodule.exports = QUnit;\n
+}\n
+\n
+\n
+// Get a reference to the global object, like window in browsers\n
+}( (function() {\n
+\treturn this;\n
+})() ));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>61033</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>qunit.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268184.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>TinyMCE QUnit tests</title>\n
+\t<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+\t<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />\n
+\t<link rel="stylesheet" href="js/qunit/qunit.css" type="text/css" />\n
+\t<link rel="stylesheet" href="../js/tinymce/skins/lightgray/skin.min.css" type="text/css" />\n
+\t<link rel="stylesheet" href="tinymce/ui/css/ui-overrides.css" type="text/css" />\n
+\t<style>\n
+\t\t#qunit-modulefilter-container { float: none; }\n
+\t</style>\n
+</head>\n
+<body>\n
+\t<div id="qunit"></div>\n
+\t<div id="qunit-fixture"></div>\n
+\t<div id="view" style="position: absolute; right: 0; top: 0"></div>\n
+\n
+\t<script src="http://www.google.com/jsapi"></script>\n
+\t<script>google.load("jquery", "1");</script>\n
+\t<script src="js/qunit/qunit.js"></script>\n
+\t<script src="js/tinymce_loader.js"></script>\n
+\t<script src="../js/tinymce/classes/jquery.tinymce.js"></script>\n
+\t<script src="js/utils.js"></script>\n
+\t<script src="js/init.js"></script>\n
+\n
+\t<!-- tinymce.file.* -->\n
+\t<script src="tinymce/file/Conversions.js"></script>\n
+\n
+\t<!-- tinymce.dom.* -->\n
+\t<script src="tinymce/dom/DomQuery.js"></script>\n
+\t<script src="tinymce/dom/DOMUtils.js"></script>\n
+\t<script src="tinymce/dom/EventUtils.js"></script>\n
+\t<script src="tinymce/dom/Range.js"></script>\n
+\t<script src="tinymce/dom/Selection.js"></script>\n
+\t<script src="tinymce/dom/Serializer.js"></script>\n
+\t<script src="tinymce/dom/TridentSelection.js"></script>\n
+\n
+\t<!-- tinymce.html.* -->\n
+\t<script src="tinymce/html/DomParser.js"></script>\n
+\t<script src="tinymce/html/Entities.js"></script>\n
+\t<script src="tinymce/html/Node.js"></script>\n
+\t<script src="tinymce/html/SaxParser.js"></script>\n
+\t<script src="tinymce/html/Schema.js"></script>\n
+\t<script src="tinymce/html/Styles.js"></script>\n
+\t<script src="tinymce/html/Writer.js"></script>\n
+\t<script src="tinymce/html/Serializer.js"></script>\n
+\n
+\t<!-- tnymce.ui.* -->\n
+\t<script src="tinymce/ui/AbsoluteLayout.js"></script>\n
+\t<script src="tinymce/ui/Button.js"></script>\n
+\t<script src="tinymce/ui/Collection.js"></script>\n
+\t<script src="tinymce/ui/ColorButton.js"></script>\n
+\t<script src="tinymce/ui/Control.js"></script>\n
+\t<script src="tinymce/ui/FitLayout.js"></script>\n
+\t<script src="tinymce/ui/FlexLayout.js"></script>\n
+\t<script src="tinymce/ui/GridLayout.js"></script>\n
+\t<script src="tinymce/ui/MenuButton.js"></script>\n
+\t<script src="tinymce/ui/Panel.js"></script>\n
+\t<script src="tinymce/ui/Selector.js"></script>\n
+\t<script src="tinymce/ui/SplitButton.js"></script>\n
+\t<script src="tinymce/ui/TabPanel.js"></script>\n
+\t<script src="tinymce/ui/TextBox.js"></script>\n
+\t<script src="tinymce/ui/Window.js"></script>\n
+\n
+\t<!-- tinymce.util.* -->\n
+\t<script src="tinymce/util/Color.js"></script>\n
+\t<script src="tinymce/util/EventDispatcher.js"></script>\n
+\t<script src="tinymce/util/JSON.js"></script>\n
+\t<script src="tinymce/util/JSONRequest.js"></script>\n
+\t<script src="tinymce/util/LocalStorage.js"></script>\n
+\t<script src="tinymce/util/Observable.js"></script>\n
+\t<script src="tinymce/util/Quirks_webkit.js"></script>\n
+\t<script src="tinymce/util/URI.js"></script>\n
+\t<script src="tinymce/util/XHR.js"></script>\n
+\t<script src="tinymce/util/I18n.js"></script>\n
+\n
+\t<!-- tinymce.* -->\n
+\t<script src="tinymce/AddOnManager.js"></script>\n
+\t<script src="tinymce/Editor.js"></script>\n
+\t<script src="tinymce/EditorUpload.js"></script>\n
+\t<script src="tinymce/EditorCommands.js"></script>\n
+\t<script src="tinymce/EditorManager.js"></script>\n
+\t<script src="tinymce/EnterKey.js"></script>\n
+\t<script src="tinymce/ForceBlocks.js"></script>\n
+\t<script src="tinymce/Formatter_apply.js"></script>\n
+\t<script src="tinymce/Formatter_check.js"></script>\n
+\t<script src="tinymce/Formatter_remove.js"></script>\n
+\t<script src="tinymce/Shortcuts.js"></script>\n
+\t<script src="tinymce/UndoManager.js"></script>\n
+\n
+\t<!-- tinymce.plugins.* -->\n
+\t<script src="plugins/autolink.js"></script>\n
+\t<script src="plugins/autosave.js"></script>\n
+\t<script src="plugins/fullpage.js"></script>\n
+\t<script src="plugins/image.js"></script>\n
+\t<script src="plugins/importcss.js"></script>\n
+\t<script src="plugins/jquery_plugin.js"></script>\n
+\t<script src="plugins/jquery_initialization.js"></script>\n
+\t<script src="plugins/legacyoutput.js"></script>\n
+\t<script src="plugins/link.js"></script>\n
+\t<script src="plugins/lists.js"></script>\n
+\t<script src="plugins/media.js"></script>\n
+\t<script src="plugins/noneditable.js"></script>\n
+\t<script src="plugins/paste.js"></script>\n
+\t<script src="plugins/searchreplace.js"></script>\n
+\t<script src="plugins/spellchecker.js"></script>\n
+\t<script src="plugins/table.js"></script>\n
+\t<script src="plugins/textpattern.js"></script>\n
+\t<script src="plugins/wordcount.js"></script>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4696</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

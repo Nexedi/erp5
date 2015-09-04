@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268520.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*jshint unused:false */\n
+/*global tinymce:true */\n
+\n
+/**\n
+ * Example plugin that adds a toolbar button and menu item.\n
+ */\n
+tinymce.PluginManager.add(\'example\', function(editor, url) {\n
+\t// Add a button that opens a window\n
+\teditor.addButton(\'example\', {\n
+\t\ttext: \'My button\',\n
+\t\ticon: false,\n
+\t\tonclick: function() {\n
+\t\t\t// Open window\n
+\t\t\teditor.windowManager.open({\n
+\t\t\t\ttitle: \'Example plugin\',\n
+\t\t\t\tbody: [\n
+\t\t\t\t\t{type: \'textbox\', name: \'title\', label: \'Title\'}\n
+\t\t\t\t],\n
+\t\t\t\tonsubmit: function(e) {\n
+\t\t\t\t\t// Insert content when the window form is submitted\n
+\t\t\t\t\teditor.insertContent(\'Title: \' + e.data.title);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+\n
+\t// Adds a menu item to the tools menu\n
+\teditor.addMenuItem(\'example\', {\n
+\t\ttext: \'Example plugin\',\n
+\t\tcontext: \'tools\',\n
+\t\tonclick: function() {\n
+\t\t\t// Open window with a specific url\n
+\t\t\teditor.windowManager.open({\n
+\t\t\t\ttitle: \'TinyMCE site\',\n
+\t\t\t\turl: url + \'/dialog.html\',\n
+\t\t\t\twidth: 600,\n
+\t\t\t\theight: 400,\n
+\t\t\t\tbuttons: [\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\ttext: \'Insert\',\n
+\t\t\t\t\t\tonclick: function() {\n
+\t\t\t\t\t\t\t// Top most window object\n
+\t\t\t\t\t\t\tvar win = editor.windowManager.getWindows()[0];\n
+\n
+\t\t\t\t\t\t\t// Insert the contents of the dialog.html textarea into the editor\n
+\t\t\t\t\t\t\teditor.insertContent(win.getContentWindow().document.getElementById(\'content\').value);\n
+\n
+\t\t\t\t\t\t\t// Close the window\n
+\t\t\t\t\t\t\twin.close();\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\t{text: \'Close\', onclick: \'close\'}\n
+\t\t\t\t]\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1595</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

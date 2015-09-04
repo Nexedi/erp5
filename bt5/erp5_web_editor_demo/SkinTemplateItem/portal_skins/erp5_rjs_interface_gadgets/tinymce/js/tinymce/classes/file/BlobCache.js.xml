@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268356.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>BlobCache.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * BlobCache.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Hold blob info objects where a blob has extra internal information.\n
+ *\n
+ * @private\n
+ * @class tinymce.file.BlobCache\n
+ */\n
+define("tinymce/file/BlobCache", [\n
+\t"tinymce/util/Tools"\n
+], function(Tools) {\n
+\treturn function() {\n
+\t\tvar cache = [], constant = Tools.constant;\n
+\n
+\t\tfunction create(id, blob, base64) {\n
+\t\t\treturn {\n
+\t\t\t\tid: constant(id),\n
+\t\t\t\tblob: constant(blob),\n
+\t\t\t\tbase64: constant(base64),\n
+\t\t\t\tblobUri: constant(URL.createObjectURL(blob))\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction add(blobInfo) {\n
+\t\t\tif (!get(blobInfo.id())) {\n
+\t\t\t\tcache.push(blobInfo);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction get(id) {\n
+\t\t\treturn findFirst(function(cachedBlobInfo) {\n
+\t\t\t\treturn cachedBlobInfo.id() === id;\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction findFirst(predicate) {\n
+\t\t\treturn Tools.grep(cache, predicate)[0];\n
+\t\t}\n
+\n
+\t\tfunction getByUri(blobUri) {\n
+\t\t\treturn findFirst(function(blobInfo) {\n
+\t\t\t\treturn blobInfo.blobUri() == blobUri;\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction destroy() {\n
+\t\t\tTools.each(cache, function(cachedBlobInfo) {\n
+\t\t\t\tURL.revokeObjectURL(cachedBlobInfo.blobUri());\n
+\t\t\t});\n
+\n
+\t\t\tcache = [];\n
+\t\t}\n
+\n
+\t\treturn {\n
+\t\t\tcreate: create,\n
+\t\t\tadd: add,\n
+\t\t\tget: get,\n
+\t\t\tgetByUri: getByUri,\n
+\t\t\tfindFirst: findFirst,\n
+\t\t\tdestroy: destroy\n
+\t\t};\n
+\t};\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1384</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>BlobCache.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

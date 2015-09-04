@@ -1,0 +1,589 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268109.61</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tinymce.Editor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * This file contains the documentation for all TinyMCE Editor events.\n
+ */\n
+\n
+// Native DOM events:\n
+// focusin focusout click dblclick mousedown mouseup mousemove mouseover beforepaste paste cut copy selectionchange\n
+// mouseout mouseenter mouseleave keydown keypress keyup contextmenu dragend dragover draggesture dragdrop drop drag\n
+\n
+// Custom events:\n
+// BeforeRenderUI SetAttrib PreInit (PostRender) init deactivate activate NodeChange BeforeExecCommand ExecCommand show hide\n
+// ProgressState LoadContent SaveContent BeforeSetContent SetContent BeforeGetContent GetContent (VisualAid) remove submit reset\n
+// BeforeAddUndo AddUndo change undo redo (ClearUndos) ObjectSelected ObjectResizeStart ObjectResized PreProcess PostProcess focus blur\n
+\n
+// Plugin events:\n
+// autosave: StoreDraft, RestoreDraft\n
+// paste: PastePreProcess, \n
+// fullscreen: FullscreenStateChanged\n
+// spellcheck: SpellcheckStart, SpellcheckEnd\n
+\n
+/**\n
+ * Fires before the UI gets rendered.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'BeforeRenderUI\', function(e) {\n
+ *             console.log(\'BeforeRenderUI event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event BeforeRenderUI\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when attributes are updated on DOM elements.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'SetAttrib\', function(e) {\n
+ *             console.log(\'SetAttrib event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event SetAttrib\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires before the editor has been initialized. This is before any contents gets inserted into the editor but\n
+ * after we have selection and dom instances.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'PreInit\', function(e) {\n
+ *             console.log(\'PreInit event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event PreInit\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires after the editor has been initialized. This is after the editor has been filled with contents.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'init\', function(e) {\n
+ *             console.log(\'init event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event init\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when the focus is moved from one editor to another editor.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'deactivate\', function(e) {\n
+ *             console.log(\'deactivate event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event deactivate\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when the focus is moved from one editor to another editor.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'activate\', function(e) {\n
+ *             console.log(\'activate event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event activate\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when the selection is moved to a new location or is the DOM is updated by some command.\n
+ * This event enables you to update the UI based on the current selection etc.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'NodeChange\', function(e) {\n
+ *             console.log(\'NodeChange event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event NodeChange\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires before a execCommand call is made. This enables you to prevent it and replace the logic\n
+ * with custom logic.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'BeforeExecCommand\', function(e) {\n
+ *             console.log(\'BeforeExecCommand event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event BeforeExecCommand\n
+ * @param {tinymce.CommandEvent} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires after a execCommand call has been made.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'ExecCommand\', function(e) {\n
+ *             console.log(\'ExecCommand event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event ExecCommand\n
+ * @param {tinymce.CommandEvent} e Event arguments.\n
+ */\n
+\n
+\n
+/**\n
+ * Fires when the editor is shown.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'show\', function(e) {\n
+ *             console.log(\'show event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event show\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when the editor is hidden.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'hide\', function(e) {\n
+ *             console.log(\'hide event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event hide\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when a progress event is made. To display a throbber/loader.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'ProgressState\', function(e) {\n
+ *             console.log(\'ProgressState event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event ProgressState\n
+ * @param {tinymce.ProgressStateEvent} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires after contents has been loaded into the editor.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'LoadContent\', function(e) {\n
+ *             console.log(\'LoadContent event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event LoadContent\n
+ * @param {tinymce.ContentEvent} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires after contents has been saved/extracted from the editor.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'SaveContent\', function(e) {\n
+ *             console.log(\'SaveContent event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event SaveContent\n
+ * @param {tinymce.ContentEvent} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires before contents is inserted into the editor.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'BeforeSetContent\', function(e) {\n
+ *             console.log(\'BeforeSetContent event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event BeforeSetContent\n
+ * @param {tinymce.ContentEvent} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires after contents has been extracted from the editor.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'GetContent\', function(e) {\n
+ *             console.log(\'GetContent event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event GetContent\n
+ * @param {tinymce.ContentEvent} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when the editor instance is removed.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'remove\', function(e) {\n
+ *             console.log(\'remove event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event remove\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when the form containing the editor is submitted.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'submit\', function(e) {\n
+ *             console.log(\'submit event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event submit\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when the form containing the editor is resetted.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'reset\', function(e) {\n
+ *             console.log(\'reset event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event reset\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires before an undo level is added to the editor.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'BeforeAddUndo\', function(e) {\n
+ *             console.log(\'BeforeAddUndo event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event BeforeAddUndo\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires after an undo level has been added to the editor.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'AddUndo\', function(e) {\n
+ *             console.log(\'AddUndo event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event AddUndo\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when contents is modified in the editor.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'change\', function(e) {\n
+ *             console.log(\'change event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event change\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when an undo operation is executed.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'undo\', function(e) {\n
+ *             console.log(\'undo event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event undo\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when an redo operation is executed.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'redo\', function(e) {\n
+ *             console.log(\'redo event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event redo\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when an object is selected such as an image.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'ObjectSelected\', function(e) {\n
+ *             console.log(\'ObjectSelected event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event ObjectSelected\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when a resize of an object like an image is about to start.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'ObjectResizeStart\', function(e) {\n
+ *             console.log(\'ObjectResizeStart event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event ObjectResizeStart\n
+ * @param {tinymce.ResizeEvent} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires after an object like an image is resized.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'ObjectResized\', function(e) {\n
+ *             console.log(\'ObjectResized event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event ObjectResized\n
+ * @param {tinymce.ResizeEvent} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires before the contents is processed.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'PreProcess\', function(e) {\n
+ *             console.log(\'PreProcess event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event PreProcess\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires after the contents has been processed.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'PostProcess\', function(e) {\n
+ *             console.log(\'PostProcess event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event PostProcess\n
+ * @param {tinymce.Event} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when the editor gets focused.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'focus\', function(e) {\n
+ *             console.log(\'focus event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event focus\n
+ * @param {tinymce.FocusEvent} e Event arguments.\n
+ */\n
+\n
+/**\n
+ * Fires when the editor is blurred.\n
+ *\n
+ * @example\n
+ * tinymce.init({\n
+ *     ...\n
+ *     setup: function(editor) {\n
+ *         editor.on(\'blur\', function(e) {\n
+ *             console.log(\'blur event\', e);\n
+ *         });\n
+ *     }\n
+ * });\n
+ *\n
+ * @event blur\n
+ * @param {tinymce.FocusEvent} e Event arguments.\n
+ */\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11747</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>tinymce.Editor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

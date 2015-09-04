@@ -1,0 +1,264 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268531.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Filters.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Filters.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Applies various filters to blobs.\n
+ */\n
+define("tinymce/imagetoolsplugin/Filters", [\n
+\t"tinymce/imagetoolsplugin/Canvas",\n
+\t"tinymce/imagetoolsplugin/ImageSize",\n
+\t"tinymce/imagetoolsplugin/Conversions",\n
+\t"tinymce/imagetoolsplugin/ColorMatrix"\n
+], function(Canvas, ImageSize, Conversions, ColorMatrix) {\n
+\tvar revokeImageUrl = Conversions.revokeImageUrl;\n
+\n
+\tfunction colorFilter(blob, matrix) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image)),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas),\n
+\t\t\t\tpixels;\n
+\n
+\t\t\tfunction applyMatrix(pixels, m) {\n
+\t\t\t\tvar d = pixels.data, r, g, b, a, i,\n
+\t\t\t\t\tm0 = m[0], m1 = m[1], m2 = m[2], m3 = m[3], m4 = m[4],\n
+\t\t\t\t\tm5 = m[5], m6 = m[6], m7 = m[7], m8 = m[8], m9 = m[9],\n
+\t\t\t\t\tm10 = m[10], m11 = m[11], m12 = m[12], m13 = m[13], m14 = m[14],\n
+\t\t\t\t\tm15 = m[15], m16 = m[16], m17 = m[17], m18 = m[18], m19 = m[19];\n
+\n
+\t\t\t\tfor (i = 0; i < d.length; i += 4) {\n
+\t\t\t\t\tr = d[i];\n
+\t\t\t\t\tg = d[i + 1];\n
+\t\t\t\t\tb = d[i + 2];\n
+\t\t\t\t\ta = d[i + 3];\n
+\n
+\t\t\t\t\td[i] = r * m0 + g * m1 + b * m2 + a * m3 + m4;\n
+\t\t\t\t\td[i + 1] = r * m5 + g * m6 + b * m7 + a * m8 + m9;\n
+\t\t\t\t\td[i + 2] = r * m10 + g * m11 + b * m12 + a * m13 + m14;\n
+\t\t\t\t\td[i + 3] = r * m15 + g * m16 + b * m17 + a * m18 + m19;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn pixels;\n
+\t\t\t}\n
+\n
+\t\t\tcontext.drawImage(image, 0, 0);\n
+\t\t\trevokeImageUrl(image);\n
+\t\t\tpixels = applyMatrix(context.getImageData(0, 0, canvas.width, canvas.height), matrix);\n
+\t\t\tcontext.putImageData(pixels, 0, 0);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction convoluteFilter(blob, matrix) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image)),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas),\n
+\t\t\t\tpixelsIn, pixelsOut;\n
+\n
+\t\t\tfunction applyMatrix(pixelsIn, pixelsOut, matrix) {\n
+\t\t\t\tvar rgba, drgba, side, halfSide, x, y, r, g, b,\n
+\t\t\t\t\tcx, cy, scx, scy, offset, wt, w, h;\n
+\n
+\t\t\t\tfunction clamp(value, min, max) {\n
+\t\t\t\t\tif (value > max) {\n
+\t\t\t\t\t\tvalue = max;\n
+\t\t\t\t\t} else if (value < min) {\n
+\t\t\t\t\t\tvalue = min;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn value;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Calc side and half side of matrix\n
+\t\t\t\tside = Math.round(Math.sqrt(matrix.length));\n
+\t\t\t\thalfSide = Math.floor(side / 2);\n
+\t\t\t\trgba = pixelsIn.data;\n
+\t\t\t\tdrgba = pixelsOut.data;\n
+\t\t\t\tw = pixelsIn.width;\n
+\t\t\t\th = pixelsIn.height;\n
+\n
+\t\t\t\t// Apply convolution matrix to pixels\n
+\t\t\t\tfor (y = 0; y < h; y++) {\n
+\t\t\t\t\tfor (x = 0; x < w; x++) {\n
+\t\t\t\t\t\tr = g = b = 0;\n
+\n
+\t\t\t\t\t\tfor (cy = 0; cy < side; cy++) {\n
+\t\t\t\t\t\t\tfor (cx = 0; cx < side; cx++) {\n
+\t\t\t\t\t\t\t\t// Calc relative x, y based on matrix\n
+\t\t\t\t\t\t\t\tscx = clamp(x + cx - halfSide, 0, w - 1);\n
+\t\t\t\t\t\t\t\tscy = clamp(y + cy - halfSide, 0, h - 1);\n
+\n
+\t\t\t\t\t\t\t\t// Calc r, g, b\n
+\t\t\t\t\t\t\t\toffset = (scy * w + scx) * 4;\n
+\t\t\t\t\t\t\t\twt = matrix[cy * side + cx];\n
+\t\t\t\t\t\t\t\tr += rgba[offset] * wt;\n
+\t\t\t\t\t\t\t\tg += rgba[offset + 1] * wt;\n
+\t\t\t\t\t\t\t\tb += rgba[offset + 2] * wt;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Set new RGB to destination buffer\n
+\t\t\t\t\t\toffset = (y * w + x) * 4;\n
+\t\t\t\t\t\tdrgba[offset] = clamp(r, 0, 255);\n
+\t\t\t\t\t\tdrgba[offset + 1] = clamp(g, 0, 255);\n
+\t\t\t\t\t\tdrgba[offset + 2] = clamp(b, 0, 255);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn pixelsOut;\n
+\t\t\t}\n
+\n
+\t\t\tcontext.drawImage(image, 0, 0);\n
+\t\t\trevokeImageUrl(image);\n
+\t\t\tpixelsIn = context.getImageData(0, 0, canvas.width, canvas.height);\n
+\t\t\tpixelsOut = context.getImageData(0, 0, canvas.width, canvas.height);\n
+\t\t\tpixelsOut = applyMatrix(pixelsIn, pixelsOut, matrix);\n
+\t\t\tcontext.putImageData(pixelsOut, 0, 0);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction functionColorFilter(colorFn) {\n
+\t\treturn function(blob, value) {\n
+\t\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\t\tvar canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image)),\n
+\t\t\t\t\tcontext = Canvas.get2dContext(canvas),\n
+\t\t\t\t\tpixels, i, lookup = new Array(256);\n
+\n
+\t\t\t\tfunction applyLookup(pixels, lookup) {\n
+\t\t\t\t\tvar d = pixels.data, i;\n
+\n
+\t\t\t\t\tfor (i = 0; i < d.length; i += 4) {\n
+\t\t\t\t\t\td[i] = lookup[d[i]];\n
+\t\t\t\t\t\td[i + 1] = lookup[d[i + 1]];\n
+\t\t\t\t\t\td[i + 2] = lookup[d[i + 2]];\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn pixels;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (i = 0; i < lookup.length; i++) {\n
+\t\t\t\t\tlookup[i] = colorFn(i, value);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcontext.drawImage(image, 0, 0);\n
+\t\t\t\trevokeImageUrl(image);\n
+\t\t\t\tpixels = applyLookup(context.getImageData(0, 0, canvas.width, canvas.height), lookup);\n
+\t\t\t\tcontext.putImageData(pixels, 0, 0);\n
+\n
+\t\t\t\treturn Conversions.canvasToBlob(canvas);\n
+\t\t\t});\n
+\t\t};\n
+\t}\n
+\n
+\tfunction complexAdjustableColorFilter(matrixAdjustFn) {\n
+\t\treturn function(blob, adjust) {\n
+\t\t\treturn colorFilter(blob, matrixAdjustFn(ColorMatrix.identity(), adjust));\n
+\t\t};\n
+\t}\n
+\n
+\tfunction basicColorFilter(matrix) {\n
+\t\treturn function(blob) {\n
+\t\t\treturn colorFilter(blob, matrix);\n
+\t\t};\n
+\t}\n
+\n
+\tfunction basicConvolutionFilter(kernel) {\n
+\t\treturn function(blob) {\n
+\t\t\treturn convoluteFilter(blob, kernel);\n
+\t\t};\n
+\t}\n
+\n
+\treturn {\n
+\t\tinvert: basicColorFilter([\n
+\t\t\t-1, 0, 0, 0, 255,\n
+\t\t\t0, -1, 0, 0, 255,\n
+\t\t\t0, 0, -1, 0, 255,\n
+\t\t\t0, 0, 0, 1, 0\n
+\t\t]),\n
+\n
+\t\tbrightness: complexAdjustableColorFilter(ColorMatrix.adjustBrightness),\n
+\t\thue: complexAdjustableColorFilter(ColorMatrix.adjustHue),\n
+\t\tsaturate: complexAdjustableColorFilter(ColorMatrix.adjustSaturation),\n
+\t\tcontrast: complexAdjustableColorFilter(ColorMatrix.adjustContrast),\n
+\t\tgrayscale: complexAdjustableColorFilter(ColorMatrix.adjustGrayscale),\n
+\t\tsepia: complexAdjustableColorFilter(ColorMatrix.adjustSepia),\n
+\t\tcolorize: function(blob, adjustR, adjustG, adjustB) {\n
+\t\t\treturn colorFilter(blob, ColorMatrix.adjustColors(ColorMatrix.identity(), adjustR, adjustG, adjustB));\n
+\t\t},\n
+\n
+\t\tsharpen: basicConvolutionFilter([\n
+\t\t\t0, -1, 0,\n
+\t\t\t-1, 5, -1,\n
+\t\t\t0, -1, 0\n
+\t\t]),\n
+\n
+\t\temboss: basicConvolutionFilter([\n
+\t\t\t-2, -1, 0,\n
+\t\t\t-1, 1, 1,\n
+\t\t\t0, 1, 2\n
+\t\t]),\n
+\n
+\t\tgamma: functionColorFilter(function(color, value) {\n
+\t\t\treturn Math.pow(color / 255, 1 - value) * 255;\n
+\t\t}),\n
+\n
+\t\texposure: functionColorFilter(function(color, value) {\n
+\t\t\treturn 255 * (1 - Math.exp(-(color / 255) * value));\n
+\t\t}),\n
+\n
+\t\tcolorFilter: colorFilter,\n
+\t\tconvoluteFilter: convoluteFilter\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6220</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Filters.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

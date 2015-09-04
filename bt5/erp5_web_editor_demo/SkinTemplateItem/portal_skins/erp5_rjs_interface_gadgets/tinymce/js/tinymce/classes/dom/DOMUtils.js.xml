@@ -1,0 +1,1879 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268377.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DOMUtils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * DOMUtils.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Utility class for various DOM manipulation and retrieval functions.\n
+ *\n
+ * @class tinymce.dom.DOMUtils\n
+ * @example\n
+ * // Add a class to an element by id in the page\n
+ * tinymce.DOM.addClass(\'someid\', \'someclass\');\n
+ *\n
+ * // Add a class to an element by id inside the editor\n
+ * tinymce.activeEditor.dom.addClass(\'someid\', \'someclass\');\n
+ */\n
+define("tinymce/dom/DOMUtils", [\n
+\t"tinymce/dom/Sizzle",\n
+\t"tinymce/dom/DomQuery",\n
+\t"tinymce/html/Styles",\n
+\t"tinymce/dom/EventUtils",\n
+\t"tinymce/dom/TreeWalker",\n
+\t"tinymce/dom/Range",\n
+\t"tinymce/html/Entities",\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/dom/StyleSheetLoader"\n
+], function(Sizzle, $, Styles, EventUtils, TreeWalker, Range, Entities, Env, Tools, StyleSheetLoader) {\n
+\t// Shorten names\n
+\tvar each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim;\n
+\tvar isIE = Env.ie;\n
+\tvar simpleSelectorRe = /^([a-z0-9],?)+$/i;\n
+\tvar whiteSpaceRegExp = /^[ \\t\\r\\n]*$/;\n
+\n
+\tfunction setupAttrHooks(domUtils, settings) {\n
+\t\tvar attrHooks = {}, keepValues = settings.keep_values, keepUrlHook;\n
+\n
+\t\tkeepUrlHook = {\n
+\t\t\tset: function($elm, value, name) {\n
+\t\t\t\tif (settings.url_converter) {\n
+\t\t\t\t\tvalue = settings.url_converter.call(settings.url_converter_scope || domUtils, value, name, $elm[0]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t$elm.attr(\'data-mce-\' + name, value).attr(name, value);\n
+\t\t\t},\n
+\n
+\t\t\tget: function($elm, name) {\n
+\t\t\t\treturn $elm.attr(\'data-mce-\' + name) || $elm.attr(name);\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tattrHooks = {\n
+\t\t\tstyle: {\n
+\t\t\t\tset: function($elm, value) {\n
+\t\t\t\t\tif (value !== null && typeof value === \'object\') {\n
+\t\t\t\t\t\t$elm.css(value);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (keepValues) {\n
+\t\t\t\t\t\t$elm.attr(\'data-mce-style\', value);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t$elm.attr(\'style\', value);\n
+\t\t\t\t},\n
+\n
+\t\t\t\tget: function($elm) {\n
+\t\t\t\t\tvar value = $elm.attr(\'data-mce-style\') || $elm.attr(\'style\');\n
+\n
+\t\t\t\t\tvalue = domUtils.serializeStyle(domUtils.parseStyle(value), $elm[0].nodeName);\n
+\n
+\t\t\t\t\treturn value;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tif (keepValues) {\n
+\t\t\tattrHooks.href = attrHooks.src = keepUrlHook;\n
+\t\t}\n
+\n
+\t\treturn attrHooks;\n
+\t}\n
+\n
+\t/**\n
+\t * Constructs a new DOMUtils instance. Consult the Wiki for more details on settings etc for this class.\n
+\t *\n
+\t * @constructor\n
+\t * @method DOMUtils\n
+\t * @param {Document} d Document reference to bind the utility class to.\n
+\t * @param {settings} s Optional settings collection.\n
+\t */\n
+\tfunction DOMUtils(doc, settings) {\n
+\t\tvar self = this, blockElementsMap;\n
+\n
+\t\tself.doc = doc;\n
+\t\tself.win = window;\n
+\t\tself.files = {};\n
+\t\tself.counter = 0;\n
+\t\tself.stdMode = !isIE || doc.documentMode >= 8;\n
+\t\tself.boxModel = !isIE || doc.compatMode == "CSS1Compat" || self.stdMode;\n
+\t\tself.styleSheetLoader = new StyleSheetLoader(doc);\n
+\t\tself.boundEvents = [];\n
+\t\tself.settings = settings = settings || {};\n
+\t\tself.schema = settings.schema;\n
+\t\tself.styles = new Styles({\n
+\t\t\turl_converter: settings.url_converter,\n
+\t\t\turl_converter_scope: settings.url_converter_scope\n
+\t\t}, settings.schema);\n
+\n
+\t\tself.fixDoc(doc);\n
+\t\tself.events = settings.ownEvents ? new EventUtils(settings.proxy) : EventUtils.Event;\n
+\t\tself.attrHooks = setupAttrHooks(self, settings);\n
+\t\tblockElementsMap = settings.schema ? settings.schema.getBlockElements() : {};\n
+\t\tself.$ = $.overrideDefaults(function() {\n
+\t\t\treturn {\n
+\t\t\t\tcontext: doc,\n
+\t\t\t\telement: self.getRoot()\n
+\t\t\t};\n
+\t\t});\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified element is a block element or not.\n
+\t\t *\n
+\t\t * @method isBlock\n
+\t\t * @param {Node/String} node Element/Node to check.\n
+\t\t * @return {Boolean} True/False state if the node is a block element or not.\n
+\t\t */\n
+\t\tself.isBlock = function(node) {\n
+\t\t\t// Fix for #5446\n
+\t\t\tif (!node) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\t// This function is called in module pattern style since it might be executed with the wrong this scope\n
+\t\t\tvar type = node.nodeType;\n
+\n
+\t\t\t// If it\'s a node then check the type and use the nodeName\n
+\t\t\tif (type) {\n
+\t\t\t\treturn !!(type === 1 && blockElementsMap[node.nodeName]);\n
+\t\t\t}\n
+\n
+\t\t\treturn !!blockElementsMap[node];\n
+\t\t};\n
+\t}\n
+\n
+\tDOMUtils.prototype = {\n
+\t\t$$: function(elm) {\n
+\t\t\tif (typeof elm == \'string\') {\n
+\t\t\t\telm = this.get(elm);\n
+\t\t\t}\n
+\n
+\t\t\treturn this.$(elm);\n
+\t\t},\n
+\n
+\t\troot: null,\n
+\n
+\t\tfixDoc: function(doc) {\n
+\t\t\tvar settings = this.settings, name;\n
+\n
+\t\t\tif (isIE && settings.schema) {\n
+\t\t\t\t// Add missing HTML 4/5 elements to IE\n
+\t\t\t\t(\'abbr article aside audio canvas \' +\n
+\t\t\t\t\'details figcaption figure footer \' +\n
+\t\t\t\t\'header hgroup mark menu meter nav \' +\n
+\t\t\t\t\'output progress section summary \' +\n
+\t\t\t\t\'time video\').replace(/\\w+/g, function(name) {\n
+\t\t\t\t\tdoc.createElement(name);\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Create all custom elements\n
+\t\t\t\tfor (name in settings.schema.getCustomElements()) {\n
+\t\t\t\t\tdoc.createElement(name);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tclone: function(node, deep) {\n
+\t\t\tvar self = this, clone, doc;\n
+\n
+\t\t\t// TODO: Add feature detection here in the future\n
+\t\t\tif (!isIE || node.nodeType !== 1 || deep) {\n
+\t\t\t\treturn node.cloneNode(deep);\n
+\t\t\t}\n
+\n
+\t\t\tdoc = self.doc;\n
+\n
+\t\t\t// Make a HTML5 safe shallow copy\n
+\t\t\tif (!deep) {\n
+\t\t\t\tclone = doc.createElement(node.nodeName);\n
+\n
+\t\t\t\t// Copy attribs\n
+\t\t\t\teach(self.getAttribs(node), function(attr) {\n
+\t\t\t\t\tself.setAttrib(clone, attr.nodeName, self.getAttrib(node, attr.nodeName));\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn clone;\n
+\t\t\t}\n
+\n
+\t\t\treturn clone.firstChild;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the root node of the document. This is normally the body but might be a DIV. Parents like getParent will not\n
+\t\t * go above the point of this root node.\n
+\t\t *\n
+\t\t * @method getRoot\n
+\t\t * @return {Element} Root element for the utility class.\n
+\t\t */\n
+\t\tgetRoot: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\treturn self.settings.root_element || self.doc.body;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the viewport of the window.\n
+\t\t *\n
+\t\t * @method getViewPort\n
+\t\t * @param {Window} win Optional window to get viewport of.\n
+\t\t * @return {Object} Viewport object with fields x, y, w and h.\n
+\t\t */\n
+\t\tgetViewPort: function(win) {\n
+\t\t\tvar doc, rootElm;\n
+\n
+\t\t\twin = !win ? this.win : win;\n
+\t\t\tdoc = win.document;\n
+\t\t\trootElm = this.boxModel ? doc.documentElement : doc.body;\n
+\n
+\t\t\t// Returns viewport size excluding scrollbars\n
+\t\t\treturn {\n
+\t\t\t\tx: win.pageXOffset || rootElm.scrollLeft,\n
+\t\t\t\ty: win.pageYOffset || rootElm.scrollTop,\n
+\t\t\t\tw: win.innerWidth || rootElm.clientWidth,\n
+\t\t\t\th: win.innerHeight || rootElm.clientHeight\n
+\t\t\t};\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the rectangle for a specific element.\n
+\t\t *\n
+\t\t * @method getRect\n
+\t\t * @param {Element/String} elm Element object or element ID to get rectangle from.\n
+\t\t * @return {object} Rectangle for specified element object with x, y, w, h fields.\n
+\t\t */\n
+\t\tgetRect: function(elm) {\n
+\t\t\tvar self = this, pos, size;\n
+\n
+\t\t\telm = self.get(elm);\n
+\t\t\tpos = self.getPos(elm);\n
+\t\t\tsize = self.getSize(elm);\n
+\n
+\t\t\treturn {\n
+\t\t\t\tx: pos.x, y: pos.y,\n
+\t\t\t\tw: size.w, h: size.h\n
+\t\t\t};\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the size dimensions of the specified element.\n
+\t\t *\n
+\t\t * @method getSize\n
+\t\t * @param {Element/String} elm Element object or element ID to get rectangle from.\n
+\t\t * @return {object} Rectangle for specified element object with w, h fields.\n
+\t\t */\n
+\t\tgetSize: function(elm) {\n
+\t\t\tvar self = this, w, h;\n
+\n
+\t\t\telm = self.get(elm);\n
+\t\t\tw = self.getStyle(elm, \'width\');\n
+\t\t\th = self.getStyle(elm, \'height\');\n
+\n
+\t\t\t// Non pixel value, then force offset/clientWidth\n
+\t\t\tif (w.indexOf(\'px\') === -1) {\n
+\t\t\t\tw = 0;\n
+\t\t\t}\n
+\n
+\t\t\t// Non pixel value, then force offset/clientWidth\n
+\t\t\tif (h.indexOf(\'px\') === -1) {\n
+\t\t\t\th = 0;\n
+\t\t\t}\n
+\n
+\t\t\treturn {\n
+\t\t\t\tw: parseInt(w, 10) || elm.offsetWidth || elm.clientWidth,\n
+\t\t\t\th: parseInt(h, 10) || elm.offsetHeight || elm.clientHeight\n
+\t\t\t};\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a node by the specified selector function. This function will\n
+\t\t * loop through all parent nodes and call the specified function for each node.\n
+\t\t * If the function then returns true indicating that it has found what it was looking for, the loop execution will then end\n
+\t\t * and the node it found will be returned.\n
+\t\t *\n
+\t\t * @method getParent\n
+\t\t * @param {Node/String} node DOM node to search parents on or ID string.\n
+\t\t * @param {function} selector Selection function or CSS selector to execute on each node.\n
+\t\t * @param {Node} root Optional root element, never go below this point.\n
+\t\t * @return {Node} DOM Node or null if it wasn\'t found.\n
+\t\t */\n
+\t\tgetParent: function(node, selector, root) {\n
+\t\t\treturn this.getParents(node, selector, root, false);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a node list of all parents matching the specified selector function or pattern.\n
+\t\t * If the function then returns true indicating that it has found what it was looking for and that node will be collected.\n
+\t\t *\n
+\t\t * @method getParents\n
+\t\t * @param {Node/String} node DOM node to search parents on or ID string.\n
+\t\t * @param {function} selector Selection function to execute on each node or CSS pattern.\n
+\t\t * @param {Node} root Optional root element, never go below this point.\n
+\t\t * @return {Array} Array of nodes or null if it wasn\'t found.\n
+\t\t */\n
+\t\tgetParents: function(node, selector, root, collect) {\n
+\t\t\tvar self = this, selectorVal, result = [];\n
+\n
+\t\t\tnode = self.get(node);\n
+\t\t\tcollect = collect === undefined;\n
+\n
+\t\t\t// Default root on inline mode\n
+\t\t\troot = root || (self.getRoot().nodeName != \'BODY\' ? self.getRoot().parentNode : null);\n
+\n
+\t\t\t// Wrap node name as func\n
+\t\t\tif (is(selector, \'string\')) {\n
+\t\t\t\tselectorVal = selector;\n
+\n
+\t\t\t\tif (selector === \'*\') {\n
+\t\t\t\t\tselector = function(node) {\n
+\t\t\t\t\t\treturn node.nodeType == 1;\n
+\t\t\t\t\t};\n
+\t\t\t\t} else {\n
+\t\t\t\t\tselector = function(node) {\n
+\t\t\t\t\t\treturn self.is(node, selectorVal);\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\twhile (node) {\n
+\t\t\t\tif (node == root || !node.nodeType || node.nodeType === 9) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!selector || selector(node)) {\n
+\t\t\t\t\tif (collect) {\n
+\t\t\t\t\t\tresult.push(node);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnode = node.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\treturn collect ? result : null;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the specified element by ID or the input element if it isn\'t a string.\n
+\t\t *\n
+\t\t * @method get\n
+\t\t * @param {String/Element} n Element id to look for or element to just pass though.\n
+\t\t * @return {Element} Element matching the specified id or null if it wasn\'t found.\n
+\t\t */\n
+\t\tget: function(elm) {\n
+\t\t\tvar name;\n
+\n
+\t\t\tif (elm && this.doc && typeof elm == \'string\') {\n
+\t\t\t\tname = elm;\n
+\t\t\t\telm = this.doc.getElementById(elm);\n
+\n
+\t\t\t\t// IE and Opera returns meta elements when they match the specified input ID, but getElementsByName seems to do the trick\n
+\t\t\t\tif (elm && elm.id !== name) {\n
+\t\t\t\t\treturn this.doc.getElementsByName(name)[1];\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn elm;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the next node that matches selector or function\n
+\t\t *\n
+\t\t * @method getNext\n
+\t\t * @param {Node} node Node to find siblings from.\n
+\t\t * @param {String/function} selector Selector CSS expression or function.\n
+\t\t * @return {Node} Next node item matching the selector or null if it wasn\'t found.\n
+\t\t */\n
+\t\tgetNext: function(node, selector) {\n
+\t\t\treturn this._findSib(node, selector, \'nextSibling\');\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the previous node that matches selector or function\n
+\t\t *\n
+\t\t * @method getPrev\n
+\t\t * @param {Node} node Node to find siblings from.\n
+\t\t * @param {String/function} selector Selector CSS expression or function.\n
+\t\t * @return {Node} Previous node item matching the selector or null if it wasn\'t found.\n
+\t\t */\n
+\t\tgetPrev: function(node, selector) {\n
+\t\t\treturn this._findSib(node, selector, \'previousSibling\');\n
+\t\t},\n
+\n
+\t\t// #ifndef jquery\n
+\n
+\t\t/**\n
+\t\t * Selects specific elements by a CSS level 3 pattern. For example "div#a1 p.test".\n
+\t\t * This function is optimized for the most common patterns needed in TinyMCE but it also performs well enough\n
+\t\t * on more complex patterns.\n
+\t\t *\n
+\t\t * @method select\n
+\t\t * @param {String} selector CSS level 3 pattern to select/find elements by.\n
+\t\t * @param {Object} scope Optional root element/scope element to search in.\n
+\t\t * @return {Array} Array with all matched elements.\n
+\t\t * @example\n
+\t\t * // Adds a class to all paragraphs in the currently active editor\n
+\t\t * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select(\'p\'), \'someclass\');\n
+\t\t *\n
+\t\t * // Adds a class to all spans that have the test class in the currently active editor\n
+\t\t * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select(\'span.test\'), \'someclass\')\n
+\t\t */\n
+\t\tselect: function(selector, scope) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\t/*eslint new-cap:0 */\n
+\t\t\treturn Sizzle(selector, self.get(scope) || self.settings.root_element || self.doc, []);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified element matches the specified css pattern.\n
+\t\t *\n
+\t\t * @method is\n
+\t\t * @param {Node/NodeList} elm DOM node to match or an array of nodes to match.\n
+\t\t * @param {String} selector CSS pattern to match the element against.\n
+\t\t */\n
+\t\tis: function(elm, selector) {\n
+\t\t\tvar i;\n
+\n
+\t\t\t// If it isn\'t an array then try to do some simple selectors instead of Sizzle for to boost performance\n
+\t\t\tif (elm.length === undefined) {\n
+\t\t\t\t// Simple all selector\n
+\t\t\t\tif (selector === \'*\') {\n
+\t\t\t\t\treturn elm.nodeType == 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Simple selector just elements\n
+\t\t\t\tif (simpleSelectorRe.test(selector)) {\n
+\t\t\t\t\tselector = selector.toLowerCase().split(/,/);\n
+\t\t\t\t\telm = elm.nodeName.toLowerCase();\n
+\n
+\t\t\t\t\tfor (i = selector.length - 1; i >= 0; i--) {\n
+\t\t\t\t\t\tif (selector[i] == elm) {\n
+\t\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Is non element\n
+\t\t\tif (elm.nodeType && elm.nodeType != 1) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\tvar elms = elm.nodeType ? [elm] : elm;\n
+\n
+\t\t\t/*eslint new-cap:0 */\n
+\t\t\treturn Sizzle(selector, elms[0].ownerDocument || elms[0], null, elms).length > 0;\n
+\t\t},\n
+\n
+\t\t// #endif\n
+\n
+\t\t/**\n
+\t\t * Adds the specified element to another element or elements.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {String/Element/Array} parentElm Element id string, DOM node element or array of ids or elements to add to.\n
+\t\t * @param {String/Element} name Name of new element to add or existing element to add.\n
+\t\t * @param {Object} attrs Optional object collection with arguments to add to the new element(s).\n
+\t\t * @param {String} html Optional inner HTML contents to add for each element.\n
+\t\t * @return {Element/Array} Element that got created, or an array of created elements if multiple input elements\n
+\t\t * were passed in.\n
+\t\t * @example\n
+\t\t * // Adds a new paragraph to the end of the active editor\n
+\t\t * tinymce.activeEditor.dom.add(tinymce.activeEditor.getBody(), \'p\', {title: \'my title\'}, \'Some content\');\n
+\t\t */\n
+\t\tadd: function(parentElm, name, attrs, html, create) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\treturn this.run(parentElm, function(parentElm) {\n
+\t\t\t\tvar newElm;\n
+\n
+\t\t\t\tnewElm = is(name, \'string\') ? self.doc.createElement(name) : name;\n
+\t\t\t\tself.setAttribs(newElm, attrs);\n
+\n
+\t\t\t\tif (html) {\n
+\t\t\t\t\tif (html.nodeType) {\n
+\t\t\t\t\t\tnewElm.appendChild(html);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tself.setHTML(newElm, html);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn !create ? parentElm.appendChild(newElm) : newElm;\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Creates a new element.\n
+\t\t *\n
+\t\t * @method create\n
+\t\t * @param {String} name Name of new element.\n
+\t\t * @param {Object} attrs Optional object name/value collection with element attributes.\n
+\t\t * @param {String} html Optional HTML string to set as inner HTML of the element.\n
+\t\t * @return {Element} HTML DOM node element that got created.\n
+\t\t * @example\n
+\t\t * // Adds an element where the caret/selection is in the active editor\n
+\t\t * var el = tinymce.activeEditor.dom.create(\'div\', {id: \'test\', \'class\': \'myclass\'}, \'some content\');\n
+\t\t * tinymce.activeEditor.selection.setNode(el);\n
+\t\t */\n
+\t\tcreate: function(name, attrs, html) {\n
+\t\t\treturn this.add(this.doc.createElement(name), name, attrs, html, 1);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Creates HTML string for element. The element will be closed unless an empty inner HTML string is passed in.\n
+\t\t *\n
+\t\t * @method createHTML\n
+\t\t * @param {String} name Name of new element.\n
+\t\t * @param {Object} attrs Optional object name/value collection with element attributes.\n
+\t\t * @param {String} html Optional HTML string to set as inner HTML of the element.\n
+\t\t * @return {String} String with new HTML element, for example: <a href="#">test</a>.\n
+\t\t * @example\n
+\t\t * // Creates a html chunk and inserts it at the current selection/caret location\n
+\t\t * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML(\'a\', {href: \'test.html\'}, \'some line\'));\n
+\t\t */\n
+\t\tcreateHTML: function(name, attrs, html) {\n
+\t\t\tvar outHtml = \'\', key;\n
+\n
+\t\t\toutHtml += \'<\' + name;\n
+\n
+\t\t\tfor (key in attrs) {\n
+\t\t\t\tif (attrs.hasOwnProperty(key) && attrs[key] !== null && typeof attrs[key] != \'undefined\') {\n
+\t\t\t\t\toutHtml += \' \' + key + \'="\' + this.encode(attrs[key]) + \'"\';\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// A call to tinymce.is doesn\'t work for some odd reason on IE9 possible bug inside their JS runtime\n
+\t\t\tif (typeof html != "undefined") {\n
+\t\t\t\treturn outHtml + \'>\' + html + \'</\' + name + \'>\';\n
+\t\t\t}\n
+\n
+\t\t\treturn outHtml + \' />\';\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Creates a document fragment out of the specified HTML string.\n
+\t\t *\n
+\t\t * @method createFragment\n
+\t\t * @param {String} html Html string to create fragment from.\n
+\t\t * @return {DocumentFragment} Document fragment node.\n
+\t\t */\n
+\t\tcreateFragment: function(html) {\n
+\t\t\tvar frag, node, doc = this.doc, container;\n
+\n
+\t\t\tcontainer = doc.createElement("div");\n
+\t\t\tfrag = doc.createDocumentFragment();\n
+\n
+\t\t\tif (html) {\n
+\t\t\t\tcontainer.innerHTML = html;\n
+\t\t\t}\n
+\n
+\t\t\twhile ((node = container.firstChild)) {\n
+\t\t\t\tfrag.appendChild(node);\n
+\t\t\t}\n
+\n
+\t\t\treturn frag;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes/deletes the specified element(s) from the DOM.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @param {String/Element/Array} node ID of element or DOM element object or array containing multiple elements/ids.\n
+\t\t * @param {Boolean} keepChildren Optional state to keep children or not. If set to true all children will be\n
+\t\t * placed at the location of the removed element.\n
+\t\t * @return {Element/Array} HTML DOM element that got removed, or an array of removed elements if multiple input elements\n
+\t\t * were passed in.\n
+\t\t * @example\n
+\t\t * // Removes all paragraphs in the active editor\n
+\t\t * tinymce.activeEditor.dom.remove(tinymce.activeEditor.dom.select(\'p\'));\n
+\t\t *\n
+\t\t * // Removes an element by id in the document\n
+\t\t * tinymce.DOM.remove(\'mydiv\');\n
+\t\t */\n
+\t\tremove: function(node, keepChildren) {\n
+\t\t\tnode = this.$$(node);\n
+\n
+\t\t\tif (keepChildren) {\n
+\t\t\t\tnode.each(function() {\n
+\t\t\t\t\tvar child;\n
+\n
+\t\t\t\t\twhile ((child = this.firstChild)) {\n
+\t\t\t\t\t\tif (child.nodeType == 3 && child.data.length === 0) {\n
+\t\t\t\t\t\t\tthis.removeChild(child);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tthis.parentNode.insertBefore(child, this);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}).remove();\n
+\t\t\t} else {\n
+\t\t\t\tnode.remove();\n
+\t\t\t}\n
+\n
+\t\t\treturn node.length > 1 ? node.toArray() : node[0];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the CSS style value on a HTML element. The name can be a camelcase string\n
+\t\t * or the CSS style name like background-color.\n
+\t\t *\n
+\t\t * @method setStyle\n
+\t\t * @param {String/Element/Array} n HTML element/Element ID or Array of elements/ids to set CSS style value on.\n
+\t\t * @param {String} na Name of the style value to set.\n
+\t\t * @param {String} v Value to set on the style.\n
+\t\t * @example\n
+\t\t * // Sets a style value on all paragraphs in the currently active editor\n
+\t\t * tinymce.activeEditor.dom.setStyle(tinymce.activeEditor.dom.select(\'p\'), \'background-color\', \'red\');\n
+\t\t *\n
+\t\t * // Sets a style value to an element by id in the current document\n
+\t\t * tinymce.DOM.setStyle(\'mydiv\', \'background-color\', \'red\');\n
+\t\t */\n
+\t\tsetStyle: function(elm, name, value) {\n
+\t\t\telm = this.$$(elm).css(name, value);\n
+\n
+\t\t\tif (this.settings.update_styles) {\n
+\t\t\t\telm.attr(\'data-mce-style\', null);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the current style or runtime/computed value of an element.\n
+\t\t *\n
+\t\t * @method getStyle\n
+\t\t * @param {String/Element} elm HTML element or element id string to get style from.\n
+\t\t * @param {String} name Style name to return.\n
+\t\t * @param {Boolean} computed Computed style.\n
+\t\t * @return {String} Current style or computed style value of an element.\n
+\t\t */\n
+\t\tgetStyle: function(elm, name, computed) {\n
+\t\t\telm = this.$$(elm);\n
+\n
+\t\t\tif (computed) {\n
+\t\t\t\treturn elm.css(name);\n
+\t\t\t}\n
+\n
+\t\t\t// Camelcase it, if needed\n
+\t\t\tname = name.replace(/-(\\D)/g, function(a, b) {\n
+\t\t\t\treturn b.toUpperCase();\n
+\t\t\t});\n
+\n
+\t\t\tif (name == \'float\') {\n
+\t\t\t\tname = Env.ie && Env.ie < 12 ? \'styleFloat\' : \'cssFloat\';\n
+\t\t\t}\n
+\n
+\t\t\treturn elm[0] && elm[0].style ? elm[0].style[name] : undefined;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets multiple styles on the specified element(s).\n
+\t\t *\n
+\t\t * @method setStyles\n
+\t\t * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set styles on.\n
+\t\t * @param {Object} o Name/Value collection of style items to add to the element(s).\n
+\t\t * @example\n
+\t\t * // Sets styles on all paragraphs in the currently active editor\n
+\t\t * tinymce.activeEditor.dom.setStyles(tinymce.activeEditor.dom.select(\'p\'), {\'background-color\': \'red\', \'color\': \'green\'});\n
+\t\t *\n
+\t\t * // Sets styles to an element by id in the current document\n
+\t\t * tinymce.DOM.setStyles(\'mydiv\', {\'background-color\': \'red\', \'color\': \'green\'});\n
+\t\t */\n
+\t\tsetStyles: function(elm, styles) {\n
+\t\t\telm = this.$$(elm).css(styles);\n
+\n
+\t\t\tif (this.settings.update_styles) {\n
+\t\t\t\telm.attr(\'data-mce-style\', null);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes all attributes from an element or elements.\n
+\t\t *\n
+\t\t * @method removeAllAttribs\n
+\t\t * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to remove attributes from.\n
+\t\t */\n
+\t\tremoveAllAttribs: function(e) {\n
+\t\t\treturn this.run(e, function(e) {\n
+\t\t\t\tvar i, attrs = e.attributes;\n
+\t\t\t\tfor (i = attrs.length - 1; i >= 0; i--) {\n
+\t\t\t\t\te.removeAttributeNode(attrs.item(i));\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the specified attribute of an element or elements.\n
+\t\t *\n
+\t\t * @method setAttrib\n
+\t\t * @param {Element/String/Array} e DOM element, element id string or array of elements/ids to set attribute on.\n
+\t\t * @param {String} n Name of attribute to set.\n
+\t\t * @param {String} v Value to set on the attribute - if this value is falsy like null, 0 or \'\' it will remove the attribute instead.\n
+\t\t * @example\n
+\t\t * // Sets class attribute on all paragraphs in the active editor\n
+\t\t * tinymce.activeEditor.dom.setAttrib(tinymce.activeEditor.dom.select(\'p\'), \'class\', \'myclass\');\n
+\t\t *\n
+\t\t * // Sets class attribute on a specific element in the current page\n
+\t\t * tinymce.dom.setAttrib(\'mydiv\', \'class\', \'myclass\');\n
+\t\t */\n
+\t\tsetAttrib: function(elm, name, value) {\n
+\t\t\tvar self = this, originalValue, hook, settings = self.settings;\n
+\n
+\t\t\tif (value === \'\') {\n
+\t\t\t\tvalue = null;\n
+\t\t\t}\n
+\n
+\t\t\telm = self.$$(elm);\n
+\t\t\toriginalValue = elm.attr(name);\n
+\n
+\t\t\tif (!elm.length) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\thook = self.attrHooks[name];\n
+\t\t\tif (hook && hook.set) {\n
+\t\t\t\thook.set(elm, value, name);\n
+\t\t\t} else {\n
+\t\t\t\telm.attr(name, value);\n
+\t\t\t}\n
+\n
+\t\t\tif (originalValue != value && settings.onSetAttrib) {\n
+\t\t\t\tsettings.onSetAttrib({\n
+\t\t\t\t\tattrElm: elm,\n
+\t\t\t\t\tattrName: name,\n
+\t\t\t\t\tattrValue: value\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets two or more specified attributes of an element or elements.\n
+\t\t *\n
+\t\t * @method setAttribs\n
+\t\t * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set attributes on.\n
+\t\t * @param {Object} attrs Name/Value collection of attribute items to add to the element(s).\n
+\t\t * @example\n
+\t\t * // Sets class and title attributes on all paragraphs in the active editor\n
+\t\t * tinymce.activeEditor.dom.setAttribs(tinymce.activeEditor.dom.select(\'p\'), {\'class\': \'myclass\', title: \'some title\'});\n
+\t\t *\n
+\t\t * // Sets class and title attributes on a specific element in the current page\n
+\t\t * tinymce.DOM.setAttribs(\'mydiv\', {\'class\': \'myclass\', title: \'some title\'});\n
+\t\t */\n
+\t\tsetAttribs: function(elm, attrs) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.$$(elm).each(function(i, node) {\n
+\t\t\t\teach(attrs, function(value, name) {\n
+\t\t\t\t\tself.setAttrib(node, name, value);\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the specified attribute by name.\n
+\t\t *\n
+\t\t * @method getAttrib\n
+\t\t * @param {String/Element} elm Element string id or DOM element to get attribute from.\n
+\t\t * @param {String} name Name of attribute to get.\n
+\t\t * @param {String} defaultVal Optional default value to return if the attribute didn\'t exist.\n
+\t\t * @return {String} Attribute value string, default value or null if the attribute wasn\'t found.\n
+\t\t */\n
+\t\tgetAttrib: function(elm, name, defaultVal) {\n
+\t\t\tvar self = this, hook, value;\n
+\n
+\t\t\telm = self.$$(elm);\n
+\n
+\t\t\tif (elm.length) {\n
+\t\t\t\thook = self.attrHooks[name];\n
+\n
+\t\t\t\tif (hook && hook.get) {\n
+\t\t\t\t\tvalue = hook.get(elm, name);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tvalue = elm.attr(name);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (typeof value == \'undefined\') {\n
+\t\t\t\tvalue = defaultVal || \'\';\n
+\t\t\t}\n
+\n
+\t\t\treturn value;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the absolute x, y position of a node. The position will be returned in an object with x, y fields.\n
+\t\t *\n
+\t\t * @method getPos\n
+\t\t * @param {Element/String} elm HTML element or element id to get x, y position from.\n
+\t\t * @param {Element} rootElm Optional root element to stop calculations at.\n
+\t\t * @return {object} Absolute position of the specified element object with x, y fields.\n
+\t\t */\n
+\t\tgetPos: function(elm, rootElm) {\n
+\t\t\tvar self = this, x = 0, y = 0, offsetParent, doc = self.doc, body = doc.body, pos;\n
+\n
+\t\t\telm = self.get(elm);\n
+\t\t\trootElm = rootElm || body;\n
+\n
+\t\t\tif (elm) {\n
+\t\t\t\t// Use getBoundingClientRect if it exists since it\'s faster than looping offset nodes\n
+\t\t\t\t// Fallback to offsetParent calculations if the body isn\'t static better since it stops at the body root\n
+\t\t\t\tif (rootElm === body && elm.getBoundingClientRect && $(body).css(\'position\') === \'static\') {\n
+\t\t\t\t\tpos = elm.getBoundingClientRect();\n
+\t\t\t\t\trootElm = self.boxModel ? doc.documentElement : body;\n
+\n
+\t\t\t\t\t// Add scroll offsets from documentElement or body since IE with the wrong box model will use d.body and so do WebKit\n
+\t\t\t\t\t// Also remove the body/documentelement clientTop/clientLeft on IE 6, 7 since they offset the position\n
+\t\t\t\t\tx = pos.left + (doc.documentElement.scrollLeft || body.scrollLeft) - rootElm.clientLeft;\n
+\t\t\t\t\ty = pos.top + (doc.documentElement.scrollTop || body.scrollTop) - rootElm.clientTop;\n
+\n
+\t\t\t\t\treturn {x: x, y: y};\n
+\t\t\t\t}\n
+\n
+\t\t\t\toffsetParent = elm;\n
+\t\t\t\twhile (offsetParent && offsetParent != rootElm && offsetParent.nodeType) {\n
+\t\t\t\t\tx += offsetParent.offsetLeft || 0;\n
+\t\t\t\t\ty += offsetParent.offsetTop || 0;\n
+\t\t\t\t\toffsetParent = offsetParent.offsetParent;\n
+\t\t\t\t}\n
+\n
+\t\t\t\toffsetParent = elm.parentNode;\n
+\t\t\t\twhile (offsetParent && offsetParent != rootElm && offsetParent.nodeType) {\n
+\t\t\t\t\tx -= offsetParent.scrollLeft || 0;\n
+\t\t\t\t\ty -= offsetParent.scrollTop || 0;\n
+\t\t\t\t\toffsetParent = offsetParent.parentNode;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn {x: x, y: y};\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Parses the specified style value into an object collection. This parser will also\n
+\t\t * merge and remove any redundant items that browsers might have added. It will also convert non-hex\n
+\t\t * colors to hex values. Urls inside the styles will also be converted to absolute/relative based on settings.\n
+\t\t *\n
+\t\t * @method parseStyle\n
+\t\t * @param {String} cssText Style value to parse, for example: border:1px solid red;.\n
+\t\t * @return {Object} Object representation of that style, for example: {border: \'1px solid red\'}\n
+\t\t */\n
+\t\tparseStyle: function(cssText) {\n
+\t\t\treturn this.styles.parse(cssText);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Serializes the specified style object into a string.\n
+\t\t *\n
+\t\t * @method serializeStyle\n
+\t\t * @param {Object} styles Object to serialize as string, for example: {border: \'1px solid red\'}\n
+\t\t * @param {String} name Optional element name.\n
+\t\t * @return {String} String representation of the style object, for example: border: 1px solid red.\n
+\t\t */\n
+\t\tserializeStyle: function(styles, name) {\n
+\t\t\treturn this.styles.serialize(styles, name);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds a style element at the top of the document with the specified cssText content.\n
+\t\t *\n
+\t\t * @method addStyle\n
+\t\t * @param {String} cssText CSS Text style to add to top of head of document.\n
+\t\t */\n
+\t\taddStyle: function(cssText) {\n
+\t\t\tvar self = this, doc = self.doc, head, styleElm;\n
+\n
+\t\t\t// Prevent inline from loading the same styles twice\n
+\t\t\tif (self !== DOMUtils.DOM && doc === document) {\n
+\t\t\t\tvar addedStyles = DOMUtils.DOM.addedStyles;\n
+\n
+\t\t\t\taddedStyles = addedStyles || [];\n
+\t\t\t\tif (addedStyles[cssText]) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\taddedStyles[cssText] = true;\n
+\t\t\t\tDOMUtils.DOM.addedStyles = addedStyles;\n
+\t\t\t}\n
+\n
+\t\t\t// Create style element if needed\n
+\t\t\tstyleElm = doc.getElementById(\'mceDefaultStyles\');\n
+\t\t\tif (!styleElm) {\n
+\t\t\t\tstyleElm = doc.createElement(\'style\');\n
+\t\t\t\tstyleElm.id = \'mceDefaultStyles\';\n
+\t\t\t\tstyleElm.type = \'text/css\';\n
+\n
+\t\t\t\thead = doc.getElementsByTagName(\'head\')[0];\n
+\t\t\t\tif (head.firstChild) {\n
+\t\t\t\t\thead.insertBefore(styleElm, head.firstChild);\n
+\t\t\t\t} else {\n
+\t\t\t\t\thead.appendChild(styleElm);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Append style data to old or new style element\n
+\t\t\tif (styleElm.styleSheet) {\n
+\t\t\t\tstyleElm.styleSheet.cssText += cssText;\n
+\t\t\t} else {\n
+\t\t\t\tstyleElm.appendChild(doc.createTextNode(cssText));\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Imports/loads the specified CSS file into the document bound to the class.\n
+\t\t *\n
+\t\t * @method loadCSS\n
+\t\t * @param {String} u URL to CSS file to load.\n
+\t\t * @example\n
+\t\t * // Loads a CSS file dynamically into the current document\n
+\t\t * tinymce.DOM.loadCSS(\'somepath/some.css\');\n
+\t\t *\n
+\t\t * // Loads a CSS file into the currently active editor instance\n
+\t\t * tinymce.activeEditor.dom.loadCSS(\'somepath/some.css\');\n
+\t\t *\n
+\t\t * // Loads a CSS file into an editor instance by id\n
+\t\t * tinymce.get(\'someid\').dom.loadCSS(\'somepath/some.css\');\n
+\t\t *\n
+\t\t * // Loads multiple CSS files into the current document\n
+\t\t * tinymce.DOM.loadCSS(\'somepath/some.css,somepath/someother.css\');\n
+\t\t */\n
+\t\tloadCSS: function(url) {\n
+\t\t\tvar self = this, doc = self.doc, head;\n
+\n
+\t\t\t// Prevent inline from loading the same CSS file twice\n
+\t\t\tif (self !== DOMUtils.DOM && doc === document) {\n
+\t\t\t\tDOMUtils.DOM.loadCSS(url);\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (!url) {\n
+\t\t\t\turl = \'\';\n
+\t\t\t}\n
+\n
+\t\t\thead = doc.getElementsByTagName(\'head\')[0];\n
+\n
+\t\t\teach(url.split(\',\'), function(url) {\n
+\t\t\t\tvar link;\n
+\n
+\t\t\t\turl = Tools._addCacheSuffix(url);\n
+\n
+\t\t\t\tif (self.files[url]) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.files[url] = true;\n
+\t\t\t\tlink = self.create(\'link\', {rel: \'stylesheet\', href: url});\n
+\n
+\t\t\t\t// IE 8 has a bug where dynamically loading stylesheets would produce a 1 item remaining bug\n
+\t\t\t\t// This fix seems to resolve that issue by recalcing the document once a stylesheet finishes loading\n
+\t\t\t\t// It\'s ugly but it seems to work fine.\n
+\t\t\t\tif (isIE && doc.documentMode && doc.recalc) {\n
+\t\t\t\t\tlink.onload = function() {\n
+\t\t\t\t\t\tif (doc.recalc) {\n
+\t\t\t\t\t\t\tdoc.recalc();\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tlink.onload = null;\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\n
+\t\t\t\thead.appendChild(link);\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds a class to the specified element or elements.\n
+\t\t *\n
+\t\t * @method addClass\n
+\t\t * @param {String/Element/Array} elm Element ID string or DOM element or array with elements or IDs.\n
+\t\t * @param {String} cls Class name to add to each element.\n
+\t\t * @return {String/Array} String with new class value or array with new class values for all elements.\n
+\t\t * @example\n
+\t\t * // Adds a class to all paragraphs in the active editor\n
+\t\t * tinymce.activeEditor.dom.addClass(tinymce.activeEditor.dom.select(\'p\'), \'myclass\');\n
+\t\t *\n
+\t\t * // Adds a class to a specific element in the current page\n
+\t\t * tinymce.DOM.addClass(\'mydiv\', \'myclass\');\n
+\t\t */\n
+\t\taddClass: function(elm, cls) {\n
+\t\t\tthis.$$(elm).addClass(cls);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes a class from the specified element or elements.\n
+\t\t *\n
+\t\t * @method removeClass\n
+\t\t * @param {String/Element/Array} elm Element ID string or DOM element or array with elements or IDs.\n
+\t\t * @param {String} cls Class name to remove from each element.\n
+\t\t * @return {String/Array} String of remaining class name(s), or an array of strings if multiple input elements\n
+\t\t * were passed in.\n
+\t\t * @example\n
+\t\t * // Removes a class from all paragraphs in the active editor\n
+\t\t * tinymce.activeEditor.dom.removeClass(tinymce.activeEditor.dom.select(\'p\'), \'myclass\');\n
+\t\t *\n
+\t\t * // Removes a class from a specific element in the current page\n
+\t\t * tinymce.DOM.removeClass(\'mydiv\', \'myclass\');\n
+\t\t */\n
+\t\tremoveClass: function(elm, cls) {\n
+\t\t\tthis.toggleClass(elm, cls, false);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true if the specified element has the specified class.\n
+\t\t *\n
+\t\t * @method hasClass\n
+\t\t * @param {String/Element} n HTML element or element id string to check CSS class on.\n
+\t\t * @param {String} c CSS class to check for.\n
+\t\t * @return {Boolean} true/false if the specified element has the specified class.\n
+\t\t */\n
+\t\thasClass: function(elm, cls) {\n
+\t\t\treturn this.$$(elm).hasClass(cls);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Toggles the specified class on/off.\n
+\t\t *\n
+\t\t * @method toggleClass\n
+\t\t * @param {Element} elm Element to toggle class on.\n
+\t\t * @param {[type]} cls Class to toggle on/off.\n
+\t\t * @param {[type]} state Optional state to set.\n
+\t\t */\n
+\t\ttoggleClass: function(elm, cls, state) {\n
+\t\t\tthis.$$(elm).toggleClass(cls, state).each(function() {\n
+\t\t\t\tif (this.className === \'\') {\n
+\t\t\t\t\t$(this).attr(\'class\', null);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Shows the specified element(s) by ID by setting the "display" style.\n
+\t\t *\n
+\t\t * @method show\n
+\t\t * @param {String/Element/Array} elm ID of DOM element or DOM element or array with elements or IDs to show.\n
+\t\t */\n
+\t\tshow: function(elm) {\n
+\t\t\tthis.$$(elm).show();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Hides the specified element(s) by ID by setting the "display" style.\n
+\t\t *\n
+\t\t * @method hide\n
+\t\t * @param {String/Element/Array} e ID of DOM element or DOM element or array with elements or IDs to hide.\n
+\t\t * @example\n
+\t\t * // Hides an element by id in the document\n
+\t\t * tinymce.DOM.hide(\'myid\');\n
+\t\t */\n
+\t\thide: function(elm) {\n
+\t\t\tthis.$$(elm).hide();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the element is hidden or not by checking the "display" style.\n
+\t\t *\n
+\t\t * @method isHidden\n
+\t\t * @param {String/Element} e Id or element to check display state on.\n
+\t\t * @return {Boolean} true/false if the element is hidden or not.\n
+\t\t */\n
+\t\tisHidden: function(elm) {\n
+\t\t\treturn this.$$(elm).css(\'display\') == \'none\';\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a unique id. This can be useful when generating elements on the fly.\n
+\t\t * This method will not check if the element already exists.\n
+\t\t *\n
+\t\t * @method uniqueId\n
+\t\t * @param {String} prefix Optional prefix to add in front of all ids - defaults to "mce_".\n
+\t\t * @return {String} Unique id.\n
+\t\t */\n
+\t\tuniqueId: function(prefix) {\n
+\t\t\treturn (!prefix ? \'mce_\' : prefix) + (this.counter++);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the specified HTML content inside the element or elements. The HTML will first be processed. This means\n
+\t\t * URLs will get converted, hex color values fixed etc. Check processHTML for details.\n
+\t\t *\n
+\t\t * @method setHTML\n
+\t\t * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set HTML inside of.\n
+\t\t * @param {String} h HTML content to set as inner HTML of the element.\n
+\t\t * @example\n
+\t\t * // Sets the inner HTML of all paragraphs in the active editor\n
+\t\t * tinymce.activeEditor.dom.setHTML(tinymce.activeEditor.dom.select(\'p\'), \'some inner html\');\n
+\t\t *\n
+\t\t * // Sets the inner HTML of an element by id in the document\n
+\t\t * tinymce.DOM.setHTML(\'mydiv\', \'some inner html\');\n
+\t\t */\n
+\t\tsetHTML: function(elm, html) {\n
+\t\t\telm = this.$$(elm);\n
+\n
+\t\t\tif (isIE) {\n
+\t\t\t\telm.each(function(i, target) {\n
+\t\t\t\t\tif (target.canHaveHTML === false) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Remove all child nodes, IE keeps empty text nodes in DOM\n
+\t\t\t\t\twhile (target.firstChild) {\n
+\t\t\t\t\t\ttarget.removeChild(target.firstChild);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\ttry {\n
+\t\t\t\t\t\t// IE will remove comments from the beginning\n
+\t\t\t\t\t\t// unless you padd the contents with something\n
+\t\t\t\t\t\ttarget.innerHTML = \'<br>\' + html;\n
+\t\t\t\t\t\ttarget.removeChild(target.firstChild);\n
+\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t// IE sometimes produces an unknown runtime error on innerHTML if it\'s a div inside a p\n
+\t\t\t\t\t\t$(\'<div>\').html(\'<br>\' + html).contents().slice(1).appendTo(target);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn html;\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\telm.html(html);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the outer HTML of an element.\n
+\t\t *\n
+\t\t * @method getOuterHTML\n
+\t\t * @param {String/Element} elm Element ID or element object to get outer HTML from.\n
+\t\t * @return {String} Outer HTML string.\n
+\t\t * @example\n
+\t\t * tinymce.DOM.getOuterHTML(editorElement);\n
+\t\t * tinymce.activeEditor.getOuterHTML(tinymce.activeEditor.getBody());\n
+\t\t */\n
+\t\tgetOuterHTML: function(elm) {\n
+\t\t\telm = this.get(elm);\n
+\n
+\t\t\t// Older FF doesn\'t have outerHTML 3.6 is still used by some orgaizations\n
+\t\t\treturn elm.nodeType == 1 && "outerHTML" in elm ? elm.outerHTML : $(\'<div>\').append($(elm).clone()).html();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the specified outer HTML on an element or elements.\n
+\t\t *\n
+\t\t * @method setOuterHTML\n
+\t\t * @param {Element/String/Array} elm DOM element, element id string or array of elements/ids to set outer HTML on.\n
+\t\t * @param {Object} html HTML code to set as outer value for the element.\n
+\t\t * @param {Document} doc Optional document scope to use in this process - defaults to the document of the DOM class.\n
+\t\t * @example\n
+\t\t * // Sets the outer HTML of all paragraphs in the active editor\n
+\t\t * tinymce.activeEditor.dom.setOuterHTML(tinymce.activeEditor.dom.select(\'p\'), \'<div>some html</div>\');\n
+\t\t *\n
+\t\t * // Sets the outer HTML of an element by id in the document\n
+\t\t * tinymce.DOM.setOuterHTML(\'mydiv\', \'<div>some html</div>\');\n
+\t\t */\n
+\t\tsetOuterHTML: function(elm, html) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.$$(elm).each(function() {\n
+\t\t\t\ttry {\n
+\t\t\t\t\t// Older FF doesn\'t have outerHTML 3.6 is still used by some orgaizations\n
+\t\t\t\t\tif ("outerHTML" in this) {\n
+\t\t\t\t\t\tthis.outerHTML = html;\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// Ignore\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// OuterHTML for IE it sometimes produces an "unknown runtime error"\n
+\t\t\t\tself.remove($(this).html(html), true);\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Entity decodes a string. This method decodes any HTML entities, such as &aring;.\n
+\t\t *\n
+\t\t * @method decode\n
+\t\t * @param {String} s String to decode entities on.\n
+\t\t * @return {String} Entity decoded string.\n
+\t\t */\n
+\t\tdecode: Entities.decode,\n
+\n
+\t\t/**\n
+\t\t * Entity encodes a string. This method encodes the most common entities, such as <>"&.\n
+\t\t *\n
+\t\t * @method encode\n
+\t\t * @param {String} text String to encode with entities.\n
+\t\t * @return {String} Entity encoded string.\n
+\t\t */\n
+\t\tencode: Entities.encodeAllRaw,\n
+\n
+\t\t/**\n
+\t\t * Inserts an element after the reference element.\n
+\t\t *\n
+\t\t * @method insertAfter\n
+\t\t * @param {Element} node Element to insert after the reference.\n
+\t\t * @param {Element/String/Array} reference_node Reference element, element id or array of elements to insert after.\n
+\t\t * @return {Element/Array} Element that got added or an array with elements.\n
+\t\t */\n
+\t\tinsertAfter: function(node, referenceNode) {\n
+\t\t\treferenceNode = this.get(referenceNode);\n
+\n
+\t\t\treturn this.run(node, function(node) {\n
+\t\t\t\tvar parent, nextSibling;\n
+\n
+\t\t\t\tparent = referenceNode.parentNode;\n
+\t\t\t\tnextSibling = referenceNode.nextSibling;\n
+\n
+\t\t\t\tif (nextSibling) {\n
+\t\t\t\t\tparent.insertBefore(node, nextSibling);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tparent.appendChild(node);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn node;\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Replaces the specified element or elements with the new element specified. The new element will\n
+\t\t * be cloned if multiple input elements are passed in.\n
+\t\t *\n
+\t\t * @method replace\n
+\t\t * @param {Element} newElm New element to replace old ones with.\n
+\t\t * @param {Element/String/Array} oldELm Element DOM node, element id or array of elements or ids to replace.\n
+\t\t * @param {Boolean} k Optional keep children state, if set to true child nodes from the old object will be added to new ones.\n
+\t\t */\n
+\t\treplace: function(newElm, oldElm, keepChildren) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\treturn self.run(oldElm, function(oldElm) {\n
+\t\t\t\tif (is(oldElm, \'array\')) {\n
+\t\t\t\t\tnewElm = newElm.cloneNode(true);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (keepChildren) {\n
+\t\t\t\t\teach(grep(oldElm.childNodes), function(node) {\n
+\t\t\t\t\t\tnewElm.appendChild(node);\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn oldElm.parentNode.replaceChild(newElm, oldElm);\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renames the specified element and keeps its attributes and children.\n
+\t\t *\n
+\t\t * @method rename\n
+\t\t * @param {Element} elm Element to rename.\n
+\t\t * @param {String} name Name of the new element.\n
+\t\t * @return {Element} New element or the old element if it needed renaming.\n
+\t\t */\n
+\t\trename: function(elm, name) {\n
+\t\t\tvar self = this, newElm;\n
+\n
+\t\t\tif (elm.nodeName != name.toUpperCase()) {\n
+\t\t\t\t// Rename block element\n
+\t\t\t\tnewElm = self.create(name);\n
+\n
+\t\t\t\t// Copy attribs to new block\n
+\t\t\t\teach(self.getAttribs(elm), function(attrNode) {\n
+\t\t\t\t\tself.setAttrib(newElm, attrNode.nodeName, self.getAttrib(elm, attrNode.nodeName));\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Replace block\n
+\t\t\t\tself.replace(newElm, elm, 1);\n
+\t\t\t}\n
+\n
+\t\t\treturn newElm || elm;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Find the common ancestor of two elements. This is a shorter method than using the DOM Range logic.\n
+\t\t *\n
+\t\t * @method findCommonAncestor\n
+\t\t * @param {Element} a Element to find common ancestor of.\n
+\t\t * @param {Element} b Element to find common ancestor of.\n
+\t\t * @return {Element} Common ancestor element of the two input elements.\n
+\t\t */\n
+\t\tfindCommonAncestor: function(a, b) {\n
+\t\t\tvar ps = a, pe;\n
+\n
+\t\t\twhile (ps) {\n
+\t\t\t\tpe = b;\n
+\n
+\t\t\t\twhile (pe && ps != pe) {\n
+\t\t\t\t\tpe = pe.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (ps == pe) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tps = ps.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\tif (!ps && a.ownerDocument) {\n
+\t\t\t\treturn a.ownerDocument.documentElement;\n
+\t\t\t}\n
+\n
+\t\t\treturn ps;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Parses the specified RGB color value and returns a hex version of that color.\n
+\t\t *\n
+\t\t * @method toHex\n
+\t\t * @param {String} rgbVal RGB string value like rgb(1,2,3)\n
+\t\t * @return {String} Hex version of that RGB value like #FF00FF.\n
+\t\t */\n
+\t\ttoHex: function(rgbVal) {\n
+\t\t\treturn this.styles.toHex(Tools.trim(rgbVal));\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Executes the specified function on the element by id or dom element node or array of elements/id.\n
+\t\t *\n
+\t\t * @method run\n
+\t\t * @param {String/Element/Array} Element ID or DOM element object or array with ids or elements.\n
+\t\t * @param {function} f Function to execute for each item.\n
+\t\t * @param {Object} s Optional scope to execute the function in.\n
+\t\t * @return {Object/Array} Single object, or an array of objects if multiple input elements were passed in.\n
+\t\t */\n
+\t\trun: function(elm, func, scope) {\n
+\t\t\tvar self = this, result;\n
+\n
+\t\t\tif (typeof elm === \'string\') {\n
+\t\t\t\telm = self.get(elm);\n
+\t\t\t}\n
+\n
+\t\t\tif (!elm) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\tscope = scope || this;\n
+\t\t\tif (!elm.nodeType && (elm.length || elm.length === 0)) {\n
+\t\t\t\tresult = [];\n
+\n
+\t\t\t\teach(elm, function(elm, i) {\n
+\t\t\t\t\tif (elm) {\n
+\t\t\t\t\t\tif (typeof elm == \'string\') {\n
+\t\t\t\t\t\t\telm = self.get(elm);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tresult.push(func.call(scope, elm, i));\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn result;\n
+\t\t\t}\n
+\n
+\t\t\treturn func.call(scope, elm);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a NodeList with attributes for the element.\n
+\t\t *\n
+\t\t * @method getAttribs\n
+\t\t * @param {HTMLElement/string} elm Element node or string id to get attributes from.\n
+\t\t * @return {NodeList} NodeList with attributes.\n
+\t\t */\n
+\t\tgetAttribs: function(elm) {\n
+\t\t\tvar attrs;\n
+\n
+\t\t\telm = this.get(elm);\n
+\n
+\t\t\tif (!elm) {\n
+\t\t\t\treturn [];\n
+\t\t\t}\n
+\n
+\t\t\tif (isIE) {\n
+\t\t\t\tattrs = [];\n
+\n
+\t\t\t\t// Object will throw exception in IE\n
+\t\t\t\tif (elm.nodeName == \'OBJECT\') {\n
+\t\t\t\t\treturn elm.attributes;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// IE doesn\'t keep the selected attribute if you clone option elements\n
+\t\t\t\tif (elm.nodeName === \'OPTION\' && this.getAttrib(elm, \'selected\')) {\n
+\t\t\t\t\tattrs.push({specified: 1, nodeName: \'selected\'});\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// It\'s crazy that this is faster in IE but it\'s because it returns all attributes all the time\n
+\t\t\t\tvar attrRegExp = /<\\/?[\\w:\\-]+ ?|=[\\"][^\\"]+\\"|=\\\'[^\\\']+\\\'|=[\\w\\-]+|>/gi;\n
+\t\t\t\telm.cloneNode(false).outerHTML.replace(attrRegExp, \'\').replace(/[\\w:\\-]+/gi, function(a) {\n
+\t\t\t\t\tattrs.push({specified: 1, nodeName: a});\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn attrs;\n
+\t\t\t}\n
+\n
+\t\t\treturn elm.attributes;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified node is to be considered empty or not.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * tinymce.DOM.isEmpty(node, {img: true});\n
+\t\t * @method isEmpty\n
+\t\t * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.\n
+\t\t * @return {Boolean} true/false if the node is empty or not.\n
+\t\t */\n
+\t\tisEmpty: function(node, elements) {\n
+\t\t\tvar self = this, i, attributes, type, walker, name, brCount = 0;\n
+\n
+\t\t\tnode = node.firstChild;\n
+\t\t\tif (node) {\n
+\t\t\t\twalker = new TreeWalker(node, node.parentNode);\n
+\t\t\t\telements = elements || (self.schema ? self.schema.getNonEmptyElements() : null);\n
+\n
+\t\t\t\tdo {\n
+\t\t\t\t\ttype = node.nodeType;\n
+\n
+\t\t\t\t\tif (type === 1) {\n
+\t\t\t\t\t\t// Ignore bogus elements\n
+\t\t\t\t\t\tif (node.getAttribute(\'data-mce-bogus\')) {\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Keep empty elements like <img />\n
+\t\t\t\t\t\tname = node.nodeName.toLowerCase();\n
+\t\t\t\t\t\tif (elements && elements[name]) {\n
+\t\t\t\t\t\t\t// Ignore single BR elements in blocks like <p><br /></p> or <p><span><br /></span></p>\n
+\t\t\t\t\t\t\tif (name === \'br\') {\n
+\t\t\t\t\t\t\t\tbrCount++;\n
+\t\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Keep elements with data-bookmark attributes or name attribute like <a name="1"></a>\n
+\t\t\t\t\t\tattributes = self.getAttribs(node);\n
+\t\t\t\t\t\ti = attributes.length;\n
+\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\tname = attributes[i].nodeName;\n
+\t\t\t\t\t\t\tif (name === "name" || name === \'data-mce-bookmark\') {\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Keep comment nodes\n
+\t\t\t\t\tif (type == 8) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Keep non whitespace text nodes\n
+\t\t\t\t\tif ((type === 3 && !whiteSpaceRegExp.test(node.nodeValue))) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t} while ((node = walker.next()));\n
+\t\t\t}\n
+\n
+\t\t\treturn brCount <= 1;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Creates a new DOM Range object. This will use the native DOM Range API if it\'s\n
+\t\t * available. If it\'s not, it will fall back to the custom TinyMCE implementation.\n
+\t\t *\n
+\t\t * @method createRng\n
+\t\t * @return {DOMRange} DOM Range object.\n
+\t\t * @example\n
+\t\t * var rng = tinymce.DOM.createRng();\n
+\t\t * alert(rng.startContainer + "," + rng.startOffset);\n
+\t\t */\n
+\t\tcreateRng: function() {\n
+\t\t\tvar doc = this.doc;\n
+\n
+\t\t\treturn doc.createRange ? doc.createRange() : new Range(this);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the index of the specified node within its parent.\n
+\t\t *\n
+\t\t * @method nodeIndex\n
+\t\t * @param {Node} node Node to look for.\n
+\t\t * @param {boolean} normalized Optional true/false state if the index is what it would be after a normalization.\n
+\t\t * @return {Number} Index of the specified node.\n
+\t\t */\n
+\t\tnodeIndex: function(node, normalized) {\n
+\t\t\tvar idx = 0, lastNodeType, nodeType;\n
+\n
+\t\t\tif (node) {\n
+\t\t\t\tfor (lastNodeType = node.nodeType, node = node.previousSibling; node; node = node.previousSibling) {\n
+\t\t\t\t\tnodeType = node.nodeType;\n
+\n
+\t\t\t\t\t// Normalize text nodes\n
+\t\t\t\t\tif (normalized && nodeType == 3) {\n
+\t\t\t\t\t\tif (nodeType == lastNodeType || !node.nodeValue.length) {\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t\tidx++;\n
+\t\t\t\t\tlastNodeType = nodeType;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn idx;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Splits an element into two new elements and places the specified split\n
+\t\t * element or elements between the new ones. For example splitting the paragraph at the bold element in\n
+\t\t * this example <p>abc<b>abc</b>123</p> would produce <p>abc</p><b>abc</b><p>123</p>.\n
+\t\t *\n
+\t\t * @method split\n
+\t\t * @param {Element} parentElm Parent element to split.\n
+\t\t * @param {Element} splitElm Element to split at.\n
+\t\t * @param {Element} replacementElm Optional replacement element to replace the split element with.\n
+\t\t * @return {Element} Returns the split element or the replacement element if that is specified.\n
+\t\t */\n
+\t\tsplit: function(parentElm, splitElm, replacementElm) {\n
+\t\t\tvar self = this, r = self.createRng(), bef, aft, pa;\n
+\n
+\t\t\t// W3C valid browsers tend to leave empty nodes to the left/right side of the contents - this makes sense\n
+\t\t\t// but we don\'t want that in our code since it serves no purpose for the end user\n
+\t\t\t// For example splitting this html at the bold element:\n
+\t\t\t//   <p>text 1<span><b>CHOP</b></span>text 2</p>\n
+\t\t\t// would produce:\n
+\t\t\t//   <p>text 1<span></span></p><b>CHOP</b><p><span></span>text 2</p>\n
+\t\t\t// this function will then trim off empty edges and produce:\n
+\t\t\t//   <p>text 1</p><b>CHOP</b><p>text 2</p>\n
+\t\t\tfunction trimNode(node) {\n
+\t\t\t\tvar i, children = node.childNodes, type = node.nodeType;\n
+\n
+\t\t\t\tfunction surroundedBySpans(node) {\n
+\t\t\t\t\tvar previousIsSpan = node.previousSibling && node.previousSibling.nodeName == \'SPAN\';\n
+\t\t\t\t\tvar nextIsSpan = node.nextSibling && node.nextSibling.nodeName == \'SPAN\';\n
+\t\t\t\t\treturn previousIsSpan && nextIsSpan;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (type == 1 && node.getAttribute(\'data-mce-type\') == \'bookmark\') {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (i = children.length - 1; i >= 0; i--) {\n
+\t\t\t\t\ttrimNode(children[i]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (type != 9) {\n
+\t\t\t\t\t// Keep non whitespace text nodes\n
+\t\t\t\t\tif (type == 3 && node.nodeValue.length > 0) {\n
+\t\t\t\t\t\t// If parent element isn\'t a block or there isn\'t any useful contents for example "<p>   </p>"\n
+\t\t\t\t\t\t// Also keep text nodes with only spaces if surrounded by spans.\n
+\t\t\t\t\t\t// eg. "<p><span>a</span> <span>b</span></p>" should keep space between a and b\n
+\t\t\t\t\t\tvar trimmedLength = trim(node.nodeValue).length;\n
+\t\t\t\t\t\tif (!self.isBlock(node.parentNode) || trimmedLength > 0 || trimmedLength === 0 && surroundedBySpans(node)) {\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else if (type == 1) {\n
+\t\t\t\t\t\t// If the only child is a bookmark then move it up\n
+\t\t\t\t\t\tchildren = node.childNodes;\n
+\n
+\t\t\t\t\t\t// TODO fix this complex if\n
+\t\t\t\t\t\tif (children.length == 1 && children[0] && children[0].nodeType == 1 &&\n
+\t\t\t\t\t\t\tchildren[0].getAttribute(\'data-mce-type\') == \'bookmark\') {\n
+\t\t\t\t\t\t\tnode.parentNode.insertBefore(children[0], node);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Keep non empty elements or img, hr etc\n
+\t\t\t\t\t\tif (children.length || /^(br|hr|input|img)$/i.test(node.nodeName)) {\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tself.remove(node);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn node;\n
+\t\t\t}\n
+\n
+\t\t\tif (parentElm && splitElm) {\n
+\t\t\t\t// Get before chunk\n
+\t\t\t\tr.setStart(parentElm.parentNode, self.nodeIndex(parentElm));\n
+\t\t\t\tr.setEnd(splitElm.parentNode, self.nodeIndex(splitElm));\n
+\t\t\t\tbef = r.extractContents();\n
+\n
+\t\t\t\t// Get after chunk\n
+\t\t\t\tr = self.createRng();\n
+\t\t\t\tr.setStart(splitElm.parentNode, self.nodeIndex(splitElm) + 1);\n
+\t\t\t\tr.setEnd(parentElm.parentNode, self.nodeIndex(parentElm) + 1);\n
+\t\t\t\taft = r.extractContents();\n
+\n
+\t\t\t\t// Insert before chunk\n
+\t\t\t\tpa = parentElm.parentNode;\n
+\t\t\t\tpa.insertBefore(trimNode(bef), parentElm);\n
+\n
+\t\t\t\t// Insert middle chunk\n
+\t\t\t\tif (replacementElm) {\n
+\t\t\t\t\tpa.replaceChild(replacementElm, splitElm);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tpa.insertBefore(splitElm, parentElm);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Insert after chunk\n
+\t\t\t\tpa.insertBefore(trimNode(aft), parentElm);\n
+\t\t\t\tself.remove(parentElm);\n
+\n
+\t\t\t\treturn replacementElm || splitElm;\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds an event handler to the specified object.\n
+\t\t *\n
+\t\t * @method bind\n
+\t\t * @param {Element/Document/Window/Array} target Target element to bind events to.\n
+\t\t * handler to or an array of elements/ids/documents.\n
+\t\t * @param {String} name Name of event handler to add, for example: click.\n
+\t\t * @param {function} func Function to execute when the event occurs.\n
+\t\t * @param {Object} scope Optional scope to execute the function in.\n
+\t\t * @return {function} Function callback handler the same as the one passed in.\n
+\t\t */\n
+\t\tbind: function(target, name, func, scope) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (Tools.isArray(target)) {\n
+\t\t\t\tvar i = target.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\ttarget[i] = self.bind(target[i], name, func, scope);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn target;\n
+\t\t\t}\n
+\n
+\t\t\t// Collect all window/document events bound by editor instance\n
+\t\t\tif (self.settings.collect && (target === self.doc || target === self.win)) {\n
+\t\t\t\tself.boundEvents.push([target, name, func, scope]);\n
+\t\t\t}\n
+\n
+\t\t\treturn self.events.bind(target, name, func, scope || self);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the specified event handler by name and function from an element or collection of elements.\n
+\t\t *\n
+\t\t * @method unbind\n
+\t\t * @param {Element/Document/Window/Array} target Target element to unbind events on.\n
+\t\t * @param {String} name Event handler name, for example: "click"\n
+\t\t * @param {function} func Function to remove.\n
+\t\t * @return {bool/Array} Bool state of true if the handler was removed, or an array of states if multiple input elements\n
+\t\t * were passed in.\n
+\t\t */\n
+\t\tunbind: function(target, name, func) {\n
+\t\t\tvar self = this, i;\n
+\n
+\t\t\tif (Tools.isArray(target)) {\n
+\t\t\t\ti = target.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\ttarget[i] = self.unbind(target[i], name, func);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn target;\n
+\t\t\t}\n
+\n
+\t\t\t// Remove any bound events matching the input\n
+\t\t\tif (self.boundEvents && (target === self.doc || target === self.win)) {\n
+\t\t\t\ti = self.boundEvents.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tvar item = self.boundEvents[i];\n
+\n
+\t\t\t\t\tif (target == item[0] && (!name || name == item[1]) && (!func || func == item[2])) {\n
+\t\t\t\t\t\tthis.events.unbind(item[0], item[1], item[2]);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn this.events.unbind(target, name, func);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Fires the specified event name with object on target.\n
+\t\t *\n
+\t\t * @method fire\n
+\t\t * @param {Node/Document/Window} target Target element or object to fire event on.\n
+\t\t * @param {String} name Name of the event to fire.\n
+\t\t * @param {Object} evt Event object to send.\n
+\t\t * @return {Event} Event object.\n
+\t\t */\n
+\t\tfire: function(target, name, evt) {\n
+\t\t\treturn this.events.fire(target, name, evt);\n
+\t\t},\n
+\n
+\t\t// Returns the content editable state of a node\n
+\t\tgetContentEditable: function(node) {\n
+\t\t\tvar contentEditable;\n
+\n
+\t\t\t// Check type\n
+\t\t\tif (!node || node.nodeType != 1) {\n
+\t\t\t\treturn null;\n
+\t\t\t}\n
+\n
+\t\t\t// Check for fake content editable\n
+\t\t\tcontentEditable = node.getAttribute("data-mce-contenteditable");\n
+\t\t\tif (contentEditable && contentEditable !== "inherit") {\n
+\t\t\t\treturn contentEditable;\n
+\t\t\t}\n
+\n
+\t\t\t// Check for real content editable\n
+\t\t\treturn node.contentEditable !== "inherit" ? node.contentEditable : null;\n
+\t\t},\n
+\n
+\t\tgetContentEditableParent: function(node) {\n
+\t\t\tvar root = this.getRoot(), state = null;\n
+\n
+\t\t\tfor (; node && node !== root; node = node.parentNode) {\n
+\t\t\t\tstate = this.getContentEditable(node);\n
+\n
+\t\t\t\tif (state !== null) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn state;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Destroys all internal references to the DOM to solve IE leak issues.\n
+\t\t *\n
+\t\t * @method destroy\n
+\t\t */\n
+\t\tdestroy: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\t// Unbind all events bound to window/document by editor instance\n
+\t\t\tif (self.boundEvents) {\n
+\t\t\t\tvar i = self.boundEvents.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tvar item = self.boundEvents[i];\n
+\t\t\t\t\tthis.events.unbind(item[0], item[1], item[2]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.boundEvents = null;\n
+\t\t\t}\n
+\n
+\t\t\t// Restore sizzle document to window.document\n
+\t\t\t// Since the current document might be removed producing "Permission denied" on IE see #6325\n
+\t\t\tif (Sizzle.setDocument) {\n
+\t\t\t\tSizzle.setDocument();\n
+\t\t\t}\n
+\n
+\t\t\tself.win = self.doc = self.root = self.events = self.frag = null;\n
+\t\t},\n
+\n
+\t\tisChildOf: function(node, parent) {\n
+\t\t\twhile (node) {\n
+\t\t\t\tif (parent === node) {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnode = node.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t},\n
+\n
+\t\t// #ifdef debug\n
+\n
+\t\tdumpRng: function(r) {\n
+\t\t\treturn (\n
+\t\t\t\t\'startContainer: \' + r.startContainer.nodeName +\n
+\t\t\t\t\', startOffset: \' + r.startOffset +\n
+\t\t\t\t\', endContainer: \' + r.endContainer.nodeName +\n
+\t\t\t\t\', endOffset: \' + r.endOffset\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\t// #endif\n
+\n
+\t\t_findSib: function(node, selector, name) {\n
+\t\t\tvar self = this, func = selector;\n
+\n
+\t\t\tif (node) {\n
+\t\t\t\t// If expression make a function of it using is\n
+\t\t\t\tif (typeof func == \'string\') {\n
+\t\t\t\t\tfunc = function(node) {\n
+\t\t\t\t\t\treturn self.is(node, selector);\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Loop all siblings\n
+\t\t\t\tfor (node = node[name]; node; node = node[name]) {\n
+\t\t\t\t\tif (func(node)) {\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn null;\n
+\t\t}\n
+\t};\n
+\n
+\t/**\n
+\t * Instance of DOMUtils for the current document.\n
+\t *\n
+\t * @static\n
+\t * @property DOM\n
+\t * @type tinymce.dom.DOMUtils\n
+\t * @example\n
+\t * // Example of how to add a class to some element by id\n
+\t * tinymce.DOM.addClass(\'someid\', \'someclass\');\n
+\t */\n
+\tDOMUtils.DOM = new DOMUtils(document);\n
+\n
+\treturn DOMUtils;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>55241</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DOMUtils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

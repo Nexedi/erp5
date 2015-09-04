@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268341.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>TabPanel.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * TabPanel.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Creates a tab panel control.\n
+ *\n
+ * @-x-less TabPanel.less\n
+ * @class tinymce.ui.TabPanel\n
+ * @extends tinymce.ui.Panel\n
+ *\n
+ * @setting {Number} activeTab Active tab index.\n
+ */\n
+define("tinymce/ui/TabPanel", [\n
+\t"tinymce/ui/Panel",\n
+\t"tinymce/dom/DomQuery",\n
+\t"tinymce/ui/DomUtils"\n
+], function(Panel, $, DomUtils) {\n
+\t"use strict";\n
+\n
+\treturn Panel.extend({\n
+\t\tDefaults: {\n
+\t\t\tlayout: \'absolute\',\n
+\t\t\tdefaults: {\n
+\t\t\t\ttype: \'panel\'\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Activates the specified tab by index.\n
+\t\t *\n
+\t\t * @method activateTab\n
+\t\t * @param {Number} idx Index of the tab to activate.\n
+\t\t */\n
+\t\tactivateTab: function(idx) {\n
+\t\t\tvar activeTabElm;\n
+\n
+\t\t\tif (this.activeTabId) {\n
+\t\t\t\tactiveTabElm = this.getEl(this.activeTabId);\n
+\t\t\t\t$(activeTabElm).removeClass(this.classPrefix + \'active\');\n
+\t\t\t\tactiveTabElm.setAttribute(\'aria-selected\', "false");\n
+\t\t\t}\n
+\n
+\t\t\tthis.activeTabId = \'t\' + idx;\n
+\n
+\t\t\tactiveTabElm = this.getEl(\'t\' + idx);\n
+\t\t\tactiveTabElm.setAttribute(\'aria-selected\', "true");\n
+\t\t\t$(activeTabElm).addClass(this.classPrefix + \'active\');\n
+\n
+\t\t\tthis.items()[idx].show().fire(\'showtab\');\n
+\t\t\tthis.reflow();\n
+\n
+\t\t\tthis.items().each(function(item, i) {\n
+\t\t\t\tif (idx != i) {\n
+\t\t\t\t\titem.hide();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, layout = self._layout, tabsHtml = \'\', prefix = self.classPrefix;\n
+\n
+\t\t\tself.preRender();\n
+\t\t\tlayout.preRender(self);\n
+\n
+\t\t\tself.items().each(function(ctrl, i) {\n
+\t\t\t\tvar id = self._id + \'-t\' + i;\n
+\n
+\t\t\t\tctrl.aria(\'role\', \'tabpanel\');\n
+\t\t\t\tctrl.aria(\'labelledby\', id);\n
+\n
+\t\t\t\ttabsHtml += (\n
+\t\t\t\t\t\'<div id="\' + id + \'" class="\' + prefix + \'tab" \' +\n
+\t\t\t\t\t\t\'unselectable="on" role="tab" aria-controls="\' + ctrl._id + \'" aria-selected="false" tabIndex="-1">\' +\n
+\t\t\t\t\t\tself.encode(ctrl.settings.title) +\n
+\t\t\t\t\t\'</div>\'\n
+\t\t\t\t);\n
+\t\t\t});\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + self._id + \'" class="\' + self.classes + \'" hidefocus="1" tabindex="-1">\' +\n
+\t\t\t\t\t\'<div id="\' + self._id + \'-head" class="\' + prefix + \'tabs" role="tablist">\' +\n
+\t\t\t\t\t\ttabsHtml +\n
+\t\t\t\t\t\'</div>\' +\n
+\t\t\t\t\t\'<div id="\' + self._id + \'-body" class="\' + self.bodyClasses + \'">\' +\n
+\t\t\t\t\t\tlayout.renderHtml(self) +\n
+\t\t\t\t\t\'</div>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Called after the control has been rendered.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super();\n
+\n
+\t\t\tself.settings.activeTab = self.settings.activeTab || 0;\n
+\t\t\tself.activateTab(self.settings.activeTab);\n
+\n
+\t\t\tthis.on(\'click\', function(e) {\n
+\t\t\t\tvar targetParent = e.target.parentNode;\n
+\n
+\t\t\t\tif (e.target.parentNode.id == self._id + \'-head\') {\n
+\t\t\t\t\tvar i = targetParent.childNodes.length;\n
+\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tif (targetParent.childNodes[i] == e.target) {\n
+\t\t\t\t\t\t\tself.activateTab(i);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Initializes the current controls layout rect.\n
+\t\t * This will be executed by the layout managers to determine the\n
+\t\t * default minWidth/minHeight etc.\n
+\t\t *\n
+\t\t * @method initLayoutRect\n
+\t\t * @return {Object} Layout rect instance.\n
+\t\t */\n
+\t\tinitLayoutRect: function() {\n
+\t\t\tvar self = this, rect, minW, minH;\n
+\n
+\t\t\tminW = DomUtils.getSize(self.getEl(\'head\')).width;\n
+\t\t\tminW = minW < 0 ? 0 : minW;\n
+\t\t\tminH = 0;\n
+\n
+\t\t\tself.items().each(function(item) {\n
+\t\t\t\tminW = Math.max(minW, item.layoutRect().minW);\n
+\t\t\t\tminH = Math.max(minH, item.layoutRect().minH);\n
+\t\t\t});\n
+\n
+\t\t\tself.items().each(function(ctrl) {\n
+\t\t\t\tctrl.settings.x = 0;\n
+\t\t\t\tctrl.settings.y = 0;\n
+\t\t\t\tctrl.settings.w = minW;\n
+\t\t\t\tctrl.settings.h = minH;\n
+\n
+\t\t\t\tctrl.layoutRect({\n
+\t\t\t\t\tx: 0,\n
+\t\t\t\t\ty: 0,\n
+\t\t\t\t\tw: minW,\n
+\t\t\t\t\th: minH\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\tvar headH = DomUtils.getSize(self.getEl(\'head\')).height;\n
+\n
+\t\t\tself.settings.minWidth = minW;\n
+\t\t\tself.settings.minHeight = minH + headH;\n
+\n
+\t\t\trect = self._super();\n
+\t\t\trect.deltaH += headH;\n
+\t\t\trect.innerH = rect.h - rect.deltaH;\n
+\n
+\t\t\treturn rect;\n
+\t\t}\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4093</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>TabPanel.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

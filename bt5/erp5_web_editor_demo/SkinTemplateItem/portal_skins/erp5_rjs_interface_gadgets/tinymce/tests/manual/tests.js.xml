@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268172.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tests.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\n
+\t"title": "tinymce",\n
+\t"tests": [\n
+\t\t{"title": "Gecko caret", "url": "gecko_caret.html", "manual": true},\n
+\t\t{"title": "Noneditable", "url": "noneditable.html", "manual": true},\n
+\t\t{"title": "Removeformat", "url": "removeformat.html", "manual": true},\n
+\t\t{"title": "Resize", "url": "resize.html", "manual": true},\n
+\t\t{"title": "Visual blocks", "url": "visualblocks.html", "manual": true},\n
+\t\t{"title": "Custom theme", "url": "custom_theme.html", "manual": true},\n
+\t\t{"title": "Development", "url": "development.html", "manual": true},\n
+\t\t{"title": "Classic theme", "url": "classic.html", "manual": true},\n
+\t\t{"title": "Inline editing", "url": "inline.html", "manual": true}\n
+\t]\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>671</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>tests.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

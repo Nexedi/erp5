@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268185.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>.jshintrc</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\n
+\t"predef": {\n
+\t\t"module": true,\n
+\t\t"asyncTest": false,\n
+\t\t"deepEqual": false,\n
+\t\t"equal": false,\n
+\t\t"expect": false,\n
+\t\t"module": false,\n
+\t\t"notDeepEqual": false,\n
+\t\t"notEqual": false,\n
+\t\t"notStrictEqual ": false,\n
+\t\t"ok": false,\n
+\t\t"QUnit": false,\n
+\t\t"raises": false,\n
+\t\t"start": false,\n
+\t\t"stop": false,\n
+\t\t"strictEqual": false,\n
+\t\t"test": false,\n
+\t\t"throws": false,\n
+\t\t"$": false,\n
+\t\t"tinymce": false,\n
+\t\t"editor": false,\n
+\t\t"inlineEditor": false,\n
+\t\t"Utils": false,\n
+\t\t"google": false\n
+\t},\n
+\t"passfail": false,\n
+\t"maxerr": 50,\n
+\t"maxparams": 50,\n
+\t"maxdepth": 8,\n
+\t"maxstatements": 150,\n
+\t//"maxcomplexity": 10,\n
+\t"camelcase":false,\n
+\t"browser": true,\n
+\t"node": false,\n
+\t"rhino": false,\n
+\t"couch": false,\n
+\t"wsh": false,\n
+\t"jquery": false,\n
+\t"prototypejs": false,\n
+\t"mootools": false,\n
+\t"dojo": false,\n
+\t"debug": false,\n
+\t"devel": false,\n
+\t"es5": false,\n
+\t"strict": false,\n
+\t"globalstrict": true,\n
+\t"asi": false,\n
+\t"laxbreak": false,\n
+\t"bitwise": true,\n
+\t"quotmark": false,\n
+\t"boss": false,\n
+\t"curly": true,\n
+\t"eqeqeq": false,\n
+\t"eqnull": false,\n
+\t"evil": true,\n
+\t"expr": false,\n
+\t"forin": false,\n
+\t"immed": true,\n
+\t"latedef": true,\n
+\t"loopfunc": false,\n
+\t"noarg": true,\n
+\t"regexp": false,\n
+\t"regexdash": false,\n
+\t"scripturl": true,\n
+\t"shadow": false,\n
+\t"supernew": false,\n
+\t"undef": true,\n
+\t"unused": true,\n
+\t"validthis": false,\n
+\t"smarttabs": false,\n
+\t"proto": false,\n
+\t"onecase": true,\n
+\t"nonstandard": true,\n
+\t"multistr": false,\n
+\t"laxcomma": false,\n
+\t"lastsemic": false,\n
+\t"iterator": false,\n
+\t"funcscope": false,\n
+\t"esnext": false,\n
+\t"newcap": false,\n
+\t"noempty": true,\n
+\t"nonew": true,\n
+\t"nomen": false,\n
+\t"onevar": false,\n
+\t"plusplus": false,\n
+\t"sub": false,\n
+\t"trailing": true,\n
+\t"white": false\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1625</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>.jshintrc</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

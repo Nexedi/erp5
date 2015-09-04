@@ -1,0 +1,252 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268326.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>TextBox.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * TextBox.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Creates a new textbox.\n
+ *\n
+ * @-x-less TextBox.less\n
+ * @class tinymce.ui.TextBox\n
+ * @extends tinymce.ui.Widget\n
+ */\n
+define("tinymce/ui/TextBox", [\n
+\t"tinymce/ui/Widget"\n
+], function(Widget) {\n
+\t"use strict";\n
+\n
+\treturn Widget.extend({\n
+\t\t/**\n
+\t\t * Constructs a instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {Boolean} multiline True if the textbox is a multiline control.\n
+\t\t * @setting {Number} maxLength Max length for the textbox.\n
+\t\t * @setting {Number} size Size of the textbox in characters.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super(settings);\n
+\n
+\t\t\tself.classes.add(\'textbox\');\n
+\n
+\t\t\tif (settings.multiline) {\n
+\t\t\t\tself.classes.add(\'multiline\');\n
+\t\t\t} else {\n
+\t\t\t\tself.on(\'keydown\', function(e) {\n
+\t\t\t\t\tvar rootControl;\n
+\n
+\t\t\t\t\tif (e.keyCode == 13) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t\t// Find root control that we can do toJSON on\n
+\t\t\t\t\t\tself.parents().reverse().each(function(ctrl) {\n
+\t\t\t\t\t\t\tif (ctrl.toJSON) {\n
+\t\t\t\t\t\t\t\trootControl = ctrl;\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t// Fire event on current text box with the serialized data of the whole form\n
+\t\t\t\t\t\tself.fire(\'submit\', {data: rootControl.toJSON()});\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tself.on(\'keyup\', function(e) {\n
+\t\t\t\t\tself.state.set(\'value\', e.target.value);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Repaints the control after a layout operation.\n
+\t\t *\n
+\t\t * @method repaint\n
+\t\t */\n
+\t\trepaint: function() {\n
+\t\t\tvar self = this, style, rect, borderBox, borderW = 0, borderH = 0, lastRepaintRect;\n
+\n
+\t\t\tstyle = self.getEl().style;\n
+\t\t\trect = self._layoutRect;\n
+\t\t\tlastRepaintRect = self._lastRepaintRect || {};\n
+\n
+\t\t\t// Detect old IE 7+8 add lineHeight to align caret vertically in the middle\n
+\t\t\tvar doc = document;\n
+\t\t\tif (!self.settings.multiline && doc.all && (!doc.documentMode || doc.documentMode <= 8)) {\n
+\t\t\t\tstyle.lineHeight = (rect.h - borderH) + \'px\';\n
+\t\t\t}\n
+\n
+\t\t\tborderBox = self.borderBox;\n
+\t\t\tborderW = borderBox.left + borderBox.right + 8;\n
+\t\t\tborderH = borderBox.top + borderBox.bottom + (self.settings.multiline ? 8 : 0);\n
+\n
+\t\t\tif (rect.x !== lastRepaintRect.x) {\n
+\t\t\t\tstyle.left = rect.x + \'px\';\n
+\t\t\t\tlastRepaintRect.x = rect.x;\n
+\t\t\t}\n
+\n
+\t\t\tif (rect.y !== lastRepaintRect.y) {\n
+\t\t\t\tstyle.top = rect.y + \'px\';\n
+\t\t\t\tlastRepaintRect.y = rect.y;\n
+\t\t\t}\n
+\n
+\t\t\tif (rect.w !== lastRepaintRect.w) {\n
+\t\t\t\tstyle.width = (rect.w - borderW) + \'px\';\n
+\t\t\t\tlastRepaintRect.w = rect.w;\n
+\t\t\t}\n
+\n
+\t\t\tif (rect.h !== lastRepaintRect.h) {\n
+\t\t\t\tstyle.height = (rect.h - borderH) + \'px\';\n
+\t\t\t\tlastRepaintRect.h = rect.h;\n
+\t\t\t}\n
+\n
+\t\t\tself._lastRepaintRect = lastRepaintRect;\n
+\t\t\tself.fire(\'repaint\', {}, false);\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, id = self._id, settings = self.settings, value = self.encode(self.state.get(\'value\'), false), extraAttrs = \'\';\n
+\n
+\t\t\tif ("spellcheck" in settings) {\n
+\t\t\t\textraAttrs += \' spellcheck="\' + settings.spellcheck + \'"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.maxLength) {\n
+\t\t\t\textraAttrs += \' maxlength="\' + settings.maxLength + \'"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.size) {\n
+\t\t\t\textraAttrs += \' size="\' + settings.size + \'"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.subtype) {\n
+\t\t\t\textraAttrs += \' type="\' + settings.subtype + \'"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (self.disabled()) {\n
+\t\t\t\textraAttrs += \' disabled="disabled"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.multiline) {\n
+\t\t\t\treturn (\n
+\t\t\t\t\t\'<textarea id="\' + id + \'" class="\' + self.classes + \'" \' +\n
+\t\t\t\t\t(settings.rows ? \' rows="\' + settings.rows + \'"\' : \'\') +\n
+\t\t\t\t\t\' hidefocus="1"\' + extraAttrs + \'>\' + value +\n
+\t\t\t\t\t\'</textarea>\'\n
+\t\t\t\t);\n
+\t\t\t}\n
+\n
+\t\t\treturn \'<input id="\' + id + \'" class="\' + self.classes + \'" value="\' + value + \'" hidefocus="1"\' + extraAttrs + \' />\';\n
+\t\t},\n
+\n
+\t\tvalue: function(value) {\n
+\t\t\tif (arguments.length) {\n
+\t\t\t\tthis.state.set(\'value\', value);\n
+\t\t\t\treturn this;\n
+\t\t\t}\n
+\n
+\t\t\t// Make sure the real state is in sync\n
+\t\t\tif (this.state.get(\'rendered\')) {\n
+\t\t\t\tthis.state.set(\'value\', this.getEl().value);\n
+\t\t\t}\n
+\n
+\t\t\treturn this.state.get(\'value\');\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Called after the control has been rendered.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super();\n
+\n
+\t\t\tself.$el.on(\'change\', function(e) {\n
+\t\t\t\tself.state.set(\'value\', e.target.value);\n
+\t\t\t\tself.fire(\'change\', e);\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.state.on(\'change:value\', function(e) {\n
+\t\t\t\tif (self.getEl().value != e.value) {\n
+\t\t\t\t\tself.getEl().value = e.value;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:disabled\', function(e) {\n
+\t\t\t\tself.getEl().disabled = e.value;\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t},\n
+\n
+\t\tremove: function() {\n
+\t\t\tthis.$el.off();\n
+\t\t\tthis._super();\n
+\t\t}\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4932</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>TextBox.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

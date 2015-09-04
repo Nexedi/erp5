@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268348.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>PanelButton.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * PanelButton.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Creates a new panel button.\n
+ *\n
+ * @class tinymce.ui.PanelButton\n
+ * @extends tinymce.ui.Button\n
+ */\n
+define("tinymce/ui/PanelButton", [\n
+\t"tinymce/ui/Button",\n
+\t"tinymce/ui/FloatPanel"\n
+], function(Button, FloatPanel) {\n
+\t"use strict";\n
+\n
+\treturn Button.extend({\n
+\t\t/**\n
+\t\t * Shows the panel for the button.\n
+\t\t *\n
+\t\t * @method showPanel\n
+\t\t */\n
+\t\tshowPanel: function() {\n
+\t\t\tvar self = this, settings = self.settings;\n
+\n
+\t\t\tself.active(true);\n
+\n
+\t\t\tif (!self.panel) {\n
+\t\t\t\tvar panelSettings = settings.panel;\n
+\n
+\t\t\t\t// Wrap panel in grid layout if type if specified\n
+\t\t\t\t// This makes it possible to add forms or other containers directly in the panel option\n
+\t\t\t\tif (panelSettings.type) {\n
+\t\t\t\t\tpanelSettings = {\n
+\t\t\t\t\t\tlayout: \'grid\',\n
+\t\t\t\t\t\titems: panelSettings\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\n
+\t\t\t\tpanelSettings.role = panelSettings.role || \'dialog\';\n
+\t\t\t\tpanelSettings.popover = true;\n
+\t\t\t\tpanelSettings.autohide = true;\n
+\t\t\t\tpanelSettings.ariaRoot = true;\n
+\n
+\t\t\t\tself.panel = new FloatPanel(panelSettings).on(\'hide\', function() {\n
+\t\t\t\t\tself.active(false);\n
+\t\t\t\t}).on(\'cancel\', function(e) {\n
+\t\t\t\t\te.stopPropagation();\n
+\t\t\t\t\tself.focus();\n
+\t\t\t\t\tself.hidePanel();\n
+\t\t\t\t}).parent(self).renderTo(self.getContainerElm());\n
+\n
+\t\t\t\tself.panel.fire(\'show\');\n
+\t\t\t\tself.panel.reflow();\n
+\t\t\t} else {\n
+\t\t\t\tself.panel.show();\n
+\t\t\t}\n
+\n
+\t\t\tself.panel.moveRel(self.getEl(), settings.popoverAlign || (self.isRtl() ? [\'bc-tr\', \'bc-tc\'] : [\'bc-tl\', \'bc-tc\']));\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Hides the panel for the button.\n
+\t\t *\n
+\t\t * @method hidePanel\n
+\t\t */\n
+\t\thidePanel: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (self.panel) {\n
+\t\t\t\tself.panel.hide();\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Called after the control has been rendered.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.aria(\'haspopup\', true);\n
+\n
+\t\t\tself.on(\'click\', function(e) {\n
+\t\t\t\tif (e.control === self) {\n
+\t\t\t\t\tif (self.panel && self.panel.visible()) {\n
+\t\t\t\t\t\tself.hidePanel();\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tself.showPanel();\n
+\t\t\t\t\t\tself.panel.focus(!!e.aria);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t},\n
+\n
+\t\tremove: function() {\n
+\t\t\tif (this.panel) {\n
+\t\t\t\tthis.panel.remove();\n
+\t\t\t\tthis.panel = null;\n
+\t\t\t}\n
+\n
+\t\t\treturn this._super();\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2360</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>PanelButton.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

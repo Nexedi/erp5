@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268414.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>validate.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * validate.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+\t// String validation:\n
+\n
+\tif (!Validator.isEmail(\'myemail\'))\n
+\t\talert(\'Invalid email.\');\n
+\n
+\t// Form validation:\n
+\n
+\tvar f = document.forms[\'myform\'];\n
+\n
+\tif (!Validator.isEmail(f.myemail))\n
+\t\talert(\'Invalid email.\');\n
+*/\n
+\n
+var Validator = {\n
+\tisEmail : function(s) {\n
+\t\treturn this.test(s, \'^[-!#$%&\\\'*+\\\\./0-9=?A-Z^_`a-z{|}~]+@[-!#$%&\\\'*+\\\\/0-9=?A-Z^_`a-z{|}~]+\\.[-!#$%&\\\'*+\\\\./0-9=?A-Z^_`a-z{|}~]+$\');\n
+\t},\n
+\n
+\tisAbsUrl : function(s) {\n
+\t\treturn this.test(s, \'^(news|telnet|nttp|file|http|ftp|https)://[-A-Za-z0-9\\\\.]+\\\\/?.*$\');\n
+\t},\n
+\n
+\tisSize : function(s) {\n
+\t\treturn this.test(s, \'^[0-9.]+(%|in|cm|mm|em|ex|pt|pc|px)?$\');\n
+\t},\n
+\n
+\tisId : function(s) {\n
+\t\treturn this.test(s, \'^[A-Za-z_]([A-Za-z0-9_])*$\');\n
+\t},\n
+\n
+\tisEmpty : function(s) {\n
+\t\tvar nl, i;\n
+\n
+\t\tif (s.nodeName == \'SELECT\' && s.selectedIndex < 1)\n
+\t\t\treturn true;\n
+\n
+\t\tif (s.type == \'checkbox\' && !s.checked)\n
+\t\t\treturn true;\n
+\n
+\t\tif (s.type == \'radio\') {\n
+\t\t\tfor (i=0, nl = s.form.elements; i<nl.length; i++) {\n
+\t\t\t\tif (nl[i].type == "radio" && nl[i].name == s.name && nl[i].checked)\n
+\t\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\treturn true;\n
+\t\t}\n
+\n
+\t\treturn new RegExp(\'^\\\\s*$\').test(s.nodeType == 1 ? s.value : s);\n
+\t},\n
+\n
+\tisNumber : function(s, d) {\n
+\t\treturn !isNaN(s.nodeType == 1 ? s.value : s) && (!d || !this.test(s, \'^-?[0-9]*\\\\.[0-9]*$\'));\n
+\t},\n
+\n
+\ttest : function(s, p) {\n
+\t\ts = s.nodeType == 1 ? s.value : s;\n
+\n
+\t\treturn s == \'\' || new RegExp(p).test(s);\n
+\t}\n
+};\n
+\n
+var AutoValidator = {\n
+\tsettings : {\n
+\t\tid_cls : \'id\',\n
+\t\tint_cls : \'int\',\n
+\t\turl_cls : \'url\',\n
+\t\tnumber_cls : \'number\',\n
+\t\temail_cls : \'email\',\n
+\t\tsize_cls : \'size\',\n
+\t\trequired_cls : \'required\',\n
+\t\tinvalid_cls : \'invalid\',\n
+\t\tmin_cls : \'min\',\n
+\t\tmax_cls : \'max\'\n
+\t},\n
+\n
+\tinit : function(s) {\n
+\t\tvar n;\n
+\n
+\t\tfor (n in s)\n
+\t\t\tthis.settings[n] = s[n];\n
+\t},\n
+\n
+\tvalidate : function(f) {\n
+\t\tvar i, nl, s = this.settings, c = 0;\n
+\n
+\t\tnl = this.tags(f, \'label\');\n
+\t\tfor (i=0; i<nl.length; i++) {\n
+\t\t\tthis.removeClass(nl[i], s.invalid_cls);\n
+\t\t\tnl[i].setAttribute(\'aria-invalid\', false);\n
+\t\t}\n
+\n
+\t\tc += this.validateElms(f, \'input\');\n
+\t\tc += this.validateElms(f, \'select\');\n
+\t\tc += this.validateElms(f, \'textarea\');\n
+\n
+\t\treturn c == 3;\n
+\t},\n
+\n
+\tinvalidate : function(n) {\n
+\t\tthis.mark(n.form, n);\n
+\t},\n
+\n
+\tgetErrorMessages : function(f) {\n
+\t\tvar nl, i, s = this.settings, field, msg, values, messages = [], ed = tinyMCEPopup.editor;\n
+\t\tnl = this.tags(f, "label");\n
+\t\tfor (i=0; i<nl.length; i++) {\n
+\t\t\tif (this.hasClass(nl[i], s.invalid_cls)) {\n
+\t\t\t\tfield = document.getElementById(nl[i].getAttribute("for"));\n
+\t\t\t\tvalues = { field: nl[i].textContent };\n
+\t\t\t\tif (this.hasClass(field, s.min_cls, true)) {\n
+\t\t\t\t\tmessage = ed.getLang(\'invalid_data_min\');\n
+\t\t\t\t\tvalues.min = this.getNum(field, s.min_cls);\n
+\t\t\t\t} else if (this.hasClass(field, s.number_cls)) {\n
+\t\t\t\t\tmessage = ed.getLang(\'invalid_data_number\');\n
+\t\t\t\t} else if (this.hasClass(field, s.size_cls)) {\n
+\t\t\t\t\tmessage = ed.getLang(\'invalid_data_size\');\n
+\t\t\t\t} else {\n
+\t\t\t\t\tmessage = ed.getLang(\'invalid_data\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tmessage = message.replace(/{\\#([^}]+)\\}/g, function(a, b) {\n
+\t\t\t\t\treturn values[b] || \'{#\' + b + \'}\';\n
+\t\t\t\t});\n
+\t\t\t\tmessages.push(message);\n
+\t\t\t}\n
+\t\t}\n
+\t\treturn messages;\n
+\t},\n
+\n
+\treset : function(e) {\n
+\t\tvar t = [\'label\', \'input\', \'select\', \'textarea\'];\n
+\t\tvar i, j, nl, s = this.settings;\n
+\n
+\t\tif (e == null)\n
+\t\t\treturn;\n
+\n
+\t\tfor (i=0; i<t.length; i++) {\n
+\t\t\tnl = this.tags(e.form ? e.form : e, t[i]);\n
+\t\t\tfor (j=0; j<nl.length; j++) {\n
+\t\t\t\tthis.removeClass(nl[j], s.invalid_cls);\n
+\t\t\t\tnl[j].setAttribute(\'aria-invalid\', false);\n
+\t\t\t}\n
+\t\t}\n
+\t},\n
+\n
+\tvalidateElms : function(f, e) {\n
+\t\tvar nl, i, n, s = this.settings, st = true, va = Validator, v;\n
+\n
+\t\tnl = this.tags(f, e);\n
+\t\tfor (i=0; i<nl.length; i++) {\n
+\t\t\tn = nl[i];\n
+\n
+\t\t\tthis.removeClass(n, s.invalid_cls);\n
+\n
+\t\t\tif (this.hasClass(n, s.required_cls) && va.isEmpty(n))\n
+\t\t\t\tst = this.mark(f, n);\n
+\n
+\t\t\tif (this.hasClass(n, s.number_cls) && !va.isNumber(n))\n
+\t\t\t\tst = this.mark(f, n);\n
+\n
+\t\t\tif (this.hasClass(n, s.int_cls) && !va.isNumber(n, true))\n
+\t\t\t\tst = this.mark(f, n);\n
+\n
+\t\t\tif (this.hasClass(n, s.url_cls) && !va.isAbsUrl(n))\n
+\t\t\t\tst = this.mark(f, n);\n
+\n
+\t\t\tif (this.hasClass(n, s.email_cls) && !va.isEmail(n))\n
+\t\t\t\tst = this.mark(f, n);\n
+\n
+\t\t\tif (this.hasClass(n, s.size_cls) && !va.isSize(n))\n
+\t\t\t\tst = this.mark(f, n);\n
+\n
+\t\t\tif (this.hasClass(n, s.id_cls) && !va.isId(n))\n
+\t\t\t\tst = this.mark(f, n);\n
+\n
+\t\t\tif (this.hasClass(n, s.min_cls, true)) {\n
+\t\t\t\tv = this.getNum(n, s.min_cls);\n
+\n
+\t\t\t\tif (isNaN(v) || parseInt(n.value) < parseInt(v))\n
+\t\t\t\t\tst = this.mark(f, n);\n
+\t\t\t}\n
+\n
+\t\t\tif (this.hasClass(n, s.max_cls, true)) {\n
+\t\t\t\tv = this.getNum(n, s.max_cls);\n
+\n
+\t\t\t\tif (isNaN(v) || parseInt(n.value) > parseInt(v))\n
+\t\t\t\t\tst = this.mark(f, n);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn st;\n
+\t},\n
+\n
+\thasClass : function(n, c, d) {\n
+\t\treturn new RegExp(\'\\\\b\' + c + (d ? \'[0-9]+\' : \'\') + \'\\\\b\', \'g\').test(n.className);\n
+\t},\n
+\n
+\tgetNum : function(n, c) {\n
+\t\tc = n.className.match(new RegExp(\'\\\\b\' + c + \'([0-9]+)\\\\b\', \'g\'))[0];\n
+\t\tc = c.replace(/[^0-9]/g, \'\');\n
+\n
+\t\treturn c;\n
+\t},\n
+\n
+\taddClass : function(n, c, b) {\n
+\t\tvar o = this.removeClass(n, c);\n
+\t\tn.className = b ? c + (o != \'\' ? (\' \' + o) : \'\') : (o != \'\' ? (o + \' \') : \'\') + c;\n
+\t},\n
+\n
+\tremoveClass : function(n, c) {\n
+\t\tc = n.className.replace(new RegExp("(^|\\\\s+)" + c + "(\\\\s+|$)"), \' \');\n
+\t\treturn n.className = c != \' \' ? c : \'\';\n
+\t},\n
+\n
+\ttags : function(f, s) {\n
+\t\treturn f.getElementsByTagName(s);\n
+\t},\n
+\n
+\tmark : function(f, n) {\n
+\t\tvar s = this.settings;\n
+\n
+\t\tthis.addClass(n, s.invalid_cls);\n
+\t\tn.setAttribute(\'aria-invalid\', \'true\');\n
+\t\tthis.markLabels(f, n, s.invalid_cls);\n
+\n
+\t\treturn false;\n
+\t},\n
+\n
+\tmarkLabels : function(f, n, ic) {\n
+\t\tvar nl, i;\n
+\n
+\t\tnl = this.tags(f, "label");\n
+\t\tfor (i=0; i<nl.length; i++) {\n
+\t\t\tif (nl[i].getAttribute("for") == n.id || nl[i].htmlFor == n.id)\n
+\t\t\t\tthis.addClass(nl[i], ic);\n
+\t\t}\n
+\n
+\t\treturn null;\n
+\t}\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5850</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>validate.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

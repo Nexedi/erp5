@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268174.01</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>init.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tvar coverObjects = [], modulesExecuted = {}, log = [], currentModule;\n
+\n
+\tQUnit.config.reorder = false;\n
+\tQUnit.config.hidepassed = true;\n
+\n
+\twindow.editor = window.inlineEditor = null; \n
+\n
+\tvar oldModule = module;\n
+\n
+\tQUnit.moduleStart(function(details) {\n
+\t\tcurrentModule = details.name;\n
+\t\tmodulesExecuted[details.name] = true;\n
+\n
+\t\ttinymce.remove();\n
+\t\tdocument.getElementById(\'view\').innerHTML = \'<textarea></textarea>\';\n
+\t});\n
+\n
+\tQUnit.moduleDone(function() {\n
+\t\ttinymce.remove();\n
+\t\twindow.editor = window.inlineEditor = null;\n
+\t});\n
+\n
+\t// Sauce labs\n
+\tQUnit.testStart(function(testDetails) {\n
+\t\tQUnit.log = function(details) {\n
+\t\t\tif (!details.result) {\n
+\t\t\t\tdetails.name = currentModule + \':\' + testDetails.name;\n
+\t\t\t\tlog.push(details);\n
+\t\t\t}\n
+\t\t};\n
+\t});\n
+\n
+\tQUnit.done(function(results) {\n
+\t\tdocument.getElementById("view").style.display = \'none\';\n
+\n
+\t\tif (window.__$coverObject) {\n
+\t\t\tcoverObjects.push(window.__$coverObject);\n
+\n
+\t\t\t$(\'<button>Coverage report</button>\').on(\'click\', function() {\n
+\t\t\t\twindow.open(\'coverage/index.html\', \'coverage\');\n
+\t\t\t}).appendTo(document.body);\n
+\t\t}\n
+\n
+\t\t// Sauce labs\n
+\t\tvar tests = [];\n
+\t\tfor (var i = 0; i < log.length; i++) {\n
+\t\t\ttests.push({\n
+\t\t\t\tname: log[i].name,\n
+\t\t\t\tresult: log[i].result,\n
+\t\t\t\texpected: log[i].expected,\n
+\t\t\t\tactual: log[i].actual,\n
+\t\t\t\tsource: log[i].source\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tresults.tests = tests;\n
+\t\twindow.global_test_results = results;\n
+\t});\n
+\n
+\twindow.module = function(name, settings) {\n
+\t\tsettings = settings || {};\n
+\n
+\t\tif (settings.setupModule) {\n
+\t\t\tQUnit.moduleStart(function(details) {\n
+\t\t\t\tif (details.name == name) {\n
+\t\t\t\t\tsettings.setupModule();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tif (settings.teardownModule) {\n
+\t\t\tQUnit.moduleDone(function(details) {\n
+\t\t\t\tif (details.name == name) {\n
+\t\t\t\t\tsettings.teardownModule();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\toldModule(name, settings);\n
+\t};\n
+\n
+\twindow.getCoverObject = function() {\n
+\t\tvar coverObject = {}, fileName, gaps, gap, count, targetModuleName;\n
+\t\tvar isScoped = document.location.search.indexOf(\'module=\') != -1;\n
+\n
+\t\tfor (var i = 0, length = coverObjects.length; i < length; i++) {\n
+\t\t\tfor (fileName in coverObjects[i]) {\n
+\t\t\t\tgaps = coverObjects[i][fileName];\n
+\n
+\t\t\t\tif (isScoped && fileName.indexOf(\'js/tinymce/classes\') === 0) {\n
+\t\t\t\t\ttargetModuleName = "tinymce." + fileName.substr(\'js/tinymce/classes\'.length + 1).replace(/\\//g, \'.\');\n
+\t\t\t\t\ttargetModuleName = targetModuleName.replace(/\\.js$/, \'\');\n
+\n
+\t\t\t\t\tif (!modulesExecuted[targetModuleName]) {\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!coverObject.hasOwnProperty(fileName))\t{\n
+\t\t\t\t\tcoverObject[fileName] = gaps;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tfor (gap in gaps) {\n
+\t\t\t\t\t\tif (gap === \'__code\') {\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tcount = gaps[gap];\n
+\n
+\t\t\t\t\t\tif (!coverObject[fileName].hasOwnProperty(gap)) {\n
+\t\t\t\t\t\t\tcoverObject[fileName][gap] = count;\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tcoverObject[fileName][gap] += count;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn coverObject;\n
+\t};\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2856</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>init.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

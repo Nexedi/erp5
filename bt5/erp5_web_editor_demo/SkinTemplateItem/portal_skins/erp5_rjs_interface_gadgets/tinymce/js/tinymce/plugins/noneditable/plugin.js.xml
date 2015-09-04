@@ -1,0 +1,657 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268391.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*jshint loopfunc:true */\n
+/*eslint no-loop-func:0 */\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'noneditable\', function(editor) {\n
+\tvar TreeWalker = tinymce.dom.TreeWalker;\n
+\tvar externalName = \'contenteditable\', internalName = \'data-mce-\' + externalName;\n
+\tvar VK = tinymce.util.VK;\n
+\n
+\t// Returns the content editable state of a node "true/false" or null\n
+\tfunction getContentEditable(node) {\n
+\t\tvar contentEditable;\n
+\n
+\t\t// Ignore non elements\n
+\t\tif (node.nodeType === 1) {\n
+\t\t\t// Check for fake content editable\n
+\t\t\tcontentEditable = node.getAttribute(internalName);\n
+\t\t\tif (contentEditable && contentEditable !== "inherit") {\n
+\t\t\t\treturn contentEditable;\n
+\t\t\t}\n
+\n
+\t\t\t// Check for real content editable\n
+\t\t\tcontentEditable = node.contentEditable;\n
+\t\t\tif (contentEditable !== "inherit") {\n
+\t\t\t\treturn contentEditable;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn null;\n
+\t}\n
+\n
+\t// Returns the noneditable parent or null if there is a editable before it or if it wasn\'t found\n
+\tfunction getNonEditableParent(node) {\n
+\t\tvar state;\n
+\n
+\t\twhile (node) {\n
+\t\t\tstate = getContentEditable(node);\n
+\t\t\tif (state) {\n
+\t\t\t\treturn state === "false" ? node : null;\n
+\t\t\t}\n
+\n
+\t\t\tnode = node.parentNode;\n
+\t\t}\n
+\t}\n
+\n
+\tfunction handleContentEditableSelection() {\n
+\t\tvar dom = editor.dom, selection = editor.selection, caretContainerId = \'mce_noneditablecaret\', invisibleChar = \'\\uFEFF\';\n
+\n
+\t\t// Get caret container parent for the specified node\n
+\t\tfunction getParentCaretContainer(node) {\n
+\t\t\twhile (node) {\n
+\t\t\t\tif (node.id === caretContainerId) {\n
+\t\t\t\t\treturn node;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnode = node.parentNode;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Finds the first text node in the specified node\n
+\t\tfunction findFirstTextNode(node) {\n
+\t\t\tvar walker;\n
+\n
+\t\t\tif (node) {\n
+\t\t\t\twalker = new TreeWalker(node, node);\n
+\n
+\t\t\t\tfor (node = walker.current(); node; node = walker.next()) {\n
+\t\t\t\t\tif (node.nodeType === 3) {\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Insert caret container before/after target or expand selection to include block\n
+\t\tfunction insertCaretContainerOrExpandToBlock(target, before) {\n
+\t\t\tvar caretContainer, rng;\n
+\n
+\t\t\t// Select block\n
+\t\t\tif (getContentEditable(target) === "false") {\n
+\t\t\t\tif (dom.isBlock(target)) {\n
+\t\t\t\t\tselection.select(target);\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\trng = dom.createRng();\n
+\n
+\t\t\tif (getContentEditable(target) === "true") {\n
+\t\t\t\tif (!target.firstChild) {\n
+\t\t\t\t\ttarget.appendChild(editor.getDoc().createTextNode(\'\\u00a0\'));\n
+\t\t\t\t}\n
+\n
+\t\t\t\ttarget = target.firstChild;\n
+\t\t\t\tbefore = true;\n
+\t\t\t}\n
+\n
+\t\t\t/*\n
+\t\t\tcaretContainer = dom.create(\'span\', {\n
+\t\t\t\tid: caretContainerId,\n
+\t\t\t\t\'data-mce-bogus\': true,\n
+\t\t\t\tstyle:\'border: 1px solid red\'\n
+\t\t\t}, invisibleChar);\n
+\t\t\t*/\n
+\n
+\t\t\tcaretContainer = dom.create(\'span\', {id: caretContainerId, \'data-mce-bogus\': true}, invisibleChar);\n
+\n
+\t\t\tif (before) {\n
+\t\t\t\ttarget.parentNode.insertBefore(caretContainer, target);\n
+\t\t\t} else {\n
+\t\t\t\tdom.insertAfter(caretContainer, target);\n
+\t\t\t}\n
+\n
+\t\t\trng.setStart(caretContainer.firstChild, 1);\n
+\t\t\trng.collapse(true);\n
+\t\t\tselection.setRng(rng);\n
+\n
+\t\t\treturn caretContainer;\n
+\t\t}\n
+\n
+\t\t// Removes any caret container\n
+\t\tfunction removeCaretContainer(caretContainer) {\n
+\t\t\tvar rng, child, lastContainer;\n
+\n
+\t\t\tif (caretContainer) {\n
+\t\t\t\trng = selection.getRng(true);\n
+\t\t\t\trng.setStartBefore(caretContainer);\n
+\t\t\t\trng.setEndBefore(caretContainer);\n
+\n
+\t\t\t\tchild = findFirstTextNode(caretContainer);\n
+\t\t\t\tif (child && child.nodeValue.charAt(0) == invisibleChar) {\n
+\t\t\t\t\tchild = child.deleteData(0, 1);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdom.remove(caretContainer, true);\n
+\n
+\t\t\t\tselection.setRng(rng);\n
+\t\t\t} else {\n
+\t\t\t\twhile ((caretContainer = dom.get(caretContainerId)) && caretContainer !== lastContainer) {\n
+\t\t\t\t\tchild = findFirstTextNode(caretContainer);\n
+\t\t\t\t\tif (child && child.nodeValue.charAt(0) == invisibleChar) {\n
+\t\t\t\t\t\tchild = child.deleteData(0, 1);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tdom.remove(caretContainer, true);\n
+\n
+\t\t\t\t\tlastContainer = caretContainer;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Modifies the selection to include contentEditable false elements or insert caret containers\n
+\t\tfunction moveSelection() {\n
+\t\t\tvar nonEditableStart, nonEditableEnd, isCollapsed, rng, element;\n
+\n
+\t\t\t// Checks if there is any contents to the left/right side of caret returns the noneditable element or\n
+\t\t\t// any editable element if it finds one inside\n
+\t\t\tfunction hasSideContent(element, left) {\n
+\t\t\t\tvar container, offset, walker, node, len;\n
+\n
+\t\t\t\tcontainer = rng.startContainer;\n
+\t\t\t\toffset = rng.startOffset;\n
+\n
+\t\t\t\t// If endpoint is in middle of text node then expand to beginning/end of element\n
+\t\t\t\tif (container.nodeType == 3) {\n
+\t\t\t\t\tlen = container.nodeValue.length;\n
+\t\t\t\t\tif ((offset > 0 && offset < len) || (left ? offset == len : offset === 0)) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// Can we resolve the node by index\n
+\t\t\t\t\tif (offset < container.childNodes.length) {\n
+\t\t\t\t\t\t// Browser represents caret position as the offset at the start of an element. When moving right\n
+\t\t\t\t\t\t// this is the element we are moving into so we consider our container to be child node at offset-1\n
+\t\t\t\t\t\tvar pos = !left && offset > 0 ? offset - 1 : offset;\n
+\t\t\t\t\t\tcontainer = container.childNodes[pos];\n
+\t\t\t\t\t\tif (container.hasChildNodes()) {\n
+\t\t\t\t\t\t\tcontainer = container.firstChild;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// If not then the caret is at the last position in it\'s container and the caret container\n
+\t\t\t\t\t\t// should be inserted after the noneditable element\n
+\t\t\t\t\t\treturn !left ? element : null;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Walk left/right to look for contents\n
+\t\t\t\twalker = new TreeWalker(container, element);\n
+\t\t\t\twhile ((node = walker[left ? \'prev\' : \'next\']())) {\n
+\t\t\t\t\tif (node.nodeType === 3 && node.nodeValue.length > 0) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t} else if (getContentEditable(node) === "true") {\n
+\t\t\t\t\t\t// Found contentEditable=true element return this one to we can move the caret inside it\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn element;\n
+\t\t\t}\n
+\n
+\t\t\t// Remove any existing caret containers\n
+\t\t\tremoveCaretContainer();\n
+\n
+\t\t\t// Get noneditable start/end elements\n
+\t\t\tisCollapsed = selection.isCollapsed();\n
+\t\t\tnonEditableStart = getNonEditableParent(selection.getStart());\n
+\t\t\tnonEditableEnd = getNonEditableParent(selection.getEnd());\n
+\n
+\t\t\t// Is any fo the range endpoints noneditable\n
+\t\t\tif (nonEditableStart || nonEditableEnd) {\n
+\t\t\t\trng = selection.getRng(true);\n
+\n
+\t\t\t\t// If it\'s a caret selection then look left/right to see if we need to move the caret out side or expand\n
+\t\t\t\tif (isCollapsed) {\n
+\t\t\t\t\tnonEditableStart = nonEditableStart || nonEditableEnd;\n
+\n
+\t\t\t\t\tif ((element = hasSideContent(nonEditableStart, true))) {\n
+\t\t\t\t\t\t// We have no contents to the left of the caret then insert a caret container before the noneditable element\n
+\t\t\t\t\t\tinsertCaretContainerOrExpandToBlock(element, true);\n
+\t\t\t\t\t} else if ((element = hasSideContent(nonEditableStart, false))) {\n
+\t\t\t\t\t\t// We have no contents to the right of the caret then insert a caret container after the noneditable element\n
+\t\t\t\t\t\tinsertCaretContainerOrExpandToBlock(element, false);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// We are in the middle of a noneditable so expand to select it\n
+\t\t\t\t\t\tselection.select(nonEditableStart);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng = selection.getRng(true);\n
+\n
+\t\t\t\t\t// Expand selection to include start non editable element\n
+\t\t\t\t\tif (nonEditableStart) {\n
+\t\t\t\t\t\trng.setStartBefore(nonEditableStart);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Expand selection to include end non editable element\n
+\t\t\t\t\tif (nonEditableEnd) {\n
+\t\t\t\t\t\trng.setEndAfter(nonEditableEnd);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction handleKey(e) {\n
+\t\t\tvar keyCode = e.keyCode, nonEditableParent, caretContainer, startElement, endElement;\n
+\n
+\t\t\tfunction getNonEmptyTextNodeSibling(node, prev) {\n
+\t\t\t\twhile ((node = node[prev ? \'previousSibling\' : \'nextSibling\'])) {\n
+\t\t\t\t\tif (node.nodeType !== 3 || node.nodeValue.length > 0) {\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction positionCaretOnElement(element, start) {\n
+\t\t\t\tselection.select(element);\n
+\t\t\t\tselection.collapse(start);\n
+\t\t\t}\n
+\n
+\t\t\tfunction canDelete(backspace) {\n
+\t\t\t\tvar rng, container, offset, nonEditableParent;\n
+\n
+\t\t\t\tfunction removeNodeIfNotParent(node) {\n
+\t\t\t\t\tvar parent = container;\n
+\n
+\t\t\t\t\twhile (parent) {\n
+\t\t\t\t\t\tif (parent === node) {\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tparent = parent.parentNode;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t\tmoveSelection();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction isNextPrevTreeNodeNonEditable() {\n
+\t\t\t\t\tvar node, walker, nonEmptyElements = editor.schema.getNonEmptyElements();\n
+\n
+\t\t\t\t\twalker = new tinymce.dom.TreeWalker(container, editor.getBody());\n
+\t\t\t\t\twhile ((node = (backspace ? walker.prev() : walker.next()))) {\n
+\t\t\t\t\t\t// Found IMG/INPUT etc\n
+\t\t\t\t\t\tif (nonEmptyElements[node.nodeName.toLowerCase()]) {\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Found text node with contents\n
+\t\t\t\t\t\tif (node.nodeType === 3 && tinymce.trim(node.nodeValue).length > 0) {\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Found non editable node\n
+\t\t\t\t\t\tif (getContentEditable(node) === "false") {\n
+\t\t\t\t\t\t\tremoveNodeIfNotParent(node);\n
+\t\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Check if the content node is within a non editable parent\n
+\t\t\t\t\tif (getNonEditableParent(node)) {\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (selection.isCollapsed()) {\n
+\t\t\t\t\trng = selection.getRng(true);\n
+\t\t\t\t\tcontainer = rng.startContainer;\n
+\t\t\t\t\toffset = rng.startOffset;\n
+\t\t\t\t\tcontainer = getParentCaretContainer(container) || container;\n
+\n
+\t\t\t\t\t// Is in noneditable parent\n
+\t\t\t\t\tif ((nonEditableParent = getNonEditableParent(container))) {\n
+\t\t\t\t\t\tremoveNodeIfNotParent(nonEditableParent);\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Check if the caret is in the middle of a text node\n
+\t\t\t\t\tif (container.nodeType == 3 && (backspace ? offset > 0 : offset < container.nodeValue.length)) {\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Resolve container index\n
+\t\t\t\t\tif (container.nodeType == 1) {\n
+\t\t\t\t\t\tcontainer = container.childNodes[offset] || container;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Check if previous or next tree node is non editable then block the event\n
+\t\t\t\t\tif (isNextPrevTreeNodeNonEditable()) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tmoveSelection();\n
+\n
+\t\t\tstartElement = selection.getStart();\n
+\t\t\tendElement = selection.getEnd();\n
+\n
+\t\t\t// Disable all key presses in contentEditable=false except delete or backspace\n
+\t\t\tnonEditableParent = getNonEditableParent(startElement) || getNonEditableParent(endElement);\n
+\t\t\tvar currentNode = editor.selection.getNode();\n
+\n
+\t\t\tvar isDirectionKey = keyCode == VK.LEFT || keyCode == VK.RIGHT || keyCode == VK.UP || keyCode == VK.DOWN;\n
+\t\t\tvar left = keyCode == VK.LEFT || keyCode == VK.UP;\n
+\n
+\t\t\tif (nonEditableParent && (keyCode < 112 || keyCode > 124) && keyCode != VK.DELETE && keyCode != VK.BACKSPACE) {\n
+\n
+\t\t\t\t// Is Ctrl+c, Ctrl+v or Ctrl+x then use default browser behavior\n
+\t\t\t\tif ((tinymce.isMac ? e.metaKey : e.ctrlKey) && (keyCode == 67 || keyCode == 88 || keyCode == 86)) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t// Arrow left/right select the element and collapse left/right\n
+\t\t\t\tif (isDirectionKey) {\n
+\n
+\t\t\t\t\t// If a block element find previous or next element to position the caret\n
+\t\t\t\t\tif (editor.dom.isBlock(nonEditableParent)) {\n
+\t\t\t\t\t\tvar targetElement = left ? nonEditableParent.previousSibling : nonEditableParent.nextSibling;\n
+\n
+\t\t\t\t\t\t// Handling for edge-cases:\n
+\t\t\t\t\t\t// \t- two nonEditables in a row -> no way to get between them\n
+\t\t\t\t\t\t// \t- nonEditable as the first/last element -> no way to get before/behind it\n
+\t\t\t\t\t\tif (!targetElement || targetElement && getContentEditable(targetElement) === \'false\') {\n
+\t\t\t\t\t\t\tvar p = dom.create(\'p\', null, \'&nbsp;\');\n
+\t\t\t\t\t\t\tp.className = \'mceTmpParagraph\';\n
+\n
+\t\t\t\t\t\t\tvar insertElement = left ? nonEditableParent : targetElement;\n
+\n
+\t\t\t\t\t\t\tif (insertElement && insertElement.parentNode) {\n
+\t\t\t\t\t\t\t\tinsertElement.parentNode.insertBefore(p, insertElement);\n
+\t\t\t\t\t\t\t} else if (!targetElement && !left) {\n
+\t\t\t\t\t\t\t\tnonEditableParent.parentNode.appendChild(p);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\ttargetElement = p;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tvar walker = new TreeWalker(targetElement, targetElement);\n
+\t\t\t\t\t\tvar caretElement = left ? walker.prev() : walker.next();\n
+\n
+\t\t\t\t\t\tpositionCaretOnElement(caretElement, !left);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tpositionCaretOnElement(nonEditableParent, left);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\t// Is arrow left/right, backspace or delete\n
+\t\t\t\tif (isDirectionKey || keyCode == VK.BACKSPACE || keyCode == VK.DELETE) {\n
+\t\t\t\t\tcaretContainer = getParentCaretContainer(startElement);\n
+\n
+\t\t\t\t\tif (caretContainer) {\n
+\t\t\t\t\t\t// Arrow left or backspace\n
+\t\t\t\t\t\tif (keyCode == VK.LEFT || keyCode == VK.BACKSPACE) {\n
+\t\t\t\t\t\t\tnonEditableParent = getNonEmptyTextNodeSibling(caretContainer, true);\n
+\n
+\t\t\t\t\t\t\tif (nonEditableParent && getContentEditable(nonEditableParent) === "false") {\n
+\t\t\t\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t\t\t\tif (keyCode == VK.LEFT) {\n
+\t\t\t\t\t\t\t\t\tpositionCaretOnElement(nonEditableParent, true);\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\tdom.remove(nonEditableParent);\n
+\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tremoveCaretContainer(caretContainer);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Arrow right or delete\n
+\t\t\t\t\t\tif (keyCode == VK.RIGHT || keyCode == VK.DELETE) {\n
+\t\t\t\t\t\t\tnonEditableParent = getNonEmptyTextNodeSibling(caretContainer, true);\n
+\n
+\t\t\t\t\t\t\tif (nonEditableParent && getContentEditable(nonEditableParent) === "false") {\n
+\t\t\t\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t\t\t\tif (keyCode == VK.RIGHT) {\n
+\t\t\t\t\t\t\t\t\tpositionCaretOnElement(nonEditableParent, false);\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\tdom.remove(nonEditableParent);\n
+\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tremoveCaretContainer(caretContainer);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\n
+\t\t\t\t\t\tif (isDirectionKey) {\n
+\t\t\t\t\t\t\t// Removal of separator paragraphs between two nonEditables\n
+\t\t\t\t\t\t\t// and before/after a nonEditable as the first/last element\n
+\t\t\t\t\t\t\tif (currentNode && currentNode.className.indexOf(\'mceTmpParagraph\') !== -1 &&\n
+\t\t\t\t\t\t\t\t\tcurrentNode[left ? \'previousSibling\' : \'nextSibling\']) {\n
+\t\t\t\t\t\t\t\tvar jumpTarget = currentNode[left ? \'previousSibling\' : \'nextSibling\'];\n
+\n
+\t\t\t\t\t\t\t\t// current node is still empty and a separator -> remove it\n
+\t\t\t\t\t\t\t\t// else: remove the separator class, as it now includes content\n
+\t\t\t\t\t\t\t\tif (currentNode.innerHTML === \'&nbsp;\' || currentNode.innerHTML === \'\' || currentNode.innerHTML === \' \') {\n
+\t\t\t\t\t\t\t\t\tdom.remove(currentNode);\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\tcurrentNode.className = currentNode.className.replace(\'mceTmpParagraph\', \'\');\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\tpositionCaretOnElement(jumpTarget, !left);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tvar rng = selection.getRng(true);\n
+\t\t\t\t\t\tvar container = rng.endContainer;\n
+\n
+\t\t\t\t\t\t// FIX: If end of node is selected, check wether next sibling is nonEditable to correctly remove it\n
+\t\t\t\t\t\t// \t\t\t(else would break for more complex nonEditables, their content would get moved to the current node)\n
+\t\t\t\t\t\tif (dom.isBlock(container) && dom.isBlock(container.nextSibling) && rng.endOffset == 1 && keyCode == VK.DELETE) {\n
+\t\t\t\t\t\t\tnonEditableParent = getNonEditableParent(container.nextSibling);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// correctly remove block-level nonEditable domNode on delete/backspace\n
+\t\t\t\t\t\tif (nonEditableParent && (keyCode == VK.DELETE || keyCode == VK.BACKSPACE) && dom.isBlock(nonEditableParent)) {\n
+\t\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\t\tdom.remove(nonEditableParent);\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif ((keyCode == VK.BACKSPACE || keyCode == VK.DELETE) && !canDelete(keyCode == VK.BACKSPACE)) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\teditor.on(\'mousedown\', function(e) {\n
+\t\t\tvar node = editor.selection.getNode();\n
+\n
+\t\t\t// Also remove separator lines when clicking on another node\n
+\t\t\tif (node && node.className.indexOf(\'mceTmpParagraph\') !== -1 && node !== e.target) {\n
+\t\t\t\t// current node is still empty and a separator -> remove it\n
+\t\t\t\t// else: remove the separator class, as it now includes content\n
+\t\t\t\tif (node.innerHTML === \'&nbsp;\' || node.innerHTML === \'\' || node.innerHTML === \' \') {\n
+\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tnode.className = node.className.replace(\'mceTmpParagraph\', \'\');\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (getContentEditable(node) === "false" && node == e.target) {\n
+\t\t\t\t// Expand selection on mouse down we can\'t block the default event since it\'s used for drag/drop\n
+\t\t\t\tmoveSelection();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'mouseup\', moveSelection);\n
+\n
+\t\teditor.on(\'keydown\', handleKey);\n
+\t}\n
+\n
+\tvar editClass, nonEditClass, nonEditableRegExps;\n
+\n
+\t// Converts configured regexps to noneditable span items\n
+\tfunction convertRegExpsToNonEditable(e) {\n
+\t\tvar i = nonEditableRegExps.length, content = e.content, cls = tinymce.trim(nonEditClass);\n
+\n
+\t\t// Don\'t replace the variables when raw is used for example on undo/redo\n
+\t\tif (e.format == "raw") {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\twhile (i--) {\n
+\t\t\tcontent = content.replace(nonEditableRegExps[i], function(match) {\n
+\t\t\t\tvar args = arguments, index = args[args.length - 2];\n
+\n
+\t\t\t\t// Is value inside an attribute then don\'t replace\n
+\t\t\t\tif (index > 0 && content.charAt(index - 1) == \'"\') {\n
+\t\t\t\t\treturn match;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn (\n
+\t\t\t\t\t\'<span class="\' + cls + \'" data-mce-content="\' + editor.dom.encode(args[0]) + \'">\' +\n
+\t\t\t\t\teditor.dom.encode(typeof args[1] === "string" ? args[1] : args[0]) + \'</span>\'\n
+\t\t\t\t);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\te.content = content;\n
+\t}\n
+\n
+\teditClass = " " + tinymce.trim(editor.getParam("noneditable_editable_class", "mceEditable")) + " ";\n
+\tnonEditClass = " " + tinymce.trim(editor.getParam("noneditable_noneditable_class", "mceNonEditable")) + " ";\n
+\n
+\t// Setup noneditable regexps array\n
+\tnonEditableRegExps = editor.getParam("noneditable_regexp");\n
+\tif (nonEditableRegExps && !nonEditableRegExps.length) {\n
+\t\tnonEditableRegExps = [nonEditableRegExps];\n
+\t}\n
+\n
+\teditor.on(\'PreInit\', function() {\n
+\t\thandleContentEditableSelection();\n
+\n
+\t\tif (nonEditableRegExps) {\n
+\t\t\teditor.on(\'BeforeSetContent\', convertRegExpsToNonEditable);\n
+\t\t}\n
+\n
+\t\t// Apply contentEditable true/false on elements with the noneditable/editable classes\n
+\t\teditor.parser.addAttributeFilter(\'class\', function(nodes) {\n
+\t\t\tvar i = nodes.length, className, node;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\t\t\t\tclassName = " " + node.attr("class") + " ";\n
+\n
+\t\t\t\tif (className.indexOf(editClass) !== -1) {\n
+\t\t\t\t\tnode.attr(internalName, "true");\n
+\t\t\t\t} else if (className.indexOf(nonEditClass) !== -1) {\n
+\t\t\t\t\tnode.attr(internalName, "false");\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Remove internal name\n
+\t\teditor.serializer.addAttributeFilter(internalName, function(nodes) {\n
+\t\t\tvar i = nodes.length, node;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\n
+\t\t\t\tif (nonEditableRegExps && node.attr(\'data-mce-content\')) {\n
+\t\t\t\t\tnode.name = "#text";\n
+\t\t\t\t\tnode.type = 3;\n
+\t\t\t\t\tnode.raw = true;\n
+\t\t\t\t\tnode.value = node.attr(\'data-mce-content\');\n
+\t\t\t\t} else {\n
+\t\t\t\t\tnode.attr(externalName, null);\n
+\t\t\t\t\tnode.attr(internalName, null);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Convert external name into internal name\n
+\t\teditor.parser.addAttributeFilter(externalName, function(nodes) {\n
+\t\t\tvar i = nodes.length, node;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\t\t\t\tnode.attr(internalName, node.attr(externalName));\n
+\t\t\t\tnode.attr(externalName, null);\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\n
+\teditor.on(\'drop\', function(e) {\n
+\t\tif (getNonEditableParent(e.target)) {\n
+\t\t\te.preventDefault();\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18909</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

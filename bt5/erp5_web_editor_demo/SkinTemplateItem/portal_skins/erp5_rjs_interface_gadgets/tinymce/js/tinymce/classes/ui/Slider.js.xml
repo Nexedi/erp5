@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268310.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Slider.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Slider.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Slider control.\n
+ *\n
+ * @-x-less Slider.less\n
+ * @class tinymce.ui.Slider\n
+ * @extends tinymce.ui.Widget\n
+ */\n
+define("tinymce/ui/Slider", [\n
+\t"tinymce/ui/Widget",\n
+\t"tinymce/ui/DragHelper",\n
+\t"tinymce/ui/DomUtils"\n
+], function(Widget, DragHelper, DomUtils) {\n
+\t"use strict";\n
+\n
+\tfunction constrain(value, minVal, maxVal) {\n
+\t\tif (value < minVal) {\n
+\t\t\tvalue = minVal;\n
+\t\t}\n
+\n
+\t\tif (value > maxVal) {\n
+\t\t\tvalue = maxVal;\n
+\t\t}\n
+\n
+\t\treturn value;\n
+\t}\n
+\n
+\tfunction updateSliderHandle(ctrl, value) {\n
+\t\tvar maxHandlePos, shortSizeName, sizeName, stylePosName, styleValue;\n
+\n
+\t\tif (ctrl.settings.orientation == "v") {\n
+\t\t\tstylePosName = "top";\n
+\t\t\tsizeName = "height";\n
+\t\t\tshortSizeName = "h";\n
+\t\t} else {\n
+\t\t\tstylePosName = "left";\n
+\t\t\tsizeName = "width";\n
+\t\t\tshortSizeName = "w";\n
+\t\t}\n
+\n
+\t\tmaxHandlePos = (ctrl.layoutRect()[shortSizeName] || 100) - DomUtils.getSize(ctrl.getEl(\'handle\'))[sizeName];\n
+\n
+\t\tstyleValue = (maxHandlePos * ((value - ctrl._minValue) / (ctrl._maxValue - ctrl._minValue))) + \'px\';\n
+\t\tctrl.getEl(\'handle\').style[stylePosName] = styleValue;\n
+\t\tctrl.getEl(\'handle\').style.height = ctrl.layoutRect().h + \'px\';\n
+\t}\n
+\n
+\treturn Widget.extend({\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (!settings.previewFilter) {\n
+\t\t\t\tsettings.previewFilter = function(value) {\n
+\t\t\t\t\treturn Math.round(value * 100) / 100.0;\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tself.classes.add(\'slider\');\n
+\n
+\t\t\tif (settings.orientation == "v") {\n
+\t\t\t\tself.classes.add(\'vertical\');\n
+\t\t\t}\n
+\n
+\t\t\tself._minValue = settings.minValue || 0;\n
+\t\t\tself._maxValue = settings.maxValue || 100;\n
+\t\t\tself._initValue = self.state.get(\'value\');\n
+\t\t},\n
+\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, id = self._id, prefix = self.classPrefix;\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + id + \'" class="\' + self.classes + \'">\' +\n
+\t\t\t\t\t\'<div id="\' + id + \'-handle" class="\' + prefix + \'slider-handle"></div>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\treset: function() {\n
+\t\t\tthis.value(this._initValue).repaint();\n
+\t\t},\n
+\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this, startPos, startHandlePos, handlePos = 0, value, minValue, maxValue, maxHandlePos;\n
+\t\t\tvar screenCordName, stylePosName, sizeName, shortSizeName;\n
+\n
+\t\t\tminValue = self._minValue;\n
+\t\t\tmaxValue = self._maxValue;\n
+\t\t\tvalue = self.value();\n
+\n
+\t\t\tif (self.settings.orientation == "v") {\n
+\t\t\t\tscreenCordName = "screenY";\n
+\t\t\t\tstylePosName = "top";\n
+\t\t\t\tsizeName = "height";\n
+\t\t\t\tshortSizeName = "h";\n
+\t\t\t} else {\n
+\t\t\t\tscreenCordName = "screenX";\n
+\t\t\t\tstylePosName = "left";\n
+\t\t\t\tsizeName = "width";\n
+\t\t\t\tshortSizeName = "w";\n
+\t\t\t}\n
+\n
+\t\t\tself._super();\n
+\n
+\t\t\tself._dragHelper = new DragHelper(self._id, {\n
+\t\t\t\thandle: self._id + "-handle",\n
+\n
+\t\t\t\tstart: function(e) {\n
+\t\t\t\t\tstartPos = e[screenCordName];\n
+\t\t\t\t\tstartHandlePos = parseInt(self.getEl(\'handle\').style[stylePosName], 10);\n
+\t\t\t\t\tmaxHandlePos = (self.layoutRect()[shortSizeName] || 100) - DomUtils.getSize(self.getEl(\'handle\'))[sizeName];\n
+\t\t\t\t\tself.fire(\'dragstart\', {value: value});\n
+\t\t\t\t},\n
+\n
+\t\t\t\tdrag: function(e) {\n
+\t\t\t\t\tvar delta = e[screenCordName] - startPos, handleEl = self.getEl(\'handle\');\n
+\n
+\t\t\t\t\thandlePos = constrain(startHandlePos + delta, 0, maxHandlePos);\n
+\t\t\t\t\thandleEl.style[stylePosName] = handlePos + \'px\';\n
+\n
+\t\t\t\t\tvalue = minValue + (handlePos / maxHandlePos) * (maxValue - minValue);\n
+\t\t\t\t\tself.value(value);\n
+\n
+\t\t\t\t\tself.tooltip().text(\'\' + self.settings.previewFilter(value)).show().moveRel(handleEl, \'bc tc\');\n
+\n
+\t\t\t\t\tself.fire(\'drag\', {value: value});\n
+\t\t\t\t},\n
+\n
+\t\t\t\tstop: function() {\n
+\t\t\t\t\tself.tooltip().hide();\n
+\t\t\t\t\tself.fire(\'dragend\', {value: value});\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\trepaint: function() {\n
+\t\t\tthis._super();\n
+\t\t\tupdateSliderHandle(this, this.value());\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.state.on(\'change:value\', function(e) {\n
+\t\t\t\tupdateSliderHandle(self, e.value);\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3964</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Slider.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

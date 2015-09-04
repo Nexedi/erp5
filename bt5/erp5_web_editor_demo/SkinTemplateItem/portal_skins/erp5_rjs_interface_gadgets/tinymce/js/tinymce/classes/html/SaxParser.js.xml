@@ -1,0 +1,517 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268282.16</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SaxParser.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * SaxParser.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*eslint max-depth:[2, 9] */\n
+\n
+/**\n
+ * This class parses HTML code using pure JavaScript and executes various events for each item it finds. It will\n
+ * always execute the events in the right order for tag soup code like <b><p></b></p>. It will also remove elements\n
+ * and attributes that doesn\'t fit the schema if the validate setting is enabled.\n
+ *\n
+ * @example\n
+ * var parser = new tinymce.html.SaxParser({\n
+ *     validate: true,\n
+ *\n
+ *     comment: function(text) {\n
+ *         console.log(\'Comment:\', text);\n
+ *     },\n
+ *\n
+ *     cdata: function(text) {\n
+ *         console.log(\'CDATA:\', text);\n
+ *     },\n
+ *\n
+ *     text: function(text, raw) {\n
+ *         console.log(\'Text:\', text, \'Raw:\', raw);\n
+ *     },\n
+ *\n
+ *     start: function(name, attrs, empty) {\n
+ *         console.log(\'Start:\', name, attrs, empty);\n
+ *     },\n
+ *\n
+ *     end: function(name) {\n
+ *         console.log(\'End:\', name);\n
+ *     },\n
+ *\n
+ *     pi: function(name, text) {\n
+ *         console.log(\'PI:\', name, text);\n
+ *     },\n
+ *\n
+ *     doctype: function(text) {\n
+ *         console.log(\'DocType:\', text);\n
+ *     }\n
+ * }, schema);\n
+ * @class tinymce.html.SaxParser\n
+ * @version 3.4\n
+ */\n
+define("tinymce/html/SaxParser", [\n
+\t"tinymce/html/Schema",\n
+\t"tinymce/html/Entities",\n
+\t"tinymce/util/Tools"\n
+], function(Schema, Entities, Tools) {\n
+\tvar each = Tools.each;\n
+\n
+\t/**\n
+\t * Returns the index of the end tag for a specific start tag. This can be\n
+\t * used to skip all children of a parent element from being processed.\n
+\t *\n
+\t * @private\n
+\t * @method findEndTag\n
+\t * @param {tinymce.html.Schema} schema Schema instance to use to match short ended elements.\n
+\t * @param {String} html HTML string to find the end tag in.\n
+\t * @param {Number} startIndex Indext to start searching at should be after the start tag.\n
+\t * @return {Number} Index of the end tag.\n
+\t */\n
+\tfunction findEndTag(schema, html, startIndex) {\n
+\t\tvar count = 1, index, matches, tokenRegExp, shortEndedElements;\n
+\n
+\t\tshortEndedElements = schema.getShortEndedElements();\n
+\t\ttokenRegExp = /<([!?\\/])?([A-Za-z0-9\\-_\\:\\.]+)((?:\\s+[^"\\\'>]+(?:(?:"[^"]*")|(?:\\\'[^\\\']*\\\')|[^>]*))*|\\/|\\s+)>/g;\n
+\t\ttokenRegExp.lastIndex = index = startIndex;\n
+\n
+\t\twhile ((matches = tokenRegExp.exec(html))) {\n
+\t\t\tindex = tokenRegExp.lastIndex;\n
+\n
+\t\t\tif (matches[1] === \'/\') { // End element\n
+\t\t\t\tcount--;\n
+\t\t\t} else if (!matches[1]) { // Start element\n
+\t\t\t\tif (matches[2] in shortEndedElements) {\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcount++;\n
+\t\t\t}\n
+\n
+\t\t\tif (count === 0) {\n
+\t\t\t\tbreak;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn index;\n
+\t}\n
+\n
+\t/**\n
+\t * Constructs a new SaxParser instance.\n
+\t *\n
+\t * @constructor\n
+\t * @method SaxParser\n
+\t * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.\n
+\t * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.\n
+\t */\n
+\tfunction SaxParser(settings, schema) {\n
+\t\tvar self = this;\n
+\n
+\t\tfunction noop() {}\n
+\n
+\t\tsettings = settings || {};\n
+\t\tself.schema = schema = schema || new Schema();\n
+\n
+\t\tif (settings.fix_self_closing !== false) {\n
+\t\t\tsettings.fix_self_closing = true;\n
+\t\t}\n
+\n
+\t\t// Add handler functions from settings and setup default handlers\n
+\t\teach(\'comment cdata text start end pi doctype\'.split(\' \'), function(name) {\n
+\t\t\tif (name) {\n
+\t\t\t\tself[name] = settings[name] || noop;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t/**\n
+\t\t * Parses the specified HTML string and executes the callbacks for each item it finds.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * new SaxParser({...}).parse(\'<b>text</b>\');\n
+\t\t * @method parse\n
+\t\t * @param {String} html Html string to sax parse.\n
+\t\t */\n
+\t\tself.parse = function(html) {\n
+\t\t\tvar self = this, matches, index = 0, value, endRegExp, stack = [], attrList, i, text, name;\n
+\t\t\tvar isInternalElement, removeInternalElements, shortEndedElements, fillAttrsMap, isShortEnded;\n
+\t\t\tvar validate, elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;\n
+\t\t\tvar attributesRequired, attributesDefault, attributesForced;\n
+\t\t\tvar anyAttributesRequired, selfClosing, tokenRegExp, attrRegExp, specialElements, attrValue, idCount = 0;\n
+\t\t\tvar decode = Entities.decode, fixSelfClosing, filteredUrlAttrs = Tools.makeMap(\'src,href,data,background,formaction,poster\');\n
+\t\t\tvar scriptUriRegExp = /((java|vb)script|mhtml):/i, dataUriRegExp = /^data:/i;\n
+\n
+\t\t\tfunction processEndTag(name) {\n
+\t\t\t\tvar pos, i;\n
+\n
+\t\t\t\t// Find position of parent of the same type\n
+\t\t\t\tpos = stack.length;\n
+\t\t\t\twhile (pos--) {\n
+\t\t\t\t\tif (stack[pos].name === name) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Found parent\n
+\t\t\t\tif (pos >= 0) {\n
+\t\t\t\t\t// Close all the open elements\n
+\t\t\t\t\tfor (i = stack.length - 1; i >= pos; i--) {\n
+\t\t\t\t\t\tname = stack[i];\n
+\n
+\t\t\t\t\t\tif (name.valid) {\n
+\t\t\t\t\t\t\tself.end(name.name);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Remove the open elements from the stack\n
+\t\t\t\t\tstack.length = pos;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction parseAttribute(match, name, value, val2, val3) {\n
+\t\t\t\tvar attrRule, i, trimRegExp = /[\\s\\u0000-\\u001F]+/g;\n
+\n
+\t\t\t\tname = name.toLowerCase();\n
+\t\t\t\tvalue = name in fillAttrsMap ? name : decode(value || val2 || val3 || \'\'); // Handle boolean attribute than value attribute\n
+\n
+\t\t\t\t// Validate name and value pass through all data- attributes\n
+\t\t\t\tif (validate && !isInternalElement && name.indexOf(\'data-\') !== 0) {\n
+\t\t\t\t\tattrRule = validAttributesMap[name];\n
+\n
+\t\t\t\t\t// Find rule by pattern matching\n
+\t\t\t\t\tif (!attrRule && validAttributePatterns) {\n
+\t\t\t\t\t\ti = validAttributePatterns.length;\n
+\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\tattrRule = validAttributePatterns[i];\n
+\t\t\t\t\t\t\tif (attrRule.pattern.test(name)) {\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// No rule matched\n
+\t\t\t\t\t\tif (i === -1) {\n
+\t\t\t\t\t\t\tattrRule = null;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// No attribute rule found\n
+\t\t\t\t\tif (!attrRule) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Validate value\n
+\t\t\t\t\tif (attrRule.validValues && !(value in attrRule.validValues)) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Block any javascript: urls or non image data uris\n
+\t\t\t\tif (filteredUrlAttrs[name] && !settings.allow_script_urls) {\n
+\t\t\t\t\tvar uri = value.replace(trimRegExp, \'\');\n
+\n
+\t\t\t\t\ttry {\n
+\t\t\t\t\t\t// Might throw malformed URI sequence\n
+\t\t\t\t\t\turi = decodeURIComponent(uri);\n
+\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t// Fallback to non UTF-8 decoder\n
+\t\t\t\t\t\turi = unescape(uri);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (scriptUriRegExp.test(uri)) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!settings.allow_html_data_urls && dataUriRegExp.test(uri) && !/^data:image\\//i.test(uri)) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Add attribute to list and map\n
+\t\t\t\tattrList.map[name] = value;\n
+\t\t\t\tattrList.push({\n
+\t\t\t\t\tname: name,\n
+\t\t\t\t\tvalue: value\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// Precompile RegExps and map objects\n
+\t\t\ttokenRegExp = new RegExp(\'<(?:\' +\n
+\t\t\t\t\'(?:!--([\\\\w\\\\W]*?)-->)|\' + // Comment\n
+\t\t\t\t\'(?:!\\\\[CDATA\\\\[([\\\\w\\\\W]*?)\\\\]\\\\]>)|\' + // CDATA\n
+\t\t\t\t\'(?:!DOCTYPE([\\\\w\\\\W]*?)>)|\' + // DOCTYPE\n
+\t\t\t\t\'(?:\\\\?([^\\\\s\\\\/<>]+) ?([\\\\w\\\\W]*?)[?/]>)|\' + // PI\n
+\t\t\t\t\'(?:\\\\/([^>]+)>)|\' + // End element\n
+\t\t\t\t\'(?:([A-Za-z0-9\\\\-_\\\\:\\\\.]+)((?:\\\\s+[^"\\\'>]+(?:(?:"[^"]*")|(?:\\\'[^\\\']*\\\')|[^>]*))*|\\\\/|\\\\s+)>)\' + // Start element\n
+\t\t\t\')\', \'g\');\n
+\n
+\t\t\tattrRegExp = /([\\w:\\-]+)(?:\\s*=\\s*(?:(?:\\"((?:[^\\"])*)\\")|(?:\\\'((?:[^\\\'])*)\\\')|([^>\\s]+)))?/g;\n
+\n
+\t\t\t// Setup lookup tables for empty elements and boolean attributes\n
+\t\t\tshortEndedElements = schema.getShortEndedElements();\n
+\t\t\tselfClosing = settings.self_closing_elements || schema.getSelfClosingElements();\n
+\t\t\tfillAttrsMap = schema.getBoolAttrs();\n
+\t\t\tvalidate = settings.validate;\n
+\t\t\tremoveInternalElements = settings.remove_internals;\n
+\t\t\tfixSelfClosing = settings.fix_self_closing;\n
+\t\t\tspecialElements = schema.getSpecialElements();\n
+\n
+\t\t\twhile ((matches = tokenRegExp.exec(html))) {\n
+\t\t\t\t// Text\n
+\t\t\t\tif (index < matches.index) {\n
+\t\t\t\t\tself.text(decode(html.substr(index, matches.index - index)));\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif ((value = matches[6])) { // End element\n
+\t\t\t\t\tvalue = value.toLowerCase();\n
+\n
+\t\t\t\t\t// IE will add a ":" in front of elements it doesn\'t understand like custom elements or HTML5 elements\n
+\t\t\t\t\tif (value.charAt(0) === \':\') {\n
+\t\t\t\t\t\tvalue = value.substr(1);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tprocessEndTag(value);\n
+\t\t\t\t} else if ((value = matches[7])) { // Start element\n
+\t\t\t\t\tvalue = value.toLowerCase();\n
+\n
+\t\t\t\t\t// IE will add a ":" in front of elements it doesn\'t understand like custom elements or HTML5 elements\n
+\t\t\t\t\tif (value.charAt(0) === \':\') {\n
+\t\t\t\t\t\tvalue = value.substr(1);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tisShortEnded = value in shortEndedElements;\n
+\n
+\t\t\t\t\t// Is self closing tag for example an <li> after an open <li>\n
+\t\t\t\t\tif (fixSelfClosing && selfClosing[value] && stack.length > 0 && stack[stack.length - 1].name === value) {\n
+\t\t\t\t\t\tprocessEndTag(value);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Validate element\n
+\t\t\t\t\tif (!validate || (elementRule = schema.getElementRule(value))) {\n
+\t\t\t\t\t\tisValidElement = true;\n
+\n
+\t\t\t\t\t\t// Grab attributes map and patters when validation is enabled\n
+\t\t\t\t\t\tif (validate) {\n
+\t\t\t\t\t\t\tvalidAttributesMap = elementRule.attributes;\n
+\t\t\t\t\t\t\tvalidAttributePatterns = elementRule.attributePatterns;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Parse attributes\n
+\t\t\t\t\t\tif ((attribsValue = matches[8])) {\n
+\t\t\t\t\t\t\tisInternalElement = attribsValue.indexOf(\'data-mce-type\') !== -1; // Check if the element is an internal element\n
+\n
+\t\t\t\t\t\t\t// If the element has internal attributes then remove it if we are told to do so\n
+\t\t\t\t\t\t\tif (isInternalElement && removeInternalElements) {\n
+\t\t\t\t\t\t\t\tisValidElement = false;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tattrList = [];\n
+\t\t\t\t\t\t\tattrList.map = {};\n
+\n
+\t\t\t\t\t\t\tattribsValue.replace(attrRegExp, parseAttribute);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tattrList = [];\n
+\t\t\t\t\t\t\tattrList.map = {};\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Process attributes if validation is enabled\n
+\t\t\t\t\t\tif (validate && !isInternalElement) {\n
+\t\t\t\t\t\t\tattributesRequired = elementRule.attributesRequired;\n
+\t\t\t\t\t\t\tattributesDefault = elementRule.attributesDefault;\n
+\t\t\t\t\t\t\tattributesForced = elementRule.attributesForced;\n
+\t\t\t\t\t\t\tanyAttributesRequired = elementRule.removeEmptyAttrs;\n
+\n
+\t\t\t\t\t\t\t// Check if any attribute exists\n
+\t\t\t\t\t\t\tif (anyAttributesRequired && !attrList.length) {\n
+\t\t\t\t\t\t\t\tisValidElement = false;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Handle forced attributes\n
+\t\t\t\t\t\t\tif (attributesForced) {\n
+\t\t\t\t\t\t\t\ti = attributesForced.length;\n
+\t\t\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\t\t\tattr = attributesForced[i];\n
+\t\t\t\t\t\t\t\t\tname = attr.name;\n
+\t\t\t\t\t\t\t\t\tattrValue = attr.value;\n
+\n
+\t\t\t\t\t\t\t\t\tif (attrValue === \'{$uid}\') {\n
+\t\t\t\t\t\t\t\t\t\tattrValue = \'mce_\' + idCount++;\n
+\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\tattrList.map[name] = attrValue;\n
+\t\t\t\t\t\t\t\t\tattrList.push({name: name, value: attrValue});\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Handle default attributes\n
+\t\t\t\t\t\t\tif (attributesDefault) {\n
+\t\t\t\t\t\t\t\ti = attributesDefault.length;\n
+\t\t\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\t\t\tattr = attributesDefault[i];\n
+\t\t\t\t\t\t\t\t\tname = attr.name;\n
+\n
+\t\t\t\t\t\t\t\t\tif (!(name in attrList.map)) {\n
+\t\t\t\t\t\t\t\t\t\tattrValue = attr.value;\n
+\n
+\t\t\t\t\t\t\t\t\t\tif (attrValue === \'{$uid}\') {\n
+\t\t\t\t\t\t\t\t\t\t\tattrValue = \'mce_\' + idCount++;\n
+\t\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\t\tattrList.map[name] = attrValue;\n
+\t\t\t\t\t\t\t\t\t\tattrList.push({name: name, value: attrValue});\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Handle required attributes\n
+\t\t\t\t\t\t\tif (attributesRequired) {\n
+\t\t\t\t\t\t\t\ti = attributesRequired.length;\n
+\t\t\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\t\t\tif (attributesRequired[i] in attrList.map) {\n
+\t\t\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t// None of the required attributes where found\n
+\t\t\t\t\t\t\t\tif (i === -1) {\n
+\t\t\t\t\t\t\t\t\tisValidElement = false;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Invalidate element if it\'s marked as bogus\n
+\t\t\t\t\t\t\tif ((attr = attrList.map[\'data-mce-bogus\'])) {\n
+\t\t\t\t\t\t\t\tif (attr === \'all\') {\n
+\t\t\t\t\t\t\t\t\tindex = findEndTag(schema, html, tokenRegExp.lastIndex);\n
+\t\t\t\t\t\t\t\t\ttokenRegExp.lastIndex = index;\n
+\t\t\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\tisValidElement = false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (isValidElement) {\n
+\t\t\t\t\t\t\tself.start(value, attrList, isShortEnded);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tisValidElement = false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Treat script, noscript and style a bit different since they may include code that looks like elements\n
+\t\t\t\t\tif ((endRegExp = specialElements[value])) {\n
+\t\t\t\t\t\tendRegExp.lastIndex = index = matches.index + matches[0].length;\n
+\n
+\t\t\t\t\t\tif ((matches = endRegExp.exec(html))) {\n
+\t\t\t\t\t\t\tif (isValidElement) {\n
+\t\t\t\t\t\t\t\ttext = html.substr(index, matches.index - index);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tindex = matches.index + matches[0].length;\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\ttext = html.substr(index);\n
+\t\t\t\t\t\t\tindex = html.length;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (isValidElement) {\n
+\t\t\t\t\t\t\tif (text.length > 0) {\n
+\t\t\t\t\t\t\t\tself.text(text, true);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tself.end(value);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\ttokenRegExp.lastIndex = index;\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Push value on to stack\n
+\t\t\t\t\tif (!isShortEnded) {\n
+\t\t\t\t\t\tif (!attribsValue || attribsValue.indexOf(\'/\') != attribsValue.length - 1) {\n
+\t\t\t\t\t\t\tstack.push({name: value, valid: isValidElement});\n
+\t\t\t\t\t\t} else if (isValidElement) {\n
+\t\t\t\t\t\t\tself.end(value);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if ((value = matches[1])) { // Comment\n
+\t\t\t\t\t// Padd comment value to avoid browsers from parsing invalid comments as HTML\n
+\t\t\t\t\tif (value.charAt(0) === \'>\') {\n
+\t\t\t\t\t\tvalue = \' \' + value;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!settings.allow_conditional_comments && value.substr(0, 3) === \'[if\') {\n
+\t\t\t\t\t\tvalue = \' \' + value;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tself.comment(value);\n
+\t\t\t\t} else if ((value = matches[2])) { // CDATA\n
+\t\t\t\t\tself.cdata(value);\n
+\t\t\t\t} else if ((value = matches[3])) { // DOCTYPE\n
+\t\t\t\t\tself.doctype(value);\n
+\t\t\t\t} else if ((value = matches[4])) { // PI\n
+\t\t\t\t\tself.pi(value, matches[5]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tindex = matches.index + matches[0].length;\n
+\t\t\t}\n
+\n
+\t\t\t// Text\n
+\t\t\tif (index < html.length) {\n
+\t\t\t\tself.text(decode(html.substr(index)));\n
+\t\t\t}\n
+\n
+\t\t\t// Close any open elements\n
+\t\t\tfor (i = stack.length - 1; i >= 0; i--) {\n
+\t\t\t\tvalue = stack[i];\n
+\n
+\t\t\t\tif (value.valid) {\n
+\t\t\t\t\tself.end(value.name);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+\n
+\tSaxParser.findEndTag = findEndTag;\n
+\n
+\treturn SaxParser;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13600</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>SaxParser.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

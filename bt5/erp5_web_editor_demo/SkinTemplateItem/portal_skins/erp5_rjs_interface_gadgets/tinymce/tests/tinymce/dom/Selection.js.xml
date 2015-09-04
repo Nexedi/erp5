@@ -1,0 +1,1028 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268228.6</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Selection.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.dom.Selection", {\n
+\tsetupModule: function() {\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "textarea",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tskin: false,\n
+\t\t\tforced_root_block: \'\',\n
+\t\t\tentities: \'raw\',\n
+\t\t\tvalid_styles: {\n
+\t\t\t\t\'*\': \'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display\'\n
+\t\t\t},\n
+\t\t\tcustom_elements: \'custom1,~custom2\',\n
+\t\t\textended_valid_elements: \'custom1,custom2\',\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+});\n
+\n
+test(\'getContent\', function() {\n
+\tvar rng, eventObj;\n
+\n
+\t// Get selected contents\n
+\teditor.setContent(\'<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\tequal(editor.selection.getContent(), \'<p>text</p>\', \'Get selected contents\');\n
+\n
+\t// Get selected contents (collapsed)\n
+\teditor.setContent(\'<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 0);\n
+\teditor.selection.setRng(rng);\n
+\tequal(editor.selection.getContent(), \'\', \'Get selected contents (collapsed)\');\n
+\n
+\t// Get selected contents, onGetContent event\n
+\teventObj = {};\n
+\n
+\tfunction handler(event) {\n
+\t\teventObj = event;\n
+\t}\n
+\n
+\teditor.on(\'GetContent\', handler);\n
+\teditor.setContent(\'<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.selection.getContent();\n
+\tequal(eventObj.content, \'<p>text</p>\', \'Get selected contents, onGetContent event\');\n
+\teditor.off(\'GetContent\', handler);\n
+});\n
+\n
+test(\'setContent\', function() {\n
+\tvar rng, eventObj;\n
+\n
+\t// Set contents at selection\n
+\teditor.setContent(\'<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.selection.setContent(\'<div>test</div>\');\n
+\tequal(editor.getContent(), \'<div>test</div>\', \'Set contents at selection\');\n
+\n
+\t// Set contents at selection (collapsed)\n
+\teditor.setContent(\'<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 0);\n
+\teditor.selection.setRng(rng);\n
+\teditor.selection.setContent(\'<div>test</div>\');\n
+\tequal(editor.getContent(), \'<div>test</div>\\n<p>text</p>\', \'Set contents at selection (collapsed)\');\n
+\n
+\t// Insert in middle of paragraph\n
+\teditor.setContent(\'<p>beforeafter</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild.firstChild, \'before\'.length);\n
+\trng.setEnd(editor.getBody().firstChild.firstChild, \'before\'.length);\n
+\teditor.selection.setRng(rng);\n
+\teditor.selection.setContent(\'<br />\');\n
+\tequal(editor.getContent(), \'<p>before<br />after</p>\', \'Set contents at selection (inside paragraph)\');\n
+\n
+\t// Check the caret is left in the correct position.\n
+\trng = editor.selection.getRng(true);\n
+\tif (document.createRange) {\n
+\t\tequal(rng.startContainer, editor.getBody().firstChild, \'Selection start container\');\n
+\t\tequal(rng.startOffset, 2, \'Selection start offset\');\n
+\t\tequal(rng.endContainer, editor.getBody().firstChild, \'Selection end container\');\n
+\t\tequal(rng.endOffset, 2, \'Selection end offset\');\n
+\t} else {\n
+\t\t// TridentSelection resolves indexed text nodes\n
+\t\tequal(rng.startContainer, editor.getBody().firstChild.lastChild, \'Selection start container\');\n
+\t\tequal(rng.startOffset, 0, \'Selection start offset\');\n
+\t\tequal(rng.endContainer, editor.getBody().firstChild.lastChild, \'Selection end container\');\n
+\t\tequal(rng.endOffset, 0, \'Selection end offset\');\n
+\t}\n
+\n
+\teditor.setContent(\'<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 0);\n
+\teditor.selection.setRng(rng);\n
+\teditor.selection.setContent(\'\');\n
+\tequal(editor.getContent(), \'<p>text</p>\', \'Set contents to empty at selection (collapsed)\');\n
+\trng = editor.selection.getRng(true);\n
+\tif (!document.createRange) {\n
+\t\t// The old IE selection can only be positioned in text nodes\n
+\t\tequal(rng.startContainer, editor.getBody().firstChild.firstChild, \'Selection start container\');\n
+\t\tequal(rng.startOffset, 0, \'Selection start offset\');\n
+\t\tequal(rng.endContainer, editor.getBody().firstChild.firstChild, \'Selection end container\');\n
+\t\tequal(rng.endOffset, 0, \'Selection end offset\');\n
+\t} else {\n
+\t\tequal(rng.startContainer, editor.getBody(), \'Selection start container\');\n
+\t\tequal(rng.startOffset, 0, \'Selection start offset\');\n
+\t\tequal(rng.endContainer, editor.getBody(), \'Selection end container\');\n
+\t\tequal(rng.endOffset, 0, \'Selection end offset\');\n
+\t}\n
+\n
+\t// Set selected contents, onSetContent event\n
+\teventObj = {};\n
+\n
+\tfunction handler(event) {\n
+\t\teventObj = event;\n
+\t}\n
+\n
+\teditor.on(\'SetContent\', handler);\n
+\teditor.setContent(\'<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.selection.setContent(\'<div>text</div>\');\n
+\tequal(eventObj.content, \'<div>text</div>\', \'Set selected contents, onSetContent event\');\n
+\teditor.off(\'SetContent\', handler);\n
+});\n
+\n
+test(\'getStart/getEnd\', function() {\n
+\tvar rng;\n
+\n
+\t// Selected contents\n
+\teditor.setContent(\'<p id="a">text</p><p id="b">text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild.firstChild, 0);\n
+\trng.setEnd(editor.getBody().lastChild.firstChild, 0);\n
+\teditor.selection.setRng(rng);\n
+\tequal(editor.selection.getStart().id, \'a\', \'Selected contents (getStart)\');\n
+\tequal(editor.selection.getEnd().id, \'b\', \'Selected contents (getEnd)\');\n
+\n
+\t// Selected contents (collapsed)\n
+\teditor.setContent(\'<p id="a">text</p>\\n<p id="b">text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild.firstChild, 0);\n
+\trng.setEnd(editor.getBody().firstChild.firstChild, 0);\n
+\teditor.selection.setRng(rng);\n
+\tequal(editor.selection.getStart().id, \'a\', \'Selected contents (getStart, collapsed)\');\n
+\tequal(editor.selection.getEnd().id, \'a\', \'Selected contents (getEnd, collapsed)\');\n
+});\n
+\n
+test(\'getBookmark/setBookmark (persistent)\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\t// Get persistent bookmark simple text selection\n
+\teditor.setContent(\'text\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 1);\n
+\trng.setEnd(editor.getBody().firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark();\n
+\tequal(editor.getContent(), \'text\', \'Editor contents (text)\');\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\tequal(editor.selection.getContent(), \'ex\', \'Selected contents (text)\');\n
+\n
+\t// Get persistent bookmark multiple elements text selection\n
+\teditor.setContent(\'<p>text</p>\\n<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild.firstChild, 1);\n
+\trng.setEnd(editor.getBody().lastChild.firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark();\n
+\tequal(editor.getContent(), \'<p>text</p>\\n<p>text</p>\', \'Editor contents (elements)\');\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\tequal(editor.selection.getContent(), \'<p>ext</p>\\n<p>tex</p>\', \'Selected contents (elements)\');\n
+});\n
+\n
+test(\'getBookmark/setBookmark (simple)\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\t// Get persistent bookmark simple text selection\n
+\teditor.setContent(\'text\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 1);\n
+\trng.setEnd(editor.getBody().firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(1);\n
+\tequal(editor.getContent(), \'text\', \'Editor contents (text)\');\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\tequal(editor.selection.getContent(), \'ex\', \'Selected contents (text)\');\n
+\n
+\t// Get persistent bookmark multiple elements text selection\n
+\teditor.setContent(\'<p>text</p>\\n<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild.firstChild, 1);\n
+\trng.setEnd(editor.getBody().lastChild.firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(1);\n
+\tequal(editor.getContent(), \'<p>text</p>\\n<p>text</p>\', \'Editor contents (elements)\');\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\tequal(editor.selection.getContent(), \'<p>ext</p>\\n<p>tex</p>\', \'Selected contents (elements)\');\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - simple text selection\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(2);\n
+\n
+\teditor.setContent(\'text\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 1);\n
+\trng.setEnd(editor.getBody().firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2);\n
+\tequal(editor.getContent(), \'text\', \'Editor contents (text)\');\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\tequal(editor.selection.getContent(), \'ex\', \'Selected contents (text)\');\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple element selection\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(1);\n
+\n
+\t// Get non intrusive bookmark simple element selection\n
+\teditor.setContent(\'<p>text<em>a<strong>b</strong>c</em></p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'em\')[0], 1);\n
+\trng.setEnd(editor.dom.select(\'em\')[0], 2);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2);\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\tequal(editor.selection.getContent(), \'<strong>b</strong>\', \'Selected contents (element)\');\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multiple elements text selection\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(2);\n
+\n
+\t// Get non intrusive bookmark multiple elements text selection\n
+\teditor.setContent(\'<p>text</p>\\n<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild.firstChild, 1);\n
+\trng.setEnd(editor.getBody().lastChild.firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2);\n
+\tequal(editor.getContent(), \'<p>text</p>\\n<p>text</p>\', \'Editor contents (elements)\');\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\tequal(editor.selection.getContent(), \'<p>ext</p>\\n<p>tex</p>\', \'Selected contents (elements)\');\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive)\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(2);\n
+\n
+\t// Get non intrusive bookmark multiple elements text selection fragmented\n
+\teditor.setContent(\'<p>text</p><p>text</p>\');\n
+\teditor.dom.select(\'p\')[0].appendChild(editor.dom.doc.createTextNode(\'a\'));\n
+\teditor.dom.select(\'p\')[0].appendChild(editor.dom.doc.createTextNode(\'a\'));\n
+\teditor.dom.select(\'p\')[0].appendChild(editor.dom.doc.createTextNode(\'a\'));\n
+\teditor.dom.select(\'p\')[0].appendChild(editor.dom.doc.createTextNode(\'text\'));\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild.lastChild, 1);\n
+\trng.setEnd(editor.getBody().lastChild.firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2);\n
+\tequal(editor.getContent(), \'<p>textaaatext</p>\\n<p>text</p>\', \'Editor contents (fragmented, elements)\');\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\tequal(editor.selection.getContent(), \'<p>ext</p>\\n<p>tex</p>\', \'Selected contents (fragmented, elements)\');\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(2);\n
+\n
+\t// Get non intrusive bookmark multiple elements text selection fragmented\n
+\teditor.setContent(\'<p>text</p><p>text</p>\');\n
+\teditor.dom.select(\'p\')[0].appendChild(editor.dom.doc.createTextNode(\'a\'));\n
+\teditor.dom.select(\'p\')[0].appendChild(editor.dom.doc.createTextNode(\'a\'));\n
+\teditor.dom.select(\'p\')[0].appendChild(editor.dom.doc.createTextNode(\'a\'));\n
+\teditor.dom.select(\'p\')[0].appendChild(editor.dom.doc.createTextNode(\'text\'));\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild.lastChild, 1);\n
+\trng.setEnd(editor.getBody().lastChild.firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2, true);\n
+\teditor.setContent(editor.getContent());\n
+\tequal(editor.getContent(), \'<p>textaaatext</p>\\n<p>text</p>\', \'Editor contents (fragmented, elements)\');\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\tequal(editor.selection.getContent(), \'<p>ext</p>\\n<p>tex</p>\', \'Selected contents (fragmented, elements)\');\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - Get bookmark before image\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(4);\n
+\n
+\teditor.setContent(\'<p><img src="about:blank" /></p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 0);\n
+\trng.setEnd(editor.getBody().firstChild, 0);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2, true);\n
+\teditor.getBody().innerHTML = editor.getBody().innerHTML;\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer, editor.getBody().firstChild);\n
+\tequal(rng.startOffset, 0);\n
+\tequal(rng.endContainer, editor.getBody().firstChild);\n
+\tequal(rng.endOffset, 0);\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(4);\n
+\n
+\teditor.setContent(\'<p><img src="about:blank" /></p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 0);\n
+\trng.setEnd(editor.getBody().firstChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2, true);\n
+\teditor.getBody().innerHTML = editor.getBody().innerHTML;\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer, editor.getBody().firstChild);\n
+\tequal(rng.startOffset, 0);\n
+\tequal(rng.endContainer, editor.getBody().firstChild);\n
+\tequal(rng.endOffset, 1);\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - Get bookmark after image\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(4);\n
+\n
+\teditor.setContent(\'<p><img src="about:blank" /></p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 1);\n
+\trng.setEnd(editor.getBody().firstChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2, true);\n
+\teditor.getBody().innerHTML = editor.getBody().innerHTML;\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer, editor.getBody().firstChild);\n
+\tequal(rng.startOffset, 1);\n
+\tequal(rng.endContainer, editor.getBody().firstChild);\n
+\tequal(rng.endOffset, 1);\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - Get bookmark before element\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(4);\n
+\n
+\teditor.setContent(\'abc<b>123</b>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 0);\n
+\trng.setEnd(editor.getBody().firstChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2, true);\n
+\teditor.getBody().innerHTML = editor.getBody().innerHTML;\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer, editor.getBody().firstChild);\n
+\tequal(rng.startOffset, 0);\n
+\tequal(rng.endContainer, editor.getBody().firstChild);\n
+\tequal(rng.endOffset, 2);\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - Get bookmark after element\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(4);\n
+\n
+\t// Get bookmark after element\n
+\teditor.setContent(\'<b>123</b>abc\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().lastChild, 1);\n
+\trng.setEnd(editor.getBody().lastChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2, true);\n
+\teditor.getBody().innerHTML = editor.getBody().innerHTML;\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer, editor.getBody().lastChild);\n
+\tequal(rng.startOffset, 1);\n
+\tequal(rng.endContainer, editor.getBody().lastChild);\n
+\tequal(rng.endOffset, 2);\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - Get bookmark inside element\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(4);\n
+\n
+\teditor.setContent(\'abc<b>123</b>abc\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().childNodes[1].firstChild, 1);\n
+\trng.setEnd(editor.getBody().childNodes[1].firstChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2, true);\n
+\teditor.getBody().innerHTML = editor.getBody().innerHTML;\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer, editor.getBody().childNodes[1].firstChild);\n
+\tequal(rng.startOffset, 1);\n
+\tequal(rng.endContainer, editor.getBody().childNodes[1].firstChild);\n
+\tequal(rng.endOffset, 2);\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(4);\n
+\n
+\teditor.setContent(\'abc\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 1);\n
+\trng.setEnd(editor.getBody().firstChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\tbookmark = editor.selection.getBookmark(2, true);\n
+\teditor.getBody().innerHTML = editor.getBody().innerHTML;\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer, editor.getBody().firstChild);\n
+\tequal(rng.startOffset, 1);\n
+\tequal(rng.endContainer, editor.getBody().firstChild);\n
+\tequal(rng.endOffset, 2);\n
+});\n
+\n
+test(\'getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html\', function() {\n
+\tvar rng, bookmark;\n
+\n
+\texpect(4);\n
+\n
+\teditor.setContent(\'<p>abc</p>123<p>123</p><p>123<b>123</b><table><tr><td>abc</td></tr></table></p>\');\n
+\teditor.execCommand(\'SelectAll\');\n
+\tUtils.setSelection(\'td\', 1, \'td\', 2);\n
+\tbookmark = editor.selection.getBookmark(2, true);\n
+\teditor.getBody().innerHTML = editor.getBody().innerHTML;\n
+\teditor.selection.moveToBookmark(bookmark);\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer, editor.dom.select(\'td\')[0].firstChild);\n
+\tequal(rng.startOffset, 1);\n
+\tequal(rng.endContainer, editor.dom.select(\'td\')[0].firstChild);\n
+\tequal(rng.endOffset, 2);\n
+});\n
+\n
+test(\'select empty TD\', function() {\n
+\teditor.getBody().innerHTML = \'<table><tr><td><br></td></tr></table>\';\n
+\teditor.selection.select(editor.dom.select(\'td\')[0], true);\n
+\tequal(editor.selection.getRng(true).startContainer.nodeName, \'TD\');\n
+});\n
+\n
+test(\'select first p\', 2, function() {\n
+\teditor.setContent(\'<p>text1</p><p>text2</p>\');\n
+\teditor.selection.select(editor.dom.select(\'p\')[0]);\n
+\tequal(editor.selection.getContent(), \'<p>text1</p>\', \'Select simple element, content\');\n
+\tequal(editor.selection.getStart().nodeName, \'P\', \'Select simple element, nodeName\');\n
+});\n
+\n
+test(\'select table\', 2, function() {\n
+\teditor.setContent(\'<table><tbody><tr><td>text1</td></tr></tbody></table>\');\n
+\teditor.selection.select(editor.dom.select(\'table\')[0]);\n
+\tequal(editor.selection.getContent(), \'<table>\\n<tbody>\\n<tr>\\n<td>text1</td>\\n</tr>\\n</tbody>\\n</table>\', \'Select complex element, content\');\n
+\tequal(editor.selection.getNode().nodeName, \'TABLE\', \'Select complex element, nodeName\');\n
+});\n
+\n
+test(\'select table text 1\', 2, function() {\n
+\teditor.setContent(\'<table><tbody><tr><td id="a">text1</td><td id="b">text2</td></tr></tbody></table>\');\n
+\teditor.selection.select(editor.dom.select(\'table\')[0], true);\n
+\tequal(editor.selection.getStart().id, \'a\', \'Expand to text content 1 (start)\');\n
+\tequal(editor.selection.getEnd().id, \'b\', \'Expand to text content 1 (end)\');\n
+});\n
+\n
+test(\'select table text 2\', 2, function() {\n
+\teditor.setContent(\'<table><tbody><tr><td id="a"><br /></td><td id="b"><br /></td></tr></tbody></table>\');\n
+\teditor.selection.select(editor.dom.select(\'table\')[0], true);\n
+\tequal(editor.dom.getParent(editor.selection.getStart(), \'td\').id, \'a\', \'Expand to text content 2 (start)\');\n
+\tequal(editor.dom.getParent(editor.selection.getEnd(), \'td\').id, \'b\', \'Expand to text content 2 (end)\');\n
+});\n
+\n
+test(\'getNode\', function() {\n
+\tvar rng;\n
+\n
+\teditor.setContent(\'<p id="p1"><span id="s1">span1</span> word <span id="s2">span2</span> word <span id="s3">span3</span></p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.get(\'s1\').firstChild, 0);\n
+\trng.setEnd(editor.dom.get(\'s1\').nextSibling, 0);\n
+\teditor.selection.setRng(rng);\n
+\tdeepEqual(editor.selection.getNode(), editor.dom.get(\'s1\'), \'Detect selection ends immediately after node at start of paragraph.\');\n
+\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.get(\'s2\').previousSibling, editor.dom.get(\'s2\').previousSibling.length);\n
+\trng.setEnd(editor.dom.get(\'s2\').nextSibling, 0);\n
+\teditor.selection.setRng(rng);\n
+\tdeepEqual(editor.selection.getNode(), editor.dom.get(\'s2\'), \'Detect selection immediately surrounds node in middle of paragraph.\');\n
+\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.get(\'s3\').previousSibling, editor.dom.get(\'s3\').previousSibling.length);\n
+\trng.setEnd(editor.dom.get(\'s3\').lastChild, editor.dom.get(\'s3\').lastChild.length);\n
+\teditor.selection.setRng(rng);\n
+\tdeepEqual(editor.selection.getNode(), editor.dom.get(\'s3\'), \'Detect selection starts immediately before node at end of paragraph.\');\n
+\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.get(\'s2\').previousSibling, editor.dom.get(\'s2\').previousSibling.length);\n
+\trng.setEnd(editor.dom.get(\'s3\').lastChild, editor.dom.get(\'s3\').lastChild.length);\n
+\teditor.selection.setRng(rng);\n
+\tdeepEqual(editor.selection.getNode(), editor.dom.get(\'p1\'), \'Detect selection wrapping multiple nodes does not collapse.\');\n
+});\n
+\n
+test(\'normalize to text node from document\', function() {\n
+\tvar rng;\n
+\n
+\tif (tinymce.isOpera || tinymce.isIE) {\n
+\t\tok(true, "Skipped on Opera/IE since Opera doesn\'t let you to set the range to document and IE will steal focus.");\n
+\t\treturn;\n
+\t}\n
+\n
+\teditor.setContent(\'<p>text</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getDoc(), 0);\n
+\trng.setEnd(editor.getDoc(), 0);\n
+\teditor.selection.setRng(rng);\n
+\teditor.selection.normalize();\n
+\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer.nodeType, 3, \'startContainer node type\');\n
+\tequal(rng.startOffset, 0, \'startContainer offset\');\n
+\tequal(rng.endContainer.nodeType, 3, \'endContainer node type\');\n
+\tequal(rng.endOffset, 0, \'endOffset offset\');\n
+});\n
+\n
+test(\'normalize to br from document\', function() {\n
+\tvar rng;\n
+\n
+\tif (tinymce.isOpera || tinymce.isIE) {\n
+\t\tok(true, "Skipped on Opera/IE since Opera doesn\'t let you to set the range to document and IE will steal focus.");\n
+\t\treturn;\n
+\t}\n
+\n
+\teditor.setContent(\'<p><br /></p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getDoc(), 0);\n
+\trng.setEnd(editor.getDoc(), 0);\n
+\teditor.selection.setRng(rng);\n
+\teditor.selection.normalize();\n
+\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer.nodeName, \'P\', \'startContainer node name\');\n
+\tequal(rng.startContainer.nodeType, 1, \'startContainer node type\');\n
+\tequal(rng.startOffset, 0, \'startContainer offset\');\n
+\tequal(rng.endContainer.nodeType, 1, \'endContainer node type\');\n
+\tequal(rng.endOffset, 0, \'endOffset offset\');\n
+});\n
+\n
+// Only run on browser with W3C DOM Range support\n
+if (tinymce.Env.range) {\n
+\ttest(\'normalize with contentEditable:false element\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.setContent(\'<p>a<b contentEditable="false">b</b>c</p>\');\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild.lastChild, 0);\n
+\t\trng.setEnd(editor.getBody().firstChild.lastChild, 0);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.collapsed, true);\n
+\t\tequal(rng.startContainer.nodeType, 3);\n
+\t\tequal(rng.startContainer.data, \'c\');\n
+\t});\n
+\n
+\ttest(\'normalize with contentEditable:false parent and contentEditable:true child element\', function() {\n
+\t\teditor.setContent(\'<p contentEditable="false">a<em contentEditable="true">b</em></p>\');\n
+\t\tUtils.setSelection(\'em\', 0);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\tvar rng = editor.selection.getRng(true);\n
+\t\tequal(rng.collapsed, true);\n
+\t\tequal(rng.startContainer.nodeType, 3);\n
+\t\tequal(rng.startContainer.data, \'b\');\n
+\t});\n
+\n
+\ttest(\'normalize with contentEditable:true parent and contentEditable:false child element\', function() {\n
+\t\teditor.setContent(\'<p contentEditable="true">a<em contentEditable="false">b</em></p>\');\n
+\t\tUtils.setSelection(\'em\', 0);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\tvar rng = editor.selection.getRng(true);\n
+\t\tequal(rng.collapsed, true);\n
+\t\tequal(rng.startContainer.nodeType, 3);\n
+\t\tequal(rng.startContainer.data, \'a\');\n
+\n
+\t\t// Excluding assert on IE since it\'s a minor issue\n
+\t\tif (tinymce.ie) {\n
+\t\t\tequal(rng.startOffset, 1);\n
+\t\t}\n
+\t});\n
+\n
+\ttest(\'normalize to text node from body\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.setContent(\'<p>text</p>\');\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody(), 0);\n
+\t\trng.setEnd(editor.getBody(), 0);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeType, 3, \'startContainer node type\');\n
+\t\tequal(rng.startOffset, 0, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeType, 3, \'endContainer node type\');\n
+\t\tequal(rng.endOffset, 0, \'endOffset offset\');\n
+\t});\n
+\n
+\ttest(\'normalize to br from body\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.setContent(\'<p><br /></p>\');\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody(), 0);\n
+\t\trng.setEnd(editor.getBody(), 0);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'P\', \'startContainer node name\');\n
+\t\tequal(rng.startContainer.nodeType, 1, \'startContainer node type\');\n
+\t\tequal(rng.startOffset, 0, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeType, 1, \'endContainer node type\');\n
+\t\tequal(rng.endOffset, 0, \'endOffset offset\');\n
+\t});\n
+\n
+\ttest(\'normalize ignore img\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<img src="about:blank " />\';\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody(), 0);\n
+\t\trng.setEnd(editor.getBody(), 1);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'BODY\', \'startContainer node name\');\n
+\t\tequal(rng.startContainer.nodeType, 1, \'startContainer node type\');\n
+\t\tequal(rng.startOffset, 0, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeName, \'BODY\', \'endContainer node name\');\n
+\t\tequal(rng.endContainer.nodeType, 1, \'endContainer node type\');\n
+\t\tequal(rng.endOffset, 1, \'endOffset offset\');\n
+\t});\n
+\n
+\ttest(\'normalize to before/after img\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p><img src="about:blank " /></p>\';\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody(), 0);\n
+\t\trng.setEnd(editor.getBody(), 1);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'P\', \'startContainer node name\');\n
+\t\tequal(rng.startContainer.nodeType, 1, \'startContainer node type\');\n
+\t\tequal(rng.startOffset, 0, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeName, \'P\', \'endContainer node name\');\n
+\t\tequal(rng.endContainer.nodeType, 1, \'endContainer node type\');\n
+\t\tequal(rng.endOffset, 1, \'endOffset offset\');\n
+\t});\n
+\n
+\ttest(\'normalize to text node inside P\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p>abc</p>\';\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody(), 0);\n
+\t\trng.setEnd(editor.getBody(), 1);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'#text\', \'startContainer node name\');\n
+\t\tequal(rng.startOffset, 0, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeName, \'#text\', \'endContainer node name\');\n
+\t\tequal(rng.endOffset, 3, \'endOffset offset\');\n
+\t});\n
+\n
+\ttest(\'normalize lean left if at the start of text node\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p><b>a</b><i>b</i></p>\';\n
+\t\tUtils.setSelection(\'i\', 0);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'#text\', \'startContainer node name\');\n
+\t\tequal(rng.startContainer.parentNode.nodeName, \'B\');\n
+\t\tequal(rng.startOffset, 1, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeName, \'#text\');\n
+\t\tequal(rng.endContainer.parentNode.nodeName, \'B\');\n
+\t\tequal(rng.endOffset, 1, \'endOffset offset\');\n
+\t});\n
+\n
+\ttest(\'normalize lean start to the right if at end of text node\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p><b>a</b><i>b</i></p>\';\n
+\t\tUtils.setSelection(\'b\', 1, \'i\', 1);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'#text\', \'startContainer node name\');\n
+\t\tequal(rng.startContainer.parentNode.nodeName, \'I\');\n
+\t\tequal(rng.startOffset, 0, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeName, \'#text\');\n
+\t\tequal(rng.endContainer.parentNode.nodeName, \'I\');\n
+\t\tequal(rng.endOffset, 1, \'endOffset offset\');\n
+\t});\n
+\n
+\ttest(\'normalize lean left but break before br\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p>a<br><b>b</b></p>\';\n
+\t\tUtils.setSelection(\'b\', 0);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeValue, \'b\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t});\n
+\n
+\ttest(\'normalize lean left but break before img\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p>a<img><b>b</b></p>\';\n
+\t\tUtils.setSelection(\'b\', 0);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeValue, \'b\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t});\n
+\n
+\ttest(\'normalize lean left but don\\\'t walk out the parent block\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p>a</p><p><b>b</b></p>\';\n
+\t\tUtils.setSelection(\'b\', 0);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeValue, \'b\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t});\n
+\n
+\ttest(\'normalize lean left into empty inline elements when caret is before br\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p><i><b></b></i><br /></p>\';\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStartBefore(editor.getBody().firstChild.lastChild);\n
+\t\trng.setEndBefore(editor.getBody().firstChild.lastChild);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'B\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t});\n
+\n
+\ttest(\'normalize don\\\'t lean left into empty inline elements if there is a br element after caret\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p><i><b></b></i><br /><br /></p>\';\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStartBefore(editor.getBody().firstChild.lastChild);\n
+\t\trng.setEndBefore(editor.getBody().firstChild.lastChild);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'P\');\n
+\t\tequal(rng.startOffset, 2);\n
+\t});\n
+\n
+\ttest(\'normalize don\\\'t lean left into empty inline elements if there is a br element before caret\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p><i><b><br /></b></i><br /></p>\';\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStartBefore(editor.getBody().firstChild.lastChild);\n
+\t\trng.setEndBefore(editor.getBody().firstChild.lastChild);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'P\');\n
+\t\tequal(rng.startOffset, 1);\n
+\t});\n
+\n
+\ttest(\'normalize don\\\'t move start/end if it\\\'s before/after table\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<table><tr><td>X</td></tr></table>\';\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStartBefore(editor.getBody().firstChild);\n
+\t\trng.setEndAfter(editor.getBody().lastChild);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'BODY\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t\tequal(rng.endContainer.nodeName, \'BODY\');\n
+\t\tequal(rng.endOffset, 1);\n
+\t});\n
+\n
+\ttest(\'normalize after paragraph\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.getBody().innerHTML = \'<p>a</p>\';\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStartAfter(editor.getBody().firstChild);\n
+\t\trng.setEndAfter(editor.getBody().lastChild);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'#text\');\n
+\t\tequal(rng.startOffset, 1);\n
+\t\tequal(rng.endContainer.nodeName, \'#text\');\n
+\t\tequal(rng.endOffset, 1);\n
+\t});\n
+\n
+\ttest(\'normalize caret after trailing BR\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.setContent(\'<p>a<br /></p>\');\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild, 2);\n
+\t\trng.setEnd(editor.getBody().firstChild, 2);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'#text\', \'startContainer node name\');\n
+\t\tequal(rng.startOffset, 1, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeName, \'#text\', \'endContainer node name\');\n
+\t\tequal(rng.endOffset, 1, \'endOffset offset\');\n
+\t});\n
+\n
+\ttest(\'normalize caret after bogus block BR\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.setContent(\'<p><br /></p>\');\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild, 1);\n
+\t\trng.setEnd(editor.getBody().firstChild, 1);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'P\', \'startContainer node name\');\n
+\t\tequal(rng.startOffset, 0, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeName, \'P\', \'endContainer node name\');\n
+\t\tequal(rng.endOffset, 0, \'endOffset offset\');\n
+\t});\n
+\n
+/*\n
+\ttest(\'normalize caret after last BR in block\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.setContent(\'<p><br /><br /></p>\');\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild, 2);\n
+\t\trng.setEnd(editor.getBody().firstChild, 2);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'P\', \'startContainer node name\');\n
+\t\tequal(rng.startOffset, 1, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeName, \'P\', \'endContainer node name\');\n
+\t\tequal(rng.endOffset, 1, \'endOffset offset\');\n
+\t});\n
+*/\n
+\n
+\ttest(\'normalize caret after double BR\', function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.setContent(\'<p>a<br /><br /></p>\');\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild, 3);\n
+\t\trng.setEnd(editor.getBody().firstChild, 3);\n
+\t\teditor.selection.setRng(rng);\n
+\t\teditor.selection.normalize();\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'P\', \'startContainer node name\');\n
+\t\tequal(rng.startOffset, 3, \'startContainer offset\');\n
+\t\tequal(rng.endContainer.nodeName, \'P\', \'endContainer node name\');\n
+\t\tequal(rng.endOffset, 3, \'endOffset offset\');\n
+\t});\n
+}\n
+\n
+test(\'custom elements\', function() {\n
+\tvar rng;\n
+\n
+\teditor.setContent(\'<custom1>test</custom1><custom2>test</custom2>\');\n
+\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 2);\n
+\teditor.selection.setRng(rng);\n
+\n
+\tequal(editor.selection.getContent(), \'<custom1>test</custom1><custom2>test</custom2>\');\n
+});\n
+\n
+test(\'selectorChanged\', function() {\n
+\tvar newState, newArgs;\n
+\n
+\teditor.selection.selectorChanged(\'a[href]\', function(state, args) {\n
+\t\tnewState = state;\n
+\t\tnewArgs = args;\n
+\t});\n
+\n
+\teditor.getBody().innerHTML = \'<p><a href="#">text</a></p>\';\n
+\tUtils.setSelection(\'a\', 0, \'a\', 4);\n
+\teditor.nodeChanged();\n
+\n
+\tok(newState);\n
+\tequal(newArgs.selector, \'a[href]\');\n
+\tequal(newArgs.node, editor.getBody().firstChild.firstChild);\n
+\tequal(newArgs.parents.length, 2);\n
+\n
+\teditor.getBody().innerHTML = \'<p>text</p>\';\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.nodeChanged();\n
+\tequal(newArgs.selector, \'a[href]\');\n
+\tequal(newArgs.node, editor.getBody().firstChild);\n
+\tequal(newArgs.parents.length, 1);\n
+});\n
+\n
+test(\'setRng\', function() {\n
+\tvar rng = editor.dom.createRng();\n
+\n
+\teditor.setContent(\'<p>x</p>\');\n
+\trng.setStart(editor.$(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.$(\'p\')[0].firstChild, 1);\n
+\n
+\teditor.selection.setRng(rng);\n
+\teditor.selection.setRng(null);\n
+\n
+\trng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer.nodeName, \'#text\');\n
+\tequal(rng.startOffset, 0);\n
+\tequal(rng.endContainer.nodeName, \'#text\');\n
+\tequal(rng.endOffset, 1);\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>35760</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Selection.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

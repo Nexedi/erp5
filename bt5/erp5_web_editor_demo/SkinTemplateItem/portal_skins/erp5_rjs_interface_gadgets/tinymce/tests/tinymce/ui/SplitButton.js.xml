@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268209.16</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SplitButton.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tmodule("tinymce.ui.SplitButton", {\n
+\t\tsetup: function() {\n
+\t\t\tdocument.getElementById(\'view\').innerHTML = \'\';\n
+\t\t},\n
+\n
+\t\tteardown: function() {\n
+\t\t\ttinymce.dom.Event.clean(document.getElementById(\'view\'));\n
+\t\t}\n
+\t});\n
+\n
+\tfunction createSplitButton(settings) {\n
+\t\treturn tinymce.ui.Factory.create(tinymce.extend({\n
+\t\t\ttype: \'splitbutton\'\n
+\t\t}, settings)).renderTo(document.getElementById(\'view\'));\n
+\t}\n
+\n
+\ttest("splitbutton text, size default", function() {\n
+\t\tvar splitButton = createSplitButton({text: \'X\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 42, 30], 4);\n
+\t});\n
+\n
+\ttest("splitbutton text, size large", function() {\n
+\t\tvar splitButton = createSplitButton({text: \'X\', size: \'large\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 44, 39], 4);\n
+\t});\n
+\n
+\ttest("splitbutton text, size small", function() {\n
+\t\tvar splitButton = createSplitButton({text: \'X\', size: \'small\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 36, 23], 4);\n
+\t});\n
+\n
+\ttest("splitbutton text, width 100, height 100", function() {\n
+\t\tvar splitButton = createSplitButton({text: \'X\', width: 100, height: 100});\n
+\n
+\t\tdeepEqual(Utils.rect(splitButton), [0, 0, 100, 100]);\n
+\t\tdeepEqual(Utils.rect(splitButton.getEl().firstChild), [1, 1, 83, 98]);\n
+\t});\n
+\n
+\ttest("splitbutton icon, size default", function() {\n
+\t\tvar splitButton = createSplitButton({icon: \'test\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 50, 30], 4);\n
+\t});\n
+\n
+\ttest("splitbutton icon, size small", function() {\n
+\t\tvar splitButton = createSplitButton({icon: \'test\', size: \'small\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 45, 24], 4);\n
+\t});\n
+\n
+\ttest("splitbutton icon, size large", function() {\n
+\t\tvar splitButton = createSplitButton({icon: \'test\', size: \'large\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 49, 40], 4);\n
+\t});\n
+\n
+\ttest("splitbutton icon, width 100, height 100", function() {\n
+\t\tvar splitButton = createSplitButton({icon: \'test\', width: 100, height: 100});\n
+\n
+\t\tdeepEqual(Utils.rect(splitButton), [0, 0, 100, 100]);\n
+\t\tdeepEqual(Utils.rect(splitButton.getEl().firstChild), [1, 1, 83, 98]);\n
+\t});\n
+\n
+\ttest("splitbutton text & icon, size default", function() {\n
+\t\tvar splitButton = createSplitButton({text: \'X\', icon: \'test\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 62, 30], 4);\n
+\t});\n
+\n
+\ttest("splitbutton text & icon, size large", function() {\n
+\t\tvar splitButton = createSplitButton({text: \'X\', icon: \'test\', size: \'large\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 64, 40], 4);\n
+\t});\n
+\n
+\ttest("splitbutton text & icon, size small", function() {\n
+\t\tvar splitButton = createSplitButton({text: \'X\', icon: \'test\', size: \'small\'});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(splitButton), [0, 0, 55, 24], 4);\n
+\t});\n
+\n
+\ttest("splitbutton text & icon, width 100, height 100", function() {\n
+\t\tvar splitButton = createSplitButton({text: \'X\', icon: \'test\', width: 100, height: 100});\n
+\n
+\t\tdeepEqual(Utils.rect(splitButton), [0, 0, 100, 100]);\n
+\t\tdeepEqual(Utils.rect(splitButton.getEl().firstChild), [1, 1, 83, 98]);\n
+\t});\n
+\n
+\ttest("splitbutton click event", function() {\n
+\t\tvar splitButton, clicks = {};\n
+\n
+\t\tsplitButton = createSplitButton({text: \'X\', onclick: function() {clicks.a = \'a\';}});\n
+\t\tsplitButton.fire(\'click\', {target: splitButton.getEl().firstChild});\n
+\n
+\t\tdeepEqual(clicks, {a: \'a\'});\n
+\t});\n
+})();\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3321</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>SplitButton.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268654.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>TabPanel.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// TabPanel\n
+\n
+.@{prefix}-tabs {\n
+\tdisplay: block;\n
+\tborder-bottom: 1px solid @tab-border;\n
+}\n
+\n
+.@{prefix}-tabs,\n
+.@{prefix}-tabs + .@{prefix}-container-body {\n
+\tbackground: @tabs-bg;\n
+}\n
+\n
+.@{prefix}-tab {\n
+\t.inline-block();\n
+\tborder: 1px solid @tab-border;\n
+\tborder-width: 0 1px 0 0;\n
+\tbackground: @tab-bg;\n
+\tpadding: 8px;\n
+\ttext-shadow: @text-shadow;\n
+\theight: 13px;\n
+\tcursor: pointer;\n
+}\n
+\n
+.@{prefix}-tab:hover {\n
+\tbackground: @tab-bg-hover;\n
+}\n
+\n
+.@{prefix}-tab.@{prefix}-active {\n
+\tbackground: @tab-bg-active;\n
+\tborder-bottom-color: transparent;\n
+\tmargin-bottom: -1px;\n
+\theight: 14px;\n
+}\n
+\n
+// RTL\n
+\n
+.@{prefix}-rtl .@{prefix}-tabs {\n
+\ttext-align: right;\n
+\tdirection: rtl;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-tab {\n
+\tborder-width: 0 0 0 1px;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>706</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>TabPanel.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

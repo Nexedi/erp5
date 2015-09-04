@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268301.67</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ForceBlocks.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ForceBlocks.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+define("tinymce/ForceBlocks", [], function() {\n
+\treturn function(editor) {\n
+\t\tvar settings = editor.settings, dom = editor.dom, selection = editor.selection;\n
+\t\tvar schema = editor.schema, blockElements = schema.getBlockElements();\n
+\n
+\t\tfunction addRootBlocks() {\n
+\t\t\tvar node = selection.getStart(), rootNode = editor.getBody(), rng;\n
+\t\t\tvar startContainer, startOffset, endContainer, endOffset, rootBlockNode;\n
+\t\t\tvar tempNode, offset = -0xFFFFFF, wrapped, restoreSelection;\n
+\t\t\tvar tmpRng, rootNodeName, forcedRootBlock;\n
+\n
+\t\t\tforcedRootBlock = settings.forced_root_block;\n
+\n
+\t\t\tif (!node || node.nodeType !== 1 || !forcedRootBlock) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Check if node is wrapped in block\n
+\t\t\twhile (node && node != rootNode) {\n
+\t\t\t\tif (blockElements[node.nodeName]) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnode = node.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\t// Get current selection\n
+\t\t\trng = selection.getRng();\n
+\t\t\tif (rng.setStart) {\n
+\t\t\t\tstartContainer = rng.startContainer;\n
+\t\t\t\tstartOffset = rng.startOffset;\n
+\t\t\t\tendContainer = rng.endContainer;\n
+\t\t\t\tendOffset = rng.endOffset;\n
+\n
+\t\t\t\ttry {\n
+\t\t\t\t\trestoreSelection = editor.getDoc().activeElement === rootNode;\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// IE throws unspecified error here sometimes\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\t// Force control range into text range\n
+\t\t\t\tif (rng.item) {\n
+\t\t\t\t\tnode = rng.item(0);\n
+\t\t\t\t\trng = editor.getDoc().body.createTextRange();\n
+\t\t\t\t\trng.moveToElementText(node);\n
+\t\t\t\t}\n
+\n
+\t\t\t\trestoreSelection = rng.parentElement().ownerDocument === editor.getDoc();\n
+\t\t\t\ttmpRng = rng.duplicate();\n
+\t\t\t\ttmpRng.collapse(true);\n
+\t\t\t\tstartOffset = tmpRng.move(\'character\', offset) * -1;\n
+\n
+\t\t\t\tif (!tmpRng.collapsed) {\n
+\t\t\t\t\ttmpRng = rng.duplicate();\n
+\t\t\t\t\ttmpRng.collapse(false);\n
+\t\t\t\t\tendOffset = (tmpRng.move(\'character\', offset) * -1) - startOffset;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Wrap non block elements and text nodes\n
+\t\t\tnode = rootNode.firstChild;\n
+\t\t\trootNodeName = rootNode.nodeName.toLowerCase();\n
+\t\t\twhile (node) {\n
+\t\t\t\t// TODO: Break this up, too complex\n
+\t\t\t\tif (((node.nodeType === 3 || (node.nodeType == 1 && !blockElements[node.nodeName]))) &&\n
+\t\t\t\t\tschema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase())) {\n
+\t\t\t\t\t// Remove empty text nodes\n
+\t\t\t\t\tif (node.nodeType === 3 && node.nodeValue.length === 0) {\n
+\t\t\t\t\t\ttempNode = node;\n
+\t\t\t\t\t\tnode = node.nextSibling;\n
+\t\t\t\t\t\tdom.remove(tempNode);\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!rootBlockNode) {\n
+\t\t\t\t\t\trootBlockNode = dom.create(forcedRootBlock, editor.settings.forced_root_block_attrs);\n
+\t\t\t\t\t\tnode.parentNode.insertBefore(rootBlockNode, node);\n
+\t\t\t\t\t\twrapped = true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\ttempNode = node;\n
+\t\t\t\t\tnode = node.nextSibling;\n
+\t\t\t\t\trootBlockNode.appendChild(tempNode);\n
+\t\t\t\t} else {\n
+\t\t\t\t\trootBlockNode = null;\n
+\t\t\t\t\tnode = node.nextSibling;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (wrapped && restoreSelection) {\n
+\t\t\t\tif (rng.setStart) {\n
+\t\t\t\t\trng.setStart(startContainer, startOffset);\n
+\t\t\t\t\trng.setEnd(endContainer, endOffset);\n
+\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// Only select if the previous selection was inside the document to prevent auto focus in quirks mode\n
+\t\t\t\t\ttry {\n
+\t\t\t\t\t\trng = editor.getDoc().body.createTextRange();\n
+\t\t\t\t\t\trng.moveToElementText(rootNode);\n
+\t\t\t\t\t\trng.collapse(true);\n
+\t\t\t\t\t\trng.moveStart(\'character\', startOffset);\n
+\n
+\t\t\t\t\t\tif (endOffset > 0) {\n
+\t\t\t\t\t\t\trng.moveEnd(\'character\', endOffset);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\trng.select();\n
+\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t// Ignore\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\teditor.nodeChanged();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Force root blocks\n
+\t\tif (settings.forced_root_block) {\n
+\t\t\teditor.on(\'NodeChange\', addRootBlocks);\n
+\t\t}\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3680</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ForceBlocks.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

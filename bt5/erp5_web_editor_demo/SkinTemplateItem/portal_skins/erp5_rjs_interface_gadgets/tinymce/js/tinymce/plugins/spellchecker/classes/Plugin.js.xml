@@ -1,0 +1,479 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268543.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*jshint camelcase:false */\n
+\n
+/**\n
+ * This class contains all core logic for the spellchecker plugin.\n
+ *\n
+ * @class tinymce.spellcheckerplugin.Plugin\n
+ * @private\n
+ */\n
+define("tinymce/spellcheckerplugin/Plugin", [\n
+\t"tinymce/spellcheckerplugin/DomTextMatcher",\n
+\t"tinymce/PluginManager",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/ui/Menu",\n
+\t"tinymce/dom/DOMUtils",\n
+\t"tinymce/util/XHR",\n
+\t"tinymce/util/URI",\n
+\t"tinymce/util/JSON"\n
+], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, XHR, URI, JSON) {\n
+\tPluginManager.add(\'spellchecker\', function(editor, url) {\n
+\t\tvar languageMenuItems, self = this, lastSuggestions, started, suggestionsMenu, settings = editor.settings;\n
+\t\tvar hasDictionarySupport;\n
+\n
+\t\tfunction getTextMatcher() {\n
+\t\t\tif (!self.textMatcher) {\n
+\t\t\t\tself.textMatcher = new DomTextMatcher(editor.getBody(), editor);\n
+\t\t\t}\n
+\n
+\t\t\treturn self.textMatcher;\n
+\t\t}\n
+\n
+\t\tfunction buildMenuItems(listName, languageValues) {\n
+\t\t\tvar items = [];\n
+\n
+\t\t\tTools.each(languageValues, function(languageValue) {\n
+\t\t\t\titems.push({\n
+\t\t\t\t\tselectable: true,\n
+\t\t\t\t\ttext: languageValue.name,\n
+\t\t\t\t\tdata: languageValue.value\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\treturn items;\n
+\t\t}\n
+\n
+\t\tvar languagesString = settings.spellchecker_languages ||\n
+\t\t\t\'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,\' +\n
+\t\t\t\'German=de,Italian=it,Polish=pl,Portuguese=pt_BR,\' +\n
+\t\t\t\'Spanish=es,Swedish=sv\';\n
+\n
+\t\tlanguageMenuItems = buildMenuItems(\'Language\',\n
+\t\t\tTools.map(languagesString.split(\',\'), function(langPair) {\n
+\t\t\t\tlangPair = langPair.split(\'=\');\n
+\n
+\t\t\t\treturn {\n
+\t\t\t\t\tname: langPair[0],\n
+\t\t\t\t\tvalue: langPair[1]\n
+\t\t\t\t};\n
+\t\t\t})\n
+\t\t);\n
+\n
+\t\tfunction isEmpty(obj) {\n
+\t\t\t/*jshint unused:false*/\n
+\t\t\t/*eslint no-unused-vars:0 */\n
+\t\t\tfor (var name in obj) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\treturn true;\n
+\t\t}\n
+\n
+\t\tfunction showSuggestions(word, spans) {\n
+\t\t\tvar items = [], suggestions = lastSuggestions[word];\n
+\n
+\t\t\tTools.each(suggestions, function(suggestion) {\n
+\t\t\t\titems.push({\n
+\t\t\t\t\ttext: suggestion,\n
+\t\t\t\t\tonclick: function() {\n
+\t\t\t\t\t\teditor.insertContent(editor.dom.encode(suggestion));\n
+\t\t\t\t\t\teditor.dom.remove(spans);\n
+\t\t\t\t\t\tcheckIfFinished();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\titems.push({text: \'-\'});\n
+\n
+\t\t\tif (hasDictionarySupport) {\n
+\t\t\t\titems.push({text: \'Add to Dictionary\', onclick: function() {\n
+\t\t\t\t\taddToDictionary(word, spans);\n
+\t\t\t\t}});\n
+\t\t\t}\n
+\n
+\t\t\titems.push.apply(items, [\n
+\t\t\t\t{text: \'Ignore\', onclick: function() {\n
+\t\t\t\t\tignoreWord(word, spans);\n
+\t\t\t\t}},\n
+\n
+\t\t\t\t{text: \'Ignore all\', onclick: function() {\n
+\t\t\t\t\tignoreWord(word, spans, true);\n
+\t\t\t\t}}\n
+\t\t\t]);\n
+\n
+\t\t\t// Render menu\n
+\t\t\tsuggestionsMenu = new Menu({\n
+\t\t\t\titems: items,\n
+\t\t\t\tcontext: \'contextmenu\',\n
+\t\t\t\tonautohide: function(e) {\n
+\t\t\t\t\tif (e.target.className.indexOf(\'spellchecker\') != -1) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t}\n
+\t\t\t\t},\n
+\t\t\t\tonhide: function() {\n
+\t\t\t\t\tsuggestionsMenu.remove();\n
+\t\t\t\t\tsuggestionsMenu = null;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tsuggestionsMenu.renderTo(document.body);\n
+\n
+\t\t\t// Position menu\n
+\t\t\tvar pos = DOMUtils.DOM.getPos(editor.getContentAreaContainer());\n
+\t\t\tvar targetPos = editor.dom.getPos(spans[0]);\n
+\t\t\tvar root = editor.dom.getRoot();\n
+\n
+\t\t\t// Adjust targetPos for scrolling in the editor\n
+\t\t\tif (root.nodeName == \'BODY\') {\n
+\t\t\t\ttargetPos.x -= root.ownerDocument.documentElement.scrollLeft || root.scrollLeft;\n
+\t\t\t\ttargetPos.y -= root.ownerDocument.documentElement.scrollTop || root.scrollTop;\n
+\t\t\t} else {\n
+\t\t\t\ttargetPos.x -= root.scrollLeft;\n
+\t\t\t\ttargetPos.y -= root.scrollTop;\n
+\t\t\t}\n
+\n
+\t\t\tpos.x += targetPos.x;\n
+\t\t\tpos.y += targetPos.y;\n
+\n
+\t\t\tsuggestionsMenu.moveTo(pos.x, pos.y + spans[0].offsetHeight);\n
+\t\t}\n
+\n
+\t\tfunction getWordCharPattern() {\n
+\t\t\t// Regexp for finding word specific characters this will split words by\n
+\t\t\t// spaces, quotes, copy right characters etc. It\'s escaped with unicode characters\n
+\t\t\t// to make it easier to output scripts on servers using different encodings\n
+\t\t\t// so if you add any characters outside the 128 byte range make sure to escape it\n
+\t\t\treturn editor.getParam(\'spellchecker_wordchar_pattern\') || new RegExp("[^" +\n
+\t\t\t\t"\\\\s!\\"#$%&()*+,-./:;<=>?@[\\\\]^_{|}`" +\n
+\t\t\t\t"\\u00a7\\u00a9\\u00ab\\u00ae\\u00b1\\u00b6\\u00b7\\u00b8\\u00bb" +\n
+\t\t\t\t"\\u00bc\\u00bd\\u00be\\u00bf\\u00d7\\u00f7\\u00a4\\u201d\\u201c\\u201e\\u00a0\\u2002\\u2003\\u2009" +\n
+\t\t\t"]+", "g");\n
+\t\t}\n
+\n
+\t\tfunction defaultSpellcheckCallback(method, text, doneCallback, errorCallback) {\n
+\t\t\tvar data = {method: method}, postData = \'\';\n
+\n
+\t\t\tif (method == "spellcheck") {\n
+\t\t\t\tdata.text = text;\n
+\t\t\t\tdata.lang = settings.spellchecker_language;\n
+\t\t\t}\n
+\n
+\t\t\tif (method == "addToDictionary") {\n
+\t\t\t\tdata.word = text;\n
+\t\t\t}\n
+\n
+\t\t\tTools.each(data, function(value, key) {\n
+\t\t\t\tif (postData) {\n
+\t\t\t\t\tpostData += \'&\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tpostData += key + \'=\' + encodeURIComponent(value);\n
+\t\t\t});\n
+\n
+\t\t\tXHR.send({\n
+\t\t\t\turl: new URI(url).toAbsolute(settings.spellchecker_rpc_url),\n
+\t\t\t\ttype: "post",\n
+\t\t\t\tcontent_type: \'application/x-www-form-urlencoded\',\n
+\t\t\t\tdata: postData,\n
+\t\t\t\tsuccess: function(result) {\n
+\t\t\t\t\tresult = JSON.parse(result);\n
+\n
+\t\t\t\t\tif (!result) {\n
+\t\t\t\t\t\terrorCallback("Sever response wasn\'t proper JSON.");\n
+\t\t\t\t\t} else if (result.error) {\n
+\t\t\t\t\t\terrorCallback(result.error);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tdoneCallback(result);\n
+\t\t\t\t\t}\n
+\t\t\t\t},\n
+\t\t\t\terror: function(type, xhr) {\n
+\t\t\t\t\terrorCallback("Spellchecker request error: " + xhr.status);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction sendRpcCall(name, data, successCallback, errorCallback) {\n
+\t\t\tvar spellCheckCallback = settings.spellchecker_callback || defaultSpellcheckCallback;\n
+\t\t\tspellCheckCallback.call(self, name, data, successCallback, errorCallback);\n
+\t\t}\n
+\n
+\t\tfunction spellcheck() {\n
+\t\t\tfinish();\n
+\n
+\t\t\tif (started) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tfunction errorCallback(message) {\n
+\t\t\t\teditor.windowManager.alert(message);\n
+\t\t\t\teditor.setProgressState(false);\n
+\t\t\t\tfinish();\n
+\t\t\t}\n
+\n
+\t\t\teditor.setProgressState(true);\n
+\t\t\tsendRpcCall("spellcheck", getTextMatcher().text, markErrors, errorCallback);\n
+\t\t\teditor.focus();\n
+\t\t}\n
+\n
+\t\tfunction checkIfFinished() {\n
+\t\t\tif (!editor.dom.select(\'span.mce-spellchecker-word\').length) {\n
+\t\t\t\tfinish();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction addToDictionary(word, spans) {\n
+\t\t\teditor.setProgressState(true);\n
+\n
+\t\t\tsendRpcCall("addToDictionary", word, function() {\n
+\t\t\t\teditor.setProgressState(false);\n
+\t\t\t\teditor.dom.remove(spans, true);\n
+\t\t\t\tcheckIfFinished();\n
+\t\t\t}, function(message) {\n
+\t\t\t\teditor.windowManager.alert(message);\n
+\t\t\t\teditor.setProgressState(false);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction ignoreWord(word, spans, all) {\n
+\t\t\teditor.selection.collapse();\n
+\n
+\t\t\tif (all) {\n
+\t\t\t\tTools.each(editor.dom.select(\'span.mce-spellchecker-word\'), function(span) {\n
+\t\t\t\t\tif (span.getAttribute(\'data-mce-word\') == word) {\n
+\t\t\t\t\t\teditor.dom.remove(span, true);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\teditor.dom.remove(spans, true);\n
+\t\t\t}\n
+\n
+\t\t\tcheckIfFinished();\n
+\t\t}\n
+\n
+\t\tfunction finish() {\n
+\t\t\tgetTextMatcher().reset();\n
+\t\t\tself.textMatcher = null;\n
+\n
+\t\t\tif (started) {\n
+\t\t\t\tstarted = false;\n
+\t\t\t\teditor.fire(\'SpellcheckEnd\');\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction getElmIndex(elm) {\n
+\t\t\tvar value = elm.getAttribute(\'data-mce-index\');\n
+\n
+\t\t\tif (typeof value == "number") {\n
+\t\t\t\treturn "" + value;\n
+\t\t\t}\n
+\n
+\t\t\treturn value;\n
+\t\t}\n
+\n
+\t\tfunction findSpansByIndex(index) {\n
+\t\t\tvar nodes, spans = [];\n
+\n
+\t\t\tnodes = Tools.toArray(editor.getBody().getElementsByTagName(\'span\'));\n
+\t\t\tif (nodes.length) {\n
+\t\t\t\tfor (var i = 0; i < nodes.length; i++) {\n
+\t\t\t\t\tvar nodeIndex = getElmIndex(nodes[i]);\n
+\n
+\t\t\t\t\tif (nodeIndex === null || !nodeIndex.length) {\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (nodeIndex === index.toString()) {\n
+\t\t\t\t\t\tspans.push(nodes[i]);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn spans;\n
+\t\t}\n
+\n
+\t\teditor.on(\'click\', function(e) {\n
+\t\t\tvar target = e.target;\n
+\n
+\t\t\tif (target.className == "mce-spellchecker-word") {\n
+\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\tvar spans = findSpansByIndex(getElmIndex(target));\n
+\n
+\t\t\t\tif (spans.length > 0) {\n
+\t\t\t\t\tvar rng = editor.dom.createRng();\n
+\t\t\t\t\trng.setStartBefore(spans[0]);\n
+\t\t\t\t\trng.setEndAfter(spans[spans.length - 1]);\n
+\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t\tshowSuggestions(target.getAttribute(\'data-mce-word\'), spans);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.addMenuItem(\'spellchecker\', {\n
+\t\t\ttext: \'Spellcheck\',\n
+\t\t\tcontext: \'tools\',\n
+\t\t\tonclick: spellcheck,\n
+\t\t\tselectable: true,\n
+\t\t\tonPostRender: function() {\n
+\t\t\t\tvar self = this;\n
+\n
+\t\t\t\tself.active(started);\n
+\n
+\t\t\t\teditor.on(\'SpellcheckStart SpellcheckEnd\', function() {\n
+\t\t\t\t\tself.active(started);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tfunction updateSelection(e) {\n
+\t\t\tvar selectedLanguage = settings.spellchecker_language;\n
+\n
+\t\t\te.control.items().each(function(ctrl) {\n
+\t\t\t\tctrl.active(ctrl.settings.data === selectedLanguage);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Find the specified words and marks them. It will also show suggestions for those words.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * editor.plugins.spellchecker.markErrors({\n
+\t\t *     dictionary: true,\n
+\t\t *     words: {\n
+\t\t *         "word1": ["suggestion 1", "Suggestion 2"]\n
+\t\t *     }\n
+\t\t * });\n
+\t\t * @param {Object} data Data object containing the words with suggestions.\n
+\t\t */\n
+\t\tfunction markErrors(data) {\n
+\t\t\tvar suggestions;\n
+\n
+\t\t\tif (data.words) {\n
+\t\t\t\thasDictionarySupport = !!data.dictionary;\n
+\t\t\t\tsuggestions = data.words;\n
+\t\t\t} else {\n
+\t\t\t\t// Fallback to old format\n
+\t\t\t\tsuggestions = data;\n
+\t\t\t}\n
+\n
+\t\t\teditor.setProgressState(false);\n
+\n
+\t\t\tif (isEmpty(suggestions)) {\n
+\t\t\t\teditor.windowManager.alert(\'No misspellings found\');\n
+\t\t\t\tstarted = false;\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tlastSuggestions = suggestions;\n
+\n
+\t\t\tgetTextMatcher().find(getWordCharPattern()).filter(function(match) {\n
+\t\t\t\treturn !!suggestions[match.text];\n
+\t\t\t}).wrap(function(match) {\n
+\t\t\t\treturn editor.dom.create(\'span\', {\n
+\t\t\t\t\t"class": \'mce-spellchecker-word\',\n
+\t\t\t\t\t"data-mce-bogus": 1,\n
+\t\t\t\t\t"data-mce-word": match.text\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\tstarted = true;\n
+\t\t\teditor.fire(\'SpellcheckStart\');\n
+\t\t}\n
+\n
+\t\tvar buttonArgs = {\n
+\t\t\ttooltip: \'Spellcheck\',\n
+\t\t\tonclick: spellcheck,\n
+\t\t\tonPostRender: function() {\n
+\t\t\t\tvar self = this;\n
+\n
+\t\t\t\teditor.on(\'SpellcheckStart SpellcheckEnd\', function() {\n
+\t\t\t\t\tself.active(started);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tif (languageMenuItems.length > 1) {\n
+\t\t\tbuttonArgs.type = \'splitbutton\';\n
+\t\t\tbuttonArgs.menu = languageMenuItems;\n
+\t\t\tbuttonArgs.onshow = updateSelection;\n
+\t\t\tbuttonArgs.onselect = function(e) {\n
+\t\t\t\tsettings.spellchecker_language = e.control.settings.data;\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\teditor.addButton(\'spellchecker\', buttonArgs);\n
+\t\teditor.addCommand(\'mceSpellCheck\', spellcheck);\n
+\n
+\t\teditor.on(\'remove\', function() {\n
+\t\t\tif (suggestionsMenu) {\n
+\t\t\t\tsuggestionsMenu.remove();\n
+\t\t\t\tsuggestionsMenu = null;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'change\', checkIfFinished);\n
+\n
+\t\tthis.getTextMatcher = getTextMatcher;\n
+\t\tthis.getWordCharPattern = getWordCharPattern;\n
+\t\tthis.markErrors = markErrors;\n
+\t\tthis.getLanguage = function() {\n
+\t\t\treturn settings.spellchecker_language;\n
+\t\t};\n
+\n
+\t\t// Set default spellchecker language if it\'s not specified\n
+\t\tsettings.spellchecker_language = settings.spellchecker_language || settings.language || \'en\';\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10788</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

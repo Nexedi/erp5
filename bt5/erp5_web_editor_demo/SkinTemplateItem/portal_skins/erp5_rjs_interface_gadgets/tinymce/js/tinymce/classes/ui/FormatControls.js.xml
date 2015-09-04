@@ -1,0 +1,590 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268340.35</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FormatControls.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * FormatControls.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Internal class containing all TinyMCE specific control types such as\n
+ * format listboxes, fontlist boxes, toolbar buttons etc.\n
+ *\n
+ * @class tinymce.ui.FormatControls\n
+ */\n
+define("tinymce/ui/FormatControls", [\n
+\t"tinymce/ui/Control",\n
+\t"tinymce/ui/Widget",\n
+\t"tinymce/ui/FloatPanel",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/EditorManager",\n
+\t"tinymce/Env"\n
+], function(Control, Widget, FloatPanel, Tools, EditorManager, Env) {\n
+\tvar each = Tools.each;\n
+\n
+\tEditorManager.on(\'AddEditor\', function(e) {\n
+\t\tif (e.editor.rtl) {\n
+\t\t\tControl.rtl = true;\n
+\t\t}\n
+\n
+\t\tregisterControls(e.editor);\n
+\t});\n
+\n
+\tControl.translate = function(text) {\n
+\t\treturn EditorManager.translate(text);\n
+\t};\n
+\n
+\tWidget.tooltips = !Env.iOS;\n
+\n
+\tfunction registerControls(editor) {\n
+\t\tvar formatMenu;\n
+\n
+\t\tfunction createListBoxChangeHandler(items, formatName) {\n
+\t\t\treturn function() {\n
+\t\t\t\tvar self = this;\n
+\n
+\t\t\t\teditor.on(\'nodeChange\', function(e) {\n
+\t\t\t\t\tvar formatter = editor.formatter;\n
+\t\t\t\t\tvar value = null;\n
+\n
+\t\t\t\t\teach(e.parents, function(node) {\n
+\t\t\t\t\t\teach(items, function(item) {\n
+\t\t\t\t\t\t\tif (formatName) {\n
+\t\t\t\t\t\t\t\tif (formatter.matchNode(node, formatName, {value: item.value})) {\n
+\t\t\t\t\t\t\t\t\tvalue = item.value;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tif (formatter.matchNode(node, item.value)) {\n
+\t\t\t\t\t\t\t\t\tvalue = item.value;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tif (value) {\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\tif (value) {\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\tself.value(value);\n
+\t\t\t\t});\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction createFormats(formats) {\n
+\t\t\tformats = formats.replace(/;$/, \'\').split(\';\');\n
+\n
+\t\t\tvar i = formats.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tformats[i] = formats[i].split(\'=\');\n
+\t\t\t}\n
+\n
+\t\t\treturn formats;\n
+\t\t}\n
+\n
+\t\tfunction createFormatMenu() {\n
+\t\t\tvar count = 0, newFormats = [];\n
+\n
+\t\t\tvar defaultStyleFormats = [\n
+\t\t\t\t{title: \'Headings\', items: [\n
+\t\t\t\t\t{title: \'Heading 1\', format: \'h1\'},\n
+\t\t\t\t\t{title: \'Heading 2\', format: \'h2\'},\n
+\t\t\t\t\t{title: \'Heading 3\', format: \'h3\'},\n
+\t\t\t\t\t{title: \'Heading 4\', format: \'h4\'},\n
+\t\t\t\t\t{title: \'Heading 5\', format: \'h5\'},\n
+\t\t\t\t\t{title: \'Heading 6\', format: \'h6\'}\n
+\t\t\t\t]},\n
+\n
+\t\t\t\t{title: \'Inline\', items: [\n
+\t\t\t\t\t{title: \'Bold\', icon: \'bold\', format: \'bold\'},\n
+\t\t\t\t\t{title: \'Italic\', icon: \'italic\', format: \'italic\'},\n
+\t\t\t\t\t{title: \'Underline\', icon: \'underline\', format: \'underline\'},\n
+\t\t\t\t\t{title: \'Strikethrough\', icon: \'strikethrough\', format: \'strikethrough\'},\n
+\t\t\t\t\t{title: \'Superscript\', icon: \'superscript\', format: \'superscript\'},\n
+\t\t\t\t\t{title: \'Subscript\', icon: \'subscript\', format: \'subscript\'},\n
+\t\t\t\t\t{title: \'Code\', icon: \'code\', format: \'code\'}\n
+\t\t\t\t]},\n
+\n
+\t\t\t\t{title: \'Blocks\', items: [\n
+\t\t\t\t\t{title: \'Paragraph\', format: \'p\'},\n
+\t\t\t\t\t{title: \'Blockquote\', format: \'blockquote\'},\n
+\t\t\t\t\t{title: \'Div\', format: \'div\'},\n
+\t\t\t\t\t{title: \'Pre\', format: \'pre\'}\n
+\t\t\t\t]},\n
+\n
+\t\t\t\t{title: \'Alignment\', items: [\n
+\t\t\t\t\t{title: \'Left\', icon: \'alignleft\', format: \'alignleft\'},\n
+\t\t\t\t\t{title: \'Center\', icon: \'aligncenter\', format: \'aligncenter\'},\n
+\t\t\t\t\t{title: \'Right\', icon: \'alignright\', format: \'alignright\'},\n
+\t\t\t\t\t{title: \'Justify\', icon: \'alignjustify\', format: \'alignjustify\'}\n
+\t\t\t\t]}\n
+\t\t\t];\n
+\n
+\t\t\tfunction createMenu(formats) {\n
+\t\t\t\tvar menu = [];\n
+\n
+\t\t\t\tif (!formats) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\teach(formats, function(format) {\n
+\t\t\t\t\tvar menuItem = {\n
+\t\t\t\t\t\ttext: format.title,\n
+\t\t\t\t\t\ticon: format.icon\n
+\t\t\t\t\t};\n
+\n
+\t\t\t\t\tif (format.items) {\n
+\t\t\t\t\t\tmenuItem.menu = createMenu(format.items);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tvar formatName = format.format || "custom" + count++;\n
+\n
+\t\t\t\t\t\tif (!format.format) {\n
+\t\t\t\t\t\t\tformat.name = formatName;\n
+\t\t\t\t\t\t\tnewFormats.push(format);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tmenuItem.format = formatName;\n
+\t\t\t\t\t\tmenuItem.cmd = format.cmd;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tmenu.push(menuItem);\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn menu;\n
+\t\t\t}\n
+\n
+\t\t\tfunction createStylesMenu() {\n
+\t\t\t\tvar menu;\n
+\n
+\t\t\t\tif (editor.settings.style_formats_merge) {\n
+\t\t\t\t\tif (editor.settings.style_formats) {\n
+\t\t\t\t\t\tmenu = createMenu(defaultStyleFormats.concat(editor.settings.style_formats));\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tmenu = createMenu(defaultStyleFormats);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tmenu = createMenu(editor.settings.style_formats || defaultStyleFormats);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn menu;\n
+\t\t\t}\n
+\n
+\t\t\teditor.on(\'init\', function() {\n
+\t\t\t\teach(newFormats, function(format) {\n
+\t\t\t\t\teditor.formatter.register(format.name, format);\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\treturn {\n
+\t\t\t\ttype: \'menu\',\n
+\t\t\t\titems: createStylesMenu(),\n
+\t\t\t\tonPostRender: function(e) {\n
+\t\t\t\t\teditor.fire(\'renderFormatsMenu\', {control: e.control});\n
+\t\t\t\t},\n
+\t\t\t\titemDefaults: {\n
+\t\t\t\t\tpreview: true,\n
+\n
+\t\t\t\t\ttextStyle: function() {\n
+\t\t\t\t\t\tif (this.settings.format) {\n
+\t\t\t\t\t\t\treturn editor.formatter.getCssText(this.settings.format);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tonPostRender: function() {\n
+\t\t\t\t\t\tvar self = this;\n
+\n
+\t\t\t\t\t\tself.parent().on(\'show\', function() {\n
+\t\t\t\t\t\t\tvar formatName, command;\n
+\n
+\t\t\t\t\t\t\tformatName = self.settings.format;\n
+\t\t\t\t\t\t\tif (formatName) {\n
+\t\t\t\t\t\t\t\tself.disabled(!editor.formatter.canApply(formatName));\n
+\t\t\t\t\t\t\t\tself.active(editor.formatter.match(formatName));\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tcommand = self.settings.cmd;\n
+\t\t\t\t\t\t\tif (command) {\n
+\t\t\t\t\t\t\t\tself.active(editor.queryCommandState(command));\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tonclick: function() {\n
+\t\t\t\t\t\tif (this.settings.format) {\n
+\t\t\t\t\t\t\ttoggleFormat(this.settings.format);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (this.settings.cmd) {\n
+\t\t\t\t\t\t\teditor.execCommand(this.settings.cmd);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tformatMenu = createFormatMenu();\n
+\n
+\t\t// Simple format controls <control/format>:<UI text>\n
+\t\teach({\n
+\t\t\tbold: \'Bold\',\n
+\t\t\titalic: \'Italic\',\n
+\t\t\tunderline: \'Underline\',\n
+\t\t\tstrikethrough: \'Strikethrough\',\n
+\t\t\tsubscript: \'Subscript\',\n
+\t\t\tsuperscript: \'Superscript\'\n
+\t\t}, function(text, name) {\n
+\t\t\teditor.addButton(name, {\n
+\t\t\t\ttooltip: text,\n
+\t\t\t\tonPostRender: function() {\n
+\t\t\t\t\tvar self = this;\n
+\n
+\t\t\t\t\t// TODO: Fix this\n
+\t\t\t\t\tif (editor.formatter) {\n
+\t\t\t\t\t\teditor.formatter.formatChanged(name, function(state) {\n
+\t\t\t\t\t\t\tself.active(state);\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\teditor.on(\'init\', function() {\n
+\t\t\t\t\t\t\teditor.formatter.formatChanged(name, function(state) {\n
+\t\t\t\t\t\t\t\tself.active(state);\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\t\t\t\t},\n
+\t\t\t\tonclick: function() {\n
+\t\t\t\t\ttoggleFormat(name);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t});\n
+\n
+\t\t// Simple command controls <control>:[<UI text>,<Command>]\n
+\t\teach({\n
+\t\t\toutdent: [\'Decrease indent\', \'Outdent\'],\n
+\t\t\tindent: [\'Increase indent\', \'Indent\'],\n
+\t\t\tcut: [\'Cut\', \'Cut\'],\n
+\t\t\tcopy: [\'Copy\', \'Copy\'],\n
+\t\t\tpaste: [\'Paste\', \'Paste\'],\n
+\t\t\thelp: [\'Help\', \'mceHelp\'],\n
+\t\t\tselectall: [\'Select all\', \'SelectAll\'],\n
+\t\t\tremoveformat: [\'Clear formatting\', \'RemoveFormat\'],\n
+\t\t\tvisualaid: [\'Visual aids\', \'mceToggleVisualAid\'],\n
+\t\t\tnewdocument: [\'New document\', \'mceNewDocument\']\n
+\t\t}, function(item, name) {\n
+\t\t\teditor.addButton(name, {\n
+\t\t\t\ttooltip: item[0],\n
+\t\t\t\tcmd: item[1]\n
+\t\t\t});\n
+\t\t});\n
+\n
+\t\t// Simple command controls with format state\n
+\t\teach({\n
+\t\t\tblockquote: [\'Blockquote\', \'mceBlockQuote\'],\n
+\t\t\tnumlist: [\'Numbered list\', \'InsertOrderedList\'],\n
+\t\t\tbullist: [\'Bullet list\', \'InsertUnorderedList\'],\n
+\t\t\tsubscript: [\'Subscript\', \'Subscript\'],\n
+\t\t\tsuperscript: [\'Superscript\', \'Superscript\'],\n
+\t\t\talignleft: [\'Align left\', \'JustifyLeft\'],\n
+\t\t\taligncenter: [\'Align center\', \'JustifyCenter\'],\n
+\t\t\talignright: [\'Align right\', \'JustifyRight\'],\n
+\t\t\talignjustify: [\'Justify\', \'JustifyFull\'],\n
+\t\t\talignnone: [\'No alignment\', \'JustifyNone\']\n
+\t\t}, function(item, name) {\n
+\t\t\teditor.addButton(name, {\n
+\t\t\t\ttooltip: item[0],\n
+\t\t\t\tcmd: item[1],\n
+\t\t\t\tonPostRender: function() {\n
+\t\t\t\t\tvar self = this;\n
+\n
+\t\t\t\t\t// TODO: Fix this\n
+\t\t\t\t\tif (editor.formatter) {\n
+\t\t\t\t\t\teditor.formatter.formatChanged(name, function(state) {\n
+\t\t\t\t\t\t\tself.active(state);\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\teditor.on(\'init\', function() {\n
+\t\t\t\t\t\t\teditor.formatter.formatChanged(name, function(state) {\n
+\t\t\t\t\t\t\t\tself.active(state);\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t});\n
+\n
+\t\tfunction toggleUndoRedoState(type) {\n
+\t\t\treturn function() {\n
+\t\t\t\tvar self = this;\n
+\n
+\t\t\t\ttype = type == \'redo\' ? \'hasRedo\' : \'hasUndo\';\n
+\n
+\t\t\t\tfunction checkState() {\n
+\t\t\t\t\treturn editor.undoManager ? editor.undoManager[type]() : false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.disabled(!checkState());\n
+\t\t\t\teditor.on(\'Undo Redo AddUndo TypingUndo ClearUndos\', function() {\n
+\t\t\t\t\tself.disabled(!checkState());\n
+\t\t\t\t});\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction toggleVisualAidState() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\teditor.on(\'VisualAid\', function(e) {\n
+\t\t\t\tself.active(e.hasVisual);\n
+\t\t\t});\n
+\n
+\t\t\tself.active(editor.hasVisual);\n
+\t\t}\n
+\n
+\t\teditor.addButton(\'undo\', {\n
+\t\t\ttooltip: \'Undo\',\n
+\t\t\tonPostRender: toggleUndoRedoState(\'undo\'),\n
+\t\t\tcmd: \'undo\'\n
+\t\t});\n
+\n
+\t\teditor.addButton(\'redo\', {\n
+\t\t\ttooltip: \'Redo\',\n
+\t\t\tonPostRender: toggleUndoRedoState(\'redo\'),\n
+\t\t\tcmd: \'redo\'\n
+\t\t});\n
+\n
+\t\teditor.addMenuItem(\'newdocument\', {\n
+\t\t\ttext: \'New document\',\n
+\t\t\ticon: \'newdocument\',\n
+\t\t\tcmd: \'mceNewDocument\'\n
+\t\t});\n
+\n
+\t\teditor.addMenuItem(\'undo\', {\n
+\t\t\ttext: \'Undo\',\n
+\t\t\ticon: \'undo\',\n
+\t\t\tshortcut: \'Meta+Z\',\n
+\t\t\tonPostRender: toggleUndoRedoState(\'undo\'),\n
+\t\t\tcmd: \'undo\'\n
+\t\t});\n
+\n
+\t\teditor.addMenuItem(\'redo\', {\n
+\t\t\ttext: \'Redo\',\n
+\t\t\ticon: \'redo\',\n
+\t\t\tshortcut: \'Meta+Y\',\n
+\t\t\tonPostRender: toggleUndoRedoState(\'redo\'),\n
+\t\t\tcmd: \'redo\'\n
+\t\t});\n
+\n
+\t\teditor.addMenuItem(\'visualaid\', {\n
+\t\t\ttext: \'Visual aids\',\n
+\t\t\tselectable: true,\n
+\t\t\tonPostRender: toggleVisualAidState,\n
+\t\t\tcmd: \'mceToggleVisualAid\'\n
+\t\t});\n
+\n
+\t\teditor.addButton(\'remove\', {\n
+\t\t\ttooltip: \'Remove\',\n
+\t\t\ticon: \'remove\',\n
+\t\t\tcmd: \'Delete\'\n
+\t\t});\n
+\n
+\t\teach({\n
+\t\t\tcut: [\'Cut\', \'Cut\', \'Meta+X\'],\n
+\t\t\tcopy: [\'Copy\', \'Copy\', \'Meta+C\'],\n
+\t\t\tpaste: [\'Paste\', \'Paste\', \'Meta+V\'],\n
+\t\t\tselectall: [\'Select all\', \'SelectAll\', \'Meta+A\'],\n
+\t\t\tbold: [\'Bold\', \'Bold\', \'Meta+B\'],\n
+\t\t\titalic: [\'Italic\', \'Italic\', \'Meta+I\'],\n
+\t\t\tunderline: [\'Underline\', \'Underline\'],\n
+\t\t\tstrikethrough: [\'Strikethrough\', \'Strikethrough\'],\n
+\t\t\tsubscript: [\'Subscript\', \'Subscript\'],\n
+\t\t\tsuperscript: [\'Superscript\', \'Superscript\'],\n
+\t\t\tremoveformat: [\'Clear formatting\', \'RemoveFormat\']\n
+\t\t}, function(item, name) {\n
+\t\t\teditor.addMenuItem(name, {\n
+\t\t\t\ttext: item[0],\n
+\t\t\t\ticon: name,\n
+\t\t\t\tshortcut: item[2],\n
+\t\t\t\tcmd: item[1]\n
+\t\t\t});\n
+\t\t});\n
+\n
+\t\teditor.on(\'mousedown\', function() {\n
+\t\t\tFloatPanel.hideAll();\n
+\t\t});\n
+\n
+\t\tfunction toggleFormat(fmt) {\n
+\t\t\tif (fmt.control) {\n
+\t\t\t\tfmt = fmt.control.value();\n
+\t\t\t}\n
+\n
+\t\t\tif (fmt) {\n
+\t\t\t\teditor.execCommand(\'mceToggleFormat\', false, fmt);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\teditor.addButton(\'styleselect\', {\n
+\t\t\ttype: \'menubutton\',\n
+\t\t\ttext: \'Formats\',\n
+\t\t\tmenu: formatMenu\n
+\t\t});\n
+\n
+\t\teditor.addButton(\'formatselect\', function() {\n
+\t\t\tvar items = [], blocks = createFormats(editor.settings.block_formats ||\n
+\t\t\t\t\'Paragraph=p;\' +\n
+\t\t\t\t\'Heading 1=h1;\' +\n
+\t\t\t\t\'Heading 2=h2;\' +\n
+\t\t\t\t\'Heading 3=h3;\' +\n
+\t\t\t\t\'Heading 4=h4;\' +\n
+\t\t\t\t\'Heading 5=h5;\' +\n
+\t\t\t\t\'Heading 6=h6;\' +\n
+\t\t\t\t\'Preformatted=pre\'\n
+\t\t\t);\n
+\n
+\t\t\teach(blocks, function(block) {\n
+\t\t\t\titems.push({\n
+\t\t\t\t\ttext: block[0],\n
+\t\t\t\t\tvalue: block[1],\n
+\t\t\t\t\ttextStyle: function() {\n
+\t\t\t\t\t\treturn editor.formatter.getCssText(block[1]);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\treturn {\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\ttext: blocks[0][0],\n
+\t\t\t\tvalues: items,\n
+\t\t\t\tfixedWidth: true,\n
+\t\t\t\tonselect: toggleFormat,\n
+\t\t\t\tonPostRender: createListBoxChangeHandler(items)\n
+\t\t\t};\n
+\t\t});\n
+\n
+\t\teditor.addButton(\'fontselect\', function() {\n
+\t\t\tvar defaultFontsFormats =\n
+\t\t\t\t\'Andale Mono=andale mono,monospace;\' +\n
+\t\t\t\t\'Arial=arial,helvetica,sans-serif;\' +\n
+\t\t\t\t\'Arial Black=arial black,sans-serif;\' +\n
+\t\t\t\t\'Book Antiqua=book antiqua,palatino,serif;\' +\n
+\t\t\t\t\'Comic Sans MS=comic sans ms,sans-serif;\' +\n
+\t\t\t\t\'Courier New=courier new,courier,monospace;\' +\n
+\t\t\t\t\'Georgia=georgia,palatino,serif;\' +\n
+\t\t\t\t\'Helvetica=helvetica,arial,sans-serif;\' +\n
+\t\t\t\t\'Impact=impact,sans-serif;\' +\n
+\t\t\t\t\'Symbol=symbol;\' +\n
+\t\t\t\t\'Tahoma=tahoma,arial,helvetica,sans-serif;\' +\n
+\t\t\t\t\'Terminal=terminal,monaco,monospace;\' +\n
+\t\t\t\t\'Times New Roman=times new roman,times,serif;\' +\n
+\t\t\t\t\'Trebuchet MS=trebuchet ms,geneva,sans-serif;\' +\n
+\t\t\t\t\'Verdana=verdana,geneva,sans-serif;\' +\n
+\t\t\t\t\'Webdings=webdings;\' +\n
+\t\t\t\t\'Wingdings=wingdings,zapf dingbats\';\n
+\n
+\t\t\tvar items = [], fonts = createFormats(editor.settings.font_formats || defaultFontsFormats);\n
+\n
+\t\t\teach(fonts, function(font) {\n
+\t\t\t\titems.push({\n
+\t\t\t\t\ttext: {raw: font[0]},\n
+\t\t\t\t\tvalue: font[1],\n
+\t\t\t\t\ttextStyle: font[1].indexOf(\'dings\') == -1 ? \'font-family:\' + font[1] : \'\'\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\treturn {\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\ttext: \'Font Family\',\n
+\t\t\t\ttooltip: \'Font Family\',\n
+\t\t\t\tvalues: items,\n
+\t\t\t\tfixedWidth: true,\n
+\t\t\t\tonPostRender: createListBoxChangeHandler(items, \'fontname\'),\n
+\t\t\t\tonselect: function(e) {\n
+\t\t\t\t\tif (e.control.settings.value) {\n
+\t\t\t\t\t\teditor.execCommand(\'FontName\', false, e.control.settings.value);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t});\n
+\n
+\t\teditor.addButton(\'fontsizeselect\', function() {\n
+\t\t\tvar items = [], defaultFontsizeFormats = \'8pt 10pt 12pt 14pt 18pt 24pt 36pt\';\n
+\t\t\tvar fontsize_formats = editor.settings.fontsize_formats || defaultFontsizeFormats;\n
+\n
+\t\t\teach(fontsize_formats.split(\' \'), function(item) {\n
+\t\t\t\tvar text = item, value = item;\n
+\t\t\t\t// Allow text=value font sizes.\n
+\t\t\t\tvar values = item.split(\'=\');\n
+\t\t\t\tif (values.length > 1) {\n
+\t\t\t\t\ttext = values[0];\n
+\t\t\t\t\tvalue = values[1];\n
+\t\t\t\t}\n
+\t\t\t\titems.push({text: text, value: value});\n
+\t\t\t});\n
+\n
+\t\t\treturn {\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\ttext: \'Font Sizes\',\n
+\t\t\t\ttooltip: \'Font Sizes\',\n
+\t\t\t\tvalues: items,\n
+\t\t\t\tfixedWidth: true,\n
+\t\t\t\tonPostRender: createListBoxChangeHandler(items, \'fontsize\'),\n
+\t\t\t\tonclick: function(e) {\n
+\t\t\t\t\tif (e.control.settings.value) {\n
+\t\t\t\t\t\teditor.execCommand(\'FontSize\', false, e.control.settings.value);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t});\n
+\n
+\t\teditor.addMenuItem(\'formats\', {\n
+\t\t\ttext: \'Formats\',\n
+\t\t\tmenu: formatMenu\n
+\t\t});\n
+\t}\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13399</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FormatControls.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

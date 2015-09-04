@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268294.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>JSON.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * JSON.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * JSON parser and serializer class.\n
+ *\n
+ * @class tinymce.util.JSON\n
+ * @static\n
+ * @example\n
+ * // JSON parse a string into an object\n
+ * var obj = tinymce.util.JSON.parse(somestring);\n
+ *\n
+ * // JSON serialize a object into an string\n
+ * var str = tinymce.util.JSON.serialize(obj);\n
+ */\n
+define("tinymce/util/JSON", [], function() {\n
+\tfunction serialize(o, quote) {\n
+\t\tvar i, v, t, name;\n
+\n
+\t\tquote = quote || \'"\';\n
+\n
+\t\tif (o === null) {\n
+\t\t\treturn \'null\';\n
+\t\t}\n
+\n
+\t\tt = typeof o;\n
+\n
+\t\tif (t == \'string\') {\n
+\t\t\tv = \'\\bb\\tt\\nn\\ff\\rr\\""\\\'\\\'\\\\\\\\\';\n
+\n
+\t\t\treturn quote + o.replace(/([\\u0080-\\uFFFF\\x00-\\x1f\\"\\\'\\\\])/g, function(a, b) {\n
+\t\t\t\t// Make sure single quotes never get encoded inside double quotes for JSON compatibility\n
+\t\t\t\tif (quote === \'"\' && a === "\'") {\n
+\t\t\t\t\treturn a;\n
+\t\t\t\t}\n
+\n
+\t\t\t\ti = v.indexOf(b);\n
+\n
+\t\t\t\tif (i + 1) {\n
+\t\t\t\t\treturn \'\\\\\' + v.charAt(i + 1);\n
+\t\t\t\t}\n
+\n
+\t\t\t\ta = b.charCodeAt().toString(16);\n
+\n
+\t\t\t\treturn \'\\\\u\' + \'0000\'.substring(a.length) + a;\n
+\t\t\t}) + quote;\n
+\t\t}\n
+\n
+\t\tif (t == \'object\') {\n
+\t\t\tif (o.hasOwnProperty && Object.prototype.toString.call(o) === \'[object Array]\') {\n
+\t\t\t\tfor (i = 0, v = \'[\'; i < o.length; i++) {\n
+\t\t\t\t\tv += (i > 0 ? \',\' : \'\') + serialize(o[i], quote);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn v + \']\';\n
+\t\t\t}\n
+\n
+\t\t\tv = \'{\';\n
+\n
+\t\t\tfor (name in o) {\n
+\t\t\t\tif (o.hasOwnProperty(name)) {\n
+\t\t\t\t\tv += typeof o[name] != \'function\' ? (v.length > 1 ? \',\' + quote : quote) + name +\n
+\t\t\t\t\t\tquote + \':\' + serialize(o[name], quote) : \'\';\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn v + \'}\';\n
+\t\t}\n
+\n
+\t\treturn \'\' + o;\n
+\t}\n
+\n
+\treturn {\n
+\t\t/**\n
+\t\t * Serializes the specified object as a JSON string.\n
+\t\t *\n
+\t\t * @method serialize\n
+\t\t * @param {Object} obj Object to serialize as a JSON string.\n
+\t\t * @param {String} quote Optional quote string defaults to ".\n
+\t\t * @return {string} JSON string serialized from input.\n
+\t\t */\n
+\t\tserialize: serialize,\n
+\n
+\t\t/**\n
+\t\t * Unserializes/parses the specified JSON string into a object.\n
+\t\t *\n
+\t\t * @method parse\n
+\t\t * @param {string} s JSON String to parse into a JavaScript object.\n
+\t\t * @return {Object} Object from input JSON string or undefined if it failed.\n
+\t\t */\n
+\t\tparse: function(text) {\n
+\t\t\ttry {\n
+\t\t\t\t// Trick uglify JS\n
+\t\t\t\treturn window[String.fromCharCode(101) + \'val\'](\'(\' + text + \')\');\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// Ignore\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**#@-*/\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2431</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>JSON.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

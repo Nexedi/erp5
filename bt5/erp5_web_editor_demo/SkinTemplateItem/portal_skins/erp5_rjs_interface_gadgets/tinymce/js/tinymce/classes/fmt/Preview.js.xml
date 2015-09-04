@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268361.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Preview.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Preview.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Internal class for generating previews styles for formats.\n
+ *\n
+ * Example:\n
+ *  Preview.getCssText(editor, \'bold\');\n
+ *\n
+ * @class tinymce.fmt.Preview\n
+ * @private\n
+ */\n
+define("tinymce/fmt/Preview", [\n
+\t"tinymce/util/Tools"\n
+], function(Tools) {\n
+\tvar each = Tools.each;\n
+\n
+\tfunction getCssText(editor, format) {\n
+\t\tvar name, previewElm, dom = editor.dom;\n
+\t\tvar previewCss = \'\', parentFontSize, previewStyles;\n
+\n
+\t\tpreviewStyles = editor.settings.preview_styles;\n
+\n
+\t\t// No preview forced\n
+\t\tif (previewStyles === false) {\n
+\t\t\treturn \'\';\n
+\t\t}\n
+\n
+\t\t// Default preview\n
+\t\tif (!previewStyles) {\n
+\t\t\tpreviewStyles = \'font-family font-size font-weight font-style text-decoration \' +\n
+\t\t\t\t\'text-transform color background-color border border-radius outline text-shadow\';\n
+\t\t}\n
+\n
+\t\t// Removes any variables since these can\'t be previewed\n
+\t\tfunction removeVars(val) {\n
+\t\t\treturn val.replace(/%(\\w+)/g, \'\');\n
+\t\t}\n
+\n
+\t\t// Create block/inline element to use for preview\n
+\t\tif (typeof format == "string") {\n
+\t\t\tformat = editor.formatter.get(format);\n
+\t\t\tif (!format) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tformat = format[0];\n
+\t\t}\n
+\n
+\t\tname = format.block || format.inline || \'span\';\n
+\t\tpreviewElm = dom.create(name);\n
+\n
+\t\t// Add format styles to preview element\n
+\t\teach(format.styles, function(value, name) {\n
+\t\t\tvalue = removeVars(value);\n
+\n
+\t\t\tif (value) {\n
+\t\t\t\tdom.setStyle(previewElm, name, value);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Add attributes to preview element\n
+\t\teach(format.attributes, function(value, name) {\n
+\t\t\tvalue = removeVars(value);\n
+\n
+\t\t\tif (value) {\n
+\t\t\t\tdom.setAttrib(previewElm, name, value);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Add classes to preview element\n
+\t\teach(format.classes, function(value) {\n
+\t\t\tvalue = removeVars(value);\n
+\n
+\t\t\tif (!dom.hasClass(previewElm, value)) {\n
+\t\t\t\tdom.addClass(previewElm, value);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.fire(\'PreviewFormats\');\n
+\n
+\t\t// Add the previewElm outside the visual area\n
+\t\tdom.setStyles(previewElm, {position: \'absolute\', left: -0xFFFF});\n
+\t\teditor.getBody().appendChild(previewElm);\n
+\n
+\t\t// Get parent container font size so we can compute px values out of em/% for older IE:s\n
+\t\tparentFontSize = dom.getStyle(editor.getBody(), \'fontSize\', true);\n
+\t\tparentFontSize = /px$/.test(parentFontSize) ? parseInt(parentFontSize, 10) : 0;\n
+\n
+\t\teach(previewStyles.split(\' \'), function(name) {\n
+\t\t\tvar value = dom.getStyle(previewElm, name, true);\n
+\n
+\t\t\t// If background is transparent then check if the body has a background color we can use\n
+\t\t\tif (name == \'background-color\' && /transparent|rgba\\s*\\([^)]+,\\s*0\\)/.test(value)) {\n
+\t\t\t\tvalue = dom.getStyle(editor.getBody(), name, true);\n
+\n
+\t\t\t\t// Ignore white since it\'s the default color, not the nicest fix\n
+\t\t\t\t// TODO: Fix this by detecting runtime style\n
+\t\t\t\tif (dom.toHex(value).toLowerCase() == \'#ffffff\') {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (name == \'color\') {\n
+\t\t\t\t// Ignore black since it\'s the default color, not the nicest fix\n
+\t\t\t\t// TODO: Fix this by detecting runtime style\n
+\t\t\t\tif (dom.toHex(value).toLowerCase() == \'#000000\') {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Old IE won\'t calculate the font size so we need to do that manually\n
+\t\t\tif (name == \'font-size\') {\n
+\t\t\t\tif (/em|%$/.test(value)) {\n
+\t\t\t\t\tif (parentFontSize === 0) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Convert font size from em/% to px\n
+\t\t\t\t\tvalue = parseFloat(value, 10) / (/%$/.test(value) ? 100 : 1);\n
+\t\t\t\t\tvalue = (value * parentFontSize) + \'px\';\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (name == "border" && value) {\n
+\t\t\t\tpreviewCss += \'padding:0 2px;\';\n
+\t\t\t}\n
+\n
+\t\t\tpreviewCss += name + \':\' + value + \';\';\n
+\t\t});\n
+\n
+\t\teditor.fire(\'AfterPreviewFormats\');\n
+\n
+\t\t//previewCss += \'line-height:normal\';\n
+\n
+\t\tdom.remove(previewElm);\n
+\n
+\t\treturn previewCss;\n
+\t}\n
+\n
+\treturn {\n
+\t\tgetCssText: getCssText\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3819</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Preview.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

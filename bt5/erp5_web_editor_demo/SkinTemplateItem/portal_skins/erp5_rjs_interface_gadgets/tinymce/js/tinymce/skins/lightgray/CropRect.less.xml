@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268691.59</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CropRect.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// CropRect\n
+\n
+.@{prefix}-croprect-container {\n
+\tposition: absolute;\n
+\ttop: 0;\n
+\tleft: 0;\n
+}\n
+\n
+.@{prefix}-croprect-handle {\n
+\tposition: absolute;\n
+\ttop: 0; left: 0;\n
+\twidth: 20px; height: 20px;\n
+\tborder: 2px solid white;\n
+}\n
+\n
+.@{prefix}-croprect-handle-nw {\n
+\tborder-width: 2px 0 0 2px;\n
+\tmargin: -2px 0 0 -2px;\n
+\tcursor: nw-resize;\n
+\ttop: 100px; left: 100px;\n
+}\n
+\n
+.@{prefix}-croprect-handle-ne {\n
+\tborder-width: 2px 2px 0 0;\n
+\tmargin: -2px 0 0 -20px;\n
+\tcursor: ne-resize;\n
+\ttop: 100px; left: 200px;\n
+}\n
+\n
+.@{prefix}-croprect-handle-sw {\n
+\tborder-width: 0 0 2px 2px;\n
+\tmargin: -20px 2px 0 -2px;\n
+\tcursor: sw-resize;\n
+\ttop: 200px; left: 100px;\n
+}\n
+\n
+.@{prefix}-croprect-handle-se {\n
+\tborder-width: 0 2px 2px 0;\n
+\tmargin: -20px 0 0 -20px;\n
+\tcursor: se-resize;\n
+\ttop: 200px; left: 200px;\n
+}\n
+\n
+.@{prefix}-croprect-handle-move {\n
+\tposition: absolute;\n
+\tcursor: move;\n
+\tborder: 0;\n
+}\n
+\n
+.@{prefix}-croprect-block {\n
+\t.opacity(@window-modalblock-opacity);\n
+\tposition: absolute;\n
+\tbackground: black;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>946</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>CropRect.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

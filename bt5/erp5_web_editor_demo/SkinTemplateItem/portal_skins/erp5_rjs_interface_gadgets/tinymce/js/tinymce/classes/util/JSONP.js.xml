@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268298.6</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>JSONP.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * JSONP.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+define("tinymce/util/JSONP", [\n
+\t"tinymce/dom/DOMUtils"\n
+], function(DOMUtils) {\n
+\treturn {\n
+\t\tcallbacks: {},\n
+\t\tcount: 0,\n
+\n
+\t\tsend: function(settings) {\n
+\t\t\tvar self = this, dom = DOMUtils.DOM, count = settings.count !== undefined ? settings.count : self.count;\n
+\t\t\tvar id = \'tinymce_jsonp_\' + count;\n
+\n
+\t\t\tself.callbacks[count] = function(json) {\n
+\t\t\t\tdom.remove(id);\n
+\t\t\t\tdelete self.callbacks[count];\n
+\n
+\t\t\t\tsettings.callback(json);\n
+\t\t\t};\n
+\n
+\t\t\tdom.add(dom.doc.body, \'script\', {\n
+\t\t\t\tid: id,\n
+\t\t\t\tsrc: settings.url,\n
+\t\t\t\ttype: \'text/javascript\'\n
+\t\t\t});\n
+\n
+\t\t\tself.count++;\n
+\t\t}\n
+\t};\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>780</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>JSONP.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

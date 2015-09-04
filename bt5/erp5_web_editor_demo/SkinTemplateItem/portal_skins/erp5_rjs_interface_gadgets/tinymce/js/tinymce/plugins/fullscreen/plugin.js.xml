@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268524.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'fullscreen\', function(editor) {\n
+\tvar fullscreenState = false, DOM = tinymce.DOM, iframeWidth, iframeHeight, resizeHandler;\n
+\tvar containerWidth, containerHeight;\n
+\n
+\tif (editor.settings.inline) {\n
+\t\treturn;\n
+\t}\n
+\n
+\tfunction getWindowSize() {\n
+\t\tvar w, h, win = window, doc = document;\n
+\t\tvar body = doc.body;\n
+\n
+\t\t// Old IE\n
+\t\tif (body.offsetWidth) {\n
+\t\t\tw = body.offsetWidth;\n
+\t\t\th = body.offsetHeight;\n
+\t\t}\n
+\n
+\t\t// Modern browsers\n
+\t\tif (win.innerWidth && win.innerHeight) {\n
+\t\t\tw = win.innerWidth;\n
+\t\t\th = win.innerHeight;\n
+\t\t}\n
+\n
+\t\treturn {w: w, h: h};\n
+\t}\n
+\n
+\tfunction toggleFullscreen() {\n
+\t\tvar body = document.body, documentElement = document.documentElement, editorContainerStyle;\n
+\t\tvar editorContainer, iframe, iframeStyle;\n
+\n
+\t\tfunction resize() {\n
+\t\t\tDOM.setStyle(iframe, \'height\', getWindowSize().h - (editorContainer.clientHeight - iframe.clientHeight));\n
+\t\t}\n
+\n
+\t\tfullscreenState = !fullscreenState;\n
+\n
+\t\teditorContainer = editor.getContainer();\n
+\t\teditorContainerStyle = editorContainer.style;\n
+\t\tiframe = editor.getContentAreaContainer().firstChild;\n
+\t\tiframeStyle = iframe.style;\n
+\n
+\t\tif (fullscreenState) {\n
+\t\t\tiframeWidth = iframeStyle.width;\n
+\t\t\tiframeHeight = iframeStyle.height;\n
+\t\t\tiframeStyle.width = iframeStyle.height = \'100%\';\n
+\t\t\tcontainerWidth = editorContainerStyle.width;\n
+\t\t\tcontainerHeight = editorContainerStyle.height;\n
+\t\t\teditorContainerStyle.width = editorContainerStyle.height = \'\';\n
+\n
+\t\t\tDOM.addClass(body, \'mce-fullscreen\');\n
+\t\t\tDOM.addClass(documentElement, \'mce-fullscreen\');\n
+\t\t\tDOM.addClass(editorContainer, \'mce-fullscreen\');\n
+\n
+\t\t\tDOM.bind(window, \'resize\', resize);\n
+\t\t\tresize();\n
+\t\t\tresizeHandler = resize;\n
+\t\t} else {\n
+\t\t\tiframeStyle.width = iframeWidth;\n
+\t\t\tiframeStyle.height = iframeHeight;\n
+\n
+\t\t\tif (containerWidth) {\n
+\t\t\t\teditorContainerStyle.width = containerWidth;\n
+\t\t\t}\n
+\n
+\t\t\tif (containerHeight) {\n
+\t\t\t\teditorContainerStyle.height = containerHeight;\n
+\t\t\t}\n
+\n
+\t\t\tDOM.removeClass(body, \'mce-fullscreen\');\n
+\t\t\tDOM.removeClass(documentElement, \'mce-fullscreen\');\n
+\t\t\tDOM.removeClass(editorContainer, \'mce-fullscreen\');\n
+\t\t\tDOM.unbind(window, \'resize\', resizeHandler);\n
+\t\t}\n
+\n
+\t\teditor.fire(\'FullscreenStateChanged\', {state: fullscreenState});\n
+\t}\n
+\n
+\teditor.on(\'init\', function() {\n
+\t\teditor.addShortcut(\'Meta+Alt+F\', \'\', toggleFullscreen);\n
+\t});\n
+\n
+\teditor.on(\'remove\', function() {\n
+\t\tif (resizeHandler) {\n
+\t\t\tDOM.unbind(window, \'resize\', resizeHandler);\n
+\t\t}\n
+\t});\n
+\n
+\teditor.addCommand(\'mceFullScreen\', toggleFullscreen);\n
+\n
+\teditor.addMenuItem(\'fullscreen\', {\n
+\t\ttext: \'Fullscreen\',\n
+\t\tshortcut: \'Meta+Alt+F\',\n
+\t\tselectable: true,\n
+\t\tonClick: toggleFullscreen,\n
+\t\tonPostRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\teditor.on(\'FullscreenStateChanged\', function(e) {\n
+\t\t\t\tself.active(e.state);\n
+\t\t\t});\n
+\t\t},\n
+\t\tcontext: \'view\'\n
+\t});\n
+\n
+\teditor.addButton(\'fullscreen\', {\n
+\t\ttooltip: \'Fullscreen\',\n
+\t\tshortcut: \'Meta+Alt+F\',\n
+\t\tonClick: toggleFullscreen,\n
+\t\tonPostRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\teditor.on(\'FullscreenStateChanged\', function(e) {\n
+\t\t\t\tself.active(e.state);\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+\n
+\treturn {\n
+\t\tisFullscreen: function() {\n
+\t\t\treturn fullscreenState;\n
+\t\t}\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3299</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

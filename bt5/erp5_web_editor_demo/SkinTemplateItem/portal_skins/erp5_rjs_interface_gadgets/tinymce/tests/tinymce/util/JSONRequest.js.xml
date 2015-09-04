@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268201.65</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>JSONRequest.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>if (location.protocol != "file:") {\n
+\tmodule("tinymce.util.JSONRequest");\n
+\n
+\tasyncTest("Successful request - send method", function() {\n
+\t\texpect(1);\n
+\n
+\t\tnew tinymce.util.JSONRequest({}).send({\n
+\t\t\ttype : \'GET\',\n
+\t\t\turl : \'tinymce/util/json_rpc_ok.js\',\n
+\t\t\tsuccess: function(data) {\n
+\t\t\t\tequal(data, \'Hello JSON-RPC\');\n
+\t\t\t\tstart();\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\n
+\tasyncTest("Successful request - sendRPC static method", function() {\n
+\t\texpect(1);\n
+\n
+\t\ttinymce.util.JSONRequest.sendRPC({\n
+\t\t\ttype : \'GET\',\n
+\t\t\turl : \'tinymce/util/json_rpc_ok.js\',\n
+\t\t\tsuccess: function(data) {\n
+\t\t\t\tequal(data, \'Hello JSON-RPC\');\n
+\t\t\t\tstart();\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\n
+\tasyncTest("Error request - send method", function() {\n
+\t\texpect(1);\n
+\n
+\t\tnew tinymce.util.JSONRequest({}).send({\n
+\t\t\ttype : \'GET\',\n
+\t\t\turl : \'tinymce/util/json_rpc_error.js\',\n
+\t\t\terror: function(error) {\n
+\t\t\t\tequal(error.code, 42);\n
+\t\t\t\tstart();\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\n
+\tasyncTest("Error request - sendRPC static method", function() {\n
+\t\texpect(1);\n
+\n
+\t\ttinymce.util.JSONRequest.sendRPC({\n
+\t\t\ttype : \'GET\',\n
+\t\t\turl : \'tinymce/util/json_rpc_error.js\',\n
+\t\t\terror: function(error) {\n
+\t\t\t\tequal(error.code, 42);\n
+\t\t\t\tstart();\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1131</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>JSONRequest.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

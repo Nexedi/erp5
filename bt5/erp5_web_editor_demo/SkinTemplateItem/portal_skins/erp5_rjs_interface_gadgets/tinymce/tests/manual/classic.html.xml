@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268157.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>classic.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Classic theme development file</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />\n
+<script src="../../js/tinymce/tinymce.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>\n
+<script>\n
+\ttinymce.init({\n
+\t\tselector: "textarea#elm1",\n
+\t\ttheme: "modern",\n
+\t\tplugins: [\n
+\t\t\t"advlist autolink autosave link image lists charmap print preview hr anchor pagebreak spellchecker",\n
+\t\t\t"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
+\t\t\t"save table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker"\n
+\t\t],\n
+\t\texternal_plugins: {\n
+\t\t\t//"moxiemanager": "/moxiemanager-php/plugin.js"\n
+\t\t},\n
+\t\tcontent_css: "css/development.css",\n
+\t\tadd_unload_trigger: false,\n
+\t\tautosave_ask_before_unload: false,\n
+\n
+\t\ttoolbar1: "save newdocument fullpage | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect",\n
+\t\ttoolbar2: "cut copy paste pastetext | searchreplace | bullist numlist | outdent indent blockquote | undo redo | link unlink anchor image media help code | insertdatetime preview | forecolor backcolor",\n
+\t\ttoolbar3: "table | hr removeformat | subscript superscript | charmap emoticons | print fullscreen | ltr rtl | spellchecker | visualchars visualblocks nonbreaking template pagebreak restoredraft | insertfile insertimage",\n
+\t\tmenubar: false,\n
+\t\ttoolbar_items_size: \'small\',\n
+\n
+\t\tstyle_formats: [\n
+\t\t\t{title: \'Bold text\', inline: \'b\'},\n
+\t\t\t{title: \'Red text\', inline: \'span\', styles: {color: \'#ff0000\'}},\n
+\t\t\t{title: \'Red header\', block: \'h1\', styles: {color: \'#ff0000\'}},\n
+\t\t\t{title: \'Example 1\', inline: \'span\', classes: \'example1\'},\n
+\t\t\t{title: \'Example 2\', inline: \'span\', classes: \'example2\'},\n
+\t\t\t{title: \'Table styles\'},\n
+\t\t\t{title: \'Table row 1\', selector: \'tr\', classes: \'tablerow1\'}\n
+\t\t],\n
+\n
+\t\ttemplates: [\n
+\t\t\t{title: \'My template 1\', description: \'Some fancy template 1\', content: \'My html\'},\n
+\t\t\t{title: \'My template 2\', description: \'Some fancy template 2\', url: \'development.html\'}\n
+\t\t],\n
+\n
+        spellchecker_callback: function(method, data, success) {\n
+\t\t\tif (method == "spellcheck") {\n
+\t\t\t\tvar words = data.match(this.getWordCharPattern());\n
+\t\t\t\tvar suggestions = {};\n
+\n
+\t\t\t\tfor (var i = 0; i < words.length; i++) {\n
+\t\t\t\t\tsuggestions[words[i]] = ["First", "second"];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tsuccess({words: suggestions, dictionary: true});\n
+\t\t\t}\n
+\n
+\t\t\tif (method == "addToDictionary") {\n
+\t\t\t\tsuccess();\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+</script>\n
+</head>\n
+<body>\n
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">\n
+\t<div>\n
+\t\t<div>\n
+\t\t\t<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">\n
+\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\tNam nisi elit, &lt;a href="http://www.tinymce.com"&gt;cursus&lt;/a&gt; in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros. &lt;img src="http://moxiecode.cachefly.net/tinymce/v6/images/logo.png" style="float: right "/&gt;\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t&lt;p&gt;\n
+\t\t\t\t&lt;img src="http://moxiecode.cachefly.net/tinymce/v6/images/logo.png" /&gt; Nam nisi elit, &lt;a href="http://www.tinymce.com"&gt;cursus&lt;/a&gt; in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t</textarea>\n
+\t\t\t<div>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').show();return false;">[Show]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').hide();return false;">[Hide]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceAddEditor\', false, \'elm1\');return false;">[Add]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').remove();return false;">[Remove]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').execCommand(\'Bold\');return false;">[Bold]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').getContent());return false;">[Get contents]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').getContent({format: \'raw\'}));return false;">[Get raw]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getContent());return false;">[Get selected HTML]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getContent({format : \'text\'}));return false;">[Get selected text]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getNode().nodeName);return false;">[Get selected element]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceInsertContent\',false,\'<b>Hello world!!</b>\');return false;">[Insert HTML]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceReplaceContent\',false,\'<b>{$selection}</b>\');return false;">[Replace selection]</a>\n
+\t\t\t</div>\n
+\n
+\t\t\t<br />\n
+\t\t\t<textarea id="elm2" name="elm2" rows="15" cols="80" style="width: 80%">\n
+\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\tThis is some example text that you can edit inside the &lt;strong&gt;TinyMCE editor&lt;/strong&gt;.\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t&lt;p&gt;\n
+\t\t\t\tNam nisi elit, cursus in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t</textarea>\n
+\t\t\t<div>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.get(\'elm2\').show();return false;">[Show]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.get(\'elm2\').hide();return false;">[Hide]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceAddEditor\', false, \'elm2\');return false;">[Add]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.get(\'elm2\').remove();return false;">[Remove]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.get(\'elm2\').execCommand(\'Bold\');return false;">[Bold]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm2\').getContent());return false;">[Get contents]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm2\').getContent({format: \'raw\'}));return false;">[Get raw]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm2\').selection.getContent());return false;">[Get selected HTML]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm2\').selection.getContent({format : \'text\'}));return false;">[Get selected text]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm2\').selection.getNode().nodeName);return false;">[Get selected element]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceInsertContent\',false,\'<b>Hello world!!</b>\');return false;">[Insert HTML]</a>\n
+\t\t\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceReplaceContent\',false,\'<b>{$selection}</b>\');return false;">[Replace selection]</a>\n
+\t\t\t</div>\n
+\t\t</div>\n
+\n
+\t\t<br />\n
+\t\t<input type="submit" name="save" value="Submit" />\n
+\t\t<input type="reset" name="reset" value="Reset" />\n
+\t</div>\n
+</form>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9156</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>classic.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

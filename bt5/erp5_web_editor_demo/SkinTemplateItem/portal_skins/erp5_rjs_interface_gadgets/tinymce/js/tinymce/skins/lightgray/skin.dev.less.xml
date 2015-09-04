@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268663.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>skin.dev.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>@import "Variables.less";\n
+@import "Reset.less";\n
+@import "Mixins.less";\n
+@import "Animations.less";\n
+@import "TinyMCE.less";\n
+@import "CropRect.less";\n
+@import "ImagePanel.less";\n
+@import "Container.less";\n
+@import "Scrollable.less";\n
+@import "Panel.less";\n
+@import "FloatPanel.less";\n
+@import "Window.less";\n
+@import "AbsoluteLayout.less";\n
+@import "ToolTip.less";\n
+@import "Button.less";\n
+@import "ButtonGroup.less";\n
+@import "Checkbox.less";\n
+@import "ComboBox.less";\n
+@import "ColorBox.less";\n
+@import "ColorButton.less";\n
+@import "ColorPicker.less";\n
+@import "Path.less";\n
+@import "FieldSet.less";\n
+@import "FitLayout.less";\n
+@import "FlowLayout.less";\n
+@import "Iframe.less";\n
+@import "Label.less";\n
+@import "MenuBar.less";\n
+@import "MenuButton.less";\n
+@import "MenuItem.less";\n
+@import "Menu.less";\n
+@import "ListBox.less";\n
+@import "Radio.less";\n
+@import "ResizeHandle.less";\n
+@import "Slider.less";\n
+@import "Spacer.less";\n
+@import "SplitButton.less";\n
+@import "StackLayout.less";\n
+@import "TabPanel.less";\n
+@import "TextBox.less";\n
+@import "Throbber.less";\n
+@import "Icons.less";\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1050</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>skin.dev.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

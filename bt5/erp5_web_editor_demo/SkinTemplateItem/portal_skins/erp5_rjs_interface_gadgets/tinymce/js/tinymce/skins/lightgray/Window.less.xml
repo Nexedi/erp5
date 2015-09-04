@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268693.71</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Window.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// Window\n
+\n
+.@{prefix}-fullscreen {\n
+\tborder: 0; padding: 0; margin: 0;\n
+\toverflow: hidden;\n
+\theight: 100%;\n
+}\n
+\n
+div.@{prefix}-fullscreen {\n
+\tposition: fixed;\n
+\ttop: 0; left: 0;\n
+}\n
+\n
+#@{prefix}-modal-block {\n
+\t.opacity(0);\n
+\tposition: fixed;\n
+\tleft: 0; top: 0;\n
+\twidth: 100%; height: 100%;\n
+\tbackground: @window-modalblock-bg;\n
+}\n
+\n
+#@{prefix}-modal-block.@{prefix}-in {\n
+\t.opacity(@window-modalblock-opacity);\n
+}\n
+\n
+.@{prefix}-window-move {\n
+\tcursor: move;\n
+}\n
+\n
+.@{prefix}-window {\n
+\t.border-radius(6px);\n
+\t.box-shadow(@window-box-shadow);\n
+\t.reset-gradient();\n
+\tbackground: @window-bg;\n
+\tposition: fixed;\n
+\ttop: 0; left: 0;\n
+\topacity: 0;\n
+\t.transition(opacity 150ms ease-in);\n
+}\n
+\n
+.@{prefix}-window.@{prefix}-in {\n
+\topacity: 1;\n
+}\n
+\n
+.@{prefix}-window-head {\n
+\tpadding: 9px 15px;\n
+\tborder-bottom: 1px solid @window-head-border;\n
+\tposition: relative;\n
+}\n
+\n
+.@{prefix}-window-head .@{prefix}-close {\n
+\tposition: absolute;\n
+\tright: 15px;\n
+\ttop: 9px;\n
+\tfont-size: 20px;\n
+\tfont-weight: bold;\n
+\tline-height: 20px;\n
+\tcolor: @window-head-close;\n
+\tcursor: pointer;\n
+\n
+\t// IE7\n
+\theight: 20px;\n
+\toverflow: hidden;\n
+}\n
+\n
+.@{prefix}-close:hover {\n
+\tcolor: @window-head-close-hover;\n
+}\n
+\n
+.@{prefix}-window-head .@{prefix}-title {\n
+\tline-height: 20px;\n
+\tfont-size: @window-title-font-size;\n
+\tfont-weight: bold;\n
+\ttext-rendering: optimizelegibility;\n
+\tpadding-right: 10px;\n
+}\n
+\n
+.@{prefix}-window .@{prefix}-container-body {\n
+\tdisplay: block;\n
+}\n
+\n
+.@{prefix}-foot {\n
+\tdisplay: block;\n
+\tbackground-color: @window-foot-bg;\n
+\tborder-top: 1px solid @window-foot-border;\n
+\t.border-radius(0 0 6px 6px);\n
+}\n
+\n
+.@{prefix}-window-head .@{prefix}-dragh {\n
+\tposition: absolute;\n
+\ttop: 0; left: 0;\n
+\tcursor: move;\n
+\twidth: 90%;\n
+\theight: 100%;\n
+}\n
+\n
+.@{prefix}-window iframe {\n
+\twidth: 100%;\n
+\theight: 100%;\n
+}\n
+\n
+.@{prefix}-window.@{prefix}-fullscreen, .@{prefix}-window.@{prefix}-fullscreen .@{prefix}-foot {\n
+\t.border-radius(0);\n
+}\n
+\n
+.@{prefix}-window-body .@{prefix}-listbox {\n
+\tborder-color: @btn-border-hover;\n
+}\n
+\n
+// RTL\n
+\n
+.@{prefix}-rtl .@{prefix}-window-head .@{prefix}-close {\n
+\tposition: absolute;\n
+\tright: auto;\n
+\tleft: 15px;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-window-head .@{prefix}-dragh {\n
+\tleft: auto;\n
+\tright: 0;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-window-head .@{prefix}-title {\n
+\tdirection: rtl;\n
+\ttext-align: right;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2191</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Window.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

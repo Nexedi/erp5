@@ -1,0 +1,439 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268400.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'charmap\', function(editor) {\n
+\tvar charmap = [\n
+\t\t[\'160\', \'no-break space\'],\n
+\t\t[\'173\', \'soft hyphen\'],\n
+\t\t[\'34\', \'quotation mark\'],\n
+\t// finance\n
+\t\t[\'162\', \'cent sign\'],\n
+\t\t[\'8364\', \'euro sign\'],\n
+\t\t[\'163\', \'pound sign\'],\n
+\t\t[\'165\', \'yen sign\'],\n
+\t// signs\n
+\t\t[\'169\', \'copyright sign\'],\n
+\t\t[\'174\', \'registered sign\'],\n
+\t\t[\'8482\', \'trade mark sign\'],\n
+\t\t[\'8240\', \'per mille sign\'],\n
+\t\t[\'181\', \'micro sign\'],\n
+\t\t[\'183\', \'middle dot\'],\n
+\t\t[\'8226\', \'bullet\'],\n
+\t\t[\'8230\', \'three dot leader\'],\n
+\t\t[\'8242\', \'minutes / feet\'],\n
+\t\t[\'8243\', \'seconds / inches\'],\n
+\t\t[\'167\', \'section sign\'],\n
+\t\t[\'182\', \'paragraph sign\'],\n
+\t\t[\'223\', \'sharp s / ess-zed\'],\n
+\t// quotations\n
+\t\t[\'8249\', \'single left-pointing angle quotation mark\'],\n
+\t\t[\'8250\', \'single right-pointing angle quotation mark\'],\n
+\t\t[\'171\', \'left pointing guillemet\'],\n
+\t\t[\'187\', \'right pointing guillemet\'],\n
+\t\t[\'8216\', \'left single quotation mark\'],\n
+\t\t[\'8217\', \'right single quotation mark\'],\n
+\t\t[\'8220\', \'left double quotation mark\'],\n
+\t\t[\'8221\', \'right double quotation mark\'],\n
+\t\t[\'8218\', \'single low-9 quotation mark\'],\n
+\t\t[\'8222\', \'double low-9 quotation mark\'],\n
+\t\t[\'60\', \'less-than sign\'],\n
+\t\t[\'62\', \'greater-than sign\'],\n
+\t\t[\'8804\', \'less-than or equal to\'],\n
+\t\t[\'8805\', \'greater-than or equal to\'],\n
+\t\t[\'8211\', \'en dash\'],\n
+\t\t[\'8212\', \'em dash\'],\n
+\t\t[\'175\', \'macron\'],\n
+\t\t[\'8254\', \'overline\'],\n
+\t\t[\'164\', \'currency sign\'],\n
+\t\t[\'166\', \'broken bar\'],\n
+\t\t[\'168\', \'diaeresis\'],\n
+\t\t[\'161\', \'inverted exclamation mark\'],\n
+\t\t[\'191\', \'turned question mark\'],\n
+\t\t[\'710\', \'circumflex accent\'],\n
+\t\t[\'732\', \'small tilde\'],\n
+\t\t[\'176\', \'degree sign\'],\n
+\t\t[\'8722\', \'minus sign\'],\n
+\t\t[\'177\', \'plus-minus sign\'],\n
+\t\t[\'247\', \'division sign\'],\n
+\t\t[\'8260\', \'fraction slash\'],\n
+\t\t[\'215\', \'multiplication sign\'],\n
+\t\t[\'185\', \'superscript one\'],\n
+\t\t[\'178\', \'superscript two\'],\n
+\t\t[\'179\', \'superscript three\'],\n
+\t\t[\'188\', \'fraction one quarter\'],\n
+\t\t[\'189\', \'fraction one half\'],\n
+\t\t[\'190\', \'fraction three quarters\'],\n
+\t// math / logical\n
+\t\t[\'402\', \'function / florin\'],\n
+\t\t[\'8747\', \'integral\'],\n
+\t\t[\'8721\', \'n-ary sumation\'],\n
+\t\t[\'8734\', \'infinity\'],\n
+\t\t[\'8730\', \'square root\'],\n
+\t\t[\'8764\', \'similar to\'],\n
+\t\t[\'8773\', \'approximately equal to\'],\n
+\t\t[\'8776\', \'almost equal to\'],\n
+\t\t[\'8800\', \'not equal to\'],\n
+\t\t[\'8801\', \'identical to\'],\n
+\t\t[\'8712\', \'element of\'],\n
+\t\t[\'8713\', \'not an element of\'],\n
+\t\t[\'8715\', \'contains as member\'],\n
+\t\t[\'8719\', \'n-ary product\'],\n
+\t\t[\'8743\', \'logical and\'],\n
+\t\t[\'8744\', \'logical or\'],\n
+\t\t[\'172\', \'not sign\'],\n
+\t\t[\'8745\', \'intersection\'],\n
+\t\t[\'8746\', \'union\'],\n
+\t\t[\'8706\', \'partial differential\'],\n
+\t\t[\'8704\', \'for all\'],\n
+\t\t[\'8707\', \'there exists\'],\n
+\t\t[\'8709\', \'diameter\'],\n
+\t\t[\'8711\', \'backward difference\'],\n
+\t\t[\'8727\', \'asterisk operator\'],\n
+\t\t[\'8733\', \'proportional to\'],\n
+\t\t[\'8736\', \'angle\'],\n
+\t// undefined\n
+\t\t[\'180\', \'acute accent\'],\n
+\t\t[\'184\', \'cedilla\'],\n
+\t\t[\'170\', \'feminine ordinal indicator\'],\n
+\t\t[\'186\', \'masculine ordinal indicator\'],\n
+\t\t[\'8224\', \'dagger\'],\n
+\t\t[\'8225\', \'double dagger\'],\n
+\t// alphabetical special chars\n
+\t\t[\'192\', \'A - grave\'],\n
+\t\t[\'193\', \'A - acute\'],\n
+\t\t[\'194\', \'A - circumflex\'],\n
+\t\t[\'195\', \'A - tilde\'],\n
+\t\t[\'196\', \'A - diaeresis\'],\n
+\t\t[\'197\', \'A - ring above\'],\n
+\t\t[\'198\', \'ligature AE\'],\n
+\t\t[\'199\', \'C - cedilla\'],\n
+\t\t[\'200\', \'E - grave\'],\n
+\t\t[\'201\', \'E - acute\'],\n
+\t\t[\'202\', \'E - circumflex\'],\n
+\t\t[\'203\', \'E - diaeresis\'],\n
+\t\t[\'204\', \'I - grave\'],\n
+\t\t[\'205\', \'I - acute\'],\n
+\t\t[\'206\', \'I - circumflex\'],\n
+\t\t[\'207\', \'I - diaeresis\'],\n
+\t\t[\'208\', \'ETH\'],\n
+\t\t[\'209\', \'N - tilde\'],\n
+\t\t[\'210\', \'O - grave\'],\n
+\t\t[\'211\', \'O - acute\'],\n
+\t\t[\'212\', \'O - circumflex\'],\n
+\t\t[\'213\', \'O - tilde\'],\n
+\t\t[\'214\', \'O - diaeresis\'],\n
+\t\t[\'216\', \'O - slash\'],\n
+\t\t[\'338\', \'ligature OE\'],\n
+\t\t[\'352\', \'S - caron\'],\n
+\t\t[\'217\', \'U - grave\'],\n
+\t\t[\'218\', \'U - acute\'],\n
+\t\t[\'219\', \'U - circumflex\'],\n
+\t\t[\'220\', \'U - diaeresis\'],\n
+\t\t[\'221\', \'Y - acute\'],\n
+\t\t[\'376\', \'Y - diaeresis\'],\n
+\t\t[\'222\', \'THORN\'],\n
+\t\t[\'224\', \'a - grave\'],\n
+\t\t[\'225\', \'a - acute\'],\n
+\t\t[\'226\', \'a - circumflex\'],\n
+\t\t[\'227\', \'a - tilde\'],\n
+\t\t[\'228\', \'a - diaeresis\'],\n
+\t\t[\'229\', \'a - ring above\'],\n
+\t\t[\'230\', \'ligature ae\'],\n
+\t\t[\'231\', \'c - cedilla\'],\n
+\t\t[\'232\', \'e - grave\'],\n
+\t\t[\'233\', \'e - acute\'],\n
+\t\t[\'234\', \'e - circumflex\'],\n
+\t\t[\'235\', \'e - diaeresis\'],\n
+\t\t[\'236\', \'i - grave\'],\n
+\t\t[\'237\', \'i - acute\'],\n
+\t\t[\'238\', \'i - circumflex\'],\n
+\t\t[\'239\', \'i - diaeresis\'],\n
+\t\t[\'240\', \'eth\'],\n
+\t\t[\'241\', \'n - tilde\'],\n
+\t\t[\'242\', \'o - grave\'],\n
+\t\t[\'243\', \'o - acute\'],\n
+\t\t[\'244\', \'o - circumflex\'],\n
+\t\t[\'245\', \'o - tilde\'],\n
+\t\t[\'246\', \'o - diaeresis\'],\n
+\t\t[\'248\', \'o slash\'],\n
+\t\t[\'339\', \'ligature oe\'],\n
+\t\t[\'353\', \'s - caron\'],\n
+\t\t[\'249\', \'u - grave\'],\n
+\t\t[\'250\', \'u - acute\'],\n
+\t\t[\'251\', \'u - circumflex\'],\n
+\t\t[\'252\', \'u - diaeresis\'],\n
+\t\t[\'253\', \'y - acute\'],\n
+\t\t[\'254\', \'thorn\'],\n
+\t\t[\'255\', \'y - diaeresis\'],\n
+\t\t[\'913\', \'Alpha\'],\n
+\t\t[\'914\', \'Beta\'],\n
+\t\t[\'915\', \'Gamma\'],\n
+\t\t[\'916\', \'Delta\'],\n
+\t\t[\'917\', \'Epsilon\'],\n
+\t\t[\'918\', \'Zeta\'],\n
+\t\t[\'919\', \'Eta\'],\n
+\t\t[\'920\', \'Theta\'],\n
+\t\t[\'921\', \'Iota\'],\n
+\t\t[\'922\', \'Kappa\'],\n
+\t\t[\'923\', \'Lambda\'],\n
+\t\t[\'924\', \'Mu\'],\n
+\t\t[\'925\', \'Nu\'],\n
+\t\t[\'926\', \'Xi\'],\n
+\t\t[\'927\', \'Omicron\'],\n
+\t\t[\'928\', \'Pi\'],\n
+\t\t[\'929\', \'Rho\'],\n
+\t\t[\'931\', \'Sigma\'],\n
+\t\t[\'932\', \'Tau\'],\n
+\t\t[\'933\', \'Upsilon\'],\n
+\t\t[\'934\', \'Phi\'],\n
+\t\t[\'935\', \'Chi\'],\n
+\t\t[\'936\', \'Psi\'],\n
+\t\t[\'937\', \'Omega\'],\n
+\t\t[\'945\', \'alpha\'],\n
+\t\t[\'946\', \'beta\'],\n
+\t\t[\'947\', \'gamma\'],\n
+\t\t[\'948\', \'delta\'],\n
+\t\t[\'949\', \'epsilon\'],\n
+\t\t[\'950\', \'zeta\'],\n
+\t\t[\'951\', \'eta\'],\n
+\t\t[\'952\', \'theta\'],\n
+\t\t[\'953\', \'iota\'],\n
+\t\t[\'954\', \'kappa\'],\n
+\t\t[\'955\', \'lambda\'],\n
+\t\t[\'956\', \'mu\'],\n
+\t\t[\'957\', \'nu\'],\n
+\t\t[\'958\', \'xi\'],\n
+\t\t[\'959\', \'omicron\'],\n
+\t\t[\'960\', \'pi\'],\n
+\t\t[\'961\', \'rho\'],\n
+\t\t[\'962\', \'final sigma\'],\n
+\t\t[\'963\', \'sigma\'],\n
+\t\t[\'964\', \'tau\'],\n
+\t\t[\'965\', \'upsilon\'],\n
+\t\t[\'966\', \'phi\'],\n
+\t\t[\'967\', \'chi\'],\n
+\t\t[\'968\', \'psi\'],\n
+\t\t[\'969\', \'omega\'],\n
+\t// symbols\n
+\t\t[\'8501\', \'alef symbol\'],\n
+\t\t[\'982\', \'pi symbol\'],\n
+\t\t[\'8476\', \'real part symbol\'],\n
+\t\t[\'978\', \'upsilon - hook symbol\'],\n
+\t\t[\'8472\', \'Weierstrass p\'],\n
+\t\t[\'8465\', \'imaginary part\'],\n
+\t// arrows\n
+\t\t[\'8592\', \'leftwards arrow\'],\n
+\t\t[\'8593\', \'upwards arrow\'],\n
+\t\t[\'8594\', \'rightwards arrow\'],\n
+\t\t[\'8595\', \'downwards arrow\'],\n
+\t\t[\'8596\', \'left right arrow\'],\n
+\t\t[\'8629\', \'carriage return\'],\n
+\t\t[\'8656\', \'leftwards double arrow\'],\n
+\t\t[\'8657\', \'upwards double arrow\'],\n
+\t\t[\'8658\', \'rightwards double arrow\'],\n
+\t\t[\'8659\', \'downwards double arrow\'],\n
+\t\t[\'8660\', \'left right double arrow\'],\n
+\t\t[\'8756\', \'therefore\'],\n
+\t\t[\'8834\', \'subset of\'],\n
+\t\t[\'8835\', \'superset of\'],\n
+\t\t[\'8836\', \'not a subset of\'],\n
+\t\t[\'8838\', \'subset of or equal to\'],\n
+\t\t[\'8839\', \'superset of or equal to\'],\n
+\t\t[\'8853\', \'circled plus\'],\n
+\t\t[\'8855\', \'circled times\'],\n
+\t\t[\'8869\', \'perpendicular\'],\n
+\t\t[\'8901\', \'dot operator\'],\n
+\t\t[\'8968\', \'left ceiling\'],\n
+\t\t[\'8969\', \'right ceiling\'],\n
+\t\t[\'8970\', \'left floor\'],\n
+\t\t[\'8971\', \'right floor\'],\n
+\t\t[\'9001\', \'left-pointing angle bracket\'],\n
+\t\t[\'9002\', \'right-pointing angle bracket\'],\n
+\t\t[\'9674\', \'lozenge\'],\n
+\t\t[\'9824\', \'black spade suit\'],\n
+\t\t[\'9827\', \'black club suit\'],\n
+\t\t[\'9829\', \'black heart suit\'],\n
+\t\t[\'9830\', \'black diamond suit\'],\n
+\t\t[\'8194\', \'en space\'],\n
+\t\t[\'8195\', \'em space\'],\n
+\t\t[\'8201\', \'thin space\'],\n
+\t\t[\'8204\', \'zero width non-joiner\'],\n
+\t\t[\'8205\', \'zero width joiner\'],\n
+\t\t[\'8206\', \'left-to-right mark\'],\n
+\t\t[\'8207\', \'right-to-left mark\']\n
+\t];\n
+\n
+\tfunction showDialog() {\n
+\t\tvar gridHtml, x, y, win;\n
+\n
+\t\tfunction getParentTd(elm) {\n
+\t\t\twhile (elm) {\n
+\t\t\t\tif (elm.nodeName == \'TD\') {\n
+\t\t\t\t\treturn elm;\n
+\t\t\t\t}\n
+\n
+\t\t\t\telm = elm.parentNode;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tgridHtml = \'<table role="presentation" cellspacing="0" class="mce-charmap"><tbody>\';\n
+\n
+\t\tvar width = 25;\n
+\t\tvar height = Math.ceil(charmap.length / width);\n
+\t\tfor (y = 0; y < height; y++) {\n
+\t\t\tgridHtml += \'<tr>\';\n
+\n
+\t\t\tfor (x = 0; x < width; x++) {\n
+\t\t\t\tvar index = y * width + x;\n
+\t\t\t\tif (index < charmap.length) {\n
+\t\t\t\t\tvar chr = charmap[index];\n
+\n
+\t\t\t\t\tgridHtml += \'<td title="\' + chr[1] + \'"><div tabindex="-1" title="\' + chr[1] + \'" role="button">\' +\n
+\t\t\t\t\t\t(chr ? String.fromCharCode(parseInt(chr[0], 10)) : \'&nbsp;\') + \'</div></td>\';\n
+\t\t\t\t} else {\n
+\t\t\t\t\tgridHtml += \'<td />\';\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tgridHtml += \'</tr>\';\n
+\t\t}\n
+\n
+\t\tgridHtml += \'</tbody></table>\';\n
+\n
+\t\tvar charMapPanel = {\n
+\t\t\ttype: \'container\',\n
+\t\t\thtml: gridHtml,\n
+\t\t\tonclick: function(e) {\n
+\t\t\t\tvar target = e.target;\n
+\t\t\t\tif (/^(TD|DIV)$/.test(target.nodeName)) {\n
+\t\t\t\t\tif (getParentTd(target).firstChild) {\n
+\t\t\t\t\t\teditor.execCommand(\'mceInsertContent\', false, tinymce.trim(target.innerText || target.textContent));\n
+\n
+\t\t\t\t\t\tif (!e.ctrlKey) {\n
+\t\t\t\t\t\t\twin.close();\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t},\n
+\t\t\tonmouseover: function(e) {\n
+\t\t\t\tvar td = getParentTd(e.target);\n
+\n
+\t\t\t\tif (td && td.firstChild) {\n
+\t\t\t\t\twin.find(\'#preview\').text(td.firstChild.firstChild.data);\n
+\t\t\t\t\twin.find(\'#previewTitle\').text(td.title);\n
+\t\t\t\t} else {\n
+\t\t\t\t\twin.find(\'#preview\').text(\' \');\n
+\t\t\t\t\twin.find(\'#previewTitle\').text(\' \');\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\twin = editor.windowManager.open({\n
+\t\t\ttitle: "Special character",\n
+\t\t\tspacing: 10,\n
+\t\t\tpadding: 10,\n
+\t\t\titems: [\n
+\t\t\t\tcharMapPanel,\n
+\t\t\t\t{\n
+\t\t\t\t\ttype: \'container\',\n
+\t\t\t\t\tlayout: \'flex\',\n
+\t\t\t\t\tdirection: \'column\',\n
+\t\t\t\t\talign: \'center\',\n
+\t\t\t\t\tspacing: 5,\n
+\t\t\t\t\tminWidth: 160,\n
+\t\t\t\t\tminHeight: 160,\n
+\t\t\t\t\titems: [\n
+\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\ttype: \'label\',\n
+\t\t\t\t\t\t\tname: \'preview\',\n
+\t\t\t\t\t\t\ttext: \' \',\n
+\t\t\t\t\t\t\tstyle: \'font-size: 40px; text-align: center\',\n
+\t\t\t\t\t\t\tborder: 1,\n
+\t\t\t\t\t\t\tminWidth: 140,\n
+\t\t\t\t\t\t\tminHeight: 80\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\ttype: \'label\',\n
+\t\t\t\t\t\t\tname: \'previewTitle\',\n
+\t\t\t\t\t\t\ttext: \' \',\n
+\t\t\t\t\t\t\tstyle: \'text-align: center\',\n
+\t\t\t\t\t\t\tborder: 1,\n
+\t\t\t\t\t\t\tminWidth: 140,\n
+\t\t\t\t\t\t\tminHeight: 80\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t]\n
+\t\t\t\t}\n
+\t\t\t],\n
+\t\t\tbuttons: [\n
+\t\t\t\t{text: "Close", onclick: function() {\n
+\t\t\t\t\twin.close();\n
+\t\t\t\t}}\n
+\t\t\t]\n
+\t\t});\n
+\t}\n
+\n
+\teditor.addButton(\'charmap\', {\n
+\t\ticon: \'charmap\',\n
+\t\ttooltip: \'Special character\',\n
+\t\tonclick: showDialog\n
+\t});\n
+\n
+\teditor.addMenuItem(\'charmap\', {\n
+\t\ticon: \'charmap\',\n
+\t\ttext: \'Special character\',\n
+\t\tonclick: showDialog,\n
+\t\tcontext: \'insert\'\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9818</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

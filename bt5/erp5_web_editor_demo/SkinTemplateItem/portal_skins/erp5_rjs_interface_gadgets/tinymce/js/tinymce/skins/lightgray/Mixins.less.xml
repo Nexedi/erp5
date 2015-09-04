@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268662.12</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Mixins.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// Mixins\n
+\n
+.opacity(@opacity) {\n
+\topacity: @opacity;\n
+\t@opacityie: @opacity * 100;\n
+\tfilter: ~"alpha(opacity=@{opacityie})";\n
+\tzoom: 1;\n
+}\n
+\n
+.vertical-gradient(@startColor, @endColor) when (@has-gradients = true) {\n
+\tbackground-color: mix(@startColor, @endColor, 60%);\n
+\tbackground-image: -moz-linear-gradient(top, @startColor, @endColor); // FF 3.6+\n
+\tbackground-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), to(@endColor)); // Safari 4+, Chrome 2+\n
+\tbackground-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+\n
+\tbackground-image: -o-linear-gradient(top, @startColor, @endColor); // Opera 11.10\n
+\tbackground-image: linear-gradient(to bottom, @startColor, @endColor); // Standard, IE10\n
+\tbackground-repeat: repeat-x;\n
+\tfilter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr=\'%d\', endColorstr=\'%d\', GradientType=0)", argb(@startColor), argb(@endColor)));\n
+\tzoom: 1;\n
+}\n
+\n
+.vertical-gradient(@startColor, @endColor) when (@has-gradients = false) {\n
+\tbackground-color: mix(@startColor, @endColor, 60%);\n
+}\n
+\n
+.border-radius(@radius) when (@has-radius = true) {\n
+\t-webkit-border-radius: @radius;\n
+\t-moz-border-radius: @radius;\n
+\tborder-radius: @radius;\n
+}\n
+\n
+.box-shadow(@shadowA, @shadowB:X, ...) when (@has-boxshadow = true) {\n
+\t// Multiple shadow solution from http://toekneestuck.com/blog/2012/05/15/less-css-arguments-variable/\n
+\t@props: ~`"@{arguments}".replace(/[\\[\\]]|\\,\\sX/g, \'\')`;\n
+\t-webkit-box-shadow: @props;\n
+\t-moz-box-shadow: @props;\n
+\tbox-shadow: @props;\n
+}\n
+\n
+.transition(@transition) {\n
+\t-webkit-transition: @transition;\n
+\ttransition: @transition;\n
+}\n
+\n
+.inline-block() {\n
+\tdisplay: inline-block;\n
+\t*display: inline;\n
+\t*zoom: 1;\n
+}\n
+\n
+.reset-gradient() {\n
+\tfilter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));\n
+\tbackground: transparent;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1799</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Mixins.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

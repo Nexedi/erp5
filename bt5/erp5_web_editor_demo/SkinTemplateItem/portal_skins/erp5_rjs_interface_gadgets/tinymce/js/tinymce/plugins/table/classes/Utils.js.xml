@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268432.34</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Utils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Utils.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Various utility functions.\n
+ *\n
+ * @class tinymce.tableplugin.Utils\n
+ * @private\n
+ */\n
+define("tinymce/tableplugin/Utils", [\n
+\t"tinymce/Env"\n
+], function(Env) {\n
+\tfunction getSpanVal(td, name) {\n
+\t\treturn parseInt(td.getAttribute(name) || 1, 10);\n
+\t}\n
+\n
+\tfunction paddCell(cell) {\n
+\t\tif (!Env.ie || Env.ie > 10) {\n
+\t\t\tcell.innerHTML = \'<br data-mce-bogus="1" />\';\n
+\t\t}\n
+\t}\n
+\n
+\treturn {\n
+\t\tgetSpanVal: getSpanVal,\n
+\t\tpaddCell: paddCell\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>643</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Utils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268347.98</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Movable.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Movable.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Movable mixin. Makes controls movable absolute and relative to other elements.\n
+ *\n
+ * @mixin tinymce.ui.Movable\n
+ */\n
+define("tinymce/ui/Movable", [\n
+\t"tinymce/ui/DomUtils"\n
+], function(DomUtils) {\n
+\t"use strict";\n
+\n
+\tfunction calculateRelativePosition(ctrl, targetElm, rel) {\n
+\t\tvar ctrlElm, pos, x, y, selfW, selfH, targetW, targetH, viewport, size;\n
+\n
+\t\tviewport = DomUtils.getViewPort();\n
+\n
+\t\t// Get pos of target\n
+\t\tpos = DomUtils.getPos(targetElm);\n
+\t\tx = pos.x;\n
+\t\ty = pos.y;\n
+\n
+\t\tif (ctrl.state.get(\'fixed\') && DomUtils.getRuntimeStyle(document.body, \'position\') == \'static\') {\n
+\t\t\tx -= viewport.x;\n
+\t\t\ty -= viewport.y;\n
+\t\t}\n
+\n
+\t\t// Get size of self\n
+\t\tctrlElm = ctrl.getEl();\n
+\t\tsize = DomUtils.getSize(ctrlElm);\n
+\t\tselfW = size.width;\n
+\t\tselfH = size.height;\n
+\n
+\t\t// Get size of target\n
+\t\tsize = DomUtils.getSize(targetElm);\n
+\t\ttargetW = size.width;\n
+\t\ttargetH = size.height;\n
+\n
+\t\t// Parse align string\n
+\t\trel = (rel || \'\').split(\'\');\n
+\n
+\t\t// Target corners\n
+\t\tif (rel[0] === \'b\') {\n
+\t\t\ty += targetH;\n
+\t\t}\n
+\n
+\t\tif (rel[1] === \'r\') {\n
+\t\t\tx += targetW;\n
+\t\t}\n
+\n
+\t\tif (rel[0] === \'c\') {\n
+\t\t\ty += Math.round(targetH / 2);\n
+\t\t}\n
+\n
+\t\tif (rel[1] === \'c\') {\n
+\t\t\tx += Math.round(targetW / 2);\n
+\t\t}\n
+\n
+\t\t// Self corners\n
+\t\tif (rel[3] === \'b\') {\n
+\t\t\ty -= selfH;\n
+\t\t}\n
+\n
+\t\tif (rel[4] === \'r\') {\n
+\t\t\tx -= selfW;\n
+\t\t}\n
+\n
+\t\tif (rel[3] === \'c\') {\n
+\t\t\ty -= Math.round(selfH / 2);\n
+\t\t}\n
+\n
+\t\tif (rel[4] === \'c\') {\n
+\t\t\tx -= Math.round(selfW / 2);\n
+\t\t}\n
+\n
+\t\treturn {\n
+\t\t\tx: x,\n
+\t\t\ty: y,\n
+\t\t\tw: selfW,\n
+\t\t\th: selfH\n
+\t\t};\n
+\t}\n
+\n
+\treturn {\n
+\t\t/**\n
+\t\t * Tests various positions to get the most suitable one.\n
+\t\t *\n
+\t\t * @method testMoveRel\n
+\t\t * @param {DOMElement} elm Element to position against.\n
+\t\t * @param {Array} rels Array with relative positions.\n
+\t\t * @return {String} Best suitable relative position.\n
+\t\t */\n
+\t\ttestMoveRel: function(elm, rels) {\n
+\t\t\tvar viewPortRect = DomUtils.getViewPort();\n
+\n
+\t\t\tfor (var i = 0; i < rels.length; i++) {\n
+\t\t\t\tvar pos = calculateRelativePosition(this, elm, rels[i]);\n
+\n
+\t\t\t\tif (this.state.get(\'fixed\')) {\n
+\t\t\t\t\tif (pos.x > 0 && pos.x + pos.w < viewPortRect.w && pos.y > 0 && pos.y + pos.h < viewPortRect.h) {\n
+\t\t\t\t\t\treturn rels[i];\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif (pos.x > viewPortRect.x && pos.x + pos.w < viewPortRect.w + viewPortRect.x &&\n
+\t\t\t\t\t\tpos.y > viewPortRect.y && pos.y + pos.h < viewPortRect.h + viewPortRect.y) {\n
+\t\t\t\t\t\treturn rels[i];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn rels[0];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Move relative to the specified element.\n
+\t\t *\n
+\t\t * @method moveRel\n
+\t\t * @param {Element} elm Element to move relative to.\n
+\t\t * @param {String} rel Relative mode. For example: br-tl.\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tmoveRel: function(elm, rel) {\n
+\t\t\tif (typeof rel != \'string\') {\n
+\t\t\t\trel = this.testMoveRel(elm, rel);\n
+\t\t\t}\n
+\n
+\t\t\tvar pos = calculateRelativePosition(this, elm, rel);\n
+\t\t\treturn this.moveTo(pos.x, pos.y);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Move by a relative x, y values.\n
+\t\t *\n
+\t\t * @method moveBy\n
+\t\t * @param {Number} dx Relative x position.\n
+\t\t * @param {Number} dy Relative y position.\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tmoveBy: function(dx, dy) {\n
+\t\t\tvar self = this, rect = self.layoutRect();\n
+\n
+\t\t\tself.moveTo(rect.x + dx, rect.y + dy);\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Move to absolute position.\n
+\t\t *\n
+\t\t * @method moveTo\n
+\t\t * @param {Number} x Absolute x position.\n
+\t\t * @param {Number} y Absolute y position.\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tmoveTo: function(x, y) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\t// TODO: Move this to some global class\n
+\t\t\tfunction constrain(value, max, size) {\n
+\t\t\t\tif (value < 0) {\n
+\t\t\t\t\treturn 0;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (value + size > max) {\n
+\t\t\t\t\tvalue = max - size;\n
+\t\t\t\t\treturn value < 0 ? 0 : value;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn value;\n
+\t\t\t}\n
+\n
+\t\t\tif (self.settings.constrainToViewport) {\n
+\t\t\t\tvar viewPortRect = DomUtils.getViewPort(window);\n
+\t\t\t\tvar layoutRect = self.layoutRect();\n
+\n
+\t\t\t\tx = constrain(x, viewPortRect.w + viewPortRect.x, layoutRect.w);\n
+\t\t\t\ty = constrain(y, viewPortRect.h + viewPortRect.y, layoutRect.h);\n
+\t\t\t}\n
+\n
+\t\t\tif (self.state.get(\'rendered\')) {\n
+\t\t\t\tself.layoutRect({x: x, y: y}).repaint();\n
+\t\t\t} else {\n
+\t\t\t\tself.settings.x = x;\n
+\t\t\t\tself.settings.y = y;\n
+\t\t\t}\n
+\n
+\t\t\tself.fire(\'move\', {x: x, y: y});\n
+\n
+\t\t\treturn self;\n
+\t\t}\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4384</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Movable.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

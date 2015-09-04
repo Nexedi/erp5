@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268447.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Utils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Utils.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class contails various utility functions for the paste plugin.\n
+ *\n
+ * @class tinymce.pasteplugin.Utils\n
+ */\n
+define("tinymce/pasteplugin/Utils", [\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/html/DomParser",\n
+\t"tinymce/html/Schema"\n
+], function(Tools, DomParser, Schema) {\n
+\tfunction filter(content, items) {\n
+\t\tTools.each(items, function(v) {\n
+\t\t\tif (v.constructor == RegExp) {\n
+\t\t\t\tcontent = content.replace(v, \'\');\n
+\t\t\t} else {\n
+\t\t\t\tcontent = content.replace(v[0], v[1]);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treturn content;\n
+\t}\n
+\n
+\t/**\n
+\t * Gets the innerText of the specified element. It will handle edge cases\n
+\t * and works better than textContent on Gecko.\n
+\t *\n
+\t * @param {String} html HTML string to get text from.\n
+\t * @return {String} String of text with line feeds.\n
+\t */\n
+\tfunction innerText(html) {\n
+\t\tvar schema = new Schema(), domParser = new DomParser({}, schema), text = \'\';\n
+\t\tvar shortEndedElements = schema.getShortEndedElements();\n
+\t\tvar ignoreElements = Tools.makeMap(\'script noscript style textarea video audio iframe object\', \' \');\n
+\t\tvar blockElements = schema.getBlockElements();\n
+\n
+\t\tfunction walk(node) {\n
+\t\t\tvar name = node.name, currentNode = node;\n
+\n
+\t\t\tif (name === \'br\') {\n
+\t\t\t\ttext += \'\\n\';\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// img/input/hr\n
+\t\t\tif (shortEndedElements[name]) {\n
+\t\t\t\ttext += \' \';\n
+\t\t\t}\n
+\n
+\t\t\t// Ingore script, video contents\n
+\t\t\tif (ignoreElements[name]) {\n
+\t\t\t\ttext += \' \';\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (node.type == 3) {\n
+\t\t\t\ttext += node.value;\n
+\t\t\t}\n
+\n
+\t\t\t// Walk all children\n
+\t\t\tif (!node.shortEnded) {\n
+\t\t\t\tif ((node = node.firstChild)) {\n
+\t\t\t\t\tdo {\n
+\t\t\t\t\t\twalk(node);\n
+\t\t\t\t\t} while ((node = node.next));\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Add \\n or \\n\\n for blocks or P\n
+\t\t\tif (blockElements[name] && currentNode.next) {\n
+\t\t\t\ttext += \'\\n\';\n
+\n
+\t\t\t\tif (name == \'p\') {\n
+\t\t\t\t\ttext += \'\\n\';\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\thtml = filter(html, [\n
+\t\t\t/<!\\[[^\\]]+\\]>/g // Conditional comments\n
+\t\t]);\n
+\n
+\t\twalk(domParser.parse(html));\n
+\n
+\t\treturn text;\n
+\t}\n
+\n
+\t/**\n
+\t * Trims the specified HTML by removing all WebKit fragments, all elements wrapping the body trailing BR elements etc.\n
+\t *\n
+\t * @param {String} html Html string to trim contents on.\n
+\t * @return {String} Html contents that got trimmed.\n
+\t */\n
+\tfunction trimHtml(html) {\n
+\t\tfunction trimSpaces(all, s1, s2) {\n
+\t\t\t// WebKit &nbsp; meant to preserve multiple spaces but instead inserted around all inline tags,\n
+\t\t\t// including the spans with inline styles created on paste\n
+\t\t\tif (!s1 && !s2) {\n
+\t\t\t\treturn \' \';\n
+\t\t\t}\n
+\n
+\t\t\treturn \'\\u00a0\';\n
+\t\t}\n
+\n
+\t\thtml = filter(html, [\n
+\t\t\t/^[\\s\\S]*<body[^>]*>\\s*|\\s*<\\/body[^>]*>[\\s\\S]*$/g, // Remove anything but the contents within the BODY element\n
+\t\t\t/<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)\n
+\t\t\t[/( ?)<span class="Apple-converted-space">\\u00a0<\\/span>( ?)/g, trimSpaces],\n
+\t\t\t/<br>$/i // Trailing BR elements\n
+\t\t]);\n
+\n
+\t\treturn html;\n
+\t}\n
+\n
+\treturn {\n
+\t\tfilter: filter,\n
+\t\tinnerText: innerText,\n
+\t\ttrimHtml: trimHtml\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3086</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Utils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

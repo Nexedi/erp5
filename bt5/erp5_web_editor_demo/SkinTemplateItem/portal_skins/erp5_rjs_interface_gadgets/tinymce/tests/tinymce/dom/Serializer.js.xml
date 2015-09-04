@@ -1,0 +1,541 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268230.63</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Serializer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>var DOM = tinymce.DOM;\n
+\n
+module("tinymce.dom.Serializer", {\n
+\tsetupModule: function() {\n
+\t\tdocument.getElementById(\'view\').innerHTML = \'\074div id="content"\076\074div id="test"\076\074/div\076\074/div\076\';\n
+\t}\n
+});\n
+\n
+test(\'Schema rules\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(8);\n
+\n
+\tser.setRules(\'@[id|title|class|style],div,img[src|alt|-style|border],span,hr\');\n
+\tDOM.setHTML(\'test\', \'\074img title="test" src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" alt="test" border="0" style="border: 1px solid red" class="test" /\076\074span id="test2"\076test\074/span\076\074hr /\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\074img title="test" class="test" src="tinymce/ui/img/raster.gif" alt="test" border="0" /\076\074span id="test2"\076test\074/span\076\074hr /\076\074/div\076\', \'Global rule\');\n
+\n
+\tser.setRules(\'*a[*],em/i[*],strong/b[*i*]\');\n
+\tDOM.setHTML(\'test\', \'\074a href="test" data-mce-href="test"\076test\074/a\076\074strong title="test" class="test"\076test2\074/strong\076\074em title="test"\076test3\074/em\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074a href="test"\076test\074/a\076\074strong title="test"\076test2\074/strong\076\074em title="test"\076test3\074/em\076\', \'Wildcard rules\');\n
+\n
+\tser.setRules(\'br,hr,input[type|name|value],div[id],span[id],strong/b,a,em/i,a[!href|!name],img[src|border=0|title={$uid}]\');\n
+\tDOM.setHTML(\'test\', \'\074br /\076\074hr /\076\074input type="text" name="test" value="val" class="no" /\076\074span id="test2" class="no"\076\074b class="no"\076abc\074/b\076\074em class="no"\076123\074/em\076\074/span\076123\074a href="file.html"  data-mce-href="file.html"\076link\074/a\076\074a name="anchor"\076\074/a\076\074a\076no\074/a\076\074img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" /\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\074br /\076\074hr /\076\074input type="text" name="test" value="val" /\076\074span id="test2"\076\074strong\076abc\074/strong\076\074em\076123\074/em\076\074/span\076123\074a href="file.html"\076link\074/a\076\074a name="anchor"\076\074/a\076no\074img src="tinymce/ui/img/raster.gif" border="0" title="mce_0" /\076\074/div\076\', \'Output name and attribute rules\');\n
+\n
+\tser.setRules(\'a[href|target\074_blank?_top|title:forced value]\');\n
+\tDOM.setHTML(\'test\', \'\074a href="file.htm" data-mce-href="file.htm" target="_blank" title="title"\076link\074/a\076\074a href="#" data-mce-href="#" target="test"\076test2\074/a\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074a href="file.htm" target="_blank" title="forced value"\076link\074/a\076\074a href="#" title="forced value"\076test2\074/a\076\');\n
+\n
+\tser.setRules(\'img[src|border=0|alt=]\');\n
+\tDOM.setHTML(\'test\', \'\074img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" border="0" alt="" /\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074img src="tinymce/ui/img/raster.gif" border="0" alt="" /\076\', \'Default attribute with empty value\');\n
+\n
+\tser.setRules(\'img[src|border=0|alt=],*[*]\');\n
+\tDOM.setHTML(\'test\', \'\074img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" /\076\074hr /\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\074img src="tinymce/ui/img/raster.gif" border="0" alt="" /\076\074hr /\076\074/div\076\');\n
+\n
+\tser = new tinymce.dom.Serializer({\n
+\t\tvalid_elements : \'img[src|border=0|alt=]\',\n
+\t\textended_valid_elements : \'div[id],img[src|alt=]\'\n
+\t});\n
+\tDOM.setHTML(\'test\', \'\074img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" alt="" /\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\074img src="tinymce/ui/img/raster.gif" alt="" /\076\074/div\076\');\n
+\n
+\tser = new tinymce.dom.Serializer({invalid_elements : \'hr,br\'});\n
+\tDOM.setHTML(\'test\', \'\074img src="tinymce/ui/img/raster.gif" data-mce-src="tinymce/ui/img/raster.gif" /\076\074hr /\076\074br /\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\074img src="tinymce/ui/img/raster.gif" alt="" /\076\074/div\076\');\n
+});\n
+\n
+test(\'Entity encoding\', function() {\n
+\tvar ser;\n
+\n
+\texpect(4);\n
+\n
+\tser = new tinymce.dom.Serializer({entity_encoding : \'numeric\'});\n
+\tDOM.setHTML(\'test\', \'\046lt;\046gt;\046amp;\046quot;\046nbsp;\046aring;\046auml;\046ouml;\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\046lt;\046gt;\046amp;"\046#160;\046#229;\046#228;\046#246;\074/div\076\');\n
+\n
+\tser = new tinymce.dom.Serializer({entity_encoding : \'named\'});\n
+\tDOM.setHTML(\'test\', \'\046lt;\046gt;\046amp;\046quot;\046nbsp;\046aring;\046auml;\046ouml;\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\046lt;\046gt;\046amp;"\046nbsp;\046aring;\046auml;\046ouml;\074/div\076\');\n
+\n
+\tser = new tinymce.dom.Serializer({entity_encoding : \'named+numeric\', entities : \'160,nbsp,34,quot,38,amp,60,lt,62,gt\'});\n
+\tDOM.setHTML(\'test\', \'\046lt;\046gt;\046amp;\046quot;\046nbsp;\046aring;\046auml;\046ouml;\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\046lt;\046gt;\046amp;"\046nbsp;\046#229;\046#228;\046#246;\074/div\076\');\n
+\n
+\tser = new tinymce.dom.Serializer({entity_encoding : \'raw\'});\n
+\tDOM.setHTML(\'test\', \'\046lt;\046gt;\046amp;\046quot;\046nbsp;\046aring;\046auml;\046ouml;\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\046lt;\046gt;\046amp;"\\u00a0\\u00e5\\u00e4\\u00f6\074/div\076\');\n
+});\n
+\n
+test(\'Form elements (general)\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(5);\n
+\n
+\tser.setRules(\'form[method],label[for],input[type|name|value|checked|disabled|readonly|length|maxlength],select[multiple],option[value|selected],textarea[name|disabled|readonly]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074input type="text" /\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074input type="text" /\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074input type="text" value="text" length="128" maxlength="129" /\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074input type="text" value="text" length="128" maxlength="129" /\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074form method="post"\076\074input type="hidden" name="method" value="get" /\076\074/form\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074form method="post"\076\074input type="hidden" name="method" value="get" /\076\074/form\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074label for="test"\076label\074/label\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074label for="test"\076label\074/label\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074input type="checkbox" value="test" /\076\074input type="button" /\076\074textarea\076\074/textarea\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074input type="checkbox" value="test" /\076\074input type="button" /\076\074textarea\076\074/textarea\076\');\n
+});\n
+\n
+test(\'Form elements (checkbox)\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(4);\n
+\n
+\tser.setRules(\'form[method],label[for],input[type|name|value|checked|disabled|readonly|length|maxlength],select[multiple],option[value|selected]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074input type="checkbox" value="1"\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074input type="checkbox" value="1" /\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074input type="checkbox" value="1" checked disabled readonly\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly" /\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074input type="checkbox" value="1" checked="1" disabled="1" readonly="1"\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly" /\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074input type="checkbox" value="1" checked="true" disabled="true" readonly="true"\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074input type="checkbox" value="1" checked="checked" disabled="disabled" readonly="readonly" /\076\');\n
+});\n
+\n
+test(\'Form elements (select)\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(7);\n
+\n
+\tser.setRules(\'form[method],label[for],input[type|name|value|checked|disabled|readonly|length|maxlength],select[multiple],option[value|selected]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074select\076\074option value="1"\076test1\074/option\076\074option value="2" selected\076test2\074/option\076\074/select\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074select\076\074option value="1"\076test1\074/option\076\074option value="2" selected="selected"\076test2\074/option\076\074/select\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074select\076\074option value="1"\076test1\074/option\076\074option selected="1" value="2"\076test2\074/option\076\074/select\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074select\076\074option value="1"\076test1\074/option\076\074option value="2" selected="selected"\076test2\074/option\076\074/select\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074select\076\074option value="1"\076test1\074/option\076\074option value="2" selected="true"\076test2\074/option\076\074/select\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074select\076\074option value="1"\076test1\074/option\076\074option value="2" selected="selected"\076test2\074/option\076\074/select\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074select multiple\076\074/select\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074select multiple="multiple"\076\074/select\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074select multiple="multiple"\076\074/select\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074select multiple="multiple"\076\074/select\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074select multiple="1"\076\074/select\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074select multiple="multiple"\076\074/select\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074select\076\074/select\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074select\076\074/select\076\');\n
+});\n
+\n
+test(\'List elements\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(5);\n
+\n
+\tser.setRules(\'ul[compact],ol,li\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074ul compact\076\074/ul\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074ul compact="compact"\076\074/ul\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074ul compact="compact"\076\074/ul\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074ul compact="compact"\076\074/ul\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074ul compact="1"\076\074/ul\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074ul compact="compact"\076\074/ul\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074ul\076\074/ul\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074ul\076\074/ul\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074ol\076\074li\076a\074/li\076\074ol\076\074li\076b\074/li\076\074li\076c\074/li\076\074/ol\076\074li\076e\074/li\076\074/ol\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074ol\076\074li\076a\074ol\076\074li\076b\074/li\076\074li\076c\074/li\076\074/ol\076\074/li\076\074li\076e\074/li\076\074/ol\076\');\n
+});\n
+\n
+test(\'Tables\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(4);\n
+\n
+\tser.setRules(\'table,tr,td[nowrap]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074table\076\074tr\076\074td\076\074/td\076\074/tr\076\074/table\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074table\076\074tr\076\074td\076\074/td\076\074/tr\076\074/table\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074table\076\074tr\076\074td nowrap\076\074/td\076\074/tr\076\074/table\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074table\076\074tr\076\074td nowrap="nowrap"\076\074/td\076\074/tr\076\074/table\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074table\076\074tr\076\074td nowrap="nowrap"\076\074/td\076\074/tr\076\074/table\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074table\076\074tr\076\074td nowrap="nowrap"\076\074/td\076\074/tr\076\074/table\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074table\076\074tr\076\074td nowrap="1"\076\074/td\076\074/tr\076\074/table\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074table\076\074tr\076\074td nowrap="nowrap"\076\074/td\076\074/tr\076\074/table\076\');\n
+});\n
+\n
+test(\'Styles\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(1);\n
+\n
+\tser.setRules(\'*[*]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074span style="border: 1px solid red" data-mce-style="border: 1px solid red;"\076test\074/span\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\074span style="border: 1px solid red;"\076test\074/span\076\074/div\076\');\n
+});\n
+\n
+test(\'Comments\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(1);\n
+\n
+\tser.setRules(\'*[*]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074!-- abc --\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076\074!-- abc --\076\074/div\076\');\n
+});\n
+\n
+test(\'Non HTML elements and attributes\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(2);\n
+\n
+\tser.setRules(\'*[*]\');\n
+\tser.schema.addValidChildren(\'+div[prefix:test]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074div test:attr="test"\076test\074/div\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\'), {getInner : 1}), \'\074div test:attr="test"\076test\074/div\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'test1\074prefix:test\076Test\074/prefix:test\076test2\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074div id="test"\076test1\074prefix:test\076Test\074/prefix:test\076test2\074/div\076\');\n
+});\n
+\n
+test(\'Padd empty elements\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(1);\n
+\n
+\tser.setRules(\'#p\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074p\076test\074/p\076\074p\076\074/p\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074p\076test\074/p\076\074p\076\046nbsp;\074/p\076\');\n
+});\n
+\n
+test(\'Remove empty elements\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(1);\n
+\n
+\tser.setRules(\'-p\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074p\076test\074/p\076\074p\076\074/p\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074p\076test\074/p\076\');\n
+});\n
+\n
+test(\'Pre/post process events\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(3);\n
+\n
+\tser.setRules(\'div[id],span[id|class],a[href],b[class]\');\n
+\n
+\tser.onPreProcess = function(o) {\n
+\t\tequal(o.test, \'abc\');\n
+\t\tDOM.setAttrib(o.node.getElementsByTagName(\'span\')[0], \'class\', \'abc\');\n
+\t};\n
+\n
+\tser.onPostProcess = function(o) {\n
+\t\tequal(o.test, \'abc\');\n
+\t\to.content = o.content.replace(/\074b\076/g, \'\074b class="123"\076\');\n
+\t};\n
+\n
+\tDOM.setHTML(\'test\', \'\074span id="test2"\076\074b\076abc\074/b\076\074/span\076123\074a href="file.html" data-mce-href="file.html"\076link\074/a\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\'), {test : \'abc\'}), \'\074div id="test"\076\074span id="test2" class="abc"\076\074b class="123"\076abc\074/b\076\074/span\076123\074a href="file.html"\076link\074/a\076\074/div\076\');\n
+});\n
+\n
+test(\'Script with non JS type attribute\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074s\'+\'cript type="mylanguage"\076\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074s\'+\'cript type="mylanguage"\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with tags inside a comment\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074s\'+\'cript\076// \074img src="test"\076\074a href="#"\076\074/a\076\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074s\'+\'cript\076// \074![CDATA[\\n// \074img src="test"\076\074a href="#"\076\074/a\076\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with less than\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074s\'+\'cript\0761 \074 2;\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074s\'+\'cript\076// \074![CDATA[\\n1 \074 2;\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with type attrib and less than\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074s\'+\'cript type="text/javascript"\0761 \074 2;\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074script type="text/javascript"\076// \074![CDATA[\\n1 \074 2;\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with whitespace in beginning/end\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076\\n\\t1 \074 2;\\n\\t if (2 \074 1)\\n\\t\\talert(1);\\n\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074s\'+\'cript\076// \074![CDATA[\\n\\t1 \074 2;\\n\\t if (2 \074 1)\\n\\t\\talert(1);\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with a HTML comment and less than\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076\074!-- 1 \074 2; // --\076\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074s\'+\'cript\076// \074![CDATA[\\n1 \074 2;\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with white space in beginning, comment and less than\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076\\n\\n\074!-- 1 \074 2;\\n\\n--\076\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074s\'+\'cript\076// \074![CDATA[\\n1 \074 2;\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with comments and cdata\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076// \074![CDATA[1 \074 2; // ]]\076\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074s\'+\'cript\076// \074![CDATA[\\n1 \074 2;\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with cdata\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076\074![CDATA[1 \074 2; ]]\076\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074s\'+\'cript\076// \074![CDATA[\\n1 \074 2;\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script whitespace in beginning/end and cdata\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076\\n\\n\074![CDATA[\\n\\n1 \074 2;\\n\\n]]\076\\n\\n\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074s\'+\'cript\076// \074![CDATA[\\n1 \074 2;\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with src attr\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script src="test.js" data-mce-src="test.js"\076\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074s\'+\'cript src="test.js"\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with HTML comment, comment and CDATA\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076\074!--// \074![CDATA[var hi = "hello";// ]]\076--\076\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074script\076// \074![CDATA[\\nvar hi = \\"hello\\";\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with block comment around cdata\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076/* \074![CDATA[ */\\nvar hi = "hello";\\n/* ]]\076 */\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074script\076// \074![CDATA[\\nvar hi = \\"hello\\";\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with html comment and block comment around cdata\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076\074!-- /* \074![CDATA[ */\\nvar hi = "hello";\\n/* ]]\076*/--\076\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074script\076// \074![CDATA[\\nvar hi = \\"hello\\";\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with line comment and html comment\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076// \074!--\\nvar hi = "hello";\\n// --\076\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074script\076// \074![CDATA[\\nvar hi = \\"hello\\";\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Script with block comment around html comment\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\tser.setRules(\'script[type|language|src]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074script\076/* \074!-- */\\nvar hi = "hello";\\n/*--\076*/\074/s\'+\'cript\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074script\076// \074![CDATA[\\nvar hi = \\"hello\\";\\n// ]]\076\074/s\'+\'cript\076\');\n
+});\n
+\n
+test(\'Protected blocks\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(3);\n
+\n
+\tser.setRules(\'noscript[test]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074!--mce:protected \' + escape(\'\074noscript test="test"\076\074br\076\074/noscript\076\') + \'--\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074noscript test="test"\076\074br\076\074/noscript\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074!--mce:protected \' + escape(\'\074noscript\076\074br\076\074/noscript\076\') + \'--\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074noscript\076\074br\076\074/noscript\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074!--mce:protected \' + escape(\'\074noscript\076\074!-- text --\076\074br\076\074/noscript\076\') + \'--\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074noscript\076\074!-- text --\076\074br\076\074/noscript\076\');\n
+});\n
+\n
+test(\'Style with whitespace at beginning\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true, valid_children: \'+body[style]\'});\n
+\tser.setRules(\'style\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074style\076 body { background:#fff }\074/style\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074style\076\074!--\\n body { background:#fff }\\n--\076\074/style\076\');\n
+});\n
+\n
+test(\'Style with cdata\', 1, function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true, valid_children: \'+body[style]\'});\n
+\tser.setRules(\'style\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074style\076\\r\\n\074![CDATA[\\r\\n   body { background:#fff }]]\076\074/style\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'\074style\076\074!--\\nbody { background:#fff }\\n--\076\074/style\076\');\n
+});\n
+\n
+test(\'CDATA\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\texpect(2);\n
+\n
+\tser.setRules(\'span\');\n
+\n
+\tDOM.setHTML(\'test\', \'123\074!--[CDATA[\074test\076]]--\076abc\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'123\074![CDATA[\074test\076]]\076abc\');\n
+\n
+\tDOM.setHTML(\'test\', \'123\074!--[CDATA[\074te\\n\\nst\076]]--\076abc\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).replace(/\\r/g, \'\'), \'123\074![CDATA[\074te\\n\\nst\076]]\076abc\');\n
+});\n
+\n
+test(\'BR at end of blocks\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\tser.setRules(\'ul,li,br\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074ul\076\074li\076test\074br /\076\074/li\076\074li\076test\074br /\076\074/li\076\074li\076test\074br /\076\074/li\076\074/ul\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074ul\076\074li\076test\074/li\076\074li\076test\074/li\076\074li\076test\074/li\076\074/ul\076\');\n
+});\n
+\n
+test(\'Map elements\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({fix_list_elements : true});\n
+\n
+\tser.setRules(\'map[id|name],area[shape|coords|href|target|alt]\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074map id="planetmap" name="planetmap"\076\074area shape="rect" coords="0,0,82,126" href="sun.htm" data-mce-href="sun.htm" target="_blank" alt="sun" /\076\074/map\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')).toLowerCase(), \'\074map id="planetmap" name="planetmap"\076\074area shape="rect" coords="0,0,82,126" href="sun.htm" target="_blank" alt="sun" /\076\074/map\076\');\n
+});\n
+\n
+test(\'Custom elements\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({\n
+\t\tcustom_elements: \'custom1,~custom2\',\n
+\t\tvalid_elements: \'custom1,custom2\'\n
+\t});\n
+\n
+\tdocument.createElement(\'custom1\');\n
+\tdocument.createElement(\'custom2\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074p\076\074custom1\076c1\074/custom1\076\074custom2\076c2\074/custom2\076\074/p\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074custom1\076c1\074/custom1\076\074custom2\076c2\074/custom2\076\');\n
+});\n
+\n
+test(\'Remove internal classes\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({\n
+\t\tvalid_elements: \'span[class]\'\n
+\t});\n
+\n
+\tDOM.setHTML(\'test\', \'\074span class="a mce-item-X mce-item-selected b"\076\074/span\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074span class="a b"\076\074/span\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074span class="a mce-item-X"\076\074/span\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074span class="a"\076\074/span\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074span class="mce-item-X"\076\074/span\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074span\076\074/span\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074span class="mce-item-X b"\076\074/span\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074span class=" b"\076\074/span\076\');\n
+\n
+\tDOM.setHTML(\'test\', \'\074span class="b mce-item-X"\076\074/span\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074span class="b"\076\074/span\076\');\n
+});\n
+\n
+test(\'Restore tabindex\', function() {\n
+\tvar ser = new tinymce.dom.Serializer({\n
+\t\tvalid_elements: \'span[tabindex]\'\n
+\t});\n
+\n
+\tDOM.setHTML(\'test\', \'\074span data-mce-tabindex="42"\076\074/span\076\');\n
+\tequal(ser.serialize(DOM.get(\'test\')), \'\074span tabindex="42"\076\074/span\076\');\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>22612</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Serializer.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

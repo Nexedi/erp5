@@ -1,0 +1,512 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268311.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Window.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Window.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Creates a new window.\n
+ *\n
+ * @-x-less Window.less\n
+ * @class tinymce.ui.Window\n
+ * @extends tinymce.ui.FloatPanel\n
+ */\n
+define("tinymce/ui/Window", [\n
+\t"tinymce/ui/FloatPanel",\n
+\t"tinymce/ui/Panel",\n
+\t"tinymce/ui/DomUtils",\n
+\t"tinymce/dom/DomQuery",\n
+\t"tinymce/ui/DragHelper",\n
+\t"tinymce/ui/BoxUtils",\n
+\t"tinymce/Env"\n
+], function(FloatPanel, Panel, DomUtils, $, DragHelper, BoxUtils, Env) {\n
+\t"use strict";\n
+\n
+\tvar windows = [], oldMetaValue = \'\';\n
+\n
+\tfunction toggleFullScreenState(state) {\n
+\t\tvar noScaleMetaValue = \'width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0\',\n
+\t\t\tviewport = $("meta[name=viewport]")[0],\n
+\t\t\tcontentValue;\n
+\n
+\t\tif (Env.overrideViewPort === false) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tif (!viewport) {\n
+\t\t\tviewport = document.createElement(\'meta\');\n
+\t\t\tviewport.setAttribute(\'name\', \'viewport\');\n
+\t\t\tdocument.getElementsByTagName(\'head\')[0].appendChild(viewport);\n
+\t\t}\n
+\n
+\t\tcontentValue = viewport.getAttribute(\'content\');\n
+\t\tif (contentValue && typeof oldMetaValue != \'undefined\') {\n
+\t\t\toldMetaValue = contentValue;\n
+\t\t}\n
+\n
+\t\tviewport.setAttribute(\'content\', state ? noScaleMetaValue : oldMetaValue);\n
+\t}\n
+\n
+\tfunction toggleBodyFullScreenClasses(classPrefix) {\n
+\t\tfor (var i = 0; i < windows.length; i++) {\n
+\t\t\tif (windows[i]._fullscreen) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t$([document.documentElement, document.body]).removeClass(classPrefix + \'fullscreen\');\n
+\t}\n
+\n
+\tfunction handleWindowResize() {\n
+\t\tvar lastSize = {\n
+\t\t\tw: window.innerWidth,\n
+\t\t\th: window.innerHeight\n
+\t\t};\n
+\n
+\t\twindow.setInterval(function() {\n
+\t\t\tvar w = window.innerWidth,\n
+\t\t\t\th = window.innerHeight;\n
+\n
+\t\t\tif (lastSize.w != w || lastSize.h != h) {\n
+\t\t\t\tlastSize = {\n
+\t\t\t\t\tw: w,\n
+\t\t\t\t\th: h\n
+\t\t\t\t};\n
+\n
+\t\t\t\t$(window).trigger(\'resize\');\n
+\t\t\t}\n
+\t\t}, 0);\n
+\n
+\t\tfunction reposition() {\n
+\t\t\tvar i, rect = DomUtils.getWindowSize(), layoutRect;\n
+\n
+\t\t\tfor (i = 0; i < windows.length; i++) {\n
+\t\t\t\tlayoutRect = windows[i].layoutRect();\n
+\n
+\t\t\t\twindows[i].moveTo(\n
+\t\t\t\t\twindows[i].settings.x || Math.max(0, rect.w / 2 - layoutRect.w / 2),\n
+\t\t\t\t\twindows[i].settings.y || Math.max(0, rect.h / 2 - layoutRect.h / 2)\n
+\t\t\t\t);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t$(window).on(\'resize\', reposition);\n
+\t}\n
+\n
+\tvar Window = FloatPanel.extend({\n
+\t\tmodal: true,\n
+\n
+\t\tDefaults: {\n
+\t\t\tborder: 1,\n
+\t\t\tlayout: \'flex\',\n
+\t\t\tcontainerCls: \'panel\',\n
+\t\t\trole: \'dialog\',\n
+\t\t\tcallbacks: {\n
+\t\t\t\tsubmit: function() {\n
+\t\t\t\t\tthis.fire(\'submit\', {data: this.toJSON()});\n
+\t\t\t\t},\n
+\n
+\t\t\t\tclose: function() {\n
+\t\t\t\t\tthis.close();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Constructs a instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super(settings);\n
+\n
+\t\t\tif (self.isRtl()) {\n
+\t\t\t\tself.classes.add(\'rtl\');\n
+\t\t\t}\n
+\n
+\t\t\tself.classes.add(\'window\');\n
+\t\t\tself.bodyClasses.add(\'window-body\');\n
+\t\t\tself.state.set(\'fixed\', true);\n
+\n
+\t\t\t// Create statusbar\n
+\t\t\tif (settings.buttons) {\n
+\t\t\t\tself.statusbar = new Panel({\n
+\t\t\t\t\tlayout: \'flex\',\n
+\t\t\t\t\tborder: \'1 0 0 0\',\n
+\t\t\t\t\tspacing: 3,\n
+\t\t\t\t\tpadding: 10,\n
+\t\t\t\t\talign: \'center\',\n
+\t\t\t\t\tpack: self.isRtl() ? \'start\' : \'end\',\n
+\t\t\t\t\tdefaults: {\n
+\t\t\t\t\t\ttype: \'button\'\n
+\t\t\t\t\t},\n
+\t\t\t\t\titems: settings.buttons\n
+\t\t\t\t});\n
+\n
+\t\t\t\tself.statusbar.classes.add(\'foot\');\n
+\t\t\t\tself.statusbar.parent(self);\n
+\t\t\t}\n
+\n
+\t\t\tself.on(\'click\', function(e) {\n
+\t\t\t\tif (e.target.className.indexOf(self.classPrefix + \'close\') != -1) {\n
+\t\t\t\t\tself.close();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself.on(\'cancel\', function() {\n
+\t\t\t\tself.close();\n
+\t\t\t});\n
+\n
+\t\t\tself.aria(\'describedby\', self.describedBy || self._id + \'-none\');\n
+\t\t\tself.aria(\'label\', settings.title);\n
+\t\t\tself._fullscreen = false;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Recalculates the positions of the controls in the current container.\n
+\t\t * This is invoked by the reflow method and shouldn\'t be called directly.\n
+\t\t *\n
+\t\t * @method recalc\n
+\t\t */\n
+\t\trecalc: function() {\n
+\t\t\tvar self = this, statusbar = self.statusbar, layoutRect, width, x, needsRecalc;\n
+\n
+\t\t\tif (self._fullscreen) {\n
+\t\t\t\tself.layoutRect(DomUtils.getWindowSize());\n
+\t\t\t\tself.layoutRect().contentH = self.layoutRect().innerH;\n
+\t\t\t}\n
+\n
+\t\t\tself._super();\n
+\n
+\t\t\tlayoutRect = self.layoutRect();\n
+\n
+\t\t\t// Resize window based on title width\n
+\t\t\tif (self.settings.title && !self._fullscreen) {\n
+\t\t\t\twidth = layoutRect.headerW;\n
+\t\t\t\tif (width > layoutRect.w) {\n
+\t\t\t\t\tx = layoutRect.x - Math.max(0, width / 2);\n
+\t\t\t\t\tself.layoutRect({w: width, x: x});\n
+\t\t\t\t\tneedsRecalc = true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Resize window based on statusbar width\n
+\t\t\tif (statusbar) {\n
+\t\t\t\tstatusbar.layoutRect({w: self.layoutRect().innerW}).recalc();\n
+\n
+\t\t\t\twidth = statusbar.layoutRect().minW + layoutRect.deltaW;\n
+\t\t\t\tif (width > layoutRect.w) {\n
+\t\t\t\t\tx = layoutRect.x - Math.max(0, width - layoutRect.w);\n
+\t\t\t\t\tself.layoutRect({w: width, x: x});\n
+\t\t\t\t\tneedsRecalc = true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Recalc body and disable auto resize\n
+\t\t\tif (needsRecalc) {\n
+\t\t\t\tself.recalc();\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Initializes the current controls layout rect.\n
+\t\t * This will be executed by the layout managers to determine the\n
+\t\t * default minWidth/minHeight etc.\n
+\t\t *\n
+\t\t * @method initLayoutRect\n
+\t\t * @return {Object} Layout rect instance.\n
+\t\t */\n
+\t\tinitLayoutRect: function() {\n
+\t\t\tvar self = this, layoutRect = self._super(), deltaH = 0, headEl;\n
+\n
+\t\t\t// Reserve vertical space for title\n
+\t\t\tif (self.settings.title && !self._fullscreen) {\n
+\t\t\t\theadEl = self.getEl(\'head\');\n
+\n
+\t\t\t\tvar size = DomUtils.getSize(headEl);\n
+\n
+\t\t\t\tlayoutRect.headerW = size.width;\n
+\t\t\t\tlayoutRect.headerH = size.height;\n
+\n
+\t\t\t\tdeltaH += layoutRect.headerH;\n
+\t\t\t}\n
+\n
+\t\t\t// Reserve vertical space for statusbar\n
+\t\t\tif (self.statusbar) {\n
+\t\t\t\tdeltaH += self.statusbar.layoutRect().h;\n
+\t\t\t}\n
+\n
+\t\t\tlayoutRect.deltaH += deltaH;\n
+\t\t\tlayoutRect.minH += deltaH;\n
+\t\t\t//layoutRect.innerH -= deltaH;\n
+\t\t\tlayoutRect.h += deltaH;\n
+\n
+\t\t\tvar rect = DomUtils.getWindowSize();\n
+\n
+\t\t\tlayoutRect.x = self.settings.x || Math.max(0, rect.w / 2 - layoutRect.w / 2);\n
+\t\t\tlayoutRect.y = self.settings.y || Math.max(0, rect.h / 2 - layoutRect.h / 2);\n
+\n
+\t\t\treturn layoutRect;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, layout = self._layout, id = self._id, prefix = self.classPrefix;\n
+\t\t\tvar settings = self.settings, headerHtml = \'\', footerHtml = \'\', html = settings.html;\n
+\n
+\t\t\tself.preRender();\n
+\t\t\tlayout.preRender(self);\n
+\n
+\t\t\tif (settings.title) {\n
+\t\t\t\theaderHtml = (\n
+\t\t\t\t\t\'<div id="\' + id + \'-head" class="\' + prefix + \'window-head">\' +\n
+\t\t\t\t\t\t\'<div id="\' + id + \'-title" class="\' + prefix + \'title">\' + self.encode(settings.title) + \'</div>\' +\n
+\t\t\t\t\t\t\'<button type="button" class="\' + prefix + \'close" aria-hidden="true">\\u00d7</button>\' +\n
+\t\t\t\t\t\t\'<div id="\' + id + \'-dragh" class="\' + prefix + \'dragh"></div>\' +\n
+\t\t\t\t\t\'</div>\'\n
+\t\t\t\t);\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.url) {\n
+\t\t\t\thtml = \'<iframe src="\' + settings.url + \'" tabindex="-1"></iframe>\';\n
+\t\t\t}\n
+\n
+\t\t\tif (typeof html == "undefined") {\n
+\t\t\t\thtml = layout.renderHtml(self);\n
+\t\t\t}\n
+\n
+\t\t\tif (self.statusbar) {\n
+\t\t\t\tfooterHtml = self.statusbar.renderHtml();\n
+\t\t\t}\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + id + \'" class="\' + self.classes + \'" hidefocus="1">\' +\n
+\t\t\t\t\t\'<div class="\' + self.classPrefix + \'reset" role="application">\' +\n
+\t\t\t\t\t\theaderHtml +\n
+\t\t\t\t\t\t\'<div id="\' + id + \'-body" class="\' + self.bodyClasses + \'">\' +\n
+\t\t\t\t\t\t\thtml +\n
+\t\t\t\t\t\t\'</div>\' +\n
+\t\t\t\t\t\tfooterHtml +\n
+\t\t\t\t\t\'</div>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Switches the window fullscreen mode.\n
+\t\t *\n
+\t\t * @method fullscreen\n
+\t\t * @param {Boolean} state True/false state.\n
+\t\t * @return {tinymce.ui.Window} Current window instance.\n
+\t\t */\n
+\t\tfullscreen: function(state) {\n
+\t\t\tvar self = this, documentElement = document.documentElement, slowRendering, prefix = self.classPrefix, layoutRect;\n
+\n
+\t\t\tif (state != self._fullscreen) {\n
+\t\t\t\t$(window).on(\'resize\', function() {\n
+\t\t\t\t\tvar time;\n
+\n
+\t\t\t\t\tif (self._fullscreen) {\n
+\t\t\t\t\t\t// Time the layout time if it\'s to slow use a timeout to not hog the CPU\n
+\t\t\t\t\t\tif (!slowRendering) {\n
+\t\t\t\t\t\t\ttime = new Date().getTime();\n
+\n
+\t\t\t\t\t\t\tvar rect = DomUtils.getWindowSize();\n
+\t\t\t\t\t\t\tself.moveTo(0, 0).resizeTo(rect.w, rect.h);\n
+\n
+\t\t\t\t\t\t\tif ((new Date().getTime()) - time > 50) {\n
+\t\t\t\t\t\t\t\tslowRendering = true;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tif (!self._timer) {\n
+\t\t\t\t\t\t\t\tself._timer = setTimeout(function() {\n
+\t\t\t\t\t\t\t\t\tvar rect = DomUtils.getWindowSize();\n
+\t\t\t\t\t\t\t\t\tself.moveTo(0, 0).resizeTo(rect.w, rect.h);\n
+\n
+\t\t\t\t\t\t\t\t\tself._timer = 0;\n
+\t\t\t\t\t\t\t\t}, 50);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tlayoutRect = self.layoutRect();\n
+\t\t\t\tself._fullscreen = state;\n
+\n
+\t\t\t\tif (!state) {\n
+\t\t\t\t\tself.borderBox = BoxUtils.parseBox(self.settings.border);\n
+\t\t\t\t\tself.getEl(\'head\').style.display = \'\';\n
+\t\t\t\t\tlayoutRect.deltaH += layoutRect.headerH;\n
+\t\t\t\t\t$([documentElement, document.body]).removeClass(prefix + \'fullscreen\');\n
+\t\t\t\t\tself.classes.remove(\'fullscreen\');\n
+\t\t\t\t\tself.moveTo(self._initial.x, self._initial.y).resizeTo(self._initial.w, self._initial.h);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tself._initial = {x: layoutRect.x, y: layoutRect.y, w: layoutRect.w, h: layoutRect.h};\n
+\n
+\t\t\t\t\tself.borderBox = BoxUtils.parseBox(\'0\');\n
+\t\t\t\t\tself.getEl(\'head\').style.display = \'none\';\n
+\t\t\t\t\tlayoutRect.deltaH -= layoutRect.headerH + 2;\n
+\t\t\t\t\t$([documentElement, document.body]).addClass(prefix + \'fullscreen\');\n
+\t\t\t\t\tself.classes.add(\'fullscreen\');\n
+\n
+\t\t\t\t\tvar rect = DomUtils.getWindowSize();\n
+\t\t\t\t\tself.moveTo(0, 0).resizeTo(rect.w, rect.h);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn self.reflow();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Called after the control has been rendered.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this, startPos;\n
+\n
+\t\t\tsetTimeout(function() {\n
+\t\t\t\tself.classes.add(\'in\');\n
+\t\t\t}, 0);\n
+\n
+\t\t\tself._super();\n
+\n
+\t\t\tif (self.statusbar) {\n
+\t\t\t\tself.statusbar.postRender();\n
+\t\t\t}\n
+\n
+\t\t\tself.focus();\n
+\n
+\t\t\tthis.dragHelper = new DragHelper(self._id + \'-dragh\', {\n
+\t\t\t\tstart: function() {\n
+\t\t\t\t\tstartPos = {\n
+\t\t\t\t\t\tx: self.layoutRect().x,\n
+\t\t\t\t\t\ty: self.layoutRect().y\n
+\t\t\t\t\t};\n
+\t\t\t\t},\n
+\n
+\t\t\t\tdrag: function(e) {\n
+\t\t\t\t\tself.moveTo(startPos.x + e.deltaX, startPos.y + e.deltaY);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself.on(\'submit\', function(e) {\n
+\t\t\t\tif (!e.isDefaultPrevented()) {\n
+\t\t\t\t\tself.close();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\twindows.push(self);\n
+\t\t\ttoggleFullScreenState(true);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Fires a submit event with the serialized form.\n
+\t\t *\n
+\t\t * @method submit\n
+\t\t * @return {Object} Event arguments object.\n
+\t\t */\n
+\t\tsubmit: function() {\n
+\t\t\treturn this.fire(\'submit\', {data: this.toJSON()});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the current control from DOM and from UI collections.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tremove: function() {\n
+\t\t\tvar self = this, i;\n
+\n
+\t\t\tself.dragHelper.destroy();\n
+\t\t\tself._super();\n
+\n
+\t\t\tif (self.statusbar) {\n
+\t\t\t\tthis.statusbar.remove();\n
+\t\t\t}\n
+\n
+\t\t\ti = windows.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tif (windows[i] === self) {\n
+\t\t\t\t\twindows.splice(i, 1);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\ttoggleFullScreenState(windows.length > 0);\n
+\t\t\ttoggleBodyFullScreenClasses(self.classPrefix);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the contentWindow object of the iframe if it exists.\n
+\t\t *\n
+\t\t * @method getContentWindow\n
+\t\t * @return {Window} window object or null.\n
+\t\t */\n
+\t\tgetContentWindow: function() {\n
+\t\t\tvar ifr = this.getEl().getElementsByTagName(\'iframe\')[0];\n
+\t\t\treturn ifr ? ifr.contentWindow : null;\n
+\t\t}\n
+\t});\n
+\n
+\tif (!Env.desktop) {\n
+\t\thandleWindowResize();\n
+\t}\n
+\n
+\treturn Window;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11349</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Window.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,2400 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268354.22</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Formatter.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>69779</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Formatter.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Formatter.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Text formatter engine class. This class is used to apply formats like bold, italic, font size\n
+ * etc to the current selection or specific nodes. This engine was build to replace the browsers\n
+ * default formatting logic for execCommand due to it\'s inconsistent and buggy behavior.\n
+ *\n
+ * @class tinymce.Formatter\n
+ * @example\n
+ *  tinymce.activeEditor.formatter.register(\'mycustomformat\', {\n
+ *    inline: \'span\',\n
+ *    styles: {color: \'#ff0000\'}\n
+ *  });\n
+ *\n
+ *  tinymce.activeEditor.formatter.apply(\'mycustomformat\');\n
+ */\n
+define("tinymce/Formatter", [\n
+\t"tinymce/dom/TreeWalker",\n
+\t"tinymce/dom/RangeUtils",\n
+\t"tinymce/dom/BookmarkManager",\n
+\t"tinymce/dom/ElementUtils",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/fmt/Preview"\n
+], function(TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Tools, Preview) {\n
+\t/**\n
+\t * Constructs a new formatter instance.\n
+\t *\n
+\t * @constructor Formatter\n
+\t * @param {tinymce.Editor} ed Editor instance to construct the formatter engine to.\n
+\t */\n
+\treturn function(ed) {\n
+\t\tvar formats = {},\n
+\t\t\tdom = ed.dom,\n
+\t\t\tselection = ed.selection,\n
+\t\t\trangeUtils = new RangeUtils(dom),\n
+\t\t\tisValid = ed.schema.isValidChild,\n
+\t\t\tisBlock = dom.isBlock,\n
+\t\t\tforcedRootBlock = ed.settings.forced_root_block,\n
+\t\t\tnodeIndex = dom.nodeIndex,\n
+\t\t\tINVISIBLE_CHAR = \'\\uFEFF\',\n
+\t\t\tMCE_ATTR_RE = /^(src|href|style)$/,\n
+\t\t\tFALSE = false,\n
+\t\t\tTRUE = true,\n
+\t\t\tformatChangeData,\n
+\t\t\tundef,\n
+\t\t\tgetContentEditable = dom.getContentEditable,\n
+\t\t\tdisableCaretContainer,\n
+\t\t\tmarkCaretContainersBogus,\n
+\t\t\tisBookmarkNode = BookmarkManager.isBookmarkNode;\n
+\n
+\t\tvar each = Tools.each,\n
+\t\t\tgrep = Tools.grep,\n
+\t\t\twalk = Tools.walk,\n
+\t\t\textend = Tools.extend;\n
+\n
+\t\tfunction isTextBlock(name) {\n
+\t\t\tif (name.nodeType) {\n
+\t\t\t\tname = name.nodeName;\n
+\t\t\t}\n
+\n
+\t\t\treturn !!ed.schema.getTextBlockElements()[name.toLowerCase()];\n
+\t\t}\n
+\n
+\t\tfunction isTableCell(node) {\n
+\t\t\treturn /^(TH|TD)$/.test(node.nodeName);\n
+\t\t}\n
+\n
+\t\tfunction isInlineBlock(node) {\n
+\t\t\treturn node && /^(IMG)$/.test(node.nodeName);\n
+\t\t}\n
+\n
+\t\tfunction getParents(node, selector) {\n
+\t\t\treturn dom.getParents(node, selector, dom.getRoot());\n
+\t\t}\n
+\n
+\t\tfunction isCaretNode(node) {\n
+\t\t\treturn node.nodeType === 1 && node.id === \'_mce_caret\';\n
+\t\t}\n
+\n
+\t\tfunction defaultFormats() {\n
+\t\t\tregister({\n
+\t\t\t\tvaligntop: [\n
+\t\t\t\t\t{selector: \'td,th\', styles: {\'verticalAlign\': \'top\'}}\n
+\t\t\t\t],\n
+\n
+\t\t\t\tvalignmiddle: [\n
+\t\t\t\t\t{selector: \'td,th\', styles: {\'verticalAlign\': \'middle\'}}\n
+\t\t\t\t],\n
+\n
+\t\t\t\tvalignbottom: [\n
+\t\t\t\t\t{selector: \'td,th\', styles: {\'verticalAlign\': \'bottom\'}}\n
+\t\t\t\t],\n
+\n
+\t\t\t\talignleft: [\n
+\t\t\t\t\t{selector: \'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li\', styles: {textAlign: \'left\'}, defaultBlock: \'div\'},\n
+\t\t\t\t\t{selector: \'img,table\', collapsed: false, styles: {\'float\': \'left\'}}\n
+\t\t\t\t],\n
+\n
+\t\t\t\taligncenter: [\n
+\t\t\t\t\t{selector: \'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li\', styles: {textAlign: \'center\'}, defaultBlock: \'div\'},\n
+\t\t\t\t\t{selector: \'img\', collapsed: false, styles: {display: \'block\', marginLeft: \'auto\', marginRight: \'auto\'}},\n
+\t\t\t\t\t{selector: \'table\', collapsed: false, styles: {marginLeft: \'auto\', marginRight: \'auto\'}}\n
+\t\t\t\t],\n
+\n
+\t\t\t\talignright: [\n
+\t\t\t\t\t{selector: \'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li\', styles: {textAlign: \'right\'}, defaultBlock: \'div\'},\n
+\t\t\t\t\t{selector: \'img,table\', collapsed: false, styles: {\'float\': \'right\'}}\n
+\t\t\t\t],\n
+\n
+\t\t\t\talignjustify: [\n
+\t\t\t\t\t{selector: \'figure,p,h1,h2,h3,h4,h5,h6,td,th,tr,div,ul,ol,li\', styles: {textAlign: \'justify\'}, defaultBlock: \'div\'}\n
+\t\t\t\t],\n
+\n
+\t\t\t\tbold: [\n
+\t\t\t\t\t{inline: \'strong\', remove: \'all\'},\n
+\t\t\t\t\t{inline: \'span\', styles: {fontWeight: \'bold\'}},\n
+\t\t\t\t\t{inline: \'b\', remove: \'all\'}\n
+\t\t\t\t],\n
+\n
+\t\t\t\titalic: [\n
+\t\t\t\t\t{inline: \'em\', remove: \'all\'},\n
+\t\t\t\t\t{inline: \'span\', styles: {fontStyle: \'italic\'}},\n
+\t\t\t\t\t{inline: \'i\', remove: \'all\'}\n
+\t\t\t\t],\n
+\n
+\t\t\t\tunderline: [\n
+\t\t\t\t\t{inline: \'span\', styles: {textDecoration: \'underline\'}, exact: true},\n
+\t\t\t\t\t{inline: \'u\', remove: \'all\'}\n
+\t\t\t\t],\n
+\n
+\t\t\t\tstrikethrough: [\n
+\t\t\t\t\t{inline: \'span\', styles: {textDecoration: \'line-through\'}, exact: true},\n
+\t\t\t\t\t{inline: \'strike\', remove: \'all\'}\n
+\t\t\t\t],\n
+\n
+\t\t\t\tforecolor: {inline: \'span\', styles: {color: \'%value\'}, links: true, remove_similar: true},\n
+\t\t\t\thilitecolor: {inline: \'span\', styles: {backgroundColor: \'%value\'}, links: true, remove_similar: true},\n
+\t\t\t\tfontname: {inline: \'span\', styles: {fontFamily: \'%value\'}},\n
+\t\t\t\tfontsize: {inline: \'span\', styles: {fontSize: \'%value\'}},\n
+\t\t\t\tfontsize_class: {inline: \'span\', attributes: {\'class\': \'%value\'}},\n
+\t\t\t\tblockquote: {block: \'blockquote\', wrapper: 1, remove: \'all\'},\n
+\t\t\t\tsubscript: {inline: \'sub\'},\n
+\t\t\t\tsuperscript: {inline: \'sup\'},\n
+\t\t\t\tcode: {inline: \'code\'},\n
+\n
+\t\t\t\tlink: {inline: \'a\', selector: \'a\', remove: \'all\', split: true, deep: true,\n
+\t\t\t\t\tonmatch: function() {\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tonformat: function(elm, fmt, vars) {\n
+\t\t\t\t\t\teach(vars, function(value, key) {\n
+\t\t\t\t\t\t\tdom.setAttrib(elm, key, value);\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\t\t\t\t},\n
+\n
+\t\t\t\tremoveformat: [\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\tselector: \'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins\',\n
+\t\t\t\t\t\tremove: \'all\',\n
+\t\t\t\t\t\tsplit: true,\n
+\t\t\t\t\t\texpand: false,\n
+\t\t\t\t\t\tblock_expand: true,\n
+\t\t\t\t\t\tdeep: true\n
+\t\t\t\t\t},\n
+\t\t\t\t\t{selector: \'span\', attributes: [\'style\', \'class\'], remove: \'empty\', split: true, expand: false, deep: true},\n
+\t\t\t\t\t{selector: \'*\', attributes: [\'style\', \'class\'], split: false, expand: false, deep: true}\n
+\t\t\t\t]\n
+\t\t\t});\n
+\n
+\t\t\t// Register default block formats\n
+\t\t\teach(\'p h1 h2 h3 h4 h5 h6 div address pre div dt dd samp\'.split(/\\s/), function(name) {\n
+\t\t\t\tregister(name, {block: name, remove: \'all\'});\n
+\t\t\t});\n
+\n
+\t\t\t// Register user defined formats\n
+\t\t\tregister(ed.settings.formats);\n
+\t\t}\n
+\n
+\t\tfunction addKeyboardShortcuts() {\n
+\t\t\t// Add some inline shortcuts\n
+\t\t\ted.addShortcut(\'meta+b\', \'bold_desc\', \'Bold\');\n
+\t\t\ted.addShortcut(\'meta+i\', \'italic_desc\', \'Italic\');\n
+\t\t\ted.addShortcut(\'meta+u\', \'underline_desc\', \'Underline\');\n
+\n
+\t\t\t// BlockFormat shortcuts keys\n
+\t\t\tfor (var i = 1; i <= 6; i++) {\n
+\t\t\t\ted.addShortcut(\'access+\' + i, \'\', [\'FormatBlock\', false, \'h\' + i]);\n
+\t\t\t}\n
+\n
+\t\t\ted.addShortcut(\'access+7\', \'\', [\'FormatBlock\', false, \'p\']);\n
+\t\t\ted.addShortcut(\'access+8\', \'\', [\'FormatBlock\', false, \'div\']);\n
+\t\t\ted.addShortcut(\'access+9\', \'\', [\'FormatBlock\', false, \'address\']);\n
+\t\t}\n
+\n
+\t\t// Public functions\n
+\n
+\t\t/**\n
+\t\t * Returns the format by name or all formats if no name is specified.\n
+\t\t *\n
+\t\t * @method get\n
+\t\t * @param {String} name Optional name to retrive by.\n
+\t\t * @return {Array/Object} Array/Object with all registred formats or a specific format.\n
+\t\t */\n
+\t\tfunction get(name) {\n
+\t\t\treturn name ? formats[name] : formats;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Registers a specific format by name.\n
+\t\t *\n
+\t\t * @method register\n
+\t\t * @param {Object/String} name Name of the format for example "bold".\n
+\t\t * @param {Object/Array} format Optional format object or array of format variants\n
+\t\t * can only be omitted if the first arg is an object.\n
+\t\t */\n
+\t\tfunction register(name, format) {\n
+\t\t\tif (name) {\n
+\t\t\t\tif (typeof name !== \'string\') {\n
+\t\t\t\t\teach(name, function(format, name) {\n
+\t\t\t\t\t\tregister(name, format);\n
+\t\t\t\t\t});\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// Force format into array and add it to internal collection\n
+\t\t\t\t\tformat = format.length ? format : [format];\n
+\n
+\t\t\t\t\teach(format, function(format) {\n
+\t\t\t\t\t\t// Set deep to false by default on selector formats this to avoid removing\n
+\t\t\t\t\t\t// alignment on images inside paragraphs when alignment is changed on paragraphs\n
+\t\t\t\t\t\tif (format.deep === undef) {\n
+\t\t\t\t\t\t\tformat.deep = !format.selector;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Default to true\n
+\t\t\t\t\t\tif (format.split === undef) {\n
+\t\t\t\t\t\t\tformat.split = !format.selector || format.inline;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Default to true\n
+\t\t\t\t\t\tif (format.remove === undef && format.selector && !format.inline) {\n
+\t\t\t\t\t\t\tformat.remove = \'none\';\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Mark format as a mixed format inline + block level\n
+\t\t\t\t\t\tif (format.selector && format.inline) {\n
+\t\t\t\t\t\t\tformat.mixed = true;\n
+\t\t\t\t\t\t\tformat.block_expand = true;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Split classes if needed\n
+\t\t\t\t\t\tif (typeof format.classes === \'string\') {\n
+\t\t\t\t\t\t\tformat.classes = format.classes.split(/\\s+/);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\tformats[name] = format;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Unregister a specific format by name.\n
+\t\t *\n
+\t\t * @method unregister\n
+\t\t * @param {String} name Name of the format for example "bold".\n
+\t\t */\n
+\t\tfunction unregister(name) {\n
+\t\t\tif (name && formats[name]) {\n
+\t\t\t\tdelete formats[name];\n
+\t\t\t}\n
+\n
+\t\t\treturn formats;\n
+\t\t}\n
+\n
+\t\tfunction getTextDecoration(node) {\n
+\t\t\tvar decoration;\n
+\n
+\t\t\ted.dom.getParent(node, function(n) {\n
+\t\t\t\tdecoration = ed.dom.getStyle(n, \'text-decoration\');\n
+\t\t\t\treturn decoration && decoration !== \'none\';\n
+\t\t\t});\n
+\n
+\t\t\treturn decoration;\n
+\t\t}\n
+\n
+\t\tfunction processUnderlineAndColor(node) {\n
+\t\t\tvar textDecoration;\n
+\t\t\tif (node.nodeType === 1 && node.parentNode && node.parentNode.nodeType === 1) {\n
+\t\t\t\ttextDecoration = getTextDecoration(node.parentNode);\n
+\t\t\t\tif (ed.dom.getStyle(node, \'color\') && textDecoration) {\n
+\t\t\t\t\ted.dom.setStyle(node, \'text-decoration\', textDecoration);\n
+\t\t\t\t} else if (ed.dom.getStyle(node, \'text-decoration\') === textDecoration) {\n
+\t\t\t\t\ted.dom.setStyle(node, \'text-decoration\', null);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Applies the specified format to the current selection or specified node.\n
+\t\t *\n
+\t\t * @method apply\n
+\t\t * @param {String} name Name of format to apply.\n
+\t\t * @param {Object} vars Optional list of variables to replace within format before applying it.\n
+\t\t * @param {Node} node Optional node to apply the format to defaults to current selection.\n
+\t\t */\n
+\t\tfunction apply(name, vars, node) {\n
+\t\t\tvar formatList = get(name), format = formatList[0], bookmark, rng, isCollapsed = !node && selection.isCollapsed();\n
+\n
+\t\t\tfunction setElementFormat(elm, fmt) {\n
+\t\t\t\tfmt = fmt || format;\n
+\n
+\t\t\t\tif (elm) {\n
+\t\t\t\t\tif (fmt.onformat) {\n
+\t\t\t\t\t\tfmt.onformat(elm, fmt, vars, node);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teach(fmt.styles, function(value, name) {\n
+\t\t\t\t\t\tdom.setStyle(elm, name, replaceVars(value, vars));\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// Needed for the WebKit span spam bug\n
+\t\t\t\t\t// TODO: Remove this once WebKit/Blink fixes this\n
+\t\t\t\t\tif (fmt.styles) {\n
+\t\t\t\t\t\tvar styleVal = dom.getAttrib(elm, \'style\');\n
+\n
+\t\t\t\t\t\tif (styleVal) {\n
+\t\t\t\t\t\t\telm.setAttribute(\'data-mce-style\', styleVal);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teach(fmt.attributes, function(value, name) {\n
+\t\t\t\t\t\tdom.setAttrib(elm, name, replaceVars(value, vars));\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\teach(fmt.classes, function(value) {\n
+\t\t\t\t\t\tvalue = replaceVars(value, vars);\n
+\n
+\t\t\t\t\t\tif (!dom.hasClass(elm, value)) {\n
+\t\t\t\t\t\t\tdom.addClass(elm, value);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction adjustSelectionToVisibleSelection() {\n
+\t\t\t\tfunction findSelectionEnd(start, end) {\n
+\t\t\t\t\tvar walker = new TreeWalker(end);\n
+\t\t\t\t\tfor (node = walker.current(); node; node = walker.prev()) {\n
+\t\t\t\t\t\tif (node.childNodes.length > 1 || node == start || node.tagName == \'BR\') {\n
+\t\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Adjust selection so that a end container with a end offset of zero is not included in the selection\n
+\t\t\t\t// as this isn\'t visible to the user.\n
+\t\t\t\tvar rng = ed.selection.getRng();\n
+\t\t\t\tvar start = rng.startContainer;\n
+\t\t\t\tvar end = rng.endContainer;\n
+\n
+\t\t\t\tif (start != end && rng.endOffset === 0) {\n
+\t\t\t\t\tvar newEnd = findSelectionEnd(start, end);\n
+\t\t\t\t\tvar endOffset = newEnd.nodeType == 3 ? newEnd.length : newEnd.childNodes.length;\n
+\n
+\t\t\t\t\trng.setEnd(newEnd, endOffset);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn rng;\n
+\t\t\t}\n
+\n
+\t\t\tfunction applyRngStyle(rng, bookmark, node_specific) {\n
+\t\t\t\tvar newWrappers = [], wrapName, wrapElm, contentEditable = true;\n
+\n
+\t\t\t\t// Setup wrapper element\n
+\t\t\t\twrapName = format.inline || format.block;\n
+\t\t\t\twrapElm = dom.create(wrapName);\n
+\t\t\t\tsetElementFormat(wrapElm);\n
+\n
+\t\t\t\trangeUtils.walk(rng, function(nodes) {\n
+\t\t\t\t\tvar currentWrapElm;\n
+\n
+\t\t\t\t\t/**\n
+\t\t\t\t\t * Process a list of nodes wrap them.\n
+\t\t\t\t\t */\n
+\t\t\t\t\tfunction process(node) {\n
+\t\t\t\t\t\tvar nodeName, parentName, found, hasContentEditableState, lastContentEditable;\n
+\n
+\t\t\t\t\t\tlastContentEditable = contentEditable;\n
+\t\t\t\t\t\tnodeName = node.nodeName.toLowerCase();\n
+\t\t\t\t\t\tparentName = node.parentNode.nodeName.toLowerCase();\n
+\n
+\t\t\t\t\t\t// Node has a contentEditable value\n
+\t\t\t\t\t\tif (node.nodeType === 1 && getContentEditable(node)) {\n
+\t\t\t\t\t\t\tlastContentEditable = contentEditable;\n
+\t\t\t\t\t\t\tcontentEditable = getContentEditable(node) === "true";\n
+\t\t\t\t\t\t\thasContentEditableState = true; // We don\'t want to wrap the container only it\'s children\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Stop wrapping on br elements\n
+\t\t\t\t\t\tif (isEq(nodeName, \'br\')) {\n
+\t\t\t\t\t\t\tcurrentWrapElm = 0;\n
+\n
+\t\t\t\t\t\t\t// Remove any br elements when we wrap things\n
+\t\t\t\t\t\t\tif (format.block) {\n
+\t\t\t\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// If node is wrapper type\n
+\t\t\t\t\t\tif (format.wrapper && matchNode(node, name, vars)) {\n
+\t\t\t\t\t\t\tcurrentWrapElm = 0;\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Can we rename the block\n
+\t\t\t\t\t\t// TODO: Break this if up, too complex\n
+\t\t\t\t\t\tif (contentEditable && !hasContentEditableState && format.block &&\n
+\t\t\t\t\t\t\t!format.wrapper && isTextBlock(nodeName) && isValid(parentName, wrapName)) {\n
+\t\t\t\t\t\t\tnode = dom.rename(node, wrapName);\n
+\t\t\t\t\t\t\tsetElementFormat(node);\n
+\t\t\t\t\t\t\tnewWrappers.push(node);\n
+\t\t\t\t\t\t\tcurrentWrapElm = 0;\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Handle selector patterns\n
+\t\t\t\t\t\tif (format.selector) {\n
+\t\t\t\t\t\t\t// Look for matching formats\n
+\t\t\t\t\t\t\teach(formatList, function(format) {\n
+\t\t\t\t\t\t\t\t// Check collapsed state if it exists\n
+\t\t\t\t\t\t\t\tif (\'collapsed\' in format && format.collapsed !== isCollapsed) {\n
+\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\tif (dom.is(node, format.selector) && !isCaretNode(node)) {\n
+\t\t\t\t\t\t\t\t\tsetElementFormat(node, format);\n
+\t\t\t\t\t\t\t\t\tfound = true;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t\t// Continue processing if a selector match wasn\'t found and a inline element is defined\n
+\t\t\t\t\t\t\tif (!format.inline || found) {\n
+\t\t\t\t\t\t\t\tcurrentWrapElm = 0;\n
+\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Is it valid to wrap this item\n
+\t\t\t\t\t\t// TODO: Break this if up, too complex\n
+\t\t\t\t\t\tif (contentEditable && !hasContentEditableState && isValid(wrapName, nodeName) && isValid(parentName, wrapName) &&\n
+\t\t\t\t\t\t\t\t!(!node_specific && node.nodeType === 3 &&\n
+\t\t\t\t\t\t\t\tnode.nodeValue.length === 1 &&\n
+\t\t\t\t\t\t\t\tnode.nodeValue.charCodeAt(0) === 65279) &&\n
+\t\t\t\t\t\t\t\t!isCaretNode(node) &&\n
+\t\t\t\t\t\t\t\t(!format.inline || !isBlock(node))) {\n
+\t\t\t\t\t\t\t// Start wrapping\n
+\t\t\t\t\t\t\tif (!currentWrapElm) {\n
+\t\t\t\t\t\t\t\t// Wrap the node\n
+\t\t\t\t\t\t\t\tcurrentWrapElm = dom.clone(wrapElm, FALSE);\n
+\t\t\t\t\t\t\t\tnode.parentNode.insertBefore(currentWrapElm, node);\n
+\t\t\t\t\t\t\t\tnewWrappers.push(currentWrapElm);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tcurrentWrapElm.appendChild(node);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t// Start a new wrapper for possible children\n
+\t\t\t\t\t\t\tcurrentWrapElm = 0;\n
+\n
+\t\t\t\t\t\t\teach(grep(node.childNodes), process);\n
+\n
+\t\t\t\t\t\t\tif (hasContentEditableState) {\n
+\t\t\t\t\t\t\t\tcontentEditable = lastContentEditable; // Restore last contentEditable state from stack\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// End the last wrapper\n
+\t\t\t\t\t\t\tcurrentWrapElm = 0;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Process siblings from range\n
+\t\t\t\t\teach(nodes, process);\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Apply formats to links as well to get the color of the underline to change as well\n
+\t\t\t\tif (format.links === true) {\n
+\t\t\t\t\teach(newWrappers, function(node) {\n
+\t\t\t\t\t\tfunction process(node) {\n
+\t\t\t\t\t\t\tif (node.nodeName === \'A\') {\n
+\t\t\t\t\t\t\t\tsetElementFormat(node, format);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\teach(grep(node.childNodes), process);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tprocess(node);\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Cleanup\n
+\t\t\t\teach(newWrappers, function(node) {\n
+\t\t\t\t\tvar childCount;\n
+\n
+\t\t\t\t\tfunction getChildCount(node) {\n
+\t\t\t\t\t\tvar count = 0;\n
+\n
+\t\t\t\t\t\teach(node.childNodes, function(node) {\n
+\t\t\t\t\t\t\tif (!isWhiteSpaceNode(node) && !isBookmarkNode(node)) {\n
+\t\t\t\t\t\t\t\tcount++;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\treturn count;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tfunction mergeStyles(node) {\n
+\t\t\t\t\t\tvar child, clone;\n
+\n
+\t\t\t\t\t\teach(node.childNodes, function(node) {\n
+\t\t\t\t\t\t\tif (node.nodeType == 1 && !isBookmarkNode(node) && !isCaretNode(node)) {\n
+\t\t\t\t\t\t\t\tchild = node;\n
+\t\t\t\t\t\t\t\treturn FALSE; // break loop\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t// If child was found and of the same type as the current node\n
+\t\t\t\t\t\tif (child && !isBookmarkNode(child) && matchName(child, format)) {\n
+\t\t\t\t\t\t\tclone = dom.clone(child, FALSE);\n
+\t\t\t\t\t\t\tsetElementFormat(clone);\n
+\n
+\t\t\t\t\t\t\tdom.replace(clone, node, TRUE);\n
+\t\t\t\t\t\t\tdom.remove(child, 1);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn clone || node;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tchildCount = getChildCount(node);\n
+\n
+\t\t\t\t\t// Remove empty nodes but only if there is multiple wrappers and they are not block\n
+\t\t\t\t\t// elements so never remove single <h1></h1> since that would remove the\n
+\t\t\t\t\t// currrent empty block element where the caret is at\n
+\t\t\t\t\tif ((newWrappers.length > 1 || !isBlock(node)) && childCount === 0) {\n
+\t\t\t\t\t\tdom.remove(node, 1);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (format.inline || format.wrapper) {\n
+\t\t\t\t\t\t// Merges the current node with it\'s children of similar type to reduce the number of elements\n
+\t\t\t\t\t\tif (!format.exact && childCount === 1) {\n
+\t\t\t\t\t\t\tnode = mergeStyles(node);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Remove/merge children\n
+\t\t\t\t\t\teach(formatList, function(format) {\n
+\t\t\t\t\t\t\t// Merge all children of similar type will move styles from child to parent\n
+\t\t\t\t\t\t\t// this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>\n
+\t\t\t\t\t\t\t// will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>\n
+\t\t\t\t\t\t\teach(dom.select(format.inline, node), function(child) {\n
+\t\t\t\t\t\t\t\tif (isBookmarkNode(child)) {\n
+\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\tremoveFormat(format, vars, child, format.exact ? child : null);\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t// Remove child if direct parent is of same type\n
+\t\t\t\t\t\tif (matchNode(node.parentNode, name, vars)) {\n
+\t\t\t\t\t\t\tdom.remove(node, 1);\n
+\t\t\t\t\t\t\tnode = 0;\n
+\t\t\t\t\t\t\treturn TRUE;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Look for parent with similar style format\n
+\t\t\t\t\t\tif (format.merge_with_parents) {\n
+\t\t\t\t\t\t\tdom.getParent(node.parentNode, function(parent) {\n
+\t\t\t\t\t\t\t\tif (matchNode(parent, name, vars)) {\n
+\t\t\t\t\t\t\t\t\tdom.remove(node, 1);\n
+\t\t\t\t\t\t\t\t\tnode = 0;\n
+\t\t\t\t\t\t\t\t\treturn TRUE;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>\n
+\t\t\t\t\t\tif (node && format.merge_siblings !== false) {\n
+\t\t\t\t\t\t\tnode = mergeSiblings(getNonWhiteSpaceSibling(node), node);\n
+\t\t\t\t\t\t\tnode = mergeSiblings(node, getNonWhiteSpaceSibling(node, TRUE));\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tif (format) {\n
+\t\t\t\tif (node) {\n
+\t\t\t\t\tif (node.nodeType) {\n
+\t\t\t\t\t\trng = dom.createRng();\n
+\t\t\t\t\t\trng.setStartBefore(node);\n
+\t\t\t\t\t\trng.setEndAfter(node);\n
+\t\t\t\t\t\tapplyRngStyle(expandRng(rng, formatList), null, true);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tapplyRngStyle(node, null, true);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif (!isCollapsed || !format.inline || dom.select(\'td.mce-item-selected,th.mce-item-selected\').length) {\n
+\t\t\t\t\t\t// Obtain selection node before selection is unselected by applyRngStyle()\n
+\t\t\t\t\t\tvar curSelNode = ed.selection.getNode();\n
+\n
+\t\t\t\t\t\t// If the formats have a default block and we can\'t find a parent block then\n
+\t\t\t\t\t\t// start wrapping it with a DIV this is for forced_root_blocks: false\n
+\t\t\t\t\t\t// It\'s kind of a hack but people should be using the default block type P since all desktop editors work that way\n
+\t\t\t\t\t\tif (!forcedRootBlock && formatList[0].defaultBlock && !dom.getParent(curSelNode, dom.isBlock)) {\n
+\t\t\t\t\t\t\tapply(formatList[0].defaultBlock);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Apply formatting to selection\n
+\t\t\t\t\t\ted.selection.setRng(adjustSelectionToVisibleSelection());\n
+\t\t\t\t\t\tbookmark = selection.getBookmark();\n
+\t\t\t\t\t\tapplyRngStyle(expandRng(selection.getRng(TRUE), formatList), bookmark);\n
+\n
+\t\t\t\t\t\t// Colored nodes should be underlined so that the color of the underline matches the text color.\n
+\t\t\t\t\t\tif (format.styles && (format.styles.color || format.styles.textDecoration)) {\n
+\t\t\t\t\t\t\twalk(curSelNode, processUnderlineAndColor, \'childNodes\');\n
+\t\t\t\t\t\t\tprocessUnderlineAndColor(curSelNode);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tselection.moveToBookmark(bookmark);\n
+\t\t\t\t\t\tmoveStart(selection.getRng(TRUE));\n
+\t\t\t\t\t\ted.nodeChanged();\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tperformCaretAction(\'apply\', name, vars);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Removes the specified format from the current selection or specified node.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @param {String} name Name of format to remove.\n
+\t\t * @param {Object} vars Optional list of variables to replace within format before removing it.\n
+\t\t * @param {Node/Range} node Optional node or DOM range to remove the format from defaults to current selection.\n
+\t\t */\n
+\t\tfunction remove(name, vars, node, similar) {\n
+\t\t\tvar formatList = get(name), format = formatList[0], bookmark, rng, contentEditable = true;\n
+\n
+\t\t\t// Merges the styles for each node\n
+\t\t\tfunction process(node) {\n
+\t\t\t\tvar children, i, l, lastContentEditable, hasContentEditableState;\n
+\n
+\t\t\t\t// Node has a contentEditable value\n
+\t\t\t\tif (node.nodeType === 1 && getContentEditable(node)) {\n
+\t\t\t\t\tlastContentEditable = contentEditable;\n
+\t\t\t\t\tcontentEditable = getContentEditable(node) === "true";\n
+\t\t\t\t\thasContentEditableState = true; // We don\'t want to wrap the container only it\'s children\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Grab the children first since the nodelist might be changed\n
+\t\t\t\tchildren = grep(node.childNodes);\n
+\n
+\t\t\t\t// Process current node\n
+\t\t\t\tif (contentEditable && !hasContentEditableState) {\n
+\t\t\t\t\tfor (i = 0, l = formatList.length; i < l; i++) {\n
+\t\t\t\t\t\tif (removeFormat(formatList[i], vars, node, node)) {\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Process the children\n
+\t\t\t\tif (format.deep) {\n
+\t\t\t\t\tif (children.length) {\n
+\t\t\t\t\t\tfor (i = 0, l = children.length; i < l; i++) {\n
+\t\t\t\t\t\t\tprocess(children[i]);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (hasContentEditableState) {\n
+\t\t\t\t\t\t\tcontentEditable = lastContentEditable; // Restore last contentEditable state from stack\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction findFormatRoot(container) {\n
+\t\t\t\tvar formatRoot;\n
+\n
+\t\t\t\t// Find format root\n
+\t\t\t\teach(getParents(container.parentNode).reverse(), function(parent) {\n
+\t\t\t\t\tvar format;\n
+\n
+\t\t\t\t\t// Find format root element\n
+\t\t\t\t\tif (!formatRoot && parent.id != \'_start\' && parent.id != \'_end\') {\n
+\t\t\t\t\t\t// Is the node matching the format we are looking for\n
+\t\t\t\t\t\tformat = matchNode(parent, name, vars, similar);\n
+\t\t\t\t\t\tif (format && format.split !== false) {\n
+\t\t\t\t\t\t\tformatRoot = parent;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn formatRoot;\n
+\t\t\t}\n
+\n
+\t\t\tfunction wrapAndSplit(formatRoot, container, target, split) {\n
+\t\t\t\tvar parent, clone, lastClone, firstClone, i, formatRootParent;\n
+\n
+\t\t\t\t// Format root found then clone formats and split it\n
+\t\t\t\tif (formatRoot) {\n
+\t\t\t\t\tformatRootParent = formatRoot.parentNode;\n
+\n
+\t\t\t\t\tfor (parent = container.parentNode; parent && parent != formatRootParent; parent = parent.parentNode) {\n
+\t\t\t\t\t\tclone = dom.clone(parent, FALSE);\n
+\n
+\t\t\t\t\t\tfor (i = 0; i < formatList.length; i++) {\n
+\t\t\t\t\t\t\tif (removeFormat(formatList[i], vars, clone, clone)) {\n
+\t\t\t\t\t\t\t\tclone = 0;\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Build wrapper node\n
+\t\t\t\t\t\tif (clone) {\n
+\t\t\t\t\t\t\tif (lastClone) {\n
+\t\t\t\t\t\t\t\tclone.appendChild(lastClone);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tif (!firstClone) {\n
+\t\t\t\t\t\t\t\tfirstClone = clone;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tlastClone = clone;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Never split block elements if the format is mixed\n
+\t\t\t\t\tif (split && (!format.mixed || !isBlock(formatRoot))) {\n
+\t\t\t\t\t\tcontainer = dom.split(formatRoot, container);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Wrap container in cloned formats\n
+\t\t\t\t\tif (lastClone) {\n
+\t\t\t\t\t\ttarget.parentNode.insertBefore(lastClone, target);\n
+\t\t\t\t\t\tfirstClone.appendChild(target);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn container;\n
+\t\t\t}\n
+\n
+\t\t\tfunction splitToFormatRoot(container) {\n
+\t\t\t\treturn wrapAndSplit(findFormatRoot(container), container, container, true);\n
+\t\t\t}\n
+\n
+\t\t\tfunction unwrap(start) {\n
+\t\t\t\tvar node = dom.get(start ? \'_start\' : \'_end\'),\n
+\t\t\t\t\tout = node[start ? \'firstChild\' : \'lastChild\'];\n
+\n
+\t\t\t\t// If the end is placed within the start the result will be removed\n
+\t\t\t\t// So this checks if the out node is a bookmark node if it is it\n
+\t\t\t\t// checks for another more suitable node\n
+\t\t\t\tif (isBookmarkNode(out)) {\n
+\t\t\t\t\tout = out[start ? \'firstChild\' : \'lastChild\'];\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Since dom.remove removes empty text nodes then we need to try to find a better node\n
+\t\t\t\tif (out.nodeType == 3 && out.data.length === 0) {\n
+\t\t\t\t\tout = start ? node.previousSibling || node.nextSibling : node.nextSibling || node.previousSibling;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdom.remove(node, true);\n
+\n
+\t\t\t\treturn out;\n
+\t\t\t}\n
+\n
+\t\t\tfunction removeRngStyle(rng) {\n
+\t\t\t\tvar startContainer, endContainer;\n
+\t\t\t\tvar commonAncestorContainer = rng.commonAncestorContainer;\n
+\n
+\t\t\t\trng = expandRng(rng, formatList, TRUE);\n
+\n
+\t\t\t\tif (format.split) {\n
+\t\t\t\t\tstartContainer = getContainer(rng, TRUE);\n
+\t\t\t\t\tendContainer = getContainer(rng);\n
+\n
+\t\t\t\t\tif (startContainer != endContainer) {\n
+\t\t\t\t\t\t// WebKit will render the table incorrectly if we wrap a TH or TD in a SPAN\n
+\t\t\t\t\t\t// so let\'s see if we can use the first child instead\n
+\t\t\t\t\t\t// This will happen if you triple click a table cell and use remove formatting\n
+\t\t\t\t\t\tif (/^(TR|TH|TD)$/.test(startContainer.nodeName) && startContainer.firstChild) {\n
+\t\t\t\t\t\t\tif (startContainer.nodeName == "TR") {\n
+\t\t\t\t\t\t\t\tstartContainer = startContainer.firstChild.firstChild || startContainer;\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tstartContainer = startContainer.firstChild || startContainer;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Try to adjust endContainer as well if cells on the same row were selected - bug #6410\n
+\t\t\t\t\t\tif (commonAncestorContainer &&\n
+\t\t\t\t\t\t\t/^T(HEAD|BODY|FOOT|R)$/.test(commonAncestorContainer.nodeName) &&\n
+\t\t\t\t\t\t\tisTableCell(endContainer) && endContainer.firstChild) {\n
+\t\t\t\t\t\t\tendContainer = endContainer.firstChild || endContainer;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (dom.isChildOf(startContainer, endContainer) && !isBlock(endContainer) &&\n
+\t\t\t\t\t\t\t!isTableCell(startContainer) && !isTableCell(endContainer)) {\n
+\t\t\t\t\t\t\tstartContainer = wrap(startContainer, \'span\', {id: \'_start\', \'data-mce-type\': \'bookmark\'});\n
+\t\t\t\t\t\t\tsplitToFormatRoot(startContainer);\n
+\t\t\t\t\t\t\tstartContainer = unwrap(TRUE);\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Wrap start/end nodes in span element since these might be cloned/moved\n
+\t\t\t\t\t\tstartContainer = wrap(startContainer, \'span\', {id: \'_start\', \'data-mce-type\': \'bookmark\'});\n
+\t\t\t\t\t\tendContainer = wrap(endContainer, \'span\', {id: \'_end\', \'data-mce-type\': \'bookmark\'});\n
+\n
+\t\t\t\t\t\t// Split start/end\n
+\t\t\t\t\t\tsplitToFormatRoot(startContainer);\n
+\t\t\t\t\t\tsplitToFormatRoot(endContainer);\n
+\n
+\t\t\t\t\t\t// Unwrap start/end to get real elements again\n
+\t\t\t\t\t\tstartContainer = unwrap(TRUE);\n
+\t\t\t\t\t\tendContainer = unwrap();\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tstartContainer = endContainer = splitToFormatRoot(startContainer);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Update range positions since they might have changed after the split operations\n
+\t\t\t\t\trng.startContainer = startContainer.parentNode ? startContainer.parentNode : startContainer;\n
+\t\t\t\t\trng.startOffset = nodeIndex(startContainer);\n
+\t\t\t\t\trng.endContainer = endContainer.parentNode ? endContainer.parentNode : endContainer;\n
+\t\t\t\t\trng.endOffset = nodeIndex(endContainer) + 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Remove items between start/end\n
+\t\t\t\trangeUtils.walk(rng, function(nodes) {\n
+\t\t\t\t\teach(nodes, function(node) {\n
+\t\t\t\t\t\tprocess(node);\n
+\n
+\t\t\t\t\t\t// Remove parent span if it only contains text-decoration: underline, yet a parent node is also underlined.\n
+\t\t\t\t\t\tif (node.nodeType === 1 && ed.dom.getStyle(node, \'text-decoration\') === \'underline\' &&\n
+\t\t\t\t\t\t\tnode.parentNode && getTextDecoration(node.parentNode) === \'underline\') {\n
+\t\t\t\t\t\t\tremoveFormat({\n
+\t\t\t\t\t\t\t\t\'deep\': false,\n
+\t\t\t\t\t\t\t\t\'exact\': true,\n
+\t\t\t\t\t\t\t\t\'inline\': \'span\',\n
+\t\t\t\t\t\t\t\t\'styles\': {\n
+\t\t\t\t\t\t\t\t\t\'textDecoration\': \'underline\'\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}, null, node);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// Handle node\n
+\t\t\tif (node) {\n
+\t\t\t\tif (node.nodeType) {\n
+\t\t\t\t\trng = dom.createRng();\n
+\t\t\t\t\trng.setStartBefore(node);\n
+\t\t\t\t\trng.setEndAfter(node);\n
+\t\t\t\t\tremoveRngStyle(rng);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tremoveRngStyle(node);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (!selection.isCollapsed() || !format.inline || dom.select(\'td.mce-item-selected,th.mce-item-selected\').length) {\n
+\t\t\t\tbookmark = selection.getBookmark();\n
+\t\t\t\tremoveRngStyle(selection.getRng(TRUE));\n
+\t\t\t\tselection.moveToBookmark(bookmark);\n
+\n
+\t\t\t\t// Check if start element still has formatting then we are at: "<b>text|</b>text"\n
+\t\t\t\t// and need to move the start into the next text node\n
+\t\t\t\tif (format.inline && match(name, vars, selection.getStart())) {\n
+\t\t\t\t\tmoveStart(selection.getRng(true));\n
+\t\t\t\t}\n
+\n
+\t\t\t\ted.nodeChanged();\n
+\t\t\t} else {\n
+\t\t\t\tperformCaretAction(\'remove\', name, vars, similar);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Toggles the specified format on/off.\n
+\t\t *\n
+\t\t * @method toggle\n
+\t\t * @param {String} name Name of format to apply/remove.\n
+\t\t * @param {Object} vars Optional list of variables to replace within format before applying/removing it.\n
+\t\t * @param {Node} node Optional node to apply the format to or remove from. Defaults to current selection.\n
+\t\t */\n
+\t\tfunction toggle(name, vars, node) {\n
+\t\t\tvar fmt = get(name);\n
+\n
+\t\t\tif (match(name, vars, node) && (!(\'toggle\' in fmt[0]) || fmt[0].toggle)) {\n
+\t\t\t\tremove(name, vars, node);\n
+\t\t\t} else {\n
+\t\t\t\tapply(name, vars, node);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Return true/false if the specified node has the specified format.\n
+\t\t *\n
+\t\t * @method matchNode\n
+\t\t * @param {Node} node Node to check the format on.\n
+\t\t * @param {String} name Format name to check.\n
+\t\t * @param {Object} vars Optional list of variables to replace before checking it.\n
+\t\t * @param {Boolean} similar Match format that has similar properties.\n
+\t\t * @return {Object} Returns the format object it matches or undefined if it doesn\'t match.\n
+\t\t */\n
+\t\tfunction matchNode(node, name, vars, similar) {\n
+\t\t\tvar formatList = get(name), format, i, classes;\n
+\n
+\t\t\tfunction matchItems(node, format, item_name) {\n
+\t\t\t\tvar key, value, items = format[item_name], i;\n
+\n
+\t\t\t\t// Custom match\n
+\t\t\t\tif (format.onmatch) {\n
+\t\t\t\t\treturn format.onmatch(node, format, item_name);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Check all items\n
+\t\t\t\tif (items) {\n
+\t\t\t\t\t// Non indexed object\n
+\t\t\t\t\tif (items.length === undef) {\n
+\t\t\t\t\t\tfor (key in items) {\n
+\t\t\t\t\t\t\tif (items.hasOwnProperty(key)) {\n
+\t\t\t\t\t\t\t\tif (item_name === \'attributes\') {\n
+\t\t\t\t\t\t\t\t\tvalue = dom.getAttrib(node, key);\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\tvalue = getStyle(node, key);\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\tif (similar && !value && !format.exact) {\n
+\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\tif ((!similar || format.exact) && !isEq(value, normalizeStyleValue(replaceVars(items[key], vars), key))) {\n
+\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// Only one match needed for indexed arrays\n
+\t\t\t\t\t\tfor (i = 0; i < items.length; i++) {\n
+\t\t\t\t\t\t\tif (item_name === \'attributes\' ? dom.getAttrib(node, items[i]) : getStyle(node, items[i])) {\n
+\t\t\t\t\t\t\t\treturn format;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn format;\n
+\t\t\t}\n
+\n
+\t\t\tif (formatList && node) {\n
+\t\t\t\t// Check each format in list\n
+\t\t\t\tfor (i = 0; i < formatList.length; i++) {\n
+\t\t\t\t\tformat = formatList[i];\n
+\n
+\t\t\t\t\t// Name name, attributes, styles and classes\n
+\t\t\t\t\tif (matchName(node, format) && matchItems(node, format, \'attributes\') && matchItems(node, format, \'styles\')) {\n
+\t\t\t\t\t\t// Match classes\n
+\t\t\t\t\t\tif ((classes = format.classes)) {\n
+\t\t\t\t\t\t\tfor (i = 0; i < classes.length; i++) {\n
+\t\t\t\t\t\t\t\tif (!dom.hasClass(node, classes[i])) {\n
+\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn format;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Matches the current selection or specified node against the specified format name.\n
+\t\t *\n
+\t\t * @method match\n
+\t\t * @param {String} name Name of format to match.\n
+\t\t * @param {Object} vars Optional list of variables to replace before checking it.\n
+\t\t * @param {Node} node Optional node to check.\n
+\t\t * @return {boolean} true/false if the specified selection/node matches the format.\n
+\t\t */\n
+\t\tfunction match(name, vars, node) {\n
+\t\t\tvar startNode;\n
+\n
+\t\t\tfunction matchParents(node) {\n
+\t\t\t\tvar root = dom.getRoot();\n
+\n
+\t\t\t\tif (node === root) {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Find first node with similar format settings\n
+\t\t\t\tnode = dom.getParent(node, function(node) {\n
+\t\t\t\t\treturn node.parentNode === root || !!matchNode(node, name, vars, true);\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Do an exact check on the similar format element\n
+\t\t\t\treturn matchNode(node, name, vars);\n
+\t\t\t}\n
+\n
+\t\t\t// Check specified node\n
+\t\t\tif (node) {\n
+\t\t\t\treturn matchParents(node);\n
+\t\t\t}\n
+\n
+\t\t\t// Check selected node\n
+\t\t\tnode = selection.getNode();\n
+\t\t\tif (matchParents(node)) {\n
+\t\t\t\treturn TRUE;\n
+\t\t\t}\n
+\n
+\t\t\t// Check start node if it\'s different\n
+\t\t\tstartNode = selection.getStart();\n
+\t\t\tif (startNode != node) {\n
+\t\t\t\tif (matchParents(startNode)) {\n
+\t\t\t\t\treturn TRUE;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn FALSE;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Matches the current selection against the array of formats and returns a new array with matching formats.\n
+\t\t *\n
+\t\t * @method matchAll\n
+\t\t * @param {Array} names Name of format to match.\n
+\t\t * @param {Object} vars Optional list of variables to replace before checking it.\n
+\t\t * @return {Array} Array with matched formats.\n
+\t\t */\n
+\t\tfunction matchAll(names, vars) {\n
+\t\t\tvar startElement, matchedFormatNames = [], checkedMap = {};\n
+\n
+\t\t\t// Check start of selection for formats\n
+\t\t\tstartElement = selection.getStart();\n
+\t\t\tdom.getParent(startElement, function(node) {\n
+\t\t\t\tvar i, name;\n
+\n
+\t\t\t\tfor (i = 0; i < names.length; i++) {\n
+\t\t\t\t\tname = names[i];\n
+\n
+\t\t\t\t\tif (!checkedMap[name] && matchNode(node, name, vars)) {\n
+\t\t\t\t\t\tcheckedMap[name] = true;\n
+\t\t\t\t\t\tmatchedFormatNames.push(name);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}, dom.getRoot());\n
+\n
+\t\t\treturn matchedFormatNames;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified format can be applied to the current selection or not. It\n
+\t\t * will currently only check the state for selector formats, it returns true on all other format types.\n
+\t\t *\n
+\t\t * @method canApply\n
+\t\t * @param {String} name Name of format to check.\n
+\t\t * @return {boolean} true/false if the specified format can be applied to the current selection/node.\n
+\t\t */\n
+\t\tfunction canApply(name) {\n
+\t\t\tvar formatList = get(name), startNode, parents, i, x, selector;\n
+\n
+\t\t\tif (formatList) {\n
+\t\t\t\tstartNode = selection.getStart();\n
+\t\t\t\tparents = getParents(startNode);\n
+\n
+\t\t\t\tfor (x = formatList.length - 1; x >= 0; x--) {\n
+\t\t\t\t\tselector = formatList[x].selector;\n
+\n
+\t\t\t\t\t// Format is not selector based then always return TRUE\n
+\t\t\t\t\t// Is it has a defaultBlock then it\'s likely it can be applied for example align on a non block element line\n
+\t\t\t\t\tif (!selector || formatList[x].defaultBlock) {\n
+\t\t\t\t\t\treturn TRUE;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tfor (i = parents.length - 1; i >= 0; i--) {\n
+\t\t\t\t\t\tif (dom.is(parents[i], selector)) {\n
+\t\t\t\t\t\t\treturn TRUE;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn FALSE;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Executes the specified callback when the current selection matches the formats or not.\n
+\t\t *\n
+\t\t * @method formatChanged\n
+\t\t * @param {String} formats Comma separated list of formats to check for.\n
+\t\t * @param {function} callback Callback with state and args when the format is changed/toggled on/off.\n
+\t\t * @param {Boolean} similar True/false state if the match should handle similar or exact formats.\n
+\t\t */\n
+\t\tfunction formatChanged(formats, callback, similar) {\n
+\t\t\tvar currentFormats;\n
+\n
+\t\t\t// Setup format node change logic\n
+\t\t\tif (!formatChangeData) {\n
+\t\t\t\tformatChangeData = {};\n
+\t\t\t\tcurrentFormats = {};\n
+\n
+\t\t\t\ted.on(\'NodeChange\', function(e) {\n
+\t\t\t\t\tvar parents = getParents(e.element), matchedFormats = {};\n
+\n
+\t\t\t\t\t// Ignore bogus nodes like the <a> tag created by moveStart()\n
+\t\t\t\t\tparents = Tools.grep(parents, function(node) {\n
+\t\t\t\t\t\treturn node.nodeType == 1 && !node.getAttribute(\'data-mce-bogus\');\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// Check for new formats\n
+\t\t\t\t\teach(formatChangeData, function(callbacks, format) {\n
+\t\t\t\t\t\teach(parents, function(node) {\n
+\t\t\t\t\t\t\tif (matchNode(node, format, {}, callbacks.similar)) {\n
+\t\t\t\t\t\t\t\tif (!currentFormats[format]) {\n
+\t\t\t\t\t\t\t\t\t// Execute callbacks\n
+\t\t\t\t\t\t\t\t\teach(callbacks, function(callback) {\n
+\t\t\t\t\t\t\t\t\t\tcallback(true, {node: node, format: format, parents: parents});\n
+\t\t\t\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t\t\t\tcurrentFormats[format] = callbacks;\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\tmatchedFormats[format] = callbacks;\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// Check if current formats still match\n
+\t\t\t\t\teach(currentFormats, function(callbacks, format) {\n
+\t\t\t\t\t\tif (!matchedFormats[format]) {\n
+\t\t\t\t\t\t\tdelete currentFormats[format];\n
+\n
+\t\t\t\t\t\t\teach(callbacks, function(callback) {\n
+\t\t\t\t\t\t\t\tcallback(false, {node: e.element, format: format, parents: parents});\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// Add format listeners\n
+\t\t\teach(formats.split(\',\'), function(format) {\n
+\t\t\t\tif (!formatChangeData[format]) {\n
+\t\t\t\t\tformatChangeData[format] = [];\n
+\t\t\t\t\tformatChangeData[format].similar = similar;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tformatChangeData[format].push(callback);\n
+\t\t\t});\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns a preview css text for the specified format.\n
+\t\t *\n
+\t\t * @method getCssText\n
+\t\t * @param {String/Object} format Format to generate preview css text for.\n
+\t\t * @return {String} Css text for the specified format.\n
+\t\t * @example\n
+\t\t * var cssText1 = editor.formatter.getCssText(\'bold\');\n
+\t\t * var cssText2 = editor.formatter.getCssText({inline: \'b\'});\n
+\t\t */\n
+\t\tfunction getCssText(format) {\n
+\t\t\treturn Preview.getCssText(ed, format);\n
+\t\t}\n
+\n
+\t\t// Expose to public\n
+\t\textend(this, {\n
+\t\t\tget: get,\n
+\t\t\tregister: register,\n
+\t\t\tunregister: unregister,\n
+\t\t\tapply: apply,\n
+\t\t\tremove: remove,\n
+\t\t\ttoggle: toggle,\n
+\t\t\tmatch: match,\n
+\t\t\tmatchAll: matchAll,\n
+\t\t\tmatchNode: matchNode,\n
+\t\t\tcanApply: canApply,\n
+\t\t\tformatChanged: formatChanged,\n
+\t\t\tgetCssText: getCssText\n
+\t\t});\n
+\n
+\t\t// Initialize\n
+\t\tdefaultFormats();\n
+\t\taddKeyboardShortcuts();\n
+\t\ted.on(\'BeforeGetContent\', function(e) {\n
+\t\t\tif (markCaretContainersBogus && e.format != \'raw\') {\n
+\t\t\t\tmarkCaretContainersBogus();\n
+\t\t\t}\n
+\t\t});\n
+\t\ted.on(\'mouseup keydown\', function(e) {\n
+\t\t\tif (disableCaretContainer) {\n
+\t\t\t\tdisableCaretContainer(e);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Private functions\n
+\n
+\t\t/**\n
+\t\t * Checks if the specified nodes name matches the format inline/block or selector.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Node} node Node to match against the specified format.\n
+\t\t * @param {Object} format Format object o match with.\n
+\t\t * @return {boolean} true/false if the format matches.\n
+\t\t */\n
+\t\tfunction matchName(node, format) {\n
+\t\t\t// Check for inline match\n
+\t\t\tif (isEq(node, format.inline)) {\n
+\t\t\t\treturn TRUE;\n
+\t\t\t}\n
+\n
+\t\t\t// Check for block match\n
+\t\t\tif (isEq(node, format.block)) {\n
+\t\t\t\treturn TRUE;\n
+\t\t\t}\n
+\n
+\t\t\t// Check for selector match\n
+\t\t\tif (format.selector) {\n
+\t\t\t\treturn node.nodeType == 1 && dom.is(node, format.selector);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Compares two string/nodes regardless of their case.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {String/Node} Node or string to compare.\n
+\t\t * @param {String/Node} Node or string to compare.\n
+\t\t * @return {boolean} True/false if they match.\n
+\t\t */\n
+\t\tfunction isEq(str1, str2) {\n
+\t\t\tstr1 = str1 || \'\';\n
+\t\t\tstr2 = str2 || \'\';\n
+\n
+\t\t\tstr1 = \'\' + (str1.nodeName || str1);\n
+\t\t\tstr2 = \'\' + (str2.nodeName || str2);\n
+\n
+\t\t\treturn str1.toLowerCase() == str2.toLowerCase();\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns the style by name on the specified node. This method modifies the style\n
+\t\t * contents to make it more easy to match. This will resolve a few browser issues.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Node} node to get style from.\n
+\t\t * @param {String} name Style name to get.\n
+\t\t * @return {String} Style item value.\n
+\t\t */\n
+\t\tfunction getStyle(node, name) {\n
+\t\t\treturn normalizeStyleValue(dom.getStyle(node, name), name);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Normalize style value by name. This method modifies the style contents\n
+\t\t * to make it more easy to match. This will resolve a few browser issues.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Node} node to get style from.\n
+\t\t * @param {String} name Style name to get.\n
+\t\t * @return {String} Style item value.\n
+\t\t */\n
+\t\tfunction normalizeStyleValue(value, name) {\n
+\t\t\t// Force the format to hex\n
+\t\t\tif (name == \'color\' || name == \'backgroundColor\') {\n
+\t\t\t\tvalue = dom.toHex(value);\n
+\t\t\t}\n
+\n
+\t\t\t// Opera will return bold as 700\n
+\t\t\tif (name == \'fontWeight\' && value == 700) {\n
+\t\t\t\tvalue = \'bold\';\n
+\t\t\t}\n
+\n
+\t\t\t// Normalize fontFamily so "\'Font name\', Font" becomes: "Font name,Font"\n
+\t\t\tif (name == \'fontFamily\') {\n
+\t\t\t\tvalue = value.replace(/[\\\'\\"]/g, \'\').replace(/,\\s+/g, \',\');\n
+\t\t\t}\n
+\n
+\t\t\treturn \'\' + value;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Replaces variables in the value. The variable format is %var.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {String} value Value to replace variables in.\n
+\t\t * @param {Object} vars Name/value array with variables to replace.\n
+\t\t * @return {String} New value with replaced variables.\n
+\t\t */\n
+\t\tfunction replaceVars(value, vars) {\n
+\t\t\tif (typeof value != "string") {\n
+\t\t\t\tvalue = value(vars);\n
+\t\t\t} else if (vars) {\n
+\t\t\t\tvalue = value.replace(/%(\\w+)/g, function(str, name) {\n
+\t\t\t\t\treturn vars[name] || str;\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn value;\n
+\t\t}\n
+\n
+\t\tfunction isWhiteSpaceNode(node) {\n
+\t\t\treturn node && node.nodeType === 3 && /^([\\t \\r\\n]+|)$/.test(node.nodeValue);\n
+\t\t}\n
+\n
+\t\tfunction wrap(node, name, attrs) {\n
+\t\t\tvar wrapper = dom.create(name, attrs);\n
+\n
+\t\t\tnode.parentNode.insertBefore(wrapper, node);\n
+\t\t\twrapper.appendChild(node);\n
+\n
+\t\t\treturn wrapper;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Expands the specified range like object to depending on format.\n
+\t\t *\n
+\t\t * For example on block formats it will move the start/end position\n
+\t\t * to the beginning of the current block.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Object} rng Range like object.\n
+\t\t * @param {Array} formats Array with formats to expand by.\n
+\t\t * @return {Object} Expanded range like object.\n
+\t\t */\n
+\t\tfunction expandRng(rng, format, remove) {\n
+\t\t\tvar lastIdx, leaf, endPoint,\n
+\t\t\t\tstartContainer = rng.startContainer,\n
+\t\t\t\tstartOffset = rng.startOffset,\n
+\t\t\t\tendContainer = rng.endContainer,\n
+\t\t\t\tendOffset = rng.endOffset;\n
+\n
+\t\t\t// This function walks up the tree if there is no siblings before/after the node\n
+\t\t\tfunction findParentContainer(start) {\n
+\t\t\t\tvar container, parent, sibling, siblingName, root;\n
+\n
+\t\t\t\tcontainer = parent = start ? startContainer : endContainer;\n
+\t\t\t\tsiblingName = start ? \'previousSibling\' : \'nextSibling\';\n
+\t\t\t\troot = dom.getRoot();\n
+\n
+\t\t\t\tfunction isBogusBr(node) {\n
+\t\t\t\t\treturn node.nodeName == "BR" && node.getAttribute(\'data-mce-bogus\') && !node.nextSibling;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// If it\'s a text node and the offset is inside the text\n
+\t\t\t\tif (container.nodeType == 3 && !isWhiteSpaceNode(container)) {\n
+\t\t\t\t\tif (start ? startOffset > 0 : endOffset < container.nodeValue.length) {\n
+\t\t\t\t\t\treturn container;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t/*eslint no-constant-condition:0 */\n
+\t\t\t\twhile (true) {\n
+\t\t\t\t\t// Stop expanding on block elements\n
+\t\t\t\t\tif (!format[0].block_expand && isBlock(parent)) {\n
+\t\t\t\t\t\treturn parent;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Walk left/right\n
+\t\t\t\t\tfor (sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {\n
+\t\t\t\t\t\tif (!isBookmarkNode(sibling) && !isWhiteSpaceNode(sibling) && !isBogusBr(sibling)) {\n
+\t\t\t\t\t\t\treturn parent;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Check if we can move up are we at root level or body level\n
+\t\t\t\t\tif (parent.parentNode == root) {\n
+\t\t\t\t\t\tcontainer = parent;\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tparent = parent.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn container;\n
+\t\t\t}\n
+\n
+\t\t\t// This function walks down the tree to find the leaf at the selection.\n
+\t\t\t// The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.\n
+\t\t\tfunction findLeaf(node, offset) {\n
+\t\t\t\tif (offset === undef) {\n
+\t\t\t\t\toffset = node.nodeType === 3 ? node.length : node.childNodes.length;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twhile (node && node.hasChildNodes()) {\n
+\t\t\t\t\tnode = node.childNodes[offset];\n
+\t\t\t\t\tif (node) {\n
+\t\t\t\t\t\toffset = node.nodeType === 3 ? node.length : node.childNodes.length;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t\treturn {node: node, offset: offset};\n
+\t\t\t}\n
+\n
+\t\t\t// If index based start position then resolve it\n
+\t\t\tif (startContainer.nodeType == 1 && startContainer.hasChildNodes()) {\n
+\t\t\t\tlastIdx = startContainer.childNodes.length - 1;\n
+\t\t\t\tstartContainer = startContainer.childNodes[startOffset > lastIdx ? lastIdx : startOffset];\n
+\n
+\t\t\t\tif (startContainer.nodeType == 3) {\n
+\t\t\t\t\tstartOffset = 0;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// If index based end position then resolve it\n
+\t\t\tif (endContainer.nodeType == 1 && endContainer.hasChildNodes()) {\n
+\t\t\t\tlastIdx = endContainer.childNodes.length - 1;\n
+\t\t\t\tendContainer = endContainer.childNodes[endOffset > lastIdx ? lastIdx : endOffset - 1];\n
+\n
+\t\t\t\tif (endContainer.nodeType == 3) {\n
+\t\t\t\t\tendOffset = endContainer.nodeValue.length;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Expands the node to the closes contentEditable false element if it exists\n
+\t\t\tfunction findParentContentEditable(node) {\n
+\t\t\t\tvar parent = node;\n
+\n
+\t\t\t\twhile (parent) {\n
+\t\t\t\t\tif (parent.nodeType === 1 && getContentEditable(parent)) {\n
+\t\t\t\t\t\treturn getContentEditable(parent) === "false" ? parent : node;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tparent = parent.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn node;\n
+\t\t\t}\n
+\n
+\t\t\tfunction findWordEndPoint(container, offset, start) {\n
+\t\t\t\tvar walker, node, pos, lastTextNode;\n
+\n
+\t\t\t\tfunction findSpace(node, offset) {\n
+\t\t\t\t\tvar pos, pos2, str = node.nodeValue;\n
+\n
+\t\t\t\t\tif (typeof offset == "undefined") {\n
+\t\t\t\t\t\toffset = start ? str.length : 0;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\tpos = str.lastIndexOf(\' \', offset);\n
+\t\t\t\t\t\tpos2 = str.lastIndexOf(\'\\u00a0\', offset);\n
+\t\t\t\t\t\tpos = pos > pos2 ? pos : pos2;\n
+\n
+\t\t\t\t\t\t// Include the space on remove to avoid tag soup\n
+\t\t\t\t\t\tif (pos !== -1 && !remove) {\n
+\t\t\t\t\t\t\tpos++;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tpos = str.indexOf(\' \', offset);\n
+\t\t\t\t\t\tpos2 = str.indexOf(\'\\u00a0\', offset);\n
+\t\t\t\t\t\tpos = pos !== -1 && (pos2 === -1 || pos < pos2) ? pos : pos2;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn pos;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (container.nodeType === 3) {\n
+\t\t\t\t\tpos = findSpace(container, offset);\n
+\n
+\t\t\t\t\tif (pos !== -1) {\n
+\t\t\t\t\t\treturn {container: container, offset: pos};\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tlastTextNode = container;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Walk the nodes inside the block\n
+\t\t\t\twalker = new TreeWalker(container, dom.getParent(container, isBlock) || ed.getBody());\n
+\t\t\t\twhile ((node = walker[start ? \'prev\' : \'next\']())) {\n
+\t\t\t\t\tif (node.nodeType === 3) {\n
+\t\t\t\t\t\tlastTextNode = node;\n
+\t\t\t\t\t\tpos = findSpace(node);\n
+\n
+\t\t\t\t\t\tif (pos !== -1) {\n
+\t\t\t\t\t\t\treturn {container: node, offset: pos};\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else if (isBlock(node)) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (lastTextNode) {\n
+\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\toffset = 0;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\toffset = lastTextNode.length;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn {container: lastTextNode, offset: offset};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction findSelectorEndPoint(container, sibling_name) {\n
+\t\t\t\tvar parents, i, y, curFormat;\n
+\n
+\t\t\t\tif (container.nodeType == 3 && container.nodeValue.length === 0 && container[sibling_name]) {\n
+\t\t\t\t\tcontainer = container[sibling_name];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tparents = getParents(container);\n
+\t\t\t\tfor (i = 0; i < parents.length; i++) {\n
+\t\t\t\t\tfor (y = 0; y < format.length; y++) {\n
+\t\t\t\t\t\tcurFormat = format[y];\n
+\n
+\t\t\t\t\t\t// If collapsed state is set then skip formats that doesn\'t match that\n
+\t\t\t\t\t\tif ("collapsed" in curFormat && curFormat.collapsed !== rng.collapsed) {\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (dom.is(parents[i], curFormat.selector)) {\n
+\t\t\t\t\t\t\treturn parents[i];\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn container;\n
+\t\t\t}\n
+\n
+\t\t\tfunction findBlockEndPoint(container, sibling_name) {\n
+\t\t\t\tvar node, root = dom.getRoot();\n
+\n
+\t\t\t\t// Expand to block of similar type\n
+\t\t\t\tif (!format[0].wrapper) {\n
+\t\t\t\t\tnode = dom.getParent(container, format[0].block, root);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Expand to first wrappable block element or any block element\n
+\t\t\t\tif (!node) {\n
+\t\t\t\t\tnode = dom.getParent(container.nodeType == 3 ? container.parentNode : container, function(node) {\n
+\t\t\t\t\t\t// Fixes #6183 where it would expand to editable parent element in inline mode\n
+\t\t\t\t\t\treturn node != root && isTextBlock(node);\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Exclude inner lists from wrapping\n
+\t\t\t\tif (node && format[0].wrapper) {\n
+\t\t\t\t\tnode = getParents(node, \'ul,ol\').reverse()[0] || node;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Didn\'t find a block element look for first/last wrappable element\n
+\t\t\t\tif (!node) {\n
+\t\t\t\t\tnode = container;\n
+\n
+\t\t\t\t\twhile (node[sibling_name] && !isBlock(node[sibling_name])) {\n
+\t\t\t\t\t\tnode = node[sibling_name];\n
+\n
+\t\t\t\t\t\t// Break on BR but include it will be removed later on\n
+\t\t\t\t\t\t// we can\'t remove it now since we need to check if it can be wrapped\n
+\t\t\t\t\t\tif (isEq(node, \'br\')) {\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn node || container;\n
+\t\t\t}\n
+\n
+\t\t\t// Expand to closest contentEditable element\n
+\t\t\tstartContainer = findParentContentEditable(startContainer);\n
+\t\t\tendContainer = findParentContentEditable(endContainer);\n
+\n
+\t\t\t// Exclude bookmark nodes if possible\n
+\t\t\tif (isBookmarkNode(startContainer.parentNode) || isBookmarkNode(startContainer)) {\n
+\t\t\t\tstartContainer = isBookmarkNode(startContainer) ? startContainer : startContainer.parentNode;\n
+\t\t\t\tstartContainer = startContainer.nextSibling || startContainer;\n
+\n
+\t\t\t\tif (startContainer.nodeType == 3) {\n
+\t\t\t\t\tstartOffset = 0;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (isBookmarkNode(endContainer.parentNode) || isBookmarkNode(endContainer)) {\n
+\t\t\t\tendContainer = isBookmarkNode(endContainer) ? endContainer : endContainer.parentNode;\n
+\t\t\t\tendContainer = endContainer.previousSibling || endContainer;\n
+\n
+\t\t\t\tif (endContainer.nodeType == 3) {\n
+\t\t\t\t\tendOffset = endContainer.length;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (format[0].inline) {\n
+\t\t\t\tif (rng.collapsed) {\n
+\t\t\t\t\t// Expand left to closest word boundary\n
+\t\t\t\t\tendPoint = findWordEndPoint(startContainer, startOffset, true);\n
+\t\t\t\t\tif (endPoint) {\n
+\t\t\t\t\t\tstartContainer = endPoint.container;\n
+\t\t\t\t\t\tstartOffset = endPoint.offset;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Expand right to closest word boundary\n
+\t\t\t\t\tendPoint = findWordEndPoint(endContainer, endOffset);\n
+\t\t\t\t\tif (endPoint) {\n
+\t\t\t\t\t\tendContainer = endPoint.container;\n
+\t\t\t\t\t\tendOffset = endPoint.offset;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Avoid applying formatting to a trailing space.\n
+\t\t\t\tleaf = findLeaf(endContainer, endOffset);\n
+\t\t\t\tif (leaf.node) {\n
+\t\t\t\t\twhile (leaf.node && leaf.offset === 0 && leaf.node.previousSibling) {\n
+\t\t\t\t\t\tleaf = findLeaf(leaf.node.previousSibling);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (leaf.node && leaf.offset > 0 && leaf.node.nodeType === 3 &&\n
+\t\t\t\t\t\t\tleaf.node.nodeValue.charAt(leaf.offset - 1) === \' \') {\n
+\n
+\t\t\t\t\t\tif (leaf.offset > 1) {\n
+\t\t\t\t\t\t\tendContainer = leaf.node;\n
+\t\t\t\t\t\t\tendContainer.splitText(leaf.offset - 1);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Move start/end point up the tree if the leaves are sharp and if we are in different containers\n
+\t\t\t// Example * becomes !: !<p><b><i>*text</i><i>text*</i></b></p>!\n
+\t\t\t// This will reduce the number of wrapper elements that needs to be created\n
+\t\t\t// Move start point up the tree\n
+\t\t\tif (format[0].inline || format[0].block_expand) {\n
+\t\t\t\tif (!format[0].inline || (startContainer.nodeType != 3 || startOffset === 0)) {\n
+\t\t\t\t\tstartContainer = findParentContainer(true);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!format[0].inline || (endContainer.nodeType != 3 || endOffset === endContainer.nodeValue.length)) {\n
+\t\t\t\t\tendContainer = findParentContainer();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Expand start/end container to matching selector\n
+\t\t\tif (format[0].selector && format[0].expand !== FALSE && !format[0].inline) {\n
+\t\t\t\t// Find new startContainer/endContainer if there is better one\n
+\t\t\t\tstartContainer = findSelectorEndPoint(startContainer, \'previousSibling\');\n
+\t\t\t\tendContainer = findSelectorEndPoint(endContainer, \'nextSibling\');\n
+\t\t\t}\n
+\n
+\t\t\t// Expand start/end container to matching block element or text node\n
+\t\t\tif (format[0].block || format[0].selector) {\n
+\t\t\t\t// Find new startContainer/endContainer if there is better one\n
+\t\t\t\tstartContainer = findBlockEndPoint(startContainer, \'previousSibling\');\n
+\t\t\t\tendContainer = findBlockEndPoint(endContainer, \'nextSibling\');\n
+\n
+\t\t\t\t// Non block element then try to expand up the leaf\n
+\t\t\t\tif (format[0].block) {\n
+\t\t\t\t\tif (!isBlock(startContainer)) {\n
+\t\t\t\t\t\tstartContainer = findParentContainer(true);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!isBlock(endContainer)) {\n
+\t\t\t\t\t\tendContainer = findParentContainer();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Setup index for startContainer\n
+\t\t\tif (startContainer.nodeType == 1) {\n
+\t\t\t\tstartOffset = nodeIndex(startContainer);\n
+\t\t\t\tstartContainer = startContainer.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\t// Setup index for endContainer\n
+\t\t\tif (endContainer.nodeType == 1) {\n
+\t\t\t\tendOffset = nodeIndex(endContainer) + 1;\n
+\t\t\t\tendContainer = endContainer.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\t// Return new range like object\n
+\t\t\treturn {\n
+\t\t\t\tstartContainer: startContainer,\n
+\t\t\t\tstartOffset: startOffset,\n
+\t\t\t\tendContainer: endContainer,\n
+\t\t\t\tendOffset: endOffset\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction isColorFormatAndAnchor(node, format) {\n
+\t\t\treturn format.links && node.tagName == \'A\';\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Removes the specified format for the specified node. It will also remove the node if it doesn\'t have\n
+\t\t * any attributes if the format specifies it to do so.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Object} format Format object with items to remove from node.\n
+\t\t * @param {Object} vars Name/value object with variables to apply to format.\n
+\t\t * @param {Node} node Node to remove the format styles on.\n
+\t\t * @param {Node} compare_node Optional compare node, if specified the styles will be compared to that node.\n
+\t\t * @return {Boolean} True/false if the node was removed or not.\n
+\t\t */\n
+\t\tfunction removeFormat(format, vars, node, compare_node) {\n
+\t\t\tvar i, attrs, stylesModified;\n
+\n
+\t\t\t// Check if node matches format\n
+\t\t\tif (!matchName(node, format) && !isColorFormatAndAnchor(node, format)) {\n
+\t\t\t\treturn FALSE;\n
+\t\t\t}\n
+\n
+\t\t\t// Should we compare with format attribs and styles\n
+\t\t\tif (format.remove != \'all\') {\n
+\t\t\t\t// Remove styles\n
+\t\t\t\teach(format.styles, function(value, name) {\n
+\t\t\t\t\tvalue = normalizeStyleValue(replaceVars(value, vars), name);\n
+\n
+\t\t\t\t\t// Indexed array\n
+\t\t\t\t\tif (typeof name === \'number\') {\n
+\t\t\t\t\t\tname = value;\n
+\t\t\t\t\t\tcompare_node = 0;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (format.remove_similar || (!compare_node || isEq(getStyle(compare_node, name), value))) {\n
+\t\t\t\t\t\tdom.setStyle(node, name, \'\');\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tstylesModified = 1;\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Remove style attribute if it\'s empty\n
+\t\t\t\tif (stylesModified && dom.getAttrib(node, \'style\') === \'\') {\n
+\t\t\t\t\tnode.removeAttribute(\'style\');\n
+\t\t\t\t\tnode.removeAttribute(\'data-mce-style\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Remove attributes\n
+\t\t\t\teach(format.attributes, function(value, name) {\n
+\t\t\t\t\tvar valueOut;\n
+\n
+\t\t\t\t\tvalue = replaceVars(value, vars);\n
+\n
+\t\t\t\t\t// Indexed array\n
+\t\t\t\t\tif (typeof name === \'number\') {\n
+\t\t\t\t\t\tname = value;\n
+\t\t\t\t\t\tcompare_node = 0;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!compare_node || isEq(dom.getAttrib(compare_node, name), value)) {\n
+\t\t\t\t\t\t// Keep internal classes\n
+\t\t\t\t\t\tif (name == \'class\') {\n
+\t\t\t\t\t\t\tvalue = dom.getAttrib(node, name);\n
+\t\t\t\t\t\t\tif (value) {\n
+\t\t\t\t\t\t\t\t// Build new class value where everything is removed except the internal prefixed classes\n
+\t\t\t\t\t\t\t\tvalueOut = \'\';\n
+\t\t\t\t\t\t\t\teach(value.split(/\\s+/), function(cls) {\n
+\t\t\t\t\t\t\t\t\tif (/mce\\-\\w+/.test(cls)) {\n
+\t\t\t\t\t\t\t\t\t\tvalueOut += (valueOut ? \' \' : \'\') + cls;\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t\t\t// We got some internal classes left\n
+\t\t\t\t\t\t\t\tif (valueOut) {\n
+\t\t\t\t\t\t\t\t\tdom.setAttrib(node, name, valueOut);\n
+\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// IE6 has a bug where the attribute doesn\'t get removed correctly\n
+\t\t\t\t\t\tif (name == "class") {\n
+\t\t\t\t\t\t\tnode.removeAttribute(\'className\');\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Remove mce prefixed attributes\n
+\t\t\t\t\t\tif (MCE_ATTR_RE.test(name)) {\n
+\t\t\t\t\t\t\tnode.removeAttribute(\'data-mce-\' + name);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode.removeAttribute(name);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Remove classes\n
+\t\t\t\teach(format.classes, function(value) {\n
+\t\t\t\t\tvalue = replaceVars(value, vars);\n
+\n
+\t\t\t\t\tif (!compare_node || dom.hasClass(compare_node, value)) {\n
+\t\t\t\t\t\tdom.removeClass(node, value);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Check for non internal attributes\n
+\t\t\t\tattrs = dom.getAttribs(node);\n
+\t\t\t\tfor (i = 0; i < attrs.length; i++) {\n
+\t\t\t\t\tif (attrs[i].nodeName.indexOf(\'_\') !== 0) {\n
+\t\t\t\t\t\treturn FALSE;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Remove the inline child if it\'s empty for example <b> or <span>\n
+\t\t\tif (format.remove != \'none\') {\n
+\t\t\t\tremoveNode(node, format);\n
+\t\t\t\treturn TRUE;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Removes the node and wrap it\'s children in paragraphs before doing so or\n
+\t\t * appends BR elements to the beginning/end of the block element if forcedRootBlocks is disabled.\n
+\t\t *\n
+\t\t * If the div in the node below gets removed:\n
+\t\t *  text<div>text</div>text\n
+\t\t *\n
+\t\t * Output becomes:\n
+\t\t *  text<div><br />text<br /></div>text\n
+\t\t *\n
+\t\t * So when the div is removed the result is:\n
+\t\t *  text<br />text<br />text\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Node} node Node to remove + apply BR/P elements to.\n
+\t\t * @param {Object} format Format rule.\n
+\t\t * @return {Node} Input node.\n
+\t\t */\n
+\t\tfunction removeNode(node, format) {\n
+\t\t\tvar parentNode = node.parentNode, rootBlockElm;\n
+\n
+\t\t\tfunction find(node, next, inc) {\n
+\t\t\t\tnode = getNonWhiteSpaceSibling(node, next, inc);\n
+\n
+\t\t\t\treturn !node || (node.nodeName == \'BR\' || isBlock(node));\n
+\t\t\t}\n
+\n
+\t\t\tif (format.block) {\n
+\t\t\t\tif (!forcedRootBlock) {\n
+\t\t\t\t\t// Append BR elements if needed before we remove the block\n
+\t\t\t\t\tif (isBlock(node) && !isBlock(parentNode)) {\n
+\t\t\t\t\t\tif (!find(node, FALSE) && !find(node.firstChild, TRUE, 1)) {\n
+\t\t\t\t\t\t\tnode.insertBefore(dom.create(\'br\'), node.firstChild);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (!find(node, TRUE) && !find(node.lastChild, FALSE, 1)) {\n
+\t\t\t\t\t\t\tnode.appendChild(dom.create(\'br\'));\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// Wrap the block in a forcedRootBlock if we are at the root of document\n
+\t\t\t\t\tif (parentNode == dom.getRoot()) {\n
+\t\t\t\t\t\tif (!format.list_block || !isEq(node, format.list_block)) {\n
+\t\t\t\t\t\t\teach(grep(node.childNodes), function(node) {\n
+\t\t\t\t\t\t\t\tif (isValid(forcedRootBlock, node.nodeName.toLowerCase())) {\n
+\t\t\t\t\t\t\t\t\tif (!rootBlockElm) {\n
+\t\t\t\t\t\t\t\t\t\trootBlockElm = wrap(node, forcedRootBlock);\n
+\t\t\t\t\t\t\t\t\t\tdom.setAttribs(rootBlockElm, ed.settings.forced_root_block_attrs);\n
+\t\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\t\trootBlockElm.appendChild(node);\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\trootBlockElm = 0;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Never remove nodes that isn\'t the specified inline element if a selector is specified too\n
+\t\t\tif (format.selector && format.inline && !isEq(format.inline, node)) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tdom.remove(node, 1);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns the next/previous non whitespace node.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Node} node Node to start at.\n
+\t\t * @param {boolean} next (Optional) Include next or previous node defaults to previous.\n
+\t\t * @param {boolean} inc (Optional) Include the current node in checking. Defaults to false.\n
+\t\t * @return {Node} Next or previous node or undefined if it wasn\'t found.\n
+\t\t */\n
+\t\tfunction getNonWhiteSpaceSibling(node, next, inc) {\n
+\t\t\tif (node) {\n
+\t\t\t\tnext = next ? \'nextSibling\' : \'previousSibling\';\n
+\n
+\t\t\t\tfor (node = inc ? node : node[next]; node; node = node[next]) {\n
+\t\t\t\t\tif (node.nodeType == 1 || !isWhiteSpaceNode(node)) {\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Merges the next/previous sibling element if they match.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Node} prev Previous node to compare/merge.\n
+\t\t * @param {Node} next Next node to compare/merge.\n
+\t\t * @return {Node} Next node if we didn\'t merge and prev node if we did.\n
+\t\t */\n
+\t\tfunction mergeSiblings(prev, next) {\n
+\t\t\tvar sibling, tmpSibling, elementUtils = new ElementUtils(dom);\n
+\n
+\t\t\tfunction findElementSibling(node, sibling_name) {\n
+\t\t\t\tfor (sibling = node; sibling; sibling = sibling[sibling_name]) {\n
+\t\t\t\t\tif (sibling.nodeType == 3 && sibling.nodeValue.length !== 0) {\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (sibling.nodeType == 1 && !isBookmarkNode(sibling)) {\n
+\t\t\t\t\t\treturn sibling;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn node;\n
+\t\t\t}\n
+\n
+\t\t\t// Check if next/prev exists and that they are elements\n
+\t\t\tif (prev && next) {\n
+\t\t\t\t// If previous sibling is empty then jump over it\n
+\t\t\t\tprev = findElementSibling(prev, \'previousSibling\');\n
+\t\t\t\tnext = findElementSibling(next, \'nextSibling\');\n
+\n
+\t\t\t\t// Compare next and previous nodes\n
+\t\t\t\tif (elementUtils.compare(prev, next)) {\n
+\t\t\t\t\t// Append nodes between\n
+\t\t\t\t\tfor (sibling = prev.nextSibling; sibling && sibling != next;) {\n
+\t\t\t\t\t\ttmpSibling = sibling;\n
+\t\t\t\t\t\tsibling = sibling.nextSibling;\n
+\t\t\t\t\t\tprev.appendChild(tmpSibling);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Remove next node\n
+\t\t\t\t\tdom.remove(next);\n
+\n
+\t\t\t\t\t// Move children into prev node\n
+\t\t\t\t\teach(grep(next.childNodes), function(node) {\n
+\t\t\t\t\t\tprev.appendChild(node);\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\treturn prev;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn next;\n
+\t\t}\n
+\n
+\t\tfunction getContainer(rng, start) {\n
+\t\t\tvar container, offset, lastIdx;\n
+\n
+\t\t\tcontainer = rng[start ? \'startContainer\' : \'endContainer\'];\n
+\t\t\toffset = rng[start ? \'startOffset\' : \'endOffset\'];\n
+\n
+\t\t\tif (container.nodeType == 1) {\n
+\t\t\t\tlastIdx = container.childNodes.length - 1;\n
+\n
+\t\t\t\tif (!start && offset) {\n
+\t\t\t\t\toffset--;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcontainer = container.childNodes[offset > lastIdx ? lastIdx : offset];\n
+\t\t\t}\n
+\n
+\t\t\t// If start text node is excluded then walk to the next node\n
+\t\t\tif (container.nodeType === 3 && start && offset >= container.nodeValue.length) {\n
+\t\t\t\tcontainer = new TreeWalker(container, ed.getBody()).next() || container;\n
+\t\t\t}\n
+\n
+\t\t\t// If end text node is excluded then walk to the previous node\n
+\t\t\tif (container.nodeType === 3 && !start && offset === 0) {\n
+\t\t\t\tcontainer = new TreeWalker(container, ed.getBody()).prev() || container;\n
+\t\t\t}\n
+\n
+\t\t\treturn container;\n
+\t\t}\n
+\n
+\t\tfunction performCaretAction(type, name, vars, similar) {\n
+\t\t\tvar caretContainerId = \'_mce_caret\', debug = ed.settings.caret_debug;\n
+\n
+\t\t\t// Creates a caret container bogus element\n
+\t\t\tfunction createCaretContainer(fill) {\n
+\t\t\t\tvar caretContainer = dom.create(\'span\', {id: caretContainerId, \'data-mce-bogus\': true, style: debug ? \'color:red\' : \'\'});\n
+\n
+\t\t\t\tif (fill) {\n
+\t\t\t\t\tcaretContainer.appendChild(ed.getDoc().createTextNode(INVISIBLE_CHAR));\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn caretContainer;\n
+\t\t\t}\n
+\n
+\t\t\tfunction isCaretContainerEmpty(node, nodes) {\n
+\t\t\t\twhile (node) {\n
+\t\t\t\t\tif ((node.nodeType === 3 && node.nodeValue !== INVISIBLE_CHAR) || node.childNodes.length > 1) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Collect nodes\n
+\t\t\t\t\tif (nodes && node.nodeType === 1) {\n
+\t\t\t\t\t\tnodes.push(node);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode = node.firstChild;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\t// Returns any parent caret container element\n
+\t\t\tfunction getParentCaretContainer(node) {\n
+\t\t\t\twhile (node) {\n
+\t\t\t\t\tif (node.id === caretContainerId) {\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode = node.parentNode;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Finds the first text node in the specified node\n
+\t\t\tfunction findFirstTextNode(node) {\n
+\t\t\t\tvar walker;\n
+\n
+\t\t\t\tif (node) {\n
+\t\t\t\t\twalker = new TreeWalker(node, node);\n
+\n
+\t\t\t\t\tfor (node = walker.current(); node; node = walker.next()) {\n
+\t\t\t\t\t\tif (node.nodeType === 3) {\n
+\t\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Removes the caret container for the specified node or all on the current document\n
+\t\t\tfunction removeCaretContainer(node, move_caret) {\n
+\t\t\t\tvar child, rng;\n
+\n
+\t\t\t\tif (!node) {\n
+\t\t\t\t\tnode = getParentCaretContainer(selection.getStart());\n
+\n
+\t\t\t\t\tif (!node) {\n
+\t\t\t\t\t\twhile ((node = dom.get(caretContainerId))) {\n
+\t\t\t\t\t\t\tremoveCaretContainer(node, false);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng = selection.getRng(true);\n
+\n
+\t\t\t\t\tif (isCaretContainerEmpty(node)) {\n
+\t\t\t\t\t\tif (move_caret !== false) {\n
+\t\t\t\t\t\t\trng.setStartBefore(node);\n
+\t\t\t\t\t\t\trng.setEndBefore(node);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tchild = findFirstTextNode(node);\n
+\n
+\t\t\t\t\t\tif (child.nodeValue.charAt(0) === INVISIBLE_CHAR) {\n
+\t\t\t\t\t\t\tchild.deleteData(0, 1);\n
+\n
+\t\t\t\t\t\t\t// Fix for bug #6976\n
+\t\t\t\t\t\t\tif (rng.startContainer == child && rng.startOffset > 0) {\n
+\t\t\t\t\t\t\t\trng.setStart(child, rng.startOffset - 1);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tif (rng.endContainer == child && rng.endOffset > 0) {\n
+\t\t\t\t\t\t\t\trng.setEnd(child, rng.endOffset - 1);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tdom.remove(node, 1);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Applies formatting to the caret postion\n
+\t\t\tfunction applyCaretFormat() {\n
+\t\t\t\tvar rng, caretContainer, textNode, offset, bookmark, container, text;\n
+\n
+\t\t\t\trng = selection.getRng(true);\n
+\t\t\t\toffset = rng.startOffset;\n
+\t\t\t\tcontainer = rng.startContainer;\n
+\t\t\t\ttext = container.nodeValue;\n
+\n
+\t\t\t\tcaretContainer = getParentCaretContainer(selection.getStart());\n
+\t\t\t\tif (caretContainer) {\n
+\t\t\t\t\ttextNode = findFirstTextNode(caretContainer);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Expand to word is caret is in the middle of a text node and the char before/after is a alpha numeric character\n
+\t\t\t\tif (text && offset > 0 && offset < text.length && /\\w/.test(text.charAt(offset)) && /\\w/.test(text.charAt(offset - 1))) {\n
+\t\t\t\t\t// Get bookmark of caret position\n
+\t\t\t\t\tbookmark = selection.getBookmark();\n
+\n
+\t\t\t\t\t// Collapse bookmark range (WebKit)\n
+\t\t\t\t\trng.collapse(true);\n
+\n
+\t\t\t\t\t// Expand the range to the closest word and split it at those points\n
+\t\t\t\t\trng = expandRng(rng, get(name));\n
+\t\t\t\t\trng = rangeUtils.split(rng);\n
+\n
+\t\t\t\t\t// Apply the format to the range\n
+\t\t\t\t\tapply(name, vars, rng);\n
+\n
+\t\t\t\t\t// Move selection back to caret position\n
+\t\t\t\t\tselection.moveToBookmark(bookmark);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif (!caretContainer || textNode.nodeValue !== INVISIBLE_CHAR) {\n
+\t\t\t\t\t\tcaretContainer = createCaretContainer(true);\n
+\t\t\t\t\t\ttextNode = caretContainer.firstChild;\n
+\n
+\t\t\t\t\t\trng.insertNode(caretContainer);\n
+\t\t\t\t\t\toffset = 1;\n
+\n
+\t\t\t\t\t\tapply(name, vars, caretContainer);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tapply(name, vars, caretContainer);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Move selection to text node\n
+\t\t\t\t\tselection.setCursorLocation(textNode, offset);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction removeCaretFormat() {\n
+\t\t\t\tvar rng = selection.getRng(true), container, offset, bookmark,\n
+\t\t\t\t\thasContentAfter, node, formatNode, parents = [], i, caretContainer;\n
+\n
+\t\t\t\tcontainer = rng.startContainer;\n
+\t\t\t\toffset = rng.startOffset;\n
+\t\t\t\tnode = container;\n
+\n
+\t\t\t\tif (container.nodeType == 3) {\n
+\t\t\t\t\tif (offset != container.nodeValue.length) {\n
+\t\t\t\t\t\thasContentAfter = true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode = node.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twhile (node) {\n
+\t\t\t\t\tif (matchNode(node, name, vars, similar)) {\n
+\t\t\t\t\t\tformatNode = node;\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (node.nextSibling) {\n
+\t\t\t\t\t\thasContentAfter = true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tparents.push(node);\n
+\t\t\t\t\tnode = node.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Node doesn\'t have the specified format\n
+\t\t\t\tif (!formatNode) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Is there contents after the caret then remove the format on the element\n
+\t\t\t\tif (hasContentAfter) {\n
+\t\t\t\t\t// Get bookmark of caret position\n
+\t\t\t\t\tbookmark = selection.getBookmark();\n
+\n
+\t\t\t\t\t// Collapse bookmark range (WebKit)\n
+\t\t\t\t\trng.collapse(true);\n
+\n
+\t\t\t\t\t// Expand the range to the closest word and split it at those points\n
+\t\t\t\t\trng = expandRng(rng, get(name), true);\n
+\t\t\t\t\trng = rangeUtils.split(rng);\n
+\n
+\t\t\t\t\t// Remove the format from the range\n
+\t\t\t\t\tremove(name, vars, rng);\n
+\n
+\t\t\t\t\t// Move selection back to caret position\n
+\t\t\t\t\tselection.moveToBookmark(bookmark);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcaretContainer = createCaretContainer();\n
+\n
+\t\t\t\t\tnode = caretContainer;\n
+\t\t\t\t\tfor (i = parents.length - 1; i >= 0; i--) {\n
+\t\t\t\t\t\tnode.appendChild(dom.clone(parents[i], false));\n
+\t\t\t\t\t\tnode = node.firstChild;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Insert invisible character into inner most format element\n
+\t\t\t\t\tnode.appendChild(dom.doc.createTextNode(INVISIBLE_CHAR));\n
+\t\t\t\t\tnode = node.firstChild;\n
+\n
+\t\t\t\t\tvar block = dom.getParent(formatNode, isTextBlock);\n
+\n
+\t\t\t\t\tif (block && dom.isEmpty(block)) {\n
+\t\t\t\t\t\t// Replace formatNode with caretContainer when removing format from empty block like <p><b>|</b></p>\n
+\t\t\t\t\t\tformatNode.parentNode.replaceChild(caretContainer, formatNode);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// Insert caret container after the formated node\n
+\t\t\t\t\t\tdom.insertAfter(caretContainer, formatNode);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Move selection to text node\n
+\t\t\t\t\tselection.setCursorLocation(node, 1);\n
+\n
+\t\t\t\t\t// If the formatNode is empty, we can remove it safely.\n
+\t\t\t\t\tif (dom.isEmpty(formatNode)) {\n
+\t\t\t\t\t\tdom.remove(formatNode);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Checks if the parent caret container node isn\'t empty if that is the case it\n
+\t\t\t// will remove the bogus state on all children that isn\'t empty\n
+\t\t\tfunction unmarkBogusCaretParents() {\n
+\t\t\t\tvar caretContainer;\n
+\n
+\t\t\t\tcaretContainer = getParentCaretContainer(selection.getStart());\n
+\t\t\t\tif (caretContainer && !dom.isEmpty(caretContainer)) {\n
+\t\t\t\t\twalk(caretContainer, function(node) {\n
+\t\t\t\t\t\tif (node.nodeType == 1 && node.id !== caretContainerId && !dom.isEmpty(node)) {\n
+\t\t\t\t\t\t\tdom.setAttrib(node, \'data-mce-bogus\', null);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}, \'childNodes\');\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Only bind the caret events once\n
+\t\t\tif (!ed._hasCaretEvents) {\n
+\t\t\t\t// Mark current caret container elements as bogus when getting the contents so we don\'t end up with empty elements\n
+\t\t\t\tmarkCaretContainersBogus = function() {\n
+\t\t\t\t\tvar nodes = [], i;\n
+\n
+\t\t\t\t\tif (isCaretContainerEmpty(getParentCaretContainer(selection.getStart()), nodes)) {\n
+\t\t\t\t\t\t// Mark children\n
+\t\t\t\t\t\ti = nodes.length;\n
+\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\tdom.setAttrib(nodes[i], \'data-mce-bogus\', \'1\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t};\n
+\n
+\t\t\t\tdisableCaretContainer = function(e) {\n
+\t\t\t\t\tvar keyCode = e.keyCode;\n
+\n
+\t\t\t\t\tremoveCaretContainer();\n
+\n
+\t\t\t\t\t// Remove caret container on keydown and it\'s a backspace, enter or left/right arrow keys\n
+\t\t\t\t\t// Backspace key needs to check if the range is collapsed due to bug #6780\n
+\t\t\t\t\tif ((keyCode == 8 && selection.isCollapsed()) || keyCode == 37 || keyCode == 39) {\n
+\t\t\t\t\t\tremoveCaretContainer(getParentCaretContainer(selection.getStart()));\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tunmarkBogusCaretParents();\n
+\t\t\t\t};\n
+\n
+\t\t\t\t// Remove bogus state if they got filled by contents using editor.selection.setContent\n
+\t\t\t\ted.on(\'SetContent\', function(e) {\n
+\t\t\t\t\tif (e.selection) {\n
+\t\t\t\t\t\tunmarkBogusCaretParents();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t\ted._hasCaretEvents = true;\n
+\t\t\t}\n
+\n
+\t\t\t// Do apply or remove caret format\n
+\t\t\tif (type == "apply") {\n
+\t\t\t\tapplyCaretFormat();\n
+\t\t\t} else {\n
+\t\t\t\tremoveCaretFormat();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Moves the start to the first suitable text node.\n
+\t\t */\n
+\t\tfunction moveStart(rng) {\n
+\t\t\tvar container = rng.startContainer,\n
+\t\t\t\t\toffset = rng.startOffset, isAtEndOfText,\n
+\t\t\t\t\twalker, node, nodes, tmpNode;\n
+\n
+\t\t\tif (rng.startContainer == rng.endContainer) {\n
+\t\t\t\tif (isInlineBlock(rng.startContainer.childNodes[rng.startOffset])) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Convert text node into index if possible\n
+\t\t\tif (container.nodeType == 3 && offset >= container.nodeValue.length) {\n
+\t\t\t\t// Get the parent container location and walk from there\n
+\t\t\t\toffset = nodeIndex(container);\n
+\t\t\t\tcontainer = container.parentNode;\n
+\t\t\t\tisAtEndOfText = true;\n
+\t\t\t}\n
+\n
+\t\t\t// Move startContainer/startOffset in to a suitable node\n
+\t\t\tif (container.nodeType == 1) {\n
+\t\t\t\tnodes = container.childNodes;\n
+\t\t\t\tcontainer = nodes[Math.min(offset, nodes.length - 1)];\n
+\t\t\t\twalker = new TreeWalker(container, dom.getParent(container, dom.isBlock));\n
+\n
+\t\t\t\t// If offset is at end of the parent node walk to the next one\n
+\t\t\t\tif (offset > nodes.length - 1 || isAtEndOfText) {\n
+\t\t\t\t\twalker.next();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (node = walker.current(); node; node = walker.next()) {\n
+\t\t\t\t\tif (node.nodeType == 3 && !isWhiteSpaceNode(node)) {\n
+\t\t\t\t\t\t// IE has a "neat" feature where it moves the start node into the closest element\n
+\t\t\t\t\t\t// we can avoid this by inserting an element before it and then remove it after we set the selection\n
+\t\t\t\t\t\ttmpNode = dom.create(\'a\', {\'data-mce-bogus\': \'all\'}, INVISIBLE_CHAR);\n
+\t\t\t\t\t\tnode.parentNode.insertBefore(tmpNode, node);\n
+\n
+\t\t\t\t\t\t// Set selection and remove tmpNode\n
+\t\t\t\t\t\trng.setStart(node, 0);\n
+\t\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t\t\tdom.remove(tmpNode);\n
+\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

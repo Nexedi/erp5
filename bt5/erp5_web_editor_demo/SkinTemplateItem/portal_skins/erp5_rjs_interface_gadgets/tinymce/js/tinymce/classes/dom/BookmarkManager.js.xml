@@ -1,0 +1,432 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268375.37</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>BookmarkManager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * BookmarkManager.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles selection bookmarks.\n
+ *\n
+ * @class tinymce.dom.BookmarkManager\n
+ */\n
+define("tinymce/dom/BookmarkManager", [\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Tools"\n
+], function(Env, Tools) {\n
+\t/**\n
+\t * Constructs a new BookmarkManager instance for a specific selection instance.\n
+\t *\n
+\t * @constructor\n
+\t * @method BookmarkManager\n
+\t * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.\n
+\t */\n
+\tfunction BookmarkManager(selection) {\n
+\t\tvar dom = selection.dom;\n
+\n
+\t\t/**\n
+\t\t * Returns a bookmark location for the current selection. This bookmark object\n
+\t\t * can then be used to restore the selection after some content modification to the document.\n
+\t\t *\n
+\t\t * @method getBookmark\n
+\t\t * @param {Number} type Optional state if the bookmark should be simple or not. Default is complex.\n
+\t\t * @param {Boolean} normalized Optional state that enables you to get a position that it would be after normalization.\n
+\t\t * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.\n
+\t\t * @example\n
+\t\t * // Stores a bookmark of the current selection\n
+\t\t * var bm = tinymce.activeEditor.selection.getBookmark();\n
+\t\t *\n
+\t\t * tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + \'Some new content\');\n
+\t\t *\n
+\t\t * // Restore the selection bookmark\n
+\t\t * tinymce.activeEditor.selection.moveToBookmark(bm);\n
+\t\t */\n
+\t\tthis.getBookmark = function(type, normalized) {\n
+\t\t\tvar rng, rng2, id, collapsed, name, element, chr = \'&#xFEFF;\', styles;\n
+\n
+\t\t\tfunction findIndex(name, element) {\n
+\t\t\t\tvar index = 0;\n
+\n
+\t\t\t\tTools.each(dom.select(name), function(node, i) {\n
+\t\t\t\t\tif (node == element) {\n
+\t\t\t\t\t\tindex = i;\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn index;\n
+\t\t\t}\n
+\n
+\t\t\tfunction normalizeTableCellSelection(rng) {\n
+\t\t\t\tfunction moveEndPoint(start) {\n
+\t\t\t\t\tvar container, offset, childNodes, prefix = start ? \'start\' : \'end\';\n
+\n
+\t\t\t\t\tcontainer = rng[prefix + \'Container\'];\n
+\t\t\t\t\toffset = rng[prefix + \'Offset\'];\n
+\n
+\t\t\t\t\tif (container.nodeType == 1 && container.nodeName == "TR") {\n
+\t\t\t\t\t\tchildNodes = container.childNodes;\n
+\t\t\t\t\t\tcontainer = childNodes[Math.min(start ? offset : offset - 1, childNodes.length - 1)];\n
+\t\t\t\t\t\tif (container) {\n
+\t\t\t\t\t\t\toffset = start ? 0 : container.childNodes.length;\n
+\t\t\t\t\t\t\trng[\'set\' + (start ? \'Start\' : \'End\')](container, offset);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tmoveEndPoint(true);\n
+\t\t\t\tmoveEndPoint();\n
+\n
+\t\t\t\treturn rng;\n
+\t\t\t}\n
+\n
+\t\t\tfunction getLocation() {\n
+\t\t\t\tvar rng = selection.getRng(true), root = dom.getRoot(), bookmark = {};\n
+\n
+\t\t\t\tfunction getPoint(rng, start) {\n
+\t\t\t\t\tvar container = rng[start ? \'startContainer\' : \'endContainer\'],\n
+\t\t\t\t\t\toffset = rng[start ? \'startOffset\' : \'endOffset\'], point = [], node, childNodes, after = 0;\n
+\n
+\t\t\t\t\tif (container.nodeType == 3) {\n
+\t\t\t\t\t\tif (normalized) {\n
+\t\t\t\t\t\t\tfor (node = container.previousSibling; node && node.nodeType == 3; node = node.previousSibling) {\n
+\t\t\t\t\t\t\t\toffset += node.nodeValue.length;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tpoint.push(offset);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tchildNodes = container.childNodes;\n
+\n
+\t\t\t\t\t\tif (offset >= childNodes.length && childNodes.length) {\n
+\t\t\t\t\t\t\tafter = 1;\n
+\t\t\t\t\t\t\toffset = Math.max(0, childNodes.length - 1);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tpoint.push(dom.nodeIndex(childNodes[offset], normalized) + after);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tfor (; container && container != root; container = container.parentNode) {\n
+\t\t\t\t\t\tpoint.push(dom.nodeIndex(container, normalized));\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn point;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tbookmark.start = getPoint(rng, true);\n
+\n
+\t\t\t\tif (!selection.isCollapsed()) {\n
+\t\t\t\t\tbookmark.end = getPoint(rng);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn bookmark;\n
+\t\t\t}\n
+\n
+\t\t\tif (type == 2) {\n
+\t\t\t\telement = selection.getNode();\n
+\t\t\t\tname = element ? element.nodeName : null;\n
+\n
+\t\t\t\tif (name == \'IMG\') {\n
+\t\t\t\t\treturn {name: name, index: findIndex(name, element)};\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (selection.tridentSel) {\n
+\t\t\t\t\treturn selection.tridentSel.getBookmark(type);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn getLocation();\n
+\t\t\t}\n
+\n
+\t\t\t// Handle simple range\n
+\t\t\tif (type) {\n
+\t\t\t\treturn {rng: selection.getRng()};\n
+\t\t\t}\n
+\n
+\t\t\trng = selection.getRng();\n
+\t\t\tid = dom.uniqueId();\n
+\t\t\tcollapsed = selection.isCollapsed();\n
+\t\t\tstyles = \'overflow:hidden;line-height:0px\';\n
+\n
+\t\t\t// Explorer method\n
+\t\t\tif (rng.duplicate || rng.item) {\n
+\t\t\t\t// Text selection\n
+\t\t\t\tif (!rng.item) {\n
+\t\t\t\t\trng2 = rng.duplicate();\n
+\n
+\t\t\t\t\ttry {\n
+\t\t\t\t\t\t// Insert start marker\n
+\t\t\t\t\t\trng.collapse();\n
+\t\t\t\t\t\trng.pasteHTML(\'<span data-mce-type="bookmark" id="\' + id + \'_start" style="\' + styles + \'">\' + chr + \'</span>\');\n
+\n
+\t\t\t\t\t\t// Insert end marker\n
+\t\t\t\t\t\tif (!collapsed) {\n
+\t\t\t\t\t\t\trng2.collapse(false);\n
+\n
+\t\t\t\t\t\t\t// Detect the empty space after block elements in IE and move the\n
+\t\t\t\t\t\t\t// end back one character <p></p>] becomes <p>]</p>\n
+\t\t\t\t\t\t\trng.moveToElementText(rng2.parentElement());\n
+\t\t\t\t\t\t\tif (rng.compareEndPoints(\'StartToEnd\', rng2) === 0) {\n
+\t\t\t\t\t\t\t\trng2.move(\'character\', -1);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\trng2.pasteHTML(\'<span data-mce-type="bookmark" id="\' + id + \'_end" style="\' + styles + \'">\' + chr + \'</span>\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t// IE might throw unspecified error so lets ignore it\n
+\t\t\t\t\t\treturn null;\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// Control selection\n
+\t\t\t\t\telement = rng.item(0);\n
+\t\t\t\t\tname = element.nodeName;\n
+\n
+\t\t\t\t\treturn {name: name, index: findIndex(name, element)};\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\telement = selection.getNode();\n
+\t\t\t\tname = element.nodeName;\n
+\t\t\t\tif (name == \'IMG\') {\n
+\t\t\t\t\treturn {name: name, index: findIndex(name, element)};\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// W3C method\n
+\t\t\t\trng2 = normalizeTableCellSelection(rng.cloneRange());\n
+\n
+\t\t\t\t// Insert end marker\n
+\t\t\t\tif (!collapsed) {\n
+\t\t\t\t\trng2.collapse(false);\n
+\t\t\t\t\trng2.insertNode(dom.create(\'span\', {\'data-mce-type\': "bookmark", id: id + \'_end\', style: styles}, chr));\n
+\t\t\t\t}\n
+\n
+\t\t\t\trng = normalizeTableCellSelection(rng);\n
+\t\t\t\trng.collapse(true);\n
+\t\t\t\trng.insertNode(dom.create(\'span\', {\'data-mce-type\': "bookmark", id: id + \'_start\', style: styles}, chr));\n
+\t\t\t}\n
+\n
+\t\t\tselection.moveToBookmark({id: id, keep: 1});\n
+\n
+\t\t\treturn {id: id};\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Restores the selection to the specified bookmark.\n
+\t\t *\n
+\t\t * @method moveToBookmark\n
+\t\t * @param {Object} bookmark Bookmark to restore selection from.\n
+\t\t * @return {Boolean} true/false if it was successful or not.\n
+\t\t * @example\n
+\t\t * // Stores a bookmark of the current selection\n
+\t\t * var bm = tinymce.activeEditor.selection.getBookmark();\n
+\t\t *\n
+\t\t * tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + \'Some new content\');\n
+\t\t *\n
+\t\t * // Restore the selection bookmark\n
+\t\t * tinymce.activeEditor.selection.moveToBookmark(bm);\n
+\t\t */\n
+\t\tthis.moveToBookmark = function(bookmark) {\n
+\t\t\tvar rng, root, startContainer, endContainer, startOffset, endOffset;\n
+\n
+\t\t\tfunction setEndPoint(start) {\n
+\t\t\t\tvar point = bookmark[start ? \'start\' : \'end\'], i, node, offset, children;\n
+\n
+\t\t\t\tif (point) {\n
+\t\t\t\t\toffset = point[0];\n
+\n
+\t\t\t\t\t// Find container node\n
+\t\t\t\t\tfor (node = root, i = point.length - 1; i >= 1; i--) {\n
+\t\t\t\t\t\tchildren = node.childNodes;\n
+\n
+\t\t\t\t\t\tif (point[i] > children.length - 1) {\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode = children[point[i]];\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Move text offset to best suitable location\n
+\t\t\t\t\tif (node.nodeType === 3) {\n
+\t\t\t\t\t\toffset = Math.min(point[0], node.nodeValue.length);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Move element offset to best suitable location\n
+\t\t\t\t\tif (node.nodeType === 1) {\n
+\t\t\t\t\t\toffset = Math.min(point[0], node.childNodes.length);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Set offset within container node\n
+\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\trng.setStart(node, offset);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\trng.setEnd(node, offset);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tfunction restoreEndPoint(suffix) {\n
+\t\t\t\tvar marker = dom.get(bookmark.id + \'_\' + suffix), node, idx, next, prev, keep = bookmark.keep;\n
+\n
+\t\t\t\tif (marker) {\n
+\t\t\t\t\tnode = marker.parentNode;\n
+\n
+\t\t\t\t\tif (suffix == \'start\') {\n
+\t\t\t\t\t\tif (!keep) {\n
+\t\t\t\t\t\t\tidx = dom.nodeIndex(marker);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tnode = marker.firstChild;\n
+\t\t\t\t\t\t\tidx = 1;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tstartContainer = endContainer = node;\n
+\t\t\t\t\t\tstartOffset = endOffset = idx;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tif (!keep) {\n
+\t\t\t\t\t\t\tidx = dom.nodeIndex(marker);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tnode = marker.firstChild;\n
+\t\t\t\t\t\t\tidx = 1;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tendContainer = node;\n
+\t\t\t\t\t\tendOffset = idx;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!keep) {\n
+\t\t\t\t\t\tprev = marker.previousSibling;\n
+\t\t\t\t\t\tnext = marker.nextSibling;\n
+\n
+\t\t\t\t\t\t// Remove all marker text nodes\n
+\t\t\t\t\t\tTools.each(Tools.grep(marker.childNodes), function(node) {\n
+\t\t\t\t\t\t\tif (node.nodeType == 3) {\n
+\t\t\t\t\t\t\t\tnode.nodeValue = node.nodeValue.replace(/\\uFEFF/g, \'\');\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t// Remove marker but keep children if for example contents where inserted into the marker\n
+\t\t\t\t\t\t// Also remove duplicated instances of the marker for example by a\n
+\t\t\t\t\t\t// split operation or by WebKit auto split on paste feature\n
+\t\t\t\t\t\twhile ((marker = dom.get(bookmark.id + \'_\' + suffix))) {\n
+\t\t\t\t\t\t\tdom.remove(marker, 1);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// If siblings are text nodes then merge them unless it\'s Opera since it some how removes the node\n
+\t\t\t\t\t\t// and we are sniffing since adding a lot of detection code for a browser with 3% of the market\n
+\t\t\t\t\t\t// isn\'t worth the effort. Sorry, Opera but it\'s just a fact\n
+\t\t\t\t\t\tif (prev && next && prev.nodeType == next.nodeType && prev.nodeType == 3 && !Env.opera) {\n
+\t\t\t\t\t\t\tidx = prev.nodeValue.length;\n
+\t\t\t\t\t\t\tprev.appendData(next.nodeValue);\n
+\t\t\t\t\t\t\tdom.remove(next);\n
+\n
+\t\t\t\t\t\t\tif (suffix == \'start\') {\n
+\t\t\t\t\t\t\t\tstartContainer = endContainer = prev;\n
+\t\t\t\t\t\t\t\tstartOffset = endOffset = idx;\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tendContainer = prev;\n
+\t\t\t\t\t\t\t\tendOffset = idx;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction addBogus(node) {\n
+\t\t\t\t// Adds a bogus BR element for empty block elements\n
+\t\t\t\tif (dom.isBlock(node) && !node.innerHTML && !Env.ie) {\n
+\t\t\t\t\tnode.innerHTML = \'<br data-mce-bogus="1" />\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn node;\n
+\t\t\t}\n
+\n
+\t\t\tif (bookmark) {\n
+\t\t\t\tif (bookmark.start) {\n
+\t\t\t\t\trng = dom.createRng();\n
+\t\t\t\t\troot = dom.getRoot();\n
+\n
+\t\t\t\t\tif (selection.tridentSel) {\n
+\t\t\t\t\t\treturn selection.tridentSel.moveToBookmark(bookmark);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (setEndPoint(true) && setEndPoint()) {\n
+\t\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if (bookmark.id) {\n
+\t\t\t\t\t// Restore start/end points\n
+\t\t\t\t\trestoreEndPoint(\'start\');\n
+\t\t\t\t\trestoreEndPoint(\'end\');\n
+\n
+\t\t\t\t\tif (startContainer) {\n
+\t\t\t\t\t\trng = dom.createRng();\n
+\t\t\t\t\t\trng.setStart(addBogus(startContainer), startOffset);\n
+\t\t\t\t\t\trng.setEnd(addBogus(endContainer), endOffset);\n
+\t\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if (bookmark.name) {\n
+\t\t\t\t\tselection.select(dom.select(bookmark.name)[bookmark.index]);\n
+\t\t\t\t} else if (bookmark.rng) {\n
+\t\t\t\t\tselection.setRng(bookmark.rng);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+\n
+\t/**\n
+\t * Returns true/false if the specified node is a bookmark node or not.\n
+\t *\n
+\t * @static\n
+\t * @method isBookmarkNode\n
+\t * @param {DOMNode} node DOM Node to check if it\'s a bookmark node or not.\n
+\t * @return {Boolean} true/false if the node is a bookmark node or not.\n
+\t */\n
+\tBookmarkManager.isBookmarkNode = function(node) {\n
+\t\treturn node && node.tagName === \'SPAN\' && node.getAttribute(\'data-mce-type\') === \'bookmark\';\n
+\t};\n
+\n
+\treturn BookmarkManager;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11029</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>BookmarkManager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

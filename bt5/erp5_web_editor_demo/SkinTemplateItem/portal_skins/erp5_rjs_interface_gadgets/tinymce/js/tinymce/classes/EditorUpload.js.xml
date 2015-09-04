@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268289.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EditorUpload.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * EditorUpload.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Handles image uploads, updates undo stack and patches over various internal functions.\n
+ *\n
+ * @private\n
+ * @class tinymce.EditorUpload\n
+ */\n
+define("tinymce/EditorUpload", [\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/file/Uploader",\n
+\t"tinymce/file/ImageScanner",\n
+\t"tinymce/file/BlobCache"\n
+], function(Tools, Uploader, ImageScanner, BlobCache) {\n
+\treturn function(editor) {\n
+\t\tvar blobCache = new BlobCache();\n
+\n
+\t\t// Replaces strings without regexps to avoid FF regexp to big issue\n
+\t\tfunction replaceString(content, search, replace) {\n
+\t\t\tvar index = 0;\n
+\n
+\t\t\tdo {\n
+\t\t\t\tindex = content.indexOf(search, index);\n
+\n
+\t\t\t\tif (index !== -1) {\n
+\t\t\t\t\tcontent = content.substring(0, index) + replace + content.substr(index + search.length);\n
+\t\t\t\t\tindex += replace.length - search.length + 1;\n
+\t\t\t\t}\n
+\t\t\t} while (index !== -1);\n
+\n
+\t\t\treturn content;\n
+\t\t}\n
+\n
+\t\tfunction replaceImageUrl(content, targetUrl, replacementUrl) {\n
+\t\t\tcontent = replaceString(content, \'src="\' + targetUrl + \'"\', \'src="\' + replacementUrl + \'"\');\n
+\t\t\tcontent = replaceString(content, \'data-mce-src="\' + targetUrl + \'"\', \'data-mce-src="\' + replacementUrl + \'"\');\n
+\n
+\t\t\treturn content;\n
+\t\t}\n
+\n
+\t\tfunction replaceUrlInUndoStack(targetUrl, replacementUrl) {\n
+\t\t\tTools.each(editor.undoManager.data, function(level) {\n
+\t\t\t\tlevel.content = replaceImageUrl(level.content, targetUrl, replacementUrl);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction uploadImages(callback) {\n
+\t\t\tvar uploader = new Uploader({\n
+\t\t\t\turl: editor.settings.images_upload_url,\n
+\t\t\t\tbasePath: editor.settings.images_upload_base_path,\n
+\t\t\t\tcredentials: editor.settings.images_upload_credentials,\n
+\t\t\t\thandler: editor.settings.images_upload_handler\n
+\t\t\t});\n
+\n
+\t\t\tfunction imageInfosToBlobInfos(imageInfos) {\n
+\t\t\t\treturn Tools.map(imageInfos, function(imageInfo) {\n
+\t\t\t\t\treturn imageInfo.blobInfo;\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn scanForImages().then(imageInfosToBlobInfos).then(uploader.upload).then(function(result) {\n
+\t\t\t\tresult = Tools.map(result, function(uploadInfo) {\n
+\t\t\t\t\tvar image;\n
+\n
+\t\t\t\t\timage = editor.dom.select(\'img[src="\' + uploadInfo.blobInfo.blobUri() + \'"]\')[0];\n
+\n
+\t\t\t\t\tif (image) {\n
+\t\t\t\t\t\treplaceUrlInUndoStack(image.src, uploadInfo.url);\n
+\n
+\t\t\t\t\t\teditor.$(image).attr({\n
+\t\t\t\t\t\t\tsrc: uploadInfo.url,\n
+\t\t\t\t\t\t\t\'data-mce-src\': editor.convertURL(uploadInfo.url, \'src\')\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn {\n
+\t\t\t\t\t\telement: image,\n
+\t\t\t\t\t\tstatus: uploadInfo.status\n
+\t\t\t\t\t};\n
+\t\t\t\t});\n
+\n
+\t\t\t\tif (callback) {\n
+\t\t\t\t\tcallback(result);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn result;\n
+\t\t\t}, function() {\n
+\t\t\t\t// Silent\n
+\t\t\t\t// TODO: Maybe execute some failure callback here?\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction scanForImages() {\n
+\t\t\treturn ImageScanner.findAll(editor.getBody(), blobCache).then(function(result) {\n
+\t\t\t\tTools.each(result, function(resultItem) {\n
+\t\t\t\t\treplaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());\n
+\t\t\t\t\tresultItem.image.src = resultItem.blobInfo.blobUri();\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn result;\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction destroy() {\n
+\t\t\tblobCache.destroy();\n
+\t\t}\n
+\n
+\t\tfunction replaceBlobWithBase64(content) {\n
+\t\t\treturn content.replace(/src="(blob:[^"]+)"/g, function(match, blobUri) {\n
+\t\t\t\tvar blobInfo = blobCache.getByUri(blobUri);\n
+\n
+\t\t\t\tif (!blobInfo) {\n
+\t\t\t\t\tblobInfo = Tools.reduce(editor.editorManager.editors, function(result, editor) {\n
+\t\t\t\t\t\treturn result || editor.editorUpload.blobCache.getByUri(blobUri);\n
+\t\t\t\t\t}, null);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (blobInfo) {\n
+\t\t\t\t\treturn \'src="data:\' + blobInfo.blob().type + \';base64,\' + blobInfo.base64() + \'"\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn match[0];\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\teditor.on(\'setContent paste\', scanForImages);\n
+\n
+\t\teditor.on(\'RawSaveContent\', function(e) {\n
+\t\t\te.content = replaceBlobWithBase64(e.content);\n
+\t\t});\n
+\n
+\t\teditor.on(\'getContent\', function(e) {\n
+\t\t\tif (e.source_view || e.format == \'raw\') {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\te.content = replaceBlobWithBase64(e.content);\n
+\t\t});\n
+\n
+\t\treturn {\n
+\t\t\tblobCache: blobCache,\n
+\t\t\tuploadImages: uploadImages,\n
+\t\t\tscanForImages: scanForImages,\n
+\t\t\tdestroy: destroy\n
+\t\t};\n
+\t};\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4065</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EditorUpload.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

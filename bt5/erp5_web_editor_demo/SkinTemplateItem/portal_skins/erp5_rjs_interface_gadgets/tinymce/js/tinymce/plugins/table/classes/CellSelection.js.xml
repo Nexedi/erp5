@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268426.42</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CellSelection.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * CellSelection.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles table cell selection by faking it using a css class that gets applied\n
+ * to cells when dragging the mouse from one cell to another.\n
+ *\n
+ * @class tinymce.tableplugin.CellSelection\n
+ * @private\n
+ */\n
+define("tinymce/tableplugin/CellSelection", [\n
+\t"tinymce/tableplugin/TableGrid",\n
+\t"tinymce/dom/TreeWalker",\n
+\t"tinymce/util/Tools"\n
+], function(TableGrid, TreeWalker, Tools) {\n
+\treturn function(editor) {\n
+\t\tvar dom = editor.dom, tableGrid, startCell, startTable, hasCellSelection = true, resizing;\n
+\n
+\t\tfunction clear(force) {\n
+\t\t\t// Restore selection possibilities\n
+\t\t\teditor.getBody().style.webkitUserSelect = \'\';\n
+\n
+\t\t\tif (force || hasCellSelection) {\n
+\t\t\t\teditor.dom.removeClass(\n
+\t\t\t\t\teditor.dom.select(\'td.mce-item-selected,th.mce-item-selected\'),\n
+\t\t\t\t\t\'mce-item-selected\'\n
+\t\t\t\t);\n
+\n
+\t\t\t\thasCellSelection = false;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction cellSelectionHandler(e) {\n
+\t\t\tvar sel, table, target = e.target;\n
+\n
+\t\t\tif (resizing) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (startCell && (tableGrid || target != startCell) && (target.nodeName == \'TD\' || target.nodeName == \'TH\')) {\n
+\t\t\t\ttable = dom.getParent(target, \'table\');\n
+\t\t\t\tif (table == startTable) {\n
+\t\t\t\t\tif (!tableGrid) {\n
+\t\t\t\t\t\ttableGrid = new TableGrid(editor, table);\n
+\t\t\t\t\t\ttableGrid.setStartCell(startCell);\n
+\n
+\t\t\t\t\t\teditor.getBody().style.webkitUserSelect = \'none\';\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\ttableGrid.setEndCell(target);\n
+\t\t\t\t\thasCellSelection = true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Remove current selection\n
+\t\t\t\tsel = editor.selection.getSel();\n
+\n
+\t\t\t\ttry {\n
+\t\t\t\t\tif (sel.removeAllRanges) {\n
+\t\t\t\t\t\tsel.removeAllRanges();\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tsel.empty();\n
+\t\t\t\t\t}\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// IE9 might throw errors here\n
+\t\t\t\t}\n
+\n
+\t\t\t\te.preventDefault();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Add cell selection logic\n
+\t\teditor.on(\'MouseDown\', function(e) {\n
+\t\t\tif (e.button != 2 && !resizing) {\n
+\t\t\t\tclear();\n
+\n
+\t\t\t\tstartCell = dom.getParent(e.target, \'td,th\');\n
+\t\t\t\tstartTable = dom.getParent(startCell, \'table\');\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'mouseover\', cellSelectionHandler);\n
+\n
+\t\teditor.on(\'remove\', function() {\n
+\t\t\tdom.unbind(editor.getDoc(), \'mouseover\', cellSelectionHandler);\n
+\t\t});\n
+\n
+\t\teditor.on(\'MouseUp\', function() {\n
+\t\t\tvar rng, sel = editor.selection, selectedCells, walker, node, lastNode;\n
+\n
+\t\t\tfunction setPoint(node, start) {\n
+\t\t\t\tvar walker = new TreeWalker(node, node);\n
+\n
+\t\t\t\tdo {\n
+\t\t\t\t\t// Text node\n
+\t\t\t\t\tif (node.nodeType == 3 && Tools.trim(node.nodeValue).length !== 0) {\n
+\t\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\t\trng.setStart(node, 0);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trng.setEnd(node, node.nodeValue.length);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// BR element\n
+\t\t\t\t\tif (node.nodeName == \'BR\') {\n
+\t\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\t\trng.setStartBefore(node);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trng.setEndBefore(node);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t} while ((node = (start ? walker.next() : walker.prev())));\n
+\t\t\t}\n
+\n
+\t\t\t// Move selection to startCell\n
+\t\t\tif (startCell) {\n
+\t\t\t\tif (tableGrid) {\n
+\t\t\t\t\teditor.getBody().style.webkitUserSelect = \'\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Try to expand text selection as much as we can only Gecko supports cell selection\n
+\t\t\t\tselectedCells = dom.select(\'td.mce-item-selected,th.mce-item-selected\');\n
+\t\t\t\tif (selectedCells.length > 0) {\n
+\t\t\t\t\trng = dom.createRng();\n
+\t\t\t\t\tnode = selectedCells[0];\n
+\t\t\t\t\trng.setStartBefore(node);\n
+\t\t\t\t\trng.setEndAfter(node);\n
+\n
+\t\t\t\t\tsetPoint(node, 1);\n
+\t\t\t\t\twalker = new TreeWalker(node, dom.getParent(selectedCells[0], \'table\'));\n
+\n
+\t\t\t\t\tdo {\n
+\t\t\t\t\t\tif (node.nodeName == \'TD\' || node.nodeName == \'TH\') {\n
+\t\t\t\t\t\t\tif (!dom.hasClass(node, \'mce-item-selected\')) {\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tlastNode = node;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} while ((node = walker.next()));\n
+\n
+\t\t\t\t\tsetPoint(lastNode);\n
+\n
+\t\t\t\t\tsel.setRng(rng);\n
+\t\t\t\t}\n
+\n
+\t\t\t\teditor.nodeChanged();\n
+\t\t\t\tstartCell = tableGrid = startTable = null;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'KeyUp Drop SetContent\', function(e) {\n
+\t\t\tclear(e.type == \'setcontent\');\n
+\t\t\tstartCell = tableGrid = startTable = null;\n
+\t\t\tresizing = false;\n
+\t\t});\n
+\n
+\t\teditor.on(\'ObjectResizeStart ObjectResized\', function(e) {\n
+\t\t\tresizing = e.type != \'objectresized\';\n
+\t\t});\n
+\n
+\t\treturn {\n
+\t\t\tclear: clear\n
+\t\t};\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4191</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>CellSelection.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

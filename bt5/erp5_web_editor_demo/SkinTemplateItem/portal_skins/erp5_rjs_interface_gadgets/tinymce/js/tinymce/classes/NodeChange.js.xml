@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268385.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>NodeChange.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * NodeChange.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles the nodechange event dispatching both manual and though selection change events.\n
+ *\n
+ * @class tinymce.NodeChange\n
+ * @private\n
+ */\n
+define("tinymce/NodeChange", [\n
+\t"tinymce/dom/RangeUtils",\n
+\t"tinymce/Env"\n
+], function(RangeUtils, Env) {\n
+\treturn function(editor) {\n
+\t\tvar lastRng, lastPath = [];\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the current element path has been changed or not.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @return {Boolean} True if the element path is the same false if it\'s not.\n
+\t\t */\n
+\t\tfunction isSameElementPath(startElm) {\n
+\t\t\tvar i, currentPath;\n
+\n
+\t\t\tcurrentPath = editor.$(startElm).parentsUntil(editor.getBody()).add(startElm);\n
+\t\t\tif (currentPath.length === lastPath.length) {\n
+\t\t\t\tfor (i = currentPath.length; i >= 0; i--) {\n
+\t\t\t\t\tif (currentPath[i] !== lastPath[i]) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (i === -1) {\n
+\t\t\t\t\tlastPath = currentPath;\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tlastPath = currentPath;\n
+\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\t// Gecko doesn\'t support the "selectionchange" event\n
+\t\tif (!(\'onselectionchange\' in editor.getDoc())) {\n
+\t\t\teditor.on(\'NodeChange Click MouseUp KeyUp Focus\', function(e) {\n
+\t\t\t\tvar nativeRng, fakeRng;\n
+\n
+\t\t\t\t// Since DOM Ranges mutate on modification\n
+\t\t\t\t// of the DOM we need to clone it\'s contents\n
+\t\t\t\tnativeRng = editor.selection.getRng();\n
+\t\t\t\tfakeRng = {\n
+\t\t\t\t\tstartContainer: nativeRng.startContainer,\n
+\t\t\t\t\tstartOffset: nativeRng.startOffset,\n
+\t\t\t\t\tendContainer: nativeRng.endContainer,\n
+\t\t\t\t\tendOffset: nativeRng.endOffset\n
+\t\t\t\t};\n
+\n
+\t\t\t\t// Always treat nodechange as a selectionchange since applying\n
+\t\t\t\t// formatting to the current range wouldn\'t update the range but it\'s parent\n
+\t\t\t\tif (e.type == \'nodechange\' || !RangeUtils.compareRanges(fakeRng, lastRng)) {\n
+\t\t\t\t\teditor.fire(\'SelectionChange\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tlastRng = fakeRng;\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// IE has a bug where it fires a selectionchange on right click that has a range at the start of the body\n
+\t\t// When the contextmenu event fires the selection is located at the right location\n
+\t\teditor.on(\'contextmenu\', function() {\n
+\t\t\teditor.fire(\'SelectionChange\');\n
+\t\t});\n
+\n
+\t\t// Selection change is delayed ~200ms on IE when you click inside the current range\n
+\t\teditor.on(\'SelectionChange\', function() {\n
+\t\t\tvar startElm = editor.selection.getStart(true);\n
+\n
+\t\t\t// IE 8 will fire a selectionchange event with an incorrect selection\n
+\t\t\t// when focusing out of table cells. Click inside cell -> toolbar = Invalid SelectionChange event\n
+\t\t\tif (!Env.range && editor.selection.isCollapsed()) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (!isSameElementPath(startElm) && editor.dom.isChildOf(startElm, editor.getBody())) {\n
+\t\t\t\teditor.nodeChanged({selectionChange: true});\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Fire an extra nodeChange on mouseup for compatibility reasons\n
+\t\teditor.on(\'MouseUp\', function(e) {\n
+\t\t\tif (!e.isDefaultPrevented()) {\n
+\t\t\t\t// Delay nodeChanged call for WebKit edge case issue where the range\n
+\t\t\t\t// isn\'t updated until after you click outside a selected image\n
+\t\t\t\tif (editor.selection.getNode().nodeName == \'IMG\') {\n
+\t\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t\t}, 0);\n
+\t\t\t\t} else {\n
+\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t/**\n
+\t\t * Distpaches out a onNodeChange event to all observers. This method should be called when you\n
+\t\t * need to update the UI states or element path etc.\n
+\t\t *\n
+\t\t * @method nodeChanged\n
+\t\t * @param {Object} args Optional args to pass to NodeChange event handlers.\n
+\t\t */\n
+\t\tthis.nodeChanged = function(args) {\n
+\t\t\tvar selection = editor.selection, node, parents, root;\n
+\n
+\t\t\t// Fix for bug #1896577 it seems that this can not be fired while the editor is loading\n
+\t\t\tif (editor.initialized && selection && !editor.settings.disable_nodechange && !editor.settings.readonly) {\n
+\t\t\t\t// Get start node\n
+\t\t\t\troot = editor.getBody();\n
+\t\t\t\tnode = selection.getStart() || root;\n
+\t\t\t\tnode = node.ownerDocument != editor.getDoc() ? editor.getBody() : node;\n
+\n
+\t\t\t\t// Edge case for <p>|<img></p>\n
+\t\t\t\tif (node.nodeName == \'IMG\' && selection.isCollapsed()) {\n
+\t\t\t\t\tnode = node.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Get parents and add them to object\n
+\t\t\t\tparents = [];\n
+\t\t\t\teditor.dom.getParent(node, function(node) {\n
+\t\t\t\t\tif (node === root) {\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tparents.push(node);\n
+\t\t\t\t});\n
+\n
+\t\t\t\targs = args || {};\n
+\t\t\t\targs.element = node;\n
+\t\t\t\targs.parents = parents;\n
+\n
+\t\t\t\teditor.fire(\'NodeChange\', args);\n
+\t\t\t}\n
+\t\t};\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4522</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>NodeChange.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268516.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'emoticons\', function(editor, url) {\n
+\tvar emoticons = [\n
+\t\t["cool", "cry", "embarassed", "foot-in-mouth"],\n
+\t\t["frown", "innocent", "kiss", "laughing"],\n
+\t\t["money-mouth", "sealed", "smile", "surprised"],\n
+\t\t["tongue-out", "undecided", "wink", "yell"]\n
+\t];\n
+\n
+\tfunction getHtml() {\n
+\t\tvar emoticonsHtml;\n
+\n
+\t\temoticonsHtml = \'<table role="list" class="mce-grid">\';\n
+\n
+\t\ttinymce.each(emoticons, function(row) {\n
+\t\t\temoticonsHtml += \'<tr>\';\n
+\n
+\t\t\ttinymce.each(row, function(icon) {\n
+\t\t\t\tvar emoticonUrl = url + \'/img/smiley-\' + icon + \'.gif\';\n
+\n
+\t\t\t\temoticonsHtml += \'<td><a href="#" data-mce-url="\' + emoticonUrl + \'" data-mce-alt="\' + icon + \'" tabindex="-1" \' +\n
+\t\t\t\t\t\'role="option" aria-label="\' + icon + \'"><img src="\' +\n
+\t\t\t\t\temoticonUrl + \'" style="width: 18px; height: 18px" role="presentation" /></a></td>\';\n
+\t\t\t});\n
+\n
+\t\t\temoticonsHtml += \'</tr>\';\n
+\t\t});\n
+\n
+\t\temoticonsHtml += \'</table>\';\n
+\n
+\t\treturn emoticonsHtml;\n
+\t}\n
+\n
+\teditor.addButton(\'emoticons\', {\n
+\t\ttype: \'panelbutton\',\n
+\t\tpanel: {\n
+\t\t\trole: \'application\',\n
+\t\t\tautohide: true,\n
+\t\t\thtml: getHtml,\n
+\t\t\tonclick: function(e) {\n
+\t\t\t\tvar linkElm = editor.dom.getParent(e.target, \'a\');\n
+\n
+\t\t\t\tif (linkElm) {\n
+\t\t\t\t\teditor.insertContent(\n
+\t\t\t\t\t\t\'<img src="\' + linkElm.getAttribute(\'data-mce-url\') + \'" alt="\' + linkElm.getAttribute(\'data-mce-alt\') + \'" />\'\n
+\t\t\t\t\t);\n
+\n
+\t\t\t\t\tthis.hide();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\t\ttooltip: \'Emoticons\'\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1615</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268530.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ImagePanel.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ImagePanel.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * ...\n
+ *\n
+ * @-x-less ImagePanel.less\n
+ */\n
+define("tinymce/imagetoolsplugin/ImagePanel", [\n
+\t"tinymce/ui/Control",\n
+\t"tinymce/ui/DragHelper",\n
+\t"tinymce/ui/Rect",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/util/Promise",\n
+\t"tinymce/imagetoolsplugin/CropRect"\n
+], function(Control, DragHelper, Rect, Tools, Promise, CropRect) {\n
+\tfunction loadImage(image) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tfunction loaded() {\n
+\t\t\t\timage.removeEventListener(\'load\', loaded);\n
+\t\t\t\tresolve(image);\n
+\t\t\t}\n
+\n
+\t\t\tif (image.complete) {\n
+\t\t\t\tresolve(image);\n
+\t\t\t} else {\n
+\t\t\t\timage.addEventListener(\'load\', loaded);\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\treturn Control.extend({\n
+\t\tDefaults: {\n
+\t\t\tclasses: "imagepanel"\n
+\t\t},\n
+\n
+\t\tselection: function(rect) {\n
+\t\t\tif (arguments.length) {\n
+\t\t\t\tthis.state.set(\'rect\', rect);\n
+\t\t\t\treturn this;\n
+\t\t\t}\n
+\n
+\t\t\treturn this.state.get(\'rect\');\n
+\t\t},\n
+\n
+\t\timageSize: function() {\n
+\t\t\tvar viewRect = this.state.get(\'viewRect\');\n
+\n
+\t\t\treturn {\n
+\t\t\t\tw: viewRect.w,\n
+\t\t\t\th: viewRect.h\n
+\t\t\t};\n
+\t\t},\n
+\n
+\t\ttoggleCropRect: function(state) {\n
+\t\t\tthis.state.set(\'cropEnabled\', state);\n
+\t\t},\n
+\n
+\t\timageSrc: function(url) {\n
+\t\t\tvar self = this, img = new Image();\n
+\n
+\t\t\timg.src = url;\n
+\n
+\t\t\tloadImage(img).then(function() {\n
+\t\t\t\tvar rect, $img, lastRect = self.state.get(\'viewRect\');\n
+\n
+\t\t\t\t$img = self.$el.find(\'img\');\n
+\t\t\t\tif ($img[0]) {\n
+\t\t\t\t\t$img.replaceWith(img);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tself.getEl().appendChild(img);\n
+\t\t\t\t}\n
+\n
+\t\t\t\trect = {x: 0, y: 0, w: img.naturalWidth, h: img.naturalHeight};\n
+\t\t\t\tself.state.set(\'viewRect\', rect);\n
+\t\t\t\tself.state.set(\'rect\', Rect.inflate(rect, -20, -20));\n
+\n
+\t\t\t\tif (!lastRect || lastRect.w != rect.w || lastRect.h != rect.h) {\n
+\t\t\t\t\tself.zoomFit();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.repaintImage();\n
+\t\t\t\tself.fire(\'load\');\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\tzoom: function(value) {\n
+\t\t\tif (arguments.length) {\n
+\t\t\t\tthis.state.set(\'zoom\', value);\n
+\t\t\t\treturn this;\n
+\t\t\t}\n
+\n
+\t\t\treturn this.state.get(\'zoom\');\n
+\t\t},\n
+\n
+\t\tpostRender: function() {\n
+\t\t\tthis.imageSrc(this.settings.imageSrc);\n
+\t\t\treturn this._super();\n
+\t\t},\n
+\n
+\t\tzoomFit: function() {\n
+\t\t\tvar self = this, $img, pw, ph, w, h, zoom, padding;\n
+\n
+\t\t\tpadding = 10;\n
+\t\t\t$img = self.$el.find(\'img\');\n
+\t\t\tpw = self.getEl().clientWidth;\n
+\t\t\tph = self.getEl().clientHeight;\n
+\t\t\tw = $img[0].naturalWidth;\n
+\t\t\th = $img[0].naturalHeight;\n
+\t\t\tzoom = Math.min((pw - padding) / w, (ph - padding) / h);\n
+\n
+\t\t\tif (zoom >= 1) {\n
+\t\t\t\tzoom = 1;\n
+\t\t\t}\n
+\n
+\t\t\tself.zoom(zoom);\n
+\t\t},\n
+\n
+\t\trepaintImage: function() {\n
+\t\t\tvar x, y, w, h, pw, ph, $img, zoom, rect, elm;\n
+\n
+\t\t\telm = this.getEl();\n
+\t\t\tzoom = this.zoom();\n
+\t\t\trect = this.state.get(\'rect\');\n
+\t\t\t$img = this.$el.find(\'img\');\n
+\t\t\tpw = elm.offsetWidth;\n
+\t\t\tph = elm.offsetHeight;\n
+\t\t\tw = $img[0].naturalWidth * zoom;\n
+\t\t\th = $img[0].naturalHeight * zoom;\n
+\t\t\tx = Math.max(0, pw / 2 - w / 2);\n
+\t\t\ty = Math.max(0, ph / 2 - h / 2);\n
+\n
+\t\t\t$img.css({\n
+\t\t\t\tleft: x,\n
+\t\t\t\ttop: y,\n
+\t\t\t\twidth: w,\n
+\t\t\t\theight: h\n
+\t\t\t});\n
+\n
+\t\t\tif (this.cropRect) {\n
+\t\t\t\tthis.cropRect.setRect({\n
+\t\t\t\t\tx: rect.x * zoom + x,\n
+\t\t\t\t\ty: rect.y * zoom + y,\n
+\t\t\t\t\tw: rect.w * zoom,\n
+\t\t\t\t\th: rect.h * zoom\n
+\t\t\t\t});\n
+\n
+\t\t\t\tthis.cropRect.setClampRect({\n
+\t\t\t\t\tx: x,\n
+\t\t\t\t\ty: y,\n
+\t\t\t\t\tw: w,\n
+\t\t\t\t\th: h\n
+\t\t\t\t});\n
+\n
+\t\t\t\tthis.cropRect.setViewPortRect({\n
+\t\t\t\t\tx: 0,\n
+\t\t\t\t\ty: 0,\n
+\t\t\t\t\tw: pw,\n
+\t\t\t\t\th: ph\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tfunction setupCropRect(rect) {\n
+\t\t\t\tself.cropRect = new CropRect(\n
+\t\t\t\t\trect,\n
+\t\t\t\t\tself.state.get(\'viewRect\'),\n
+\t\t\t\t\tself.state.get(\'viewRect\'),\n
+\t\t\t\t\tself.getEl()\n
+\t\t\t\t);\n
+\n
+\t\t\t\tself.cropRect.on(\'updateRect\', function(e) {\n
+\t\t\t\t\tvar rect = e.rect, zoom = self.zoom();\n
+\n
+\t\t\t\t\trect = {\n
+\t\t\t\t\t\tx: Math.round(rect.x / zoom),\n
+\t\t\t\t\t\ty: Math.round(rect.y / zoom),\n
+\t\t\t\t\t\tw: Math.round(rect.w / zoom),\n
+\t\t\t\t\t\th: Math.round(rect.h / zoom)\n
+\t\t\t\t\t};\n
+\n
+\t\t\t\t\tself.state.set(\'rect\', rect);\n
+\t\t\t\t});\n
+\n
+\t\t\t\tself.on(\'remove\', self.cropRect.destroy);\n
+\t\t\t}\n
+\n
+\t\t\tself.state.on(\'change:cropEnabled\', function(e) {\n
+\t\t\t\tself.cropRect.toggleVisibility(e.value);\n
+\t\t\t\tself.repaintImage();\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:zoom\', function() {\n
+\t\t\t\tself.repaintImage();\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:rect\', function(e) {\n
+\t\t\t\tvar rect = e.value;\n
+\n
+\t\t\t\tif (!self.cropRect) {\n
+\t\t\t\t\tsetupCropRect(rect);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.cropRect.setRect(rect);\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4309</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ImagePanel.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

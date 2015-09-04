@@ -1,0 +1,587 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268300.08</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Tools.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Tools.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class contains various utlity functions. These are also exposed\n
+ * directly on the tinymce namespace.\n
+ *\n
+ * @class tinymce.util.Tools\n
+ */\n
+define("tinymce/util/Tools", [\n
+\t"tinymce/Env"\n
+], function(Env) {\n
+\t/**\n
+\t * Removes whitespace from the beginning and end of a string.\n
+\t *\n
+\t * @method trim\n
+\t * @param {String} s String to remove whitespace from.\n
+\t * @return {String} New string with removed whitespace.\n
+\t */\n
+\tvar whiteSpaceRegExp = /^\\s*|\\s*$/g;\n
+\n
+\tfunction trim(str) {\n
+\t\treturn (str === null || str === undefined) ? \'\' : ("" + str).replace(whiteSpaceRegExp, \'\');\n
+\t}\n
+\n
+\t/**\n
+\t * Returns true/false if the object is an array or not.\n
+\t *\n
+\t * @method isArray\n
+\t * @param {Object} obj Object to check.\n
+\t * @return {boolean} true/false state if the object is an array or not.\n
+\t */\n
+\tvar isArray = Array.isArray || function(obj) {\n
+\t\treturn Object.prototype.toString.call(obj) === "[object Array]";\n
+\t};\n
+\n
+\t/**\n
+\t * Checks if a object is of a specific type for example an array.\n
+\t *\n
+\t * @method is\n
+\t * @param {Object} obj Object to check type of.\n
+\t * @param {string} type Optional type to check for.\n
+\t * @return {Boolean} true/false if the object is of the specified type.\n
+\t */\n
+\tfunction is(obj, type) {\n
+\t\tif (!type) {\n
+\t\t\treturn obj !== undefined;\n
+\t\t}\n
+\n
+\t\tif (type == \'array\' && isArray(obj)) {\n
+\t\t\treturn true;\n
+\t\t}\n
+\n
+\t\treturn typeof obj == type;\n
+\t}\n
+\n
+\t/**\n
+\t * Converts the specified object into a real JavaScript array.\n
+\t *\n
+\t * @method toArray\n
+\t * @param {Object} obj Object to convert into array.\n
+\t * @return {Array} Array object based in input.\n
+\t */\n
+\tfunction toArray(obj) {\n
+\t\tvar array = obj, i, l;\n
+\n
+\t\tif (!isArray(obj)) {\n
+\t\t\tarray = [];\n
+\t\t\tfor (i = 0, l = obj.length; i < l; i++) {\n
+\t\t\t\tarray[i] = obj[i];\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn array;\n
+\t}\n
+\n
+\t/**\n
+\t * Makes a name/object map out of an array with names.\n
+\t *\n
+\t * @method makeMap\n
+\t * @param {Array/String} items Items to make map out of.\n
+\t * @param {String} delim Optional delimiter to split string by.\n
+\t * @param {Object} map Optional map to add items to.\n
+\t * @return {Object} Name/value map of items.\n
+\t */\n
+\tfunction makeMap(items, delim, map) {\n
+\t\tvar i;\n
+\n
+\t\titems = items || [];\n
+\t\tdelim = delim || \',\';\n
+\n
+\t\tif (typeof items == "string") {\n
+\t\t\titems = items.split(delim);\n
+\t\t}\n
+\n
+\t\tmap = map || {};\n
+\n
+\t\ti = items.length;\n
+\t\twhile (i--) {\n
+\t\t\tmap[items[i]] = {};\n
+\t\t}\n
+\n
+\t\treturn map;\n
+\t}\n
+\n
+\t/**\n
+\t * Performs an iteration of all items in a collection such as an object or array. This method will execure the\n
+\t * callback function for each item in the collection, if the callback returns false the iteration will terminate.\n
+\t * The callback has the following format: cb(value, key_or_index).\n
+\t *\n
+\t * @method each\n
+\t * @param {Object} o Collection to iterate.\n
+\t * @param {function} cb Callback function to execute for each item.\n
+\t * @param {Object} s Optional scope to execute the callback in.\n
+\t * @example\n
+\t * // Iterate an array\n
+\t * tinymce.each([1,2,3], function(v, i) {\n
+\t *     console.debug("Value: " + v + ", Index: " + i);\n
+\t * });\n
+\t *\n
+\t * // Iterate an object\n
+\t * tinymce.each({a: 1, b: 2, c: 3], function(v, k) {\n
+\t *     console.debug("Value: " + v + ", Key: " + k);\n
+\t * });\n
+\t */\n
+\tfunction each(o, cb, s) {\n
+\t\tvar n, l;\n
+\n
+\t\tif (!o) {\n
+\t\t\treturn 0;\n
+\t\t}\n
+\n
+\t\ts = s || o;\n
+\n
+\t\tif (o.length !== undefined) {\n
+\t\t\t// Indexed arrays, needed for Safari\n
+\t\t\tfor (n = 0, l = o.length; n < l; n++) {\n
+\t\t\t\tif (cb.call(s, o[n], n, o) === false) {\n
+\t\t\t\t\treturn 0;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t} else {\n
+\t\t\t// Hashtables\n
+\t\t\tfor (n in o) {\n
+\t\t\t\tif (o.hasOwnProperty(n)) {\n
+\t\t\t\t\tif (cb.call(s, o[n], n, o) === false) {\n
+\t\t\t\t\t\treturn 0;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn 1;\n
+\t}\n
+\n
+\t/**\n
+\t * Creates a new array by the return value of each iteration function call. This enables you to convert\n
+\t * one array list into another.\n
+\t *\n
+\t * @method map\n
+\t * @param {Array} array Array of items to iterate.\n
+\t * @param {function} callback Function to call for each item. It\'s return value will be the new value.\n
+\t * @return {Array} Array with new values based on function return values.\n
+\t */\n
+\tfunction map(array, callback) {\n
+\t\tvar out = [];\n
+\n
+\t\teach(array, function(item) {\n
+\t\t\tout.push(callback(item));\n
+\t\t});\n
+\n
+\t\treturn out;\n
+\t}\n
+\n
+\t/**\n
+\t * Filters out items from the input array by calling the specified function for each item.\n
+\t * If the function returns false the item will be excluded if it returns true it will be included.\n
+\t *\n
+\t * @method grep\n
+\t * @param {Array} a Array of items to loop though.\n
+\t * @param {function} f Function to call for each item. Include/exclude depends on it\'s return value.\n
+\t * @return {Array} New array with values imported and filtered based in input.\n
+\t * @example\n
+\t * // Filter out some items, this will return an array with 4 and 5\n
+\t * var items = tinymce.grep([1,2,3,4,5], function(v) {return v > 3;});\n
+\t */\n
+\tfunction grep(a, f) {\n
+\t\tvar o = [];\n
+\n
+\t\teach(a, function(v) {\n
+\t\t\tif (!f || f(v)) {\n
+\t\t\t\to.push(v);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treturn o;\n
+\t}\n
+\n
+\t/**\n
+\t * Creates a class, subclass or static singleton.\n
+\t * More details on this method can be found in the Wiki.\n
+\t *\n
+\t * @method create\n
+\t * @param {String} s Class name, inheritage and prefix.\n
+\t * @param {Object} p Collection of methods to add to the class.\n
+\t * @param {Object} root Optional root object defaults to the global window object.\n
+\t * @example\n
+\t * // Creates a basic class\n
+\t * tinymce.create(\'tinymce.somepackage.SomeClass\', {\n
+\t *     SomeClass: function() {\n
+\t *         // Class constructor\n
+\t *     },\n
+\t *\n
+\t *     method: function() {\n
+\t *         // Some method\n
+\t *     }\n
+\t * });\n
+\t *\n
+\t * // Creates a basic subclass class\n
+\t * tinymce.create(\'tinymce.somepackage.SomeSubClass:tinymce.somepackage.SomeClass\', {\n
+\t *     SomeSubClass: function() {\n
+\t *         // Class constructor\n
+\t *         this.parent(); // Call parent constructor\n
+\t *     },\n
+\t *\n
+\t *     method: function() {\n
+\t *         // Some method\n
+\t *         this.parent(); // Call parent method\n
+\t *     },\n
+\t *\n
+\t *     \'static\': {\n
+\t *         staticMethod: function() {\n
+\t *             // Static method\n
+\t *         }\n
+\t *     }\n
+\t * });\n
+\t *\n
+\t * // Creates a singleton/static class\n
+\t * tinymce.create(\'static tinymce.somepackage.SomeSingletonClass\', {\n
+\t *     method: function() {\n
+\t *         // Some method\n
+\t *     }\n
+\t * });\n
+\t */\n
+\tfunction create(s, p, root) {\n
+\t\tvar self = this, sp, ns, cn, scn, c, de = 0;\n
+\n
+\t\t// Parse : <prefix> <class>:<super class>\n
+\t\ts = /^((static) )?([\\w.]+)(:([\\w.]+))?/.exec(s);\n
+\t\tcn = s[3].match(/(^|\\.)(\\w+)$/i)[2]; // Class name\n
+\n
+\t\t// Create namespace for new class\n
+\t\tns = self.createNS(s[3].replace(/\\.\\w+$/, \'\'), root);\n
+\n
+\t\t// Class already exists\n
+\t\tif (ns[cn]) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t// Make pure static class\n
+\t\tif (s[2] == \'static\') {\n
+\t\t\tns[cn] = p;\n
+\n
+\t\t\tif (this.onCreate) {\n
+\t\t\t\tthis.onCreate(s[2], s[3], ns[cn]);\n
+\t\t\t}\n
+\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t// Create default constructor\n
+\t\tif (!p[cn]) {\n
+\t\t\tp[cn] = function() {};\n
+\t\t\tde = 1;\n
+\t\t}\n
+\n
+\t\t// Add constructor and methods\n
+\t\tns[cn] = p[cn];\n
+\t\tself.extend(ns[cn].prototype, p);\n
+\n
+\t\t// Extend\n
+\t\tif (s[5]) {\n
+\t\t\tsp = self.resolve(s[5]).prototype;\n
+\t\t\tscn = s[5].match(/\\.(\\w+)$/i)[1]; // Class name\n
+\n
+\t\t\t// Extend constructor\n
+\t\t\tc = ns[cn];\n
+\t\t\tif (de) {\n
+\t\t\t\t// Add passthrough constructor\n
+\t\t\t\tns[cn] = function() {\n
+\t\t\t\t\treturn sp[scn].apply(this, arguments);\n
+\t\t\t\t};\n
+\t\t\t} else {\n
+\t\t\t\t// Add inherit constructor\n
+\t\t\t\tns[cn] = function() {\n
+\t\t\t\t\tthis.parent = sp[scn];\n
+\t\t\t\t\treturn c.apply(this, arguments);\n
+\t\t\t\t};\n
+\t\t\t}\n
+\t\t\tns[cn].prototype[cn] = ns[cn];\n
+\n
+\t\t\t// Add super methods\n
+\t\t\tself.each(sp, function(f, n) {\n
+\t\t\t\tns[cn].prototype[n] = sp[n];\n
+\t\t\t});\n
+\n
+\t\t\t// Add overridden methods\n
+\t\t\tself.each(p, function(f, n) {\n
+\t\t\t\t// Extend methods if needed\n
+\t\t\t\tif (sp[n]) {\n
+\t\t\t\t\tns[cn].prototype[n] = function() {\n
+\t\t\t\t\t\tthis.parent = sp[n];\n
+\t\t\t\t\t\treturn f.apply(this, arguments);\n
+\t\t\t\t\t};\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif (n != cn) {\n
+\t\t\t\t\t\tns[cn].prototype[n] = f;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Add static methods\n
+\t\t/*jshint sub:true*/\n
+\t\t/*eslint dot-notation:0*/\n
+\t\tself.each(p[\'static\'], function(f, n) {\n
+\t\t\tns[cn][n] = f;\n
+\t\t});\n
+\t}\n
+\n
+\t/**\n
+\t * Returns the index of a value in an array, this method will return -1 if the item wasn\'t found.\n
+\t *\n
+\t * @method inArray\n
+\t * @param {Array} a Array/Object to search for value in.\n
+\t * @param {Object} v Value to check for inside the array.\n
+\t * @return {Number/String} Index of item inside the array inside an object. Or -1 if it wasn\'t found.\n
+\t * @example\n
+\t * // Get index of value in array this will alert 1 since 2 is at that index\n
+\t * alert(tinymce.inArray([1,2,3], 2));\n
+\t */\n
+\tfunction inArray(a, v) {\n
+\t\tvar i, l;\n
+\n
+\t\tif (a) {\n
+\t\t\tfor (i = 0, l = a.length; i < l; i++) {\n
+\t\t\t\tif (a[i] === v) {\n
+\t\t\t\t\treturn i;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn -1;\n
+\t}\n
+\n
+\tfunction extend(obj, ext) {\n
+\t\tvar i, l, name, args = arguments, value;\n
+\n
+\t\tfor (i = 1, l = args.length; i < l; i++) {\n
+\t\t\text = args[i];\n
+\t\t\tfor (name in ext) {\n
+\t\t\t\tif (ext.hasOwnProperty(name)) {\n
+\t\t\t\t\tvalue = ext[name];\n
+\n
+\t\t\t\t\tif (value !== undefined) {\n
+\t\t\t\t\t\tobj[name] = value;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn obj;\n
+\t}\n
+\n
+\t/**\n
+\t * Executed the specified function for each item in a object tree.\n
+\t *\n
+\t * @method walk\n
+\t * @param {Object} o Object tree to walk though.\n
+\t * @param {function} f Function to call for each item.\n
+\t * @param {String} n Optional name of collection inside the objects to walk for example childNodes.\n
+\t * @param {String} s Optional scope to execute the function in.\n
+\t */\n
+\tfunction walk(o, f, n, s) {\n
+\t\ts = s || this;\n
+\n
+\t\tif (o) {\n
+\t\t\tif (n) {\n
+\t\t\t\to = o[n];\n
+\t\t\t}\n
+\n
+\t\t\teach(o, function(o, i) {\n
+\t\t\t\tif (f.call(s, o, i, n) === false) {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twalk(o, f, n, s);\n
+\t\t\t});\n
+\t\t}\n
+\t}\n
+\n
+\t/**\n
+\t * Creates a namespace on a specific object.\n
+\t *\n
+\t * @method createNS\n
+\t * @param {String} n Namespace to create for example a.b.c.d.\n
+\t * @param {Object} o Optional object to add namespace to, defaults to window.\n
+\t * @return {Object} New namespace object the last item in path.\n
+\t * @example\n
+\t * // Create some namespace\n
+\t * tinymce.createNS(\'tinymce.somepackage.subpackage\');\n
+\t *\n
+\t * // Add a singleton\n
+\t * var tinymce.somepackage.subpackage.SomeSingleton = {\n
+\t *     method: function() {\n
+\t *         // Some method\n
+\t *     }\n
+\t * };\n
+\t */\n
+\tfunction createNS(n, o) {\n
+\t\tvar i, v;\n
+\n
+\t\to = o || window;\n
+\n
+\t\tn = n.split(\'.\');\n
+\t\tfor (i = 0; i < n.length; i++) {\n
+\t\t\tv = n[i];\n
+\n
+\t\t\tif (!o[v]) {\n
+\t\t\t\to[v] = {};\n
+\t\t\t}\n
+\n
+\t\t\to = o[v];\n
+\t\t}\n
+\n
+\t\treturn o;\n
+\t}\n
+\n
+\t/**\n
+\t * Resolves a string and returns the object from a specific structure.\n
+\t *\n
+\t * @method resolve\n
+\t * @param {String} n Path to resolve for example a.b.c.d.\n
+\t * @param {Object} o Optional object to search though, defaults to window.\n
+\t * @return {Object} Last object in path or null if it couldn\'t be resolved.\n
+\t * @example\n
+\t * // Resolve a path into an object reference\n
+\t * var obj = tinymce.resolve(\'a.b.c.d\');\n
+\t */\n
+\tfunction resolve(n, o) {\n
+\t\tvar i, l;\n
+\n
+\t\to = o || window;\n
+\n
+\t\tn = n.split(\'.\');\n
+\t\tfor (i = 0, l = n.length; i < l; i++) {\n
+\t\t\to = o[n[i]];\n
+\n
+\t\t\tif (!o) {\n
+\t\t\t\tbreak;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn o;\n
+\t}\n
+\n
+\t/**\n
+\t * Splits a string but removes the whitespace before and after each value.\n
+\t *\n
+\t * @method explode\n
+\t * @param {string} s String to split.\n
+\t * @param {string} d Delimiter to split by.\n
+\t * @example\n
+\t * // Split a string into an array with a,b,c\n
+\t * var arr = tinymce.explode(\'a, b,   c\');\n
+\t */\n
+\tfunction explode(s, d) {\n
+\t\tif (!s || is(s, \'array\')) {\n
+\t\t\treturn s;\n
+\t\t}\n
+\n
+\t\treturn map(s.split(d || \',\'), trim);\n
+\t}\n
+\n
+\tfunction constant(value) {\n
+\t\treturn function() {\n
+\t\t\treturn value;\n
+\t\t};\n
+\t}\n
+\n
+\tfunction reduce(collection, iteratee, accumulator, thisArg) {\n
+\t\tvar i = 0;\n
+\n
+\t\tif (arguments.length < 3) {\n
+\t\t\taccumulator = collection[0];\n
+\t\t\ti = 1;\n
+\t\t}\n
+\n
+\t\tfor (; i < collection.length; i++) {\n
+\t\t\taccumulator = iteratee.call(thisArg, accumulator, collection[i], i);\n
+\t\t}\n
+\n
+\t\treturn accumulator;\n
+\t}\n
+\n
+\tfunction _addCacheSuffix(url) {\n
+\t\tvar cacheSuffix = Env.cacheSuffix;\n
+\n
+\t\tif (cacheSuffix) {\n
+\t\t\turl += (url.indexOf(\'?\') === -1 ? \'?\' : \'&\') + cacheSuffix;\n
+\t\t}\n
+\n
+\t\treturn url;\n
+\t}\n
+\n
+\treturn {\n
+\t\ttrim: trim,\n
+\t\tisArray: isArray,\n
+\t\tis: is,\n
+\t\ttoArray: toArray,\n
+\t\tmakeMap: makeMap,\n
+\t\teach: each,\n
+\t\tmap: map,\n
+\t\tgrep: grep,\n
+\t\tfilter: grep,\n
+\t\tinArray: inArray,\n
+\t\textend: extend,\n
+\t\tcreate: create,\n
+\t\twalk: walk,\n
+\t\tcreateNS: createNS,\n
+\t\tresolve: resolve,\n
+\t\texplode: explode,\n
+\t\tconstant: constant,\n
+\t\treduce: reduce,\n
+\t\t_addCacheSuffix: _addCacheSuffix\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12308</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Tools.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268141.71</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>custom_theme.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Custom theme manual test</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<!-- TinyMCE -->\n
+<script src="../../js/tinymce/tinymce.dev.js"></script>\n
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>\n
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>\n
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/cupertino/jquery-ui.css" type="text/css" />\n
+<script>\n
+\ttinymce.init({\n
+\t\tmode: "exact",\n
+\t\telements: "elm1",\n
+\t\tplugins: "autolink,lists,pagebreak,layer,table,save,emoticons,insertdatetime,preview," +\n
+\t\t\t\t"media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template," +\n
+\t\t\t\t"wordcount,advlist,autosave,visualblocks",\n
+\t\tcontent_css: "css/custom_theme_content.css",\n
+\n
+\t\ttheme: function(editor, target) {\n
+\t\t\tvar dom = tinymce.DOM, editorContainer;\n
+\n
+\t\t\t// Generate UI\n
+\t\t\teditorContainer = dom.insertAfter(dom.create(\'div\', {style: \'border: 1px solid gray\'},\n
+\t\t\t\t\'<div>\' +\n
+\t\t\t\t\t\'<button data-mce-command="bold">B</button>\' +\n
+\t\t\t\t\t\'<button data-mce-command="italic">I</button>\' +\n
+\t\t\t\t\t\'<button data-mce-command="mceInsertContent" data-mce-value="Hello">Insert Hello</button>\' +\n
+\t\t\t\t\'</div>\' +\n
+\t\t\t\t\'<div style="border-top: 1px solid gray"></div>\'\n
+\t\t\t), target);\n
+\n
+\t\t\t// Set editor container size to target element size\n
+\t\t\tdom.setStyle(editorContainer, \'width\', target.offsetWidth);\n
+\n
+\t\t\t// Bind events for each button\n
+\t\t\ttinymce.each(dom.select(\'button\', editorContainer), function(button) {\n
+\t\t\t\tdom.bind(button, \'click\', function(e) {\n
+\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t// Execute editor command based on data parameters\n
+\t\t\t\t\teditor.execCommand(dom.getAttrib(e.target, \'data-mce-command\'), false, dom.getAttrib(e.target, \'data-mce-value\'));\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\t// Register state change listeners\n
+\t\t\teditor.on(\'init\', function() {\n
+\t\t\t\ttinymce.each(dom.select(\'button\', editorContainer), function(button) {\n
+\t\t\t\t\teditor.formatter.formatChanged(dom.getAttrib(button, \'data-mce-command\'), function(state) {\n
+\t\t\t\t\t\tbutton.style.color = state ? "red" : "";\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\t// Return editor and iframe containers\n
+\t\t\treturn {\n
+\t\t\t\teditorContainer: editorContainer,\n
+\t\t\t\tiframeContainer: editorContainer.lastChild,\n
+\n
+\t\t\t\t// Calculate iframe height: target height - toolbar height\n
+\t\t\t\tiframeHeight: target.offsetHeight - editorContainer.firstChild.offsetHeight\n
+\t\t\t};\n
+\t\t}\n
+\t});\n
+\n
+\ttinymce.init({\n
+\t\tmode: "exact",\n
+\t\telements: "elm2",\n
+\t\tplugins: "autolink lists pagebreak layer table save emoticons insertdatetime preview " +\n
+\t\t\t\t"media searchreplace print contextmenu paste directionality fullscreen noneditable visualchars nonbreaking template," +\n
+\t\t\t\t"wordcount,advlist,autosave,visualblocks",\n
+\t\tcontent_css: "css/custom_theme_content.css",\n
+\n
+\t\ttheme: function(editor, target) {\n
+\t\t\t// Generate UI\n
+\t\t\tvar editorContainer = $(target).after(\n
+\t\t\t\t\'<div class="ui-widget ui-corner-all">\' +\n
+\t\t\t\t\t\'<div class="ui-widget-header" style="padding: 2px">\' +\n
+\t\t\t\t\t\t\'<input type="checkbox" id="bold" data-mce-command="bold" /><label for="bold">B</label>\' +\n
+\t\t\t\t\t\t\'<input type="checkbox" id="italic" data-mce-command="italic" /><label for="italic">I</label>\' +\n
+\t\t\t\t\t\t\'<button data-mce-command="mceInsertContent" data-mce-value="Hello">Insert Hello</button>\' +\n
+\t\t\t\t\t\'</div>\' +\n
+\t\t\t\t\t\'<div class="ui-widget-content ui-corner-bottom"></div>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t).next();\n
+\n
+\t\t\t// Bind events for each button\n
+\t\t\t$("button,input", editorContainer).button().click(function(e) {\n
+\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t// Execute editor command based on data parameters\n
+\t\t\t\teditor.execCommand($(this).attr(\'data-mce-command\'),false, $(this).attr(\'data-mce-value\'));\n
+\t\t\t});\n
+\n
+\t\t\t// Register state change listeners\n
+\t\t\teditor.on(\'init\', function() {\n
+\t\t\t\t$("input", editorContainer).each(function(i, button) {\n
+\t\t\t\t\teditor.formatter.formatChanged($(button).attr(\'data-mce-command\'), function(state) {\n
+\t\t\t\t\t\t$(button).attr(\'checked\', state).button(\'refresh\');\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\t// Set editor container with to target width\n
+\t\t\teditorContainer.css(\'width\', $(target).width());\n
+\n
+\t\t\t// Return editor and iframe containers\n
+\t\t\treturn {\n
+\t\t\t\teditorContainer: editorContainer[0],\n
+\t\t\t\tiframeContainer: editorContainer.children().eq(-1),\n
+\n
+\t\t\t\t// Calculate iframe height: target height - toolbar height\n
+\t\t\t\tiframeHeight: $(target).height() - editorContainer.first().outerHeight()\n
+\t\t\t};\n
+\t\t}\n
+\t});\n
+</script>\n
+<!-- /TinyMCE -->\n
+\n
+</head>\n
+<body>\n
+\n
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">\n
+\t<div>\n
+\t\t<h4>Custom UI using TinyMCE API</h4>\n
+\n
+\t\t<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->\n
+\t\t<div>\n
+\t\t\t<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">\n
+\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\tThis is some example text that you can edit inside the &lt;strong&gt;TinyMCE editor&lt;/strong&gt;.\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t&lt;p&gt;\n
+\t\t\t\tNam nisi elit, cursus in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t</textarea>\n
+\t\t</div>\n
+\n
+\t\t<!-- Some integration calls -->\n
+\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').show();return false;">[Show]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').hide();return false;">[Hide]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.get(\'elm1\').execCommand(\'Bold\');return false;">[Bold]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').getContent());return false;">[Get contents]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getContent());return false;">[Get selected HTML]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getContent({format : \'text\'}));return false;">[Get selected text]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm1\').selection.getNode().nodeName);return false;">[Get selected element]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceInsertContent\',false,\'<b>Hello world!!</b>\');return false;">[Insert HTML]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceReplaceContent\',false,\'<b>{$selection}</b>\');return false;">[Replace selection]</a>\n
+\t</div>\n
+\n
+\t<div>\n
+\t\t<h4>Custom UI using jQuery/jQueryUI APIs</h4>\n
+\n
+\t\t<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->\n
+\t\t<div>\n
+\t\t\t<textarea id="elm2" name="elm2" rows="15" cols="80" style="width: 80%">\n
+\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\tThis is some example text that you can edit inside the &lt;strong&gt;TinyMCE editor&lt;/strong&gt;.\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t&lt;p&gt;\n
+\t\t\t\tNam nisi elit, cursus in rhoncus sit amet, pulvinar laoreet leo. Nam sed lectus quam, ut sagittis tellus. Quisque dignissim mauris a augue rutrum tempor. Donec vitae purus nec massa vestibulum ornare sit amet id tellus. Nunc quam mauris, fermentum nec lacinia eget, sollicitudin nec ante. Aliquam molestie volutpat dapibus. Nunc interdum viverra sodales. Morbi laoreet pulvinar gravida. Quisque ut turpis sagittis nunc accumsan vehicula. Duis elementum congue ultrices. Cras faucibus feugiat arcu quis lacinia. In hac habitasse platea dictumst. Pellentesque fermentum magna sit amet tellus varius ullamcorper. Vestibulum at urna augue, eget varius neque. Fusce facilisis venenatis dapibus. Integer non sem at arcu euismod tempor nec sed nisl. Morbi ultricies, mauris ut ultricies adipiscing, felis odio condimentum massa, et luctus est nunc nec eros.\n
+\t\t\t\t&lt;/p&gt;\n
+\t\t\t</textarea>\n
+\t\t</div>\n
+\n
+\t\t<!-- Some integration calls -->\n
+\t\t<a href="javascript:;" onclick="tinymce.get(\'elm2\').show();return false;">[Show]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.get(\'elm2\').hide();return false;">[Hide]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.get(\'elm2\').execCommand(\'Bold\');return false;">[Bold]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm2\').getContent());return false;">[Get contents]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm2\').selection.getContent());return false;">[Get selected HTML]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm2\').selection.getContent({format : \'text\'}));return false;">[Get selected text]</a>\n
+\t\t<a href="javascript:;" onclick="alert(tinymce.get(\'elm2\').selection.getNode().nodeName);return false;">[Get selected element]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceInsertContent\',false,\'<b>Hello world!!</b>\');return false;">[Insert HTML]</a>\n
+\t\t<a href="javascript:;" onclick="tinymce.execCommand(\'mceReplaceContent\',false,\'<b>{$selection}</b>\');return false;">[Replace selection]</a>\n
+\t</div>\n
+</form>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9299</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>custom_theme.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

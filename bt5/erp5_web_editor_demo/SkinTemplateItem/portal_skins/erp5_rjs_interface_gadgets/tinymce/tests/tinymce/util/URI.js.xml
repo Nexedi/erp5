@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268200.3</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>URI.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.util.URI");\n
+\n
+test(\'protocol relative url\', function() {\n
+\tvar uri = new tinymce.util.URI(\'//www.site.com/dir1/file?query#hash\');\n
+\n
+\tequal(uri.protocol, "");\n
+\tequal(uri.host, "www.site.com");\n
+\tequal(uri.path, "/dir1/file");\n
+\tequal(uri.query, "query");\n
+\tequal(uri.anchor, "hash");\n
+\tequal(uri.source, "//www.site.com/dir1/file?query#hash");\n
+\tequal(uri.getURI(), "//www.site.com/dir1/file?query#hash");\n
+\tequal(uri.toRelative(\'//www.site.com/dir1/file2\'), \'file2\');\n
+\tequal(uri.toRelative(\'//www.site2.com/dir1/file2\'), \'//www.site2.com/dir1/file2\');\n
+\tequal(uri.toAbsolute(\'../file2\'), \'//www.site.com/dir1/file2\');\n
+\tequal(uri.toAbsolute(\'//www.site2.com/dir1/file2\'), \'//www.site2.com/dir1/file2\');\n
+});\n
+\n
+test(\'parseFullURLs\', 3, function() {\n
+\tequal(new tinymce.util.URI(\'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash\').getURI(), \'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash\');\n
+\tok(new tinymce.util.URI(\'http://a2bc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash\').getURI() != \'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash\');\n
+\tequal(new tinymce.util.URI(\'chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890:8080/path/dir/file.ext?key1=val1&key2=val2#hash\').getURI(), \'chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890:8080/path/dir/file.ext?key1=val1&key2=val2#hash\');\n
+});\n
+\n
+test(\'relativeURLs\', 31, function() {\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/file.html\').toRelative(\'http://www.site.com/dir1/dir3/file.html\'), \'../dir3/file.html\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/file.html\').toRelative(\'http://www.site.com/dir3/dir4/file.html\'), \'../../dir3/dir4/file.html\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/\').toRelative(\'http://www.site.com/dir1/dir3/file.htm\'), \'dir3/file.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'http://www.site2.com/dir1/dir3/file.htm\'), \'http://www.site2.com/dir1/dir3/file.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'http://www.site.com:8080/dir1/dir3/file.htm\'), \'http://www.site.com:8080/dir1/dir3/file.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'https://www.site.com/dir1/dir3/file.htm\'), \'https://www.site.com/dir1/dir3/file.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'/file.htm\'), \'../../file.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'/file.htm?id=1#a\'), \'../../file.htm?id=1#a\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'mailto:test@test.com\'), \'mailto:test@test.com\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'news:test\'), \'news:test\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'javascript:void(0);\'), \'javascript:void(0);\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'about:blank\'), \'about:blank\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'#test\'), \'#test\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'test.htm\'), \'test.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'http://www.site.com/dir1/dir2/test.htm\'), \'test.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'dir2/test.htm\'), \'dir2/test.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'../dir2/test.htm\'), \'test.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'../dir3/\'), \'../dir3/\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'../../../../../../test.htm\'), \'../../test.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'//www.site.com/test.htm\'), \'../../test.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'@@tinymce\'), \'@@tinymce\'); // Zope 3 URL\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'../@@tinymce\'), \'../@@tinymce\'); // Zope 3 URL\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/\').toRelative(\'dir2/test.htm\'), \'dir2/test.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/\').toRelative(\'./\'), \'./\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/test/\').toRelative(\'../\'), \'../\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/test/test/\').toRelative(\'../\'), \'../\');\n
+\tequal(new tinymce.util.URI(\'chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890/dir1/dir2/\').toRelative(\'/dir1\', true), \'../\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/\').toRelative(\'http://www.site.com/\'), \'http://www.site.com/\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/\').toRelative(\'http://www.site.com\'), \'http://www.site.com/\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'/file.htm?q=http://site.com/\'), \'../../file.htm?q=http://site.com/\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toRelative(\'/file.htm#http://site.com/\'), \'../../file.htm#http://site.com/\');\n
+});\n
+\n
+test(\'absoluteURLs\', 19, function() {\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'\'), \'http://www.site.com/dir1/dir2/\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'../dir3\'), \'http://www.site.com/dir1/dir3\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'../dir3\', 1), \'/dir1/dir3\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'../../../../dir3\'), \'http://www.site.com/dir3\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'../abc/def/../../abc/../dir3/file.htm\'), \'http://www.site.com/dir1/dir3/file.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'http://www.site.com/dir2/dir3\'), \'http://www.site.com/dir2/dir3\');\n
+\tequal(new tinymce.util.URI(\'http://www.site2.com/dir1/dir2/\').toAbsolute(\'http://www.site2.com/dir2/dir3\'), \'http://www.site2.com/dir2/dir3\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'mailto:test@test.com\'), \'mailto:test@test.com\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'news:test\'), \'news:test\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'javascript:void(0);\'), \'javascript:void(0);\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'about:blank\'), \'about:blank\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'#test\'), \'#test\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'test.htm\'), \'http://www.site.com/dir1/dir2/test.htm\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'../@@tinymce\'), \'http://www.site.com/dir1/@@tinymce\'); // Zope 3 URL\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').getURI(), \'http://www.site.com/dir1/dir2/\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'/dir1/dir1/\'), \'http://www.site.com/dir1/dir1/\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'https://www.site.com/dir1/dir2/\', true), \'https://www.site.com/dir1/dir2/\');\n
+\tequal(new tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'http://www.site.com/dir1/dir2/\', true), \'/dir1/dir2/\');\n
+\tequal(new tinymce.util.URI(\'chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890/dir1/dir2/\').toAbsolute(\'chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890/dir1/dir2/\', true), \'/dir1/dir2/\');\n
+});\n
+\n
+test(\'strangeURLs\', 6, function() {\n
+\tequal(new tinymce.util.URI(\'//www.site.com\').getURI(), \'//www.site.com\');\n
+\tequal(new tinymce.util.URI(\'mailto:test@test.com\').getURI(), \'mailto:test@test.com\');\n
+\tequal(new tinymce.util.URI(\'news:somegroup\').getURI(), \'news:somegroup\');\n
+\tequal(new tinymce.util.URI(\'skype:somegroup\').getURI(), \'skype:somegroup\');\n
+\tequal(new tinymce.util.URI(\'tel:somegroup\').getURI(), \'tel:somegroup\');\n
+\tequal(new tinymce.util.URI(\'//www.site.com/a@b\').getURI(), \'//www.site.com/a@b\');\n
+});\n
+\n
+test(\'isSameOrigin\', function() {\n
+\tok(new tinymce.util.URI(\'http://www.site.com\').isSameOrigin(new tinymce.util.URI(\'http://www.site.com\')));\n
+\tok(new tinymce.util.URI(\'//www.site.com\').isSameOrigin(new tinymce.util.URI(\'//www.site.com\')));\n
+\tok(new tinymce.util.URI(\'http://www.site.com:80\').isSameOrigin(new tinymce.util.URI(\'http://www.site.com\')));\n
+\tok(new tinymce.util.URI(\'https://www.site.com:443\').isSameOrigin(new tinymce.util.URI(\'https://www.site.com\')));\n
+\tok(new tinymce.util.URI(\'//www.site.com:80\').isSameOrigin(new tinymce.util.URI(\'//www.site.com:80\')));\n
+\tok(new tinymce.util.URI(\'mailto:test@site.com\').isSameOrigin(new tinymce.util.URI(\'mailto:test@site.com\')));\n
+\tok(new tinymce.util.URI(\'mailto:test@site.com:25\').isSameOrigin(new tinymce.util.URI(\'mailto:test@site.com\')));\n
+\tok(new tinymce.util.URI(\'ftp://www.site.com\').isSameOrigin(new tinymce.util.URI(\'ftp://www.site.com\')));\n
+\tok(new tinymce.util.URI(\'ftp://www.site.com:21\').isSameOrigin(new tinymce.util.URI(\'ftp://www.site.com\')));\n
+\tok(new tinymce.util.URI(\'https://www.site.com\').isSameOrigin(new tinymce.util.URI(\'http://www.site.com\')) == false);\n
+\tok(new tinymce.util.URI(\'http://www.site.com:8080\').isSameOrigin(new tinymce.util.URI(\'http://www.site.com\')) == false);\n
+\tok(new tinymce.util.URI(\'https://www.site.com:8080\').isSameOrigin(new tinymce.util.URI(\'https://www.site.com\')) == false);\n
+\tok(new tinymce.util.URI(\'ftp://www.site.com:1021\').isSameOrigin(new tinymce.util.URI(\'ftp://www.site.com\')) == false);\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9631</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>URI.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

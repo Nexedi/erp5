@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268138.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>noneditable.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.plugins.Noneditable", {\n
+\tsetupModule: function() {\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "textarea",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tskin: false,\n
+\t\t\tindent: false,\n
+\t\t\tnoneditable_regexp: [/\\{[^\\}]+\\}/g],\n
+\t\t\tplugins: \'noneditable\',\n
+\t\t\tforced_root_block: \'\',\n
+\t\t\tconvert_fonts_to_spans: false,\n
+\t\t\tentities: \'raw\',\n
+\t\t\tvalid_styles: {\n
+\t\t\t\t\'*\': \'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display\'\n
+\t\t\t},\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+});\n
+\n
+// Ignore on IE 7, 8 this is a known bug not worth fixing\n
+if (!tinymce.Env.ie || tinymce.Env.ie > 8) {\n
+\ttest(\'expand to noneditable (start)\', function() {\n
+\t\teditor.setContent(\'<p><span class="mceNonEditable">no</span>yes</p>\');\n
+\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild.firstChild.firstChild, 1);\n
+\t\trng.setEnd(editor.getBody().firstChild.lastChild, 1);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\teditor.dom.fire(editor.getBody(), \'mouseup\');\n
+\t\trng = Utils.normalizeRng(editor.selection.getRng(true));\n
+\n
+\t\tequal(rng.startContainer.nodeName, \'P\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t\tequal(rng.endContainer.nodeName, \'#text\');\n
+\t\tequal(rng.endOffset, 1);\n
+\t});\n
+\n
+\ttest(\'expand to noneditable (end)\', function() {\n
+\t\teditor.setContent(\'<p>yes<span class="mceNonEditable">no</span></p>\');\n
+\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild.firstChild, 1);\n
+\t\trng.setEnd(editor.getBody().firstChild.lastChild.firstChild, 1);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\teditor.dom.fire(editor.getBody(), \'mouseup\');\n
+\t\trng = Utils.normalizeRng(editor.selection.getRng(true));\n
+\n
+\t\tequal(rng.startContainer.nodeName, \'#text\');\n
+\t\tequal(rng.startOffset, 1);\n
+\t\tequal(rng.endContainer.nodeName, \'P\');\n
+\t\tequal(rng.endOffset, 2);\n
+\t});\n
+\n
+\ttest(\'expand to noneditable (start/end)\', function() {\n
+\t\teditor.setContent(\'<p>yes<span class="mceNonEditable">noedit</span>yes</p>\');\n
+\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 1);\n
+\t\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 2);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\teditor.dom.fire(editor.getBody(), \'mouseup\');\n
+\t\trng = Utils.normalizeRng(editor.selection.getRng(true));\n
+\n
+\t\tequal(rng.startContainer.nodeName, \'P\');\n
+\t\tequal(rng.startOffset, 1);\n
+\t\tequal(rng.endContainer.nodeName, \'P\');\n
+\t\tequal(rng.endOffset, 2);\n
+\t});\n
+\n
+\ttest(\'type after non editable\', function() {\n
+\t\teditor.setContent(\'<p><span class="mceNonEditable">no</span>yes</p>\');\n
+\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 2);\n
+\t\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 2);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\tUtils.type(\'X\');\n
+\t\trng = Utils.normalizeRng(editor.selection.getRng(true));\n
+\n
+\t\tequal(rng.startContainer.getAttribute(\'data-mce-bogus\'), \'true\');\n
+\t\tequal(rng.startContainer.nodeName, \'SPAN\');\n
+\t\tequal(rng.startOffset, 1);\n
+\t\tequal(rng.endContainer.nodeName, \'SPAN\');\n
+\t\tequal(rng.endOffset, 1);\n
+\t\tequal(editor.getContent(), \'<p><span class="mceNonEditable">no</span>Xyes</p>\');\n
+\t});\n
+}\n
+\n
+test(\'type between non editable\', function() {\n
+\teditor.setContent(\'<p><span class="mceNonEditable">no</span><span class="mceNonEditable">no</span></p>\');\n
+\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 2);\n
+\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\n
+\tUtils.type(\'X\');\n
+\trng = Utils.normalizeRng(editor.selection.getRng(true));\n
+\n
+\tequal(rng.startContainer.getAttribute(\'data-mce-bogus\'), \'true\');\n
+\tequal(rng.startContainer.nodeName, \'SPAN\');\n
+\tequal(rng.startOffset, 1);\n
+\tequal(rng.endContainer.nodeName, \'SPAN\');\n
+\tequal(rng.endOffset, 1);\n
+\tequal(editor.getContent(), \'<p><span class="mceNonEditable">no</span>X<span class="mceNonEditable">no</span></p>\');\n
+});\n
+\n
+test(\'type after last non editable\', function() {\n
+\teditor.setContent(\'<p><span class="mceNonEditable">no</span></p>\');\n
+\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 2);\n
+\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\n
+\tUtils.type(\'X\');\n
+\trng = Utils.normalizeRng(editor.selection.getRng(true));\n
+\n
+\tequal(rng.startContainer.getAttribute(\'data-mce-bogus\'), \'true\');\n
+\tequal(rng.startContainer.nodeName, \'SPAN\');\n
+\tequal(rng.startOffset, 1);\n
+\tequal(rng.endContainer.nodeName, \'SPAN\');\n
+\tequal(rng.endOffset, 1);\n
+\tequal(editor.getContent(), \'<p><span class="mceNonEditable">no</span>X</p>\');\n
+});\n
+\n
+// Ignore on IE 7, 8 this is a known bug not worth fixing\n
+if (!tinymce.Env.ie || tinymce.Env.ie > 8) {\n
+\ttest(\'escape noneditable inline element (left)\', function() {\n
+\t\teditor.setContent(\'<p>no <span class="mceNonEditable">yes</span> no</p><p class="mceNonEditable">no</p>\');\n
+\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.selectNode(editor.dom.select(\'span\')[0]);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\tUtils.type({keyCode: 37});\n
+\t\trng = Utils.normalizeRng(editor.selection.getRng(true));\n
+\t\tequal(rng.startContainer.nodeName, \'P\');\n
+\t\tequal(rng.collapsed, true);\n
+\t});\n
+}\n
+\n
+test(\'escape noneditable inline element (right)\', function() {\n
+\teditor.setContent(\'<p>no <span class="mceNonEditable">yes</span> no</p><p class="mceNonEditable">no</p>\');\n
+\n
+\tvar rng = editor.dom.createRng();\n
+\trng.selectNode(editor.dom.select(\'span\')[0]);\n
+\teditor.selection.setRng(rng);\n
+\n
+\tUtils.type({keyCode: 39});\n
+\trng = Utils.normalizeRng(editor.selection.getRng(true));\n
+\n
+\tequal(rng.startContainer.nodeName, \'P\');\n
+\tequal(editor.dom.nodeIndex(rng.startContainer), 0);\n
+\tequal(rng.collapsed, true);\n
+});\n
+\n
+test(\'escape noneditable block element (left)\', function(){\n
+\teditor.setContent(\'<p>yes</p><p class="mceNonEditable">no</p><p>yes</p>\');\n
+\n
+\tvar rng = editor.dom.createRng();\n
+\trng.selectNode(editor.dom.select(\'p\')[1]);\n
+\teditor.selection.setRng(rng);\n
+\n
+\tUtils.type({keyCode: 37});\n
+\trng = Utils.normalizeRng(editor.selection.getRng(true));\n
+\n
+\tequal(rng.startContainer.nodeName, "P");\n
+\tequal(editor.dom.nodeIndex(rng.startContainer), 0);\n
+\tequal(rng.startOffset, 1);\n
+\tequal(rng.collapsed, true);\n
+\n
+});\n
+\n
+test(\'escape noneditable block element (right)\', function(){\n
+\teditor.setContent(\'<p>yes</p><p class="mceNonEditable">no</p><p>yes</p>\');\n
+\n
+\tvar rng = editor.dom.createRng();\n
+\trng.selectNode(editor.dom.select(\'p\')[1]);\n
+\teditor.selection.setRng(rng);\n
+\n
+\tUtils.type({keyCode: 39});\n
+\trng = Utils.normalizeRng(editor.selection.getRng(true));\n
+\n
+\tequal(rng.startContainer.nodeName, "P");\n
+\tequal(editor.dom.nodeIndex(rng.startContainer), 2);\n
+\tequal(rng.startOffset, 0);\n
+\tequal(rng.collapsed, true);\n
+\n
+});\n
+\n
+test(\'noneditable regexp\', function() {\n
+\teditor.setContent(\'<p>{test1}{test2}</p>\');\n
+\n
+\tequal(editor.dom.select(\'span\').length, 2);\n
+\tequal(editor.getContent(), \'<p>{test1}{test2}</p>\');\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6819</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>noneditable.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

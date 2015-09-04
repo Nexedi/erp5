@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268424.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+(function() {\n
+\ttinymce.create(\'tinymce.plugins.BBCodePlugin\', {\n
+\t\tinit: function(ed) {\n
+\t\t\tvar self = this, dialect = ed.getParam(\'bbcode_dialect\', \'punbb\').toLowerCase();\n
+\n
+\t\t\ted.on(\'beforeSetContent\', function(e) {\n
+\t\t\t\te.content = self[\'_\' + dialect + \'_bbcode2html\'](e.content);\n
+\t\t\t});\n
+\n
+\t\t\ted.on(\'postProcess\', function(e) {\n
+\t\t\t\tif (e.set) {\n
+\t\t\t\t\te.content = self[\'_\' + dialect + \'_bbcode2html\'](e.content);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (e.get) {\n
+\t\t\t\t\te.content = self[\'_\' + dialect + \'_html2bbcode\'](e.content);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\tgetInfo: function() {\n
+\t\t\treturn {\n
+\t\t\t\tlongname: \'BBCode Plugin\',\n
+\t\t\t\tauthor: \'Ephox Corp\',\n
+\t\t\t\tauthorurl: \'http://www.tinymce.com\',\n
+\t\t\t\tinfourl: \'http://www.tinymce.com/wiki.php/Plugin:bbcode\'\n
+\t\t\t};\n
+\t\t},\n
+\n
+\t\t// Private methods\n
+\n
+\t\t// HTML -> BBCode in PunBB dialect\n
+\t\t_punbb_html2bbcode: function(s) {\n
+\t\t\ts = tinymce.trim(s);\n
+\n
+\t\t\tfunction rep(re, str) {\n
+\t\t\t\ts = s.replace(re, str);\n
+\t\t\t}\n
+\n
+\t\t\t// example: <strong> to [b]\n
+\t\t\trep(/<a.*?href=\\"(.*?)\\".*?>(.*?)<\\/a>/gi, "[url=$1]$2[/url]");\n
+\t\t\trep(/<font.*?color=\\"(.*?)\\".*?class=\\"codeStyle\\".*?>(.*?)<\\/font>/gi, "[code][color=$1]$2[/color][/code]");\n
+\t\t\trep(/<font.*?color=\\"(.*?)\\".*?class=\\"quoteStyle\\".*?>(.*?)<\\/font>/gi, "[quote][color=$1]$2[/color][/quote]");\n
+\t\t\trep(/<font.*?class=\\"codeStyle\\".*?color=\\"(.*?)\\".*?>(.*?)<\\/font>/gi, "[code][color=$1]$2[/color][/code]");\n
+\t\t\trep(/<font.*?class=\\"quoteStyle\\".*?color=\\"(.*?)\\".*?>(.*?)<\\/font>/gi, "[quote][color=$1]$2[/color][/quote]");\n
+\t\t\trep(/<span style=\\"color: ?(.*?);\\">(.*?)<\\/span>/gi, "[color=$1]$2[/color]");\n
+\t\t\trep(/<font.*?color=\\"(.*?)\\".*?>(.*?)<\\/font>/gi, "[color=$1]$2[/color]");\n
+\t\t\trep(/<span style=\\"font-size:(.*?);\\">(.*?)<\\/span>/gi, "[size=$1]$2[/size]");\n
+\t\t\trep(/<font>(.*?)<\\/font>/gi, "$1");\n
+\t\t\trep(/<img.*?src=\\"(.*?)\\".*?\\/>/gi, "[img]$1[/img]");\n
+\t\t\trep(/<span class=\\"codeStyle\\">(.*?)<\\/span>/gi, "[code]$1[/code]");\n
+\t\t\trep(/<span class=\\"quoteStyle\\">(.*?)<\\/span>/gi, "[quote]$1[/quote]");\n
+\t\t\trep(/<strong class=\\"codeStyle\\">(.*?)<\\/strong>/gi, "[code][b]$1[/b][/code]");\n
+\t\t\trep(/<strong class=\\"quoteStyle\\">(.*?)<\\/strong>/gi, "[quote][b]$1[/b][/quote]");\n
+\t\t\trep(/<em class=\\"codeStyle\\">(.*?)<\\/em>/gi, "[code][i]$1[/i][/code]");\n
+\t\t\trep(/<em class=\\"quoteStyle\\">(.*?)<\\/em>/gi, "[quote][i]$1[/i][/quote]");\n
+\t\t\trep(/<u class=\\"codeStyle\\">(.*?)<\\/u>/gi, "[code][u]$1[/u][/code]");\n
+\t\t\trep(/<u class=\\"quoteStyle\\">(.*?)<\\/u>/gi, "[quote][u]$1[/u][/quote]");\n
+\t\t\trep(/<\\/(strong|b)>/gi, "[/b]");\n
+\t\t\trep(/<(strong|b)>/gi, "[b]");\n
+\t\t\trep(/<\\/(em|i)>/gi, "[/i]");\n
+\t\t\trep(/<(em|i)>/gi, "[i]");\n
+\t\t\trep(/<\\/u>/gi, "[/u]");\n
+\t\t\trep(/<span style=\\"text-decoration: ?underline;\\">(.*?)<\\/span>/gi, "[u]$1[/u]");\n
+\t\t\trep(/<u>/gi, "[u]");\n
+\t\t\trep(/<blockquote[^>]*>/gi, "[quote]");\n
+\t\t\trep(/<\\/blockquote>/gi, "[/quote]");\n
+\t\t\trep(/<br \\/>/gi, "\\n");\n
+\t\t\trep(/<br\\/>/gi, "\\n");\n
+\t\t\trep(/<br>/gi, "\\n");\n
+\t\t\trep(/<p>/gi, "");\n
+\t\t\trep(/<\\/p>/gi, "\\n");\n
+\t\t\trep(/&nbsp;|\\u00a0/gi, " ");\n
+\t\t\trep(/&quot;/gi, "\\"");\n
+\t\t\trep(/&lt;/gi, "<");\n
+\t\t\trep(/&gt;/gi, ">");\n
+\t\t\trep(/&amp;/gi, "&");\n
+\n
+\t\t\treturn s;\n
+\t\t},\n
+\n
+\t\t// BBCode -> HTML from PunBB dialect\n
+\t\t_punbb_bbcode2html: function(s) {\n
+\t\t\ts = tinymce.trim(s);\n
+\n
+\t\t\tfunction rep(re, str) {\n
+\t\t\t\ts = s.replace(re, str);\n
+\t\t\t}\n
+\n
+\t\t\t// example: [b] to <strong>\n
+\t\t\trep(/\\n/gi, "<br />");\n
+\t\t\trep(/\\[b\\]/gi, "<strong>");\n
+\t\t\trep(/\\[\\/b\\]/gi, "</strong>");\n
+\t\t\trep(/\\[i\\]/gi, "<em>");\n
+\t\t\trep(/\\[\\/i\\]/gi, "</em>");\n
+\t\t\trep(/\\[u\\]/gi, "<u>");\n
+\t\t\trep(/\\[\\/u\\]/gi, "</u>");\n
+\t\t\trep(/\\[url=([^\\]]+)\\](.*?)\\[\\/url\\]/gi, "<a href=\\"$1\\">$2</a>");\n
+\t\t\trep(/\\[url\\](.*?)\\[\\/url\\]/gi, "<a href=\\"$1\\">$1</a>");\n
+\t\t\trep(/\\[img\\](.*?)\\[\\/img\\]/gi, "<img src=\\"$1\\" />");\n
+\t\t\trep(/\\[color=(.*?)\\](.*?)\\[\\/color\\]/gi, "<font color=\\"$1\\">$2</font>");\n
+\t\t\trep(/\\[code\\](.*?)\\[\\/code\\]/gi, "<span class=\\"codeStyle\\">$1</span>&nbsp;");\n
+\t\t\trep(/\\[quote.*?\\](.*?)\\[\\/quote\\]/gi, "<span class=\\"quoteStyle\\">$1</span>&nbsp;");\n
+\n
+\t\t\treturn s;\n
+\t\t}\n
+\t});\n
+\n
+\t// Register plugin\n
+\ttinymce.PluginManager.add(\'bbcode\', tinymce.plugins.BBCodePlugin);\n
+})();
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4223</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

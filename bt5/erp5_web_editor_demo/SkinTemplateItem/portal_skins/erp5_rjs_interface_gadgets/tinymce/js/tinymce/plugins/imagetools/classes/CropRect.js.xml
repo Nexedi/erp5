@@ -1,0 +1,257 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268528.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CropRect.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * CropRect.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * ...\n
+ */\n
+define("tinymce/imagetoolsplugin/CropRect", [\n
+\t"tinymce/dom/DomQuery",\n
+\t"tinymce/ui/DragHelper",\n
+\t"tinymce/ui/Rect",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/util/Observable"\n
+], function($, DragHelper, Rect, Tools, Observable) {\n
+\tvar count = 0;\n
+\n
+\treturn function(currentRect, viewPortRect, clampRect, containerElm) {\n
+\t\tvar instance, handles, dragHelpers, blockers, prefix = \'mce-\', id = prefix + \'crid-\' + (count++);\n
+\n
+\t\thandles = [\n
+\t\t\t{name: \'move\', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: 0, deltaH: 0},\n
+\t\t\t{name: \'nw\', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: -1, deltaH: -1},\n
+\t\t\t{name: \'ne\', xMul: 1, yMul: 0, deltaX: 0, deltaY: 1, deltaW: 1, deltaH: -1},\n
+\t\t\t{name: \'sw\', xMul: 0, yMul: 1, deltaX: 1, deltaY: 0, deltaW: -1, deltaH: 1},\n
+\t\t\t{name: \'se\', xMul: 1, yMul: 1, deltaX: 0, deltaY: 0, deltaW: 1, deltaH: 1}\n
+\t\t];\n
+\n
+\t\tblockers = ["top", "right", "bottom", "left"];\n
+\n
+\t\tfunction getAbsoluteRect(outerRect, relativeRect) {\n
+\t\t\treturn {\n
+\t\t\t\tx: relativeRect.x + outerRect.x,\n
+\t\t\t\ty: relativeRect.y + outerRect.y,\n
+\t\t\t\tw: relativeRect.w,\n
+\t\t\t\th: relativeRect.h\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction getRelativeRect(outerRect, innerRect) {\n
+\t\t\treturn {\n
+\t\t\t\tx: innerRect.x - outerRect.x,\n
+\t\t\t\ty: innerRect.y - outerRect.y,\n
+\t\t\t\tw: innerRect.w,\n
+\t\t\t\th: innerRect.h\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction getInnerRect() {\n
+\t\t\treturn getRelativeRect(clampRect, currentRect);\n
+\t\t}\n
+\n
+\t\tfunction render() {\n
+\t\t\tfunction createDragHelper(handle) {\n
+\t\t\t\tvar startRect;\n
+\n
+\t\t\t\treturn new DragHelper(id, {\n
+\t\t\t\t\tdocument: containerElm.ownerDocument,\n
+\t\t\t\t\thandle: id + \'-\' + handle.name,\n
+\n
+\t\t\t\t\tstart: function() {\n
+\t\t\t\t\t\tstartRect = currentRect;\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tdrag: function(e) {\n
+\t\t\t\t\t\tvar x, y, w, h, rect;\n
+\n
+\t\t\t\t\t\tx = startRect.x;\n
+\t\t\t\t\t\ty = startRect.y;\n
+\t\t\t\t\t\tw = startRect.w;\n
+\t\t\t\t\t\th = startRect.h;\n
+\n
+\t\t\t\t\t\tx += e.deltaX * handle.deltaX;\n
+\t\t\t\t\t\ty += e.deltaY * handle.deltaY;\n
+\t\t\t\t\t\tw += e.deltaX * handle.deltaW;\n
+\t\t\t\t\t\th += e.deltaY * handle.deltaH;\n
+\n
+\t\t\t\t\t\tif (w < 20) {\n
+\t\t\t\t\t\t\tw = 20;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (h < 20) {\n
+\t\t\t\t\t\t\th = 20;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\trect = currentRect = Rect.clamp({x: x, y: y, w: w, h: h}, clampRect, handle.name == \'move\');\n
+\t\t\t\t\t\trect = getRelativeRect(clampRect, rect);\n
+\n
+\t\t\t\t\t\tinstance.fire(\'updateRect\', {rect: rect});\n
+\t\t\t\t\t\tsetInnerRect(rect);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t$(\'<div id="\' + id + \'" class="\' + prefix + \'croprect-container" data-mce-bogus="all">\').appendTo(containerElm);\n
+\n
+\t\t\tTools.each(blockers, function(blocker) {\n
+\t\t\t\t$(\'#\' + id, containerElm).append(\n
+\t\t\t\t\t\'<div id="\' + id + \'-\' + blocker + \'"class="\' + prefix + \'croprect-block" style="display: none" data-mce-bogus="all">\'\n
+\t\t\t\t);\n
+\t\t\t});\n
+\n
+\t\t\tTools.each(handles, function(handle) {\n
+\t\t\t\t$(\'#\' + id, containerElm).append(\n
+\t\t\t\t\t\'<div id="\' + id + \'-\' + handle.name + \'" class="\' + prefix +\n
+\t\t\t\t\t\t\'croprect-handle \' + prefix + \'croprect-handle-\' + handle.name + \'" style="display: none" data-mce-bogus="all">\'\n
+\t\t\t\t);\n
+\t\t\t});\n
+\n
+\t\t\tdragHelpers = Tools.map(handles, createDragHelper);\n
+\n
+\t\t\trepaint(currentRect);\n
+\t\t}\n
+\n
+\t\tfunction toggleVisibility(state) {\n
+\t\t\tvar selectors;\n
+\n
+\t\t\tselectors = Tools.map(handles, function(handle) {\n
+\t\t\t\treturn \'#\' + id + \'-\' + handle.name;\n
+\t\t\t}).concat(Tools.map(blockers, function(blocker) {\n
+\t\t\t\treturn \'#\' + id + \'-\' + blocker;\n
+\t\t\t})).join(\',\');\n
+\n
+\t\t\tif (state) {\n
+\t\t\t\t$(selectors, containerElm).show();\n
+\t\t\t} else {\n
+\t\t\t\t$(selectors, containerElm).hide();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction repaint(rect) {\n
+\t\t\tfunction updateElementRect(name, rect) {\n
+\t\t\t\tif (rect.h < 0) {\n
+\t\t\t\t\trect.h = 0;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (rect.w < 0) {\n
+\t\t\t\t\trect.w = 0;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t$(\'#\' + id + \'-\' + name, containerElm).css({\n
+\t\t\t\t\tleft: rect.x,\n
+\t\t\t\t\ttop: rect.y,\n
+\t\t\t\t\twidth: rect.w,\n
+\t\t\t\t\theight: rect.h\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tTools.each(handles, function(handle) {\n
+\t\t\t\t$(\'#\' + id + \'-\' + handle.name, containerElm).css({\n
+\t\t\t\t\tleft: rect.w * handle.xMul + rect.x,\n
+\t\t\t\t\ttop: rect.h * handle.yMul + rect.y\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\tupdateElementRect(\'top\', {x: viewPortRect.x, y: viewPortRect.y, w: viewPortRect.w, h: rect.y - viewPortRect.y});\n
+\t\t\tupdateElementRect(\'right\', {x: rect.x + rect.w, y: rect.y, w: viewPortRect.w - rect.x - rect.w + viewPortRect.x, h: rect.h});\n
+\t\t\tupdateElementRect(\'bottom\', {\n
+\t\t\t\tx: viewPortRect.x,\n
+\t\t\t\ty: rect.y + rect.h,\n
+\t\t\t\tw: viewPortRect.w,\n
+\t\t\t\th: viewPortRect.h - rect.y - rect.h + viewPortRect.y\n
+\t\t\t});\n
+\t\t\tupdateElementRect(\'left\', {x: viewPortRect.x, y: rect.y, w: rect.x - viewPortRect.x, h: rect.h});\n
+\t\t\tupdateElementRect(\'move\', rect);\n
+\t\t}\n
+\n
+\t\tfunction setRect(rect) {\n
+\t\t\tcurrentRect = rect;\n
+\t\t\trepaint(currentRect);\n
+\t\t}\n
+\n
+\t\tfunction setViewPortRect(rect) {\n
+\t\t\tviewPortRect = rect;\n
+\t\t\trepaint(currentRect);\n
+\t\t}\n
+\n
+\t\tfunction setInnerRect(rect) {\n
+\t\t\tsetRect(getAbsoluteRect(clampRect, rect));\n
+\t\t}\n
+\n
+\t\tfunction setClampRect(rect) {\n
+\t\t\tclampRect = rect;\n
+\t\t\trepaint(currentRect);\n
+\t\t}\n
+\n
+\t\tfunction destroy() {\n
+\t\t\tTools.each(dragHelpers, function(helper) {\n
+\t\t\t\thelper.destroy();\n
+\t\t\t});\n
+\n
+\t\t\tdragHelpers = [];\n
+\t\t}\n
+\n
+\t\trender(containerElm);\n
+\n
+\t\tinstance = Tools.extend({\n
+\t\t\ttoggleVisibility: toggleVisibility,\n
+\t\t\tsetClampRect: setClampRect,\n
+\t\t\tsetRect: setRect,\n
+\t\t\tgetInnerRect: getInnerRect,\n
+\t\t\tsetInnerRect: setInnerRect,\n
+\t\t\tsetViewPortRect: setViewPortRect,\n
+\t\t\tdestroy: destroy\n
+\t\t}, Observable);\n
+\n
+\t\treturn instance;\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5360</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>CropRect.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

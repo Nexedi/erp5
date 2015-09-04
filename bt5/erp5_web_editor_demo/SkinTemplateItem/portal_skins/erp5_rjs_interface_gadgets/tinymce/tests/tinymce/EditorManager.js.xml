@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268226.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EditorManager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.EditorManager", {\n
+\tsetupModule: function() {\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "textarea",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tskin: false,\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+});\n
+\n
+test(\'get\', function() {\n
+\tstrictEqual(tinymce.get().length, 1);\n
+\tstrictEqual(tinymce.get(0), tinymce.activeEditor);\n
+\tstrictEqual(tinymce.get(1), null);\n
+\tstrictEqual(tinymce.get("noid"), null);\n
+\tstrictEqual(tinymce.get(undefined), null);\n
+\tstrictEqual(tinymce.get()[0], tinymce.activeEditor);\n
+\tstrictEqual(tinymce.get(tinymce.activeEditor.id), tinymce.activeEditor);\n
+});\n
+\n
+test(\'addI18n/translate\', function() {\n
+\ttinymce.addI18n(\'en\', {\n
+\t\t\'from\': \'to\'\n
+\t});\n
+\n
+\tequal(tinymce.translate(\'from\'), \'to\');\n
+});\n
+\n
+test(\'triggerSave\', function() {\n
+\tvar saveCount = 0;\n
+\n
+\twindow.editor.on(\'SaveContent\', function() {\n
+\t\tsaveCount++;\n
+\t});\n
+\n
+\ttinymce.triggerSave();\n
+\tequal(saveCount, 1);\n
+});\n
+\n
+test(\'Re-init on same id\', function() {\n
+\ttinymce.init({selector: "#" + tinymce.activeEditor.id});\n
+\tstrictEqual(tinymce.get().length, 1);\n
+});\n
+\n
+asyncTest(\'Externally destroyed editor\', function() {\n
+\ttinymce.remove();\n
+\n
+\ttinymce.init({\n
+\t\tselector: "textarea",\n
+\t\tinit_instance_callback: function(editor1) {\n
+\t\t\tsetTimeout(function() {\n
+\t\t\t\t// Destroy the editor by setting innerHTML common ajax pattern\n
+\t\t\t\tdocument.getElementById(\'view\').innerHTML = \'<textarea id="\' + editor1.id + \'"></textarea>\';\n
+\n
+\t\t\t\t// Re-init the editor will have the same id\n
+\t\t\t\ttinymce.init({\n
+\t\t\t\t\tselector: "textarea",\n
+\t\t\t\t\tinit_instance_callback: function(editor2) {\n
+\t\t\t\t\t\tQUnit.start();\n
+\n
+\t\t\t\t\t\tstrictEqual(tinymce.get().length, 1);\n
+\t\t\t\t\t\tstrictEqual(editor1.id, editor2.id);\n
+\t\t\t\t\t\tok(editor1.destroyed, "First editor instance should be destroyed");\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}, 0);\n
+\t\t}\n
+\t});\n
+});\n
+\n
+asyncTest(\'Init/remove on same id\', function() {\n
+\tvar textArea = document.createElement(\'textarea\');\n
+\tdocument.getElementById(\'view\').appendChild(textArea);\n
+\n
+\ttinymce.init({\n
+\t\tselector: "#view textarea",\n
+\t\tinit_instance_callback: function() {\n
+\t\t\twindow.setTimeout(function() {\n
+\t\t\t\tQUnit.start();\n
+\n
+\t\t\t\tstrictEqual(tinymce.get().length, 2);\n
+\t\t\t\tstrictEqual(tinymce.get(1), tinymce.activeEditor);\n
+\t\t\t\ttinymce.remove(\'#\' + tinymce.get(1).id);\n
+\t\t\t\tstrictEqual(tinymce.get().length, 1);\n
+\t\t\t\tstrictEqual(tinymce.get(0), tinymce.activeEditor);\n
+\t\t\t}, 0);\n
+\t\t}\n
+\t});\n
+\n
+\tstrictEqual(tinymce.get().length, 2);\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2430</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EditorManager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

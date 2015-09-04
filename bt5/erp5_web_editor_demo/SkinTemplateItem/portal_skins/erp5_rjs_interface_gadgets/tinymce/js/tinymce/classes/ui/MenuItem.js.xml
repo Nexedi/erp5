@@ -1,0 +1,363 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268336.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MenuItem.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * MenuItem.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Creates a new menu item.\n
+ *\n
+ * @-x-less MenuItem.less\n
+ * @class tinymce.ui.MenuItem\n
+ * @extends tinymce.ui.Control\n
+ */\n
+define("tinymce/ui/MenuItem", [\n
+\t"tinymce/ui/Widget",\n
+\t"tinymce/ui/Factory",\n
+\t"tinymce/Env"\n
+], function(Widget, Factory, Env) {\n
+\t"use strict";\n
+\n
+\treturn Widget.extend({\n
+\t\tDefaults: {\n
+\t\t\tborder: 0,\n
+\t\t\trole: \'menuitem\'\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Constructs a instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {Boolean} selectable Selectable menu.\n
+\t\t * @setting {Array} menu Submenu array with items.\n
+\t\t * @setting {String} shortcut Shortcut to display for menu item. Example: Ctrl+X\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this, text;\n
+\n
+\t\t\tself._super(settings);\n
+\n
+\t\t\tsettings = self.settings;\n
+\n
+\t\t\tself.classes.add(\'menu-item\');\n
+\n
+\t\t\tif (settings.menu) {\n
+\t\t\t\tself.classes.add(\'menu-item-expand\');\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.preview) {\n
+\t\t\t\tself.classes.add(\'menu-item-preview\');\n
+\t\t\t}\n
+\n
+\t\t\ttext = self.state.get(\'text\');\n
+\t\t\tif (text === \'-\' || text === \'|\') {\n
+\t\t\t\tself.classes.add(\'menu-item-sep\');\n
+\t\t\t\tself.aria(\'role\', \'separator\');\n
+\t\t\t\tself.state.set(\'text\', \'-\');\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.selectable) {\n
+\t\t\t\tself.aria(\'role\', \'menuitemcheckbox\');\n
+\t\t\t\tself.classes.add(\'menu-item-checkbox\');\n
+\t\t\t\tsettings.icon = \'selected\';\n
+\t\t\t}\n
+\n
+\t\t\tif (!settings.preview && !settings.selectable) {\n
+\t\t\t\tself.classes.add(\'menu-item-normal\');\n
+\t\t\t}\n
+\n
+\t\t\tself.on(\'mousedown\', function(e) {\n
+\t\t\t\te.preventDefault();\n
+\t\t\t});\n
+\n
+\t\t\tif (settings.menu && !settings.ariaHideMenu) {\n
+\t\t\t\tself.aria(\'haspopup\', true);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the menuitem has sub menu.\n
+\t\t *\n
+\t\t * @method hasMenus\n
+\t\t * @return {Boolean} True/false state if it has submenu.\n
+\t\t */\n
+\t\thasMenus: function() {\n
+\t\t\treturn !!this.settings.menu;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Shows the menu for the menu item.\n
+\t\t *\n
+\t\t * @method showMenu\n
+\t\t */\n
+\t\tshowMenu: function() {\n
+\t\t\tvar self = this, settings = self.settings, menu, parent = self.parent();\n
+\n
+\t\t\tparent.items().each(function(ctrl) {\n
+\t\t\t\tif (ctrl !== self) {\n
+\t\t\t\t\tctrl.hideMenu();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tif (settings.menu) {\n
+\t\t\t\tmenu = self.menu;\n
+\n
+\t\t\t\tif (!menu) {\n
+\t\t\t\t\tmenu = settings.menu;\n
+\n
+\t\t\t\t\t// Is menu array then auto constuct menu control\n
+\t\t\t\t\tif (menu.length) {\n
+\t\t\t\t\t\tmenu = {\n
+\t\t\t\t\t\t\ttype: \'menu\',\n
+\t\t\t\t\t\t\titems: menu\n
+\t\t\t\t\t\t};\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tmenu.type = menu.type || \'menu\';\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (parent.settings.itemDefaults) {\n
+\t\t\t\t\t\tmenu.itemDefaults = parent.settings.itemDefaults;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tmenu = self.menu = Factory.create(menu).parent(self).renderTo();\n
+\t\t\t\t\tmenu.reflow();\n
+\t\t\t\t\tmenu.on(\'cancel\', function(e) {\n
+\t\t\t\t\t\te.stopPropagation();\n
+\t\t\t\t\t\tself.focus();\n
+\t\t\t\t\t\tmenu.hide();\n
+\t\t\t\t\t});\n
+\t\t\t\t\tmenu.on(\'show hide\', function(e) {\n
+\t\t\t\t\t\te.control.items().each(function(ctrl) {\n
+\t\t\t\t\t\t\tctrl.active(ctrl.settings.selected);\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}).fire(\'show\');\n
+\n
+\t\t\t\t\tmenu.on(\'hide\', function(e) {\n
+\t\t\t\t\t\tif (e.control === menu) {\n
+\t\t\t\t\t\t\tself.classes.remove(\'selected\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\tmenu.submenu = true;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tmenu.show();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tmenu._parentMenu = parent;\n
+\n
+\t\t\t\tmenu.classes.add(\'menu-sub\');\n
+\n
+\t\t\t\tvar rel = menu.testMoveRel(\n
+\t\t\t\t\tself.getEl(),\n
+\t\t\t\t\tself.isRtl() ? [\'tl-tr\', \'bl-br\', \'tr-tl\', \'br-bl\'] : [\'tr-tl\', \'br-bl\', \'tl-tr\', \'bl-br\']\n
+\t\t\t\t);\n
+\n
+\t\t\t\tmenu.moveRel(self.getEl(), rel);\n
+\t\t\t\tmenu.rel = rel;\n
+\n
+\t\t\t\trel = \'menu-sub-\' + rel;\n
+\t\t\t\tmenu.classes.remove(menu._lastRel).add(rel);\n
+\t\t\t\tmenu._lastRel = rel;\n
+\n
+\t\t\t\tself.classes.add(\'selected\');\n
+\t\t\t\tself.aria(\'expanded\', true);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Hides the menu for the menu item.\n
+\t\t *\n
+\t\t * @method hideMenu\n
+\t\t */\n
+\t\thideMenu: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (self.menu) {\n
+\t\t\t\tself.menu.items().each(function(item) {\n
+\t\t\t\t\tif (item.hideMenu) {\n
+\t\t\t\t\t\titem.hideMenu();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tself.menu.hide();\n
+\t\t\t\tself.aria(\'expanded\', false);\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, id = self._id, settings = self.settings, prefix = self.classPrefix, text = self.encode(self.state.get(\'text\'));\n
+\t\t\tvar icon = self.settings.icon, image = \'\', shortcut = settings.shortcut;\n
+\n
+\t\t\t// Converts shortcut format to Mac/PC variants\n
+\t\t\tfunction convertShortcut(shortcut) {\n
+\t\t\t\tvar i, value, replace = {};\n
+\n
+\t\t\t\tif (Env.mac) {\n
+\t\t\t\t\treplace = {\n
+\t\t\t\t\t\talt: \'&#x2325;\',\n
+\t\t\t\t\t\tctrl: \'&#x2318;\',\n
+\t\t\t\t\t\tshift: \'&#x21E7;\',\n
+\t\t\t\t\t\tmeta: \'&#x2318;\'\n
+\t\t\t\t\t};\n
+\t\t\t\t} else {\n
+\t\t\t\t\treplace = {\n
+\t\t\t\t\t\tmeta: \'Ctrl\'\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\n
+\t\t\t\tshortcut = shortcut.split(\'+\');\n
+\n
+\t\t\t\tfor (i = 0; i < shortcut.length; i++) {\n
+\t\t\t\t\tvalue = replace[shortcut[i].toLowerCase()];\n
+\n
+\t\t\t\t\tif (value) {\n
+\t\t\t\t\t\tshortcut[i] = value;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn shortcut.join(\'+\');\n
+\t\t\t}\n
+\n
+\t\t\tif (icon) {\n
+\t\t\t\tself.parent().classes.add(\'menu-has-icons\');\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.image) {\n
+\t\t\t\ticon = \'none\';\n
+\t\t\t\timage = \' style="background-image: url(\\\'\' + settings.image + \'\\\')"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (shortcut) {\n
+\t\t\t\tshortcut = convertShortcut(shortcut);\n
+\t\t\t}\n
+\n
+\t\t\ticon = prefix + \'ico \' + prefix + \'i-\' + (self.settings.icon || \'none\');\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + id + \'" class="\' + self.classes + \'" tabindex="-1">\' +\n
+\t\t\t\t\t(text !== \'-\' ? \'<i class="\' + icon + \'"\' + image + \'></i>\\u00a0\' : \'\') +\n
+\t\t\t\t\t(text !== \'-\' ? \'<span id="\' + id + \'-text" class="\' + prefix + \'text">\' + text + \'</span>\' : \'\') +\n
+\t\t\t\t\t(shortcut ? \'<div id="\' + id + \'-shortcut" class="\' + prefix + \'menu-shortcut">\' + shortcut + \'</div>\' : \'\') +\n
+\t\t\t\t\t(settings.menu ? \'<div class="\' + prefix + \'caret"></div>\' : \'\') +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Gets invoked after the control has been rendered.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this, settings = self.settings;\n
+\n
+\t\t\tvar textStyle = settings.textStyle;\n
+\t\t\tif (typeof textStyle == "function") {\n
+\t\t\t\ttextStyle = textStyle.call(this);\n
+\t\t\t}\n
+\n
+\t\t\tif (textStyle) {\n
+\t\t\t\tvar textElm = self.getEl(\'text\');\n
+\t\t\t\tif (textElm) {\n
+\t\t\t\t\ttextElm.setAttribute(\'style\', textStyle);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tself.on(\'mouseenter click\', function(e) {\n
+\t\t\t\tif (e.control === self) {\n
+\t\t\t\t\tif (!settings.menu && e.type === \'click\') {\n
+\t\t\t\t\t\tself.fire(\'select\');\n
+\t\t\t\t\t\tself.parent().hideAll();\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tself.showMenu();\n
+\n
+\t\t\t\t\t\tif (e.aria) {\n
+\t\t\t\t\t\t\tself.menu.focus(true);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself._super();\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\tactive: function(state) {\n
+\t\t\tif (typeof state != "undefined") {\n
+\t\t\t\tthis.aria(\'checked\', state);\n
+\t\t\t}\n
+\n
+\t\t\treturn this._super(state);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the control and it\'s menus.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t */\n
+\t\tremove: function() {\n
+\t\t\tthis._super();\n
+\n
+\t\t\tif (this.menu) {\n
+\t\t\t\tthis.menu.remove();\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6896</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>MenuItem.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

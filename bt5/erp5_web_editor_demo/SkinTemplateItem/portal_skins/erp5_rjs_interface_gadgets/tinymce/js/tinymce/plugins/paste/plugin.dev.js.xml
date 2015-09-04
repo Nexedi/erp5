@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268451.16</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.dev.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Inline development version. Only to be used while developing since it uses document.write to load scripts.\n
+ */\n
+\n
+/*jshint smarttabs:true, undef:true, latedef:true, curly:true, bitwise:true, camelcase:true */\n
+/*globals $code */\n
+\n
+(function(exports) {\n
+\t"use strict";\n
+\n
+\tvar html = "", baseDir;\n
+\tvar modules = {}, exposedModules = [], moduleCount = 0;\n
+\n
+\tvar scripts = document.getElementsByTagName(\'script\');\n
+\tfor (var i = 0; i < scripts.length; i++) {\n
+\t\tvar src = scripts[i].src;\n
+\n
+\t\tif (src.indexOf(\'/plugin.dev.js\') != -1) {\n
+\t\t\tbaseDir = src.substring(0, src.lastIndexOf(\'/\'));\n
+\t\t}\n
+\t}\n
+\n
+\tfunction require(ids, callback) {\n
+\t\tvar module, defs = [];\n
+\n
+\t\tfor (var i = 0; i < ids.length; ++i) {\n
+\t\t\tmodule = modules[ids[i]] || resolve(ids[i]);\n
+\t\t\tif (!module) {\n
+\t\t\t\tthrow \'module definition dependecy not found: \' + ids[i];\n
+\t\t\t}\n
+\n
+\t\t\tdefs.push(module);\n
+\t\t}\n
+\n
+\t\tcallback.apply(null, defs);\n
+\t}\n
+\n
+\tfunction resolve(id) {\n
+\t\tvar target = exports;\n
+\t\tvar fragments = id.split(/[.\\/]/);\n
+\n
+\t\tfor (var fi = 0; fi < fragments.length; ++fi) {\n
+\t\t\tif (!target[fragments[fi]]) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\ttarget = target[fragments[fi]];\n
+\t\t}\n
+\n
+\t\treturn target;\n
+\t}\n
+\n
+\tfunction register(id) {\n
+\t\tvar target = exports;\n
+\t\tvar fragments = id.split(/[.\\/]/);\n
+\n
+\t\tfor (var fi = 0; fi < fragments.length - 1; ++fi) {\n
+\t\t\tif (target[fragments[fi]] === undefined) {\n
+\t\t\t\ttarget[fragments[fi]] = {};\n
+\t\t\t}\n
+\n
+\t\t\ttarget = target[fragments[fi]];\n
+\t\t}\n
+\n
+\t\ttarget[fragments[fragments.length - 1]] = modules[id];\n
+\t}\n
+\n
+\tfunction define(id, dependencies, definition) {\n
+\t\tif (typeof id !== \'string\') {\n
+\t\t\tthrow \'invalid module definition, module id must be defined and be a string\';\n
+\t\t}\n
+\n
+\t\tif (dependencies === undefined) {\n
+\t\t\tthrow \'invalid module definition, dependencies must be specified\';\n
+\t\t}\n
+\n
+\t\tif (definition === undefined) {\n
+\t\t\tthrow \'invalid module definition, definition function must be specified\';\n
+\t\t}\n
+\n
+\t\trequire(dependencies, function() {\n
+\t\t\tmodules[id] = definition.apply(null, arguments);\n
+\t\t});\n
+\n
+\t\tif (--moduleCount === 0) {\n
+\t\t\tfor (var i = 0; i < exposedModules.length; i++) {\n
+\t\t\t\tregister(exposedModules[i]);\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\tfunction expose(ids) {\n
+\t\texposedModules = ids;\n
+\t}\n
+\n
+\tfunction writeScripts() {\n
+\t\tdocument.write(html);\n
+\t}\n
+\n
+\tfunction load(path) {\n
+\t\thtml += \'<script type="text/javascript" src="\' + baseDir + \'/\' + path + \'"></script>\\n\';\n
+\t\tmoduleCount++;\n
+\t}\n
+\n
+\t// Expose globally\n
+\texports.define = define;\n
+\texports.require = require;\n
+\n
+\texpose(["tinymce/pasteplugin/Utils"]);\n
+\n
+\tload(\'classes/Utils.js\');\n
+\tload(\'classes/Clipboard.js\');\n
+\tload(\'classes/WordFilter.js\');\n
+\tload(\'classes/Quirks.js\');\n
+\tload(\'classes/Plugin.js\');\n
+\n
+\twriteScripts();\n
+})(this);\n
+\n
+// $hash: fc6c3818d16bbf020db6801ac6c8c113
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2653</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.dev.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

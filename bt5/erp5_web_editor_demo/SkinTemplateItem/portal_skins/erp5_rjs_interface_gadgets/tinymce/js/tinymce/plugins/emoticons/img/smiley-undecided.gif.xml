@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268513.47</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>smiley-undecided.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhEgASANQRACoWAsbGxop5G/fYEMq2av3sJb+qTu/v7qeJB/PwWda6DmRODN7SMrebDb+j
+LfryR/79cfr6+uDYukIvB8OqFvvvOcS8nfvjGdfX1v76WVZDDP75N3ZiEbmbHM6/JAAAACH5BAEA
+AB8ALAAAAAASABIAAAXO4CeKUWmWY0pKRocgnSFFKkk0TAJBCdMQtNTBQUlkHpXKI5OgOA6jiMED
+QSavD4jHQItIGlXBRJAUC7KNmZSR2WgWnI1bE88wuIdO4rHhVOR9fxsPCR0HB2ByHh4FBRcUCgMX
+FxkNh4kbBQObnJwPlnkJmp0IEwsNkg+GBwYMFZOPEwB0CBcVdwcRFhQZjg0cFLAXBRkUFiWsHr3C
+k8RbuR8RGA4eCZnNGwkeDhhBHwcYBhQMS0cMFAYYUCnSFgZETgYW3TXR4AH4AereHyEAOw==</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>337</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>smiley-undecided.gif</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

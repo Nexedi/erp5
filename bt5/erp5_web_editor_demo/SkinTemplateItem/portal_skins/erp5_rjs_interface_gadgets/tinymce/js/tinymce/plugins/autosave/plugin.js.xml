@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268553.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+// Internal unload handler will be called before the page is unloaded\n
+// Needs to be outside the plugin since it would otherwise keep\n
+// a reference to editor in closue scope\n
+/*eslint no-func-assign:0 */\n
+tinymce._beforeUnloadHandler = function() {\n
+\tvar msg;\n
+\n
+\ttinymce.each(tinymce.editors, function(editor) {\n
+\t\t// Store a draft for each editor instance\n
+\t\tif (editor.plugins.autosave) {\n
+\t\t\teditor.plugins.autosave.storeDraft();\n
+\t\t}\n
+\n
+\t\t// Setup a return message if the editor is dirty\n
+\t\tif (!msg && editor.isDirty() && editor.getParam("autosave_ask_before_unload", true)) {\n
+\t\t\tmsg = editor.translate("You have unsaved changes are you sure you want to navigate away?");\n
+\t\t}\n
+\t});\n
+\n
+\treturn msg;\n
+};\n
+\n
+tinymce.PluginManager.add(\'autosave\', function(editor) {\n
+\tvar settings = editor.settings, LocalStorage = tinymce.util.LocalStorage, prefix, started;\n
+\n
+\tprefix = settings.autosave_prefix || \'tinymce-autosave-{path}{query}-{id}-\';\n
+\tprefix = prefix.replace(/\\{path\\}/g, document.location.pathname);\n
+\tprefix = prefix.replace(/\\{query\\}/g, document.location.search);\n
+\tprefix = prefix.replace(/\\{id\\}/g, editor.id);\n
+\n
+\tfunction parseTime(time, defaultTime) {\n
+\t\tvar multipels = {\n
+\t\t\ts: 1000,\n
+\t\t\tm: 60000\n
+\t\t};\n
+\n
+\t\ttime = /^(\\d+)([ms]?)$/.exec(\'\' + (time || defaultTime));\n
+\n
+\t\treturn (time[2] ? multipels[time[2]] : 1) * parseInt(time, 10);\n
+\t}\n
+\n
+\tfunction hasDraft() {\n
+\t\tvar time = parseInt(LocalStorage.getItem(prefix + "time"), 10) || 0;\n
+\n
+\t\tif (new Date().getTime() - time > settings.autosave_retention) {\n
+\t\t\tremoveDraft(false);\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\treturn true;\n
+\t}\n
+\n
+\tfunction removeDraft(fire) {\n
+\t\tLocalStorage.removeItem(prefix + "draft");\n
+\t\tLocalStorage.removeItem(prefix + "time");\n
+\n
+\t\tif (fire !== false) {\n
+\t\t\teditor.fire(\'RemoveDraft\');\n
+\t\t}\n
+\t}\n
+\n
+\tfunction storeDraft() {\n
+\t\tif (!isEmpty() && editor.isDirty()) {\n
+\t\t\tLocalStorage.setItem(prefix + "draft", editor.getContent({format: \'raw\', no_events: true}));\n
+\t\t\tLocalStorage.setItem(prefix + "time", new Date().getTime());\n
+\t\t\teditor.fire(\'StoreDraft\');\n
+\t\t}\n
+\t}\n
+\n
+\tfunction restoreDraft() {\n
+\t\tif (hasDraft()) {\n
+\t\t\teditor.setContent(LocalStorage.getItem(prefix + "draft"), {format: \'raw\'});\n
+\t\t\teditor.fire(\'RestoreDraft\');\n
+\t\t}\n
+\t}\n
+\n
+\tfunction startStoreDraft() {\n
+\t\tif (!started) {\n
+\t\t\tsetInterval(function() {\n
+\t\t\t\tif (!editor.removed) {\n
+\t\t\t\t\tstoreDraft();\n
+\t\t\t\t}\n
+\t\t\t}, settings.autosave_interval);\n
+\n
+\t\t\tstarted = true;\n
+\t\t}\n
+\t}\n
+\n
+\tsettings.autosave_interval = parseTime(settings.autosave_interval, \'30s\');\n
+\tsettings.autosave_retention = parseTime(settings.autosave_retention, \'20m\');\n
+\n
+\tfunction postRender() {\n
+\t\tvar self = this;\n
+\n
+\t\tself.disabled(!hasDraft());\n
+\n
+\t\teditor.on(\'StoreDraft RestoreDraft RemoveDraft\', function() {\n
+\t\t\tself.disabled(!hasDraft());\n
+\t\t});\n
+\n
+\t\tstartStoreDraft();\n
+\t}\n
+\n
+\tfunction restoreLastDraft() {\n
+\t\teditor.undoManager.beforeChange();\n
+\t\trestoreDraft();\n
+\t\tremoveDraft();\n
+\t\teditor.undoManager.add();\n
+\t}\n
+\n
+\teditor.addButton(\'restoredraft\', {\n
+\t\ttitle: \'Restore last draft\',\n
+\t\tonclick: restoreLastDraft,\n
+\t\tonPostRender: postRender\n
+\t});\n
+\n
+\teditor.addMenuItem(\'restoredraft\', {\n
+\t\ttext: \'Restore last draft\',\n
+\t\tonclick: restoreLastDraft,\n
+\t\tonPostRender: postRender,\n
+\t\tcontext: \'file\'\n
+\t});\n
+\n
+\tfunction isEmpty(html) {\n
+\t\tvar forcedRootBlockName = editor.settings.forced_root_block;\n
+\n
+\t\thtml = tinymce.trim(typeof html == "undefined" ? editor.getBody().innerHTML : html);\n
+\n
+\t\treturn html === \'\' || new RegExp(\n
+\t\t\t\'^<\' + forcedRootBlockName + \'[^>]*>((\\u00a0|&nbsp;|[ \\t]|<br[^>]*>)+?|)<\\/\' + forcedRootBlockName + \'>|<br>$\', \'i\'\n
+\t\t).test(html);\n
+\t}\n
+\n
+\tif (editor.settings.autosave_restore_when_empty !== false) {\n
+\t\teditor.on(\'init\', function() {\n
+\t\t\tif (hasDraft() && isEmpty()) {\n
+\t\t\t\trestoreDraft();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'saveContent\', function() {\n
+\t\t\tremoveDraft();\n
+\t\t});\n
+\t}\n
+\n
+\twindow.onbeforeunload = tinymce._beforeUnloadHandler;\n
+\n
+\tthis.hasDraft = hasDraft;\n
+\tthis.storeDraft = storeDraft;\n
+\tthis.restoreDraft = restoreDraft;\n
+\tthis.removeDraft = removeDraft;\n
+\tthis.isEmpty = isEmpty;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4159</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268215.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ui-overrides.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* Hardcodes sizes since fonts vary on platforms */\n
+\n
+.mce-spacer {\n
+\twidth: 20px;\n
+\theight: 20px;\n
+\tvisibility: visible;\n
+\tborder: 0 solid black;\n
+}\n
+\n
+.mce-head .mce-title {\n
+\twidth: 100px;\n
+\theight: 20px;\n
+\tdisplay: inline-block;\n
+}\n
+\n
+.mce-btn .mce-txt {\n
+\twidth: 20px;\n
+}\n
+\n
+/* Colors used for debugging */\n
+\n
+.mce-red {background-color: red;}\n
+.mce-green {background-color: green;}\n
+.mce-blue {background-color: blue;}\n
+.mce-yellow {background-color: yellow;}\n
+.mce-magenta {background-color: magenta;}\n
+.mce-cyan {background-color: cyan;}\n
+.mce-dotted {background-image: url(../img/raster.gif);}\n
+.mce-i-test {background: red;}\n
+ </string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>609</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ui-overrides.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

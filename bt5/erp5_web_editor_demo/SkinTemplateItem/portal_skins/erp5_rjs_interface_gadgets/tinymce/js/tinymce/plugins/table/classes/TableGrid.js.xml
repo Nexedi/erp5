@@ -1,0 +1,902 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268428.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>TableGrid.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * TableGrid.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class creates a grid out of a table element. This\n
+ * makes it a whole lot easier to handle complex tables with\n
+ * col/row spans.\n
+ *\n
+ * @class tinymce.tableplugin.TableGrid\n
+ * @private\n
+ */\n
+define("tinymce/tableplugin/TableGrid", [\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/Env",\n
+\t"tinymce/tableplugin/Utils"\n
+], function(Tools, Env, Utils) {\n
+\tvar each = Tools.each, getSpanVal = Utils.getSpanVal;\n
+\n
+\treturn function(editor, table) {\n
+\t\tvar grid, gridWidth, startPos, endPos, selectedCell, selection = editor.selection, dom = selection.dom;\n
+\n
+\t\tfunction buildGrid() {\n
+\t\t\tvar startY = 0;\n
+\n
+\t\t\tgrid = [];\n
+\t\t\tgridWidth = 0;\n
+\n
+\t\t\teach([\'thead\', \'tbody\', \'tfoot\'], function(part) {\n
+\t\t\t\tvar rows = dom.select(\'> \' + part + \' tr\', table);\n
+\n
+\t\t\t\teach(rows, function(tr, y) {\n
+\t\t\t\t\ty += startY;\n
+\n
+\t\t\t\t\teach(dom.select(\'> td, > th\', tr), function(td, x) {\n
+\t\t\t\t\t\tvar x2, y2, rowspan, colspan;\n
+\n
+\t\t\t\t\t\t// Skip over existing cells produced by rowspan\n
+\t\t\t\t\t\tif (grid[y]) {\n
+\t\t\t\t\t\t\twhile (grid[y][x]) {\n
+\t\t\t\t\t\t\t\tx++;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Get col/rowspan from cell\n
+\t\t\t\t\t\trowspan = getSpanVal(td, \'rowspan\');\n
+\t\t\t\t\t\tcolspan = getSpanVal(td, \'colspan\');\n
+\n
+\t\t\t\t\t\t// Fill out rowspan/colspan right and down\n
+\t\t\t\t\t\tfor (y2 = y; y2 < y + rowspan; y2++) {\n
+\t\t\t\t\t\t\tif (!grid[y2]) {\n
+\t\t\t\t\t\t\t\tgrid[y2] = [];\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tfor (x2 = x; x2 < x + colspan; x2++) {\n
+\t\t\t\t\t\t\t\tgrid[y2][x2] = {\n
+\t\t\t\t\t\t\t\t\tpart: part,\n
+\t\t\t\t\t\t\t\t\treal: y2 == y && x2 == x,\n
+\t\t\t\t\t\t\t\t\telm: td,\n
+\t\t\t\t\t\t\t\t\trowspan: rowspan,\n
+\t\t\t\t\t\t\t\t\tcolspan: colspan\n
+\t\t\t\t\t\t\t\t};\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tgridWidth = Math.max(gridWidth, x + 1);\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\n
+\t\t\t\tstartY += rows.length;\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction cloneNode(node, children) {\n
+\t\t\tnode = node.cloneNode(children);\n
+\t\t\tnode.removeAttribute(\'id\');\n
+\n
+\t\t\treturn node;\n
+\t\t}\n
+\n
+\t\tfunction getCell(x, y) {\n
+\t\t\tvar row;\n
+\n
+\t\t\trow = grid[y];\n
+\t\t\tif (row) {\n
+\t\t\t\treturn row[x];\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction setSpanVal(td, name, val) {\n
+\t\t\tif (td) {\n
+\t\t\t\tval = parseInt(val, 10);\n
+\n
+\t\t\t\tif (val === 1) {\n
+\t\t\t\t\ttd.removeAttribute(name, 1);\n
+\t\t\t\t} else {\n
+\t\t\t\t\ttd.setAttribute(name, val, 1);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction isCellSelected(cell) {\n
+\t\t\treturn cell && (dom.hasClass(cell.elm, \'mce-item-selected\') || cell == selectedCell);\n
+\t\t}\n
+\n
+\t\tfunction getSelectedRows() {\n
+\t\t\tvar rows = [];\n
+\n
+\t\t\teach(table.rows, function(row) {\n
+\t\t\t\teach(row.cells, function(cell) {\n
+\t\t\t\t\tif (dom.hasClass(cell, \'mce-item-selected\') || (selectedCell && cell == selectedCell.elm)) {\n
+\t\t\t\t\t\trows.push(row);\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\treturn rows;\n
+\t\t}\n
+\n
+\t\tfunction deleteTable() {\n
+\t\t\tvar rng = dom.createRng();\n
+\n
+\t\t\trng.setStartAfter(table);\n
+\t\t\trng.setEndAfter(table);\n
+\n
+\t\t\tselection.setRng(rng);\n
+\n
+\t\t\tdom.remove(table);\n
+\t\t}\n
+\n
+\t\tfunction cloneCell(cell) {\n
+\t\t\tvar formatNode, cloneFormats = {};\n
+\n
+\t\t\tif (editor.settings.table_clone_elements !== false) {\n
+\t\t\t\tcloneFormats = Tools.makeMap(\n
+\t\t\t\t\t(editor.settings.table_clone_elements || \'strong em b i span font h1 h2 h3 h4 h5 h6 p div\').toUpperCase(),\n
+\t\t\t\t\t/[ ,]/\n
+\t\t\t\t);\n
+\t\t\t}\n
+\n
+\t\t\t// Clone formats\n
+\t\t\tTools.walk(cell, function(node) {\n
+\t\t\t\tvar curNode;\n
+\n
+\t\t\t\tif (node.nodeType == 3) {\n
+\t\t\t\t\teach(dom.getParents(node.parentNode, null, cell).reverse(), function(node) {\n
+\t\t\t\t\t\tif (!cloneFormats[node.nodeName]) {\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode = cloneNode(node, false);\n
+\n
+\t\t\t\t\t\tif (!formatNode) {\n
+\t\t\t\t\t\t\tformatNode = curNode = node;\n
+\t\t\t\t\t\t} else if (curNode) {\n
+\t\t\t\t\t\t\tcurNode.appendChild(node);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tcurNode = node;\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// Add something to the inner node\n
+\t\t\t\t\tif (curNode) {\n
+\t\t\t\t\t\tcurNode.innerHTML = Env.ie ? \'&nbsp;\' : \'<br data-mce-bogus="1" />\';\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t}, \'childNodes\');\n
+\n
+\t\t\tcell = cloneNode(cell, false);\n
+\t\t\tsetSpanVal(cell, \'rowSpan\', 1);\n
+\t\t\tsetSpanVal(cell, \'colSpan\', 1);\n
+\n
+\t\t\tif (formatNode) {\n
+\t\t\t\tcell.appendChild(formatNode);\n
+\t\t\t} else {\n
+\t\t\t\tUtils.paddCell(cell);\n
+\t\t\t}\n
+\n
+\t\t\treturn cell;\n
+\t\t}\n
+\n
+\t\tfunction cleanup() {\n
+\t\t\tvar rng = dom.createRng(), row;\n
+\n
+\t\t\t// Empty rows\n
+\t\t\teach(dom.select(\'tr\', table), function(tr) {\n
+\t\t\t\tif (tr.cells.length === 0) {\n
+\t\t\t\t\tdom.remove(tr);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// Empty table\n
+\t\t\tif (dom.select(\'tr\', table).length === 0) {\n
+\t\t\t\trng.setStartBefore(table);\n
+\t\t\t\trng.setEndBefore(table);\n
+\t\t\t\tselection.setRng(rng);\n
+\t\t\t\tdom.remove(table);\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Empty header/body/footer\n
+\t\t\teach(dom.select(\'thead,tbody,tfoot\', table), function(part) {\n
+\t\t\t\tif (part.rows.length === 0) {\n
+\t\t\t\t\tdom.remove(part);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// Restore selection to start position if it still exists\n
+\t\t\tbuildGrid();\n
+\n
+\t\t\t// If we have a valid startPos object\n
+\t\t\tif (startPos) {\n
+\t\t\t\t// Restore the selection to the closest table position\n
+\t\t\t\trow = grid[Math.min(grid.length - 1, startPos.y)];\n
+\t\t\t\tif (row) {\n
+\t\t\t\t\tselection.select(row[Math.min(row.length - 1, startPos.x)].elm, true);\n
+\t\t\t\t\tselection.collapse(true);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction fillLeftDown(x, y, rows, cols) {\n
+\t\t\tvar tr, x2, r, c, cell;\n
+\n
+\t\t\ttr = grid[y][x].elm.parentNode;\n
+\t\t\tfor (r = 1; r <= rows; r++) {\n
+\t\t\t\ttr = dom.getNext(tr, \'tr\');\n
+\n
+\t\t\t\tif (tr) {\n
+\t\t\t\t\t// Loop left to find real cell\n
+\t\t\t\t\tfor (x2 = x; x2 >= 0; x2--) {\n
+\t\t\t\t\t\tcell = grid[y + r][x2].elm;\n
+\n
+\t\t\t\t\t\tif (cell.parentNode == tr) {\n
+\t\t\t\t\t\t\t// Append clones after\n
+\t\t\t\t\t\t\tfor (c = 1; c <= cols; c++) {\n
+\t\t\t\t\t\t\t\tdom.insertAfter(cloneCell(cell), cell);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (x2 == -1) {\n
+\t\t\t\t\t\t// Insert nodes before first cell\n
+\t\t\t\t\t\tfor (c = 1; c <= cols; c++) {\n
+\t\t\t\t\t\t\ttr.insertBefore(cloneCell(tr.cells[0]), tr.cells[0]);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction split() {\n
+\t\t\teach(grid, function(row, y) {\n
+\t\t\t\teach(row, function(cell, x) {\n
+\t\t\t\t\tvar colSpan, rowSpan, i;\n
+\n
+\t\t\t\t\tif (isCellSelected(cell)) {\n
+\t\t\t\t\t\tcell = cell.elm;\n
+\t\t\t\t\t\tcolSpan = getSpanVal(cell, \'colspan\');\n
+\t\t\t\t\t\trowSpan = getSpanVal(cell, \'rowspan\');\n
+\n
+\t\t\t\t\t\tif (colSpan > 1 || rowSpan > 1) {\n
+\t\t\t\t\t\t\tsetSpanVal(cell, \'rowSpan\', 1);\n
+\t\t\t\t\t\t\tsetSpanVal(cell, \'colSpan\', 1);\n
+\n
+\t\t\t\t\t\t\t// Insert cells right\n
+\t\t\t\t\t\t\tfor (i = 0; i < colSpan - 1; i++) {\n
+\t\t\t\t\t\t\t\tdom.insertAfter(cloneCell(cell), cell);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tfillLeftDown(x, y, rowSpan - 1, colSpan);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction merge(cell, cols, rows) {\n
+\t\t\tvar pos, startX, startY, endX, endY, x, y, startCell, endCell, children, count;\n
+\n
+\t\t\t// Use specified cell and cols/rows\n
+\t\t\tif (cell) {\n
+\t\t\t\tpos = getPos(cell);\n
+\t\t\t\tstartX = pos.x;\n
+\t\t\t\tstartY = pos.y;\n
+\t\t\t\tendX = startX + (cols - 1);\n
+\t\t\t\tendY = startY + (rows - 1);\n
+\t\t\t} else {\n
+\t\t\t\tstartPos = endPos = null;\n
+\n
+\t\t\t\t// Calculate start/end pos by checking for selected cells in grid works better with context menu\n
+\t\t\t\teach(grid, function(row, y) {\n
+\t\t\t\t\teach(row, function(cell, x) {\n
+\t\t\t\t\t\tif (isCellSelected(cell)) {\n
+\t\t\t\t\t\t\tif (!startPos) {\n
+\t\t\t\t\t\t\t\tstartPos = {x: x, y: y};\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tendPos = {x: x, y: y};\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Use selection, but make sure startPos is valid before accessing\n
+\t\t\t\tif (startPos) {\n
+\t\t\t\t\tstartX = startPos.x;\n
+\t\t\t\t\tstartY = startPos.y;\n
+\t\t\t\t\tendX = endPos.x;\n
+\t\t\t\t\tendY = endPos.y;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Find start/end cells\n
+\t\t\tstartCell = getCell(startX, startY);\n
+\t\t\tendCell = getCell(endX, endY);\n
+\n
+\t\t\t// Check if the cells exists and if they are of the same part for example tbody = tbody\n
+\t\t\tif (startCell && endCell && startCell.part == endCell.part) {\n
+\t\t\t\t// Split and rebuild grid\n
+\t\t\t\tsplit();\n
+\t\t\t\tbuildGrid();\n
+\n
+\t\t\t\t// Set row/col span to start cell\n
+\t\t\t\tstartCell = getCell(startX, startY).elm;\n
+\t\t\t\tsetSpanVal(startCell, \'colSpan\', (endX - startX) + 1);\n
+\t\t\t\tsetSpanVal(startCell, \'rowSpan\', (endY - startY) + 1);\n
+\n
+\t\t\t\t// Remove other cells and add it\'s contents to the start cell\n
+\t\t\t\tfor (y = startY; y <= endY; y++) {\n
+\t\t\t\t\tfor (x = startX; x <= endX; x++) {\n
+\t\t\t\t\t\tif (!grid[y] || !grid[y][x]) {\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tcell = grid[y][x].elm;\n
+\n
+\t\t\t\t\t\t/*jshint loopfunc:true */\n
+\t\t\t\t\t\t/*eslint no-loop-func:0 */\n
+\t\t\t\t\t\tif (cell != startCell) {\n
+\t\t\t\t\t\t\t// Move children to startCell\n
+\t\t\t\t\t\t\tchildren = Tools.grep(cell.childNodes);\n
+\t\t\t\t\t\t\teach(children, function(node) {\n
+\t\t\t\t\t\t\t\tstartCell.appendChild(node);\n
+\t\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t\t// Remove bogus nodes if there is children in the target cell\n
+\t\t\t\t\t\t\tif (children.length) {\n
+\t\t\t\t\t\t\t\tchildren = Tools.grep(startCell.childNodes);\n
+\t\t\t\t\t\t\t\tcount = 0;\n
+\t\t\t\t\t\t\t\teach(children, function(node) {\n
+\t\t\t\t\t\t\t\t\tif (node.nodeName == \'BR\' && dom.getAttrib(node, \'data-mce-bogus\') && count++ < children.length - 1) {\n
+\t\t\t\t\t\t\t\t\t\tstartCell.removeChild(node);\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tdom.remove(cell);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Remove empty rows etc and restore caret location\n
+\t\t\t\tcleanup();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction insertRow(before) {\n
+\t\t\tvar posY, cell, lastCell, x, rowElm, newRow, newCell, otherCell, rowSpan;\n
+\n
+\t\t\t// Find first/last row\n
+\t\t\teach(grid, function(row, y) {\n
+\t\t\t\teach(row, function(cell) {\n
+\t\t\t\t\tif (isCellSelected(cell)) {\n
+\t\t\t\t\t\tcell = cell.elm;\n
+\t\t\t\t\t\trowElm = cell.parentNode;\n
+\t\t\t\t\t\tnewRow = cloneNode(rowElm, false);\n
+\t\t\t\t\t\tposY = y;\n
+\n
+\t\t\t\t\t\tif (before) {\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tif (before) {\n
+\t\t\t\t\treturn !posY;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// If posY is undefined there is nothing for us to do here...just return to avoid crashing below\n
+\t\t\tif (posY === undefined) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tfor (x = 0; x < grid[0].length; x++) {\n
+\t\t\t\t// Cell not found could be because of an invalid table structure\n
+\t\t\t\tif (!grid[posY][x]) {\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcell = grid[posY][x].elm;\n
+\n
+\t\t\t\tif (cell != lastCell) {\n
+\t\t\t\t\tif (!before) {\n
+\t\t\t\t\t\trowSpan = getSpanVal(cell, \'rowspan\');\n
+\t\t\t\t\t\tif (rowSpan > 1) {\n
+\t\t\t\t\t\t\tsetSpanVal(cell, \'rowSpan\', rowSpan + 1);\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// Check if cell above can be expanded\n
+\t\t\t\t\t\tif (posY > 0 && grid[posY - 1][x]) {\n
+\t\t\t\t\t\t\totherCell = grid[posY - 1][x].elm;\n
+\t\t\t\t\t\t\trowSpan = getSpanVal(otherCell, \'rowSpan\');\n
+\t\t\t\t\t\t\tif (rowSpan > 1) {\n
+\t\t\t\t\t\t\t\tsetSpanVal(otherCell, \'rowSpan\', rowSpan + 1);\n
+\t\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Insert new cell into new row\n
+\t\t\t\t\tnewCell = cloneCell(cell);\n
+\t\t\t\t\tsetSpanVal(newCell, \'colSpan\', cell.colSpan);\n
+\n
+\t\t\t\t\tnewRow.appendChild(newCell);\n
+\n
+\t\t\t\t\tlastCell = cell;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (newRow.hasChildNodes()) {\n
+\t\t\t\tif (!before) {\n
+\t\t\t\t\tdom.insertAfter(newRow, rowElm);\n
+\t\t\t\t} else {\n
+\t\t\t\t\trowElm.parentNode.insertBefore(newRow, rowElm);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction insertCol(before) {\n
+\t\t\tvar posX, lastCell;\n
+\n
+\t\t\t// Find first/last column\n
+\t\t\teach(grid, function(row) {\n
+\t\t\t\teach(row, function(cell, x) {\n
+\t\t\t\t\tif (isCellSelected(cell)) {\n
+\t\t\t\t\t\tposX = x;\n
+\n
+\t\t\t\t\t\tif (before) {\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tif (before) {\n
+\t\t\t\t\treturn !posX;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teach(grid, function(row, y) {\n
+\t\t\t\tvar cell, rowSpan, colSpan;\n
+\n
+\t\t\t\tif (!row[posX]) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcell = row[posX].elm;\n
+\t\t\t\tif (cell != lastCell) {\n
+\t\t\t\t\tcolSpan = getSpanVal(cell, \'colspan\');\n
+\t\t\t\t\trowSpan = getSpanVal(cell, \'rowspan\');\n
+\n
+\t\t\t\t\tif (colSpan == 1) {\n
+\t\t\t\t\t\tif (!before) {\n
+\t\t\t\t\t\t\tdom.insertAfter(cloneCell(cell), cell);\n
+\t\t\t\t\t\t\tfillLeftDown(posX, y, rowSpan - 1, colSpan);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tcell.parentNode.insertBefore(cloneCell(cell), cell);\n
+\t\t\t\t\t\t\tfillLeftDown(posX, y, rowSpan - 1, colSpan);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tsetSpanVal(cell, \'colSpan\', cell.colSpan + 1);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tlastCell = cell;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction deleteCols() {\n
+\t\t\tvar cols = [];\n
+\n
+\t\t\t// Get selected column indexes\n
+\t\t\teach(grid, function(row) {\n
+\t\t\t\teach(row, function(cell, x) {\n
+\t\t\t\t\tif (isCellSelected(cell) && Tools.inArray(cols, x) === -1) {\n
+\t\t\t\t\t\teach(grid, function(row) {\n
+\t\t\t\t\t\t\tvar cell = row[x].elm, colSpan;\n
+\n
+\t\t\t\t\t\t\tcolSpan = getSpanVal(cell, \'colSpan\');\n
+\n
+\t\t\t\t\t\t\tif (colSpan > 1) {\n
+\t\t\t\t\t\t\t\tsetSpanVal(cell, \'colSpan\', colSpan - 1);\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tdom.remove(cell);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\tcols.push(x);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\tcleanup();\n
+\t\t}\n
+\n
+\t\tfunction deleteRows() {\n
+\t\t\tvar rows;\n
+\n
+\t\t\tfunction deleteRow(tr) {\n
+\t\t\t\tvar pos, lastCell;\n
+\n
+\t\t\t\t// Move down row spanned cells\n
+\t\t\t\teach(tr.cells, function(cell) {\n
+\t\t\t\t\tvar rowSpan = getSpanVal(cell, \'rowSpan\');\n
+\n
+\t\t\t\t\tif (rowSpan > 1) {\n
+\t\t\t\t\t\tsetSpanVal(cell, \'rowSpan\', rowSpan - 1);\n
+\t\t\t\t\t\tpos = getPos(cell);\n
+\t\t\t\t\t\tfillLeftDown(pos.x, pos.y, 1, 1);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Delete cells\n
+\t\t\t\tpos = getPos(tr.cells[0]);\n
+\t\t\t\teach(grid[pos.y], function(cell) {\n
+\t\t\t\t\tvar rowSpan;\n
+\n
+\t\t\t\t\tcell = cell.elm;\n
+\n
+\t\t\t\t\tif (cell != lastCell) {\n
+\t\t\t\t\t\trowSpan = getSpanVal(cell, \'rowSpan\');\n
+\n
+\t\t\t\t\t\tif (rowSpan <= 1) {\n
+\t\t\t\t\t\t\tdom.remove(cell);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tsetSpanVal(cell, \'rowSpan\', rowSpan - 1);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tlastCell = cell;\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// Get selected rows and move selection out of scope\n
+\t\t\trows = getSelectedRows();\n
+\n
+\t\t\t// Delete all selected rows\n
+\t\t\teach(rows.reverse(), function(tr) {\n
+\t\t\t\tdeleteRow(tr);\n
+\t\t\t});\n
+\n
+\t\t\tcleanup();\n
+\t\t}\n
+\n
+\t\tfunction cutRows() {\n
+\t\t\tvar rows = getSelectedRows();\n
+\n
+\t\t\tdom.remove(rows);\n
+\t\t\tcleanup();\n
+\n
+\t\t\treturn rows;\n
+\t\t}\n
+\n
+\t\tfunction copyRows() {\n
+\t\t\tvar rows = getSelectedRows();\n
+\n
+\t\t\teach(rows, function(row, i) {\n
+\t\t\t\trows[i] = cloneNode(row, true);\n
+\t\t\t});\n
+\n
+\t\t\treturn rows;\n
+\t\t}\n
+\n
+\t\tfunction pasteRows(rows, before) {\n
+\t\t\tvar selectedRows = getSelectedRows(),\n
+\t\t\t\ttargetRow = selectedRows[before ? 0 : selectedRows.length - 1],\n
+\t\t\t\ttargetCellCount = targetRow.cells.length;\n
+\n
+\t\t\t// Nothing to paste\n
+\t\t\tif (!rows) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Calc target cell count\n
+\t\t\teach(grid, function(row) {\n
+\t\t\t\tvar match;\n
+\n
+\t\t\t\ttargetCellCount = 0;\n
+\t\t\t\teach(row, function(cell) {\n
+\t\t\t\t\tif (cell.real) {\n
+\t\t\t\t\t\ttargetCellCount += cell.colspan;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (cell.elm.parentNode == targetRow) {\n
+\t\t\t\t\t\tmatch = 1;\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tif (match) {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tif (!before) {\n
+\t\t\t\trows.reverse();\n
+\t\t\t}\n
+\n
+\t\t\teach(rows, function(row) {\n
+\t\t\t\tvar i, cellCount = row.cells.length, cell;\n
+\n
+\t\t\t\t// Remove col/rowspans\n
+\t\t\t\tfor (i = 0; i < cellCount; i++) {\n
+\t\t\t\t\tcell = row.cells[i];\n
+\t\t\t\t\tsetSpanVal(cell, \'colSpan\', 1);\n
+\t\t\t\t\tsetSpanVal(cell, \'rowSpan\', 1);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Needs more cells\n
+\t\t\t\tfor (i = cellCount; i < targetCellCount; i++) {\n
+\t\t\t\t\trow.appendChild(cloneCell(row.cells[cellCount - 1]));\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Needs less cells\n
+\t\t\t\tfor (i = targetCellCount; i < cellCount; i++) {\n
+\t\t\t\t\tdom.remove(row.cells[i]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Add before/after\n
+\t\t\t\tif (before) {\n
+\t\t\t\t\ttargetRow.parentNode.insertBefore(row, targetRow);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tdom.insertAfter(row, targetRow);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// Remove current selection\n
+\t\t\tdom.removeClass(dom.select(\'td.mce-item-selected,th.mce-item-selected\'), \'mce-item-selected\');\n
+\t\t}\n
+\n
+\t\tfunction getPos(target) {\n
+\t\t\tvar pos;\n
+\n
+\t\t\teach(grid, function(row, y) {\n
+\t\t\t\teach(row, function(cell, x) {\n
+\t\t\t\t\tif (cell.elm == target) {\n
+\t\t\t\t\t\tpos = {x: x, y: y};\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn !pos;\n
+\t\t\t});\n
+\n
+\t\t\treturn pos;\n
+\t\t}\n
+\n
+\t\tfunction setStartCell(cell) {\n
+\t\t\tstartPos = getPos(cell);\n
+\t\t}\n
+\n
+\t\tfunction findEndPos() {\n
+\t\t\tvar maxX, maxY;\n
+\n
+\t\t\tmaxX = maxY = 0;\n
+\n
+\t\t\teach(grid, function(row, y) {\n
+\t\t\t\teach(row, function(cell, x) {\n
+\t\t\t\t\tvar colSpan, rowSpan;\n
+\n
+\t\t\t\t\tif (isCellSelected(cell)) {\n
+\t\t\t\t\t\tcell = grid[y][x];\n
+\n
+\t\t\t\t\t\tif (x > maxX) {\n
+\t\t\t\t\t\t\tmaxX = x;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (y > maxY) {\n
+\t\t\t\t\t\t\tmaxY = y;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (cell.real) {\n
+\t\t\t\t\t\t\tcolSpan = cell.colspan - 1;\n
+\t\t\t\t\t\t\trowSpan = cell.rowspan - 1;\n
+\n
+\t\t\t\t\t\t\tif (colSpan) {\n
+\t\t\t\t\t\t\t\tif (x + colSpan > maxX) {\n
+\t\t\t\t\t\t\t\t\tmaxX = x + colSpan;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tif (rowSpan) {\n
+\t\t\t\t\t\t\t\tif (y + rowSpan > maxY) {\n
+\t\t\t\t\t\t\t\t\tmaxY = y + rowSpan;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\treturn {x: maxX, y: maxY};\n
+\t\t}\n
+\n
+\t\tfunction setEndCell(cell) {\n
+\t\t\tvar startX, startY, endX, endY, maxX, maxY, colSpan, rowSpan, x, y;\n
+\n
+\t\t\tendPos = getPos(cell);\n
+\n
+\t\t\tif (startPos && endPos) {\n
+\t\t\t\t// Get start/end positions\n
+\t\t\t\tstartX = Math.min(startPos.x, endPos.x);\n
+\t\t\t\tstartY = Math.min(startPos.y, endPos.y);\n
+\t\t\t\tendX = Math.max(startPos.x, endPos.x);\n
+\t\t\t\tendY = Math.max(startPos.y, endPos.y);\n
+\n
+\t\t\t\t// Expand end positon to include spans\n
+\t\t\t\tmaxX = endX;\n
+\t\t\t\tmaxY = endY;\n
+\n
+\t\t\t\t// Expand startX\n
+\t\t\t\tfor (y = startY; y <= maxY; y++) {\n
+\t\t\t\t\tcell = grid[y][startX];\n
+\n
+\t\t\t\t\tif (!cell.real) {\n
+\t\t\t\t\t\tif (startX - (cell.colspan - 1) < startX) {\n
+\t\t\t\t\t\t\tstartX -= cell.colspan - 1;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Expand startY\n
+\t\t\t\tfor (x = startX; x <= maxX; x++) {\n
+\t\t\t\t\tcell = grid[startY][x];\n
+\n
+\t\t\t\t\tif (!cell.real) {\n
+\t\t\t\t\t\tif (startY - (cell.rowspan - 1) < startY) {\n
+\t\t\t\t\t\t\tstartY -= cell.rowspan - 1;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Find max X, Y\n
+\t\t\t\tfor (y = startY; y <= endY; y++) {\n
+\t\t\t\t\tfor (x = startX; x <= endX; x++) {\n
+\t\t\t\t\t\tcell = grid[y][x];\n
+\n
+\t\t\t\t\t\tif (cell.real) {\n
+\t\t\t\t\t\t\tcolSpan = cell.colspan - 1;\n
+\t\t\t\t\t\t\trowSpan = cell.rowspan - 1;\n
+\n
+\t\t\t\t\t\t\tif (colSpan) {\n
+\t\t\t\t\t\t\t\tif (x + colSpan > maxX) {\n
+\t\t\t\t\t\t\t\t\tmaxX = x + colSpan;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tif (rowSpan) {\n
+\t\t\t\t\t\t\t\tif (y + rowSpan > maxY) {\n
+\t\t\t\t\t\t\t\t\tmaxY = y + rowSpan;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Remove current selection\n
+\t\t\t\tdom.removeClass(dom.select(\'td.mce-item-selected,th.mce-item-selected\'), \'mce-item-selected\');\n
+\n
+\t\t\t\t// Add new selection\n
+\t\t\t\tfor (y = startY; y <= maxY; y++) {\n
+\t\t\t\t\tfor (x = startX; x <= maxX; x++) {\n
+\t\t\t\t\t\tif (grid[y][x]) {\n
+\t\t\t\t\t\t\tdom.addClass(grid[y][x].elm, \'mce-item-selected\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction moveRelIdx(cellElm, delta) {\n
+\t\t\tvar pos, index, cell;\n
+\n
+\t\t\tpos = getPos(cellElm);\n
+\t\t\tindex = pos.y * gridWidth + pos.x;\n
+\n
+\t\t\tdo {\n
+\t\t\t\tindex += delta;\n
+\t\t\t\tcell = getCell(index % gridWidth, Math.floor(index / gridWidth));\n
+\n
+\t\t\t\tif (!cell) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (cell.elm != cellElm) {\n
+\t\t\t\t\tselection.select(cell.elm, true);\n
+\n
+\t\t\t\t\tif (dom.isEmpty(cell.elm)) {\n
+\t\t\t\t\t\tselection.collapse(true);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\t\t\t} while (cell.elm == cellElm);\n
+\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\ttable = table || dom.getParent(selection.getStart(), \'table\');\n
+\n
+\t\tbuildGrid();\n
+\n
+\t\tselectedCell = dom.getParent(selection.getStart(), \'th,td\');\n
+\t\tif (selectedCell) {\n
+\t\t\tstartPos = getPos(selectedCell);\n
+\t\t\tendPos = findEndPos();\n
+\t\t\tselectedCell = getCell(startPos.x, startPos.y);\n
+\t\t}\n
+\n
+\t\tTools.extend(this, {\n
+\t\t\tdeleteTable: deleteTable,\n
+\t\t\tsplit: split,\n
+\t\t\tmerge: merge,\n
+\t\t\tinsertRow: insertRow,\n
+\t\t\tinsertCol: insertCol,\n
+\t\t\tdeleteCols: deleteCols,\n
+\t\t\tdeleteRows: deleteRows,\n
+\t\t\tcutRows: cutRows,\n
+\t\t\tcopyRows: copyRows,\n
+\t\t\tpasteRows: pasteRows,\n
+\t\t\tgetPos: getPos,\n
+\t\t\tsetStartCell: setStartCell,\n
+\t\t\tsetEndCell: setEndCell,\n
+\t\t\tmoveRelIdx: moveRelIdx,\n
+\t\t\trefresh: buildGrid\n
+\t\t});\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18320</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>TableGrid.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

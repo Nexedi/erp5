@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268313.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FormItem.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * FormItem.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class is a container created by the form element with\n
+ * a label and control item.\n
+ *\n
+ * @class tinymce.ui.FormItem\n
+ * @extends tinymce.ui.Container\n
+ * @setting {String} label Label to display for the form item.\n
+ */\n
+define("tinymce/ui/FormItem", [\n
+\t"tinymce/ui/Container"\n
+], function(Container) {\n
+\t"use strict";\n
+\n
+\treturn Container.extend({\n
+\t\tDefaults: {\n
+\t\t\tlayout: \'flex\',\n
+\t\t\talign: \'center\',\n
+\t\t\tdefaults: {\n
+\t\t\t\tflex: 1\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, layout = self._layout, prefix = self.classPrefix;\n
+\n
+\t\t\tself.classes.add(\'formitem\');\n
+\t\t\tlayout.preRender(self);\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + self._id + \'" class="\' + self.classes + \'" hidefocus="1" tabindex="-1">\' +\n
+\t\t\t\t\t(self.settings.title ? (\'<div id="\' + self._id + \'-title" class="\' + prefix + \'title">\' +\n
+\t\t\t\t\t\tself.settings.title + \'</div>\') : \'\') +\n
+\t\t\t\t\t\'<div id="\' + self._id + \'-body" class="\' + self.bodyClasses + \'">\' +\n
+\t\t\t\t\t\t(self.settings.html || \'\') + layout.renderHtml(self) +\n
+\t\t\t\t\t\'</div>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1385</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FormItem.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

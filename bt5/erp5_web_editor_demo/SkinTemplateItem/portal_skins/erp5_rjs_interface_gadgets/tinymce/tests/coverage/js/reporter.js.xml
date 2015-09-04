@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268244.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>reporter.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+headings = [];\n
+\n
+onload = function(){\n
+  headings = document.querySelectorAll(\'h2\');\n
+};\n
+\n
+onscroll = function(e){\n
+  var heading = find(window.scrollY);\n
+  if (!heading) return;\n
+  var links = document.querySelectorAll(\'#menu a\')\n
+    , link;\n
+\n
+  for (var i = 0, len = links.length; i < len; ++i) {\n
+    link = links[i];\n
+    link.className = link.getAttribute(\'href\') == \'#\' + heading.id\n
+      ? \'active\'\n
+      : \'\';\n
+  }\n
+};\n
+\n
+function find(y) {\n
+  var i = headings.length\n
+    , heading;\n
+\n
+  while (i--) {\n
+    heading = headings[i];\n
+    if (y > heading.offsetTop) {\n
+      return heading;\n
+    }\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>587</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>reporter.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

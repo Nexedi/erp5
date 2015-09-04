@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268386.11</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EditorObservable.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * EditorObservable.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This mixin contains the event logic for the tinymce.Editor class.\n
+ *\n
+ * @mixin tinymce.EditorObservable\n
+ * @extends tinymce.util.Observable\n
+ */\n
+define("tinymce/EditorObservable", [\n
+\t"tinymce/util/Observable",\n
+\t"tinymce/dom/DOMUtils",\n
+\t"tinymce/util/Tools"\n
+], function(Observable, DOMUtils, Tools) {\n
+\tvar DOM = DOMUtils.DOM, customEventRootDelegates;\n
+\n
+\t/**\n
+\t * Returns the event target so for the specified event. Some events fire\n
+\t * only on document, some fire on documentElement etc. This also handles the\n
+\t * custom event root setting where it returns that element instead of the body.\n
+\t *\n
+\t * @private\n
+\t * @param {tinymce.Editor} editor Editor instance to get event target from.\n
+\t * @param {String} eventName Name of the event for example "click".\n
+\t * @return {Element/Document} HTML Element or document target to bind on.\n
+\t */\n
+\tfunction getEventTarget(editor, eventName) {\n
+\t\tif (eventName == \'selectionchange\') {\n
+\t\t\treturn editor.getDoc();\n
+\t\t}\n
+\n
+\t\t// Need to bind mousedown/mouseup etc to document not body in iframe mode\n
+\t\t// Since the user might click on the HTML element not the BODY\n
+\t\tif (!editor.inline && /^mouse|click|contextmenu|drop|dragover|dragend/.test(eventName)) {\n
+\t\t\treturn editor.getDoc().documentElement;\n
+\t\t}\n
+\n
+\t\t// Bind to event root instead of body if it\'s defined\n
+\t\tif (editor.settings.event_root) {\n
+\t\t\tif (!editor.eventRoot) {\n
+\t\t\t\teditor.eventRoot = DOM.select(editor.settings.event_root)[0];\n
+\t\t\t}\n
+\n
+\t\t\treturn editor.eventRoot;\n
+\t\t}\n
+\n
+\t\treturn editor.getBody();\n
+\t}\n
+\n
+\t/**\n
+\t * Binds a event delegate for the specified name this delegate will fire\n
+\t * the event to the editor dispatcher.\n
+\t *\n
+\t * @private\n
+\t * @param {tinymce.Editor} editor Editor instance to get event target from.\n
+\t * @param {String} eventName Name of the event for example "click".\n
+\t */\n
+\tfunction bindEventDelegate(editor, eventName) {\n
+\t\tvar eventRootElm = getEventTarget(editor, eventName), delegate;\n
+\n
+\t\tif (!editor.delegates) {\n
+\t\t\teditor.delegates = {};\n
+\t\t}\n
+\n
+\t\tif (editor.delegates[eventName]) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tif (editor.settings.event_root) {\n
+\t\t\tif (!customEventRootDelegates) {\n
+\t\t\t\tcustomEventRootDelegates = {};\n
+\t\t\t\teditor.editorManager.on(\'removeEditor\', function() {\n
+\t\t\t\t\tvar name;\n
+\n
+\t\t\t\t\tif (!editor.editorManager.activeEditor) {\n
+\t\t\t\t\t\tif (customEventRootDelegates) {\n
+\t\t\t\t\t\t\tfor (name in customEventRootDelegates) {\n
+\t\t\t\t\t\t\t\teditor.dom.unbind(getEventTarget(editor, name));\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tcustomEventRootDelegates = null;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tif (customEventRootDelegates[eventName]) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tdelegate = function(e) {\n
+\t\t\t\tvar target = e.target, editors = editor.editorManager.editors, i = editors.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tvar body = editors[i].getBody();\n
+\n
+\t\t\t\t\tif (body === target || DOM.isChildOf(target, body)) {\n
+\t\t\t\t\t\tif (!editors[i].hidden) {\n
+\t\t\t\t\t\t\teditors[i].fire(eventName, e);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\tcustomEventRootDelegates[eventName] = delegate;\n
+\t\t\tDOM.bind(eventRootElm, eventName, delegate);\n
+\t\t} else {\n
+\t\t\tdelegate = function(e) {\n
+\t\t\t\tif (!editor.hidden) {\n
+\t\t\t\t\teditor.fire(eventName, e);\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\tDOM.bind(eventRootElm, eventName, delegate);\n
+\t\t\teditor.delegates[eventName] = delegate;\n
+\t\t}\n
+\t}\n
+\n
+\tvar EditorObservable = {\n
+\t\t/**\n
+\t\t * Bind any pending event delegates. This gets executed after the target body/document is created.\n
+\t\t *\n
+\t\t * @private\n
+\t\t */\n
+\t\tbindPendingEventDelegates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tTools.each(self._pendingNativeEvents, function(name) {\n
+\t\t\t\tbindEventDelegate(self, name);\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Toggles a native event on/off this is called by the EventDispatcher when\n
+\t\t * the first native event handler is added and when the last native event handler is removed.\n
+\t\t *\n
+\t\t * @private\n
+\t\t */\n
+\t\ttoggleNativeEvent: function(name, state) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (self.settings.readonly) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Never bind focus/blur since the FocusManager fakes those\n
+\t\t\tif (name == "focus" || name == "blur") {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (state) {\n
+\t\t\t\tif (self.initialized) {\n
+\t\t\t\t\tbindEventDelegate(self, name);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif (!self._pendingNativeEvents) {\n
+\t\t\t\t\t\tself._pendingNativeEvents = [name];\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tself._pendingNativeEvents.push(name);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t} else if (self.initialized) {\n
+\t\t\t\tself.dom.unbind(getEventTarget(self, name), name, self.delegates[name]);\n
+\t\t\t\tdelete self.delegates[name];\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Unbinds all native event handlers that means delegates, custom events bound using the Events API etc.\n
+\t\t *\n
+\t\t * @private\n
+\t\t */\n
+\t\tunbindAllNativeEvents: function() {\n
+\t\t\tvar self = this, name;\n
+\n
+\t\t\tif (self.delegates) {\n
+\t\t\t\tfor (name in self.delegates) {\n
+\t\t\t\t\tself.dom.unbind(getEventTarget(self, name), name, self.delegates[name]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdelete self.delegates;\n
+\t\t\t}\n
+\n
+\t\t\tif (!self.inline) {\n
+\t\t\t\tself.getBody().onload = null;\n
+\t\t\t\tself.dom.unbind(self.getWin());\n
+\t\t\t\tself.dom.unbind(self.getDoc());\n
+\t\t\t}\n
+\n
+\t\t\tself.dom.unbind(self.getBody());\n
+\t\t\tself.dom.unbind(self.getContainer());\n
+\t\t}\n
+\t};\n
+\n
+\tEditorObservable = Tools.extend({}, Observable, EditorObservable);\n
+\n
+\treturn EditorObservable;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5259</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EditorObservable.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

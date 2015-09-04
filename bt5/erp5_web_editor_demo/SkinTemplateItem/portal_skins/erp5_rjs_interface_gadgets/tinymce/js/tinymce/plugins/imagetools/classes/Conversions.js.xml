@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268533.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Conversions.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Conversions.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Converts blob/uris/images back and forth.\n
+ */\n
+define("tinymce/imagetoolsplugin/Conversions", [\n
+\t"tinymce/util/Promise",\n
+\t"tinymce/imagetoolsplugin/Canvas",\n
+\t"tinymce/imagetoolsplugin/Mime",\n
+\t"tinymce/imagetoolsplugin/ImageSize"\n
+], function(Promise, Canvas, Mime, ImageSize) {\n
+\tfunction loadImage(image) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tfunction loaded() {\n
+\t\t\t\timage.removeEventListener(\'load\', loaded);\n
+\t\t\t\tresolve(image);\n
+\t\t\t}\n
+\n
+\t\t\tif (image.complete) {\n
+\t\t\t\tresolve(image);\n
+\t\t\t} else {\n
+\t\t\t\timage.addEventListener(\'load\', loaded);\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tfunction imageToCanvas(image) {\n
+\t\treturn loadImage(image).then(function(image) {\n
+\t\t\tvar context, canvas;\n
+\n
+\t\t\tcanvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image));\n
+\t\t\tcontext = Canvas.get2dContext(canvas);\n
+\t\t\tcontext.drawImage(image, 0, 0);\n
+\n
+\t\t\treturn canvas;\n
+\t\t});\n
+\t}\n
+\n
+\tfunction imageToBlob(image) {\n
+\t\treturn loadImage(image).then(function(image) {\n
+\t\t\tvar src = image.src;\n
+\n
+\t\t\tif (src.indexOf(\'blob:\') === 0) {\n
+\t\t\t\treturn blobUriToBlob(src);\n
+\t\t\t}\n
+\n
+\t\t\tif (src.indexOf(\'data:\') === 0) {\n
+\t\t\t\treturn dataUriToBlob(src);\n
+\t\t\t}\n
+\n
+\t\t\treturn imageToCanvas(image).then(function(canvas) {\n
+\t\t\t\treturn dataUriToBlob(canvas.toDataURL(Mime.guessMimeType(src)));\n
+\t\t\t});\n
+\t\t});\n
+\t}\n
+\n
+\tfunction blobToImage(blob) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar image = new Image();\n
+\n
+\t\t\tfunction loaded() {\n
+\t\t\t\timage.removeEventListener(\'load\', loaded);\n
+\t\t\t\tresolve(image);\n
+\t\t\t}\n
+\n
+\t\t\timage.addEventListener(\'load\', loaded);\n
+\t\t\timage.src = URL.createObjectURL(blob);\n
+\n
+\t\t\tif (image.complete) {\n
+\t\t\t\tloaded();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tfunction blobUriToBlob(url) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar xhr = new XMLHttpRequest();\n
+\n
+\t\t\txhr.open(\'GET\', url, true);\n
+\t\t\txhr.responseType = \'blob\';\n
+\n
+\t\t\txhr.onload = function() {\n
+\t\t\t\tif (this.status == 200) {\n
+\t\t\t\t\tresolve(this.response);\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\txhr.send();\n
+\t\t});\n
+\t}\n
+\n
+\tfunction dataUriToBlob(uri) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar str, arr, i, matches, type, blobBuilder;\n
+\n
+\t\t\turi = uri.split(\',\');\n
+\n
+\t\t\tmatches = /data:([^;]+)/.exec(uri[0]);\n
+\t\t\tif (matches) {\n
+\t\t\t\ttype = matches[1];\n
+\t\t\t}\n
+\n
+\t\t\tstr = atob(uri[1]);\n
+\n
+\t\t\tif (window.WebKitBlobBuilder) {\n
+\t\t\t\t/*globals WebKitBlobBuilder:false */\n
+\t\t\t\tblobBuilder = new WebKitBlobBuilder();\n
+\n
+\t\t\t\tarr = new ArrayBuffer(str.length);\n
+\t\t\t\tfor (i = 0; i < arr.length; i++) {\n
+\t\t\t\t\tarr[i] = str.charCodeAt(i);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tblobBuilder.append(arr);\n
+\n
+\t\t\t\tresolve(blobBuilder.getBlob(type));\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tarr = new Uint8Array(str.length);\n
+\n
+\t\t\tfor (i = 0; i < arr.length; i++) {\n
+\t\t\t\tarr[i] = str.charCodeAt(i);\n
+\t\t\t}\n
+\n
+\t\t\tresolve(new Blob([arr], {type: type}));\n
+\t\t});\n
+\t}\n
+\n
+\tfunction uriToBlob(url) {\n
+\t\tif (url.indexOf(\'blob:\') === 0) {\n
+\t\t\treturn blobUriToBlob(url);\n
+\t\t}\n
+\n
+\t\tif (url.indexOf(\'data:\') === 0) {\n
+\t\t\treturn dataUriToBlob(url);\n
+\t\t}\n
+\n
+\t\treturn null;\n
+\t}\n
+\n
+\tfunction canvasToBlob(canvas, type) {\n
+\t\treturn dataUriToBlob(canvas.toDataURL(type));\n
+\t}\n
+\n
+\tfunction blobToDataUri(blob) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar reader = new FileReader();\n
+\n
+\t\t\treader.onloadend = function() {\n
+\t\t\t\tresolve(reader.result);\n
+\t\t\t};\n
+\n
+\t\t\treader.readAsDataURL(blob);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction blobToBase64(blob) {\n
+\t\treturn blobToDataUri(blob).then(function(dataUri) {\n
+\t\t\treturn dataUri.split(\',\')[1];\n
+\t\t});\n
+\t}\n
+\n
+\tfunction revokeImageUrl(image) {\n
+\t\tURL.revokeObjectURL(image.src);\n
+\t}\n
+\n
+\treturn {\n
+\t\tblobToImage: blobToImage,\n
+\t\timageToBlob: imageToBlob,\n
+\t\turiToBlob: uriToBlob,\n
+\t\tblobToDataUri: blobToDataUri,\n
+\t\tblobToBase64: blobToBase64,\n
+\t\timageToCanvas: imageToCanvas,\n
+\t\tcanvasToBlob: canvasToBlob,\n
+\t\trevokeImageUrl: revokeImageUrl\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3811</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Conversions.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

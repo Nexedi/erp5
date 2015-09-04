@@ -1,0 +1,549 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268330.3</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Container.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Container.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Container control. This is extended by all controls that can have\n
+ * children such as panels etc. You can also use this class directly as an\n
+ * generic container instance. The container doesn\'t have any specific role or style.\n
+ *\n
+ * @-x-less Container.less\n
+ * @class tinymce.ui.Container\n
+ * @extends tinymce.ui.Control\n
+ */\n
+define("tinymce/ui/Container", [\n
+\t"tinymce/ui/Control",\n
+\t"tinymce/ui/Collection",\n
+\t"tinymce/ui/Selector",\n
+\t"tinymce/ui/Factory",\n
+\t"tinymce/ui/KeyboardNavigation",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/dom/DomQuery",\n
+\t"tinymce/ui/ClassList",\n
+\t"tinymce/ui/ReflowQueue"\n
+], function(Control, Collection, Selector, Factory, KeyboardNavigation, Tools, $, ClassList, ReflowQueue) {\n
+\t"use strict";\n
+\n
+\tvar selectorCache = {};\n
+\n
+\treturn Control.extend({\n
+\t\t/**\n
+\t\t * Constructs a new control instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {Array} items Items to add to container in JSON format or control instances.\n
+\t\t * @setting {String} layout Layout manager by name to use.\n
+\t\t * @setting {Object} defaults Default settings to apply to all items.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tsettings = self.settings;\n
+\n
+\t\t\tif (settings.fixed) {\n
+\t\t\t\tself.state.set(\'fixed\', true);\n
+\t\t\t}\n
+\n
+\t\t\tself._items = new Collection();\n
+\n
+\t\t\tif (self.isRtl()) {\n
+\t\t\t\tself.classes.add(\'rtl\');\n
+\t\t\t}\n
+\n
+\t\t\tself.bodyClasses = new ClassList(function() {\n
+\t\t\t\tif (self.state.get(\'rendered\')) {\n
+\t\t\t\t\tself.getEl(\'body\').className = this.toString();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t\tself.bodyClasses.prefix = self.classPrefix;\n
+\n
+\t\t\tself.classes.add(\'container\');\n
+\t\t\tself.bodyClasses.add(\'container-body\');\n
+\n
+\t\t\tif (settings.containerCls) {\n
+\t\t\t\tself.classes.add(settings.containerCls);\n
+\t\t\t}\n
+\n
+\t\t\tself._layout = Factory.create((settings.layout || \'\') + \'layout\');\n
+\n
+\t\t\tif (self.settings.items) {\n
+\t\t\t\tself.add(self.settings.items);\n
+\t\t\t} else {\n
+\t\t\t\tself.add(self.render());\n
+\t\t\t}\n
+\n
+\t\t\t// TODO: Fix this!\n
+\t\t\tself._hasBody = true;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a collection of child items that the container currently have.\n
+\t\t *\n
+\t\t * @method items\n
+\t\t * @return {tinymce.ui.Collection} Control collection direct child controls.\n
+\t\t */\n
+\t\titems: function() {\n
+\t\t\treturn this._items;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Find child controls by selector.\n
+\t\t *\n
+\t\t * @method find\n
+\t\t * @param {String} selector Selector CSS pattern to find children by.\n
+\t\t * @return {tinymce.ui.Collection} Control collection with child controls.\n
+\t\t */\n
+\t\tfind: function(selector) {\n
+\t\t\tselector = selectorCache[selector] = selectorCache[selector] || new Selector(selector);\n
+\n
+\t\t\treturn selector.find(this);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds one or many items to the current container. This will create instances of\n
+\t\t * the object representations if needed.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {Array/Object/tinymce.ui.Control} items Array or item that will be added to the container.\n
+\t\t * @return {tinymce.ui.Collection} Current collection control.\n
+\t\t */\n
+\t\tadd: function(items) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.items().add(self.create(items)).parent(self);\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Focuses the current container instance. This will look\n
+\t\t * for the first control in the container and focus that.\n
+\t\t *\n
+\t\t * @method focus\n
+\t\t * @param {Boolean} keyboard Optional true/false if the focus was a keyboard focus or not.\n
+\t\t * @return {tinymce.ui.Collection} Current instance.\n
+\t\t */\n
+\t\tfocus: function(keyboard) {\n
+\t\t\tvar self = this, focusCtrl, keyboardNav, items;\n
+\n
+\t\t\tif (keyboard) {\n
+\t\t\t\tkeyboardNav = self.keyboardNav || self.parents().eq(-1)[0].keyboardNav;\n
+\n
+\t\t\t\tif (keyboardNav) {\n
+\t\t\t\t\tkeyboardNav.focusFirst(self);\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\titems = self.find(\'*\');\n
+\n
+\t\t\t// TODO: Figure out a better way to auto focus alert dialog buttons\n
+\t\t\tif (self.statusbar) {\n
+\t\t\t\titems.add(self.statusbar.items());\n
+\t\t\t}\n
+\n
+\t\t\titems.each(function(ctrl) {\n
+\t\t\t\tif (ctrl.settings.autofocus) {\n
+\t\t\t\t\tfocusCtrl = null;\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (ctrl.canFocus) {\n
+\t\t\t\t\tfocusCtrl = focusCtrl || ctrl;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tif (focusCtrl) {\n
+\t\t\t\tfocusCtrl.focus();\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Replaces the specified child control with a new control.\n
+\t\t *\n
+\t\t * @method replace\n
+\t\t * @param {tinymce.ui.Control} oldItem Old item to be replaced.\n
+\t\t * @param {tinymce.ui.Control} newItem New item to be inserted.\n
+\t\t */\n
+\t\treplace: function(oldItem, newItem) {\n
+\t\t\tvar ctrlElm, items = this.items(), i = items.length;\n
+\n
+\t\t\t// Replace the item in collection\n
+\t\t\twhile (i--) {\n
+\t\t\t\tif (items[i] === oldItem) {\n
+\t\t\t\t\titems[i] = newItem;\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (i >= 0) {\n
+\t\t\t\t// Remove new item from DOM\n
+\t\t\t\tctrlElm = newItem.getEl();\n
+\t\t\t\tif (ctrlElm) {\n
+\t\t\t\t\tctrlElm.parentNode.removeChild(ctrlElm);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Remove old item from DOM\n
+\t\t\t\tctrlElm = oldItem.getEl();\n
+\t\t\t\tif (ctrlElm) {\n
+\t\t\t\t\tctrlElm.parentNode.removeChild(ctrlElm);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Adopt the item\n
+\t\t\tnewItem.parent(this);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Creates the specified items. If any of the items is plain JSON style objects\n
+\t\t * it will convert these into real tinymce.ui.Control instances.\n
+\t\t *\n
+\t\t * @method create\n
+\t\t * @param {Array} items Array of items to convert into control instances.\n
+\t\t * @return {Array} Array with control instances.\n
+\t\t */\n
+\t\tcreate: function(items) {\n
+\t\t\tvar self = this, settings, ctrlItems = [];\n
+\n
+\t\t\t// Non array structure, then force it into an array\n
+\t\t\tif (!Tools.isArray(items)) {\n
+\t\t\t\titems = [items];\n
+\t\t\t}\n
+\n
+\t\t\t// Add default type to each child control\n
+\t\t\tTools.each(items, function(item) {\n
+\t\t\t\tif (item) {\n
+\t\t\t\t\t// Construct item if needed\n
+\t\t\t\t\tif (!(item instanceof Control)) {\n
+\t\t\t\t\t\t// Name only then convert it to an object\n
+\t\t\t\t\t\tif (typeof item == "string") {\n
+\t\t\t\t\t\t\titem = {type: item};\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Create control instance based on input settings and default settings\n
+\t\t\t\t\t\tsettings = Tools.extend({}, self.settings.defaults, item);\n
+\t\t\t\t\t\titem.type = settings.type = settings.type || item.type || self.settings.defaultType ||\n
+\t\t\t\t\t\t\t(settings.defaults ? settings.defaults.type : null);\n
+\t\t\t\t\t\titem = Factory.create(settings);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tctrlItems.push(item);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn ctrlItems;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders new control instances.\n
+\t\t *\n
+\t\t * @private\n
+\t\t */\n
+\t\trenderNew: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\t// Render any new items\n
+\t\t\tself.items().each(function(ctrl, index) {\n
+\t\t\t\tvar containerElm;\n
+\n
+\t\t\t\tctrl.parent(self);\n
+\n
+\t\t\t\tif (!ctrl.state.get(\'rendered\')) {\n
+\t\t\t\t\tcontainerElm = self.getEl(\'body\');\n
+\n
+\t\t\t\t\t// Insert or append the item\n
+\t\t\t\t\tif (containerElm.hasChildNodes() && index <= containerElm.childNodes.length - 1) {\n
+\t\t\t\t\t\t$(containerElm.childNodes[index]).before(ctrl.renderHtml());\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t$(containerElm).append(ctrl.renderHtml());\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tctrl.postRender();\n
+\t\t\t\t\tReflowQueue.add(ctrl);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself._layout.applyClasses(self.items().filter(\':visible\'));\n
+\t\t\tself._lastRect = null;\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Appends new instances to the current container.\n
+\t\t *\n
+\t\t * @method append\n
+\t\t * @param {Array/tinymce.ui.Collection} items Array if controls to append.\n
+\t\t * @return {tinymce.ui.Container} Current container instance.\n
+\t\t */\n
+\t\tappend: function(items) {\n
+\t\t\treturn this.add(items).renderNew();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Prepends new instances to the current container.\n
+\t\t *\n
+\t\t * @method prepend\n
+\t\t * @param {Array/tinymce.ui.Collection} items Array if controls to prepend.\n
+\t\t * @return {tinymce.ui.Container} Current container instance.\n
+\t\t */\n
+\t\tprepend: function(items) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.items().set(self.create(items).concat(self.items().toArray()));\n
+\n
+\t\t\treturn self.renderNew();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Inserts an control at a specific index.\n
+\t\t *\n
+\t\t * @method insert\n
+\t\t * @param {Array/tinymce.ui.Collection} items Array if controls to insert.\n
+\t\t * @param {Number} index Index to insert controls at.\n
+\t\t * @param {Boolean} [before=false] Inserts controls before the index.\n
+\t\t */\n
+\t\tinsert: function(items, index, before) {\n
+\t\t\tvar self = this, curItems, beforeItems, afterItems;\n
+\n
+\t\t\titems = self.create(items);\n
+\t\t\tcurItems = self.items();\n
+\n
+\t\t\tif (!before && index < curItems.length - 1) {\n
+\t\t\t\tindex += 1;\n
+\t\t\t}\n
+\n
+\t\t\tif (index >= 0 && index < curItems.length) {\n
+\t\t\t\tbeforeItems = curItems.slice(0, index).toArray();\n
+\t\t\t\tafterItems = curItems.slice(index).toArray();\n
+\t\t\t\tcurItems.set(beforeItems.concat(items, afterItems));\n
+\t\t\t}\n
+\n
+\t\t\treturn self.renderNew();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Populates the form fields from the specified JSON data object.\n
+\t\t *\n
+\t\t * Control items in the form that matches the data will have it\'s value set.\n
+\t\t *\n
+\t\t * @method fromJSON\n
+\t\t * @param {Object} data JSON data object to set control values by.\n
+\t\t * @return {tinymce.ui.Container} Current form instance.\n
+\t\t */\n
+\t\tfromJSON: function(data) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tfor (var name in data) {\n
+\t\t\t\tself.find(\'#\' + name).value(data[name]);\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Serializes the form into a JSON object by getting all items\n
+\t\t * that has a name and a value.\n
+\t\t *\n
+\t\t * @method toJSON\n
+\t\t * @return {Object} JSON object with form data.\n
+\t\t */\n
+\t\ttoJSON: function() {\n
+\t\t\tvar self = this, data = {};\n
+\n
+\t\t\tself.find(\'*\').each(function(ctrl) {\n
+\t\t\t\tvar name = ctrl.name(), value = ctrl.value();\n
+\n
+\t\t\t\tif (name && typeof value != "undefined") {\n
+\t\t\t\t\tdata[name] = value;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn data;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, layout = self._layout, role = this.settings.role;\n
+\n
+\t\t\tself.preRender();\n
+\t\t\tlayout.preRender(self);\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + self._id + \'" class="\' + self.classes + \'"\' + (role ? \' role="\' + this.settings.role + \'"\' : \'\') + \'>\' +\n
+\t\t\t\t\t\'<div id="\' + self._id + \'-body" class="\' + self.bodyClasses + \'">\' +\n
+\t\t\t\t\t\t(self.settings.html || \'\') + layout.renderHtml(self) +\n
+\t\t\t\t\t\'</div>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Post render method. Called after the control has been rendered to the target.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t * @return {tinymce.ui.Container} Current combobox instance.\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this, box;\n
+\n
+\t\t\tself.items().exec(\'postRender\');\n
+\t\t\tself._super();\n
+\n
+\t\t\tself._layout.postRender(self);\n
+\t\t\tself.state.set(\'rendered\', true);\n
+\n
+\t\t\tif (self.settings.style) {\n
+\t\t\t\tself.$el.css(self.settings.style);\n
+\t\t\t}\n
+\n
+\t\t\tif (self.settings.border) {\n
+\t\t\t\tbox = self.borderBox;\n
+\t\t\t\tself.$el.css({\n
+\t\t\t\t\t\'border-top-width\': box.top,\n
+\t\t\t\t\t\'border-right-width\': box.right,\n
+\t\t\t\t\t\'border-bottom-width\': box.bottom,\n
+\t\t\t\t\t\'border-left-width\': box.left\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tif (!self.parent()) {\n
+\t\t\t\tself.keyboardNav = new KeyboardNavigation({\n
+\t\t\t\t\troot: self\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Initializes the current controls layout rect.\n
+\t\t * This will be executed by the layout managers to determine the\n
+\t\t * default minWidth/minHeight etc.\n
+\t\t *\n
+\t\t * @method initLayoutRect\n
+\t\t * @return {Object} Layout rect instance.\n
+\t\t */\n
+\t\tinitLayoutRect: function() {\n
+\t\t\tvar self = this, layoutRect = self._super();\n
+\n
+\t\t\t// Recalc container size by asking layout manager\n
+\t\t\tself._layout.recalc(self);\n
+\n
+\t\t\treturn layoutRect;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Recalculates the positions of the controls in the current container.\n
+\t\t * This is invoked by the reflow method and shouldn\'t be called directly.\n
+\t\t *\n
+\t\t * @method recalc\n
+\t\t */\n
+\t\trecalc: function() {\n
+\t\t\tvar self = this, rect = self._layoutRect, lastRect = self._lastRect;\n
+\n
+\t\t\tif (!lastRect || lastRect.w != rect.w || lastRect.h != rect.h) {\n
+\t\t\t\tself._layout.recalc(self);\n
+\t\t\t\trect = self.layoutRect();\n
+\t\t\t\tself._lastRect = {x: rect.x, y: rect.y, w: rect.w, h: rect.h};\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Reflows the current container and it\'s children and possible parents.\n
+\t\t * This should be used after you for example append children to the current control so\n
+\t\t * that the layout managers know that they need to reposition everything.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * container.append({type: \'button\', text: \'My button\'}).reflow();\n
+\t\t *\n
+\t\t * @method reflow\n
+\t\t * @return {tinymce.ui.Container} Current container instance.\n
+\t\t */\n
+\t\treflow: function() {\n
+\t\t\tvar i;\n
+\n
+\t\t\tReflowQueue.remove(this);\n
+\n
+\t\t\tif (this.visible()) {\n
+\t\t\t\tControl.repaintControls = [];\n
+\t\t\t\tControl.repaintControls.map = {};\n
+\n
+\t\t\t\tthis.recalc();\n
+\t\t\t\ti = Control.repaintControls.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tControl.repaintControls[i].repaint();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// TODO: Fix me!\n
+\t\t\t\tif (this.settings.layout !== "flow" && this.settings.layout !== "stack") {\n
+\t\t\t\t\tthis.repaint();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tControl.repaintControls = [];\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12702</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Container.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,320 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268148.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>performance.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Performance testcase</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<script src="../../js/tinymce/tinymce.dev.js"></script>\n
+<script>\n
+var editor;\n
+\n
+var performanceTests = {\n
+\t\'tinymce.Editor.getContent (text blocks)\': {\n
+\t\tsetup: function() {\n
+\t\t\tvar html;\n
+\n
+\t\t\tif (!this.html) {\n
+\t\t\t\thtml = [];\n
+\t\t\t\tfor (var i = 0; i < 400; i++) {\n
+\t\t\t\t\thtml.push(\'<p id="x" title="my title abc" class="myclass">\');\n
+\n
+\t\t\t\t\tfor (var a = 0; a < 100; a++)\n
+\t\t\t\t\t\thtml.push(\'word\' + i + \',\' + a + \' abc\');\n
+\n
+\t\t\t\t\thtml.push(\'</p>\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tthis.html = html.join(\'\');\n
+\t\t\t}\n
+\n
+\t\t\teditor.setContent(this.html);\n
+\t\t},\n
+\n
+\t\trun: function() {\n
+\t\t\treturn editor.getContent();\n
+\t\t}\n
+\t},\n
+\n
+\t\'tinymce.Editor.getContent (text blocks with entities)\': {\n
+\t\tsetup: function() {\n
+\t\t\tvar html;\n
+\n
+\t\t\tif (!this.html) {\n
+\t\t\t\thtml = [];\n
+\t\t\t\tfor (var i = 0; i < 400; i++) {\n
+\t\t\t\t\thtml.push(\'<p id="x" title="my title &aring;&auml;&ouml;" class="myclass">\');\n
+\n
+\t\t\t\t\tfor (var a = 0; a < 100; a++)\n
+\t\t\t\t\t\thtml.push(\'word\' + i + \',\' + a + \' &aring;&auml;&ouml;\');\n
+\n
+\t\t\t\t\thtml.push(\'</p>\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tthis.html = html = html.join(\'\');\n
+\t\t\t} else\n
+\t\t\t\thtml = this.html;\n
+\n
+\t\t\teditor.setContent(html);\n
+\t\t},\n
+\n
+\t\trun: function() {\n
+\t\t\treturn editor.getContent();\n
+\t\t}\n
+\t},\n
+\n
+\t\'tinymce.html.DomParser (validate: false)\': {\n
+\t\tsetup: function() {\n
+\t\t\tvar html;\n
+\n
+\t\t\tif (!this.html) {\n
+\t\t\t\thtml = [];\n
+\t\t\t\tfor (var i = 0; i < 400; i++) {\n
+\t\t\t\t\thtml.push(\'<p id="x" title="my title &aring;&auml;&ouml" class="myclass">\');\n
+\t\t\t\t\thtml.push(\'<strong>bold</strong><em>italic</em>\');\n
+\n
+\t\t\t\t\tfor (var a = 0; a < 100; a++)\n
+\t\t\t\t\t\thtml.push(\'word\' + i + \',\' + a + \' &aring;&auml;&ouml;\');\n
+\n
+\t\t\t\t\thtml.push(\'</p>\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tthis.html = html = html.join(\'\');\n
+\t\t\t}\n
+\n
+\t\t\teditor.setContent(this.html);\n
+\t\t},\n
+\n
+\t\trun: function() {\n
+\t\t\treturn new tinymce.html.DomParser({validate: false}).parse(this.html);\n
+\t\t}\n
+\t},\n
+\n
+\t\'tinymce.html.DomParser (validate: true)\': {\n
+\t\tsetup: function() {\n
+\t\t\tvar html;\n
+\n
+\t\t\tif (!this.html) {\n
+\t\t\t\thtml = [];\n
+\t\t\t\tfor (var i = 0; i < 400; i++) {\n
+\t\t\t\t\thtml.push(\'<p id="x" title="my title &aring;&auml;&ouml" class="myclass">\');\n
+\t\t\t\t\thtml.push(\'<strong>bold</strong><em>italic</em>\');\n
+\n
+\t\t\t\t\tfor (var a = 0; a < 100; a++)\n
+\t\t\t\t\t\thtml.push(\'word\' + i + \',\' + a + \' &aring;&auml;&ouml;\');\n
+\n
+\t\t\t\t\thtml.push(\'</p>\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tthis.html = html = html.join(\'\');\n
+\t\t\t}\n
+\n
+\t\t\teditor.setContent(this.html);\n
+\t\t},\n
+\n
+\t\trun: function() {\n
+\t\t\treturn new tinymce.html.DomParser().parse(this.html);\n
+\t\t}\n
+\t},\n
+\n
+\t\'tinymce.html.SaxParser (validate: false)\': {\n
+\t\tsetup: function() {\n
+\t\t\tvar html;\n
+\n
+\t\t\tif (!this.html) {\n
+\t\t\t\thtml = [];\n
+\t\t\t\tfor (var i = 0; i < 400; i++) {\n
+\t\t\t\t\thtml.push(\'<p id="x" title="my title &aring;&auml;&ouml" class="myclass">\');\n
+\n
+\t\t\t\t\tfor (var a = 0; a < 100; a++)\n
+\t\t\t\t\t\thtml.push(\'word\' + i + \',\' + a + \' &aring;&auml;&ouml;\');\n
+\n
+\t\t\t\t\thtml.push(\'</p>\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tthis.html = html = html.join(\'\');\n
+\t\t\t}\n
+\n
+\t\t\teditor.setContent(this.html);\n
+\t\t},\n
+\n
+\t\trun: function() {\n
+\t\t\treturn new tinymce.html.SaxParser({validate: false}).parse(this.html);\n
+\t\t}\n
+\t},\n
+\n
+\t\'tinymce.html.SaxParser (validate: true)\': {\n
+\t\tsetup: function() {\n
+\t\t\tvar html;\n
+\n
+\t\t\tif (!this.html) {\n
+\t\t\t\thtml = [];\n
+\t\t\t\tfor (var i = 0; i < 400; i++) {\n
+\t\t\t\t\thtml.push(\'<p id="x" title="my title &aring;&auml;&ouml" class="myclass">\');\n
+\n
+\t\t\t\t\tfor (var a = 0; a < 100; a++)\n
+\t\t\t\t\t\thtml.push(\'word\' + i + \',\' + a + \' &aring;&auml;&ouml;\');\n
+\n
+\t\t\t\t\thtml.push(\'</p>\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tthis.html = html = html.join(\'\');\n
+\t\t\t}\n
+\n
+\t\t\teditor.setContent(this.html);\n
+\t\t},\n
+\n
+\t\trun: function() {\n
+\t\t\treturn new tinymce.html.SaxParser().parse(this.html);\n
+\t\t}\n
+\t},\n
+\n
+\t\'tinymce.html.Entities.decode\': {\n
+\t\trun: function() {\n
+\t\t\tfor (var i = 0; i < 10000; i++) {\n
+\t\t\t\ttinymce.html.Entities.decode(\'text&aring;&auml;&uml;&lt;&gt;&amp;text\');\n
+\t\t\t}\n
+\t\t}\n
+\t},\n
+\n
+\t\'tinymce.util.URI (absolute/relative)\': {\n
+\t\trun: function() {\n
+\t\t\tfor (var i = 0; i < 200; i++) {\n
+\t\t\t\tnew tinymce.util.URI(\'http://www.site.com/dir1/dir2/file.html\').toRelative(\'http://www.site.com/dir1/dir3/file.html\');\n
+\t\t\t\tnew tinymce.util.URI(\'http://www.site.com/dir1/dir2/file.html\').toRelative(\'http://www.site.com/dir3/dir4/file.html\'); \n
+\t\t\t\tnew tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'../dir3\');\n
+\t\t\t\tnew tinymce.util.URI(\'http://www.site.com/dir1/dir2/\').toAbsolute(\'../dir3\', 1);\n
+\t\t\t}\n
+\t\t}\n
+\t},\n
+\n
+\t\'tinymce.dom.DOMUtils.parseStyle/serializeStyle\': {\n
+\t\trun: function() {\n
+\t\t\tfor (var i = 0; i < 1000; i++) {\n
+\t\t\t\ttinymce.DOM.serializeStyle(\n
+\t\t\t\t\ttinymce.DOM.parseStyle(\'border:1px solid red; background-image:url(some/dir/file.gif); font-size: 15px; color:rgb(1,2,3)\')\n
+\t\t\t\t);\n
+\t\t\t}\n
+\t\t}\n
+\t},\n
+\n
+\t\'tinymce.html.Styles\': {\n
+\t\tsetup: function() {\n
+\t\t\tthis.styles = new tinymce.html.Styles({\n
+\t\t\t\turl_converter : function(url) {\n
+\t\t\t\t\treturn \'|\' + url + \'|\';\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\trun: function() {\n
+\t\t\tfor (var i = 0; i < 1000; i++) {\n
+\t\t\t\tthis.styles.serialize(this.styles.parse("key:rgb(1,2,3) url(a) url(\'b\') url(\\"c\\") \\"st\\\\\\"r\'st\'r\\" \'st\\\\\'r\\"str\\"str\'"));\n
+\t\t\t\tthis.styles.serialize(this.styles.parse("key:rgb(1,2,3) rgb(1,2,3) rgb(1,2,3) rgb(1,2,3)"));\n
+\t\t\t\tthis.styles.serialize(this.styles.parse("font-size: 10px; font-weight: bold; font-family: Arial"));\n
+\n
+\t\t\t\t//tinymce.DOM.serializeStyle(tinymce.DOM.parseStyle("key:rgb(1,2,3) url(a) url(\'b\') url(\\"c\\") \\"st\\\\\\"r\'st\'r\\" \'st\\\\\'r\\"str\\"str\'"));\n
+\t\t\t\t//tinymce.DOM.serializeStyle(tinymce.DOM.parseStyle("key:rgb(1,2,3) rgb(1,2,3) rgb(1,2,3) rgb(1,2,3)"));\n
+\t\t\t\t//tinymce.DOM.serializeStyle(tinymce.DOM.parseStyle("font-size: 10px; font-weight: bold; font-family: Arial"));\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+};\n
+\n
+tinymce.init({\n
+\tmode : "exact",\n
+\telements : "elm1",\n
+\tadd_unload_trigger : false,\n
+\tinit_instance_callback : function(ed) {\n
+\t\tvar count = 0;\n
+\n
+\t\teditor = ed;\n
+\n
+\t\ttinymce.each(performanceTests, function(test, title) {\n
+\t\t\ttinymce.DOM.add(\'tests\', \'li\', null, \'<a id="test_\' + (++count) + \'" href="#">\' + title + \'</a>\');\n
+\t\t\ttinymce.DOM.bind(tinymce.DOM.get(\'test_\' + count), \'click\', function(e) {\n
+\t\t\t\tvar count = 0, numberOfRuns;\n
+\n
+\t\t\t\tnumberOfRuns = parseInt(document.getElementById(\'runs\').value);\n
+\n
+\t\t\t\te.preventDefault();\n
+\t\t\t\te.target.innerHTML = title + \' (Running)\';\n
+\n
+\t\t\t\tfunction runTest() {\n
+\t\t\t\t\tvar i, time, times = [], sum = 0;\n
+\n
+\t\t\t\t\tif (test.setup)\n
+\t\t\t\t\t\ttest.setup();\n
+\n
+\t\t\t\t\ttime = +new Date;\n
+\t\t\t\t\ttest.run();\n
+\t\t\t\t\ttime = (+new Date) - time;\n
+\t\t\t\t\ttimes.push(time);\n
+\n
+\t\t\t\t\tif (count++ >= numberOfRuns) {\n
+\t\t\t\t\t\tfor (i = 0; i < times.length; i++)\n
+\t\t\t\t\t\t\tsum += times[i];\n
+\n
+\t\t\t\t\t\te.target.innerHTML = title + \' (Avarage: \' + (sum / times.length) + \'ms)\';\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\te.target.innerHTML = title + \' (Runned \' + count + " of " + numberOfRuns + ", " + time + "ms)";\n
+\t\t\t\t\t\tsetTimeout(runTest, 10);\n
+\t\t\t\t\t}\n
+\t\t\t\t};\n
+\n
+\t\t\t\tsetTimeout(runTest, 10);\n
+\t\t\t});\n
+\t\t});\n
+\t}\n
+});\n
+</script>\n
+</head>\n
+<body>\n
+\t<h1>Performance tests</h1>\n
+\t<p style="margin-left: 10px">Runs: <input id="runs" type="text" value="10" size="3" /></p>\n
+\t<ul id="tests"></ul>\n
+\t<textarea id="elm1"></textarea>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6861</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>performance.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,481 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268343.65</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Collection.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Collection.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Control collection, this class contains control instances and it enables you to\n
+ * perform actions on all the contained items. This is very similar to how jQuery works.\n
+ *\n
+ * @example\n
+ * someCollection.show().disabled(true);\n
+ *\n
+ * @class tinymce.ui.Collection\n
+ */\n
+define("tinymce/ui/Collection", [\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/ui/Selector",\n
+\t"tinymce/util/Class"\n
+], function(Tools, Selector, Class) {\n
+\t"use strict";\n
+\n
+\tvar Collection, proto, push = Array.prototype.push, slice = Array.prototype.slice;\n
+\n
+\tproto = {\n
+\t\t/**\n
+\t\t * Current number of contained control instances.\n
+\t\t *\n
+\t\t * @field length\n
+\t\t * @type Number\n
+\t\t */\n
+\t\tlength: 0,\n
+\n
+\t\t/**\n
+\t\t * Constructor for the collection.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @method init\n
+\t\t * @param {Array} items Optional array with items to add.\n
+\t\t */\n
+\t\tinit: function(items) {\n
+\t\t\tif (items) {\n
+\t\t\t\tthis.add(items);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds new items to the control collection.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {Array} items Array if items to add to collection.\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance.\n
+\t\t */\n
+\t\tadd: function(items) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\t// Force single item into array\n
+\t\t\tif (!Tools.isArray(items)) {\n
+\t\t\t\tif (items instanceof Collection) {\n
+\t\t\t\t\tself.add(items.toArray());\n
+\t\t\t\t} else {\n
+\t\t\t\t\tpush.call(self, items);\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tpush.apply(self, items);\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the contents of the collection. This will remove any existing items\n
+\t\t * and replace them with the ones specified in the input array.\n
+\t\t *\n
+\t\t * @method set\n
+\t\t * @param {Array} items Array with items to set into the Collection.\n
+\t\t * @return {tinymce.ui.Collection} Collection instance.\n
+\t\t */\n
+\t\tset: function(items) {\n
+\t\t\tvar self = this, len = self.length, i;\n
+\n
+\t\t\tself.length = 0;\n
+\t\t\tself.add(items);\n
+\n
+\t\t\t// Remove old entries\n
+\t\t\tfor (i = self.length; i < len; i++) {\n
+\t\t\t\tdelete self[i];\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Filters the collection item based on the specified selector expression or selector function.\n
+\t\t *\n
+\t\t * @method filter\n
+\t\t * @param {String} selector Selector expression to filter items by.\n
+\t\t * @return {tinymce.ui.Collection} Collection containing the filtered items.\n
+\t\t */\n
+\t\tfilter: function(selector) {\n
+\t\t\tvar self = this, i, l, matches = [], item, match;\n
+\n
+\t\t\t// Compile string into selector expression\n
+\t\t\tif (typeof selector === "string") {\n
+\t\t\t\tselector = new Selector(selector);\n
+\n
+\t\t\t\tmatch = function(item) {\n
+\t\t\t\t\treturn selector.match(item);\n
+\t\t\t\t};\n
+\t\t\t} else {\n
+\t\t\t\t// Use selector as matching function\n
+\t\t\t\tmatch = selector;\n
+\t\t\t}\n
+\n
+\t\t\tfor (i = 0, l = self.length; i < l; i++) {\n
+\t\t\t\titem = self[i];\n
+\n
+\t\t\t\tif (match(item)) {\n
+\t\t\t\t\tmatches.push(item);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn new Collection(matches);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Slices the items within the collection.\n
+\t\t *\n
+\t\t * @method slice\n
+\t\t * @param {Number} index Index to slice at.\n
+\t\t * @param {Number} len Optional length to slice.\n
+\t\t * @return {tinymce.ui.Collection} Current collection.\n
+\t\t */\n
+\t\tslice: function() {\n
+\t\t\treturn new Collection(slice.apply(this, arguments));\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Makes the current collection equal to the specified index.\n
+\t\t *\n
+\t\t * @method eq\n
+\t\t * @param {Number} index Index of the item to set the collection to.\n
+\t\t * @return {tinymce.ui.Collection} Current collection.\n
+\t\t */\n
+\t\teq: function(index) {\n
+\t\t\treturn index === -1 ? this.slice(index) : this.slice(index, +index + 1);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Executes the specified callback on each item in collection.\n
+\t\t *\n
+\t\t * @method each\n
+\t\t * @param {function} callback Callback to execute for each item in collection.\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance.\n
+\t\t */\n
+\t\teach: function(callback) {\n
+\t\t\tTools.each(this, callback);\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns an JavaScript array object of the contents inside the collection.\n
+\t\t *\n
+\t\t * @method toArray\n
+\t\t * @return {Array} Array with all items from collection.\n
+\t\t */\n
+\t\ttoArray: function() {\n
+\t\t\treturn Tools.toArray(this);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Finds the index of the specified control or return -1 if it isn\'t in the collection.\n
+\t\t *\n
+\t\t * @method indexOf\n
+\t\t * @param {Control} ctrl Control instance to look for.\n
+\t\t * @return {Number} Index of the specified control or -1.\n
+\t\t */\n
+\t\tindexOf: function(ctrl) {\n
+\t\t\tvar self = this, i = self.length;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tif (self[i] === ctrl) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn i;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a new collection of the contents in reverse order.\n
+\t\t *\n
+\t\t * @method reverse\n
+\t\t * @return {tinymce.ui.Collection} Collection instance with reversed items.\n
+\t\t */\n
+\t\treverse: function() {\n
+\t\t\treturn new Collection(Tools.toArray(this).reverse());\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the class exists or not.\n
+\t\t *\n
+\t\t * @method hasClass\n
+\t\t * @param {String} cls Class to check for.\n
+\t\t * @return {Boolean} true/false state if the class exists or not.\n
+\t\t */\n
+\t\thasClass: function(cls) {\n
+\t\t\treturn this[0] ? this[0].classes.contains(cls) : false;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the specific property on the items in the collection. The same as executing control.<property>(<value>);\n
+\t\t *\n
+\t\t * @method prop\n
+\t\t * @param {String} name Property name to get/set.\n
+\t\t * @param {Object} value Optional object value to set.\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance or value of the first item on a get operation.\n
+\t\t */\n
+\t\tprop: function(name, value) {\n
+\t\t\tvar self = this, undef, item;\n
+\n
+\t\t\tif (value !== undef) {\n
+\t\t\t\tself.each(function(item) {\n
+\t\t\t\t\tif (item[name]) {\n
+\t\t\t\t\t\titem[name](value);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\titem = self[0];\n
+\n
+\t\t\tif (item && item[name]) {\n
+\t\t\t\treturn item[name]();\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Executes the specific function name with optional arguments an all items in collection if it exists.\n
+\t\t *\n
+\t\t * @example collection.exec("myMethod", arg1, arg2, arg3);\n
+\t\t * @method exec\n
+\t\t * @param {String} name Name of the function to execute.\n
+\t\t * @param {Object} ... Multiple arguments to pass to each function.\n
+\t\t * @return {tinymce.ui.Collection} Current collection.\n
+\t\t */\n
+\t\texec: function(name) {\n
+\t\t\tvar self = this, args = Tools.toArray(arguments).slice(1);\n
+\n
+\t\t\tself.each(function(item) {\n
+\t\t\t\tif (item[name]) {\n
+\t\t\t\t\titem[name].apply(item, args);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Remove all items from collection and DOM.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @return {tinymce.ui.Collection} Current collection.\n
+\t\t */\n
+\t\tremove: function() {\n
+\t\t\tvar i = this.length;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tthis[i].remove();\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds a class to all items in the collection.\n
+\t\t *\n
+\t\t * @method addClass\n
+\t\t * @param {String} cls Class to add to each item.\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance.\n
+\t\t */\n
+\t\taddClass: function(cls) {\n
+\t\t\treturn this.each(function(item) {\n
+\t\t\t\titem.classes.add(cls);\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the specified class from all items in collection.\n
+\t\t *\n
+\t\t * @method removeClass\n
+\t\t * @param {String} cls Class to remove from each item.\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance.\n
+\t\t */\n
+\t\tremoveClass: function(cls) {\n
+\t\t\treturn this.each(function(item) {\n
+\t\t\t\titem.classes.remove(cls);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Fires the specified event by name and arguments on the control. This will execute all\n
+\t\t * bound event handlers.\n
+\t\t *\n
+\t\t * @method fire\n
+\t\t * @param {String} name Name of the event to fire.\n
+\t\t * @param {Object} args Optional arguments to pass to the event.\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance.\n
+\t\t */\n
+\t\t// fire: function(event, args) {}, -- Generated by code below\n
+\n
+\t\t/**\n
+\t\t * Binds a callback to the specified event. This event can both be\n
+\t\t * native browser events like "click" or custom ones like PostRender.\n
+\t\t *\n
+\t\t * The callback function will have two parameters the first one being the control that received the event\n
+\t\t * the second one will be the event object either the browsers native event object or a custom JS object.\n
+\t\t *\n
+\t\t * @method on\n
+\t\t * @param {String} name Name of the event to bind. For example "click".\n
+\t\t * @param {String/function} callback Callback function to execute ones the event occurs.\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance.\n
+\t\t */\n
+\t\t// on: function(name, callback) {}, -- Generated by code below\n
+\n
+\t\t/**\n
+\t\t * Unbinds the specified event and optionally a specific callback. If you omit the name\n
+\t\t * parameter all event handlers will be removed. If you omit the callback all event handles\n
+\t\t * by the specified name will be removed.\n
+\t\t *\n
+\t\t * @method off\n
+\t\t * @param {String} name Optional name for the event to unbind.\n
+\t\t * @param {function} callback Optional callback function to unbind.\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance.\n
+\t\t */\n
+\t\t// off: function(name, callback) {}, -- Generated by code below\n
+\n
+\t\t/**\n
+\t\t * Shows the items in the current collection.\n
+\t\t *\n
+\t\t * @method show\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance.\n
+\t\t */\n
+\t\t// show: function() {}, -- Generated by code below\n
+\n
+\t\t/**\n
+\t\t * Hides the items in the current collection.\n
+\t\t *\n
+\t\t * @method hide\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance.\n
+\t\t */\n
+\t\t// hide: function() {}, -- Generated by code below\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the text contents of the items in the current collection.\n
+\t\t *\n
+\t\t * @method text\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance or text value of the first item on a get operation.\n
+\t\t */\n
+\t\t// text: function(value) {}, -- Generated by code below\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the name contents of the items in the current collection.\n
+\t\t *\n
+\t\t * @method name\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance or name value of the first item on a get operation.\n
+\t\t */\n
+\t\t// name: function(value) {}, -- Generated by code below\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the disabled state on the items in the current collection.\n
+\t\t *\n
+\t\t * @method disabled\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance or disabled state of the first item on a get operation.\n
+\t\t */\n
+\t\t// disabled: function(state) {}, -- Generated by code below\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the active state on the items in the current collection.\n
+\t\t *\n
+\t\t * @method active\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance or active state of the first item on a get operation.\n
+\t\t */\n
+\t\t// active: function(state) {}, -- Generated by code below\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the selected state on the items in the current collection.\n
+\t\t *\n
+\t\t * @method selected\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance or selected state of the first item on a get operation.\n
+\t\t */\n
+\t\t// selected: function(state) {}, -- Generated by code below\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the selected state on the items in the current collection.\n
+\t\t *\n
+\t\t * @method visible\n
+\t\t * @return {tinymce.ui.Collection} Current collection instance or visible state of the first item on a get operation.\n
+\t\t */\n
+\t\t// visible: function(state) {}, -- Generated by code below\n
+\t};\n
+\n
+\t// Extend tinymce.ui.Collection prototype with some generated control specific methods\n
+\tTools.each(\'fire on off show hide append prepend before after reflow\'.split(\' \'), function(name) {\n
+\t\tproto[name] = function() {\n
+\t\t\tvar args = Tools.toArray(arguments);\n
+\n
+\t\t\tthis.each(function(ctrl) {\n
+\t\t\t\tif (name in ctrl) {\n
+\t\t\t\t\tctrl[name].apply(ctrl, args);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn this;\n
+\t\t};\n
+\t});\n
+\n
+\t// Extend tinymce.ui.Collection prototype with some property methods\n
+\tTools.each(\'text name disabled active selected checked visible parent value data\'.split(\' \'), function(name) {\n
+\t\tproto[name] = function(value) {\n
+\t\t\treturn this.prop(name, value);\n
+\t\t};\n
+\t});\n
+\n
+\t// Create class based on the new prototype\n
+\tCollection = Class.extend(proto);\n
+\n
+\t// Stick Collection into Selector to prevent circual references\n
+\tSelector.Collection = Collection;\n
+\n
+\treturn Collection;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11931</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Collection.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

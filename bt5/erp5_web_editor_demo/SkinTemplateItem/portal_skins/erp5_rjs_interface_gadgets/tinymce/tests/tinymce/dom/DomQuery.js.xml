@@ -1,0 +1,1076 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268232.9</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DomQuery.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tvar $elm;\n
+\n
+\tmodule("tinymce.dom.DomQuery", {\n
+\t\tteardown: function() {\n
+\t\t\tif ($elm) {\n
+\t\t\t\t$elm.off();\n
+\t\t\t\t$elm = null;\n
+\t\t\t}\n
+\n
+\t\t\tdocument.getElementById(\'view\').innerHTML = \'\';\n
+\t\t}\n
+\t});\n
+\n
+\tfunction normalizeParentNode(parentNode) {\n
+\t\t// IE 8 will return a document fragment as it\'s parent when nodes are removed\n
+\t\tif (parentNode && parentNode.nodeType == 11) {\n
+\t\t\treturn null;\n
+\t\t}\n
+\n
+\t\treturn parentNode;\n
+\t}\n
+\n
+\tfunction normalizeStyleValue(value) {\n
+\t\tif (typeof value == \'string\') {\n
+\t\t\treturn value.toLowerCase().replace(/\\s+/g, \' \').replace(/;\\s*$/, \'\');\n
+\t\t}\n
+\n
+\t\treturn value;\n
+\t}\n
+\n
+\tfunction splitAtView(nodes) {\n
+\t\tnodes.each(function(i) {\n
+\t\t\tif (this.id == \'view\') {\n
+\t\t\t\tnodes = nodes.slice(0, i);\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treturn nodes;\n
+\t}\n
+\n
+\tfunction addTests(prefix, $) {\n
+\t\ttest(prefix + \'Constructor HTML\', function() {\n
+\t\t\tvar $html;\n
+\n
+\t\t\t$html = $(\'<b>a</b><i>b</i>\');\n
+\t\t\tequal($html.length, 2);\n
+\t\t\tequal($html[0].tagName, \'B\');\n
+\t\t\tequal($html[1].tagName, \'I\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'Constructor HTML with attributes\', function() {\n
+\t\t\tvar $html;\n
+\n
+\t\t\t$html = $(\'<b>\', {id: \'id\', title: \'title\'});\n
+\t\t\tequal($html.length, 1);\n
+\t\t\tequal($html[0].tagName, \'B\');\n
+\t\t\tequal($html[0].getAttribute(\'id\'), \'id\');\n
+\t\t\tequal($html[0].getAttribute(\'title\'), \'title\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'Constructor selector\', function() {\n
+\t\t\tvar $selector;\n
+\n
+\t\t\t$selector = $(\'#view\');\n
+\t\t\tequal($selector.length, 1);\n
+\t\t\tequal($selector.selector, \'#view\');\n
+\t\t\tstrictEqual($selector.context, document);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'Constructor selector and context\', function() {\n
+\t\t\tvar $selector;\n
+\n
+\t\t\t$selector = $(\'#view\', document);\n
+\t\t\tequal($selector.length, 1);\n
+\t\t\tequal($selector.selector, \'#view\');\n
+\t\t\tstrictEqual($selector.context, document);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'Constructor selector and context\', function() {\n
+\t\t\tvar $selector;\n
+\n
+\t\t\t$(\'#view\').html(\'<div><b>a</b></div><div><b>b</b></div>\');\n
+\t\t\t$(\'b\', $(\'#view div\')[0]).html(\'x\');\n
+\t\t\tequal($(\'#view\').html().toLowerCase().replace(/[\\r\\n]/g, \'\'), \'<div><b>x</b></div><div><b>b</b></div>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'Constructor array\', function() {\n
+\t\t\tvar $html;\n
+\n
+\t\t\t$html = $([document.getElementById(\'view\'), document.body]);\n
+\t\t\tequal($html.length, 2);\n
+\t\t\tequal($html[0].tagName, \'DIV\');\n
+\t\t\tequal($html[1].tagName, \'BODY\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'Constructor query instance\', function() {\n
+\t\t\tvar $clone;\n
+\n
+\t\t\t$clone = $($(\'#view\'));\n
+\t\t\tequal($clone.length, 1);\n
+\t\t\tequal($clone[0].tagName, \'DIV\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'Constructor window\', function() {\n
+\t\t\tvar $win;\n
+\n
+\t\t\t$win = $(window);\n
+\t\t\tequal($win.length, 1);\n
+\t\t\tstrictEqual($win[0], window);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'Constructor window\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(document.body);\n
+\t\t\tequal($elm.length, 1);\n
+\t\t\tstrictEqual($elm[0], document.body);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'static extend()\', function() {\n
+\t\t\tvar data;\n
+\n
+\t\t\tdeepEqual($.extend({a: 1, b: 1}, {b: 2, c: 2}), {a: 1, b: 2, c: 2});\n
+\t\t\tdeepEqual($.extend({a: 1, b: 1}, {b: 2, c: 2}, {c: 3, d: 3}), {a: 1, b: 2, c: 3, d: 3});\n
+\n
+\t\t\tdata = {a: 1, b: 1};\n
+\t\t\tok(data === $.extend(data, {b: 2, c: 2}, {c: 3, d: 3}), {a: 1, b: 2, c: 3, d: 3});\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'static makeArray()\', function() {\n
+\t\t\tstrictEqual($.makeArray(window)[0], window);\n
+\t\t\tdeepEqual($.makeArray({\'0\': \'a\', \'1\': \'b\', length: 2}), [\'a\', \'b\']);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'static inArray()\', function() {\n
+\t\t\tdeepEqual($.inArray(1, [1, 2]), 0);\n
+\t\t\tdeepEqual($.inArray(2, [1, 2]), 1);\n
+\t\t\tdeepEqual($.inArray(3, [1, 2]), -1);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'static grep()\', function() {\n
+\t\t\tdeepEqual($.grep([1, 2, 3], function(v) {return v > 1;}), [2, 3]);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'static isArray()\', function() {\n
+\t\t\tok($.isArray([]));\n
+\t\t\tok(!$.isArray({}));\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'static each()\', function() {\n
+\t\t\tvar data;\n
+\n
+\t\t\tdata = \'\';\n
+\t\t\t$.each([1, 2, 3], function(key, value) {\n
+\t\t\t\tdata += \'\' + value + key;\n
+\t\t\t});\n
+\n
+\t\t\tequal(data, \'102132\');\n
+\n
+\t\t\tdata = \'\';\n
+\t\t\t$.each({a: 1, b: 2, c: 3}, function(key, value) {\n
+\t\t\t\tdata += \'\' + value + key;\n
+\t\t\t});\n
+\n
+\t\t\tequal(data, \'1a2b3c\');\n
+\n
+\t\t\tdata = \'\';\n
+\t\t\t$.each([1, 2, 3], function(key, value) {\n
+\t\t\t\tdata += \'\' + value + key;\n
+\n
+\t\t\t\tif (value == 2) {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tequal(data, \'1021\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'static trim()\', function() {\n
+\t\t\tequal($.trim(\' a \'), \'a\');\n
+\t\t\tequal($.trim(\'a \'), \'a\');\n
+\t\t\tequal($.trim(\' a\'), \'a\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'static unique()\', function() {\n
+\t\t\tvar nodes;\n
+\n
+\t\t\tnodes = $.unique([document.getElementById(\'view\'), document.getElementById(\'view\'), document.body]);\n
+\t\t\tequal(nodes.length, 2);\n
+\t\t\tequal(nodes[0].tagName, \'BODY\');\n
+\t\t\tequal(nodes[1].tagName, \'DIV\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'toArray()\', function() {\n
+\t\t\tok($.isArray($(\'#view\').toArray()));\n
+\t\t\tequal($(\'#view\').toArray().length, 1);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'add() single element\', function() {\n
+\t\t\tvar $nodes = $(\'#view\').add(document.body);\n
+\t\t\tequal($nodes.length, 2);\n
+\t\t\tequal($nodes[0].tagName, \'BODY\');\n
+\t\t\tequal($nodes[1].tagName, \'DIV\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'add() multiple elements (duplicates)\', function() {\n
+\t\t\tvar $nodes = $(\'#view,#view\').add([document.body, document.body]);\n
+\t\t\tequal($nodes.length, 2);\n
+\t\t\tequal($nodes[0].tagName, \'BODY\');\n
+\t\t\tequal($nodes[1].tagName, \'DIV\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'add() multiple elements (non duplicates)\', function() {\n
+\t\t\tvar $nodes = $(\'#view\').add([$(\'<b/>\')[0], $(\'<i/>\')[0]]);\n
+\t\t\tequal($nodes.length, 3);\n
+\t\t\tequal($nodes[0].tagName, \'DIV\');\n
+\t\t\tequal($nodes[1].tagName, \'B\');\n
+\t\t\tequal($nodes[2].tagName, \'I\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'add() selector\', function() {\n
+\t\t\tvar $nodes = $().add(\'#view\');\n
+\t\t\tequal($nodes.length, 1);\n
+\t\t\tequal($nodes[0].tagName, \'DIV\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'attr() set/get attr on element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b/>\').attr(\'id\', \'x\');\n
+\t\t\tequal($elm.attr(\'id\'), \'x\');\n
+\t\t\tequal(typeof $elm.attr(\'noattr\'), \'undefined\', \'Undefined attribute shouldn\\\'t have a value\');\n
+\n
+\t\t\t$elm = $(\'<b/>\').attr(\'attr\', null);\n
+\t\t\tequal(typeof $elm.attr(\'attr\'), \'undefined\', \'Deleted attribute shouldn\\\'t have a value (1)\');\n
+\n
+\t\t\t$elm = $(\'<b/>\').attr(\'id\', 1);\n
+\t\t\tstrictEqual($elm.attr(\'id\'), \'1\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'attr() set/get style attr on element (IE 7)\', function() {\n
+\t\t\t$elm = $(\'<b style="font-size: 10px" />\').attr(\'style\', \'font-size: 43px\');\n
+\t\t\tequal(normalizeStyleValue($elm.attr(\'style\')), \'font-size: 43px\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'attr() set/get checked attr on element (IE 7)\', function() {\n
+\t\t\t$elm = $(\'<input type="checkbox" />\').attr(\'checked\', \'checked\');\n
+\t\t\tequal($elm.attr(\'checked\').toLowerCase(), \'checked\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'attr() get special attrs on element (IE 7)\', function() {\n
+\t\t\t$elm = $(\'<input type="checkbox" />\');\n
+\t\t\tequal(typeof $elm.attr(\'maxlength\'), \'undefined\', \'Undefined maxlength\');\n
+\t\t\tequal(typeof $elm.attr(\'size\'), \'undefined\', \'Undefined size\');\n
+\t\t\tequal(typeof $elm.attr(\'checked\'), \'undefined\', \'Undefined checked\');\n
+\t\t\tequal(typeof $elm.attr(\'readonly\'), \'undefined\', \'Undefined readonly\');\n
+\t\t\tequal(typeof $elm.attr(\'disabled\'), \'undefined\', \'Undefined disabled\');\n
+\n
+\t\t\t$elm = $(\'<input type="text" />\');\n
+\t\t\tequal(typeof $elm.attr(\'maxlength\'), \'undefined\', \'Undefined maxlength\');\n
+\t\t\tequal(typeof $elm.attr(\'size\'), \'undefined\', \'Undefined size\');\n
+\t\t\tequal(typeof $elm.attr(\'checked\'), \'undefined\', \'Undefined checked\');\n
+\t\t\tequal(typeof $elm.attr(\'readonly\'), \'undefined\', \'Undefined readonly\');\n
+\t\t\tequal(typeof $elm.attr(\'disabled\'), \'undefined\', \'Undefined disabled\');\n
+\n
+\t\t\t$elm = $(\'<input type="text" size="11" maxlength="21" disabled="disabled" />\');\n
+\t\t\tequal($elm.attr(\'maxlength\'), \'21\', \'maxlength\');\n
+\t\t\tequal($elm.attr(\'size\'), \'11\', \'size\');\n
+\t\t\tequal($elm.attr(\'disabled\'), \'disabled\', \'disabled\');\n
+\n
+\t\t\t$elm = $(\'<textarea></textarea>\');\n
+\t\t\tequal(typeof $elm.attr(\'maxlength\'), \'undefined\', \'Undefined maxlength\');\n
+\t\t\tequal(typeof $elm.attr(\'size\'), \'undefined\', \'Undefined size\');\n
+\t\t\tequal(typeof $elm.attr(\'checked\'), \'undefined\', \'Undefined checked\');\n
+\t\t\tequal(typeof $elm.attr(\'readonly\'), \'undefined\', \'Undefined readonly\');\n
+\t\t\tequal(typeof $elm.attr(\'disabled\'), \'undefined\', \'Undefined disabled\');\n
+\n
+\t\t\t$elm = $(\'<textarea readonly="readonly"></textarea>\');\n
+\t\t\tequal($elm.attr(\'readonly\'), \'readonly\', \'readonly\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'attr() set/get attrs on element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b/>\').attr({id: \'x\', title: \'y\'});\n
+\t\t\tequal($elm.attr(\'id\'), \'x\');\n
+\t\t\tequal($elm.attr(\'title\'), \'y\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'attr() set/get on non element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $([document.createTextNode(\'x\')]).attr(\'id\', \'x\');\n
+\t\t\tequal(typeof $elm.attr(\'id\'), \'undefined\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'removeAttr() on element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b attr="a" />\').removeAttr(\'AttR\');\n
+\t\t\tequal(typeof $elm.attr(\'attr\'), \'undefined\');\n
+\n
+\t\t\t$elm = $([document.createTextNode(\'x\')]).removeAttr(\'id\');\n
+\t\t\tequal(typeof $elm.attr(\'id\'), \'undefined\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'prop() set/get attr on element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b/>\').prop(\'id\', \'x\');\n
+\t\t\tequal($elm.prop(\'id\'), \'x\');\n
+\t\t\tequal(typeof $elm.prop(\'noprop\'), \'undefined\');\n
+\n
+\t\t\t$elm = $(\'<b class="x"/>\');\n
+\t\t\tequal($elm.prop(\'class\'), \'x\');\n
+\t\t\tequal($elm.prop(\'className\'), \'x\');\n
+\n
+\t\t\t$elm = $(\'<label for="x"/>\');\n
+\t\t\tequal($elm.prop(\'for\'), \'x\');\n
+\t\t\tequal($elm.prop(\'htmlFor\'), \'x\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'prop() set/get attrs on element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b/>\').prop({id: \'x\', title: \'y\'});\n
+\t\t\tequal($elm.prop(\'id\'), \'x\');\n
+\t\t\tequal($elm.prop(\'title\'), \'y\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'css() get/set single item on element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b />\').appendTo(\'#view\').css(\'font-size\', 42);\n
+\t\t\tequal($elm.css(\'font-size\'), \'42px\');\n
+\n
+\t\t\t$elm = $(\'<b />\').appendTo(\'#view\').css(\'fontSize\', 42);\n
+\t\t\tequal($elm.css(\'fontSize\'), \'42px\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'css() get/set items on element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b>x</b>\').appendTo(\'#view\').css({\'font-size\': 42, \'text-indent\': 42});\n
+\t\t\tequal($elm.css(\'font-size\'), \'42px\');\n
+\t\t\tequal($elm.css(\'text-indent\'), \'42px\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'css() set opacity\', function() {\n
+\t\t\tvar styles = new tinymce.html.Styles();\n
+\n
+\t\t\tif (tinymce.Env.ie && tinymce.Env.ie < 9) {\n
+\t\t\t\t// jQuery has a slightly different output but basically the same\n
+\t\t\t\tdeepEqual(styles.parse($(\'<b></b>\').css(\'opacity\', 0.5).attr(\'style\')), {filter: \'alpha(opacity=50)\', \'zoom\': \'1\'});\n
+\t\t\t\tstrictEqual(typeof $(\'<b></b>\').css(\'opacity\', null).attr(\'style\'), \'undefined\');\n
+\t\t\t} else {\n
+\t\t\t\tstrictEqual(normalizeStyleValue($(\'<b></b>\').css(\'opacity\', 0.5).attr(\'style\')), \'opacity: 0.5\');\n
+\t\t\t\tok(!$(\'<b></b>\').css(\'opacity\', null).attr(\'style\'));\n
+\t\t\t\tok(!$(\'<b></b>\').css(\'opacity\', \'\').attr(\'style\'));\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'css() set float\', function() {\n
+\t\t\tstrictEqual(normalizeStyleValue($(\'<b></b>\').css(\'float\', \'right\').attr(\'style\')), \'float: right\');\n
+\t\t\tok(!$(\'<b style="float: left"></b>\').css(\'float\', \'\').attr(\'style\'));\n
+\t\t\tok(!$(\'<b></b>\').css(\'float\', null).attr(\'style\'));\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'remove() single element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b>x</b>\').appendTo(\'#view\').remove();\n
+\t\t\tstrictEqual(normalizeParentNode($elm[0].parentNode), null);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'remove() multiple elements\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b>x</b><em>x</em>\').appendTo(\'#view\').remove();\n
+\t\t\tstrictEqual(normalizeParentNode($elm[0].parentNode), null);\n
+\t\t\tstrictEqual(normalizeParentNode($elm[1].parentNode), null);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'remove() unappended element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b>x</b>\').remove();\n
+\t\t\tstrictEqual(normalizeParentNode($elm[0].parentNode), null);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'empty() single element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b><i>x<i>y</b>\').empty();\n
+\t\t\tstrictEqual($elm[0].firstChild, null);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'html() set on single element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b></b>\').html(\'<i>x</i>\');\n
+\t\t\tstrictEqual($elm[0].firstChild.tagName, \'I\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'html() get on element/elements\', function() {\n
+\t\t\tstrictEqual($(\'<b><i>x</i></b>\').html().toLowerCase(), \'<i>x</i>\');\n
+\t\t\tstrictEqual($(\'<b><i>x</i></b><i>a</i>\').html().toLowerCase(), \'<i>x</i>\');\n
+\t\t});\n
+\n
+\t\t/*\n
+\t\ttest(prefix + \'html() set comment as first child (IE)\', function() {\n
+\t\t\t$(\'#view\').html(\'<!-- x -->y\');\n
+\t\t\tstrictEqual($(\'#view\').html(), \'<!-- x -->y\');\n
+\t\t});\n
+\t\t*/\n
+\n
+\t\ttest(prefix + \'html() set DIV as child of P (IE 8)\', function() {\n
+\t\t\t$(\'<p></p>\').appendTo(\'#view\');\n
+\t\t\t$(\'#view p\').html(\'<div>x</div>\');\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase().replace(/[\\r\\n]/g, \'\'), \'<p><div>x</div></p>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'text() set on single element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b></b>\').text(\'<i>x</i>\');\n
+\t\t\tstrictEqual($elm[0].firstChild.data, \'<i>x</i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'text() get on element\', function() {\n
+\t\t\tstrictEqual($(\'<b><i>x</i>y</b>\').text().toLowerCase(), \'xy\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'append() to element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b>a</b>\');\n
+\t\t\t$elm.append($(\'<i>b</i>\'));\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'a<i>b</i>\');\n
+\n
+\t\t\t$elm = $(\'<b>a</b>\');\n
+\t\t\t$elm.append(\'<i>b</i>\');\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'a<i>b</i>\');\n
+\n
+\t\t\t$elm = $(\'<b>a</b>\');\n
+\t\t\t$elm.append(\'b\');\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'ab\');\n
+\n
+\t\t\t$elm = $(\'<b>a</b>\');\n
+\t\t\t$elm.append($(\'<i>b</i><b>c</b>\'));\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'a<i>b</i><b>c</b>\');\n
+\n
+\t\t\t$elm = $(\'<b></b>\');\n
+\t\t\t$elm.append($(\'<i>b</i>\'));\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>b</i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'prepend() to element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b>a</b>\');\n
+\t\t\t$elm.prepend($(\'<i>b</i>\'));\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>b</i>a\');\n
+\n
+\t\t\t$elm = $(\'<b>a</b>\');\n
+\t\t\t$elm.prepend($(\'<i>b</i><b>c</b>\'));\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>b</i><b>c</b>a\');\n
+\n
+\t\t\t$elm = $(\'<b></b>\');\n
+\t\t\t$elm.prepend($(\'<i>b</i>\'));\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>b</i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'before() element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b><i>a</i></b>\');\n
+\t\t\t$elm.children().before($(\'<i>b</i>\'));\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>b</i><i>a</i>\');\n
+\n
+\t\t\t$elm = $(\'<b><i>a</i></b>\');\n
+\t\t\t$elm.children().before($(\'<i>b</i><i>c</i>\'));\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>b</i><i>c</i><i>a</i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'after() element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b><i>a</i></b>\');\n
+\t\t\t$elm.children().after($(\'<i>b</i>\'));\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>a</i><i>b</i>\');\n
+\n
+\t\t\t$elm = $(\'<b><i>a</i></b>\');\n
+\t\t\t$elm.children().after($(\'<i>b</i><i>c</i>\'));\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>a</i><i>b</i><i>c</i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'appendTo() to element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b>a</b>\');\n
+\t\t\t$(\'<i>b</i>\').appendTo($elm);\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'a<i>b</i>\');\n
+\n
+\t\t\t$elm = $(\'<b>a</b>\');\n
+\t\t\t$(\'<i>b</i><b>c</b>\').appendTo($elm);\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'a<i>b</i><b>c</b>\');\n
+\n
+\t\t\t$elm = $(\'<b></b>\');\n
+\t\t\t$(\'<i>b</i>\').appendTo($elm);\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>b</i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'prependTo() to element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b>a</b>\');\n
+\t\t\t$(\'<i>b</i>\').prependTo($elm);\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>b</i>a\');\n
+\n
+\t\t\t$elm = $(\'<b>a</b>\');\n
+\t\t\t$(\'<i>b</i><b>c</b>\').prependTo($elm);\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>b</i><b>c</b>a\');\n
+\n
+\t\t\t$elm = $(\'<b></b>\');\n
+\t\t\t$(\'<i>b</i>\').prependTo($elm);\n
+\t\t\tstrictEqual($elm.html().toLowerCase(), \'<i>b</i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'addClass() to element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b></b>\').addClass(\'a\');\n
+\t\t\tstrictEqual($elm.attr(\'class\'), \'a\');\n
+\n
+\t\t\t$elm = $(\'<b class="a"></b>\').addClass(\'b\');\n
+\t\t\tstrictEqual($elm.attr(\'class\'), \'a b\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'removeClass() from element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b class="x"></b>\').removeClass(\'a\');\n
+\t\t\tstrictEqual($elm.attr(\'class\'), \'x\');\n
+\n
+\t\t\t$elm = $(\'<b class="a b"></b>\').removeClass(\'b\');\n
+\t\t\tstrictEqual($elm.attr(\'class\'), \'a\');\n
+\n
+\t\t\t$elm = $(\'<b class="a"></b>\').removeClass(\'a\');\n
+\t\t\tstrictEqual($elm.attr(\'class\'), \'\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'toggleClass() on element\', function() {\n
+\t\t\tvar $elm;\n
+\n
+\t\t\t$elm = $(\'<b class="x"></b>\').toggleClass(\'a\');\n
+\t\t\tstrictEqual($elm.attr(\'class\'), \'x a\');\n
+\n
+\t\t\t$elm = $(\'<b class="a b"></b>\').toggleClass(\'b\');\n
+\t\t\tstrictEqual($elm.attr(\'class\'), \'a\');\n
+\n
+\t\t\t$elm = $(\'<b class="a"></b>\').toggleClass(\'a\', true);\n
+\t\t\tstrictEqual($elm.attr(\'class\'), \'a\');\n
+\n
+\t\t\t$elm = $(\'<b class="a b"></b>\').toggleClass(\'a\', false);\n
+\t\t\tstrictEqual($elm.attr(\'class\'), \'b\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'toggleClass() on element\', function() {\n
+\t\t\tstrictEqual($(\'<b class="a"></b>\').hasClass(\'a\'), true);\n
+\t\t\tstrictEqual($(\'<b class="a"></b>\').hasClass(\'b\'), false);\n
+\t\t\tstrictEqual($(\'<b class="a b"></b>\').hasClass(\'b\'), true);\n
+\t\t\tstrictEqual($(\'<b class="a b"></b>\').hasClass(\'a\'), true);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'filter()\', function() {\n
+\t\t\tstrictEqual($(\'<b></b><i></i><u></u>\').filter(\'b,i\').length, 2);\n
+\t\t\tstrictEqual($(\'<b></b><i></i><u></u>\').filter(function(i, elm) {\n
+\t\t\t\treturn  elm.tagName != \'U\';\n
+\t\t\t}).length, 2);\n
+\t\t\tstrictEqual($(\'<b></b><i></i><u></u>\').filter(function(i, elm) {\n
+\t\t\t\treturn i != 2;\n
+\t\t\t}).length, 2);\n
+\t\t\tstrictEqual($([document, window, document.createTextNode(\'x\')]).filter(\'*\').length, 0);\n
+\t\t\tstrictEqual($.filter(\'*\', [document, window, document.createTextNode(\'x\')]).length, 0);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'each() collection\', function() {\n
+\t\t\tvar $html = $(\'<b>a</b><i>b</i>\'), data;\n
+\n
+\t\t\tdata = \'\';\n
+\t\t\t$html.each(function(index, elm) {\n
+\t\t\t\tdata += index + elm.innerHTML + this.innerHTML;\n
+\t\t\t});\n
+\t\t\tstrictEqual(data, \'0aa1bb\');\n
+\n
+\t\t\tdata = \'\';\n
+\t\t\t$html.each(function(index, elm) {\n
+\t\t\t\tdata += index + elm.innerHTML + this.innerHTML;\n
+\n
+\t\t\t\tif (index === 0) {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t\tstrictEqual(data, \'0aa\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'on()/off()/trigger()\', function() {\n
+\t\t\tvar lastArgs1, lastArgs2;\n
+\n
+\t\t\t$elm = $(\'<b />\')\n
+\n
+\t\t\t// Single listener\n
+\t\t\t$elm.on(\'click\', function(e) {\n
+\t\t\t\tlastArgs1 = e;\n
+\t\t\t});\n
+\t\t\t$elm.trigger(\'click\');\n
+\t\t\tstrictEqual(lastArgs1.type, \'click\');\n
+\n
+\t\t\t// Single listener trigger object\n
+\t\t\t$elm.off().on(\'click\', function(e) {\n
+\t\t\t\tlastArgs1 = e;\n
+\t\t\t});\n
+\t\t\t$elm.trigger({type: \'click\', custom: \'x\'});\n
+\t\t\tstrictEqual(lastArgs1.type, \'click\');\n
+\t\t\tstrictEqual(lastArgs1.custom, \'x\');\n
+\n
+\t\t\t// Unbind listeners\n
+\t\t\tlastArgs1 = null;\n
+\t\t\t$elm.off(\'click\');\n
+\t\t\t$elm.trigger(\'click\');\n
+\t\t\tstrictEqual(lastArgs1, null);\n
+\n
+\t\t\t// Bind two listeners\n
+\t\t\t$elm.on(\'click\', function(e) {\n
+\t\t\t\tlastArgs1 = e;\n
+\t\t\t});\n
+\t\t\t$elm.on(\'click\', function(e) {\n
+\t\t\t\tlastArgs2 = e;\n
+\t\t\t});\n
+\t\t\t$elm.trigger(\'click\');\n
+\t\t\tstrictEqual(lastArgs1.type, \'click\');\n
+\t\t\tstrictEqual(lastArgs2.type, \'click\');\n
+\n
+\t\t\t// Bind two listeners and stop propagation\n
+\t\t\tlastArgs1 = lastArgs2 = null;\n
+\t\t\t$elm.off(\'click\');\n
+\t\t\t$elm.on(\'click\', function(e) {\n
+\t\t\t\tlastArgs1 = e;\n
+\t\t\t\te.stopImmediatePropagation();\n
+\t\t\t});\n
+\t\t\t$elm.on(\'click\', function(e) {\n
+\t\t\t\tlastArgs2 = e;\n
+\t\t\t});\n
+\t\t\t$elm.trigger(\'click\');\n
+\t\t\tstrictEqual(lastArgs1.type, \'click\');\n
+\t\t\tstrictEqual(lastArgs2, null);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'show()/hide() element\', function() {\n
+\t\t\tequal(normalizeStyleValue($(\'<b></b>\').hide().attr(\'style\')), \'display: none\');\n
+\t\t\tok(!$(\'<b></b>\').show().attr(\'style\'));\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'slice/eq/first/last() on collection\', function() {\n
+\t\t\tvar $html = $(\'<b>1</b><i>2</i><em>3</em>\');\n
+\n
+\t\t\tstrictEqual($html.slice(1).length, 2);\n
+\t\t\tstrictEqual($html.slice(1)[0].tagName, \'I\');\n
+\t\t\tstrictEqual($html.slice(1)[1].tagName, \'EM\');\n
+\n
+\t\t\tstrictEqual($html.slice(1, 2).length, 1);\n
+\t\t\tstrictEqual($html.slice(1, 2)[0].tagName, \'I\');\n
+\n
+\t\t\tstrictEqual($html.slice(-2, -1).length, 1);\n
+\t\t\tstrictEqual($html.slice(-2, -1)[0].tagName, \'I\');\n
+\n
+\t\t\tstrictEqual($html.eq(1).length, 1);\n
+\t\t\tstrictEqual($html.eq(1)[0].tagName, \'I\');\n
+\n
+\t\t\tstrictEqual($html.eq(-1).length, 1);\n
+\t\t\tstrictEqual($html.eq(-1)[0].tagName, \'EM\');\n
+\n
+\t\t\tstrictEqual($html.eq(1).length, 1);\n
+\t\t\tstrictEqual($html.eq(1)[0].tagName, \'I\');\n
+\n
+\t\t\tstrictEqual($html.first().length, 1);\n
+\t\t\tstrictEqual($html.first()[0].tagName, \'B\');\n
+\n
+\t\t\tstrictEqual($html.last().length, 1);\n
+\t\t\tstrictEqual($html.last()[0].tagName, \'EM\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'replaceWith() on single element with single element\', function() {\n
+\t\t\tvar $result;\n
+\n
+\t\t\t$(\'<b>1</b>\').appendTo(\'#view\');\n
+\t\t\t$result = $(\'#view b\').replaceWith(\'<i>2</i>\');\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase(), \'<i>2</i>\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'B\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'replaceWith() on single element with multiple elements\', function() {\n
+\t\t\tvar $result;\n
+\n
+\t\t\t$(\'<b>1</b>\').appendTo(\'#view\');\n
+\t\t\t$result = $(\'#view b\').replaceWith(\'<i>2</i><i>3</i>\');\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase(), \'<i>2</i><i>3</i>\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'B\');\n
+\t\t});\n
+/*\n
+\t\ttest(prefix + \'replaceWith() on multiple elements with multiple elements\', function() {\n
+\t\t\tvar $result;\n
+\n
+\t\t\t$(\'<b>1</b><i>2</i>\').appendTo(\'#view\');\n
+\t\t\t$result = $(\'#view b, #view i\').replaceWith(\'<i>3</i><i>4</i>\');\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase(), \'<i>3</i><i>4</i>\');\n
+\t\t\tstrictEqual($result.length, 2);\n
+\t\t\tstrictEqual($result[0].tagName, \'B\');\n
+\t\t\tstrictEqual($result[1].tagName, \'I\');\n
+\t\t});\n
+*/\n
+\t\ttest(prefix + \'wrap() single element\', function() {\n
+\t\t\t$(\'<b>1</b>\').appendTo(\'#view\').wrap(\'<i>\');\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase(), \'<i><b>1</b></i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'wrap() multiple element\', function() {\n
+\t\t\t$(\'<b>1</b><b>2</b>\').appendTo(\'#view\').wrap(\'<i>\');\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase(), \'<i><b>1</b></i><i><b>2</b></i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'wrapAll() multiple element\', function() {\n
+\t\t\t$(\'<b>1</b><b>2</b>\').appendTo(\'#view\').wrapAll(\'<i>\');\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase(), \'<i><b>1</b><b>2</b></i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'wrapInner() multiple element\', function() {\n
+\t\t\t$(\'<b>1<i>a</i></b><b>2<i>b</i></b>\').appendTo(\'#view\').wrapInner(\'<i>\');\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase(), \'<b><i>1<i>a</i></i></b><b><i>2<i>b</i></i></b>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'unwrap() single element with no siblings\', function() {\n
+\t\t\t$(\'#view\').html(\'<b><i>1</i></b>\');\n
+\t\t\t$(\'#view i\').unwrap();\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase(), \'<i>1</i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'unwrap() single element with siblings\', function() {\n
+\t\t\t$(\'#view\').html(\'<b><i>1</i><i>2</i></b>\');\n
+\t\t\t$(\'#view i\').unwrap();\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase(), \'<i>1</i><i>2</i>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'clone() single element\', function() {\n
+\t\t\t$(\'<b>1</b>\').appendTo(\'#view\').clone().appendTo(\'#view\');\n
+\t\t\tstrictEqual($(\'#view\').html().toLowerCase(), \'<b>1</b><b>1</b>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'find()\', function() {\n
+\t\t\tvar $result;\n
+\n
+\t\t\t$(\'#view\').append(\'<em><i>1</i></em><strong><b>2</b></strong>\');\n
+\n
+\t\t\t$result = $(\'#view\').find(\'*\');\n
+\t\t\tstrictEqual($result.length, 4);\n
+\n
+\t\t\t$result = $(\'#view em\').find(\'*\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\n
+\t\t\t$result = $(\'#view em, #view strong\').find(\'*\');\n
+\t\t\tstrictEqual($result.length, 2);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t\tstrictEqual($result[1].tagName, \'B\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'parent()\', function() {\n
+\t\t\tvar $result;\n
+\n
+\t\t\t$(\'#view\').append(\'<em><i>1</i></em><strong><b>2</b></strong>\');\n
+\n
+\t\t\t$result = $(\'#view i, #view b\').parent();\n
+\t\t\tstrictEqual($result.length, 2);\n
+\t\t\tstrictEqual($result[0].tagName, \'EM\');\n
+\t\t\tstrictEqual($result[1].tagName, \'STRONG\');\n
+\n
+\t\t\t$result = $(\'#view i, #view b\').parent(\'em\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'EM\');\n
+\n
+\t\t\t$result = $(\'#view i, #view b\').parent(\'div\');\n
+\t\t\tstrictEqual($result.length, 0);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'parents()\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<div><em><i>1</i></em><strong><b>2</b></strong></div>\').appendTo(\'#view\');\n
+\n
+\t\t\t$result = splitAtView($(\'#view i, #view b\').parents());\n
+\t\t\tstrictEqual($result.length, 3);\n
+\t\t\tstrictEqual($result[0].tagName, \'STRONG\');\n
+\t\t\tstrictEqual($result[1].tagName, \'EM\');\n
+\t\t\tstrictEqual($result[2].tagName, \'DIV\');\n
+\n
+\t\t\t$result = splitAtView($(\'#view i, #view b\').parents(\'em\'));\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'EM\');\n
+\n
+\t\t\t$result = splitAtView($(\'#view i, #view b\').parents(\'p\'));\n
+\t\t\tstrictEqual($result.length, 0);\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'parentsUntil(selector)\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<div><em><i>1</i></em><strong><b>2</b></strong></div>\').appendTo(\'#view\');\n
+\n
+\t\t\t$result = $(\'#view i, #view b\').parentsUntil(\'#view\');\n
+\t\t\tstrictEqual($result.length, 3);\n
+\t\t\tstrictEqual($result[0].tagName, \'STRONG\');\n
+\t\t\tstrictEqual($result[1].tagName, \'EM\');\n
+\t\t\tstrictEqual($result[2].tagName, \'DIV\');\n
+\n
+\t\t\t$result = $(\'#view i, #view b\').parentsUntil(\'#view\', \'div\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'DIV\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'parentsUntil(element)\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<div><em><i>1</i></em><strong><b>2</b></strong></div>\').appendTo(\'#view\');\n
+\n
+\t\t\t$result = $(\'#view i, #view b\').parentsUntil(document.getElementById(\'view\'));\n
+\t\t\tstrictEqual($result.length, 3);\n
+\t\t\tstrictEqual($result[0].tagName, \'STRONG\');\n
+\t\t\tstrictEqual($result[1].tagName, \'EM\');\n
+\t\t\tstrictEqual($result[2].tagName, \'DIV\');\n
+\n
+\t\t\t$result = $(\'#view i, #view b\').parentsUntil(document.getElementById(\'view\'), \'div\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'DIV\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'parentsUntil(query)\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<div><em><i>1</i></em><strong><b>2</b></strong></div>\').appendTo(\'#view\');\n
+\n
+\t\t\t$result = $(\'#view i, #view b\').parentsUntil($(\'#view\'));\n
+\t\t\tstrictEqual($result.length, 3);\n
+\t\t\tstrictEqual($result[0].tagName, \'STRONG\');\n
+\t\t\tstrictEqual($result[1].tagName, \'EM\');\n
+\t\t\tstrictEqual($result[2].tagName, \'DIV\');\n
+\n
+\t\t\t$result = $(\'#view i, #view b\').parentsUntil($(\'#view\'), \'div\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'DIV\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'next()\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<b>1</b>2<i>3</i>\');\n
+\n
+\t\t\t$result = html.next();\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'prev()\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<b>1</b>2<i>3</i>\');\n
+\n
+\t\t\t$result = $(html).prev();\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'B\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'nextUntil(selector)\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<b>1</b><i>2</i><em>3</em><span>3</span>\');\n
+\n
+\t\t\t$result = html.first().nextUntil(\'span\');\n
+\t\t\tstrictEqual($result.length, 2);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t\tstrictEqual($result[1].tagName, \'EM\');\n
+\n
+\t\t\t$result = html.first().nextUntil(\'span\', \'i\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'nextUntil(element)\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<b>1</b><i>2</i><em>3</em><span>3</span>\');\n
+\n
+\t\t\t$result = html.first().nextUntil(html.last()[0]);\n
+\t\t\tstrictEqual($result.length, 2);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t\tstrictEqual($result[1].tagName, \'EM\');\n
+\n
+\t\t\t$result = html.first().nextUntil(html.last()[0], \'i\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'nextUntil(query)\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<b>1</b><i>2</i><em>3</em><span>3</span>\');\n
+\n
+\t\t\t$result = html.first().nextUntil(html.last());\n
+\t\t\tstrictEqual($result.length, 2);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t\tstrictEqual($result[1].tagName, \'EM\');\n
+\n
+\t\t\t$result = html.first().nextUntil(html.last(), \'i\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'prevUntil(selector)\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<b>1</b><i>2</i><em>3</em><span>3</span>\');\n
+\n
+\t\t\t$result = html.last().prevUntil(\'b\');\n
+\t\t\tstrictEqual($result.length, 2);\n
+\t\t\tstrictEqual($result[0].tagName, \'EM\');\n
+\t\t\tstrictEqual($result[1].tagName, \'I\');\n
+\n
+\t\t\t$result = html.last().prevUntil(\'b\', \'i\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'prevUntil(element)\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<b>1</b><i>2</i><em>3</em><span>3</span>\');\n
+\n
+\t\t\t$result = html.last().prevUntil(html.first()[0]);\n
+\t\t\tstrictEqual($result.length, 2);\n
+\t\t\tstrictEqual($result[0].tagName, \'EM\');\n
+\t\t\tstrictEqual($result[1].tagName, \'I\');\n
+\n
+\t\t\t$result = html.last().prevUntil(html.first()[0], \'i\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'prevUntil(query)\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<b>1</b><i>2</i><em>3</em><span>3</span>\');\n
+\n
+\t\t\t$result = html.last().prevUntil(html.first());\n
+\t\t\tstrictEqual($result.length, 2);\n
+\t\t\tstrictEqual($result[0].tagName, \'EM\');\n
+\t\t\tstrictEqual($result[1].tagName, \'I\');\n
+\n
+\t\t\t$result = html.last().prevUntil(html.first(), \'i\');\n
+\t\t\tstrictEqual($result.length, 1);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'children()\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<b>1<i>2</i><b>3</b></b>\');\n
+\n
+\t\t\t$result = html.children();\n
+\t\t\tstrictEqual($result.length, 2);\n
+\t\t\tstrictEqual($result[0].tagName, \'I\');\n
+\t\t\tstrictEqual($result[1].tagName, \'B\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'contents()\', function() {\n
+\t\t\tvar $result, html;\n
+\n
+\t\t\thtml = $(\'<b>1<i>2</i><b>3</b></b>\');\n
+\n
+\t\t\t$result = html.contents();\n
+\t\t\tstrictEqual($result.length, 3);\n
+\t\t\tstrictEqual($result[0].nodeName, \'#text\');\n
+\t\t\tstrictEqual($result[1].tagName, \'I\');\n
+\t\t\tstrictEqual($result[2].tagName, \'B\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'closest(selector/element/query)\', function() {\n
+\t\t\tvar innerMost, html;\n
+\n
+\t\t\thtml = $(\'<b><i><em><b>x</b></em></i></b>\');\n
+\t\t\tinnerMost = $(html[0].firstChild.firstChild.firstChild);\n
+\n
+\t\t\tstrictEqual(innerMost.closest(null).length, 0);\n
+\t\t\tstrictEqual(innerMost.closest(\'b\').html(), \'x\');\n
+\t\t\tstrictEqual(innerMost.closest(innerMost[0]).html(), \'x\');\n
+\t\t\tstrictEqual(innerMost.closest(\'b i\').html().toLowerCase(), \'<em><b>x</b></em>\');\n
+\t\t\tstrictEqual(innerMost.closest($(html[0].firstChild.firstChild)).html().toLowerCase(), \'<b>x</b>\');\n
+\t\t\tstrictEqual(innerMost.closest($(html[0].firstChild.firstChild)[0]).html().toLowerCase(), \'<b>x</b>\');\n
+\t\t});\n
+\n
+\t\ttest(prefix + \'offset()\', function() {\n
+\t\t\tvar testElm = $(\'<b></b>\').offset({top: 10, left: 20});\n
+\t\t\tstrictEqual(testElm[0].style.top, \'10px\');\n
+\t\t\tstrictEqual(testElm[0].style.left, \'20px\');\n
+\n
+\t\t\tvar viewOffset = $(\'#view\').offset();\n
+\t\t\tvar testElmOffset = $(\'<b></b>\').css({position: \'absolute\', top: 10, left: 20}).prependTo(\'#view\').offset();\n
+\n
+\t\t\ttestElmOffset.left -= viewOffset.left;\n
+\t\t\ttestElmOffset.top -= viewOffset.top;\n
+\n
+\t\t\tdeepEqual(testElmOffset, {top: 10, left: 20});\n
+\t\t});\n
+\t}\n
+\n
+\t// Run tests against jQuery/DomQuery so we know that we are compatible\n
+\taddTests(\'DomQuery: \', tinymce.dom.DomQuery);\n
+\taddTests(\'jQuery: \', jQuery);\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>30904</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DomQuery.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

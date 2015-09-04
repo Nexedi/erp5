@@ -1,0 +1,923 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268220.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FlexLayout.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>(function() {\n
+\tvar panel;\n
+\n
+\tmodule("tinymce.ui.FlexLayout", {\n
+\t\tsetup: function() {\n
+\t\t\tdocument.getElementById(\'view\').innerHTML = \'\';\n
+\t\t},\n
+\n
+\t\tteardown: function() {\n
+\t\t\ttinymce.dom.Event.clean(document.getElementById(\'view\'));\n
+\t\t}\n
+\t});\n
+\n
+\tfunction renderPanel(settings) {\n
+\t\tvar panel = tinymce.ui.Factory.create(tinymce.extend({\n
+\t\t\ttype: "panel",\n
+\t\t\tlayout: "flex",\n
+\t\t\twidth: 200, height: 200,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\'},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\'},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\'}\n
+\t\t\t]\n
+\t\t}, settings)).renderTo(document.getElementById(\'view\')).reflow();\n
+\n
+\t\tUtils.resetScroll(panel.getEl(\'body\'));\n
+\n
+\t\treturn panel;\n
+\t}\n
+\n
+\ttest("pack: default, align: default, flex: default", function() {\n
+\t\tpanel = renderPanel({});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [20, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [40, 0, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: default, align: default, flex: default, borders", function() {\n
+\t\tpanel = renderPanel({defaults: {border: 1}});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 22, 22]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [22, 0, 22, 22]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [44, 0, 22, 22]);\n
+\t});\n
+\n
+\ttest("pack: default, flex: 1", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tdefaults: {flex: 1}\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [67, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [133, 0, 67, 20]);\n
+\t});\n
+\n
+\ttest("pack: default, flex: 1, minWidth: various", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tdefaults: {flex: 1},\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', minWidth: 25, classes: \'red\'},\n
+\t\t\t\t{type: \'spacer\', minWidth: 30, classes: \'green\'},\n
+\t\t\t\t{type: \'spacer\', minWidth: 35, classes: \'blue\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 62, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [62, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [128, 0, 72, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, flex: default", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [20, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [40, 0, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, flex: 1", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tdefaults: {flex: 1}\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [67, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [133, 0, 67, 20]);\n
+\t});\n
+\n
+\ttest("pack: end, flex: default", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "end"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [140, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [160, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [180, 0, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: end, flex: 1", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "end",\n
+\t\t\tdefaults: {flex: 1}\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [67, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [133, 0, 67, 20]);\n
+\t});\n
+\n
+\ttest("pack: center, flex: default", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "center"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [70, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [90, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [110, 0, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: center, flex: 1", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "center",\n
+\t\t\tdefaults: {flex: 1}\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [67, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [133, 0, 67, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, spacing: 3", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tlayout: "flex",\n
+\t\t\tpack: "start",\n
+\t\t\tspacing: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [23, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [46, 0, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: end, spacing: 3", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "end",\n
+\t\t\tspacing: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [134, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [157, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [180, 0, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: center, spacing: 3", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "center",\n
+\t\t\tspacing: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [67, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [90, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [113, 0, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, padding: 3", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tpadding: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [3, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [23, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [43, 3, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, spacing: 3, padding: 3", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tpadding: 3,\n
+\t\t\tspacing: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [3, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [26, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [49, 3, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, align: start", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\talign: "start"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [20, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [40, 0, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack start, align: center", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\talign: "center"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 90, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [20, 90, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [40, 90, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, align: end", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\talign: "end"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 180, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [20, 180, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [40, 180, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, align: stretch", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\talign: "stretch"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 200]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [20, 0, 20, 200]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [40, 0, 20, 200]);\n
+\t});\n
+\n
+\ttest("pack: start, padding: 3, align: stretch", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\talign: "stretch",\n
+\t\t\tpadding: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [3, 3, 20, 194]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [23, 3, 20, 194]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [43, 3, 20, 194]);\n
+\t});\n
+\n
+\ttest("pack: start, flex: mixed values", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 0.3},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\', flex: 0.5}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 43, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [43, 0, 98, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [141, 0, 59, 20]);\n
+\t});\n
+\n
+\ttest("pack: justify", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "justify"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [90, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [180, 0, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: justify, padding: 3", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "justify",\n
+\t\t\tpadding: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [3, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [90, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [177, 3, 20, 20]);\n
+\t});\n
+\n
+\ttest("pack: justify, minWidth: mixed values, padding: 3", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "justify",\n
+\t\t\tpadding: 3,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\'},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', minWidth: 80},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\', minWidth: 50}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [3, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [45, 3,  80, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [147, 3, 50, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, flex: 1, maxWidth: 80 on second", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\twidth: 400,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', maxWidth: 80, flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\', flex: 1}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 160, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [160, 0, 80, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [240, 0, 160, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, flex: 1, minWidth: 150 on second", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\twidth: 400,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', minWidth: 150, flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\', flex: 1}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 90, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [90, 0, 220, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [310, 0, 90, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, flex: default, hide item and reflow", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tautoResize: true,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\'},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\'},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [20, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [40, 0, 20, 20]);\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 60, 20]);\n
+\t\tpanel.items().eq(0).hide();\n
+\t\tpanel.reflow();\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 40, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, flex: 1, reflow after resize outer width", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\', flex: 1}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [67, 0, 67, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [133, 0, 67, 20]);\n
+\n
+\t\tpanel.layoutRect({w: 400, h: 400}).reflow();\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 400, 400]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 133, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [133, 0, 133, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [267, 0, 133, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, maxWidth/maxHeight: 100, item minWidth/maxHeight: 200 (overflow W+H)", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tautoResize: true,\n
+\t\t\tautoScroll: true,\n
+\t\t\tmaxWidth: 100,\n
+\t\t\tmaxHeight: 100,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', minWidth: 200, minHeight: 200, classes: \'red dotted\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 100, 100]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 200, 200]);\n
+\t\tequal(panel.layoutRect().contentW, 200);\n
+\t\tequal(panel.layoutRect().contentH, 200);\n
+\t});\n
+\n
+\ttest("pack: start, direction: column, maxWidth/maxHeight: 100, padding: 20, spacing: 10, item minWidth/maxHeight: 200 (overflow W+H)", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tdirection: "column",\n
+\t\t\tautoResize: true,\n
+\t\t\tautoScroll: true,\n
+\t\t\tmaxWidth: 100,\n
+\t\t\tmaxHeight: 100,\n
+\t\t\tpadding: 20,\n
+\t\t\tspacing: 10,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', minWidth: 100, minHeight: 100, classes: \'red dotted\'},\n
+\t\t\t\t{type: \'spacer\', minWidth: 100, minHeight: 100, classes: \'green dotted\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 100, 100]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [20, 20, 100, 100]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [20, 130, 100, 100]);\n
+\t\tequal(panel.layoutRect().contentW, 20 + 100 + 20);\n
+\t\tequal(panel.layoutRect().contentH, 20 + 100 + 10 + 100 + 20);\n
+\t});\n
+\n
+\ttest("pack: start, maxWidth/maxHeight: 100, item minWidth/maxHeight: 200 (overflow W)", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tautoResize: true,\n
+\t\t\tautoScroll: true,\n
+\t\t\tmaxWidth: 100,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', minWidth: 200, minHeight: 200, classes: \'red dotted\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 200, 200]);\n
+\t\tequal(panel.layoutRect().contentW, 200);\n
+\t\tequal(panel.layoutRect().contentH, 200);\n
+\t});\n
+\n
+\ttest("pack: start, maxWidth/maxHeight: 100, item minWidth/maxHeight: 200 (overflow H)", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tautoResize: true,\n
+\t\t\tautoScroll: true,\n
+\t\t\tmaxHeight: 100,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', minWidth: 200, minHeight: 200, classes: \'red dotted\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 200, 200]);\n
+\t\tequal(panel.layoutRect().contentW, 200);\n
+\t\tequal(panel.layoutRect().contentH, 200);\n
+\t});\n
+\n
+\ttest("pack: start, minWidth: 200, item minWidth: 100 (underflow)", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tautoResize: true,\n
+\t\t\tminWidth: 200,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', minWidth: 100, classes: \'red\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 200, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 100, 20]);\n
+\t});\n
+\n
+\ttest("pack: start, flex: 1, border: 1, reflow after resize inner width", function() {\n
+\t\tpanel = renderPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tborder: 1,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 1}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tpanel.layoutRect({innerW: 400, innerH: 400}).reflow();\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 402, 402]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [1, 1, 400, 20]);\n
+\t});\n
+\n
+\ttest("row flexbox in row flexbox", function() {\n
+\t\tpanel = tinymce.ui.Factory.create({\n
+\t\t\ttype: \'panel\',\n
+\t\t\tlayout: \'flex\',\n
+\t\t\talign: \'end\',\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\'},\n
+\t\t\t\t{type: \'panel\', layout: \'flex\', padding: 10, spacing: 10, items: [\n
+\t\t\t\t\t{type: \'spacer\', classes: \'yellow\'},\n
+\t\t\t\t\t{type: \'spacer\', classes: \'magenta\'}\n
+\t\t\t\t]},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\'}\n
+\t\t\t]\n
+\t\t}).renderTo(document.getElementById(\'view\')).reflow();\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 110, 40]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find("panel")[0]), [20, 0, 70, 40]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 20, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [30, 10, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [60, 10, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[3]), [90, 20, 20, 20]);\n
+\t});\n
+\n
+\ttest("row flexbox in row flexbox hide inner item and reflow", function() {\n
+\t\tpanel = tinymce.ui.Factory.create({\n
+\t\t\ttype: \'panel\',\n
+\t\t\tlayout: \'flex\',\n
+\t\t\talign: \'end\',\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\'},\n
+\t\t\t\t{type: \'panel\', layout: \'flex\', padding: 10, spacing: 10, items: [\n
+\t\t\t\t\t{type: \'spacer\', classes: \'yellow\'},\n
+\t\t\t\t\t{type: \'spacer\', classes: \'magenta\'}\n
+\t\t\t\t]},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\'}\n
+\t\t\t]\n
+\t\t}).renderTo(document.getElementById(\'view\')).reflow();\n
+\n
+\t\tpanel.find(\'spacer\')[1].hide().parent().reflow();\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 80, 40]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find("panel")[0]), [20, 0, 40, 40]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 20, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [30, 10, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[3]), [60, 20, 20, 20]);\n
+\t});\n
+\n
+\t// Direction column tests\n
+\n
+\tfunction renderColumnPanel(settings) {\n
+\t\tsettings.direction = "column";\n
+\t\treturn renderPanel(settings);\n
+\t}\n
+\n
+\ttest("direction: column, pack: default, align: default, flex: default", function() {\n
+\t\tpanel = renderColumnPanel({});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 20, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 40, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: default, flex: 1", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tdefaults: {flex: 1}\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 67, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 133, 20, 67]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: default, flex: 1, minWidth: various", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tdefaults: {flex: 1},\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', minHeight: 25, classes: \'red\'},\n
+\t\t\t\t{type: \'spacer\', minHeight: 30, classes: \'green\'},\n
+\t\t\t\t{type: \'spacer\', minHeight: 35, classes: \'blue\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 62]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 62, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 128, 20, 72]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, flex: default", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 20, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 40, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, flex: 1", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tdefaults: {flex: 1}\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 67, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 133, 20, 67]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: end, flex: default", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "end"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 140, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 160, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 180, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: end, flex: 1", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "end",\n
+\t\t\tdefaults: {flex: 1}\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 67, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 133, 20, 67]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: center, flex: default", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "center"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 70, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 90, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 110, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: center, flex: 1", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "center",\n
+\t\t\tdefaults: {flex: 1}\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 67, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 133, 20, 67]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, spacing: 3", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tlayout: "flex",\n
+\t\t\tpack: "start",\n
+\t\t\tspacing: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 23, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 46, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: end, spacing: 3", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "end",\n
+\t\t\tspacing: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 134, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 157, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 180, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: center, spacing: 3", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "center",\n
+\t\t\tspacing: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 67, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 90, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 113, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, padding: 3", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tpadding: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [3, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [3, 23, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [3, 43, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, spacing: 3, padding: 3", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tpadding: 3,\n
+\t\t\tspacing: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [3, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [3, 26, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [3, 49, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, align: start", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\talign: "start"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 20, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 40, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack start, align: center", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\talign: "center"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [90, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [90, 20, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [90, 40, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, align: end", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\talign: "end"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [180, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [180, 20, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [180, 40, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, align: stretch", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\talign: "stretch"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 200, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 20, 200, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 40, 200, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, padding: 3, align: stretch", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\talign: "stretch",\n
+\t\t\tpadding: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [3, 3, 194, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [3, 23, 194, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [3, 43, 194, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, flex: mixed values", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 0.3},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\', flex: 0.5}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 43]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 43, 20, 98]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 141, 20, 59]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: justify", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "justify"\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 90, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 180, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: justify, padding: 3", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "justify",\n
+\t\t\tpadding: 3\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [3, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [3, 90, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [3, 177, 20, 20]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: justify, minHeight: mixed values, padding: 3", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "justify",\n
+\t\t\tpadding: 3,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\'},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', minHeight: 80},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\', minHeight: 50}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [3, 3, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [3, 45, 20, 80]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [3, 147, 20, 50]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, flex: 1, maxHeight: 80 on second", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\theight: 400,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', maxHeight: 80, flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\', flex: 1}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 160]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 160, 20, 80]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 240, 20, 160]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, flex: 1, minHeight: 150 on second", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\theight: 400,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', minHeight: 150, flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\', flex: 1}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 90]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 90, 20, 220]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 310, 20, 90]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, flex: 1, reflow after resize outer height", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', flex: 1},\n
+\t\t\t\t{type: \'spacer\', classes: \'blue\', flex: 1}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 67, 20, 67]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 133, 20, 67]);\n
+\n
+\t\tpanel.layoutRect({w: 400, h: 400}).reflow();\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 400, 400]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 0, 20, 133]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [0, 133, 20, 133]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [0, 267, 20, 133]);\n
+\t});\n
+\n
+\ttest("direction: column, pack: start, flex: 1, border: 1, reflow after resize inner width", function() {\n
+\t\tpanel = renderColumnPanel({\n
+\t\t\tpack: "start",\n
+\t\t\tborder: 1,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 1}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tpanel.layoutRect({innerW: 400, innerH: 400}).reflow();\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 402, 402]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [1, 1, 20, 400]);\n
+\t});\n
+\n
+\ttest("direction: column, row flexbox in row flexbox and resize parent", function() {\n
+\t\tpanel = tinymce.ui.Factory.create({\n
+\t\t\ttype: \'panel\',\n
+\t\t\tlayout: \'flex\',\n
+\t\t\talign: \'end\',\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\'},\n
+\t\t\t\t{type: \'panel\', layout: \'flex\', padding: 10, spacing: 10, items: [\n
+\t\t\t\t\t{type: \'spacer\', classes: \'yellow\'},\n
+\t\t\t\t\t{type: \'spacer\', classes: \'magenta\'}\n
+\t\t\t\t]},\n
+\t\t\t\t{type: \'spacer\', classes: \'green\'}\n
+\t\t\t]\n
+\t\t}).renderTo(document.getElementById(\'view\')).reflow();\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel), [0, 0, 110, 40]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find("panel")[0]), [20, 0, 70, 40]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[0]), [0, 20, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[1]), [30, 10, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[2]), [60, 10, 20, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.rect(panel.find(\'spacer\')[3]), [90, 20, 20, 20]);\n
+\t});\n
+})();</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>30451</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FlexLayout.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

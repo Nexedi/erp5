@@ -1,0 +1,901 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268569.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>theme.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * theme.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.ThemeManager.add(\'modern\', function(editor) {\n
+\tvar self = this, settings = editor.settings, Factory = tinymce.ui.Factory,\n
+\t\teach = tinymce.each, DOM = tinymce.DOM, Rect = tinymce.ui.Rect, FloatPanel = tinymce.ui.FloatPanel;\n
+\n
+\t// Default menus\n
+\tvar defaultMenus = {\n
+\t\tfile: {title: \'File\', items: \'newdocument\'},\n
+\t\tedit: {title: \'Edit\', items: \'undo redo | cut copy paste pastetext | selectall\'},\n
+\t\tinsert: {title: \'Insert\', items: \'|\'},\n
+\t\tview: {title: \'View\', items: \'visualaid |\'},\n
+\t\tformat: {title: \'Format\', items: \'bold italic underline strikethrough superscript subscript | formats | removeformat\'},\n
+\t\ttable: {title: \'Table\'},\n
+\t\ttools: {title: \'Tools\'}\n
+\t};\n
+\n
+\tvar defaultToolbar = "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | " +\n
+\t\t"bullist numlist outdent indent | link image";\n
+\n
+\tfunction createToolbar(items, size) {\n
+\t\tvar toolbarItems = [], buttonGroup;\n
+\n
+\t\tif (!items) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\teach(items.split(/[ ,]/), function(item) {\n
+\t\t\tvar itemName;\n
+\n
+\t\t\tfunction bindSelectorChanged() {\n
+\t\t\t\tvar selection = editor.selection;\n
+\n
+\t\t\t\tif (itemName == "bullist") {\n
+\t\t\t\t\tselection.selectorChanged(\'ul > li\', function(state, args) {\n
+\t\t\t\t\t\tvar nodeName, i = args.parents.length;\n
+\n
+\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\tnodeName = args.parents[i].nodeName;\n
+\t\t\t\t\t\t\tif (nodeName == "OL" || nodeName == "UL") {\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\titem.active(state && nodeName == "UL");\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (itemName == "numlist") {\n
+\t\t\t\t\tselection.selectorChanged(\'ol > li\', function(state, args) {\n
+\t\t\t\t\t\tvar nodeName, i = args.parents.length;\n
+\n
+\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\tnodeName = args.parents[i].nodeName;\n
+\t\t\t\t\t\t\tif (nodeName == "OL" || nodeName == "UL") {\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\titem.active(state && nodeName == "OL");\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (item.settings.stateSelector) {\n
+\t\t\t\t\tselection.selectorChanged(item.settings.stateSelector, function(state) {\n
+\t\t\t\t\t\titem.active(state);\n
+\t\t\t\t\t}, true);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (item.settings.disabledStateSelector) {\n
+\t\t\t\t\tselection.selectorChanged(item.settings.disabledStateSelector, function(state) {\n
+\t\t\t\t\t\titem.disabled(state);\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (item == "|") {\n
+\t\t\t\tbuttonGroup = null;\n
+\t\t\t} else {\n
+\t\t\t\tif (Factory.has(item)) {\n
+\t\t\t\t\titem = {type: item, size: size};\n
+\t\t\t\t\ttoolbarItems.push(item);\n
+\t\t\t\t\tbuttonGroup = null;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif (!buttonGroup) {\n
+\t\t\t\t\t\tbuttonGroup = {type: \'buttongroup\', items: []};\n
+\t\t\t\t\t\ttoolbarItems.push(buttonGroup);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (editor.buttons[item]) {\n
+\t\t\t\t\t\t// TODO: Move control creation to some UI class\n
+\t\t\t\t\t\titemName = item;\n
+\t\t\t\t\t\titem = editor.buttons[itemName];\n
+\n
+\t\t\t\t\t\tif (typeof item == "function") {\n
+\t\t\t\t\t\t\titem = item();\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\titem.type = item.type || \'button\';\n
+\t\t\t\t\t\titem.size = size;\n
+\n
+\t\t\t\t\t\titem = Factory.create(item);\n
+\t\t\t\t\t\tbuttonGroup.items.push(item);\n
+\n
+\t\t\t\t\t\tif (editor.initialized) {\n
+\t\t\t\t\t\t\tbindSelectorChanged();\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\teditor.on(\'init\', bindSelectorChanged);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treturn {\n
+\t\t\ttype: \'toolbar\',\n
+\t\t\tlayout: \'flow\',\n
+\t\t\titems: toolbarItems\n
+\t\t};\n
+\t}\n
+\n
+\t/**\n
+\t * Creates the toolbars from config and returns a toolbar array.\n
+\t *\n
+\t * @param {String} size Optional toolbar item size.\n
+\t * @return {Array} Array with toolbars.\n
+\t */\n
+\tfunction createToolbars(size) {\n
+\t\tvar toolbars = [];\n
+\n
+\t\tfunction addToolbar(items) {\n
+\t\t\tif (items) {\n
+\t\t\t\ttoolbars.push(createToolbar(items, size));\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Convert toolbar array to multiple options\n
+\t\tif (tinymce.isArray(settings.toolbar)) {\n
+\t\t\t// Empty toolbar array is the same as a disabled toolbar\n
+\t\t\tif (settings.toolbar.length === 0) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\ttinymce.each(settings.toolbar, function(toolbar, i) {\n
+\t\t\t\tsettings["toolbar" + (i + 1)] = toolbar;\n
+\t\t\t});\n
+\n
+\t\t\tdelete settings.toolbar;\n
+\t\t}\n
+\n
+\t\t// Generate toolbar<n>\n
+\t\tfor (var i = 1; i < 10; i++) {\n
+\t\t\tif (!addToolbar(settings["toolbar" + i])) {\n
+\t\t\t\tbreak;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Generate toolbar or default toolbar unless it\'s disabled\n
+\t\tif (!toolbars.length && settings.toolbar !== false) {\n
+\t\t\taddToolbar(settings.toolbar || defaultToolbar);\n
+\t\t}\n
+\n
+\t\tif (toolbars.length) {\n
+\t\t\treturn {\n
+\t\t\t\ttype: \'panel\',\n
+\t\t\t\tlayout: \'stack\',\n
+\t\t\t\tclasses: "toolbar-grp",\n
+\t\t\t\tariaRoot: true,\n
+\t\t\t\tariaRemember: true,\n
+\t\t\t\titems: toolbars\n
+\t\t\t};\n
+\t\t}\n
+\t}\n
+\n
+\t/**\n
+\t * Creates the menu buttons based on config.\n
+\t *\n
+\t * @return {Array} Menu buttons array.\n
+\t */\n
+\tfunction createMenuButtons() {\n
+\t\tvar name, menuButtons = [];\n
+\n
+\t\tfunction createMenuItem(name) {\n
+\t\t\tvar menuItem;\n
+\n
+\t\t\tif (name == \'|\') {\n
+\t\t\t\treturn {text: \'|\'};\n
+\t\t\t}\n
+\n
+\t\t\tmenuItem = editor.menuItems[name];\n
+\n
+\t\t\treturn menuItem;\n
+\t\t}\n
+\n
+\t\tfunction createMenu(context) {\n
+\t\t\tvar menuButton, menu, menuItems, isUserDefined, removedMenuItems;\n
+\n
+\t\t\tremovedMenuItems = tinymce.makeMap((settings.removed_menuitems || \'\').split(/[ ,]/));\n
+\n
+\t\t\t// User defined menu\n
+\t\t\tif (settings.menu) {\n
+\t\t\t\tmenu = settings.menu[context];\n
+\t\t\t\tisUserDefined = true;\n
+\t\t\t} else {\n
+\t\t\t\tmenu = defaultMenus[context];\n
+\t\t\t}\n
+\n
+\t\t\tif (menu) {\n
+\t\t\t\tmenuButton = {text: menu.title};\n
+\t\t\t\tmenuItems = [];\n
+\n
+\t\t\t\t// Default/user defined items\n
+\t\t\t\teach((menu.items || \'\').split(/[ ,]/), function(item) {\n
+\t\t\t\t\tvar menuItem = createMenuItem(item);\n
+\n
+\t\t\t\t\tif (menuItem && !removedMenuItems[item]) {\n
+\t\t\t\t\t\tmenuItems.push(createMenuItem(item));\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Added though context\n
+\t\t\t\tif (!isUserDefined) {\n
+\t\t\t\t\teach(editor.menuItems, function(menuItem) {\n
+\t\t\t\t\t\tif (menuItem.context == context) {\n
+\t\t\t\t\t\t\tif (menuItem.separator == \'before\') {\n
+\t\t\t\t\t\t\t\tmenuItems.push({text: \'|\'});\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tif (menuItem.prependToContext) {\n
+\t\t\t\t\t\t\t\tmenuItems.unshift(menuItem);\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tmenuItems.push(menuItem);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tif (menuItem.separator == \'after\') {\n
+\t\t\t\t\t\t\t\tmenuItems.push({text: \'|\'});\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (var i = 0; i < menuItems.length; i++) {\n
+\t\t\t\t\tif (menuItems[i].text == \'|\') {\n
+\t\t\t\t\t\tif (i === 0 || i == menuItems.length - 1) {\n
+\t\t\t\t\t\t\tmenuItems.splice(i, 1);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tmenuButton.menu = menuItems;\n
+\n
+\t\t\t\tif (!menuButton.menu.length) {\n
+\t\t\t\t\treturn null;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn menuButton;\n
+\t\t}\n
+\n
+\t\tvar defaultMenuBar = [];\n
+\t\tif (settings.menu) {\n
+\t\t\tfor (name in settings.menu) {\n
+\t\t\t\tdefaultMenuBar.push(name);\n
+\t\t\t}\n
+\t\t} else {\n
+\t\t\tfor (name in defaultMenus) {\n
+\t\t\t\tdefaultMenuBar.push(name);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tvar enabledMenuNames = typeof settings.menubar == "string" ? settings.menubar.split(/[ ,]/) : defaultMenuBar;\n
+\t\tfor (var i = 0; i < enabledMenuNames.length; i++) {\n
+\t\t\tvar menu = enabledMenuNames[i];\n
+\t\t\tmenu = createMenu(menu);\n
+\n
+\t\t\tif (menu) {\n
+\t\t\t\tmenuButtons.push(menu);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn menuButtons;\n
+\t}\n
+\n
+\t/**\n
+\t * Adds accessibility shortcut keys to panel.\n
+\t *\n
+\t * @param {tinymce.ui.Panel} panel Panel to add focus to.\n
+\t */\n
+\tfunction addAccessibilityKeys(panel) {\n
+\t\tfunction focus(type) {\n
+\t\t\tvar item = panel.find(type)[0];\n
+\n
+\t\t\tif (item) {\n
+\t\t\t\titem.focus(true);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\teditor.shortcuts.add(\'Alt+F9\', \'\', function() {\n
+\t\t\tfocus(\'menubar\');\n
+\t\t});\n
+\n
+\t\teditor.shortcuts.add(\'Alt+F10\', \'\', function() {\n
+\t\t\tfocus(\'toolbar\');\n
+\t\t});\n
+\n
+\t\teditor.shortcuts.add(\'Alt+F11\', \'\', function() {\n
+\t\t\tfocus(\'elementpath\');\n
+\t\t});\n
+\n
+\t\tpanel.on(\'cancel\', function() {\n
+\t\t\teditor.focus();\n
+\t\t});\n
+\t}\n
+\n
+\t/**\n
+\t * Resizes the editor to the specified width, height.\n
+\t */\n
+\tfunction resizeTo(width, height) {\n
+\t\tvar containerElm, iframeElm, containerSize, iframeSize;\n
+\n
+\t\tfunction getSize(elm) {\n
+\t\t\treturn {\n
+\t\t\t\twidth: elm.clientWidth,\n
+\t\t\t\theight: elm.clientHeight\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tcontainerElm = editor.getContainer();\n
+\t\tiframeElm = editor.getContentAreaContainer().firstChild;\n
+\t\tcontainerSize = getSize(containerElm);\n
+\t\tiframeSize = getSize(iframeElm);\n
+\n
+\t\tif (width !== null) {\n
+\t\t\twidth = Math.max(settings.min_width || 100, width);\n
+\t\t\twidth = Math.min(settings.max_width || 0xFFFF, width);\n
+\n
+\t\t\tDOM.setStyle(containerElm, \'width\', width + (containerSize.width - iframeSize.width));\n
+\t\t\tDOM.setStyle(iframeElm, \'width\', width);\n
+\t\t}\n
+\n
+\t\theight = Math.max(settings.min_height || 100, height);\n
+\t\theight = Math.min(settings.max_height || 0xFFFF, height);\n
+\t\tDOM.setStyle(iframeElm, \'height\', height);\n
+\n
+\t\teditor.fire(\'ResizeEditor\');\n
+\t}\n
+\n
+\tfunction resizeBy(dw, dh) {\n
+\t\tvar elm = editor.getContentAreaContainer();\n
+\t\tself.resizeTo(elm.clientWidth + dw, elm.clientHeight + dh);\n
+\t}\n
+\n
+\t/**\n
+\t * Handles contextual toolbars.\n
+\t */\n
+\tfunction addContextualToolbars() {\n
+\t\tvar scrollContainer;\n
+\n
+\t\tfunction getContextToolbars() {\n
+\t\t\treturn editor.contextToolbars || [];\n
+\t\t}\n
+\n
+\t\tfunction getElementRect(elm) {\n
+\t\t\tvar pos, targetRect, root;\n
+\n
+\t\t\tpos = tinymce.DOM.getPos(editor.getContentAreaContainer());\n
+\t\t\ttargetRect = editor.dom.getRect(elm);\n
+\t\t\troot = editor.dom.getRoot();\n
+\n
+\t\t\t// Adjust targetPos for scrolling in the editor\n
+\t\t\tif (root.nodeName == \'BODY\') {\n
+\t\t\t\ttargetRect.x -= root.ownerDocument.documentElement.scrollLeft || root.scrollLeft;\n
+\t\t\t\ttargetRect.y -= root.ownerDocument.documentElement.scrollTop || root.scrollTop;\n
+\t\t\t}\n
+\n
+\t\t\ttargetRect.x += pos.x;\n
+\t\t\ttargetRect.y += pos.y;\n
+\n
+\t\t\treturn targetRect;\n
+\t\t}\n
+\n
+\t\tfunction hideAllFloatingPanels() {\n
+\t\t\teach(editor.contextToolbars, function(toolbar) {\n
+\t\t\t\tif (toolbar.panel) {\n
+\t\t\t\t\ttoolbar.panel.hide();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction reposition(match) {\n
+\t\t\tvar relPos, panelRect, elementRect, contentAreaRect, panel, relRect, testPositions;\n
+\n
+\t\t\tif (editor.removed) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (!match || !match.toolbar.panel) {\n
+\t\t\t\thideAllFloatingPanels();\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\ttestPositions = [\n
+\t\t\t\t\'tc-bc\', \'bc-tc\',\n
+\t\t\t\t\'tl-bl\', \'bl-tl\',\n
+\t\t\t\t\'tr-br\', \'br-tr\'\n
+\t\t\t];\n
+\n
+\t\t\tpanel = match.toolbar.panel;\n
+\t\t\tpanel.show();\n
+\n
+\t\t\telementRect = getElementRect(match.element);\n
+\t\t\tpanelRect = tinymce.DOM.getRect(panel.getEl());\n
+\t\t\tcontentAreaRect = tinymce.DOM.getRect(editor.getContentAreaContainer() || editor.getBody());\n
+\n
+\t\t\tif (!editor.inline) {\n
+\t\t\t\tcontentAreaRect.w = editor.getDoc().documentElement.offsetWidth;\n
+\t\t\t}\n
+\n
+\t\t\t// Inflate the elementRect so it doesn\'t get placed above resize handles\n
+\t\t\tif (editor.selection.controlSelection.isResizable(match.element)) {\n
+\t\t\t\telementRect = Rect.inflate(elementRect, 0, 7);\n
+\t\t\t}\n
+\n
+\t\t\trelPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, testPositions);\n
+\n
+\t\t\tif (relPos) {\n
+\t\t\t\teach(testPositions.concat(\'inside\'), function(pos) {\n
+\t\t\t\t\tpanel.classes.toggle(\'tinymce-inline-\' + pos, pos == relPos);\n
+\t\t\t\t});\n
+\n
+\t\t\t\trelRect = Rect.relativePosition(panelRect, elementRect, relPos);\n
+\t\t\t\tpanel.moveTo(relRect.x, relRect.y);\n
+\t\t\t} else {\n
+\t\t\t\teach(testPositions, function(pos) {\n
+\t\t\t\t\tpanel.classes.toggle(\'tinymce-inline-\' + pos, false);\n
+\t\t\t\t});\n
+\n
+\t\t\t\tpanel.classes.toggle(\'tinymce-inline-inside\', true);\n
+\n
+\t\t\t\telementRect = Rect.intersect(contentAreaRect, elementRect);\n
+\n
+\t\t\t\tif (elementRect) {\n
+\t\t\t\t\trelPos = Rect.findBestRelativePosition(panelRect, elementRect, contentAreaRect, [\n
+\t\t\t\t\t\t\'tc-tc\', \'tl-tl\', \'tr-tr\'\n
+\t\t\t\t\t]);\n
+\n
+\t\t\t\t\tif (relPos) {\n
+\t\t\t\t\t\trelRect = Rect.relativePosition(panelRect, elementRect, relPos);\n
+\t\t\t\t\t\tpanel.moveTo(relRect.x, relRect.y);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tpanel.moveTo(elementRect.x, elementRect.y);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tpanel.hide();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t//drawRect(contentAreaRect, \'blue\');\n
+\t\t\t//drawRect(elementRect, \'red\');\n
+\t\t\t//drawRect(panelRect, \'green\');\n
+\t\t}\n
+\n
+\t\tfunction repositionHandler() {\n
+\t\t\tfunction execute() {\n
+\t\t\t\tif (editor.selection) {\n
+\t\t\t\t\treposition(findFrontMostMatch(editor.selection.getNode()));\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (window.requestAnimationFrame) {\n
+\t\t\t\twindow.requestAnimationFrame(execute);\n
+\t\t\t} else {\n
+\t\t\t\texecute();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction bindScrollEvent() {\n
+\t\t\tif (!scrollContainer) {\n
+\t\t\t\tscrollContainer = editor.selection.getScrollContainer() || editor.getWin();\n
+\t\t\t\ttinymce.$(scrollContainer).on(\'scroll\', repositionHandler);\n
+\n
+\t\t\t\teditor.on(\'remove\', function() {\n
+\t\t\t\t\ttinymce.$(scrollContainer).off(\'scroll\');\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction showContextToolbar(match) {\n
+\t\t\tvar panel;\n
+\n
+\t\t\tif (match.toolbar.panel) {\n
+\t\t\t\tmatch.toolbar.panel.show();\n
+\t\t\t\treposition(match);\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tbindScrollEvent();\n
+\n
+\t\t\tpanel = Factory.create({\n
+\t\t\t\ttype: \'floatpanel\',\n
+\t\t\t\trole: \'application\',\n
+\t\t\t\tclasses: \'tinymce tinymce-inline\',\n
+\t\t\t\tlayout: \'flex\',\n
+\t\t\t\tdirection: \'column\',\n
+\t\t\t\talign: \'stretch\',\n
+\t\t\t\tautohide: false,\n
+\t\t\t\tautofix: true,\n
+\t\t\t\tfixed: true,\n
+\t\t\t\tborder: 1,\n
+\t\t\t\titems: createToolbar(match.toolbar.items)\n
+\t\t\t});\n
+\n
+\t\t\tmatch.toolbar.panel = panel;\n
+\t\t\tpanel.renderTo(document.body).reflow();\n
+\t\t\treposition(match);\n
+\t\t}\n
+\n
+\t\tfunction hideAllContextToolbars() {\n
+\t\t\ttinymce.each(getContextToolbars(), function(toolbar) {\n
+\t\t\t\tif (toolbar.panel) {\n
+\t\t\t\t\ttoolbar.panel.hide();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction findFrontMostMatch(targetElm) {\n
+\t\t\tvar i, y, parentsAndSelf, toolbars = getContextToolbars();\n
+\n
+\t\t\tparentsAndSelf = editor.$(targetElm).parents().add(targetElm);\n
+\t\t\tfor (i = parentsAndSelf.length - 1; i >= 0; i--) {\n
+\t\t\t\tfor (y = toolbars.length - 1; y >= 0; y--) {\n
+\t\t\t\t\tif (toolbars[y].predicate(parentsAndSelf[i])) {\n
+\t\t\t\t\t\treturn {\n
+\t\t\t\t\t\t\ttoolbar: toolbars[y],\n
+\t\t\t\t\t\t\telement: parentsAndSelf[i]\n
+\t\t\t\t\t\t};\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn null;\n
+\t\t}\n
+\n
+\t\teditor.on(\'click keyup blur\', function() {\n
+\t\t\t// Needs to be delayed to avoid Chrome img focus out bug\n
+\t\t\twindow.setTimeout(function() {\n
+\t\t\t\tvar match;\n
+\n
+\t\t\t\tif (editor.removed) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tmatch = findFrontMostMatch(editor.selection.getNode());\n
+\t\t\t\tif (match) {\n
+\t\t\t\t\tshowContextToolbar(match);\n
+\t\t\t\t} else {\n
+\t\t\t\t\thideAllContextToolbars();\n
+\t\t\t\t}\n
+\t\t\t}, 0);\n
+\t\t});\n
+\n
+\t\teditor.on(\'ObjectResizeStart\', function() {\n
+\t\t\tvar match = findFrontMostMatch(editor.selection.getNode());\n
+\n
+\t\t\tif (match && match.toolbar.panel) {\n
+\t\t\t\tmatch.toolbar.panel.hide();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'nodeChange ResizeEditor ResizeWindow\', repositionHandler);\n
+\n
+\t\teditor.on(\'remove\', function() {\n
+\t\t\ttinymce.each(getContextToolbars(), function(toolbar) {\n
+\t\t\t\tif (toolbar.panel) {\n
+\t\t\t\t\ttoolbar.panel.remove();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teditor.contextToolbars = {};\n
+\t\t});\n
+\t}\n
+\n
+\t/**\n
+\t * Renders the inline editor UI.\n
+\t *\n
+\t * @return {Object} Name/value object with theme data.\n
+\t */\n
+\tfunction renderInlineUI(args) {\n
+\t\tvar panel, inlineToolbarContainer;\n
+\n
+\t\tif (settings.fixed_toolbar_container) {\n
+\t\t\tinlineToolbarContainer = DOM.select(settings.fixed_toolbar_container)[0];\n
+\t\t}\n
+\n
+\t\tfunction reposition() {\n
+\t\t\tif (panel && panel.moveRel && panel.visible() && !panel._fixed) {\n
+\t\t\t\t// TODO: This is kind of ugly and doesn\'t handle multiple scrollable elements\n
+\t\t\t\tvar scrollContainer = editor.selection.getScrollContainer(), body = editor.getBody();\n
+\t\t\t\tvar deltaX = 0, deltaY = 0;\n
+\n
+\t\t\t\tif (scrollContainer) {\n
+\t\t\t\t\tvar bodyPos = DOM.getPos(body), scrollContainerPos = DOM.getPos(scrollContainer);\n
+\n
+\t\t\t\t\tdeltaX = Math.max(0, scrollContainerPos.x - bodyPos.x);\n
+\t\t\t\t\tdeltaY = Math.max(0, scrollContainerPos.y - bodyPos.y);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tpanel.fixed(false).moveRel(body, editor.rtl ? [\'tr-br\', \'br-tr\'] : [\'tl-bl\', \'bl-tl\', \'tr-br\']).moveBy(deltaX, deltaY);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction show() {\n
+\t\t\tif (panel) {\n
+\t\t\t\tpanel.show();\n
+\t\t\t\treposition();\n
+\t\t\t\tDOM.addClass(editor.getBody(), \'mce-edit-focus\');\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction hide() {\n
+\t\t\tif (panel) {\n
+\t\t\t\t// We require two events as the inline float panel based toolbar does not have autohide=true\n
+\t\t\t\tpanel.hide();\n
+\n
+\t\t\t\t// All other autohidden float panels will be closed below.\n
+\t\t\t\tFloatPanel.hideAll();\n
+\n
+\t\t\t\tDOM.removeClass(editor.getBody(), \'mce-edit-focus\');\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction render() {\n
+\t\t\tif (panel) {\n
+\t\t\t\tif (!panel.visible()) {\n
+\t\t\t\t\tshow();\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Render a plain panel inside the inlineToolbarContainer if it\'s defined\n
+\t\t\tpanel = self.panel = Factory.create({\n
+\t\t\t\ttype: inlineToolbarContainer ? \'panel\' : \'floatpanel\',\n
+\t\t\t\trole: \'application\',\n
+\t\t\t\tclasses: \'tinymce tinymce-inline\',\n
+\t\t\t\tlayout: \'flex\',\n
+\t\t\t\tdirection: \'column\',\n
+\t\t\t\talign: \'stretch\',\n
+\t\t\t\tautohide: false,\n
+\t\t\t\tautofix: true,\n
+\t\t\t\tfixed: !!inlineToolbarContainer,\n
+\t\t\t\tborder: 1,\n
+\t\t\t\titems: [\n
+\t\t\t\t\tsettings.menubar === false ? null : {type: \'menubar\', border: \'0 0 1 0\', items: createMenuButtons()},\n
+\t\t\t\t\tcreateToolbars(settings.toolbar_items_size)\n
+\t\t\t\t]\n
+\t\t\t});\n
+\n
+\t\t\t// Add statusbar\n
+\t\t\t/*if (settings.statusbar !== false) {\n
+\t\t\t\tpanel.add({type: \'panel\', classes: \'statusbar\', layout: \'flow\', border: \'1 0 0 0\', items: [\n
+\t\t\t\t\t{type: \'elementpath\'}\n
+\t\t\t\t]});\n
+\t\t\t}*/\n
+\n
+\t\t\teditor.fire(\'BeforeRenderUI\');\n
+\t\t\tpanel.renderTo(inlineToolbarContainer || document.body).reflow();\n
+\n
+\t\t\taddAccessibilityKeys(panel);\n
+\t\t\tshow();\n
+\t\t\taddContextualToolbars();\n
+\n
+\t\t\teditor.on(\'nodeChange\', reposition);\n
+\t\t\teditor.on(\'activate\', show);\n
+\t\t\teditor.on(\'deactivate\', hide);\n
+\n
+\t\t\teditor.nodeChanged();\n
+\t\t}\n
+\n
+\t\tsettings.content_editable = true;\n
+\n
+\t\teditor.on(\'focus\', function() {\n
+\t\t\t// Render only when the CSS file has been loaded\n
+\t\t\tif (args.skinUiCss) {\n
+\t\t\t\ttinymce.DOM.styleSheetLoader.load(args.skinUiCss, render, render);\n
+\t\t\t} else {\n
+\t\t\t\trender();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'blur hide\', hide);\n
+\n
+\t\t// Remove the panel when the editor is removed\n
+\t\teditor.on(\'remove\', function() {\n
+\t\t\tif (panel) {\n
+\t\t\t\tpanel.remove();\n
+\t\t\t\tpanel = null;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Preload skin css\n
+\t\tif (args.skinUiCss) {\n
+\t\t\ttinymce.DOM.styleSheetLoader.load(args.skinUiCss);\n
+\t\t}\n
+\n
+\t\treturn {};\n
+\t}\n
+\n
+\t/**\n
+\t * Renders the iframe editor UI.\n
+\t *\n
+\t * @param {Object} args Details about target element etc.\n
+\t * @return {Object} Name/value object with theme data.\n
+\t */\n
+\tfunction renderIframeUI(args) {\n
+\t\tvar panel, resizeHandleCtrl, startSize;\n
+\n
+\t\tif (args.skinUiCss) {\n
+\t\t\ttinymce.DOM.loadCSS(args.skinUiCss);\n
+\t\t}\n
+\n
+\t\t// Basic UI layout\n
+\t\tpanel = self.panel = Factory.create({\n
+\t\t\ttype: \'panel\',\n
+\t\t\trole: \'application\',\n
+\t\t\tclasses: \'tinymce\',\n
+\t\t\tstyle: \'visibility: hidden\',\n
+\t\t\tlayout: \'stack\',\n
+\t\t\tborder: 1,\n
+\t\t\titems: [\n
+\t\t\t\tsettings.menubar === false ? null : {type: \'menubar\', border: \'0 0 1 0\', items: createMenuButtons()},\n
+\t\t\t\tcreateToolbars(settings.toolbar_items_size),\n
+\t\t\t\t{type: \'panel\', name: \'iframe\', layout: \'stack\', classes: \'edit-area\', html: \'\', border: \'1 0 0 0\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tif (settings.resize !== false) {\n
+\t\t\tresizeHandleCtrl = {\n
+\t\t\t\ttype: \'resizehandle\',\n
+\t\t\t\tdirection: settings.resize,\n
+\n
+\t\t\t\tonResizeStart: function() {\n
+\t\t\t\t\tvar elm = editor.getContentAreaContainer().firstChild;\n
+\n
+\t\t\t\t\tstartSize = {\n
+\t\t\t\t\t\twidth: elm.clientWidth,\n
+\t\t\t\t\t\theight: elm.clientHeight\n
+\t\t\t\t\t};\n
+\t\t\t\t},\n
+\n
+\t\t\t\tonResize: function(e) {\n
+\t\t\t\t\tif (settings.resize == \'both\') {\n
+\t\t\t\t\t\tresizeTo(startSize.width + e.deltaX, startSize.height + e.deltaY);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tresizeTo(null, startSize.height + e.deltaY);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\t// Add statusbar if needed\n
+\t\tif (settings.statusbar !== false) {\n
+\t\t\tpanel.add({type: \'panel\', name: \'statusbar\', classes: \'statusbar\', layout: \'flow\', border: \'1 0 0 0\', ariaRoot: true, items: [\n
+\t\t\t\t{type: \'elementpath\'},\n
+\t\t\t\tresizeHandleCtrl\n
+\t\t\t]});\n
+\t\t}\n
+\n
+\t\tif (settings.readonly) {\n
+\t\t\tpanel.find(\'*\').disabled(true);\n
+\t\t}\n
+\n
+\t\teditor.fire(\'BeforeRenderUI\');\n
+\t\tpanel.renderBefore(args.targetNode).reflow();\n
+\n
+\t\tif (settings.width) {\n
+\t\t\ttinymce.DOM.setStyle(panel.getEl(), \'width\', settings.width);\n
+\t\t}\n
+\n
+\t\t// Remove the panel when the editor is removed\n
+\t\teditor.on(\'remove\', function() {\n
+\t\t\tpanel.remove();\n
+\t\t\tpanel = null;\n
+\t\t});\n
+\n
+\t\t// Add accesibility shortcuts\n
+\t\taddAccessibilityKeys(panel);\n
+\t\taddContextualToolbars();\n
+\n
+\t\treturn {\n
+\t\t\tiframeContainer: panel.find(\'#iframe\')[0].getEl(),\n
+\t\t\teditorContainer: panel.getEl()\n
+\t\t};\n
+\t}\n
+\n
+\t/**\n
+\t * Renders the UI for the theme. This gets called by the editor.\n
+\t *\n
+\t * @param {Object} args Details about target element etc.\n
+\t * @return {Object} Theme UI data items.\n
+\t */\n
+\tself.renderUI = function(args) {\n
+\t\tvar skin = settings.skin !== false ? settings.skin || \'lightgray\' : false;\n
+\n
+\t\tif (skin) {\n
+\t\t\tvar skinUrl = settings.skin_url;\n
+\n
+\t\t\tif (skinUrl) {\n
+\t\t\t\tskinUrl = editor.documentBaseURI.toAbsolute(skinUrl);\n
+\t\t\t} else {\n
+\t\t\t\tskinUrl = tinymce.baseURL + \'/skins/\' + skin;\n
+\t\t\t}\n
+\n
+\t\t\t// Load special skin for IE7\n
+\t\t\t// TODO: Remove this when we drop IE7 support\n
+\t\t\tif (tinymce.Env.documentMode <= 7) {\n
+\t\t\t\targs.skinUiCss = skinUrl + \'/skin.ie7.min.css\';\n
+\t\t\t} else {\n
+\t\t\t\targs.skinUiCss = skinUrl + \'/skin.min.css\';\n
+\t\t\t}\n
+\n
+\t\t\t// Load content.min.css or content.inline.min.css\n
+\t\t\teditor.contentCSS.push(skinUrl + \'/content\' + (editor.inline ? \'.inline\' : \'\') + \'.min.css\');\n
+\t\t}\n
+\n
+\t\t// Handle editor setProgressState change\n
+\t\teditor.on(\'ProgressState\', function(e) {\n
+\t\t\tself.throbber = self.throbber || new tinymce.ui.Throbber(self.panel.getEl(\'body\'));\n
+\n
+\t\t\tif (e.state) {\n
+\t\t\t\tself.throbber.show(e.time);\n
+\t\t\t} else {\n
+\t\t\t\tself.throbber.hide();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tif (settings.inline) {\n
+\t\t\treturn renderInlineUI(args);\n
+\t\t}\n
+\n
+\t\treturn renderIframeUI(args);\n
+\t};\n
+\n
+\tself.resizeTo = resizeTo;\n
+\tself.resizeBy = resizeBy;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>20605</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>theme.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

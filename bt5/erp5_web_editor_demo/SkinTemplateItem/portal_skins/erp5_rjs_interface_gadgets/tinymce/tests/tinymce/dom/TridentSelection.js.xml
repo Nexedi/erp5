@@ -1,0 +1,587 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268236.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>TridentSelection.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.dom.TridentSelection", {\n
+\tsetupModule: function() {\n
+\t\tif (window.getSelection) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tQUnit.stop();\n
+\t\tdocument.getElementById(\'view\').innerHTML = \'<textarea></textarea>\';\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "textarea",\n
+\t\t\telements: "elm1",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tskin: false,\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+});\n
+\n
+if (!window.getSelection) {\n
+\ttest("Selection of element containing text", function(){\n
+\t\texpect(5);\n
+\t\t\n
+\t\teditor.setContent(\'<p>123</p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody(), 0);\n
+\t\trng.setEnd(editor.getBody(), 1);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(1);\n
+\t\tequal(rng.startContainer.nodeName, \'#text\', \'Start container is text node\');\n
+\t\tequal(rng.endContainer.nodeName, \'#text\', \'End container is text node\');\n
+\t\tequal(rng.startOffset, 0, \'Start of text node\');\n
+\t\tequal(rng.endOffset, 3, \'End of text node\');\n
+\t\tequal(editor.dom.getOuterHTML(rng.cloneContents()), \'123\', \'Contents matches\');\n
+\t});\n
+\t\n
+\ttest("Single image selection", function(){\n
+\t\texpect(6);\n
+\t\t\n
+\t\teditor.setContent(\'<p><img src="about:blank" /></p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStartBefore(editor.dom.select(\'img\')[0]);\n
+\t\trng.setEndAfter(editor.dom.select(\'img\')[0]);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(1);\n
+\t\tequal(rng.startContainer.nodeName, \'P\', \'Check startContainer\');\n
+\t\tequal(rng.endContainer.nodeName, \'P\', \'Check endContainer\');\n
+\t\tequal(rng.startOffset, 0, \'Check startOffset\');\n
+\t\tequal(rng.endOffset, 1, \'Check endOffset\');\n
+\t\tequal(Utils.cleanHtml(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase()), \'<img src="about:blank">\', \'Check contents\');\n
+\t\tok(editor.selection.getRng().item, \'Check if it\\\'s a control selection\');\n
+\t});\n
+\t\n
+\ttest("Multiple image selection", function(){\n
+\t\texpect(6);\n
+\t\t\n
+\t\teditor.setContent(\'<p><img src="about:blank" /><img src="about:blank" /></p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStartBefore(editor.dom.select(\'img\')[0]);\n
+\t\trng.setEndAfter(editor.dom.select(\'img\')[1]);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(1);\n
+\t\tequal(rng.startContainer.nodeName, \'P\');\n
+\t\tequal(rng.endContainer.nodeName, \'P\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t\tequal(rng.endOffset, 2);\n
+\t\tequal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), \'<img src="about:blank"><img src="about:blank">\');\n
+\t\tok(editor.selection.getRng().parentElement, \'Is text selection\');\n
+\t});\n
+\t\n
+\ttest("Text node selection", function(){\n
+\t\texpect(5);\n
+\t\t\n
+\t\teditor.setContent(\'<p>1234</p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild.firstChild, 1);\n
+\t\trng.setEnd(editor.getBody().firstChild.firstChild, 3);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(1);\n
+\t\tequal(rng.startContainer.nodeName, \'#text\');\n
+\t\tequal(rng.endContainer.nodeName, \'#text\');\n
+\t\tequal(rng.startOffset, 1);\n
+\t\tequal(rng.endOffset, 3);\n
+\t\tequal(editor.dom.getOuterHTML(rng.cloneContents()), \'23\');\n
+\t});\n
+\t\n
+\ttest("Text node selection between two elements", function(){\n
+\t\texpect(5);\n
+\t\t\n
+\t\teditor.setContent(\'<p>1234</p><p>abcd</p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild.firstChild, 1);\n
+\t\trng.setEnd(editor.getBody().childNodes[1].firstChild, 3);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(1);\n
+\t\tequal(rng.startContainer.nodeName, \'#text\');\n
+\t\tequal(rng.endContainer.nodeName, \'#text\');\n
+\t\tequal(rng.startOffset, 1);\n
+\t\tequal(rng.endOffset, 3);\n
+\t\tequal(editor.dom.getOuterHTML(rng.cloneContents()).replace(/[\\r\\n]/g, \'\').toLowerCase(), \'<p>234</p><p>abc</p>\');\n
+\t\t\n
+\t\teditor.setContent(\'<p>1</p><p>1234</p><p>abcd</p><p>2</p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t});\n
+\t\n
+\ttest("Mixed selection start at element end at text", function(){\n
+\t\texpect(5);\n
+\t\t\n
+\t\teditor.setContent(\'<p><img src="about:blank" />text</p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStartBefore(editor.dom.select(\'img\')[0]);\n
+\t\trng.setEnd(editor.getBody().firstChild.lastChild, 3);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(1);\n
+\t\tequal(rng.startContainer.nodeName, \'P\');\n
+\t\tequal(rng.endContainer.nodeName, \'#text\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t\tequal(rng.endOffset, 3);\n
+\t\tequal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), \'<img src="about:blank">tex\');\n
+\t});\n
+\t\n
+\ttest("Mixed selection start at text end at element", function(){\n
+\t\texpect(5);\n
+\t\t\n
+\t\teditor.setContent(\'<p>text<img src="about:blank" /></p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild.firstChild, 1);\n
+\t\trng.setEndAfter(editor.getBody().firstChild.lastChild);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(1);\n
+\t\t\n
+\t\tequal(rng.startContainer.nodeName, \'#text\');\n
+\t\tequal(rng.startOffset, 1);\n
+\t\t\n
+\t\tequal(rng.endContainer.nodeName, \'P\');\n
+\t\tequal(rng.endOffset, 2);\n
+\t\t\n
+\t\tequal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), \'ext<img src="about:blank">\');\n
+\t});\n
+\t\n
+\ttest("Caret position before image", function(){\n
+\t\texpect(4);\n
+\t\t\n
+\t\teditor.setContent(\'<p><img src="about:blank" /><img src="about:blank" /></p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStartBefore(editor.dom.select(\'img\')[0]);\n
+\t\trng.setEndBefore(editor.dom.select(\'img\')[0]);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(1);\n
+\t\tequal(rng.startContainer.nodeName, \'P\');\n
+\t\tequal(rng.endContainer.nodeName, \'P\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t\tequal(rng.endOffset, 0);\n
+\t});\n
+\t\n
+\ttest("Caret position between images", function(){\n
+\t\texpect(4);\n
+\t\t\n
+\t\teditor.setContent(\'<p><img src="about:blank" /><img src="about:blank" /></p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStartAfter(editor.dom.select(\'img\')[0]);\n
+\t\trng.setEndAfter(editor.dom.select(\'img\')[0]);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(1);\n
+\t\tequal(rng.startContainer.nodeName, \'P\');\n
+\t\tequal(rng.endContainer.nodeName, \'P\');\n
+\t\tequal(rng.startOffset, 1);\n
+\t\tequal(rng.endOffset, 1);\n
+\t});\n
+\t\n
+\ttest("Caret position after image", function(){\n
+\t\texpect(4);\n
+\t\t\n
+\t\teditor.setContent(\'<p><img src="about:blank" /><img src="about:blank" /></p>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStartAfter(editor.dom.select(\'img\')[1]);\n
+\t\trng.setEndAfter(editor.dom.select(\'img\')[1]);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(1);\n
+\t\tequal(rng.startContainer.nodeName, \'P\');\n
+\t\tequal(rng.endContainer.nodeName, \'P\');\n
+\t\tequal(rng.startOffset, 2);\n
+\t\tequal(rng.endOffset, 2);\n
+\t});\n
+\t\n
+\ttest("Selection of empty text element", function(){\n
+\t\texpect(6);\n
+\t\t\n
+\t\teditor.setContent(\'<div></div>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody(), 0);\n
+\t\trng.setEnd(editor.getBody(), 1);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'BODY\');\n
+\t\tequal(rng.endContainer.nodeName, \'BODY\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t\tequal(rng.endOffset, 1);\n
+\t\tequal(rng.startContainer.childNodes[0].innerHTML, \'\');\n
+\t\tequal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), \'<div></div>\');\n
+\t});\n
+\n
+\ttest("Selection of empty text element with caret inside", function(){\n
+\t\texpect(6);\n
+\t\t\n
+\t\teditor.setContent(\'<div></div>\', {\n
+\t\t\tformat: \'raw\'\n
+\t\t});\n
+\t\t\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild, 0);\n
+\t\trng.setEnd(editor.getBody().firstChild, 0);\n
+\t\teditor.selection.setRng(rng);\n
+\t\t\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'DIV\');\n
+\t\tequal(rng.endContainer.nodeName, \'DIV\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t\tequal(rng.endOffset, 0);\n
+\t\tequal(rng.startContainer.innerHTML, \'\');\n
+\t\tequal(editor.dom.getOuterHTML(rng.cloneContents()).toLowerCase(), \'\');\n
+\t});\n
+\n
+\t/*test("Caret position before table", function() {\n
+\t\tvar table, rng;\n
+\n
+\t\teditor.focus();\n
+\t\teditor.setContent(\'<p>Before</p><table id="table" border="1"><tr><td>Cell 1</td><td>Cell 2</td></tr><tr><td>Cell 3</td><td>Cell 4</td></tr></table><p>After</p>\');\n
+\n
+\t\ttable = editor.dom.get(\'table\');\n
+\t\trng = editor.selection.getRng();\n
+\t\trng.moveToElementText(table);\n
+\t\trng.move(\'character\', -1);\n
+\t\trng.select();\n
+\n
+\t\trng = editor.selection.getRng(1);\n
+\t\tequal(rng.startContainer.nodeName, \'BODY\');\n
+\t\tequal(rng.startOffset, 1);\n
+\t\tequal(rng.endContainer.nodeName, \'BODY\');\n
+\t\tequal(rng.endOffset, 1);\n
+\t});*/\n
+\n
+\ttest("Selection end within empty element", function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.focus();\n
+\t\teditor.getBody().innerHTML = \'<p>123</p><p></p>\';\n
+\n
+\t\trng = editor.execCommand(\'SelectAll\');\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'#text\');\n
+\t\tequal(rng.startOffset, 0);\n
+\t\tequal(rng.endContainer.nodeName, \'BODY\');\n
+\t\tequal(rng.endOffset, 2);\n
+\t});\n
+\n
+\ttest("Selection after paragraph", function() {\n
+\t\tvar rng;\n
+\n
+\t\teditor.focus();\n
+\t\teditor.getBody().innerHTML = \'<p>123</p><p>abcd</p>\';\n
+\n
+\t\trng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild, 1);\n
+\t\trng.setEnd(editor.getBody().firstChild, 1);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\trng = editor.selection.getRng(true);\n
+\t\tok(rng.startContainer == rng.endContainer);\n
+\t\tequal(rng.startContainer.nodeName, \'#text\');\n
+\t\tequal(rng.startOffset, 3);\n
+\t\tequal(rng.endContainer.nodeName, \'#text\');\n
+\t\tequal(rng.endOffset, 3);\n
+\t});\n
+\n
+\ttest("Selection of text outside of a block element", function() {\n
+\t\tvar r;\n
+\t\t\n
+\t\teditor.settings.forced_root_block = \'\';\n
+\t\teditor.focus();\n
+\t\teditor.getBody().innerHTML = \'<ul><li>Item</li></ul>Text\';\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody().lastChild, 2);\n
+\t\tr.setEnd(editor.getBody().lastChild, 2);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody().lastChild, "Start container is text node.");\n
+\t\tequal(r.endContainer, editor.getBody().lastChild, "End container is text node.");\n
+\t\tequal(r.startOffset, 2);\n
+\t\tequal(r.endOffset, 2);\n
+\n
+\t\tequal(editor.selection.getStart(), editor.getBody(), "Selection start is body.");\n
+\t\tdeepEqual(editor.selection.getSelectedBlocks(), [], "No blocks selected.");\n
+\t});\n
+\n
+\ttest("Resizable element text selection", function() {\n
+\t\tvar r;\n
+\n
+\t\teditor.getBody().innerHTML = \'<div style="width: 100px; height:100px;"><table><tr><td>.</td></tr></table>abc</div>\';\n
+\t\teditor.focus();\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody().firstChild.lastChild, 1);\n
+\t\tr.setEnd(editor.getBody().firstChild.lastChild, 2);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody().firstChild.lastChild, "Start container is text node.");\n
+\t\tequal(r.endContainer, editor.getBody().firstChild.lastChild, "End container is text node.");\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endOffset, 2);\n
+\t});\n
+\n
+\ttest("Resizable element before table selection", function() {\n
+\t\tvar r;\n
+\n
+\t\teditor.getBody().innerHTML = \'<div style="width: 100px; height:100px;"><table><tr><td>.</td></tr></table></div>\';\n
+\t\teditor.focus();\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody().firstChild, 0);\n
+\t\tr.setEnd(editor.getBody().firstChild, 0);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody().firstChild, "Start container is div node.");\n
+\t\tequal(r.endContainer, editor.getBody().firstChild, "End container is div node.");\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endOffset, 0);\n
+\t});\n
+\n
+\ttest("Fragmented text nodes after element", function() {\n
+\t\tvar r;\n
+\n
+\t\teditor.getBody().innerHTML = \'<b>x</b>\';\n
+\t\teditor.getBody().appendChild(editor.getDoc().createTextNode(\'1\'));\n
+\t\teditor.getBody().appendChild(editor.getDoc().createTextNode(\'23\'));\n
+\t\teditor.getBody().appendChild(editor.getDoc().createTextNode(\'456\'));\n
+\t\teditor.getBody().appendChild(editor.getDoc().createTextNode(\'7890\'));\n
+\t\teditor.focus();\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody().lastChild, 1);\n
+\t\tr.setEnd(editor.getBody().lastChild, 1);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody().lastChild, "Start container is last text node.");\n
+\t\tequal(r.endContainer, editor.getBody().lastChild, "End container is last text node.");\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endOffset, 1);\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody().childNodes[2], 2);\n
+\t\tr.setEnd(editor.getBody().childNodes[2], 2);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node.");\n
+\t\tequal(r.endContainer, editor.getBody().childNodes[2], "End container is second text node.");\n
+\t\tequal(r.startOffset, 2);\n
+\t\tequal(r.endOffset, 2);\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody().childNodes[3], 0);\n
+\t\tr.setEnd(editor.getBody().childNodes[3], 1);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node (lean left).");\n
+\t\tequal(r.endContainer, editor.getBody().childNodes[3], "End container is third text node.");\n
+\t\tequal(r.startOffset, 2);\n
+\t\tequal(r.endOffset, 1);\n
+\t});\n
+\n
+\ttest("Fragmented text nodes before element", function() {\n
+\t\tvar r;\n
+\n
+\t\teditor.getBody().innerHTML = \'\';\n
+\t\teditor.getBody().appendChild(editor.getDoc().createTextNode(\'1\'));\n
+\t\teditor.getBody().appendChild(editor.getDoc().createTextNode(\'23\'));\n
+\t\teditor.getBody().appendChild(editor.getDoc().createTextNode(\'456\'));\n
+\t\teditor.getBody().appendChild(editor.getDoc().createTextNode(\'7890\'));\n
+\t\teditor.getBody().appendChild(editor.dom.create(\'b\', null, \'x\'));\n
+\t\teditor.focus();\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody().childNodes[3], 1);\n
+\t\tr.setEnd(editor.getBody().childNodes[3], 1);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody().childNodes[3], "Start container is last text node.");\n
+\t\tequal(r.endContainer, editor.getBody().childNodes[3], "End container is last text node.");\n
+\t\tequal(r.startContainer.nodeValue, \'7890\');\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endOffset, 1);\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody().childNodes[1], 2);\n
+\t\tr.setEnd(editor.getBody().childNodes[1], 2);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody().childNodes[2], "Start container is second text node. (lean right)");\n
+\t\tequal(r.endContainer, editor.getBody().childNodes[2], "End container is second text node.");\n
+\t\tequal(r.startContainer.nodeValue, \'456\');\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endOffset, 0);\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody().childNodes[1], 0);\n
+\t\tr.setEnd(editor.getBody().childNodes[1], 1);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody().childNodes[1], "Start container is second text node.");\n
+\t\tequal(r.endContainer, editor.getBody().childNodes[1], "End container is third text node.");\n
+\t\tequal(r.startContainer.nodeValue, \'23\');\n
+\t\tequal(r.endContainer.nodeValue, \'23\');\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endOffset, 1);\n
+\t});\n
+\n
+\ttest("Non contentEditable elements", function() {\n
+\t\tvar r;\n
+\n
+\t\teditor.getBody().innerHTML = \'<span contentEditable="false">a</span><span contentEditable="false">a</span><span contentEditable="false">a</span>\';\n
+\t\teditor.focus();\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody(), 0);\n
+\t\tr.setEnd(editor.getBody(), 0);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody(), "Start container is before first nonEditable.");\n
+\t\tequal(r.endContainer, editor.getBody(), "End container is before  first nonEditable.");\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endOffset, 0);\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody(), 0);\n
+\t\tr.setEnd(editor.getBody(), 1);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody(), "Start container before first nonEditable.");\n
+\t\tequal(r.endContainer, editor.getBody(), "End container is after first nonEditable.");\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endOffset, 1);\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody(), 0);\n
+\t\tr.setEnd(editor.getBody(), 2);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody(), "Start container before first nonEditable.");\n
+\t\tequal(r.endContainer, editor.getBody(), "End container is after second nonEditable.");\n
+\t\tequal(r.startOffset, 0);\n
+\t\tequal(r.endOffset, 2);\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody(), 1);\n
+\t\tr.setEnd(editor.getBody(), 1);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody(), "Start container is before second nonEditable.");\n
+\t\tequal(r.endContainer, editor.getBody(), "End container is div before second nonEditable.");\n
+\t\tequal(r.startOffset, 1);\n
+\t\tequal(r.endOffset, 1);\n
+\n
+\t\tr = editor.dom.createRng();\n
+\t\tr.setStart(editor.getBody(), 2);\n
+\t\tr.setEnd(editor.getBody(), 2);\n
+\t\teditor.selection.setRng(r);\n
+\n
+\t\tr = editor.selection.getRng(true);\n
+\t\tequal(r.startContainer, editor.getBody(), "Start container is after last nonEditable.");\n
+\t\tequal(r.endContainer, editor.getBody(), "End container is after last nonEditable.");\n
+\t\tequal(r.startOffset, 2);\n
+\t\tequal(r.endOffset, 2);\n
+\t});\n
+} else {\n
+\ttest("Skipped ie_selection tests as not running in IE.", function() {\n
+\t\tok(true, "Dummy assert");\n
+\t});\n
+}\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17652</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>TridentSelection.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

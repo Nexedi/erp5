@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268655.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Path.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// Path\n
+\n
+.@{prefix}-path {\n
+\t.inline-block();\n
+\tpadding: 8px;\n
+\twhite-space: normal;\n
+}\n
+\n
+.@{prefix}-path .@{prefix}-txt {\n
+\tdisplay: inline-block;\n
+\tpadding-right: 3px;\n
+}\n
+\n
+.@{prefix}-path .@{prefix}-path-body {\n
+\tdisplay: inline-block;\n
+}\n
+\n
+.@{prefix}-path-item {\n
+\t.inline-block();\n
+\tcursor: pointer;\n
+\tcolor: @path-text;\n
+}\n
+\n
+.@{prefix}-path-item:hover {\n
+\ttext-decoration: underline;\n
+}\n
+\n
+.@{prefix}-path-item:focus {\n
+\tbackground: @path-bg-focus;\n
+\tcolor: @path-text-focus;\n
+}\n
+\n
+.@{prefix}-path .@{prefix}-divider {\n
+\tdisplay: inline;\n
+}\n
+\n
+.@{prefix}-disabled .@{prefix}-path-item {\n
+\tcolor: @text-disabled;\n
+}\n
+\n
+// RTL\n
+\n
+.@{prefix}-rtl .@{prefix}-path {\n
+\tdirection: rtl;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>650</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Path.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

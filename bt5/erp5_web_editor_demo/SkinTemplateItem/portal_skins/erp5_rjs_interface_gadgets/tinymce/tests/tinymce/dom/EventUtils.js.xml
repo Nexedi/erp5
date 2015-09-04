@@ -1,0 +1,487 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268235.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EventUtils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var eventUtils = tinymce.dom.Event;\n
+\n
+module("tinymce.dom.Event", {\n
+\tsetupModule: function() {\n
+\t\tdocument.getElementById(\'view\').innerHTML = (\n
+\t\t\t\'<div id="content" tabindex="0">\' +\n
+\t\t\t\'<div id="inner" tabindex="0"></div>\' +\n
+\t\t\t\'</div>\'\n
+\t\t);\n
+\t},\n
+\n
+\tteardown: function() {\n
+\t\teventUtils.clean(window);\n
+\t}\n
+});\n
+\n
+test("unbind all", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'click\', function() {\n
+\t\tresult.click = true;\n
+\t});\n
+\n
+\teventUtils.bind(window, \'keydown\', function() {\n
+\t\tresult.keydown1 = true;\n
+\t});\n
+\n
+\teventUtils.bind(window, \'keydown\', function() {\n
+\t\tresult.keydown2 = true;\n
+\t});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(window, \'click\');\n
+\teventUtils.fire(window, \'keydown\');\n
+\tdeepEqual(result, {click: true, keydown1: true, keydown2: true});\n
+\n
+\teventUtils.unbind(window);\n
+\tresult = {};\n
+\teventUtils.fire(window, \'click\');\n
+\teventUtils.fire(window, \'keydown\');\n
+\tdeepEqual(result, {});\n
+});\n
+\n
+test("unbind event", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'click\', function() {\n
+\t\tresult.click = true;\n
+\t});\n
+\n
+\teventUtils.bind(window, \'keydown\', function() {\n
+\t\tresult.keydown1 = true;\n
+\t});\n
+\n
+\teventUtils.bind(window, \'keydown\', function() {\n
+\t\tresult.keydown2 = true;\n
+\t});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(window, \'click\');\n
+\teventUtils.fire(window, \'keydown\');\n
+\tdeepEqual(result, {click: true, keydown1: true, keydown2: true});\n
+\n
+\teventUtils.unbind(window, \'click\');\n
+\tresult = {};\n
+\teventUtils.fire(window, \'click\');\n
+\teventUtils.fire(window, \'keydown\');\n
+\tdeepEqual(result, {keydown1: true, keydown2: true});\n
+});\n
+\n
+test("unbind event non existing", function() {\n
+\teventUtils.unbind(window, \'noevent\');\n
+\tok(true, "No exception");\n
+});\n
+\n
+test("unbind callback", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'click\', function() {\n
+\t\tresult.click = true;\n
+\t});\n
+\n
+\teventUtils.bind(window, \'keydown\', function() {\n
+\t\tresult.keydown1 = true;\n
+\t});\n
+\n
+\tfunction callback2() {\n
+\t\tresult.keydown2 = true;\n
+\t}\n
+\n
+\teventUtils.bind(window, \'keydown\', callback2);\n
+\n
+\tresult = {};\n
+\teventUtils.fire(window, \'click\');\n
+\teventUtils.fire(window, \'keydown\');\n
+\tdeepEqual(result, {click: true, keydown1: true, keydown2: true});\n
+\n
+\teventUtils.unbind(window, \'keydown\', callback2);\n
+\tresult = {};\n
+\teventUtils.fire(window, \'click\');\n
+\teventUtils.fire(window, \'keydown\');\n
+\tdeepEqual(result, {click: true, keydown1: true});\n
+});\n
+\n
+test("unbind multiple", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'mouseup mousedown click\', function(e) {\n
+\t\tresult[e.type] = true;\n
+\t});\n
+\n
+\teventUtils.unbind(window, \'mouseup mousedown\');\n
+\n
+\tresult = {};\n
+\teventUtils.fire(window, \'mouseup\');\n
+\teventUtils.fire(window, \'mousedown\');\n
+\teventUtils.fire(window, \'click\');\n
+\tdeepEqual(result, {click: true});\n
+});\n
+\n
+test("bind multiple", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'mouseup mousedown\', function(e) {\n
+\t\tresult[e.type] = true;\n
+\t});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(window, \'mouseup\');\n
+\teventUtils.fire(window, \'mousedown\');\n
+\teventUtils.fire(window, \'click\');\n
+\tdeepEqual(result, {mouseup: true, mousedown: true});\n
+});\n
+\n
+test("bind/fire bubbling", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'click\', function() {\n
+\t\tresult.window = true;\n
+\t});\n
+\n
+\teventUtils.bind(document, \'click\', function() {\n
+\t\tresult.document = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.body, \'click\', function() {\n
+\t\tresult.body = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.getElementById(\'content\'), \'click\', function() {\n
+\t\tresult.content = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.getElementById(\'inner\'), \'click\', function() {\n
+\t\tresult.inner = true;\n
+\t});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(window, \'click\');\n
+\tdeepEqual(result, {window: true});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(document, \'click\');\n
+\tdeepEqual(result, {document: true, window: true});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(document.body, \'click\');\n
+\tdeepEqual(result, {body: true, document: true, window: true});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(document.getElementById(\'content\'), \'click\');\n
+\tdeepEqual(result, {content: true, body: true, document: true, window: true});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(document.getElementById(\'inner\'), \'click\');\n
+\tdeepEqual(result, {inner: true, content: true, body: true, document: true, window: true});\n
+});\n
+\n
+test("bind/fire stopImmediatePropagation", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'click\', function() {\n
+\t\tresult.click1 = true;\n
+\t});\n
+\n
+\teventUtils.bind(window, \'click\', function(e) {\n
+\t\tresult.click2 = true;\n
+\t\te.stopImmediatePropagation();\n
+\t});\n
+\n
+\teventUtils.bind(window, \'click\', function() {\n
+\t\tresult.click3 = true;\n
+\t});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(window, \'click\');\n
+\tdeepEqual(result, {click1: true, click2: true});\n
+});\n
+\n
+test("bind/fire stopPropagation", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'click\', function() {\n
+\t\tresult.click1 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.body, \'click\', function() {\n
+\t\tresult.click2 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.getElementById(\'inner\'), \'click\', function(e) {\n
+\t\tresult.click3 = true;\n
+\t\te.stopPropagation();\n
+\t});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(document.getElementById(\'inner\'), \'click\');\n
+\tdeepEqual(result, {click3: true});\n
+});\n
+\n
+test("clean window", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'click\', function() {\n
+\t\tresult.click1 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.body, \'click\', function() {\n
+\t\tresult.click2 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.getElementById(\'content\'), \'click\', function() {\n
+\t\tresult.click3 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.getElementById(\'inner\'), \'click\', function() {\n
+\t\tresult.click4 = true;\n
+\t});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(document.getElementById(\'inner\'), \'click\');\n
+\tdeepEqual(result, {click1: true, click2: true, click3: true, click4: true});\n
+\n
+\teventUtils.clean(window);\n
+\tresult = {};\n
+\teventUtils.fire(document.getElementById(\'inner\'), \'click\');\n
+\tdeepEqual(result, {});\n
+});\n
+\n
+test("clean document", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'click\', function() {\n
+\t\tresult.click1 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document, \'click\', function() {\n
+\t\tresult.click2 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.body, \'click\', function() {\n
+\t\tresult.click3 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.getElementById(\'content\'), \'click\', function() {\n
+\t\tresult.click4 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.getElementById(\'inner\'), \'click\', function() {\n
+\t\tresult.click5 = true;\n
+\t});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(document.getElementById(\'inner\'), \'click\');\n
+\tdeepEqual(result, {click1: true, click2: true, click3: true, click4: true, click5: true});\n
+\n
+\teventUtils.clean(document);\n
+\tresult = {};\n
+\teventUtils.fire(document.getElementById(\'inner\'), \'click\');\n
+\tdeepEqual(result, {click1: true});\n
+});\n
+\n
+test("clean element", function() {\n
+\tvar result;\n
+\n
+\teventUtils.bind(window, \'click\', function() {\n
+\t\tresult.click1 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.body, \'click\', function() {\n
+\t\tresult.click2 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.getElementById(\'content\'), \'click\', function() {\n
+\t\tresult.click3 = true;\n
+\t});\n
+\n
+\teventUtils.bind(document.getElementById(\'inner\'), \'click\', function() {\n
+\t\tresult.click4 = true;\n
+\t});\n
+\n
+\tresult = {};\n
+\teventUtils.fire(document.getElementById(\'inner\'), \'click\');\n
+\tdeepEqual(result, {click1: true, click2: true, click3: true, click4: true});\n
+\n
+\teventUtils.clean(document.getElementById(\'content\'));\n
+\tresult = {};\n
+\teventUtils.fire(document.getElementById(\'inner\'), \'click\');\n
+\tdeepEqual(result, {click1: true, click2: true});\n
+});\n
+\n
+test("mouseenter/mouseleave bind/unbind", function() {\n
+\tvar result = {};\n
+\n
+\teventUtils.bind(document.body, \'mouseenter mouseleave\', function(e) {\n
+\t\tresult[e.type] = true;\n
+\t});\n
+\n
+\teventUtils.fire(document.body, \'mouseenter\');\n
+\teventUtils.fire(document.body, \'mouseleave\');\n
+\n
+\tdeepEqual(result, {mouseenter: true, mouseleave: true});\n
+\n
+\tresult = {};\n
+\teventUtils.clean(document.body);\n
+\teventUtils.fire(document.body, \'mouseenter\');\n
+\teventUtils.fire(document.body, \'mouseleave\');\n
+\tdeepEqual(result, {});\n
+});\n
+\n
+/*\n
+asyncTest("focusin/focusout bind/unbind", function() {\n
+\tvar result = {};\n
+\n
+\twindow.setTimeout(function() {\n
+\t\teventUtils.bind(document.body, \'focusin focusout\', function(e) {\n
+\t\t\t// IE will fire a focusout on the parent element if you focus an element within not a big deal so lets detect it in the test\n
+\t\t\tif (e.type == "focusout" && e.target.contains(document.activeElement)) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tresult[e.type] = result[e.type] ? ++result[e.type] : 1;\n
+\t\t});\n
+\n
+\t\tstart();\n
+\t\tdocument.getElementById(\'content\').focus();\n
+\t\tdocument.getElementById(\'inner\').focus();\n
+\n
+\t\tdeepEqual(result, {focusin: 2, focusout: 1});\n
+\t}, 0);\n
+});\n
+*/\n
+\n
+test("bind unbind fire clean on null", function() {\n
+\teventUtils.bind(null, \'click\', function() {});\n
+\teventUtils.unbind(null, \'click\', function() {});\n
+\teventUtils.fire(null, {});\n
+\teventUtils.clean(null);\n
+\tok(true, "No exception");\n
+});\n
+\n
+test("bind ready when page is loaded", function() {\n
+\tvar ready;\n
+\n
+\teventUtils.bind(window, \'ready\', function() {\n
+\t\tready = true;\n
+\t});\n
+\n
+\tok(eventUtils.domLoaded, "DomLoaded state true");\n
+\tok(ready, "Window is ready.");\n
+});\n
+\n
+test("event states when event object is fired twice", function() {\n
+\tvar result = {};\n
+\n
+\teventUtils.bind(window, \'keydown\', function(e) {result[e.type] = true;e.preventDefault();e.stopPropagation();});\n
+\teventUtils.bind(window, \'keyup\', function(e) {result[e.type] = true;e.stopImmediatePropagation();});\n
+\n
+\tvar event = {};\n
+\teventUtils.fire(window, \'keydown\', event);\n
+\teventUtils.fire(window, \'keyup\', event);\n
+\n
+\tok(event.isDefaultPrevented(), "Default is prevented.");\n
+\tok(event.isPropagationStopped(), "Propagation is stopped.");\n
+\tok(event.isImmediatePropagationStopped(), "Immediate propagation is stopped.");\n
+\n
+\tdeepEqual(result, {keydown: true, keyup: true});\n
+});\n
+\n
+test("unbind inside callback", function() {\n
+\tvar data;\n
+\n
+\tfunction append(value) {\n
+\t\treturn function() {\n
+\t\t\tdata += value;\n
+\t\t};\n
+\t}\n
+\n
+\tfunction callback() {\n
+\t\teventUtils.unbind(window, \'click\', callback);\n
+\t\tdata += \'b\';\n
+\t}\n
+\n
+\tdata = \'\';\n
+\teventUtils.bind(window, \'click\', append("a"));\n
+\teventUtils.bind(window, \'click\', callback);\n
+\teventUtils.bind(window, \'click\', append("c"));\n
+\n
+\teventUtils.fire(window, \'click\', {});\n
+\tequal(data, \'abc\');\n
+\n
+\tdata = \'\';\n
+\teventUtils.fire(window, \'click\', {});\n
+\tequal(data, \'ac\');\n
+});\n
+\n
+test("ready/DOMContentLoaded (domLoaded = true)", function() {\n
+\tvar evt;\n
+\n
+\teventUtils.bind(window, "ready", function(e) {evt = e;});\n
+\tequal(evt.type, "ready");\n
+});\n
+\n
+test("ready/DOMContentLoaded (document.readyState check)", function() {\n
+\tvar evt;\n
+\n
+\ttry {\n
+\t\tdocument.readyState = "loading";\n
+\t} catch (e) {\n
+\t\tok(true, "IE doesn\'t allow us to set document.readyState");\n
+\t\treturn;\n
+\t}\n
+\n
+\teventUtils.domLoaded = false;\n
+\tdocument.readyState = "loading";\n
+\teventUtils.bind(window, "ready", function(e) {evt = e;});\n
+\tok(typeof(evt) !== "undefined");\n
+\n
+\teventUtils.domLoaded = false;\n
+\tdocument.readyState = "complete";\n
+\teventUtils.bind(window, "ready", function(e) {evt = e;});\n
+\tequal(evt.type, "ready");\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10746</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EventUtils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

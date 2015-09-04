@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268696.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FloatPanel.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿// FloatPanel\n
+\n
+.@{prefix}-floatpanel {\n
+\tposition: absolute;\n
+\t.box-shadow(@floatpanel-box-shadow);\n
+}\n
+\n
+.@{prefix}-floatpanel.@{prefix}-fixed {\n
+\tposition: fixed;\n
+}\n
+\n
+// Popover panel\n
+\n
+.@{prefix}-floatpanel .@{prefix}-arrow,\n
+.@{prefix}-floatpanel .@{prefix}-arrow:after {\n
+\tposition: absolute;\n
+\tdisplay: block;\n
+\twidth: 0;\n
+\theight: 0;\n
+\tborder-color: transparent;\n
+\tborder-style: solid;\n
+}\n
+\n
+.@{prefix}-floatpanel .@{prefix}-arrow {\n
+\tborder-width: @popover-arrow-outer-width;\n
+}\n
+\n
+.@{prefix}-floatpanel .@{prefix}-arrow:after {\n
+\tborder-width: @popover-arrow-width;\n
+\tcontent: "";\n
+}\n
+\n
+.@{prefix}-floatpanel.@{prefix}-popover {\n
+\t.reset-gradient();\n
+\t.border-radius(6px);\n
+\t.box-shadow(@floatpanel-box-shadow);\n
+\ttop: 0;\n
+\tleft: 0;\n
+\tbackground: @popover-bg;\n
+\tborder: 1px solid @panel-border;\n
+\tborder: 1px solid @popover-arrow-outer;\n
+\n
+\t&.@{prefix}-bottom {\n
+\t\tmargin-top: @popover-arrow-width;\n
+\t\t*margin-top: 0;\n
+\n
+\t\t& > .@{prefix}-arrow {\n
+\t\t\tleft: 50%;\n
+\t\t\tmargin-left: -@popover-arrow-outer-width;\n
+\t\t\tborder-top-width: 0;\n
+\t\t\tborder-bottom-color: @panel-border;\n
+\t\t\tborder-bottom-color: @popover-arrow-outer;\n
+\t\t\ttop: -@popover-arrow-outer-width;\n
+\n
+\t\t\t&:after {\n
+\t\t\t\ttop: 1px;\n
+\t\t\t\tmargin-left: -@popover-arrow-width;\n
+\t\t\t\tborder-top-width: 0;\n
+\t\t\t\tborder-bottom-color: @popover-arrow;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t&.@{prefix}-start { margin-left: -22px; }\n
+\t\t&.@{prefix}-start > .@{prefix}-arrow { left: 20px; }\n
+\n
+\t\t&.@{prefix}-end { margin-left: 22px; }\n
+\t\t&.@{prefix}-end > .@{prefix}-arrow { right: 10px; left: auto; }\n
+\t}\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1477</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FloatPanel.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

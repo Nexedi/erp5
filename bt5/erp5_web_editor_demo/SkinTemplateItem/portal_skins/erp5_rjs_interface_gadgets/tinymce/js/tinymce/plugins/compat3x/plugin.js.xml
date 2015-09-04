@@ -1,0 +1,341 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268417.12</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true, console:true */\n
+/*eslint no-console:0, new-cap:0 */\n
+\n
+/**\n
+ * This plugin adds missing events form the 4.x API back. Not every event is\n
+ * properly supported but most things should work.\n
+ *\n
+ * Unsupported things:\n
+ *  - No editor.onEvent\n
+ *  - Can\'t cancel execCommands with beforeExecCommand\n
+ */\n
+(function(tinymce) {\n
+\tvar reported;\n
+\n
+\tfunction noop() {\n
+\t}\n
+\n
+\tfunction log(apiCall) {\n
+\t\tif (!reported && window && window.console) {\n
+\t\t\treported = true;\n
+\t\t\tconsole.log("Deprecated TinyMCE API call: " + apiCall);\n
+\t\t}\n
+\t}\n
+\n
+\tfunction Dispatcher(target, newEventName, argsMap, defaultScope) {\n
+\t\ttarget = target || this;\n
+\n
+\t\tif (!newEventName) {\n
+\t\t\tthis.add = this.addToTop = this.remove = this.dispatch = noop;\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tthis.add = function(callback, scope, prepend) {\n
+\t\t\tlog(\'<target>.on\' + newEventName + ".add(..)");\n
+\n
+\t\t\t// Convert callback({arg1:x, arg2:x}) -> callback(arg1, arg2)\n
+\t\t\tfunction patchedEventCallback(e) {\n
+\t\t\t\tvar callbackArgs = [];\n
+\n
+\t\t\t\tif (typeof argsMap == "string") {\n
+\t\t\t\t\targsMap = argsMap.split(" ");\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (argsMap && typeof argsMap != "function") {\n
+\t\t\t\t\tfor (var i = 0; i < argsMap.length; i++) {\n
+\t\t\t\t\t\tcallbackArgs.push(e[argsMap[i]]);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (typeof argsMap == "function") {\n
+\t\t\t\t\tcallbackArgs = argsMap(newEventName, e, target);\n
+\t\t\t\t\tif (!callbackArgs) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!argsMap) {\n
+\t\t\t\t\tcallbackArgs = [e];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcallbackArgs.unshift(defaultScope || target);\n
+\n
+\t\t\t\tif (callback.apply(scope || defaultScope || target, callbackArgs) === false) {\n
+\t\t\t\t\te.stopImmediatePropagation();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\ttarget.on(newEventName, patchedEventCallback, prepend);\n
+\n
+\t\t\treturn patchedEventCallback;\n
+\t\t};\n
+\n
+\t\tthis.addToTop = function(callback, scope) {\n
+\t\t\tthis.add(callback, scope, true);\n
+\t\t};\n
+\n
+\t\tthis.remove = function(callback) {\n
+\t\t\treturn target.off(newEventName, callback);\n
+\t\t};\n
+\n
+\t\tthis.dispatch = function() {\n
+\t\t\ttarget.fire(newEventName);\n
+\n
+\t\t\treturn true;\n
+\t\t};\n
+\t}\n
+\n
+\ttinymce.util.Dispatcher = Dispatcher;\n
+\ttinymce.onBeforeUnload = new Dispatcher(tinymce, "BeforeUnload");\n
+\ttinymce.onAddEditor = new Dispatcher(tinymce, "AddEditor", "editor");\n
+\ttinymce.onRemoveEditor = new Dispatcher(tinymce, "RemoveEditor", "editor");\n
+\n
+\ttinymce.util.Cookie = {\n
+\t\tget: noop, getHash: noop, remove: noop, set: noop, setHash: noop\n
+\t};\n
+\n
+\tfunction patchEditor(editor) {\n
+\t\tfunction patchEditorEvents(oldEventNames, argsMap) {\n
+\t\t\ttinymce.each(oldEventNames.split(" "), function(oldName) {\n
+\t\t\t\teditor["on" + oldName] = new Dispatcher(editor, oldName, argsMap);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction convertUndoEventArgs(type, event, target) {\n
+\t\t\treturn [\n
+\t\t\t\tevent.level,\n
+\t\t\t\ttarget\n
+\t\t\t];\n
+\t\t}\n
+\n
+\t\tfunction filterSelectionEvents(needsSelection) {\n
+\t\t\treturn function(type, e) {\n
+\t\t\t\tif ((!e.selection && !needsSelection) || e.selection == needsSelection) {\n
+\t\t\t\t\treturn [e];\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tif (editor.controlManager) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tfunction cmNoop() {\n
+\t\t\tvar obj = {}, methods = \'add addMenu addSeparator collapse createMenu destroy displayColor expand focus \' +\n
+\t\t\t\t\'getLength hasMenus hideMenu isActive isCollapsed isDisabled isRendered isSelected mark \' +\n
+\t\t\t\t\'postRender remove removeAll renderHTML renderMenu renderNode renderTo select selectByIndex \' +\n
+\t\t\t\t\'setActive setAriaProperty setColor setDisabled setSelected setState showMenu update\';\n
+\n
+\t\t\tlog(\'editor.controlManager.*\');\n
+\n
+\t\t\tfunction _noop() {\n
+\t\t\t\treturn cmNoop();\n
+\t\t\t}\n
+\n
+\t\t\ttinymce.each(methods.split(\' \'), function(method) {\n
+\t\t\t\tobj[method] = _noop;\n
+\t\t\t});\n
+\n
+\t\t\treturn obj;\n
+\t\t}\n
+\n
+\t\teditor.controlManager = {\n
+\t\t\tbuttons: {},\n
+\n
+\t\t\tsetDisabled: function(name, state) {\n
+\t\t\t\tlog("controlManager.setDisabled(..)");\n
+\n
+\t\t\t\tif (this.buttons[name]) {\n
+\t\t\t\t\tthis.buttons[name].disabled(state);\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tsetActive: function(name, state) {\n
+\t\t\t\tlog("controlManager.setActive(..)");\n
+\n
+\t\t\t\tif (this.buttons[name]) {\n
+\t\t\t\t\tthis.buttons[name].active(state);\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tonAdd: new Dispatcher(),\n
+\t\t\tonPostRender: new Dispatcher(),\n
+\n
+\t\t\tadd: function(obj) {\n
+\t\t\t\treturn obj;\n
+\t\t\t},\n
+\t\t\tcreateButton: cmNoop,\n
+\t\t\tcreateColorSplitButton: cmNoop,\n
+\t\t\tcreateControl: cmNoop,\n
+\t\t\tcreateDropMenu: cmNoop,\n
+\t\t\tcreateListBox: cmNoop,\n
+\t\t\tcreateMenuButton: cmNoop,\n
+\t\t\tcreateSeparator: cmNoop,\n
+\t\t\tcreateSplitButton: cmNoop,\n
+\t\t\tcreateToolbar: cmNoop,\n
+\t\t\tcreateToolbarGroup: cmNoop,\n
+\t\t\tdestroy: noop,\n
+\t\t\tget: noop,\n
+\t\t\tsetControlType: cmNoop\n
+\t\t};\n
+\n
+\t\tpatchEditorEvents("PreInit BeforeRenderUI PostRender Load Init Remove Activate Deactivate", "editor");\n
+\t\tpatchEditorEvents("Click MouseUp MouseDown DblClick KeyDown KeyUp KeyPress ContextMenu Paste Submit Reset");\n
+\t\tpatchEditorEvents("BeforeExecCommand ExecCommand", "command ui value args"); // args.terminate not supported\n
+\t\tpatchEditorEvents("PreProcess PostProcess LoadContent SaveContent Change");\n
+\t\tpatchEditorEvents("BeforeSetContent BeforeGetContent SetContent GetContent", filterSelectionEvents(false));\n
+\t\tpatchEditorEvents("SetProgressState", "state time");\n
+\t\tpatchEditorEvents("VisualAid", "element hasVisual");\n
+\t\tpatchEditorEvents("Undo Redo", convertUndoEventArgs);\n
+\n
+\t\tpatchEditorEvents("NodeChange", function(type, e) {\n
+\t\t\treturn [\n
+\t\t\t\teditor.controlManager,\n
+\t\t\t\te.element,\n
+\t\t\t\teditor.selection.isCollapsed(),\n
+\t\t\t\te\n
+\t\t\t];\n
+\t\t});\n
+\n
+\t\tvar originalAddButton = editor.addButton;\n
+\t\teditor.addButton = function(name, settings) {\n
+\t\t\tvar originalOnPostRender;\n
+\n
+\t\t\tfunction patchedPostRender() {\n
+\t\t\t\teditor.controlManager.buttons[name] = this;\n
+\n
+\t\t\t\tif (originalOnPostRender) {\n
+\t\t\t\t\treturn originalOnPostRender.call(this);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfor (var key in settings) {\n
+\t\t\t\tif (key.toLowerCase() === "onpostrender") {\n
+\t\t\t\t\toriginalOnPostRender = settings[key];\n
+\t\t\t\t\tsettings.onPostRender = patchedPostRender;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (!originalOnPostRender) {\n
+\t\t\t\tsettings.onPostRender = patchedPostRender;\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.title) {\n
+\t\t\t\tsettings.title = tinymce.i18n.translate((editor.settings.language || "en") + "." + settings.title);\n
+\t\t\t}\n
+\n
+\t\t\treturn originalAddButton.call(this, name, settings);\n
+\t\t};\n
+\n
+\t\teditor.on(\'init\', function() {\n
+\t\t\tvar undoManager = editor.undoManager, selection = editor.selection;\n
+\n
+\t\t\tundoManager.onUndo = new Dispatcher(editor, "Undo", convertUndoEventArgs, null, undoManager);\n
+\t\t\tundoManager.onRedo = new Dispatcher(editor, "Redo", convertUndoEventArgs, null, undoManager);\n
+\t\t\tundoManager.onBeforeAdd = new Dispatcher(editor, "BeforeAddUndo", null, undoManager);\n
+\t\t\tundoManager.onAdd = new Dispatcher(editor, "AddUndo", null, undoManager);\n
+\n
+\t\t\tselection.onBeforeGetContent = new Dispatcher(editor, "BeforeGetContent", filterSelectionEvents(true), selection);\n
+\t\t\tselection.onGetContent = new Dispatcher(editor, "GetContent", filterSelectionEvents(true), selection);\n
+\t\t\tselection.onBeforeSetContent = new Dispatcher(editor, "BeforeSetContent", filterSelectionEvents(true), selection);\n
+\t\t\tselection.onSetContent = new Dispatcher(editor, "SetContent", filterSelectionEvents(true), selection);\n
+\t\t});\n
+\n
+\t\teditor.on(\'BeforeRenderUI\', function() {\n
+\t\t\tvar windowManager = editor.windowManager;\n
+\n
+\t\t\twindowManager.onOpen = new Dispatcher();\n
+\t\t\twindowManager.onClose = new Dispatcher();\n
+\t\t\twindowManager.createInstance = function(className, a, b, c, d, e) {\n
+\t\t\t\tlog("windowManager.createInstance(..)");\n
+\n
+\t\t\t\tvar constr = tinymce.resolve(className);\n
+\t\t\t\treturn new constr(a, b, c, d, e);\n
+\t\t\t};\n
+\t\t});\n
+\t}\n
+\n
+\ttinymce.on(\'SetupEditor\', patchEditor);\n
+\ttinymce.PluginManager.add("compat3x", patchEditor);\n
+\n
+\ttinymce.addI18n = function(prefix, o) {\n
+\t\tvar I18n = tinymce.util.I18n, each = tinymce.each;\n
+\n
+\t\tif (typeof prefix == "string" && prefix.indexOf(\'.\') === -1) {\n
+\t\t\tI18n.add(prefix, o);\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tif (!tinymce.is(prefix, \'string\')) {\n
+\t\t\teach(prefix, function(o, lc) {\n
+\t\t\t\teach(o, function(o, g) {\n
+\t\t\t\t\teach(o, function(o, k) {\n
+\t\t\t\t\t\tif (g === \'common\') {\n
+\t\t\t\t\t\t\tI18n.data[lc + \'.\' + k] = o;\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tI18n.data[lc + \'.\' + g + \'.\' + k] = o;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t} else {\n
+\t\t\teach(o, function(o, k) {\n
+\t\t\t\tI18n.data[prefix + \'.\' + k] = o;\n
+\t\t\t});\n
+\t\t}\n
+\t};\n
+})(tinymce);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8143</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

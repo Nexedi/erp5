@@ -1,0 +1,586 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268194.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DomParser.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tmodule("tinymce.html.DomParser");\n
+\n
+\tvar schema = new tinymce.html.Schema({valid_elements: \'*[class|title]\'});\n
+\tvar serializer = new tinymce.html.Serializer({}, schema);\n
+\tvar parser, root;\n
+\n
+\tfunction countNodes(node, counter) {\n
+\t\tvar sibling;\n
+\n
+\t\tif (!counter) {\n
+\t\t\tcounter = {};\n
+\t\t}\n
+\n
+\t\tif (node.name in counter) {\n
+\t\t\tcounter[node.name]++;\n
+\t\t} else {\n
+\t\t\tcounter[node.name] = 1;\n
+\t\t}\n
+\n
+\t\tfor (sibling = node.firstChild; sibling; sibling = sibling.next) {\n
+\t\t\tcountNodes(sibling, counter);\n
+\t\t}\n
+\n
+\t\treturn counter;\n
+\t}\n
+\n
+\tschema.addValidChildren(\'+body[style]\');\n
+\n
+\ttest(\'Parse element\', function() {\n
+\t\tvar parser, root;\n
+\n
+\t\texpect(7);\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<B title="title" class="class">test</B>\');\n
+\t\tequal(serializer.serialize(root), \'<b class="class" title="title">test</b>\', \'Inline element\');\n
+\t\tequal(root.firstChild.type, 1, \'Element type\');\n
+\t\tequal(root.firstChild.name, \'b\', \'Element name\');\n
+\t\tdeepEqual(root.firstChild.attributes, [{name: \'title\', value: \'title\'}, {name: \'class\', value: \'class\'}], \'Element attributes\');\n
+\t\tdeepEqual(countNodes(root), {body:1, b:1, \'#text\':1}, \'Element attributes (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'  \\t\\r\\n  <SCRIPT>  \\t\\r\\n   a < b > \\t\\r\\n   </S\' + \'CRIPT>   \\t\\r\\n  \');\n
+\t\tequal(serializer.serialize(root), \'<script>  \\t\\r\\n   a < b > \\t\\r\\n   </s\' + \'cript>\', \'Retain code inside SCRIPT\');\n
+\t\tdeepEqual(countNodes(root), {body:1, script:1, \'#text\':1}, \'Retain code inside SCRIPT (count)\');\n
+\t});\n
+\n
+\ttest(\'Whitespace\', function() {\n
+\t\texpect(12);\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'  \\t\\r\\n  <B>  \\t\\r\\n   test  \\t\\r\\n   </B>   \\t\\r\\n  \');\n
+\t\tequal(serializer.serialize(root), \' <b> test </b> \', \'Redundant whitespace (inline element)\');\n
+\t\tdeepEqual(countNodes(root), {body:1, b:1, \'#text\':3}, \'Redundant whitespace (inline element) (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'  \\t\\r\\n  <P>  \\t\\r\\n   test  \\t\\r\\n   </P>   \\t\\r\\n  \');\n
+\t\tequal(serializer.serialize(root), \'<p>test</p>\', \'Redundant whitespace (block element)\');\n
+\t\tdeepEqual(countNodes(root), {body:1, p:1, \'#text\':1}, \'Redundant whitespace (block element) (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'  \\t\\r\\n  <SCRIPT>  \\t\\r\\n   test  \\t\\r\\n   </S\' + \'CRIPT>   \\t\\r\\n  \');\n
+\t\tequal(serializer.serialize(root), \'<script>  \\t\\r\\n   test  \\t\\r\\n   </s\' + \'cript>\', \'Whitespace around and inside SCRIPT\');\n
+\t\tdeepEqual(countNodes(root), {body:1, script:1, \'#text\':1}, \'Whitespace around and inside SCRIPT (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'  \\t\\r\\n  <STYLE>  \\t\\r\\n   test  \\t\\r\\n   </STYLE>   \\t\\r\\n  \');\n
+\t\tequal(serializer.serialize(root), \'<style>  \\t\\r\\n   test  \\t\\r\\n   </style>\', \'Whitespace around and inside STYLE\');\n
+\t\tdeepEqual(countNodes(root), {body:1, style:1, \'#text\':1}, \'Whitespace around and inside STYLE (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<ul>\\n<li>Item 1\\n<ul>\\n<li>\\n \\t Indented \\t \\n</li>\\n</ul>\\n</li>\\n</ul>\\n\');\n
+\t\tequal(serializer.serialize(root), \'<ul><li>Item 1<ul><li>Indented</li></ul></li></ul>\', \'Whitespace around and inside blocks (ul/li)\');\n
+\t\tdeepEqual(countNodes(root), {body:1, li:2, ul:2, \'#text\':2}, \'Whitespace around and inside blocks (ul/li) (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : \'hr,br\'}));\n
+\t\troot = parser.parse(\'\\n<hr />\\n<br />\\n<div>\\n<hr />\\n<br />\\n<img src="file.gif" data-mce-src="file.gif" />\\n<hr />\\n<br />\\n</div>\\n<hr />\\n<br />\\n\');\n
+\t\tequal(serializer.serialize(root), \'<div><img src="file.gif" data-mce-src="file.gif" alt="" /></div>\', \'Whitespace where SaxParser will produce multiple whitespace nodes\');\n
+\t\tdeepEqual(countNodes(root), {body:1, div:1, img:1}, \'Whitespace where SaxParser will produce multiple whitespace nodes (count)\');\n
+\t});\n
+\n
+\ttest(\'Whitespace before/after invalid element with text in block\', function() {\n
+\t\tparser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : \'em\'}));\n
+\t\troot = parser.parse(\'<p>a <em>b</em> c</p>\');\n
+\t\tequal(serializer.serialize(root), \'<p>a b c</p>\');\n
+\t});\n
+\n
+\ttest(\'Whitespace before/after invalid element whitespace element in block\', function() {\n
+\t\tparser = new tinymce.html.DomParser({}, new tinymce.html.Schema({invalid_elements : \'span\'}));\n
+\t\troot = parser.parse(\'<p> <span></span> </p>\');\n
+\t\tequal(serializer.serialize(root), \'<p>\\u00a0</p>\');\n
+\t});\n
+\n
+\ttest(\'Whitespace preserved in PRE\', function() {\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'  \\t\\r\\n  <PRE>  \\t\\r\\n   test  \\t\\r\\n   </PRE>   \\t\\r\\n  \');\n
+\t\tequal(serializer.serialize(root), \'<pre>  \\t\\r\\n   test  \\t\\r\\n   </pre>\', \'Whitespace around and inside PRE\');\n
+\t\tdeepEqual(countNodes(root), {body:1, pre:1, \'#text\':1}, \'Whitespace around and inside PRE (count)\');\n
+\t});\n
+\n
+\ttest(\'Whitespace preserved in SPAN inside PRE\', function() {\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'  \\t\\r\\n  <PRE>  \\t\\r\\n  <span>    test    </span> \\t\\r\\n   </PRE>   \\t\\r\\n  \');\n
+\t\tequal(serializer.serialize(root), \'<pre>  \\t\\r\\n  <span>    test    </span> \\t\\r\\n   </pre>\', \'Whitespace around and inside PRE\');\n
+\t\tdeepEqual(countNodes(root), {body:1, pre:1, span:1, \'#text\':3}, \'Whitespace around and inside PRE (count)\');\n
+\t});\n
+\n
+\ttest(\'Parse invalid contents\', function() {\n
+\t\tvar parser, root;\n
+\n
+\t\texpect(20);\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p class="a"><p class="b">123</p></p>\');\n
+\t\tequal(serializer.serialize(root), \'<p class="b">123</p>\', \'P in P, no nodes before/after\');\n
+\t\tdeepEqual(countNodes(root), {body:1, p:1, \'#text\':1}, \'P in P, no nodes before/after (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p class="a">a<p class="b">b</p><p class="c">c</p>d</p>\');\n
+\t\tequal(serializer.serialize(root), \'<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="a">d</p>\', \'Two P in P, no nodes before/after\');\n
+\t\tdeepEqual(countNodes(root), {body: 1, p:4, \'#text\': 4}, \'Two P in P, no nodes before/after (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p class="a">abc<p class="b">def</p></p>\');\n
+\t\tequal(serializer.serialize(root), \'<p class="a">abc</p><p class="b">def</p>\', \'P in P with nodes before\');\n
+\t\tdeepEqual(countNodes(root), {body: 1, p:2, \'#text\': 2}, \'P in P with nodes before (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p class="a"><p class="b">abc</p>def</p>\');\n
+\t\tequal(serializer.serialize(root), \'<p class="b">abc</p><p class="a">def</p>\', \'P in P with nodes after\');\n
+\t\tdeepEqual(countNodes(root), {body: 1, p:2, \'#text\': 2}, \'P in P with nodes after (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p class="a"><p class="b">abc</p><br></p>\');\n
+\t\tequal(serializer.serialize(root), \'<p class="b">abc</p>\', \'P in P with BR after\');\n
+\t\tdeepEqual(countNodes(root), {body: 1, p:1, \'#text\': 1}, \'P in P with BR after (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p class="a">a<strong>b<span>c<em>d<p class="b">e</p>f</em>g</span>h</strong>i</p>\');\n
+\t\tequal(serializer.serialize(root), \'<p class="a">a<strong>b<span>c<em>d</em></span></strong></p><p class="b">e</p><p class="a"><strong><span><em>f</em>g</span>h</strong>i</p>\', \'P in P wrapped in inline elements\');\n
+\t\tdeepEqual(countNodes(root), {"body":1, "p":3, "#text":9, "strong":2, "span":2, "em": 2}, \'P in P wrapped in inline elements (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p class="a">a<p class="b">b<p class="c">c</p>d</p>e</p>\');\n
+\t\tequal(serializer.serialize(root), \'<p class="a">a</p><p class="b">b</p><p class="c">c</p><p class="b">d</p><p class="a">e</p>\', \'P in P in P with text before/after\');\n
+\t\tdeepEqual(countNodes(root), {body: 1, p:5, \'#text\': 5}, \'P in P in P with text before/after (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p>a<ul><li>b</li><li>c</li></ul>d</p>\');\n
+\t\tequal(serializer.serialize(root), \'<p>a</p><ul><li>b</li><li>c</li></ul><p>d</p>\', \'UL inside P\');\n
+\t\tdeepEqual(countNodes(root), {body: 1, p:2, ul:1, li:2, \'#text\': 4}, \'UL inside P (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<table><tr><td><tr>a</tr></td></tr></table>\');\n
+\t\tequal(serializer.serialize(root), \'<table><tr><td>a</td></tr></table>\', \'TR inside TD\');\n
+\t\tdeepEqual(countNodes(root), {body: 1, table:1, tr:1, td:1, \'#text\': 1}, \'TR inside TD (count)\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: \'p,section,div\'}));\n
+\t\troot = parser.parse(\'<div><section><p>a</p></section></div>\');\n
+\t\tequal(serializer.serialize(root), \'<div><section><p>a</p></section></div>\', \'P inside SECTION\');\n
+\t\tdeepEqual(countNodes(root), {"body":1, "div":1, "section":1, "p":1, "#text":1}, \'P inside SECTION (count)\');\n
+\t});\n
+\n
+\ttest(\'Remove empty nodes\', function() {\n
+\t\tparser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: \'-p,-span[id]\'}));\n
+\t\troot = parser.parse(\'<p>a<span></span><span> </span><span id="x">b</span><span id="y"></span></p><p></p><p><span></span></p><p> </p>\');\n
+\t\tequal(serializer.serialize(root), \'<p>a <span id="x">b</span><span id="y"></span></p>\');\n
+\t});\n
+\n
+\ttest(\'addNodeFilter\', function() {\n
+\t\tvar parser, result;\n
+\n
+\t\texpect(7);\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\tparser.addNodeFilter(\'#comment\', function(nodes, name, args) {\n
+\t\t\tresult = {nodes : nodes, name : name, args : args};\n
+\t\t});\n
+\t\tparser.parse(\'text<!--text1-->text<!--text2-->\');\n
+\n
+\t\tdeepEqual(result.args, {}, \'Parser args\');\n
+\t\tequal(result.name, \'#comment\', \'Parser filter result name\');\n
+\t\tequal(result.nodes.length, 2, \'Parser filter result node\');\n
+\t\tequal(result.nodes[0].name, \'#comment\', \'Parser filter result node(0) name\');\n
+\t\tequal(result.nodes[0].value, \'text1\', \'Parser filter result node(0) value\');\n
+\t\tequal(result.nodes[1].name, \'#comment\', \'Parser filter result node(1) name\');\n
+\t\tequal(result.nodes[1].value, \'text2\', \'Parser filter result node(1) value\');\n
+\t});\n
+\n
+\ttest(\'addNodeFilter multiple names\', function() {\n
+\t\tvar parser, results = {};\n
+\n
+\t\texpect(14);\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\tparser.addNodeFilter(\'#comment,#text\', function(nodes, name, args) {\n
+\t\t\tresults[name] = {nodes : nodes, name : name, args : args};\n
+\t\t});\n
+\t\tparser.parse(\'text1<!--text1-->text2<!--text2-->\');\n
+\n
+\t\tdeepEqual(results[\'#comment\'].args, {}, \'Parser args\');\n
+\t\tequal(results[\'#comment\'].name, \'#comment\', \'Parser filter result name\');\n
+\t\tequal(results[\'#comment\'].nodes.length, 2, \'Parser filter result node\');\n
+\t\tequal(results[\'#comment\'].nodes[0].name, \'#comment\', \'Parser filter result node(0) name\');\n
+\t\tequal(results[\'#comment\'].nodes[0].value, \'text1\', \'Parser filter result node(0) value\');\n
+\t\tequal(results[\'#comment\'].nodes[1].name, \'#comment\', \'Parser filter result node(1) name\');\n
+\t\tequal(results[\'#comment\'].nodes[1].value, \'text2\', \'Parser filter result node(1) value\');\n
+\t\tdeepEqual(results[\'#text\'].args, {}, \'Parser args\');\n
+\t\tequal(results[\'#text\'].name, \'#text\', \'Parser filter result name\');\n
+\t\tequal(results[\'#text\'].nodes.length, 2, \'Parser filter result node\');\n
+\t\tequal(results[\'#text\'].nodes[0].name, \'#text\', \'Parser filter result node(0) name\');\n
+\t\tequal(results[\'#text\'].nodes[0].value, \'text1\', \'Parser filter result node(0) value\');\n
+\t\tequal(results[\'#text\'].nodes[1].name, \'#text\', \'Parser filter result node(1) name\');\n
+\t\tequal(results[\'#text\'].nodes[1].value, \'text2\', \'Parser filter result node(1) value\');\n
+\t});\n
+\n
+\ttest(\'addNodeFilter with parser args\', function() {\n
+\t\tvar parser, result;\n
+\n
+\t\texpect(1);\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\tparser.addNodeFilter(\'#comment\', function(nodes, name, args) {\n
+\t\t\tresult = {nodes : nodes, name : name, args : args};\n
+\t\t});\n
+\t\tparser.parse(\'text<!--text1-->text<!--text2-->\', {value: 1});\n
+\n
+\t\tdeepEqual(result.args, {value: 1}, \'Parser args\');\n
+\t});\n
+\n
+\ttest(\'addAttributeFilter\', function() {\n
+\t\tvar parser, result;\n
+\n
+\t\texpect(7);\n
+\n
+\t\tparser = new tinymce.html.DomParser({});\n
+\t\tparser.addAttributeFilter(\'src\', function(nodes, name, args) {\n
+\t\t\tresult = {nodes : nodes, name : name, args : args};\n
+\t\t});\n
+\t\tparser.parse(\'<b>a<img src="1.gif" />b<img src="1.gif" />c</b>\');\n
+\n
+\t\tdeepEqual(result.args, {}, \'Parser args\');\n
+\t\tequal(result.name, \'src\', \'Parser filter result name\');\n
+\t\tequal(result.nodes.length, 2, \'Parser filter result node\');\n
+\t\tequal(result.nodes[0].name, \'img\', \'Parser filter result node(0) name\');\n
+\t\tequal(result.nodes[0].attr(\'src\'), \'1.gif\', \'Parser filter result node(0) attr\');\n
+\t\tequal(result.nodes[1].name, \'img\', \'Parser filter result node(1) name\');\n
+\t\tequal(result.nodes[1].attr(\'src\'), \'1.gif\', \'Parser filter result node(1) attr\');\n
+\t});\n
+\n
+\ttest(\'addAttributeFilter multiple\', function() {\n
+\t\tvar parser, results = {};\n
+\n
+\t\texpect(14);\n
+\n
+\t\tparser = new tinymce.html.DomParser({});\n
+\t\tparser.addAttributeFilter(\'src,href\', function(nodes, name, args) {\n
+\t\t\tresults[name] = {nodes : nodes, name : name, args : args};\n
+\t\t});\n
+\t\tparser.parse(\'<b><a href="1.gif">a</a><img src="1.gif" />b<img src="1.gif" /><a href="2.gif">c</a></b>\');\n
+\n
+\t\tdeepEqual(results.src.args, {}, \'Parser args\');\n
+\t\tequal(results.src.name, \'src\', \'Parser filter result name\');\n
+\t\tequal(results.src.nodes.length, 2, \'Parser filter result node\');\n
+\t\tequal(results.src.nodes[0].name, \'img\', \'Parser filter result node(0) name\');\n
+\t\tequal(results.src.nodes[0].attr(\'src\'), \'1.gif\', \'Parser filter result node(0) attr\');\n
+\t\tequal(results.src.nodes[1].name, \'img\', \'Parser filter result node(1) name\');\n
+\t\tequal(results.src.nodes[1].attr(\'src\'), \'1.gif\', \'Parser filter result node(1) attr\');\n
+\t\tdeepEqual(results.href.args, {}, \'Parser args\');\n
+\t\tequal(results.href.name, \'href\', \'Parser filter result name\');\n
+\t\tequal(results.href.nodes.length, 2, \'Parser filter result node\');\n
+\t\tequal(results.href.nodes[0].name, \'a\', \'Parser filter result node(0) name\');\n
+\t\tequal(results.href.nodes[0].attr(\'href\'), \'1.gif\', \'Parser filter result node(0) attr\');\n
+\t\tequal(results.href.nodes[1].name, \'a\', \'Parser filter result node(1) name\');\n
+\t\tequal(results.href.nodes[1].attr(\'href\'), \'2.gif\', \'Parser filter result node(1) attr\');\n
+\t});\n
+\n
+\ttest(\'Fix orphan LI elements\', function() {\n
+\t\tvar parser;\n
+\n
+\t\texpect(3);\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<ul><li>a</li></ul><li>b</li>\');\n
+\t\tequal(serializer.serialize(root), \'<ul><li>a</li><li>b</li></ul>\', \'LI moved to previous sibling UL\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<li>a</li><ul><li>b</li></ul>\');\n
+\t\tequal(serializer.serialize(root), \'<ul><li>a</li><li>b</li></ul>\', \'LI moved to next sibling UL\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<li>a</li>\');\n
+\t\tequal(serializer.serialize(root), \'<ul><li>a</li></ul>\', \'LI wrapped in new UL\');\n
+\t});\n
+\n
+\ttest(\'Remove empty elements\', function() {\n
+\t\tvar parser, schema = new tinymce.html.Schema({valid_elements: \'span,-a,img\'});\n
+\n
+\t\texpect(3);\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<span></span><a href="#"></a>\');\n
+\t\tequal(serializer.serialize(root), \'<span></span>\', \'Remove empty a element\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: \'span,a[name],img\'}));\n
+\t\troot = parser.parse(\'<span></span><a name="anchor"></a>\');\n
+\t\tequal(serializer.serialize(root), \'<span></span><a name="anchor"></a>\', \'Leave a with name attribute\');\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, new tinymce.html.Schema({valid_elements: \'span,a[href],img[src]\'}));\n
+\t\troot = parser.parse(\'<span></span><a href="#"><img src="about:blank" /></a>\');\n
+\t\tequal(serializer.serialize(root), \'<span></span><a href="#"><img src="about:blank" /></a>\', \'Leave elements with img in it\');\n
+\t});\n
+\n
+\ttest(\'Self closing list elements\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\texpect(1);\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>\');\n
+\t\tequal(serializer.serialize(root), \'<ul><li>1</li><li><strong>2</strong></li><li><em><strong>3</strong></em></li></ul>\', \'Split out LI elements in LI elements.\');\n
+\t});\n
+\n
+\ttest(\'Remove redundant br elements\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\texpect(1);\n
+\n
+\t\tparser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);\n
+\t\troot = parser.parse(\n
+\t\t\t\'<p>a<br></p>\' +\n
+\t\t\t\'<p>a<br>b<br></p>\' +\n
+\t\t\t\'<p>a<br><br></p><p>a<br><span data-mce-type="bookmark"></span><br></p>\' +\n
+\t\t\t\'<p>a<span data-mce-type="bookmark"></span><br></p>\'\n
+\t\t);\n
+\t\tequal(serializer.serialize(root), \'<p>a</p><p>a<br />b</p><p>a<br /><br /></p><p>a<br /><br /></p><p>a</p>\', \'Remove traling br elements.\');\n
+\t});\n
+\n
+\ttest(\'Replace br with nbsp when wrapped in two inline elements and one block\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\tparser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);\n
+\t\troot = parser.parse(\'<p><strong><em><br /></em></strong></p>\');\n
+\t\tequal(serializer.serialize(root), \'<p><strong><em>\\u00a0</em></strong></p>\');\n
+\t});\n
+\n
+\ttest(\'Replace br with nbsp when wrapped in an inline element and placed in the root\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\tparser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);\n
+\t\troot = parser.parse(\'<strong><br /></strong>\');\n
+\t\tequal(serializer.serialize(root), \'<strong>\\u00a0</strong>\');\n
+\t});\n
+\n
+\ttest(\'Don\\\'t replace br inside root element when there is multiple brs\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\tparser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);\n
+\t\troot = parser.parse(\'<strong><br /><br /></strong>\');\n
+\t\tequal(serializer.serialize(root), \'<strong><br /><br /></strong>\');\n
+\t});\n
+\n
+\ttest(\'Don\\\'t replace br inside root element when there is siblings\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\tparser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);\n
+\t\troot = parser.parse(\'<strong><br /></strong><em>x</em>\');\n
+\t\tequal(serializer.serialize(root), \'<strong><br /></strong><em>x</em>\');\n
+\t});\n
+\n
+\ttest(\'Remove br in invalid parent bug\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema({valid_elements: \'br\'});\n
+\n
+\t\texpect(1);\n
+\n
+\t\tparser = new tinymce.html.DomParser({remove_trailing_brs : true}, schema);\n
+\t\troot = parser.parse(\'<br>\');\n
+\t\tequal(serializer.serialize(root), \'\', \'Remove traling br elements.\');\n
+\t});\n
+\n
+\ttest(\'Forced root blocks\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\texpect(1);\n
+\n
+\t\tparser = new tinymce.html.DomParser({forced_root_block : \'p\'}, schema);\n
+\t\troot = parser.parse(\n
+\t\t\t\'<!-- a -->\' +\n
+\t\t\t\'b\' +\n
+\t\t\t\'<b>c</b>\' +\n
+\t\t\t\'<p>d</p>\' +\n
+\t\t\t\'<p>e</p>\' +\n
+\t\t\t\'f\' +\n
+\t\t\t\'<b>g</b>\' +\n
+\t\t\t\'h\'\n
+\t\t);\n
+\t\tequal(serializer.serialize(root), \'<!-- a --><p>b<strong>c</strong></p><p>d</p><p>e</p><p>f<strong>g</strong>h</p>\', \'Mixed text nodes, inline elements and blocks.\');\n
+\t});\n
+\n
+\ttest(\'Forced root blocks attrs\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\texpect(1);\n
+\n
+\t\tparser = new tinymce.html.DomParser({forced_root_block: \'p\', forced_root_block_attrs: {"class": "class1"}}, schema);\n
+\t\troot = parser.parse(\n
+\t\t\t\'<!-- a -->\' +\n
+\t\t\t\'b\' +\n
+\t\t\t\'<b>c</b>\' +\n
+\t\t\t\'<p>d</p>\' +\n
+\t\t\t\'<p>e</p>\' +\n
+\t\t\t\'f\' +\n
+\t\t\t\'<b>g</b>\' +\n
+\t\t\t\'h\'\n
+\t\t);\n
+\t\tequal(serializer.serialize(root), \'<!-- a -->\' +\n
+\t\t\t\'<p class="class1">b<strong>c</strong></p>\' +\n
+\t\t\t\'<p>d</p>\' +\n
+\t\t\t\'<p>e</p>\' +\n
+\t\t\t\'<p class="class1">f<strong>g</strong>h</p>\',\n
+\t\t\'Mixed text nodes, inline elements and blocks.\');\n
+\t});\n
+\n
+\ttest(\'Parse contents with html4 anchors and allow_html_in_named_anchor: false\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\tparser = new tinymce.html.DomParser({allow_html_in_named_anchor : false}, schema);\n
+\t\troot = parser.parse(\'<a name="x">a</a><a href="x">x</a>\');\n
+\t\tequal(serializer.serialize(root), \'<a name="x"></a>a<a href="x">x</a>\');\n
+\t});\n
+\n
+\ttest(\'Parse contents with html5 anchors and allow_html_in_named_anchor: false\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema({schema: "html5"});\n
+\n
+\t\tparser = new tinymce.html.DomParser({allow_html_in_named_anchor : false}, schema);\n
+\t\troot = parser.parse(\'<a id="x">a</a><a href="x">x</a>\');\n
+\t\tequal(serializer.serialize(root), \'<a id="x"></a>a<a href="x">x</a>\');\n
+\t});\n
+\n
+\ttest(\'Parse contents with html4 anchors and allow_html_in_named_anchor: true\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\tparser = new tinymce.html.DomParser({allow_html_in_named_anchor : true}, schema);\n
+\t\troot = parser.parse(\'<a name="x">a</a><a href="x">x</a>\');\n
+\t\tequal(serializer.serialize(root), \'<a name="x">a</a><a href="x">x</a>\');\n
+\t});\n
+\n
+\ttest(\'Parse contents with html5 anchors and allow_html_in_named_anchor: true\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema({schema: "html5"});\n
+\n
+\t\tparser = new tinymce.html.DomParser({allow_html_in_named_anchor : true}, schema);\n
+\t\troot = parser.parse(\'<a id="x">a</a><a href="x">x</a>\');\n
+\t\tequal(serializer.serialize(root), \'<a id="x">a</a><a href="x">x</a>\');\n
+\t});\n
+\n
+\ttest(\'Parse contents with html5 self closing datalist options\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema({schema: "html5"});\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<datalist><option label="a1" value="b1"><option label="a2" value="b2"><option label="a3" value="b3"></datalist>\');\n
+\t\tequal(serializer.serialize(root), \'<datalist><option label="a1" value="b1"></option><option label="a2" value="b2"></option><option label="a3" value="b3"></option></datalist>\');\n
+\t});\n
+\n
+\ttest(\'Parse inline contents before block bug #5424\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema({schema: "html5"});\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<b>1</b> 2<p>3</p>\');\n
+\t\tequal(serializer.serialize(root), \'<b>1</b> 2<p>3</p>\');\n
+\t});\n
+\n
+\ttest(\'Invalid text blocks within a li\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema({schema: "html5", valid_children: \'-li[p]\'});\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<ul><li>1<p>2</p></li><li>a<p>b</p><p>c</p></li></ul>\');\n
+\t\tequal(serializer.serialize(root), \'<ul><li>12</li><li>ab</li><li>c</li></ul>\');\n
+\t});\n
+\n
+\ttest(\'Invalid inline element with space before\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p><span>1</span> <strong>2</strong></p>\');\n
+\t\tequal(serializer.serialize(root), \'<p>1 <strong>2</strong></p>\');\n
+\t});\n
+\n
+\ttest(\'Valid classes\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema({valid_classes: \'classA classB\'});\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p class="classA classB classC">a</p>\');\n
+\t\tequal(serializer.serialize(root), \'<p class="classA classB">a</p>\');\n
+\t});\n
+\n
+\ttest(\'Valid classes multiple elements\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema({valid_classes: {\'*\': \'classA classB\', \'strong\': \'classC\'}});\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<p class="classA classB classC"><strong class="classA classB classC classD">a</strong></p>\');\n
+\t\tequal(serializer.serialize(root), \'<p class="classA classB"><strong class="classA classB classC">a</strong></p>\');\n
+\t});\n
+\n
+\ttest(\'Remove empty list blocks\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'<ul><li></li></ul><ul><li> </li></ul>\');\n
+\t\tequal(serializer.serialize(root), \'\');\n
+\t});\n
+\n
+\ttest(\'Preserve space in inline span\', function() {\n
+\t\tvar parser, root, schema = new tinymce.html.Schema();\n
+\n
+\t\tparser = new tinymce.html.DomParser({}, schema);\n
+\t\troot = parser.parse(\'a<span> </span>b\');\n
+\t\tequal(serializer.serialize(root), \'a b\');\n
+\t});\n
+\n
+\ttest(\'Bug #7543 removes whitespace between bogus elements before a block\', function() {\n
+\t\tvar serializer = new tinymce.html.Serializer();\n
+\n
+\t\tequal(\n
+\t\t\tserializer.serialize(new tinymce.html.DomParser().parse(\n
+\t\t\t\t\'<div><b data-mce-bogus="1">a</b> <b data-mce-bogus="1">b</b><p>c</p></div>\')\n
+\t\t\t),\n
+\t\t\t\'<div>a b<p>c</p></div>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest(\'Bug #7582 removes whitespace between bogus elements before a block\', function() {\n
+\t\tvar serializer = new tinymce.html.Serializer();\n
+\n
+\t\tequal(\n
+\t\t\tserializer.serialize(new tinymce.html.DomParser().parse(\n
+\t\t\t\t\'<div>1 <span data-mce-bogus="1">2</span><div>3</div></div>\')\n
+\t\t\t),\n
+\t\t\t\'<div>1 2<div>3</div></div>\'\n
+\t\t);\n
+\t});\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>24838</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DomParser.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

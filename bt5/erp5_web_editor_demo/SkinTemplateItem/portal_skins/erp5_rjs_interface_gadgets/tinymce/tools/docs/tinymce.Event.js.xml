@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268111.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tinymce.Event.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * This is the base class for all TinyMCE events.\n
+ *\n
+ * @class tinymce.Event\n
+ */\n
+\n
+/**\n
+ * Prevents the default action of an event to be executed.\n
+ *\n
+ * @method preventDefault\n
+ */\n
+\n
+/**\n
+ * Prevents the default action of an event to be executed.\n
+ *\n
+ * @method preventDefault\n
+ */\n
+\n
+/**\n
+ * Stops the event from propagating up to listeners on parent objects.\n
+ *\n
+ * @method stopPropagation\n
+ */\n
+\n
+/**\n
+ * Prevents the event from propagating to listeners on the same object.\n
+ *\n
+ * @method stopImmediatePropagation\n
+ */\n
+\n
+/**\n
+ * Returns true/false if the default action is to be prevented or not.\n
+ *\n
+ * @method isDefaultPrevented\n
+ * @return {Boolean} True/false if the event is to be execured or not.\n
+ */\n
+\n
+/**\n
+ * Returns true/false if the event propagation is stopped or not.\n
+ *\n
+ * @method isPropagationStopped\n
+ * @return {Boolean} True/false if the event propagation is stopped or not.\n
+ */\n
+\n
+/**\n
+ * Returns true/false if the event immediate propagation is stopped or not.\n
+ *\n
+ * @method isImmediatePropagationStopped\n
+ * @return {Boolean} True/false if the event immediate propagation is stopped or not.\n
+ */\n
+\n
+/**\n
+ * The event type name for example "click".\n
+ *\n
+ * @property {String} type\n
+ */\n
+\n
+/**\n
+ * @include tinymce.ContentEvent.js\n
+ * @include tinymce.CommandEvent.js\n
+ * @include tinymce.ProgressStateEvent.js\n
+ * @include tinymce.FocusEvent.js\n
+ * @include tinymce.ResizeEvent.js\n
+ */\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1369</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>tinymce.Event.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

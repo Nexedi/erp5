@@ -1,0 +1,650 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268137.24</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>table.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tmodule("tinymce.plugins.Table", {\n
+\t\tsetupModule: function() {\n
+\t\t\tQUnit.stop();\n
+\n
+\t\t\ttinymce.init({\n
+\t\t\t\tselector: "textarea",\n
+\t\t\t\tadd_unload_trigger: false,\n
+\t\t\t\tskin: false,\n
+\t\t\t\tindent: false,\n
+\t\t\t\tplugins: \'table\',\n
+\t\t\t\tvalid_styles: {\n
+\t\t\t\t\t\'*\' : \'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse\'\n
+\t\t\t\t},\n
+\t\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\t\twindow.editor = ed;\n
+\t\t\t\t\tQUnit.start();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\t\tteardown: function() {\n
+\t\t\tvar win = Utils.getFrontmostWindow();\n
+\n
+\t\t\tif (win) {\n
+\t\t\t\twin.close();\n
+\t\t\t}\n
+\n
+\t\t\tdelete editor.settings.table_advtab;\n
+\t\t\tdelete editor.settings.table_cell_advtab;\n
+\t\t\tdelete editor.settings.table_class_list;\n
+\t\t\tdelete editor.settings.table_cell_class_list;\n
+\t\t\tdelete editor.settings.table_row_class_list;\n
+\t\t\tdelete editor.settings.table_style_by_css;\n
+\t\t}\n
+\t});\n
+\n
+\tfunction fillAndSubmitWindowForm(data) {\n
+\t\tvar win = Utils.getFrontmostWindow();\n
+\n
+\t\twin.fromJSON(data);\n
+\t\twin.find(\'form\')[0].submit();\n
+\t\twin.close();\n
+\t}\n
+\n
+\tfunction cleanTableHtml(html) {\n
+\t\treturn Utils.cleanHtml(html).replace(/<p>(&nbsp;|<br[^>]+>)<\\/p>$/, \'\');\n
+\t}\n
+\n
+\ttest("Table properties dialog (get data from plain table)", function() {\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"align": "",\n
+\t\t\t"border": "",\n
+\t\t\t"caption": false,\n
+\t\t\t"cellpadding": "",\n
+\t\t\t"cellspacing": "",\n
+\t\t\t"height": "",\n
+\t\t\t"width": "",\n
+\t\t\t"backgroundColor": "",\n
+\t\t\t"borderColor": "",\n
+\t\t\t"style": ""\n
+\t\t});\n
+\t});\n
+\n
+\ttest("Table properties dialog (get/set data from/to plain table, no adv tab)", function() {\n
+\t\teditor.settings.table_advtab = false;\n
+\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"align": "",\n
+\t\t\t"border": "",\n
+\t\t\t"caption": false,\n
+\t\t\t"cellpadding": "",\n
+\t\t\t"cellspacing": "",\n
+\t\t\t"height": "",\n
+\t\t\t"width": ""\n
+\t\t});\n
+\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\twidth: "100",\n
+\t\t\theight: "101"\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table style="width: 100px; height: 101px;"><tbody><tr><td>x</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog (get/set data from/to plain table, class list)", function() {\n
+\t\teditor.settings.table_class_list = [{title: \'Class1\', value: \'class1\'}];\n
+\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"align": "",\n
+\t\t\t"border": "",\n
+\t\t\t"caption": false,\n
+\t\t\t"cellpadding": "",\n
+\t\t\t"cellspacing": "",\n
+\t\t\t"height": "",\n
+\t\t\t"width": "",\n
+\t\t\t"backgroundColor": "",\n
+\t\t\t"borderColor": "",\n
+\t\t\t"style": "",\n
+\t\t\t"class": ""\n
+\t\t});\n
+\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\twidth: "100",\n
+\t\t\theight: "101"\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table style="width: 100px; height: 101px;"><tbody><tr><td>x</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog (get data from full table)", function() {\n
+\t\teditor.setContent(\n
+\t\t\t\'<table style="width: 100px; height: 101px;" border="4" cellspacing="2" cellpadding="3">\' +\n
+\t\t\t\'<caption>&nbsp;</caption>\' +\n
+\t\t\t\'<tbody>\' +\n
+\t\t\t\'<tr>\' +\n
+\t\t\t\'<td>&nbsp;</td>\' +\n
+\t\t\t\'</tr>\' +\n
+\t\t\t\'</tbody>\' +\n
+\t\t\t\'</table>\'\n
+\t\t);\n
+\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"align": "",\n
+\t\t\t"border": "4",\n
+\t\t\t"caption": true,\n
+\t\t\t"cellpadding": "3",\n
+\t\t\t"cellspacing": "2",\n
+\t\t\t"height": "101",\n
+\t\t\t"width": "100",\n
+\t\t\t"backgroundColor": "",\n
+\t\t\t"borderColor": "",\n
+\t\t\t"style": "width: 100px; height: 101px;"\n
+\t\t});\n
+\t});\n
+\n
+\ttest("Table properties dialog (add caption)", function() {\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\tcaption: true\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table><caption>&nbsp;</caption><tbody><tr><td>x</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog (remove caption)", function() {\n
+\t\teditor.setContent(\'<table><caption>&nbsp;</caption><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\tcaption: false\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table><tbody><tr><td>x</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog (change size in pixels)", function() {\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\twidth: 100,\n
+\t\t\theight: 101\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table style="width: 100px; height: 101px;"><tbody><tr><td>x</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog (change size in %)", function() {\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\twidth: "100%",\n
+\t\t\theight: "101%"\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table style="width: 100%; height: 101%;"><tbody><tr><td>x</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog (change: border,cellpadding,cellspacing,align,backgroundColor,borderColor)", function() {\n
+\t\teditor.setContent(\'<table style="border-color: red; background-color: blue"><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\tborder: "1",\n
+\t\t\tcellpadding: "2",\n
+\t\t\tcellspacing: "3",\n
+\t\t\talign: "right"\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table style="float: right; border-color: red; background-color: blue;" border="1" cellspacing="3" cellpadding="2"><tbody><tr><td>x</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog css border", function() {\n
+\t\teditor.settings.table_style_by_css = true;\n
+\n
+\t\teditor.setContent(\'<table><tr><td>X</td><td>Z</td></tr></table>\');\n
+\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\tborder: "1px solid green"\n
+\t\t});\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table style=\\"border: 1px solid green;\\"><tbody><tr><td style=\\"border: 1px solid green;\\">x</td><td style=\\"border: 1px solid green;\\">z</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog css cell padding", function() {\n
+\t\teditor.settings.table_style_by_css = true;\n
+\n
+\t\teditor.setContent(\'<table><tr><td>X</td><td>Z</td></tr></table>\');\n
+\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\tcellpadding: "2"\n
+\t\t});\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table><tbody><tr><td style=\\"padding: 2px;\\">x</td><td style=\\"padding: 2px;\\">z</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog cell spacing", function() {\n
+\t\teditor.settings.table_style_by_css = true;\n
+\n
+\t\teditor.setContent(\'<table><tr><td>X</td><td>Z</td></tr></table>\');\n
+\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\tcellspacing: "3"\n
+\t\t});\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table style=\\"border-spacing: 3px;\\"><tbody><tr><td>x</td><td>z</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog border-color", function() {\n
+\t\teditor.settings.table_style_by_css = true;\n
+\n
+\t\teditor.setContent(\'<table><tr><td>X</td><td>Z</td></tr></table>\');\n
+\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\tborderColor: "green"\n
+\t\t});\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table style=\\"border-color: green;\\"><tbody><tr><td>x</td><td>z</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog css border, style", function() {\n
+\t\teditor.settings.table_style_by_css = true;\n
+\n
+\t\teditor.setContent(\'<table><tr><td>X</td><td>Z</td></tr></table>\');\n
+\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\tborder: "1px solid green",\n
+\t\t\tstyle: "border-collapse: collapse"\n
+\t\t});\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table style=\\"border: 1px solid green; border-collapse: collapse;\\"><tbody><tr><td style=\\"border: 1px solid green;\\">x</td><td style=\\"border: 1px solid green;\\">z</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table properties dialog (get cell padding from styled cells)", function() {\n
+\t\teditor.settings.table_style_by_css = true;\n
+\n
+\t\teditor.setContent(\'<table><tr><td style="padding: 5px">X</td></tr><tr><td style="padding: 5px">X</td></tr></table>\' +\n
+\t\t\t\'<table><tr><td style="padding: 15px">X</td></tr><tr><td style="padding: 15px">X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableProps\');\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t"align": "",\n
+\t\t"backgroundColor": "",\n
+\t\t"border": "",\n
+\t\t"borderColor": "",\n
+\t\t"caption": false,\n
+\t\t"cellpadding": "5px",\n
+\t\t"cellspacing": "",\n
+\t\t"height": "",\n
+\t\t"style": "",\n
+\t\t"width": ""\n
+\t\t});\n
+\t});\n
+\n
+\ttest("Table cell properties dialog (get data from plain cell)", function() {\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableCellProps\');\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"align": "",\n
+\t\t\t"valign": "",\n
+\t\t\t"height": "",\n
+\t\t\t"scope": "",\n
+\t\t\t"type": "td",\n
+\t\t\t"width": "",\n
+\t\t\t"backgroundColor": "",\n
+\t\t\t"borderColor": "",\n
+\t\t\t"style": ""\n
+\t\t});\n
+\t});\n
+\n
+\ttest("Table cell properties dialog (get/set data from/to plain cell, no adv tab)", function() {\n
+\t\teditor.settings.table_cell_advtab = false;\n
+\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableCellProps\');\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"align": "",\n
+\t\t\t"valign": "",\n
+\t\t\t"height": "",\n
+\t\t\t"scope": "",\n
+\t\t\t"type": "td",\n
+\t\t\t"width": ""\n
+\t\t});\n
+\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\twidth: 100,\n
+\t\t\theight: 101\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table><tbody><tr><td style="width: 100px; height: 101px;">x</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table cell properties dialog (get data from complex cell)", function() {\n
+\t\teditor.setContent(\'<table><tr><th style="text-align: right; vertical-align: top; width: 10px; height: 11px; border-color: red; background-color: blue" scope="row">X</th></tr></table>\');\n
+\t\tUtils.setSelection(\'th\', 0);\n
+\t\teditor.execCommand(\'mceTableCellProps\');\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"align": "right",\n
+\t\t\t"valign": "top",\n
+\t\t\t"height": "11",\n
+\t\t\t"scope": "row",\n
+\t\t\t"type": "th",\n
+\t\t\t"width": "10",\n
+\t\t\t"backgroundColor": "blue",\n
+\t\t\t"borderColor": "red",\n
+\t\t\t"style": "width: 10px; height: 11px; vertical-align: top; text-align: right; border-color: red; background-color: blue;"\n
+\t\t});\n
+\t});\n
+\n
+\ttest("Table cell properties dialog (update all)", function() {\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableCellProps\');\n
+\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\t"align": "right",\n
+\t\t\t"height": "11",\n
+\t\t\t"scope": "row",\n
+\t\t\t"type": "th",\n
+\t\t\t"width": "10"\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table><tbody><tr><th style="width: 10px; height: 11px; text-align: right;" scope="row">x</th></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Table row properties dialog (get data from plain cell)", function() {\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableRowProps\');\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"align": "",\n
+\t\t\t"height": "",\n
+\t\t\t"type": "tbody",\n
+\t\t\t"backgroundColor": "",\n
+\t\t\t"borderColor": "",\n
+\t\t\t"style": ""\n
+\t\t});\n
+\t});\n
+\n
+\ttest("Table row properties dialog (get data from complex row)", function() {\n
+\t\teditor.setContent(\'<table><thead><tr style="height: 10px; text-align: right; border-color: red; background-color: blue"><td>X</td></tr></thead></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableRowProps\');\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"align": "right",\n
+\t\t\t"height": "10",\n
+\t\t\t"type": "thead",\n
+\t\t\t"backgroundColor": "blue",\n
+\t\t\t"borderColor": "red",\n
+\t\t\t"style": "height: 10px; text-align: right; border-color: red; background-color: blue;"\n
+\t\t});\n
+\t});\n
+\n
+\ttest("Table row properties dialog (update all)", function() {\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableRowProps\');\n
+\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\t"align": "right",\n
+\t\t\t"height": "10",\n
+\t\t\t"type": "thead"\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table><thead><tr style="height: 10px; text-align: right;"><td>x</td></tr></thead></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("mceTableDelete command", function() {\n
+\t\teditor.setContent(\'<table><tr><td>X</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableDelete\');\n
+\t\tequal(cleanTableHtml(editor.getContent()), \'\');\n
+\t});\n
+\n
+\ttest("mceTableDeleteCol command", function() {\n
+\t\teditor.setContent(\'<table><tr><td>1</td><td>2</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableDeleteCol\');\n
+\t\tequal(cleanTableHtml(editor.getContent()), \'<table><tbody><tr><td>2</td></tr></tbody></table>\');\n
+\t});\n
+\n
+\ttest("mceTableDeleteRow command", function() {\n
+\t\teditor.setContent(\'<table><tr><td>1</td></tr><tr><td>2</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableDeleteRow\');\n
+\t\tequal(cleanTableHtml(editor.getContent()), \'<table><tbody><tr><td>2</td></tr></tbody></table>\');\n
+\t});\n
+\n
+\ttest("mceTableInsertColAfter command", function() {\n
+\t\teditor.setContent(\'<table><tr><td>1</td></tr><tr><td>2</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableInsertColAfter\');\n
+\t\tequal(cleanTableHtml(editor.getContent()), \'<table><tbody><tr><td>1</td><td>&nbsp;</td></tr><tr><td>2</td><td>&nbsp;</td></tr></tbody></table>\');\n
+\t});\n
+\n
+\ttest("mceTableInsertColBefore command", function() {\n
+\t\teditor.setContent(\'<table><tr><td>1</td></tr><tr><td>2</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableInsertColBefore\');\n
+\t\tequal(cleanTableHtml(editor.getContent()), \'<table><tbody><tr><td>&nbsp;</td><td>1</td></tr><tr><td>&nbsp;</td><td>2</td></tr></tbody></table>\');\n
+\t});\n
+\n
+\ttest("mceTableInsertRowAfter command", function() {\n
+\t\teditor.setContent(\'<table><tr><td>1</td><td>2</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableInsertRowAfter\');\n
+\t\tequal(cleanTableHtml(editor.getContent()), \'<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>\');\n
+\t});\n
+\n
+\ttest("mceTableInsertRowBefore command", function() {\n
+\t\teditor.setContent(\'<table><tr><td>1</td><td>2</td></tr></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableInsertRowBefore\');\n
+\t\tequal(cleanTableHtml(editor.getContent()), \'<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>1</td><td>2</td></tr></tbody></table>\');\n
+\t});\n
+\n
+\ttest("mceTableMergeCells command with cell selection", function() {\n
+\t\teditor.getBody().innerHTML = \'<table><tr><td class="mce-item-selected">1</td><td class="mce-item-selected">2</td></tr></table>\';\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableMergeCells\');\n
+\t\tequal(cleanTableHtml(editor.getContent()), \'<table><tbody><tr><td colspan="2">12</td></tr></tbody></table>\');\n
+\t});\n
+\n
+\ttest("mceTableSplitCells command", function() {\n
+\t\teditor.setContent(\'<table><tbody><tr><td colspan="2">12</td></tr></tbody></table>\');\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.execCommand(\'mceTableSplitCells\');\n
+\t\tequal(\n
+\t\t\tcleanTableHtml(editor.getContent()),\n
+\t\t\t\'<table><tbody><tr><td>12</td><td>&nbsp;</td></tr></tbody></table>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Tab key navigation", function() {\n
+\t\teditor.setContent(\'<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></tbody></table><p>x</p>\');\n
+\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.fire(\'keydown\', {keyCode: 9});\n
+\t\tequal(editor.selection.getStart().innerHTML, \'A2\');\n
+\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.fire(\'keydown\', {keyCode: 9, shiftKey: true});\n
+\t\tequal(editor.selection.getStart().innerHTML, \'A1\');\n
+\n
+\t\tUtils.setSelection(\'td:nth-child(2)\', 0);\n
+\t\teditor.fire(\'keydown\', {keyCode: 9, shiftKey: true});\n
+\t\tequal(editor.selection.getStart().innerHTML, \'A1\');\n
+\n
+\t\tUtils.setSelection(\'tr:nth-child(2) td:nth-child(2)\', 0);\n
+\t\teditor.fire(\'keydown\', {keyCode: 9});\n
+\t\tequal(editor.selection.getStart(true).nodeName, \'TD\');\n
+\t\tequal(\n
+\t\t\teditor.getContent(),\n
+\t\t\t\'<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Delete selected cells", function() {\n
+\t\teditor.getBody().innerHTML = (\n
+\t\t\t\'<table><tbody>\' +\n
+\t\t\t\'<tr><td class="mce-item-selected">A1</td><td>A2</td></tr>\' +\n
+\t\t\t\'<tr><td class="mce-item-selected">B1</td><td>B2</td></tr>\' +\n
+\t\t\t\'</tbody></table>\' +\n
+\t\t\t\'<p>x</p>\'\n
+\t\t);\n
+\n
+\t\tUtils.setSelection(\'td\', 0, \'td\', 2);\n
+\t\teditor.fire(\'keydown\', {keyCode: 46});\n
+\n
+\t\tequal(\n
+\t\t\teditor.getContent(),\n
+\t\t\t\'<table><tbody><tr><td>&nbsp;</td><td>A2</td></tr><tr><td>&nbsp;</td><td>B2</td></tr></tbody></table><p>x</p>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Delete all cells", function() {\n
+\t\teditor.getBody().innerHTML = (\n
+\t\t\t\'<table><tbody>\' +\n
+\t\t\t\'<tr><td class="mce-item-selected">A1</td><td class="mce-item-selected">A2</td></tr>\' +\n
+\t\t\t\'<tr><td class="mce-item-selected">B1</td><td class="mce-item-selected">B2</td></tr>\' +\n
+\t\t\t\'</tbody></table>\' +\n
+\t\t\t\'<p>x</p>\'\n
+\t\t);\n
+\n
+\t\tUtils.setSelection(\'td\', 0, \'td\', 2);\n
+\t\teditor.fire(\'keydown\', {keyCode: 46});\n
+\n
+\t\tequal(\n
+\t\t\teditor.getContent(),\n
+\t\t\t\'<p>x</p>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest("Delete empty like table cell contents", function() {\n
+\t\teditor.getBody().innerHTML = (\n
+\t\t\t\'<table><tbody>\' +\n
+\t\t\t\'<tr><td><p><br></p></td><td><p>a</p></td>\' +\n
+\t\t\t\'</tbody></table>\' +\n
+\t\t\t\'<p>x</p>\'\n
+\t\t);\n
+\n
+\t\tUtils.setSelection(\'td\', 0);\n
+\t\teditor.fire(\'keydown\', {keyCode: 46});\n
+\n
+\t\tequal(\n
+\t\t\teditor.getContent(),\n
+\t\t\t\'<table><tbody><tr><td>&nbsp;</td><td><p>a</p></td></tr></tbody></table><p>x</p>\'\n
+\t\t);\n
+\t});\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18235</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>table.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

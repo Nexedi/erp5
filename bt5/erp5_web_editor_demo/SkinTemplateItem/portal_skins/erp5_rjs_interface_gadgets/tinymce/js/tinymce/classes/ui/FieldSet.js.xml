@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268327.32</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FieldSet.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * FieldSet.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class creates fieldset containers.\n
+ *\n
+ * @-x-less FieldSet.less\n
+ * @class tinymce.ui.FieldSet\n
+ * @extends tinymce.ui.Form\n
+ */\n
+define("tinymce/ui/FieldSet", [\n
+\t"tinymce/ui/Form"\n
+], function(Form) {\n
+\t"use strict";\n
+\n
+\treturn Form.extend({\n
+\t\tDefaults: {\n
+\t\t\tcontainerCls: \'fieldset\',\n
+\t\t\tlayout: \'flex\',\n
+\t\t\tdirection: \'column\',\n
+\t\t\talign: \'stretch\',\n
+\t\t\tflex: 1,\n
+\t\t\tpadding: "25 15 5 15",\n
+\t\t\tlabelGap: 30,\n
+\t\t\tspacing: 10,\n
+\t\t\tborder: 1\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, layout = self._layout, prefix = self.classPrefix;\n
+\n
+\t\t\tself.preRender();\n
+\t\t\tlayout.preRender(self);\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<fieldset id="\' + self._id + \'" class="\' + self.classes + \'" hidefocus="1" tabindex="-1">\' +\n
+\t\t\t\t\t(self.settings.title ? (\'<legend id="\' + self._id + \'-title" class="\' + prefix + \'fieldset-title">\' +\n
+\t\t\t\t\t\tself.settings.title + \'</legend>\') : \'\') +\n
+\t\t\t\t\t\'<div id="\' + self._id + \'-body" class="\' + self.bodyClasses + \'">\' +\n
+\t\t\t\t\t\t(self.settings.html || \'\') + layout.renderHtml(self) +\n
+\t\t\t\t\t\'</div>\' +\n
+\t\t\t\t\'</fieldset>\'\n
+\t\t\t);\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1399</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FieldSet.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

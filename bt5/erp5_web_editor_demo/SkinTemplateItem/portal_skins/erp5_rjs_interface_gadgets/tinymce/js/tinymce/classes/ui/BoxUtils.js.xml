@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268338.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>BoxUtils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * BoxUtils.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Utility class for box parsing and measuing.\n
+ *\n
+ * @class tinymce.ui.BoxUtils\n
+ */\n
+define("tinymce/ui/BoxUtils", [\n
+], function() {\n
+\t"use strict";\n
+\n
+\treturn {\n
+\t\t/**\n
+\t\t * Parses the specified box value. A box value contains 1-4 properties in clockwise order.\n
+\t\t *\n
+\t\t * @method parseBox\n
+\t\t * @param {String/Number} value Box value "0 1 2 3" or "0" etc.\n
+\t\t * @return {Object} Object with top/right/bottom/left properties.\n
+\t\t * @private\n
+\t\t */\n
+\t\tparseBox: function(value) {\n
+\t\t\tvar len, radix = 10;\n
+\n
+\t\t\tif (!value) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (typeof value === "number") {\n
+\t\t\t\tvalue = value || 0;\n
+\n
+\t\t\t\treturn {\n
+\t\t\t\t\ttop: value,\n
+\t\t\t\t\tleft: value,\n
+\t\t\t\t\tbottom: value,\n
+\t\t\t\t\tright: value\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\tvalue = value.split(\' \');\n
+\t\t\tlen = value.length;\n
+\n
+\t\t\tif (len === 1) {\n
+\t\t\t\tvalue[1] = value[2] = value[3] = value[0];\n
+\t\t\t} else if (len === 2) {\n
+\t\t\t\tvalue[2] = value[0];\n
+\t\t\t\tvalue[3] = value[1];\n
+\t\t\t} else if (len === 3) {\n
+\t\t\t\tvalue[3] = value[1];\n
+\t\t\t}\n
+\n
+\t\t\treturn {\n
+\t\t\t\ttop: parseInt(value[0], radix) || 0,\n
+\t\t\t\tright: parseInt(value[1], radix) || 0,\n
+\t\t\t\tbottom: parseInt(value[2], radix) || 0,\n
+\t\t\t\tleft: parseInt(value[3], radix) || 0\n
+\t\t\t};\n
+\t\t},\n
+\n
+\t\tmeasureBox: function(elm, prefix) {\n
+\t\t\tfunction getStyle(name) {\n
+\t\t\t\tvar defaultView = document.defaultView;\n
+\n
+\t\t\t\tif (defaultView) {\n
+\t\t\t\t\t// Remove camelcase\n
+\t\t\t\t\tname = name.replace(/[A-Z]/g, function(a) {\n
+\t\t\t\t\t\treturn \'-\' + a;\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\treturn defaultView.getComputedStyle(elm, null).getPropertyValue(name);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn elm.currentStyle[name];\n
+\t\t\t}\n
+\n
+\t\t\tfunction getSide(name) {\n
+\t\t\t\tvar val = parseFloat(getStyle(name), 10);\n
+\n
+\t\t\t\treturn isNaN(val) ? 0 : val;\n
+\t\t\t}\n
+\n
+\t\t\treturn {\n
+\t\t\t\ttop: getSide(prefix + "TopWidth"),\n
+\t\t\t\tright: getSide(prefix + "RightWidth"),\n
+\t\t\t\tbottom: getSide(prefix + "BottomWidth"),\n
+\t\t\t\tleft: getSide(prefix + "LeftWidth")\n
+\t\t\t};\n
+\t\t}\n
+\t};\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2032</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>BoxUtils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

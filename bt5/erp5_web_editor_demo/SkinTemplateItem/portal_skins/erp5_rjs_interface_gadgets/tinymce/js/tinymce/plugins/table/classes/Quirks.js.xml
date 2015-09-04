@@ -1,0 +1,441 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268431.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Quirks.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Quirks.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class includes fixes for various browser quirks.\n
+ *\n
+ * @class tinymce.tableplugin.Quirks\n
+ * @private\n
+ */\n
+define("tinymce/tableplugin/Quirks", [\n
+\t"tinymce/util/VK",\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/tableplugin/Utils"\n
+], function(VK, Env, Tools, Utils) {\n
+\tvar each = Tools.each, getSpanVal = Utils.getSpanVal;\n
+\n
+\treturn function(editor) {\n
+\t\t/**\n
+\t\t * Fixed caret movement around tables on WebKit.\n
+\t\t */\n
+\t\tfunction moveWebKitSelection() {\n
+\t\t\tfunction eventHandler(e) {\n
+\t\t\t\tvar key = e.keyCode;\n
+\n
+\t\t\t\tfunction handle(upBool, sourceNode) {\n
+\t\t\t\t\tvar siblingDirection = upBool ? \'previousSibling\' : \'nextSibling\';\n
+\t\t\t\t\tvar currentRow = editor.dom.getParent(sourceNode, \'tr\');\n
+\t\t\t\t\tvar siblingRow = currentRow[siblingDirection];\n
+\n
+\t\t\t\t\tif (siblingRow) {\n
+\t\t\t\t\t\tmoveCursorToRow(editor, sourceNode, siblingRow, upBool);\n
+\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tvar tableNode = editor.dom.getParent(currentRow, \'table\');\n
+\t\t\t\t\tvar middleNode = currentRow.parentNode;\n
+\t\t\t\t\tvar parentNodeName = middleNode.nodeName.toLowerCase();\n
+\t\t\t\t\tif (parentNodeName === \'tbody\' || parentNodeName === (upBool ? \'tfoot\' : \'thead\')) {\n
+\t\t\t\t\t\tvar targetParent = getTargetParent(upBool, tableNode, middleNode, \'tbody\');\n
+\t\t\t\t\t\tif (targetParent !== null) {\n
+\t\t\t\t\t\t\treturn moveToRowInTarget(upBool, targetParent, sourceNode);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn escapeTable(upBool, currentRow, siblingDirection, tableNode);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction getTargetParent(upBool, topNode, secondNode, nodeName) {\n
+\t\t\t\t\tvar tbodies = editor.dom.select(\'>\' + nodeName, topNode);\n
+\t\t\t\t\tvar position = tbodies.indexOf(secondNode);\n
+\t\t\t\t\tif (upBool && position === 0 || !upBool && position === tbodies.length - 1) {\n
+\t\t\t\t\t\treturn getFirstHeadOrFoot(upBool, topNode);\n
+\t\t\t\t\t} else if (position === -1) {\n
+\t\t\t\t\t\tvar topOrBottom = secondNode.tagName.toLowerCase() === \'thead\' ? 0 : tbodies.length - 1;\n
+\t\t\t\t\t\treturn tbodies[topOrBottom];\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn tbodies[position + (upBool ? -1 : 1)];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction getFirstHeadOrFoot(upBool, parent) {\n
+\t\t\t\t\tvar tagName = upBool ? \'thead\' : \'tfoot\';\n
+\t\t\t\t\tvar headOrFoot = editor.dom.select(\'>\' + tagName, parent);\n
+\t\t\t\t\treturn headOrFoot.length !== 0 ? headOrFoot[0] : null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction moveToRowInTarget(upBool, targetParent, sourceNode) {\n
+\t\t\t\t\tvar targetRow = getChildForDirection(targetParent, upBool);\n
+\n
+\t\t\t\t\tif (targetRow) {\n
+\t\t\t\t\t\tmoveCursorToRow(editor, sourceNode, targetRow, upBool);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction escapeTable(upBool, currentRow, siblingDirection, table) {\n
+\t\t\t\t\tvar tableSibling = table[siblingDirection];\n
+\n
+\t\t\t\t\tif (tableSibling) {\n
+\t\t\t\t\t\tmoveCursorToStartOfElement(tableSibling);\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tvar parentCell = editor.dom.getParent(table, \'td,th\');\n
+\t\t\t\t\tif (parentCell) {\n
+\t\t\t\t\t\treturn handle(upBool, parentCell, e);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tvar backUpSibling = getChildForDirection(currentRow, !upBool);\n
+\t\t\t\t\tmoveCursorToStartOfElement(backUpSibling);\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction getChildForDirection(parent, up) {\n
+\t\t\t\t\tvar child = parent && parent[up ? \'lastChild\' : \'firstChild\'];\n
+\t\t\t\t\t// BR is not a valid table child to return in this case we return the table cell\n
+\t\t\t\t\treturn child && child.nodeName === \'BR\' ? editor.dom.getParent(child, \'td,th\') : child;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction moveCursorToStartOfElement(n) {\n
+\t\t\t\t\teditor.selection.setCursorLocation(n, 0);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction isVerticalMovement() {\n
+\t\t\t\t\treturn key == VK.UP || key == VK.DOWN;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction isInTable(editor) {\n
+\t\t\t\t\tvar node = editor.selection.getNode();\n
+\t\t\t\t\tvar currentRow = editor.dom.getParent(node, \'tr\');\n
+\t\t\t\t\treturn currentRow !== null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction columnIndex(column) {\n
+\t\t\t\t\tvar colIndex = 0;\n
+\t\t\t\t\tvar c = column;\n
+\t\t\t\t\twhile (c.previousSibling) {\n
+\t\t\t\t\t\tc = c.previousSibling;\n
+\t\t\t\t\t\tcolIndex = colIndex + getSpanVal(c, "colspan");\n
+\t\t\t\t\t}\n
+\t\t\t\t\treturn colIndex;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction findColumn(rowElement, columnIndex) {\n
+\t\t\t\t\tvar c = 0, r = 0;\n
+\n
+\t\t\t\t\teach(rowElement.children, function(cell, i) {\n
+\t\t\t\t\t\tc = c + getSpanVal(cell, "colspan");\n
+\t\t\t\t\t\tr = i;\n
+\t\t\t\t\t\tif (c > columnIndex) {\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t\treturn r;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction moveCursorToRow(ed, node, row, upBool) {\n
+\t\t\t\t\tvar srcColumnIndex = columnIndex(editor.dom.getParent(node, \'td,th\'));\n
+\t\t\t\t\tvar tgtColumnIndex = findColumn(row, srcColumnIndex);\n
+\t\t\t\t\tvar tgtNode = row.childNodes[tgtColumnIndex];\n
+\t\t\t\t\tvar rowCellTarget = getChildForDirection(tgtNode, upBool);\n
+\t\t\t\t\tmoveCursorToStartOfElement(rowCellTarget || tgtNode);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction shouldFixCaret(preBrowserNode) {\n
+\t\t\t\t\tvar newNode = editor.selection.getNode();\n
+\t\t\t\t\tvar newParent = editor.dom.getParent(newNode, \'td,th\');\n
+\t\t\t\t\tvar oldParent = editor.dom.getParent(preBrowserNode, \'td,th\');\n
+\n
+\t\t\t\t\treturn newParent && newParent !== oldParent && checkSameParentTable(newParent, oldParent);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction checkSameParentTable(nodeOne, NodeTwo) {\n
+\t\t\t\t\treturn editor.dom.getParent(nodeOne, \'TABLE\') === editor.dom.getParent(NodeTwo, \'TABLE\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (isVerticalMovement() && isInTable(editor)) {\n
+\t\t\t\t\tvar preBrowserNode = editor.selection.getNode();\n
+\t\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\t\tif (shouldFixCaret(preBrowserNode)) {\n
+\t\t\t\t\t\t\thandle(!e.shiftKey && key === VK.UP, preBrowserNode, e);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}, 0);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\teditor.on(\'KeyDown\', function(e) {\n
+\t\t\t\teventHandler(e);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction fixBeforeTableCaretBug() {\n
+\t\t\t// Checks if the selection/caret is at the start of the specified block element\n
+\t\t\tfunction isAtStart(rng, par) {\n
+\t\t\t\tvar doc = par.ownerDocument, rng2 = doc.createRange(), elm;\n
+\n
+\t\t\t\trng2.setStartBefore(par);\n
+\t\t\t\trng2.setEnd(rng.endContainer, rng.endOffset);\n
+\n
+\t\t\t\telm = doc.createElement(\'body\');\n
+\t\t\t\telm.appendChild(rng2.cloneContents());\n
+\n
+\t\t\t\t// Check for text characters of other elements that should be treated as content\n
+\t\t\t\treturn elm.innerHTML.replace(/<(br|img|object|embed|input|textarea)[^>]*>/gi, \'-\').replace(/<[^>]+>/g, \'\').length === 0;\n
+\t\t\t}\n
+\n
+\t\t\t// Fixes an bug where it\'s impossible to place the caret before a table in Gecko\n
+\t\t\t// this fix solves it by detecting when the caret is at the beginning of such a table\n
+\t\t\t// and then manually moves the caret infront of the table\n
+\t\t\teditor.on(\'KeyDown\', function(e) {\n
+\t\t\t\tvar rng, table, dom = editor.dom;\n
+\n
+\t\t\t\t// On gecko it\'s not possible to place the caret before a table\n
+\t\t\t\tif (e.keyCode == 37 || e.keyCode == 38) {\n
+\t\t\t\t\trng = editor.selection.getRng();\n
+\t\t\t\t\ttable = dom.getParent(rng.startContainer, \'table\');\n
+\n
+\t\t\t\t\tif (table && editor.getBody().firstChild == table) {\n
+\t\t\t\t\t\tif (isAtStart(rng, table)) {\n
+\t\t\t\t\t\t\trng = dom.createRng();\n
+\n
+\t\t\t\t\t\t\trng.setStartBefore(table);\n
+\t\t\t\t\t\t\trng.setEndBefore(table);\n
+\n
+\t\t\t\t\t\t\teditor.selection.setRng(rng);\n
+\n
+\t\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Fixes an issue on Gecko where it\'s impossible to place the caret behind a table\n
+\t\t// This fix will force a paragraph element after the table but only when the forced_root_block setting is enabled\n
+\t\tfunction fixTableCaretPos() {\n
+\t\t\teditor.on(\'KeyDown SetContent VisualAid\', function() {\n
+\t\t\t\tvar last;\n
+\n
+\t\t\t\t// Skip empty text nodes from the end\n
+\t\t\t\tfor (last = editor.getBody().lastChild; last; last = last.previousSibling) {\n
+\t\t\t\t\tif (last.nodeType == 3) {\n
+\t\t\t\t\t\tif (last.nodeValue.length > 0) {\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else if (last.nodeType == 1 && (last.tagName == \'BR\' || !last.getAttribute(\'data-mce-bogus\'))) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (last && last.nodeName == \'TABLE\') {\n
+\t\t\t\t\tif (editor.settings.forced_root_block) {\n
+\t\t\t\t\t\teditor.dom.add(\n
+\t\t\t\t\t\t\teditor.getBody(),\n
+\t\t\t\t\t\t\teditor.settings.forced_root_block,\n
+\t\t\t\t\t\t\teditor.settings.forced_root_block_attrs,\n
+\t\t\t\t\t\t\tEnv.ie && Env.ie < 11 ? \'&nbsp;\' : \'<br data-mce-bogus="1" />\'\n
+\t\t\t\t\t\t);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\teditor.dom.add(editor.getBody(), \'br\', {\'data-mce-bogus\': \'1\'});\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'PreProcess\', function(o) {\n
+\t\t\t\tvar last = o.node.lastChild;\n
+\n
+\t\t\t\tif (last && (last.nodeName == "BR" || (last.childNodes.length == 1 &&\n
+\t\t\t\t\t(last.firstChild.nodeName == \'BR\' || last.firstChild.nodeValue == \'\\u00a0\'))) &&\n
+\t\t\t\t\tlast.previousSibling && last.previousSibling.nodeName == "TABLE") {\n
+\t\t\t\t\teditor.dom.remove(last);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// this nasty hack is here to work around some WebKit selection bugs.\n
+\t\tfunction fixTableCellSelection() {\n
+\t\t\tfunction tableCellSelected(ed, rng, n, currentCell) {\n
+\t\t\t\t// The decision of when a table cell is selected is somewhat involved.  The fact that this code is\n
+\t\t\t\t// required is actually a pointer to the root cause of this bug. A cell is selected when the start\n
+\t\t\t\t// and end offsets are 0, the start container is a text, and the selection node is either a TR (most cases)\n
+\t\t\t\t// or the parent of the table (in the case of the selection containing the last cell of a table).\n
+\t\t\t\tvar TEXT_NODE = 3, table = ed.dom.getParent(rng.startContainer, \'TABLE\');\n
+\t\t\t\tvar tableParent, allOfCellSelected, tableCellSelection;\n
+\n
+\t\t\t\tif (table) {\n
+\t\t\t\t\ttableParent = table.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tallOfCellSelected = rng.startContainer.nodeType == TEXT_NODE &&\n
+\t\t\t\t\trng.startOffset === 0 &&\n
+\t\t\t\t\trng.endOffset === 0 &&\n
+\t\t\t\t\tcurrentCell &&\n
+\t\t\t\t\t(n.nodeName == "TR" || n == tableParent);\n
+\n
+\t\t\t\ttableCellSelection = (n.nodeName == "TD" || n.nodeName == "TH") && !currentCell;\n
+\n
+\t\t\t\treturn allOfCellSelected || tableCellSelection;\n
+\t\t\t}\n
+\n
+\t\t\tfunction fixSelection() {\n
+\t\t\t\tvar rng = editor.selection.getRng();\n
+\t\t\t\tvar n = editor.selection.getNode();\n
+\t\t\t\tvar currentCell = editor.dom.getParent(rng.startContainer, \'TD,TH\');\n
+\n
+\t\t\t\tif (!tableCellSelected(editor, rng, n, currentCell)) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!currentCell) {\n
+\t\t\t\t\tcurrentCell = n;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Get the very last node inside the table cell\n
+\t\t\t\tvar end = currentCell.lastChild;\n
+\t\t\t\twhile (end.lastChild) {\n
+\t\t\t\t\tend = end.lastChild;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Select the entire table cell. Nothing outside of the table cell should be selected.\n
+\t\t\t\tif (end.nodeType == 3) {\n
+\t\t\t\t\trng.setEnd(end, end.data.length);\n
+\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\teditor.on(\'KeyDown\', function() {\n
+\t\t\t\tfixSelection();\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'MouseDown\', function(e) {\n
+\t\t\t\tif (e.button != 2) {\n
+\t\t\t\t\tfixSelection();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Delete table if all cells are selected.\n
+\t\t */\n
+\t\tfunction deleteTable() {\n
+\t\t\tfunction placeCaretInCell(cell) {\n
+\t\t\t\teditor.selection.select(cell, true);\n
+\t\t\t\teditor.selection.collapse(true);\n
+\t\t\t}\n
+\n
+\t\t\tfunction clearCell(cell) {\n
+\t\t\t\teditor.$(cell).empty();\n
+\t\t\t\tUtils.paddCell(cell);\n
+\t\t\t}\n
+\n
+\t\t\teditor.on(\'keydown\', function(e) {\n
+\t\t\t\tif ((e.keyCode == VK.DELETE || e.keyCode == VK.BACKSPACE) && !e.isDefaultPrevented()) {\n
+\t\t\t\t\tvar table, tableCells, selectedTableCells, cell;\n
+\n
+\t\t\t\t\ttable = editor.dom.getParent(editor.selection.getStart(), \'table\');\n
+\t\t\t\t\tif (table) {\n
+\t\t\t\t\t\ttableCells = editor.dom.select(\'td,th\', table);\n
+\t\t\t\t\t\tselectedTableCells = Tools.grep(tableCells, function(cell) {\n
+\t\t\t\t\t\t\treturn editor.dom.hasClass(cell, \'mce-item-selected\');\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\tif (selectedTableCells.length === 0) {\n
+\t\t\t\t\t\t\t// If caret is within an empty table cell then empty it for real\n
+\t\t\t\t\t\t\tcell = editor.dom.getParent(editor.selection.getStart(), \'td,th\');\n
+\t\t\t\t\t\t\tif (editor.selection.isCollapsed() && cell && editor.dom.isEmpty(cell)) {\n
+\t\t\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\t\t\tclearCell(cell);\n
+\t\t\t\t\t\t\t\tplaceCaretInCell(cell);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t\tif (tableCells.length == selectedTableCells.length) {\n
+\t\t\t\t\t\t\teditor.execCommand(\'mceTableDelete\');\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tTools.each(selectedTableCells, clearCell);\n
+\t\t\t\t\t\t\tplaceCaretInCell(selectedTableCells[0]);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tdeleteTable();\n
+\n
+\t\tif (Env.webkit) {\n
+\t\t\tmoveWebKitSelection();\n
+\t\t\tfixTableCellSelection();\n
+\t\t}\n
+\n
+\t\tif (Env.gecko) {\n
+\t\t\tfixBeforeTableCaretBug();\n
+\t\t\tfixTableCaretPos();\n
+\t\t}\n
+\n
+\t\tif (Env.ie > 10) {\n
+\t\t\tfixBeforeTableCaretBug();\n
+\t\t\tfixTableCaretPos();\n
+\t\t}\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12062</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Quirks.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

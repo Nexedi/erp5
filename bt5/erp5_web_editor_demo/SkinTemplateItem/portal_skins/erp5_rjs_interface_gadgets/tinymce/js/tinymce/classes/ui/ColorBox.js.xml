@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268316.49</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ColorBox.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * ColorBox.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This widget lets you enter colors and browse for colors by pressing the color button. It also displays\n
+ * a preview of the current color.\n
+ *\n
+ * @-x-less ColorBox.less\n
+ * @class tinymce.ui.ColorBox\n
+ * @extends tinymce.ui.ComboBox\n
+ */\n
+define("tinymce/ui/ColorBox", [\n
+\t"tinymce/ui/ComboBox"\n
+], function(ComboBox) {\n
+\t"use strict";\n
+\n
+\treturn ComboBox.extend({\n
+\t\t/**\n
+\t\t * Constructs a new control instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tsettings.spellcheck = false;\n
+\n
+\t\t\tif (settings.onaction) {\n
+\t\t\t\tsettings.icon = \'none\';\n
+\t\t\t}\n
+\n
+\t\t\tself._super(settings);\n
+\n
+\t\t\tself.classes.add(\'colorbox\');\n
+\t\t\tself.on(\'change keyup postrender\', function() {\n
+\t\t\t\tself.repaintColor(self.value());\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\trepaintColor: function(value) {\n
+\t\t\tvar elm = this.getEl().getElementsByTagName(\'i\')[0];\n
+\n
+\t\t\tif (elm) {\n
+\t\t\t\ttry {\n
+\t\t\t\t\telm.style.background = value;\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// Ignore\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.state.on(\'change:value\', function(e) {\n
+\t\t\t\tif (self._rendered) {\n
+\t\t\t\t\tself.repaintColor(e.value);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t}\n
+\t});\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1456</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ColorBox.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,421 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268387.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.tinymce.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * jquery.tinymce.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true, jQuery */\n
+\n
+(function($) {\n
+\tvar undef,\n
+\t\tlazyLoading,\n
+\t\tpatchApplied,\n
+\t\tdelayedInits = [],\n
+\t\twin = window;\n
+\n
+\t$.fn.tinymce = function(settings) {\n
+\t\tvar self = this, url, base, lang, suffix = "";\n
+\n
+\t\t// No match then just ignore the call\n
+\t\tif (!self.length) {\n
+\t\t\treturn self;\n
+\t\t}\n
+\n
+\t\t// Get editor instance\n
+\t\tif (!settings) {\n
+\t\t\treturn window.tinymce ? tinymce.get(self[0].id) : null;\n
+\t\t}\n
+\n
+\t\tself.css(\'visibility\', \'hidden\'); // Hide textarea to avoid flicker\n
+\n
+\t\tfunction init() {\n
+\t\t\tvar editors = [], initCount = 0;\n
+\n
+\t\t\t// Apply patches to the jQuery object, only once\n
+\t\t\tif (!patchApplied) {\n
+\t\t\t\tapplyPatch();\n
+\t\t\t\tpatchApplied = true;\n
+\t\t\t}\n
+\n
+\t\t\t// Create an editor instance for each matched node\n
+\t\t\tself.each(function(i, node) {\n
+\t\t\t\tvar ed, id = node.id, oninit = settings.oninit;\n
+\n
+\t\t\t\t// Generate unique id for target element if needed\n
+\t\t\t\tif (!id) {\n
+\t\t\t\t\tnode.id = id = tinymce.DOM.uniqueId();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Only init the editor once\n
+\t\t\t\tif (tinymce.get(id)) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Create editor instance and render it\n
+\t\t\t\ted = new tinymce.Editor(id, settings, tinymce.EditorManager);\n
+\t\t\t\teditors.push(ed);\n
+\n
+\t\t\t\ted.on(\'init\', function() {\n
+\t\t\t\t\tvar scope, func = oninit;\n
+\n
+\t\t\t\t\tself.css(\'visibility\', \'\');\n
+\n
+\t\t\t\t\t// Run this if the oninit setting is defined\n
+\t\t\t\t\t// this logic will fire the oninit callback ones each\n
+\t\t\t\t\t// matched editor instance is initialized\n
+\t\t\t\t\tif (oninit) {\n
+\t\t\t\t\t\t// Fire the oninit event ones each editor instance is initialized\n
+\t\t\t\t\t\tif (++initCount == editors.length) {\n
+\t\t\t\t\t\t\tif (typeof func === "string") {\n
+\t\t\t\t\t\t\t\tscope = (func.indexOf(".") === -1) ? null : tinymce.resolve(func.replace(/\\.\\w+$/, ""));\n
+\t\t\t\t\t\t\t\tfunc = tinymce.resolve(func);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Call the oninit function with the object\n
+\t\t\t\t\t\t\tfunc.apply(scope || tinymce, editors);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\t// Render the editor instances in a separate loop since we\n
+\t\t\t// need to have the full editors array used in the onInit calls\n
+\t\t\t$.each(editors, function(i, ed) {\n
+\t\t\t\ted.render();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Load TinyMCE on demand, if we need to\n
+\t\tif (!win.tinymce && !lazyLoading && (url = settings.script_url)) {\n
+\t\t\tlazyLoading = 1;\n
+\t\t\tbase = url.substring(0, url.lastIndexOf("/"));\n
+\n
+\t\t\t// Check if it\'s a dev/src version they want to load then\n
+\t\t\t// make sure that all plugins, themes etc are loaded in source mode as well\n
+\t\t\tif (url.indexOf(\'.min\') != -1) {\n
+\t\t\t\tsuffix = ".min";\n
+\t\t\t}\n
+\n
+\t\t\t// Setup tinyMCEPreInit object this will later be used by the TinyMCE\n
+\t\t\t// core script to locate other resources like CSS files, dialogs etc\n
+\t\t\t// You can also predefined a tinyMCEPreInit object and then it will use that instead\n
+\t\t\twin.tinymce = win.tinyMCEPreInit || {\n
+\t\t\t\tbase: base,\n
+\t\t\t\tsuffix: suffix\n
+\t\t\t};\n
+\n
+\t\t\t// url contains gzip then we assume it\'s a compressor\n
+\t\t\tif (url.indexOf(\'gzip\') != -1) {\n
+\t\t\t\tlang = settings.language || "en";\n
+\t\t\t\turl = url + (/\\?/.test(url) ? \'&\' : \'?\') + "js=true&core=true&suffix=" + escape(suffix) +\n
+\t\t\t\t\t"&themes=" + escape(settings.theme || \'modern\') + "&plugins=" +\n
+\t\t\t\t\tescape(settings.plugins || \'\') + "&languages=" + (lang || \'\');\n
+\n
+\t\t\t\t// Check if compressor script is already loaded otherwise setup a basic one\n
+\t\t\t\tif (!win.tinyMCE_GZ) {\n
+\t\t\t\t\twin.tinyMCE_GZ = {\n
+\t\t\t\t\t\tstart: function() {\n
+\t\t\t\t\t\t\tfunction load(url) {\n
+\t\t\t\t\t\t\t\ttinymce.ScriptLoader.markDone(tinymce.baseURI.toAbsolute(url));\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Add core languages\n
+\t\t\t\t\t\t\tload("langs/" + lang + ".js");\n
+\n
+\t\t\t\t\t\t\t// Add themes with languages\n
+\t\t\t\t\t\t\tload("themes/" + settings.theme + "/theme" + suffix + ".js");\n
+\t\t\t\t\t\t\tload("themes/" + settings.theme + "/langs/" + lang + ".js");\n
+\n
+\t\t\t\t\t\t\t// Add plugins with languages\n
+\t\t\t\t\t\t\t$.each(settings.plugins.split(","), function(i, name) {\n
+\t\t\t\t\t\t\t\tif (name) {\n
+\t\t\t\t\t\t\t\t\tload("plugins/" + name + "/plugin" + suffix + ".js");\n
+\t\t\t\t\t\t\t\t\tload("plugins/" + name + "/langs/" + lang + ".js");\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t},\n
+\n
+\t\t\t\t\t\tend: function() {\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tvar script = document.createElement(\'script\');\n
+\t\t\tscript.type = \'text/javascript\';\n
+\t\t\tscript.onload = script.onreadystatechange = function(e) {\n
+\t\t\t\te = e || window.event;\n
+\n
+\t\t\t\tif (lazyLoading !== 2 && (e.type == \'load\' || /complete|loaded/.test(script.readyState))) {\n
+\t\t\t\t\ttinymce.dom.Event.domLoaded = 1;\n
+\t\t\t\t\tlazyLoading = 2;\n
+\n
+\t\t\t\t\t// Execute callback after mainscript has been loaded and before the initialization occurs\n
+\t\t\t\t\tif (settings.script_loaded) {\n
+\t\t\t\t\t\tsettings.script_loaded();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tinit();\n
+\n
+\t\t\t\t\t$.each(delayedInits, function(i, init) {\n
+\t\t\t\t\t\tinit();\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t\tscript.src = url;\n
+\t\t\tdocument.body.appendChild(script);\n
+\t\t} else {\n
+\t\t\t// Delay the init call until tinymce is loaded\n
+\t\t\tif (lazyLoading === 1) {\n
+\t\t\t\tdelayedInits.push(init);\n
+\t\t\t} else {\n
+\t\t\t\tinit();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn self;\n
+\t};\n
+\n
+\t// Add :tinymce psuedo selector this will select elements that has been converted into editor instances\n
+\t// it\'s now possible to use things like $(\'*:tinymce\') to get all TinyMCE bound elements.\n
+\t$.extend($.expr[":"], {\n
+\t\ttinymce: function(e) {\n
+\t\t\tvar editor;\n
+\n
+\t\t\tif (e.id && "tinymce" in window) {\n
+\t\t\t\teditor = tinymce.get(e.id);\n
+\n
+\t\t\t\tif (editor && editor.editorManager === tinymce) {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t}\n
+\t});\n
+\n
+\t// This function patches internal jQuery functions so that if\n
+\t// you for example remove an div element containing an editor it\'s\n
+\t// automatically destroyed by the TinyMCE API\n
+\tfunction applyPatch() {\n
+\t\t// Removes any child editor instances by looking for editor wrapper elements\n
+\t\tfunction removeEditors(name) {\n
+\t\t\t// If the function is remove\n
+\t\t\tif (name === "remove") {\n
+\t\t\t\tthis.each(function(i, node) {\n
+\t\t\t\t\tvar ed = tinyMCEInstance(node);\n
+\n
+\t\t\t\t\tif (ed) {\n
+\t\t\t\t\t\ted.remove();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tthis.find("span.mceEditor,div.mceEditor").each(function(i, node) {\n
+\t\t\t\tvar ed = tinymce.get(node.id.replace(/_parent$/, ""));\n
+\n
+\t\t\t\tif (ed) {\n
+\t\t\t\t\ted.remove();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Loads or saves contents from/to textarea if the value\n
+\t\t// argument is defined it will set the TinyMCE internal contents\n
+\t\tfunction loadOrSave(value) {\n
+\t\t\tvar self = this, ed;\n
+\n
+\t\t\t// Handle set value\n
+\t\t\t/*jshint eqnull:true */\n
+\t\t\tif (value != null) {\n
+\t\t\t\tremoveEditors.call(self);\n
+\n
+\t\t\t\t// Saves the contents before get/set value of textarea/div\n
+\t\t\t\tself.each(function(i, node) {\n
+\t\t\t\t\tvar ed;\n
+\n
+\t\t\t\t\tif ((ed = tinymce.get(node.id))) {\n
+\t\t\t\t\t\ted.setContent(value);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t} else if (self.length > 0) {\n
+\t\t\t\t// Handle get value\n
+\t\t\t\tif ((ed = tinymce.get(self[0].id))) {\n
+\t\t\t\t\treturn ed.getContent();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Returns tinymce instance for the specified element or null if it wasn\'t found\n
+\t\tfunction tinyMCEInstance(element) {\n
+\t\t\tvar ed = null;\n
+\n
+\t\t\tif (element && element.id && win.tinymce) {\n
+\t\t\t\ted = tinymce.get(element.id);\n
+\t\t\t}\n
+\n
+\t\t\treturn ed;\n
+\t\t}\n
+\n
+\t\t// Checks if the specified set contains tinymce instances\n
+\t\tfunction containsTinyMCE(matchedSet) {\n
+\t\t\treturn !!((matchedSet) && (matchedSet.length) && (win.tinymce) && (matchedSet.is(":tinymce")));\n
+\t\t}\n
+\n
+\t\t// Patch various jQuery functions\n
+\t\tvar jQueryFn = {};\n
+\n
+\t\t// Patch some setter/getter functions these will\n
+\t\t// now be able to set/get the contents of editor instances for\n
+\t\t// example $(\'#editorid\').html(\'Content\'); will update the TinyMCE iframe instance\n
+\t\t$.each(["text", "html", "val"], function(i, name) {\n
+\t\t\tvar origFn = jQueryFn[name] = $.fn[name],\n
+\t\t\t\ttextProc = (name === "text");\n
+\n
+\t\t\t$.fn[name] = function(value) {\n
+\t\t\t\tvar self = this;\n
+\n
+\t\t\t\tif (!containsTinyMCE(self)) {\n
+\t\t\t\t\treturn origFn.apply(self, arguments);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (value !== undef) {\n
+\t\t\t\t\tloadOrSave.call(self.filter(":tinymce"), value);\n
+\t\t\t\t\torigFn.apply(self.not(":tinymce"), arguments);\n
+\n
+\t\t\t\t\treturn self; // return original set for chaining\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar ret = "";\n
+\t\t\t\tvar args = arguments;\n
+\n
+\t\t\t\t(textProc ? self : self.eq(0)).each(function(i, node) {\n
+\t\t\t\t\tvar ed = tinyMCEInstance(node);\n
+\n
+\t\t\t\t\tif (ed) {\n
+\t\t\t\t\t\tret += textProc ? ed.getContent().replace(/<(?:"[^"]*"|\'[^\']*\'|[^\'">])*>/g, "") : ed.getContent({save: true});\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tret += origFn.apply($(node), args);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn ret;\n
+\t\t\t};\n
+\t\t});\n
+\n
+\t\t// Makes it possible to use $(\'#id\').append("content"); to append contents to the TinyMCE editor iframe\n
+\t\t$.each(["append", "prepend"], function(i, name) {\n
+\t\t\tvar origFn = jQueryFn[name] = $.fn[name],\n
+\t\t\t\tprepend = (name === "prepend");\n
+\n
+\t\t\t$.fn[name] = function(value) {\n
+\t\t\t\tvar self = this;\n
+\n
+\t\t\t\tif (!containsTinyMCE(self)) {\n
+\t\t\t\t\treturn origFn.apply(self, arguments);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (value !== undef) {\n
+\t\t\t\t\tif (typeof value === "string") {\n
+\t\t\t\t\t\tself.filter(":tinymce").each(function(i, node) {\n
+\t\t\t\t\t\t\tvar ed = tinyMCEInstance(node);\n
+\n
+\t\t\t\t\t\t\tif (ed) {\n
+\t\t\t\t\t\t\t\ted.setContent(prepend ? value + ed.getContent() : ed.getContent() + value);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\torigFn.apply(self.not(":tinymce"), arguments);\n
+\n
+\t\t\t\t\treturn self; // return original set for chaining\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t});\n
+\n
+\t\t// Makes sure that the editor instance gets properly destroyed when the parent element is removed\n
+\t\t$.each(["remove", "replaceWith", "replaceAll", "empty"], function(i, name) {\n
+\t\t\tvar origFn = jQueryFn[name] = $.fn[name];\n
+\n
+\t\t\t$.fn[name] = function() {\n
+\t\t\t\tremoveEditors.call(this, name);\n
+\n
+\t\t\t\treturn origFn.apply(this, arguments);\n
+\t\t\t};\n
+\t\t});\n
+\n
+\t\tjQueryFn.attr = $.fn.attr;\n
+\n
+\t\t// Makes sure that $(\'#tinymce_id\').attr(\'value\') gets the editors current HTML contents\n
+\t\t$.fn.attr = function(name, value) {\n
+\t\t\tvar self = this, args = arguments;\n
+\n
+\t\t\tif ((!name) || (name !== "value") || (!containsTinyMCE(self))) {\n
+\t\t\t\tif (value !== undef) {\n
+\t\t\t\t\treturn jQueryFn.attr.apply(self, args);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn jQueryFn.attr.apply(self, args);\n
+\t\t\t}\n
+\n
+\t\t\tif (value !== undef) {\n
+\t\t\t\tloadOrSave.call(self.filter(":tinymce"), value);\n
+\t\t\t\tjQueryFn.attr.apply(self.not(":tinymce"), args);\n
+\n
+\t\t\t\treturn self; // return original set for chaining\n
+\t\t\t}\n
+\n
+\t\t\tvar node = self[0], ed = tinyMCEInstance(node);\n
+\n
+\t\t\treturn ed ? ed.getContent({save: true}) : jQueryFn.attr.apply($(node), args);\n
+\t\t};\n
+\t}\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10167</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery.tinymce.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

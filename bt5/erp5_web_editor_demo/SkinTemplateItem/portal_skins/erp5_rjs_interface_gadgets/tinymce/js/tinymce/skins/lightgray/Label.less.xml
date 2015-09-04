@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268690.99</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Label.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// Label\n
+\n
+.@{prefix}-label {\n
+\t.inline-block();\n
+\ttext-shadow: @text-shadow;\n
+\toverflow: hidden;\n
+}\n
+\n
+.@{prefix}-label.@{prefix}-autoscroll {\n
+\toverflow: auto;\n
+}\n
+\n
+.@{prefix}-label.@{prefix}-disabled {\n
+\tcolor: @text-disabled;\n
+}\n
+\n
+.@{prefix}-label.@{prefix}-multiline {\n
+\twhite-space: pre-wrap;\n
+}\n
+\n
+.@{prefix}-label.@{prefix}-error {\n
+\tcolor: @text-error;\n
+}\n
+\n
+// RTL\n
+\n
+.@{prefix}-rtl .@{prefix}-label {\n
+\ttext-align: right;\n
+\tdirection: rtl;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>428</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Label.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

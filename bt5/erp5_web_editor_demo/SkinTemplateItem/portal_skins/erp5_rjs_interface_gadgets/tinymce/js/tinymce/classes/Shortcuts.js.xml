@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268303.34</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Shortcuts.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Shortcuts.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Contains all logic for handling of keyboard shortcuts.\n
+ *\n
+ * @class tinymce.Shortcuts\n
+ * @example\n
+ * editor.shortcuts.add(\'ctrl+a\', function() {});\n
+ * editor.shortcuts.add(\'meta+a\', function() {}); // "meta" maps to Command on Mac and Ctrl on PC\n
+ * editor.shortcuts.add(\'ctrl+alt+a\', function() {});\n
+ * editor.shortcuts.add(\'access+a\', function() {}); // "access" maps to ctrl+alt on Mac and shift+alt on PC\n
+ */\n
+define("tinymce/Shortcuts", [\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/Env"\n
+], function(Tools, Env) {\n
+\tvar each = Tools.each, explode = Tools.explode;\n
+\n
+\tvar keyCodeLookup = {\n
+\t\t"f9": 120,\n
+\t\t"f10": 121,\n
+\t\t"f11": 122\n
+\t};\n
+\n
+\tvar modifierNames = Tools.makeMap(\'alt,ctrl,shift,meta,access\');\n
+\n
+\treturn function(editor) {\n
+\t\tvar self = this, shortcuts = {};\n
+\n
+\t\tfunction createShortcut(pattern, desc, cmdFunc, scope) {\n
+\t\t\tvar id, key, shortcut;\n
+\n
+\t\t\tshortcut = {\n
+\t\t\t\tfunc: cmdFunc,\n
+\t\t\t\tscope: scope || editor,\n
+\t\t\t\tdesc: editor.translate(desc)\n
+\t\t\t};\n
+\n
+\t\t\t// Parse modifiers and keys ctrl+alt+b for example\n
+\t\t\teach(explode(pattern, \'+\'), function(value) {\n
+\t\t\t\tif (value in modifierNames) {\n
+\t\t\t\t\tshortcut[value] = true;\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// Allow numeric keycodes like ctrl+219 for ctrl+[\n
+\t\t\t\t\tif (/^[0-9]{2,}$/.test(value)) {\n
+\t\t\t\t\t\tshortcut.keyCode = parseInt(value, 10);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tshortcut.charCode = value.charCodeAt(0);\n
+\t\t\t\t\t\tshortcut.keyCode = keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// Generate unique id for modifier combination and set default state for unused modifiers\n
+\t\t\tid = [shortcut.keyCode];\n
+\t\t\tfor (key in modifierNames) {\n
+\t\t\t\tif (shortcut[key]) {\n
+\t\t\t\t\tid.push(key);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tshortcut[key] = false;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\tshortcut.id = id.join(\',\');\n
+\n
+\t\t\t// Handle special access modifier differently depending on Mac/Win\n
+\t\t\tif (shortcut.access) {\n
+\t\t\t\tshortcut.alt = true;\n
+\n
+\t\t\t\tif (Env.mac) {\n
+\t\t\t\t\tshortcut.ctrl = true;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tshortcut.shift = true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Handle special meta modifier differently depending on Mac/Win\n
+\t\t\tif (shortcut.meta) {\n
+\t\t\t\tif (Env.mac) {\n
+\t\t\t\t\tshortcut.meta = true;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tshortcut.ctrl = true;\n
+\t\t\t\t\tshortcut.meta = false;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn shortcut;\n
+\t\t}\n
+\n
+\t\teditor.on(\'keyup keypress keydown\', function(e) {\n
+\t\t\tif ((e.altKey || e.ctrlKey || e.metaKey) && !e.isDefaultPrevented()) {\n
+\t\t\t\teach(shortcuts, function(shortcut) {\n
+\t\t\t\t\tif (shortcut.ctrl != e.ctrlKey || shortcut.meta != e.metaKey) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (shortcut.alt != e.altKey || shortcut.shift != e.shiftKey) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (e.keyCode == shortcut.keyCode || (e.charCode && e.charCode == shortcut.charCode)) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t\tif (e.type == "keydown") {\n
+\t\t\t\t\t\t\tshortcut.func.call(shortcut.scope);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t/**\n
+\t\t * Adds a keyboard shortcut for some command or function.\n
+\t\t *\n
+\t\t * @method addShortcut\n
+\t\t * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.\n
+\t\t * @param {String} desc Text description for the command.\n
+\t\t * @param {String/Function} cmdFunc Command name string or function to execute when the key is pressed.\n
+\t\t * @param {Object} sc Optional scope to execute the function in.\n
+\t\t * @return {Boolean} true/false state if the shortcut was added or not.\n
+\t\t */\n
+\t\tself.add = function(pattern, desc, cmdFunc, scope) {\n
+\t\t\tvar cmd;\n
+\n
+\t\t\tcmd = cmdFunc;\n
+\n
+\t\t\tif (typeof cmdFunc === \'string\') {\n
+\t\t\t\tcmdFunc = function() {\n
+\t\t\t\t\teditor.execCommand(cmd, false, null);\n
+\t\t\t\t};\n
+\t\t\t} else if (Tools.isArray(cmd)) {\n
+\t\t\t\tcmdFunc = function() {\n
+\t\t\t\t\teditor.execCommand(cmd[0], cmd[1], cmd[2]);\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\teach(explode(pattern.toLowerCase()), function(pattern) {\n
+\t\t\t\tvar shortcut = createShortcut(pattern, desc, cmdFunc, scope);\n
+\t\t\t\tshortcuts[shortcut.id] = shortcut;\n
+\t\t\t});\n
+\n
+\t\t\treturn true;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Remove a keyboard shortcut by pattern.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.\n
+\t\t * @return {Boolean} true/false state if the shortcut was removed or not.\n
+\t\t */\n
+\t\tself.remove = function(pattern) {\n
+\t\t\tvar shortcut = createShortcut(pattern);\n
+\n
+\t\t\tif (shortcuts[shortcut.id]) {\n
+\t\t\t\tdelete shortcuts[shortcut.id];\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t};\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4440</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Shortcuts.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

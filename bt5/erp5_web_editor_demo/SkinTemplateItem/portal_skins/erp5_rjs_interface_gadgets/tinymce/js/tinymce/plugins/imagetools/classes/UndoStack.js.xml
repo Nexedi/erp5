@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268531.08</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>UndoStack.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * UndoStack.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+define("tinymce/imagetoolsplugin/UndoStack", [\n
+], function() {\n
+\treturn function() {\n
+\t\tvar data = [], index = -1;\n
+\n
+\t\tfunction add(state) {\n
+\t\t\tvar removed;\n
+\n
+\t\t\tremoved = data.splice(++index);\n
+\t\t\tdata.push(state);\n
+\n
+\t\t\treturn {\n
+\t\t\t\tstate: state,\n
+\t\t\t\tremoved: removed\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction undo() {\n
+\t\t\tif (canUndo()) {\n
+\t\t\t\treturn data[--index];\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction redo() {\n
+\t\t\tif (canRedo()) {\n
+\t\t\t\treturn data[++index];\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction canUndo() {\n
+\t\t\treturn index > 0;\n
+\t\t}\n
+\n
+\t\tfunction canRedo() {\n
+\t\t\treturn index != -1 && index < data.length - 1;\n
+\t\t}\n
+\n
+\t\treturn {\n
+\t\t\tdata: data,\n
+\t\t\tadd: add,\n
+\t\t\tundo: undo,\n
+\t\t\tredo: redo,\n
+\t\t\tcanUndo: canUndo,\n
+\t\t\tcanRedo: canRedo\n
+\t\t};\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>893</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>UndoStack.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

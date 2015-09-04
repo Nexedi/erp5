@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268564.97</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'contextmenu\', function(editor) {\n
+\tvar menu, contextmenuNeverUseNative = editor.settings.contextmenu_never_use_native;\n
+\n
+\teditor.on(\'contextmenu\', function(e) {\n
+\t\tvar contextmenu, doc = editor.getDoc();\n
+\n
+\t\t// Block TinyMCE menu on ctrlKey\n
+\t\tif (e.ctrlKey && !contextmenuNeverUseNative) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\te.preventDefault();\n
+\n
+\t\t/**\n
+\t\t * WebKit/Blink on Mac has the odd behavior of selecting the target word or line this causes\n
+\t\t * issues when for example inserting images see: #7022\n
+\t\t */\n
+\t\tif (tinymce.Env.mac && tinymce.Env.webkit) {\n
+\t\t\tif (e.button == 2 && doc.caretRangeFromPoint) {\n
+\t\t\t\teditor.selection.setRng(doc.caretRangeFromPoint(e.x, e.y));\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tcontextmenu = editor.settings.contextmenu || \'link image inserttable | cell row column deletetable\';\n
+\n
+\t\t// Render menu\n
+\t\tif (!menu) {\n
+\t\t\tvar items = [];\n
+\n
+\t\t\ttinymce.each(contextmenu.split(/[ ,]/), function(name) {\n
+\t\t\t\tvar item = editor.menuItems[name];\n
+\n
+\t\t\t\tif (name == \'|\') {\n
+\t\t\t\t\titem = {text: name};\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (item) {\n
+\t\t\t\t\titem.shortcut = \'\'; // Hide shortcuts\n
+\t\t\t\t\titems.push(item);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tfor (var i = 0; i < items.length; i++) {\n
+\t\t\t\tif (items[i].text == \'|\') {\n
+\t\t\t\t\tif (i === 0 || i == items.length - 1) {\n
+\t\t\t\t\t\titems.splice(i, 1);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tmenu = new tinymce.ui.Menu({\n
+\t\t\t\titems: items,\n
+\t\t\t\tcontext: \'contextmenu\',\n
+\t\t\t\tclasses: \'contextmenu\'\n
+\t\t\t}).renderTo();\n
+\n
+\t\t\teditor.on(\'remove\', function() {\n
+\t\t\t\tmenu.remove();\n
+\t\t\t\tmenu = null;\n
+\t\t\t});\n
+\t\t} else {\n
+\t\t\tmenu.show();\n
+\t\t}\n
+\n
+\t\t// Position menu\n
+\t\tvar pos = {x: e.pageX, y: e.pageY};\n
+\n
+\t\tif (!editor.inline) {\n
+\t\t\tpos = tinymce.DOM.getPos(editor.getContentAreaContainer());\n
+\t\t\tpos.x += e.clientX;\n
+\t\t\tpos.y += e.clientY;\n
+\t\t}\n
+\n
+\t\tmenu.moveTo(pos.x, pos.y);\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1971</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

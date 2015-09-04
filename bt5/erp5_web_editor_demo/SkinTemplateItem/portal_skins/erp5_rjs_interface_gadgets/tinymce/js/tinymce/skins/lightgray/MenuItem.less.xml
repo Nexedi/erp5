@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268658.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MenuItem.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// MenuItem\n
+\n
+.@{prefix}-menu-item {\n
+\tdisplay: block;\n
+\tpadding: 6px 15px 6px 12px;\n
+\tclear: both;\n
+\tfont-weight: normal;\n
+\tline-height: 20px;\n
+\tcolor: @menuitem-text;\n
+\twhite-space: nowrap;\n
+\tcursor: pointer;\n
+\tline-height: normal;\n
+\tborder-left: 4px solid transparent;\n
+\tmargin-bottom: 1px;\n
+}\n
+\n
+.@{prefix}-menu-item .@{prefix}-ico, .@{prefix}-menu-item .@{prefix}-text {\n
+\tcolor: @menuitem-text;\n
+}\n
+\n
+.@{prefix}-menu-item.@{prefix}-disabled .@{prefix}-text, .@{prefix}-menu-item.@{prefix}-disabled .@{prefix}-ico {\n
+\tcolor: mix(@menuitem-text, @menu-bg, 40%);\n
+}\n
+\n
+.@{prefix}-menu-item:hover .@{prefix}-text, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-text, .@{prefix}-menu-item:focus .@{prefix}-text {\n
+\tcolor: @menuitem-text-inverse;\n
+}\n
+\n
+.@{prefix}-menu-item:hover .@{prefix}-ico, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-ico, .@{prefix}-menu-item:focus .@{prefix}-ico {\n
+\tcolor: @menuitem-text-inverse;\n
+}\n
+\n
+.@{prefix}-menu-item.@{prefix}-disabled:hover {\n
+\tbackground: @menuitem-bg-disabled;\n
+}\n
+\n
+.@{prefix}-menu-shortcut {\n
+\tdisplay: inline-block;\n
+\tcolor: mix(@menuitem-text, @menu-bg, 40%);\n
+}\n
+\n
+.@{prefix}-menu-shortcut {\n
+\t.inline-block();\n
+\tpadding: 0 15px 0 20px;\n
+}\n
+\n
+.@{prefix}-menu-item:hover .@{prefix}-menu-shortcut, .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-menu-shortcut, .@{prefix}-menu-item:focus .@{prefix}-menu-shortcut {\n
+\tcolor: @menuitem-text-inverse;\n
+}\n
+\n
+.@{prefix}-menu-item .@{prefix}-caret {\n
+\tmargin-top: 4px;\n
+\t*margin-top: 3px;\n
+\tmargin-right: 6px;\n
+\tborder-top: 4px solid transparent;\n
+\tborder-bottom: 4px solid transparent;\n
+\tborder-left: 4px solid @menuitem-caret;\n
+}\n
+\n
+.@{prefix}-menu-item.@{prefix}-selected .@{prefix}-caret, .@{prefix}-menu-item:focus .@{prefix}-caret, .@{prefix}-menu-item:hover .@{prefix}-caret {\n
+\tborder-left-color: @menuitem-caret-selected;\n
+}\n
+\n
+.@{prefix}-menu-align .@{prefix}-menu-shortcut {\n
+\t*margin-top: -2px;\n
+}\n
+\n
+.@{prefix}-menu-align .@{prefix}-menu-shortcut, .@{prefix}-menu-align .@{prefix}-caret {\n
+\tposition: absolute;\n
+\tright: 0;\n
+}\n
+\n
+.@{prefix}-menu-item.@{prefix}-active i {\n
+\tvisibility: visible;\n
+}\n
+\n
+.@{prefix}-menu-item-normal.@{prefix}-active {\n
+\tbackground-color: @menuitem-bg-active;\n
+}\n
+\n
+.@{prefix}-menu-item-preview.@{prefix}-active {\n
+\tborder-left: 5px solid @menuitem-preview-border-active;\n
+}\n
+\n
+.@{prefix}-menu-item-normal.@{prefix}-active .@{prefix}-text {\n
+\tcolor: @menuitem-text-active;\n
+}\n
+\n
+.@{prefix}-menu-item-normal.@{prefix}-active:hover .@{prefix}-text, .@{prefix}-menu-item-normal.@{prefix}-active:hover .@{prefix}-ico {\n
+\tcolor: @menuitem-text-inverse;\n
+}\n
+\n
+.@{prefix}-menu-item-normal.@{prefix}-active:focus .@{prefix}-text, .@{prefix}-menu-item-normal.@{prefix}-active:focus .@{prefix}-ico {\n
+\tcolor: @menuitem-text-inverse;\n
+}\n
+\n
+.@{prefix}-menu-item:hover, .@{prefix}-menu-item.@{prefix}-selected, .@{prefix}-menu-item:focus {\n
+\ttext-decoration: none;\n
+\tcolor: @menuitem-text-inverse;\n
+\t.vertical-gradient(@menuitem-bg-selected, @menuitem-bg-selected-hlight);\n
+}\n
+\n
+div.@{prefix}-menu .@{prefix}-menu-item-sep, .@{prefix}-menu-item-sep:hover {\n
+\tborder: 0;\n
+\tpadding: 0;\n
+\theight: 1px;\n
+\tmargin: 9px 1px;\n
+\toverflow: hidden;\n
+\tbackground: @menuitem-separator-top;\n
+\tborder-bottom: 1px solid @menuitem-separator-bottom;\n
+\tcursor: default;\n
+\tfilter: none;\n
+}\n
+\n
+// RTL\n
+\n
+.@{prefix}-menu.@{prefix}-rtl {\n
+\tdirection: rtl;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-menu-item {\n
+\ttext-align: right;\n
+\tdirection: rtl;\n
+\tpadding: 6px 12px 6px 15px;\n
+}\n
+\n
+.@{prefix}-menu-align.@{prefix}-rtl .@{prefix}-menu-shortcut, .@{prefix}-menu-align.@{prefix}-rtl .@{prefix}-caret {\n
+\tright: auto;\n
+\tleft: 0;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-menu-item .@{prefix}-caret {\n
+\tmargin-left: 6px;\n
+\tmargin-right: 0;\n
+\tborder-right: 4px solid @menuitem-caret;\n
+\tborder-left: 0;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-menu-item.@{prefix}-selected .@{prefix}-caret, .@{prefix}-rtl .@{prefix}-menu-item:focus .@{prefix}-caret, .@{prefix}-rtl .@{prefix}-menu-item:hover .@{prefix}-caret {\n
+\tborder-left-color: transparent;\n
+\tborder-right-color: @menuitem-caret-selected;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3942</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>MenuItem.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

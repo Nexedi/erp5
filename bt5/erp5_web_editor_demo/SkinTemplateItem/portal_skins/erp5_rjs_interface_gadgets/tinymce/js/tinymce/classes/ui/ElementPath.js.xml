@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268309.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ElementPath.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ElementPath.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This control creates an path for the current selections parent elements in TinyMCE.\n
+ *\n
+ * @class tinymce.ui.ElementPath\n
+ * @extends tinymce.ui.Path\n
+ */\n
+define("tinymce/ui/ElementPath", [\n
+\t"tinymce/ui/Path",\n
+\t"tinymce/EditorManager"\n
+], function(Path, EditorManager) {\n
+\treturn Path.extend({\n
+\t\t/**\n
+\t\t * Post render method. Called after the control has been rendered to the target.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t * @return {tinymce.ui.ElementPath} Current combobox instance.\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this, editor = EditorManager.activeEditor;\n
+\n
+\t\t\tfunction isHidden(elm) {\n
+\t\t\t\tif (elm.nodeType === 1) {\n
+\t\t\t\t\tif (elm.nodeName == "BR" || !!elm.getAttribute(\'data-mce-bogus\')) {\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (elm.getAttribute(\'data-mce-type\') === \'bookmark\') {\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\tif (editor.settings.elementpath !== false) {\n
+\t\t\t\tself.on(\'select\', function(e) {\n
+\t\t\t\t\teditor.focus();\n
+\t\t\t\t\teditor.selection.select(this.row()[e.index].element);\n
+\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t});\n
+\n
+\t\t\t\teditor.on(\'nodeChange\', function(e) {\n
+\t\t\t\t\tvar outParents = [], parents = e.parents, i = parents.length;\n
+\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tif (parents[i].nodeType == 1 && !isHidden(parents[i])) {\n
+\t\t\t\t\t\t\tvar args = editor.fire(\'ResolveName\', {\n
+\t\t\t\t\t\t\t\tname: parents[i].nodeName.toLowerCase(),\n
+\t\t\t\t\t\t\t\ttarget: parents[i]\n
+\t\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t\tif (!args.isDefaultPrevented()) {\n
+\t\t\t\t\t\t\t\toutParents.push({name: args.name, element: parents[i]});\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tif (args.isPropagationStopped()) {\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tself.row(outParents);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn self._super();\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1869</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ElementPath.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,390 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268527.11</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ *\n
+ * Settings:\n
+ *  imagetools_cors_hosts - Array of remote domains that has CORS setup.\n
+ *  imagetools_proxy - Url to proxy that streams images from remote host to local host.\n
+ *  imagetools_toolbar - Toolbar items to render when an editable image is selected.\n
+ */\n
+define("tinymce/imagetoolsplugin/Plugin", [\n
+\t"tinymce/PluginManager",\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Promise",\n
+\t"tinymce/util/URI",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/imagetoolsplugin/ImageTools",\n
+\t"tinymce/imagetoolsplugin/Conversions",\n
+\t"tinymce/imagetoolsplugin/Dialog"\n
+], function(PluginManager, Env, Promise, URI, Tools, ImageTools, Conversions, Dialog) {\n
+\tPluginManager.add(\'imagetools\', function(editor) {\n
+\t\tvar count = 0;\n
+\n
+\t\tif (!Env.fileApi) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t/*\n
+\t\tfunction startCrop() {\n
+\t\t\tvar imageRect, viewPortRect;\n
+\n
+\t\t\timageRect = getSelectedImage().getBoundingClientRect();\n
+\n
+\t\t\timageRect = {\n
+\t\t\t\tx: imageRect.left,\n
+\t\t\t\ty: imageRect.top,\n
+\t\t\t\tw: imageRect.width,\n
+\t\t\t\th: imageRect.height\n
+\t\t\t};\n
+\n
+\t\t\tviewPortRect = {\n
+\t\t\t\tx: 0,\n
+\t\t\t\ty: 0,\n
+\t\t\t\tw: editor.getBody().scrollWidth,\n
+\t\t\t\th: editor.getBody().scrollHeight\n
+\t\t\t};\n
+\n
+\t\t\tcropRect = new CropRect(imageRect, viewPortRect, imageRect, editor.getBody());\n
+\t\t\tcropRect.toggleVisibility(true);\n
+\n
+\t\t\teditor.selection.getSel().removeAllRanges();\n
+\t\t\teditor.nodeChanged();\n
+\t\t}\n
+\n
+\t\tfunction stopCrop() {\n
+\t\t\tif (cropRect) {\n
+\t\t\t\tcropRect.destroy();\n
+\t\t\t\tcropRect = null;\n
+\t\t\t}\n
+\t\t}\n
+\t\t*/\n
+\n
+\t\tfunction getImageSize(img) {\n
+\t\t\tvar width, height;\n
+\n
+\t\t\tfunction isPxValue(value) {\n
+\t\t\t\treturn value.indexOf(\'px\') == value.length - 2;\n
+\t\t\t}\n
+\n
+\t\t\twidth = img.style.width;\n
+\t\t\theight = img.style.height;\n
+\t\t\tif (width || height) {\n
+\t\t\t\tif (isPxValue(width) && isPxValue(height)) {\n
+\t\t\t\t\treturn {\n
+\t\t\t\t\t\tw: parseInt(width, 10),\n
+\t\t\t\t\t\th: parseInt(height, 10)\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn null;\n
+\t\t\t}\n
+\n
+\t\t\twidth = editor.$(img).attr(\'width\');\n
+\t\t\theight = editor.$(img).attr(\'height\');\n
+\t\t\tif (width && height) {\n
+\t\t\t\treturn {\n
+\t\t\t\t\tw: parseInt(width, 10),\n
+\t\t\t\t\th: parseInt(height, 10)\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\treturn null;\n
+\t\t}\n
+\n
+\t\tfunction setImageSize(img, size) {\n
+\t\t\tvar width, height;\n
+\n
+\t\t\tif (size) {\n
+\t\t\t\twidth = img.style.width;\n
+\t\t\t\theight = img.style.height;\n
+\n
+\t\t\t\tif (width || height) {\n
+\t\t\t\t\teditor.$(img).css({\n
+\t\t\t\t\t\twidth: size.w,\n
+\t\t\t\t\t\theight: size.h\n
+\t\t\t\t\t}).removeAttr(\'data-mce-style\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\twidth = img.width;\n
+\t\t\t\theight = img.height;\n
+\n
+\t\t\t\tif (width || height) {\n
+\t\t\t\t\teditor.$(img).attr({\n
+\t\t\t\t\t\twidth: size.w,\n
+\t\t\t\t\t\theight: size.h\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction getNaturalImageSize(img) {\n
+\t\t\treturn {\n
+\t\t\t\tw: img.naturalWidth,\n
+\t\t\t\th: img.naturalHeight\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction getSelectedImage() {\n
+\t\t\treturn editor.selection.getNode();\n
+\t\t}\n
+\n
+\t\tfunction createId() {\n
+\t\t\treturn \'imagetools\' + count++;\n
+\t\t}\n
+\n
+\t\tfunction isLocalImage(img) {\n
+\t\t\tvar url = img.src;\n
+\n
+\t\t\treturn url.indexOf(\'data:\') === 0 || url.indexOf(\'blob:\') === 0 || new URI(url).host === editor.documentBaseURI.host;\n
+\t\t}\n
+\n
+\t\tfunction isCorsImage(img) {\n
+\t\t\treturn Tools.inArray(editor.settings.imagetools_cors_hosts, new URI(img.src).host) !== -1;\n
+\t\t}\n
+\n
+\t\tfunction requestUrlAsBlob(url) {\n
+\t\t\t// Needs to be XHR for IE 10 compatibility\n
+\t\t\treturn new Promise(function(resolve) {\n
+\t\t\t\tvar xhr = new XMLHttpRequest();\n
+\n
+\t\t\t\txhr.onload = function() {\n
+\t\t\t\t\tresolve(this.response);\n
+\t\t\t\t};\n
+\n
+\t\t\t\txhr.open(\'GET\', url, true);\n
+\t\t\t\txhr.responseType = \'blob\';\n
+\t\t\t\txhr.send();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction imageToBlob(img) {\n
+\t\t\tvar src = img.src;\n
+\n
+\t\t\tif (isCorsImage(img)) {\n
+\t\t\t\treturn requestUrlAsBlob(img.src);\n
+\t\t\t}\n
+\n
+\t\t\tif (!isLocalImage(img)) {\n
+\t\t\t\timg = new Image();\n
+\t\t\t\tsrc = editor.settings.imagetools_proxy;\n
+\t\t\t\timg.src += (src.indexOf(\'?\') === -1 ? \'?\' : \'&\') + \'url=\' + encodeURIComponent(img.src);\n
+\t\t\t}\n
+\n
+\t\t\treturn Conversions.imageToBlob(img);\n
+\t\t}\n
+\n
+\t\tfunction findSelectedBlobInfo() {\n
+\t\t\tvar blobInfo;\n
+\n
+\t\t\tblobInfo = editor.editorUpload.blobCache.getByUri(getSelectedImage().src);\n
+\t\t\tif (blobInfo) {\n
+\t\t\t\treturn blobInfo;\n
+\t\t\t}\n
+\n
+\t\t\treturn imageToBlob(getSelectedImage()).then(function(blob) {\n
+\t\t\t\treturn Conversions.blobToBase64(blob).then(function(base64) {\n
+\t\t\t\t\tvar blobCache = editor.editorUpload.blobCache;\n
+\t\t\t\t\tvar blobInfo = blobCache.create(createId(), blob, base64);\n
+\t\t\t\t\tblobCache.add(blobInfo);\n
+\t\t\t\t\treturn blobInfo;\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction updateSelectedImage(blob) {\n
+\t\t\treturn Conversions.blobToDataUri(blob).then(function(dataUri) {\n
+\t\t\t\tvar id, base64, blobCache, blobInfo, selectedImage;\n
+\n
+\t\t\t\tselectedImage = getSelectedImage();\n
+\t\t\t\tid = createId();\n
+\t\t\t\tblobCache = editor.editorUpload.blobCache;\n
+\t\t\t\tbase64 = URI.parseDataUri(dataUri).data;\n
+\n
+\t\t\t\tblobInfo = blobCache.create(id, blob, base64);\n
+\t\t\t\tblobCache.add(blobInfo);\n
+\n
+\t\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\t\tfunction imageLoadedHandler() {\n
+\t\t\t\t\t\teditor.$(selectedImage).off(\'load\', imageLoadedHandler);\n
+\t\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teditor.$(selectedImage).on(\'load\', imageLoadedHandler);\n
+\n
+\t\t\t\t\teditor.$(selectedImage).attr({\n
+\t\t\t\t\t\tsrc: blobInfo.blobUri()\n
+\t\t\t\t\t}).removeAttr(\'data-mce-src\');\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn blobInfo;\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction selectedImageOperation(fn) {\n
+\t\t\treturn function() {\n
+\t\t\t\treturn editor._scanForImages().then(findSelectedBlobInfo).then(fn).then(updateSelectedImage);\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction rotate(angle) {\n
+\t\t\treturn function() {\n
+\t\t\t\treturn selectedImageOperation(function(blobInfo) {\n
+\t\t\t\t\tvar size = getImageSize(getSelectedImage());\n
+\n
+\t\t\t\t\tif (size) {\n
+\t\t\t\t\t\tsetImageSize(getSelectedImage(), {\n
+\t\t\t\t\t\t\tw: size.h,\n
+\t\t\t\t\t\t\th: size.w\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn ImageTools.rotate(blobInfo.blob(), angle);\n
+\t\t\t\t})();\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction flip(axis) {\n
+\t\t\treturn function() {\n
+\t\t\t\treturn selectedImageOperation(function(blobInfo) {\n
+\t\t\t\t\treturn ImageTools.flip(blobInfo.blob(), axis);\n
+\t\t\t\t})();\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction editImageDialog() {\n
+\t\t\tvar img = getSelectedImage(), originalSize = getNaturalImageSize(img);\n
+\n
+\t\t\tif (img) {\n
+\t\t\t\timageToBlob(img).then(Dialog.edit).then(function(blob) {\n
+\t\t\t\t\treturn new Promise(function(resolve) {\n
+\t\t\t\t\t\tConversions.blobToImage(blob).then(function(newImage) {\n
+\t\t\t\t\t\t\tvar newSize = getNaturalImageSize(newImage);\n
+\n
+\t\t\t\t\t\t\tif (originalSize.w != newSize.w || originalSize.h != newSize.h) {\n
+\t\t\t\t\t\t\t\tif (getImageSize(img)) {\n
+\t\t\t\t\t\t\t\t\tsetImageSize(img, newSize);\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tURL.revokeObjectURL(newImage.src);\n
+\t\t\t\t\t\t\tresolve(blob);\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t});\n
+\t\t\t\t}).then(updateSelectedImage, function() {});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction addButtons() {\n
+\t\t\teditor.addButton(\'rotateleft\', {\n
+\t\t\t\ttitle: \'Rotate counterclockwise\',\n
+\t\t\t\tonclick: rotate(-90)\n
+\t\t\t});\n
+\n
+\t\t\teditor.addButton(\'rotateright\', {\n
+\t\t\t\ttitle: \'Rotate clockwise\',\n
+\t\t\t\tonclick: rotate(90)\n
+\t\t\t});\n
+\n
+\t\t\teditor.addButton(\'flipv\', {\n
+\t\t\t\ttitle: \'Flip vertically\',\n
+\t\t\t\tonclick: flip(\'v\')\n
+\t\t\t});\n
+\n
+\t\t\teditor.addButton(\'fliph\', {\n
+\t\t\t\ttitle: \'Flip horizontally\',\n
+\t\t\t\tonclick: flip(\'h\')\n
+\t\t\t});\n
+\n
+\t\t\teditor.addButton(\'editimage\', {\n
+\t\t\t\ttitle: \'Edit image\',\n
+\t\t\t\tonclick: editImageDialog\n
+\t\t\t});\n
+\n
+\t\t\teditor.addButton(\'imageoptions\', {\n
+\t\t\t\ttitle: \'Image options\',\n
+\t\t\t\ticon: \'options\',\n
+\t\t\t\tcmd: \'mceImage\'\n
+\t\t\t});\n
+\n
+\t\t\t/*\n
+\t\t\teditor.addButton(\'crop\', {\n
+\t\t\t\ttitle: \'Crop\',\n
+\t\t\t\tonclick: startCrop\n
+\t\t\t});\n
+\t\t\t*/\n
+\t\t}\n
+\n
+\t\tfunction isEditableImage(img) {\n
+\t\t\tvar selectorMatched = editor.dom.is(img, \'img:not([data-mce-object],[data-mce-placeholder])\');\n
+\n
+\t\t\treturn selectorMatched && (isLocalImage(img) || isCorsImage(img) || editor.settings.imagetools_proxy);\n
+\t\t}\n
+\n
+\t\tfunction addToolbars() {\n
+\t\t\tvar toolbarItems = editor.settings.imagetools_toolbar;\n
+\n
+\t\t\tif (!toolbarItems) {\n
+\t\t\t\ttoolbarItems = \'rotateleft rotateright | flipv fliph | crop editimage imageoptions\';\n
+\t\t\t}\n
+\n
+\t\t\teditor.addContextToolbar(\n
+\t\t\t\tisEditableImage,\n
+\t\t\t\ttoolbarItems\n
+\t\t\t);\n
+\t\t}\n
+\n
+\t\taddButtons();\n
+\t\taddToolbars();\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7809</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268541.03</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+/*eslint no-nested-ternary:0 */\n
+\n
+/**\n
+ * Auto Resize\n
+ *\n
+ * This plugin automatically resizes the content area to fit its content height.\n
+ * It will retain a minimum height, which is the height of the content area when\n
+ * it\'s initialized.\n
+ */\n
+tinymce.PluginManager.add(\'autoresize\', function(editor) {\n
+\tvar settings = editor.settings, oldSize = 0;\n
+\n
+\tfunction isFullscreen() {\n
+\t\treturn editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();\n
+\t}\n
+\n
+\tif (editor.settings.inline) {\n
+\t\treturn;\n
+\t}\n
+\n
+\t/**\n
+\t * This method gets executed each time the editor needs to resize.\n
+\t */\n
+\tfunction resize(e) {\n
+\t\tvar deltaSize, doc, body, docElm, DOM = tinymce.DOM, resizeHeight, myHeight,\n
+\t\t\tmarginTop, marginBottom, paddingTop, paddingBottom, borderTop, borderBottom;\n
+\n
+\t\tdoc = editor.getDoc();\n
+\t\tif (!doc) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tbody = doc.body;\n
+\t\tdocElm = doc.documentElement;\n
+\t\tresizeHeight = settings.autoresize_min_height;\n
+\n
+\t\tif (!body || (e && e.type === "setcontent" && e.initial) || isFullscreen()) {\n
+\t\t\tif (body && docElm) {\n
+\t\t\t\tbody.style.overflowY = "auto";\n
+\t\t\t\tdocElm.style.overflowY = "auto"; // Old IE\n
+\t\t\t}\n
+\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t// Calculate outer height of the body element using CSS styles\n
+\t\tmarginTop = editor.dom.getStyle(body, \'margin-top\', true);\n
+\t\tmarginBottom = editor.dom.getStyle(body, \'margin-bottom\', true);\n
+\t\tpaddingTop = editor.dom.getStyle(body, \'padding-top\', true);\n
+\t\tpaddingBottom = editor.dom.getStyle(body, \'padding-bottom\', true);\n
+\t\tborderTop = editor.dom.getStyle(body, \'border-top-width\', true);\n
+\t\tborderBottom = editor.dom.getStyle(body, \'border-bottom-width\', true);\n
+\t\tmyHeight = body.offsetHeight + parseInt(marginTop, 10) + parseInt(marginBottom, 10) +\n
+\t\t\tparseInt(paddingTop, 10) + parseInt(paddingBottom, 10) +\n
+\t\t\tparseInt(borderTop, 10) + parseInt(borderBottom, 10);\n
+\n
+\t\t// Make sure we have a valid height\n
+\t\tif (isNaN(myHeight) || myHeight <= 0) {\n
+\t\t\t// Get height differently depending on the browser used\n
+\t\t\tmyHeight = tinymce.Env.ie ? body.scrollHeight : (tinymce.Env.webkit && body.clientHeight === 0 ? 0 : body.offsetHeight);\n
+\t\t}\n
+\n
+\t\t// Don\'t make it smaller than the minimum height\n
+\t\tif (myHeight > settings.autoresize_min_height) {\n
+\t\t\tresizeHeight = myHeight;\n
+\t\t}\n
+\n
+\t\t// If a maximum height has been defined don\'t exceed this height\n
+\t\tif (settings.autoresize_max_height && myHeight > settings.autoresize_max_height) {\n
+\t\t\tresizeHeight = settings.autoresize_max_height;\n
+\t\t\tbody.style.overflowY = "auto";\n
+\t\t\tdocElm.style.overflowY = "auto"; // Old IE\n
+\t\t} else {\n
+\t\t\tbody.style.overflowY = "hidden";\n
+\t\t\tdocElm.style.overflowY = "hidden"; // Old IE\n
+\t\t\tbody.scrollTop = 0;\n
+\t\t}\n
+\n
+\t\t// Resize content element\n
+\t\tif (resizeHeight !== oldSize) {\n
+\t\t\tdeltaSize = resizeHeight - oldSize;\n
+\t\t\tDOM.setStyle(editor.iframeElement, \'height\', resizeHeight + \'px\');\n
+\t\t\toldSize = resizeHeight;\n
+\n
+\t\t\t// WebKit doesn\'t decrease the size of the body element until the iframe gets resized\n
+\t\t\t// So we need to continue to resize the iframe down until the size gets fixed\n
+\t\t\tif (tinymce.isWebKit && deltaSize < 0) {\n
+\t\t\t\tresize(e);\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\t/**\n
+\t * Calls the resize x times in 100ms intervals. We can\'t wait for load events since\n
+\t * the CSS files might load async.\n
+\t */\n
+\tfunction wait(times, interval, callback) {\n
+\t\tsetTimeout(function() {\n
+\t\t\tresize({});\n
+\n
+\t\t\tif (times--) {\n
+\t\t\t\twait(times, interval, callback);\n
+\t\t\t} else if (callback) {\n
+\t\t\t\tcallback();\n
+\t\t\t}\n
+\t\t}, interval);\n
+\t}\n
+\n
+\t// Define minimum height\n
+\tsettings.autoresize_min_height = parseInt(editor.getParam(\'autoresize_min_height\', editor.getElement().offsetHeight), 10);\n
+\n
+\t// Define maximum height\n
+\tsettings.autoresize_max_height = parseInt(editor.getParam(\'autoresize_max_height\', 0), 10);\n
+\n
+\t// Add padding at the bottom for better UX\n
+\teditor.on("init", function() {\n
+\t\tvar overflowPadding, bottomMargin;\n
+\n
+\t\toverflowPadding = editor.getParam(\'autoresize_overflow_padding\', 1);\n
+\t\tbottomMargin = editor.getParam(\'autoresize_bottom_margin\', 50);\n
+\n
+\t\tif (overflowPadding !== false) {\n
+\t\t\teditor.dom.setStyles(editor.getBody(), {\n
+\t\t\t\tpaddingLeft: overflowPadding,\n
+\t\t\t\tpaddingRight: overflowPadding\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tif (bottomMargin !== false) {\n
+\t\t\teditor.dom.setStyles(editor.getBody(), {\n
+\t\t\t\tpaddingBottom: bottomMargin\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+\n
+\t// Add appropriate listeners for resizing content area\n
+\teditor.on("nodechange setcontent keyup FullscreenStateChanged", resize);\n
+\n
+\tif (editor.getParam(\'autoresize_on_init\', true)) {\n
+\t\teditor.on(\'init\', function() {\n
+\t\t\t// Hit it 20 times in 100 ms intervals\n
+\t\t\twait(20, 100, function() {\n
+\t\t\t\t// Hit it 5 times in 1 sec intervals\n
+\t\t\t\twait(5, 1000);\n
+\t\t\t});\n
+\t\t});\n
+\t}\n
+\n
+\t// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand(\'mceExample\');\n
+\teditor.addCommand(\'mceAutoResize\', resize);\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4957</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

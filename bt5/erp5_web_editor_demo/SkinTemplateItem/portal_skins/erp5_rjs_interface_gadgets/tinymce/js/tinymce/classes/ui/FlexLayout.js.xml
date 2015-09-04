@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268344.46</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FlexLayout.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * FlexLayout.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This layout manager works similar to the CSS flex box.\n
+ *\n
+ * @setting {String} direction row|row-reverse|column|column-reverse\n
+ * @setting {Number} flex A positive-number to flex by.\n
+ * @setting {String} align start|end|center|stretch\n
+ * @setting {String} pack start|end|justify\n
+ *\n
+ * @class tinymce.ui.FlexLayout\n
+ * @extends tinymce.ui.AbsoluteLayout\n
+ */\n
+define("tinymce/ui/FlexLayout", [\n
+\t"tinymce/ui/AbsoluteLayout"\n
+], function(AbsoluteLayout) {\n
+\t"use strict";\n
+\n
+\treturn AbsoluteLayout.extend({\n
+\t\t/**\n
+\t\t * Recalculates the positions of the controls in the specified container.\n
+\t\t *\n
+\t\t * @method recalc\n
+\t\t * @param {tinymce.ui.Container} container Container instance to recalc.\n
+\t\t */\n
+\t\trecalc: function(container) {\n
+\t\t\t// A ton of variables, needs to be in the same scope for performance\n
+\t\t\tvar i, l, items, contLayoutRect, contPaddingBox, contSettings, align, pack, spacing, totalFlex, availableSpace, direction;\n
+\t\t\tvar ctrl, ctrlLayoutRect, ctrlSettings, flex, maxSizeItems = [], size, maxSize, ratio, rect, pos, maxAlignEndPos;\n
+\t\t\tvar sizeName, minSizeName, posName, maxSizeName, beforeName, innerSizeName, deltaSizeName, contentSizeName;\n
+\t\t\tvar alignAxisName, alignInnerSizeName, alignSizeName, alignMinSizeName, alignBeforeName, alignAfterName;\n
+\t\t\tvar alignDeltaSizeName, alignContentSizeName;\n
+\t\t\tvar max = Math.max, min = Math.min;\n
+\n
+\t\t\t// Get container items, properties and settings\n
+\t\t\titems = container.items().filter(\':visible\');\n
+\t\t\tcontLayoutRect = container.layoutRect();\n
+\t\t\tcontPaddingBox = container.paddingBox;\n
+\t\t\tcontSettings = container.settings;\n
+\t\t\tdirection = container.isRtl() ? (contSettings.direction || \'row-reversed\') : contSettings.direction;\n
+\t\t\talign = contSettings.align;\n
+\t\t\tpack = container.isRtl() ? (contSettings.pack || \'end\') : contSettings.pack;\n
+\t\t\tspacing = contSettings.spacing || 0;\n
+\n
+\t\t\tif (direction == "row-reversed" || direction == "column-reverse") {\n
+\t\t\t\titems = items.set(items.toArray().reverse());\n
+\t\t\t\tdirection = direction.split(\'-\')[0];\n
+\t\t\t}\n
+\n
+\t\t\t// Setup axis variable name for row/column direction since the calculations is the same\n
+\t\t\tif (direction == "column") {\n
+\t\t\t\tposName = "y";\n
+\t\t\t\tsizeName = "h";\n
+\t\t\t\tminSizeName = "minH";\n
+\t\t\t\tmaxSizeName = "maxH";\n
+\t\t\t\tinnerSizeName = "innerH";\n
+\t\t\t\tbeforeName = \'top\';\n
+\t\t\t\tdeltaSizeName = "deltaH";\n
+\t\t\t\tcontentSizeName = "contentH";\n
+\n
+\t\t\t\talignBeforeName = "left";\n
+\t\t\t\talignSizeName = "w";\n
+\t\t\t\talignAxisName = "x";\n
+\t\t\t\talignInnerSizeName = "innerW";\n
+\t\t\t\talignMinSizeName = "minW";\n
+\t\t\t\talignAfterName = "right";\n
+\t\t\t\talignDeltaSizeName = "deltaW";\n
+\t\t\t\talignContentSizeName = "contentW";\n
+\t\t\t} else {\n
+\t\t\t\tposName = "x";\n
+\t\t\t\tsizeName = "w";\n
+\t\t\t\tminSizeName = "minW";\n
+\t\t\t\tmaxSizeName = "maxW";\n
+\t\t\t\tinnerSizeName = "innerW";\n
+\t\t\t\tbeforeName = \'left\';\n
+\t\t\t\tdeltaSizeName = "deltaW";\n
+\t\t\t\tcontentSizeName = "contentW";\n
+\n
+\t\t\t\talignBeforeName = "top";\n
+\t\t\t\talignSizeName = "h";\n
+\t\t\t\talignAxisName = "y";\n
+\t\t\t\talignInnerSizeName = "innerH";\n
+\t\t\t\talignMinSizeName = "minH";\n
+\t\t\t\talignAfterName = "bottom";\n
+\t\t\t\talignDeltaSizeName = "deltaH";\n
+\t\t\t\talignContentSizeName = "contentH";\n
+\t\t\t}\n
+\n
+\t\t\t// Figure out total flex, availableSpace and collect any max size elements\n
+\t\t\tavailableSpace = contLayoutRect[innerSizeName] - contPaddingBox[beforeName] - contPaddingBox[beforeName];\n
+\t\t\tmaxAlignEndPos = totalFlex = 0;\n
+\t\t\tfor (i = 0, l = items.length; i < l; i++) {\n
+\t\t\t\tctrl = items[i];\n
+\t\t\t\tctrlLayoutRect = ctrl.layoutRect();\n
+\t\t\t\tctrlSettings = ctrl.settings;\n
+\t\t\t\tflex = ctrlSettings.flex;\n
+\t\t\t\tavailableSpace -= (i < l - 1 ? spacing : 0);\n
+\n
+\t\t\t\tif (flex > 0) {\n
+\t\t\t\t\ttotalFlex += flex;\n
+\n
+\t\t\t\t\t// Flexed item has a max size then we need to check if we will hit that size\n
+\t\t\t\t\tif (ctrlLayoutRect[maxSizeName]) {\n
+\t\t\t\t\t\tmaxSizeItems.push(ctrl);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tctrlLayoutRect.flex = flex;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tavailableSpace -= ctrlLayoutRect[minSizeName];\n
+\n
+\t\t\t\t// Calculate the align end position to be used to check for overflow/underflow\n
+\t\t\t\tsize = contPaddingBox[alignBeforeName] + ctrlLayoutRect[alignMinSizeName] + contPaddingBox[alignAfterName];\n
+\t\t\t\tif (size > maxAlignEndPos) {\n
+\t\t\t\t\tmaxAlignEndPos = size;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Calculate minW/minH\n
+\t\t\trect = {};\n
+\t\t\tif (availableSpace < 0) {\n
+\t\t\t\trect[minSizeName] = contLayoutRect[minSizeName] - availableSpace + contLayoutRect[deltaSizeName];\n
+\t\t\t} else {\n
+\t\t\t\trect[minSizeName] = contLayoutRect[innerSizeName] - availableSpace + contLayoutRect[deltaSizeName];\n
+\t\t\t}\n
+\n
+\t\t\trect[alignMinSizeName] = maxAlignEndPos + contLayoutRect[alignDeltaSizeName];\n
+\n
+\t\t\trect[contentSizeName] = contLayoutRect[innerSizeName] - availableSpace;\n
+\t\t\trect[alignContentSizeName] = maxAlignEndPos;\n
+\t\t\trect.minW = min(rect.minW, contLayoutRect.maxW);\n
+\t\t\trect.minH = min(rect.minH, contLayoutRect.maxH);\n
+\t\t\trect.minW = max(rect.minW, contLayoutRect.startMinWidth);\n
+\t\t\trect.minH = max(rect.minH, contLayoutRect.startMinHeight);\n
+\n
+\t\t\t// Resize container container if minSize was changed\n
+\t\t\tif (contLayoutRect.autoResize && (rect.minW != contLayoutRect.minW || rect.minH != contLayoutRect.minH)) {\n
+\t\t\t\trect.w = rect.minW;\n
+\t\t\t\trect.h = rect.minH;\n
+\n
+\t\t\t\tcontainer.layoutRect(rect);\n
+\t\t\t\tthis.recalc(container);\n
+\n
+\t\t\t\t// Forced recalc for example if items are hidden/shown\n
+\t\t\t\tif (container._lastRect === null) {\n
+\t\t\t\t\tvar parentCtrl = container.parent();\n
+\t\t\t\t\tif (parentCtrl) {\n
+\t\t\t\t\t\tparentCtrl._lastRect = null;\n
+\t\t\t\t\t\tparentCtrl.recalc();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Handle max size elements, check if they will become to wide with current options\n
+\t\t\tratio = availableSpace / totalFlex;\n
+\t\t\tfor (i = 0, l = maxSizeItems.length; i < l; i++) {\n
+\t\t\t\tctrl = maxSizeItems[i];\n
+\t\t\t\tctrlLayoutRect = ctrl.layoutRect();\n
+\t\t\t\tmaxSize = ctrlLayoutRect[maxSizeName];\n
+\t\t\t\tsize = ctrlLayoutRect[minSizeName] + ctrlLayoutRect.flex * ratio;\n
+\n
+\t\t\t\tif (size > maxSize) {\n
+\t\t\t\t\tavailableSpace -= (ctrlLayoutRect[maxSizeName] - ctrlLayoutRect[minSizeName]);\n
+\t\t\t\t\ttotalFlex -= ctrlLayoutRect.flex;\n
+\t\t\t\t\tctrlLayoutRect.flex = 0;\n
+\t\t\t\t\tctrlLayoutRect.maxFlexSize = maxSize;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tctrlLayoutRect.maxFlexSize = 0;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Setup new ratio, target layout rect, start position\n
+\t\t\tratio = availableSpace / totalFlex;\n
+\t\t\tpos = contPaddingBox[beforeName];\n
+\t\t\trect = {};\n
+\n
+\t\t\t// Handle pack setting moves the start position to end, center\n
+\t\t\tif (totalFlex === 0) {\n
+\t\t\t\tif (pack == "end") {\n
+\t\t\t\t\tpos = availableSpace + contPaddingBox[beforeName];\n
+\t\t\t\t} else if (pack == "center") {\n
+\t\t\t\t\tpos = Math.round(\n
+\t\t\t\t\t\t(contLayoutRect[innerSizeName] / 2) - ((contLayoutRect[innerSizeName] - availableSpace) / 2)\n
+\t\t\t\t\t) + contPaddingBox[beforeName];\n
+\n
+\t\t\t\t\tif (pos < 0) {\n
+\t\t\t\t\t\tpos = contPaddingBox[beforeName];\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if (pack == "justify") {\n
+\t\t\t\t\tpos = contPaddingBox[beforeName];\n
+\t\t\t\t\tspacing = Math.floor(availableSpace / (items.length - 1));\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Default aligning (start) the other ones needs to be calculated while doing the layout\n
+\t\t\trect[alignAxisName] = contPaddingBox[alignBeforeName];\n
+\n
+\t\t\t// Start laying out controls\n
+\t\t\tfor (i = 0, l = items.length; i < l; i++) {\n
+\t\t\t\tctrl = items[i];\n
+\t\t\t\tctrlLayoutRect = ctrl.layoutRect();\n
+\t\t\t\tsize = ctrlLayoutRect.maxFlexSize || ctrlLayoutRect[minSizeName];\n
+\n
+\t\t\t\t// Align the control on the other axis\n
+\t\t\t\tif (align === "center") {\n
+\t\t\t\t\trect[alignAxisName] = Math.round((contLayoutRect[alignInnerSizeName] / 2) - (ctrlLayoutRect[alignSizeName] / 2));\n
+\t\t\t\t} else if (align === "stretch") {\n
+\t\t\t\t\trect[alignSizeName] = max(\n
+\t\t\t\t\t\tctrlLayoutRect[alignMinSizeName] || 0,\n
+\t\t\t\t\t\tcontLayoutRect[alignInnerSizeName] - contPaddingBox[alignBeforeName] - contPaddingBox[alignAfterName]\n
+\t\t\t\t\t);\n
+\t\t\t\t\trect[alignAxisName] = contPaddingBox[alignBeforeName];\n
+\t\t\t\t} else if (align === "end") {\n
+\t\t\t\t\trect[alignAxisName] = contLayoutRect[alignInnerSizeName] - ctrlLayoutRect[alignSizeName] - contPaddingBox.top;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Calculate new size based on flex\n
+\t\t\t\tif (ctrlLayoutRect.flex > 0) {\n
+\t\t\t\t\tsize += ctrlLayoutRect.flex * ratio;\n
+\t\t\t\t}\n
+\n
+\t\t\t\trect[sizeName] = size;\n
+\t\t\t\trect[posName] = pos;\n
+\t\t\t\tctrl.layoutRect(rect);\n
+\n
+\t\t\t\t// Recalculate containers\n
+\t\t\t\tif (ctrl.recalc) {\n
+\t\t\t\t\tctrl.recalc();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Move x/y position\n
+\t\t\t\tpos += size + spacing;\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8282</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FlexLayout.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

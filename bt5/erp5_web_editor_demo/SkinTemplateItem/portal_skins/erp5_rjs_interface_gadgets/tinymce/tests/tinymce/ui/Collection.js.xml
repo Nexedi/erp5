@@ -1,0 +1,293 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268218.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Collection.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>(function() {\n
+\tvar panel;\n
+\n
+\tmodule("tinymce.ui.Collection", {\n
+\t\tsetupModule: function() {\n
+\t\t\tpanel = tinymce.ui.Factory.create({\n
+\t\t\t\ttype: \'panel\',\n
+\t\t\t\titems: [\n
+\t\t\t\t\t{type: \'button\', name: \'button1\', text: \'button1\', classes: \'class1\', disabled: true},\n
+\t\t\t\t\t{type: \'button\', name: \'button2\', classes: \'class1 class2\'},\n
+\t\t\t\t\t{type: \'button\', name: \'button3\', classes: \'class2 class1 class3\'},\n
+\n
+\t\t\t\t\t{type: \'buttongroup\', name: \'buttongroup1\', items: [\n
+\t\t\t\t\t\t{type: \'button\', name: \'button4\'},\n
+\t\t\t\t\t\t{type: \'button\', name: \'button5\'},\n
+\t\t\t\t\t\t{type: \'button\', name: \'button6\'}\n
+\t\t\t\t\t]},\n
+\n
+\t\t\t\t\t{type: \'buttongroup\', name: \'buttongroup2\', items: [\n
+\t\t\t\t\t\t{type: \'button\', name: \'button7\'},\n
+\t\t\t\t\t\t{type: \'button\', name: \'button8\'},\n
+\t\t\t\t\t\t{type: \'button\', name: \'button9\'}\n
+\t\t\t\t\t]},\n
+\n
+\t\t\t\t\t{type: \'toolbar\', name: \'toolbar1\', items: [\n
+\t\t\t\t\t\t{type: \'buttongroup\', name: \'buttongroup3\', items: [\n
+\t\t\t\t\t\t\t{type: \'button\', name: \'button10\', disabled: true},\n
+\t\t\t\t\t\t\t{type: \'button\', name: \'button11\'},\n
+\t\t\t\t\t\t\t{type: \'button\', name: \'button12\', classes: \'class4\'}\n
+\t\t\t\t\t\t]}\n
+\t\t\t\t\t]}\n
+\t\t\t\t]\n
+\t\t\t}).renderTo(document.getElementById(\'view\'));\n
+\t\t},\n
+\n
+\t\tteardown: function() {\n
+\t\t\ttinymce.dom.Event.clean(document.getElementById(\'view\'));\n
+\t\t}\n
+\t});\n
+\n
+\ttest("Constructor", function() {\n
+\t\tequal(new tinymce.ui.Collection().length, 0);\n
+\t\tequal(new tinymce.ui.Collection(panel.find(\'button\').toArray()).length, 12);\n
+\t\tequal(new tinymce.ui.Collection(panel.find(\'button\')).length, 12);\n
+\t\tequal(new tinymce.ui.Collection(panel.find(\'button:first\')[0]).length, 1);\n
+\t\tequal(new tinymce.ui.Collection(panel.find(\'button:first\')[0])[0].type, \'button\');\n
+\t});\n
+\n
+\ttest("add", function() {\n
+\t\tvar collection = new tinymce.ui.Collection([panel, panel]);\n
+\n
+\t\tequal(collection.add(panel).length, 3);\n
+\t\tequal(collection.add([panel, panel]).length, 5);\n
+\t});\n
+\n
+\ttest("set", function() {\n
+\t\tvar collection = new tinymce.ui.Collection([panel, panel]);\n
+\n
+\t\tequal(collection.set(panel).length, 1);\n
+\t\tequal(collection.set([panel, panel]).length, 2);\n
+\t});\n
+\n
+\ttest("filter", function() {\n
+\t\tequal(panel.find(\'button\').filter(\'*:first\').length, 4);\n
+\t\tequal(panel.find(\'button\').filter(\'buttongroup button\').length, 9);\n
+\t\tequal(panel.find(\'button\').filter(\'*\').length, 12);\n
+\t\tequal(panel.find(\'button\').filter(\'nomatch\').length, 0);\n
+\t\tequal(panel.find(\'button\').filter(function(ctrl) {return ctrl.settings.name == "button7";}).length, 1);\n
+\t});\n
+\n
+\ttest("slice", function() {\n
+\t\tequal(panel.find(\'button\').slice(1).length, 11);\n
+\t\tequal(panel.find(\'button\').slice(1)[0].name(), \'button2\');\n
+\n
+\t\tequal(panel.find(\'button\').slice(0, 1).length, 1);\n
+\t\tequal(panel.find(\'button\').slice(0, 1)[0].name(), \'button1\');\n
+\n
+\t\tequal(panel.find(\'button\').slice(-1).length, 1);\n
+\t\tequal(panel.find(\'button\').slice(-1)[0].name(), \'button12\');\n
+\n
+\t\tequal(panel.find(\'button\').slice(-2).length, 2);\n
+\t\tequal(panel.find(\'button\').slice(-2)[0].name(), \'button11\');\n
+\n
+\t\tequal(panel.find(\'button\').slice(-2, -1).length, 1);\n
+\t\tequal(panel.find(\'button\').slice(-2, -1)[0].name(), \'button11\');\n
+\n
+\t\tequal(panel.find(\'button\').slice(1000).length, 0);\n
+\t\tequal(panel.find(\'button\').slice(-1000).length, 12);\n
+\t});\n
+\n
+\ttest("eq", function() {\n
+\t\tequal(panel.find(\'button\').eq(1).length, 1);\n
+\t\tequal(panel.find(\'button\').eq(1)[0].name(), \'button2\');\n
+\n
+\t\tequal(panel.find(\'button\').eq(-2).length, 1);\n
+\t\tequal(panel.find(\'button\').eq(-2)[0].name(), \'button11\');\n
+\n
+\t\tequal(panel.find(\'button\').eq(1000).length, 0);\n
+\t});\n
+\n
+\ttest("each", function() {\n
+\t\tvar count;\n
+\n
+\t\tcount = 0;\n
+\t\tpanel.find(\'button\').each(function() {\n
+\t\t\tcount++;\n
+\t\t});\n
+\n
+\t\tequal(count, 12);\n
+\n
+\t\tcount = 0;\n
+\t\tpanel.find(\'nomatch\').each(function() {\n
+\t\t\tcount++;\n
+\t\t});\n
+\n
+\t\tequal(count, 0);\n
+\n
+\t\tcount = 0;\n
+\t\tpanel.find(\'button\').each(function(item, index) {\n
+\t\t\tcount += index;\n
+\t\t});\n
+\n
+\t\tequal(count, 66);\n
+\n
+\t\tcount = 0;\n
+\t\tpanel.find(\'button\').each(function(item) {\n
+\t\t\tif (item.type == \'button\') {\n
+\t\t\t\tcount++;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tequal(count, 12);\n
+\n
+\t\tcount = 0;\n
+\t\tpanel.find(\'button\').each(function(item, index) {\n
+\t\t\tcount++;\n
+\n
+\t\t\tif (index == 3) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tequal(count, 4);\n
+\t});\n
+\n
+\ttest("toArray", function() {\n
+\t\tequal(panel.find(\'button\').toArray().length, 12);\n
+\t\tequal(panel.find(\'button\').toArray().concat, Array.prototype.concat);\n
+\t});\n
+\n
+\ttest("fire/on/off", function() {\n
+\t\tvar value;\n
+\n
+\t\tvalue = 0;\n
+\t\tpanel.find(\'button\').off();\n
+\t\tpanel.find(\'button#button1,button#button2\').on(\'test\', function(args) {\n
+\t\t\tvalue += args.value;\n
+\t\t});\n
+\t\tpanel.find(\'button#button1\').fire(\'test\', {value: 42});\n
+\t\tequal(value, 42);\n
+\n
+\t\tvalue = 0;\n
+\t\tpanel.find(\'button\').off();\n
+\t\tpanel.find(\'button#button1,button#button2\').on(\'test\', function(args) {\n
+\t\t\tvalue += args.value;\n
+\t\t});\n
+\t\tpanel.find(\'button\').fire(\'test\', {value: 42});\n
+\t\tequal(value, 84);\n
+\n
+\t\tvalue = 0;\n
+\t\tpanel.find(\'button\').off();\n
+\t\tpanel.find(\'button#button1,button#button2\').on(\'test\', function(args) {\n
+\t\t\tvalue += args.value;\n
+\t\t});\n
+\t\tpanel.find(\'button#button1\').off(\'test\');\n
+\t\tpanel.find(\'button\').fire(\'test\', {value: 42});\n
+\t\tequal(value, 42);\n
+\n
+\t\tpanel.find(\'button\').off();\n
+\n
+\t\tvalue = 0;\n
+\t\tpanel.find(\'button\').fire(\'test\', {value: 42});\n
+\t\tequal(value, 0);\n
+\t});\n
+\n
+\ttest("show/hide", function() {\n
+\t\tpanel.find(\'button#button1,button#button2\').hide();\n
+\t\tequal(panel.find(\'button:not(:visible)\').length, 2);\n
+\n
+\t\tpanel.find(\'button#button1\').show();\n
+\t\tequal(panel.find(\'button:not(:visible)\').length, 1);\n
+\n
+\t\tpanel.find(\'button#button2\').show();\n
+\t});\n
+\n
+\ttest("text", function() {\n
+\t\tequal(panel.find(\'button#button1,button#button2\').text(), \'button1\');\n
+\t\tequal(panel.find(\'button#button2\').text(\'button2\').text(), \'button2\');\n
+\n
+\t\tequal(panel.find(\'button#button2,button#button3\').text(\'test\').text(), \'test\');\n
+\t\tequal(panel.find(\'button#button3\').text(), \'test\');\n
+\t});\n
+\n
+\ttest("disabled", function() {\n
+\t\tok(panel.find(\'button#button1\').disabled());\n
+\t\tok(!panel.find(\'button#button2\').disabled());\n
+\t\tok(panel.find(\'button#button2\').disabled(true).disabled());\n
+\n
+\t\tpanel.find(\'button#button2\').disabled(false);\n
+\t});\n
+\n
+\ttest("visible", function() {\n
+\t\tok(panel.find(\'button#button2\').visible());\n
+\t\tok(!panel.find(\'button#button2\').visible(false).visible());\n
+\n
+\t\tpanel.find(\'button#button2\').visible(true);\n
+\t});\n
+\n
+\ttest("active", function() {\n
+\t\tok(!panel.find(\'button#button2\').active());\n
+\t\tok(panel.find(\'button#button2\').active(true).active());\n
+\n
+\t\tpanel.find(\'button#button2\').active(false);\n
+\t});\n
+\n
+\ttest("name", function() {\n
+\t\tequal(panel.find(\'button#button1\').name(), \'button1\');\n
+\t\tequal(panel.find(\'button#button2\').name(\'buttonX\').name(), \'buttonX\');\n
+\n
+\t\tpanel.find(\'button#buttonX\').name(\'button2\');\n
+\t});\n
+\n
+\ttest("addClass/removeClass/hasClass", function() {\n
+\t\tpanel.find(\'button#button1\').addClass(\'test\');\n
+\t\tok(panel.find(\'button#button1\').hasClass(\'test\'));\n
+\t\tok(!panel.find(\'button#button1\').hasClass(\'nomatch\'));\n
+\t\tpanel.find(\'button#button1\').removeClass(\'test\');\n
+\t\tok(!panel.find(\'button#button1\').hasClass(\'test\'));\n
+\t});\n
+\n
+\ttest("prop", function() {\n
+\t\tok(panel.find(\'button#button1\').prop(\'disabled\'));\n
+\t\tequal(panel.find(\'button#button1\').prop(\'name\'), \'button1\');\n
+\t\tequal(panel.find(\'button#button1\').prop(\'name\', \'buttonX\').prop(\'name\'), \'buttonX\');\n
+\t\tpanel.find(\'button#buttonX\').prop(\'name\', \'button1\');\n
+\t\tequal(panel.find(\'button#button1\').prop(\'missingProperty\'), undefined);\n
+\t});\n
+\n
+\ttest("exec", function() {\n
+\t\tok(!panel.find(\'button#button1\').exec(\'disabled\', false).disabled());\n
+\t\tpanel.find(\'button#button1\').disabled(true);\n
+\t});\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7337</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Collection.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

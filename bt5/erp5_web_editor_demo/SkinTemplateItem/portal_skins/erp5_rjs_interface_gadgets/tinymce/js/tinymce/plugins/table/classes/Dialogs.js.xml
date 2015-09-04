@@ -1,0 +1,868 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268427.44</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Dialogs.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Dialogs.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*eslint dot-notation:0*/\n
+\n
+/**\n
+ * ...\n
+ *\n
+ * @class tinymce.tableplugin.Dialogs\n
+ * @private\n
+ */\n
+define("tinymce/tableplugin/Dialogs", [\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/Env"\n
+], function(Tools, Env) {\n
+\tvar each = Tools.each;\n
+\n
+\treturn function(editor) {\n
+\t\tvar self = this;\n
+\n
+\t\tfunction createColorPickAction() {\n
+\t\t\tvar colorPickerCallback = editor.settings.color_picker_callback;\n
+\n
+\t\t\tif (colorPickerCallback) {\n
+\t\t\t\treturn function() {\n
+\t\t\t\t\tvar self = this;\n
+\n
+\t\t\t\t\tcolorPickerCallback.call(\n
+\t\t\t\t\t\teditor,\n
+\t\t\t\t\t\tfunction(value) {\n
+\t\t\t\t\t\t\tself.value(value).fire(\'change\');\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\tself.value()\n
+\t\t\t\t\t);\n
+\t\t\t\t};\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction createStyleForm(dom) {\n
+\t\t\treturn {\n
+\t\t\t\ttitle: \'Advanced\',\n
+\t\t\t\ttype: \'form\',\n
+\t\t\t\tdefaults: {\n
+\t\t\t\t\tonchange: function() {\n
+\t\t\t\t\t\tupdateStyle(dom, this.parents().reverse()[0], this.name() == "style");\n
+\t\t\t\t\t}\n
+\t\t\t\t},\n
+\t\t\t\titems: [\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\tlabel: \'Style\',\n
+\t\t\t\t\t\tname: \'style\',\n
+\t\t\t\t\t\ttype: \'textbox\'\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\t\tpadding: 0,\n
+\t\t\t\t\t\tformItemDefaults: {\n
+\t\t\t\t\t\t\tlayout: \'grid\',\n
+\t\t\t\t\t\t\talignH: [\'start\', \'right\']\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\tdefaults: {\n
+\t\t\t\t\t\t\tsize: 7\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\titems: [\n
+\t\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\t\tlabel: \'Border color\',\n
+\t\t\t\t\t\t\t\ttype: \'colorbox\',\n
+\t\t\t\t\t\t\t\tname: \'borderColor\',\n
+\t\t\t\t\t\t\t\tonaction: createColorPickAction()\n
+\t\t\t\t\t\t\t},\n
+\n
+\t\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\t\tlabel: \'Background color\',\n
+\t\t\t\t\t\t\t\ttype: \'colorbox\',\n
+\t\t\t\t\t\t\t\tname: \'backgroundColor\',\n
+\t\t\t\t\t\t\t\tonaction: createColorPickAction()\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t]\n
+\t\t\t\t\t}\n
+\t\t\t\t]\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction removePxSuffix(size) {\n
+\t\t\treturn size ? size.replace(/px$/, \'\') : "";\n
+\t\t}\n
+\n
+\t\tfunction addSizeSuffix(size) {\n
+\t\t\tif (/^[0-9]+$/.test(size)) {\n
+\t\t\t\tsize += "px";\n
+\t\t\t}\n
+\n
+\t\t\treturn size;\n
+\t\t}\n
+\n
+\t\tfunction unApplyAlign(elm) {\n
+\t\t\teach(\'left center right\'.split(\' \'), function(name) {\n
+\t\t\t\teditor.formatter.remove(\'align\' + name, {}, elm);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction unApplyVAlign(elm) {\n
+\t\t\teach(\'top middle bottom\'.split(\' \'), function(name) {\n
+\t\t\t\teditor.formatter.remove(\'valign\' + name, {}, elm);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction buildListItems(inputList, itemCallback, startItems) {\n
+\t\t\tfunction appendItems(values, output) {\n
+\t\t\t\toutput = output || [];\n
+\n
+\t\t\t\tTools.each(values, function(item) {\n
+\t\t\t\t\tvar menuItem = {text: item.text || item.title};\n
+\n
+\t\t\t\t\tif (item.menu) {\n
+\t\t\t\t\t\tmenuItem.menu = appendItems(item.menu);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tmenuItem.value = item.value;\n
+\n
+\t\t\t\t\t\tif (itemCallback) {\n
+\t\t\t\t\t\t\titemCallback(menuItem);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\toutput.push(menuItem);\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn output;\n
+\t\t\t}\n
+\n
+\t\t\treturn appendItems(inputList, startItems || []);\n
+\t\t}\n
+\n
+\t\tfunction updateStyle(dom, win, isStyleCtrl) {\n
+\t\t\tvar data = win.toJSON();\n
+\t\t\tvar css = dom.parseStyle(data.style);\n
+\n
+\t\t\tif (isStyleCtrl) {\n
+\t\t\t\twin.find(\'#borderColor\').value(css["border-color"] || \'\')[0].fire(\'change\');\n
+\t\t\t\twin.find(\'#backgroundColor\').value(css["background-color"] || \'\')[0].fire(\'change\');\n
+\t\t\t} else {\n
+\t\t\t\tcss["border-color"] = data.borderColor;\n
+\t\t\t\tcss["background-color"] = data.backgroundColor;\n
+\t\t\t}\n
+\n
+\t\t\twin.find(\'#style\').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));\n
+\t\t}\n
+\n
+\t\tfunction appendStylesToData(dom, data, elm) {\n
+\t\t\tvar css = dom.parseStyle(dom.getAttrib(elm, \'style\'));\n
+\n
+\t\t\tif (css["border-color"]) {\n
+\t\t\t\tdata.borderColor = css["border-color"];\n
+\t\t\t}\n
+\n
+\t\t\tif (css["background-color"]) {\n
+\t\t\t\tdata.backgroundColor = css["background-color"];\n
+\t\t\t}\n
+\n
+\t\t\tdata.style = dom.serializeStyle(css);\n
+\t\t}\n
+\n
+\t\tfunction mergeStyles(dom, elm, styles) {\n
+\t\t\tvar css = dom.parseStyle(dom.getAttrib(elm, \'style\'));\n
+\n
+\t\t\teach(styles, function(style) {\n
+\t\t\t\tcss[style.name] = style.value;\n
+\t\t\t});\n
+\n
+\t\t\tdom.setAttrib(elm, \'style\', dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));\n
+\t\t}\n
+\n
+\t\tself.tableProps = function() {\n
+\t\t\tself.table(true);\n
+\t\t};\n
+\n
+\t\tself.table = function(isProps) {\n
+\t\t\tvar dom = editor.dom, tableElm, colsCtrl, rowsCtrl, classListCtrl, data = {}, generalTableForm, stylesToMerge;\n
+\n
+\t\t\tfunction onSubmitTableForm() {\n
+\n
+\t\t\t\t//Explore the layers of the table till we find the first layer of tds or ths\n
+\t\t\t\tfunction styleTDTH(elm, name, value) {\n
+\t\t\t\t\tif (elm.tagName === "TD" || elm.tagName === "TH") {\n
+\t\t\t\t\t\tdom.setStyle(elm, name, value);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tif (elm.children) {\n
+\t\t\t\t\t\t\tfor (var i = 0; i < elm.children.length; i++) {\n
+\t\t\t\t\t\t\t\tstyleTDTH(elm.children[i], name, value);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar captionElm;\n
+\n
+\t\t\t\tupdateStyle(dom, this);\n
+\t\t\t\tdata = Tools.extend(data, this.toJSON());\n
+\n
+\t\t\t\tif (data["class"] === false) {\n
+\t\t\t\t\tdelete data["class"];\n
+\t\t\t\t}\n
+\n
+\t\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\t\tif (!tableElm) {\n
+\t\t\t\t\t\ttableElm = editor.plugins.table.insertTable(data.cols || 1, data.rows || 1);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teditor.dom.setAttribs(tableElm, {\n
+\t\t\t\t\t\tstyle: data.style,\n
+\t\t\t\t\t\t\'class\': data[\'class\']\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\tif (editor.settings.table_style_by_css) {\n
+\t\t\t\t\t\tstylesToMerge = [];\n
+\t\t\t\t\t\tstylesToMerge.push({name: \'border\', value: data.border});\n
+\t\t\t\t\t\tstylesToMerge.push({name: \'border-spacing\', value: addSizeSuffix(data.cellspacing)});\n
+\t\t\t\t\t\tmergeStyles(dom, tableElm, stylesToMerge);\n
+\t\t\t\t\t\tdom.setAttribs(tableElm, {\n
+\t\t\t\t\t\t\t\'data-mce-border-color\': data.borderColor,\n
+\t\t\t\t\t\t\t\'data-mce-cell-padding\': data.cellpadding,\n
+\t\t\t\t\t\t\t\'data-mce-border\': data.border\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t\tif (tableElm.children) {\n
+\t\t\t\t\t\t\tfor (var i = 0; i < tableElm.children.length; i++) {\n
+\t\t\t\t\t\t\t\tstyleTDTH(tableElm.children[i], \'border\', data.border);\n
+\t\t\t\t\t\t\t\tstyleTDTH(tableElm.children[i], \'padding\', addSizeSuffix(data.cellpadding));\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\teditor.dom.setAttribs(tableElm, {\n
+\t\t\t\t\t\t\tborder: data.border,\n
+\t\t\t\t\t\t\tcellpadding: data.cellpadding,\n
+\t\t\t\t\t\t\tcellspacing: data.cellspacing\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (dom.getAttrib(tableElm, \'width\') && !editor.settings.table_style_by_css) {\n
+\t\t\t\t\t\tdom.setAttrib(tableElm, \'width\', removePxSuffix(data.width));\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tdom.setStyle(tableElm, \'width\', addSizeSuffix(data.width));\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tdom.setStyle(tableElm, \'height\', addSizeSuffix(data.height));\n
+\n
+\t\t\t\t\t// Toggle caption on/off\n
+\t\t\t\t\tcaptionElm = dom.select(\'caption\', tableElm)[0];\n
+\n
+\t\t\t\t\tif (captionElm && !data.caption) {\n
+\t\t\t\t\t\tdom.remove(captionElm);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!captionElm && data.caption) {\n
+\t\t\t\t\t\tcaptionElm = dom.create(\'caption\');\n
+\t\t\t\t\t\tcaptionElm.innerHTML = !Env.ie ? \'<br data-mce-bogus="1"/>\' : \'\\u00a0\';\n
+\t\t\t\t\t\ttableElm.insertBefore(captionElm, tableElm.firstChild);\n
+\t\t\t\t\t}\n
+\t\t\t\t\tunApplyAlign(tableElm);\n
+\t\t\t\t\tif (data.align) {\n
+\t\t\t\t\t\teditor.formatter.apply(\'align\' + data.align, {}, tableElm);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teditor.focus();\n
+\t\t\t\t\teditor.addVisual();\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tfunction getTDTHOverallStyle(elm, name) {\n
+\t\t\t\tvar cells = editor.dom.select("td,th", elm), firstChildStyle;\n
+\n
+\t\t\t\tfunction checkChildren(firstChildStyle, elms) {\n
+\n
+\t\t\t\t\tfor (var i = 0; i < elms.length; i++) {\n
+\t\t\t\t\t\tvar currentStyle = dom.getStyle(elms[i], name);\n
+\t\t\t\t\t\tif (typeof firstChildStyle === "undefined") {\n
+\t\t\t\t\t\t\tfirstChildStyle = currentStyle;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\tif (firstChildStyle != currentStyle) {\n
+\t\t\t\t\t\t\treturn "";\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn firstChildStyle;\n
+\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfirstChildStyle = checkChildren(firstChildStyle, cells);\n
+\n
+\t\t\t\treturn firstChildStyle;\n
+\t\t\t}\n
+\n
+\t\t\tif (isProps === true) {\n
+\t\t\t\ttableElm = dom.getParent(editor.selection.getStart(), \'table\');\n
+\n
+\t\t\t\tif (tableElm) {\n
+\t\t\t\t\tdata = {\n
+\t\t\t\t\t\twidth: removePxSuffix(dom.getStyle(tableElm, \'width\') || dom.getAttrib(tableElm, \'width\')),\n
+\t\t\t\t\t\theight: removePxSuffix(dom.getStyle(tableElm, \'height\') || dom.getAttrib(tableElm, \'height\')),\n
+\t\t\t\t\t\tcellspacing: removePxSuffix(dom.getStyle(tableElm, \'border-spacing\') ||\n
+\t\t\t\t\t\t\tdom.getAttrib(tableElm, \'cellspacing\')),\n
+\t\t\t\t\t\tcellpadding: dom.getAttrib(tableElm, \'data-mce-cell-padding\') || dom.getAttrib(tableElm, \'cellpadding\') ||\n
+\t\t\t\t\t\t\tgetTDTHOverallStyle(tableElm, \'padding\'),\n
+\t\t\t\t\t\tborder: dom.getAttrib(tableElm, \'data-mce-border\') || dom.getAttrib(tableElm, \'border\') ||\n
+\t\t\t\t\t\t\tgetTDTHOverallStyle(tableElm, \'border\'),\n
+\t\t\t\t\t\tborderColor: dom.getAttrib(tableElm, \'data-mce-border-color\'),\n
+\t\t\t\t\t\tcaption: !!dom.select(\'caption\', tableElm)[0],\n
+\t\t\t\t\t\t\'class\': dom.getAttrib(tableElm, \'class\')\n
+\t\t\t\t\t};\n
+\n
+\t\t\t\t\teach(\'left center right\'.split(\' \'), function(name) {\n
+\t\t\t\t\t\tif (editor.formatter.matchNode(tableElm, \'align\' + name)) {\n
+\t\t\t\t\t\t\tdata.align = name;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tcolsCtrl = {label: \'Cols\', name: \'cols\'};\n
+\t\t\t\trowsCtrl = {label: \'Rows\', name: \'rows\'};\n
+\t\t\t}\n
+\n
+\t\t\tif (editor.settings.table_class_list) {\n
+\t\t\t\tif (data["class"]) {\n
+\t\t\t\t\tdata["class"] = data["class"].replace(/\\s*mce\\-item\\-table\\s*/g, \'\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tclassListCtrl = {\n
+\t\t\t\t\tname: \'class\',\n
+\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\tlabel: \'Class\',\n
+\t\t\t\t\tvalues: buildListItems(\n
+\t\t\t\t\t\teditor.settings.table_class_list,\n
+\t\t\t\t\t\tfunction(item) {\n
+\t\t\t\t\t\t\tif (item.value) {\n
+\t\t\t\t\t\t\t\titem.textStyle = function() {\n
+\t\t\t\t\t\t\t\t\treturn editor.formatter.getCssText({block: \'table\', classes: [item.value]});\n
+\t\t\t\t\t\t\t\t};\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t)\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\tgeneralTableForm = {\n
+\t\t\t\ttype: \'form\',\n
+\t\t\t\tlayout: \'flex\',\n
+\t\t\t\tdirection: \'column\',\n
+\t\t\t\tlabelGapCalc: \'children\',\n
+\t\t\t\tpadding: 0,\n
+\t\t\t\titems: [\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\t\tlabelGapCalc: false,\n
+\t\t\t\t\t\tpadding: 0,\n
+\t\t\t\t\t\tlayout: \'grid\',\n
+\t\t\t\t\t\tcolumns: 2,\n
+\t\t\t\t\t\tdefaults: {\n
+\t\t\t\t\t\t\ttype: \'textbox\',\n
+\t\t\t\t\t\t\tmaxWidth: 50\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\titems: (editor.settings.table_appearance_options !== false) ? [\n
+\t\t\t\t\t\t\tcolsCtrl,\n
+\t\t\t\t\t\t\trowsCtrl,\n
+\t\t\t\t\t\t\t{label: \'Width\', name: \'width\'},\n
+\t\t\t\t\t\t\t{label: \'Height\', name: \'height\'},\n
+\t\t\t\t\t\t\t{label: \'Cell spacing\', name: \'cellspacing\'},\n
+\t\t\t\t\t\t\t{label: \'Cell padding\', name: \'cellpadding\'},\n
+\t\t\t\t\t\t\t{label: \'Border\', name: \'border\'},\n
+\t\t\t\t\t\t\t{label: \'Caption\', name: \'caption\', type: \'checkbox\'}\n
+\t\t\t\t\t\t] : [\n
+\t\t\t\t\t\t\tcolsCtrl,\n
+\t\t\t\t\t\t\trowsCtrl,\n
+\t\t\t\t\t\t\t{label: \'Width\', name: \'width\'},\n
+\t\t\t\t\t\t\t{label: \'Height\', name: \'height\'}\n
+\t\t\t\t\t\t]\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\tlabel: \'Alignment\',\n
+\t\t\t\t\t\tname: \'align\',\n
+\t\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\t\ttext: \'None\',\n
+\t\t\t\t\t\tvalues: [\n
+\t\t\t\t\t\t\t{text: \'None\', value: \'\'},\n
+\t\t\t\t\t\t\t{text: \'Left\', value: \'left\'},\n
+\t\t\t\t\t\t\t{text: \'Center\', value: \'center\'},\n
+\t\t\t\t\t\t\t{text: \'Right\', value: \'right\'}\n
+\t\t\t\t\t\t]\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tclassListCtrl\n
+\t\t\t\t]\n
+\t\t\t};\n
+\n
+\t\t\tif (editor.settings.table_advtab !== false) {\n
+\t\t\t\tappendStylesToData(dom, data, tableElm);\n
+\n
+\t\t\t\teditor.windowManager.open({\n
+\t\t\t\t\ttitle: "Table properties",\n
+\t\t\t\t\tdata: data,\n
+\t\t\t\t\tbodyType: \'tabpanel\',\n
+\t\t\t\t\tbody: [\n
+\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\ttitle: \'General\',\n
+\t\t\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\t\t\titems: generalTableForm\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\tcreateStyleForm(dom)\n
+\t\t\t\t\t],\n
+\n
+\t\t\t\t\tonsubmit: onSubmitTableForm\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\teditor.windowManager.open({\n
+\t\t\t\t\ttitle: "Table properties",\n
+\t\t\t\t\tdata: data,\n
+\t\t\t\t\tbody: generalTableForm,\n
+\t\t\t\t\tonsubmit: onSubmitTableForm\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tself.merge = function(grid, cell) {\n
+\t\t\teditor.windowManager.open({\n
+\t\t\t\ttitle: "Merge cells",\n
+\t\t\t\tbody: [\n
+\t\t\t\t\t{label: \'Cols\', name: \'cols\', type: \'textbox\', value: \'1\', size: 10},\n
+\t\t\t\t\t{label: \'Rows\', name: \'rows\', type: \'textbox\', value: \'1\', size: 10}\n
+\t\t\t\t],\n
+\t\t\t\tonsubmit: function() {\n
+\t\t\t\t\tvar data = this.toJSON();\n
+\n
+\t\t\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\t\t\tgrid.merge(cell, data.cols, data.rows);\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t};\n
+\n
+\t\tself.cell = function() {\n
+\t\t\tvar dom = editor.dom, cellElm, data, classListCtrl, cells = [];\n
+\n
+\t\t\tfunction onSubmitCellForm() {\n
+\t\t\t\tupdateStyle(dom, this);\n
+\t\t\t\tdata = Tools.extend(data, this.toJSON());\n
+\n
+\t\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\t\teach(cells, function(cellElm) {\n
+\t\t\t\t\t\teditor.dom.setAttribs(cellElm, {\n
+\t\t\t\t\t\t\tscope: data.scope,\n
+\t\t\t\t\t\t\tstyle: data.style,\n
+\t\t\t\t\t\t\t\'class\': data[\'class\']\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\teditor.dom.setStyles(cellElm, {\n
+\t\t\t\t\t\t\twidth: addSizeSuffix(data.width),\n
+\t\t\t\t\t\t\theight: addSizeSuffix(data.height)\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t// Switch cell type\n
+\t\t\t\t\t\tif (data.type && cellElm.nodeName.toLowerCase() != data.type) {\n
+\t\t\t\t\t\t\tcellElm = dom.rename(cellElm, data.type);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Apply/remove alignment\n
+\t\t\t\t\t\tunApplyAlign(cellElm);\n
+\t\t\t\t\t\tif (data.align) {\n
+\t\t\t\t\t\t\teditor.formatter.apply(\'align\' + data.align, {}, cellElm);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Apply/remove vertical alignment\n
+\t\t\t\t\t\tunApplyVAlign(cellElm);\n
+\t\t\t\t\t\tif (data.valign) {\n
+\t\t\t\t\t\t\teditor.formatter.apply(\'valign\' + data.valign, {}, cellElm);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\teditor.focus();\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// Get selected cells or the current cell\n
+\t\t\tcells = editor.dom.select(\'td.mce-item-selected,th.mce-item-selected\');\n
+\t\t\tcellElm = editor.dom.getParent(editor.selection.getStart(), \'td,th\');\n
+\t\t\tif (!cells.length && cellElm) {\n
+\t\t\t\tcells.push(cellElm);\n
+\t\t\t}\n
+\n
+\t\t\tcellElm = cellElm || cells[0];\n
+\n
+\t\t\tif (!cellElm) {\n
+\t\t\t\t// If this element is null, return now to avoid crashing.\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tdata = {\n
+\t\t\t\twidth: removePxSuffix(dom.getStyle(cellElm, \'width\') || dom.getAttrib(cellElm, \'width\')),\n
+\t\t\t\theight: removePxSuffix(dom.getStyle(cellElm, \'height\') || dom.getAttrib(cellElm, \'height\')),\n
+\t\t\t\tscope: dom.getAttrib(cellElm, \'scope\'),\n
+\t\t\t\t\'class\': dom.getAttrib(cellElm, \'class\')\n
+\t\t\t};\n
+\n
+\t\t\tdata.type = cellElm.nodeName.toLowerCase();\n
+\n
+\t\t\teach(\'left center right\'.split(\' \'), function(name) {\n
+\t\t\t\tif (editor.formatter.matchNode(cellElm, \'align\' + name)) {\n
+\t\t\t\t\tdata.align = name;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teach(\'top middle bottom\'.split(\' \'), function(name) {\n
+\t\t\t\tif (editor.formatter.matchNode(cellElm, \'valign\' + name)) {\n
+\t\t\t\t\tdata.valign = name;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tif (editor.settings.table_cell_class_list) {\n
+\t\t\t\tclassListCtrl = {\n
+\t\t\t\t\tname: \'class\',\n
+\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\tlabel: \'Class\',\n
+\t\t\t\t\tvalues: buildListItems(\n
+\t\t\t\t\t\teditor.settings.table_cell_class_list,\n
+\t\t\t\t\t\tfunction(item) {\n
+\t\t\t\t\t\t\tif (item.value) {\n
+\t\t\t\t\t\t\t\titem.textStyle = function() {\n
+\t\t\t\t\t\t\t\t\treturn editor.formatter.getCssText({block: \'td\', classes: [item.value]});\n
+\t\t\t\t\t\t\t\t};\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t)\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\tvar generalCellForm = {\n
+\t\t\t\ttype: \'form\',\n
+\t\t\t\tlayout: \'flex\',\n
+\t\t\t\tdirection: \'column\',\n
+\t\t\t\tlabelGapCalc: \'children\',\n
+\t\t\t\tpadding: 0,\n
+\t\t\t\titems: [\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\t\tlayout: \'grid\',\n
+\t\t\t\t\t\tcolumns: 2,\n
+\t\t\t\t\t\tlabelGapCalc: false,\n
+\t\t\t\t\t\tpadding: 0,\n
+\t\t\t\t\t\tdefaults: {\n
+\t\t\t\t\t\t\ttype: \'textbox\',\n
+\t\t\t\t\t\t\tmaxWidth: 50\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\titems: [\n
+\t\t\t\t\t\t\t{label: \'Width\', name: \'width\'},\n
+\t\t\t\t\t\t\t{label: \'Height\', name: \'height\'},\n
+\t\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\t\tlabel: \'Cell type\',\n
+\t\t\t\t\t\t\t\tname: \'type\',\n
+\t\t\t\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\t\t\t\ttext: \'None\',\n
+\t\t\t\t\t\t\t\tminWidth: 90,\n
+\t\t\t\t\t\t\t\tmaxWidth: null,\n
+\t\t\t\t\t\t\t\tvalues: [\n
+\t\t\t\t\t\t\t\t\t{text: \'Cell\', value: \'td\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Header cell\', value: \'th\'}\n
+\t\t\t\t\t\t\t\t]\n
+\t\t\t\t\t\t\t},\n
+\t\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\t\tlabel: \'Scope\',\n
+\t\t\t\t\t\t\t\tname: \'scope\',\n
+\t\t\t\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\t\t\t\ttext: \'None\',\n
+\t\t\t\t\t\t\t\tminWidth: 90,\n
+\t\t\t\t\t\t\t\tmaxWidth: null,\n
+\t\t\t\t\t\t\t\tvalues: [\n
+\t\t\t\t\t\t\t\t\t{text: \'None\', value: \'\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Row\', value: \'row\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Column\', value: \'col\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Row group\', value: \'rowgroup\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Column group\', value: \'colgroup\'}\n
+\t\t\t\t\t\t\t\t]\n
+\t\t\t\t\t\t\t},\n
+\t\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\t\tlabel: \'H Align\',\n
+\t\t\t\t\t\t\t\tname: \'align\',\n
+\t\t\t\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\t\t\t\ttext: \'None\',\n
+\t\t\t\t\t\t\t\tminWidth: 90,\n
+\t\t\t\t\t\t\t\tmaxWidth: null,\n
+\t\t\t\t\t\t\t\tvalues: [\n
+\t\t\t\t\t\t\t\t\t{text: \'None\', value: \'\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Left\', value: \'left\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Center\', value: \'center\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Right\', value: \'right\'}\n
+\t\t\t\t\t\t\t\t]\n
+\t\t\t\t\t\t\t},\n
+\t\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\t\tlabel: \'V Align\',\n
+\t\t\t\t\t\t\t\tname: \'valign\',\n
+\t\t\t\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\t\t\t\ttext: \'None\',\n
+\t\t\t\t\t\t\t\tminWidth: 90,\n
+\t\t\t\t\t\t\t\tmaxWidth: null,\n
+\t\t\t\t\t\t\t\tvalues: [\n
+\t\t\t\t\t\t\t\t\t{text: \'None\', value: \'\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Top\', value: \'top\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Middle\', value: \'middle\'},\n
+\t\t\t\t\t\t\t\t\t{text: \'Bottom\', value: \'bottom\'}\n
+\t\t\t\t\t\t\t\t]\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t]\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tclassListCtrl\n
+\t\t\t\t]\n
+\t\t\t};\n
+\n
+\t\t\tif (editor.settings.table_cell_advtab !== false) {\n
+\t\t\t\tappendStylesToData(dom, data, cellElm);\n
+\n
+\t\t\t\teditor.windowManager.open({\n
+\t\t\t\t\ttitle: "Cell properties",\n
+\t\t\t\t\tbodyType: \'tabpanel\',\n
+\t\t\t\t\tdata: data,\n
+\t\t\t\t\tbody: [\n
+\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\ttitle: \'General\',\n
+\t\t\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\t\t\titems: generalCellForm\n
+\t\t\t\t\t\t},\n
+\n
+\t\t\t\t\t\tcreateStyleForm(dom)\n
+\t\t\t\t\t],\n
+\n
+\t\t\t\t\tonsubmit: onSubmitCellForm\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\teditor.windowManager.open({\n
+\t\t\t\t\ttitle: "Cell properties",\n
+\t\t\t\t\tdata: data,\n
+\t\t\t\t\tbody: generalCellForm,\n
+\t\t\t\t\tonsubmit: onSubmitCellForm\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tself.row = function() {\n
+\t\t\tvar dom = editor.dom, tableElm, cellElm, rowElm, classListCtrl, data, rows = [], generalRowForm;\n
+\n
+\t\t\tfunction onSubmitRowForm() {\n
+\t\t\t\tvar tableElm, oldParentElm, parentElm;\n
+\n
+\t\t\t\tupdateStyle(dom, this);\n
+\t\t\t\tdata = Tools.extend(data, this.toJSON());\n
+\n
+\t\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\t\tvar toType = data.type;\n
+\n
+\t\t\t\t\teach(rows, function(rowElm) {\n
+\t\t\t\t\t\teditor.dom.setAttribs(rowElm, {\n
+\t\t\t\t\t\t\tscope: data.scope,\n
+\t\t\t\t\t\t\tstyle: data.style,\n
+\t\t\t\t\t\t\t\'class\': data[\'class\']\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\teditor.dom.setStyles(rowElm, {\n
+\t\t\t\t\t\t\theight: addSizeSuffix(data.height)\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\tif (toType != rowElm.parentNode.nodeName.toLowerCase()) {\n
+\t\t\t\t\t\t\ttableElm = dom.getParent(rowElm, \'table\');\n
+\n
+\t\t\t\t\t\t\toldParentElm = rowElm.parentNode;\n
+\t\t\t\t\t\t\tparentElm = dom.select(toType, tableElm)[0];\n
+\t\t\t\t\t\t\tif (!parentElm) {\n
+\t\t\t\t\t\t\t\tparentElm = dom.create(toType);\n
+\t\t\t\t\t\t\t\tif (tableElm.firstChild) {\n
+\t\t\t\t\t\t\t\t\ttableElm.insertBefore(parentElm, tableElm.firstChild);\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\ttableElm.appendChild(parentElm);\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tparentElm.appendChild(rowElm);\n
+\n
+\t\t\t\t\t\t\tif (!oldParentElm.hasChildNodes()) {\n
+\t\t\t\t\t\t\t\tdom.remove(oldParentElm);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Apply/remove alignment\n
+\t\t\t\t\t\tunApplyAlign(rowElm);\n
+\t\t\t\t\t\tif (data.align) {\n
+\t\t\t\t\t\t\teditor.formatter.apply(\'align\' + data.align, {}, rowElm);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\teditor.focus();\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\ttableElm = editor.dom.getParent(editor.selection.getStart(), \'table\');\n
+\t\t\tcellElm = editor.dom.getParent(editor.selection.getStart(), \'td,th\');\n
+\n
+\t\t\teach(tableElm.rows, function(row) {\n
+\t\t\t\teach(row.cells, function(cell) {\n
+\t\t\t\t\tif (dom.hasClass(cell, \'mce-item-selected\') || cell == cellElm) {\n
+\t\t\t\t\t\trows.push(row);\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\trowElm = rows[0];\n
+\t\t\tif (!rowElm) {\n
+\t\t\t\t// If this element is null, return now to avoid crashing.\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tdata = {\n
+\t\t\t\theight: removePxSuffix(dom.getStyle(rowElm, \'height\') || dom.getAttrib(rowElm, \'height\')),\n
+\t\t\t\tscope: dom.getAttrib(rowElm, \'scope\'),\n
+\t\t\t\t\'class\': dom.getAttrib(rowElm, \'class\')\n
+\t\t\t};\n
+\n
+\t\t\tdata.type = rowElm.parentNode.nodeName.toLowerCase();\n
+\n
+\t\t\teach(\'left center right\'.split(\' \'), function(name) {\n
+\t\t\t\tif (editor.formatter.matchNode(rowElm, \'align\' + name)) {\n
+\t\t\t\t\tdata.align = name;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tif (editor.settings.table_row_class_list) {\n
+\t\t\t\tclassListCtrl = {\n
+\t\t\t\t\tname: \'class\',\n
+\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\tlabel: \'Class\',\n
+\t\t\t\t\tvalues: buildListItems(\n
+\t\t\t\t\t\teditor.settings.table_row_class_list,\n
+\t\t\t\t\t\tfunction(item) {\n
+\t\t\t\t\t\t\tif (item.value) {\n
+\t\t\t\t\t\t\t\titem.textStyle = function() {\n
+\t\t\t\t\t\t\t\t\treturn editor.formatter.getCssText({block: \'tr\', classes: [item.value]});\n
+\t\t\t\t\t\t\t\t};\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t)\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\tgeneralRowForm = {\n
+\t\t\t\ttype: \'form\',\n
+\t\t\t\tcolumns: 2,\n
+\t\t\t\tpadding: 0,\n
+\t\t\t\tdefaults: {\n
+\t\t\t\t\ttype: \'textbox\'\n
+\t\t\t\t},\n
+\t\t\t\titems: [\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\t\tname: \'type\',\n
+\t\t\t\t\t\tlabel: \'Row type\',\n
+\t\t\t\t\t\ttext: \'None\',\n
+\t\t\t\t\t\tmaxWidth: null,\n
+\t\t\t\t\t\tvalues: [\n
+\t\t\t\t\t\t\t{text: \'Header\', value: \'thead\'},\n
+\t\t\t\t\t\t\t{text: \'Body\', value: \'tbody\'},\n
+\t\t\t\t\t\t\t{text: \'Footer\', value: \'tfoot\'}\n
+\t\t\t\t\t\t]\n
+\t\t\t\t\t},\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\t\tname: \'align\',\n
+\t\t\t\t\t\tlabel: \'Alignment\',\n
+\t\t\t\t\t\ttext: \'None\',\n
+\t\t\t\t\t\tmaxWidth: null,\n
+\t\t\t\t\t\tvalues: [\n
+\t\t\t\t\t\t\t{text: \'None\', value: \'\'},\n
+\t\t\t\t\t\t\t{text: \'Left\', value: \'left\'},\n
+\t\t\t\t\t\t\t{text: \'Center\', value: \'center\'},\n
+\t\t\t\t\t\t\t{text: \'Right\', value: \'right\'}\n
+\t\t\t\t\t\t]\n
+\t\t\t\t\t},\n
+\t\t\t\t\t{label: \'Height\', name: \'height\'},\n
+\t\t\t\t\tclassListCtrl\n
+\t\t\t\t]\n
+\t\t\t};\n
+\n
+\t\t\tif (editor.settings.table_row_advtab !== false) {\n
+\t\t\t\tappendStylesToData(dom, data, rowElm);\n
+\n
+\t\t\t\teditor.windowManager.open({\n
+\t\t\t\t\ttitle: "Row properties",\n
+\t\t\t\t\tdata: data,\n
+\t\t\t\t\tbodyType: \'tabpanel\',\n
+\t\t\t\t\tbody: [\n
+\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\ttitle: \'General\',\n
+\t\t\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\t\t\titems: generalRowForm\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\tcreateStyleForm(dom)\n
+\t\t\t\t\t],\n
+\n
+\t\t\t\t\tonsubmit: onSubmitRowForm\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\teditor.windowManager.open({\n
+\t\t\t\t\ttitle: "Row properties",\n
+\t\t\t\t\tdata: data,\n
+\t\t\t\t\tbody: generalRowForm,\n
+\t\t\t\t\tonsubmit: onSubmitRowForm\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t};\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>20215</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Dialogs.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

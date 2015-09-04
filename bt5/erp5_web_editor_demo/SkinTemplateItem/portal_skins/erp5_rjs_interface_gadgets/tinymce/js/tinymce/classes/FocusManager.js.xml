@@ -1,0 +1,308 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268349.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FocusManager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * FocusManager.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class manages the focus/blur state of the editor. This class is needed since some\n
+ * browsers fire false focus/blur states when the selection is moved to a UI dialog or similar.\n
+ *\n
+ * This class will fire two events focus and blur on the editor instances that got affected.\n
+ * It will also handle the restore of selection when the focus is lost and returned.\n
+ *\n
+ * @class tinymce.FocusManager\n
+ */\n
+define("tinymce/FocusManager", [\n
+\t"tinymce/dom/DOMUtils",\n
+\t"tinymce/Env"\n
+], function(DOMUtils, Env) {\n
+\tvar selectionChangeHandler, documentFocusInHandler, documentMouseUpHandler, DOM = DOMUtils.DOM;\n
+\n
+\t/**\n
+\t * Constructs a new focus manager instance.\n
+\t *\n
+\t * @constructor FocusManager\n
+\t * @param {tinymce.EditorManager} editorManager Editor manager instance to handle focus for.\n
+\t */\n
+\tfunction FocusManager(editorManager) {\n
+\t\tfunction getActiveElement() {\n
+\t\t\ttry {\n
+\t\t\t\treturn document.activeElement;\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// IE sometimes fails to get the activeElement when resizing table\n
+\t\t\t\t// TODO: Investigate this\n
+\t\t\t\treturn document.body;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// We can\'t store a real range on IE 11 since it gets mutated so we need to use a bookmark object\n
+\t\t// TODO: Move this to a separate range utils class since it\'s it\'s logic is present in Selection as well.\n
+\t\tfunction createBookmark(dom, rng) {\n
+\t\t\tif (rng && rng.startContainer) {\n
+\t\t\t\t// Verify that the range is within the root of the editor\n
+\t\t\t\tif (!dom.isChildOf(rng.startContainer, dom.getRoot()) || !dom.isChildOf(rng.endContainer, dom.getRoot())) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn {\n
+\t\t\t\t\tstartContainer: rng.startContainer,\n
+\t\t\t\t\tstartOffset: rng.startOffset,\n
+\t\t\t\t\tendContainer: rng.endContainer,\n
+\t\t\t\t\tendOffset: rng.endOffset\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\treturn rng;\n
+\t\t}\n
+\n
+\t\tfunction bookmarkToRng(editor, bookmark) {\n
+\t\t\tvar rng;\n
+\n
+\t\t\tif (bookmark.startContainer) {\n
+\t\t\t\trng = editor.getDoc().createRange();\n
+\t\t\t\trng.setStart(bookmark.startContainer, bookmark.startOffset);\n
+\t\t\t\trng.setEnd(bookmark.endContainer, bookmark.endOffset);\n
+\t\t\t} else {\n
+\t\t\t\trng = bookmark;\n
+\t\t\t}\n
+\n
+\t\t\treturn rng;\n
+\t\t}\n
+\n
+\t\tfunction isUIElement(elm) {\n
+\t\t\treturn !!DOM.getParent(elm, FocusManager.isEditorUIElement);\n
+\t\t}\n
+\n
+\t\tfunction registerEvents(e) {\n
+\t\t\tvar editor = e.editor;\n
+\n
+\t\t\teditor.on(\'init\', function() {\n
+\t\t\t\t// Gecko/WebKit has ghost selections in iframes and IE only has one selection per browser tab\n
+\t\t\t\tif (editor.inline || Env.ie) {\n
+\t\t\t\t\t// Use the onbeforedeactivate event when available since it works better see #7023\n
+\t\t\t\t\tif ("onbeforedeactivate" in document && Env.ie < 9) {\n
+\t\t\t\t\t\teditor.dom.bind(editor.getBody(), \'beforedeactivate\', function(e) {\n
+\t\t\t\t\t\t\tif (e.target != editor.getBody()) {\n
+\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\ttry {\n
+\t\t\t\t\t\t\t\teditor.lastRng = editor.selection.getRng();\n
+\t\t\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t\t\t// IE throws "Unexcpected call to method or property access" some times so lets ignore it\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// On other browsers take snapshot on nodechange in inline mode since they have Ghost selections for iframes\n
+\t\t\t\t\t\teditor.on(\'nodechange mouseup keyup\', function(e) {\n
+\t\t\t\t\t\t\tvar node = getActiveElement();\n
+\n
+\t\t\t\t\t\t\t// Only act on manual nodechanges\n
+\t\t\t\t\t\t\tif (e.type == \'nodechange\' && e.selectionChange) {\n
+\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// IE 11 reports active element as iframe not body of iframe\n
+\t\t\t\t\t\t\tif (node && node.id == editor.id + \'_ifr\') {\n
+\t\t\t\t\t\t\t\tnode = editor.getBody();\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tif (editor.dom.isChildOf(node, editor.getBody())) {\n
+\t\t\t\t\t\t\t\teditor.lastRng = editor.selection.getRng();\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Handles the issue with WebKit not retaining selection within inline document\n
+\t\t\t\t\t// If the user releases the mouse out side the body since a mouse up event wont occur on the body\n
+\t\t\t\t\tif (Env.webkit && !selectionChangeHandler) {\n
+\t\t\t\t\t\tselectionChangeHandler = function() {\n
+\t\t\t\t\t\t\tvar activeEditor = editorManager.activeEditor;\n
+\n
+\t\t\t\t\t\t\tif (activeEditor && activeEditor.selection) {\n
+\t\t\t\t\t\t\t\tvar rng = activeEditor.selection.getRng();\n
+\n
+\t\t\t\t\t\t\t\t// Store when it\'s non collapsed\n
+\t\t\t\t\t\t\t\tif (rng && !rng.collapsed) {\n
+\t\t\t\t\t\t\t\t\teditor.lastRng = rng;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t};\n
+\n
+\t\t\t\t\t\tDOM.bind(document, \'selectionchange\', selectionChangeHandler);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'setcontent\', function() {\n
+\t\t\t\teditor.lastRng = null;\n
+\t\t\t});\n
+\n
+\t\t\t// Remove last selection bookmark on mousedown see #6305\n
+\t\t\teditor.on(\'mousedown\', function() {\n
+\t\t\t\teditor.selection.lastFocusBookmark = null;\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'focusin\', function() {\n
+\t\t\t\tvar focusedEditor = editorManager.focusedEditor;\n
+\n
+\t\t\t\tif (editor.selection.lastFocusBookmark) {\n
+\t\t\t\t\teditor.selection.setRng(bookmarkToRng(editor, editor.selection.lastFocusBookmark));\n
+\t\t\t\t\teditor.selection.lastFocusBookmark = null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (focusedEditor != editor) {\n
+\t\t\t\t\tif (focusedEditor) {\n
+\t\t\t\t\t\tfocusedEditor.fire(\'blur\', {focusedEditor: editor});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teditorManager.setActive(editor);\n
+\t\t\t\t\teditorManager.focusedEditor = editor;\n
+\t\t\t\t\teditor.fire(\'focus\', {blurredEditor: focusedEditor});\n
+\t\t\t\t\teditor.focus(true);\n
+\t\t\t\t}\n
+\n
+\t\t\t\teditor.lastRng = null;\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'focusout\', function() {\n
+\t\t\t\twindow.setTimeout(function() {\n
+\t\t\t\t\tvar focusedEditor = editorManager.focusedEditor;\n
+\n
+\t\t\t\t\t// Still the same editor the the blur was outside any editor UI\n
+\t\t\t\t\tif (!isUIElement(getActiveElement()) && focusedEditor == editor) {\n
+\t\t\t\t\t\teditor.fire(\'blur\', {focusedEditor: null});\n
+\t\t\t\t\t\teditorManager.focusedEditor = null;\n
+\n
+\t\t\t\t\t\t// Make sure selection is valid could be invalid if the editor is blured and removed before the timeout occurs\n
+\t\t\t\t\t\tif (editor.selection) {\n
+\t\t\t\t\t\t\teditor.selection.lastFocusBookmark = null;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}, 0);\n
+\t\t\t});\n
+\n
+\t\t\t// Check if focus is moved to an element outside the active editor by checking if the target node\n
+\t\t\t// isn\'t within the body of the activeEditor nor a UI element such as a dialog child control\n
+\t\t\tif (!documentFocusInHandler) {\n
+\t\t\t\tdocumentFocusInHandler = function(e) {\n
+\t\t\t\t\tvar activeEditor = editorManager.activeEditor;\n
+\n
+\t\t\t\t\tif (activeEditor && e.target.ownerDocument == document) {\n
+\t\t\t\t\t\t// Check to make sure we have a valid selection don\'t update the bookmark if it\'s\n
+\t\t\t\t\t\t// a focusin to the body of the editor see #7025\n
+\t\t\t\t\t\tif (activeEditor.selection && e.target != activeEditor.getBody()) {\n
+\t\t\t\t\t\t\tactiveEditor.selection.lastFocusBookmark = createBookmark(activeEditor.dom, activeEditor.lastRng);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Fire a blur event if the element isn\'t a UI element\n
+\t\t\t\t\t\tif (e.target != document.body && !isUIElement(e.target) && editorManager.focusedEditor == activeEditor) {\n
+\t\t\t\t\t\t\tactiveEditor.fire(\'blur\', {focusedEditor: null});\n
+\t\t\t\t\t\t\teditorManager.focusedEditor = null;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t};\n
+\n
+\t\t\t\tDOM.bind(document, \'focusin\', documentFocusInHandler);\n
+\t\t\t}\n
+\n
+\t\t\t// Handle edge case when user starts the selection inside the editor and releases\n
+\t\t\t// the mouse outside the editor producing a new selection. This weird workaround is needed since\n
+\t\t\t// Gecko doesn\'t have the "selectionchange" event we need to do this. Fixes: #6843\n
+\t\t\tif (editor.inline && !documentMouseUpHandler) {\n
+\t\t\t\tdocumentMouseUpHandler = function(e) {\n
+\t\t\t\t\tvar activeEditor = editorManager.activeEditor;\n
+\n
+\t\t\t\t\tif (activeEditor.inline && !activeEditor.dom.isChildOf(e.target, activeEditor.getBody())) {\n
+\t\t\t\t\t\tvar rng = activeEditor.selection.getRng();\n
+\n
+\t\t\t\t\t\tif (!rng.collapsed) {\n
+\t\t\t\t\t\t\tactiveEditor.lastRng = rng;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t};\n
+\n
+\t\t\t\tDOM.bind(document, \'mouseup\', documentMouseUpHandler);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction unregisterDocumentEvents(e) {\n
+\t\t\tif (editorManager.focusedEditor == e.editor) {\n
+\t\t\t\teditorManager.focusedEditor = null;\n
+\t\t\t}\n
+\n
+\t\t\tif (!editorManager.activeEditor) {\n
+\t\t\t\tDOM.unbind(document, \'selectionchange\', selectionChangeHandler);\n
+\t\t\t\tDOM.unbind(document, \'focusin\', documentFocusInHandler);\n
+\t\t\t\tDOM.unbind(document, \'mouseup\', documentMouseUpHandler);\n
+\t\t\t\tselectionChangeHandler = documentFocusInHandler = documentMouseUpHandler = null;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\teditorManager.on(\'AddEditor\', registerEvents);\n
+\t\teditorManager.on(\'RemoveEditor\', unregisterDocumentEvents);\n
+\t}\n
+\n
+\t/**\n
+\t * Returns true if the specified element is part of the UI for example an button or text input.\n
+\t *\n
+\t * @method isEditorUIElement\n
+\t * @param  {Element} elm Element to check if it\'s part of the UI or not.\n
+\t * @return {Boolean} True/false state if the element is part of the UI or not.\n
+\t */\n
+\tFocusManager.isEditorUIElement = function(elm) {\n
+\t\t// Needs to be converted to string since svg can have focus: #6776\n
+\t\treturn elm.className.toString().indexOf(\'mce-\') !== -1;\n
+\t};\n
+\n
+\treturn FocusManager;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8724</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FocusManager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

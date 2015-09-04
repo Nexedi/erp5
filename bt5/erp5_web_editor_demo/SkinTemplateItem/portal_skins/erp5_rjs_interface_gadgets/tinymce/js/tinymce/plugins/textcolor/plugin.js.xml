@@ -1,0 +1,326 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268497.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+/*eslint consistent-this:0 */\n
+\n
+tinymce.PluginManager.add(\'textcolor\', function(editor) {\n
+\tvar cols, rows;\n
+\n
+\trows = editor.settings.textcolor_rows || 5;\n
+\tcols = editor.settings.textcolor_cols || 8;\n
+\n
+\tfunction getCurrentColor(format) {\n
+\t\tvar color;\n
+\n
+\t\teditor.dom.getParents(editor.selection.getStart(), function(elm) {\n
+\t\t\tvar value;\n
+\n
+\t\t\tif ((value = elm.style[format == \'forecolor\' ? \'color\' : \'background-color\'])) {\n
+\t\t\t\tcolor = value;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treturn color;\n
+\t}\n
+\n
+\tfunction mapColors() {\n
+\t\tvar i, colors = [], colorMap;\n
+\n
+\t\tcolorMap = editor.settings.textcolor_map || [\n
+\t\t\t"000000", "Black",\n
+\t\t\t"993300", "Burnt orange",\n
+\t\t\t"333300", "Dark olive",\n
+\t\t\t"003300", "Dark green",\n
+\t\t\t"003366", "Dark azure",\n
+\t\t\t"000080", "Navy Blue",\n
+\t\t\t"333399", "Indigo",\n
+\t\t\t"333333", "Very dark gray",\n
+\t\t\t"800000", "Maroon",\n
+\t\t\t"FF6600", "Orange",\n
+\t\t\t"808000", "Olive",\n
+\t\t\t"008000", "Green",\n
+\t\t\t"008080", "Teal",\n
+\t\t\t"0000FF", "Blue",\n
+\t\t\t"666699", "Grayish blue",\n
+\t\t\t"808080", "Gray",\n
+\t\t\t"FF0000", "Red",\n
+\t\t\t"FF9900", "Amber",\n
+\t\t\t"99CC00", "Yellow green",\n
+\t\t\t"339966", "Sea green",\n
+\t\t\t"33CCCC", "Turquoise",\n
+\t\t\t"3366FF", "Royal blue",\n
+\t\t\t"800080", "Purple",\n
+\t\t\t"999999", "Medium gray",\n
+\t\t\t"FF00FF", "Magenta",\n
+\t\t\t"FFCC00", "Gold",\n
+\t\t\t"FFFF00", "Yellow",\n
+\t\t\t"00FF00", "Lime",\n
+\t\t\t"00FFFF", "Aqua",\n
+\t\t\t"00CCFF", "Sky blue",\n
+\t\t\t"993366", "Red violet",\n
+\t\t\t"FFFFFF", "White",\n
+\t\t\t"FF99CC", "Pink",\n
+\t\t\t"FFCC99", "Peach",\n
+\t\t\t"FFFF99", "Light yellow",\n
+\t\t\t"CCFFCC", "Pale green",\n
+\t\t\t"CCFFFF", "Pale cyan",\n
+\t\t\t"99CCFF", "Light sky blue",\n
+\t\t\t"CC99FF", "Plum"\n
+\t\t];\n
+\n
+\t\tfor (i = 0; i < colorMap.length; i += 2) {\n
+\t\t\tcolors.push({\n
+\t\t\t\ttext: colorMap[i + 1],\n
+\t\t\t\tcolor: \'#\' + colorMap[i]\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\treturn colors;\n
+\t}\n
+\n
+\tfunction renderColorPicker() {\n
+\t\tvar ctrl = this, colors, color, html, last, x, y, i, id = ctrl._id, count = 0;\n
+\n
+\t\tfunction getColorCellHtml(color, title) {\n
+\t\t\tvar isNoColor = color == \'transparent\';\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<td class="mce-grid-cell\' + (isNoColor ? \' mce-colorbtn-trans\' : \'\') + \'">\' +\n
+\t\t\t\t\t\'<div id="\' + id + \'-\' + (count++) + \'"\' +\n
+\t\t\t\t\t\t\' data-mce-color="\' + (color ? color : \'\') + \'"\' +\n
+\t\t\t\t\t\t\' role="option"\' +\n
+\t\t\t\t\t\t\' tabIndex="-1"\' +\n
+\t\t\t\t\t\t\' style="\' + (color ? \'background-color: \' + color : \'\') + \'"\' +\n
+\t\t\t\t\t\t\' title="\' + tinymce.translate(title) + \'">\' +\n
+\t\t\t\t\t\t(isNoColor ? \'&#215;\' : \'\') +\n
+\t\t\t\t\t\'</div>\' +\n
+\t\t\t\t\'</td>\'\n
+\t\t\t);\n
+\t\t}\n
+\n
+\t\tcolors = mapColors();\n
+\t\tcolors.push({\n
+\t\t\ttext: tinymce.translate("No color"),\n
+\t\t\tcolor: "transparent"\n
+\t\t});\n
+\n
+\t\thtml = \'<table class="mce-grid mce-grid-border mce-colorbutton-grid" role="list" cellspacing="0"><tbody>\';\n
+\t\tlast = colors.length - 1;\n
+\n
+\t\tfor (y = 0; y < rows; y++) {\n
+\t\t\thtml += \'<tr>\';\n
+\n
+\t\t\tfor (x = 0; x < cols; x++) {\n
+\t\t\t\ti = y * cols + x;\n
+\n
+\t\t\t\tif (i > last) {\n
+\t\t\t\t\thtml += \'<td></td>\';\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcolor = colors[i];\n
+\t\t\t\t\thtml += getColorCellHtml(color.color, color.text);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\thtml += \'</tr>\';\n
+\t\t}\n
+\n
+\t\tif (editor.settings.color_picker_callback) {\n
+\t\t\thtml += (\n
+\t\t\t\t\'<tr>\' +\n
+\t\t\t\t\t\'<td colspan="\' + cols + \'" class="mce-custom-color-btn">\' +\n
+\t\t\t\t\t\t\'<div id="\' + id + \'-c" class="mce-widget mce-btn mce-btn-small mce-btn-flat" \' +\n
+\t\t\t\t\t\t\t\'role="button" tabindex="-1" aria-labelledby="\' + id + \'-c" style="width: 100%">\' +\n
+\t\t\t\t\t\t\t\'<button type="button" role="presentation" tabindex="-1">\' + tinymce.translate(\'Custom...\') + \'</button>\' +\n
+\t\t\t\t\t\t\'</div>\' +\n
+\t\t\t\t\t\'</td>\' +\n
+\t\t\t\t\'</tr>\'\n
+\t\t\t);\n
+\n
+\t\t\thtml += \'<tr>\';\n
+\n
+\t\t\tfor (x = 0; x < cols; x++) {\n
+\t\t\t\thtml += getColorCellHtml(\'\', \'Custom color\');\n
+\t\t\t}\n
+\n
+\t\t\thtml += \'</tr>\';\n
+\t\t}\n
+\n
+\t\thtml += \'</tbody></table>\';\n
+\n
+\t\treturn html;\n
+\t}\n
+\n
+\tfunction applyFormat(format, value) {\n
+\t\teditor.undoManager.transact(function() {\n
+\t\t\teditor.focus();\n
+\t\t\teditor.formatter.apply(format, {value: value});\n
+\t\t\teditor.nodeChanged();\n
+\t\t});\n
+\t}\n
+\n
+\tfunction removeFormat(format) {\n
+\t\teditor.undoManager.transact(function() {\n
+\t\t\teditor.focus();\n
+\t\t\teditor.formatter.remove(format, {value: null}, null, true);\n
+\t\t\teditor.nodeChanged();\n
+\t\t});\n
+\t}\n
+\n
+\tfunction onPanelClick(e) {\n
+\t\tvar buttonCtrl = this.parent(), value;\n
+\n
+\t\tfunction selectColor(value) {\n
+\t\t\tbuttonCtrl.hidePanel();\n
+\t\t\tbuttonCtrl.color(value);\n
+\t\t\tapplyFormat(buttonCtrl.settings.format, value);\n
+\t\t}\n
+\n
+\t\tfunction resetColor() {\n
+\t\t\tbuttonCtrl.hidePanel();\n
+\t\t\tbuttonCtrl.resetColor();\n
+\t\t\tremoveFormat(buttonCtrl.settings.format);\n
+\t\t}\n
+\n
+\t\tfunction setDivColor(div, value) {\n
+\t\t\tdiv.style.background = value;\n
+\t\t\tdiv.setAttribute(\'data-mce-color\', value);\n
+\t\t}\n
+\n
+\t\tif (tinymce.DOM.getParent(e.target, \'.mce-custom-color-btn\')) {\n
+\t\t\tbuttonCtrl.hidePanel();\n
+\n
+\t\t\teditor.settings.color_picker_callback.call(editor, function(value) {\n
+\t\t\t\tvar tableElm = buttonCtrl.panel.getEl().getElementsByTagName(\'table\')[0];\n
+\t\t\t\tvar customColorCells, div, i;\n
+\n
+\t\t\t\tcustomColorCells = tinymce.map(tableElm.rows[tableElm.rows.length - 1].childNodes, function(elm) {\n
+\t\t\t\t\treturn elm.firstChild;\n
+\t\t\t\t});\n
+\n
+\t\t\t\tfor (i = 0; i < customColorCells.length; i++) {\n
+\t\t\t\t\tdiv = customColorCells[i];\n
+\t\t\t\t\tif (!div.getAttribute(\'data-mce-color\')) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Shift colors to the right\n
+\t\t\t\t// TODO: Might need to be the left on RTL\n
+\t\t\t\tif (i == cols) {\n
+\t\t\t\t\tfor (i = 0; i < cols - 1; i++) {\n
+\t\t\t\t\t\tsetDivColor(customColorCells[i], customColorCells[i + 1].getAttribute(\'data-mce-color\'));\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tsetDivColor(div, value);\n
+\t\t\t\tselectColor(value);\n
+\t\t\t}, getCurrentColor(buttonCtrl.settings.format));\n
+\t\t}\n
+\n
+\t\tvalue = e.target.getAttribute(\'data-mce-color\');\n
+\t\tif (value) {\n
+\t\t\tif (this.lastId) {\n
+\t\t\t\tdocument.getElementById(this.lastId).setAttribute(\'aria-selected\', false);\n
+\t\t\t}\n
+\n
+\t\t\te.target.setAttribute(\'aria-selected\', true);\n
+\t\t\tthis.lastId = e.target.id;\n
+\n
+\t\t\tif (value == \'transparent\') {\n
+\t\t\t\tresetColor();\n
+\t\t\t} else {\n
+\t\t\t\tselectColor(value);\n
+\t\t\t}\n
+\t\t} else if (value !== null) {\n
+\t\t\tbuttonCtrl.hidePanel();\n
+\t\t}\n
+\t}\n
+\n
+\tfunction onButtonClick() {\n
+\t\tvar self = this;\n
+\n
+\t\tif (self._color) {\n
+\t\t\tapplyFormat(self.settings.format, self._color);\n
+\t\t} else {\n
+\t\t\tremoveFormat(self.settings.format);\n
+\t\t}\n
+\t}\n
+\n
+\teditor.addButton(\'forecolor\', {\n
+\t\ttype: \'colorbutton\',\n
+\t\ttooltip: \'Text color\',\n
+\t\tformat: \'forecolor\',\n
+\t\tpanel: {\n
+\t\t\trole: \'application\',\n
+\t\t\tariaRemember: true,\n
+\t\t\thtml: renderColorPicker,\n
+\t\t\tonclick: onPanelClick\n
+\t\t},\n
+\t\tonclick: onButtonClick\n
+\t});\n
+\n
+\teditor.addButton(\'backcolor\', {\n
+\t\ttype: \'colorbutton\',\n
+\t\ttooltip: \'Background color\',\n
+\t\tformat: \'hilitecolor\',\n
+\t\tpanel: {\n
+\t\t\trole: \'application\',\n
+\t\t\tariaRemember: true,\n
+\t\t\thtml: renderColorPicker,\n
+\t\t\tonclick: onPanelClick\n
+\t\t},\n
+\t\tonclick: onButtonClick\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6656</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

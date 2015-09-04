@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268653.24</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Button.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// Button\n
+\n
+.@{prefix}-btn {\n
+\tborder: 1px solid mix(rgb(red(@btn-border-right), green(@btn-border-right), blue(@btn-border-right)), @panel-bg, 30%);\n
+\tborder-color: @btn-border-top @btn-border-right @btn-border-bottom @btn-border-left;\n
+\tposition: relative;\n
+\ttext-shadow: @text-shadow;\n
+\n
+\t.inline-block();\n
+\t.border-radius(3px);\n
+\t.box-shadow(@btn-box-shadow);\n
+\t.vertical-gradient(@btn-bg, @btn-bg-hlight);\n
+\n
+\t&:hover, &:focus {\n
+\t\tcolor: @btn-text;\n
+\t\t.vertical-gradient(darken(@btn-bg, 5%), darken(@btn-bg-hlight, 5%));\n
+\t\tborder-color: @btn-border-hover;\n
+\t}\n
+\n
+\t&.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {\n
+\t\tcursor: default;\n
+\t\t.box-shadow(none);\n
+\t\t.opacity(@btn-box-disabled-opacity);\n
+\t}\n
+\n
+\t&.@{prefix}-active, &.@{prefix}-active:hover {\n
+\t\t.vertical-gradient(darken(@btn-bg, 10%), darken(@btn-bg-hlight, 5%));\n
+\t\t.box-shadow(@btn-box-shadow-active);\n
+\t\tborder-color: darken(@btn-bg, 20%);\n
+\t}\n
+\n
+\t&:active {\n
+\t\t.vertical-gradient(darken(@btn-bg, 7%), darken(@btn-bg-hlight, 5%));\n
+\t\t.box-shadow(@btn-box-shadow-active);\n
+\t\tborder-color: @btn-border-active;\n
+\n
+\t}\n
+}\n
+\n
+.@{prefix}-btn button {\n
+\tpadding: @btn-padding;\n
+\tfont-size: @font-size;\n
+\tline-height: @line-height;\n
+\t*line-height: @line-height - 4px;\n
+\tcursor: pointer;\n
+\tcolor: @btn-text;\n
+\ttext-align: center;\n
+\n
+\t// Fixes for default inner padding of button\n
+\toverflow: visible; // IE7\n
+\t-webkit-appearance: none; // WebKit\n
+\t&::-moz-focus-inner { // Gecko\n
+\t\tborder: 0;\n
+\t\tpadding: 0;\n
+\t}\n
+}\n
+\n
+.@{prefix}-btn i {\n
+\ttext-shadow: 1px 1px @btn-text-shadow;\n
+}\n
+\n
+.@{prefix}-primary {\n
+\tmin-width: 50px;\n
+\tcolor: @btn-primary-text;\n
+\tborder: 1px solid transparent;\n
+\tborder-color: @btn-primary-border;\n
+\t.vertical-gradient(@btn-primary-bg, @btn-primary-bg-hlight);\n
+\n
+\t&:hover, &:focus {\n
+\t\t.vertical-gradient(darken(@btn-primary-bg, 5%), darken(@btn-primary-bg-hlight, 5%));\n
+\t\tborder-color: @btn-primary-border-hover;\n
+\t}\n
+\n
+\t&.@{prefix}-disabled button, &.@{prefix}-disabled:hover button {\n
+\t\tcursor: default;\n
+\t\t.box-shadow(none);\n
+\t\t.opacity(@btn-box-disabled-opacity);\n
+\t}\n
+\n
+\t&.@{prefix}-active, &.@{prefix}-active:hover, &:not(.@{prefix}-disabled):active {\n
+\t\t.vertical-gradient(darken(@btn-primary-bg, 10%), darken(@btn-primary-bg-hlight, 10%));\n
+\t\t.box-shadow(@btn-box-shadow-active);\n
+\t}\n
+}\n
+\n
+.@{prefix}-primary button, .@{prefix}-primary button i {\n
+\tcolor: @btn-primary-text;\n
+\ttext-shadow: 1px 1px @btn-primary-text-shadow;\n
+}\n
+\n
+.@{prefix}-btn-large button {\n
+\tpadding: 9px 14px;\n
+\tfont-size: @font-size + 2px;\n
+\tline-height: normal;\n
+\t.border-radius(5px);\n
+}\n
+\n
+.@{prefix}-btn-large i {\n
+\tmargin-top: 2px;\n
+}\n
+\n
+.@{prefix}-btn-small button {\n
+\tpadding: 1px 5px;\n
+\tfont-size: @font-size - 2px;\n
+\t*padding-bottom: 2px;\n
+}\n
+\n
+.@{prefix}-btn-small i {\n
+\tline-height: 20px;\n
+\tvertical-align: top;\n
+\t*line-height: 18px;\n
+}\n
+\n
+.@{prefix}-btn .@{prefix}-caret {\n
+\tmargin-top: 8px;\n
+\tmargin-left: 0;\n
+}\n
+\n
+.@{prefix}-btn-small .@{prefix}-caret {\n
+\tmargin-top: 8px;\n
+\tmargin-left: 0;\n
+}\n
+\n
+.@{prefix}-caret {\n
+\t.inline-block();\n
+\twidth: 0; height: 0;\n
+\tvertical-align: top;\n
+\tborder-top: 4px solid @btn-caret-border;\n
+\tborder-right: 4px solid transparent;\n
+\tborder-left: 4px solid transparent;\n
+\tcontent: "";\n
+}\n
+\n
+.@{prefix}-disabled .@{prefix}-caret {\n
+\tborder-top-color: @text-disabled;\n
+}\n
+\n
+.@{prefix}-caret.@{prefix}-up {\n
+\tborder-bottom: 4px solid @btn-caret-border;\n
+\tborder-top: 0;\n
+}\n
+\n
+.@{prefix}-btn-flat {\n
+\tborder: 0;\n
+\tbackground: transparent;\n
+\t.border-radius(0);\n
+\t.box-shadow(none);\n
+\tfilter: none;\n
+}\n
+\n
+.@{prefix}-btn-flat:hover, .@{prefix}-btn-flat.@{prefix}-active, .@{prefix}-btn-flat:focus, .@{prefix}-btn-flat:active {\n
+\tborder: 0;\n
+\tbackground: @menubar-bg-active;\n
+\tfilter: none;\n
+\t.box-shadow(none);\n
+}\n
+\n
+.@{prefix}-btn-has-text .@{prefix}-ico {\n
+\tpadding-right: 5px;\n
+}\n
+\n
+// RTL\n
+\n
+.@{prefix}-rtl .@{prefix}-btn button {\n
+\tdirection: rtl;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3710</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Button.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

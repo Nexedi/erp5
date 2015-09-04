@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268142.9</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>imagetools.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Imagetools plugin test</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<script src="../../js/tinymce/tinymce.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/imagetools/plugin.dev.js"></script>\n
+<!-- <link rel="stylesheet" href="../../js/tinymce/skins/lightgray/skin.min.css"> -->\n
+<script>\n
+\ttinymce.init({\n
+\t\t//imagetools_cors_hosts: ["moxiecode.cachefly.net"],\n
+\t\t//imagetools_proxy: "proxy.php",\n
+\n
+\t\t//images_upload_url: \'postAcceptor.php\',\n
+\t\t//images_upload_base_path: \'base/path\',\n
+\t\t//images_upload_credentials: true,\n
+\n
+\t\tselector: "textarea.tinymce",\n
+\t\ttheme: "modern",\n
+\t\tplugins: [\n
+\t\t\t"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",\n
+\t\t\t"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
+\t\t\t"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker imagetools"\n
+\t\t],\n
+\t\tcontent_css: "css/development.css",\n
+\t\tadd_unload_trigger: false,\n
+\t\theight: 600,\n
+\t\ttoolbar1: "undo redo | styleselect | alignleft aligncenter alignright alignjustify | link image | media | emoticons"\n
+\t});\n
+\n
+\tfunction send() {\n
+\t\ttinymce.activeEditor.uploadImages(function(success) {\n
+\t\t\tdocument.forms[0].submit();\n
+\t\t});\n
+\t}\n
+\n
+\tfunction upload() {\n
+\t\ttinymce.activeEditor.uploadImages(function(success) {\n
+\t\t\tconsole.log(success);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction dump() {\n
+\t\tvar content = tinymce.activeEditor.getContent();\n
+\n
+\t\ttinymce.$(\'#view\').html(content);\n
+\t\tconsole.log(content);\n
+\t}\n
+</script>\n
+</head>\n
+<body>\n
+\n
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">\n
+\t<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%" class="tinymce">\n
+\t\t<p>\n
+\t\t\t<img src="img/dogleft.jpg" width="160" height="100">\n
+\t\t\t<img src="img/dogleft.jpg" style="width: 160px; height: 100px">\n
+\t\t\t<img src="img/dogleft.jpg" style="width: 20%">\n
+\t\t\t<img src="img/dogleft.jpg">\n
+\t\t\t<img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png">\n
+\t\t</p>\n
+\t</textarea>\n
+\n
+\t<input type="button" value="Submit" onclick="send()" />\n
+\t<input type="button" value="Dump" onclick="dump()" />\n
+\t<input type="button" value="Upload" onclick="upload()" />\n
+</form>\n
+\n
+<div id="view"></div>\n
+\t\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2240</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>imagetools.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

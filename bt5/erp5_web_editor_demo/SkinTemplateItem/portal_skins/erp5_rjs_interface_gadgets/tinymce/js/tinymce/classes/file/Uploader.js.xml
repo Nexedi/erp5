@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268356.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Uploader.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Uploader.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Upload blobs or blob infos to the specified URL or handler.\n
+ *\n
+ * @private\n
+ * @class tinymce.file.Uploader\n
+ * @example\n
+ * var uploader = new Uploader({\n
+ *     url: \'/upload.php\',\n
+ *     basePath: \'/base/path\',\n
+ *     credentials: true,\n
+ *     handler: function(data, success, failure) {\n
+ *         ...\n
+ *     }\n
+ * });\n
+ *\n
+ * uploader.upload(blobInfos).then(function(result) {\n
+ *     ...\n
+ * });\n
+ */\n
+define("tinymce/file/Uploader", [\n
+\t"tinymce/util/Promise",\n
+\t"tinymce/util/Tools"\n
+], function(Promise, Tools) {\n
+\treturn function(settings) {\n
+\t\tfunction fileName(blobInfo) {\n
+\t\t\tvar ext, extensions;\n
+\n
+\t\t\textensions = {\n
+\t\t\t\t\'image/jpeg\': \'jpg\',\n
+\t\t\t\t\'image/jpg\': \'jpg\',\n
+\t\t\t\t\'image/gif\': \'gif\',\n
+\t\t\t\t\'image/png\': \'png\'\n
+\t\t\t};\n
+\n
+\t\t\text = extensions[blobInfo.blob().type.toLowerCase()] || \'dat\';\n
+\n
+\t\t\treturn blobInfo.id() + \'.\' + ext;\n
+\t\t}\n
+\n
+\t\tfunction pathJoin(path1, path2) {\n
+\t\t\tif (path1) {\n
+\t\t\t\treturn path1.replace(/\\/$/, \'\') + \'/\' + path2.replace(/^\\//, \'\');\n
+\t\t\t}\n
+\n
+\t\t\treturn path2;\n
+\t\t}\n
+\n
+\t\tfunction blobInfoToData(blobInfo) {\n
+\t\t\treturn {\n
+\t\t\t\tid: blobInfo.id,\n
+\t\t\t\tblob: blobInfo.blob,\n
+\t\t\t\tbase64: blobInfo.base64,\n
+\t\t\t\tfilename: Tools.constant(fileName(blobInfo))\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction defaultHandler(blobInfo, success, failure) {\n
+\t\t\tvar xhr, formData;\n
+\n
+\t\t\txhr = new XMLHttpRequest();\n
+\t\t\txhr.withCredentials = settings.credentials;\n
+\t\t\txhr.open(\'POST\', settings.url);\n
+\n
+\t\t\txhr.onload = function() {\n
+\t\t\t\tvar json;\n
+\n
+\t\t\t\tif (xhr.status != 200) {\n
+\t\t\t\t\tfailure("HTTP Error: " + xhr.status);\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tjson = JSON.parse(xhr.responseText);\n
+\n
+\t\t\t\tif (!json || typeof json.location != "string") {\n
+\t\t\t\t\tfailure("Invalid JSON: " + xhr.responseText);\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tsuccess(pathJoin(settings.basePath, json.location));\n
+\t\t\t};\n
+\n
+\t\t\tformData = new FormData();\n
+\t\t\tformData.append(\'file\', blobInfo.blob(), fileName(blobInfo));\n
+\n
+\t\t\txhr.send(formData);\n
+\t\t}\n
+\n
+\t\tfunction upload(blobInfos) {\n
+\t\t\treturn new Promise(function(resolve, reject) {\n
+\t\t\t\tvar handler = settings.handler, queue, index = 0, uploadedIdMap = {};\n
+\n
+\t\t\t\t// If no url is configured then resolve\n
+\t\t\t\tif (!settings.url && handler === defaultHandler) {\n
+\t\t\t\t\tresolve([]);\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tqueue = Tools.map(blobInfos, function(blobInfo) {\n
+\t\t\t\t\treturn {\n
+\t\t\t\t\t\tstatus: false,\n
+\t\t\t\t\t\tblobInfo: blobInfo,\n
+\t\t\t\t\t\turl: \'\'\n
+\t\t\t\t\t};\n
+\t\t\t\t});\n
+\n
+\t\t\t\tfunction uploadNext() {\n
+\t\t\t\t\tvar previousResult, queueItem = queue[index++];\n
+\n
+\t\t\t\t\tif (!queueItem) {\n
+\t\t\t\t\t\tresolve(queue);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Only upload unique blob once\n
+\t\t\t\t\tpreviousResult = uploadedIdMap[queueItem.blobInfo.id()];\n
+\t\t\t\t\tif (previousResult) {\n
+\t\t\t\t\t\tqueueItem.url = previousResult;\n
+\t\t\t\t\t\tqueueItem.status = true;\n
+\t\t\t\t\t\tuploadNext();\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\thandler(blobInfoToData(queueItem.blobInfo), function(url) {\n
+\t\t\t\t\t\tuploadedIdMap[queueItem.blobInfo.id()] = url;\n
+\t\t\t\t\t\tqueueItem.url = url;\n
+\t\t\t\t\t\tqueueItem.status = true;\n
+\t\t\t\t\t\tuploadNext();\n
+\t\t\t\t\t}, function(failure) {\n
+\t\t\t\t\t\tqueueItem.status = false;\n
+\t\t\t\t\t\treject(failure);\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\n
+\t\t\t\tuploadNext();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tsettings = Tools.extend({\n
+\t\t\tcredentials: false,\n
+\t\t\thandler: defaultHandler\n
+\t\t}, settings);\n
+\n
+\t\treturn {\n
+\t\t\tupload: upload\n
+\t\t};\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3351</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Uploader.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

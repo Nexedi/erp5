@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268182.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>runner.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * PhantomJS Runner QUnit Plugin 1.2.0\n
+ *\n
+ * PhantomJS binaries: http://phantomjs.org/download.html\n
+ * Requires PhantomJS 1.6+ (1.7+ recommended)\n
+ *\n
+ * Run with:\n
+ *   phantomjs runner.js [url-of-your-qunit-testsuite]\n
+ *\n
+ * e.g.\n
+ *   phantomjs runner.js http://localhost/qunit/test/index.html\n
+ */\n
+\n
+/*global phantom:false, require:false, console:false, window:false, QUnit:false */\n
+\n
+(function() {\n
+\t\'use strict\';\n
+\n
+\tvar url, page, timeout,\n
+\t\targs = require(\'system\').args;\n
+\n
+\t// arg[0]: scriptName, args[1...]: arguments\n
+\tif (args.length < 2 || args.length > 3) {\n
+\t\tconsole.error(\'Usage:\\n  phantomjs runner.js [url-of-your-qunit-testsuite] [timeout-in-seconds]\');\n
+\t\tphantom.exit(1);\n
+\t}\n
+\n
+\turl = args[1];\n
+\tpage = require(\'webpage\').create();\n
+\tif (args[2] !== undefined) {\n
+\t\ttimeout = parseInt(args[2], 10);\n
+\t}\n
+\n
+\t// Route `console.log()` calls from within the Page context to the main Phantom context (i.e. current `this`)\n
+\tpage.onConsoleMessage = function(msg) {\n
+\t\tconsole.log(msg);\n
+\t};\n
+\n
+\tpage.onInitialized = function() {\n
+\t\tpage.evaluate(addLogging);\n
+\t};\n
+\n
+\tpage.onCallback = function(message) {\n
+\t\tvar result,\n
+\t\t\tfailed;\n
+\n
+\t\tif (message) {\n
+\t\t\tif (message.name === \'QUnit.done\') {\n
+\t\t\t\tresult = message.data;\n
+\t\t\t\tfailed = !result || !result.total || result.failed;\n
+\n
+\t\t\t\tif (!result.total) {\n
+\t\t\t\t\tconsole.error(\'No tests were executed. Are you loading tests asynchronously?\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tphantom.exit(failed ? 1 : 0);\n
+\t\t\t}\n
+\t\t}\n
+\t};\n
+\n
+\tpage.open(url, function(status) {\n
+\t\tif (status !== \'success\') {\n
+\t\t\tconsole.error(\'Unable to access network: \' + status);\n
+\t\t\tphantom.exit(1);\n
+\t\t} else {\n
+\t\t\t// Cannot do this verification with the \'DOMContentLoaded\' handler because it\n
+\t\t\t// will be too late to attach it if a page does not have any script tags.\n
+\t\t\tvar qunitMissing = page.evaluate(function() { return (typeof QUnit === \'undefined\' || !QUnit); });\n
+\t\t\tif (qunitMissing) {\n
+\t\t\t\tconsole.error(\'The `QUnit` object is not present on this page.\');\n
+\t\t\t\tphantom.exit(1);\n
+\t\t\t}\n
+\n
+\t\t\t// Set a timeout on the test running, otherwise tests with async problems will hang forever\n
+\t\t\tif (typeof timeout === \'number\') {\n
+\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\tconsole.error(\'The specified timeout of \' + timeout + \' seconds has expired. Aborting...\');\n
+\t\t\t\t\tphantom.exit(1);\n
+\t\t\t\t}, timeout * 1000);\n
+\t\t\t}\n
+\n
+\t\t\t// Do nothing... the callback mechanism will handle everything!\n
+\t\t}\n
+\t});\n
+\n
+\tfunction addLogging() {\n
+\t\twindow.document.addEventListener(\'DOMContentLoaded\', function() {\n
+\t\t\tvar currentTestAssertions = [];\n
+\n
+\t\t\tQUnit.log(function(details) {\n
+\t\t\t\tvar response;\n
+\n
+\t\t\t\t// Ignore passing assertions\n
+\t\t\t\tif (details.result) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tresponse = details.message || \'\';\n
+\n
+\t\t\t\tif (typeof details.expected !== \'undefined\') {\n
+\t\t\t\t\tif (response) {\n
+\t\t\t\t\t\tresponse += \', \';\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tresponse += \'expected: \' + details.expected + \', but was: \' + details.actual;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (details.source) {\n
+\t\t\t\t\tresponse += "\\n" + details.source;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcurrentTestAssertions.push(\'Failed assertion: \' + response);\n
+\t\t\t});\n
+\n
+\t\t\tQUnit.testDone(function(result) {\n
+\t\t\t\tvar i,\n
+\t\t\t\t\tlen,\n
+\t\t\t\t\tname = \'\';\n
+\n
+\t\t\t\tif (result.module) {\n
+\t\t\t\t\tname += result.module + \': \';\n
+\t\t\t\t}\n
+\t\t\t\tname += result.name;\n
+\n
+\t\t\t\tif (result.failed) {\n
+\t\t\t\t\tconsole.log(\'\\n\' + \'Test failed: \' + name);\n
+\n
+\t\t\t\t\tfor (i = 0, len = currentTestAssertions.length; i < len; i++) {\n
+\t\t\t\t\t\tconsole.log(\'    \' + currentTestAssertions[i]);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcurrentTestAssertions.length = 0;\n
+\t\t\t});\n
+\n
+\t\t\tQUnit.done(function(result) {\n
+\t\t\t\tconsole.log(\'\\n\' + \'Took \' + result.runtime +  \'ms to run \' + result.total + \' tests. \' + result.passed + \' passed, \' + result.failed + \' failed.\');\n
+\n
+\t\t\t\tif (typeof window.callPhantom === \'function\') {\n
+\t\t\t\t\twindow.callPhantom({\n
+\t\t\t\t\t\t\'name\': \'QUnit.done\',\n
+\t\t\t\t\t\t\'data\': result\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}, false);\n
+\t}\n
+})();
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3766</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>runner.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,269 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268547.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'layer\', function(editor) {\n
+\tfunction getParentLayer(node) {\n
+\t\tdo {\n
+\t\t\tif (node.className && node.className.indexOf(\'mceItemLayer\') != -1) {\n
+\t\t\t\treturn node;\n
+\t\t\t}\n
+\t\t} while ((node = node.parentNode));\n
+\t}\n
+\n
+\tfunction visualAid(e) {\n
+\t\tvar dom = editor.dom;\n
+\n
+\t\ttinymce.each(dom.select(\'div,p\', e), function(e) {\n
+\t\t\tif (/^(absolute|relative|fixed)$/i.test(e.style.position)) {\n
+\t\t\t\tif (e.hasVisual) {\n
+\t\t\t\t\tdom.addClass(e, \'mceItemVisualAid\');\n
+\t\t\t\t} else {\n
+\t\t\t\t\tdom.removeClass(e, \'mceItemVisualAid\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdom.addClass(e, \'mceItemLayer\');\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tfunction move(d) {\n
+\t\tvar i, z = [], le = getParentLayer(editor.selection.getNode()), ci = -1, fi = -1, nl;\n
+\n
+\t\tnl = [];\n
+\t\ttinymce.walk(editor.getBody(), function(n) {\n
+\t\t\tif (n.nodeType == 1 && /^(absolute|relative|static)$/i.test(n.style.position)) {\n
+\t\t\t\tnl.push(n);\n
+\t\t\t}\n
+\t\t}, \'childNodes\');\n
+\n
+\t\t// Find z-indexes\n
+\t\tfor (i = 0; i < nl.length; i++) {\n
+\t\t\tz[i] = nl[i].style.zIndex ? parseInt(nl[i].style.zIndex, 10) : 0;\n
+\n
+\t\t\tif (ci < 0 && nl[i] == le) {\n
+\t\t\t\tci = i;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tif (d < 0) {\n
+\t\t\t// Move back\n
+\n
+\t\t\t// Try find a lower one\n
+\t\t\tfor (i = 0; i < z.length; i++) {\n
+\t\t\t\tif (z[i] < z[ci]) {\n
+\t\t\t\t\tfi = i;\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (fi > -1) {\n
+\t\t\t\tnl[ci].style.zIndex = z[fi];\n
+\t\t\t\tnl[fi].style.zIndex = z[ci];\n
+\t\t\t} else {\n
+\t\t\t\tif (z[ci] > 0) {\n
+\t\t\t\t\tnl[ci].style.zIndex = z[ci] - 1;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t} else {\n
+\t\t\t// Move forward\n
+\n
+\t\t\t// Try find a higher one\n
+\t\t\tfor (i = 0; i < z.length; i++) {\n
+\t\t\t\tif (z[i] > z[ci]) {\n
+\t\t\t\t\tfi = i;\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (fi > -1) {\n
+\t\t\t\tnl[ci].style.zIndex = z[fi];\n
+\t\t\t\tnl[fi].style.zIndex = z[ci];\n
+\t\t\t} else {\n
+\t\t\t\tnl[ci].style.zIndex = z[ci] + 1;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\teditor.execCommand(\'mceRepaint\');\n
+\t}\n
+\n
+\tfunction insertLayer() {\n
+\t\tvar dom = editor.dom, p = dom.getPos(dom.getParent(editor.selection.getNode(), \'*\'));\n
+\t\tvar body = editor.getBody();\n
+\n
+\t\teditor.dom.add(body, \'div\', {\n
+\t\t\tstyle: {\n
+\t\t\t\tposition: \'absolute\',\n
+\t\t\t\tleft: p.x,\n
+\t\t\t\ttop: (p.y > 20 ? p.y : 20),\n
+\t\t\t\twidth: 100,\n
+\t\t\t\theight: 100\n
+\t\t\t},\n
+\t\t\t\'class\': \'mceItemVisualAid mceItemLayer\'\n
+\t\t}, editor.selection.getContent() || editor.getLang(\'layer.content\'));\n
+\n
+\t\t// Workaround for IE where it messes up the JS engine if you insert a layer on IE 6,7\n
+\t\tif (tinymce.Env.ie) {\n
+\t\t\tdom.setHTML(body, body.innerHTML);\n
+\t\t}\n
+\t}\n
+\n
+\tfunction toggleAbsolute() {\n
+\t\tvar le = getParentLayer(editor.selection.getNode());\n
+\n
+\t\tif (!le) {\n
+\t\t\tle = editor.dom.getParent(editor.selection.getNode(), \'DIV,P,IMG\');\n
+\t\t}\n
+\n
+\t\tif (le) {\n
+\t\t\tif (le.style.position.toLowerCase() == "absolute") {\n
+\t\t\t\teditor.dom.setStyles(le, {\n
+\t\t\t\t\tposition: \'\',\n
+\t\t\t\t\tleft: \'\',\n
+\t\t\t\t\ttop: \'\',\n
+\t\t\t\t\twidth: \'\',\n
+\t\t\t\t\theight: \'\'\n
+\t\t\t\t});\n
+\n
+\t\t\t\teditor.dom.removeClass(le, \'mceItemVisualAid\');\n
+\t\t\t\teditor.dom.removeClass(le, \'mceItemLayer\');\n
+\t\t\t} else {\n
+\t\t\t\tif (!le.style.left) {\n
+\t\t\t\t\tle.style.left = 20 + \'px\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!le.style.top) {\n
+\t\t\t\t\tle.style.top = 20 + \'px\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!le.style.width) {\n
+\t\t\t\t\tle.style.width = le.width ? (le.width + \'px\') : \'100px\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!le.style.height) {\n
+\t\t\t\t\tle.style.height = le.height ? (le.height + \'px\') : \'100px\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tle.style.position = "absolute";\n
+\n
+\t\t\t\teditor.dom.setAttrib(le, \'data-mce-style\', \'\');\n
+\t\t\t\teditor.addVisual(editor.getBody());\n
+\t\t\t}\n
+\n
+\t\t\teditor.execCommand(\'mceRepaint\');\n
+\t\t\teditor.nodeChanged();\n
+\t\t}\n
+\t}\n
+\n
+\t// Register commands\n
+\teditor.addCommand(\'mceInsertLayer\', insertLayer);\n
+\n
+\teditor.addCommand(\'mceMoveForward\', function() {\n
+\t\tmove(1);\n
+\t});\n
+\n
+\teditor.addCommand(\'mceMoveBackward\', function() {\n
+\t\tmove(-1);\n
+\t});\n
+\n
+\teditor.addCommand(\'mceMakeAbsolute\', function() {\n
+\t\ttoggleAbsolute();\n
+\t});\n
+\n
+\t// Register buttons\n
+\teditor.addButton(\'moveforward\', {title: \'layer.forward_desc\', cmd: \'mceMoveForward\'});\n
+\teditor.addButton(\'movebackward\', {title: \'layer.backward_desc\', cmd: \'mceMoveBackward\'});\n
+\teditor.addButton(\'absolute\', {title: \'layer.absolute_desc\', cmd: \'mceMakeAbsolute\'});\n
+\teditor.addButton(\'insertlayer\', {title: \'layer.insertlayer_desc\', cmd: \'mceInsertLayer\'});\n
+\n
+\teditor.on(\'init\', function() {\n
+\t\tif (tinymce.Env.ie) {\n
+\t\t\teditor.getDoc().execCommand(\'2D-Position\', false, true);\n
+\t\t}\n
+\t});\n
+\n
+\t// Remove serialized styles when selecting a layer since it might be changed by a drag operation\n
+\teditor.on(\'mouseup\', function(e) {\n
+\t\tvar layer = getParentLayer(e.target);\n
+\n
+\t\tif (layer) {\n
+\t\t\teditor.dom.setAttrib(layer, \'data-mce-style\', \'\');\n
+\t\t}\n
+\t});\n
+\n
+\t// Fixes edit focus issues with layers on Gecko\n
+\t// This will enable designMode while inside a layer and disable it when outside\n
+\teditor.on(\'mousedown\', function(e) {\n
+\t\tvar node = e.target, doc = editor.getDoc(), parent;\n
+\n
+\t\tif (tinymce.Env.gecko) {\n
+\t\t\tif (getParentLayer(node)) {\n
+\t\t\t\tif (doc.designMode !== \'on\') {\n
+\t\t\t\t\tdoc.designMode = \'on\';\n
+\n
+\t\t\t\t\t// Repaint caret\n
+\t\t\t\t\tnode = doc.body;\n
+\t\t\t\t\tparent = node.parentNode;\n
+\t\t\t\t\tparent.removeChild(node);\n
+\t\t\t\t\tparent.appendChild(node);\n
+\t\t\t\t}\n
+\t\t\t} else if (doc.designMode == \'on\') {\n
+\t\t\t\tdoc.designMode = \'off\';\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\n
+\teditor.on(\'NodeChange\', visualAid);\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5193</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

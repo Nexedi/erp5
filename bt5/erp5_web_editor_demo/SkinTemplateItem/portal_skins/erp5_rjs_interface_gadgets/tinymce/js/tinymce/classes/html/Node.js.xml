@@ -1,0 +1,540 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268281.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Node.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Node.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class is a minimalistic implementation of a DOM like node used by the DomParser class.\n
+ *\n
+ * @example\n
+ * var node = new tinymce.html.Node(\'strong\', 1);\n
+ * someRoot.append(node);\n
+ *\n
+ * @class tinymce.html.Node\n
+ * @version 3.4\n
+ */\n
+define("tinymce/html/Node", [], function() {\n
+\tvar whiteSpaceRegExp = /^[ \\t\\r\\n]*$/, typeLookup = {\n
+\t\t\'#text\': 3,\n
+\t\t\'#comment\': 8,\n
+\t\t\'#cdata\': 4,\n
+\t\t\'#pi\': 7,\n
+\t\t\'#doctype\': 10,\n
+\t\t\'#document-fragment\': 11\n
+\t};\n
+\n
+\t// Walks the tree left/right\n
+\tfunction walk(node, root_node, prev) {\n
+\t\tvar sibling, parent, startName = prev ? \'lastChild\' : \'firstChild\', siblingName = prev ? \'prev\' : \'next\';\n
+\n
+\t\t// Walk into nodes if it has a start\n
+\t\tif (node[startName]) {\n
+\t\t\treturn node[startName];\n
+\t\t}\n
+\n
+\t\t// Return the sibling if it has one\n
+\t\tif (node !== root_node) {\n
+\t\t\tsibling = node[siblingName];\n
+\n
+\t\t\tif (sibling) {\n
+\t\t\t\treturn sibling;\n
+\t\t\t}\n
+\n
+\t\t\t// Walk up the parents to look for siblings\n
+\t\t\tfor (parent = node.parent; parent && parent !== root_node; parent = parent.parent) {\n
+\t\t\t\tsibling = parent[siblingName];\n
+\n
+\t\t\t\tif (sibling) {\n
+\t\t\t\t\treturn sibling;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\t/**\n
+\t * Constructs a new Node instance.\n
+\t *\n
+\t * @constructor\n
+\t * @method Node\n
+\t * @param {String} name Name of the node type.\n
+\t * @param {Number} type Numeric type representing the node.\n
+\t */\n
+\tfunction Node(name, type) {\n
+\t\tthis.name = name;\n
+\t\tthis.type = type;\n
+\n
+\t\tif (type === 1) {\n
+\t\t\tthis.attributes = [];\n
+\t\t\tthis.attributes.map = {};\n
+\t\t}\n
+\t}\n
+\n
+\tNode.prototype = {\n
+\t\t/**\n
+\t\t * Replaces the current node with the specified one.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * someNode.replace(someNewNode);\n
+\t\t *\n
+\t\t * @method replace\n
+\t\t * @param {tinymce.html.Node} node Node to replace the current node with.\n
+\t\t * @return {tinymce.html.Node} The old node that got replaced.\n
+\t\t */\n
+\t\treplace: function(node) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (node.parent) {\n
+\t\t\t\tnode.remove();\n
+\t\t\t}\n
+\n
+\t\t\tself.insert(node, self);\n
+\t\t\tself.remove();\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Gets/sets or removes an attribute by name.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * someNode.attr("name", "value"); // Sets an attribute\n
+\t\t * console.log(someNode.attr("name")); // Gets an attribute\n
+\t\t * someNode.attr("name", null); // Removes an attribute\n
+\t\t *\n
+\t\t * @method attr\n
+\t\t * @param {String} name Attribute name to set or get.\n
+\t\t * @param {String} value Optional value to set.\n
+\t\t * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.\n
+\t\t */\n
+\t\tattr: function(name, value) {\n
+\t\t\tvar self = this, attrs, i, undef;\n
+\n
+\t\t\tif (typeof name !== "string") {\n
+\t\t\t\tfor (i in name) {\n
+\t\t\t\t\tself.attr(i, name[i]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\tif ((attrs = self.attributes)) {\n
+\t\t\t\tif (value !== undef) {\n
+\t\t\t\t\t// Remove attribute\n
+\t\t\t\t\tif (value === null) {\n
+\t\t\t\t\t\tif (name in attrs.map) {\n
+\t\t\t\t\t\t\tdelete attrs.map[name];\n
+\n
+\t\t\t\t\t\t\ti = attrs.length;\n
+\t\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\t\tif (attrs[i].name === name) {\n
+\t\t\t\t\t\t\t\t\tattrs = attrs.splice(i, 1);\n
+\t\t\t\t\t\t\t\t\treturn self;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn self;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Set attribute\n
+\t\t\t\t\tif (name in attrs.map) {\n
+\t\t\t\t\t\t// Set attribute\n
+\t\t\t\t\t\ti = attrs.length;\n
+\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\tif (attrs[i].name === name) {\n
+\t\t\t\t\t\t\t\tattrs[i].value = value;\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tattrs.push({name: name, value: value});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tattrs.map[name] = value;\n
+\n
+\t\t\t\t\treturn self;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn attrs.map[name];\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Does a shallow clones the node into a new node. It will also exclude id attributes since\n
+\t\t * there should only be one id per document.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * var clonedNode = node.clone();\n
+\t\t *\n
+\t\t * @method clone\n
+\t\t * @return {tinymce.html.Node} New copy of the original node.\n
+\t\t */\n
+\t\tclone: function() {\n
+\t\t\tvar self = this, clone = new Node(self.name, self.type), i, l, selfAttrs, selfAttr, cloneAttrs;\n
+\n
+\t\t\t// Clone element attributes\n
+\t\t\tif ((selfAttrs = self.attributes)) {\n
+\t\t\t\tcloneAttrs = [];\n
+\t\t\t\tcloneAttrs.map = {};\n
+\n
+\t\t\t\tfor (i = 0, l = selfAttrs.length; i < l; i++) {\n
+\t\t\t\t\tselfAttr = selfAttrs[i];\n
+\n
+\t\t\t\t\t// Clone everything except id\n
+\t\t\t\t\tif (selfAttr.name !== \'id\') {\n
+\t\t\t\t\t\tcloneAttrs[cloneAttrs.length] = {name: selfAttr.name, value: selfAttr.value};\n
+\t\t\t\t\t\tcloneAttrs.map[selfAttr.name] = selfAttr.value;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tclone.attributes = cloneAttrs;\n
+\t\t\t}\n
+\n
+\t\t\tclone.value = self.value;\n
+\t\t\tclone.shortEnded = self.shortEnded;\n
+\n
+\t\t\treturn clone;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Wraps the node in in another node.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * node.wrap(wrapperNode);\n
+\t\t *\n
+\t\t * @method wrap\n
+\t\t */\n
+\t\twrap: function(wrapper) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.parent.insert(wrapper, self);\n
+\t\t\twrapper.append(self);\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Unwraps the node in other words it removes the node but keeps the children.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * node.unwrap();\n
+\t\t *\n
+\t\t * @method unwrap\n
+\t\t */\n
+\t\tunwrap: function() {\n
+\t\t\tvar self = this, node, next;\n
+\n
+\t\t\tfor (node = self.firstChild; node;) {\n
+\t\t\t\tnext = node.next;\n
+\t\t\t\tself.insert(node, self, true);\n
+\t\t\t\tnode = next;\n
+\t\t\t}\n
+\n
+\t\t\tself.remove();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the node from it\'s parent.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * node.remove();\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @return {tinymce.html.Node} Current node that got removed.\n
+\t\t */\n
+\t\tremove: function() {\n
+\t\t\tvar self = this, parent = self.parent, next = self.next, prev = self.prev;\n
+\n
+\t\t\tif (parent) {\n
+\t\t\t\tif (parent.firstChild === self) {\n
+\t\t\t\t\tparent.firstChild = next;\n
+\n
+\t\t\t\t\tif (next) {\n
+\t\t\t\t\t\tnext.prev = null;\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tprev.next = next;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (parent.lastChild === self) {\n
+\t\t\t\t\tparent.lastChild = prev;\n
+\n
+\t\t\t\t\tif (prev) {\n
+\t\t\t\t\t\tprev.next = null;\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tnext.prev = prev;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.parent = self.next = self.prev = null;\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Appends a new node as a child of the current node.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * node.append(someNode);\n
+\t\t *\n
+\t\t * @method append\n
+\t\t * @param {tinymce.html.Node} node Node to append as a child of the current one.\n
+\t\t * @return {tinymce.html.Node} The node that got appended.\n
+\t\t */\n
+\t\tappend: function(node) {\n
+\t\t\tvar self = this, last;\n
+\n
+\t\t\tif (node.parent) {\n
+\t\t\t\tnode.remove();\n
+\t\t\t}\n
+\n
+\t\t\tlast = self.lastChild;\n
+\t\t\tif (last) {\n
+\t\t\t\tlast.next = node;\n
+\t\t\t\tnode.prev = last;\n
+\t\t\t\tself.lastChild = node;\n
+\t\t\t} else {\n
+\t\t\t\tself.lastChild = self.firstChild = node;\n
+\t\t\t}\n
+\n
+\t\t\tnode.parent = self;\n
+\n
+\t\t\treturn node;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Inserts a node at a specific position as a child of the current node.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * parentNode.insert(newChildNode, oldChildNode);\n
+\t\t *\n
+\t\t * @method insert\n
+\t\t * @param {tinymce.html.Node} node Node to insert as a child of the current node.\n
+\t\t * @param {tinymce.html.Node} ref_node Reference node to set node before/after.\n
+\t\t * @param {Boolean} before Optional state to insert the node before the reference node.\n
+\t\t * @return {tinymce.html.Node} The node that got inserted.\n
+\t\t */\n
+\t\tinsert: function(node, ref_node, before) {\n
+\t\t\tvar parent;\n
+\n
+\t\t\tif (node.parent) {\n
+\t\t\t\tnode.remove();\n
+\t\t\t}\n
+\n
+\t\t\tparent = ref_node.parent || this;\n
+\n
+\t\t\tif (before) {\n
+\t\t\t\tif (ref_node === parent.firstChild) {\n
+\t\t\t\t\tparent.firstChild = node;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tref_node.prev.next = node;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnode.prev = ref_node.prev;\n
+\t\t\t\tnode.next = ref_node;\n
+\t\t\t\tref_node.prev = node;\n
+\t\t\t} else {\n
+\t\t\t\tif (ref_node === parent.lastChild) {\n
+\t\t\t\t\tparent.lastChild = node;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tref_node.next.prev = node;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnode.next = ref_node.next;\n
+\t\t\t\tnode.prev = ref_node;\n
+\t\t\t\tref_node.next = node;\n
+\t\t\t}\n
+\n
+\t\t\tnode.parent = parent;\n
+\n
+\t\t\treturn node;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Get all children by name.\n
+\t\t *\n
+\t\t * @method getAll\n
+\t\t * @param {String} name Name of the child nodes to collect.\n
+\t\t * @return {Array} Array with child nodes matchin the specified name.\n
+\t\t */\n
+\t\tgetAll: function(name) {\n
+\t\t\tvar self = this, node, collection = [];\n
+\n
+\t\t\tfor (node = self.firstChild; node; node = walk(node, self)) {\n
+\t\t\t\tif (node.name === name) {\n
+\t\t\t\t\tcollection.push(node);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn collection;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes all children of the current node.\n
+\t\t *\n
+\t\t * @method empty\n
+\t\t * @return {tinymce.html.Node} The current node that got cleared.\n
+\t\t */\n
+\t\tempty: function() {\n
+\t\t\tvar self = this, nodes, i, node;\n
+\n
+\t\t\t// Remove all children\n
+\t\t\tif (self.firstChild) {\n
+\t\t\t\tnodes = [];\n
+\n
+\t\t\t\t// Collect the children\n
+\t\t\t\tfor (node = self.firstChild; node; node = walk(node, self)) {\n
+\t\t\t\t\tnodes.push(node);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Remove the children\n
+\t\t\t\ti = nodes.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tnode = nodes[i];\n
+\t\t\t\t\tnode.parent = node.firstChild = node.lastChild = node.next = node.prev = null;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tself.firstChild = self.lastChild = null;\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the node is to be considered empty or not.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * node.isEmpty({img: true});\n
+\t\t * @method isEmpty\n
+\t\t * @param {Object} elements Name/value object with elements that are automatically treated as non empty elements.\n
+\t\t * @return {Boolean} true/false if the node is empty or not.\n
+\t\t */\n
+\t\tisEmpty: function(elements) {\n
+\t\t\tvar self = this, node = self.firstChild, i, name;\n
+\n
+\t\t\tif (node) {\n
+\t\t\t\tdo {\n
+\t\t\t\t\tif (node.type === 1) {\n
+\t\t\t\t\t\t// Ignore bogus elements\n
+\t\t\t\t\t\tif (node.attributes.map[\'data-mce-bogus\']) {\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Keep empty elements like <img />\n
+\t\t\t\t\t\tif (elements[node.name]) {\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Keep bookmark nodes and name attribute like <a name="1"></a>\n
+\t\t\t\t\t\ti = node.attributes.length;\n
+\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\tname = node.attributes[i].name;\n
+\t\t\t\t\t\t\tif (name === "name" || name.indexOf(\'data-mce-bookmark\') === 0) {\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Keep comments\n
+\t\t\t\t\tif (node.type === 8) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Keep non whitespace text nodes\n
+\t\t\t\t\tif ((node.type === 3 && !whiteSpaceRegExp.test(node.value))) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t} while ((node = walk(node, self)));\n
+\t\t\t}\n
+\n
+\t\t\treturn true;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Walks to the next or previous node and returns that node or null if it wasn\'t found.\n
+\t\t *\n
+\t\t * @method walk\n
+\t\t * @param {Boolean} prev Optional previous node state defaults to false.\n
+\t\t * @return {tinymce.html.Node} Node that is next to or previous of the current node.\n
+\t\t */\n
+\t\twalk: function(prev) {\n
+\t\t\treturn walk(this, null, prev);\n
+\t\t}\n
+\t};\n
+\n
+\t/**\n
+\t * Creates a node of a specific type.\n
+\t *\n
+\t * @static\n
+\t * @method create\n
+\t * @param {String} name Name of the node type to create for example "b" or "#text".\n
+\t * @param {Object} attrs Name/value collection of attributes that will be applied to elements.\n
+\t */\n
+\tNode.create = function(name, attrs) {\n
+\t\tvar node, attrName;\n
+\n
+\t\t// Create node\n
+\t\tnode = new Node(name, typeLookup[name] || 1);\n
+\n
+\t\t// Add attributes if needed\n
+\t\tif (attrs) {\n
+\t\t\tfor (attrName in attrs) {\n
+\t\t\t\tnode.attr(attrName, attrs[attrName]);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn node;\n
+\t};\n
+\n
+\treturn Node;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10863</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Node.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

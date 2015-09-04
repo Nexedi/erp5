@@ -1,0 +1,866 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268287.42</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DomParser.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * DomParser.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make\n
+ * sure that the node tree is valid according to the specified schema.\n
+ * So for example: <p>a<p>b</p>c</p> will become <p>a</p><p>b</p><p>c</p>\n
+ *\n
+ * @example\n
+ * var parser = new tinymce.html.DomParser({validate: true}, schema);\n
+ * var rootNode = parser.parse(\'<h1>content</h1>\');\n
+ *\n
+ * @class tinymce.html.DomParser\n
+ * @version 3.4\n
+ */\n
+define("tinymce/html/DomParser", [\n
+\t"tinymce/html/Node",\n
+\t"tinymce/html/Schema",\n
+\t"tinymce/html/SaxParser",\n
+\t"tinymce/util/Tools"\n
+], function(Node, Schema, SaxParser, Tools) {\n
+\tvar makeMap = Tools.makeMap, each = Tools.each, explode = Tools.explode, extend = Tools.extend;\n
+\n
+\t/**\n
+\t * Constructs a new DomParser instance.\n
+\t *\n
+\t * @constructor\n
+\t * @method DomParser\n
+\t * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.\n
+\t * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.\n
+\t */\n
+\treturn function(settings, schema) {\n
+\t\tvar self = this, nodeFilters = {}, attributeFilters = [], matchedNodes = {}, matchedAttributes = {};\n
+\n
+\t\tsettings = settings || {};\n
+\t\tsettings.validate = "validate" in settings ? settings.validate : true;\n
+\t\tsettings.root_name = settings.root_name || \'body\';\n
+\t\tself.schema = schema = schema || new Schema();\n
+\n
+\t\tfunction fixInvalidChildren(nodes) {\n
+\t\t\tvar ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;\n
+\t\t\tvar nonEmptyElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;\n
+\n
+\t\t\tnonSplitableElements = makeMap(\'tr,td,th,tbody,thead,tfoot,table\');\n
+\t\t\tnonEmptyElements = schema.getNonEmptyElements();\n
+\t\t\ttextBlockElements = schema.getTextBlockElements();\n
+\t\t\tspecialElements = schema.getSpecialElements();\n
+\n
+\t\t\tfor (ni = 0; ni < nodes.length; ni++) {\n
+\t\t\t\tnode = nodes[ni];\n
+\n
+\t\t\t\t// Already removed or fixed\n
+\t\t\t\tif (!node.parent || node.fixed) {\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// If the invalid element is a text block and the text block is within a parent LI element\n
+\t\t\t\t// Then unwrap the first text block and convert other sibling text blocks to LI elements similar to Word/Open Office\n
+\t\t\t\tif (textBlockElements[node.name] && node.parent.name == \'li\') {\n
+\t\t\t\t\t// Move sibling text blocks after LI element\n
+\t\t\t\t\tsibling = node.next;\n
+\t\t\t\t\twhile (sibling) {\n
+\t\t\t\t\t\tif (textBlockElements[sibling.name]) {\n
+\t\t\t\t\t\t\tsibling.name = \'li\';\n
+\t\t\t\t\t\t\tsibling.fixed = true;\n
+\t\t\t\t\t\t\tnode.parent.insert(sibling, node.parent);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tsibling = sibling.next;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Unwrap current text block\n
+\t\t\t\t\tnode.unwrap(node);\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Get list of all parent nodes until we find a valid parent to stick the child into\n
+\t\t\t\tparents = [node];\n
+\t\t\t\tfor (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name) &&\n
+\t\t\t\t\t!nonSplitableElements[parent.name]; parent = parent.parent) {\n
+\t\t\t\t\tparents.push(parent);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Found a suitable parent\n
+\t\t\t\tif (parent && parents.length > 1) {\n
+\t\t\t\t\t// Reverse the array since it makes looping easier\n
+\t\t\t\t\tparents.reverse();\n
+\n
+\t\t\t\t\t// Clone the related parent and insert that after the moved node\n
+\t\t\t\t\tnewParent = currentNode = self.filterNode(parents[0].clone());\n
+\n
+\t\t\t\t\t// Start cloning and moving children on the left side of the target node\n
+\t\t\t\t\tfor (i = 0; i < parents.length - 1; i++) {\n
+\t\t\t\t\t\tif (schema.isValidChild(currentNode.name, parents[i].name)) {\n
+\t\t\t\t\t\t\ttempNode = self.filterNode(parents[i].clone());\n
+\t\t\t\t\t\t\tcurrentNode.append(tempNode);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\ttempNode = currentNode;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tfor (childNode = parents[i].firstChild; childNode && childNode != parents[i + 1];) {\n
+\t\t\t\t\t\t\tnextNode = childNode.next;\n
+\t\t\t\t\t\t\ttempNode.append(childNode);\n
+\t\t\t\t\t\t\tchildNode = nextNode;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tcurrentNode = tempNode;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!newParent.isEmpty(nonEmptyElements)) {\n
+\t\t\t\t\t\tparent.insert(newParent, parents[0], true);\n
+\t\t\t\t\t\tparent.insert(node, newParent);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tparent.insert(node, parents[0], true);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Check if the element is empty by looking through it\'s contents and special treatment for <p><br /></p>\n
+\t\t\t\t\tparent = parents[0];\n
+\t\t\t\t\tif (parent.isEmpty(nonEmptyElements) || parent.firstChild === parent.lastChild && parent.firstChild.name === \'br\') {\n
+\t\t\t\t\t\tparent.empty().remove();\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if (node.parent) {\n
+\t\t\t\t\t// If it\'s an LI try to find a UL/OL for it or wrap it\n
+\t\t\t\t\tif (node.name === \'li\') {\n
+\t\t\t\t\t\tsibling = node.prev;\n
+\t\t\t\t\t\tif (sibling && (sibling.name === \'ul\' || sibling.name === \'ul\')) {\n
+\t\t\t\t\t\t\tsibling.append(node);\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tsibling = node.next;\n
+\t\t\t\t\t\tif (sibling && (sibling.name === \'ul\' || sibling.name === \'ul\')) {\n
+\t\t\t\t\t\t\tsibling.insert(node, sibling.firstChild, true);\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode.wrap(self.filterNode(new Node(\'ul\', 1)));\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Try wrapping the element in a DIV\n
+\t\t\t\t\tif (schema.isValidChild(node.parent.name, \'div\') && schema.isValidChild(\'div\', node.name)) {\n
+\t\t\t\t\t\tnode.wrap(self.filterNode(new Node(\'div\', 1)));\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// We failed wrapping it, then remove or unwrap it\n
+\t\t\t\t\t\tif (specialElements[node.name]) {\n
+\t\t\t\t\t\t\tnode.empty().remove();\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tnode.unwrap();\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Runs the specified node though the element and attributes filters.\n
+\t\t *\n
+\t\t * @method filterNode\n
+\t\t * @param {tinymce.html.Node} Node the node to run filters on.\n
+\t\t * @return {tinymce.html.Node} The passed in node.\n
+\t\t */\n
+\t\tself.filterNode = function(node) {\n
+\t\t\tvar i, name, list;\n
+\n
+\t\t\t// Run element filters\n
+\t\t\tif (name in nodeFilters) {\n
+\t\t\t\tlist = matchedNodes[name];\n
+\n
+\t\t\t\tif (list) {\n
+\t\t\t\t\tlist.push(node);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tmatchedNodes[name] = [node];\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Run attribute filters\n
+\t\t\ti = attributeFilters.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tname = attributeFilters[i].name;\n
+\n
+\t\t\t\tif (name in node.attributes.map) {\n
+\t\t\t\t\tlist = matchedAttributes[name];\n
+\n
+\t\t\t\t\tif (list) {\n
+\t\t\t\t\t\tlist.push(node);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tmatchedAttributes[name] = [node];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn node;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Adds a node filter function to the parser, the parser will collect the specified nodes by name\n
+\t\t * and then execute the callback ones it has finished parsing the document.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * parser.addNodeFilter(\'p,h1\', function(nodes, name) {\n
+\t\t *\t\tfor (var i = 0; i < nodes.length; i++) {\n
+\t\t *\t\t\tconsole.log(nodes[i].name);\n
+\t\t *\t\t}\n
+\t\t * });\n
+\t\t * @method addNodeFilter\n
+\t\t * @method {String} name Comma separated list of nodes to collect.\n
+\t\t * @param {function} callback Callback function to execute once it has collected nodes.\n
+\t\t */\n
+\t\tself.addNodeFilter = function(name, callback) {\n
+\t\t\teach(explode(name), function(name) {\n
+\t\t\t\tvar list = nodeFilters[name];\n
+\n
+\t\t\t\tif (!list) {\n
+\t\t\t\t\tnodeFilters[name] = list = [];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tlist.push(callback);\n
+\t\t\t});\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Adds a attribute filter function to the parser, the parser will collect nodes that has the specified attributes\n
+\t\t * and then execute the callback ones it has finished parsing the document.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * parser.addAttributeFilter(\'src,href\', function(nodes, name) {\n
+\t\t *\t\tfor (var i = 0; i < nodes.length; i++) {\n
+\t\t *\t\t\tconsole.log(nodes[i].name);\n
+\t\t *\t\t}\n
+\t\t * });\n
+\t\t * @method addAttributeFilter\n
+\t\t * @method {String} name Comma separated list of nodes to collect.\n
+\t\t * @param {function} callback Callback function to execute once it has collected nodes.\n
+\t\t */\n
+\t\tself.addAttributeFilter = function(name, callback) {\n
+\t\t\teach(explode(name), function(name) {\n
+\t\t\t\tvar i;\n
+\n
+\t\t\t\tfor (i = 0; i < attributeFilters.length; i++) {\n
+\t\t\t\t\tif (attributeFilters[i].name === name) {\n
+\t\t\t\t\t\tattributeFilters[i].callbacks.push(callback);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tattributeFilters.push({name: name, callbacks: [callback]});\n
+\t\t\t});\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Parses the specified HTML string into a DOM like node tree and returns the result.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * var rootNode = new DomParser({...}).parse(\'<b>text</b>\');\n
+\t\t * @method parse\n
+\t\t * @param {String} html Html string to sax parse.\n
+\t\t * @param {Object} args Optional args object that gets passed to all filter functions.\n
+\t\t * @return {tinymce.html.Node} Root node containing the tree.\n
+\t\t */\n
+\t\tself.parse = function(html, args) {\n
+\t\t\tvar parser, rootNode, node, nodes, i, l, fi, fl, list, name, validate;\n
+\t\t\tvar blockElements, startWhiteSpaceRegExp, invalidChildren = [], isInWhiteSpacePreservedElement;\n
+\t\t\tvar endWhiteSpaceRegExp, allWhiteSpaceRegExp, isAllWhiteSpaceRegExp, whiteSpaceElements;\n
+\t\t\tvar children, nonEmptyElements, rootBlockName;\n
+\n
+\t\t\targs = args || {};\n
+\t\t\tmatchedNodes = {};\n
+\t\t\tmatchedAttributes = {};\n
+\t\t\tblockElements = extend(makeMap(\'script,style,head,html,body,title,meta,param\'), schema.getBlockElements());\n
+\t\t\tnonEmptyElements = schema.getNonEmptyElements();\n
+\t\t\tchildren = schema.children;\n
+\t\t\tvalidate = settings.validate;\n
+\t\t\trootBlockName = "forced_root_block" in args ? args.forced_root_block : settings.forced_root_block;\n
+\n
+\t\t\twhiteSpaceElements = schema.getWhiteSpaceElements();\n
+\t\t\tstartWhiteSpaceRegExp = /^[ \\t\\r\\n]+/;\n
+\t\t\tendWhiteSpaceRegExp = /[ \\t\\r\\n]+$/;\n
+\t\t\tallWhiteSpaceRegExp = /[ \\t\\r\\n]+/g;\n
+\t\t\tisAllWhiteSpaceRegExp = /^[ \\t\\r\\n]+$/;\n
+\n
+\t\t\tfunction addRootBlocks() {\n
+\t\t\t\tvar node = rootNode.firstChild, next, rootBlockNode;\n
+\n
+\t\t\t\t// Removes whitespace at beginning and end of block so:\n
+\t\t\t\t// <p> x </p> -> <p>x</p>\n
+\t\t\t\tfunction trim(rootBlockNode) {\n
+\t\t\t\t\tif (rootBlockNode) {\n
+\t\t\t\t\t\tnode = rootBlockNode.firstChild;\n
+\t\t\t\t\t\tif (node && node.type == 3) {\n
+\t\t\t\t\t\t\tnode.value = node.value.replace(startWhiteSpaceRegExp, \'\');\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode = rootBlockNode.lastChild;\n
+\t\t\t\t\t\tif (node && node.type == 3) {\n
+\t\t\t\t\t\t\tnode.value = node.value.replace(endWhiteSpaceRegExp, \'\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Check if rootBlock is valid within rootNode for example if P is valid in H1 if H1 is the contentEditabe root\n
+\t\t\t\tif (!schema.isValidChild(rootNode.name, rootBlockName.toLowerCase())) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twhile (node) {\n
+\t\t\t\t\tnext = node.next;\n
+\n
+\t\t\t\t\tif (node.type == 3 || (node.type == 1 && node.name !== \'p\' &&\n
+\t\t\t\t\t\t!blockElements[node.name] && !node.attr(\'data-mce-type\'))) {\n
+\t\t\t\t\t\tif (!rootBlockNode) {\n
+\t\t\t\t\t\t\t// Create a new root block element\n
+\t\t\t\t\t\t\trootBlockNode = createNode(rootBlockName, 1);\n
+\t\t\t\t\t\t\trootBlockNode.attr(settings.forced_root_block_attrs);\n
+\t\t\t\t\t\t\trootNode.insert(rootBlockNode, node);\n
+\t\t\t\t\t\t\trootBlockNode.append(node);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trootBlockNode.append(node);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\ttrim(rootBlockNode);\n
+\t\t\t\t\t\trootBlockNode = null;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode = next;\n
+\t\t\t\t}\n
+\n
+\t\t\t\ttrim(rootBlockNode);\n
+\t\t\t}\n
+\n
+\t\t\tfunction createNode(name, type) {\n
+\t\t\t\tvar node = new Node(name, type), list;\n
+\n
+\t\t\t\tif (name in nodeFilters) {\n
+\t\t\t\t\tlist = matchedNodes[name];\n
+\n
+\t\t\t\t\tif (list) {\n
+\t\t\t\t\t\tlist.push(node);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tmatchedNodes[name] = [node];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn node;\n
+\t\t\t}\n
+\n
+\t\t\tfunction removeWhitespaceBefore(node) {\n
+\t\t\t\tvar textNode, textNodeNext, textVal, sibling, blockElements = schema.getBlockElements();\n
+\n
+\t\t\t\tfor (textNode = node.prev; textNode && textNode.type === 3;) {\n
+\t\t\t\t\ttextVal = textNode.value.replace(endWhiteSpaceRegExp, \'\');\n
+\n
+\t\t\t\t\t// Found a text node with non whitespace then trim that and break\n
+\t\t\t\t\tif (textVal.length > 0) {\n
+\t\t\t\t\t\ttextNode.value = textVal;\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\ttextNodeNext = textNode.next;\n
+\n
+\t\t\t\t\t// Fix for bug #7543 where bogus nodes would produce empty\n
+\t\t\t\t\t// text nodes and these would be removed if a nested list was before it\n
+\t\t\t\t\tif (textNodeNext) {\n
+\t\t\t\t\t\tif (textNodeNext.type == 3 && textNodeNext.value.length) {\n
+\t\t\t\t\t\t\ttextNode = textNode.prev;\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (!blockElements[textNodeNext.name] && textNodeNext.name != \'script\' && textNodeNext.name != \'style\') {\n
+\t\t\t\t\t\t\ttextNode = textNode.prev;\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tsibling = textNode.prev;\n
+\t\t\t\t\ttextNode.remove();\n
+\t\t\t\t\ttextNode = sibling;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction cloneAndExcludeBlocks(input) {\n
+\t\t\t\tvar name, output = {};\n
+\n
+\t\t\t\tfor (name in input) {\n
+\t\t\t\t\tif (name !== \'li\' && name != \'p\') {\n
+\t\t\t\t\t\toutput[name] = input[name];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn output;\n
+\t\t\t}\n
+\n
+\t\t\tparser = new SaxParser({\n
+\t\t\t\tvalidate: validate,\n
+\t\t\t\tallow_script_urls: settings.allow_script_urls,\n
+\t\t\t\tallow_conditional_comments: settings.allow_conditional_comments,\n
+\n
+\t\t\t\t// Exclude P and LI from DOM parsing since it\'s treated better by the DOM parser\n
+\t\t\t\tself_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),\n
+\n
+\t\t\t\tcdata: function(text) {\n
+\t\t\t\t\tnode.append(createNode(\'#cdata\', 4)).value = text;\n
+\t\t\t\t},\n
+\n
+\t\t\t\ttext: function(text, raw) {\n
+\t\t\t\t\tvar textNode;\n
+\n
+\t\t\t\t\t// Trim all redundant whitespace on non white space elements\n
+\t\t\t\t\tif (!isInWhiteSpacePreservedElement) {\n
+\t\t\t\t\t\ttext = text.replace(allWhiteSpaceRegExp, \' \');\n
+\n
+\t\t\t\t\t\tif (node.lastChild && blockElements[node.lastChild.name]) {\n
+\t\t\t\t\t\t\ttext = text.replace(startWhiteSpaceRegExp, \'\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Do we need to create the node\n
+\t\t\t\t\tif (text.length !== 0) {\n
+\t\t\t\t\t\ttextNode = createNode(\'#text\', 3);\n
+\t\t\t\t\t\ttextNode.raw = !!raw;\n
+\t\t\t\t\t\tnode.append(textNode).value = text;\n
+\t\t\t\t\t}\n
+\t\t\t\t},\n
+\n
+\t\t\t\tcomment: function(text) {\n
+\t\t\t\t\tnode.append(createNode(\'#comment\', 8)).value = text;\n
+\t\t\t\t},\n
+\n
+\t\t\t\tpi: function(name, text) {\n
+\t\t\t\t\tnode.append(createNode(name, 7)).value = text;\n
+\t\t\t\t\tremoveWhitespaceBefore(node);\n
+\t\t\t\t},\n
+\n
+\t\t\t\tdoctype: function(text) {\n
+\t\t\t\t\tvar newNode;\n
+\n
+\t\t\t\t\tnewNode = node.append(createNode(\'#doctype\', 10));\n
+\t\t\t\t\tnewNode.value = text;\n
+\t\t\t\t\tremoveWhitespaceBefore(node);\n
+\t\t\t\t},\n
+\n
+\t\t\t\tstart: function(name, attrs, empty) {\n
+\t\t\t\t\tvar newNode, attrFiltersLen, elementRule, attrName, parent;\n
+\n
+\t\t\t\t\telementRule = validate ? schema.getElementRule(name) : {};\n
+\t\t\t\t\tif (elementRule) {\n
+\t\t\t\t\t\tnewNode = createNode(elementRule.outputName || name, 1);\n
+\t\t\t\t\t\tnewNode.attributes = attrs;\n
+\t\t\t\t\t\tnewNode.shortEnded = empty;\n
+\n
+\t\t\t\t\t\tnode.append(newNode);\n
+\n
+\t\t\t\t\t\t// Check if node is valid child of the parent node is the child is\n
+\t\t\t\t\t\t// unknown we don\'t collect it since it\'s probably a custom element\n
+\t\t\t\t\t\tparent = children[node.name];\n
+\t\t\t\t\t\tif (parent && children[newNode.name] && !parent[newNode.name]) {\n
+\t\t\t\t\t\t\tinvalidChildren.push(newNode);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tattrFiltersLen = attributeFilters.length;\n
+\t\t\t\t\t\twhile (attrFiltersLen--) {\n
+\t\t\t\t\t\t\tattrName = attributeFilters[attrFiltersLen].name;\n
+\n
+\t\t\t\t\t\t\tif (attrName in attrs.map) {\n
+\t\t\t\t\t\t\t\tlist = matchedAttributes[attrName];\n
+\n
+\t\t\t\t\t\t\t\tif (list) {\n
+\t\t\t\t\t\t\t\t\tlist.push(newNode);\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\tmatchedAttributes[attrName] = [newNode];\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Trim whitespace before block\n
+\t\t\t\t\t\tif (blockElements[name]) {\n
+\t\t\t\t\t\t\tremoveWhitespaceBefore(newNode);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Change current node if the element wasn\'t empty i.e not <br /> or <img />\n
+\t\t\t\t\t\tif (!empty) {\n
+\t\t\t\t\t\t\tnode = newNode;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Check if we are inside a whitespace preserved element\n
+\t\t\t\t\t\tif (!isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {\n
+\t\t\t\t\t\t\tisInWhiteSpacePreservedElement = true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t},\n
+\n
+\t\t\t\tend: function(name) {\n
+\t\t\t\t\tvar textNode, elementRule, text, sibling, tempNode;\n
+\n
+\t\t\t\t\telementRule = validate ? schema.getElementRule(name) : {};\n
+\t\t\t\t\tif (elementRule) {\n
+\t\t\t\t\t\tif (blockElements[name]) {\n
+\t\t\t\t\t\t\tif (!isInWhiteSpacePreservedElement) {\n
+\t\t\t\t\t\t\t\t// Trim whitespace of the first node in a block\n
+\t\t\t\t\t\t\t\ttextNode = node.firstChild;\n
+\t\t\t\t\t\t\t\tif (textNode && textNode.type === 3) {\n
+\t\t\t\t\t\t\t\t\ttext = textNode.value.replace(startWhiteSpaceRegExp, \'\');\n
+\n
+\t\t\t\t\t\t\t\t\t// Any characters left after trim or should we remove it\n
+\t\t\t\t\t\t\t\t\tif (text.length > 0) {\n
+\t\t\t\t\t\t\t\t\t\ttextNode.value = text;\n
+\t\t\t\t\t\t\t\t\t\ttextNode = textNode.next;\n
+\t\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\t\tsibling = textNode.next;\n
+\t\t\t\t\t\t\t\t\t\ttextNode.remove();\n
+\t\t\t\t\t\t\t\t\t\ttextNode = sibling;\n
+\n
+\t\t\t\t\t\t\t\t\t\t// Remove any pure whitespace siblings\n
+\t\t\t\t\t\t\t\t\t\twhile (textNode && textNode.type === 3) {\n
+\t\t\t\t\t\t\t\t\t\t\ttext = textNode.value;\n
+\t\t\t\t\t\t\t\t\t\t\tsibling = textNode.next;\n
+\n
+\t\t\t\t\t\t\t\t\t\t\tif (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {\n
+\t\t\t\t\t\t\t\t\t\t\t\ttextNode.remove();\n
+\t\t\t\t\t\t\t\t\t\t\t\ttextNode = sibling;\n
+\t\t\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\t\t\ttextNode = sibling;\n
+\t\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t// Trim whitespace of the last node in a block\n
+\t\t\t\t\t\t\t\ttextNode = node.lastChild;\n
+\t\t\t\t\t\t\t\tif (textNode && textNode.type === 3) {\n
+\t\t\t\t\t\t\t\t\ttext = textNode.value.replace(endWhiteSpaceRegExp, \'\');\n
+\n
+\t\t\t\t\t\t\t\t\t// Any characters left after trim or should we remove it\n
+\t\t\t\t\t\t\t\t\tif (text.length > 0) {\n
+\t\t\t\t\t\t\t\t\t\ttextNode.value = text;\n
+\t\t\t\t\t\t\t\t\t\ttextNode = textNode.prev;\n
+\t\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\t\tsibling = textNode.prev;\n
+\t\t\t\t\t\t\t\t\t\ttextNode.remove();\n
+\t\t\t\t\t\t\t\t\t\ttextNode = sibling;\n
+\n
+\t\t\t\t\t\t\t\t\t\t// Remove any pure whitespace siblings\n
+\t\t\t\t\t\t\t\t\t\twhile (textNode && textNode.type === 3) {\n
+\t\t\t\t\t\t\t\t\t\t\ttext = textNode.value;\n
+\t\t\t\t\t\t\t\t\t\t\tsibling = textNode.prev;\n
+\n
+\t\t\t\t\t\t\t\t\t\t\tif (text.length === 0 || isAllWhiteSpaceRegExp.test(text)) {\n
+\t\t\t\t\t\t\t\t\t\t\t\ttextNode.remove();\n
+\t\t\t\t\t\t\t\t\t\t\t\ttextNode = sibling;\n
+\t\t\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\t\t\ttextNode = sibling;\n
+\t\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t// Trim start white space\n
+\t\t\t\t\t\t\t// Removed due to: #5424\n
+\t\t\t\t\t\t\t/*textNode = node.prev;\n
+\t\t\t\t\t\t\tif (textNode && textNode.type === 3) {\n
+\t\t\t\t\t\t\t\ttext = textNode.value.replace(startWhiteSpaceRegExp, \'\');\n
+\n
+\t\t\t\t\t\t\t\tif (text.length > 0)\n
+\t\t\t\t\t\t\t\t\ttextNode.value = text;\n
+\t\t\t\t\t\t\t\telse\n
+\t\t\t\t\t\t\t\t\ttextNode.remove();\n
+\t\t\t\t\t\t\t}*/\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Check if we exited a whitespace preserved element\n
+\t\t\t\t\t\tif (isInWhiteSpacePreservedElement && whiteSpaceElements[name]) {\n
+\t\t\t\t\t\t\tisInWhiteSpacePreservedElement = false;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Handle empty nodes\n
+\t\t\t\t\t\tif (elementRule.removeEmpty || elementRule.paddEmpty) {\n
+\t\t\t\t\t\t\tif (node.isEmpty(nonEmptyElements)) {\n
+\t\t\t\t\t\t\t\tif (elementRule.paddEmpty) {\n
+\t\t\t\t\t\t\t\t\tnode.empty().append(new Node(\'#text\', \'3\')).value = \'\\u00a0\';\n
+\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\t// Leave nodes that have a name like <a name="name">\n
+\t\t\t\t\t\t\t\t\tif (!node.attributes.map.name && !node.attributes.map.id) {\n
+\t\t\t\t\t\t\t\t\t\ttempNode = node.parent;\n
+\n
+\t\t\t\t\t\t\t\t\t\tif (blockElements[node.name]) {\n
+\t\t\t\t\t\t\t\t\t\t\tnode.empty().remove();\n
+\t\t\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\t\t\tnode.unwrap();\n
+\t\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\t\tnode = tempNode;\n
+\t\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode = node.parent;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}, schema);\n
+\n
+\t\t\trootNode = node = new Node(args.context || settings.root_name, 11);\n
+\n
+\t\t\tparser.parse(html);\n
+\n
+\t\t\t// Fix invalid children or report invalid children in a contextual parsing\n
+\t\t\tif (validate && invalidChildren.length) {\n
+\t\t\t\tif (!args.context) {\n
+\t\t\t\t\tfixInvalidChildren(invalidChildren);\n
+\t\t\t\t} else {\n
+\t\t\t\t\targs.invalid = true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Wrap nodes in the root into block elements if the root is body\n
+\t\t\tif (rootBlockName && (rootNode.name == \'body\' || args.isRootContent)) {\n
+\t\t\t\taddRootBlocks();\n
+\t\t\t}\n
+\n
+\t\t\t// Run filters only when the contents is valid\n
+\t\t\tif (!args.invalid) {\n
+\t\t\t\t// Run node filters\n
+\t\t\t\tfor (name in matchedNodes) {\n
+\t\t\t\t\tlist = nodeFilters[name];\n
+\t\t\t\t\tnodes = matchedNodes[name];\n
+\n
+\t\t\t\t\t// Remove already removed children\n
+\t\t\t\t\tfi = nodes.length;\n
+\t\t\t\t\twhile (fi--) {\n
+\t\t\t\t\t\tif (!nodes[fi].parent) {\n
+\t\t\t\t\t\t\tnodes.splice(fi, 1);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tfor (i = 0, l = list.length; i < l; i++) {\n
+\t\t\t\t\t\tlist[i](nodes, name, args);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Run attribute filters\n
+\t\t\t\tfor (i = 0, l = attributeFilters.length; i < l; i++) {\n
+\t\t\t\t\tlist = attributeFilters[i];\n
+\n
+\t\t\t\t\tif (list.name in matchedAttributes) {\n
+\t\t\t\t\t\tnodes = matchedAttributes[list.name];\n
+\n
+\t\t\t\t\t\t// Remove already removed children\n
+\t\t\t\t\t\tfi = nodes.length;\n
+\t\t\t\t\t\twhile (fi--) {\n
+\t\t\t\t\t\t\tif (!nodes[fi].parent) {\n
+\t\t\t\t\t\t\t\tnodes.splice(fi, 1);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tfor (fi = 0, fl = list.callbacks.length; fi < fl; fi++) {\n
+\t\t\t\t\t\t\tlist.callbacks[fi](nodes, list.name, args);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn rootNode;\n
+\t\t};\n
+\n
+\t\t// Remove <br> at end of block elements Gecko and WebKit injects BR elements to\n
+\t\t// make it possible to place the caret inside empty blocks. This logic tries to remove\n
+\t\t// these elements and keep br elements that where intended to be there intact\n
+\t\tif (settings.remove_trailing_brs) {\n
+\t\t\tself.addNodeFilter(\'br\', function(nodes) {\n
+\t\t\t\tvar i, l = nodes.length, node, blockElements = extend({}, schema.getBlockElements());\n
+\t\t\t\tvar nonEmptyElements = schema.getNonEmptyElements(), parent, lastParent, prev, prevName;\n
+\t\t\t\tvar elementRule, textNode;\n
+\n
+\t\t\t\t// Remove brs from body element as well\n
+\t\t\t\tblockElements.body = 1;\n
+\n
+\t\t\t\t// Must loop forwards since it will otherwise remove all brs in <p>a<br><br><br></p>\n
+\t\t\t\tfor (i = 0; i < l; i++) {\n
+\t\t\t\t\tnode = nodes[i];\n
+\t\t\t\t\tparent = node.parent;\n
+\n
+\t\t\t\t\tif (blockElements[node.parent.name] && node === parent.lastChild) {\n
+\t\t\t\t\t\t// Loop all nodes to the left of the current node and check for other BR elements\n
+\t\t\t\t\t\t// excluding bookmarks since they are invisible\n
+\t\t\t\t\t\tprev = node.prev;\n
+\t\t\t\t\t\twhile (prev) {\n
+\t\t\t\t\t\t\tprevName = prev.name;\n
+\n
+\t\t\t\t\t\t\t// Ignore bookmarks\n
+\t\t\t\t\t\t\tif (prevName !== "span" || prev.attr(\'data-mce-type\') !== \'bookmark\') {\n
+\t\t\t\t\t\t\t\t// Found a non BR element\n
+\t\t\t\t\t\t\t\tif (prevName !== "br") {\n
+\t\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t// Found another br it\'s a <br><br> structure then don\'t remove anything\n
+\t\t\t\t\t\t\t\tif (prevName === \'br\') {\n
+\t\t\t\t\t\t\t\t\tnode = null;\n
+\t\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tprev = prev.prev;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (node) {\n
+\t\t\t\t\t\t\tnode.remove();\n
+\n
+\t\t\t\t\t\t\t// Is the parent to be considered empty after we removed the BR\n
+\t\t\t\t\t\t\tif (parent.isEmpty(nonEmptyElements)) {\n
+\t\t\t\t\t\t\t\telementRule = schema.getElementRule(parent.name);\n
+\n
+\t\t\t\t\t\t\t\t// Remove or padd the element depending on schema rule\n
+\t\t\t\t\t\t\t\tif (elementRule) {\n
+\t\t\t\t\t\t\t\t\tif (elementRule.removeEmpty) {\n
+\t\t\t\t\t\t\t\t\t\tparent.remove();\n
+\t\t\t\t\t\t\t\t\t} else if (elementRule.paddEmpty) {\n
+\t\t\t\t\t\t\t\t\t\tparent.empty().append(new Node(\'#text\', 3)).value = \'\\u00a0\';\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// Replaces BR elements inside inline elements like <p><b><i><br></i></b></p>\n
+\t\t\t\t\t\t// so they become <p><b><i>&nbsp;</i></b></p>\n
+\t\t\t\t\t\tlastParent = node;\n
+\t\t\t\t\t\twhile (parent && parent.firstChild === lastParent && parent.lastChild === lastParent) {\n
+\t\t\t\t\t\t\tlastParent = parent;\n
+\n
+\t\t\t\t\t\t\tif (blockElements[parent.name]) {\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tparent = parent.parent;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (lastParent === parent) {\n
+\t\t\t\t\t\t\ttextNode = new Node(\'#text\', 3);\n
+\t\t\t\t\t\t\ttextNode.value = \'\\u00a0\';\n
+\t\t\t\t\t\t\tnode.replace(textNode);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.\n
+\t\tif (!settings.allow_html_in_named_anchor) {\n
+\t\t\tself.addAttributeFilter(\'id,name\', function(nodes) {\n
+\t\t\t\tvar i = nodes.length, sibling, prevSibling, parent, node;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tnode = nodes[i];\n
+\t\t\t\t\tif (node.name === \'a\' && node.firstChild && !node.attr(\'href\')) {\n
+\t\t\t\t\t\tparent = node.parent;\n
+\n
+\t\t\t\t\t\t// Move children after current node\n
+\t\t\t\t\t\tsibling = node.lastChild;\n
+\t\t\t\t\t\tdo {\n
+\t\t\t\t\t\t\tprevSibling = sibling.prev;\n
+\t\t\t\t\t\t\tparent.insert(sibling, node);\n
+\t\t\t\t\t\t\tsibling = prevSibling;\n
+\t\t\t\t\t\t} while (sibling);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tif (settings.validate && schema.getValidClasses()) {\n
+\t\t\tself.addAttributeFilter(\'class\', function(nodes) {\n
+\t\t\t\tvar i = nodes.length, node, classList, ci, className, classValue;\n
+\t\t\t\tvar validClasses = schema.getValidClasses(), validClassesMap, valid;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tnode = nodes[i];\n
+\t\t\t\t\tclassList = node.attr(\'class\').split(\' \');\n
+\t\t\t\t\tclassValue = \'\';\n
+\n
+\t\t\t\t\tfor (ci = 0; ci < classList.length; ci++) {\n
+\t\t\t\t\t\tclassName = classList[ci];\n
+\t\t\t\t\t\tvalid = false;\n
+\n
+\t\t\t\t\t\tvalidClassesMap = validClasses[\'*\'];\n
+\t\t\t\t\t\tif (validClassesMap && validClassesMap[className]) {\n
+\t\t\t\t\t\t\tvalid = true;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tvalidClassesMap = validClasses[node.name];\n
+\t\t\t\t\t\tif (!valid && validClassesMap && validClassesMap[className]) {\n
+\t\t\t\t\t\t\tvalid = true;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (valid) {\n
+\t\t\t\t\t\t\tif (classValue) {\n
+\t\t\t\t\t\t\t\tclassValue += \' \';\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tclassValue += className;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!classValue.length) {\n
+\t\t\t\t\t\tclassValue = null;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode.attr(\'class\', classValue);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>24115</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DomParser.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

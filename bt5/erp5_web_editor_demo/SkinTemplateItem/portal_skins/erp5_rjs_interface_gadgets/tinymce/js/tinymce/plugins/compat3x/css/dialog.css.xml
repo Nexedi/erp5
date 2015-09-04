@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268416.22</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dialog.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* Generic */\n
+body {\n
+font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px;\n
+scrollbar-3dlight-color:#F0F0EE;\n
+scrollbar-arrow-color:#676662;\n
+scrollbar-base-color:#F0F0EE;\n
+scrollbar-darkshadow-color:#DDDDDD;\n
+scrollbar-face-color:#E0E0DD;\n
+scrollbar-highlight-color:#F0F0EE;\n
+scrollbar-shadow-color:#F0F0EE;\n
+scrollbar-track-color:#F5F5F5;\n
+background:#F0F0EE;\n
+padding:0;\n
+margin:8px 8px 0 8px;\n
+}\n
+\n
+html {background:#F0F0EE;}\n
+td {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}\n
+textarea {resize:none;outline:none;}\n
+a:link, a:visited {color:black;}\n
+a:hover {color:#2B6FB6;}\n
+.nowrap {white-space: nowrap}\n
+\n
+/* Forms */\n
+fieldset {margin:0; padding:4px; border:1px solid #919B9C; font-family:Verdana, Arial; font-size:10px;}\n
+legend {color:#2B6FB6; font-weight:bold;}\n
+label.msg {display:none;}\n
+label.invalid {color:#EE0000; display:inline;}\n
+input.invalid {border:1px solid #EE0000;}\n
+input {background:#FFF; border:1px solid #CCC;}\n
+input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}\n
+input, select, textarea {border:1px solid #808080;}\n
+input.radio {border:1px none #000000; background:transparent; vertical-align:middle;}\n
+input.checkbox {border:1px none #000000; background:transparent; vertical-align:middle;}\n
+.input_noborder {border:0;}\n
+\n
+/* Buttons */\n
+#insert, #cancel, input.button, .updateButton {\n
+border:0; margin:0; padding:0;\n
+font-weight:bold;\n
+width:94px; height:26px;\n
+background:url(../img/buttons.png) 0 -26px;\n
+cursor:pointer;\n
+padding-bottom:2px;\n
+float:left;\n
+}\n
+\n
+#insert {background:url(../img/buttons.png) 0 -52px}\n
+#cancel {background:url(../img/buttons.png) 0 0; float:right}\n
+\n
+/* Browse */\n
+a.pickcolor, a.browse {text-decoration:none}\n
+a.browse span {display:block; width:20px; height:18px; background:url(../img/icons.gif) -20px 0 no-repeat; border:1px solid #FFF; margin-left:1px;}\n
+.mceOldBoxModel a.browse span {width:22px; height:20px;}\n
+a.browse:hover span {border:1px solid #0A246A; background-color:#B2BBD0;}\n
+a.browse span.disabled {border:1px solid white; opacity:0.3; -ms-filter:\'alpha(opacity=30)\'; filter:alpha(opacity=30)}\n
+a.browse:hover span.disabled {border:1px solid white; background-color:transparent;}\n
+a.pickcolor span {display:block; width:20px; height:16px; background:url(../img/icons.gif) -840px 0; margin-left:2px;}\n
+.mceOldBoxModel a.pickcolor span {width:21px; height:17px;}\n
+a.pickcolor:hover span {background-color:#B2BBD0;}\n
+a.pickcolor:hover span.disabled {}\n
+\n
+/* Charmap */\n
+table.charmap {border:1px solid #AAA; text-align:center}\n
+td.charmap, #charmap a {width:18px; height:18px; color:#000; border:1px solid #AAA; text-align:center; font-size:12px; vertical-align:middle; line-height: 18px;}\n
+#charmap a {display:block; color:#000; text-decoration:none; border:0}\n
+#charmap a:hover {background:#CCC;color:#2B6FB6}\n
+#charmap #codeN {font-size:10px; font-family:Arial,Helvetica,sans-serif; text-align:center}\n
+#charmap #codeV {font-size:40px; height:80px; border:1px solid #AAA; text-align:center}\n
+\n
+/* Source */\n
+.wordWrapCode {vertical-align:middle; border:1px none #000000; background:transparent;}\n
+.mceActionPanel {margin-top:5px;}\n
+\n
+/* Tabs classes */\n
+.tabs {width:100%; height:18px; line-height:normal; background:url(../img/tabs.gif) repeat-x 0 -72px;}\n
+.tabs ul {margin:0; padding:0; list-style:none;}\n
+.tabs li {float:left; background:url(../img/tabs.gif) no-repeat 0 0; margin:0 2px 0 0; padding:0 0 0 10px; line-height:17px; height:18px; display:block;}\n
+.tabs li.current {background:url(../img/tabs.gif) no-repeat 0 -18px; margin-right:2px;}\n
+.tabs span {float:left; display:block; background:url(../img/tabs.gif) no-repeat right -36px; padding:0px 10px 0 0;}\n
+.tabs .current span {background:url(../img/tabs.gif) no-repeat right -54px;}\n
+.tabs a {text-decoration:none; font-family:Verdana, Arial; font-size:10px;}\n
+.tabs a:link, .tabs a:visited, .tabs a:hover {color:black;}\n
+\n
+/* Panels */\n
+.panel_wrapper div.panel {display:none;}\n
+.panel_wrapper div.current {display:block; width:100%; height:300px; overflow:visible;}\n
+.panel_wrapper {border:1px solid #919B9C; border-top:0px; padding:10px; padding-top:5px; clear:both; background:white;}\n
+\n
+/* Columns */\n
+.column {float:left;}\n
+.properties {width:100%;}\n
+.properties .column1 {}\n
+.properties .column2 {text-align:left;}\n
+\n
+/* Titles */\n
+h1, h2, h3, h4 {color:#2B6FB6; margin:0; padding:0; padding-top:5px;}\n
+h3 {font-size:14px;}\n
+.title {font-size:12px; font-weight:bold; color:#2B6FB6;}\n
+\n
+/* Dialog specific */\n
+#link .panel_wrapper, #link div.current {height:125px;}\n
+#image .panel_wrapper, #image div.current {height:200px;}\n
+#plugintable thead {font-weight:bold; background:#DDD;}\n
+#plugintable, #about #plugintable td {border:1px solid #919B9C;}\n
+#plugintable {width:96%; margin-top:10px;}\n
+#pluginscontainer {height:290px; overflow:auto;}\n
+#colorpicker #preview {display:inline-block; padding-left:40px; height:14px; border:1px solid black; margin-left:5px; margin-right: 5px}\n
+#colorpicker #previewblock {position: relative; top: -3px; padding-left:5px; padding-top: 0px; display:inline}\n
+#colorpicker #preview_wrapper { text-align:center; padding-top:4px; white-space: nowrap}\n
+#colorpicker #colors {float:left; border:1px solid gray; cursor:crosshair;}\n
+#colorpicker #light {border:1px solid gray; margin-left:5px; float:left;width:15px; height:150px; cursor:crosshair;}\n
+#colorpicker #light div {overflow:hidden;}\n
+#colorpicker .panel_wrapper div.current {height:175px;}\n
+#colorpicker #namedcolors {width:150px;}\n
+#colorpicker #namedcolors a {display:block; float:left; width:10px; height:10px; margin:1px 1px 0 0; overflow:hidden;}\n
+#colorpicker #colornamecontainer {margin-top:5px;}\n
+#colorpicker #picker_panel fieldset {margin:auto;width:325px;}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5670</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dialog.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

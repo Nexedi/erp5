@@ -1,0 +1,305 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268523.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'template\', function(editor) {\n
+\tvar each = tinymce.each;\n
+\n
+\tfunction createTemplateList(callback) {\n
+\t\treturn function() {\n
+\t\t\tvar templateList = editor.settings.templates;\n
+\n
+\t\t\tif (typeof templateList == "string") {\n
+\t\t\t\ttinymce.util.XHR.send({\n
+\t\t\t\t\turl: templateList,\n
+\t\t\t\t\tsuccess: function(text) {\n
+\t\t\t\t\t\tcallback(tinymce.util.JSON.parse(text));\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\tcallback(templateList);\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+\n
+\tfunction showDialog(templateList) {\n
+\t\tvar win, values = [], templateHtml;\n
+\n
+\t\tif (!templateList || templateList.length === 0) {\n
+\t\t\teditor.windowManager.alert(\'No templates defined\');\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\ttinymce.each(templateList, function(template) {\n
+\t\t\tvalues.push({\n
+\t\t\t\tselected: !values.length,\n
+\t\t\t\ttext: template.title,\n
+\t\t\t\tvalue: {\n
+\t\t\t\t\turl: template.url,\n
+\t\t\t\t\tcontent: template.content,\n
+\t\t\t\t\tdescription: template.description\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t});\n
+\n
+\t\tfunction onSelectTemplate(e) {\n
+\t\t\tvar value = e.control.value();\n
+\n
+\t\t\tfunction insertIframeHtml(html) {\n
+\t\t\t\tif (html.indexOf(\'<html>\') == -1) {\n
+\t\t\t\t\tvar contentCssLinks = \'\';\n
+\n
+\t\t\t\t\ttinymce.each(editor.contentCSS, function(url) {\n
+\t\t\t\t\t\tcontentCssLinks += \'<link type="text/css" rel="stylesheet" href="\' + editor.documentBaseURI.toAbsolute(url) + \'">\';\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\thtml = (\n
+\t\t\t\t\t\t\'<!DOCTYPE html>\' +\n
+\t\t\t\t\t\t\'<html>\' +\n
+\t\t\t\t\t\t\t\'<head>\' +\n
+\t\t\t\t\t\t\t\tcontentCssLinks +\n
+\t\t\t\t\t\t\t\'</head>\' +\n
+\t\t\t\t\t\t\t\'<body>\' +\n
+\t\t\t\t\t\t\t\thtml +\n
+\t\t\t\t\t\t\t\'</body>\' +\n
+\t\t\t\t\t\t\'</html>\'\n
+\t\t\t\t\t);\n
+\t\t\t\t}\n
+\n
+\t\t\t\thtml = replaceTemplateValues(html, \'template_preview_replace_values\');\n
+\n
+\t\t\t\tvar doc = win.find(\'iframe\')[0].getEl().contentWindow.document;\n
+\t\t\t\tdoc.open();\n
+\t\t\t\tdoc.write(html);\n
+\t\t\t\tdoc.close();\n
+\t\t\t}\n
+\n
+\t\t\tif (value.url) {\n
+\t\t\t\ttinymce.util.XHR.send({\n
+\t\t\t\t\turl: value.url,\n
+\t\t\t\t\tsuccess: function(html) {\n
+\t\t\t\t\t\ttemplateHtml = html;\n
+\t\t\t\t\t\tinsertIframeHtml(templateHtml);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\ttemplateHtml = value.content;\n
+\t\t\t\tinsertIframeHtml(templateHtml);\n
+\t\t\t}\n
+\n
+\t\t\twin.find(\'#description\')[0].text(e.control.value().description);\n
+\t\t}\n
+\n
+\t\twin = editor.windowManager.open({\n
+\t\t\ttitle: \'Insert template\',\n
+\t\t\tlayout: \'flex\',\n
+\t\t\tdirection: \'column\',\n
+\t\t\talign: \'stretch\',\n
+\t\t\tpadding: 15,\n
+\t\t\tspacing: 10,\n
+\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'form\', flex: 0, padding: 0, items: [\n
+\t\t\t\t\t{type: \'container\', label: \'Templates\', items: {\n
+\t\t\t\t\t\ttype: \'listbox\', label: \'Templates\', name: \'template\', values: values, onselect: onSelectTemplate\n
+\t\t\t\t\t}}\n
+\t\t\t\t]},\n
+\t\t\t\t{type: \'label\', name: \'description\', label: \'Description\', text: \'\\u00a0\'},\n
+\t\t\t\t{type: \'iframe\', flex: 1, border: 1}\n
+\t\t\t],\n
+\n
+\t\t\tonsubmit: function() {\n
+\t\t\t\tinsertTemplate(false, templateHtml);\n
+\t\t\t},\n
+\n
+\t\t\twidth: editor.getParam(\'template_popup_width\', 600),\n
+\t\t\theight: editor.getParam(\'template_popup_height\', 500)\n
+\t\t});\n
+\n
+\t\twin.find(\'listbox\')[0].fire(\'select\');\n
+\t}\n
+\n
+\tfunction getDateTime(fmt, date) {\n
+\t\tvar daysShort = "Sun Mon Tue Wed Thu Fri Sat Sun".split(\' \');\n
+\t\tvar daysLong = "Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday".split(\' \');\n
+\t\tvar monthsShort = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(\' \');\n
+\t\tvar monthsLong = "January February March April May June July August September October November December".split(\' \');\n
+\n
+\t\tfunction addZeros(value, len) {\n
+\t\t\tvalue = "" + value;\n
+\n
+\t\t\tif (value.length < len) {\n
+\t\t\t\tfor (var i = 0; i < (len - value.length); i++) {\n
+\t\t\t\t\tvalue = "0" + value;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn value;\n
+\t\t}\n
+\n
+\t\tdate = date || new Date();\n
+\n
+\t\tfmt = fmt.replace("%D", "%m/%d/%Y");\n
+\t\tfmt = fmt.replace("%r", "%I:%M:%S %p");\n
+\t\tfmt = fmt.replace("%Y", "" + date.getFullYear());\n
+\t\tfmt = fmt.replace("%y", "" + date.getYear());\n
+\t\tfmt = fmt.replace("%m", addZeros(date.getMonth() + 1, 2));\n
+\t\tfmt = fmt.replace("%d", addZeros(date.getDate(), 2));\n
+\t\tfmt = fmt.replace("%H", "" + addZeros(date.getHours(), 2));\n
+\t\tfmt = fmt.replace("%M", "" + addZeros(date.getMinutes(), 2));\n
+\t\tfmt = fmt.replace("%S", "" + addZeros(date.getSeconds(), 2));\n
+\t\tfmt = fmt.replace("%I", "" + ((date.getHours() + 11) % 12 + 1));\n
+\t\tfmt = fmt.replace("%p", "" + (date.getHours() < 12 ? "AM" : "PM"));\n
+\t\tfmt = fmt.replace("%B", "" + editor.translate(monthsLong[date.getMonth()]));\n
+\t\tfmt = fmt.replace("%b", "" + editor.translate(monthsShort[date.getMonth()]));\n
+\t\tfmt = fmt.replace("%A", "" + editor.translate(daysLong[date.getDay()]));\n
+\t\tfmt = fmt.replace("%a", "" + editor.translate(daysShort[date.getDay()]));\n
+\t\tfmt = fmt.replace("%%", "%");\n
+\n
+\t\treturn fmt;\n
+\t}\n
+\n
+\tfunction replaceVals(e) {\n
+\t\tvar dom = editor.dom, vl = editor.getParam(\'template_replace_values\');\n
+\n
+\t\teach(dom.select(\'*\', e), function(e) {\n
+\t\t\teach(vl, function(v, k) {\n
+\t\t\t\tif (dom.hasClass(e, k)) {\n
+\t\t\t\t\tif (typeof vl[k] == \'function\') {\n
+\t\t\t\t\t\tvl[k](e);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t});\n
+\t}\n
+\n
+\tfunction replaceTemplateValues(html, templateValuesOptionName) {\n
+\t\teach(editor.getParam(templateValuesOptionName), function(v, k) {\n
+\t\t\tif (typeof v != \'function\') {\n
+\t\t\t\thtml = html.replace(new RegExp(\'\\\\{\\\\$\' + k + \'\\\\}\', \'g\'), v);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treturn html;\n
+\t}\n
+\n
+\tfunction insertTemplate(ui, html) {\n
+\t\tvar el, n, dom = editor.dom, sel = editor.selection.getContent();\n
+\n
+\t\thtml = replaceTemplateValues(html, \'template_replace_values\');\n
+\t\tel = dom.create(\'div\', null, html);\n
+\n
+\t\t// Find template element within div\n
+\t\tn = dom.select(\'.mceTmpl\', el);\n
+\t\tif (n && n.length > 0) {\n
+\t\t\tel = dom.create(\'div\', null);\n
+\t\t\tel.appendChild(n[0].cloneNode(true));\n
+\t\t}\n
+\n
+\t\tfunction hasClass(n, c) {\n
+\t\t\treturn new RegExp(\'\\\\b\' + c + \'\\\\b\', \'g\').test(n.className);\n
+\t\t}\n
+\n
+\t\teach(dom.select(\'*\', el), function(n) {\n
+\t\t\t// Replace cdate\n
+\t\t\tif (hasClass(n, editor.getParam(\'template_cdate_classes\', \'cdate\').replace(/\\s+/g, \'|\'))) {\n
+\t\t\t\tn.innerHTML = getDateTime(editor.getParam("template_cdate_format", editor.getLang("template.cdate_format")));\n
+\t\t\t}\n
+\n
+\t\t\t// Replace mdate\n
+\t\t\tif (hasClass(n, editor.getParam(\'template_mdate_classes\', \'mdate\').replace(/\\s+/g, \'|\'))) {\n
+\t\t\t\tn.innerHTML = getDateTime(editor.getParam("template_mdate_format", editor.getLang("template.mdate_format")));\n
+\t\t\t}\n
+\n
+\t\t\t// Replace selection\n
+\t\t\tif (hasClass(n, editor.getParam(\'template_selected_content_classes\', \'selcontent\').replace(/\\s+/g, \'|\'))) {\n
+\t\t\t\tn.innerHTML = sel;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treplaceVals(el);\n
+\n
+\t\teditor.execCommand(\'mceInsertContent\', false, el.innerHTML);\n
+\t\teditor.addVisual();\n
+\t}\n
+\n
+\teditor.addCommand(\'mceInsertTemplate\', insertTemplate);\n
+\n
+\teditor.addButton(\'template\', {\n
+\t\ttitle: \'Insert template\',\n
+\t\tonclick: createTemplateList(showDialog)\n
+\t});\n
+\n
+\teditor.addMenuItem(\'template\', {\n
+\t\ttext: \'Insert template\',\n
+\t\tonclick: createTemplateList(showDialog),\n
+\t\tcontext: \'insert\'\n
+\t});\n
+\n
+\teditor.on(\'PreProcess\', function(o) {\n
+\t\tvar dom = editor.dom;\n
+\n
+\t\teach(dom.select(\'div\', o.node), function(e) {\n
+\t\t\tif (dom.hasClass(e, \'mceTmpl\')) {\n
+\t\t\t\teach(dom.select(\'*\', e), function(e) {\n
+\t\t\t\t\tif (dom.hasClass(e, editor.getParam(\'template_mdate_classes\', \'mdate\').replace(/\\s+/g, \'|\'))) {\n
+\t\t\t\t\t\te.innerHTML = getDateTime(editor.getParam("template_mdate_format", editor.getLang("template.mdate_format")));\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\treplaceVals(e);\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7201</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

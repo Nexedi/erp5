@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268342.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Button.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Button.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class is used to create buttons. You can create them directly or through the Factory.\n
+ *\n
+ * @example\n
+ * // Create and render a button to the body element\n
+ * tinymce.ui.Factory.create({\n
+ *     type: \'button\',\n
+ *     text: \'My button\'\n
+ * }).renderTo(document.body);\n
+ *\n
+ * @-x-less Button.less\n
+ * @class tinymce.ui.Button\n
+ * @extends tinymce.ui.Widget\n
+ */\n
+define("tinymce/ui/Button", [\n
+\t"tinymce/ui/Widget"\n
+], function(Widget) {\n
+\t"use strict";\n
+\n
+\treturn Widget.extend({\n
+\t\tDefaults: {\n
+\t\t\tclasses: "widget btn",\n
+\t\t\trole: "button"\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Constructs a new button instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {String} size Size of the button small|medium|large.\n
+\t\t * @setting {String} image Image to use for icon.\n
+\t\t * @setting {String} icon Icon to use for button.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this, size;\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tsettings = self.settings;\n
+\n
+\t\t\tsize = self.settings.size;\n
+\n
+\t\t\tself.on(\'click mousedown\', function(e) {\n
+\t\t\t\te.preventDefault();\n
+\t\t\t});\n
+\n
+\t\t\tself.on(\'touchstart\', function(e) {\n
+\t\t\t\tself.fire(\'click\', e);\n
+\t\t\t\te.preventDefault();\n
+\t\t\t});\n
+\n
+\t\t\tif (settings.subtype) {\n
+\t\t\t\tself.classes.add(settings.subtype);\n
+\t\t\t}\n
+\n
+\t\t\tif (size) {\n
+\t\t\t\tself.classes.add(\'btn-\' + size);\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.icon) {\n
+\t\t\t\tself.icon(settings.icon);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the current button icon.\n
+\t\t *\n
+\t\t * @method icon\n
+\t\t * @param {String} [icon] New icon identifier.\n
+\t\t * @return {String|tinymce.ui.MenuButton} Current icon or current MenuButton instance.\n
+\t\t */\n
+\t\ticon: function(icon) {\n
+\t\t\tif (!arguments.length) {\n
+\t\t\t\treturn this.state.get(\'icon\');\n
+\t\t\t}\n
+\n
+\t\t\tthis.state.set(\'icon\', icon);\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Repaints the button for example after it\'s been resizes by a layout engine.\n
+\t\t *\n
+\t\t * @method repaint\n
+\t\t */\n
+\t\trepaint: function() {\n
+\t\t\tvar btnStyle = this.getEl().firstChild.style;\n
+\n
+\t\t\tbtnStyle.width = btnStyle.height = "100%";\n
+\n
+\t\t\tthis._super();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, id = self._id, prefix = self.classPrefix;\n
+\t\t\tvar icon = self.state.get(\'icon\'), image, text = self.state.get(\'text\');\n
+\n
+\t\t\timage = self.settings.image;\n
+\t\t\tif (image) {\n
+\t\t\t\ticon = \'none\';\n
+\n
+\t\t\t\t// Support for [high dpi, low dpi] image sources\n
+\t\t\t\tif (typeof image != "string") {\n
+\t\t\t\t\timage = window.getSelection ? image[0] : image[1];\n
+\t\t\t\t}\n
+\n
+\t\t\t\timage = \' style="background-image: url(\\\'\' + image + \'\\\')"\';\n
+\t\t\t} else {\n
+\t\t\t\timage = \'\';\n
+\t\t\t}\n
+\n
+\t\t\tif (text) {\n
+\t\t\t\tself.classes.add(\'btn-has-text\');\n
+\t\t\t}\n
+\n
+\t\t\ticon = self.settings.icon ? prefix + \'ico \' + prefix + \'i-\' + icon : \'\';\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + id + \'" class="\' + self.classes + \'" tabindex="-1" aria-labelledby="\' + id + \'">\' +\n
+\t\t\t\t\t\'<button role="presentation" type="button" tabindex="-1">\' +\n
+\t\t\t\t\t\t(icon ? \'<i class="\' + icon + \'"\' + image + \'></i>\' : \'\') +\n
+\t\t\t\t\t\t(text ? self.encode(text) : \'\') +\n
+\t\t\t\t\t\'</button>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tfunction setButtonText(text) {\n
+\t\t\t\tvar node = self.getEl().firstChild.firstChild;\n
+\n
+\t\t\t\tfor (; node; node = node.nextSibling) {\n
+\t\t\t\t\tif (node.nodeType == 3) {\n
+\t\t\t\t\t\tnode.data = self.translate(text);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.classes.toggle(\'btn-has-text\', !!text);\n
+\t\t\t}\n
+\n
+\t\t\tself.state.on(\'change:text\', function(e) {\n
+\t\t\t\tsetButtonText(e.value);\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:icon\', function(e) {\n
+\t\t\t\tvar icon = e.value, prefix = self.classPrefix;\n
+\n
+\t\t\t\tself.settings.icon = icon;\n
+\t\t\t\ticon = icon ? prefix + \'ico \' + prefix + \'i-\' + self.settings.icon : \'\';\n
+\n
+\t\t\t\tvar btnElm = self.getEl().firstChild, iconElm = btnElm.getElementsByTagName(\'i\')[0];\n
+\n
+\t\t\t\tif (icon) {\n
+\t\t\t\t\tif (!iconElm || iconElm != btnElm.firstChild) {\n
+\t\t\t\t\t\ticonElm = document.createElement(\'i\');\n
+\t\t\t\t\t\tbtnElm.insertBefore(iconElm, btnElm.firstChild);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\ticonElm.className = icon;\n
+\t\t\t\t} else if (iconElm) {\n
+\t\t\t\t\tbtnElm.removeChild(iconElm);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tsetButtonText(self.state.get(\'text\'));\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t}\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4382</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Button.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

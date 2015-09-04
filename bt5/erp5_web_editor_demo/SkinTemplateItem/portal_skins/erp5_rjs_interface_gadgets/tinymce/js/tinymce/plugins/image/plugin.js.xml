@@ -1,0 +1,593 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268556.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'image\', function(editor) {\n
+\tfunction getImageSize(url, callback) {\n
+\t\tvar img = document.createElement(\'img\');\n
+\n
+\t\tfunction done(width, height) {\n
+\t\t\tif (img.parentNode) {\n
+\t\t\t\timg.parentNode.removeChild(img);\n
+\t\t\t}\n
+\n
+\t\t\tcallback({width: width, height: height});\n
+\t\t}\n
+\n
+\t\timg.onload = function() {\n
+\t\t\tdone(Math.max(img.width, img.clientWidth), Math.max(img.height, img.clientHeight));\n
+\t\t};\n
+\n
+\t\timg.onerror = function() {\n
+\t\t\tdone();\n
+\t\t};\n
+\n
+\t\tvar style = img.style;\n
+\t\tstyle.visibility = \'hidden\';\n
+\t\tstyle.position = \'fixed\';\n
+\t\tstyle.bottom = style.left = 0;\n
+\t\tstyle.width = style.height = \'auto\';\n
+\n
+\t\tdocument.body.appendChild(img);\n
+\t\timg.src = url;\n
+\t}\n
+\n
+\tfunction buildListItems(inputList, itemCallback, startItems) {\n
+\t\tfunction appendItems(values, output) {\n
+\t\t\toutput = output || [];\n
+\n
+\t\t\ttinymce.each(values, function(item) {\n
+\t\t\t\tvar menuItem = {text: item.text || item.title};\n
+\n
+\t\t\t\tif (item.menu) {\n
+\t\t\t\t\tmenuItem.menu = appendItems(item.menu);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tmenuItem.value = item.value;\n
+\t\t\t\t\titemCallback(menuItem);\n
+\t\t\t\t}\n
+\n
+\t\t\t\toutput.push(menuItem);\n
+\t\t\t});\n
+\n
+\t\t\treturn output;\n
+\t\t}\n
+\n
+\t\treturn appendItems(inputList, startItems || []);\n
+\t}\n
+\n
+\tfunction createImageList(callback) {\n
+\t\treturn function() {\n
+\t\t\tvar imageList = editor.settings.image_list;\n
+\n
+\t\t\tif (typeof imageList == "string") {\n
+\t\t\t\ttinymce.util.XHR.send({\n
+\t\t\t\t\turl: imageList,\n
+\t\t\t\t\tsuccess: function(text) {\n
+\t\t\t\t\t\tcallback(tinymce.util.JSON.parse(text));\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t} else if (typeof imageList == "function") {\n
+\t\t\t\timageList(callback);\n
+\t\t\t} else {\n
+\t\t\t\tcallback(imageList);\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+\n
+\tfunction showDialog(imageList) {\n
+\t\tvar win, data = {}, dom = editor.dom, imgElm = editor.selection.getNode();\n
+\t\tvar width, height, imageListCtrl, classListCtrl, imageDimensions = editor.settings.image_dimensions !== false;\n
+\n
+\t\tfunction recalcSize() {\n
+\t\t\tvar widthCtrl, heightCtrl, newWidth, newHeight;\n
+\n
+\t\t\twidthCtrl = win.find(\'#width\')[0];\n
+\t\t\theightCtrl = win.find(\'#height\')[0];\n
+\n
+\t\t\tif (!widthCtrl || !heightCtrl) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tnewWidth = widthCtrl.value();\n
+\t\t\tnewHeight = heightCtrl.value();\n
+\n
+\t\t\tif (win.find(\'#constrain\')[0].checked() && width && height && newWidth && newHeight) {\n
+\t\t\t\tif (width != newWidth) {\n
+\t\t\t\t\tnewHeight = Math.round((newWidth / width) * newHeight);\n
+\n
+\t\t\t\t\tif (!isNaN(newHeight)) {\n
+\t\t\t\t\t\theightCtrl.value(newHeight);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tnewWidth = Math.round((newHeight / height) * newWidth);\n
+\n
+\t\t\t\t\tif (!isNaN(newWidth)) {\n
+\t\t\t\t\t\twidthCtrl.value(newWidth);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\twidth = newWidth;\n
+\t\t\theight = newHeight;\n
+\t\t}\n
+\n
+\t\tfunction onSubmitForm() {\n
+\t\t\tfunction waitLoad(imgElm) {\n
+\t\t\t\tfunction selectImage() {\n
+\t\t\t\t\timgElm.onload = imgElm.onerror = null;\n
+\n
+\t\t\t\t\tif (editor.selection) {\n
+\t\t\t\t\t\teditor.selection.select(imgElm);\n
+\t\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\timgElm.onload = function() {\n
+\t\t\t\t\tif (!data.width && !data.height && imageDimensions) {\n
+\t\t\t\t\t\tdom.setAttribs(imgElm, {\n
+\t\t\t\t\t\t\twidth: imgElm.clientWidth,\n
+\t\t\t\t\t\t\theight: imgElm.clientHeight\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tselectImage();\n
+\t\t\t\t};\n
+\n
+\t\t\t\timgElm.onerror = selectImage;\n
+\t\t\t}\n
+\n
+\t\t\tupdateStyle();\n
+\t\t\trecalcSize();\n
+\n
+\t\t\tdata = tinymce.extend(data, win.toJSON());\n
+\n
+\t\t\tif (!data.alt) {\n
+\t\t\t\tdata.alt = \'\';\n
+\t\t\t}\n
+\n
+\t\t\tif (!data.title) {\n
+\t\t\t\tdata.title = \'\';\n
+\t\t\t}\n
+\n
+\t\t\tif (data.width === \'\') {\n
+\t\t\t\tdata.width = null;\n
+\t\t\t}\n
+\n
+\t\t\tif (data.height === \'\') {\n
+\t\t\t\tdata.height = null;\n
+\t\t\t}\n
+\n
+\t\t\tif (!data.style) {\n
+\t\t\t\tdata.style = null;\n
+\t\t\t}\n
+\n
+\t\t\t// Setup new data excluding style properties\n
+\t\t\t/*eslint dot-notation: 0*/\n
+\t\t\tdata = {\n
+\t\t\t\tsrc: data.src,\n
+\t\t\t\talt: data.alt,\n
+\t\t\t\ttitle: data.title,\n
+\t\t\t\twidth: data.width,\n
+\t\t\t\theight: data.height,\n
+\t\t\t\tstyle: data.style,\n
+\t\t\t\t"class": data["class"]\n
+\t\t\t};\n
+\n
+\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\tif (!data.src) {\n
+\t\t\t\t\tif (imgElm) {\n
+\t\t\t\t\t\tdom.remove(imgElm);\n
+\t\t\t\t\t\teditor.focus();\n
+\t\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (data.title === "") {\n
+\t\t\t\t\tdata.title = null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!imgElm) {\n
+\t\t\t\t\tdata.id = \'__mcenew\';\n
+\t\t\t\t\teditor.focus();\n
+\t\t\t\t\teditor.selection.setContent(dom.createHTML(\'img\', data));\n
+\t\t\t\t\timgElm = dom.get(\'__mcenew\');\n
+\t\t\t\t\tdom.setAttrib(imgElm, \'id\', null);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tdom.setAttribs(imgElm, data);\n
+\t\t\t\t}\n
+\n
+\t\t\t\twaitLoad(imgElm);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction removePixelSuffix(value) {\n
+\t\t\tif (value) {\n
+\t\t\t\tvalue = value.replace(/px$/, \'\');\n
+\t\t\t}\n
+\n
+\t\t\treturn value;\n
+\t\t}\n
+\n
+\t\tfunction srcChange(e) {\n
+\t\t\tvar srcURL, prependURL, absoluteURLPattern, meta = e.meta || {};\n
+\n
+\t\t\tif (imageListCtrl) {\n
+\t\t\t\timageListCtrl.value(editor.convertURL(this.value(), \'src\'));\n
+\t\t\t}\n
+\n
+\t\t\ttinymce.each(meta, function(value, key) {\n
+\t\t\t\twin.find(\'#\' + key).value(value);\n
+\t\t\t});\n
+\n
+\t\t\tif (!meta.width && !meta.height) {\n
+\t\t\t\tsrcURL = editor.convertURL(this.value(), \'src\');\n
+\n
+\t\t\t\t// Pattern test the src url and make sure we haven\'t already prepended the url\n
+\t\t\t\tprependURL = editor.settings.image_prepend_url;\n
+\t\t\t\tabsoluteURLPattern = new RegExp(\'^(?:[a-z]+:)?//\', \'i\');\n
+\t\t\t\tif (prependURL && !absoluteURLPattern.test(srcURL) && srcURL.substring(0, prependURL.length) !== prependURL) {\n
+\t\t\t\t\tsrcURL = prependURL + srcURL;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tthis.value(srcURL);\n
+\n
+\t\t\t\tgetImageSize(editor.documentBaseURI.toAbsolute(this.value()), function(data) {\n
+\t\t\t\t\tif (data.width && data.height && imageDimensions) {\n
+\t\t\t\t\t\twidth = data.width;\n
+\t\t\t\t\t\theight = data.height;\n
+\n
+\t\t\t\t\t\twin.find(\'#width\').value(width);\n
+\t\t\t\t\t\twin.find(\'#height\').value(height);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\twidth = dom.getAttrib(imgElm, \'width\');\n
+\t\theight = dom.getAttrib(imgElm, \'height\');\n
+\n
+\t\tif (imgElm.nodeName == \'IMG\' && !imgElm.getAttribute(\'data-mce-object\') && !imgElm.getAttribute(\'data-mce-placeholder\')) {\n
+\t\t\tdata = {\n
+\t\t\t\tsrc: dom.getAttrib(imgElm, \'src\'),\n
+\t\t\t\talt: dom.getAttrib(imgElm, \'alt\'),\n
+\t\t\t\ttitle: dom.getAttrib(imgElm, \'title\'),\n
+\t\t\t\t"class": dom.getAttrib(imgElm, \'class\'),\n
+\t\t\t\twidth: width,\n
+\t\t\t\theight: height\n
+\t\t\t};\n
+\t\t} else {\n
+\t\t\timgElm = null;\n
+\t\t}\n
+\n
+\t\tif (imageList) {\n
+\t\t\timageListCtrl = {\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\tlabel: \'Image list\',\n
+\t\t\t\tvalues: buildListItems(\n
+\t\t\t\t\timageList,\n
+\t\t\t\t\tfunction(item) {\n
+\t\t\t\t\t\titem.value = editor.convertURL(item.value || item.url, \'src\');\n
+\t\t\t\t\t},\n
+\t\t\t\t\t[{text: \'None\', value: \'\'}]\n
+\t\t\t\t),\n
+\t\t\t\tvalue: data.src && editor.convertURL(data.src, \'src\'),\n
+\t\t\t\tonselect: function(e) {\n
+\t\t\t\t\tvar altCtrl = win.find(\'#alt\');\n
+\n
+\t\t\t\t\tif (!altCtrl.value() || (e.lastControl && altCtrl.value() == e.lastControl.text())) {\n
+\t\t\t\t\t\taltCtrl.value(e.control.text());\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\twin.find(\'#src\').value(e.control.value()).fire(\'change\');\n
+\t\t\t\t},\n
+\t\t\t\tonPostRender: function() {\n
+\t\t\t\t\t/*eslint consistent-this: 0*/\n
+\t\t\t\t\timageListCtrl = this;\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tif (editor.settings.image_class_list) {\n
+\t\t\tclassListCtrl = {\n
+\t\t\t\tname: \'class\',\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\tlabel: \'Class\',\n
+\t\t\t\tvalues: buildListItems(\n
+\t\t\t\t\teditor.settings.image_class_list,\n
+\t\t\t\t\tfunction(item) {\n
+\t\t\t\t\t\tif (item.value) {\n
+\t\t\t\t\t\t\titem.textStyle = function() {\n
+\t\t\t\t\t\t\t\treturn editor.formatter.getCssText({inline: \'img\', classes: [item.value]});\n
+\t\t\t\t\t\t\t};\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t)\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\t// General settings shared between simple and advanced dialogs\n
+\t\tvar generalFormItems = [\n
+\t\t\t{\n
+\t\t\t\tname: \'src\',\n
+\t\t\t\ttype: \'filepicker\',\n
+\t\t\t\tfiletype: \'image\',\n
+\t\t\t\tlabel: \'Source\',\n
+\t\t\t\tautofocus: true,\n
+\t\t\t\tonchange: srcChange\n
+\t\t\t},\n
+\t\t\timageListCtrl\n
+\t\t];\n
+\n
+\t\tif (editor.settings.image_description !== false) {\n
+\t\t\tgeneralFormItems.push({name: \'alt\', type: \'textbox\', label: \'Image description\'});\n
+\t\t}\n
+\n
+\t\tif (editor.settings.image_title) {\n
+\t\t\tgeneralFormItems.push({name: \'title\', type: \'textbox\', label: \'Image Title\'});\n
+\t\t}\n
+\n
+\t\tif (imageDimensions) {\n
+\t\t\tgeneralFormItems.push({\n
+\t\t\t\ttype: \'container\',\n
+\t\t\t\tlabel: \'Dimensions\',\n
+\t\t\t\tlayout: \'flex\',\n
+\t\t\t\tdirection: \'row\',\n
+\t\t\t\talign: \'center\',\n
+\t\t\t\tspacing: 5,\n
+\t\t\t\titems: [\n
+\t\t\t\t\t{name: \'width\', type: \'textbox\', maxLength: 5, size: 3, onchange: recalcSize, ariaLabel: \'Width\'},\n
+\t\t\t\t\t{type: \'label\', text: \'x\'},\n
+\t\t\t\t\t{name: \'height\', type: \'textbox\', maxLength: 5, size: 3, onchange: recalcSize, ariaLabel: \'Height\'},\n
+\t\t\t\t\t{name: \'constrain\', type: \'checkbox\', checked: true, text: \'Constrain proportions\'}\n
+\t\t\t\t]\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tgeneralFormItems.push(classListCtrl);\n
+\n
+\t\tfunction mergeMargins(css) {\n
+\t\t\tif (css.margin) {\n
+\n
+\t\t\t\tvar splitMargin = css.margin.split(" ");\n
+\n
+\t\t\t\tswitch (splitMargin.length) {\n
+\t\t\t\t\tcase 1: //margin: toprightbottomleft;\n
+\t\t\t\t\t\tcss[\'margin-top\'] = css[\'margin-top\'] || splitMargin[0];\n
+\t\t\t\t\t\tcss[\'margin-right\'] = css[\'margin-right\'] || splitMargin[0];\n
+\t\t\t\t\t\tcss[\'margin-bottom\'] = css[\'margin-bottom\'] || splitMargin[0];\n
+\t\t\t\t\t\tcss[\'margin-left\'] = css[\'margin-left\'] || splitMargin[0];\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\tcase 2: //margin: topbottom rightleft;\n
+\t\t\t\t\t\tcss[\'margin-top\'] = css[\'margin-top\'] || splitMargin[0];\n
+\t\t\t\t\t\tcss[\'margin-right\'] = css[\'margin-right\'] || splitMargin[1];\n
+\t\t\t\t\t\tcss[\'margin-bottom\'] = css[\'margin-bottom\'] || splitMargin[0];\n
+\t\t\t\t\t\tcss[\'margin-left\'] = css[\'margin-left\'] || splitMargin[1];\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\tcase 3: //margin: top rightleft bottom;\n
+\t\t\t\t\t\tcss[\'margin-top\'] = css[\'margin-top\'] || splitMargin[0];\n
+\t\t\t\t\t\tcss[\'margin-right\'] = css[\'margin-right\'] || splitMargin[1];\n
+\t\t\t\t\t\tcss[\'margin-bottom\'] = css[\'margin-bottom\'] || splitMargin[2];\n
+\t\t\t\t\t\tcss[\'margin-left\'] = css[\'margin-left\'] || splitMargin[1];\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\tcase 4: //margin: top right bottom left;\n
+\t\t\t\t\t\tcss[\'margin-top\'] = css[\'margin-top\'] || splitMargin[0];\n
+\t\t\t\t\t\tcss[\'margin-right\'] = css[\'margin-right\'] || splitMargin[1];\n
+\t\t\t\t\t\tcss[\'margin-bottom\'] = css[\'margin-bottom\'] || splitMargin[2];\n
+\t\t\t\t\t\tcss[\'margin-left\'] = css[\'margin-left\'] || splitMargin[3];\n
+\t\t\t\t}\n
+\t\t\t\tdelete css.margin;\n
+\t\t\t}\n
+\t\t\treturn css;\n
+\t\t}\n
+\n
+\t\tfunction updateStyle() {\n
+\t\t\tfunction addPixelSuffix(value) {\n
+\t\t\t\tif (value.length > 0 && /^[0-9]+$/.test(value)) {\n
+\t\t\t\t\tvalue += \'px\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn value;\n
+\t\t\t}\n
+\n
+\t\t\tif (!editor.settings.image_advtab) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tvar data = win.toJSON(),\n
+\t\t\t\tcss = dom.parseStyle(data.style);\n
+\n
+\t\t\tcss = mergeMargins(css);\n
+\n
+\t\t\tif (data.vspace) {\n
+\t\t\t\tcss[\'margin-top\'] = css[\'margin-bottom\'] = addPixelSuffix(data.vspace);\n
+\t\t\t}\n
+\t\t\tif (data.hspace) {\n
+\t\t\t\tcss[\'margin-left\'] = css[\'margin-right\'] = addPixelSuffix(data.hspace);\n
+\t\t\t}\n
+\t\t\tif (data.border) {\n
+\t\t\t\tcss[\'border-width\'] = addPixelSuffix(data.border);\n
+\t\t\t}\n
+\n
+\t\t\twin.find(\'#style\').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));\n
+\t\t}\n
+\n
+\t\tfunction updateVSpaceHSpaceBorder() {\n
+\t\t\tif (!editor.settings.image_advtab) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tvar data = win.toJSON(),\n
+\t\t\t\tcss = dom.parseStyle(data.style);\n
+\n
+\t\t\twin.find(\'#vspace\').value("");\n
+\t\t\twin.find(\'#hspace\').value("");\n
+\n
+\t\t\tcss = mergeMargins(css);\n
+\n
+\t\t\t//Move opposite equal margins to vspace/hspace field\n
+\t\t\tif ((css[\'margin-top\'] && css[\'margin-bottom\']) || (css[\'margin-right\'] && css[\'margin-left\'])) {\n
+\t\t\t\tif (css[\'margin-top\'] === css[\'margin-bottom\']) {\n
+\t\t\t\t\twin.find(\'#vspace\').value(removePixelSuffix(css[\'margin-top\']));\n
+\t\t\t\t} else {\n
+\t\t\t\t\twin.find(\'#vspace\').value(\'\');\n
+\t\t\t\t}\n
+\t\t\t\tif (css[\'margin-right\'] === css[\'margin-left\']) {\n
+\t\t\t\t\twin.find(\'#hspace\').value(removePixelSuffix(css[\'margin-right\']));\n
+\t\t\t\t} else {\n
+\t\t\t\t\twin.find(\'#hspace\').value(\'\');\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t//Move border-width\n
+\t\t\tif (css[\'border-width\']) {\n
+\t\t\t\twin.find(\'#border\').value(removePixelSuffix(css[\'border-width\']));\n
+\t\t\t}\n
+\n
+\t\t\twin.find(\'#style\').value(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));\n
+\n
+\t\t}\n
+\n
+\t\tif (editor.settings.image_advtab) {\n
+\t\t\t// Parse styles from img\n
+\t\t\tif (imgElm) {\n
+\t\t\t\tif (imgElm.style.marginLeft && imgElm.style.marginRight && imgElm.style.marginLeft === imgElm.style.marginRight) {\n
+\t\t\t\t\tdata.hspace = removePixelSuffix(imgElm.style.marginLeft);\n
+\t\t\t\t}\n
+\t\t\t\tif (imgElm.style.marginTop && imgElm.style.marginBottom && imgElm.style.marginTop === imgElm.style.marginBottom) {\n
+\t\t\t\t\tdata.vspace = removePixelSuffix(imgElm.style.marginTop);\n
+\t\t\t\t}\n
+\t\t\t\tif (imgElm.style.borderWidth) {\n
+\t\t\t\t\tdata.border = removePixelSuffix(imgElm.style.borderWidth);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdata.style = editor.dom.serializeStyle(editor.dom.parseStyle(editor.dom.getAttrib(imgElm, \'style\')));\n
+\t\t\t}\n
+\n
+\t\t\t// Advanced dialog shows general+advanced tabs\n
+\t\t\twin = editor.windowManager.open({\n
+\t\t\t\ttitle: \'Insert/edit image\',\n
+\t\t\t\tdata: data,\n
+\t\t\t\tbodyType: \'tabpanel\',\n
+\t\t\t\tbody: [\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\ttitle: \'General\',\n
+\t\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\t\titems: generalFormItems\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\t{\n
+\t\t\t\t\t\ttitle: \'Advanced\',\n
+\t\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\t\tpack: \'start\',\n
+\t\t\t\t\t\titems: [\n
+\t\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\t\tlabel: \'Style\',\n
+\t\t\t\t\t\t\t\tname: \'style\',\n
+\t\t\t\t\t\t\t\ttype: \'textbox\',\n
+\t\t\t\t\t\t\t\tonchange: updateVSpaceHSpaceBorder\n
+\t\t\t\t\t\t\t},\n
+\t\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\t\t\t\tlayout: \'grid\',\n
+\t\t\t\t\t\t\t\tpackV: \'start\',\n
+\t\t\t\t\t\t\t\tcolumns: 2,\n
+\t\t\t\t\t\t\t\tpadding: 0,\n
+\t\t\t\t\t\t\t\talignH: [\'left\', \'right\'],\n
+\t\t\t\t\t\t\t\tdefaults: {\n
+\t\t\t\t\t\t\t\t\ttype: \'textbox\',\n
+\t\t\t\t\t\t\t\t\tmaxWidth: 50,\n
+\t\t\t\t\t\t\t\t\tonchange: updateStyle\n
+\t\t\t\t\t\t\t\t},\n
+\t\t\t\t\t\t\t\titems: [\n
+\t\t\t\t\t\t\t\t\t{label: \'Vertical space\', name: \'vspace\'},\n
+\t\t\t\t\t\t\t\t\t{label: \'Horizontal space\', name: \'hspace\'},\n
+\t\t\t\t\t\t\t\t\t{label: \'Border\', name: \'border\'}\n
+\t\t\t\t\t\t\t\t]\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t]\n
+\t\t\t\t\t}\n
+\t\t\t\t],\n
+\t\t\t\tonSubmit: onSubmitForm\n
+\t\t\t});\n
+\t\t} else {\n
+\t\t\t// Simple default dialog\n
+\t\t\twin = editor.windowManager.open({\n
+\t\t\t\ttitle: \'Insert/edit image\',\n
+\t\t\t\tdata: data,\n
+\t\t\t\tbody: generalFormItems,\n
+\t\t\t\tonSubmit: onSubmitForm\n
+\t\t\t});\n
+\t\t}\n
+\t}\n
+\n
+\teditor.addButton(\'image\', {\n
+\t\ticon: \'image\',\n
+\t\ttooltip: \'Insert/edit image\',\n
+\t\tonclick: createImageList(showDialog),\n
+\t\tstateSelector: \'img:not([data-mce-object],[data-mce-placeholder])\'\n
+\t});\n
+\n
+\teditor.addMenuItem(\'image\', {\n
+\t\ticon: \'image\',\n
+\t\ttext: \'Insert/edit image\',\n
+\t\tonclick: createImageList(showDialog),\n
+\t\tcontext: \'insert\',\n
+\t\tprependToContext: true\n
+\t});\n
+\n
+\teditor.addCommand(\'mceImage\', createImageList(showDialog));\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13759</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

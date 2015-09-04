@@ -1,0 +1,720 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268238.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DOMUtils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tmodule("tinymce.dom.DOMUtils", {\n
+\t\tteardownModule: function() {\n
+\t\t\tDOM = null;\n
+\t\t}\n
+\t});\n
+\n
+\tvar DOM = new tinymce.dom.DOMUtils(document, {keep_values : true, schema : new tinymce.html.Schema()});\n
+\n
+\ttest(\'parseStyle\', 11, function() {\n
+\t\tvar dom;\n
+\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tdom = new tinymce.dom.DOMUtils(document, {hex_colors : true, keep_values : true, url_converter : function(u) {\n
+\t\t\treturn \'X\' + u + \'Y\';\n
+\t\t}});\n
+\n
+\t\tequal(\n
+\t\t\tdom.serializeStyle(dom.parseStyle(\'border: 1px solid red; color: green\')),\n
+\t\t\t\'border: 1px solid red; color: green;\'\n
+\t\t);\n
+\n
+\t\tequal(\n
+\t\t\tdom.serializeStyle(dom.parseStyle(\'border: 1px solid rgb(0, 255, 255); color: green\')),\n
+\t\t\t\'border: 1px solid #00ffff; color: green;\'\n
+\t\t);\n
+\n
+\t\tequal(\n
+\t\t\tdom.serializeStyle(dom.parseStyle(\'border-top: 1px solid red; border-left: 1px solid red; border-bottom: 1px solid red; border-right: 1px solid red;\')),\n
+\t\t\t\'border: 1px solid red;\'\n
+\t\t);\n
+\n
+\t\tequal(\n
+\t\t\tdom.serializeStyle(dom.parseStyle(\'border-width: 1pt 1pt 1pt 1pt; border-style: none none none none; border-color: black black black black;\')),\n
+\t\t\t\'border: 1pt none black;\'\n
+\t\t);\n
+\t\t\n
+\t\tequal(\n
+\t\t\tdom.serializeStyle(dom.parseStyle(\'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;\')),\n
+\t\t\t\'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;\'\n
+\t\t);\n
+\n
+\t\tequal(\n
+\t\t\tdom.serializeStyle(dom.parseStyle(\'background: transparent url(test.gif);\')),\n
+\t\t\t\'background: transparent url(\\\'Xtest.gifY\\\');\'\n
+\t\t);\n
+\n
+\t\tequal(\n
+\t\t\tdom.serializeStyle(dom.parseStyle(\'background: transparent url(http://www.site.com/test.gif?a=1&b=2);\')),\n
+\t\t\t\'background: transparent url(\\\'Xhttp://www.site.com/test.gif?a=1&b=2Y\\\');\'\n
+\t\t);\n
+\n
+\t\tdom.setHTML(\'test\', \'<span id="test2" style="   margin-left: 1px;    margin-top: 1px;   margin-right: 1px;   margin-bottom: 1px   "></span>\');\n
+\t\tequal(dom.getAttrib(\'test2\', \'style\'), \'margin: 1px;\');\n
+\n
+\t\tdom.setHTML(\'test\', \'<span id="test2" style="background-image: url(test.gif);"></span>\');\n
+\t\tequal(dom.getAttrib(\'test2\', \'style\'), \'background-image: url(\\\'Xtest.gifY\\\');\');\n
+\n
+\t\tdom.get(\'test\').innerHTML = \'<span id="test2" style="border: 1px solid #00ff00"></span>\';\n
+\t\tequal(dom.getAttrib(\'test2\', \'style\'), tinymce.isIE && !window.getSelection ? \'border: #00ff00 1px solid;\' : \'border: 1px solid #00ff00;\'); // IE has a separate output\n
+\n
+\t\tdom.get(\'test\').innerHTML = \'<span id="test2" style="background-image: url(http://www.site.com/test.gif);"></span>\';\n
+\t\tequal(dom.getAttrib(\'test2\', \'style\'), \'background-image: url(\\\'Xhttp://www.site.com/test.gifY\\\');\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'addClass\', function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.get(\'test\').className = \'\';\n
+\t\tDOM.addClass(\'test\', \'abc\');\n
+\t\tequal(DOM.get(\'test\').className, \'abc\');\n
+\n
+\t\tDOM.addClass(\'test\', \'123\');\n
+\t\tequal(DOM.get(\'test\').className, \'abc 123\');\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<span id="test2"></span><span id="test3"></span><span id="test4"></span>\';\n
+\t\tDOM.addClass(DOM.select(\'span\', \'test\'), \'abc\');\n
+\t\tequal(DOM.get(\'test2\').className, \'abc\');\n
+\t\tequal(DOM.get(\'test3\').className, \'abc\');\n
+\t\tequal(DOM.get(\'test4\').className, \'abc\');\n
+\t\tDOM.get(\'test\').innerHTML = \'\';\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'removeClass\', 5, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.get(\'test\').className = \'abc 123 xyz\';\n
+\t\tDOM.removeClass(\'test\', \'123\');\n
+\t\tequal(DOM.get(\'test\').className, \'abc xyz\');\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<span id="test2" class="test1"></span><span id="test3" class="test test1 test"></span><span id="test4" class="test1 test"></span>\';\n
+\t\tDOM.removeClass(DOM.select(\'span\', \'test\'), \'test1\');\n
+\t\tequal(DOM.get(\'test2\').className, \'\');\n
+\t\tequal(DOM.get(\'test3\').className, \'test test\');\n
+\t\tequal(DOM.get(\'test4\').className, \'test\');\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<span id="test2" class="test"></span>\';\n
+\t\tDOM.removeClass(\'test2\', \'test\');\n
+\t\tequal(Utils.normalizeHtml(DOM.get(\'test\').innerHTML), \'<span id="test2"></span>\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'hasClass\', 7, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.get(\'test\').className = \'abc 123 xyz\';\n
+\t\tok(DOM.hasClass(\'test\', \'abc\'));\n
+\t\tok(DOM.hasClass(\'test\', \'123\'));\n
+\t\tok(DOM.hasClass(\'test\', \'xyz\'));\n
+\t\tok(!DOM.hasClass(\'test\', \'aaa\'));\n
+\n
+\t\tDOM.get(\'test\').className = \'abc\';\n
+\t\tok(DOM.hasClass(\'test\', \'abc\'));\n
+\n
+\t\tDOM.get(\'test\').className = \'aaa abc\';\n
+\t\tok(DOM.hasClass(\'test\', \'abc\'));\n
+\n
+\t\tDOM.get(\'test\').className = \'abc aaa\';\n
+\t\tok(DOM.hasClass(\'test\', \'abc\'));\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'add\', 5, function() {\n
+\t\tvar e;\n
+\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.add(\'test\', \'span\', {\'class\' : \'abc 123\'}, \'content <b>abc</b>\');\n
+\t\te = DOM.get(\'test\').getElementsByTagName(\'span\')[0];\n
+\t\tequal(e.className, \'abc 123\');\n
+\t\tequal(e.innerHTML.toLowerCase(), \'content <b>abc</b>\');\n
+\t\tDOM.remove(e);\n
+\n
+\t\tDOM.add(\'test\', \'span\', {\'class\' : \'abc 123\'});\n
+\t\te = DOM.get(\'test\').getElementsByTagName(\'span\')[0];\n
+\t\tequal(e.className, \'abc 123\');\n
+\t\tDOM.remove(e);\n
+\n
+\t\tDOM.add(\'test\', \'span\');\n
+\t\te = DOM.get(\'test\').getElementsByTagName(\'span\')[0];\n
+\t\tequal(e.nodeName, \'SPAN\');\n
+\t\tDOM.remove(e);\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<span id="test2"></span><span id="test3"></span><span id="test4"></span>\';\n
+\t\tDOM.add([\'test2\', \'test3\', \'test4\'], \'span\', {\'class\' : \'abc 123\'});\n
+\t\tequal(DOM.select(\'span\', \'test\').length, 6);\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'create\', 3, function() {\n
+\t\tvar e;\n
+\n
+\t\te = DOM.create(\'span\', {\'class\' : \'abc 123\'}, \'content <b>abc</b>\');\n
+\n
+\t\tequal(e.nodeName, \'SPAN\');\n
+\t\tequal(e.className, \'abc 123\');\n
+\t\tequal(e.innerHTML.toLowerCase(), \'content <b>abc</b>\');\n
+\t});\n
+\n
+\ttest(\'createHTML\', 5, function() {\n
+\t\tequal(DOM.createHTML(\'span\', {\'id\': \'id1\', \'class\': \'abc 123\'}, \'content <b>abc</b>\'), \'<span id="id1" class="abc 123">content <b>abc</b></span>\');\n
+\t\tequal(DOM.createHTML(\'span\', {\'id\': \'id1\', \'class\': \'abc 123\'}), \'<span id="id1" class="abc 123" />\');\n
+\t\tequal(DOM.createHTML(\'span\', {\'id\': null, \'class\': undefined}), \'<span />\');\n
+\t\tequal(DOM.createHTML(\'span\'), \'<span />\');\n
+\t\tequal(DOM.createHTML(\'span\', null, \'content <b>abc</b>\'), \'<span>content <b>abc</b></span>\');\n
+\t});\n
+\n
+\ttest(\'uniqueId\', 3, function() {\n
+\t\tDOM.counter = 0;\n
+\n
+\t\tequal(DOM.uniqueId(), \'mce_0\');\n
+\t\tequal(DOM.uniqueId(), \'mce_1\');\n
+\t\tequal(DOM.uniqueId(), \'mce_2\');\n
+\t});\n
+\n
+\ttest(\'showHide\', function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.show(\'test\');\n
+\t\tequal(DOM.get(\'test\').style.display, \'\');\n
+\t\tok(!DOM.isHidden(\'test\'));\n
+\n
+\t\tDOM.hide(\'test\');\n
+\t\tequal(DOM.get(\'test\').style.display, \'none\');\n
+\t\tok(DOM.isHidden(\'test\'));\n
+\n
+\t\t// Cleanup\n
+\t\tDOM.setAttrib(\'test\', \'style\', \'\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'select\', 4, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.setHTML(\'test\', \'<div>test 1</div><div>test 2 <div>test 3</div></div><div>test 4</div>\');\n
+\t\tequal(DOM.select(\'div\', \'test\').length, 4);\n
+\t\tok(DOM.select(\'div\', \'test\').reverse);\n
+\n
+\t\tDOM.setHTML(\'test\', \'<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>\');\n
+\t\tequal(DOM.select(\'div.test2\', \'test\').length, 2);\n
+\n
+\t\tDOM.setHTML(\'test\', \'<div class="test1 test2 test3">test 1</div><div class="test2">test 2 <div>test 3</div></div><div>test 4</div>\');\n
+\t\tequal(DOM.select(\'div div\', \'test\').length, 1, null, tinymce.isWebKit); // Issue: http://bugs.webkit.org/show_bug.cgi?id=17461\n
+\t\t//alert(DOM.select(\'div div\', \'test\').length +","+DOM.get(\'test\').querySelectorAll(\'div div\').length);\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'is\', 3, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\t\tDOM.setHTML(\'test\', \'<div id="textX" class="test">test 1</div>\');\n
+\n
+\t\tok(DOM.is(DOM.get(\'textX\'), \'div\'));\n
+\t\tok(DOM.is(DOM.get(\'textX\'), \'div#textX.test\'));\n
+\t\tok(!DOM.is(DOM.get(\'textX\'), \'div#textX2\'));\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'encode\', 1, function() {\n
+\t\tequal(DOM.encode(\'abc<>"&\\\'\\u00e5\\u00e4\\u00f6\'), \'abc&lt;&gt;&quot;&amp;&#39;\\u00e5\\u00e4\\u00f6\');\n
+\t});\n
+\n
+\ttest(\'setGetAttrib\', function() {\n
+\t\tvar dom;\n
+\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.setAttrib(\'test\', \'class\', \'test 123\');\n
+\t\tequal(DOM.getAttrib(\'test\', \'class\'), \'test 123\');\n
+\n
+\t\tDOM.setAttrib(\'test\', \'src\', \'url\');\n
+\t\tequal(DOM.getAttrib(\'test\', \'src\'), \'url\');\n
+\t\tequal(DOM.getAttrib(\'test\', \'data-mce-src\'), \'url\');\n
+\t\tequal(DOM.getAttrib(\'test\', \'abc\'), \'\');\n
+\n
+\t\tDOM.setAttribs(\'test\', {\'class\' : \'123\', title : \'abc\'});\n
+\t\tequal(DOM.getAttrib(\'test\', \'class\'), \'123\');\n
+\t\tequal(DOM.getAttrib(\'test\', \'title\'), \'abc\');\n
+\n
+\t\tDOM.setAttribs(\'test\');\n
+\t\tequal(DOM.getAttrib(\'test\', \'class\'), \'123\');\n
+\t\tequal(DOM.getAttrib(\'test\', \'title\'), \'abc\');\n
+\n
+\t\tdom = new tinymce.dom.DOMUtils(document, {keep_values : true, url_converter : function(u, n) {\n
+\t\t\treturn \'&<>"\' + u + \'&<>"\' + n;\n
+\t\t}});\n
+\n
+\t\tdom.setAttribs(\'test\', {src : \'123\', href : \'abc\'});\n
+\t\tequal(DOM.getAttrib(\'test\', \'src\'), \'&<>"123&<>"src\');\n
+\t\tequal(DOM.getAttrib(\'test\', \'href\'), \'&<>"abc&<>"href\');\n
+\n
+\t\tequal(DOM.getAttrib(document, \'test\'), false);\n
+\t\tequal(DOM.getAttrib(document, \'test\', \'\'), \'\');\n
+\t\tequal(DOM.getAttrib(document, \'test\', \'x\'), \'x\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'setGetAttrib on null\', function() {\n
+\t\tstrictEqual(DOM.getAttrib(null, \'test\'), \'\');\n
+\t\tDOM.setAttrib(null, \'test\');\n
+\t});\n
+\n
+\ttest(\'getAttribs\', 2, function() {\n
+\t\tfunction check(obj, val) {\n
+\t\t\tvar count = 0;\n
+\n
+\t\t\tval = val.split(\',\');\n
+\n
+\t\t\ttinymce.each(obj, function(o) {\n
+\t\t\t\tif (tinymce.inArray(val, o.nodeName.toLowerCase()) != -1 && o.specified) {\n
+\t\t\t\t\tcount++;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn count == obj.length;\n
+\t\t}\n
+\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<span id="test2" class="test"></span>\';\n
+\t\tok(check(DOM.getAttribs(\'test2\'), \'id,class\'));\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<input id="test2" type="checkbox" name="test" value="1" disabled readonly checked></span>\';\n
+\t\tok(check(DOM.getAttribs(\'test2\'), \'id,type,name,value,disabled,readonly,checked\'), \'Expected attributed: type,name,disabled,readonly,checked\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'setGetStyles\', function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.setStyle(\'test\', \'font-size\', \'20px\');\n
+\t\tequal(DOM.getStyle(\'test\', \'font-size\'), \'20px\');\n
+\n
+\t\tDOM.setStyle(\'test\', \'fontSize\', \'21px\');\n
+\t\tequal(DOM.getStyle(\'test\', \'fontSize\'), \'21px\');\n
+\n
+\t\tDOM.setStyles(\'test\', {fontSize : \'22px\', display : \'inline\'});\n
+\t\tequal(DOM.getStyle(\'test\', \'fontSize\'), \'22px\');\n
+\t\tequal(DOM.getStyle(\'test\', \'display\'), \'inline\');\n
+\n
+\t\tDOM.setStyle(\'test\', \'fontSize\', 23);\n
+\t\tequal(DOM.getStyle(\'test\', \'fontSize\'), \'23px\');\n
+\n
+\t\tDOM.setStyle(\'test\', \'fontSize\', 23);\n
+\t\tDOM.setStyle(\'test\', \'fontSize\', \'\');\n
+\t\tequal(DOM.getStyle(\'test\', \'fontSize\'), \'\');\n
+\n
+\t\tDOM.setStyle(\'test\', \'fontSize\', 23);\n
+\t\tDOM.setStyle(\'test\', \'fontSize\', null);\n
+\t\tequal(DOM.getStyle(\'test\', \'fontSize\'), \'\');\n
+\n
+\t\tDOM.setAttrib(\'test\', \'style\', \'\');\n
+\t\tequal(typeof DOM.getStyle(null, \'fontSize\'), \'undefined\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'getPos\', 2, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.setStyles(\'test\', {position : \'absolute\', left : 100, top : 110});\n
+\t\tequal(DOM.getPos(\'test\').x, 100);\n
+\t\tequal(DOM.getPos(\'test\').y, 110);\n
+\n
+\t\tDOM.setAttrib(\'test\', \'style\', \'\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'getParent\', 6, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<div><span>ab<a id="test2" href="">abc</a>c</span></div>\';\n
+\n
+\t\tequal(DOM.getParent(\'test2\', function(n) {return n.nodeName == \'SPAN\';}).nodeName, \'SPAN\');\n
+\t\tequal(DOM.getParent(\'test2\', function(n) {return n.nodeName == \'BODY\';}).nodeName, \'BODY\');\n
+\t\tequal(DOM.getParent(\'test2\', function(n) {return n.nodeName == \'BODY\';}, document.body), null);\n
+\t\tequal(DOM.getParent(\'test2\', function() {return false;}), null);\n
+\t\tequal(DOM.getParent(\'test2\', \'SPAN\').nodeName, \'SPAN\');\n
+\t\tequal(DOM.getParent(\'test2\', \'body\', DOM.get(\'test\')), null);\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'\';\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'getParents\', 4, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\t\tDOM.get(\'test\').innerHTML = \'<div><span class="test">ab<span><a id="test2" href="">abc</a>c</span></span></div>\';\n
+\n
+\t\tequal(DOM.getParents(\'test2\', function(n) {return n.nodeName == \'SPAN\';}).length, 2);\n
+\t\tequal(DOM.getParents(\'test2\', \'span\').length, 2);\n
+\t\tequal(DOM.getParents(\'test2\', \'span.test\').length, 1);\n
+\t\tequal(DOM.getParents(\'test2\', \'body\', DOM.get(\'test\')).length, 0);\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'is\', 2, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\t\tDOM.get(\'test\').innerHTML = \'<div><span class="test">ab<span><a id="test2" href="">abc</a>c</span></span></div>\';\n
+\n
+\t\tok(DOM.is(DOM.select(\'span\', \'test\'), \'span\'));\n
+\t\tok(DOM.is(DOM.select(\'#test2\', \'test\'), \'#test2\'));\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'getViewPort\', 4, function() {\n
+\t\tvar wp;\n
+\n
+\t\twp = DOM.getViewPort();\n
+\t\tequal(wp.x, 0);\n
+\t\tequal(wp.y, 0);\n
+\t\tok(wp.w > 0);\n
+\t\tok(wp.h > 0);\n
+\t});\n
+\n
+\ttest(\'getRect\', 5, function() {\n
+\t\tvar r;\n
+\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.setStyles(\'test\', {position : \'absolute\', left : 100, top : 110, width : 320, height : 240});\n
+\t\tr = DOM.getRect(\'test\');\n
+\t\tequal(r.x, 100);\n
+\t\tequal(r.y, 110);\n
+\t\tequal(r.w, 320);\n
+\t\tequal(r.h, 240);\n
+\n
+\t\tDOM.setAttrib(\'test\', \'style\', \'\');\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<div style="width:320px;height:240px"><div id="test2" style="width:50%;height:240px"></div></div>\';\n
+\t\tr = DOM.getRect(\'test2\');\n
+\t\tequal(r.w, 160);\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'getSize\', 2, function() {\n
+\t\tvar r;\n
+\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<div style="width:320px;height:240px"><div id="test2" style="width:50%;height:240px"></div></div>\';\n
+\t\tr = DOM.getSize(\'test2\');\n
+\t\tequal(r.w, 160);\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<div style="width:320px;height:240px"><div id="test2" style="width:100px;height:240px"></div></div>\';\n
+\t\tr = DOM.getSize(\'test2\');\n
+\t\tequal(r.w, 100);\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'getNext\', 5, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<strong>A</strong><span>B</span><em>C</em>\';\n
+\t\tequal(DOM.getNext(DOM.get(\'test\').firstChild, \'*\').nodeName, \'SPAN\');\n
+\t\tequal(DOM.getNext(DOM.get(\'test\').firstChild, \'em\').nodeName, \'EM\');\n
+\t\tequal(DOM.getNext(DOM.get(\'test\').firstChild, \'div\'), null);\n
+\t\tequal(DOM.getNext(null, \'div\'), null);\n
+\t\tequal(DOM.getNext(DOM.get(\'test\').firstChild, function(n) {return n.nodeName == \'EM\';}).nodeName, \'EM\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'getPrev\', 5, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.get(\'test\').innerHTML = \'<strong>A</strong><span>B</span><em>C</em>\';\n
+\t\tequal(DOM.getPrev(DOM.get(\'test\').lastChild, \'*\').nodeName, \'SPAN\');\n
+\t\tequal(DOM.getPrev(DOM.get(\'test\').lastChild, \'strong\').nodeName, \'STRONG\');\n
+\t\tequal(DOM.getPrev(DOM.get(\'test\').lastChild, \'div\'), null);\n
+\t\tequal(DOM.getPrev(null, \'div\'), null);\n
+\t\tequal(DOM.getPrev(DOM.get(\'test\').lastChild, function(n) {return n.nodeName == \'STRONG\';}).nodeName, \'STRONG\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'loadCSS\', 1, function() {\n
+\t\tvar c = 0;\n
+\n
+\t\tDOM.loadCSS(\'tinymce/dom/test.css?a=1,tinymce/dom/test.css?a=2,tinymce/dom/test.css?a=3\');\n
+\n
+\t\ttinymce.each(document.getElementsByTagName(\'link\'), function(n) {\n
+\t\t\tif (n.href.indexOf(\'test.css?a=\') != -1) {\n
+\t\t\t\tc++;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tequal(c, 3, null, tinymce.isOpera);\n
+\t});\n
+\n
+\ttest(\'insertAfter\', 2, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span id="test2"></span>\');\n
+\t\tDOM.insertAfter(DOM.create(\'br\'), \'test2\');\n
+\t\tequal(DOM.get(\'test2\').nextSibling.nodeName, \'BR\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span>test</span><span id="test2"></span><span>test</span>\');\n
+\t\tDOM.insertAfter(DOM.create(\'br\'), \'test2\');\n
+\t\tequal(DOM.get(\'test2\').nextSibling.nodeName, \'BR\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'isBlock\', 4, function() {\n
+\t\tok(DOM.isBlock(DOM.create(\'div\')));\n
+\t\tok(DOM.isBlock(\'DIV\'));\n
+\t\tok(!DOM.isBlock(\'SPAN\'));\n
+\t\tok(DOM.isBlock(\'div\'));\n
+\t});\n
+\n
+\ttest(\'remove\', 2, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span id="test2"><span>test</span><span>test2</span></span>\');\n
+\t\tDOM.remove(\'test2\', 1);\n
+\t\tequal(DOM.get(\'test\').innerHTML.toLowerCase(), \'<span>test</span><span>test2</span>\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span id="test2"><span>test</span><span>test2</span></span>\');\n
+\t\tequal(DOM.remove(\'test2\').nodeName, \'SPAN\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'replace\', 2, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span id="test2"><span>test</span><span>test2</span></span>\');\n
+\t\tDOM.replace(DOM.create(\'div\', {id : \'test2\'}), \'test2\', 1);\n
+\t\tequal(DOM.get(\'test2\').innerHTML.toLowerCase(), \'<span>test</span><span>test2</span>\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span id="test2"><span>test</span><span>test2</span></span>\');\n
+\t\tDOM.replace(DOM.create(\'div\', {id : \'test2\'}), \'test2\');\n
+\t\tequal(DOM.get(\'test2\').innerHTML, \'\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'toHex\', 5, function() {\n
+\t\tequal(DOM.toHex(\'rgb(0, 255, 255)\'), \'#00ffff\');\n
+\t\tequal(DOM.toHex(\'rgb(255, 0, 0)\'), \'#ff0000\');\n
+\t\tequal(DOM.toHex(\'rgb(0, 0, 255)\'), \'#0000ff\');\n
+\t\tequal(DOM.toHex(\'rgb  (  0  , 0  , 255  )  \'), \'#0000ff\');\n
+\t\tequal(DOM.toHex(\'   RGB  (  0  , 0  , 255  )  \'), \'#0000ff\');\n
+\t});\n
+\n
+\ttest(\'getOuterHTML\', 4, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span id="test2"><span>test</span><span>test2</span></span>\');\n
+\t\tequal(DOM.getOuterHTML(\'test2\').toLowerCase().replace(/\\"/g, \'\'), \'<span id=test2><span>test</span><span>test2</span></span>\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span id="test2"><span>test</span><span>test2</span></span>\');\n
+\t\tDOM.setOuterHTML(\'test2\', \'<div id="test2">123</div>\');\n
+\t\tequal(tinymce.trim(DOM.getOuterHTML(\'test2\') || \'\').toLowerCase().replace(/\\"/g, \'\'), \'<div id=test2>123</div>\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span id="test2"><span>test</span><span>test2</span></span>\');\n
+\t\tDOM.setOuterHTML(\'test2\', \'<div id="test2">123</div><div id="test3">abc</div>\');\n
+\t\tequal(tinymce.trim(DOM.get(\'test\').innerHTML).toLowerCase().replace(/>\\s+</g, \'><\').replace(/\\"/g, \'\'), \'<div id=test2>123</div><div id=test3>abc</div>\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'test\');\n
+\t\tequal(tinymce.trim(DOM.getOuterHTML(DOM.get(\'test\').firstChild)), \'test\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'encodeDecode\', 2, function() {\n
+\t\tequal(DOM.encode(\'\\u00e5\\u00e4\\u00f6&<>"\'), \'\\u00e5\\u00e4\\u00f6&amp;&lt;&gt;&quot;\');\n
+\t\tequal(DOM.decode(\'&aring;&auml;&ouml;&amp;&lt;&gt;&quot;\'), \'\\u00e5\\u00e4\\u00f6&<>"\');\n
+\t});\n
+\n
+\ttest(\'split\', 2, function() {\n
+\t\tvar point, parent;\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'});\n
+\n
+\t\tDOM.setHTML(\'test\', \'<p><b>text1<span>inner</span>text2</b></p>\');\n
+\t\tparent = DOM.select(\'p\', DOM.get(\'test\'))[0];\n
+\t\tpoint = DOM.select(\'span\', DOM.get(\'test\'))[0];\n
+\t\tDOM.split(parent, point);\n
+\t\tequal(DOM.get(\'test\').innerHTML.toLowerCase().replace(/\\s+/g, \'\'), \'<p><b>text1</b></p><span>inner</span><p><b>text2</b></p>\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li><li>third line<br></li></ul></li></ul>\');\n
+\t\tparent = DOM.select(\'li:nth-child(1)\', DOM.get(\'test\'))[0];\n
+\t\tpoint = DOM.select(\'ul li:nth-child(2)\', DOM.get(\'test\'))[0];\n
+\t\tDOM.split(parent, point);\n
+\t\tequal(Utils.cleanHtml(DOM.get(\'test\').innerHTML), \'<ul><li>first line<br><ul><li><span>second</span> <span>line</span></li></ul></li><li>third line<br></li></ul>\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'nodeIndex\', 5, function() {\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'}, \'abc<b>abc</b>abc\');\n
+\n
+\t\tequal(DOM.nodeIndex(DOM.get(\'test\').childNodes[0]), 0, \'Index of first child.\');\n
+\t\tequal(DOM.nodeIndex(DOM.get(\'test\').childNodes[1]), 1, \'Index of second child.\');\n
+\t\tequal(DOM.nodeIndex(DOM.get(\'test\').childNodes[2]), 2, \'Index of third child.\');\n
+\n
+\t\tDOM.get(\'test\').insertBefore(DOM.doc.createTextNode(\'a\'), DOM.get(\'test\').firstChild);\n
+\t\tDOM.get(\'test\').insertBefore(DOM.doc.createTextNode(\'b\'), DOM.get(\'test\').firstChild);\n
+\n
+\t\tequal(DOM.nodeIndex(DOM.get(\'test\').lastChild), 4, \'Index of last child with fragmented DOM.\');\n
+\t\tequal(DOM.nodeIndex(DOM.get(\'test\').lastChild, true), 2, \'Normalized index of last child with fragmented DOM.\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'isEmpty\', 14, function() {\n
+\t\tDOM.schema = new tinymce.html.Schema(); // A schema will be added when used within a editor instance\n
+\t\tDOM.add(document.body, \'div\', {id : \'test\'}, \'\');\n
+\n
+\t\tok(DOM.isEmpty(DOM.get(\'test\')), \'No children\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<br />\');\n
+\t\tok(DOM.isEmpty(DOM.get(\'test\')), \'Br child\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<br /><br />\');\n
+\t\tok(!DOM.isEmpty(DOM.get(\'test\')), \'Br children\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'text\');\n
+\t\tok(!DOM.isEmpty(DOM.get(\'test\')), \'Text child\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span>text</span>\');\n
+\t\tok(!DOM.isEmpty(DOM.get(\'test\')), \'Text child in span\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span></span>\');\n
+\t\tok(DOM.isEmpty(DOM.get(\'test\')), \'Empty span child\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<div><span><b></b></span><b></b><em></em></div>\');\n
+\t\tok(DOM.isEmpty(DOM.get(\'test\')), \'Empty complex HTML\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<div><span><b></b></span><b></b><em>X</em></div>\');\n
+\t\tok(!DOM.isEmpty(DOM.get(\'test\')), \'Non empty complex HTML\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<div><span><b></b></span><b></b><em> </em></div>\');\n
+\t\tok(DOM.isEmpty(DOM.get(\'test\')), \'Non empty complex HTML with space\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<div><span><b></b></span><b></b><em><a name="x"></a></em></div>\');\n
+\t\tok(!DOM.isEmpty(DOM.get(\'test\')), \'Non empty complex HTML with achor name\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<img src="tinymce/ui/img/raster.gif">\');\n
+\t\tok(!DOM.isEmpty(DOM.get(\'test\')), \'Non empty html with img element\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span data-mce-bookmark="1"></span>\');\n
+\t\tok(!DOM.isEmpty(DOM.get(\'test\')), \'Span with bookmark attribute.\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<span data-mce-style="color:Red"></span>\');\n
+\t\tok(DOM.isEmpty(DOM.get(\'test\')), \'Span with data-mce attribute.\');\n
+\n
+\t\tDOM.setHTML(\'test\', \'<div><!-- comment --></div>\');\n
+\t\tok(!DOM.isEmpty(DOM.get(\'test\')), \'Element with comment.\');\n
+\n
+\t\tDOM.remove(\'test\');\n
+\t});\n
+\n
+\ttest(\'isEmpty with list of elements considered non-empty\', function() {\n
+\t\tvar elm = DOM.create(\'p\', null, \'<img>\');\n
+\t\tequal(false, DOM.isEmpty(elm, {img: true}));\n
+\t});\n
+\n
+\ttest(\'isEmpty with list of elements considered non-empty without schema\', function() {\n
+\t\tvar domWithoutSchema = new tinymce.dom.DOMUtils(document, {keep_values: true});\n
+\n
+\t\tvar elm = domWithoutSchema.create(\'p\', null, \'<img>\');\n
+\t\tequal(false, domWithoutSchema.isEmpty(elm, {img: true}));\n
+\t});\n
+\n
+\ttest(\'isEmpty on P with BR in EM\', function() {\n
+\t\tvar elm = DOM.create(\'p\', null, \'<em><br></em>\');\n
+\t\tok(DOM.isEmpty(elm, \'No children\'));\n
+\t});\n
+\t\n
+\ttest(\'isEmpty on P with two BR in EM\', function() {\n
+\t\tvar elm = DOM.create(\'p\', null, \'<em><br><br></em>\');\n
+\t\tequal(false, DOM.isEmpty(elm));\n
+\t});\n
+\n
+\ttest(\'bind/unbind/fire\', function() {\n
+\t\tvar count = 0;\n
+\n
+\t\tDOM.bind(document, \'click\', function() {count++;});\n
+\t\tDOM.fire(document, \'click\');\n
+\t\tDOM.unbind(document, \'click\');\n
+\t\tequal(count, 1);\n
+\n
+\t\tcount = 0;\n
+\t\tDOM.bind([document, window], \'click\', function(e) {e.stopPropagation(); count++;});\n
+\t\tDOM.fire(document, \'click\');\n
+\t\tDOM.fire(window, \'click\');\n
+\t\tDOM.unbind([document, window], \'click\');\n
+\t\tequal(count, 2);\n
+\n
+\t\tcount = 0;\n
+\t\tDOM.fire(document, \'click\');\n
+\t\tDOM.fire(window, \'click\');\n
+\t\tequal(count, 0);\n
+\t});\n
+\n
+\tDOM.remove(\'test\');\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>23385</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DOMUtils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

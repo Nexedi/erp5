@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268334.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ResizeHandle.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ResizeHandle.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Renders a resize handle that fires ResizeStart, Resize and ResizeEnd events.\n
+ *\n
+ * @-x-less ResizeHandle.less\n
+ * @class tinymce.ui.ResizeHandle\n
+ * @extends tinymce.ui.Widget\n
+ */\n
+define("tinymce/ui/ResizeHandle", [\n
+\t"tinymce/ui/Widget",\n
+\t"tinymce/ui/DragHelper"\n
+], function(Widget, DragHelper) {\n
+\t"use strict";\n
+\n
+\treturn Widget.extend({\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, prefix = self.classPrefix;\n
+\n
+\t\t\tself.classes.add(\'resizehandle\');\n
+\n
+\t\t\tif (self.settings.direction == "both") {\n
+\t\t\t\tself.classes.add(\'resizehandle-both\');\n
+\t\t\t}\n
+\n
+\t\t\tself.canFocus = false;\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + self._id + \'" class="\' + self.classes + \'">\' +\n
+\t\t\t\t\t\'<i class="\' + prefix + \'ico \' + prefix + \'i-resize"></i>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Called after the control has been rendered.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super();\n
+\n
+\t\t\tself.resizeDragHelper = new DragHelper(this._id, {\n
+\t\t\t\tstart: function() {\n
+\t\t\t\t\tself.fire(\'ResizeStart\');\n
+\t\t\t\t},\n
+\n
+\t\t\t\tdrag: function(e) {\n
+\t\t\t\t\tif (self.settings.direction != "both") {\n
+\t\t\t\t\t\te.deltaX = 0;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tself.fire(\'Resize\', e);\n
+\t\t\t\t},\n
+\n
+\t\t\t\tstop: function() {\n
+\t\t\t\t\tself.fire(\'ResizeEnd\');\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\tremove: function() {\n
+\t\t\tif (this.resizeDragHelper) {\n
+\t\t\t\tthis.resizeDragHelper.destroy();\n
+\t\t\t}\n
+\n
+\t\t\treturn this._super();\n
+\t\t}\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1717</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ResizeHandle.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

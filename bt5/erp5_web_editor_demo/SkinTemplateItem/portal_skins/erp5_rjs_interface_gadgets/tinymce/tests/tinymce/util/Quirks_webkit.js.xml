@@ -1,0 +1,318 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268203.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Quirks_webkit.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.utils.Quirks_WebKit", {\n
+\tsetupModule: function() {\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "textarea",\n
+\t\t\telements: "elm1",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tskin: false,\n
+\t\t\tindent: false,\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tinit_instance_callback : function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+});\n
+\n
+if (tinymce.isWebKit) {\n
+\ttest(\'Delete from beginning of P into H1\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p>b</p>\';\n
+\t\tUtils.setSelection(\'p\', 0);\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<h1>ab</h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+/*\n
+\ttest(\'Delete whole H1 before P\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p>b</p>\';\n
+\n
+\t\tvar rng = editor.selection.getRng();\n
+\t\trng.setStartBefore(editor.getBody().firstChild);\n
+\t\trng.setEndAfter(editor.getBody().firstChild);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<h1>b<br></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'ForwardDelete whole H1 before P\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p>b</p>\';\n
+\n
+\t\tvar rng = editor.selection.getRng();\n
+\t\trng.setStartBefore(editor.getBody().firstChild);\n
+\t\trng.setEndAfter(editor.getBody().firstChild);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\teditor.execCommand(\'ForwardDelete\');\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<h1>b<br></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+*/\n
+\n
+\ttest(\'Delete between empty paragraphs\', function() {\n
+\t\teditor.getBody().innerHTML = \'<p>a</p><p><br></p><p><br></p><p>b</p>\';\n
+\t\tUtils.setSelection(\'p:last\', 0);\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), \'<p>a</p><p><br /></p><p>b<br /></p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'P\');\n
+\t});\n
+\n
+\ttest(\'Delete range from middle of H1 to middle of span in P\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>ab</h1><p>b<span style="color:red">cd</span></p>\';\n
+\t\tUtils.setSelection(\'h1\', 1, \'span\', 1);\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), \'<h1>a<span style="color: red;">d</span></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'Delete from beginning of P with style span inside into H1 with inline block\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a<input type="text"></h1><p>b<span style="color:red">c</span></p>\';\n
+\t\tUtils.setSelection(\'p\', 0);\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(editor.getContent(), \'<h1>a<input type="text" />b<span style="color: red;">c</span></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'Delete from beginning of P with style span inside into H1\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p>b<span style="color:red">c</span></p>\';\n
+\t\tUtils.setSelection(\'p\', 0);\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(editor.getContent(), \'<h1>ab<span style="color: red;">c</span></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'Delete from beginning of P into H1 with contentEditable:false\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1 contentEditable="false">a</h1><p>b<span style="color:red">c</span></p>\';\n
+\t\tUtils.setSelection(\'p\', 0);\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(editor.getContent(), \'<h1 contenteditable="false">a</h1><p>b<span style="color: red;">c</span></p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'Delete from beginning of P with style span inside into H1 with trailing BR\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a<br></h1><p>b<span style="color:red">c</span></p>\';\n
+\t\tUtils.setSelection(\'p\', 0);\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(editor.getContent(), \'<h1>ab<span style="color: red;">c</span></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'Delete from empty P with style span inside into H1\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a<br></h1><p><span style="color:red"><br></span></p>\';\n
+\t\tUtils.setSelection(\'span\', 0);\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(editor.getContent(), \'<h1>a</h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'Delete from beginning of P with span style to H1\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p><span style="color:red">b</span></p>\';\n
+\t\tUtils.setSelection(\'span\', 0);\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(editor.getContent(), \'<h1>a<span style="color: red;">b</span></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'Delete from beginning of P with BR line to H1\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p>b<br>c</p>\';\n
+\t\tUtils.setSelection(\'p\', 0);\n
+\t\teditor.execCommand(\'Delete\');\n
+\t\tequal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), \'<h1>ab<br />c</h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'ForwardDelete from end of H1 to P with style span\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p><span style="color:red">b</span></p>\';\n
+\t\tUtils.setSelection(\'h1\', 1);\n
+\t\teditor.execCommand(\'ForwardDelete\');\n
+\t\tequal(editor.getContent(), \'<h1>a<span style="color: red;">b</span></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'ForwardDelete from end of H1 with trailing BR to P with style span\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a<br></h1><p><span style="color:red">b</span></p>\';\n
+\t\tUtils.setSelection(\'h1\', 1);\n
+\t\teditor.execCommand(\'ForwardDelete\');\n
+\t\tequal(editor.getContent(), \'<h1>a<span style="color: red;">b</span></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'ForwardDelete from end of H1 with two trailing BR:s to P with style span\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a<br><br></h1><p><span style="color:red">b</span></p>\';\n
+\t\tUtils.setSelection(\'h1\', 1);\n
+\t\teditor.execCommand(\'ForwardDelete\');\n
+\t\tequal(editor.getContent(), \'<h1>a</h1><p><span style="color: red;">b</span></p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'ForwardDelete from end of H1 to P with style and inline block element\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p><input type="text"><span style="color:red">b</span></p>\';\n
+\t\tUtils.setSelection(\'h1\', 1);\n
+\t\teditor.execCommand(\'ForwardDelete\');\n
+\t\tequal(editor.getContent(), \'<h1>a<input type="text" /><span style="color: red;">b</span></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'ForwardDelete from end of H1 with BR line to P\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a<br>b</h1><p>c</p>\';\n
+\n
+\t\tvar rng = editor.selection.getRng();\n
+\t\trng.setStart(editor.$(\'h1\')[0].lastChild, 1);\n
+\t\trng.setEnd(editor.$(\'h1\')[0].lastChild, 1);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\teditor.execCommand(\'ForwardDelete\');\n
+\t\tequal(Utils.normalizeHtml(Utils.cleanHtml(editor.getBody().innerHTML)), \'<h1>a<br />bc</h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'ForwardDelete from end of H1 into P\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p>b</p>\';\n
+\t\tUtils.setSelection(\'h1\', 1);\n
+\t\teditor.execCommand(\'ForwardDelete\');\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<h1>ab</h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'ForwardDelete from end of H1 into P with contentEditable:false\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p contentEditable="false">b</p>\';\n
+\t\tUtils.setSelection(\'h1\', 1);\n
+\t\teditor.execCommand(\'ForwardDelete\');\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<h1>a</h1><p contenteditable="false">b</p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'ForwardDelete from end of H1 into P with style span inside\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p>b<span style="color: #010203">c</span></p>\';\n
+\t\tUtils.setSelection(\'h1\', 1);\n
+\t\teditor.execCommand(\'ForwardDelete\');\n
+\t\tequal(editor.getContent(), \'<h1>ab<span style="color: #010203;">c</span></h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'Backspace key from beginning of P into H1\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p>b</p>\';\n
+\t\tUtils.setSelection(\'p\', 0);\n
+\t\teditor.fire("keydown", {keyCode: 8});\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<h1>ab</h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'Delete key from end of H1 into P\', function() {\n
+\t\teditor.getBody().innerHTML = \'<h1>a</h1><p>b</p>\';\n
+\t\tUtils.setSelection(\'h1\', 1);\n
+\t\teditor.fire("keydown", {keyCode: 46});\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<h1>ab</h1>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'H1\');\n
+\t});\n
+\n
+\ttest(\'Backspace previous word\', function() {\n
+\t\teditor.getBody().innerHTML = \'<p>abc 123</p>\';\n
+\t\tUtils.setSelection(\'p\', 7);\n
+\t\teditor.fire("keydown", {keyCode: 8, ctrlKey: true});\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<p>abc&nbsp;</p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'P\');\n
+\t});\n
+\n
+\ttest(\'Backspace previous line\', function() {\n
+\t\teditor.getBody().innerHTML = \'<p>abc 123</p>\';\n
+\t\tUtils.setSelection(\'p\', 7);\n
+\t\teditor.fire("keydown", {keyCode: 8, metaKey: true});\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<p><br></p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'BR\');\n
+\t});\n
+\n
+\ttest(\'Delete next word\', function() {\n
+\t\teditor.getBody().innerHTML = \'<p>abc 123</p>\';\n
+\t\tUtils.setSelection(\'p\', 0);\n
+\t\teditor.fire("keydown", {keyCode: 46, ctrlKey: true});\n
+\n
+\t\t// Remove nbsp since very old WebKit has an slight issue\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML).replace(\'&nbsp;\', \'\'), \'<p>123</p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'P\');\n
+\t});\n
+\n
+\ttest(\'Delete next line\', function() {\n
+\t\teditor.getBody().innerHTML = \'<p>abc 123</p>\';\n
+\t\tUtils.setSelection(\'p\', 0);\n
+\t\teditor.fire("keydown", {keyCode: 46, metaKey: true});\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<p><br></p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'BR\');\n
+\t});\n
+\n
+\ttest(\'Type over bold text in fully selected block and keep bold\', function() {\n
+\t\teditor.getBody().innerHTML = \'<p><i><b>x</b></i></p>\';\n
+\t\tUtils.setSelection(\'b\', 0, \'b\', 1);\n
+\t\teditor.fire("keypress", {keyCode: 65, charCode: 65});\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<p><i><b>a</b></i></p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'B\');\n
+\t});\n
+\n
+\ttest(\'Type over partial bold text and keep bold\', function() {\n
+\t\teditor.getBody().innerHTML = \'<p><b>xy</b></p>\';\n
+\t\tUtils.setSelection(\'b\', 0, \'b\', 1);\n
+\t\teditor.fire("keypress", {keyCode: 65, charCode: 65});\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<p><b>ay</b></p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'B\');\n
+\t});\n
+\n
+\ttest(\'Type over bold text wrapped inside other formats\', function() {\n
+\t\teditor.getBody().innerHTML = \'<p><i>1<b>2</b>3</i></p>\';\n
+\t\tUtils.setSelection(\'b\', 0, \'b\', 1);\n
+\t\teditor.fire("keypress", {keyCode: 65, charCode: 65});\n
+\t\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<p><i>1<b>a</b>3</i></p>\');\n
+\t\tequal(editor.selection.getStart().nodeName, \'B\');\n
+\t});\n
+} else {\n
+\ttest("Skipped since the browser isn\'t WebKit", function() {\n
+\t\tok(true, "Skipped");\n
+\t});\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11217</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Quirks_webkit.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

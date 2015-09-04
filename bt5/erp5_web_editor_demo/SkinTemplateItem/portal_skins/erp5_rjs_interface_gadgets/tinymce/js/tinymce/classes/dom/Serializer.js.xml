@@ -1,0 +1,441 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268365.43</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Serializer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Serializer.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class is used to serialize DOM trees into a string. Consult the TinyMCE Wiki API for\n
+ * more details and examples on how to use this class.\n
+ *\n
+ * @class tinymce.dom.Serializer\n
+ */\n
+define("tinymce/dom/Serializer", [\n
+\t"tinymce/dom/DOMUtils",\n
+\t"tinymce/html/DomParser",\n
+\t"tinymce/html/Entities",\n
+\t"tinymce/html/Serializer",\n
+\t"tinymce/html/Node",\n
+\t"tinymce/html/Schema",\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Tools"\n
+], function(DOMUtils, DomParser, Entities, Serializer, Node, Schema, Env, Tools) {\n
+\tvar each = Tools.each, trim = Tools.trim;\n
+\tvar DOM = DOMUtils.DOM;\n
+\n
+\t/**\n
+\t * Constructs a new DOM serializer class.\n
+\t *\n
+\t * @constructor\n
+\t * @method Serializer\n
+\t * @param {Object} settings Serializer settings object.\n
+\t * @param {tinymce.Editor} editor Optional editor to bind events to and get schema/dom from.\n
+\t */\n
+\treturn function(settings, editor) {\n
+\t\tvar dom, schema, htmlParser;\n
+\n
+\t\tif (editor) {\n
+\t\t\tdom = editor.dom;\n
+\t\t\tschema = editor.schema;\n
+\t\t}\n
+\n
+\t\t// Default DOM and Schema if they are undefined\n
+\t\tdom = dom || DOM;\n
+\t\tschema = schema || new Schema(settings);\n
+\t\tsettings.entity_encoding = settings.entity_encoding || \'named\';\n
+\t\tsettings.remove_trailing_brs = "remove_trailing_brs" in settings ? settings.remove_trailing_brs : true;\n
+\n
+\t\thtmlParser = new DomParser(settings, schema);\n
+\n
+\t\t// Convert tabindex back to elements when serializing contents\n
+\t\thtmlParser.addAttributeFilter(\'data-mce-tabindex\', function(nodes, name) {\n
+\t\t\tvar i = nodes.length, node;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\t\t\t\tnode.attr(\'tabindex\', node.attributes.map[\'data-mce-tabindex\']);\n
+\t\t\t\tnode.attr(name, null);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Convert move data-mce-src, data-mce-href and data-mce-style into nodes or process them if needed\n
+\t\thtmlParser.addAttributeFilter(\'src,href,style\', function(nodes, name) {\n
+\t\t\tvar i = nodes.length, node, value, internalName = \'data-mce-\' + name;\n
+\t\t\tvar urlConverter = settings.url_converter, urlConverterScope = settings.url_converter_scope, undef;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\n
+\t\t\t\tvalue = node.attributes.map[internalName];\n
+\t\t\t\tif (value !== undef) {\n
+\t\t\t\t\t// Set external name to internal value and remove internal\n
+\t\t\t\t\tnode.attr(name, value.length \076 0 ? value : null);\n
+\t\t\t\t\tnode.attr(internalName, null);\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// No internal attribute found then convert the value we have in the DOM\n
+\t\t\t\t\tvalue = node.attributes.map[name];\n
+\n
+\t\t\t\t\tif (name === "style") {\n
+\t\t\t\t\t\tvalue = dom.serializeStyle(dom.parseStyle(value), node.name);\n
+\t\t\t\t\t} else if (urlConverter) {\n
+\t\t\t\t\t\tvalue = urlConverter.call(urlConverterScope, value, name, node.name);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode.attr(name, value.length \076 0 ? value : null);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Remove internal classes mceItem\074..\076 or mceSelected\n
+\t\thtmlParser.addAttributeFilter(\'class\', function(nodes) {\n
+\t\t\tvar i = nodes.length, node, value;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\t\t\t\tvalue = node.attr(\'class\');\n
+\n
+\t\t\t\tif (value) {\n
+\t\t\t\t\tvalue = node.attr(\'class\').replace(/(?:^|\\s)mce-item-\\w+(?!\\S)/g, \'\');\n
+\t\t\t\t\tnode.attr(\'class\', value.length \076 0 ? value : null);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Remove bookmark elements\n
+\t\thtmlParser.addAttributeFilter(\'data-mce-type\', function(nodes, name, args) {\n
+\t\t\tvar i = nodes.length, node;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\n
+\t\t\t\tif (node.attributes.map[\'data-mce-type\'] === \'bookmark\' \046\046 !args.cleanup) {\n
+\t\t\t\t\tnode.remove();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\thtmlParser.addNodeFilter(\'noscript\', function(nodes) {\n
+\t\t\tvar i = nodes.length, node;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i].firstChild;\n
+\n
+\t\t\t\tif (node) {\n
+\t\t\t\t\tnode.value = Entities.decode(node.value);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Force script into CDATA sections and remove the mce- prefix also add comments around styles\n
+\t\thtmlParser.addNodeFilter(\'script,style\', function(nodes, name) {\n
+\t\t\tvar i = nodes.length, node, value, type;\n
+\n
+\t\t\tfunction trim(value) {\n
+\t\t\t\t/*jshint maxlen:255 */\n
+\t\t\t\t/*eslint max-len:0 */\n
+\t\t\t\treturn value.replace(/(\074!--\\[CDATA\\[|\\]\\]--\076)/g, \'\\n\')\n
+\t\t\t\t\t\t.replace(/^[\\r\\n]*|[\\r\\n]*$/g, \'\')\n
+\t\t\t\t\t\t.replace(/^\\s*((\074!--)?(\\s*\\/\\/)?\\s*\074!\\[CDATA\\[|(\074!--\\s*)?\\/\\*\\s*\074!\\[CDATA\\[\\s*\\*\\/|(\\/\\/)?\\s*\074!--|\\/\\*\\s*\074!--\\s*\\*\\/)\\s*[\\r\\n]*/gi, \'\')\n
+\t\t\t\t\t\t.replace(/\\s*(\\/\\*\\s*\\]\\]\076\\s*\\*\\/(--\076)?|\\s*\\/\\/\\s*\\]\\]\076(--\076)?|\\/\\/\\s*(--\076)?|\\]\\]\076|\\/\\*\\s*--\076\\s*\\*\\/|\\s*--\076\\s*)\\s*$/g, \'\');\n
+\t\t\t}\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\t\t\t\tvalue = node.firstChild ? node.firstChild.value : \'\';\n
+\n
+\t\t\t\tif (name === "script") {\n
+\t\t\t\t\t// Remove mce- prefix from script elements and remove default type since the user specified\n
+\t\t\t\t\t// a script element without type attribute\n
+\t\t\t\t\ttype = node.attr(\'type\');\n
+\t\t\t\t\tif (type) {\n
+\t\t\t\t\t\tnode.attr(\'type\', type == \'mce-no/type\' ? null : type.replace(/^mce\\-/, \'\'));\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (value.length \076 0) {\n
+\t\t\t\t\t\tnode.firstChild.value = \'// \074![CDATA[\\n\' + trim(value) + \'\\n// ]]\076\';\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif (value.length \076 0) {\n
+\t\t\t\t\t\tnode.firstChild.value = \'\074!--\\n\' + trim(value) + \'\\n--\076\';\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Convert comments to cdata and handle protected comments\n
+\t\thtmlParser.addNodeFilter(\'#comment\', function(nodes) {\n
+\t\t\tvar i = nodes.length, node;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\n
+\t\t\t\tif (node.value.indexOf(\'[CDATA[\') === 0) {\n
+\t\t\t\t\tnode.name = \'#cdata\';\n
+\t\t\t\t\tnode.type = 4;\n
+\t\t\t\t\tnode.value = node.value.replace(/^\\[CDATA\\[|\\]\\]$/g, \'\');\n
+\t\t\t\t} else if (node.value.indexOf(\'mce:protected \') === 0) {\n
+\t\t\t\t\tnode.name = "#text";\n
+\t\t\t\t\tnode.type = 3;\n
+\t\t\t\t\tnode.raw = true;\n
+\t\t\t\t\tnode.value = unescape(node.value).substr(14);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\thtmlParser.addNodeFilter(\'xml:namespace,input\', function(nodes, name) {\n
+\t\t\tvar i = nodes.length, node;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\t\t\t\tif (node.type === 7) {\n
+\t\t\t\t\tnode.remove();\n
+\t\t\t\t} else if (node.type === 1) {\n
+\t\t\t\t\tif (name === "input" \046\046 !("type" in node.attributes.map)) {\n
+\t\t\t\t\t\tnode.attr(\'type\', \'text\');\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Fix list elements, TODO: Replace this later\n
+\t\tif (settings.fix_list_elements) {\n
+\t\t\thtmlParser.addNodeFilter(\'ul,ol\', function(nodes) {\n
+\t\t\t\tvar i = nodes.length, node, parentNode;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tnode = nodes[i];\n
+\t\t\t\t\tparentNode = node.parent;\n
+\n
+\t\t\t\t\tif (parentNode.name === \'ul\' || parentNode.name === \'ol\') {\n
+\t\t\t\t\t\tif (node.prev \046\046 node.prev.name === \'li\') {\n
+\t\t\t\t\t\t\tnode.prev.append(node);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Remove internal data attributes\n
+\t\thtmlParser.addAttributeFilter(\n
+\t\t\t\'data-mce-src,data-mce-href,data-mce-style,\' +\n
+\t\t\t\'data-mce-selected,data-mce-expando,\' +\n
+\t\t\t\'data-mce-type,data-mce-resize\',\n
+\n
+\t\t\tfunction(nodes, name) {\n
+\t\t\t\tvar i = nodes.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tnodes[i].attr(name, null);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t);\n
+\n
+\t\t// Return public methods\n
+\t\treturn {\n
+\t\t\t/**\n
+\t\t\t * Schema instance that was used to when the Serializer was constructed.\n
+\t\t\t *\n
+\t\t\t * @field {tinymce.html.Schema} schema\n
+\t\t\t */\n
+\t\t\tschema: schema,\n
+\n
+\t\t\t/**\n
+\t\t\t * Adds a node filter function to the parser used by the serializer, the parser will collect the specified nodes by name\n
+\t\t\t * and then execute the callback ones it has finished parsing the document.\n
+\t\t\t *\n
+\t\t\t * @example\n
+\t\t\t * parser.addNodeFilter(\'p,h1\', function(nodes, name) {\n
+\t\t\t *\t\tfor (var i = 0; i \074 nodes.length; i++) {\n
+\t\t\t *\t\t\tconsole.log(nodes[i].name);\n
+\t\t\t *\t\t}\n
+\t\t\t * });\n
+\t\t\t * @method addNodeFilter\n
+\t\t\t * @method {String} name Comma separated list of nodes to collect.\n
+\t\t\t * @param {function} callback Callback function to execute once it has collected nodes.\n
+\t\t\t */\n
+\t\t\taddNodeFilter: htmlParser.addNodeFilter,\n
+\n
+\t\t\t/**\n
+\t\t\t * Adds a attribute filter function to the parser used by the serializer, the parser will\n
+\t\t\t * collect nodes that has the specified attributes\n
+\t\t\t * and then execute the callback ones it has finished parsing the document.\n
+\t\t\t *\n
+\t\t\t * @example\n
+\t\t\t * parser.addAttributeFilter(\'src,href\', function(nodes, name) {\n
+\t\t\t *\t\tfor (var i = 0; i \074 nodes.length; i++) {\n
+\t\t\t *\t\t\tconsole.log(nodes[i].name);\n
+\t\t\t *\t\t}\n
+\t\t\t * });\n
+\t\t\t * @method addAttributeFilter\n
+\t\t\t * @method {String} name Comma separated list of nodes to collect.\n
+\t\t\t * @param {function} callback Callback function to execute once it has collected nodes.\n
+\t\t\t */\n
+\t\t\taddAttributeFilter: htmlParser.addAttributeFilter,\n
+\n
+\t\t\t/**\n
+\t\t\t * Serializes the specified browser DOM node into a HTML string.\n
+\t\t\t *\n
+\t\t\t * @method serialize\n
+\t\t\t * @param {DOMNode} node DOM node to serialize.\n
+\t\t\t * @param {Object} args Arguments option that gets passed to event handlers.\n
+\t\t\t */\n
+\t\t\tserialize: function(node, args) {\n
+\t\t\t\tvar self = this, impl, doc, oldDoc, htmlSerializer, content;\n
+\n
+\t\t\t\t// Explorer won\'t clone contents of script and style and the\n
+\t\t\t\t// selected index of select elements are cleared on a clone operation.\n
+\t\t\t\tif (Env.ie \046\046 dom.select(\'script,style,select,map\').length \076 0) {\n
+\t\t\t\t\tcontent = node.innerHTML;\n
+\t\t\t\t\tnode = node.cloneNode(false);\n
+\t\t\t\t\tdom.setHTML(node, content);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tnode = node.cloneNode(true);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Nodes needs to be attached to something in WebKit/Opera\n
+\t\t\t\t// This fix will make DOM ranges and make Sizzle happy!\n
+\t\t\t\timpl = node.ownerDocument.implementation;\n
+\t\t\t\tif (impl.createHTMLDocument) {\n
+\t\t\t\t\t// Create an empty HTML document\n
+\t\t\t\t\tdoc = impl.createHTMLDocument("");\n
+\n
+\t\t\t\t\t// Add the element or it\'s children if it\'s a body element to the new document\n
+\t\t\t\t\teach(node.nodeName == \'BODY\' ? node.childNodes : [node], function(node) {\n
+\t\t\t\t\t\tdoc.body.appendChild(doc.importNode(node, true));\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// Grab first child or body element for serialization\n
+\t\t\t\t\tif (node.nodeName != \'BODY\') {\n
+\t\t\t\t\t\tnode = doc.body.firstChild;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tnode = doc.body;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// set the new document in DOMUtils so createElement etc works\n
+\t\t\t\t\toldDoc = dom.doc;\n
+\t\t\t\t\tdom.doc = doc;\n
+\t\t\t\t}\n
+\n
+\t\t\t\targs = args || {};\n
+\t\t\t\targs.format = args.format || \'html\';\n
+\n
+\t\t\t\t// Don\'t wrap content if we want selected html\n
+\t\t\t\tif (args.selection) {\n
+\t\t\t\t\targs.forced_root_block = \'\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Pre process\n
+\t\t\t\tif (!args.no_events) {\n
+\t\t\t\t\targs.node = node;\n
+\t\t\t\t\tself.onPreProcess(args);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Setup serializer\n
+\t\t\t\thtmlSerializer = new Serializer(settings, schema);\n
+\n
+\t\t\t\t// Parse and serialize HTML\n
+\t\t\t\targs.content = htmlSerializer.serialize(\n
+\t\t\t\t\thtmlParser.parse(trim(args.getInner ? node.innerHTML : dom.getOuterHTML(node)), args)\n
+\t\t\t\t);\n
+\n
+\t\t\t\t// Replace all BOM characters for now until we can find a better solution\n
+\t\t\t\tif (!args.cleanup) {\n
+\t\t\t\t\targs.content = args.content.replace(/\\uFEFF/g, \'\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Post process\n
+\t\t\t\tif (!args.no_events) {\n
+\t\t\t\t\tself.onPostProcess(args);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Restore the old document if it was changed\n
+\t\t\t\tif (oldDoc) {\n
+\t\t\t\t\tdom.doc = oldDoc;\n
+\t\t\t\t}\n
+\n
+\t\t\t\targs.node = null;\n
+\n
+\t\t\t\treturn args.content;\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Adds valid elements rules to the serializers schema instance this enables you to specify things\n
+\t\t\t * like what elements should be outputted and what attributes specific elements might have.\n
+\t\t\t * Consult the Wiki for more details on this format.\n
+\t\t\t *\n
+\t\t\t * @method addRules\n
+\t\t\t * @param {String} rules Valid elements rules string to add to schema.\n
+\t\t\t */\n
+\t\t\taddRules: function(rules) {\n
+\t\t\t\tschema.addValidElements(rules);\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Sets the valid elements rules to the serializers schema instance this enables you to specify things\n
+\t\t\t * like what elements should be outputted and what attributes specific elements might have.\n
+\t\t\t * Consult the Wiki for more details on this format.\n
+\t\t\t *\n
+\t\t\t * @method setRules\n
+\t\t\t * @param {String} rules Valid elements rules string.\n
+\t\t\t */\n
+\t\t\tsetRules: function(rules) {\n
+\t\t\t\tschema.setValidElements(rules);\n
+\t\t\t},\n
+\n
+\t\t\tonPreProcess: function(args) {\n
+\t\t\t\tif (editor) {\n
+\t\t\t\t\teditor.fire(\'PreProcess\', args);\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tonPostProcess: function(args) {\n
+\t\t\t\tif (editor) {\n
+\t\t\t\t\teditor.fire(\'PostProcess\', args);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\t};\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11814</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Serializer.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

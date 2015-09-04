@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268347.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Layout.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Layout.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Base layout manager class.\n
+ *\n
+ * @class tinymce.ui.Layout\n
+ */\n
+define("tinymce/ui/Layout", [\n
+\t"tinymce/util/Class",\n
+\t"tinymce/util/Tools"\n
+], function(Class, Tools) {\n
+\t"use strict";\n
+\n
+\treturn Class.extend({\n
+\t\tDefaults: {\n
+\t\t\tfirstControlClass: \'first\',\n
+\t\t\tlastControlClass: \'last\'\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Constructs a layout instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tthis.settings = Tools.extend({}, this.Defaults, settings);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * This method gets invoked before the layout renders the controls.\n
+\t\t *\n
+\t\t * @method preRender\n
+\t\t * @param {tinymce.ui.Container} container Container instance to preRender.\n
+\t\t */\n
+\t\tpreRender: function(container) {\n
+\t\t\tcontainer.bodyClasses.add(this.settings.containerClass);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Applies layout classes to the container.\n
+\t\t *\n
+\t\t * @private\n
+\t\t */\n
+\t\tapplyClasses: function(items) {\n
+\t\t\tvar self = this, settings = self.settings, firstClass, lastClass, firstItem, lastItem;\n
+\n
+\t\t\tfirstClass = settings.firstControlClass;\n
+\t\t\tlastClass = settings.lastControlClass;\n
+\n
+\t\t\titems.each(function(item) {\n
+\t\t\t\titem.classes.remove(firstClass).remove(lastClass).add(settings.controlClass);\n
+\n
+\t\t\t\tif (item.visible()) {\n
+\t\t\t\t\tif (!firstItem) {\n
+\t\t\t\t\t\tfirstItem = item;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tlastItem = item;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tif (firstItem) {\n
+\t\t\t\tfirstItem.classes.add(firstClass);\n
+\t\t\t}\n
+\n
+\t\t\tif (lastItem) {\n
+\t\t\t\tlastItem.classes.add(lastClass);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the specified container and any layout specific HTML.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @param {tinymce.ui.Container} container Container to render HTML for.\n
+\t\t */\n
+\t\trenderHtml: function(container) {\n
+\t\t\tvar self = this, html = \'\';\n
+\n
+\t\t\tself.applyClasses(container.items());\n
+\n
+\t\t\tcontainer.items().each(function(item) {\n
+\t\t\t\thtml += item.renderHtml();\n
+\t\t\t});\n
+\n
+\t\t\treturn html;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Recalculates the positions of the controls in the specified container.\n
+\t\t *\n
+\t\t * @method recalc\n
+\t\t * @param {tinymce.ui.Container} container Container instance to recalc.\n
+\t\t */\n
+\t\trecalc: function() {\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * This method gets invoked after the layout renders the controls.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t * @param {tinymce.ui.Container} container Container instance to postRender.\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t},\n
+\n
+\t\tisNative: function() {\n
+\t\t\treturn false;\n
+\t\t}\n
+\t});\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2594</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Layout.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

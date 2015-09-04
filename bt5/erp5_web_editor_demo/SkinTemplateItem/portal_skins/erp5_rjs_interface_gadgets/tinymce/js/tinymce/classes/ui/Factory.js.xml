@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268306.97</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Factory.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Factory.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+/**\n
+ * This class is a factory for control instances. This enables you\n
+ * to create instances of controls without having to require the UI controls directly.\n
+ *\n
+ * It also allow you to override or add new control types.\n
+ *\n
+ * @class tinymce.ui.Factory\n
+ */\n
+define("tinymce/ui/Factory", [], function() {\n
+\t"use strict";\n
+\n
+\tvar types = {}, namespaceInit;\n
+\n
+\treturn {\n
+\t\t/**\n
+\t\t * Adds a new control instance type to the factory.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {String} type Type name for example "button".\n
+\t\t * @param {function} typeClass Class type function.\n
+\t\t */\n
+\t\tadd: function(type, typeClass) {\n
+\t\t\ttypes[type.toLowerCase()] = typeClass;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified type exists or not.\n
+\t\t *\n
+\t\t * @method has\n
+\t\t * @param {String} type Type to look for.\n
+\t\t * @return {Boolean} true/false if the control by name exists.\n
+\t\t */\n
+\t\thas: function(type) {\n
+\t\t\treturn !!types[type.toLowerCase()];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Creates a new control instance based on the settings provided. The instance created will be\n
+\t\t * based on the specified type property it can also create whole structures of components out of\n
+\t\t * the specified JSON object.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * tinymce.ui.Factory.create({\n
+\t\t *     type: \'button\',\n
+\t\t *     text: \'Hello world!\'\n
+\t\t * });\n
+\t\t *\n
+\t\t * @method create\n
+\t\t * @param {Object/String} settings Name/Value object with items used to create the type.\n
+\t\t * @return {tinymce.ui.Control} Control instance based on the specified type.\n
+\t\t */\n
+\t\tcreate: function(type, settings) {\n
+\t\t\tvar ControlType, name, namespace;\n
+\n
+\t\t\t// Build type lookup\n
+\t\t\tif (!namespaceInit) {\n
+\t\t\t\tnamespace = tinymce.ui;\n
+\n
+\t\t\t\tfor (name in namespace) {\n
+\t\t\t\t\ttypes[name.toLowerCase()] = namespace[name];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnamespaceInit = true;\n
+\t\t\t}\n
+\n
+\t\t\t// If string is specified then use it as the type\n
+\t\t\tif (typeof type == \'string\') {\n
+\t\t\t\tsettings = settings || {};\n
+\t\t\t\tsettings.type = type;\n
+\t\t\t} else {\n
+\t\t\t\tsettings = type;\n
+\t\t\t\ttype = settings.type;\n
+\t\t\t}\n
+\n
+\t\t\t// Find control type\n
+\t\t\ttype = type.toLowerCase();\n
+\t\t\tControlType = types[type];\n
+\n
+\t\t\t// #if debug\n
+\n
+\t\t\tif (!ControlType) {\n
+\t\t\t\tthrow new Error("Could not find control by type: " + type);\n
+\t\t\t}\n
+\n
+\t\t\t// #endif\n
+\n
+\t\t\tControlType = new ControlType(settings);\n
+\t\t\tControlType.type = type; // Set the type on the instance, this will be used by the Selector engine\n
+\n
+\t\t\treturn ControlType;\n
+\t\t}\n
+\t};\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2582</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Factory.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

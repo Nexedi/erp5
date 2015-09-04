@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268135.01</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>legacyoutput.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.plugins.Legacyoutput", {\n
+\tsetupModule: function() {\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "textarea",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tskin: false,\n
+\t\t\tplugins: \'legacyoutput\',\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+});\n
+\n
+test("Font color", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'forecolor\', false, \'#FF0000\');\n
+\tequal(editor.getContent().toLowerCase(), \'<p><font color="#ff0000">text</font></p>\');\n
+});\n
+\n
+test("Font size", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'fontsize\', false, 7);\n
+\tequal(editor.getContent(), \'<p><font size="7">text</font></p>\');\n
+});\n
+\n
+test("Font face", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'fontname\', false, "times");\n
+\tequal(editor.getContent(), \'<p><font face="times">text</font></p>\');\n
+});\n
+\n
+test("Bold", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'bold\');\n
+\tequal(editor.getContent(), \'<p><b>text</b></p>\');\n
+});\n
+\n
+test("Italic", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'italic\');\n
+\tequal(editor.getContent(), \'<p><i>text</i></p>\');\n
+});\n
+\n
+test("Underline", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'underline\');\n
+\tequal(editor.getContent(), \'<p><u>text</u></p>\');\n
+});\n
+\n
+test("Strikethrough", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'strikethrough\');\n
+\tequal(editor.getContent(), \'<p><strike>text</strike></p>\');\n
+});\n
+\n
+test("Justifyleft", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'justifyleft\');\n
+\tequal(editor.getContent(), \'<p align="left">text</p>\');\n
+});\n
+\n
+test("Justifycenter", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'justifycenter\');\n
+\tequal(editor.getContent(), \'<p align="center">text</p>\');\n
+});\n
+\n
+test("Justifyright", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'justifyright\');\n
+\tequal(editor.getContent(), \'<p align="right">text</p>\');\n
+});\n
+\n
+test("Justifyfull", function() {\n
+\teditor.setContent(\'<p>text</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\teditor.execCommand(\'justifyfull\');\n
+\tequal(editor.getContent(), \'<p align="justify">text</p>\');\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2593</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>legacyoutput.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,464 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268240.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Editor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.Editor", {\n
+\tsetupModule: function() {\n
+\t\tdocument.getElementById(\'view\').innerHTML = \'<textarea id="elm1"></textarea><div id="elm2"></div>\';\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "#elm1",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tskin: false,\n
+\t\t\tentities: \'raw\',\n
+\t\t\tindent: false,\n
+\t\t\tvalid_styles: {\n
+\t\t\t\t\'*\': \'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display\'\n
+\t\t\t},\n
+\t\t\tcustom_elements: \'custom1,~custom2\',\n
+\t\t\textended_valid_elements: \'custom1,custom2\',\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\n
+\t\t\t\tif (window.inlineEditor) {\n
+\t\t\t\t\tQUnit.start();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "#elm2",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tskin: false,\n
+\t\t\tentities: \'raw\',\n
+\t\t\tindent: false,\n
+\t\t\tinline: true,\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.inlineEditor = ed;\n
+\n
+\t\t\t\tif (window.editor) {\n
+\t\t\t\t\tQUnit.start();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\t},\n
+\n
+\tteardown: function() {\n
+\t\tUtils.unpatch(editor.getDoc());\n
+\t\tinlineEditor.show();\n
+\t\teditor.show();\n
+\t}\n
+});\n
+\n
+test(\'Event: change\', function() {\n
+\tvar level, lastLevel;\n
+\n
+\teditor.on(\'change\', function(e) {\n
+\t\tlevel = e.level;\n
+\t\tlastLevel = e.lastLevel;\n
+\t});\n
+\n
+\teditor.setContent(\'\');\n
+\teditor.insertContent(\'a\');\n
+\tequal(level.content.toLowerCase(), \'<p>a</p>\');\n
+\tequal(lastLevel.content, editor.undoManager.data[0].content);\n
+\n
+\teditor.off(\'change\');\n
+});\n
+\n
+test(\'Event: beforeExecCommand\', function() {\n
+\tvar cmd, ui, value;\n
+\n
+\teditor.on(\'BeforeExecCommand\', function(e) {\n
+\t\tcmd = e.command;\n
+\t\tui = e.ui;\n
+\t\tvalue = e.value;\n
+\n
+\t\te.preventDefault();\n
+\t});\n
+\n
+\teditor.setContent(\'\');\n
+\teditor.insertContent(\'a\');\n
+\tequal(editor.getContent(), \'\');\n
+\tequal(cmd, \'mceInsertContent\');\n
+\tequal(ui, false);\n
+\tequal(value, \'a\');\n
+\n
+\teditor.off(\'BeforeExecCommand\');\n
+\teditor.setContent(\'\');\n
+\teditor.insertContent(\'a\');\n
+\tequal(editor.getContent(), \'<p>a</p>\');\n
+});\n
+\n
+test(\'urls - relativeURLs\', function() {\n
+\teditor.settings.relative_urls = true;\n
+\teditor.documentBaseURI = new tinymce.util.URI(\'http://www.site.com/dirA/dirB/dirC/\');\n
+\n
+\teditor.setContent(\'<a href="test.html">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="test.html">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="../test.html">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="../test.html">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="test/test.html">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="test/test.html">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="/test.html">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="../../../test.html">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="http://www.somesite.com/test/file.htm">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="http://www.somesite.com/test/file.htm">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="//www.site.com/test/file.htm">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="../../../test/file.htm">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="//www.somesite.com/test/file.htm">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="//www.somesite.com/test/file.htm">test</a></p>\');\n
+});\n
+\n
+test(\'urls - absoluteURLs\', function() {\n
+\teditor.settings.relative_urls = false;\n
+\teditor.settings.remove_script_host = true;\n
+\teditor.documentBaseURI = new tinymce.util.URI(\'http://www.site.com/dirA/dirB/dirC/\');\n
+\n
+\teditor.setContent(\'<a href="test.html">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="/dirA/dirB/dirC/test.html">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="../test.html">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="/dirA/dirB/test.html">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="test/test.html">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="/dirA/dirB/dirC/test/test.html">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="http://www.somesite.com/test/file.htm">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="http://www.somesite.com/test/file.htm">test</a></p>\');\n
+\n
+\teditor.settings.relative_urls = false;\n
+\teditor.settings.remove_script_host = false;\n
+\n
+\teditor.setContent(\'<a href="test.html">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="../test.html">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="http://www.site.com/dirA/dirB/test.html">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="test/test.html">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="http://www.site.com/dirA/dirB/dirC/test/test.html">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="http://www.somesite.com/test/file.htm">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="http://www.somesite.com/test/file.htm">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="//www.site.com/test/file.htm">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="//www.site.com/test/file.htm">test</a></p>\');\n
+\n
+\teditor.setContent(\'<a href="//www.somesite.com/test/file.htm">test</a>\');\n
+\tequal(editor.getContent(), \'<p><a href="//www.somesite.com/test/file.htm">test</a></p>\');\n
+});\n
+\n
+test(\'WebKit Serialization range bug\', function() {\n
+\texpect(1);\n
+\n
+\tif (tinymce.isIE) {\n
+\t\tok(true, "Skip IE");\n
+\t} else {\n
+\t\t// Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don\'t\n
+\t\t// wind up testing the serialization functionality we were aiming for and the test fails.\n
+\t\tvar p = editor.dom.create(\'p\', {}, \'123<table><tbody><tr><td>X</td></tr></tbody></table>456\');\n
+\t\teditor.dom.replace(p, editor.getBody().firstChild);\n
+\n
+\t\tequal(editor.getContent(), \'<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>\');\n
+\t}\n
+});\n
+\n
+test(\'editor_methods - getParam\', function() {\n
+\texpect(5);\n
+\n
+\teditor.settings.test = \'a,b,c\';\n
+\tequal(editor.getParam(\'test\', \'\', \'hash\').c, \'c\');\n
+\n
+\teditor.settings.test = \'a\';\n
+\tequal(editor.getParam(\'test\', \'\', \'hash\').a, \'a\');\n
+\n
+\teditor.settings.test = \'a=b\';\n
+\tequal(editor.getParam(\'test\', \'\', \'hash\').a, \'b\');\n
+\n
+\teditor.settings.test = \'a=b;c=d,e\';\n
+\tequal(editor.getParam(\'test\', \'\', \'hash\').c, \'d,e\');\n
+\n
+\teditor.settings.test = \'a=b,c=d\';\n
+\tequal(editor.getParam(\'test\', \'\', \'hash\').c, \'d\');\n
+});\n
+\n
+test(\'setContent\', function() {\n
+\tvar count;\n
+\n
+\texpect(4);\n
+\n
+\tfunction callback(e) {\n
+\t\te.content = e.content.replace(/test/, \'X\');\n
+\t\tcount++;\n
+\t}\n
+\n
+\teditor.on(\'SetContent\', callback);\n
+\teditor.on(\'BeforeSetContent\', callback);\n
+\tcount = 0;\n
+\teditor.setContent(\'<p>test</p>\');\n
+\tequal(editor.getContent(), "<p>X</p>");\n
+\tequal(count, 2);\n
+\teditor.off(\'SetContent\', callback);\n
+\teditor.off(\'BeforeSetContent\', callback);\n
+\n
+\tcount = 0;\n
+\teditor.setContent(\'<p>test</p>\');\n
+\tequal(editor.getContent(), "<p>test</p>");\n
+\tequal(count, 0);\n
+});\n
+\n
+test(\'setContent with comment bug #4409\', function() {\n
+\teditor.setContent(\'<!-- x --><br>\');\n
+\teditor.settings.disable_nodechange = false;\n
+\teditor.nodeChanged();\n
+\teditor.settings.disable_nodechange = true;\n
+\tequal(editor.getContent(), "<!-- x --><p>\\u00a0</p>");\n
+});\n
+\n
+test(\'custom elements\', function() {\n
+\teditor.setContent(\'<custom1>c1</custom1><custom2>c1</custom2>\');\n
+\tequal(editor.getContent(), \'<custom1>c1</custom1><p><custom2>c1</custom2></p>\');\n
+});\n
+\n
+test(\'Store/restore tabindex\', function() {\n
+\teditor.setContent(\'<span tabindex="42">abc</span>\');\n
+\tequal(editor.getContent({format: \'raw\'}).toLowerCase(), \'<p><span data-mce-tabindex="42">abc</span></p>\');\n
+\tequal(editor.getContent(), \'<p><span tabindex="42">abc</span></p>\');\n
+});\n
+\n
+test(\'show/hide/isHidden and events\', function() {\n
+\tvar lastEvent;\n
+\n
+\teditor.on(\'show hide\', function(e) {\n
+\t\tlastEvent = e;\n
+\t});\n
+\n
+\tequal(editor.isHidden(), false, \'Initial isHidden state\');\n
+\n
+\teditor.hide();\n
+\tequal(editor.isHidden(), true, \'After hide isHidden state\');\n
+\tequal(lastEvent.type, "hide");\n
+\n
+\tlastEvent = null;\n
+\teditor.hide();\n
+\tstrictEqual(lastEvent, null);\n
+\n
+\teditor.show();\n
+\tequal(editor.isHidden(), false, \'After show isHidden state\');\n
+\tequal(lastEvent.type, "show");\n
+\n
+\tlastEvent = null;\n
+\teditor.show();\n
+\tstrictEqual(lastEvent, null);\n
+});\n
+\n
+test(\'show/hide/isHidden and events (inline)\', function() {\n
+\tvar lastEvent;\n
+\n
+\tinlineEditor.on(\'show hide\', function(e) {\n
+\t\tlastEvent = e;\n
+\t});\n
+\n
+\tequal(inlineEditor.isHidden(), false, \'Initial isHidden state\');\n
+\n
+\tinlineEditor.hide();\n
+\tequal(inlineEditor.isHidden(), true, \'After hide isHidden state\');\n
+\tequal(lastEvent.type, "hide");\n
+\tstrictEqual(inlineEditor.getBody().contentEditable, "false", "ContentEditable after hide");\n
+\n
+\tlastEvent = null;\n
+\tinlineEditor.hide();\n
+\tstrictEqual(lastEvent, null);\n
+\n
+\tinlineEditor.show();\n
+\tequal(inlineEditor.isHidden(), false, \'After show isHidden state\');\n
+\tequal(lastEvent.type, "show");\n
+\tstrictEqual(inlineEditor.getBody().contentEditable, "true", "ContentEditable after show");\n
+\n
+\tlastEvent = null;\n
+\tinlineEditor.show();\n
+\tstrictEqual(lastEvent, null);\n
+});\n
+\n
+test(\'hide save content and hidden state while saving\', function() {\n
+\tvar lastEvent, hiddenStateWhileSaving;\n
+\n
+\teditor.on(\'SaveContent\', function(e) {\n
+\t\tlastEvent = e;\n
+\t\thiddenStateWhileSaving = editor.isHidden();\n
+\t});\n
+\n
+\teditor.setContent(\'xyz\');\n
+\teditor.hide();\n
+\n
+\tstrictEqual(hiddenStateWhileSaving, false, \'False isHidden state while saving\');\n
+\tstrictEqual(lastEvent.content, \'<p>xyz</p>\');\n
+\tstrictEqual(document.getElementById(\'elm1\').value, \'<p>xyz</p>\');\n
+});\n
+\n
+asyncTest(\'remove editor\', function() {\n
+\tdocument.getElementById(\'view\').appendChild(tinymce.DOM.create(\'textarea\', {id: \'elmx\'}));\n
+\n
+\ttinymce.init({\n
+\t\tselector: "#elmx",\n
+\t\tadd_unload_trigger: false,\n
+\t\tdisable_nodechange: true,\n
+\t\tskin: false,\n
+\t\tinit_instance_callback: function(editor) {\n
+\t\t\twindow.setTimeout(function() {\n
+\t\t\t\tvar lastEvent;\n
+\n
+\t\t\t\teditor.on(\'SaveContent\', function(e) {\n
+\t\t\t\t\tlastEvent = e;\n
+\t\t\t\t});\n
+\n
+\t\t\t\teditor.setContent(\'xyz\');\n
+\t\t\t\teditor.remove();\n
+\n
+\t\t\t\tQUnit.start();\n
+\n
+\t\t\t\tstrictEqual(lastEvent.content, \'<p>xyz</p>\');\n
+\t\t\t\tstrictEqual(document.getElementById(\'elmx\').value, \'<p>xyz</p>\');\n
+\t\t\t}, 0);\n
+\t\t}\n
+\t});\n
+});\n
+\n
+test(\'insertContent\', function() {\n
+\teditor.setContent(\'<p>ab</p>\');\n
+\tUtils.setSelection(\'p\', 1);\n
+\teditor.insertContent(\'c\');\n
+\tequal(editor.getContent(), \'<p>acb</p>\');\n
+});\n
+\n
+test(\'insertContent merge\', function() {\n
+\teditor.setContent(\'<p><strong>a</strong></p>\');\n
+\tUtils.setSelection(\'p\', 1);\n
+\teditor.insertContent(\'<em><strong>b</strong></em>\', {merge: true});\n
+\tequal(editor.getContent(), \'<p><strong>a<em>b</em></strong></p>\');\n
+});\n
+\n
+test(\'execCommand return values for native commands\', function() {\n
+\tvar lastCmd;\n
+\n
+\tstrictEqual(editor.execCommand("NonExistingCommand"), false, "Return value for a completely unhandled command");\n
+\n
+\tUtils.patch(editor.getDoc(), \'execCommand\', function(orgFunc, cmd) {\n
+\t\tlastCmd = cmd;\n
+\t\treturn true;\n
+\t});\n
+\n
+\tstrictEqual(editor.execCommand("ExistingCommand"), true, "Return value for an editor handled command");\n
+\tstrictEqual(lastCmd, "ExistingCommand");\n
+});\n
+\n
+test(\'addCommand\', function() {\n
+\tvar scope = {}, lastScope, lastArgs;\n
+\n
+\tfunction callback() {\n
+\t\tlastScope = this;\n
+\t\tlastArgs = arguments;\n
+\t}\n
+\n
+\teditor.addCommand("CustomCommand1", callback, scope);\n
+\teditor.addCommand("CustomCommand2", callback);\n
+\n
+\teditor.execCommand("CustomCommand1", false, "value", {extra: true});\n
+\tstrictEqual(lastArgs[0], false);\n
+\tstrictEqual(lastArgs[1], "value");\n
+\tok(lastScope === scope);\n
+\n
+\teditor.execCommand("CustomCommand2");\n
+\tequal(typeof lastArgs[0], "undefined");\n
+\tequal(typeof lastArgs[1], "undefined");\n
+\tok(lastScope === editor);\n
+});\n
+\n
+test(\'addQueryStateHandler\', function() {\n
+\tvar scope = {}, lastScope, currentState;\n
+\n
+\tfunction callback() {\n
+\t\tlastScope = this;\n
+\t\treturn currentState;\n
+\t}\n
+\n
+\teditor.addQueryStateHandler("CustomCommand1", callback, scope);\n
+\teditor.addQueryStateHandler("CustomCommand2", callback);\n
+\n
+\tcurrentState = false;\n
+\tok(!editor.queryCommandState("CustomCommand1"));\n
+\tok(lastScope === scope, "Scope is not custom scope");\n
+\n
+\tcurrentState = true;\n
+\tok(editor.queryCommandState("CustomCommand2"));\n
+\tok(lastScope === editor, "Scope is not editor");\n
+});\n
+\n
+test(\'addQueryValueHandler\', function() {\n
+\tvar scope = {}, lastScope, currentValue;\n
+\n
+\tfunction callback() {\n
+\t\tlastScope = this;\n
+\t\treturn currentValue;\n
+\t}\n
+\n
+\teditor.addQueryValueHandler("CustomCommand1", callback, scope);\n
+\teditor.addQueryValueHandler("CustomCommand2", callback);\n
+\n
+\tcurrentValue = "a";\n
+\tequal(editor.queryCommandValue("CustomCommand1"), "a");\n
+\tok(lastScope === scope, "Scope is not custom scope");\n
+\n
+\tcurrentValue = "b";\n
+\tok(editor.queryCommandValue("CustomCommand2"), "b");\n
+\tok(lastScope === editor, "Scope is not editor");\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12364</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Editor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

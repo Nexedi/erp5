@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268461.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'advlist\', function(editor) {\n
+\tvar olMenuItems, ulMenuItems, lastStyles = {};\n
+\n
+\tfunction buildMenuItems(listName, styleValues) {\n
+\t\tvar items = [];\n
+\n
+\t\ttinymce.each(styleValues.split(/[ ,]/), function(styleValue) {\n
+\t\t\titems.push({\n
+\t\t\t\ttext: styleValue.replace(/\\-/g, \' \').replace(/\\b\\w/g, function(chr) {\n
+\t\t\t\t\treturn chr.toUpperCase();\n
+\t\t\t\t}),\n
+\t\t\t\tdata: styleValue == \'default\' ? \'\' : styleValue\n
+\t\t\t});\n
+\t\t});\n
+\n
+\t\treturn items;\n
+\t}\n
+\n
+\tolMenuItems = buildMenuItems(\'OL\', editor.getParam(\n
+\t\t"advlist_number_styles",\n
+\t\t"default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman"\n
+\t));\n
+\n
+\tulMenuItems = buildMenuItems(\'UL\', editor.getParam("advlist_bullet_styles", "default,circle,disc,square"));\n
+\n
+\tfunction applyListFormat(listName, styleValue) {\n
+\t\teditor.undoManager.transact(function() {\n
+\t\t\tvar list, dom = editor.dom, sel = editor.selection;\n
+\n
+\t\t\t// Check for existing list element\n
+\t\t\tlist = dom.getParent(sel.getNode(), \'ol,ul\');\n
+\n
+\t\t\t// Switch/add list type if needed\n
+\t\t\tif (!list || list.nodeName != listName || styleValue === false) {\n
+\t\t\t\teditor.execCommand(listName == \'UL\' ? \'InsertUnorderedList\' : \'InsertOrderedList\');\n
+\t\t\t}\n
+\n
+\t\t\t// Set style\n
+\t\t\tstyleValue = styleValue === false ? lastStyles[listName] : styleValue;\n
+\t\t\tlastStyles[listName] = styleValue;\n
+\n
+\t\t\tlist = dom.getParent(sel.getNode(), \'ol,ul\');\n
+\t\t\tif (list) {\n
+\t\t\t\tdom.setStyle(list, \'listStyleType\', styleValue ? styleValue : null);\n
+\t\t\t\tlist.removeAttribute(\'data-mce-style\');\n
+\t\t\t}\n
+\n
+\t\t\teditor.focus();\n
+\t\t});\n
+\t}\n
+\n
+\tfunction updateSelection(e) {\n
+\t\tvar listStyleType = editor.dom.getStyle(editor.dom.getParent(editor.selection.getNode(), \'ol,ul\'), \'listStyleType\') || \'\';\n
+\n
+\t\te.control.items().each(function(ctrl) {\n
+\t\t\tctrl.active(ctrl.settings.data === listStyleType);\n
+\t\t});\n
+\t}\n
+\n
+\teditor.addButton(\'numlist\', {\n
+\t\ttype: \'splitbutton\',\n
+\t\ttooltip: \'Numbered list\',\n
+\t\tmenu: olMenuItems,\n
+\t\tonshow: updateSelection,\n
+\t\tonselect: function(e) {\n
+\t\t\tapplyListFormat(\'OL\', e.control.settings.data);\n
+\t\t},\n
+\t\tonclick: function() {\n
+\t\t\tapplyListFormat(\'OL\', false);\n
+\t\t}\n
+\t});\n
+\n
+\teditor.addButton(\'bullist\', {\n
+\t\ttype: \'splitbutton\',\n
+\t\ttooltip: \'Bullet list\',\n
+\t\tmenu: ulMenuItems,\n
+\t\tonshow: updateSelection,\n
+\t\tonselect: function(e) {\n
+\t\t\tapplyListFormat(\'UL\', e.control.settings.data);\n
+\t\t},\n
+\t\tonclick: function() {\n
+\t\t\tapplyListFormat(\'UL\', false);\n
+\t\t}\n
+\t});\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2566</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

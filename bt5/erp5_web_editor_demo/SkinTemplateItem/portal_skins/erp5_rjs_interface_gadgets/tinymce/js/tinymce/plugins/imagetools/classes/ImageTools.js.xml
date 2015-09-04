@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268529.59</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ImageTools.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ImageTools.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Modifies image blobs.\n
+ */\n
+define("tinymce/imagetoolsplugin/ImageTools", [\n
+\t"tinymce/imagetoolsplugin/Conversions",\n
+\t"tinymce/imagetoolsplugin/Canvas",\n
+\t"tinymce/imagetoolsplugin/ImageSize"\n
+], function(Conversions, Canvas, ImageSize) {\n
+\tvar revokeImageUrl = Conversions.revokeImageUrl;\n
+\n
+\tfunction rotate(blob, angle) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image)),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas),\n
+\t\t\t\ttranslateX = 0, translateY = 0;\n
+\n
+\t\t\tangle = angle < 0 ? 360 + angle : angle;\n
+\n
+\t\t\tif (angle == 90 || angle == 270) {\n
+\t\t\t\tCanvas.resize(canvas, canvas.height, canvas.width);\n
+\t\t\t}\n
+\n
+\t\t\tif (angle == 90 || angle == 180) {\n
+\t\t\t\ttranslateX = canvas.width;\n
+\t\t\t}\n
+\n
+\t\t\tif (angle == 270 || angle == 180) {\n
+\t\t\t\ttranslateY = canvas.height;\n
+\t\t\t}\n
+\n
+\t\t\tcontext.translate(translateX, translateY);\n
+\t\t\tcontext.rotate(angle * Math.PI / 180);\n
+\t\t\tcontext.drawImage(image, 0, 0);\n
+\t\t\trevokeImageUrl(image);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas, blob.type);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction flip(blob, axis) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image)),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas);\n
+\n
+\t\t\tif (axis == \'v\') {\n
+\t\t\t\tcontext.scale(1, -1);\n
+\t\t\t\tcontext.drawImage(image, 0, -canvas.height);\n
+\t\t\t} else {\n
+\t\t\t\tcontext.scale(-1, 1);\n
+\t\t\t\tcontext.drawImage(image, -canvas.width, 0);\n
+\t\t\t}\n
+\n
+\t\t\trevokeImageUrl(image);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction crop(blob, x, y, w, h) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(w, h),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas);\n
+\n
+\t\t\tcontext.drawImage(image, -x, -y);\n
+\t\t\trevokeImageUrl(image);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction resize(blob, w, h) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(w, h),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas);\n
+\n
+\t\t\tcontext.drawImage(image, 0, 0, w, h);\n
+\t\t\trevokeImageUrl(image);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas, blob.type);\n
+\t\t});\n
+\t}\n
+\n
+\treturn {\n
+\t\trotate: rotate,\n
+\t\tflip: flip,\n
+\t\tcrop: crop,\n
+\t\tresize: resize\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2459</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ImageTools.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

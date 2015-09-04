@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268191.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Writer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>module("tinymce.html.Writer");\n
+\n
+test(\'Comment\', function() {\n
+\tvar writer;\n
+\n
+\texpect(2);\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.comment(\'text\');\n
+\tequal(writer.getContent(), \'\074!--text--\076\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.comment(\'\');\n
+\tequal(writer.getContent(), \'\074!----\076\');\n
+});\n
+\n
+test(\'CDATA\', function() {\n
+\tvar writer;\n
+\n
+\texpect(2);\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.cdata(\'text\');\n
+\tequal(writer.getContent(), \'\074![CDATA[text]]\076\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.cdata(\'\');\n
+\tequal(writer.getContent(), \'\074![CDATA[]]\076\');\n
+});\n
+\n
+test(\'PI\', function() {\n
+\tvar writer;\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.pi(\'xml\', \'someval\');\n
+\tequal(writer.getContent(), \'\074?xml someval?\076\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.pi(\'xml\');\n
+\tequal(writer.getContent(), \'\074?xml?\076\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.pi(\'xml\', \'encoding="UTF-8" \074 \076\');\n
+\tequal(writer.getContent(), \'\074?xml encoding="UTF-8" \046lt; \046gt;?\076\');\n
+});\n
+\n
+test(\'Doctype\', function() {\n
+\tvar writer;\n
+\n
+\texpect(2);\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.doctype(\' text\');\n
+\tequal(writer.getContent(), \'\074!DOCTYPE text\076\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.doctype(\'\');\n
+\tequal(writer.getContent(), \'\074!DOCTYPE\076\');\n
+});\n
+\n
+test(\'Text\', function() {\n
+\tvar writer;\n
+\n
+\texpect(2);\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.text(\'te\074xt\');\n
+\tequal(writer.getContent(), \'te\046lt;xt\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.text(\'\');\n
+\tequal(writer.getContent(), \'\');\n
+});\n
+\n
+test(\'Text raw\', function() {\n
+\tvar writer;\n
+\n
+\texpect(2);\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.text(\'te\074xt\', true);\n
+\tequal(writer.getContent(), \'te\074xt\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.text(\'\', true);\n
+\tequal(writer.getContent(), \'\');\n
+});\n
+\n
+test(\'Start\', function() {\n
+\tvar writer;\n
+\n
+\texpect(5);\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.start(\'b\');\n
+\tequal(writer.getContent(), \'\074b\076\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.start(\'b\', [{name: \'attr1\', value: \'value1\'}, {name: \'attr2\', value: \'value2\'}]);\n
+\tequal(writer.getContent(), \'\074b attr1="value1" attr2="value2"\076\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.start(\'b\', [{name: \'attr1\', value: \'val\074"ue1\'}]);\n
+\tequal(writer.getContent(), \'\074b attr1="val\046lt;\046quot;ue1"\076\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.start(\'img\', [{name: \'attr1\', value: \'value1\'}, {name: \'attr2\', value: \'value2\'}], true);\n
+\tequal(writer.getContent(), \'\074img attr1="value1" attr2="value2" /\076\');\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.start(\'br\', null, true);\n
+\tequal(writer.getContent(), \'\074br /\076\');\n
+});\n
+\n
+test(\'End\', function() {\n
+\tvar writer;\n
+\n
+\texpect(1);\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.end(\'b\');\n
+\tequal(writer.getContent(), \'\074/b\076\');\n
+});\n
+\n
+test(\'Indentation\', function() {\n
+\tvar writer;\n
+\n
+\texpect(2);\n
+\n
+\twriter = new tinymce.html.Writer({indent: true, indent_before: \'p\', indent_after:\'p\'});\n
+\twriter.start(\'p\');\n
+\twriter.start(\'span\');\n
+\twriter.text(\'a\');\n
+\twriter.end(\'span\');\n
+\twriter.end(\'p\');\n
+\twriter.start(\'p\');\n
+\twriter.text(\'a\');\n
+\twriter.end(\'p\');\n
+\tequal(writer.getContent(), \'\074p\076\074span\076a\074/span\076\074/p\076\\n\074p\076a\074/p\076\');\n
+\n
+\twriter = new tinymce.html.Writer({indent: true, indent_before: \'p\', indent_after:\'p\'});\n
+\twriter.start(\'p\');\n
+\twriter.text(\'a\');\n
+\twriter.end(\'p\');\n
+\tequal(writer.getContent(), \'\074p\076a\074/p\076\');\n
+});\n
+\n
+test(\'Entities\', function() {\n
+\tvar writer;\n
+\n
+\texpect(3);\n
+\n
+\twriter = new tinymce.html.Writer();\n
+\twriter.start(\'p\', [{name: "title", value: \'\074\076"\\\'\046\\u00e5\\u00e4\\u00f6\'}]);\n
+\twriter.text(\'\074\076"\\\'\046\\u00e5\\u00e4\\u00f6\');\n
+\twriter.end(\'p\');\n
+\tequal(writer.getContent(), \'\074p title="\046lt;\046gt;\046quot;\\\'\046amp;\\u00e5\\u00e4\\u00f6"\076\046lt;\046gt;"\\\'\046amp;\\u00e5\\u00e4\\u00f6\074/p\076\');\n
+\n
+\twriter = new tinymce.html.Writer({entity_encoding: \'numeric\'});\n
+\twriter.start(\'p\', [{name: "title", value: \'\074\076"\\\'\046\\u00e5\\u00e4\\u00f6\'}]);\n
+\twriter.text(\'\074\076"\\\'\046\\u00e5\\u00e4\\u00f6\');\n
+\twriter.end(\'p\');\n
+\tequal(writer.getContent(), \'\074p title="\046lt;\046gt;\046quot;\\\'\046amp;\046#229;\046#228;\046#246;"\076\046lt;\046gt;"\\\'\046amp;\046#229;\046#228;\046#246;\074/p\076\');\n
+\n
+\twriter = new tinymce.html.Writer({entity_encoding: \'named\'});\n
+\twriter.start(\'p\', [{name: "title", value: \'\074\076"\\\'\046\\u00e5\\u00e4\\u00f6\'}]);\n
+\twriter.text(\'\074\076"\\\'\046\\u00e5\\u00e4\\u00f6\');\n
+\twriter.end(\'p\');\n
+\tequal(writer.getContent(), \'\074p title="\046lt;\046gt;\046quot;\\\'\046amp;\046aring;\046auml;\046ouml;"\076\046lt;\046gt;"\\\'\046amp;\046aring;\046auml;\046ouml;\074/p\076\');\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4284</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Writer.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

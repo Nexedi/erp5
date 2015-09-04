@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268295.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Observable.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Observable.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This mixin will add event binding logic to classes.\n
+ *\n
+ * @mixin tinymce.util.Observable\n
+ */\n
+define("tinymce/util/Observable", [\n
+\t"tinymce/util/EventDispatcher"\n
+], function(EventDispatcher) {\n
+\tfunction getEventDispatcher(obj) {\n
+\t\tif (!obj._eventDispatcher) {\n
+\t\t\tobj._eventDispatcher = new EventDispatcher({\n
+\t\t\t\tscope: obj,\n
+\t\t\t\ttoggleEvent: function(name, state) {\n
+\t\t\t\t\tif (EventDispatcher.isNative(name) && obj.toggleNativeEvent) {\n
+\t\t\t\t\t\tobj.toggleNativeEvent(name, state);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\treturn obj._eventDispatcher;\n
+\t}\n
+\n
+\treturn {\n
+\t\t/**\n
+\t\t * Fires the specified event by name.\n
+\t\t *\n
+\t\t * @method fire\n
+\t\t * @param {String} name Name of the event to fire.\n
+\t\t * @param {Object?} args Event arguments.\n
+\t\t * @param {Boolean?} bubble True/false if the event is to be bubbled.\n
+\t\t * @return {Object} Event args instance passed in.\n
+\t\t * @example\n
+\t\t * instance.fire(\'event\', {...});\n
+\t\t */\n
+\t\tfire: function(name, args, bubble) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\t// Prevent all events except the remove event after the instance has been removed\n
+\t\t\tif (self.removed && name !== "remove") {\n
+\t\t\t\treturn args;\n
+\t\t\t}\n
+\n
+\t\t\targs = getEventDispatcher(self).fire(name, args, bubble);\n
+\n
+\t\t\t// Bubble event up to parents\n
+\t\t\tif (bubble !== false && self.parent) {\n
+\t\t\t\tvar parent = self.parent();\n
+\t\t\t\twhile (parent && !args.isPropagationStopped()) {\n
+\t\t\t\t\tparent.fire(name, args, false);\n
+\t\t\t\t\tparent = parent.parent();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn args;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Binds an event listener to a specific event by name.\n
+\t\t *\n
+\t\t * @method on\n
+\t\t * @param {String} name Event name or space separated list of events to bind.\n
+\t\t * @param {callback} callback Callback to be executed when the event occurs.\n
+\t\t * @param {Boolean} first Optional flag if the event should be prepended. Use this with care.\n
+\t\t * @return {Object} Current class instance.\n
+\t\t * @example\n
+\t\t * instance.on(\'event\', function(e) {\n
+\t\t *     // Callback logic\n
+\t\t * });\n
+\t\t */\n
+\t\ton: function(name, callback, prepend) {\n
+\t\t\treturn getEventDispatcher(this).on(name, callback, prepend);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Unbinds an event listener to a specific event by name.\n
+\t\t *\n
+\t\t * @method off\n
+\t\t * @param {String?} name Name of the event to unbind.\n
+\t\t * @param {callback?} callback Callback to unbind.\n
+\t\t * @return {Object} Current class instance.\n
+\t\t * @example\n
+\t\t * // Unbind specific callback\n
+\t\t * instance.off(\'event\', handler);\n
+\t\t *\n
+\t\t * // Unbind all listeners by name\n
+\t\t * instance.off(\'event\');\n
+\t\t *\n
+\t\t * // Unbind all events\n
+\t\t * instance.off();\n
+\t\t */\n
+\t\toff: function(name, callback) {\n
+\t\t\treturn getEventDispatcher(this).off(name, callback);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Bind the event callback and once it fires the callback is removed.\n
+\t\t *\n
+\t\t * @method once\n
+\t\t * @param {String} name Name of the event to bind.\n
+\t\t * @param {callback} callback Callback to bind only once.\n
+\t\t * @return {Object} Current class instance.\n
+\t\t */\n
+\t\tonce: function(name, callback) {\n
+\t\t\treturn getEventDispatcher(this).once(name, callback);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the object has a event of the specified name.\n
+\t\t *\n
+\t\t * @method hasEventListeners\n
+\t\t * @param {String} name Name of the event to check for.\n
+\t\t * @return {Boolean} true/false if the event exists or not.\n
+\t\t */\n
+\t\thasEventListeners: function(name) {\n
+\t\t\treturn getEventDispatcher(this).has(name);\n
+\t\t}\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3498</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Observable.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

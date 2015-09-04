@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268165.17</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>removeformat.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Full featured example</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<script src="../js/tinymce_loader.js"></script>\n
+<script>\n
+\ttinymce.init({\n
+\t\tmode: "textareas",\n
+\t\tplugins: "pagebreak,layer,table,save,emoticons,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template,tabfocus",\n
+\t\tadd_unload_trigger: 0\n
+\t});\n
+</script>\n
+<!-- /TinyMCE -->\n
+\n
+</head>\n
+<body>\n
+\n
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">\n
+\t<div>\n
+\t\t<h3>Full featured example</h3>\n
+\n
+\t\t<p>\n
+\t\t\tThis page shows all available buttons and plugins that are included in the TinyMCE core package.\n
+\t\t\tThere are more examples on how to use TinyMCE in the <a href="http://wiki.moxiecode.com/examples/tinymce/">Wiki</a>.\n
+\t\t</p>\n
+\n
+\t\t<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->\n
+\t\t<div>\n
+\t\t\t<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">\n
+\t\t\t\t<p>text1 <span style="color:red">middle</span> text2</p>\n
+\t\t\t\t<p><b><em>xyz<span style="color:red">---</span>123</em></b></p>\n
+\t\t\t\t<p><b><em>xyz<span style="color:green">---</span>123</em></b></p>\n
+\t\t\t\t<table>\n
+\t\t\t\t\t<tr>\n
+\t\t\t\t\t\t<td><span style="color:green"><b>bold 1</b><em>italic 1</em></span></td>\n
+\t\t\t\t\t\t<td><b>bold 2</b><em>italic 2</em></td>\n
+\t\t\t\t\t</tr>\n
+\t\t\t\t\t<tr>\n
+\t\t\t\t\t\t<td><b>bold 3</b><em><a href="#">italic 3</a></em></td>\n
+\t\t\t\t\t\t<td><b>bold 4</b><em>italic 4</em></td>\n
+\t\t\t\t\t</tr>\n
+\t\t\t\t</table>\n
+\t\t\t\t<p><b><em>xyz<span style="color:red">---</span>123</em></b></p>\n
+\t\t\t\t<ul>\n
+\t\t\t\t\t<li><b><em>test 1</em></b><b><em>test 2</em></b></li>\n
+\t\t\t\t\t<li><b><em>test 1</em></b><b><em>test 2</em></b></li>\n
+\t\t\t\t</ul>\n
+\t\t\t\t<p><b><em>xyz<span style="color:green">---</span>123</em></b></p>\n
+\t\t\t\t<p>text 1</p>\n
+\t\t\t\t<p>text 2</p>\n
+\t\t\t\t<p>text 3</p>\n
+\t\t\t\t<p>text 4</p>\n
+\t\t\t</textarea>\n
+\t\t</div>\n
+\n
+\t\t<!-- Some integration calls -->\n
+\t\t<a href="javascript:;" onmousedown="tinymce.get(\'elm1\').show();">[Show]</a>\n
+\t\t<a href="javascript:;" onmousedown="tinymce.get(\'elm1\').hide();">[Hide]</a>\n
+\t\t<a href="javascript:;" onmousedown="tinymce.get(\'elm1\').execCommand(\'Bold\');">[Bold]</a>\n
+\t\t<a href="javascript:;" onmousedown="alert(tinymce.get(\'elm1\').getContent());">[Get contents]</a>\n
+\t\t<a href="javascript:;" onmousedown="alert(tinymce.get(\'elm1\').getContent({format:\'raw\'}));">[Get raw]</a>\n
+\t\t<a href="javascript:;" onmousedown="alert(tinymce.get(\'elm1\').selection.getContent());">[Get selected HTML]</a>\n
+\t\t<a href="javascript:;" onmousedown="alert(tinymce.get(\'elm1\').selection.getContent({format : \'text\'}));">[Get selected text]</a>\n
+\t\t<a href="javascript:;" onmousedown="alert(tinymce.get(\'elm1\').selection.getNode().nodeName);">[Get selected element]</a>\n
+\t\t<a href="javascript:;" onmousedown="tinymce.execCommand(\'mceInsertContent\',false,\'<b>Hello world!!</b>\');">[Insert HTML]</a>\n
+\t\t<a href="javascript:;" onmousedown="tinymce.execCommand(\'mceReplaceContent\',false,\'<b>{$selection}</b>\');">[Replace selection]</a>\n
+\n
+\t\t<br />\n
+\t\t<input type="submit" name="save" value="Submit" />\n
+\t\t<input type="reset" name="reset" value="Reset" />\n
+\t</div>\n
+</form>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3142</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>removeformat.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

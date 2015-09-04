@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268197.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EventDispatcher.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>module("tinymce.util.EventDispatcher");\n
+\n
+test("fire (no event listeners)", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), args;\n
+\n
+\targs = dispatcher.fire(\'click\', {test: 1});\n
+\tequal(args.test, 1);\n
+\tequal(args.isDefaultPrevented(), false);\n
+\tequal(args.isPropagationStopped(), false);\n
+\tequal(args.isImmediatePropagationStopped(), false);\n
+\tstrictEqual(args.target, dispatcher);\n
+\n
+\targs = dispatcher.fire(\'click\');\n
+\tequal(args.isDefaultPrevented(), false);\n
+\tequal(args.isPropagationStopped(), false);\n
+\tequal(args.isImmediatePropagationStopped(), false);\n
+});\n
+\n
+test("fire (event listeners)", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tdispatcher.on(\'click\', function() {data += \'a\';});\n
+\tdispatcher.on(\'click\', function() {data += \'b\';});\n
+\n
+\targs = dispatcher.fire(\'click\', {test: 1});\n
+\tequal(data, \'ab\');\n
+});\n
+\n
+test("fire (event listeners) stopImmediatePropagation", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tdispatcher.on(\'click\', function(e) { data += \'a\'; e.stopImmediatePropagation(); });\n
+\tdispatcher.on(\'click\', function() { data += \'b\'; });\n
+\n
+\tdispatcher.fire(\'click\', {test: 1});\n
+\tequal(data, \'a\');\n
+});\n
+\n
+test("on", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tstrictEqual(dispatcher.on(\'click\', function() {data += \'a\';}), dispatcher);\n
+\tstrictEqual(dispatcher.on(\'click keydown\', function() {data += \'b\';}), dispatcher);\n
+\n
+\tdispatcher.fire(\'click\');\n
+\tequal(data, \'ab\');\n
+\n
+\tdispatcher.fire(\'keydown\');\n
+\tequal(data, \'abb\');\n
+});\n
+\n
+test("on (prepend)", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tstrictEqual(dispatcher.on(\'click\', function() {data += \'a\';}), dispatcher);\n
+\tstrictEqual(dispatcher.on(\'click\', function() {data += \'b\';}, true), dispatcher);\n
+\n
+\tdispatcher.fire(\'click\');\n
+\tequal(data, \'ba\');\n
+});\n
+\n
+test("once", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tstrictEqual(dispatcher.on(\'click\', function() {data += \'a\';}), dispatcher);\n
+\tstrictEqual(dispatcher.once(\'click\', function() {data += \'b\';}), dispatcher);\n
+\tstrictEqual(dispatcher.on(\'click\', function() {data += \'c\';}), dispatcher);\n
+\n
+\tdispatcher.fire(\'click\');\n
+\tequal(data, \'abc\');\n
+\n
+\tdispatcher.fire(\'click\');\n
+\tequal(data, \'abcac\');\n
+});\n
+\n
+test("once (prepend)", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tstrictEqual(dispatcher.on(\'click\', function() {data += \'a\';}), dispatcher);\n
+\tstrictEqual(dispatcher.once(\'click\', function() {data += \'b\';}, true), dispatcher);\n
+\tstrictEqual(dispatcher.on(\'click\', function() {data += \'c\';}), dispatcher);\n
+\n
+\tdispatcher.fire(\'click\');\n
+\tequal(data, \'bac\');\n
+\n
+\tdispatcher.fire(\'click\');\n
+\tequal(data, \'bacac\');\n
+});\n
+\n
+test("once (unbind)", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tfunction handler() {\n
+\t\tdata += \'b\';\n
+\t}\n
+\n
+\tdispatcher.once(\'click\', function() {data += \'a\';});\n
+\tdispatcher.once(\'click\', handler);\n
+\tdispatcher.off(\'click\', handler);\n
+\n
+\tdispatcher.fire(\'click\');\n
+\tequal(data, \'a\');\n
+});\n
+\n
+test("once (multiple events)", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tdispatcher.once(\'click\', function() {data += \'a\';});\n
+\tdispatcher.once(\'keydown\', function() {data += \'b\';});\n
+\n
+\tdispatcher.fire(\'click\');\n
+\tequal(data, \'a\');\n
+\n
+\tdispatcher.fire(\'keydown\');\n
+\tequal(data, \'ab\');\n
+\n
+\tdispatcher.fire(\'click\');\n
+\tdispatcher.fire(\'keydown\');\n
+\n
+\tequal(data, \'ab\');\n
+});\n
+\n
+test("off (all)", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tfunction listenerA() { data += \'a\'; }\n
+\tfunction listenerB() { data += \'b\'; }\n
+\tfunction listenerC() { data += \'c\'; }\n
+\n
+\tdispatcher.on(\'click\', listenerA);\n
+\tdispatcher.on(\'click\', listenerB);\n
+\tdispatcher.on(\'keydown\', listenerC);\n
+\n
+\tdispatcher.off();\n
+\n
+\tdata = \'\';\n
+\tdispatcher.fire(\'click\');\n
+\tdispatcher.fire(\'keydown\');\n
+\tequal(data, \'\');\n
+});\n
+\n
+test("off (all named)", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tfunction listenerA() { data += \'a\'; }\n
+\tfunction listenerB() { data += \'b\'; }\n
+\tfunction listenerC() { data += \'c\'; }\n
+\n
+\tdispatcher.on(\'click\', listenerA);\n
+\tdispatcher.on(\'click\', listenerB);\n
+\tdispatcher.on(\'keydown\', listenerC);\n
+\n
+\tdispatcher.off(\'click\');\n
+\n
+\tdata = \'\';\n
+\tdispatcher.fire(\'click\');\n
+\tdispatcher.fire(\'keydown\');\n
+\tequal(data, \'c\');\n
+});\n
+\n
+test("off (all specific observer)", function() {\n
+\tvar dispatcher = new tinymce.util.EventDispatcher(), data = \'\';\n
+\n
+\tfunction listenerA() { data += \'a\'; }\n
+\tfunction listenerB() { data += \'b\'; }\n
+\n
+\tdispatcher.on(\'click\', listenerA);\n
+\tdispatcher.on(\'click\', listenerB);\n
+\tdispatcher.off(\'click\', listenerB);\n
+\n
+\tdata = \'\';\n
+\tdispatcher.fire(\'click\');\n
+\tequal(data, \'a\');\n
+});\n
+\n
+test("scope setting", function() {\n
+\tvar lastScope, lastEvent, dispatcher;\n
+\n
+\tdispatcher = new tinymce.util.EventDispatcher();\n
+\tdispatcher.on(\'click\', function() {\n
+\t\tlastScope = this;\n
+\t}).fire(\'click\');\n
+\tstrictEqual(dispatcher, lastScope);\n
+\n
+\tvar scope = {test: 1};\n
+\tdispatcher = new tinymce.util.EventDispatcher({scope: scope});\n
+\tdispatcher.on(\'click\', function(e) {\n
+\t\tlastScope = this;\n
+\t\tlastEvent = e;\n
+\t}).fire(\'click\');\n
+\tstrictEqual(scope, lastScope);\n
+\tstrictEqual(lastEvent.target, lastScope);\n
+});\n
+\n
+test("beforeFire setting", function() {\n
+\tvar lastArgs, dispatcher, args;\n
+\n
+\tdispatcher = new tinymce.util.EventDispatcher({\n
+\t\tbeforeFire: function(args) {\n
+\t\t\tlastArgs = args;\n
+\t\t}\n
+\t});\n
+\n
+\targs = dispatcher.fire(\'click\');\n
+\tstrictEqual(lastArgs, args);\n
+});\n
+\n
+test("beforeFire setting (stopImmediatePropagation)", function() {\n
+\tvar lastArgs, dispatcher, args, data = \'\';\n
+\n
+\tdispatcher = new tinymce.util.EventDispatcher({\n
+\t\tbeforeFire: function(args) {\n
+\t\t\tlastArgs = args;\n
+\t\t\targs.stopImmediatePropagation();\n
+\t\t}\n
+\t});\n
+\n
+\tfunction listenerA() { data += \'a\'; }\n
+\n
+\tdispatcher.on(\'click\', listenerA);\n
+\targs = dispatcher.fire(\'click\');\n
+\tstrictEqual(lastArgs, args);\n
+\tstrictEqual(data, \'\');\n
+});\n
+\n
+test("toggleEvent setting", function() {\n
+\tvar lastName, lastState;\n
+\n
+\tdispatcher = new tinymce.util.EventDispatcher({\n
+\t\ttoggleEvent: function(name, state) {\n
+\t\t\tlastName = name;\n
+\t\t\tlastState = state;\n
+\t\t}\n
+\t});\n
+\n
+\tfunction listenerA() { data += \'a\'; }\n
+\tfunction listenerB() { data += \'b\'; }\n
+\n
+\tdispatcher.on(\'click\', listenerA);\n
+\tstrictEqual(lastName, \'click\');\n
+\tstrictEqual(lastState, true);\n
+\n
+\tlastName = lastState = null;\n
+\tdispatcher.on(\'click\', listenerB);\n
+\tstrictEqual(lastName, null);\n
+\tstrictEqual(lastState, null);\n
+\n
+\tdispatcher.off(\'click\', listenerA);\n
+\tstrictEqual(lastName, null);\n
+\tstrictEqual(lastState, null);\n
+\n
+\tdispatcher.off(\'click\', listenerB);\n
+\tstrictEqual(lastName, \'click\');\n
+\tstrictEqual(lastState, false);\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6615</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EventDispatcher.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

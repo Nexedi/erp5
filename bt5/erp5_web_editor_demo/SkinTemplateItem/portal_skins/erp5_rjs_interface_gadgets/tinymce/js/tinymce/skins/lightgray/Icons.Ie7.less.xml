@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268699.42</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Icons.Ie7.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Icons IE7 */\n
+\n
+@font-face {\n
+\tfont-family: \'tinymce\';\n
+\tsrc:url(\'fonts/tinymce.eot\');\n
+\tsrc:url(\'fonts/tinymce.eot?#iefix\') format(\'embedded-opentype\'),\n
+\t\turl(\'fonts/tinymce.woff\') format(\'woff\'),\n
+\t\turl(\'fonts/tinymce.ttf\') format(\'truetype\'),\n
+\t\turl(\'fonts/tinymce.svg#tinymce\') format(\'svg\');\n
+\tfont-weight: normal;\n
+\tfont-style: normal;\n
+}\n
+\n
+@font-face {\n
+\tfont-family: \'tinymce-small\';\n
+\tsrc:url(\'fonts/tinymce-small.eot\');\n
+\tsrc:url(\'fonts/tinymce-small.eot?#iefix\') format(\'embedded-opentype\'),\n
+\t\turl(\'fonts/tinymce-small.woff\') format(\'woff\'),\n
+\t\turl(\'fonts/tinymce-small.ttf\') format(\'truetype\'),\n
+\t\turl(\'fonts/tinymce-small.svg#tinymce\') format(\'svg\');\n
+\tfont-weight: normal;\n
+\tfont-style: normal;\n
+}\n
+\n
+@iconSize: 16px;\n
+\n
+.@{prefix}-ico {\n
+\tfont-family: \'tinymce\';\n
+\tfont-style: normal;\n
+\tfont-weight: normal;\n
+\tfont-size: @iconSize;\n
+\tline-height: 16px;\n
+\tvertical-align: text-top;\n
+\t-webkit-font-smoothing: antialiased;\n
+\n
+\tdisplay: inline-block;\n
+\tbackground: transparent center center;\n
+\twidth: 16px;\n
+\theight: 16px;\n
+\tcolor: @btn-text;\n
+\t-ie7-icon: \' \';\n
+}\n
+\n
+.@{prefix}-btn-small .@{prefix}-ico {\n
+\tfont-family: \'tinymce-small\';\n
+}\n
+\n
+// .@{prefix}-i-checkbox needs to have zoom overridden since it\'s set by the gradient mixin\n
+.@{prefix}-ico, i.@{prefix}-i-checkbox {\n
+\tzoom: ~"expression(this.runtimeStyle[\'zoom\'] = \'1\', this.innerHTML = this.currentStyle[\'-ie7-icon\'].substr(1, 1) + \'&nbsp;\')";\t\n
+}\n
+\n
+.@{prefix}-i-save           { -ie7-icon: "\\e000"; }\n
+.@{prefix}-i-newdocument    { -ie7-icon: "\\e001"; }\n
+.@{prefix}-i-fullpage       { -ie7-icon: "\\e002"; }\n
+.@{prefix}-i-alignleft      { -ie7-icon: "\\e003"; }\n
+.@{prefix}-i-aligncenter    { -ie7-icon: "\\e004"; }\n
+.@{prefix}-i-alignright     { -ie7-icon: "\\e005"; }\n
+.@{prefix}-i-alignjustify   { -ie7-icon: "\\e006"; }\n
+.@{prefix}-i-alignnone      { -ie7-icon: "\\e003"; }\n
+.@{prefix}-i-cut            { -ie7-icon: "\\e007"; }\n
+.@{prefix}-i-paste          { -ie7-icon: "\\e008"; }\n
+.@{prefix}-i-searchreplace  { -ie7-icon: "\\e009"; }\n
+.@{prefix}-i-bullist        { -ie7-icon: "\\e00a"; }\n
+.@{prefix}-i-numlist        { -ie7-icon: "\\e00b"; }\n
+.@{prefix}-i-indent         { -ie7-icon: "\\e00c"; }\n
+.@{prefix}-i-outdent        { -ie7-icon: "\\e00d"; }\n
+.@{prefix}-i-blockquote     { -ie7-icon: "\\e00e"; }\n
+.@{prefix}-i-undo           { -ie7-icon: "\\e00f"; }\n
+.@{prefix}-i-redo           { -ie7-icon: "\\e010"; }\n
+.@{prefix}-i-link           { -ie7-icon: "\\e011"; }\n
+.@{prefix}-i-unlink         { -ie7-icon: "\\e012"; }\n
+.@{prefix}-i-anchor         { -ie7-icon: "\\e013"; }\n
+.@{prefix}-i-image          { -ie7-icon: "\\e014"; }\n
+.@{prefix}-i-media          { -ie7-icon: "\\e015"; }\n
+.@{prefix}-i-help           { -ie7-icon: "\\e016"; }\n
+.@{prefix}-i-code           { -ie7-icon: "\\e017"; }\n
+.@{prefix}-i-insertdatetime { -ie7-icon: "\\e018"; }\n
+.@{prefix}-i-preview        { -ie7-icon: "\\e019"; }\n
+.@{prefix}-i-forecolor      { -ie7-icon: "\\e01a"; }\n
+.@{prefix}-i-backcolor      { -ie7-icon: "\\e01a"; }\n
+.@{prefix}-i-table          { -ie7-icon: "\\e01b"; }\n
+.@{prefix}-i-hr             { -ie7-icon: "\\e01c"; }\n
+.@{prefix}-i-removeformat   { -ie7-icon: "\\e01d"; }\n
+.@{prefix}-i-subscript      { -ie7-icon: "\\e01e"; }\n
+.@{prefix}-i-superscript    { -ie7-icon: "\\e01f"; }\n
+.@{prefix}-i-charmap        { -ie7-icon: "\\e020"; }\n
+.@{prefix}-i-emoticons      { -ie7-icon: "\\e021"; }\n
+.@{prefix}-i-print          { -ie7-icon: "\\e022"; }\n
+.@{prefix}-i-fullscreen     { -ie7-icon: "\\e023"; }\n
+.@{prefix}-i-spellchecker   { -ie7-icon: "\\e024"; }\n
+.@{prefix}-i-nonbreaking    { -ie7-icon: "\\e025"; }\n
+.@{prefix}-i-template       { -ie7-icon: "\\e026"; }\n
+.@{prefix}-i-pagebreak      { -ie7-icon: "\\e027"; }\n
+.@{prefix}-i-restoredraft   { -ie7-icon: "\\e028"; }\n
+.@{prefix}-i-untitled       { -ie7-icon: "\\e029"; }\n
+.@{prefix}-i-bold           { -ie7-icon: "\\e02a"; }\n
+.@{prefix}-i-italic         { -ie7-icon: "\\e02b"; }\n
+.@{prefix}-i-underline      { -ie7-icon: "\\e02c"; }\n
+.@{prefix}-i-strikethrough  { -ie7-icon: "\\e02d"; }\n
+.@{prefix}-i-visualchars    { -ie7-icon: "\\e02e"; }\n
+.@{prefix}-i-ltr            { -ie7-icon: "\\e02f"; }\n
+.@{prefix}-i-rtl            { -ie7-icon: "\\e030"; }\n
+.@{prefix}-i-copy           { -ie7-icon: "\\e031"; }\n
+.@{prefix}-i-resize         { -ie7-icon: "\\e032"; }\n
+.@{prefix}-i-browse         { -ie7-icon: "\\e034"; }\n
+.@{prefix}-i-pastetext      { -ie7-icon: "\\e035"; }\n
+.@{prefix}-i-rotateleft     { -ie7-icon: "\\eaa8"; }\n
+.@{prefix}-i-rotateright    { -ie7-icon: "\\eaa9"; }\n
+.@{prefix}-i-crop           { -ie7-icon: "\\ee78"; }\n
+.@{prefix}-i-editimage      { -ie7-icon: "\\e914"; }\n
+.@{prefix}-i-options        { -ie7-icon: "\\ec6a"; }\n
+.@{prefix}-i-flipv          { -ie7-icon: "\\eaaa"; }\n
+.@{prefix}-i-fliph          { -ie7-icon: "\\eaac"; }\n
+.@{prefix}-i-zoomin         { -ie7-icon: "\\eb35"; }\n
+.@{prefix}-i-zoomout        { -ie7-icon: "\\eb36"; }\n
+.@{prefix}-i-sun            { -ie7-icon: "\\eccc"; }\n
+.@{prefix}-i-moon           { -ie7-icon: "\\eccd"; }\n
+.@{prefix}-i-arrowleft      { -ie7-icon: "\\edc0"; }\n
+.@{prefix}-i-arrowright     { -ie7-icon: "\\edb8"; }\n
+.@{prefix}-i-drop           { -ie7-icon: "\\e934"; }\n
+.@{prefix}-i-contrast       { -ie7-icon: "\\ecd4"; }\n
+.@{prefix}-i-sharpen        { -ie7-icon: "\\eba7"; }\n
+.@{prefix}-i-palette        { -ie7-icon: "\\e92a"; }\n
+.@{prefix}-i-resize2        { -ie7-icon: "\\edf9"; }\n
+.@{prefix}-i-orientation    { -ie7-icon: "\\e601"; }\n
+.@{prefix}-i-invert         { -ie7-icon: "\\e602"; }\n
+.@{prefix}-i-gamma          { -ie7-icon: "\\e600"; }\n
+.@{prefix}-i-remove         { -ie7-icon: "\\ed6a"; }\n
+\n
+.@{prefix}-i-checkbox, .@{prefix}-i-selected {\n
+\t-ie7-icon: "\\e033";\n
+}\n
+\n
+.@{prefix}-i-selected              { visibility: hidden; }\n
+.@{prefix}-i-backcolor             { background: #BBB; }\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5570</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Icons.Ie7.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

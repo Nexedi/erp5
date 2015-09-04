@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268301.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Class.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Class.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This utilitiy class is used for easier inheritage.\n
+ *\n
+ * Features:\n
+ * * Exposed super functions: this._super();\n
+ * * Mixins\n
+ * * Dummy functions\n
+ * * Property functions: var value = object.value(); and object.value(newValue);\n
+ * * Static functions\n
+ * * Defaults settings\n
+ */\n
+define("tinymce/util/Class", [\n
+\t"tinymce/util/Tools"\n
+], function(Tools) {\n
+\tvar each = Tools.each, extend = Tools.extend;\n
+\n
+\tvar extendClass, initializing;\n
+\n
+\tfunction Class() {\n
+\t}\n
+\n
+\t// Provides classical inheritance, based on code made by John Resig\n
+\tClass.extend = extendClass = function(prop) {\n
+\t\tvar self = this, _super = self.prototype, prototype, name, member;\n
+\n
+\t\t// The dummy class constructor\n
+\t\tfunction Class() {\n
+\t\t\tvar i, mixins, mixin, self = this;\n
+\n
+\t\t\t// All construction is actually done in the init method\n
+\t\t\tif (!initializing) {\n
+\t\t\t\t// Run class constuctor\n
+\t\t\t\tif (self.init) {\n
+\t\t\t\t\tself.init.apply(self, arguments);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Run mixin constructors\n
+\t\t\t\tmixins = self.Mixins;\n
+\t\t\t\tif (mixins) {\n
+\t\t\t\t\ti = mixins.length;\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tmixin = mixins[i];\n
+\t\t\t\t\t\tif (mixin.init) {\n
+\t\t\t\t\t\t\tmixin.init.apply(self, arguments);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Dummy function, needs to be extended in order to provide functionality\n
+\t\tfunction dummy() {\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t// Creates a overloaded method for the class\n
+\t\t// this enables you to use this._super(); to call the super function\n
+\t\tfunction createMethod(name, fn) {\n
+\t\t\treturn function() {\n
+\t\t\t\tvar self = this, tmp = self._super, ret;\n
+\n
+\t\t\t\tself._super = _super[name];\n
+\t\t\t\tret = fn.apply(self, arguments);\n
+\t\t\t\tself._super = tmp;\n
+\n
+\t\t\t\treturn ret;\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\t// Instantiate a base class (but only create the instance,\n
+\t\t// don\'t run the init constructor)\n
+\t\tinitializing = true;\n
+\n
+\t\t/*eslint new-cap:0 */\n
+\t\tprototype = new self();\n
+\t\tinitializing = false;\n
+\n
+\t\t// Add mixins\n
+\t\tif (prop.Mixins) {\n
+\t\t\teach(prop.Mixins, function(mixin) {\n
+\t\t\t\tmixin = mixin;\n
+\n
+\t\t\t\tfor (var name in mixin) {\n
+\t\t\t\t\tif (name !== "init") {\n
+\t\t\t\t\t\tprop[name] = mixin[name];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tif (_super.Mixins) {\n
+\t\t\t\tprop.Mixins = _super.Mixins.concat(prop.Mixins);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Generate dummy methods\n
+\t\tif (prop.Methods) {\n
+\t\t\teach(prop.Methods.split(\',\'), function(name) {\n
+\t\t\t\tprop[name] = dummy;\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Generate property methods\n
+\t\tif (prop.Properties) {\n
+\t\t\teach(prop.Properties.split(\',\'), function(name) {\n
+\t\t\t\tvar fieldName = \'_\' + name;\n
+\n
+\t\t\t\tprop[name] = function(value) {\n
+\t\t\t\t\tvar self = this, undef;\n
+\n
+\t\t\t\t\t// Set value\n
+\t\t\t\t\tif (value !== undef) {\n
+\t\t\t\t\t\tself[fieldName] = value;\n
+\n
+\t\t\t\t\t\treturn self;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Get value\n
+\t\t\t\t\treturn self[fieldName];\n
+\t\t\t\t};\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Static functions\n
+\t\tif (prop.Statics) {\n
+\t\t\teach(prop.Statics, function(func, name) {\n
+\t\t\t\tClass[name] = func;\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Default settings\n
+\t\tif (prop.Defaults && _super.Defaults) {\n
+\t\t\tprop.Defaults = extend({}, _super.Defaults, prop.Defaults);\n
+\t\t}\n
+\n
+\t\t// Copy the properties over onto the new prototype\n
+\t\tfor (name in prop) {\n
+\t\t\tmember = prop[name];\n
+\n
+\t\t\tif (typeof member == "function" && _super[name]) {\n
+\t\t\t\tprototype[name] = createMethod(name, member);\n
+\t\t\t} else {\n
+\t\t\t\tprototype[name] = member;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Populate our constructed prototype object\n
+\t\tClass.prototype = prototype;\n
+\n
+\t\t// Enforce the constructor to be what we expect\n
+\t\tClass.constructor = Class;\n
+\n
+\t\t// And make this class extendible\n
+\t\tClass.extend = extendClass;\n
+\n
+\t\treturn Class;\n
+\t};\n
+\n
+\treturn Class;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3616</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Class.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

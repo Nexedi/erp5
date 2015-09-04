@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268444.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class contains the tinymce plugin logic for the paste plugin.\n
+ *\n
+ * @class tinymce.pasteplugin.Plugin\n
+ * @private\n
+ */\n
+define("tinymce/pasteplugin/Plugin", [\n
+\t"tinymce/PluginManager",\n
+\t"tinymce/pasteplugin/Clipboard",\n
+\t"tinymce/pasteplugin/WordFilter",\n
+\t"tinymce/pasteplugin/Quirks"\n
+], function(PluginManager, Clipboard, WordFilter, Quirks) {\n
+\tvar userIsInformed;\n
+\n
+\tPluginManager.add(\'paste\', function(editor) {\n
+\t\tvar self = this, clipboard, settings = editor.settings;\n
+\n
+\t\tfunction togglePlainTextPaste() {\n
+\t\t\tif (clipboard.pasteFormat == "text") {\n
+\t\t\t\tthis.active(false);\n
+\t\t\t\tclipboard.pasteFormat = "html";\n
+\t\t\t} else {\n
+\t\t\t\tclipboard.pasteFormat = "text";\n
+\t\t\t\tthis.active(true);\n
+\n
+\t\t\t\tif (!userIsInformed) {\n
+\t\t\t\t\teditor.windowManager.alert(\n
+\t\t\t\t\t\t\'Paste is now in plain text mode. Contents will now \' +\n
+\t\t\t\t\t\t\'be pasted as plain text until you toggle this option off.\'\n
+\t\t\t\t\t);\n
+\n
+\t\t\t\t\tuserIsInformed = true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tself.clipboard = clipboard = new Clipboard(editor);\n
+\t\tself.quirks = new Quirks(editor);\n
+\t\tself.wordFilter = new WordFilter(editor);\n
+\n
+\t\tif (editor.settings.paste_as_text) {\n
+\t\t\tself.clipboard.pasteFormat = "text";\n
+\t\t}\n
+\n
+\t\tif (settings.paste_preprocess) {\n
+\t\t\teditor.on(\'PastePreProcess\', function(e) {\n
+\t\t\t\tsettings.paste_preprocess.call(self, self, e);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tif (settings.paste_postprocess) {\n
+\t\t\teditor.on(\'PastePostProcess\', function(e) {\n
+\t\t\t\tsettings.paste_postprocess.call(self, self, e);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\teditor.addCommand(\'mceInsertClipboardContent\', function(ui, value) {\n
+\t\t\tif (value.content) {\n
+\t\t\t\tself.clipboard.pasteHtml(value.content);\n
+\t\t\t}\n
+\n
+\t\t\tif (value.text) {\n
+\t\t\t\tself.clipboard.pasteText(value.text);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Block all drag/drop events\n
+\t\tif (editor.paste_block_drop) {\n
+\t\t\teditor.on(\'dragend dragover draggesture dragdrop drop drag\', function(e) {\n
+\t\t\t\te.preventDefault();\n
+\t\t\t\te.stopPropagation();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Prevent users from dropping data images on Gecko\n
+\t\tif (!editor.settings.paste_data_images) {\n
+\t\t\teditor.on(\'drop\', function(e) {\n
+\t\t\t\tvar dataTransfer = e.dataTransfer;\n
+\n
+\t\t\t\tif (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\teditor.addButton(\'pastetext\', {\n
+\t\t\ticon: \'pastetext\',\n
+\t\t\ttooltip: \'Paste as text\',\n
+\t\t\tonclick: togglePlainTextPaste,\n
+\t\t\tactive: self.clipboard.pasteFormat == "text"\n
+\t\t});\n
+\n
+\t\teditor.addMenuItem(\'pastetext\', {\n
+\t\t\ttext: \'Paste as text\',\n
+\t\t\tselectable: true,\n
+\t\t\tactive: clipboard.pasteFormat,\n
+\t\t\tonclick: togglePlainTextPaste\n
+\t\t});\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2716</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268298.04</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>JSONRequest.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * JSONRequest.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class enables you to use JSON-RPC to call backend methods.\n
+ *\n
+ * @class tinymce.util.JSONRequest\n
+ * @example\n
+ * var json = new tinymce.util.JSONRequest({\n
+ *     url: \'somebackend.php\'\n
+ * });\n
+ *\n
+ * // Send RPC call 1\n
+ * json.send({\n
+ *     method: \'someMethod1\',\n
+ *     params: [\'a\', \'b\'],\n
+ *     success: function(result) {\n
+ *         console.dir(result);\n
+ *     }\n
+ * });\n
+ *\n
+ * // Send RPC call 2\n
+ * json.send({\n
+ *     method: \'someMethod2\',\n
+ *     params: [\'a\', \'b\'],\n
+ *     success: function(result) {\n
+ *         console.dir(result);\n
+ *     }\n
+ * });\n
+ */\n
+define("tinymce/util/JSONRequest", [\n
+\t"tinymce/util/JSON",\n
+\t"tinymce/util/XHR",\n
+\t"tinymce/util/Tools"\n
+], function(JSON, XHR, Tools) {\n
+\tvar extend = Tools.extend;\n
+\n
+\tfunction JSONRequest(settings) {\n
+\t\tthis.settings = extend({}, settings);\n
+\t\tthis.count = 0;\n
+\t}\n
+\n
+\t/**\n
+\t * Simple helper function to send a JSON-RPC request without the need to initialize an object.\n
+\t * Consult the Wiki API documentation for more details on what you can pass to this function.\n
+\t *\n
+\t * @method sendRPC\n
+\t * @static\n
+\t * @param {Object} o Call object where there are three field id, method and params this object should also contain callbacks etc.\n
+\t */\n
+\tJSONRequest.sendRPC = function(o) {\n
+\t\treturn new JSONRequest().send(o);\n
+\t};\n
+\n
+\tJSONRequest.prototype = {\n
+\t\t/**\n
+\t\t * Sends a JSON-RPC call. Consult the Wiki API documentation for more details on what you can pass to this function.\n
+\t\t *\n
+\t\t * @method send\n
+\t\t * @param {Object} args Call object where there are three field id, method and params this object should also contain callbacks etc.\n
+\t\t */\n
+\t\tsend: function(args) {\n
+\t\t\tvar ecb = args.error, scb = args.success;\n
+\n
+\t\t\targs = extend(this.settings, args);\n
+\n
+\t\t\targs.success = function(c, x) {\n
+\t\t\t\tc = JSON.parse(c);\n
+\n
+\t\t\t\tif (typeof c == \'undefined\') {\n
+\t\t\t\t\tc = {\n
+\t\t\t\t\t\terror: \'JSON Parse error.\'\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (c.error) {\n
+\t\t\t\t\tecb.call(args.error_scope || args.scope, c.error, x);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tscb.call(args.success_scope || args.scope, c.result);\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\targs.error = function(ty, x) {\n
+\t\t\t\tif (ecb) {\n
+\t\t\t\t\tecb.call(args.error_scope || args.scope, ty, x);\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\targs.data = JSON.serialize({\n
+\t\t\t\tid: args.id || \'c\' + (this.count++),\n
+\t\t\t\tmethod: args.method,\n
+\t\t\t\tparams: args.params\n
+\t\t\t});\n
+\n
+\t\t\t// JSON content type for Ruby on rails. Bug: #1883287\n
+\t\t\targs.content_type = \'application/json\';\n
+\n
+\t\t\tXHR.send(args);\n
+\t\t}\n
+\t};\n
+\n
+\treturn JSONRequest;\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2634</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>JSONRequest.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268649.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ColorButton.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// ColorButton\n
+\n
+.@{prefix}-colorbutton .@{prefix}-ico {\n
+\tposition: relative;\n
+}\n
+\n
+.@{prefix}-colorbutton-grid {\n
+\tmargin: 4px;\t\n
+}\n
+\n
+.@{prefix}-colorbutton button {\n
+    padding-right: 6px;\n
+    padding-left: 6px;\n
+}\n
+\n
+.@{prefix}-colorbutton .@{prefix}-preview {\n
+\tpadding-right: 3px;\n
+\tdisplay: block;\n
+\tposition: absolute;\n
+\tleft: 50%;\n
+\ttop: 50%;\n
+\tmargin-left: -17px;\n
+\tmargin-top: 7px;\n
+\tbackground: gray;\n
+\twidth: 13px;\n
+\theight: 2px;\n
+\toverflow: hidden;\n
+}\n
+\n
+.@{prefix}-colorbutton.@{prefix}-btn-small .@{prefix}-preview {\n
+\tmargin-left: -16px;\n
+\tpadding-right: 0;\n
+\twidth: 16px;\n
+}\n
+\n
+.@{prefix}-colorbutton .@{prefix}-open {\n
+\tpadding-left: 4px;\n
+\tpadding-right: 4px;\n
+\tborder-left: 1px solid transparent;\n
+}\n
+\n
+.@{prefix}-colorbutton:hover .@{prefix}-open {\n
+\tborder-color: darken(@btn-bg, 20%);\n
+}\n
+\n
+.@{prefix}-colorbutton.@{prefix}-btn-small .@{prefix}-open {\n
+\tpadding: 0 3px 0 3px;\n
+}\n
+\n
+// RTL\n
+\n
+.@{prefix}-rtl .@{prefix}-colorbutton {\n
+\tdirection: rtl;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-colorbutton .@{prefix}-preview {\n
+\tmargin-left: 0;\n
+\tpadding-right: 0;\n
+\tpadding-left: 3px;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-colorbutton.@{prefix}-btn-small .@{prefix}-preview {\n
+\tmargin-left: 0;\n
+\tpadding-right: 0;\n
+\tpadding-left: 2px;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-colorbutton .@{prefix}-open {\n
+\tpadding-left: 4px;\n
+\tpadding-right: 4px;\n
+\tborder-left: 0;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1301</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ColorButton.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

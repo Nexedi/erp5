@@ -1,0 +1,676 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268444.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Clipboard.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Clipboard.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class contains logic for getting HTML contents out of the clipboard.\n
+ *\n
+ * We need to make a lot of ugly hacks to get the contents out of the clipboard since\n
+ * the W3C Clipboard API is broken in all browsers that have it: Gecko/WebKit/Blink.\n
+ * We might rewrite this the way those API:s stabilize. Browsers doesn\'t handle pasting\n
+ * from applications like Word the same way as it does when pasting into a contentEditable area\n
+ * so we need to do lots of extra work to try to get to this clipboard data.\n
+ *\n
+ * Current implementation steps:\n
+ *  1. On keydown with paste keys Ctrl+V or Shift+Insert create\n
+ *     a paste bin element and move focus to that element.\n
+ *  2. Wait for the browser to fire a "paste" event and get the contents out of the paste bin.\n
+ *  3. Check if the paste was successful if true, process the HTML.\n
+ *  (4). If the paste was unsuccessful use IE execCommand, Clipboard API, document.dataTransfer old WebKit API etc.\n
+ *\n
+ * @class tinymce.pasteplugin.Clipboard\n
+ * @private\n
+ */\n
+define("tinymce/pasteplugin/Clipboard", [\n
+\t"tinymce/Env",\n
+\t"tinymce/dom/RangeUtils",\n
+\t"tinymce/util/VK",\n
+\t"tinymce/pasteplugin/Utils"\n
+], function(Env, RangeUtils, VK, Utils) {\n
+\treturn function(editor) {\n
+\t\tvar self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;\n
+\t\tvar pasteBinDefaultContent = \'%MCEPASTEBIN%\', keyboardPastePlainTextState;\n
+\t\tvar mceInternalUrlPrefix = \'data:text/mce-internal,\';\n
+\n
+\t\t/**\n
+\t\t * Pastes the specified HTML. This means that the HTML is filtered and then\n
+\t\t * inserted at the current selection in the editor. It will also fire paste events\n
+\t\t * for custom user filtering.\n
+\t\t *\n
+\t\t * @param {String} html HTML code to paste into the current selection.\n
+\t\t */\n
+\t\tfunction pasteHtml(html) {\n
+\t\t\tvar args, dom = editor.dom;\n
+\n
+\t\t\targs = editor.fire(\'BeforePastePreProcess\', {content: html}); // Internal event used by Quirks\n
+\t\t\targs = editor.fire(\'PastePreProcess\', args);\n
+\t\t\thtml = args.content;\n
+\n
+\t\t\tif (!args.isDefaultPrevented()) {\n
+\t\t\t\t// User has bound PastePostProcess events then we need to pass it through a DOM node\n
+\t\t\t\t// This is not ideal but we don\'t want to let the browser mess up the HTML for example\n
+\t\t\t\t// some browsers add &nbsp; to P tags etc\n
+\t\t\t\tif (editor.hasEventListeners(\'PastePostProcess\') && !args.isDefaultPrevented()) {\n
+\t\t\t\t\t// We need to attach the element to the DOM so Sizzle selectors work on the contents\n
+\t\t\t\t\tvar tempBody = dom.add(editor.getBody(), \'div\', {style: \'display:none\'}, html);\n
+\t\t\t\t\targs = editor.fire(\'PastePostProcess\', {node: tempBody});\n
+\t\t\t\t\tdom.remove(tempBody);\n
+\t\t\t\t\thtml = args.node.innerHTML;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!args.isDefaultPrevented()) {\n
+\t\t\t\t\teditor.insertContent(html, {merge: editor.settings.paste_merge_formats !== false, data: {paste: true}});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Pastes the specified text. This means that the plain text is processed\n
+\t\t * and converted into BR and P elements. It will fire paste events for custom filtering.\n
+\t\t *\n
+\t\t * @param {String} text Text to paste as the current selection location.\n
+\t\t */\n
+\t\tfunction pasteText(text) {\n
+\t\t\ttext = editor.dom.encode(text).replace(/\\r\\n/g, \'\\n\');\n
+\n
+\t\t\tvar startBlock = editor.dom.getParent(editor.selection.getStart(), editor.dom.isBlock);\n
+\n
+\t\t\t// Create start block html for example <p attr="value">\n
+\t\t\tvar forcedRootBlockName = editor.settings.forced_root_block;\n
+\t\t\tvar forcedRootBlockStartHtml;\n
+\t\t\tif (forcedRootBlockName) {\n
+\t\t\t\tforcedRootBlockStartHtml = editor.dom.createHTML(forcedRootBlockName, editor.settings.forced_root_block_attrs);\n
+\t\t\t\tforcedRootBlockStartHtml = forcedRootBlockStartHtml.substr(0, forcedRootBlockStartHtml.length - 3) + \'>\';\n
+\t\t\t}\n
+\n
+\t\t\tif ((startBlock && /^(PRE|DIV)$/.test(startBlock.nodeName)) || !forcedRootBlockName) {\n
+\t\t\t\ttext = Utils.filter(text, [\n
+\t\t\t\t\t[/\\n/g, "<br>"]\n
+\t\t\t\t]);\n
+\t\t\t} else {\n
+\t\t\t\ttext = Utils.filter(text, [\n
+\t\t\t\t\t[/\\n\\n/g, "</p>" + forcedRootBlockStartHtml],\n
+\t\t\t\t\t[/^(.*<\\/p>)(<p>)$/, forcedRootBlockStartHtml + \'$1\'],\n
+\t\t\t\t\t[/\\n/g, "<br />"]\n
+\t\t\t\t]);\n
+\n
+\t\t\t\tif (text.indexOf(\'<p>\') != -1) {\n
+\t\t\t\t\ttext = forcedRootBlockStartHtml + text;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tpasteHtml(text);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Creates a paste bin element as close as possible to the current caret location and places the focus inside that element\n
+\t\t * so that when the real paste event occurs the contents gets inserted into this element\n
+\t\t * instead of the current editor selection element.\n
+\t\t */\n
+\t\tfunction createPasteBin() {\n
+\t\t\tvar dom = editor.dom, body = editor.getBody();\n
+\t\t\tvar viewport = editor.dom.getViewPort(editor.getWin()), scrollTop = viewport.y, top = 20;\n
+\t\t\tvar scrollContainer;\n
+\n
+\t\t\tlastRng = editor.selection.getRng();\n
+\n
+\t\t\tif (editor.inline) {\n
+\t\t\t\tscrollContainer = editor.selection.getScrollContainer();\n
+\n
+\t\t\t\t// Can\'t always rely on scrollTop returning a useful value.\n
+\t\t\t\t// It returns 0 if the browser doesn\'t support scrollTop for the element or is non-scrollable\n
+\t\t\t\tif (scrollContainer && scrollContainer.scrollTop > 0) {\n
+\t\t\t\t\tscrollTop = scrollContainer.scrollTop;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t/**\n
+\t\t\t * Returns the rect of the current caret if the caret is in an empty block before a\n
+\t\t\t * BR we insert a temporary invisible character that we get the rect this way we always get a proper rect.\n
+\t\t\t *\n
+\t\t\t * TODO: This might be useful in core.\n
+\t\t\t */\n
+\t\t\tfunction getCaretRect(rng) {\n
+\t\t\t\tvar rects, textNode, node, container = rng.startContainer;\n
+\n
+\t\t\t\trects = rng.getClientRects();\n
+\t\t\t\tif (rects.length) {\n
+\t\t\t\t\treturn rects[0];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!rng.collapsed || container.nodeType != 1) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnode = container.childNodes[lastRng.startOffset];\n
+\n
+\t\t\t\t// Skip empty whitespace nodes\n
+\t\t\t\twhile (node && node.nodeType == 3 && !node.data.length) {\n
+\t\t\t\t\tnode = node.nextSibling;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!node) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Check if the location is |<br>\n
+\t\t\t\t// TODO: Might need to expand this to say |<table>\n
+\t\t\t\tif (node.tagName == \'BR\') {\n
+\t\t\t\t\ttextNode = dom.doc.createTextNode(\'\\uFEFF\');\n
+\t\t\t\t\tnode.parentNode.insertBefore(textNode, node);\n
+\n
+\t\t\t\t\trng = dom.createRng();\n
+\t\t\t\t\trng.setStartBefore(textNode);\n
+\t\t\t\t\trng.setEndAfter(textNode);\n
+\n
+\t\t\t\t\trects = rng.getClientRects();\n
+\t\t\t\t\tdom.remove(textNode);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (rects.length) {\n
+\t\t\t\t\treturn rects[0];\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Calculate top cordinate this is needed to avoid scrolling to top of document\n
+\t\t\t// We want the paste bin to be as close to the caret as possible to avoid scrolling\n
+\t\t\tif (lastRng.getClientRects) {\n
+\t\t\t\tvar rect = getCaretRect(lastRng);\n
+\n
+\t\t\t\tif (rect) {\n
+\t\t\t\t\t// Client rects gets us closes to the actual\n
+\t\t\t\t\t// caret location in for example a wrapped paragraph block\n
+\t\t\t\t\ttop = scrollTop + (rect.top - dom.getPos(body).y);\n
+\t\t\t\t} else {\n
+\t\t\t\t\ttop = scrollTop;\n
+\n
+\t\t\t\t\t// Check if we can find a closer location by checking the range element\n
+\t\t\t\t\tvar container = lastRng.startContainer;\n
+\t\t\t\t\tif (container) {\n
+\t\t\t\t\t\tif (container.nodeType == 3 && container.parentNode != body) {\n
+\t\t\t\t\t\t\tcontainer = container.parentNode;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (container.nodeType == 1) {\n
+\t\t\t\t\t\t\ttop = dom.getPos(container, scrollContainer || body).y;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Create a pastebin\n
+\t\t\tpasteBinElm = dom.add(editor.getBody(), \'div\', {\n
+\t\t\t\tid: "mcepastebin",\n
+\t\t\t\tcontentEditable: true,\n
+\t\t\t\t"data-mce-bogus": "all",\n
+\t\t\t\tstyle: \'position: absolute; top: \' + top + \'px;\' +\n
+\t\t\t\t\t\'width: 10px; height: 10px; overflow: hidden; opacity: 0\'\n
+\t\t\t}, pasteBinDefaultContent);\n
+\n
+\t\t\t// Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE and Gecko\n
+\t\t\tif (Env.ie || Env.gecko) {\n
+\t\t\t\tdom.setStyle(pasteBinElm, \'left\', dom.getStyle(body, \'direction\', true) == \'rtl\' ? 0xFFFF : -0xFFFF);\n
+\t\t\t}\n
+\n
+\t\t\t// Prevent focus events from bubbeling fixed FocusManager issues\n
+\t\t\tdom.bind(pasteBinElm, \'beforedeactivate focusin focusout\', function(e) {\n
+\t\t\t\te.stopPropagation();\n
+\t\t\t});\n
+\n
+\t\t\tpasteBinElm.focus();\n
+\t\t\teditor.selection.select(pasteBinElm, true);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Removes the paste bin if it exists.\n
+\t\t */\n
+\t\tfunction removePasteBin() {\n
+\t\t\tif (pasteBinElm) {\n
+\t\t\t\tvar pasteBinClone;\n
+\n
+\t\t\t\t// WebKit/Blink might clone the div so\n
+\t\t\t\t// lets make sure we remove all clones\n
+\t\t\t\t// TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!\n
+\t\t\t\twhile ((pasteBinClone = editor.dom.get(\'mcepastebin\'))) {\n
+\t\t\t\t\teditor.dom.remove(pasteBinClone);\n
+\t\t\t\t\teditor.dom.unbind(pasteBinClone);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (lastRng) {\n
+\t\t\t\t\teditor.selection.setRng(lastRng);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tpasteBinElm = lastRng = null;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns the contents of the paste bin as a HTML string.\n
+\t\t *\n
+\t\t * @return {String} Get the contents of the paste bin.\n
+\t\t */\n
+\t\tfunction getPasteBinHtml() {\n
+\t\t\tvar html = \'\', pasteBinClones, i, clone, cloneHtml;\n
+\n
+\t\t\t// Since WebKit/Chrome might clone the paste bin when pasting\n
+\t\t\t// for example: <img style="float: right"> we need to check if any of them contains some useful html.\n
+\t\t\t// TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!\n
+\t\t\tpasteBinClones = editor.dom.select(\'div[id=mcepastebin]\');\n
+\t\t\tfor (i = 0; i < pasteBinClones.length; i++) {\n
+\t\t\t\tclone = pasteBinClones[i];\n
+\n
+\t\t\t\t// Pasting plain text produces pastebins in pastebinds makes sence right!?\n
+\t\t\t\tif (clone.firstChild && clone.firstChild.id == \'mcepastebin\') {\n
+\t\t\t\t\tclone = clone.firstChild;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcloneHtml = clone.innerHTML;\n
+\t\t\t\tif (html != pasteBinDefaultContent) {\n
+\t\t\t\t\thtml += cloneHtml;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn html;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Gets various content types out of a datatransfer object.\n
+\t\t *\n
+\t\t * @param {DataTransfer} dataTransfer Event fired on paste.\n
+\t\t * @return {Object} Object with mime types and data for those mime types.\n
+\t\t */\n
+\t\tfunction getDataTransferItems(dataTransfer) {\n
+\t\t\tvar data = {};\n
+\n
+\t\t\tif (dataTransfer) {\n
+\t\t\t\t// Use old WebKit/IE API\n
+\t\t\t\tif (dataTransfer.getData) {\n
+\t\t\t\t\tvar legacyText = dataTransfer.getData(\'Text\');\n
+\t\t\t\t\tif (legacyText && legacyText.length > 0) {\n
+\t\t\t\t\t\tif (legacyText.indexOf(mceInternalUrlPrefix) == -1) {\n
+\t\t\t\t\t\t\tdata[\'text/plain\'] = legacyText;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (dataTransfer.types) {\n
+\t\t\t\t\tfor (var i = 0; i < dataTransfer.types.length; i++) {\n
+\t\t\t\t\t\tvar contentType = dataTransfer.types[i];\n
+\t\t\t\t\t\tdata[contentType] = dataTransfer.getData(contentType);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn data;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Gets various content types out of the Clipboard API. It will also get the\n
+\t\t * plain text using older IE and WebKit API:s.\n
+\t\t *\n
+\t\t * @param {ClipboardEvent} clipboardEvent Event fired on paste.\n
+\t\t * @return {Object} Object with mime types and data for those mime types.\n
+\t\t */\n
+\t\tfunction getClipboardContent(clipboardEvent) {\n
+\t\t\treturn getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Checks if the clipboard contains image data if it does it will take that data\n
+\t\t * and convert it into a data url image and paste that image at the caret location.\n
+\t\t *\n
+\t\t * @param  {ClipboardEvent} e Paste/drop event object.\n
+\t\t * @param  {DOMRange} rng Optional rng object to move selection to.\n
+\t\t * @return {Boolean} true/false if the image data was found or not.\n
+\t\t */\n
+\t\tfunction pasteImageData(e, rng) {\n
+\t\t\tvar dataTransfer = e.clipboardData || e.dataTransfer;\n
+\n
+\t\t\tfunction processItems(items) {\n
+\t\t\t\tvar i, item, reader, hadImage = false;\n
+\n
+\t\t\t\tfunction pasteImage(reader) {\n
+\t\t\t\t\tif (rng) {\n
+\t\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t\t\trng = null;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tpasteHtml(\'<img src="\' + reader.result + \'">\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (items) {\n
+\t\t\t\t\tfor (i = 0; i < items.length; i++) {\n
+\t\t\t\t\t\titem = items[i];\n
+\n
+\t\t\t\t\t\tif (/^image\\/(jpeg|png|gif|bmp)$/.test(item.type)) {\n
+\t\t\t\t\t\t\treader = new FileReader();\n
+\t\t\t\t\t\t\treader.onload = pasteImage.bind(null, reader);\n
+\t\t\t\t\t\t\treader.readAsDataURL(item.getAsFile ? item.getAsFile() : item);\n
+\n
+\t\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\t\thadImage = true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn hadImage;\n
+\t\t\t}\n
+\n
+\t\t\tif (editor.settings.paste_data_images && dataTransfer) {\n
+\t\t\t\treturn processItems(dataTransfer.items) || processItems(dataTransfer.files);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Chrome on Android doesn\'t support proper clipboard access so we have no choice but to allow the browser default behavior.\n
+\t\t *\n
+\t\t * @param {Event} e Paste event object to check if it contains any data.\n
+\t\t * @return {Boolean} true/false if the clipboard is empty or not.\n
+\t\t */\n
+\t\tfunction isBrokenAndroidClipboardEvent(e) {\n
+\t\t\tvar clipboardData = e.clipboardData;\n
+\n
+\t\t\treturn navigator.userAgent.indexOf(\'Android\') != -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;\n
+\t\t}\n
+\n
+\t\tfunction getCaretRangeFromEvent(e) {\n
+\t\t\treturn RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());\n
+\t\t}\n
+\n
+\t\tfunction hasContentType(clipboardContent, mimeType) {\n
+\t\t\treturn mimeType in clipboardContent && clipboardContent[mimeType].length > 0;\n
+\t\t}\n
+\n
+\t\tfunction isKeyboardPasteEvent(e) {\n
+\t\t\treturn (VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45);\n
+\t\t}\n
+\n
+\t\tfunction registerEventHandlers() {\n
+\t\t\teditor.on(\'keydown\', function(e) {\n
+\t\t\t\tfunction removePasteBinOnKeyUp(e) {\n
+\t\t\t\t\t// Ctrl+V or Shift+Insert\n
+\t\t\t\t\tif (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {\n
+\t\t\t\t\t\tremovePasteBin();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Ctrl+V or Shift+Insert\n
+\t\t\t\tif (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {\n
+\t\t\t\t\tkeyboardPastePlainTextState = e.shiftKey && e.keyCode == 86;\n
+\n
+\t\t\t\t\t// Edge case on Safari on Mac where it doesn\'t handle Cmd+Shift+V correctly\n
+\t\t\t\t\t// it fires the keydown but no paste or keyup so we are left with a paste bin\n
+\t\t\t\t\tif (keyboardPastePlainTextState && Env.webkit && navigator.userAgent.indexOf(\'Version/\') != -1) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Prevent undoManager keydown handler from making an undo level with the pastebin in it\n
+\t\t\t\t\te.stopImmediatePropagation();\n
+\n
+\t\t\t\t\tkeyboardPasteTimeStamp = new Date().getTime();\n
+\n
+\t\t\t\t\t// IE doesn\'t support Ctrl+Shift+V and it doesn\'t even produce a paste event\n
+\t\t\t\t\t// so lets fake a paste event and let IE use the execCommand/dataTransfer methods\n
+\t\t\t\t\tif (Env.ie && keyboardPastePlainTextState) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\teditor.fire(\'paste\', {ieFake: true});\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tremovePasteBin();\n
+\t\t\t\t\tcreatePasteBin();\n
+\n
+\t\t\t\t\t// Remove pastebin if we get a keyup and no paste event\n
+\t\t\t\t\t// For example pasting a file in IE 11 will not produce a paste event\n
+\t\t\t\t\teditor.once(\'keyup\', removePasteBinOnKeyUp);\n
+\t\t\t\t\teditor.once(\'paste\', function() {\n
+\t\t\t\t\t\teditor.off(\'keyup\', removePasteBinOnKeyUp);\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'paste\', function(e) {\n
+\t\t\t\t// Getting content from the Clipboard can take some time\n
+\t\t\t\tvar clipboardTimer = new Date().getTime();\n
+\t\t\t\tvar clipboardContent = getClipboardContent(e);\n
+\t\t\t\tvar clipboardDelay = new Date().getTime() - clipboardTimer;\n
+\n
+\t\t\t\tvar isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;\n
+\t\t\t\tvar plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;\n
+\n
+\t\t\t\tkeyboardPastePlainTextState = false;\n
+\n
+\t\t\t\tif (e.isDefaultPrevented() || isBrokenAndroidClipboardEvent(e)) {\n
+\t\t\t\t\tremovePasteBin();\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (pasteImageData(e)) {\n
+\t\t\t\t\tremovePasteBin();\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Not a keyboard paste prevent default paste and try to grab the clipboard contents using different APIs\n
+\t\t\t\tif (!isKeyBoardPaste) {\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Try IE only method if paste isn\'t a keyboard paste\n
+\t\t\t\tif (Env.ie && (!isKeyBoardPaste || e.ieFake)) {\n
+\t\t\t\t\tcreatePasteBin();\n
+\n
+\t\t\t\t\teditor.dom.bind(pasteBinElm, \'paste\', function(e) {\n
+\t\t\t\t\t\te.stopPropagation();\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\teditor.getDoc().execCommand(\'Paste\', false, null);\n
+\t\t\t\t\tclipboardContent["text/html"] = getPasteBinHtml();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\tvar content;\n
+\n
+\t\t\t\t\t// Grab HTML from Clipboard API or paste bin as a fallback\n
+\t\t\t\t\tif (hasContentType(clipboardContent, \'text/html\')) {\n
+\t\t\t\t\t\tcontent = clipboardContent[\'text/html\'];\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tcontent = getPasteBinHtml();\n
+\n
+\t\t\t\t\t\t// If paste bin is empty try using plain text mode\n
+\t\t\t\t\t\t// since that is better than nothing right\n
+\t\t\t\t\t\tif (content == pasteBinDefaultContent) {\n
+\t\t\t\t\t\t\tplainTextMode = true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tcontent = Utils.trimHtml(content);\n
+\n
+\t\t\t\t\t// WebKit has a nice bug where it clones the paste bin if you paste from for example notepad\n
+\t\t\t\t\t// so we need to force plain text mode in this case\n
+\t\t\t\t\tif (pasteBinElm && pasteBinElm.firstChild && pasteBinElm.firstChild.id === \'mcepastebin\') {\n
+\t\t\t\t\t\tplainTextMode = true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tremovePasteBin();\n
+\n
+\t\t\t\t\t// If we got nothing from clipboard API and pastebin then we could try the last resort: plain/text\n
+\t\t\t\t\tif (!content.length) {\n
+\t\t\t\t\t\tplainTextMode = true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Grab plain text from Clipboard API or convert existing HTML to plain text\n
+\t\t\t\t\tif (plainTextMode) {\n
+\t\t\t\t\t\t// Use plain text contents from Clipboard API unless the HTML contains paragraphs then\n
+\t\t\t\t\t\t// we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text\n
+\t\t\t\t\t\tif (hasContentType(clipboardContent, \'text/plain\') && content.indexOf(\'</p>\') == -1) {\n
+\t\t\t\t\t\t\tcontent = clipboardContent[\'text/plain\'];\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tcontent = Utils.innerText(content);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// If the content is the paste bin default HTML then it was\n
+\t\t\t\t\t// impossible to get the cliboard data out.\n
+\t\t\t\t\tif (content == pasteBinDefaultContent) {\n
+\t\t\t\t\t\tif (!isKeyBoardPaste) {\n
+\t\t\t\t\t\t\teditor.windowManager.alert(\'Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.\');\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (plainTextMode) {\n
+\t\t\t\t\t\tpasteText(content);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tpasteHtml(content);\n
+\t\t\t\t\t}\n
+\t\t\t\t}, 0);\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'dragstart dragend\', function(e) {\n
+\t\t\t\tdraggingInternally = e.type == \'dragstart\';\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'drop\', function(e) {\n
+\t\t\t\tvar rng = getCaretRangeFromEvent(e);\n
+\n
+\t\t\t\tif (e.isDefaultPrevented() || draggingInternally) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (pasteImageData(e, rng)) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (rng && editor.settings.paste_filter_drop !== false) {\n
+\t\t\t\t\tvar dropContent = getDataTransferItems(e.dataTransfer);\n
+\t\t\t\t\tvar content = dropContent[\'mce-internal\'] || dropContent[\'text/html\'] || dropContent[\'text/plain\'];\n
+\n
+\t\t\t\t\tif (content) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\t\t\t\tif (dropContent[\'mce-internal\']) {\n
+\t\t\t\t\t\t\t\teditor.execCommand(\'Delete\');\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\teditor.selection.setRng(rng);\n
+\n
+\t\t\t\t\t\t\tcontent = Utils.trimHtml(content);\n
+\n
+\t\t\t\t\t\t\tif (!dropContent[\'text/html\']) {\n
+\t\t\t\t\t\t\t\tpasteText(content);\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tpasteHtml(content);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'dragover dragend\', function(e) {\n
+\t\t\t\tif (editor.settings.paste_data_images) {\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tself.pasteHtml = pasteHtml;\n
+\t\tself.pasteText = pasteText;\n
+\n
+\t\teditor.on(\'preInit\', function() {\n
+\t\t\tregisterEventHandlers();\n
+\n
+\t\t\t// Remove all data images from paste for example from Gecko\n
+\t\t\t// except internal images like video elements\n
+\t\t\teditor.parser.addNodeFilter(\'img\', function(nodes, name, args) {\n
+\t\t\t\tfunction isPasteInsert(args) {\n
+\t\t\t\t\treturn args.data && args.data.paste === true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction remove(node) {\n
+\t\t\t\t\tif (!node.attr(\'data-mce-object\') && src !== Env.transparentSrc) {\n
+\t\t\t\t\t\tnode.remove();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction isWebKitFakeUrl(src) {\n
+\t\t\t\t\treturn src.indexOf("webkit-fake-url") === 0;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction isDataUri(src) {\n
+\t\t\t\t\treturn src.indexOf("data:") === 0;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!editor.settings.paste_data_images && isPasteInsert(args)) {\n
+\t\t\t\t\tvar i = nodes.length;\n
+\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tvar src = nodes[i].attributes.map.src;\n
+\n
+\t\t\t\t\t\tif (!src) {\n
+\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141\n
+\t\t\t\t\t\tif (isWebKitFakeUrl(src)) {\n
+\t\t\t\t\t\t\tremove(nodes[i]);\n
+\t\t\t\t\t\t} else if (!editor.settings.allow_html_data_urls && isDataUri(src)) {\n
+\t\t\t\t\t\t\tremove(nodes[i]);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t});\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>19989</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Clipboard.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

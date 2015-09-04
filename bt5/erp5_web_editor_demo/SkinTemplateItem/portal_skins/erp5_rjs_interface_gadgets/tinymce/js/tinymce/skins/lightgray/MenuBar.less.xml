@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268638.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MenuBar.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* MenuBar */\n
+\n
+.@{prefix}-menubar .@{prefix}-menubtn {\n
+\tborder-color: transparent;\n
+\tbackground: transparent;\n
+\t.border-radius(0);\n
+\t.box-shadow(none);\n
+\tfilter: none;\n
+}\n
+\n
+.@{prefix}-menubar .@{prefix}-menubtn button {\n
+\tcolor: @menubar-menubtn-text;\n
+}\n
+\n
+.@{prefix}-menubar {\n
+\tborder: 1px solid @menubar-border;\n
+}\n
+\n
+.@{prefix}-menubar .@{prefix}-menubtn button span {\n
+\tcolor: @text;\n
+}\n
+\n
+.@{prefix}-menubar .@{prefix}-caret {\n
+\tborder-top-color: @text;\n
+}\n
+\n
+.@{prefix}-menubar .@{prefix}-menubtn:hover, .@{prefix}-menubar .@{prefix}-menubtn.@{prefix}-active, .@{prefix}-menubar .@{prefix}-menubtn:focus {\n
+\tborder-color: darken(@btn-bg, 20%);\n
+\tbackground: @menu-bg;\n
+\tfilter: none;\n
+\t.box-shadow(none);\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>689</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>MenuBar.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

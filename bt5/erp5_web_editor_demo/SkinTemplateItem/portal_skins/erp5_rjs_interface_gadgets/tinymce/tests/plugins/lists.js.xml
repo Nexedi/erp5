@@ -1,0 +1,2116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268124.74</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lists.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.plugins.Lists", {\n
+\tsetupModule: function() {\n
+\t\tdocument.getElementById(\'view\').innerHTML = \'<textarea id="elm1"></textarea><div id="elm2"></div>\';\n
+\t\tQUnit.stop();\n
+\n
+\t\tfunction wait() {\n
+\t\t\tif (window.editor && window.inlineEditor) {\n
+\t\t\t\tif (!QUnit.started) {\n
+\t\t\t\t\tQUnit.start();\n
+\t\t\t\t\tQUnit.started = true;\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tsetTimeout(wait, 0);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: \'#elm1\',\n
+\t\t\tplugins: "lists",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tskin: false,\n
+\t\t\tindent: false,\n
+\t\t\tschema: \'html5\',\n
+\t\t\tentities: \'raw\',\n
+\t\t\tvalid_elements: \'li,ol,ul,dl,dt,dd,em,strong,span,#p,div,br\',\n
+\t\t\tvalid_styles: {\n
+\t\t\t\t\'*\': \'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left\'\n
+\t\t\t},\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\t\t\t\twait();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: \'#elm2\',\n
+\t\t\tinline: true,\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tskin: false,\n
+\t\t\tplugins: "lists",\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.inlineEditor = ed;\n
+\t\t\t\twait();\n
+\t\t\t}\n
+\t\t});\n
+\t},\n
+\n
+\tteardown: function() {\n
+\t\teditor.settings.forced_root_block = \'p\';\n
+\t}\n
+});\n
+\n
+function trimBrs(html) {\n
+\treturn html.toLowerCase().replace(/<br[^>]*>|[\\r\\n]+/gi, \'\');\n
+}\n
+\n
+function execCommand(cmd) {\n
+\tif (editor.editorCommands.hasCustomCommand(cmd)) {\n
+\t\teditor.execCommand(cmd);\n
+\t}\n
+}\n
+\n
+test(\'Apply UL list to single P\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<p>a</p>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 0);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(), \'<ul><li>a</li></ul>\');\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL list to single empty P\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<p><br></p>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 0);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(trimBrs(editor.getContent({format: \'raw\'})), \'<ul><li></li></ul>\');\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL list to multiple Ps\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<p>a</p>\' +\n
+\t\t\'<p>b</p>\' +\n
+\t\t\'<p>c</p>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 0, \'p:last\', 0);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply OL list to single P\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<p>a</p>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 0);\n
+\texecCommand(\'InsertOrderedList\');\n
+\n
+\tequal(editor.getContent(), \'<ol><li>a</li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply OL list to single empty P\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<p><br></p>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 0);\n
+\texecCommand(\'InsertOrderedList\');\n
+\n
+\tequal(trimBrs(editor.getContent({format: \'raw\'})), \'<ol><li></li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply OL list to multiple Ps\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<p>a</p>\' +\n
+\t\t\'<p>b</p>\' +\n
+\t\t\'<p>c</p>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 0, \'p:last\', 0);\n
+\texecCommand(\'InsertOrderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply OL to UL list\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 0, \'li:last\', 0);\n
+\texecCommand(\'InsertOrderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply OL to UL list with collapsed selection\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\');\n
+\texecCommand(\'InsertOrderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL to OL list\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 0, \'li:last\', 0);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL to OL list collapsed selection\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\');\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL to P and merge with adjacent lists\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\' +\n
+\t\t\'<p>b</p>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 1);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL to OL and merge with adjacent lists\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\' +\n
+\t\t\'<ol><li>b</li></ol>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'ol li\', 1);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply OL to P and merge with adjacent lists\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ol>\' +\n
+\t\t\'<p>b</p>\' +\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 1);\n
+\texecCommand(\'InsertOrderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply OL to UL and merge with adjacent lists\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ol>\' +\n
+\t\t\'<ul><li>b</li></ul>\' +\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'ul li\', 1);\n
+\texecCommand(\'InsertOrderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL list to single text line\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'a\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'body\', 0);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(), \'<ul><li>a</li></ul>\');\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL list to single text line with BR\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'a<br>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'body\', 0);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(), \'<ul><li>a</li></ul>\');\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL list to multiple lines separated by BR\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'a<br>\' +\n
+\t\t\'b<br>\' +\n
+\t\t\'c\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\teditor.execCommand(\'SelectAll\');\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL list to multiple lines separated by BR and with trailing BR\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'a<br>\' +\n
+\t\t\'b<br>\' +\n
+\t\t\'c<br>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\teditor.execCommand(\'SelectAll\');\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL list to multiple formatted lines separated by BR\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'<strong>a</strong><br>\' +\n
+\t\t\'<span>b</span><br>\' +\n
+\t\t\'<em>c</em>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'strong\', 0, \'em\', 0);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li><strong>a</strong></li>\' +\n
+\t\t\t\'<li><span>b</span></li>\' +\n
+\t\t\t\'<li><em>c</em></li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getStart().nodeName, \'STRONG\');\n
+\tequal(editor.selection.getEnd().nodeName, tinymce.Env.ie && tinymce.Env.ie < 9 ? \'LI\' : \'EM\'); // Old IE will return the end LI not a big deal\n
+});\n
+\n
+// Ignore on IE 7, 8 this is a known bug not worth fixing\n
+if (!tinymce.Env.ie || tinymce.Env.ie > 8) {\n
+\ttest(\'Apply UL list to br line and text block line\', function() {\n
+\t\teditor.settings.forced_root_block = false;\n
+\n
+\t\teditor.setContent(\n
+\t\t\t\'a\' +\n
+\t\t\t\'<p>b</p>\'\n
+\t\t);\n
+\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStart(editor.getBody().firstChild, 0);\n
+\t\trng.setEnd(editor.getBody().lastChild.firstChild, 1);\n
+\t\teditor.selection.setRng(rng);\n
+\t\texecCommand(\'InsertUnorderedList\');\n
+\n
+\t\tequal(editor.getContent(),\n
+\t\t\t\'<ul>\' +\n
+\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'</ul>\'\n
+\t\t);\n
+\n
+\t\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+\t\tequal(editor.selection.getEnd().nodeName, \'LI\');\n
+\t});\n
+}\n
+\n
+test(\'Apply UL list to text block line and br line\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'<p>a</p>\' +\n
+\t\t\'b\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild.firstChild, 0);\n
+\trng.setEnd(editor.getBody().lastChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getStart().nodeName, \'LI\');\n
+\tequal(editor.selection.getEnd().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Apply UL list to all BR lines (SelectAll)\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'a<br>\' +\n
+\t\t\'b<br>\' +\n
+\t\t\'c<br>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\teditor.execCommand(\'SelectAll\');\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+});\n
+\n
+test(\'Apply UL list to all P lines (SelectAll)\', function() {\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'<p>a</p>\' +\n
+\t\t\'<p>b</p>\' +\n
+\t\t\'<p>c</p>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\teditor.execCommand(\'SelectAll\');\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+});\n
+\n
+// Remove\n
+\n
+test(\'Remove UL at single LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\');\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>a</p>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove UL at start LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\');\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>a</p>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove UL at start empty LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li><br></li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\');\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>\\u00a0</p>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove UL at middle LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\', 1);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\' +\n
+\t\t\'<p>b</p>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove UL at middle empty LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li><br></li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\', 0);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\' +\n
+\t\t\'<p>\\u00a0</p>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove UL at end LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:last\', 1);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\' +\n
+\t\t\'<p>c</p>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove UL at end empty LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li><br></li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:last\', 0);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\' +\n
+\t\t\'<p>\\u00a0</p>\'\n
+\t);\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove UL at middle LI inside parent OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ul>\' +\n
+\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\'</ul>\' +\n
+\t\t\t\'<li>e</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'ul li:nth-child(2)\', 1);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ul>\' +\n
+\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'</ul>\' +\n
+\t\t\'</ol>\' +\n
+\t\t\'<p>c</p>\' +\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<ul>\' +\n
+\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\'</ul>\' +\n
+\t\t\t\'<li>e</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove UL at middle LI inside parent OL (html5)\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>e</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'ul li:nth-child(2)\', 1);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\' +\n
+\t\t\'<p>c</p>\' +\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>e</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove UL with single LI in BR mode\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 1);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'a\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'BODY\');\n
+});\n
+\n
+test(\'Remove UL with multiple LI in BR mode\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:first\', 1, \'li:last\', 1);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'a<br />\' +\n
+\t\t\'b\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'BODY\');\n
+});\n
+\n
+test(\'Remove empty UL between two textblocks\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<div>a</div>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li></li>\' +\n
+\t\t\'</ul>\' +\n
+\t\t\'<div>b</div>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:first\', 0);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<div>a</div>\' +\n
+\t\t\'<p>\\u00a0</p>\' +\n
+\t\t\'<div>b</div>\'\n
+\t);\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove indented list with single item\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li\', 0, \'li li\', 1);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\' +\n
+\t\t\'<p>b</p>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Remove indented list with multiple items\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>d</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li:first\', 0, \'li li:last\', 1);\n
+\texecCommand(\'InsertUnorderedList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\' +\n
+\t\t\'<p>b</p>\' +\n
+\t \t\'<p>c</p>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>d</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\tequal(editor.selection.getStart().firstChild.data, \'b\');\n
+\tequal(editor.selection.getEnd().firstChild.data, \'c\');\n
+});\n
+\n
+// Ignore on IE 7, 8 this is a known bug not worth fixing\n
+if (!tinymce.Env.ie || tinymce.Env.ie > 8) {\n
+\ttest(\'Remove empty UL between two textblocks in BR mode\', function() {\n
+\t\teditor.settings.forced_root_block = false;\n
+\n
+\t\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\t\'<div>a</div>\' +\n
+\t\t\t\'<ul>\' +\n
+\t\t\t\t\'<li></li>\' +\n
+\t\t\t\'</ul>\' +\n
+\t\t\t\'<div>b</div>\'\n
+\t\t);\n
+\n
+\t\teditor.focus();\n
+\t\tUtils.setSelection(\'li:first\', 0);\n
+\t\texecCommand(\'InsertUnorderedList\');\n
+\n
+\t\tequal(editor.getContent(),\n
+\t\t\t\'<div>a</div>\' +\n
+\t\t\t\'<br />\' +\n
+\t\t\t\'<div>b</div>\'\n
+\t\t);\n
+\t\tequal(editor.selection.getStart().nodeName, \'BR\');\n
+\t});\n
+}\n
+\n
+// Outdent\n
+\n
+test(\'Outdent inside LI in beginning of OL in LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li\', 1);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Outdent inside LI in middle of OL in LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li:nth-child(2)\', 1);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>c\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Outdent inside LI in end of OL in LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li:last\', 1);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+// Nested lists in OL elements\n
+\n
+test(\'Outdent inside LI in beginning of OL in OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'ol ol li\', 1);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Outdent inside LI in middle of OL in OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'ol ol li:nth-child(2)\', 1);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Outdent inside first/last LI in inner OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>1\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>2</li>\' +\n
+\t\t\t\t\'<li>3</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>4</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'ol ol li:nth-child(1)\', 0, \'ol ol li:nth-child(2)\', 1);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>1</li>\' +\n
+\t\t\t\'<li>2</li>\' +\n
+\t\t\t\'<li>3</li>\' +\n
+\t\t\t\'<li>4</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getRng(true).startContainer.nodeValue, \'2\');\n
+\tequal(editor.selection.getRng(true).endContainer.nodeValue, \'3\');\n
+});\n
+\n
+test(\'Outdent inside first LI in inner OL where OL is single child of parent LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'ol ol li:first\', 0);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Outdent inside LI in end of OL in OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'ol ol li:last\', 1);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Outdent inside only child LI in OL in OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'ol ol li\', 0);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Outdent multiple LI in OL and nested OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 0, \'li li\', 1);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>a</p>\' +\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+});\n
+\n
+// Indent\n
+\n
+test(\'Indent single LI in OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 0);\n
+\texecCommand(\'Indent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Indent middle LI in OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\', 0);\n
+\texecCommand(\'Indent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Indent last LI in OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:last\', 0);\n
+\texecCommand(\'Indent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Indent last LI to same level as middle LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:last\', 1);\n
+\texecCommand(\'Indent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Indent first LI and nested LI OL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 0, \'li li\', 0);\n
+\texecCommand(\'Indent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Indent second LI to same level as nested LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\', 0);\n
+\texecCommand(\'Indent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Indent second LI to same level as nested LI 2\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>cd\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>e</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\', 1);\n
+\texecCommand(\'Indent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>cd</li>\' +\n
+\t\t\t\t\t\'<li>e</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Indent second and third LI\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\', 0, \'li:last\', 0);\n
+\texecCommand(\'Indent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+});\n
+\n
+// Backspace\n
+\n
+test(\'Backspace at beginning of single LI in UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>a</p>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Backspace at beginning of first LI in UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>a</p>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Backspace at beginning of middle LI in UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>ab</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Backspace at beginning of start LI in UL inside UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>ab\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Backspace at beginning of middle LI in UL inside UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li:nth-child(2)\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>bc</li>\' +\n
+\t\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Backspace at beginning of single LI in UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>a</p>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Backspace at beginning of first LI in UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<p>a</p>\' +\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Backspace at beginning of middle LI in UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>ab</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Backspace at beginning of start LI in UL inside UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>ab\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Backspace at beginning of middle LI in UL inside UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li:nth-child(2)\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>bc</li>\' +\n
+\t\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Backspace at beginning of LI with empty LI above in UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li></li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(3)\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().innerHTML, \'b\');\n
+});\n
+\n
+test(\'Backspace at beginning of LI with BR padded empty LI above in UL\', function() {\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li><br></li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(3)\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().innerHTML, \'b\');\n
+});\n
+\n
+test(\'Backspace at beginning of LI with empty LI with STRING and BR above in UL\', function() {\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li><strong><br></strong></li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(3)\', 0);\n
+\teditor.plugins.lists.backspaceDelete();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().innerHTML, \'b\');\n
+});\n
+\n
+// Delete\n
+\n
+test(\'Delete at end of single LI in UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 1);\n
+\teditor.plugins.lists.backspaceDelete(true);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Delete at end of first LI in UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 1);\n
+\teditor.plugins.lists.backspaceDelete(true);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>ab</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Delete at end of middle LI in UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'<li>c</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li:nth-child(2)\', 1);\n
+\teditor.plugins.lists.backspaceDelete(true);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>bc</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Delete at end of start LI in UL inside UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li\', 1);\n
+\teditor.plugins.lists.backspaceDelete(true);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>bc</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Delete at end of middle LI in UL inside UL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\t\'<li>d</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li li:nth-child(2)\', 1);\n
+\teditor.plugins.lists.backspaceDelete(true);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\'<li>cd</li>\' +\n
+\t\t\t\t\'</ul>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Delete at end of LI before empty LI\', function() {\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li></li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 1);\n
+\teditor.plugins.lists.backspaceDelete(true);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().innerHTML, \'a\');\n
+});\n
+\n
+test(\'Delete at end of LI before BR padded empty LI\', function() {\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li><br></li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 1);\n
+\teditor.plugins.lists.backspaceDelete(true);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().innerHTML, \'a\');\n
+});\n
+\n
+test(\'Delete at end of LI before empty LI with STRONG\', function() {\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li><strong><br></strong></li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'li\', 1);\n
+\teditor.plugins.lists.backspaceDelete(true);\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ul>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>b</li>\' +\n
+\t\t\'</ul>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().innerHTML, \'a\');\n
+});\n
+\n
+test(\'Remove UL in inline body element contained in LI\', function() {\n
+\tinlineEditor.setContent(\'<ul><li>a</li></ul>\');\n
+\tinlineEditor.selection.setCursorLocation();\n
+\tinlineEditor.execCommand(\'InsertUnorderedList\');\n
+\tequal(inlineEditor.getContent(), \'<p>a</p>\');\n
+});\n
+\n
+test(\'Backspace in LI in UL in inline body element contained within LI\', function() {\n
+\tinlineEditor.setContent(\'<ul><li>a</li></ul>\');\n
+\tinlineEditor.focus();\n
+\tinlineEditor.selection.select(inlineEditor.getBody(), true);\n
+\tinlineEditor.selection.collapse(true);\n
+\tinlineEditor.plugins.lists.backspaceDelete();\n
+\tequal(inlineEditor.getContent(), \'<p>a</p>\');\n
+});\n
+\n
+test(\'Apply DL list to multiple Ps\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<p>a</p>\' +\n
+\t\t\'<p>b</p>\' +\n
+\t\t\'<p>c</p>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 0, \'p:last\', 0);\n
+\texecCommand(\'InsertDefinitionList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<dl>\' +\n
+\t\t\t\'<dt>a</dt>\' +\n
+\t\t\t\'<dt>b</dt>\' +\n
+\t\t\t\'<dt>c</dt>\' +\n
+\t\t\'</dl>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'DT\');\n
+});\n
+\n
+test(\'Apply OL list to single P\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<p>a</p>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 0);\n
+\texecCommand(\'InsertDefinitionList\');\n
+\n
+\tequal(editor.getContent(), \'<dl><dt>a</dt></dl>\');\n
+\tequal(editor.selection.getNode().nodeName, \'DT\');\n
+});\n
+\n
+test(\'Apply DL to P and merge with adjacent lists\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<dl>\' +\n
+\t\t\t\'<dt>a</dt>\' +\n
+\t\t\'</dl>\' +\n
+\t\t\'<p>b</p>\' +\n
+\t\t\'<dl>\' +\n
+\t\t\t\'<dt>c</dt>\' +\n
+\t\t\'</dl>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'p\', 1);\n
+\texecCommand(\'InsertDefinitionList\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<dl>\' +\n
+\t\t\t\'<dt>a</dt>\' +\n
+\t\t\t\'<dt>b</dt>\' +\n
+\t\t\t\'<dt>c</dt>\' +\n
+\t\t\'</dl>\'\n
+\t);\n
+\tequal(editor.selection.getStart().nodeName, \'DT\');\n
+});\n
+\n
+test(\'Indent single DT in DL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<dl>\' +\n
+\t\t\t\'<dt>a</dt>\' +\n
+\t\t\'</dl>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'dt\', 0);\n
+\texecCommand(\'Indent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<dl>\' +\n
+\t\t\t\'<dd>a</dd>\' +\n
+\t\t\'</dl>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'DD\');\n
+});\n
+\n
+test(\'Outdent single DD in DL\', function() {\n
+\teditor.getBody().innerHTML = trimBrs(\n
+\t\t\'<dl>\' +\n
+\t\t\t\'<dd>a</dd>\' +\n
+\t\t\'</dl>\'\n
+\t);\n
+\n
+\teditor.focus();\n
+\tUtils.setSelection(\'dd\', 1);\n
+\texecCommand(\'Outdent\');\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<dl>\' +\n
+\t\t\t\'<dt>a</dt>\' +\n
+\t\t\'</dl>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'DT\');\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>38916</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>lists.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

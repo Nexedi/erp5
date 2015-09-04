@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268331.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Throbber.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Throbber.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class enables you to display a Throbber for any element.\n
+ *\n
+ * @-x-less Throbber.less\n
+ * @class tinymce.ui.Throbber\n
+ */\n
+define("tinymce/ui/Throbber", [\n
+\t"tinymce/dom/DomQuery",\n
+\t"tinymce/ui/Control"\n
+], function($, Control) {\n
+\t"use strict";\n
+\n
+\t/**\n
+\t * Constructs a new throbber.\n
+\t *\n
+\t * @constructor\n
+\t * @param {Element} elm DOM Html element to display throbber in.\n
+\t * @param {Boolean} inline Optional true/false state if the throbber should be appended to end of element for infinite scroll.\n
+\t */\n
+\treturn function(elm, inline) {\n
+\t\tvar self = this, state, classPrefix = Control.classPrefix;\n
+\n
+\t\t/**\n
+\t\t * Shows the throbber.\n
+\t\t *\n
+\t\t * @method show\n
+\t\t * @param {Number} [time] Time to wait before showing.\n
+\t\t * @param {function} [callback] Optional callback to execute when the throbber is shown.\n
+\t\t * @return {tinymce.ui.Throbber} Current throbber instance.\n
+\t\t */\n
+\t\tself.show = function(time, callback) {\n
+\t\t\tself.hide();\n
+\n
+\t\t\tstate = true;\n
+\n
+\t\t\twindow.setTimeout(function() {\n
+\t\t\t\tif (state) {\n
+\t\t\t\t\t$(elm).append(\n
+\t\t\t\t\t\t\'<div class="\' + classPrefix + \'throbber\' + (inline ? \' \' + classPrefix + \'throbber-inline\' : \'\') + \'"></div>\'\n
+\t\t\t\t\t);\n
+\n
+\t\t\t\t\tif (callback) {\n
+\t\t\t\t\t\tcallback();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}, time || 0);\n
+\n
+\t\t\treturn self;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Hides the throbber.\n
+\t\t *\n
+\t\t * @method hide\n
+\t\t * @return {tinymce.ui.Throbber} Current throbber instance.\n
+\t\t */\n
+\t\tself.hide = function() {\n
+\t\t\tvar child = elm.lastChild;\n
+\n
+\t\t\tif (child && child.className.indexOf(\'throbber\') != -1) {\n
+\t\t\t\tchild.parentNode.removeChild(child);\n
+\t\t\t}\n
+\n
+\t\t\tstate = false;\n
+\n
+\t\t\treturn self;\n
+\t\t};\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1791</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Throbber.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

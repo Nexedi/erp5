@@ -1,0 +1,413 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268324.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Selector.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Selector.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*eslint no-nested-ternary:0 */\n
+\n
+/**\n
+ * Selector engine, enables you to select controls by using CSS like expressions.\n
+ * We currently only support basic CSS expressions to reduce the size of the core\n
+ * and the ones we support should be enough for most cases.\n
+ *\n
+ * @example\n
+ * Supported expressions:\n
+ *  element\n
+ *  element#name\n
+ *  element.class\n
+ *  element[attr]\n
+ *  element[attr*=value]\n
+ *  element[attr~=value]\n
+ *  element[attr!=value]\n
+ *  element[attr^=value]\n
+ *  element[attr$=value]\n
+ *  element:<state>\n
+ *  element:not(<expression>)\n
+ *  element:first\n
+ *  element:last\n
+ *  element:odd\n
+ *  element:even\n
+ *  element element\n
+ *  element > element\n
+ *\n
+ * @class tinymce.ui.Selector\n
+ */\n
+define("tinymce/ui/Selector", [\n
+\t"tinymce/util/Class"\n
+], function(Class) {\n
+\t"use strict";\n
+\n
+\t/**\n
+\t * Produces an array with a unique set of objects. It will not compare the values\n
+\t * but the references of the objects.\n
+\t *\n
+\t * @private\n
+\t * @method unqiue\n
+\t * @param {Array} array Array to make into an array with unique items.\n
+\t * @return {Array} Array with unique items.\n
+\t */\n
+\tfunction unique(array) {\n
+\t\tvar uniqueItems = [], i = array.length, item;\n
+\n
+\t\twhile (i--) {\n
+\t\t\titem = array[i];\n
+\n
+\t\t\tif (!item.__checked) {\n
+\t\t\t\tuniqueItems.push(item);\n
+\t\t\t\titem.__checked = 1;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\ti = uniqueItems.length;\n
+\t\twhile (i--) {\n
+\t\t\tdelete uniqueItems[i].__checked;\n
+\t\t}\n
+\n
+\t\treturn uniqueItems;\n
+\t}\n
+\n
+\tvar expression = /^([\\w\\\\*]+)?(?:#([\\w\\\\]+))?(?:\\.([\\w\\\\\\.]+))?(?:\\[\\@?([\\w\\\\]+)([\\^\\$\\*!~]?=)([\\w\\\\]+)\\])?(?:\\:(.+))?/i;\n
+\n
+\t/*jshint maxlen:255 */\n
+\t/*eslint max-len:0 */\n
+\tvar chunker = /((?:\\((?:\\([^()]+\\)|[^()]+)+\\)|\\[(?:\\[[^\\[\\]]*\\]|[\'"][^\'"]*[\'"]|[^\\[\\]\'"]+)+\\]|\\\\.|[^ >+~,(\\[\\\\]+)+|[>+~])(\\s*,\\s*)?((?:.|\\r|\\n)*)/g,\n
+\t\twhiteSpace = /^\\s*|\\s*$/g,\n
+\t\tCollection;\n
+\n
+\tvar Selector = Class.extend({\n
+\t\t/**\n
+\t\t * Constructs a new Selector instance.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @method init\n
+\t\t * @param {String} selector CSS like selector expression.\n
+\t\t */\n
+\t\tinit: function(selector) {\n
+\t\t\tvar match = this.match;\n
+\n
+\t\t\tfunction compileNameFilter(name) {\n
+\t\t\t\tif (name) {\n
+\t\t\t\t\tname = name.toLowerCase();\n
+\n
+\t\t\t\t\treturn function(item) {\n
+\t\t\t\t\t\treturn name === \'*\' || item.type === name;\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction compileIdFilter(id) {\n
+\t\t\t\tif (id) {\n
+\t\t\t\t\treturn function(item) {\n
+\t\t\t\t\t\treturn item._name === id;\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction compileClassesFilter(classes) {\n
+\t\t\t\tif (classes) {\n
+\t\t\t\t\tclasses = classes.split(\'.\');\n
+\n
+\t\t\t\t\treturn function(item) {\n
+\t\t\t\t\t\tvar i = classes.length;\n
+\n
+\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\tif (!item.classes.contains(classes[i])) {\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction compileAttrFilter(name, cmp, check) {\n
+\t\t\t\tif (name) {\n
+\t\t\t\t\treturn function(item) {\n
+\t\t\t\t\t\tvar value = item[name] ? item[name]() : \'\';\n
+\n
+\t\t\t\t\t\treturn !cmp ? !!check :\n
+\t\t\t\t\t\t\tcmp === "=" ? value === check :\n
+\t\t\t\t\t\t\tcmp === "*=" ? value.indexOf(check) >= 0 :\n
+\t\t\t\t\t\t\tcmp === "~=" ? (" " + value + " ").indexOf(" " + check + " ") >= 0 :\n
+\t\t\t\t\t\t\tcmp === "!=" ? value != check :\n
+\t\t\t\t\t\t\tcmp === "^=" ? value.indexOf(check) === 0 :\n
+\t\t\t\t\t\t\tcmp === "$=" ? value.substr(value.length - check.length) === check :\n
+\t\t\t\t\t\t\tfalse;\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction compilePsuedoFilter(name) {\n
+\t\t\t\tvar notSelectors;\n
+\n
+\t\t\t\tif (name) {\n
+\t\t\t\t\tname = /(?:not\\((.+)\\))|(.+)/i.exec(name);\n
+\n
+\t\t\t\t\tif (!name[1]) {\n
+\t\t\t\t\t\tname = name[2];\n
+\n
+\t\t\t\t\t\treturn function(item, index, length) {\n
+\t\t\t\t\t\t\treturn name === \'first\' ? index === 0 :\n
+\t\t\t\t\t\t\t\tname === \'last\' ? index === length - 1 :\n
+\t\t\t\t\t\t\t\tname === \'even\' ? index % 2 === 0 :\n
+\t\t\t\t\t\t\t\tname === \'odd\' ? index % 2 === 1 :\n
+\t\t\t\t\t\t\t\titem[name] ? item[name]() :\n
+\t\t\t\t\t\t\t\tfalse;\n
+\t\t\t\t\t\t};\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Compile not expression\n
+\t\t\t\t\tnotSelectors = parseChunks(name[1], []);\n
+\n
+\t\t\t\t\treturn function(item) {\n
+\t\t\t\t\t\treturn !match(item, notSelectors);\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction compile(selector, filters, direct) {\n
+\t\t\t\tvar parts;\n
+\n
+\t\t\t\tfunction add(filter) {\n
+\t\t\t\t\tif (filter) {\n
+\t\t\t\t\t\tfilters.push(filter);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Parse expression into parts\n
+\t\t\t\tparts = expression.exec(selector.replace(whiteSpace, \'\'));\n
+\n
+\t\t\t\tadd(compileNameFilter(parts[1]));\n
+\t\t\t\tadd(compileIdFilter(parts[2]));\n
+\t\t\t\tadd(compileClassesFilter(parts[3]));\n
+\t\t\t\tadd(compileAttrFilter(parts[4], parts[5], parts[6]));\n
+\t\t\t\tadd(compilePsuedoFilter(parts[7]));\n
+\n
+\t\t\t\t// Mark the filter with psuedo for performance\n
+\t\t\t\tfilters.psuedo = !!parts[7];\n
+\t\t\t\tfilters.direct = direct;\n
+\n
+\t\t\t\treturn filters;\n
+\t\t\t}\n
+\n
+\t\t\t// Parser logic based on Sizzle by John Resig\n
+\t\t\tfunction parseChunks(selector, selectors) {\n
+\t\t\t\tvar parts = [], extra, matches, i;\n
+\n
+\t\t\t\tdo {\n
+\t\t\t\t\tchunker.exec("");\n
+\t\t\t\t\tmatches = chunker.exec(selector);\n
+\n
+\t\t\t\t\tif (matches) {\n
+\t\t\t\t\t\tselector = matches[3];\n
+\t\t\t\t\t\tparts.push(matches[1]);\n
+\n
+\t\t\t\t\t\tif (matches[2]) {\n
+\t\t\t\t\t\t\textra = matches[3];\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t} while (matches);\n
+\n
+\t\t\t\tif (extra) {\n
+\t\t\t\t\tparseChunks(extra, selectors);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tselector = [];\n
+\t\t\t\tfor (i = 0; i < parts.length; i++) {\n
+\t\t\t\t\tif (parts[i] != \'>\') {\n
+\t\t\t\t\t\tselector.push(compile(parts[i], [], parts[i - 1] === \'>\'));\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tselectors.push(selector);\n
+\n
+\t\t\t\treturn selectors;\n
+\t\t\t}\n
+\n
+\t\t\tthis._selectors = parseChunks(selector, []);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the selector matches the specified control.\n
+\t\t *\n
+\t\t * @method match\n
+\t\t * @param {tinymce.ui.Control} control Control to match agains the selector.\n
+\t\t * @param {Array} selectors Optional array of selectors, mostly used internally.\n
+\t\t * @return {Boolean} true/false state if the control matches or not.\n
+\t\t */\n
+\t\tmatch: function(control, selectors) {\n
+\t\t\tvar i, l, si, sl, selector, fi, fl, filters, index, length, siblings, count, item;\n
+\n
+\t\t\tselectors = selectors || this._selectors;\n
+\t\t\tfor (i = 0, l = selectors.length; i < l; i++) {\n
+\t\t\t\tselector = selectors[i];\n
+\t\t\t\tsl = selector.length;\n
+\t\t\t\titem = control;\n
+\t\t\t\tcount = 0;\n
+\n
+\t\t\t\tfor (si = sl - 1; si >= 0; si--) {\n
+\t\t\t\t\tfilters = selector[si];\n
+\n
+\t\t\t\t\twhile (item) {\n
+\t\t\t\t\t\t// Find the index and length since a psuedo filter like :first needs it\n
+\t\t\t\t\t\tif (filters.psuedo) {\n
+\t\t\t\t\t\t\tsiblings = item.parent().items();\n
+\t\t\t\t\t\t\tindex = length = siblings.length;\n
+\t\t\t\t\t\t\twhile (index--) {\n
+\t\t\t\t\t\t\t\tif (siblings[index] === item) {\n
+\t\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tfor (fi = 0, fl = filters.length; fi < fl; fi++) {\n
+\t\t\t\t\t\t\tif (!filters[fi](item, index, length)) {\n
+\t\t\t\t\t\t\t\tfi = fl + 1;\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (fi === fl) {\n
+\t\t\t\t\t\t\tcount++;\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t// If it didn\'t match the right most expression then\n
+\t\t\t\t\t\t\t// break since it\'s no point looking at the parents\n
+\t\t\t\t\t\t\tif (si === sl - 1) {\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\titem = item.parent();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// If we found all selectors then return true otherwise continue looking\n
+\t\t\t\tif (count === sl) {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a tinymce.ui.Collection with matches of the specified selector inside the specified container.\n
+\t\t *\n
+\t\t * @method find\n
+\t\t * @param {tinymce.ui.Control} container Container to look for items in.\n
+\t\t * @return {tinymce.ui.Collection} Collection with matched elements.\n
+\t\t */\n
+\t\tfind: function(container) {\n
+\t\t\tvar matches = [], i, l, selectors = this._selectors;\n
+\n
+\t\t\tfunction collect(items, selector, index) {\n
+\t\t\t\tvar i, l, fi, fl, item, filters = selector[index];\n
+\n
+\t\t\t\tfor (i = 0, l = items.length; i < l; i++) {\n
+\t\t\t\t\titem = items[i];\n
+\n
+\t\t\t\t\t// Run each filter agains the item\n
+\t\t\t\t\tfor (fi = 0, fl = filters.length; fi < fl; fi++) {\n
+\t\t\t\t\t\tif (!filters[fi](item, i, l)) {\n
+\t\t\t\t\t\t\tfi = fl + 1;\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// All filters matched the item\n
+\t\t\t\t\tif (fi === fl) {\n
+\t\t\t\t\t\t// Matched item is on the last expression like: panel toolbar [button]\n
+\t\t\t\t\t\tif (index == selector.length - 1) {\n
+\t\t\t\t\t\t\tmatches.push(item);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t// Collect next expression type\n
+\t\t\t\t\t\t\tif (item.items) {\n
+\t\t\t\t\t\t\t\tcollect(item.items(), selector, index + 1);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else if (filters.direct) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Collect child items\n
+\t\t\t\t\tif (item.items) {\n
+\t\t\t\t\t\tcollect(item.items(), selector, index);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (container.items) {\n
+\t\t\t\tfor (i = 0, l = selectors.length; i < l; i++) {\n
+\t\t\t\t\tcollect(container.items(), selectors[i], 0);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Unique the matches if needed\n
+\t\t\t\tif (l > 1) {\n
+\t\t\t\t\tmatches = unique(matches);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Fix for circular reference\n
+\t\t\tif (!Collection) {\n
+\t\t\t\t// TODO: Fix me!\n
+\t\t\t\tCollection = Selector.Collection;\n
+\t\t\t}\n
+\n
+\t\t\treturn new Collection(matches);\n
+\t\t}\n
+\t});\n
+\n
+\treturn Selector;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8655</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Selector.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

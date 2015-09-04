@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268305.51</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DomUtils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * DomUtils.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+define("tinymce/ui/DomUtils", [\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/dom/DOMUtils"\n
+], function(Tools, DOMUtils) {\n
+\t"use strict";\n
+\n
+\tvar count = 0;\n
+\n
+\treturn {\n
+\t\tid: function() {\n
+\t\t\treturn \'mceu_\' + (count++);\n
+\t\t},\n
+\n
+\t\tcreateFragment: function(html) {\n
+\t\t\treturn DOMUtils.DOM.createFragment(html);\n
+\t\t},\n
+\n
+\t\tgetWindowSize: function() {\n
+\t\t\treturn DOMUtils.DOM.getViewPort();\n
+\t\t},\n
+\n
+\t\tgetSize: function(elm) {\n
+\t\t\tvar width, height;\n
+\n
+\t\t\tif (elm.getBoundingClientRect) {\n
+\t\t\t\tvar rect = elm.getBoundingClientRect();\n
+\n
+\t\t\t\twidth = Math.max(rect.width || (rect.right - rect.left), elm.offsetWidth);\n
+\t\t\t\theight = Math.max(rect.height || (rect.bottom - rect.bottom), elm.offsetHeight);\n
+\t\t\t} else {\n
+\t\t\t\twidth = elm.offsetWidth;\n
+\t\t\t\theight = elm.offsetHeight;\n
+\t\t\t}\n
+\n
+\t\t\treturn {width: width, height: height};\n
+\t\t},\n
+\n
+\t\tgetPos: function(elm, root) {\n
+\t\t\treturn DOMUtils.DOM.getPos(elm, root);\n
+\t\t},\n
+\n
+\t\tgetViewPort: function(win) {\n
+\t\t\treturn DOMUtils.DOM.getViewPort(win);\n
+\t\t},\n
+\n
+\t\tget: function(id) {\n
+\t\t\treturn document.getElementById(id);\n
+\t\t},\n
+\n
+\t\taddClass: function(elm, cls) {\n
+\t\t\treturn DOMUtils.DOM.addClass(elm, cls);\n
+\t\t},\n
+\n
+\t\tremoveClass: function(elm, cls) {\n
+\t\t\treturn DOMUtils.DOM.removeClass(elm, cls);\n
+\t\t},\n
+\n
+\t\thasClass: function(elm, cls) {\n
+\t\t\treturn DOMUtils.DOM.hasClass(elm, cls);\n
+\t\t},\n
+\n
+\t\ttoggleClass: function(elm, cls, state) {\n
+\t\t\treturn DOMUtils.DOM.toggleClass(elm, cls, state);\n
+\t\t},\n
+\n
+\t\tcss: function(elm, name, value) {\n
+\t\t\treturn DOMUtils.DOM.setStyle(elm, name, value);\n
+\t\t},\n
+\n
+\t\tgetRuntimeStyle: function(elm, name) {\n
+\t\t\treturn DOMUtils.DOM.getStyle(elm, name, true);\n
+\t\t},\n
+\n
+\t\ton: function(target, name, callback, scope) {\n
+\t\t\treturn DOMUtils.DOM.bind(target, name, callback, scope);\n
+\t\t},\n
+\n
+\t\toff: function(target, name, callback) {\n
+\t\t\treturn DOMUtils.DOM.unbind(target, name, callback);\n
+\t\t},\n
+\n
+\t\tfire: function(target, name, args) {\n
+\t\t\treturn DOMUtils.DOM.fire(target, name, args);\n
+\t\t},\n
+\n
+\t\tinnerHtml: function(elm, html) {\n
+\t\t\t// Workaround for <div> in <p> bug on IE 8 #6178\n
+\t\t\tDOMUtils.DOM.setHTML(elm, html);\n
+\t\t}\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2221</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DomUtils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

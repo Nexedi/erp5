@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268693.01</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>AbsoluteLayout.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// AbsoluteLayout\n
+\n
+.@{prefix}-abs-layout {\n
+\tposition: relative;\n
+}\n
+\n
+body .@{prefix}-abs-layout-item, .@{prefix}-abs-end {\n
+\tposition: absolute;\n
+}\n
+\n
+.@{prefix}-abs-end {\n
+\twidth: 1px; height: 1px;\n
+}\n
+\n
+.@{prefix}-container-body.@{prefix}-abs-layout {\n
+\toverflow: hidden;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>265</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>AbsoluteLayout.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

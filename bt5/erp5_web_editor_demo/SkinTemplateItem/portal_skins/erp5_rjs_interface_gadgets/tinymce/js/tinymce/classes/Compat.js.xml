@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268290.2</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Compat.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Compat.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * TinyMCE core class.\n
+ *\n
+ * @static\n
+ * @class tinymce\n
+ * @borrow-members tinymce.EditorManager\n
+ * @borrow-members tinymce.util.Tools\n
+ */\n
+define("tinymce/Compat", [\n
+\t"tinymce/dom/DOMUtils",\n
+\t"tinymce/dom/EventUtils",\n
+\t"tinymce/dom/ScriptLoader",\n
+\t"tinymce/AddOnManager",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/Env"\n
+], function(DOMUtils, EventUtils, ScriptLoader, AddOnManager, Tools, Env) {\n
+\tvar tinymce = window.tinymce;\n
+\n
+\t/**\n
+\t * @property {tinymce.dom.DOMUtils} DOM Global DOM instance.\n
+\t * @property {tinymce.dom.ScriptLoader} ScriptLoader Global ScriptLoader instance.\n
+\t * @property {tinymce.AddOnManager} PluginManager Global PluginManager instance.\n
+\t * @property {tinymce.AddOnManager} ThemeManager Global ThemeManager instance.\n
+\t */\n
+\ttinymce.DOM = DOMUtils.DOM;\n
+\ttinymce.ScriptLoader = ScriptLoader.ScriptLoader;\n
+\ttinymce.PluginManager = AddOnManager.PluginManager;\n
+\ttinymce.ThemeManager = AddOnManager.ThemeManager;\n
+\n
+\ttinymce.dom = tinymce.dom || {};\n
+\ttinymce.dom.Event = EventUtils.Event;\n
+\n
+\tTools.each(Tools, function(func, key) {\n
+\t\ttinymce[key] = func;\n
+\t});\n
+\n
+\tTools.each(\'isOpera isWebKit isIE isGecko isMac\'.split(\' \'), function(name) {\n
+\t\ttinymce[name] = Env[name.substr(2).toLowerCase()];\n
+\t});\n
+\n
+\treturn {};\n
+});\n
+\n
+// Describe the different namespaces\n
+\n
+/**\n
+ * Root level namespace this contains classes directly releated to the TinyMCE editor.\n
+ *\n
+ * @namespace tinymce\n
+ */\n
+\n
+/**\n
+ * Contains classes for handling the browsers DOM.\n
+ *\n
+ * @namespace tinymce.dom\n
+ */\n
+\n
+/**\n
+ * Contains html parser and serializer logic.\n
+ *\n
+ * @namespace tinymce.html\n
+ */\n
+\n
+/**\n
+ * Contains the different UI types such as buttons, listboxes etc.\n
+ *\n
+ * @namespace tinymce.ui\n
+ */\n
+\n
+/**\n
+ * Contains various utility classes such as json parser, cookies etc.\n
+ *\n
+ * @namespace tinymce.util\n
+ */\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1983</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Compat.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

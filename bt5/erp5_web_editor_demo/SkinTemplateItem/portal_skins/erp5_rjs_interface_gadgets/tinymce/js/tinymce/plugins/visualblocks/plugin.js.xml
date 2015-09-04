@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268493.51</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'visualblocks\', function(editor, url) {\n
+\tvar cssId, visualBlocksMenuItem, enabled;\n
+\n
+\t// We don\'t support older browsers like IE6/7 and they don\'t provide prototypes for DOM objects\n
+\tif (!window.NodeList) {\n
+\t\treturn;\n
+\t}\n
+\n
+\tfunction toggleActiveState() {\n
+\t\tvar self = this;\n
+\n
+\t\tself.active(enabled);\n
+\n
+\t\teditor.on(\'VisualBlocks\', function() {\n
+\t\t\tself.active(editor.dom.hasClass(editor.getBody(), \'mce-visualblocks\'));\n
+\t\t});\n
+\t}\n
+\n
+\teditor.addCommand(\'mceVisualBlocks\', function() {\n
+\t\tvar dom = editor.dom, linkElm;\n
+\n
+\t\tif (!cssId) {\n
+\t\t\tcssId = dom.uniqueId();\n
+\t\t\tlinkElm = dom.create(\'link\', {\n
+\t\t\t\tid: cssId,\n
+\t\t\t\trel: \'stylesheet\',\n
+\t\t\t\thref: url + \'/css/visualblocks.css\'\n
+\t\t\t});\n
+\n
+\t\t\teditor.getDoc().getElementsByTagName(\'head\')[0].appendChild(linkElm);\n
+\t\t}\n
+\n
+\t\t// Toggle on/off visual blocks while computing previews\n
+\t\teditor.on("PreviewFormats AfterPreviewFormats", function(e) {\n
+\t\t\tif (enabled) {\n
+\t\t\t\tdom.toggleClass(editor.getBody(), \'mce-visualblocks\', e.type == "afterpreviewformats");\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tdom.toggleClass(editor.getBody(), \'mce-visualblocks\');\n
+\t\tenabled = editor.dom.hasClass(editor.getBody(), \'mce-visualblocks\');\n
+\n
+\t\tif (visualBlocksMenuItem) {\n
+\t\t\tvisualBlocksMenuItem.active(dom.hasClass(editor.getBody(), \'mce-visualblocks\'));\n
+\t\t}\n
+\n
+\t\teditor.fire(\'VisualBlocks\');\n
+\t});\n
+\n
+\teditor.addButton(\'visualblocks\', {\n
+\t\ttitle: \'Show blocks\',\n
+\t\tcmd: \'mceVisualBlocks\',\n
+\t\tonPostRender: toggleActiveState\n
+\t});\n
+\n
+\teditor.addMenuItem(\'visualblocks\', {\n
+\t\ttext: \'Show blocks\',\n
+\t\tcmd: \'mceVisualBlocks\',\n
+\t\tonPostRender: toggleActiveState,\n
+\t\tselectable: true,\n
+\t\tcontext: \'view\',\n
+\t\tprependToContext: true\n
+\t});\n
+\n
+\teditor.on(\'init\', function() {\n
+\t\tif (editor.settings.visualblocks_default_state) {\n
+\t\t\teditor.execCommand(\'mceVisualBlocks\', false, null, {skip_focus: true});\n
+\t\t}\n
+\t});\n
+\n
+\teditor.on(\'remove\', function() {\n
+\t\teditor.dom.removeClass(editor.getBody(), \'mce-visualblocks\');\n
+\t});\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2139</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,1136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268242.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EnterKey.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.EnterKey", {\n
+\tsetupModule: function() {\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "textarea",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tindent: false,\n
+\t\t\tskin: false,\n
+\t\t\tentities: \'raw\',\n
+\t\t\tschema: \'html5\',\n
+\t\t\textended_valid_elements: \'div[id|style|contenteditable],span[id|style|contenteditable],#dt,#dd\',\n
+\t\t\tvalid_styles: {\n
+\t\t\t\t\'*\' : \'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left\'\n
+\t\t\t},\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}\n
+\t\t});\n
+\t},\n
+\n
+\tteardown: function() {\n
+\t\teditor.settings.forced_root_block = \'p\';\n
+\t\teditor.settings.forced_root_block_attrs = null;\n
+\t\teditor.settings.end_container_on_empty_block = false;\n
+\t\teditor.settings.br_in_pre = true;\n
+\t\teditor.settings.keep_styles = true;\n
+\t\tdelete editor.settings.force_p_newlines;\n
+\t}\n
+});\n
+\n
+test(\'Enter at end of H1\', function() {\n
+\teditor.setContent(\'<h1>abc</h1>\');\n
+\tUtils.setSelection(\'h1\', 3);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<h1>abc</h1><p>\\u00a0</p>\');\n
+\tequal(editor.selection.getRng(true).startContainer.nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter in midde of H1\', function() {\n
+\teditor.setContent(\'<h1>abcd</h1>\');\n
+\tUtils.setSelection(\'h1\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<h1>ab</h1><h1>cd</h1>\');\n
+\tequal(editor.selection.getRng(true).startContainer.parentNode.nodeName, \'H1\');\n
+});\n
+\n
+test(\'Enter before text after EM\', function() {\n
+\teditor.setContent(\'<p><em>a</em>b</p>\');\n
+\teditor.selection.setCursorLocation(editor.getBody().firstChild, 1);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p><em>a</em></p><p>b</p>\');\n
+\tvar rng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer.nodeValue, \'b\');\n
+});\n
+\n
+test(\'Enter before first IMG in P\', function() {\n
+\teditor.setContent(\'<p><img alt="" src="about:blank" /></p>\');\n
+\teditor.selection.setCursorLocation(editor.getBody().firstChild, 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>\\u00a0</p><p><img src="about:blank" alt="" /></p>\');\n
+});\n
+\n
+test(\'Enter before last IMG in P with text\', function() {\n
+\teditor.setContent(\'<p>abc<img alt="" src="about:blank" /></p>\');\n
+\teditor.selection.setCursorLocation(editor.getBody().firstChild, 1);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>abc</p><p><img src="about:blank" alt="" /></p>\');\n
+\tvar rng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer.nodeName, \'P\');\n
+\tequal(rng.startContainer.childNodes[rng.startOffset].nodeName, \'IMG\');\n
+});\n
+\n
+test(\'Enter before last IMG in P with IMG sibling\', function() {\n
+\teditor.setContent(\'<p><img src="about:blank" alt="" /><img src="about:blank" alt="" /></p>\');\n
+\teditor.selection.setCursorLocation(editor.getBody().firstChild, 1);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p><img src="about:blank" alt="" /></p><p><img src="about:blank" alt="" /></p>\');\n
+\tvar rng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer.nodeName, \'P\');\n
+\tequal(rng.startContainer.childNodes[rng.startOffset].nodeName, \'IMG\');\n
+});\n
+\n
+test(\'Enter after last IMG in P\', function() {\n
+\teditor.setContent(\'<p>abc<img alt="" src="about:blank" /></p>\');\n
+\teditor.selection.setCursorLocation(editor.getBody().firstChild, 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>abc<img src="about:blank" alt="" /></p><p>\\u00a0</p>\');\n
+});\n
+\n
+test(\'Enter before last INPUT in P with text\', function() {\n
+\teditor.setContent(\'<p>abc<input type="text" /></p>\');\n
+\teditor.selection.setCursorLocation(editor.getBody().firstChild, 1);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>abc</p><p><input type="text" /></p>\');\n
+\tvar rng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer.nodeName, \'P\');\n
+\tequal(rng.startContainer.childNodes[rng.startOffset].nodeName, \'INPUT\');\n
+});\n
+\n
+test(\'Enter before last INPUT in P with IMG sibling\', function() {\n
+\teditor.setContent(\'<p><input type="text" /><input type="text" /></p>\');\n
+\teditor.selection.setCursorLocation(editor.getBody().firstChild, 1);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p><input type="text" /></p><p><input type="text" /></p>\');\n
+\tvar rng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer.nodeName, \'P\');\n
+\tequal(rng.startContainer.childNodes[rng.startOffset].nodeName, \'INPUT\');\n
+});\n
+\n
+test(\'Enter after last INPUT in P\', function() {\n
+\teditor.setContent(\'<p>abc<input type="text" /></p>\');\n
+\teditor.selection.setCursorLocation(editor.getBody().firstChild, 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>abc<input type="text" /></p><p>\\u00a0</p>\');\n
+});\n
+\n
+test(\'Enter at end of P\', function() {\n
+\teditor.setContent(\'<p>abc</p>\');\n
+\tUtils.setSelection(\'p\', 3);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>abc</p><p>\\u00a0</p>\');\n
+\tequal(editor.selection.getRng(true).startContainer.nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter at end of EM inside P\', function() {\n
+\teditor.setContent(\'<p><em>abc</em></p>\');\n
+\tUtils.setSelection(\'em\', 3);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML).replace(/<br([^>]+|)>|&nbsp;/g, \'\'), \'<p><em>abc</em></p><p><em></em></p>\');\n
+\tequal(editor.selection.getRng(true).startContainer.nodeName, \'EM\');\n
+});\n
+\n
+test(\'Enter at middle of EM inside P\', function() {\n
+\teditor.setContent(\'<p><em>abcd</em></p>\');\n
+\tUtils.setSelection(\'em\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p><em>ab</em></p><p><em>cd</em></p>\');\n
+\tequal(editor.selection.getRng(true).startContainer.parentNode.nodeName, \'EM\');\n
+});\n
+\n
+test(\'Enter at beginning EM inside P\', function() {\n
+\teditor.setContent(\'<p><em>abc</em></p>\');\n
+\tUtils.setSelection(\'em\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML).replace(/<br([^>]+|)>|&nbsp;/g, \'\'), \'<p><em></em></p><p><em>abc</em></p>\');\n
+\tequal(editor.selection.getRng(true).startContainer.nodeValue, \'abc\');\n
+});\n
+\n
+test(\'Enter at end of STRONG in EM inside P\', function() {\n
+\teditor.setContent(\'<p><em><strong>abc</strong></em></p>\');\n
+\tUtils.setSelection(\'strong\', 3);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML).replace(/<br([^>]+|)>|&nbsp;/g, \'\'), \'<p><em><strong>abc</strong></em></p><p><em><strong></strong></em></p>\');\n
+\tequal(editor.selection.getRng(true).startContainer.nodeName, \'STRONG\');\n
+});\n
+\n
+test(\'Enter at middle of STRONG in EM inside P\', function() {\n
+\teditor.setContent(\'<p><em><strong>abcd</strong></em></p>\');\n
+\tUtils.setSelection(\'strong\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p><em><strong>ab</strong></em></p><p><em><strong>cd</strong></em></p>\');\n
+\tequal(editor.selection.getRng(true).startContainer.parentNode.nodeName, \'STRONG\');\n
+});\n
+\n
+test(\'Enter at beginning STRONG in EM inside P\', function() {\n
+\teditor.setContent(\'<p><em><strong>abc</strong></em></p>\');\n
+\tUtils.setSelection(\'strong\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML).replace(/<br([^>]+|)>|&nbsp;/g, \'\'), \'<p><em><strong></strong></em></p><p><em><strong>abc</strong></em></p>\');\n
+\tequal(editor.selection.getRng(true).startContainer.nodeValue, \'abc\');\n
+});\n
+\n
+test(\'Enter at beginning of P\', function() {\n
+\teditor.setContent(\'<p>abc</p>\');\n
+\tUtils.setSelection(\'p\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>\\u00a0</p><p>abc</p>\');\n
+\tequal(editor.selection.getRng(true).startContainer.nodeValue, \'abc\');\n
+});\n
+\n
+test(\'Enter at middle of P with style, id and class attributes\', function() {\n
+\teditor.setContent(\'<p id="a" class="b" style="color:#000">abcd</p>\');\n
+\tUtils.setSelection(\'p\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p id="a" class="b" style="color: #000;">ab</p><p class="b" style="color: #000;">cd</p>\');\n
+\tequal(editor.selection.getRng(true).startContainer.parentNode.nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter at a range between H1 and P\', function() {\n
+\teditor.setContent(\'<h1>abcd</h1><p>efgh</p>\');\n
+\tUtils.setSelection(\'h1\', 2, \'p\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<h1>abgh</h1>\');\n
+\tequal(editor.selection.getNode().nodeName, \'H1\');\n
+});\n
+\n
+test(\'Enter at end of H1 in HGROUP\', function() {\n
+\teditor.setContent(\'<hgroup><h1>abc</h1></hgroup>\');\n
+\tUtils.setSelection(\'h1\', 3);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<hgroup><h1>abc</h1><h1>\\u00a0</h1></hgroup>\');\n
+\tequal(editor.selection.getRng(true).startContainer.nodeName, \'H1\');\n
+});\n
+\n
+test(\'Enter inside empty TD\', function() {\n
+\teditor.getBody().innerHTML = \'<table><tr><td></td></tr></table>\';\n
+\tUtils.setSelection(\'td\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML).replace(/<br([^>]+|)>|&nbsp;/g, \'\'), \'<table><tbody><tr><td><p></p><p></p></td></tr></tbody></table>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Shift+Enter inside STRONG inside TD with BR\', function() {\n
+\teditor.getBody().innerHTML = \'<table><tr><td>d <strong>e</strong><br></td></tr></table>\';\n
+\tUtils.setSelection(\'strong\', 1);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<table><tbody><tr><td>d <strong>e<br></strong><br></td></tr></tbody></table>\');\n
+\tequal(editor.selection.getNode().nodeName, \'STRONG\');\n
+});\n
+\n
+test(\'Enter inside middle of text node in body\', function() {\n
+\teditor.getBody().innerHTML = \'abcd\';\n
+\tUtils.setSelection(\'body\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>ab</p><p>cd</p>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter inside at beginning of text node in body\', function() {\n
+\teditor.getBody().innerHTML = \'abcd\';\n
+\tUtils.setSelection(\'body\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>\\u00a0</p><p>abcd</p>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter inside at end of text node in body\', function() {\n
+\teditor.getBody().innerHTML = \'abcd\';\n
+\tUtils.setSelection(\'body\', 4);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>abcd</p><p>\\u00a0</p>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter inside empty body\', function() {\n
+\teditor.getBody().innerHTML = \'\';\n
+\tUtils.setSelection(\'body\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>\\u00a0</p><p>\\u00a0</p>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter inside empty li in beginning of ol\', function() {\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<ol><li></li><li>a</li></ol>\' : \'<ol><li><br></li><li>a</li></ol>\';\n
+\tUtils.setSelection(\'li\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>\\u00a0</p><ol><li>a</li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter inside empty li at the end of ol\', function() {\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<ol><li>a</li><li></li></ol>\' : \'<ol><li>a</li><li><br></li></ol>\';\n
+\tUtils.setSelection(\'li:last\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<ol><li>a</li></ol><p>\\u00a0</p>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Shift+Enter inside empty li in the middle of ol\', function() {\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<ol><li>a</li><li></li><li>b</li></ol>\' : \'<ol><li>a</li><li><br></li><li>b</li></ol>\';\n
+\tUtils.setSelection(\'li:nth-child(2)\', 0);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<ol><li>a</li></ol><p>\\u00a0</p><ol><li>b</li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Shift+Enter inside empty li in beginning of ol\', function() {\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<ol><li></li><li>a</li></ol>\' : \'<ol><li><br></li><li>a</li></ol>\';\n
+\tUtils.setSelection(\'li\', 0);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<p>\\u00a0</p><ol><li>a</li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Shift+Enter inside empty li at the end of ol\', function() {\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<ol><li>a</li><li></li></ol>\' : \'<ol><li>a</li><li><br></li></ol>\';\n
+\tUtils.setSelection(\'li:last\', 0);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<ol><li>a</li></ol><p>\\u00a0</p>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter inside empty li in the middle of ol with forced_root_block: false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<ol><li>a</li><li></li><li>b</li></ol>\' : \'<ol><li>a</li><li><br></li><li>b</li></ol>\';\n
+\tUtils.setSelection(\'li:nth-child(2)\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<ol><li>a</li></ol><br /><ol><li>b</li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'BODY\');\n
+});\n
+\n
+test(\'Enter inside empty li in beginning of ol with forced_root_block: false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<ol><li></li><li>a</li></ol>\' : \'<ol><li><br></li><li>a</li></ol>\';\n
+\tUtils.setSelection(\'li\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<br /><ol><li>a</li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'BODY\');\n
+});\n
+\n
+test(\'Enter inside empty li at the end of ol with forced_root_block: false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<ol><li>a</li><li></li></ol>\' : \'<ol><li>a</li><li><br></li></ol>\';\n
+\tUtils.setSelection(\'li:last\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<ol><li>a</li></ol><br>\');\n
+\tequal(editor.selection.getNode().nodeName, \'BODY\');\n
+});\n
+\n
+test(\'Enter inside empty li in the middle of ol\', function() {\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<ol><li>a</li><li></li><li>b</li></ol>\' : \'<ol><li>a</li><li><br></li><li>b</li></ol>\';\n
+\tUtils.setSelection(\'li:nth-child(2)\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<ol><li>a</li></ol><p>\\u00a0</p><ol><li>b</li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+// Nested lists in LI elements\n
+\n
+test(\'Enter inside empty LI in beginning of OL in LI\', function() {\n
+\teditor.getBody().innerHTML = Utils.trimBrsOnIE(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li><br></li>\' +\n
+\t\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tUtils.setSelection(\'li li\', 0);\n
+\teditor.focus();\n
+\tUtils.pressEnter();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li>\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Enter inside empty LI in middle of OL in LI\', function() {\n
+\teditor.getBody().innerHTML = Utils.trimBrsOnIE(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\t\t\'<li><br></li>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tUtils.setSelection(\'li li:nth-child(2)\', 0);\n
+\teditor.focus();\n
+\tUtils.pressEnter();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li>\\u00a0\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\t// Ignore on IE 7, 8 this is a known bug not worth fixing\n
+\tif (!tinymce.Env.ie || tinymce.Env.ie > 8) {\n
+\t\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+\t}\n
+});\n
+\n
+test(\'Enter inside empty LI in end of OL in LI\', function() {\n
+\teditor.getBody().innerHTML = Utils.trimBrsOnIE(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\t\t\'<li><br></li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tUtils.setSelection(\'li li:last\', 0);\n
+\teditor.focus();\n
+\tUtils.pressEnter();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a\' +\n
+\t\t\t\t\'<ol>\' +\n
+\t\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\t\'</ol>\' +\n
+\t\t\t\'</li>\' +\n
+\t\t\t\'<li></li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+// Nested lists in OL elements\n
+\n
+// Ignore on IE 7, 8 this is a known bug not worth fixing\n
+if (!tinymce.Env.ie || tinymce.Env.ie > 8) {\n
+\ttest(\'Enter before nested list\', function() {\n
+\t\teditor.getBody().innerHTML = Utils.trimBrsOnIE(\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>a\' +\n
+\t\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\t\'</ul>\' +\n
+\t\t\t\t\'</li>\' +\n
+\t\t\t\'</ol>\'\n
+\t\t);\n
+\n
+\t\tUtils.setSelection(\'ol > li\', 1);\n
+\t\teditor.focus();\n
+\t\tUtils.pressEnter();\n
+\n
+\t\tequal(editor.getContent(),\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\t\'<li>\\u00a0\' +\n
+\t\t\t\t\t\'<ul>\' +\n
+\t\t\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\t\t\t\'<li>c</li>\' +\n
+\t\t\t\t\t\'</ul>\' +\n
+\t\t\t\t\'</li>\' +\n
+\t\t\t\'</ol>\'\n
+\t\t);\n
+\n
+\t\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+\t});\n
+}\n
+\n
+test(\'Enter inside empty LI in beginning of OL in OL\', function() {\n
+\teditor.getBody().innerHTML = Utils.trimBrsOnIE(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li><br></li>\' +\n
+\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tUtils.setSelection(\'ol ol li\', 0);\n
+\teditor.focus();\n
+\tUtils.pressEnter();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<li></li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Enter inside empty LI in middle of OL in OL\', function() {\n
+\teditor.getBody().innerHTML = Utils.trimBrsOnIE(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\t\'<li><br></li>\' +\n
+\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tUtils.setSelection(\'ol ol li:nth-child(2)\', 0);\n
+\teditor.focus();\n
+\tUtils.pressEnter();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\t\'<li></li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>b</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Enter inside empty LI in end of OL in OL\', function() {\n
+\teditor.getBody().innerHTML = Utils.trimBrsOnIE(\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\t\'<li><br></li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tUtils.setSelection(\'ol ol li:last\', 0);\n
+\teditor.focus();\n
+\tUtils.pressEnter();\n
+\n
+\tequal(editor.getContent(),\n
+\t\t\'<ol>\' +\n
+\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'<ol>\' +\n
+\t\t\t\t\'<li>a</li>\' +\n
+\t\t\t\'</ol>\' +\n
+\t\t\t\'<li></li>\' +\n
+\t\t\'</ol>\'\n
+\t);\n
+\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+test(\'Enter at beginning of first DT inside DL\', function() {\n
+\teditor.getBody().innerHTML = \'<dl><dt>a</dt></dl>\';\n
+\tUtils.setSelection(\'dt\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<dl><dt>\\u00a0</dt><dt>a</dt></dl>\');\n
+\tequal(editor.selection.getNode().nodeName, \'DT\');\n
+});\n
+\n
+test(\'Enter at beginning of first DD inside DL\', function() {\n
+\teditor.getBody().innerHTML = \'<dl><dd>a</dd></dl>\';\n
+\tUtils.setSelection(\'dd\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<dl><dd>\\u00a0</dd><dd>a</dd></dl>\');\n
+\tequal(editor.selection.getNode().nodeName, \'DD\');\n
+});\n
+\n
+test(\'Enter at beginning of middle DT inside DL\', function() {\n
+\teditor.getBody().innerHTML = \'<dl><dt>a</dt><dt>b</dt><dt>c</dt></dl>\';\n
+\tUtils.setSelection(\'dt:nth-child(2)\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<dl><dt>a</dt><dt>\\u00a0</dt><dt>b</dt><dt>c</dt></dl>\');\n
+\tequal(editor.selection.getNode().nodeName, \'DT\');\n
+});\n
+\n
+test(\'Enter at beginning of middle DD inside DL\', function() {\n
+\teditor.getBody().innerHTML = \'<dl><dd>a</dd><dd>b</dd><dd>c</dd></dl>\';\n
+\tUtils.setSelection(\'dd:nth-child(2)\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<dl><dd>a</dd><dd>\\u00a0</dd><dd>b</dd><dd>c</dd></dl>\');\n
+\tequal(editor.selection.getNode().nodeName, \'DD\');\n
+});\n
+\n
+test(\'Enter at end of last DT inside DL\', function() {\n
+\teditor.getBody().innerHTML = \'<dl><dt>a</dt></dl>\';\n
+\tUtils.setSelection(\'dt\', 1);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<dl><dt>a</dt><dt>\\u00a0</dt></dl>\');\n
+\tequal(editor.selection.getNode().nodeName, \'DT\');\n
+});\n
+\n
+test(\'Enter at end of last DD inside DL\', function() {\n
+\teditor.getBody().innerHTML = \'<dl><dd>a</dd></dl>\';\n
+\tUtils.setSelection(\'dd\', 1);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<dl><dd>a</dd><dd>\\u00a0</dd></dl>\');\n
+\tequal(editor.selection.getNode().nodeName, \'DD\');\n
+});\n
+\n
+test(\'Enter at end of last empty DT inside DL\', function() {\n
+\teditor.getBody().innerHTML = \'<dl><dt>a</dt><dt></dt></dl>\';\n
+\tUtils.setSelection(\'dt:nth-child(2)\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<dl><dt>a</dt></dl><p>\\u00a0</p>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter at end of last empty DD inside DL\', function() {\n
+\teditor.getBody().innerHTML = \'<dl><dd>a</dd><dd></dd></dl>\';\n
+\tUtils.setSelection(\'dd:nth-child(2)\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<dl><dd>a</dd></dl><p>\\u00a0</p>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter at beginning of P inside LI\', function() {\n
+\teditor.getBody().innerHTML = \'<ol><li><p>abcd</p></li></ol>\';\n
+\tUtils.setSelection(\'p\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<ol><li></li><li><p>abcd</p></li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Enter inside middle of P inside LI\', function() {\n
+\teditor.getBody().innerHTML = \'<ol><li><p>abcd</p></li></ol>\';\n
+\tUtils.setSelection(\'p\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<ol><li><p>ab</p></li><li><p>cd</p></li></ol>\');\n
+\n
+\t// Ignore on IE 7, 8 this is a known bug not worth fixing\n
+\tif (!tinymce.Env.ie || tinymce.Env.ie > 8) {\n
+\t\tequal(editor.selection.getNode().nodeName, \'P\');\n
+\t}\n
+});\n
+\n
+test(\'Enter at end of P inside LI\', function() {\n
+\teditor.getBody().innerHTML = \'<ol><li><p>abcd</p></li></ol>\';\n
+\tUtils.setSelection(\'p\', 4);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<ol><li><p>abcd</p></li><li></li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'LI\');\n
+});\n
+\n
+\n
+test(\'Shift+Enter at beginning of P inside LI\', function() {\n
+\teditor.getBody().innerHTML = \'<ol><li><p>abcd</p></li></ol>\';\n
+\tUtils.setSelection(\'p\', 0);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<ol><li><p><br />abcd</p></li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Shift+Enter inside middle of P inside LI\', function() {\n
+\teditor.getBody().innerHTML = \'<ol><li><p>abcd</p></li></ol>\';\n
+\tUtils.setSelection(\'p\', 2);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<ol><li><p>ab<br />cd</p></li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Shift+Enter at end of P inside LI\', function() {\n
+\teditor.getBody().innerHTML = \'<ol><li><p>abcd</p></li></ol>\';\n
+\tUtils.setSelection(\'p\', 4);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), (tinymce.isIE && tinymce.Env.ie < 11) ? \'<ol><li><p>abcd</p></li></ol>\' : \'<ol><li><p>abcd<br /><br /></p></li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+\n
+test(\'Ctrl+Enter at beginning of P inside LI\', function() {\n
+\teditor.getBody().innerHTML = \'<ol><li><p>abcd</p></li></ol>\';\n
+\tUtils.setSelection(\'p\', 0);\n
+\tUtils.pressEnter({ctrlKey: true});\n
+\tequal(editor.getContent(), \'<ol><li><p>\\u00a0</p><p>abcd</p></li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Ctrl+Enter inside middle of P inside LI\', function() {\n
+\teditor.getBody().innerHTML = \'<ol><li><p>abcd</p></li></ol>\';\n
+\tUtils.setSelection(\'p\', 2);\n
+\tUtils.pressEnter({ctrlKey: true});\n
+\tequal(editor.getContent(), \'<ol><li><p>ab</p><p>cd</p></li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+test(\'Ctrl+Enter at end of P inside LI\', function() {\n
+\teditor.getBody().innerHTML = \'<ol><li><p>abcd</p></li></ol>\';\n
+\tUtils.setSelection(\'p\', 4);\n
+\tUtils.pressEnter({ctrlKey: true});\n
+\tequal(editor.getContent(), \'<ol><li><p>abcd</p><p>\\u00a0</p></li></ol>\');\n
+\tequal(editor.selection.getNode().nodeName, \'P\');\n
+});\n
+\n
+\n
+test(\'Enter in the middle of text in P with forced_root_block set to false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'<p>abc</p>\';\n
+\tUtils.setSelection(\'p\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>ab<br />c</p>\');\n
+});\n
+\n
+test(\'Enter at the end of text in P with forced_root_block set to false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'<p>abc</p>\';\n
+\tUtils.setSelection(\'p\', 3);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), (tinymce.isIE && tinymce.Env.ie < 11) ? \'<p>abc<br></p>\' : \'<p>abc<br><br></p>\');\n
+});\n
+\n
+test(\'Enter at the middle of text in BODY with forced_root_block set to false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'abcd\';\n
+\tUtils.setSelection(\'body\', 2);\n
+\teditor.focus();\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'ab<br>cd\');\n
+});\n
+\n
+test(\'Enter at the beginning of text in BODY with forced_root_block set to false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'abcd\';\n
+\tUtils.setSelection(\'body\', 0);\n
+\teditor.focus();\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<br>abcd\');\n
+});\n
+\n
+test(\'Enter at the end of text in BODY with forced_root_block set to false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'abcd\';\n
+\tUtils.setSelection(\'body\', 4);\n
+\teditor.focus();\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), (tinymce.isIE && tinymce.Env.ie < 11) ? \'abcd<br>\' : \'abcd<br><br>\');\n
+});\n
+\n
+test(\'Enter in empty P at the end of a blockquote and end_container_on_empty_block: true\', function() {\n
+\teditor.settings.end_container_on_empty_block = true;\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<blockquote><p>abc</p><p></p></blockquote>\' : \'<blockquote><p>abc</p><p><br></p></blockquote>\';\n
+\tUtils.setSelection(\'p:last\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<blockquote><p>abc</p></blockquote><p>\\u00a0</p>\');\n
+});\n
+\n
+test(\'Enter in empty P at the beginning of a blockquote and end_container_on_empty_block: true\', function() {\n
+\teditor.settings.end_container_on_empty_block = true;\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<blockquote><p></p><p>abc</p></blockquote>\' : \'<blockquote><p><br></p><p>abc</p></blockquote>\';\n
+\tUtils.setSelection(\'p\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>\\u00a0</p><blockquote><p>abc</p></blockquote>\');\n
+});\n
+\n
+test(\'Enter in empty P at in the middle of a blockquote and end_container_on_empty_block: true\', function() {\n
+\teditor.settings.end_container_on_empty_block = true;\n
+\teditor.getBody().innerHTML = (tinymce.isIE && tinymce.Env.ie < 11) ? \'<blockquote><p>abc</p><p></p><p>123</p></blockquote>\' : \'<blockquote><p>abc</p><p><br></p><p>123</p></blockquote>\';\n
+\tUtils.setSelection(\'p:nth-child(2)\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<blockquote><p>abc</p></blockquote><p>\\u00a0</p><blockquote><p>123</p></blockquote>\');\n
+});\n
+\n
+test(\'Enter inside empty P with empty P siblings\', function() {\n
+\t// Tests that a workaround for an IE bug is working correctly\n
+\teditor.getBody().innerHTML = \'<p></p><p></p><p>X</p>\';\n
+\tUtils.setSelection(\'p\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>\\u00a0</p><p>\\u00a0</p><p>\\u00a0</p><p>X</p>\');\n
+});\n
+\n
+test(\'Enter at end of H1 with forced_root_block_attrs\', function() {\n
+\teditor.settings.forced_root_block_attrs = {"class": "class1"};\n
+\teditor.getBody().innerHTML = \'<h1>a</h1>\';\n
+\tUtils.setSelection(\'h1\', 1);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<h1>a</h1><p class="class1">\\u00a0</p>\');\n
+});\n
+\n
+test(\'Shift+Enter at beginning of P\', function() {\n
+\teditor.getBody().innerHTML = \'<p>abc</p>\';\n
+\tUtils.setSelection(\'p\', 0);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<p><br />abc</p>\');\n
+});\n
+\n
+test(\'Shift+Enter in the middle of P\', function() {\n
+\teditor.getBody().innerHTML = \'<p>abcd</p>\';\n
+\tUtils.setSelection(\'p\', 2);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<p>ab<br />cd</p>\');\n
+});\n
+\n
+test(\'Shift+Enter at the end of P\', function() {\n
+\teditor.getBody().innerHTML = \'<p>abcd</p>\';\n
+\tUtils.setSelection(\'p\', 4);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), (tinymce.isIE && tinymce.Env.ie < 11) ? \'<p>abcd</p>\' : \'<p>abcd<br /><br /></p>\');\n
+});\n
+\n
+test(\'Shift+Enter in the middle of B with a BR after it\', function() {\n
+\teditor.getBody().innerHTML = \'<p><b>abcd</b><br></p>\';\n
+\tUtils.setSelection(\'b\', 2);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<p><b>ab<br />cd</b></p>\');\n
+});\n
+\n
+test(\'Shift+Enter at the end of B with a BR after it\', function() {\n
+\teditor.getBody().innerHTML = \'<p><b>abcd</b><br></p>\';\n
+\tUtils.setSelection(\'b\', 4);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<p><b>abcd<br /></b></p>\');\n
+});\n
+\n
+test(\'Enter in beginning of PRE\', function() {\n
+\teditor.getBody().innerHTML = \'<pre>abc</pre>\';\n
+\tUtils.setSelection(\'pre\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<pre><br />abc</pre>\');\n
+});\n
+\n
+test(\'Enter in the middle of PRE\', function() {\n
+\teditor.getBody().innerHTML = \'<pre>abcd</pre>\';\n
+\tUtils.setSelection(\'pre\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<pre>ab<br />cd</pre>\');\n
+});\n
+\n
+test(\'Enter at the end of PRE\', function() {\n
+\teditor.getBody().innerHTML = \'<pre>abcd</pre>\';\n
+\tUtils.setSelection(\'pre\', 4);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), (tinymce.isIE && tinymce.Env.ie < 11) ? \'<pre>abcd</pre>\' : \'<pre>abcd<br /><br /></pre>\');\n
+});\n
+\n
+test(\'Enter in beginning of PRE and br_in_pre: false\', function() {\n
+\teditor.settings.br_in_pre = false;\n
+\teditor.getBody().innerHTML = \'<pre>abc</pre>\';\n
+\tUtils.setSelection(\'pre\', 0);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<pre>\\u00a0</pre><pre>abc</pre>\');\n
+});\n
+\n
+test(\'Enter in the middle of PRE and br_in_pre: false\', function() {\n
+\teditor.settings.br_in_pre = false;\n
+\teditor.getBody().innerHTML = \'<pre>abcd</pre>\';\n
+\tUtils.setSelection(\'pre\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<pre>ab</pre><pre>cd</pre>\');\n
+});\n
+\n
+test(\'Enter at the end of PRE and br_in_pre: false\', function() {\n
+\teditor.settings.br_in_pre = false;\n
+\teditor.getBody().innerHTML = \'<pre>abcd</pre>\';\n
+\tUtils.setSelection(\'pre\', 4);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<pre>abcd</pre><p>\\u00a0</p>\');\n
+});\n
+\n
+test(\'Shift+Enter in beginning of PRE\', function() {\n
+\teditor.getBody().innerHTML = \'<pre>abc</pre>\';\n
+\tUtils.setSelection(\'pre\', 0);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<pre>\\u00a0</pre><pre>abc</pre>\');\n
+});\n
+\n
+test(\'Shift+Enter in the middle of PRE\', function() {\n
+\teditor.getBody().innerHTML = \'<pre>abcd</pre>\';\n
+\tUtils.setSelection(\'pre\', 2);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<pre>ab</pre><pre>cd</pre>\');\n
+});\n
+\n
+test(\'Shift+Enter at the end of PRE\', function() {\n
+\teditor.getBody().innerHTML = \'<pre>abcd</pre>\';\n
+\tUtils.setSelection(\'pre\', 4);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<pre>abcd</pre><p>\\u00a0</p>\');\n
+});\n
+\n
+test(\'Shift+Enter in beginning of P with forced_root_block set to false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'<p>abc</p>\';\n
+\tUtils.setSelection(\'p\', 0);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<p>\\u00a0</p><p>abc</p>\');\n
+});\n
+\n
+test(\'Shift+Enter in middle of P with forced_root_block set to false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'<p>abcd</p>\';\n
+\tUtils.setSelection(\'p\', 2);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<p>ab</p><p>cd</p>\');\n
+});\n
+\n
+test(\'Shift+Enter at the end of P with forced_root_block set to false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'<p>abc</p>\';\n
+\tUtils.setSelection(\'p\', 3);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<p>abc</p><p>\\u00a0</p>\');\n
+});\n
+\n
+test(\'Shift+Enter in body with forced_root_block set to false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'abcd\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 2);\n
+\trng.setEnd(editor.getBody().firstChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<p>ab</p><p>cd</p>\');\n
+});\n
+\n
+test(\'Enter at the end of DIV layer\', function() {\n
+\teditor.settings.br_in_pre = false;\n
+\teditor.setContent(\'<div style="position: absolute; top: 1px; left: 2px;">abcd</div>\');\n
+\tUtils.setSelection(\'div\', 4);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<div style="position: absolute; top: 1px; left: 2px;"><p>abcd</p><p>\\u00a0</p></div>\');\n
+});\n
+\n
+test(\'Enter in div inside contentEditable:false div\', function() {\n
+\teditor.getBody().innerHTML = \'<div data-mce-contenteditable="false"><div>abcd</div></div>\';\n
+\tUtils.setSelection(\'div div\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<div data-mce-contenteditable="false"><div>abcd</div></div>\');\n
+});\n
+\n
+test(\'Enter in div with contentEditable:true inside contentEditable:false div\', function() {\n
+\teditor.getBody().innerHTML = \'<div data-mce-contenteditable="false"><div data-mce-contenteditable="true">abcd</div></div>\';\n
+\tUtils.setSelection(\'div div\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<div data-mce-contenteditable="false"><div data-mce-contenteditable="true"><p>ab</p><p>cd</p></div></div>\');\n
+});\n
+\n
+test(\'Enter in span with contentEditable:true inside contentEditable:false div\', function() {\n
+\teditor.getBody().innerHTML = \'<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">abcd</span></div>\';\n
+\tUtils.setSelection(\'span\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">abcd</span></div>\');\n
+});\n
+\n
+test(\'Shift+Enter in span with contentEditable:true inside contentEditable:false div\', function() {\n
+\teditor.getBody().innerHTML = \'<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">abcd</span></div>\';\n
+\tUtils.setSelection(\'span\', 2);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">ab<br>cd</span></div>\');\n
+});\n
+\n
+test(\'Enter in span with contentEditable:true inside contentEditable:false div and forced_root_block: false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">abcd</span></div>\';\n
+\tUtils.setSelection(\'span\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<div data-mce-contenteditable="false"><span data-mce-contenteditable="true">ab<br>cd</span></div>\');\n
+});\n
+\n
+test(\'Enter in em within contentEditable:true div inside contentEditable:false div\', function() {\n
+\teditor.getBody().innerHTML = \'<div data-mce-contenteditable="false"><div data-mce-contenteditable="true"><em>abcd</em></div></div>\';\n
+\tUtils.setSelection(\'em\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(Utils.cleanHtml(editor.getBody().innerHTML), \'<div data-mce-contenteditable="false"><div data-mce-contenteditable="true"><p><em>ab</em></p><p><em>cd</em></p></div></div>\');\n
+});\n
+\n
+test(\'Enter at end of text in a span inside a P and keep_styles: false\', function() {\n
+\teditor.settings.keep_styles = false;\n
+\teditor.getBody().innerHTML = \'<p><em><span style="font-size: 13px;">X</span></em></p>\';\n
+\tUtils.setSelection(\'span\', 1);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p><em><span style="font-size: 13px;">X</span></em></p><p>\\u00a0</p>\');\n
+});\n
+\n
+test(\'Shift+enter in LI when forced_root_block: false\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.getBody().innerHTML = \'<ul><li>text</li></ul>\';\n
+\tUtils.setSelection(\'li\', 2);\n
+\tUtils.pressEnter({shiftKey: true});\n
+\tequal(editor.getContent(), \'<ul><li>te<br />xt</li></ul>\');\n
+});\n
+\n
+test(\'Enter when forced_root_block: false and force_p_newlines: true\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.settings.force_p_newlines = true;\n
+\teditor.getBody().innerHTML = \'text\';\n
+\tUtils.setSelection(\'body\', 2);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>te</p><p>xt</p>\');\n
+});\n
+\n
+test(\'Enter at end of br line\', function() {\n
+\teditor.settings.forced_root_block = false;\n
+\teditor.settings.force_p_newlines = true;\n
+\teditor.getBody().innerHTML = \'<p>a<br>b</p>\';\n
+\tUtils.setSelection(\'p\', 1);\n
+\tUtils.pressEnter();\n
+\tequal(editor.getContent(), \'<p>a</p><p><br />b</p>\');\n
+\n
+\tvar rng = editor.selection.getRng(true);\n
+\tequal(rng.startContainer.nodeName, \'P\');\n
+\tequal(rng.startContainer.childNodes[rng.startOffset].nodeName, \'BR\');\n
+});\n
+\n
+// Ignore on IE 7, 8 this is a known bug not worth fixing\n
+if (!tinymce.Env.ie || tinymce.Env.ie > 8) {\n
+\ttest(\'Enter before BR between DIVs\', function() {\n
+\t\teditor.getBody().innerHTML = \'<div>a<span>b</span>c</div><br /><div>d</div>\';\n
+\t\tvar rng = editor.dom.createRng();\n
+\t\trng.setStartBefore(editor.dom.select(\'br\')[0]);\n
+\t\trng.setEndBefore(editor.dom.select(\'br\')[0]);\n
+\t\teditor.selection.setRng(rng);\n
+\t\tUtils.pressEnter();\n
+\t\tequal(editor.getContent(), \'<div>a<span>b</span>c</div><p>\\u00a0</p><p>\\u00a0</p><div>d</div>\');\n
+\t});\n
+}\n
+\n
+// Only test these on modern browsers\n
+if (window.getSelection) {\n
+\ttest(\'Enter behind table element\', function() {\n
+\t\tvar rng = editor.dom.createRng();\n
+\n
+\t\teditor.getBody().innerHTML = \'<table><tbody><td>x</td></tbody></table>\';\n
+\t\trng.setStartAfter(editor.getBody().lastChild);\n
+\t\trng.setEndAfter(editor.getBody().lastChild);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\tUtils.pressEnter();\n
+\t\tequal(editor.getContent(), \'<table><tbody><tr><td>x</td></tr></tbody></table><p>\\u00a0</p>\');\n
+\t});\n
+\n
+\ttest(\'Enter before table element\', function() {\n
+\t\tvar rng = editor.dom.createRng();\n
+\n
+\t\teditor.getBody().innerHTML = \'<table><tbody><td>x</td></tbody></table>\';\n
+\t\trng.setStartBefore(editor.getBody().lastChild);\n
+\t\trng.setEndBefore(editor.getBody().lastChild);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\tUtils.pressEnter();\n
+\t\tequal(editor.getContent(), \'<p>\\u00a0</p><table><tbody><tr><td>x</td></tr></tbody></table>\');\n
+\t});\n
+\n
+\ttest(\'Enter behind table followed by a p\', function() {\n
+\t\tvar rng = editor.dom.createRng();\n
+\n
+\t\teditor.getBody().innerHTML = \'<table><tbody><td>x</td></tbody></table><p>x</p>\';\n
+\t\trng.setStartAfter(editor.getBody().firstChild);\n
+\t\trng.setEndAfter(editor.getBody().firstChild);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\tUtils.pressEnter();\n
+\t\tequal(editor.getContent(), \'<table><tbody><tr><td>x</td></tr></tbody></table><p>\\u00a0</p><p>x</p>\');\n
+\t});\n
+\n
+\ttest(\'Enter before table element preceded by a p\', function() {\n
+\t\tvar rng = editor.dom.createRng();\n
+\n
+\t\teditor.getBody().innerHTML = \'<p>x</p><table><tbody><td>x</td></tbody></table>\';\n
+\t\trng.setStartBefore(editor.getBody().lastChild);\n
+\t\trng.setStartBefore(editor.getBody().lastChild);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\tUtils.pressEnter();\n
+\t\tequal(editor.getContent(), \'<p>x</p><p>\\u00a0</p><table><tbody><tr><td>x</td></tr></tbody></table>\');\n
+\t});\n
+\n
+\ttest(\'Enter twice before table element\', function(){\n
+\t\tvar rng = editor.dom.createRng();\n
+\n
+\t\teditor.getBody().innerHTML = \'<table><tbody><tr><td>x</td></tr></tbody></table>\';\n
+\t\trng.setStartBefore(editor.getBody().lastChild);\n
+\t\trng.setEndBefore(editor.getBody().lastChild);\n
+\t\teditor.selection.setRng(rng);\n
+\n
+\t\tUtils.pressEnter();\n
+\t\tUtils.pressEnter();\n
+\t\tequal(editor.getContent(), \'<p>\\u00a0</p><p>\\u00a0</p><table><tbody><tr><td>x</td></tr></tbody></table>\');\n
+\t});\n
+\n
+\ttest(\'Enter after span with space\', function() {\n
+\t\teditor.setContent(\'<p><b>abc </b></p>\');\n
+\t\tUtils.setSelection(\'b\', 3);\n
+\t\tUtils.pressEnter();\n
+\t\tequal(editor.getContent(), \'<p><b>abc</b></p><p>\\u00a0</p>\');\n
+\n
+\t\tvar rng = editor.selection.getRng(true);\n
+\t\tequal(rng.startContainer.nodeName, \'B\');\n
+\t\tnotEqual(rng.startContainer.data, \' \');\n
+\t});\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>39296</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EnterKey.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

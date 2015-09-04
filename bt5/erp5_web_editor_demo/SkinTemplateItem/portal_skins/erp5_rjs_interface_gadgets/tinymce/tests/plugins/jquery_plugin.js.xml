@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268123.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery_plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.plugins.jQuery", {\n
+\tsetupModule: function() {\n
+\t\tdocument.getElementById(\'view\').innerHTML = (\n
+\t\t\t\'<textarea id="elm1"></textarea>\' +\n
+\t\t\t\'<textarea id="elm2"></textarea>\' +\n
+\t\t\t\'<textarea id="elm3">Textarea</textarea>\'\n
+\t\t);\n
+\n
+\t\tQUnit.stop();\n
+\n
+\t\t$(function() {\n
+\t\t\t$(\'#elm1,#elm2\').tinymce({\n
+\t\t\t\tplugins: [\n
+\t\t\t\t\t"pagebreak,layer,table,save,emoticons,insertdatetime,preview,media,searchreplace",\n
+\t\t\t\t\t"print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,template"\n
+\t\t\t\t],\n
+\n
+\t\t\t\tinit_instance_callback: function() {\n
+\t\t\t\t\tvar ed1 = tinymce.get(\'elm1\'), ed2 = tinymce.get(\'elm2\');\n
+\n
+\t\t\t\t\t// When both editors are initialized\n
+\t\t\t\t\tif (ed1 && ed1.initialized && ed2 && ed2.initialized) {\n
+\t\t\t\t\t\tQUnit.start();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t});\n
+\t}\n
+});\n
+\n
+test("Get editor instance", function() {\n
+\tequal($(\'#elm1\').tinymce().id, \'elm1\');\n
+\tequal($(\'#elm2\').tinymce().id, \'elm2\');\n
+\tequal($(\'#elm3\').tinymce(), null);\n
+});\n
+\n
+test("Get contents using jQuery", function() {\n
+\texpect(4);\n
+\n
+\ttinymce.get(\'elm1\').setContent(\'<p>Editor 1</p>\');\n
+\n
+\tequal($(\'#elm1\').html(), \'<p>Editor 1</p>\');\n
+\tequal($(\'#elm1\').val(), \'<p>Editor 1</p>\');\n
+\tequal($(\'#elm1\').attr(\'value\'), \'<p>Editor 1</p>\');\n
+\tequal($(\'#elm1\').text(), \'Editor 1\');\n
+});\n
+\n
+test("Set contents using jQuery", function() {\n
+\texpect(4);\n
+\n
+\t$(\'#elm1\').html(\'Test 1\');\n
+\tequal($(\'#elm1\').html(), \'<p>Test 1</p>\');\n
+\n
+\t$(\'#elm1\').val(\'Test 2\');\n
+\tequal($(\'#elm1\').html(), \'<p>Test 2</p>\');\n
+\n
+\t$(\'#elm1\').text(\'Test 3\');\n
+\tequal($(\'#elm1\').html(), \'<p>Test 3</p>\');\n
+\n
+\t$(\'#elm1\').attr(\'value\', \'Test 4\');\n
+\tequal($(\'#elm1\').html(), \'<p>Test 4</p>\');\n
+});\n
+\n
+test("append/prepend contents using jQuery", function() {\n
+\texpect(2);\n
+\n
+\ttinymce.get(\'elm1\').setContent(\'<p>Editor 1</p>\');\n
+\n
+\t$(\'#elm1\').append(\'<p>Test 1</p>\');\n
+\tequal($(\'#elm1\').html(), \'<p>Editor 1</p>\\n<p>Test 1</p>\');\n
+\n
+\t$(\'#elm1\').prepend(\'<p>Test 2</p>\');\n
+\tequal($(\'#elm1\').html(), \'<p>Test 2</p>\\n<p>Editor 1</p>\\n<p>Test 1</p>\');\n
+});\n
+\n
+test("Find using :tinymce selector", function() {\n
+\texpect(1);\n
+\n
+\tequal($(\'textarea:tinymce\').length, 2);\n
+});\n
+\n
+test("Set contents using :tinymce selector", function() {\n
+\texpect(3);\n
+\n
+\t$(\'textarea:tinymce\').val(\'Test 1\');\n
+\tequal($(\'#elm1\').val(), \'<p>Test 1</p>\');\n
+\tequal($(\'#elm2\').val(), \'<p>Test 1</p>\');\n
+\tequal($(\'#elm3\').val(), \'Textarea\');\n
+});\n
+\n
+test("Get contents using :tinymce selector", function() {\n
+\texpect(1);\n
+\n
+\t$(\'textarea:tinymce\').val(\'Test get\');\n
+\tequal($(\'textarea:tinymce\').val(), \'<p>Test get</p>\');\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2468</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery_plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

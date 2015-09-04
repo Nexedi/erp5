@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268300.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>LocalStorage.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * LocalStorage.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class will simulate LocalStorage on IE 7 and return the native version on modern browsers.\n
+ * Storage is done using userData on IE 7 and a special serialization format. The format is designed\n
+ * to be as small as possible by making sure that the keys and values doesn\'t need to be encoded. This\n
+ * makes it possible to store for example HTML data.\n
+ *\n
+ * Storage format for userData:\n
+ * <base 32 key length>,<key string>,<base 32 value length>,<value>,...\n
+ *\n
+ * For example this data key1=value1,key2=value2 would be:\n
+ * 4,key1,6,value1,4,key2,6,value2\n
+ *\n
+ * @class tinymce.util.LocalStorage\n
+ * @static\n
+ * @version 4.0\n
+ * @example\n
+ * tinymce.util.LocalStorage.setItem(\'key\', \'value\');\n
+ * var value = tinymce.util.LocalStorage.getItem(\'key\');\n
+ */\n
+define("tinymce/util/LocalStorage", [], function() {\n
+\tvar LocalStorage, storageElm, items, keys, userDataKey, hasOldIEDataSupport;\n
+\n
+\t// Check for native support\n
+\ttry {\n
+\t\tif (window.localStorage) {\n
+\t\t\treturn localStorage;\n
+\t\t}\n
+\t} catch (ex) {\n
+\t\t// Ignore\n
+\t}\n
+\n
+\tuserDataKey = "tinymce";\n
+\tstorageElm = document.documentElement;\n
+\thasOldIEDataSupport = !!storageElm.addBehavior;\n
+\n
+\tif (hasOldIEDataSupport) {\n
+\t\tstorageElm.addBehavior(\'#default#userData\');\n
+\t}\n
+\n
+\t/**\n
+\t * Gets the keys names and updates LocalStorage.length property. Since IE7 doesn\'t have any getters/setters.\n
+\t */\n
+\tfunction updateKeys() {\n
+\t\tkeys = [];\n
+\n
+\t\tfor (var key in items) {\n
+\t\t\tkeys.push(key);\n
+\t\t}\n
+\n
+\t\tLocalStorage.length = keys.length;\n
+\t}\n
+\n
+\t/**\n
+\t * Loads the userData string and parses it into the items structure.\n
+\t */\n
+\tfunction load() {\n
+\t\tvar key, data, value, pos = 0;\n
+\n
+\t\titems = {};\n
+\n
+\t\t// localStorage can be disabled on WebKit/Gecko so make a dummy storage\n
+\t\tif (!hasOldIEDataSupport) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tfunction next(end) {\n
+\t\t\tvar value, nextPos;\n
+\n
+\t\t\tnextPos = end !== undefined ? pos + end : data.indexOf(\',\', pos);\n
+\t\t\tif (nextPos === -1 || nextPos > data.length) {\n
+\t\t\t\treturn null;\n
+\t\t\t}\n
+\n
+\t\t\tvalue = data.substring(pos, nextPos);\n
+\t\t\tpos = nextPos + 1;\n
+\n
+\t\t\treturn value;\n
+\t\t}\n
+\n
+\t\tstorageElm.load(userDataKey);\n
+\t\tdata = storageElm.getAttribute(userDataKey) || \'\';\n
+\n
+\t\tdo {\n
+\t\t\tvar offset = next();\n
+\t\t\tif (offset === null) {\n
+\t\t\t\tbreak;\n
+\t\t\t}\n
+\n
+\t\t\tkey = next(parseInt(offset, 32) || 0);\n
+\t\t\tif (key !== null) {\n
+\t\t\t\toffset = next();\n
+\t\t\t\tif (offset === null) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvalue = next(parseInt(offset, 32) || 0);\n
+\n
+\t\t\t\tif (key) {\n
+\t\t\t\t\titems[key] = value;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t} while (key !== null);\n
+\n
+\t\tupdateKeys();\n
+\t}\n
+\n
+\t/**\n
+\t * Saves the items structure into a the userData format.\n
+\t */\n
+\tfunction save() {\n
+\t\tvar value, data = \'\';\n
+\n
+\t\t// localStorage can be disabled on WebKit/Gecko so make a dummy storage\n
+\t\tif (!hasOldIEDataSupport) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tfor (var key in items) {\n
+\t\t\tvalue = items[key];\n
+\t\t\tdata += (data ? \',\' : \'\') + key.length.toString(32) + \',\' + key + \',\' + value.length.toString(32) + \',\' + value;\n
+\t\t}\n
+\n
+\t\tstorageElm.setAttribute(userDataKey, data);\n
+\n
+\t\ttry {\n
+\t\t\tstorageElm.save(userDataKey);\n
+\t\t} catch (ex) {\n
+\t\t\t// Ignore disk full\n
+\t\t}\n
+\n
+\t\tupdateKeys();\n
+\t}\n
+\n
+\tLocalStorage = {\n
+\t\t/**\n
+\t\t * Length of the number of items in storage.\n
+\t\t *\n
+\t\t * @property length\n
+\t\t * @type Number\n
+\t\t * @return {Number} Number of items in storage.\n
+\t\t */\n
+\t\t//length:0,\n
+\n
+\t\t/**\n
+\t\t * Returns the key name by index.\n
+\t\t *\n
+\t\t * @method key\n
+\t\t * @param {Number} index Index of key to return.\n
+\t\t * @return {String} Key value or null if it wasn\'t found.\n
+\t\t */\n
+\t\tkey: function(index) {\n
+\t\t\treturn keys[index];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the value if the specified key or null if it wasn\'t found.\n
+\t\t *\n
+\t\t * @method getItem\n
+\t\t * @param {String} key Key of item to retrive.\n
+\t\t * @return {String} Value of the specified item or null if it wasn\'t found.\n
+\t\t */\n
+\t\tgetItem: function(key) {\n
+\t\t\treturn key in items ? items[key] : null;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the value of the specified item by it\'s key.\n
+\t\t *\n
+\t\t * @method setItem\n
+\t\t * @param {String} key Key of the item to set.\n
+\t\t * @param {String} value Value of the item to set.\n
+\t\t */\n
+\t\tsetItem: function(key, value) {\n
+\t\t\titems[key] = "" + value;\n
+\t\t\tsave();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the specified item by key.\n
+\t\t *\n
+\t\t * @method removeItem\n
+\t\t * @param {String} key Key of item to remove.\n
+\t\t */\n
+\t\tremoveItem: function(key) {\n
+\t\t\tdelete items[key];\n
+\t\t\tsave();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes all items.\n
+\t\t *\n
+\t\t * @method clear\n
+\t\t */\n
+\t\tclear: function() {\n
+\t\t\titems = {};\n
+\t\t\tsave();\n
+\t\t}\n
+\t};\n
+\n
+\tload();\n
+\n
+\treturn LocalStorage;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4576</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>LocalStorage.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

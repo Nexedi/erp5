@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268403.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'textpattern\', function(editor) {\n
+\tvar isPatternsDirty = true, patterns;\n
+\n
+\tpatterns = editor.settings.textpattern_patterns || [\n
+\t\t{start: \'*\', end: \'*\', format: \'italic\'},\n
+\t\t{start: \'**\', end: \'**\', format: \'bold\'},\n
+\t\t{start: \'#\', format: \'h1\'},\n
+\t\t{start: \'##\', format: \'h2\'},\n
+\t\t{start: \'###\', format: \'h3\'},\n
+\t\t{start: \'####\', format: \'h4\'},\n
+\t\t{start: \'#####\', format: \'h5\'},\n
+\t\t{start: \'######\', format: \'h6\'},\n
+\t\t{start: \'1. \', cmd: \'InsertOrderedList\'},\n
+\t\t{start: \'* \', cmd: \'InsertUnorderedList\'},\n
+\t\t{start: \'- \', cmd: \'InsertUnorderedList\'}\n
+\t];\n
+\n
+\t// Returns a sorted patterns list, ordered descending by start length\n
+\tfunction getPatterns() {\n
+\t\tif (isPatternsDirty) {\n
+\t\t\tpatterns.sort(function(a, b) {\n
+\t\t\t\tif (a.start.length > b.start.length) {\n
+\t\t\t\t\treturn -1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (a.start.length < b.start.length) {\n
+\t\t\t\t\treturn 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn 0;\n
+\t\t\t});\n
+\n
+\t\t\tisPatternsDirty = false;\n
+\t\t}\n
+\n
+\t\treturn patterns;\n
+\t}\n
+\n
+\t// Finds a matching pattern to the specified text\n
+\tfunction findPattern(text) {\n
+\t\tvar patterns = getPatterns();\n
+\n
+\t\tfor (var i = 0; i < patterns.length; i++) {\n
+\t\t\tif (text.indexOf(patterns[i].start) !== 0) {\n
+\t\t\t\tcontinue;\n
+\t\t\t}\n
+\n
+\t\t\tif (patterns[i].end && text.lastIndexOf(patterns[i].end) != text.length - patterns[i].end.length) {\n
+\t\t\t\tcontinue;\n
+\t\t\t}\n
+\n
+\t\t\treturn patterns[i];\n
+\t\t}\n
+\t}\n
+\n
+\t// Finds the best matching end pattern\n
+\tfunction findEndPattern(text, offset, delta) {\n
+\t\tvar patterns, pattern, i;\n
+\n
+\t\t// Find best matching end\n
+\t\tpatterns = getPatterns();\n
+\t\tfor (i = 0; i < patterns.length; i++) {\n
+\t\t\tpattern = patterns[i];\n
+\t\t\tif (pattern.end && text.substr(offset - pattern.end.length - delta, pattern.end.length) == pattern.end) {\n
+\t\t\t\treturn pattern;\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\t// Handles inline formats like *abc* and **abc**\n
+\tfunction applyInlineFormat(space) {\n
+\t\tvar selection, dom, rng, container, offset, startOffset, text, patternRng, pattern, delta, format;\n
+\n
+\t\tfunction splitContainer() {\n
+\t\t\t// Split text node and remove start/end from text node\n
+\t\t\tcontainer = container.splitText(startOffset);\n
+\t\t\tcontainer.splitText(offset - startOffset - delta);\n
+\t\t\tcontainer.deleteData(0, pattern.start.length);\n
+\t\t\tcontainer.deleteData(container.data.length - pattern.end.length, pattern.end.length);\n
+\t\t}\n
+\n
+\t\tselection = editor.selection;\n
+\t\tdom = editor.dom;\n
+\n
+\t\tif (!selection.isCollapsed()) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\trng = selection.getRng(true);\n
+\t\tcontainer = rng.startContainer;\n
+\t\toffset = rng.startOffset;\n
+\t\ttext = container.data;\n
+\t\tdelta = space ? 1 : 0;\n
+\n
+\t\tif (container.nodeType != 3) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t// Find best matching end\n
+\t\tpattern = findEndPattern(text, offset, delta);\n
+\t\tif (!pattern) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t// Find start of matched pattern\n
+\t\t// TODO: Might need to improve this if there is nested formats\n
+\t\tstartOffset = Math.max(0, offset - delta);\n
+\t\tstartOffset = text.lastIndexOf(pattern.start, startOffset - pattern.end.length - 1);\n
+\n
+\t\tif (startOffset === -1) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t// Setup a range for the matching word\n
+\t\tpatternRng = dom.createRng();\n
+\t\tpatternRng.setStart(container, startOffset);\n
+\t\tpatternRng.setEnd(container, offset - delta);\n
+\t\tpattern = findPattern(patternRng.toString());\n
+\n
+\t\tif (!pattern || !pattern.end) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t// If container match doesn\'t have anything between start/end then do nothing\n
+\t\tif (container.data.length <= pattern.start.length + pattern.end.length) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tformat = editor.formatter.get(pattern.format);\n
+\t\tif (format && format[0].inline) {\n
+\t\t\tsplitContainer();\n
+\t\t\teditor.formatter.apply(pattern.format, {}, container);\n
+\t\t\treturn container;\n
+\t\t}\n
+\t}\n
+\n
+\t// Handles block formats like ##abc or 1. abc\n
+\tfunction applyBlockFormat() {\n
+\t\tvar selection, dom, container, firstTextNode, node, format, textBlockElm, pattern, walker, rng, offset;\n
+\n
+\t\tselection = editor.selection;\n
+\t\tdom = editor.dom;\n
+\n
+\t\tif (!selection.isCollapsed()) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\ttextBlockElm = dom.getParent(selection.getStart(), \'p\');\n
+\t\tif (textBlockElm) {\n
+\t\t\twalker = new tinymce.dom.TreeWalker(textBlockElm, textBlockElm);\n
+\t\t\twhile ((node = walker.next())) {\n
+\t\t\t\tif (node.nodeType == 3) {\n
+\t\t\t\t\tfirstTextNode = node;\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (firstTextNode) {\n
+\t\t\t\tpattern = findPattern(firstTextNode.data);\n
+\t\t\t\tif (!pattern) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\trng = selection.getRng(true);\n
+\t\t\t\tcontainer = rng.startContainer;\n
+\t\t\t\toffset = rng.startOffset;\n
+\n
+\t\t\t\tif (firstTextNode == container) {\n
+\t\t\t\t\toffset = Math.max(0, offset - pattern.start.length);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (tinymce.trim(firstTextNode.data).length == pattern.start.length) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (pattern.format) {\n
+\t\t\t\t\tformat = editor.formatter.get(pattern.format);\n
+\t\t\t\t\tif (format && format[0].block) {\n
+\t\t\t\t\t\tfirstTextNode.deleteData(0, pattern.start.length);\n
+\t\t\t\t\t\teditor.formatter.apply(pattern.format, {}, firstTextNode);\n
+\n
+\t\t\t\t\t\trng.setStart(container, offset);\n
+\t\t\t\t\t\trng.collapse(true);\n
+\t\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (pattern.cmd) {\n
+\t\t\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\t\t\tfirstTextNode.deleteData(0, pattern.start.length);\n
+\t\t\t\t\t\teditor.execCommand(pattern.cmd);\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\tfunction handleEnter() {\n
+\t\tvar rng, wrappedTextNode;\n
+\n
+\t\twrappedTextNode = applyInlineFormat();\n
+\t\tif (wrappedTextNode) {\n
+\t\t\trng = editor.dom.createRng();\n
+\t\t\trng.setStart(wrappedTextNode, wrappedTextNode.data.length);\n
+\t\t\trng.setEnd(wrappedTextNode, wrappedTextNode.data.length);\n
+\t\t\teditor.selection.setRng(rng);\n
+\t\t}\n
+\n
+\t\tapplyBlockFormat();\n
+\t}\n
+\n
+\tfunction handleSpace() {\n
+\t\tvar wrappedTextNode, lastChar, lastCharNode, rng, dom;\n
+\n
+\t\twrappedTextNode = applyInlineFormat(true);\n
+\t\tif (wrappedTextNode) {\n
+\t\t\tdom = editor.dom;\n
+\t\t\tlastChar = wrappedTextNode.data.slice(-1);\n
+\n
+\t\t\t// Move space after the newly formatted node\n
+\t\t\tif (/[\\u00a0 ]/.test(lastChar)) {\n
+\t\t\t\twrappedTextNode.deleteData(wrappedTextNode.data.length - 1, 1);\n
+\t\t\t\tlastCharNode = dom.doc.createTextNode(lastChar);\n
+\n
+\t\t\t\tif (wrappedTextNode.nextSibling) {\n
+\t\t\t\t\tdom.insertAfter(lastCharNode, wrappedTextNode.nextSibling);\n
+\t\t\t\t} else {\n
+\t\t\t\t\twrappedTextNode.parentNode.appendChild(lastCharNode);\n
+\t\t\t\t}\n
+\n
+\t\t\t\trng = dom.createRng();\n
+\t\t\t\trng.setStart(lastCharNode, 1);\n
+\t\t\t\trng.setEnd(lastCharNode, 1);\n
+\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\teditor.on(\'keydown\', function(e) {\n
+\t\tif (e.keyCode == 13 && !tinymce.util.VK.modifierPressed(e)) {\n
+\t\t\thandleEnter();\n
+\t\t}\n
+\t}, true);\n
+\n
+\teditor.on(\'keyup\', function(e) {\n
+\t\tif (e.keyCode == 32 && !tinymce.util.VK.modifierPressed(e)) {\n
+\t\t\thandleSpace();\n
+\t\t}\n
+\t});\n
+\n
+\tthis.getPatterns = getPatterns;\n
+\tthis.setPatterns = function(newPatterns) {\n
+\t\tpatterns = newPatterns;\n
+\t\tisPatternsDirty = true;\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6783</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

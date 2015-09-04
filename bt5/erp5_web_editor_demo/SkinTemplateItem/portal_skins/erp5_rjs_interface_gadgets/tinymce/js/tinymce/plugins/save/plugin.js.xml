@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268495.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'save\', function(editor) {\n
+\tfunction save() {\n
+\t\tvar formObj;\n
+\n
+\t\tformObj = tinymce.DOM.getParent(editor.id, \'form\');\n
+\n
+\t\tif (editor.getParam("save_enablewhendirty", true) && !editor.isDirty()) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\ttinymce.triggerSave();\n
+\n
+\t\t// Use callback instead\n
+\t\tif (editor.getParam("save_onsavecallback")) {\n
+\t\t\tif (editor.execCallback(\'save_onsavecallback\', editor)) {\n
+\t\t\t\teditor.startContent = tinymce.trim(editor.getContent({format: \'raw\'}));\n
+\t\t\t\teditor.nodeChanged();\n
+\t\t\t}\n
+\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tif (formObj) {\n
+\t\t\teditor.isNotDirty = true;\n
+\n
+\t\t\tif (!formObj.onsubmit || formObj.onsubmit()) {\n
+\t\t\t\tif (typeof formObj.submit == "function") {\n
+\t\t\t\t\tformObj.submit();\n
+\t\t\t\t} else {\n
+\t\t\t\t\teditor.windowManager.alert("Error: Form submit field collision.");\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\teditor.nodeChanged();\n
+\t\t} else {\n
+\t\t\teditor.windowManager.alert("Error: No form element found.");\n
+\t\t}\n
+\t}\n
+\n
+\tfunction cancel() {\n
+\t\tvar h = tinymce.trim(editor.startContent);\n
+\n
+\t\t// Use callback instead\n
+\t\tif (editor.getParam("save_oncancelcallback")) {\n
+\t\t\teditor.execCallback(\'save_oncancelcallback\', editor);\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\teditor.setContent(h);\n
+\t\teditor.undoManager.clear();\n
+\t\teditor.nodeChanged();\n
+\t}\n
+\n
+\tfunction stateToggle() {\n
+\t\tvar self = this;\n
+\n
+\t\teditor.on(\'nodeChange\', function() {\n
+\t\t\tself.disabled(editor.getParam("save_enablewhendirty", true) && !editor.isDirty());\n
+\t\t});\n
+\t}\n
+\n
+\teditor.addCommand(\'mceSave\', save);\n
+\teditor.addCommand(\'mceCancel\', cancel);\n
+\n
+\teditor.addButton(\'save\', {\n
+\t\ticon: \'save\',\n
+\t\ttext: \'Save\',\n
+\t\tcmd: \'mceSave\',\n
+\t\tdisabled: true,\n
+\t\tonPostRender: stateToggle\n
+\t});\n
+\n
+\teditor.addButton(\'cancel\', {\n
+\t\ttext: \'Cancel\',\n
+\t\ticon: false,\n
+\t\tcmd: \'mceCancel\',\n
+\t\tdisabled: true,\n
+\t\tonPostRender: stateToggle\n
+\t});\n
+\n
+\teditor.addShortcut(\'Meta+S\', \'\', \'mceSave\');\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2006</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

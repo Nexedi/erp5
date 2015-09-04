@@ -1,0 +1,647 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268369.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ControlSelection.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ControlSelection.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles control selection of elements. Controls are elements\n
+ * that can be resized and needs to be selected as a whole. It adds custom resize handles\n
+ * to all browser engines that support properly disabling the built in resize logic.\n
+ *\n
+ * @class tinymce.dom.ControlSelection\n
+ */\n
+define("tinymce/dom/ControlSelection", [\n
+\t"tinymce/util/VK",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/Env"\n
+], function(VK, Tools, Env) {\n
+\treturn function(selection, editor) {\n
+\t\tvar dom = editor.dom, each = Tools.each;\n
+\t\tvar selectedElm, selectedElmGhost, resizeHelper, resizeHandles, selectedHandle, lastMouseDownEvent;\n
+\t\tvar startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;\n
+\t\tvar width, height, editableDoc = editor.getDoc(), rootDocument = document, isIE = Env.ie && Env.ie < 11;\n
+\t\tvar abs = Math.abs, round = Math.round, rootElement = editor.getBody(), startScrollWidth, startScrollHeight;\n
+\n
+\t\t// Details about each resize handle how to scale etc\n
+\t\tresizeHandles = {\n
+\t\t\t// Name: x multiplier, y multiplier, delta size x, delta size y\n
+\t\t\t/*n: [0.5, 0, 0, -1],\n
+\t\t\te: [1, 0.5, 1, 0],\n
+\t\t\ts: [0.5, 1, 0, 1],\n
+\t\t\tw: [0, 0.5, -1, 0],*/\n
+\t\t\tnw: [0, 0, -1, -1],\n
+\t\t\tne: [1, 0, 1, -1],\n
+\t\t\tse: [1, 1, 1, 1],\n
+\t\t\tsw: [0, 1, -1, 1]\n
+\t\t};\n
+\n
+\t\t// Add CSS for resize handles, cloned element and selected\n
+\t\tvar rootClass = \'.mce-content-body\';\n
+\t\teditor.contentStyles.push(\n
+\t\t\trootClass + \' div.mce-resizehandle {\' +\n
+\t\t\t\t\'position: absolute;\' +\n
+\t\t\t\t\'border: 1px solid black;\' +\n
+\t\t\t\t\'background: #FFF;\' +\n
+\t\t\t\t\'width: 7px;\' +\n
+\t\t\t\t\'height: 7px;\' +\n
+\t\t\t\t\'z-index: 10000\' +\n
+\t\t\t\'}\' +\n
+\t\t\trootClass + \' .mce-resizehandle:hover {\' +\n
+\t\t\t\t\'background: #000\' +\n
+\t\t\t\'}\' +\n
+\t\t\trootClass + \' img[data-mce-selected], hr[data-mce-selected] {\' +\n
+\t\t\t\t\'outline: 1px solid black;\' +\n
+\t\t\t\t\'resize: none\' + // Have been talks about implementing this in browsers\n
+\t\t\t\'}\' +\n
+\t\t\trootClass + \' .mce-clonedresizable {\' +\n
+\t\t\t\t\'position: absolute;\' +\n
+\t\t\t\t(Env.gecko ? \'\' : \'outline: 1px dashed black;\') + // Gecko produces trails while resizing\n
+\t\t\t\t\'opacity: .5;\' +\n
+\t\t\t\t\'filter: alpha(opacity=50);\' +\n
+\t\t\t\t\'z-index: 10000\' +\n
+\t\t\t\'}\' +\n
+\t\t\trootClass + \' .mce-resize-helper {\' +\n
+\t\t\t\t\'background: #555;\' +\n
+\t\t\t\t\'background: rgba(0,0,0,0.75);\' +\n
+\t\t\t\t\'border-radius: 3px;\' +\n
+\t\t\t\t\'border: 1px;\' +\n
+\t\t\t\t\'color: white;\' +\n
+\t\t\t\t\'display: none;\' +\n
+\t\t\t\t\'font-family: sans-serif;\' +\n
+\t\t\t\t\'font-size: 12px;\' +\n
+\t\t\t\t\'white-space: nowrap;\' +\n
+\t\t\t\t\'line-height: 14px;\' +\n
+\t\t\t\t\'margin: 5px 10px;\' +\n
+\t\t\t\t\'padding: 5px;\' +\n
+\t\t\t\t\'position: absolute;\' +\n
+\t\t\t\t\'z-index: 10001\' +\n
+\t\t\t\'}\'\n
+\t\t);\n
+\n
+\t\tfunction isResizable(elm) {\n
+\t\t\tvar selector = editor.settings.object_resizing;\n
+\n
+\t\t\tif (selector === false || Env.iOS) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\tif (typeof selector != \'string\') {\n
+\t\t\t\tselector = \'table,img,div\';\n
+\t\t\t}\n
+\n
+\t\t\tif (elm.getAttribute(\'data-mce-resize\') === \'false\') {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\treturn editor.dom.is(elm, selector);\n
+\t\t}\n
+\n
+\t\tfunction resizeGhostElement(e) {\n
+\t\t\tvar deltaX, deltaY, proportional;\n
+\t\t\tvar resizeHelperX, resizeHelperY;\n
+\n
+\t\t\t// Calc new width/height\n
+\t\t\tdeltaX = e.screenX - startX;\n
+\t\t\tdeltaY = e.screenY - startY;\n
+\n
+\t\t\t// Calc new size\n
+\t\t\twidth = deltaX * selectedHandle[2] + startW;\n
+\t\t\theight = deltaY * selectedHandle[3] + startH;\n
+\n
+\t\t\t// Never scale down lower than 5 pixels\n
+\t\t\twidth = width < 5 ? 5 : width;\n
+\t\t\theight = height < 5 ? 5 : height;\n
+\n
+\t\t\tif (selectedElm.nodeName == "IMG" && editor.settings.resize_img_proportional !== false) {\n
+\t\t\t\tproportional = !VK.modifierPressed(e);\n
+\t\t\t} else {\n
+\t\t\t\tproportional = VK.modifierPressed(e) || (selectedElm.nodeName == "IMG" && selectedHandle[2] * selectedHandle[3] !== 0);\n
+\t\t\t}\n
+\n
+\t\t\t// Constrain proportions\n
+\t\t\tif (proportional) {\n
+\t\t\t\tif (abs(deltaX) > abs(deltaY)) {\n
+\t\t\t\t\theight = round(width * ratio);\n
+\t\t\t\t\twidth = round(height / ratio);\n
+\t\t\t\t} else {\n
+\t\t\t\t\twidth = round(height / ratio);\n
+\t\t\t\t\theight = round(width * ratio);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Update ghost size\n
+\t\t\tdom.setStyles(selectedElmGhost, {\n
+\t\t\t\twidth: width,\n
+\t\t\t\theight: height\n
+\t\t\t});\n
+\n
+\t\t\t// Update resize helper position\n
+\t\t\tresizeHelperX = selectedHandle.startPos.x + deltaX;\n
+\t\t\tresizeHelperY = selectedHandle.startPos.y + deltaY;\n
+\t\t\tresizeHelperX = resizeHelperX > 0 ? resizeHelperX : 0;\n
+\t\t\tresizeHelperY = resizeHelperY > 0 ? resizeHelperY : 0;\n
+\n
+\t\t\tdom.setStyles(resizeHelper, {\n
+\t\t\t\tleft: resizeHelperX,\n
+\t\t\t\ttop: resizeHelperY,\n
+\t\t\t\tdisplay: \'block\'\n
+\t\t\t});\n
+\n
+\t\t\tresizeHelper.innerHTML = width + \' &times; \' + height;\n
+\n
+\t\t\t// Update ghost X position if needed\n
+\t\t\tif (selectedHandle[2] < 0 && selectedElmGhost.clientWidth <= width) {\n
+\t\t\t\tdom.setStyle(selectedElmGhost, \'left\', selectedElmX + (startW - width));\n
+\t\t\t}\n
+\n
+\t\t\t// Update ghost Y position if needed\n
+\t\t\tif (selectedHandle[3] < 0 && selectedElmGhost.clientHeight <= height) {\n
+\t\t\t\tdom.setStyle(selectedElmGhost, \'top\', selectedElmY + (startH - height));\n
+\t\t\t}\n
+\n
+\t\t\t// Calculate how must overflow we got\n
+\t\t\tdeltaX = rootElement.scrollWidth - startScrollWidth;\n
+\t\t\tdeltaY = rootElement.scrollHeight - startScrollHeight;\n
+\n
+\t\t\t// Re-position the resize helper based on the overflow\n
+\t\t\tif (deltaX + deltaY !== 0) {\n
+\t\t\t\tdom.setStyles(resizeHelper, {\n
+\t\t\t\t\tleft: resizeHelperX - deltaX,\n
+\t\t\t\t\ttop: resizeHelperY - deltaY\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tif (!resizeStarted) {\n
+\t\t\t\teditor.fire(\'ObjectResizeStart\', {target: selectedElm, width: startW, height: startH});\n
+\t\t\t\tresizeStarted = true;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction endGhostResize() {\n
+\t\t\tresizeStarted = false;\n
+\n
+\t\t\tfunction setSizeProp(name, value) {\n
+\t\t\t\tif (value) {\n
+\t\t\t\t\t// Resize by using style or attribute\n
+\t\t\t\t\tif (selectedElm.style[name] || !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)) {\n
+\t\t\t\t\t\tdom.setStyle(selectedElm, name, value);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tdom.setAttrib(selectedElm, name, value);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Set width/height properties\n
+\t\t\tsetSizeProp(\'width\', width);\n
+\t\t\tsetSizeProp(\'height\', height);\n
+\n
+\t\t\tdom.unbind(editableDoc, \'mousemove\', resizeGhostElement);\n
+\t\t\tdom.unbind(editableDoc, \'mouseup\', endGhostResize);\n
+\n
+\t\t\tif (rootDocument != editableDoc) {\n
+\t\t\t\tdom.unbind(rootDocument, \'mousemove\', resizeGhostElement);\n
+\t\t\t\tdom.unbind(rootDocument, \'mouseup\', endGhostResize);\n
+\t\t\t}\n
+\n
+\t\t\t// Remove ghost/helper and update resize handle positions\n
+\t\t\tdom.remove(selectedElmGhost);\n
+\t\t\tdom.remove(resizeHelper);\n
+\n
+\t\t\tif (!isIE || selectedElm.nodeName == "TABLE") {\n
+\t\t\t\tshowResizeRect(selectedElm);\n
+\t\t\t}\n
+\n
+\t\t\teditor.fire(\'ObjectResized\', {target: selectedElm, width: width, height: height});\n
+\t\t\tdom.setAttrib(selectedElm, \'style\', dom.getAttrib(selectedElm, \'style\'));\n
+\t\t\teditor.nodeChanged();\n
+\t\t}\n
+\n
+\t\tfunction showResizeRect(targetElm, mouseDownHandleName, mouseDownEvent) {\n
+\t\t\tvar position, targetWidth, targetHeight, e, rect;\n
+\n
+\t\t\tunbindResizeHandleEvents();\n
+\n
+\t\t\t// Get position and size of target\n
+\t\t\tposition = dom.getPos(targetElm, rootElement);\n
+\t\t\tselectedElmX = position.x;\n
+\t\t\tselectedElmY = position.y;\n
+\t\t\trect = targetElm.getBoundingClientRect(); // Fix for Gecko offsetHeight for table with caption\n
+\t\t\ttargetWidth = rect.width || (rect.right - rect.left);\n
+\t\t\ttargetHeight = rect.height || (rect.bottom - rect.top);\n
+\n
+\t\t\t// Reset width/height if user selects a new image/table\n
+\t\t\tif (selectedElm != targetElm) {\n
+\t\t\t\tdetachResizeStartListener();\n
+\t\t\t\tselectedElm = targetElm;\n
+\t\t\t\twidth = height = 0;\n
+\t\t\t}\n
+\n
+\t\t\t// Makes it possible to disable resizing\n
+\t\t\te = editor.fire(\'ObjectSelected\', {target: targetElm});\n
+\n
+\t\t\tif (isResizable(targetElm) && !e.isDefaultPrevented()) {\n
+\t\t\t\teach(resizeHandles, function(handle, name) {\n
+\t\t\t\t\tvar handleElm;\n
+\n
+\t\t\t\t\tfunction startDrag(e) {\n
+\t\t\t\t\t\tstartX = e.screenX;\n
+\t\t\t\t\t\tstartY = e.screenY;\n
+\t\t\t\t\t\tstartW = selectedElm.clientWidth;\n
+\t\t\t\t\t\tstartH = selectedElm.clientHeight;\n
+\t\t\t\t\t\tratio = startH / startW;\n
+\t\t\t\t\t\tselectedHandle = handle;\n
+\n
+\t\t\t\t\t\thandle.startPos = {\n
+\t\t\t\t\t\t\tx: targetWidth * handle[0] + selectedElmX,\n
+\t\t\t\t\t\t\ty: targetHeight * handle[1] + selectedElmY\n
+\t\t\t\t\t\t};\n
+\n
+\t\t\t\t\t\tstartScrollWidth = rootElement.scrollWidth;\n
+\t\t\t\t\t\tstartScrollHeight = rootElement.scrollHeight;\n
+\n
+\t\t\t\t\t\tselectedElmGhost = selectedElm.cloneNode(true);\n
+\t\t\t\t\t\tdom.addClass(selectedElmGhost, \'mce-clonedresizable\');\n
+\t\t\t\t\t\tdom.setAttrib(selectedElmGhost, \'data-mce-bogus\', \'all\');\n
+\t\t\t\t\t\tselectedElmGhost.contentEditable = false; // Hides IE move layer cursor\n
+\t\t\t\t\t\tselectedElmGhost.unSelectabe = true;\n
+\t\t\t\t\t\tdom.setStyles(selectedElmGhost, {\n
+\t\t\t\t\t\t\tleft: selectedElmX,\n
+\t\t\t\t\t\t\ttop: selectedElmY,\n
+\t\t\t\t\t\t\tmargin: 0\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\tselectedElmGhost.removeAttribute(\'data-mce-selected\');\n
+\t\t\t\t\t\trootElement.appendChild(selectedElmGhost);\n
+\n
+\t\t\t\t\t\tdom.bind(editableDoc, \'mousemove\', resizeGhostElement);\n
+\t\t\t\t\t\tdom.bind(editableDoc, \'mouseup\', endGhostResize);\n
+\n
+\t\t\t\t\t\tif (rootDocument != editableDoc) {\n
+\t\t\t\t\t\t\tdom.bind(rootDocument, \'mousemove\', resizeGhostElement);\n
+\t\t\t\t\t\t\tdom.bind(rootDocument, \'mouseup\', endGhostResize);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tresizeHelper = dom.add(rootElement, \'div\', {\n
+\t\t\t\t\t\t\t\'class\': \'mce-resize-helper\',\n
+\t\t\t\t\t\t\t\'data-mce-bogus\': \'all\'\n
+\t\t\t\t\t\t}, startW + \' &times; \' + startH);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (mouseDownHandleName) {\n
+\t\t\t\t\t\t// Drag started by IE native resizestart\n
+\t\t\t\t\t\tif (name == mouseDownHandleName) {\n
+\t\t\t\t\t\t\tstartDrag(mouseDownEvent);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Get existing or render resize handle\n
+\t\t\t\t\thandleElm = dom.get(\'mceResizeHandle\' + name);\n
+\t\t\t\t\tif (handleElm) {\n
+\t\t\t\t\t\tdom.remove(handleElm);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\thandleElm = dom.add(rootElement, \'div\', {\n
+\t\t\t\t\t\tid: \'mceResizeHandle\' + name,\n
+\t\t\t\t\t\t\'data-mce-bogus\': \'all\',\n
+\t\t\t\t\t\t\'class\': \'mce-resizehandle\',\n
+\t\t\t\t\t\tunselectable: true,\n
+\t\t\t\t\t\tstyle: \'cursor:\' + name + \'-resize; margin:0; padding:0\'\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// Hides IE move layer cursor\n
+\t\t\t\t\t// If we set it on Chrome we get this wounderful bug: #6725\n
+\t\t\t\t\tif (Env.ie) {\n
+\t\t\t\t\t\thandleElm.contentEditable = false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tdom.bind(handleElm, \'mousedown\', function(e) {\n
+\t\t\t\t\t\te.stopImmediatePropagation();\n
+\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\tstartDrag(e);\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\thandle.elm = handleElm;\n
+\n
+\t\t\t\t\t// Position element\n
+\t\t\t\t\tdom.setStyles(handleElm, {\n
+\t\t\t\t\t\tleft: (targetWidth * handle[0] + selectedElmX) - (handleElm.offsetWidth / 2),\n
+\t\t\t\t\t\ttop: (targetHeight * handle[1] + selectedElmY) - (handleElm.offsetHeight / 2)\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\thideResizeRect();\n
+\t\t\t}\n
+\n
+\t\t\tselectedElm.setAttribute(\'data-mce-selected\', \'1\');\n
+\t\t}\n
+\n
+\t\tfunction hideResizeRect() {\n
+\t\t\tvar name, handleElm;\n
+\n
+\t\t\tunbindResizeHandleEvents();\n
+\n
+\t\t\tif (selectedElm) {\n
+\t\t\t\tselectedElm.removeAttribute(\'data-mce-selected\');\n
+\t\t\t}\n
+\n
+\t\t\tfor (name in resizeHandles) {\n
+\t\t\t\thandleElm = dom.get(\'mceResizeHandle\' + name);\n
+\t\t\t\tif (handleElm) {\n
+\t\t\t\t\tdom.unbind(handleElm);\n
+\t\t\t\t\tdom.remove(handleElm);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction updateResizeRect(e) {\n
+\t\t\tvar startElm, controlElm;\n
+\n
+\t\t\tfunction isChildOrEqual(node, parent) {\n
+\t\t\t\tif (node) {\n
+\t\t\t\t\tdo {\n
+\t\t\t\t\t\tif (node === parent) {\n
+\t\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} while ((node = node.parentNode));\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Ignore all events while resizing or if the editor instance was removed\n
+\t\t\tif (resizeStarted || editor.removed) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v\n
+\t\t\teach(dom.select(\'img[data-mce-selected],hr[data-mce-selected]\'), function(img) {\n
+\t\t\t\timg.removeAttribute(\'data-mce-selected\');\n
+\t\t\t});\n
+\n
+\t\t\tcontrolElm = e.type == \'mousedown\' ? e.target : selection.getNode();\n
+\t\t\tcontrolElm = dom.$(controlElm).closest(isIE ? \'table\' : \'table,img,hr\')[0];\n
+\n
+\t\t\tif (isChildOrEqual(controlElm, rootElement)) {\n
+\t\t\t\tdisableGeckoResize();\n
+\t\t\t\tstartElm = selection.getStart(true);\n
+\n
+\t\t\t\tif (isChildOrEqual(startElm, controlElm) && isChildOrEqual(selection.getEnd(true), controlElm)) {\n
+\t\t\t\t\tif (!isIE || (controlElm != startElm && startElm.nodeName !== \'IMG\')) {\n
+\t\t\t\t\t\tshowResizeRect(controlElm);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\thideResizeRect();\n
+\t\t}\n
+\n
+\t\tfunction attachEvent(elm, name, func) {\n
+\t\t\tif (elm && elm.attachEvent) {\n
+\t\t\t\telm.attachEvent(\'on\' + name, func);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction detachEvent(elm, name, func) {\n
+\t\t\tif (elm && elm.detachEvent) {\n
+\t\t\t\telm.detachEvent(\'on\' + name, func);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction resizeNativeStart(e) {\n
+\t\t\tvar target = e.srcElement, pos, name, corner, cornerX, cornerY, relativeX, relativeY;\n
+\n
+\t\t\tpos = target.getBoundingClientRect();\n
+\t\t\trelativeX = lastMouseDownEvent.clientX - pos.left;\n
+\t\t\trelativeY = lastMouseDownEvent.clientY - pos.top;\n
+\n
+\t\t\t// Figure out what corner we are draging on\n
+\t\t\tfor (name in resizeHandles) {\n
+\t\t\t\tcorner = resizeHandles[name];\n
+\n
+\t\t\t\tcornerX = target.offsetWidth * corner[0];\n
+\t\t\t\tcornerY = target.offsetHeight * corner[1];\n
+\n
+\t\t\t\tif (abs(cornerX - relativeX) < 8 && abs(cornerY - relativeY) < 8) {\n
+\t\t\t\t\tselectedHandle = corner;\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Remove native selection and let the magic begin\n
+\t\t\tresizeStarted = true;\n
+\t\t\teditor.fire(\'ObjectResizeStart\', {\n
+\t\t\t\ttarget: selectedElm,\n
+\t\t\t\twidth: selectedElm.clientWidth,\n
+\t\t\t\theight: selectedElm.clientHeight\n
+\t\t\t});\n
+\t\t\teditor.getDoc().selection.empty();\n
+\t\t\tshowResizeRect(target, name, lastMouseDownEvent);\n
+\t\t}\n
+\n
+\t\tfunction nativeControlSelect(e) {\n
+\t\t\tvar target = e.srcElement;\n
+\n
+\t\t\tif (target != selectedElm) {\n
+\t\t\t\teditor.fire(\'ObjectSelected\', {target: target});\n
+\t\t\t\tdetachResizeStartListener();\n
+\n
+\t\t\t\tif (target.id.indexOf(\'mceResizeHandle\') === 0) {\n
+\t\t\t\t\te.returnValue = false;\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (target.nodeName == \'IMG\' || target.nodeName == \'TABLE\') {\n
+\t\t\t\t\thideResizeRect();\n
+\t\t\t\t\tselectedElm = target;\n
+\t\t\t\t\tattachEvent(target, \'resizestart\', resizeNativeStart);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction detachResizeStartListener() {\n
+\t\t\tdetachEvent(selectedElm, \'resizestart\', resizeNativeStart);\n
+\t\t}\n
+\n
+\t\tfunction unbindResizeHandleEvents() {\n
+\t\t\tfor (var name in resizeHandles) {\n
+\t\t\t\tvar handle = resizeHandles[name];\n
+\n
+\t\t\t\tif (handle.elm) {\n
+\t\t\t\t\tdom.unbind(handle.elm);\n
+\t\t\t\t\tdelete handle.elm;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction disableGeckoResize() {\n
+\t\t\ttry {\n
+\t\t\t\t// Disable object resizing on Gecko\n
+\t\t\t\teditor.getDoc().execCommand(\'enableObjectResizing\', false, false);\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// Ignore\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction controlSelect(elm) {\n
+\t\t\tvar ctrlRng;\n
+\n
+\t\t\tif (!isIE) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tctrlRng = editableDoc.body.createControlRange();\n
+\n
+\t\t\ttry {\n
+\t\t\t\tctrlRng.addElement(elm);\n
+\t\t\t\tctrlRng.select();\n
+\t\t\t\treturn true;\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// Ignore since the element can\'t be control selected for example a P tag\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\teditor.on(\'init\', function() {\n
+\t\t\tif (isIE) {\n
+\t\t\t\t// Hide the resize rect on resize and reselect the image\n
+\t\t\t\teditor.on(\'ObjectResized\', function(e) {\n
+\t\t\t\t\tif (e.target.nodeName != \'TABLE\') {\n
+\t\t\t\t\t\thideResizeRect();\n
+\t\t\t\t\t\tcontrolSelect(e.target);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tattachEvent(rootElement, \'controlselect\', nativeControlSelect);\n
+\n
+\t\t\t\teditor.on(\'mousedown\', function(e) {\n
+\t\t\t\t\tlastMouseDownEvent = e;\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\tdisableGeckoResize();\n
+\n
+\t\t\t\t// Sniff sniff, hard to feature detect this stuff\n
+\t\t\t\tif (Env.ie >= 11) {\n
+\t\t\t\t\t// Needs to be mousedown for drag/drop to work on IE 11\n
+\t\t\t\t\t// Needs to be click on Edge to properly select images\n
+\t\t\t\t\teditor.on(\'mousedown click\', function(e) {\n
+\t\t\t\t\t\tvar nodeName = e.target.nodeName;\n
+\n
+\t\t\t\t\t\tif (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName)) {\n
+\t\t\t\t\t\t\teditor.selection.select(e.target, nodeName == \'TABLE\');\n
+\n
+\t\t\t\t\t\t\t// Only fire once since nodeChange is expensive\n
+\t\t\t\t\t\t\tif (e.type == \'mousedown\') {\n
+\t\t\t\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\teditor.dom.bind(rootElement, \'mscontrolselect\', function(e) {\n
+\t\t\t\t\t\tif (/^(TABLE|IMG|HR)$/.test(e.target.nodeName)) {\n
+\t\t\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t\t\t// This moves the selection from being a control selection to a text like selection like in WebKit #6753\n
+\t\t\t\t\t\t\t// TODO: Fix this the day IE works like other browsers without this nasty native ugly control selections.\n
+\t\t\t\t\t\t\tif (e.target.tagName == \'IMG\') {\n
+\t\t\t\t\t\t\t\twindow.setTimeout(function() {\n
+\t\t\t\t\t\t\t\t\teditor.selection.select(e.target);\n
+\t\t\t\t\t\t\t\t}, 0);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\teditor.on(\'nodechange ResizeEditor ResizeWindow drop\', function(e) {\n
+\t\t\t\tif (window.requestAnimationFrame) {\n
+\t\t\t\t\twindow.requestAnimationFrame(function() {\n
+\t\t\t\t\t\tupdateResizeRect(e);\n
+\t\t\t\t\t});\n
+\t\t\t\t} else {\n
+\t\t\t\t\tupdateResizeRect(e);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// Update resize rect while typing in a table\n
+\t\t\teditor.on(\'keydown keyup\', function(e) {\n
+\t\t\t\tif (selectedElm && selectedElm.nodeName == "TABLE") {\n
+\t\t\t\t\tupdateResizeRect(e);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'hide\', hideResizeRect);\n
+\n
+\t\t\t// Hide rect on focusout since it would float on top of windows otherwise\n
+\t\t\t//editor.on(\'focusout\', hideResizeRect);\n
+\t\t});\n
+\n
+\t\teditor.on(\'remove\', unbindResizeHandleEvents);\n
+\n
+\t\tfunction destroy() {\n
+\t\t\tselectedElm = selectedElmGhost = null;\n
+\n
+\t\t\tif (isIE) {\n
+\t\t\t\tdetachResizeStartListener();\n
+\t\t\t\tdetachEvent(rootElement, \'controlselect\', nativeControlSelect);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn {\n
+\t\t\tisResizable: isResizable,\n
+\t\t\tshowResizeRect: showResizeRect,\n
+\t\t\thideResizeRect: hideResizeRect,\n
+\t\t\tupdateResizeRect: updateResizeRect,\n
+\t\t\tcontrolSelect: controlSelect,\n
+\t\t\tdestroy: destroy\n
+\t\t};\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16988</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ControlSelection.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,595 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268193.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Schema.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.html.Schema");\n
+\n
+test(\'Valid elements global rule\', function() {\n
+\texpect(1);\n
+\n
+\tvar schema = new tinymce.html.Schema({valid_elements: \'@[id|style],img[src|-style]\'});\n
+\tdeepEqual(schema.getElementRule(\'img\'), {"attributes": {"id": {}, "src": {}}, "attributesOrder": ["id", "src"]});\n
+});\n
+\n
+test(\'Whildcard element rule\', function() {\n
+\tvar schema;\n
+\n
+\texpect(17);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'*[id|class]\'});\n
+\tdeepEqual(schema.getElementRule(\'b\').attributes, {"id": {}, "class": {} });\n
+\tdeepEqual(schema.getElementRule(\'b\').attributesOrder, ["id", "class"]);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'b*[id|class]\'});\n
+\tdeepEqual(schema.getElementRule(\'b\').attributes, {"id": {}, "class": {} });\n
+\tdeepEqual(schema.getElementRule(\'b\').attributesOrder, ["id", "class"]);\n
+\tdeepEqual(schema.getElementRule(\'body\').attributes, {"id": {}, "class": {} });\n
+\tdeepEqual(schema.getElementRule(\'body\').attributesOrder, ["id", "class"]);\n
+\tequal(schema.getElementRule(\'img\'), undefined);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'b?[id|class]\'});\n
+\tdeepEqual(schema.getElementRule(\'b\').attributes, {"id": {}, "class": {} });\n
+\tdeepEqual(schema.getElementRule(\'b\').attributesOrder, ["id", "class"]);\n
+\tdeepEqual(schema.getElementRule(\'bx\').attributes, {"id": {}, "class": {} });\n
+\tdeepEqual(schema.getElementRule(\'bx\').attributesOrder, ["id", "class"]);\n
+\tequal(schema.getElementRule(\'body\'), undefined);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'b+[id|class]\'});\n
+\tdeepEqual(schema.getElementRule(\'body\').attributes, {"id": {}, "class": {} });\n
+\tdeepEqual(schema.getElementRule(\'body\').attributesOrder, ["id", "class"]);\n
+\tdeepEqual(schema.getElementRule(\'bx\').attributes, {"id": {}, "class": {} });\n
+\tdeepEqual(schema.getElementRule(\'bx\').attributesOrder, ["id", "class"]);\n
+\tequal(schema.getElementRule(\'b\'), undefined);\n
+});\n
+\n
+test(\'Whildcard attribute rule\', function() {\n
+\tvar schema;\n
+\n
+\texpect(13);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'b[id|class|*]\'});\n
+\tdeepEqual(schema.getElementRule(\'b\').attributes, {"id": {}, "class": {} });\n
+\tdeepEqual(schema.getElementRule(\'b\').attributesOrder, ["id", "class"]);\n
+\tok(schema.getElementRule(\'b\').attributePatterns[0].pattern.test(\'x\'));\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'b[id|class|x?]\'});\n
+\tdeepEqual(schema.getElementRule(\'b\').attributes, {"id": {}, "class": {} });\n
+\tdeepEqual(schema.getElementRule(\'b\').attributesOrder, ["id", "class"]);\n
+\tok(schema.getElementRule(\'b\').attributePatterns[0].pattern.test(\'xy\'));\n
+\tok(!schema.getElementRule(\'b\').attributePatterns[0].pattern.test(\'xba\'));\n
+\tok(!schema.getElementRule(\'b\').attributePatterns[0].pattern.test(\'a\'));\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'b[id|class|x+]\'});\n
+\tdeepEqual(schema.getElementRule(\'b\').attributes, {"id": {}, "class": {} });\n
+\tdeepEqual(schema.getElementRule(\'b\').attributesOrder, ["id", "class"]);\n
+\tok(!schema.getElementRule(\'b\').attributePatterns[0].pattern.test(\'x\'));\n
+\tok(schema.getElementRule(\'b\').attributePatterns[0].pattern.test(\'xb\'));\n
+\tok(schema.getElementRule(\'b\').attributePatterns[0].pattern.test(\'xba\'));\n
+});\n
+\n
+test(\'Valid attributes and attribute order\', function() {\n
+\tvar schema;\n
+\n
+\texpect(3);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'div,a[href|title],b[title]\'});\n
+\tdeepEqual(schema.getElementRule(\'div\'), {"attributes": {}, "attributesOrder": []});\n
+\tdeepEqual(schema.getElementRule(\'a\'), {"attributes": {"href": {}, "title": {}}, "attributesOrder": ["href", "title"]});\n
+\tdeepEqual(schema.getElementRule(\'b\'), {"attributes": {"title": {}}, "attributesOrder": ["title"]});\n
+});\n
+\n
+test(\'Required any attributes\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'a![id|style|href]\'});\n
+\tdeepEqual(schema.getElementRule(\'a\'), {"attributes": {"href": {}, "id": {}, "style": {}}, "attributesOrder": ["id", "style", "href"], "removeEmptyAttrs": true});\n
+});\n
+\n
+test(\'Required attributes\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'a[!href|!name]\'});\n
+\tdeepEqual(schema.getElementRule(\'a\'), {"attributes": {"href": {"required": true}, "name": {"required": true}}, "attributesOrder": ["href", "name"], "attributesRequired": ["href", "name"]});\n
+});\n
+\n
+test(\'Default attribute values\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'img[border=0]\'});\n
+\tdeepEqual(schema.getElementRule(\'img\'), {"attributes": {"border": {"defaultValue": "0"}}, "attributesOrder": ["border"], "attributesDefault": [{"name": "border", "value": "0"}]});\n
+});\n
+\n
+test(\'Forced attribute values\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'img[border:0]\'});\n
+\tdeepEqual(schema.getElementRule(\'img\'), {"attributes": {"border": {"forcedValue": "0"}}, "attributesOrder": ["border"], "attributesForced": [{"name": "border", "value": "0"}]});\n
+});\n
+\n
+test(\'Required attribute values\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'span[dir<ltr?rtl]\'});\n
+\tdeepEqual(schema.getElementRule(\'span\'), {"attributes": {"dir": {"validValues": {"rtl": {}, "ltr": {}}}}, "attributesOrder": ["dir"]});\n
+});\n
+\n
+test(\'Remove empty elements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(2);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'-span\'});\n
+\tdeepEqual(schema.getElementRule(\'span\'), {"attributes": {}, "attributesOrder": [], "removeEmpty": true});\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'#span\'});\n
+\tdeepEqual(schema.getElementRule(\'span\'), {"attributes": {}, "attributesOrder": [], "paddEmpty": true});\n
+});\n
+\n
+test(\'addValidElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'@[id|style],img[src|-style]\'});\n
+\tschema.addValidElements(\'b[class]\');\n
+\tdeepEqual(schema.getElementRule(\'b\'), {"attributes": {"id": {}, "style": {}, "class": {}}, "attributesOrder": ["id", "style", "class"]});\n
+});\n
+\n
+test(\'setValidElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(3);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'@[id|style],img[src|-style]\'});\n
+\tschema.setValidElements(\'b[class]\');\n
+\tequal(schema.getElementRule(\'img\'), undefined);\n
+\tdeepEqual(schema.getElementRule(\'b\'), {"attributes": {"class": {}}, "attributesOrder": ["class"]});\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements: \'img[src]\'});\n
+\tschema.setValidElements(\'@[id|style],img[src]\');\n
+\tdeepEqual(schema.getElementRule(\'img\'), {"attributes": {"id": {}, "style": {}, "src": {}}, "attributesOrder": ["id", "style", "src"]});\n
+});\n
+\n
+test(\'getBoolAttrs\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tdeepEqual(schema.getBoolAttrs(), {\n
+\t\t"CONTROLS": {}, "LOOP": {}, "AUTOPLAY": {}, "SELECTED": {}, "READONLY": {}, "NOWRAP": {},\n
+\t\t"NOSHADE": {}, "NORESIZE": {}, "NOHREF": {}, "MULTIPLE": {}, "ISMAP": {}, "DISABLED": {}, "DEFER": {},\n
+\t\t"DECLARE": {}, "COMPACT": {}, "CHECKED": {},\n
+\t\t"controls": {}, "loop": {}, "autoplay": {}, "selected": {}, "readonly": {}, "nowrap": {},\n
+\t\t"noshade": {}, "noresize": {}, "nohref": {}, "multiple": {}, "ismap": {}, "disabled": {}, "defer": {},\n
+\t\t"declare": {}, "compact": {}, "checked": {}\n
+\t});\n
+});\n
+\n
+test(\'getBlockElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tdeepEqual(schema.getBlockElements(), {\n
+\t\tASIDE: {}, HGROUP: {}, SECTION: {}, ARTICLE: {}, FOOTER: {}, HEADER: {},\n
+\t\tISINDEX: {}, MENU: {}, NOSCRIPT: {}, FIELDSET: {}, DIR: {}, DD: {}, DT: {},\n
+\t\tDL: {}, CENTER: {}, BLOCKQUOTE: {}, CAPTION: {}, UL: {}, OL: {}, LI: {},\n
+\t\tTD: {}, TR: {}, TH: {}, TFOOT: {}, THEAD: {}, TBODY: {}, TABLE: {}, FORM: {},\n
+\t\tPRE: {}, ADDRESS: {}, DIV: {}, P: {}, HR: {}, H6: {}, H5: {}, H4: {}, H3: {},\n
+\t\tH2: {}, H1: {}, NAV: {}, FIGURE: {}, DATALIST: {}, OPTGROUP: {}, OPTION: {}, SELECT: {},\n
+\t\taside: {}, hgroup: {}, section: {}, article: {}, footer: {}, header: {},\n
+\t\tisindex: {}, menu: {}, noscript: {}, fieldset: {}, dir: {}, dd: {}, dt: {}, dl: {}, center: {},\n
+\t\tblockquote: {}, caption: {}, ul: {}, ol: {}, li: {}, td: {}, tr: {}, th: {}, tfoot: {}, thead: {},\n
+\t\ttbody: {}, table: {}, form: {}, pre: {}, address: {}, div: {}, p: {}, hr: {}, h6: {},\n
+\t\th5: {}, h4: {}, h3: {}, h2: {}, h1: {}, nav: {}, figure: {}, datalist: {}, optgroup: {},\n
+\t\toption: {}, select: {}\n
+\t});\n
+});\n
+\n
+test(\'getShortEndedElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tdeepEqual(schema.getShortEndedElements(), {\n
+\t\t"EMBED": {}, "PARAM": {}, "META": {}, "LINK": {}, "ISINDEX": {},\n
+\t\t"INPUT": {}, "IMG": {}, "HR": {}, "FRAME": {}, "COL": {}, "BR": {},\n
+\t\t"BASEFONT": {}, "BASE": {}, "AREA": {}, "SOURCE" : {}, "WBR" : {}, "TRACK" : {},\n
+\t\t"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},\n
+\t\t"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},\n
+\t\t"basefont": {}, "base": {}, "area": {}, "source" : {}, "wbr" : {}, "track" : {}\n
+\t});\n
+});\n
+\n
+test(\'getNonEmptyElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tdeepEqual(schema.getNonEmptyElements(), {\n
+\t\t"EMBED": {}, "PARAM": {}, "META": {}, "LINK": {}, "ISINDEX": {},\n
+\t\t"INPUT": {}, "IMG": {}, "HR": {}, "FRAME": {}, "COL": {}, "BR": {},\n
+\t\t"BASEFONT": {}, "BASE": {}, "AREA": {}, "SOURCE" : {},\n
+\t\t"TD": {}, "TH": {}, "IFRAME": {}, "VIDEO": {}, "AUDIO": {}, "OBJECT": {}, "WBR": {}, "TRACK" : {}, "SCRIPT" : {},\n
+\t\t"embed": {}, "param": {}, "meta": {}, "link": {}, "isindex": {},\n
+\t\t"input": {}, "img": {}, "hr": {}, "frame": {}, "col": {}, "br": {},\n
+\t\t"basefont": {}, "base": {}, "area": {}, "source" : {},\n
+\t\t"td": {}, "th": {}, "iframe": {}, "video": {}, "audio": {}, "object": {}, "wbr" : {}, "track" : {},  "script" : {}\n
+\t});\n
+});\n
+\n
+test(\'getWhiteSpaceElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tdeepEqual(schema.getWhiteSpaceElements(), {\n
+\t\t"IFRAME": {}, "NOSCRIPT": {}, "OBJECT": {}, "PRE": {},\n
+\t\t"SCRIPT": {}, "STYLE": {}, "TEXTAREA": {}, "VIDEO": {}, "AUDIO": {},\n
+\t\t"iframe": {}, "noscript": {}, "object": {}, "pre": {},\n
+\t\t"script": {}, "style": {}, "textarea": {}, "video": {}, "audio": {}\n
+\t});\n
+});\n
+\n
+test(\'getTextBlockElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tdeepEqual(schema.getTextBlockElements(), {\n
+\t\t"ADDRESS": {}, "ARTICLE": {}, "ASIDE": {}, "BLOCKQUOTE": {}, "CENTER": {}, "DIR": {}, "DIV": {}, "FIELDSET": {}, "FIGURE": {}, "FOOTER": {}, "FORM": {},\n
+\t\t"H1": {}, "H2": {}, "H3": {}, "H4": {}, "H5": {}, "H6": {}, "HEADER": {}, "HGROUP": {}, "NAV": {}, "P": {}, "PRE": {}, "SECTION": {},\n
+\t\t"address": {}, "article": {}, "aside": {}, "blockquote": {}, "center": {}, "dir": {}, "div": {}, "fieldset": {}, "figure": {}, "footer": {}, "form": {},\n
+\t\t"h1": {}, "h2": {}, "h3": {}, "h4": {}, "h5": {}, "h6": {}, "header": {}, "hgroup": {}, "nav": {}, "p": {}, "pre": {}, "section": {}\n
+\t});\n
+});\n
+\n
+test(\'getTextInlineElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(1);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tdeepEqual(schema.getTextInlineElements(), {\n
+\t\t"B": {}, "CITE": {}, "CODE": {}, "DFN": {},\t"EM": {}, "FONT": {}, "I": {}, "MARK": {}, "Q": {},\n
+\t\t"SAMP": {}, "SPAN": {}, "STRIKE": {}, "STRONG": {}, "SUB": {}, "SUP": {}, "U": {}, "VAR": {},\n
+\t\t"b": {}, "cite": {}, "code": {}, "dfn": {}, "em": {}, "font": {}, "i": {}, "mark": {}, "q": {},\n
+\t\t"samp": {}, "span": {}, "strike": {}, "strong": {}, "sub": {}, "sup": {}, "u": {}, "var": {}\n
+\t});\n
+});\n
+\n
+test(\'isValidChild\', function() {\n
+\tvar schema;\n
+\n
+\texpect(4);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tok(schema.isValidChild(\'body\', \'p\'));\n
+\tok(schema.isValidChild(\'p\', \'img\'));\n
+\tok(!schema.isValidChild(\'body\', \'body\'));\n
+\tok(!schema.isValidChild(\'p\', \'body\'));\n
+});\n
+\n
+test(\'getElementRule\', function() {\n
+\tvar schema;\n
+\n
+\texpect(3);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tok(schema.getElementRule(\'b\'));\n
+\tok(!schema.getElementRule(\'bx\'));\n
+\tok(!schema.getElementRule(null));\n
+});\n
+\n
+test(\'addCustomElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(5);\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements:\'inline,block\'});\n
+\tschema.addCustomElements(\'~inline,block\');\n
+\tok(schema.getElementRule(\'inline\'));\n
+\tok(schema.getElementRule(\'block\'));\n
+\tok(schema.isValidChild(\'body\', \'block\'));\n
+\tok(schema.isValidChild(\'block\', \'inline\'));\n
+\tok(schema.isValidChild(\'p\', \'inline\'));\n
+});\n
+\n
+test(\'addValidChildren\', function() {\n
+\tvar schema;\n
+\n
+\texpect(7);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tok(schema.isValidChild(\'body\', \'p\'));\n
+\tok(!schema.isValidChild(\'body\', \'body\'));\n
+\tok(!schema.isValidChild(\'body\', \'html\'));\n
+\tschema.addValidChildren(\'+body[body|html]\');\n
+\tok(schema.isValidChild(\'body\', \'body\'));\n
+\tok(schema.isValidChild(\'body\', \'html\'));\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tok(schema.isValidChild(\'body\', \'p\'));\n
+\tschema.addValidChildren(\'-body[p]\');\n
+\tok(!schema.isValidChild(\'body\', \'p\'));\n
+});\n
+\n
+test(\'addCustomElements/getCustomElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(4);\n
+\n
+\tschema = new tinymce.html.Schema();\n
+\tschema.addCustomElements(\'~inline,block\');\n
+\tok(schema.getBlockElements().block);\n
+\tok(!schema.getBlockElements().inline);\n
+\tok(schema.getCustomElements().inline);\n
+\tok(schema.getCustomElements().block);\n
+});\n
+\n
+test(\'whitespaceElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(3);\n
+\n
+\tschema = new tinymce.html.Schema({whitespace_elements : \'pre,p\'});\n
+\tok(schema.getWhiteSpaceElements().pre);\n
+\tok(!schema.getWhiteSpaceElements().span);\n
+\n
+\tschema = new tinymce.html.Schema({whitespace_elements : \'code\'});\n
+\tok(schema.getWhiteSpaceElements().code);\n
+});\n
+\n
+test(\'selfClosingElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(3);\n
+\n
+\tschema = new tinymce.html.Schema({self_closing_elements : \'pre,p\'});\n
+\tok(schema.getSelfClosingElements().pre);\n
+\tok(schema.getSelfClosingElements().p);\n
+\tok(!schema.getSelfClosingElements().li);\n
+});\n
+\n
+test(\'shortEndedElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(3);\n
+\n
+\tschema = new tinymce.html.Schema({short_ended_elements : \'pre,p\'});\n
+\tok(schema.getShortEndedElements().pre);\n
+\tok(schema.getShortEndedElements().p);\n
+\tok(!schema.getShortEndedElements().img);\n
+});\n
+\n
+test(\'booleanAttributes\', function() {\n
+\tvar schema;\n
+\n
+\texpect(3);\n
+\n
+\tschema = new tinymce.html.Schema({boolean_attributes : \'href,alt\'});\n
+\tok(schema.getBoolAttrs().href);\n
+\tok(schema.getBoolAttrs().alt);\n
+\tok(!schema.getBoolAttrs().checked);\n
+});\n
+\n
+test(\'nonEmptyElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(3);\n
+\n
+\tschema = new tinymce.html.Schema({non_empty_elements : \'pre,p\'});\n
+\tok(schema.getNonEmptyElements().pre);\n
+\tok(schema.getNonEmptyElements().p);\n
+\tok(!schema.getNonEmptyElements().img);\n
+});\n
+\n
+test(\'blockElements\', function() {\n
+\tvar schema;\n
+\n
+\texpect(3);\n
+\n
+\tschema = new tinymce.html.Schema({block_elements : \'pre,p\'});\n
+\tok(schema.getBlockElements().pre);\n
+\tok(schema.getBlockElements().p);\n
+\tok(!schema.getBlockElements().h1);\n
+});\n
+\n
+test(\'isValid\', function() {\n
+\tvar schema;\n
+\n
+\tschema = new tinymce.html.Schema({valid_elements : \'a[href],i[*]\'});\n
+\n
+\tok(schema.isValid(\'a\'));\n
+\tok(schema.isValid(\'a\', \'href\'));\n
+\tok(!schema.isValid(\'b\'));\n
+\tok(!schema.isValid(\'b\', \'href\'));\n
+\tok(!schema.isValid(\'a\', \'id\'));\n
+\tok(schema.isValid(\'i\'));\n
+\tok(schema.isValid(\'i\', \'id\'));\n
+});\n
+\n
+test(\'validStyles\', function() {\n
+\tvar schema;\n
+\n
+\tschema = new tinymce.html.Schema({valid_styles: \'color,font-size\'});\n
+\tdeepEqual(schema.getValidStyles(), {\n
+\t\t"*": [\n
+\t\t\t"color",\n
+\t\t\t"font-size"\n
+\t\t]\n
+\t});\n
+\n
+\tschema = new tinymce.html.Schema({valid_styles: \'color font-size\'});\n
+\tdeepEqual(schema.getValidStyles(), {\n
+\t\t"*": [\n
+\t\t\t"color",\n
+\t\t\t"font-size"\n
+\t\t]\n
+\t});\n
+\n
+\tschema = new tinymce.html.Schema({\n
+\t\tvalid_styles: {\n
+\t\t\t\'*\': \'color font-size\',\n
+\t\t\t\'a\': \'background font-family\'\n
+\t\t}\n
+\t});\n
+\tdeepEqual(schema.getValidStyles(), {\n
+\t\t"*": [\n
+\t\t\t"color",\n
+\t\t\t"font-size"\n
+\t\t],\n
+\n
+\t\t"a": [\n
+\t\t\t"background",\n
+\t\t\t"font-family"\n
+\t\t],\n
+\n
+\t\t"A": [\n
+\t\t\t"background",\n
+\t\t\t"font-family"\n
+\t\t]\n
+\t});\n
+});\n
+\n
+test(\'invalidStyles\', function() {\n
+\tvar schema;\n
+\n
+\tschema = new tinymce.html.Schema({invalid_styles: \'color,font-size\'});\n
+\tdeepEqual(schema.getInvalidStyles(), {\n
+\t\t\'*\': {\n
+\t\t\t\'color\': {},\n
+\t\t\t\'font-size\': {}\n
+\t\t}\n
+\t});\n
+\n
+\tschema = new tinymce.html.Schema({invalid_styles: \'color font-size\'});\n
+\tdeepEqual(schema.getInvalidStyles(), {\n
+\t\t\'*\': {\n
+\t\t\t\'color\': {},\n
+\t\t\t\'font-size\': {}\n
+\t\t}\n
+\t});\n
+\n
+\tschema = new tinymce.html.Schema({\n
+\t\tinvalid_styles: {\n
+\t\t\t\'*\': \'color font-size\',\n
+\t\t\t\'a\': \'background font-family\'\n
+\t\t}\n
+\t});\n
+\tdeepEqual(schema.getInvalidStyles(), {\n
+\t\t\'*\': {\n
+\t\t\t\'color\': {},\n
+\t\t\t\'font-size\': {}\n
+\t\t},\n
+\n
+\t\t\'a\': {\n
+\t\t\t\'background\': {},\n
+\t\t\t\'font-family\': {}\n
+\t\t},\n
+\n
+\t\t\'A\': {\n
+\t\t\t\'background\': {},\n
+\t\t\t\'font-family\': {}\n
+\t\t}\n
+\t});\n
+});\n
+\n
+test(\'validClasses\', function() {\n
+\tvar schema;\n
+\n
+\tschema = new tinymce.html.Schema({valid_classes: \'classA,classB\'});\n
+\tdeepEqual(schema.getValidClasses(), {\n
+\t\t\'*\': {\n
+\t\t\t\'classA\': {},\n
+\t\t\t\'classB\': {}\n
+\t\t}\n
+\t});\n
+\n
+\tschema = new tinymce.html.Schema({valid_classes: \'classA classB\'});\n
+\tdeepEqual(schema.getValidClasses(), {\n
+\t\t\'*\': {\n
+\t\t\t\'classA\': {},\n
+\t\t\t\'classB\': {}\n
+\t\t}\n
+\t});\n
+\n
+\tschema = new tinymce.html.Schema({\n
+\t\tvalid_classes: {\n
+\t\t\t\'*\': \'classA classB\',\n
+\t\t\t\'a\': \'classC classD\'\n
+\t\t}\n
+\t});\n
+\tdeepEqual(schema.getValidClasses(), {\n
+\t\t\'*\': {\n
+\t\t\t\'classA\': {},\n
+\t\t\t\'classB\': {}\n
+\t\t},\n
+\n
+\t\t\'a\': {\n
+\t\t\t\'classC\': {},\n
+\t\t\t\'classD\': {}\n
+\t\t},\n
+\n
+\t\t\'A\': {\n
+\t\t\t\'classC\': {},\n
+\t\t\t\'classD\': {}\n
+\t\t}\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17046</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Schema.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

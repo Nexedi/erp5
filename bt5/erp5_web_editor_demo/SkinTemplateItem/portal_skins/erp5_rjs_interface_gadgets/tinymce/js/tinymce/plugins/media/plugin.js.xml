@@ -1,0 +1,833 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268398.35</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*jshint maxlen:255 */\n
+/*eslint max-len:0 */\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'media\', function(editor, url) {\n
+\tvar urlPatterns = [\n
+\t\t{regex: /youtu\\.be\\/([\\w\\-.]+)/, type: \'iframe\', w: 425, h: 350, url: \'//www.youtube.com/embed/$1\'},\n
+\t\t{regex: /youtube\\.com(.+)v=([^&]+)/, type: \'iframe\', w: 425, h: 350, url: \'//www.youtube.com/embed/$2\'},\n
+\t\t{regex: /vimeo\\.com\\/([0-9]+)/, type: \'iframe\', w: 425, h: 350, url: \'//player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc\'},\n
+\t\t{regex: /vimeo\\.com\\/(.*)\\/([0-9]+)/, type: "iframe", w: 425, h: 350, url: "//player.vimeo.com/video/$2?title=0&amp;byline=0"},\n
+\t\t{regex: /maps\\.google\\.([a-z]{2,3})\\/maps\\/(.+)msid=(.+)/, type: \'iframe\', w: 425, h: 350, url: \'//maps.google.com/maps/ms?msid=$2&output=embed"\'}\n
+\t];\n
+\n
+\tvar embedChange = (tinymce.Env.ie && tinymce.Env.ie <= 8) ? \'onChange\' : \'onInput\';\n
+\n
+\tfunction guessMime(url) {\n
+\t\turl = url.toLowerCase();\n
+\n
+\t\tif (url.indexOf(\'.mp3\') != -1) {\n
+\t\t\treturn \'audio/mpeg\';\n
+\t\t}\n
+\n
+\t\tif (url.indexOf(\'.wav\') != -1) {\n
+\t\t\treturn \'audio/wav\';\n
+\t\t}\n
+\n
+\t\tif (url.indexOf(\'.mp4\') != -1) {\n
+\t\t\treturn \'video/mp4\';\n
+\t\t}\n
+\n
+\t\tif (url.indexOf(\'.webm\') != -1) {\n
+\t\t\treturn \'video/webm\';\n
+\t\t}\n
+\n
+\t\tif (url.indexOf(\'.ogg\') != -1) {\n
+\t\t\treturn \'video/ogg\';\n
+\t\t}\n
+\n
+\t\tif (url.indexOf(\'.swf\') != -1) {\n
+\t\t\treturn \'application/x-shockwave-flash\';\n
+\t\t}\n
+\n
+\t\treturn \'\';\n
+\t}\n
+\n
+\tfunction getVideoScriptMatch(src) {\n
+\t\tvar prefixes = editor.settings.media_scripts;\n
+\n
+\t\tif (prefixes) {\n
+\t\t\tfor (var i = 0; i < prefixes.length; i++) {\n
+\t\t\t\tif (src.indexOf(prefixes[i].filter) !== -1) {\n
+\t\t\t\t\treturn prefixes[i];\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\tfunction showDialog() {\n
+\t\tvar win, width, height, data;\n
+\n
+\t\tvar generalFormItems = [\n
+\t\t\t{\n
+\t\t\t\tname: \'source1\',\n
+\t\t\t\ttype: \'filepicker\',\n
+\t\t\t\tfiletype: \'media\',\n
+\t\t\t\tsize: 40,\n
+\t\t\t\tautofocus: true,\n
+\t\t\t\tlabel: \'Source\',\n
+\t\t\t\tonchange: function(e) {\n
+\t\t\t\t\ttinymce.each(e.meta, function(value, key) {\n
+\t\t\t\t\t\twin.find(\'#\' + key).value(value);\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t];\n
+\n
+\t\tfunction recalcSize(e) {\n
+\t\t\tvar widthCtrl, heightCtrl, newWidth, newHeight;\n
+\n
+\t\t\twidthCtrl = win.find(\'#width\')[0];\n
+\t\t\theightCtrl = win.find(\'#height\')[0];\n
+\n
+\t\t\tnewWidth = widthCtrl.value();\n
+\t\t\tnewHeight = heightCtrl.value();\n
+\n
+\t\t\tif (win.find(\'#constrain\')[0].checked() && width && height && newWidth && newHeight) {\n
+\t\t\t\tif (e.control == widthCtrl) {\n
+\t\t\t\t\tnewHeight = Math.round((newWidth / width) * newHeight);\n
+\n
+\t\t\t\t\tif (!isNaN(newHeight)) {\n
+\t\t\t\t\t\theightCtrl.value(newHeight);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tnewWidth = Math.round((newHeight / height) * newWidth);\n
+\n
+\t\t\t\t\tif (!isNaN(newWidth)) {\n
+\t\t\t\t\t\twidthCtrl.value(newWidth);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\twidth = newWidth;\n
+\t\t\theight = newHeight;\n
+\t\t}\n
+\n
+\t\tif (editor.settings.media_alt_source !== false) {\n
+\t\t\tgeneralFormItems.push({name: \'source2\', type: \'filepicker\', filetype: \'media\', size: 40, label: \'Alternative source\'});\n
+\t\t}\n
+\n
+\t\tif (editor.settings.media_poster !== false) {\n
+\t\t\tgeneralFormItems.push({name: \'poster\', type: \'filepicker\', filetype: \'image\', size: 40, label: \'Poster\'});\n
+\t\t}\n
+\n
+\t\tif (editor.settings.media_dimensions !== false) {\n
+\t\t\tgeneralFormItems.push({\n
+\t\t\t\ttype: \'container\',\n
+\t\t\t\tlabel: \'Dimensions\',\n
+\t\t\t\tlayout: \'flex\',\n
+\t\t\t\talign: \'center\',\n
+\t\t\t\tspacing: 5,\n
+\t\t\t\titems: [\n
+\t\t\t\t\t{name: \'width\', type: \'textbox\', maxLength: 5, size: 3, onchange: recalcSize, ariaLabel: \'Width\'},\n
+\t\t\t\t\t{type: \'label\', text: \'x\'},\n
+\t\t\t\t\t{name: \'height\', type: \'textbox\', maxLength: 5, size: 3, onchange: recalcSize, ariaLabel: \'Height\'},\n
+\t\t\t\t\t{name: \'constrain\', type: \'checkbox\', checked: true, text: \'Constrain proportions\'}\n
+\t\t\t\t]\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tdata = getData(editor.selection.getNode());\n
+\t\twidth = data.width;\n
+\t\theight = data.height;\n
+\n
+\t\tvar embedTextBox = {\n
+\t\t\tid: \'mcemediasource\',\n
+\t\t\ttype: \'textbox\',\n
+\t\t\tflex: 1,\n
+\t\t\tname: \'embed\',\n
+\t\t\tvalue: getSource(),\n
+\t\t\tmultiline: true,\n
+\t\t\tlabel: \'Source\'\n
+\t\t};\n
+\n
+\t\tfunction updateValueOnChange() {\n
+\t\t\tdata = htmlToData(this.value());\n
+\t\t\tthis.parent().parent().fromJSON(data);\n
+\t\t}\n
+\n
+\t\tembedTextBox[embedChange] = updateValueOnChange;\n
+\n
+\t\twin = editor.windowManager.open({\n
+\t\t\ttitle: \'Insert/edit video\',\n
+\t\t\tdata: data,\n
+\t\t\tbodyType: \'tabpanel\',\n
+\t\t\tbody: [\n
+\t\t\t\t{\n
+\t\t\t\t\ttitle: \'General\',\n
+\t\t\t\t\ttype: "form",\n
+\t\t\t\t\tonShowTab: function() {\n
+\t\t\t\t\t\tdata = htmlToData(this.next().find(\'#embed\').value());\n
+\t\t\t\t\t\tthis.fromJSON(data);\n
+\t\t\t\t\t},\n
+\t\t\t\t\titems: generalFormItems\n
+\t\t\t\t},\n
+\n
+\t\t\t\t{\n
+\t\t\t\t\ttitle: \'Embed\',\n
+\t\t\t\t\ttype: "container",\n
+\t\t\t\t\tlayout: \'flex\',\n
+\t\t\t\t\tdirection: \'column\',\n
+\t\t\t\t\talign: \'stretch\',\n
+\t\t\t\t\tpadding: 10,\n
+\t\t\t\t\tspacing: 10,\n
+\t\t\t\t\tonShowTab: function() {\n
+\t\t\t\t\t\tthis.find(\'#embed\').value(dataToHtml(this.parent().toJSON()));\n
+\t\t\t\t\t},\n
+\t\t\t\t\titems: [\n
+\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\ttype: \'label\',\n
+\t\t\t\t\t\t\ttext: \'Paste your embed code below:\',\n
+\t\t\t\t\t\t\tforId: \'mcemediasource\'\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\tembedTextBox\n
+\t\t\t\t\t]\n
+\t\t\t\t}\n
+\t\t\t],\n
+\t\t\tonSubmit: function() {\n
+\t\t\t\tvar beforeObjects, afterObjects, i, y;\n
+\n
+\t\t\t\tbeforeObjects = editor.dom.select(\'img[data-mce-object]\');\n
+\t\t\t\teditor.insertContent(dataToHtml(this.toJSON()));\n
+\t\t\t\tafterObjects = editor.dom.select(\'img[data-mce-object]\');\n
+\n
+\t\t\t\t// Find new image placeholder so we can select it\n
+\t\t\t\tfor (i = 0; i < beforeObjects.length; i++) {\n
+\t\t\t\t\tfor (y = afterObjects.length - 1; y >= 0; y--) {\n
+\t\t\t\t\t\tif (beforeObjects[i] == afterObjects[y]) {\n
+\t\t\t\t\t\t\tafterObjects.splice(y, 1);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\teditor.selection.select(afterObjects[0]);\n
+\t\t\t\teditor.nodeChanged();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tfunction getSource() {\n
+\t\tvar elm = editor.selection.getNode();\n
+\n
+\t\tif (elm.getAttribute(\'data-mce-object\')) {\n
+\t\t\treturn editor.selection.getContent();\n
+\t\t}\n
+\t}\n
+\n
+\tfunction dataToHtml(data) {\n
+\t\tvar html = \'\';\n
+\n
+\t\tif (!data.source1) {\n
+\t\t\ttinymce.extend(data, htmlToData(data.embed));\n
+\t\t\tif (!data.source1) {\n
+\t\t\t\treturn \'\';\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tif (!data.source2) {\n
+\t\t\tdata.source2 = \'\';\n
+\t\t}\n
+\n
+\t\tif (!data.poster) {\n
+\t\t\tdata.poster = \'\';\n
+\t\t}\n
+\n
+\t\tdata.source1 = editor.convertURL(data.source1, "source");\n
+\t\tdata.source2 = editor.convertURL(data.source2, "source");\n
+\t\tdata.source1mime = guessMime(data.source1);\n
+\t\tdata.source2mime = guessMime(data.source2);\n
+\t\tdata.poster = editor.convertURL(data.poster, "poster");\n
+\t\tdata.flashPlayerUrl = editor.convertURL(url + \'/moxieplayer.swf\', "movie");\n
+\n
+\t\ttinymce.each(urlPatterns, function(pattern) {\n
+\t\t\tvar match, i, url;\n
+\n
+\t\t\tif ((match = pattern.regex.exec(data.source1))) {\n
+\t\t\t\turl = pattern.url;\n
+\n
+\t\t\t\tfor (i = 0; match[i]; i++) {\n
+\t\t\t\t\t/*jshint loopfunc:true*/\n
+\t\t\t\t\t/*eslint no-loop-func:0 */\n
+\t\t\t\t\turl = url.replace(\'$\' + i, function() {\n
+\t\t\t\t\t\treturn match[i];\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdata.source1 = url;\n
+\t\t\t\tdata.type = pattern.type;\n
+\t\t\t\tdata.width = data.width || pattern.w;\n
+\t\t\t\tdata.height = data.height || pattern.h;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tif (data.embed) {\n
+\t\t\thtml = updateHtml(data.embed, data, true);\n
+\t\t} else {\n
+\t\t\tvar videoScript = getVideoScriptMatch(data.source1);\n
+\t\t\tif (videoScript) {\n
+\t\t\t\tdata.type = \'script\';\n
+\t\t\t\tdata.width = videoScript.width;\n
+\t\t\t\tdata.height = videoScript.height;\n
+\t\t\t}\n
+\n
+\t\t\tdata.width = data.width || 300;\n
+\t\t\tdata.height = data.height || 150;\n
+\n
+\t\t\ttinymce.each(data, function(value, key) {\n
+\t\t\t\tdata[key] = editor.dom.encode(value);\n
+\t\t\t});\n
+\n
+\t\t\tif (data.type == "iframe") {\n
+\t\t\t\thtml += \'<iframe src="\' + data.source1 + \'" width="\' + data.width + \'" height="\' + data.height + \'"></iframe>\';\n
+\t\t\t} else if (data.source1mime == "application/x-shockwave-flash") {\n
+\t\t\t\thtml += \'<object data="\' + data.source1 + \'" width="\' + data.width + \'" height="\' + data.height + \'" type="application/x-shockwave-flash">\';\n
+\n
+\t\t\t\tif (data.poster) {\n
+\t\t\t\t\thtml += \'<img src="\' + data.poster + \'" width="\' + data.width + \'" height="\' + data.height + \'" />\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\thtml += \'</object>\';\n
+\t\t\t} else if (data.source1mime.indexOf(\'audio\') != -1) {\n
+\t\t\t\tif (editor.settings.audio_template_callback) {\n
+\t\t\t\t\thtml = editor.settings.audio_template_callback(data);\n
+\t\t\t\t} else {\n
+\t\t\t\t\thtml += (\n
+\t\t\t\t\t\t\'<audio controls="controls" src="\' + data.source1 + \'">\' +\n
+\t\t\t\t\t\t\t(data.source2 ? \'\\n<source src="\' + data.source2 + \'"\' + (data.source2mime ? \' type="\' + data.source2mime + \'"\' : \'\') + \' />\\n\' : \'\') +\n
+\t\t\t\t\t\t\'</audio>\'\n
+\t\t\t\t\t);\n
+\t\t\t\t}\n
+\t\t\t} else if (data.type == "script") {\n
+\t\t\t\thtml += \'<script src="\' + data.source1 + \'"></script>\';\n
+\t\t\t} else {\n
+\t\t\t\tif (editor.settings.video_template_callback) {\n
+\t\t\t\t\thtml = editor.settings.video_template_callback(data);\n
+\t\t\t\t} else {\n
+\t\t\t\t\thtml = (\n
+\t\t\t\t\t\t\'<video width="\' + data.width + \'" height="\' + data.height + \'"\' + (data.poster ? \' poster="\' + data.poster + \'"\' : \'\') + \' controls="controls">\\n\' +\n
+\t\t\t\t\t\t\t\'<source src="\' + data.source1 + \'"\' + (data.source1mime ? \' type="\' + data.source1mime + \'"\' : \'\') + \' />\\n\' +\n
+\t\t\t\t\t\t\t(data.source2 ? \'<source src="\' + data.source2 + \'"\' + (data.source2mime ? \' type="\' + data.source2mime + \'"\' : \'\') + \' />\\n\' : \'\') +\n
+\t\t\t\t\t\t\'</video>\'\n
+\t\t\t\t\t);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn html;\n
+\t}\n
+\n
+\tfunction htmlToData(html) {\n
+\t\tvar data = {};\n
+\n
+\t\tnew tinymce.html.SaxParser({\n
+\t\t\tvalidate: false,\n
+\t\t\tallow_conditional_comments: true,\n
+\t\t\tspecial: \'script,noscript\',\n
+\t\t\tstart: function(name, attrs) {\n
+\t\t\t\tif (!data.source1 && name == "param") {\n
+\t\t\t\t\tdata.source1 = attrs.map.movie;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (name == "iframe" || name == "object" || name == "embed" || name == "video" || name == "audio") {\n
+\t\t\t\t\tif (!data.type) {\n
+\t\t\t\t\t\tdata.type = name;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tdata = tinymce.extend(attrs.map, data);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (name == "script") {\n
+\t\t\t\t\tvar videoScript = getVideoScriptMatch(attrs.map.src);\n
+\t\t\t\t\tif (!videoScript) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tdata = {\n
+\t\t\t\t\t\ttype: "script",\n
+\t\t\t\t\t\tsource1: attrs.map.src,\n
+\t\t\t\t\t\twidth: videoScript.width,\n
+\t\t\t\t\t\theight: videoScript.height\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (name == "source") {\n
+\t\t\t\t\tif (!data.source1) {\n
+\t\t\t\t\t\tdata.source1 = attrs.map.src;\n
+\t\t\t\t\t} else if (!data.source2) {\n
+\t\t\t\t\t\tdata.source2 = attrs.map.src;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (name == "img" && !data.poster) {\n
+\t\t\t\t\tdata.poster = attrs.map.src;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}).parse(html);\n
+\n
+\t\tdata.source1 = data.source1 || data.src || data.data;\n
+\t\tdata.source2 = data.source2 || \'\';\n
+\t\tdata.poster = data.poster || \'\';\n
+\n
+\t\treturn data;\n
+\t}\n
+\n
+\tfunction getData(element) {\n
+\t\tif (element.getAttribute(\'data-mce-object\')) {\n
+\t\t\treturn htmlToData(editor.serializer.serialize(element, {selection: true}));\n
+\t\t}\n
+\n
+\t\treturn {};\n
+\t}\n
+\n
+\tfunction sanitize(html) {\n
+\t\tif (editor.settings.media_filter_html === false) {\n
+\t\t\treturn html;\n
+\t\t}\n
+\n
+\t\tvar writer = new tinymce.html.Writer(), blocked;\n
+\n
+\t\tnew tinymce.html.SaxParser({\n
+\t\t\tvalidate: false,\n
+\t\t\tallow_conditional_comments: false,\n
+\t\t\tspecial: \'script,noscript\',\n
+\n
+\t\t\tcomment: function(text) {\n
+\t\t\t\twriter.comment(text);\n
+\t\t\t},\n
+\n
+\t\t\tcdata: function(text) {\n
+\t\t\t\twriter.cdata(text);\n
+\t\t\t},\n
+\n
+\t\t\ttext: function(text, raw) {\n
+\t\t\t\twriter.text(text, raw);\n
+\t\t\t},\n
+\n
+\t\t\tstart: function(name, attrs, empty) {\n
+\t\t\t\tblocked = true;\n
+\n
+\t\t\t\tif (name == \'script\' || name == \'noscript\') {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (var i = 0; i < attrs.length; i++) {\n
+\t\t\t\t\tif (attrs[i].name.indexOf(\'on\') === 0) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (attrs[i].name == \'style\') {\n
+\t\t\t\t\t\tattrs[i].value = editor.dom.serializeStyle(editor.dom.parseStyle(attrs[i].value), name);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.start(name, attrs, empty);\n
+\t\t\t\tblocked = false;\n
+\t\t\t},\n
+\n
+\t\t\tend: function(name) {\n
+\t\t\t\tif (blocked) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.end(name);\n
+\t\t\t}\n
+\t\t}, new tinymce.html.Schema({})).parse(html);\n
+\n
+\t\treturn writer.getContent();\n
+\t}\n
+\n
+\tfunction updateHtml(html, data, updateAll) {\n
+\t\tvar writer = new tinymce.html.Writer();\n
+\t\tvar sourceCount = 0, hasImage;\n
+\n
+\t\tfunction setAttributes(attrs, updatedAttrs) {\n
+\t\t\tvar name, i, value, attr;\n
+\n
+\t\t\tfor (name in updatedAttrs) {\n
+\t\t\t\tvalue = "" + updatedAttrs[name];\n
+\n
+\t\t\t\tif (attrs.map[name]) {\n
+\t\t\t\t\ti = attrs.length;\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tattr = attrs[i];\n
+\n
+\t\t\t\t\t\tif (attr.name == name) {\n
+\t\t\t\t\t\t\tif (value) {\n
+\t\t\t\t\t\t\t\tattrs.map[name] = value;\n
+\t\t\t\t\t\t\t\tattr.value = value;\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tdelete attrs.map[name];\n
+\t\t\t\t\t\t\t\tattrs.splice(i, 1);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if (value) {\n
+\t\t\t\t\tattrs.push({\n
+\t\t\t\t\t\tname: name,\n
+\t\t\t\t\t\tvalue: value\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\tattrs.map[name] = value;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tnew tinymce.html.SaxParser({\n
+\t\t\tvalidate: false,\n
+\t\t\tallow_conditional_comments: true,\n
+\t\t\tspecial: \'script,noscript\',\n
+\n
+\t\t\tcomment: function(text) {\n
+\t\t\t\twriter.comment(text);\n
+\t\t\t},\n
+\n
+\t\t\tcdata: function(text) {\n
+\t\t\t\twriter.cdata(text);\n
+\t\t\t},\n
+\n
+\t\t\ttext: function(text, raw) {\n
+\t\t\t\twriter.text(text, raw);\n
+\t\t\t},\n
+\n
+\t\t\tstart: function(name, attrs, empty) {\n
+\t\t\t\tswitch (name) {\n
+\t\t\t\t\tcase "video":\n
+\t\t\t\t\tcase "object":\n
+\t\t\t\t\tcase "embed":\n
+\t\t\t\t\tcase "img":\n
+\t\t\t\t\tcase "iframe":\n
+\t\t\t\t\t\tsetAttributes(attrs, {\n
+\t\t\t\t\t\t\twidth: data.width,\n
+\t\t\t\t\t\t\theight: data.height\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (updateAll) {\n
+\t\t\t\t\tswitch (name) {\n
+\t\t\t\t\t\tcase "video":\n
+\t\t\t\t\t\t\tsetAttributes(attrs, {\n
+\t\t\t\t\t\t\t\tposter: data.poster,\n
+\t\t\t\t\t\t\t\tsrc: ""\n
+\t\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t\tif (data.source2) {\n
+\t\t\t\t\t\t\t\tsetAttributes(attrs, {\n
+\t\t\t\t\t\t\t\t\tsrc: ""\n
+\t\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\t\tcase "iframe":\n
+\t\t\t\t\t\t\tsetAttributes(attrs, {\n
+\t\t\t\t\t\t\t\tsrc: data.source1\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\t\tcase "source":\n
+\t\t\t\t\t\t\tsourceCount++;\n
+\n
+\t\t\t\t\t\t\tif (sourceCount <= 2) {\n
+\t\t\t\t\t\t\t\tsetAttributes(attrs, {\n
+\t\t\t\t\t\t\t\t\tsrc: data["source" + sourceCount],\n
+\t\t\t\t\t\t\t\t\ttype: data["source" + sourceCount + "mime"]\n
+\t\t\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t\t\tif (!data["source" + sourceCount]) {\n
+\t\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\t\tcase "img":\n
+\t\t\t\t\t\t\tif (!data.poster) {\n
+\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\thasImage = true;\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.start(name, attrs, empty);\n
+\t\t\t},\n
+\n
+\t\t\tend: function(name) {\n
+\t\t\t\tif (name == "video" && updateAll) {\n
+\t\t\t\t\tfor (var index = 1; index <= 2; index++) {\n
+\t\t\t\t\t\tif (data["source" + index]) {\n
+\t\t\t\t\t\t\tvar attrs = [];\n
+\t\t\t\t\t\t\tattrs.map = {};\n
+\n
+\t\t\t\t\t\t\tif (sourceCount < index) {\n
+\t\t\t\t\t\t\t\tsetAttributes(attrs, {\n
+\t\t\t\t\t\t\t\t\tsrc: data["source" + index],\n
+\t\t\t\t\t\t\t\t\ttype: data["source" + index + "mime"]\n
+\t\t\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t\t\twriter.start("source", attrs, true);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (data.poster && name == "object" && updateAll && !hasImage) {\n
+\t\t\t\t\tvar imgAttrs = [];\n
+\t\t\t\t\timgAttrs.map = {};\n
+\n
+\t\t\t\t\tsetAttributes(imgAttrs, {\n
+\t\t\t\t\t\tsrc: data.poster,\n
+\t\t\t\t\t\twidth: data.width,\n
+\t\t\t\t\t\theight: data.height\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\twriter.start("img", imgAttrs, true);\n
+\t\t\t\t}\n
+\n
+\t\t\t\twriter.end(name);\n
+\t\t\t}\n
+\t\t}, new tinymce.html.Schema({})).parse(html);\n
+\n
+\t\treturn writer.getContent();\n
+\t}\n
+\n
+\teditor.on(\'ResolveName\', function(e) {\n
+\t\tvar name;\n
+\n
+\t\tif (e.target.nodeType == 1 && (name = e.target.getAttribute("data-mce-object"))) {\n
+\t\t\te.name = name;\n
+\t\t}\n
+\t});\n
+\n
+\teditor.on(\'preInit\', function() {\n
+\t\t// Make sure that any messy HTML is retained inside these\n
+\t\tvar specialElements = editor.schema.getSpecialElements();\n
+\t\ttinymce.each(\'video audio iframe object\'.split(\' \'), function(name) {\n
+\t\t\tspecialElements[name] = new RegExp(\'<\\/\' + name + \'[^>]*>\', \'gi\');\n
+\t\t});\n
+\n
+\t\t// Allow elements\n
+\t\t//editor.schema.addValidElements(\'object[id|style|width|height|classid|codebase|*],embed[id|style|width|height|type|src|*],video[*],audio[*]\');\n
+\n
+\t\t// Set allowFullscreen attribs as boolean\n
+\t\tvar boolAttrs = editor.schema.getBoolAttrs();\n
+\t\ttinymce.each(\'webkitallowfullscreen mozallowfullscreen allowfullscreen\'.split(\' \'), function(name) {\n
+\t\t\tboolAttrs[name] = {};\n
+\t\t});\n
+\n
+\t\t// Converts iframe, video etc into placeholder images\n
+\t\teditor.parser.addNodeFilter(\'iframe,video,audio,object,embed,script\', function(nodes, name) {\n
+\t\t\tvar i = nodes.length, ai, node, placeHolder, attrName, attrValue, attribs, innerHtml;\n
+\t\t\tvar videoScript;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\t\t\t\tif (!node.parent) {\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (node.name == \'script\') {\n
+\t\t\t\t\tvideoScript = getVideoScriptMatch(node.attr(\'src\'));\n
+\t\t\t\t\tif (!videoScript) {\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tplaceHolder = new tinymce.html.Node(\'img\', 1);\n
+\t\t\t\tplaceHolder.shortEnded = true;\n
+\n
+\t\t\t\tif (videoScript) {\n
+\t\t\t\t\tif (videoScript.width) {\n
+\t\t\t\t\t\tnode.attr(\'width\', videoScript.width.toString());\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (videoScript.height) {\n
+\t\t\t\t\t\tnode.attr(\'height\', videoScript.height.toString());\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Prefix all attributes except width, height and style since we\n
+\t\t\t\t// will add these to the placeholder\n
+\t\t\t\tattribs = node.attributes;\n
+\t\t\t\tai = attribs.length;\n
+\t\t\t\twhile (ai--) {\n
+\t\t\t\t\tattrName = attribs[ai].name;\n
+\t\t\t\t\tattrValue = attribs[ai].value;\n
+\n
+\t\t\t\t\tif (attrName !== "width" && attrName !== "height" && attrName !== "style") {\n
+\t\t\t\t\t\tif (attrName == "data" || attrName == "src") {\n
+\t\t\t\t\t\t\tattrValue = editor.convertURL(attrValue, attrName);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tplaceHolder.attr(\'data-mce-p-\' + attrName, attrValue);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Place the inner HTML contents inside an escaped attribute\n
+\t\t\t\t// This enables us to copy/paste the fake object\n
+\t\t\t\tinnerHtml = node.firstChild && node.firstChild.value;\n
+\t\t\t\tif (innerHtml) {\n
+\t\t\t\t\tplaceHolder.attr("data-mce-html", escape(innerHtml));\n
+\t\t\t\t\tplaceHolder.firstChild = null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tplaceHolder.attr({\n
+\t\t\t\t\twidth: node.attr(\'width\') || "300",\n
+\t\t\t\t\theight: node.attr(\'height\') || (name == "audio" ? "30" : "150"),\n
+\t\t\t\t\tstyle: node.attr(\'style\'),\n
+\t\t\t\t\tsrc: tinymce.Env.transparentSrc,\n
+\t\t\t\t\t"data-mce-object": name,\n
+\t\t\t\t\t"class": "mce-object mce-object-" + name\n
+\t\t\t\t});\n
+\n
+\t\t\t\tnode.replace(placeHolder);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Replaces placeholder images with real elements for video, object, iframe etc\n
+\t\teditor.serializer.addAttributeFilter(\'data-mce-object\', function(nodes, name) {\n
+\t\t\tvar i = nodes.length, node, realElm, ai, attribs, innerHtml, innerNode, realElmName;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\t\t\t\tif (!node.parent) {\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\trealElmName = node.attr(name);\n
+\t\t\t\trealElm = new tinymce.html.Node(realElmName, 1);\n
+\n
+\t\t\t\t// Add width/height to everything but audio\n
+\t\t\t\tif (realElmName != "audio" && realElmName != "script") {\n
+\t\t\t\t\trealElm.attr({\n
+\t\t\t\t\t\twidth: node.attr(\'width\'),\n
+\t\t\t\t\t\theight: node.attr(\'height\')\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\n
+\t\t\t\trealElm.attr({\n
+\t\t\t\t\tstyle: node.attr(\'style\')\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Unprefix all placeholder attributes\n
+\t\t\t\tattribs = node.attributes;\n
+\t\t\t\tai = attribs.length;\n
+\t\t\t\twhile (ai--) {\n
+\t\t\t\t\tvar attrName = attribs[ai].name;\n
+\n
+\t\t\t\t\tif (attrName.indexOf(\'data-mce-p-\') === 0) {\n
+\t\t\t\t\t\trealElm.attr(attrName.substr(11), attribs[ai].value);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (realElmName == "script") {\n
+\t\t\t\t\trealElm.attr(\'type\', \'text/javascript\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Inject innerhtml\n
+\t\t\t\tinnerHtml = node.attr(\'data-mce-html\');\n
+\t\t\t\tif (innerHtml) {\n
+\t\t\t\t\tinnerNode = new tinymce.html.Node(\'#text\', 3);\n
+\t\t\t\t\tinnerNode.raw = true;\n
+\t\t\t\t\tinnerNode.value = sanitize(unescape(innerHtml));\n
+\t\t\t\t\trealElm.append(innerNode);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnode.replace(realElm);\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\n
+\teditor.on(\'ObjectSelected\', function(e) {\n
+\t\tvar objectType = e.target.getAttribute(\'data-mce-object\');\n
+\n
+\t\tif (objectType == "audio" || objectType == "script") {\n
+\t\t\te.preventDefault();\n
+\t\t}\n
+\t});\n
+\n
+\teditor.on(\'objectResized\', function(e) {\n
+\t\tvar target = e.target, html;\n
+\n
+\t\tif (target.getAttribute(\'data-mce-object\')) {\n
+\t\t\thtml = target.getAttribute(\'data-mce-html\');\n
+\t\t\tif (html) {\n
+\t\t\t\thtml = unescape(html);\n
+\t\t\t\ttarget.setAttribute(\'data-mce-html\', escape(\n
+\t\t\t\t\tupdateHtml(html, {\n
+\t\t\t\t\t\twidth: e.width,\n
+\t\t\t\t\t\theight: e.height\n
+\t\t\t\t\t})\n
+\t\t\t\t));\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\n
+\teditor.addButton(\'media\', {\n
+\t\ttooltip: \'Insert/edit video\',\n
+\t\tonclick: showDialog,\n
+\t\tstateSelector: [\'img[data-mce-object=video]\', \'img[data-mce-object=iframe]\']\n
+\t});\n
+\n
+\teditor.addMenuItem(\'media\', {\n
+\t\ticon: \'media\',\n
+\t\ttext: \'Insert/edit video\',\n
+\t\tonclick: showDialog,\n
+\t\tcontext: \'insert\',\n
+\t\tprependToContext: true\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>19402</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

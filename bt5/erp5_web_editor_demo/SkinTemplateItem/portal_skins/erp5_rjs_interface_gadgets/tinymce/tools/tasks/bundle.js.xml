@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268108.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>bundle.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var fs = require("fs");\n
+var path = require("path");\n
+\n
+module.exports = function(grunt) {\n
+\tgrunt.registerMultiTask("bundle", "Bundles code, themes and bundles to a single file.", function() {\n
+\t\tvar options, contents, themes, plugins;\n
+\n
+\t\tfunction appendFile(src) {\n
+\t\t\tsrc = src.replace(/\\\\/g, \'/\');\n
+\n
+\t\t\tif (fs.existsSync(src)) {\n
+\t\t\t\tgrunt.log.writeln("Appending file:", src);\n
+\t\t\t\tcontents += grunt.file.read(src);\n
+\t\t\t} else {\n
+\t\t\t\tgrunt.fail.fatal("Could not find file: " + src);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction append(dirPath, fileName, value) {\n
+\t\t\tif (value) {\n
+\t\t\t\tvalue.split(/,/).forEach(function(src) {\n
+\t\t\t\t\tappendFile(path.join(dirPath, src, fileName));\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\toptions = grunt.config([this.name, this.target]).options;\n
+\t\toptions.themesDir = options.themesDir || "plugins";\n
+\t\toptions.themeFileName = options.themeFileName || "theme.min.js";\n
+\t\toptions.pluginsDir = options.pluginsDir || "plugins";\n
+\t\toptions.pluginFileName = options.pluginFileName || "plugin.min.js";\n
+\t\toptions.outputPath = options.outputPath || "full.min.js";\n
+\n
+\t\tthemes = grunt.option("themes");\n
+\t\tplugins = grunt.option("plugins");\n
+\n
+\t\tif (!themes && !plugins) {\n
+\t\t\tgrunt.log.writeln("Use: grunt bundle --themes <comma separated list of themes> --plugins <comma separated list of plugins>");\n
+\t\t\tprocess.exit(-1);\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tcontents = "";\n
+\t\tthis.files.forEach(function(filePair) {\n
+\t\t\tfilePair.src.forEach(function(src) {\n
+\t\t\t\tappendFile(src);\n
+\t\t\t});\n
+\t\t});\n
+\n
+\t\tappend(options.themesDir, options.themeFileName, themes);\n
+\t\tappend(options.pluginsDir, options.pluginFileName, plugins);\n
+\n
+\t\tif (contents.length > 0) {\n
+\t\t\tgrunt.file.write(options.outputPath, contents);\n
+\t\t\tgrunt.log.ok("Created bundle js:", options.outputPath);\n
+\t\t}\n
+\t});\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1708</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>bundle.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

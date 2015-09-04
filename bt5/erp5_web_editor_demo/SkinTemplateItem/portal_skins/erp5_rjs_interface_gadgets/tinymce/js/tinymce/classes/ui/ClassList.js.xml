@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268345.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ClassList.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ClassList.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Handles adding and removal of classes.\n
+ *\n
+ * @class tinymce.ui.ClassList\n
+ */\n
+define("tinymce/ui/ClassList", [\n
+\t"tinymce/util/Tools"\n
+], function(Tools) {\n
+\t"use strict";\n
+\n
+\tfunction noop() {\n
+\t}\n
+\n
+\t/**\n
+\t * Constructs a new class list the specified onchange\n
+\t * callback will be executed when the class list gets modifed.\n
+\t *\n
+\t * @constructor ClassList\n
+\t * @param {function} onchange Onchange callback to be executed.\n
+\t */\n
+\tfunction ClassList(onchange) {\n
+\t\tthis.cls = [];\n
+\t\tthis.cls._map = {};\n
+\t\tthis.onchange = onchange || noop;\n
+\t\tthis.prefix = \'\';\n
+\t}\n
+\n
+\tTools.extend(ClassList.prototype, {\n
+\t\t/**\n
+\t\t * Adds a new class to the class list.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {String} cls Class to be added.\n
+\t\t * @return {tinymce.ui.ClassList} Current class list instance.\n
+\t\t */\n
+\t\tadd: function(cls) {\n
+\t\t\tif (cls && !this.contains(cls)) {\n
+\t\t\t\tthis.cls._map[cls] = true;\n
+\t\t\t\tthis.cls.push(cls);\n
+\t\t\t\tthis._change();\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the specified class from the class list.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @param {String} cls Class to be removed.\n
+\t\t * @return {tinymce.ui.ClassList} Current class list instance.\n
+\t\t */\n
+\t\tremove: function(cls) {\n
+\t\t\tif (this.contains(cls)) {\n
+\t\t\t\tfor (var i = 0; i < this.cls.length; i++) {\n
+\t\t\t\t\tif (this.cls[i] === cls) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tthis.cls.splice(i, 1);\n
+\t\t\t\tdelete this.cls._map[cls];\n
+\t\t\t\tthis._change();\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Toggles a class in the class list.\n
+\t\t *\n
+\t\t * @method toggle\n
+\t\t * @param {String} cls Class to be added/removed.\n
+\t\t * @param {Boolean} state Optional state if it should be added/removed.\n
+\t\t * @return {tinymce.ui.ClassList} Current class list instance.\n
+\t\t */\n
+\t\ttoggle: function(cls, state) {\n
+\t\t\tvar curState = this.contains(cls);\n
+\n
+\t\t\tif (curState !== state) {\n
+\t\t\t\tif (curState) {\n
+\t\t\t\t\tthis.remove(cls);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tthis.add(cls);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tthis._change();\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true if the class list has the specified class.\n
+\t\t *\n
+\t\t * @method contains\n
+\t\t * @param {String} cls Class to look for.\n
+\t\t * @return {Boolean} true/false if the class exists or not.\n
+\t\t */\n
+\t\tcontains: function(cls) {\n
+\t\t\treturn !!this.cls._map[cls];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a space separated list of classes.\n
+\t\t *\n
+\t\t * @method toString\n
+\t\t * @return {String} Space separated list of classes.\n
+\t\t */\n
+\n
+\t\t_change: function() {\n
+\t\t\tdelete this.clsValue;\n
+\t\t\tthis.onchange.call(this);\n
+\t\t}\n
+\t});\n
+\n
+\t// IE 8 compatibility\n
+\tClassList.prototype.toString = function() {\n
+\t\tvar value;\n
+\n
+\t\tif (this.clsValue) {\n
+\t\t\treturn this.clsValue;\n
+\t\t}\n
+\n
+\t\tvalue = \'\';\n
+\t\tfor (var i = 0; i < this.cls.length; i++) {\n
+\t\t\tif (i > 0) {\n
+\t\t\t\tvalue += \' \';\n
+\t\t\t}\n
+\n
+\t\t\tvalue += this.prefix + this.cls[i];\n
+\t\t}\n
+\n
+\t\treturn value;\n
+\t};\n
+\n
+\treturn ClassList;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2952</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ClassList.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

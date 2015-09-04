@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268181.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tinymce_loader.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tvar baseURL;\n
+\n
+\t// Get base where the tinymce script is located\n
+\tvar scripts = document.getElementsByTagName(\'script\');\n
+\tfor (var i = 0; i < scripts.length; i++) {\n
+\t\tvar src = scripts[i].src;\n
+\n
+\t\tif (/tinymce_loader\\.js/.test(src)) {\n
+\t\t\tbaseURL = src.substring(0, src.lastIndexOf(\'/\'));\n
+\t\t\tbreak;\n
+\t\t}\n
+\t}\n
+\n
+\tif (document.location.search.indexOf(\'min=true\') > 0) {\n
+\t\tdocument.write(\'<script src="\' + baseURL + \'/../../js/tinymce/tinymce.min.js"></script>\');\n
+\t} else {\n
+\t\tdocument.write(\'<script src="\' + baseURL + \'/../../js/tinymce/tinymce.dev.js"></script>\');\n
+\t}\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>580</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>tinymce_loader.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

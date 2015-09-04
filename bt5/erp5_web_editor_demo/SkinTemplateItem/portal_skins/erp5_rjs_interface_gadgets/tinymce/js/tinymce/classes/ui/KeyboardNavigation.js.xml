@@ -1,0 +1,449 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268345.2</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>KeyboardNavigation.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * KeyboardNavigation.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles keyboard navigation of controls and elements.\n
+ *\n
+ * @class tinymce.ui.KeyboardNavigation\n
+ */\n
+define("tinymce/ui/KeyboardNavigation", [\n
+], function() {\n
+\t"use strict";\n
+\n
+\t/**\n
+\t * This class handles all keyboard navigation for WAI-ARIA support. Each root container\n
+\t * gets an instance of this class.\n
+\t *\n
+\t * @constructor\n
+\t */\n
+\treturn function(settings) {\n
+\t\tvar root = settings.root, focusedElement, focusedControl;\n
+\n
+\t\tfunction isElement(node) {\n
+\t\t\treturn node && node.nodeType === 1;\n
+\t\t}\n
+\n
+\t\ttry {\n
+\t\t\tfocusedElement = document.activeElement;\n
+\t\t} catch (ex) {\n
+\t\t\t// IE sometimes fails to return a proper element\n
+\t\t\tfocusedElement = document.body;\n
+\t\t}\n
+\n
+\t\tfocusedControl = root.getParentCtrl(focusedElement);\n
+\n
+\t\t/**\n
+\t\t * Returns the currently focused elements wai aria role of the currently\n
+\t\t * focused element or specified element.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Element} elm Optional element to get role from.\n
+\t\t * @return {String} Role of specified element.\n
+\t\t */\n
+\t\tfunction getRole(elm) {\n
+\t\t\telm = elm || focusedElement;\n
+\n
+\t\t\tif (isElement(elm)) {\n
+\t\t\t\treturn elm.getAttribute(\'role\');\n
+\t\t\t}\n
+\n
+\t\t\treturn null;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns the wai role of the parent element of the currently\n
+\t\t * focused element or specified element.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Element} elm Optional element to get parent role from.\n
+\t\t * @return {String} Role of the first parent that has a role.\n
+\t\t */\n
+\t\tfunction getParentRole(elm) {\n
+\t\t\tvar role, parent = elm || focusedElement;\n
+\n
+\t\t\twhile ((parent = parent.parentNode)) {\n
+\t\t\t\tif ((role = getRole(parent))) {\n
+\t\t\t\t\treturn role;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns a wai aria property by name for example aria-selected.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {String} name Name of the aria property to get for example "disabled".\n
+\t\t * @return {String} Aria property value.\n
+\t\t */\n
+\t\tfunction getAriaProp(name) {\n
+\t\t\tvar elm = focusedElement;\n
+\n
+\t\t\tif (isElement(elm)) {\n
+\t\t\t\treturn elm.getAttribute(\'aria-\' + name);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Is the element a text input element or not.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Element} elm Element to check if it\'s an text input element or not.\n
+\t\t * @return {Boolean} True/false if the element is a text element or not.\n
+\t\t */\n
+\t\tfunction isTextInputElement(elm) {\n
+\t\t\tvar tagName = elm.tagName.toUpperCase();\n
+\n
+\t\t\t// Notice: since type can be "email" etc we don\'t check the type\n
+\t\t\t// So all input elements gets treated as text input elements\n
+\t\t\treturn tagName == "INPUT" || tagName == "TEXTAREA";\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified element can be focused or not.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Element} elm DOM element to check if it can be focused or not.\n
+\t\t * @return {Boolean} True/false if the element can have focus.\n
+\t\t */\n
+\t\tfunction canFocus(elm) {\n
+\t\t\tif (isTextInputElement(elm) && !elm.hidden) {\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tif (/^(button|menuitem|checkbox|tab|menuitemcheckbox|option|gridcell)$/.test(getRole(elm))) {\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns an array of focusable visible elements within the specified container element.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Element} elm DOM element to find focusable elements within.\n
+\t\t * @return {Array} Array of focusable elements.\n
+\t\t */\n
+\t\tfunction getFocusElements(elm) {\n
+\t\t\tvar elements = [];\n
+\n
+\t\t\tfunction collect(elm) {\n
+\t\t\t\tif (elm.nodeType != 1 || elm.style.display == \'none\') {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (canFocus(elm)) {\n
+\t\t\t\t\telements.push(elm);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (var i = 0; i < elm.childNodes.length; i++) {\n
+\t\t\t\t\tcollect(elm.childNodes[i]);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tcollect(elm || root.getEl());\n
+\n
+\t\t\treturn elements;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns the navigation root control for the specified control. The navigation root\n
+\t\t * is the control that the keyboard navigation gets scoped to for example a menubar or toolbar group.\n
+\t\t * It will look for parents of the specified target control or the currently focused control if this option is omitted.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {tinymce.ui.Control} targetControl Optional target control to find root of.\n
+\t\t * @return {tinymce.ui.Control} Navigation root control.\n
+\t\t */\n
+\t\tfunction getNavigationRoot(targetControl) {\n
+\t\t\tvar navigationRoot, controls;\n
+\n
+\t\t\ttargetControl = targetControl || focusedControl;\n
+\t\t\tcontrols = targetControl.parents().toArray();\n
+\t\t\tcontrols.unshift(targetControl);\n
+\n
+\t\t\tfor (var i = 0; i < controls.length; i++) {\n
+\t\t\t\tnavigationRoot = controls[i];\n
+\n
+\t\t\t\tif (navigationRoot.settings.ariaRoot) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn navigationRoot;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Focuses the first item in the specified targetControl element or the last aria index if the\n
+\t\t * navigation root has the ariaRemember option enabled.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {tinymce.ui.Control} targetControl Target control to focus the first item in.\n
+\t\t */\n
+\t\tfunction focusFirst(targetControl) {\n
+\t\t\tvar navigationRoot = getNavigationRoot(targetControl);\n
+\t\t\tvar focusElements = getFocusElements(navigationRoot.getEl());\n
+\n
+\t\t\tif (navigationRoot.settings.ariaRemember && "lastAriaIndex" in navigationRoot) {\n
+\t\t\t\tmoveFocusToIndex(navigationRoot.lastAriaIndex, focusElements);\n
+\t\t\t} else {\n
+\t\t\t\tmoveFocusToIndex(0, focusElements);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Moves the focus to the specified index within the elements list.\n
+\t\t * This will scope the index to the size of the element list if it changed.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Number} idx Specified index to move to.\n
+\t\t * @param {Array} elements Array with dom elements to move focus within.\n
+\t\t * @return {Number} Input index or a changed index if it was out of range.\n
+\t\t */\n
+\t\tfunction moveFocusToIndex(idx, elements) {\n
+\t\t\tif (idx < 0) {\n
+\t\t\t\tidx = elements.length - 1;\n
+\t\t\t} else if (idx >= elements.length) {\n
+\t\t\t\tidx = 0;\n
+\t\t\t}\n
+\n
+\t\t\tif (elements[idx]) {\n
+\t\t\t\telements[idx].focus();\n
+\t\t\t}\n
+\n
+\t\t\treturn idx;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Moves the focus forwards or backwards.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Number} dir Direction to move in positive means forward, negative means backwards.\n
+\t\t * @param {Array} elements Optional array of elements to move within defaults to the current navigation roots elements.\n
+\t\t */\n
+\t\tfunction moveFocus(dir, elements) {\n
+\t\t\tvar idx = -1, navigationRoot = getNavigationRoot();\n
+\n
+\t\t\telements = elements || getFocusElements(navigationRoot.getEl());\n
+\n
+\t\t\tfor (var i = 0; i < elements.length; i++) {\n
+\t\t\t\tif (elements[i] === focusedElement) {\n
+\t\t\t\t\tidx = i;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tidx += dir;\n
+\t\t\tnavigationRoot.lastAriaIndex = moveFocusToIndex(idx, elements);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Moves the focus to the left this is called by the left key.\n
+\t\t *\n
+\t\t * @private\n
+\t\t */\n
+\t\tfunction left() {\n
+\t\t\tvar parentRole = getParentRole();\n
+\n
+\t\t\tif (parentRole == "tablist") {\n
+\t\t\t\tmoveFocus(-1, getFocusElements(focusedElement.parentNode));\n
+\t\t\t} else if (focusedControl.parent().submenu) {\n
+\t\t\t\tcancel();\n
+\t\t\t} else {\n
+\t\t\t\tmoveFocus(-1);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Moves the focus to the right this is called by the right key.\n
+\t\t *\n
+\t\t * @private\n
+\t\t */\n
+\t\tfunction right() {\n
+\t\t\tvar role = getRole(), parentRole = getParentRole();\n
+\n
+\t\t\tif (parentRole == "tablist") {\n
+\t\t\t\tmoveFocus(1, getFocusElements(focusedElement.parentNode));\n
+\t\t\t} else if (role == "menuitem" && parentRole == "menu" && getAriaProp(\'haspopup\')) {\n
+\t\t\t\tenter();\n
+\t\t\t} else {\n
+\t\t\t\tmoveFocus(1);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Moves the focus to the up this is called by the up key.\n
+\t\t *\n
+\t\t * @private\n
+\t\t */\n
+\t\tfunction up() {\n
+\t\t\tmoveFocus(-1);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Moves the focus to the up this is called by the down key.\n
+\t\t *\n
+\t\t * @private\n
+\t\t */\n
+\t\tfunction down() {\n
+\t\t\tvar role = getRole(), parentRole = getParentRole();\n
+\n
+\t\t\tif (role == "menuitem" && parentRole == "menubar") {\n
+\t\t\t\tenter();\n
+\t\t\t} else if (role == "button" && getAriaProp(\'haspopup\')) {\n
+\t\t\t\tenter({key: \'down\'});\n
+\t\t\t} else {\n
+\t\t\t\tmoveFocus(1);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Moves the focus to the next item or previous item depending on shift key.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {DOMEvent} e DOM event object.\n
+\t\t */\n
+\t\tfunction tab(e) {\n
+\t\t\tvar parentRole = getParentRole();\n
+\n
+\t\t\tif (parentRole == "tablist") {\n
+\t\t\t\tvar elm = getFocusElements(focusedControl.getEl(\'body\'))[0];\n
+\n
+\t\t\t\tif (elm) {\n
+\t\t\t\t\telm.focus();\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tmoveFocus(e.shiftKey ? -1 : 1);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Calls the cancel event on the currently focused control. This is normally done using the Esc key.\n
+\t\t *\n
+\t\t * @private\n
+\t\t */\n
+\t\tfunction cancel() {\n
+\t\t\tfocusedControl.fire(\'cancel\');\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Calls the click event on the currently focused control. This is normally done using the Enter/Space keys.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Object} aria Optional aria data to pass along with the enter event.\n
+\t\t */\n
+\t\tfunction enter(aria) {\n
+\t\t\taria = aria || {};\n
+\t\t\tfocusedControl.fire(\'click\', {target: focusedElement, aria: aria});\n
+\t\t}\n
+\n
+\t\troot.on(\'keydown\', function(e) {\n
+\t\t\tfunction handleNonTabOrEscEvent(e, handler) {\n
+\t\t\t\t// Ignore non tab keys for text elements\n
+\t\t\t\tif (isTextInputElement(focusedElement)) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (handler(e) !== false) {\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (e.isDefaultPrevented()) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tswitch (e.keyCode) {\n
+\t\t\t\tcase 37: // DOM_VK_LEFT\n
+\t\t\t\t\thandleNonTabOrEscEvent(e, left);\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 39: // DOM_VK_RIGHT\n
+\t\t\t\t\thandleNonTabOrEscEvent(e, right);\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 38: // DOM_VK_UP\n
+\t\t\t\t\thandleNonTabOrEscEvent(e, up);\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 40: // DOM_VK_DOWN\n
+\t\t\t\t\thandleNonTabOrEscEvent(e, down);\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 27: // DOM_VK_ESCAPE\n
+\t\t\t\t\tcancel();\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 14: // DOM_VK_ENTER\n
+\t\t\t\tcase 13: // DOM_VK_RETURN\n
+\t\t\t\tcase 32: // DOM_VK_SPACE\n
+\t\t\t\t\thandleNonTabOrEscEvent(e, enter);\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 9: // DOM_VK_TAB\n
+\t\t\t\t\tif (tab(e) !== false) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t}\n
+\t\t\t\t\tbreak;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\troot.on(\'focusin\', function(e) {\n
+\t\t\tfocusedElement = e.target;\n
+\t\t\tfocusedControl = e.control;\n
+\t\t});\n
+\n
+\t\treturn {\n
+\t\t\tfocusFirst: focusFirst\n
+\t\t};\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9957</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>KeyboardNavigation.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

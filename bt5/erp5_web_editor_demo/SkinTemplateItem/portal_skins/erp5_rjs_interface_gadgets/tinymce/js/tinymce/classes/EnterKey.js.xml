@@ -1,0 +1,692 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268385.01</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EnterKey.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * EnterKey.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Contains logic for handling the enter key to split/generate block elements.\n
+ */\n
+define("tinymce/EnterKey", [\n
+\t"tinymce/dom/TreeWalker",\n
+\t"tinymce/dom/RangeUtils",\n
+\t"tinymce/Env"\n
+], function(TreeWalker, RangeUtils, Env) {\n
+\tvar isIE = Env.ie && Env.ie < 11;\n
+\n
+\treturn function(editor) {\n
+\t\tvar dom = editor.dom, selection = editor.selection, settings = editor.settings;\n
+\t\tvar undoManager = editor.undoManager, schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements(),\n
+\t\t\tmoveCaretBeforeOnEnterElementsMap = schema.getMoveCaretBeforeOnEnterElements();\n
+\n
+\t\tfunction handleEnterKey(evt) {\n
+\t\t\tvar rng, tmpRng, editableRoot, container, offset, parentBlock, documentMode, shiftKey,\n
+\t\t\t\tnewBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;\n
+\n
+\t\t\t// Returns true if the block can be split into two blocks or not\n
+\t\t\tfunction canSplitBlock(node) {\n
+\t\t\t\treturn node &&\n
+\t\t\t\t\tdom.isBlock(node) &&\n
+\t\t\t\t\t!/^(TD|TH|CAPTION|FORM)$/.test(node.nodeName) &&\n
+\t\t\t\t\t!/^(fixed|absolute)/i.test(node.style.position) &&\n
+\t\t\t\t\tdom.getContentEditable(node) !== "true";\n
+\t\t\t}\n
+\n
+\t\t\t// Renders empty block on IE\n
+\t\t\tfunction renderBlockOnIE(block) {\n
+\t\t\t\tvar oldRng;\n
+\n
+\t\t\t\tif (dom.isBlock(block)) {\n
+\t\t\t\t\toldRng = selection.getRng();\n
+\t\t\t\t\tblock.appendChild(dom.create(\'span\', null, \'\\u00a0\'));\n
+\t\t\t\t\tselection.select(block);\n
+\t\t\t\t\tblock.lastChild.outerHTML = \'\';\n
+\t\t\t\t\tselection.setRng(oldRng);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>\n
+\t\t\tfunction trimInlineElementsOnLeftSideOfBlock(block) {\n
+\t\t\t\tvar node = block, firstChilds = [], i;\n
+\n
+\t\t\t\tif (!node) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Find inner most first child ex: <p><i><b>*</b></i></p>\n
+\t\t\t\twhile ((node = node.firstChild)) {\n
+\t\t\t\t\tif (dom.isBlock(node)) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (node.nodeType == 1 && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {\n
+\t\t\t\t\t\tfirstChilds.push(node);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\ti = firstChilds.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tnode = firstChilds[i];\n
+\t\t\t\t\tif (!node.hasChildNodes() || (node.firstChild == node.lastChild && node.firstChild.nodeValue === \'\')) {\n
+\t\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// Remove <a> </a> see #5381\n
+\t\t\t\t\t\tif (node.nodeName == "A" && (node.innerText || node.textContent) === \' \') {\n
+\t\t\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Moves the caret to a suitable position within the root for example in the first non\n
+\t\t\t// pure whitespace text node or before an image\n
+\t\t\tfunction moveToCaretPosition(root) {\n
+\t\t\t\tvar walker, node, rng, lastNode = root, tempElm;\n
+\t\t\t\tfunction firstNonWhiteSpaceNodeSibling(node) {\n
+\t\t\t\t\twhile (node) {\n
+\t\t\t\t\t\tif (node.nodeType == 1 || (node.nodeType == 3 && node.data && /[\\r\\n\\s]/.test(node.data))) {\n
+\t\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode = node.nextSibling;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!root) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Old IE versions doesn\'t properly render blocks with br elements in them\n
+\t\t\t\t// For example <p><br></p> wont be rendered correctly in a contentEditable area\n
+\t\t\t\t// until you remove the br producing <p></p>\n
+\t\t\t\tif (Env.ie && Env.ie < 9 && parentBlock && parentBlock.firstChild) {\n
+\t\t\t\t\tif (parentBlock.firstChild == parentBlock.lastChild && parentBlock.firstChild.tagName == \'BR\') {\n
+\t\t\t\t\t\tdom.remove(parentBlock.firstChild);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (/^(LI|DT|DD)$/.test(root.nodeName)) {\n
+\t\t\t\t\tvar firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);\n
+\n
+\t\t\t\t\tif (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {\n
+\t\t\t\t\t\troot.insertBefore(dom.doc.createTextNode(\'\\u00a0\'), root.firstChild);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\trng = dom.createRng();\n
+\n
+\t\t\t\t// Normalize whitespace to remove empty text nodes. Fix for: #6904\n
+\t\t\t\t// Gecko will be able to place the caret in empty text nodes but it won\'t render propery\n
+\t\t\t\t// Older IE versions will sometimes crash so for now ignore all IE versions\n
+\t\t\t\tif (!Env.ie) {\n
+\t\t\t\t\troot.normalize();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (root.hasChildNodes()) {\n
+\t\t\t\t\twalker = new TreeWalker(root, root);\n
+\n
+\t\t\t\t\twhile ((node = walker.current())) {\n
+\t\t\t\t\t\tif (node.nodeType == 3) {\n
+\t\t\t\t\t\t\trng.setStart(node, 0);\n
+\t\t\t\t\t\t\trng.setEnd(node, 0);\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (moveCaretBeforeOnEnterElementsMap[node.nodeName.toLowerCase()]) {\n
+\t\t\t\t\t\t\trng.setStartBefore(node);\n
+\t\t\t\t\t\t\trng.setEndBefore(node);\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tlastNode = node;\n
+\t\t\t\t\t\tnode = walker.next();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!node) {\n
+\t\t\t\t\t\trng.setStart(lastNode, 0);\n
+\t\t\t\t\t\trng.setEnd(lastNode, 0);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif (root.nodeName == \'BR\') {\n
+\t\t\t\t\t\tif (root.nextSibling && dom.isBlock(root.nextSibling)) {\n
+\t\t\t\t\t\t\t// Trick on older IE versions to render the caret before the BR between two lists\n
+\t\t\t\t\t\t\tif (!documentMode || documentMode < 9) {\n
+\t\t\t\t\t\t\t\ttempElm = dom.create(\'br\');\n
+\t\t\t\t\t\t\t\troot.parentNode.insertBefore(tempElm, root);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\trng.setStartBefore(root);\n
+\t\t\t\t\t\t\trng.setEndBefore(root);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trng.setStartAfter(root);\n
+\t\t\t\t\t\t\trng.setEndAfter(root);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\trng.setStart(root, 0);\n
+\t\t\t\t\t\trng.setEnd(root, 0);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tselection.setRng(rng);\n
+\n
+\t\t\t\t// Remove tempElm created for old IE:s\n
+\t\t\t\tdom.remove(tempElm);\n
+\t\t\t\tselection.scrollIntoView(root);\n
+\t\t\t}\n
+\n
+\t\t\tfunction setForcedBlockAttrs(node) {\n
+\t\t\t\tvar forcedRootBlockName = settings.forced_root_block;\n
+\n
+\t\t\t\tif (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {\n
+\t\t\t\t\tdom.setAttribs(node, settings.forced_root_block_attrs);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Creates a new block element by cloning the current one or creating a new one if the name is specified\n
+\t\t\t// This function will also copy any text formatting from the parent block and add it to the new one\n
+\t\t\tfunction createNewBlock(name) {\n
+\t\t\t\tvar node = container, block, clonedNode, caretNode, textInlineElements = schema.getTextInlineElements();\n
+\n
+\t\t\t\tif (name || parentBlockName == "TABLE") {\n
+\t\t\t\t\tblock = dom.create(name || newBlockName);\n
+\t\t\t\t\tsetForcedBlockAttrs(block);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tblock = parentBlock.cloneNode(false);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcaretNode = block;\n
+\n
+\t\t\t\t// Clone any parent styles\n
+\t\t\t\tif (settings.keep_styles !== false) {\n
+\t\t\t\t\tdo {\n
+\t\t\t\t\t\tif (textInlineElements[node.nodeName]) {\n
+\t\t\t\t\t\t\t// Never clone a caret containers\n
+\t\t\t\t\t\t\tif (node.id == \'_mce_caret\') {\n
+\t\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tclonedNode = node.cloneNode(false);\n
+\t\t\t\t\t\t\tdom.setAttrib(clonedNode, \'id\', \'\'); // Remove ID since it needs to be document unique\n
+\n
+\t\t\t\t\t\t\tif (block.hasChildNodes()) {\n
+\t\t\t\t\t\t\t\tclonedNode.appendChild(block.firstChild);\n
+\t\t\t\t\t\t\t\tblock.appendChild(clonedNode);\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tcaretNode = clonedNode;\n
+\t\t\t\t\t\t\t\tblock.appendChild(clonedNode);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} while ((node = node.parentNode));\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// BR is needed in empty blocks on non IE browsers\n
+\t\t\t\tif (!isIE) {\n
+\t\t\t\t\tcaretNode.innerHTML = \'<br data-mce-bogus="1">\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn block;\n
+\t\t\t}\n
+\n
+\t\t\t// Returns true/false if the caret is at the start/end of the parent block element\n
+\t\t\tfunction isCaretAtStartOrEndOfBlock(start) {\n
+\t\t\t\tvar walker, node, name;\n
+\n
+\t\t\t\t// Caret is in the middle of a text node like "a|b"\n
+\t\t\t\tif (container.nodeType == 3 && (start ? offset > 0 : offset < container.nodeValue.length)) {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// If after the last element in block node edge case for #5091\n
+\t\t\t\tif (container.parentNode == parentBlock && isAfterLastNodeInContainer && !start) {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// If the caret if before the first element in parentBlock\n
+\t\t\t\tif (start && container.nodeType == 1 && container == parentBlock.firstChild) {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Caret can be before/after a table\n
+\t\t\t\tif (container.nodeName === "TABLE" || (container.previousSibling && container.previousSibling.nodeName == "TABLE")) {\n
+\t\t\t\t\treturn (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Walk the DOM and look for text nodes or non empty elements\n
+\t\t\t\twalker = new TreeWalker(container, parentBlock);\n
+\n
+\t\t\t\t// If caret is in beginning or end of a text block then jump to the next/previous node\n
+\t\t\t\tif (container.nodeType == 3) {\n
+\t\t\t\t\tif (start && offset === 0) {\n
+\t\t\t\t\t\twalker.prev();\n
+\t\t\t\t\t} else if (!start && offset == container.nodeValue.length) {\n
+\t\t\t\t\t\twalker.next();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\twhile ((node = walker.current())) {\n
+\t\t\t\t\tif (node.nodeType === 1) {\n
+\t\t\t\t\t\t// Ignore bogus elements\n
+\t\t\t\t\t\tif (!node.getAttribute(\'data-mce-bogus\')) {\n
+\t\t\t\t\t\t\t// Keep empty elements like <img /> <input /> but not trailing br:s like <p>text|<br></p>\n
+\t\t\t\t\t\t\tname = node.nodeName.toLowerCase();\n
+\t\t\t\t\t\t\tif (nonEmptyElementsMap[name] && name !== \'br\') {\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else if (node.nodeType === 3 && !/^[ \\t\\r\\n]*$/.test(node.nodeValue)) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\twalker.prev();\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\twalker.next();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\t// Wraps any text nodes or inline elements in the specified forced root block name\n
+\t\t\tfunction wrapSelfAndSiblingsInDefaultBlock(container, offset) {\n
+\t\t\t\tvar newBlock, parentBlock, startNode, node, next, rootBlockName, blockName = newBlockName || \'P\';\n
+\n
+\t\t\t\t// Not in a block element or in a table cell or caption\n
+\t\t\t\tparentBlock = dom.getParent(container, dom.isBlock);\n
+\t\t\t\trootBlockName = editor.getBody().nodeName.toLowerCase();\n
+\t\t\t\tif (!parentBlock || !canSplitBlock(parentBlock)) {\n
+\t\t\t\t\tparentBlock = parentBlock || editableRoot;\n
+\n
+\t\t\t\t\tif (!parentBlock.hasChildNodes()) {\n
+\t\t\t\t\t\tnewBlock = dom.create(blockName);\n
+\t\t\t\t\t\tsetForcedBlockAttrs(newBlock);\n
+\t\t\t\t\t\tparentBlock.appendChild(newBlock);\n
+\t\t\t\t\t\trng.setStart(newBlock, 0);\n
+\t\t\t\t\t\trng.setEnd(newBlock, 0);\n
+\t\t\t\t\t\treturn newBlock;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Find parent that is the first child of parentBlock\n
+\t\t\t\t\tnode = container;\n
+\t\t\t\t\twhile (node.parentNode != parentBlock) {\n
+\t\t\t\t\t\tnode = node.parentNode;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Loop left to find start node start wrapping at\n
+\t\t\t\t\twhile (node && !dom.isBlock(node)) {\n
+\t\t\t\t\t\tstartNode = node;\n
+\t\t\t\t\t\tnode = node.previousSibling;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (startNode && schema.isValidChild(rootBlockName, blockName.toLowerCase())) {\n
+\t\t\t\t\t\tnewBlock = dom.create(blockName);\n
+\t\t\t\t\t\tsetForcedBlockAttrs(newBlock);\n
+\t\t\t\t\t\tstartNode.parentNode.insertBefore(newBlock, startNode);\n
+\n
+\t\t\t\t\t\t// Start wrapping until we hit a block\n
+\t\t\t\t\t\tnode = startNode;\n
+\t\t\t\t\t\twhile (node && !dom.isBlock(node)) {\n
+\t\t\t\t\t\t\tnext = node.nextSibling;\n
+\t\t\t\t\t\t\tnewBlock.appendChild(node);\n
+\t\t\t\t\t\t\tnode = next;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Restore range to it\'s past location\n
+\t\t\t\t\t\trng.setStart(container, offset);\n
+\t\t\t\t\t\trng.setEnd(container, offset);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn container;\n
+\t\t\t}\n
+\n
+\t\t\t// Inserts a block or br before/after or in the middle of a split list of the LI is empty\n
+\t\t\tfunction handleEmptyListItem() {\n
+\t\t\t\tfunction isFirstOrLastLi(first) {\n
+\t\t\t\t\tvar node = containerBlock[first ? \'firstChild\' : \'lastChild\'];\n
+\n
+\t\t\t\t\t// Find first/last element since there might be whitespace there\n
+\t\t\t\t\twhile (node) {\n
+\t\t\t\t\t\tif (node.nodeType == 1) {\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode = node[first ? \'nextSibling\' : \'previousSibling\'];\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn node === parentBlock;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction getContainerBlock() {\n
+\t\t\t\t\tvar containerBlockParent = containerBlock.parentNode;\n
+\n
+\t\t\t\t\tif (/^(LI|DT|DD)$/.test(containerBlockParent.nodeName)) {\n
+\t\t\t\t\t\treturn containerBlockParent;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn containerBlock;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Check if we are in an nested list\n
+\t\t\t\tvar containerBlockParentName = containerBlock.parentNode.nodeName;\n
+\t\t\t\tif (/^(OL|UL|LI)$/.test(containerBlockParentName)) {\n
+\t\t\t\t\tnewBlockName = \'LI\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnewBlock = newBlockName ? createNewBlock(newBlockName) : dom.create(\'BR\');\n
+\n
+\t\t\t\tif (isFirstOrLastLi(true) && isFirstOrLastLi()) {\n
+\t\t\t\t\tif (containerBlockParentName == \'LI\') {\n
+\t\t\t\t\t\t// Nested list is inside a LI\n
+\t\t\t\t\t\tdom.insertAfter(newBlock, getContainerBlock());\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// Is first and last list item then replace the OL/UL with a text block\n
+\t\t\t\t\t\tdom.replace(newBlock, containerBlock);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if (isFirstOrLastLi(true)) {\n
+\t\t\t\t\tif (containerBlockParentName == \'LI\') {\n
+\t\t\t\t\t\t// List nested in an LI then move the list to a new sibling LI\n
+\t\t\t\t\t\tdom.insertAfter(newBlock, getContainerBlock());\n
+\t\t\t\t\t\tnewBlock.appendChild(dom.doc.createTextNode(\' \')); // Needed for IE so the caret can be placed\n
+\t\t\t\t\t\tnewBlock.appendChild(containerBlock);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// First LI in list then remove LI and add text block before list\n
+\t\t\t\t\t\tcontainerBlock.parentNode.insertBefore(newBlock, containerBlock);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if (isFirstOrLastLi()) {\n
+\t\t\t\t\t// Last LI in list then remove LI and add text block after list\n
+\t\t\t\t\tdom.insertAfter(newBlock, getContainerBlock());\n
+\t\t\t\t\trenderBlockOnIE(newBlock);\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// Middle LI in list the split the list and insert a text block in the middle\n
+\t\t\t\t\t// Extract after fragment and insert it after the current block\n
+\t\t\t\t\tcontainerBlock = getContainerBlock();\n
+\t\t\t\t\ttmpRng = rng.cloneRange();\n
+\t\t\t\t\ttmpRng.setStartAfter(parentBlock);\n
+\t\t\t\t\ttmpRng.setEndAfter(containerBlock);\n
+\t\t\t\t\tfragment = tmpRng.extractContents();\n
+\n
+\t\t\t\t\tif (newBlockName == \'LI\' && fragment.firstChild.nodeName == \'LI\') {\n
+\t\t\t\t\t\tnewBlock = fragment.firstChild;\n
+\t\t\t\t\t\tdom.insertAfter(fragment, containerBlock);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tdom.insertAfter(fragment, containerBlock);\n
+\t\t\t\t\t\tdom.insertAfter(newBlock, containerBlock);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdom.remove(parentBlock);\n
+\t\t\t\tmoveToCaretPosition(newBlock);\n
+\t\t\t\tundoManager.add();\n
+\t\t\t}\n
+\n
+\t\t\t// Inserts a BR element if the forced_root_block option is set to false or empty string\n
+\t\t\tfunction insertBr() {\n
+\t\t\t\teditor.execCommand("InsertLineBreak", false, evt);\n
+\t\t\t}\n
+\n
+\t\t\t// Trims any linebreaks at the beginning of node user for example when pressing enter in a PRE element\n
+\t\t\tfunction trimLeadingLineBreaks(node) {\n
+\t\t\t\tdo {\n
+\t\t\t\t\tif (node.nodeType === 3) {\n
+\t\t\t\t\t\tnode.nodeValue = node.nodeValue.replace(/^[\\r\\n]+/, \'\');\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode = node.firstChild;\n
+\t\t\t\t} while (node);\n
+\t\t\t}\n
+\n
+\t\t\tfunction getEditableRoot(node) {\n
+\t\t\t\tvar root = dom.getRoot(), parent, editableRoot;\n
+\n
+\t\t\t\t// Get all parents until we hit a non editable parent or the root\n
+\t\t\t\tparent = node;\n
+\t\t\t\twhile (parent !== root && dom.getContentEditable(parent) !== "false") {\n
+\t\t\t\t\tif (dom.getContentEditable(parent) === "true") {\n
+\t\t\t\t\t\teditableRoot = parent;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tparent = parent.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn parent !== root ? editableRoot : root;\n
+\t\t\t}\n
+\n
+\t\t\t// Adds a BR at the end of blocks that only contains an IMG or INPUT since\n
+\t\t\t// these might be floated and then they won\'t expand the block\n
+\t\t\tfunction addBrToBlockIfNeeded(block) {\n
+\t\t\t\tvar lastChild;\n
+\n
+\t\t\t\t// IE will render the blocks correctly other browsers needs a BR\n
+\t\t\t\tif (!isIE) {\n
+\t\t\t\t\tblock.normalize(); // Remove empty text nodes that got left behind by the extract\n
+\n
+\t\t\t\t\t// Check if the block is empty or contains a floated last child\n
+\t\t\t\t\tlastChild = block.lastChild;\n
+\t\t\t\t\tif (!lastChild || (/^(left|right)$/gi.test(dom.getStyle(lastChild, \'float\', true)))) {\n
+\t\t\t\t\t\tdom.add(block, \'br\');\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction insertNewBlockAfter() {\n
+\t\t\t\t// If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup\n
+\t\t\t\tif (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName != \'HGROUP\') {\n
+\t\t\t\t\tnewBlock = createNewBlock(newBlockName);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tnewBlock = createNewBlock();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Split the current container block element if enter is pressed inside an empty inner block element\n
+\t\t\t\tif (settings.end_container_on_empty_block && canSplitBlock(containerBlock) && dom.isEmpty(parentBlock)) {\n
+\t\t\t\t\t// Split container block for example a BLOCKQUOTE at the current blockParent location for example a P\n
+\t\t\t\t\tnewBlock = dom.split(containerBlock, parentBlock);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tdom.insertAfter(newBlock, parentBlock);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tmoveToCaretPosition(newBlock);\n
+\t\t\t}\n
+\n
+\t\t\trng = selection.getRng(true);\n
+\n
+\t\t\t// Event is blocked by some other handler for example the lists plugin\n
+\t\t\tif (evt.isDefaultPrevented()) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Delete any selected contents\n
+\t\t\tif (!rng.collapsed) {\n
+\t\t\t\teditor.execCommand(\'Delete\');\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Setup range items and newBlockName\n
+\t\t\tnew RangeUtils(dom).normalize(rng);\n
+\t\t\tcontainer = rng.startContainer;\n
+\t\t\toffset = rng.startOffset;\n
+\t\t\tnewBlockName = (settings.force_p_newlines ? \'p\' : \'\') || settings.forced_root_block;\n
+\t\t\tnewBlockName = newBlockName ? newBlockName.toUpperCase() : \'\';\n
+\t\t\tdocumentMode = dom.doc.documentMode;\n
+\t\t\tshiftKey = evt.shiftKey;\n
+\n
+\t\t\t// Resolve node index\n
+\t\t\tif (container.nodeType == 1 && container.hasChildNodes()) {\n
+\t\t\t\tisAfterLastNodeInContainer = offset > container.childNodes.length - 1;\n
+\n
+\t\t\t\tcontainer = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;\n
+\t\t\t\tif (isAfterLastNodeInContainer && container.nodeType == 3) {\n
+\t\t\t\t\toffset = container.nodeValue.length;\n
+\t\t\t\t} else {\n
+\t\t\t\t\toffset = 0;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Get editable root node normaly the body element but sometimes a div or span\n
+\t\t\teditableRoot = getEditableRoot(container);\n
+\n
+\t\t\t// If there is no editable root then enter is done inside a contentEditable false element\n
+\t\t\tif (!editableRoot) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tundoManager.beforeChange();\n
+\n
+\t\t\t// If editable root isn\'t block nor the root of the editor\n
+\t\t\tif (!dom.isBlock(editableRoot) && editableRoot != dom.getRoot()) {\n
+\t\t\t\tif (!newBlockName || shiftKey) {\n
+\t\t\t\t\tinsertBr();\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Wrap the current node and it\'s sibling in a default block if it\'s needed.\n
+\t\t\t// for example this <td>text|<b>text2</b></td> will become this <td><p>text|<b>text2</p></b></td>\n
+\t\t\t// This won\'t happen if root blocks are disabled or the shiftKey is pressed\n
+\t\t\tif ((newBlockName && !shiftKey) || (!newBlockName && shiftKey)) {\n
+\t\t\t\tcontainer = wrapSelfAndSiblingsInDefaultBlock(container, offset);\n
+\t\t\t}\n
+\n
+\t\t\t// Find parent block and setup empty block paddings\n
+\t\t\tparentBlock = dom.getParent(container, dom.isBlock);\n
+\t\t\tcontainerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;\n
+\n
+\t\t\t// Setup block names\n
+\t\t\tparentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : \'\'; // IE < 9 & HTML5\n
+\t\t\tcontainerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : \'\'; // IE < 9 & HTML5\n
+\n
+\t\t\t// Enter inside block contained within a LI then split or insert before/after LI\n
+\t\t\tif (containerBlockName == \'LI\' && !evt.ctrlKey) {\n
+\t\t\t\tparentBlock = containerBlock;\n
+\t\t\t\tparentBlockName = containerBlockName;\n
+\t\t\t}\n
+\n
+\t\t\t// Handle enter in list item\n
+\t\t\tif (/^(LI|DT|DD)$/.test(parentBlockName)) {\n
+\t\t\t\tif (!newBlockName && shiftKey) {\n
+\t\t\t\t\tinsertBr();\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Handle enter inside an empty list item\n
+\t\t\t\tif (dom.isEmpty(parentBlock)) {\n
+\t\t\t\t\thandleEmptyListItem();\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Don\'t split PRE tags but insert a BR instead easier when writing code samples etc\n
+\t\t\tif (parentBlockName == \'PRE\' && settings.br_in_pre !== false) {\n
+\t\t\t\tif (!shiftKey) {\n
+\t\t\t\t\tinsertBr();\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\t// If no root block is configured then insert a BR by default or if the shiftKey is pressed\n
+\t\t\t\tif ((!newBlockName && !shiftKey && parentBlockName != \'LI\') || (newBlockName && shiftKey)) {\n
+\t\t\t\t\tinsertBr();\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// If parent block is root then never insert new blocks\n
+\t\t\tif (newBlockName && parentBlock === editor.getBody()) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Default block name if it\'s not configured\n
+\t\t\tnewBlockName = newBlockName || \'P\';\n
+\n
+\t\t\t// Insert new block before/after the parent block depending on caret location\n
+\t\t\tif (isCaretAtStartOrEndOfBlock()) {\n
+\t\t\t\tinsertNewBlockAfter();\n
+\t\t\t} else if (isCaretAtStartOrEndOfBlock(true)) {\n
+\t\t\t\t// Insert new block before\n
+\t\t\t\tnewBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);\n
+\t\t\t\trenderBlockOnIE(newBlock);\n
+\t\t\t\tmoveToCaretPosition(parentBlock);\n
+\t\t\t} else {\n
+\t\t\t\t// Extract after fragment and insert it after the current block\n
+\t\t\t\ttmpRng = rng.cloneRange();\n
+\t\t\t\ttmpRng.setEndAfter(parentBlock);\n
+\t\t\t\tfragment = tmpRng.extractContents();\n
+\t\t\t\ttrimLeadingLineBreaks(fragment);\n
+\t\t\t\tnewBlock = fragment.firstChild;\n
+\t\t\t\tdom.insertAfter(fragment, parentBlock);\n
+\t\t\t\ttrimInlineElementsOnLeftSideOfBlock(newBlock);\n
+\t\t\t\taddBrToBlockIfNeeded(parentBlock);\n
+\n
+\t\t\t\t// New block might become empty if it\'s <p><b>a |</b></p>\n
+\t\t\t\tif (dom.isEmpty(newBlock)) {\n
+\t\t\t\t\tdom.remove(newBlock);\n
+\t\t\t\t\tinsertNewBlockAfter();\n
+\t\t\t\t} else {\n
+\t\t\t\t\tmoveToCaretPosition(newBlock);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tdom.setAttrib(newBlock, \'id\', \'\'); // Remove ID since it needs to be document unique\n
+\n
+\t\t\t// Allow custom handling of new blocks\n
+\t\t\teditor.fire(\'NewBlock\', {newBlock: newBlock});\n
+\n
+\t\t\tundoManager.add();\n
+\t\t}\n
+\n
+\t\teditor.on(\'keydown\', function(evt) {\n
+\t\t\tif (evt.keyCode == 13) {\n
+\t\t\t\tif (handleEnterKey(evt) !== false) {\n
+\t\t\t\t\tevt.preventDefault();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>20843</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EnterKey.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

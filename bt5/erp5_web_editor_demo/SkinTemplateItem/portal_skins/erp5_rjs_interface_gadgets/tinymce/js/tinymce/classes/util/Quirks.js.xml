@@ -1,0 +1,1637 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268293.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Quirks.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Quirks.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ *\n
+ * @ignore-file\n
+ */\n
+\n
+/**\n
+ * This file includes fixes for various browser quirks it\'s made to make it easy to add/remove browser specific fixes.\n
+ *\n
+ * @class tinymce.util.Quirks\n
+ */\n
+define("tinymce/util/Quirks", [\n
+\t"tinymce/util/VK",\n
+\t"tinymce/dom/RangeUtils",\n
+\t"tinymce/dom/TreeWalker",\n
+\t"tinymce/html/Node",\n
+\t"tinymce/html/Entities",\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Tools"\n
+], function(VK, RangeUtils, TreeWalker, Node, Entities, Env, Tools) {\n
+\treturn function(editor) {\n
+\t\tvar each = Tools.each, $ = editor.$;\n
+\t\tvar BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,\n
+\t\t\tsettings = editor.settings, parser = editor.parser, serializer = editor.serializer;\n
+\t\tvar isGecko = Env.gecko, isIE = Env.ie, isWebKit = Env.webkit;\n
+\t\tvar mceInternalUrlPrefix = \'data:text/mce-internal,\';\n
+\t\tvar mceInternalDataType = isIE ? \'Text\' : \'URL\';\n
+\n
+\t\t/**\n
+\t\t * Executes a command with a specific state this can be to enable/disable browser editing features.\n
+\t\t */\n
+\t\tfunction setEditorCommandState(cmd, state) {\n
+\t\t\ttry {\n
+\t\t\t\teditor.getDoc().execCommand(cmd, false, state);\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// Ignore\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns current IE document mode.\n
+\t\t */\n
+\t\tfunction getDocumentMode() {\n
+\t\t\tvar documentMode = editor.getDoc().documentMode;\n
+\n
+\t\t\treturn documentMode ? documentMode : 6;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the event is prevented or not.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {Event} e Event object.\n
+\t\t * @return {Boolean} true/false if the event is prevented or not.\n
+\t\t */\n
+\t\tfunction isDefaultPrevented(e) {\n
+\t\t\treturn e.isDefaultPrevented();\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Sets Text/URL data on the event\'s dataTransfer object to a special data:text/mce-internal url.\n
+\t\t * This is to workaround the inability to set custom contentType on IE and Safari.\n
+\t\t * The editor\'s selected content is encoded into this url so drag and drop between editors will work.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {DragEvent} e Event object\n
+\t\t */\n
+\t\tfunction setMceInteralContent(e) {\n
+\t\t\tvar selectionHtml, internalContent;\n
+\n
+\t\t\tif (e.dataTransfer) {\n
+\t\t\t\tif (editor.selection.isCollapsed() && e.target.tagName == \'IMG\') {\n
+\t\t\t\t\tselection.select(e.target);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tselectionHtml = editor.selection.getContent();\n
+\n
+\t\t\t\t// Safari/IE doesn\'t support custom dataTransfer items so we can only use URL and Text\n
+\t\t\t\tif (selectionHtml.length > 0) {\n
+\t\t\t\t\tinternalContent = mceInternalUrlPrefix + escape(editor.id) + \',\' + escape(selectionHtml);\n
+\t\t\t\t\te.dataTransfer.setData(mceInternalDataType, internalContent);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Gets content of special data:text/mce-internal url on the event\'s dataTransfer object.\n
+\t\t * This is to workaround the inability to set custom contentType on IE and Safari.\n
+\t\t * The editor\'s selected content is encoded into this url so drag and drop between editors will work.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {DragEvent} e Event object\n
+\t\t * @returns {String} mce-internal content\n
+\t\t */\n
+\t\tfunction getMceInternalContent(e) {\n
+\t\t\tvar internalContent;\n
+\n
+\t\t\tif (e.dataTransfer) {\n
+\t\t\t\tinternalContent = e.dataTransfer.getData(mceInternalDataType);\n
+\n
+\t\t\t\tif (internalContent && internalContent.indexOf(mceInternalUrlPrefix) >= 0) {\n
+\t\t\t\t\tinternalContent = internalContent.substr(mceInternalUrlPrefix.length).split(\',\');\n
+\n
+\t\t\t\t\treturn {\n
+\t\t\t\t\t\tid: unescape(internalContent[0]),\n
+\t\t\t\t\t\thtml: unescape(internalContent[1])\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn null;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Inserts contents using the paste clipboard command if it\'s available if it isn\'t it will fallback\n
+\t\t * to the core command.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @param {String} content Content to insert at selection.\n
+\t\t */\n
+\t\tfunction insertClipboardContents(content) {\n
+\t\t\tif (editor.queryCommandSupported(\'mceInsertClipboardContent\')) {\n
+\t\t\t\teditor.execCommand(\'mceInsertClipboardContent\', false, {content: content});\n
+\t\t\t} else {\n
+\t\t\t\teditor.execCommand(\'mceInsertContent\', false, content);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Fixes a WebKit bug when deleting contents using backspace or delete key.\n
+\t\t * WebKit will produce a span element if you delete across two block elements.\n
+\t\t *\n
+\t\t * Example:\n
+\t\t * <h1>a</h1><p>|b</p>\n
+\t\t *\n
+\t\t * Will produce this on backspace:\n
+\t\t * <h1>a<span style="<all runtime styles>">b</span></p>\n
+\t\t *\n
+\t\t * This fixes the backspace to produce:\n
+\t\t * <h1>a|b</p>\n
+\t\t *\n
+\t\t * See bug: https://bugs.webkit.org/show_bug.cgi?id=45784\n
+\t\t *\n
+\t\t * This fixes the following delete scenarios:\n
+\t\t *  1. Delete by pressing backspace key.\n
+\t\t *  2. Delete by pressing delete key.\n
+\t\t *  3. Delete by pressing backspace key with ctrl/cmd (Word delete).\n
+\t\t *  4. Delete by pressing delete key with ctrl/cmd (Word delete).\n
+\t\t *  5. Delete by drag/dropping contents inside the editor.\n
+\t\t *  6. Delete by using Cut Ctrl+X/Cmd+X.\n
+\t\t *  7. Delete by selecting contents and writing a character.\n
+\t\t *\n
+\t\t * This code is a ugly hack since writing full custom delete logic for just this bug\n
+\t\t * fix seemed like a huge task. I hope we can remove this before the year 2030.\n
+\t\t */\n
+\t\tfunction cleanupStylesWhenDeleting() {\n
+\t\t\tvar doc = editor.getDoc(), dom = editor.dom, selection = editor.selection;\n
+\t\t\tvar MutationObserver = window.MutationObserver, olderWebKit, dragStartRng;\n
+\n
+\t\t\t// Add mini polyfill for older WebKits\n
+\t\t\t// TODO: Remove this when old Safari versions gets updated\n
+\t\t\tif (!MutationObserver) {\n
+\t\t\t\tolderWebKit = true;\n
+\n
+\t\t\t\tMutationObserver = function() {\n
+\t\t\t\t\tvar records = [], target;\n
+\n
+\t\t\t\t\tfunction nodeInsert(e) {\n
+\t\t\t\t\t\tvar target = e.relatedNode || e.target;\n
+\t\t\t\t\t\trecords.push({target: target, addedNodes: [target]});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tfunction attrModified(e) {\n
+\t\t\t\t\t\tvar target = e.relatedNode || e.target;\n
+\t\t\t\t\t\trecords.push({target: target, attributeName: e.attrName});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tthis.observe = function(node) {\n
+\t\t\t\t\t\ttarget = node;\n
+\t\t\t\t\t\ttarget.addEventListener(\'DOMSubtreeModified\', nodeInsert, false);\n
+\t\t\t\t\t\ttarget.addEventListener(\'DOMNodeInsertedIntoDocument\', nodeInsert, false);\n
+\t\t\t\t\t\ttarget.addEventListener(\'DOMNodeInserted\', nodeInsert, false);\n
+\t\t\t\t\t\ttarget.addEventListener(\'DOMAttrModified\', attrModified, false);\n
+\t\t\t\t\t};\n
+\n
+\t\t\t\t\tthis.disconnect = function() {\n
+\t\t\t\t\t\ttarget.removeEventListener(\'DOMSubtreeModified\', nodeInsert, false);\n
+\t\t\t\t\t\ttarget.removeEventListener(\'DOMNodeInsertedIntoDocument\', nodeInsert, false);\n
+\t\t\t\t\t\ttarget.removeEventListener(\'DOMNodeInserted\', nodeInsert, false);\n
+\t\t\t\t\t\ttarget.removeEventListener(\'DOMAttrModified\', attrModified, false);\n
+\t\t\t\t\t};\n
+\n
+\t\t\t\t\tthis.takeRecords = function() {\n
+\t\t\t\t\t\treturn records;\n
+\t\t\t\t\t};\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\tfunction isTrailingBr(node) {\n
+\t\t\t\tvar blockElements = dom.schema.getBlockElements(), rootNode = editor.getBody();\n
+\n
+\t\t\t\tif (node.nodeName != \'BR\') {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (node = node; node != rootNode && !blockElements[node.nodeName]; node = node.parentNode) {\n
+\t\t\t\t\tif (node.nextSibling) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tfunction isSiblingsIgnoreWhiteSpace(node1, node2) {\n
+\t\t\t\tvar node;\n
+\n
+\t\t\t\tfor (node = node1.nextSibling; node && node != node2; node = node.nextSibling) {\n
+\t\t\t\t\tif (node.nodeType == 3 && $.trim(node.data).length === 0) {\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (node !== node2) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn node === node2;\n
+\t\t\t}\n
+\n
+\t\t\tfunction findCaretNode(node, forward, startNode) {\n
+\t\t\t\tvar walker, current, nonEmptyElements;\n
+\n
+\t\t\t\tnonEmptyElements = dom.schema.getNonEmptyElements();\n
+\n
+\t\t\t\twalker = new TreeWalker(startNode || node, node);\n
+\n
+\t\t\t\twhile ((current = walker[forward ? \'next\' : \'prev\']())) {\n
+\t\t\t\t\tif (nonEmptyElements[current.nodeName] && !isTrailingBr(current)) {\n
+\t\t\t\t\t\treturn current;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (current.nodeType == 3 && current.data.length > 0) {\n
+\t\t\t\t\t\treturn current;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction deleteRangeBetweenTextBlocks(rng) {\n
+\t\t\t\tvar startBlock, endBlock, caretNodeBefore, caretNodeAfter, textBlockElements;\n
+\n
+\t\t\t\tif (rng.collapsed) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tstartBlock = dom.getParent(RangeUtils.getNode(rng.startContainer, rng.startOffset), dom.isBlock);\n
+\t\t\t\tendBlock = dom.getParent(RangeUtils.getNode(rng.endContainer, rng.endOffset), dom.isBlock);\n
+\t\t\t\ttextBlockElements = editor.schema.getTextBlockElements();\n
+\n
+\t\t\t\tif (startBlock == endBlock) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!textBlockElements[startBlock.nodeName] || !textBlockElements[endBlock.nodeName]) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (dom.getContentEditable(startBlock) === "false" || dom.getContentEditable(endBlock) === "false") {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\trng.deleteContents();\n
+\n
+\t\t\t\tcaretNodeBefore = findCaretNode(startBlock, false);\n
+\t\t\t\tcaretNodeAfter = findCaretNode(endBlock, true);\n
+\n
+\t\t\t\tif (!dom.isEmpty(endBlock)) {\n
+\t\t\t\t\t$(startBlock).append(endBlock.childNodes);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t$(endBlock).remove();\n
+\n
+\t\t\t\tif (caretNodeBefore) {\n
+\t\t\t\t\tif (caretNodeBefore.nodeType == 1) {\n
+\t\t\t\t\t\tif (caretNodeBefore.nodeName == "BR") {\n
+\t\t\t\t\t\t\trng.setStartBefore(caretNodeBefore);\n
+\t\t\t\t\t\t\trng.setEndBefore(caretNodeBefore);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trng.setStartAfter(caretNodeBefore);\n
+\t\t\t\t\t\t\trng.setEndAfter(caretNodeBefore);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\trng.setStart(caretNodeBefore, caretNodeBefore.data.length);\n
+\t\t\t\t\t\trng.setEnd(caretNodeBefore, caretNodeBefore.data.length);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if (caretNodeAfter) {\n
+\t\t\t\t\tif (caretNodeAfter.nodeType == 1) {\n
+\t\t\t\t\t\trng.setStartBefore(caretNodeAfter);\n
+\t\t\t\t\t\trng.setEndBefore(caretNodeAfter);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\trng.setStart(caretNodeAfter, 0);\n
+\t\t\t\t\t\trng.setEnd(caretNodeAfter, 0);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tselection.setRng(rng);\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tfunction expandBetweenBlocks(rng, isForward) {\n
+\t\t\t\tvar caretNode, targetCaretNode, textBlock, targetTextBlock, container, offset;\n
+\n
+\t\t\t\tif (!rng.collapsed) {\n
+\t\t\t\t\treturn rng;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcontainer = rng.startContainer;\n
+\t\t\t\toffset = rng.startOffset;\n
+\n
+\t\t\t\tif (container.nodeType == 3) {\n
+\t\t\t\t\tif (isForward) {\n
+\t\t\t\t\t\tif (offset < container.data.length) {\n
+\t\t\t\t\t\t\treturn rng;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tif (offset > 0) {\n
+\t\t\t\t\t\t\treturn rng;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcaretNode = RangeUtils.getNode(rng.startContainer, rng.startOffset);\n
+\t\t\t\ttextBlock = dom.getParent(caretNode, dom.isBlock);\n
+\t\t\t\ttargetCaretNode = findCaretNode(editor.getBody(), isForward, caretNode);\n
+\t\t\t\ttargetTextBlock = dom.getParent(targetCaretNode, dom.isBlock);\n
+\n
+\t\t\t\tif (!caretNode || !targetCaretNode) {\n
+\t\t\t\t\treturn rng;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (targetTextBlock && textBlock != targetTextBlock) {\n
+\t\t\t\t\tif (!isForward) {\n
+\t\t\t\t\t\tif (!isSiblingsIgnoreWhiteSpace(targetTextBlock, textBlock)) {\n
+\t\t\t\t\t\t\treturn rng;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (targetCaretNode.nodeType == 1) {\n
+\t\t\t\t\t\t\tif (targetCaretNode.nodeName == "BR") {\n
+\t\t\t\t\t\t\t\trng.setStartBefore(targetCaretNode);\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\trng.setStartAfter(targetCaretNode);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trng.setStart(targetCaretNode, targetCaretNode.data.length);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (caretNode.nodeType == 1) {\n
+\t\t\t\t\t\t\trng.setEnd(caretNode, 0);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trng.setEndBefore(caretNode);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tif (!isSiblingsIgnoreWhiteSpace(textBlock, targetTextBlock)) {\n
+\t\t\t\t\t\t\treturn rng;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (caretNode.nodeType == 1) {\n
+\t\t\t\t\t\t\tif (caretNode.nodeName == "BR") {\n
+\t\t\t\t\t\t\t\trng.setStartBefore(caretNode);\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\trng.setStartAfter(caretNode);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trng.setStart(caretNode, caretNode.data.length);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (targetCaretNode.nodeType == 1) {\n
+\t\t\t\t\t\t\trng.setEnd(targetCaretNode, 0);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trng.setEndBefore(targetCaretNode);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn rng;\n
+\t\t\t}\n
+\n
+\t\t\tfunction handleTextBlockMergeDelete(isForward) {\n
+\t\t\t\tvar rng = selection.getRng();\n
+\n
+\t\t\t\trng = expandBetweenBlocks(rng, isForward);\n
+\n
+\t\t\t\tif (deleteRangeBetweenTextBlocks(rng)) {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction customDelete(isForward) {\n
+\t\t\t\tvar mutationObserver, rng, caretElement;\n
+\n
+\t\t\t\tif (handleTextBlockMergeDelete(isForward)) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tTools.each(editor.getBody().getElementsByTagName(\'*\'), function(elm) {\n
+\t\t\t\t\t// Mark existing spans\n
+\t\t\t\t\tif (elm.tagName == \'SPAN\') {\n
+\t\t\t\t\t\telm.setAttribute(\'mce-data-marked\', 1);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Make sure all elements has a data-mce-style attribute\n
+\t\t\t\t\tif (!elm.hasAttribute(\'data-mce-style\') && elm.hasAttribute(\'style\')) {\n
+\t\t\t\t\t\teditor.dom.setAttrib(elm, \'style\', editor.dom.getAttrib(elm, \'style\'));\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Observe added nodes and style attribute changes\n
+\t\t\t\tmutationObserver = new MutationObserver(function() {});\n
+\t\t\t\tmutationObserver.observe(editor.getDoc(), {\n
+\t\t\t\t\tchildList: true,\n
+\t\t\t\t\tattributes: true,\n
+\t\t\t\t\tsubtree: true,\n
+\t\t\t\t\tattributeFilter: [\'style\']\n
+\t\t\t\t});\n
+\n
+\t\t\t\teditor.getDoc().execCommand(isForward ? \'ForwardDelete\' : \'Delete\', false, null);\n
+\n
+\t\t\t\trng = editor.selection.getRng();\n
+\t\t\t\tcaretElement = rng.startContainer.parentNode;\n
+\n
+\t\t\t\tTools.each(mutationObserver.takeRecords(), function(record) {\n
+\t\t\t\t\tif (!dom.isChildOf(record.target, editor.getBody())) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Restore style attribute to previous value\n
+\t\t\t\t\tif (record.attributeName == "style") {\n
+\t\t\t\t\t\tvar oldValue = record.target.getAttribute(\'data-mce-style\');\n
+\n
+\t\t\t\t\t\tif (oldValue) {\n
+\t\t\t\t\t\t\trecord.target.setAttribute("style", oldValue);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trecord.target.removeAttribute("style");\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Remove all spans that isn\'t maked and retain selection\n
+\t\t\t\t\tTools.each(record.addedNodes, function(node) {\n
+\t\t\t\t\t\tif (node.nodeName == "SPAN" && !node.getAttribute(\'mce-data-marked\')) {\n
+\t\t\t\t\t\t\tvar offset, container;\n
+\n
+\t\t\t\t\t\t\tif (node == caretElement) {\n
+\t\t\t\t\t\t\t\toffset = rng.startOffset;\n
+\t\t\t\t\t\t\t\tcontainer = node.firstChild;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tdom.remove(node, true);\n
+\n
+\t\t\t\t\t\t\tif (container) {\n
+\t\t\t\t\t\t\t\trng.setStart(container, offset);\n
+\t\t\t\t\t\t\t\trng.setEnd(container, offset);\n
+\t\t\t\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\n
+\t\t\t\tmutationObserver.disconnect();\n
+\n
+\t\t\t\t// Remove any left over marks\n
+\t\t\t\tTools.each(editor.dom.select(\'span[mce-data-marked]\'), function(span) {\n
+\t\t\t\t\tspan.removeAttribute(\'mce-data-marked\');\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\teditor.on(\'keydown\', function(e) {\n
+\t\t\t\tvar isForward = e.keyCode == DELETE, isMetaOrCtrl = e.ctrlKey || e.metaKey;\n
+\n
+\t\t\t\tif (!isDefaultPrevented(e) && (isForward || e.keyCode == BACKSPACE)) {\n
+\t\t\t\t\tvar rng = editor.selection.getRng(), container = rng.startContainer, offset = rng.startOffset;\n
+\n
+\t\t\t\t\t// Ignore non meta delete in the where there is text before/after the caret\n
+\t\t\t\t\tif (!isMetaOrCtrl && rng.collapsed && container.nodeType == 3) {\n
+\t\t\t\t\t\tif (isForward ? offset < container.data.length : offset > 0) {\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\tif (isMetaOrCtrl) {\n
+\t\t\t\t\t\teditor.selection.getSel().modify("extend", isForward ? "forward" : "backward", e.metaKey ? "lineboundary" : "word");\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tcustomDelete(isForward);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// Handle case where text is deleted by typing over\n
+\t\t\teditor.on(\'keypress\', function(e) {\n
+\t\t\t\tif (!isDefaultPrevented(e) && !selection.isCollapsed() && e.charCode && !VK.metaKeyPressed(e)) {\n
+\t\t\t\t\tvar rng, currentFormatNodes, fragmentNode, blockParent, caretNode, charText;\n
+\n
+\t\t\t\t\trng = editor.selection.getRng();\n
+\t\t\t\t\tcharText = String.fromCharCode(e.charCode);\n
+\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t// Keep track of current format nodes\n
+\t\t\t\t\tcurrentFormatNodes = $(rng.startContainer).parents().filter(function(idx, node) {\n
+\t\t\t\t\t\treturn !!editor.schema.getTextInlineElements()[node.nodeName];\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\tcustomDelete(true);\n
+\n
+\t\t\t\t\t// Check if the browser removed them\n
+\t\t\t\t\tcurrentFormatNodes = currentFormatNodes.filter(function(idx, node) {\n
+\t\t\t\t\t\treturn !$.contains(editor.getBody(), node);\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// Then re-add them\n
+\t\t\t\t\tif (currentFormatNodes.length) {\n
+\t\t\t\t\t\tfragmentNode = dom.createFragment();\n
+\n
+\t\t\t\t\t\tcurrentFormatNodes.each(function(idx, formatNode) {\n
+\t\t\t\t\t\t\tformatNode = formatNode.cloneNode(false);\n
+\n
+\t\t\t\t\t\t\tif (fragmentNode.hasChildNodes()) {\n
+\t\t\t\t\t\t\t\tformatNode.appendChild(fragmentNode.firstChild);\n
+\t\t\t\t\t\t\t\tfragmentNode.appendChild(formatNode);\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tcaretNode = formatNode;\n
+\t\t\t\t\t\t\t\tfragmentNode.appendChild(formatNode);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tfragmentNode.appendChild(formatNode);\n
+\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\tcaretNode.appendChild(editor.getDoc().createTextNode(charText));\n
+\n
+\t\t\t\t\t\t// Prevent edge case where older WebKit would add an extra BR element\n
+\t\t\t\t\t\tblockParent = dom.getParent(rng.startContainer, dom.isBlock);\n
+\t\t\t\t\t\tif (dom.isEmpty(blockParent)) {\n
+\t\t\t\t\t\t\t$(blockParent).empty().append(fragmentNode);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trng.insertNode(fragmentNode);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\trng.setStart(caretNode.firstChild, 1);\n
+\t\t\t\t\t\trng.setEnd(caretNode.firstChild, 1);\n
+\t\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\teditor.selection.setContent(charText);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teditor.addCommand(\'Delete\', function() {\n
+\t\t\t\tcustomDelete();\n
+\t\t\t});\n
+\n
+\t\t\teditor.addCommand(\'ForwardDelete\', function() {\n
+\t\t\t\tcustomDelete(true);\n
+\t\t\t});\n
+\n
+\t\t\t// Older WebKits doesn\'t properly handle the clipboard so we can\'t add the rest\n
+\t\t\tif (olderWebKit) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\teditor.on(\'dragstart\', function(e) {\n
+\t\t\t\tdragStartRng = selection.getRng();\n
+\t\t\t\tsetMceInteralContent(e);\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'drop\', function(e) {\n
+\t\t\t\tif (!isDefaultPrevented(e)) {\n
+\t\t\t\t\tvar internalContent = getMceInternalContent(e);\n
+\n
+\t\t\t\t\tif (internalContent) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t\t// Safari has a weird issue where drag/dropping images sometimes\n
+\t\t\t\t\t\t// produces a green plus icon. When this happens the caretRangeFromPoint\n
+\t\t\t\t\t\t// will return "null" even though the x, y coordinate is correct.\n
+\t\t\t\t\t\t// But if we detach the insert from the drop event we will get a proper range\n
+\t\t\t\t\t\twindow.setTimeout(function() {\n
+\t\t\t\t\t\t\tvar pointRng = RangeUtils.getCaretRangeFromPoint(e.x, e.y, doc);\n
+\n
+\t\t\t\t\t\t\tif (dragStartRng) {\n
+\t\t\t\t\t\t\t\tselection.setRng(dragStartRng);\n
+\t\t\t\t\t\t\t\tdragStartRng = null;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tcustomDelete();\n
+\t\t\t\t\t\t\tselection.setRng(pointRng);\n
+\t\t\t\t\t\t\tinsertClipboardContents(internalContent.html);\n
+\t\t\t\t\t\t}, 0);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'cut\', function(e) {\n
+\t\t\t\tif (!isDefaultPrevented(e) && e.clipboardData && !editor.selection.isCollapsed()) {\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\te.clipboardData.clearData();\n
+\t\t\t\t\te.clipboardData.setData(\'text/html\', editor.selection.getContent());\n
+\t\t\t\t\te.clipboardData.setData(\'text/plain\', editor.selection.getContent({format: \'text\'}));\n
+\n
+\t\t\t\t\t// Needed delay for https://code.google.com/p/chromium/issues/detail?id=363288#c3\n
+\t\t\t\t\t// Nested delete/forwardDelete not allowed on execCommand("cut")\n
+\t\t\t\t\t// This is ugly but not sure how to work around it otherwise\n
+\t\t\t\t\twindow.setTimeout(function() {\n
+\t\t\t\t\t\tcustomDelete(true);\n
+\t\t\t\t\t}, 0);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Makes sure that the editor body becomes empty when backspace or delete is pressed in empty editors.\n
+\t\t *\n
+\t\t * For example:\n
+\t\t * <p><b>|</b></p>\n
+\t\t *\n
+\t\t * Or:\n
+\t\t * <h1>|</h1>\n
+\t\t *\n
+\t\t * Or:\n
+\t\t * [<h1></h1>]\n
+\t\t */\n
+\t\tfunction emptyEditorWhenDeleting() {\n
+\t\t\tfunction serializeRng(rng) {\n
+\t\t\t\tvar body = dom.create("body");\n
+\t\t\t\tvar contents = rng.cloneContents();\n
+\t\t\t\tbody.appendChild(contents);\n
+\t\t\t\treturn selection.serializer.serialize(body, {format: \'html\'});\n
+\t\t\t}\n
+\n
+\t\t\tfunction allContentsSelected(rng) {\n
+\t\t\t\tif (!rng.setStart) {\n
+\t\t\t\t\tif (rng.item) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tvar bodyRng = rng.duplicate();\n
+\t\t\t\t\tbodyRng.moveToElementText(editor.getBody());\n
+\t\t\t\t\treturn RangeUtils.compareRanges(rng, bodyRng);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar selection = serializeRng(rng);\n
+\n
+\t\t\t\tvar allRng = dom.createRng();\n
+\t\t\t\tallRng.selectNode(editor.getBody());\n
+\n
+\t\t\t\tvar allSelection = serializeRng(allRng);\n
+\t\t\t\treturn selection === allSelection;\n
+\t\t\t}\n
+\n
+\t\t\teditor.on(\'keydown\', function(e) {\n
+\t\t\t\tvar keyCode = e.keyCode, isCollapsed, body;\n
+\n
+\t\t\t\t// Empty the editor if it\'s needed for example backspace at <p><b>|</b></p>\n
+\t\t\t\tif (!isDefaultPrevented(e) && (keyCode == DELETE || keyCode == BACKSPACE)) {\n
+\t\t\t\t\tisCollapsed = editor.selection.isCollapsed();\n
+\t\t\t\t\tbody = editor.getBody();\n
+\n
+\t\t\t\t\t// Selection is collapsed but the editor isn\'t empty\n
+\t\t\t\t\tif (isCollapsed && !dom.isEmpty(body)) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Selection isn\'t collapsed but not all the contents is selected\n
+\t\t\t\t\tif (!isCollapsed && !allContentsSelected(editor.selection.getRng())) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Manually empty the editor\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\teditor.setContent(\'\');\n
+\n
+\t\t\t\t\tif (body.firstChild && dom.isBlock(body.firstChild)) {\n
+\t\t\t\t\t\teditor.selection.setCursorLocation(body.firstChild, 0);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\teditor.selection.setCursorLocation(body, 0);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * WebKit doesn\'t select all the nodes in the body when you press Ctrl+A.\n
+\t\t * IE selects more than the contents <body>[<p>a</p>]</body> instead of <body><p>[a]</p]</body> see bug #6438\n
+\t\t * This selects the whole body so that backspace/delete logic will delete everything\n
+\t\t */\n
+\t\tfunction selectAll() {\n
+\t\t\teditor.shortcuts.add(\'meta+a\', null, \'SelectAll\');\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * WebKit has a weird issue where it some times fails to properly convert keypresses to input method keystrokes.\n
+\t\t * The IME on Mac doesn\'t initialize when it doesn\'t fire a proper focus event.\n
+\t\t *\n
+\t\t * This seems to happen when the user manages to click the documentElement element then the window doesn\'t get proper focus until\n
+\t\t * you enter a character into the editor.\n
+\t\t *\n
+\t\t * It also happens when the first focus in made to the body.\n
+\t\t *\n
+\t\t * See: https://bugs.webkit.org/show_bug.cgi?id=83566\n
+\t\t */\n
+\t\tfunction inputMethodFocus() {\n
+\t\t\tif (!editor.settings.content_editable) {\n
+\t\t\t\t// Case 1 IME doesn\'t initialize if you focus the document\n
+\t\t\t\tdom.bind(editor.getDoc(), \'focusin\', function() {\n
+\t\t\t\t\tselection.setRng(selection.getRng());\n
+\t\t\t\t});\n
+\n
+\t\t\t\t// Case 2 IME doesn\'t initialize if you click the documentElement it also doesn\'t properly fire the focusin event\n
+\t\t\t\t// Needs to be both down/up due to weird rendering bug on Chrome Windows\n
+\t\t\t\tdom.bind(editor.getDoc(), \'mousedown mouseup\', function(e) {\n
+\t\t\t\t\tif (e.target == editor.getDoc().documentElement) {\n
+\t\t\t\t\t\teditor.getBody().focus();\n
+\n
+\t\t\t\t\t\tif (e.type == \'mousedown\') {\n
+\t\t\t\t\t\t\t// Edge case for mousedown, drag select and mousedown again within selection on Chrome Windows to render caret\n
+\t\t\t\t\t\t\tselection.placeCaretAt(e.clientX, e.clientY);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tselection.setRng(selection.getRng());\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Backspacing in FireFox/IE from a paragraph into a horizontal rule results in a floating text node because the\n
+\t\t * browser just deletes the paragraph - the browser fails to merge the text node with a horizontal rule so it is\n
+\t\t * left there. TinyMCE sees a floating text node and wraps it in a paragraph on the key up event (ForceBlocks.js\n
+\t\t * addRootBlocks), meaning the action does nothing. With this code, FireFox/IE matche the behaviour of other\n
+\t\t * browsers.\n
+\t\t *\n
+\t\t * It also fixes a bug on Firefox where it\'s impossible to delete HR elements.\n
+\t\t */\n
+\t\tfunction removeHrOnBackspace() {\n
+\t\t\teditor.on(\'keydown\', function(e) {\n
+\t\t\t\tif (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {\n
+\t\t\t\t\t// Check if there is any HR elements this is faster since getRng on IE 7 & 8 is slow\n
+\t\t\t\t\tif (!editor.getBody().getElementsByTagName(\'hr\').length) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {\n
+\t\t\t\t\t\tvar node = selection.getNode();\n
+\t\t\t\t\t\tvar previousSibling = node.previousSibling;\n
+\n
+\t\t\t\t\t\tif (node.nodeName == \'HR\') {\n
+\t\t\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === "hr") {\n
+\t\t\t\t\t\t\tdom.remove(previousSibling);\n
+\t\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Firefox 3.x has an issue where the body element won\'t get proper focus if you click out\n
+\t\t * side it\'s rectangle.\n
+\t\t */\n
+\t\tfunction focusBody() {\n
+\t\t\t// Fix for a focus bug in FF 3.x where the body element\n
+\t\t\t// wouldn\'t get proper focus if the user clicked on the HTML element\n
+\t\t\tif (!window.Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4\n
+\t\t\t\teditor.on(\'mousedown\', function(e) {\n
+\t\t\t\t\tif (!isDefaultPrevented(e) && e.target.nodeName === "HTML") {\n
+\t\t\t\t\t\tvar body = editor.getBody();\n
+\n
+\t\t\t\t\t\t// Blur the body it\'s focused but not correctly focused\n
+\t\t\t\t\t\tbody.blur();\n
+\n
+\t\t\t\t\t\t// Refocus the body after a little while\n
+\t\t\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\t\t\tbody.focus();\n
+\t\t\t\t\t\t}, 0);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * WebKit has a bug where it isn\'t possible to select image, hr or anchor elements\n
+\t\t * by clicking on them so we need to fake that.\n
+\t\t */\n
+\t\tfunction selectControlElements() {\n
+\t\t\teditor.on(\'click\', function(e) {\n
+\t\t\t\tvar target = e.target;\n
+\n
+\t\t\t\t// Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250\n
+\t\t\t\t// WebKit can\'t even do simple things like selecting an image\n
+\t\t\t\t// Needs to be the setBaseAndExtend or it will fail to select floated images\n
+\t\t\t\tif (/^(IMG|HR)$/.test(target.nodeName)) {\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\tselection.getSel().setBaseAndExtent(target, 0, target, 1);\n
+\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (target.nodeName == \'A\' && dom.hasClass(target, \'mce-item-anchor\')) {\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\tselection.select(target);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Fixes a Gecko bug where the style attribute gets added to the wrong element when deleting between two block elements.\n
+\t\t *\n
+\t\t * Fixes do backspace/delete on this:\n
+\t\t * <p>bla[ck</p><p style="color:red">r]ed</p>\n
+\t\t *\n
+\t\t * Would become:\n
+\t\t * <p>bla|ed</p>\n
+\t\t *\n
+\t\t * Instead of:\n
+\t\t * <p style="color:red">bla|ed</p>\n
+\t\t */\n
+\t\tfunction removeStylesWhenDeletingAcrossBlockElements() {\n
+\t\t\tfunction getAttributeApplyFunction() {\n
+\t\t\t\tvar template = dom.getAttribs(selection.getStart().cloneNode(false));\n
+\n
+\t\t\t\treturn function() {\n
+\t\t\t\t\tvar target = selection.getStart();\n
+\n
+\t\t\t\t\tif (target !== editor.getBody()) {\n
+\t\t\t\t\t\tdom.setAttrib(target, "style", null);\n
+\n
+\t\t\t\t\t\teach(template, function(attr) {\n
+\t\t\t\t\t\t\ttarget.setAttributeNode(attr.cloneNode(true));\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\tfunction isSelectionAcrossElements() {\n
+\t\t\t\treturn !selection.isCollapsed() &&\n
+\t\t\t\t\tdom.getParent(selection.getStart(), dom.isBlock) != dom.getParent(selection.getEnd(), dom.isBlock);\n
+\t\t\t}\n
+\n
+\t\t\teditor.on(\'keypress\', function(e) {\n
+\t\t\t\tvar applyAttributes;\n
+\n
+\t\t\t\tif (!isDefaultPrevented(e) && (e.keyCode == 8 || e.keyCode == 46) && isSelectionAcrossElements()) {\n
+\t\t\t\t\tapplyAttributes = getAttributeApplyFunction();\n
+\t\t\t\t\teditor.getDoc().execCommand(\'delete\', false, null);\n
+\t\t\t\t\tapplyAttributes();\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tdom.bind(editor.getDoc(), \'cut\', function(e) {\n
+\t\t\t\tvar applyAttributes;\n
+\n
+\t\t\t\tif (!isDefaultPrevented(e) && isSelectionAcrossElements()) {\n
+\t\t\t\t\tapplyAttributes = getAttributeApplyFunction();\n
+\n
+\t\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\t\tapplyAttributes();\n
+\t\t\t\t\t}, 0);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Screen readers on IE needs to have the role application set on the body.\n
+\t\t */\n
+\t\tfunction ensureBodyHasRoleApplication() {\n
+\t\t\tdocument.body.setAttribute("role", "application");\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Backspacing into a table behaves differently depending upon browser type.\n
+\t\t * Therefore, disable Backspace when cursor immediately follows a table.\n
+\t\t */\n
+\t\tfunction disableBackspaceIntoATable() {\n
+\t\t\teditor.on(\'keydown\', function(e) {\n
+\t\t\t\tif (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {\n
+\t\t\t\t\tif (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {\n
+\t\t\t\t\t\tvar previousSibling = selection.getNode().previousSibling;\n
+\t\t\t\t\t\tif (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === "table") {\n
+\t\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Old IE versions can\'t properly render BR elements in PRE tags white in contentEditable mode. So this\n
+\t\t * logic adds a \\n before the BR so that it will get rendered.\n
+\t\t */\n
+\t\tfunction addNewLinesBeforeBrInPre() {\n
+\t\t\t// IE8+ rendering mode does the right thing with BR in PRE\n
+\t\t\tif (getDocumentMode() > 7) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Enable display: none in area and add a specific class that hides all BR elements in PRE to\n
+\t\t\t// avoid the caret from getting stuck at the BR elements while pressing the right arrow key\n
+\t\t\tsetEditorCommandState(\'RespectVisibilityInDesign\', true);\n
+\t\t\teditor.contentStyles.push(\'.mceHideBrInPre pre br {display: none}\');\n
+\t\t\tdom.addClass(editor.getBody(), \'mceHideBrInPre\');\n
+\n
+\t\t\t// Adds a \\n before all BR elements in PRE to get them visual\n
+\t\t\tparser.addNodeFilter(\'pre\', function(nodes) {\n
+\t\t\t\tvar i = nodes.length, brNodes, j, brElm, sibling;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tbrNodes = nodes[i].getAll(\'br\');\n
+\t\t\t\t\tj = brNodes.length;\n
+\t\t\t\t\twhile (j--) {\n
+\t\t\t\t\t\tbrElm = brNodes[j];\n
+\n
+\t\t\t\t\t\t// Add \\n before BR in PRE elements on older IE:s so the new lines get rendered\n
+\t\t\t\t\t\tsibling = brElm.prev;\n
+\t\t\t\t\t\tif (sibling && sibling.type === 3 && sibling.value.charAt(sibling.value - 1) != \'\\n\') {\n
+\t\t\t\t\t\t\tsibling.value += \'\\n\';\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tbrElm.parent.insert(new Node(\'#text\', 3), brElm, true).value = \'\\n\';\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// Removes any \\n before BR elements in PRE since other browsers and in contentEditable=false mode they will be visible\n
+\t\t\tserializer.addNodeFilter(\'pre\', function(nodes) {\n
+\t\t\t\tvar i = nodes.length, brNodes, j, brElm, sibling;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tbrNodes = nodes[i].getAll(\'br\');\n
+\t\t\t\t\tj = brNodes.length;\n
+\t\t\t\t\twhile (j--) {\n
+\t\t\t\t\t\tbrElm = brNodes[j];\n
+\t\t\t\t\t\tsibling = brElm.prev;\n
+\t\t\t\t\t\tif (sibling && sibling.type == 3) {\n
+\t\t\t\t\t\t\tsibling.value = sibling.value.replace(/\\r?\\n$/, \'\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Moves style width/height to attribute width/height when the user resizes an image on IE.\n
+\t\t */\n
+\t\tfunction removePreSerializedStylesWhenSelectingControls() {\n
+\t\t\tdom.bind(editor.getBody(), \'mouseup\', function() {\n
+\t\t\t\tvar value, node = selection.getNode();\n
+\n
+\t\t\t\t// Moved styles to attributes on IMG eements\n
+\t\t\t\tif (node.nodeName == \'IMG\') {\n
+\t\t\t\t\t// Convert style width to width attribute\n
+\t\t\t\t\tif ((value = dom.getStyle(node, \'width\'))) {\n
+\t\t\t\t\t\tdom.setAttrib(node, \'width\', value.replace(/[^0-9%]+/g, \'\'));\n
+\t\t\t\t\t\tdom.setStyle(node, \'width\', \'\');\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Convert style height to height attribute\n
+\t\t\t\t\tif ((value = dom.getStyle(node, \'height\'))) {\n
+\t\t\t\t\t\tdom.setAttrib(node, \'height\', value.replace(/[^0-9%]+/g, \'\'));\n
+\t\t\t\t\t\tdom.setStyle(node, \'height\', \'\');\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Removes a blockquote when backspace is pressed at the beginning of it.\n
+\t\t *\n
+\t\t * For example:\n
+\t\t * <blockquote><p>|x</p></blockquote>\n
+\t\t *\n
+\t\t * Becomes:\n
+\t\t * <p>|x</p>\n
+\t\t */\n
+\t\tfunction removeBlockQuoteOnBackSpace() {\n
+\t\t\t// Add block quote deletion handler\n
+\t\t\teditor.on(\'keydown\', function(e) {\n
+\t\t\t\tvar rng, container, offset, root, parent;\n
+\n
+\t\t\t\tif (isDefaultPrevented(e) || e.keyCode != VK.BACKSPACE) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\trng = selection.getRng();\n
+\t\t\t\tcontainer = rng.startContainer;\n
+\t\t\t\toffset = rng.startOffset;\n
+\t\t\t\troot = dom.getRoot();\n
+\t\t\t\tparent = container;\n
+\n
+\t\t\t\tif (!rng.collapsed || offset !== 0) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twhile (parent && parent.parentNode && parent.parentNode.firstChild == parent && parent.parentNode != root) {\n
+\t\t\t\t\tparent = parent.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Is the cursor at the beginning of a blockquote?\n
+\t\t\t\tif (parent.tagName === \'BLOCKQUOTE\') {\n
+\t\t\t\t\t// Remove the blockquote\n
+\t\t\t\t\teditor.formatter.toggle(\'blockquote\', null, parent);\n
+\n
+\t\t\t\t\t// Move the caret to the beginning of container\n
+\t\t\t\t\trng = dom.createRng();\n
+\t\t\t\t\trng.setStart(container, 0);\n
+\t\t\t\t\trng.setEnd(container, 0);\n
+\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Sets various Gecko editing options on mouse down and before a execCommand to disable inline table editing that is broken etc.\n
+\t\t */\n
+\t\tfunction setGeckoEditingOptions() {\n
+\t\t\tfunction setOpts() {\n
+\t\t\t\teditor._refreshContentEditable();\n
+\n
+\t\t\t\tsetEditorCommandState("StyleWithCSS", false);\n
+\t\t\t\tsetEditorCommandState("enableInlineTableEditing", false);\n
+\n
+\t\t\t\tif (!settings.object_resizing) {\n
+\t\t\t\t\tsetEditorCommandState("enableObjectResizing", false);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (!settings.readonly) {\n
+\t\t\t\teditor.on(\'BeforeExecCommand MouseDown\', setOpts);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Fixes a gecko link bug, when a link is placed at the end of block elements there is\n
+\t\t * no way to move the caret behind the link. This fix adds a bogus br element after the link.\n
+\t\t *\n
+\t\t * For example this:\n
+\t\t * <p><b><a href="#">x</a></b></p>\n
+\t\t *\n
+\t\t * Becomes this:\n
+\t\t * <p><b><a href="#">x</a></b><br></p>\n
+\t\t */\n
+\t\tfunction addBrAfterLastLinks() {\n
+\t\t\tfunction fixLinks() {\n
+\t\t\t\teach(dom.select(\'a\'), function(node) {\n
+\t\t\t\t\tvar parentNode = node.parentNode, root = dom.getRoot();\n
+\n
+\t\t\t\t\tif (parentNode.lastChild === node) {\n
+\t\t\t\t\t\twhile (parentNode && !dom.isBlock(parentNode)) {\n
+\t\t\t\t\t\t\tif (parentNode.parentNode.lastChild !== parentNode || parentNode === root) {\n
+\t\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tparentNode = parentNode.parentNode;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tdom.add(parentNode, \'br\', {\'data-mce-bogus\': 1});\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\teditor.on(\'SetContent ExecCommand\', function(e) {\n
+\t\t\t\tif (e.type == "setcontent" || e.command === \'mceInsertLink\') {\n
+\t\t\t\t\tfixLinks();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * WebKit will produce DIV elements here and there by default. But since TinyMCE uses paragraphs by\n
+\t\t * default we want to change that behavior.\n
+\t\t */\n
+\t\tfunction setDefaultBlockType() {\n
+\t\t\tif (settings.forced_root_block) {\n
+\t\t\t\teditor.on(\'init\', function() {\n
+\t\t\t\t\tsetEditorCommandState(\'DefaultParagraphSeparator\', settings.forced_root_block);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Removes ghost selections from images/tables on Gecko.\n
+\t\t */\n
+\t\tfunction removeGhostSelection() {\n
+\t\t\teditor.on(\'Undo Redo SetContent\', function(e) {\n
+\t\t\t\tif (!e.initial) {\n
+\t\t\t\t\teditor.execCommand(\'mceRepaint\');\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Deletes the selected image on IE instead of navigating to previous page.\n
+\t\t */\n
+\t\tfunction deleteControlItemOnBackSpace() {\n
+\t\t\teditor.on(\'keydown\', function(e) {\n
+\t\t\t\tvar rng;\n
+\n
+\t\t\t\tif (!isDefaultPrevented(e) && e.keyCode == BACKSPACE) {\n
+\t\t\t\t\trng = editor.getDoc().selection.createRange();\n
+\t\t\t\t\tif (rng && rng.item) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\teditor.undoManager.beforeChange();\n
+\t\t\t\t\t\tdom.remove(rng.item(0));\n
+\t\t\t\t\t\teditor.undoManager.add();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * IE10 doesn\'t properly render block elements with the right height until you add contents to them.\n
+\t\t * This fixes that by adding a padding-right to all empty text block elements.\n
+\t\t * See: https://connect.microsoft.com/IE/feedback/details/743881\n
+\t\t */\n
+\t\tfunction renderEmptyBlocksFix() {\n
+\t\t\tvar emptyBlocksCSS;\n
+\n
+\t\t\t// IE10+\n
+\t\t\tif (getDocumentMode() >= 10) {\n
+\t\t\t\temptyBlocksCSS = \'\';\n
+\t\t\t\teach(\'p div h1 h2 h3 h4 h5 h6\'.split(\' \'), function(name, i) {\n
+\t\t\t\t\temptyBlocksCSS += (i > 0 ? \',\' : \'\') + name + \':empty\';\n
+\t\t\t\t});\n
+\n
+\t\t\t\teditor.contentStyles.push(emptyBlocksCSS + \'{padding-right: 1px !important}\');\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Old IE versions can\'t retain contents within noscript elements so this logic will store the contents\n
+\t\t * as a attribute and the insert that value as it\'s raw text when the DOM is serialized.\n
+\t\t */\n
+\t\tfunction keepNoScriptContents() {\n
+\t\t\tif (getDocumentMode() < 9) {\n
+\t\t\t\tparser.addNodeFilter(\'noscript\', function(nodes) {\n
+\t\t\t\t\tvar i = nodes.length, node, textNode;\n
+\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tnode = nodes[i];\n
+\t\t\t\t\t\ttextNode = node.firstChild;\n
+\n
+\t\t\t\t\t\tif (textNode) {\n
+\t\t\t\t\t\t\tnode.attr(\'data-mce-innertext\', textNode.value);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tserializer.addNodeFilter(\'noscript\', function(nodes) {\n
+\t\t\t\t\tvar i = nodes.length, node, textNode, value;\n
+\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tnode = nodes[i];\n
+\t\t\t\t\t\ttextNode = nodes[i].firstChild;\n
+\n
+\t\t\t\t\t\tif (textNode) {\n
+\t\t\t\t\t\t\ttextNode.value = Entities.decode(textNode.value);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t// Old IE can\'t retain noscript value so an attribute is used to store it\n
+\t\t\t\t\t\t\tvalue = node.attributes.map[\'data-mce-innertext\'];\n
+\t\t\t\t\t\t\tif (value) {\n
+\t\t\t\t\t\t\t\tnode.attr(\'data-mce-innertext\', null);\n
+\t\t\t\t\t\t\t\ttextNode = new Node(\'#text\', 3);\n
+\t\t\t\t\t\t\t\ttextNode.value = value;\n
+\t\t\t\t\t\t\t\ttextNode.raw = true;\n
+\t\t\t\t\t\t\t\tnode.append(textNode);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * IE has an issue where you can\'t select/move the caret by clicking outside the body if the document is in standards mode.\n
+\t\t */\n
+\t\tfunction fixCaretSelectionOfDocumentElementOnIe() {\n
+\t\t\tvar doc = dom.doc, body = doc.body, started, startRng, htmlElm;\n
+\n
+\t\t\t// Return range from point or null if it failed\n
+\t\t\tfunction rngFromPoint(x, y) {\n
+\t\t\t\tvar rng = body.createTextRange();\n
+\n
+\t\t\t\ttry {\n
+\t\t\t\t\trng.moveToPoint(x, y);\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// IE sometimes throws and exception, so lets just ignore it\n
+\t\t\t\t\trng = null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn rng;\n
+\t\t\t}\n
+\n
+\t\t\t// Fires while the selection is changing\n
+\t\t\tfunction selectionChange(e) {\n
+\t\t\t\tvar pointRng;\n
+\n
+\t\t\t\t// Check if the button is down or not\n
+\t\t\t\tif (e.button) {\n
+\t\t\t\t\t// Create range from mouse position\n
+\t\t\t\t\tpointRng = rngFromPoint(e.x, e.y);\n
+\n
+\t\t\t\t\tif (pointRng) {\n
+\t\t\t\t\t\t// Check if pointRange is before/after selection then change the endPoint\n
+\t\t\t\t\t\tif (pointRng.compareEndPoints(\'StartToStart\', startRng) > 0) {\n
+\t\t\t\t\t\t\tpointRng.setEndPoint(\'StartToStart\', startRng);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tpointRng.setEndPoint(\'EndToEnd\', startRng);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tpointRng.select();\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tendSelection();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Removes listeners\n
+\t\t\tfunction endSelection() {\n
+\t\t\t\tvar rng = doc.selection.createRange();\n
+\n
+\t\t\t\t// If the range is collapsed then use the last start range\n
+\t\t\t\tif (startRng && !rng.item && rng.compareEndPoints(\'StartToEnd\', rng) === 0) {\n
+\t\t\t\t\tstartRng.select();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdom.unbind(doc, \'mouseup\', endSelection);\n
+\t\t\t\tdom.unbind(doc, \'mousemove\', selectionChange);\n
+\t\t\t\tstartRng = started = 0;\n
+\t\t\t}\n
+\n
+\t\t\t// Make HTML element unselectable since we are going to handle selection by hand\n
+\t\t\tdoc.documentElement.unselectable = true;\n
+\n
+\t\t\t// Detect when user selects outside BODY\n
+\t\t\tdom.bind(doc, \'mousedown contextmenu\', function(e) {\n
+\t\t\t\tif (e.target.nodeName === \'HTML\') {\n
+\t\t\t\t\tif (started) {\n
+\t\t\t\t\t\tendSelection();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Detect vertical scrollbar, since IE will fire a mousedown on the scrollbar and have target set as HTML\n
+\t\t\t\t\thtmlElm = doc.documentElement;\n
+\t\t\t\t\tif (htmlElm.scrollHeight > htmlElm.clientHeight) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tstarted = 1;\n
+\t\t\t\t\t// Setup start position\n
+\t\t\t\t\tstartRng = rngFromPoint(e.x, e.y);\n
+\t\t\t\t\tif (startRng) {\n
+\t\t\t\t\t\t// Listen for selection change events\n
+\t\t\t\t\t\tdom.bind(doc, \'mouseup\', endSelection);\n
+\t\t\t\t\t\tdom.bind(doc, \'mousemove\', selectionChange);\n
+\n
+\t\t\t\t\t\tdom.getRoot().focus();\n
+\t\t\t\t\t\tstartRng.select();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Fixes selection issues where the caret can be placed between two inline elements like <b>a</b>|<b>b</b>\n
+\t\t * this fix will lean the caret right into the closest inline element.\n
+\t\t */\n
+\t\tfunction normalizeSelection() {\n
+\t\t\t// Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i> except for Ctrl+A since it selects everything\n
+\t\t\teditor.on(\'keyup focusin mouseup\', function(e) {\n
+\t\t\t\tif (e.keyCode != 65 || !VK.metaKeyPressed(e)) {\n
+\t\t\t\t\tselection.normalize();\n
+\t\t\t\t}\n
+\t\t\t}, true);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Forces Gecko to render a broken image icon if it fails to load an image.\n
+\t\t */\n
+\t\tfunction showBrokenImageIcon() {\n
+\t\t\teditor.contentStyles.push(\n
+\t\t\t\t\'img:-moz-broken {\' +\n
+\t\t\t\t\t\'-moz-force-broken-image-icon:1;\' +\n
+\t\t\t\t\t\'min-width:24px;\' +\n
+\t\t\t\t\t\'min-height:24px\' +\n
+\t\t\t\t\'}\'\n
+\t\t\t);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * iOS has a bug where it\'s impossible to type if the document has a touchstart event\n
+\t\t * bound and the user touches the document while having the on screen keyboard visible.\n
+\t\t *\n
+\t\t * The touch event moves the focus to the parent document while having the caret inside the iframe\n
+\t\t * this fix moves the focus back into the iframe document.\n
+\t\t */\n
+\t\tfunction restoreFocusOnKeyDown() {\n
+\t\t\tif (!editor.inline) {\n
+\t\t\t\teditor.on(\'keydown\', function() {\n
+\t\t\t\t\tif (document.activeElement == document.body) {\n
+\t\t\t\t\t\teditor.getWin().focus();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * IE 11 has an annoying issue where you can\'t move focus into the editor\n
+\t\t * by clicking on the white area HTML element. We used to be able to to fix this with\n
+\t\t * the fixCaretSelectionOfDocumentElementOnIe fix. But since M$ removed the selection\n
+\t\t * object it\'s not possible anymore. So we need to hack in a ungly CSS to force the\n
+\t\t * body to be at least 150px. If the user clicks the HTML element out side this 150px region\n
+\t\t * we simply move the focus into the first paragraph. Not ideal since you loose the\n
+\t\t * positioning of the caret but goot enough for most cases.\n
+\t\t */\n
+\t\tfunction bodyHeight() {\n
+\t\t\tif (!editor.inline) {\n
+\t\t\t\teditor.contentStyles.push(\'body {min-height: 150px}\');\n
+\t\t\t\teditor.on(\'click\', function(e) {\n
+\t\t\t\t\tif (e.target.nodeName == \'HTML\') {\n
+\t\t\t\t\t\tvar rng;\n
+\n
+\t\t\t\t\t\t// Need to store away non collapsed ranges since the focus call will mess that up see #7382\n
+\t\t\t\t\t\trng = editor.selection.getRng();\n
+\t\t\t\t\t\teditor.getBody().focus();\n
+\t\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t\t\teditor.selection.normalize();\n
+\t\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Firefox on Mac OS will move the browser back to the previous page if you press CMD+Left arrow.\n
+\t\t * You might then loose all your work so we need to block that behavior and replace it with our own.\n
+\t\t */\n
+\t\tfunction blockCmdArrowNavigation() {\n
+\t\t\tif (Env.mac) {\n
+\t\t\t\teditor.on(\'keydown\', function(e) {\n
+\t\t\t\t\tif (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode == 37 || e.keyCode == 39)) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\teditor.selection.getSel().modify(\'move\', e.keyCode == 37 ? \'backward\' : \'forward\', \'lineboundary\');\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Disables the autolinking in IE 9+ this is then re-enabled by the autolink plugin.\n
+\t\t */\n
+\t\tfunction disableAutoUrlDetect() {\n
+\t\t\tsetEditorCommandState("AutoUrlDetect", false);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * IE 11 has a fantastic bug where it will produce two trailing BR elements to iframe bodies when\n
+\t\t * the iframe is hidden by display: none on a parent container. The DOM is actually out of sync\n
+\t\t * with innerHTML in this case. It\'s like IE adds shadow DOM BR elements that appears on innerHTML\n
+\t\t * but not as the lastChild of the body. However is we add a BR element to the body then remove it\n
+\t\t * it doesn\'t seem to add these BR elements makes sence right?!\n
+\t\t *\n
+\t\t * Example of what happens: <body>text</body> becomes <body>text<br><br></body>\n
+\t\t */\n
+\t\tfunction doubleTrailingBrElements() {\n
+\t\t\tif (!editor.inline) {\n
+\t\t\t\teditor.on(\'focus blur beforegetcontent\', function() {\n
+\t\t\t\t\tvar br = editor.dom.create(\'br\');\n
+\t\t\t\t\teditor.getBody().appendChild(br);\n
+\t\t\t\t\tbr.parentNode.removeChild(br);\n
+\t\t\t\t}, true);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * iOS 7.1 introduced two new bugs:\n
+\t\t * 1) It\'s possible to open links within a contentEditable area by clicking on them.\n
+\t\t * 2) If you hold down the finger it will display the link/image touch callout menu.\n
+\t\t */\n
+\t\tfunction tapLinksAndImages() {\n
+\t\t\teditor.on(\'click\', function(e) {\n
+\t\t\t\tvar elm = e.target;\n
+\n
+\t\t\t\tdo {\n
+\t\t\t\t\tif (elm.tagName === \'A\') {\n
+\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t} while ((elm = elm.parentNode));\n
+\t\t\t});\n
+\n
+\t\t\teditor.contentStyles.push(\'.mce-content-body {-webkit-touch-callout: none}\');\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * iOS Safari and possible other browsers have a bug where it won\'t fire\n
+\t\t * a click event when a contentEditable is focused. This function fakes click events\n
+\t\t * by using touchstart/touchend and measuring the time and distance travelled.\n
+\t\t */\n
+\t\t/*\n
+\t\tfunction touchClickEvent() {\n
+\t\t\teditor.on(\'touchstart\', function(e) {\n
+\t\t\t\tvar elm, time, startTouch, changedTouches;\n
+\n
+\t\t\t\telm = e.target;\n
+\t\t\t\ttime = new Date().getTime();\n
+\t\t\t\tchangedTouches = e.changedTouches;\n
+\n
+\t\t\t\tif (!changedTouches || changedTouches.length > 1) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tstartTouch = changedTouches[0];\n
+\n
+\t\t\t\teditor.once(\'touchend\', function(e) {\n
+\t\t\t\t\tvar endTouch = e.changedTouches[0], args;\n
+\n
+\t\t\t\t\tif (new Date().getTime() - time > 500) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (Math.abs(startTouch.clientX - endTouch.clientX) > 5) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (Math.abs(startTouch.clientY - endTouch.clientY) > 5) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\targs = {\n
+\t\t\t\t\t\ttarget: elm\n
+\t\t\t\t\t};\n
+\n
+\t\t\t\t\teach(\'pageX pageY clientX clientY screenX screenY\'.split(\' \'), function(key) {\n
+\t\t\t\t\t\targs[key] = endTouch[key];\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\targs = editor.fire(\'click\', args);\n
+\n
+\t\t\t\t\tif (!args.isDefaultPrevented()) {\n
+\t\t\t\t\t\t// iOS WebKit can\'t place the caret properly once\n
+\t\t\t\t\t\t// you bind touch events so we need to do this manually\n
+\t\t\t\t\t\t// TODO: Expand to the closest word? Touble tap still works.\n
+\t\t\t\t\t\teditor.selection.placeCaretAt(endTouch.clientX, endTouch.clientY);\n
+\t\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t}\n
+\t\t*/\n
+\n
+\t\t/**\n
+\t\t * WebKit has a bug where it will allow forms to be submitted if they are inside a contentEditable element.\n
+\t\t * For example this: <form><button></form>\n
+\t\t */\n
+\t\tfunction blockFormSubmitInsideEditor() {\n
+\t\t\teditor.on(\'init\', function() {\n
+\t\t\t\teditor.dom.bind(editor.getBody(), \'submit\', function(e) {\n
+\t\t\t\t\te.preventDefault();\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Sometimes WebKit/Blink generates BR elements with the Apple-interchange-newline class.\n
+\t\t *\n
+\t\t * Scenario:\n
+\t\t *  1) Create a table 2x2.\n
+\t\t *  2) Select and copy cells A2-B2.\n
+\t\t *  3) Paste and it will add BR element to table cell.\n
+\t\t */\n
+\t\tfunction removeAppleInterchangeBrs() {\n
+\t\t\tparser.addNodeFilter(\'br\', function(nodes) {\n
+\t\t\t\tvar i = nodes.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tif (nodes[i].attr(\'class\') == \'Apple-interchange-newline\') {\n
+\t\t\t\t\t\tnodes[i].remove();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * IE cannot set custom contentType\'s on drag events, and also does not properly drag/drop between\n
+\t\t * editors. This uses a special data:text/mce-internal URL to pass data when drag/drop between editors.\n
+\t\t */\n
+\t\tfunction ieInternalDragAndDrop() {\n
+\t\t\teditor.on(\'dragstart\', function(e) {\n
+\t\t\t\tsetMceInteralContent(e);\n
+\t\t\t});\n
+\n
+\t\t\teditor.on(\'drop\', function(e) {\n
+\t\t\t\tif (!isDefaultPrevented(e)) {\n
+\t\t\t\t\tvar internalContent = getMceInternalContent(e);\n
+\n
+\t\t\t\t\tif (internalContent && internalContent.id != editor.id) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t\tvar rng = RangeUtils.getCaretRangeFromPoint(e.x, e.y, editor.getDoc());\n
+\t\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t\t\tinsertClipboardContents(internalContent.html);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// All browsers\n
+\t\tremoveBlockQuoteOnBackSpace();\n
+\t\temptyEditorWhenDeleting();\n
+\t\tnormalizeSelection();\n
+\n
+\t\t// WebKit\n
+\t\tif (isWebKit) {\n
+\t\t\tcleanupStylesWhenDeleting();\n
+\t\t\tinputMethodFocus();\n
+\t\t\tselectControlElements();\n
+\t\t\tsetDefaultBlockType();\n
+\t\t\tblockFormSubmitInsideEditor();\n
+\t\t\tdisableBackspaceIntoATable();\n
+\t\t\tremoveAppleInterchangeBrs();\n
+\t\t\t//touchClickEvent();\n
+\n
+\t\t\t// iOS\n
+\t\t\tif (Env.iOS) {\n
+\t\t\t\trestoreFocusOnKeyDown();\n
+\t\t\t\tbodyHeight();\n
+\t\t\t\ttapLinksAndImages();\n
+\t\t\t} else {\n
+\t\t\t\tselectAll();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// IE\n
+\t\tif (isIE && Env.ie < 11) {\n
+\t\t\tremoveHrOnBackspace();\n
+\t\t\tensureBodyHasRoleApplication();\n
+\t\t\taddNewLinesBeforeBrInPre();\n
+\t\t\tremovePreSerializedStylesWhenSelectingControls();\n
+\t\t\tdeleteControlItemOnBackSpace();\n
+\t\t\trenderEmptyBlocksFix();\n
+\t\t\tkeepNoScriptContents();\n
+\t\t\tfixCaretSelectionOfDocumentElementOnIe();\n
+\t\t}\n
+\n
+\t\tif (Env.ie >= 11) {\n
+\t\t\tbodyHeight();\n
+\t\t\tdoubleTrailingBrElements();\n
+\t\t\tdisableBackspaceIntoATable();\n
+\t\t}\n
+\n
+\t\tif (Env.ie) {\n
+\t\t\tselectAll();\n
+\t\t\tdisableAutoUrlDetect();\n
+\t\t\tieInternalDragAndDrop();\n
+\t\t}\n
+\n
+\t\t// Gecko\n
+\t\tif (isGecko) {\n
+\t\t\tremoveHrOnBackspace();\n
+\t\t\tfocusBody();\n
+\t\t\tremoveStylesWhenDeletingAcrossBlockElements();\n
+\t\t\tsetGeckoEditingOptions();\n
+\t\t\taddBrAfterLastLinks();\n
+\t\t\tremoveGhostSelection();\n
+\t\t\tshowBrokenImageIcon();\n
+\t\t\tblockCmdArrowNavigation();\n
+\t\t\tdisableBackspaceIntoATable();\n
+\t\t}\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>47300</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Quirks.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

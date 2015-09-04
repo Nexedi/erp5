@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268125.31</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>importcss.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>(function() {\n
+\tvar menuCtrl;\n
+\n
+\tmodule("tinymce.plugins.ImportCSS", {\n
+\t\tsetupModule: function() {\n
+\t\t\tQUnit.stop();\n
+\n
+\t\t\ttinymce.init({\n
+\t\t\t\tselector: "textarea",\n
+\t\t\t\tadd_unload_trigger: false,\n
+\t\t\t\tskin: false,\n
+\t\t\t\tplugins: \'importcss\',\n
+\t\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\t\twindow.editor = ed;\n
+\t\t\t\t\tQUnit.start();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\tteardown: function() {\n
+\t\t\tif (menuCtrl) {\n
+\t\t\t\tmenuCtrl.remove();\n
+\t\t\t\tmenuCtrl = null;\n
+\t\t\t}\n
+\n
+\t\t\teditor.contentCSS = [];\n
+\t\t\tdelete editor.settings.importcss_file_filter;\n
+\t\t\tdelete editor.settings.importcss_merge_classes;\n
+\t\t\tdelete editor.settings.importcss_append;\n
+\t\t\tdelete editor.settings.importcss_selector_filter;\n
+\t\t\tdelete editor.settings.importcss_groups;\n
+\t\t}\n
+\t});\n
+\n
+\tfunction fireFormatsMenuEvent(styleSheets, items) {\n
+\t\tmenuCtrl = tinymce.ui.Factory.create(\'menu\', {\n
+\t\t\titems: items\n
+\t\t}).renderTo(document.getElementById(\'view\'));\n
+\n
+\t\treturn editor.fire(\'renderFormatsMenu\', {\n
+\t\t\tcontrol: menuCtrl,\n
+\t\t\tdoc: {\n
+\t\t\t\tstyleSheets: styleSheets\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tfunction getMenuItemFormat(item) {\n
+\t\treturn editor.formatter.get(item.settings.format)[0];\n
+\t}\n
+\n
+\ttest("Import content_css files", function() {\n
+\t\teditor.contentCSS.push("test1.css");\n
+\t\teditor.contentCSS.push("test2.css");\n
+\n
+\t\tvar evt = fireFormatsMenuEvent([\n
+\t\t\t{\n
+\t\t\t\thref: \'test1.css\',\n
+\t\t\t\tcssRules: [\n
+\t\t\t\t\t{selectorText: \'.a\'},\n
+\t\t\t\t\t{selectorText: \'p.b\'},\n
+\t\t\t\t\t{selectorText: \'img.c\'}\n
+\t\t\t\t]\n
+\t\t\t},\n
+\n
+\t\t\t{href: \'test2.css\', cssRules: [{selectorText: \'.d\'}]},\n
+\t\t\t{href: \'test3.css\',\tcssRules: [{selectorText: \'.e\'}]}\n
+\t\t]);\n
+\n
+\t\tequal(evt.control.items().length, 4);\n
+\n
+\t\tequal(evt.control.items()[0].text(), \'a\');\n
+\t\tequal(getMenuItemFormat(evt.control.items()[0]).classes, \'a\');\n
+\n
+\t\tequal(evt.control.items()[1].text(), \'p.b\');\n
+\t\tequal(getMenuItemFormat(evt.control.items()[1]).block, \'p\');\n
+\t\tequal(getMenuItemFormat(evt.control.items()[1]).classes, \'b\');\n
+\n
+\t\tequal(evt.control.items()[2].text(), \'img.c\');\n
+\t\tequal(getMenuItemFormat(evt.control.items()[2]).selector, \'img\');\n
+\t\tequal(getMenuItemFormat(evt.control.items()[2]).classes, \'c\');\n
+\n
+\t\tequal(evt.control.items()[3].text(), \'d\');\n
+\t});\n
+\n
+\ttest("Import custom importcss_merge_classes: false", function() {\n
+\t\teditor.contentCSS.push("test.css");\n
+\t\teditor.settings.importcss_merge_classes = false;\n
+\n
+\t\tvar evt = fireFormatsMenuEvent([\n
+\t\t\t{href: \'test.css\', cssRules: [{selectorText: \'.a\'}]}\n
+\t\t]);\n
+\n
+\t\tequal(evt.control.items().length, 1);\n
+\t\tdeepEqual(getMenuItemFormat(evt.control.items()[0]).attributes, {"class": "a"});\n
+\t});\n
+\n
+\ttest("Import custom importcss_append: true", function() {\n
+\t\teditor.contentCSS.push("test.css");\n
+\t\teditor.settings.importcss_append = true;\n
+\n
+\t\tvar evt = fireFormatsMenuEvent([\n
+\t\t\t{href: \'test.css\', cssRules: [{selectorText: \'.b\'}]}\n
+\t\t], {text: \'a\'});\n
+\n
+\t\tequal(evt.control.items().length, 2);\n
+\t\tequal(evt.control.items()[0].text(), \'a\');\n
+\t\tequal(evt.control.items()[1].text(), \'b\');\n
+\t});\n
+\n
+\ttest("Import custom importcss_selector_filter (string)", function() {\n
+\t\teditor.contentCSS.push("test1.css");\n
+\t\teditor.settings.importcss_selector_filter = ".a";\n
+\n
+\t\tvar evt = fireFormatsMenuEvent([\n
+\t\t\t{href: \'test1.css\', cssRules: [\n
+\t\t\t\t{selectorText: \'.a\'},\n
+\t\t\t\t{selectorText: \'.b\'}\n
+\t\t\t]},\n
+\t\t]);\n
+\n
+\t\tequal(evt.control.items().length, 1);\n
+\t\tequal(evt.control.items()[0].text(), \'a\');\n
+\t});\n
+\n
+\ttest("Import custom importcss_selector_filter (function)", function() {\n
+\t\teditor.contentCSS.push("test1.css");\n
+\t\teditor.settings.importcss_selector_filter = function(selector) {\n
+\t\t\treturn selector === ".a";\n
+\t\t};\n
+\n
+\t\tvar evt = fireFormatsMenuEvent([\n
+\t\t\t{href: \'test1.css\', cssRules: [\n
+\t\t\t\t{selectorText: \'.a\'},\n
+\t\t\t\t{selectorText: \'.b\'}\n
+\t\t\t]},\n
+\t\t]);\n
+\n
+\t\tequal(evt.control.items().length, 1);\n
+\t\tequal(evt.control.items()[0].text(), \'a\');\n
+\t});\n
+\n
+\ttest("Import custom importcss_selector_filter (regexp)", function() {\n
+\t\teditor.contentCSS.push("test1.css");\n
+\t\teditor.settings.importcss_selector_filter = /a/;\n
+\n
+\t\tvar evt = fireFormatsMenuEvent([\n
+\t\t\t{href: \'test1.css\', cssRules: [\n
+\t\t\t\t{selectorText: \'.a\'},\n
+\t\t\t\t{selectorText: \'.b\'}\n
+\t\t\t]},\n
+\t\t]);\n
+\n
+\t\tequal(evt.control.items().length, 1);\n
+\t\tequal(evt.control.items()[0].text(), \'a\');\n
+\t});\n
+\n
+\ttest("Import custom importcss_groups", function() {\n
+\t\teditor.contentCSS.push("test1.css");\n
+\t\teditor.settings.importcss_groups = [\n
+\t\t\t{title: \'g1\', filter: /a/},\n
+\t\t\t{title: \'g2\', filter: /b/},\n
+\t\t\t{title: \'g3\'}\n
+\t\t];\n
+\n
+\t\tvar evt = fireFormatsMenuEvent([\n
+\t\t\t{href: \'test1.css\', cssRules: [\n
+\t\t\t\t{selectorText: \'.a\'},\n
+\t\t\t\t{selectorText: \'.b\'},\n
+\t\t\t\t{selectorText: \'.c\'}\n
+\t\t\t]},\n
+\t\t]);\n
+\n
+\t\tequal(evt.control.items().length, 3);\n
+\t\tequal(evt.control.items()[0].text(), \'g1\');\n
+\t\tequal(evt.control.items()[0].settings.menu[0].text, \'a\');\n
+\t\tequal(evt.control.items()[1].text(), \'g2\');\n
+\t\tequal(evt.control.items()[1].settings.menu[0].text, \'b\');\n
+\t\tequal(evt.control.items()[2].text(), \'g3\');\n
+\t\tequal(evt.control.items()[2].settings.menu[0].text, \'c\');\n
+\t});\n
+\n
+\ttest("Import custom importcss_file_filter (string)", function() {\n
+\t\teditor.contentCSS.push("test1.css");\n
+\t\teditor.settings.importcss_file_filter = "test2.css";\n
+\n
+\t\tvar evt = fireFormatsMenuEvent([\n
+\t\t\t{href: \'test1.css\', cssRules: [{selectorText: \'.a\'}]},\n
+\t\t\t{href: \'test2.css\', cssRules: [{selectorText: \'.b\'}]}\n
+\t\t]);\n
+\n
+\t\tequal(evt.control.items().length, 1);\n
+\t\tequal(evt.control.items()[0].text(), \'b\');\n
+\t});\n
+\n
+\ttest("Import custom importcss_file_filter (function)", function() {\n
+\t\teditor.contentCSS.push("test1.css");\n
+\t\teditor.settings.importcss_file_filter = function(href) {\n
+\t\t\treturn href === "test2.css";\n
+\t\t};\n
+\n
+\t\tvar evt = fireFormatsMenuEvent([\n
+\t\t\t{href: \'test1.css\', cssRules: [{selectorText: \'.a\'}]},\n
+\t\t\t{href: \'test2.css\', cssRules: [{selectorText: \'.b\'}]}\n
+\t\t]);\n
+\n
+\t\tequal(evt.control.items().length, 1);\n
+\t\tequal(evt.control.items()[0].text(), \'b\');\n
+\t});\n
+\n
+\ttest("Import custom importcss_file_filter (regexp)", function() {\n
+\t\teditor.contentCSS.push("test1.css");\n
+\t\teditor.settings.importcss_file_filter = /test2\\.css/;\n
+\n
+\t\tvar evt = fireFormatsMenuEvent([\n
+\t\t\t{href: \'test1.css\', cssRules: [{selectorText: \'.a\'}]},\n
+\t\t\t{href: \'test2.css\', cssRules: [{selectorText: \'.b\'}]}\n
+\t\t]);\n
+\n
+\t\tequal(evt.control.items().length, 1);\n
+\t\tequal(evt.control.items()[0].text(), \'b\');\n
+\t});\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6090</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>importcss.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268339.26</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>StackLayout.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * StackLayout.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This layout uses the browsers layout when the items are blocks.\n
+ *\n
+ * @-x-less StackLayout.less\n
+ * @class tinymce.ui.StackLayout\n
+ * @extends tinymce.ui.FlowLayout\n
+ */\n
+define("tinymce/ui/StackLayout", [\n
+\t"tinymce/ui/FlowLayout"\n
+], function(FlowLayout) {\n
+\t"use strict";\n
+\n
+\treturn FlowLayout.extend({\n
+\t\tDefaults: {\n
+\t\t\tcontainerClass: \'stack-layout\',\n
+\t\t\tcontrolClass: \'stack-layout-item\',\n
+\t\t\tendClass: \'break\'\n
+\t\t},\n
+\n
+\t\tisNative: function() {\n
+\t\t\treturn true;\n
+\t\t}\n
+\t});\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>691</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>StackLayout.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,337 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268291.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EventDispatcher.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * EventDispatcher.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class lets you add/remove and fire events by name on the specified scope. This makes\n
+ * it easy to add event listener logic to any class.\n
+ *\n
+ * @class tinymce.util.EventDispatcher\n
+ * @example\n
+ *  var eventDispatcher = new EventDispatcher();\n
+ *\n
+ *  eventDispatcher.on(\'click\', function() {console.log(\'data\');});\n
+ *  eventDispatcher.fire(\'click\', {data: 123});\n
+ */\n
+define("tinymce/util/EventDispatcher", [\n
+\t"tinymce/util/Tools"\n
+], function(Tools) {\n
+\tvar nativeEvents = Tools.makeMap(\n
+\t\t"focus blur focusin focusout click dblclick mousedown mouseup mousemove mouseover beforepaste paste cut copy selectionchange " +\n
+\t\t"mouseout mouseenter mouseleave wheel keydown keypress keyup input contextmenu dragstart dragend dragover " +\n
+\t\t"draggesture dragdrop drop drag submit " +\n
+\t\t"compositionstart compositionend compositionupdate touchstart touchend",\n
+\t\t\' \'\n
+\t);\n
+\n
+\tfunction Dispatcher(settings) {\n
+\t\tvar self = this, scope, bindings = {}, toggleEvent;\n
+\n
+\t\tfunction returnFalse() {\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\tfunction returnTrue() {\n
+\t\t\treturn true;\n
+\t\t}\n
+\n
+\t\tsettings = settings || {};\n
+\t\tscope = settings.scope || self;\n
+\t\ttoggleEvent = settings.toggleEvent || returnFalse;\n
+\n
+\t\t/**\n
+\t\t * Fires the specified event by name.\n
+\t\t *\n
+\t\t * @method fire\n
+\t\t * @param {String} name Name of the event to fire.\n
+\t\t * @param {Object?} args Event arguments.\n
+\t\t * @return {Object} Event args instance passed in.\n
+\t\t * @example\n
+\t\t * instance.fire(\'event\', {...});\n
+\t\t */\n
+\t\tfunction fire(name, args) {\n
+\t\t\tvar handlers, i, l, callback;\n
+\n
+\t\t\tname = name.toLowerCase();\n
+\t\t\targs = args || {};\n
+\t\t\targs.type = name;\n
+\n
+\t\t\t// Setup target is there isn\'t one\n
+\t\t\tif (!args.target) {\n
+\t\t\t\targs.target = scope;\n
+\t\t\t}\n
+\n
+\t\t\t// Add event delegation methods if they are missing\n
+\t\t\tif (!args.preventDefault) {\n
+\t\t\t\t// Add preventDefault method\n
+\t\t\t\targs.preventDefault = function() {\n
+\t\t\t\t\targs.isDefaultPrevented = returnTrue;\n
+\t\t\t\t};\n
+\n
+\t\t\t\t// Add stopPropagation\n
+\t\t\t\targs.stopPropagation = function() {\n
+\t\t\t\t\targs.isPropagationStopped = returnTrue;\n
+\t\t\t\t};\n
+\n
+\t\t\t\t// Add stopImmediatePropagation\n
+\t\t\t\targs.stopImmediatePropagation = function() {\n
+\t\t\t\t\targs.isImmediatePropagationStopped = returnTrue;\n
+\t\t\t\t};\n
+\n
+\t\t\t\t// Add event delegation states\n
+\t\t\t\targs.isDefaultPrevented = returnFalse;\n
+\t\t\t\targs.isPropagationStopped = returnFalse;\n
+\t\t\t\targs.isImmediatePropagationStopped = returnFalse;\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.beforeFire) {\n
+\t\t\t\tsettings.beforeFire(args);\n
+\t\t\t}\n
+\n
+\t\t\thandlers = bindings[name];\n
+\t\t\tif (handlers) {\n
+\t\t\t\tfor (i = 0, l = handlers.length; i < l; i++) {\n
+\t\t\t\t\tcallback = handlers[i];\n
+\n
+\t\t\t\t\t// Unbind handlers marked with "once"\n
+\t\t\t\t\tif (callback.once) {\n
+\t\t\t\t\t\toff(name, callback.func);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Stop immediate propagation if needed\n
+\t\t\t\t\tif (args.isImmediatePropagationStopped()) {\n
+\t\t\t\t\t\targs.stopPropagation();\n
+\t\t\t\t\t\treturn args;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// If callback returns false then prevent default and stop all propagation\n
+\t\t\t\t\tif (callback.func.call(scope, args) === false) {\n
+\t\t\t\t\t\targs.preventDefault();\n
+\t\t\t\t\t\treturn args;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn args;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Binds an event listener to a specific event by name.\n
+\t\t *\n
+\t\t * @method on\n
+\t\t * @param {String} name Event name or space separated list of events to bind.\n
+\t\t * @param {callback} callback Callback to be executed when the event occurs.\n
+\t\t * @param {Boolean} first Optional flag if the event should be prepended. Use this with care.\n
+\t\t * @return {Object} Current class instance.\n
+\t\t * @example\n
+\t\t * instance.on(\'event\', function(e) {\n
+\t\t *     // Callback logic\n
+\t\t * });\n
+\t\t */\n
+\t\tfunction on(name, callback, prepend, extra) {\n
+\t\t\tvar handlers, names, i;\n
+\n
+\t\t\tif (callback === false) {\n
+\t\t\t\tcallback = returnFalse;\n
+\t\t\t}\n
+\n
+\t\t\tif (callback) {\n
+\t\t\t\tcallback = {\n
+\t\t\t\t\tfunc: callback\n
+\t\t\t\t};\n
+\n
+\t\t\t\tif (extra) {\n
+\t\t\t\t\tTools.extend(callback, extra);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnames = name.toLowerCase().split(\' \');\n
+\t\t\t\ti = names.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tname = names[i];\n
+\t\t\t\t\thandlers = bindings[name];\n
+\t\t\t\t\tif (!handlers) {\n
+\t\t\t\t\t\thandlers = bindings[name] = [];\n
+\t\t\t\t\t\ttoggleEvent(name, true);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (prepend) {\n
+\t\t\t\t\t\thandlers.unshift(callback);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\thandlers.push(callback);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Unbinds an event listener to a specific event by name.\n
+\t\t *\n
+\t\t * @method off\n
+\t\t * @param {String?} name Name of the event to unbind.\n
+\t\t * @param {callback?} callback Callback to unbind.\n
+\t\t * @return {Object} Current class instance.\n
+\t\t * @example\n
+\t\t * // Unbind specific callback\n
+\t\t * instance.off(\'event\', handler);\n
+\t\t *\n
+\t\t * // Unbind all listeners by name\n
+\t\t * instance.off(\'event\');\n
+\t\t *\n
+\t\t * // Unbind all events\n
+\t\t * instance.off();\n
+\t\t */\n
+\t\tfunction off(name, callback) {\n
+\t\t\tvar i, handlers, bindingName, names, hi;\n
+\n
+\t\t\tif (name) {\n
+\t\t\t\tnames = name.toLowerCase().split(\' \');\n
+\t\t\t\ti = names.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tname = names[i];\n
+\t\t\t\t\thandlers = bindings[name];\n
+\n
+\t\t\t\t\t// Unbind all handlers\n
+\t\t\t\t\tif (!name) {\n
+\t\t\t\t\t\tfor (bindingName in bindings) {\n
+\t\t\t\t\t\t\ttoggleEvent(bindingName, false);\n
+\t\t\t\t\t\t\tdelete bindings[bindingName];\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn self;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (handlers) {\n
+\t\t\t\t\t\t// Unbind all by name\n
+\t\t\t\t\t\tif (!callback) {\n
+\t\t\t\t\t\t\thandlers.length = 0;\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t// Unbind specific ones\n
+\t\t\t\t\t\t\thi = handlers.length;\n
+\t\t\t\t\t\t\twhile (hi--) {\n
+\t\t\t\t\t\t\t\tif (handlers[hi].func === callback) {\n
+\t\t\t\t\t\t\t\t\thandlers = handlers.slice(0, hi).concat(handlers.slice(hi + 1));\n
+\t\t\t\t\t\t\t\t\tbindings[name] = handlers;\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (!handlers.length) {\n
+\t\t\t\t\t\t\ttoggleEvent(name, false);\n
+\t\t\t\t\t\t\tdelete bindings[name];\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tfor (name in bindings) {\n
+\t\t\t\t\ttoggleEvent(name, false);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tbindings = {};\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Binds an event listener to a specific event by name\n
+\t\t * and automatically unbind the event once the callback fires.\n
+\t\t *\n
+\t\t * @method once\n
+\t\t * @param {String} name Event name or space separated list of events to bind.\n
+\t\t * @param {callback} callback Callback to be executed when the event occurs.\n
+\t\t * @param {Boolean} first Optional flag if the event should be prepended. Use this with care.\n
+\t\t * @return {Object} Current class instance.\n
+\t\t * @example\n
+\t\t * instance.once(\'event\', function(e) {\n
+\t\t *     // Callback logic\n
+\t\t * });\n
+\t\t */\n
+\t\tfunction once(name, callback, prepend) {\n
+\t\t\treturn on(name, callback, prepend, {once: true});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the dispatcher has a event of the specified name.\n
+\t\t *\n
+\t\t * @method has\n
+\t\t * @param {String} name Name of the event to check for.\n
+\t\t * @return {Boolean} true/false if the event exists or not.\n
+\t\t */\n
+\t\tfunction has(name) {\n
+\t\t\tname = name.toLowerCase();\n
+\t\t\treturn !(!bindings[name] || bindings[name].length === 0);\n
+\t\t}\n
+\n
+\t\t// Expose\n
+\t\tself.fire = fire;\n
+\t\tself.on = on;\n
+\t\tself.off = off;\n
+\t\tself.once = once;\n
+\t\tself.has = has;\n
+\t}\n
+\n
+\t/**\n
+\t * Returns true/false if the specified event name is a native browser event or not.\n
+\t *\n
+\t * @method isNative\n
+\t * @param {String} name Name to check if it\'s native.\n
+\t * @return {Boolean} true/false if the event is native or not.\n
+\t * @static\n
+\t */\n
+\tDispatcher.isNative = function(name) {\n
+\t\treturn !!nativeEvents[name.toLowerCase()];\n
+\t};\n
+\n
+\treturn Dispatcher;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7333</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EventDispatcher.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

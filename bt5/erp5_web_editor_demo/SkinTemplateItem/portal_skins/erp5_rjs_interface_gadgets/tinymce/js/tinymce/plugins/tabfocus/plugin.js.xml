@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268457.9</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'tabfocus\', function(editor) {\n
+\tvar DOM = tinymce.DOM, each = tinymce.each, explode = tinymce.explode;\n
+\n
+\tfunction tabCancel(e) {\n
+\t\tif (e.keyCode === 9 && !e.ctrlKey && !e.altKey && !e.metaKey) {\n
+\t\t\te.preventDefault();\n
+\t\t}\n
+\t}\n
+\n
+\tfunction tabHandler(e) {\n
+\t\tvar x, el, v, i;\n
+\n
+\t\tif (e.keyCode !== 9 || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tfunction find(direction) {\n
+\t\t\tel = DOM.select(\':input:enabled,*[tabindex]:not(iframe)\');\n
+\n
+\t\t\tfunction canSelectRecursive(e) {\n
+\t\t\t\treturn e.nodeName === "BODY" || (e.type != \'hidden\' &&\n
+\t\t\t\t\te.style.display != "none" &&\n
+\t\t\t\t\te.style.visibility != "hidden" && canSelectRecursive(e.parentNode));\n
+\t\t\t}\n
+\n
+\t\t\tfunction canSelect(el) {\n
+\t\t\t\treturn /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && tinymce.get(e.id) && el.tabIndex != -1 && canSelectRecursive(el);\n
+\t\t\t}\n
+\n
+\t\t\teach(el, function(e, i) {\n
+\t\t\t\tif (e.id == editor.id) {\n
+\t\t\t\t\tx = i;\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t\tif (direction > 0) {\n
+\t\t\t\tfor (i = x + 1; i < el.length; i++) {\n
+\t\t\t\t\tif (canSelect(el[i])) {\n
+\t\t\t\t\t\treturn el[i];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tfor (i = x - 1; i >= 0; i--) {\n
+\t\t\t\t\tif (canSelect(el[i])) {\n
+\t\t\t\t\t\treturn el[i];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn null;\n
+\t\t}\n
+\n
+\t\tv = explode(editor.getParam(\'tab_focus\', editor.getParam(\'tabfocus_elements\', \':prev,:next\')));\n
+\n
+\t\tif (v.length == 1) {\n
+\t\t\tv[1] = v[0];\n
+\t\t\tv[0] = \':prev\';\n
+\t\t}\n
+\n
+\t\t// Find element to focus\n
+\t\tif (e.shiftKey) {\n
+\t\t\tif (v[0] == \':prev\') {\n
+\t\t\t\tel = find(-1);\n
+\t\t\t} else {\n
+\t\t\t\tel = DOM.get(v[0]);\n
+\t\t\t}\n
+\t\t} else {\n
+\t\t\tif (v[1] == \':next\') {\n
+\t\t\t\tel = find(1);\n
+\t\t\t} else {\n
+\t\t\t\tel = DOM.get(v[1]);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tif (el) {\n
+\t\t\tvar focusEditor = tinymce.get(el.id || el.name);\n
+\n
+\t\t\tif (el.id && focusEditor) {\n
+\t\t\t\tfocusEditor.focus();\n
+\t\t\t} else {\n
+\t\t\t\twindow.setTimeout(function() {\n
+\t\t\t\t\tif (!tinymce.Env.webkit) {\n
+\t\t\t\t\t\twindow.focus();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tel.focus();\n
+\t\t\t\t}, 10);\n
+\t\t\t}\n
+\n
+\t\t\te.preventDefault();\n
+\t\t}\n
+\t}\n
+\n
+\teditor.on(\'init\', function() {\n
+\t\tif (editor.inline) {\n
+\t\t\t// Remove default tabIndex in inline mode\n
+\t\t\ttinymce.DOM.setAttrib(editor.getBody(), \'tabIndex\', null);\n
+\t\t}\n
+\n
+\t\teditor.on(\'keyup\', tabCancel);\n
+\n
+\t\tif (tinymce.Env.gecko) {\n
+\t\t\teditor.on(\'keypress keydown\', tabHandler);\n
+\t\t} else {\n
+\t\t\teditor.on(\'keydown\', tabHandler);\n
+\t\t}\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2493</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

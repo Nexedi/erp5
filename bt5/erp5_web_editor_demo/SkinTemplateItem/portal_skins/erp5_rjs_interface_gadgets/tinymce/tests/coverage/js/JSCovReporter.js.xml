@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268245.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>JSCovReporter.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+JSCovFileReporter = Backbone.View.extend({\n
+    initialize: function () {\n
+        _.bindAll(this);\n
+        this.open  = \'<tr class="{class}"><td class="line">{line_number}</td><td class="hits">{count}</td><td class="source">\';\n
+        this.close = \'</td></tr>\';\n
+\n
+        this.coverObject = this.options.coverObject;\n
+\n
+        this.error = 0;\n
+        this.pass = 0;\n
+        this.total = 0;\n
+    },\n
+\n
+    // substitute credits: MooTools\n
+    substitute: function(string, object){\n
+        return string.replace(/\\\\?\\{([^{}]+)\\}/g, function(match, name){\n
+            if (match.charAt(0) == \'\\\\\') return match.slice(1);\n
+            return (object[name] !== null) ? object[name] : \'\';\n
+        });\n
+    },\n
+\n
+    generateClose: function(count){\n
+        return this.substitute(this.close, {\n
+            count: count\n
+        });\n
+    },\n
+\n
+    generateOpen: function(hit_count, line_number){\n
+        return this.substitute(this.open, {\n
+            \'count\': hit_count,\n
+            \'line_number\': line_number,\n
+            \'class\': hit_count ? \'hit\' : \'miss\'\n
+        });\n
+    },\n
+\n
+    report: function () {\n
+        var thisview = this;\n
+        var i, l, k;\n
+\n
+        var code = this.coverObject.__code;\n
+\n
+        // generate array of all tokens\n
+        var codez = [];\n
+        for (i = 0, l = code.length; i < l; i++){\n
+            codez.push({\n
+                pos: i,\n
+                value: code.slice(i, i + 1)\n
+            });\n
+        }\n
+\n
+        // CoverObject has keys like "12:200" which means from char 12 to 200\n
+        // This orders all first gaps in a list of dictionaries to ease drawing table lines\n
+        var gaps = Object.keys(this.coverObject);\n
+        gaps = _.without(gaps, \'__code\');\n
+        var first_gaps = _.map(gaps, function ( gap ) {\n
+            return {\n
+                gap: parseInt(gap.split(\':\')[0], 10),\n
+                hit_count: thisview.coverObject[gap]\n
+            };\n
+        }).sort(function (a, b) {\n
+            if (a[\'gap\'] > b[\'gap\']) return 1;\n
+            if (b[\'gap\'] > a[\'gap\']) return -1;\n
+            return 0;\n
+        });\n
+\n
+        var second_gaps = _.map(gaps, function ( gap ) {\n
+            return {\n
+                gap: parseInt(gap.split(\':\')[1], 10),\n
+                hit_count: thisview.coverObject[gap]\n
+            };\n
+        }).sort(function (a, b) {\n
+            if (a[\'gap\'] > b[\'gap\']) return 1;\n
+            if (b[\'gap\'] > a[\'gap\']) return -1;\n
+            return 0;\n
+        });\n
+\n
+\n
+        // If it doesn\'t start from 0 it\'s because there are comments in the beginning\n
+        // We add a initial gap with one hit\n
+        if (first_gaps[0] !== 0) {\n
+            first_gaps.splice(0, 0, {gap: 0, hit_count: 1});\n
+        }\n
+\n
+        var result = \'\';\n
+        var number_trailing_whitespaces = 0;\n
+        var trailing_whitespaces = \'\';\n
+\n
+\n
+        // We will go from one gap to the next wrapping them in table lines\n
+        for (i=0, l = first_gaps.length; i < l; i++){\n
+\n
+            var hit_count = first_gaps[i][\'hit_count\'];\n
+\n
+            this.total++;\n
+            if (hit_count) this.pass++;\n
+            else this.error++;\n
+\n
+            var limit = null;\n
+            if (i+1 >= l) {\n
+                limit = codez.length;\n
+            }\n
+            else {\n
+                limit = first_gaps[i+1][\'gap\'];\n
+            }\n
+\n
+            // Table line opening\n
+            result += this.generateOpen(hit_count, this.total);\n
+\n
+            // Add trailing white space if it existed from previous line without carriage returns\n
+            if (number_trailing_whitespaces > 0 ) {\n
+                result += trailing_whitespaces.replace(/(\\r\\n|\\n|\\r)/gm,"");\n
+            }\n
+\n
+            // Add lines of code without initial white spaces, and replacing conflictive chars\n
+            result += _.map(codez.slice(first_gaps[i][\'gap\'], limit), function (loc) {\n
+                return loc[\'value\'];\n
+            }).join(\'\').trimLeft().replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\');\n
+\n
+            // Count trailing white spaces for future line, then remove them\n
+            var matches = result.match(/(\\s+)$/);\n
+            result = result.trimRight();\n
+\n
+            if (matches !== null) {\n
+                number_trailing_whitespaces = matches[0].length;\n
+                trailing_whitespaces = matches[0];\n
+            }\n
+            else {\n
+                number_trailing_whitespaces = 0;\n
+            }\n
+\n
+            // Generate table line closing\n
+            result += this.generateClose(hit_count);\n
+        }\n
+\n
+        return result;\n
+    }\n
+});\n
+\n
+\n
+JSCovReporter = Backbone.View.extend({\n
+    initialize: function () {\n
+        this.coverObject = this.options.coverObject;\n
+\n
+        // Generate the report\n
+        this.report();\n
+\n
+        // Activate reporter.js scrolling UX\n
+        onload();\n
+    },\n
+\n
+    report: function () {\n
+        var result = \'\';\n
+        var index = \'\';\n
+\n
+        for (var file in this.coverObject) {\n
+            var fileReporter = new JSCovFileReporter({ coverObject: this.coverObject[file] });\n
+\n
+            var fileReport = fileReporter.report();\n
+            var percentage = Math.round(fileReporter.pass / fileReporter.total * 100);\n
+\n
+            this.error += fileReporter.error;\n
+            this.pass  += fileReporter.pass;\n
+            this.total += fileReporter.total;\n
+\n
+            var type_coverage = "high";\n
+            if (percentage < 75 && percentage >= 50) {\n
+                type_coverage = \'medium\';\n
+            }\n
+            else if (percentage < 50 && percentage >= 25) {\n
+                type_coverage = \'low\';\n
+            }\n
+            else if (percentage < 25) {\n
+                type_coverage = \'terrible\';\n
+            }\n
+\n
+            // Title\n
+            result += \'<h2 id="\' + file + \'" class="file-title">\' + file + \'</h2>\';\n
+            // Stats\n
+            result += \'<div class="stats \' + type_coverage + \'"><div class="percentage">\'+ percentage + \'%</div>\';\n
+            result += \'<div class="sloc">\' + fileReporter.total + \'</div><div class="hits">\' + fileReporter.pass + \'</div>\';\n
+            result += \'<div class="misses">\' + fileReporter.error + \'</div></div>\';\n
+            // Report\n
+            result += \'<div class="file-report">\';\n
+            result += \'<table id="source"><tbody>\' + fileReport + \'</tbody></table>\';\n
+            result += \'</div>\';\n
+\n
+            // Menu index\n
+            index += \'<li><span class="cov \' + type_coverage + \'">\' + percentage + \'</span><a href="#\' + file+ \'">\' + file + \'</a></li>\';\n
+        }\n
+\n
+        $(\'#coverage\').html(result);\n
+        $(\'#menu\').html(\'<ul id="toc">\' + index + \'</ul>\');\n
+    }\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6462</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>JSCovReporter.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

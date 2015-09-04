@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268648.13</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Icons.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* Icons */\n
+\n
+@font-face {\n
+\tfont-family: \'tinymce\';\n
+\tsrc:url(\'fonts/tinymce.eot\');\n
+\tsrc:url(\'fonts/tinymce.eot?#iefix\') format(\'embedded-opentype\'),\n
+\t\turl(\'fonts/tinymce.woff\') format(\'woff\'),\n
+\t\turl(\'fonts/tinymce.ttf\') format(\'truetype\'),\n
+\t\turl(\'fonts/tinymce.svg#tinymce\') format(\'svg\');\n
+\tfont-weight: normal;\n
+\tfont-style: normal;\n
+}\n
+\n
+@font-face {\n
+\tfont-family: \'tinymce-small\';\n
+\tsrc:url(\'fonts/tinymce-small.eot\');\n
+\tsrc:url(\'fonts/tinymce-small.eot?#iefix\') format(\'embedded-opentype\'),\n
+\t\turl(\'fonts/tinymce-small.woff\') format(\'woff\'),\n
+\t\turl(\'fonts/tinymce-small.ttf\') format(\'truetype\'),\n
+\t\turl(\'fonts/tinymce-small.svg#tinymce\') format(\'svg\');\n
+\tfont-weight: normal;\n
+\tfont-style: normal;\n
+}\n
+\n
+@iconSize: 16px;\n
+\n
+.@{prefix}-ico {\n
+\tfont-family: \'tinymce\', Arial;\n
+\tfont-style: normal;\n
+\tfont-weight: normal;\n
+\tfont-variant: normal;\n
+\tfont-size: @iconSize;\n
+\tline-height: 16px;\n
+\tspeak: none;\n
+\tvertical-align: text-top;\n
+\t-webkit-font-smoothing: antialiased;\n
+\t-moz-osx-font-smoothing: grayscale;\n
+\n
+\tdisplay: inline-block;\n
+\tbackground: transparent center center;\n
+\tbackground-size: cover;\n
+\twidth: 16px;\n
+\theight: 16px;\n
+\tcolor: @btn-text;\n
+}\n
+\n
+.@{prefix}-btn-small .@{prefix}-ico {\n
+\tfont-family: \'tinymce-small\', Arial;\n
+}\n
+\n
+.@{prefix}-i-save:before           { content: "\\e000"; }\n
+.@{prefix}-i-newdocument:before    { content: "\\e001"; }\n
+.@{prefix}-i-fullpage:before       { content: "\\e002"; }\n
+.@{prefix}-i-alignleft:before      { content: "\\e003"; }\n
+.@{prefix}-i-aligncenter:before    { content: "\\e004"; }\n
+.@{prefix}-i-alignright:before     { content: "\\e005"; }\n
+.@{prefix}-i-alignjustify:before   { content: "\\e006"; }\n
+.@{prefix}-i-alignnone:before      { content: "\\e003"; }\n
+.@{prefix}-i-cut:before            { content: "\\e007"; }\n
+.@{prefix}-i-paste:before          { content: "\\e008"; }\n
+.@{prefix}-i-searchreplace:before  { content: "\\e009"; }\n
+.@{prefix}-i-bullist:before        { content: "\\e00a"; }\n
+.@{prefix}-i-numlist:before        { content: "\\e00b"; }\n
+.@{prefix}-i-indent:before         { content: "\\e00c"; }\n
+.@{prefix}-i-outdent:before        { content: "\\e00d"; }\n
+.@{prefix}-i-blockquote:before     { content: "\\e00e"; }\n
+.@{prefix}-i-undo:before           { content: "\\e00f"; }\n
+.@{prefix}-i-redo:before           { content: "\\e010"; }\n
+.@{prefix}-i-link:before           { content: "\\e011"; }\n
+.@{prefix}-i-unlink:before         { content: "\\e012"; }\n
+.@{prefix}-i-anchor:before         { content: "\\e013"; }\n
+.@{prefix}-i-image:before          { content: "\\e014"; }\n
+.@{prefix}-i-media:before          { content: "\\e015"; }\n
+.@{prefix}-i-help:before           { content: "\\e016"; }\n
+.@{prefix}-i-code:before           { content: "\\e017"; }\n
+.@{prefix}-i-insertdatetime:before { content: "\\e018"; }\n
+.@{prefix}-i-preview:before        { content: "\\e019"; }\n
+.@{prefix}-i-forecolor:before      { content: "\\e01a"; }\n
+.@{prefix}-i-backcolor:before      { content: "\\e01a"; }\n
+.@{prefix}-i-table:before          { content: "\\e01b"; }\n
+.@{prefix}-i-hr:before             { content: "\\e01c"; }\n
+.@{prefix}-i-removeformat:before   { content: "\\e01d"; }\n
+.@{prefix}-i-subscript:before      { content: "\\e01e"; }\n
+.@{prefix}-i-superscript:before    { content: "\\e01f"; }\n
+.@{prefix}-i-charmap:before        { content: "\\e020"; }\n
+.@{prefix}-i-emoticons:before      { content: "\\e021"; }\n
+.@{prefix}-i-print:before          { content: "\\e022"; }\n
+.@{prefix}-i-fullscreen:before     { content: "\\e023"; }\n
+.@{prefix}-i-spellchecker:before   { content: "\\e024"; }\n
+.@{prefix}-i-nonbreaking:before    { content: "\\e025"; }\n
+.@{prefix}-i-template:before       { content: "\\e026"; }\n
+.@{prefix}-i-pagebreak:before      { content: "\\e027"; }\n
+.@{prefix}-i-restoredraft:before   { content: "\\e028"; }\n
+.@{prefix}-i-untitled:before       { content: "\\e029"; }\n
+.@{prefix}-i-bold:before           { content: "\\e02a"; }\n
+.@{prefix}-i-italic:before         { content: "\\e02b"; }\n
+.@{prefix}-i-underline:before      { content: "\\e02c"; }\n
+.@{prefix}-i-strikethrough:before  { content: "\\e02d"; }\n
+.@{prefix}-i-visualchars:before    { content: "\\e02e"; }\n
+.@{prefix}-i-visualblocks:before   { content: "\\e02e"; }\n
+.@{prefix}-i-ltr:before            { content: "\\e02f"; }\n
+.@{prefix}-i-rtl:before            { content: "\\e030"; }\n
+.@{prefix}-i-copy:before           { content: "\\e031"; }\n
+.@{prefix}-i-resize:before         { content: "\\e032"; }\n
+.@{prefix}-i-browse:before         { content: "\\e034"; }\n
+.@{prefix}-i-pastetext:before      { content: "\\e035"; }\n
+.@{prefix}-i-rotateleft:before     { content: "\\eaa8"; }\n
+.@{prefix}-i-rotateright:before    { content: "\\eaa9"; }\n
+.@{prefix}-i-crop:before           { content: "\\ee78"; }\n
+.@{prefix}-i-editimage:before      { content: "\\e914"; }\n
+.@{prefix}-i-options:before        { content: "\\ec6a"; }\n
+.@{prefix}-i-flipv:before          { content: "\\eaaa"; }\n
+.@{prefix}-i-fliph:before          { content: "\\eaac"; }\n
+.@{prefix}-i-zoomin:before         { content: "\\eb35"; }\n
+.@{prefix}-i-zoomout:before        { content: "\\eb36"; }\n
+.@{prefix}-i-sun:before            { content: "\\eccc"; }\n
+.@{prefix}-i-moon:before           { content: "\\eccd"; }\n
+.@{prefix}-i-arrowleft:before      { content: "\\edc0"; }\n
+.@{prefix}-i-arrowright:before     { content: "\\edb8"; }\n
+.@{prefix}-i-drop:before           { content: "\\e934"; }\n
+.@{prefix}-i-contrast:before       { content: "\\ecd4"; }\n
+.@{prefix}-i-sharpen:before        { content: "\\eba7"; }\n
+.@{prefix}-i-palette:before        { content: "\\e92a"; }\n
+.@{prefix}-i-resize2:before        { content: "\\edf9"; }\n
+.@{prefix}-i-orientation:before    { content: "\\e601"; }\n
+.@{prefix}-i-invert:before         { content: "\\e602"; }\n
+.@{prefix}-i-gamma:before          { content: "\\e600"; }\n
+.@{prefix}-i-remove:before         { content: "\\ed6a"; }\n
+\n
+.@{prefix}-i-checkbox:before, .@{prefix}-i-selected:before {\n
+\tcontent: "\\e033";\n
+}\n
+\n
+.@{prefix}-i-selected              { visibility: hidden; }\n
+i.@{prefix}-i-backcolor            { text-shadow: none; background: @colorbtn-backcolor-bg; }\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5888</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Icons.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

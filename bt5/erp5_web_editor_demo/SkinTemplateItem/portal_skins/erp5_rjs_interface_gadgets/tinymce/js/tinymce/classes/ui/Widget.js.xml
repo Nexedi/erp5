@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268325.11</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Widget.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Widget.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Widget base class a widget is a control that has a tooltip and some basic states.\n
+ *\n
+ * @class tinymce.ui.Widget\n
+ * @extends tinymce.ui.Control\n
+ */\n
+define("tinymce/ui/Widget", [\n
+\t"tinymce/ui/Control",\n
+\t"tinymce/ui/Tooltip"\n
+], function(Control, Tooltip) {\n
+\t"use strict";\n
+\n
+\tvar tooltip;\n
+\n
+\tvar Widget = Control.extend({\n
+\t\t/**\n
+\t\t * Constructs a instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {String} tooltip Tooltip text to display when hovering.\n
+\t\t * @setting {Boolean} autofocus True if the control should be focused when rendered.\n
+\t\t * @setting {String} text Text to display inside widget.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tsettings = self.settings;\n
+\t\t\tself.canFocus = true;\n
+\n
+\t\t\tif (settings.tooltip && Widget.tooltips !== false) {\n
+\t\t\t\tself.on(\'mouseenter\', function(e) {\n
+\t\t\t\t\tvar tooltip = self.tooltip().moveTo(-0xFFFF);\n
+\n
+\t\t\t\t\tif (e.control == self) {\n
+\t\t\t\t\t\tvar rel = tooltip.text(settings.tooltip).show().testMoveRel(self.getEl(), [\'bc-tc\', \'bc-tl\', \'bc-tr\']);\n
+\n
+\t\t\t\t\t\ttooltip.classes.toggle(\'tooltip-n\', rel == \'bc-tc\');\n
+\t\t\t\t\t\ttooltip.classes.toggle(\'tooltip-nw\', rel == \'bc-tl\');\n
+\t\t\t\t\t\ttooltip.classes.toggle(\'tooltip-ne\', rel == \'bc-tr\');\n
+\n
+\t\t\t\t\t\ttooltip.moveRel(self.getEl(), rel);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\ttooltip.hide();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tself.on(\'mouseleave mousedown click\', function() {\n
+\t\t\t\t\tself.tooltip().hide();\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tself.aria(\'label\', settings.ariaLabel || settings.tooltip);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the current tooltip instance.\n
+\t\t *\n
+\t\t * @method tooltip\n
+\t\t * @return {tinymce.ui.Tooltip} Tooltip instance.\n
+\t\t */\n
+\t\ttooltip: function() {\n
+\t\t\tif (!tooltip) {\n
+\t\t\t\ttooltip = new Tooltip({type: \'tooltip\'});\n
+\t\t\t\ttooltip.renderTo();\n
+\t\t\t}\n
+\n
+\t\t\treturn tooltip;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Called after the control has been rendered.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this, settings = self.settings;\n
+\n
+\t\t\tself._super();\n
+\n
+\t\t\tif (!self.parent() && (settings.width || settings.height)) {\n
+\t\t\t\tself.initLayoutRect();\n
+\t\t\t\tself.repaint();\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.autofocus) {\n
+\t\t\t\tself.focus();\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tfunction disable(state) {\n
+\t\t\t\tself.aria(\'disabled\', state);\n
+\t\t\t\tself.classes.toggle(\'disabled\', state);\n
+\t\t\t}\n
+\n
+\t\t\tfunction active(state) {\n
+\t\t\t\tself.aria(\'pressed\', state);\n
+\t\t\t\tself.classes.toggle(\'active\', state);\n
+\t\t\t}\n
+\n
+\t\t\tself.state.on(\'change:disabled\', function(e) {\n
+\t\t\t\tdisable(e.value);\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:active\', function(e) {\n
+\t\t\t\tactive(e.value);\n
+\t\t\t});\n
+\n
+\t\t\tif (self.state.get(\'disabled\')) {\n
+\t\t\t\tdisable(true);\n
+\t\t\t}\n
+\n
+\t\t\tif (self.state.get(\'active\')) {\n
+\t\t\t\tactive(true);\n
+\t\t\t}\n
+\n
+\t\t\treturn self._super();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the current control from DOM and from UI collections.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tremove: function() {\n
+\t\t\tthis._super();\n
+\n
+\t\t\tif (tooltip) {\n
+\t\t\t\ttooltip.remove();\n
+\t\t\t\ttooltip = null;\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\n
+\treturn Widget;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3283</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Widget.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

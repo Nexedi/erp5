@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268373.53</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ElementUtils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ElementUtils.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Utility class for various element specific functions.\n
+ *\n
+ * @private\n
+ */\n
+define("tinymce/dom/ElementUtils", [\n
+\t"tinymce/dom/BookmarkManager",\n
+\t"tinymce/util/Tools"\n
+], function(BookmarkManager, Tools) {\n
+\tvar each = Tools.each;\n
+\n
+\tfunction ElementUtils(dom) {\n
+\t\t/**\n
+\t\t * Compares two nodes and checks if it\'s attributes and styles matches.\n
+\t\t * This doesn\'t compare classes as items since their order is significant.\n
+\t\t *\n
+\t\t * @method compare\n
+\t\t * @param {Node} node1 First node to compare with.\n
+\t\t * @param {Node} node2 Second node to compare with.\n
+\t\t * @return {boolean} True/false if the nodes are the same or not.\n
+\t\t */\n
+\t\tthis.compare = function(node1, node2) {\n
+\t\t\t// Not the same name\n
+\t\t\tif (node1.nodeName != node2.nodeName) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\t/**\n
+\t\t\t * Returns all the nodes attributes excluding internal ones, styles and classes.\n
+\t\t\t *\n
+\t\t\t * @private\n
+\t\t\t * @param {Node} node Node to get attributes from.\n
+\t\t\t * @return {Object} Name/value object with attributes and attribute values.\n
+\t\t\t */\n
+\t\t\tfunction getAttribs(node) {\n
+\t\t\t\tvar attribs = {};\n
+\n
+\t\t\t\teach(dom.getAttribs(node), function(attr) {\n
+\t\t\t\t\tvar name = attr.nodeName.toLowerCase();\n
+\n
+\t\t\t\t\t// Don\'t compare internal attributes or style\n
+\t\t\t\t\tif (name.indexOf(\'_\') !== 0 && name !== \'style\' && name !== \'data-mce-style\') {\n
+\t\t\t\t\t\tattribs[name] = dom.getAttrib(node, name);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn attribs;\n
+\t\t\t}\n
+\n
+\t\t\t/**\n
+\t\t\t * Compares two objects checks if it\'s key + value exists in the other one.\n
+\t\t\t *\n
+\t\t\t * @private\n
+\t\t\t * @param {Object} obj1 First object to compare.\n
+\t\t\t * @param {Object} obj2 Second object to compare.\n
+\t\t\t * @return {boolean} True/false if the objects matches or not.\n
+\t\t\t */\n
+\t\t\tfunction compareObjects(obj1, obj2) {\n
+\t\t\t\tvar value, name;\n
+\n
+\t\t\t\tfor (name in obj1) {\n
+\t\t\t\t\t// Obj1 has item obj2 doesn\'t have\n
+\t\t\t\t\tif (obj1.hasOwnProperty(name)) {\n
+\t\t\t\t\t\tvalue = obj2[name];\n
+\n
+\t\t\t\t\t\t// Obj2 doesn\'t have obj1 item\n
+\t\t\t\t\t\tif (typeof value == "undefined") {\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Obj2 item has a different value\n
+\t\t\t\t\t\tif (obj1[name] != value) {\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Delete similar value\n
+\t\t\t\t\t\tdelete obj2[name];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Check if obj 2 has something obj 1 doesn\'t have\n
+\t\t\t\tfor (name in obj2) {\n
+\t\t\t\t\t// Obj2 has item obj1 doesn\'t have\n
+\t\t\t\t\tif (obj2.hasOwnProperty(name)) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\t// Attribs are not the same\n
+\t\t\tif (!compareObjects(getAttribs(node1), getAttribs(node2))) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\t// Styles are not the same\n
+\t\t\tif (!compareObjects(dom.parseStyle(dom.getAttrib(node1, \'style\')), dom.parseStyle(dom.getAttrib(node2, \'style\')))) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\treturn !BookmarkManager.isBookmarkNode(node1) && !BookmarkManager.isBookmarkNode(node2);\n
+\t\t};\n
+\t}\n
+\n
+\treturn ElementUtils;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3003</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ElementUtils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

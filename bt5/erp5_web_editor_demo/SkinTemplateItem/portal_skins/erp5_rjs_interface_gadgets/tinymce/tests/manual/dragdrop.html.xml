@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268158.38</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dragdrop.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Drag/drop test</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />\n
+<!--\n
+<script type="text/javascript">less = {env: "development", async: false};</script>\n
+<link rel="stylesheet/less" type="text/css" href="../../js/tinymce/skins/lightgray/skin.dev.less">\n
+<script src="../../node_modules/less/dist/less-1.4.2.min.js"></script>\n
+-->\n
+<script src="../../js/tinymce/tinymce.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>\n
+<script>\n
+\ttinymce.init({\n
+\t\tselector: "textarea",\n
+\t\tplugins: [\n
+\t\t\t"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",\n
+\t\t\t"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
+\t\t\t"save table contextmenu directionality emoticons template paste textcolor importcss colorpicker textpattern"\n
+\t\t],\n
+\t\tcontent_css: "css/development.css",\n
+\t\tadd_unload_trigger: false,\n
+\t\tsetup: function(ed) {\n
+\t\t\t/*ed.on(\n
+\t\t\t\t\'Init PreInit PostRender PreProcess PostProcess BeforeExecCommand ExecCommand Activate Deactivate \' +\n
+\t\t\t\t\'NodeChange SetAttrib Load Save BeforeSetContent SetContent BeforeGetContent GetContent Remove Show Hide\' +\n
+\t\t\t\t\'Change Undo Redo AddUndo BeforeAddUndo\', function(e) {\n
+\t\t\t\tconsole.log(e.type, e);\n
+\t\t\t});*/\n
+\t\t}\n
+\t});\n
+\n
+\tif (!window.console) {\n
+\t\twindow.console = {\n
+\t\t\tlog: function() {\n
+\t\t\t\ttinymce.$(\'<div></div>\').text(tinymce.grep(arguments).join(\' \')).appendTo(document.body);\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+</script>\n
+</head>\n
+<body>\n
+\n
+<textarea rows="15" cols="80" style="width: 80%">\n
+\t<p>\n
+\t\ttext\n
+\t\t<img src="img/dogleft.jpg" width="50" height="50">\n
+\t\ttext\n
+\t\t<img src="img/dogleft.jpg" width="50" height="50" style="margin: 10px; border: 5px solid green;">\n
+\t\ttext\n
+\t</p>\n
+\n
+\t<p>\n
+\t\ttext\n
+\t\t<img src="img/dogleft.jpg" width="50" height="50">\n
+\t\ttext\n
+\t\t<img src="img/dogleft.jpg" width="50" height="50" style="margin: 10px; border: 5px solid green;">\n
+\t\ttext\n
+\t</p>\n
+</textarea>\n
+\n
+<textarea rows="15" cols="80" style="width: 80%">\n
+\t<p>\n
+\t\ttext\n
+\t\t<img src="img/dogleft.jpg" width="50" height="50">\n
+\t\ttext\n
+\t\t<img src="img/dogleft.jpg" width="50" height="50" style="margin: 10px; border: 5px solid green;">\n
+\t\ttext\n
+\t</p>\n
+\n
+\t<p>\n
+\t\ttext\n
+\t\t<img src="img/dogleft.jpg" width="50" height="50">\n
+\t\ttext\n
+\t\t<img src="img/dogleft.jpg" width="50" height="50" style="margin: 10px; border: 5px solid green;">\n
+\t\ttext\n
+\t</p>\n
+</textarea>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2665</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dragdrop.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

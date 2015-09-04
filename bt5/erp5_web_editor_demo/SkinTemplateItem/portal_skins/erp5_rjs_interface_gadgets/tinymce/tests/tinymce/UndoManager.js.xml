@@ -1,0 +1,416 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268223.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>UndoManager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.UndoManager", {\n
+\tsetupModule: function() {\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "textarea",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tskin: false,\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\t\t\t\tQUnit.start();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+});\n
+\n
+test(\'Initial states\', function() {\n
+\texpect(3);\n
+\n
+\tok(!editor.undoManager.hasUndo());\n
+\tok(!editor.undoManager.hasRedo());\n
+\tok(!editor.undoManager.typing);\n
+});\n
+\n
+test(\'One undo level\', function() {\n
+\teditor.undoManager.clear();\n
+\teditor.setContent(\'test\');\n
+\n
+\texpect(3);\n
+\n
+\teditor.focus();\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.execCommand(\'Bold\');\n
+\n
+\tok(editor.undoManager.hasUndo());\n
+\tok(!editor.undoManager.hasRedo());\n
+\tok(!editor.undoManager.typing);\n
+});\n
+\n
+test(\'Two undo levels\', function() {\n
+\teditor.undoManager.clear();\n
+\teditor.setContent(\'test\');\n
+\n
+\texpect(3);\n
+\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.execCommand(\'Bold\');\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.execCommand(\'Italic\');\n
+\n
+\tok(editor.undoManager.hasUndo());\n
+\tok(!editor.undoManager.hasRedo());\n
+\tok(!editor.undoManager.typing);\n
+});\n
+\n
+test(\'No undo levels and one redo\', function() {\n
+\teditor.undoManager.clear();\n
+\teditor.setContent(\'test\');\n
+\n
+\texpect(3);\n
+\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.execCommand(\'Bold\');\n
+\teditor.undoManager.undo();\n
+\n
+\tok(!editor.undoManager.hasUndo());\n
+\tok(editor.undoManager.hasRedo());\n
+\tok(!editor.undoManager.typing);\n
+});\n
+\n
+test(\'One undo levels and one redo\', function() {\n
+\teditor.undoManager.clear();\n
+\teditor.setContent(\'test\');\n
+\n
+\texpect(3);\n
+\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.execCommand(\'Bold\');\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.execCommand(\'Italic\');\n
+\teditor.undoManager.undo();\n
+\n
+\tok(editor.undoManager.hasUndo());\n
+\tok(editor.undoManager.hasRedo());\n
+\tok(!editor.undoManager.typing);\n
+});\n
+\n
+test(\'Typing state\', function() {\n
+\teditor.undoManager.clear();\n
+\teditor.setContent(\'test\');\n
+\n
+\texpect(4);\n
+\n
+\tok(!editor.undoManager.typing);\n
+\n
+\teditor.dom.fire(editor.getBody(), \'keydown\', {keyCode: 65});\n
+\tok(editor.undoManager.typing);\n
+\n
+\teditor.dom.fire(editor.getBody(), \'keyup\', {keyCode: 13});\n
+\tok(!editor.undoManager.typing);\n
+\n
+\tselectAllFlags = {keyCode: 65, ctrlKey: false, altKey: false, shiftKey: false};\n
+\n
+\tif (tinymce.Env.mac) {\n
+\t\tselectAllFlags.metaKey = true;\n
+\t} else {\n
+\t\tselectAllFlags.ctrlKey = true;\n
+\t}\n
+\n
+\teditor.dom.fire(editor.getBody(), \'keydown\', selectAllFlags);\n
+\tok(!editor.undoManager.typing);\n
+});\n
+\n
+test(\'Undo and add new level\', function() {\n
+\teditor.undoManager.clear();\n
+\teditor.setContent(\'test\');\n
+\n
+\texpect(3);\n
+\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.execCommand(\'Bold\');\n
+\teditor.undoManager.undo();\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.execCommand(\'Italic\');\n
+\n
+\tok(editor.undoManager.hasUndo());\n
+\tok(!editor.undoManager.hasRedo());\n
+\tok(!editor.undoManager.typing);\n
+});\n
+\n
+test(\'Events\', function() {\n
+\tvar add, undo, redo;\n
+\n
+\teditor.undoManager.clear();\n
+\teditor.setContent(\'test\');\n
+\n
+\texpect(6);\n
+\n
+\teditor.on(\'AddUndo\', function(e) {\n
+\t\tadd = e.level;\n
+\t});\n
+\n
+\teditor.on(\'Undo\', function(e) {\n
+\t\tundo = e.level;\n
+\t});\n
+\n
+\teditor.on(\'Redo\', function(e) {\n
+\t\tredo = e.level;\n
+\t});\n
+\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.execCommand(\'Bold\');\n
+\tok(add.content);\n
+\tok(add.bookmark);\n
+\n
+\teditor.undoManager.undo();\n
+\tok(undo.content);\n
+\tok(undo.bookmark);\n
+\n
+\teditor.undoManager.redo();\n
+\tok(redo.content);\n
+\tok(redo.bookmark);\n
+});\n
+\n
+test(\'Transact\', function() {\n
+\tvar count = 0;\n
+\n
+\teditor.undoManager.clear();\n
+\n
+\teditor.on(\'BeforeAddUndo\', function() {\n
+\t\tcount++;\n
+\t});\n
+\n
+\teditor.undoManager.transact(function() {\n
+\t\teditor.undoManager.add();\n
+\t\teditor.undoManager.add();\n
+\t});\n
+\n
+\tequal(count, 1);\n
+});\n
+\n
+test(\'Transact nested\', function() {\n
+\tvar count = 0;\n
+\n
+\teditor.undoManager.clear();\n
+\n
+\teditor.on(\'BeforeAddUndo\', function() {\n
+\t\tcount++;\n
+\t});\n
+\n
+\teditor.undoManager.transact(function() {\n
+\t\teditor.undoManager.add();\n
+\n
+\t\teditor.undoManager.transact(function() {\n
+\t\t\teditor.undoManager.add();\n
+\t\t});\n
+\t});\n
+\n
+\tequal(count, 1);\n
+});\n
+\n
+test(\'Transact exception\', function() {\n
+\tvar count = 0;\n
+\n
+\teditor.undoManager.clear();\n
+\n
+\teditor.on(\'BeforeAddUndo\', function() {\n
+\t\tcount++;\n
+\t});\n
+\n
+\tthrows(\n
+\t\tfunction() {\n
+\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\tthrow new Error("Test");\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t"Test"\n
+\t);\n
+\n
+\teditor.undoManager.add();\n
+\n
+\tequal(count, 1);\n
+});\n
+\n
+test(\'Exclude internal elements\', function() {\n
+\tvar count = 0, lastLevel;\n
+\n
+\teditor.undoManager.clear();\n
+\tequal(count, 0);\n
+\n
+\teditor.on(\'AddUndo\', function() {\n
+\t\tcount++;\n
+\t});\n
+\n
+\teditor.on(\'BeforeAddUndo\', function(e) {\n
+\t\tlastLevel = e.level;\n
+\t});\n
+\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'test\' +\n
+\t\t\'<img src="about:blank" data-mce-selected="1" />\' +\n
+\t\t\'<table data-mce-selected="1"><tr><td>x</td></tr></table>\'\n
+\t);\n
+\n
+\teditor.undoManager.add();\n
+\tequal(count, 1);\n
+\tequal(Utils.cleanHtml(lastLevel.content),\n
+\t\t\'test\' +\n
+\t\t\'<img src="about:blank">\' +\n
+\t\t\'<table><tbody><tr><td>x</td></tr></tbody></table>\'\n
+\t);\n
+\n
+\teditor.getBody().innerHTML = (\n
+\t\t\'<span data-mce-bogus="1">\\u200B</span>\' +\n
+\t\t\'<span data-mce-bogus="1">\\uFEFF</span>\' +\n
+\t\t\'<div data-mce-bogus="all"></div>\' +\n
+\t\t\'<div data-mce-bogus="all"><div><b>x</b></div></div>\' +\n
+\t\t\'<img src="about:blank" data-mce-bogus="all">\' +\n
+\t\t\'<br data-mce-bogus="1">\' +\n
+\t\t\'test\' +\n
+\t\t\'<img src="about:blank" />\' +\n
+\t\t\'<table><tr><td>x</td></tr></table>\'\n
+\t);\n
+\n
+\teditor.undoManager.add();\n
+\tequal(count, 2);\n
+\tequal(Utils.cleanHtml(lastLevel.content),\n
+\t\t\'<br data-mce-bogus="1">\' +\n
+\t\t\'test\' +\n
+\t\t\'<img src="about:blank">\' +\n
+\t\t\'<table><tbody><tr><td>x</td></tr></tbody></table>\'\n
+\t);\n
+});\n
+\n
+test(\'Undo added when typing and losing focus\', function() {\n
+\tvar lastLevel;\n
+\n
+\teditor.on(\'BeforeAddUndo\', function(e) {\n
+\t\tlastLevel = e.level;\n
+\t});\n
+\n
+\teditor.undoManager.clear();\n
+\teditor.setContent("<p>some text</p>");\n
+\tUtils.setSelection(\'p\', 4, \'p\', 9);\n
+\tUtils.type(\'\\b\');\n
+\n
+\tequal(Utils.cleanHtml(lastLevel.content), "<p>some text</p>");\n
+\teditor.fire(\'blur\');\n
+\tequal(Utils.cleanHtml(lastLevel.content), "<p>some</p>");\n
+\n
+\teditor.execCommand(\'FormatBlock\', false, \'h1\');\n
+\teditor.undoManager.undo();\n
+\tequal(editor.getContent(), "<p>some</p>");\n
+});\n
+\n
+test(\'BeforeAddUndo event\', function() {\n
+\tvar lastEvt, addUndoEvt;\n
+\n
+\tfunction blockEvent(e) {\n
+\t\te.preventDefault();\n
+\t}\n
+\n
+\teditor.on(\'BeforeAddUndo\', function(e) {\n
+\t\tlastEvt = e;\n
+\t});\n
+\n
+\teditor.undoManager.clear();\n
+\teditor.setContent("<p>a</p>");\n
+\teditor.undoManager.add();\n
+\n
+\tequal(lastEvt.lastLevel, null);\n
+\tequal(Utils.cleanHtml(lastEvt.level.content), "<p>a</p>");\n
+\n
+\teditor.setContent("<p>b</p>");\n
+\teditor.undoManager.add();\n
+\n
+\tequal(Utils.cleanHtml(lastEvt.lastLevel.content), "<p>a</p>");\n
+\tequal(Utils.cleanHtml(lastEvt.level.content), "<p>b</p>");\n
+\n
+\teditor.on(\'BeforeAddUndo\', blockEvent);\n
+\n
+\teditor.on(\'AddUndo\', function(e) {\n
+\t\taddUndoEvt = e;\n
+\t});\n
+\n
+\teditor.setContent("<p>c</p>");\n
+\teditor.undoManager.add(null, {data: 1});\n
+\n
+\tequal(Utils.cleanHtml(lastEvt.lastLevel.content), "<p>b</p>");\n
+\tequal(Utils.cleanHtml(lastEvt.level.content), "<p>c</p>");\n
+\tequal(lastEvt.originalEvent.data, 1);\n
+\tok(!addUndoEvt, "Event level produced when it should be blocked");\n
+\n
+\teditor.off(\'BeforeAddUndo\', blockEvent);\n
+});\n
+\n
+test(\'Dirty state type letter\', function() {\n
+\teditor.undoManager.clear();\n
+\teditor.isNotDirty = true;\n
+\teditor.setContent("<p>a</p>");\n
+\tUtils.setSelection(\'p\', 1);\n
+\n
+\tok(!editor.isDirty(), "Dirty state should be false");\n
+\tUtils.type(\'b\');\n
+\tequal(editor.getContent(), "<p>ab</p>");\n
+\tok(editor.isDirty(), "Dirty state should be true");\n
+});\n
+\n
+test(\'Dirty state type shift+letter\', function() {\n
+\teditor.undoManager.clear();\n
+\teditor.isNotDirty = true;\n
+\teditor.setContent("<p>a</p>");\n
+\tUtils.setSelection(\'p\', 1);\n
+\n
+\tok(!editor.isDirty(), "Dirty state should be false");\n
+\tUtils.type({keyCode: 65, charCode: 66, shiftKey: true});\n
+\tequal(editor.getContent(), "<p>aB</p>");\n
+\tok(editor.isDirty(), "Dirty state should be true");\n
+});\n
+\n
+test(\'Dirty state type AltGr+letter\', function() {\n
+\teditor.undoManager.clear();\n
+\teditor.isNotDirty = true;\n
+\teditor.setContent("<p>a</p>");\n
+\tUtils.setSelection(\'p\', 1);\n
+\n
+\tok(!editor.isDirty(), "Dirty state should be false");\n
+\tUtils.type({keyCode: 65, charCode: 66, ctrlKey: true, altKey: true});\n
+\tequal(editor.getContent(), "<p>aB</p>");\n
+\tok(editor.isDirty(), "Dirty state should be true");\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8083</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>UndoManager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

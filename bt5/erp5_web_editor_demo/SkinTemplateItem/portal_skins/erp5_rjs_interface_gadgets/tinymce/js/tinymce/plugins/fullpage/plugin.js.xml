@@ -1,0 +1,534 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268558.42</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'fullpage\', function(editor) {\n
+\tvar each = tinymce.each, Node = tinymce.html.Node;\n
+\tvar head, foot;\n
+\n
+\tfunction showDialog() {\n
+\t\tvar data = htmlToData();\n
+\n
+\t\teditor.windowManager.open({\n
+\t\t\ttitle: \'Document properties\',\n
+\t\t\tdata: data,\n
+\t\t\tdefaults: {type: \'textbox\', size: 40},\n
+\t\t\tbody: [\n
+\t\t\t\t{name: \'title\', label: \'Title\'},\n
+\t\t\t\t{name: \'keywords\', label: \'Keywords\'},\n
+\t\t\t\t{name: \'description\', label: \'Description\'},\n
+\t\t\t\t{name: \'robots\', label: \'Robots\'},\n
+\t\t\t\t{name: \'author\', label: \'Author\'},\n
+\t\t\t\t{name: \'docencoding\', label: \'Encoding\'}\n
+\t\t\t],\n
+\t\t\tonSubmit: function(e) {\n
+\t\t\t\tdataToHtml(tinymce.extend(data, e.data));\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tfunction htmlToData() {\n
+\t\tvar headerFragment = parseHeader(), data = {}, elm, matches;\n
+\n
+\t\tfunction getAttr(elm, name) {\n
+\t\t\tvar value = elm.attr(name);\n
+\n
+\t\t\treturn value || \'\';\n
+\t\t}\n
+\n
+\t\t// Default some values\n
+\t\tdata.fontface = editor.getParam("fullpage_default_fontface", "");\n
+\t\tdata.fontsize = editor.getParam("fullpage_default_fontsize", "");\n
+\n
+\t\t// Parse XML PI\n
+\t\telm = headerFragment.firstChild;\n
+\t\tif (elm.type == 7) {\n
+\t\t\tdata.xml_pi = true;\n
+\t\t\tmatches = /encoding="([^"]+)"/.exec(elm.value);\n
+\t\t\tif (matches) {\n
+\t\t\t\tdata.docencoding = matches[1];\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Parse doctype\n
+\t\telm = headerFragment.getAll(\'#doctype\')[0];\n
+\t\tif (elm) {\n
+\t\t\tdata.doctype = \'<!DOCTYPE\' + elm.value + ">";\n
+\t\t}\n
+\n
+\t\t// Parse title element\n
+\t\telm = headerFragment.getAll(\'title\')[0];\n
+\t\tif (elm && elm.firstChild) {\n
+\t\t\tdata.title = elm.firstChild.value;\n
+\t\t}\n
+\n
+\t\t// Parse meta elements\n
+\t\teach(headerFragment.getAll(\'meta\'), function(meta) {\n
+\t\t\tvar name = meta.attr(\'name\'), httpEquiv = meta.attr(\'http-equiv\'), matches;\n
+\n
+\t\t\tif (name) {\n
+\t\t\t\tdata[name.toLowerCase()] = meta.attr(\'content\');\n
+\t\t\t} else if (httpEquiv == "Content-Type") {\n
+\t\t\t\tmatches = /charset\\s*=\\s*(.*)\\s*/gi.exec(meta.attr(\'content\'));\n
+\n
+\t\t\t\tif (matches) {\n
+\t\t\t\t\tdata.docencoding = matches[1];\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Parse html attribs\n
+\t\telm = headerFragment.getAll(\'html\')[0];\n
+\t\tif (elm) {\n
+\t\t\tdata.langcode = getAttr(elm, \'lang\') || getAttr(elm, \'xml:lang\');\n
+\t\t}\n
+\n
+\t\t// Parse stylesheets\n
+\t\tdata.stylesheets = [];\n
+\t\ttinymce.each(headerFragment.getAll(\'link\'), function(link) {\n
+\t\t\tif (link.attr(\'rel\') == \'stylesheet\') {\n
+\t\t\t\tdata.stylesheets.push(link.attr(\'href\'));\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Parse body parts\n
+\t\telm = headerFragment.getAll(\'body\')[0];\n
+\t\tif (elm) {\n
+\t\t\tdata.langdir = getAttr(elm, \'dir\');\n
+\t\t\tdata.style = getAttr(elm, \'style\');\n
+\t\t\tdata.visited_color = getAttr(elm, \'vlink\');\n
+\t\t\tdata.link_color = getAttr(elm, \'link\');\n
+\t\t\tdata.active_color = getAttr(elm, \'alink\');\n
+\t\t}\n
+\n
+\t\treturn data;\n
+\t}\n
+\n
+\tfunction dataToHtml(data) {\n
+\t\tvar headerFragment, headElement, html, elm, value, dom = editor.dom;\n
+\n
+\t\tfunction setAttr(elm, name, value) {\n
+\t\t\telm.attr(name, value ? value : undefined);\n
+\t\t}\n
+\n
+\t\tfunction addHeadNode(node) {\n
+\t\t\tif (headElement.firstChild) {\n
+\t\t\t\theadElement.insert(node, headElement.firstChild);\n
+\t\t\t} else {\n
+\t\t\t\theadElement.append(node);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\theaderFragment = parseHeader();\n
+\t\theadElement = headerFragment.getAll(\'head\')[0];\n
+\t\tif (!headElement) {\n
+\t\t\telm = headerFragment.getAll(\'html\')[0];\n
+\t\t\theadElement = new Node(\'head\', 1);\n
+\n
+\t\t\tif (elm.firstChild) {\n
+\t\t\t\telm.insert(headElement, elm.firstChild, true);\n
+\t\t\t} else {\n
+\t\t\t\telm.append(headElement);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Add/update/remove XML-PI\n
+\t\telm = headerFragment.firstChild;\n
+\t\tif (data.xml_pi) {\n
+\t\t\tvalue = \'version="1.0"\';\n
+\n
+\t\t\tif (data.docencoding) {\n
+\t\t\t\tvalue += \' encoding="\' + data.docencoding + \'"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (elm.type != 7) {\n
+\t\t\t\telm = new Node(\'xml\', 7);\n
+\t\t\t\theaderFragment.insert(elm, headerFragment.firstChild, true);\n
+\t\t\t}\n
+\n
+\t\t\telm.value = value;\n
+\t\t} else if (elm && elm.type == 7) {\n
+\t\t\telm.remove();\n
+\t\t}\n
+\n
+\t\t// Add/update/remove doctype\n
+\t\telm = headerFragment.getAll(\'#doctype\')[0];\n
+\t\tif (data.doctype) {\n
+\t\t\tif (!elm) {\n
+\t\t\t\telm = new Node(\'#doctype\', 10);\n
+\n
+\t\t\t\tif (data.xml_pi) {\n
+\t\t\t\t\theaderFragment.insert(elm, headerFragment.firstChild);\n
+\t\t\t\t} else {\n
+\t\t\t\t\taddHeadNode(elm);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\telm.value = data.doctype.substring(9, data.doctype.length - 1);\n
+\t\t} else if (elm) {\n
+\t\t\telm.remove();\n
+\t\t}\n
+\n
+\t\t// Add meta encoding\n
+\t\telm = null;\n
+\t\teach(headerFragment.getAll(\'meta\'), function(meta) {\n
+\t\t\tif (meta.attr(\'http-equiv\') == \'Content-Type\') {\n
+\t\t\t\telm = meta;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tif (data.docencoding) {\n
+\t\t\tif (!elm) {\n
+\t\t\t\telm = new Node(\'meta\', 1);\n
+\t\t\t\telm.attr(\'http-equiv\', \'Content-Type\');\n
+\t\t\t\telm.shortEnded = true;\n
+\t\t\t\taddHeadNode(elm);\n
+\t\t\t}\n
+\n
+\t\t\telm.attr(\'content\', \'text/html; charset=\' + data.docencoding);\n
+\t\t} else if (elm) {\n
+\t\t\telm.remove();\n
+\t\t}\n
+\n
+\t\t// Add/update/remove title\n
+\t\telm = headerFragment.getAll(\'title\')[0];\n
+\t\tif (data.title) {\n
+\t\t\tif (!elm) {\n
+\t\t\t\telm = new Node(\'title\', 1);\n
+\t\t\t\taddHeadNode(elm);\n
+\t\t\t} else {\n
+\t\t\t\telm.empty();\n
+\t\t\t}\n
+\n
+\t\t\telm.append(new Node(\'#text\', 3)).value = data.title;\n
+\t\t} else if (elm) {\n
+\t\t\telm.remove();\n
+\t\t}\n
+\n
+\t\t// Add/update/remove meta\n
+\t\teach(\'keywords,description,author,copyright,robots\'.split(\',\'), function(name) {\n
+\t\t\tvar nodes = headerFragment.getAll(\'meta\'), i, meta, value = data[name];\n
+\n
+\t\t\tfor (i = 0; i < nodes.length; i++) {\n
+\t\t\t\tmeta = nodes[i];\n
+\n
+\t\t\t\tif (meta.attr(\'name\') == name) {\n
+\t\t\t\t\tif (value) {\n
+\t\t\t\t\t\tmeta.attr(\'content\', value);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tmeta.remove();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (value) {\n
+\t\t\t\telm = new Node(\'meta\', 1);\n
+\t\t\t\telm.attr(\'name\', name);\n
+\t\t\t\telm.attr(\'content\', value);\n
+\t\t\t\telm.shortEnded = true;\n
+\n
+\t\t\t\taddHeadNode(elm);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tvar currentStyleSheetsMap = {};\n
+\t\ttinymce.each(headerFragment.getAll(\'link\'), function(stylesheet) {\n
+\t\t\tif (stylesheet.attr(\'rel\') == \'stylesheet\') {\n
+\t\t\t\tcurrentStyleSheetsMap[stylesheet.attr(\'href\')] = stylesheet;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Add new\n
+\t\ttinymce.each(data.stylesheets, function(stylesheet) {\n
+\t\t\tif (!currentStyleSheetsMap[stylesheet]) {\n
+\t\t\t\telm = new Node(\'link\', 1);\n
+\t\t\t\telm.attr({\n
+\t\t\t\t\trel: \'stylesheet\',\n
+\t\t\t\t\ttext: \'text/css\',\n
+\t\t\t\t\thref: stylesheet\n
+\t\t\t\t});\n
+\t\t\t\telm.shortEnded = true;\n
+\t\t\t\taddHeadNode(elm);\n
+\t\t\t}\n
+\n
+\t\t\tdelete currentStyleSheetsMap[stylesheet];\n
+\t\t});\n
+\n
+\t\t// Delete old\n
+\t\ttinymce.each(currentStyleSheetsMap, function(stylesheet) {\n
+\t\t\tstylesheet.remove();\n
+\t\t});\n
+\n
+\t\t// Update body attributes\n
+\t\telm = headerFragment.getAll(\'body\')[0];\n
+\t\tif (elm) {\n
+\t\t\tsetAttr(elm, \'dir\', data.langdir);\n
+\t\t\tsetAttr(elm, \'style\', data.style);\n
+\t\t\tsetAttr(elm, \'vlink\', data.visited_color);\n
+\t\t\tsetAttr(elm, \'link\', data.link_color);\n
+\t\t\tsetAttr(elm, \'alink\', data.active_color);\n
+\n
+\t\t\t// Update iframe body as well\n
+\t\t\tdom.setAttribs(editor.getBody(), {\n
+\t\t\t\tstyle: data.style,\n
+\t\t\t\tdir: data.dir,\n
+\t\t\t\tvLink: data.visited_color,\n
+\t\t\t\tlink: data.link_color,\n
+\t\t\t\taLink: data.active_color\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Set html attributes\n
+\t\telm = headerFragment.getAll(\'html\')[0];\n
+\t\tif (elm) {\n
+\t\t\tsetAttr(elm, \'lang\', data.langcode);\n
+\t\t\tsetAttr(elm, \'xml:lang\', data.langcode);\n
+\t\t}\n
+\n
+\t\t// No need for a head element\n
+\t\tif (!headElement.firstChild) {\n
+\t\t\theadElement.remove();\n
+\t\t}\n
+\n
+\t\t// Serialize header fragment and crop away body part\n
+\t\thtml = new tinymce.html.Serializer({\n
+\t\t\tvalidate: false,\n
+\t\t\tindent: true,\n
+\t\t\tapply_source_formatting: true,\n
+\t\t\tindent_before: \'head,html,body,meta,title,script,link,style\',\n
+\t\t\tindent_after: \'head,html,body,meta,title,script,link,style\'\n
+\t\t}).serialize(headerFragment);\n
+\n
+\t\thead = html.substring(0, html.indexOf(\'</body>\'));\n
+\t}\n
+\n
+\tfunction parseHeader() {\n
+\t\t// Parse the contents with a DOM parser\n
+\t\treturn new tinymce.html.DomParser({\n
+\t\t\tvalidate: false,\n
+\t\t\troot_name: \'#document\'\n
+\t\t}).parse(head);\n
+\t}\n
+\n
+\tfunction setContent(evt) {\n
+\t\tvar startPos, endPos, content = evt.content, headerFragment, styles = \'\', dom = editor.dom, elm;\n
+\n
+\t\tif (evt.selection) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tfunction low(s) {\n
+\t\t\treturn s.replace(/<\\/?[A-Z]+/g, function(a) {\n
+\t\t\t\treturn a.toLowerCase();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Ignore raw updated if we already have a head, this will fix issues with undo/redo keeping the head/foot separate\n
+\t\tif (evt.format == \'raw\' && head) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tif (evt.source_view && editor.getParam(\'fullpage_hide_in_source_view\')) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t// Fixed so new document/setContent(\'\') doesn\'t remove existing header/footer except when it\'s in source code view\n
+\t\tif (content.length === 0 && !evt.source_view) {\n
+\t\t\tcontent = tinymce.trim(head) + \'\\n\' + tinymce.trim(content) + \'\\n\' + tinymce.trim(foot);\n
+\t\t}\n
+\n
+\t\t// Parse out head, body and footer\n
+\t\tcontent = content.replace(/<(\\/?)BODY/gi, \'<$1body\');\n
+\t\tstartPos = content.indexOf(\'<body\');\n
+\n
+\t\tif (startPos != -1) {\n
+\t\t\tstartPos = content.indexOf(\'>\', startPos);\n
+\t\t\thead = low(content.substring(0, startPos + 1));\n
+\n
+\t\t\tendPos = content.indexOf(\'</body\', startPos);\n
+\t\t\tif (endPos == -1) {\n
+\t\t\t\tendPos = content.length;\n
+\t\t\t}\n
+\n
+\t\t\tevt.content = content.substring(startPos + 1, endPos);\n
+\t\t\tfoot = low(content.substring(endPos));\n
+\t\t} else {\n
+\t\t\thead = getDefaultHeader();\n
+\t\t\tfoot = \'\\n</body>\\n</html>\';\n
+\t\t}\n
+\n
+\t\t// Parse header and update iframe\n
+\t\theaderFragment = parseHeader();\n
+\t\teach(headerFragment.getAll(\'style\'), function(node) {\n
+\t\t\tif (node.firstChild) {\n
+\t\t\t\tstyles += node.firstChild.value;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\telm = headerFragment.getAll(\'body\')[0];\n
+\t\tif (elm) {\n
+\t\t\tdom.setAttribs(editor.getBody(), {\n
+\t\t\t\tstyle: elm.attr(\'style\') || \'\',\n
+\t\t\t\tdir: elm.attr(\'dir\') || \'\',\n
+\t\t\t\tvLink: elm.attr(\'vlink\') || \'\',\n
+\t\t\t\tlink: elm.attr(\'link\') || \'\',\n
+\t\t\t\taLink: elm.attr(\'alink\') || \'\'\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tdom.remove(\'fullpage_styles\');\n
+\n
+\t\tvar headElm = editor.getDoc().getElementsByTagName(\'head\')[0];\n
+\n
+\t\tif (styles) {\n
+\t\t\tdom.add(headElm, \'style\', {\n
+\t\t\t\tid: \'fullpage_styles\'\n
+\t\t\t}, styles);\n
+\n
+\t\t\t// Needed for IE 6/7\n
+\t\t\telm = dom.get(\'fullpage_styles\');\n
+\t\t\tif (elm.styleSheet) {\n
+\t\t\t\telm.styleSheet.cssText = styles;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tvar currentStyleSheetsMap = {};\n
+\t\ttinymce.each(headElm.getElementsByTagName(\'link\'), function(stylesheet) {\n
+\t\t\tif (stylesheet.rel == \'stylesheet\' && stylesheet.getAttribute(\'data-mce-fullpage\')) {\n
+\t\t\t\tcurrentStyleSheetsMap[stylesheet.href] = stylesheet;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Add new\n
+\t\ttinymce.each(headerFragment.getAll(\'link\'), function(stylesheet) {\n
+\t\t\tvar href = stylesheet.attr(\'href\');\n
+\n
+\t\t\tif (!currentStyleSheetsMap[href] && stylesheet.attr(\'rel\') == \'stylesheet\') {\n
+\t\t\t\tdom.add(headElm, \'link\', {\n
+\t\t\t\t\trel: \'stylesheet\',\n
+\t\t\t\t\ttext: \'text/css\',\n
+\t\t\t\t\thref: href,\n
+\t\t\t\t\t\'data-mce-fullpage\': \'1\'\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tdelete currentStyleSheetsMap[href];\n
+\t\t});\n
+\n
+\t\t// Delete old\n
+\t\ttinymce.each(currentStyleSheetsMap, function(stylesheet) {\n
+\t\t\tstylesheet.parentNode.removeChild(stylesheet);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction getDefaultHeader() {\n
+\t\tvar header = \'\', value, styles = \'\';\n
+\n
+\t\tif (editor.getParam(\'fullpage_default_xml_pi\')) {\n
+\t\t\theader += \'<?xml version="1.0" encoding="\' + editor.getParam(\'fullpage_default_encoding\', \'ISO-8859-1\') + \'" ?>\\n\';\n
+\t\t}\n
+\n
+\t\theader += editor.getParam(\'fullpage_default_doctype\', \'<!DOCTYPE html>\');\n
+\t\theader += \'\\n<html>\\n<head>\\n\';\n
+\n
+\t\tif ((value = editor.getParam(\'fullpage_default_title\'))) {\n
+\t\t\theader += \'<title>\' + value + \'</title>\\n\';\n
+\t\t}\n
+\n
+\t\tif ((value = editor.getParam(\'fullpage_default_encoding\'))) {\n
+\t\t\theader += \'<meta http-equiv="Content-Type" content="text/html; charset=\' + value + \'" />\\n\';\n
+\t\t}\n
+\n
+\t\tif ((value = editor.getParam(\'fullpage_default_font_family\'))) {\n
+\t\t\tstyles += \'font-family: \' + value + \';\';\n
+\t\t}\n
+\n
+\t\tif ((value = editor.getParam(\'fullpage_default_font_size\'))) {\n
+\t\t\tstyles += \'font-size: \' + value + \';\';\n
+\t\t}\n
+\n
+\t\tif ((value = editor.getParam(\'fullpage_default_text_color\'))) {\n
+\t\t\tstyles += \'color: \' + value + \';\';\n
+\t\t}\n
+\n
+\t\theader += \'</head>\\n<body\' + (styles ? \' style="\' + styles + \'"\' : \'\') + \'>\\n\';\n
+\n
+\t\treturn header;\n
+\t}\n
+\n
+\tfunction getContent(evt) {\n
+\t\tif (!evt.selection && (!evt.source_view || !editor.getParam(\'fullpage_hide_in_source_view\'))) {\n
+\t\t\tevt.content = tinymce.trim(head) + \'\\n\' + tinymce.trim(evt.content) + \'\\n\' + tinymce.trim(foot);\n
+\t\t}\n
+\t}\n
+\n
+\teditor.addCommand(\'mceFullPageProperties\', showDialog);\n
+\n
+\teditor.addButton(\'fullpage\', {\n
+\t\ttitle: \'Document properties\',\n
+\t\tcmd: \'mceFullPageProperties\'\n
+\t});\n
+\n
+\teditor.addMenuItem(\'fullpage\', {\n
+\t\ttext: \'Document properties\',\n
+\t\tcmd: \'mceFullPageProperties\',\n
+\t\tcontext: \'file\'\n
+\t});\n
+\n
+\teditor.on(\'BeforeSetContent\', setContent);\n
+\teditor.on(\'GetContent\', getContent);\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12239</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

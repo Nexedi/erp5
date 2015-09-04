@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268328.2</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Form.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Form.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class creates a form container. A form container has the ability\n
+ * to automatically wrap items in tinymce.ui.FormItem instances.\n
+ *\n
+ * Each FormItem instance is a container for the label and the item.\n
+ *\n
+ * @example\n
+ * tinymce.ui.Factory.create({\n
+ *     type: \'form\',\n
+ *     items: [\n
+ *         {type: \'textbox\', label: \'My text box\'}\n
+ *     ]\n
+ * }).renderTo(document.body);\n
+ *\n
+ * @class tinymce.ui.Form\n
+ * @extends tinymce.ui.Container\n
+ */\n
+define("tinymce/ui/Form", [\n
+\t"tinymce/ui/Container",\n
+\t"tinymce/ui/FormItem",\n
+\t"tinymce/util/Tools"\n
+], function(Container, FormItem, Tools) {\n
+\t"use strict";\n
+\n
+\treturn Container.extend({\n
+\t\tDefaults: {\n
+\t\t\tcontainerCls: \'form\',\n
+\t\t\tlayout: \'flex\',\n
+\t\t\tdirection: \'column\',\n
+\t\t\talign: \'stretch\',\n
+\t\t\tflex: 1,\n
+\t\t\tpadding: 20,\n
+\t\t\tlabelGap: 30,\n
+\t\t\tspacing: 10,\n
+\t\t\tcallbacks: {\n
+\t\t\t\tsubmit: function() {\n
+\t\t\t\t\tthis.submit();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * This method gets invoked before the control is rendered.\n
+\t\t *\n
+\t\t * @method preRender\n
+\t\t */\n
+\t\tpreRender: function() {\n
+\t\t\tvar self = this, items = self.items();\n
+\n
+\t\t\tif (!self.settings.formItemDefaults) {\n
+\t\t\t\tself.settings.formItemDefaults = {\n
+\t\t\t\t\tlayout: \'flex\',\n
+\t\t\t\t\tautoResize: "overflow",\n
+\t\t\t\t\tdefaults: {flex: 1}\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\t// Wrap any labeled items in FormItems\n
+\t\t\titems.each(function(ctrl) {\n
+\t\t\t\tvar formItem, label = ctrl.settings.label;\n
+\n
+\t\t\t\tif (label) {\n
+\t\t\t\t\tformItem = new FormItem(Tools.extend({\n
+\t\t\t\t\t\titems: {\n
+\t\t\t\t\t\t\ttype: \'label\',\n
+\t\t\t\t\t\t\tid: ctrl._id + \'-l\',\n
+\t\t\t\t\t\t\ttext: label,\n
+\t\t\t\t\t\t\tflex: 0,\n
+\t\t\t\t\t\t\tforId: ctrl._id,\n
+\t\t\t\t\t\t\tdisabled: ctrl.disabled()\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}, self.settings.formItemDefaults));\n
+\n
+\t\t\t\t\tformItem.type = \'formitem\';\n
+\t\t\t\t\tctrl.aria(\'labelledby\', ctrl._id + \'-l\');\n
+\n
+\t\t\t\t\tif (typeof ctrl.settings.flex == "undefined") {\n
+\t\t\t\t\t\tctrl.settings.flex = 1;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tself.replace(ctrl, formItem);\n
+\t\t\t\t\tformItem.add(ctrl);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Fires a submit event with the serialized form.\n
+\t\t *\n
+\t\t * @method submit\n
+\t\t * @return {Object} Event arguments object.\n
+\t\t */\n
+\t\tsubmit: function() {\n
+\t\t\treturn this.fire(\'submit\', {data: this.toJSON()});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Post render method. Called after the control has been rendered to the target.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t * @return {tinymce.ui.ComboBox} Current combobox instance.\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super();\n
+\t\t\tself.fromJSON(self.settings.data);\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super();\n
+\n
+\t\t\tfunction recalcLabels() {\n
+\t\t\t\tvar maxLabelWidth = 0, labels = [], i, labelGap, items;\n
+\n
+\t\t\t\tif (self.settings.labelGapCalc === false) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (self.settings.labelGapCalc == "children") {\n
+\t\t\t\t\titems = self.find(\'formitem\');\n
+\t\t\t\t} else {\n
+\t\t\t\t\titems = self.items();\n
+\t\t\t\t}\n
+\n
+\t\t\t\titems.filter(\'formitem\').each(function(item) {\n
+\t\t\t\t\tvar labelCtrl = item.items()[0], labelWidth = labelCtrl.getEl().clientWidth;\n
+\n
+\t\t\t\t\tmaxLabelWidth = labelWidth > maxLabelWidth ? labelWidth : maxLabelWidth;\n
+\t\t\t\t\tlabels.push(labelCtrl);\n
+\t\t\t\t});\n
+\n
+\t\t\t\tlabelGap = self.settings.labelGap || 0;\n
+\n
+\t\t\t\ti = labels.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tlabels[i].settings.minWidth = maxLabelWidth + labelGap;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tself.on(\'show\', recalcLabels);\n
+\t\t\trecalcLabels();\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3423</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Form.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

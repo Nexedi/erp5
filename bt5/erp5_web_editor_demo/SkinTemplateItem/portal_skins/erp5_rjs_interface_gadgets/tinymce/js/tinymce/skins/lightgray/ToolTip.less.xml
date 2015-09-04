@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268695.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ToolTip.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// Tooltip\n
+\n
+.@{prefix}-tooltip {\n
+\tposition: absolute;\n
+\tpadding: 5px;\n
+\t.opacity(0.8);\n
+}\n
+\n
+.@{prefix}-tooltip-inner {\n
+\tfont-size: @tooltip-font-size;\n
+\tbackground-color: @tooltip-bg;\n
+\tcolor: @tooltip-text;\n
+\tmax-width: 200px;\n
+\tpadding: 5px 8px 4px 8px;\n
+\ttext-align: center;\n
+\twhite-space: normal;\n
+}\n
+\n
+.@{prefix}-tooltip-inner {\n
+\t.border-radius(3px);\n
+}\n
+\n
+.@{prefix}-tooltip-inner {\n
+\t.box-shadow(0 0 5px @tooltip-bg);\n
+}\n
+\n
+.@{prefix}-tooltip-arrow {\n
+\tposition: absolute;\n
+\twidth: 0;\n
+\theight: 0;\n
+\tline-height: 0;\n
+\tborder: 5px dashed @tooltip-bg;\n
+}\n
+\n
+.@{prefix}-tooltip-arrow-n {\n
+\tborder-bottom-color: @tooltip-bg;\n
+}\n
+\n
+.@{prefix}-tooltip-arrow-s {\n
+\tborder-top-color: @tooltip-bg;\n
+}\n
+\n
+.@{prefix}-tooltip-arrow-e {\n
+\tborder-left-color: @tooltip-bg;\n
+}\n
+\n
+.@{prefix}-tooltip-arrow-w {\n
+\tborder-right-color: @tooltip-bg;\n
+}\n
+\n
+.@{prefix}-tooltip-nw, .@{prefix}-tooltip-sw {\n
+\tmargin-left: -14px;\n
+}\n
+\n
+.@{prefix}-tooltip-n .@{prefix}-tooltip-arrow {\n
+\ttop: 0px;\n
+\tleft: 50%;\n
+\tmargin-left: -5px;\n
+\tborder-bottom-style: solid;\n
+\tborder-top: none;\n
+\tborder-left-color: transparent;\n
+\tborder-right-color: transparent;\n
+}\n
+\n
+.@{prefix}-tooltip-nw .@{prefix}-tooltip-arrow {\n
+\ttop: 0;\n
+\tleft: 10px;\n
+\tborder-bottom-style: solid;\n
+\tborder-top: none;\n
+\tborder-left-color: transparent;\n
+\tborder-right-color: transparent;\n
+}\n
+\n
+.@{prefix}-tooltip-ne .@{prefix}-tooltip-arrow {\n
+\ttop: 0;\n
+\tright: 10px;\n
+\tborder-bottom-style: solid;\n
+\tborder-top: none;\n
+\tborder-left-color: transparent;\n
+\tborder-right-color: transparent;\n
+}\n
+\n
+.@{prefix}-tooltip-s .@{prefix}-tooltip-arrow {\n
+\tbottom: 0;\n
+\tleft: 50%;\n
+\tmargin-left: -5px;\n
+\tborder-top-style: solid;\n
+\tborder-bottom: none;\n
+\tborder-left-color: transparent;\n
+\tborder-right-color: transparent;\n
+}\n
+\n
+.@{prefix}-tooltip-sw .@{prefix}-tooltip-arrow {\n
+\tbottom: 0;\n
+\tleft: 10px;\n
+\tborder-top-style: solid;\n
+\tborder-bottom: none;\n
+\tborder-left-color: transparent;\n
+\tborder-right-color: transparent;\n
+}\n
+\n
+.@{prefix}-tooltip-se .@{prefix}-tooltip-arrow {\n
+\tbottom: 0;\n
+\tright: 10px;\n
+\tborder-top-style: solid;\n
+\tborder-bottom: none;\n
+\tborder-left-color: transparent;\n
+\tborder-right-color: transparent;\n
+}\n
+\n
+.@{prefix}-tooltip-e .@{prefix}-tooltip-arrow {\n
+\tright: 0;\n
+\ttop: 50%;\n
+\tmargin-top: -5px;\n
+\tborder-left-style: solid;\n
+\tborder-right: none;\n
+\tborder-top-color: transparent;\n
+\tborder-bottom-color: transparent;\n
+}\n
+\n
+.@{prefix}-tooltip-w .@{prefix}-tooltip-arrow {\n
+\tleft: 0;\n
+\ttop: 50%;\n
+\tmargin-top: -5px;\n
+\tborder-right-style: solid;\n
+\tborder-left: none;\n
+\tborder-top-color: transparent;\n
+\tborder-bottom-color: transparent;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2463</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ToolTip.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268302.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>LegacyInput.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * LegacyInput.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+define("tinymce/LegacyInput", [\n
+\t"tinymce/EditorManager",\n
+\t"tinymce/util/Tools"\n
+], function(EditorManager, Tools) {\n
+\tvar each = Tools.each, explode = Tools.explode;\n
+\n
+\tEditorManager.on(\'AddEditor\', function(e) {\n
+\t\tvar editor = e.editor;\n
+\n
+\t\teditor.on(\'preInit\', function() {\n
+\t\t\tvar filters, fontSizes, dom, settings = editor.settings;\n
+\n
+\t\t\tfunction replaceWithSpan(node, styles) {\n
+\t\t\t\teach(styles, function(value, name) {\n
+\t\t\t\t\tif (value) {\n
+\t\t\t\t\t\tdom.setStyle(node, name, value);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tdom.rename(node, \'span\');\n
+\t\t\t}\n
+\n
+\t\t\tfunction convert(e) {\n
+\t\t\t\tdom = editor.dom;\n
+\n
+\t\t\t\tif (settings.convert_fonts_to_spans) {\n
+\t\t\t\t\teach(dom.select(\'font,u,strike\', e.node), function(node) {\n
+\t\t\t\t\t\tfilters[node.nodeName.toLowerCase()](dom, node);\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.inline_styles) {\n
+\t\t\t\tfontSizes = explode(settings.font_size_legacy_values);\n
+\n
+\t\t\t\tfilters = {\n
+\t\t\t\t\tfont: function(dom, node) {\n
+\t\t\t\t\t\treplaceWithSpan(node, {\n
+\t\t\t\t\t\t\tbackgroundColor: node.style.backgroundColor,\n
+\t\t\t\t\t\t\tcolor: node.color,\n
+\t\t\t\t\t\t\tfontFamily: node.face,\n
+\t\t\t\t\t\t\tfontSize: fontSizes[parseInt(node.size, 10) - 1]\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tu: function(dom, node) {\n
+\t\t\t\t\t\t// HTML5 allows U element\n
+\t\t\t\t\t\tif (editor.settings.schema === "html4") {\n
+\t\t\t\t\t\t\treplaceWithSpan(node, {\n
+\t\t\t\t\t\t\t\ttextDecoration: \'underline\'\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tstrike: function(dom, node) {\n
+\t\t\t\t\t\treplaceWithSpan(node, {\n
+\t\t\t\t\t\t\ttextDecoration: \'line-through\'\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\t\t\t\t};\n
+\n
+\t\t\t\teditor.on(\'PreProcess SetContent\', convert);\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1735</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>LegacyInput.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

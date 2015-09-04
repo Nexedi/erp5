@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268492.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>visualblocks.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>.mce-visualblocks p {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin-left: 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhCQAJAJEAAAAAAP///7u7u////yH5BAEAAAMALAAAAAAJAAkAAAIQnG+CqCN/mlyvsRUpThG6AgA7);\n
+}\n
+\n
+.mce-visualblocks h1 {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin-left: 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhDQAKAIABALu7u////yH5BAEAAAEALAAAAAANAAoAAAIXjI8GybGu1JuxHoAfRNRW3TWXyF2YiRUAOw==);\n
+}\n
+\n
+.mce-visualblocks h2 {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin-left: 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhDgAKAIABALu7u////yH5BAEAAAEALAAAAAAOAAoAAAIajI8Hybbx4oOuqgTynJd6bGlWg3DkJzoaUAAAOw==);\n
+}\n
+\n
+.mce-visualblocks h3 {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin-left: 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhDgAKAIABALu7u////yH5BAEAAAEALAAAAAAOAAoAAAIZjI8Hybbx4oOuqgTynJf2Ln2NOHpQpmhAAQA7);\n
+}\n
+\n
+.mce-visualblocks h4 {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin-left: 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhDgAKAIABALu7u////yH5BAEAAAEALAAAAAAOAAoAAAIajI8HybbxInR0zqeAdhtJlXwV1oCll2HaWgAAOw==);\n
+}\n
+\n
+.mce-visualblocks h5 {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin-left: 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhDgAKAIABALu7u////yH5BAEAAAEALAAAAAAOAAoAAAIajI8HybbxIoiuwjane4iq5GlW05GgIkIZUAAAOw==);\n
+}\n
+\n
+.mce-visualblocks h6 {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin-left: 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhDgAKAIABALu7u////yH5BAEAAAEALAAAAAAOAAoAAAIajI8HybbxIoiuwjan04jep1iZ1XRlAo5bVgAAOw==);\n
+}\n
+\n
+.mce-visualblocks div {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin-left: 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhEgAKAIABALu7u////yH5BAEAAAEALAAAAAASAAoAAAIfjI9poI0cgDywrhuxfbrzDEbQM2Ei5aRjmoySW4pAAQA7);\n
+}\n
+\n
+.mce-visualblocks section {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin: 0 0 1em 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhKAAKAIABALu7u////yH5BAEAAAEALAAAAAAoAAoAAAI5jI+pywcNY3sBWHdNrplytD2ellDeSVbp+GmWqaDqDMepc8t17Y4vBsK5hDyJMcI6KkuYU+jpjLoKADs=);\n
+}\n
+\n
+.mce-visualblocks article {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin: 0 0 1em 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhKgAKAIABALu7u////yH5BAEAAAEALAAAAAAqAAoAAAI6jI+pywkNY3wG0GBvrsd2tXGYSGnfiF7ikpXemTpOiJScasYoDJJrjsG9gkCJ0ag6KhmaIe3pjDYBBQA7);\n
+}\n
+\n
+.mce-visualblocks blockquote {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhPgAKAIABALu7u////yH5BAEAAAEALAAAAAA+AAoAAAJPjI+py+0Knpz0xQDyuUhvfoGgIX5iSKZYgq5uNL5q69asZ8s5rrf0yZmpNkJZzFesBTu8TOlDVAabUyatguVhWduud3EyiUk45xhTTgMBBQA7);\n
+}\n
+\n
+.mce-visualblocks address {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin: 0 0 1em 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhLQAKAIABALu7u////yH5BAEAAAEALAAAAAAtAAoAAAI/jI+pywwNozSP1gDyyZcjb3UaRpXkWaXmZW4OqKLhBmLs+K263DkJK7OJeifh7FicKD9A1/IpGdKkyFpNmCkAADs=);\n
+}\n
+\n
+.mce-visualblocks pre {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin-left: 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhFQAKAIABALu7uwAAACH5BAEAAAEALAAAAAAVAAoAAAIjjI+ZoN0cgDwSmnpz1NCueYERhnibZVKLNnbOq8IvKpJtVQAAOw==);\n
+}\n
+\n
+.mce-visualblocks figure {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin: 0 0 1em 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhJAAKAIAAALu7u////yH5BAEAAAEALAAAAAAkAAoAAAI0jI+py+2fwAHUSFvD3RlvG4HIp4nX5JFSpnZUJ6LlrM52OE7uSWosBHScgkSZj7dDKnWAAgA7);\n
+}\n
+\n
+.mce-visualblocks hgroup {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin: 0 0 1em 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhJwAKAIABALu7uwAAACH5BAEAAAEALAAAAAAnAAoAAAI3jI+pywYNI3uB0gpsRtt5fFnfNZaVSYJil4Wo03Hv6Z62uOCgiXH1kZIIJ8NiIxRrAZNMZAtQAAA7);\n
+}\n
+\n
+.mce-visualblocks aside {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin: 0 0 1em 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhHgAKAIABAKqqqv///yH5BAEAAAEALAAAAAAeAAoAAAItjI+pG8APjZOTzgtqy7I3f1yehmQcFY4WKZbqByutmW4aHUd6vfcVbgudgpYCADs=);\n
+}\n
+\n
+.mce-visualblocks figcaption {\n
+\tborder: 1px dashed #BBB;\n
+}\n
+\n
+.mce-visualblocks ul {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin: 0 0 1em 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhDQAKAIAAALu7u////yH5BAEAAAEALAAAAAANAAoAAAIXjI8GybGuYnqUVSjvw26DzzXiqIDlVwAAOw==)\n
+}\n
+\n
+.mce-visualblocks ol {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin: 0 0 1em 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhDQAKAIABALu7u////yH5BAEAAAEALAAAAAANAAoAAAIXjI8GybH6HHt0qourxC6CvzXieHyeWQAAOw==);\n
+}\n
+\n
+.mce-visualblocks dl {\n
+\tpadding-top: 10px;\n
+\tborder: 1px dashed #BBB;\n
+\tmargin: 0 0 1em 3px;\n
+\tbackground: transparent no-repeat url(data:image/gif;base64,R0lGODlhDQAKAIABALu7u////yH5BAEAAAEALAAAAAANAAoAAAIXjI8GybEOnmOvUoWznTqeuEjNSCqeGRUAOw==);\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5070</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>visualblocks.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268304.97</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Checkbox.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Checkbox.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This control creates a custom checkbox.\n
+ *\n
+ * @example\n
+ * // Create and render a checkbox to the body element\n
+ * tinymce.ui.Factory.create({\n
+ *     type: \'checkbox\',\n
+ *     checked: true,\n
+ *     text: \'My checkbox\'\n
+ * }).renderTo(document.body);\n
+ *\n
+ * @-x-less Checkbox.less\n
+ * @class tinymce.ui.Checkbox\n
+ * @extends tinymce.ui.Widget\n
+ */\n
+define("tinymce/ui/Checkbox", [\n
+\t"tinymce/ui/Widget"\n
+], function(Widget) {\n
+\t"use strict";\n
+\n
+\treturn Widget.extend({\n
+\t\tDefaults: {\n
+\t\t\tclasses: "checkbox",\n
+\t\t\trole: "checkbox",\n
+\t\t\tchecked: false\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Constructs a new Checkbox instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {Boolean} checked True if the checkbox should be checked by default.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super(settings);\n
+\n
+\t\t\tself.on(\'click mousedown\', function(e) {\n
+\t\t\t\te.preventDefault();\n
+\t\t\t});\n
+\n
+\t\t\tself.on(\'click\', function(e) {\n
+\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\tif (!self.disabled()) {\n
+\t\t\t\t\tself.checked(!self.checked());\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself.checked(self.settings.checked);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Getter/setter function for the checked state.\n
+\t\t *\n
+\t\t * @method checked\n
+\t\t * @param {Boolean} [state] State to be set.\n
+\t\t * @return {Boolean|tinymce.ui.Checkbox} True/false or checkbox if it\'s a set operation.\n
+\t\t */\n
+\t\tchecked: function(state) {\n
+\t\t\tif (!arguments.length) {\n
+\t\t\t\treturn this.state.get(\'checked\');\n
+\t\t\t}\n
+\n
+\t\t\tthis.state.set(\'checked\', state);\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Getter/setter function for the value state.\n
+\t\t *\n
+\t\t * @method value\n
+\t\t * @param {Boolean} [state] State to be set.\n
+\t\t * @return {Boolean|tinymce.ui.Checkbox} True/false or checkbox if it\'s a set operation.\n
+\t\t */\n
+\t\tvalue: function(state) {\n
+\t\t\tif (!arguments.length) {\n
+\t\t\t\treturn this.checked();\n
+\t\t\t}\n
+\n
+\t\t\treturn this.checked(state);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, id = self._id, prefix = self.classPrefix;\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + id + \'" class="\' + self.classes + \'" unselectable="on" aria-labelledby="\' + id + \'-al" tabindex="-1">\' +\n
+\t\t\t\t\t\'<i class="\' + prefix + \'ico \' + prefix + \'i-checkbox"></i>\' +\n
+\t\t\t\t\t\'<span id="\' + id + \'-al" class="\' + prefix + \'label">\' + self.encode(self.state.get(\'text\')) + \'</span>\' +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tfunction checked(state) {\n
+\t\t\t\tself.classes.toggle("checked", state);\n
+\t\t\t\tself.aria(\'checked\', state);\n
+\t\t\t}\n
+\n
+\t\t\tself.state.on(\'change:text\', function(e) {\n
+\t\t\t\tself.getEl(\'al\').firstChild.data = self.translate(e.value);\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:checked change:value\', function(e) {\n
+\t\t\t\tself.fire(\'change\');\n
+\t\t\t\tchecked(e.value);\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:icon\', function(e) {\n
+\t\t\t\tvar icon = e.value, prefix = self.classPrefix;\n
+\n
+\t\t\t\tif (typeof icon == \'undefined\') {\n
+\t\t\t\t\treturn self.settings.icon;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.settings.icon = icon;\n
+\t\t\t\ticon = icon ? prefix + \'ico \' + prefix + \'i-\' + self.settings.icon : \'\';\n
+\n
+\t\t\t\tvar btnElm = self.getEl().firstChild, iconElm = btnElm.getElementsByTagName(\'i\')[0];\n
+\n
+\t\t\t\tif (icon) {\n
+\t\t\t\t\tif (!iconElm || iconElm != btnElm.firstChild) {\n
+\t\t\t\t\t\ticonElm = document.createElement(\'i\');\n
+\t\t\t\t\t\tbtnElm.insertBefore(iconElm, btnElm.firstChild);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\ticonElm.className = icon;\n
+\t\t\t\t} else if (iconElm) {\n
+\t\t\t\t\tbtnElm.removeChild(iconElm);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tif (self.state.get(\'checked\')) {\n
+\t\t\t\tchecked(true);\n
+\t\t\t}\n
+\n
+\t\t\treturn self._super();\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3799</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Checkbox.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

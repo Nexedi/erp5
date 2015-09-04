@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268309.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ListBox.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ListBox.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Creates a new list box control.\n
+ *\n
+ * @-x-less ListBox.less\n
+ * @class tinymce.ui.ListBox\n
+ * @extends tinymce.ui.MenuButton\n
+ */\n
+define("tinymce/ui/ListBox", [\n
+\t"tinymce/ui/MenuButton",\n
+\t"tinymce/ui/Menu"\n
+], function(MenuButton, Menu) {\n
+\t"use strict";\n
+\n
+\treturn MenuButton.extend({\n
+\t\t/**\n
+\t\t * Constructs a instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {Array} values Array with values to add to list box.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this, values, selected, selectedText, lastItemCtrl;\n
+\n
+\t\t\tfunction setSelected(menuValues) {\n
+\t\t\t\t// Try to find a selected value\n
+\t\t\t\tfor (var i = 0; i < menuValues.length; i++) {\n
+\t\t\t\t\tselected = menuValues[i].selected || settings.value === menuValues[i].value;\n
+\n
+\t\t\t\t\tif (selected) {\n
+\t\t\t\t\t\tselectedText = selectedText || menuValues[i].text;\n
+\t\t\t\t\t\tself.state.set(\'value\', menuValues[i].value);\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// If the value has a submenu, try to find the selected values in that menu\n
+\t\t\t\t\tif (menuValues[i].menu) {\n
+\t\t\t\t\t\tif (setSelected(menuValues[i].menu)) {\n
+\t\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tsettings = self.settings;\n
+\n
+\t\t\tself._values = values = settings.values;\n
+\t\t\tif (values) {\n
+\t\t\t\tif (typeof settings.value != "undefined") {\n
+\t\t\t\t\tsetSelected(values);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Default with first item\n
+\t\t\t\tif (!selected && values.length > 0) {\n
+\t\t\t\t\tselectedText = values[0].text;\n
+\t\t\t\t\tself.state.set(\'value\', values[0].value);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.state.set(\'menu\', values);\n
+\t\t\t}\n
+\n
+\t\t\tself.state.set(\'text\', settings.text || selectedText || values[0].text);\n
+\n
+\t\t\tself.classes.add(\'listbox\');\n
+\n
+\t\t\tself.on(\'select\', function(e) {\n
+\t\t\t\tvar ctrl = e.control;\n
+\n
+\t\t\t\tif (lastItemCtrl) {\n
+\t\t\t\t\te.lastControl = lastItemCtrl;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (settings.multiple) {\n
+\t\t\t\t\tctrl.active(!ctrl.active());\n
+\t\t\t\t} else {\n
+\t\t\t\t\tself.value(e.control.value());\n
+\t\t\t\t}\n
+\n
+\t\t\t\tlastItemCtrl = ctrl;\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Getter/setter function for the control value.\n
+\t\t *\n
+\t\t * @method value\n
+\t\t * @param {String} [value] Value to be set.\n
+\t\t * @return {Boolean/tinymce.ui.ListBox} Value or self if it\'s a set operation.\n
+\t\t */\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tfunction activateMenuItemsByValue(menu, value) {\n
+\t\t\t\tif (menu instanceof Menu) {\n
+\t\t\t\t\tmenu.items().each(function(ctrl) {\n
+\t\t\t\t\t\tif (!ctrl.hasMenus()) {\n
+\t\t\t\t\t\t\tctrl.active(ctrl.value() === value);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction getSelectedItem(menuValues, value) {\n
+\t\t\t\tvar selectedItem;\n
+\n
+\t\t\t\tif (!menuValues) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (var i = 0; i < menuValues.length; i++) {\n
+\t\t\t\t\tif (menuValues[i].value === value) {\n
+\t\t\t\t\t\treturn menuValues[i];\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (menuValues[i].menu) {\n
+\t\t\t\t\t\tselectedItem = getSelectedItem(menuValues[i].menu, value);\n
+\t\t\t\t\t\tif (selectedItem) {\n
+\t\t\t\t\t\t\treturn selectedItem;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tself.on(\'show\', function(e) {\n
+\t\t\t\tactivateMenuItemsByValue(e.control, self.value());\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:value\', function(e) {\n
+\t\t\t\tvar selectedItem = getSelectedItem(self.state.get(\'menu\'), e.value);\n
+\n
+\t\t\t\tif (selectedItem) {\n
+\t\t\t\t\tself.text(selectedItem.text);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tself.text(self.settings.text);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t}\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3471</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ListBox.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

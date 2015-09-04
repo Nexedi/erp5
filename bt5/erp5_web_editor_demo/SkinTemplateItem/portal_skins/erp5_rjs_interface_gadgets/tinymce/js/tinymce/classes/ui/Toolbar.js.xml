@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268306.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Toolbar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Toolbar.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Creates a new toolbar.\n
+ *\n
+ * @class tinymce.ui.Toolbar\n
+ * @extends tinymce.ui.Container\n
+ */\n
+define("tinymce/ui/Toolbar", [\n
+\t"tinymce/ui/Container"\n
+], function(Container) {\n
+\t"use strict";\n
+\n
+\treturn Container.extend({\n
+\t\tDefaults: {\n
+\t\t\trole: \'toolbar\',\n
+\t\t\tlayout: \'flow\'\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Constructs a instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tself.classes.add(\'toolbar\');\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Called after the control has been rendered.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.items().each(function(ctrl) {\n
+\t\t\t\tctrl.classes.add(\'toolbar-item\');\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t}\n
+\t});\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1023</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Toolbar.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

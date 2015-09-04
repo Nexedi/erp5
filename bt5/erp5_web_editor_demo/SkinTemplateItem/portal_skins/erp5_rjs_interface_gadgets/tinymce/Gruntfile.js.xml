@@ -1,0 +1,762 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268113.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Gruntfile.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*eslint-env node */\n
+\n
+module.exports = function(grunt) {\n
+\tvar packageData = grunt.file.readJSON("package.json");\n
+\tvar changelogLine = grunt.file.read("changelog.txt").toString().split("\\n")[0];\n
+\tpackageData.version = /^Version ([0-9xabrc.]+)/.exec(changelogLine)[1];\n
+\tpackageData.date = /^Version [^\\(]+\\(([^\\)]+)\\)/.exec(changelogLine)[1];\n
+\n
+\tgrunt.initConfig({\n
+\t\tpkg: packageData,\n
+\n
+\t\teslint: {\n
+\t\t\toptions: {\n
+\t\t\t\tconfig: ".eslintrc"\n
+\t\t\t},\n
+\n
+\t\t\tcore: ["js/tinymce/classes/**/*.js"],\n
+\n
+\t\t\tplugins: [\n
+\t\t\t\t"js/tinymce/plugins/*/plugin.js",\n
+\t\t\t\t"js/tinymce/plugins/*/classes/**/*.js",\n
+\t\t\t\t"!js/tinymce/plugins/paste/plugin.js",\n
+\t\t\t\t"!js/tinymce/plugins/table/plugin.js",\n
+\t\t\t\t"!js/tinymce/plugins/spellchecker/plugin.js",\n
+\t\t\t\t"!js/tinymce/plugins/imagetools/plugin.js"\n
+\t\t\t],\n
+\n
+\t\t\tthemes: ["js/tinymce/themes/*/theme.js"]\n
+\t\t},\n
+\n
+\t\tjscs: {\n
+\t\t\toptions: {\n
+\t\t\t\tconfig: ".jscsrc"\n
+\t\t\t},\n
+\n
+\t\t\tcore: ["js/tinymce/classes/**/*.js"],\n
+\n
+\t\t\tplugins: [\n
+\t\t\t\t"js/tinymce/plugins/*/plugin.js",\n
+\t\t\t\t"js/tinymce/plugins/*/classes/**.js",\n
+\t\t\t\t"!js/tinymce/plugins/paste/plugin.js",\n
+\t\t\t\t"!js/tinymce/plugins/table/plugin.js",\n
+\t\t\t\t"!js/tinymce/plugins/spellchecker/plugin.js",\n
+\t\t\t\t"!js/tinymce/plugins/imagetools/plugin.js"\n
+\t\t\t],\n
+\n
+\t\t\tthemes: ["js/tinymce/themes/*/theme.js"]\n
+\t\t},\n
+\n
+\t\tqunit: {\n
+\t\t\tcore: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\turls: [\n
+\t\t\t\t\t\t"tests/index.html"\n
+\t\t\t\t\t]\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tamdlc: {\n
+\t\t\tcore: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tversion: packageData.version,\n
+\t\t\t\t\treleaseDate: packageData.date,\n
+\t\t\t\t\tbaseDir: "js/tinymce/classes",\n
+\t\t\t\t\trootNS: "tinymce",\n
+\t\t\t\t\toutputSource: "js/tinymce/tinymce.js",\n
+\t\t\t\t\toutputMinified: "js/tinymce/tinymce.min.js",\n
+\t\t\t\t\toutputDev: "js/tinymce/tinymce.dev.js",\n
+\t\t\t\t\tverbose: false,\n
+\t\t\t\t\texpose: "public",\n
+\t\t\t\t\tcompress: true,\n
+\n
+\t\t\t\t\tfrom: [\n
+\t\t\t\t\t\t"dom/DomQuery.js",\n
+\t\t\t\t\t\t"EditorManager.js",\n
+\t\t\t\t\t\t"LegacyInput.js",\n
+\t\t\t\t\t\t"util/XHR.js",\n
+\t\t\t\t\t\t"util/JSONRequest.js",\n
+\t\t\t\t\t\t"util/JSONP.js",\n
+\t\t\t\t\t\t"util/LocalStorage.js",\n
+\t\t\t\t\t\t"Compat.js",\n
+\t\t\t\t\t\t"ui/*.js"\n
+\t\t\t\t\t]\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t"core-jquery": {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tmoduleOverrides: {\n
+\t\t\t\t\t\t"tinymce/dom/Sizzle": "js/tinymce/classes/dom/Sizzle.jQuery.js"\n
+\t\t\t\t\t},\n
+\t\t\t\t\tversion: packageData.version,\n
+\t\t\t\t\treleaseDate: packageData.date,\n
+\t\t\t\t\tbaseDir: "js/tinymce/classes",\n
+\t\t\t\t\trootNS: "tinymce",\n
+\t\t\t\t\toutputSource: "js/tinymce/tinymce.jquery.js",\n
+\t\t\t\t\toutputMinified: "js/tinymce/tinymce.jquery.min.js",\n
+\t\t\t\t\toutputDev: "js/tinymce/tinymce.jquery.dev.js",\n
+\t\t\t\t\tverbose: false,\n
+\t\t\t\t\texpose: "public",\n
+\t\t\t\t\tcompress: true,\n
+\n
+\t\t\t\t\tfrom: [\n
+\t\t\t\t\t\t"dom/DomQuery.js",\n
+\t\t\t\t\t\t"EditorManager.js",\n
+\t\t\t\t\t\t"LegacyInput.js",\n
+\t\t\t\t\t\t"util/XHR.js",\n
+\t\t\t\t\t\t"util/JSONRequest.js",\n
+\t\t\t\t\t\t"util/JSONP.js",\n
+\t\t\t\t\t\t"util/LocalStorage.js",\n
+\t\t\t\t\t\t"Compat.js",\n
+\t\t\t\t\t\t"ui/*.js"\n
+\t\t\t\t\t]\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t"paste-plugin": {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tbaseDir: "js/tinymce/plugins/paste/classes",\n
+\t\t\t\t\trootNS: "tinymce.pasteplugin",\n
+\t\t\t\t\toutputSource: "js/tinymce/plugins/paste/plugin.js",\n
+\t\t\t\t\toutputMinified: "js/tinymce/plugins/paste/plugin.min.js",\n
+\t\t\t\t\toutputDev: "js/tinymce/plugins/paste/plugin.dev.js",\n
+\t\t\t\t\tverbose: false,\n
+\t\t\t\t\texpose: "public",\n
+\t\t\t\t\tcompress: true,\n
+\n
+\t\t\t\t\tfrom: "Plugin.js"\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t"table-plugin": {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tbaseDir: "js/tinymce/plugins/table/classes",\n
+\t\t\t\t\trootNS: "tinymce.tableplugin",\n
+\t\t\t\t\toutputSource: "js/tinymce/plugins/table/plugin.js",\n
+\t\t\t\t\toutputMinified: "js/tinymce/plugins/table/plugin.min.js",\n
+\t\t\t\t\toutputDev: "js/tinymce/plugins/table/plugin.dev.js",\n
+\t\t\t\t\tverbose: false,\n
+\t\t\t\t\texpose: "public",\n
+\t\t\t\t\tcompress: true,\n
+\n
+\t\t\t\t\tfrom: "Plugin.js"\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t"spellchecker-plugin": {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tbaseDir: "js/tinymce/plugins/spellchecker/classes",\n
+\t\t\t\t\trootNS: "tinymce.spellcheckerplugin",\n
+\t\t\t\t\toutputSource: "js/tinymce/plugins/spellchecker/plugin.js",\n
+\t\t\t\t\toutputMinified: "js/tinymce/plugins/spellchecker/plugin.min.js",\n
+\t\t\t\t\toutputDev: "js/tinymce/plugins/spellchecker/plugin.dev.js",\n
+\t\t\t\t\tverbose: false,\n
+\t\t\t\t\texpose: "public",\n
+\t\t\t\t\tcompress: true,\n
+\n
+\t\t\t\t\tfrom: "Plugin.js"\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t"imagetools-plugin": {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tbaseDir: "js/tinymce/plugins/imagetools/classes",\n
+\t\t\t\t\trootNS: "tinymce.imagetoolsplugin",\n
+\t\t\t\t\toutputSource: "js/tinymce/plugins/imagetools/plugin.js",\n
+\t\t\t\t\toutputMinified: "js/tinymce/plugins/imagetools/plugin.min.js",\n
+\t\t\t\t\toutputDev: "js/tinymce/plugins/imagetools/plugin.dev.js",\n
+\t\t\t\t\tverbose: false,\n
+\t\t\t\t\texpose: "public",\n
+\t\t\t\t\tcompress: true,\n
+\n
+\t\t\t\t\tfrom: "Plugin.js"\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tskin: {\n
+\t\t\tmodern: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tprepend: [\n
+\t\t\t\t\t\t"Variables.less",\n
+\t\t\t\t\t\t"Reset.less",\n
+\t\t\t\t\t\t"Mixins.less",\n
+\t\t\t\t\t\t"Animations.less",\n
+\t\t\t\t\t\t"TinyMCE.less",\n
+\t\t\t\t\t\t"CropRect.less",\n
+\t\t\t\t\t\t"ImagePanel.less"\n
+\t\t\t\t\t],\n
+\t\t\t\t\tappend: ["Icons.less"],\n
+\t\t\t\t\timportFrom: "js/tinymce/tinymce.js",\n
+\t\t\t\t\tpath: "js/tinymce/skins",\n
+\t\t\t\t\tdevLess: "skin.dev.less",\n
+\t\t\t\t\tsrcLess: "skin.less"\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tie7: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tprepend: [\n
+\t\t\t\t\t\t"Variables.less",\n
+\t\t\t\t\t\t"Reset.less",\n
+\t\t\t\t\t\t"Mixins.less",\n
+\t\t\t\t\t\t"Animations.less",\n
+\t\t\t\t\t\t"TinyMCE.less",\n
+\t\t\t\t\t\t"CropRect.less",\n
+\t\t\t\t\t\t"ImagePanel.less"\n
+\t\t\t\t\t],\n
+\t\t\t\t\tappend: ["Icons.Ie7.less"],\n
+\t\t\t\t\timportFrom: "js/tinymce/tinymce.js",\n
+\t\t\t\t\tpath: "js/tinymce/skins",\n
+\t\t\t\t\tdevLess: "skin.ie7.dev.less",\n
+\t\t\t\t\tsrcLess: "skin.ie7.less"\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tless: {\n
+\t\t\tmodern: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tcleancss: true,\n
+\t\t\t\t\tstrictImports: true\n
+\t\t\t\t},\n
+\n
+\t\t\t\texpand: true,\n
+\t\t\t\tsrc: ["js/tinymce/skins/**/skin.dev.less"],\n
+\t\t\t\text: ".min.css"\n
+\t\t\t},\n
+\n
+\t\t\tie7: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tcompress: true,\n
+\t\t\t\t\tstrictImports: true,\n
+\t\t\t\t\tieCompat: true\n
+\t\t\t\t},\n
+\n
+\t\t\t\texpand: true,\n
+\t\t\t\tsrc: ["js/tinymce/skins/**/skin.ie7.dev.less"],\n
+\t\t\t\text: ".ie7.min.css"\n
+\t\t\t},\n
+\n
+\t\t\tcontent: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tcleancss: true,\n
+\t\t\t\t\tstrictImports: true\n
+\t\t\t\t},\n
+\n
+\t\t\t\trename: function(dest, src) {\n
+\t\t\t\t\treturn src.toLowerCase();\n
+\t\t\t\t},\n
+\n
+\t\t\t\texpand: true,\n
+\t\t\t\tsrc: ["js/tinymce/skins/**/Content.less"],\n
+\t\t\t\text: ".min.css"\n
+\t\t\t},\n
+\n
+\t\t\t"content-inline": {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tcleancss: true,\n
+\t\t\t\t\tstrictImports: true\n
+\t\t\t\t},\n
+\n
+\t\t\t\trename: function(dest, src) {\n
+\t\t\t\t\treturn src.toLowerCase();\n
+\t\t\t\t},\n
+\n
+\t\t\t\texpand: true,\n
+\t\t\t\tsrc: ["js/tinymce/skins/**/Content.Inline.less"],\n
+\t\t\t\text: ".inline.min.css"\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tuglify: {\n
+\t\t\toptions: {\n
+\t\t\t\tbeautify: {\n
+\t\t\t\t\tascii_only: true\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tthemes: {\n
+\t\t\t\tsrc: ["js/tinymce/themes/*/theme.js"],\n
+\t\t\t\texpand: true,\n
+\t\t\t\text: ".min.js"\n
+\t\t\t},\n
+\n
+\t\t\tplugins: {\n
+\t\t\t\tsrc: ["js/tinymce/plugins/*/plugin.js"],\n
+\t\t\t\texpand: true,\n
+\t\t\t\text: ".min.js"\n
+\t\t\t},\n
+\n
+\t\t\t"jquery-plugin": {\n
+\t\t\t\tsrc: ["js/tinymce/classes/jquery.tinymce.js"],\n
+\t\t\t\tdest: "js/tinymce/jquery.tinymce.min.js"\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tmoxiezip: {\n
+\t\t\tproduction: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tbaseDir: "tinymce",\n
+\n
+\t\t\t\t\texcludes: [\n
+\t\t\t\t\t\t"js/tinymce/plugins/moxiemanager",\n
+\t\t\t\t\t\t"js/tinymce/plugins/compat3x",\n
+\t\t\t\t\t\t"js/tinymce/plugins/visualblocks/img",\n
+\t\t\t\t\t\t"js/tinymce/plugins/*/classes/**",\n
+\t\t\t\t\t\t"js/tinymce/plugins/*/plugin.js",\n
+\t\t\t\t\t\t"js/tinymce/plugins/*/plugin.dev.js",\n
+\t\t\t\t\t\t"js/tinymce/themes/*/theme.js",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/*.less",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/fonts/*.json",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/fonts/*.dev.svg",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/fonts/readme.md",\n
+\t\t\t\t\t\t"readme.md"\n
+\t\t\t\t\t],\n
+\n
+\t\t\t\t\tto: "tmp/tinymce_<%= pkg.version %>.zip"\n
+\t\t\t\t},\n
+\n
+\t\t\t\tsrc: [\n
+\t\t\t\t\t"js/tinymce/langs",\n
+\t\t\t\t\t"js/tinymce/plugins",\n
+\t\t\t\t\t"js/tinymce/skins",\n
+\t\t\t\t\t"js/tinymce/themes",\n
+\t\t\t\t\t"js/tinymce/tinymce.min.js",\n
+\t\t\t\t\t"js/tinymce/license.txt",\n
+\t\t\t\t\t"changelog.txt",\n
+\t\t\t\t\t"LICENSE.TXT",\n
+\t\t\t\t\t"readme.md"\n
+\t\t\t\t]\n
+\t\t\t},\n
+\n
+\t\t\tjquery: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tbaseDir: "tinymce",\n
+\n
+\t\t\t\t\texcludes: [\n
+\t\t\t\t\t\t"js/tinymce/plugins/moxiemanager",\n
+\t\t\t\t\t\t"js/tinymce/plugins/compat3x",\n
+\t\t\t\t\t\t"js/tinymce/plugins/visualblocks/img",\n
+\t\t\t\t\t\t"js/tinymce/plugins/*/classes/**",\n
+\t\t\t\t\t\t"js/tinymce/plugins/*/plugin.js",\n
+\t\t\t\t\t\t"js/tinymce/plugins/*/plugin.dev.js",\n
+\t\t\t\t\t\t"js/tinymce/themes/*/theme.js",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/*.less",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/fonts/*.json",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/fonts/*.dev.svg",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/fonts/readme.md",\n
+\t\t\t\t\t\t"readme.md"\n
+\t\t\t\t\t],\n
+\n
+\t\t\t\t\tpathFilter: function(args) {\n
+\t\t\t\t\t\tif (args.zipFilePath == "js/tinymce/tinymce.jquery.min.js") {\n
+\t\t\t\t\t\t\targs.zipFilePath = "js/tinymce/tinymce.min.js";\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tto: "tmp/tinymce_<%= pkg.version %>_jquery.zip"\n
+\t\t\t\t},\n
+\n
+\t\t\t\tsrc: [\n
+\t\t\t\t\t"js/tinymce/langs",\n
+\t\t\t\t\t"js/tinymce/plugins",\n
+\t\t\t\t\t"js/tinymce/skins",\n
+\t\t\t\t\t"js/tinymce/themes",\n
+\t\t\t\t\t"js/tinymce/tinymce.jquery.min.js",\n
+\t\t\t\t\t"js/tinymce/jquery.tinymce.min.js",\n
+\t\t\t\t\t"js/tinymce/license.txt",\n
+\t\t\t\t\t"changelog.txt",\n
+\t\t\t\t\t"LICENSE.TXT",\n
+\t\t\t\t\t"readme.md"\n
+\t\t\t\t]\n
+\t\t\t},\n
+\n
+\t\t\tdevelopment: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tbaseDir: "tinymce",\n
+\n
+\t\t\t\t\texcludes: [\n
+\t\t\t\t\t\t"js/tinymce/tinymce.full.min.js",\n
+\t\t\t\t\t\t"js/tinymce/plugins/moxiemanager",\n
+\t\t\t\t\t\t"js/tests/.jshintrc"\n
+\t\t\t\t\t],\n
+\n
+\t\t\t\t\tto: "tmp/tinymce_<%= pkg.version %>_dev.zip"\n
+\t\t\t\t},\n
+\n
+\t\t\t\tsrc: [\n
+\t\t\t\t\t"js",\n
+\t\t\t\t\t"tests",\n
+\t\t\t\t\t"tools",\n
+\t\t\t\t\t"changelog.txt",\n
+\t\t\t\t\t"LICENSE.TXT",\n
+\t\t\t\t\t"Gruntfile.js",\n
+\t\t\t\t\t"readme.md",\n
+\t\t\t\t\t"package.json",\n
+\t\t\t\t\t".eslintrc",\n
+\t\t\t\t\t".jscsrc",\n
+\t\t\t\t\t".jshintrc"\n
+\t\t\t\t]\n
+\t\t\t},\n
+\n
+\t\t\tcomponent: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\texcludes: [\n
+\t\t\t\t\t\t"js/tinymce/plugins/moxiemanager",\n
+\t\t\t\t\t\t"js/tinymce/plugins/example",\n
+\t\t\t\t\t\t"js/tinymce/plugins/example_dependency",\n
+\t\t\t\t\t\t"js/tinymce/plugins/compat3x",\n
+\t\t\t\t\t\t"js/tinymce/plugins/visualblocks/img",\n
+\t\t\t\t\t\t"js/tinymce/plugins/*/classes/**",\n
+\t\t\t\t\t\t"js/tinymce/plugins/*/plugin.dev.js",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/*.less",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/fonts/*.json",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/fonts/*.dev.svg",\n
+\t\t\t\t\t\t"js/tinymce/skins/*/fonts/readme.md",\n
+\t\t\t\t\t\t"readme.md"\n
+\t\t\t\t\t],\n
+\n
+\t\t\t\t\tpathFilter: function(args) {\n
+\t\t\t\t\t\tif (args.zipFilePath.indexOf("js/tinymce/") === 0) {\n
+\t\t\t\t\t\t\targs.zipFilePath = args.zipFilePath.substr("js/tinymce/".length);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tonBeforeSave: function(zip) {\n
+\t\t\t\t\t\tfunction jsonToBuffer(json) {\n
+\t\t\t\t\t\t\treturn new Buffer(JSON.stringify(json, null, \'\\t\'));\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tzip.addData("bower.json", jsonToBuffer({\n
+\t\t\t\t\t\t\t"name": "tinymce",\n
+\t\t\t\t\t\t\t"version": packageData.version,\n
+\t\t\t\t\t\t\t"description": "Web based JavaScript HTML WYSIWYG editor control.",\n
+\t\t\t\t\t\t\t"license": "http://www.tinymce.com/license",\n
+\t\t\t\t\t\t\t"keywords": ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"],\n
+\t\t\t\t\t\t\t"homepage": "http://www.tinymce.com",\n
+\t\t\t\t\t\t\t"main": "tinymce.min.js",\n
+\t\t\t\t\t\t\t"ignore": ["readme.md", "composer.json", "package.json"]\n
+\t\t\t\t\t\t}));\n
+\n
+\t\t\t\t\t\tzip.addData("package.json", jsonToBuffer({\n
+\t\t\t\t\t\t\t"name": "tinymce",\n
+\t\t\t\t\t\t\t"version": packageData.version,\n
+\t\t\t\t\t\t\t"description": "Web based JavaScript HTML WYSIWYG editor control.",\n
+\t\t\t\t\t\t\t"license": "LGPL-2.1",\n
+\t\t\t\t\t\t\t"keywords": ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"],\n
+\t\t\t\t\t\t\t"bugs": {"url": "http://www.tinymce.com/develop/bugtracker.php"}\n
+\t\t\t\t\t\t}));\n
+\n
+\t\t\t\t\t\tzip.addData("composer.json", jsonToBuffer({\n
+\t\t\t\t\t\t\t"name": "tinymce/tinymce",\n
+\t\t\t\t\t\t\t"version": packageData.version,\n
+\t\t\t\t\t\t\t"description": "Web based JavaScript HTML WYSIWYG editor control.",\n
+\t\t\t\t\t\t\t"license": ["LGPL-2.1"],\n
+\t\t\t\t\t\t\t"keywords": ["editor", "wysiwyg", "tinymce", "richtext", "javascript", "html"],\n
+\t\t\t\t\t\t\t"homepage": "http://www.tinymce.com",\n
+\t\t\t\t\t\t\t"type": "component",\n
+\t\t\t\t\t\t\t"extra": {\n
+\t\t\t\t\t\t\t\t"component": {\n
+\t\t\t\t\t\t\t\t\t"scripts": [\n
+\t\t\t\t\t\t\t\t\t\t"tinymce.js",\n
+\t\t\t\t\t\t\t\t\t\t"plugins/*/plugin.js",\n
+\t\t\t\t\t\t\t\t\t\t"themes/*/theme.js"\n
+\t\t\t\t\t\t\t\t\t],\n
+\t\t\t\t\t\t\t\t\t"files": [\n
+\t\t\t\t\t\t\t\t\t\t"tinymce.min.js",\n
+\t\t\t\t\t\t\t\t\t\t"plugins/*/plugin.min.js",\n
+\t\t\t\t\t\t\t\t\t\t"themes/*/theme.min.js",\n
+\t\t\t\t\t\t\t\t\t\t"skins/**"\n
+\t\t\t\t\t\t\t\t\t]\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t},\n
+\t\t\t\t\t\t\t"archive": {\n
+\t\t\t\t\t\t\t\t"exclude": ["readme.md", "bower.js", "package.json"]\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}));\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tto: "tmp/tinymce_<%= pkg.version %>_component.zip"\n
+\t\t\t\t},\n
+\n
+\t\t\t\tsrc: [\n
+\t\t\t\t\t"js/tinymce/skins",\n
+\t\t\t\t\t"js/tinymce/plugins",\n
+\t\t\t\t\t"js/tinymce/themes",\n
+\t\t\t\t\t"js/tinymce/tinymce.js",\n
+\t\t\t\t\t"js/tinymce/tinymce.min.js",\n
+\t\t\t\t\t"js/tinymce/jquery.tinymce.min.js",\n
+\t\t\t\t\t"js/tinymce/tinymce.jquery.js",\n
+\t\t\t\t\t"js/tinymce/tinymce.jquery.min.js",\n
+\t\t\t\t\t"js/tinymce/license.txt",\n
+\t\t\t\t\t"changelog.txt"\n
+\t\t\t\t]\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tconnect: {\n
+\t\t\tserver: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tport: 9999\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t"saucelabs-qunit": {\n
+\t\t\tall: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\turls: ["127.0.0.1:9999/tests/index.html?min=true"],\n
+\t\t\t\t\ttestname: "TinyMCE QUnit Tests",\n
+\t\t\t\t\tbrowsers: [\n
+\t\t\t\t\t\t{browserName: "firefox", platform: "XP"},\n
+\t\t\t\t\t\t{browserName: "googlechrome", platform: "XP"},\n
+\t\t\t\t\t\t{browserName: "firefox", platform: "Linux"},\n
+\t\t\t\t\t\t{browserName: "googlechrome", platform: "Linux"},\n
+\t\t\t\t\t\t{browserName: "internet explorer", platform: "XP", version: "8"},\n
+\t\t\t\t\t\t{browserName: "internet explorer", platform: "Windows 7", version: "9"},\n
+\t\t\t\t\t\t{browserName: "internet explorer", platform: "Windows 7", version: "10"},\n
+\t\t\t\t\t\t{browserName: "internet explorer", platform: "Windows 7", version: "11"},\n
+\t\t\t\t\t\t{browserName: "safari", platform: "OS X 10.9", version: "7"},\n
+\t\t\t\t\t\t{browserName: "safari", platform: "OS X 10.8", version: "6"}\n
+\t\t\t\t\t]\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tnugetpack: {\n
+\t\t\tmain: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tid: "TinyMCE",\n
+\t\t\t\t\tversion: packageData.version,\n
+\t\t\t\t\tauthors: "Ephox Corp",\n
+\t\t\t\t\towners: "Ephox Corp",\n
+\t\t\t\t\tdescription: "The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +\n
+\t\t\t\t\t\t"control released as Open Source under LGPL by Ephox Corp. TinyMCE has the ability to convert HTML " +\n
+\t\t\t\t\t\t"TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate " +\n
+\t\t\t\t\t\t"into other Content Management Systems.",\n
+\t\t\t\t\treleaseNotes: "Release notes for my package.",\n
+\t\t\t\t\tsummary: "TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +\n
+\t\t\t\t\t\t"control released as Open Source under LGPL by Ephox Corp.",\n
+\t\t\t\t\tprojectUrl: "http://www.tinymce.com/",\n
+\t\t\t\t\ticonUrl: "http://www.tinymce.com/favicon.ico",\n
+\t\t\t\t\tlicenseUrl: "http://www.tinymce.com/license",\n
+\t\t\t\t\trequireLicenseAcceptance: true,\n
+\t\t\t\t\ttags: "Editor TinyMCE HTML HTMLEditor",\n
+\t\t\t\t\texcludes: [\n
+\t\t\t\t\t\t"js/tinymce/skins/**/*.dev.svg",\n
+\t\t\t\t\t\t"js/tinymce/skins/**/*.less",\n
+\t\t\t\t\t\t"js/tinymce/plugins/**/classes",\n
+\t\t\t\t\t\t"js/tinymce/plugins/**/*.dev.js"\n
+\t\t\t\t\t],\n
+\t\t\t\t\toutputDir: "tmp"\n
+\t\t\t\t},\n
+\n
+\t\t\t\tfiles: [\n
+\t\t\t\t\t{src: "js/tinymce/langs", dest: "/content/scripts/tinymce/langs"},\n
+\t\t\t\t\t{src: "js/tinymce/plugins", dest: "/content/scripts/tinymce/plugins"},\n
+\t\t\t\t\t{src: "js/tinymce/themes", dest: "/content/scripts/tinymce/themes"},\n
+\t\t\t\t\t{src: "js/tinymce/skins", dest: "/content/scripts/tinymce/skins"},\n
+\t\t\t\t\t{src: "js/tinymce/tinymce.js", dest: "/content/scripts/tinymce/tinymce.js"},\n
+\t\t\t\t\t{src: "js/tinymce/tinymce.min.js", dest: "/content/scripts/tinymce/tinymce.min.js"},\n
+\t\t\t\t\t{src: "js/tinymce/license.txt", dest: "/content/scripts/tinymce/license.txt"}\n
+\t\t\t\t]\n
+\t\t\t},\n
+\n
+\t\t\tjquery: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tid: "TinyMCE.jQuery",\n
+\t\t\t\t\tversion: packageData.version,\n
+\t\t\t\t\tauthors: "Ephox Corp",\n
+\t\t\t\t\towners: "Ephox Corp",\n
+\t\t\t\t\tdescription: "The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +\n
+\t\t\t\t\t\t"control released as Open Source under LGPL by Ephox Corp. TinyMCE has the ability to convert HTML " +\n
+\t\t\t\t\t\t"TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate " +\n
+\t\t\t\t\t\t"into other Content Management Systems.",\n
+\t\t\t\t\treleaseNotes: "Release notes for my package.",\n
+\t\t\t\t\tsummary: "TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor " +\n
+\t\t\t\t\t\t"control released as Open Source under LGPL by Ephox Corp.",\n
+\t\t\t\t\tprojectUrl: "http://www.tinymce.com/",\n
+\t\t\t\t\ticonUrl: "http://www.tinymce.com/favicon.ico",\n
+\t\t\t\t\tlicenseUrl: "http://www.tinymce.com/license",\n
+\t\t\t\t\trequireLicenseAcceptance: true,\n
+\t\t\t\t\ttags: "Editor TinyMCE HTML HTMLEditor",\n
+\t\t\t\t\texcludes: [\n
+\t\t\t\t\t\t"js/tinymce/skins/**/*.dev.svg",\n
+\t\t\t\t\t\t"js/tinymce/skins/**/*.less",\n
+\t\t\t\t\t\t"js/tinymce/plugins/**/classes",\n
+\t\t\t\t\t\t"js/tinymce/plugins/**/*.dev.js"\n
+\t\t\t\t\t],\n
+\t\t\t\t\toutputDir: "tmp"\n
+\t\t\t\t},\n
+\n
+\t\t\t\tfiles: [\n
+\t\t\t\t\t{src: "js/tinymce/langs", dest: "/content/scripts/tinymce/langs"},\n
+\t\t\t\t\t{src: "js/tinymce/plugins", dest: "/content/scripts/tinymce/plugins"},\n
+\t\t\t\t\t{src: "js/tinymce/themes", dest: "/content/scripts/tinymce/themes"},\n
+\t\t\t\t\t{src: "js/tinymce/skins", dest: "/content/scripts/tinymce/skins"},\n
+\t\t\t\t\t{src: "js/tinymce/tinymce.js", dest: "/content/scripts/tinymce/tinymce.js"},\n
+\t\t\t\t\t{src: "js/tinymce/tinymce.min.js", dest: "/content/scripts/tinymce/tinymce.min.js"},\n
+\t\t\t\t\t{src: "js/tinymce/jquery.tinymce.min.js", dest: "/content/scripts/tinymce/jquery.tinymce.min.js"},\n
+\t\t\t\t\t{src: "js/tinymce/license.txt", dest: "/content/scripts/tinymce/license.txt"}\n
+\t\t\t\t]\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tbundle: {\n
+\t\t\tminified: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tthemesDir: "js/tinymce/themes",\n
+\t\t\t\t\tpluginsDir: "js/tinymce/plugins",\n
+\t\t\t\t\tpluginFileName: "plugin.min.js",\n
+\t\t\t\t\tthemeFileName: "theme.min.js",\n
+\t\t\t\t\toutputPath: "js/tinymce/tinymce.full.min.js"\n
+\t\t\t\t},\n
+\n
+\t\t\t\tsrc: [\n
+\t\t\t\t\t"js/tinymce/tinymce.min.js"\n
+\t\t\t\t]\n
+\t\t\t},\n
+\n
+\t\t\tsource: {\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tthemesDir: "js/tinymce/themes",\n
+\t\t\t\t\tpluginsDir: "js/tinymce/plugins",\n
+\t\t\t\t\tpluginFileName: "plugin.js",\n
+\t\t\t\t\tthemeFileName: "theme.js",\n
+\t\t\t\t\toutputPath: "js/tinymce/tinymce.full.js"\n
+\t\t\t\t},\n
+\n
+\t\t\t\tsrc: [\n
+\t\t\t\t\t"js/tinymce/tinymce.js"\n
+\t\t\t\t]\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tclean: {\n
+\t\t\trelease: ["tmp"],\n
+\n
+\t\t\tcore: [\n
+\t\t\t\t"js/tinymce/tinymce*",\n
+\t\t\t\t"js/tinymce/*.min.js",\n
+\t\t\t\t"js/tinymce/*.dev.js"\n
+\t\t\t],\n
+\n
+\t\t\tplugins: [\n
+\t\t\t\t"js/tinymce/plugins/**/*.min.js",\n
+\t\t\t\t"js/tinymce/plugins/**/*.dev.js",\n
+\t\t\t\t"js/tinymce/plugins/table/plugin.js",\n
+\t\t\t\t"js/tinymce/plugins/paste/plugin.js",\n
+\t\t\t\t"js/tinymce/plugins/spellchecker/plugin.js"\n
+\t\t\t],\n
+\n
+\t\t\tskins: [\n
+\t\t\t\t"js/tinymce/skins/**/*.min.css",\n
+\t\t\t\t"js/tinymce/skins/**/*.dev.less"\n
+\t\t\t],\n
+\n
+\t\t\tnpm: [\n
+\t\t\t\t"node_modules",\n
+\t\t\t\t"npm-debug.log"\n
+\t\t\t],\n
+\n
+\t\t\tsaucelabs: [\n
+\t\t\t\t"?sc.log",\n
+\t\t\t\t"sc_*.log"\n
+\t\t\t]\n
+\t\t},\n
+\n
+\t\twatch: {\n
+\t\t\tcore: {\n
+\t\t\t\tfiles: ["js/tinymce/classes/**/*.js"],\n
+\t\t\t\ttasks: ["eslint:core", "jscs:core", "amdlc:core", "amdlc:core-jquery", "skin"],\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tspawn: false\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tplugins: {\n
+\t\t\t\tfiles: ["js/tinymce/plugins/**/*.js"],\n
+\t\t\t\ttasks: [\n
+\t\t\t\t\t"amdlc:paste-plugin", "amdlc:imagetools-plugin",\n
+\t\t\t\t\t"amdlc:table-plugin", "amdlc:spellchecker-plugin", "uglify:plugins",\n
+\t\t\t\t\t"eslint:plugins", "jscs:plugins"\n
+\t\t\t\t],\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tspawn: false\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tthemes: {\n
+\t\t\t\tfiles: ["js/tinymce/themes/**/*.js"],\n
+\t\t\t\ttasks: ["eslint:themes", "jscs:themes", "uglify:themes"],\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tspawn: false\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tskins: {\n
+\t\t\t\tfiles: ["js/tinymce/skins/**/*"],\n
+\t\t\t\ttasks: ["less"],\n
+\t\t\t\toptions: {\n
+\t\t\t\t\tspawn: false\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\n
+\trequire("load-grunt-tasks")(grunt);\n
+\tgrunt.loadTasks("tools/tasks");\n
+\n
+\tgrunt.registerTask("lint", ["eslint", "jscs"]);\n
+\tgrunt.registerTask("minify", ["amdlc", "uglify", "skin", "less"]);\n
+\tgrunt.registerTask("test", ["qunit"]);\n
+\tgrunt.registerTask("sc-test", ["connect", "clean:saucelabs", "saucelabs-qunit"]);\n
+\tgrunt.registerTask("default", ["lint", "minify", "test", "clean:release", "moxiezip", "nugetpack"]);\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18757</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gruntfile.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

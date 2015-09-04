@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268155.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>gecko_caret.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Gecko caret tests</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<script src="../../js/tinymce/tinymce.dev.js"></script>\n
+<script>\n
+function init() {\n
+\ttinymce.init({\n
+\t\tmode: "textareas",\n
+\t\tplugins: [\n
+\t\t\t"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",\n
+\t\t\t"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
+\t\t\t"save table contextmenu directionality emoticons template paste"\n
+\t\t],\n
+\t\tvalid_elements: \'*[*]\',\n
+\t\tadd_unload_trigger : false,\n
+\t\teditor_selector : \'editable\',\n
+\t\tcontent_css: \'css/gecko_caret.css\'\n
+\t});\n
+}\n
+\n
+function reInit10x() {\n
+\ttinymce.execCommand(\'mceRemoveEditor\', false, \'elm3\');\n
+\n
+\tfor (var i = 0; i < 10; i++) {\n
+\t\ttinymce.execCommand(\'mceRemoveEditor\', false, \'elm3\');\n
+\t\ttinymce.execCommand(\'mceAddEditor\', false, \'elm3\');\n
+\t}\n
+}\n
+\n
+init();\n
+</script>\n
+</head>\n
+<body>\n
+\n
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">\n
+\t<div>\n
+\t\t<h3>Visible editor</h3>\n
+\n
+\t\t<div>\n
+\t\t\t<div id="container1">\n
+\t\t\t\t<textarea id="elm1" name="elm1" rows="7" cols="80" style="width: 80%" class="editable">\n
+\t\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\t\tThis is some text that can be edited. &lt;b contenteditable="false"&gt;This is some text that isn\'t &lt;em contenteditable="true"&gt;editable&lt;/em&gt;.....&lt;/b&gt;\n
+\t\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\t\tAnother paragraph.\n
+\t\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t\t&lt;table&gt;\n
+\t\t\t\t\t\t&lt;tr&gt;&lt;td&gt;Cell&lt;/td&gt;&lt;/tr&gt;\n
+\t\t\t\t\t&lt;/table&gt;\n
+\t\t\t\t</textarea>\n
+\t\t\t</div>\n
+\t\t\t<a href="#" onclick="tinymce.DOM.show(\'container1\');return false;">[Show]</a>\n
+\t\t\t<a href="#" onclick="tinymce.DOM.hide(\'container1\');return false;">[Hide]</a>\n
+\t\t</div>\n
+\n
+\t\t<h3>Invisible editor</h3>\n
+\t\t<div>\n
+\t\t\t<div id="container2" style="display: none">\n
+\t\t\t\t<textarea id="elm2" name="elm2" rows="7" cols="80" style="width: 80%" class="editable">\n
+\t\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\t\tThis is some text that can be edited. &lt;b contenteditable="false"&gt;This is some text that isn\'t &lt;em contenteditable="true"&gt;editable&lt;/em&gt;.....&lt;/b&gt;\n
+\t\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\t\tAnother paragraph.\n
+\t\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t\t&lt;table&gt;\n
+\t\t\t\t\t\t&lt;tr&gt;&lt;td&gt;Cell&lt;/td&gt;&lt;/tr&gt;\n
+\t\t\t\t\t&lt;/table&gt;\n
+\t\t\t\t</textarea>\n
+\t\t\t</div>\n
+\n
+\t\t\t<a href="#" onclick="tinymce.DOM.show(\'container2\');return false;">[Show]</a>\n
+\t\t\t<a href="#" onclick="tinymce.DOM.hide(\'container2\');return false;">[Hide]</a>\n
+\t\t</div>\n
+\t\t\n
+\t\t<h3>On demand editor</h3>\n
+\t\t<div>\n
+\t\t\t<div id="container3">\n
+\t\t\t\t<textarea id="elm3" name="elm3" rows="7" cols="80" style="width: 80%">\n
+\t\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\t\tThis is some text that can be edited. &lt;b contenteditable="false"&gt;This is some text that isn\'t &lt;em contenteditable="true"&gt;editable&lt;/em&gt;.....&lt;/b&gt;\n
+\t\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t\t&lt;p&gt;\n
+\t\t\t\t\t\tAnother paragraph.\n
+\t\t\t\t\t&lt;/p&gt;\n
+\t\t\t\t\t&lt;table&gt;\n
+\t\t\t\t\t\t&lt;tr&gt;&lt;td&gt;Cell&lt;/td&gt;&lt;/tr&gt;\n
+\t\t\t\t\t&lt;/table&gt;\n
+\t\t\t\t</textarea>\n
+\t\t\t</div>\n
+\n
+\t\t\t<a href="#" onclick="tinymce.execCommand(\'mceAddEditor\', false, \'elm3\');return false;">[Init]</a>\n
+\t\t\t<a href="#" onclick="tinymce.DOM.show(\'container3\');return false;">[Show]</a>\n
+\t\t\t<a href="#" onclick="tinymce.DOM.hide(\'container3\');return false;">[Hide]</a>\n
+\t\t\t<a href="#" onclick="tinymce.execCommand(\'mceRemoveEditor\', false, \'elm3\');return false;">[Remove]</a>\n
+\t\t\t<a href="#" onclick="reInit10x();return false;">[Re-init 10x]</a>\n
+\t\t</div>\n
+\t</div>\n
+</form>\n
+\n
+</body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3429</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>gecko_caret.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

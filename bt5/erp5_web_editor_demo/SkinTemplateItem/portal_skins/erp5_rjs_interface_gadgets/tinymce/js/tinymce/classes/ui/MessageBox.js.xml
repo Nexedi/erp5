@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268342.9</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MessageBox.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * MessageBox.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class is used to create MessageBoxes like alerts/confirms etc.\n
+ *\n
+ * @class tinymce.ui.MessageBox\n
+ * @extends tinymce.ui.FloatPanel\n
+ */\n
+define("tinymce/ui/MessageBox", [\n
+\t"tinymce/ui/Window"\n
+], function(Window) {\n
+\t"use strict";\n
+\n
+\tvar MessageBox = Window.extend({\n
+\t\t/**\n
+\t\t * Constructs a instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tsettings = {\n
+\t\t\t\tborder: 1,\n
+\t\t\t\tpadding: 20,\n
+\t\t\t\tlayout: \'flex\',\n
+\t\t\t\tpack: "center",\n
+\t\t\t\talign: "center",\n
+\t\t\t\tcontainerCls: \'panel\',\n
+\t\t\t\tautoScroll: true,\n
+\t\t\t\tbuttons: {type: "button", text: "Ok", action: "ok"},\n
+\t\t\t\titems: {\n
+\t\t\t\t\ttype: "label",\n
+\t\t\t\t\tmultiline: true,\n
+\t\t\t\t\tmaxWidth: 500,\n
+\t\t\t\t\tmaxHeight: 200\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\tthis._super(settings);\n
+\t\t},\n
+\n
+\t\tStatics: {\n
+\t\t\t/**\n
+\t\t\t * Ok buttons constant.\n
+\t\t\t *\n
+\t\t\t * @static\n
+\t\t\t * @final\n
+\t\t\t * @field {Number} OK\n
+\t\t\t */\n
+\t\t\tOK: 1,\n
+\n
+\t\t\t/**\n
+\t\t\t * Ok/cancel buttons constant.\n
+\t\t\t *\n
+\t\t\t * @static\n
+\t\t\t * @final\n
+\t\t\t * @field {Number} OK_CANCEL\n
+\t\t\t */\n
+\t\t\tOK_CANCEL: 2,\n
+\n
+\t\t\t/**\n
+\t\t\t * yes/no buttons constant.\n
+\t\t\t *\n
+\t\t\t * @static\n
+\t\t\t * @final\n
+\t\t\t * @field {Number} YES_NO\n
+\t\t\t */\n
+\t\t\tYES_NO: 3,\n
+\n
+\t\t\t/**\n
+\t\t\t * yes/no/cancel buttons constant.\n
+\t\t\t *\n
+\t\t\t * @static\n
+\t\t\t * @final\n
+\t\t\t * @field {Number} YES_NO_CANCEL\n
+\t\t\t */\n
+\t\t\tYES_NO_CANCEL: 4,\n
+\n
+\t\t\t/**\n
+\t\t\t * Constructs a new message box and renders it to the body element.\n
+\t\t\t *\n
+\t\t\t * @static\n
+\t\t\t * @method msgBox\n
+\t\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t\t */\n
+\t\t\tmsgBox: function(settings) {\n
+\t\t\t\tvar buttons, callback = settings.callback || function() {};\n
+\n
+\t\t\t\tfunction createButton(text, status, primary) {\n
+\t\t\t\t\treturn {\n
+\t\t\t\t\t\ttype: "button",\n
+\t\t\t\t\t\ttext: text,\n
+\t\t\t\t\t\tsubtype: primary ? \'primary\' : \'\',\n
+\t\t\t\t\t\tonClick: function(e) {\n
+\t\t\t\t\t\t\te.control.parents()[1].close();\n
+\t\t\t\t\t\t\tcallback(status);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\n
+\t\t\t\tswitch (settings.buttons) {\n
+\t\t\t\t\tcase MessageBox.OK_CANCEL:\n
+\t\t\t\t\t\tbuttons = [\n
+\t\t\t\t\t\t\tcreateButton(\'Ok\', true, true),\n
+\t\t\t\t\t\t\tcreateButton(\'Cancel\', false)\n
+\t\t\t\t\t\t];\n
+\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\tcase MessageBox.YES_NO:\n
+\t\t\t\t\tcase MessageBox.YES_NO_CANCEL:\n
+\t\t\t\t\t\tbuttons = [\n
+\t\t\t\t\t\t\tcreateButton(\'Yes\', 1, true),\n
+\t\t\t\t\t\t\tcreateButton(\'No\', 0)\n
+\t\t\t\t\t\t];\n
+\n
+\t\t\t\t\t\tif (settings.buttons == MessageBox.YES_NO_CANCEL) {\n
+\t\t\t\t\t\t\tbuttons.push(createButton(\'Cancel\', -1));\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\tbreak;\n
+\n
+\t\t\t\t\tdefault:\n
+\t\t\t\t\t\tbuttons = [\n
+\t\t\t\t\t\t\tcreateButton(\'Ok\', true, true)\n
+\t\t\t\t\t\t];\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn new Window({\n
+\t\t\t\t\tpadding: 20,\n
+\t\t\t\t\tx: settings.x,\n
+\t\t\t\t\ty: settings.y,\n
+\t\t\t\t\tminWidth: 300,\n
+\t\t\t\t\tminHeight: 100,\n
+\t\t\t\t\tlayout: "flex",\n
+\t\t\t\t\tpack: "center",\n
+\t\t\t\t\talign: "center",\n
+\t\t\t\t\tbuttons: buttons,\n
+\t\t\t\t\ttitle: settings.title,\n
+\t\t\t\t\trole: \'alertdialog\',\n
+\t\t\t\t\titems: {\n
+\t\t\t\t\t\ttype: "label",\n
+\t\t\t\t\t\tmultiline: true,\n
+\t\t\t\t\t\tmaxWidth: 500,\n
+\t\t\t\t\t\tmaxHeight: 200,\n
+\t\t\t\t\t\ttext: settings.text\n
+\t\t\t\t\t},\n
+\t\t\t\t\tonPostRender: function() {\n
+\t\t\t\t\t\tthis.aria(\'describedby\', this.items()[0]._id);\n
+\t\t\t\t\t},\n
+\t\t\t\t\tonClose: settings.onClose,\n
+\t\t\t\t\tonCancel: function() {\n
+\t\t\t\t\t\tcallback(false);\n
+\t\t\t\t\t}\n
+\t\t\t\t}).renderTo(document.body).reflow();\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Creates a new alert dialog.\n
+\t\t\t *\n
+\t\t\t * @method alert\n
+\t\t\t * @param {Object} settings Settings for the alert dialog.\n
+\t\t\t * @param {function} [callback] Callback to execute when the user makes a choice.\n
+\t\t\t */\n
+\t\t\talert: function(settings, callback) {\n
+\t\t\t\tif (typeof settings == "string") {\n
+\t\t\t\t\tsettings = {text: settings};\n
+\t\t\t\t}\n
+\n
+\t\t\t\tsettings.callback = callback;\n
+\t\t\t\treturn MessageBox.msgBox(settings);\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Creates a new confirm dialog.\n
+\t\t\t *\n
+\t\t\t * @method confirm\n
+\t\t\t * @param {Object} settings Settings for the confirm dialog.\n
+\t\t\t * @param {function} [callback] Callback to execute when the user makes a choice.\n
+\t\t\t */\n
+\t\t\tconfirm: function(settings, callback) {\n
+\t\t\t\tif (typeof settings == "string") {\n
+\t\t\t\t\tsettings = {text: settings};\n
+\t\t\t\t}\n
+\n
+\t\t\t\tsettings.callback = callback;\n
+\t\t\t\tsettings.buttons = MessageBox.OK_CANCEL;\n
+\n
+\t\t\t\treturn MessageBox.msgBox(settings);\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\n
+\treturn MessageBox;\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4230</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>MessageBox.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

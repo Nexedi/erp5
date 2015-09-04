@@ -1,0 +1,1048 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268286.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Schema.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Schema.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Schema validator class.\n
+ *\n
+ * @class tinymce.html.Schema\n
+ * @example\n
+ *  if (tinymce.activeEditor.schema.isValidChild(\'p\', \'span\'))\n
+ *    alert(\'span is valid child of p.\');\n
+ *\n
+ *  if (tinymce.activeEditor.schema.getElementRule(\'p\'))\n
+ *    alert(\'P is a valid element.\');\n
+ *\n
+ * @class tinymce.html.Schema\n
+ * @version 3.4\n
+ */\n
+define("tinymce/html/Schema", [\n
+\t"tinymce/util/Tools"\n
+], function(Tools) {\n
+\tvar mapCache = {}, dummyObj = {};\n
+\tvar makeMap = Tools.makeMap, each = Tools.each, extend = Tools.extend, explode = Tools.explode, inArray = Tools.inArray;\n
+\n
+\tfunction split(items, delim) {\n
+\t\treturn items ? items.split(delim || \' \') : [];\n
+\t}\n
+\n
+\t/**\n
+\t * Builds a schema lookup table\n
+\t *\n
+\t * @private\n
+\t * @param {String} type html4, html5 or html5-strict schema type.\n
+\t * @return {Object} Schema lookup table.\n
+\t */\n
+\tfunction compileSchema(type) {\n
+\t\tvar schema = {}, globalAttributes, blockContent;\n
+\t\tvar phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;\n
+\n
+\t\tfunction add(name, attributes, children) {\n
+\t\t\tvar ni, i, attributesOrder, args = arguments;\n
+\n
+\t\t\tfunction arrayToMap(array, obj) {\n
+\t\t\t\tvar map = {}, i, l;\n
+\n
+\t\t\t\tfor (i = 0, l = array.length; i < l; i++) {\n
+\t\t\t\t\tmap[array[i]] = obj || {};\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn map;\n
+\t\t\t}\n
+\n
+\t\t\tchildren = children || [];\n
+\t\t\tattributes = attributes || "";\n
+\n
+\t\t\tif (typeof children === "string") {\n
+\t\t\t\tchildren = split(children);\n
+\t\t\t}\n
+\n
+\t\t\t// Split string children\n
+\t\t\tfor (i = 3; i < args.length; i++) {\n
+\t\t\t\tif (typeof args[i] === "string") {\n
+\t\t\t\t\targs[i] = split(args[i]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tchildren.push.apply(children, args[i]);\n
+\t\t\t}\n
+\n
+\t\t\tname = split(name);\n
+\t\t\tni = name.length;\n
+\t\t\twhile (ni--) {\n
+\t\t\t\tattributesOrder = [].concat(globalAttributes, split(attributes));\n
+\t\t\t\tschema[name[ni]] = {\n
+\t\t\t\t\tattributes: arrayToMap(attributesOrder),\n
+\t\t\t\t\tattributesOrder: attributesOrder,\n
+\t\t\t\t\tchildren: arrayToMap(children, dummyObj)\n
+\t\t\t\t};\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction addAttrs(name, attributes) {\n
+\t\t\tvar ni, schemaItem, i, l;\n
+\n
+\t\t\tname = split(name);\n
+\t\t\tni = name.length;\n
+\t\t\tattributes = split(attributes);\n
+\t\t\twhile (ni--) {\n
+\t\t\t\tschemaItem = schema[name[ni]];\n
+\t\t\t\tfor (i = 0, l = attributes.length; i < l; i++) {\n
+\t\t\t\t\tschemaItem.attributes[attributes[i]] = {};\n
+\t\t\t\t\tschemaItem.attributesOrder.push(attributes[i]);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Use cached schema\n
+\t\tif (mapCache[type]) {\n
+\t\t\treturn mapCache[type];\n
+\t\t}\n
+\n
+\t\t// Attributes present on all elements\n
+\t\tglobalAttributes = split("id accesskey class dir lang style tabindex title");\n
+\n
+\t\t// Event attributes can be opt-in/opt-out\n
+\t\t/*eventAttributes = split("onabort onblur oncancel oncanplay oncanplaythrough onchange onclick onclose oncontextmenu oncuechange " +\n
+\t\t\t\t"ondblclick ondrag ondragend ondragenter ondragleave ondragover ondragstart ondrop ondurationchange onemptied onended " +\n
+\t\t\t\t"onerror onfocus oninput oninvalid onkeydown onkeypress onkeyup onload onloadeddata onloadedmetadata onloadstart " +\n
+\t\t\t\t"onmousedown onmousemove onmouseout onmouseover onmouseup onmousewheel onpause onplay onplaying onprogress onratechange " +\n
+\t\t\t\t"onreset onscroll onseeked onseeking onseeking onselect onshow onstalled onsubmit onsuspend ontimeupdate onvolumechange " +\n
+\t\t\t\t"onwaiting"\n
+\t\t);*/\n
+\n
+\t\t// Block content elements\n
+\t\tblockContent = split(\n
+\t\t\t"address blockquote div dl fieldset form h1 h2 h3 h4 h5 h6 hr menu ol p pre table ul"\n
+\t\t);\n
+\n
+\t\t// Phrasing content elements from the HTML5 spec (inline)\n
+\t\tphrasingContent = split(\n
+\t\t\t"a abbr b bdo br button cite code del dfn em embed i iframe img input ins kbd " +\n
+\t\t\t"label map noscript object q s samp script select small span strong sub sup " +\n
+\t\t\t"textarea u var #text #comment"\n
+\t\t);\n
+\n
+\t\t// Add HTML5 items to globalAttributes, blockContent, phrasingContent\n
+\t\tif (type != "html4") {\n
+\t\t\tglobalAttributes.push.apply(globalAttributes, split("contenteditable contextmenu draggable dropzone " +\n
+\t\t\t\t"hidden spellcheck translate"));\n
+\t\t\tblockContent.push.apply(blockContent, split("article aside details dialog figure header footer hgroup section nav"));\n
+\t\t\tphrasingContent.push.apply(phrasingContent, split("audio canvas command datalist mark meter output picture " +\n
+\t\t\t\t"progress time wbr video ruby bdi keygen"));\n
+\t\t}\n
+\n
+\t\t// Add HTML4 elements unless it\'s html5-strict\n
+\t\tif (type != "html5-strict") {\n
+\t\t\tglobalAttributes.push("xml:lang");\n
+\n
+\t\t\thtml4PhrasingContent = split("acronym applet basefont big font strike tt");\n
+\t\t\tphrasingContent.push.apply(phrasingContent, html4PhrasingContent);\n
+\n
+\t\t\teach(html4PhrasingContent, function(name) {\n
+\t\t\t\tadd(name, "", phrasingContent);\n
+\t\t\t});\n
+\n
+\t\t\thtml4BlockContent = split("center dir isindex noframes");\n
+\t\t\tblockContent.push.apply(blockContent, html4BlockContent);\n
+\n
+\t\t\t// Flow content elements from the HTML5 spec (block+inline)\n
+\t\t\tflowContent = [].concat(blockContent, phrasingContent);\n
+\n
+\t\t\teach(html4BlockContent, function(name) {\n
+\t\t\t\tadd(name, "", flowContent);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Flow content elements from the HTML5 spec (block+inline)\n
+\t\tflowContent = flowContent || [].concat(blockContent, phrasingContent);\n
+\n
+\t\t// HTML4 base schema TODO: Move HTML5 specific attributes to HTML5 specific if statement\n
+\t\t// Schema items <element name>, <specific attributes>, <children ..>\n
+\t\tadd("html", "manifest", "head body");\n
+\t\tadd("head", "", "base command link meta noscript script style title");\n
+\t\tadd("title hr noscript br");\n
+\t\tadd("base", "href target");\n
+\t\tadd("link", "href rel media hreflang type sizes hreflang");\n
+\t\tadd("meta", "name http-equiv content charset");\n
+\t\tadd("style", "media type scoped");\n
+\t\tadd("script", "src async defer type charset");\n
+\t\tadd("body", "onafterprint onbeforeprint onbeforeunload onblur onerror onfocus " +\n
+\t\t\t\t"onhashchange onload onmessage onoffline ononline onpagehide onpageshow " +\n
+\t\t\t\t"onpopstate onresize onscroll onstorage onunload", flowContent);\n
+\t\tadd("address dt dd div caption", "", flowContent);\n
+\t\tadd("h1 h2 h3 h4 h5 h6 pre p abbr code var samp kbd sub sup i b u bdo span legend em strong small s cite dfn", "", phrasingContent);\n
+\t\tadd("blockquote", "cite", flowContent);\n
+\t\tadd("ol", "reversed start type", "li");\n
+\t\tadd("ul", "", "li");\n
+\t\tadd("li", "value", flowContent);\n
+\t\tadd("dl", "", "dt dd");\n
+\t\tadd("a", "href target rel media hreflang type", phrasingContent);\n
+\t\tadd("q", "cite", phrasingContent);\n
+\t\tadd("ins del", "cite datetime", flowContent);\n
+\t\tadd("img", "src sizes srcset alt usemap ismap width height");\n
+\t\tadd("iframe", "src name width height", flowContent);\n
+\t\tadd("embed", "src type width height");\n
+\t\tadd("object", "data type typemustmatch name usemap form width height", flowContent, "param");\n
+\t\tadd("param", "name value");\n
+\t\tadd("map", "name", flowContent, "area");\n
+\t\tadd("area", "alt coords shape href target rel media hreflang type");\n
+\t\tadd("table", "border", "caption colgroup thead tfoot tbody tr" + (type == "html4" ? " col" : ""));\n
+\t\tadd("colgroup", "span", "col");\n
+\t\tadd("col", "span");\n
+\t\tadd("tbody thead tfoot", "", "tr");\n
+\t\tadd("tr", "", "td th");\n
+\t\tadd("td", "colspan rowspan headers", flowContent);\n
+\t\tadd("th", "colspan rowspan headers scope abbr", flowContent);\n
+\t\tadd("form", "accept-charset action autocomplete enctype method name novalidate target", flowContent);\n
+\t\tadd("fieldset", "disabled form name", flowContent, "legend");\n
+\t\tadd("label", "form for", phrasingContent);\n
+\t\tadd("input", "accept alt autocomplete checked dirname disabled form formaction formenctype formmethod formnovalidate " +\n
+\t\t\t\t"formtarget height list max maxlength min multiple name pattern readonly required size src step type value width"\n
+\t\t);\n
+\t\tadd("button", "disabled form formaction formenctype formmethod formnovalidate formtarget name type value",\n
+\t\t\ttype == "html4" ? flowContent : phrasingContent);\n
+\t\tadd("select", "disabled form multiple name required size", "option optgroup");\n
+\t\tadd("optgroup", "disabled label", "option");\n
+\t\tadd("option", "disabled label selected value");\n
+\t\tadd("textarea", "cols dirname disabled form maxlength name readonly required rows wrap");\n
+\t\tadd("menu", "type label", flowContent, "li");\n
+\t\tadd("noscript", "", flowContent);\n
+\n
+\t\t// Extend with HTML5 elements\n
+\t\tif (type != "html4") {\n
+\t\t\tadd("wbr");\n
+\t\t\tadd("ruby", "", phrasingContent, "rt rp");\n
+\t\t\tadd("figcaption", "", flowContent);\n
+\t\t\tadd("mark rt rp summary bdi", "", phrasingContent);\n
+\t\t\tadd("canvas", "width height", flowContent);\n
+\t\t\tadd("video", "src crossorigin poster preload autoplay mediagroup loop " +\n
+\t\t\t\t"muted controls width height buffered", flowContent, "track source");\n
+\t\t\tadd("audio", "src crossorigin preload autoplay mediagroup loop muted controls buffered volume", flowContent, "track source");\n
+\t\t\tadd("picture", "", "img source");\n
+\t\t\tadd("source", "src srcset type media sizes");\n
+\t\t\tadd("track", "kind src srclang label default");\n
+\t\t\tadd("datalist", "", phrasingContent, "option");\n
+\t\t\tadd("article section nav aside header footer", "", flowContent);\n
+\t\t\tadd("hgroup", "", "h1 h2 h3 h4 h5 h6");\n
+\t\t\tadd("figure", "", flowContent, "figcaption");\n
+\t\t\tadd("time", "datetime", phrasingContent);\n
+\t\t\tadd("dialog", "open", flowContent);\n
+\t\t\tadd("command", "type label icon disabled checked radiogroup command");\n
+\t\t\tadd("output", "for form name", phrasingContent);\n
+\t\t\tadd("progress", "value max", phrasingContent);\n
+\t\t\tadd("meter", "value min max low high optimum", phrasingContent);\n
+\t\t\tadd("details", "open", flowContent, "summary");\n
+\t\t\tadd("keygen", "autofocus challenge disabled form keytype name");\n
+\t\t}\n
+\n
+\t\t// Extend with HTML4 attributes unless it\'s html5-strict\n
+\t\tif (type != "html5-strict") {\n
+\t\t\taddAttrs("script", "language xml:space");\n
+\t\t\taddAttrs("style", "xml:space");\n
+\t\t\taddAttrs("object", "declare classid code codebase codetype archive standby align border hspace vspace");\n
+\t\t\taddAttrs("embed", "align name hspace vspace");\n
+\t\t\taddAttrs("param", "valuetype type");\n
+\t\t\taddAttrs("a", "charset name rev shape coords");\n
+\t\t\taddAttrs("br", "clear");\n
+\t\t\taddAttrs("applet", "codebase archive code object alt name width height align hspace vspace");\n
+\t\t\taddAttrs("img", "name longdesc align border hspace vspace");\n
+\t\t\taddAttrs("iframe", "longdesc frameborder marginwidth marginheight scrolling align");\n
+\t\t\taddAttrs("font basefont", "size color face");\n
+\t\t\taddAttrs("input", "usemap align");\n
+\t\t\taddAttrs("select", "onchange");\n
+\t\t\taddAttrs("textarea");\n
+\t\t\taddAttrs("h1 h2 h3 h4 h5 h6 div p legend caption", "align");\n
+\t\t\taddAttrs("ul", "type compact");\n
+\t\t\taddAttrs("li", "type");\n
+\t\t\taddAttrs("ol dl menu dir", "compact");\n
+\t\t\taddAttrs("pre", "width xml:space");\n
+\t\t\taddAttrs("hr", "align noshade size width");\n
+\t\t\taddAttrs("isindex", "prompt");\n
+\t\t\taddAttrs("table", "summary width frame rules cellspacing cellpadding align bgcolor");\n
+\t\t\taddAttrs("col", "width align char charoff valign");\n
+\t\t\taddAttrs("colgroup", "width align char charoff valign");\n
+\t\t\taddAttrs("thead", "align char charoff valign");\n
+\t\t\taddAttrs("tr", "align char charoff valign bgcolor");\n
+\t\t\taddAttrs("th", "axis align char charoff valign nowrap bgcolor width height");\n
+\t\t\taddAttrs("form", "accept");\n
+\t\t\taddAttrs("td", "abbr axis scope align char charoff valign nowrap bgcolor width height");\n
+\t\t\taddAttrs("tfoot", "align char charoff valign");\n
+\t\t\taddAttrs("tbody", "align char charoff valign");\n
+\t\t\taddAttrs("area", "nohref");\n
+\t\t\taddAttrs("body", "background bgcolor text link vlink alink");\n
+\t\t}\n
+\n
+\t\t// Extend with HTML5 attributes unless it\'s html4\n
+\t\tif (type != "html4") {\n
+\t\t\taddAttrs("input button select textarea", "autofocus");\n
+\t\t\taddAttrs("input textarea", "placeholder");\n
+\t\t\taddAttrs("a", "download");\n
+\t\t\taddAttrs("link script img", "crossorigin");\n
+\t\t\taddAttrs("iframe", "sandbox seamless allowfullscreen"); // Excluded: srcdoc\n
+\t\t}\n
+\n
+\t\t// Special: iframe, ruby, video, audio, label\n
+\n
+\t\t// Delete children of the same name from it\'s parent\n
+\t\t// For example: form can\'t have a child of the name form\n
+\t\teach(split(\'a form meter progress dfn\'), function(name) {\n
+\t\t\tif (schema[name]) {\n
+\t\t\t\tdelete schema[name].children[name];\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Delete header, footer, sectioning and heading content descendants\n
+\t\t/*each(\'dt th address\', function(name) {\n
+\t\t\tdelete schema[name].children[name];\n
+\t\t});*/\n
+\n
+\t\t// Caption can\'t have tables\n
+\t\tdelete schema.caption.children.table;\n
+\n
+\t\t// Delete scripts by default due to possible XSS\n
+\t\tdelete schema.script;\n
+\n
+\t\t// TODO: LI:s can only have value if parent is OL\n
+\n
+\t\t// TODO: Handle transparent elements\n
+\t\t// a ins del canvas map\n
+\n
+\t\tmapCache[type] = schema;\n
+\n
+\t\treturn schema;\n
+\t}\n
+\n
+\tfunction compileElementMap(value, mode) {\n
+\t\tvar styles;\n
+\n
+\t\tif (value) {\n
+\t\t\tstyles = {};\n
+\n
+\t\t\tif (typeof value == \'string\') {\n
+\t\t\t\tvalue = {\n
+\t\t\t\t\t\'*\': value\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\t// Convert styles into a rule list\n
+\t\t\teach(value, function(value, key) {\n
+\t\t\t\tstyles[key] = styles[key.toUpperCase()] = mode == \'map\' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\treturn styles;\n
+\t}\n
+\n
+\t/**\n
+\t * Constructs a new Schema instance.\n
+\t *\n
+\t * @constructor\n
+\t * @method Schema\n
+\t * @param {Object} settings Name/value settings object.\n
+\t */\n
+\treturn function(settings) {\n
+\t\tvar self = this, elements = {}, children = {}, patternElements = [], validStyles, invalidStyles, schemaItems;\n
+\t\tvar whiteSpaceElementsMap, selfClosingElementsMap, shortEndedElementsMap, boolAttrMap, validClasses;\n
+\t\tvar blockElementsMap, nonEmptyElementsMap, moveCaretBeforeOnEnterElementsMap, textBlockElementsMap, textInlineElementsMap;\n
+\t\tvar customElementsMap = {}, specialElements = {};\n
+\n
+\t\t// Creates an lookup table map object for the specified option or the default value\n
+\t\tfunction createLookupTable(option, default_value, extendWith) {\n
+\t\t\tvar value = settings[option];\n
+\n
+\t\t\tif (!value) {\n
+\t\t\t\t// Get cached default map or make it if needed\n
+\t\t\t\tvalue = mapCache[option];\n
+\n
+\t\t\t\tif (!value) {\n
+\t\t\t\t\tvalue = makeMap(default_value, \' \', makeMap(default_value.toUpperCase(), \' \'));\n
+\t\t\t\t\tvalue = extend(value, extendWith);\n
+\n
+\t\t\t\t\tmapCache[option] = value;\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\t// Create custom map\n
+\t\t\t\tvalue = makeMap(value, /[, ]/, makeMap(value.toUpperCase(), /[, ]/));\n
+\t\t\t}\n
+\n
+\t\t\treturn value;\n
+\t\t}\n
+\n
+\t\tsettings = settings || {};\n
+\t\tschemaItems = compileSchema(settings.schema);\n
+\n
+\t\t// Allow all elements and attributes if verify_html is set to false\n
+\t\tif (settings.verify_html === false) {\n
+\t\t\tsettings.valid_elements = \'*[*]\';\n
+\t\t}\n
+\n
+\t\tvalidStyles = compileElementMap(settings.valid_styles);\n
+\t\tinvalidStyles = compileElementMap(settings.invalid_styles, \'map\');\n
+\t\tvalidClasses = compileElementMap(settings.valid_classes, \'map\');\n
+\n
+\t\t// Setup map objects\n
+\t\twhiteSpaceElementsMap = createLookupTable(\'whitespace_elements\', \'pre script noscript style textarea video audio iframe object\');\n
+\t\tselfClosingElementsMap = createLookupTable(\'self_closing_elements\', \'colgroup dd dt li option p td tfoot th thead tr\');\n
+\t\tshortEndedElementsMap = createLookupTable(\'short_ended_elements\', \'area base basefont br col frame hr img input isindex link \' +\n
+\t\t\t\'meta param embed source wbr track\');\n
+\t\tboolAttrMap = createLookupTable(\'boolean_attributes\', \'checked compact declare defer disabled ismap multiple nohref noresize \' +\n
+\t\t\t\'noshade nowrap readonly selected autoplay loop controls\');\n
+\t\tnonEmptyElementsMap = createLookupTable(\'non_empty_elements\', \'td th iframe video audio object script\', shortEndedElementsMap);\n
+\t\tmoveCaretBeforeOnEnterElementsMap = createLookupTable(\'move_caret_before_on_enter_elements\', \'table\', nonEmptyElementsMap);\n
+\t\ttextBlockElementsMap = createLookupTable(\'text_block_elements\', \'h1 h2 h3 h4 h5 h6 p div address pre form \' +\n
+\t\t\t\t\t\t\'blockquote center dir fieldset header footer article section hgroup aside nav figure\');\n
+\t\tblockElementsMap = createLookupTable(\'block_elements\', \'hr table tbody thead tfoot \' +\n
+\t\t\t\t\t\t\'th tr td li ol ul caption dl dt dd noscript menu isindex option \' +\n
+\t\t\t\t\t\t\'datalist select optgroup\', textBlockElementsMap);\n
+\t\ttextInlineElementsMap = createLookupTable(\'text_inline_elements\', \'span strong b em i font strike u var cite \' +\n
+\t\t\t\t\t\t\t\t\t\t\'dfn code mark q sup sub samp\');\n
+\n
+\t\teach((settings.special || \'script noscript style textarea\').split(\' \'), function(name) {\n
+\t\t\tspecialElements[name] = new RegExp(\'<\\/\' + name + \'[^>]*>\', \'gi\');\n
+\t\t});\n
+\n
+\t\t// Converts a wildcard expression string to a regexp for example *a will become /.*a/.\n
+\t\tfunction patternToRegExp(str) {\n
+\t\t\treturn new RegExp(\'^\' + str.replace(/([?+*])/g, \'.$1\') + \'$\');\n
+\t\t}\n
+\n
+\t\t// Parses the specified valid_elements string and adds to the current rules\n
+\t\t// This function is a bit hard to read since it\'s heavily optimized for speed\n
+\t\tfunction addValidElements(validElements) {\n
+\t\t\tvar ei, el, ai, al, matches, element, attr, attrData, elementName, attrName, attrType, attributes, attributesOrder,\n
+\t\t\t\tprefix, outputName, globalAttributes, globalAttributesOrder, key, value,\n
+\t\t\t\telementRuleRegExp = /^([#+\\-])?([^\\[!\\/]+)(?:\\/([^\\[!]+))?(?:(!?)\\[([^\\]]+)\\])?$/,\n
+\t\t\t\tattrRuleRegExp = /^([!\\-])?(\\w+::\\w+|[^=:<]+)?(?:([=:<])(.*))?$/,\n
+\t\t\t\thasPatternsRegExp = /[*?+]/;\n
+\n
+\t\t\tif (validElements) {\n
+\t\t\t\t// Split valid elements into an array with rules\n
+\t\t\t\tvalidElements = split(validElements, \',\');\n
+\n
+\t\t\t\tif (elements[\'@\']) {\n
+\t\t\t\t\tglobalAttributes = elements[\'@\'].attributes;\n
+\t\t\t\t\tglobalAttributesOrder = elements[\'@\'].attributesOrder;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Loop all rules\n
+\t\t\t\tfor (ei = 0, el = validElements.length; ei < el; ei++) {\n
+\t\t\t\t\t// Parse element rule\n
+\t\t\t\t\tmatches = elementRuleRegExp.exec(validElements[ei]);\n
+\t\t\t\t\tif (matches) {\n
+\t\t\t\t\t\t// Setup local names for matches\n
+\t\t\t\t\t\tprefix = matches[1];\n
+\t\t\t\t\t\telementName = matches[2];\n
+\t\t\t\t\t\toutputName = matches[3];\n
+\t\t\t\t\t\tattrData = matches[5];\n
+\n
+\t\t\t\t\t\t// Create new attributes and attributesOrder\n
+\t\t\t\t\t\tattributes = {};\n
+\t\t\t\t\t\tattributesOrder = [];\n
+\n
+\t\t\t\t\t\t// Create the new element\n
+\t\t\t\t\t\telement = {\n
+\t\t\t\t\t\t\tattributes: attributes,\n
+\t\t\t\t\t\t\tattributesOrder: attributesOrder\n
+\t\t\t\t\t\t};\n
+\n
+\t\t\t\t\t\t// Padd empty elements prefix\n
+\t\t\t\t\t\tif (prefix === \'#\') {\n
+\t\t\t\t\t\t\telement.paddEmpty = true;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Remove empty elements prefix\n
+\t\t\t\t\t\tif (prefix === \'-\') {\n
+\t\t\t\t\t\t\telement.removeEmpty = true;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (matches[4] === \'!\') {\n
+\t\t\t\t\t\t\telement.removeEmptyAttrs = true;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Copy attributes from global rule into current rule\n
+\t\t\t\t\t\tif (globalAttributes) {\n
+\t\t\t\t\t\t\tfor (key in globalAttributes) {\n
+\t\t\t\t\t\t\t\tattributes[key] = globalAttributes[key];\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tattributesOrder.push.apply(attributesOrder, globalAttributesOrder);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Attributes defined\n
+\t\t\t\t\t\tif (attrData) {\n
+\t\t\t\t\t\t\tattrData = split(attrData, \'|\');\n
+\t\t\t\t\t\t\tfor (ai = 0, al = attrData.length; ai < al; ai++) {\n
+\t\t\t\t\t\t\t\tmatches = attrRuleRegExp.exec(attrData[ai]);\n
+\t\t\t\t\t\t\t\tif (matches) {\n
+\t\t\t\t\t\t\t\t\tattr = {};\n
+\t\t\t\t\t\t\t\t\tattrType = matches[1];\n
+\t\t\t\t\t\t\t\t\tattrName = matches[2].replace(/::/g, \':\');\n
+\t\t\t\t\t\t\t\t\tprefix = matches[3];\n
+\t\t\t\t\t\t\t\t\tvalue = matches[4];\n
+\n
+\t\t\t\t\t\t\t\t\t// Required\n
+\t\t\t\t\t\t\t\t\tif (attrType === \'!\') {\n
+\t\t\t\t\t\t\t\t\t\telement.attributesRequired = element.attributesRequired || [];\n
+\t\t\t\t\t\t\t\t\t\telement.attributesRequired.push(attrName);\n
+\t\t\t\t\t\t\t\t\t\tattr.required = true;\n
+\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\t// Denied from global\n
+\t\t\t\t\t\t\t\t\tif (attrType === \'-\') {\n
+\t\t\t\t\t\t\t\t\t\tdelete attributes[attrName];\n
+\t\t\t\t\t\t\t\t\t\tattributesOrder.splice(inArray(attributesOrder, attrName), 1);\n
+\t\t\t\t\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\t// Default value\n
+\t\t\t\t\t\t\t\t\tif (prefix) {\n
+\t\t\t\t\t\t\t\t\t\t// Default value\n
+\t\t\t\t\t\t\t\t\t\tif (prefix === \'=\') {\n
+\t\t\t\t\t\t\t\t\t\t\telement.attributesDefault = element.attributesDefault || [];\n
+\t\t\t\t\t\t\t\t\t\t\telement.attributesDefault.push({name: attrName, value: value});\n
+\t\t\t\t\t\t\t\t\t\t\tattr.defaultValue = value;\n
+\t\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\t\t// Forced value\n
+\t\t\t\t\t\t\t\t\t\tif (prefix === \':\') {\n
+\t\t\t\t\t\t\t\t\t\t\telement.attributesForced = element.attributesForced || [];\n
+\t\t\t\t\t\t\t\t\t\t\telement.attributesForced.push({name: attrName, value: value});\n
+\t\t\t\t\t\t\t\t\t\t\tattr.forcedValue = value;\n
+\t\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\t\t// Required values\n
+\t\t\t\t\t\t\t\t\t\tif (prefix === \'<\') {\n
+\t\t\t\t\t\t\t\t\t\t\tattr.validValues = makeMap(value, \'?\');\n
+\t\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\t// Check for attribute patterns\n
+\t\t\t\t\t\t\t\t\tif (hasPatternsRegExp.test(attrName)) {\n
+\t\t\t\t\t\t\t\t\t\telement.attributePatterns = element.attributePatterns || [];\n
+\t\t\t\t\t\t\t\t\t\tattr.pattern = patternToRegExp(attrName);\n
+\t\t\t\t\t\t\t\t\t\telement.attributePatterns.push(attr);\n
+\t\t\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\t\t\t// Add attribute to order list if it doesn\'t already exist\n
+\t\t\t\t\t\t\t\t\t\tif (!attributes[attrName]) {\n
+\t\t\t\t\t\t\t\t\t\t\tattributesOrder.push(attrName);\n
+\t\t\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\t\t\tattributes[attrName] = attr;\n
+\t\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Global rule, store away these for later usage\n
+\t\t\t\t\t\tif (!globalAttributes && elementName == \'@\') {\n
+\t\t\t\t\t\t\tglobalAttributes = attributes;\n
+\t\t\t\t\t\t\tglobalAttributesOrder = attributesOrder;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Handle substitute elements such as b/strong\n
+\t\t\t\t\t\tif (outputName) {\n
+\t\t\t\t\t\t\telement.outputName = elementName;\n
+\t\t\t\t\t\t\telements[outputName] = element;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Add pattern or exact element\n
+\t\t\t\t\t\tif (hasPatternsRegExp.test(elementName)) {\n
+\t\t\t\t\t\t\telement.pattern = patternToRegExp(elementName);\n
+\t\t\t\t\t\t\tpatternElements.push(element);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\telements[elementName] = element;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction setValidElements(validElements) {\n
+\t\t\telements = {};\n
+\t\t\tpatternElements = [];\n
+\n
+\t\t\taddValidElements(validElements);\n
+\n
+\t\t\teach(schemaItems, function(element, name) {\n
+\t\t\t\tchildren[name] = element.children;\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Adds custom non HTML elements to the schema\n
+\t\tfunction addCustomElements(customElements) {\n
+\t\t\tvar customElementRegExp = /^(~)?(.+)$/;\n
+\n
+\t\t\tif (customElements) {\n
+\t\t\t\t// Flush cached items since we are altering the default maps\n
+\t\t\t\tmapCache.text_block_elements = mapCache.block_elements = null;\n
+\n
+\t\t\t\teach(split(customElements, \',\'), function(rule) {\n
+\t\t\t\t\tvar matches = customElementRegExp.exec(rule),\n
+\t\t\t\t\t\tinline = matches[1] === \'~\',\n
+\t\t\t\t\t\tcloneName = inline ? \'span\' : \'div\',\n
+\t\t\t\t\t\tname = matches[2];\n
+\n
+\t\t\t\t\tchildren[name] = children[cloneName];\n
+\t\t\t\t\tcustomElementsMap[name] = cloneName;\n
+\n
+\t\t\t\t\t// If it\'s not marked as inline then add it to valid block elements\n
+\t\t\t\t\tif (!inline) {\n
+\t\t\t\t\t\tblockElementsMap[name.toUpperCase()] = {};\n
+\t\t\t\t\t\tblockElementsMap[name] = {};\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Add elements clone if needed\n
+\t\t\t\t\tif (!elements[name]) {\n
+\t\t\t\t\t\tvar customRule = elements[cloneName];\n
+\n
+\t\t\t\t\t\tcustomRule = extend({}, customRule);\n
+\t\t\t\t\t\tdelete customRule.removeEmptyAttrs;\n
+\t\t\t\t\t\tdelete customRule.removeEmpty;\n
+\n
+\t\t\t\t\t\telements[name] = customRule;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Add custom elements at span/div positions\n
+\t\t\t\t\teach(children, function(element, elmName) {\n
+\t\t\t\t\t\tif (element[cloneName]) {\n
+\t\t\t\t\t\t\tchildren[elmName] = element = extend({}, children[elmName]);\n
+\t\t\t\t\t\t\telement[name] = element[cloneName];\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Adds valid children to the schema object\n
+\t\tfunction addValidChildren(validChildren) {\n
+\t\t\tvar childRuleRegExp = /^([+\\-]?)(\\w+)\\[([^\\]]+)\\]$/;\n
+\n
+\t\t\t// Invalidate the schema cache if the schema is mutated\n
+\t\t\tmapCache[settings.schema] = null;\n
+\n
+\t\t\tif (validChildren) {\n
+\t\t\t\teach(split(validChildren, \',\'), function(rule) {\n
+\t\t\t\t\tvar matches = childRuleRegExp.exec(rule), parent, prefix;\n
+\n
+\t\t\t\t\tif (matches) {\n
+\t\t\t\t\t\tprefix = matches[1];\n
+\n
+\t\t\t\t\t\t// Add/remove items from default\n
+\t\t\t\t\t\tif (prefix) {\n
+\t\t\t\t\t\t\tparent = children[matches[2]];\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tparent = children[matches[2]] = {\'#comment\': {}};\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tparent = children[matches[2]];\n
+\n
+\t\t\t\t\t\teach(split(matches[3], \'|\'), function(child) {\n
+\t\t\t\t\t\t\tif (prefix === \'-\') {\n
+\t\t\t\t\t\t\t\tdelete parent[child];\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tparent[child] = {};\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction getElementRule(name) {\n
+\t\t\tvar element = elements[name], i;\n
+\n
+\t\t\t// Exact match found\n
+\t\t\tif (element) {\n
+\t\t\t\treturn element;\n
+\t\t\t}\n
+\n
+\t\t\t// No exact match then try the patterns\n
+\t\t\ti = patternElements.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\telement = patternElements[i];\n
+\n
+\t\t\t\tif (element.pattern.test(name)) {\n
+\t\t\t\t\treturn element;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tif (!settings.valid_elements) {\n
+\t\t\t// No valid elements defined then clone the elements from the schema spec\n
+\t\t\teach(schemaItems, function(element, name) {\n
+\t\t\t\telements[name] = {\n
+\t\t\t\t\tattributes: element.attributes,\n
+\t\t\t\t\tattributesOrder: element.attributesOrder\n
+\t\t\t\t};\n
+\n
+\t\t\t\tchildren[name] = element.children;\n
+\t\t\t});\n
+\n
+\t\t\t// Switch these on HTML4\n
+\t\t\tif (settings.schema != "html5") {\n
+\t\t\t\teach(split(\'strong/b em/i\'), function(item) {\n
+\t\t\t\t\titem = split(item, \'/\');\n
+\t\t\t\t\telements[item[1]].outputName = item[0];\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// Add default alt attribute for images\n
+\t\t\telements.img.attributesDefault = [{name: \'alt\', value: \'\'}];\n
+\n
+\t\t\t// Remove these if they are empty by default\n
+\t\t\teach(split(\'ol ul sub sup blockquote span font a table tbody tr strong em b i\'), function(name) {\n
+\t\t\t\tif (elements[name]) {\n
+\t\t\t\t\telements[name].removeEmpty = true;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// Padd these by default\n
+\t\t\teach(split(\'p h1 h2 h3 h4 h5 h6 th td pre div address caption\'), function(name) {\n
+\t\t\t\telements[name].paddEmpty = true;\n
+\t\t\t});\n
+\n
+\t\t\t// Remove these if they have no attributes\n
+\t\t\teach(split(\'span\'), function(name) {\n
+\t\t\t\telements[name].removeEmptyAttrs = true;\n
+\t\t\t});\n
+\n
+\t\t\t// Remove these by default\n
+\t\t\t// TODO: Reenable in 4.1\n
+\t\t\t/*each(split(\'script style\'), function(name) {\n
+\t\t\t\tdelete elements[name];\n
+\t\t\t});*/\n
+\t\t} else {\n
+\t\t\tsetValidElements(settings.valid_elements);\n
+\t\t}\n
+\n
+\t\taddCustomElements(settings.custom_elements);\n
+\t\taddValidChildren(settings.valid_children);\n
+\t\taddValidElements(settings.extended_valid_elements);\n
+\n
+\t\t// Todo: Remove this when we fix list handling to be valid\n
+\t\taddValidChildren(\'+ol[ul|ol],+ul[ul|ol]\');\n
+\n
+\t\t// Delete invalid elements\n
+\t\tif (settings.invalid_elements) {\n
+\t\t\teach(explode(settings.invalid_elements), function(item) {\n
+\t\t\t\tif (elements[item]) {\n
+\t\t\t\t\tdelete elements[item];\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// If the user didn\'t allow span only allow internal spans\n
+\t\tif (!getElementRule(\'span\')) {\n
+\t\t\taddValidElements(\'span[!data-mce-type|*]\');\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Name/value map object with valid parents and children to those parents.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * children = {\n
+\t\t *    div:{p:{}, h1:{}}\n
+\t\t * };\n
+\t\t * @field children\n
+\t\t * @type Object\n
+\t\t */\n
+\t\tself.children = children;\n
+\n
+\t\t/**\n
+\t\t * Name/value map object with valid styles for each element.\n
+\t\t *\n
+\t\t * @method getValidStyles\n
+\t\t * @type Object\n
+\t\t */\n
+\t\tself.getValidStyles = function() {\n
+\t\t\treturn validStyles;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Name/value map object with valid styles for each element.\n
+\t\t *\n
+\t\t * @method getInvalidStyles\n
+\t\t * @type Object\n
+\t\t */\n
+\t\tself.getInvalidStyles = function() {\n
+\t\t\treturn invalidStyles;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Name/value map object with valid classes for each element.\n
+\t\t *\n
+\t\t * @method getValidClasses\n
+\t\t * @type Object\n
+\t\t */\n
+\t\tself.getValidClasses = function() {\n
+\t\t\treturn validClasses;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns a map with boolean attributes.\n
+\t\t *\n
+\t\t * @method getBoolAttrs\n
+\t\t * @return {Object} Name/value lookup map for boolean attributes.\n
+\t\t */\n
+\t\tself.getBoolAttrs = function() {\n
+\t\t\treturn boolAttrMap;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns a map with block elements.\n
+\t\t *\n
+\t\t * @method getBlockElements\n
+\t\t * @return {Object} Name/value lookup map for block elements.\n
+\t\t */\n
+\t\tself.getBlockElements = function() {\n
+\t\t\treturn blockElementsMap;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns a map with text block elements. Such as: p,h1-h6,div,address\n
+\t\t *\n
+\t\t * @method getTextBlockElements\n
+\t\t * @return {Object} Name/value lookup map for block elements.\n
+\t\t */\n
+\t\tself.getTextBlockElements = function() {\n
+\t\t\treturn textBlockElementsMap;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns a map of inline text format nodes for example strong/span or ins.\n
+\t\t *\n
+\t\t * @method getTextInlineElements\n
+\t\t * @return {Object} Name/value lookup map for text format elements.\n
+\t\t */\n
+\t\tself.getTextInlineElements = function() {\n
+\t\t\treturn textInlineElementsMap;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns a map with short ended elements such as BR or IMG.\n
+\t\t *\n
+\t\t * @method getShortEndedElements\n
+\t\t * @return {Object} Name/value lookup map for short ended elements.\n
+\t\t */\n
+\t\tself.getShortEndedElements = function() {\n
+\t\t\treturn shortEndedElementsMap;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns a map with self closing tags such as <li>.\n
+\t\t *\n
+\t\t * @method getSelfClosingElements\n
+\t\t * @return {Object} Name/value lookup map for self closing tags elements.\n
+\t\t */\n
+\t\tself.getSelfClosingElements = function() {\n
+\t\t\treturn selfClosingElementsMap;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns a map with elements that should be treated as contents regardless if it has text\n
+\t\t * content in them or not such as TD, VIDEO or IMG.\n
+\t\t *\n
+\t\t * @method getNonEmptyElements\n
+\t\t * @return {Object} Name/value lookup map for non empty elements.\n
+\t\t */\n
+\t\tself.getNonEmptyElements = function() {\n
+\t\t\treturn nonEmptyElementsMap;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns a map with elements that the caret should be moved in front of after enter is\n
+\t\t * pressed\n
+\t\t *\n
+\t\t * @method getMoveCaretBeforeOnEnterElements\n
+\t\t * @return {Object} Name/value lookup map for elements to place the caret in front of.\n
+\t\t */\n
+\t\tself.getMoveCaretBeforeOnEnterElements = function() {\n
+\t\t\treturn moveCaretBeforeOnEnterElementsMap;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns a map with elements where white space is to be preserved like PRE or SCRIPT.\n
+\t\t *\n
+\t\t * @method getWhiteSpaceElements\n
+\t\t * @return {Object} Name/value lookup map for white space elements.\n
+\t\t */\n
+\t\tself.getWhiteSpaceElements = function() {\n
+\t\t\treturn whiteSpaceElementsMap;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns a map with special elements. These are elements that needs to be parsed\n
+\t\t * in a special way such as script, style, textarea etc. The map object values\n
+\t\t * are regexps used to find the end of the element.\n
+\t\t *\n
+\t\t * @method getSpecialElements\n
+\t\t * @return {Object} Name/value lookup map for special elements.\n
+\t\t */\n
+\t\tself.getSpecialElements = function() {\n
+\t\t\treturn specialElements;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified element and it\'s child is valid or not\n
+\t\t * according to the schema.\n
+\t\t *\n
+\t\t * @method isValidChild\n
+\t\t * @param {String} name Element name to check for.\n
+\t\t * @param {String} child Element child to verify.\n
+\t\t * @return {Boolean} True/false if the element is a valid child of the specified parent.\n
+\t\t */\n
+\t\tself.isValidChild = function(name, child) {\n
+\t\t\tvar parent = children[name];\n
+\n
+\t\t\treturn !!(parent && parent[child]);\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified element name and optional attribute is\n
+\t\t * valid according to the schema.\n
+\t\t *\n
+\t\t * @method isValid\n
+\t\t * @param {String} name Name of element to check.\n
+\t\t * @param {String} attr Optional attribute name to check for.\n
+\t\t * @return {Boolean} True/false if the element and attribute is valid.\n
+\t\t */\n
+\t\tself.isValid = function(name, attr) {\n
+\t\t\tvar attrPatterns, i, rule = getElementRule(name);\n
+\n
+\t\t\t// Check if it\'s a valid element\n
+\t\t\tif (rule) {\n
+\t\t\t\tif (attr) {\n
+\t\t\t\t\t// Check if attribute name exists\n
+\t\t\t\t\tif (rule.attributes[attr]) {\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Check if attribute matches a regexp pattern\n
+\t\t\t\t\tattrPatterns = rule.attributePatterns;\n
+\t\t\t\t\tif (attrPatterns) {\n
+\t\t\t\t\t\ti = attrPatterns.length;\n
+\t\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\t\tif (attrPatterns[i].pattern.test(name)) {\n
+\t\t\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// No match\n
+\t\t\treturn false;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified element is valid or not\n
+\t\t * according to the schema.\n
+\t\t *\n
+\t\t * @method getElementRule\n
+\t\t * @param {String} name Element name to check for.\n
+\t\t * @return {Object} Element object or undefined if the element isn\'t valid.\n
+\t\t */\n
+\t\tself.getElementRule = getElementRule;\n
+\n
+\t\t/**\n
+\t\t * Returns an map object of all custom elements.\n
+\t\t *\n
+\t\t * @method getCustomElements\n
+\t\t * @return {Object} Name/value map object of all custom elements.\n
+\t\t */\n
+\t\tself.getCustomElements = function() {\n
+\t\t\treturn customElementsMap;\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Parses a valid elements string and adds it to the schema. The valid elements\n
+\t\t * format is for example "element[attr=default|otherattr]".\n
+\t\t * Existing rules will be replaced with the ones specified, so this extends the schema.\n
+\t\t *\n
+\t\t * @method addValidElements\n
+\t\t * @param {String} valid_elements String in the valid elements format to be parsed.\n
+\t\t */\n
+\t\tself.addValidElements = addValidElements;\n
+\n
+\t\t/**\n
+\t\t * Parses a valid elements string and sets it to the schema. The valid elements\n
+\t\t * format is for example "element[attr=default|otherattr]".\n
+\t\t * Existing rules will be replaced with the ones specified, so this extends the schema.\n
+\t\t *\n
+\t\t * @method setValidElements\n
+\t\t * @param {String} valid_elements String in the valid elements format to be parsed.\n
+\t\t */\n
+\t\tself.setValidElements = setValidElements;\n
+\n
+\t\t/**\n
+\t\t * Adds custom non HTML elements to the schema.\n
+\t\t *\n
+\t\t * @method addCustomElements\n
+\t\t * @param {String} custom_elements Comma separated list of custom elements to add.\n
+\t\t */\n
+\t\tself.addCustomElements = addCustomElements;\n
+\n
+\t\t/**\n
+\t\t * Parses a valid children string and adds them to the schema structure. The valid children\n
+\t\t * format is for example: "element[child1|child2]".\n
+\t\t *\n
+\t\t * @method addValidChildren\n
+\t\t * @param {String} valid_children Valid children elements string to parse\n
+\t\t */\n
+\t\tself.addValidChildren = addValidChildren;\n
+\n
+\t\tself.elements = elements;\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>32842</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Schema.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

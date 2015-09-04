@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268192.43</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Entities.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.html.Entities");\n
+\n
+test(\'encodeRaw\', function() {\n
+\texpect(2);\n
+\n
+\tequal(tinymce.html.Entities.encodeRaw(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\\u0060\'), \'&lt;&gt;"\\\'&amp;\\u00e5\\u00e4\\u00f6\\u0060\', \'Raw encoding text\');\n
+\tequal(tinymce.html.Entities.encodeRaw(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\\u0060\', true), \'&lt;&gt;&quot;\\\'&amp;\\u00e5\\u00e4\\u00f6&#96;\', \'Raw encoding attribute\');\n
+});\n
+\n
+test(\'encodeAllRaw\', function() {\n
+\texpect(1);\n
+\n
+\tequal(tinymce.html.Entities.encodeAllRaw(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\'), \'&lt;&gt;&quot;&#39;&amp;\\u00e5\\u00e4\\u00f6\', \'Raw encoding all\');\n
+});\n
+\n
+test(\'encodeNumeric\', function() {\n
+\texpect(2);\n
+\n
+\tequal(tinymce.html.Entities.encodeNumeric(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\\u03b8\\u2170\\ufa11\'), \'&lt;&gt;"\\\'&amp;&#229;&#228;&#246;&#952;&#8560;&#64017;\', \'Numeric encoding text\');\n
+\tequal(tinymce.html.Entities.encodeNumeric(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\', true), \'&lt;&gt;&quot;\\\'&amp;&#229;&#228;&#246;\', \'Numeric encoding attribute\');\n
+});\n
+\n
+test(\'encodeNamed\', function() {\n
+\texpect(4);\n
+\n
+\tequal(tinymce.html.Entities.encodeNamed(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\'), \'&lt;&gt;"\\\'&amp;&aring;&auml;&ouml;\', \'Named encoding text\');\n
+\tequal(tinymce.html.Entities.encodeNamed(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\', true), \'&lt;&gt;&quot;\\\'&amp;&aring;&auml;&ouml;\', \'Named encoding attribute\');\n
+\tequal(tinymce.html.Entities.encodeNamed(\'<>"\\\'\\u00e5\\u00e4\\u00f6\', false, {\'\\u00e5\' : \'&aring;\'}), \'&lt;&gt;"\\\'&aring;\\u00e4\\u00f6\', \'Named encoding text\');\n
+\tequal(tinymce.html.Entities.encodeNamed(\'<>"\\\'\\u00e5\\u00e4\\u00f6\', true, {\'\\u00e5\' : \'&aring;\'}), \'&lt;&gt;&quot;\\\'&aring;\\u00e4\\u00f6\', \'Named encoding attribute\');\n
+});\n
+\n
+test(\'getEncodeFunc\', function() {\n
+\tvar encodeFunc;\n
+\n
+\texpect(10);\n
+\n
+\tencodeFunc = tinymce.html.Entities.getEncodeFunc(\'raw\');\n
+\tequal(encodeFunc(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\'), \'&lt;&gt;"\\\'&amp;\\u00e5\\u00e4\\u00f6\', \'Raw encoding text\');\n
+\tequal(encodeFunc(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\', true), \'&lt;&gt;&quot;\\\'&amp;\\u00e5\\u00e4\\u00f6\', \'Raw encoding attribute\');\n
+\n
+\tencodeFunc = tinymce.html.Entities.getEncodeFunc(\'named\');\n
+\tequal(encodeFunc(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\'), \'&lt;&gt;"\\\'&amp;&aring;&auml;&ouml;\', \'Named encoding text\');\n
+\tequal(encodeFunc(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\', true), \'&lt;&gt;&quot;\\\'&amp;&aring;&auml;&ouml;\', \'Named encoding attribute\');\n
+\n
+\tencodeFunc = tinymce.html.Entities.getEncodeFunc(\'numeric\');\n
+\tequal(encodeFunc(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\'), \'&lt;&gt;"\\\'&amp;&#229;&#228;&#246;\', \'Named encoding text\');\n
+\tequal(encodeFunc(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\', true), \'&lt;&gt;&quot;\\\'&amp;&#229;&#228;&#246;\', \'Named encoding attribute\');\n
+\n
+\tencodeFunc = tinymce.html.Entities.getEncodeFunc(\'named+numeric\', \'229,aring\');\n
+\tequal(encodeFunc(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\'), \'&lt;&gt;"\\\'&amp;&aring;&#228;&#246;\', \'Named+numeric encoding text\');\n
+\tequal(encodeFunc(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\', true), \'&lt;&gt;&quot;\\\'&amp;&aring;&#228;&#246;\', \'Named+numeric encoding attribute\');\n
+\n
+\tencodeFunc = tinymce.html.Entities.getEncodeFunc(\'named,numeric\', \'229,aring\');\n
+\tequal(encodeFunc(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\'), \'&lt;&gt;"\\\'&amp;&aring;&#228;&#246;\', \'Named+numeric encoding text\');\n
+\tequal(encodeFunc(\'<>"\\\'&\\u00e5\\u00e4\\u00f6\', true), \'&lt;&gt;&quot;\\\'&amp;&aring;&#228;&#246;\', \'Named+numeric encoding attribute\');\n
+});\n
+\n
+test(\'decode\', function() {\n
+\tequal(tinymce.html.Entities.decode(\'&lt;&gt;&quot;&#39;&amp;&aring;&auml;&ouml;&unknown;\'), \'<>"\\\'&\\u00e5\\u00e4\\u00f6&unknown;\', \'Decode text with various entities\');\n
+\tequal(tinymce.html.Entities.decode(\'&#65;&#66;&#039;\'), \'AB\\\'\', \'Decode numeric entities\');\n
+\tequal(tinymce.html.Entities.decode(\'&#x4F;&#X4F;&#x27;\'), \'OO\\\'\', \'Decode hexanumeric entities\');\n
+\tequal(tinymce.html.Entities.decode(\'&#65&#66&#x43\'), \'ABC\', \'Decode numeric entities with no semicolon\');\n
+\tequal(tinymce.html.Entities.decode(\'&test\'), \'&test\', \'Dont decode invalid entity name without semicolon\');\n
+\n
+\tequal(tinymce.html.Entities.encodeNumeric(tinymce.html.Entities.decode(\n
+\t\t\'&#130;&#131;&#132;&#133;&#134;&#135;&#136;&#137;&#138;\' +\n
+\t\t\'&#139;&#140;&#141;&#142;&#143;&#144;&#145;&#146;&#147;&#148;&#149;&#150;&#151;&#152;\' +\n
+\t\t\'&#153;&#154;&#155;&#156;&#157;&#158;&#159;\')\n
+\t), \'&#8218;&#402;&#8222;&#8230;&#8224;&#8225;&#710;&#8240;&#352;&#8249;&#338;&#141;&#381;\' +\n
+\t\t\'&#143;&#144;&#8216;&#8217;&#8220;&#8221;&#8226;&#8211;&#8212;&#732;&#8482;&#353;\' +\n
+\t\t\'&#8250;&#339;&#157;&#382;&#376;\',\n
+\t\'Entity decode ascii\');\n
+\n
+\tequal(tinymce.html.Entities.encodeNumeric(tinymce.html.Entities.decode(\'&#194564;\')), \'&#194564;\', "High byte non western character.");\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4491</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Entities.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

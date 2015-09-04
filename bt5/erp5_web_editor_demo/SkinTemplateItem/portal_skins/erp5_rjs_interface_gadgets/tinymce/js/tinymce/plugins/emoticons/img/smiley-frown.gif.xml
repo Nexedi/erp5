@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268511.22</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>smiley-frown.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhEgASANQRAEEnBcbGxqCCCPPVD93PMsq2ar+qTu/v7vPxWM69IvzvN2hUErebDb+jLf79
+cfzlGVpBCvr6+uDYuvryR8SrFcS8ndfX1v75N/76Wu7aIrmbHPjdFPnpJXhgENLCMAAAACH5BAEA
+AB8ALAAAAAASABIAAAXR4CeKUWmWY0pKhiYImiFFKlkwHuI4iMcUtNShQUFgJgrFBIOgNA6jiCHh
+mHg8yevEkTDQIhJGVbGAJMtKB2MmJWAuFwgALodjCN6DBjGBdxZ+gBcTCBoHB2JwFwoZHBsDkBsb
+GAyHiReOkJqRE5V6CAqSFHIAEBSSDxOGBwYEoQylHR1yDBsKeAcRFRQYGQIbD8EPGwIZGBQVJawJ
+CBzCwhwIXbkfERYNzJjBHBfSDRZBHwcWBhQES0cEFAYWUCnWFQZETgYV4DXV4wH7Ae3hHyEAOw==</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>340</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>smiley-frown.gif</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

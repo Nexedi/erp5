@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268692.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Variables.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// Variables\n
+// Syntax: <control>-(<sub control>)-<bg|border|text>-(<state>)-(<extra>);\n
+// Example: @btn-primary-bg-hover-hlight;\n
+\n
+@prefix:                         mce;\n
+\n
+// Default font\n
+@font-family:                    "Helvetica Neue", Helvetica, Arial, sans-serif;\n
+@font-size:                      14px;\n
+@line-height:                    20px;\n
+@has-gradients:                  false;\n
+@has-radius:                     false;\n
+@has-boxshadow:                  false;\n
+@has-button-borders:             false;\n
+\n
+// Text colors\n
+@text:                           #333;\n
+@text-inverse:                   white;\n
+@text-disabled:                  #aaa;\n
+@text-shadow:                    0 1px 1px hsla(hue(@text-inverse), saturation(@text-inverse), lightness(@text-inverse), 0.75);\n
+@text-error:                     #aa0000;\n
+\n
+// Button\n
+@btn-text:                       @text;\n
+@btn-text-shadow:                none; \n
+@btn-border-top:                 transparent;\n
+@btn-border-right:               transparent;\n
+@btn-border-bottom:              transparent;\n
+@btn-border-left:                transparent;\n
+@btn-caret-border:               @btn-text;   \n
+@btn-text-disabled:              @text-disabled;\n
+@btn-box-shadow:                 inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);\n
+@btn-box-shadow-active:          inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);\n
+@btn-box-disabled-opacity:       0.4;\n
+@btn-bg:                         white;\n
+@btn-bg-hlight:                  #D9D9D9;\n
+@btn-bg-hover:                   darken(@btn-bg, 5%);\n
+@btn-bg-hlight-hover:            darken(@btn-bg-hlight, 5%);\n
+@btn-border-hover:               darken(@btn-bg, 20%);\n
+@btn-border-active:              darken(@btn-bg, 20%);\n
+@btn-padding:                    4px 8px;\n
+\n
+@btn-primary-bg:                 #2980b9;\n
+@btn-primary-bg-hlight:          #3498db;\n
+@btn-primary-bg-hover:           darken(@btn-primary-bg, 5%);\n
+@btn-primary-bg-hover-hlight:    darken(@btn-primary-bg-hlight, 5%);\n
+@btn-primary-text:               #fff;\n
+@btn-primary-text-shadow:        none;\n
+@btn-primary-border-top:         mix(@btn-border-top, @btn-primary-bg, 50%);\n
+@btn-primary-border-right:       mix(@btn-border-right, @btn-primary-bg, 50%);\n
+@btn-primary-border-bottom:      mix(@btn-border-bottom, @btn-primary-bg, 50%);\n
+@btn-primary-border-left:        mix(@btn-border-left, @btn-primary-bg, 50%);\n
+@btn-primary-border:             transparent;\n
+@btn-primary-border-hover:       transparent;\n
+\n
+// Button group\n
+@btn-group-border-width:         1px;\n
+\n
+// Menu\n
+@menuitem-text:                  @text;\n
+@menu-bg:                        #fff;\n
+@menu-margin:                    -1px 0 0;\n
+@menu-border:                    rgba(0, 0, 0, 0.2);\n
+@menubar-border:                 mix(@panel-border, @panel-bg, 60%);\n
+@menuitem-text-inverse:          @text-inverse;\n
+@menubar-bg-active:              darken(@btn-bg, 10%);\n
+@menuitem-bg-hover:              #0081C2;\n
+@menuitem-bg-selected:           #2980b9;\n
+@menuitem-bg-selected-hlight:    #3498db;\n
+@menuitem-bg-disabled:           #CCC;\n
+@menuitem-caret:                 @menuitem-text;\n
+@menuitem-caret-selected:        @menuitem-text-inverse;\n
+@menuitem-separator-top:         transparent;\n
+@menuitem-separator-bottom:      rgba(0,0,0,0.1);\n
+@menuitem-bg-active:             #3498db;\n
+@menuitem-text-active:           @text-inverse;\n
+@menuitem-preview-border-active: #aaa;\n
+@menubar-menubtn-text:           #333;\n
+\n
+// Panel\n
+@panel-border:                   rgba(0,0,0,.2);\n
+@panel-bg:                       #FDFDFD;\n
+@panel-bg-hlight:                #DDD;\n
+\n
+// Tabs\n
+@tab-border:                     #c5c5c5;\n
+@tab-bg:                         #ffffff;\n
+@tab-bg-hover:                   #FDFDFD;\n
+@tab-bg-active:                  #FDFDFD;\n
+@tabs-bg:\t\t\t\t\t\t #FFF;\n
+\n
+// Tooltip\n
+@tooltip-bg:                     #000;\n
+@tooltip-text:                   white;\n
+@tooltip-font-size:              11px;\n
+\n
+// Window\n
+@window-border:                  #c5c5c5;\n
+@window-head-border:             @window-border;\n
+@window-head-close:              mix(@text, @window-bg, 60%);\n
+@window-head-close-hover:        mix(@text, @window-bg, 40%);\n
+@window-foot-border:             @window-border;\n
+@window-foot-bg:                 @window-bg;\n
+@window-fullscreen-bg:           #FFF;\n
+@window-modalblock-bg:           #000;\n
+@window-modalblock-opacity:      0.3;\n
+@window-box-shadow:              0 3px 7px rgba(0, 0, 0, 0.3);\n
+@window-bg:                      #FFF;\n
+@window-title-font-size:         20px;\n
+\n
+// Popover\n
+@popover-bg:                     @window-bg;\n
+@popover-arrow-width:            10px;\n
+@popover-arrow:                  @window-bg;\n
+@popover-arrow-outer-width:      @popover-arrow-width + 1;\n
+@popover-arrow-outer:            rgba(0, 0, 0, 0.25);\n
+\n
+// Floatpanel\n
+@floatpanel-box-shadow:          0 5px 10px rgba(0, 0, 0, .2);\n
+\n
+// Checkbox\n
+@checkbox-bg:                    @btn-bg;\n
+@checkbox-bg-hlight:             @btn-bg-hlight;\n
+@checkbox-box-shadow:            inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);\n
+@checkbox-border:                #c5c5c5;\n
+@checkbox-border-focus:          rgba(82, 168, 236, .8);\n
+\n
+// Path\n
+@path-text:                      @text;\n
+@path-bg-focus:                  #666;\n
+@path-text-focus:                #fff;\n
+\n
+// Textbox\n
+@textbox-text-placeholder:       #aaa;\n
+@textbox-box-shadow:             inset 0 1px 1px rgba(0, 0, 0, 0.075);\n
+@textbox-bg:                     #fff;\n
+@textbox-border:                 #c5c5c5;\n
+@textbox-border-focus:           #3498db;\n
+\n
+// Throbber\n
+@throbber-bg:                    #fff url(\'img/loader.gif\') no-repeat center center;\n
+\n
+// Combobox\n
+@combobox-border:                @textbox-border;\n
+\n
+// Colorpicker\n
+@colorpicker-border:             @textbox-border;\n
+@colorpicker-hue-bg:             #fff;\n
+@colorpicker-hue-border:         #333;\n
+\n
+// Grid\n
+@grid-bg-active:                 @menuitem-bg-active;\n
+@grid-border-active:             @menuitem-bg-active;\n
+@grid-border:                    #d6d6d6;\n
+\n
+// Misc\n
+@colorbtn-backcolor-bg:          #BBB;\n
+@iframe-border:                  @panel-border;\n
+\n
+// Slider\n
+@slider-border:                  #AAA;\n
+@slider-bg:                      #EEE;\n
+@slider-handle-border:           #BBB;\n
+@slider-handle-bg:               #DDD;\n
+\n
+// Flow layout\n
+@flow-layout-spacing:            2px;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6250</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Variables.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

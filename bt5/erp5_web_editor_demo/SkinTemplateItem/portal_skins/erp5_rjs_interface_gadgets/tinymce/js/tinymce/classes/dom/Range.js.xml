@@ -1,0 +1,821 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268368.08</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Range.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Range.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+define("tinymce/dom/Range", [\n
+\t"tinymce/util/Tools"\n
+], function(Tools) {\n
+\t// Range constructor\n
+\tfunction Range(dom) {\n
+\t\tvar self = this,\n
+\t\t\tdoc = dom.doc,\n
+\t\t\tEXTRACT = 0,\n
+\t\t\tCLONE = 1,\n
+\t\t\tDELETE = 2,\n
+\t\t\tTRUE = true,\n
+\t\t\tFALSE = false,\n
+\t\t\tSTART_OFFSET = \'startOffset\',\n
+\t\t\tSTART_CONTAINER = \'startContainer\',\n
+\t\t\tEND_CONTAINER = \'endContainer\',\n
+\t\t\tEND_OFFSET = \'endOffset\',\n
+\t\t\textend = Tools.extend,\n
+\t\t\tnodeIndex = dom.nodeIndex;\n
+\n
+\t\tfunction createDocumentFragment() {\n
+\t\t\treturn doc.createDocumentFragment();\n
+\t\t}\n
+\n
+\t\tfunction setStart(n, o) {\n
+\t\t\t_setEndPoint(TRUE, n, o);\n
+\t\t}\n
+\n
+\t\tfunction setEnd(n, o) {\n
+\t\t\t_setEndPoint(FALSE, n, o);\n
+\t\t}\n
+\n
+\t\tfunction setStartBefore(n) {\n
+\t\t\tsetStart(n.parentNode, nodeIndex(n));\n
+\t\t}\n
+\n
+\t\tfunction setStartAfter(n) {\n
+\t\t\tsetStart(n.parentNode, nodeIndex(n) + 1);\n
+\t\t}\n
+\n
+\t\tfunction setEndBefore(n) {\n
+\t\t\tsetEnd(n.parentNode, nodeIndex(n));\n
+\t\t}\n
+\n
+\t\tfunction setEndAfter(n) {\n
+\t\t\tsetEnd(n.parentNode, nodeIndex(n) + 1);\n
+\t\t}\n
+\n
+\t\tfunction collapse(ts) {\n
+\t\t\tif (ts) {\n
+\t\t\t\tself[END_CONTAINER] = self[START_CONTAINER];\n
+\t\t\t\tself[END_OFFSET] = self[START_OFFSET];\n
+\t\t\t} else {\n
+\t\t\t\tself[START_CONTAINER] = self[END_CONTAINER];\n
+\t\t\t\tself[START_OFFSET] = self[END_OFFSET];\n
+\t\t\t}\n
+\n
+\t\t\tself.collapsed = TRUE;\n
+\t\t}\n
+\n
+\t\tfunction selectNode(n) {\n
+\t\t\tsetStartBefore(n);\n
+\t\t\tsetEndAfter(n);\n
+\t\t}\n
+\n
+\t\tfunction selectNodeContents(n) {\n
+\t\t\tsetStart(n, 0);\n
+\t\t\tsetEnd(n, n.nodeType === 1 ? n.childNodes.length : n.nodeValue.length);\n
+\t\t}\n
+\n
+\t\tfunction compareBoundaryPoints(h, r) {\n
+\t\t\tvar sc = self[START_CONTAINER], so = self[START_OFFSET], ec = self[END_CONTAINER], eo = self[END_OFFSET],\n
+\t\t\trsc = r.startContainer, rso = r.startOffset, rec = r.endContainer, reo = r.endOffset;\n
+\n
+\t\t\t// Check START_TO_START\n
+\t\t\tif (h === 0) {\n
+\t\t\t\treturn _compareBoundaryPoints(sc, so, rsc, rso);\n
+\t\t\t}\n
+\n
+\t\t\t// Check START_TO_END\n
+\t\t\tif (h === 1) {\n
+\t\t\t\treturn _compareBoundaryPoints(ec, eo, rsc, rso);\n
+\t\t\t}\n
+\n
+\t\t\t// Check END_TO_END\n
+\t\t\tif (h === 2) {\n
+\t\t\t\treturn _compareBoundaryPoints(ec, eo, rec, reo);\n
+\t\t\t}\n
+\n
+\t\t\t// Check END_TO_START\n
+\t\t\tif (h === 3) {\n
+\t\t\t\treturn _compareBoundaryPoints(sc, so, rec, reo);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction deleteContents() {\n
+\t\t\t_traverse(DELETE);\n
+\t\t}\n
+\n
+\t\tfunction extractContents() {\n
+\t\t\treturn _traverse(EXTRACT);\n
+\t\t}\n
+\n
+\t\tfunction cloneContents() {\n
+\t\t\treturn _traverse(CLONE);\n
+\t\t}\n
+\n
+\t\tfunction insertNode(n) {\n
+\t\t\tvar startContainer = this[START_CONTAINER],\n
+\t\t\t\tstartOffset = this[START_OFFSET], nn, o;\n
+\n
+\t\t\t// Node is TEXT_NODE or CDATA\n
+\t\t\tif ((startContainer.nodeType === 3 || startContainer.nodeType === 4) && startContainer.nodeValue) {\n
+\t\t\t\tif (!startOffset) {\n
+\t\t\t\t\t// At the start of text\n
+\t\t\t\t\tstartContainer.parentNode.insertBefore(n, startContainer);\n
+\t\t\t\t} else if (startOffset >= startContainer.nodeValue.length) {\n
+\t\t\t\t\t// At the end of text\n
+\t\t\t\t\tdom.insertAfter(n, startContainer);\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// Middle, need to split\n
+\t\t\t\t\tnn = startContainer.splitText(startOffset);\n
+\t\t\t\t\tstartContainer.parentNode.insertBefore(n, nn);\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\t// Insert element node\n
+\t\t\t\tif (startContainer.childNodes.length > 0) {\n
+\t\t\t\t\to = startContainer.childNodes[startOffset];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (o) {\n
+\t\t\t\t\tstartContainer.insertBefore(n, o);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif (startContainer.nodeType == 3) {\n
+\t\t\t\t\t\tdom.insertAfter(n, startContainer);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tstartContainer.appendChild(n);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction surroundContents(n) {\n
+\t\t\tvar f = self.extractContents();\n
+\n
+\t\t\tself.insertNode(n);\n
+\t\t\tn.appendChild(f);\n
+\t\t\tself.selectNode(n);\n
+\t\t}\n
+\n
+\t\tfunction cloneRange() {\n
+\t\t\treturn extend(new Range(dom), {\n
+\t\t\t\tstartContainer: self[START_CONTAINER],\n
+\t\t\t\tstartOffset: self[START_OFFSET],\n
+\t\t\t\tendContainer: self[END_CONTAINER],\n
+\t\t\t\tendOffset: self[END_OFFSET],\n
+\t\t\t\tcollapsed: self.collapsed,\n
+\t\t\t\tcommonAncestorContainer: self.commonAncestorContainer\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t// Private methods\n
+\n
+\t\tfunction _getSelectedNode(container, offset) {\n
+\t\t\tvar child;\n
+\n
+\t\t\tif (container.nodeType == 3 /* TEXT_NODE */) {\n
+\t\t\t\treturn container;\n
+\t\t\t}\n
+\n
+\t\t\tif (offset < 0) {\n
+\t\t\t\treturn container;\n
+\t\t\t}\n
+\n
+\t\t\tchild = container.firstChild;\n
+\t\t\twhile (child && offset > 0) {\n
+\t\t\t\t--offset;\n
+\t\t\t\tchild = child.nextSibling;\n
+\t\t\t}\n
+\n
+\t\t\tif (child) {\n
+\t\t\t\treturn child;\n
+\t\t\t}\n
+\n
+\t\t\treturn container;\n
+\t\t}\n
+\n
+\t\tfunction _isCollapsed() {\n
+\t\t\treturn (self[START_CONTAINER] == self[END_CONTAINER] && self[START_OFFSET] == self[END_OFFSET]);\n
+\t\t}\n
+\n
+\t\tfunction _compareBoundaryPoints(containerA, offsetA, containerB, offsetB) {\n
+\t\t\tvar c, offsetC, n, cmnRoot, childA, childB;\n
+\n
+\t\t\t// In the first case the boundary-points have the same container. A is before B\n
+\t\t\t// if its offset is less than the offset of B, A is equal to B if its offset is\n
+\t\t\t// equal to the offset of B, and A is after B if its offset is greater than the\n
+\t\t\t// offset of B.\n
+\t\t\tif (containerA == containerB) {\n
+\t\t\t\tif (offsetA == offsetB) {\n
+\t\t\t\t\treturn 0; // equal\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (offsetA < offsetB) {\n
+\t\t\t\t\treturn -1; // before\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn 1; // after\n
+\t\t\t}\n
+\n
+\t\t\t// In the second case a child node C of the container of A is an ancestor\n
+\t\t\t// container of B. In this case, A is before B if the offset of A is less than or\n
+\t\t\t// equal to the index of the child node C and A is after B otherwise.\n
+\t\t\tc = containerB;\n
+\t\t\twhile (c && c.parentNode != containerA) {\n
+\t\t\t\tc = c.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\tif (c) {\n
+\t\t\t\toffsetC = 0;\n
+\t\t\t\tn = containerA.firstChild;\n
+\n
+\t\t\t\twhile (n != c && offsetC < offsetA) {\n
+\t\t\t\t\toffsetC++;\n
+\t\t\t\t\tn = n.nextSibling;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (offsetA <= offsetC) {\n
+\t\t\t\t\treturn -1; // before\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn 1; // after\n
+\t\t\t}\n
+\n
+\t\t\t// In the third case a child node C of the container of B is an ancestor container\n
+\t\t\t// of A. In this case, A is before B if the index of the child node C is less than\n
+\t\t\t// the offset of B and A is after B otherwise.\n
+\t\t\tc = containerA;\n
+\t\t\twhile (c && c.parentNode != containerB) {\n
+\t\t\t\tc = c.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\tif (c) {\n
+\t\t\t\toffsetC = 0;\n
+\t\t\t\tn = containerB.firstChild;\n
+\n
+\t\t\t\twhile (n != c && offsetC < offsetB) {\n
+\t\t\t\t\toffsetC++;\n
+\t\t\t\t\tn = n.nextSibling;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (offsetC < offsetB) {\n
+\t\t\t\t\treturn -1; // before\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn 1; // after\n
+\t\t\t}\n
+\n
+\t\t\t// In the fourth case, none of three other cases hold: the containers of A and B\n
+\t\t\t// are siblings or descendants of sibling nodes. In this case, A is before B if\n
+\t\t\t// the container of A is before the container of B in a pre-order traversal of the\n
+\t\t\t// Ranges\' context tree and A is after B otherwise.\n
+\t\t\tcmnRoot = dom.findCommonAncestor(containerA, containerB);\n
+\t\t\tchildA = containerA;\n
+\n
+\t\t\twhile (childA && childA.parentNode != cmnRoot) {\n
+\t\t\t\tchildA = childA.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\tif (!childA) {\n
+\t\t\t\tchildA = cmnRoot;\n
+\t\t\t}\n
+\n
+\t\t\tchildB = containerB;\n
+\t\t\twhile (childB && childB.parentNode != cmnRoot) {\n
+\t\t\t\tchildB = childB.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\tif (!childB) {\n
+\t\t\t\tchildB = cmnRoot;\n
+\t\t\t}\n
+\n
+\t\t\tif (childA == childB) {\n
+\t\t\t\treturn 0; // equal\n
+\t\t\t}\n
+\n
+\t\t\tn = cmnRoot.firstChild;\n
+\t\t\twhile (n) {\n
+\t\t\t\tif (n == childA) {\n
+\t\t\t\t\treturn -1; // before\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (n == childB) {\n
+\t\t\t\t\treturn 1; // after\n
+\t\t\t\t}\n
+\n
+\t\t\t\tn = n.nextSibling;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction _setEndPoint(st, n, o) {\n
+\t\t\tvar ec, sc;\n
+\n
+\t\t\tif (st) {\n
+\t\t\t\tself[START_CONTAINER] = n;\n
+\t\t\t\tself[START_OFFSET] = o;\n
+\t\t\t} else {\n
+\t\t\t\tself[END_CONTAINER] = n;\n
+\t\t\t\tself[END_OFFSET] = o;\n
+\t\t\t}\n
+\n
+\t\t\t// If one boundary-point of a Range is set to have a root container\n
+\t\t\t// other than the current one for the Range, the Range is collapsed to\n
+\t\t\t// the new position. This enforces the restriction that both boundary-\n
+\t\t\t// points of a Range must have the same root container.\n
+\t\t\tec = self[END_CONTAINER];\n
+\t\t\twhile (ec.parentNode) {\n
+\t\t\t\tec = ec.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\tsc = self[START_CONTAINER];\n
+\t\t\twhile (sc.parentNode) {\n
+\t\t\t\tsc = sc.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\tif (sc == ec) {\n
+\t\t\t\t// The start position of a Range is guaranteed to never be after the\n
+\t\t\t\t// end position. To enforce this restriction, if the start is set to\n
+\t\t\t\t// be at a position after the end, the Range is collapsed to that\n
+\t\t\t\t// position.\n
+\t\t\t\tif (_compareBoundaryPoints(self[START_CONTAINER], self[START_OFFSET], self[END_CONTAINER], self[END_OFFSET]) > 0) {\n
+\t\t\t\t\tself.collapse(st);\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tself.collapse(st);\n
+\t\t\t}\n
+\n
+\t\t\tself.collapsed = _isCollapsed();\n
+\t\t\tself.commonAncestorContainer = dom.findCommonAncestor(self[START_CONTAINER], self[END_CONTAINER]);\n
+\t\t}\n
+\n
+\t\tfunction _traverse(how) {\n
+\t\t\tvar c, endContainerDepth = 0, startContainerDepth = 0, p, depthDiff, startNode, endNode, sp, ep;\n
+\n
+\t\t\tif (self[START_CONTAINER] == self[END_CONTAINER]) {\n
+\t\t\t\treturn _traverseSameContainer(how);\n
+\t\t\t}\n
+\n
+\t\t\tfor (c = self[END_CONTAINER], p = c.parentNode; p; c = p, p = p.parentNode) {\n
+\t\t\t\tif (p == self[START_CONTAINER]) {\n
+\t\t\t\t\treturn _traverseCommonStartContainer(c, how);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t++endContainerDepth;\n
+\t\t\t}\n
+\n
+\t\t\tfor (c = self[START_CONTAINER], p = c.parentNode; p; c = p, p = p.parentNode) {\n
+\t\t\t\tif (p == self[END_CONTAINER]) {\n
+\t\t\t\t\treturn _traverseCommonEndContainer(c, how);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t++startContainerDepth;\n
+\t\t\t}\n
+\n
+\t\t\tdepthDiff = startContainerDepth - endContainerDepth;\n
+\n
+\t\t\tstartNode = self[START_CONTAINER];\n
+\t\t\twhile (depthDiff > 0) {\n
+\t\t\t\tstartNode = startNode.parentNode;\n
+\t\t\t\tdepthDiff--;\n
+\t\t\t}\n
+\n
+\t\t\tendNode = self[END_CONTAINER];\n
+\t\t\twhile (depthDiff < 0) {\n
+\t\t\t\tendNode = endNode.parentNode;\n
+\t\t\t\tdepthDiff++;\n
+\t\t\t}\n
+\n
+\t\t\t// ascend the ancestor hierarchy until we have a common parent.\n
+\t\t\tfor (sp = startNode.parentNode, ep = endNode.parentNode; sp != ep; sp = sp.parentNode, ep = ep.parentNode) {\n
+\t\t\t\tstartNode = sp;\n
+\t\t\t\tendNode = ep;\n
+\t\t\t}\n
+\n
+\t\t\treturn _traverseCommonAncestors(startNode, endNode, how);\n
+\t\t}\n
+\n
+\t\tfunction _traverseSameContainer(how) {\n
+\t\t\tvar frag, s, sub, n, cnt, sibling, xferNode, start, len;\n
+\n
+\t\t\tif (how != DELETE) {\n
+\t\t\t\tfrag = createDocumentFragment();\n
+\t\t\t}\n
+\n
+\t\t\t// If selection is empty, just return the fragment\n
+\t\t\tif (self[START_OFFSET] == self[END_OFFSET]) {\n
+\t\t\t\treturn frag;\n
+\t\t\t}\n
+\n
+\t\t\t// Text node needs special case handling\n
+\t\t\tif (self[START_CONTAINER].nodeType == 3 /* TEXT_NODE */) {\n
+\t\t\t\t// get the substring\n
+\t\t\t\ts = self[START_CONTAINER].nodeValue;\n
+\t\t\t\tsub = s.substring(self[START_OFFSET], self[END_OFFSET]);\n
+\n
+\t\t\t\t// set the original text node to its new value\n
+\t\t\t\tif (how != CLONE) {\n
+\t\t\t\t\tn = self[START_CONTAINER];\n
+\t\t\t\t\tstart = self[START_OFFSET];\n
+\t\t\t\t\tlen = self[END_OFFSET] - self[START_OFFSET];\n
+\n
+\t\t\t\t\tif (start === 0 && len >= n.nodeValue.length - 1) {\n
+\t\t\t\t\t\tn.parentNode.removeChild(n);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tn.deleteData(start, len);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Nothing is partially selected, so collapse to start point\n
+\t\t\t\t\tself.collapse(TRUE);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (how == DELETE) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (sub.length > 0) {\n
+\t\t\t\t\tfrag.appendChild(doc.createTextNode(sub));\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn frag;\n
+\t\t\t}\n
+\n
+\t\t\t// Copy nodes between the start/end offsets.\n
+\t\t\tn = _getSelectedNode(self[START_CONTAINER], self[START_OFFSET]);\n
+\t\t\tcnt = self[END_OFFSET] - self[START_OFFSET];\n
+\n
+\t\t\twhile (n && cnt > 0) {\n
+\t\t\t\tsibling = n.nextSibling;\n
+\t\t\t\txferNode = _traverseFullySelected(n, how);\n
+\n
+\t\t\t\tif (frag) {\n
+\t\t\t\t\tfrag.appendChild(xferNode);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t--cnt;\n
+\t\t\t\tn = sibling;\n
+\t\t\t}\n
+\n
+\t\t\t// Nothing is partially selected, so collapse to start point\n
+\t\t\tif (how != CLONE) {\n
+\t\t\t\tself.collapse(TRUE);\n
+\t\t\t}\n
+\n
+\t\t\treturn frag;\n
+\t\t}\n
+\n
+\t\tfunction _traverseCommonStartContainer(endAncestor, how) {\n
+\t\t\tvar frag, n, endIdx, cnt, sibling, xferNode;\n
+\n
+\t\t\tif (how != DELETE) {\n
+\t\t\t\tfrag = createDocumentFragment();\n
+\t\t\t}\n
+\n
+\t\t\tn = _traverseRightBoundary(endAncestor, how);\n
+\n
+\t\t\tif (frag) {\n
+\t\t\t\tfrag.appendChild(n);\n
+\t\t\t}\n
+\n
+\t\t\tendIdx = nodeIndex(endAncestor);\n
+\t\t\tcnt = endIdx - self[START_OFFSET];\n
+\n
+\t\t\tif (cnt <= 0) {\n
+\t\t\t\t// Collapse to just before the endAncestor, which\n
+\t\t\t\t// is partially selected.\n
+\t\t\t\tif (how != CLONE) {\n
+\t\t\t\t\tself.setEndBefore(endAncestor);\n
+\t\t\t\t\tself.collapse(FALSE);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn frag;\n
+\t\t\t}\n
+\n
+\t\t\tn = endAncestor.previousSibling;\n
+\t\t\twhile (cnt > 0) {\n
+\t\t\t\tsibling = n.previousSibling;\n
+\t\t\t\txferNode = _traverseFullySelected(n, how);\n
+\n
+\t\t\t\tif (frag) {\n
+\t\t\t\t\tfrag.insertBefore(xferNode, frag.firstChild);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t--cnt;\n
+\t\t\t\tn = sibling;\n
+\t\t\t}\n
+\n
+\t\t\t// Collapse to just before the endAncestor, which\n
+\t\t\t// is partially selected.\n
+\t\t\tif (how != CLONE) {\n
+\t\t\t\tself.setEndBefore(endAncestor);\n
+\t\t\t\tself.collapse(FALSE);\n
+\t\t\t}\n
+\n
+\t\t\treturn frag;\n
+\t\t}\n
+\n
+\t\tfunction _traverseCommonEndContainer(startAncestor, how) {\n
+\t\t\tvar frag, startIdx, n, cnt, sibling, xferNode;\n
+\n
+\t\t\tif (how != DELETE) {\n
+\t\t\t\tfrag = createDocumentFragment();\n
+\t\t\t}\n
+\n
+\t\t\tn = _traverseLeftBoundary(startAncestor, how);\n
+\t\t\tif (frag) {\n
+\t\t\t\tfrag.appendChild(n);\n
+\t\t\t}\n
+\n
+\t\t\tstartIdx = nodeIndex(startAncestor);\n
+\t\t\t++startIdx; // Because we already traversed it\n
+\n
+\t\t\tcnt = self[END_OFFSET] - startIdx;\n
+\t\t\tn = startAncestor.nextSibling;\n
+\t\t\twhile (n && cnt > 0) {\n
+\t\t\t\tsibling = n.nextSibling;\n
+\t\t\t\txferNode = _traverseFullySelected(n, how);\n
+\n
+\t\t\t\tif (frag) {\n
+\t\t\t\t\tfrag.appendChild(xferNode);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t--cnt;\n
+\t\t\t\tn = sibling;\n
+\t\t\t}\n
+\n
+\t\t\tif (how != CLONE) {\n
+\t\t\t\tself.setStartAfter(startAncestor);\n
+\t\t\t\tself.collapse(TRUE);\n
+\t\t\t}\n
+\n
+\t\t\treturn frag;\n
+\t\t}\n
+\n
+\t\tfunction _traverseCommonAncestors(startAncestor, endAncestor, how) {\n
+\t\t\tvar n, frag, startOffset, endOffset, cnt, sibling, nextSibling;\n
+\n
+\t\t\tif (how != DELETE) {\n
+\t\t\t\tfrag = createDocumentFragment();\n
+\t\t\t}\n
+\n
+\t\t\tn = _traverseLeftBoundary(startAncestor, how);\n
+\t\t\tif (frag) {\n
+\t\t\t\tfrag.appendChild(n);\n
+\t\t\t}\n
+\n
+\t\t\tstartOffset = nodeIndex(startAncestor);\n
+\t\t\tendOffset = nodeIndex(endAncestor);\n
+\t\t\t++startOffset;\n
+\n
+\t\t\tcnt = endOffset - startOffset;\n
+\t\t\tsibling = startAncestor.nextSibling;\n
+\n
+\t\t\twhile (cnt > 0) {\n
+\t\t\t\tnextSibling = sibling.nextSibling;\n
+\t\t\t\tn = _traverseFullySelected(sibling, how);\n
+\n
+\t\t\t\tif (frag) {\n
+\t\t\t\t\tfrag.appendChild(n);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tsibling = nextSibling;\n
+\t\t\t\t--cnt;\n
+\t\t\t}\n
+\n
+\t\t\tn = _traverseRightBoundary(endAncestor, how);\n
+\n
+\t\t\tif (frag) {\n
+\t\t\t\tfrag.appendChild(n);\n
+\t\t\t}\n
+\n
+\t\t\tif (how != CLONE) {\n
+\t\t\t\tself.setStartAfter(startAncestor);\n
+\t\t\t\tself.collapse(TRUE);\n
+\t\t\t}\n
+\n
+\t\t\treturn frag;\n
+\t\t}\n
+\n
+\t\tfunction _traverseRightBoundary(root, how) {\n
+\t\t\tvar next = _getSelectedNode(self[END_CONTAINER], self[END_OFFSET] - 1), parent, clonedParent;\n
+\t\t\tvar prevSibling, clonedChild, clonedGrandParent, isFullySelected = next != self[END_CONTAINER];\n
+\n
+\t\t\tif (next == root) {\n
+\t\t\t\treturn _traverseNode(next, isFullySelected, FALSE, how);\n
+\t\t\t}\n
+\n
+\t\t\tparent = next.parentNode;\n
+\t\t\tclonedParent = _traverseNode(parent, FALSE, FALSE, how);\n
+\n
+\t\t\twhile (parent) {\n
+\t\t\t\twhile (next) {\n
+\t\t\t\t\tprevSibling = next.previousSibling;\n
+\t\t\t\t\tclonedChild = _traverseNode(next, isFullySelected, FALSE, how);\n
+\n
+\t\t\t\t\tif (how != DELETE) {\n
+\t\t\t\t\t\tclonedParent.insertBefore(clonedChild, clonedParent.firstChild);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tisFullySelected = TRUE;\n
+\t\t\t\t\tnext = prevSibling;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (parent == root) {\n
+\t\t\t\t\treturn clonedParent;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnext = parent.previousSibling;\n
+\t\t\t\tparent = parent.parentNode;\n
+\n
+\t\t\t\tclonedGrandParent = _traverseNode(parent, FALSE, FALSE, how);\n
+\n
+\t\t\t\tif (how != DELETE) {\n
+\t\t\t\t\tclonedGrandParent.appendChild(clonedParent);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tclonedParent = clonedGrandParent;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction _traverseLeftBoundary(root, how) {\n
+\t\t\tvar next = _getSelectedNode(self[START_CONTAINER], self[START_OFFSET]), isFullySelected = next != self[START_CONTAINER];\n
+\t\t\tvar parent, clonedParent, nextSibling, clonedChild, clonedGrandParent;\n
+\n
+\t\t\tif (next == root) {\n
+\t\t\t\treturn _traverseNode(next, isFullySelected, TRUE, how);\n
+\t\t\t}\n
+\n
+\t\t\tparent = next.parentNode;\n
+\t\t\tclonedParent = _traverseNode(parent, FALSE, TRUE, how);\n
+\n
+\t\t\twhile (parent) {\n
+\t\t\t\twhile (next) {\n
+\t\t\t\t\tnextSibling = next.nextSibling;\n
+\t\t\t\t\tclonedChild = _traverseNode(next, isFullySelected, TRUE, how);\n
+\n
+\t\t\t\t\tif (how != DELETE) {\n
+\t\t\t\t\t\tclonedParent.appendChild(clonedChild);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tisFullySelected = TRUE;\n
+\t\t\t\t\tnext = nextSibling;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (parent == root) {\n
+\t\t\t\t\treturn clonedParent;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnext = parent.nextSibling;\n
+\t\t\t\tparent = parent.parentNode;\n
+\n
+\t\t\t\tclonedGrandParent = _traverseNode(parent, FALSE, TRUE, how);\n
+\n
+\t\t\t\tif (how != DELETE) {\n
+\t\t\t\t\tclonedGrandParent.appendChild(clonedParent);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tclonedParent = clonedGrandParent;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction _traverseNode(n, isFullySelected, isLeft, how) {\n
+\t\t\tvar txtValue, newNodeValue, oldNodeValue, offset, newNode;\n
+\n
+\t\t\tif (isFullySelected) {\n
+\t\t\t\treturn _traverseFullySelected(n, how);\n
+\t\t\t}\n
+\n
+\t\t\tif (n.nodeType == 3 /* TEXT_NODE */) {\n
+\t\t\t\ttxtValue = n.nodeValue;\n
+\n
+\t\t\t\tif (isLeft) {\n
+\t\t\t\t\toffset = self[START_OFFSET];\n
+\t\t\t\t\tnewNodeValue = txtValue.substring(offset);\n
+\t\t\t\t\toldNodeValue = txtValue.substring(0, offset);\n
+\t\t\t\t} else {\n
+\t\t\t\t\toffset = self[END_OFFSET];\n
+\t\t\t\t\tnewNodeValue = txtValue.substring(0, offset);\n
+\t\t\t\t\toldNodeValue = txtValue.substring(offset);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (how != CLONE) {\n
+\t\t\t\t\tn.nodeValue = oldNodeValue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (how == DELETE) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnewNode = dom.clone(n, FALSE);\n
+\t\t\t\tnewNode.nodeValue = newNodeValue;\n
+\n
+\t\t\t\treturn newNode;\n
+\t\t\t}\n
+\n
+\t\t\tif (how == DELETE) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\treturn dom.clone(n, FALSE);\n
+\t\t}\n
+\n
+\t\tfunction _traverseFullySelected(n, how) {\n
+\t\t\tif (how != DELETE) {\n
+\t\t\t\treturn how == CLONE ? dom.clone(n, TRUE) : n;\n
+\t\t\t}\n
+\n
+\t\t\tn.parentNode.removeChild(n);\n
+\t\t}\n
+\n
+\t\tfunction toStringIE() {\n
+\t\t\treturn dom.create(\'body\', null, cloneContents()).outerText;\n
+\t\t}\n
+\n
+\t\textend(self, {\n
+\t\t\t// Inital states\n
+\t\t\tstartContainer: doc,\n
+\t\t\tstartOffset: 0,\n
+\t\t\tendContainer: doc,\n
+\t\t\tendOffset: 0,\n
+\t\t\tcollapsed: TRUE,\n
+\t\t\tcommonAncestorContainer: doc,\n
+\n
+\t\t\t// Range constants\n
+\t\t\tSTART_TO_START: 0,\n
+\t\t\tSTART_TO_END: 1,\n
+\t\t\tEND_TO_END: 2,\n
+\t\t\tEND_TO_START: 3,\n
+\n
+\t\t\t// Public methods\n
+\t\t\tsetStart: setStart,\n
+\t\t\tsetEnd: setEnd,\n
+\t\t\tsetStartBefore: setStartBefore,\n
+\t\t\tsetStartAfter: setStartAfter,\n
+\t\t\tsetEndBefore: setEndBefore,\n
+\t\t\tsetEndAfter: setEndAfter,\n
+\t\t\tcollapse: collapse,\n
+\t\t\tselectNode: selectNode,\n
+\t\t\tselectNodeContents: selectNodeContents,\n
+\t\t\tcompareBoundaryPoints: compareBoundaryPoints,\n
+\t\t\tdeleteContents: deleteContents,\n
+\t\t\textractContents: extractContents,\n
+\t\t\tcloneContents: cloneContents,\n
+\t\t\tinsertNode: insertNode,\n
+\t\t\tsurroundContents: surroundContents,\n
+\t\t\tcloneRange: cloneRange,\n
+\t\t\ttoStringIE: toStringIE\n
+\t\t});\n
+\n
+\t\treturn self;\n
+\t}\n
+\n
+\t// Older IE versions doesn\'t let you override toString by it\'s constructor so we have to stick it in the prototype\n
+\tRange.prototype.toString = function() {\n
+\t\treturn this.toStringIE();\n
+\t};\n
+\n
+\treturn Range;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18107</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Range.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

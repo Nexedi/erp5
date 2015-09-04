@@ -1,0 +1,529 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268528.16</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Dialog.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Dialog.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * ...\n
+ */\n
+define("tinymce/imagetoolsplugin/Dialog", [\n
+\t"tinymce/dom/DOMUtils",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/util/Promise",\n
+\t"tinymce/ui/Factory",\n
+\t"tinymce/ui/Form",\n
+\t"tinymce/ui/Container",\n
+\t"tinymce/imagetoolsplugin/ImagePanel",\n
+\t"tinymce/imagetoolsplugin/ImageTools",\n
+\t"tinymce/imagetoolsplugin/Filters",\n
+\t"tinymce/imagetoolsplugin/Conversions",\n
+\t"tinymce/imagetoolsplugin/UndoStack"\n
+], function(DOMUtils, Tools, Promise, Factory, Form, Container, ImagePanel, ImageTools, Filters, Conversions, UndoStack) {\n
+\tfunction createState(blob) {\n
+\t\treturn {\n
+\t\t\tblob: blob,\n
+\t\t\turl: URL.createObjectURL(blob)\n
+\t\t};\n
+\t}\n
+\n
+\tfunction destroyState(state) {\n
+\t\tif (state) {\n
+\t\t\tURL.revokeObjectURL(state.url);\n
+\t\t}\n
+\t}\n
+\n
+\tfunction destroyStates(states) {\n
+\t\tTools.each(states, destroyState);\n
+\t}\n
+\n
+\tfunction open(currentState, resolve, reject) {\n
+\t\tvar win, undoStack = new UndoStack(), mainPanel, filtersPanel, tempState,\n
+\t\t\tcropPanel, resizePanel, flipRotatePanel, imagePanel, sidePanel, mainViewContainer,\n
+\t\t\tinvertPanel, brightnessPanel, huePanel, saturatePanel, contrastPanel, grayscalePanel,\n
+\t\t\tsepiaPanel, colorizePanel, sharpenPanel, embossPanel, gammaPanel, exposurePanel, panels,\n
+\t\t\twidth, height, ratioW, ratioH;\n
+\n
+\t\tfunction recalcSize(e) {\n
+\t\t\tvar widthCtrl, heightCtrl, newWidth, newHeight;\n
+\n
+\t\t\twidthCtrl = win.find(\'#w\')[0];\n
+\t\t\theightCtrl = win.find(\'#h\')[0];\n
+\n
+\t\t\tnewWidth = parseInt(widthCtrl.value(), 10);\n
+\t\t\tnewHeight = parseInt(heightCtrl.value(), 10);\n
+\n
+\t\t\tif (win.find(\'#constrain\')[0].checked() && width && height && newWidth && newHeight) {\n
+\t\t\t\tif (e.control.settings.name == \'w\') {\n
+\t\t\t\t\tnewHeight = Math.round(newWidth * ratioW);\n
+\t\t\t\t\theightCtrl.value(newHeight);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tnewWidth = Math.round(newHeight * ratioH);\n
+\t\t\t\t\twidthCtrl.value(newWidth);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\twidth = newWidth;\n
+\t\t\theight = newHeight;\n
+\t\t}\n
+\n
+\t\tfunction floatToPercent(value) {\n
+\t\t\treturn Math.round(value * 100) + \'%\';\n
+\t\t}\n
+\n
+\t\tfunction updateButtonUndoStates() {\n
+\t\t\twin.find(\'#undo\').disabled(!undoStack.canUndo());\n
+\t\t\twin.find(\'#redo\').disabled(!undoStack.canRedo());\n
+\t\t\twin.statusbar.find(\'#save\').disabled(!undoStack.canUndo());\n
+\t\t}\n
+\n
+\t\tfunction disableUndoRedo() {\n
+\t\t\twin.find(\'#undo\').disabled(true);\n
+\t\t\twin.find(\'#redo\').disabled(true);\n
+\t\t}\n
+\n
+\t\tfunction displayState(state) {\n
+\t\t\tif (state) {\n
+\t\t\t\timagePanel.imageSrc(state.url);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction switchPanel(targetPanel) {\n
+\t\t\treturn function() {\n
+\t\t\t\tvar hidePanels = Tools.filter(panels, function(panel) {\n
+\t\t\t\t\treturn panel.settings.name != targetPanel;\n
+\t\t\t\t});\n
+\n
+\t\t\t\tTools.each(hidePanels, function(panel) {\n
+\t\t\t\t\tpanel.hide();\n
+\t\t\t\t});\n
+\n
+\t\t\t\ttargetPanel.show();\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction addTempState(blob) {\n
+\t\t\ttempState = createState(blob);\n
+\t\t\tdisplayState(tempState);\n
+\t\t}\n
+\n
+\t\tfunction addBlobState(blob) {\n
+\t\t\tcurrentState = createState(blob);\n
+\t\t\tdisplayState(currentState);\n
+\t\t\tdestroyStates(undoStack.add(currentState).removed);\n
+\t\t\tupdateButtonUndoStates();\n
+\t\t}\n
+\n
+\t\tfunction crop() {\n
+\t\t\tvar rect = imagePanel.selection();\n
+\n
+\t\t\tImageTools.crop(currentState.blob, rect.x, rect.y, rect.w, rect.h).then(function(blob) {\n
+\t\t\t\taddBlobState(blob);\n
+\t\t\t\tcancel();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction tempAction(fn) {\n
+\t\t\tvar args = [].slice.call(arguments, 1);\n
+\n
+\t\t\treturn function() {\n
+\t\t\t\tvar state = tempState || currentState;\n
+\n
+\t\t\t\tfn.apply(this, [state.blob].concat(args)).then(addTempState);\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction action(fn) {\n
+\t\t\tvar args = [].slice.call(arguments, 1);\n
+\n
+\t\t\treturn function() {\n
+\t\t\t\tfn.apply(this, [currentState.blob].concat(args)).then(addBlobState);\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction cancel() {\n
+\t\t\tdisplayState(currentState);\n
+\t\t\tdestroyState(tempState);\n
+\t\t\tswitchPanel(mainPanel)();\n
+\t\t\tupdateButtonUndoStates();\n
+\t\t}\n
+\n
+\t\tfunction applyTempState() {\n
+\t\t\tif (tempState) {\n
+\t\t\t\taddBlobState(tempState.blob);\n
+\t\t\t\tcancel();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction zoomIn() {\n
+\t\t\tvar zoom = imagePanel.zoom();\n
+\n
+\t\t\tif (zoom < 2) {\n
+\t\t\t\tzoom += 0.1;\n
+\t\t\t}\n
+\n
+\t\t\timagePanel.zoom(zoom);\n
+\t\t}\n
+\n
+\t\tfunction zoomOut() {\n
+\t\t\tvar zoom = imagePanel.zoom();\n
+\n
+\t\t\tif (zoom > 0.1) {\n
+\t\t\t\tzoom -= 0.1;\n
+\t\t\t}\n
+\n
+\t\t\timagePanel.zoom(zoom);\n
+\t\t}\n
+\n
+\t\tfunction undo() {\n
+\t\t\tcurrentState = undoStack.undo();\n
+\t\t\tdisplayState(currentState);\n
+\t\t\tupdateButtonUndoStates();\n
+\t\t}\n
+\n
+\t\tfunction redo() {\n
+\t\t\tcurrentState = undoStack.redo();\n
+\t\t\tdisplayState(currentState);\n
+\t\t\tupdateButtonUndoStates();\n
+\t\t}\n
+\n
+\t\tfunction save() {\n
+\t\t\tresolve(currentState.blob);\n
+\t\t\twin.close();\n
+\t\t}\n
+\n
+\t\tfunction createPanel(items) {\n
+\t\t\treturn new Form({\n
+\t\t\t\tlayout: \'flex\',\n
+\t\t\t\tdirection: \'row\',\n
+\t\t\t\tlabelGap: 5,\n
+\t\t\t\tborder: \'0 0 1 0\',\n
+\t\t\t\talign: \'center\',\n
+\t\t\t\tpack: \'center\',\n
+\t\t\t\tpadding: \'0 10 0 10\',\n
+\t\t\t\tspacing: 5,\n
+\t\t\t\tflex: 0,\n
+\t\t\t\tminHeight: 60,\n
+\t\t\t\tdefaults: {\n
+\t\t\t\t\tclasses: \'imagetool\',\n
+\t\t\t\t\ttype: \'button\'\n
+\t\t\t\t},\n
+\t\t\t\titems: items\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction createFilterPanel(title, filter) {\n
+\t\t\treturn createPanel([\n
+\t\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: applyTempState}\n
+\t\t\t]).hide().on(\'show\', function() {\n
+\t\t\t\tdisableUndoRedo();\n
+\n
+\t\t\t\tfilter(currentState.blob).then(function(blob) {\n
+\t\t\t\t\tvar newTempState = createState(blob);\n
+\n
+\t\t\t\t\tdisplayState(newTempState);\n
+\t\t\t\t\tdestroyState(tempState);\n
+\t\t\t\t\ttempState = newTempState;\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction createVariableFilterPanel(title, filter, value, min, max) {\n
+\t\t\tfunction update(value) {\n
+\t\t\t\tfilter(currentState.blob, value).then(function(blob) {\n
+\t\t\t\t\tvar newTempState = createState(blob);\n
+\t\t\t\t\tdisplayState(newTempState);\n
+\t\t\t\t\tdestroyState(tempState);\n
+\t\t\t\t\ttempState = newTempState;\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn createPanel([\n
+\t\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t\t{\n
+\t\t\t\t\ttype: \'slider\',\n
+\t\t\t\t\tflex: 1,\n
+\t\t\t\t\tondragend: function(e) {\n
+\t\t\t\t\t\tupdate(e.value);\n
+\t\t\t\t\t},\n
+\t\t\t\t\tminValue: min,\n
+\t\t\t\t\tmaxValue: max,\n
+\t\t\t\t\tvalue: value,\n
+\t\t\t\t\tpreviewFilter: floatToPercent\n
+\t\t\t\t},\n
+\t\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: applyTempState}\n
+\t\t\t]).hide().on(\'show\', function() {\n
+\t\t\t\tthis.find(\'slider\').value(value);\n
+\t\t\t\tdisableUndoRedo();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction createRgbFilterPanel(title, filter) {\n
+\t\t\tfunction update() {\n
+\t\t\t\tvar r, g, b;\n
+\n
+\t\t\t\tr = win.find(\'#r\')[0].value();\n
+\t\t\t\tg = win.find(\'#g\')[0].value();\n
+\t\t\t\tb = win.find(\'#b\')[0].value();\n
+\n
+\t\t\t\tfilter(currentState.blob, r, g, b).then(function(blob) {\n
+\t\t\t\t\tvar newTempState = createState(blob);\n
+\t\t\t\t\tdisplayState(newTempState);\n
+\t\t\t\t\tdestroyState(tempState);\n
+\t\t\t\t\ttempState = newTempState;\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn createPanel([\n
+\t\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t\t{\n
+\t\t\t\t\ttype: \'slider\', label: \'R\', name: \'r\', minValue: 0,\n
+\t\t\t\t\tvalue: 1, maxValue: 2, ondragend: update, previewFilter: floatToPercent\n
+\t\t\t\t},\n
+\t\t\t\t{\n
+\t\t\t\t\ttype: \'slider\', label: \'G\', name: \'g\', minValue: 0,\n
+\t\t\t\t\tvalue: 1, maxValue: 2, ondragend: update, previewFilter: floatToPercent\n
+\t\t\t\t},\n
+\t\t\t\t{\n
+\t\t\t\t\ttype: \'slider\', label: \'B\', name: \'b\', minValue: 0,\n
+\t\t\t\t\tvalue: 1, maxValue: 2, ondragend: update, previewFilter: floatToPercent\n
+\t\t\t\t},\n
+\t\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: applyTempState}\n
+\t\t\t]).hide().on(\'show\', function() {\n
+\t\t\t\twin.find(\'#r,#g,#b\').value(1);\n
+\t\t\t\tdisableUndoRedo();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tcropPanel = createPanel([\n
+\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: crop}\n
+\t\t]).hide().on(\'show hide\', function(e) {\n
+\t\t\timagePanel.toggleCropRect(e.type == \'show\');\n
+\t\t}).on(\'show\', disableUndoRedo);\n
+\n
+\t\tfunction toggleConstrain(e) {\n
+\t\t\tif (e.control.value() === true) {\n
+\t\t\t\tratioW = height / width;\n
+\t\t\t\tratioH = width / height;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tresizePanel = createPanel([\n
+\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{type: \'textbox\', name: \'w\', label: \'Width\', size: 4, onkeyup: recalcSize},\n
+\t\t\t{type: \'textbox\', name: \'h\', label: \'Height\', size: 4, onkeyup: recalcSize},\n
+\t\t\t{type: \'checkbox\', name: \'constrain\', text: \'Constrain proportions\', checked: true, onchange: toggleConstrain},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: \'submit\'}\n
+\t\t]).hide().on(\'submit\', function(e) {\n
+\t\t\tvar width = parseInt(win.find(\'#w\').value(), 10),\n
+\t\t\t\theight = parseInt(win.find(\'#h\').value(), 10);\n
+\n
+\t\t\te.preventDefault();\n
+\n
+\t\t\taction(ImageTools.resize, width, height)();\n
+\t\t\tcancel();\n
+\t\t}).on(\'show\', disableUndoRedo);\n
+\n
+\t\tflipRotatePanel = createPanel([\n
+\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{icon: \'fliph\', tooltip: \'Flip horizontally\', onclick: tempAction(ImageTools.flip, \'h\')},\n
+\t\t\t{icon: \'flipv\', tooltip: \'Flip vertically\', onclick: tempAction(ImageTools.flip, \'v\')},\n
+\t\t\t{icon: \'rotateleft\', tooltip: \'Rotate counterclockwise\', onclick: tempAction(ImageTools.rotate, -90)},\n
+\t\t\t{icon: \'rotateright\', tooltip: \'Rotate clockwise\', onclick: tempAction(ImageTools.rotate, 90)},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: applyTempState}\n
+\t\t]).hide().on(\'show\', disableUndoRedo);\n
+\n
+\t\tinvertPanel = createFilterPanel("Invert", Filters.invert);\n
+\t\tsharpenPanel = createFilterPanel("Sharpen", Filters.sharpen);\n
+\t\tembossPanel = createFilterPanel("Emboss", Filters.emboss);\n
+\n
+\t\tbrightnessPanel = createVariableFilterPanel("Brightness", Filters.brightness, 0, -1, 1);\n
+\t\thuePanel = createVariableFilterPanel("Hue", Filters.hue, 180, 0, 360);\n
+\t\tsaturatePanel = createVariableFilterPanel("Saturate", Filters.saturate, 0, -1, 1);\n
+\t\tcontrastPanel = createVariableFilterPanel("Contrast", Filters.contrast, 0, -1, 1);\n
+\t\tgrayscalePanel = createVariableFilterPanel("Grayscale", Filters.grayscale, 0, 0, 1);\n
+\t\tsepiaPanel = createVariableFilterPanel("Sepia", Filters.sepia, 0, 0, 1);\n
+\t\tcolorizePanel = createRgbFilterPanel("Colorize", Filters.colorize);\n
+\t\tgammaPanel = createVariableFilterPanel("Gamma", Filters.gamma, 0, -1, 1);\n
+\t\texposurePanel = createVariableFilterPanel("Exposure", Filters.exposure, 1, 0, 2);\n
+\n
+\t\tfiltersPanel = createPanel([\n
+\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{text: \'hue\', icon: \'hue\', onclick: switchPanel(huePanel)},\n
+\t\t\t{text: \'saturate\', icon: \'saturate\', onclick: switchPanel(saturatePanel)},\n
+\t\t\t{text: \'sepia\', icon: \'sepia\', onclick: switchPanel(sepiaPanel)},\n
+\t\t\t{text: \'emboss\', icon: \'emboss\', onclick: switchPanel(embossPanel)},\n
+\t\t\t{text: \'exposure\', icon: \'exposure\', onclick: switchPanel(exposurePanel)},\n
+\t\t\t{type: \'spacer\', flex: 1}\n
+\t\t]).hide();\n
+\n
+\t\tmainPanel = createPanel([\n
+\t\t\t{tooltip: \'Crop\', icon: \'crop\', onclick: switchPanel(cropPanel)},\n
+\t\t\t{tooltip: \'Resize\', icon: \'resize2\', onclick: switchPanel(resizePanel)},\n
+\t\t\t{tooltip: \'Orientation\', icon: \'orientation\', onclick: switchPanel(flipRotatePanel)},\n
+\t\t\t{tooltip: \'Brightness\', icon: \'sun\', onclick: switchPanel(brightnessPanel)},\n
+\t\t\t{tooltip: \'Sharpen\', icon: \'sharpen\', onclick: switchPanel(sharpenPanel)},\n
+\t\t\t{tooltip: \'Contrast\', icon: \'contrast\', onclick: switchPanel(contrastPanel)},\n
+\t\t\t{tooltip: \'Color levels\', icon: \'drop\', onclick: switchPanel(colorizePanel)},\n
+\t\t\t{tooltip: \'Gamma\', icon: \'gamma\', onclick: switchPanel(gammaPanel)},\n
+\t\t\t{tooltip: \'Invert\', icon: \'invert\', onclick: switchPanel(invertPanel)}\n
+\t\t\t//{text: \'More\', onclick: switchPanel(filtersPanel)}\n
+\t\t]);\n
+\n
+\t\timagePanel = new ImagePanel({\n
+\t\t\tflex: 1,\n
+\t\t\timageSrc: currentState.url\n
+\t\t});\n
+\n
+\t\tsidePanel = new Container({\n
+\t\t\tlayout: \'flex\',\n
+\t\t\tdirection: \'column\',\n
+\t\t\tborder: \'0 1 0 0\',\n
+\t\t\tpadding: 5,\n
+\t\t\tspacing: 5,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'button\', icon: \'undo\', tooltip: \'Undo\', name: \'undo\', onclick: undo},\n
+\t\t\t\t{type: \'button\', icon: \'redo\', tooltip: \'Redo\', name: \'redo\', onclick: redo},\n
+\t\t\t\t{type: \'button\', icon: \'zoomin\', tooltip: \'Zoom in\', onclick: zoomIn},\n
+\t\t\t\t{type: \'button\', icon: \'zoomout\', tooltip: \'Zoom out\', onclick: zoomOut}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tmainViewContainer = new Container({\n
+\t\t\ttype: \'container\',\n
+\t\t\tlayout: \'flex\',\n
+\t\t\tdirection: \'row\',\n
+\t\t\talign: \'stretch\',\n
+\t\t\tflex: 1,\n
+\t\t\titems: [sidePanel, imagePanel]\n
+\t\t});\n
+\n
+\t\tpanels = [\n
+\t\t\tmainPanel,\n
+\t\t\tcropPanel,\n
+\t\t\tresizePanel,\n
+\t\t\tflipRotatePanel,\n
+\t\t\tfiltersPanel,\n
+\t\t\tinvertPanel,\n
+\t\t\tbrightnessPanel,\n
+\t\t\thuePanel,\n
+\t\t\tsaturatePanel,\n
+\t\t\tcontrastPanel,\n
+\t\t\tgrayscalePanel,\n
+\t\t\tsepiaPanel,\n
+\t\t\tcolorizePanel,\n
+\t\t\tsharpenPanel,\n
+\t\t\tembossPanel,\n
+\t\t\tgammaPanel,\n
+\t\t\texposurePanel\n
+\t\t];\n
+\n
+\t\twin = Factory.create(\'window\', {\n
+\t\t\tlayout: \'flex\',\n
+\t\t\tdirection: \'column\',\n
+\t\t\talign: \'stretch\',\n
+\t\t\tminWidth: Math.min(DOMUtils.DOM.getViewPort().w, 800),\n
+\t\t\tminHeight: Math.min(DOMUtils.DOM.getViewPort().h, 650),\n
+\t\t\ttitle: \'Edit image\',\n
+\t\t\titems: panels.concat([mainViewContainer]),\n
+\t\t\tbuttons: [\n
+\t\t\t\t{text: \'Save\', name: \'save\', subtype: \'primary\', onclick: save},\n
+\t\t\t\t{text: \'Cancel\', onclick: \'close\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\twin.renderTo(document.body).reflow();\n
+\n
+\t\twin.on(\'close\', function() {\n
+\t\t\treject();\n
+\t\t\tdestroyStates(undoStack.data);\n
+\t\t\tundoStack = null;\n
+\t\t\ttempState = null;\n
+\t\t});\n
+\n
+\t\tundoStack.add(currentState);\n
+\t\tupdateButtonUndoStates();\n
+\n
+\t\timagePanel.on(\'load\', function() {\n
+\t\t\twidth = imagePanel.imageSize().w;\n
+\t\t\theight = imagePanel.imageSize().h;\n
+\t\t\tratioW = height / width;\n
+\t\t\tratioH = width / height;\n
+\n
+\t\t\twin.find(\'#w\').value(width);\n
+\t\t\twin.find(\'#h\').value(height);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction edit(blob) {\n
+\t\treturn new Promise(function(resolve, reject) {\n
+\t\t\topen(createState(blob), resolve, reject);\n
+\t\t});\n
+\t}\n
+\n
+\t//edit(\'img/dogleft.jpg\');\n
+\n
+\treturn {\n
+\t\tedit: edit\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13366</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Dialog.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

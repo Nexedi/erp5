@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268501.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'wordcount\', function(editor) {\n
+\tvar self = this, countre, cleanre;\n
+\n
+\t// Included most unicode blocks see: http://en.wikipedia.org/wiki/Unicode_block\n
+\t// Latin-1_Supplement letters, a-z, u2019 == &rsquo;\n
+\tcountre = editor.getParam(\'wordcount_countregex\', /[\\w\\u2019\\x27\\-\\u00C0-\\u1FFF]+/g);\n
+\tcleanre = editor.getParam(\'wordcount_cleanregex\', /[0-9.(),;:!?%#$?\\x27\\x22_+=\\\\\\/\\-]*/g);\n
+\n
+\tfunction update() {\n
+\t\teditor.theme.panel.find(\'#wordcount\').text([\'Words: {0}\', self.getCount()]);\n
+\t}\n
+\n
+\teditor.on(\'init\', function() {\n
+\t\tvar statusbar = editor.theme.panel && editor.theme.panel.find(\'#statusbar\')[0];\n
+\n
+\t\tif (statusbar) {\n
+\t\t\twindow.setTimeout(function() {\n
+\t\t\t\tstatusbar.insert({\n
+\t\t\t\t\ttype: \'label\',\n
+\t\t\t\t\tname: \'wordcount\',\n
+\t\t\t\t\ttext: [\'Words: {0}\', self.getCount()],\n
+\t\t\t\t\tclasses: \'wordcount\',\n
+\t\t\t\t\tdisabled: editor.settings.readonly\n
+\t\t\t\t}, 0);\n
+\n
+\t\t\t\teditor.on(\'setcontent beforeaddundo\', update);\n
+\n
+\t\t\t\teditor.on(\'keyup\', function(e) {\n
+\t\t\t\t\tif (e.keyCode == 32) {\n
+\t\t\t\t\t\tupdate();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}, 0);\n
+\t\t}\n
+\t});\n
+\n
+\tself.getCount = function() {\n
+\t\tvar tx = editor.getContent({format: \'raw\'});\n
+\t\tvar tc = 0;\n
+\n
+\t\tif (tx) {\n
+\t\t\ttx = tx.replace(/\\.\\.\\./g, \' \'); // convert ellipses to spaces\n
+\t\t\ttx = tx.replace(/<.[^<>]*?>/g, \' \').replace(/&nbsp;|&#160;/gi, \' \'); // remove html tags and space chars\n
+\n
+\t\t\t// deal with html entities\n
+\t\t\ttx = tx.replace(/(\\w+)(&#?[a-z0-9]+;)+(\\w+)/i, "$1$3").replace(/&.+?;/g, \' \');\n
+\t\t\ttx = tx.replace(cleanre, \'\'); // remove numbers and punctuation\n
+\n
+\t\t\tvar wordArray = tx.match(countre);\n
+\t\t\tif (wordArray) {\n
+\t\t\t\ttc = wordArray.length;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn tc;\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1855</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

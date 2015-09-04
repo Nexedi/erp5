@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268503.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'visualchars\', function(editor) {\n
+\tvar self = this, state;\n
+\n
+\tfunction toggleVisualChars(addBookmark) {\n
+\t\tvar node, nodeList, i, body = editor.getBody(), nodeValue, selection = editor.selection, div, bookmark;\n
+\t\tvar charMap, visualCharsRegExp;\n
+\n
+\t\tcharMap = {\n
+\t\t\t\'\\u00a0\': \'nbsp\',\n
+\t\t\t\'\\u00ad\': \'shy\'\n
+\t\t};\n
+\n
+\t\tfunction wrapCharWithSpan(value) {\n
+\t\t\treturn \'<span data-mce-bogus="1" class="mce-\' + charMap[value] + \'">\' + value + \'</span>\';\n
+\t\t}\n
+\n
+\t\tfunction compileCharMapToRegExp() {\n
+\t\t\tvar key, regExp = \'\';\n
+\n
+\t\t\tfor (key in charMap) {\n
+\t\t\t\tregExp += key;\n
+\t\t\t}\n
+\n
+\t\t\treturn new RegExp(\'[\' + regExp + \']\', \'g\');\n
+\t\t}\n
+\n
+\t\tfunction compileCharMapToCssSelector() {\n
+\t\t\tvar key, selector = \'\';\n
+\n
+\t\t\tfor (key in charMap) {\n
+\t\t\t\tif (selector) {\n
+\t\t\t\t\tselector += \',\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tselector += \'span.mce-\' + charMap[key];\n
+\t\t\t}\n
+\n
+\t\t\treturn selector;\n
+\t\t}\n
+\n
+\t\tstate = !state;\n
+\t\tself.state = state;\n
+\t\teditor.fire(\'VisualChars\', {state: state});\n
+\t\tvisualCharsRegExp = compileCharMapToRegExp();\n
+\n
+\t\tif (addBookmark) {\n
+\t\t\tbookmark = selection.getBookmark();\n
+\t\t}\n
+\n
+\t\tif (state) {\n
+\t\t\tnodeList = [];\n
+\t\t\ttinymce.walk(body, function(n) {\n
+\t\t\t\tif (n.nodeType == 3 && n.nodeValue && visualCharsRegExp.test(n.nodeValue)) {\n
+\t\t\t\t\tnodeList.push(n);\n
+\t\t\t\t}\n
+\t\t\t}, \'childNodes\');\n
+\n
+\t\t\tfor (i = 0; i < nodeList.length; i++) {\n
+\t\t\t\tnodeValue = nodeList[i].nodeValue;\n
+\t\t\t\tnodeValue = nodeValue.replace(visualCharsRegExp, wrapCharWithSpan);\n
+\n
+\t\t\t\tdiv = editor.dom.create(\'div\', null, nodeValue);\n
+\t\t\t\twhile ((node = div.lastChild)) {\n
+\t\t\t\t\teditor.dom.insertAfter(node, nodeList[i]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\teditor.dom.remove(nodeList[i]);\n
+\t\t\t}\n
+\t\t} else {\n
+\t\t\tnodeList = editor.dom.select(compileCharMapToCssSelector(), body);\n
+\n
+\t\t\tfor (i = nodeList.length - 1; i >= 0; i--) {\n
+\t\t\t\teditor.dom.remove(nodeList[i], 1);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tselection.moveToBookmark(bookmark);\n
+\t}\n
+\n
+\tfunction toggleActiveState() {\n
+\t\tvar self = this;\n
+\n
+\t\teditor.on(\'VisualChars\', function(e) {\n
+\t\t\tself.active(e.state);\n
+\t\t});\n
+\t}\n
+\n
+\teditor.addCommand(\'mceVisualChars\', toggleVisualChars);\n
+\n
+\teditor.addButton(\'visualchars\', {\n
+\t\ttitle: \'Show invisible characters\',\n
+\t\tcmd: \'mceVisualChars\',\n
+\t\tonPostRender: toggleActiveState\n
+\t});\n
+\n
+\teditor.addMenuItem(\'visualchars\', {\n
+\t\ttext: \'Show invisible characters\',\n
+\t\tcmd: \'mceVisualChars\',\n
+\t\tonPostRender: toggleActiveState,\n
+\t\tselectable: true,\n
+\t\tcontext: \'view\',\n
+\t\tprependToContext: true\n
+\t});\n
+\n
+\teditor.on(\'beforegetcontent\', function(e) {\n
+\t\tif (state && e.format != \'raw\' && !e.draft) {\n
+\t\t\tstate = true;\n
+\t\t\ttoggleVisualChars(false);\n
+\t\t}\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2738</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

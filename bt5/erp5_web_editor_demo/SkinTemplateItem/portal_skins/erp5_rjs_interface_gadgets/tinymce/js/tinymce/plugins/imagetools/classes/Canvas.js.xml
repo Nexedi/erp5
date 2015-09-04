@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268532.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Canvas.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Canvas.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Contains various canvas functions.\n
+ */\n
+define("tinymce/imagetoolsplugin/Canvas", [], function() {\n
+\tfunction create(width, height) {\n
+\t\treturn resize(document.createElement(\'canvas\'), width, height);\n
+\t}\n
+\n
+\tfunction get2dContext(canvas) {\n
+\t\treturn canvas.getContext("2d");\n
+\t}\n
+\n
+\tfunction resize(canvas, width, height) {\n
+\t\tcanvas.width = width;\n
+\t\tcanvas.height = height;\n
+\n
+\t\treturn canvas;\n
+\t}\n
+\n
+\treturn {\n
+\t\tcreate: create,\n
+\t\tresize: resize,\n
+\t\tget2dContext: get2dContext\n
+\t};\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>691</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Canvas.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

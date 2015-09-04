@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268539.49</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'preview\', function(editor) {\n
+\tvar settings = editor.settings, sandbox = !tinymce.Env.ie;\n
+\n
+\teditor.addCommand(\'mcePreview\', function() {\n
+\t\teditor.windowManager.open({\n
+\t\t\ttitle: \'Preview\',\n
+\t\t\twidth: parseInt(editor.getParam("plugin_preview_width", "650"), 10),\n
+\t\t\theight: parseInt(editor.getParam("plugin_preview_height", "500"), 10),\n
+\t\t\thtml: \'<iframe src="javascript:\\\'\\\'" frameborder="0"\' + (sandbox ? \' sandbox="allow-scripts"\' : \'\') + \'></iframe>\',\n
+\t\t\tbuttons: {\n
+\t\t\t\ttext: \'Close\',\n
+\t\t\t\tonclick: function() {\n
+\t\t\t\t\tthis.parent().parent().close();\n
+\t\t\t\t}\n
+\t\t\t},\n
+\t\t\tonPostRender: function() {\n
+\t\t\t\tvar previewHtml, headHtml = \'\';\n
+\n
+\t\t\t\theadHtml += \'<base href="\' + editor.documentBaseURI.getURI() + \'">\';\n
+\n
+\t\t\t\ttinymce.each(editor.contentCSS, function(url) {\n
+\t\t\t\t\theadHtml += \'<link type="text/css" rel="stylesheet" href="\' + editor.documentBaseURI.toAbsolute(url) + \'">\';\n
+\t\t\t\t});\n
+\n
+\t\t\t\tvar bodyId = settings.body_id || \'tinymce\';\n
+\t\t\t\tif (bodyId.indexOf(\'=\') != -1) {\n
+\t\t\t\t\tbodyId = editor.getParam(\'body_id\', \'\', \'hash\');\n
+\t\t\t\t\tbodyId = bodyId[editor.id] || bodyId;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar bodyClass = settings.body_class || \'\';\n
+\t\t\t\tif (bodyClass.indexOf(\'=\') != -1) {\n
+\t\t\t\t\tbodyClass = editor.getParam(\'body_class\', \'\', \'hash\');\n
+\t\t\t\t\tbodyClass = bodyClass[editor.id] || \'\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar dirAttr = editor.settings.directionality ? \' dir="\' + editor.settings.directionality + \'"\' : \'\';\n
+\n
+\t\t\t\tpreviewHtml = (\n
+\t\t\t\t\t\'<!DOCTYPE html>\' +\n
+\t\t\t\t\t\'<html>\' +\n
+\t\t\t\t\t\'<head>\' +\n
+\t\t\t\t\t\theadHtml +\n
+\t\t\t\t\t\'</head>\' +\n
+\t\t\t\t\t\'<body id="\' + bodyId + \'" class="mce-content-body \' + bodyClass + \'"\' + dirAttr + \'>\' +\n
+\t\t\t\t\t\teditor.getContent() +\n
+\t\t\t\t\t\'</body>\' +\n
+\t\t\t\t\t\'</html>\'\n
+\t\t\t\t);\n
+\n
+\t\t\t\tif (!sandbox) {\n
+\t\t\t\t\t// IE 6-11 doesn\'t support data uris on iframes\n
+\t\t\t\t\t// so I guess they will have to be less secure since we can\'t sandbox on those\n
+\t\t\t\t\t// TODO: Use sandbox if future versions of IE supports iframes with data: uris.\n
+\t\t\t\t\tvar doc = this.getEl(\'body\').firstChild.contentWindow.document;\n
+\t\t\t\t\tdoc.open();\n
+\t\t\t\t\tdoc.write(previewHtml);\n
+\t\t\t\t\tdoc.close();\n
+\t\t\t\t} else {\n
+\t\t\t\t\tthis.getEl(\'body\').firstChild.src = \'data:text/html;charset=utf-8,\' + encodeURIComponent(previewHtml);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\n
+\teditor.addButton(\'preview\', {\n
+\t\ttitle: \'Preview\',\n
+\t\tcmd: \'mcePreview\'\n
+\t});\n
+\n
+\teditor.addMenuItem(\'preview\', {\n
+\t\ttext: \'Preview\',\n
+\t\tcmd: \'mcePreview\',\n
+\t\tcontext: \'view\'\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2607</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

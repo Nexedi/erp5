@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268199.06</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>JSON.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>module("tinymce.util.JSON");\n
+\n
+test(\'serialize\', 2, function() {\n
+\tequal(\n
+\t\ttinymce.util.JSON.serialize({\n
+\t\t\tarr1 : [1, 2, 3, [1, 2, 3]],\n
+\t\t\tbool1 : true,\n
+\t\t\tfloat1: 3.14,\n
+\t\t\tint1 : 123,\n
+\t\t\tnull1 : null,\n
+\t\t\tobj1 : {key1 : "val1", key2 : "val2"}, str1 : \'\\"\\\'abc\\u00C5123\\\\\'}\n
+\t\t),\n
+\t\t\'{"arr1":[1,2,3,[1,2,3]],"bool1":true,"float1":3.14,"int1":123,"null1":null,"obj1":{"key1":"val1","key2":"val2"},"str1":"\\\\"\\\'abc\\\\u00c5123\\\\\\\\"}\'\n
+\t);\n
+\n
+\tequal(\n
+\t\ttinymce.util.JSON.serialize({\n
+\t\t\tarr1 : [1, 2, 3, [1, 2, 3]],\n
+\t\t\tbool1 : true,\n
+\t\t\tfloat1: 3.14,\n
+\t\t\tint1 : 123,\n
+\t\t\tnull1 : null,\n
+\t\t\tobj1 : {key1 : "val1", key2 : "val2"}, str1 : \'\\"\\\'abc\\u00C5123\'}, "\'"\n
+\t\t),\n
+\t\t"{\'arr1\':[1,2,3,[1,2,3]],\'bool1\':true,\'float1\':3.14,\'int1\':123,\'null1\':null,\'obj1\':{\'key1\':\'val1\',\'key2\':\'val2\'},\'str1\':\'\\\\\\"\\\\\'abc\\\\u00c5123\'}"\n
+\t);\n
+});\n
+\n
+test(\'parse\', 1, function() {\n
+\tequal(tinymce.util.JSON.parse(\'{"arr1":[1,2,3,[1,2,3]],"bool1":true,"float1":3.14,"int1":123,"null1":null,"obj1":{"key1":"val1","key2":"val2"},"str1":"abc\\\\u00c5123"}\').str1, \'abc\\u00c5123\');\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1032</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>JSON.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

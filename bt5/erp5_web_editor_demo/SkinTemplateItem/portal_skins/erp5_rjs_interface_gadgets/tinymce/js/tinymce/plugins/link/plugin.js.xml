@@ -1,0 +1,447 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268518.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'link\', function(editor) {\n
+\tfunction createLinkList(callback) {\n
+\t\treturn function() {\n
+\t\t\tvar linkList = editor.settings.link_list;\n
+\n
+\t\t\tif (typeof linkList == "string") {\n
+\t\t\t\ttinymce.util.XHR.send({\n
+\t\t\t\t\turl: linkList,\n
+\t\t\t\t\tsuccess: function(text) {\n
+\t\t\t\t\t\tcallback(tinymce.util.JSON.parse(text));\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t} else if (typeof linkList == "function") {\n
+\t\t\t\tlinkList(callback);\n
+\t\t\t} else {\n
+\t\t\t\tcallback(linkList);\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+\n
+\tfunction buildListItems(inputList, itemCallback, startItems) {\n
+\t\tfunction appendItems(values, output) {\n
+\t\t\toutput = output || [];\n
+\n
+\t\t\ttinymce.each(values, function(item) {\n
+\t\t\t\tvar menuItem = {text: item.text || item.title};\n
+\n
+\t\t\t\tif (item.menu) {\n
+\t\t\t\t\tmenuItem.menu = appendItems(item.menu);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tmenuItem.value = item.value;\n
+\n
+\t\t\t\t\tif (itemCallback) {\n
+\t\t\t\t\t\titemCallback(menuItem);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\toutput.push(menuItem);\n
+\t\t\t});\n
+\n
+\t\t\treturn output;\n
+\t\t}\n
+\n
+\t\treturn appendItems(inputList, startItems || []);\n
+\t}\n
+\n
+\tfunction showDialog(linkList) {\n
+\t\tvar data = {}, selection = editor.selection, dom = editor.dom, selectedElm, anchorElm, initialText;\n
+\t\tvar win, onlyText, textListCtrl, linkListCtrl, relListCtrl, targetListCtrl, classListCtrl, linkTitleCtrl, value;\n
+\n
+\t\tfunction linkListChangeHandler(e) {\n
+\t\t\tvar textCtrl = win.find(\'#text\');\n
+\n
+\t\t\tif (!textCtrl.value() || (e.lastControl && textCtrl.value() == e.lastControl.text())) {\n
+\t\t\t\ttextCtrl.value(e.control.text());\n
+\t\t\t}\n
+\n
+\t\t\twin.find(\'#href\').value(e.control.value());\n
+\t\t}\n
+\n
+\t\tfunction buildAnchorListControl(url) {\n
+\t\t\tvar anchorList = [];\n
+\n
+\t\t\ttinymce.each(editor.dom.select(\'a:not([href])\'), function(anchor) {\n
+\t\t\t\tvar id = anchor.name || anchor.id;\n
+\n
+\t\t\t\tif (id) {\n
+\t\t\t\t\tanchorList.push({\n
+\t\t\t\t\t\ttext: id,\n
+\t\t\t\t\t\tvalue: \'#\' + id,\n
+\t\t\t\t\t\tselected: url.indexOf(\'#\' + id) != -1\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tif (anchorList.length) {\n
+\t\t\t\tanchorList.unshift({text: \'None\', value: \'\'});\n
+\n
+\t\t\t\treturn {\n
+\t\t\t\t\tname: \'anchor\',\n
+\t\t\t\t\ttype: \'listbox\',\n
+\t\t\t\t\tlabel: \'Anchors\',\n
+\t\t\t\t\tvalues: anchorList,\n
+\t\t\t\t\tonselect: linkListChangeHandler\n
+\t\t\t\t};\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction updateText() {\n
+\t\t\tif (!initialText && data.text.length === 0 && onlyText) {\n
+\t\t\t\tthis.parent().parent().find(\'#text\')[0].value(this.value());\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction urlChange(e) {\n
+\t\t\tvar meta = e.meta || {};\n
+\n
+\t\t\tif (linkListCtrl) {\n
+\t\t\t\tlinkListCtrl.value(editor.convertURL(this.value(), \'href\'));\n
+\t\t\t}\n
+\n
+\t\t\ttinymce.each(e.meta, function(value, key) {\n
+\t\t\t\twin.find(\'#\' + key).value(value);\n
+\t\t\t});\n
+\n
+\t\t\tif (!meta.text) {\n
+\t\t\t\tupdateText.call(this);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction isOnlyTextSelected(anchorElm) {\n
+\t\t\tvar html = selection.getContent();\n
+\n
+\t\t\t// Partial html and not a fully selected anchor element\n
+\t\t\tif (/</.test(html) && (!/^<a [^>]+>[^<]+<\\/a>$/.test(html) || html.indexOf(\'href=\') == -1)) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\tif (anchorElm) {\n
+\t\t\t\tvar nodes = anchorElm.childNodes, i;\n
+\n
+\t\t\t\tif (nodes.length === 0) {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (i = nodes.length - 1; i >= 0; i--) {\n
+\t\t\t\t\tif (nodes[i].nodeType != 3) {\n
+\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn true;\n
+\t\t}\n
+\n
+\t\tselectedElm = selection.getNode();\n
+\t\tanchorElm = dom.getParent(selectedElm, \'a[href]\');\n
+\t\tonlyText = isOnlyTextSelected();\n
+\n
+\t\tdata.text = initialText = anchorElm ? (anchorElm.innerText || anchorElm.textContent) : selection.getContent({format: \'text\'});\n
+\t\tdata.href = anchorElm ? dom.getAttrib(anchorElm, \'href\') : \'\';\n
+\n
+\t\tif (anchorElm) {\n
+\t\t\tdata.target = dom.getAttrib(anchorElm, \'target\');\n
+\t\t} else if (editor.settings.default_link_target) {\n
+\t\t\tdata.target = editor.settings.default_link_target;\n
+\t\t}\n
+\n
+\t\tif ((value = dom.getAttrib(anchorElm, \'rel\'))) {\n
+\t\t\tdata.rel = value;\n
+\t\t}\n
+\n
+\t\tif ((value = dom.getAttrib(anchorElm, \'class\'))) {\n
+\t\t\tdata[\'class\'] = value;\n
+\t\t}\n
+\n
+\t\tif ((value = dom.getAttrib(anchorElm, \'title\'))) {\n
+\t\t\tdata.title = value;\n
+\t\t}\n
+\n
+\t\tif (onlyText) {\n
+\t\t\ttextListCtrl = {\n
+\t\t\t\tname: \'text\',\n
+\t\t\t\ttype: \'textbox\',\n
+\t\t\t\tsize: 40,\n
+\t\t\t\tlabel: \'Text to display\',\n
+\t\t\t\tonchange: function() {\n
+\t\t\t\t\tdata.text = this.value();\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tif (linkList) {\n
+\t\t\tlinkListCtrl = {\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\tlabel: \'Link list\',\n
+\t\t\t\tvalues: buildListItems(\n
+\t\t\t\t\tlinkList,\n
+\t\t\t\t\tfunction(item) {\n
+\t\t\t\t\t\titem.value = editor.convertURL(item.value || item.url, \'href\');\n
+\t\t\t\t\t},\n
+\t\t\t\t\t[{text: \'None\', value: \'\'}]\n
+\t\t\t\t),\n
+\t\t\t\tonselect: linkListChangeHandler,\n
+\t\t\t\tvalue: editor.convertURL(data.href, \'href\'),\n
+\t\t\t\tonPostRender: function() {\n
+\t\t\t\t\t/*eslint consistent-this:0*/\n
+\t\t\t\t\tlinkListCtrl = this;\n
+\t\t\t\t}\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tif (editor.settings.target_list !== false) {\n
+\t\t\tif (!editor.settings.target_list) {\n
+\t\t\t\teditor.settings.target_list = [\n
+\t\t\t\t\t{text: \'None\', value: \'\'},\n
+\t\t\t\t\t{text: \'New window\', value: \'_blank\'}\n
+\t\t\t\t];\n
+\t\t\t}\n
+\n
+\t\t\ttargetListCtrl = {\n
+\t\t\t\tname: \'target\',\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\tlabel: \'Target\',\n
+\t\t\t\tvalues: buildListItems(editor.settings.target_list)\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tif (editor.settings.rel_list) {\n
+\t\t\trelListCtrl = {\n
+\t\t\t\tname: \'rel\',\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\tlabel: \'Rel\',\n
+\t\t\t\tvalues: buildListItems(editor.settings.rel_list)\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tif (editor.settings.link_class_list) {\n
+\t\t\tclassListCtrl = {\n
+\t\t\t\tname: \'class\',\n
+\t\t\t\ttype: \'listbox\',\n
+\t\t\t\tlabel: \'Class\',\n
+\t\t\t\tvalues: buildListItems(\n
+\t\t\t\t\teditor.settings.link_class_list,\n
+\t\t\t\t\tfunction(item) {\n
+\t\t\t\t\t\tif (item.value) {\n
+\t\t\t\t\t\t\titem.textStyle = function() {\n
+\t\t\t\t\t\t\t\treturn editor.formatter.getCssText({inline: \'a\', classes: [item.value]});\n
+\t\t\t\t\t\t\t};\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t)\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tif (editor.settings.link_title !== false) {\n
+\t\t\tlinkTitleCtrl = {\n
+\t\t\t\tname: \'title\',\n
+\t\t\t\ttype: \'textbox\',\n
+\t\t\t\tlabel: \'Title\',\n
+\t\t\t\tvalue: data.title\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\twin = editor.windowManager.open({\n
+\t\t\ttitle: \'Insert link\',\n
+\t\t\tdata: data,\n
+\t\t\tbody: [\n
+\t\t\t\t{\n
+\t\t\t\t\tname: \'href\',\n
+\t\t\t\t\ttype: \'filepicker\',\n
+\t\t\t\t\tfiletype: \'file\',\n
+\t\t\t\t\tsize: 40,\n
+\t\t\t\t\tautofocus: true,\n
+\t\t\t\t\tlabel: \'Url\',\n
+\t\t\t\t\tonchange: urlChange,\n
+\t\t\t\t\tonkeyup: updateText\n
+\t\t\t\t},\n
+\t\t\t\ttextListCtrl,\n
+\t\t\t\tlinkTitleCtrl,\n
+\t\t\t\tbuildAnchorListControl(data.href),\n
+\t\t\t\tlinkListCtrl,\n
+\t\t\t\trelListCtrl,\n
+\t\t\t\ttargetListCtrl,\n
+\t\t\t\tclassListCtrl\n
+\t\t\t],\n
+\t\t\tonSubmit: function(e) {\n
+\t\t\t\t/*eslint dot-notation: 0*/\n
+\t\t\t\tvar href;\n
+\n
+\t\t\t\tdata = tinymce.extend(data, e.data);\n
+\t\t\t\thref = data.href;\n
+\n
+\t\t\t\t// Delay confirm since onSubmit will move focus\n
+\t\t\t\tfunction delayedConfirm(message, callback) {\n
+\t\t\t\t\tvar rng = editor.selection.getRng();\n
+\n
+\t\t\t\t\twindow.setTimeout(function() {\n
+\t\t\t\t\t\teditor.windowManager.confirm(message, function(state) {\n
+\t\t\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t\t\t\tcallback(state);\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}, 0);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction insertLink() {\n
+\t\t\t\t\tvar linkAttrs = {\n
+\t\t\t\t\t\thref: href,\n
+\t\t\t\t\t\ttarget: data.target ? data.target : null,\n
+\t\t\t\t\t\trel: data.rel ? data.rel : null,\n
+\t\t\t\t\t\t"class": data["class"] ? data["class"] : null,\n
+\t\t\t\t\t\ttitle: data.title ? data.title : null\n
+\t\t\t\t\t};\n
+\n
+\t\t\t\t\tif (anchorElm) {\n
+\t\t\t\t\t\teditor.focus();\n
+\n
+\t\t\t\t\t\tif (onlyText && data.text != initialText) {\n
+\t\t\t\t\t\t\tif ("innerText" in anchorElm) {\n
+\t\t\t\t\t\t\t\tanchorElm.innerText = data.text;\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tanchorElm.textContent = data.text;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tdom.setAttribs(anchorElm, linkAttrs);\n
+\n
+\t\t\t\t\t\tselection.select(anchorElm);\n
+\t\t\t\t\t\teditor.undoManager.add();\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tif (onlyText) {\n
+\t\t\t\t\t\t\teditor.insertContent(dom.createHTML(\'a\', linkAttrs, dom.encode(data.text)));\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\teditor.execCommand(\'mceInsertLink\', false, linkAttrs);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!href) {\n
+\t\t\t\t\teditor.execCommand(\'unlink\');\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Is email and not //user@domain.com\n
+\t\t\t\tif (href.indexOf(\'@\') > 0 && href.indexOf(\'//\') == -1 && href.indexOf(\'mailto:\') == -1) {\n
+\t\t\t\t\tdelayedConfirm(\n
+\t\t\t\t\t\t\'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?\',\n
+\t\t\t\t\t\tfunction(state) {\n
+\t\t\t\t\t\t\tif (state) {\n
+\t\t\t\t\t\t\t\thref = \'mailto:\' + href;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tinsertLink();\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t);\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Is not protocol prefixed\n
+\t\t\t\tif ((editor.settings.link_assume_external_targets && !/^\\w+:/i.test(href)) ||\n
+\t\t\t\t\t(!editor.settings.link_assume_external_targets && /^\\s*www\\./i.test(href))) {\n
+\t\t\t\t\tdelayedConfirm(\n
+\t\t\t\t\t\t\'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?\',\n
+\t\t\t\t\t\tfunction(state) {\n
+\t\t\t\t\t\t\tif (state) {\n
+\t\t\t\t\t\t\t\thref = \'http://\' + href;\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tinsertLink();\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t);\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tinsertLink();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\teditor.addButton(\'link\', {\n
+\t\ticon: \'link\',\n
+\t\ttooltip: \'Insert/edit link\',\n
+\t\tshortcut: \'Meta+K\',\n
+\t\tonclick: createLinkList(showDialog),\n
+\t\tstateSelector: \'a[href]\'\n
+\t});\n
+\n
+\teditor.addButton(\'unlink\', {\n
+\t\ticon: \'unlink\',\n
+\t\ttooltip: \'Remove link\',\n
+\t\tcmd: \'unlink\',\n
+\t\tstateSelector: \'a[href]\'\n
+\t});\n
+\n
+\teditor.addShortcut(\'Meta+K\', \'\', createLinkList(showDialog));\n
+\teditor.addCommand(\'mceLink\', createLinkList(showDialog));\n
+\n
+\tthis.showDialog = showDialog;\n
+\n
+\teditor.addMenuItem(\'link\', {\n
+\t\ticon: \'link\',\n
+\t\ttext: \'Insert/edit link\',\n
+\t\tshortcut: \'Meta+K\',\n
+\t\tonclick: createLinkList(showDialog),\n
+\t\tstateSelector: \'a[href]\',\n
+\t\tcontext: \'insert\',\n
+\t\tprependToContext: true\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9160</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

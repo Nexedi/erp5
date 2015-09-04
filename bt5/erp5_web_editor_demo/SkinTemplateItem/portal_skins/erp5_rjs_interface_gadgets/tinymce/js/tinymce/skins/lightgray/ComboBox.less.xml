@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268685.47</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ComboBox.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// ComboBox\n
+\n
+.@{prefix}-combobox {\n
+\t.inline-block();\n
+\t.border-radius(3px);\n
+\t.box-shadow(@textbox-box-shadow);\n
+\t*height: 32px;\n
+}\n
+\n
+.@{prefix}-combobox input {\n
+\tborder: 1px solid @textbox-border;\n
+\tborder-right-color: @combobox-border;\n
+\theight: 28px;\n
+}\n
+\n
+.@{prefix}-combobox.@{prefix}-disabled input {\n
+\tcolor: mix(@text, @textbox-bg, 40%);\n
+}\n
+\n
+.@{prefix}-combobox.@{prefix}-has-open input {\n
+\t.border-radius(4px 0 0 4px);\n
+}\n
+\n
+.@{prefix}-combobox .@{prefix}-btn {\n
+\tborder: 1px solid @textbox-border;\n
+\tborder-left: 0;\n
+\t.border-radius(0 4px 4px 0);\n
+}\n
+\n
+.@{prefix}-combobox button {\n
+\tpadding-right: 8px;\n
+\tpadding-left: 8px;\n
+}\n
+\n
+.@{prefix}-combobox.@{prefix}-disabled .@{prefix}-btn button {\n
+\tcursor: default;\n
+\t.box-shadow(none);\n
+\t.opacity(@btn-box-disabled-opacity);\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>755</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ComboBox.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

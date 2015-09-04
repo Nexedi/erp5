@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268198.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Color.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>(function() {\n
+\tmodule("tinymce.util.Color");\n
+\n
+\tvar Color = tinymce.util.Color;\n
+\t\n
+\ttest("Constructor", function() {\n
+\t\tequal(new Color().toHex(), \'#000000\');\n
+\t\tequal(new Color(\'#faebcd\').toHex(), \'#faebcd\');\n
+\t});\n
+\n
+\ttest("parse method", function() {\n
+\t\tvar color = new Color();\n
+\n
+\t\tequal(color.parse(\'#faebcd\').toHex(), \'#faebcd\');\n
+\t\tequal(color.parse(\'#ccc\').toHex(), \'#cccccc\');\n
+\t\tequal(color.parse(\' #faebcd \').toHex(), \'#faebcd\');\n
+\t\tequal(color.parse(\'rgb(255,254,253)\').toHex(), \'#fffefd\');\n
+\t\tequal(color.parse(\' rgb ( 255 , 254 , 253 ) \').toHex(), \'#fffefd\');\n
+\t\tequal(color.parse({r: 255, g: 254, b: 253}).toHex(), \'#fffefd\');\n
+\t\tequal(color.parse({h: 359, s: 50, v: 50}).toHex(), \'#804041\');\n
+\t\tequal(color.parse({r: 700, g: 700, b: 700}).toHex(), \'#ffffff\');\n
+\t\tequal(color.parse({r: -1, g: -10, b: -20}).toHex(), \'#000000\');\n
+\t});\n
+\n
+\ttest("toRgb method", function() {\n
+\t\tdeepEqual(new Color(\'#faebcd\').toRgb(), {r: 250, g: 235, b: 205});\n
+\t});\n
+\n
+\ttest("toHsv method", function() {\n
+\t\tdeepEqual(new Color(\'#804041\').toHsv(), {h: 359, s: 50, v: 50});\n
+\t});\n
+\n
+\ttest("toHex method", function() {\n
+\t\tequal(new Color({r: 255, g: 254, b: 253}).toHex(), \'#fffefd\');\n
+\t});\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1161</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Color.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

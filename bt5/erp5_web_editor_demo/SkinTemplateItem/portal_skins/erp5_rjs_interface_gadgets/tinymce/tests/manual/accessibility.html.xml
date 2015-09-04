@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268143.44</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>accessibility.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Accessibility test</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<script src="../../js/tinymce/tinymce.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>\n
+<script>\n
+\ttinymce.init({\n
+\t\tselector: "textarea#elm1",\n
+\t\ttheme: "modern",\n
+\t\tplugins: [\n
+\t\t\t"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",\n
+\t\t\t"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
+\t\t\t"save table contextmenu directionality emoticons template paste textcolor importcss"\n
+\t\t],\n
+\t\tcontent_css: "css/development.css",\n
+\t\tadd_unload_trigger: false,\n
+\n
+\t\ttoolbar1: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",\n
+\t\ttoolbar2: "custompanelbutton textbutton spellchecker",\n
+\n
+\t\timage_advtab: true,\n
+\n
+\t\tstyle_formats: [\n
+\t\t\t{title: \'Bold text\', format: \'h1\'},\n
+\t\t\t{title: \'Red text\', inline: \'span\', styles: {color: \'#ff0000\'}},\n
+\t\t\t{title: \'Red header\', block: \'h1\', styles: {color: \'#ff0000\'}},\n
+\t\t\t{title: \'Example 1\', inline: \'span\', classes: \'example1\'},\n
+\t\t\t{title: \'Example 2\', inline: \'span\', classes: \'example2\'},\n
+\t\t\t{title: \'Table styles\'},\n
+\t\t\t{title: \'Table row 1\', selector: \'tr\', classes: \'tablerow1\'}\n
+\t\t],\n
+\n
+\t\ttemplate_replace_values : {\n
+\t\t\tusername : "Jack Black"\n
+\t\t},\n
+\n
+\t\ttemplate_preview_replace_values : {\n
+\t\t\tusername : "Preview user name"\n
+\t\t},\n
+\n
+\t\t//file_browser_callback: function() {},\n
+\n
+\t\ttemplates: [ \n
+\t\t\t{title: \'Some title 1\', description: \'Some desc 1\', content: \'<strong class="red">My content: {$username}</strong>\'}, \n
+\t\t\t{title: \'Some title 2\', description: \'Some desc 2\', url: \'development.html\'} \n
+\t\t],\n
+\n
+\t\tsetup: function(ed) {\n
+\t\t\ted.addButton(\'custompanelbutton\', {\n
+\t\t\t\ttype: \'panelbutton\',\n
+\t\t\t\ttext: \'Panel\',\n
+\t\t\t\tpanel: {\n
+\t\t\t\t\ttype: \'form\',\n
+\t\t\t\t\titems: [\n
+\t\t\t\t\t\t{type: \'button\', text: \'Ok\'},\n
+\t\t\t\t\t\t{type: \'button\', text: \'Cancel\'}\n
+\t\t\t\t\t]\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\ted.addButton(\'textbutton\', {\n
+\t\t\t\ttype: \'button\',\n
+\t\t\t\ttext: \'Text\'\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\tspellchecker_callback: function(method, words, callback) {\n
+\t\t\tif (method == "spellcheck") {\n
+\t\t\t\tvar suggestions = {};\n
+\n
+\t\t\t\tfor (var i = 0; i < words.length; i++) {\n
+\t\t\t\t\tsuggestions[words[i]] = ["First", "second"];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcallback(suggestions);\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+</script>\n
+<style>\n
+*:focus {\n
+\toutline: 1px solid red !important;\n
+}\n
+</style>\n
+</head>\n
+<body>\n
+\n
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">\n
+\t<textarea id="elm1" name="elm1" rows="15" cols="80" style="width: 80%">&lt;p&gt;&lt;b&gt;&lt;i&gt;Content&lt;/i&gt;&lt;/b&gt;&lt;/p&gt;</textarea>\n
+\n
+\t<input type="submit" name="save" value="Submit" />\n
+\t<input type="reset" name="reset" value="Reset" />\n
+</form>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2995</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>accessibility.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

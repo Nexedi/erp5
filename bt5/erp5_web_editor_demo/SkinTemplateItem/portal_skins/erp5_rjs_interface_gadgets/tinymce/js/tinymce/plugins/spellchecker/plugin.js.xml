@@ -1,0 +1,1038 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268545.99</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Compiled inline version. (Library mode)\n
+ */\n
+\n
+/*jshint smarttabs:true, undef:true, latedef:true, curly:true, bitwise:true, camelcase:true */\n
+/*globals $code */\n
+\n
+(function(exports, undefined) {\n
+\t"use strict";\n
+\n
+\tvar modules = {};\n
+\n
+\tfunction require(ids, callback) {\n
+\t\tvar module, defs = [];\n
+\n
+\t\tfor (var i = 0; i < ids.length; ++i) {\n
+\t\t\tmodule = modules[ids[i]] || resolve(ids[i]);\n
+\t\t\tif (!module) {\n
+\t\t\t\tthrow \'module definition dependecy not found: \' + ids[i];\n
+\t\t\t}\n
+\n
+\t\t\tdefs.push(module);\n
+\t\t}\n
+\n
+\t\tcallback.apply(null, defs);\n
+\t}\n
+\n
+\tfunction define(id, dependencies, definition) {\n
+\t\tif (typeof id !== \'string\') {\n
+\t\t\tthrow \'invalid module definition, module id must be defined and be a string\';\n
+\t\t}\n
+\n
+\t\tif (dependencies === undefined) {\n
+\t\t\tthrow \'invalid module definition, dependencies must be specified\';\n
+\t\t}\n
+\n
+\t\tif (definition === undefined) {\n
+\t\t\tthrow \'invalid module definition, definition function must be specified\';\n
+\t\t}\n
+\n
+\t\trequire(dependencies, function() {\n
+\t\t\tmodules[id] = definition.apply(null, arguments);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction defined(id) {\n
+\t\treturn !!modules[id];\n
+\t}\n
+\n
+\tfunction resolve(id) {\n
+\t\tvar target = exports;\n
+\t\tvar fragments = id.split(/[.\\/]/);\n
+\n
+\t\tfor (var fi = 0; fi < fragments.length; ++fi) {\n
+\t\t\tif (!target[fragments[fi]]) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\ttarget = target[fragments[fi]];\n
+\t\t}\n
+\n
+\t\treturn target;\n
+\t}\n
+\n
+\tfunction expose(ids) {\n
+\t\tfor (var i = 0; i < ids.length; i++) {\n
+\t\t\tvar target = exports;\n
+\t\t\tvar id = ids[i];\n
+\t\t\tvar fragments = id.split(/[.\\/]/);\n
+\n
+\t\t\tfor (var fi = 0; fi < fragments.length - 1; ++fi) {\n
+\t\t\t\tif (target[fragments[fi]] === undefined) {\n
+\t\t\t\t\ttarget[fragments[fi]] = {};\n
+\t\t\t\t}\n
+\n
+\t\t\t\ttarget = target[fragments[fi]];\n
+\t\t\t}\n
+\n
+\t\t\ttarget[fragments[fragments.length - 1]] = modules[id];\n
+\t\t}\n
+\t}\n
+\n
+// Included from: js/tinymce/plugins/spellchecker/classes/DomTextMatcher.js\n
+\n
+/**\n
+ * DomTextMatcher.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*eslint no-labels:0, no-constant-condition: 0 */\n
+\n
+/**\n
+ * This class logic for filtering text and matching words.\n
+ *\n
+ * @class tinymce.spellcheckerplugin.TextFilter\n
+ * @private\n
+ */\n
+define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {\n
+\t// Based on work developed by: James Padolsey http://james.padolsey.com\n
+\t// released under UNLICENSE that is compatible with LGPL\n
+\t// TODO: Handle contentEditable edgecase:\n
+\t// <p>text<span contentEditable="false">text<span contentEditable="true">text</span>text</span>text</p>\n
+\treturn function(node, editor) {\n
+\t\tvar m, matches = [], text, dom = editor.dom;\n
+\t\tvar blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;\n
+\n
+\t\tblockElementsMap = editor.schema.getBlockElements(); // H1-H6, P, TD etc\n
+\t\thiddenTextElementsMap = editor.schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT\n
+\t\tshortEndedElementsMap = editor.schema.getShortEndedElements(); // BR, IMG, INPUT\n
+\n
+\t\tfunction createMatch(m, data) {\n
+\t\t\tif (!m[0]) {\n
+\t\t\t\tthrow \'findAndReplaceDOMText cannot handle zero-length matches\';\n
+\t\t\t}\n
+\n
+\t\t\treturn {\n
+\t\t\t\tstart: m.index,\n
+\t\t\t\tend: m.index + m[0].length,\n
+\t\t\t\ttext: m[0],\n
+\t\t\t\tdata: data\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction getText(node) {\n
+\t\t\tvar txt;\n
+\n
+\t\t\tif (node.nodeType === 3) {\n
+\t\t\t\treturn node.data;\n
+\t\t\t}\n
+\n
+\t\t\tif (hiddenTextElementsMap[node.nodeName] && !blockElementsMap[node.nodeName]) {\n
+\t\t\t\treturn \'\';\n
+\t\t\t}\n
+\n
+\t\t\ttxt = \'\';\n
+\n
+\t\t\tif (blockElementsMap[node.nodeName] || shortEndedElementsMap[node.nodeName]) {\n
+\t\t\t\ttxt += \'\\n\';\n
+\t\t\t}\n
+\n
+\t\t\tif ((node = node.firstChild)) {\n
+\t\t\t\tdo {\n
+\t\t\t\t\ttxt += getText(node);\n
+\t\t\t\t} while ((node = node.nextSibling));\n
+\t\t\t}\n
+\n
+\t\t\treturn txt;\n
+\t\t}\n
+\n
+\t\tfunction stepThroughMatches(node, matches, replaceFn) {\n
+\t\t\tvar startNode, endNode, startNodeIndex,\n
+\t\t\t\tendNodeIndex, innerNodes = [], atIndex = 0, curNode = node,\n
+\t\t\t\tmatchLocation, matchIndex = 0;\n
+\n
+\t\t\tmatches = matches.slice(0);\n
+\t\t\tmatches.sort(function(a, b) {\n
+\t\t\t\treturn a.start - b.start;\n
+\t\t\t});\n
+\n
+\t\t\tmatchLocation = matches.shift();\n
+\n
+\t\t\tout: while (true) {\n
+\t\t\t\tif (blockElementsMap[curNode.nodeName] || shortEndedElementsMap[curNode.nodeName]) {\n
+\t\t\t\t\tatIndex++;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (curNode.nodeType === 3) {\n
+\t\t\t\t\tif (!endNode && curNode.length + atIndex >= matchLocation.end) {\n
+\t\t\t\t\t\t// We\'ve found the ending\n
+\t\t\t\t\t\tendNode = curNode;\n
+\t\t\t\t\t\tendNodeIndex = matchLocation.end - atIndex;\n
+\t\t\t\t\t} else if (startNode) {\n
+\t\t\t\t\t\t// Intersecting node\n
+\t\t\t\t\t\tinnerNodes.push(curNode);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!startNode && curNode.length + atIndex > matchLocation.start) {\n
+\t\t\t\t\t\t// We\'ve found the match start\n
+\t\t\t\t\t\tstartNode = curNode;\n
+\t\t\t\t\t\tstartNodeIndex = matchLocation.start - atIndex;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tatIndex += curNode.length;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (startNode && endNode) {\n
+\t\t\t\t\tcurNode = replaceFn({\n
+\t\t\t\t\t\tstartNode: startNode,\n
+\t\t\t\t\t\tstartNodeIndex: startNodeIndex,\n
+\t\t\t\t\t\tendNode: endNode,\n
+\t\t\t\t\t\tendNodeIndex: endNodeIndex,\n
+\t\t\t\t\t\tinnerNodes: innerNodes,\n
+\t\t\t\t\t\tmatch: matchLocation.text,\n
+\t\t\t\t\t\tmatchIndex: matchIndex\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// replaceFn has to return the node that replaced the endNode\n
+\t\t\t\t\t// and then we step back so we can continue from the end of the\n
+\t\t\t\t\t// match:\n
+\t\t\t\t\tatIndex -= (endNode.length - endNodeIndex);\n
+\t\t\t\t\tstartNode = null;\n
+\t\t\t\t\tendNode = null;\n
+\t\t\t\t\tinnerNodes = [];\n
+\t\t\t\t\tmatchLocation = matches.shift();\n
+\t\t\t\t\tmatchIndex++;\n
+\n
+\t\t\t\t\tif (!matchLocation) {\n
+\t\t\t\t\t\tbreak; // no more matches\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if ((!hiddenTextElementsMap[curNode.nodeName] || blockElementsMap[curNode.nodeName]) && curNode.firstChild) {\n
+\t\t\t\t\t// Move down\n
+\t\t\t\t\tcurNode = curNode.firstChild;\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t} else if (curNode.nextSibling) {\n
+\t\t\t\t\t// Move forward:\n
+\t\t\t\t\tcurNode = curNode.nextSibling;\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Move forward or up:\n
+\t\t\t\twhile (true) {\n
+\t\t\t\t\tif (curNode.nextSibling) {\n
+\t\t\t\t\t\tcurNode = curNode.nextSibling;\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t} else if (curNode.parentNode !== node) {\n
+\t\t\t\t\t\tcurNode = curNode.parentNode;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tbreak out;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t* Generates the actual replaceFn which splits up text nodes\n
+\t\t* and inserts the replacement element.\n
+\t\t*/\n
+\t\tfunction genReplacer(callback) {\n
+\t\t\tfunction makeReplacementNode(fill, matchIndex) {\n
+\t\t\t\tvar match = matches[matchIndex];\n
+\n
+\t\t\t\tif (!match.stencil) {\n
+\t\t\t\t\tmatch.stencil = callback(match);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar clone = match.stencil.cloneNode(false);\n
+\t\t\t\tclone.setAttribute(\'data-mce-index\', matchIndex);\n
+\n
+\t\t\t\tif (fill) {\n
+\t\t\t\t\tclone.appendChild(dom.doc.createTextNode(fill));\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn clone;\n
+\t\t\t}\n
+\n
+\t\t\treturn function(range) {\n
+\t\t\t\tvar before, after, parentNode, startNode = range.startNode,\n
+\t\t\t\t\tendNode = range.endNode, matchIndex = range.matchIndex,\n
+\t\t\t\t\tdoc = dom.doc;\n
+\n
+\t\t\t\tif (startNode === endNode) {\n
+\t\t\t\t\tvar node = startNode;\n
+\n
+\t\t\t\t\tparentNode = node.parentNode;\n
+\t\t\t\t\tif (range.startNodeIndex > 0) {\n
+\t\t\t\t\t\t// Add "before" text node (before the match)\n
+\t\t\t\t\t\tbefore = doc.createTextNode(node.data.substring(0, range.startNodeIndex));\n
+\t\t\t\t\t\tparentNode.insertBefore(before, node);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Create the replacement node:\n
+\t\t\t\t\tvar el = makeReplacementNode(range.match, matchIndex);\n
+\t\t\t\t\tparentNode.insertBefore(el, node);\n
+\t\t\t\t\tif (range.endNodeIndex < node.length) {\n
+\t\t\t\t\t\t// Add "after" text node (after the match)\n
+\t\t\t\t\t\tafter = doc.createTextNode(node.data.substring(range.endNodeIndex));\n
+\t\t\t\t\t\tparentNode.insertBefore(after, node);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode.parentNode.removeChild(node);\n
+\n
+\t\t\t\t\treturn el;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Replace startNode -> [innerNodes...] -> endNode (in that order)\n
+\t\t\t\tbefore = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));\n
+\t\t\t\tafter = doc.createTextNode(endNode.data.substring(range.endNodeIndex));\n
+\t\t\t\tvar elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);\n
+\t\t\t\tvar innerEls = [];\n
+\n
+\t\t\t\tfor (var i = 0, l = range.innerNodes.length; i < l; ++i) {\n
+\t\t\t\t\tvar innerNode = range.innerNodes[i];\n
+\t\t\t\t\tvar innerEl = makeReplacementNode(innerNode.data, matchIndex);\n
+\t\t\t\t\tinnerNode.parentNode.replaceChild(innerEl, innerNode);\n
+\t\t\t\t\tinnerEls.push(innerEl);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);\n
+\n
+\t\t\t\tparentNode = startNode.parentNode;\n
+\t\t\t\tparentNode.insertBefore(before, startNode);\n
+\t\t\t\tparentNode.insertBefore(elA, startNode);\n
+\t\t\t\tparentNode.removeChild(startNode);\n
+\n
+\t\t\t\tparentNode = endNode.parentNode;\n
+\t\t\t\tparentNode.insertBefore(elB, endNode);\n
+\t\t\t\tparentNode.insertBefore(after, endNode);\n
+\t\t\t\tparentNode.removeChild(endNode);\n
+\n
+\t\t\t\treturn elB;\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction unwrapElement(element) {\n
+\t\t\tvar parentNode = element.parentNode;\n
+\t\t\tparentNode.insertBefore(element.firstChild, element);\n
+\t\t\telement.parentNode.removeChild(element);\n
+\t\t}\n
+\n
+\t\tfunction getWrappersByIndex(index) {\n
+\t\t\tvar elements = node.getElementsByTagName(\'*\'), wrappers = [];\n
+\n
+\t\t\tindex = typeof index == "number" ? "" + index : null;\n
+\n
+\t\t\tfor (var i = 0; i < elements.length; i++) {\n
+\t\t\t\tvar element = elements[i], dataIndex = element.getAttribute(\'data-mce-index\');\n
+\n
+\t\t\t\tif (dataIndex !== null && dataIndex.length) {\n
+\t\t\t\t\tif (dataIndex === index || index === null) {\n
+\t\t\t\t\t\twrappers.push(element);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn wrappers;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns the index of a specific match object or -1 if it isn\'t found.\n
+\t\t *\n
+\t\t * @param  {Match} match Text match object.\n
+\t\t * @return {Number} Index of match or -1 if it isn\'t found.\n
+\t\t */\n
+\t\tfunction indexOf(match) {\n
+\t\t\tvar i = matches.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tif (matches[i] === match) {\n
+\t\t\t\t\treturn i;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn -1;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Filters the matches. If the callback returns true it stays if not it gets removed.\n
+\t\t *\n
+\t\t * @param {Function} callback Callback to execute for each match.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction filter(callback) {\n
+\t\t\tvar filteredMatches = [];\n
+\n
+\t\t\teach(function(match, i) {\n
+\t\t\t\tif (callback(match, i)) {\n
+\t\t\t\t\tfilteredMatches.push(match);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tmatches = filteredMatches;\n
+\n
+\t\t\t/*jshint validthis:true*/\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Executes the specified callback for each match.\n
+\t\t *\n
+\t\t * @param {Function} callback  Callback to execute for each match.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction each(callback) {\n
+\t\t\tfor (var i = 0, l = matches.length; i < l; i++) {\n
+\t\t\t\tif (callback(matches[i], i) === false) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t/*jshint validthis:true*/\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Wraps the current matches with nodes created by the specified callback.\n
+\t\t * Multiple clones of these matches might occur on matches that are on multiple nodex.\n
+\t\t *\n
+\t\t * @param {Function} callback Callback to execute in order to create elements for matches.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction wrap(callback) {\n
+\t\t\tif (matches.length) {\n
+\t\t\t\tstepThroughMatches(node, matches, genReplacer(callback));\n
+\t\t\t}\n
+\n
+\t\t\t/*jshint validthis:true*/\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Finds the specified regexp and adds them to the matches collection.\n
+\t\t *\n
+\t\t * @param {RegExp} regex Global regexp to search the current node by.\n
+\t\t * @param {Object} [data] Optional custom data element for the match.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction find(regex, data) {\n
+\t\t\tif (text && regex.global) {\n
+\t\t\t\twhile ((m = regex.exec(text))) {\n
+\t\t\t\t\tmatches.push(createMatch(m, data));\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Unwraps the specified match object or all matches if unspecified.\n
+\t\t *\n
+\t\t * @param {Object} [match] Optional match object.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction unwrap(match) {\n
+\t\t\tvar i, elements = getWrappersByIndex(match ? indexOf(match) : null);\n
+\n
+\t\t\ti = elements.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tunwrapElement(elements[i]);\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns a match object by the specified DOM element.\n
+\t\t *\n
+\t\t * @param {DOMElement} element Element to return match object for.\n
+\t\t * @return {Object} Match object for the specified element.\n
+\t\t */\n
+\t\tfunction matchFromElement(element) {\n
+\t\t\treturn matches[element.getAttribute(\'data-mce-index\')];\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns a DOM element from the specified match element. This will be the first element if it\'s split\n
+\t\t * on multiple nodes.\n
+\t\t *\n
+\t\t * @param {Object} match Match element to get first element of.\n
+\t\t * @return {DOMElement} DOM element for the specified match object.\n
+\t\t */\n
+\t\tfunction elementFromMatch(match) {\n
+\t\t\treturn getWrappersByIndex(indexOf(match))[0];\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Adds match the specified range for example a grammar line.\n
+\t\t *\n
+\t\t * @param {Number} start Start offset.\n
+\t\t * @param {Number} length Length of the text.\n
+\t\t * @param {Object} data Custom data object for match.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction add(start, length, data) {\n
+\t\t\tmatches.push({\n
+\t\t\t\tstart: start,\n
+\t\t\t\tend: start + length,\n
+\t\t\t\ttext: text.substr(start, length),\n
+\t\t\t\tdata: data\n
+\t\t\t});\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns a DOM range for the specified match.\n
+\t\t *\n
+\t\t * @param  {Object} match Match object to get range for.\n
+\t\t * @return {DOMRange} DOM Range for the specified match.\n
+\t\t */\n
+\t\tfunction rangeFromMatch(match) {\n
+\t\t\tvar wrappers = getWrappersByIndex(indexOf(match));\n
+\n
+\t\t\tvar rng = editor.dom.createRng();\n
+\t\t\trng.setStartBefore(wrappers[0]);\n
+\t\t\trng.setEndAfter(wrappers[wrappers.length - 1]);\n
+\n
+\t\t\treturn rng;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Replaces the specified match with the specified text.\n
+\t\t *\n
+\t\t * @param {Object} match Match object to replace.\n
+\t\t * @param {String} text Text to replace the match with.\n
+\t\t * @return {DOMRange} DOM range produced after the replace.\n
+\t\t */\n
+\t\tfunction replace(match, text) {\n
+\t\t\tvar rng = rangeFromMatch(match);\n
+\n
+\t\t\trng.deleteContents();\n
+\n
+\t\t\tif (text.length > 0) {\n
+\t\t\t\trng.insertNode(editor.dom.doc.createTextNode(text));\n
+\t\t\t}\n
+\n
+\t\t\treturn rng;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Resets the DomTextMatcher instance. This will remove any wrapped nodes and remove any matches.\n
+\t\t *\n
+\t\t * @return {[type]} [description]\n
+\t\t */\n
+\t\tfunction reset() {\n
+\t\t\tmatches.splice(0, matches.length);\n
+\t\t\tunwrap();\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\ttext = getText(node);\n
+\n
+\t\treturn {\n
+\t\t\ttext: text,\n
+\t\t\tmatches: matches,\n
+\t\t\teach: each,\n
+\t\t\tfilter: filter,\n
+\t\t\treset: reset,\n
+\t\t\tmatchFromElement: matchFromElement,\n
+\t\t\telementFromMatch: elementFromMatch,\n
+\t\t\tfind: find,\n
+\t\t\tadd: add,\n
+\t\t\twrap: wrap,\n
+\t\t\tunwrap: unwrap,\n
+\t\t\treplace: replace,\n
+\t\t\trangeFromMatch: rangeFromMatch,\n
+\t\t\tindexOf: indexOf\n
+\t\t};\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/spellchecker/classes/Plugin.js\n
+\n
+/**\n
+ * Plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*jshint camelcase:false */\n
+\n
+/**\n
+ * This class contains all core logic for the spellchecker plugin.\n
+ *\n
+ * @class tinymce.spellcheckerplugin.Plugin\n
+ * @private\n
+ */\n
+define("tinymce/spellcheckerplugin/Plugin", [\n
+\t"tinymce/spellcheckerplugin/DomTextMatcher",\n
+\t"tinymce/PluginManager",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/ui/Menu",\n
+\t"tinymce/dom/DOMUtils",\n
+\t"tinymce/util/XHR",\n
+\t"tinymce/util/URI",\n
+\t"tinymce/util/JSON"\n
+], function(DomTextMatcher, PluginManager, Tools, Menu, DOMUtils, XHR, URI, JSON) {\n
+\tPluginManager.add(\'spellchecker\', function(editor, url) {\n
+\t\tvar languageMenuItems, self = this, lastSuggestions, started, suggestionsMenu, settings = editor.settings;\n
+\t\tvar hasDictionarySupport;\n
+\n
+\t\tfunction getTextMatcher() {\n
+\t\t\tif (!self.textMatcher) {\n
+\t\t\t\tself.textMatcher = new DomTextMatcher(editor.getBody(), editor);\n
+\t\t\t}\n
+\n
+\t\t\treturn self.textMatcher;\n
+\t\t}\n
+\n
+\t\tfunction buildMenuItems(listName, languageValues) {\n
+\t\t\tvar items = [];\n
+\n
+\t\t\tTools.each(languageValues, function(languageValue) {\n
+\t\t\t\titems.push({\n
+\t\t\t\t\tselectable: true,\n
+\t\t\t\t\ttext: languageValue.name,\n
+\t\t\t\t\tdata: languageValue.value\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\treturn items;\n
+\t\t}\n
+\n
+\t\tvar languagesString = settings.spellchecker_languages ||\n
+\t\t\t\'English=en,Danish=da,Dutch=nl,Finnish=fi,French=fr_FR,\' +\n
+\t\t\t\'German=de,Italian=it,Polish=pl,Portuguese=pt_BR,\' +\n
+\t\t\t\'Spanish=es,Swedish=sv\';\n
+\n
+\t\tlanguageMenuItems = buildMenuItems(\'Language\',\n
+\t\t\tTools.map(languagesString.split(\',\'), function(langPair) {\n
+\t\t\t\tlangPair = langPair.split(\'=\');\n
+\n
+\t\t\t\treturn {\n
+\t\t\t\t\tname: langPair[0],\n
+\t\t\t\t\tvalue: langPair[1]\n
+\t\t\t\t};\n
+\t\t\t})\n
+\t\t);\n
+\n
+\t\tfunction isEmpty(obj) {\n
+\t\t\t/*jshint unused:false*/\n
+\t\t\t/*eslint no-unused-vars:0 */\n
+\t\t\tfor (var name in obj) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\treturn true;\n
+\t\t}\n
+\n
+\t\tfunction showSuggestions(word, spans) {\n
+\t\t\tvar items = [], suggestions = lastSuggestions[word];\n
+\n
+\t\t\tTools.each(suggestions, function(suggestion) {\n
+\t\t\t\titems.push({\n
+\t\t\t\t\ttext: suggestion,\n
+\t\t\t\t\tonclick: function() {\n
+\t\t\t\t\t\teditor.insertContent(editor.dom.encode(suggestion));\n
+\t\t\t\t\t\teditor.dom.remove(spans);\n
+\t\t\t\t\t\tcheckIfFinished();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\titems.push({text: \'-\'});\n
+\n
+\t\t\tif (hasDictionarySupport) {\n
+\t\t\t\titems.push({text: \'Add to Dictionary\', onclick: function() {\n
+\t\t\t\t\taddToDictionary(word, spans);\n
+\t\t\t\t}});\n
+\t\t\t}\n
+\n
+\t\t\titems.push.apply(items, [\n
+\t\t\t\t{text: \'Ignore\', onclick: function() {\n
+\t\t\t\t\tignoreWord(word, spans);\n
+\t\t\t\t}},\n
+\n
+\t\t\t\t{text: \'Ignore all\', onclick: function() {\n
+\t\t\t\t\tignoreWord(word, spans, true);\n
+\t\t\t\t}}\n
+\t\t\t]);\n
+\n
+\t\t\t// Render menu\n
+\t\t\tsuggestionsMenu = new Menu({\n
+\t\t\t\titems: items,\n
+\t\t\t\tcontext: \'contextmenu\',\n
+\t\t\t\tonautohide: function(e) {\n
+\t\t\t\t\tif (e.target.className.indexOf(\'spellchecker\') != -1) {\n
+\t\t\t\t\t\te.preventDefault();\n
+\t\t\t\t\t}\n
+\t\t\t\t},\n
+\t\t\t\tonhide: function() {\n
+\t\t\t\t\tsuggestionsMenu.remove();\n
+\t\t\t\t\tsuggestionsMenu = null;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tsuggestionsMenu.renderTo(document.body);\n
+\n
+\t\t\t// Position menu\n
+\t\t\tvar pos = DOMUtils.DOM.getPos(editor.getContentAreaContainer());\n
+\t\t\tvar targetPos = editor.dom.getPos(spans[0]);\n
+\t\t\tvar root = editor.dom.getRoot();\n
+\n
+\t\t\t// Adjust targetPos for scrolling in the editor\n
+\t\t\tif (root.nodeName == \'BODY\') {\n
+\t\t\t\ttargetPos.x -= root.ownerDocument.documentElement.scrollLeft || root.scrollLeft;\n
+\t\t\t\ttargetPos.y -= root.ownerDocument.documentElement.scrollTop || root.scrollTop;\n
+\t\t\t} else {\n
+\t\t\t\ttargetPos.x -= root.scrollLeft;\n
+\t\t\t\ttargetPos.y -= root.scrollTop;\n
+\t\t\t}\n
+\n
+\t\t\tpos.x += targetPos.x;\n
+\t\t\tpos.y += targetPos.y;\n
+\n
+\t\t\tsuggestionsMenu.moveTo(pos.x, pos.y + spans[0].offsetHeight);\n
+\t\t}\n
+\n
+\t\tfunction getWordCharPattern() {\n
+\t\t\t// Regexp for finding word specific characters this will split words by\n
+\t\t\t// spaces, quotes, copy right characters etc. It\'s escaped with unicode characters\n
+\t\t\t// to make it easier to output scripts on servers using different encodings\n
+\t\t\t// so if you add any characters outside the 128 byte range make sure to escape it\n
+\t\t\treturn editor.getParam(\'spellchecker_wordchar_pattern\') || new RegExp("[^" +\n
+\t\t\t\t"\\\\s!\\"#$%&()*+,-./:;<=>?@[\\\\]^_{|}`" +\n
+\t\t\t\t"\\u00a7\\u00a9\\u00ab\\u00ae\\u00b1\\u00b6\\u00b7\\u00b8\\u00bb" +\n
+\t\t\t\t"\\u00bc\\u00bd\\u00be\\u00bf\\u00d7\\u00f7\\u00a4\\u201d\\u201c\\u201e\\u00a0\\u2002\\u2003\\u2009" +\n
+\t\t\t"]+", "g");\n
+\t\t}\n
+\n
+\t\tfunction defaultSpellcheckCallback(method, text, doneCallback, errorCallback) {\n
+\t\t\tvar data = {method: method}, postData = \'\';\n
+\n
+\t\t\tif (method == "spellcheck") {\n
+\t\t\t\tdata.text = text;\n
+\t\t\t\tdata.lang = settings.spellchecker_language;\n
+\t\t\t}\n
+\n
+\t\t\tif (method == "addToDictionary") {\n
+\t\t\t\tdata.word = text;\n
+\t\t\t}\n
+\n
+\t\t\tTools.each(data, function(value, key) {\n
+\t\t\t\tif (postData) {\n
+\t\t\t\t\tpostData += \'&\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tpostData += key + \'=\' + encodeURIComponent(value);\n
+\t\t\t});\n
+\n
+\t\t\tXHR.send({\n
+\t\t\t\turl: new URI(url).toAbsolute(settings.spellchecker_rpc_url),\n
+\t\t\t\ttype: "post",\n
+\t\t\t\tcontent_type: \'application/x-www-form-urlencoded\',\n
+\t\t\t\tdata: postData,\n
+\t\t\t\tsuccess: function(result) {\n
+\t\t\t\t\tresult = JSON.parse(result);\n
+\n
+\t\t\t\t\tif (!result) {\n
+\t\t\t\t\t\terrorCallback("Sever response wasn\'t proper JSON.");\n
+\t\t\t\t\t} else if (result.error) {\n
+\t\t\t\t\t\terrorCallback(result.error);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tdoneCallback(result);\n
+\t\t\t\t\t}\n
+\t\t\t\t},\n
+\t\t\t\terror: function(type, xhr) {\n
+\t\t\t\t\terrorCallback("Spellchecker request error: " + xhr.status);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction sendRpcCall(name, data, successCallback, errorCallback) {\n
+\t\t\tvar spellCheckCallback = settings.spellchecker_callback || defaultSpellcheckCallback;\n
+\t\t\tspellCheckCallback.call(self, name, data, successCallback, errorCallback);\n
+\t\t}\n
+\n
+\t\tfunction spellcheck() {\n
+\t\t\tfinish();\n
+\n
+\t\t\tif (started) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tfunction errorCallback(message) {\n
+\t\t\t\teditor.windowManager.alert(message);\n
+\t\t\t\teditor.setProgressState(false);\n
+\t\t\t\tfinish();\n
+\t\t\t}\n
+\n
+\t\t\teditor.setProgressState(true);\n
+\t\t\tsendRpcCall("spellcheck", getTextMatcher().text, markErrors, errorCallback);\n
+\t\t\teditor.focus();\n
+\t\t}\n
+\n
+\t\tfunction checkIfFinished() {\n
+\t\t\tif (!editor.dom.select(\'span.mce-spellchecker-word\').length) {\n
+\t\t\t\tfinish();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction addToDictionary(word, spans) {\n
+\t\t\teditor.setProgressState(true);\n
+\n
+\t\t\tsendRpcCall("addToDictionary", word, function() {\n
+\t\t\t\teditor.setProgressState(false);\n
+\t\t\t\teditor.dom.remove(spans, true);\n
+\t\t\t\tcheckIfFinished();\n
+\t\t\t}, function(message) {\n
+\t\t\t\teditor.windowManager.alert(message);\n
+\t\t\t\teditor.setProgressState(false);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction ignoreWord(word, spans, all) {\n
+\t\t\teditor.selection.collapse();\n
+\n
+\t\t\tif (all) {\n
+\t\t\t\tTools.each(editor.dom.select(\'span.mce-spellchecker-word\'), function(span) {\n
+\t\t\t\t\tif (span.getAttribute(\'data-mce-word\') == word) {\n
+\t\t\t\t\t\teditor.dom.remove(span, true);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\teditor.dom.remove(spans, true);\n
+\t\t\t}\n
+\n
+\t\t\tcheckIfFinished();\n
+\t\t}\n
+\n
+\t\tfunction finish() {\n
+\t\t\tgetTextMatcher().reset();\n
+\t\t\tself.textMatcher = null;\n
+\n
+\t\t\tif (started) {\n
+\t\t\t\tstarted = false;\n
+\t\t\t\teditor.fire(\'SpellcheckEnd\');\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction getElmIndex(elm) {\n
+\t\t\tvar value = elm.getAttribute(\'data-mce-index\');\n
+\n
+\t\t\tif (typeof value == "number") {\n
+\t\t\t\treturn "" + value;\n
+\t\t\t}\n
+\n
+\t\t\treturn value;\n
+\t\t}\n
+\n
+\t\tfunction findSpansByIndex(index) {\n
+\t\t\tvar nodes, spans = [];\n
+\n
+\t\t\tnodes = Tools.toArray(editor.getBody().getElementsByTagName(\'span\'));\n
+\t\t\tif (nodes.length) {\n
+\t\t\t\tfor (var i = 0; i < nodes.length; i++) {\n
+\t\t\t\t\tvar nodeIndex = getElmIndex(nodes[i]);\n
+\n
+\t\t\t\t\tif (nodeIndex === null || !nodeIndex.length) {\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (nodeIndex === index.toString()) {\n
+\t\t\t\t\t\tspans.push(nodes[i]);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn spans;\n
+\t\t}\n
+\n
+\t\teditor.on(\'click\', function(e) {\n
+\t\t\tvar target = e.target;\n
+\n
+\t\t\tif (target.className == "mce-spellchecker-word") {\n
+\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\tvar spans = findSpansByIndex(getElmIndex(target));\n
+\n
+\t\t\t\tif (spans.length > 0) {\n
+\t\t\t\t\tvar rng = editor.dom.createRng();\n
+\t\t\t\t\trng.setStartBefore(spans[0]);\n
+\t\t\t\t\trng.setEndAfter(spans[spans.length - 1]);\n
+\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t\tshowSuggestions(target.getAttribute(\'data-mce-word\'), spans);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.addMenuItem(\'spellchecker\', {\n
+\t\t\ttext: \'Spellcheck\',\n
+\t\t\tcontext: \'tools\',\n
+\t\t\tonclick: spellcheck,\n
+\t\t\tselectable: true,\n
+\t\t\tonPostRender: function() {\n
+\t\t\t\tvar self = this;\n
+\n
+\t\t\t\tself.active(started);\n
+\n
+\t\t\t\teditor.on(\'SpellcheckStart SpellcheckEnd\', function() {\n
+\t\t\t\t\tself.active(started);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tfunction updateSelection(e) {\n
+\t\t\tvar selectedLanguage = settings.spellchecker_language;\n
+\n
+\t\t\te.control.items().each(function(ctrl) {\n
+\t\t\t\tctrl.active(ctrl.settings.data === selectedLanguage);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Find the specified words and marks them. It will also show suggestions for those words.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * editor.plugins.spellchecker.markErrors({\n
+\t\t *     dictionary: true,\n
+\t\t *     words: {\n
+\t\t *         "word1": ["suggestion 1", "Suggestion 2"]\n
+\t\t *     }\n
+\t\t * });\n
+\t\t * @param {Object} data Data object containing the words with suggestions.\n
+\t\t */\n
+\t\tfunction markErrors(data) {\n
+\t\t\tvar suggestions;\n
+\n
+\t\t\tif (data.words) {\n
+\t\t\t\thasDictionarySupport = !!data.dictionary;\n
+\t\t\t\tsuggestions = data.words;\n
+\t\t\t} else {\n
+\t\t\t\t// Fallback to old format\n
+\t\t\t\tsuggestions = data;\n
+\t\t\t}\n
+\n
+\t\t\teditor.setProgressState(false);\n
+\n
+\t\t\tif (isEmpty(suggestions)) {\n
+\t\t\t\teditor.windowManager.alert(\'No misspellings found\');\n
+\t\t\t\tstarted = false;\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tlastSuggestions = suggestions;\n
+\n
+\t\t\tgetTextMatcher().find(getWordCharPattern()).filter(function(match) {\n
+\t\t\t\treturn !!suggestions[match.text];\n
+\t\t\t}).wrap(function(match) {\n
+\t\t\t\treturn editor.dom.create(\'span\', {\n
+\t\t\t\t\t"class": \'mce-spellchecker-word\',\n
+\t\t\t\t\t"data-mce-bogus": 1,\n
+\t\t\t\t\t"data-mce-word": match.text\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\tstarted = true;\n
+\t\t\teditor.fire(\'SpellcheckStart\');\n
+\t\t}\n
+\n
+\t\tvar buttonArgs = {\n
+\t\t\ttooltip: \'Spellcheck\',\n
+\t\t\tonclick: spellcheck,\n
+\t\t\tonPostRender: function() {\n
+\t\t\t\tvar self = this;\n
+\n
+\t\t\t\teditor.on(\'SpellcheckStart SpellcheckEnd\', function() {\n
+\t\t\t\t\tself.active(started);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tif (languageMenuItems.length > 1) {\n
+\t\t\tbuttonArgs.type = \'splitbutton\';\n
+\t\t\tbuttonArgs.menu = languageMenuItems;\n
+\t\t\tbuttonArgs.onshow = updateSelection;\n
+\t\t\tbuttonArgs.onselect = function(e) {\n
+\t\t\t\tsettings.spellchecker_language = e.control.settings.data;\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\teditor.addButton(\'spellchecker\', buttonArgs);\n
+\t\teditor.addCommand(\'mceSpellCheck\', spellcheck);\n
+\n
+\t\teditor.on(\'remove\', function() {\n
+\t\t\tif (suggestionsMenu) {\n
+\t\t\t\tsuggestionsMenu.remove();\n
+\t\t\t\tsuggestionsMenu = null;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'change\', checkIfFinished);\n
+\n
+\t\tthis.getTextMatcher = getTextMatcher;\n
+\t\tthis.getWordCharPattern = getWordCharPattern;\n
+\t\tthis.markErrors = markErrors;\n
+\t\tthis.getLanguage = function() {\n
+\t\t\treturn settings.spellchecker_language;\n
+\t\t};\n
+\n
+\t\t// Set default spellchecker language if it\'s not specified\n
+\t\tsettings.spellchecker_language = settings.spellchecker_language || settings.language || \'en\';\n
+\t});\n
+});\n
+\n
+expose(["tinymce/spellcheckerplugin/DomTextMatcher"]);\n
+})(this);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>25239</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

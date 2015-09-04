@@ -1,0 +1,265 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268530.16</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ColorMatrix.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ImageTools.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ *\n
+ * Some of the matrix calculations and constants are from the EaselJS library released under MIT:\n
+ * https://github.com/CreateJS/EaselJS/blob/master/src/easeljs/filters/ColorMatrix.js\n
+ */\n
+\n
+/**\n
+ * Various operations for color matrices.\n
+ */\n
+define("tinymce/imagetoolsplugin/ColorMatrix", [], function() {\n
+\tfunction clamp(value, min, max) {\n
+\t\tvalue = parseFloat(value);\n
+\n
+\t\tif (value > max) {\n
+\t\t\tvalue = max;\n
+\t\t} else if (value < min) {\n
+\t\t\tvalue = min;\n
+\t\t}\n
+\n
+\t\treturn value;\n
+\t}\n
+\n
+\tfunction identity() {\n
+\t\treturn [\n
+\t\t\t1, 0, 0, 0, 0,\n
+\t\t\t0, 1, 0, 0, 0,\n
+\t\t\t0, 0, 1, 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t];\n
+\t}\n
+\n
+\tvar DELTA_INDEX = [\n
+\t\t0, 0.01, 0.02, 0.04, 0.05, 0.06, 0.07, 0.08, 0.1, 0.11,\n
+\t\t0.12, 0.14, 0.15, 0.16, 0.17, 0.18, 0.20, 0.21, 0.22, 0.24,\n
+\t\t0.25, 0.27, 0.28, 0.30, 0.32, 0.34, 0.36, 0.38, 0.40, 0.42,\n
+\t\t0.44, 0.46, 0.48, 0.5, 0.53, 0.56, 0.59, 0.62, 0.65, 0.68,\n
+\t\t0.71, 0.74, 0.77, 0.80, 0.83, 0.86, 0.89, 0.92, 0.95, 0.98,\n
+\t\t1.0, 1.06, 1.12, 1.18, 1.24, 1.30, 1.36, 1.42, 1.48, 1.54,\n
+\t\t1.60, 1.66, 1.72, 1.78, 1.84, 1.90, 1.96, 2.0, 2.12, 2.25,\n
+\t\t2.37, 2.50, 2.62, 2.75, 2.87, 3.0, 3.2, 3.4, 3.6, 3.8,\n
+\t\t4.0, 4.3, 4.7, 4.9, 5.0, 5.5, 6.0, 6.5, 6.8, 7.0,\n
+\t\t7.3, 7.5, 7.8, 8.0, 8.4, 8.7, 9.0, 9.4, 9.6, 9.8,\n
+\t\t10.0\n
+\t];\n
+\n
+\tfunction multiply(matrix1, matrix2) {\n
+\t\tvar i, j, k, val, col = [], out = new Array(10);\n
+\n
+\t\tfor (i = 0; i < 5; i++) {\n
+\t\t\tfor (j = 0; j < 5; j++) {\n
+\t\t\t\tcol[j] = matrix2[j + i * 5];\n
+\t\t\t}\n
+\n
+\t\t\tfor (j = 0; j < 5; j++) {\n
+\t\t\t\tval = 0;\n
+\n
+\t\t\t\tfor (k = 0; k < 5; k++) {\n
+\t\t\t\t\tval += matrix1[j + k * 5] * col[k];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tout[j + i * 5] = val;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn out;\n
+\t}\n
+\n
+\tfunction adjust(matrix, adjustValue) {\n
+\t\tadjustValue = clamp(adjustValue, 0, 1);\n
+\n
+\t\treturn matrix.map(function(value, index) {\n
+\t\t\tif (index % 6 === 0) {\n
+\t\t\t\tvalue = 1.0 - ((1 - value) * adjustValue);\n
+\t\t\t} else {\n
+\t\t\t\tvalue *= adjustValue;\n
+\t\t\t}\n
+\n
+\t\t\treturn clamp(value, 0, 1);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction adjustContrast(matrix, value) {\n
+\t\tvar x;\n
+\n
+\t\tvalue = clamp(value, -1, 1);\n
+\t\tvalue *= 100;\n
+\n
+\t\tif (value < 0) {\n
+\t\t\tx = 127 + value / 100 * 127;\n
+\t\t} else {\n
+\t\t\tx = value % 1;\n
+\n
+\t\t\tif (x === 0) {\n
+\t\t\t\tx = DELTA_INDEX[value];\n
+\t\t\t} else {\n
+\t\t\t\t// use linear interpolation for more granularity.\n
+\t\t\t\tx = DELTA_INDEX[(Math.floor(value))] * (1 - x) + DELTA_INDEX[(Math.floor(value)) + 1] * x;\n
+\t\t\t}\n
+\n
+\t\t\tx = x * 127 + 127;\n
+\t\t}\n
+\n
+\t\treturn multiply(matrix, [\n
+\t\t\tx / 127, 0, 0, 0, 0.5 * (127 - x),\n
+\t\t\t0, x / 127, 0, 0, 0.5 * (127 - x),\n
+\t\t\t0, 0, x / 127, 0, 0.5 * (127 - x),\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t]);\n
+\t}\n
+\n
+\tfunction adjustSaturation(matrix, value) {\n
+\t\tvar x, lumR, lumG, lumB;\n
+\n
+\t\tvalue = clamp(value, -1, 1);\n
+\t\tx = 1 + ((value > 0) ? 3 * value : value);\n
+\t\tlumR = 0.3086;\n
+\t\tlumG = 0.6094;\n
+\t\tlumB = 0.0820;\n
+\n
+\t\treturn multiply(matrix, [\n
+\t\t\tlumR * (1 - x) + x, lumG * (1 - x), lumB * (1 - x), 0, 0,\n
+\t\t\tlumR * (1 - x), lumG * (1 - x) + x, lumB * (1 - x), 0, 0,\n
+\t\t\tlumR * (1 - x), lumG * (1 - x), lumB * (1 - x) + x, 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t]);\n
+\t}\n
+\n
+\tfunction adjustHue(matrix, angle) {\n
+\t\tvar cosVal, sinVal, lumR, lumG, lumB;\n
+\n
+\t\tangle = clamp(angle, -180, 180) / 180 * Math.PI;\n
+\t\tcosVal = Math.cos(angle);\n
+\t\tsinVal = Math.sin(angle);\n
+\t\tlumR = 0.213;\n
+\t\tlumG = 0.715;\n
+\t\tlumB = 0.072;\n
+\n
+\t\treturn multiply(matrix, [\n
+\t\t\tlumR + cosVal * (1 - lumR) + sinVal * (-lumR), lumG + cosVal * (-lumG) + sinVal * (-lumG),\n
+\t\t\tlumB + cosVal * (-lumB) + sinVal * (1 - lumB), 0, 0,\n
+\t\t\tlumR + cosVal * (-lumR) + sinVal * (0.143), lumG + cosVal * (1 - lumG) + sinVal * (0.140),\n
+\t\t\tlumB + cosVal * (-lumB) + sinVal * (-0.283), 0, 0,\n
+\t\t\tlumR + cosVal * (-lumR) + sinVal * (-(1 - lumR)), lumG + cosVal * (-lumG) + sinVal * (lumG),\n
+\t\t\tlumB + cosVal * (1 - lumB) + sinVal * (lumB), 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t]);\n
+\t}\n
+\n
+\tfunction adjustBrightness(matrix, value) {\n
+\t\tvalue = clamp(255 * value, -255, 255);\n
+\n
+\t\treturn multiply(matrix, [\n
+\t\t\t1, 0, 0, 0, value,\n
+\t\t\t0, 1, 0, 0, value,\n
+\t\t\t0, 0, 1, 0, value,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t]);\n
+\t}\n
+\n
+\tfunction adjustColors(matrix, adjustR, adjustG, adjustB) {\n
+\t\tadjustR = clamp(adjustR, 0, 2);\n
+\t\tadjustG = clamp(adjustG, 0, 2);\n
+\t\tadjustB = clamp(adjustB, 0, 2);\n
+\n
+\t\treturn multiply(matrix, [\n
+\t\t\tadjustR, 0, 0, 0, 0,\n
+\t\t\t0, adjustG, 0, 0, 0,\n
+\t\t\t0, 0, adjustB, 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t]);\n
+\t}\n
+\n
+\tfunction adjustSepia(matrix, value) {\n
+\t\tvalue = clamp(value, 0, 1);\n
+\n
+\t\treturn multiply(matrix, adjust([\n
+\t\t\t0.393, 0.769, 0.189, 0, 0,\n
+\t\t\t0.349, 0.686, 0.168, 0, 0,\n
+\t\t\t0.272, 0.534, 0.131, 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t], value));\n
+\t}\n
+\n
+\tfunction adjustGrayscale(matrix, value) {\n
+\t\tvalue = clamp(value, 0, 1);\n
+\n
+\t\treturn multiply(matrix, adjust([\n
+\t\t\t0.33, 0.34, 0.33, 0, 0,\n
+\t\t\t0.33, 0.34, 0.33, 0, 0,\n
+\t\t\t0.33, 0.34, 0.33, 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t], value));\n
+\t}\n
+\n
+\treturn {\n
+\t\tidentity: identity,\n
+\t\tadjust: adjust,\n
+\t\tmultiply: multiply,\n
+\t\tadjustContrast: adjustContrast,\n
+\t\tadjustBrightness: adjustBrightness,\n
+\t\tadjustSaturation: adjustSaturation,\n
+\t\tadjustHue: adjustHue,\n
+\t\tadjustColors: adjustColors,\n
+\t\tadjustSepia: adjustSepia,\n
+\t\tadjustGrayscale: adjustGrayscale\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5241</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ColorMatrix.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

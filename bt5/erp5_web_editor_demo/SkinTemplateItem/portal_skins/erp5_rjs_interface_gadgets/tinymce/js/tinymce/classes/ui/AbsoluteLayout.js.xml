@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268346.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>AbsoluteLayout.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * AbsoluteLayout.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * LayoutManager for absolute positioning. This layout manager is more of\n
+ * a base class for other layouts but can be created and used directly.\n
+ *\n
+ * @-x-less AbsoluteLayout.less\n
+ * @class tinymce.ui.AbsoluteLayout\n
+ * @extends tinymce.ui.Layout\n
+ */\n
+define("tinymce/ui/AbsoluteLayout", [\n
+\t"tinymce/ui/Layout"\n
+], function(Layout) {\n
+\t"use strict";\n
+\n
+\treturn Layout.extend({\n
+\t\tDefaults: {\n
+\t\t\tcontainerClass: \'abs-layout\',\n
+\t\t\tcontrolClass: \'abs-layout-item\'\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Recalculates the positions of the controls in the specified container.\n
+\t\t *\n
+\t\t * @method recalc\n
+\t\t * @param {tinymce.ui.Container} container Container instance to recalc.\n
+\t\t */\n
+\t\trecalc: function(container) {\n
+\t\t\tcontainer.items().filter(\':visible\').each(function(ctrl) {\n
+\t\t\t\tvar settings = ctrl.settings;\n
+\n
+\t\t\t\tctrl.layoutRect({\n
+\t\t\t\t\tx: settings.x,\n
+\t\t\t\t\ty: settings.y,\n
+\t\t\t\t\tw: settings.w,\n
+\t\t\t\t\th: settings.h\n
+\t\t\t\t});\n
+\n
+\t\t\t\tif (ctrl.recalc) {\n
+\t\t\t\t\tctrl.recalc();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the specified container and any layout specific HTML.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @param {tinymce.ui.Container} container Container to render HTML for.\n
+\t\t */\n
+\t\trenderHtml: function(container) {\n
+\t\t\treturn \'<div id="\' + container._id + \'-absend" class="\' + container.classPrefix + \'abs-end"></div>\' + this._super(container);\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1536</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>AbsoluteLayout.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

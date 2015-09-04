@@ -1,0 +1,423 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268355.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>UndoManager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * UndoManager.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles the undo/redo history levels for the editor. Since the build in undo/redo has major drawbacks a custom one was needed.\n
+ *\n
+ * @class tinymce.UndoManager\n
+ */\n
+define("tinymce/UndoManager", [\n
+\t"tinymce/util/VK",\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/html/SaxParser"\n
+], function(VK, Env, Tools, SaxParser) {\n
+\tvar trim = Tools.trim, trimContentRegExp;\n
+\n
+\ttrimContentRegExp = new RegExp([\n
+\t\t\'<span[^>]+data-mce-bogus[^>]+>[\\u200B\\uFEFF]+<\\\\/span>\', // Trim bogus spans like caret containers\n
+\t\t\'\\\\s?data-mce-selected="[^"]+"\' // Trim temporaty data-mce prefixed attributes like data-mce-selected\n
+\t].join(\'|\'), \'gi\');\n
+\n
+\treturn function(editor) {\n
+\t\tvar self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;\n
+\n
+\t\t/**\n
+\t\t * Returns a trimmed version of the editor contents to be used for the undo level. This\n
+\t\t * will remove any data-mce-bogus="all" marked elements since these are used for UI it will also\n
+\t\t * remove the data-mce-selected attributes used for selection of objects and caret containers.\n
+\t\t * It will keep all data-mce-bogus="1" elements since these can be used to place the caret etc and will\n
+\t\t * be removed by the serialization logic when you save.\n
+\t\t *\n
+\t\t * @private\n
+\t\t * @return {String} HTML contents of the editor excluding some internal bogus elements.\n
+\t\t */\n
+\t\tfunction getContent() {\n
+\t\t\tvar content = editor.getContent({format: \'raw\', no_events: 1});\n
+\t\t\tvar bogusAllRegExp = /<(\\w+) [^>]*data-mce-bogus="all"[^>]*>/g;\n
+\t\t\tvar endTagIndex, index, matchLength, matches, shortEndedElements, schema = editor.schema;\n
+\n
+\t\t\tcontent = content.replace(trimContentRegExp, \'\');\n
+\t\t\tshortEndedElements = schema.getShortEndedElements();\n
+\n
+\t\t\t// Remove all bogus elements marked with "all"\n
+\t\t\twhile ((matches = bogusAllRegExp.exec(content))) {\n
+\t\t\t\tindex = bogusAllRegExp.lastIndex;\n
+\t\t\t\tmatchLength = matches[0].length;\n
+\n
+\t\t\t\tif (shortEndedElements[matches[1]]) {\n
+\t\t\t\t\tendTagIndex = index;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tendTagIndex = SaxParser.findEndTag(schema, content, index);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcontent = content.substring(0, index - matchLength) + content.substring(endTagIndex);\n
+\t\t\t\tbogusAllRegExp.lastIndex = index - matchLength;\n
+\t\t\t}\n
+\n
+\t\t\treturn trim(content);\n
+\t\t}\n
+\n
+\t\tfunction setDirty(state) {\n
+\t\t\teditor.isNotDirty = !state;\n
+\t\t}\n
+\n
+\t\tfunction addNonTypingUndoLevel(e) {\n
+\t\t\tself.typing = false;\n
+\t\t\tself.add({}, e);\n
+\t\t}\n
+\n
+\t\t// Add initial undo level when the editor is initialized\n
+\t\teditor.on(\'init\', function() {\n
+\t\t\tself.add();\n
+\t\t});\n
+\n
+\t\t// Get position before an execCommand is processed\n
+\t\teditor.on(\'BeforeExecCommand\', function(e) {\n
+\t\t\tvar cmd = e.command;\n
+\n
+\t\t\tif (cmd != \'Undo\' && cmd != \'Redo\' && cmd != \'mceRepaint\') {\n
+\t\t\t\tself.beforeChange();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Add undo level after an execCommand call was made\n
+\t\teditor.on(\'ExecCommand\', function(e) {\n
+\t\t\tvar cmd = e.command;\n
+\n
+\t\t\tif (cmd != \'Undo\' && cmd != \'Redo\' && cmd != \'mceRepaint\') {\n
+\t\t\t\taddNonTypingUndoLevel(e);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'ObjectResizeStart\', function() {\n
+\t\t\tself.beforeChange();\n
+\t\t});\n
+\n
+\t\teditor.on(\'SaveContent ObjectResized blur\', addNonTypingUndoLevel);\n
+\t\teditor.on(\'DragEnd\', addNonTypingUndoLevel);\n
+\n
+\t\teditor.on(\'KeyUp\', function(e) {\n
+\t\t\tvar keyCode = e.keyCode;\n
+\n
+\t\t\tif ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 45 || keyCode == 13 || e.ctrlKey) {\n
+\t\t\t\taddNonTypingUndoLevel();\n
+\t\t\t\teditor.nodeChanged();\n
+\t\t\t}\n
+\n
+\t\t\tif (keyCode == 46 || keyCode == 8 || (Env.mac && (keyCode == 91 || keyCode == 93))) {\n
+\t\t\t\teditor.nodeChanged();\n
+\t\t\t}\n
+\n
+\t\t\t// Fire a TypingUndo event on the first character entered\n
+\t\t\tif (isFirstTypedCharacter && self.typing) {\n
+\t\t\t\t// Make it dirty if the content was changed after typing the first character\n
+\t\t\t\tif (!editor.isDirty()) {\n
+\t\t\t\t\tsetDirty(data[0] && getContent() != data[0].content);\n
+\n
+\t\t\t\t\t// Fire initial change event\n
+\t\t\t\t\tif (!editor.isNotDirty) {\n
+\t\t\t\t\t\teditor.fire(\'change\', {level: data[0], lastLevel: null});\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\teditor.fire(\'TypingUndo\');\n
+\t\t\t\tisFirstTypedCharacter = false;\n
+\t\t\t\teditor.nodeChanged();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'KeyDown\', function(e) {\n
+\t\t\tvar keyCode = e.keyCode;\n
+\n
+\t\t\t// Is caracter positon keys left,right,up,down,home,end,pgdown,pgup,enter\n
+\t\t\tif ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 45) {\n
+\t\t\t\tif (self.typing) {\n
+\t\t\t\t\taddNonTypingUndoLevel(e);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// If key isn\'t Ctrl+Alt/AltGr\n
+\t\t\tvar modKey = (e.ctrlKey && !e.altKey) || e.metaKey;\n
+\t\t\tif ((keyCode < 16 || keyCode > 20) && keyCode != 224 && keyCode != 91 && !self.typing && !modKey) {\n
+\t\t\t\tself.beforeChange();\n
+\t\t\t\tself.typing = true;\n
+\t\t\t\tself.add({}, e);\n
+\t\t\t\tisFirstTypedCharacter = true;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.on(\'MouseDown\', function(e) {\n
+\t\t\tif (self.typing) {\n
+\t\t\t\taddNonTypingUndoLevel(e);\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Add keyboard shortcuts for undo/redo keys\n
+\t\teditor.addShortcut(\'meta+z\', \'\', \'Undo\');\n
+\t\teditor.addShortcut(\'meta+y,meta+shift+z\', \'\', \'Redo\');\n
+\n
+\t\teditor.on(\'AddUndo Undo Redo ClearUndos\', function(e) {\n
+\t\t\tif (!e.isDefaultPrevented()) {\n
+\t\t\t\teditor.nodeChanged();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t/*eslint consistent-this:0 */\n
+\t\tself = {\n
+\t\t\t// Explose for debugging reasons\n
+\t\t\tdata: data,\n
+\n
+\t\t\t/**\n
+\t\t\t * State if the user is currently typing or not. This will add a typing operation into one undo\n
+\t\t\t * level instead of one new level for each keystroke.\n
+\t\t\t *\n
+\t\t\t * @field {Boolean} typing\n
+\t\t\t */\n
+\t\t\ttyping: false,\n
+\n
+\t\t\t/**\n
+\t\t\t * Stores away a bookmark to be used when performing an undo action so that the selection is before\n
+\t\t\t * the change has been made.\n
+\t\t\t *\n
+\t\t\t * @method beforeChange\n
+\t\t\t */\n
+\t\t\tbeforeChange: function() {\n
+\t\t\t\tif (!locks) {\n
+\t\t\t\t\tbeforeBookmark = editor.selection.getBookmark(2, true);\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Adds a new undo level/snapshot to the undo list.\n
+\t\t\t *\n
+\t\t\t * @method add\n
+\t\t\t * @param {Object} level Optional undo level object to add.\n
+\t\t\t * @param {DOMEvent} Event Optional event responsible for the creation of the undo level.\n
+\t\t\t * @return {Object} Undo level that got added or null it a level wasn\'t needed.\n
+\t\t\t */\n
+\t\t\tadd: function(level, event) {\n
+\t\t\t\tvar i, settings = editor.settings, lastLevel;\n
+\n
+\t\t\t\tlevel = level || {};\n
+\t\t\t\tlevel.content = getContent();\n
+\n
+\t\t\t\tif (locks || editor.removed) {\n
+\t\t\t\t\treturn null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tlastLevel = data[index];\n
+\t\t\t\tif (editor.fire(\'BeforeAddUndo\', {level: level, lastLevel: lastLevel, originalEvent: event}).isDefaultPrevented()) {\n
+\t\t\t\t\treturn null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Add undo level if needed\n
+\t\t\t\tif (lastLevel && lastLevel.content == level.content) {\n
+\t\t\t\t\treturn null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Set before bookmark on previous level\n
+\t\t\t\tif (data[index]) {\n
+\t\t\t\t\tdata[index].beforeBookmark = beforeBookmark;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Time to compress\n
+\t\t\t\tif (settings.custom_undo_redo_levels) {\n
+\t\t\t\t\tif (data.length > settings.custom_undo_redo_levels) {\n
+\t\t\t\t\t\tfor (i = 0; i < data.length - 1; i++) {\n
+\t\t\t\t\t\t\tdata[i] = data[i + 1];\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tdata.length--;\n
+\t\t\t\t\t\tindex = data.length;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Get a non intrusive normalized bookmark\n
+\t\t\t\tlevel.bookmark = editor.selection.getBookmark(2, true);\n
+\n
+\t\t\t\t// Crop array if needed\n
+\t\t\t\tif (index < data.length - 1) {\n
+\t\t\t\t\tdata.length = index + 1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdata.push(level);\n
+\t\t\t\tindex = data.length - 1;\n
+\n
+\t\t\t\tvar args = {level: level, lastLevel: lastLevel, originalEvent: event};\n
+\n
+\t\t\t\teditor.fire(\'AddUndo\', args);\n
+\n
+\t\t\t\tif (index > 0) {\n
+\t\t\t\t\tsetDirty(true);\n
+\t\t\t\t\teditor.fire(\'change\', args);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn level;\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Undoes the last action.\n
+\t\t\t *\n
+\t\t\t * @method undo\n
+\t\t\t * @return {Object} Undo level or null if no undo was performed.\n
+\t\t\t */\n
+\t\t\tundo: function() {\n
+\t\t\t\tvar level;\n
+\n
+\t\t\t\tif (self.typing) {\n
+\t\t\t\t\tself.add();\n
+\t\t\t\t\tself.typing = false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (index > 0) {\n
+\t\t\t\t\tlevel = data[--index];\n
+\n
+\t\t\t\t\t// Undo to first index then set dirty state to false\n
+\t\t\t\t\tif (index === 0) {\n
+\t\t\t\t\t\tsetDirty(false);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teditor.setContent(level.content, {format: \'raw\'});\n
+\t\t\t\t\teditor.selection.moveToBookmark(level.beforeBookmark);\n
+\n
+\t\t\t\t\teditor.fire(\'undo\', {level: level});\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn level;\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Redoes the last action.\n
+\t\t\t *\n
+\t\t\t * @method redo\n
+\t\t\t * @return {Object} Redo level or null if no redo was performed.\n
+\t\t\t */\n
+\t\t\tredo: function() {\n
+\t\t\t\tvar level;\n
+\n
+\t\t\t\tif (index < data.length - 1) {\n
+\t\t\t\t\tlevel = data[++index];\n
+\n
+\t\t\t\t\teditor.setContent(level.content, {format: \'raw\'});\n
+\t\t\t\t\teditor.selection.moveToBookmark(level.bookmark);\n
+\t\t\t\t\tsetDirty(true);\n
+\n
+\t\t\t\t\teditor.fire(\'redo\', {level: level});\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn level;\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Removes all undo levels.\n
+\t\t\t *\n
+\t\t\t * @method clear\n
+\t\t\t */\n
+\t\t\tclear: function() {\n
+\t\t\t\tdata = [];\n
+\t\t\t\tindex = 0;\n
+\t\t\t\tself.typing = false;\n
+\t\t\t\teditor.fire(\'ClearUndos\');\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Returns true/false if the undo manager has any undo levels.\n
+\t\t\t *\n
+\t\t\t * @method hasUndo\n
+\t\t\t * @return {Boolean} true/false if the undo manager has any undo levels.\n
+\t\t\t */\n
+\t\t\thasUndo: function() {\n
+\t\t\t\t// Has undo levels or typing and content isn\'t the same as the initial level\n
+\t\t\t\treturn index > 0 || (self.typing && data[0] && getContent() != data[0].content);\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Returns true/false if the undo manager has any redo levels.\n
+\t\t\t *\n
+\t\t\t * @method hasRedo\n
+\t\t\t * @return {Boolean} true/false if the undo manager has any redo levels.\n
+\t\t\t */\n
+\t\t\thasRedo: function() {\n
+\t\t\t\treturn index < data.length - 1 && !this.typing;\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Executes the specified function in an undo transation. The selection\n
+\t\t\t * before the modification will be stored to the undo stack and if the DOM changes\n
+\t\t\t * it will add a new undo level. Any methods within the transation that adds undo levels will\n
+\t\t\t * be ignored. So a transation can include calls to execCommand or editor.insertContent.\n
+\t\t\t *\n
+\t\t\t * @method transact\n
+\t\t\t * @param {function} callback Function to execute dom manipulation logic in.\n
+\t\t\t */\n
+\t\t\ttransact: function(callback) {\n
+\t\t\t\tself.beforeChange();\n
+\n
+\t\t\t\ttry {\n
+\t\t\t\t\tlocks++;\n
+\t\t\t\t\tcallback();\n
+\t\t\t\t} finally {\n
+\t\t\t\t\tlocks--;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.add();\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\treturn self;\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10124</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>UndoManager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

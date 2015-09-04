@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268563.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'pagebreak\', function(editor) {\n
+\tvar pageBreakClass = \'mce-pagebreak\', separatorHtml = editor.getParam(\'pagebreak_separator\', \'<!-- pagebreak -->\');\n
+\n
+\tvar pageBreakSeparatorRegExp = new RegExp(separatorHtml.replace(/[\\?\\.\\*\\[\\]\\(\\)\\{\\}\\+\\^\\$\\:]/g, function(a) {\n
+\t\treturn \'\\\\\' + a;\n
+\t}), \'gi\');\n
+\n
+\tvar pageBreakPlaceHolderHtml = \'<img src="\' + tinymce.Env.transparentSrc + \'" class="\' +\n
+\t\tpageBreakClass + \'" data-mce-resize="false" />\';\n
+\n
+\t// Register commands\n
+\teditor.addCommand(\'mcePageBreak\', function() {\n
+\t\tif (editor.settings.pagebreak_split_block) {\n
+\t\t\teditor.insertContent(\'<p>\' + pageBreakPlaceHolderHtml + \'</p>\');\n
+\t\t} else {\n
+\t\t\teditor.insertContent(pageBreakPlaceHolderHtml);\n
+\t\t}\n
+\t});\n
+\n
+\t// Register buttons\n
+\teditor.addButton(\'pagebreak\', {\n
+\t\ttitle: \'Page break\',\n
+\t\tcmd: \'mcePageBreak\'\n
+\t});\n
+\n
+\teditor.addMenuItem(\'pagebreak\', {\n
+\t\ttext: \'Page break\',\n
+\t\ticon: \'pagebreak\',\n
+\t\tcmd: \'mcePageBreak\',\n
+\t\tcontext: \'insert\'\n
+\t});\n
+\n
+\teditor.on(\'ResolveName\', function(e) {\n
+\t\tif (e.target.nodeName == \'IMG\' && editor.dom.hasClass(e.target, pageBreakClass)) {\n
+\t\t\te.name = \'pagebreak\';\n
+\t\t}\n
+\t});\n
+\n
+\teditor.on(\'click\', function(e) {\n
+\t\te = e.target;\n
+\n
+\t\tif (e.nodeName === \'IMG\' && editor.dom.hasClass(e, pageBreakClass)) {\n
+\t\t\teditor.selection.select(e);\n
+\t\t}\n
+\t});\n
+\n
+\teditor.on(\'BeforeSetContent\', function(e) {\n
+\t\te.content = e.content.replace(pageBreakSeparatorRegExp, pageBreakPlaceHolderHtml);\n
+\t});\n
+\n
+\teditor.on(\'PreInit\', function() {\n
+\t\teditor.serializer.addNodeFilter(\'img\', function(nodes) {\n
+\t\t\tvar i = nodes.length, node, className;\n
+\n
+\t\t\twhile (i--) {\n
+\t\t\t\tnode = nodes[i];\n
+\t\t\t\tclassName = node.attr(\'class\');\n
+\t\t\t\tif (className && className.indexOf(\'mce-pagebreak\') !== -1) {\n
+\t\t\t\t\t// Replace parent block node if pagebreak_split_block is enabled\n
+\t\t\t\t\tvar parentNode = node.parent;\n
+\t\t\t\t\tif (editor.schema.getBlockElements()[parentNode.name] && editor.settings.pagebreak_split_block) {\n
+\t\t\t\t\t\tparentNode.type = 3;\n
+\t\t\t\t\t\tparentNode.value = separatorHtml;\n
+\t\t\t\t\t\tparentNode.raw = true;\n
+\t\t\t\t\t\tnode.remove();\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode.type = 3;\n
+\t\t\t\t\tnode.value = separatorHtml;\n
+\t\t\t\t\tnode.raw = true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2378</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

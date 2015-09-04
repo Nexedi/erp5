@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268295.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Promise.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Promise.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * Promise polyfill under MIT license: https://github.com/taylorhakes/promise-polyfill\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/* eslint-disable */\n
+/* jshint ignore:start */\n
+\n
+/**\n
+ * Modifed to be a feature fill and wrapped as tinymce module.\n
+ */\n
+define("tinymce/util/Promise", [], function() {\n
+\tif (window.Promise) {\n
+\t\treturn window.Promise;\n
+\t}\n
+\n
+\t// Use polyfill for setImmediate for performance gains\n
+\tvar asap = Promise.immediateFn || (typeof setImmediate === \'function\' && setImmediate) ||\n
+\t\tfunction(fn) { setTimeout(fn, 1); };\n
+\n
+\t// Polyfill for Function.prototype.bind\n
+\tfunction bind(fn, thisArg) {\n
+\t\treturn function() {\n
+\t\t\tfn.apply(thisArg, arguments);\n
+\t\t};\n
+\t}\n
+\n
+\tvar isArray = Array.isArray || function(value) { return Object.prototype.toString.call(value) === "[object Array]"; };\n
+\n
+\tfunction Promise(fn) {\n
+\t\tif (typeof this !== \'object\') throw new TypeError(\'Promises must be constructed via new\');\n
+\t\tif (typeof fn !== \'function\') throw new TypeError(\'not a function\');\n
+\t\tthis._state = null;\n
+\t\tthis._value = null;\n
+\t\tthis._deferreds = [];\n
+\n
+\t\tdoResolve(fn, bind(resolve, this), bind(reject, this));\n
+\t}\n
+\n
+\tfunction handle(deferred) {\n
+\t\tvar me = this;\n
+\t\tif (this._state === null) {\n
+\t\t\tthis._deferreds.push(deferred);\n
+\t\t\treturn;\n
+\t\t}\n
+\t\tasap(function() {\n
+\t\t\tvar cb = me._state ? deferred.onFulfilled : deferred.onRejected;\n
+\t\t\tif (cb === null) {\n
+\t\t\t\t(me._state ? deferred.resolve : deferred.reject)(me._value);\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t\tvar ret;\n
+\t\t\ttry {\n
+\t\t\t\tret = cb(me._value);\n
+\t\t\t}\n
+\t\t\tcatch (e) {\n
+\t\t\t\tdeferred.reject(e);\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t\tdeferred.resolve(ret);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction resolve(newValue) {\n
+\t\ttry { //Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure\n
+\t\t\tif (newValue === this) throw new TypeError(\'A promise cannot be resolved with itself.\');\n
+\t\t\tif (newValue && (typeof newValue === \'object\' || typeof newValue === \'function\')) {\n
+\t\t\t\tvar then = newValue.then;\n
+\t\t\t\tif (typeof then === \'function\') {\n
+\t\t\t\t\tdoResolve(bind(then, newValue), bind(resolve, this), bind(reject, this));\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\tthis._state = true;\n
+\t\t\tthis._value = newValue;\n
+\t\t\tfinale.call(this);\n
+\t\t} catch (e) { reject.call(this, e); }\n
+\t}\n
+\n
+\tfunction reject(newValue) {\n
+\t\tthis._state = false;\n
+\t\tthis._value = newValue;\n
+\t\tfinale.call(this);\n
+\t}\n
+\n
+\tfunction finale() {\n
+\t\tfor (var i = 0, len = this._deferreds.length; i < len; i++) {\n
+\t\t\thandle.call(this, this._deferreds[i]);\n
+\t\t}\n
+\t\tthis._deferreds = null;\n
+\t}\n
+\n
+\tfunction Handler(onFulfilled, onRejected, resolve, reject){\n
+\t\tthis.onFulfilled = typeof onFulfilled === \'function\' ? onFulfilled : null;\n
+\t\tthis.onRejected = typeof onRejected === \'function\' ? onRejected : null;\n
+\t\tthis.resolve = resolve;\n
+\t\tthis.reject = reject;\n
+\t}\n
+\n
+\t/**\n
+\t * Take a potentially misbehaving resolver function and make sure\n
+\t * onFulfilled and onRejected are only called once.\n
+\t *\n
+\t * Makes no guarantees about asynchrony.\n
+\t */\n
+\tfunction doResolve(fn, onFulfilled, onRejected) {\n
+\t\tvar done = false;\n
+\t\ttry {\n
+\t\t\tfn(function (value) {\n
+\t\t\t\tif (done) return;\n
+\t\t\t\tdone = true;\n
+\t\t\t\tonFulfilled(value);\n
+\t\t\t}, function (reason) {\n
+\t\t\t\tif (done) return;\n
+\t\t\t\tdone = true;\n
+\t\t\t\tonRejected(reason);\n
+\t\t\t});\n
+\t\t} catch (ex) {\n
+\t\t\tif (done) return;\n
+\t\t\tdone = true;\n
+\t\t\tonRejected(ex);\n
+\t\t}\n
+\t}\n
+\n
+\tPromise.prototype[\'catch\'] = function (onRejected) {\n
+\t\treturn this.then(null, onRejected);\n
+\t};\n
+\n
+\tPromise.prototype.then = function(onFulfilled, onRejected) {\n
+\t\tvar me = this;\n
+\t\treturn new Promise(function(resolve, reject) {\n
+\t\t\thandle.call(me, new Handler(onFulfilled, onRejected, resolve, reject));\n
+\t\t});\n
+\t};\n
+\n
+\tPromise.all = function () {\n
+\t\tvar args = Array.prototype.slice.call(arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments);\n
+\n
+\t\treturn new Promise(function (resolve, reject) {\n
+\t\t\tif (args.length === 0) return resolve([]);\n
+\t\t\tvar remaining = args.length;\n
+\t\t\tfunction res(i, val) {\n
+\t\t\t\ttry {\n
+\t\t\t\t\tif (val && (typeof val === \'object\' || typeof val === \'function\')) {\n
+\t\t\t\t\t\tvar then = val.then;\n
+\t\t\t\t\t\tif (typeof then === \'function\') {\n
+\t\t\t\t\t\t\tthen.call(val, function (val) { res(i, val); }, reject);\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t\targs[i] = val;\n
+\t\t\t\t\tif (--remaining === 0) {\n
+\t\t\t\t\t\tresolve(args);\n
+\t\t\t\t\t}\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\treject(ex);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\tfor (var i = 0; i < args.length; i++) {\n
+\t\t\t\tres(i, args[i]);\n
+\t\t\t}\n
+\t\t});\n
+\t};\n
+\n
+\tPromise.resolve = function (value) {\n
+\t\tif (value && typeof value === \'object\' && value.constructor === Promise) {\n
+\t\t\treturn value;\n
+\t\t}\n
+\n
+\t\treturn new Promise(function (resolve) {\n
+\t\t\tresolve(value);\n
+\t\t});\n
+\t};\n
+\n
+\tPromise.reject = function (value) {\n
+\t\treturn new Promise(function (resolve, reject) {\n
+\t\t\treject(value);\n
+\t\t});\n
+\t};\n
+\n
+\tPromise.race = function (values) {\n
+\t\treturn new Promise(function (resolve, reject) {\n
+\t\t\tfor(var i = 0, len = values.length; i < len; i++) {\n
+\t\t\t\tvalues[i].then(resolve, reject);\n
+\t\t\t}\n
+\t\t});\n
+\t};\n
+\n
+\treturn Promise;\n
+});\n
+\n
+/* jshint ignore:end */\n
+/* eslint-enable */
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5061</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Promise.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

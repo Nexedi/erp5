@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268248.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>.eslintrc</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\n
+\t"env": {\n
+\t\t"browser": true,\n
+\t\t"amd": true\n
+\t},\n
+\n
+\t"globals": {\n
+\t\t"escape": true,\n
+\t\t"unescape": true\n
+\t},\n
+\n
+\t"rules": {\n
+\t\t"quotes": 0,\n
+\t\t"camelcase": 0,\n
+\t\t"strict": 0,\n
+\t\t"eqeqeq": 0,\n
+\t\t"no-underscore-dangle": 0,\n
+\t\t"consistent-return": 0,\n
+\t\t"no-shadow": 0,\n
+\t\t"no-use-before-define": 0,\n
+\t\t"brace-style": [2, "1tbs"],\n
+\t\t"func-style": [2, "declaration"],\n
+\t\t"guard-for-in": 0,\n
+\t\t"no-floating-decimal": 2,\n
+\t\t"no-nested-ternary": 2,\n
+\t\t"radix": 2,\n
+\t\t"wrap-iife": [2, "inside"],\n
+\t\t"consistent-this": [2, "self"],\n
+\t\t"no-bitwise": 2,\n
+\t\t"max-params": [2, 50],\n
+\t\t"max-depth": [1, 8],\n
+\t\t"max-statements": [2, 150],\n
+\t\t"max-len": [1, 140, 4],\n
+\t\t"eol-last": 0,\n
+\t\t"quotes": 0,\n
+\t\t"no-trailing-spaces": 2,\n
+\t\t"comma-spacing": [2, {"before": false, "after": true}],\n
+\t\t"space-in-parens": [2, "never"],\n
+\t\t"space-infix-ops": [2, {"int32Hint": false}],\n
+\t\t"space-after-keywords": 2,\n
+\t\t"space-unary-ops": [1, { "words": true, "nonwords": false }],\n
+\t\t"space-return-throw-case": 2,\n
+\t\t"space-before-blocks": [2, "always"],\n
+\t\t"space-before-function-paren": [2, {"anonymous": "never", "named": "never"}],\n
+\t\t"no-multiple-empty-lines": [1, {max: 2}],\n
+\t\t"object-curly-spacing": [2, "never"],\n
+\t\t"operator-linebreak": [2, "after"],\n
+\t\t"semi": [2, "always"],\n
+\t\t"indent": 0,\n
+\t\t"curly": [2, "all"],\n
+\t\t"dot-notation": [2, {"allowKeywords": false}],\n
+\t\t"no-else-return": 2,\n
+\t\t"no-eval": 2,\n
+\t\t"no-implied-eval": 2,\n
+\t\t"no-loop-func": 2,\n
+\t\t"no-multi-str": 2,\n
+\t\t"no-multi-spaces": 2,\n
+\t\t"no-sequences": 2,\n
+\t\t"radix": 2,\n
+\t\t"no-new": 2,\n
+\t\t"no-caller": 2\n
+\t},\n
+\n
+\t"extends": "eslint:recommended"\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1540</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>.eslintrc</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

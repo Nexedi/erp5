@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268467.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'insertdatetime\', function(editor) {\n
+\tvar daysShort = "Sun Mon Tue Wed Thu Fri Sat Sun".split(\' \');\n
+\tvar daysLong = "Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday".split(\' \');\n
+\tvar monthsShort = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(\' \');\n
+\tvar monthsLong = "January February March April May June July August September October November December".split(\' \');\n
+\tvar menuItems = [], lastFormat, defaultButtonTimeFormat;\n
+\n
+\tfunction getDateTime(fmt, date) {\n
+\t\tfunction addZeros(value, len) {\n
+\t\t\tvalue = "" + value;\n
+\n
+\t\t\tif (value.length < len) {\n
+\t\t\t\tfor (var i = 0; i < (len - value.length); i++) {\n
+\t\t\t\t\tvalue = "0" + value;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn value;\n
+\t\t}\n
+\n
+\t\tdate = date || new Date();\n
+\n
+\t\tfmt = fmt.replace("%D", "%m/%d/%Y");\n
+\t\tfmt = fmt.replace("%r", "%I:%M:%S %p");\n
+\t\tfmt = fmt.replace("%Y", "" + date.getFullYear());\n
+\t\tfmt = fmt.replace("%y", "" + date.getYear());\n
+\t\tfmt = fmt.replace("%m", addZeros(date.getMonth() + 1, 2));\n
+\t\tfmt = fmt.replace("%d", addZeros(date.getDate(), 2));\n
+\t\tfmt = fmt.replace("%H", "" + addZeros(date.getHours(), 2));\n
+\t\tfmt = fmt.replace("%M", "" + addZeros(date.getMinutes(), 2));\n
+\t\tfmt = fmt.replace("%S", "" + addZeros(date.getSeconds(), 2));\n
+\t\tfmt = fmt.replace("%I", "" + ((date.getHours() + 11) % 12 + 1));\n
+\t\tfmt = fmt.replace("%p", "" + (date.getHours() < 12 ? "AM" : "PM"));\n
+\t\tfmt = fmt.replace("%B", "" + editor.translate(monthsLong[date.getMonth()]));\n
+\t\tfmt = fmt.replace("%b", "" + editor.translate(monthsShort[date.getMonth()]));\n
+\t\tfmt = fmt.replace("%A", "" + editor.translate(daysLong[date.getDay()]));\n
+\t\tfmt = fmt.replace("%a", "" + editor.translate(daysShort[date.getDay()]));\n
+\t\tfmt = fmt.replace("%%", "%");\n
+\n
+\t\treturn fmt;\n
+\t}\n
+\n
+\tfunction insertDateTime(format) {\n
+\t\tvar html = getDateTime(format);\n
+\n
+\t\tif (editor.settings.insertdatetime_element) {\n
+\t\t\tvar computerTime;\n
+\n
+\t\t\tif (/%[HMSIp]/.test(format)) {\n
+\t\t\t\tcomputerTime = getDateTime("%Y-%m-%dT%H:%M");\n
+\t\t\t} else {\n
+\t\t\t\tcomputerTime = getDateTime("%Y-%m-%d");\n
+\t\t\t}\n
+\n
+\t\t\thtml = \'<time datetime="\' + computerTime + \'">\' + html + \'</time>\';\n
+\n
+\t\t\tvar timeElm = editor.dom.getParent(editor.selection.getStart(), \'time\');\n
+\t\t\tif (timeElm) {\n
+\t\t\t\teditor.dom.setOuterHTML(timeElm, html);\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\teditor.insertContent(html);\n
+\t}\n
+\n
+\teditor.addCommand(\'mceInsertDate\', function() {\n
+\t\tinsertDateTime(editor.getParam("insertdatetime_dateformat", editor.translate("%Y-%m-%d")));\n
+\t});\n
+\n
+\teditor.addCommand(\'mceInsertTime\', function() {\n
+\t\tinsertDateTime(editor.getParam("insertdatetime_timeformat", editor.translate(\'%H:%M:%S\')));\n
+\t});\n
+\n
+\teditor.addButton(\'insertdatetime\', {\n
+\t\ttype: \'splitbutton\',\n
+\t\ttitle: \'Insert date/time\',\n
+\t\tonclick: function() {\n
+\t\t\tinsertDateTime(lastFormat || defaultButtonTimeFormat);\n
+\t\t},\n
+\t\tmenu: menuItems\n
+\t});\n
+\n
+\ttinymce.each(editor.settings.insertdatetime_formats || [\n
+\t\t"%H:%M:%S",\n
+\t\t"%Y-%m-%d",\n
+\t\t"%I:%M:%S %p",\n
+\t\t"%D"\n
+\t], function(fmt) {\n
+\t\tif (!defaultButtonTimeFormat) {\n
+\t\t\tdefaultButtonTimeFormat = fmt;\n
+\t\t}\n
+\n
+\t\tmenuItems.push({\n
+\t\t\ttext: getDateTime(fmt),\n
+\t\t\tonclick: function() {\n
+\t\t\t\tlastFormat = fmt;\n
+\t\t\t\tinsertDateTime(fmt);\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\n
+\teditor.addMenuItem(\'insertdatetime\', {\n
+\t\ticon: \'date\',\n
+\t\ttext: \'Insert date/time\',\n
+\t\tmenu: menuItems,\n
+\t\tcontext: \'insert\'\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3491</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268334.12</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DragHelper.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * DragHelper.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Drag/drop helper class.\n
+ *\n
+ * @example\n
+ * var dragHelper = new tinymce.ui.DragHelper(\'mydiv\', {\n
+ *     start: function(evt) {\n
+ *     },\n
+ *\n
+ *     drag: function(evt) {\n
+ *     },\n
+ *\n
+ *     end: function(evt) {\n
+ *     }\n
+ * });\n
+ *\n
+ * @class tinymce.ui.DragHelper\n
+ */\n
+define("tinymce/ui/DragHelper", [\n
+\t"tinymce/dom/DomQuery"\n
+], function($) {\n
+\t"use strict";\n
+\n
+\tfunction getDocumentSize(doc) {\n
+\t\tvar documentElement, body, scrollWidth, clientWidth;\n
+\t\tvar offsetWidth, scrollHeight, clientHeight, offsetHeight, max = Math.max;\n
+\n
+\t\tdocumentElement = doc.documentElement;\n
+\t\tbody = doc.body;\n
+\n
+\t\tscrollWidth = max(documentElement.scrollWidth, body.scrollWidth);\n
+\t\tclientWidth = max(documentElement.clientWidth, body.clientWidth);\n
+\t\toffsetWidth = max(documentElement.offsetWidth, body.offsetWidth);\n
+\n
+\t\tscrollHeight = max(documentElement.scrollHeight, body.scrollHeight);\n
+\t\tclientHeight = max(documentElement.clientHeight, body.clientHeight);\n
+\t\toffsetHeight = max(documentElement.offsetHeight, body.offsetHeight);\n
+\n
+\t\treturn {\n
+\t\t\twidth: scrollWidth < offsetWidth ? clientWidth : scrollWidth,\n
+\t\t\theight: scrollHeight < offsetHeight ? clientHeight : scrollHeight\n
+\t\t};\n
+\t}\n
+\n
+\tfunction updateWithTouchData(e) {\n
+\t\tvar keys, i;\n
+\n
+\t\tif (e.changedTouches) {\n
+\t\t\tkeys = "screenX screenY pageX pageY clientX clientY".split(\' \');\n
+\t\t\tfor (i = 0; i < keys.length; i++) {\n
+\t\t\t\te[keys[i]] = e.changedTouches[0][keys[i]];\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\treturn function(id, settings) {\n
+\t\tvar $eventOverlay, doc = settings.document || document, downButton, start, stop, drag, startX, startY;\n
+\n
+\t\tsettings = settings || {};\n
+\n
+\t\tfunction getHandleElm() {\n
+\t\t\treturn doc.getElementById(settings.handle || id);\n
+\t\t}\n
+\n
+\t\tstart = function(e) {\n
+\t\t\tvar docSize = getDocumentSize(doc), handleElm, cursor;\n
+\n
+\t\t\tupdateWithTouchData(e);\n
+\n
+\t\t\te.preventDefault();\n
+\t\t\tdownButton = e.button;\n
+\t\t\thandleElm = getHandleElm();\n
+\t\t\tstartX = e.screenX;\n
+\t\t\tstartY = e.screenY;\n
+\n
+\t\t\t// Grab cursor from handle so we can place it on overlay\n
+\t\t\tif (window.getComputedStyle) {\n
+\t\t\t\tcursor = window.getComputedStyle(handleElm, null).getPropertyValue("cursor");\n
+\t\t\t} else {\n
+\t\t\t\tcursor = handleElm.runtimeStyle.cursor;\n
+\t\t\t}\n
+\n
+\t\t\t$eventOverlay = $(\'<div>\').css({\n
+\t\t\t\tposition: "absolute",\n
+\t\t\t\ttop: 0, left: 0,\n
+\t\t\t\twidth: docSize.width,\n
+\t\t\t\theight: docSize.height,\n
+\t\t\t\tzIndex: 0x7FFFFFFF,\n
+\t\t\t\topacity: 0.0001,\n
+\t\t\t\tcursor: cursor\n
+\t\t\t}).appendTo(doc.body);\n
+\n
+\t\t\t$(doc).on(\'mousemove touchmove\', drag).on(\'mouseup touchend\', stop);\n
+\n
+\t\t\tsettings.start(e);\n
+\t\t};\n
+\n
+\t\tdrag = function(e) {\n
+\t\t\tupdateWithTouchData(e);\n
+\n
+\t\t\tif (e.button !== downButton) {\n
+\t\t\t\treturn stop(e);\n
+\t\t\t}\n
+\n
+\t\t\te.deltaX = e.screenX - startX;\n
+\t\t\te.deltaY = e.screenY - startY;\n
+\n
+\t\t\te.preventDefault();\n
+\t\t\tsettings.drag(e);\n
+\t\t};\n
+\n
+\t\tstop = function(e) {\n
+\t\t\tupdateWithTouchData(e);\n
+\n
+\t\t\t$(doc).off(\'mousemove touchmove\', drag).off(\'mouseup touchend\', stop);\n
+\n
+\t\t\t$eventOverlay.remove();\n
+\n
+\t\t\tif (settings.stop) {\n
+\t\t\t\tsettings.stop(e);\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\t/**\n
+\t\t * Destroys the drag/drop helper instance.\n
+\t\t *\n
+\t\t * @method destroy\n
+\t\t */\n
+\t\tthis.destroy = function() {\n
+\t\t\t$(getHandleElm()).off();\n
+\t\t};\n
+\n
+\t\t$(getHandleElm()).on(\'mousedown touchstart\', start);\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3335</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DragHelper.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

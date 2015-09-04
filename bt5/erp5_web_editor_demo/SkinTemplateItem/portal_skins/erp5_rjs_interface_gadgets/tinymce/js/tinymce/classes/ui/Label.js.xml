@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268331.63</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Label.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Label.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class creates a label element. A label is a simple text control\n
+ * that can be bound to other controls.\n
+ *\n
+ * @-x-less Label.less\n
+ * @class tinymce.ui.Label\n
+ * @extends tinymce.ui.Widget\n
+ */\n
+define("tinymce/ui/Label", [\n
+\t"tinymce/ui/Widget",\n
+\t"tinymce/ui/DomUtils"\n
+], function(Widget, DomUtils) {\n
+\t"use strict";\n
+\n
+\treturn Widget.extend({\n
+\t\t/**\n
+\t\t * Constructs a instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @param {Boolean} multiline Multiline label.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tself.classes.add(\'widget\').add(\'label\');\n
+\t\t\tself.canFocus = false;\n
+\n
+\t\t\tif (settings.multiline) {\n
+\t\t\t\tself.classes.add(\'autoscroll\');\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.strong) {\n
+\t\t\t\tself.classes.add(\'strong\');\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Initializes the current controls layout rect.\n
+\t\t * This will be executed by the layout managers to determine the\n
+\t\t * default minWidth/minHeight etc.\n
+\t\t *\n
+\t\t * @method initLayoutRect\n
+\t\t * @return {Object} Layout rect instance.\n
+\t\t */\n
+\t\tinitLayoutRect: function() {\n
+\t\t\tvar self = this, layoutRect = self._super();\n
+\n
+\t\t\tif (self.settings.multiline) {\n
+\t\t\t\tvar size = DomUtils.getSize(self.getEl());\n
+\n
+\t\t\t\t// Check if the text fits within maxW if not then try word wrapping it\n
+\t\t\t\tif (size.width > layoutRect.maxW) {\n
+\t\t\t\t\tlayoutRect.minW = layoutRect.maxW;\n
+\t\t\t\t\tself.classes.add(\'multiline\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.getEl().style.width = layoutRect.minW + \'px\';\n
+\t\t\t\tlayoutRect.startMinH = layoutRect.h = layoutRect.minH = Math.min(layoutRect.maxH, DomUtils.getSize(self.getEl()).height);\n
+\t\t\t}\n
+\n
+\t\t\treturn layoutRect;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Repaints the control after a layout operation.\n
+\t\t *\n
+\t\t * @method repaint\n
+\t\t */\n
+\t\trepaint: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tif (!self.settings.multiline) {\n
+\t\t\t\tself.getEl().style.lineHeight = self.layoutRect().h + \'px\';\n
+\t\t\t}\n
+\n
+\t\t\treturn self._super();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, forId = self.settings.forId;\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<label id="\' + self._id + \'" class="\' + self.classes + \'"\' + (forId ? \' for="\' + forId + \'"\' : \'\') + \'>\' +\n
+\t\t\t\t\tself.encode(self.state.get(\'text\')) +\n
+\t\t\t\t\'</label>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.state.on(\'change:text\', function(e) {\n
+\t\t\t\tself.innerHtml(self.encode(e.value));\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t}\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2733</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Label.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268206.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Window.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>(function() {\n
+\tmodule("tinymce.ui.Window", {\n
+\t\tsetup: function() {\n
+\t\t\tdocument.getElementById(\'view\').innerHTML = \'\';\n
+\t\t},\n
+\n
+\t\tteardown: function() {\n
+\t\t\ttinymce.dom.Event.clean(document.getElementById(\'view\'));\n
+\t\t\ttinymce.DOM.remove(document.getElementById(\'mce-modal-block\'));\n
+\t\t}\n
+\t});\n
+\n
+\tfunction createWindow(settings) {\n
+\t\treturn tinymce.ui.Factory.create(tinymce.extend({\n
+\t\t\ttype: \'window\'\n
+\t\t}, settings)).renderTo(document.getElementById(\'view\')).reflow();\n
+\t}\n
+\n
+\ttest("window x, y, w, h", function() {\n
+\t\tvar win = createWindow({x: 100, y: 120, width: 200, height: 210});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.size(win), [200, 210]);\n
+\t});\n
+\n
+\ttest("no title, no buttonbar, autoResize", function() {\n
+\t\tvar win = createWindow({\n
+\t\t\tx: 100,\n
+\t\t\ty: 120,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.size(win), [22, 22]);\n
+\t\tUtils.nearlyEqualRects(Utils.size(win.find("spacer")[0]), [20, 20]);\n
+\t});\n
+\n
+\ttest("title, no buttonbar, autoResize, title is widest", function() {\n
+\t\tvar win = createWindow({\n
+\t\t\tx: 100,\n
+\t\t\ty: 120,\n
+\t\t\ttitle: "XXXXXXXXXXXXXXXXXXXXXX",\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 1}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.size(win), [326, 61], 60);\n
+\t\tUtils.nearlyEqualRects(Utils.size(win.find("spacer")[0]), [324, 20], 60);\n
+\t});\n
+\n
+\ttest("buttonbar, autoResize, buttonbar is widest", function() {\n
+\t\tvar win = createWindow({\n
+\t\t\tx: 100,\n
+\t\t\ty: 120,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', flex: 1}\n
+\t\t\t],\n
+\t\t\tbuttons: [\n
+\t\t\t\t{type: \'spacer\', classes: \'green\', minWidth: 400}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.size(win), [422, 63]);\n
+\t\tUtils.nearlyEqualRects(Utils.size(win.find("spacer")[0]), [420, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.size(win.statusbar.find("spacer")[0]), [400, 20]);\n
+\t});\n
+\n
+\ttest("buttonbar, title, autoResize, content is widest", function() {\n
+\t\tvar win = createWindow({\n
+\t\t\tx: 100,\n
+\t\t\ty: 120,\n
+\t\t\ttitle: "X",\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'spacer\', classes: \'red\', minWidth: 400}\n
+\t\t\t],\n
+\t\t\tbuttons: [\n
+\t\t\t\t{type: \'spacer\', classes: \'green\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tUtils.nearlyEqualRects(Utils.size(win), [402, 102]);\n
+\t\tUtils.nearlyEqualRects(Utils.size(win.getEl("head")), [400, 39]);\n
+\t\tUtils.nearlyEqualRects(Utils.size(win.find("spacer")[0]), [400, 20]);\n
+\t\tUtils.nearlyEqualRects(Utils.size(win.statusbar.find("spacer")[0]), [20, 20]);\n
+\t});\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2326</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Window.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

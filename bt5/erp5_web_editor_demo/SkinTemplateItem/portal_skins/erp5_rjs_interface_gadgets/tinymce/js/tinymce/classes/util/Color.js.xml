@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268291.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Color.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Color.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class lets you parse/serialize colors and convert rgb/hsb.\n
+ *\n
+ * @class tinymce.util.Color\n
+ * @example\n
+ * var white = new tinymce.util.Color({r: 255, g: 255, b: 255});\n
+ * var red = new tinymce.util.Color(\'#FF0000\');\n
+ *\n
+ * console.log(white.toHex(), red.toHsv());\n
+ */\n
+define("tinymce/util/Color", [], function() {\n
+\tvar min = Math.min, max = Math.max, round = Math.round;\n
+\n
+\t/**\n
+\t * Constructs a new color instance.\n
+\t *\n
+\t * @constructor\n
+\t * @method Color\n
+\t * @param {String} value Optional initial value to parse.\n
+\t */\n
+\tfunction Color(value) {\n
+\t\tvar self = this, r = 0, g = 0, b = 0;\n
+\n
+\t\tfunction rgb2hsv(r, g, b) {\n
+\t\t\tvar h, s, v, d, minRGB, maxRGB;\n
+\n
+\t\t\th = 0;\n
+\t\t\ts = 0;\n
+\t\t\tv = 0;\n
+\t\t\tr = r / 255;\n
+\t\t\tg = g / 255;\n
+\t\t\tb = b / 255;\n
+\n
+\t\t\tminRGB = min(r, min(g, b));\n
+\t\t\tmaxRGB = max(r, max(g, b));\n
+\n
+\t\t\tif (minRGB == maxRGB) {\n
+\t\t\t\tv = minRGB;\n
+\n
+\t\t\t\treturn {\n
+\t\t\t\t\th: 0,\n
+\t\t\t\t\ts: 0,\n
+\t\t\t\t\tv: v * 100\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\t/*eslint no-nested-ternary:0 */\n
+\t\t\td = (r == minRGB) ? g - b : ((b == minRGB) ? r - g : b - r);\n
+\t\t\th = (r == minRGB) ? 3 : ((b == minRGB) ? 1 : 5);\n
+\t\t\th = 60 * (h - d / (maxRGB - minRGB));\n
+\t\t\ts = (maxRGB - minRGB) / maxRGB;\n
+\t\t\tv = maxRGB;\n
+\n
+\t\t\treturn {\n
+\t\t\t\th: round(h),\n
+\t\t\t\ts: round(s * 100),\n
+\t\t\t\tv: round(v * 100)\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction hsvToRgb(hue, saturation, brightness) {\n
+\t\t\tvar side, chroma, x, match;\n
+\n
+\t\t\thue = (parseInt(hue, 10) || 0) % 360;\n
+\t\t\tsaturation = parseInt(saturation, 10) / 100;\n
+\t\t\tbrightness = parseInt(brightness, 10) / 100;\n
+\t\t\tsaturation = max(0, min(saturation, 1));\n
+\t\t\tbrightness = max(0, min(brightness, 1));\n
+\n
+\t\t\tif (saturation === 0) {\n
+\t\t\t\tr = g = b = round(255 * brightness);\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tside = hue / 60;\n
+\t\t\tchroma = brightness * saturation;\n
+\t\t\tx = chroma * (1 - Math.abs(side % 2 - 1));\n
+\t\t\tmatch = brightness - chroma;\n
+\n
+\t\t\tswitch (Math.floor(side)) {\n
+\t\t\t\tcase 0:\n
+\t\t\t\t\tr = chroma;\n
+\t\t\t\t\tg = x;\n
+\t\t\t\t\tb = 0;\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 1:\n
+\t\t\t\t\tr = x;\n
+\t\t\t\t\tg = chroma;\n
+\t\t\t\t\tb = 0;\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 2:\n
+\t\t\t\t\tr = 0;\n
+\t\t\t\t\tg = chroma;\n
+\t\t\t\t\tb = x;\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 3:\n
+\t\t\t\t\tr = 0;\n
+\t\t\t\t\tg = x;\n
+\t\t\t\t\tb = chroma;\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 4:\n
+\t\t\t\t\tr = x;\n
+\t\t\t\t\tg = 0;\n
+\t\t\t\t\tb = chroma;\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tcase 5:\n
+\t\t\t\t\tr = chroma;\n
+\t\t\t\t\tg = 0;\n
+\t\t\t\t\tb = x;\n
+\t\t\t\t\tbreak;\n
+\n
+\t\t\t\tdefault:\n
+\t\t\t\t\tr = g = b = 0;\n
+\t\t\t}\n
+\n
+\t\t\tr = round(255 * (r + match));\n
+\t\t\tg = round(255 * (g + match));\n
+\t\t\tb = round(255 * (b + match));\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns the hex string of the current color. For example: #ff00ff\n
+\t\t *\n
+\t\t * @method toHex\n
+\t\t * @return {String} Hex string of current color.\n
+\t\t */\n
+\t\tfunction toHex() {\n
+\t\t\tfunction hex(val) {\n
+\t\t\t\tval = parseInt(val, 10).toString(16);\n
+\n
+\t\t\t\treturn val.length > 1 ? val : \'0\' + val;\n
+\t\t\t}\n
+\n
+\t\t\treturn \'#\' + hex(r) + hex(g) + hex(b);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns the r, g, b values of the color. Each channel has a range from 0-255.\n
+\t\t *\n
+\t\t * @method toRgb\n
+\t\t * @return {Object} Object with r, g, b fields.\n
+\t\t */\n
+\t\tfunction toRgb() {\n
+\t\t\treturn {\n
+\t\t\t\tr: r,\n
+\t\t\t\tg: g,\n
+\t\t\t\tb: b\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns the h, s, v values of the color. Ranges: h=0-360, s=0-100, v=0-100.\n
+\t\t *\n
+\t\t * @method toHsv\n
+\t\t * @return {Object} Object with h, s, v fields.\n
+\t\t */\n
+\t\tfunction toHsv() {\n
+\t\t\treturn rgb2hsv(r, g, b);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Parses the specified value and populates the color instance.\n
+\t\t *\n
+\t\t * Supported format examples:\n
+\t\t *  * rbg(255,0,0)\n
+\t\t *  * #ff0000\n
+\t\t *  * #fff\n
+\t\t *  * {r: 255, g: 0, b: 0}\n
+\t\t *  * {h: 360, s: 100, v: 100}\n
+\t\t *\n
+\t\t * @method parse\n
+\t\t * @param {Object/String} value Color value to parse.\n
+\t\t * @return {tinymce.util.Color} Current color instance.\n
+\t\t */\n
+\t\tfunction parse(value) {\n
+\t\t\tvar matches;\n
+\n
+\t\t\tif (typeof value == \'object\') {\n
+\t\t\t\tif ("r" in value) {\n
+\t\t\t\t\tr = value.r;\n
+\t\t\t\t\tg = value.g;\n
+\t\t\t\t\tb = value.b;\n
+\t\t\t\t} else if ("v" in value) {\n
+\t\t\t\t\thsvToRgb(value.h, value.s, value.v);\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tif ((matches = /rgb\\s*\\(\\s*([0-9]+)\\s*,\\s*([0-9]+)\\s*,\\s*([0-9]+)[^\\)]*\\)/gi.exec(value))) {\n
+\t\t\t\t\tr = parseInt(matches[1], 10);\n
+\t\t\t\t\tg = parseInt(matches[2], 10);\n
+\t\t\t\t\tb = parseInt(matches[3], 10);\n
+\t\t\t\t} else if ((matches = /#([0-F]{2})([0-F]{2})([0-F]{2})/gi.exec(value))) {\n
+\t\t\t\t\tr = parseInt(matches[1], 16);\n
+\t\t\t\t\tg = parseInt(matches[2], 16);\n
+\t\t\t\t\tb = parseInt(matches[3], 16);\n
+\t\t\t\t} else if ((matches = /#([0-F])([0-F])([0-F])/gi.exec(value))) {\n
+\t\t\t\t\tr = parseInt(matches[1] + matches[1], 16);\n
+\t\t\t\t\tg = parseInt(matches[2] + matches[2], 16);\n
+\t\t\t\t\tb = parseInt(matches[3] + matches[3], 16);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tr = r < 0 ? 0 : (r > 255 ? 255 : r);\n
+\t\t\tg = g < 0 ? 0 : (g > 255 ? 255 : g);\n
+\t\t\tb = b < 0 ? 0 : (b > 255 ? 255 : b);\n
+\n
+\t\t\treturn self;\n
+\t\t}\n
+\n
+\t\tif (value) {\n
+\t\t\tparse(value);\n
+\t\t}\n
+\n
+\t\tself.toRgb = toRgb;\n
+\t\tself.toHsv = toHsv;\n
+\t\tself.toHex = toHex;\n
+\t\tself.parse = parse;\n
+\t}\n
+\n
+\treturn Color;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4871</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Color.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

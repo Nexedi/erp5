@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268686.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ButtonGroup.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// ButtonGroup\n
+\n
+.btn-group-border-left(@border-color) when (@has-button-borders = true) {\n
+\tborder-left: 1px solid @border-color;\n
+}\n
+\n
+.btn-group-border-right(@border-color) when (@has-button-borders = true) {\n
+\tborder-right: 1px solid @border-color;\n
+}\n
+\n
+\n
+.@{prefix}-btn-group .@{prefix}-btn {\n
+\tborder-width: @btn-group-border-width;\n
+\tmargin: 0;\n
+\t.border-radius(0);\n
+\tmargin-left: @flow-layout-spacing;\n
+}\n
+\n
+.@{prefix}-btn-group .@{prefix}-btn when (@has-button-borders = true) {\n
+\tborder-left-width: 0;\n
+\tborder-right-width: 0;\n
+\tmargin-left: 0;\n
+}\n
+\n
+.@{prefix}-btn-group:not(:first-child) when (@has-button-borders = true) {\n
+\tpadding-left: 1px;\n
+\tmargin-left: 1px;\n
+}\n
+\n
+.@{prefix}-btn-group:not(:first-child) when (@has-button-borders = false) {\n
+\tborder-left: 1px solid darken(@btn-bg, 15%);\n
+\tpadding-left: @flow-layout-spacing + 1px;\n
+\tmargin-left: @flow-layout-spacing + 1px;\n
+}\n
+\n
+.@{prefix}-btn-group .@{prefix}-first {\n
+\t.border-radius(3px 0 0 3px);\n
+\t.btn-group-border-left(@btn-border-left);\n
+\tmargin-left: 0;\n
+}\n
+\n
+.@{prefix}-btn-group .@{prefix}-last {\n
+\t.border-radius(0 3px 3px 0);\n
+\t.btn-group-border-right(@btn-border-right);\n
+}\n
+\n
+.@{prefix}-btn-group .@{prefix}-first.@{prefix}-last {\n
+\t.border-radius(3px);\n
+}\n
+\n
+.@{prefix}-btn-group .@{prefix}-btn.@{prefix}-flow-layout-item {\n
+\tmargin: 0;\n
+}\n
+\n
+// RTL\n
+\n
+.@{prefix}-rtl .@{prefix}-btn-group .@{prefix}-btn {\n
+\tmargin-left: 0;\n
+\tmargin-right: @flow-layout-spacing;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-btn-group .@{prefix}-first {\n
+\tmargin-right: 0;\n
+}\n
+\n
+.@{prefix}-rtl .@{prefix}-btn-group:not(:first-child) {\n
+\tborder-left: none;\n
+\tborder-right:1px solid darken(@btn-bg, 15%);\n
+\tpadding-right: @flow-layout-spacing + 2px;\n
+\tmargin-right: @flow-layout-spacing + 2px;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1681</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ButtonGroup.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

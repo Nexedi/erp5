@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268532.61</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ImageSize.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * ImageSize.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Returns the size of images.\n
+ */\n
+define("tinymce/imagetoolsplugin/ImageSize", [], function() {\n
+\tfunction getWidth(image) {\n
+\t\treturn image.naturalWidth || image.width;\n
+\t}\n
+\n
+\tfunction getHeight(image) {\n
+\t\treturn image.naturalHeight || image.height;\n
+\t}\n
+\n
+\treturn {\n
+\t\tgetWidth: getWidth,\n
+\t\tgetHeight: getHeight\n
+\t};\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>536</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ImageSize.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

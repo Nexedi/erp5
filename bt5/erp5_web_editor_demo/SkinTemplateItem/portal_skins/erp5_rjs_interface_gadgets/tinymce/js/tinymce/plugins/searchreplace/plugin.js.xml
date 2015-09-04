@@ -1,0 +1,644 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268419.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*jshint smarttabs:true, undef:true, unused:true, latedef:true, curly:true, bitwise:true */\n
+/*eslint no-labels:0, no-constant-condition: 0 */\n
+/*global tinymce:true */\n
+\n
+(function() {\n
+\t// Based on work developed by: James Padolsey http://james.padolsey.com\n
+\t// released under UNLICENSE that is compatible with LGPL\n
+\t// TODO: Handle contentEditable edgecase:\n
+\t// <p>text<span contentEditable="false">text<span contentEditable="true">text</span>text</span>text</p>\n
+\tfunction findAndReplaceDOMText(regex, node, replacementNode, captureGroup, schema) {\n
+\t\tvar m, matches = [], text, count = 0, doc;\n
+\t\tvar blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;\n
+\n
+\t\tdoc = node.ownerDocument;\n
+\t\tblockElementsMap = schema.getBlockElements(); // H1-H6, P, TD etc\n
+\t\thiddenTextElementsMap = schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT\n
+\t\tshortEndedElementsMap = schema.getShortEndedElements(); // BR, IMG, INPUT\n
+\n
+\t\tfunction getMatchIndexes(m, captureGroup) {\n
+\t\t\tcaptureGroup = captureGroup || 0;\n
+\n
+\t\t\tif (!m[0]) {\n
+\t\t\t\tthrow \'findAndReplaceDOMText cannot handle zero-length matches\';\n
+\t\t\t}\n
+\n
+\t\t\tvar index = m.index;\n
+\n
+\t\t\tif (captureGroup > 0) {\n
+\t\t\t\tvar cg = m[captureGroup];\n
+\n
+\t\t\t\tif (!cg) {\n
+\t\t\t\t\tthrow \'Invalid capture group\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tindex += m[0].indexOf(cg);\n
+\t\t\t\tm[0] = cg;\n
+\t\t\t}\n
+\n
+\t\t\treturn [index, index + m[0].length, [m[0]]];\n
+\t\t}\n
+\n
+\t\tfunction getText(node) {\n
+\t\t\tvar txt;\n
+\n
+\t\t\tif (node.nodeType === 3) {\n
+\t\t\t\treturn node.data;\n
+\t\t\t}\n
+\n
+\t\t\tif (hiddenTextElementsMap[node.nodeName] && !blockElementsMap[node.nodeName]) {\n
+\t\t\t\treturn \'\';\n
+\t\t\t}\n
+\n
+\t\t\ttxt = \'\';\n
+\n
+\t\t\tif (blockElementsMap[node.nodeName] || shortEndedElementsMap[node.nodeName]) {\n
+\t\t\t\ttxt += \'\\n\';\n
+\t\t\t}\n
+\n
+\t\t\tif ((node = node.firstChild)) {\n
+\t\t\t\tdo {\n
+\t\t\t\t\ttxt += getText(node);\n
+\t\t\t\t} while ((node = node.nextSibling));\n
+\t\t\t}\n
+\n
+\t\t\treturn txt;\n
+\t\t}\n
+\n
+\t\tfunction stepThroughMatches(node, matches, replaceFn) {\n
+\t\t\tvar startNode, endNode, startNodeIndex,\n
+\t\t\t\tendNodeIndex, innerNodes = [], atIndex = 0, curNode = node,\n
+\t\t\t\tmatchLocation = matches.shift(), matchIndex = 0;\n
+\n
+\t\t\tout: while (true) {\n
+\t\t\t\tif (blockElementsMap[curNode.nodeName] || shortEndedElementsMap[curNode.nodeName]) {\n
+\t\t\t\t\tatIndex++;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (curNode.nodeType === 3) {\n
+\t\t\t\t\tif (!endNode && curNode.length + atIndex >= matchLocation[1]) {\n
+\t\t\t\t\t\t// We\'ve found the ending\n
+\t\t\t\t\t\tendNode = curNode;\n
+\t\t\t\t\t\tendNodeIndex = matchLocation[1] - atIndex;\n
+\t\t\t\t\t} else if (startNode) {\n
+\t\t\t\t\t\t// Intersecting node\n
+\t\t\t\t\t\tinnerNodes.push(curNode);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!startNode && curNode.length + atIndex > matchLocation[0]) {\n
+\t\t\t\t\t\t// We\'ve found the match start\n
+\t\t\t\t\t\tstartNode = curNode;\n
+\t\t\t\t\t\tstartNodeIndex = matchLocation[0] - atIndex;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tatIndex += curNode.length;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (startNode && endNode) {\n
+\t\t\t\t\tcurNode = replaceFn({\n
+\t\t\t\t\t\tstartNode: startNode,\n
+\t\t\t\t\t\tstartNodeIndex: startNodeIndex,\n
+\t\t\t\t\t\tendNode: endNode,\n
+\t\t\t\t\t\tendNodeIndex: endNodeIndex,\n
+\t\t\t\t\t\tinnerNodes: innerNodes,\n
+\t\t\t\t\t\tmatch: matchLocation[2],\n
+\t\t\t\t\t\tmatchIndex: matchIndex\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// replaceFn has to return the node that replaced the endNode\n
+\t\t\t\t\t// and then we step back so we can continue from the end of the\n
+\t\t\t\t\t// match:\n
+\t\t\t\t\tatIndex -= (endNode.length - endNodeIndex);\n
+\t\t\t\t\tstartNode = null;\n
+\t\t\t\t\tendNode = null;\n
+\t\t\t\t\tinnerNodes = [];\n
+\t\t\t\t\tmatchLocation = matches.shift();\n
+\t\t\t\t\tmatchIndex++;\n
+\n
+\t\t\t\t\tif (!matchLocation) {\n
+\t\t\t\t\t\tbreak; // no more matches\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if ((!hiddenTextElementsMap[curNode.nodeName] || blockElementsMap[curNode.nodeName]) && curNode.firstChild) {\n
+\t\t\t\t\t// Move down\n
+\t\t\t\t\tcurNode = curNode.firstChild;\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t} else if (curNode.nextSibling) {\n
+\t\t\t\t\t// Move forward:\n
+\t\t\t\t\tcurNode = curNode.nextSibling;\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Move forward or up:\n
+\t\t\t\twhile (true) {\n
+\t\t\t\t\tif (curNode.nextSibling) {\n
+\t\t\t\t\t\tcurNode = curNode.nextSibling;\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t} else if (curNode.parentNode !== node) {\n
+\t\t\t\t\t\tcurNode = curNode.parentNode;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tbreak out;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t* Generates the actual replaceFn which splits up text nodes\n
+\t\t* and inserts the replacement element.\n
+\t\t*/\n
+\t\tfunction genReplacer(nodeName) {\n
+\t\t\tvar makeReplacementNode;\n
+\n
+\t\t\tif (typeof nodeName != \'function\') {\n
+\t\t\t\tvar stencilNode = nodeName.nodeType ? nodeName : doc.createElement(nodeName);\n
+\n
+\t\t\t\tmakeReplacementNode = function(fill, matchIndex) {\n
+\t\t\t\t\tvar clone = stencilNode.cloneNode(false);\n
+\n
+\t\t\t\t\tclone.setAttribute(\'data-mce-index\', matchIndex);\n
+\n
+\t\t\t\t\tif (fill) {\n
+\t\t\t\t\t\tclone.appendChild(doc.createTextNode(fill));\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn clone;\n
+\t\t\t\t};\n
+\t\t\t} else {\n
+\t\t\t\tmakeReplacementNode = nodeName;\n
+\t\t\t}\n
+\n
+\t\t\treturn function(range) {\n
+\t\t\t\tvar before, after, parentNode, startNode = range.startNode,\n
+\t\t\t\t\tendNode = range.endNode, matchIndex = range.matchIndex;\n
+\n
+\t\t\t\tif (startNode === endNode) {\n
+\t\t\t\t\tvar node = startNode;\n
+\n
+\t\t\t\t\tparentNode = node.parentNode;\n
+\t\t\t\t\tif (range.startNodeIndex > 0) {\n
+\t\t\t\t\t\t// Add `before` text node (before the match)\n
+\t\t\t\t\t\tbefore = doc.createTextNode(node.data.substring(0, range.startNodeIndex));\n
+\t\t\t\t\t\tparentNode.insertBefore(before, node);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Create the replacement node:\n
+\t\t\t\t\tvar el = makeReplacementNode(range.match[0], matchIndex);\n
+\t\t\t\t\tparentNode.insertBefore(el, node);\n
+\t\t\t\t\tif (range.endNodeIndex < node.length) {\n
+\t\t\t\t\t\t// Add `after` text node (after the match)\n
+\t\t\t\t\t\tafter = doc.createTextNode(node.data.substring(range.endNodeIndex));\n
+\t\t\t\t\t\tparentNode.insertBefore(after, node);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode.parentNode.removeChild(node);\n
+\n
+\t\t\t\t\treturn el;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Replace startNode -> [innerNodes...] -> endNode (in that order)\n
+\t\t\t\tbefore = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));\n
+\t\t\t\tafter = doc.createTextNode(endNode.data.substring(range.endNodeIndex));\n
+\t\t\t\tvar elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);\n
+\t\t\t\tvar innerEls = [];\n
+\n
+\t\t\t\tfor (var i = 0, l = range.innerNodes.length; i < l; ++i) {\n
+\t\t\t\t\tvar innerNode = range.innerNodes[i];\n
+\t\t\t\t\tvar innerEl = makeReplacementNode(innerNode.data, matchIndex);\n
+\t\t\t\t\tinnerNode.parentNode.replaceChild(innerEl, innerNode);\n
+\t\t\t\t\tinnerEls.push(innerEl);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);\n
+\n
+\t\t\t\tparentNode = startNode.parentNode;\n
+\t\t\t\tparentNode.insertBefore(before, startNode);\n
+\t\t\t\tparentNode.insertBefore(elA, startNode);\n
+\t\t\t\tparentNode.removeChild(startNode);\n
+\n
+\t\t\t\tparentNode = endNode.parentNode;\n
+\t\t\t\tparentNode.insertBefore(elB, endNode);\n
+\t\t\t\tparentNode.insertBefore(after, endNode);\n
+\t\t\t\tparentNode.removeChild(endNode);\n
+\n
+\t\t\t\treturn elB;\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\ttext = getText(node);\n
+\t\tif (!text) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tif (regex.global) {\n
+\t\t\twhile ((m = regex.exec(text))) {\n
+\t\t\t\tmatches.push(getMatchIndexes(m, captureGroup));\n
+\t\t\t}\n
+\t\t} else {\n
+\t\t\tm = text.match(regex);\n
+\t\t\tmatches.push(getMatchIndexes(m, captureGroup));\n
+\t\t}\n
+\n
+\t\tif (matches.length) {\n
+\t\t\tcount = matches.length;\n
+\t\t\tstepThroughMatches(node, matches, genReplacer(replacementNode));\n
+\t\t}\n
+\n
+\t\treturn count;\n
+\t}\n
+\n
+\tfunction Plugin(editor) {\n
+\t\tvar self = this, currentIndex = -1;\n
+\n
+\t\tfunction showDialog() {\n
+\t\t\tvar last = {}, selectedText;\n
+\n
+\t\t\tselectedText = tinymce.trim(editor.selection.getContent({format: \'text\'}));\n
+\n
+\t\t\tfunction updateButtonStates() {\n
+\t\t\t\twin.statusbar.find(\'#next\').disabled(!findSpansByIndex(currentIndex + 1).length);\n
+\t\t\t\twin.statusbar.find(\'#prev\').disabled(!findSpansByIndex(currentIndex - 1).length);\n
+\t\t\t}\n
+\n
+\t\t\tfunction notFoundAlert() {\n
+\t\t\t\ttinymce.ui.MessageBox.alert(\'Could not find the specified string.\', function() {\n
+\t\t\t\t\twin.find(\'#find\')[0].focus();\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tvar win = tinymce.ui.Factory.create({\n
+\t\t\t\ttype: \'window\',\n
+\t\t\t\tlayout: "flex",\n
+\t\t\t\tpack: "center",\n
+\t\t\t\talign: "center",\n
+\t\t\t\tonClose: function() {\n
+\t\t\t\t\teditor.focus();\n
+\t\t\t\t\tself.done();\n
+\t\t\t\t},\n
+\t\t\t\tonSubmit: function(e) {\n
+\t\t\t\t\tvar count, caseState, text, wholeWord;\n
+\n
+\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\tcaseState = win.find(\'#case\').checked();\n
+\t\t\t\t\twholeWord = win.find(\'#words\').checked();\n
+\n
+\t\t\t\t\ttext = win.find(\'#find\').value();\n
+\t\t\t\t\tif (!text.length) {\n
+\t\t\t\t\t\tself.done(false);\n
+\t\t\t\t\t\twin.statusbar.items().slice(1).disabled(true);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (last.text == text && last.caseState == caseState && last.wholeWord == wholeWord) {\n
+\t\t\t\t\t\tif (findSpansByIndex(currentIndex + 1).length === 0) {\n
+\t\t\t\t\t\t\tnotFoundAlert();\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tself.next();\n
+\t\t\t\t\t\tupdateButtonStates();\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tcount = self.find(text, caseState, wholeWord);\n
+\t\t\t\t\tif (!count) {\n
+\t\t\t\t\t\tnotFoundAlert();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\twin.statusbar.items().slice(1).disabled(count === 0);\n
+\t\t\t\t\tupdateButtonStates();\n
+\n
+\t\t\t\t\tlast = {\n
+\t\t\t\t\t\ttext: text,\n
+\t\t\t\t\t\tcaseState: caseState,\n
+\t\t\t\t\t\twholeWord: wholeWord\n
+\t\t\t\t\t};\n
+\t\t\t\t},\n
+\t\t\t\tbuttons: [\n
+\t\t\t\t\t{text: "Find", subtype: \'primary\', onclick: function() {\n
+\t\t\t\t\t\twin.submit();\n
+\t\t\t\t\t}},\n
+\t\t\t\t\t{text: "Replace", disabled: true, onclick: function() {\n
+\t\t\t\t\t\tif (!self.replace(win.find(\'#replace\').value())) {\n
+\t\t\t\t\t\t\twin.statusbar.items().slice(1).disabled(true);\n
+\t\t\t\t\t\t\tcurrentIndex = -1;\n
+\t\t\t\t\t\t\tlast = {};\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}},\n
+\t\t\t\t\t{text: "Replace all", disabled: true, onclick: function() {\n
+\t\t\t\t\t\tself.replace(win.find(\'#replace\').value(), true, true);\n
+\t\t\t\t\t\twin.statusbar.items().slice(1).disabled(true);\n
+\t\t\t\t\t\tlast = {};\n
+\t\t\t\t\t}},\n
+\t\t\t\t\t{type: "spacer", flex: 1},\n
+\t\t\t\t\t{text: "Prev", name: \'prev\', disabled: true, onclick: function() {\n
+\t\t\t\t\t\tself.prev();\n
+\t\t\t\t\t\tupdateButtonStates();\n
+\t\t\t\t\t}},\n
+\t\t\t\t\t{text: "Next", name: \'next\', disabled: true, onclick: function() {\n
+\t\t\t\t\t\tself.next();\n
+\t\t\t\t\t\tupdateButtonStates();\n
+\t\t\t\t\t}}\n
+\t\t\t\t],\n
+\t\t\t\ttitle: "Find and replace",\n
+\t\t\t\titems: {\n
+\t\t\t\t\ttype: "form",\n
+\t\t\t\t\tpadding: 20,\n
+\t\t\t\t\tlabelGap: 30,\n
+\t\t\t\t\tspacing: 10,\n
+\t\t\t\t\titems: [\n
+\t\t\t\t\t\t{type: \'textbox\', name: \'find\', size: 40, label: \'Find\', value: selectedText},\n
+\t\t\t\t\t\t{type: \'textbox\', name: \'replace\', size: 40, label: \'Replace with\'},\n
+\t\t\t\t\t\t{type: \'checkbox\', name: \'case\', text: \'Match case\', label: \' \'},\n
+\t\t\t\t\t\t{type: \'checkbox\', name: \'words\', text: \'Whole words\', label: \' \'}\n
+\t\t\t\t\t]\n
+\t\t\t\t}\n
+\t\t\t}).renderTo().reflow();\n
+\t\t}\n
+\n
+\t\tself.init = function(ed) {\n
+\t\t\ted.addMenuItem(\'searchreplace\', {\n
+\t\t\t\ttext: \'Find and replace\',\n
+\t\t\t\tshortcut: \'Meta+F\',\n
+\t\t\t\tonclick: showDialog,\n
+\t\t\t\tseparator: \'before\',\n
+\t\t\t\tcontext: \'edit\'\n
+\t\t\t});\n
+\n
+\t\t\ted.addButton(\'searchreplace\', {\n
+\t\t\t\ttooltip: \'Find and replace\',\n
+\t\t\t\tshortcut: \'Meta+F\',\n
+\t\t\t\tonclick: showDialog\n
+\t\t\t});\n
+\n
+\t\t\ted.addCommand("SearchReplace", showDialog);\n
+\t\t\ted.shortcuts.add(\'Meta+F\', \'\', showDialog);\n
+\t\t};\n
+\n
+\t\tfunction getElmIndex(elm) {\n
+\t\t\tvar value = elm.getAttribute(\'data-mce-index\');\n
+\n
+\t\t\tif (typeof value == "number") {\n
+\t\t\t\treturn "" + value;\n
+\t\t\t}\n
+\n
+\t\t\treturn value;\n
+\t\t}\n
+\n
+\t\tfunction markAllMatches(regex) {\n
+\t\t\tvar node, marker;\n
+\n
+\t\t\tmarker = editor.dom.create(\'span\', {\n
+\t\t\t\t"data-mce-bogus": 1\n
+\t\t\t});\n
+\n
+\t\t\tmarker.className = \'mce-match-marker\'; // IE 7 adds class="mce-match-marker" and class=mce-match-marker\n
+\t\t\tnode = editor.getBody();\n
+\n
+\t\t\tself.done(false);\n
+\n
+\t\t\treturn findAndReplaceDOMText(regex, node, marker, false, editor.schema);\n
+\t\t}\n
+\n
+\t\tfunction unwrap(node) {\n
+\t\t\tvar parentNode = node.parentNode;\n
+\n
+\t\t\tif (node.firstChild) {\n
+\t\t\t\tparentNode.insertBefore(node.firstChild, node);\n
+\t\t\t}\n
+\n
+\t\t\tnode.parentNode.removeChild(node);\n
+\t\t}\n
+\n
+\t\tfunction findSpansByIndex(index) {\n
+\t\t\tvar nodes, spans = [];\n
+\n
+\t\t\tnodes = tinymce.toArray(editor.getBody().getElementsByTagName(\'span\'));\n
+\t\t\tif (nodes.length) {\n
+\t\t\t\tfor (var i = 0; i < nodes.length; i++) {\n
+\t\t\t\t\tvar nodeIndex = getElmIndex(nodes[i]);\n
+\n
+\t\t\t\t\tif (nodeIndex === null || !nodeIndex.length) {\n
+\t\t\t\t\t\tcontinue;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (nodeIndex === index.toString()) {\n
+\t\t\t\t\t\tspans.push(nodes[i]);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn spans;\n
+\t\t}\n
+\n
+\t\tfunction moveSelection(forward) {\n
+\t\t\tvar testIndex = currentIndex, dom = editor.dom;\n
+\n
+\t\t\tforward = forward !== false;\n
+\n
+\t\t\tif (forward) {\n
+\t\t\t\ttestIndex++;\n
+\t\t\t} else {\n
+\t\t\t\ttestIndex--;\n
+\t\t\t}\n
+\n
+\t\t\tdom.removeClass(findSpansByIndex(currentIndex), \'mce-match-marker-selected\');\n
+\n
+\t\t\tvar spans = findSpansByIndex(testIndex);\n
+\t\t\tif (spans.length) {\n
+\t\t\t\tdom.addClass(findSpansByIndex(testIndex), \'mce-match-marker-selected\');\n
+\t\t\t\teditor.selection.scrollIntoView(spans[0]);\n
+\t\t\t\treturn testIndex;\n
+\t\t\t}\n
+\n
+\t\t\treturn -1;\n
+\t\t}\n
+\n
+\t\tfunction removeNode(node) {\n
+\t\t\tvar dom = editor.dom, parent = node.parentNode;\n
+\n
+\t\t\tdom.remove(node);\n
+\n
+\t\t\tif (dom.isEmpty(parent)) {\n
+\t\t\t\tdom.remove(parent);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tself.find = function(text, matchCase, wholeWord) {\n
+\t\t\ttext = text.replace(/[\\-\\[\\]\\/\\{\\}\\(\\)\\*\\+\\?\\.\\\\\\^\\$\\|]/g, "\\\\$&");\n
+\t\t\ttext = wholeWord ? \'\\\\b\' + text + \'\\\\b\' : text;\n
+\n
+\t\t\tvar count = markAllMatches(new RegExp(text, matchCase ? \'g\' : \'gi\'));\n
+\n
+\t\t\tif (count) {\n
+\t\t\t\tcurrentIndex = -1;\n
+\t\t\t\tcurrentIndex = moveSelection(true);\n
+\t\t\t}\n
+\n
+\t\t\treturn count;\n
+\t\t};\n
+\n
+\t\tself.next = function() {\n
+\t\t\tvar index = moveSelection(true);\n
+\n
+\t\t\tif (index !== -1) {\n
+\t\t\t\tcurrentIndex = index;\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tself.prev = function() {\n
+\t\t\tvar index = moveSelection(false);\n
+\n
+\t\t\tif (index !== -1) {\n
+\t\t\t\tcurrentIndex = index;\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tfunction isMatchSpan(node) {\n
+\t\t\tvar matchIndex = getElmIndex(node);\n
+\n
+\t\t\treturn matchIndex !== null && matchIndex.length > 0;\n
+\t\t}\n
+\n
+\t\tself.replace = function(text, forward, all) {\n
+\t\t\tvar i, nodes, node, matchIndex, currentMatchIndex, nextIndex = currentIndex, hasMore;\n
+\n
+\t\t\tforward = forward !== false;\n
+\n
+\t\t\tnode = editor.getBody();\n
+\t\t\tnodes = tinymce.grep(tinymce.toArray(node.getElementsByTagName(\'span\')), isMatchSpan);\n
+\t\t\tfor (i = 0; i < nodes.length; i++) {\n
+\t\t\t\tvar nodeIndex = getElmIndex(nodes[i]);\n
+\n
+\t\t\t\tmatchIndex = currentMatchIndex = parseInt(nodeIndex, 10);\n
+\t\t\t\tif (all || matchIndex === currentIndex) {\n
+\t\t\t\t\tif (text.length) {\n
+\t\t\t\t\t\tnodes[i].firstChild.nodeValue = text;\n
+\t\t\t\t\t\tunwrap(nodes[i]);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tremoveNode(nodes[i]);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\twhile (nodes[++i]) {\n
+\t\t\t\t\t\tmatchIndex = parseInt(getElmIndex(nodes[i]), 10);\n
+\n
+\t\t\t\t\t\tif (matchIndex === currentMatchIndex) {\n
+\t\t\t\t\t\t\tremoveNode(nodes[i]);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\ti--;\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (forward) {\n
+\t\t\t\t\t\tnextIndex--;\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if (currentMatchIndex > currentIndex) {\n
+\t\t\t\t\tnodes[i].setAttribute(\'data-mce-index\', currentMatchIndex - 1);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\teditor.undoManager.add();\n
+\t\t\tcurrentIndex = nextIndex;\n
+\n
+\t\t\tif (forward) {\n
+\t\t\t\thasMore = findSpansByIndex(nextIndex + 1).length > 0;\n
+\t\t\t\tself.next();\n
+\t\t\t} else {\n
+\t\t\t\thasMore = findSpansByIndex(nextIndex - 1).length > 0;\n
+\t\t\t\tself.prev();\n
+\t\t\t}\n
+\n
+\t\t\treturn !all && hasMore;\n
+\t\t};\n
+\n
+\t\tself.done = function(keepEditorSelection) {\n
+\t\t\tvar i, nodes, startContainer, endContainer;\n
+\n
+\t\t\tnodes = tinymce.toArray(editor.getBody().getElementsByTagName(\'span\'));\n
+\t\t\tfor (i = 0; i < nodes.length; i++) {\n
+\t\t\t\tvar nodeIndex = getElmIndex(nodes[i]);\n
+\n
+\t\t\t\tif (nodeIndex !== null && nodeIndex.length) {\n
+\t\t\t\t\tif (nodeIndex === currentIndex.toString()) {\n
+\t\t\t\t\t\tif (!startContainer) {\n
+\t\t\t\t\t\t\tstartContainer = nodes[i].firstChild;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tendContainer = nodes[i].firstChild;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tunwrap(nodes[i]);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (startContainer && endContainer) {\n
+\t\t\t\tvar rng = editor.dom.createRng();\n
+\t\t\t\trng.setStart(startContainer, 0);\n
+\t\t\t\trng.setEnd(endContainer, endContainer.data.length);\n
+\n
+\t\t\t\tif (keepEditorSelection !== false) {\n
+\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn rng;\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+\n
+\ttinymce.PluginManager.add(\'searchreplace\', Plugin);\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>15333</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

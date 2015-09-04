@@ -1,0 +1,1331 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268314.59</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Control.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Control.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*eslint consistent-this:0 */\n
+\n
+/**\n
+ * This is the base class for all controls and containers. All UI control instances inherit\n
+ * from this one as it has the base logic needed by all of them.\n
+ *\n
+ * @class tinymce.ui.Control\n
+ */\n
+define("tinymce/ui/Control", [\n
+\t"tinymce/util/Class",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/util/EventDispatcher",\n
+\t"tinymce/data/ObservableObject",\n
+\t"tinymce/ui/Collection",\n
+\t"tinymce/ui/DomUtils",\n
+\t"tinymce/dom/DomQuery",\n
+\t"tinymce/ui/BoxUtils",\n
+\t"tinymce/ui/ClassList",\n
+\t"tinymce/ui/ReflowQueue"\n
+], function(Class, Tools, EventDispatcher, ObservableObject, Collection, DomUtils, $, BoxUtils, ClassList, ReflowQueue) {\n
+\t"use strict";\n
+\n
+\tvar hasMouseWheelEventSupport = "onmousewheel" in document;\n
+\tvar hasWheelEventSupport = false;\n
+\tvar classPrefix = "mce-";\n
+\tvar Control, idCounter = 0;\n
+\n
+\tvar proto = {\n
+\t\tStatics: {\n
+\t\t\tclassPrefix: classPrefix\n
+\t\t},\n
+\n
+\t\tisRtl: function() {\n
+\t\t\treturn Control.rtl;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Class/id prefix to use for all controls.\n
+\t\t *\n
+\t\t * @final\n
+\t\t * @field {String} classPrefix\n
+\t\t */\n
+\t\tclassPrefix: classPrefix,\n
+\n
+\t\t/**\n
+\t\t * Constructs a new control instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {String} style Style CSS properties to add.\n
+\t\t * @setting {String} border Border box values example: 1 1 1 1\n
+\t\t * @setting {String} padding Padding box values example: 1 1 1 1\n
+\t\t * @setting {String} margin Margin box values example: 1 1 1 1\n
+\t\t * @setting {Number} minWidth Minimal width for the control.\n
+\t\t * @setting {Number} minHeight Minimal height for the control.\n
+\t\t * @setting {String} classes Space separated list of classes to add.\n
+\t\t * @setting {String} role WAI-ARIA role to use for control.\n
+\t\t * @setting {Boolean} hidden Is the control hidden by default.\n
+\t\t * @setting {Boolean} disabled Is the control disabled by default.\n
+\t\t * @setting {String} name Name of the control instance.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this, classes, defaultClasses;\n
+\n
+\t\t\tfunction applyClasses(classes) {\n
+\t\t\t\tvar i;\n
+\n
+\t\t\t\tclasses = classes.split(\' \');\n
+\t\t\t\tfor (i = 0; i < classes.length; i++) {\n
+\t\t\t\t\tself.classes.add(classes[i]);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tself.settings = settings = Tools.extend({}, self.Defaults, settings);\n
+\n
+\t\t\t// Initial states\n
+\t\t\tself._id = settings.id || (\'mceu_\' + (idCounter++));\n
+\t\t\tself._aria = {role: settings.role};\n
+\t\t\tself._elmCache = {};\n
+\t\t\tself.$ = $;\n
+\n
+\t\t\tself.state = new ObservableObject({\n
+\t\t\t\tvisible: true,\n
+\t\t\t\tactive: false,\n
+\t\t\t\tdisabled: false,\n
+\t\t\t\tvalue: \'\'\n
+\t\t\t});\n
+\n
+\t\t\tself.data = new ObservableObject(settings.data);\n
+\n
+\t\t\tself.classes = new ClassList(function() {\n
+\t\t\t\tif (self.state.get(\'rendered\')) {\n
+\t\t\t\t\tself.getEl().className = this.toString();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t\tself.classes.prefix = self.classPrefix;\n
+\n
+\t\t\t// Setup classes\n
+\t\t\tclasses = settings.classes;\n
+\t\t\tif (classes) {\n
+\t\t\t\tif (self.Defaults) {\n
+\t\t\t\t\tdefaultClasses = self.Defaults.classes;\n
+\n
+\t\t\t\t\tif (defaultClasses && classes != defaultClasses) {\n
+\t\t\t\t\t\tapplyClasses(defaultClasses);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tapplyClasses(classes);\n
+\t\t\t}\n
+\n
+\t\t\tTools.each(\'title text name visible disabled active value\'.split(\' \'), function(name) {\n
+\t\t\t\tif (name in settings) {\n
+\t\t\t\t\tself[name](settings[name]);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself.on(\'click\', function() {\n
+\t\t\t\tif (self.disabled()) {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t/**\n
+\t\t\t * Name/value object with settings for the current control.\n
+\t\t\t *\n
+\t\t\t * @field {Object} settings\n
+\t\t\t */\n
+\t\t\tself.settings = settings;\n
+\n
+\t\t\tself.borderBox = BoxUtils.parseBox(settings.border);\n
+\t\t\tself.paddingBox = BoxUtils.parseBox(settings.padding);\n
+\t\t\tself.marginBox = BoxUtils.parseBox(settings.margin);\n
+\n
+\t\t\tif (settings.hidden) {\n
+\t\t\t\tself.hide();\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t// Will generate getter/setter methods for these properties\n
+\t\tProperties: \'parent,name\',\n
+\n
+\t\t/**\n
+\t\t * Returns the root element to render controls into.\n
+\t\t *\n
+\t\t * @method getContainerElm\n
+\t\t * @return {Element} HTML DOM element to render into.\n
+\t\t */\n
+\t\tgetContainerElm: function() {\n
+\t\t\treturn document.body;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a control instance for the current DOM element.\n
+\t\t *\n
+\t\t * @method getParentCtrl\n
+\t\t * @param {Element} elm HTML dom element to get parent control from.\n
+\t\t * @return {tinymce.ui.Control} Control instance or undefined.\n
+\t\t */\n
+\t\tgetParentCtrl: function(elm) {\n
+\t\t\tvar ctrl, lookup = this.getRoot().controlIdLookup;\n
+\n
+\t\t\twhile (elm && lookup) {\n
+\t\t\t\tctrl = lookup[elm.id];\n
+\t\t\t\tif (ctrl) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\telm = elm.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\treturn ctrl;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Initializes the current controls layout rect.\n
+\t\t * This will be executed by the layout managers to determine the\n
+\t\t * default minWidth/minHeight etc.\n
+\t\t *\n
+\t\t * @method initLayoutRect\n
+\t\t * @return {Object} Layout rect instance.\n
+\t\t */\n
+\t\tinitLayoutRect: function() {\n
+\t\t\tvar self = this, settings = self.settings, borderBox, layoutRect;\n
+\t\t\tvar elm = self.getEl(), width, height, minWidth, minHeight, autoResize;\n
+\t\t\tvar startMinWidth, startMinHeight, initialSize;\n
+\n
+\t\t\t// Measure the current element\n
+\t\t\tborderBox = self.borderBox = self.borderBox || BoxUtils.measureBox(elm, \'border\');\n
+\t\t\tself.paddingBox = self.paddingBox || BoxUtils.measureBox(elm, \'padding\');\n
+\t\t\tself.marginBox = self.marginBox || BoxUtils.measureBox(elm, \'margin\');\n
+\t\t\tinitialSize = DomUtils.getSize(elm);\n
+\n
+\t\t\t// Setup minWidth/minHeight and width/height\n
+\t\t\tstartMinWidth = settings.minWidth;\n
+\t\t\tstartMinHeight = settings.minHeight;\n
+\t\t\tminWidth = startMinWidth || initialSize.width;\n
+\t\t\tminHeight = startMinHeight || initialSize.height;\n
+\t\t\twidth = settings.width;\n
+\t\t\theight = settings.height;\n
+\t\t\tautoResize = settings.autoResize;\n
+\t\t\tautoResize = typeof autoResize != "undefined" ? autoResize : !width && !height;\n
+\n
+\t\t\twidth = width || minWidth;\n
+\t\t\theight = height || minHeight;\n
+\n
+\t\t\tvar deltaW = borderBox.left + borderBox.right;\n
+\t\t\tvar deltaH = borderBox.top + borderBox.bottom;\n
+\n
+\t\t\tvar maxW = settings.maxWidth || 0xFFFF;\n
+\t\t\tvar maxH = settings.maxHeight || 0xFFFF;\n
+\n
+\t\t\t// Setup initial layout rect\n
+\t\t\tself._layoutRect = layoutRect = {\n
+\t\t\t\tx: settings.x || 0,\n
+\t\t\t\ty: settings.y || 0,\n
+\t\t\t\tw: width,\n
+\t\t\t\th: height,\n
+\t\t\t\tdeltaW: deltaW,\n
+\t\t\t\tdeltaH: deltaH,\n
+\t\t\t\tcontentW: width - deltaW,\n
+\t\t\t\tcontentH: height - deltaH,\n
+\t\t\t\tinnerW: width - deltaW,\n
+\t\t\t\tinnerH: height - deltaH,\n
+\t\t\t\tstartMinWidth: startMinWidth || 0,\n
+\t\t\t\tstartMinHeight: startMinHeight || 0,\n
+\t\t\t\tminW: Math.min(minWidth, maxW),\n
+\t\t\t\tminH: Math.min(minHeight, maxH),\n
+\t\t\t\tmaxW: maxW,\n
+\t\t\t\tmaxH: maxH,\n
+\t\t\t\tautoResize: autoResize,\n
+\t\t\t\tscrollW: 0\n
+\t\t\t};\n
+\n
+\t\t\tself._lastLayoutRect = {};\n
+\n
+\t\t\treturn layoutRect;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Getter/setter for the current layout rect.\n
+\t\t *\n
+\t\t * @method layoutRect\n
+\t\t * @param {Object} [newRect] Optional new layout rect.\n
+\t\t * @return {tinymce.ui.Control/Object} Current control or rect object.\n
+\t\t */\n
+\t\tlayoutRect: function(newRect) {\n
+\t\t\tvar self = this, curRect = self._layoutRect, lastLayoutRect, size, deltaWidth, deltaHeight, undef, repaintControls;\n
+\n
+\t\t\t// Initialize default layout rect\n
+\t\t\tif (!curRect) {\n
+\t\t\t\tcurRect = self.initLayoutRect();\n
+\t\t\t}\n
+\n
+\t\t\t// Set new rect values\n
+\t\t\tif (newRect) {\n
+\t\t\t\t// Calc deltas between inner and outer sizes\n
+\t\t\t\tdeltaWidth = curRect.deltaW;\n
+\t\t\t\tdeltaHeight = curRect.deltaH;\n
+\n
+\t\t\t\t// Set x position\n
+\t\t\t\tif (newRect.x !== undef) {\n
+\t\t\t\t\tcurRect.x = newRect.x;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Set y position\n
+\t\t\t\tif (newRect.y !== undef) {\n
+\t\t\t\t\tcurRect.y = newRect.y;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Set minW\n
+\t\t\t\tif (newRect.minW !== undef) {\n
+\t\t\t\t\tcurRect.minW = newRect.minW;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Set minH\n
+\t\t\t\tif (newRect.minH !== undef) {\n
+\t\t\t\t\tcurRect.minH = newRect.minH;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Set new width and calculate inner width\n
+\t\t\t\tsize = newRect.w;\n
+\t\t\t\tif (size !== undef) {\n
+\t\t\t\t\tsize = size < curRect.minW ? curRect.minW : size;\n
+\t\t\t\t\tsize = size > curRect.maxW ? curRect.maxW : size;\n
+\t\t\t\t\tcurRect.w = size;\n
+\t\t\t\t\tcurRect.innerW = size - deltaWidth;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Set new height and calculate inner height\n
+\t\t\t\tsize = newRect.h;\n
+\t\t\t\tif (size !== undef) {\n
+\t\t\t\t\tsize = size < curRect.minH ? curRect.minH : size;\n
+\t\t\t\t\tsize = size > curRect.maxH ? curRect.maxH : size;\n
+\t\t\t\t\tcurRect.h = size;\n
+\t\t\t\t\tcurRect.innerH = size - deltaHeight;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Set new inner width and calculate width\n
+\t\t\t\tsize = newRect.innerW;\n
+\t\t\t\tif (size !== undef) {\n
+\t\t\t\t\tsize = size < curRect.minW - deltaWidth ? curRect.minW - deltaWidth : size;\n
+\t\t\t\t\tsize = size > curRect.maxW - deltaWidth ? curRect.maxW - deltaWidth : size;\n
+\t\t\t\t\tcurRect.innerW = size;\n
+\t\t\t\t\tcurRect.w = size + deltaWidth;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Set new height and calculate inner height\n
+\t\t\t\tsize = newRect.innerH;\n
+\t\t\t\tif (size !== undef) {\n
+\t\t\t\t\tsize = size < curRect.minH - deltaHeight ? curRect.minH - deltaHeight : size;\n
+\t\t\t\t\tsize = size > curRect.maxH - deltaHeight ? curRect.maxH - deltaHeight : size;\n
+\t\t\t\t\tcurRect.innerH = size;\n
+\t\t\t\t\tcurRect.h = size + deltaHeight;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Set new contentW\n
+\t\t\t\tif (newRect.contentW !== undef) {\n
+\t\t\t\t\tcurRect.contentW = newRect.contentW;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Set new contentH\n
+\t\t\t\tif (newRect.contentH !== undef) {\n
+\t\t\t\t\tcurRect.contentH = newRect.contentH;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Compare last layout rect with the current one to see if we need to repaint or not\n
+\t\t\t\tlastLayoutRect = self._lastLayoutRect;\n
+\t\t\t\tif (lastLayoutRect.x !== curRect.x || lastLayoutRect.y !== curRect.y ||\n
+\t\t\t\t\tlastLayoutRect.w !== curRect.w || lastLayoutRect.h !== curRect.h) {\n
+\t\t\t\t\trepaintControls = Control.repaintControls;\n
+\n
+\t\t\t\t\tif (repaintControls) {\n
+\t\t\t\t\t\tif (repaintControls.map && !repaintControls.map[self._id]) {\n
+\t\t\t\t\t\t\trepaintControls.push(self);\n
+\t\t\t\t\t\t\trepaintControls.map[self._id] = true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tlastLayoutRect.x = curRect.x;\n
+\t\t\t\t\tlastLayoutRect.y = curRect.y;\n
+\t\t\t\t\tlastLayoutRect.w = curRect.w;\n
+\t\t\t\t\tlastLayoutRect.h = curRect.h;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn self;\n
+\t\t\t}\n
+\n
+\t\t\treturn curRect;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Repaints the control after a layout operation.\n
+\t\t *\n
+\t\t * @method repaint\n
+\t\t */\n
+\t\trepaint: function() {\n
+\t\t\tvar self = this, style, bodyStyle, bodyElm, rect, borderBox;\n
+\t\t\tvar borderW = 0, borderH = 0, lastRepaintRect, round, value;\n
+\n
+\t\t\t// Use Math.round on all values on IE < 9\n
+\t\t\tround = !document.createRange ? Math.round : function(value) {\n
+\t\t\t\treturn value;\n
+\t\t\t};\n
+\n
+\t\t\tstyle = self.getEl().style;\n
+\t\t\trect = self._layoutRect;\n
+\t\t\tlastRepaintRect = self._lastRepaintRect || {};\n
+\n
+\t\t\tborderBox = self.borderBox;\n
+\t\t\tborderW = borderBox.left + borderBox.right;\n
+\t\t\tborderH = borderBox.top + borderBox.bottom;\n
+\n
+\t\t\tif (rect.x !== lastRepaintRect.x) {\n
+\t\t\t\tstyle.left = round(rect.x) + \'px\';\n
+\t\t\t\tlastRepaintRect.x = rect.x;\n
+\t\t\t}\n
+\n
+\t\t\tif (rect.y !== lastRepaintRect.y) {\n
+\t\t\t\tstyle.top = round(rect.y) + \'px\';\n
+\t\t\t\tlastRepaintRect.y = rect.y;\n
+\t\t\t}\n
+\n
+\t\t\tif (rect.w !== lastRepaintRect.w) {\n
+\t\t\t\tvalue = round(rect.w - borderW);\n
+\t\t\t\tstyle.width = (value >= 0 ? value : 0) + \'px\';\n
+\t\t\t\tlastRepaintRect.w = rect.w;\n
+\t\t\t}\n
+\n
+\t\t\tif (rect.h !== lastRepaintRect.h) {\n
+\t\t\t\tvalue = round(rect.h - borderH);\n
+\t\t\t\tstyle.height = (value >= 0 ? value : 0) + \'px\';\n
+\t\t\t\tlastRepaintRect.h = rect.h;\n
+\t\t\t}\n
+\n
+\t\t\t// Update body if needed\n
+\t\t\tif (self._hasBody && rect.innerW !== lastRepaintRect.innerW) {\n
+\t\t\t\tvalue = round(rect.innerW);\n
+\n
+\t\t\t\tbodyElm = self.getEl(\'body\');\n
+\t\t\t\tif (bodyElm) {\n
+\t\t\t\t\tbodyStyle = bodyElm.style;\n
+\t\t\t\t\tbodyStyle.width = (value >= 0 ? value : 0) + \'px\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tlastRepaintRect.innerW = rect.innerW;\n
+\t\t\t}\n
+\n
+\t\t\tif (self._hasBody && rect.innerH !== lastRepaintRect.innerH) {\n
+\t\t\t\tvalue = round(rect.innerH);\n
+\n
+\t\t\t\tbodyElm = bodyElm || self.getEl(\'body\');\n
+\t\t\t\tif (bodyElm) {\n
+\t\t\t\t\tbodyStyle = bodyStyle || bodyElm.style;\n
+\t\t\t\t\tbodyStyle.height = (value >= 0 ? value : 0) + \'px\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tlastRepaintRect.innerH = rect.innerH;\n
+\t\t\t}\n
+\n
+\t\t\tself._lastRepaintRect = lastRepaintRect;\n
+\t\t\tself.fire(\'repaint\', {}, false);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Binds a callback to the specified event. This event can both be\n
+\t\t * native browser events like "click" or custom ones like PostRender.\n
+\t\t *\n
+\t\t * The callback function will be passed a DOM event like object that enables yout do stop propagation.\n
+\t\t *\n
+\t\t * @method on\n
+\t\t * @param {String} name Name of the event to bind. For example "click".\n
+\t\t * @param {String/function} callback Callback function to execute ones the event occurs.\n
+\t\t * @return {tinymce.ui.Control} Current control object.\n
+\t\t */\n
+\t\ton: function(name, callback) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tfunction resolveCallbackName(name) {\n
+\t\t\t\tvar callback, scope;\n
+\n
+\t\t\t\tif (typeof name != \'string\') {\n
+\t\t\t\t\treturn name;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn function(e) {\n
+\t\t\t\t\tif (!callback) {\n
+\t\t\t\t\t\tself.parentsAndSelf().each(function(ctrl) {\n
+\t\t\t\t\t\t\tvar callbacks = ctrl.settings.callbacks;\n
+\n
+\t\t\t\t\t\t\tif (callbacks && (callback = callbacks[name])) {\n
+\t\t\t\t\t\t\t\tscope = ctrl;\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!callback) {\n
+\t\t\t\t\t\te.action = name;\n
+\t\t\t\t\t\tthis.fire(\'execute\', e);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn callback.call(scope, e);\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\tgetEventDispatcher(self).on(name, resolveCallbackName(callback));\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Unbinds the specified event and optionally a specific callback. If you omit the name\n
+\t\t * parameter all event handlers will be removed. If you omit the callback all event handles\n
+\t\t * by the specified name will be removed.\n
+\t\t *\n
+\t\t * @method off\n
+\t\t * @param {String} [name] Name for the event to unbind.\n
+\t\t * @param {function} [callback] Callback function to unbind.\n
+\t\t * @return {mxex.ui.Control} Current control object.\n
+\t\t */\n
+\t\toff: function(name, callback) {\n
+\t\t\tgetEventDispatcher(this).off(name, callback);\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Fires the specified event by name and arguments on the control. This will execute all\n
+\t\t * bound event handlers.\n
+\t\t *\n
+\t\t * @method fire\n
+\t\t * @param {String} name Name of the event to fire.\n
+\t\t * @param {Object} [args] Arguments to pass to the event.\n
+\t\t * @param {Boolean} [bubble] Value to control bubbeling. Defaults to true.\n
+\t\t * @return {Object} Current arguments object.\n
+\t\t */\n
+\t\tfire: function(name, args, bubble) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\targs = args || {};\n
+\n
+\t\t\tif (!args.control) {\n
+\t\t\t\targs.control = self;\n
+\t\t\t}\n
+\n
+\t\t\targs = getEventDispatcher(self).fire(name, args);\n
+\n
+\t\t\t// Bubble event up to parents\n
+\t\t\tif (bubble !== false && self.parent) {\n
+\t\t\t\tvar parent = self.parent();\n
+\t\t\t\twhile (parent && !args.isPropagationStopped()) {\n
+\t\t\t\t\tparent.fire(name, args, false);\n
+\t\t\t\t\tparent = parent.parent();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn args;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified event has any listeners.\n
+\t\t *\n
+\t\t * @method hasEventListeners\n
+\t\t * @param {String} name Name of the event to check for.\n
+\t\t * @return {Boolean} True/false state if the event has listeners.\n
+\t\t */\n
+\t\thasEventListeners: function(name) {\n
+\t\t\treturn getEventDispatcher(this).has(name);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a control collection with all parent controls.\n
+\t\t *\n
+\t\t * @method parents\n
+\t\t * @param {String} selector Optional selector expression to find parents.\n
+\t\t * @return {tinymce.ui.Collection} Collection with all parent controls.\n
+\t\t */\n
+\t\tparents: function(selector) {\n
+\t\t\tvar self = this, ctrl, parents = new Collection();\n
+\n
+\t\t\t// Add each parent to collection\n
+\t\t\tfor (ctrl = self.parent(); ctrl; ctrl = ctrl.parent()) {\n
+\t\t\t\tparents.add(ctrl);\n
+\t\t\t}\n
+\n
+\t\t\t// Filter away everything that doesn\'t match the selector\n
+\t\t\tif (selector) {\n
+\t\t\t\tparents = parents.filter(selector);\n
+\t\t\t}\n
+\n
+\t\t\treturn parents;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the current control and it\'s parents.\n
+\t\t *\n
+\t\t * @method parentsAndSelf\n
+\t\t * @param {String} selector Optional selector expression to find parents.\n
+\t\t * @return {tinymce.ui.Collection} Collection with all parent controls.\n
+\t\t */\n
+\t\tparentsAndSelf: function(selector) {\n
+\t\t\treturn new Collection(this).add(this.parents(selector));\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the control next to the current control.\n
+\t\t *\n
+\t\t * @method next\n
+\t\t * @return {tinymce.ui.Control} Next control instance.\n
+\t\t */\n
+\t\tnext: function() {\n
+\t\t\tvar parentControls = this.parent().items();\n
+\n
+\t\t\treturn parentControls[parentControls.indexOf(this) + 1];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the control previous to the current control.\n
+\t\t *\n
+\t\t * @method prev\n
+\t\t * @return {tinymce.ui.Control} Previous control instance.\n
+\t\t */\n
+\t\tprev: function() {\n
+\t\t\tvar parentControls = this.parent().items();\n
+\n
+\t\t\treturn parentControls[parentControls.indexOf(this) - 1];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the inner HTML of the control element.\n
+\t\t *\n
+\t\t * @method innerHtml\n
+\t\t * @param {String} html Html string to set as inner html.\n
+\t\t * @return {tinymce.ui.Control} Current control object.\n
+\t\t */\n
+\t\tinnerHtml: function(html) {\n
+\t\t\tthis.$el.html(html);\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the control DOM element or sub element.\n
+\t\t *\n
+\t\t * @method getEl\n
+\t\t * @param {String} [suffix] Suffix to get element by.\n
+\t\t * @return {Element} HTML DOM element for the current control or it\'s children.\n
+\t\t */\n
+\t\tgetEl: function(suffix) {\n
+\t\t\tvar id = suffix ? this._id + \'-\' + suffix : this._id;\n
+\n
+\t\t\tif (!this._elmCache[id]) {\n
+\t\t\t\tthis._elmCache[id] = $(\'#\' + id)[0];\n
+\t\t\t}\n
+\n
+\t\t\treturn this._elmCache[id];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the visible state to true.\n
+\t\t *\n
+\t\t * @method show\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tshow: function() {\n
+\t\t\treturn this.visible(true);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the visible state to false.\n
+\t\t *\n
+\t\t * @method hide\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\thide: function() {\n
+\t\t\treturn this.visible(false);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Focuses the current control.\n
+\t\t *\n
+\t\t * @method focus\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tfocus: function() {\n
+\t\t\ttry {\n
+\t\t\t\tthis.getEl().focus();\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// Ignore IE error\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Blurs the current control.\n
+\t\t *\n
+\t\t * @method blur\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tblur: function() {\n
+\t\t\tthis.getEl().blur();\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the specified aria property.\n
+\t\t *\n
+\t\t * @method aria\n
+\t\t * @param {String} name Name of the aria property to set.\n
+\t\t * @param {String} value Value of the aria property.\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\taria: function(name, value) {\n
+\t\t\tvar self = this, elm = self.getEl(self.ariaTarget);\n
+\n
+\t\t\tif (typeof value === "undefined") {\n
+\t\t\t\treturn self._aria[name];\n
+\t\t\t}\n
+\n
+\t\t\tself._aria[name] = value;\n
+\n
+\t\t\tif (self.state.get(\'rendered\')) {\n
+\t\t\t\telm.setAttribute(name == \'role\' ? name : \'aria-\' + name, value);\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Encodes the specified string with HTML entities. It will also\n
+\t\t * translate the string to different languages.\n
+\t\t *\n
+\t\t * @method encode\n
+\t\t * @param {String/Object/Array} text Text to entity encode.\n
+\t\t * @param {Boolean} [translate=true] False if the contents shouldn\'t be translated.\n
+\t\t * @return {String} Encoded and possible traslated string.\n
+\t\t */\n
+\t\tencode: function(text, translate) {\n
+\t\t\tif (translate !== false) {\n
+\t\t\t\ttext = this.translate(text);\n
+\t\t\t}\n
+\n
+\t\t\treturn (text || \'\').replace(/[&<>"]/g, function(match) {\n
+\t\t\t\treturn \'&#\' + match.charCodeAt(0) + \';\';\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the translated string.\n
+\t\t *\n
+\t\t * @method translate\n
+\t\t * @param {String} text Text to translate.\n
+\t\t * @return {String} Translated string or the same as the input.\n
+\t\t */\n
+\t\ttranslate: function(text) {\n
+\t\t\treturn Control.translate ? Control.translate(text) : text;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds items before the current control.\n
+\t\t *\n
+\t\t * @method before\n
+\t\t * @param {Array/tinymce.ui.Collection} items Array of items to prepend before this control.\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tbefore: function(items) {\n
+\t\t\tvar self = this, parent = self.parent();\n
+\n
+\t\t\tif (parent) {\n
+\t\t\t\tparent.insert(items, parent.items().indexOf(self), true);\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds items after the current control.\n
+\t\t *\n
+\t\t * @method after\n
+\t\t * @param {Array/tinymce.ui.Collection} items Array of items to append after this control.\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tafter: function(items) {\n
+\t\t\tvar self = this, parent = self.parent();\n
+\n
+\t\t\tif (parent) {\n
+\t\t\t\tparent.insert(items, parent.items().indexOf(self));\n
+\t\t\t}\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes the current control from DOM and from UI collections.\n
+\t\t *\n
+\t\t * @method remove\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tremove: function() {\n
+\t\t\tvar self = this, elm = self.getEl(), parent = self.parent(), newItems, i;\n
+\n
+\t\t\tif (self.items) {\n
+\t\t\t\tvar controls = self.items().toArray();\n
+\t\t\t\ti = controls.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tcontrols[i].remove();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (parent && parent.items) {\n
+\t\t\t\tnewItems = [];\n
+\n
+\t\t\t\tparent.items().each(function(item) {\n
+\t\t\t\t\tif (item !== self) {\n
+\t\t\t\t\t\tnewItems.push(item);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tparent.items().set(newItems);\n
+\t\t\t\tparent._lastRect = null;\n
+\t\t\t}\n
+\n
+\t\t\tif (self._eventsRoot && self._eventsRoot == self) {\n
+\t\t\t\t$(elm).off();\n
+\t\t\t}\n
+\n
+\t\t\tvar lookup = self.getRoot().controlIdLookup;\n
+\t\t\tif (lookup) {\n
+\t\t\t\tdelete lookup[self._id];\n
+\t\t\t}\n
+\n
+\t\t\tif (elm && elm.parentNode) {\n
+\t\t\t\telm.parentNode.removeChild(elm);\n
+\t\t\t}\n
+\n
+\t\t\tself.state.set(\'rendered\', false);\n
+\t\t\tself.state.destroy();\n
+\n
+\t\t\tself.fire(\'remove\');\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control before the specified element.\n
+\t\t *\n
+\t\t * @method renderBefore\n
+\t\t * @param {Element} elm Element to render before.\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\trenderBefore: function(elm) {\n
+\t\t\t$(elm).before(this.renderHtml());\n
+\t\t\tthis.postRender();\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control to the specified element.\n
+\t\t *\n
+\t\t * @method renderBefore\n
+\t\t * @param {Element} elm Element to render to.\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\trenderTo: function(elm) {\n
+\t\t\t$(elm || this.getContainerElm()).append(this.renderHtml());\n
+\t\t\tthis.postRender();\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\tpreRender: function() {\n
+\t\t},\n
+\n
+\t\trender: function() {\n
+\t\t},\n
+\n
+\t\trenderHtml: function() {\n
+\t\t\treturn \'<div id="\' + this._id + \'" class="\' + this.classes + \'"></div>\';\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Post render method. Called after the control has been rendered to the target.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this, settings = self.settings, elm, box, parent, name, parentEventsRoot;\n
+\n
+\t\t\tself.$el = $(self.getEl());\n
+\t\t\tself.state.set(\'rendered\', true);\n
+\n
+\t\t\t// Bind on<event> settings\n
+\t\t\tfor (name in settings) {\n
+\t\t\t\tif (name.indexOf("on") === 0) {\n
+\t\t\t\t\tself.on(name.substr(2), settings[name]);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (self._eventsRoot) {\n
+\t\t\t\tfor (parent = self.parent(); !parentEventsRoot && parent; parent = parent.parent()) {\n
+\t\t\t\t\tparentEventsRoot = parent._eventsRoot;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (parentEventsRoot) {\n
+\t\t\t\t\tfor (name in parentEventsRoot._nativeEvents) {\n
+\t\t\t\t\t\tself._nativeEvents[name] = true;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tbindPendingEvents(self);\n
+\n
+\t\t\tif (settings.style) {\n
+\t\t\t\telm = self.getEl();\n
+\t\t\t\tif (elm) {\n
+\t\t\t\t\telm.setAttribute(\'style\', settings.style);\n
+\t\t\t\t\telm.style.cssText = settings.style;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (self.settings.border) {\n
+\t\t\t\tbox = self.borderBox;\n
+\t\t\t\tself.$el.css({\n
+\t\t\t\t\t\'border-top-width\': box.top,\n
+\t\t\t\t\t\'border-right-width\': box.right,\n
+\t\t\t\t\t\'border-bottom-width\': box.bottom,\n
+\t\t\t\t\t\'border-left-width\': box.left\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// Add instance to lookup\n
+\t\t\tvar root = self.getRoot();\n
+\t\t\tif (!root.controlIdLookup) {\n
+\t\t\t\troot.controlIdLookup = {};\n
+\t\t\t}\n
+\n
+\t\t\troot.controlIdLookup[self._id] = self;\n
+\n
+\t\t\tfor (var key in self._aria) {\n
+\t\t\t\tself.aria(key, self._aria[key]);\n
+\t\t\t}\n
+\n
+\t\t\tif (self.state.get(\'visible\') === false) {\n
+\t\t\t\tself.getEl().style.display = \'none\';\n
+\t\t\t}\n
+\n
+\t\t\tself.bindStates();\n
+\n
+\t\t\tself.state.on(\'change:visible\', function(e) {\n
+\t\t\t\tvar state = e.value, parentCtrl;\n
+\n
+\t\t\t\tif (self.state.get(\'rendered\')) {\n
+\t\t\t\t\tself.getEl().style.display = state === false ? \'none\' : \'\';\n
+\n
+\t\t\t\t\t// Need to force a reflow here on IE 8\n
+\t\t\t\t\tself.getEl().getBoundingClientRect();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Parent container needs to reflow\n
+\t\t\t\tparentCtrl = self.parent();\n
+\t\t\t\tif (parentCtrl) {\n
+\t\t\t\t\tparentCtrl._lastRect = null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.fire(state ? \'show\' : \'hide\');\n
+\n
+\t\t\t\tReflowQueue.add(self);\n
+\t\t\t});\n
+\n
+\t\t\tself.fire(\'postrender\', {}, false);\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Scrolls the current control into view.\n
+\t\t *\n
+\t\t * @method scrollIntoView\n
+\t\t * @param {String} align Alignment in view top|center|bottom.\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\tscrollIntoView: function(align) {\n
+\t\t\tfunction getOffset(elm, rootElm) {\n
+\t\t\t\tvar x, y, parent = elm;\n
+\n
+\t\t\t\tx = y = 0;\n
+\t\t\t\twhile (parent && parent != rootElm && parent.nodeType) {\n
+\t\t\t\t\tx += parent.offsetLeft || 0;\n
+\t\t\t\t\ty += parent.offsetTop || 0;\n
+\t\t\t\t\tparent = parent.offsetParent;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn {x: x, y: y};\n
+\t\t\t}\n
+\n
+\t\t\tvar elm = this.getEl(), parentElm = elm.parentNode;\n
+\t\t\tvar x, y, width, height, parentWidth, parentHeight;\n
+\t\t\tvar pos = getOffset(elm, parentElm);\n
+\n
+\t\t\tx = pos.x;\n
+\t\t\ty = pos.y;\n
+\t\t\twidth = elm.offsetWidth;\n
+\t\t\theight = elm.offsetHeight;\n
+\t\t\tparentWidth = parentElm.clientWidth;\n
+\t\t\tparentHeight = parentElm.clientHeight;\n
+\n
+\t\t\tif (align == "end") {\n
+\t\t\t\tx -= parentWidth - width;\n
+\t\t\t\ty -= parentHeight - height;\n
+\t\t\t} else if (align == "center") {\n
+\t\t\t\tx -= (parentWidth / 2) - (width / 2);\n
+\t\t\t\ty -= (parentHeight / 2) - (height / 2);\n
+\t\t\t}\n
+\n
+\t\t\tparentElm.scrollLeft = x;\n
+\t\t\tparentElm.scrollTop = y;\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\tgetRoot: function() {\n
+\t\t\tvar ctrl = this, rootControl, parents = [];\n
+\n
+\t\t\twhile (ctrl) {\n
+\t\t\t\tif (ctrl.rootControl) {\n
+\t\t\t\t\trootControl = ctrl.rootControl;\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tparents.push(ctrl);\n
+\t\t\t\trootControl = ctrl;\n
+\t\t\t\tctrl = ctrl.parent();\n
+\t\t\t}\n
+\n
+\t\t\tif (!rootControl) {\n
+\t\t\t\trootControl = this;\n
+\t\t\t}\n
+\n
+\t\t\tvar i = parents.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tparents[i].rootControl = rootControl;\n
+\t\t\t}\n
+\n
+\t\t\treturn rootControl;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Reflows the current control and it\'s parents.\n
+\t\t * This should be used after you for example append children to the current control so\n
+\t\t * that the layout managers know that they need to reposition everything.\n
+\t\t *\n
+\t\t * @example\n
+\t\t * container.append({type: \'button\', text: \'My button\'}).reflow();\n
+\t\t *\n
+\t\t * @method reflow\n
+\t\t * @return {tinymce.ui.Control} Current control instance.\n
+\t\t */\n
+\t\treflow: function() {\n
+\t\t\tReflowQueue.remove(this);\n
+\n
+\t\t\tvar parent = this.parent();\n
+\t\t\tif (parent._layout && !parent._layout.isNative()) {\n
+\t\t\t\tparent.reflow();\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the parent container for the control.\n
+\t\t *\n
+\t\t * @method parent\n
+\t\t * @param {tinymce.ui.Container} parent Optional parent to set.\n
+\t\t * @return {tinymce.ui.Control} Parent control or the current control on a set action.\n
+\t\t */\n
+\t\t// parent: function(parent) {} -- Generated\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the text for the control.\n
+\t\t *\n
+\t\t * @method text\n
+\t\t * @param {String} value Value to set to control.\n
+\t\t * @return {String/tinymce.ui.Control} Current control on a set operation or current value on a get.\n
+\t\t */\n
+\t\t// text: function(value) {} -- Generated\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the disabled state on the control.\n
+\t\t *\n
+\t\t * @method disabled\n
+\t\t * @param {Boolean} state Value to set to control.\n
+\t\t * @return {Boolean/tinymce.ui.Control} Current control on a set operation or current state on a get.\n
+\t\t */\n
+\t\t// disabled: function(state) {} -- Generated\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the active for the control.\n
+\t\t *\n
+\t\t * @method active\n
+\t\t * @param {Boolean} state Value to set to control.\n
+\t\t * @return {Boolean/tinymce.ui.Control} Current control on a set operation or current state on a get.\n
+\t\t */\n
+\t\t// active: function(state) {} -- Generated\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the name for the control.\n
+\t\t *\n
+\t\t * @method name\n
+\t\t * @param {String} value Value to set to control.\n
+\t\t * @return {String/tinymce.ui.Control} Current control on a set operation or current value on a get.\n
+\t\t */\n
+\t\t// name: function(value) {} -- Generated\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the title for the control.\n
+\t\t *\n
+\t\t * @method title\n
+\t\t * @param {String} value Value to set to control.\n
+\t\t * @return {String/tinymce.ui.Control} Current control on a set operation or current value on a get.\n
+\t\t */\n
+\t\t// title: function(value) {} -- Generated\n
+\n
+\t\t/**\n
+\t\t * Sets/gets the visible for the control.\n
+\t\t *\n
+\t\t * @method visible\n
+\t\t * @param {Boolean} state Value to set to control.\n
+\t\t * @return {Boolean/tinymce.ui.Control} Current control on a set operation or current state on a get.\n
+\t\t */\n
+\t\t// visible: function(value) {} -- Generated\n
+\t};\n
+\n
+\t/**\n
+\t * Setup state properties.\n
+\t */\n
+\tTools.each(\'text title visible disabled active value\'.split(\' \'), function(name) {\n
+\t\tproto[name] = function(value) {\n
+\t\t\tif (arguments.length === 0) {\n
+\t\t\t\treturn this.state.get(name);\n
+\t\t\t}\n
+\n
+\t\t\tif (typeof value != "undefined") {\n
+\t\t\t\tthis.state.set(name, value);\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t};\n
+\t});\n
+\n
+\tControl = Class.extend(proto);\n
+\n
+\tfunction getEventDispatcher(obj) {\n
+\t\tif (!obj._eventDispatcher) {\n
+\t\t\tobj._eventDispatcher = new EventDispatcher({\n
+\t\t\t\tscope: obj,\n
+\t\t\t\ttoggleEvent: function(name, state) {\n
+\t\t\t\t\tif (state && EventDispatcher.isNative(name)) {\n
+\t\t\t\t\t\tif (!obj._nativeEvents) {\n
+\t\t\t\t\t\t\tobj._nativeEvents = {};\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tobj._nativeEvents[name] = true;\n
+\n
+\t\t\t\t\t\tif (obj.state.get(\'rendered\')) {\n
+\t\t\t\t\t\t\tbindPendingEvents(obj);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\treturn obj._eventDispatcher;\n
+\t}\n
+\n
+\tfunction bindPendingEvents(eventCtrl) {\n
+\t\tvar i, l, parents, eventRootCtrl, nativeEvents, name;\n
+\n
+\t\tfunction delegate(e) {\n
+\t\t\tvar control = eventCtrl.getParentCtrl(e.target);\n
+\n
+\t\t\tif (control) {\n
+\t\t\t\tcontrol.fire(e.type, e);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction mouseLeaveHandler() {\n
+\t\t\tvar ctrl = eventRootCtrl._lastHoverCtrl;\n
+\n
+\t\t\tif (ctrl) {\n
+\t\t\t\tctrl.fire("mouseleave", {target: ctrl.getEl()});\n
+\n
+\t\t\t\tctrl.parents().each(function(ctrl) {\n
+\t\t\t\t\tctrl.fire("mouseleave", {target: ctrl.getEl()});\n
+\t\t\t\t});\n
+\n
+\t\t\t\teventRootCtrl._lastHoverCtrl = null;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction mouseEnterHandler(e) {\n
+\t\t\tvar ctrl = eventCtrl.getParentCtrl(e.target), lastCtrl = eventRootCtrl._lastHoverCtrl, idx = 0, i, parents, lastParents;\n
+\n
+\t\t\t// Over on a new control\n
+\t\t\tif (ctrl !== lastCtrl) {\n
+\t\t\t\teventRootCtrl._lastHoverCtrl = ctrl;\n
+\n
+\t\t\t\tparents = ctrl.parents().toArray().reverse();\n
+\t\t\t\tparents.push(ctrl);\n
+\n
+\t\t\t\tif (lastCtrl) {\n
+\t\t\t\t\tlastParents = lastCtrl.parents().toArray().reverse();\n
+\t\t\t\t\tlastParents.push(lastCtrl);\n
+\n
+\t\t\t\t\tfor (idx = 0; idx < lastParents.length; idx++) {\n
+\t\t\t\t\t\tif (parents[idx] !== lastParents[idx]) {\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tfor (i = lastParents.length - 1; i >= idx; i--) {\n
+\t\t\t\t\t\tlastCtrl = lastParents[i];\n
+\t\t\t\t\t\tlastCtrl.fire("mouseleave", {\n
+\t\t\t\t\t\t\ttarget: lastCtrl.getEl()\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (i = idx; i < parents.length; i++) {\n
+\t\t\t\t\tctrl = parents[i];\n
+\t\t\t\t\tctrl.fire("mouseenter", {\n
+\t\t\t\t\t\ttarget: ctrl.getEl()\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction fixWheelEvent(e) {\n
+\t\t\te.preventDefault();\n
+\n
+\t\t\tif (e.type == "mousewheel") {\n
+\t\t\t\te.deltaY = -1 / 40 * e.wheelDelta;\n
+\n
+\t\t\t\tif (e.wheelDeltaX) {\n
+\t\t\t\t\te.deltaX = -1 / 40 * e.wheelDeltaX;\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\te.deltaX = 0;\n
+\t\t\t\te.deltaY = e.detail;\n
+\t\t\t}\n
+\n
+\t\t\te = eventCtrl.fire("wheel", e);\n
+\t\t}\n
+\n
+\t\tnativeEvents = eventCtrl._nativeEvents;\n
+\t\tif (nativeEvents) {\n
+\t\t\t// Find event root element if it exists\n
+\t\t\tparents = eventCtrl.parents().toArray();\n
+\t\t\tparents.unshift(eventCtrl);\n
+\t\t\tfor (i = 0, l = parents.length; !eventRootCtrl && i < l; i++) {\n
+\t\t\t\teventRootCtrl = parents[i]._eventsRoot;\n
+\t\t\t}\n
+\n
+\t\t\t// Event root wasn\'t found the use the root control\n
+\t\t\tif (!eventRootCtrl) {\n
+\t\t\t\teventRootCtrl = parents[parents.length - 1] || eventCtrl;\n
+\t\t\t}\n
+\n
+\t\t\t// Set the eventsRoot property on children that didn\'t have it\n
+\t\t\teventCtrl._eventsRoot = eventRootCtrl;\n
+\t\t\tfor (l = i, i = 0; i < l; i++) {\n
+\t\t\t\tparents[i]._eventsRoot = eventRootCtrl;\n
+\t\t\t}\n
+\n
+\t\t\tvar eventRootDelegates = eventRootCtrl._delegates;\n
+\t\t\tif (!eventRootDelegates) {\n
+\t\t\t\teventRootDelegates = eventRootCtrl._delegates = {};\n
+\t\t\t}\n
+\n
+\t\t\t// Bind native event delegates\n
+\t\t\tfor (name in nativeEvents) {\n
+\t\t\t\tif (!nativeEvents) {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (name === "wheel" && !hasWheelEventSupport) {\n
+\t\t\t\t\tif (hasMouseWheelEventSupport) {\n
+\t\t\t\t\t\t$(eventCtrl.getEl()).on("mousewheel", fixWheelEvent);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t$(eventCtrl.getEl()).on("DOMMouseScroll", fixWheelEvent);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Special treatment for mousenter/mouseleave since these doesn\'t bubble\n
+\t\t\t\tif (name === "mouseenter" || name === "mouseleave") {\n
+\t\t\t\t\t// Fake mousenter/mouseleave\n
+\t\t\t\t\tif (!eventRootCtrl._hasMouseEnter) {\n
+\t\t\t\t\t\t$(eventRootCtrl.getEl()).on("mouseleave", mouseLeaveHandler).on("mouseover", mouseEnterHandler);\n
+\t\t\t\t\t\teventRootCtrl._hasMouseEnter = 1;\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if (!eventRootDelegates[name]) {\n
+\t\t\t\t\t$(eventRootCtrl.getEl()).on(name, delegate);\n
+\t\t\t\t\teventRootDelegates[name] = true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Remove the event once it\'s bound\n
+\t\t\t\tnativeEvents[name] = false;\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\n
+\treturn Control;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>32575</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Control.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

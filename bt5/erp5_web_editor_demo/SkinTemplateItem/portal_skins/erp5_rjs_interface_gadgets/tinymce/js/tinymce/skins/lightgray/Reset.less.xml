@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268700.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Reset.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// Reset\n
+\n
+.@{prefix}-container, .@{prefix}-container *, .@{prefix}-widget, .@{prefix}-widget *, .@{prefix}-reset {\n
+\tmargin: 0; padding: 0; border: 0; outline: 0;\n
+\tvertical-align: top; background: transparent;\n
+\ttext-decoration: none; color: @text;\n
+\tfont-family: @font-family;\n
+\tfont-size: @font-size; text-shadow: none; float: none;\n
+\tposition: static; width: auto; height: auto;\n
+\twhite-space: nowrap; cursor: inherit;\n
+\t-webkit-tap-highlight-color: transparent;\n
+\tline-height: normal; font-weight: normal;\n
+\ttext-align: left;\n
+\t-moz-box-sizing: content-box;\n
+\t-webkit-box-sizing: content-box;\n
+\tbox-sizing: content-box;\n
+\tdirection: ltr;\n
+\tmax-width: none;\n
+}\n
+\n
+.@{prefix}-widget button {\n
+\t-moz-box-sizing: border-box;\n
+\t-webkit-box-sizing: border-box;\n
+\tbox-sizing: border-box;\n
+}\n
+\n
+.@{prefix}-container *[unselectable] {\n
+\t-moz-user-select: none;\n
+\t-webkit-user-select: none;\n
+\t-o-user-select: none;\n
+\tuser-select: none;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>905</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Reset.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

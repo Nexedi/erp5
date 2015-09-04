@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268697.13</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Content.Objects.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* Content.Objects.less */\n
+\n
+.mce-content-body .mce-reset {\n
+\tmargin: 0; padding: 0; border: 0; outline: 0;\n
+\tvertical-align: top; background: transparent;\n
+\ttext-decoration: none; color: black;\n
+\tfont-family: Arial;\n
+\tfont-size: 11px; text-shadow: none; float: none;\n
+\tposition: static; width: auto; height: auto;\n
+\twhite-space: nowrap; cursor: inherit;\n
+\tline-height: normal; font-weight: normal;\n
+\ttext-align: left;\n
+\t-webkit-tap-highlight-color: transparent;\n
+\t-moz-box-sizing: content-box;\n
+\t-webkit-box-sizing: content-box;\n
+\tbox-sizing: content-box;\n
+\tdirection: ltr;\n
+\tmax-width: none;\n
+}\n
+\n
+.mce-object {\n
+\tborder: 1px dotted #3A3A3A;\n
+\tbackground: #D5D5D5 url(img/object.gif) no-repeat center;\n
+}\n
+\n
+.mce-pagebreak {\n
+\tcursor: default;\n
+\tdisplay: block;\n
+\tborder: 0;\n
+\twidth: 100%;\n
+\theight: 5px;\n
+\tborder: 1px dashed #666;\n
+\tmargin-top: 15px;\n
+\tpage-break-before: always;\n
+}\n
+\n
+@media print {\n
+  .mce-pagebreak {\n
+    border: 0px;\n
+  }\n
+}\n
+\n
+.mce-item-anchor {\n
+\tcursor: default;\n
+\tdisplay: inline-block;\n
+\t-webkit-user-select: all;\n
+\t-webkit-user-modify: read-only;\n
+\t-moz-user-select: all;\n
+\t-moz-user-modify: read-only;\n
+\tuser-select: all;\n
+\tuser-modify: read-only;\n
+\twidth: 9px !important;\n
+\theight: 9px !important;\n
+\tborder: 1px dotted #3A3A3A;\n
+\tbackground: #D5D5D5 url(img/anchor.gif) no-repeat center;\n
+}\n
+\n
+.mce-nbsp, .mce-shy {\n
+\tbackground: #AAA;\n
+}\n
+\n
+.mce-shy::after {\n
+\tcontent: \'-\';\n
+}\n
+\n
+hr {\n
+\tcursor: default;\n
+}\n
+\n
+.mce-match-marker {\n
+\tbackground: #AAA;\n
+\tcolor: #fff;\n
+}\n
+\n
+.mce-match-marker-selected {\n
+\tbackground: #3399ff;\n
+\tcolor: #fff;\n
+}\n
+\n
+.mce-spellchecker-word {\n
+\tborder-bottom: 2px solid #F00;\n
+\tcursor: default;\n
+}\n
+\n
+.mce-spellchecker-grammar {\n
+\tborder-bottom: 2px solid #008000;\n
+\tcursor: default;\n
+}\n
+\n
+.mce-item-table, .mce-item-table td, .mce-item-table th, .mce-item-table caption {\n
+\tborder: 1px dashed #BBB;\n
+}\n
+\n
+td.mce-item-selected, th.mce-item-selected {\n
+\tbackground-color: #3399ff !important;\n
+}\n
+\n
+.mce-edit-focus {\n
+\toutline: 1px dotted #333;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1909</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Content.Objects.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

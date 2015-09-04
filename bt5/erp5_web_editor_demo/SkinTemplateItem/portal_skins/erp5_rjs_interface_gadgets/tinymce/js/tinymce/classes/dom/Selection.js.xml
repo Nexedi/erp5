@@ -1,0 +1,1046 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268364.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Selection.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Selection.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles text and control selection it\'s an crossbrowser utility class.\n
+ * Consult the TinyMCE Wiki API for more details and examples on how to use this class.\n
+ *\n
+ * @class tinymce.dom.Selection\n
+ * @example\n
+ * // Getting the currently selected node for the active editor\n
+ * alert(tinymce.activeEditor.selection.getNode().nodeName);\n
+ */\n
+define("tinymce/dom/Selection", [\n
+\t"tinymce/dom/TreeWalker",\n
+\t"tinymce/dom/TridentSelection",\n
+\t"tinymce/dom/ControlSelection",\n
+\t"tinymce/dom/RangeUtils",\n
+\t"tinymce/dom/BookmarkManager",\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Tools"\n
+], function(TreeWalker, TridentSelection, ControlSelection, RangeUtils, BookmarkManager, Env, Tools) {\n
+\tvar each = Tools.each, trim = Tools.trim;\n
+\tvar isIE = Env.ie;\n
+\n
+\t/**\n
+\t * Constructs a new selection instance.\n
+\t *\n
+\t * @constructor\n
+\t * @method Selection\n
+\t * @param {tinymce.dom.DOMUtils} dom DOMUtils object reference.\n
+\t * @param {Window} win Window to bind the selection object to.\n
+\t * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.\n
+\t */\n
+\tfunction Selection(dom, win, serializer, editor) {\n
+\t\tvar self = this;\n
+\n
+\t\tself.dom = dom;\n
+\t\tself.win = win;\n
+\t\tself.serializer = serializer;\n
+\t\tself.editor = editor;\n
+\t\tself.bookmarkManager = new BookmarkManager(self);\n
+\t\tself.controlSelection = new ControlSelection(self, editor);\n
+\n
+\t\t// No W3C Range support\n
+\t\tif (!self.win.getSelection) {\n
+\t\t\tself.tridentSel = new TridentSelection(self);\n
+\t\t}\n
+\t}\n
+\n
+\tSelection.prototype = {\n
+\t\t/**\n
+\t\t * Move the selection cursor range to the specified node and offset.\n
+\t\t * If there is no node specified it will move it to the first suitable location within the body.\n
+\t\t *\n
+\t\t * @method setCursorLocation\n
+\t\t * @param {Node} node Optional node to put the cursor in.\n
+\t\t * @param {Number} offset Optional offset from the start of the node to put the cursor at.\n
+\t\t */\n
+\t\tsetCursorLocation: function(node, offset) {\n
+\t\t\tvar self = this, rng = self.dom.createRng();\n
+\n
+\t\t\tif (!node) {\n
+\t\t\t\tself._moveEndPoint(rng, self.editor.getBody(), true);\n
+\t\t\t\tself.setRng(rng);\n
+\t\t\t} else {\n
+\t\t\t\trng.setStart(node, offset);\n
+\t\t\t\trng.setEnd(node, offset);\n
+\t\t\t\tself.setRng(rng);\n
+\t\t\t\tself.collapse(false);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the selected contents using the DOM serializer passed in to this class.\n
+\t\t *\n
+\t\t * @method getContent\n
+\t\t * @param {Object} s Optional settings class with for example output format text or html.\n
+\t\t * @return {String} Selected contents in for example HTML format.\n
+\t\t * @example\n
+\t\t * // Alerts the currently selected contents\n
+\t\t * alert(tinymce.activeEditor.selection.getContent());\n
+\t\t *\n
+\t\t * // Alerts the currently selected contents as plain text\n
+\t\t * alert(tinymce.activeEditor.selection.getContent({format: \'text\'}));\n
+\t\t */\n
+\t\tgetContent: function(args) {\n
+\t\t\tvar self = this, rng = self.getRng(), tmpElm = self.dom.create("body");\n
+\t\t\tvar se = self.getSel(), whiteSpaceBefore, whiteSpaceAfter, fragment;\n
+\n
+\t\t\targs = args || {};\n
+\t\t\twhiteSpaceBefore = whiteSpaceAfter = \'\';\n
+\t\t\targs.get = true;\n
+\t\t\targs.format = args.format || \'html\';\n
+\t\t\targs.selection = true;\n
+\t\t\tself.editor.fire(\'BeforeGetContent\', args);\n
+\n
+\t\t\tif (args.format == \'text\') {\n
+\t\t\t\treturn self.isCollapsed() ? \'\' : (rng.text || (se.toString ? se.toString() : \'\'));\n
+\t\t\t}\n
+\n
+\t\t\tif (rng.cloneContents) {\n
+\t\t\t\tfragment = rng.cloneContents();\n
+\n
+\t\t\t\tif (fragment) {\n
+\t\t\t\t\ttmpElm.appendChild(fragment);\n
+\t\t\t\t}\n
+\t\t\t} else if (rng.item !== undefined || rng.htmlText !== undefined) {\n
+\t\t\t\t// IE will produce invalid markup if elements are present that\n
+\t\t\t\t// it doesn\'t understand like custom elements or HTML5 elements.\n
+\t\t\t\t// Adding a BR in front of the contents and then remoiving it seems to fix it though.\n
+\t\t\t\ttmpElm.innerHTML = \'<br>\' + (rng.item ? rng.item(0).outerHTML : rng.htmlText);\n
+\t\t\t\ttmpElm.removeChild(tmpElm.firstChild);\n
+\t\t\t} else {\n
+\t\t\t\ttmpElm.innerHTML = rng.toString();\n
+\t\t\t}\n
+\n
+\t\t\t// Keep whitespace before and after\n
+\t\t\tif (/^\\s/.test(tmpElm.innerHTML)) {\n
+\t\t\t\twhiteSpaceBefore = \' \';\n
+\t\t\t}\n
+\n
+\t\t\tif (/\\s+$/.test(tmpElm.innerHTML)) {\n
+\t\t\t\twhiteSpaceAfter = \' \';\n
+\t\t\t}\n
+\n
+\t\t\targs.getInner = true;\n
+\n
+\t\t\targs.content = self.isCollapsed() ? \'\' : whiteSpaceBefore + self.serializer.serialize(tmpElm, args) + whiteSpaceAfter;\n
+\t\t\tself.editor.fire(\'GetContent\', args);\n
+\n
+\t\t\treturn args.content;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the current selection to the specified content. If any contents is selected it will be replaced\n
+\t\t * with the contents passed in to this function. If there is no selection the contents will be inserted\n
+\t\t * where the caret is placed in the editor/page.\n
+\t\t *\n
+\t\t * @method setContent\n
+\t\t * @param {String} content HTML contents to set could also be other formats depending on settings.\n
+\t\t * @param {Object} args Optional settings object with for example data format.\n
+\t\t * @example\n
+\t\t * // Inserts some HTML contents at the current selection\n
+\t\t * tinymce.activeEditor.selection.setContent(\'<strong>Some contents</strong>\');\n
+\t\t */\n
+\t\tsetContent: function(content, args) {\n
+\t\t\tvar self = this, rng = self.getRng(), caretNode, doc = self.win.document, frag, temp;\n
+\n
+\t\t\targs = args || {format: \'html\'};\n
+\t\t\targs.set = true;\n
+\t\t\targs.selection = true;\n
+\t\t\tcontent = args.content = content;\n
+\n
+\t\t\t// Dispatch before set content event\n
+\t\t\tif (!args.no_events) {\n
+\t\t\t\tself.editor.fire(\'BeforeSetContent\', args);\n
+\t\t\t}\n
+\n
+\t\t\tcontent = args.content;\n
+\n
+\t\t\tif (rng.insertNode) {\n
+\t\t\t\t// Make caret marker since insertNode places the caret in the beginning of text after insert\n
+\t\t\t\tcontent += \'<span id="__caret">_</span>\';\n
+\n
+\t\t\t\t// Delete and insert new node\n
+\t\t\t\tif (rng.startContainer == doc && rng.endContainer == doc) {\n
+\t\t\t\t\t// WebKit will fail if the body is empty since the range is then invalid and it can\'t insert contents\n
+\t\t\t\t\tdoc.body.innerHTML = content;\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng.deleteContents();\n
+\n
+\t\t\t\t\tif (doc.body.childNodes.length === 0) {\n
+\t\t\t\t\t\tdoc.body.innerHTML = content;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\t// createContextualFragment doesn\'t exists in IE 9 DOMRanges\n
+\t\t\t\t\t\tif (rng.createContextualFragment) {\n
+\t\t\t\t\t\t\trng.insertNode(rng.createContextualFragment(content));\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t// Fake createContextualFragment call in IE 9\n
+\t\t\t\t\t\t\tfrag = doc.createDocumentFragment();\n
+\t\t\t\t\t\t\ttemp = doc.createElement(\'div\');\n
+\n
+\t\t\t\t\t\t\tfrag.appendChild(temp);\n
+\t\t\t\t\t\t\ttemp.outerHTML = content;\n
+\n
+\t\t\t\t\t\t\trng.insertNode(frag);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Move to caret marker\n
+\t\t\t\tcaretNode = self.dom.get(\'__caret\');\n
+\n
+\t\t\t\t// Make sure we wrap it compleatly, Opera fails with a simple select call\n
+\t\t\t\trng = doc.createRange();\n
+\t\t\t\trng.setStartBefore(caretNode);\n
+\t\t\t\trng.setEndBefore(caretNode);\n
+\t\t\t\tself.setRng(rng);\n
+\n
+\t\t\t\t// Remove the caret position\n
+\t\t\t\tself.dom.remove(\'__caret\');\n
+\n
+\t\t\t\ttry {\n
+\t\t\t\t\tself.setRng(rng);\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// Might fail on Opera for some odd reason\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tif (rng.item) {\n
+\t\t\t\t\t// Delete content and get caret text selection\n
+\t\t\t\t\tdoc.execCommand(\'Delete\', false, null);\n
+\t\t\t\t\trng = self.getRng();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Explorer removes spaces from the beginning of pasted contents\n
+\t\t\t\tif (/^\\s+/.test(content)) {\n
+\t\t\t\t\trng.pasteHTML(\'<span id="__mce_tmp">_</span>\' + content);\n
+\t\t\t\t\tself.dom.remove(\'__mce_tmp\');\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng.pasteHTML(content);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Dispatch set content event\n
+\t\t\tif (!args.no_events) {\n
+\t\t\t\tself.editor.fire(\'SetContent\', args);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the start element of a selection range. If the start is in a text\n
+\t\t * node the parent element will be returned.\n
+\t\t *\n
+\t\t * @method getStart\n
+\t\t * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.\n
+\t\t * @return {Element} Start element of selection range.\n
+\t\t */\n
+\t\tgetStart: function(real) {\n
+\t\t\tvar self = this, rng = self.getRng(), startElement, parentElement, checkRng, node;\n
+\n
+\t\t\tif (rng.duplicate || rng.item) {\n
+\t\t\t\t// Control selection, return first item\n
+\t\t\t\tif (rng.item) {\n
+\t\t\t\t\treturn rng.item(0);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Get start element\n
+\t\t\t\tcheckRng = rng.duplicate();\n
+\t\t\t\tcheckRng.collapse(1);\n
+\t\t\t\tstartElement = checkRng.parentElement();\n
+\t\t\t\tif (startElement.ownerDocument !== self.dom.doc) {\n
+\t\t\t\t\tstartElement = self.dom.getRoot();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Check if range parent is inside the start element, then return the inner parent element\n
+\t\t\t\t// This will fix issues when a single element is selected, IE would otherwise return the wrong start element\n
+\t\t\t\tparentElement = node = rng.parentElement();\n
+\t\t\t\twhile ((node = node.parentNode)) {\n
+\t\t\t\t\tif (node == startElement) {\n
+\t\t\t\t\t\tstartElement = parentElement;\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn startElement;\n
+\t\t\t}\n
+\n
+\t\t\tstartElement = rng.startContainer;\n
+\n
+\t\t\tif (startElement.nodeType == 1 && startElement.hasChildNodes()) {\n
+\t\t\t\tif (!real || !rng.collapsed) {\n
+\t\t\t\t\tstartElement = startElement.childNodes[Math.min(startElement.childNodes.length - 1, rng.startOffset)];\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (startElement && startElement.nodeType == 3) {\n
+\t\t\t\treturn startElement.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\treturn startElement;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the end element of a selection range. If the end is in a text\n
+\t\t * node the parent element will be returned.\n
+\t\t *\n
+\t\t * @method getEnd\n
+\t\t * @param {Boolean} real Optional state to get the real parent when the selection is collapsed not the closest element.\n
+\t\t * @return {Element} End element of selection range.\n
+\t\t */\n
+\t\tgetEnd: function(real) {\n
+\t\t\tvar self = this, rng = self.getRng(), endElement, endOffset;\n
+\n
+\t\t\tif (rng.duplicate || rng.item) {\n
+\t\t\t\tif (rng.item) {\n
+\t\t\t\t\treturn rng.item(0);\n
+\t\t\t\t}\n
+\n
+\t\t\t\trng = rng.duplicate();\n
+\t\t\t\trng.collapse(0);\n
+\t\t\t\tendElement = rng.parentElement();\n
+\t\t\t\tif (endElement.ownerDocument !== self.dom.doc) {\n
+\t\t\t\t\tendElement = self.dom.getRoot();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (endElement && endElement.nodeName == \'BODY\') {\n
+\t\t\t\t\treturn endElement.lastChild || endElement;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn endElement;\n
+\t\t\t}\n
+\n
+\t\t\tendElement = rng.endContainer;\n
+\t\t\tendOffset = rng.endOffset;\n
+\n
+\t\t\tif (endElement.nodeType == 1 && endElement.hasChildNodes()) {\n
+\t\t\t\tif (!real || !rng.collapsed) {\n
+\t\t\t\t\tendElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (endElement && endElement.nodeType == 3) {\n
+\t\t\t\treturn endElement.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\treturn endElement;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a bookmark location for the current selection. This bookmark object\n
+\t\t * can then be used to restore the selection after some content modification to the document.\n
+\t\t *\n
+\t\t * @method getBookmark\n
+\t\t * @param {Number} type Optional state if the bookmark should be simple or not. Default is complex.\n
+\t\t * @param {Boolean} normalized Optional state that enables you to get a position that it would be after normalization.\n
+\t\t * @return {Object} Bookmark object, use moveToBookmark with this object to restore the selection.\n
+\t\t * @example\n
+\t\t * // Stores a bookmark of the current selection\n
+\t\t * var bm = tinymce.activeEditor.selection.getBookmark();\n
+\t\t *\n
+\t\t * tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + \'Some new content\');\n
+\t\t *\n
+\t\t * // Restore the selection bookmark\n
+\t\t * tinymce.activeEditor.selection.moveToBookmark(bm);\n
+\t\t */\n
+\t\tgetBookmark: function(type, normalized) {\n
+\t\t\treturn this.bookmarkManager.getBookmark(type, normalized);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Restores the selection to the specified bookmark.\n
+\t\t *\n
+\t\t * @method moveToBookmark\n
+\t\t * @param {Object} bookmark Bookmark to restore selection from.\n
+\t\t * @return {Boolean} true/false if it was successful or not.\n
+\t\t * @example\n
+\t\t * // Stores a bookmark of the current selection\n
+\t\t * var bm = tinymce.activeEditor.selection.getBookmark();\n
+\t\t *\n
+\t\t * tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + \'Some new content\');\n
+\t\t *\n
+\t\t * // Restore the selection bookmark\n
+\t\t * tinymce.activeEditor.selection.moveToBookmark(bm);\n
+\t\t */\n
+\t\tmoveToBookmark: function(bookmark) {\n
+\t\t\treturn this.bookmarkManager.moveToBookmark(bookmark);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Selects the specified element. This will place the start and end of the selection range around the element.\n
+\t\t *\n
+\t\t * @method select\n
+\t\t * @param {Element} node HMTL DOM element to select.\n
+\t\t * @param {Boolean} content Optional bool state if the contents should be selected or not on non IE browser.\n
+\t\t * @return {Element} Selected element the same element as the one that got passed in.\n
+\t\t * @example\n
+\t\t * // Select the first paragraph in the active editor\n
+\t\t * tinymce.activeEditor.selection.select(tinymce.activeEditor.dom.select(\'p\')[0]);\n
+\t\t */\n
+\t\tselect: function(node, content) {\n
+\t\t\tvar self = this, dom = self.dom, rng = dom.createRng(), idx;\n
+\n
+\t\t\t// Clear stored range set by FocusManager\n
+\t\t\tself.lastFocusBookmark = null;\n
+\n
+\t\t\tif (node) {\n
+\t\t\t\tif (!content && self.controlSelection.controlSelect(node)) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tidx = dom.nodeIndex(node);\n
+\t\t\t\trng.setStart(node.parentNode, idx);\n
+\t\t\t\trng.setEnd(node.parentNode, idx + 1);\n
+\n
+\t\t\t\t// Find first/last text node or BR element\n
+\t\t\t\tif (content) {\n
+\t\t\t\t\tself._moveEndPoint(rng, node, true);\n
+\t\t\t\t\tself._moveEndPoint(rng, node);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.setRng(rng);\n
+\t\t\t}\n
+\n
+\t\t\treturn node;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the selection range is collapsed or not. Collapsed means if it\'s a caret or a larger selection.\n
+\t\t *\n
+\t\t * @method isCollapsed\n
+\t\t * @return {Boolean} true/false state if the selection range is collapsed or not.\n
+\t\t * Collapsed means if it\'s a caret or a larger selection.\n
+\t\t */\n
+\t\tisCollapsed: function() {\n
+\t\t\tvar self = this, rng = self.getRng(), sel = self.getSel();\n
+\n
+\t\t\tif (!rng || rng.item) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\tif (rng.compareEndPoints) {\n
+\t\t\t\treturn rng.compareEndPoints(\'StartToEnd\', rng) === 0;\n
+\t\t\t}\n
+\n
+\t\t\treturn !sel || rng.collapsed;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Collapse the selection to start or end of range.\n
+\t\t *\n
+\t\t * @method collapse\n
+\t\t * @param {Boolean} toStart Optional boolean state if to collapse to end or not. Defaults to start.\n
+\t\t */\n
+\t\tcollapse: function(toStart) {\n
+\t\t\tvar self = this, rng = self.getRng(), node;\n
+\n
+\t\t\t// Control range on IE\n
+\t\t\tif (rng.item) {\n
+\t\t\t\tnode = rng.item(0);\n
+\t\t\t\trng = self.win.document.body.createTextRange();\n
+\t\t\t\trng.moveToElementText(node);\n
+\t\t\t}\n
+\n
+\t\t\trng.collapse(!!toStart);\n
+\t\t\tself.setRng(rng);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the browsers internal selection object.\n
+\t\t *\n
+\t\t * @method getSel\n
+\t\t * @return {Selection} Internal browser selection object.\n
+\t\t */\n
+\t\tgetSel: function() {\n
+\t\t\tvar win = this.win;\n
+\n
+\t\t\treturn win.getSelection ? win.getSelection() : win.document.selection;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the browsers internal range object.\n
+\t\t *\n
+\t\t * @method getRng\n
+\t\t * @param {Boolean} w3c Forces a compatible W3C range on IE.\n
+\t\t * @return {Range} Internal browser range object.\n
+\t\t * @see http://www.quirksmode.org/dom/range_intro.html\n
+\t\t * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/\n
+\t\t */\n
+\t\tgetRng: function(w3c) {\n
+\t\t\tvar self = this, selection, rng, elm, doc = self.win.document, ieRng;\n
+\n
+\t\t\tfunction tryCompareBoundaryPoints(how, sourceRange, destinationRange) {\n
+\t\t\t\ttry {\n
+\t\t\t\t\treturn sourceRange.compareBoundaryPoints(how, destinationRange);\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// Gecko throws wrong document exception if the range points\n
+\t\t\t\t\t// to nodes that where removed from the dom #6690\n
+\t\t\t\t\t// Browsers should mutate existing DOMRange instances so that they always point\n
+\t\t\t\t\t// to something in the document this is not the case in Gecko works fine in IE/WebKit/Blink\n
+\t\t\t\t\t// For performance reasons just return -1\n
+\t\t\t\t\treturn -1;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Use last rng passed from FocusManager if it\'s available this enables\n
+\t\t\t// calls to editor.selection.getStart() to work when caret focus is lost on IE\n
+\t\t\tif (!w3c && self.lastFocusBookmark) {\n
+\t\t\t\tvar bookmark = self.lastFocusBookmark;\n
+\n
+\t\t\t\t// Convert bookmark to range IE 11 fix\n
+\t\t\t\tif (bookmark.startContainer) {\n
+\t\t\t\t\trng = doc.createRange();\n
+\t\t\t\t\trng.setStart(bookmark.startContainer, bookmark.startOffset);\n
+\t\t\t\t\trng.setEnd(bookmark.endContainer, bookmark.endOffset);\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng = bookmark;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn rng;\n
+\t\t\t}\n
+\n
+\t\t\t// Found tridentSel object then we need to use that one\n
+\t\t\tif (w3c && self.tridentSel) {\n
+\t\t\t\treturn self.tridentSel.getRangeAt(0);\n
+\t\t\t}\n
+\n
+\t\t\ttry {\n
+\t\t\t\tif ((selection = self.getSel())) {\n
+\t\t\t\t\tif (selection.rangeCount > 0) {\n
+\t\t\t\t\t\trng = selection.getRangeAt(0);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\trng = selection.createRange ? selection.createRange() : doc.createRange();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// IE throws unspecified error here if TinyMCE is placed in a frame/iframe\n
+\t\t\t}\n
+\n
+\t\t\t// We have W3C ranges and it\'s IE then fake control selection since IE9 doesn\'t handle that correctly yet\n
+\t\t\t// IE 11 doesn\'t support the selection object so we check for that as well\n
+\t\t\tif (isIE && rng && rng.setStart && doc.selection) {\n
+\t\t\t\ttry {\n
+\t\t\t\t\t// IE will sometimes throw an exception here\n
+\t\t\t\t\tieRng = doc.selection.createRange();\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// Ignore\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (ieRng && ieRng.item) {\n
+\t\t\t\t\telm = ieRng.item(0);\n
+\t\t\t\t\trng = doc.createRange();\n
+\t\t\t\t\trng.setStartBefore(elm);\n
+\t\t\t\t\trng.setEndAfter(elm);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// No range found then create an empty one\n
+\t\t\t// This can occur when the editor is placed in a hidden container element on Gecko\n
+\t\t\t// Or on IE when there was an exception\n
+\t\t\tif (!rng) {\n
+\t\t\t\trng = doc.createRange ? doc.createRange() : doc.body.createTextRange();\n
+\t\t\t}\n
+\n
+\t\t\t// If range is at start of document then move it to start of body\n
+\t\t\tif (rng.setStart && rng.startContainer.nodeType === 9 && rng.collapsed) {\n
+\t\t\t\telm = self.dom.getRoot();\n
+\t\t\t\trng.setStart(elm, 0);\n
+\t\t\t\trng.setEnd(elm, 0);\n
+\t\t\t}\n
+\n
+\t\t\tif (self.selectedRange && self.explicitRange) {\n
+\t\t\t\tif (tryCompareBoundaryPoints(rng.START_TO_START, rng, self.selectedRange) === 0 &&\n
+\t\t\t\t\ttryCompareBoundaryPoints(rng.END_TO_END, rng, self.selectedRange) === 0) {\n
+\t\t\t\t\t// Safari, Opera and Chrome only ever select text which causes the range to change.\n
+\t\t\t\t\t// This lets us use the originally set range if the selection hasn\'t been changed by the user.\n
+\t\t\t\t\trng = self.explicitRange;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tself.selectedRange = null;\n
+\t\t\t\t\tself.explicitRange = null;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn rng;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Changes the selection to the specified DOM range.\n
+\t\t *\n
+\t\t * @method setRng\n
+\t\t * @param {Range} rng Range to select.\n
+\t\t */\n
+\t\tsetRng: function(rng, forward) {\n
+\t\t\tvar self = this, sel, node;\n
+\n
+\t\t\tif (!rng) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Is IE specific range\n
+\t\t\tif (rng.select) {\n
+\t\t\t\ttry {\n
+\t\t\t\t\trng.select();\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// Needed for some odd IE bug #1843306\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (!self.tridentSel) {\n
+\t\t\t\tsel = self.getSel();\n
+\n
+\t\t\t\tif (sel) {\n
+\t\t\t\t\tself.explicitRange = rng;\n
+\n
+\t\t\t\t\ttry {\n
+\t\t\t\t\t\tsel.removeAllRanges();\n
+\t\t\t\t\t\tsel.addRange(rng);\n
+\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t// IE might throw errors here if the editor is within a hidden container and selection is changed\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Forward is set to false and we have an extend function\n
+\t\t\t\t\tif (forward === false && sel.extend) {\n
+\t\t\t\t\t\tsel.collapse(rng.endContainer, rng.endOffset);\n
+\t\t\t\t\t\tsel.extend(rng.startContainer, rng.startOffset);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// adding range isn\'t always successful so we need to check range count otherwise an exception can occur\n
+\t\t\t\t\tself.selectedRange = sel.rangeCount > 0 ? sel.getRangeAt(0) : null;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// WebKit egde case selecting images works better using setBaseAndExtent\n
+\t\t\t\tif (!rng.collapsed && rng.startContainer == rng.endContainer && sel.setBaseAndExtent && !Env.ie) {\n
+\t\t\t\t\tif (rng.endOffset - rng.startOffset < 2) {\n
+\t\t\t\t\t\tif (rng.startContainer.hasChildNodes()) {\n
+\t\t\t\t\t\t\tnode = rng.startContainer.childNodes[rng.startOffset];\n
+\t\t\t\t\t\t\tif (node && node.tagName == \'IMG\') {\n
+\t\t\t\t\t\t\t\tself.getSel().setBaseAndExtent(node, 0, node, 1);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\t// Is W3C Range fake range on IE\n
+\t\t\t\tif (rng.cloneRange) {\n
+\t\t\t\t\ttry {\n
+\t\t\t\t\t\tself.tridentSel.addRange(rng);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t//IE9 throws an error here if called before selection is placed in the editor\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets the current selection to the specified DOM element.\n
+\t\t *\n
+\t\t * @method setNode\n
+\t\t * @param {Element} elm Element to set as the contents of the selection.\n
+\t\t * @return {Element} Returns the element that got passed in.\n
+\t\t * @example\n
+\t\t * // Inserts a DOM node at current selection/caret location\n
+\t\t * tinymce.activeEditor.selection.setNode(tinymce.activeEditor.dom.create(\'img\', {src: \'some.gif\', title: \'some title\'}));\n
+\t\t */\n
+\t\tsetNode: function(elm) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.setContent(self.dom.getOuterHTML(elm));\n
+\n
+\t\t\treturn elm;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the currently selected element or the common ancestor element for both start and end of the selection.\n
+\t\t *\n
+\t\t * @method getNode\n
+\t\t * @return {Element} Currently selected element or common ancestor element.\n
+\t\t * @example\n
+\t\t * // Alerts the currently selected elements node name\n
+\t\t * alert(tinymce.activeEditor.selection.getNode().nodeName);\n
+\t\t */\n
+\t\tgetNode: function() {\n
+\t\t\tvar self = this, rng = self.getRng(), elm;\n
+\t\t\tvar startContainer = rng.startContainer, endContainer = rng.endContainer;\n
+\t\t\tvar startOffset = rng.startOffset, endOffset = rng.endOffset, root = self.dom.getRoot();\n
+\n
+\t\t\tfunction skipEmptyTextNodes(node, forwards) {\n
+\t\t\t\tvar orig = node;\n
+\n
+\t\t\t\twhile (node && node.nodeType === 3 && node.length === 0) {\n
+\t\t\t\t\tnode = forwards ? node.nextSibling : node.previousSibling;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn node || orig;\n
+\t\t\t}\n
+\n
+\t\t\t// Range maybe lost after the editor is made visible again\n
+\t\t\tif (!rng) {\n
+\t\t\t\treturn root;\n
+\t\t\t}\n
+\n
+\t\t\tif (rng.setStart) {\n
+\t\t\t\telm = rng.commonAncestorContainer;\n
+\n
+\t\t\t\t// Handle selection a image or other control like element such as anchors\n
+\t\t\t\tif (!rng.collapsed) {\n
+\t\t\t\t\tif (startContainer == endContainer) {\n
+\t\t\t\t\t\tif (endOffset - startOffset < 2) {\n
+\t\t\t\t\t\t\tif (startContainer.hasChildNodes()) {\n
+\t\t\t\t\t\t\t\telm = startContainer.childNodes[startOffset];\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// If the anchor node is a element instead of a text node then return this element\n
+\t\t\t\t\t//if (tinymce.isWebKit && sel.anchorNode && sel.anchorNode.nodeType == 1)\n
+\t\t\t\t\t//\treturn sel.anchorNode.childNodes[sel.anchorOffset];\n
+\n
+\t\t\t\t\t// Handle cases where the selection is immediately wrapped around a node and return that node instead of it\'s parent.\n
+\t\t\t\t\t// This happens when you double click an underlined word in FireFox.\n
+\t\t\t\t\tif (startContainer.nodeType === 3 && endContainer.nodeType === 3) {\n
+\t\t\t\t\t\tif (startContainer.length === startOffset) {\n
+\t\t\t\t\t\t\tstartContainer = skipEmptyTextNodes(startContainer.nextSibling, true);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tstartContainer = startContainer.parentNode;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (endOffset === 0) {\n
+\t\t\t\t\t\t\tendContainer = skipEmptyTextNodes(endContainer.previousSibling, false);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tendContainer = endContainer.parentNode;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (startContainer && startContainer === endContainer) {\n
+\t\t\t\t\t\t\treturn startContainer;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (elm && elm.nodeType == 3) {\n
+\t\t\t\t\treturn elm.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn elm;\n
+\t\t\t}\n
+\n
+\t\t\telm = rng.item ? rng.item(0) : rng.parentElement();\n
+\n
+\t\t\t// IE 7 might return elements outside the iframe\n
+\t\t\tif (elm.ownerDocument !== self.win.document) {\n
+\t\t\t\telm = root;\n
+\t\t\t}\n
+\n
+\t\t\treturn elm;\n
+\t\t},\n
+\n
+\t\tgetSelectedBlocks: function(startElm, endElm) {\n
+\t\t\tvar self = this, dom = self.dom, node, root, selectedBlocks = [];\n
+\n
+\t\t\troot = dom.getRoot();\n
+\t\t\tstartElm = dom.getParent(startElm || self.getStart(), dom.isBlock);\n
+\t\t\tendElm = dom.getParent(endElm || self.getEnd(), dom.isBlock);\n
+\n
+\t\t\tif (startElm && startElm != root) {\n
+\t\t\t\tselectedBlocks.push(startElm);\n
+\t\t\t}\n
+\n
+\t\t\tif (startElm && endElm && startElm != endElm) {\n
+\t\t\t\tnode = startElm;\n
+\n
+\t\t\t\tvar walker = new TreeWalker(startElm, root);\n
+\t\t\t\twhile ((node = walker.next()) && node != endElm) {\n
+\t\t\t\t\tif (dom.isBlock(node)) {\n
+\t\t\t\t\t\tselectedBlocks.push(node);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (endElm && startElm != endElm && endElm != root) {\n
+\t\t\t\tselectedBlocks.push(endElm);\n
+\t\t\t}\n
+\n
+\t\t\treturn selectedBlocks;\n
+\t\t},\n
+\n
+\t\tisForward: function() {\n
+\t\t\tvar dom = this.dom, sel = this.getSel(), anchorRange, focusRange;\n
+\n
+\t\t\t// No support for selection direction then always return true\n
+\t\t\tif (!sel || !sel.anchorNode || !sel.focusNode) {\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tanchorRange = dom.createRng();\n
+\t\t\tanchorRange.setStart(sel.anchorNode, sel.anchorOffset);\n
+\t\t\tanchorRange.collapse(true);\n
+\n
+\t\t\tfocusRange = dom.createRng();\n
+\t\t\tfocusRange.setStart(sel.focusNode, sel.focusOffset);\n
+\t\t\tfocusRange.collapse(true);\n
+\n
+\t\t\treturn anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;\n
+\t\t},\n
+\n
+\t\tnormalize: function() {\n
+\t\t\tvar self = this, rng = self.getRng();\n
+\n
+\t\t\tif (Env.range && new RangeUtils(self.dom).normalize(rng)) {\n
+\t\t\t\tself.setRng(rng, self.isForward());\n
+\t\t\t}\n
+\n
+\t\t\treturn rng;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Executes callback when the current selection starts/stops matching the specified selector. The current\n
+\t\t * state will be passed to the callback as it\'s first argument.\n
+\t\t *\n
+\t\t * @method selectorChanged\n
+\t\t * @param {String} selector CSS selector to check for.\n
+\t\t * @param {function} callback Callback with state and args when the selector is matches or not.\n
+\t\t */\n
+\t\tselectorChanged: function(selector, callback) {\n
+\t\t\tvar self = this, currentSelectors;\n
+\n
+\t\t\tif (!self.selectorChangedData) {\n
+\t\t\t\tself.selectorChangedData = {};\n
+\t\t\t\tcurrentSelectors = {};\n
+\n
+\t\t\t\tself.editor.on(\'NodeChange\', function(e) {\n
+\t\t\t\t\tvar node = e.element, dom = self.dom, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};\n
+\n
+\t\t\t\t\t// Check for new matching selectors\n
+\t\t\t\t\teach(self.selectorChangedData, function(callbacks, selector) {\n
+\t\t\t\t\t\teach(parents, function(node) {\n
+\t\t\t\t\t\t\tif (dom.is(node, selector)) {\n
+\t\t\t\t\t\t\t\tif (!currentSelectors[selector]) {\n
+\t\t\t\t\t\t\t\t\t// Execute callbacks\n
+\t\t\t\t\t\t\t\t\teach(callbacks, function(callback) {\n
+\t\t\t\t\t\t\t\t\t\tcallback(true, {node: node, selector: selector, parents: parents});\n
+\t\t\t\t\t\t\t\t\t});\n
+\n
+\t\t\t\t\t\t\t\t\tcurrentSelectors[selector] = callbacks;\n
+\t\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\t\tmatchedSelectors[selector] = callbacks;\n
+\t\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// Check if current selectors still match\n
+\t\t\t\t\teach(currentSelectors, function(callbacks, selector) {\n
+\t\t\t\t\t\tif (!matchedSelectors[selector]) {\n
+\t\t\t\t\t\t\tdelete currentSelectors[selector];\n
+\n
+\t\t\t\t\t\t\teach(callbacks, function(callback) {\n
+\t\t\t\t\t\t\t\tcallback(false, {node: node, selector: selector, parents: parents});\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// Add selector listeners\n
+\t\t\tif (!self.selectorChangedData[selector]) {\n
+\t\t\t\tself.selectorChangedData[selector] = [];\n
+\t\t\t}\n
+\n
+\t\t\tself.selectorChangedData[selector].push(callback);\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\tgetScrollContainer: function() {\n
+\t\t\tvar scrollContainer, node = this.dom.getRoot();\n
+\n
+\t\t\twhile (node && node.nodeName != \'BODY\') {\n
+\t\t\t\tif (node.scrollHeight > node.clientHeight) {\n
+\t\t\t\t\tscrollContainer = node;\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnode = node.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\treturn scrollContainer;\n
+\t\t},\n
+\n
+\t\tscrollIntoView: function(elm) {\n
+\t\t\tvar y, viewPort, self = this, dom = self.dom, root = dom.getRoot(), viewPortY, viewPortH;\n
+\n
+\t\t\tfunction getPos(elm) {\n
+\t\t\t\tvar x = 0, y = 0;\n
+\n
+\t\t\t\tvar offsetParent = elm;\n
+\t\t\t\twhile (offsetParent && offsetParent.nodeType) {\n
+\t\t\t\t\tx += offsetParent.offsetLeft || 0;\n
+\t\t\t\t\ty += offsetParent.offsetTop || 0;\n
+\t\t\t\t\toffsetParent = offsetParent.offsetParent;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn {x: x, y: y};\n
+\t\t\t}\n
+\n
+\t\t\tif (root.nodeName != \'BODY\') {\n
+\t\t\t\tvar scrollContainer = self.getScrollContainer();\n
+\t\t\t\tif (scrollContainer) {\n
+\t\t\t\t\ty = getPos(elm).y - getPos(scrollContainer).y;\n
+\t\t\t\t\tviewPortH = scrollContainer.clientHeight;\n
+\t\t\t\t\tviewPortY = scrollContainer.scrollTop;\n
+\t\t\t\t\tif (y < viewPortY || y + 25 > viewPortY + viewPortH) {\n
+\t\t\t\t\t\tscrollContainer.scrollTop = y < viewPortY ? y : y - viewPortH + 25;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tviewPort = dom.getViewPort(self.editor.getWin());\n
+\t\t\ty = dom.getPos(elm).y;\n
+\t\t\tviewPortY = viewPort.y;\n
+\t\t\tviewPortH = viewPort.h;\n
+\t\t\tif (y < viewPort.y || y + 25 > viewPortY + viewPortH) {\n
+\t\t\t\tself.editor.getWin().scrollTo(0, y < viewPortY ? y : y - viewPortH + 25);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tplaceCaretAt: function(clientX, clientY) {\n
+\t\t\tvar doc = this.editor.getDoc(), rng, point;\n
+\n
+\t\t\tif (doc.caretPositionFromPoint) {\n
+\t\t\t\tpoint = doc.caretPositionFromPoint(clientX, clientY);\n
+\t\t\t\trng = doc.createRange();\n
+\t\t\t\trng.setStart(point.offsetNode, point.offset);\n
+\t\t\t\trng.collapse(true);\n
+\t\t\t} else if (doc.caretRangeFromPoint) {\n
+\t\t\t\trng = doc.caretRangeFromPoint(clientX, clientY);\n
+\t\t\t} else if (doc.body.createTextRange) {\n
+\t\t\t\trng = doc.body.createTextRange();\n
+\n
+\t\t\t\ttry {\n
+\t\t\t\t\trng.moveToPoint(clientX, clientY);\n
+\t\t\t\t\trng.collapse(true);\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\trng.collapse(clientY < doc.body.clientHeight);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tthis.setRng(rng);\n
+\t\t},\n
+\n
+\t\t_moveEndPoint: function(rng, node, start) {\n
+\t\t\tvar root = node, walker = new TreeWalker(node, root);\n
+\t\t\tvar nonEmptyElementsMap = this.dom.schema.getNonEmptyElements();\n
+\n
+\t\t\tdo {\n
+\t\t\t\t// Text node\n
+\t\t\t\tif (node.nodeType == 3 && trim(node.nodeValue).length !== 0) {\n
+\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\trng.setStart(node, 0);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\trng.setEnd(node, node.nodeValue.length);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// BR/IMG/INPUT elements but not table cells\n
+\t\t\t\tif (nonEmptyElementsMap[node.nodeName] && !/^(TD|TH)$/.test(node.nodeName)) {\n
+\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\trng.setStartBefore(node);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tif (node.nodeName == \'BR\') {\n
+\t\t\t\t\t\t\trng.setEndBefore(node);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\trng.setEndAfter(node);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Found empty text block old IE can place the selection inside those\n
+\t\t\t\tif (Env.ie && Env.ie < 11 && this.dom.isBlock(node) && this.dom.isEmpty(node)) {\n
+\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\trng.setStart(node, 0);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\trng.setEnd(node, 0);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t} while ((node = (start ? walker.next() : walker.prev())));\n
+\n
+\t\t\t// Failed to find any text node or other suitable location then move to the root of body\n
+\t\t\tif (root.nodeName == \'BODY\') {\n
+\t\t\t\tif (start) {\n
+\t\t\t\t\trng.setStart(root, 0);\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng.setEnd(root, root.childNodes.length);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tdestroy: function() {\n
+\t\t\tthis.win = null;\n
+\t\t\tthis.controlSelection.destroy();\n
+\t\t}\n
+\t};\n
+\n
+\treturn Selection;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>29908</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Selection.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

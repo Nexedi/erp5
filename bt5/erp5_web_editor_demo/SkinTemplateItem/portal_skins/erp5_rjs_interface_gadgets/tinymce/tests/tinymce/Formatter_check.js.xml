@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268243.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Formatter_check.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.Formatter - Check", {\n
+\tsetupModule: function() {\n
+\t\tdocument.getElementById(\'view\').innerHTML = \'<textarea id="elm1"></textarea><div id="elm2"></div>\';\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "#elm1",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\textended_valid_elements: \'b,i,span[style|contenteditable]\',\n
+\t\t\tskin: false,\n
+\t\t\tentities: \'raw\',\n
+\t\t\tvalid_styles: {\n
+\t\t\t\t\'*\': \'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display\'\n
+\t\t\t},\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\n
+\t\t\t\tif (window.inlineEditor) {\n
+\t\t\t\t\tQUnit.start();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "#elm2",\n
+\t\t\tinline: true,\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tindent: false,\n
+\t\t\tskin: false,\n
+\t\t\tconvert_fonts_to_spans: false,\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tentities: \'raw\',\n
+\t\t\tvalid_styles: {\n
+\t\t\t\t\'*\': \'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display\'\n
+\t\t\t},\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.inlineEditor = ed;\n
+\n
+\t\t\t\tif (window.editor) {\n
+\t\t\t\t\tQUnit.start();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+});\n
+\n
+test(\'Selected style element text\', function() {\n
+\teditor.formatter.register(\'bold\', {inline: \'b\'});\n
+\teditor.getBody().innerHTML = \'<p><b>1234</b></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'b\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'b\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(editor.formatter.match(\'bold\'), \'Selected style element text\');\n
+});\n
+\n
+test(\'Selected style element with css styles\', function() {\n
+\teditor.formatter.register(\'color\', {inline: \'span\', styles: {color: \'#ff0000\'}});\n
+\teditor.getBody().innerHTML = \'<p><span style="color:#ff0000">1234</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(editor.formatter.match(\'color\'), \'Selected style element with css styles\');\n
+});\n
+\n
+test(\'Selected style element with attributes\', function() {\n
+\teditor.formatter.register(\'fontsize\', {inline: \'font\', attributes: {size: \'7\'}});\n
+\teditor.getBody().innerHTML = \'<p><font size="7">1234</font></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'font\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'font\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(editor.formatter.match(\'fontsize\'), \'Selected style element with attributes\');\n
+});\n
+\n
+test(\'Selected style element text multiple formats\', function() {\n
+\teditor.formatter.register(\'multiple\', [\n
+\t\t{inline: \'b\'},\n
+\t\t{inline: \'strong\'}\n
+\t]);\n
+\teditor.getBody().innerHTML = \'<p><strong>1234</strong></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'strong\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'strong\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(editor.formatter.match(\'multiple\'), \'Selected style element text multiple formats\');\n
+});\n
+\n
+test(\'Selected complex style element\', function() {\n
+\teditor.formatter.register(\'complex\', {inline: \'span\', styles: {fontWeight: \'bold\'}});\n
+\teditor.getBody().innerHTML = \'<p><span style="color:#ff0000; font-weight:bold">1234</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(editor.formatter.match(\'complex\'), \'Selected complex style element\');\n
+});\n
+\n
+test(\'Selected non style element text\', function() {\n
+\teditor.formatter.register(\'bold\', {inline: \'b\'});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(!editor.formatter.match(\'bold\'), \'Selected non style element text\');\n
+});\n
+\n
+test(\'Selected partial style element (start)\', function() {\n
+\teditor.formatter.register(\'bold\', {inline: \'b\'});\n
+\teditor.getBody().innerHTML = \'<p><b>1234</b>5678</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'b\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].lastChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(editor.formatter.match(\'bold\'), \'Selected partial style element (start)\');\n
+});\n
+\n
+test(\'Selected partial style element (end)\', function() {\n
+\teditor.formatter.register(\'bold\', {inline: \'b\'});\n
+\teditor.getBody().innerHTML = \'<p>1234<b>5678</b></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'b\')[0].lastChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(!editor.formatter.match(\'bold\'), \'Selected partial style element (end)\');\n
+});\n
+\n
+test(\'Selected element text with parent inline element\', function() {\n
+\teditor.formatter.register(\'bold\', {inline: \'b\'});\n
+\teditor.getBody().innerHTML = \'<p><b><em><span>1234</span></em></b></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(editor.formatter.match(\'bold\'), \'Selected element text with parent inline element\');\n
+});\n
+\n
+test(\'Selected element match with variable\', function() {\n
+\teditor.formatter.register(\'complex\', {inline: \'span\', styles: {color: \'%color\'}});\n
+\teditor.getBody().innerHTML = \'<p><span style="color:#ff0000">1234</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(editor.formatter.match(\'complex\', {color: \'#ff0000\'}), \'Selected element match with variable\');\n
+});\n
+\n
+test(\'Selected element match with variable and function\', function() {\n
+\teditor.formatter.register(\'complex\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tcolor: function(vars) {\n
+\t\t\t\treturn vars.color + \'00\';\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\n
+\teditor.getBody().innerHTML = \'<p><span style="color:#ff0000">1234</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\tok(editor.formatter.match(\'complex\', {color: \'#ff00\'}), \'Selected element match with variable and function\');\n
+});\n
+\n
+test(\'formatChanged simple format\', function() {\n
+\tvar newState, newArgs;\n
+\n
+\teditor.formatter.formatChanged(\'bold\', function(state, args) {\n
+\t\tnewState = state;\n
+\t\tnewArgs = args;\n
+\t});\n
+\n
+\teditor.getBody().innerHTML = \'<p>text</p>\';\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\n
+\t// Check apply\n
+\teditor.formatter.apply(\'bold\');\n
+\teditor.nodeChanged();\n
+\tok(newState);\n
+\tequal(newArgs.format, \'bold\');\n
+\tequal(newArgs.node, editor.getBody().firstChild.firstChild);\n
+\tequal(newArgs.parents.length, 2);\n
+\n
+\t// Check remove\n
+\teditor.formatter.remove(\'bold\');\n
+\teditor.nodeChanged();\n
+\tok(!newState);\n
+\tequal(newArgs.format, \'bold\');\n
+\tequal(newArgs.node, editor.getBody().firstChild);\n
+\tequal(newArgs.parents.length, 1);\n
+});\n
+\n
+test(\'formatChanged complex format\', function() {\n
+\tvar newState, newArgs;\n
+\n
+\teditor.formatter.register(\'complex\', {inline: \'span\', styles: {color: \'%color\'}});\n
+\n
+\teditor.formatter.formatChanged(\'complex\', function(state, args) {\n
+\t\tnewState = state;\n
+\t\tnewArgs = args;\n
+\t}, true);\n
+\n
+\teditor.getBody().innerHTML = \'<p>text</p>\';\n
+\tUtils.setSelection(\'p\', 0, \'p\', 4);\n
+\n
+\t// Check apply\n
+\teditor.formatter.apply(\'complex\', {color: \'#FF0000\'});\n
+\teditor.nodeChanged();\n
+\tok(newState);\n
+\tequal(newArgs.format, \'complex\');\n
+\tequal(newArgs.node, editor.getBody().firstChild.firstChild);\n
+\tequal(newArgs.parents.length, 2);\n
+\n
+\t// Check remove\n
+\teditor.formatter.remove(\'complex\', {color: \'#FF0000\'});\n
+\teditor.nodeChanged();\n
+\tok(!newState);\n
+\tequal(newArgs.format, \'complex\');\n
+\tequal(newArgs.node, editor.getBody().firstChild);\n
+\tequal(newArgs.parents.length, 1);\n
+});\n
+\n
+test(\'Match format on div block in inline mode\', function() {\n
+\tinlineEditor.setContent(\'<p>a</p><p>b</p>\');\n
+\tinlineEditor.execCommand(\'SelectAll\');\n
+\tok(!inlineEditor.formatter.match(\'div\'), \'Formatter.match on div says true\');\n
+});\n
+\n
+test(\'Get preview css text for formats\', function() {\n
+\tok(/font-weight\\:(bold|700)/.test(editor.formatter.getCssText(\'bold\')), \'Bold not found in preview style\');\n
+\tok(/font-weight\\:(bold|700)/.test(editor.formatter.getCssText({inline: \'b\'})), \'Bold not found in preview style\');\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8452</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Formatter_check.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

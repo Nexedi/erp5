@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268658.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Content.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* Content.less */\n
+\n
+@font-family: Verdana, Arial, Helvetica, sans-serif;\n
+@font-size: 11px;\n
+\n
+body {\n
+\tbackground-color: #FFFFFF;\n
+\tcolor: #000000;\n
+\tfont-family: @font-family;\n
+\tfont-size: @font-size;\n
+\tscrollbar-3dlight-color: #F0F0EE;\n
+\tscrollbar-arrow-color: #676662;\n
+\tscrollbar-base-color: #F0F0EE;\n
+\tscrollbar-darkshadow-color: #DDDDDD;\n
+\tscrollbar-face-color: #E0E0DD;\n
+\tscrollbar-highlight-color: #F0F0EE;\n
+\tscrollbar-shadow-color: #F0F0EE;\n
+\tscrollbar-track-color: #F5F5F5;\n
+}\n
+\n
+td, th {\n
+\tfont-family: @font-family;\n
+\tfont-size: @font-size;\n
+}\n
+\n
+@import "Content.Objects.less";\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>569</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Content.less</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

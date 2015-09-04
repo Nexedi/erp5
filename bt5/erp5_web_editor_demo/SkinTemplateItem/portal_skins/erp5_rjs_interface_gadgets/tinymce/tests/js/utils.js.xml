@@ -1,0 +1,461 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268183.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>utils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tfunction fontFace(face) {\n
+\t\tif (tinymce.isOpera) {\n
+\t\t\treturn "\'" + face + "\'";\n
+\t\t} else {\n
+\t\t\treturn face;\n
+\t\t}\n
+\t}\n
+\n
+\tfunction findContainer(selector) {\n
+\t\tvar container;\n
+\t\tif (tinymce.is(selector, \'string\')) {\n
+\t\t\tcontainer = editor.dom.select(selector)[0];\n
+\t\t} else {\n
+\t\t\tcontainer = selector;\n
+\t\t}\n
+\t\tif (container.firstChild) {\n
+\t\t\tcontainer = container.firstChild;\n
+\t\t}\n
+\t\treturn container;\n
+\t}\n
+\n
+\tfunction setSelection(startSelector, startOffset, endSelector, endOffset) {\n
+\t\tif (!endSelector) {\n
+\t\t\tendSelector = startSelector;\n
+\t\t\tendOffset = startOffset;\n
+\t\t}\n
+\t\tvar startContainer = findContainer(startSelector);\n
+\t\tvar endContainer = findContainer(endSelector);\n
+\t\tvar rng = editor.dom.createRng();\n
+\n
+\t\tfunction setRange(container, offset, start) {\n
+\t\t\toffset = offset || 0;\n
+\n
+\t\t\tif (offset === \'after\') {\n
+\t\t\t\tif (start) {\n
+\t\t\t\t\trng.setStartAfter(container);\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng.setEndAfter(container);\n
+\t\t\t\t}\n
+\t\t\t\treturn;\n
+\t\t\t} else if (offset === \'afterNextCharacter\') {\n
+\t\t\t\tcontainer = container.nextSibling;\n
+\t\t\t\toffset = 1;\n
+\t\t\t}\n
+\t\t\tif (start) {\n
+\t\t\t\trng.setStart(container, offset);\n
+\t\t\t} else {\n
+\t\t\t\trng.setEnd(container, offset);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tsetRange(startContainer, startOffset, true);\n
+\t\tsetRange(endContainer, endOffset, false);\n
+\t\teditor.selection.setRng(rng);\n
+\t}\n
+\n
+\tfunction trimContent(content) {\n
+\t\treturn content.replace(/^<p>&nbsp;<\\/p>\\n?/, \'\').replace(/\\n?<p>&nbsp;<\\/p>$/, \'\');\n
+\t}\n
+\n
+\t/**\n
+\t * Fakes a key event.\n
+\t *\n
+\t * @param {Element/String} e DOM element object or element id to send fake event to.\n
+\t * @param {String} na Event name to fake like "keydown".\n
+\t * @param {Object} o Optional object with data to send with the event like keyCode and charCode.\n
+\t */\n
+\tfunction fakeKeyEvent(e, na, o) {\n
+\t\tvar ev;\n
+\n
+\t\to = tinymce.extend({\n
+\t\t\tkeyCode : 13,\n
+\t\t\tcharCode : 0\n
+\t\t}, o);\n
+\n
+\t\te = tinymce.DOM.get(e);\n
+\n
+\t\tif (e.fireEvent) {\n
+\t\t\tev = document.createEventObject();\n
+\t\t\ttinymce.extend(ev, o);\n
+\t\t\te.fireEvent(\'on\' + na, ev);\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tif (document.createEvent) {\n
+\t\t\ttry {\n
+\t\t\t\t// Fails in Safari\n
+\t\t\t\tev = document.createEvent(\'KeyEvents\');\n
+\t\t\t\tev.initKeyEvent(na, true, true, window, false, false, false, false, o.keyCode, o.charCode);\n
+\t\t\t} catch (ex) {\n
+\t\t\t\tev = document.createEvent(\'Events\');\n
+\t\t\t\tev.initEvent(na, true, true);\n
+\n
+\t\t\t\tev.keyCode = o.keyCode;\n
+\t\t\t\tev.charCode = o.charCode;\n
+\t\t\t}\n
+\t\t} else {\n
+\t\t\tev = document.createEvent(\'UIEvents\');\n
+\n
+\t\t\tif (ev.initUIEvent) {\n
+\t\t\t\tev.initUIEvent(na, true, true, window, 1);\n
+\t\t\t}\n
+\n
+\t\t\tev.keyCode = o.keyCode;\n
+\t\t\tev.charCode = o.charCode;\n
+\t\t}\n
+\n
+\t\te.dispatchEvent(ev);\n
+\t}\n
+\n
+\tfunction normalizeRng(rng) {\n
+\t\tif (rng.startContainer.nodeType == 3) {\n
+\t\t\tif (rng.startOffset === 0) {\n
+\t\t\t\trng.setStartBefore(rng.startContainer);\n
+\t\t\t} else if (rng.startOffset >= rng.startContainer.nodeValue.length - 1) {\n
+\t\t\t\trng.setStartAfter(rng.startContainer);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tif (rng.endContainer.nodeType == 3) {\n
+\t\t\tif (rng.endOffset === 0) {\n
+\t\t\t\trng.setEndBefore(rng.endContainer);\n
+\t\t\t} else if (rng.endOffset >= rng.endContainer.nodeValue.length - 1) {\n
+\t\t\t\trng.setEndAfter(rng.endContainer);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn rng;\n
+\t}\n
+\n
+\t// TODO: Replace this with the new event logic in 3.5\n
+\tfunction type(chr) {\n
+\t\tvar editor = tinymce.activeEditor, keyCode, charCode, evt, startElm, rng;\n
+\n
+\t\tfunction charCodeToKeyCode(charCode) {\n
+\t\t\tvar lookup = {\n
+\t\t\t\t\'0\': 48, \'1\': 49, \'2\': 50, \'3\': 51, \'4\': 52, \'5\': 53, \'6\': 54, \'7\': 55, \'8\': 56, \'9\': 57,\'a\': 65, \'b\': 66, \'c\': 67,\n
+\t\t\t\t\'d\': 68, \'e\': 69, \'f\': 70, \'g\': 71, \'h\': 72, \'i\': 73, \'j\': 74, \'k\': 75, \'l\': 76, \'m\': 77, \'n\': 78, \'o\': 79, \'p\': 80, \'q\': 81,\n
+\t\t\t\t\'r\': 82, \'s\': 83, \'t\': 84, \'u\': 85,\t\'v\': 86, \'w\': 87, \'x\': 88, \'y\': 89, \' \': 32, \',\': 188, \'-\': 189, \'.\': 190, \'/\': 191, \'\\\\\': 220,\n
+\t\t\t\t\'[\': 219, \']\': 221, \'\\\'\': 222, \';\': 186, \'=\': 187, \')\': 41\n
+\t\t\t};\n
+\n
+\t\t\treturn lookup[String.fromCharCode(charCode)];\n
+\t\t}\n
+\n
+\t\tfunction fakeEvent(target, type, evt) {\n
+\t\t\teditor.dom.fire(target, type, evt);\n
+\t\t}\n
+\n
+\t\t// Numeric keyCode\n
+\t\tif (typeof(chr) == "number") {\n
+\t\t\tcharCode = chr;\n
+\t\t\tkeyCode = charCodeToKeyCode(charCode);\n
+\t\t} else if (typeof(chr) == "string") {\n
+\t\t\t// String value\n
+\t\t\tif (chr == \'\\b\') {\n
+\t\t\t\tkeyCode = 8;\n
+\t\t\t\tcharCode = chr.charCodeAt(0);\n
+\t\t\t} else if (chr == \'\\n\') {\n
+\t\t\t\tkeyCode = 13;\n
+\t\t\t\tcharCode = chr.charCodeAt(0);\n
+\t\t\t} else {\n
+\t\t\t\tcharCode = chr.charCodeAt(0);\n
+\t\t\t\tkeyCode = charCodeToKeyCode(charCode);\n
+\t\t\t}\n
+\t\t} else {\n
+\t\t\tevt = chr;\n
+\n
+\t\t\tif (evt.charCode) {\n
+\t\t\t\tchr = String.fromCharCode(evt.charCode);\n
+\t\t\t}\n
+\n
+\t\t\tif (evt.keyCode) {\n
+\t\t\t\tkeyCode = evt.keyCode;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tevt = evt || {keyCode: keyCode, charCode: charCode};\n
+\n
+\t\tstartElm = editor.selection.getStart();\n
+\t\tfakeEvent(startElm, \'keydown\', evt);\n
+\t\tfakeEvent(startElm, \'keypress\', evt);\n
+\n
+\t\tif (!evt.isDefaultPrevented()) {\n
+\t\t\tif (keyCode == 8) {\n
+\t\t\t\tif (editor.getDoc().selection) {\n
+\t\t\t\t\trng = editor.getDoc().selection.createRange();\n
+\n
+\t\t\t\t\tif (rng.text.length === 0) {\n
+\t\t\t\t\t\trng.moveStart(\'character\', -1);\n
+\t\t\t\t\t\trng.select();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\trng.execCommand(\'Delete\', false, null);\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng = editor.selection.getRng();\n
+\n
+\t\t\t\t\tif (rng.startContainer.nodeType == 1 && rng.collapsed) {\n
+\t\t\t\t\t\tvar nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];\n
+\n
+\t\t\t\t\t\t// If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node\n
+\t\t\t\t\t\t// Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn\'t delete otherwise\n
+\t\t\t\t\t\tif (rng.startOffset >= nodes.length - 1 && lastNode && lastNode.nodeType == 3 && lastNode.data.length > 0) {\n
+\t\t\t\t\t\t\trng.setStart(lastNode, lastNode.data.length - 1);\n
+\t\t\t\t\t\t\trng.setEnd(lastNode, lastNode.data.length);\n
+\t\t\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teditor.getDoc().execCommand(\'Delete\', false, null);\n
+\t\t\t\t}\n
+\t\t\t} else if (typeof(chr) == \'string\') {\n
+\t\t\t\trng = editor.selection.getRng(true);\n
+\n
+\t\t\t\tif (rng.startContainer.nodeType == 3 && rng.collapsed) {\n
+\t\t\t\t\trng.startContainer.insertData(rng.startOffset, chr);\n
+\t\t\t\t\trng.setStart(rng.startContainer, rng.startOffset + 1);\n
+\t\t\t\t\trng.collapse(true);\n
+\t\t\t\t\teditor.selection.setRng(rng);\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng.insertNode(editor.getDoc().createTextNode(chr));\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfakeEvent(startElm, \'keyup\', evt);\n
+\t}\n
+\n
+\tfunction cleanHtml(html) {\n
+\t\thtml = html.toLowerCase().replace(/[\\r\\n]+/gi, \'\');\n
+\t\thtml = html.replace(/ (sizcache[0-9]+|sizcache|nodeindex|sizset[0-9]+|sizset|data\\-mce\\-expando|data\\-mce\\-selected)="[^"]*"/gi, \'\');\n
+\t\thtml = html.replace(/<span[^>]+data-mce-bogus[^>]+>[\\u200B\\uFEFF]+<\\/span>|<div[^>]+data-mce-bogus[^>]+><\\/div>/gi, \'\');\n
+\t\thtml = html.replace(/ style="([^"]+)"/gi, function(val1, val2) {\n
+\t\t\tval2 = val2.replace(/;$/, \'\');\n
+\t\t\treturn \' style="\' + val2.replace(/\\:([^ ])/g, \': $1\') + \';"\';\n
+\t\t});\n
+\n
+\t\treturn html;\n
+\t}\n
+\n
+\tfunction normalizeHtml(html) {\n
+\t\tvar writer = new tinymce.html.Writer();\n
+\n
+\t\tnew tinymce.html.SaxParser({\n
+\t\t\tvalidate: false,\n
+\t\t\tcomment: writer.comment,\n
+\t\t\tcdata: writer.cdata,\n
+\t\t\ttext: writer.text,\n
+\t\t\tend: writer.end,\n
+\t\t\tpi: writer.pi,\n
+\t\t\tdoctype: writer.doctype,\n
+\n
+\t\t\tstart: function(name, attrs, empty) {\n
+\t\t\t\tattrs.sort(function(a, b) {\n
+\t\t\t\t\tif (a.name === b.name) {\n
+\t\t\t\t\t\treturn 0;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn a.name > b.name ? 1 : -1;\n
+\t\t\t\t});\n
+\n
+\t\t\t\twriter.start(name, attrs, empty);\n
+\t\t\t}\n
+\t\t}).parse(html);\n
+\n
+\t\treturn writer.getContent();\n
+\t}\n
+\n
+\t/**\n
+\t * Measures the x, y, w, h of the specified element/control relative to the view element.\n
+\t */\n
+\tfunction rect(ctrl) {\n
+\t\tvar outerRect, innerRect;\n
+\n
+\t\tif (ctrl.nodeType) {\n
+\t\t\tinnerRect = ctrl.getBoundingClientRect();\n
+\t\t} else {\n
+\t\t\tinnerRect = ctrl.getEl().getBoundingClientRect();\n
+\t\t}\n
+\n
+\t\touterRect = document.getElementById(\'view\').getBoundingClientRect();\n
+\n
+\t\treturn [\n
+\t\t\tMath.round(innerRect.left - outerRect.left),\n
+\t\t\tMath.round(innerRect.top - outerRect.top),\n
+\t\t\tMath.round(innerRect.right - innerRect.left),\n
+\t\t\tMath.round(innerRect.bottom - innerRect.top)\n
+\t\t];\n
+\t}\n
+\n
+\tfunction size(ctrl) {\n
+\t\treturn rect(ctrl).slice(2);\n
+\t}\n
+\n
+\tfunction resetScroll(elm) {\n
+\t\telm.scrollTop = 0;\n
+\t\telm.scrollLeft = 0;\n
+\t}\n
+\n
+\t// Needed since fonts render differently on different platforms\n
+\tfunction nearlyEqualRects(rect1, rect2, diff) {\n
+\t\tdiff = diff || 1;\n
+\n
+\t\tfor (var i = 0; i < 4; i++) {\n
+\t\t\tif (Math.abs(rect1[i] - rect2[i]) > diff) {\n
+\t\t\t\tdeepEqual(rect1, rect2);\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tok(true);\n
+\t}\n
+\n
+\tfunction getFrontmostWindow() {\n
+\t\treturn editor.windowManager.windows[editor.windowManager.windows.length - 1];\n
+\t}\n
+\n
+\tfunction pressArrowKey(evt) {\n
+\t\tvar dom = editor.dom, target = editor.selection.getNode();\n
+\n
+\t\tevt = tinymce.extend({keyCode: 37}, evt);\n
+\n
+\t\tdom.fire(target, \'keydown\', evt);\n
+\t\tdom.fire(target, \'keypress\', evt);\n
+\t\tdom.fire(target, \'keyup\', evt);\n
+\t}\n
+\n
+\tfunction pressEnter(evt) {\n
+\t\tvar dom = editor.dom, target = editor.selection.getNode();\n
+\n
+\t\tevt = tinymce.extend({keyCode: 13}, evt);\n
+\n
+\t\tdom.fire(target, \'keydown\', evt);\n
+\t\tdom.fire(target, \'keypress\', evt);\n
+\t\tdom.fire(target, \'keyup\', evt);\n
+\t}\n
+\n
+\tfunction trimBrsOnIE(html) {\n
+\t\treturn html.replace(/<br[^>]*>/gi, \'\');\n
+\t}\n
+\n
+\tfunction patch(proto, name, patchFunc) {\n
+\t\tvar originalFunc = proto[name];\n
+\t\tvar originalFuncs = proto.__originalFuncs;\n
+\n
+\t\tif (!originalFuncs) {\n
+\t\t\tproto.__originalFuncs = originalFuncs = {};\n
+\t\t}\n
+\n
+\t\tif (!originalFuncs[name]) {\n
+\t\t\toriginalFuncs[name] = originalFunc;\n
+\t\t} else {\n
+\t\t\toriginalFunc = originalFuncs[name];\n
+\t\t}\n
+\n
+\t\tproto[name] = function() {\n
+\t\t\tvar args = Array.prototype.slice.call(arguments);\n
+\t\t\targs.unshift(originalFunc);\n
+\t\t\treturn patchFunc.apply(this, args);\n
+\t\t};\n
+\t}\n
+\n
+\tfunction unpatch(proto, name) {\n
+\t\tvar originalFuncs = proto.__originalFuncs;\n
+\n
+\t\tif (!originalFuncs) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tif (name) {\n
+\t\t\tproto[name] = originalFuncs[name];\n
+\t\t\tdelete originalFuncs[name];\n
+\t\t} else {\n
+\t\t\tfor (var key in originalFuncs) {\n
+\t\t\t\tproto[key] = originalFuncs[key];\n
+\t\t\t}\n
+\n
+\t\t\tdelete proto.__originalFuncs;\n
+\t\t}\n
+\t}\n
+\n
+\tfunction triggerElementChange(element){\n
+\t\tvar evt;\n
+\n
+\t\tif ("createEvent" in document) {\n
+\t\t\tevt = document.createEvent("HTMLEvents");\n
+\t\t\tevt.initEvent("change", false, true);\n
+\t\t\telement.dispatchEvent(evt);\n
+\t\t} else {\n
+\t\t\telement.fireEvent("onchange");\n
+\t\t}\n
+\t}\n
+\n
+\twindow.Utils = {\n
+\t\tfontFace: fontFace,\n
+\t\tfindContainer: findContainer,\n
+\t\tsetSelection: setSelection,\n
+\t\ttrimContent: trimContent,\n
+\t\tfakeKeyEvent: fakeKeyEvent,\n
+\t\tnormalizeRng: normalizeRng,\n
+\t\ttype: type,\n
+\t\tcleanHtml: cleanHtml,\n
+\t\tnormalizeHtml: normalizeHtml,\n
+\t\trect: rect,\n
+\t\tsize: size,\n
+\t\tresetScroll: resetScroll,\n
+\t\tnearlyEqualRects: nearlyEqualRects,\n
+\t\tgetFrontmostWindow: getFrontmostWindow,\n
+\t\tpressArrowKey: pressArrowKey,\n
+\t\tpressEnter: pressEnter,\n
+\t\ttrimBrsOnIE: trimBrsOnIE,\n
+\t\tpatch: patch,\n
+\t\tunpatch: unpatch,\n
+\t\ttriggerElementChange: triggerElementChange\n
+\t};\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10497</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>utils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

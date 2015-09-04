@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268567.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'autolink\', function(editor) {\n
+\tvar AutoUrlDetectState;\n
+\n
+\teditor.on("keydown", function(e) {\n
+\t\tif (e.keyCode == 13) {\n
+\t\t\treturn handleEnter(editor);\n
+\t\t}\n
+\t});\n
+\n
+\t// Internet Explorer has built-in automatic linking for most cases\n
+\tif (tinymce.Env.ie) {\n
+\t\teditor.on("focus", function() {\n
+\t\t\tif (!AutoUrlDetectState) {\n
+\t\t\t\tAutoUrlDetectState = true;\n
+\n
+\t\t\t\ttry {\n
+\t\t\t\t\teditor.execCommand(\'AutoUrlDetect\', false, true);\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// Ignore\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\treturn;\n
+\t}\n
+\n
+\teditor.on("keypress", function(e) {\n
+\t\tif (e.keyCode == 41) {\n
+\t\t\treturn handleEclipse(editor);\n
+\t\t}\n
+\t});\n
+\n
+\teditor.on("keyup", function(e) {\n
+\t\tif (e.keyCode == 32) {\n
+\t\t\treturn handleSpacebar(editor);\n
+\t\t}\n
+\t});\n
+\n
+\tfunction handleEclipse(editor) {\n
+\t\tparseCurrentLine(editor, -1, \'(\', true);\n
+\t}\n
+\n
+\tfunction handleSpacebar(editor) {\n
+\t\tparseCurrentLine(editor, 0, \'\', true);\n
+\t}\n
+\n
+\tfunction handleEnter(editor) {\n
+\t\tparseCurrentLine(editor, -1, \'\', false);\n
+\t}\n
+\n
+\tfunction parseCurrentLine(editor, end_offset, delimiter) {\n
+\t\tvar rng, end, start, endContainer, bookmark, text, matches, prev, len, rngText;\n
+\n
+\t\tfunction scopeIndex(container, index) {\n
+\t\t\tif (index < 0) {\n
+\t\t\t\tindex = 0;\n
+\t\t\t}\n
+\n
+\t\t\tif (container.nodeType == 3) {\n
+\t\t\t\tvar len = container.data.length;\n
+\n
+\t\t\t\tif (index > len) {\n
+\t\t\t\t\tindex = len;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn index;\n
+\t\t}\n
+\n
+\t\tfunction setStart(container, offset) {\n
+\t\t\tif (container.nodeType != 1 || container.hasChildNodes()) {\n
+\t\t\t\trng.setStart(container, scopeIndex(container, offset));\n
+\t\t\t} else {\n
+\t\t\t\trng.setStartBefore(container);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction setEnd(container, offset) {\n
+\t\t\tif (container.nodeType != 1 || container.hasChildNodes()) {\n
+\t\t\t\trng.setEnd(container, scopeIndex(container, offset));\n
+\t\t\t} else {\n
+\t\t\t\trng.setEndAfter(container);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Never create a link when we are inside a link\n
+\t\tif (editor.selection.getNode().tagName == \'A\') {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t// We need at least five characters to form a URL,\n
+\t\t// hence, at minimum, five characters from the beginning of the line.\n
+\t\trng = editor.selection.getRng(true).cloneRange();\n
+\t\tif (rng.startOffset < 5) {\n
+\t\t\t// During testing, the caret is placed inbetween two text nodes.\n
+\t\t\t// The previous text node contains the URL.\n
+\t\t\tprev = rng.endContainer.previousSibling;\n
+\t\t\tif (!prev) {\n
+\t\t\t\tif (!rng.endContainer.firstChild || !rng.endContainer.firstChild.nextSibling) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tprev = rng.endContainer.firstChild.nextSibling;\n
+\t\t\t}\n
+\n
+\t\t\tlen = prev.length;\n
+\t\t\tsetStart(prev, len);\n
+\t\t\tsetEnd(prev, len);\n
+\n
+\t\t\tif (rng.endOffset < 5) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tend = rng.endOffset;\n
+\t\t\tendContainer = prev;\n
+\t\t} else {\n
+\t\t\tendContainer = rng.endContainer;\n
+\n
+\t\t\t// Get a text node\n
+\t\t\tif (endContainer.nodeType != 3 && endContainer.firstChild) {\n
+\t\t\t\twhile (endContainer.nodeType != 3 && endContainer.firstChild) {\n
+\t\t\t\t\tendContainer = endContainer.firstChild;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Move range to text node\n
+\t\t\t\tif (endContainer.nodeType == 3) {\n
+\t\t\t\t\tsetStart(endContainer, 0);\n
+\t\t\t\t\tsetEnd(endContainer, endContainer.nodeValue.length);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (rng.endOffset == 1) {\n
+\t\t\t\tend = 2;\n
+\t\t\t} else {\n
+\t\t\t\tend = rng.endOffset - 1 - end_offset;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tstart = end;\n
+\n
+\t\tdo {\n
+\t\t\t// Move the selection one character backwards.\n
+\t\t\tsetStart(endContainer, end >= 2 ? end - 2 : 0);\n
+\t\t\tsetEnd(endContainer, end >= 1 ? end - 1 : 0);\n
+\t\t\tend -= 1;\n
+\t\t\trngText = rng.toString();\n
+\n
+\t\t\t// Loop until one of the following is found: a blank space, &nbsp;, delimiter, (end-2) >= 0\n
+\t\t} while (rngText != \' \' && rngText !== \'\' && rngText.charCodeAt(0) != 160 && (end - 2) >= 0 && rngText != delimiter);\n
+\n
+\t\tif (rng.toString() == delimiter || rng.toString().charCodeAt(0) == 160) {\n
+\t\t\tsetStart(endContainer, end);\n
+\t\t\tsetEnd(endContainer, start);\n
+\t\t\tend += 1;\n
+\t\t} else if (rng.startOffset === 0) {\n
+\t\t\tsetStart(endContainer, 0);\n
+\t\t\tsetEnd(endContainer, start);\n
+\t\t} else {\n
+\t\t\tsetStart(endContainer, end);\n
+\t\t\tsetEnd(endContainer, start);\n
+\t\t}\n
+\n
+\t\t// Exclude last . from word like "www.site.com."\n
+\t\ttext = rng.toString();\n
+\t\tif (text.charAt(text.length - 1) == \'.\') {\n
+\t\t\tsetEnd(endContainer, start - 1);\n
+\t\t}\n
+\n
+\t\ttext = rng.toString();\n
+\t\tmatches = text.match(/^(https?:\\/\\/|ssh:\\/\\/|ftp:\\/\\/|file:\\/|www\\.|(?:mailto:)?[A-Z0-9._%+\\-]+@)(.+)$/i);\n
+\n
+\t\tif (matches) {\n
+\t\t\tif (matches[1] == \'www.\') {\n
+\t\t\t\tmatches[1] = \'http://www.\';\n
+\t\t\t} else if (/@$/.test(matches[1]) && !/^mailto:/.test(matches[1])) {\n
+\t\t\t\tmatches[1] = \'mailto:\' + matches[1];\n
+\t\t\t}\n
+\n
+\t\t\tbookmark = editor.selection.getBookmark();\n
+\n
+\t\t\teditor.selection.setRng(rng);\n
+\t\t\teditor.execCommand(\'createlink\', false, matches[1] + matches[2]);\n
+\t\t\teditor.selection.moveToBookmark(bookmark);\n
+\t\t\teditor.nodeChanged();\n
+\t\t}\n
+\t}\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4846</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

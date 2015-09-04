@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268195.06</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Styles.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.html.Styles");\n
+\n
+test(\'Basic parsing/serializing\', function() {\n
+\tvar styles = new tinymce.html.Styles();\n
+\n
+\texpect(11);\n
+\n
+\tequal(styles.serialize(styles.parse(\'FONT-SIZE:10px\')), "font-size: 10px;");\n
+\tequal(styles.serialize(styles.parse(\'FONT-SIZE:10px;COLOR:red\')), "font-size: 10px; color: red;");\n
+\tequal(styles.serialize(styles.parse(\'   FONT-SIZE  :  10px  ;   COLOR  :  red   \')), "font-size: 10px; color: red;");\n
+\tequal(styles.serialize(styles.parse(\'key:"value"\')), "key: \'value\';");\n
+\tequal(styles.serialize(styles.parse(\'key:"value1" \\\'value2\\\'\')), "key: \'value1\' \'value2\';");\n
+\tequal(styles.serialize(styles.parse(\'key:"val\\\\"ue1" \\\'val\\\\\\\'ue2\\\'\')), "key: \'val\\"ue1\' \'val\\\\\'ue2\';");\n
+\tequal(styles.serialize(styles.parse(\'width:100%\')), \'width: 100%;\');\n
+\tequal(styles.serialize(styles.parse(\'value:_; value2:"_"\')), \'value: _; value2: \\\'_\\\';\');\n
+\tequal(styles.serialize(styles.parse(\'value: "&amp;"\')), "value: \'&amp;\';");\n
+\tequal(styles.serialize(styles.parse(\'value: "&"\')), "value: \'&\';");\n
+\tequal(styles.serialize(styles.parse(\'value: \')), "");\n
+});\n
+\n
+test(\'Colors force hex and lowercase\', function() {\n
+\tvar styles = new tinymce.html.Styles();\n
+\n
+\texpect(6);\n
+\n
+\tequal(styles.serialize(styles.parse(\'color: rgb(1,2,3)\')), "color: #010203;");\n
+\tequal(styles.serialize(styles.parse(\'color: RGB(1,2,3)\')), "color: #010203;");\n
+\tequal(styles.serialize(styles.parse(\'color: #FF0000\')), "color: #ff0000;");\n
+\tequal(styles.serialize(styles.parse(\'  color:   RGB  (  1  ,  2  ,  3  )  \')), "color: #010203;");\n
+\tequal(styles.serialize(styles.parse(\'   FONT-SIZE  :  10px  ;   COLOR  :  RGB  (  1  ,  2  ,  3  )   \')), "font-size: 10px; color: #010203;");\n
+\tequal(styles.serialize(styles.parse(\'   FONT-SIZE  :  10px  ;   COLOR  :  RED   \')), "font-size: 10px; color: red;");\n
+});\n
+\n
+test(\'Urls convert urls and force format\', function() {\n
+\tvar styles = new tinymce.html.Styles({url_converter : function(url) {\n
+\t\treturn \'|\' + url + \'|\';\n
+\t}});\n
+\n
+\texpect(9);\n
+\n
+\tequal(styles.serialize(styles.parse(\'background: url(a)\')), "background: url(\'|a|\');");\n
+\tequal(styles.serialize(styles.parse(\'background: url("a")\')), "background: url(\'|a|\');");\n
+\tequal(styles.serialize(styles.parse("background: url(\'a\')")), "background: url(\'|a|\');");\n
+\tequal(styles.serialize(styles.parse(\'background: url(   a   )\')), "background: url(\'|a|\');");\n
+\tequal(styles.serialize(styles.parse(\'background: url(   "a"   )\')), "background: url(\'|a|\');");\n
+\tequal(styles.serialize(styles.parse("background: url(    \'a\'    )")), "background: url(\'|a|\');");\n
+\tequal(styles.serialize(styles.parse(\'background1: url(a); background2: url("a"); background3: url(\\\'a\\\')\')), "background1: url(\'|a|\'); background2: url(\'|a|\'); background3: url(\'|a|\');");\n
+\tequal(styles.serialize(styles.parse("background: url(\'http://www.site.com/a?a=b&c=d\')")), "background: url(\'|http://www.site.com/a?a=b&c=d|\');");\n
+\tequal(styles.serialize(styles.parse("background: url(\'http://www.site.com/a_190x144.jpg\');")), "background: url(\'|http://www.site.com/a_190x144.jpg|\');");\n
+});\n
+\n
+test(\'Compress styles\', function() {\n
+\tvar styles = new tinymce.html.Styles();\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'border-top: 1px solid red; border-left: 1px solid red; border-bottom: 1px solid red; border-right: 1px solid red;\')),\n
+\t\t\'border: 1px solid red;\'\n
+\t);\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'border-width: 1pt 1pt 1pt 1pt; border-style: none none none none; border-color: black black black black;\')),\n
+\t\t\'border: 1pt none black;\'\n
+\t);\n
+\t\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;\')),\n
+\t\t\'border-width: 1pt 4pt 2pt 3pt; border-style: solid dashed dotted none; border-color: black red green blue;\'\n
+\t);\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'border-top: 1px solid red; border-left: 1px solid red; border-right: 1px solid red; border-bottom: 1px solid red\')),\n
+\t\t\'border: 1px solid red;\'\n
+\t);\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'border-top: 1px solid red; border-right: 2px solid red; border-bottom: 3px solid red; border-left: 4px solid red\')),\n
+\t\t\'border-top: 1px solid red; border-right: 2px solid red; border-bottom: 3px solid red; border-left: 4px solid red;\'\n
+\t);\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'padding-top: 1px; padding-right: 2px; padding-bottom: 3px; padding-left: 4px\')),\n
+\t\t\'padding: 1px 2px 3px 4px;\'\n
+\t);\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'margin-top: 1px; margin-right: 2px; margin-bottom: 3px; margin-left: 4px\')),\n
+\t\t\'margin: 1px 2px 3px 4px;\'\n
+\t);\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'margin-top: 1px; margin-right: 1px; margin-bottom: 1px; margin-left: 2px\')),\n
+\t\t\'margin: 1px 1px 1px 2px;\'\n
+\t);\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'margin-top: 2px; margin-right: 1px; margin-bottom: 1px; margin-left: 1px\')),\n
+\t\t\'margin: 2px 1px 1px 1px;\'\n
+\t);\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'border-top-color: red; border-right-color: green; border-bottom-color: blue; border-left-color: yellow\')),\n
+\t\t\'border-color: red green blue yellow;\'\n
+\t);\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'border-width: 1px; border-style: solid; border-color: red\')),\n
+\t\t\'border: 1px solid red;\'\n
+\t);\n
+\n
+\tequal(\n
+\t\tstyles.serialize(styles.parse(\'border-width: 1px; border-color: red\')),\n
+\t\t\'border-width: 1px; border-color: red;\'\n
+\t);\n
+});\n
+\n
+test(\'Font weight\', function() {\n
+\tvar styles = new tinymce.html.Styles();\n
+\n
+\texpect(1);\n
+\n
+\tequal(styles.serialize(styles.parse(\'font-weight: 700\')), "font-weight: bold;");\n
+});\n
+\n
+test(\'Valid styles\', function() {\n
+\tvar styles = new tinymce.html.Styles({}, new tinymce.html.Schema({valid_styles : {\'*\': \'color,font-size\', \'a\': \'margin-left\'}}));\n
+\n
+\texpect(2);\n
+\n
+\tequal(styles.serialize(styles.parse(\'color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 1;\'), \'b\'), "color: #ff0000; font-size: 10px;");\n
+\tequal(styles.serialize(styles.parse(\'color: #ff0000; font-size: 10px; margin-left: 10px; invalid: 2;\'), \'a\'), "color: #ff0000; font-size: 10px; margin-left: 10px;");\n
+});\n
+\n
+test(\'Invalid styles\', function() {\n
+\tvar styles = new tinymce.html.Styles({}, new tinymce.html.Schema({invalid_styles : {\'*\': \'color,font-size\', \'a\': \'margin-left\'}}));\n
+\n
+\tequal(styles.serialize(styles.parse(\'color: #ff0000; font-size: 10px; margin-left: 10px\'), \'b\'), "margin-left: 10px;");\n
+\tequal(styles.serialize(styles.parse(\'color: #ff0000; font-size: 10px; margin-left: 10px; margin-right: 10px;\'), \'a\'), "margin-right: 10px;");\n
+});\n
+\n
+test(\'Script urls denied\', function() {\n
+\tvar styles = new tinymce.html.Styles();\n
+\n
+\tequal(styles.serialize(styles.parse(\'behavior:url(test.htc)\')), "");\n
+\tequal(styles.serialize(styles.parse(\'color:expression(alert(1))\')), "");\n
+\tequal(styles.serialize(styles.parse(\'color:\\\\65xpression(alert(1))\')), "");\n
+\tequal(styles.serialize(styles.parse(\'color:exp/**/ression(alert(1))\')), "");\n
+\tequal(styles.serialize(styles.parse(\'color:/**/\')), "");\n
+\tequal(styles.serialize(styles.parse(\'color:  expression  (  alert(1))\')), "");\n
+\tequal(styles.serialize(styles.parse(\'background:url(jAvaScript:alert(1)\')), "");\n
+\tequal(styles.serialize(styles.parse(\'background:url(javascript:alert(1)\')), "");\n
+\tequal(styles.serialize(styles.parse(\'background:url(vbscript:alert(1)\')), "");\n
+\tequal(styles.serialize(styles.parse(\'background:url(j\\navas\\u0000cr\\tipt:alert(1)\')), "");\n
+\tequal(styles.serialize(styles.parse(\'background:url(data:image/svg+xml,%3Csvg/%3E)\')), "");\n
+});\n
+\n
+test(\'Script urls allowed\', function() {\n
+\tvar styles = new tinymce.html.Styles({allow_script_urls: true});\n
+\n
+\tequal(styles.serialize(styles.parse(\'behavior:url(test.htc)\')), "behavior: url(\'test.htc\');");\n
+\tequal(styles.serialize(styles.parse(\'color:expression(alert(1))\')), "color: expression(alert(1));");\n
+\tequal(styles.serialize(styles.parse(\'background:url(javascript:alert(1)\')), "background: url(\'javascript:alert(1\');");\n
+\tequal(styles.serialize(styles.parse(\'background:url(vbscript:alert(1)\')), "background: url(\'vbscript:alert(1\');");\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7895</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Styles.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

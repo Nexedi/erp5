@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268130.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>link.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\n
+\tvar nonRelativeRegex = /^\\w+:/i;\n
+\n
+\tmodule("tinymce.plugins.Link", {\n
+\t\tsetupModule: function() {\n
+\t\t\tQUnit.stop();\n
+\n
+\t\t\ttinymce.init({\n
+\t\t\t\tselector: \'textarea\',\n
+\t\t\t\tadd_unload_trigger: false,\n
+\t\t\t\tskin: false,\n
+\t\t\t\tindent: false,\n
+\t\t\t\tplugins: "link",\n
+\t\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\t\twindow.editor = ed;\n
+\t\t\t\t\tQUnit.start();\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\tteardown: function() {\n
+\t\t\tdelete editor.settings.file_browser_callback;\n
+\t\t\tdelete editor.settings.link_list;\n
+\t\t\tdelete editor.settings.link_class_list;\n
+\t\t\tdelete editor.settings.link_target_list;\n
+\t\t\tdelete editor.settings.rel_list;\n
+\n
+\t\t\tvar win = Utils.getFrontmostWindow();\n
+\n
+\t\t\tif (win) {\n
+\t\t\t\twin.close();\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\n
+\tfunction cleanHtml(html) {\n
+\t\treturn Utils.cleanHtml(html).replace(/<p>(&nbsp;|<br[^>]+>)<\\/p>$/, \'\');\n
+\t}\n
+\n
+\tfunction fillAndSubmitWindowForm(data) {\n
+\t\tvar win = Utils.getFrontmostWindow();\n
+\n
+\t\twin.fromJSON(data);\n
+\t\twin.find(\'form\')[0].submit();\n
+\t\twin.close();\n
+\t}\n
+\n
+\ttest(\'Default link dialog on empty editor\', function() {\n
+\t\teditor.setContent(\'\');\n
+\t\teditor.execCommand(\'mceLink\', true);\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"href": "",\n
+\t\t\t"target": "",\n
+\t\t\t"text": "",\n
+\t\t\t"title": ""\n
+\t\t});\n
+\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\t"href": "href",\n
+\t\t\t"target": "_blank",\n
+\t\t\t"text": "text",\n
+\t\t\t"title": "title"\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanHtml(editor.getContent()),\n
+\t\t\t\'<p><a title="title" href="href" target="_blank">text</a></p>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest(\'Default link dialog on text selection\', function() {\n
+\t\teditor.setContent(\'<p>abc</p>\');\n
+\t\tUtils.setSelection(\'p\', 1, \'p\', 2);\n
+\t\teditor.execCommand(\'mceLink\', true);\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"href": "",\n
+\t\t\t"target": "",\n
+\t\t\t"text": "b",\n
+\t\t\t"title": ""\n
+\t\t});\n
+\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\t"href": "href",\n
+\t\t\t"target": "_blank",\n
+\t\t\t"title": "title"\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanHtml(editor.getContent()),\n
+\t\t\t\'<p>a<a title="title" href="href" target="_blank">b</a>c</p>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest(\'Default link dialog on non pure text selection\', function() {\n
+\t\teditor.setContent(\'<p>a</p><p>bc</p>\');\n
+\t\tUtils.setSelection(\'p:nth-child(1)\', 0, \'p:nth-child(2)\', 2);\n
+\t\teditor.execCommand(\'mceLink\', true);\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"href": "",\n
+\t\t\t"target": "",\n
+\t\t\t"title": ""\n
+\t\t});\n
+\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\t"href": "href",\n
+\t\t\t"target": "_blank",\n
+\t\t\t"title": "title"\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanHtml(editor.getContent()),\n
+\t\t\t\'<p><a title="title" href="href" target="_blank">a</a></p>\' +\n
+\t\t\t\'<p><a title="title" href="href" target="_blank">bc</a></p>\'\n
+\t\t);\n
+\t});\n
+\n
+\ttest(\'All lists link dialog on empty editor\', function() {\n
+\t\teditor.settings.link_list = [\n
+\t\t\t{title: \'link1\', value: \'link1\'},\n
+\t\t\t{title: \'link2\', value: \'link2\'}\n
+\t\t];\n
+\n
+\t\teditor.settings.link_class_list = [\n
+\t\t\t{title: \'class1\', value: \'class1\'},\n
+\t\t\t{title: \'class2\', value: \'class2\'}\n
+\t\t];\n
+\n
+\t\teditor.settings.target_list = [\n
+\t\t\t{title: \'target1\', value: \'target1\'},\n
+\t\t\t{title: \'target2\', value: \'target2\'}\n
+\t\t];\n
+\n
+\t\teditor.settings.rel_list = [\n
+\t\t\t{title: \'rel1\', value: \'rel1\'},\n
+\t\t\t{title: \'rel2\', value: \'rel2\'}\n
+\t\t];\n
+\n
+\t\teditor.setContent(\'\');\n
+\t\teditor.execCommand(\'mceLink\', true);\n
+\n
+\t\tdeepEqual(Utils.getFrontmostWindow().toJSON(), {\n
+\t\t\t"class": "class1",\n
+\t\t\t"href": "",\n
+\t\t\t"rel": "rel1",\n
+\t\t\t"target": "target1",\n
+\t\t\t"text": "",\n
+\t\t\t"title": ""\n
+\t\t});\n
+\n
+\t\tfillAndSubmitWindowForm({\n
+\t\t\t"href": "href",\n
+\t\t\t"text": "text",\n
+\t\t\t"title": "title"\n
+\t\t});\n
+\n
+\t\tequal(\n
+\t\t\tcleanHtml(editor.getContent()),\n
+\t\t\t\'<p><a class="class1" title="title" href="href" target="target1" rel="rel1">text</a></p>\'\n
+\t\t);\n
+\t});\n
+\n
+\t//Since there\'s no capability to use the confirm dialog with unit tests, simply test the regex we\'re using\n
+\ttest(\'Test new regex for non relative link setting ftp\', function() {\n
+\t\tequal(nonRelativeRegex.test(\'ftp://testftp.com\'), true);\n
+\t});\n
+\n
+\ttest(\'Test new regex for non relative link setting http\', function() {\n
+\t\tequal(nonRelativeRegex.test(\'http://testhttp.com\'), true);\n
+\t});\n
+\n
+\ttest(\'Test new regex for non relative link setting relative\', function() {\n
+\t\tequal(nonRelativeRegex.test(\'testhttp.com\'), false);\n
+\t});\n
+\n
+\ttest(\'Test new regex for non relative link setting relative base\', function() {\n
+\t\tequal(nonRelativeRegex.test(\'/testjpg.jpg\'), false);\n
+\t});\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4206</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>link.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

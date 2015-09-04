@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268378.59</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>StyleSheetLoader.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * StyleSheetLoader.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles loading of external stylesheets and fires events when these are loaded.\n
+ *\n
+ * @class tinymce.dom.StyleSheetLoader\n
+ * @private\n
+ */\n
+define("tinymce/dom/StyleSheetLoader", [\n
+\t"tinymce/util/Tools"\n
+], function(Tools) {\n
+\t"use strict";\n
+\n
+\treturn function(document, settings) {\n
+\t\tvar idCount = 0, loadedStates = {}, maxLoadTime;\n
+\n
+\t\tsettings = settings || {};\n
+\t\tmaxLoadTime = settings.maxLoadTime || 5000;\n
+\n
+\t\tfunction appendToHead(node) {\n
+\t\t\tdocument.getElementsByTagName(\'head\')[0].appendChild(node);\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Loads the specified css style sheet file and call the loadedCallback once it\'s finished loading.\n
+\t\t *\n
+\t\t * @method load\n
+\t\t * @param {String} url Url to be loaded.\n
+\t\t * @param {Function} loadedCallback Callback to be executed when loaded.\n
+\t\t * @param {Function} errorCallback Callback to be executed when failed loading.\n
+\t\t */\n
+\t\tfunction load(url, loadedCallback, errorCallback) {\n
+\t\t\tvar link, style, startTime, state;\n
+\n
+\t\t\tfunction passed() {\n
+\t\t\t\tvar callbacks = state.passed, i = callbacks.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tcallbacks[i]();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tstate.status = 2;\n
+\t\t\t\tstate.passed = [];\n
+\t\t\t\tstate.failed = [];\n
+\t\t\t}\n
+\n
+\t\t\tfunction failed() {\n
+\t\t\t\tvar callbacks = state.failed, i = callbacks.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tcallbacks[i]();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tstate.status = 3;\n
+\t\t\t\tstate.passed = [];\n
+\t\t\t\tstate.failed = [];\n
+\t\t\t}\n
+\n
+\t\t\t// Sniffs for older WebKit versions that have the link.onload but a broken one\n
+\t\t\tfunction isOldWebKit() {\n
+\t\t\t\tvar webKitChunks = navigator.userAgent.match(/WebKit\\/(\\d*)/);\n
+\t\t\t\treturn !!(webKitChunks && webKitChunks[1] < 536);\n
+\t\t\t}\n
+\n
+\t\t\t// Calls the waitCallback until the test returns true or the timeout occurs\n
+\t\t\tfunction wait(testCallback, waitCallback) {\n
+\t\t\t\tif (!testCallback()) {\n
+\t\t\t\t\t// Wait for timeout\n
+\t\t\t\t\tif ((new Date().getTime()) - startTime < maxLoadTime) {\n
+\t\t\t\t\t\twindow.setTimeout(waitCallback, 0);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tfailed();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Workaround for WebKit that doesn\'t properly support the onload event for link elements\n
+\t\t\t// Or WebKit that fires the onload event before the StyleSheet is added to the document\n
+\t\t\tfunction waitForWebKitLinkLoaded() {\n
+\t\t\t\twait(function() {\n
+\t\t\t\t\tvar styleSheets = document.styleSheets, styleSheet, i = styleSheets.length, owner;\n
+\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tstyleSheet = styleSheets[i];\n
+\t\t\t\t\t\towner = styleSheet.ownerNode ? styleSheet.ownerNode : styleSheet.owningElement;\n
+\t\t\t\t\t\tif (owner && owner.id === link.id) {\n
+\t\t\t\t\t\t\tpassed();\n
+\t\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}, waitForWebKitLinkLoaded);\n
+\t\t\t}\n
+\n
+\t\t\t// Workaround for older Geckos that doesn\'t have any onload event for StyleSheets\n
+\t\t\tfunction waitForGeckoLinkLoaded() {\n
+\t\t\t\twait(function() {\n
+\t\t\t\t\ttry {\n
+\t\t\t\t\t\t// Accessing the cssRules will throw an exception until the CSS file is loaded\n
+\t\t\t\t\t\tvar cssRules = style.sheet.cssRules;\n
+\t\t\t\t\t\tpassed();\n
+\t\t\t\t\t\treturn !!cssRules;\n
+\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t// Ignore\n
+\t\t\t\t\t}\n
+\t\t\t\t}, waitForGeckoLinkLoaded);\n
+\t\t\t}\n
+\n
+\t\t\turl = Tools._addCacheSuffix(url);\n
+\n
+\t\t\tif (!loadedStates[url]) {\n
+\t\t\t\tstate = {\n
+\t\t\t\t\tpassed: [],\n
+\t\t\t\t\tfailed: []\n
+\t\t\t\t};\n
+\n
+\t\t\t\tloadedStates[url] = state;\n
+\t\t\t} else {\n
+\t\t\t\tstate = loadedStates[url];\n
+\t\t\t}\n
+\n
+\t\t\tif (loadedCallback) {\n
+\t\t\t\tstate.passed.push(loadedCallback);\n
+\t\t\t}\n
+\n
+\t\t\tif (errorCallback) {\n
+\t\t\t\tstate.failed.push(errorCallback);\n
+\t\t\t}\n
+\n
+\t\t\t// Is loading wait for it to pass\n
+\t\t\tif (state.status == 1) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Has finished loading and was success\n
+\t\t\tif (state.status == 2) {\n
+\t\t\t\tpassed();\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Has finished loading and was a failure\n
+\t\t\tif (state.status == 3) {\n
+\t\t\t\tfailed();\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// Start loading\n
+\t\t\tstate.status = 1;\n
+\t\t\tlink = document.createElement(\'link\');\n
+\t\t\tlink.rel = \'stylesheet\';\n
+\t\t\tlink.type = \'text/css\';\n
+\t\t\tlink.id = \'u\' + (idCount++);\n
+\t\t\tlink.async = false;\n
+\t\t\tlink.defer = false;\n
+\t\t\tstartTime = new Date().getTime();\n
+\n
+\t\t\t// Feature detect onload on link element and sniff older webkits since it has an broken onload event\n
+\t\t\tif ("onload" in link && !isOldWebKit()) {\n
+\t\t\t\tlink.onload = waitForWebKitLinkLoaded;\n
+\t\t\t\tlink.onerror = failed;\n
+\t\t\t} else {\n
+\t\t\t\t// Sniff for old Firefox that doesn\'t support the onload event on link elements\n
+\t\t\t\t// TODO: Remove this in the future when everyone uses modern browsers\n
+\t\t\t\tif (navigator.userAgent.indexOf("Firefox") > 0) {\n
+\t\t\t\t\tstyle = document.createElement(\'style\');\n
+\t\t\t\t\tstyle.textContent = \'@import "\' + url + \'"\';\n
+\t\t\t\t\twaitForGeckoLinkLoaded();\n
+\t\t\t\t\tappendToHead(style);\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Use the id owner on older webkits\n
+\t\t\t\twaitForWebKitLinkLoaded();\n
+\t\t\t}\n
+\n
+\t\t\tappendToHead(link);\n
+\t\t\tlink.href = url;\n
+\t\t}\n
+\n
+\t\tthis.load = load;\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4816</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>StyleSheetLoader.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268346.37</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Menu.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Menu.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Creates a new menu.\n
+ *\n
+ * @-x-less Menu.less\n
+ * @class tinymce.ui.Menu\n
+ * @extends tinymce.ui.FloatPanel\n
+ */\n
+define("tinymce/ui/Menu", [\n
+\t"tinymce/ui/FloatPanel",\n
+\t"tinymce/ui/MenuItem",\n
+\t"tinymce/util/Tools"\n
+], function(FloatPanel, MenuItem, Tools) {\n
+\t"use strict";\n
+\n
+\tvar Menu = FloatPanel.extend({\n
+\t\tDefaults: {\n
+\t\t\tdefaultType: \'menuitem\',\n
+\t\t\tborder: 1,\n
+\t\t\tlayout: \'stack\',\n
+\t\t\trole: \'application\',\n
+\t\t\tbodyRole: \'menu\',\n
+\t\t\tariaRoot: true\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Constructs a instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tsettings.autohide = true;\n
+\t\t\tsettings.constrainToViewport = true;\n
+\n
+\t\t\tif (settings.itemDefaults) {\n
+\t\t\t\tvar items = settings.items, i = items.length;\n
+\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\titems[i] = Tools.extend({}, settings.itemDefaults, items[i]);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tself.classes.add(\'menu\');\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Repaints the control after a layout operation.\n
+\t\t *\n
+\t\t * @method repaint\n
+\t\t */\n
+\t\trepaint: function() {\n
+\t\t\tthis.classes.toggle(\'menu-align\', true);\n
+\n
+\t\t\tthis._super();\n
+\n
+\t\t\tthis.getEl().style.height = \'\';\n
+\t\t\tthis.getEl(\'body\').style.height = \'\';\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Hides/closes the menu.\n
+\t\t *\n
+\t\t * @method cancel\n
+\t\t */\n
+\t\tcancel: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.hideAll();\n
+\t\t\tself.fire(\'select\');\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Hide menu and all sub menus.\n
+\t\t *\n
+\t\t * @method hideAll\n
+\t\t */\n
+\t\thideAll: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tthis.find(\'menuitem\').exec(\'hideMenu\');\n
+\n
+\t\t\treturn self._super();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Invoked before the menu is rendered.\n
+\t\t *\n
+\t\t * @method preRender\n
+\t\t */\n
+\t\tpreRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.items().each(function(ctrl) {\n
+\t\t\t\tvar settings = ctrl.settings;\n
+\n
+\t\t\t\tif (settings.icon || settings.image || settings.selectable) {\n
+\t\t\t\t\tself._hasIcons = true;\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t}\n
+\t});\n
+\n
+\treturn Menu;\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2189</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Menu.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

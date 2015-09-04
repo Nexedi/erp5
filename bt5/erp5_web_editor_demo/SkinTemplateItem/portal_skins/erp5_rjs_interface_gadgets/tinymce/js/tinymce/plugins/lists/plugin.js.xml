@@ -1,0 +1,855 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268561.24</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+/*eslint consistent-this:0 */\n
+\n
+tinymce.PluginManager.add(\'lists\', function(editor) {\n
+\tvar self = this;\n
+\n
+\tfunction isListNode(node) {\n
+\t\treturn node && (/^(OL|UL|DL)$/).test(node.nodeName);\n
+\t}\n
+\n
+\tfunction isFirstChild(node) {\n
+\t\treturn node.parentNode.firstChild == node;\n
+\t}\n
+\n
+\tfunction isLastChild(node) {\n
+\t\treturn node.parentNode.lastChild == node;\n
+\t}\n
+\n
+\tfunction isTextBlock(node) {\n
+\t\treturn node && !!editor.schema.getTextBlockElements()[node.nodeName];\n
+\t}\n
+\n
+\teditor.on(\'init\', function() {\n
+\t\tvar dom = editor.dom, selection = editor.selection;\n
+\n
+\t\t/**\n
+\t\t * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with\n
+\t\t * index 0 so that they can be restored properly after the DOM has been modified. Text bookmarks will not have spans\n
+\t\t * added to them since they can be restored after a dom operation.\n
+\t\t *\n
+\t\t * So this: <p><b>|</b><b>|</b></p>\n
+\t\t * becomes: <p><b><span data-mce-type="bookmark">|</span></b><b data-mce-type="bookmark">|</span></b></p>\n
+\t\t *\n
+\t\t * @param  {DOMRange} rng DOM Range to get bookmark on.\n
+\t\t * @return {Object} Bookmark object.\n
+\t\t */\n
+\t\tfunction createBookmark(rng) {\n
+\t\t\tvar bookmark = {};\n
+\n
+\t\t\tfunction setupEndPoint(start) {\n
+\t\t\t\tvar offsetNode, container, offset;\n
+\n
+\t\t\t\tcontainer = rng[start ? \'startContainer\' : \'endContainer\'];\n
+\t\t\t\toffset = rng[start ? \'startOffset\' : \'endOffset\'];\n
+\n
+\t\t\t\tif (container.nodeType == 1) {\n
+\t\t\t\t\toffsetNode = dom.create(\'span\', {\'data-mce-type\': \'bookmark\'});\n
+\n
+\t\t\t\t\tif (container.hasChildNodes()) {\n
+\t\t\t\t\t\toffset = Math.min(offset, container.childNodes.length - 1);\n
+\n
+\t\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\t\tcontainer.insertBefore(offsetNode, container.childNodes[offset]);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tdom.insertAfter(offsetNode, container.childNodes[offset]);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tcontainer.appendChild(offsetNode);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tcontainer = offsetNode;\n
+\t\t\t\t\toffset = 0;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tbookmark[start ? \'startContainer\' : \'endContainer\'] = container;\n
+\t\t\t\tbookmark[start ? \'startOffset\' : \'endOffset\'] = offset;\n
+\t\t\t}\n
+\n
+\t\t\tsetupEndPoint(true);\n
+\n
+\t\t\tif (!rng.collapsed) {\n
+\t\t\t\tsetupEndPoint();\n
+\t\t\t}\n
+\n
+\t\t\treturn bookmark;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Moves the selection to the current bookmark and removes any selection container wrappers.\n
+\t\t *\n
+\t\t * @param {Object} bookmark Bookmark object to move selection to.\n
+\t\t */\n
+\t\tfunction moveToBookmark(bookmark) {\n
+\t\t\tfunction restoreEndPoint(start) {\n
+\t\t\t\tvar container, offset, node;\n
+\n
+\t\t\t\tfunction nodeIndex(container) {\n
+\t\t\t\t\tvar node = container.parentNode.firstChild, idx = 0;\n
+\n
+\t\t\t\t\twhile (node) {\n
+\t\t\t\t\t\tif (node == container) {\n
+\t\t\t\t\t\t\treturn idx;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Skip data-mce-type=bookmark nodes\n
+\t\t\t\t\t\tif (node.nodeType != 1 || node.getAttribute(\'data-mce-type\') != \'bookmark\') {\n
+\t\t\t\t\t\t\tidx++;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode = node.nextSibling;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn -1;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcontainer = node = bookmark[start ? \'startContainer\' : \'endContainer\'];\n
+\t\t\t\toffset = bookmark[start ? \'startOffset\' : \'endOffset\'];\n
+\n
+\t\t\t\tif (!container) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (container.nodeType == 1) {\n
+\t\t\t\t\toffset = nodeIndex(container);\n
+\t\t\t\t\tcontainer = container.parentNode;\n
+\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tbookmark[start ? \'startContainer\' : \'endContainer\'] = container;\n
+\t\t\t\tbookmark[start ? \'startOffset\' : \'endOffset\'] = offset;\n
+\t\t\t}\n
+\n
+\t\t\trestoreEndPoint(true);\n
+\t\t\trestoreEndPoint();\n
+\n
+\t\t\tvar rng = dom.createRng();\n
+\n
+\t\t\trng.setStart(bookmark.startContainer, bookmark.startOffset);\n
+\n
+\t\t\tif (bookmark.endContainer) {\n
+\t\t\t\trng.setEnd(bookmark.endContainer, bookmark.endOffset);\n
+\t\t\t}\n
+\n
+\t\t\tselection.setRng(rng);\n
+\t\t}\n
+\n
+\t\tfunction createNewTextBlock(contentNode, blockName) {\n
+\t\t\tvar node, textBlock, fragment = dom.createFragment(), hasContentNode;\n
+\t\t\tvar blockElements = editor.schema.getBlockElements();\n
+\n
+\t\t\tif (editor.settings.forced_root_block) {\n
+\t\t\t\tblockName = blockName || editor.settings.forced_root_block;\n
+\t\t\t}\n
+\n
+\t\t\tif (blockName) {\n
+\t\t\t\ttextBlock = dom.create(blockName);\n
+\n
+\t\t\t\tif (textBlock.tagName === editor.settings.forced_root_block) {\n
+\t\t\t\t\tdom.setAttribs(textBlock, editor.settings.forced_root_block_attrs);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfragment.appendChild(textBlock);\n
+\t\t\t}\n
+\n
+\t\t\tif (contentNode) {\n
+\t\t\t\twhile ((node = contentNode.firstChild)) {\n
+\t\t\t\t\tvar nodeName = node.nodeName;\n
+\n
+\t\t\t\t\tif (!hasContentNode && (nodeName != \'SPAN\' || node.getAttribute(\'data-mce-type\') != \'bookmark\')) {\n
+\t\t\t\t\t\thasContentNode = true;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (blockElements[nodeName]) {\n
+\t\t\t\t\t\tfragment.appendChild(node);\n
+\t\t\t\t\t\ttextBlock = null;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tif (blockName) {\n
+\t\t\t\t\t\t\tif (!textBlock) {\n
+\t\t\t\t\t\t\t\ttextBlock = dom.create(blockName);\n
+\t\t\t\t\t\t\t\tfragment.appendChild(textBlock);\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\ttextBlock.appendChild(node);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tfragment.appendChild(node);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (!editor.settings.forced_root_block) {\n
+\t\t\t\tfragment.appendChild(dom.create(\'br\'));\n
+\t\t\t} else {\n
+\t\t\t\t// BR is needed in empty blocks on non IE browsers\n
+\t\t\t\tif (!hasContentNode && (!tinymce.Env.ie || tinymce.Env.ie > 10)) {\n
+\t\t\t\t\ttextBlock.appendChild(dom.create(\'br\', {\'data-mce-bogus\': \'1\'}));\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn fragment;\n
+\t\t}\n
+\n
+\t\tfunction getSelectedListItems() {\n
+\t\t\treturn tinymce.grep(selection.getSelectedBlocks(), function(block) {\n
+\t\t\t\treturn /^(LI|DT|DD)$/.test(block.nodeName);\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction splitList(ul, li, newBlock) {\n
+\t\t\tvar tmpRng, fragment, bookmarks, node;\n
+\n
+\t\t\tfunction removeAndKeepBookmarks(targetNode) {\n
+\t\t\t\ttinymce.each(bookmarks, function(node) {\n
+\t\t\t\t\ttargetNode.parentNode.insertBefore(node, li.parentNode);\n
+\t\t\t\t});\n
+\n
+\t\t\t\tdom.remove(targetNode);\n
+\t\t\t}\n
+\n
+\t\t\tbookmarks = dom.select(\'span[data-mce-type="bookmark"]\', ul);\n
+\t\t\tnewBlock = newBlock || createNewTextBlock(li);\n
+\t\t\ttmpRng = dom.createRng();\n
+\t\t\ttmpRng.setStartAfter(li);\n
+\t\t\ttmpRng.setEndAfter(ul);\n
+\t\t\tfragment = tmpRng.extractContents();\n
+\n
+\t\t\tfor (node = fragment.firstChild; node; node = node.firstChild) {\n
+\t\t\t\tif (node.nodeName == \'LI\' && dom.isEmpty(node)) {\n
+\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (!dom.isEmpty(fragment)) {\n
+\t\t\t\tdom.insertAfter(fragment, ul);\n
+\t\t\t}\n
+\n
+\t\t\tdom.insertAfter(newBlock, ul);\n
+\n
+\t\t\tif (dom.isEmpty(li.parentNode)) {\n
+\t\t\t\tremoveAndKeepBookmarks(li.parentNode);\n
+\t\t\t}\n
+\n
+\t\t\tdom.remove(li);\n
+\n
+\t\t\tif (dom.isEmpty(ul)) {\n
+\t\t\t\tdom.remove(ul);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction mergeWithAdjacentLists(listBlock) {\n
+\t\t\tvar sibling, node;\n
+\n
+\t\t\tsibling = listBlock.nextSibling;\n
+\t\t\tif (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName) {\n
+\t\t\t\twhile ((node = sibling.firstChild)) {\n
+\t\t\t\t\tlistBlock.appendChild(node);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdom.remove(sibling);\n
+\t\t\t}\n
+\n
+\t\t\tsibling = listBlock.previousSibling;\n
+\t\t\tif (sibling && isListNode(sibling) && sibling.nodeName == listBlock.nodeName) {\n
+\t\t\t\twhile ((node = sibling.firstChild)) {\n
+\t\t\t\t\tlistBlock.insertBefore(node, listBlock.firstChild);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdom.remove(sibling);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Normalizes the all lists in the specified element.\n
+\t\t */\n
+\t\tfunction normalizeList(element) {\n
+\t\t\ttinymce.each(tinymce.grep(dom.select(\'ol,ul\', element)), function(ul) {\n
+\t\t\t\tvar sibling, parentNode = ul.parentNode;\n
+\n
+\t\t\t\t// Move UL/OL to previous LI if it\'s the only child of a LI\n
+\t\t\t\tif (parentNode.nodeName == \'LI\' && parentNode.firstChild == ul) {\n
+\t\t\t\t\tsibling = parentNode.previousSibling;\n
+\t\t\t\t\tif (sibling && sibling.nodeName == \'LI\') {\n
+\t\t\t\t\t\tsibling.appendChild(ul);\n
+\n
+\t\t\t\t\t\tif (dom.isEmpty(parentNode)) {\n
+\t\t\t\t\t\t\tdom.remove(parentNode);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Append OL/UL to previous LI if it\'s in a parent OL/UL i.e. old HTML4\n
+\t\t\t\tif (isListNode(parentNode)) {\n
+\t\t\t\t\tsibling = parentNode.previousSibling;\n
+\t\t\t\t\tif (sibling && sibling.nodeName == \'LI\') {\n
+\t\t\t\t\t\tsibling.appendChild(ul);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction outdent(li) {\n
+\t\t\tvar ul = li.parentNode, ulParent = ul.parentNode, newBlock;\n
+\n
+\t\t\tfunction removeEmptyLi(li) {\n
+\t\t\t\tif (dom.isEmpty(li)) {\n
+\t\t\t\t\tdom.remove(li);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (li.nodeName == \'DD\') {\n
+\t\t\t\tdom.rename(li, \'DT\');\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tif (isFirstChild(li) && isLastChild(li)) {\n
+\t\t\t\tif (ulParent.nodeName == "LI") {\n
+\t\t\t\t\tdom.insertAfter(li, ulParent);\n
+\t\t\t\t\tremoveEmptyLi(ulParent);\n
+\t\t\t\t\tdom.remove(ul);\n
+\t\t\t\t} else if (isListNode(ulParent)) {\n
+\t\t\t\t\tdom.remove(ul, true);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tulParent.insertBefore(createNewTextBlock(li), ul);\n
+\t\t\t\t\tdom.remove(ul);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t} else if (isFirstChild(li)) {\n
+\t\t\t\tif (ulParent.nodeName == "LI") {\n
+\t\t\t\t\tdom.insertAfter(li, ulParent);\n
+\t\t\t\t\tli.appendChild(ul);\n
+\t\t\t\t\tremoveEmptyLi(ulParent);\n
+\t\t\t\t} else if (isListNode(ulParent)) {\n
+\t\t\t\t\tulParent.insertBefore(li, ul);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tulParent.insertBefore(createNewTextBlock(li), ul);\n
+\t\t\t\t\tdom.remove(li);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t} else if (isLastChild(li)) {\n
+\t\t\t\tif (ulParent.nodeName == "LI") {\n
+\t\t\t\t\tdom.insertAfter(li, ulParent);\n
+\t\t\t\t} else if (isListNode(ulParent)) {\n
+\t\t\t\t\tdom.insertAfter(li, ul);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tdom.insertAfter(createNewTextBlock(li), ul);\n
+\t\t\t\t\tdom.remove(li);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tif (ulParent.nodeName == \'LI\') {\n
+\t\t\t\tul = ulParent;\n
+\t\t\t\tnewBlock = createNewTextBlock(li, \'LI\');\n
+\t\t\t} else if (isListNode(ulParent)) {\n
+\t\t\t\tnewBlock = createNewTextBlock(li, \'LI\');\n
+\t\t\t} else {\n
+\t\t\t\tnewBlock = createNewTextBlock(li);\n
+\t\t\t}\n
+\n
+\t\t\tsplitList(ul, li, newBlock);\n
+\t\t\tnormalizeList(ul.parentNode);\n
+\n
+\t\t\treturn true;\n
+\t\t}\n
+\n
+\t\tfunction indent(li) {\n
+\t\t\tvar sibling, newList;\n
+\n
+\t\t\tfunction mergeLists(from, to) {\n
+\t\t\t\tvar node;\n
+\n
+\t\t\t\tif (isListNode(from)) {\n
+\t\t\t\t\twhile ((node = li.lastChild.firstChild)) {\n
+\t\t\t\t\t\tto.appendChild(node);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tdom.remove(from);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (li.nodeName == \'DT\') {\n
+\t\t\t\tdom.rename(li, \'DD\');\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tsibling = li.previousSibling;\n
+\n
+\t\t\tif (sibling && isListNode(sibling)) {\n
+\t\t\t\tsibling.appendChild(li);\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tif (sibling && sibling.nodeName == \'LI\' && isListNode(sibling.lastChild)) {\n
+\t\t\t\tsibling.lastChild.appendChild(li);\n
+\t\t\t\tmergeLists(li.lastChild, sibling.lastChild);\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tsibling = li.nextSibling;\n
+\n
+\t\t\tif (sibling && isListNode(sibling)) {\n
+\t\t\t\tsibling.insertBefore(li, sibling.firstChild);\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\tif (sibling && sibling.nodeName == \'LI\' && isListNode(li.lastChild)) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\tsibling = li.previousSibling;\n
+\t\t\tif (sibling && sibling.nodeName == \'LI\') {\n
+\t\t\t\tnewList = dom.create(li.parentNode.nodeName);\n
+\t\t\t\tsibling.appendChild(newList);\n
+\t\t\t\tnewList.appendChild(li);\n
+\t\t\t\tmergeLists(li.lastChild, newList);\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\tfunction indentSelection() {\n
+\t\t\tvar listElements = getSelectedListItems();\n
+\n
+\t\t\tif (listElements.length) {\n
+\t\t\t\tvar bookmark = createBookmark(selection.getRng(true));\n
+\n
+\t\t\t\tfor (var i = 0; i < listElements.length; i++) {\n
+\t\t\t\t\tif (!indent(listElements[i]) && i === 0) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tmoveToBookmark(bookmark);\n
+\t\t\t\teditor.nodeChanged();\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction outdentSelection() {\n
+\t\t\tvar listElements = getSelectedListItems();\n
+\n
+\t\t\tif (listElements.length) {\n
+\t\t\t\tvar bookmark = createBookmark(selection.getRng(true));\n
+\t\t\t\tvar i, y, root = editor.getBody();\n
+\n
+\t\t\t\ti = listElements.length;\n
+\t\t\t\twhile (i--) {\n
+\t\t\t\t\tvar node = listElements[i].parentNode;\n
+\n
+\t\t\t\t\twhile (node && node != root) {\n
+\t\t\t\t\t\ty = listElements.length;\n
+\t\t\t\t\t\twhile (y--) {\n
+\t\t\t\t\t\t\tif (listElements[y] === node) {\n
+\t\t\t\t\t\t\t\tlistElements.splice(i, 1);\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tnode = node.parentNode;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (i = 0; i < listElements.length; i++) {\n
+\t\t\t\t\tif (!outdent(listElements[i]) && i === 0) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tmoveToBookmark(bookmark);\n
+\t\t\t\teditor.nodeChanged();\n
+\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction applyList(listName) {\n
+\t\t\tvar rng = selection.getRng(true), bookmark = createBookmark(rng), listItemName = \'LI\';\n
+\n
+\t\t\tlistName = listName.toUpperCase();\n
+\n
+\t\t\tif (listName == \'DL\') {\n
+\t\t\t\tlistItemName = \'DT\';\n
+\t\t\t}\n
+\n
+\t\t\tfunction getSelectedTextBlocks() {\n
+\t\t\t\tvar textBlocks = [], root = editor.getBody();\n
+\n
+\t\t\t\tfunction getEndPointNode(start) {\n
+\t\t\t\t\tvar container, offset;\n
+\n
+\t\t\t\t\tcontainer = rng[start ? \'startContainer\' : \'endContainer\'];\n
+\t\t\t\t\toffset = rng[start ? \'startOffset\' : \'endOffset\'];\n
+\n
+\t\t\t\t\t// Resolve node index\n
+\t\t\t\t\tif (container.nodeType == 1) {\n
+\t\t\t\t\t\tcontainer = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\twhile (container.parentNode != root) {\n
+\t\t\t\t\t\tif (isTextBlock(container)) {\n
+\t\t\t\t\t\t\treturn container;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (/^(TD|TH)$/.test(container.parentNode.nodeName)) {\n
+\t\t\t\t\t\t\treturn container;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tcontainer = container.parentNode;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn container;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar startNode = getEndPointNode(true);\n
+\t\t\t\tvar endNode = getEndPointNode();\n
+\t\t\t\tvar block, siblings = [];\n
+\n
+\t\t\t\tfor (var node = startNode; node; node = node.nextSibling) {\n
+\t\t\t\t\tsiblings.push(node);\n
+\n
+\t\t\t\t\tif (node == endNode) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\ttinymce.each(siblings, function(node) {\n
+\t\t\t\t\tif (isTextBlock(node)) {\n
+\t\t\t\t\t\ttextBlocks.push(node);\n
+\t\t\t\t\t\tblock = null;\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (dom.isBlock(node) || node.nodeName == \'BR\') {\n
+\t\t\t\t\t\tif (node.nodeName == \'BR\') {\n
+\t\t\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tblock = null;\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tvar nextSibling = node.nextSibling;\n
+\t\t\t\t\tif (tinymce.dom.BookmarkManager.isBookmarkNode(node)) {\n
+\t\t\t\t\t\tif (isTextBlock(nextSibling) || (!nextSibling && node.parentNode == root)) {\n
+\t\t\t\t\t\t\tblock = null;\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!block) {\n
+\t\t\t\t\t\tblock = dom.create(\'p\');\n
+\t\t\t\t\t\tnode.parentNode.insertBefore(block, node);\n
+\t\t\t\t\t\ttextBlocks.push(block);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tblock.appendChild(node);\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn textBlocks;\n
+\t\t\t}\n
+\n
+\t\t\ttinymce.each(getSelectedTextBlocks(), function(block) {\n
+\t\t\t\tvar listBlock, sibling;\n
+\n
+\t\t\t\tsibling = block.previousSibling;\n
+\t\t\t\tif (sibling && isListNode(sibling) && sibling.nodeName == listName) {\n
+\t\t\t\t\tlistBlock = sibling;\n
+\t\t\t\t\tblock = dom.rename(block, listItemName);\n
+\t\t\t\t\tsibling.appendChild(block);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tlistBlock = dom.create(listName);\n
+\t\t\t\t\tblock.parentNode.insertBefore(listBlock, block);\n
+\t\t\t\t\tlistBlock.appendChild(block);\n
+\t\t\t\t\tblock = dom.rename(block, listItemName);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tmergeWithAdjacentLists(listBlock);\n
+\t\t\t});\n
+\n
+\t\t\tmoveToBookmark(bookmark);\n
+\t\t}\n
+\n
+\t\tfunction removeList() {\n
+\t\t\tvar bookmark = createBookmark(selection.getRng(true)), root = editor.getBody();\n
+\n
+\t\t\ttinymce.each(getSelectedListItems(), function(li) {\n
+\t\t\t\tvar node, rootList;\n
+\n
+\t\t\t\tif (dom.isEmpty(li)) {\n
+\t\t\t\t\toutdent(li);\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (node = li; node && node != root; node = node.parentNode) {\n
+\t\t\t\t\tif (isListNode(node)) {\n
+\t\t\t\t\t\trootList = node;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tsplitList(rootList, li);\n
+\t\t\t});\n
+\n
+\t\t\tmoveToBookmark(bookmark);\n
+\t\t}\n
+\n
+\t\tfunction toggleList(listName) {\n
+\t\t\tvar parentList = dom.getParent(selection.getStart(), \'OL,UL,DL\');\n
+\n
+\t\t\tif (parentList) {\n
+\t\t\t\tif (parentList.nodeName == listName) {\n
+\t\t\t\t\tremoveList(listName);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tvar bookmark = createBookmark(selection.getRng(true));\n
+\t\t\t\t\tmergeWithAdjacentLists(dom.rename(parentList, listName));\n
+\t\t\t\t\tmoveToBookmark(bookmark);\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\tapplyList(listName);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction queryListCommandState(listName) {\n
+\t\t\treturn function() {\n
+\t\t\t\tvar parentList = dom.getParent(editor.selection.getStart(), \'UL,OL,DL\');\n
+\n
+\t\t\t\treturn parentList && parentList.nodeName == listName;\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tself.backspaceDelete = function(isForward) {\n
+\t\t\tfunction findNextCaretContainer(rng, isForward) {\n
+\t\t\t\tvar node = rng.startContainer, offset = rng.startOffset;\n
+\t\t\t\tvar nonEmptyBlocks, walker;\n
+\n
+\t\t\t\tif (node.nodeType == 3 && (isForward ? offset < node.data.length : offset > 0)) {\n
+\t\t\t\t\treturn node;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnonEmptyBlocks = editor.schema.getNonEmptyElements();\n
+\t\t\t\twalker = new tinymce.dom.TreeWalker(rng.startContainer);\n
+\n
+\t\t\t\twhile ((node = walker[isForward ? \'next\' : \'prev\']())) {\n
+\t\t\t\t\tif (node.nodeName == \'LI\' && !node.hasChildNodes()) {\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (nonEmptyBlocks[node.nodeName]) {\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (node.nodeType == 3 && node.data.length > 0) {\n
+\t\t\t\t\t\treturn node;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tfunction mergeLiElements(fromElm, toElm) {\n
+\t\t\t\tvar node, listNode, ul = fromElm.parentNode;\n
+\n
+\t\t\t\tif (isListNode(toElm.lastChild)) {\n
+\t\t\t\t\tlistNode = toElm.lastChild;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnode = toElm.lastChild;\n
+\t\t\t\tif (node && node.nodeName == \'BR\' && fromElm.hasChildNodes()) {\n
+\t\t\t\t\tdom.remove(node);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (dom.isEmpty(toElm)) {\n
+\t\t\t\t\tdom.$(toElm).empty();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!dom.isEmpty(fromElm)) {\n
+\t\t\t\t\twhile ((node = fromElm.firstChild)) {\n
+\t\t\t\t\t\ttoElm.appendChild(node);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (listNode) {\n
+\t\t\t\t\ttoElm.appendChild(listNode);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdom.remove(fromElm);\n
+\n
+\t\t\t\tif (dom.isEmpty(ul)) {\n
+\t\t\t\t\tdom.remove(ul);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (selection.isCollapsed()) {\n
+\t\t\t\tvar li = dom.getParent(selection.getStart(), \'LI\');\n
+\n
+\t\t\t\tif (li) {\n
+\t\t\t\t\tvar rng = selection.getRng(true);\n
+\t\t\t\t\tvar otherLi = dom.getParent(findNextCaretContainer(rng, isForward), \'LI\');\n
+\n
+\t\t\t\t\tif (otherLi && otherLi != li) {\n
+\t\t\t\t\t\tvar bookmark = createBookmark(rng);\n
+\n
+\t\t\t\t\t\tif (isForward) {\n
+\t\t\t\t\t\t\tmergeLiElements(otherLi, li);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tmergeLiElements(li, otherLi);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tmoveToBookmark(bookmark);\n
+\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t} else if (!otherLi) {\n
+\t\t\t\t\t\tif (!isForward && removeList(li.parentNode.nodeName)) {\n
+\t\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\teditor.on(\'BeforeExecCommand\', function(e) {\n
+\t\t\tvar cmd = e.command.toLowerCase(), isHandled;\n
+\n
+\t\t\tif (cmd == "indent") {\n
+\t\t\t\tif (indentSelection()) {\n
+\t\t\t\t\tisHandled = true;\n
+\t\t\t\t}\n
+\t\t\t} else if (cmd == "outdent") {\n
+\t\t\t\tif (outdentSelection()) {\n
+\t\t\t\t\tisHandled = true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (isHandled) {\n
+\t\t\t\teditor.fire(\'ExecCommand\', {command: e.command});\n
+\t\t\t\te.preventDefault();\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\teditor.addCommand(\'InsertUnorderedList\', function() {\n
+\t\t\ttoggleList(\'UL\');\n
+\t\t});\n
+\n
+\t\teditor.addCommand(\'InsertOrderedList\', function() {\n
+\t\t\ttoggleList(\'OL\');\n
+\t\t});\n
+\n
+\t\teditor.addCommand(\'InsertDefinitionList\', function() {\n
+\t\t\ttoggleList(\'DL\');\n
+\t\t});\n
+\n
+\t\teditor.addQueryStateHandler(\'InsertUnorderedList\', queryListCommandState(\'UL\'));\n
+\t\teditor.addQueryStateHandler(\'InsertOrderedList\', queryListCommandState(\'OL\'));\n
+\t\teditor.addQueryStateHandler(\'InsertDefinitionList\', queryListCommandState(\'DL\'));\n
+\n
+\t\teditor.on(\'keydown\', function(e) {\n
+\t\t\t// Check for tab but not ctrl/cmd+tab since it switches browser tabs\n
+\t\t\tif (e.keyCode != 9 || tinymce.util.VK.metaKeyPressed(e)) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (editor.dom.getParent(editor.selection.getStart(), \'LI,DT,DD\')) {\n
+\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\tif (e.shiftKey) {\n
+\t\t\t\t\toutdentSelection();\n
+\t\t\t\t} else {\n
+\t\t\t\t\tindentSelection();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\n
+\teditor.addButton(\'indent\', {\n
+\t\ticon: \'indent\',\n
+\t\ttitle: \'Increase indent\',\n
+\t\tcmd: \'Indent\',\n
+\t\tonPostRender: function() {\n
+\t\t\tvar ctrl = this;\n
+\n
+\t\t\teditor.on(\'nodechange\', function() {\n
+\t\t\t\tvar blocks = editor.selection.getSelectedBlocks();\n
+\t\t\t\tvar disable = false;\n
+\n
+\t\t\t\tfor (var i = 0, l = blocks.length; !disable && i < l; i++) {\n
+\t\t\t\t\tvar tag = blocks[i].nodeName;\n
+\n
+\t\t\t\t\tdisable = (tag == \'LI\' && isFirstChild(blocks[i]) || tag == \'UL\' || tag == \'OL\' || tag == \'DD\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tctrl.disabled(disable);\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+\n
+\teditor.on(\'keydown\', function(e) {\n
+\t\tif (e.keyCode == tinymce.util.VK.BACKSPACE) {\n
+\t\t\tif (self.backspaceDelete()) {\n
+\t\t\t\te.preventDefault();\n
+\t\t\t}\n
+\t\t} else if (e.keyCode == tinymce.util.VK.DELETE) {\n
+\t\t\tif (self.backspaceDelete(true)) {\n
+\t\t\t\te.preventDefault();\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>19342</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

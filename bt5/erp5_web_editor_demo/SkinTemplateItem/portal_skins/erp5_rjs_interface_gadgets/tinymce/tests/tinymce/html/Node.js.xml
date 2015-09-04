@@ -1,0 +1,482 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268188.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Node.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>module("tinymce.html.Node");\n
+\n
+test(\'construction\', function() {\n
+\tvar node;\n
+\n
+\texpect(15);\n
+\n
+\tnode = new tinymce.html.Node(\'#text\', 3);\n
+\tequal(node.name, \'#text\');\n
+\tequal(node.type, 3);\n
+\n
+\tnode = new tinymce.html.Node(\'#comment\', 8);\n
+\tequal(node.name, \'#comment\');\n
+\tequal(node.type, 8);\n
+\n
+\tnode = new tinymce.html.Node(\'b\', 1);\n
+\tequal(node.name, \'b\');\n
+\tequal(node.type, 1);\n
+\tdeepEqual(node.attributes, []);\n
+\n
+\tnode = new tinymce.html.Node(\'#pi\', 7);\n
+\tequal(node.name, \'#pi\');\n
+\tequal(node.type, 7);\n
+\n
+\tnode = new tinymce.html.Node(\'#doctype\', 10);\n
+\tequal(node.name, \'#doctype\');\n
+\tequal(node.type, 10);\n
+\n
+\tnode = new tinymce.html.Node(\'#cdata\', 4);\n
+\tequal(node.name, \'#cdata\');\n
+\tequal(node.type, 4);\n
+\n
+\tnode = new tinymce.html.Node(\'#frag\', 11);\n
+\tequal(node.name, \'#frag\');\n
+\tequal(node.type, 11);\n
+});\n
+\n
+test(\'append inside empty node\', function() {\n
+\tvar root, node;\n
+\n
+\texpect(10);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tok(root.firstChild.parent === root);\n
+\tequal(root.firstChild.next, undefined);\n
+\tequal(root.firstChild.prev, undefined);\n
+\tequal(root.firstChild.firstChild, undefined);\n
+\tequal(root.firstChild.lastChild, undefined);\n
+\tok(node.parent === root);\n
+\tequal(node.next, undefined);\n
+\tequal(node.prev, undefined);\n
+\tequal(node.firstChild, undefined);\n
+\tequal(node.lastChild, undefined);\n
+});\n
+\n
+test(\'append node after node\', function() {\n
+\tvar root, node, node2;\n
+\n
+\texpect(17);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode2 = root.append(new tinymce.html.Node(\'a\', 1));\n
+\tnode = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tok(root.firstChild.parent === root, \'root.firstChild.parent === root\');\n
+\tok(root.firstChild === node2, \'root.firstChild\');\n
+\tok(root.lastChild === node, \'root.firstChild\');\n
+\tok(root.firstChild.next === node, \'root.firstChild.next\');\n
+\tequal(root.firstChild.prev, undefined, \'root.firstChild.prev\');\n
+\tequal(root.firstChild.firstChild, undefined, \'root.firstChild.firstChild\');\n
+\tequal(root.firstChild.lastChild, undefined, \'root.firstChild.lastChild\');\n
+\tok(node2.parent === root, \'node2.parent === root\');\n
+\tok(node2.next === node, \'node2.next\');\n
+\tequal(node2.prev, undefined, \'node2.prev\');\n
+\tequal(node2.firstChild, undefined, \'node2.firstChild\');\n
+\tequal(node2.lastChild, undefined, \'node2.lastChild\');\n
+\tok(node.parent === root, \'node.parent === root\');\n
+\tequal(node.next, undefined, \'node.next\');\n
+\tok(node.prev === node2, \'node.prev\');\n
+\tequal(node.firstChild, undefined, \'node.firstChild\');\n
+\tequal(node.lastChild, undefined, \'node.lastChild\');\n
+});\n
+\n
+test(\'append existing node before other existing node\', function() {\n
+\tvar root, node, node2;\n
+\n
+\texpect(8);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode = root.append(new tinymce.html.Node(\'a\', 1));\n
+\tnode2 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\troot.append(node);\n
+\tok(root.firstChild === node2, \'root.firstChild\');\n
+\tok(root.lastChild === node, \'root.lastChild\');\n
+\tequal(node.next, undefined, \'node.next\');\n
+\tok(node.prev === node2, \'node.prev\');\n
+\tok(node.parent === root, \'node.parent\');\n
+\tok(node2.parent === root, \'node2.parent\');\n
+\tequal(node2.prev, undefined, \'node2.prev\');\n
+\tok(node2.next === node, \'node2.next\');\n
+});\n
+\n
+test(\'remove unattached node\', function() {\n
+\texpect(1);\n
+\n
+\tok(!new tinymce.html.Node(\'#text\', 3).remove().parent);\n
+});\n
+\n
+test(\'remove single child\', function() {\n
+\tvar root, node;\n
+\n
+\texpect(6);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode = root.append(new tinymce.html.Node(\'p\', 1));\n
+\tnode = root.firstChild.remove();\n
+\tequal(root.firstChild, undefined);\n
+\tequal(root.lastChild, undefined);\n
+\tequal(node.parent, undefined);\n
+\tequal(node.next, undefined);\n
+\tequal(node.prev, undefined);\n
+\tequal(node.name, \'p\');\n
+});\n
+\n
+test(\'remove middle node\', function() {\n
+\tvar root, node, node2, node3;\n
+\n
+\texpect(9);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode = root.append(new tinymce.html.Node(\'a\', 1));\n
+\tnode2 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode3 = root.append(new tinymce.html.Node(\'c\', 1));\n
+\tnode2.remove();\n
+\tequal(node2.parent, undefined);\n
+\tequal(node2.next, undefined);\n
+\tequal(node2.prev, undefined);\n
+\tok(root.firstChild === node, \'root.firstChild\');\n
+\tok(root.lastChild === node3, \'root.lastChild\');\n
+\tok(node.next === node3, \'node.next\');\n
+\tequal(node.prev, undefined, \'node.prev\');\n
+\tok(node3.prev, node, \'node3.prev\');\n
+\tequal(node3.next, undefined, \'node3.next\');\n
+});\n
+\n
+test(\'insert after last\', function() {\n
+\tvar fragment, root, node, node2;\n
+\n
+\texpect(5);\n
+\n
+\tfragment = new tinymce.html.Node(\'#frag\', 11);\n
+\troot = fragment.append(new tinymce.html.Node(\'body\', 1));\n
+\tnode = root.append(new tinymce.html.Node(\'a\', 1));\n
+\tnode2 = root.insert(new tinymce.html.Node(\'x\', 1), node);\n
+\tok(root.firstChild === node, \'root.firstChild\');\n
+\tok(root.lastChild === node2, \'root.lastChild\');\n
+\tok(node.next === node2, \'node.next\');\n
+\tok(node2.prev === node, \'node2.prev\');\n
+\tok(node2.parent === root, \'node3.next\');\n
+});\n
+\n
+test(\'insert before first\', function() {\n
+\tvar fragment, root, node, node2;\n
+\n
+\texpect(8);\n
+\n
+\tfragment = new tinymce.html.Node(\'#frag\', 11);\n
+\troot = fragment.append(new tinymce.html.Node(\'body\', 1));\n
+\tnode = root.append(new tinymce.html.Node(\'a\', 1));\n
+\tnode2 = root.insert(new tinymce.html.Node(\'x\', 1), node, true);\n
+\tok(root.firstChild === node2, \'root.firstChild\');\n
+\tok(root.lastChild === node, \'root.lastChild\');\n
+\tok(node2.parent === root, \'node2.lastChild\');\n
+\tok(node2.next === node, \'node2.next\');\n
+\tok(node2.prev === undefined, \'node2.prev\');\n
+\tok(node.parent === root, \'node.lastChild\');\n
+\tok(node.next === undefined, \'node.next\');\n
+\tok(node.prev === node2, \'node.prev\');\n
+});\n
+\n
+test(\'insert before second\', function() {\n
+\tvar fragment, root, node, node2, node3;\n
+\n
+\texpect(5);\n
+\n
+\tfragment = new tinymce.html.Node(\'#frag\', 11);\n
+\troot = fragment.append(new tinymce.html.Node(\'body\', 1));\n
+\tnode = root.append(new tinymce.html.Node(\'a\', 1));\n
+\tnode2 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode3 = root.insert(new tinymce.html.Node(\'x\', 1), node2, true);\n
+\tok(root.firstChild === node, \'root.firstChild\');\n
+\tok(root.lastChild === node2, \'root.lastChild\');\n
+\tok(node3.parent === root, \'node3.parent\');\n
+\tok(node3.next === node2, \'node3.next\');\n
+\tok(node3.prev === node, \'node3.prev\');\n
+});\n
+\n
+test(\'insert after and between two nodes\', function() {\n
+\tvar root, node, node2, node3, fragment;\n
+\n
+\texpect(7);\n
+\n
+\tfragment = new tinymce.html.Node(\'#frag\', 11);\n
+\troot = fragment.append(new tinymce.html.Node(\'body\', 1));\n
+\tnode = root.append(new tinymce.html.Node(\'a\', 1));\n
+\tnode2 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode3 = root.insert(new tinymce.html.Node(\'x\', 1), node);\n
+\tok(root.firstChild === node, \'root.firstChild\');\n
+\tok(root.lastChild === node2, \'root.lastChild\');\n
+\tok(node.next === node3, \'node.next\');\n
+\tok(node2.prev === node3, \'node2.prev\');\n
+\tok(node3.parent === root, \'node3.next\');\n
+\tok(node3.next === node2, \'node3.next\');\n
+\tok(node3.prev === node, \'node3.prev\');\n
+});\n
+\n
+test(\'replace single child\', function() {\n
+\tvar root, node1, node2;\n
+\n
+\texpect(5);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode2 = root.append(new tinymce.html.Node(\'em\', 1));\n
+\tnode1.replace(node2);\n
+\tok(root.firstChild === node2, \'root.firstChild\');\n
+\tok(root.lastChild === node2, \'root.lastChild\');\n
+\tok(node2.parent === root, \'node2.parent\');\n
+\tok(!node2.next, \'node2.next\');\n
+\tok(!node2.prev, \'node2.prev\');\n
+});\n
+\n
+test(\'replace first child\', function() {\n
+\tvar root, node1, node2, node3;\n
+\n
+\texpect(5);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode2 = root.append(new tinymce.html.Node(\'em\', 1));\n
+\tnode3 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode1.replace(node2);\n
+\tok(root.firstChild === node2, \'root.firstChild\');\n
+\tok(root.lastChild === node3, \'root.lastChild\');\n
+\tok(node2.parent === root, \'node2.parent\');\n
+\tok(node2.next === node3, \'node2.next\');\n
+\tok(!node2.prev, \'node2.prev\');\n
+});\n
+\n
+test(\'replace last child\', function() {\n
+\tvar root, node1, node2, node3;\n
+\n
+\texpect(5);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode3 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode2 = root.append(new tinymce.html.Node(\'em\', 1));\n
+\tnode3.replace(node2);\n
+\tok(root.firstChild === node1, \'root.firstChild\');\n
+\tok(root.lastChild === node2, \'root.lastChild\');\n
+\tok(node2.parent === root, \'node2.parent\');\n
+\tok(!node2.next, \'node2.next\');\n
+\tok(node2.prev === node1, \'node2.prev\');\n
+});\n
+\n
+test(\'replace middle child\', function() {\n
+\tvar root, node1, node2, node3, node4;\n
+\n
+\texpect(5);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode2 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode3 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode4 = root.append(new tinymce.html.Node(\'em\', 1));\n
+\tnode2.replace(node4);\n
+\tok(root.firstChild === node1, \'root.firstChild\');\n
+\tok(root.lastChild === node3, \'root.lastChild\');\n
+\tok(node4.parent === root, \'node4.parent\');\n
+\tok(node4.next === node3, \'node4.next\');\n
+\tok(node4.prev === node1, \'node4.prev\');\n
+});\n
+\n
+test(\'attr\', 22, function() {\n
+\tvar node;\n
+\n
+\tnode = new tinymce.html.Node(\'b\', 1);\n
+\tdeepEqual(node.attributes, []);\n
+\tnode.attr(\'attr1\', \'value1\');\n
+\tequal(node.attr(\'attr1\'), \'value1\');\n
+\tequal(node.attr(\'attr2\'), undefined);\n
+\tdeepEqual(node.attributes, [{name: \'attr1\', value: \'value1\'}]);\n
+\tdeepEqual(node.attributes.map, {\'attr1\': \'value1\'});\n
+\n
+\tnode = new tinymce.html.Node(\'b\', 1);\n
+\tdeepEqual(node.attributes, []);\n
+\tnode.attr(\'attr1\', \'value1\');\n
+\tnode.attr(\'attr1\', \'valueX\');\n
+\tequal(node.attr(\'attr1\'), \'valueX\');\n
+\tdeepEqual(node.attributes, [{name: \'attr1\', value: \'valueX\'}]);\n
+\tdeepEqual(node.attributes.map, {\'attr1\': \'valueX\'});\n
+\n
+\tnode = new tinymce.html.Node(\'b\', 1);\n
+\tdeepEqual(node.attributes, []);\n
+\tnode.attr(\'attr1\', \'value1\');\n
+\tnode.attr(\'attr2\', \'value2\');\n
+\tequal(node.attr(\'attr1\'), \'value1\');\n
+\tequal(node.attr(\'attr2\'), \'value2\');\n
+\tdeepEqual(node.attributes, [{name: \'attr1\', value: \'value1\'}, {name: \'attr2\', value: \'value2\'}]);\n
+\tdeepEqual(node.attributes.map, {\'attr1\': \'value1\', \'attr2\': \'value2\'});\n
+\n
+\tnode = new tinymce.html.Node(\'b\', 1);\n
+\tdeepEqual(node.attributes, []);\n
+\tnode.attr(\'attr1\', \'value1\');\n
+\tnode.attr(\'attr1\', null);\n
+\tequal(node.attr(\'attr1\'), undefined);\n
+\tdeepEqual(node.attributes, []);\n
+\tdeepEqual(node.attributes.map, {});\n
+\n
+\tnode = new tinymce.html.Node(\'b\', 1);\n
+\tnode.attr({a:\'1\', b:\'2\'});\n
+\tdeepEqual(node.attributes, [{name: \'a\', value: \'1\'}, {name: \'b\', value: \'2\'}]);\n
+\tdeepEqual(node.attributes.map, {a:\'1\', b:\'2\'});\n
+\n
+\tnode = new tinymce.html.Node(\'b\', 1);\n
+\tnode.attr(null);\n
+\tdeepEqual(node.attributes, []);\n
+\tdeepEqual(node.attributes.map, {});\n
+});\n
+\n
+test(\'clone\', function() {\n
+\tvar root, node, clone;\n
+\n
+\texpect(16);\n
+\n
+\tnode = new tinymce.html.Node(\'#text\', 3);\n
+\tnode.value = \'value\';\n
+\tclone = node.clone();\n
+\tequal(clone.name, \'#text\');\n
+\tequal(clone.type, 3);\n
+\tequal(clone.value, \'value\');\n
+\tequal(clone.parent, undefined);\n
+\tequal(clone.next, undefined);\n
+\tequal(clone.prev, undefined);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode = new tinymce.html.Node(\'#text\', 3);\n
+\tnode.value = \'value\';\n
+\troot.append(node);\n
+\tequal(clone.name, \'#text\');\n
+\tequal(clone.type, 3);\n
+\tequal(clone.value, \'value\');\n
+\tequal(clone.parent, undefined);\n
+\tequal(clone.next, undefined);\n
+\tequal(clone.prev, undefined);\n
+\n
+\tnode = new tinymce.html.Node(\'b\', 1);\n
+\tnode.attr(\'id\', \'id\');\n
+\tnode.attr(\'class\', \'class\');\n
+\tnode.attr(\'title\', \'title\');\n
+\tclone = node.clone();\n
+\tequal(clone.name, \'b\');\n
+\tequal(clone.type, 1);\n
+\tdeepEqual(clone.attributes, [{name: \'class\', value: \'class\'}, {name: \'title\', value: \'title\'}]);\n
+\tdeepEqual(clone.attributes.map, {\'class\': \'class\', \'title\': \'title\'});\n
+});\n
+\n
+test(\'unwrap\', function() {\n
+\tvar root, node1, node2, node3;\n
+\n
+\texpect(7);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode2 = node1.append(new tinymce.html.Node(\'em\', 1));\n
+\tnode1.unwrap();\n
+\tok(root.firstChild === node2, \'root.firstChild\');\n
+\tok(root.lastChild === node2, \'root.lastChild\');\n
+\tok(node2.parent === root, \'node2.parent\');\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode2 = node1.append(new tinymce.html.Node(\'em\', 1));\n
+\tnode3 = node1.append(new tinymce.html.Node(\'span\', 1));\n
+\tnode1.unwrap();\n
+\tok(root.firstChild === node2, \'root.firstChild\');\n
+\tok(root.lastChild === node3, \'root.lastChild\');\n
+\tok(node2.parent === root, \'node2.parent\');\n
+\tok(node3.parent === root, \'node3.parent\');\n
+});\n
+\n
+test(\'empty\', function() {\n
+\tvar root, node1, node2;\n
+\n
+\texpect(4);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'b\', 1));\n
+\tnode2 = node1.append(new tinymce.html.Node(\'em\', 1));\n
+\tnode1.empty();\n
+\tok(root.firstChild === node1, \'root.firstChild\');\n
+\tok(root.lastChild === node1, \'root.firstChild\');\n
+\tok(!node1.firstChild, \'node1.firstChild\');\n
+\tok(!node1.lastChild, \'node1.firstChild\');\n
+});\n
+\n
+test(\'isEmpty\', function() {\n
+\tvar root, node1, node2;\n
+\n
+\texpect(9);\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'p\', 1));\n
+\tnode2 = node1.append(new tinymce.html.Node(\'b\', 1));\n
+\tok(root.isEmpty({img: 1}), \'Is empty 1\');\n
+\tok(node1.isEmpty({img: 1}), \'Is empty 2\');\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'p\', 1));\n
+\tnode2 = node1.append(new tinymce.html.Node(\'img\', 1));\n
+\tok(!root.isEmpty({img: 1}), \'Is not empty 1\');\n
+\tok(!node1.isEmpty({img: 1}), \'Is not empty 2\');\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'p\', 1));\n
+\tnode2 = node1.append(new tinymce.html.Node(\'#text\', 3));\n
+\tnode2.value = \'X\';\n
+\tok(!root.isEmpty({img: 1}), \'Is not empty 3\');\n
+\tok(!node1.isEmpty({img: 1}), \'Is not empty 4\');\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'p\', 1));\n
+\tnode2 = node1.append(new tinymce.html.Node(\'#text\', 3));\n
+\tnode2.value = \'\';\n
+\tok(root.isEmpty({img: 1}), \'Is empty 4\');\n
+\tok(node1.isEmpty({img: 1}), \'Is empty 5\');\n
+\n
+\troot = new tinymce.html.Node(\'#frag\', 11);\n
+\tnode1 = root.append(new tinymce.html.Node(\'a\', 1)).attr(\'name\', \'x\');\n
+\tok(!root.isEmpty({img: 1}), \'Contains anchor with name attribute.\');\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14089</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Node.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

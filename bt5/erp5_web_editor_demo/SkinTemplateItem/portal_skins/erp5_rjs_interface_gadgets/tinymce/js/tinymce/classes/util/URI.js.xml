@@ -1,0 +1,455 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268296.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>URI.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * URI.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles parsing, modification and serialization of URI/URL strings.\n
+ * @class tinymce.util.URI\n
+ */\n
+define("tinymce/util/URI", [\n
+\t"tinymce/util/Tools"\n
+], function(Tools) {\n
+\tvar each = Tools.each, trim = Tools.trim;\n
+\tvar queryParts = "source protocol authority userInfo user password host port relative path directory file query anchor".split(\' \');\n
+\tvar DEFAULT_PORTS = {\n
+\t\t\'ftp\': 21,\n
+\t\t\'http\': 80,\n
+\t\t\'https\': 443,\n
+\t\t\'mailto\': 25\n
+\t};\n
+\n
+\t/**\n
+\t * Constructs a new URI instance.\n
+\t *\n
+\t * @constructor\n
+\t * @method URI\n
+\t * @param {String} url URI string to parse.\n
+\t * @param {Object} settings Optional settings object.\n
+\t */\n
+\tfunction URI(url, settings) {\n
+\t\tvar self = this, baseUri, base_url;\n
+\n
+\t\turl = trim(url);\n
+\t\tsettings = self.settings = settings || {};\n
+\t\tbaseUri = settings.base_uri;\n
+\n
+\t\t// Strange app protocol that isn\'t http/https or local anchor\n
+\t\t// For example: mailto,skype,tel etc.\n
+\t\tif (/^([\\w\\-]+):([^\\/]{2})/i.test(url) || /^\\s*#/.test(url)) {\n
+\t\t\tself.source = url;\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tvar isProtocolRelative = url.indexOf(\'//\') === 0;\n
+\n
+\t\t// Absolute path with no host, fake host and protocol\n
+\t\tif (url.indexOf(\'/\') === 0 && !isProtocolRelative) {\n
+\t\t\turl = (baseUri ? baseUri.protocol || \'http\' : \'http\') + \'://mce_host\' + url;\n
+\t\t}\n
+\n
+\t\t// Relative path http:// or protocol relative //path\n
+\t\tif (!/^[\\w\\-]*:?\\/\\//.test(url)) {\n
+\t\t\tbase_url = settings.base_uri ? settings.base_uri.path : new URI(location.href).directory;\n
+\t\t\tif (settings.base_uri.protocol === "") {\n
+\t\t\t\turl = \'//mce_host\' + self.toAbsPath(base_url, url);\n
+\t\t\t} else {\n
+\t\t\t\turl = /([^#?]*)([#?]?.*)/.exec(url);\n
+\t\t\t\turl = ((baseUri && baseUri.protocol) || \'http\') + \'://mce_host\' + self.toAbsPath(base_url, url[1]) + url[2];\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Parse URL (Credits goes to Steave, http://blog.stevenlevithan.com/archives/parseuri)\n
+\t\turl = url.replace(/@@/g, \'(mce_at)\'); // Zope 3 workaround, they use @@something\n
+\n
+\t\t/*jshint maxlen: 255 */\n
+\t\t/*eslint max-len: 0 */\n
+\t\turl = /^(?:(?![^:@]+:[^:@\\/]*@)([^:\\/?#.]+):)?(?:\\/\\/)?((?:(([^:@\\/]*):?([^:@\\/]*))?@)?([^:\\/?#]*)(?::(\\d*))?)(((\\/(?:[^?#](?![^?#\\/]*\\.[^?#\\/.]+(?:[?#]|$)))*\\/?)?([^?#\\/]*))(?:\\?([^#]*))?(?:#(.*))?)/.exec(url);\n
+\n
+\t\teach(queryParts, function(v, i) {\n
+\t\t\tvar part = url[i];\n
+\n
+\t\t\t// Zope 3 workaround, they use @@something\n
+\t\t\tif (part) {\n
+\t\t\t\tpart = part.replace(/\\(mce_at\\)/g, \'@@\');\n
+\t\t\t}\n
+\n
+\t\t\tself[v] = part;\n
+\t\t});\n
+\n
+\t\tif (baseUri) {\n
+\t\t\tif (!self.protocol) {\n
+\t\t\t\tself.protocol = baseUri.protocol;\n
+\t\t\t}\n
+\n
+\t\t\tif (!self.userInfo) {\n
+\t\t\t\tself.userInfo = baseUri.userInfo;\n
+\t\t\t}\n
+\n
+\t\t\tif (!self.port && self.host === \'mce_host\') {\n
+\t\t\t\tself.port = baseUri.port;\n
+\t\t\t}\n
+\n
+\t\t\tif (!self.host || self.host === \'mce_host\') {\n
+\t\t\t\tself.host = baseUri.host;\n
+\t\t\t}\n
+\n
+\t\t\tself.source = \'\';\n
+\t\t}\n
+\n
+\t\tif (isProtocolRelative) {\n
+\t\t\tself.protocol = \'\';\n
+\t\t}\n
+\n
+\t\t//t.path = t.path || \'/\';\n
+\t}\n
+\n
+\tURI.prototype = {\n
+\t\t/**\n
+\t\t * Sets the internal path part of the URI.\n
+\t\t *\n
+\t\t * @method setPath\n
+\t\t * @param {string} path Path string to set.\n
+\t\t */\n
+\t\tsetPath: function(path) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tpath = /^(.*?)\\/?(\\w+)?$/.exec(path);\n
+\n
+\t\t\t// Update path parts\n
+\t\t\tself.path = path[0];\n
+\t\t\tself.directory = path[1];\n
+\t\t\tself.file = path[2];\n
+\n
+\t\t\t// Rebuild source\n
+\t\t\tself.source = \'\';\n
+\t\t\tself.getURI();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Converts the specified URI into a relative URI based on the current URI instance location.\n
+\t\t *\n
+\t\t * @method toRelative\n
+\t\t * @param {String} uri URI to convert into a relative path/URI.\n
+\t\t * @return {String} Relative URI from the point specified in the current URI instance.\n
+\t\t * @example\n
+\t\t * // Converts an absolute URL to an relative URL url will be somedir/somefile.htm\n
+\t\t * var url = new tinymce.util.URI(\'http://www.site.com/dir/\').toRelative(\'http://www.site.com/dir/somedir/somefile.htm\');\n
+\t\t */\n
+\t\ttoRelative: function(uri) {\n
+\t\t\tvar self = this, output;\n
+\n
+\t\t\tif (uri === "./") {\n
+\t\t\t\treturn uri;\n
+\t\t\t}\n
+\n
+\t\t\turi = new URI(uri, {base_uri: self});\n
+\n
+\t\t\t// Not on same domain/port or protocol\n
+\t\t\tif ((uri.host != \'mce_host\' && self.host != uri.host && uri.host) || self.port != uri.port ||\n
+\t\t\t\t(self.protocol != uri.protocol && uri.protocol !== "")) {\n
+\t\t\t\treturn uri.getURI();\n
+\t\t\t}\n
+\n
+\t\t\tvar tu = self.getURI(), uu = uri.getURI();\n
+\n
+\t\t\t// Allow usage of the base_uri when relative_urls = true\n
+\t\t\tif (tu == uu || (tu.charAt(tu.length - 1) == "/" && tu.substr(0, tu.length - 1) == uu)) {\n
+\t\t\t\treturn tu;\n
+\t\t\t}\n
+\n
+\t\t\toutput = self.toRelPath(self.path, uri.path);\n
+\n
+\t\t\t// Add query\n
+\t\t\tif (uri.query) {\n
+\t\t\t\toutput += \'?\' + uri.query;\n
+\t\t\t}\n
+\n
+\t\t\t// Add anchor\n
+\t\t\tif (uri.anchor) {\n
+\t\t\t\toutput += \'#\' + uri.anchor;\n
+\t\t\t}\n
+\n
+\t\t\treturn output;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Converts the specified URI into a absolute URI based on the current URI instance location.\n
+\t\t *\n
+\t\t * @method toAbsolute\n
+\t\t * @param {String} uri URI to convert into a relative path/URI.\n
+\t\t * @param {Boolean} noHost No host and protocol prefix.\n
+\t\t * @return {String} Absolute URI from the point specified in the current URI instance.\n
+\t\t * @example\n
+\t\t * // Converts an relative URL to an absolute URL url will be http://www.site.com/dir/somedir/somefile.htm\n
+\t\t * var url = new tinymce.util.URI(\'http://www.site.com/dir/\').toAbsolute(\'somedir/somefile.htm\');\n
+\t\t */\n
+\t\ttoAbsolute: function(uri, noHost) {\n
+\t\t\turi = new URI(uri, {base_uri: this});\n
+\n
+\t\t\treturn uri.getURI(noHost && this.isSameOrigin(uri));\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Determine whether the given URI has the same origin as this URI.  Based on RFC-6454.\n
+\t\t * Supports default ports for protocols listed in DEFAULT_PORTS.  Unsupported protocols will fail safe: they\n
+\t\t * won\'t match, if the port specifications differ.\n
+\t\t *\n
+\t\t * @method isSameOrigin\n
+\t\t * @param {tinymce.util.URI} uri Uri instance to compare.\n
+\t\t * @returns {Boolean} True if the origins are the same.\n
+\t\t */\n
+\t\tisSameOrigin: function(uri) {\n
+\t\t\tif (this.host == uri.host && this.protocol == uri.protocol) {\n
+\t\t\t\tif (this.port == uri.port) {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar defaultPort = DEFAULT_PORTS[this.protocol];\n
+\t\t\t\tif (defaultPort && ((this.port || defaultPort) == (uri.port || defaultPort))) {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Converts a absolute path into a relative path.\n
+\t\t *\n
+\t\t * @method toRelPath\n
+\t\t * @param {String} base Base point to convert the path from.\n
+\t\t * @param {String} path Absolute path to convert into a relative path.\n
+\t\t */\n
+\t\ttoRelPath: function(base, path) {\n
+\t\t\tvar items, breakPoint = 0, out = \'\', i, l;\n
+\n
+\t\t\t// Split the paths\n
+\t\t\tbase = base.substring(0, base.lastIndexOf(\'/\'));\n
+\t\t\tbase = base.split(\'/\');\n
+\t\t\titems = path.split(\'/\');\n
+\n
+\t\t\tif (base.length >= items.length) {\n
+\t\t\t\tfor (i = 0, l = base.length; i < l; i++) {\n
+\t\t\t\t\tif (i >= items.length || base[i] != items[i]) {\n
+\t\t\t\t\t\tbreakPoint = i + 1;\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (base.length < items.length) {\n
+\t\t\t\tfor (i = 0, l = items.length; i < l; i++) {\n
+\t\t\t\t\tif (i >= base.length || base[i] != items[i]) {\n
+\t\t\t\t\t\tbreakPoint = i + 1;\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (breakPoint === 1) {\n
+\t\t\t\treturn path;\n
+\t\t\t}\n
+\n
+\t\t\tfor (i = 0, l = base.length - (breakPoint - 1); i < l; i++) {\n
+\t\t\t\tout += "../";\n
+\t\t\t}\n
+\n
+\t\t\tfor (i = breakPoint - 1, l = items.length; i < l; i++) {\n
+\t\t\t\tif (i != breakPoint - 1) {\n
+\t\t\t\t\tout += "/" + items[i];\n
+\t\t\t\t} else {\n
+\t\t\t\t\tout += items[i];\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn out;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Converts a relative path into a absolute path.\n
+\t\t *\n
+\t\t * @method toAbsPath\n
+\t\t * @param {String} base Base point to convert the path from.\n
+\t\t * @param {String} path Relative path to convert into an absolute path.\n
+\t\t */\n
+\t\ttoAbsPath: function(base, path) {\n
+\t\t\tvar i, nb = 0, o = [], tr, outPath;\n
+\n
+\t\t\t// Split paths\n
+\t\t\ttr = /\\/$/.test(path) ? \'/\' : \'\';\n
+\t\t\tbase = base.split(\'/\');\n
+\t\t\tpath = path.split(\'/\');\n
+\n
+\t\t\t// Remove empty chunks\n
+\t\t\teach(base, function(k) {\n
+\t\t\t\tif (k) {\n
+\t\t\t\t\to.push(k);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tbase = o;\n
+\n
+\t\t\t// Merge relURLParts chunks\n
+\t\t\tfor (i = path.length - 1, o = []; i >= 0; i--) {\n
+\t\t\t\t// Ignore empty or .\n
+\t\t\t\tif (path[i].length === 0 || path[i] === ".") {\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Is parent\n
+\t\t\t\tif (path[i] === \'..\') {\n
+\t\t\t\t\tnb++;\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Move up\n
+\t\t\t\tif (nb > 0) {\n
+\t\t\t\t\tnb--;\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\to.push(path[i]);\n
+\t\t\t}\n
+\n
+\t\t\ti = base.length - nb;\n
+\n
+\t\t\t// If /a/b/c or /\n
+\t\t\tif (i <= 0) {\n
+\t\t\t\toutPath = o.reverse().join(\'/\');\n
+\t\t\t} else {\n
+\t\t\t\toutPath = base.slice(0, i).join(\'/\') + \'/\' + o.reverse().join(\'/\');\n
+\t\t\t}\n
+\n
+\t\t\t// Add front / if it\'s needed\n
+\t\t\tif (outPath.indexOf(\'/\') !== 0) {\n
+\t\t\t\toutPath = \'/\' + outPath;\n
+\t\t\t}\n
+\n
+\t\t\t// Add traling / if it\'s needed\n
+\t\t\tif (tr && outPath.lastIndexOf(\'/\') !== outPath.length - 1) {\n
+\t\t\t\toutPath += tr;\n
+\t\t\t}\n
+\n
+\t\t\treturn outPath;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the full URI of the internal structure.\n
+\t\t *\n
+\t\t * @method getURI\n
+\t\t * @param {Boolean} noProtoHost Optional no host and protocol part. Defaults to false.\n
+\t\t */\n
+\t\tgetURI: function(noProtoHost) {\n
+\t\t\tvar s, self = this;\n
+\n
+\t\t\t// Rebuild source\n
+\t\t\tif (!self.source || noProtoHost) {\n
+\t\t\t\ts = \'\';\n
+\n
+\t\t\t\tif (!noProtoHost) {\n
+\t\t\t\t\tif (self.protocol) {\n
+\t\t\t\t\t\ts += self.protocol + \'://\';\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\ts += \'//\';\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (self.userInfo) {\n
+\t\t\t\t\t\ts += self.userInfo + \'@\';\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (self.host) {\n
+\t\t\t\t\t\ts += self.host;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (self.port) {\n
+\t\t\t\t\t\ts += \':\' + self.port;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (self.path) {\n
+\t\t\t\t\ts += self.path;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (self.query) {\n
+\t\t\t\t\ts += \'?\' + self.query;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (self.anchor) {\n
+\t\t\t\t\ts += \'#\' + self.anchor;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.source = s;\n
+\t\t\t}\n
+\n
+\t\t\treturn self.source;\n
+\t\t}\n
+\t};\n
+\n
+\tURI.parseDataUri = function(uri) {\n
+\t\tvar type, matches;\n
+\n
+\t\turi = decodeURIComponent(uri).split(\',\');\n
+\n
+\t\tmatches = /data:([^;]+)/.exec(uri[0]);\n
+\t\tif (matches) {\n
+\t\t\ttype = matches[1];\n
+\t\t}\n
+\n
+\t\treturn {\n
+\t\t\ttype: type,\n
+\t\t\tdata: uri[1]\n
+\t\t};\n
+\t};\n
+\n
+\treturn URI;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9799</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>URI.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

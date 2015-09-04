@@ -1,0 +1,2317 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268536.63</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Compiled inline version. (Library mode)\n
+ */\n
+\n
+/*jshint smarttabs:true, undef:true, latedef:true, curly:true, bitwise:true, camelcase:true */\n
+/*globals $code */\n
+\n
+(function(exports, undefined) {\n
+\t"use strict";\n
+\n
+\tvar modules = {};\n
+\n
+\tfunction require(ids, callback) {\n
+\t\tvar module, defs = [];\n
+\n
+\t\tfor (var i = 0; i < ids.length; ++i) {\n
+\t\t\tmodule = modules[ids[i]] || resolve(ids[i]);\n
+\t\t\tif (!module) {\n
+\t\t\t\tthrow \'module definition dependecy not found: \' + ids[i];\n
+\t\t\t}\n
+\n
+\t\t\tdefs.push(module);\n
+\t\t}\n
+\n
+\t\tcallback.apply(null, defs);\n
+\t}\n
+\n
+\tfunction define(id, dependencies, definition) {\n
+\t\tif (typeof id !== \'string\') {\n
+\t\t\tthrow \'invalid module definition, module id must be defined and be a string\';\n
+\t\t}\n
+\n
+\t\tif (dependencies === undefined) {\n
+\t\t\tthrow \'invalid module definition, dependencies must be specified\';\n
+\t\t}\n
+\n
+\t\tif (definition === undefined) {\n
+\t\t\tthrow \'invalid module definition, definition function must be specified\';\n
+\t\t}\n
+\n
+\t\trequire(dependencies, function() {\n
+\t\t\tmodules[id] = definition.apply(null, arguments);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction defined(id) {\n
+\t\treturn !!modules[id];\n
+\t}\n
+\n
+\tfunction resolve(id) {\n
+\t\tvar target = exports;\n
+\t\tvar fragments = id.split(/[.\\/]/);\n
+\n
+\t\tfor (var fi = 0; fi < fragments.length; ++fi) {\n
+\t\t\tif (!target[fragments[fi]]) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\ttarget = target[fragments[fi]];\n
+\t\t}\n
+\n
+\t\treturn target;\n
+\t}\n
+\n
+\tfunction expose(ids) {\n
+\t\tfor (var i = 0; i < ids.length; i++) {\n
+\t\t\tvar target = exports;\n
+\t\t\tvar id = ids[i];\n
+\t\t\tvar fragments = id.split(/[.\\/]/);\n
+\n
+\t\t\tfor (var fi = 0; fi < fragments.length - 1; ++fi) {\n
+\t\t\t\tif (target[fragments[fi]] === undefined) {\n
+\t\t\t\t\ttarget[fragments[fi]] = {};\n
+\t\t\t\t}\n
+\n
+\t\t\t\ttarget = target[fragments[fi]];\n
+\t\t\t}\n
+\n
+\t\t\ttarget[fragments[fragments.length - 1]] = modules[id];\n
+\t\t}\n
+\t}\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/Canvas.js\n
+\n
+/**\n
+ * Canvas.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Contains various canvas functions.\n
+ */\n
+define("tinymce/imagetoolsplugin/Canvas", [], function() {\n
+\tfunction create(width, height) {\n
+\t\treturn resize(document.createElement(\'canvas\'), width, height);\n
+\t}\n
+\n
+\tfunction get2dContext(canvas) {\n
+\t\treturn canvas.getContext("2d");\n
+\t}\n
+\n
+\tfunction resize(canvas, width, height) {\n
+\t\tcanvas.width = width;\n
+\t\tcanvas.height = height;\n
+\n
+\t\treturn canvas;\n
+\t}\n
+\n
+\treturn {\n
+\t\tcreate: create,\n
+\t\tresize: resize,\n
+\t\tget2dContext: get2dContext\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/Mime.js\n
+\n
+/**\n
+ * Mime.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Returns mime types for uris.\n
+ */\n
+define("tinymce/imagetoolsplugin/Mime", [], function() {\n
+\tfunction getUriPathName(uri) {\n
+\t\tvar a = document.createElement(\'a\');\n
+\n
+\t\ta.href = uri;\n
+\n
+\t\treturn a.pathname;\n
+\t}\n
+\n
+\tfunction guessMimeType(uri) {\n
+\t\tvar parts = getUriPathName(uri).split(\'.\'),\n
+\t\t\text = parts[parts.length - 1],\n
+\t\t\tmimes = {\n
+\t\t\t\t\'jpg\': \'image/jpeg\',\n
+\t\t\t\t\'jpeg\': \'image/jpeg\',\n
+\t\t\t\t\'png\': \'image/png\'\n
+\t\t\t};\n
+\n
+\t\tif (ext) {\n
+\t\t\text = ext.toLowerCase();\n
+\t\t}\n
+\n
+\t\treturn mimes[ext];\n
+\t}\n
+\n
+\treturn {\n
+\t\tguessMimeType: guessMimeType\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/ImageSize.js\n
+\n
+/**\n
+ * ImageSize.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Returns the size of images.\n
+ */\n
+define("tinymce/imagetoolsplugin/ImageSize", [], function() {\n
+\tfunction getWidth(image) {\n
+\t\treturn image.naturalWidth || image.width;\n
+\t}\n
+\n
+\tfunction getHeight(image) {\n
+\t\treturn image.naturalHeight || image.height;\n
+\t}\n
+\n
+\treturn {\n
+\t\tgetWidth: getWidth,\n
+\t\tgetHeight: getHeight\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/Conversions.js\n
+\n
+/**\n
+ * Conversions.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Converts blob/uris/images back and forth.\n
+ */\n
+define("tinymce/imagetoolsplugin/Conversions", [\n
+\t"tinymce/util/Promise",\n
+\t"tinymce/imagetoolsplugin/Canvas",\n
+\t"tinymce/imagetoolsplugin/Mime",\n
+\t"tinymce/imagetoolsplugin/ImageSize"\n
+], function(Promise, Canvas, Mime, ImageSize) {\n
+\tfunction loadImage(image) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tfunction loaded() {\n
+\t\t\t\timage.removeEventListener(\'load\', loaded);\n
+\t\t\t\tresolve(image);\n
+\t\t\t}\n
+\n
+\t\t\tif (image.complete) {\n
+\t\t\t\tresolve(image);\n
+\t\t\t} else {\n
+\t\t\t\timage.addEventListener(\'load\', loaded);\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tfunction imageToCanvas(image) {\n
+\t\treturn loadImage(image).then(function(image) {\n
+\t\t\tvar context, canvas;\n
+\n
+\t\t\tcanvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image));\n
+\t\t\tcontext = Canvas.get2dContext(canvas);\n
+\t\t\tcontext.drawImage(image, 0, 0);\n
+\n
+\t\t\treturn canvas;\n
+\t\t});\n
+\t}\n
+\n
+\tfunction imageToBlob(image) {\n
+\t\treturn loadImage(image).then(function(image) {\n
+\t\t\tvar src = image.src;\n
+\n
+\t\t\tif (src.indexOf(\'blob:\') === 0) {\n
+\t\t\t\treturn blobUriToBlob(src);\n
+\t\t\t}\n
+\n
+\t\t\tif (src.indexOf(\'data:\') === 0) {\n
+\t\t\t\treturn dataUriToBlob(src);\n
+\t\t\t}\n
+\n
+\t\t\treturn imageToCanvas(image).then(function(canvas) {\n
+\t\t\t\treturn dataUriToBlob(canvas.toDataURL(Mime.guessMimeType(src)));\n
+\t\t\t});\n
+\t\t});\n
+\t}\n
+\n
+\tfunction blobToImage(blob) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar image = new Image();\n
+\n
+\t\t\tfunction loaded() {\n
+\t\t\t\timage.removeEventListener(\'load\', loaded);\n
+\t\t\t\tresolve(image);\n
+\t\t\t}\n
+\n
+\t\t\timage.addEventListener(\'load\', loaded);\n
+\t\t\timage.src = URL.createObjectURL(blob);\n
+\n
+\t\t\tif (image.complete) {\n
+\t\t\t\tloaded();\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\tfunction blobUriToBlob(url) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar xhr = new XMLHttpRequest();\n
+\n
+\t\t\txhr.open(\'GET\', url, true);\n
+\t\t\txhr.responseType = \'blob\';\n
+\n
+\t\t\txhr.onload = function() {\n
+\t\t\t\tif (this.status == 200) {\n
+\t\t\t\t\tresolve(this.response);\n
+\t\t\t\t}\n
+\t\t\t};\n
+\n
+\t\t\txhr.send();\n
+\t\t});\n
+\t}\n
+\n
+\tfunction dataUriToBlob(uri) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar str, arr, i, matches, type, blobBuilder;\n
+\n
+\t\t\turi = uri.split(\',\');\n
+\n
+\t\t\tmatches = /data:([^;]+)/.exec(uri[0]);\n
+\t\t\tif (matches) {\n
+\t\t\t\ttype = matches[1];\n
+\t\t\t}\n
+\n
+\t\t\tstr = atob(uri[1]);\n
+\n
+\t\t\tif (window.WebKitBlobBuilder) {\n
+\t\t\t\t/*globals WebKitBlobBuilder:false */\n
+\t\t\t\tblobBuilder = new WebKitBlobBuilder();\n
+\n
+\t\t\t\tarr = new ArrayBuffer(str.length);\n
+\t\t\t\tfor (i = 0; i < arr.length; i++) {\n
+\t\t\t\t\tarr[i] = str.charCodeAt(i);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tblobBuilder.append(arr);\n
+\n
+\t\t\t\tresolve(blobBuilder.getBlob(type));\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tarr = new Uint8Array(str.length);\n
+\n
+\t\t\tfor (i = 0; i < arr.length; i++) {\n
+\t\t\t\tarr[i] = str.charCodeAt(i);\n
+\t\t\t}\n
+\n
+\t\t\tresolve(new Blob([arr], {type: type}));\n
+\t\t});\n
+\t}\n
+\n
+\tfunction uriToBlob(url) {\n
+\t\tif (url.indexOf(\'blob:\') === 0) {\n
+\t\t\treturn blobUriToBlob(url);\n
+\t\t}\n
+\n
+\t\tif (url.indexOf(\'data:\') === 0) {\n
+\t\t\treturn dataUriToBlob(url);\n
+\t\t}\n
+\n
+\t\treturn null;\n
+\t}\n
+\n
+\tfunction canvasToBlob(canvas, type) {\n
+\t\treturn dataUriToBlob(canvas.toDataURL(type));\n
+\t}\n
+\n
+\tfunction blobToDataUri(blob) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tvar reader = new FileReader();\n
+\n
+\t\t\treader.onloadend = function() {\n
+\t\t\t\tresolve(reader.result);\n
+\t\t\t};\n
+\n
+\t\t\treader.readAsDataURL(blob);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction blobToBase64(blob) {\n
+\t\treturn blobToDataUri(blob).then(function(dataUri) {\n
+\t\t\treturn dataUri.split(\',\')[1];\n
+\t\t});\n
+\t}\n
+\n
+\tfunction revokeImageUrl(image) {\n
+\t\tURL.revokeObjectURL(image.src);\n
+\t}\n
+\n
+\treturn {\n
+\t\tblobToImage: blobToImage,\n
+\t\timageToBlob: imageToBlob,\n
+\t\turiToBlob: uriToBlob,\n
+\t\tblobToDataUri: blobToDataUri,\n
+\t\tblobToBase64: blobToBase64,\n
+\t\timageToCanvas: imageToCanvas,\n
+\t\tcanvasToBlob: canvasToBlob,\n
+\t\trevokeImageUrl: revokeImageUrl\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/ImageTools.js\n
+\n
+/**\n
+ * ImageTools.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Modifies image blobs.\n
+ */\n
+define("tinymce/imagetoolsplugin/ImageTools", [\n
+\t"tinymce/imagetoolsplugin/Conversions",\n
+\t"tinymce/imagetoolsplugin/Canvas",\n
+\t"tinymce/imagetoolsplugin/ImageSize"\n
+], function(Conversions, Canvas, ImageSize) {\n
+\tvar revokeImageUrl = Conversions.revokeImageUrl;\n
+\n
+\tfunction rotate(blob, angle) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image)),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas),\n
+\t\t\t\ttranslateX = 0, translateY = 0;\n
+\n
+\t\t\tangle = angle < 0 ? 360 + angle : angle;\n
+\n
+\t\t\tif (angle == 90 || angle == 270) {\n
+\t\t\t\tCanvas.resize(canvas, canvas.height, canvas.width);\n
+\t\t\t}\n
+\n
+\t\t\tif (angle == 90 || angle == 180) {\n
+\t\t\t\ttranslateX = canvas.width;\n
+\t\t\t}\n
+\n
+\t\t\tif (angle == 270 || angle == 180) {\n
+\t\t\t\ttranslateY = canvas.height;\n
+\t\t\t}\n
+\n
+\t\t\tcontext.translate(translateX, translateY);\n
+\t\t\tcontext.rotate(angle * Math.PI / 180);\n
+\t\t\tcontext.drawImage(image, 0, 0);\n
+\t\t\trevokeImageUrl(image);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas, blob.type);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction flip(blob, axis) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image)),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas);\n
+\n
+\t\t\tif (axis == \'v\') {\n
+\t\t\t\tcontext.scale(1, -1);\n
+\t\t\t\tcontext.drawImage(image, 0, -canvas.height);\n
+\t\t\t} else {\n
+\t\t\t\tcontext.scale(-1, 1);\n
+\t\t\t\tcontext.drawImage(image, -canvas.width, 0);\n
+\t\t\t}\n
+\n
+\t\t\trevokeImageUrl(image);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction crop(blob, x, y, w, h) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(w, h),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas);\n
+\n
+\t\t\tcontext.drawImage(image, -x, -y);\n
+\t\t\trevokeImageUrl(image);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction resize(blob, w, h) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(w, h),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas);\n
+\n
+\t\t\tcontext.drawImage(image, 0, 0, w, h);\n
+\t\t\trevokeImageUrl(image);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas, blob.type);\n
+\t\t});\n
+\t}\n
+\n
+\treturn {\n
+\t\trotate: rotate,\n
+\t\tflip: flip,\n
+\t\tcrop: crop,\n
+\t\tresize: resize\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/CropRect.js\n
+\n
+/**\n
+ * CropRect.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * ...\n
+ */\n
+define("tinymce/imagetoolsplugin/CropRect", [\n
+\t"tinymce/dom/DomQuery",\n
+\t"tinymce/ui/DragHelper",\n
+\t"tinymce/ui/Rect",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/util/Observable"\n
+], function($, DragHelper, Rect, Tools, Observable) {\n
+\tvar count = 0;\n
+\n
+\treturn function(currentRect, viewPortRect, clampRect, containerElm) {\n
+\t\tvar instance, handles, dragHelpers, blockers, prefix = \'mce-\', id = prefix + \'crid-\' + (count++);\n
+\n
+\t\thandles = [\n
+\t\t\t{name: \'move\', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: 0, deltaH: 0},\n
+\t\t\t{name: \'nw\', xMul: 0, yMul: 0, deltaX: 1, deltaY: 1, deltaW: -1, deltaH: -1},\n
+\t\t\t{name: \'ne\', xMul: 1, yMul: 0, deltaX: 0, deltaY: 1, deltaW: 1, deltaH: -1},\n
+\t\t\t{name: \'sw\', xMul: 0, yMul: 1, deltaX: 1, deltaY: 0, deltaW: -1, deltaH: 1},\n
+\t\t\t{name: \'se\', xMul: 1, yMul: 1, deltaX: 0, deltaY: 0, deltaW: 1, deltaH: 1}\n
+\t\t];\n
+\n
+\t\tblockers = ["top", "right", "bottom", "left"];\n
+\n
+\t\tfunction getAbsoluteRect(outerRect, relativeRect) {\n
+\t\t\treturn {\n
+\t\t\t\tx: relativeRect.x + outerRect.x,\n
+\t\t\t\ty: relativeRect.y + outerRect.y,\n
+\t\t\t\tw: relativeRect.w,\n
+\t\t\t\th: relativeRect.h\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction getRelativeRect(outerRect, innerRect) {\n
+\t\t\treturn {\n
+\t\t\t\tx: innerRect.x - outerRect.x,\n
+\t\t\t\ty: innerRect.y - outerRect.y,\n
+\t\t\t\tw: innerRect.w,\n
+\t\t\t\th: innerRect.h\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction getInnerRect() {\n
+\t\t\treturn getRelativeRect(clampRect, currentRect);\n
+\t\t}\n
+\n
+\t\tfunction render() {\n
+\t\t\tfunction createDragHelper(handle) {\n
+\t\t\t\tvar startRect;\n
+\n
+\t\t\t\treturn new DragHelper(id, {\n
+\t\t\t\t\tdocument: containerElm.ownerDocument,\n
+\t\t\t\t\thandle: id + \'-\' + handle.name,\n
+\n
+\t\t\t\t\tstart: function() {\n
+\t\t\t\t\t\tstartRect = currentRect;\n
+\t\t\t\t\t},\n
+\n
+\t\t\t\t\tdrag: function(e) {\n
+\t\t\t\t\t\tvar x, y, w, h, rect;\n
+\n
+\t\t\t\t\t\tx = startRect.x;\n
+\t\t\t\t\t\ty = startRect.y;\n
+\t\t\t\t\t\tw = startRect.w;\n
+\t\t\t\t\t\th = startRect.h;\n
+\n
+\t\t\t\t\t\tx += e.deltaX * handle.deltaX;\n
+\t\t\t\t\t\ty += e.deltaY * handle.deltaY;\n
+\t\t\t\t\t\tw += e.deltaX * handle.deltaW;\n
+\t\t\t\t\t\th += e.deltaY * handle.deltaH;\n
+\n
+\t\t\t\t\t\tif (w < 20) {\n
+\t\t\t\t\t\t\tw = 20;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (h < 20) {\n
+\t\t\t\t\t\t\th = 20;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\trect = currentRect = Rect.clamp({x: x, y: y, w: w, h: h}, clampRect, handle.name == \'move\');\n
+\t\t\t\t\t\trect = getRelativeRect(clampRect, rect);\n
+\n
+\t\t\t\t\t\tinstance.fire(\'updateRect\', {rect: rect});\n
+\t\t\t\t\t\tsetInnerRect(rect);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t$(\'<div id="\' + id + \'" class="\' + prefix + \'croprect-container" data-mce-bogus="all">\').appendTo(containerElm);\n
+\n
+\t\t\tTools.each(blockers, function(blocker) {\n
+\t\t\t\t$(\'#\' + id, containerElm).append(\n
+\t\t\t\t\t\'<div id="\' + id + \'-\' + blocker + \'"class="\' + prefix + \'croprect-block" style="display: none" data-mce-bogus="all">\'\n
+\t\t\t\t);\n
+\t\t\t});\n
+\n
+\t\t\tTools.each(handles, function(handle) {\n
+\t\t\t\t$(\'#\' + id, containerElm).append(\n
+\t\t\t\t\t\'<div id="\' + id + \'-\' + handle.name + \'" class="\' + prefix +\n
+\t\t\t\t\t\t\'croprect-handle \' + prefix + \'croprect-handle-\' + handle.name + \'" style="display: none" data-mce-bogus="all">\'\n
+\t\t\t\t);\n
+\t\t\t});\n
+\n
+\t\t\tdragHelpers = Tools.map(handles, createDragHelper);\n
+\n
+\t\t\trepaint(currentRect);\n
+\t\t}\n
+\n
+\t\tfunction toggleVisibility(state) {\n
+\t\t\tvar selectors;\n
+\n
+\t\t\tselectors = Tools.map(handles, function(handle) {\n
+\t\t\t\treturn \'#\' + id + \'-\' + handle.name;\n
+\t\t\t}).concat(Tools.map(blockers, function(blocker) {\n
+\t\t\t\treturn \'#\' + id + \'-\' + blocker;\n
+\t\t\t})).join(\',\');\n
+\n
+\t\t\tif (state) {\n
+\t\t\t\t$(selectors, containerElm).show();\n
+\t\t\t} else {\n
+\t\t\t\t$(selectors, containerElm).hide();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction repaint(rect) {\n
+\t\t\tfunction updateElementRect(name, rect) {\n
+\t\t\t\tif (rect.h < 0) {\n
+\t\t\t\t\trect.h = 0;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (rect.w < 0) {\n
+\t\t\t\t\trect.w = 0;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t$(\'#\' + id + \'-\' + name, containerElm).css({\n
+\t\t\t\t\tleft: rect.x,\n
+\t\t\t\t\ttop: rect.y,\n
+\t\t\t\t\twidth: rect.w,\n
+\t\t\t\t\theight: rect.h\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\tTools.each(handles, function(handle) {\n
+\t\t\t\t$(\'#\' + id + \'-\' + handle.name, containerElm).css({\n
+\t\t\t\t\tleft: rect.w * handle.xMul + rect.x,\n
+\t\t\t\t\ttop: rect.h * handle.yMul + rect.y\n
+\t\t\t\t});\n
+\t\t\t});\n
+\n
+\t\t\tupdateElementRect(\'top\', {x: viewPortRect.x, y: viewPortRect.y, w: viewPortRect.w, h: rect.y - viewPortRect.y});\n
+\t\t\tupdateElementRect(\'right\', {x: rect.x + rect.w, y: rect.y, w: viewPortRect.w - rect.x - rect.w + viewPortRect.x, h: rect.h});\n
+\t\t\tupdateElementRect(\'bottom\', {\n
+\t\t\t\tx: viewPortRect.x,\n
+\t\t\t\ty: rect.y + rect.h,\n
+\t\t\t\tw: viewPortRect.w,\n
+\t\t\t\th: viewPortRect.h - rect.y - rect.h + viewPortRect.y\n
+\t\t\t});\n
+\t\t\tupdateElementRect(\'left\', {x: viewPortRect.x, y: rect.y, w: rect.x - viewPortRect.x, h: rect.h});\n
+\t\t\tupdateElementRect(\'move\', rect);\n
+\t\t}\n
+\n
+\t\tfunction setRect(rect) {\n
+\t\t\tcurrentRect = rect;\n
+\t\t\trepaint(currentRect);\n
+\t\t}\n
+\n
+\t\tfunction setViewPortRect(rect) {\n
+\t\t\tviewPortRect = rect;\n
+\t\t\trepaint(currentRect);\n
+\t\t}\n
+\n
+\t\tfunction setInnerRect(rect) {\n
+\t\t\tsetRect(getAbsoluteRect(clampRect, rect));\n
+\t\t}\n
+\n
+\t\tfunction setClampRect(rect) {\n
+\t\t\tclampRect = rect;\n
+\t\t\trepaint(currentRect);\n
+\t\t}\n
+\n
+\t\tfunction destroy() {\n
+\t\t\tTools.each(dragHelpers, function(helper) {\n
+\t\t\t\thelper.destroy();\n
+\t\t\t});\n
+\n
+\t\t\tdragHelpers = [];\n
+\t\t}\n
+\n
+\t\trender(containerElm);\n
+\n
+\t\tinstance = Tools.extend({\n
+\t\t\ttoggleVisibility: toggleVisibility,\n
+\t\t\tsetClampRect: setClampRect,\n
+\t\t\tsetRect: setRect,\n
+\t\t\tgetInnerRect: getInnerRect,\n
+\t\t\tsetInnerRect: setInnerRect,\n
+\t\t\tsetViewPortRect: setViewPortRect,\n
+\t\t\tdestroy: destroy\n
+\t\t}, Observable);\n
+\n
+\t\treturn instance;\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/ImagePanel.js\n
+\n
+/**\n
+ * ImagePanel.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * ...\n
+ *\n
+ * @-x-less ImagePanel.less\n
+ */\n
+define("tinymce/imagetoolsplugin/ImagePanel", [\n
+\t"tinymce/ui/Control",\n
+\t"tinymce/ui/DragHelper",\n
+\t"tinymce/ui/Rect",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/util/Promise",\n
+\t"tinymce/imagetoolsplugin/CropRect"\n
+], function(Control, DragHelper, Rect, Tools, Promise, CropRect) {\n
+\tfunction loadImage(image) {\n
+\t\treturn new Promise(function(resolve) {\n
+\t\t\tfunction loaded() {\n
+\t\t\t\timage.removeEventListener(\'load\', loaded);\n
+\t\t\t\tresolve(image);\n
+\t\t\t}\n
+\n
+\t\t\tif (image.complete) {\n
+\t\t\t\tresolve(image);\n
+\t\t\t} else {\n
+\t\t\t\timage.addEventListener(\'load\', loaded);\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+\n
+\treturn Control.extend({\n
+\t\tDefaults: {\n
+\t\t\tclasses: "imagepanel"\n
+\t\t},\n
+\n
+\t\tselection: function(rect) {\n
+\t\t\tif (arguments.length) {\n
+\t\t\t\tthis.state.set(\'rect\', rect);\n
+\t\t\t\treturn this;\n
+\t\t\t}\n
+\n
+\t\t\treturn this.state.get(\'rect\');\n
+\t\t},\n
+\n
+\t\timageSize: function() {\n
+\t\t\tvar viewRect = this.state.get(\'viewRect\');\n
+\n
+\t\t\treturn {\n
+\t\t\t\tw: viewRect.w,\n
+\t\t\t\th: viewRect.h\n
+\t\t\t};\n
+\t\t},\n
+\n
+\t\ttoggleCropRect: function(state) {\n
+\t\t\tthis.state.set(\'cropEnabled\', state);\n
+\t\t},\n
+\n
+\t\timageSrc: function(url) {\n
+\t\t\tvar self = this, img = new Image();\n
+\n
+\t\t\timg.src = url;\n
+\n
+\t\t\tloadImage(img).then(function() {\n
+\t\t\t\tvar rect, $img, lastRect = self.state.get(\'viewRect\');\n
+\n
+\t\t\t\t$img = self.$el.find(\'img\');\n
+\t\t\t\tif ($img[0]) {\n
+\t\t\t\t\t$img.replaceWith(img);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tself.getEl().appendChild(img);\n
+\t\t\t\t}\n
+\n
+\t\t\t\trect = {x: 0, y: 0, w: img.naturalWidth, h: img.naturalHeight};\n
+\t\t\t\tself.state.set(\'viewRect\', rect);\n
+\t\t\t\tself.state.set(\'rect\', Rect.inflate(rect, -20, -20));\n
+\n
+\t\t\t\tif (!lastRect || lastRect.w != rect.w || lastRect.h != rect.h) {\n
+\t\t\t\t\tself.zoomFit();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.repaintImage();\n
+\t\t\t\tself.fire(\'load\');\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\tzoom: function(value) {\n
+\t\t\tif (arguments.length) {\n
+\t\t\t\tthis.state.set(\'zoom\', value);\n
+\t\t\t\treturn this;\n
+\t\t\t}\n
+\n
+\t\t\treturn this.state.get(\'zoom\');\n
+\t\t},\n
+\n
+\t\tpostRender: function() {\n
+\t\t\tthis.imageSrc(this.settings.imageSrc);\n
+\t\t\treturn this._super();\n
+\t\t},\n
+\n
+\t\tzoomFit: function() {\n
+\t\t\tvar self = this, $img, pw, ph, w, h, zoom, padding;\n
+\n
+\t\t\tpadding = 10;\n
+\t\t\t$img = self.$el.find(\'img\');\n
+\t\t\tpw = self.getEl().clientWidth;\n
+\t\t\tph = self.getEl().clientHeight;\n
+\t\t\tw = $img[0].naturalWidth;\n
+\t\t\th = $img[0].naturalHeight;\n
+\t\t\tzoom = Math.min((pw - padding) / w, (ph - padding) / h);\n
+\n
+\t\t\tif (zoom >= 1) {\n
+\t\t\t\tzoom = 1;\n
+\t\t\t}\n
+\n
+\t\t\tself.zoom(zoom);\n
+\t\t},\n
+\n
+\t\trepaintImage: function() {\n
+\t\t\tvar x, y, w, h, pw, ph, $img, zoom, rect, elm;\n
+\n
+\t\t\telm = this.getEl();\n
+\t\t\tzoom = this.zoom();\n
+\t\t\trect = this.state.get(\'rect\');\n
+\t\t\t$img = this.$el.find(\'img\');\n
+\t\t\tpw = elm.offsetWidth;\n
+\t\t\tph = elm.offsetHeight;\n
+\t\t\tw = $img[0].naturalWidth * zoom;\n
+\t\t\th = $img[0].naturalHeight * zoom;\n
+\t\t\tx = Math.max(0, pw / 2 - w / 2);\n
+\t\t\ty = Math.max(0, ph / 2 - h / 2);\n
+\n
+\t\t\t$img.css({\n
+\t\t\t\tleft: x,\n
+\t\t\t\ttop: y,\n
+\t\t\t\twidth: w,\n
+\t\t\t\theight: h\n
+\t\t\t});\n
+\n
+\t\t\tif (this.cropRect) {\n
+\t\t\t\tthis.cropRect.setRect({\n
+\t\t\t\t\tx: rect.x * zoom + x,\n
+\t\t\t\t\ty: rect.y * zoom + y,\n
+\t\t\t\t\tw: rect.w * zoom,\n
+\t\t\t\t\th: rect.h * zoom\n
+\t\t\t\t});\n
+\n
+\t\t\t\tthis.cropRect.setClampRect({\n
+\t\t\t\t\tx: x,\n
+\t\t\t\t\ty: y,\n
+\t\t\t\t\tw: w,\n
+\t\t\t\t\th: h\n
+\t\t\t\t});\n
+\n
+\t\t\t\tthis.cropRect.setViewPortRect({\n
+\t\t\t\t\tx: 0,\n
+\t\t\t\t\ty: 0,\n
+\t\t\t\t\tw: pw,\n
+\t\t\t\t\th: ph\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tfunction setupCropRect(rect) {\n
+\t\t\t\tself.cropRect = new CropRect(\n
+\t\t\t\t\trect,\n
+\t\t\t\t\tself.state.get(\'viewRect\'),\n
+\t\t\t\t\tself.state.get(\'viewRect\'),\n
+\t\t\t\t\tself.getEl()\n
+\t\t\t\t);\n
+\n
+\t\t\t\tself.cropRect.on(\'updateRect\', function(e) {\n
+\t\t\t\t\tvar rect = e.rect, zoom = self.zoom();\n
+\n
+\t\t\t\t\trect = {\n
+\t\t\t\t\t\tx: Math.round(rect.x / zoom),\n
+\t\t\t\t\t\ty: Math.round(rect.y / zoom),\n
+\t\t\t\t\t\tw: Math.round(rect.w / zoom),\n
+\t\t\t\t\t\th: Math.round(rect.h / zoom)\n
+\t\t\t\t\t};\n
+\n
+\t\t\t\t\tself.state.set(\'rect\', rect);\n
+\t\t\t\t});\n
+\n
+\t\t\t\tself.on(\'remove\', self.cropRect.destroy);\n
+\t\t\t}\n
+\n
+\t\t\tself.state.on(\'change:cropEnabled\', function(e) {\n
+\t\t\t\tself.cropRect.toggleVisibility(e.value);\n
+\t\t\t\tself.repaintImage();\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:zoom\', function() {\n
+\t\t\t\tself.repaintImage();\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:rect\', function(e) {\n
+\t\t\t\tvar rect = e.value;\n
+\n
+\t\t\t\tif (!self.cropRect) {\n
+\t\t\t\t\tsetupCropRect(rect);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.cropRect.setRect(rect);\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/ColorMatrix.js\n
+\n
+/**\n
+ * ImageTools.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ *\n
+ * Some of the matrix calculations and constants are from the EaselJS library released under MIT:\n
+ * https://github.com/CreateJS/EaselJS/blob/master/src/easeljs/filters/ColorMatrix.js\n
+ */\n
+\n
+/**\n
+ * Various operations for color matrices.\n
+ */\n
+define("tinymce/imagetoolsplugin/ColorMatrix", [], function() {\n
+\tfunction clamp(value, min, max) {\n
+\t\tvalue = parseFloat(value);\n
+\n
+\t\tif (value > max) {\n
+\t\t\tvalue = max;\n
+\t\t} else if (value < min) {\n
+\t\t\tvalue = min;\n
+\t\t}\n
+\n
+\t\treturn value;\n
+\t}\n
+\n
+\tfunction identity() {\n
+\t\treturn [\n
+\t\t\t1, 0, 0, 0, 0,\n
+\t\t\t0, 1, 0, 0, 0,\n
+\t\t\t0, 0, 1, 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t];\n
+\t}\n
+\n
+\tvar DELTA_INDEX = [\n
+\t\t0, 0.01, 0.02, 0.04, 0.05, 0.06, 0.07, 0.08, 0.1, 0.11,\n
+\t\t0.12, 0.14, 0.15, 0.16, 0.17, 0.18, 0.20, 0.21, 0.22, 0.24,\n
+\t\t0.25, 0.27, 0.28, 0.30, 0.32, 0.34, 0.36, 0.38, 0.40, 0.42,\n
+\t\t0.44, 0.46, 0.48, 0.5, 0.53, 0.56, 0.59, 0.62, 0.65, 0.68,\n
+\t\t0.71, 0.74, 0.77, 0.80, 0.83, 0.86, 0.89, 0.92, 0.95, 0.98,\n
+\t\t1.0, 1.06, 1.12, 1.18, 1.24, 1.30, 1.36, 1.42, 1.48, 1.54,\n
+\t\t1.60, 1.66, 1.72, 1.78, 1.84, 1.90, 1.96, 2.0, 2.12, 2.25,\n
+\t\t2.37, 2.50, 2.62, 2.75, 2.87, 3.0, 3.2, 3.4, 3.6, 3.8,\n
+\t\t4.0, 4.3, 4.7, 4.9, 5.0, 5.5, 6.0, 6.5, 6.8, 7.0,\n
+\t\t7.3, 7.5, 7.8, 8.0, 8.4, 8.7, 9.0, 9.4, 9.6, 9.8,\n
+\t\t10.0\n
+\t];\n
+\n
+\tfunction multiply(matrix1, matrix2) {\n
+\t\tvar i, j, k, val, col = [], out = new Array(10);\n
+\n
+\t\tfor (i = 0; i < 5; i++) {\n
+\t\t\tfor (j = 0; j < 5; j++) {\n
+\t\t\t\tcol[j] = matrix2[j + i * 5];\n
+\t\t\t}\n
+\n
+\t\t\tfor (j = 0; j < 5; j++) {\n
+\t\t\t\tval = 0;\n
+\n
+\t\t\t\tfor (k = 0; k < 5; k++) {\n
+\t\t\t\t\tval += matrix1[j + k * 5] * col[k];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tout[j + i * 5] = val;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn out;\n
+\t}\n
+\n
+\tfunction adjust(matrix, adjustValue) {\n
+\t\tadjustValue = clamp(adjustValue, 0, 1);\n
+\n
+\t\treturn matrix.map(function(value, index) {\n
+\t\t\tif (index % 6 === 0) {\n
+\t\t\t\tvalue = 1.0 - ((1 - value) * adjustValue);\n
+\t\t\t} else {\n
+\t\t\t\tvalue *= adjustValue;\n
+\t\t\t}\n
+\n
+\t\t\treturn clamp(value, 0, 1);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction adjustContrast(matrix, value) {\n
+\t\tvar x;\n
+\n
+\t\tvalue = clamp(value, -1, 1);\n
+\t\tvalue *= 100;\n
+\n
+\t\tif (value < 0) {\n
+\t\t\tx = 127 + value / 100 * 127;\n
+\t\t} else {\n
+\t\t\tx = value % 1;\n
+\n
+\t\t\tif (x === 0) {\n
+\t\t\t\tx = DELTA_INDEX[value];\n
+\t\t\t} else {\n
+\t\t\t\t// use linear interpolation for more granularity.\n
+\t\t\t\tx = DELTA_INDEX[(Math.floor(value))] * (1 - x) + DELTA_INDEX[(Math.floor(value)) + 1] * x;\n
+\t\t\t}\n
+\n
+\t\t\tx = x * 127 + 127;\n
+\t\t}\n
+\n
+\t\treturn multiply(matrix, [\n
+\t\t\tx / 127, 0, 0, 0, 0.5 * (127 - x),\n
+\t\t\t0, x / 127, 0, 0, 0.5 * (127 - x),\n
+\t\t\t0, 0, x / 127, 0, 0.5 * (127 - x),\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t]);\n
+\t}\n
+\n
+\tfunction adjustSaturation(matrix, value) {\n
+\t\tvar x, lumR, lumG, lumB;\n
+\n
+\t\tvalue = clamp(value, -1, 1);\n
+\t\tx = 1 + ((value > 0) ? 3 * value : value);\n
+\t\tlumR = 0.3086;\n
+\t\tlumG = 0.6094;\n
+\t\tlumB = 0.0820;\n
+\n
+\t\treturn multiply(matrix, [\n
+\t\t\tlumR * (1 - x) + x, lumG * (1 - x), lumB * (1 - x), 0, 0,\n
+\t\t\tlumR * (1 - x), lumG * (1 - x) + x, lumB * (1 - x), 0, 0,\n
+\t\t\tlumR * (1 - x), lumG * (1 - x), lumB * (1 - x) + x, 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t]);\n
+\t}\n
+\n
+\tfunction adjustHue(matrix, angle) {\n
+\t\tvar cosVal, sinVal, lumR, lumG, lumB;\n
+\n
+\t\tangle = clamp(angle, -180, 180) / 180 * Math.PI;\n
+\t\tcosVal = Math.cos(angle);\n
+\t\tsinVal = Math.sin(angle);\n
+\t\tlumR = 0.213;\n
+\t\tlumG = 0.715;\n
+\t\tlumB = 0.072;\n
+\n
+\t\treturn multiply(matrix, [\n
+\t\t\tlumR + cosVal * (1 - lumR) + sinVal * (-lumR), lumG + cosVal * (-lumG) + sinVal * (-lumG),\n
+\t\t\tlumB + cosVal * (-lumB) + sinVal * (1 - lumB), 0, 0,\n
+\t\t\tlumR + cosVal * (-lumR) + sinVal * (0.143), lumG + cosVal * (1 - lumG) + sinVal * (0.140),\n
+\t\t\tlumB + cosVal * (-lumB) + sinVal * (-0.283), 0, 0,\n
+\t\t\tlumR + cosVal * (-lumR) + sinVal * (-(1 - lumR)), lumG + cosVal * (-lumG) + sinVal * (lumG),\n
+\t\t\tlumB + cosVal * (1 - lumB) + sinVal * (lumB), 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t]);\n
+\t}\n
+\n
+\tfunction adjustBrightness(matrix, value) {\n
+\t\tvalue = clamp(255 * value, -255, 255);\n
+\n
+\t\treturn multiply(matrix, [\n
+\t\t\t1, 0, 0, 0, value,\n
+\t\t\t0, 1, 0, 0, value,\n
+\t\t\t0, 0, 1, 0, value,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t]);\n
+\t}\n
+\n
+\tfunction adjustColors(matrix, adjustR, adjustG, adjustB) {\n
+\t\tadjustR = clamp(adjustR, 0, 2);\n
+\t\tadjustG = clamp(adjustG, 0, 2);\n
+\t\tadjustB = clamp(adjustB, 0, 2);\n
+\n
+\t\treturn multiply(matrix, [\n
+\t\t\tadjustR, 0, 0, 0, 0,\n
+\t\t\t0, adjustG, 0, 0, 0,\n
+\t\t\t0, 0, adjustB, 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t]);\n
+\t}\n
+\n
+\tfunction adjustSepia(matrix, value) {\n
+\t\tvalue = clamp(value, 0, 1);\n
+\n
+\t\treturn multiply(matrix, adjust([\n
+\t\t\t0.393, 0.769, 0.189, 0, 0,\n
+\t\t\t0.349, 0.686, 0.168, 0, 0,\n
+\t\t\t0.272, 0.534, 0.131, 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t], value));\n
+\t}\n
+\n
+\tfunction adjustGrayscale(matrix, value) {\n
+\t\tvalue = clamp(value, 0, 1);\n
+\n
+\t\treturn multiply(matrix, adjust([\n
+\t\t\t0.33, 0.34, 0.33, 0, 0,\n
+\t\t\t0.33, 0.34, 0.33, 0, 0,\n
+\t\t\t0.33, 0.34, 0.33, 0, 0,\n
+\t\t\t0, 0, 0, 1, 0,\n
+\t\t\t0, 0, 0, 0, 1\n
+\t\t], value));\n
+\t}\n
+\n
+\treturn {\n
+\t\tidentity: identity,\n
+\t\tadjust: adjust,\n
+\t\tmultiply: multiply,\n
+\t\tadjustContrast: adjustContrast,\n
+\t\tadjustBrightness: adjustBrightness,\n
+\t\tadjustSaturation: adjustSaturation,\n
+\t\tadjustHue: adjustHue,\n
+\t\tadjustColors: adjustColors,\n
+\t\tadjustSepia: adjustSepia,\n
+\t\tadjustGrayscale: adjustGrayscale\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/Filters.js\n
+\n
+/**\n
+ * Filters.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Applies various filters to blobs.\n
+ */\n
+define("tinymce/imagetoolsplugin/Filters", [\n
+\t"tinymce/imagetoolsplugin/Canvas",\n
+\t"tinymce/imagetoolsplugin/ImageSize",\n
+\t"tinymce/imagetoolsplugin/Conversions",\n
+\t"tinymce/imagetoolsplugin/ColorMatrix"\n
+], function(Canvas, ImageSize, Conversions, ColorMatrix) {\n
+\tvar revokeImageUrl = Conversions.revokeImageUrl;\n
+\n
+\tfunction colorFilter(blob, matrix) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image)),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas),\n
+\t\t\t\tpixels;\n
+\n
+\t\t\tfunction applyMatrix(pixels, m) {\n
+\t\t\t\tvar d = pixels.data, r, g, b, a, i,\n
+\t\t\t\t\tm0 = m[0], m1 = m[1], m2 = m[2], m3 = m[3], m4 = m[4],\n
+\t\t\t\t\tm5 = m[5], m6 = m[6], m7 = m[7], m8 = m[8], m9 = m[9],\n
+\t\t\t\t\tm10 = m[10], m11 = m[11], m12 = m[12], m13 = m[13], m14 = m[14],\n
+\t\t\t\t\tm15 = m[15], m16 = m[16], m17 = m[17], m18 = m[18], m19 = m[19];\n
+\n
+\t\t\t\tfor (i = 0; i < d.length; i += 4) {\n
+\t\t\t\t\tr = d[i];\n
+\t\t\t\t\tg = d[i + 1];\n
+\t\t\t\t\tb = d[i + 2];\n
+\t\t\t\t\ta = d[i + 3];\n
+\n
+\t\t\t\t\td[i] = r * m0 + g * m1 + b * m2 + a * m3 + m4;\n
+\t\t\t\t\td[i + 1] = r * m5 + g * m6 + b * m7 + a * m8 + m9;\n
+\t\t\t\t\td[i + 2] = r * m10 + g * m11 + b * m12 + a * m13 + m14;\n
+\t\t\t\t\td[i + 3] = r * m15 + g * m16 + b * m17 + a * m18 + m19;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn pixels;\n
+\t\t\t}\n
+\n
+\t\t\tcontext.drawImage(image, 0, 0);\n
+\t\t\trevokeImageUrl(image);\n
+\t\t\tpixels = applyMatrix(context.getImageData(0, 0, canvas.width, canvas.height), matrix);\n
+\t\t\tcontext.putImageData(pixels, 0, 0);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction convoluteFilter(blob, matrix) {\n
+\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\tvar canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image)),\n
+\t\t\t\tcontext = Canvas.get2dContext(canvas),\n
+\t\t\t\tpixelsIn, pixelsOut;\n
+\n
+\t\t\tfunction applyMatrix(pixelsIn, pixelsOut, matrix) {\n
+\t\t\t\tvar rgba, drgba, side, halfSide, x, y, r, g, b,\n
+\t\t\t\t\tcx, cy, scx, scy, offset, wt, w, h;\n
+\n
+\t\t\t\tfunction clamp(value, min, max) {\n
+\t\t\t\t\tif (value > max) {\n
+\t\t\t\t\t\tvalue = max;\n
+\t\t\t\t\t} else if (value < min) {\n
+\t\t\t\t\t\tvalue = min;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn value;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Calc side and half side of matrix\n
+\t\t\t\tside = Math.round(Math.sqrt(matrix.length));\n
+\t\t\t\thalfSide = Math.floor(side / 2);\n
+\t\t\t\trgba = pixelsIn.data;\n
+\t\t\t\tdrgba = pixelsOut.data;\n
+\t\t\t\tw = pixelsIn.width;\n
+\t\t\t\th = pixelsIn.height;\n
+\n
+\t\t\t\t// Apply convolution matrix to pixels\n
+\t\t\t\tfor (y = 0; y < h; y++) {\n
+\t\t\t\t\tfor (x = 0; x < w; x++) {\n
+\t\t\t\t\t\tr = g = b = 0;\n
+\n
+\t\t\t\t\t\tfor (cy = 0; cy < side; cy++) {\n
+\t\t\t\t\t\t\tfor (cx = 0; cx < side; cx++) {\n
+\t\t\t\t\t\t\t\t// Calc relative x, y based on matrix\n
+\t\t\t\t\t\t\t\tscx = clamp(x + cx - halfSide, 0, w - 1);\n
+\t\t\t\t\t\t\t\tscy = clamp(y + cy - halfSide, 0, h - 1);\n
+\n
+\t\t\t\t\t\t\t\t// Calc r, g, b\n
+\t\t\t\t\t\t\t\toffset = (scy * w + scx) * 4;\n
+\t\t\t\t\t\t\t\twt = matrix[cy * side + cx];\n
+\t\t\t\t\t\t\t\tr += rgba[offset] * wt;\n
+\t\t\t\t\t\t\t\tg += rgba[offset + 1] * wt;\n
+\t\t\t\t\t\t\t\tb += rgba[offset + 2] * wt;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t// Set new RGB to destination buffer\n
+\t\t\t\t\t\toffset = (y * w + x) * 4;\n
+\t\t\t\t\t\tdrgba[offset] = clamp(r, 0, 255);\n
+\t\t\t\t\t\tdrgba[offset + 1] = clamp(g, 0, 255);\n
+\t\t\t\t\t\tdrgba[offset + 2] = clamp(b, 0, 255);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn pixelsOut;\n
+\t\t\t}\n
+\n
+\t\t\tcontext.drawImage(image, 0, 0);\n
+\t\t\trevokeImageUrl(image);\n
+\t\t\tpixelsIn = context.getImageData(0, 0, canvas.width, canvas.height);\n
+\t\t\tpixelsOut = context.getImageData(0, 0, canvas.width, canvas.height);\n
+\t\t\tpixelsOut = applyMatrix(pixelsIn, pixelsOut, matrix);\n
+\t\t\tcontext.putImageData(pixelsOut, 0, 0);\n
+\n
+\t\t\treturn Conversions.canvasToBlob(canvas);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction functionColorFilter(colorFn) {\n
+\t\treturn function(blob, value) {\n
+\t\t\treturn Conversions.blobToImage(blob).then(function(image) {\n
+\t\t\t\tvar canvas = Canvas.create(ImageSize.getWidth(image), ImageSize.getHeight(image)),\n
+\t\t\t\t\tcontext = Canvas.get2dContext(canvas),\n
+\t\t\t\t\tpixels, i, lookup = new Array(256);\n
+\n
+\t\t\t\tfunction applyLookup(pixels, lookup) {\n
+\t\t\t\t\tvar d = pixels.data, i;\n
+\n
+\t\t\t\t\tfor (i = 0; i < d.length; i += 4) {\n
+\t\t\t\t\t\td[i] = lookup[d[i]];\n
+\t\t\t\t\t\td[i + 1] = lookup[d[i + 1]];\n
+\t\t\t\t\t\td[i + 2] = lookup[d[i + 2]];\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn pixels;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfor (i = 0; i < lookup.length; i++) {\n
+\t\t\t\t\tlookup[i] = colorFn(i, value);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tcontext.drawImage(image, 0, 0);\n
+\t\t\t\trevokeImageUrl(image);\n
+\t\t\t\tpixels = applyLookup(context.getImageData(0, 0, canvas.width, canvas.height), lookup);\n
+\t\t\t\tcontext.putImageData(pixels, 0, 0);\n
+\n
+\t\t\t\treturn Conversions.canvasToBlob(canvas);\n
+\t\t\t});\n
+\t\t};\n
+\t}\n
+\n
+\tfunction complexAdjustableColorFilter(matrixAdjustFn) {\n
+\t\treturn function(blob, adjust) {\n
+\t\t\treturn colorFilter(blob, matrixAdjustFn(ColorMatrix.identity(), adjust));\n
+\t\t};\n
+\t}\n
+\n
+\tfunction basicColorFilter(matrix) {\n
+\t\treturn function(blob) {\n
+\t\t\treturn colorFilter(blob, matrix);\n
+\t\t};\n
+\t}\n
+\n
+\tfunction basicConvolutionFilter(kernel) {\n
+\t\treturn function(blob) {\n
+\t\t\treturn convoluteFilter(blob, kernel);\n
+\t\t};\n
+\t}\n
+\n
+\treturn {\n
+\t\tinvert: basicColorFilter([\n
+\t\t\t-1, 0, 0, 0, 255,\n
+\t\t\t0, -1, 0, 0, 255,\n
+\t\t\t0, 0, -1, 0, 255,\n
+\t\t\t0, 0, 0, 1, 0\n
+\t\t]),\n
+\n
+\t\tbrightness: complexAdjustableColorFilter(ColorMatrix.adjustBrightness),\n
+\t\thue: complexAdjustableColorFilter(ColorMatrix.adjustHue),\n
+\t\tsaturate: complexAdjustableColorFilter(ColorMatrix.adjustSaturation),\n
+\t\tcontrast: complexAdjustableColorFilter(ColorMatrix.adjustContrast),\n
+\t\tgrayscale: complexAdjustableColorFilter(ColorMatrix.adjustGrayscale),\n
+\t\tsepia: complexAdjustableColorFilter(ColorMatrix.adjustSepia),\n
+\t\tcolorize: function(blob, adjustR, adjustG, adjustB) {\n
+\t\t\treturn colorFilter(blob, ColorMatrix.adjustColors(ColorMatrix.identity(), adjustR, adjustG, adjustB));\n
+\t\t},\n
+\n
+\t\tsharpen: basicConvolutionFilter([\n
+\t\t\t0, -1, 0,\n
+\t\t\t-1, 5, -1,\n
+\t\t\t0, -1, 0\n
+\t\t]),\n
+\n
+\t\temboss: basicConvolutionFilter([\n
+\t\t\t-2, -1, 0,\n
+\t\t\t-1, 1, 1,\n
+\t\t\t0, 1, 2\n
+\t\t]),\n
+\n
+\t\tgamma: functionColorFilter(function(color, value) {\n
+\t\t\treturn Math.pow(color / 255, 1 - value) * 255;\n
+\t\t}),\n
+\n
+\t\texposure: functionColorFilter(function(color, value) {\n
+\t\t\treturn 255 * (1 - Math.exp(-(color / 255) * value));\n
+\t\t}),\n
+\n
+\t\tcolorFilter: colorFilter,\n
+\t\tconvoluteFilter: convoluteFilter\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/UndoStack.js\n
+\n
+/**\n
+ * UndoStack.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+define("tinymce/imagetoolsplugin/UndoStack", [\n
+], function() {\n
+\treturn function() {\n
+\t\tvar data = [], index = -1;\n
+\n
+\t\tfunction add(state) {\n
+\t\t\tvar removed;\n
+\n
+\t\t\tremoved = data.splice(++index);\n
+\t\t\tdata.push(state);\n
+\n
+\t\t\treturn {\n
+\t\t\t\tstate: state,\n
+\t\t\t\tremoved: removed\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction undo() {\n
+\t\t\tif (canUndo()) {\n
+\t\t\t\treturn data[--index];\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction redo() {\n
+\t\t\tif (canRedo()) {\n
+\t\t\t\treturn data[++index];\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction canUndo() {\n
+\t\t\treturn index > 0;\n
+\t\t}\n
+\n
+\t\tfunction canRedo() {\n
+\t\t\treturn index != -1 && index < data.length - 1;\n
+\t\t}\n
+\n
+\t\treturn {\n
+\t\t\tdata: data,\n
+\t\t\tadd: add,\n
+\t\t\tundo: undo,\n
+\t\t\tredo: redo,\n
+\t\t\tcanUndo: canUndo,\n
+\t\t\tcanRedo: canRedo\n
+\t\t};\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/Dialog.js\n
+\n
+/**\n
+ * Dialog.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * ...\n
+ */\n
+define("tinymce/imagetoolsplugin/Dialog", [\n
+\t"tinymce/dom/DOMUtils",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/util/Promise",\n
+\t"tinymce/ui/Factory",\n
+\t"tinymce/ui/Form",\n
+\t"tinymce/ui/Container",\n
+\t"tinymce/imagetoolsplugin/ImagePanel",\n
+\t"tinymce/imagetoolsplugin/ImageTools",\n
+\t"tinymce/imagetoolsplugin/Filters",\n
+\t"tinymce/imagetoolsplugin/Conversions",\n
+\t"tinymce/imagetoolsplugin/UndoStack"\n
+], function(DOMUtils, Tools, Promise, Factory, Form, Container, ImagePanel, ImageTools, Filters, Conversions, UndoStack) {\n
+\tfunction createState(blob) {\n
+\t\treturn {\n
+\t\t\tblob: blob,\n
+\t\t\turl: URL.createObjectURL(blob)\n
+\t\t};\n
+\t}\n
+\n
+\tfunction destroyState(state) {\n
+\t\tif (state) {\n
+\t\t\tURL.revokeObjectURL(state.url);\n
+\t\t}\n
+\t}\n
+\n
+\tfunction destroyStates(states) {\n
+\t\tTools.each(states, destroyState);\n
+\t}\n
+\n
+\tfunction open(currentState, resolve, reject) {\n
+\t\tvar win, undoStack = new UndoStack(), mainPanel, filtersPanel, tempState,\n
+\t\t\tcropPanel, resizePanel, flipRotatePanel, imagePanel, sidePanel, mainViewContainer,\n
+\t\t\tinvertPanel, brightnessPanel, huePanel, saturatePanel, contrastPanel, grayscalePanel,\n
+\t\t\tsepiaPanel, colorizePanel, sharpenPanel, embossPanel, gammaPanel, exposurePanel, panels,\n
+\t\t\twidth, height, ratioW, ratioH;\n
+\n
+\t\tfunction recalcSize(e) {\n
+\t\t\tvar widthCtrl, heightCtrl, newWidth, newHeight;\n
+\n
+\t\t\twidthCtrl = win.find(\'#w\')[0];\n
+\t\t\theightCtrl = win.find(\'#h\')[0];\n
+\n
+\t\t\tnewWidth = parseInt(widthCtrl.value(), 10);\n
+\t\t\tnewHeight = parseInt(heightCtrl.value(), 10);\n
+\n
+\t\t\tif (win.find(\'#constrain\')[0].checked() && width && height && newWidth && newHeight) {\n
+\t\t\t\tif (e.control.settings.name == \'w\') {\n
+\t\t\t\t\tnewHeight = Math.round(newWidth * ratioW);\n
+\t\t\t\t\theightCtrl.value(newHeight);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tnewWidth = Math.round(newHeight * ratioH);\n
+\t\t\t\t\twidthCtrl.value(newWidth);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\twidth = newWidth;\n
+\t\t\theight = newHeight;\n
+\t\t}\n
+\n
+\t\tfunction floatToPercent(value) {\n
+\t\t\treturn Math.round(value * 100) + \'%\';\n
+\t\t}\n
+\n
+\t\tfunction updateButtonUndoStates() {\n
+\t\t\twin.find(\'#undo\').disabled(!undoStack.canUndo());\n
+\t\t\twin.find(\'#redo\').disabled(!undoStack.canRedo());\n
+\t\t\twin.statusbar.find(\'#save\').disabled(!undoStack.canUndo());\n
+\t\t}\n
+\n
+\t\tfunction disableUndoRedo() {\n
+\t\t\twin.find(\'#undo\').disabled(true);\n
+\t\t\twin.find(\'#redo\').disabled(true);\n
+\t\t}\n
+\n
+\t\tfunction displayState(state) {\n
+\t\t\tif (state) {\n
+\t\t\t\timagePanel.imageSrc(state.url);\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction switchPanel(targetPanel) {\n
+\t\t\treturn function() {\n
+\t\t\t\tvar hidePanels = Tools.filter(panels, function(panel) {\n
+\t\t\t\t\treturn panel.settings.name != targetPanel;\n
+\t\t\t\t});\n
+\n
+\t\t\t\tTools.each(hidePanels, function(panel) {\n
+\t\t\t\t\tpanel.hide();\n
+\t\t\t\t});\n
+\n
+\t\t\t\ttargetPanel.show();\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction addTempState(blob) {\n
+\t\t\ttempState = createState(blob);\n
+\t\t\tdisplayState(tempState);\n
+\t\t}\n
+\n
+\t\tfunction addBlobState(blob) {\n
+\t\t\tcurrentState = createState(blob);\n
+\t\t\tdisplayState(currentState);\n
+\t\t\tdestroyStates(undoStack.add(currentState).removed);\n
+\t\t\tupdateButtonUndoStates();\n
+\t\t}\n
+\n
+\t\tfunction crop() {\n
+\t\t\tvar rect = imagePanel.selection();\n
+\n
+\t\t\tImageTools.crop(currentState.blob, rect.x, rect.y, rect.w, rect.h).then(function(blob) {\n
+\t\t\t\taddBlobState(blob);\n
+\t\t\t\tcancel();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction tempAction(fn) {\n
+\t\t\tvar args = [].slice.call(arguments, 1);\n
+\n
+\t\t\treturn function() {\n
+\t\t\t\tvar state = tempState || currentState;\n
+\n
+\t\t\t\tfn.apply(this, [state.blob].concat(args)).then(addTempState);\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction action(fn) {\n
+\t\t\tvar args = [].slice.call(arguments, 1);\n
+\n
+\t\t\treturn function() {\n
+\t\t\t\tfn.apply(this, [currentState.blob].concat(args)).then(addBlobState);\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction cancel() {\n
+\t\t\tdisplayState(currentState);\n
+\t\t\tdestroyState(tempState);\n
+\t\t\tswitchPanel(mainPanel)();\n
+\t\t\tupdateButtonUndoStates();\n
+\t\t}\n
+\n
+\t\tfunction applyTempState() {\n
+\t\t\tif (tempState) {\n
+\t\t\t\taddBlobState(tempState.blob);\n
+\t\t\t\tcancel();\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction zoomIn() {\n
+\t\t\tvar zoom = imagePanel.zoom();\n
+\n
+\t\t\tif (zoom < 2) {\n
+\t\t\t\tzoom += 0.1;\n
+\t\t\t}\n
+\n
+\t\t\timagePanel.zoom(zoom);\n
+\t\t}\n
+\n
+\t\tfunction zoomOut() {\n
+\t\t\tvar zoom = imagePanel.zoom();\n
+\n
+\t\t\tif (zoom > 0.1) {\n
+\t\t\t\tzoom -= 0.1;\n
+\t\t\t}\n
+\n
+\t\t\timagePanel.zoom(zoom);\n
+\t\t}\n
+\n
+\t\tfunction undo() {\n
+\t\t\tcurrentState = undoStack.undo();\n
+\t\t\tdisplayState(currentState);\n
+\t\t\tupdateButtonUndoStates();\n
+\t\t}\n
+\n
+\t\tfunction redo() {\n
+\t\t\tcurrentState = undoStack.redo();\n
+\t\t\tdisplayState(currentState);\n
+\t\t\tupdateButtonUndoStates();\n
+\t\t}\n
+\n
+\t\tfunction save() {\n
+\t\t\tresolve(currentState.blob);\n
+\t\t\twin.close();\n
+\t\t}\n
+\n
+\t\tfunction createPanel(items) {\n
+\t\t\treturn new Form({\n
+\t\t\t\tlayout: \'flex\',\n
+\t\t\t\tdirection: \'row\',\n
+\t\t\t\tlabelGap: 5,\n
+\t\t\t\tborder: \'0 0 1 0\',\n
+\t\t\t\talign: \'center\',\n
+\t\t\t\tpack: \'center\',\n
+\t\t\t\tpadding: \'0 10 0 10\',\n
+\t\t\t\tspacing: 5,\n
+\t\t\t\tflex: 0,\n
+\t\t\t\tminHeight: 60,\n
+\t\t\t\tdefaults: {\n
+\t\t\t\t\tclasses: \'imagetool\',\n
+\t\t\t\t\ttype: \'button\'\n
+\t\t\t\t},\n
+\t\t\t\titems: items\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction createFilterPanel(title, filter) {\n
+\t\t\treturn createPanel([\n
+\t\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: applyTempState}\n
+\t\t\t]).hide().on(\'show\', function() {\n
+\t\t\t\tdisableUndoRedo();\n
+\n
+\t\t\t\tfilter(currentState.blob).then(function(blob) {\n
+\t\t\t\t\tvar newTempState = createState(blob);\n
+\n
+\t\t\t\t\tdisplayState(newTempState);\n
+\t\t\t\t\tdestroyState(tempState);\n
+\t\t\t\t\ttempState = newTempState;\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction createVariableFilterPanel(title, filter, value, min, max) {\n
+\t\t\tfunction update(value) {\n
+\t\t\t\tfilter(currentState.blob, value).then(function(blob) {\n
+\t\t\t\t\tvar newTempState = createState(blob);\n
+\t\t\t\t\tdisplayState(newTempState);\n
+\t\t\t\t\tdestroyState(tempState);\n
+\t\t\t\t\ttempState = newTempState;\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn createPanel([\n
+\t\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t\t{\n
+\t\t\t\t\ttype: \'slider\',\n
+\t\t\t\t\tflex: 1,\n
+\t\t\t\t\tondragend: function(e) {\n
+\t\t\t\t\t\tupdate(e.value);\n
+\t\t\t\t\t},\n
+\t\t\t\t\tminValue: min,\n
+\t\t\t\t\tmaxValue: max,\n
+\t\t\t\t\tvalue: value,\n
+\t\t\t\t\tpreviewFilter: floatToPercent\n
+\t\t\t\t},\n
+\t\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: applyTempState}\n
+\t\t\t]).hide().on(\'show\', function() {\n
+\t\t\t\tthis.find(\'slider\').value(value);\n
+\t\t\t\tdisableUndoRedo();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction createRgbFilterPanel(title, filter) {\n
+\t\t\tfunction update() {\n
+\t\t\t\tvar r, g, b;\n
+\n
+\t\t\t\tr = win.find(\'#r\')[0].value();\n
+\t\t\t\tg = win.find(\'#g\')[0].value();\n
+\t\t\t\tb = win.find(\'#b\')[0].value();\n
+\n
+\t\t\t\tfilter(currentState.blob, r, g, b).then(function(blob) {\n
+\t\t\t\t\tvar newTempState = createState(blob);\n
+\t\t\t\t\tdisplayState(newTempState);\n
+\t\t\t\t\tdestroyState(tempState);\n
+\t\t\t\t\ttempState = newTempState;\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn createPanel([\n
+\t\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t\t{\n
+\t\t\t\t\ttype: \'slider\', label: \'R\', name: \'r\', minValue: 0,\n
+\t\t\t\t\tvalue: 1, maxValue: 2, ondragend: update, previewFilter: floatToPercent\n
+\t\t\t\t},\n
+\t\t\t\t{\n
+\t\t\t\t\ttype: \'slider\', label: \'G\', name: \'g\', minValue: 0,\n
+\t\t\t\t\tvalue: 1, maxValue: 2, ondragend: update, previewFilter: floatToPercent\n
+\t\t\t\t},\n
+\t\t\t\t{\n
+\t\t\t\t\ttype: \'slider\', label: \'B\', name: \'b\', minValue: 0,\n
+\t\t\t\t\tvalue: 1, maxValue: 2, ondragend: update, previewFilter: floatToPercent\n
+\t\t\t\t},\n
+\t\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: applyTempState}\n
+\t\t\t]).hide().on(\'show\', function() {\n
+\t\t\t\twin.find(\'#r,#g,#b\').value(1);\n
+\t\t\t\tdisableUndoRedo();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tcropPanel = createPanel([\n
+\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: crop}\n
+\t\t]).hide().on(\'show hide\', function(e) {\n
+\t\t\timagePanel.toggleCropRect(e.type == \'show\');\n
+\t\t}).on(\'show\', disableUndoRedo);\n
+\n
+\t\tfunction toggleConstrain(e) {\n
+\t\t\tif (e.control.value() === true) {\n
+\t\t\t\tratioW = height / width;\n
+\t\t\t\tratioH = width / height;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tresizePanel = createPanel([\n
+\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{type: \'textbox\', name: \'w\', label: \'Width\', size: 4, onkeyup: recalcSize},\n
+\t\t\t{type: \'textbox\', name: \'h\', label: \'Height\', size: 4, onkeyup: recalcSize},\n
+\t\t\t{type: \'checkbox\', name: \'constrain\', text: \'Constrain proportions\', checked: true, onchange: toggleConstrain},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: \'submit\'}\n
+\t\t]).hide().on(\'submit\', function(e) {\n
+\t\t\tvar width = parseInt(win.find(\'#w\').value(), 10),\n
+\t\t\t\theight = parseInt(win.find(\'#h\').value(), 10);\n
+\n
+\t\t\te.preventDefault();\n
+\n
+\t\t\taction(ImageTools.resize, width, height)();\n
+\t\t\tcancel();\n
+\t\t}).on(\'show\', disableUndoRedo);\n
+\n
+\t\tflipRotatePanel = createPanel([\n
+\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{icon: \'fliph\', tooltip: \'Flip horizontally\', onclick: tempAction(ImageTools.flip, \'h\')},\n
+\t\t\t{icon: \'flipv\', tooltip: \'Flip vertically\', onclick: tempAction(ImageTools.flip, \'v\')},\n
+\t\t\t{icon: \'rotateleft\', tooltip: \'Rotate counterclockwise\', onclick: tempAction(ImageTools.rotate, -90)},\n
+\t\t\t{icon: \'rotateright\', tooltip: \'Rotate clockwise\', onclick: tempAction(ImageTools.rotate, 90)},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{text: \'Apply\', subtype: \'primary\', onclick: applyTempState}\n
+\t\t]).hide().on(\'show\', disableUndoRedo);\n
+\n
+\t\tinvertPanel = createFilterPanel("Invert", Filters.invert);\n
+\t\tsharpenPanel = createFilterPanel("Sharpen", Filters.sharpen);\n
+\t\tembossPanel = createFilterPanel("Emboss", Filters.emboss);\n
+\n
+\t\tbrightnessPanel = createVariableFilterPanel("Brightness", Filters.brightness, 0, -1, 1);\n
+\t\thuePanel = createVariableFilterPanel("Hue", Filters.hue, 180, 0, 360);\n
+\t\tsaturatePanel = createVariableFilterPanel("Saturate", Filters.saturate, 0, -1, 1);\n
+\t\tcontrastPanel = createVariableFilterPanel("Contrast", Filters.contrast, 0, -1, 1);\n
+\t\tgrayscalePanel = createVariableFilterPanel("Grayscale", Filters.grayscale, 0, 0, 1);\n
+\t\tsepiaPanel = createVariableFilterPanel("Sepia", Filters.sepia, 0, 0, 1);\n
+\t\tcolorizePanel = createRgbFilterPanel("Colorize", Filters.colorize);\n
+\t\tgammaPanel = createVariableFilterPanel("Gamma", Filters.gamma, 0, -1, 1);\n
+\t\texposurePanel = createVariableFilterPanel("Exposure", Filters.exposure, 1, 0, 2);\n
+\n
+\t\tfiltersPanel = createPanel([\n
+\t\t\t{text: \'Back\', onclick: cancel},\n
+\t\t\t{type: \'spacer\', flex: 1},\n
+\t\t\t{text: \'hue\', icon: \'hue\', onclick: switchPanel(huePanel)},\n
+\t\t\t{text: \'saturate\', icon: \'saturate\', onclick: switchPanel(saturatePanel)},\n
+\t\t\t{text: \'sepia\', icon: \'sepia\', onclick: switchPanel(sepiaPanel)},\n
+\t\t\t{text: \'emboss\', icon: \'emboss\', onclick: switchPanel(embossPanel)},\n
+\t\t\t{text: \'exposure\', icon: \'exposure\', onclick: switchPanel(exposurePanel)},\n
+\t\t\t{type: \'spacer\', flex: 1}\n
+\t\t]).hide();\n
+\n
+\t\tmainPanel = createPanel([\n
+\t\t\t{tooltip: \'Crop\', icon: \'crop\', onclick: switchPanel(cropPanel)},\n
+\t\t\t{tooltip: \'Resize\', icon: \'resize2\', onclick: switchPanel(resizePanel)},\n
+\t\t\t{tooltip: \'Orientation\', icon: \'orientation\', onclick: switchPanel(flipRotatePanel)},\n
+\t\t\t{tooltip: \'Brightness\', icon: \'sun\', onclick: switchPanel(brightnessPanel)},\n
+\t\t\t{tooltip: \'Sharpen\', icon: \'sharpen\', onclick: switchPanel(sharpenPanel)},\n
+\t\t\t{tooltip: \'Contrast\', icon: \'contrast\', onclick: switchPanel(contrastPanel)},\n
+\t\t\t{tooltip: \'Color levels\', icon: \'drop\', onclick: switchPanel(colorizePanel)},\n
+\t\t\t{tooltip: \'Gamma\', icon: \'gamma\', onclick: switchPanel(gammaPanel)},\n
+\t\t\t{tooltip: \'Invert\', icon: \'invert\', onclick: switchPanel(invertPanel)}\n
+\t\t\t//{text: \'More\', onclick: switchPanel(filtersPanel)}\n
+\t\t]);\n
+\n
+\t\timagePanel = new ImagePanel({\n
+\t\t\tflex: 1,\n
+\t\t\timageSrc: currentState.url\n
+\t\t});\n
+\n
+\t\tsidePanel = new Container({\n
+\t\t\tlayout: \'flex\',\n
+\t\t\tdirection: \'column\',\n
+\t\t\tborder: \'0 1 0 0\',\n
+\t\t\tpadding: 5,\n
+\t\t\tspacing: 5,\n
+\t\t\titems: [\n
+\t\t\t\t{type: \'button\', icon: \'undo\', tooltip: \'Undo\', name: \'undo\', onclick: undo},\n
+\t\t\t\t{type: \'button\', icon: \'redo\', tooltip: \'Redo\', name: \'redo\', onclick: redo},\n
+\t\t\t\t{type: \'button\', icon: \'zoomin\', tooltip: \'Zoom in\', onclick: zoomIn},\n
+\t\t\t\t{type: \'button\', icon: \'zoomout\', tooltip: \'Zoom out\', onclick: zoomOut}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tmainViewContainer = new Container({\n
+\t\t\ttype: \'container\',\n
+\t\t\tlayout: \'flex\',\n
+\t\t\tdirection: \'row\',\n
+\t\t\talign: \'stretch\',\n
+\t\t\tflex: 1,\n
+\t\t\titems: [sidePanel, imagePanel]\n
+\t\t});\n
+\n
+\t\tpanels = [\n
+\t\t\tmainPanel,\n
+\t\t\tcropPanel,\n
+\t\t\tresizePanel,\n
+\t\t\tflipRotatePanel,\n
+\t\t\tfiltersPanel,\n
+\t\t\tinvertPanel,\n
+\t\t\tbrightnessPanel,\n
+\t\t\thuePanel,\n
+\t\t\tsaturatePanel,\n
+\t\t\tcontrastPanel,\n
+\t\t\tgrayscalePanel,\n
+\t\t\tsepiaPanel,\n
+\t\t\tcolorizePanel,\n
+\t\t\tsharpenPanel,\n
+\t\t\tembossPanel,\n
+\t\t\tgammaPanel,\n
+\t\t\texposurePanel\n
+\t\t];\n
+\n
+\t\twin = Factory.create(\'window\', {\n
+\t\t\tlayout: \'flex\',\n
+\t\t\tdirection: \'column\',\n
+\t\t\talign: \'stretch\',\n
+\t\t\tminWidth: Math.min(DOMUtils.DOM.getViewPort().w, 800),\n
+\t\t\tminHeight: Math.min(DOMUtils.DOM.getViewPort().h, 650),\n
+\t\t\ttitle: \'Edit image\',\n
+\t\t\titems: panels.concat([mainViewContainer]),\n
+\t\t\tbuttons: [\n
+\t\t\t\t{text: \'Save\', name: \'save\', subtype: \'primary\', onclick: save},\n
+\t\t\t\t{text: \'Cancel\', onclick: \'close\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\twin.renderTo(document.body).reflow();\n
+\n
+\t\twin.on(\'close\', function() {\n
+\t\t\treject();\n
+\t\t\tdestroyStates(undoStack.data);\n
+\t\t\tundoStack = null;\n
+\t\t\ttempState = null;\n
+\t\t});\n
+\n
+\t\tundoStack.add(currentState);\n
+\t\tupdateButtonUndoStates();\n
+\n
+\t\timagePanel.on(\'load\', function() {\n
+\t\t\twidth = imagePanel.imageSize().w;\n
+\t\t\theight = imagePanel.imageSize().h;\n
+\t\t\tratioW = height / width;\n
+\t\t\tratioH = width / height;\n
+\n
+\t\t\twin.find(\'#w\').value(width);\n
+\t\t\twin.find(\'#h\').value(height);\n
+\t\t});\n
+\t}\n
+\n
+\tfunction edit(blob) {\n
+\t\treturn new Promise(function(resolve, reject) {\n
+\t\t\topen(createState(blob), resolve, reject);\n
+\t\t});\n
+\t}\n
+\n
+\t//edit(\'img/dogleft.jpg\');\n
+\n
+\treturn {\n
+\t\tedit: edit\n
+\t};\n
+});\n
+\n
+// Included from: js/tinymce/plugins/imagetools/classes/Plugin.js\n
+\n
+/**\n
+ * Plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ *\n
+ * Settings:\n
+ *  imagetools_cors_hosts - Array of remote domains that has CORS setup.\n
+ *  imagetools_proxy - Url to proxy that streams images from remote host to local host.\n
+ *  imagetools_toolbar - Toolbar items to render when an editable image is selected.\n
+ */\n
+define("tinymce/imagetoolsplugin/Plugin", [\n
+\t"tinymce/PluginManager",\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Promise",\n
+\t"tinymce/util/URI",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/imagetoolsplugin/ImageTools",\n
+\t"tinymce/imagetoolsplugin/Conversions",\n
+\t"tinymce/imagetoolsplugin/Dialog"\n
+], function(PluginManager, Env, Promise, URI, Tools, ImageTools, Conversions, Dialog) {\n
+\tPluginManager.add(\'imagetools\', function(editor) {\n
+\t\tvar count = 0;\n
+\n
+\t\tif (!Env.fileApi) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\t/*\n
+\t\tfunction startCrop() {\n
+\t\t\tvar imageRect, viewPortRect;\n
+\n
+\t\t\timageRect = getSelectedImage().getBoundingClientRect();\n
+\n
+\t\t\timageRect = {\n
+\t\t\t\tx: imageRect.left,\n
+\t\t\t\ty: imageRect.top,\n
+\t\t\t\tw: imageRect.width,\n
+\t\t\t\th: imageRect.height\n
+\t\t\t};\n
+\n
+\t\t\tviewPortRect = {\n
+\t\t\t\tx: 0,\n
+\t\t\t\ty: 0,\n
+\t\t\t\tw: editor.getBody().scrollWidth,\n
+\t\t\t\th: editor.getBody().scrollHeight\n
+\t\t\t};\n
+\n
+\t\t\tcropRect = new CropRect(imageRect, viewPortRect, imageRect, editor.getBody());\n
+\t\t\tcropRect.toggleVisibility(true);\n
+\n
+\t\t\teditor.selection.getSel().removeAllRanges();\n
+\t\t\teditor.nodeChanged();\n
+\t\t}\n
+\n
+\t\tfunction stopCrop() {\n
+\t\t\tif (cropRect) {\n
+\t\t\t\tcropRect.destroy();\n
+\t\t\t\tcropRect = null;\n
+\t\t\t}\n
+\t\t}\n
+\t\t*/\n
+\n
+\t\tfunction getImageSize(img) {\n
+\t\t\tvar width, height;\n
+\n
+\t\t\tfunction isPxValue(value) {\n
+\t\t\t\treturn value.indexOf(\'px\') == value.length - 2;\n
+\t\t\t}\n
+\n
+\t\t\twidth = img.style.width;\n
+\t\t\theight = img.style.height;\n
+\t\t\tif (width || height) {\n
+\t\t\t\tif (isPxValue(width) && isPxValue(height)) {\n
+\t\t\t\t\treturn {\n
+\t\t\t\t\t\tw: parseInt(width, 10),\n
+\t\t\t\t\t\th: parseInt(height, 10)\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn null;\n
+\t\t\t}\n
+\n
+\t\t\twidth = editor.$(img).attr(\'width\');\n
+\t\t\theight = editor.$(img).attr(\'height\');\n
+\t\t\tif (width && height) {\n
+\t\t\t\treturn {\n
+\t\t\t\t\tw: parseInt(width, 10),\n
+\t\t\t\t\th: parseInt(height, 10)\n
+\t\t\t\t};\n
+\t\t\t}\n
+\n
+\t\t\treturn null;\n
+\t\t}\n
+\n
+\t\tfunction setImageSize(img, size) {\n
+\t\t\tvar width, height;\n
+\n
+\t\t\tif (size) {\n
+\t\t\t\twidth = img.style.width;\n
+\t\t\t\theight = img.style.height;\n
+\n
+\t\t\t\tif (width || height) {\n
+\t\t\t\t\teditor.$(img).css({\n
+\t\t\t\t\t\twidth: size.w,\n
+\t\t\t\t\t\theight: size.h\n
+\t\t\t\t\t}).removeAttr(\'data-mce-style\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\twidth = img.width;\n
+\t\t\t\theight = img.height;\n
+\n
+\t\t\t\tif (width || height) {\n
+\t\t\t\t\teditor.$(img).attr({\n
+\t\t\t\t\t\twidth: size.w,\n
+\t\t\t\t\t\theight: size.h\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction getNaturalImageSize(img) {\n
+\t\t\treturn {\n
+\t\t\t\tw: img.naturalWidth,\n
+\t\t\t\th: img.naturalHeight\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction getSelectedImage() {\n
+\t\t\treturn editor.selection.getNode();\n
+\t\t}\n
+\n
+\t\tfunction createId() {\n
+\t\t\treturn \'imagetools\' + count++;\n
+\t\t}\n
+\n
+\t\tfunction isLocalImage(img) {\n
+\t\t\tvar url = img.src;\n
+\n
+\t\t\treturn url.indexOf(\'data:\') === 0 || url.indexOf(\'blob:\') === 0 || new URI(url).host === editor.documentBaseURI.host;\n
+\t\t}\n
+\n
+\t\tfunction isCorsImage(img) {\n
+\t\t\treturn Tools.inArray(editor.settings.imagetools_cors_hosts, new URI(img.src).host) !== -1;\n
+\t\t}\n
+\n
+\t\tfunction requestUrlAsBlob(url) {\n
+\t\t\t// Needs to be XHR for IE 10 compatibility\n
+\t\t\treturn new Promise(function(resolve) {\n
+\t\t\t\tvar xhr = new XMLHttpRequest();\n
+\n
+\t\t\t\txhr.onload = function() {\n
+\t\t\t\t\tresolve(this.response);\n
+\t\t\t\t};\n
+\n
+\t\t\t\txhr.open(\'GET\', url, true);\n
+\t\t\t\txhr.responseType = \'blob\';\n
+\t\t\t\txhr.send();\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction imageToBlob(img) {\n
+\t\t\tvar src = img.src;\n
+\n
+\t\t\tif (isCorsImage(img)) {\n
+\t\t\t\treturn requestUrlAsBlob(img.src);\n
+\t\t\t}\n
+\n
+\t\t\tif (!isLocalImage(img)) {\n
+\t\t\t\timg = new Image();\n
+\t\t\t\tsrc = editor.settings.imagetools_proxy;\n
+\t\t\t\timg.src += (src.indexOf(\'?\') === -1 ? \'?\' : \'&\') + \'url=\' + encodeURIComponent(img.src);\n
+\t\t\t}\n
+\n
+\t\t\treturn Conversions.imageToBlob(img);\n
+\t\t}\n
+\n
+\t\tfunction findSelectedBlobInfo() {\n
+\t\t\tvar blobInfo;\n
+\n
+\t\t\tblobInfo = editor.editorUpload.blobCache.getByUri(getSelectedImage().src);\n
+\t\t\tif (blobInfo) {\n
+\t\t\t\treturn blobInfo;\n
+\t\t\t}\n
+\n
+\t\t\treturn imageToBlob(getSelectedImage()).then(function(blob) {\n
+\t\t\t\treturn Conversions.blobToBase64(blob).then(function(base64) {\n
+\t\t\t\t\tvar blobCache = editor.editorUpload.blobCache;\n
+\t\t\t\t\tvar blobInfo = blobCache.create(createId(), blob, base64);\n
+\t\t\t\t\tblobCache.add(blobInfo);\n
+\t\t\t\t\treturn blobInfo;\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction updateSelectedImage(blob) {\n
+\t\t\treturn Conversions.blobToDataUri(blob).then(function(dataUri) {\n
+\t\t\t\tvar id, base64, blobCache, blobInfo, selectedImage;\n
+\n
+\t\t\t\tselectedImage = getSelectedImage();\n
+\t\t\t\tid = createId();\n
+\t\t\t\tblobCache = editor.editorUpload.blobCache;\n
+\t\t\t\tbase64 = URI.parseDataUri(dataUri).data;\n
+\n
+\t\t\t\tblobInfo = blobCache.create(id, blob, base64);\n
+\t\t\t\tblobCache.add(blobInfo);\n
+\n
+\t\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\t\tfunction imageLoadedHandler() {\n
+\t\t\t\t\t\teditor.$(selectedImage).off(\'load\', imageLoadedHandler);\n
+\t\t\t\t\t\teditor.nodeChanged();\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teditor.$(selectedImage).on(\'load\', imageLoadedHandler);\n
+\n
+\t\t\t\t\teditor.$(selectedImage).attr({\n
+\t\t\t\t\t\tsrc: blobInfo.blobUri()\n
+\t\t\t\t\t}).removeAttr(\'data-mce-src\');\n
+\t\t\t\t});\n
+\n
+\t\t\t\treturn blobInfo;\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction selectedImageOperation(fn) {\n
+\t\t\treturn function() {\n
+\t\t\t\treturn editor._scanForImages().then(findSelectedBlobInfo).then(fn).then(updateSelectedImage);\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction rotate(angle) {\n
+\t\t\treturn function() {\n
+\t\t\t\treturn selectedImageOperation(function(blobInfo) {\n
+\t\t\t\t\tvar size = getImageSize(getSelectedImage());\n
+\n
+\t\t\t\t\tif (size) {\n
+\t\t\t\t\t\tsetImageSize(getSelectedImage(), {\n
+\t\t\t\t\t\t\tw: size.h,\n
+\t\t\t\t\t\t\th: size.w\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn ImageTools.rotate(blobInfo.blob(), angle);\n
+\t\t\t\t})();\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction flip(axis) {\n
+\t\t\treturn function() {\n
+\t\t\t\treturn selectedImageOperation(function(blobInfo) {\n
+\t\t\t\t\treturn ImageTools.flip(blobInfo.blob(), axis);\n
+\t\t\t\t})();\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction editImageDialog() {\n
+\t\t\tvar img = getSelectedImage(), originalSize = getNaturalImageSize(img);\n
+\n
+\t\t\tif (img) {\n
+\t\t\t\timageToBlob(img).then(Dialog.edit).then(function(blob) {\n
+\t\t\t\t\treturn new Promise(function(resolve) {\n
+\t\t\t\t\t\tConversions.blobToImage(blob).then(function(newImage) {\n
+\t\t\t\t\t\t\tvar newSize = getNaturalImageSize(newImage);\n
+\n
+\t\t\t\t\t\t\tif (originalSize.w != newSize.w || originalSize.h != newSize.h) {\n
+\t\t\t\t\t\t\t\tif (getImageSize(img)) {\n
+\t\t\t\t\t\t\t\t\tsetImageSize(img, newSize);\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\t\tURL.revokeObjectURL(newImage.src);\n
+\t\t\t\t\t\t\tresolve(blob);\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t});\n
+\t\t\t\t}).then(updateSelectedImage, function() {});\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\tfunction addButtons() {\n
+\t\t\teditor.addButton(\'rotateleft\', {\n
+\t\t\t\ttitle: \'Rotate counterclockwise\',\n
+\t\t\t\tonclick: rotate(-90)\n
+\t\t\t});\n
+\n
+\t\t\teditor.addButton(\'rotateright\', {\n
+\t\t\t\ttitle: \'Rotate clockwise\',\n
+\t\t\t\tonclick: rotate(90)\n
+\t\t\t});\n
+\n
+\t\t\teditor.addButton(\'flipv\', {\n
+\t\t\t\ttitle: \'Flip vertically\',\n
+\t\t\t\tonclick: flip(\'v\')\n
+\t\t\t});\n
+\n
+\t\t\teditor.addButton(\'fliph\', {\n
+\t\t\t\ttitle: \'Flip horizontally\',\n
+\t\t\t\tonclick: flip(\'h\')\n
+\t\t\t});\n
+\n
+\t\t\teditor.addButton(\'editimage\', {\n
+\t\t\t\ttitle: \'Edit image\',\n
+\t\t\t\tonclick: editImageDialog\n
+\t\t\t});\n
+\n
+\t\t\teditor.addButton(\'imageoptions\', {\n
+\t\t\t\ttitle: \'Image options\',\n
+\t\t\t\ticon: \'options\',\n
+\t\t\t\tcmd: \'mceImage\'\n
+\t\t\t});\n
+\n
+\t\t\t/*\n
+\t\t\teditor.addButton(\'crop\', {\n
+\t\t\t\ttitle: \'Crop\',\n
+\t\t\t\tonclick: startCrop\n
+\t\t\t});\n
+\t\t\t*/\n
+\t\t}\n
+\n
+\t\tfunction isEditableImage(img) {\n
+\t\t\tvar selectorMatched = editor.dom.is(img, \'img:not([data-mce-object],[data-mce-placeholder])\');\n
+\n
+\t\t\treturn selectorMatched && (isLocalImage(img) || isCorsImage(img) || editor.settings.imagetools_proxy);\n
+\t\t}\n
+\n
+\t\tfunction addToolbars() {\n
+\t\t\tvar toolbarItems = editor.settings.imagetools_toolbar;\n
+\n
+\t\t\tif (!toolbarItems) {\n
+\t\t\t\ttoolbarItems = \'rotateleft rotateright | flipv fliph | crop editimage imageoptions\';\n
+\t\t\t}\n
+\n
+\t\t\teditor.addContextToolbar(\n
+\t\t\t\tisEditableImage,\n
+\t\t\t\ttoolbarItems\n
+\t\t\t);\n
+\t\t}\n
+\n
+\t\taddButtons();\n
+\t\taddToolbars();\n
+\t});\n
+});\n
+\n
+expose(["tinymce/imagetoolsplugin/Canvas","tinymce/imagetoolsplugin/Mime","tinymce/imagetoolsplugin/ImageSize","tinymce/imagetoolsplugin/Conversions","tinymce/imagetoolsplugin/ImageTools","tinymce/imagetoolsplugin/CropRect","tinymce/imagetoolsplugin/ImagePanel","tinymce/imagetoolsplugin/ColorMatrix","tinymce/imagetoolsplugin/Filters","tinymce/imagetoolsplugin/UndoStack","tinymce/imagetoolsplugin/Dialog","tinymce/imagetoolsplugin/Plugin"]);\n
+})(this);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>54472</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

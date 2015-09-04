@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268299.17</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>I18n.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * I18n.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * I18n class that handles translation of TinyMCE UI.\n
+ * Uses po style with csharp style parameters.\n
+ *\n
+ * @class tinymce.util.I18n\n
+ */\n
+define("tinymce/util/I18n", [], function() {\n
+\t"use strict";\n
+\n
+\tvar data = {}, code = "en";\n
+\n
+\treturn {\n
+\t\t/**\n
+\t\t * Sets the current language code.\n
+\t\t *\n
+\t\t * @method setCode\n
+\t\t * @param {String} newCode Current language code.\n
+\t\t */\n
+\t\tsetCode: function(newCode) {\n
+\t\t\tif (newCode) {\n
+\t\t\t\tcode = newCode;\n
+\t\t\t\tthis.rtl = this.data[newCode] ? this.data[newCode]._dir === \'rtl\' : false;\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the current language code.\n
+\t\t *\n
+\t\t * @method getCode\n
+\t\t * @return {String} Current language code.\n
+\t\t */\n
+\t\tgetCode: function() {\n
+\t\t\treturn code;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Property gets set to true if a RTL language pack was loaded.\n
+\t\t *\n
+\t\t * @property rtl\n
+\t\t * @type Boolean\n
+\t\t */\n
+\t\trtl: false,\n
+\n
+\t\t/**\n
+\t\t * Adds translations for a specific language code.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {String} code Language code like sv_SE.\n
+\t\t * @param {Array} items Name/value array with English en_US to sv_SE.\n
+\t\t */\n
+\t\tadd: function(code, items) {\n
+\t\t\tvar langData = data[code];\n
+\n
+\t\t\tif (!langData) {\n
+\t\t\t\tdata[code] = langData = {};\n
+\t\t\t}\n
+\n
+\t\t\tfor (var name in items) {\n
+\t\t\t\tlangData[name] = items[name];\n
+\t\t\t}\n
+\n
+\t\t\tthis.setCode(code);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Translates the specified text.\n
+\t\t *\n
+\t\t * It has a few formats:\n
+\t\t * I18n.translate("Text");\n
+\t\t * I18n.translate(["Text {0}/{1}", 0, 1]);\n
+\t\t * I18n.translate({raw: "Raw string"});\n
+\t\t *\n
+\t\t * @method translate\n
+\t\t * @param {String/Object/Array} text Text to translate.\n
+\t\t * @return {String} String that got translated.\n
+\t\t */\n
+\t\ttranslate: function(text) {\n
+\t\t\tvar langData;\n
+\n
+\t\t\tlangData = data[code];\n
+\t\t\tif (!langData) {\n
+\t\t\t\tlangData = {};\n
+\t\t\t}\n
+\n
+\t\t\tif (typeof text == "undefined") {\n
+\t\t\t\treturn text;\n
+\t\t\t}\n
+\n
+\t\t\tif (typeof text != "string" && text.raw) {\n
+\t\t\t\treturn text.raw;\n
+\t\t\t}\n
+\n
+\t\t\tif (text.push) {\n
+\t\t\t\tvar values = text.slice(1);\n
+\n
+\t\t\t\ttext = (langData[text[0]] || text[0]).replace(/\\{([0-9]+)\\}/g, function(match1, match2) {\n
+\t\t\t\t\treturn values[match2];\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\treturn (langData[text] || text).replace(/{context:\\w+}$/, \'\');\n
+\t\t},\n
+\n
+\t\tdata: data\n
+\t};\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2339</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>I18n.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

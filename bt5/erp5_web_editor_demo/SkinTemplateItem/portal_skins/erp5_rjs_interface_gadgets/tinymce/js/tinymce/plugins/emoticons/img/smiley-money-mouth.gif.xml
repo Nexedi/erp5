@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268511.97</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>smiley-money-mouth.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhEgASANQUACkYBr62mpiMHMKoIsKsUffaE25YNvn0UoS1auPYMdra2T5eKrSXCvz6bvz0
+ObKbJEozB4lzE8rCoK6iVvb29k13OVpGPjJCGrHlmZqGNtG+JtnTv3J4JJJ+FcLCwgAAACH5BAEA
+AB8ALAAAAAASABIAAAW+4CeKVGmWY0puxMMwD7FRKkkw2tE0h8YQtBTlMeAdHI6DbvAIfigEDe+B
+RD50GuBzw2g4IgAIEixuMGbQxCEBiCQcbHcyARwqkQLA25FXH5oUXUgQbQUFhBGGBwwlgniGhh2Q
+iyUDBwQZGpCbRAcDJQRvBhakpaQGcHUSlg8AFQgVrxUAAp4SJQpRHAsLsK8LFRdZCjQUCgMXvBgI
+CBgLFwIDxCPGE7sY2M4DBNNCCgG84QsB3Sq4HugexE4fIQA7</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>321</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>smiley-money-mouth.gif</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

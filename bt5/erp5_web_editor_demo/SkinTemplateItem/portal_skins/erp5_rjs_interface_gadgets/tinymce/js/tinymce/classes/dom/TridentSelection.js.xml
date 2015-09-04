@@ -1,0 +1,550 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268374.46</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>TridentSelection.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * TridentSelection.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * Selection class for old explorer versions. This one fakes the\n
+ * native selection object available on modern browsers.\n
+ *\n
+ * @class tinymce.dom.TridentSelection\n
+ */\n
+define("tinymce/dom/TridentSelection", [], function() {\n
+\tfunction Selection(selection) {\n
+\t\tvar self = this, dom = selection.dom, FALSE = false;\n
+\n
+\t\tfunction getPosition(rng, start) {\n
+\t\t\tvar checkRng, startIndex = 0, endIndex, inside,\n
+\t\t\t\tchildren, child, offset, index, position = -1, parent;\n
+\n
+\t\t\t// Setup test range, collapse it and get the parent\n
+\t\t\tcheckRng = rng.duplicate();\n
+\t\t\tcheckRng.collapse(start);\n
+\t\t\tparent = checkRng.parentElement();\n
+\n
+\t\t\t// Check if the selection is within the right document\n
+\t\t\tif (parent.ownerDocument !== selection.dom.doc) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\t// IE will report non editable elements as it\'s parent so look for an editable one\n
+\t\t\twhile (parent.contentEditable === "false") {\n
+\t\t\t\tparent = parent.parentNode;\n
+\t\t\t}\n
+\n
+\t\t\t// If parent doesn\'t have any children then return that we are inside the element\n
+\t\t\tif (!parent.hasChildNodes()) {\n
+\t\t\t\treturn {node: parent, inside: 1};\n
+\t\t\t}\n
+\n
+\t\t\t// Setup node list and endIndex\n
+\t\t\tchildren = parent.children;\n
+\t\t\tendIndex = children.length - 1;\n
+\n
+\t\t\t// Perform a binary search for the position\n
+\t\t\twhile (startIndex <= endIndex) {\n
+\t\t\t\tindex = Math.floor((startIndex + endIndex) / 2);\n
+\n
+\t\t\t\t// Move selection to node and compare the ranges\n
+\t\t\t\tchild = children[index];\n
+\t\t\t\tcheckRng.moveToElementText(child);\n
+\t\t\t\tposition = checkRng.compareEndPoints(start ? \'StartToStart\' : \'EndToEnd\', rng);\n
+\n
+\t\t\t\t// Before/after or an exact match\n
+\t\t\t\tif (position > 0) {\n
+\t\t\t\t\tendIndex = index - 1;\n
+\t\t\t\t} else if (position < 0) {\n
+\t\t\t\t\tstartIndex = index + 1;\n
+\t\t\t\t} else {\n
+\t\t\t\t\treturn {node: child};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Check if child position is before or we didn\'t find a position\n
+\t\t\tif (position < 0) {\n
+\t\t\t\t// No element child was found use the parent element and the offset inside that\n
+\t\t\t\tif (!child) {\n
+\t\t\t\t\tcheckRng.moveToElementText(parent);\n
+\t\t\t\t\tcheckRng.collapse(true);\n
+\t\t\t\t\tchild = parent;\n
+\t\t\t\t\tinside = true;\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcheckRng.collapse(false);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Walk character by character in text node until we hit the selected range endpoint,\n
+\t\t\t\t// hit the end of document or parent isn\'t the right one\n
+\t\t\t\t// We need to walk char by char since rng.text or rng.htmlText will trim line endings\n
+\t\t\t\toffset = 0;\n
+\t\t\t\twhile (checkRng.compareEndPoints(start ? \'StartToStart\' : \'StartToEnd\', rng) !== 0) {\n
+\t\t\t\t\tif (checkRng.move(\'character\', 1) === 0 || parent != checkRng.parentElement()) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\toffset++;\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\t// Child position is after the selection endpoint\n
+\t\t\t\tcheckRng.collapse(true);\n
+\n
+\t\t\t\t// Walk character by character in text node until we hit the selected range endpoint, hit\n
+\t\t\t\t// the end of document or parent isn\'t the right one\n
+\t\t\t\toffset = 0;\n
+\t\t\t\twhile (checkRng.compareEndPoints(start ? \'StartToStart\' : \'StartToEnd\', rng) !== 0) {\n
+\t\t\t\t\tif (checkRng.move(\'character\', -1) === 0 || parent != checkRng.parentElement()) {\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\toffset++;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn {node: child, position: position, offset: offset, inside: inside};\n
+\t\t}\n
+\n
+\t\t// Returns a W3C DOM compatible range object by using the IE Range API\n
+\t\tfunction getRange() {\n
+\t\t\tvar ieRange = selection.getRng(), domRange = dom.createRng(), element, collapsed, tmpRange, element2, bookmark;\n
+\n
+\t\t\t// If selection is outside the current document just return an empty range\n
+\t\t\telement = ieRange.item ? ieRange.item(0) : ieRange.parentElement();\n
+\t\t\tif (element.ownerDocument != dom.doc) {\n
+\t\t\t\treturn domRange;\n
+\t\t\t}\n
+\n
+\t\t\tcollapsed = selection.isCollapsed();\n
+\n
+\t\t\t// Handle control selection\n
+\t\t\tif (ieRange.item) {\n
+\t\t\t\tdomRange.setStart(element.parentNode, dom.nodeIndex(element));\n
+\t\t\t\tdomRange.setEnd(domRange.startContainer, domRange.startOffset + 1);\n
+\n
+\t\t\t\treturn domRange;\n
+\t\t\t}\n
+\n
+\t\t\tfunction findEndPoint(start) {\n
+\t\t\t\tvar endPoint = getPosition(ieRange, start), container, offset, textNodeOffset = 0, sibling, undef, nodeValue;\n
+\n
+\t\t\t\tcontainer = endPoint.node;\n
+\t\t\t\toffset = endPoint.offset;\n
+\n
+\t\t\t\tif (endPoint.inside && !container.hasChildNodes()) {\n
+\t\t\t\t\tdomRange[start ? \'setStart\' : \'setEnd\'](container, 0);\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (offset === undef) {\n
+\t\t\t\t\tdomRange[start ? \'setStartBefore\' : \'setEndAfter\'](container);\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (endPoint.position < 0) {\n
+\t\t\t\t\tsibling = endPoint.inside ? container.firstChild : container.nextSibling;\n
+\n
+\t\t\t\t\tif (!sibling) {\n
+\t\t\t\t\t\tdomRange[start ? \'setStartAfter\' : \'setEndAfter\'](container);\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!offset) {\n
+\t\t\t\t\t\tif (sibling.nodeType == 3) {\n
+\t\t\t\t\t\t\tdomRange[start ? \'setStart\' : \'setEnd\'](sibling, 0);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tdomRange[start ? \'setStartBefore\' : \'setEndBefore\'](sibling);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Find the text node and offset\n
+\t\t\t\t\twhile (sibling) {\n
+\t\t\t\t\t\tif (sibling.nodeType == 3) {\n
+\t\t\t\t\t\t\tnodeValue = sibling.nodeValue;\n
+\t\t\t\t\t\t\ttextNodeOffset += nodeValue.length;\n
+\n
+\t\t\t\t\t\t\t// We are at or passed the position we where looking for\n
+\t\t\t\t\t\t\tif (textNodeOffset >= offset) {\n
+\t\t\t\t\t\t\t\tcontainer = sibling;\n
+\t\t\t\t\t\t\t\ttextNodeOffset -= offset;\n
+\t\t\t\t\t\t\t\ttextNodeOffset = nodeValue.length - textNodeOffset;\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tsibling = sibling.nextSibling;\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// Find the text node and offset\n
+\t\t\t\t\tsibling = container.previousSibling;\n
+\n
+\t\t\t\t\tif (!sibling) {\n
+\t\t\t\t\t\treturn domRange[start ? \'setStartBefore\' : \'setEndBefore\'](container);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// If there isn\'t any text to loop then use the first position\n
+\t\t\t\t\tif (!offset) {\n
+\t\t\t\t\t\tif (container.nodeType == 3) {\n
+\t\t\t\t\t\t\tdomRange[start ? \'setStart\' : \'setEnd\'](sibling, container.nodeValue.length);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tdomRange[start ? \'setStartAfter\' : \'setEndAfter\'](sibling);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\twhile (sibling) {\n
+\t\t\t\t\t\tif (sibling.nodeType == 3) {\n
+\t\t\t\t\t\t\ttextNodeOffset += sibling.nodeValue.length;\n
+\n
+\t\t\t\t\t\t\t// We are at or passed the position we where looking for\n
+\t\t\t\t\t\t\tif (textNodeOffset >= offset) {\n
+\t\t\t\t\t\t\t\tcontainer = sibling;\n
+\t\t\t\t\t\t\t\ttextNodeOffset -= offset;\n
+\t\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tsibling = sibling.previousSibling;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tdomRange[start ? \'setStart\' : \'setEnd\'](container, textNodeOffset);\n
+\t\t\t}\n
+\n
+\t\t\ttry {\n
+\t\t\t\t// Find start point\n
+\t\t\t\tfindEndPoint(true);\n
+\n
+\t\t\t\t// Find end point if needed\n
+\t\t\t\tif (!collapsed) {\n
+\t\t\t\t\tfindEndPoint();\n
+\t\t\t\t}\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// IE has a nasty bug where text nodes might throw "invalid argument" when you\n
+\t\t\t\t// access the nodeValue or other properties of text nodes. This seems to happend when\n
+\t\t\t\t// text nodes are split into two nodes by a delete/backspace call. So lets detect it and try to fix it.\n
+\t\t\t\tif (ex.number == -2147024809) {\n
+\t\t\t\t\t// Get the current selection\n
+\t\t\t\t\tbookmark = self.getBookmark(2);\n
+\n
+\t\t\t\t\t// Get start element\n
+\t\t\t\t\ttmpRange = ieRange.duplicate();\n
+\t\t\t\t\ttmpRange.collapse(true);\n
+\t\t\t\t\telement = tmpRange.parentElement();\n
+\n
+\t\t\t\t\t// Get end element\n
+\t\t\t\t\tif (!collapsed) {\n
+\t\t\t\t\t\ttmpRange = ieRange.duplicate();\n
+\t\t\t\t\t\ttmpRange.collapse(false);\n
+\t\t\t\t\t\telement2 = tmpRange.parentElement();\n
+\t\t\t\t\t\telement2.innerHTML = element2.innerHTML;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Remove the broken elements\n
+\t\t\t\t\telement.innerHTML = element.innerHTML;\n
+\n
+\t\t\t\t\t// Restore the selection\n
+\t\t\t\t\tself.moveToBookmark(bookmark);\n
+\n
+\t\t\t\t\t// Since the range has moved we need to re-get it\n
+\t\t\t\t\tieRange = selection.getRng();\n
+\n
+\t\t\t\t\t// Find start point\n
+\t\t\t\t\tfindEndPoint(true);\n
+\n
+\t\t\t\t\t// Find end point if needed\n
+\t\t\t\t\tif (!collapsed) {\n
+\t\t\t\t\t\tfindEndPoint();\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tthrow ex; // Throw other errors\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn domRange;\n
+\t\t}\n
+\n
+\t\tthis.getBookmark = function(type) {\n
+\t\t\tvar rng = selection.getRng(), bookmark = {};\n
+\n
+\t\t\tfunction getIndexes(node) {\n
+\t\t\t\tvar parent, root, children, i, indexes = [];\n
+\n
+\t\t\t\tparent = node.parentNode;\n
+\t\t\t\troot = dom.getRoot().parentNode;\n
+\n
+\t\t\t\twhile (parent != root && parent.nodeType !== 9) {\n
+\t\t\t\t\tchildren = parent.children;\n
+\n
+\t\t\t\t\ti = children.length;\n
+\t\t\t\t\twhile (i--) {\n
+\t\t\t\t\t\tif (node === children[i]) {\n
+\t\t\t\t\t\t\tindexes.push(i);\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode = parent;\n
+\t\t\t\t\tparent = parent.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn indexes;\n
+\t\t\t}\n
+\n
+\t\t\tfunction getBookmarkEndPoint(start) {\n
+\t\t\t\tvar position;\n
+\n
+\t\t\t\tposition = getPosition(rng, start);\n
+\t\t\t\tif (position) {\n
+\t\t\t\t\treturn {\n
+\t\t\t\t\t\tposition: position.position,\n
+\t\t\t\t\t\toffset: position.offset,\n
+\t\t\t\t\t\tindexes: getIndexes(position.node),\n
+\t\t\t\t\t\tinside: position.inside\n
+\t\t\t\t\t};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Non ubstructive bookmark\n
+\t\t\tif (type === 2) {\n
+\t\t\t\t// Handle text selection\n
+\t\t\t\tif (!rng.item) {\n
+\t\t\t\t\tbookmark.start = getBookmarkEndPoint(true);\n
+\n
+\t\t\t\t\tif (!selection.isCollapsed()) {\n
+\t\t\t\t\t\tbookmark.end = getBookmarkEndPoint();\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\tbookmark.start = {ctrl: true, indexes: getIndexes(rng.item(0))};\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn bookmark;\n
+\t\t};\n
+\n
+\t\tthis.moveToBookmark = function(bookmark) {\n
+\t\t\tvar rng, body = dom.doc.body;\n
+\n
+\t\t\tfunction resolveIndexes(indexes) {\n
+\t\t\t\tvar node, i, idx, children;\n
+\n
+\t\t\t\tnode = dom.getRoot();\n
+\t\t\t\tfor (i = indexes.length - 1; i >= 0; i--) {\n
+\t\t\t\t\tchildren = node.children;\n
+\t\t\t\t\tidx = indexes[i];\n
+\n
+\t\t\t\t\tif (idx <= children.length - 1) {\n
+\t\t\t\t\t\tnode = children[idx];\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn node;\n
+\t\t\t}\n
+\n
+\t\t\tfunction setBookmarkEndPoint(start) {\n
+\t\t\t\tvar endPoint = bookmark[start ? \'start\' : \'end\'], moveLeft, moveRng, undef, offset;\n
+\n
+\t\t\t\tif (endPoint) {\n
+\t\t\t\t\tmoveLeft = endPoint.position > 0;\n
+\n
+\t\t\t\t\tmoveRng = body.createTextRange();\n
+\t\t\t\t\tmoveRng.moveToElementText(resolveIndexes(endPoint.indexes));\n
+\n
+\t\t\t\t\toffset = endPoint.offset;\n
+\t\t\t\t\tif (offset !== undef) {\n
+\t\t\t\t\t\tmoveRng.collapse(endPoint.inside || moveLeft);\n
+\t\t\t\t\t\tmoveRng.moveStart(\'character\', moveLeft ? -offset : offset);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tmoveRng.collapse(start);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\trng.setEndPoint(start ? \'StartToStart\' : \'EndToStart\', moveRng);\n
+\n
+\t\t\t\t\tif (start) {\n
+\t\t\t\t\t\trng.collapse(true);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (bookmark.start) {\n
+\t\t\t\tif (bookmark.start.ctrl) {\n
+\t\t\t\t\trng = body.createControlRange();\n
+\t\t\t\t\trng.addElement(resolveIndexes(bookmark.start.indexes));\n
+\t\t\t\t\trng.select();\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng = body.createTextRange();\n
+\t\t\t\t\tsetBookmarkEndPoint(true);\n
+\t\t\t\t\tsetBookmarkEndPoint();\n
+\t\t\t\t\trng.select();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t};\n
+\n
+\t\tthis.addRange = function(rng) {\n
+\t\t\tvar ieRng, ctrlRng, startContainer, startOffset, endContainer, endOffset, sibling,\n
+\t\t\t\tdoc = selection.dom.doc, body = doc.body, nativeRng, ctrlElm;\n
+\n
+\t\t\tfunction setEndPoint(start) {\n
+\t\t\t\tvar container, offset, marker, tmpRng, nodes;\n
+\n
+\t\t\t\tmarker = dom.create(\'a\');\n
+\t\t\t\tcontainer = start ? startContainer : endContainer;\n
+\t\t\t\toffset = start ? startOffset : endOffset;\n
+\t\t\t\ttmpRng = ieRng.duplicate();\n
+\n
+\t\t\t\tif (container == doc || container == doc.documentElement) {\n
+\t\t\t\t\tcontainer = body;\n
+\t\t\t\t\toffset = 0;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (container.nodeType == 3) {\n
+\t\t\t\t\tcontainer.parentNode.insertBefore(marker, container);\n
+\t\t\t\t\ttmpRng.moveToElementText(marker);\n
+\t\t\t\t\ttmpRng.moveStart(\'character\', offset);\n
+\t\t\t\t\tdom.remove(marker);\n
+\t\t\t\t\tieRng.setEndPoint(start ? \'StartToStart\' : \'EndToEnd\', tmpRng);\n
+\t\t\t\t} else {\n
+\t\t\t\t\tnodes = container.childNodes;\n
+\n
+\t\t\t\t\tif (nodes.length) {\n
+\t\t\t\t\t\tif (offset >= nodes.length) {\n
+\t\t\t\t\t\t\tdom.insertAfter(marker, nodes[nodes.length - 1]);\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tcontainer.insertBefore(marker, nodes[offset]);\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\ttmpRng.moveToElementText(marker);\n
+\t\t\t\t\t} else if (container.canHaveHTML) {\n
+\t\t\t\t\t\t// Empty node selection for example <div>|</div>\n
+\t\t\t\t\t\t// Setting innerHTML with a span marker then remove that marker seems to keep empty block elements open\n
+\t\t\t\t\t\tcontainer.innerHTML = \'<span>&#xFEFF;</span>\';\n
+\t\t\t\t\t\tmarker = container.firstChild;\n
+\t\t\t\t\t\ttmpRng.moveToElementText(marker);\n
+\t\t\t\t\t\ttmpRng.collapse(FALSE); // Collapse false works better than true for some odd reason\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tieRng.setEndPoint(start ? \'StartToStart\' : \'EndToEnd\', tmpRng);\n
+\t\t\t\t\tdom.remove(marker);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Setup some shorter versions\n
+\t\t\tstartContainer = rng.startContainer;\n
+\t\t\tstartOffset = rng.startOffset;\n
+\t\t\tendContainer = rng.endContainer;\n
+\t\t\tendOffset = rng.endOffset;\n
+\t\t\tieRng = body.createTextRange();\n
+\n
+\t\t\t// If single element selection then try making a control selection out of it\n
+\t\t\tif (startContainer == endContainer && startContainer.nodeType == 1) {\n
+\t\t\t\t// Trick to place the caret inside an empty block element like <p></p>\n
+\t\t\t\tif (startOffset == endOffset && !startContainer.hasChildNodes()) {\n
+\t\t\t\t\tif (startContainer.canHaveHTML) {\n
+\t\t\t\t\t\t// Check if previous sibling is an empty block if it is then we need to render it\n
+\t\t\t\t\t\t// IE would otherwise move the caret into the sibling instead of the empty startContainer see: #5236\n
+\t\t\t\t\t\t// Example this: <p></p><p>|</p> would become this: <p>|</p><p></p>\n
+\t\t\t\t\t\tsibling = startContainer.previousSibling;\n
+\t\t\t\t\t\tif (sibling && !sibling.hasChildNodes() && dom.isBlock(sibling)) {\n
+\t\t\t\t\t\t\tsibling.innerHTML = \'&#xFEFF;\';\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tsibling = null;\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tstartContainer.innerHTML = \'<span>&#xFEFF;</span><span>&#xFEFF;</span>\';\n
+\t\t\t\t\t\tieRng.moveToElementText(startContainer.lastChild);\n
+\t\t\t\t\t\tieRng.select();\n
+\t\t\t\t\t\tdom.doc.selection.clear();\n
+\t\t\t\t\t\tstartContainer.innerHTML = \'\';\n
+\n
+\t\t\t\t\t\tif (sibling) {\n
+\t\t\t\t\t\t\tsibling.innerHTML = \'\';\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tstartOffset = dom.nodeIndex(startContainer);\n
+\t\t\t\t\tstartContainer = startContainer.parentNode;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (startOffset == endOffset - 1) {\n
+\t\t\t\t\ttry {\n
+\t\t\t\t\t\tctrlElm = startContainer.childNodes[startOffset];\n
+\t\t\t\t\t\tctrlRng = body.createControlRange();\n
+\t\t\t\t\t\tctrlRng.addElement(ctrlElm);\n
+\t\t\t\t\t\tctrlRng.select();\n
+\n
+\t\t\t\t\t\t// Check if the range produced is on the correct element and is a control range\n
+\t\t\t\t\t\t// On IE 8 it will select the parent contentEditable container if you select an inner element see: #5398\n
+\t\t\t\t\t\tnativeRng = selection.getRng();\n
+\t\t\t\t\t\tif (nativeRng.item && ctrlElm === nativeRng.item(0)) {\n
+\t\t\t\t\t\t\treturn;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t// Ignore\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Set start/end point of selection\n
+\t\t\tsetEndPoint(true);\n
+\t\t\tsetEndPoint();\n
+\n
+\t\t\t// Select the new range and scroll it into view\n
+\t\t\tieRng.select();\n
+\t\t};\n
+\n
+\t\t// Expose range method\n
+\t\tthis.getRangeAt = getRange;\n
+\t}\n
+\n
+\treturn Selection;\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14237</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>TridentSelection.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,309 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268288.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>AddOnManager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * AddOnManager.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class handles the loading of themes/plugins or other add-ons and their language packs.\n
+ *\n
+ * @class tinymce.AddOnManager\n
+ */\n
+define("tinymce/AddOnManager", [\n
+\t"tinymce/dom/ScriptLoader",\n
+\t"tinymce/util/Tools"\n
+], function(ScriptLoader, Tools) {\n
+\tvar each = Tools.each;\n
+\n
+\tfunction AddOnManager() {\n
+\t\tvar self = this;\n
+\n
+\t\tself.items = [];\n
+\t\tself.urls = {};\n
+\t\tself.lookup = {};\n
+\t}\n
+\n
+\tAddOnManager.prototype = {\n
+\t\t/**\n
+\t\t * Returns the specified add on by the short name.\n
+\t\t *\n
+\t\t * @method get\n
+\t\t * @param {String} name Add-on to look for.\n
+\t\t * @return {tinymce.Theme/tinymce.Plugin} Theme or plugin add-on instance or undefined.\n
+\t\t */\n
+\t\tget: function(name) {\n
+\t\t\tif (this.lookup[name]) {\n
+\t\t\t\treturn this.lookup[name].instance;\n
+\t\t\t}\n
+\n
+\t\t\treturn undefined;\n
+\t\t},\n
+\n
+\t\tdependencies: function(name) {\n
+\t\t\tvar result;\n
+\n
+\t\t\tif (this.lookup[name]) {\n
+\t\t\t\tresult = this.lookup[name].dependencies;\n
+\t\t\t}\n
+\n
+\t\t\treturn result || [];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Loads a language pack for the specified add-on.\n
+\t\t *\n
+\t\t * @method requireLangPack\n
+\t\t * @param {String} name Short name of the add-on.\n
+\t\t * @param {String} languages Optional comma or space separated list of languages to check if it matches the name.\n
+\t\t */\n
+\t\trequireLangPack: function(name, languages) {\n
+\t\t\tvar language = AddOnManager.language;\n
+\n
+\t\t\tif (language && AddOnManager.languageLoad !== false) {\n
+\t\t\t\tif (languages) {\n
+\t\t\t\t\tlanguages = \',\' + languages + \',\';\n
+\n
+\t\t\t\t\t// Load short form sv.js or long form sv_SE.js\n
+\t\t\t\t\tif (languages.indexOf(\',\' + language.substr(0, 2) + \',\') != -1) {\n
+\t\t\t\t\t\tlanguage = language.substr(0, 2);\n
+\t\t\t\t\t} else if (languages.indexOf(\',\' + language + \',\') == -1) {\n
+\t\t\t\t\t\treturn;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tScriptLoader.ScriptLoader.add(this.urls[name] + \'/langs/\' + language + \'.js\');\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds a instance of the add-on by it\'s short name.\n
+\t\t *\n
+\t\t * @method add\n
+\t\t * @param {String} id Short name/id for the add-on.\n
+\t\t * @param {tinymce.Theme/tinymce.Plugin} addOn Theme or plugin to add.\n
+\t\t * @return {tinymce.Theme/tinymce.Plugin} The same theme or plugin instance that got passed in.\n
+\t\t * @example\n
+\t\t * // Create a simple plugin\n
+\t\t * tinymce.create(\'tinymce.plugins.TestPlugin\', {\n
+\t\t *   TestPlugin: function(ed, url) {\n
+\t\t *   ed.on(\'click\', function(e) {\n
+\t\t *      ed.windowManager.alert(\'Hello World!\');\n
+\t\t *   });\n
+\t\t *   }\n
+\t\t * });\n
+\t\t *\n
+\t\t * // Register plugin using the add method\n
+\t\t * tinymce.PluginManager.add(\'test\', tinymce.plugins.TestPlugin);\n
+\t\t *\n
+\t\t * // Initialize TinyMCE\n
+\t\t * tinymce.init({\n
+\t\t *  ...\n
+\t\t *  plugins: \'-test\' // Init the plugin but don\'t try to load it\n
+\t\t * });\n
+\t\t */\n
+\t\tadd: function(id, addOn, dependencies) {\n
+\t\t\tthis.items.push(addOn);\n
+\t\t\tthis.lookup[id] = {instance: addOn, dependencies: dependencies};\n
+\n
+\t\t\treturn addOn;\n
+\t\t},\n
+\n
+\t\tcreateUrl: function(baseUrl, dep) {\n
+\t\t\tif (typeof dep === "object") {\n
+\t\t\t\treturn dep;\n
+\t\t\t}\n
+\n
+\t\t\treturn {prefix: baseUrl.prefix, resource: dep, suffix: baseUrl.suffix};\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Add a set of components that will make up the add-on. Using the url of the add-on name as the base url.\n
+\t\t * This should be used in development mode.  A new compressor/javascript munger process will ensure that the\n
+\t\t * components are put together into the plugin.js file and compressed correctly.\n
+\t\t *\n
+\t\t * @method addComponents\n
+\t\t * @param {String} pluginName name of the plugin to load scripts from (will be used to get the base url for the plugins).\n
+\t\t * @param {Array} scripts Array containing the names of the scripts to load.\n
+\t\t */\n
+\t\taddComponents: function(pluginName, scripts) {\n
+\t\t\tvar pluginUrl = this.urls[pluginName];\n
+\n
+\t\t\teach(scripts, function(script) {\n
+\t\t\t\tScriptLoader.ScriptLoader.add(pluginUrl + "/" + script);\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Loads an add-on from a specific url.\n
+\t\t *\n
+\t\t * @method load\n
+\t\t * @param {String} name Short name of the add-on that gets loaded.\n
+\t\t * @param {String} addOnUrl URL to the add-on that will get loaded.\n
+\t\t * @param {function} callback Optional callback to execute ones the add-on is loaded.\n
+\t\t * @param {Object} scope Optional scope to execute the callback in.\n
+\t\t * @example\n
+\t\t * // Loads a plugin from an external URL\n
+\t\t * tinymce.PluginManager.load(\'myplugin\', \'/some/dir/someplugin/plugin.js\');\n
+\t\t *\n
+\t\t * // Initialize TinyMCE\n
+\t\t * tinymce.init({\n
+\t\t *  ...\n
+\t\t *  plugins: \'-myplugin\' // Don\'t try to load it again\n
+\t\t * });\n
+\t\t */\n
+\t\tload: function(name, addOnUrl, callback, scope) {\n
+\t\t\tvar self = this, url = addOnUrl;\n
+\n
+\t\t\tfunction loadDependencies() {\n
+\t\t\t\tvar dependencies = self.dependencies(name);\n
+\n
+\t\t\t\teach(dependencies, function(dep) {\n
+\t\t\t\t\tvar newUrl = self.createUrl(addOnUrl, dep);\n
+\n
+\t\t\t\t\tself.load(newUrl.resource, newUrl, undefined, undefined);\n
+\t\t\t\t});\n
+\n
+\t\t\t\tif (callback) {\n
+\t\t\t\t\tif (scope) {\n
+\t\t\t\t\t\tcallback.call(scope);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tcallback.call(ScriptLoader);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tif (self.urls[name]) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tif (typeof addOnUrl === "object") {\n
+\t\t\t\turl = addOnUrl.prefix + addOnUrl.resource + addOnUrl.suffix;\n
+\t\t\t}\n
+\n
+\t\t\tif (url.indexOf(\'/\') !== 0 && url.indexOf(\'://\') == -1) {\n
+\t\t\t\turl = AddOnManager.baseURL + \'/\' + url;\n
+\t\t\t}\n
+\n
+\t\t\tself.urls[name] = url.substring(0, url.lastIndexOf(\'/\'));\n
+\n
+\t\t\tif (self.lookup[name]) {\n
+\t\t\t\tloadDependencies();\n
+\t\t\t} else {\n
+\t\t\t\tScriptLoader.ScriptLoader.add(url, loadDependencies, scope);\n
+\t\t\t}\n
+\t\t}\n
+\t};\n
+\n
+\tAddOnManager.PluginManager = new AddOnManager();\n
+\tAddOnManager.ThemeManager = new AddOnManager();\n
+\n
+\treturn AddOnManager;\n
+});\n
+\n
+/**\n
+ * TinyMCE theme class.\n
+ *\n
+ * @class tinymce.Theme\n
+ */\n
+\n
+/**\n
+ * This method is responsible for rendering/generating the overall user interface with toolbars, buttons, iframe containers etc.\n
+ *\n
+ * @method renderUI\n
+ * @param {Object} obj Object parameter containing the targetNode DOM node that will be replaced visually with an editor instance.\n
+ * @return {Object} an object with items like iframeContainer, editorContainer, sizeContainer, deltaWidth, deltaHeight.\n
+ */\n
+\n
+/**\n
+ * Plugin base class, this is a pseudo class that describes how a plugin is to be created for TinyMCE. The methods below are all optional.\n
+ *\n
+ * @class tinymce.Plugin\n
+ * @example\n
+ * tinymce.PluginManager.add(\'example\', function(editor, url) {\n
+ *     // Add a button that opens a window\n
+ *     editor.addButton(\'example\', {\n
+ *         text: \'My button\',\n
+ *         icon: false,\n
+ *         onclick: function() {\n
+ *             // Open window\n
+ *             editor.windowManager.open({\n
+ *                 title: \'Example plugin\',\n
+ *                 body: [\n
+ *                     {type: \'textbox\', name: \'title\', label: \'Title\'}\n
+ *                 ],\n
+ *                 onsubmit: function(e) {\n
+ *                     // Insert content when the window form is submitted\n
+ *                     editor.insertContent(\'Title: \' + e.data.title);\n
+ *                 }\n
+ *             });\n
+ *         }\n
+ *     });\n
+ *\n
+ *     // Adds a menu item to the tools menu\n
+ *     editor.addMenuItem(\'example\', {\n
+ *         text: \'Example plugin\',\n
+ *         context: \'tools\',\n
+ *         onclick: function() {\n
+ *             // Open window with a specific url\n
+ *             editor.windowManager.open({\n
+ *                 title: \'TinyMCE site\',\n
+ *                 url: \'http://www.tinymce.com\',\n
+ *                 width: 800,\n
+ *                 height: 600,\n
+ *                 buttons: [{\n
+ *                     text: \'Close\',\n
+ *                     onclick: \'close\'\n
+ *                 }]\n
+ *             });\n
+ *         }\n
+ *     });\n
+ * });\n
+ */\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7575</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>AddOnManager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

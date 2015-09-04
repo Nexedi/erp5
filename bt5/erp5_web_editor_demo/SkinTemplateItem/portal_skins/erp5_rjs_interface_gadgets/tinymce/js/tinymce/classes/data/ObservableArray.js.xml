@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268279.6</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ObservableArray.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ObservableArray.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class is an array that emmits events when mutation occurs.\n
+ *\n
+ * @class tinymce.data.ObservableArray\n
+ */\n
+define("tinymce/data/ObservableArray", [\n
+\t"tinymce/util/Observable",\n
+\t"tinymce/util/Class"\n
+], function(Observable, Class) {\n
+\tvar push = Array.prototype.push, slice = Array.prototype.slice, splice = Array.prototype.splice;\n
+\n
+\tvar ObservableArray = Class.extend({\n
+\t\tMixins: [Observable],\n
+\n
+\t\t/**\n
+\t\t * Number of items in array.\n
+\t\t *\n
+\t\t * @field length\n
+\t\t * @type Number\n
+\t\t */\n
+\t\tlength: 0,\n
+\n
+\t\t/**\n
+\t\t * Constructs a new observable object instance.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} data Optional initial data for the object.\n
+\t\t */\n
+\t\tinit: function(data) {\n
+\t\t\tif (data) {\n
+\t\t\t\tthis.push.apply(this, data);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Adds items to the end of array.\n
+\t\t *\n
+\t\t * @method push\n
+\t\t * @param {Object} item... Item or items to add to the end of array.\n
+\t\t * @return {Number} Number of items that got added.\n
+\t\t */\n
+\t\tpush: function() {\n
+\t\t\tvar args, index = this.length;\n
+\n
+\t\t\targs = Array.prototype.slice.call(arguments);\n
+\t\t\tpush.apply(this, args);\n
+\n
+\t\t\tthis.fire(\'add\', {\n
+\t\t\t\titems: args,\n
+\t\t\t\tindex: index\n
+\t\t\t});\n
+\n
+\t\t\treturn args.length;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Pops the last item off the array.\n
+\t\t *\n
+\t\t * @method pop\n
+\t\t * @return {Object} Item that got popped out.\n
+\t\t */\n
+\t\tpop: function() {\n
+\t\t\treturn this.splice(this.length - 1, 1)[0];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Slices out a portion of the array as a new array.\n
+\t\t *\n
+\t\t * @method slice\n
+\t\t * @param {Number} begin Beginning of slice.\n
+\t\t * @param {Number} end End of slice.\n
+\t\t * @return {Array} Native array instance with items.\n
+\t\t */\n
+\t\tslice: function(begin, end) {\n
+\t\t\treturn slice.call(this, begin, end);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes/replaces/inserts items in the array.\n
+\t\t *\n
+\t\t * @method splice\n
+\t\t * @param {Number} index Index to splice at.\n
+\t\t * @param {Number} howMany Optional number of items to splice away.\n
+\t\t * @param {Object} item ... Item or items to insert at the specified index.\n
+\t\t */\n
+\t\tsplice: function(index) {\n
+\t\t\tvar added, removed, args = slice.call(arguments);\n
+\n
+\t\t\tif (args.length === 1) {\n
+\t\t\t\targs[1] = this.length;\n
+\t\t\t}\n
+\n
+\t\t\tremoved = splice.apply(this, args);\n
+\t\t\tadded = args.slice(2);\n
+\n
+\t\t\tif (removed.length > 0) {\n
+\t\t\t\tthis.fire(\'remove\', {items: removed, index: index});\n
+\t\t\t}\n
+\n
+\t\t\tif (added.length > 0) {\n
+\t\t\t\tthis.fire(\'add\', {items: added, index: index});\n
+\t\t\t}\n
+\n
+\t\t\treturn removed;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Removes and returns the first item of the array.\n
+\t\t *\n
+\t\t * @method shift\n
+\t\t * @return {Object} First item of the array.\n
+\t\t */\n
+\t\tshift: function() {\n
+\t\t\treturn this.splice(0, 1)[0];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Appends an item to the top of array.\n
+\t\t *\n
+\t\t * @method unshift\n
+\t\t * @param {Object} item... Item or items to prepend to array.\n
+\t\t * @return {Number} Number of items that got added.\n
+\t\t */\n
+\t\tunshift: function() {\n
+\t\t\tvar args = slice.call(arguments);\n
+\t\t\tthis.splice.apply(this, [0, 0].concat(args));\n
+\t\t\treturn args.length;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Executes the callback for each item in the array.\n
+\t\t *\n
+\t\t * @method forEach\n
+\t\t * @param {function} callback Callback to execute for each item in array.\n
+\t\t * @param {Object} scope Optional scope for this when executing the callback.\n
+\t\t */\n
+\t\tforEach: function(callback, scope) {\n
+\t\t\tvar i;\n
+\n
+\t\t\tscope = scope || this;\n
+\t\t\tfor (i = 0; i < this.length; i++) {\n
+\t\t\t\tcallback.call(scope, this[i], i, this);\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns the index of the specified item or -1 if it wasn\'t found.\n
+\t\t *\n
+\t\t * @method indexOf\n
+\t\t * @return {Number} Index of item or null if it wasn\'t found.\n
+\t\t */\n
+\t\tindexOf: function(item) {\n
+\t\t\tfor (var i = 0; i < this.length; i++) {\n
+\t\t\t\tif (this[i] === item) {\n
+\t\t\t\t\treturn i;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn -1;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Filters the observable array into a new observable array\n
+\t\t * based on the true/false return value of the specified callback.\n
+\t\t *\n
+\t\t * @method filter\n
+\t\t * @param {function} callback Callback function to execute for each item and filter by.\n
+\t\t * @param {Object} thisArg Optional scope for this when executing the callback.\n
+\t\t * @return {tinymce.data.ObservableArray} Filtered observable array instance.\n
+\t\t */\n
+\t\tfilter: function(callback, thisArg) {\n
+\t\t\tvar self = this, out = new ObservableArray();\n
+\n
+\t\t\tthis.forEach(function(item, index) {\n
+\t\t\t\tif (callback.call(thisArg || self, item, index, self)) {\n
+\t\t\t\t\tout.push(item);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\treturn out;\n
+\t\t}\n
+\t});\n
+\n
+\treturn ObservableArray;\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4549</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ObservableArray.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

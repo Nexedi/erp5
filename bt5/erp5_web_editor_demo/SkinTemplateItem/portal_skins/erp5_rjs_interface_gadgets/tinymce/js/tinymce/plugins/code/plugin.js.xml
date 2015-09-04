@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268499.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * plugin.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*global tinymce:true */\n
+\n
+tinymce.PluginManager.add(\'code\', function(editor) {\n
+\tfunction showDialog() {\n
+\t\tvar win = editor.windowManager.open({\n
+\t\t\ttitle: "Source code",\n
+\t\t\tbody: {\n
+\t\t\t\ttype: \'textbox\',\n
+\t\t\t\tname: \'code\',\n
+\t\t\t\tmultiline: true,\n
+\t\t\t\tminWidth: editor.getParam("code_dialog_width", 600),\n
+\t\t\t\tminHeight: editor.getParam("code_dialog_height", Math.min(tinymce.DOM.getViewPort().h - 200, 500)),\n
+\t\t\t\tspellcheck: false,\n
+\t\t\t\tstyle: \'direction: ltr; text-align: left\'\n
+\t\t\t},\n
+\t\t\tonSubmit: function(e) {\n
+\t\t\t\t// We get a lovely "Wrong document" error in IE 11 if we\n
+\t\t\t\t// don\'t move the focus to the editor before creating an undo\n
+\t\t\t\t// transation since it tries to make a bookmark for the current selection\n
+\t\t\t\teditor.focus();\n
+\n
+\t\t\t\teditor.undoManager.transact(function() {\n
+\t\t\t\t\teditor.setContent(e.data.code);\n
+\t\t\t\t});\n
+\n
+\t\t\t\teditor.selection.setCursorLocation();\n
+\t\t\t\teditor.nodeChanged();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Gecko has a major performance issue with textarea\n
+\t\t// contents so we need to set it when all reflows are done\n
+\t\twin.find(\'#code\').value(editor.getContent({source_view: true}));\n
+\t}\n
+\n
+\teditor.addCommand("mceCodeEditor", showDialog);\n
+\n
+\teditor.addButton(\'code\', {\n
+\t\ticon: \'code\',\n
+\t\ttooltip: \'Source code\',\n
+\t\tonclick: showDialog\n
+\t});\n
+\n
+\teditor.addMenuItem(\'code\', {\n
+\t\ticon: \'code\',\n
+\t\ttext: \'Source code\',\n
+\t\tcontext: \'tools\',\n
+\t\tonclick: showDialog\n
+\t});\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1569</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugin.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

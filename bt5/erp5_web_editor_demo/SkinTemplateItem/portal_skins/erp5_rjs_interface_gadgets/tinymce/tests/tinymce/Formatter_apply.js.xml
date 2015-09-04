@@ -1,0 +1,1686 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268223.26</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Formatter_apply.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+module("tinymce.Formatter - Apply", {\n
+\tsetupModule: function() {\n
+\t\tdocument.getElementById(\'view\').innerHTML = \'<textarea id="elm1"></textarea><div id="elm2"></div>\';\n
+\t\tQUnit.stop();\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "#elm1",\n
+\t\t\tplugins: "noneditable",\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tskin: false,\n
+\t\t\tindent: false,\n
+\t\t\textended_valid_elements: \'b[id|style|title],i[id|style|title],span[id|class|style|title|contenteditable],font[face|size]\',\n
+\t\t\tforced_root_block: \'\',\n
+\t\t\tconvert_fonts_to_spans: false,\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tentities: \'raw\',\n
+\t\t\tvalid_styles: {\n
+\t\t\t\t\'*\': \'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display\'\n
+\t\t\t},\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.editor = ed;\n
+\n
+\t\t\t\tif (inlineEditor) {\n
+\t\t\t\t\tQUnit.start();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\ttinymce.init({\n
+\t\t\tselector: "#elm2",\n
+\t\t\tinline: true,\n
+\t\t\tadd_unload_trigger: false,\n
+\t\t\tskin: false,\n
+\t\t\tindent: false,\n
+\t\t\tconvert_fonts_to_spans: false,\n
+\t\t\tdisable_nodechange: true,\n
+\t\t\tentities: \'raw\',\n
+\t\t\tvalid_styles: {\n
+\t\t\t\t\'*\': \'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,margin,margin-top,margin-right,margin-bottom,margin-left,display\'\n
+\t\t\t},\n
+\t\t\tinit_instance_callback: function(ed) {\n
+\t\t\t\twindow.inlineEditor = ed;\n
+\n
+\t\t\t\tif (editor) {\n
+\t\t\t\t\tQUnit.start();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t});\n
+\t}\n
+});\n
+\n
+function getContent() {\n
+\treturn editor.getContent().toLowerCase().replace(/[\\r]+/g, \'\');\n
+}\n
+\n
+test(\'apply inline to a list\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\ttoggle: false\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p><ul><li>first element</li><li>second element</li></ul><p>5678</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[1].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>1234</b></p><ul><li><b>first element</b></li><li><b>second element</b></li></ul><p><b>5678</b></p>\', \'selection of a list\');\n
+});\n
+\n
+test(\'Toggle OFF - Inline element on selected text\', function() {\n
+\t// Toggle OFF - Inline element on selected text\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\ttoggle: false\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><b>1234</b></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'b\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'b\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.toggle(\'format\');\n
+\tequal(getContent(), \'<p><b>1234</b></p>\');\n
+});\n
+\n
+test(\'Toggle OFF - Inline element on partially selected text\', function() {\n
+\t// Toggle OFF - Inline element on partially selected text\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\ttoggle: 0\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1<b>23</b>4</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'b\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'b\')[0].firstChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.toggle(\'format\');\n
+\tequal(getContent(), \'<p>1<b>23</b>4</p>\');\n
+});\n
+\n
+test(\'Toggle OFF - Inline element on partially selected text in start/end elements\', function() {\n
+\t// Toggle OFF - Inline element on partially selected text in start/end elements\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\ttoggle: false\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1<b>234</b></p><p><b>123</b>4</p>\'; //\'<p>1234</p><p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'b\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'b\')[1].firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.toggle(\'format\');\n
+\tequal(getContent(), \'<p>1<b>234</b></p><p><b>123</b>4</p>\');\n
+});\n
+\n
+test(\'Toggle ON - NO inline element on selected text\', function() {\n
+\t// Inline element on selected text\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\ttoggle: true\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>1234</b></p>\', \'Inline element on selected text\');\n
+\teditor.formatter.toggle(\'format\');\n
+\tequal(getContent(), \'<p>1234</p>\', \'Toggle ON - NO inline element on selected text\');\n
+});\n
+\n
+test(\'Selection spanning from within format to outside format with toggle off\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\ttoggle: false\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><b>12</b>34</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'b\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].lastChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.toggle(\'format\');\n
+\tequal(getContent(), \'<p><b>1234</b></p>\', \'Extend formating if start of selection is already formatted\');\n
+});\n
+\n
+test(\'Inline element on partially selected text\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 1);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p>1<b>23</b>4</p>\', \'Inline element on partially selected text\');\n
+\teditor.formatter.toggle(\'format\');\n
+\tequal(getContent(), \'<p>1234</p>\', \'Toggle ON - NO inline element on partially selected text\');\n
+});\n
+\n
+test(\'Inline element on partially selected text in start/end elements\', function() {\n
+\t// Inline element on partially selected text in start/end elements\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p><p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 1);\n
+\trng.setEnd(editor.dom.select(\'p\')[1].firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p>1<b>234</b></p><p><b>123</b>4</p>\');\n
+});\n
+\n
+test(\'Inline element on selected element\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>1234</b></p>\', \'Inline element on selected element\');\n
+});\n
+\n
+test(\'Inline element on multiple selected elements\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p><p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 2);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>1234</b></p><p><b>1234</b></p>\', \'Inline element on multiple selected elements\');\n
+});\n
+\n
+test(\'Inline element on multiple selected elements with various childnodes\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><em>1234</em>5678<span>9</span></p><p><em>1234</em>5678<span>9</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 2);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b><em>1234</em>5678<span>9</span></b></p><p><b><em>1234</em>5678<span>9</span></b></p>\', \'Inline element on multiple selected elements with various childnodes\');\n
+});\n
+\n
+test(\'Inline element with attributes\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\tattributes: {\n
+\t\t\ttitle: \'value1\',\n
+\t\t\tid: \'value2\'\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b id="value2" title="value1">1234</b></p>\', \'Inline element with attributes\');\n
+});\n
+\n
+test(\'Inline element with styles\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\tstyles: {\n
+\t\t\tcolor: \'#ff0000\',\n
+\t\t\tfontSize: \'10px\'\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b style=\\"color: #ff0000; font-size: 10px;\\">1234</b></p>\', \'Inline element with styles\');\n
+});\n
+\n
+test(\'Inline element with attributes and styles\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\tattributes: {\n
+\t\t\ttitle: \'value1\',\n
+\t\t\tid: \'value2\'\n
+\t\t},\n
+\t\tstyles: {\n
+\t\t\tcolor: \'#ff0000\',\n
+\t\t\tfontSize: \'10px\'\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b id="value2" style="color: #ff0000; font-size: 10px;" title="value1">1234</b></p>\', \'Inline element with attributes and styles\');\n
+});\n
+\n
+test(\'Inline element with wrapable parents\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>x<em><span>1234</span></em>y</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p>x<b><em><span>1234</span></em></b>y</p>\', \'Inline element with wrapable parents\');\n
+});\n
+\n
+test(\'Inline element with redundant child\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><b>1234</b></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0], 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0], 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>1234</b></p>\', \'Inline element with redundant child\');\n
+});\n
+\n
+test(\'Inline element with redundant parent\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><b>a<em>1234</em>b</b></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'em\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'em\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>a<em>1234</em>b</b></p>\', \'Inline element with redundant parent\');\n
+});\n
+\n
+test(\'Inline element with redundant child of similar type 1\', function() {\n
+\teditor.formatter.register(\'format\', [{\n
+\t\tinline: \'b\'\n
+\t}, {\n
+\t\tinline: \'strong\'\n
+\t}]);\n
+\teditor.getBody().innerHTML = \'<p>a<strong>1234</strong>b</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0], 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0], 3);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>a1234b</b></p>\', \'Inline element with redundant child of similar type 1\');\n
+});\n
+\n
+test(\'Inline element with redundant child of similar type 2\', function() {\n
+\teditor.formatter.register(\'format\', [{\n
+\t\tinline: \'b\'\n
+\t}, {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tfontWeight: \'bold\'\n
+\t\t}\n
+\t}]);\n
+\teditor.getBody().innerHTML = \'<p><span style="font-weight:bold">1234</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0], 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0], 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>1234</b></p>\', \'Inline element with redundant child of similar type 2\');\n
+});\n
+\n
+test(\'Inline element with redundant children of similar types\', function() {\n
+\teditor.formatter.register(\'format\', [{\n
+\t\tinline: \'b\'\n
+\t}, {\n
+\t\tinline: \'strong\'\n
+\t}, {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tfontWeight: \'bold\'\n
+\t\t}\n
+\t}]);\n
+\teditor.getBody().innerHTML = \'<p><span style="font-weight:bold">a<strong>1234</strong><b>5678</b>b</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0], 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0], 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>a12345678b</b></p>\', \'Inline element with redundant children of similar types\');\n
+});\n
+\n
+test(\'Inline element with redundant parent 1\', function() {\n
+\teditor.formatter.register(\'format\', [{\n
+\t\tinline: \'b\'\n
+\t}, {\n
+\t\tinline: \'strong\'\n
+\t}]);\n
+\teditor.getBody().innerHTML = \'<p><strong>a<em>1234</em>b</strong></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'em\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'em\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><strong>a<em>1234</em>b</strong></p>\', \'Inline element with redundant parent 1\');\n
+});\n
+\n
+test(\'Inline element with redundant parent 2\', function() {\n
+\teditor.formatter.register(\'format\', [{\n
+\t\tinline: \'b\'\n
+\t}, {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tfontWeight: \'bold\'\n
+\t\t}\n
+\t}]);\n
+\teditor.getBody().innerHTML = \'<p><span style="font-weight:bold">a<em>1234</em>b</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'em\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'em\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><span style="font-weight: bold;">a<em>1234</em>b</span></p>\', \'Inline element with redundant parent 2\');\n
+});\n
+\n
+test(\'Inline element with redundant parents of similar types\', function() {\n
+\teditor.formatter.register(\'format\', [{\n
+\t\tinline: \'b\'\n
+\t}, {\n
+\t\tinline: \'strong\'\n
+\t}, {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tfontWeight: \'bold\'\n
+\t\t}\n
+\t}]);\n
+\teditor.getBody().innerHTML = \'<p><span style="font-weight:bold"><strong><b>a<em>1234</em>b</b></strong></span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'em\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'em\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><span style="font-weight: bold;"><strong><b>a<em>1234</em>b</b></strong></span></p>\', \'Inline element with redundant parents of similar types\');\n
+});\n
+\n
+test(\'Inline element merged with parent and child\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>a<b>12<b>34</b>56</b>b</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'b\')[0].firstChild, 1);\n
+\trng.setEnd(editor.dom.select(\'b\')[0].lastChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p>a<b>123456</b>b</p>\', \'Inline element merged with parent and child\');\n
+});\n
+\n
+test(\'Inline element merged with child 1\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tfontWeight: \'bold\'\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>a<span style="font-weight:bold">1234</span>b</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><span style="font-weight: bold;">a1234b</span></p>\', \'Inline element merged with child 1\');\n
+});\n
+\n
+test(\'Inline element merged with child 2\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tfontWeight: \'bold\'\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>a<span style="font-weight:bold; color:#ff0000">1234</span>b</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><span style=\\"font-weight: bold;\\">a<span style=\\"color: #ff0000;\\">1234</span>b</span></p>\', \'Inline element merged with child 2\');\n
+});\n
+\n
+test(\'Inline element merged with child 3\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tfontWeight: \'bold\'\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>a<span id="id" style="font-weight:bold">1234</span>b</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><span style=\\"font-weight: bold;\\">a<span id=\\"id\\">1234</span>b</span></p>\', \'Inline element merged with child 3\');\n
+});\n
+\n
+test(\'Inline element merged with child 3\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tfontWeight: \'bold\'\n
+\t\t},\n
+\t\tmerge: true\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><span style="color:#ff0000">1234</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><span style="color: #ff0000; font-weight: bold;">1234</span></p>\', \'Inline element merged with child 3\');\n
+});\n
+\n
+test(\'Inline element merged with child 4\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tcolor: \'#00ff00\'\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><span style="color:#ff0000">1234</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><span style="color: #00ff00;">1234</span></p>\', \'Inline element merged with child 4\');\n
+});\n
+\n
+test(\'Inline element with attributes merged with child 1\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'font\',\n
+\t\tattributes: {\n
+\t\t\tface: \'arial\'\n
+\t\t},\n
+\t\tmerge: true\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><font size="7">1234</font></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><font face="arial" size="7">1234</font></p>\', \'Inline element with attributes merged with child 1\');\n
+});\n
+\n
+test(\'Inline element with attributes merged with child 2\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'font\',\n
+\t\tattributes: {\n
+\t\t\tsize: \'7\'\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>a<font size="7">1234</font>b</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><font size="7">a1234b</font></p>\', \'Inline element with attributes merged with child 2\');\n
+});\n
+\n
+test(\'Inline element merged with left sibling\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><b>1234</b>5678</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].lastChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].lastChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>12345678</b></p>\', \'Inline element merged with left sibling\');\n
+});\n
+\n
+test(\'Inline element merged with right sibling\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234<b>5678</b></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>12345678</b></p>\', \'Inline element merged with right sibling\');\n
+});\n
+\n
+test(\'Inline element merged with left and right siblings\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><b>12</b>34<b>56</b></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].childNodes[1], 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].childNodes[1], 2);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>123456</b></p>\', \'Inline element merged with left and right siblings\');\n
+});\n
+\n
+test(\'Don\\\'t merge siblings with whitespace between 1\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><b>a</b> b</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].lastChild, 1);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].lastChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>a</b> <b>b</b></p>\', \'Don\\\'t merge siblings with whitespace between 1\');\n
+});\n
+\n
+test(\'Don\\\'t merge siblings with whitespace between 1\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>a <b>b</b></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>a</b> <b>b</b></p>\', \'Don\\\'t merge siblings with whitespace between 2\');\n
+});\n
+\n
+test(\'Inline element not merged in exact mode\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tcolor: \'#00ff00\'\n
+\t\t},\n
+\t\texact: true\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><span style="color:#ff0000">1234</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><span style="color: #00ff00;"><span style="color: #ff0000;">1234</span></span></p>\', \'Inline element not merged in exact mode\');\n
+});\n
+\n
+test(\'Inline element merged in exact mode\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tcolor: \'#ff0000\'\n
+\t\t},\n
+\t\texact: true\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><span style="color:#ff0000">1234</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><span style="color: #ff0000;">1234</span></p>\', \'Inline element merged in exact mode\');\n
+});\n
+\n
+test(\'Deep left branch\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><em><i><ins>1234</ins></i></em><em>text1</em><em>text2</em></p><p><em>5678</em></p><p>9012</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'ins\')[0].firstChild, 1);\n
+\trng.setEnd(editor.dom.select(\'p\')[2].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><em><i><ins>1<b>234</b></ins></i></em><b><em>text1</em><em>text2</em></b></p><p><b><em>5678</em></b></p><p><b>9012</b></p>\', \'Deep left branch\');\n
+});\n
+\n
+test(\'Deep right branch\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>9012</p><p><em>5678</em></p><p><em><i><ins>1234</ins></i></em><em>text1</em><em>text2</em></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'em\')[3].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>9012</b></p><p><b><em>5678</em></b></p><p><b><em><i><ins>1234</ins></i></em><em>text1</em></b><em><b>text</b>2</em></p>\', \'Deep right branch\');\n
+});\n
+\n
+test(\'Full element text selection on two elements with a table in the middle\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p><table><tbody><tr><td>123</td></tr></tbody></table><p>5678</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[1].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><b>1234</b></p><table><tbody><tr><td><b>123</b></td></tr></tbody></table><p><b>5678</b></p>\', \'Full element text selection on two elements with a table in the middle\');\n
+});\n
+\n
+test(\'Inline element on selected text with variables\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\tstyles: {\n
+\t\t\tcolor: \'%color\'\n
+\t\t},\n
+\t\tattributes: {\n
+\t\t\ttitle: \'%title\'\n
+\t\t}\n
+\t}, {\n
+\t\tcolor: \'#ff0000\',\n
+\t\ttitle: \'title\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\', {\n
+\t\tcolor: \'#ff0000\',\n
+\t\ttitle: \'title\'\n
+\t});\n
+\tequal(getContent(), \'<p><b style="color: #ff0000;" title="title">1234</b></p>\', \'Inline element on selected text\');\n
+});\n
+\n
+test(\'Remove redundant children\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tfontFamily: \'arial\'\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p><span style="font-family: sans-serif;"><span style="font-family: palatino;">1</span>2<span style="font-family: verdana;">3</span>4</span></p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0], 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0], 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><span style=\\"font-family: \' + Utils.fontFace(\'arial\') + \';\\">1234</span></p>\', \'Remove redundant children\');\n
+});\n
+\n
+test(\'Inline element on selected text with function values\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\',\n
+\t\tstyles: {\n
+\t\t\tcolor: function(vars) {\n
+\t\t\t\treturn vars.color + \'00ff\';\n
+\t\t\t}\n
+\t\t},\n
+\t\tattributes: {\n
+\t\t\ttitle: function(vars) {\n
+\t\t\t\treturn vars.title + \'2\';\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\', {\n
+\t\tcolor: \'#ff\',\n
+\t\ttitle: \'title\'\n
+\t});\n
+\tequal(getContent(), \'<p><b style="color: #ff00ff;" title="title2">1234</b></p>\', \'Inline element on selected text with function values\');\n
+});\n
+\n
+test(\'Block element on selected text\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'div\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div>1234</div>\', \'Block element on selected text\');\n
+});\n
+\n
+test(\'Block element on partially selected text\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'div\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 1);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div>1234</div>\', \'Block element on partially selected text\');\n
+});\n
+\n
+test(\'Block element on selected element\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'div\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div>1234</div>\', \'Block element on selected element\');\n
+});\n
+\n
+test(\'Block element on selected elements\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'div\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p><p>5678</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 2);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div>1234</div><div>5678</div>\', \'Block element on selected elements\');\n
+});\n
+\n
+test(\'Block element on selected elements with attributes\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'div\',\n
+\t\tattributes: {\n
+\t\t\t\'title\': \'test\'\n
+\t\t}\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p><p>5678</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 2);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div title="test">1234</div><div title="test">5678</div>\', \'Block element on selected elements with attributes\');\n
+});\n
+\n
+test(\'Block element on nested element\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'p\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<div><h1>1234</h1></div>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'h1\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'h1\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div><p>1234</p></div>\', \'Block element on nested element\');\n
+});\n
+\n
+test(\'Block element on selected non wrapped text 1\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'div\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'1234\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 0);\n
+\trng.setEnd(editor.getBody().firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div>1234</div>\', \'Block element on selected non wrapped text 1\');\n
+});\n
+\n
+test(\'Block element on selected non wrapped text 2\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'div\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'1234<br />4567<br />8910\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody().firstChild, 0);\n
+\trng.setEnd(editor.getBody().lastChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div>1234</div><div>4567</div><div>8910</div>\', \'Block element on selected non wrapped text 2\');\n
+});\n
+\n
+test(\'Block element on selected non wrapped text 3\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'div\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<br />1234<br /><br />4567<br />8910<br />\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 7);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div>1234</div><div>4567</div><div>8910</div>\', \'Block element on selected non wrapped text 3\');\n
+});\n
+\n
+test(\'Block element wrapper 1\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'blockquote\',\n
+\t\twrapper: 1\n
+\t});\n
+\teditor.getBody().innerHTML = \'<h1>1234</h1><p>5678</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'h1\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<blockquote><h1>1234</h1><p>5678</p></blockquote>\', \'Block element wrapper 1\');\n
+});\n
+\n
+test(\'Block element wrapper 2\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'blockquote\',\n
+\t\twrapper: 1\n
+\t});\n
+\teditor.getBody().innerHTML = \'<h1>1234</h1>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'h1\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'h1\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<blockquote><h1>1234</h1></blockquote>\', \'Block element wrapper 2\');\n
+});\n
+\n
+test(\'Block element wrapper 3\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'blockquote\',\n
+\t\twrapper: 1\n
+\t});\n
+\teditor.getBody().innerHTML = \'<br /><h1>1234</h1><br />\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.getBody(), 0);\n
+\trng.setEnd(editor.getBody(), 3);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<blockquote><h1>1234</h1></blockquote>\', \'Block element wrapper 3\');\n
+});\n
+\n
+test(\'Apply format on single element that matches a selector 1\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tselector: \'p\',\n
+\t\tattributes: {\n
+\t\t\ttitle: \'test\'\n
+\t\t},\n
+\t\tstyles: {\n
+\t\t\t\'color\': \'#ff0000\'\n
+\t\t},\n
+\t\tclasses: \'a b c\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p class="a b c" style="color: #ff0000;" title="test">1234</p>\', \'Apply format on single element that matches a selector\');\n
+});\n
+\n
+test(\'Apply format on single element parent that matches a selector 2\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tselector: \'div\',\n
+\t\tattributes: {\n
+\t\t\ttitle: \'test\'\n
+\t\t},\n
+\t\tstyles: {\n
+\t\t\t\'color\': \'#ff0000\'\n
+\t\t},\n
+\t\tclasses: \'a b c\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<div><p>1234</p><p>test</p><p>1234</p></div>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'div\')[0], 1);\n
+\trng.setEnd(editor.dom.select(\'div\')[0], 2);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div class="a b c" style="color: #ff0000;" title="test"><p>1234</p><p>test</p><p>1234</p></div>\', \'Apply format on single element parent that matches a selector\');\n
+});\n
+\n
+test(\'Apply format on multiple elements that matches a selector 2\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tselector: \'p\',\n
+\t\tattributes: {\n
+\t\t\ttitle: \'test\'\n
+\t\t},\n
+\t\tstyles: {\n
+\t\t\t\'color\': \'#ff0000\'\n
+\t\t},\n
+\t\tclasses: \'a b c\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p>1234</p><div>test</div><p>1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[1].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p class="a b c" style="color: #ff0000;" title="test">1234</p><div>test</div><p class="a b c" style="color: #ff0000;" title="test">1234</p>\', \'Apply format on multiple elements that matches a selector\');\n
+});\n
+\n
+test(\'Apply format on top of existing selector element\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tselector: \'p\',\n
+\t\tattributes: {\n
+\t\t\ttitle: \'test2\'\n
+\t\t},\n
+\t\tstyles: {\n
+\t\t\t\'color\': \'#00ff00\'\n
+\t\t},\n
+\t\tclasses: \'a b c\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<p class=\\"c d\\" title=\\"test\\">1234</p>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p class="c d a b" style="color: #00ff00;" title="test2">1234</p>\', \'Apply format on top of existing selector element\');\n
+});\n
+\n
+test(\'Format on single li that matches a selector\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tselector: \'li\',\n
+\t\tattributes: {\n
+\t\t\ttitle: \'test\'\n
+\t\t},\n
+\t\tstyles: {\n
+\t\t\t\'color\': \'#ff0000\'\n
+\t\t},\n
+\t\tclasses: \'a b c\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<div>text</div>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'div\')[0], 0);\n
+\trng.setEnd(editor.dom.select(\'div\')[0], 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div><span class="a b c" style="color: #ff0000;" title="test">text</span></div>\', \'Apply format on single element that matches a selector\');\n
+});\n
+\n
+test(\'Format on single div that matches a selector\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tselector: \'div\',\n
+\t\tattributes: {\n
+\t\t\ttitle: \'test\'\n
+\t\t},\n
+\t\tstyles: {\n
+\t\t\t\'color\': \'#ff0000\'\n
+\t\t},\n
+\t\tclasses: \'a b c\'\n
+\t});\n
+\teditor.getBody().innerHTML = \'<div>text</div>\';\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'div\')[0], 0);\n
+\trng.setEnd(editor.dom.select(\'div\')[0], 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<div class="a b c" style="color: #ff0000;" title="test">text</div>\', \'Apply format on single element that matches a selector\');\n
+});\n
+\n
+test(\'Bold and italics is applied to text that is not highlighted\', function() {\n
+\tvar rng = editor.dom.createRng();\n
+\teditor.setContent(\'<p><span style="font-family: Arial;"><strong>test1 test2</strong> test3 test4 test5 test6</span></p>\');\n
+\trng.setStart(editor.dom.select(\'strong\')[0].firstChild, 6);\n
+\trng.setEnd(editor.dom.select(\'strong\')[0].firstChild, 11);\n
+\teditor.focus();\n
+\teditor.selection.setRng(rng);\n
+\teditor.execCommand(\'Italic\');\n
+\tequal(editor.getContent(), \'<p><span style="font-family: Arial;"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>\', \'Selected text should be bold.\');\n
+});\n
+\n
+test(\'Apply color format to links as well\', function() {\n
+\teditor.setContent(\'<p>123<a href="#">abc</a>456</p>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].lastChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tcolor: \'#FF0000\'\n
+\t\t},\n
+\t\tlinks: true\n
+\t});\n
+\teditor.formatter.apply(\'format\');\n
+\n
+\tequal(\n
+\t\teditor.getContent(),\n
+\t\t\'<p><span style="color: #ff0000;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>\',\n
+\t\t\'Link should have it\\\'s own color.\'\n
+\t);\n
+});\n
+\n
+test(\'Color on link element\', function() {\n
+\teditor.setContent(\'<p><span style="font-size: 10px;">123<a href="#">abc</a>456</span></p>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'span\')[0].lastChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tcolor: \'#FF0000\'\n
+\t\t},\n
+\t\tlinks: true\n
+\t});\n
+\teditor.formatter.apply(\'format\');\n
+\n
+\tequal(\n
+\t\teditor.getContent(),\n
+\t\t\'<p><span style="color: #ff0000; font-size: 10px;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>\',\n
+\t\t\'Link should have it\\\'s own color.\'\n
+\t);\n
+});\n
+\n
+test("Applying formats in lists", function() {\n
+\teditor.setContent(\'<ul><li>text<ul><li>nested</li></ul></li></ul>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'li\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'li\')[0].firstChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply("h1");\n
+\tequal(editor.getContent(), \'<ul><li><h1>text</h1><ul><li>nested</li></ul></li></ul>\', "heading should not automatically apply to sublists");\n
+});\n
+\n
+test("Applying formats on a list including child nodes", function(){\n
+\teditor.formatter.register(\'format\', {inline: \'strong\'});\n
+\teditor.setContent(\'<ol><li>a</li><li>b<ul><li>c</li><li>d<br /><ol><li>e</li><li>f</li></ol></li></ul></li><li>g</li></ol>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'li\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'li\')[6].firstChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply("format");\n
+\tequal(editor.getContent(), \'<ol><li><strong>a</strong></li><li><strong>b</strong><ul><li><strong>c</strong></li><li><strong>d</strong><br /><ol><li><strong>e</strong></li><li><strong>f</strong></li></ol></li></ul></li><li><strong>g</strong></li></ol>\', "should be applied to all sublists");\n
+});\n
+\n
+test(\'Block format on li element\', function() {\n
+\teditor.setContent(\'<ul><li>text<ul><li>nested</li></ul></li></ul>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'li\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'li\')[1].firstChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply("h1");\n
+\tequal(editor.getContent(), \'<ul><li><h1>text</h1><ul><li><h1>nested</h1></li></ul></li></ul>\', "heading should automatically apply to sublists, when selection spans the sublist");\n
+});\n
+\n
+test(\'Block on li element 2\', function() {\n
+\teditor.setContent(\'<ul><li>before<ul><li>nested</li></ul>after</li></ul>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'li\')[0].lastChild, 1);\n
+\trng.setEnd(editor.dom.select(\'li\')[0].lastChild, 2);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply("h1");\n
+\tequal(editor.getContent(), \'<ul><li>before<ul><li>nested</li></ul><h1>after</h1></li></ul>\', "heading should automatically apply to sublists, when selection spans the sublist");\n
+});\n
+\n
+test(\'Block on li element 3\', function() {\n
+\teditor.setContent(\'<ul><li>before<ul><li>nested</li></ul>after</li></ul>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'li\')[1].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'li\')[0].lastChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply("h1");\n
+\tequal(editor.getContent(), \'<ul><li>before<ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>\', "heading should automatically apply to sublists, when selection spans the sublist");\n
+});\n
+\n
+test(\'Block on li element 4\', function() {\n
+\teditor.setContent(\'<ul><li>before<ul><li>nested</li></ul>after</li></ul>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'li\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'li\')[0].lastChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply("h1");\n
+\tequal(editor.getContent(), \'<ul><li><h1>before</h1><ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>\', "heading should apply correctly when selection is after a sublist");\n
+});\n
+\n
+test(\'Underline colors 1\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\t\'color\': \'#ff0000\'\n
+\t\t}\n
+\t});\n
+\teditor.setContent(\'<p><span style="font-family: \\\'arial black\\\'; text-decoration: underline;">test</span></p>\');\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p><span style="color: #ff0000; font-family: \\\'arial black\\\'; text-decoration: underline;">test</span></p>\', \'Coloring an underlined text should result in a colored underline\');\n
+});\n
+\n
+test(\'Underline colors 2\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: "span",\n
+\t\texact: true,\n
+\t\tstyles: {\n
+\t\t\t\'textDecoration\': \'underline\'\n
+\t\t}\n
+\t});\n
+\teditor.setContent(\'<p><span style="font-family: \\\'arial black\\\'; color: rgb(255, 0, 0);">test</span></p>\');\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: \\\'arial black\\\'; text-decoration: underline;">test</span></span></p>\', \'Underlining colored text should result in a colored underline\');\n
+});\n
+\n
+test(\'Underline colors 3\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: "span",\n
+\t\texact: true,\n
+\t\tstyles: {\n
+\t\t\t\'textDecoration\': \'underline\'\n
+\t\t}\n
+\t});\n
+\teditor.setContent(\'<p><span style="font-family: \\\'arial black\\\'; text-decoration: underline;"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>\');\n
+\teditor.execCommand(\'SelectAll\');\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p><span style="text-decoration: underline;"><span style="font-family: \\\'arial black\\\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>\', \'Underlining colored and underlined text should result in a colored underline\');\n
+});\n
+\n
+test(\'Underline colors 4\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\t\'color\': \'#ff0000\'\n
+\t\t}\n
+\t});\n
+\teditor.setContent(\'<p style="font-size: 22pt;"><span style=\\"text-decoration: underline;\\"><span style=\\"color: yellow; text-decoration: underline;\\">yellowredyellow</span></span></p>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[1].firstChild, 6);\n
+\trng.setEnd(editor.dom.select(\'span\')[1].firstChild, 9);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow;\' +\n
+\t\t\' text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>\',\n
+\t\t\'Coloring an colored underdlined text should result in newly colored underline\'\n
+\t);\n
+});\n
+\n
+test(\'Underline colors 5\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: "span",\n
+\t\texact: true,\n
+\t\tstyles: {\n
+\t\t\t\'textDecoration\': \'underline\'\n
+\t\t}\n
+\t});\n
+\teditor.setContent(\'<p><span style="font-family: \\\'arial black\\\',\\\'avant garde\\\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: \\\'arial black\\\',\\\'avant garde\\\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p><p><span style="font-family: \\\'arial black\\\', \\\'avant garde\\\';"><em><strong>This is some <span style="color: rgb(255, 0, 0);">example</span></strong></em> text</span></p>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'strong\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'span\')[4].lastChild, 5);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p><span style="text-decoration: underline;"><span style="font-family: \\\'arial black\\\',\\\'avant garde\\\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \\\'arial black\\\',\\\'avant garde\\\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p><p><span style="text-decoration: underline;"><span style="font-family: \\\'arial black\\\', \\\'avant garde\\\';"><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong></em> text</span></span></p>\', \'Colored elements should be underlined when selection is across multiple paragraphs\');\n
+});\n
+\n
+test(\'Underline colors 6\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\texact: true,\n
+\t\tstyles: {\n
+\t\t\t\'color\': \'#ff0000\'\n
+\t\t}\n
+\t});\n
+\teditor.setContent(\'<p><span style="text-decoration: underline;">This is some text.</span></p>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[0].firstChild, 8);\n
+\trng.setEnd(editor.dom.select(\'span\')[0].firstChild, 12);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.apply(\'format\');\n
+\teditor.formatter.remove(\'format\');\n
+\tequal(editor.getContent(), \'<p><span style="text-decoration: underline;">This is some text.</span></p>\', \'Children nodes that are underlined should be removed if their parent nodes are underlined\');\n
+});\n
+\n
+test(\'Underline colors 7\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\texact: true,\n
+\t\tstyles: {\n
+\t\t\t\'color\': \'#ff0000\'\n
+\t\t}\n
+\t});\n
+\teditor.setContent(\'<p><span style="text-decoration: underline;">This is <span style="color: #ff0000; text-decoration: underline; background-color: #ff0000">some</span> text.</span></p>\');\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'span\')[1].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'span\')[1].firstChild, 4);\n
+\teditor.selection.setRng(rng);\n
+\teditor.formatter.remove(\'format\');\n
+\tequal(editor.getContent(), \'<p><span style=\\"text-decoration: underline;\\">This is <span style=\\"background-color: #ff0000;\\">some</span> text.</span></p>\', \'Children nodes that are underlined should be removed if their parent nodes are underlined\');\n
+});\n
+\n
+test(\'Caret format inside single block word\', function() {\n
+\teditor.setContent(\'<p>abc</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 2, \'p\', 2);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p><b>abc</b></p>\');\n
+});\n
+\n
+test(\'Caret format inside first block word\', function() {\n
+\teditor.setContent(\'<p>abc 123</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 2, \'p\', 2);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p><b>abc</b> 123</p>\');\n
+});\n
+\n
+test(\'Caret format inside last block word\', function() {\n
+\teditor.setContent(\'<p>abc 123</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 5, \'p\', 5);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p>abc <b>123</b></p>\');\n
+});\n
+\n
+test(\'Caret format inside middle block word\', function() {\n
+\teditor.setContent(\'<p>abc 123 456</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 5, \'p\', 5);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p>abc <b>123</b> 456</p>\');\n
+});\n
+\n
+test(\'Caret format on word separated by non breaking space\', function() {\n
+\teditor.setContent(\'<p>one&nbsp;two</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 1, \'p\', 1);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p><b>one</b>\\u00a0two</p>\');\n
+});\n
+\n
+test(\'Caret format inside single inline wrapped word\', function() {\n
+\teditor.setContent(\'<p>abc <em>123</em> 456</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'em\', 1, \'em\', 1);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p>abc <b><em>123</em></b> 456</p>\');\n
+});\n
+\n
+test(\'Caret format inside word before similar format\', function() {\n
+\teditor.setContent(\'<p>abc 123 <b>456</b></p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 1, \'p\', 1);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p><b>abc</b> 123 <b>456</b></p>\');\n
+});\n
+\n
+test(\'Caret format inside last inline wrapped word\', function() {\n
+\teditor.setContent(\'<p>abc <em>abc 123</em> 456</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'em\', 5, \'em\', 5);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p>abc <em>abc <b>123</b></em> 456</p>\');\n
+});\n
+\n
+test(\'Caret format before text\', function() {\n
+\teditor.setContent(\'<p>a</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 0, \'p\', 0);\n
+\teditor.formatter.apply(\'format\');\n
+\tUtils.type(\'b\');\n
+\tequal(editor.getContent(), \'<p><b>b</b>a</p>\');\n
+});\n
+\n
+test(\'Caret format after text\', function() {\n
+\teditor.setContent(\'<p>a</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 1, \'p\', 1);\n
+\teditor.formatter.apply(\'format\');\n
+\tUtils.type(\'b\');\n
+\tequal(editor.getContent(), \'<p>a<b>b</b></p>\');\n
+});\n
+\n
+test(\'Caret format and no key press\', function() {\n
+\teditor.setContent(\'<p>a</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 0, \'p\', 0);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p>a</p>\');\n
+});\n
+\n
+test(\'Caret format and arrow left\', function() {\n
+\teditor.setContent(\'<p>a</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 0, \'p\', 0);\n
+\teditor.formatter.apply(\'format\');\n
+\tUtils.type({\n
+\t\tkeyCode: 37\n
+\t});\n
+\tequal(editor.getContent(), \'<p>a</p>\');\n
+});\n
+\n
+test(\'Caret format and arrow right\', function() {\n
+\teditor.setContent(\'<p>a</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 0, \'p\', 0);\n
+\teditor.formatter.apply(\'format\');\n
+\tUtils.type({\n
+\t\tkeyCode: 39\n
+\t});\n
+\tequal(editor.getContent(), \'<p>a</p>\');\n
+});\n
+\n
+test(\'Caret format and backspace\', function() {\n
+\tvar rng;\n
+\n
+\tif (tinymce.isOpera) {\n
+\t\tok(true, "Skip Opera since faking backspace doesn\'t work.");\n
+\t\treturn;\n
+\t}\n
+\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\n
+\teditor.setContent(\'<p>abc</p>\');\n
+\trng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 3);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].firstChild, 3);\n
+\teditor.selection.setRng(rng);\n
+\n
+\teditor.formatter.apply(\'format\');\n
+\tUtils.type(\'\\b\');\n
+\tequal(editor.getContent(), \'<p>ab</p>\');\n
+});\n
+\n
+test(\'Caret format on word in li with word in parent li before it\', function() {\n
+\teditor.setContent(\'<ul><li>one<ul><li>two</li></ul></li></ul>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\tUtils.setSelection(\'ul li li\', 1, \'ul li li\', 1);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<ul><li>one<ul><li><b>two</b></li></ul></li></ul>\');\n
+});\n
+\n
+test(\'Selector format on whole contents\', function() {\n
+\teditor.setContent(\'<p>a</p>\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tselector: \'*\',\n
+\t\tclasses: \'test\'\n
+\t});\n
+\tUtils.setSelection(\'p\', 0, \'p\', 1);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p class="test">a</p>\');\n
+});\n
+\n
+test(\'format inline on contentEditable: false block\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.setContent(\'<p>abc</p><p contenteditable="false">def</p>\');\n
+\tUtils.setSelection(\'p:nth-child(2)\', 0, \'p:nth-child(2)\', 3);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p>abc</p><p>def</p>\', \'Text is not bold\');\n
+});\n
+\n
+test(\'format block on contentEditable: false block\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'h1\'\n
+\t});\n
+\teditor.setContent(\'<p>abc</p><p contenteditable="false">def</p>\');\n
+\tUtils.setSelection(\'p:nth-child(2)\', 0, \'p:nth-child(2)\', 3);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p>abc</p><p>def</p>\', \'P is not h1\');\n
+});\n
+\n
+test(\'contentEditable: false on start and contentEditable: true on end\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.setContent(\'<p>abc</p><p contenteditable="false">def</p><p>ghi</p>\');\n
+\tUtils.setSelection(\'p:nth-child(2)\', 0, \'p:nth-child(3)\', 3);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p>abc</p><p>def</p><p><b>ghi</b></p>\', \'Text in last paragraph is bold\');\n
+});\n
+\n
+test(\'contentEditable: true on start and contentEditable: false on end\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.setContent(\'<p>abc</p><p contenteditable="false">def</p>\');\n
+\tUtils.setSelection(\'p:nth-child(1)\', 0, \'p:nth-child(2)\', 3);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p><b>abc</b></p><p>def</p>\', \'Text in first paragraph is bold\');\n
+});\n
+\n
+test(\'contentEditable: true inside contentEditable: false\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'b\'\n
+\t});\n
+\teditor.setContent(\'<p>abc</p><p contenteditable="false"><span contenteditable="true">def</span></p>\');\n
+\tUtils.setSelection(\'span\', 0, \'span\', 3);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p>abc</p><p><span><b>def</b></span></p>\', \'Text is bold\');\n
+});\n
+\n
+test(\'Del element wrapping blocks\', function() {\n
+\teditor.setContent(\'<p>a</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 1);\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'del\',\n
+\t\twrapper: true\n
+\t});\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<del><p>a</p></del>\');\n
+});\n
+\n
+test(\'Del element replacing block\', function() {\n
+\teditor.setContent(\'<p>a</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 1);\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'del\'\n
+\t});\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<del>a</del>\');\n
+});\n
+\n
+test(\'Del element as inline\', function() {\n
+\teditor.setContent(\'<p>a</p>\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 1);\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'del\'\n
+\t});\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<p><del>a</del></p>\');\n
+});\n
+\n
+test(\'Align specified table element with collapsed: false and selection collapsed\', function() {\n
+\teditor.setContent(\'<table><tr><td>a</td></tr></table>\');\n
+\tUtils.setSelection(\'td\', 0, \'td\', 0);\n
+\teditor.formatter.register(\'format\', {\n
+\t\tselector: \'table\',\n
+\t\tcollapsed: false,\n
+\t\tstyles: {\n
+\t\t\t\'float\': \'right\'\n
+\t\t}\n
+\t});\n
+\teditor.formatter.apply(\'format\', {}, editor.getBody().firstChild);\n
+\tequal(getContent(), \'<table style="float: right;"><tbody><tr><td>a</td></tr></tbody></table>\');\n
+});\n
+\n
+test(\'Apply ID format to around existing bookmark node\', function() {\n
+\teditor.getBody().innerHTML = \'<p>a<span id="b" data-mce-type="bookmark"></span>b</p>\';\n
+\n
+\tvar rng = editor.dom.createRng();\n
+\trng.setStart(editor.dom.select(\'p\')[0].firstChild, 0);\n
+\trng.setEnd(editor.dom.select(\'p\')[0].lastChild, 1);\n
+\teditor.selection.setRng(rng);\n
+\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tattributes: {\n
+\t\t\tid: \'id\'\n
+\t\t}\n
+\t});\n
+\teditor.formatter.apply(\'format\');\n
+\n
+\tequal(Utils.normalizeHtml(editor.getBody().innerHTML), \'<p><span id="id">a<span data-mce-type="bookmark" id="b"></span>b</span></p>\');\n
+});\n
+\n
+test(\'Bug #5134 - TinyMCE removes formatting tags in the getContent\', function() {\n
+\teditor.setContent(\'\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'strong\',\n
+\t\ttoggle: false\n
+\t});\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'\', \'empty TinyMCE\');\n
+\teditor.selection.setContent(\'a\');\n
+\tequal(getContent(), \'<strong>a</strong>\', \'bold text inside TinyMCE\');\n
+});\n
+\n
+test(\'Bug #5134 - TinyMCE removes formatting tags in the getContent - typing\', function() {\n
+\teditor.setContent(\'\');\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'strong\',\n
+\t\ttoggle: false\n
+\t});\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'\', \'empty TinyMCE\');\n
+\tUtils.type(\'a\');\n
+\tequal(getContent(), \'<strong>a</strong>\', \'bold text inside TinyMCE\');\n
+});\n
+\n
+test(\'Bug #5453 - TD contents with BR gets wrapped in block format\', function() {\n
+\teditor.setContent(\'<table><tr><td>abc<br />123</td></tr></table>\');\n
+\tUtils.setSelection(\'td\', 1, \'td\', 1);\n
+\teditor.formatter.register(\'format\', {\n
+\t\tblock: \'h1\'\n
+\t});\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(getContent(), \'<table><tbody><tr><td><h1>abc</h1>123</td></tr></tbody></table>\');\n
+});\n
+\n
+test(\'Bug #6471 - Merge left/right style properties\', function() {\n
+\teditor.formatter.register(\'format\', {\n
+\t\tinline: \'span\',\n
+\t\tstyles: {\n
+\t\t\tfontWeight: \'bold\'\n
+\t\t}\n
+\t});\n
+\teditor.setContent(\'<p>abc</p>\');\n
+\tUtils.setSelection(\'p\', 2, \'p\', 3);\n
+\teditor.formatter.apply(\'format\');\n
+\tUtils.setSelection(\'p\', 1, \'p\', 2);\n
+\teditor.formatter.apply(\'format\');\n
+\tUtils.setSelection(\'p\', 0, \'p\', 1);\n
+\teditor.formatter.apply(\'format\');\n
+\tequal(editor.getContent(), \'<p><span style="font-weight: bold;">abc</span></p>\');\n
+});\n
+\n
+test(\'Bug #6518 - Apply div blocks to inline editor paragraph\', function() {\n
+\tinlineEditor.setContent(\'<p>a</p><p>b</p>\');\n
+\tinlineEditor.selection.select(inlineEditor.getBody().firstChild, true);\n
+\tinlineEditor.selection.collapse(true);\n
+\tinlineEditor.formatter.register(\'format\', {\n
+\t\tblock: \'div\'\n
+\t});\n
+\tinlineEditor.formatter.apply(\'format\');\n
+\tequal(inlineEditor.getContent(), \'<div>a</div><p>b</p>\');\n
+});\n
+\n
+asyncTest(\'Bug #7412 - valid_styles affects the Bold and Italic buttons, although it shouldn\\\'t\', function() {\n
+    tinymce.remove();\n
+\n
+    document.getElementById(\'view\').innerHTML = \'<textarea id="elm1"></textarea>\';\n
+\n
+    tinymce.init({\n
+        selector: "#elm1",\n
+        add_unload_trigger: false,\n
+        valid_styles: {\n
+            span: \'color,background-color,font-size,text-decoration,padding-left\'\n
+        },\n
+        init_instance_callback: function(ed) {\n
+            window.editor = ed;\n
+            QUnit.start();\n
+\n
+            editor.getBody().innerHTML = \'<p>1 <span style="text-decoration: underline;">1234</span> 1</p>\';\n
+            var rng = editor.dom.createRng();\n
+            rng.setStart(editor.dom.select(\'span\')[0], 0);\n
+            rng.setEnd(editor.dom.select(\'span\')[0], 1);\n
+            editor.selection.setRng(rng);\n
+            editor.formatter.toggle(\'bold\');\n
+            equal(getContent(), \'<p>1 <strong><span style="text-decoration: underline;">1234</span></strong> 1</p>\');\n
+        }\n
+    });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>59233</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Formatter_apply.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

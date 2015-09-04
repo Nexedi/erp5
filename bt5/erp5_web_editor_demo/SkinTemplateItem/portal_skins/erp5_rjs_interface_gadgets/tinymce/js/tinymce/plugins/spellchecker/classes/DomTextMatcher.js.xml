@@ -1,0 +1,514 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268542.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DomTextMatcher.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * DomTextMatcher.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*eslint no-labels:0, no-constant-condition: 0 */\n
+\n
+/**\n
+ * This class logic for filtering text and matching words.\n
+ *\n
+ * @class tinymce.spellcheckerplugin.TextFilter\n
+ * @private\n
+ */\n
+define("tinymce/spellcheckerplugin/DomTextMatcher", [], function() {\n
+\t// Based on work developed by: James Padolsey http://james.padolsey.com\n
+\t// released under UNLICENSE that is compatible with LGPL\n
+\t// TODO: Handle contentEditable edgecase:\n
+\t// <p>text<span contentEditable="false">text<span contentEditable="true">text</span>text</span>text</p>\n
+\treturn function(node, editor) {\n
+\t\tvar m, matches = [], text, dom = editor.dom;\n
+\t\tvar blockElementsMap, hiddenTextElementsMap, shortEndedElementsMap;\n
+\n
+\t\tblockElementsMap = editor.schema.getBlockElements(); // H1-H6, P, TD etc\n
+\t\thiddenTextElementsMap = editor.schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT\n
+\t\tshortEndedElementsMap = editor.schema.getShortEndedElements(); // BR, IMG, INPUT\n
+\n
+\t\tfunction createMatch(m, data) {\n
+\t\t\tif (!m[0]) {\n
+\t\t\t\tthrow \'findAndReplaceDOMText cannot handle zero-length matches\';\n
+\t\t\t}\n
+\n
+\t\t\treturn {\n
+\t\t\t\tstart: m.index,\n
+\t\t\t\tend: m.index + m[0].length,\n
+\t\t\t\ttext: m[0],\n
+\t\t\t\tdata: data\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction getText(node) {\n
+\t\t\tvar txt;\n
+\n
+\t\t\tif (node.nodeType === 3) {\n
+\t\t\t\treturn node.data;\n
+\t\t\t}\n
+\n
+\t\t\tif (hiddenTextElementsMap[node.nodeName] && !blockElementsMap[node.nodeName]) {\n
+\t\t\t\treturn \'\';\n
+\t\t\t}\n
+\n
+\t\t\ttxt = \'\';\n
+\n
+\t\t\tif (blockElementsMap[node.nodeName] || shortEndedElementsMap[node.nodeName]) {\n
+\t\t\t\ttxt += \'\\n\';\n
+\t\t\t}\n
+\n
+\t\t\tif ((node = node.firstChild)) {\n
+\t\t\t\tdo {\n
+\t\t\t\t\ttxt += getText(node);\n
+\t\t\t\t} while ((node = node.nextSibling));\n
+\t\t\t}\n
+\n
+\t\t\treturn txt;\n
+\t\t}\n
+\n
+\t\tfunction stepThroughMatches(node, matches, replaceFn) {\n
+\t\t\tvar startNode, endNode, startNodeIndex,\n
+\t\t\t\tendNodeIndex, innerNodes = [], atIndex = 0, curNode = node,\n
+\t\t\t\tmatchLocation, matchIndex = 0;\n
+\n
+\t\t\tmatches = matches.slice(0);\n
+\t\t\tmatches.sort(function(a, b) {\n
+\t\t\t\treturn a.start - b.start;\n
+\t\t\t});\n
+\n
+\t\t\tmatchLocation = matches.shift();\n
+\n
+\t\t\tout: while (true) {\n
+\t\t\t\tif (blockElementsMap[curNode.nodeName] || shortEndedElementsMap[curNode.nodeName]) {\n
+\t\t\t\t\tatIndex++;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (curNode.nodeType === 3) {\n
+\t\t\t\t\tif (!endNode && curNode.length + atIndex >= matchLocation.end) {\n
+\t\t\t\t\t\t// We\'ve found the ending\n
+\t\t\t\t\t\tendNode = curNode;\n
+\t\t\t\t\t\tendNodeIndex = matchLocation.end - atIndex;\n
+\t\t\t\t\t} else if (startNode) {\n
+\t\t\t\t\t\t// Intersecting node\n
+\t\t\t\t\t\tinnerNodes.push(curNode);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (!startNode && curNode.length + atIndex > matchLocation.start) {\n
+\t\t\t\t\t\t// We\'ve found the match start\n
+\t\t\t\t\t\tstartNode = curNode;\n
+\t\t\t\t\t\tstartNodeIndex = matchLocation.start - atIndex;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tatIndex += curNode.length;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (startNode && endNode) {\n
+\t\t\t\t\tcurNode = replaceFn({\n
+\t\t\t\t\t\tstartNode: startNode,\n
+\t\t\t\t\t\tstartNodeIndex: startNodeIndex,\n
+\t\t\t\t\t\tendNode: endNode,\n
+\t\t\t\t\t\tendNodeIndex: endNodeIndex,\n
+\t\t\t\t\t\tinnerNodes: innerNodes,\n
+\t\t\t\t\t\tmatch: matchLocation.text,\n
+\t\t\t\t\t\tmatchIndex: matchIndex\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// replaceFn has to return the node that replaced the endNode\n
+\t\t\t\t\t// and then we step back so we can continue from the end of the\n
+\t\t\t\t\t// match:\n
+\t\t\t\t\tatIndex -= (endNode.length - endNodeIndex);\n
+\t\t\t\t\tstartNode = null;\n
+\t\t\t\t\tendNode = null;\n
+\t\t\t\t\tinnerNodes = [];\n
+\t\t\t\t\tmatchLocation = matches.shift();\n
+\t\t\t\t\tmatchIndex++;\n
+\n
+\t\t\t\t\tif (!matchLocation) {\n
+\t\t\t\t\t\tbreak; // no more matches\n
+\t\t\t\t\t}\n
+\t\t\t\t} else if ((!hiddenTextElementsMap[curNode.nodeName] || blockElementsMap[curNode.nodeName]) && curNode.firstChild) {\n
+\t\t\t\t\t// Move down\n
+\t\t\t\t\tcurNode = curNode.firstChild;\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t} else if (curNode.nextSibling) {\n
+\t\t\t\t\t// Move forward:\n
+\t\t\t\t\tcurNode = curNode.nextSibling;\n
+\t\t\t\t\tcontinue;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Move forward or up:\n
+\t\t\t\twhile (true) {\n
+\t\t\t\t\tif (curNode.nextSibling) {\n
+\t\t\t\t\t\tcurNode = curNode.nextSibling;\n
+\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t} else if (curNode.parentNode !== node) {\n
+\t\t\t\t\t\tcurNode = curNode.parentNode;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tbreak out;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t* Generates the actual replaceFn which splits up text nodes\n
+\t\t* and inserts the replacement element.\n
+\t\t*/\n
+\t\tfunction genReplacer(callback) {\n
+\t\t\tfunction makeReplacementNode(fill, matchIndex) {\n
+\t\t\t\tvar match = matches[matchIndex];\n
+\n
+\t\t\t\tif (!match.stencil) {\n
+\t\t\t\t\tmatch.stencil = callback(match);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar clone = match.stencil.cloneNode(false);\n
+\t\t\t\tclone.setAttribute(\'data-mce-index\', matchIndex);\n
+\n
+\t\t\t\tif (fill) {\n
+\t\t\t\t\tclone.appendChild(dom.doc.createTextNode(fill));\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn clone;\n
+\t\t\t}\n
+\n
+\t\t\treturn function(range) {\n
+\t\t\t\tvar before, after, parentNode, startNode = range.startNode,\n
+\t\t\t\t\tendNode = range.endNode, matchIndex = range.matchIndex,\n
+\t\t\t\t\tdoc = dom.doc;\n
+\n
+\t\t\t\tif (startNode === endNode) {\n
+\t\t\t\t\tvar node = startNode;\n
+\n
+\t\t\t\t\tparentNode = node.parentNode;\n
+\t\t\t\t\tif (range.startNodeIndex > 0) {\n
+\t\t\t\t\t\t// Add "before" text node (before the match)\n
+\t\t\t\t\t\tbefore = doc.createTextNode(node.data.substring(0, range.startNodeIndex));\n
+\t\t\t\t\t\tparentNode.insertBefore(before, node);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Create the replacement node:\n
+\t\t\t\t\tvar el = makeReplacementNode(range.match, matchIndex);\n
+\t\t\t\t\tparentNode.insertBefore(el, node);\n
+\t\t\t\t\tif (range.endNodeIndex < node.length) {\n
+\t\t\t\t\t\t// Add "after" text node (after the match)\n
+\t\t\t\t\t\tafter = doc.createTextNode(node.data.substring(range.endNodeIndex));\n
+\t\t\t\t\t\tparentNode.insertBefore(after, node);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tnode.parentNode.removeChild(node);\n
+\n
+\t\t\t\t\treturn el;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Replace startNode -> [innerNodes...] -> endNode (in that order)\n
+\t\t\t\tbefore = doc.createTextNode(startNode.data.substring(0, range.startNodeIndex));\n
+\t\t\t\tafter = doc.createTextNode(endNode.data.substring(range.endNodeIndex));\n
+\t\t\t\tvar elA = makeReplacementNode(startNode.data.substring(range.startNodeIndex), matchIndex);\n
+\t\t\t\tvar innerEls = [];\n
+\n
+\t\t\t\tfor (var i = 0, l = range.innerNodes.length; i < l; ++i) {\n
+\t\t\t\t\tvar innerNode = range.innerNodes[i];\n
+\t\t\t\t\tvar innerEl = makeReplacementNode(innerNode.data, matchIndex);\n
+\t\t\t\t\tinnerNode.parentNode.replaceChild(innerEl, innerNode);\n
+\t\t\t\t\tinnerEls.push(innerEl);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar elB = makeReplacementNode(endNode.data.substring(0, range.endNodeIndex), matchIndex);\n
+\n
+\t\t\t\tparentNode = startNode.parentNode;\n
+\t\t\t\tparentNode.insertBefore(before, startNode);\n
+\t\t\t\tparentNode.insertBefore(elA, startNode);\n
+\t\t\t\tparentNode.removeChild(startNode);\n
+\n
+\t\t\t\tparentNode = endNode.parentNode;\n
+\t\t\t\tparentNode.insertBefore(elB, endNode);\n
+\t\t\t\tparentNode.insertBefore(after, endNode);\n
+\t\t\t\tparentNode.removeChild(endNode);\n
+\n
+\t\t\t\treturn elB;\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction unwrapElement(element) {\n
+\t\t\tvar parentNode = element.parentNode;\n
+\t\t\tparentNode.insertBefore(element.firstChild, element);\n
+\t\t\telement.parentNode.removeChild(element);\n
+\t\t}\n
+\n
+\t\tfunction getWrappersByIndex(index) {\n
+\t\t\tvar elements = node.getElementsByTagName(\'*\'), wrappers = [];\n
+\n
+\t\t\tindex = typeof index == "number" ? "" + index : null;\n
+\n
+\t\t\tfor (var i = 0; i < elements.length; i++) {\n
+\t\t\t\tvar element = elements[i], dataIndex = element.getAttribute(\'data-mce-index\');\n
+\n
+\t\t\t\tif (dataIndex !== null && dataIndex.length) {\n
+\t\t\t\t\tif (dataIndex === index || index === null) {\n
+\t\t\t\t\t\twrappers.push(element);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn wrappers;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns the index of a specific match object or -1 if it isn\'t found.\n
+\t\t *\n
+\t\t * @param  {Match} match Text match object.\n
+\t\t * @return {Number} Index of match or -1 if it isn\'t found.\n
+\t\t */\n
+\t\tfunction indexOf(match) {\n
+\t\t\tvar i = matches.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tif (matches[i] === match) {\n
+\t\t\t\t\treturn i;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn -1;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Filters the matches. If the callback returns true it stays if not it gets removed.\n
+\t\t *\n
+\t\t * @param {Function} callback Callback to execute for each match.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction filter(callback) {\n
+\t\t\tvar filteredMatches = [];\n
+\n
+\t\t\teach(function(match, i) {\n
+\t\t\t\tif (callback(match, i)) {\n
+\t\t\t\t\tfilteredMatches.push(match);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tmatches = filteredMatches;\n
+\n
+\t\t\t/*jshint validthis:true*/\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Executes the specified callback for each match.\n
+\t\t *\n
+\t\t * @param {Function} callback  Callback to execute for each match.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction each(callback) {\n
+\t\t\tfor (var i = 0, l = matches.length; i < l; i++) {\n
+\t\t\t\tif (callback(matches[i], i) === false) {\n
+\t\t\t\t\tbreak;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t/*jshint validthis:true*/\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Wraps the current matches with nodes created by the specified callback.\n
+\t\t * Multiple clones of these matches might occur on matches that are on multiple nodex.\n
+\t\t *\n
+\t\t * @param {Function} callback Callback to execute in order to create elements for matches.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction wrap(callback) {\n
+\t\t\tif (matches.length) {\n
+\t\t\t\tstepThroughMatches(node, matches, genReplacer(callback));\n
+\t\t\t}\n
+\n
+\t\t\t/*jshint validthis:true*/\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Finds the specified regexp and adds them to the matches collection.\n
+\t\t *\n
+\t\t * @param {RegExp} regex Global regexp to search the current node by.\n
+\t\t * @param {Object} [data] Optional custom data element for the match.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction find(regex, data) {\n
+\t\t\tif (text && regex.global) {\n
+\t\t\t\twhile ((m = regex.exec(text))) {\n
+\t\t\t\t\tmatches.push(createMatch(m, data));\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Unwraps the specified match object or all matches if unspecified.\n
+\t\t *\n
+\t\t * @param {Object} [match] Optional match object.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction unwrap(match) {\n
+\t\t\tvar i, elements = getWrappersByIndex(match ? indexOf(match) : null);\n
+\n
+\t\t\ti = elements.length;\n
+\t\t\twhile (i--) {\n
+\t\t\t\tunwrapElement(elements[i]);\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns a match object by the specified DOM element.\n
+\t\t *\n
+\t\t * @param {DOMElement} element Element to return match object for.\n
+\t\t * @return {Object} Match object for the specified element.\n
+\t\t */\n
+\t\tfunction matchFromElement(element) {\n
+\t\t\treturn matches[element.getAttribute(\'data-mce-index\')];\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns a DOM element from the specified match element. This will be the first element if it\'s split\n
+\t\t * on multiple nodes.\n
+\t\t *\n
+\t\t * @param {Object} match Match element to get first element of.\n
+\t\t * @return {DOMElement} DOM element for the specified match object.\n
+\t\t */\n
+\t\tfunction elementFromMatch(match) {\n
+\t\t\treturn getWrappersByIndex(indexOf(match))[0];\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Adds match the specified range for example a grammar line.\n
+\t\t *\n
+\t\t * @param {Number} start Start offset.\n
+\t\t * @param {Number} length Length of the text.\n
+\t\t * @param {Object} data Custom data object for match.\n
+\t\t * @return {DomTextMatcher} Current DomTextMatcher instance.\n
+\t\t */\n
+\t\tfunction add(start, length, data) {\n
+\t\t\tmatches.push({\n
+\t\t\t\tstart: start,\n
+\t\t\t\tend: start + length,\n
+\t\t\t\ttext: text.substr(start, length),\n
+\t\t\t\tdata: data\n
+\t\t\t});\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns a DOM range for the specified match.\n
+\t\t *\n
+\t\t * @param  {Object} match Match object to get range for.\n
+\t\t * @return {DOMRange} DOM Range for the specified match.\n
+\t\t */\n
+\t\tfunction rangeFromMatch(match) {\n
+\t\t\tvar wrappers = getWrappersByIndex(indexOf(match));\n
+\n
+\t\t\tvar rng = editor.dom.createRng();\n
+\t\t\trng.setStartBefore(wrappers[0]);\n
+\t\t\trng.setEndAfter(wrappers[wrappers.length - 1]);\n
+\n
+\t\t\treturn rng;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Replaces the specified match with the specified text.\n
+\t\t *\n
+\t\t * @param {Object} match Match object to replace.\n
+\t\t * @param {String} text Text to replace the match with.\n
+\t\t * @return {DOMRange} DOM range produced after the replace.\n
+\t\t */\n
+\t\tfunction replace(match, text) {\n
+\t\t\tvar rng = rangeFromMatch(match);\n
+\n
+\t\t\trng.deleteContents();\n
+\n
+\t\t\tif (text.length > 0) {\n
+\t\t\t\trng.insertNode(editor.dom.doc.createTextNode(text));\n
+\t\t\t}\n
+\n
+\t\t\treturn rng;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Resets the DomTextMatcher instance. This will remove any wrapped nodes and remove any matches.\n
+\t\t *\n
+\t\t * @return {[type]} [description]\n
+\t\t */\n
+\t\tfunction reset() {\n
+\t\t\tmatches.splice(0, matches.length);\n
+\t\t\tunwrap();\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\n
+\t\ttext = getText(node);\n
+\n
+\t\treturn {\n
+\t\t\ttext: text,\n
+\t\t\tmatches: matches,\n
+\t\t\teach: each,\n
+\t\t\tfilter: filter,\n
+\t\t\treset: reset,\n
+\t\t\tmatchFromElement: matchFromElement,\n
+\t\t\telementFromMatch: elementFromMatch,\n
+\t\t\tfind: find,\n
+\t\t\tadd: add,\n
+\t\t\twrap: wrap,\n
+\t\t\tunwrap: unwrap,\n
+\t\t\treplace: replace,\n
+\t\t\trangeFromMatch: rangeFromMatch,\n
+\t\t\tindexOf: indexOf\n
+\t\t};\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12515</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DomTextMatcher.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268284.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Writer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Writer.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class is used to write HTML tags out it can be used with the Serializer or the SaxParser.\n
+ *\n
+ * @class tinymce.html.Writer\n
+ * @example\n
+ * var writer = new tinymce.html.Writer({indent: true});\n
+ * var parser = new tinymce.html.SaxParser(writer).parse(\'\074p\076\074br\076\074/p\076\');\n
+ * console.log(writer.getContent());\n
+ *\n
+ * @class tinymce.html.Writer\n
+ * @version 3.4\n
+ */\n
+define("tinymce/html/Writer", [\n
+\t"tinymce/html/Entities",\n
+\t"tinymce/util/Tools"\n
+], function(Entities, Tools) {\n
+\tvar makeMap = Tools.makeMap;\n
+\n
+\t/**\n
+\t * Constructs a new Writer instance.\n
+\t *\n
+\t * @constructor\n
+\t * @method Writer\n
+\t * @param {Object} settings Name/value settings object.\n
+\t */\n
+\treturn function(settings) {\n
+\t\tvar html = [], indent, indentBefore, indentAfter, encode, htmlOutput;\n
+\n
+\t\tsettings = settings || {};\n
+\t\tindent = settings.indent;\n
+\t\tindentBefore = makeMap(settings.indent_before || \'\');\n
+\t\tindentAfter = makeMap(settings.indent_after || \'\');\n
+\t\tencode = Entities.getEncodeFunc(settings.entity_encoding || \'raw\', settings.entities);\n
+\t\thtmlOutput = settings.element_format == "html";\n
+\n
+\t\treturn {\n
+\t\t\t/**\n
+\t\t\t * Writes the a start element such as \074p id="a"\076.\n
+\t\t\t *\n
+\t\t\t * @method start\n
+\t\t\t * @param {String} name Name of the element.\n
+\t\t\t * @param {Array} attrs Optional attribute array or undefined if it hasn\'t any.\n
+\t\t\t * @param {Boolean} empty Optional empty state if the tag should end like \074br /\076.\n
+\t\t\t */\n
+\t\t\tstart: function(name, attrs, empty) {\n
+\t\t\t\tvar i, l, attr, value;\n
+\n
+\t\t\t\tif (indent \046\046 indentBefore[name] \046\046 html.length \076 0) {\n
+\t\t\t\t\tvalue = html[html.length - 1];\n
+\n
+\t\t\t\t\tif (value.length \076 0 \046\046 value !== \'\\n\') {\n
+\t\t\t\t\t\thtml.push(\'\\n\');\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\thtml.push(\'\074\', name);\n
+\n
+\t\t\t\tif (attrs) {\n
+\t\t\t\t\tfor (i = 0, l = attrs.length; i \074 l; i++) {\n
+\t\t\t\t\t\tattr = attrs[i];\n
+\t\t\t\t\t\thtml.push(\' \', attr.name, \'="\', encode(attr.value, true), \'"\');\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (!empty || htmlOutput) {\n
+\t\t\t\t\thtml[html.length] = \'\076\';\n
+\t\t\t\t} else {\n
+\t\t\t\t\thtml[html.length] = \' /\076\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (empty \046\046 indent \046\046 indentAfter[name] \046\046 html.length \076 0) {\n
+\t\t\t\t\tvalue = html[html.length - 1];\n
+\n
+\t\t\t\t\tif (value.length \076 0 \046\046 value !== \'\\n\') {\n
+\t\t\t\t\t\thtml.push(\'\\n\');\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Writes the a end element such as \074/p\076.\n
+\t\t\t *\n
+\t\t\t * @method end\n
+\t\t\t * @param {String} name Name of the element.\n
+\t\t\t */\n
+\t\t\tend: function(name) {\n
+\t\t\t\tvar value;\n
+\n
+\t\t\t\t/*if (indent \046\046 indentBefore[name] \046\046 html.length \076 0) {\n
+\t\t\t\t\tvalue = html[html.length - 1];\n
+\n
+\t\t\t\t\tif (value.length \076 0 \046\046 value !== \'\\n\')\n
+\t\t\t\t\t\thtml.push(\'\\n\');\n
+\t\t\t\t}*/\n
+\n
+\t\t\t\thtml.push(\'\074/\', name, \'\076\');\n
+\n
+\t\t\t\tif (indent \046\046 indentAfter[name] \046\046 html.length \076 0) {\n
+\t\t\t\t\tvalue = html[html.length - 1];\n
+\n
+\t\t\t\t\tif (value.length \076 0 \046\046 value !== \'\\n\') {\n
+\t\t\t\t\t\thtml.push(\'\\n\');\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Writes a text node.\n
+\t\t\t *\n
+\t\t\t * @method text\n
+\t\t\t * @param {String} text String to write out.\n
+\t\t\t * @param {Boolean} raw Optional raw state if true the contents wont get encoded.\n
+\t\t\t */\n
+\t\t\ttext: function(text, raw) {\n
+\t\t\t\tif (text.length \076 0) {\n
+\t\t\t\t\thtml[html.length] = raw ? text : encode(text);\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Writes a cdata node such as \074![CDATA[data]]\076.\n
+\t\t\t *\n
+\t\t\t * @method cdata\n
+\t\t\t * @param {String} text String to write out inside the cdata.\n
+\t\t\t */\n
+\t\t\tcdata: function(text) {\n
+\t\t\t\thtml.push(\'\074![CDATA[\', text, \']]\076\');\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Writes a comment node such as \074!-- Comment --\076.\n
+\t\t\t *\n
+\t\t\t * @method cdata\n
+\t\t\t * @param {String} text String to write out inside the comment.\n
+\t\t\t */\n
+\t\t\tcomment: function(text) {\n
+\t\t\t\thtml.push(\'\074!--\', text, \'--\076\');\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Writes a PI node such as \074?xml attr="value" ?\076.\n
+\t\t\t *\n
+\t\t\t * @method pi\n
+\t\t\t * @param {String} name Name of the pi.\n
+\t\t\t * @param {String} text String to write out inside the pi.\n
+\t\t\t */\n
+\t\t\tpi: function(name, text) {\n
+\t\t\t\tif (text) {\n
+\t\t\t\t\thtml.push(\'\074?\', name, \' \', encode(text), \'?\076\');\n
+\t\t\t\t} else {\n
+\t\t\t\t\thtml.push(\'\074?\', name, \'?\076\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (indent) {\n
+\t\t\t\t\thtml.push(\'\\n\');\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Writes a doctype node such as \074!DOCTYPE data\076.\n
+\t\t\t *\n
+\t\t\t * @method doctype\n
+\t\t\t * @param {String} text String to write out inside the doctype.\n
+\t\t\t */\n
+\t\t\tdoctype: function(text) {\n
+\t\t\t\thtml.push(\'\074!DOCTYPE\', text, \'\076\', indent ? \'\\n\' : \'\');\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Resets the internal buffer if one wants to reuse the writer.\n
+\t\t\t *\n
+\t\t\t * @method reset\n
+\t\t\t */\n
+\t\t\treset: function() {\n
+\t\t\t\thtml.length = 0;\n
+\t\t\t},\n
+\n
+\t\t\t/**\n
+\t\t\t * Returns the contents that got serialized.\n
+\t\t\t *\n
+\t\t\t * @method getContent\n
+\t\t\t * @return {String} HTML contents that got written down.\n
+\t\t\t */\n
+\t\t\tgetContent: function() {\n
+\t\t\t\treturn html.join(\'\').replace(/\\n$/, \'\');\n
+\t\t\t}\n
+\t\t};\n
+\t};\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4766</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Writer.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

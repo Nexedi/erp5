@@ -1,0 +1,1046 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268359.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EditorCommands.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * EditorCommands.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class enables you to add custom editor commands and it contains\n
+ * overrides for native browser commands to address various bugs and issues.\n
+ *\n
+ * @class tinymce.EditorCommands\n
+ */\n
+define("tinymce/EditorCommands", [\n
+\t"tinymce/html/Serializer",\n
+\t"tinymce/Env",\n
+\t"tinymce/util/Tools",\n
+\t"tinymce/dom/ElementUtils",\n
+\t"tinymce/dom/RangeUtils",\n
+\t"tinymce/dom/TreeWalker"\n
+], function(Serializer, Env, Tools, ElementUtils, RangeUtils, TreeWalker) {\n
+\t// Added for compression purposes\n
+\tvar each = Tools.each, extend = Tools.extend;\n
+\tvar map = Tools.map, inArray = Tools.inArray, explode = Tools.explode;\n
+\tvar isGecko = Env.gecko, isIE = Env.ie, isOldIE = Env.ie && Env.ie < 11;\n
+\tvar TRUE = true, FALSE = false;\n
+\n
+\treturn function(editor) {\n
+\t\tvar dom, selection, formatter,\n
+\t\t\tcommands = {state: {}, exec: {}, value: {}},\n
+\t\t\tsettings = editor.settings,\n
+\t\t\tbookmark;\n
+\n
+\t\teditor.on(\'PreInit\', function() {\n
+\t\t\tdom = editor.dom;\n
+\t\t\tselection = editor.selection;\n
+\t\t\tsettings = editor.settings;\n
+\t\t\tformatter = editor.formatter;\n
+\t\t});\n
+\n
+\t\t/**\n
+\t\t * Executes the specified command.\n
+\t\t *\n
+\t\t * @method execCommand\n
+\t\t * @param {String} command Command to execute.\n
+\t\t * @param {Boolean} ui Optional user interface state.\n
+\t\t * @param {Object} value Optional value for command.\n
+\t\t * @return {Boolean} true/false if the command was found or not.\n
+\t\t */\n
+\t\tfunction execCommand(command, ui, value, args) {\n
+\t\t\tvar func, customCommand, state = 0;\n
+\n
+\t\t\tif (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {\n
+\t\t\t\teditor.focus();\n
+\t\t\t}\n
+\n
+\t\t\targs = extend({}, args);\n
+\t\t\targs = editor.fire(\'BeforeExecCommand\', {command: command, ui: ui, value: value});\n
+\t\t\tif (args.isDefaultPrevented()) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\tcustomCommand = command.toLowerCase();\n
+\t\t\tif ((func = commands.exec[customCommand])) {\n
+\t\t\t\tfunc(customCommand, ui, value);\n
+\t\t\t\teditor.fire(\'ExecCommand\', {command: command, ui: ui, value: value});\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\t// Plugin commands\n
+\t\t\teach(editor.plugins, function(p) {\n
+\t\t\t\tif (p.execCommand && p.execCommand(command, ui, value)) {\n
+\t\t\t\t\teditor.fire(\'ExecCommand\', {command: command, ui: ui, value: value});\n
+\t\t\t\t\tstate = true;\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tif (state) {\n
+\t\t\t\treturn state;\n
+\t\t\t}\n
+\n
+\t\t\t// Theme commands\n
+\t\t\tif (editor.theme && editor.theme.execCommand && editor.theme.execCommand(command, ui, value)) {\n
+\t\t\t\teditor.fire(\'ExecCommand\', {command: command, ui: ui, value: value});\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\t// Browser commands\n
+\t\t\ttry {\n
+\t\t\t\tstate = editor.getDoc().execCommand(command, ui, value);\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// Ignore old IE errors\n
+\t\t\t}\n
+\n
+\t\t\tif (state) {\n
+\t\t\t\teditor.fire(\'ExecCommand\', {command: command, ui: ui, value: value});\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Queries the current state for a command for example if the current selection is "bold".\n
+\t\t *\n
+\t\t * @method queryCommandState\n
+\t\t * @param {String} command Command to check the state of.\n
+\t\t * @return {Boolean/Number} true/false if the selected contents is bold or not, -1 if it\'s not found.\n
+\t\t */\n
+\t\tfunction queryCommandState(command) {\n
+\t\t\tvar func;\n
+\n
+\t\t\t// Is hidden then return undefined\n
+\t\t\tif (editor._isHidden()) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tcommand = command.toLowerCase();\n
+\t\t\tif ((func = commands.state[command])) {\n
+\t\t\t\treturn func(command);\n
+\t\t\t}\n
+\n
+\t\t\t// Browser commands\n
+\t\t\ttry {\n
+\t\t\t\treturn editor.getDoc().queryCommandState(command);\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// Fails sometimes see bug: 1896577\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Queries the command value for example the current fontsize.\n
+\t\t *\n
+\t\t * @method queryCommandValue\n
+\t\t * @param {String} command Command to check the value of.\n
+\t\t * @return {Object} Command value of false if it\'s not found.\n
+\t\t */\n
+\t\tfunction queryCommandValue(command) {\n
+\t\t\tvar func;\n
+\n
+\t\t\t// Is hidden then return undefined\n
+\t\t\tif (editor._isHidden()) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\tcommand = command.toLowerCase();\n
+\t\t\tif ((func = commands.value[command])) {\n
+\t\t\t\treturn func(command);\n
+\t\t\t}\n
+\n
+\t\t\t// Browser commands\n
+\t\t\ttry {\n
+\t\t\t\treturn editor.getDoc().queryCommandValue(command);\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// Fails sometimes see bug: 1896577\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Adds commands to the command collection.\n
+\t\t *\n
+\t\t * @method addCommands\n
+\t\t * @param {Object} command_list Name/value collection with commands to add, the names can also be comma separated.\n
+\t\t * @param {String} type Optional type to add, defaults to exec. Can be value or state as well.\n
+\t\t */\n
+\t\tfunction addCommands(command_list, type) {\n
+\t\t\ttype = type || \'exec\';\n
+\n
+\t\t\teach(command_list, function(callback, command) {\n
+\t\t\t\teach(command.toLowerCase().split(\',\'), function(command) {\n
+\t\t\t\t\tcommands[type][command] = callback;\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t}\n
+\n
+\t\tfunction addCommand(command, callback, scope) {\n
+\t\t\tcommand = command.toLowerCase();\n
+\t\t\tcommands.exec[command] = function(command, ui, value, args) {\n
+\t\t\t\treturn callback.call(scope || editor, ui, value, args);\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the command is supported or not.\n
+\t\t *\n
+\t\t * @method queryCommandSupported\n
+\t\t * @param {String} cmd Command that we check support for.\n
+\t\t * @return {Boolean} true/false if the command is supported or not.\n
+\t\t */\n
+\t\tfunction queryCommandSupported(command) {\n
+\t\t\tcommand = command.toLowerCase();\n
+\n
+\t\t\tif (commands.exec[command]) {\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\n
+\t\t\t// Browser commands\n
+\t\t\ttry {\n
+\t\t\t\treturn editor.getDoc().queryCommandSupported(command);\n
+\t\t\t} catch (ex) {\n
+\t\t\t\t// Fails sometimes see bug: 1896577\n
+\t\t\t}\n
+\n
+\t\t\treturn false;\n
+\t\t}\n
+\n
+\t\tfunction addQueryStateHandler(command, callback, scope) {\n
+\t\t\tcommand = command.toLowerCase();\n
+\t\t\tcommands.state[command] = function() {\n
+\t\t\t\treturn callback.call(scope || editor);\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction addQueryValueHandler(command, callback, scope) {\n
+\t\t\tcommand = command.toLowerCase();\n
+\t\t\tcommands.value[command] = function() {\n
+\t\t\t\treturn callback.call(scope || editor);\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\tfunction hasCustomCommand(command) {\n
+\t\t\tcommand = command.toLowerCase();\n
+\t\t\treturn !!commands.exec[command];\n
+\t\t}\n
+\n
+\t\t// Expose public methods\n
+\t\textend(this, {\n
+\t\t\texecCommand: execCommand,\n
+\t\t\tqueryCommandState: queryCommandState,\n
+\t\t\tqueryCommandValue: queryCommandValue,\n
+\t\t\tqueryCommandSupported: queryCommandSupported,\n
+\t\t\taddCommands: addCommands,\n
+\t\t\taddCommand: addCommand,\n
+\t\t\taddQueryStateHandler: addQueryStateHandler,\n
+\t\t\taddQueryValueHandler: addQueryValueHandler,\n
+\t\t\thasCustomCommand: hasCustomCommand\n
+\t\t});\n
+\n
+\t\t// Private methods\n
+\n
+\t\tfunction execNativeCommand(command, ui, value) {\n
+\t\t\tif (ui === undefined) {\n
+\t\t\t\tui = FALSE;\n
+\t\t\t}\n
+\n
+\t\t\tif (value === undefined) {\n
+\t\t\t\tvalue = null;\n
+\t\t\t}\n
+\n
+\t\t\treturn editor.getDoc().execCommand(command, ui, value);\n
+\t\t}\n
+\n
+\t\tfunction isFormatMatch(name) {\n
+\t\t\treturn formatter.match(name);\n
+\t\t}\n
+\n
+\t\tfunction toggleFormat(name, value) {\n
+\t\t\tformatter.toggle(name, value ? {value: value} : undefined);\n
+\t\t\teditor.nodeChanged();\n
+\t\t}\n
+\n
+\t\tfunction storeSelection(type) {\n
+\t\t\tbookmark = selection.getBookmark(type);\n
+\t\t}\n
+\n
+\t\tfunction restoreSelection() {\n
+\t\t\tselection.moveToBookmark(bookmark);\n
+\t\t}\n
+\n
+\t\t// Add execCommand overrides\n
+\t\taddCommands({\n
+\t\t\t// Ignore these, added for compatibility\n
+\t\t\t\'mceResetDesignMode,mceBeginUndoLevel\': function() {},\n
+\n
+\t\t\t// Add undo manager logic\n
+\t\t\t\'mceEndUndoLevel,mceAddUndoLevel\': function() {\n
+\t\t\t\teditor.undoManager.add();\n
+\t\t\t},\n
+\n
+\t\t\t\'Cut,Copy,Paste\': function(command) {\n
+\t\t\t\tvar doc = editor.getDoc(), failed;\n
+\n
+\t\t\t\t// Try executing the native command\n
+\t\t\t\ttry {\n
+\t\t\t\t\texecNativeCommand(command);\n
+\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t// Command failed\n
+\t\t\t\t\tfailed = TRUE;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Present alert message about clipboard access not being available\n
+\t\t\t\tif (failed || !doc.queryCommandSupported(command)) {\n
+\t\t\t\t\tvar msg = editor.translate(\n
+\t\t\t\t\t\t"Your browser doesn\'t support direct access to the clipboard. " +\n
+\t\t\t\t\t\t"Please use the Ctrl+X/C/V keyboard shortcuts instead."\n
+\t\t\t\t\t);\n
+\n
+\t\t\t\t\tif (Env.mac) {\n
+\t\t\t\t\t\tmsg = msg.replace(/Ctrl\\+/g, \'\\u2318+\');\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teditor.windowManager.alert(msg);\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t// Override unlink command\n
+\t\t\tunlink: function() {\n
+\t\t\t\tif (selection.isCollapsed()) {\n
+\t\t\t\t\tvar elm = selection.getNode();\n
+\t\t\t\t\tif (elm.tagName == \'A\') {\n
+\t\t\t\t\t\teditor.dom.remove(elm, true);\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tformatter.remove("link");\n
+\t\t\t},\n
+\n
+\t\t\t// Override justify commands to use the text formatter engine\n
+\t\t\t\'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull,JustifyNone\': function(command) {\n
+\t\t\t\tvar align = command.substring(7);\n
+\n
+\t\t\t\tif (align == \'full\') {\n
+\t\t\t\t\talign = \'justify\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Remove all other alignments first\n
+\t\t\t\teach(\'left,center,right,justify\'.split(\',\'), function(name) {\n
+\t\t\t\t\tif (align != name) {\n
+\t\t\t\t\t\tformatter.remove(\'align\' + name);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tif (align != \'none\') {\n
+\t\t\t\t\ttoggleFormat(\'align\' + align);\n
+\t\t\t\t\texecCommand(\'mceRepaint\');\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t// Override list commands to fix WebKit bug\n
+\t\t\t\'InsertUnorderedList,InsertOrderedList\': function(command) {\n
+\t\t\t\tvar listElm, listParent;\n
+\n
+\t\t\t\texecNativeCommand(command);\n
+\n
+\t\t\t\t// WebKit produces lists within block elements so we need to split them\n
+\t\t\t\t// we will replace the native list creation logic to custom logic later on\n
+\t\t\t\t// TODO: Remove this when the list creation logic is removed\n
+\t\t\t\tlistElm = dom.getParent(selection.getNode(), \'ol,ul\');\n
+\t\t\t\tif (listElm) {\n
+\t\t\t\t\tlistParent = listElm.parentNode;\n
+\n
+\t\t\t\t\t// If list is within a text block then split that block\n
+\t\t\t\t\tif (/^(H[1-6]|P|ADDRESS|PRE)$/.test(listParent.nodeName)) {\n
+\t\t\t\t\t\tstoreSelection();\n
+\t\t\t\t\t\tdom.split(listParent, listElm);\n
+\t\t\t\t\t\trestoreSelection();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t// Override commands to use the text formatter engine\n
+\t\t\t\'Bold,Italic,Underline,Strikethrough,Superscript,Subscript\': function(command) {\n
+\t\t\t\ttoggleFormat(command);\n
+\t\t\t},\n
+\n
+\t\t\t// Override commands to use the text formatter engine\n
+\t\t\t\'ForeColor,HiliteColor,FontName\': function(command, ui, value) {\n
+\t\t\t\ttoggleFormat(command, value);\n
+\t\t\t},\n
+\n
+\t\t\tFontSize: function(command, ui, value) {\n
+\t\t\t\tvar fontClasses, fontSizes;\n
+\n
+\t\t\t\t// Convert font size 1-7 to styles\n
+\t\t\t\tif (value >= 1 && value <= 7) {\n
+\t\t\t\t\tfontSizes = explode(settings.font_size_style_values);\n
+\t\t\t\t\tfontClasses = explode(settings.font_size_classes);\n
+\n
+\t\t\t\t\tif (fontClasses) {\n
+\t\t\t\t\t\tvalue = fontClasses[value - 1] || value;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tvalue = fontSizes[value - 1] || value;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\ttoggleFormat(command, value);\n
+\t\t\t},\n
+\n
+\t\t\tRemoveFormat: function(command) {\n
+\t\t\t\tformatter.remove(command);\n
+\t\t\t},\n
+\n
+\t\t\tmceBlockQuote: function() {\n
+\t\t\t\ttoggleFormat(\'blockquote\');\n
+\t\t\t},\n
+\n
+\t\t\tFormatBlock: function(command, ui, value) {\n
+\t\t\t\treturn toggleFormat(value || \'p\');\n
+\t\t\t},\n
+\n
+\t\t\tmceCleanup: function() {\n
+\t\t\t\tvar bookmark = selection.getBookmark();\n
+\n
+\t\t\t\teditor.setContent(editor.getContent({cleanup: TRUE}), {cleanup: TRUE});\n
+\n
+\t\t\t\tselection.moveToBookmark(bookmark);\n
+\t\t\t},\n
+\n
+\t\t\tmceRemoveNode: function(command, ui, value) {\n
+\t\t\t\tvar node = value || selection.getNode();\n
+\n
+\t\t\t\t// Make sure that the body node isn\'t removed\n
+\t\t\t\tif (node != editor.getBody()) {\n
+\t\t\t\t\tstoreSelection();\n
+\t\t\t\t\teditor.dom.remove(node, TRUE);\n
+\t\t\t\t\trestoreSelection();\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tmceSelectNodeDepth: function(command, ui, value) {\n
+\t\t\t\tvar counter = 0;\n
+\n
+\t\t\t\tdom.getParent(selection.getNode(), function(node) {\n
+\t\t\t\t\tif (node.nodeType == 1 && counter++ == value) {\n
+\t\t\t\t\t\tselection.select(node);\n
+\t\t\t\t\t\treturn FALSE;\n
+\t\t\t\t\t}\n
+\t\t\t\t}, editor.getBody());\n
+\t\t\t},\n
+\n
+\t\t\tmceSelectNode: function(command, ui, value) {\n
+\t\t\t\tselection.select(value);\n
+\t\t\t},\n
+\n
+\t\t\tmceInsertContent: function(command, ui, value) {\n
+\t\t\t\tvar parser, serializer, parentNode, rootNode, fragment, args;\n
+\t\t\t\tvar marker, rng, node, node2, bookmarkHtml, merge, data;\n
+\t\t\t\tvar textInlineElements = editor.schema.getTextInlineElements();\n
+\n
+\t\t\t\tfunction trimOrPaddLeftRight(html) {\n
+\t\t\t\t\tvar rng, container, offset;\n
+\n
+\t\t\t\t\trng = selection.getRng(true);\n
+\t\t\t\t\tcontainer = rng.startContainer;\n
+\t\t\t\t\toffset = rng.startOffset;\n
+\n
+\t\t\t\t\tfunction hasSiblingText(siblingName) {\n
+\t\t\t\t\t\treturn container[siblingName] && container[siblingName].nodeType == 3;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif (container.nodeType == 3) {\n
+\t\t\t\t\t\tif (offset > 0) {\n
+\t\t\t\t\t\t\thtml = html.replace(/^&nbsp;/, \' \');\n
+\t\t\t\t\t\t} else if (!hasSiblingText(\'previousSibling\')) {\n
+\t\t\t\t\t\t\thtml = html.replace(/^ /, \'&nbsp;\');\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (offset < container.length) {\n
+\t\t\t\t\t\t\thtml = html.replace(/&nbsp;(<br>|)$/, \' \');\n
+\t\t\t\t\t\t} else if (!hasSiblingText(\'nextSibling\')) {\n
+\t\t\t\t\t\t\thtml = html.replace(/(&nbsp;| )(<br>|)$/, \'&nbsp;\');\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn html;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Removes &nbsp; from a [b] c -> a &nbsp;c -> a c\n
+\t\t\t\tfunction trimNbspAfterDeleteAndPaddValue() {\n
+\t\t\t\t\tvar rng, container, offset;\n
+\n
+\t\t\t\t\trng = selection.getRng(true);\n
+\t\t\t\t\tcontainer = rng.startContainer;\n
+\t\t\t\t\toffset = rng.startOffset;\n
+\n
+\t\t\t\t\tif (container.nodeType == 3 && rng.collapsed) {\n
+\t\t\t\t\t\tif (container.data[offset] === \'\\u00a0\') {\n
+\t\t\t\t\t\t\tcontainer.deleteData(offset, 1);\n
+\n
+\t\t\t\t\t\t\tif (!/[\\u00a0| ]$/.test(value)) {\n
+\t\t\t\t\t\t\t\tvalue += \' \';\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t} else if (container.data[offset - 1] === \'\\u00a0\') {\n
+\t\t\t\t\t\t\tcontainer.deleteData(offset - 1, 1);\n
+\n
+\t\t\t\t\t\t\tif (!/[\\u00a0| ]$/.test(value)) {\n
+\t\t\t\t\t\t\t\tvalue = \' \' + value;\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction markInlineFormatElements(fragment) {\n
+\t\t\t\t\tif (merge) {\n
+\t\t\t\t\t\tfor (node = fragment.firstChild; node; node = node.walk(true)) {\n
+\t\t\t\t\t\t\tif (textInlineElements[node.name]) {\n
+\t\t\t\t\t\t\t\tnode.attr(\'data-mce-new\', "true");\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tfunction reduceInlineTextElements() {\n
+\t\t\t\t\tif (merge) {\n
+\t\t\t\t\t\tvar root = editor.getBody(), elementUtils = new ElementUtils(dom);\n
+\n
+\t\t\t\t\t\teach(dom.select(\'*[data-mce-new]\'), function(node) {\n
+\t\t\t\t\t\t\tnode.removeAttribute(\'data-mce-new\');\n
+\n
+\t\t\t\t\t\t\tfor (var testNode = node.parentNode; testNode && testNode != root; testNode = testNode.parentNode) {\n
+\t\t\t\t\t\t\t\tif (elementUtils.compare(testNode, node)) {\n
+\t\t\t\t\t\t\t\t\tdom.remove(node, true);\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (typeof value != \'string\') {\n
+\t\t\t\t\tmerge = value.merge;\n
+\t\t\t\t\tdata = value.data;\n
+\t\t\t\t\tvalue = value.content;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Check for whitespace before/after value\n
+\t\t\t\tif (/^ | $/.test(value)) {\n
+\t\t\t\t\tvalue = trimOrPaddLeftRight(value);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Setup parser and serializer\n
+\t\t\t\tparser = editor.parser;\n
+\t\t\t\tserializer = new Serializer({}, editor.schema);\n
+\t\t\t\tbookmarkHtml = \'<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;&#x200B;</span>\';\n
+\n
+\t\t\t\t// Run beforeSetContent handlers on the HTML to be inserted\n
+\t\t\t\targs = {content: value, format: \'html\', selection: true};\n
+\t\t\t\teditor.fire(\'BeforeSetContent\', args);\n
+\t\t\t\tvalue = args.content;\n
+\n
+\t\t\t\t// Add caret at end of contents if it\'s missing\n
+\t\t\t\tif (value.indexOf(\'{$caret}\') == -1) {\n
+\t\t\t\t\tvalue += \'{$caret}\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Replace the caret marker with a span bookmark element\n
+\t\t\t\tvalue = value.replace(/\\{\\$caret\\}/, bookmarkHtml);\n
+\n
+\t\t\t\t// If selection is at <body>|<p></p> then move it into <body><p>|</p>\n
+\t\t\t\trng = selection.getRng();\n
+\t\t\t\tvar caretElement = rng.startContainer || (rng.parentElement ? rng.parentElement() : null);\n
+\t\t\t\tvar body = editor.getBody();\n
+\t\t\t\tif (caretElement === body && selection.isCollapsed()) {\n
+\t\t\t\t\tif (dom.isBlock(body.firstChild) && dom.isEmpty(body.firstChild)) {\n
+\t\t\t\t\t\trng = dom.createRng();\n
+\t\t\t\t\t\trng.setStart(body.firstChild, 0);\n
+\t\t\t\t\t\trng.setEnd(body.firstChild, 0);\n
+\t\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Insert node maker where we will insert the new HTML and get it\'s parent\n
+\t\t\t\tif (!selection.isCollapsed()) {\n
+\t\t\t\t\teditor.getDoc().execCommand(\'Delete\', false, null);\n
+\t\t\t\t\ttrimNbspAfterDeleteAndPaddValue();\n
+\t\t\t\t}\n
+\n
+\t\t\t\tparentNode = selection.getNode();\n
+\n
+\t\t\t\t// Parse the fragment within the context of the parent node\n
+\t\t\t\tvar parserArgs = {context: parentNode.nodeName.toLowerCase(), data: data};\n
+\t\t\t\tfragment = parser.parse(value, parserArgs);\n
+\n
+\t\t\t\tmarkInlineFormatElements(fragment);\n
+\n
+\t\t\t\t// Move the caret to a more suitable location\n
+\t\t\t\tnode = fragment.lastChild;\n
+\t\t\t\tif (node.attr(\'id\') == \'mce_marker\') {\n
+\t\t\t\t\tmarker = node;\n
+\n
+\t\t\t\t\tfor (node = node.prev; node; node = node.walk(true)) {\n
+\t\t\t\t\t\tif (node.type == 3 || !dom.isBlock(node.name)) {\n
+\t\t\t\t\t\t\tif (editor.schema.isValidChild(node.parent.name, \'span\')) {\n
+\t\t\t\t\t\t\t\tnode.parent.insert(marker, node, node.name === \'br\');\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\tbreak;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// If parser says valid we can insert the contents into that parent\n
+\t\t\t\tif (!parserArgs.invalid) {\n
+\t\t\t\t\tvalue = serializer.serialize(fragment);\n
+\n
+\t\t\t\t\t// Check if parent is empty or only has one BR element then set the innerHTML of that parent\n
+\t\t\t\t\tnode = parentNode.firstChild;\n
+\t\t\t\t\tnode2 = parentNode.lastChild;\n
+\t\t\t\t\tif (!node || (node === node2 && node.nodeName === \'BR\')) {\n
+\t\t\t\t\t\tdom.setHTML(parentNode, value);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tselection.setContent(value);\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// If the fragment was invalid within that context then we need\n
+\t\t\t\t\t// to parse and process the parent it\'s inserted into\n
+\n
+\t\t\t\t\t// Insert bookmark node and get the parent\n
+\t\t\t\t\tselection.setContent(bookmarkHtml);\n
+\t\t\t\t\tparentNode = selection.getNode();\n
+\t\t\t\t\trootNode = editor.getBody();\n
+\n
+\t\t\t\t\t// Opera will return the document node when selection is in root\n
+\t\t\t\t\tif (parentNode.nodeType == 9) {\n
+\t\t\t\t\t\tparentNode = node = rootNode;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tnode = parentNode;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Find the ancestor just before the root element\n
+\t\t\t\t\twhile (node !== rootNode) {\n
+\t\t\t\t\t\tparentNode = node;\n
+\t\t\t\t\t\tnode = node.parentNode;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\t// Get the outer/inner HTML depending on if we are in the root and parser and serialize that\n
+\t\t\t\t\tvalue = parentNode == rootNode ? rootNode.innerHTML : dom.getOuterHTML(parentNode);\n
+\t\t\t\t\tvalue = serializer.serialize(\n
+\t\t\t\t\t\tparser.parse(\n
+\t\t\t\t\t\t\t// Need to replace by using a function since $ in the contents would otherwise be a problem\n
+\t\t\t\t\t\t\tvalue.replace(/<span (id="mce_marker"|id=mce_marker).+?<\\/span>/i, function() {\n
+\t\t\t\t\t\t\t\treturn serializer.serialize(fragment);\n
+\t\t\t\t\t\t\t})\n
+\t\t\t\t\t\t)\n
+\t\t\t\t\t);\n
+\n
+\t\t\t\t\t// Set the inner/outer HTML depending on if we are in the root or not\n
+\t\t\t\t\tif (parentNode == rootNode) {\n
+\t\t\t\t\t\tdom.setHTML(rootNode, value);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tdom.setOuterHTML(parentNode, value);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treduceInlineTextElements();\n
+\n
+\t\t\t\tmarker = dom.get(\'mce_marker\');\n
+\t\t\t\tselection.scrollIntoView(marker);\n
+\n
+\t\t\t\t// Move selection before marker and remove it\n
+\t\t\t\trng = dom.createRng();\n
+\n
+\t\t\t\t// If previous sibling is a text node set the selection to the end of that node\n
+\t\t\t\tnode = marker.previousSibling;\n
+\t\t\t\tif (node && node.nodeType == 3) {\n
+\t\t\t\t\trng.setStart(node, node.nodeValue.length);\n
+\n
+\t\t\t\t\t// TODO: Why can\'t we normalize on IE\n
+\t\t\t\t\tif (!isIE) {\n
+\t\t\t\t\t\tnode2 = marker.nextSibling;\n
+\t\t\t\t\t\tif (node2 && node2.nodeType == 3) {\n
+\t\t\t\t\t\t\tnode.appendData(node2.data);\n
+\t\t\t\t\t\t\tnode2.parentNode.removeChild(node2);\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// If the previous sibling isn\'t a text node or doesn\'t exist set the selection before the marker node\n
+\t\t\t\t\trng.setStartBefore(marker);\n
+\t\t\t\t\trng.setEndBefore(marker);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Remove the marker node and set the new range\n
+\t\t\t\tdom.remove(marker);\n
+\t\t\t\tselection.setRng(rng);\n
+\n
+\t\t\t\t// Dispatch after event and add any visual elements needed\n
+\t\t\t\teditor.fire(\'SetContent\', args);\n
+\t\t\t\teditor.addVisual();\n
+\t\t\t},\n
+\n
+\t\t\tmceInsertRawHTML: function(command, ui, value) {\n
+\t\t\t\tselection.setContent(\'tiny_mce_marker\');\n
+\t\t\t\teditor.setContent(\n
+\t\t\t\t\teditor.getContent().replace(/tiny_mce_marker/g, function() {\n
+\t\t\t\t\t\treturn value;\n
+\t\t\t\t\t})\n
+\t\t\t\t);\n
+\t\t\t},\n
+\n
+\t\t\tmceToggleFormat: function(command, ui, value) {\n
+\t\t\t\ttoggleFormat(value);\n
+\t\t\t},\n
+\n
+\t\t\tmceSetContent: function(command, ui, value) {\n
+\t\t\t\teditor.setContent(value);\n
+\t\t\t},\n
+\n
+\t\t\t\'Indent,Outdent\': function(command) {\n
+\t\t\t\tvar intentValue, indentUnit, value;\n
+\n
+\t\t\t\t// Setup indent level\n
+\t\t\t\tintentValue = settings.indentation;\n
+\t\t\t\tindentUnit = /[a-z%]+$/i.exec(intentValue);\n
+\t\t\t\tintentValue = parseInt(intentValue, 10);\n
+\n
+\t\t\t\tif (!queryCommandState(\'InsertUnorderedList\') && !queryCommandState(\'InsertOrderedList\')) {\n
+\t\t\t\t\t// If forced_root_blocks is set to false we don\'t have a block to indent so lets create a div\n
+\t\t\t\t\tif (!settings.forced_root_block && !dom.getParent(selection.getNode(), dom.isBlock)) {\n
+\t\t\t\t\t\tformatter.apply(\'div\');\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\teach(selection.getSelectedBlocks(), function(element) {\n
+\t\t\t\t\t\tif (element.nodeName != "LI") {\n
+\t\t\t\t\t\t\tvar indentStyleName = editor.getParam(\'indent_use_margin\', false) ? \'margin\' : \'padding\';\n
+\n
+\t\t\t\t\t\t\tindentStyleName += dom.getStyle(element, \'direction\', true) == \'rtl\' ? \'Right\' : \'Left\';\n
+\n
+\t\t\t\t\t\t\tif (command == \'outdent\') {\n
+\t\t\t\t\t\t\t\tvalue = Math.max(0, parseInt(element.style[indentStyleName] || 0, 10) - intentValue);\n
+\t\t\t\t\t\t\t\tdom.setStyle(element, indentStyleName, value ? value + indentUnit : \'\');\n
+\t\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\t\tvalue = (parseInt(element.style[indentStyleName] || 0, 10) + intentValue) + indentUnit;\n
+\t\t\t\t\t\t\t\tdom.setStyle(element, indentStyleName, value);\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t} else {\n
+\t\t\t\t\texecNativeCommand(command);\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tmceRepaint: function() {\n
+\t\t\t\tif (isGecko) {\n
+\t\t\t\t\ttry {\n
+\t\t\t\t\t\tstoreSelection(TRUE);\n
+\n
+\t\t\t\t\t\tif (selection.getSel()) {\n
+\t\t\t\t\t\t\tselection.getSel().selectAllChildren(editor.getBody());\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tselection.collapse(TRUE);\n
+\t\t\t\t\t\trestoreSelection();\n
+\t\t\t\t\t} catch (ex) {\n
+\t\t\t\t\t\t// Ignore\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tInsertHorizontalRule: function() {\n
+\t\t\t\teditor.execCommand(\'mceInsertContent\', false, \'<hr />\');\n
+\t\t\t},\n
+\n
+\t\t\tmceToggleVisualAid: function() {\n
+\t\t\t\teditor.hasVisual = !editor.hasVisual;\n
+\t\t\t\teditor.addVisual();\n
+\t\t\t},\n
+\n
+\t\t\tmceReplaceContent: function(command, ui, value) {\n
+\t\t\t\teditor.execCommand(\'mceInsertContent\', false, value.replace(/\\{\\$selection\\}/g, selection.getContent({format: \'text\'})));\n
+\t\t\t},\n
+\n
+\t\t\tmceInsertLink: function(command, ui, value) {\n
+\t\t\t\tvar anchor;\n
+\n
+\t\t\t\tif (typeof value == \'string\') {\n
+\t\t\t\t\tvalue = {href: value};\n
+\t\t\t\t}\n
+\n
+\t\t\t\tanchor = dom.getParent(selection.getNode(), \'a\');\n
+\n
+\t\t\t\t// Spaces are never valid in URLs and it\'s a very common mistake for people to make so we fix it here.\n
+\t\t\t\tvalue.href = value.href.replace(\' \', \'%20\');\n
+\n
+\t\t\t\t// Remove existing links if there could be child links or that the href isn\'t specified\n
+\t\t\t\tif (!anchor || !value.href) {\n
+\t\t\t\t\tformatter.remove(\'link\');\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Apply new link to selection\n
+\t\t\t\tif (value.href) {\n
+\t\t\t\t\tformatter.apply(\'link\', value, anchor);\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tselectAll: function() {\n
+\t\t\t\tvar root = dom.getRoot(), rng;\n
+\n
+\t\t\t\tif (selection.getRng().setStart) {\n
+\t\t\t\t\trng = dom.createRng();\n
+\t\t\t\t\trng.setStart(root, 0);\n
+\t\t\t\t\trng.setEnd(root, root.childNodes.length);\n
+\t\t\t\t\tselection.setRng(rng);\n
+\t\t\t\t} else {\n
+\t\t\t\t\t// IE will render it\'s own root level block elements and sometimes\n
+\t\t\t\t\t// even put font elements in them when the user starts typing. So we need to\n
+\t\t\t\t\t// move the selection to a more suitable element from this:\n
+\t\t\t\t\t// <body>|<p></p></body> to this: <body><p>|</p></body>\n
+\t\t\t\t\trng = selection.getRng();\n
+\t\t\t\t\tif (!rng.item) {\n
+\t\t\t\t\t\trng.moveToElementText(root);\n
+\t\t\t\t\t\trng.select();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\t"delete": function() {\n
+\t\t\t\texecNativeCommand("Delete");\n
+\n
+\t\t\t\t// Check if body is empty after the delete call if so then set the contents\n
+\t\t\t\t// to an empty string and move the caret to any block produced by that operation\n
+\t\t\t\t// this fixes the issue with root blocks not being properly produced after a delete call on IE\n
+\t\t\t\tvar body = editor.getBody();\n
+\n
+\t\t\t\tif (dom.isEmpty(body)) {\n
+\t\t\t\t\teditor.setContent(\'\');\n
+\n
+\t\t\t\t\tif (body.firstChild && dom.isBlock(body.firstChild)) {\n
+\t\t\t\t\t\teditor.selection.setCursorLocation(body.firstChild, 0);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\teditor.selection.setCursorLocation(body, 0);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t},\n
+\n
+\t\t\tmceNewDocument: function() {\n
+\t\t\t\teditor.setContent(\'\');\n
+\t\t\t},\n
+\n
+\t\t\tInsertLineBreak: function(command, ui, value) {\n
+\t\t\t\t// We load the current event in from EnterKey.js when appropriate to heed\n
+\t\t\t\t// certain event-specific variations such as ctrl-enter in a list\n
+\t\t\t\tvar evt = value;\n
+\t\t\t\tvar brElm, extraBr, marker;\n
+\t\t\t\tvar rng = selection.getRng(true);\n
+\t\t\t\tnew RangeUtils(dom).normalize(rng);\n
+\n
+\t\t\t\tvar offset = rng.startOffset;\n
+\t\t\t\tvar container = rng.startContainer;\n
+\n
+\t\t\t\t// Resolve node index\n
+\t\t\t\tif (container.nodeType == 1 && container.hasChildNodes()) {\n
+\t\t\t\t\tvar isAfterLastNodeInContainer = offset > container.childNodes.length - 1;\n
+\n
+\t\t\t\t\tcontainer = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;\n
+\t\t\t\t\tif (isAfterLastNodeInContainer && container.nodeType == 3) {\n
+\t\t\t\t\t\toffset = container.nodeValue.length;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\toffset = 0;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar parentBlock = dom.getParent(container, dom.isBlock);\n
+\t\t\t\tvar parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : \'\'; // IE < 9 & HTML5\n
+\t\t\t\tvar containerBlock = parentBlock ? dom.getParent(parentBlock.parentNode, dom.isBlock) : null;\n
+\t\t\t\tvar containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : \'\'; // IE < 9 & HTML5\n
+\n
+\t\t\t\t// Enter inside block contained within a LI then split or insert before/after LI\n
+\t\t\t\tvar isControlKey = evt && evt.ctrlKey;\n
+\t\t\t\tif (containerBlockName == \'LI\' && !isControlKey) {\n
+\t\t\t\t\tparentBlock = containerBlock;\n
+\t\t\t\t\tparentBlockName = containerBlockName;\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Walks the parent block to the right and look for BR elements\n
+\t\t\t\tfunction hasRightSideContent() {\n
+\t\t\t\t\tvar walker = new TreeWalker(container, parentBlock), node;\n
+\t\t\t\t\tvar nonEmptyElementsMap = editor.schema.getNonEmptyElements();\n
+\n
+\t\t\t\t\twhile ((node = walker.next())) {\n
+\t\t\t\t\t\tif (nonEmptyElementsMap[node.nodeName.toLowerCase()] || node.length > 0) {\n
+\t\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif (container && container.nodeType == 3 && offset >= container.nodeValue.length) {\n
+\t\t\t\t\t// Insert extra BR element at the end block elements\n
+\t\t\t\t\tif (!isOldIE && !hasRightSideContent()) {\n
+\t\t\t\t\t\tbrElm = dom.create(\'br\');\n
+\t\t\t\t\t\trng.insertNode(brElm);\n
+\t\t\t\t\t\trng.setStartAfter(brElm);\n
+\t\t\t\t\t\trng.setEndAfter(brElm);\n
+\t\t\t\t\t\textraBr = true;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\tbrElm = dom.create(\'br\');\n
+\t\t\t\trng.insertNode(brElm);\n
+\n
+\t\t\t\t// Rendering modes below IE8 doesn\'t display BR elements in PRE unless we have a \\n before it\n
+\t\t\t\tvar documentMode = dom.doc.documentMode;\n
+\t\t\t\tif (isOldIE && parentBlockName == \'PRE\' && (!documentMode || documentMode < 8)) {\n
+\t\t\t\t\tbrElm.parentNode.insertBefore(dom.doc.createTextNode(\'\\r\'), brElm);\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Insert temp marker and scroll to that\n
+\t\t\t\tmarker = dom.create(\'span\', {}, \'&nbsp;\');\n
+\t\t\t\tbrElm.parentNode.insertBefore(marker, brElm);\n
+\t\t\t\tselection.scrollIntoView(marker);\n
+\t\t\t\tdom.remove(marker);\n
+\n
+\t\t\t\tif (!extraBr) {\n
+\t\t\t\t\trng.setStartAfter(brElm);\n
+\t\t\t\t\trng.setEndAfter(brElm);\n
+\t\t\t\t} else {\n
+\t\t\t\t\trng.setStartBefore(brElm);\n
+\t\t\t\t\trng.setEndBefore(brElm);\n
+\t\t\t\t}\n
+\n
+\t\t\t\tselection.setRng(rng);\n
+\t\t\t\teditor.undoManager.add();\n
+\n
+\t\t\t\treturn TRUE;\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// Add queryCommandState overrides\n
+\t\taddCommands({\n
+\t\t\t// Override justify commands\n
+\t\t\t\'JustifyLeft,JustifyCenter,JustifyRight,JustifyFull\': function(command) {\n
+\t\t\t\tvar name = \'align\' + command.substring(7);\n
+\t\t\t\tvar nodes = selection.isCollapsed() ? [dom.getParent(selection.getNode(), dom.isBlock)] : selection.getSelectedBlocks();\n
+\t\t\t\tvar matches = map(nodes, function(node) {\n
+\t\t\t\t\treturn !!formatter.matchNode(node, name);\n
+\t\t\t\t});\n
+\t\t\t\treturn inArray(matches, TRUE) !== -1;\n
+\t\t\t},\n
+\n
+\t\t\t\'Bold,Italic,Underline,Strikethrough,Superscript,Subscript\': function(command) {\n
+\t\t\t\treturn isFormatMatch(command);\n
+\t\t\t},\n
+\n
+\t\t\tmceBlockQuote: function() {\n
+\t\t\t\treturn isFormatMatch(\'blockquote\');\n
+\t\t\t},\n
+\n
+\t\t\tOutdent: function() {\n
+\t\t\t\tvar node;\n
+\n
+\t\t\t\tif (settings.inline_styles) {\n
+\t\t\t\t\tif ((node = dom.getParent(selection.getStart(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {\n
+\t\t\t\t\t\treturn TRUE;\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tif ((node = dom.getParent(selection.getEnd(), dom.isBlock)) && parseInt(node.style.paddingLeft, 10) > 0) {\n
+\t\t\t\t\t\treturn TRUE;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn (\n
+\t\t\t\t\tqueryCommandState(\'InsertUnorderedList\') ||\n
+\t\t\t\t\tqueryCommandState(\'InsertOrderedList\') ||\n
+\t\t\t\t\t(!settings.inline_styles && !!dom.getParent(selection.getNode(), \'BLOCKQUOTE\'))\n
+\t\t\t\t);\n
+\t\t\t},\n
+\n
+\t\t\t\'InsertUnorderedList,InsertOrderedList\': function(command) {\n
+\t\t\t\tvar list = dom.getParent(selection.getNode(), \'ul,ol\');\n
+\n
+\t\t\t\treturn list &&\n
+\t\t\t\t\t(\n
+\t\t\t\t\t\tcommand === \'insertunorderedlist\' && list.tagName === \'UL\' ||\n
+\t\t\t\t\t\tcommand === \'insertorderedlist\' && list.tagName === \'OL\'\n
+\t\t\t\t\t);\n
+\t\t\t}\n
+\t\t}, \'state\');\n
+\n
+\t\t// Add queryCommandValue overrides\n
+\t\taddCommands({\n
+\t\t\t\'FontSize,FontName\': function(command) {\n
+\t\t\t\tvar value = 0, parent;\n
+\n
+\t\t\t\tif ((parent = dom.getParent(selection.getNode(), \'span\'))) {\n
+\t\t\t\t\tif (command == \'fontsize\') {\n
+\t\t\t\t\t\tvalue = parent.style.fontSize;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tvalue = parent.style.fontFamily.replace(/, /g, \',\').replace(/[\\\'\\"]/g, \'\').toLowerCase();\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn value;\n
+\t\t\t}\n
+\t\t}, \'value\');\n
+\n
+\t\t// Add undo manager logic\n
+\t\taddCommands({\n
+\t\t\tUndo: function() {\n
+\t\t\t\teditor.undoManager.undo();\n
+\t\t\t},\n
+\n
+\t\t\tRedo: function() {\n
+\t\t\t\teditor.undoManager.redo();\n
+\t\t\t}\n
+\t\t});\n
+\t};\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>28767</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EditorCommands.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

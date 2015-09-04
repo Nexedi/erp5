@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268326.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Iframe.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Iframe.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/*jshint scripturl:true */\n
+\n
+/**\n
+ * This class creates an iframe.\n
+ *\n
+ * @setting {String} url Url to open in the iframe.\n
+ *\n
+ * @-x-less Iframe.less\n
+ * @class tinymce.ui.Iframe\n
+ * @extends tinymce.ui.Widget\n
+ */\n
+define("tinymce/ui/Iframe", [\n
+\t"tinymce/ui/Widget"\n
+], function(Widget) {\n
+\t"use strict";\n
+\n
+\treturn Widget.extend({\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.classes.add(\'iframe\');\n
+\t\t\tself.canFocus = false;\n
+\n
+\t\t\t/*eslint no-script-url:0 */\n
+\t\t\treturn (\n
+\t\t\t\t\'<iframe id="\' + self._id + \'" class="\' + self.classes + \'" tabindex="-1" src="\' +\n
+\t\t\t\t(self.settings.url || "javascript:\\\'\\\'") + \'" frameborder="0"></iframe>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Setter for the iframe source.\n
+\t\t *\n
+\t\t * @method src\n
+\t\t * @param {String} src Source URL for iframe.\n
+\t\t */\n
+\t\tsrc: function(src) {\n
+\t\t\tthis.getEl().src = src;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Inner HTML for the iframe.\n
+\t\t *\n
+\t\t * @method html\n
+\t\t * @param {String} html HTML string to set as HTML inside the iframe.\n
+\t\t * @param {function} callback Optional callback to execute when the iframe body is filled with contents.\n
+\t\t * @return {tinymce.ui.Iframe} Current iframe control.\n
+\t\t */\n
+\t\thtml: function(html, callback) {\n
+\t\t\tvar self = this, body = this.getEl().contentWindow.document.body;\n
+\n
+\t\t\t// Wait for iframe to initialize IE 10 takes time\n
+\t\t\tif (!body) {\n
+\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\tself.html(html);\n
+\t\t\t\t}, 0);\n
+\t\t\t} else {\n
+\t\t\t\tbody.innerHTML = html;\n
+\n
+\t\t\t\tif (callback) {\n
+\t\t\t\t\tcallback();\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1827</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Iframe.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268157.35</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>focus.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+<title>Focus tests</title>\n
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />\n
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />\n
+<!--\n
+<script type="text/javascript">less = {env: "development", async: false};</script>\n
+<link rel="stylesheet/less" type="text/css" href="../../js/tinymce/skins/lightgray/skin.dev.less">\n
+<script src="../../node_modules/less/dist/less-1.4.2.min.js"></script>\n
+-->\n
+<script src="../../js/tinymce/tinymce.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/table/plugin.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/paste/plugin.dev.js"></script>\n
+<script src="../../js/tinymce/plugins/spellchecker/plugin.dev.js"></script>\n
+<script>\n
+\ttinymce.init({\n
+\t\tselector: "textarea.editor",\n
+\t\ttheme: "modern",\n
+\t\tplugins: [\n
+\t\t\t"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",\n
+\t\t\t"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
+\t\t\t"save table contextmenu directionality emoticons template paste textcolor importcss"\n
+\t\t],\n
+\t\tadd_unload_trigger: false,\n
+\n
+\t\ttoolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",\n
+\n
+\t\tsetup: function(ed) {\n
+\t\t\ted.on(\'focus blur activate deactivate\', function(e) {\n
+\t\t\t\tconsole.log(e.type + \':\' + ed.id);\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+\n
+\ttinymce.init({\n
+\t\tselector: "div.editor",\n
+\t\tinline: true,\n
+\t\ttheme: "modern",\n
+\t\tplugins: [\n
+\t\t\t"advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",\n
+\t\t\t"searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
+\t\t\t"save table contextmenu directionality emoticons template paste textcolor importcss"\n
+\t\t],\n
+\t\tadd_unload_trigger: false,\n
+\n
+\t\ttoolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table",\n
+\n
+\t\tsetup: function(ed) {\n
+\t\t\ted.on(\'focus blur activate deactivate\', function(e) {\n
+\t\t\t\tconsole.log(e.type + \':\' + ed.id);\n
+\t\t\t});\n
+\t\t}\n
+\t});\n
+\n
+\tif (!window.console) {\n
+\t\tconsole = {\n
+\t\t\tlog: function(text) {\n
+\t\t\t\tdocument.body.appendChild(document.createTextNode(text));\n
+\t\t\t\tdocument.body.appendChild(document.createElement(\'br\'));\n
+\t\t\t}\n
+\t\t};\n
+\t}\n
+</script>\n
+<style>\n
+.editor {\n
+\tborder: 1px dashed black;\n
+}\n
+</style>\n
+</head>\n
+<body id="root">\n
+<form method="post" action="http://www.tinymce.com/dump.php?example=true">\n
+\t<div>\n
+\t\t<div>\n
+\t\t\t<textarea id="e1" class="editor">\n
+\t\t\t\t<p>e1</p>\n
+\t\t\t\t<table>\n
+\t\t\t\t<tbody>\n
+\t\t\t\t<tr>\n
+\t\t\t\t<td>Cell</td>\n
+\t\t\t\t</tr>\n
+\t\t\t\t</tbody>\n
+\t\t\t\t</table>\n
+\t\t\t\t<p>Text2</p>\n
+\t\t\t\t<div contenteditable="false">contentEditable:false</div>\n
+\t\t\t\t<div tabindex="1">Block with tabindex:1</div>\n
+\t\t\t\t<p>abc<span tabindex="1">Inline with tabindex:1</span>123</p>\n
+\t\t\t</textarea>\n
+\n
+\t\t\t<div>\n
+\t\t\t\t<button type="button">Button</button>\n
+\t\t\t\t<a href="#">Link</a>\n
+\t\t\t\t<button type="button" onclick="tinymce.activeEditor.execCommand(\'Bold\');">Bold:active</button>\n
+\t\t\t\t<button type="button" onclick="tinymce.get(\'e1\').execCommand(\'Bold\');">Bold:e1</button>\n
+\t\t\t</div>\n
+\n
+\t\t\t<textarea id="e2" class="editor">\n
+\t\t\t\t<p>e2</p>\n
+\t\t\t\t<table>\n
+\t\t\t\t<tbody>\n
+\t\t\t\t<tr>\n
+\t\t\t\t<td>Cell</td>\n
+\t\t\t\t</tr>\n
+\t\t\t\t</tbody>\n
+\t\t\t\t</table>\n
+\t\t\t\t<p>Text2</p>\n
+\t\t\t\t<div contenteditable="false">contentEditable:false</div>\n
+\t\t\t\t<div tabindex="1">Block with tabindex:1</div>\n
+\t\t\t\t<p>abc<span tabindex="1">Inline with tabindex:1</span>123</p>\n
+\t\t\t</textarea>\n
+\n
+\t\t\t<div id="e3" class="editor">\n
+\t\t\t\t<p>e3</p>\n
+\t\t\t\t<table>\n
+\t\t\t\t<tbody>\n
+\t\t\t\t<tr>\n
+\t\t\t\t<td>Cell</td>\n
+\t\t\t\t</tr>\n
+\t\t\t\t</tbody>\n
+\t\t\t\t</table>\n
+\t\t\t\t<p>Text2</p>\n
+\t\t\t\t<div contenteditable="false">contentEditable:false</div>\n
+\t\t\t\t<div tabindex="1">Block with tabindex:1</div>\n
+\t\t\t\t<p>abc<span tabindex="1">Inline with tabindex:1</span>123</p>\n
+\t\t\t</div>\n
+\n
+\t\t\t<div id="e4" class="editor">\n
+\t\t\t\t<p>e4</p>\n
+\t\t\t\t<table>\n
+\t\t\t\t<tbody>\n
+\t\t\t\t<tr>\n
+\t\t\t\t<td>Cell</td>\n
+\t\t\t\t</tr>\n
+\t\t\t\t</tbody>\n
+\t\t\t\t</table>\n
+\t\t\t\t<p>Text2</p>\n
+\t\t\t\t<div contenteditable="false">contentEditable:false</div>\n
+\t\t\t\t<div tabindex="1">Block with tabindex:1</div>\n
+\t\t\t\t<p>abc<span tabindex="1">Inline with tabindex:1</span>123</p>\n
+\t\t\t</div>\n
+\t\t</div>\n
+\n
+\t\t<br />\n
+\t\t<input type="submit" name="save" value="Submit" />\n
+\t\t<input type="reset" name="reset" value="Reset" />\n
+\t</div>\n
+</form>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4509</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>focus.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

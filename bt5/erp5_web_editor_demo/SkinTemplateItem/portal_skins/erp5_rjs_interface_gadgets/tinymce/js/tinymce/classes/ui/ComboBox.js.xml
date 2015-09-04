@@ -1,0 +1,349 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268332.38</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ComboBox.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ComboBox.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class creates a combobox control. Select box that you select a value from or\n
+ * type a value into.\n
+ *\n
+ * @-x-less ComboBox.less\n
+ * @class tinymce.ui.ComboBox\n
+ * @extends tinymce.ui.Widget\n
+ */\n
+define("tinymce/ui/ComboBox", [\n
+\t"tinymce/ui/Widget",\n
+\t"tinymce/ui/Factory",\n
+\t"tinymce/ui/DomUtils",\n
+\t"tinymce/dom/DomQuery"\n
+], function(Widget, Factory, DomUtils, $) {\n
+\t"use strict";\n
+\n
+\treturn Widget.extend({\n
+\t\t/**\n
+\t\t * Constructs a new control instance with the specified settings.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} settings Name/value object with settings.\n
+\t\t * @setting {String} placeholder Placeholder text to display.\n
+\t\t */\n
+\t\tinit: function(settings) {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself._super(settings);\n
+\t\t\tsettings = self.settings;\n
+\n
+\t\t\tself.classes.add(\'combobox\');\n
+\t\t\tself.subinput = true;\n
+\t\t\tself.ariaTarget = \'inp\'; // TODO: Figure out a better way\n
+\n
+\t\t\tsettings.menu = settings.menu || settings.values;\n
+\n
+\t\t\tif (settings.menu) {\n
+\t\t\t\tsettings.icon = \'caret\';\n
+\t\t\t}\n
+\n
+\t\t\tself.on(\'click\', function(e) {\n
+\t\t\t\tvar elm = e.target, root = self.getEl();\n
+\n
+\t\t\t\tif (!$.contains(root, elm) && elm != root) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\twhile (elm && elm != root) {\n
+\t\t\t\t\tif (elm.id && elm.id.indexOf(\'-open\') != -1) {\n
+\t\t\t\t\t\tself.fire(\'action\');\n
+\n
+\t\t\t\t\t\tif (settings.menu) {\n
+\t\t\t\t\t\t\tself.showMenu();\n
+\n
+\t\t\t\t\t\t\tif (e.aria) {\n
+\t\t\t\t\t\t\t\tself.menu.items()[0].focus();\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\telm = elm.parentNode;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// TODO: Rework this\n
+\t\t\tself.on(\'keydown\', function(e) {\n
+\t\t\t\tif (e.target.nodeName == "INPUT" && e.keyCode == 13) {\n
+\t\t\t\t\tself.parents().reverse().each(function(ctrl) {\n
+\t\t\t\t\t\tvar stateValue = self.state.get(\'value\'), inputValue = self.getEl(\'inp\').value;\n
+\n
+\t\t\t\t\t\te.preventDefault();\n
+\n
+\t\t\t\t\t\tself.state.set(\'value\', inputValue);\n
+\n
+\t\t\t\t\t\tif (stateValue != inputValue) {\n
+\t\t\t\t\t\t\tself.fire(\'change\');\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif (ctrl.hasEventListeners(\'submit\') && ctrl.toJSON) {\n
+\t\t\t\t\t\t\tctrl.fire(\'submit\', {data: ctrl.toJSON()});\n
+\t\t\t\t\t\t\treturn false;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself.on(\'keyup\', function(e) {\n
+\t\t\t\tif (e.target.nodeName == "INPUT") {\n
+\t\t\t\t\tself.state.set(\'value\', e.target.value);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\tshowMenu: function() {\n
+\t\t\tvar self = this, settings = self.settings, menu;\n
+\n
+\t\t\tif (!self.menu) {\n
+\t\t\t\tmenu = settings.menu || [];\n
+\n
+\t\t\t\t// Is menu array then auto constuct menu control\n
+\t\t\t\tif (menu.length) {\n
+\t\t\t\t\tmenu = {\n
+\t\t\t\t\t\ttype: \'menu\',\n
+\t\t\t\t\t\titems: menu\n
+\t\t\t\t\t};\n
+\t\t\t\t} else {\n
+\t\t\t\t\tmenu.type = menu.type || \'menu\';\n
+\t\t\t\t}\n
+\n
+\t\t\t\tself.menu = Factory.create(menu).parent(self).renderTo(self.getContainerElm());\n
+\t\t\t\tself.fire(\'createmenu\');\n
+\t\t\t\tself.menu.reflow();\n
+\t\t\t\tself.menu.on(\'cancel\', function(e) {\n
+\t\t\t\t\tif (e.control === self.menu) {\n
+\t\t\t\t\t\tself.focus();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tself.menu.on(\'show hide\', function(e) {\n
+\t\t\t\t\te.control.items().each(function(ctrl) {\n
+\t\t\t\t\t\tctrl.active(ctrl.value() == self.value());\n
+\t\t\t\t\t});\n
+\t\t\t\t}).fire(\'show\');\n
+\n
+\t\t\t\tself.menu.on(\'select\', function(e) {\n
+\t\t\t\t\tself.value(e.control.value());\n
+\t\t\t\t});\n
+\n
+\t\t\t\tself.on(\'focusin\', function(e) {\n
+\t\t\t\t\tif (e.target.tagName.toUpperCase() == \'INPUT\') {\n
+\t\t\t\t\t\tself.menu.hide();\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\n
+\t\t\t\tself.aria(\'expanded\', true);\n
+\t\t\t}\n
+\n
+\t\t\tself.menu.show();\n
+\t\t\tself.menu.layoutRect({w: self.layoutRect().w});\n
+\t\t\tself.menu.moveRel(self.getEl(), self.isRtl() ? [\'br-tr\', \'tr-br\'] : [\'bl-tl\', \'tl-bl\']);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Focuses the input area of the control.\n
+\t\t *\n
+\t\t * @method focus\n
+\t\t */\n
+\t\tfocus: function() {\n
+\t\t\tthis.getEl(\'inp\').focus();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Repaints the control after a layout operation.\n
+\t\t *\n
+\t\t * @method repaint\n
+\t\t */\n
+\t\trepaint: function() {\n
+\t\t\tvar self = this, elm = self.getEl(), openElm = self.getEl(\'open\'), rect = self.layoutRect();\n
+\t\t\tvar width, lineHeight;\n
+\n
+\t\t\tif (openElm) {\n
+\t\t\t\twidth = rect.w - DomUtils.getSize(openElm).width - 10;\n
+\t\t\t} else {\n
+\t\t\t\twidth = rect.w - 10;\n
+\t\t\t}\n
+\n
+\t\t\t// Detect old IE 7+8 add lineHeight to align caret vertically in the middle\n
+\t\t\tvar doc = document;\n
+\t\t\tif (doc.all && (!doc.documentMode || doc.documentMode <= 8)) {\n
+\t\t\t\tlineHeight = (self.layoutRect().h - 2) + \'px\';\n
+\t\t\t}\n
+\n
+\t\t\t$(elm.firstChild).css({\n
+\t\t\t\twidth: width,\n
+\t\t\t\tlineHeight: lineHeight\n
+\t\t\t});\n
+\n
+\t\t\tself._super();\n
+\n
+\t\t\treturn self;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Post render method. Called after the control has been rendered to the target.\n
+\t\t *\n
+\t\t * @method postRender\n
+\t\t * @return {tinymce.ui.ComboBox} Current combobox instance.\n
+\t\t */\n
+\t\tpostRender: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\t$(this.getEl(\'inp\')).on(\'change\', function(e) {\n
+\t\t\t\tself.state.set(\'value\', e.target.value);\n
+\t\t\t\tself.fire(\'change\', e);\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Renders the control as a HTML string.\n
+\t\t *\n
+\t\t * @method renderHtml\n
+\t\t * @return {String} HTML representing the control.\n
+\t\t */\n
+\t\trenderHtml: function() {\n
+\t\t\tvar self = this, id = self._id, settings = self.settings, prefix = self.classPrefix;\n
+\t\t\tvar value = self.state.get(\'value\') || \'\';\n
+\t\t\tvar icon, text, openBtnHtml = \'\', extraAttrs = \'\';\n
+\n
+\t\t\tif ("spellcheck" in settings) {\n
+\t\t\t\textraAttrs += \' spellcheck="\' + settings.spellcheck + \'"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.maxLength) {\n
+\t\t\t\textraAttrs += \' maxlength="\' + settings.maxLength + \'"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.size) {\n
+\t\t\t\textraAttrs += \' size="\' + settings.size + \'"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (settings.subtype) {\n
+\t\t\t\textraAttrs += \' type="\' + settings.subtype + \'"\';\n
+\t\t\t}\n
+\n
+\t\t\tif (self.disabled()) {\n
+\t\t\t\textraAttrs += \' disabled="disabled"\';\n
+\t\t\t}\n
+\n
+\t\t\ticon = settings.icon;\n
+\t\t\tif (icon && icon != \'caret\') {\n
+\t\t\t\ticon = prefix + \'ico \' + prefix + \'i-\' + settings.icon;\n
+\t\t\t}\n
+\n
+\t\t\ttext = self.state.get(\'text\');\n
+\n
+\t\t\tif (icon || text) {\n
+\t\t\t\topenBtnHtml = (\n
+\t\t\t\t\t\'<div id="\' + id + \'-open" class="\' + prefix + \'btn \' + prefix + \'open" tabIndex="-1" role="button">\' +\n
+\t\t\t\t\t\t\'<button id="\' + id + \'-action" type="button" hidefocus="1" tabindex="-1">\' +\n
+\t\t\t\t\t\t\t(icon != \'caret\' ? \'<i class="\' + icon + \'"></i>\' : \'<i class="\' + prefix + \'caret"></i>\') +\n
+\t\t\t\t\t\t\t(text ? (icon ? \' \' : \'\') + text : \'\') +\n
+\t\t\t\t\t\t\'</button>\' +\n
+\t\t\t\t\t\'</div>\'\n
+\t\t\t\t);\n
+\n
+\t\t\t\tself.classes.add(\'has-open\');\n
+\t\t\t}\n
+\n
+\t\t\treturn (\n
+\t\t\t\t\'<div id="\' + id + \'" class="\' + self.classes + \'">\' +\n
+\t\t\t\t\t\'<input id="\' + id + \'-inp" class="\' + prefix + \'textbox" value="\' +\n
+\t\t\t\t\tself.encode(value, false) + \'" hidefocus="1"\' + extraAttrs + \' placeholder="\' +\n
+\t\t\t\t\tself.encode(settings.placeholder) + \'" />\' +\n
+\t\t\t\t\topenBtnHtml +\n
+\t\t\t\t\'</div>\'\n
+\t\t\t);\n
+\t\t},\n
+\n
+\t\tvalue: function(value) {\n
+\t\t\tif (arguments.length) {\n
+\t\t\t\tthis.state.set(\'value\', value);\n
+\t\t\t\treturn this;\n
+\t\t\t}\n
+\n
+\t\t\t// Make sure the real state is in sync\n
+\t\t\tif (this.state.get(\'rendered\')) {\n
+\t\t\t\tthis.state.set(\'value\', this.getEl(\'inp\').value);\n
+\t\t\t}\n
+\n
+\t\t\treturn this.state.get(\'value\');\n
+\t\t},\n
+\n
+\t\tbindStates: function() {\n
+\t\t\tvar self = this;\n
+\n
+\t\t\tself.state.on(\'change:value\', function(e) {\n
+\t\t\t\tif (self.getEl(\'inp\').value != e.value) {\n
+\t\t\t\t\tself.getEl(\'inp\').value = e.value;\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\tself.state.on(\'change:disabled\', function(e) {\n
+\t\t\t\tself.getEl(\'inp\').disabled = e.value;\n
+\t\t\t});\n
+\n
+\t\t\treturn self._super();\n
+\t\t},\n
+\n
+\t\tremove: function() {\n
+\t\t\t$(this.getEl(\'inp\')).off();\n
+\t\t\tthis._super();\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7202</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ComboBox.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268279.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ObservableObject.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * ObservableObject.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+/**\n
+ * This class is a object that is observable when properties changes a change event gets emitted.\n
+ *\n
+ * @class tinymce.data.ObservableObject\n
+ */\n
+define("tinymce/data/ObservableObject", [\n
+\t"tinymce/data/Binding",\n
+\t"tinymce/util/Observable",\n
+\t"tinymce/util/Class",\n
+\t"tinymce/util/Tools"\n
+], function(Binding, Observable, Class, Tools) {\n
+\tfunction isEqual(a, b) {\n
+\t\tvar k, checked;\n
+\n
+\t\t// Strict equals\n
+\t\tif (a === b) {\n
+\t\t\treturn true;\n
+\t\t}\n
+\n
+\t\t// Compare null\n
+\t\tif (a === null || b === null) {\n
+\t\t\treturn a === b;\n
+\t\t}\n
+\n
+\t\t// Compare number, boolean, string, undefined\n
+\t\tif (typeof a !== "object" || typeof b !== "object") {\n
+\t\t\treturn a === b;\n
+\t\t}\n
+\n
+\t\t// Compare arrays\n
+\t\tif (Tools.isArray(b)) {\n
+\t\t\tif (a.length !== b.length) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\tk = a.length;\n
+\t\t\twhile (k--) {\n
+\t\t\t\tif (!isEqual(a[k], b[k])) {\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\t// Compare objects\n
+\t\tchecked = {};\n
+\t\tfor (k in b) {\n
+\t\t\tif (!isEqual(a[k], b[k])) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\tchecked[k] = true;\n
+\t\t}\n
+\n
+\t\tfor (k in a) {\n
+\t\t\tif (!checked[k] && !isEqual(a[k], b[k])) {\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\t\t}\n
+\n
+\t\treturn true;\n
+\t}\n
+\n
+\treturn Class.extend({\n
+\t\tMixins: [Observable],\n
+\n
+\t\t/**\n
+\t\t * Constructs a new observable object instance.\n
+\t\t *\n
+\t\t * @constructor\n
+\t\t * @param {Object} data Initial data for the object.\n
+\t\t */\n
+\t\tinit: function(data) {\n
+\t\t\tvar name, value;\n
+\n
+\t\t\tdata = data || {};\n
+\n
+\t\t\tfor (name in data) {\n
+\t\t\t\tvalue = data[name];\n
+\n
+\t\t\t\tif (value instanceof Binding) {\n
+\t\t\t\t\tdata[name] = value.create(this, name);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\tthis.data = data;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Sets a property on the value this will call\n
+\t\t * observers if the value is a change from the current value.\n
+\t\t *\n
+\t\t * @method set\n
+\t\t * @param {String/object} name Name of the property to set or a object of items to set.\n
+\t\t * @param {Object} value Value to set for the property.\n
+\t\t * @return {tinymce.data.ObservableObject} Observable object instance.\n
+\t\t */\n
+\t\tset: function(name, value) {\n
+\t\t\tvar key, args, oldValue = this.data[name];\n
+\n
+\t\t\tif (value instanceof Binding) {\n
+\t\t\t\tvalue = value.create(this, name);\n
+\t\t\t}\n
+\n
+\t\t\tif (typeof name === "object") {\n
+\t\t\t\tfor (key in name) {\n
+\t\t\t\t\tthis.set(key, name[key]);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn this;\n
+\t\t\t}\n
+\n
+\t\t\tif (!isEqual(oldValue, value)) {\n
+\t\t\t\tthis.data[name] = value;\n
+\n
+\t\t\t\targs = {\n
+\t\t\t\t\ttarget: this,\n
+\t\t\t\t\tname: name,\n
+\t\t\t\t\tvalue: value,\n
+\t\t\t\t\toldValue: oldValue\n
+\t\t\t\t};\n
+\n
+\t\t\t\tthis.fire(\'change:\' + name, args);\n
+\t\t\t\tthis.fire(\'change\', args);\n
+\t\t\t}\n
+\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Gets a property by name.\n
+\t\t *\n
+\t\t * @method get\n
+\t\t * @param {String} name Name of the property to get.\n
+\t\t * @return {Object} Object value of propery.\n
+\t\t */\n
+\t\tget: function(name) {\n
+\t\t\treturn this.data[name];\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns true/false if the specified property exists.\n
+\t\t *\n
+\t\t * @method has\n
+\t\t * @param {String} name Name of the property to check for.\n
+\t\t * @return {Boolean} true/false if the item exists.\n
+\t\t */\n
+\t\thas: function(name) {\n
+\t\t\treturn name in this.data;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Returns a dynamic property binding for the specified property name. This makes\n
+\t\t * it possible to sync the state of two properties in two ObservableObject instances.\n
+\t\t *\n
+\t\t * @method bind\n
+\t\t * @param {String} name Name of the property to sync with the property it\'s inserted to.\n
+\t\t * @return {tinymce.data.Binding} Data binding instance.\n
+\t\t */\n
+\t\tbind: function(name) {\n
+\t\t\treturn Binding.create(this, name);\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Destroys the observable object and fires the "destroy"\n
+\t\t * event and clean up any internal resources.\n
+\t\t *\n
+\t\t * @method destroy\n
+\t\t */\n
+\t\tdestroy: function() {\n
+\t\t\tthis.fire(\'destroy\');\n
+\t\t}\n
+\t});\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3774</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ObservableObject.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

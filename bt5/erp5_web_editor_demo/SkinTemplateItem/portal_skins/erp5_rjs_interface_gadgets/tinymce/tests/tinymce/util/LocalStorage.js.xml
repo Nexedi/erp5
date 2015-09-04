@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268203.97</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>LocalStorage.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function() {\n
+\tvar LocalStorage = tinymce.util.LocalStorage;\n
+\n
+\tmodule("tinymce.util.LocalStorage", {\n
+\t\tsetup: function() {\n
+\t\t\tLocalStorage.clear();\n
+\t\t},\n
+\n
+\t\tteardown: function() {\n
+\t\t\tLocalStorage.clear();\n
+\t\t}\n
+\t});\n
+\n
+\tQUnit.config.reorder = false;\n
+\n
+\ttest(\'setItem\', function() {\n
+\t\tLocalStorage.setItem("a", "1");\n
+\t\tequal(LocalStorage.getItem("a"), "1");\n
+\t\tLocalStorage.setItem("a", "2");\n
+\t\tequal(LocalStorage.getItem("a"), "2");\n
+\t\tLocalStorage.setItem("a", 3);\n
+\t\tequal(LocalStorage.getItem("a"), "3");\n
+\t\tLocalStorage.setItem("a", null);\n
+\t\tequal(LocalStorage.getItem("a"), "null");\n
+\t\tLocalStorage.setItem("a", undefined);\n
+\t\tequal(LocalStorage.getItem("a"), "undefined");\n
+\t\tLocalStorage.setItem("a", new Date(0));\n
+\t\tequal(LocalStorage.getItem("a"), new Date(0).toString());\n
+\t});\n
+\n
+\ttest(\'getItem\', function() {\n
+\t\tLocalStorage.setItem("a", "1");\n
+\t\tequal(LocalStorage.getItem("a"), "1");\n
+\t\tLocalStorage.setItem("a", "0");\n
+\t\tequal(LocalStorage.getItem("a"), "0");\n
+\t\tequal(LocalStorage.getItem("b"), null);\n
+\t});\n
+\n
+\ttest(\'removeItem\', function() {\n
+\t\tLocalStorage.setItem("a", "1");\n
+\t\tequal(LocalStorage.getItem("a"), "1");\n
+\t\tLocalStorage.removeItem("a");\n
+\t\tequal(LocalStorage.getItem("a"), null);\n
+\t});\n
+\n
+\ttest(\'key\', function() {\n
+\t\tLocalStorage.setItem("a", "1");\n
+\t\tequal(LocalStorage.key(0), "a");\n
+\t\tequal(LocalStorage.length, 1);\n
+\t});\n
+\n
+\ttest(\'length\', function() {\n
+\t\tequal(LocalStorage.length, 0);\n
+\t\tLocalStorage.setItem("a", "1");\n
+\t\tequal(LocalStorage.length, 1);\n
+\t});\n
+\n
+\ttest(\'clear\', function() {\n
+\t\tequal(LocalStorage.length, 0);\n
+\t\tLocalStorage.setItem("a", "1");\n
+\t\tequal(LocalStorage.length, 1);\n
+\t});\n
+\n
+\ttest(\'setItem key and value with commas\', function() {\n
+\t\tLocalStorage.setItem("a,1", "1,2");\n
+\t\tLocalStorage.setItem("b,2", "2,3");\n
+\t\tequal(LocalStorage.getItem("a,1"), "1,2");\n
+\t\tequal(LocalStorage.getItem("b,2"), "2,3");\n
+\t});\n
+\n
+\ttest(\'setItem with two large values\', function() {\n
+\t\tvar data = "";\n
+\n
+\t\tfor (var i = 0; i < 1024; i++) {\n
+\t\t\tdata += \'x\';\n
+\t\t}\n
+\n
+\t\tLocalStorage.clear();\n
+\t\tLocalStorage.setItem("a", data + "1");\n
+\t\tLocalStorage.setItem("b", data);\n
+\t\tequal(LocalStorage.getItem("a").length, 1024 + 1);\n
+\t\tequal(LocalStorage.getItem("b").length, 1024);\n
+\t});\n
+\n
+\ttest(\'setItem with two large keys\', function() {\n
+\t\tvar key = "";\n
+\n
+\t\tfor (var i = 0; i < 1024; i++) {\n
+\t\t\tkey += \'x\';\n
+\t\t}\n
+\n
+\t\tLocalStorage.clear();\n
+\t\tLocalStorage.setItem(key + "1", "a");\n
+\t\tLocalStorage.setItem(key + "2", "b");\n
+\t\tequal(LocalStorage.key(0), key + "1");\n
+\t\tequal(LocalStorage.key(1), key + "2");\n
+\t});\n
+})();\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2476</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>LocalStorage.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

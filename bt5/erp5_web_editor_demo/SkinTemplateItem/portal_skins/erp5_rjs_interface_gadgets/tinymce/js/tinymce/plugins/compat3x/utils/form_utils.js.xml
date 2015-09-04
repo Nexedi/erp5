@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41268413.38</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>form_utils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * form_utils.js\n
+ *\n
+ * Released under LGPL License.\n
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved\n
+ *\n
+ * License: http://www.tinymce.com/license\n
+ * Contributing: http://www.tinymce.com/contributing\n
+ */\n
+\n
+var themeBaseURL = tinyMCEPopup.editor.baseURI.toAbsolute(\'themes/\' + tinyMCEPopup.getParam("theme"));\n
+\n
+function getColorPickerHTML(id, target_form_element) {\n
+\tvar h = "", dom = tinyMCEPopup.dom;\n
+\n
+\tif (label = dom.select(\'label[for=\' + target_form_element + \']\')[0]) {\n
+\t\tlabel.id = label.id || dom.uniqueId();\n
+\t}\n
+\n
+\th += \'<a role="button" aria-labelledby="\' + id + \'_label" id="\' + id + \'_link" href="javascript:;" onclick="tinyMCEPopup.pickColor(event,\\\'\' + target_form_element +\'\\\');" onmousedown="return false;" class="pickcolor">\';\n
+\th += \'<span id="\' + id + \'" title="\' + tinyMCEPopup.getLang(\'browse\') + \'">&nbsp;<span id="\' + id + \'_label" class="mceVoiceLabel mceIconOnly" style="display:none;">\' + tinyMCEPopup.getLang(\'browse\') + \'</span></span></a>\';\n
+\n
+\treturn h;\n
+}\n
+\n
+function updateColor(img_id, form_element_id) {\n
+\tdocument.getElementById(img_id).style.backgroundColor = document.forms[0].elements[form_element_id].value;\n
+}\n
+\n
+function setBrowserDisabled(id, state) {\n
+\tvar img = document.getElementById(id);\n
+\tvar lnk = document.getElementById(id + "_link");\n
+\n
+\tif (lnk) {\n
+\t\tif (state) {\n
+\t\t\tlnk.setAttribute("realhref", lnk.getAttribute("href"));\n
+\t\t\tlnk.removeAttribute("href");\n
+\t\t\ttinyMCEPopup.dom.addClass(img, \'disabled\');\n
+\t\t} else {\n
+\t\t\tif (lnk.getAttribute("realhref"))\n
+\t\t\t\tlnk.setAttribute("href", lnk.getAttribute("realhref"));\n
+\n
+\t\t\ttinyMCEPopup.dom.removeClass(img, \'disabled\');\n
+\t\t}\n
+\t}\n
+}\n
+\n
+function getBrowserHTML(id, target_form_element, type, prefix) {\n
+\tvar option = prefix + "_" + type + "_browser_callback", cb, html;\n
+\n
+\tcb = tinyMCEPopup.getParam(option, tinyMCEPopup.getParam("file_browser_callback"));\n
+\n
+\tif (!cb)\n
+\t\treturn "";\n
+\n
+\thtml = "";\n
+\thtml += \'<a id="\' + id + \'_link" href="javascript:openBrowser(\\\'\' + id + \'\\\',\\\'\' + target_form_element + \'\\\', \\\'\' + type + \'\\\',\\\'\' + option + \'\\\');" onmousedown="return false;" class="browse">\';\n
+\thtml += \'<span id="\' + id + \'" title="\' + tinyMCEPopup.getLang(\'browse\') + \'">&nbsp;</span></a>\';\n
+\n
+\treturn html;\n
+}\n
+\n
+function openBrowser(img_id, target_form_element, type, option) {\n
+\tvar img = document.getElementById(img_id);\n
+\n
+\tif (img.className != "mceButtonDisabled")\n
+\t\ttinyMCEPopup.openBrowser(target_form_element, type, option);\n
+}\n
+\n
+function selectByValue(form_obj, field_name, value, add_custom, ignore_case) {\n
+\tif (!form_obj || !form_obj.elements[field_name])\n
+\t\treturn;\n
+\n
+\tif (!value)\n
+\t\tvalue = "";\n
+\n
+\tvar sel = form_obj.elements[field_name];\n
+\n
+\tvar found = false;\n
+\tfor (var i=0; i<sel.options.length; i++) {\n
+\t\tvar option = sel.options[i];\n
+\n
+\t\tif (option.value == value || (ignore_case && option.value.toLowerCase() == value.toLowerCase())) {\n
+\t\t\toption.selected = true;\n
+\t\t\tfound = true;\n
+\t\t} else\n
+\t\t\toption.selected = false;\n
+\t}\n
+\n
+\tif (!found && add_custom && value != \'\') {\n
+\t\tvar option = new Option(value, value);\n
+\t\toption.selected = true;\n
+\t\tsel.options[sel.options.length] = option;\n
+\t\tsel.selectedIndex = sel.options.length - 1;\n
+\t}\n
+\n
+\treturn found;\n
+}\n
+\n
+function getSelectValue(form_obj, field_name) {\n
+\tvar elm = form_obj.elements[field_name];\n
+\n
+\tif (elm == null || elm.options == null || elm.selectedIndex === -1)\n
+\t\treturn "";\n
+\n
+\treturn elm.options[elm.selectedIndex].value;\n
+}\n
+\n
+function addSelectValue(form_obj, field_name, name, value) {\n
+\tvar s = form_obj.elements[field_name];\n
+\tvar o = new Option(name, value);\n
+\ts.options[s.options.length] = o;\n
+}\n
+\n
+function addClassesToList(list_id, specific_option) {\n
+\t// Setup class droplist\n
+\tvar styleSelectElm = document.getElementById(list_id);\n
+\tvar styles = tinyMCEPopup.getParam(\'theme_advanced_styles\', false);\n
+\tstyles = tinyMCEPopup.getParam(specific_option, styles);\n
+\n
+\tif (styles) {\n
+\t\tvar stylesAr = styles.split(\';\');\n
+\n
+\t\tfor (var i=0; i<stylesAr.length; i++) {\n
+\t\t\tif (stylesAr != "") {\n
+\t\t\t\tvar key, value;\n
+\n
+\t\t\t\tkey = stylesAr[i].split(\'=\')[0];\n
+\t\t\t\tvalue = stylesAr[i].split(\'=\')[1];\n
+\n
+\t\t\t\tstyleSelectElm.options[styleSelectElm.length] = new Option(key, value);\n
+\t\t\t}\n
+\t\t}\n
+\t} else {\n
+\t\t/*tinymce.each(tinyMCEPopup.editor.dom.getClasses(), function(o) {\n
+\t\t\tstyleSelectElm.options[styleSelectElm.length] = new Option(o.title || o[\'class\'], o[\'class\']);\n
+\t\t});*/\n
+\t}\n
+}\n
+\n
+function isVisible(element_id) {\n
+\tvar elm = document.getElementById(element_id);\n
+\n
+\treturn elm && elm.style.display != "none";\n
+}\n
+\n
+function convertRGBToHex(col) {\n
+\tvar re = new RegExp("rgb\\\\s*\\\\(\\\\s*([0-9]+).*,\\\\s*([0-9]+).*,\\\\s*([0-9]+).*\\\\)", "gi");\n
+\n
+\tvar rgb = col.replace(re, "$1,$2,$3").split(\',\');\n
+\tif (rgb.length == 3) {\n
+\t\tr = parseInt(rgb[0]).toString(16);\n
+\t\tg = parseInt(rgb[1]).toString(16);\n
+\t\tb = parseInt(rgb[2]).toString(16);\n
+\n
+\t\tr = r.length == 1 ? \'0\' + r : r;\n
+\t\tg = g.length == 1 ? \'0\' + g : g;\n
+\t\tb = b.length == 1 ? \'0\' + b : b;\n
+\n
+\t\treturn "#" + r + g + b;\n
+\t}\n
+\n
+\treturn col;\n
+}\n
+\n
+function convertHexToRGB(col) {\n
+\tif (col.indexOf(\'#\') != -1) {\n
+\t\tcol = col.replace(new RegExp(\'[^0-9A-F]\', \'gi\'), \'\');\n
+\n
+\t\tr = parseInt(col.substring(0, 2), 16);\n
+\t\tg = parseInt(col.substring(2, 4), 16);\n
+\t\tb = parseInt(col.substring(4, 6), 16);\n
+\n
+\t\treturn "rgb(" + r + "," + g + "," + b + ")";\n
+\t}\n
+\n
+\treturn col;\n
+}\n
+\n
+function trimSize(size) {\n
+\treturn size.replace(/([0-9\\.]+)(px|%|in|cm|mm|em|ex|pt|pc)/i, \'$1$2\');\n
+}\n
+\n
+function getCSSSize(size) {\n
+\tsize = trimSize(size);\n
+\n
+\tif (size == "")\n
+\t\treturn "";\n
+\n
+\t// Add px\n
+\tif (/^[0-9]+$/.test(size))\n
+\t\tsize += \'px\';\n
+\t// Sanity check, IE doesn\'t like broken values\n
+\telse if (!(/^[0-9\\.]+(px|%|in|cm|mm|em|ex|pt|pc)$/i.test(size)))\n
+\t\treturn "";\n
+\n
+\treturn size;\n
+}\n
+\n
+function getStyle(elm, attrib, style) {\n
+\tvar val = tinyMCEPopup.dom.getAttrib(elm, attrib);\n
+\n
+\tif (val != \'\')\n
+\t\treturn \'\' + val;\n
+\n
+\tif (typeof(style) == \'undefined\')\n
+\t\tstyle = attrib;\n
+\n
+\treturn tinyMCEPopup.dom.getStyle(elm, style);\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5792</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>form_utils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
