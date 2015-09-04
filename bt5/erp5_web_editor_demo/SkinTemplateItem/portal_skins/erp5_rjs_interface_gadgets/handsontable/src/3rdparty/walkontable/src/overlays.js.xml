@@ -1,0 +1,433 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272621.49</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>overlays.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  getScrollableElement,\n
+  getScrollbarWidth,\n
+  getScrollLeft,\n
+  getScrollTop,\n
+    } from \'./../../../helpers/dom/element\';\n
+import {isKey} from \'./../../../helpers/unicode\';\n
+import {EventManager} from \'./../../../eventManager\';\n
+import {WalkontableCornerOverlay} from \'./overlay/corner\';\n
+import {WalkontableDebugOverlay} from \'./overlay/debug\';\n
+import {WalkontableLeftOverlay} from \'./overlay/left\';\n
+import {WalkontableTopOverlay} from \'./overlay/top\';\n
+\n
+\n
+/**\n
+ * @class WalkontableOverlays\n
+ */\n
+class WalkontableOverlays {\n
+  /**\n
+   * @param {Walkontable} wotInstance\n
+   */\n
+  constructor(wotInstance) {\n
+    this.wot = wotInstance;\n
+\n
+    // legacy support\n
+    this.instance = this.wot;\n
+    this.eventManager = new EventManager(this.wot);\n
+\n
+    this.wot.update(\'scrollbarWidth\', getScrollbarWidth());\n
+    this.wot.update(\'scrollbarHeight\', getScrollbarWidth());\n
+\n
+    this.mainTableScrollableElement = getScrollableElement(this.wot.wtTable.TABLE);\n
+\n
+    this.topOverlay = new WalkontableTopOverlay(this.wot);\n
+    this.leftOverlay = new WalkontableLeftOverlay(this.wot);\n
+\n
+    if (this.topOverlay.needFullRender && this.leftOverlay.needFullRender) {\n
+      this.topLeftCornerOverlay = new WalkontableCornerOverlay(this.wot);\n
+    }\n
+    if (this.wot.getSetting(\'debug\')) {\n
+      this.debug = new WalkontableDebugOverlay(this.wot);\n
+    }\n
+\n
+    this.destroyed = false;\n
+    this.keyPressed = false;\n
+    this.spreaderLastSize = {\n
+      width: null,\n
+      height: null\n
+    };\n
+    this.overlayScrollPositions = {\n
+      \'master\': {\n
+        top: 0,\n
+        left: 0\n
+      },\n
+      \'top\': {\n
+        top: null,\n
+        left: 0\n
+      },\n
+      \'left\': {\n
+        top: 0,\n
+        left: null\n
+      }\n
+    };\n
+    this.registerListeners();\n
+  }\n
+\n
+  /**\n
+   * Refresh and redraw table\n
+   */\n
+  refreshAll() {\n
+    if (!this.wot.drawn) {\n
+      return;\n
+    }\n
+    if (!this.wot.wtTable.holder.parentNode) {\n
+      // Walkontable was detached from DOM, but this handler was not removed\n
+      this.destroy();\n
+\n
+      return;\n
+    }\n
+    this.wot.draw(true);\n
+\n
+    this.topOverlay.onScroll();\n
+    this.leftOverlay.onScroll();\n
+  }\n
+\n
+  /**\n
+   * Register all necessary event listeners\n
+   */\n
+  registerListeners() {\n
+    this.eventManager.addEventListener(document.documentElement, \'keydown\', (event) => this.onKeyDown(event));\n
+    this.eventManager.addEventListener(document.documentElement, \'keyup\', () => this.onKeyUp());\n
+    this.eventManager.addEventListener(document, \'visibilitychange\', () => this.onKeyUp());\n
+\n
+    this.eventManager.addEventListener(this.mainTableScrollableElement, \'scroll\', (event) => this.onTableScroll(event));\n
+\n
+    if (this.topOverlay.needFullRender) {\n
+      this.eventManager.addEventListener(this.topOverlay.clone.wtTable.holder, \'scroll\', (event) => this.onTableScroll(event));\n
+      this.eventManager.addEventListener(this.topOverlay.clone.wtTable.holder, \'wheel\', (event) => this.onTableScroll(event));\n
+    }\n
+\n
+    if (this.leftOverlay.needFullRender) {\n
+      this.eventManager.addEventListener(this.leftOverlay.clone.wtTable.holder, \'scroll\', (event) => this.onTableScroll(event));\n
+      this.eventManager.addEventListener(this.leftOverlay.clone.wtTable.holder, \'wheel\', (event) => this.onTableScroll(event));\n
+    }\n
+\n
+    if (this.topOverlay.trimmingContainer !== window && this.leftOverlay.trimmingContainer !== window) {\n
+      // This is necessary?\n
+      //eventManager.addEventListener(window, \'scroll\', (event) => this.refreshAll(event));\n
+      this.eventManager.addEventListener(window, \'wheel\', (event) => {\n
+        let overlay;\n
+        let deltaY = event.wheelDeltaY || event.deltaY;\n
+        let deltaX = event.wheelDeltaX || event.deltaX;\n
+\n
+        if (this.topOverlay.clone.wtTable.holder.contains(event.realTarget)) {\n
+          overlay = \'top\';\n
+\n
+        } else if (this.leftOverlay.clone.wtTable.holder.contains(event.realTarget)) {\n
+          overlay = \'left\';\n
+        }\n
+\n
+        if (overlay == \'top\' && deltaY !== 0) {\n
+          event.preventDefault();\n
+        } else if (overlay == \'left\' && deltaX !== 0) {\n
+          event.preventDefault();\n
+        }\n
+      });\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Scroll listener\n
+   *\n
+   * @param {Event} event\n
+   */\n
+  onTableScroll(event) {\n
+    // if mobile browser, do not update scroll positions, as the overlays are hidden during the scroll\n
+    if (Handsontable.mobileBrowser) {\n
+      return;\n
+    }\n
+    // For key press, sync only master -> overlay position because while pressing Walkontable.render is triggered\n
+    // by hot.refreshBorder\n
+    if (this.keyPressed && this.mainTableScrollableElement !== window &&\n
+        !event.target.contains(this.mainTableScrollableElement)) {\n
+      return;\n
+    }\n
+    if (event.type === \'scroll\') {\n
+      this.syncScrollPositions(event);\n
+\n
+    } else {\n
+      this.translateMouseWheelToScroll(event);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Key down listener\n
+   */\n
+  onKeyDown(event) {\n
+    this.keyPressed = isKey(event.keyCode, \'ARROW_UP|ARROW_RIGHT|ARROW_DOWN|ARROW_LEFT\');\n
+  }\n
+\n
+  /**\n
+   * Key up listener\n
+   */\n
+  onKeyUp() {\n
+    this.keyPressed = false;\n
+  }\n
+\n
+  /**\n
+   * Translate wheel event into scroll event and sync scroll overlays position\n
+   *\n
+   * @param {Event} event\n
+   * @returns {Boolean}\n
+   */\n
+  translateMouseWheelToScroll(event) {\n
+    let topOverlay = this.topOverlay.clone.wtTable.holder;\n
+    let leftOverlay = this.leftOverlay.clone.wtTable.holder;\n
+    let eventMockup = {type: \'wheel\'};\n
+    let tempElem = event.target;\n
+    let deltaY = event.wheelDeltaY || (-1) * event.deltaY;\n
+    let deltaX = event.wheelDeltaX || (-1) * event.deltaX;\n
+    let parentHolder;\n
+\n
+    while (tempElem != document && tempElem != null) {\n
+      if (tempElem.className.indexOf(\'wtHolder\') > -1) {\n
+        parentHolder = tempElem;\n
+        break;\n
+      }\n
+      tempElem = tempElem.parentNode;\n
+    }\n
+    eventMockup.target = parentHolder;\n
+\n
+    if (parentHolder == topOverlay) {\n
+      this.syncScrollPositions(eventMockup, (-0.2) * deltaY);\n
+\n
+    } else if (parentHolder == leftOverlay) {\n
+      this.syncScrollPositions(eventMockup, (-0.2) * deltaX);\n
+    }\n
+\n
+    return false;\n
+  }\n
+\n
+  /**\n
+   * Synchronize scroll position between master table and overlay table\n
+   *\n
+   * @param {Event|Object} event\n
+   * @param {Number} [fakeScrollValue=null]\n
+   */\n
+  syncScrollPositions(event, fakeScrollValue = null) {\n
+    if (this.destroyed) {\n
+      return;\n
+    }\n
+    if (arguments.length === 0) {\n
+      this.syncScrollWithMaster();\n
+\n
+      return;\n
+    }\n
+    let master = this.mainTableScrollableElement;\n
+    let target = event.target;\n
+    let tempScrollValue = 0;\n
+    let scrollValueChanged = false;\n
+    let topOverlay;\n
+    let leftOverlay;\n
+\n
+    if (this.topOverlay.needFullRender) {\n
+      topOverlay = this.topOverlay.clone.wtTable.holder;\n
+    }\n
+    if (this.leftOverlay.needFullRender) {\n
+      leftOverlay = this.leftOverlay.clone.wtTable.holder;\n
+    }\n
+\n
+    if (target === document) {\n
+      target = window;\n
+    }\n
+\n
+    if (target === master) {\n
+      tempScrollValue = getScrollLeft(target);\n
+\n
+      // if scrolling the master table - populate the scroll values to both top and left overlays\n
+      if (this.overlayScrollPositions.master.left !== tempScrollValue) {\n
+        this.overlayScrollPositions.master.left = tempScrollValue;\n
+        scrollValueChanged = true;\n
+\n
+        if (topOverlay) {\n
+          topOverlay.scrollLeft = tempScrollValue;\n
+        }\n
+      }\n
+      tempScrollValue = getScrollTop(target);\n
+\n
+      if (this.overlayScrollPositions.master.top !== tempScrollValue) {\n
+        this.overlayScrollPositions.master.top = tempScrollValue;\n
+        scrollValueChanged = true;\n
+\n
+        if (leftOverlay) {\n
+          leftOverlay.scrollTop = tempScrollValue;\n
+        }\n
+      }\n
+\n
+    } else if (target === topOverlay) {\n
+      tempScrollValue = getScrollLeft(target);\n
+\n
+      // if scrolling the top overlay - populate the horizontal scroll to the master table\n
+      if (this.overlayScrollPositions.top.left !== tempScrollValue) {\n
+        this.overlayScrollPositions.top.left = tempScrollValue;\n
+        scrollValueChanged = true;\n
+\n
+        master.scrollLeft = tempScrollValue;\n
+      }\n
+\n
+      // "fake" scroll value calculated from the mousewheel event\n
+      if (fakeScrollValue !== null) {\n
+        scrollValueChanged = true;\n
+        master.scrollTop += fakeScrollValue;\n
+      }\n
+\n
+    } else if (target === leftOverlay) {\n
+      tempScrollValue = getScrollTop(target);\n
+\n
+      // if scrolling the left overlay - populate the vertical scroll to the master table\n
+      if (this.overlayScrollPositions.left.top !== tempScrollValue) {\n
+        this.overlayScrollPositions.left.top = tempScrollValue;\n
+        scrollValueChanged = true;\n
+\n
+        master.scrollTop = tempScrollValue;\n
+      }\n
+\n
+      // "fake" scroll value calculated from the mousewheel event\n
+      if (fakeScrollValue !== null) {\n
+        scrollValueChanged = true;\n
+        master.scrollLeft += fakeScrollValue;\n
+      }\n
+    }\n
+\n
+    if (!this.keyPressed && scrollValueChanged && event.type === \'scroll\') {\n
+      this.refreshAll();\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Synchronize overlay scrollbars with the master scrollbar\n
+   */\n
+  syncScrollWithMaster() {\n
+    var master = this.topOverlay.mainTableScrollableElement;\n
+\n
+    if (this.topOverlay.needFullRender) {\n
+      this.topOverlay.clone.wtTable.holder.scrollLeft = master.scrollLeft;\n
+    }\n
+    if (this.leftOverlay.needFullRender) {\n
+      this.leftOverlay.clone.wtTable.holder.scrollTop = master.scrollTop;\n
+    }\n
+  }\n
+\n
+  /**\n
+   *\n
+   */\n
+  destroy() {\n
+    this.eventManager.destroy();\n
+    this.topOverlay.destroy();\n
+    this.leftOverlay.destroy();\n
+\n
+    if (this.topLeftCornerOverlay) {\n
+      this.topLeftCornerOverlay.destroy();\n
+    }\n
+    if (this.debug) {\n
+      this.debug.destroy();\n
+    }\n
+    this.destroyed = true;\n
+  }\n
+\n
+  /**\n
+   * @param {Boolean} [fastDraw=false]\n
+   */\n
+  refresh(fastDraw = false) {\n
+    if (this.topOverlay.isElementSizesAdjusted && this.leftOverlay.isElementSizesAdjusted) {\n
+      let container = this.wot.wtTable.wtRootElement.parentNode || this.wot.wtTable.wtRootElement;\n
+      let width = container.clientWidth;\n
+      let height = container.clientHeight;\n
+\n
+      if (width !== this.spreaderLastSize.width || height !== this.spreaderLastSize.height) {\n
+        this.spreaderLastSize.width = width;\n
+        this.spreaderLastSize.height = height;\n
+        this.adjustElementsSize();\n
+      }\n
+    }\n
+    this.leftOverlay.refresh(fastDraw);\n
+    this.topOverlay.refresh(fastDraw);\n
+\n
+    if (this.topLeftCornerOverlay) {\n
+      this.topLeftCornerOverlay.refresh(fastDraw);\n
+    }\n
+    if (this.debug) {\n
+      this.debug.refresh(fastDraw);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Adjust overlays elements size and master table size\n
+   *\n
+   * @param {Boolean} [force=false]\n
+   */\n
+  adjustElementsSize(force = false) {\n
+    let totalColumns = this.wot.getSetting(\'totalColumns\');\n
+    let totalRows = this.wot.getSetting(\'totalRows\');\n
+    let headerRowSize = this.wot.wtViewport.getRowHeaderWidth();\n
+    let headerColumnSize = this.wot.wtViewport.getColumnHeaderHeight();\n
+    let hiderStyle = this.wot.wtTable.hider.style;\n
+\n
+    hiderStyle.width = (headerRowSize + this.leftOverlay.sumCellSizes(0, totalColumns)) + \'px\';\n
+    hiderStyle.height = (headerColumnSize + this.topOverlay.sumCellSizes(0, totalRows) + 1) + \'px\';\n
+\n
+    this.topOverlay.adjustElementsSize(force);\n
+    this.leftOverlay.adjustElementsSize(force);\n
+  }\n
+\n
+  /**\n
+   *\n
+   */\n
+  applyToDOM() {\n
+    if (!this.topOverlay.isElementSizesAdjusted || !this.leftOverlay.isElementSizesAdjusted) {\n
+      this.adjustElementsSize();\n
+    }\n
+    this.topOverlay.applyToDOM();\n
+    this.leftOverlay.applyToDOM();\n
+  }\n
+}\n
+\n
+export {WalkontableOverlays};\n
+\n
+window.WalkontableOverlays = WalkontableOverlays;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11526</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>overlays.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

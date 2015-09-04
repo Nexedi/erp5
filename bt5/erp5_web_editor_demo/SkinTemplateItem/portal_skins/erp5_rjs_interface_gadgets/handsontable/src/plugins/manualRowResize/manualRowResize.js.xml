@@ -1,0 +1,303 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272675.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>manualRowResize.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {addClass, hasClass, removeClass} from \'./../../helpers/dom/element\';\n
+import {eventManager as eventManagerObject} from \'./../../eventManager\';\n
+import {pageX, pageY} from \'./../../helpers/dom/event\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+export {ManualRowResize};\n
+\n
+//registerPlugin(\'manualRowResize\', ManualRowResize);\n
+\n
+/**\n
+ * HandsontableManualRowResize\n
+ *\n
+ * Has 2 UI components:\n
+ * - handle - the draggable element that sets the desired height of the row\n
+ * - guide - the helper guide that shows the desired height as a horizontal guide\n
+ *\n
+ * Warning! Whenever you make a change in this file, make an analogous change in manualRowResize.js\n
+ *\n
+ * @private\n
+ * @class ManualRowResize\n
+ * @plugin ManualRowResize\n
+ */\n
+function ManualRowResize() {\n
+\n
+  var currentTH, currentRow, currentHeight, instance, newSize, startY, startHeight, startOffset, handle = document.createElement(\'DIV\'),\n
+    guide = document.createElement(\'DIV\'),\n
+    eventManager = eventManagerObject(this);\n
+\n
+  handle.className = \'manualRowResizer\';\n
+  guide.className = \'manualRowResizerGuide\';\n
+\n
+  var saveManualRowHeights = function() {\n
+    var instance = this;\n
+    Handsontable.hooks.run(instance, \'persistentStateSave\', \'manualRowHeights\', instance.manualRowHeights);\n
+  };\n
+\n
+  var loadManualRowHeights = function() {\n
+    var instance = this,\n
+      storedState = {};\n
+    Handsontable.hooks.run(instance, \'persistentStateLoad\', \'manualRowHeights\', storedState);\n
+    return storedState.value;\n
+  };\n
+\n
+  function setupHandlePosition(TH) {\n
+    instance = this;\n
+    currentTH = TH;\n
+\n
+    var row = this.view.wt.wtTable.getCoords(TH).row; //getCoords returns WalkontableCellCoords\n
+    if (row >= 0) { //if not col header\n
+      currentRow = row;\n
+      var box = currentTH.getBoundingClientRect();\n
+      startOffset = box.top - 6;\n
+      startHeight = parseInt(box.height, 10);\n
+      handle.style.left = box.left + \'px\';\n
+      handle.style.top = startOffset + startHeight + \'px\';\n
+      instance.rootElement.appendChild(handle);\n
+    }\n
+  }\n
+\n
+  function refreshHandlePosition() {\n
+    handle.style.top = startOffset + currentHeight + \'px\';\n
+  }\n
+\n
+  function setupGuidePosition() {\n
+    var instance = this;\n
+    addClass(handle, \'active\');\n
+    addClass(guide, \'active\');\n
+    guide.style.top = handle.style.top;\n
+    guide.style.left = handle.style.left;\n
+    guide.style.width = instance.view.maximumVisibleElementWidth(0) + \'px\';\n
+    instance.rootElement.appendChild(guide);\n
+  }\n
+\n
+  function refreshGuidePosition() {\n
+    guide.style.top = handle.style.top;\n
+  }\n
+\n
+  function hideHandleAndGuide() {\n
+    removeClass(handle, \'active\');\n
+    removeClass(guide, \'active\');\n
+  }\n
+\n
+  var checkRowHeader = function(element) {\n
+    if (element.tagName != \'BODY\') {\n
+      if (element.parentNode.tagName == \'TBODY\') {\n
+        return true;\n
+      } else {\n
+        element = element.parentNode;\n
+        return checkRowHeader(element);\n
+      }\n
+    }\n
+    return false;\n
+  };\n
+\n
+  var getTHFromTargetElement = function(element) {\n
+    if (element.tagName != \'TABLE\') {\n
+      if (element.tagName == \'TH\') {\n
+        return element;\n
+      } else {\n
+        return getTHFromTargetElement(element.parentNode);\n
+      }\n
+    }\n
+    return null;\n
+  };\n
+\n
+  var bindEvents = function() {\n
+    var instance = this;\n
+    var pressed;\n
+    var dblclick = 0;\n
+    var autoresizeTimeout = null;\n
+\n
+    eventManager.addEventListener(instance.rootElement, \'mouseover\', function(e) {\n
+      if (checkRowHeader(e.target)) {\n
+        var th = getTHFromTargetElement(e.target);\n
+        if (th) {\n
+          if (!pressed) {\n
+            setupHandlePosition.call(instance, th);\n
+          }\n
+        }\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(instance.rootElement, \'mousedown\', function(e) {\n
+      if (hasClass(e.target, \'manualRowResizer\')) {\n
+        setupGuidePosition.call(instance);\n
+        pressed = instance;\n
+\n
+        if (autoresizeTimeout == null) {\n
+          autoresizeTimeout = setTimeout(function() {\n
+            if (dblclick >= 2) {\n
+              var hookNewSize = Handsontable.hooks.run(instance, \'beforeRowResize\', currentRow, newSize, true);\n
+\n
+              if (hookNewSize !== void 0) {\n
+                newSize = hookNewSize;\n
+              }\n
+              setManualSize(currentRow, newSize); //double click sets auto row size\n
+              instance.forceFullRender = true;\n
+              instance.view.render(); //updates all\n
+              Handsontable.hooks.run(instance, \'afterRowResize\', currentRow, newSize, true);\n
+            }\n
+            dblclick = 0;\n
+            autoresizeTimeout = null;\n
+          }, 500);\n
+          instance._registerTimeout(autoresizeTimeout);\n
+        }\n
+        dblclick++;\n
+\n
+        startY = pageY(e);\n
+        newSize = startHeight;\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(window, \'mousemove\', function(e) {\n
+      if (pressed) {\n
+        currentHeight = startHeight + (pageY(e) - startY);\n
+        newSize = setManualSize(currentRow, currentHeight);\n
+        refreshHandlePosition();\n
+        refreshGuidePosition();\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(window, \'mouseup\', function(e) {\n
+      if (pressed) {\n
+        hideHandleAndGuide();\n
+        pressed = false;\n
+\n
+        if (newSize != startHeight) {\n
+          Handsontable.hooks.run(instance, \'beforeRowResize\', currentRow, newSize);\n
+\n
+          instance.forceFullRender = true;\n
+          instance.view.render(); //updates all\n
+\n
+          saveManualRowHeights.call(instance);\n
+\n
+          Handsontable.hooks.run(instance, \'afterRowResize\', currentRow, newSize);\n
+        }\n
+\n
+        setupHandlePosition.call(instance, currentTH);\n
+      }\n
+    });\n
+\n
+    instance.addHook(\'afterDestroy\', unbindEvents);\n
+  };\n
+\n
+  var unbindEvents = function() {\n
+    eventManager.clear();\n
+  };\n
+\n
+  this.init = function(source) {\n
+    this.manualRowHeights = [];\n
+    var instance = this;\n
+    var manualColumnHeightEnabled = !! (this.getSettings().manualRowResize);\n
+\n
+    if (manualColumnHeightEnabled) {\n
+\n
+      var initialRowHeights = this.getSettings().manualRowResize;\n
+      var loadedManualRowHeights = loadManualRowHeights.call(instance);\n
+\n
+      // update plugin usages count for manualColumnPositions\n
+      if (typeof instance.manualRowHeightsPluginUsages != \'undefined\') {\n
+        instance.manualRowHeightsPluginUsages.push(\'manualRowResize\');\n
+      } else {\n
+        instance.manualRowHeightsPluginUsages = [\'manualRowResize\'];\n
+      }\n
+\n
+      if (typeof loadedManualRowHeights != \'undefined\') {\n
+        this.manualRowHeights = loadedManualRowHeights;\n
+      } else if (Array.isArray(initialRowHeights)) {\n
+        this.manualRowHeights = initialRowHeights;\n
+      } else {\n
+        this.manualRowHeights = [];\n
+      }\n
+\n
+      if (source === void 0) {\n
+        bindEvents.call(this);\n
+      }\n
+    } else {\n
+      var pluginUsagesIndex = instance.manualRowHeightsPluginUsages ? instance.manualRowHeightsPluginUsages.indexOf(\'manualRowResize\') : -1;\n
+\n
+      if (pluginUsagesIndex > -1) {\n
+        unbindEvents.call(this);\n
+        this.manualRowHeights = [];\n
+        instance.manualRowHeightsPluginUsages[pluginUsagesIndex] = void 0;\n
+      }\n
+    }\n
+  };\n
+\n
+  var setManualSize = function(row, height) {\n
+    row = Handsontable.hooks.run(instance, \'modifyRow\', row);\n
+    instance.manualRowHeights[row] = height;\n
+\n
+    return height;\n
+  };\n
+\n
+  this.modifyRowHeight = function(height, row) {\n
+    if (this.getSettings().manualRowResize) {\n
+      row = this.runHooks(\'modifyRow\', row);\n
+\n
+      if (this.manualRowHeights[row] !== void 0) {\n
+        return this.manualRowHeights[row];\n
+      }\n
+    }\n
+\n
+    return height;\n
+  };\n
+}\n
+\n
+var htManualRowResize = new ManualRowResize();\n
+\n
+Handsontable.hooks.add(\'init\', htManualRowResize.init);\n
+Handsontable.hooks.add(\'afterUpdateSettings\', function () {\n
+  htManualRowResize.init.call(this, \'afterUpdateSettings\');\n
+});\n
+\n
+Handsontable.hooks.add(\'modifyRowHeight\', htManualRowResize.modifyRowHeight);\n
+\n
+Handsontable.hooks.register(\'beforeRowResize\');\n
+Handsontable.hooks.register(\'afterRowResize\');\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7886</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>manualRowResize.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

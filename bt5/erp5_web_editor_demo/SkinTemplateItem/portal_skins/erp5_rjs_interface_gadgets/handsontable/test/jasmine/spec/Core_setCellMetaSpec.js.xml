@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272524.59</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_setCellMetaSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_setCellMeta\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should set correct meta className for cell\', function () {\n
+\n
+    var className = "htCenter htMiddle";\n
+\n
+    handsontable({\n
+      afterCellMetaReset: function() {\n
+        this.setCellMeta(0, 0, "className", className );\n
+      }\n
+    });\n
+\n
+    var cellMeta = getCellMeta(0,0);\n
+\n
+    expect(cellMeta.className).not.toBeUndefined();\n
+    expect(cellMeta.className).toEqual(className);\n
+  });\n
+\n
+  it(\'should set correct meta classNames for cells using cell in configuration\', function () {\n
+    var classNames = [\n
+      \'htCenter htTop\',\n
+      \'htRight htBottom\'\n
+    ];\n
+\n
+    handsontable({\n
+      cell: [\n
+        {row: 0, col: 0, className: classNames[0] },\n
+        {row: 1, col: 1, className: classNames[1] }\n
+      ]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\')[0].className).toEqual(classNames[0]);\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(1)\')[0].className).toEqual(classNames[1]);\n
+  });\n
+\n
+  it(\'should change cell meta data with updateSettings\', function () {\n
+    var classNames = [\n
+      \'htCenter htTop\',\n
+      \'htRight htBottom\'\n
+    ];\n
+\n
+    handsontable({\n
+      cell: [\n
+        {row: 0, col: 0, className: classNames[0] },\n
+        {row: 1, col: 1, className: classNames[1] }\n
+      ]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\')[0].className).toEqual(classNames[0]);\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(1)\')[0].className).toEqual(classNames[1]);\n
+\n
+    updateSettings({\n
+      cell: []\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\')[0].className).toEqual(\'\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(1)\')[0].className).toEqual(\'\');\n
+\n
+    updateSettings({\n
+      cell: [\n
+        {row: 0, col: 0, className: classNames[1] },\n
+        {row: 1, col: 1, className: classNames[0] }\n
+      ]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\')[0].className).toEqual(classNames[1]);\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(1)\')[0].className).toEqual(classNames[0]);\n
+  });\n
+\n
+  it(\'should call afterSetCellMeta plugin hook\', function () {\n
+    var className = "htCenter htMiddle";\n
+    var res = {};\n
+\n
+    handsontable({\n
+      afterCellMetaReset: function () {\n
+        this.setCellMeta(0, 1, "className", className);\n
+      },\n
+      afterSetCellMeta: function (row, col, key, val) {\n
+        res.row = row;\n
+        res.col = col;\n
+        res.key = key;\n
+        res.val = val;\n
+      }\n
+    });\n
+\n
+    expect(res.row).toEqual(0);\n
+    expect(res.col).toEqual(1);\n
+    expect(res.key).toEqual("className");\n
+    expect(res.val).toEqual(className);\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2859</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_setCellMetaSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

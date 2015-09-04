@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272496.13</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>numericValidatorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'NumericValidator\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfObjects = function () {\n
+    return [\n
+      {id: 1, name: "Ted", lastName: "Right"},\n
+      {id: 2, name: "Frank", lastName: "Honest"},\n
+      {id: 3, name: "Joan", lastName: "Well"},\n
+      {id: 4, name: "Sid", lastName: "Strong"},\n
+      {id: 5, name: "Jane", lastName: "Neat"},\n
+      {id: 6, name: "Chuck", lastName: "Jackson"},\n
+      {id: 7, name: "Meg", lastName: "Jansen"},\n
+      {id: 8, name: "Rob", lastName: "Norris"},\n
+      {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+      {id: 10, name: "Eve", lastName: "Branson"}\n
+    ];\n
+  };\n
+\n
+  it(\'should not validate non numeric string\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate : onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(2, 0, \'test\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(false, \'test\', 2, \'id\', undefined, undefined);\n
+    });\n
+\n
+\n
+  });\n
+\n
+  it(\'should validate numeric string\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate : onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(2, 0, \'123\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(true, 123, 2, \'id\', undefined, undefined);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should validate signed numeric string\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate : onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(2, 0, \'-123\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(true, -123, 2, \'id\', undefined, undefined);\n
+    });\n
+  });\n
+\n
+  it(\'should validate empty string\', function () {\n
+    var out;\n
+\n
+    Handsontable.NumericValidator(\'\', function (result) {\n
+      out = result;\n
+    });\n
+\n
+    expect(out).toBe(true);\n
+  });\n
+\n
+  //is this correct behavior is disputable, but at least it\'s consistent\n
+  it(\'should validate null with the same empty string\', function () {\n
+    var out1, out2;\n
+\n
+    Handsontable.NumericValidator(\'\', function (result) {\n
+      out1 = result;\n
+    });\n
+\n
+    Handsontable.NumericValidator(null, function (result) {\n
+      out2 = result;\n
+    });\n
+\n
+    expect(out1).toBe(out2);\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3242</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>numericValidatorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

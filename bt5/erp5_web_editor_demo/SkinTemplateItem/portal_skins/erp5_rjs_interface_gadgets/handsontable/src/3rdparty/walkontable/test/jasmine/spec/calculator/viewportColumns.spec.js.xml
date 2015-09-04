@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272584.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>viewportColumns.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>describe(\'WalkontableViewportColumnsCalculator\', function () {\n
+  function allColumns20() {\n
+    return 20;\n
+  }\n
+\n
+  it("should render first 5 columns in unscrolled container", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(100, 0, 1000, allColumns20);\n
+    expect(calc.startColumn).toBe(0);\n
+    expect(calc.startPosition).toBe(0);\n
+    expect(calc.endColumn).toBe(4);\n
+\n
+    var visibleCalc = new WalkontableViewportColumnsCalculator(100, 0, 1000, allColumns20, null, true);\n
+    expect(visibleCalc.startColumn).toBe(0);\n
+    expect(visibleCalc.endColumn).toBe(4);\n
+  });\n
+\n
+  it("should render 6 columns, starting from 3 in container scrolled to half of fourth column", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(100, 70, 1000, allColumns20);\n
+    expect(calc.startColumn).toBe(3);\n
+    expect(calc.startPosition).toBe(60);\n
+    expect(calc.endColumn).toBe(8);\n
+\n
+    var visibleCalc = new WalkontableViewportColumnsCalculator(100, 70, 1000, allColumns20, null, true);\n
+    expect(visibleCalc.startColumn).toBe(4);\n
+    expect(visibleCalc.endColumn).toBe(7);\n
+  });\n
+\n
+  it("should render 10 columns, starting from 1 in container scrolled to half of fourth column (with render overrides)", function () {\n
+    var overrideFn = function (calc) {\n
+      calc.startColumn -= 2;\n
+      calc.endColumn += 2;\n
+    };\n
+\n
+    var calc = new WalkontableViewportColumnsCalculator(100, 70, 1000, allColumns20, overrideFn);\n
+    expect(calc.startColumn).toBe(1);\n
+    expect(calc.startPosition).toBe(20);\n
+    expect(calc.endColumn).toBe(10);\n
+\n
+    var visibleCalc = new WalkontableViewportColumnsCalculator(100, 70, 1000, allColumns20, null, true);\n
+    expect(visibleCalc.startColumn).toBe(4);\n
+    expect(visibleCalc.endColumn).toBe(7);\n
+  });\n
+\n
+  it("should return number of rendered columns", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(100, 50, 1000, allColumns20);\n
+    expect(calc.count).toBe(6);\n
+\n
+    var visibleCalc = new WalkontableViewportColumnsCalculator(100, 50, 1000, allColumns20, null, true);\n
+    expect(visibleCalc.count).toBe(4);\n
+  });\n
+\n
+  it("should render all columns if their size is smaller than viewport", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(200, 0, 8, allColumns20);\n
+    expect(calc.startColumn).toBe(0);\n
+    expect(calc.endColumn).toBe(7);\n
+    expect(calc.count).toBe(8);\n
+\n
+    var visibleCalc = new WalkontableViewportColumnsCalculator(200, 0, 8, allColumns20, null, true);\n
+    expect(visibleCalc.startColumn).toBe(0);\n
+    expect(visibleCalc.endColumn).toBe(7);\n
+    expect(visibleCalc.count).toBe(8);\n
+  });\n
+\n
+  it("should render all columns if their size is exactly the viewport", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(200, 0, 10, allColumns20);\n
+    expect(calc.startColumn).toBe(0);\n
+    expect(calc.endColumn).toBe(9);\n
+    expect(calc.count).toBe(10);\n
+\n
+    var visibleCalc = new WalkontableViewportColumnsCalculator(200, 0, 10, allColumns20, null, true);\n
+    expect(visibleCalc.startColumn).toBe(0);\n
+    expect(visibleCalc.endColumn).toBe(9);\n
+    expect(visibleCalc.count).toBe(10);\n
+  });\n
+\n
+  it("should render all columns if their size is slightly larger than viewport", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(199, 0, 10, allColumns20);\n
+    expect(calc.startColumn).toBe(0);\n
+    expect(calc.endColumn).toBe(9);\n
+    expect(calc.count).toBe(10);\n
+\n
+    var visibleCalc = new WalkontableViewportColumnsCalculator(199, 0, 10, allColumns20, null, true);\n
+    expect(visibleCalc.startColumn).toBe(0);\n
+    expect(visibleCalc.endColumn).toBe(8);\n
+    expect(visibleCalc.count).toBe(9);\n
+  });\n
+\n
+  it("should set null values if total columns is 0", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(200, 0, 0, allColumns20);\n
+    expect(calc.startColumn).toBe(null);\n
+    expect(calc.startPosition).toBe(null);\n
+    expect(calc.endColumn).toBe(null);\n
+    expect(calc.count).toBe(0);\n
+\n
+    var visibleCalc = new WalkontableViewportColumnsCalculator(200, 0, 0, allColumns20, null, true);\n
+    expect(visibleCalc.startColumn).toBe(null);\n
+    expect(visibleCalc.endColumn).toBe(null);\n
+  });\n
+\n
+  it("should set null values if total columns is 0 (with overrideFn provided)", function () {\n
+    var overrideFn = function (myCalc) {\n
+      myCalc.startColumn = 0;\n
+      myCalc.endColumn = 0;\n
+    };\n
+\n
+    var calc = new WalkontableViewportColumnsCalculator(200, 0, 0, allColumns20, overrideFn);\n
+    expect(calc.startColumn).toBe(null);\n
+    expect(calc.startPosition).toBe(null);\n
+    expect(calc.endColumn).toBe(null);\n
+    expect(calc.count).toBe(0);\n
+\n
+    var visibleCalc = new WalkontableViewportColumnsCalculator(200, 0, 0, allColumns20, null, true);\n
+    expect(visibleCalc.startColumn).toBe(null);\n
+    expect(visibleCalc.endColumn).toBe(null);\n
+  });\n
+\n
+  it("should scroll backwards if total columns is reached", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(190, 350, 20, allColumns20);\n
+    expect(calc.startColumn).toBe(10);\n
+    expect(calc.startPosition).toBe(200);\n
+    expect(calc.endColumn).toBe(19);\n
+    expect(calc.count).toBe(10);\n
+\n
+    var visibleCalc = new WalkontableViewportColumnsCalculator(190, 350, 20, allColumns20, null, true);\n
+    expect(visibleCalc.startColumn).toBe(11);\n
+    expect(visibleCalc.endColumn).toBe(19);\n
+  });\n
+\n
+  it("should update stretchAllRatio after refreshStretching call (stretch: all)", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(250, 0, 20, allColumns20, null, true, \'all\');\n
+\n
+    expect(calc.stretchAllRatio).toBe(0);\n
+    expect(calc.stretchLastWidth).toBe(0);\n
+\n
+    calc.refreshStretching(414);\n
+\n
+    expect(calc.stretchAllRatio).toBe(1.035);\n
+    expect(calc.stretchLastWidth).toBe(0);\n
+  });\n
+\n
+  it("should update stretchAllRatio after refreshStretching call (stretch: last)", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(250, 0, 5, allColumns20, null, true, \'last\');\n
+\n
+    expect(calc.stretchAllRatio).toBe(0);\n
+    expect(calc.stretchLastWidth).toBe(0);\n
+\n
+    calc.refreshStretching(414);\n
+\n
+    expect(calc.stretchAllRatio).toBe(0);\n
+    expect(calc.stretchLastWidth).toBe(334);\n
+  });\n
+\n
+  it("should return valid stretched column width (stretch: all)", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(250, 0, 5, allColumns20, null, true, \'all\');\n
+\n
+    expect(calc.getStretchedColumnWidth(0, 50)).toBe(null);\n
+    expect(calc.needVerifyLastColumnWidth).toBe(true);\n
+\n
+    calc.refreshStretching(417);\n
+\n
+    expect(calc.getStretchedColumnWidth(0, allColumns20())).toBe(83);\n
+    expect(calc.getStretchedColumnWidth(1, allColumns20())).toBe(83);\n
+    expect(calc.getStretchedColumnWidth(2, allColumns20())).toBe(83);\n
+    expect(calc.getStretchedColumnWidth(3, allColumns20())).toBe(83);\n
+    expect(calc.needVerifyLastColumnWidth).toBe(true);\n
+    expect(calc.getStretchedColumnWidth(4, allColumns20())).toBe(85);\n
+    expect(calc.needVerifyLastColumnWidth).toBe(false);\n
+  });\n
+\n
+  it("should return valid stretched column width (stretch: last)", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(250, 0, 5, allColumns20, null, true, \'last\');\n
+\n
+    expect(calc.getStretchedColumnWidth(0, 50)).toBe(null);\n
+\n
+    calc.refreshStretching(417);\n
+\n
+    expect(calc.getStretchedColumnWidth(0, allColumns20())).toBe(null);\n
+    expect(calc.getStretchedColumnWidth(1, allColumns20())).toBe(null);\n
+    expect(calc.getStretchedColumnWidth(2, allColumns20())).toBe(null);\n
+    expect(calc.getStretchedColumnWidth(3, allColumns20())).toBe(null);\n
+    expect(calc.getStretchedColumnWidth(4, allColumns20())).toBe(337);\n
+  });\n
+\n
+  it("call refreshStretching should clear stretchAllColumnsWidth and needVerifyLastColumnWidth property", function () {\n
+    var calc = new WalkontableViewportColumnsCalculator(250, 0, 5, allColumns20, null, true, \'all\');\n
+\n
+    expect(calc.stretchAllColumnsWidth.length).toBe(0);\n
+    expect(calc.needVerifyLastColumnWidth).toBe(true);\n
+\n
+    calc.refreshStretching(417);\n
+    calc.getStretchedColumnWidth(0, allColumns20());\n
+    calc.getStretchedColumnWidth(1, allColumns20());\n
+    calc.getStretchedColumnWidth(2, allColumns20());\n
+    calc.getStretchedColumnWidth(3, allColumns20());\n
+    calc.getStretchedColumnWidth(4, allColumns20());\n
+\n
+    expect(calc.stretchAllColumnsWidth.length).toBe(5);\n
+    expect(calc.needVerifyLastColumnWidth).toBe(false);\n
+\n
+    calc.refreshStretching(201);\n
+\n
+    expect(calc.stretchAllColumnsWidth.length).toBe(0);\n
+    expect(calc.needVerifyLastColumnWidth).toBe(true);\n
+  });\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8478</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>viewportColumns.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

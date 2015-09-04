@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272688.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dragToScroll.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {eventManager as eventManagerObject} from \'./../../eventManager\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+export {DragToScroll};\n
+\n
+//registerPlugin(\'dragToScroll\', DragToScroll);\n
+\n
+Handsontable.plugins.DragToScroll = DragToScroll;\n
+\n
+/**\n
+ * Plugin used to scroll Handsontable by selecting a cell and dragging outside of visible viewport\n
+ *\n
+ * @private\n
+ * @class DragToScroll\n
+ * @plugin DragToScroll\n
+ */\n
+function DragToScroll() {\n
+  this.boundaries = null;\n
+  this.callback = null;\n
+}\n
+\n
+/**\n
+ * @param boundaries {Object} compatible with getBoundingClientRect\n
+ */\n
+DragToScroll.prototype.setBoundaries = function (boundaries) {\n
+  this.boundaries = boundaries;\n
+};\n
+\n
+/**\n
+ * @param callback {Function}\n
+ */\n
+DragToScroll.prototype.setCallback = function (callback) {\n
+  this.callback = callback;\n
+};\n
+\n
+/**\n
+ * Check if mouse position (x, y) is outside of the viewport\n
+ * @param x\n
+ * @param y\n
+ */\n
+DragToScroll.prototype.check = function (x, y) {\n
+  var diffX = 0;\n
+  var diffY = 0;\n
+\n
+  if (y < this.boundaries.top) {\n
+    //y is less than top\n
+    diffY = y - this.boundaries.top;\n
+  }\n
+  else if (y > this.boundaries.bottom) {\n
+    //y is more than bottom\n
+    diffY = y - this.boundaries.bottom;\n
+  }\n
+\n
+  if (x < this.boundaries.left) {\n
+    //x is less than left\n
+    diffX = x - this.boundaries.left;\n
+  }\n
+  else if (x > this.boundaries.right) {\n
+    //x is more than right\n
+    diffX = x - this.boundaries.right;\n
+  }\n
+\n
+  this.callback(diffX, diffY);\n
+};\n
+\n
+var dragToScroll;\n
+var instance;\n
+\n
+var setupListening = function (instance) {\n
+  instance.dragToScrollListening = false;\n
+  var scrollHandler = instance.view.wt.wtTable.holder; //native scroll\n
+  dragToScroll = new DragToScroll();\n
+  if (scrollHandler === window) {\n
+    //not much we can do currently\n
+    return;\n
+  }\n
+  else {\n
+    dragToScroll.setBoundaries(scrollHandler.getBoundingClientRect());\n
+  }\n
+\n
+  dragToScroll.setCallback(function (scrollX, scrollY) {\n
+    if (scrollX < 0) {\n
+      scrollHandler.scrollLeft -= 50;\n
+    }\n
+    else if (scrollX > 0) {\n
+      scrollHandler.scrollLeft += 50;\n
+    }\n
+\n
+    if (scrollY < 0) {\n
+      scrollHandler.scrollTop -= 20;\n
+    }\n
+    else if (scrollY > 0) {\n
+      scrollHandler.scrollTop += 20;\n
+    }\n
+  });\n
+\n
+  instance.dragToScrollListening = true;\n
+};\n
+\n
+Handsontable.hooks.add(\'afterInit\', function () {\n
+  var instance = this;\n
+  var eventManager = eventManagerObject(this);\n
+\n
+  eventManager.addEventListener(document, \'mouseup\', function () {\n
+    instance.dragToScrollListening = false;\n
+  });\n
+\n
+  eventManager.addEventListener(document, \'mousemove\', function (event) {\n
+    if (instance.dragToScrollListening) {\n
+      dragToScroll.check(event.clientX, event.clientY);\n
+    }\n
+  });\n
+});\n
+\n
+Handsontable.hooks.add(\'afterDestroy\', function () {\n
+  eventManagerObject(this).clear();\n
+});\n
+\n
+Handsontable.hooks.add(\'afterOnCellMouseDown\', function () {\n
+  setupListening(this);\n
+});\n
+\n
+Handsontable.hooks.add(\'afterOnCellCornerMouseDown\', function () {\n
+  setupListening(this);\n
+});\n
+\n
+Handsontable.plugins.DragToScroll = DragToScroll;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2977</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dragToScroll.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

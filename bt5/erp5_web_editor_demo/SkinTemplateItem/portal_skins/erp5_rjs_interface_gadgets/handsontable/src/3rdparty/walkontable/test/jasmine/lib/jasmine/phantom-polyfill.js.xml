@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272602.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>phantom-polyfill.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+\n
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind\n
+\n
+if (!Function.prototype.bind) {\n
+  Function.prototype.bind = function (oThis) {\n
+    if (typeof this !== "function") {\n
+      // closest thing possible to the ECMAScript 5 internal IsCallable function\n
+      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");\n
+    }\n
+\n
+    var aArgs = Array.prototype.slice.call(arguments, 1),\n
+      fToBind = this,\n
+      FNOP = function () {},\n
+      fBound = function () {\n
+        return fToBind.apply(this instanceof FNOP && oThis ? this : oThis, aArgs.concat(Array.prototype.slice.call(arguments)));\n
+      };\n
+\n
+    FNOP.prototype = this.prototype;\n
+    fBound.prototype = new FNOP();\n
+\n
+    return fBound;\n
+  };\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>781</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>phantom-polyfill.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,1523 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272446.37</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>font-awesome.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*!\n
+ *  Font Awesome 3.2.1\n
+ *  the iconic font designed for Bootstrap\n
+ *  ------------------------------------------------------------------------------\n
+ *  The full suite of pictographic icons, examples, and documentation can be\n
+ *  found at http://fontawesome.io.  Stay up to date on Twitter at\n
+ *  http://twitter.com/fontawesome.\n
+ *\n
+ *  License\n
+ *  ------------------------------------------------------------------------------\n
+ *  - The Font Awesome font is licensed under SIL OFL 1.1 -\n
+ *    http://scripts.sil.org/OFL\n
+ *  - Font Awesome CSS, LESS, and SASS files are licensed under MIT License -\n
+ *    http://opensource.org/licenses/mit-license.html\n
+ *  - Font Awesome documentation licensed under CC BY 3.0 -\n
+ *    http://creativecommons.org/licenses/by/3.0/\n
+ *  - Attribution is no longer required in Font Awesome 3.0, but much appreciated:\n
+ *    "Font Awesome by Dave Gandy - http://fontawesome.io"\n
+ *\n
+ *  Author - Dave Gandy\n
+ *  ------------------------------------------------------------------------------\n
+ *  Email: dave@fontawesome.io\n
+ *  Twitter: http://twitter.com/davegandy\n
+ *  Work: Lead Product Designer @ Kyruus - http://kyruus.com\n
+ */\n
+/* FONT PATH\n
+ * -------------------------- */\n
+@font-face {\n
+  font-family: \'FontAwesome\';\n
+  src: url(\'../font/fontawesome-webfont.eot?v=3.2.1\');\n
+  src: url(\'../font/fontawesome-webfont.eot?#iefix&v=3.2.1\') format(\'embedded-opentype\'), url(\'../font/fontawesome-webfont.woff?v=3.2.1\') format(\'woff\'), url(\'../font/fontawesome-webfont.ttf?v=3.2.1\') format(\'truetype\'), url(\'../font/fontawesome-webfont.svg#fontawesomeregular?v=3.2.1\') format(\'svg\');\n
+  font-weight: normal;\n
+  font-style: normal;\n
+}\n
+/* FONT AWESOME CORE\n
+ * -------------------------- */\n
+[class^="icon-"],\n
+[class*=" icon-"] {\n
+  font-family: FontAwesome;\n
+  font-weight: normal;\n
+  font-style: normal;\n
+  text-decoration: inherit;\n
+  -webkit-font-smoothing: antialiased;\n
+  *margin-right: .3em;\n
+}\n
+[class^="icon-"]:before,\n
+[class*=" icon-"]:before {\n
+  text-decoration: inherit;\n
+  display: inline-block;\n
+  speak: none;\n
+}\n
+/* makes the font 33% larger relative to the icon container */\n
+.icon-large:before {\n
+  vertical-align: -10%;\n
+  font-size: 1.3333333333333333em;\n
+}\n
+/* makes sure icons active on rollover in links */\n
+a [class^="icon-"],\n
+a [class*=" icon-"] {\n
+  display: inline;\n
+}\n
+/* increased font size for icon-large */\n
+[class^="icon-"].icon-fixed-width,\n
+[class*=" icon-"].icon-fixed-width {\n
+  display: inline-block;\n
+  width: 1.1428571428571428em;\n
+  text-align: right;\n
+  padding-right: 0.2857142857142857em;\n
+}\n
+[class^="icon-"].icon-fixed-width.icon-large,\n
+[class*=" icon-"].icon-fixed-width.icon-large {\n
+  width: 1.4285714285714286em;\n
+}\n
+.icons-ul {\n
+  margin-left: 2.142857142857143em;\n
+  list-style-type: none;\n
+}\n
+.icons-ul > li {\n
+  position: relative;\n
+}\n
+.icons-ul .icon-li {\n
+  position: absolute;\n
+  left: -2.142857142857143em;\n
+  width: 2.142857142857143em;\n
+  text-align: center;\n
+  line-height: inherit;\n
+}\n
+[class^="icon-"].hide,\n
+[class*=" icon-"].hide {\n
+  display: none;\n
+}\n
+.icon-muted {\n
+  color: #eeeeee;\n
+}\n
+.icon-light {\n
+  color: #ffffff;\n
+}\n
+.icon-dark {\n
+  color: #333333;\n
+}\n
+.icon-border {\n
+  border: solid 1px #eeeeee;\n
+  padding: .2em .25em .15em;\n
+  -webkit-border-radius: 3px;\n
+  -moz-border-radius: 3px;\n
+  border-radius: 3px;\n
+}\n
+.icon-2x {\n
+  font-size: 2em;\n
+}\n
+.icon-2x.icon-border {\n
+  border-width: 2px;\n
+  -webkit-border-radius: 4px;\n
+  -moz-border-radius: 4px;\n
+  border-radius: 4px;\n
+}\n
+.icon-3x {\n
+  font-size: 3em;\n
+}\n
+.icon-3x.icon-border {\n
+  border-width: 3px;\n
+  -webkit-border-radius: 5px;\n
+  -moz-border-radius: 5px;\n
+  border-radius: 5px;\n
+}\n
+.icon-4x {\n
+  font-size: 4em;\n
+}\n
+.icon-4x.icon-border {\n
+  border-width: 4px;\n
+  -webkit-border-radius: 6px;\n
+  -moz-border-radius: 6px;\n
+  border-radius: 6px;\n
+}\n
+.icon-5x {\n
+  font-size: 5em;\n
+}\n
+.icon-5x.icon-border {\n
+  border-width: 5px;\n
+  -webkit-border-radius: 7px;\n
+  -moz-border-radius: 7px;\n
+  border-radius: 7px;\n
+}\n
+.pull-right {\n
+  float: right;\n
+}\n
+.pull-left {\n
+  float: left;\n
+}\n
+[class^="icon-"].pull-left,\n
+[class*=" icon-"].pull-left {\n
+  margin-right: .3em;\n
+}\n
+[class^="icon-"].pull-right,\n
+[class*=" icon-"].pull-right {\n
+  margin-left: .3em;\n
+}\n
+/* BOOTSTRAP SPECIFIC CLASSES\n
+ * -------------------------- */\n
+/* Bootstrap 2.0 sprites.less reset */\n
+[class^="icon-"],\n
+[class*=" icon-"] {\n
+  display: inline;\n
+  width: auto;\n
+  height: auto;\n
+  line-height: normal;\n
+  vertical-align: baseline;\n
+  background-image: none;\n
+  background-position: 0% 0%;\n
+  background-repeat: repeat;\n
+  margin-top: 0;\n
+}\n
+/* more sprites.less reset */\n
+.icon-white,\n
+.nav-pills > .active > a > [class^="icon-"],\n
+.nav-pills > .active > a > [class*=" icon-"],\n
+.nav-list > .active > a > [class^="icon-"],\n
+.nav-list > .active > a > [class*=" icon-"],\n
+.navbar-inverse .nav > .active > a > [class^="icon-"],\n
+.navbar-inverse .nav > .active > a > [class*=" icon-"],\n
+.dropdown-menu > li > a:hover > [class^="icon-"],\n
+.dropdown-menu > li > a:hover > [class*=" icon-"],\n
+.dropdown-menu > .active > a > [class^="icon-"],\n
+.dropdown-menu > .active > a > [class*=" icon-"],\n
+.dropdown-submenu:hover > a > [class^="icon-"],\n
+.dropdown-submenu:hover > a > [class*=" icon-"] {\n
+  background-image: none;\n
+}\n
+/* keeps Bootstrap styles with and without icons the same */\n
+.btn [class^="icon-"].icon-large,\n
+.nav [class^="icon-"].icon-large,\n
+.btn [class*=" icon-"].icon-large,\n
+.nav [class*=" icon-"].icon-large {\n
+  line-height: .9em;\n
+}\n
+.btn [class^="icon-"].icon-spin,\n
+.nav [class^="icon-"].icon-spin,\n
+.btn [class*=" icon-"].icon-spin,\n
+.nav [class*=" icon-"].icon-spin {\n
+  display: inline-block;\n
+}\n
+.nav-tabs [class^="icon-"],\n
+.nav-pills [class^="icon-"],\n
+.nav-tabs [class*=" icon-"],\n
+.nav-pills [class*=" icon-"],\n
+.nav-tabs [class^="icon-"].icon-large,\n
+.nav-pills [class^="icon-"].icon-large,\n
+.nav-tabs [class*=" icon-"].icon-large,\n
+.nav-pills [class*=" icon-"].icon-large {\n
+  line-height: .9em;\n
+}\n
+.btn [class^="icon-"].pull-left.icon-2x,\n
+.btn [class*=" icon-"].pull-left.icon-2x,\n
+.btn [class^="icon-"].pull-right.icon-2x,\n
+.btn [class*=" icon-"].pull-right.icon-2x {\n
+  margin-top: .18em;\n
+}\n
+.btn [class^="icon-"].icon-spin.icon-large,\n
+.btn [class*=" icon-"].icon-spin.icon-large {\n
+  line-height: .8em;\n
+}\n
+.btn.btn-small [class^="icon-"].pull-left.icon-2x,\n
+.btn.btn-small [class*=" icon-"].pull-left.icon-2x,\n
+.btn.btn-small [class^="icon-"].pull-right.icon-2x,\n
+.btn.btn-small [class*=" icon-"].pull-right.icon-2x {\n
+  margin-top: .25em;\n
+}\n
+.btn.btn-large [class^="icon-"],\n
+.btn.btn-large [class*=" icon-"] {\n
+  margin-top: 0;\n
+}\n
+.btn.btn-large [class^="icon-"].pull-left.icon-2x,\n
+.btn.btn-large [class*=" icon-"].pull-left.icon-2x,\n
+.btn.btn-large [class^="icon-"].pull-right.icon-2x,\n
+.btn.btn-large [class*=" icon-"].pull-right.icon-2x {\n
+  margin-top: .05em;\n
+}\n
+.btn.btn-large [class^="icon-"].pull-left.icon-2x,\n
+.btn.btn-large [class*=" icon-"].pull-left.icon-2x {\n
+  margin-right: .2em;\n
+}\n
+.btn.btn-large [class^="icon-"].pull-right.icon-2x,\n
+.btn.btn-large [class*=" icon-"].pull-right.icon-2x {\n
+  margin-left: .2em;\n
+}\n
+/* Fixes alignment in nav lists */\n
+.nav-list [class^="icon-"],\n
+.nav-list [class*=" icon-"] {\n
+  line-height: inherit;\n
+}\n
+/* EXTRAS\n
+ * -------------------------- */\n
+/* Stacked and layered icon */\n
+.icon-stack {\n
+  position: relative;\n
+  display: inline-block;\n
+  width: 2em;\n
+  height: 2em;\n
+  line-height: 2em;\n
+  vertical-align: -35%;\n
+}\n
+.icon-stack [class^="icon-"],\n
+.icon-stack [class*=" icon-"] {\n
+  display: block;\n
+  text-align: center;\n
+  position: absolute;\n
+  width: 100%;\n
+  height: 100%;\n
+  font-size: 1em;\n
+  line-height: inherit;\n
+  *line-height: 2em;\n
+}\n
+.icon-stack .icon-stack-base {\n
+  font-size: 2em;\n
+  *line-height: 1em;\n
+}\n
+/* Animated rotating icon */\n
+.icon-spin {\n
+  display: inline-block;\n
+  -moz-animation: spin 2s infinite linear;\n
+  -o-animation: spin 2s infinite linear;\n
+  -webkit-animation: spin 2s infinite linear;\n
+  animation: spin 2s infinite linear;\n
+}\n
+/* Prevent stack and spinners from being taken inline when inside a link */\n
+a .icon-stack,\n
+a .icon-spin {\n
+  display: inline-block;\n
+  text-decoration: none;\n
+}\n
+@-moz-keyframes spin {\n
+  0% {\n
+    -moz-transform: rotate(0deg);\n
+  }\n
+  100% {\n
+    -moz-transform: rotate(359deg);\n
+  }\n
+}\n
+@-webkit-keyframes spin {\n
+  0% {\n
+    -webkit-transform: rotate(0deg);\n
+  }\n
+  100% {\n
+    -webkit-transform: rotate(359deg);\n
+  }\n
+}\n
+@-o-keyframes spin {\n
+  0% {\n
+    -o-transform: rotate(0deg);\n
+  }\n
+  100% {\n
+    -o-transform: rotate(359deg);\n
+  }\n
+}\n
+@-ms-keyframes spin {\n
+  0% {\n
+    -ms-transform: rotate(0deg);\n
+  }\n
+  100% {\n
+    -ms-transform: rotate(359deg);\n
+  }\n
+}\n
+@keyframes spin {\n
+  0% {\n
+    transform: rotate(0deg);\n
+  }\n
+  100% {\n
+    transform: rotate(359deg);\n
+  }\n
+}\n
+/* Icon rotations and mirroring */\n
+.icon-rotate-90:before {\n
+  -webkit-transform: rotate(90deg);\n
+  -moz-transform: rotate(90deg);\n
+  -ms-transform: rotate(90deg);\n
+  -o-transform: rotate(90deg);\n
+  transform: rotate(90deg);\n
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);\n
+}\n
+.icon-rotate-180:before {\n
+  -webkit-transform: rotate(180deg);\n
+  -moz-transform: rotate(180deg);\n
+  -ms-transform: rotate(180deg);\n
+  -o-transform: rotate(180deg);\n
+  transform: rotate(180deg);\n
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);\n
+}\n
+.icon-rotate-270:before {\n
+  -webkit-transform: rotate(270deg);\n
+  -moz-transform: rotate(270deg);\n
+  -ms-transform: rotate(270deg);\n
+  -o-transform: rotate(270deg);\n
+  transform: rotate(270deg);\n
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);\n
+}\n
+.icon-flip-horizontal:before {\n
+  -webkit-transform: scale(-1, 1);\n
+  -moz-transform: scale(-1, 1);\n
+  -ms-transform: scale(-1, 1);\n
+  -o-transform: scale(-1, 1);\n
+  transform: scale(-1, 1);\n
+}\n
+.icon-flip-vertical:before {\n
+  -webkit-transform: scale(1, -1);\n
+  -moz-transform: scale(1, -1);\n
+  -ms-transform: scale(1, -1);\n
+  -o-transform: scale(1, -1);\n
+  transform: scale(1, -1);\n
+}\n
+/* ensure rotation occurs inside anchor tags */\n
+a .icon-rotate-90:before,\n
+a .icon-rotate-180:before,\n
+a .icon-rotate-270:before,\n
+a .icon-flip-horizontal:before,\n
+a .icon-flip-vertical:before {\n
+  display: inline-block;\n
+}\n
+/* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen\n
+   readers do not read off random characters that represent icons */\n
+.icon-glass:before {\n
+  content: "\\f000";\n
+}\n
+.icon-music:before {\n
+  content: "\\f001";\n
+}\n
+.icon-search:before {\n
+  content: "\\f002";\n
+}\n
+.icon-envelope-alt:before {\n
+  content: "\\f003";\n
+}\n
+.icon-heart:before {\n
+  content: "\\f004";\n
+}\n
+.icon-star:before {\n
+  content: "\\f005";\n
+}\n
+.icon-star-empty:before {\n
+  content: "\\f006";\n
+}\n
+.icon-user:before {\n
+  content: "\\f007";\n
+}\n
+.icon-film:before {\n
+  content: "\\f008";\n
+}\n
+.icon-th-large:before {\n
+  content: "\\f009";\n
+}\n
+.icon-th:before {\n
+  content: "\\f00a";\n
+}\n
+.icon-th-list:before {\n
+  content: "\\f00b";\n
+}\n
+.icon-ok:before {\n
+  content: "\\f00c";\n
+}\n
+.icon-remove:before {\n
+  content: "\\f00d";\n
+}\n
+.icon-zoom-in:before {\n
+  content: "\\f00e";\n
+}\n
+.icon-zoom-out:before {\n
+  content: "\\f010";\n
+}\n
+.icon-power-off:before,\n
+.icon-off:before {\n
+  content: "\\f011";\n
+}\n
+.icon-signal:before {\n
+  content: "\\f012";\n
+}\n
+.icon-gear:before,\n
+.icon-cog:before {\n
+  content: "\\f013";\n
+}\n
+.icon-trash:before {\n
+  content: "\\f014";\n
+}\n
+.icon-home:before {\n
+  content: "\\f015";\n
+}\n
+.icon-file-alt:before {\n
+  content: "\\f016";\n
+}\n
+.icon-time:before {\n
+  content: "\\f017";\n
+}\n
+.icon-road:before {\n
+  content: "\\f018";\n
+}\n
+.icon-download-alt:before {\n
+  content: "\\f019";\n
+}\n
+.icon-download:before {\n
+  content: "\\f01a";\n
+}\n
+.icon-upload:before {\n
+  content: "\\f01b";\n
+}\n
+.icon-inbox:before {\n
+  content: "\\f01c";\n
+}\n
+.icon-play-circle:before {\n
+  content: "\\f01d";\n
+}\n
+.icon-rotate-right:before,\n
+.icon-repeat:before {\n
+  content: "\\f01e";\n
+}\n
+.icon-refresh:before {\n
+  content: "\\f021";\n
+}\n
+.icon-list-alt:before {\n
+  content: "\\f022";\n
+}\n
+.icon-lock:before {\n
+  content: "\\f023";\n
+}\n
+.icon-flag:before {\n
+  content: "\\f024";\n
+}\n
+.icon-headphones:before {\n
+  content: "\\f025";\n
+}\n
+.icon-volume-off:before {\n
+  content: "\\f026";\n
+}\n
+.icon-volume-down:before {\n
+  content: "\\f027";\n
+}\n
+.icon-volume-up:before {\n
+  content: "\\f028";\n
+}\n
+.icon-qrcode:before {\n
+  content: "\\f029";\n
+}\n
+.icon-barcode:before {\n
+  content: "\\f02a";\n
+}\n
+.icon-tag:before {\n
+  content: "\\f02b";\n
+}\n
+.icon-tags:before {\n
+  content: "\\f02c";\n
+}\n
+.icon-book:before {\n
+  content: "\\f02d";\n
+}\n
+.icon-bookmark:before {\n
+  content: "\\f02e";\n
+}\n
+.icon-print:before {\n
+  content: "\\f02f";\n
+}\n
+.icon-camera:before {\n
+  content: "\\f030";\n
+}\n
+.icon-font:before {\n
+  content: "\\f031";\n
+}\n
+.icon-bold:before {\n
+  content: "\\f032";\n
+}\n
+.icon-italic:before {\n
+  content: "\\f033";\n
+}\n
+.icon-text-height:before {\n
+  content: "\\f034";\n
+}\n
+.icon-text-width:before {\n
+  content: "\\f035";\n
+}\n
+.icon-align-left:before {\n
+  content: "\\f036";\n
+}\n
+.icon-align-center:before {\n
+  content: "\\f037";\n
+}\n
+.icon-align-right:before {\n
+  content: "\\f038";\n
+}\n
+.icon-align-justify:before {\n
+  content: "\\f039";\n
+}\n
+.icon-list:before {\n
+  content: "\\f03a";\n
+}\n
+.icon-indent-left:before {\n
+  content: "\\f03b";\n
+}\n
+.icon-indent-right:before {\n
+  content: "\\f03c";\n
+}\n
+.icon-facetime-video:before {\n
+  content: "\\f03d";\n
+}\n
+.icon-picture:before {\n
+  content: "\\f03e";\n
+}\n
+.icon-pencil:before {\n
+  content: "\\f040";\n
+}\n
+.icon-map-marker:before {\n
+  content: "\\f041";\n
+}\n
+.icon-adjust:before {\n
+  content: "\\f042";\n
+}\n
+.icon-tint:before {\n
+  content: "\\f043";\n
+}\n
+.icon-edit:before {\n
+  content: "\\f044";\n
+}\n
+.icon-share:before {\n
+  content: "\\f045";\n
+}\n
+.icon-check:before {\n
+  content: "\\f046";\n
+}\n
+.icon-move:before {\n
+  content: "\\f047";\n
+}\n
+.icon-step-backward:before {\n
+  content: "\\f048";\n
+}\n
+.icon-fast-backward:before {\n
+  content: "\\f049";\n
+}\n
+.icon-backward:before {\n
+  content: "\\f04a";\n
+}\n
+.icon-play:before {\n
+  content: "\\f04b";\n
+}\n
+.icon-pause:before {\n
+  content: "\\f04c";\n
+}\n
+.icon-stop:before {\n
+  content: "\\f04d";\n
+}\n
+.icon-forward:before {\n
+  content: "\\f04e";\n
+}\n
+.icon-fast-forward:before {\n
+  content: "\\f050";\n
+}\n
+.icon-step-forward:before {\n
+  content: "\\f051";\n
+}\n
+.icon-eject:before {\n
+  content: "\\f052";\n
+}\n
+.icon-chevron-left:before {\n
+  content: "\\f053";\n
+}\n
+.icon-chevron-right:before {\n
+  content: "\\f054";\n
+}\n
+.icon-plus-sign:before {\n
+  content: "\\f055";\n
+}\n
+.icon-minus-sign:before {\n
+  content: "\\f056";\n
+}\n
+.icon-remove-sign:before {\n
+  content: "\\f057";\n
+}\n
+.icon-ok-sign:before {\n
+  content: "\\f058";\n
+}\n
+.icon-question-sign:before {\n
+  content: "\\f059";\n
+}\n
+.icon-info-sign:before {\n
+  content: "\\f05a";\n
+}\n
+.icon-screenshot:before {\n
+  content: "\\f05b";\n
+}\n
+.icon-remove-circle:before {\n
+  content: "\\f05c";\n
+}\n
+.icon-ok-circle:before {\n
+  content: "\\f05d";\n
+}\n
+.icon-ban-circle:before {\n
+  content: "\\f05e";\n
+}\n
+.icon-arrow-left:before {\n
+  content: "\\f060";\n
+}\n
+.icon-arrow-right:before {\n
+  content: "\\f061";\n
+}\n
+.icon-arrow-up:before {\n
+  content: "\\f062";\n
+}\n
+.icon-arrow-down:before {\n
+  content: "\\f063";\n
+}\n
+.icon-mail-forward:before,\n
+.icon-share-alt:before {\n
+  content: "\\f064";\n
+}\n
+.icon-resize-full:before {\n
+  content: "\\f065";\n
+}\n
+.icon-resize-small:before {\n
+  content: "\\f066";\n
+}\n
+.icon-plus:before {\n
+  content: "\\f067";\n
+}\n
+.icon-minus:before {\n
+  content: "\\f068";\n
+}\n
+.icon-asterisk:before {\n
+  content: "\\f069";\n
+}\n
+.icon-exclamation-sign:before {\n
+  content: "\\f06a";\n
+}\n
+.icon-gift:before {\n
+  content: "\\f06b";\n
+}\n
+.icon-leaf:before {\n
+  content: "\\f06c";\n
+}\n
+.icon-fire:before {\n
+  content: "\\f06d";\n
+}\n
+.icon-eye-open:before {\n
+  content: "\\f06e";\n
+}\n
+.icon-eye-close:before {\n
+  content: "\\f070";\n
+}\n
+.icon-warning-sign:before {\n
+  content: "\\f071";\n
+}\n
+.icon-plane:before {\n
+  content: "\\f072";\n
+}\n
+.icon-calendar:before {\n
+  content: "\\f073";\n
+}\n
+.icon-random:before {\n
+  content: "\\f074";\n
+}\n
+.icon-comment:before {\n
+  content: "\\f075";\n
+}\n
+.icon-magnet:before {\n
+  content: "\\f076";\n
+}\n
+.icon-chevron-up:before {\n
+  content: "\\f077";\n
+}\n
+.icon-chevron-down:before {\n
+  content: "\\f078";\n
+}\n
+.icon-retweet:before {\n
+  content: "\\f079";\n
+}\n
+.icon-shopping-cart:before {\n
+  content: "\\f07a";\n
+}\n
+.icon-folder-close:before {\n
+  content: "\\f07b";\n
+}\n
+.icon-folder-open:before {\n
+  content: "\\f07c";\n
+}\n
+.icon-resize-vertical:before {\n
+  content: "\\f07d";\n
+}\n
+.icon-resize-horizontal:before {\n
+  content: "\\f07e";\n
+}\n
+.icon-bar-chart:before {\n
+  content: "\\f080";\n
+}\n
+.icon-twitter-sign:before {\n
+  content: "\\f081";\n
+}\n
+.icon-facebook-sign:before {\n
+  content: "\\f082";\n
+}\n
+.icon-camera-retro:before {\n
+  content: "\\f083";\n
+}\n
+.icon-key:before {\n
+  content: "\\f084";\n
+}\n
+.icon-gears:before,\n
+.icon-cogs:before {\n
+  content: "\\f085";\n
+}\n
+.icon-comments:before {\n
+  content: "\\f086";\n
+}\n
+.icon-thumbs-up-alt:before {\n
+  content: "\\f087";\n
+}\n
+.icon-thumbs-down-alt:before {\n
+  content: "\\f088";\n
+}\n
+.icon-star-half:before {\n
+  content: "\\f089";\n
+}\n
+.icon-heart-empty:before {\n
+  content: "\\f08a";\n
+}\n
+.icon-signout:before {\n
+  content: "\\f08b";\n
+}\n
+.icon-linkedin-sign:before {\n
+  content: "\\f08c";\n
+}\n
+.icon-pushpin:before {\n
+  content: "\\f08d";\n
+}\n
+.icon-external-link:before {\n
+  content: "\\f08e";\n
+}\n
+.icon-signin:before {\n
+  content: "\\f090";\n
+}\n
+.icon-trophy:before {\n
+  content: "\\f091";\n
+}\n
+.icon-github-sign:before {\n
+  content: "\\f092";\n
+}\n
+.icon-upload-alt:before {\n
+  content: "\\f093";\n
+}\n
+.icon-lemon:before {\n
+  content: "\\f094";\n
+}\n
+.icon-phone:before {\n
+  content: "\\f095";\n
+}\n
+.icon-unchecked:before,\n
+.icon-check-empty:before {\n
+  content: "\\f096";\n
+}\n
+.icon-bookmark-empty:before {\n
+  content: "\\f097";\n
+}\n
+.icon-phone-sign:before {\n
+  content: "\\f098";\n
+}\n
+.icon-twitter:before {\n
+  content: "\\f099";\n
+}\n
+.icon-facebook:before {\n
+  content: "\\f09a";\n
+}\n
+.icon-github:before {\n
+  content: "\\f09b";\n
+}\n
+.icon-unlock:before {\n
+  content: "\\f09c";\n
+}\n
+.icon-credit-card:before {\n
+  content: "\\f09d";\n
+}\n
+.icon-rss:before {\n
+  content: "\\f09e";\n
+}\n
+.icon-hdd:before {\n
+  content: "\\f0a0";\n
+}\n
+.icon-bullhorn:before {\n
+  content: "\\f0a1";\n
+}\n
+.icon-bell:before {\n
+  content: "\\f0a2";\n
+}\n
+.icon-certificate:before {\n
+  content: "\\f0a3";\n
+}\n
+.icon-hand-right:before {\n
+  content: "\\f0a4";\n
+}\n
+.icon-hand-left:before {\n
+  content: "\\f0a5";\n
+}\n
+.icon-hand-up:before {\n
+  content: "\\f0a6";\n
+}\n
+.icon-hand-down:before {\n
+  content: "\\f0a7";\n
+}\n
+.icon-circle-arrow-left:before {\n
+  content: "\\f0a8";\n
+}\n
+.icon-circle-arrow-right:before {\n
+  content: "\\f0a9";\n
+}\n
+.icon-circle-arrow-up:before {\n
+  content: "\\f0aa";\n
+}\n
+.icon-circle-arrow-down:before {\n
+  content: "\\f0ab";\n
+}\n
+.icon-globe:before {\n
+  content: "\\f0ac";\n
+}\n
+.icon-wrench:before {\n
+  content: "\\f0ad";\n
+}\n
+.icon-tasks:before {\n
+  content: "\\f0ae";\n
+}\n
+.icon-filter:before {\n
+  content: "\\f0b0";\n
+}\n
+.icon-briefcase:before {\n
+  content: "\\f0b1";\n
+}\n
+.icon-fullscreen:before {\n
+  content: "\\f0b2";\n
+}\n
+.icon-group:before {\n
+  content: "\\f0c0";\n
+}\n
+.icon-link:before {\n
+  content: "\\f0c1";\n
+}\n
+.icon-cloud:before {\n
+  content: "\\f0c2";\n
+}\n
+.icon-beaker:before {\n
+  content: "\\f0c3";\n
+}\n
+.icon-cut:before {\n
+  content: "\\f0c4";\n
+}\n
+.icon-copy:before {\n
+  content: "\\f0c5";\n
+}\n
+.icon-paperclip:before,\n
+.icon-paper-clip:before {\n
+  content: "\\f0c6";\n
+}\n
+.icon-save:before {\n
+  content: "\\f0c7";\n
+}\n
+.icon-sign-blank:before {\n
+  content: "\\f0c8";\n
+}\n
+.icon-reorder:before {\n
+  content: "\\f0c9";\n
+}\n
+.icon-list-ul:before {\n
+  content: "\\f0ca";\n
+}\n
+.icon-list-ol:before {\n
+  content: "\\f0cb";\n
+}\n
+.icon-strikethrough:before {\n
+  content: "\\f0cc";\n
+}\n
+.icon-underline:before {\n
+  content: "\\f0cd";\n
+}\n
+.icon-table:before {\n
+  content: "\\f0ce";\n
+}\n
+.icon-magic:before {\n
+  content: "\\f0d0";\n
+}\n
+.icon-truck:before {\n
+  content: "\\f0d1";\n
+}\n
+.icon-pinterest:before {\n
+  content: "\\f0d2";\n
+}\n
+.icon-pinterest-sign:before {\n
+  content: "\\f0d3";\n
+}\n
+.icon-google-plus-sign:before {\n
+  content: "\\f0d4";\n
+}\n
+.icon-google-plus:before {\n
+  content: "\\f0d5";\n
+}\n
+.icon-money:before {\n
+  content: "\\f0d6";\n
+}\n
+.icon-caret-down:before {\n
+  content: "\\f0d7";\n
+}\n
+.icon-caret-up:before {\n
+  content: "\\f0d8";\n
+}\n
+.icon-caret-left:before {\n
+  content: "\\f0d9";\n
+}\n
+.icon-caret-right:before {\n
+  content: "\\f0da";\n
+}\n
+.icon-columns:before {\n
+  content: "\\f0db";\n
+}\n
+.icon-sort:before {\n
+  content: "\\f0dc";\n
+}\n
+.icon-sort-down:before {\n
+  content: "\\f0dd";\n
+}\n
+.icon-sort-up:before {\n
+  content: "\\f0de";\n
+}\n
+.icon-envelope:before {\n
+  content: "\\f0e0";\n
+}\n
+.icon-linkedin:before {\n
+  content: "\\f0e1";\n
+}\n
+.icon-rotate-left:before,\n
+.icon-undo:before {\n
+  content: "\\f0e2";\n
+}\n
+.icon-legal:before {\n
+  content: "\\f0e3";\n
+}\n
+.icon-dashboard:before {\n
+  content: "\\f0e4";\n
+}\n
+.icon-comment-alt:before {\n
+  content: "\\f0e5";\n
+}\n
+.icon-comments-alt:before {\n
+  content: "\\f0e6";\n
+}\n
+.icon-bolt:before {\n
+  content: "\\f0e7";\n
+}\n
+.icon-sitemap:before {\n
+  content: "\\f0e8";\n
+}\n
+.icon-umbrella:before {\n
+  content: "\\f0e9";\n
+}\n
+.icon-paste:before {\n
+  content: "\\f0ea";\n
+}\n
+.icon-lightbulb:before {\n
+  content: "\\f0eb";\n
+}\n
+.icon-exchange:before {\n
+  content: "\\f0ec";\n
+}\n
+.icon-cloud-download:before {\n
+  content: "\\f0ed";\n
+}\n
+.icon-cloud-upload:before {\n
+  content: "\\f0ee";\n
+}\n
+.icon-user-md:before {\n
+  content: "\\f0f0";\n
+}\n
+.icon-stethoscope:before {\n
+  content: "\\f0f1";\n
+}\n
+.icon-suitcase:before {\n
+  content: "\\f0f2";\n
+}\n
+.icon-bell-alt:before {\n
+  content: "\\f0f3";\n
+}\n
+.icon-coffee:before {\n
+  content: "\\f0f4";\n
+}\n
+.icon-food:before {\n
+  content: "\\f0f5";\n
+}\n
+.icon-file-text-alt:before {\n
+  content: "\\f0f6";\n
+}\n
+.icon-building:before {\n
+  content: "\\f0f7";\n
+}\n
+.icon-hospital:before {\n
+  content: "\\f0f8";\n
+}\n
+.icon-ambulance:before {\n
+  content: "\\f0f9";\n
+}\n
+.icon-medkit:before {\n
+  content: "\\f0fa";\n
+}\n
+.icon-fighter-jet:before {\n
+  content: "\\f0fb";\n
+}\n
+.icon-beer:before {\n
+  content: "\\f0fc";\n
+}\n
+.icon-h-sign:before {\n
+  content: "\\f0fd";\n
+}\n
+.icon-plus-sign-alt:before {\n
+  content: "\\f0fe";\n
+}\n
+.icon-double-angle-left:before {\n
+  content: "\\f100";\n
+}\n
+.icon-double-angle-right:before {\n
+  content: "\\f101";\n
+}\n
+.icon-double-angle-up:before {\n
+  content: "\\f102";\n
+}\n
+.icon-double-angle-down:before {\n
+  content: "\\f103";\n
+}\n
+.icon-angle-left:before {\n
+  content: "\\f104";\n
+}\n
+.icon-angle-right:before {\n
+  content: "\\f105";\n
+}\n
+.icon-angle-up:before {\n
+  content: "\\f106";\n
+}\n
+.icon-angle-down:before {\n
+  content: "\\f107";\n
+}\n
+.icon-desktop:before {\n
+  content: "\\f108";\n
+}\n
+.icon-laptop:before {\n
+  content: "\\f109";\n
+}\n
+.icon-tablet:before {\n
+  content: "\\f10a";\n
+}\n
+.icon-mobile-phone:before {\n
+  content: "\\f10b";\n
+}\n
+.icon-circle-blank:before {\n
+  content: "\\f10c";\n
+}\n
+.icon-quote-left:before {\n
+  content: "\\f10d";\n
+}\n
+.icon-quote-right:before {\n
+  content: "\\f10e";\n
+}\n
+.icon-spinner:before {\n
+  content: "\\f110";\n
+}\n
+.icon-circle:before {\n
+  content: "\\f111";\n
+}\n
+.icon-mail-reply:before,\n
+.icon-reply:before {\n
+  content: "\\f112";\n
+}\n
+.icon-github-alt:before {\n
+  content: "\\f113";\n
+}\n
+.icon-folder-close-alt:before {\n
+  content: "\\f114";\n
+}\n
+.icon-folder-open-alt:before {\n
+  content: "\\f115";\n
+}\n
+.icon-expand-alt:before {\n
+  content: "\\f116";\n
+}\n
+.icon-collapse-alt:before {\n
+  content: "\\f117";\n
+}\n
+.icon-smile:before {\n
+  content: "\\f118";\n
+}\n
+.icon-frown:before {\n
+  content: "\\f119";\n
+}\n
+.icon-meh:before {\n
+  content: "\\f11a";\n
+}\n
+.icon-gamepad:before {\n
+  content: "\\f11b";\n
+}\n
+.icon-keyboard:before {\n
+  content: "\\f11c";\n
+}\n
+.icon-flag-alt:before {\n
+  content: "\\f11d";\n
+}\n
+.icon-flag-checkered:before {\n
+  content: "\\f11e";\n
+}\n
+.icon-terminal:before {\n
+  content: "\\f120";\n
+}\n
+.icon-code:before {\n
+  content: "\\f121";\n
+}\n
+.icon-reply-all:before {\n
+  content: "\\f122";\n
+}\n
+.icon-mail-reply-all:before {\n
+  content: "\\f122";\n
+}\n
+.icon-star-half-full:before,\n
+.icon-star-half-empty:before {\n
+  content: "\\f123";\n
+}\n
+.icon-location-arrow:before {\n
+  content: "\\f124";\n
+}\n
+.icon-crop:before {\n
+  content: "\\f125";\n
+}\n
+.icon-code-fork:before {\n
+  content: "\\f126";\n
+}\n
+.icon-unlink:before {\n
+  content: "\\f127";\n
+}\n
+.icon-question:before {\n
+  content: "\\f128";\n
+}\n
+.icon-info:before {\n
+  content: "\\f129";\n
+}\n
+.icon-exclamation:before {\n
+  content: "\\f12a";\n
+}\n
+.icon-superscript:before {\n
+  content: "\\f12b";\n
+}\n
+.icon-subscript:before {\n
+  content: "\\f12c";\n
+}\n
+.icon-eraser:before {\n
+  content: "\\f12d";\n
+}\n
+.icon-puzzle-piece:before {\n
+  content: "\\f12e";\n
+}\n
+.icon-microphone:before {\n
+  content: "\\f130";\n
+}\n
+.icon-microphone-off:before {\n
+  content: "\\f131";\n
+}\n
+.icon-shield:before {\n
+  content: "\\f132";\n
+}\n
+.icon-calendar-empty:before {\n
+  content: "\\f133";\n
+}\n
+.icon-fire-extinguisher:before {\n
+  content: "\\f134";\n
+}\n
+.icon-rocket:before {\n
+  content: "\\f135";\n
+}\n
+.icon-maxcdn:before {\n
+  content: "\\f136";\n
+}\n
+.icon-chevron-sign-left:before {\n
+  content: "\\f137";\n
+}\n
+.icon-chevron-sign-right:before {\n
+  content: "\\f138";\n
+}\n
+.icon-chevron-sign-up:before {\n
+  content: "\\f139";\n
+}\n
+.icon-chevron-sign-down:before {\n
+  content: "\\f13a";\n
+}\n
+.icon-html5:before {\n
+  content: "\\f13b";\n
+}\n
+.icon-css3:before {\n
+  content: "\\f13c";\n
+}\n
+.icon-anchor:before {\n
+  content: "\\f13d";\n
+}\n
+.icon-unlock-alt:before {\n
+  content: "\\f13e";\n
+}\n
+.icon-bullseye:before {\n
+  content: "\\f140";\n
+}\n
+.icon-ellipsis-horizontal:before {\n
+  content: "\\f141";\n
+}\n
+.icon-ellipsis-vertical:before {\n
+  content: "\\f142";\n
+}\n
+.icon-rss-sign:before {\n
+  content: "\\f143";\n
+}\n
+.icon-play-sign:before {\n
+  content: "\\f144";\n
+}\n
+.icon-ticket:before {\n
+  content: "\\f145";\n
+}\n
+.icon-minus-sign-alt:before {\n
+  content: "\\f146";\n
+}\n
+.icon-check-minus:before {\n
+  content: "\\f147";\n
+}\n
+.icon-level-up:before {\n
+  content: "\\f148";\n
+}\n
+.icon-level-down:before {\n
+  content: "\\f149";\n
+}\n
+.icon-check-sign:before {\n
+  content: "\\f14a";\n
+}\n
+.icon-edit-sign:before {\n
+  content: "\\f14b";\n
+}\n
+.icon-external-link-sign:before {\n
+  content: "\\f14c";\n
+}\n
+.icon-share-sign:before {\n
+  content: "\\f14d";\n
+}\n
+.icon-compass:before {\n
+  content: "\\f14e";\n
+}\n
+.icon-collapse:before {\n
+  content: "\\f150";\n
+}\n
+.icon-collapse-top:before {\n
+  content: "\\f151";\n
+}\n
+.icon-expand:before {\n
+  content: "\\f152";\n
+}\n
+.icon-euro:before,\n
+.icon-eur:before {\n
+  content: "\\f153";\n
+}\n
+.icon-gbp:before {\n
+  content: "\\f154";\n
+}\n
+.icon-dollar:before,\n
+.icon-usd:before {\n
+  content: "\\f155";\n
+}\n
+.icon-rupee:before,\n
+.icon-inr:before {\n
+  content: "\\f156";\n
+}\n
+.icon-yen:before,\n
+.icon-jpy:before {\n
+  content: "\\f157";\n
+}\n
+.icon-renminbi:before,\n
+.icon-cny:before {\n
+  content: "\\f158";\n
+}\n
+.icon-won:before,\n
+.icon-krw:before {\n
+  content: "\\f159";\n
+}\n
+.icon-bitcoin:before,\n
+.icon-btc:before {\n
+  content: "\\f15a";\n
+}\n
+.icon-file:before {\n
+  content: "\\f15b";\n
+}\n
+.icon-file-text:before {\n
+  content: "\\f15c";\n
+}\n
+.icon-sort-by-alphabet:before {\n
+  content: "\\f15d";\n
+}\n
+.icon-sort-by-alphabet-alt:before {\n
+  content: "\\f15e";\n
+}\n
+.icon-sort-by-attributes:before {\n
+  content: "\\f160";\n
+}\n
+.icon-sort-by-attributes-alt:before {\n
+  content: "\\f161";\n
+}\n
+.icon-sort-by-order:before {\n
+  content: "\\f162";\n
+}\n
+.icon-sort-by-order-alt:before {\n
+  content: "\\f163";\n
+}\n
+.icon-thumbs-up:before {\n
+  content: "\\f164";\n
+}\n
+.icon-thumbs-down:before {\n
+  content: "\\f165";\n
+}\n
+.icon-youtube-sign:before {\n
+  content: "\\f166";\n
+}\n
+.icon-youtube:before {\n
+  content: "\\f167";\n
+}\n
+.icon-xing:before {\n
+  content: "\\f168";\n
+}\n
+.icon-xing-sign:before {\n
+  content: "\\f169";\n
+}\n
+.icon-youtube-play:before {\n
+  content: "\\f16a";\n
+}\n
+.icon-dropbox:before {\n
+  content: "\\f16b";\n
+}\n
+.icon-stackexchange:before {\n
+  content: "\\f16c";\n
+}\n
+.icon-instagram:before {\n
+  content: "\\f16d";\n
+}\n
+.icon-flickr:before {\n
+  content: "\\f16e";\n
+}\n
+.icon-adn:before {\n
+  content: "\\f170";\n
+}\n
+.icon-bitbucket:before {\n
+  content: "\\f171";\n
+}\n
+.icon-bitbucket-sign:before {\n
+  content: "\\f172";\n
+}\n
+.icon-tumblr:before {\n
+  content: "\\f173";\n
+}\n
+.icon-tumblr-sign:before {\n
+  content: "\\f174";\n
+}\n
+.icon-long-arrow-down:before {\n
+  content: "\\f175";\n
+}\n
+.icon-long-arrow-up:before {\n
+  content: "\\f176";\n
+}\n
+.icon-long-arrow-left:before {\n
+  content: "\\f177";\n
+}\n
+.icon-long-arrow-right:before {\n
+  content: "\\f178";\n
+}\n
+.icon-apple:before {\n
+  content: "\\f179";\n
+}\n
+.icon-windows:before {\n
+  content: "\\f17a";\n
+}\n
+.icon-android:before {\n
+  content: "\\f17b";\n
+}\n
+.icon-linux:before {\n
+  content: "\\f17c";\n
+}\n
+.icon-dribbble:before {\n
+  content: "\\f17d";\n
+}\n
+.icon-skype:before {\n
+  content: "\\f17e";\n
+}\n
+.icon-foursquare:before {\n
+  content: "\\f180";\n
+}\n
+.icon-trello:before {\n
+  content: "\\f181";\n
+}\n
+.icon-female:before {\n
+  content: "\\f182";\n
+}\n
+.icon-male:before {\n
+  content: "\\f183";\n
+}\n
+.icon-gittip:before {\n
+  content: "\\f184";\n
+}\n
+.icon-sun:before {\n
+  content: "\\f185";\n
+}\n
+.icon-moon:before {\n
+  content: "\\f186";\n
+}\n
+.icon-archive:before {\n
+  content: "\\f187";\n
+}\n
+.icon-bug:before {\n
+  content: "\\f188";\n
+}\n
+.icon-vk:before {\n
+  content: "\\f189";\n
+}\n
+.icon-weibo:before {\n
+  content: "\\f18a";\n
+}\n
+.icon-renren:before {\n
+  content: "\\f18b";\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>27232</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>font-awesome.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

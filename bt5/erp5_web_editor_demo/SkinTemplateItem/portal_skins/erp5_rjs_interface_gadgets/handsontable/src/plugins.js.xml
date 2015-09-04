@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272735.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>plugins.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Utility to register plugins and common namespace for keeping reference to all plugins classes\n
+ */\n
+\n
+import {objectEach} from \'./helpers/object\';\n
+import {toUpperCaseFirst} from \'./helpers/string\';\n
+\n
+const registeredPlugins = new WeakMap();\n
+\n
+/**\n
+ * Registers plugin under given name\n
+ *\n
+ * @param {String} pluginName\n
+ * @param {Function} PluginClass\n
+ */\n
+function registerPlugin(pluginName, PluginClass) {\n
+  pluginName = toUpperCaseFirst(pluginName);\n
+\n
+  Handsontable.hooks.add(\'construct\', function () {\n
+    var holder;\n
+\n
+    if (!registeredPlugins.has(this)) {\n
+      registeredPlugins.set(this, {});\n
+    }\n
+    holder = registeredPlugins.get(this);\n
+\n
+    if (!holder[pluginName]) {\n
+      holder[pluginName] = new PluginClass(this);\n
+    }\n
+  });\n
+  Handsontable.hooks.add(\'afterDestroy\', function () {\n
+    var i, pluginsHolder;\n
+\n
+    if (registeredPlugins.has(this)) {\n
+      pluginsHolder = registeredPlugins.get(this);\n
+\n
+      for (i in pluginsHolder) {\n
+        if (pluginsHolder.hasOwnProperty(i)) {\n
+          pluginsHolder[i].destroy();\n
+        }\n
+      }\n
+      registeredPlugins.delete(this);\n
+    }\n
+  });\n
+}\n
+\n
+/**\n
+ * @param {Object} instance\n
+ * @param {String|Function} pluginName\n
+ * @returns {Function} pluginClass Returns plugin instance if exists or `undefined` if not exists.\n
+ */\n
+function getPlugin(instance, pluginName) {\n
+  if (typeof pluginName != \'string\') {\n
+    throw Error(\'Only strings can be passed as "plugin" parameter\');\n
+  }\n
+  let _pluginName = toUpperCaseFirst(pluginName);\n
+\n
+  if (!registeredPlugins.has(instance) || !registeredPlugins.get(instance)[_pluginName]) {\n
+    return void 0;\n
+  }\n
+\n
+  return registeredPlugins.get(instance)[_pluginName];\n
+}\n
+\n
+/**\n
+ * Get all registred plugins names for concrete Handsontable instance.\n
+ *\n
+ * @param {Object} hotInstance\n
+ * @returns {Array}\n
+ */\n
+function getRegistredPluginNames(hotInstance) {\n
+  return registeredPlugins.has(hotInstance) ? Object.keys(registeredPlugins.get(hotInstance)) : [];\n
+}\n
+\n
+/**\n
+ * Get plugin name.\n
+ *\n
+ * @param {Object} hotInstance\n
+ * @param {Object} plugin\n
+ * @returns {String|null}\n
+ */\n
+function getPluginName(hotInstance, plugin) {\n
+  let pluginName = null;\n
+\n
+  if (registeredPlugins.has(hotInstance)) {\n
+    objectEach(registeredPlugins.get(hotInstance), (pluginInstance, name) => {\n
+      if (pluginInstance === plugin) {\n
+        pluginName = name;\n
+      }\n
+    });\n
+  }\n
+\n
+  return pluginName;\n
+}\n
+\n
+export {registerPlugin, getPlugin, getRegistredPluginNames, getPluginName};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2438</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>plugins.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

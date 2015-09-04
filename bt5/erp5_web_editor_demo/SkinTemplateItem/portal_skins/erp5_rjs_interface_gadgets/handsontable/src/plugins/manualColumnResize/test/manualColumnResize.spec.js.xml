@@ -1,0 +1,351 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272653.89</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>manualColumnResize.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'manualColumnResize\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it("should change column widths at init", function () {\n
+    handsontable({\n
+      manualColumnResize: [100, 150, 180]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').outerWidth()).toEqual(100);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').outerWidth()).toEqual(150);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(2)\').outerWidth()).toEqual(180);\n
+  });\n
+\n
+  it("should change the default column widths with updateSettings", function () {\n
+    handsontable({\n
+      manualColumnResize: true\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').outerWidth()).toEqual(50);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').outerWidth()).toEqual(50);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(2)\').outerWidth()).toEqual(50);\n
+\n
+    updateSettings({\n
+      manualColumnResize: [60, 50, 80]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').outerWidth()).toEqual(60);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').outerWidth()).toEqual(50);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(2)\').outerWidth()).toEqual(80);\n
+  });\n
+\n
+  it("should change column widths with updateSettings", function () {\n
+    handsontable({\n
+      manualColumnResize: [100, 150, 180]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').outerWidth()).toEqual(100);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').outerWidth()).toEqual(150);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(2)\').outerWidth()).toEqual(180);\n
+\n
+    updateSettings({\n
+      manualColumnResize: [60, 50, 80]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').outerWidth()).toEqual(60);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').outerWidth()).toEqual(50);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(2)\').outerWidth()).toEqual(80);\n
+  });\n
+\n
+  it("should reset column widths", function () {\n
+    handsontable({\n
+      manualColumnResize: [100, 150, 180]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').outerWidth()).toEqual(100);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').outerWidth()).toEqual(150);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(2)\').outerWidth()).toEqual(180);\n
+\n
+    updateSettings({\n
+      manualColumnResize: true\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').outerWidth()).toEqual(50);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').outerWidth()).toEqual(50);\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(2)\').outerWidth()).toEqual(50);\n
+  });\n
+\n
+  it("should resize appropriate columns, even if the column order was changed with manualColumnMove plugin", function () {\n
+    handsontable({\n
+      colHeaders: ["First", "Second", "Third"],\n
+      manualColumnMove: [2, 1, 0, 3],\n
+      manualColumnResize: true\n
+    });\n
+\n
+    var $columnHeaders = this.$container.find(\'thead tr:eq(0) th\');\n
+    var initialColumnWidths = [];\n
+\n
+    $columnHeaders.each(function(){\n
+       initialColumnWidths.push($(this).width());\n
+    });\n
+\n
+    resizeColumn.call(this, 0, 100);\n
+\n
+    var $resizedTh = $columnHeaders.eq(0);\n
+\n
+    expect($resizedTh.text()).toEqual(\'Third\');\n
+    expect($resizedTh.outerWidth()).toEqual(100);\n
+\n
+    //Sizes of remaining columns should stay the same\n
+    for(var i = 1; i < $columnHeaders.length; i++){\n
+      expect($columnHeaders.eq(i).width()).toEqual(initialColumnWidths[i]);\n
+    }\n
+  });\n
+\n
+  it("should trigger an afterColumnResize event after column size changes", function () {\n
+\n
+    var afterColumnResizeCallback = jasmine.createSpy(\'afterColumnResizeCallback\');\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(3, 3),\n
+      colHeaders: true,\n
+      manualColumnResize: true,\n
+      afterColumnResize: afterColumnResizeCallback\n
+    });\n
+\n
+    expect(colWidth(this.$container, 0)).toEqual(50);\n
+\n
+    resizeColumn(0, 100);\n
+\n
+    expect(afterColumnResizeCallback).toHaveBeenCalledWith(0, 100, void 0, void 0, void 0, void 0);\n
+    expect(colWidth(this.$container, 0)).toEqual(100);\n
+  });\n
+\n
+  it("should not trigger an afterColumnResize event if column size does not change (mouseMove event width delta = 0)", function () {\n
+\n
+    var afterColumnResizeCallback = jasmine.createSpy(\'afterColumnResizeCallback\');\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(3, 3),\n
+      colHeaders: true,\n
+      manualColumnResize: true,\n
+      afterColumnResize: afterColumnResizeCallback\n
+    });\n
+\n
+    expect(colWidth(this.$container, 0)).toEqual(50);\n
+\n
+    resizeColumn(0, 50);\n
+\n
+    expect(afterColumnResizeCallback).not.toHaveBeenCalled();\n
+    expect(colWidth(this.$container, 0)).toEqual(50);\n
+\n
+  });\n
+\n
+  it("should not trigger an afterColumnResize event if column size does not change (no mouseMove event)", function () {\n
+\n
+    var afterColumnResizeCallback = jasmine.createSpy(\'afterColumnResizeCallback\');\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(3, 3),\n
+      colHeaders: true,\n
+      manualColumnResize: true,\n
+      afterColumnResize: afterColumnResizeCallback\n
+    });\n
+\n
+    expect(colWidth(this.$container, 0)).toEqual(50);\n
+\n
+    var $th = this.$container.find(\'thead tr:eq(0) th:eq(0)\');\n
+    $th.simulate(\'mouseover\');\n
+\n
+    var $resizer = this.$container.find(\'.manualColumnResizer\');\n
+    var resizerPosition = $resizer.position();\n
+\n
+\n
+//    var mouseDownEvent = new $.Event(\'mousedown\', {pageX: resizerPosition.left});\n
+//    $resizer.trigger(mouseDownEvent);\n
+    $resizer.simulate(\'mousedown\',{clientX: resizerPosition.left});\n
+\n
+//    $resizer.trigger(\'mouseup\');\n
+    $resizer.simulate(\'mouseup\');\n
+\n
+    expect(afterColumnResizeCallback).not.toHaveBeenCalled();\n
+    expect(colWidth(this.$container, 0)).toEqual(50);\n
+\n
+  });\n
+\n
+  it("should trigger an afterColumnResize after column size changes, after double click", function () {\n
+\n
+    var afterColumnResizeCallback = jasmine.createSpy(\'afterColumnResizeCallback\');\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(3, 3),\n
+      colHeaders: true,\n
+      manualColumnResize: true,\n
+      afterColumnResize: afterColumnResizeCallback\n
+    });\n
+\n
+    expect(colWidth(this.$container, 0)).toEqual(50);\n
+\n
+    var $th = this.$container.find(\'thead tr:eq(0) th:eq(0)\');\n
+\n
+    $th.simulate(\'mouseover\');\n
+\n
+    var $resizer = this.$container.find(\'.manualColumnResizer\');\n
+    var resizerPosition = $resizer.position();\n
+\n
+    $resizer.simulate(\'mousedown\',{clientX: resizerPosition.left});\n
+    $resizer.simulate(\'mouseup\');\n
+\n
+    $resizer.simulate(\'mousedown\',{clientX: resizerPosition.left});\n
+    $resizer.simulate(\'mouseup\');\n
+\n
+\n
+    waitsFor(function(){\n
+      return afterColumnResizeCallback.calls.length > 0;\n
+    }, \'Column resize\', 1000);\n
+\n
+    runs(function(){\n
+      expect(afterColumnResizeCallback.calls.length).toEqual(1);\n
+      expect(afterColumnResizeCallback.calls[0].args[0]).toEqual(0);\n
+\n
+      //All modern browsers returns width = 25px, but IE8 seems to compute width differently and returns 24px\n
+      expect(afterColumnResizeCallback.calls[0].args[1]).toBeInArray([24, 25]);\n
+      expect(colWidth(this.$container, 0)).toBeInArray([24, 25]);\n
+    });\n
+\n
+  });\n
+\n
+  it("should autosize column after double click (when initial width is not defined)", function () {\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(3, 3),\n
+      colHeaders: true,\n
+      manualColumnResize: true,\n
+      columns: [{width: 100}, {width: 200}, {}]\n
+    });\n
+\n
+    expect(colWidth(this.$container, 0)).toEqual(100);\n
+    expect(colWidth(this.$container, 1)).toEqual(200);\n
+    expect(colWidth(this.$container, 2)).toEqual(50);\n
+\n
+    resizeColumn(2, 300);\n
+\n
+    var $resizer = this.$container.find(\'.manualColumnResizer\');\n
+    var resizerPosition = $resizer.position();\n
+\n
+    $resizer.simulate(\'mousedown\',{clientX: resizerPosition.left});\n
+    $resizer.simulate(\'mouseup\');\n
+\n
+    $resizer.simulate(\'mousedown\',{clientX: resizerPosition.left});\n
+    $resizer.simulate(\'mouseup\');\n
+\n
+    waits(1000);\n
+\n
+    runs(function() {\n
+      expect(colWidth(this.$container, 2)).toBeAroundValue(26);\n
+    }.bind(this));\n
+  });\n
+\n
+  it("should adjust resize handles position after table size changed", function(){\n
+    var maxed = false;\n
+\n
+    handsontable({\n
+      colHeaders: true,\n
+      manualColumnResize: true,\n
+      stretchH: \'all\',\n
+      width: function () {\n
+        return maxed ? 614 : 200;\n
+      }\n
+    });\n
+\n
+    this.$container.find(\'thead th:eq(0)\').simulate(\'mouseover\');\n
+\n
+    var handle = this.$container.find(\'.manualColumnResizer\');\n
+    var handleBox = handle[0].getBoundingClientRect();\n
+    var th0 = this.$container.find(\'thead th:eq(0)\');\n
+    var thBox = th0[0].getBoundingClientRect();\n
+\n
+    expect(handleBox.left + handleBox.width).toEqual(thBox.left + thBox.width - 1);\n
+\n
+    maxed = true;\n
+\n
+    render();\n
+    this.$container.find(\'thead th:eq(0)\').simulate(\'mouseover\');\n
+\n
+    handleBox = handle[0].getBoundingClientRect();\n
+    thBox = th0[0].getBoundingClientRect();\n
+    expect(handleBox.left + handleBox.width).toEqual(thBox.left + thBox.width - 1);\n
+  });\n
+\n
+  it("should display the resize handle in the correct place after the table has been scrolled", function () {\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(10, 20),\n
+      colHeaders: true,\n
+      manualColumnResize: true,\n
+      height: 100,\n
+      width: 200\n
+    });\n
+\n
+    var mainHolder = hot.view.wt.wtTable.holder;\n
+\n
+    var $colHeader = this.$container.find(\'.ht_clone_top thead tr:eq(0) th:eq(2)\');\n
+    $colHeader.simulate("mouseover");\n
+    var $handle = this.$container.find(\'.manualColumnResizer\');\n
+    $handle[0].style.background = "red";\n
+\n
+    expect($colHeader.offset().left + $colHeader.width() - 5).toEqual($handle.offset().left);\n
+    expect($colHeader.offset().top).toEqual($handle.offset().top);\n
+\n
+    $(mainHolder).scrollLeft(200);\n
+    hot.render();\n
+\n
+    $colHeader = this.$container.find(\'.ht_clone_top thead tr:eq(0) th:eq(3)\');\n
+    $colHeader.simulate("mouseover");\n
+    expect($colHeader.offset().left + $colHeader.width() - 5).toEqual($handle.offset().left);\n
+    expect($colHeader.offset().top).toEqual($handle.offset().top);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10361</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>manualColumnResize.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

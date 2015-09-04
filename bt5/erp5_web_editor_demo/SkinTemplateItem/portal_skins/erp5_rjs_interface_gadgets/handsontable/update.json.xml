@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272486.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>update.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\n
+  "COMMENT": "This is a update.json file used by jsDelivr.com CDN",\n
+  "packageManager": "github",\n
+  "name": "handsontable",\n
+  "repo": "handsontable/handsontable",\n
+  "files": {\n
+    "include": ["./dist/*.js", "./plugins/**/*.js", "./plugins/**/*.css"],\n
+    "exclude": ["./plugins/**/*spec*"]\n
+  }\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>298</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>update.json</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

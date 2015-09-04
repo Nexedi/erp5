@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272534.42</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dropdownEditorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'DropdownEditor\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  var choices = ["yellow", "red", "orange", "green", "blue", "gray", "black", "white", "purple", "lime", "olive", "cyan"];\n
+\n
+  var hot;\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'" style="width: 300px; height: 200px; overflow: auto"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (hot) {\n
+      hot = null;\n
+    }\n
+\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  describe("closing the editor", function () {\n
+    it("should not close editor on scrolling", function(){\n
+      hot = handsontable({\n
+        data: [\n
+        [\'\', \'two\',\'three\'],\n
+        [\'four\', \'five\', \'six\']\n
+        ],\n
+        columns: [\n
+        {\n
+          type: \'dropdown\',\n
+          source: choices\n
+        },\n
+        {\n
+\n
+        },\n
+        {\n
+\n
+        }\n
+        ]\n
+      });\n
+\n
+      selectCell(0, 0);\n
+      $(getCell(0, 0)).find(\'.htAutocompleteArrow\').simulate(\'mousedown\');\n
+      $(getCell(0, 0)).find(\'.htAutocompleteArrow\').simulate(\'mouseup\');\n
+\n
+      hot.view.wt.wtOverlays.topOverlay.scrollTo(1);\n
+\n
+      waits(30);\n
+\n
+      var dropdown = Handsontable.editors.getEditor(\'dropdown\', hot);\n
+\n
+      runs(function () {\n
+        expect($(dropdown.htContainer).is(\':visible\')).toBe(true);\n
+        selectCell(0, 0);\n
+      });\n
+\n
+      waits(30);\n
+\n
+      runs(function () {\n
+        $(getCell(0, 0)).find(\'.htAutocompleteArrow\').simulate(\'mousedown\');\n
+        $(getCell(0, 0)).find(\'.htAutocompleteArrow\').simulate(\'mouseup\');\n
+\n
+        dropdown.instance.view.wt.wtOverlays.topOverlay.scrollTo(3);\n
+      });\n
+\n
+      waits(30);\n
+\n
+      runs(function () {\n
+        expect($(dropdown.htContainer).is(\':visible\')).toBe(true);\n
+      });\n
+    });\n
+});\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1757</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dropdownEditorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

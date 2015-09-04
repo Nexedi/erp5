@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272296.04</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>package.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\n
+    "name"         : "chroma-js",\n
+    "description"  : "JavaScript library for color conversions",\n
+    "version"      : "0.5.6",\n
+    "author"       : "Gregor Aisch",\n
+    "homepage"     : "https://github.com/gka/chroma.js",\n
+    "keywords"     : ["color"],\n
+    "maintainers"  : [\n
+        { "name": "Klemen Slavič", "email": "klemen@celtra.com", "web": "http://about.me/klemen.slavic" },\n
+        { "name": "Gregor Aisch", "email": "mail@driven-by-data.net", "web": "http://driven-by-data.net" }\n
+    ],\n
+    "bugs"         : "https://github.com/gka/chroma.js/issues",\n
+    "repository" :\n
+       { "type": "git", "url" : "git://github.com/gka/chroma.js.git" }\n
+    ,\n
+    "main"         : "chroma.js",\n
+    "scripts"      : {\n
+        "compile": "./build.sh"\n
+    },\n
+    "devDependencies": {\n
+        "uglify-js"     : "2.x",\n
+        "coffee-script" : "1.2",\n
+        "vows": "0.7.x"\n
+    }\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>881</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>package.json</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

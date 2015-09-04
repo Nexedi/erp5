@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272566.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>basic.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Benchmark Runner</title>\n
+\n
+  <script type="text/javascript" src="lib/benchmark.js/benchmark.js"></script>\n
+  <applet code="nano" archive="lib/benchmark.js/nano.jar"></applet>\n
+\n
+  <!-- include source files here... -->\n
+  <script type="text/javascript" src="../../test/jasmine/lib/jquery.min.js"></script>\n
+  <script src="../../dist/walkontable.js"></script>\n
+  <link href="../../css/walkontable.css" rel="stylesheet">\n
+\n
+  <!-- include benchmark suite here... -->\n
+  <script type="text/javascript" src="basic.js"></script>\n
+</head>\n
+<body>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>608</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>basic.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

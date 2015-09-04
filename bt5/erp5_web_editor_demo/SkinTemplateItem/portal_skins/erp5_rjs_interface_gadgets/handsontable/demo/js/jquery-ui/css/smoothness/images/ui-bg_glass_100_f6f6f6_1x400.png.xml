@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272382.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ui-bg_glass_100_f6f6f6_1x400.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAEAAAGQEAAAAAAao4lEAAAAAmJLR0T//xSrMc0AAAAJcEhZcwAA
+AEgAAABIAEbJaz4AAABISURBVDjLY/g1mWEUjSKqo2/fGL5LMXzPYfh+nOGHFsOPBQw/xRh+TmX4
+JcLwq4vhNwPD71yG3xcZ/igx/Ilk+JM0ikYRMQgA8pJH3iOhTlAAAAAldEVYdGRhdGU6Y3JlYXRl
+ADIwMTMtMDUtMTJUMTk6NTU6NDItMDc6MDCoMtn6AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDEzLTA1
+LTEyVDE5OjU1OjQyLTA3OjAw2W9hRgAAAABJRU5ErkJggg==</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>262</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ui-bg_glass_100_f6f6f6_1x400.png</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

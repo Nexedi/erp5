@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272636.06</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>data.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {getPrototypeOf} from \'./object\';\n
+\n
+/**\n
+ * Generates spreadsheet-like column names: A, B, C, ..., Z, AA, AB, etc\n
+ * @param index\n
+ * @returns {String}\n
+ */\n
+export function spreadsheetColumnLabel(index) {\n
+  var dividend = index + 1;\n
+  var columnLabel = \'\';\n
+  var modulo;\n
+  while (dividend > 0) {\n
+    modulo = (dividend - 1) % 26;\n
+    columnLabel = String.fromCharCode(65 + modulo) + columnLabel;\n
+    dividend = parseInt((dividend - modulo) / 26, 10);\n
+  }\n
+  return columnLabel;\n
+}\n
+\n
+/**\n
+ * Creates 2D array of Excel-like values "A1", "A2", ...\n
+ * @param rowCount\n
+ * @param colCount\n
+ * @returns {Array}\n
+ */\n
+export function createSpreadsheetData(rowCount, colCount) {\n
+  rowCount = typeof rowCount === \'number\' ? rowCount : 100;\n
+  colCount = typeof colCount === \'number\' ? colCount : 4;\n
+\n
+  var rows = []\n
+    , i\n
+    , j;\n
+\n
+  for (i = 0; i < rowCount; i++) {\n
+    var row = [];\n
+    for (j = 0; j < colCount; j++) {\n
+      row.push(spreadsheetColumnLabel(j) + (i + 1));\n
+    }\n
+    rows.push(row);\n
+  }\n
+  return rows;\n
+}\n
+\n
+export function createSpreadsheetObjectData(rowCount, colCount) {\n
+  rowCount = typeof rowCount === \'number\' ? rowCount : 100;\n
+  colCount = typeof colCount === \'number\' ? colCount : 4;\n
+\n
+  var rows = []\n
+    , i\n
+    , j;\n
+\n
+  for (i = 0; i < rowCount; i++) {\n
+    var row = {};\n
+    for (j = 0; j < colCount; j++) {\n
+      row[\'prop\' + j] = spreadsheetColumnLabel(j) + (i + 1);\n
+    }\n
+    rows.push(row);\n
+  }\n
+  return rows;\n
+}\n
+\n
+export function translateRowsToColumns(input) {\n
+  var i\n
+    , ilen\n
+    , j\n
+    , jlen\n
+    , output = []\n
+    , olen = 0;\n
+\n
+  for (i = 0, ilen = input.length; i < ilen; i++) {\n
+    for (j = 0, jlen = input[i].length; j < jlen; j++) {\n
+      if (j == olen) {\n
+        output.push([]);\n
+        olen++;\n
+      }\n
+      output[j].push(input[i][j]);\n
+    }\n
+  }\n
+  return output;\n
+}\n
+\n
+/**\n
+ * Factory that produces a function for searching methods (or any properties) which could be defined directly in\n
+ * table configuration or implicitly, within cell type definition.\n
+ *\n
+ * For example: renderer can be defined explicitly using "renderer" property in column configuration or it can be\n
+ * defined implicitly using "type" property.\n
+ *\n
+ * Methods/properties defined explicitly always takes precedence over those defined through "type".\n
+ *\n
+ * If the method/property is not found in an object, searching is continued recursively through prototype chain, until\n
+ * it reaches the Object.prototype.\n
+ *\n
+ *\n
+ * @param methodName {String} name of the method/property to search (i.e. \'renderer\', \'validator\', \'copyable\')\n
+ * @param allowUndefined {Boolean} [optional] if false, the search is continued if methodName has not been found in cell "type"\n
+ * @returns {Function}\n
+ */\n
+export function cellMethodLookupFactory(methodName, allowUndefined) {\n
+\n
+  allowUndefined = typeof allowUndefined == \'undefined\' ? true : allowUndefined;\n
+\n
+  return function cellMethodLookup (row, col) {\n
+\n
+    return (function getMethodFromProperties(properties) {\n
+\n
+      if (!properties){\n
+\n
+        return;                       //method not found\n
+\n
+      }\n
+      else if (properties.hasOwnProperty(methodName) && properties[methodName] !== void 0) { //check if it is own and is not empty\n
+\n
+        return properties[methodName];  //method defined directly\n
+\n
+      } else if (properties.hasOwnProperty(\'type\') && properties.type) { //check if it is own and is not empty\n
+\n
+        var type;\n
+\n
+        if(typeof properties.type != \'string\' ){\n
+          throw new Error(\'Cell type must be a string \');\n
+        }\n
+\n
+        type = translateTypeNameToObject(properties.type);\n
+\n
+        if (type.hasOwnProperty(methodName)) {\n
+          return type[methodName]; //method defined in type.\n
+        } else if (allowUndefined) {\n
+          return; //method does not defined in type (eg. validator), returns undefined\n
+        }\n
+\n
+      }\n
+\n
+      return getMethodFromProperties(getPrototypeOf(properties));\n
+\n
+    })(typeof row == \'number\' ? this.getCellMeta(row, col) : row);\n
+\n
+  };\n
+\n
+  function translateTypeNameToObject(typeName) {\n
+    var type = Handsontable.cellTypes[typeName];\n
+\n
+    if(typeof type == \'undefined\'){\n
+      throw new Error(\'You declared cell type "\' + typeName + \'" as a string that is not mapped to a known object. \' +\n
+        \'Cell type must be an object or a string mapped to an object in Handsontable.cellTypes\');\n
+    }\n
+\n
+    return type;\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4311</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>data.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

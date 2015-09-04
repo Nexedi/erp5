@@ -1,0 +1,1376 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272524.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_validateSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_validate\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfObjects = function () {\n
+    return [\n
+      {id: 1, name: "Ted", lastName: "Right"},\n
+      {id: 2, name: "Frank", lastName: "Honest"},\n
+      {id: 3, name: "Joan", lastName: "Well"},\n
+      {id: 4, name: "Sid", lastName: "Strong"},\n
+      {id: 5, name: "Jane", lastName: "Neat"},\n
+      {id: 6, name: "Chuck", lastName: "Jackson"},\n
+      {id: 7, name: "Meg", lastName: "Jansen"},\n
+      {id: 8, name: "Rob", lastName: "Norris"},\n
+      {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+      {id: 10, name: "Eve", lastName: "Branson"}\n
+    ];\n
+  };\n
+\n
+  it(\'should call beforeValidate\', function () {\n
+    var fired = null;\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      beforeValidate: function () {\n
+        fired = true;\n
+      }\n
+    });\n
+    setDataAtCell(2, 0, \'test\');\n
+\n
+    expect(fired).toEqual(true);\n
+  });\n
+\n
+  it(\'should call afterValidate\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    setDataAtCell(2, 0, \'test\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate.calls.length).toEqual(1);\n
+    });\n
+  });\n
+\n
+  it(\'beforeValidate can manipulate value\', function () {\n
+    var result = null;\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    onAfterValidate.plan = function (valid, value) {\n
+      result = value;\n
+    };\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      beforeValidate: function (value) {\n
+        value = 999;\n
+        return value;\n
+      },\n
+      afterValidate: onAfterValidate\n
+    });\n
+    setDataAtCell(2, 0, 123);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(result).toEqual(999);\n
+    });\n
+  });\n
+\n
+  it(\'should be able to define custom validator function\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', validator: function (value, cb) {\n
+          cb(true);\n
+        }},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    setDataAtCell(2, 0, 123);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(true, 123, 2, \'id\', undefined, undefined);\n
+    });\n
+  });\n
+\n
+  it(\'should be able to define custom validator RegExp\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', validator: /^\\d+$/ },\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(2, 0, \'test\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(false, \'test\', 2, \'id\', undefined, undefined);\n
+    });\n
+  });\n
+\n
+  it(\'this in validator should point to cellProperties\', function () {\n
+    var result = null;\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', validator: function (value, cb) {\n
+          result = this;\n
+          cb(true);\n
+        }},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    setDataAtCell(2, 0, 123);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(result.instance).toEqual(getInstance());\n
+    });\n
+  });\n
+\n
+  it(\'should add class name `htInvalid` to an cell that does not validate - on validateCells\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+      validator: function (value, callb) {\n
+        if (value == "B1") {\n
+          callb(false);\n
+        }\n
+        else {\n
+          callb(true);\n
+        }\n
+      },\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    hot.validateCells(function () {\n
+      hot.render();\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length == 4;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(this.$container.find(\'td.htInvalid\').length).toEqual(1);\n
+      expect(this.$container.find(\'td:not(.htInvalid)\').length).toEqual(3);\n
+    });\n
+  });\n
+\n
+  it(\'should add class name `htInvalid` to an cell that does not validate - when we trigger validateCell\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+      validator: function (value, cb) {\n
+        cb(false);\n
+      },\n
+      afterValidate: onAfterValidate\n
+    });\n
+    expect(this.$container.find(\'td:not(.htInvalid)\').length).toEqual(4);\n
+\n
+    hot.validateCell(hot.getDataAtCell(1, 1), hot.getCellMeta(1, 1), function() {});\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length === 1;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(this.$container.find(\'td.htInvalid\').length).toEqual(1);\n
+      expect(this.$container.find(\'td:not(.htInvalid)\').length).toEqual(3);\n
+    });\n
+  });\n
+\n
+  it(\'should remove class name `htInvalid` from an cell that does validate - when we change validator rules\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+    var isValid = false;\n
+    var validator = function() {\n
+        return isValid;\n
+    };\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+      validator: function (value, cb) {\n
+        cb(validator());\n
+      },\n
+      afterValidate: onAfterValidate\n
+    });\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length === 4;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    hot.validateCells(function() {});\n
+\n
+    runs(function () {\n
+      expect(this.$container.find(\'td.htInvalid\').length).toEqual(4);\n
+      expect(this.$container.find(\'td:not(.htInvalid)\').length).toEqual(0);\n
+    });\n
+\n
+    runs(function () {\n
+      isValid = true;\n
+      onAfterValidate.reset();\n
+      hot.validateCell(hot.getDataAtCell(1, 1), hot.getCellMeta(1, 1), function() {});\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length === 1;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(this.$container.find(\'td.htInvalid\').length).toEqual(3);\n
+      expect(this.$container.find(\'td:not(.htInvalid)\').length).toEqual(1);\n
+    });\n
+  });\n
+\n
+  it(\'should add class name `htInvalid` to an cell that does not validate - on edit\', function () {\n
+\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+      validator: function (value, callb) {\n
+        if (value == \'test\') {\n
+          callb(false);\n
+        }\n
+        else {\n
+          callb(true);\n
+        }\n
+      },\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(0, 0, \'test\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(this.$container.find(\'td.htInvalid\').length).toEqual(1);\n
+      expect(this.$container.find(\'tr:eq(0) td:eq(0)\').hasClass(\'htInvalid\')).toEqual(true);\n
+    });\n
+\n
+\n
+  });\n
+\n
+  it(\'should add class name `htInvalid` to a cell without removing other classes\', function () {\n
+\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+    var validator = jasmine.createSpy(\'validator\').andCallThrough();\n
+    validator.plan = function (value, callb) {\n
+      if (value == 123) {\n
+        callb(false);\n
+      }\n
+      else {\n
+        callb(true);\n
+      }\n
+    };\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+      type: \'numeric\',\n
+      validator: validator,\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(0, 0, 123);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation 1\', 1000);\n
+\n
+    runs(function () {\n
+      expect(validator.calls.length).toEqual(1);\n
+      expect(this.$container.find(\'tr:eq(0) td:eq(0)\').hasClass(\'htInvalid\')).toEqual(true);\n
+      expect(this.$container.find(\'tr:eq(0) td:eq(0)\').hasClass(\'htNumeric\')).toEqual(true);\n
+\n
+    });\n
+    runs(function () {\n
+      onAfterValidate.reset();\n
+      setDataAtCell(0, 0, 124);\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(this.$container.find(\'tr:eq(0) td:eq(0)\').hasClass(\'htInvalid\')).toEqual(false);\n
+      expect(this.$container.find(\'tr:eq(0) td:eq(0)\').hasClass(\'htNumeric\')).toEqual(true);\n
+    });\n
+\n
+\n
+  });\n
+\n
+  it(\'should add class name `htInvalid` to an cell that does not validate - after validateCells\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(0, 0, \'test\');\n
+\n
+    waits(100);\n
+\n
+    runs(function () {\n
+      expect(this.$container.find(\'td.htInvalid\').length).toEqual(0);\n
+    });\n
+\n
+    runs(function () {\n
+      updateSettings({validator: function (value, callb) {\n
+        if (value == \'test\') {\n
+          callb(false);\n
+        }\n
+        else {\n
+          callb(true);\n
+        }\n
+      }});\n
+\n
+      onAfterValidate.reset();\n
+\n
+      hot.validateCells(function () {});\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(this.$container.find(\'td.htInvalid\').length).toEqual(1);\n
+      expect(this.$container.find(\'tr:eq(0) td:eq(0)\').hasClass(\'htInvalid\')).toEqual(true);\n
+    });\n
+  });\n
+\n
+  it(\'should remove class name `htInvalid` when cell is edited to validate\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+      validator: function (value, callb) {\n
+        if (value == \'A1\') {\n
+          callb(false)\n
+        }\n
+        else {\n
+          callb(true)\n
+        }\n
+      },\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    hot.validateCells(function () {\n
+      hot.render();\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(this.$container.find(\'tr:eq(0) td:eq(0)\').hasClass(\'htInvalid\')).toEqual(true);\n
+    });\n
+\n
+    runs(function () {\n
+      onAfterValidate.reset();\n
+      setDataAtCell(0, 0, \'test\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(this.$container.find(\'tr:eq(0) td:eq(0)\').hasClass(\'htInvalid\')).toEqual(false);\n
+    });\n
+  });\n
+\n
+  it(\'should not allow for changes where data is invalid (multiple changes, async)\', function () {\n
+    var validatedChanges;\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callb) {\n
+        setTimeout(function () {\n
+          if (value === \'fail\') {\n
+            callb(false)\n
+          }\n
+          else {\n
+            callb(true)\n
+          }\n
+        }, 10);\n
+      },\n
+      afterChange: function (changes, source) {\n
+        if (source !== \'loadData\') {\n
+          validatedChanges = changes;\n
+        }\n
+      }\n
+    });\n
+\n
+    populateFromArray(0, 0, [\n
+      [\'A1-new\'],\n
+      [\'fail\'],\n
+      [\'A3-new\']\n
+    ]);\n
+\n
+    waitsFor(function () {\n
+      return validatedChanges;\n
+    }, 1000);\n
+\n
+    runs(function () {\n
+      expect(validatedChanges.length).toEqual(2);\n
+      expect(validatedChanges[0]).toEqual([0, 0, \'A1\', \'A1-new\']);\n
+      expect(validatedChanges[1]).toEqual([2, 0, \'A3\', \'A3-new\']);\n
+      expect(getDataAtCell(0, 0)).toEqual(\'A1-new\');\n
+      expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+      expect(getDataAtCell(2, 0)).toEqual(\'A3-new\');\n
+      expect(getCellMeta(0, 0).valid).toBe(true);\n
+      expect(getCellMeta(1, 0).valid).toBe(true);\n
+      expect(getCellMeta(2, 0).valid).toBe(true);\n
+    });\n
+  });\n
+\n
+  it(\'should call beforeChange exactly once after cell value edit and validator is synchronous\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+    var onBeforeChange = jasmine.createSpy(\'onBeforeChange\');\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callback) {\n
+        callback(true);\n
+      },\n
+      beforeChange: onBeforeChange,\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    expect(onBeforeChange.calls.length).toEqual(0);\n
+\n
+    hot.setDataAtCell(0, 0, 10);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onBeforeChange.calls.length).toEqual(1);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should call beforeChange exactly once after cell value edit and validator is asynchronous\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+    var onBeforeChange = jasmine.createSpy(\'onBeforeChange\');\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callback) {\n
+        setTimeout(function () {\n
+          callback(true);\n
+        }, 10);\n
+      },\n
+      beforeChange: onBeforeChange,\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    expect(onBeforeChange.calls.length).toEqual(0);\n
+\n
+    hot.setDataAtCell(0, 0, 10);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onBeforeChange.calls.length).toEqual(1);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should call afterChange exactly once after cell value edit and validator is synchronous\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+    var onAfterChange = jasmine.createSpy(\'onAfterChange\');\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callback) {\n
+        callback(true);\n
+      },\n
+      afterChange: onAfterChange,\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    expect(onAfterChange.calls.length).toEqual(1); //loadData\n
+\n
+    hot.setDataAtCell(0, 0, 10);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterChange.calls.length).toEqual(2);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should call afterChange exactly once after cell value edit and validator is asynchronous\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+    var onAfterChange = jasmine.createSpy(\'onAfterChange\');\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callback) {\n
+        setTimeout(function () {\n
+          callback(true);\n
+        }, 10);\n
+      },\n
+      afterChange: onAfterChange,\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    expect(onAfterChange.calls.length).toEqual(1); //loadData\n
+\n
+    hot.setDataAtCell(0, 0, 10);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterChange.calls.length).toEqual(2);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'edited cell should stay on screen until value is validated\', function () {\n
+    var isEditorVisibleBeforeChange;\n
+    var isEditorVisibleAfterChange;\n
+\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    onAfterValidate.plan = function () {\n
+      isEditorVisibleBeforeChange = isEditorVisible();\n
+    };\n
+\n
+    var onAfterChange = jasmine.createSpy(\'onAfterChange\');\n
+    onAfterChange.plan = function () {\n
+      isEditorVisibleAfterChange = isEditorVisible();\n
+    };\n
+\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      afterValidate: onAfterValidate,\n
+      afterChange: onAfterChange,\n
+      validator: function (value, callback) {\n
+        setTimeout(function () {\n
+          callback(true);\n
+        }, 100);\n
+      }\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+    document.activeElement.value = \'Ted\';\n
+\n
+    onAfterValidate.reset();\n
+    onAfterChange.reset();\n
+\n
+    keyDown(\'enter\');\n
+\n
+    expect(document.activeElement.nodeName).toEqual(\'TEXTAREA\');\n
+\n
+    waitsFor(function() {\n
+      return onAfterValidate.calls.length > 0 && onAfterChange.calls.length > 0;\n
+    }, \'Cell validation and value change\', 1000);\n
+\n
+    runs(function () {\n
+      expect(isEditorVisibleBeforeChange).toBe(true);\n
+      expect(isEditorVisibleAfterChange).toBe(true);\n
+      expect(isEditorVisible()).toBe(false);\n
+      expect(document.activeElement.nodeName).toEqual(\'BODY\');\n
+    });\n
+  });\n
+\n
+  it(\'should validate edited cell after selecting another cell\', function () {\n
+\n
+    var validated = false;\n
+    var validatedValue;\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      afterValidate: function () {\n
+        beforeElement = document.activeElement;\n
+      },\n
+      afterChange: function () {\n
+        afterElement = document.activeElement;\n
+      },\n
+      validator: function (value, callback) {\n
+        setTimeout(function () {\n
+          validated = true;\n
+          validatedValue = value;\n
+          callback(true);\n
+        }, 100);\n
+      }\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'Ted\';\n
+\n
+    selectCell(0, 1);\n
+\n
+\n
+    waitsFor(function () {\n
+      return validated;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(validatedValue).toEqual(\'Ted\');\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should leave the new value in editor if it does not validate (async validation), after hitting ENTER\', function () {\n
+\n
+    var validated = false;\n
+    var validationResult;\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callback) {\n
+        setTimeout(function () {\n
+\n
+          validated = true;\n
+          validationResult = value.length == 2;\n
+          callback(validationResult);\n
+        }, 100);\n
+      }\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'Ted\';\n
+\n
+    keyDown(\'enter\');\n
+\n
+\n
+    waitsFor(function () {\n
+      return validated;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(validationResult).toBe(false);\n
+      expect(document.activeElement.value).toEqual(\'Ted\');\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should leave the new value in editor if it does not validate (sync validation), after hitting ENTER\', function () {\n
+\n
+    var validated = false;\n
+    var validationResult;\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callback) {\n
+        validated = true;\n
+        validationResult = value.length == 2;\n
+        callback(validationResult);\n
+      }\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'Ted\';\n
+\n
+    keyDown(\'enter\');\n
+\n
+\n
+    waitsFor(function () {\n
+      return validated;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(validationResult).toBe(false);\n
+      expect(document.activeElement.value).toEqual(\'Ted\');\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should leave the new value in editor if it does not validate (async validation), after selecting another cell\', function () {\n
+\n
+    var validated = false;\n
+    var validationResult;\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callback) {\n
+        setTimeout(function () {\n
+\n
+          setTimeout(function () {\n
+            validated = true;\n
+          }, 0);\n
+\n
+          validationResult = value.length == 2;\n
+          callback(validationResult);\n
+        }, 100);\n
+      }\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'Ted\';\n
+\n
+    selectCell(1, 0);\n
+\n
+\n
+    waitsFor(function () {\n
+      return validated;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(validationResult).toBe(false);\n
+      expect(document.activeElement.value).toEqual(\'Ted\');\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should leave the new value in editor if it does not validate (sync validation), after selecting another cell\', function () {\n
+\n
+    var validated = false;\n
+    var validationResult;\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callback) {\n
+        validationResult = value.length == 2;\n
+        callback(validationResult);\n
+\n
+        /*Setting this variable has to be async, because we are not interested in when the validation happens, but when\n
+         the callback is being called. Since internally all the callbacks are processed asynchronously (even if they are\n
+         synchronous) end of validator function is not the equivalent of whole validation routine end.\n
+         If it still sounds weird, take a look at HandsontableTextEditorClass.prototype.finishEditing method.\n
+         */\n
+\n
+        setTimeout(function () {\n
+          validated = true;\n
+        }, 0);\n
+      }\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'Ted\';\n
+\n
+    selectCell(1, 0);\n
+\n
+\n
+    waitsFor(function () {\n
+      return validated;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(validationResult).toBe(false);\n
+      expect(document.activeElement.value).toEqual(\'Ted\');\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should close the editor and save the new value if validation fails and allowInvalid is set to "true"\', function () {\n
+    var validated = false;\n
+    var validationResult;\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: true,\n
+      validator: function (value, callback) {\n
+        setTimeout(function () {\n
+\n
+          validated = true;\n
+          validationResult = value.length == 2;\n
+          callback(validationResult);\n
+        }, 100);\n
+      }\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'Ted\';\n
+\n
+    selectCell(1, 0);\n
+\n
+\n
+    waitsFor(function () {\n
+      return validated;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(validationResult).toBe(false);\n
+      expect(document.activeElement.nodeName).toEqual(\'BODY\');\n
+      expect(getDataAtCell(0, 0)).toEqual(\'Ted\');\n
+      expect(getCell(0, 0).className).toMatch(/htInvalid/);\n
+    });\n
+  });\n
+\n
+  it(\'should close the editor and save the new value after double clicking on a cell, if the previously edited cell validated correctly\', function () {\n
+\n
+    var validated = false;\n
+    var validationResult;\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callback) {\n
+        setTimeout(function () {\n
+\n
+          validated = true;\n
+          validationResult = value.length == 2;\n
+          callback(validationResult);\n
+        }, 100);\n
+      }\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    var editor = $(\'.handsontableInputHolder\');\n
+    expect(editor.is(\':visible\')).toBe(true);\n
+\n
+    document.activeElement.value = \'AA\';\n
+\n
+    expect(document.activeElement.value).toEqual(\'AA\');\n
+\n
+    var cell = $(getCell(1, 0));\n
+    var clicks = 0;\n
+\n
+    setTimeout(function () {\n
+      mouseDown(cell);\n
+      mouseUp(cell);\n
+      clicks++;\n
+    }, 0);\n
+\n
+    setTimeout(function () {\n
+      mouseDown(cell);\n
+      mouseUp(cell);\n
+      clicks++;\n
+    }, 100);\n
+\n
+    waitsFor(function () {\n
+      return clicks == 2 && validated;\n
+    }, \'Two clicks\', 1000);\n
+\n
+    runs(function () {\n
+      expect(editor.is(\':visible\')).toBe(false);\n
+      expect(validationResult).toBe(true);\n
+      expect(getDataAtCell(0, 0)).toEqual(\'AA\');\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should close the editor and restore the original value after double clicking on a cell, if the previously edited cell have not validated\', function () {\n
+\n
+    var validated = false;\n
+    var validationResult;\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      allowInvalid: false,\n
+      validator: function (value, callback) {\n
+        setTimeout(function () {\n
+          validated = true;\n
+          validationResult = value.length == 2;\n
+          callback(validationResult);\n
+        }, 100);\n
+      }\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'AAA\';\n
+\n
+    expect(document.activeElement.value).toEqual(\'AAA\');\n
+\n
+    var cell = $(getCell(1, 0));\n
+    var clicks = 0;\n
+\n
+    setTimeout(function () {\n
+      mouseDown(cell);\n
+      mouseUp(cell);\n
+      clicks++;\n
+    }, 0);\n
+\n
+    setTimeout(function () {\n
+      mouseDown(cell);\n
+      mouseUp(cell);\n
+      clicks++;\n
+    }, 100);\n
+\n
+    waitsFor(function () {\n
+      return clicks == 2 && validated;\n
+    }, \'Two clicks\', 1000);\n
+\n
+    runs(function () {\n
+      expect(validationResult).toBe(false);\n
+      expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should listen to key changes after cell is corrected (allowInvalid: false)\', function () {\n
+\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      allowInvalid: false,\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', validator: function (val, cb) {\n
+          cb(parseInt(val, 10) > 100);\n
+        }},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDownUp(\'enter\');\n
+    document.activeElement.value = \'99\';\n
+\n
+    onAfterValidate.reset();\n
+\n
+    keyDownUp(\'enter\'); //should be ignored\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(isEditorVisible()).toBe(true);\n
+    });\n
+\n
+    runs(function () {\n
+      document.activeElement.value = \'999\';\n
+\n
+      onAfterValidate.reset();\n
+      keyDownUp(\'enter\'); //should be accepted\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation 2\', 1000);\n
+\n
+    runs(function () {\n
+      expect(isEditorVisible()).toBe(false);\n
+      expect(getSelected()).toEqual([3, 0, 3, 0]);\n
+\n
+      keyDownUp(\'arrow_up\');\n
+      expect(getSelected()).toEqual([2, 0, 2, 0]);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should allow keyboard movement when cell is being validated (move DOWN)\', function () {\n
+\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      allowInvalid: false,\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', validator: function (val, cb) {\n
+          setTimeout(function () {\n
+            cb(parseInt(val, 10) > 100);\n
+          }, 100);\n
+        }},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDownUp(\'enter\');\n
+    document.activeElement.value = \'999\';\n
+    keyDownUp(\'enter\');\n
+\n
+    expect(getSelected()).toEqual([3, 0, 3, 0]);\n
+\n
+    keyDownUp(\'arrow_down\');\n
+    keyDownUp(\'arrow_down\');\n
+    expect(isEditorVisible()).toBe(true);\n
+    expect(getSelected()).toEqual([5, 0, 5, 0]);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(isEditorVisible()).toBe(false);\n
+      expect(getSelected()).toEqual([5, 0, 5, 0]); // only enterMove and first arrow_down is performed\n
+    });\n
+  });\n
+\n
+  it(\'should not allow keyboard movement until cell is validated (move UP)\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      allowInvalid: false,\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', validator: function (val, cb) {\n
+          setTimeout(function () {\n
+            cb(parseInt(val, 10) > 100);\n
+          }, 100);\n
+        }},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    selectCell(2, 0);\n
+\n
+    keyDownUp(\'enter\');\n
+    document.activeElement.value = \'999\';\n
+    keyDownUp(\'enter\');\n
+\n
+    expect(getSelected()).toEqual([3, 0, 3, 0]);\n
+\n
+    keyDownUp(\'arrow_up\');\n
+    keyDownUp(\'arrow_up\');\n
+    expect(isEditorVisible()).toBe(true);\n
+    expect(getSelected()).toEqual([1, 0, 1, 0]);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+\n
+    runs(function () {\n
+      expect(isEditorVisible()).toBe(false);\n
+      expect(getSelected()).toEqual([1, 0, 1, 0]);\n
+    });\n
+  });\n
+\n
+  it(\'should not allow keyboard movement until cell is validated (move RIGHT)\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      allowInvalid: false,\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', validator: function (val, cb) {\n
+          setTimeout(function () {\n
+            cb(parseInt(val, 10) > 100);\n
+          }, 100);\n
+        }},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    selectCell(2, 0);\n
+\n
+    keyDownUp(\'enter\');\n
+    document.activeElement.value = \'999\';\n
+    keyDownUp(\'enter\'); //should be accepted but only after 100 ms\n
+    expect(getSelected()).toEqual([3, 0, 3, 0]);\n
+\n
+    keyDownUp(\'arrow_right\');\n
+    keyDownUp(\'arrow_right\');\n
+    expect(isEditorVisible()).toBe(true);\n
+    expect(getSelected()).toEqual([3, 2, 3, 2]);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+\n
+    runs(function () {\n
+      expect(isEditorVisible()).toBe(false);\n
+      expect(getSelected()).toEqual([3, 2, 3, 2]);\n
+    });\n
+  });\n
+\n
+  it(\'should not allow keyboard movement until cell is validated (move LEFT)\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    hot = handsontable({\n
+      data: arrayOfObjects(),\n
+      allowInvalid: false,\n
+      columns: [\n
+        {data: \'name\'},\n
+        {data: \'lastName\'},\n
+        {data: \'id\', type: \'numeric\', validator: function (val, cb) {\n
+          setTimeout(function () {\n
+            cb(parseInt(val, 10) > 100);\n
+          }, 100);\n
+        }}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    selectCell(2, 2);\n
+\n
+    keyDownUp(\'enter\');\n
+    document.activeElement.value = \'999\';\n
+    keyDownUp(\'enter\'); //should be accepted but only after 100 ms\n
+    expect(getSelected()).toEqual([3, 2, 3, 2]);\n
+\n
+    this.$container.simulate(\'keydown\', {keyCode: Handsontable.helper.KEY_CODES.ARROW_LEFT});\n
+    this.$container.simulate(\'keyup\', {keyCode: Handsontable.helper.KEY_CODES.ARROW_LEFT});\n
+    this.$container.simulate(\'keydown\', {keyCode: Handsontable.helper.KEY_CODES.ARROW_LEFT});\n
+    this.$container.simulate(\'keyup\', {keyCode: Handsontable.helper.KEY_CODES.ARROW_LEFT});\n
+\n
+    expect(isEditorVisible()).toBe(true);\n
+    expect(getSelected()).toEqual([3, 0, 3, 0]);\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(isEditorVisible()).toBe(false);\n
+      expect(getSelected()).toEqual([3, 0, 3, 0]);\n
+    });\n
+  });\n
+\n
+  it(\'should not validate cell if editing has been canceled\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDownUp(Handsontable.helper.KEY_CODES.ENTER);  //open editor\n
+    keyDownUp(Handsontable.helper.KEY_CODES.ESCAPE); //cancel editing\n
+\n
+    waits(100);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).not.toHaveBeenCalled();\n
+    });\n
+\n
+\n
+  });\n
+\n
+  it(\'should leave cell invalid if editing has been canceled\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', validator: function (value, cb) {\n
+          cb(false);\n
+        }},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(0, 0, \'foo\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0\n
+    }, \'cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getCellMeta(0, 0).valid).toBe(false);\n
+\n
+      selectCell(0, 0);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.ENTER);  //open editor\n
+      keyDownUp(Handsontable.helper.KEY_CODES.ESCAPE); //cancel editing\n
+\n
+      expect(getCellMeta(0, 0).valid).toBe(false);\n
+\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should open an appropriate editor after cell value is valid again\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    var hot = handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {\n
+          data: \'id\',\n
+          validator: function (value, cb) {\n
+            cb(value == parseInt(value, 10));\n
+          },\n
+          allowInvalid: false\n
+        },\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var activeEditor = hot.getActiveEditor();\n
+\n
+    expect(activeEditor.row).toEqual(0);\n
+    expect(activeEditor.col).toEqual(0);\n
+\n
+    keyDownUp(Handsontable.helper.KEY_CODES.ENTER); //open editor\n
+    activeEditor.setValue(\'foo\');\n
+    keyDownUp(Handsontable.helper.KEY_CODES.ENTER); //save changes, close editor\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0\n
+    }, \'cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      onAfterValidate.reset();\n
+      activeEditor = hot.getActiveEditor();\n
+\n
+      expect(activeEditor.isOpened()).toBe(true); //value is invalid, so editor stays opened\n
+      expect(activeEditor.row).toEqual(0);\n
+      expect(activeEditor.col).toEqual(0);\n
+\n
+      activeEditor.setValue(2);\n
+\n
+      keyDownUp(Handsontable.helper.KEY_CODES.ENTER);  //save changes and move to cell below (row: 1, col: ś0)\n
+\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0\n
+    }, \'cell validation 2\', 1000);\n
+\n
+    runs(function () {\n
+      keyDownUp(Handsontable.helper.KEY_CODES.ENTER);  //open editor\n
+\n
+      activeEditor = hot.getActiveEditor();\n
+      expect(activeEditor.row).toEqual(1);\n
+      expect(activeEditor.col).toEqual(0);\n
+\n
+    });\n
+\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>35443</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_validateSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

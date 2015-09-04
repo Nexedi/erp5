@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272514.32</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>EventManagerSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'EventManager\', function () {\n
+  it(\'should add/remove/clear event for multiple instances\', function () {\n
+    var instance = {\n
+      subinstance: {}\n
+    };\n
+    var instance2 = {};\n
+    var eM0 = Handsontable.eventManager(instance);\n
+    var eM1 = Handsontable.eventManager(instance.subinstance);\n
+    var eM2 = Handsontable.eventManager(instance2);\n
+\n
+    expect(instance.eventListeners.length).toEqual(0);\n
+\n
+    var test = function () {};\n
+    var test2 = function () {};\n
+\n
+    eM0.addEventListener(window,\'click\',test, true);\n
+    eM1.addEventListener(window,\'mousedown\',test);\n
+    eM2.addEventListener(window,\'mouseup\', test,false);\n
+    eM2.addEventListener(window,\'click\', test2);\n
+\n
+    expect(instance.eventListeners.length).toEqual(1);\n
+    expect(instance.subinstance.eventListeners.length).toEqual(1);\n
+    expect(instance2.eventListeners.length).toEqual(2);\n
+\n
+    eM0.removeEventListener(window,\'click\',test,true);\n
+    expect(instance.eventListeners.length).toEqual(0);\n
+\n
+    eM1.removeEventListener(window);\n
+    expect(instance.subinstance.eventListeners.length).toEqual(1);\n
+\n
+    eM1.clear();\n
+    expect(instance.subinstance.eventListeners.length).toEqual(0);\n
+\n
+    eM2.clear();\n
+    expect(instance2.eventListeners.length).toEqual(0);\n
+  });\n
+\n
+  it(\'should detect event when fired from hot-table (web component)\', function () {\n
+    // skip if browser not support Shadow DOM natively\n
+    if (!document.createElement(\'div\').createShadowRoot) {\n
+      return;\n
+    }\n
+    Handsontable.eventManager.isHotTableEnv = true;\n
+    var instance = {};\n
+    var em = Handsontable.eventManager(instance);\n
+    var classicHost = document.createElement(\'div\');\n
+    var hotTable = document.createElement(\'hot-table\');\n
+\n
+    var shadowHotTable = hotTable.createShadowRoot();\n
+    shadowHotTable.innerHTML = \'<span>shadow <inner-custom><p></p></inner-custom></span>\';\n
+\n
+    var test1 = jasmine.createSpy(\'test1\');\n
+    var test2 = jasmine.createSpy(\'test2\');\n
+\n
+    em.addEventListener(classicHost, \'click\', test1);\n
+    em.addEventListener(shadowHotTable.querySelector(\'p\'), \'click\', test2);\n
+    em.fireEvent(classicHost, \'click\');\n
+    em.fireEvent(shadowHotTable.querySelector(\'p\'), \'click\');\n
+    em.clear();\n
+\n
+    expect(test1.mostRecentCall.args[0].isTargetWebComponent).toEqual(true);\n
+    expect(test1.calls.length).toEqual(1);\n
+    expect(test2.calls.length).toEqual(1);\n
+    expect(test2.mostRecentCall.args[0].target).toEqual(shadowHotTable.querySelector(\'p\'));\n
+\n
+    Handsontable.eventManager.isHotTableEnv = false;\n
+  });\n
+\n
+  it(\'should clear all events\', function () {\n
+    var instance = {};\n
+    var em = Handsontable.eventManager(instance);\n
+\n
+    var test = jasmine.createSpy(\'test\');\n
+    var test1 = jasmine.createSpy(\'test1\');\n
+\n
+    em.addEventListener(window, \'click\', test);\n
+    em.addEventListener(window, \'click\', test1);\n
+    em.addEventListener(window, \'click\', test1);\n
+    em.fireEvent(window, \'click\');\n
+\n
+    expect(test.calls.length).toEqual(1);\n
+    expect(test1.calls.length).toEqual(2);\n
+\n
+    em.clear(window);\n
+    em.fireEvent(window, \'click\');\n
+\n
+    expect(test.calls.length).toEqual(1);\n
+    expect(test1.calls.length).toEqual(2);\n
+  });\n
+\n
+  it(\'should destroy instance\', function () {\n
+    var instance = {};\n
+    var em = Handsontable.eventManager(instance);\n
+\n
+    var test = jasmine.createSpy(\'test\');\n
+    var test1 = jasmine.createSpy(\'test1\');\n
+\n
+    em.addEventListener(window, \'click\', test);\n
+    em.addEventListener(window, \'click\', test1);\n
+    em.addEventListener(window, \'click\', test1);\n
+    em.fireEvent(window, \'click\');\n
+\n
+    expect(test.calls.length).toEqual(1);\n
+    expect(test1.calls.length).toEqual(2);\n
+\n
+    em.destroy(window);\n
+    em.fireEvent(window, \'click\');\n
+\n
+    expect(test.calls.length).toEqual(1);\n
+    expect(test1.calls.length).toEqual(2);\n
+    expect(em.context).toBe(null);\n
+    expect(instance.eventListeners.length).toBe(0);\n
+  });\n
+\n
+  it(\'should fire event\', function () {\n
+    var instance = {};\n
+    var em = Handsontable.eventManager(instance);\n
+\n
+    var test = jasmine.createSpy(\'test\');\n
+    var test1 = jasmine.createSpy(\'test1\');\n
+\n
+    em.addEventListener(window, \'click\', test);\n
+    em.addEventListener(window, \'click\', test1);\n
+    em.addEventListener(window, \'click\', test1);\n
+    em.fireEvent(window, \'click\');\n
+\n
+    expect(test.calls.length).toEqual(1);\n
+    expect(test1.calls.length).toEqual(2);\n
+\n
+    em.fireEvent(window, \'click\');\n
+\n
+    expect(test.calls.length).toEqual(2);\n
+    expect(test1.calls.length).toEqual(4);\n
+\n
+    em.clear(window, \'click\');\n
+  });\n
+\n
+  it(\'should remove event by calling function returned from addEvent\', function () {\n
+    var instance = {};\n
+    var em = Handsontable.eventManager(instance);\n
+\n
+    var test = jasmine.createSpy(\'test\');\n
+\n
+    var clickRemoveEvent = em.addEventListener(window, \'click\', test);\n
+    em.fireEvent(window, \'click\');\n
+\n
+    expect(test.calls.length).toEqual(1);\n
+    expect(instance.eventListeners.length).toEqual(1);\n
+\n
+    clickRemoveEvent();\n
+\n
+    expect(test.calls.length).toEqual(1);\n
+    expect(instance.eventListeners.length).toEqual(0);\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5006</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EventManagerSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

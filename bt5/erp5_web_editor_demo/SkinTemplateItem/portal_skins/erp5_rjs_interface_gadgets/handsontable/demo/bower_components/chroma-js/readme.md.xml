@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272300.38</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>readme.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string># Chroma.js\n
+\n
+Chroma.js is a tiny JavaScript library (8.5kB) for all kinds of color conversions and color scales.\n
+\n
+### Usage\n
+\n
+\n
+Initiate and manipulate colors:\n
+\n
+```javascript\n
+chroma(\'#D4F880\').darken().hex();  // #9BC04B\n
+```\n
+\n
+Working with color scales is easy, too:\n
+\n
+```javascript    \n
+scale = chroma.scale([\'white\', \'red\']);\n
+scale(0.5).hex(); // #FF7F7F\n
+```\n
+\n
+Lab/Lch interpolation looks better than than RGB\n
+\n
+```javascript    \n
+chroma.scale([\'white\', \'red\']).mode(\'lab\');\n
+```\n
+\n
+Custom domains! Quantiles! Color Brewer!! \n
+\n
+```javascript    \n
+chroma.scale(\'RdYlBu\').domain(myValues, 7, \'quantiles\');    \n
+```\n
+\n
+And why not use logarithmic color scales once in your life?\n
+\n
+```javascript\n
+chroma.scale([\'lightyellow\', \'navy\']).domain([1, 100000], 7, \'log\');    \n
+```\n
+\n
+### Like it?\n
+\n
+Why not dive into the [API docs](https://github.com/gka/chroma.js/blob/master/doc/api.md) (quite short actually), and download [chroma.min.js](https://raw.github.com/gka/chroma.js/master/chroma.min.js) right away.\n
+\n
+You can use it in node.js, too!\n
+\n
+    npm install chroma-js\n
+\n
+\n
+### Build instructions\n
+\n
+To compile the coffee-script source files you have to run ``build.sh``.\n
+\n
+To run the tests simply run\n
+\n
+    vows test/*.coffee\n
+\n
+\n
+### Similar Libraries / Prior Art\n
+\n
+* [Chromatist](https://github.com/jrus/chromatist)\n
+* [GrapeFruit](http://code.google.com/p/grapefruit/) (Python)\n
+* [colors.py](https://github.com/mattrobenolt/colors.py) (Python)\n
+* [d3.js](https://github.com/mbostock/d3)\n
+\n
+\n
+### Author\n
+\n
+Chroma.js is written by [Gregor Aisch](http://driven-by-data.net).\n
+\n
+### License\n
+\n
+Released under [BSD license](http://opensource.org/licenses/BSD-3-Clause).\n
+Versions prior to 0.4 were released under [GPL](http://www.gnu.org/licenses/gpl-3.0).\n
+\n
+### Known issues\n
+\n
+* HSI color conversion (experimental) produces weird results sometimes\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1798</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>readme.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

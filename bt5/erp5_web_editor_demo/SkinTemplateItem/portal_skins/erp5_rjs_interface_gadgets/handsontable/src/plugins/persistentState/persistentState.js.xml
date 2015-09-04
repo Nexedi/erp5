@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272660.26</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>persistentState.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+export {HandsontablePersistentState};\n
+\n
+//registerPlugin(\'persistentState\', HandsontablePersistentState);\n
+\n
+function Storage(prefix) {\n
+\n
+  var savedKeys;\n
+\n
+  var saveSavedKeys = function () {\n
+    window.localStorage[prefix + \'__\' + \'persistentStateKeys\'] = JSON.stringify(savedKeys);\n
+  };\n
+\n
+  var loadSavedKeys = function () {\n
+    var keysJSON = window.localStorage[prefix + \'__\' + \'persistentStateKeys\'];\n
+    var keys = typeof keysJSON == \'string\' ? JSON.parse(keysJSON) : void 0;\n
+    savedKeys = keys ? keys : [];\n
+  };\n
+\n
+  var clearSavedKeys = function () {\n
+    savedKeys = [];\n
+    saveSavedKeys();\n
+  };\n
+\n
+  loadSavedKeys();\n
+\n
+  this.saveValue = function (key, value) {\n
+    window.localStorage[prefix + \'_\' + key] = JSON.stringify(value);\n
+    if (savedKeys.indexOf(key) == -1) {\n
+      savedKeys.push(key);\n
+      saveSavedKeys();\n
+    }\n
+\n
+  };\n
+\n
+  this.loadValue = function (key, defaultValue) {\n
+\n
+    key = typeof key != \'undefined\' ? key : defaultValue;\n
+\n
+    var value = window.localStorage[prefix + \'_\' + key];\n
+\n
+    return typeof value == "undefined" ? void 0 : JSON.parse(value);\n
+\n
+  };\n
+\n
+  this.reset = function (key) {\n
+    window.localStorage.removeItem(prefix + \'_\' + key);\n
+  };\n
+\n
+  this.resetAll = function () {\n
+    for (var index = 0; index < savedKeys.length; index++) {\n
+      window.localStorage.removeItem(prefix + \'_\' + savedKeys[index]);\n
+    }\n
+\n
+    clearSavedKeys();\n
+  };\n
+}\n
+\n
+/**\n
+ * @private\n
+ * @class PersistentState\n
+ * @plugin PersistentState\n
+ */\n
+function HandsontablePersistentState() {\n
+  var plugin = this;\n
+\n
+\n
+  this.init = function () {\n
+    var instance = this,\n
+      pluginSettings = instance.getSettings().persistentState;\n
+\n
+    plugin.enabled = !!(pluginSettings);\n
+\n
+    if (!plugin.enabled) {\n
+      removeHooks.call(instance);\n
+      return;\n
+    }\n
+\n
+    if (!instance.storage) {\n
+      instance.storage = new Storage(instance.rootElement.id);\n
+    }\n
+\n
+    instance.resetState = plugin.resetValue;\n
+\n
+    addHooks.call(instance);\n
+\n
+  };\n
+\n
+  this.saveValue = function (key, value) {\n
+    var instance = this;\n
+\n
+    instance.storage.saveValue(key, value);\n
+  };\n
+\n
+  this.loadValue = function (key, saveTo) {\n
+    var instance = this;\n
+\n
+    saveTo.value = instance.storage.loadValue(key);\n
+  };\n
+\n
+  this.resetValue = function (key) {\n
+    var instance = this;\n
+\n
+    if (typeof  key != \'undefined\') {\n
+      instance.storage.reset(key);\n
+    } else {\n
+      instance.storage.resetAll();\n
+    }\n
+\n
+  };\n
+\n
+  var hooks = {\n
+    \'persistentStateSave\': plugin.saveValue,\n
+    \'persistentStateLoad\': plugin.loadValue,\n
+    \'persistentStateReset\': plugin.resetValue\n
+  };\n
+\n
+  for (var hookName in hooks) {\n
+    if (hooks.hasOwnProperty(hookName)) {\n
+      Handsontable.hooks.register(hookName);\n
+    }\n
+  }\n
+\n
+  function addHooks() {\n
+    var instance = this;\n
+\n
+    for (var hookName in hooks) {\n
+      if (hooks.hasOwnProperty(hookName)) {\n
+        instance.addHook(hookName, hooks[hookName]);\n
+      }\n
+    }\n
+  }\n
+\n
+  function removeHooks() {\n
+    var instance = this;\n
+\n
+    for (var hookName in hooks) {\n
+      if (hooks.hasOwnProperty(hookName)) {\n
+        instance.removeHook(hookName, hooks[hookName]);\n
+      }\n
+    }\n
+  }\n
+}\n
+\n
+\n
+var htPersistentState = new HandsontablePersistentState();\n
+Handsontable.hooks.add(\'beforeInit\', htPersistentState.init);\n
+Handsontable.hooks.add(\'afterUpdateSettings\', htPersistentState.init);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3317</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>persistentState.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272626.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>autocompleteValidator.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {stringify} from \'./../helpers/mixed\';\n
+\n
+/**\n
+ * Autocomplete cell validator.\n
+ *\n
+ * @private\n
+ * @validator AutocompleteValidator\n
+ * @param {*} value - Value of edited cell\n
+ * @param {Function} callback - Callback called with validation result\n
+ */\n
+Handsontable.AutocompleteValidator = function (value, callback) {\n
+  if (this.strict && this.source) {\n
+    if ( typeof this.source === \'function\' ) {\n
+      this.source(value, process(value, callback));\n
+    } else {\n
+      process(value, callback)(this.source);\n
+    }\n
+  } else {\n
+    callback(true);\n
+  }\n
+};\n
+\n
+/**\n
+ * Function responsible for validation of autocomplete value.\n
+ *\n
+ * @param {*} value - Value of edited cell\n
+ * @param {Function} callback - Callback called with validation result\n
+ */\n
+function process(value, callback) {\n
+  var originalVal  = value;\n
+  var lowercaseVal = typeof originalVal === \'string\' ? originalVal.toLowerCase() : null;\n
+\n
+  return function (source) {\n
+    var found = false;\n
+    for (var s = 0, slen = source.length; s < slen; s++) {\n
+      if (originalVal === source[s]) {\n
+        found = true; //perfect match\n
+        break;\n
+      }\n
+      else if (lowercaseVal === stringify(source[s]).toLowerCase()) {\n
+        // changes[i][3] = source[s]; //good match, fix the case << TODO?\n
+        found = true;\n
+        break;\n
+      }\n
+    }\n
+\n
+    callback(found);\n
+  };\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1333</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>autocompleteValidator.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

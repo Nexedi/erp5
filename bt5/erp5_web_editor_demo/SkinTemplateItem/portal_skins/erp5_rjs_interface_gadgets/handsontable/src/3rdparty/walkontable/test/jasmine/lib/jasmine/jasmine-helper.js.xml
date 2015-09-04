@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272604.56</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jasmine-helper.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*global jasmine:false, window:false, document:false*/\n
+\n
+(function(){\n
+  \'use strict\';\n
+\n
+  var jasmineEnv = jasmine.getEnv();\n
+\n
+  jasmineEnv.updateInterval = 1000;\n
+  var htmlReporter = new jasmine.HtmlReporter();\n
+  jasmineEnv.addReporter(htmlReporter);\n
+\n
+  jasmineEnv.specFilter = function(spec) {\n
+    return htmlReporter.specFilter(spec);\n
+  };\n
+\n
+  var currentWindowOnload = window.onload;\n
+\n
+  if (document.readyState !== \'complete\') {\n
+    window.onload = function() {\n
+      if (currentWindowOnload) {\n
+        currentWindowOnload();\n
+      }\n
+      jasmineEnv.execute();\n
+    };\n
+  } else {\n
+    jasmineEnv.execute();\n
+  }\n
+\n
+\n
+}());\n
+\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>619</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jasmine-helper.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

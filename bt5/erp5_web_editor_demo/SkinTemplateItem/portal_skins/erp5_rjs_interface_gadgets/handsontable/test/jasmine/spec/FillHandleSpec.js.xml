@@ -1,0 +1,439 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272533.46</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FillHandleSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'FillHandle\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should appear when fillHandle equals true\', function () {\n
+    handsontable({\n
+      fillHandle: true\n
+    });\n
+\n
+    selectCell(2, 2);\n
+\n
+    expect(isFillHandleVisible()).toBe(true);\n
+  });\n
+\n
+  it(\'should not appear when fillHandle equals false\', function () {\n
+    handsontable({\n
+      fillHandle: false\n
+    });\n
+    selectCell(2, 2);\n
+\n
+    expect(isFillHandleVisible()).toBe(false);\n
+  });\n
+\n
+  it(\'should disappear when beginediting is triggered\', function () {\n
+    handsontable({\n
+      fillHandle: true\n
+    });\n
+    selectCell(2, 2);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    expect(isFillHandleVisible()).toBe(false);\n
+  });\n
+\n
+  it(\'should appear when finishediting is triggered\', function () {\n
+    handsontable({\n
+      fillHandle: true\n
+    });\n
+    selectCell(2, 2);\n
+\n
+    keyDown(\'enter\');\n
+    keyDown(\'enter\');\n
+\n
+    expect(isFillHandleVisible()).toBe(true);\n
+  });\n
+\n
+  it(\'should not appear when fillHandle equals false and finishediting is triggered\', function () {\n
+    handsontable({\n
+      fillHandle: false\n
+    });\n
+    selectCell(2, 2);\n
+\n
+    keyDown(\'enter\');\n
+    keyDown(\'enter\');\n
+\n
+    expect(isFillHandleVisible()).toBe(false);\n
+  });\n
+\n
+  it(\'should appear when editor is discarded using the ESC key\', function () {\n
+    handsontable({\n
+      fillHandle: true\n
+    });\n
+    selectCell(2, 2);\n
+\n
+    keyDown(\'enter\');\n
+    keyDown(\'esc\');\n
+\n
+    expect(isFillHandleVisible()).toBe(true);\n
+  });\n
+\n
+  it(\'should add custom value after autofill\', function () {\n
+    handsontable({\n
+      data: [\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6]\n
+      ],\n
+      beforeAutofill: function (start, end, data) {\n
+        data[0][0] = "test";\n
+      }\n
+    });\n
+    selectCell(0, 0);\n
+\n
+    this.$container.find(\'.wtBorder.corner\').simulate(\'mousedown\');\n
+    this.$container.find(\'tr:eq(1) td:eq(0)\').simulate(\'mouseover\');\n
+    this.$container.find(\'tr:eq(2) td:eq(0)\').simulate(\'mouseover\');\n
+    this.$container.find(\'.wtBorder.corner\').simulate(\'mouseup\');\n
+\n
+    expect(getSelected()).toEqual([0, 0, 2, 0]);\n
+    expect(getDataAtCell(1, 0)).toEqual("test");\n
+  });\n
+\n
+  it(\'should use correct cell coordinates also when Handsontable is used inside a TABLE (#355)\', function () {\n
+    var $table = $(\'<table><tr><td></td></tr></table>\').appendTo(\'body\');\n
+    this.$container.appendTo($table.find(\'td\'));\n
+\n
+    var ev;\n
+\n
+    handsontable({\n
+      data: [\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6]\n
+      ],\n
+      beforeAutofill: function (start, end, data) {\n
+        data[0][0] = "test";\n
+      }\n
+    });\n
+    selectCell(1, 1);\n
+\n
+    this.$container.find(\'.wtBorder.current.corner\').simulate(\'mousedown\');\n
+    this.$container.find(\'tr:eq(1) td:eq(0)\').simulate(\'mouseover\');\n
+    this.$container.find(\'tr:eq(2) td:eq(0)\').simulate(\'mouseover\');\n
+    this.$container.find(\'tr:eq(2) td:eq(0)\').simulate(\'mouseup\');\n
+\n
+    expect(getSelected()).toEqual([1, 1, 2, 1]);\n
+    expect(getDataAtCell(2, 1)).toEqual("test");\n
+\n
+    document.body.removeChild($table[0]);\n
+  });\n
+  it("should fill cells below until the end of content in the neighbouring column with current cell\'s data", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, null, null, null, null],\n
+        [1, 2, null, null, null, null]\n
+      ]\n
+    });\n
+\n
+    selectCell(1,3);\n
+    var fillHandle = this.$container.find(\'.wtBorder.current.corner\')[0];\n
+    mouseDoubleClick(fillHandle);\n
+\n
+    expect(getDataAtCell(2,3)).toEqual(null);\n
+    expect(getDataAtCell(3,3)).toEqual(null);\n
+\n
+    selectCell(1,2);\n
+    mouseDoubleClick(fillHandle);\n
+\n
+    expect(getDataAtCell(2,2)).toEqual(3);\n
+    expect(getDataAtCell(3,2)).toEqual(3);\n
+\n
+  });\n
+\n
+  it("should fill cells below until the end of content in the neighbouring column with the currently selected area\'s data", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, null, null, null, null],\n
+        [1, 2, null, null, null, null]\n
+      ]\n
+    });\n
+\n
+    selectCell(1,3,1,4);\n
+    var fillHandle = this.$container.find(\'.wtBorder.area.corner\')[0];\n
+    mouseDoubleClick(fillHandle);\n
+\n
+    expect(getDataAtCell(2,3)).toEqual(null);\n
+    expect(getDataAtCell(3,3)).toEqual(null);\n
+    expect(getDataAtCell(2,4)).toEqual(null);\n
+    expect(getDataAtCell(3,4)).toEqual(null);\n
+\n
+    selectCell(1,2,1,3);\n
+    mouseDoubleClick(fillHandle);\n
+\n
+    expect(getDataAtCell(2,2)).toEqual(3);\n
+    expect(getDataAtCell(3,2)).toEqual(3);\n
+    expect(getDataAtCell(2,3)).toEqual(4);\n
+    expect(getDataAtCell(3,3)).toEqual(4);\n
+\n
+  });\n
+\n
+  it(\'should add new row after dragging the handle to the last table row\', function () {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, 2, "test", 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6]\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 2);\n
+\n
+    this.$container.find(\'.wtBorder.current.corner\').simulate(\'mousedown\');\n
+    this.$container.find(\'tr:last-child td:eq(2)\').simulate(\'mouseover\');\n
+\n
+    expect(hot.countRows()).toBe(4);\n
+    waits(300);\n
+\n
+    runs(function () {\n
+      expect(hot.countRows()).toBe(5);\n
+\n
+      this.$container.find(\'tr:last-child td:eq(2)\').simulate(\'mouseover\');\n
+\n
+      waits(300);\n
+\n
+      runs(function () {\n
+        expect(hot.countRows()).toBe(6);\n
+      });\n
+\n
+    });\n
+  });\n
+\n
+  it(\'should not add new rows if the current number of rows reaches the maxRows setting\', function () {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, 2, "test", 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6]\n
+      ],\n
+      maxRows: 5\n
+    });\n
+\n
+    selectCell(0, 2);\n
+\n
+    this.$container.find(\'.wtBorder.current.corner\').simulate(\'mousedown\');\n
+    this.$container.find(\'tr:last-child td:eq(2)\').simulate(\'mouseover\');\n
+\n
+    expect(hot.countRows()).toBe(4);\n
+    waits(300);\n
+\n
+    runs(function () {\n
+      expect(hot.countRows()).toBe(5);\n
+\n
+      this.$container.find(\'tr:last-child td:eq(2)\').simulate(\'mouseover\');\n
+\n
+      waits(300);\n
+\n
+      runs(function () {\n
+        expect(hot.countRows()).toBe(5);\n
+      });\n
+\n
+    });\n
+  });\n
+\n
+  it(\'should add new row after dragging the handle below the viewport\', function () {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, 2, "test", 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6]\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 2);\n
+\n
+    this.$container.find(\'.wtBorder.current.corner\').simulate(\'mousedown\');\n
+    var ev = {}\n
+      , $lastRow = this.$container.find(\'tr:last-child td:eq(2)\');\n
+\n
+    expect(hot.countRows()).toBe(4);\n
+\n
+    ev.clientX = $lastRow.offset().left / 2;\n
+    ev.clientY = $lastRow.offset().top + 50;\n
+\n
+    $(document).simulate(\'mousemove\', ev);\n
+\n
+    waits(300);\n
+\n
+    runs(function () {\n
+      expect(hot.countRows()).toBe(5);\n
+\n
+      ev.clientY = $lastRow.offset().top + 150;\n
+      $(document).simulate(\'mousemove\',ev);\n
+\n
+      waits(300);\n
+\n
+      runs(function () {\n
+        expect(hot.countRows()).toBe(6);\n
+      });\n
+    });\n
+  });\n
+\n
+  it(\'should not fill any cells when dragging the handle to the headers\', function () {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 7, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6]\n
+      ],\n
+      colHeaders: true\n
+    });\n
+\n
+    // col headers:\n
+\n
+    selectCell(2, 2);\n
+\n
+    this.$container.find(\'.wtBorder.current.corner\').simulate(\'mousedown\');\n
+\n
+    var errors = 0;\n
+\n
+    try {\n
+      this.$container.find(\'thead tr:first-child th:eq(2)\').simulate(\'mouseover\').simulate(\'mouseup\');\n
+    } catch(err) {\n
+      errors++;\n
+    }\n
+\n
+    expect(errors).toEqual(0);\n
+    expect(getDataAtCell(1,2)).toEqual(3);\n
+    expect(getDataAtCell(0,2)).toEqual(3);\n
+    expect($(".fill").filter(function() { return $(this).css("display") != "none" }).length).toEqual(0); // check if fill selection is refreshed\n
+\n
+    // row headers:\n
+    selectCell(2, 2);\n
+\n
+    this.$container.find(\'.wtBorder.current.corner\').simulate(\'mousedown\');\n
+\n
+    errors = 0;\n
+\n
+    try {\n
+      this.$container.find(\'tbody tr:nth(2) th:first-child\').simulate(\'mouseover\').simulate(\'mouseup\');\n
+    } catch(err) {\n
+      errors++;\n
+    }\n
+\n
+    expect(errors).toEqual(0);\n
+    expect(getDataAtCell(2,1)).toEqual(2);\n
+    expect(getDataAtCell(2,0)).toEqual(1);\n
+    expect($(".fill").filter(function() { return $(this).css("display") != "none" }).length).toEqual(0); // check if fill selection is refreshed\n
+  });\n
+\n
+\n
+  it(\'should not add a new row if dragging from the last row upwards or sideways\', function () {\n
+    var mouseOverSpy = jasmine.createSpy(\'mouseOverSpy\');\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6],\n
+        [1, 2, "test", 4, 5, 6],\n
+        [1, 2, 3, 4, 5, 6]\n
+      ],\n
+      afterOnCellMouseOver: mouseOverSpy\n
+    });\n
+\n
+    selectCell(3, 2);\n
+\n
+    this.$container.find(\'.wtBorder.current.corner\').simulate(\'mousedown\');\n
+    this.$container.find(\'tr:nth-child(3) td:eq(2)\').simulate(\'mouseover\');\n
+\n
+    waitsFor(function () {\n
+      return mouseOverSpy.callCount > 0;\n
+    }, \'mouseover performed\', 1000);\n
+\n
+    runs(function () {\n
+      expect(hot.countRows()).toBe(4);\n
+\n
+      selectCell(3, 2);\n
+      this.$container.find(\'.wtBorder.current.corner\').simulate(\'mousedown\');\n
+      this.$container.find(\'tr:nth-child(4) td:eq(3)\').simulate(\'mouseover\');\n
+\n
+      waitsFor(function () {\n
+        return mouseOverSpy.callCount > 0;\n
+      }, \'mouseover performed\', 1000);\n
+\n
+      runs(function () {\n
+        expect(hot.countRows()).toBe(4);\n
+\n
+        selectCell(3, 2);\n
+        this.$container.find(\'.wtBorder.current.corner\').simulate(\'mousedown\');\n
+        this.$container.find(\'tr:nth-child(4) td:eq(1)\').simulate(\'mouseover\');\n
+\n
+        waitsFor(function () {\n
+          return mouseOverSpy.callCount > 0;\n
+        }, \'mouseover performed\', 1000);\n
+\n
+        runs(function () {\n
+          expect(hot.countRows()).toBe(4);\n
+        });\n
+\n
+      });\n
+\n
+    });\n
+\n
+  });\n
+\n
+});\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10222</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FillHandleSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

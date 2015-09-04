@@ -1,0 +1,496 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272622.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>viewport.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  getScrollbarWidth,\n
+  getScrollTop,\n
+  getStyle,\n
+  offset,\n
+  outerHeight,\n
+  outerWidth,\n
+    } from \'./../../../helpers/dom/element\';\n
+import {EventManager} from \'./../../../eventManager\';\n
+import {WalkontableViewportColumnsCalculator} from \'./calculator/viewportColumns\';\n
+import {WalkontableViewportRowsCalculator} from \'./calculator/viewportRows\';\n
+\n
+\n
+/**\n
+ * @class WalkontableViewport\n
+ */\n
+class WalkontableViewport {\n
+  /**\n
+   * @param wotInstance\n
+   */\n
+  constructor(wotInstance) {\n
+    this.wot = wotInstance;\n
+\n
+    // legacy support\n
+    this.instance = this.wot;\n
+\n
+    this.oversizedRows = [];\n
+    this.oversizedColumnHeaders = [];\n
+    this.isMarkedOversizedColumn = {};\n
+    this.clientHeight = 0;\n
+    this.containerWidth = NaN;\n
+    this.rowHeaderWidth = NaN;\n
+    this.rowsVisibleCalculator = null;\n
+    this.columnsVisibleCalculator = null;\n
+\n
+    this.eventManager = new EventManager(this.wot);\n
+    this.eventManager.addEventListener(window, \'resize\', () => {\n
+      this.clientHeight = this.getWorkspaceHeight();\n
+    });\n
+  }\n
+\n
+  /**\n
+   * @returns {number}\n
+   */\n
+  getWorkspaceHeight() {\n
+    // var scrollHandler = this.instance.wtOverlays.topOverlay.scrollHandler;\n
+    let trimmingContainer = this.instance.wtOverlays.topOverlay.trimmingContainer;\n
+    let elemHeight;\n
+    let height = 0;\n
+\n
+    if (trimmingContainer === window) {\n
+      height = document.documentElement.clientHeight;\n
+\n
+    } else {\n
+      elemHeight = outerHeight(trimmingContainer);\n
+      // returns height without DIV scrollbar\n
+      height = (elemHeight > 0 && trimmingContainer.clientHeight > 0) ? trimmingContainer.clientHeight : Infinity;\n
+    }\n
+\n
+    return height;\n
+  }\n
+\n
+  getWorkspaceWidth() {\n
+    let width;\n
+    let totalColumns = this.instance.getSetting("totalColumns");\n
+    let trimmingContainer = this.instance.wtOverlays.leftOverlay.trimmingContainer;\n
+    let overflow;\n
+    let stretchSetting = this.instance.getSetting(\'stretchH\');\n
+    let docOffsetWidth = document.documentElement.offsetWidth;\n
+\n
+    if (Handsontable.freezeOverlays) {\n
+      width = Math.min(docOffsetWidth - this.getWorkspaceOffset().left, docOffsetWidth);\n
+    } else {\n
+      width = Math.min(this.getContainerFillWidth(), docOffsetWidth - this.getWorkspaceOffset().left, docOffsetWidth);\n
+    }\n
+\n
+    if (trimmingContainer === window && totalColumns > 0 && this.sumColumnWidths(0, totalColumns - 1) > width) {\n
+      // in case sum of column widths is higher than available stylesheet width, let\'s assume using the whole window\n
+      // otherwise continue below, which will allow stretching\n
+      // this is used in `scroll_window.html`\n
+      // TODO test me\n
+      return document.documentElement.clientWidth;\n
+    }\n
+\n
+    if (trimmingContainer !== window) {\n
+      overflow = getStyle(this.instance.wtOverlays.leftOverlay.trimmingContainer, \'overflow\');\n
+\n
+      if (overflow == "scroll" || overflow == "hidden" || overflow == "auto") {\n
+        // this is used in `scroll.html`\n
+        // TODO test me\n
+        return Math.max(width, trimmingContainer.clientWidth);\n
+      }\n
+    }\n
+\n
+    if (stretchSetting === \'none\' || !stretchSetting) {\n
+      // if no stretching is used, return the maximum used workspace width\n
+      return Math.max(width, outerWidth(this.instance.wtTable.TABLE));\n
+    } else {\n
+      // if stretching is used, return the actual container width, so the columns can fit inside it\n
+      return width;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Checks if viewport has vertical scroll\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  hasVerticalScroll() {\n
+    return this.getWorkspaceActualHeight() > this.getWorkspaceHeight();\n
+  }\n
+\n
+  /**\n
+   * Checks if viewport has horizontal scroll\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  hasHorizontalScroll() {\n
+    return this.getWorkspaceActualWidth() > this.getWorkspaceWidth();\n
+  }\n
+\n
+  /**\n
+   * @param from\n
+   * @param length\n
+   * @returns {Number}\n
+   */\n
+  sumColumnWidths(from, length) {\n
+    let sum = 0;\n
+\n
+    while (from < length) {\n
+      sum += this.wot.wtTable.getColumnWidth(from);\n
+      from ++;\n
+    }\n
+\n
+    return sum;\n
+  }\n
+\n
+  /**\n
+   * @returns {Number}\n
+   */\n
+  getContainerFillWidth() {\n
+    if (this.containerWidth) {\n
+      return this.containerWidth;\n
+    }\n
+    let mainContainer = this.instance.wtTable.holder;\n
+    let fillWidth;\n
+    let dummyElement;\n
+\n
+    dummyElement = document.createElement("DIV");\n
+    dummyElement.style.width = "100%";\n
+    dummyElement.style.height = "1px";\n
+    mainContainer.appendChild(dummyElement);\n
+    fillWidth = dummyElement.offsetWidth;\n
+\n
+    this.containerWidth = fillWidth;\n
+    mainContainer.removeChild(dummyElement);\n
+\n
+    return fillWidth;\n
+  }\n
+\n
+  /**\n
+   * @returns {Number}\n
+   */\n
+  getWorkspaceOffset() {\n
+    return offset(this.wot.wtTable.TABLE);\n
+  }\n
+\n
+  /**\n
+   * @returns {Number}\n
+   */\n
+  getWorkspaceActualHeight() {\n
+    return outerHeight(this.wot.wtTable.TABLE);\n
+  }\n
+\n
+  /**\n
+   * @returns {Number}\n
+   */\n
+  getWorkspaceActualWidth() {\n
+    return outerWidth(this.wot.wtTable.TABLE) ||\n
+      outerWidth(this.wot.wtTable.TBODY) ||\n
+      outerWidth(this.wot.wtTable.THEAD); //IE8 reports 0 as <table> offsetWidth;\n
+  }\n
+\n
+  /**\n
+   * @returns {Number}\n
+   */\n
+  getColumnHeaderHeight() {\n
+    if (isNaN(this.columnHeaderHeight)) {\n
+      this.columnHeaderHeight = outerHeight(this.wot.wtTable.THEAD);\n
+    }\n
+\n
+    return this.columnHeaderHeight;\n
+  }\n
+\n
+  /**\n
+   * @returns {Number}\n
+   */\n
+  getViewportHeight() {\n
+    let containerHeight = this.getWorkspaceHeight();\n
+    let columnHeaderHeight;\n
+\n
+    if (containerHeight === Infinity) {\n
+      return containerHeight;\n
+    }\n
+    columnHeaderHeight = this.getColumnHeaderHeight();\n
+\n
+    if (columnHeaderHeight > 0) {\n
+      containerHeight -= columnHeaderHeight;\n
+    }\n
+\n
+    return containerHeight;\n
+  }\n
+\n
+  /**\n
+   * @returns {Number}\n
+   */\n
+  getRowHeaderWidth() {\n
+    if (this.wot.cloneSource) {\n
+      return this.wot.cloneSource.wtViewport.getRowHeaderWidth();\n
+    }\n
+    if (isNaN(this.rowHeaderWidth)) {\n
+      let rowHeaders = this.instance.getSetting(\'rowHeaders\');\n
+\n
+      if (rowHeaders.length) {\n
+        let TH = this.instance.wtTable.TABLE.querySelector(\'TH\');\n
+        this.rowHeaderWidth = 0;\n
+\n
+        for (let i = 0, len = rowHeaders.length; i < len; i++) {\n
+          if (TH) {\n
+            this.rowHeaderWidth += outerWidth(TH);\n
+            TH = TH.nextSibling;\n
+\n
+          } else {\n
+            // yes this is a cheat but it worked like that before, just taking assumption from CSS instead of measuring.\n
+            // TODO: proper fix\n
+            this.rowHeaderWidth += 50;\n
+          }\n
+        }\n
+      } else {\n
+        this.rowHeaderWidth = 0;\n
+      }\n
+    }\n
+\n
+    return this.rowHeaderWidth;\n
+  }\n
+\n
+  /**\n
+   * @returns {Number}\n
+   */\n
+  getViewportWidth() {\n
+    let containerWidth = this.getWorkspaceWidth();\n
+    let rowHeaderWidth;\n
+\n
+    if (containerWidth === Infinity) {\n
+      return containerWidth;\n
+    }\n
+    rowHeaderWidth = this.getRowHeaderWidth();\n
+\n
+    if (rowHeaderWidth > 0) {\n
+      return containerWidth - rowHeaderWidth;\n
+    }\n
+\n
+    return containerWidth;\n
+  }\n
+\n
+  /**\n
+   * Creates:\n
+   *  - rowsRenderCalculator (before draw, to qualify rows for rendering)\n
+   *  - rowsVisibleCalculator (after draw, to measure which rows are actually visible)\n
+   *\n
+   * @returns {WalkontableViewportRowsCalculator}\n
+   */\n
+  createRowsCalculator(visible = false) {\n
+    let height;\n
+    let pos;\n
+    let fixedRowsTop;\n
+\n
+    this.rowHeaderWidth = NaN;\n
+\n
+    if (this.wot.wtSettings.settings.renderAllRows) {\n
+      height = Infinity;\n
+    } else {\n
+      height = this.getViewportHeight();\n
+    }\n
+    pos = getScrollTop(this.wot.wtOverlays.mainTableScrollableElement) - this.wot.wtOverlays.topOverlay.getTableParentOffset();\n
+\n
+    if (pos < 0) {\n
+      pos = 0;\n
+    }\n
+    fixedRowsTop = this.wot.getSetting(\'fixedRowsTop\');\n
+\n
+    if (fixedRowsTop) {\n
+      let fixedRowsHeight = this.wot.wtOverlays.topOverlay.sumCellSizes(0, fixedRowsTop);\n
+      pos += fixedRowsHeight;\n
+      height -= fixedRowsHeight;\n
+    }\n
+\n
+    return new WalkontableViewportRowsCalculator(\n
+      height,\n
+      pos,\n
+      this.wot.getSetting(\'totalRows\'),\n
+      (sourceRow) => {\n
+        return this.wot.wtTable.getRowHeight(sourceRow);\n
+      },\n
+      visible ? null : this.wot.wtSettings.settings.viewportRowCalculatorOverride,\n
+      visible\n
+    );\n
+  }\n
+\n
+  /**\n
+   * Creates:\n
+   *  - columnsRenderCalculator (before draw, to qualify columns for rendering)\n
+   *  - columnsVisibleCalculator (after draw, to measure which columns are actually visible)\n
+   *\n
+   * @returns {WalkontableViewportRowsCalculator}\n
+   */\n
+  createColumnsCalculator(visible = false) {\n
+    let width = this.getViewportWidth();\n
+    let pos;\n
+    let fixedColumnsLeft;\n
+\n
+    this.columnHeaderHeight = NaN;\n
+\n
+    pos = this.wot.wtOverlays.leftOverlay.getScrollPosition() - this.wot.wtOverlays.leftOverlay.getTableParentOffset();\n
+\n
+    if (pos < 0) {\n
+      pos = 0;\n
+    }\n
+    fixedColumnsLeft = this.wot.getSetting(\'fixedColumnsLeft\');\n
+\n
+    if (fixedColumnsLeft) {\n
+      let fixedColumnsWidth = this.wot.wtOverlays.leftOverlay.sumCellSizes(0, fixedColumnsLeft);\n
+      pos += fixedColumnsWidth;\n
+      width -= fixedColumnsWidth;\n
+    }\n
+    if (this.wot.wtTable.holder.clientWidth !== this.wot.wtTable.holder.offsetWidth) {\n
+      width -= getScrollbarWidth();\n
+    }\n
+\n
+    return new WalkontableViewportColumnsCalculator(\n
+      width,\n
+      pos,\n
+      this.wot.getSetting(\'totalColumns\'),\n
+      (sourceCol) => {\n
+        return this.wot.wtTable.getColumnWidth(sourceCol);\n
+      },\n
+      visible ? null : this.wot.wtSettings.settings.viewportColumnCalculatorOverride,\n
+      visible,\n
+      this.wot.getSetting(\'stretchH\')\n
+    );\n
+  }\n
+\n
+  /**\n
+   * Creates rowsRenderCalculator and columnsRenderCalculator (before draw, to determine what rows and\n
+   * cols should be rendered)\n
+   *\n
+   * @param fastDraw {Boolean} If `true`, will try to avoid full redraw and only update the border positions.\n
+   *                           If `false` or `undefined`, will perform a full redraw\n
+   * @returns fastDraw {Boolean} The fastDraw value, possibly modified\n
+   */\n
+  createRenderCalculators(fastDraw = false) {\n
+    if (fastDraw) {\n
+      let proposedRowsVisibleCalculator = this.createRowsCalculator(true);\n
+      let proposedColumnsVisibleCalculator = this.createColumnsCalculator(true);\n
+\n
+      if (!(this.areAllProposedVisibleRowsAlreadyRendered(proposedRowsVisibleCalculator) &&\n
+          this.areAllProposedVisibleColumnsAlreadyRendered(proposedColumnsVisibleCalculator))) {\n
+        fastDraw = false;\n
+      }\n
+    }\n
+\n
+    if (!fastDraw) {\n
+      this.rowsRenderCalculator = this.createRowsCalculator();\n
+      this.columnsRenderCalculator = this.createColumnsCalculator();\n
+    }\n
+    // delete temporarily to make sure that renderers always use rowsRenderCalculator, not rowsVisibleCalculator\n
+    this.rowsVisibleCalculator = null;\n
+    this.columnsVisibleCalculator = null;\n
+\n
+    return fastDraw;\n
+  }\n
+\n
+  /**\n
+   * Creates rowsVisibleCalculator and columnsVisibleCalculator (after draw, to determine what are\n
+   * the actually visible rows and columns)\n
+   */\n
+  createVisibleCalculators() {\n
+    this.rowsVisibleCalculator = this.createRowsCalculator(true);\n
+    this.columnsVisibleCalculator = this.createColumnsCalculator(true);\n
+  }\n
+\n
+  /**\n
+   * Returns information whether proposedRowsVisibleCalculator viewport\n
+   * is contained inside rows rendered in previous draw (cached in rowsRenderCalculator)\n
+   *\n
+   * @param {Object} proposedRowsVisibleCalculator\n
+   * @returns {Boolean} Returns `true` if all proposed visible rows are already rendered (meaning: redraw is not needed).\n
+   *                    Returns `false` if at least one proposed visible row is not already rendered (meaning: redraw is needed)\n
+   */\n
+  areAllProposedVisibleRowsAlreadyRendered(proposedRowsVisibleCalculator) {\n
+    if (this.rowsVisibleCalculator) {\n
+      if (proposedRowsVisibleCalculator.startRow < this.rowsRenderCalculator.startRow ||\n
+          (proposedRowsVisibleCalculator.startRow === this.rowsRenderCalculator.startRow &&\n
+          proposedRowsVisibleCalculator.startRow > 0)) {\n
+        return false;\n
+\n
+      } else if (proposedRowsVisibleCalculator.endRow > this.rowsRenderCalculator.endRow ||\n
+          (proposedRowsVisibleCalculator.endRow === this.rowsRenderCalculator.endRow &&\n
+          proposedRowsVisibleCalculator.endRow < this.wot.getSetting(\'totalRows\') - 1)) {\n
+        return false;\n
+\n
+      } else {\n
+        return true;\n
+      }\n
+    }\n
+\n
+    return false;\n
+  }\n
+\n
+  /**\n
+   * Returns information whether proposedColumnsVisibleCalculator viewport\n
+   * is contained inside column rendered in previous draw (cached in columnsRenderCalculator)\n
+   *\n
+   * @param {Object} proposedColumnsVisibleCalculator\n
+   * @returns {Boolean} Returns `true` if all proposed visible columns are already rendered (meaning: redraw is not needed).\n
+   *                    Returns `false` if at least one proposed visible column is not already rendered (meaning: redraw is needed)\n
+   */\n
+  areAllProposedVisibleColumnsAlreadyRendered(proposedColumnsVisibleCalculator) {\n
+    if (this.columnsVisibleCalculator) {\n
+      if (proposedColumnsVisibleCalculator.startColumn < this.columnsRenderCalculator.startColumn ||\n
+          (proposedColumnsVisibleCalculator.startColumn === this.columnsRenderCalculator.startColumn &&\n
+          proposedColumnsVisibleCalculator.startColumn > 0)) {\n
+        return false;\n
+\n
+      } else if (proposedColumnsVisibleCalculator.endColumn > this.columnsRenderCalculator.endColumn ||\n
+          (proposedColumnsVisibleCalculator.endColumn === this.columnsRenderCalculator.endColumn &&\n
+          proposedColumnsVisibleCalculator.endColumn < this.wot.getSetting(\'totalColumns\') - 1)) {\n
+        return false;\n
+\n
+      } else {\n
+        return true;\n
+      }\n
+    }\n
+\n
+    return false;\n
+  }\n
+}\n
+\n
+export {WalkontableViewport};\n
+\n
+window.WalkontableViewport = WalkontableViewport;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13656</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>viewport.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

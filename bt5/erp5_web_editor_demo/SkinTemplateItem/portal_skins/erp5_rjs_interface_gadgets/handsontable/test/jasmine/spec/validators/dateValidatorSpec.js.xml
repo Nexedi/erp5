@@ -1,0 +1,318 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272497.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dateValidatorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'dateValidator\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfObjects = function () {\n
+    return [\n
+      {date: "01/01/2015", name: "Ted", lastName: "Right"},\n
+      {date: "01/01/15", name: "Frank", lastName: "Honest"},\n
+      {date: "41/01/2015", name: "Joan", lastName: "Well"},\n
+      {date: "01/51/2015", name: "Sid", lastName: "Strong"}\n
+    ];\n
+  };\n
+\n
+  it("should not positively validate a non-date string", function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'date\', type: \'date\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(0, 0, \'wat\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(false, \'wat\', 0, \'date\', undefined, undefined);\n
+    });\n
+  });\n
+\n
+  it("should not positively validate a incorrect date string", function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'date\', type: \'date\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(0, 0, \'33/01/2014\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(false, \'33/01/2014\', 0, \'date\', undefined, undefined);\n
+    });\n
+  });\n
+\n
+  it("should not positively validate a date string in wrong format", function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'date\', type: \'date\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(1, 0, \'01/01/15\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(false, \'01/01/15\', 1, \'date\', undefined, undefined);\n
+    });\n
+  });\n
+\n
+  it("should not positively validate a date string in wrong format (if custom format is provided)", function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'date\', type: \'date\', dateFormat: \'DD/MM/YY\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(1, 0, \'01/01/2015\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(false, \'01/01/2015\', 1, \'date\', undefined, undefined);\n
+    });\n
+  });\n
+\n
+  it("should positively validate a date string in correct format", function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'date\', type: \'date\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(1, 0, \'01/01/2015\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(true, \'01/01/2015\', 1, \'date\', undefined, undefined);\n
+    });\n
+  });\n
+\n
+  it("should positively validate a date string in correct format (if custom format is provided)", function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'date\', type: \'date\', dateFormat: \'DD/MM/YY\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(1, 0, \'23/03/15\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(onAfterValidate).toHaveBeenCalledWith(true, \'23/03/15\', 1, \'date\', undefined, undefined);\n
+    });\n
+  });\n
+\n
+  describe("correctFormat", function () {\n
+    it("should not make any changes to entered string if correctFormat is not set", function () {\n
+      var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+      handsontable({\n
+        data: arrayOfObjects(),\n
+        columns: [\n
+          {data: \'date\', type: \'date\', dateFormat: "MM/DD/YY"},\n
+          {data: \'name\'},\n
+          {data: \'lastName\'}\n
+        ],\n
+        afterValidate: onAfterValidate\n
+      });\n
+\n
+      setDataAtCell(1, 0, \'11/23/2013\');\n
+\n
+      waitsFor(function () {\n
+        return onAfterValidate.calls.length > 0;\n
+      }, \'Cell validation\', 1000);\n
+\n
+      runs(function () {\n
+        expect(onAfterValidate).toHaveBeenCalledWith(false, \'11/23/2013\', 1, \'date\', undefined, undefined);\n
+      });\n
+    });\n
+\n
+    it("should not make any changes to entered string if correctFormat is set to false", function () {\n
+      var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+      handsontable({\n
+        data: arrayOfObjects(),\n
+        columns: [\n
+          {data: \'date\', type: \'date\', dateFormat: "MM/DD/YY", correctFormat: false},\n
+          {data: \'name\'},\n
+          {data: \'lastName\'}\n
+        ],\n
+        afterValidate: onAfterValidate\n
+      });\n
+\n
+      setDataAtCell(1, 0, \'11/23/2013\');\n
+\n
+      waitsFor(function () {\n
+        return onAfterValidate.calls.length > 0;\n
+      }, \'Cell validation\', 1000);\n
+\n
+      runs(function () {\n
+        expect(onAfterValidate).toHaveBeenCalledWith(false, \'11/23/2013\', 1, \'date\', undefined, undefined);\n
+      });\n
+    });\n
+\n
+    it("should rewrite the string to the correct format if a date-string in different format is provided", function () {\n
+      var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+      handsontable({\n
+        data: arrayOfObjects(),\n
+        columns: [\n
+          {data: \'date\', type: \'date\', dateFormat: "MM/DD/YYYY", correctFormat: true},\n
+          {data: \'lastName\'}\n
+        ],\n
+        afterValidate: onAfterValidate\n
+      });\n
+\n
+      setDataAtCell(1, 0, \'1/10/15\');\n
+\n
+      waitsFor(function () {\n
+        return onAfterValidate.calls.length > 0;\n
+      }, \'Cell validation\', 1000);\n
+\n
+      runs(function () {\n
+        expect(onAfterValidate).toHaveBeenCalledWith(true, \'1/10/15\', 1, \'date\', undefined, undefined);\n
+      });\n
+\n
+      waits(30);\n
+\n
+      runs(function () {\n
+        expect(getDataAtCell(1, 0)).toEqual("01/10/2015");\n
+      });\n
+    });\n
+\n
+    it("should not try to correct format of non-date strings", function () {\n
+      var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+      handsontable({\n
+        data: arrayOfObjects(),\n
+        columns: [\n
+          {data: \'date\', type: \'date\', dateFormat: "DD/MM/YY", correctFormat: true},\n
+          {data: \'name\'},\n
+          {data: \'lastName\'}\n
+        ],\n
+        afterValidate: onAfterValidate\n
+      });\n
+\n
+      setDataAtCell(1, 0, \'test non-date string\');\n
+\n
+      waitsFor(function () {\n
+        return onAfterValidate.calls.length > 0;\n
+      }, \'Cell validation\', 1000);\n
+\n
+      runs(function () {\n
+        expect(onAfterValidate).toHaveBeenCalledWith(false, \'test non-date string\', 1, \'date\', undefined, undefined);\n
+      });\n
+\n
+      waits(30);\n
+\n
+    });\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7703</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dateValidatorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

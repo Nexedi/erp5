@@ -1,0 +1,444 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272730.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>editorManager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {WalkontableCellCoords} from \'./3rdparty/walkontable/src/cell/coords\';\n
+import {KEY_CODES, isMetaKey, isCtrlKey} from \'./helpers/unicode\';\n
+import {stopPropagation, stopImmediatePropagation, isImmediatePropagationStopped} from \'./helpers/dom/event\';\n
+import {getEditor} from \'./editors\';\n
+import {eventManager as eventManagerObject} from \'./eventManager\';\n
+\n
+export {EditorManager};\n
+\n
+// support for older versions of Handsontable\n
+Handsontable.EditorManager = EditorManager;\n
+\n
+function EditorManager(instance, priv, selection){\n
+  var _this = this,\n
+    destroyed = false,\n
+    eventManager,\n
+    activeEditor;\n
+\n
+  eventManager = eventManagerObject(instance);\n
+\n
+  function moveSelectionAfterEnter(shiftKey) {\n
+    var enterMoves = typeof priv.settings.enterMoves === \'function\' ? priv.settings.enterMoves(event) : priv.settings.enterMoves;\n
+\n
+    if (shiftKey) {\n
+      // move selection up\n
+      selection.transformStart(-enterMoves.row, - enterMoves.col);\n
+\n
+    } else {\n
+      // move selection down (add a new row if needed)\n
+      selection.transformStart(enterMoves.row, enterMoves.col, true);\n
+    }\n
+  }\n
+\n
+  function moveSelectionUp(shiftKey) {\n
+    if (shiftKey) {\n
+      selection.transformEnd(-1, 0);\n
+    } else {\n
+      selection.transformStart(-1, 0);\n
+    }\n
+  }\n
+\n
+  function moveSelectionDown(shiftKey) {\n
+    if (shiftKey) {\n
+      // expanding selection down with shift\n
+      selection.transformEnd(1, 0);\n
+    } else {\n
+      // move selection down\n
+      selection.transformStart(1, 0);\n
+    }\n
+  }\n
+\n
+  function moveSelectionRight(shiftKey) {\n
+    if (shiftKey) {\n
+      selection.transformEnd(0, 1);\n
+    } else {\n
+      selection.transformStart(0, 1);\n
+    }\n
+  }\n
+\n
+  function moveSelectionLeft(shiftKey) {\n
+    if (shiftKey) {\n
+      selection.transformEnd(0, - 1);\n
+    } else {\n
+      selection.transformStart(0, - 1);\n
+    }\n
+  }\n
+\n
+  function onKeyDown(event) {\n
+    var ctrlDown, rangeModifier;\n
+\n
+    if (!instance.isListening()) {\n
+      return;\n
+    }\n
+    Handsontable.hooks.run(instance, \'beforeKeyDown\', event);\n
+\n
+    if (destroyed) {\n
+      return;\n
+    }\n
+    if (isImmediatePropagationStopped(event)) {\n
+      return;\n
+    }\n
+    priv.lastKeyCode = event.keyCode;\n
+\n
+    if (!selection.isSelected()) {\n
+      return;\n
+    }\n
+    // catch CTRL but not right ALT (which in some systems triggers ALT+CTRL)\n
+    ctrlDown = (event.ctrlKey || event.metaKey) && !event.altKey;\n
+\n
+    if (activeEditor && !activeEditor.isWaiting()) {\n
+      if (!isMetaKey(event.keyCode) && !isCtrlKey(event.keyCode) && !ctrlDown && !_this.isEditorOpened()) {\n
+        _this.openEditor("", event);\n
+\n
+        return;\n
+      }\n
+    }\n
+    rangeModifier = event.shiftKey ? selection.setRangeEnd : selection.setRangeStart;\n
+\n
+    switch (event.keyCode) {\n
+\n
+      case KEY_CODES.A:\n
+        if (!_this.isEditorOpened() && ctrlDown) {\n
+          selection.selectAll();\n
+\n
+          event.preventDefault();\n
+          stopPropagation(event);\n
+        }\n
+        break;\n
+\n
+      case KEY_CODES.ARROW_UP:\n
+        if (_this.isEditorOpened() && !activeEditor.isWaiting()) {\n
+          _this.closeEditorAndSaveChanges(ctrlDown);\n
+        }\n
+        moveSelectionUp(event.shiftKey);\n
+\n
+        event.preventDefault();\n
+        stopPropagation(event);\n
+        break;\n
+\n
+      case KEY_CODES.ARROW_DOWN:\n
+        if (_this.isEditorOpened() && !activeEditor.isWaiting()) {\n
+          _this.closeEditorAndSaveChanges(ctrlDown);\n
+        }\n
+        moveSelectionDown(event.shiftKey);\n
+\n
+        event.preventDefault();\n
+        stopPropagation(event);\n
+        break;\n
+\n
+      case KEY_CODES.ARROW_RIGHT:\n
+        if (_this.isEditorOpened() && !activeEditor.isWaiting()) {\n
+          _this.closeEditorAndSaveChanges(ctrlDown);\n
+        }\n
+        moveSelectionRight(event.shiftKey);\n
+\n
+        event.preventDefault();\n
+        stopPropagation(event);\n
+        break;\n
+\n
+      case KEY_CODES.ARROW_LEFT:\n
+        if (_this.isEditorOpened() && !activeEditor.isWaiting()) {\n
+          _this.closeEditorAndSaveChanges(ctrlDown);\n
+        }\n
+        moveSelectionLeft(event.shiftKey);\n
+\n
+        event.preventDefault();\n
+        stopPropagation(event);\n
+        break;\n
+\n
+      case KEY_CODES.TAB:\n
+        var tabMoves = typeof priv.settings.tabMoves === \'function\' ? priv.settings.tabMoves(event) : priv.settings.tabMoves;\n
+\n
+        if (event.shiftKey) {\n
+          // move selection left\n
+          selection.transformStart(-tabMoves.row, -tabMoves.col);\n
+        } else {\n
+          // move selection right (add a new column if needed)\n
+          selection.transformStart(tabMoves.row, tabMoves.col, true);\n
+        }\n
+        event.preventDefault();\n
+        stopPropagation(event);\n
+        break;\n
+\n
+      case KEY_CODES.BACKSPACE:\n
+      case KEY_CODES.DELETE:\n
+        selection.empty(event);\n
+        _this.prepareEditor();\n
+        event.preventDefault();\n
+        break;\n
+\n
+      case KEY_CODES.F2:\n
+        /* F2 */\n
+        _this.openEditor(null, event);\n
+\n
+        if (activeEditor) {\n
+          activeEditor.enableFullEditMode();\n
+        }\n
+        event.preventDefault(); //prevent Opera from opening \'Go to Page dialog\'\n
+        break;\n
+\n
+      case KEY_CODES.ENTER:\n
+        /* return/enter */\n
+        if (_this.isEditorOpened()) {\n
+\n
+          if (activeEditor && activeEditor.state !== Handsontable.EditorState.WAITING) {\n
+            _this.closeEditorAndSaveChanges(ctrlDown);\n
+          }\n
+          moveSelectionAfterEnter(event.shiftKey);\n
+\n
+        } else {\n
+          if (instance.getSettings().enterBeginsEditing) {\n
+            _this.openEditor(null, event);\n
+\n
+            if (activeEditor) {\n
+              activeEditor.enableFullEditMode();\n
+            }\n
+          } else {\n
+            moveSelectionAfterEnter(event.shiftKey);\n
+          }\n
+        }\n
+        event.preventDefault(); //don\'t add newline to field\n
+        stopImmediatePropagation(event); //required by HandsontableEditor\n
+        break;\n
+\n
+      case KEY_CODES.ESCAPE:\n
+        if (_this.isEditorOpened()) {\n
+          _this.closeEditorAndRestoreOriginalValue(ctrlDown);\n
+        }\n
+        event.preventDefault();\n
+        break;\n
+\n
+      case KEY_CODES.HOME:\n
+        if (event.ctrlKey || event.metaKey) {\n
+          rangeModifier(new WalkontableCellCoords(0, priv.selRange.from.col));\n
+        } else {\n
+          rangeModifier(new WalkontableCellCoords(priv.selRange.from.row, 0));\n
+        }\n
+        event.preventDefault(); //don\'t scroll the window\n
+        stopPropagation(event);\n
+        break;\n
+\n
+      case KEY_CODES.END:\n
+        if (event.ctrlKey || event.metaKey) {\n
+          rangeModifier(new WalkontableCellCoords(instance.countRows() - 1, priv.selRange.from.col));\n
+        } else {\n
+          rangeModifier(new WalkontableCellCoords(priv.selRange.from.row, instance.countCols() - 1));\n
+        }\n
+        event.preventDefault(); //don\'t scroll the window\n
+        stopPropagation(event);\n
+        break;\n
+\n
+      case KEY_CODES.PAGE_UP:\n
+        selection.transformStart(-instance.countVisibleRows(), 0);\n
+        event.preventDefault(); //don\'t page up the window\n
+        stopPropagation(event);\n
+        break;\n
+\n
+      case KEY_CODES.PAGE_DOWN:\n
+        selection.transformStart(instance.countVisibleRows(), 0);\n
+        event.preventDefault(); //don\'t page down the window\n
+        stopPropagation(event);\n
+        break;\n
+    }\n
+  }\n
+\n
+  function init() {\n
+    instance.addHook(\'afterDocumentKeyDown\', onKeyDown);\n
+\n
+    eventManager.addEventListener(document.documentElement, \'keydown\', function(event) {\n
+      instance.runHooks(\'afterDocumentKeyDown\', event);\n
+    });\n
+\n
+    function onDblClick(event, coords, elem) {\n
+      // may be TD or TH\n
+      if (elem.nodeName == "TD") {\n
+        _this.openEditor();\n
+\n
+        if (activeEditor) {\n
+          activeEditor.enableFullEditMode();\n
+        }\n
+      }\n
+    }\n
+    instance.view.wt.update(\'onCellDblClick\', onDblClick);\n
+\n
+    instance.addHook(\'afterDestroy\', function() {\n
+      destroyed = true;\n
+    });\n
+  }\n
+\n
+  /**\n
+   * Destroy current editor, if exists.\n
+   *\n
+   * @function destroyEditor\n
+   * @memberof! Handsontable.EditorManager#\n
+   * @param {Boolean} revertOriginal\n
+   */\n
+  this.destroyEditor = function(revertOriginal) {\n
+    this.closeEditor(revertOriginal);\n
+  };\n
+\n
+  /**\n
+   * Get active editor.\n
+   *\n
+   * @function getActiveEditor\n
+   * @memberof! Handsontable.EditorManager#\n
+   * @returns {*}\n
+   */\n
+  this.getActiveEditor = function() {\n
+    return activeEditor;\n
+  };\n
+\n
+  /**\n
+   * Prepare text input to be displayed at given grid cell.\n
+   *\n
+   * @function prepareEditor\n
+   * @memberof! Handsontable.EditorManager#\n
+   */\n
+  this.prepareEditor = function() {\n
+    var row, col, prop, td, originalValue, cellProperties, editorClass;\n
+\n
+    if (activeEditor && activeEditor.isWaiting()) {\n
+      this.closeEditor(false, false, function(dataSaved) {\n
+        if (dataSaved) {\n
+          _this.prepareEditor();\n
+        }\n
+      });\n
+\n
+      return;\n
+    }\n
+    row = priv.selRange.highlight.row;\n
+    col = priv.selRange.highlight.col;\n
+    prop = instance.colToProp(col);\n
+    td = instance.getCell(row, col);\n
+    originalValue = instance.getDataAtCell(row, col);\n
+    cellProperties = instance.getCellMeta(row, col);\n
+    editorClass = instance.getCellEditor(cellProperties);\n
+\n
+    if (editorClass) {\n
+      activeEditor = Handsontable.editors.getEditor(editorClass, instance);\n
+      activeEditor.prepare(row, col, prop, td, originalValue, cellProperties);\n
+\n
+    } else {\n
+      activeEditor = void 0;\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Check is editor is opened/showed.\n
+   *\n
+   * @function isEditorOpened\n
+   * @memberof! Handsontable.EditorManager#\n
+   * @returns {Boolean}\n
+   */\n
+  this.isEditorOpened = function() {\n
+    return activeEditor && activeEditor.isOpened();\n
+  };\n
+\n
+  /**\n
+   * Open editor with initial value.\n
+   *\n
+   * @function openEditor\n
+   * @memberof! Handsontable.EditorManager#\n
+   * @param {String} initialValue\n
+   * @param {DOMEvent} event\n
+   */\n
+  this.openEditor = function (initialValue, event) {\n
+    if (activeEditor && !activeEditor.cellProperties.readOnly) {\n
+      activeEditor.beginEditing(initialValue, event);\n
+    } else if (activeEditor && activeEditor.cellProperties.readOnly) {\n
+\n
+      // move the selection after opening the editor with ENTER key\n
+      if (event && event.keyCode === KEY_CODES.ENTER) {\n
+        moveSelectionAfterEnter();\n
+      }\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Close editor, finish editing cell.\n
+   *\n
+   * @function closeEditor\n
+   * @memberof! Handsontable.EditorManager#\n
+   * @param {Boolean} restoreOriginalValue\n
+   * @param {Boolean} [ctrlDown]\n
+   * @param {Function} [callback]\n
+   */\n
+  this.closeEditor = function(restoreOriginalValue, ctrlDown, callback) {\n
+    if (!activeEditor) {\n
+      if (callback) {\n
+        callback(false);\n
+      }\n
+    } else {\n
+      activeEditor.finishEditing(restoreOriginalValue, ctrlDown, callback);\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Close editor and save changes.\n
+   *\n
+   * @function closeEditorAndSaveChanges\n
+   * @memberof! Handsontable.EditorManager#\n
+   * @param {Boolean} ctrlDown\n
+   */\n
+  this.closeEditorAndSaveChanges = function(ctrlDown) {\n
+    return this.closeEditor(false, ctrlDown);\n
+  };\n
+\n
+  /**\n
+   * Close editor and restore original value.\n
+   *\n
+   * @function closeEditorAndRestoreOriginalValue\n
+   * @memberof! Handsontable.EditorManager#\n
+   * @param {Boolean} ctrlDown\n
+   */\n
+  this.closeEditorAndRestoreOriginalValue = function(ctrlDown) {\n
+    return this.closeEditor(true, ctrlDown);\n
+  };\n
+\n
+  init();\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11177</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>editorManager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

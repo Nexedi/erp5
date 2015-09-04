@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272709.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>contextMenu.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*!\n
+ * Handsontable ContextMenu\n
+ */\n
+\n
+.htContextMenu {\n
+  display: none;\n
+  position: absolute;\n
+  z-index: 1060; /* needs to be higher than 1050 - z-index for Twitter Bootstrap modal (#1569) */\n
+}\n
+\n
+.htContextMenu .ht_clone_top,\n
+.htContextMenu .ht_clone_left,\n
+.htContextMenu .ht_clone_corner,\n
+.htContextMenu .ht_clone_debug {\n
+  display: none;\n
+}\n
+\n
+.htContextMenu table.htCore {\n
+  border: 1px solid #bbb;\n
+  border-bottom-width: 2px;\n
+  border-right-width: 2px;\n
+}\n
+\n
+.htContextMenu .wtBorder {\n
+  visibility: hidden;\n
+}\n
+\n
+.htContextMenu table tbody tr td {\n
+  background: white;\n
+  border-width: 0;\n
+  padding: 4px 6px 0 6px;\n
+  cursor: pointer;\n
+  overflow: hidden;\n
+  white-space: nowrap;\n
+  text-overflow: ellipsis;\n
+}\n
+\n
+.htContextMenu table tbody tr td:first-child {\n
+  border: 0;\n
+}\n
+\n
+.htContextMenu table tbody tr td.htDimmed {\n
+  font-style: normal;\n
+  color: #323232;\n
+}\n
+\n
+.htContextMenu table tbody tr td.current,\n
+.htContextMenu table tbody tr td.zeroclipboard-is-hover {\n
+  background: #e9e9e9;\n
+}\n
+\n
+.htContextMenu table tbody tr td.htSeparator {\n
+  border-top: 1px solid #bbb;\n
+  height: 0;\n
+  padding: 0;\n
+}\n
+\n
+.htContextMenu table tbody tr td.htDisabled {\n
+  color: #999;\n
+}\n
+\n
+.htContextMenu table tbody tr td.htDisabled:hover {\n
+  background: #fff;\n
+  color: #999;\n
+  cursor: default;\n
+}\n
+\n
+.htContextMenu table tbody tr td div {\n
+  padding-left: 10px;\n
+}\n
+\n
+.htContextMenu table tbody tr td div span.selected {\n
+  margin-top: -2px;\n
+  position: absolute;\n
+  left: 4px;\n
+}\n
+\n
+.htContextMenu .ht_master .wtHolder {\n
+  overflow: hidden;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1491</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>contextMenu.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

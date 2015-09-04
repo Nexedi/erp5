@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272669.16</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>copyPaste.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import copyPaste from \'copyPaste\';\n
+import SheetClip from \'SheetClip\';\n
+import {KEY_CODES, isCtrlKey} from \'./../../helpers/unicode\';\n
+import {stopImmediatePropagation} from \'./../../helpers/dom/event\';\n
+import {proxy} from \'./../../helpers/function\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+import {WalkontableCellCoords} from \'./../../3rdparty/walkontable/src/cell/coords\';\n
+import {WalkontableCellRange} from \'./../../3rdparty/walkontable/src/cell/range\';\n
+\n
+\n
+/**\n
+ * @class CopyPaste\n
+ * @plugin CopyPaste\n
+ * @dependencies copyPaste SheetClip\n
+ */\n
+function CopyPastePlugin(instance) {\n
+  var _this = this;\n
+\n
+  this.copyPasteInstance = copyPaste();\n
+  this.copyPasteInstance.onCut(onCut);\n
+  this.copyPasteInstance.onPaste(onPaste);\n
+\n
+  instance.addHook(\'beforeKeyDown\', onBeforeKeyDown);\n
+\n
+  function onCut() {\n
+    if (!instance.isListening()) {\n
+      return;\n
+    }\n
+    instance.selection.empty();\n
+  }\n
+\n
+  function onPaste(str) {\n
+    var\n
+      input,\n
+      inputArray,\n
+      selected,\n
+      coordsFrom,\n
+      coordsTo,\n
+      cellRange,\n
+      topLeftCorner,\n
+      bottomRightCorner,\n
+      areaStart,\n
+      areaEnd;\n
+\n
+    if (!instance.isListening() || !instance.selection.isSelected()) {\n
+      return;\n
+    }\n
+    input = str;\n
+    inputArray = SheetClip.parse(input);\n
+    selected = instance.getSelected();\n
+    coordsFrom = new WalkontableCellCoords(selected[0], selected[1]);\n
+    coordsTo = new WalkontableCellCoords(selected[2], selected[3]);\n
+    cellRange = new WalkontableCellRange(coordsFrom, coordsFrom, coordsTo);\n
+    topLeftCorner = cellRange.getTopLeftCorner();\n
+    bottomRightCorner = cellRange.getBottomRightCorner();\n
+    areaStart = topLeftCorner;\n
+    areaEnd = new WalkontableCellCoords(\n
+      Math.max(bottomRightCorner.row, inputArray.length - 1 + topLeftCorner.row),\n
+      Math.max(bottomRightCorner.col, inputArray[0].length - 1 + topLeftCorner.col));\n
+\n
+    instance.addHookOnce(\'afterChange\', function(changes, source) {\n
+      if (changes && changes.length) {\n
+        this.selectCell(areaStart.row, areaStart.col, areaEnd.row, areaEnd.col);\n
+      }\n
+    });\n
+\n
+    instance.populateFromArray(areaStart.row, areaStart.col, inputArray, areaEnd.row, areaEnd.col, \'paste\', instance.getSettings().pasteMode);\n
+  }\n
+\n
+  function onBeforeKeyDown(event) {\n
+    if (!instance.getSelected()) {\n
+      return;\n
+    }\n
+    if (instance.getActiveEditor() && instance.getActiveEditor().isOpened()) {\n
+      return;\n
+    }\n
+    if (isCtrlKey(event.keyCode)) {\n
+      // when CTRL is pressed, prepare selectable text in textarea\n
+      _this.setCopyableText();\n
+      stopImmediatePropagation(event);\n
+\n
+      return;\n
+    }\n
+    // catch CTRL but not right ALT (which in some systems triggers ALT+CTRL)\n
+    let ctrlDown = (event.ctrlKey || event.metaKey) && !event.altKey;\n
+\n
+    if (event.keyCode == KEY_CODES.A && ctrlDown) {\n
+      instance._registerTimeout(setTimeout(proxy(_this.setCopyableText, _this), 0));\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Destroy plugin instance.\n
+   *\n
+   * @function destroy\n
+   * @memberof CopyPaste#\n
+   */\n
+  this.destroy = function() {\n
+    if (this.copyPasteInstance) {\n
+      this.copyPasteInstance.removeCallback(onCut);\n
+      this.copyPasteInstance.removeCallback(onPaste);\n
+      this.copyPasteInstance.destroy();\n
+      this.copyPasteInstance = null;\n
+    }\n
+    instance.removeHook(\'beforeKeyDown\', onBeforeKeyDown);\n
+  };\n
+\n
+  instance.addHook(\'afterDestroy\', proxy(this.destroy, this));\n
+\n
+  /**\n
+   * @function triggerPaste\n
+   * @memberof CopyPaste#\n
+   */\n
+  this.triggerPaste = proxy(this.copyPasteInstance.triggerPaste, this.copyPasteInstance);\n
+\n
+  /**\n
+   * @function triggerCut\n
+   * @memberof CopyPaste#\n
+   */\n
+  this.triggerCut = proxy(this.copyPasteInstance.triggerCut, this.copyPasteInstance);\n
+\n
+  /**\n
+   * Prepares copyable text in the invisible textarea.\n
+   *\n
+   * @function setCopyable\n
+   * @memberof CopyPaste#\n
+   */\n
+  this.setCopyableText = function() {\n
+    var settings = instance.getSettings();\n
+    var copyRowsLimit = settings.copyRowsLimit;\n
+    var copyColsLimit = settings.copyColsLimit;\n
+\n
+    var selRange = instance.getSelectedRange();\n
+    var topLeft = selRange.getTopLeftCorner();\n
+    var bottomRight = selRange.getBottomRightCorner();\n
+    var startRow = topLeft.row;\n
+    var startCol = topLeft.col;\n
+    var endRow = bottomRight.row;\n
+    var endCol = bottomRight.col;\n
+    var finalEndRow = Math.min(endRow, startRow + copyRowsLimit - 1);\n
+    var finalEndCol = Math.min(endCol, startCol + copyColsLimit - 1);\n
+\n
+    instance.copyPaste.copyPasteInstance.copyable(instance.getCopyableData(startRow, startCol, finalEndRow, finalEndCol));\n
+\n
+    if (endRow !== finalEndRow || endCol !== finalEndCol) {\n
+      Handsontable.hooks.run(instance, "afterCopyLimit", endRow - startRow + 1, endCol - startCol + 1, copyRowsLimit, copyColsLimit);\n
+    }\n
+  };\n
+}\n
+\n
+/**\n
+ * Init plugin\n
+ *\n
+ * @function init\n
+ * @memberof CopyPaste#\n
+ */\n
+function init() {\n
+  var instance = this,\n
+    pluginEnabled = instance.getSettings().copyPaste !== false;\n
+\n
+  if (pluginEnabled && !instance.copyPaste) {\n
+    /**\n
+     * Instance of CopyPaste Plugin {@link Handsontable.CopyPaste}\n
+     *\n
+     * @alias copyPaste\n
+     * @memberof! Handsontable.Core#\n
+     * @type {CopyPaste}\n
+     */\n
+    instance.copyPaste = new CopyPastePlugin(instance);\n
+\n
+  } else if (!pluginEnabled && instance.copyPaste) {\n
+    instance.copyPaste.destroy();\n
+    instance.copyPaste = null;\n
+  }\n
+}\n
+\n
+Handsontable.hooks.add(\'afterInit\', init);\n
+Handsontable.hooks.add(\'afterUpdateSettings\', init);\n
+\n
+Handsontable.hooks.register(\'afterCopyLimit\');\n
+\n
+export {CopyPastePlugin};\n
+\n
+//registerPlugin(\'CopyPaste\', CopyPastePlugin);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5538</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>copyPaste.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

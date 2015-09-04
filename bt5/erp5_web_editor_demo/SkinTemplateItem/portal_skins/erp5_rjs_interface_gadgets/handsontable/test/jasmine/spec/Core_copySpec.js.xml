@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272505.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_copySpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_copy\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfArrays = function () {\n
+    return [\n
+      ["", "Kia", "Nissan", "Toyota", "Honda"],\n
+      ["2008", 10, 11, 12, 13],\n
+      ["2009", 20, 11, 14, 13],\n
+      ["2010", 30, 15, 12, 13]\n
+    ];\n
+  };\n
+\n
+  it(\'should set copyable text until copyRowsLimit is reached\', function () {\n
+    handsontable({\n
+      data: arrayOfArrays(),\n
+      copyRowsLimit: 2\n
+    });\n
+\n
+    selectCell(0, 0, countRows() - 1, countCols() - 1); //selectAll\n
+    keyDownUp(\'ctrl\');\n
+\n
+    // should prepare 2 rows for copying\n
+    expect($(\'textarea.copyPaste\').val()).toEqual(\'\\tKia\\tNissan\\tToyota\\tHonda\\n2008\\t10\\t11\\t12\\t13\\n\');\n
+  });\n
+\n
+  it(\'should set copyable text until copyColsLimit is reached\', function () {\n
+    handsontable({\n
+      data: arrayOfArrays(),\n
+      copyColsLimit: 2\n
+    });\n
+\n
+    selectCell(0, 0, countRows() - 1, countCols() - 1); //selectAll\n
+    keyDownUp(\'ctrl\');\n
+\n
+    //should prepare 2 columns for copying\n
+    expect($(\'textarea.copyPaste\').val()).toEqual(\'\\tKia\\n2008\\t10\\n2009\\t20\\n2010\\t30\\n\');\n
+  });\n
+\n
+  it(\'should call onCopyLimit callback when copy limit was reached\', function () {\n
+    var result;\n
+\n
+    handsontable({\n
+      data: arrayOfArrays(),\n
+      copyRowsLimit: 2,\n
+      copyColsLimit: 2,\n
+      afterCopyLimit: function (selectedRowsCount, selectedColsCount, copyRowsLimit, copyColsLimit) {\n
+        result = [selectedRowsCount, selectedColsCount, copyRowsLimit, copyColsLimit];\n
+      }\n
+    });\n
+\n
+    selectCell(0, 0, countRows() - 1, countCols() - 1); //selectAll\n
+    keyDownUp(\'ctrl\');\n
+    expect(result).toEqual([4, 5, 2, 2]);\n
+  });\n
+\n
+  it(\'ctrl+x should cut selected data\', function () {\n
+    var hot = handsontable({\n
+      data: arrayOfArrays()\n
+    });\n
+\n
+    selectCell(0, 0, countRows() - 1, countCols() - 1); //selectAll\n
+    keyDownUp(\'ctrl+x\');\n
+    waits(200);\n
+\n
+    runs(function() {\n
+      expect(hot.getDataAtCell(0, 0)).toEqual(\'\');\n
+      expect(hot.getDataAtCell(1, 1)).toEqual(\'\');\n
+      expect(hot.getDataAtCell(2, 2)).toEqual(\'\');\n
+    });\n
+  });\n
+\n
+  it(\'ctrl+v should paste copied data to selected range\', function () {\n
+    var hot = handsontable({\n
+      data: arrayOfArrays()\n
+    });\n
+    $(\'textarea.copyPaste\').val(\'\\tKia\\tNissan\\tToyota\\tHonda\\n2008\\t10\\t11\\t12\\t13\\n\');\n
+\n
+    selectCell(0, 0, countRows() - 1, countCols() - 1); //selectAll\n
+    keyDownUp(\'ctrl+v\');\n
+    waits(200);\n
+\n
+    runs(function() {\n
+      expect(hot.getDataAtCell(0, 0)).toEqual(\'\');\n
+      expect(hot.getDataAtCell(0, 1)).toEqual(\'Kia\');\n
+      expect(hot.getDataAtCell(0, 2)).toEqual(\'Nissan\');\n
+      expect(hot.getDataAtCell(0, 3)).toEqual(\'Toyota\');\n
+      expect(hot.getDataAtCell(1, 0)).toEqual(\'2008\');\n
+      expect(hot.getDataAtCell(1, 1)).toEqual(\'10\');\n
+      expect(hot.getDataAtCell(1, 2)).toEqual(\'11\');\n
+      expect(hot.getDataAtCell(1, 3)).toEqual(\'12\');\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3061</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_copySpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

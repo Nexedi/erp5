@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272532.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_keepEmptyRowsSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_keepEmptyRows\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfNestedObjects = function () {\n
+    return [\n
+      {id: 1, name: {\n
+        first: "Ted",\n
+        last: "Right"\n
+      }, address: "Street Name", zip: "80410", city: "City Name"},\n
+      {id: 2, name: {\n
+        first: "Frank",\n
+        last: "Honest"\n
+      }, address: "Street Name", zip: "80410", city: "City Name"},\n
+      {id: 3, name: {\n
+        first: "Joan",\n
+        last: "Well"\n
+      }, address: "Street Name", zip: "80410", city: "City Name"}\n
+    ]\n
+  };\n
+\n
+  it(\'should remove columns if needed\', function () {\n
+    handsontable({\n
+      data: arrayOfNestedObjects(),\n
+      columns: [\n
+        {data: "id"},\n
+        {data: "name.first"}\n
+      ]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:first td\').length).toEqual(2);\n
+  });\n
+\n
+  it(\'should create columns if needed\', function () {\n
+    handsontable({\n
+      data: arrayOfNestedObjects(),\n
+      columns: [\n
+        {data: "id"},\n
+        {data: "name.first"},\n
+        {data: "name.last"},\n
+        {data: "address"},\n
+        {data: "zip"},\n
+        {data: "city"}\n
+      ]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:first td\').length).toEqual(6);\n
+  });\n
+\n
+  it(\'should create spare cols and rows on init (array data source)\', function () {\n
+    handsontable({\n
+      data: [\n
+        ["one", "two"],\n
+        ["three", "four"]\n
+      ],\n
+      minCols: 4,\n
+      minRows: 4,\n
+      minSpareRows: 4,\n
+      minSpareCols: 4\n
+    });\n
+\n
+    expect(countCells()).toEqual(36);\n
+  });\n
+\n
+  it(\'should create spare cols and rows on init (object data source)\', function () {\n
+    handsontable({\n
+      data: arrayOfNestedObjects(),\n
+      minRows: 4,\n
+      minSpareRows: 1\n
+    });\n
+\n
+    expect(countRows()).toEqual(4);\n
+    expect(countCols()).toEqual(6); //because arrayOfNestedObjects has 6 nested properites and they should be figured out if dataSchema/columns is not given\n
+    expect(this.$container.find(\'tbody tr:first td:last\').text()).toEqual(\'City Name\');\n
+  });\n
+\n
+  it(\'should create new row when last cell in last row is edited\', function () {\n
+    var data = [\n
+      ["one", "two"],\n
+      ["three", "four"]\n
+    ];\n
+\n
+    handsontable({\n
+      data: data,\n
+      minRows: 4,\n
+      minCols: 4,\n
+      minSpareRows: 1\n
+    });\n
+    setDataAtCell(3, 3, "test");\n
+\n
+    expect(data.length).toEqual(5);\n
+  });\n
+\n
+  it(\'should create new col when last cell in last row is edited\', function () {\n
+    var data = [\n
+      ["one", "two"],\n
+      ["three", "four"]\n
+    ];\n
+\n
+    handsontable({\n
+      data: data,\n
+      minRows: 4,\n
+      minCols: 4,\n
+      minSpareCols: 1\n
+    });\n
+    setDataAtCell(3, 3, "test");\n
+\n
+    expect(countCols()).toEqual(5);\n
+  });\n
+\n
+  it(\'should create new row when last cell in last row is edited by autocomplete\', function () {\n
+    var data = [\n
+          {id: 1, color: "orange" }\n
+        ];\n
+\n
+    var syncSources = jasmine.createSpy(\'syncSources\');\n
+\n
+    syncSources.plan = function (query, process) {\n
+      process([\'red\', \'dark-yellow\', \'yellow\', \'light-yellow\', \'black\']);\n
+    };\n
+\n
+    handsontable({\n
+      data: data,\n
+      startRows: 5,\n
+      colHeaders: true,\n
+      minSpareRows: 1,\n
+      columns: [\n
+        {data: "id", type: \'text\'},\n
+        {\n
+          data: "color",\n
+          editor: \'autocomplete\',\n
+          source: syncSources\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(1, 1);\n
+\n
+    keyDownUp(\'enter\');\n
+\n
+    waitsFor(function () {\n
+      return syncSources.calls.length > 0;\n
+    }, \'Source function call\', 1000);\n
+\n
+    runs(function () {\n
+      keyDown(\'arrow_down\');\n
+      keyDownUp(\'enter\');\n
+\n
+      expect(data.length).toEqual(3);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should not create more rows that maxRows\', function () {\n
+    handsontable({\n
+      startRows: 4,\n
+      maxRows: 6,\n
+      minSpareRows: 1\n
+    });\n
+    setDataAtCell(3, 0, "test");\n
+    setDataAtCell(4, 0, "test");\n
+    setDataAtCell(5, 0, "test");\n
+\n
+    expect(countRows()).toEqual(6);\n
+  });\n
+\n
+  it(\'should not create more cols that maxCols\', function () {\n
+    handsontable({\n
+      startCols: 4,\n
+      maxCols: 6,\n
+      minSpareCols: 1\n
+    });\n
+    setDataAtCell(0, 3, "test");\n
+    setDataAtCell(0, 4, "test");\n
+    setDataAtCell(0, 5, "test");\n
+\n
+    expect(countCols()).toEqual(6);\n
+  });\n
+\n
+  it(\'should ignore minCols if columns is set\', function () {\n
+    handsontable({\n
+      startCols: 1,\n
+      minCols: 6,\n
+      columns: [\n
+        {},\n
+        {}\n
+      ]\n
+    });\n
+\n
+    expect(countCols()).toEqual(2);\n
+  });\n
+\n
+  it(\'columns should have priority over startCols\', function () {\n
+    handsontable({\n
+      startCols: 3,\n
+      minCols: 6,\n
+      columns: [\n
+        {},\n
+        {}\n
+      ]\n
+    });\n
+\n
+    expect(countCols()).toEqual(2);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4824</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_keepEmptyRowsSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

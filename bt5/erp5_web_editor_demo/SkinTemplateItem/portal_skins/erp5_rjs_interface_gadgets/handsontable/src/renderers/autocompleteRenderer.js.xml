@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272740.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>autocompleteRenderer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {addClass, hasClass} from \'./../helpers/dom/element\';\n
+import {eventManager as eventManagerObject} from \'./../eventManager\';\n
+import {getRenderer, registerRenderer} from \'./../renderers\';\n
+import {WalkontableCellCoords} from \'./../3rdparty/walkontable/src/cell/coords\';\n
+\n
+var clonableWRAPPER = document.createElement(\'DIV\');\n
+clonableWRAPPER.className = \'htAutocompleteWrapper\';\n
+\n
+var clonableARROW = document.createElement(\'DIV\');\n
+clonableARROW.className = \'htAutocompleteArrow\';\n
+// workaround for https://github.com/handsontable/handsontable/issues/1946\n
+// this is faster than innerHTML. See: https://github.com/handsontable/handsontable/wiki/JavaScript-&-DOM-performance-tips\n
+clonableARROW.appendChild(document.createTextNode(String.fromCharCode(9660)));\n
+\n
+var wrapTdContentWithWrapper = function(TD, WRAPPER){\n
+  WRAPPER.innerHTML = TD.innerHTML;\n
+  dom.empty(TD);\n
+  TD.appendChild(WRAPPER);\n
+};\n
+\n
+/**\n
+ * Autocomplete renderer\n
+ *\n
+ * @private\n
+ * @renderer AutocompleteRenderer\n
+ * @param {Object} instance Handsontable instance\n
+ * @param {Element} TD Table cell where to render\n
+ * @param {Number} row\n
+ * @param {Number} col\n
+ * @param {String|Number} prop Row object property name\n
+ * @param value Value to render (remember to escape unsafe HTML before inserting to DOM!)\n
+ * @param {Object} cellProperties Cell properites (shared by cell renderer and editor)\n
+ */\n
+function autocompleteRenderer(instance, TD, row, col, prop, value, cellProperties) {\n
+\n
+  var WRAPPER = clonableWRAPPER.cloneNode(true); //this is faster than createElement\n
+  var ARROW = clonableARROW.cloneNode(true); //this is faster than createElement\n
+\n
+  getRenderer(\'text\')(instance, TD, row, col, prop, value, cellProperties);\n
+\n
+  TD.appendChild(ARROW);\n
+  addClass(TD, \'htAutocomplete\');\n
+\n
+\n
+  if (!TD.firstChild) { //http://jsperf.com/empty-node-if-needed\n
+    //otherwise empty fields appear borderless in demo/renderers.html (IE)\n
+    TD.appendChild(document.createTextNode(String.fromCharCode(160))); // workaround for https://github.com/handsontable/handsontable/issues/1946\n
+    //this is faster than innerHTML. See: https://github.com/handsontable/handsontable/wiki/JavaScript-&-DOM-performance-tips\n
+  }\n
+\n
+\n
+\n
+  if (!instance.acArrowListener) {\n
+    var eventManager = eventManagerObject(instance);\n
+\n
+    //not very elegant but easy and fast\n
+    instance.acArrowListener = function (event) {\n
+      if (hasClass(event.target, \'htAutocompleteArrow\')) {\n
+        instance.view.wt.getSetting(\'onCellDblClick\', null, new WalkontableCellCoords(row, col), TD);\n
+      }\n
+    };\n
+\n
+    eventManager.addEventListener(instance.rootElement, \'mousedown\', instance.acArrowListener);\n
+\n
+    //We need to unbind the listener after the table has been destroyed\n
+    instance.addHookOnce(\'afterDestroy\', function () {\n
+      eventManager.destroy();\n
+    });\n
+  }\n
+}\n
+\n
+export {autocompleteRenderer};\n
+\n
+registerRenderer(\'autocomplete\', autocompleteRenderer);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2884</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>autocompleteRenderer.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

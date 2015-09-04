@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272506.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ColHeaderSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'ColHeader\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should not show col headers by default\', function () {\n
+    var that = this;\n
+    handsontable();\n
+\n
+    expect(that.$container.find(\'thead th\').length).toEqual(0);\n
+  });\n
+\n
+  it(\'should show col headers if true\', function () {\n
+    var that = this;\n
+    handsontable({\n
+      colHeaders: true\n
+    });\n
+\n
+    expect(that.$container.find(\'thead th\').length).toBeGreaterThan(0);\n
+  });\n
+\n
+  it(\'should show col headers numbered 1-10 by default\', function () {\n
+    var that = this;\n
+    var startCols = 5;\n
+    handsontable({\n
+      startCols: startCols,\n
+      colHeaders: true\n
+    });\n
+\n
+    var ths = getHtCore().find(\'thead th\');\n
+    expect(ths.length).toEqual(startCols);\n
+    expect($.trim(ths.eq(0).text())).toEqual(\'A\');\n
+    expect($.trim(ths.eq(1).text())).toEqual(\'B\');\n
+    expect($.trim(ths.eq(2).text())).toEqual(\'C\');\n
+    expect($.trim(ths.eq(3).text())).toEqual(\'D\');\n
+    expect($.trim(ths.eq(4).text())).toEqual(\'E\');\n
+  });\n
+\n
+  it(\'should show col headers with custom label\', function () {\n
+    var that = this;\n
+    var startCols = 5;\n
+    handsontable({\n
+      startCols: startCols,\n
+      colHeaders: [\'First\', \'Second\', \'Third\']\n
+    });\n
+\n
+    var ths = getHtCore().find(\'thead th\');\n
+    expect(ths.length).toEqual(startCols);\n
+    expect($.trim(ths.eq(0).text())).toEqual(\'First\');\n
+    expect($.trim(ths.eq(1).text())).toEqual(\'Second\');\n
+    expect($.trim(ths.eq(2).text())).toEqual(\'Third\');\n
+    expect($.trim(ths.eq(3).text())).toEqual(\'D\');\n
+    expect($.trim(ths.eq(4).text())).toEqual(\'E\');\n
+  });\n
+\n
+  it(\'should not show col headers if false\', function () {\n
+    var that = this;\n
+    handsontable({\n
+      colHeaders: false\n
+    });\n
+\n
+    expect(that.$container.find(\'th.htColHeader\').length).toEqual(0);\n
+  });\n
+\n
+  it(\'should hide columns headers after updateSettings\', function(){\n
+     var hot  = handsontable({\n
+       startCols: 5,\n
+       colHeaders: true\n
+     });\n
+\n
+    expect(getHtCore().find(\'thead th\').length).toEqual(5);\n
+\n
+    hot.updateSettings({\n
+      colHeaders: false\n
+    });\n
+\n
+    expect(this.$container.find(\'thead th\').length).toEqual(0);\n
+  });\n
+\n
+  it(\'should show/hide columns headers after updateSettings\', function(){\n
+    var hot  = handsontable({\n
+      startCols: 5,\n
+      colHeaders: true\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'thead th\').length).toEqual(5);\n
+\n
+    hot.updateSettings({\n
+      colHeaders: false\n
+    });\n
+\n
+    expect(htCore.find(\'thead th\').length).toEqual(0);\n
+\n
+    hot.updateSettings({\n
+      colHeaders: true\n
+    });\n
+\n
+    expect(htCore.find(\'thead th\').length).toEqual(5);\n
+\n
+    hot.updateSettings({\n
+      colHeaders: false\n
+    });\n
+\n
+    expect(htCore.find(\'thead th\').length).toEqual(0);\n
+  });\n
+\n
+  it(\'should show columns headers after updateSettings\', function(){\n
+    var hot  = handsontable({\n
+      startCols: 5,\n
+      colHeaders: false\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'thead th\').length).toEqual(0);\n
+\n
+    hot.updateSettings({\n
+      colHeaders: true\n
+    });\n
+\n
+    expect(htCore.find(\'thead th\').length).toEqual(5);\n
+  });\n
+\n
+  it(\'should show new columns headers after updateSettings\', function(){\n
+    var hot  = handsontable({\n
+      startCols: 3,\n
+      colHeaders: [\'A\', \'B\', \'C\']\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+    expect(htCore.find(\'thead th:eq(0)\').text()).toEqual(\'A\');\n
+    expect(htCore.find(\'thead th:eq(1)\').text()).toEqual(\'B\');\n
+    expect(htCore.find(\'thead th:eq(2)\').text()).toEqual(\'C\');\n
+\n
+    hot.updateSettings({\n
+      colHeaders: [\'X\', \'Y\', \'Z\']\n
+    });\n
+\n
+    expect(htCore.find(\'thead th:eq(0)\').text()).toEqual(\'X\');\n
+    expect(htCore.find(\'thead th:eq(1)\').text()).toEqual(\'Y\');\n
+    expect(htCore.find(\'thead th:eq(2)\').text()).toEqual(\'Z\');\n
+\n
+  });\n
+\n
+  it(\'should be possible to define colHeaders with a function\', function () {\n
+    var hot = handsontable({\n
+      startCols: 2,\n
+      colHeaders: function (col) {\n
+        switch (col) {\n
+          case 0:\n
+            return \'One\';\n
+\n
+          case 1:\n
+            return \'Two\';\n
+        }\n
+      }\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'thead th:eq(0)\').text()).toEqual(\'One\');\n
+    expect(htCore.find(\'thead th:eq(1)\').text()).toEqual(\'Two\');\n
+  });\n
+\n
+  it(\'should be possible to set HTML in colHeaders\', function () {\n
+    var hot = handsontable({\n
+      startCols: 2,\n
+      colHeaders: [\'One <input type="checkbox">\', \'Two <input type="checkbox">\']\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'thead th:eq(0) input[type=checkbox]\').length).toEqual(1);\n
+    expect(htCore.find(\'thead th:eq(1) input[type=checkbox]\').length).toEqual(1);\n
+  });\n
+\n
+  it(\'should be possible to set colHeaders when columns array is present\', function () {\n
+    var hot = handsontable({\n
+      startCols: 2,\n
+      colHeaders: [\'One\', \'Two\'],\n
+      columns: [\n
+        {type: \'text\'},\n
+        {type: \'text\'}\n
+      ]\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'thead th:eq(0)\').text()).toEqual(\'One\');\n
+    expect(htCore.find(\'thead th:eq(1)\').text()).toEqual(\'Two\');\n
+  });\n
+\n
+  it(\'should be possible to set colHeaders using columns title property\', function () {\n
+    var hot = handsontable({\n
+      startCols: 2,\n
+      colHeaders: [\'One\', \'Two\'],\n
+      columns: [\n
+        {type: \'text\', title: \'Special title\'},\n
+        {type: \'text\'}\n
+      ]\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'thead th:eq(0)\').text()).toEqual(\'Special title\');\n
+    expect(htCore.find(\'thead th:eq(1)\').text()).toEqual(\'Two\');\n
+  });\n
+\n
+  it("should resize all the column headers in the overlays, according to the other overlays\' height", function () {\n
+    var hot = handsontable({\n
+      startCols: 5,\n
+      colHeaders: [\'a\',\'a\',\'a\',\'a<BR>a\',\'a\'],\n
+      fixedColumnsLeft: 2\n
+    });\n
+\n
+    var topHeaderExample = $(".ht_clone_top").find(\'thead tr:first-child th:nth-child(1)\'),\n
+      masterHeaderExample = $(".ht_master").find(\'thead tr:first-child th:nth-child(3)\');\n
+\n
+    expect(topHeaderExample.height()).toEqual(masterHeaderExample.height());\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6204</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ColHeaderSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

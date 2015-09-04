@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272625.65</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>walkontable.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>.wtHolder {\n
+  position: relative;\n
+  font-family: Arial, Helvetica, sans-serif;\n
+  line-height: 1.3em;\n
+  font-size: 13px;\n
+}\n
+\n
+.wtHolder table,\n
+.wtHolder tbody,\n
+.wtHolder thead,\n
+.wtHolder td,\n
+.wtHolder th,\n
+.wtHolder div {\n
+  box-sizing: content-box;\n
+  -webkit-box-sizing: content-box;\n
+  -moz-box-sizing: content-box;\n
+}\n
+\n
+.wtHolder table {\n
+  border-collapse: separate;\n
+  /*it must be separate, otherwise there are offset miscalculations in WebKit: http://stackoverflow.com/questions/2655987/border-collapse-differences-in-ff-and-webkit*/\n
+  /*position: relative;*/\n
+  /*this actually only changes appearance of user selection - does not make text unselectable\n
+  -webkit-user-select: none;\n
+  -khtml-user-select: none;\n
+  -moz-user-select: none;\n
+  -o-user-select: none;\n
+  -ms-user-select: none;\n
+  /*user-select: none; /*no browser supports unprefixed version*/\n
+  border-spacing: 0;\n
+  margin: 0;\n
+  border-width: 0;\n
+  table-layout: fixed;\n
+  width: 0;\n
+  outline-width: 0;\n
+  /* reset bootstrap table style. for more info see: https://github.com/handsontable/handsontable/issues/224 */\n
+  max-width: none;\n
+  max-height: none;\n
+}\n
+\n
+.wtHolder col {\n
+  width: 50px;\n
+}\n
+\n
+.wtHolder col.rowHeader {\n
+  width: 50px;\n
+}\n
+\n
+.wtHolder th,\n
+.wtHolder td {\n
+  border-right: 1px solid #CCC;\n
+  border-bottom: 1px solid #CCC;\n
+  height: 22px;\n
+  empty-cells: show;\n
+  line-height: 21px;\n
+  padding: 0 4px 0 4px;\n
+  /* top, bottom padding different than 0 is handled poorly by FF with HTML5 doctype */\n
+  background-color: #FFF;\n
+  vertical-align: top;\n
+  overflow: hidden;\n
+  outline-width: 0;\n
+  white-space: pre-line;\n
+  /* preserve new line character in cell */\n
+}\n
+\n
+.wtHolder th:last-child {\n
+  /*Foundation framework fix*/\n
+  border-right: 1px solid #CCC;\n
+  border-bottom: 1px solid #CCC;\n
+}\n
+\n
+.wtHolder tr:first-child th.htNoFrame,\n
+.wtHolder th:first-child.htNoFrame,\n
+.wtHolder th.htNoFrame {\n
+  border-left-width: 0;\n
+  background-color: white;\n
+  border-color: #FFF;\n
+}\n
+\n
+.wtHolder th:first-child,\n
+.wtHolder td:first-child,\n
+.wtHolder .htNoFrame + th,\n
+.wtHolder .htNoFrame + td {\n
+  border-left: 1px solid #CCC;\n
+}\n
+\n
+.wtHolder tr:first-child th,\n
+.wtHolder tr:first-child td {\n
+  border-top: 1px solid #CCC;\n
+}\n
+\n
+.wtHolder thead tr:last-child th {\n
+  border-bottom-width: 0;\n
+}\n
+\n
+.wtHolder thead tr.lastChild th {\n
+  border-bottom-width: 0;\n
+}\n
+\n
+.wtHolder th {\n
+  background-color: #EEE;\n
+  color: #222;\n
+  text-align: center;\n
+  font-weight: normal;\n
+  white-space: nowrap;\n
+}\n
+\n
+.wtHolder th .small {\n
+  font-size: 12px;\n
+}\n
+\n
+.wtHolder thead th {\n
+  padding: 0;\n
+}\n
+\n
+.wtHolder th.active {\n
+  background-color: #CCC;\n
+}\n
+\n
+.wtHolder thead th .relative {\n
+  position: relative;\n
+  padding: 2px 4px;\n
+}\n
+\n
+/* border line */\n
+.wtHolder .wtBorder {\n
+  position: absolute;\n
+  font-size: 0;\n
+}\n
+\n
+.wtHolder td.area {\n
+  background-color: #EEF4FF;\n
+}\n
+\n
+/* fill handle */\n
+.wtHolder .wtBorder.corner {\n
+  font-size: 0;\n
+  cursor: crosshair;\n
+}\n
+\n
+.wtHolder .htBorder.htFillBorder {\n
+  background: red;\n
+  width: 1px;\n
+  height: 1px;\n
+}\n
+\n
+.ht_master .wtHolder {\n
+  overflow: auto;\n
+}\n
+\n
+.ht_clone_left .wtHolder {\n
+  overflow-x: hidden;\n
+  overflow-y: auto;\n
+}\n
+\n
+.ht_clone_top .wtHolder {\n
+  overflow-x: auto;\n
+  overflow-y: hidden;\n
+}\n
+\n
+/* used for testing */\n
+.testOverflowHidden {\n
+  overflow: hidden;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3171</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>walkontable.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

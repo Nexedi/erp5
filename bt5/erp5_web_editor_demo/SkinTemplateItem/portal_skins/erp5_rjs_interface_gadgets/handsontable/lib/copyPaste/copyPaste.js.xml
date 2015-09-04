@@ -1,0 +1,359 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272901.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>copyPaste.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * Creates a textarea that stays hidden on the page and gets focused when user presses CTRL while not having a form\n
+ * input focused.\n
+ * In future we may implement a better driver when better APIs are available.\n
+ *\n
+ * @constructor\n
+ * @private\n
+ */\n
+\n
+var instance;\n
+\n
+function copyPaste() {\n
+  if (!instance) {\n
+    instance = new CopyPasteClass();\n
+\n
+  } else if (instance.hasBeenDestroyed()){\n
+    instance.init();\n
+  }\n
+  instance.refCounter++;\n
+\n
+  return instance;\n
+}\n
+\n
+if (typeof exports !== \'undefined\') {\n
+  module.exports = copyPaste;\n
+}\n
+\n
+function CopyPasteClass() {\n
+  this.refCounter = 0;\n
+  this.init();\n
+}\n
+\n
+CopyPasteClass.prototype.init = function () {\n
+  var\n
+    style,\n
+    parent;\n
+\n
+  this.copyCallbacks = [];\n
+  this.cutCallbacks = [];\n
+  this.pasteCallbacks = [];\n
+\n
+  // this.listenerElement = document.documentElement;\n
+  parent = document.body;\n
+\n
+  if (document.getElementById(\'CopyPasteDiv\')) {\n
+    this.elDiv = document.getElementById(\'CopyPasteDiv\');\n
+    this.elTextarea = this.elDiv.firstChild;\n
+\n
+  } else {\n
+    this.elDiv = document.createElement(\'div\');\n
+    this.elDiv.id = \'CopyPasteDiv\';\n
+    style = this.elDiv.style;\n
+    style.position = \'fixed\';\n
+    style.top = \'-10000px\';\n
+    style.left = \'-10000px\';\n
+    parent.appendChild(this.elDiv);\n
+\n
+    this.elTextarea = document.createElement(\'textarea\');\n
+    this.elTextarea.className = \'copyPaste\';\n
+    this.elTextarea.onpaste = function(event) {\n
+      var clipboardContents,\n
+        temp;\n
+\n
+      if (\'WebkitAppearance\' in document.documentElement.style) { // chrome and safari\n
+        clipboardContents = event.clipboardData.getData("Text");\n
+\n
+        // Safari adds an additional newline to copied text\n
+        if (navigator.userAgent.indexOf(\'Safari\') !== -1 && navigator.userAgent.indexOf(\'Chrome\') === -1) {\n
+          temp = clipboardContents.split(\'\\n\');\n
+\n
+          if (temp[temp.length - 1] === \'\') {\n
+            temp.pop();\n
+          }\n
+          clipboardContents = temp.join(\'\\n\');\n
+        }\n
+        this.value = clipboardContents;\n
+\n
+        return false;\n
+      }\n
+    };\n
+    style = this.elTextarea.style;\n
+    style.width = \'10000px\';\n
+    style.height = \'10000px\';\n
+    style.overflow = \'hidden\';\n
+    this.elDiv.appendChild(this.elTextarea);\n
+\n
+    if (typeof style.opacity !== \'undefined\') {\n
+      style.opacity = 0;\n
+    }\n
+  }\n
+  this.onKeyDownRef = this.onKeyDown.bind(this);\n
+  document.documentElement.addEventListener(\'keydown\', this.onKeyDownRef, false);\n
+};\n
+\n
+/**\n
+ * Call method on every key down event\n
+ *\n
+ * @param {Event} event\n
+ */\n
+CopyPasteClass.prototype.onKeyDown = function(event) {\n
+  var _this = this,\n
+    isCtrlDown = false;\n
+\n
+  function isActiveElementEditable() {\n
+    var element = document.activeElement;\n
+\n
+    if (element.shadowRoot && element.shadowRoot.activeElement) {\n
+      element = element.shadowRoot.activeElement;\n
+    }\n
+\n
+    return [\'INPUT\', \'SELECT\', \'TEXTAREA\'].indexOf(element.nodeName) > -1 || element.contentEditable === \'true\';\n
+  }\n
+\n
+  // mac\n
+  if (event.metaKey) {\n
+    isCtrlDown = true;\n
+  }\n
+  // pc\n
+  else if (event.ctrlKey && navigator.userAgent.indexOf(\'Mac\') === -1) {\n
+    isCtrlDown = true;\n
+  }\n
+  if (isCtrlDown) {\n
+    // this is needed by fragmentSelection in Handsontable. Ignore copypaste.js behavior if fragment of cell text is selected\n
+    if (document.activeElement !== this.elTextarea && (this.getSelectionText() !== \'\' || isActiveElementEditable())) {\n
+      return;\n
+    }\n
+    this.selectNodeText(this.elTextarea);\n
+    setTimeout(function() {\n
+      if (document.activeElement !== _this.elTextarea) {\n
+        _this.selectNodeText(_this.elTextarea);\n
+      }\n
+    }, 0);\n
+  }\n
+\n
+  if (isCtrlDown &&\n
+      (event.keyCode === 67 ||\n
+      event.keyCode === 86 ||\n
+      event.keyCode === 88)) {\n
+    // works in all browsers, incl. Opera < 12.12\n
+    if (event.keyCode === 88) {\n
+      setTimeout(function () {\n
+        _this.triggerCut(event);\n
+      }, 0);\n
+\n
+    } else if (event.keyCode === 86) {\n
+      setTimeout(function () {\n
+        _this.triggerPaste(event);\n
+      }, 0);\n
+    }\n
+  }\n
+};\n
+\n
+//http://jsperf.com/textara-selection\n
+//http://stackoverflow.com/questions/1502385/how-can-i-make-this-code-work-in-ie\n
+/**\n
+ * Select all text contains in passed node element\n
+ *\n
+ * @param {Element} element\n
+ */\n
+CopyPasteClass.prototype.selectNodeText = function(element) {\n
+  if (element) {\n
+    element.select();\n
+  }\n
+};\n
+\n
+//http://stackoverflow.com/questions/5379120/get-the-highlighted-selected-text\n
+/**\n
+ * Get selection text\n
+ *\n
+ * @returns {String}\n
+ */\n
+CopyPasteClass.prototype.getSelectionText = function() {\n
+  var text = \'\';\n
+\n
+  if (window.getSelection) {\n
+    text = window.getSelection().toString();\n
+\n
+  } else if (document.selection && document.selection.type !== \'Control\') {\n
+    text = document.selection.createRange().text;\n
+  }\n
+\n
+  return text;\n
+};\n
+\n
+/**\n
+ * Make string copyable\n
+ *\n
+ * @param {String} string\n
+ */\n
+CopyPasteClass.prototype.copyable = function(string) {\n
+  if (typeof string !== \'string\' && string.toString === void 0) {\n
+    throw new Error(\'copyable requires string parameter\');\n
+  }\n
+  this.elTextarea.value = string;\n
+  this.selectNodeText(this.elTextarea);\n
+};\n
+\n
+/*CopyPasteClass.prototype.onCopy = function (fn) {\n
+  this.copyCallbacks.push(fn);\n
+};*/\n
+\n
+/**\n
+ * Add function callback to onCut event\n
+ *\n
+ * @param {Function} callback\n
+ */\n
+CopyPasteClass.prototype.onCut = function(callback) {\n
+  this.cutCallbacks.push(callback);\n
+};\n
+\n
+/**\n
+ * Add function callback to onPaste event\n
+ *\n
+ * @param {Function} callback\n
+ */\n
+CopyPasteClass.prototype.onPaste = function(callback) {\n
+  this.pasteCallbacks.push(callback);\n
+};\n
+\n
+/**\n
+ * Remove callback from all events\n
+ *\n
+ * @param {Function} callback\n
+ * @returns {Boolean}\n
+ */\n
+CopyPasteClass.prototype.removeCallback = function(callback) {\n
+  var i, len;\n
+\n
+  for (i = 0, len = this.copyCallbacks.length; i < len; i++) {\n
+    if (this.copyCallbacks[i] === callback) {\n
+      this.copyCallbacks.splice(i, 1);\n
+\n
+      return true;\n
+    }\n
+  }\n
+  for (i = 0, len = this.cutCallbacks.length; i < len; i++) {\n
+    if (this.cutCallbacks[i] === callback) {\n
+      this.cutCallbacks.splice(i, 1);\n
+\n
+      return true;\n
+    }\n
+  }\n
+  for (i = 0, len = this.pasteCallbacks.length; i < len; i++) {\n
+    if (this.pasteCallbacks[i] === callback) {\n
+      this.pasteCallbacks.splice(i, 1);\n
+\n
+      return true;\n
+    }\n
+  }\n
+\n
+  return false;\n
+};\n
+\n
+/**\n
+ * Trigger cut event\n
+ *\n
+ * @param {DOMEvent} event\n
+ */\n
+CopyPasteClass.prototype.triggerCut = function(event) {\n
+  var _this = this;\n
+\n
+  if (_this.cutCallbacks) {\n
+    setTimeout(function () {\n
+      for (var i = 0, len = _this.cutCallbacks.length; i < len; i++) {\n
+        _this.cutCallbacks[i](event);\n
+      }\n
+    }, 50);\n
+  }\n
+};\n
+\n
+/**\n
+ * Trigger paste event\n
+ *\n
+ * @param {DOMEvent} event\n
+ * @param {String} string\n
+ */\n
+CopyPasteClass.prototype.triggerPaste = function(event, string) {\n
+  var _this = this;\n
+\n
+  if (_this.pasteCallbacks) {\n
+    setTimeout(function () {\n
+      var val = string || _this.elTextarea.value;\n
+\n
+      for (var i = 0, len = _this.pasteCallbacks.length; i < len; i++) {\n
+        _this.pasteCallbacks[i](val, event);\n
+      }\n
+    }, 50);\n
+  }\n
+};\n
+\n
+/**\n
+ * Destroy instance\n
+ */\n
+CopyPasteClass.prototype.destroy = function() {\n
+  if (!this.hasBeenDestroyed() && --this.refCounter === 0) {\n
+    if (this.elDiv && this.elDiv.parentNode) {\n
+      this.elDiv.parentNode.removeChild(this.elDiv);\n
+      this.elDiv = null;\n
+      this.elTextarea = null;\n
+    }\n
+    document.documentElement.removeEventListener(\'keydown\', this.onKeyDownRef);\n
+    this.onKeyDownRef = null;\n
+  }\n
+};\n
+\n
+/**\n
+ * Check if instance has been destroyed\n
+ *\n
+ * @returns {Boolean}\n
+ */\n
+CopyPasteClass.prototype.hasBeenDestroyed = function() {\n
+  return !this.refCounter;\n
+};\n
+\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7555</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>copyPaste.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

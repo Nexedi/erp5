@@ -1,0 +1,369 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272513.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_onKeyDownSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_onKeyDown\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should advance to next cell when TAB is pressed\', function () {\n
+    //https://github.com/handsontable/handsontable/issues/151\n
+    handsontable();\n
+    selectCell(0, 0);\n
+    keyDownUp(\'tab\');\n
+    expect(getSelected()).toEqual([0, 1, 0, 1]);\n
+  });\n
+\n
+  it(\'should advance to previous cell when shift+TAB is pressed\', function () {\n
+    handsontable();\n
+    selectCell(1, 1);\n
+    keyDownUp(\'shift+tab\');\n
+    expect(getSelected()).toEqual([1, 0, 1, 0]);\n
+  });\n
+\n
+  describe(\'while editing (quick edit mode)\', function() {\n
+    it(\'should finish editing and advance to next cell when TAB is pressed\', function () {\n
+      //https://github.com/handsontable/handsontable/issues/215\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'x\'); // value to cell trigger quick edit mode\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'tab\');\n
+      expect(getData()[1][1]).toEqual(\'Ted\');\n
+      expect(getSelected()).toEqual([1, 2, 1, 2]);\n
+    });\n
+\n
+    it(\'should finish editing and advance to lower cell when enter is pressed\', function () {\n
+      //https://github.com/handsontable/handsontable/issues/215\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'x\'); // value to cell trigger quick edit mode\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'enter\');\n
+      expect(getData()[1][1]).toEqual(\'Ted\');\n
+      expect(getSelected()).toEqual([2, 1, 2, 1]);\n
+    });\n
+\n
+    it(\'should finish editing and advance to higher cell when shift+enter is pressed\', function () {\n
+      //https://github.com/handsontable/handsontable/issues/215\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'x\'); // trigger quick edit mode\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'shift+enter\');\n
+      expect(getData()[1][1]).toEqual(\'Ted\');\n
+      expect(getSelected()).toEqual([0, 1, 0, 1]);\n
+    });\n
+\n
+    it(\'should finish editing and advance to lower cell when down arrow is pressed\', function () {\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'x\');\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'arrow_down\');\n
+      expect(getData()[1][1]).toEqual(\'Ted\');\n
+      expect(getSelected()).toEqual([2, 1, 2, 1]);\n
+    });\n
+\n
+    it(\'should finish editing and advance to higher cell when up arrow is pressed\', function () {\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'x\');\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'arrow_up\');\n
+      expect(getData()[1][1]).toEqual(\'Ted\');\n
+      expect(getSelected()).toEqual([0, 1, 0, 1]);\n
+    });\n
+\n
+    it(\'should finish editing and advance to right cell when right arrow is pressed\', function () {\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'x\');\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'arrow_right\');\n
+      keyDownUp(\'arrow_right\');\n
+      keyDownUp(\'arrow_right\');\n
+      keyDownUp(\'arrow_right\');\n
+      expect(getData()[1][1]).toEqual(\'Ted\');\n
+      expect(getSelected()).toEqual([1, 4, 1, 4]);\n
+    });\n
+\n
+    it(\'should finish editing and advance to left cell when left arrow is pressed\', function () {\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'x\');\n
+      keyProxy().val(\'Ted\');\n
+      Handsontable.Dom.setCaretPosition(keyProxy()[0], 0, 0);\n
+      keyDownUp(\'arrow_left\');\n
+      keyDownUp(\'arrow_left\');\n
+      keyDownUp(\'arrow_left\');\n
+      keyDownUp(\'arrow_left\');\n
+      keyDownUp(\'arrow_left\');\n
+      expect(getData()[1][1]).toEqual(\'Ted\');\n
+      expect(getSelected()).toEqual([1, 0, 1, 0]);\n
+    });\n
+\n
+    it(\'should finish editing and advance to lower cell when enter is pressed (with sync validator)\', function () {\n
+      var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+      handsontable({\n
+        validator: function(val, cb){\n
+          cb(true);\n
+        },\n
+        afterValidate: onAfterValidate\n
+      });\n
+\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'x\');\n
+      keyProxy().val(\'Ted\');\n
+\n
+      onAfterValidate.reset();\n
+      keyDownUp(\'enter\');\n
+\n
+      waitsFor(function () {\n
+        return onAfterValidate.calls.length > 0;\n
+      }, \'Cell validation\', 1000);\n
+\n
+      runs(function () {\n
+        expect(onAfterValidate).toHaveBeenCalled();\n
+        expect(getData()[1][1]).toEqual(\'Ted\');\n
+        expect(getSelected()).toEqual([2, 1, 2, 1]);\n
+      });\n
+    });\n
+\n
+    it(\'should finish editing and advance to lower cell when enter is pressed (with async validator)\', function () {\n
+      var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+      handsontable({\n
+        validator: function(val, cb){\n
+          setTimeout(function(){\n
+            cb(true);\n
+          }, 10);\n
+        },\n
+        afterValidate: onAfterValidate\n
+      });\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'x\');\n
+      keyProxy().val(\'Ted\');\n
+\n
+      onAfterValidate.reset();\n
+      keyDownUp(\'enter\');\n
+\n
+      waitsFor(function () {\n
+        return onAfterValidate.calls.length > 0;\n
+      }, \'Cell validation\', 1000);\n
+\n
+      runs(function () {\n
+        expect(onAfterValidate).toHaveBeenCalled();\n
+        expect(getData()[1][1]).toEqual(\'Ted\');\n
+        expect(getSelected()).toEqual([2, 1, 2, 1]);\n
+      });\n
+    });\n
+  });\n
+\n
+  describe(\'while editing (full edit mode)\', function() {\n
+    it(\'should finish editing and advance to next cell when TAB is pressed\', function () {\n
+      //https://github.com/handsontable/handsontable/issues/215\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'enter\');\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'tab\');\n
+      expect(getData()[1][1]).toEqual(\'Ted\');\n
+      expect(getSelected()).toEqual([1, 2, 1, 2]);\n
+    });\n
+\n
+    it(\'should finish editing and advance to lower cell when enter is pressed\', function () {\n
+      //https://github.com/handsontable/handsontable/issues/215\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'enter\');\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'enter\');\n
+      expect(getData()[1][1]).toEqual(\'Ted\');\n
+      expect(getSelected()).toEqual([2, 1, 2, 1]);\n
+    });\n
+\n
+    it(\'should finish editing and advance to higher cell when shift+enter is pressed\', function () {\n
+      //https://github.com/handsontable/handsontable/issues/215\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'enter\');\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'shift+enter\');\n
+      expect(getData()[1][1]).toEqual(\'Ted\');\n
+      expect(getSelected()).toEqual([0, 1, 0, 1]);\n
+    });\n
+\n
+    it(\'shouldn\\\'t finish editing and advance to lower cell when down arrow is pressed\', function () {\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'enter\');\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'arrow_down\');\n
+      expect(getData()[1][1]).toEqual(null);\n
+      expect(getSelected()).toEqual([1, 1, 1, 1]);\n
+    });\n
+\n
+    it(\'shouldn\\\'t finish editing and advance to higher cell when up arrow is pressed\', function () {\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'enter\');\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'arrow_up\');\n
+      expect(getData()[1][1]).toEqual(null);\n
+      expect(getSelected()).toEqual([1, 1, 1, 1]);\n
+    });\n
+\n
+    it(\'shouldn\\\'t finish editing and advance to right cell when right arrow is pressed\', function () {\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'enter\');\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'arrow_right\');\n
+      keyDownUp(\'arrow_right\');\n
+      keyDownUp(\'arrow_right\');\n
+      keyDownUp(\'arrow_right\');\n
+      expect(getData()[1][1]).toEqual(null);\n
+      expect(getSelected()).toEqual([1, 1, 1, 1]);\n
+    });\n
+\n
+    it(\'shouldn\\\'t finish editing and advance to left cell when left arrow is pressed\', function () {\n
+      handsontable();\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'enter\');\n
+      keyProxy().val(\'Ted\');\n
+      keyDownUp(\'arrow_left\');\n
+      keyDownUp(\'arrow_left\');\n
+      keyDownUp(\'arrow_left\');\n
+      keyDownUp(\'arrow_left\');\n
+      expect(getData()[1][1]).toEqual(null);\n
+      expect(getSelected()).toEqual([1, 1, 1, 1]);\n
+    });\n
+\n
+    it(\'should finish editing and advance to lower cell when enter is pressed (with sync validator)\', function () {\n
+      var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+      handsontable({\n
+        validator: function(val, cb){\n
+          cb(true);\n
+        },\n
+        afterValidate: onAfterValidate\n
+      });\n
+\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'enter\');\n
+      keyProxy().val(\'Ted\');\n
+\n
+      onAfterValidate.reset();\n
+      keyDownUp(\'enter\');\n
+\n
+      waitsFor(function () {\n
+        return onAfterValidate.calls.length > 0;\n
+      }, \'Cell validation\', 1000);\n
+\n
+      runs(function () {\n
+        expect(onAfterValidate).toHaveBeenCalled();\n
+        expect(getData()[1][1]).toEqual(\'Ted\');\n
+        expect(getSelected()).toEqual([2, 1, 2, 1]);\n
+      });\n
+    });\n
+\n
+    it(\'should finish editing and advance to lower cell when enter is pressed (with async validator)\', function () {\n
+      var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+      handsontable({\n
+        validator: function(val, cb){\n
+          setTimeout(function(){\n
+            cb(true);\n
+          }, 10);\n
+        },\n
+        afterValidate: onAfterValidate\n
+      });\n
+      selectCell(1, 1);\n
+\n
+      keyDownUp(\'enter\');\n
+      keyProxy().val(\'Ted\');\n
+\n
+      onAfterValidate.reset();\n
+      keyDownUp(\'enter\');\n
+\n
+      waitsFor(function () {\n
+        return onAfterValidate.calls.length > 0;\n
+      }, \'Cell validation\', 1000);\n
+\n
+      runs(function () {\n
+        expect(onAfterValidate).toHaveBeenCalled();\n
+        expect(getData()[1][1]).toEqual(\'Ted\');\n
+        expect(getSelected()).toEqual([2, 1, 2, 1]);\n
+      });\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9704</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_onKeyDownSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

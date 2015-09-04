@@ -1,0 +1,351 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272667.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>copyPaste.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'CopyPaste\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it("should remove additional new line from copied text (only safari)", function () {\n
+    var getData = jasmine.createSpy().andReturn(\'a\\nb\\n\\n\');\n
+    var hot = handsontable();\n
+\n
+    $(\'.copyPaste\')[0].onpaste({clipboardData: {getData: getData}});\n
+\n
+    if (Handsontable.helper.isSafari()) {\n
+      expect($(\'.copyPaste\')[0].value).toEqual(\'a\\nb\\n\');\n
+      expect(getData).toHaveBeenCalledWith(\'Text\');\n
+\n
+    } else if (Handsontable.helper.isChrome()) {\n
+      expect($(\'.copyPaste\')[0].value).toBe(\'a\\nb\\n\\n\');\n
+      expect(getData).toHaveBeenCalledWith(\'Text\');\n
+    }\n
+  });\n
+\n
+\n
+  describe("enabling/disabing plugin", function () {\n
+    it("should enable copyPaste by default", function () {\n
+\n
+      var hot = handsontable();\n
+\n
+      expect(hot.copyPaste).toBeDefined();\n
+\n
+    });\n
+\n
+    it("should create copyPaste div if enabled", function () {\n
+      expect($(\'#CopyPasteDiv\').length).toEqual(0);\n
+\n
+      var hot = handsontable();\n
+\n
+      selectCell(0, 0);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.CONTROL_LEFT); //copyPaste div isn\'t created until you click CTRL\n
+\n
+      expect($(\'#CopyPasteDiv\').length).toEqual(1);\n
+    });\n
+\n
+    it("should not create copyPaste div if disabled", function () {\n
+      expect($(\'#CopyPasteDiv\').length).toEqual(0);\n
+\n
+      var hot = handsontable({\n
+        copyPaste: false\n
+      });\n
+\n
+      selectCell(0, 0);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.CONTROL_LEFT);\n
+\n
+      expect($(\'#CopyPasteDiv\').length).toEqual(0);\n
+    });\n
+\n
+    it("should not create copyPaste property if plugin is disabled", function () {\n
+      var hot = handsontable({\n
+        copyPaste: false\n
+      });\n
+\n
+      expect(hot.copyPaste).toBeUndefined();\n
+    });\n
+\n
+    it("should enable/disable plugin using updateSettings", function () {\n
+      var hot = handsontable();\n
+\n
+      expect(hot.copyPaste).toBeDefined();\n
+\n
+      updateSettings({\n
+        copyPaste: false\n
+      });\n
+\n
+      expect(hot.copyPaste).toBe(null);\n
+    });\n
+\n
+    it("should remove copyPaste div if plugin has been disabled using updateSetting", function () {\n
+      expect($(\'#CopyPasteDiv\').length).toEqual(0);\n
+\n
+      var hot = handsontable();\n
+\n
+      selectCell(0, 0);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.CONTROL_LEFT);\n
+\n
+      expect($(\'#CopyPasteDiv\').length).toEqual(1);\n
+\n
+      updateSettings({\n
+        copyPaste: false\n
+      });\n
+\n
+      expect($(\'#CopyPasteDiv\').length).toEqual(0);\n
+\n
+      selectCell(0, 0);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.CONTROL_LEFT);\n
+\n
+      expect($(\'#CopyPasteDiv\').length).toEqual(0);\n
+    });\n
+  });\n
+\n
+  describe("setting values copyable", function () {\n
+    it("should set copyable text when selecting a single cell and hitting ctrl", function () {\n
+      handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+      });\n
+\n
+      var copyPasteTextarea = $(\'textarea.copyPaste\');\n
+\n
+      expect(copyPasteTextarea.val().length).toEqual(0);\n
+\n
+      selectCell(0, 0);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.CONTROL_LEFT);\n
+\n
+      expect(copyPasteTextarea.val()).toEqual(\'A1\\n\');\n
+    });\n
+\n
+    it("should set copyable text when selecting a single cell and hitting left command", function () {\n
+      handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+      });\n
+\n
+      var copyPasteTextarea = $(\'textarea.copyPaste\');\n
+\n
+      expect(copyPasteTextarea.val().length).toEqual(0);\n
+\n
+      selectCell(0, 0);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.COMMAND_LEFT);\n
+\n
+      expect(copyPasteTextarea.val()).toEqual(\'A1\\n\');\n
+    });\n
+\n
+    it("should set copyable text when selecting a single cell and hitting right command", function () {\n
+      handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+      });\n
+\n
+      var copyPasteTextarea = $(\'textarea.copyPaste\');\n
+\n
+      expect(copyPasteTextarea.val().length).toEqual(0);\n
+\n
+      selectCell(0, 0);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.COMMAND_RIGHT);\n
+\n
+      expect(copyPasteTextarea.val()).toEqual(\'A1\\n\');\n
+    });\n
+\n
+    it("should set copyable text when selecting multiple cells and hitting ctrl", function () {\n
+      handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+      });\n
+\n
+      var copyPasteTextarea = $(\'textarea.copyPaste\');\n
+\n
+      expect(copyPasteTextarea.val().length).toEqual(0);\n
+\n
+      selectCell(0, 0, 1, 0);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.CONTROL_LEFT);\n
+\n
+      expect(copyPasteTextarea.val()).toEqual(\'A1\\nA2\\n\');\n
+    });\n
+\n
+    it("should set copyable text when selecting all cells with CTRL+A", function () {\n
+      handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+      });\n
+\n
+      var copyPasteTextarea = $(\'textarea.copyPaste\');\n
+\n
+      expect(copyPasteTextarea.val().length).toEqual(0);\n
+\n
+      selectCell(0, 0);\n
+\n
+      $(document.activeElement).simulate(\'keydown\', {keyCode: Handsontable.helper.KEY_CODES.A, ctrlKey: true});\n
+      waits(0);\n
+\n
+      runs(function () {\n
+        expect(getSelected()).toEqual([0, 0, 1, 1]);\n
+\n
+        expect(copyPasteTextarea.val()).toEqual(\'A1\\tB1\\nA2\\tB2\\n\');\n
+      });\n
+    });\n
+\n
+    it("should not throw error when no cell is selected (#1221)", function () {\n
+      handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+      });\n
+\n
+      selectCell(0, 0);\n
+      deselectCell();\n
+\n
+      function keydownCtrl(){\n
+//        $(document).trigger($.Event(\'keydown\', {\n
+//          keyCode: Handsontable.helper.keyCode.COMMAND_LEFT\n
+//        }));\n
+        $(document).simulate(\'keydown\', {\n
+          keyCode: Handsontable.helper.KEY_CODES.COMMAND_LEFT\n
+        });\n
+      }\n
+\n
+      // expect no to throw any exception\n
+      expect(keydownCtrl).not.toThrow();\n
+    });\n
+\n
+    it("should set copyable text when selecting a single cell with specified type and hitting ctrl (#1300)", function () {\n
+      handsontable({\n
+        data: [[\'A\', 1], [\'B\', 2]],\n
+        columns: [\n
+          {\n
+            type: \'text\'\n
+          },\n
+          {\n
+            type: \'numeric\'\n
+          }\n
+        ]\n
+      });\n
+\n
+      var copyPasteTextarea = $(\'textarea.copyPaste\');\n
+\n
+      expect(copyPasteTextarea.val().length).toEqual(0);\n
+\n
+      selectCell(0, 0, 1, 1);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.CONTROL_LEFT);\n
+\n
+      expect(copyPasteTextarea.val()).toEqual(\'A\\t1\\nB\\t2\\n\');\n
+    });\n
+\n
+    it("should set copyable text when selecting a single cell with editor type as false (#2574)", function () {\n
+      handsontable({\n
+        data: [[\'A\', 1], [\'B\', 2]],\n
+        columns: [\n
+          {\n
+            type: \'text\'\n
+          },\n
+          {\n
+            editor: false\n
+          }\n
+        ]\n
+      });\n
+\n
+      var copyPasteTextarea = $(\'textarea.copyPaste\');\n
+\n
+      expect(copyPasteTextarea.val().length).toEqual(0);\n
+\n
+      selectCell(1, 1, 1, 1);\n
+      keyDownUp(Handsontable.helper.KEY_CODES.CONTROL_LEFT);\n
+\n
+      expect(copyPasteTextarea.val()).toEqual(\'2\\n\');\n
+    });\n
+\n
+\n
+    describe("working with multiple tables", function () {\n
+      beforeEach(function () {\n
+        this.$container2 = $(\'<div id="\' + id + \'2"></div>\').appendTo(\'body\');\n
+      });\n
+\n
+      afterEach(function () {\n
+        if (this.$container2) {\n
+          this.$container2.handsontable(\'destroy\');\n
+          this.$container2.remove();\n
+        }\n
+      });\n
+\n
+      it("should disable copyPaste only in particular table", function () {\n
+        var hot1 = handsontable();\n
+        var hot2 = this.$container2.handsontable({\n
+          copyPaste: false\n
+        });\n
+\n
+        expect(hot1.copyPaste).toBeDefined();\n
+        expect(hot2.copyPaste).toBeUndefined();\n
+      });\n
+\n
+      it("should create only one CopyPasteDiv regardless of the number of tables", function () {\n
+        var hot1 = handsontable();\n
+        var hot2 = this.$container2.handsontable();\n
+\n
+        expect($(\'#CopyPasteDiv\').length).toEqual(1);\n
+      });\n
+\n
+      it("should leave CopyPasteDiv as long as at least one table has copyPaste enabled", function () {\n
+        var hot1 = handsontable();\n
+        var hot2 = this.$container2.handsontable().handsontable(\'getInstance\');\n
+\n
+        expect($(\'#CopyPasteDiv\').length).toEqual(1);\n
+\n
+        hot1.updateSettings({\n
+          copyPaste: false\n
+        });\n
+\n
+        expect($(\'#CopyPasteDiv\').length).toEqual(1);\n
+\n
+        hot2.updateSettings({\n
+          copyPaste: false\n
+        });\n
+\n
+        expect($(\'#CopyPasteDiv\').length).toEqual(0);\n
+      });\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8539</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>copyPaste.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

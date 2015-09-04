@@ -1,0 +1,624 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272619.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tableRenderer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  addClass,\n
+  empty,\n
+  getScrollbarWidth,\n
+  hasClass,\n
+  innerHeight,\n
+    } from \'./../../../helpers/dom/element\';\n
+\n
+/**\n
+ * @class WalkontableTableRenderer\n
+ */\n
+class WalkontableTableRenderer {\n
+  /**\n
+   * @param {WalkontableTable} wtTable\n
+   */\n
+  constructor(wtTable) {\n
+    this.wtTable = wtTable;\n
+    this.wot = wtTable.instance;\n
+    // legacy support\n
+    this.instance = wtTable.instance;\n
+\n
+    this.rowFilter = wtTable.rowFilter;\n
+    this.columnFilter = wtTable.columnFilter;\n
+\n
+    this.TABLE = wtTable.TABLE;\n
+    this.THEAD = wtTable.THEAD;\n
+    this.TBODY = wtTable.TBODY;\n
+    this.COLGROUP = wtTable.COLGROUP;\n
+\n
+    this.rowHeaders = [];\n
+    this.rowHeaderCount = 0;\n
+    this.columnHeaders = [];\n
+    this.columnHeaderCount = 0;\n
+    this.fixedRowsTop = 0;\n
+  }\n
+\n
+  /**\n
+   *\n
+   */\n
+  render() {\n
+    if (!this.wtTable.isWorkingOnClone()) {\n
+      this.wot.getSetting(\'beforeDraw\', true);\n
+    }\n
+\n
+    this.rowHeaders = this.wot.getSetting(\'rowHeaders\');\n
+    this.rowHeaderCount = this.rowHeaders.length;\n
+    this.fixedRowsTop = this.wot.getSetting(\'fixedRowsTop\');\n
+    this.columnHeaders = this.wot.getSetting(\'columnHeaders\');\n
+    this.columnHeaderCount = this.columnHeaders.length;\n
+\n
+    let columnsToRender = this.wtTable.getRenderedColumnsCount();\n
+    let rowsToRender = this.wtTable.getRenderedRowsCount();\n
+    let totalColumns = this.wot.getSetting(\'totalColumns\');\n
+    let totalRows = this.wot.getSetting(\'totalRows\');\n
+    let workspaceWidth;\n
+    let adjusted = false;\n
+\n
+    if (totalColumns > 0) {\n
+      // prepare COL and TH elements for rendering\n
+      this.adjustAvailableNodes();\n
+      adjusted = true;\n
+\n
+      // adjust column widths according to user widths settings\n
+      this.renderColumnHeaders();\n
+\n
+      //Render table rows\n
+      this.renderRows(totalRows, rowsToRender, columnsToRender);\n
+\n
+      if (!this.wtTable.isWorkingOnClone()) {\n
+        workspaceWidth = this.wot.wtViewport.getWorkspaceWidth();\n
+        this.wot.wtViewport.containerWidth = null;\n
+      }\n
+      this.adjustColumnHeaderHeights();\n
+      this.adjustColumnWidths(columnsToRender);\n
+      this.markOversizedColumns();\n
+    }\n
+\n
+    if (!adjusted) {\n
+      this.adjustAvailableNodes();\n
+    }\n
+    this.removeRedundantRows(rowsToRender);\n
+\n
+    if (!this.wtTable.isWorkingOnClone()) {\n
+      this.markOversizedRows();\n
+\n
+      this.wot.wtViewport.createVisibleCalculators();\n
+      this.wot.wtOverlays.refresh(false);\n
+      this.wot.wtOverlays.applyToDOM();\n
+\n
+      if (workspaceWidth !== this.wot.wtViewport.getWorkspaceWidth()) {\n
+        //workspace width changed though to shown/hidden vertical scrollbar. Let\'s reapply stretching\n
+        this.wot.wtViewport.containerWidth = null;\n
+\n
+        let firstRendered = this.wtTable.getFirstRenderedColumn();\n
+        let lastRendered = this.wtTable.getLastRenderedColumn();\n
+\n
+        for (let i = firstRendered; i < lastRendered; i++) {\n
+          let width = this.wtTable.getStretchedColumnWidth(i);\n
+          let renderedIndex = this.columnFilter.sourceToRendered(i);\n
+\n
+          this.COLGROUP.childNodes[renderedIndex + this.rowHeaderCount].style.width = width + \'px\';\n
+        }\n
+      }\n
+\n
+      this.wot.getSetting(\'onDraw\', true);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * @param {Number} renderedRowsCount\n
+   */\n
+  removeRedundantRows(renderedRowsCount) {\n
+    while (this.wtTable.tbodyChildrenLength > renderedRowsCount) {\n
+      this.TBODY.removeChild(this.TBODY.lastChild);\n
+      this.wtTable.tbodyChildrenLength--;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * @param {Number} totalRows\n
+   * @param {Number} rowsToRender\n
+   * @param {Number} columnsToRender\n
+   */\n
+  renderRows(totalRows, rowsToRender, columnsToRender) {\n
+    let lastTD, TR;\n
+    let visibleRowIndex = 0;\n
+    let sourceRowIndex = this.rowFilter.renderedToSource(visibleRowIndex);\n
+    let isWorkingOnClone = this.wtTable.isWorkingOnClone();\n
+\n
+    while (sourceRowIndex < totalRows && sourceRowIndex >= 0) {\n
+      if (visibleRowIndex > 1000) {\n
+        throw new Error(\'Security brake: Too much TRs. Please define height for your table, which will enforce scrollbars.\');\n
+      }\n
+      if (rowsToRender !== void 0 && visibleRowIndex === rowsToRender) {\n
+        // We have as much rows as needed for this clone\n
+        break;\n
+      }\n
+      TR = this.getOrCreateTrForRow(visibleRowIndex, TR);\n
+\n
+      // Render row headers\n
+      this.renderRowHeaders(sourceRowIndex, TR);\n
+      // Add and/or remove TDs to TR to match the desired number\n
+      this.adjustColumns(TR, columnsToRender + this.rowHeaderCount);\n
+\n
+      lastTD = this.renderCells(sourceRowIndex, TR, columnsToRender);\n
+\n
+      if (!isWorkingOnClone) {\n
+        // Reset the oversized row cache for this row\n
+        this.resetOversizedRow(sourceRowIndex);\n
+      }\n
+\n
+      if (TR.firstChild) {\n
+        // if I have 2 fixed columns with one-line content and the 3rd column has a multiline content, this is\n
+        // the way to make sure that the overlay will has same row height\n
+        let height = this.wot.wtTable.getRowHeight(sourceRowIndex);\n
+\n
+        if (height) {\n
+          // Decrease height. 1 pixel will be "replaced" by 1px border top\n
+          height--;\n
+          TR.firstChild.style.height = height + \'px\';\n
+        } else {\n
+          TR.firstChild.style.height = \'\';\n
+        }\n
+      }\n
+      visibleRowIndex++;\n
+      sourceRowIndex = this.rowFilter.renderedToSource(visibleRowIndex);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Reset the oversized row cache for the provided index\n
+   *\n
+   * @param {Number} sourceRow Row index\n
+   */\n
+  resetOversizedRow(sourceRow) {\n
+    if (this.wot.getSetting(\'externalRowCalculator\')) {\n
+      return;\n
+    }\n
+    if (this.wot.wtViewport.oversizedRows && this.wot.wtViewport.oversizedRows[sourceRow]) {\n
+      this.wot.wtViewport.oversizedRows[sourceRow] = void 0;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Check if any of the rendered rows is higher than expected, and if so, cache them\n
+   */\n
+  markOversizedRows() {\n
+    if (this.wot.getSetting(\'externalRowCalculator\')) {\n
+      return;\n
+    }\n
+    let rowCount = this.instance.wtTable.TBODY.childNodes.length;\n
+    let expectedTableHeight = rowCount * this.instance.wtSettings.settings.defaultRowHeight;\n
+    let actualTableHeight = innerHeight(this.instance.wtTable.TBODY) - 1;\n
+    let previousRowHeight;\n
+    let rowInnerHeight;\n
+    let sourceRowIndex;\n
+    let currentTr;\n
+    let rowHeader;\n
+\n
+    if (expectedTableHeight === actualTableHeight) {\n
+      // If the actual table height equals rowCount * default single row height, no row is oversized -> no need to iterate over them\n
+      return;\n
+    }\n
+\n
+    while (rowCount) {\n
+      rowCount--;\n
+      sourceRowIndex = this.instance.wtTable.rowFilter.renderedToSource(rowCount);\n
+      previousRowHeight = this.instance.wtTable.getRowHeight(sourceRowIndex);\n
+      currentTr = this.instance.wtTable.getTrForRow(sourceRowIndex);\n
+      rowHeader = currentTr.querySelector(\'th\');\n
+\n
+      if (rowHeader) {\n
+        rowInnerHeight = innerHeight(rowHeader);\n
+      } else {\n
+        rowInnerHeight = innerHeight(currentTr) - 1;\n
+      }\n
+\n
+      if ((!previousRowHeight && this.instance.wtSettings.settings.defaultRowHeight < rowInnerHeight ||\n
+          previousRowHeight < rowInnerHeight)) {\n
+        this.instance.wtViewport.oversizedRows[sourceRowIndex] = ++rowInnerHeight;\n
+      }\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Check if any of the rendered columns is wider than expected, and if so, cache them.\n
+   */\n
+  markOversizedColumns() {\n
+    let overlayName = this.wot.getOverlayName();\n
+\n
+    if (!this.columnHeaderCount || this.wot.wtViewport.isMarkedOversizedColumn[overlayName] || this.wtTable.isWorkingOnClone()) {\n
+      return;\n
+    }\n
+    let columnCount = this.wtTable.getRenderedColumnsCount();\n
+\n
+    for (let i = 0; i < this.columnHeaderCount; i++) {\n
+      for (let renderedColumnIndex = (-1) * this.rowHeaderCount; renderedColumnIndex < columnCount; renderedColumnIndex++) {\n
+        this.markIfOversizedColumnHeader(renderedColumnIndex);\n
+      }\n
+    }\n
+    this.wot.wtViewport.isMarkedOversizedColumn[overlayName] = true;\n
+  }\n
+\n
+  /**\n
+   *\n
+   */\n
+  adjustColumnHeaderHeights() {\n
+    let columnHeaders = this.wot.getSetting(\'columnHeaders\');\n
+    let childs = this.wot.wtTable.THEAD.childNodes;\n
+    let oversizedCols = this.wot.wtViewport.oversizedColumnHeaders;\n
+\n
+    for (let i = 0, len = columnHeaders.length; i < len; i++) {\n
+      if (oversizedCols[i]) {\n
+        if (childs[i].childNodes.length === 0) {\n
+          return;\n
+        }\n
+        childs[i].childNodes[0].style.height = oversizedCols[i] + \'px\';\n
+      }\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Check if column header for the specified column is higher than expected, and if so, cache it\n
+   *\n
+   * @param {Number} col Index of column\n
+   */\n
+  markIfOversizedColumnHeader(col) {\n
+    let sourceColIndex = this.wot.wtTable.columnFilter.renderedToSource(col);\n
+    let level = this.columnHeaderCount;\n
+    let defaultRowHeight = this.wot.wtSettings.settings.defaultRowHeight;\n
+    let previousColHeaderHeight;\n
+    let currentHeader;\n
+    let currentHeaderHeight;\n
+\n
+    while (level) {\n
+      level--;\n
+\n
+      previousColHeaderHeight = this.wot.wtTable.getColumnHeaderHeight(level);\n
+      currentHeader = this.wot.wtTable.getColumnHeader(sourceColIndex, level);\n
+\n
+      if (!currentHeader) {\n
+        continue;\n
+      }\n
+      //currentHeaderHeight = defaultRowHeight;\n
+      currentHeaderHeight = innerHeight(currentHeader);\n
+\n
+      if (!previousColHeaderHeight && defaultRowHeight < currentHeaderHeight || previousColHeaderHeight < currentHeaderHeight) {\n
+        this.wot.wtViewport.oversizedColumnHeaders[level] = currentHeaderHeight;\n
+      }\n
+    }\n
+  }\n
+\n
+  /**\n
+   * @param {Number} sourceRowIndex\n
+   * @param {HTMLTableRowElement} TR\n
+   * @param {Number} columnsToRender\n
+   * @returns {HTMLTableCellElement}\n
+   */\n
+  renderCells(sourceRowIndex, TR, columnsToRender) {\n
+    let TD;\n
+    let sourceColIndex;\n
+\n
+    for (let visibleColIndex = 0; visibleColIndex < columnsToRender; visibleColIndex++) {\n
+      sourceColIndex = this.columnFilter.renderedToSource(visibleColIndex);\n
+\n
+      if (visibleColIndex === 0) {\n
+        TD = TR.childNodes[this.columnFilter.sourceColumnToVisibleRowHeadedColumn(sourceColIndex)];\n
+      } else {\n
+        TD = TD.nextSibling; //http://jsperf.com/nextsibling-vs-indexed-childnodes\n
+      }\n
+      // If the number of headers has been reduced, we need to replace excess TH with TD\n
+      if (TD.nodeName == \'TH\') {\n
+        TD = replaceThWithTd(TD, TR);\n
+      }\n
+      if (!hasClass(TD, \'hide\')) {\n
+        TD.className = \'\';\n
+      }\n
+      TD.removeAttribute(\'style\');\n
+      this.wot.wtSettings.settings.cellRenderer(sourceRowIndex, sourceColIndex, TD);\n
+    }\n
+\n
+    return TD;\n
+  }\n
+\n
+  /**\n
+   * @param {Number} columnsToRender\n
+   */\n
+  adjustColumnWidths(columnsToRender) {\n
+    let scrollbarCompensation = 0;\n
+    let sourceInstance = this.wot.cloneSource ? this.wot.cloneSource : this.wot;\n
+    let mainHolder = sourceInstance.wtTable.holder;\n
+\n
+    if (mainHolder.offsetHeight < mainHolder.scrollHeight) {\n
+      scrollbarCompensation = getScrollbarWidth();\n
+    }\n
+    this.wot.wtViewport.columnsRenderCalculator.refreshStretching(this.wot.wtViewport.getViewportWidth() - scrollbarCompensation);\n
+\n
+    for (let renderedColIndex = 0; renderedColIndex < columnsToRender; renderedColIndex++) {\n
+      let width = this.wtTable.getStretchedColumnWidth(this.columnFilter.renderedToSource(renderedColIndex));\n
+      this.COLGROUP.childNodes[renderedColIndex + this.rowHeaderCount].style.width = width + \'px\';\n
+    }\n
+  }\n
+\n
+  /**\n
+   * @param {HTMLTableCellElement} TR\n
+   */\n
+  appendToTbody(TR) {\n
+    this.TBODY.appendChild(TR);\n
+    this.wtTable.tbodyChildrenLength++;\n
+  }\n
+\n
+  /**\n
+   * @param {Number} rowIndex\n
+   * @param {HTMLTableRowElement} currentTr\n
+   * @returns {HTMLTableCellElement}\n
+   */\n
+  getOrCreateTrForRow(rowIndex, currentTr) {\n
+    let TR;\n
+\n
+    if (rowIndex >= this.wtTable.tbodyChildrenLength) {\n
+      TR = this.createRow();\n
+      this.appendToTbody(TR);\n
+\n
+    } else if (rowIndex === 0) {\n
+      TR = this.TBODY.firstChild;\n
+\n
+    } else {\n
+      // http://jsperf.com/nextsibling-vs-indexed-childnodes\n
+      TR = currentTr.nextSibling;\n
+    }\n
+\n
+    return TR;\n
+  }\n
+\n
+  /**\n
+   * @returns {HTMLTableCellElement}\n
+   */\n
+  createRow() {\n
+    let TR = document.createElement(\'TR\');\n
+\n
+    for (let visibleColIndex = 0; visibleColIndex < this.rowHeaderCount; visibleColIndex++) {\n
+      TR.appendChild(document.createElement(\'TH\'));\n
+    }\n
+\n
+    return TR;\n
+  }\n
+\n
+  /**\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {HTMLTableCellElement} TH\n
+   */\n
+  renderRowHeader(row, col, TH) {\n
+    TH.className = \'\';\n
+    TH.removeAttribute(\'style\');\n
+    this.rowHeaders[col](row, TH, col);\n
+  }\n
+\n
+  /**\n
+   * @param {Number} row\n
+   * @param {HTMLTableCellElement} TR\n
+   */\n
+  renderRowHeaders(row, TR) {\n
+    for (let TH = TR.firstChild, visibleColIndex = 0; visibleColIndex < this.rowHeaderCount; visibleColIndex++) {\n
+      // If the number of row headers increased we need to create TH or replace an existing TD node with TH\n
+      if (!TH) {\n
+        TH = document.createElement(\'TH\');\n
+        TR.appendChild(TH);\n
+\n
+      } else if (TH.nodeName == \'TD\') {\n
+        TH = replaceTdWithTh(TH, TR);\n
+      }\n
+      this.renderRowHeader(row, visibleColIndex, TH);\n
+      // http://jsperf.com/nextsibling-vs-indexed-childnodes\n
+      TH = TH.nextSibling;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Adjust the number of COL and TH elements to match the number of columns and headers that need to be rendered\n
+   */\n
+  adjustAvailableNodes() {\n
+    this.adjustColGroups();\n
+    this.adjustThead();\n
+  }\n
+\n
+  /**\n
+   * Renders the column headers\n
+   */\n
+  renderColumnHeaders() {\n
+    let overlayName = this.wot.getOverlayName();\n
+\n
+    if (!this.columnHeaderCount) {\n
+      return;\n
+    }\n
+    let columnCount = this.wtTable.getRenderedColumnsCount();\n
+\n
+    for (let i = 0; i < this.columnHeaderCount; i++) {\n
+      let TR = this.getTrForColumnHeaders(i);\n
+\n
+      for (let renderedColumnIndex = (-1) * this.rowHeaderCount; renderedColumnIndex < columnCount; renderedColumnIndex++) {\n
+        let sourceCol = this.columnFilter.renderedToSource(renderedColumnIndex);\n
+\n
+        this.renderColumnHeader(i, sourceCol, TR.childNodes[renderedColumnIndex + this.rowHeaderCount]);\n
+      }\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Adjusts the number of COL elements to match the number of columns that need to be rendered\n
+   */\n
+  adjustColGroups() {\n
+    let columnCount = this.wtTable.getRenderedColumnsCount();\n
+\n
+    while (this.wtTable.colgroupChildrenLength < columnCount + this.rowHeaderCount) {\n
+      this.COLGROUP.appendChild(document.createElement(\'COL\'));\n
+      this.wtTable.colgroupChildrenLength++;\n
+    }\n
+    while (this.wtTable.colgroupChildrenLength > columnCount + this.rowHeaderCount) {\n
+      this.COLGROUP.removeChild(this.COLGROUP.lastChild);\n
+      this.wtTable.colgroupChildrenLength--;\n
+    }\n
+    if (this.rowHeaderCount) {\n
+      addClass(this.COLGROUP.childNodes[0], \'rowHeader\');\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Adjusts the number of TH elements in THEAD to match the number of headers and columns that need to be rendered\n
+   */\n
+  adjustThead() {\n
+    let columnCount = this.wtTable.getRenderedColumnsCount();\n
+    let TR = this.THEAD.firstChild;\n
+\n
+    if (this.columnHeaders.length) {\n
+      for (let i = 0, len = this.columnHeaders.length; i < len; i++) {\n
+        TR = this.THEAD.childNodes[i];\n
+\n
+        if (!TR) {\n
+          TR = document.createElement(\'TR\');\n
+          this.THEAD.appendChild(TR);\n
+        }\n
+        this.theadChildrenLength = TR.childNodes.length;\n
+\n
+        while (this.theadChildrenLength < columnCount + this.rowHeaderCount) {\n
+          TR.appendChild(document.createElement(\'TH\'));\n
+          this.theadChildrenLength++;\n
+        }\n
+        while (this.theadChildrenLength > columnCount + this.rowHeaderCount) {\n
+          TR.removeChild(TR.lastChild);\n
+          this.theadChildrenLength--;\n
+        }\n
+      }\n
+      let theadChildrenLength = this.THEAD.childNodes.length;\n
+\n
+      if (theadChildrenLength > this.columnHeaders.length) {\n
+        for (let i = this.columnHeaders.length; i < theadChildrenLength; i++) {\n
+          this.THEAD.removeChild(this.THEAD.lastChild);\n
+        }\n
+      }\n
+    } else if (TR) {\n
+      empty(TR);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * @param {Number} index\n
+   * @returns {HTMLTableCellElement}\n
+   */\n
+  getTrForColumnHeaders(index) {\n
+    return this.THEAD.childNodes[index];\n
+  }\n
+\n
+  /**\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {HTMLTableCellElement} TH\n
+   * @returns {*}\n
+   */\n
+  renderColumnHeader(row, col, TH) {\n
+    TH.className = \'\';\n
+    TH.removeAttribute(\'style\');\n
+\n
+    return this.columnHeaders[row](col, TH, row);\n
+  }\n
+\n
+  /**\n
+   * Add and/or remove the TDs to match the desired number\n
+   *\n
+   * @param {HTMLTableCellElement} TR Table row in question\n
+   * @param {Number} desiredCount The desired number of TDs in the TR\n
+   */\n
+  adjustColumns(TR, desiredCount) {\n
+    let count = TR.childNodes.length;\n
+\n
+    while (count < desiredCount) {\n
+      let TD = document.createElement(\'TD\');\n
+\n
+      TR.appendChild(TD);\n
+      count++;\n
+    }\n
+    while (count > desiredCount) {\n
+      TR.removeChild(TR.lastChild);\n
+      count--;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * @param {Number} columnsToRender\n
+   */\n
+  removeRedundantColumns(columnsToRender) {\n
+    while (this.wtTable.tbodyChildrenLength > columnsToRender) {\n
+      this.TBODY.removeChild(this.TBODY.lastChild);\n
+      this.wtTable.tbodyChildrenLength--;\n
+    }\n
+  }\n
+}\n
+\n
+function replaceTdWithTh(TD, TR) {\n
+  let TH = document.createElement(\'TH\');\n
+\n
+  TR.insertBefore(TH, TD);\n
+  TR.removeChild(TD);\n
+\n
+  return TH;\n
+}\n
+\n
+function replaceThWithTd(TH, TR) {\n
+  let TD = document.createElement(\'TD\');\n
+\n
+  TR.insertBefore(TD, TH);\n
+  TR.removeChild(TH);\n
+\n
+  return TD;\n
+}\n
+\n
+export {WalkontableTableRenderer};\n
+\n
+window.WalkontableTableRenderer = WalkontableTableRenderer;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17499</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>tableRenderer.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

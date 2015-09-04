@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272485.67</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fixed.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Fixed Rows &amp; Columns - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies)\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Fixed Rows &amp; Columns">\n
+  <meta property="og:description"\n
+        content="This page shows how to configure Handsontable fixed rows/columns">\n
+  <meta property="og:url" content="http://handsontable.com/demo/fixed.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/fixed.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+          <div class="descLayout">\n
+            <div class="pad" data-jsfiddle="example1">\n
+              <h2>Fixed rows and columns</h2>\n
+\n
+              <p>Specify two fixed rows with <code>fixedRowsTop: 2</code> and two fixed columns with <code>fixedColumnsLeft:\n
+                2</code> option.</p>\n
+\n
+              <p>Note: You\'ll need horizontal scrollbars, so just set a container <code>width</code> and <code>overflow:\n
+                hidden</code> in CSS.</p>\n
+\n
+              <pre id="positions"></pre>\n
+\n
+              <div id="example1" style="width: 400px; height: 300px; overflow: hidden;"></div>\n
+\n
+              <p>\n
+                <button name="dump" data-instance="hot" data-dump="#example1" title="Prints current data source to Firebug/Chrome Dev Tools">\n
+                  Dump data to console\n
+                </button>\n
+              </p>\n
+            </div>\n
+          </div>\n
+\n
+          <div class="codeLayout">\n
+            <div class="pad">\n
+              <div class="jsFiddle">\n
+                <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+              </div>\n
+\n
+              <script data-jsfiddle="example1">\n
+                /**\n
+                 * Container looks like this:\n
+                 *\n
+                 * <div id="example1" style="width: 400px; height: 300px; overflow: hidden"></div>\n
+                 */\n
+                var myData = Handsontable.helper.createSpreadsheetData(1000, 100),\n
+                  container = document.getElementById(\'example1\'),\n
+                  positions = document.getElementById(\'positions\'),\n
+                  hot;\n
+\n
+                hot = new Handsontable(container, {\n
+                  data: myData,\n
+                  colWidths: [65, 47, 47, 47, 47, 47, 47, 47, 47, 47],\n
+                  rowHeaders: true,\n
+                  colHeaders: true,\n
+                  fixedRowsTop: 2,\n
+                  fixedColumnsLeft: 2,\n
+                  contextMenu: true\n
+                });\n
+\n
+                setInterval(function () {\n
+                  var str = \'\';\n
+\n
+                  str += \'rowOffset: \' + hot.rowOffset();\n
+\n
+                  positions.innerHTML = str;\n
+                }, 100);\n
+              </script>\n
+            </div>\n
+          </div>\n
+        </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4565</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>fixed.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

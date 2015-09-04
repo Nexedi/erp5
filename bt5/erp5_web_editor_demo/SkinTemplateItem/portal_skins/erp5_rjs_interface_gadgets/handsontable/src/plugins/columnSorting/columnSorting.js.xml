@@ -1,0 +1,504 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272680.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>columnSorting.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  addClass,\n
+  closest,\n
+  hasClass,\n
+  index,\n
+  removeClass,\n
+    } from \'./../../helpers/dom/element\';\n
+import {eventManager as eventManagerObject} from \'./../../eventManager\';\n
+import BasePlugin from \'./../_base\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+Handsontable.hooks.register(\'beforeColumnSort\');\n
+Handsontable.hooks.register(\'afterColumnSort\');\n
+\n
+/**\n
+ * This plugin sorts the view by a column (but does not sort the data source!)\n
+ *\n
+ * @private\n
+ * @class ColumnSorting\n
+ * @plugin ColumnSorting\n
+ * @dependencies ObserveChanges\n
+ */\n
+class ColumnSorting extends BasePlugin {\n
+  /**\n
+   * @param {Object} hotInstance\n
+   */\n
+  constructor(hotInstance) {\n
+    super(hotInstance);\n
+    this.sortIndicators = [];\n
+  }\n
+\n
+  /**\n
+   * Check if the plugin is enabled in the handsontable settings.\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isEnabled() {\n
+    return !!(this.hot.getSettings().columnSorting);\n
+  }\n
+\n
+  /**\n
+   * Enable plugin for this Handsontable instance.\n
+   */\n
+  enablePlugin() {\n
+    if (this.enabled) {\n
+      return;\n
+    }\n
+    const _this = this;\n
+    this.hot.sortIndex = [];\n
+\n
+    this.hot.sort = function() {\n
+      let args = Array.prototype.slice.call(arguments);\n
+\n
+      return _this.sortByColumn.apply(_this, args);\n
+    };\n
+\n
+    if (typeof this.hot.getSettings().observeChanges === \'undefined\') {\n
+      this.enableObserveChangesPlugin();\n
+    }\n
+    this.bindColumnSortingAfterClick();\n
+\n
+    this.addHook(\'modifyRow\', (row) => this.translateRow(row));\n
+    this.addHook(\'afterUpdateSettings\', () => this.onAfterUpdateSettings());\n
+    this.addHook(\'afterGetColHeader\', (col, TH) => this.getColHeader(col, TH));\n
+    this.addHook(\'afterCreateRow\', function() {\n
+      _this.afterCreateRow.apply(_this, arguments);\n
+    });\n
+    this.addHook(\'afterRemoveRow\', function() {\n
+      _this.afterRemoveRow.apply(_this, arguments);\n
+    });\n
+    this.addHook(\'afterInit\', () => this.sortBySettings());\n
+    this.addHook(\'afterLoadData\', () => {\n
+      this.hot.sortIndex = [];\n
+\n
+      if (this.hot.view) {\n
+        this.sortBySettings();\n
+      }\n
+    });\n
+    if (this.hot.view) {\n
+      this.sortBySettings();\n
+    }\n
+    super.enablePlugin();\n
+  }\n
+\n
+  /**\n
+   * Disable plugin for this Handsontable instance.\n
+   */\n
+  disablePlugin() {\n
+    this.hot.sort = void 0;\n
+    super.disablePlugin();\n
+  }\n
+\n
+  onAfterUpdateSettings() {\n
+    this.sortBySettings();\n
+  }\n
+\n
+  sortBySettings() {\n
+    let sortingSettings = this.hot.getSettings().columnSorting;\n
+    let loadedSortingState = this.loadSortingState();\n
+    let sortingColumn;\n
+    let sortingOrder;\n
+\n
+    if (typeof loadedSortingState !== \'undefined\') {\n
+      sortingColumn = loadedSortingState.sortColumn;\n
+      sortingOrder = loadedSortingState.sortOrder;\n
+\n
+    } else {\n
+      sortingColumn = sortingSettings.column;\n
+      sortingOrder = sortingSettings.sortOrder;\n
+    }\n
+    this.sortByColumn(sortingColumn, sortingOrder);\n
+  }\n
+\n
+  /**\n
+   * Set sorted column and order info\n
+   * @param col {number} sorted column\n
+   * @param order {boolean|undefined} sorting order\n
+   */\n
+  setSortingColumn(col, order) {\n
+    if (typeof col == \'undefined\') {\n
+      this.hot.sortColumn = void 0;\n
+      this.hot.sortOrder = void 0;\n
+\n
+      return;\n
+    } else if (this.hot.sortColumn === col && typeof order == \'undefined\') {\n
+      if (this.hot.sortOrder === false) {\n
+        this.hot.sortOrder = void 0;\n
+      } else {\n
+        this.hot.sortOrder = !this.hot.sortOrder;\n
+      }\n
+\n
+    } else {\n
+      this.hot.sortOrder = typeof order != \'undefined\' ? order : true;\n
+    }\n
+\n
+    this.hot.sortColumn = col;\n
+  }\n
+\n
+  sortByColumn(col, order) {\n
+    this.setSortingColumn(col, order);\n
+\n
+    if (typeof this.hot.sortColumn == \'undefined\') {\n
+      return;\n
+    }\n
+\n
+    Handsontable.hooks.run(this.hot, \'beforeColumnSort\', this.hot.sortColumn, this.hot.sortOrder);\n
+\n
+    this.sort();\n
+    this.hot.render();\n
+\n
+    this.saveSortingState();\n
+\n
+    Handsontable.hooks.run(this.hot, \'afterColumnSort\', this.hot.sortColumn, this.hot.sortOrder);\n
+  }\n
+\n
+  /**\n
+   * Save the sorting state\n
+   */\n
+  saveSortingState() {\n
+    let sortingState = {};\n
+\n
+    if (typeof this.hot.sortColumn != \'undefined\') {\n
+      sortingState.sortColumn = this.hot.sortColumn;\n
+    }\n
+\n
+    if (typeof this.hot.sortOrder != \'undefined\') {\n
+      sortingState.sortOrder = this.hot.sortOrder;\n
+    }\n
+\n
+    if (sortingState.hasOwnProperty(\'sortColumn\') || sortingState.hasOwnProperty(\'sortOrder\')) {\n
+      Handsontable.hooks.run(this.hot, \'persistentStateSave\', \'columnSorting\', sortingState);\n
+    }\n
+\n
+  }\n
+\n
+  /**\n
+   * Load the sorting state\n
+   * @returns {*} previousle saved sorting state\n
+   */\n
+  loadSortingState() {\n
+    let storedState = {};\n
+    Handsontable.hooks.run(this.hot, \'persistentStateLoad\', \'columnSorting\', storedState);\n
+\n
+    return storedState.value;\n
+  }\n
+\n
+  /**\n
+   * Bind the events for column sorting\n
+   */\n
+  bindColumnSortingAfterClick() {\n
+    if (this.bindedSortEvent) {\n
+      return;\n
+    }\n
+    let eventManager = eventManagerObject(this.hot),\n
+      _this = this;\n
+\n
+    this.bindedSortEvent = true;\n
+    eventManager.addEventListener(this.hot.rootElement, \'click\', function(e) {\n
+      if (hasClass(e.target, \'columnSorting\')) {\n
+        let col = getColumn(e.target);\n
+\n
+        if (col !== this.lastSortedColumn) {\n
+          _this.sortOrderClass = \'ascending\';\n
+        } else {\n
+          switch (_this.hot.sortOrder) {\n
+            case void 0:\n
+              _this.sortOrderClass = \'ascending\';\n
+              break;\n
+            case true:\n
+              _this.sortOrderClass = \'descending\';\n
+              break;\n
+            case false:\n
+              _this.sortOrderClass = void 0;\n
+          }\n
+        }\n
+\n
+        this.lastSortedColumn = col;\n
+\n
+        _this.sortByColumn(col);\n
+      }\n
+    });\n
+\n
+    function countRowHeaders() {\n
+      let THs = _this.hot.view.TBODY.querySelector(\'tr\').querySelectorAll(\'th\');\n
+      return THs.length;\n
+    }\n
+\n
+    function getColumn(target) {\n
+      let TH = closest(target, \'TH\');\n
+      return index(TH) - countRowHeaders();\n
+    }\n
+  }\n
+\n
+  enableObserveChangesPlugin() {\n
+    let _this = this;\n
+\n
+    this.hot._registerTimeout(\n
+      setTimeout(function() {\n
+        _this.hot.updateSettings({\n
+          observeChanges: true\n
+        });\n
+      }, 0));\n
+  }\n
+\n
+  /**\n
+   * Default sorting algorithm\n
+   * @param sortOrder\n
+   * @returns {Function} the comparing function\n
+   */\n
+  defaultSort(sortOrder) {\n
+    return function(a, b) {\n
+      if (typeof a[1] == "string") {\n
+        a[1] = a[1].toLowerCase();\n
+      }\n
+      if (typeof b[1] == "string") {\n
+        b[1] = b[1].toLowerCase();\n
+      }\n
+\n
+      if (a[1] === b[1]) {\n
+        return 0;\n
+      }\n
+      if (a[1] === null || a[1] === "") {\n
+        return 1;\n
+      }\n
+      if (b[1] === null || b[1] === "") {\n
+        return -1;\n
+      }\n
+      if (a[1] < b[1]) {\n
+        return sortOrder ? -1 : 1;\n
+      }\n
+      if (a[1] > b[1]) {\n
+        return sortOrder ? 1 : -1;\n
+      }\n
+      return 0;\n
+    };\n
+  }\n
+\n
+  /**\n
+   * Date sorting algorithm\n
+   * @param sortOrder\n
+   * @returns {Function} The compare function\n
+   */\n
+  dateSort(sortOrder) {\n
+    return function(a, b) {\n
+      if (a[1] === b[1]) {\n
+        return 0;\n
+      }\n
+      if (a[1] === null) {\n
+        return 1;\n
+      }\n
+      if (b[1] === null) {\n
+        return -1;\n
+      }\n
+\n
+      var aDate = new Date(a[1]);\n
+      var bDate = new Date(b[1]);\n
+\n
+      if (aDate < bDate) {\n
+        return sortOrder ? -1 : 1;\n
+      }\n
+      if (aDate > bDate) {\n
+        return sortOrder ? 1 : -1;\n
+      }\n
+\n
+      return 0;\n
+    };\n
+  }\n
+\n
+  sort() {\n
+    if (typeof this.hot.sortOrder == \'undefined\') {\n
+      return;\n
+    }\n
+\n
+    let colMeta,\n
+      sortFunction;\n
+\n
+    this.hot.sortingEnabled = false; //this is required by translateRow plugin hook\n
+    this.hot.sortIndex.length = 0;\n
+\n
+    var colOffset = this.hot.colOffset();\n
+    for (var i = 0, ilen = this.hot.countRows() - this.hot.getSettings().minSpareRows; i < ilen; i++) {\n
+      this.hot.sortIndex.push([i, this.hot.getDataAtCell(i, this.hot.sortColumn + colOffset)]);\n
+    }\n
+\n
+    colMeta = this.hot.getCellMeta(0, this.hot.sortColumn);\n
+\n
+    this.sortIndicators[this.hot.sortColumn] = colMeta.sortIndicator;\n
+\n
+    switch (colMeta.type) {\n
+      case \'date\':\n
+        sortFunction = this.dateSort;\n
+        break;\n
+      default:\n
+        sortFunction = this.defaultSort;\n
+    }\n
+\n
+    this.hot.sortIndex.sort(sortFunction(this.hot.sortOrder));\n
+\n
+    //Append spareRows\n
+    for (var i = this.hot.sortIndex.length; i < this.hot.countRows(); i++) {\n
+      this.hot.sortIndex.push([i, this.hot.getDataAtCell(i, this.hot.sortColumn + colOffset)]);\n
+    }\n
+\n
+    this.hot.sortingEnabled = true; //this is required by translateRow plugin hook\n
+  }\n
+\n
+  /**\n
+   * `modifyRow` hook callback. Translates physical row index to the sorted row index\n
+   * @param row {number} row index\n
+   * @returns {number} sorted row index\n
+   */\n
+  translateRow(row) {\n
+    if (this.hot.sortingEnabled && (typeof this.hot.sortOrder !== \'undefined\') && this.hot.sortIndex && this.hot.sortIndex.length && this.hot.sortIndex[row]) {\n
+      return this.hot.sortIndex[row][0];\n
+    }\n
+\n
+    return row;\n
+  }\n
+\n
+  /**\n
+   * Translates sorted row index to physical row index\n
+   * @param row {number} sorted row index\n
+   * @returns {number} physical row index\n
+   */\n
+  untranslateRow(row) {\n
+    if (this.hot.sortingEnabled && this.hot.sortIndex && this.hot.sortIndex.length) {\n
+      for (var i = 0; i < this.hot.sortIndex.length; i++) {\n
+        if (this.hot.sortIndex[i][0] == row) {\n
+          return i;\n
+        }\n
+      }\n
+    }\n
+  }\n
+\n
+  /**\n
+   * `afterGetColHeader` callback. Adds column sorting css classes to clickable headers\n
+   * @param col\n
+   * @param TH\n
+   */\n
+  getColHeader(col, TH) {\n
+    let headerLink = TH.querySelector(\'.colHeader\');\n
+\n
+    if (this.hot.getSettings().columnSorting && col >= 0) {\n
+      addClass(headerLink, \'columnSorting\');\n
+    }\n
+    removeClass(headerLink, \'descending\');\n
+    removeClass(headerLink, \'ascending\');\n
+\n
+    if (this.sortIndicators[col]) {\n
+      if (col === this.hot.sortColumn) {\n
+        if (this.sortOrderClass === \'ascending\') {\n
+          addClass(headerLink, \'ascending\');\n
+\n
+        } else if (this.sortOrderClass === \'descending\') {\n
+          addClass(headerLink, \'descending\');\n
+        }\n
+      }\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Check if any column is in a sorted state\n
+   * @returns {boolean}\n
+   */\n
+  isSorted() {\n
+    return typeof this.hot.sortColumn != \'undefined\';\n
+  }\n
+\n
+  /**\n
+   * `afterCreateRow` callback. Updates the sorting state after a row have been created\n
+   * @param index\n
+   * @param amount\n
+   */\n
+  afterCreateRow(index, amount) {\n
+    if (!this.isSorted()) {\n
+      return;\n
+    }\n
+\n
+    for (var i = 0; i < this.hot.sortIndex.length; i++) {\n
+      if (this.hot.sortIndex[i][0] >= index) {\n
+        this.hot.sortIndex[i][0] += amount;\n
+      }\n
+    }\n
+\n
+    for (var i = 0; i < amount; i++) {\n
+      this.hot.sortIndex.splice(index + i, 0, [index + i, this.hot.getData()[index + i][this.hot.sortColumn + this.hot.colOffset()]]);\n
+    }\n
+\n
+    this.saveSortingState();\n
+  }\n
+\n
+  /**\n
+   * `afterRemoveRow` hook callback.\n
+   * @param index\n
+   * @param amount\n
+   */\n
+  afterRemoveRow(index, amount) {\n
+    if (!this.isSorted()) {\n
+      return;\n
+    }\n
+\n
+    let physicalRemovedIndex = this.translateRow(index);\n
+\n
+    this.hot.sortIndex.splice(index, amount);\n
+\n
+    for (var i = 0; i < this.hot.sortIndex.length; i++) {\n
+      if (this.hot.sortIndex[i][0] > physicalRemovedIndex) {\n
+        this.hot.sortIndex[i][0] -= amount;\n
+      }\n
+    }\n
+\n
+    this.saveSortingState();\n
+  }\n
+\n
+}\n
+\n
+export default ColumnSorting;\n
+\n
+registerPlugin(\'columnSorting\', ColumnSorting);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11384</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>columnSorting.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

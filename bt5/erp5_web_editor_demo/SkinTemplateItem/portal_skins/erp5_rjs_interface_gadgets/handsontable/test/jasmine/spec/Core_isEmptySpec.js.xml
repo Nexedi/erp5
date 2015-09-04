@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272508.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_isEmptySpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core.isEmpty*\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  describe(\'isEmptyRow\', function () {\n
+    it(\'should be empty row\', function () {\n
+      handsontable();\n
+      var hot = getInstance();\n
+      expect(hot.isEmptyRow(0)).toEqual(true);\n
+    });\n
+\n
+    it(\'should not be empty row\', function () {\n
+      handsontable();\n
+      setDataAtCell(0, 0, \'test\');\n
+      var hot = getInstance();\n
+      expect(hot.isEmptyRow(0)).toEqual(false);\n
+    });\n
+\n
+    it(\'should bind this to instance\', function () {\n
+      handsontable();\n
+      var hot = getInstance();\n
+      var check = hot.isEmptyRow;\n
+      expect(check(0)).toEqual(true); //this may be change in future when we switch to define isEmptyCol in prototype\n
+    });\n
+  });\n
+\n
+  describe(\'isEmptyCol\', function () {\n
+    it(\'should be empty row\', function () {\n
+      handsontable();\n
+      var hot = getInstance();\n
+      expect(hot.isEmptyCol(0)).toEqual(true);\n
+    });\n
+\n
+    it(\'should not be empty row\', function () {\n
+      handsontable();\n
+      setDataAtCell(0, 0, \'test\');\n
+      var hot = getInstance();\n
+      expect(hot.isEmptyCol(0)).toEqual(false);\n
+    });\n
+\n
+    it(\'should bind this to instance\', function () {\n
+      handsontable();\n
+      var hot = getInstance();\n
+      var check = hot.isEmptyCol;\n
+      expect(check(0)).toEqual(true); //this may be change in future when we switch to define isEmptyCol in prototype\n
+    });\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1609</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_isEmptySpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,327 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272597.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>reporter.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window:false, alert:false, jasmine:false, Node:false, */\n
+/*jshint curly:false*/\n
+\n
+\'use strict\';\n
+\n
+var phantom = {};\n
+\n
+if (window._phantom) {\n
+  console.log = function(){\n
+    phantom.sendMessage(\'verbose\',Array.prototype.slice.apply(arguments).join(\', \'));\n
+  };\n
+}\n
+\n
+phantom.sendMessage = function() {\n
+  var args = [].slice.call( arguments );\n
+  var payload = JSON.stringify( args );\n
+  if (window._phantom) {\n
+    // alerts are the communication bridge to grunt\n
+    alert( payload );\n
+  }\n
+};\n
+\n
+(function(){\n
+\n
+  function PhantomReporter() {\n
+    this.started = false;\n
+    this.finished = false;\n
+    this.suites_ = [];\n
+    this.results_ = {};\n
+    this.buffer = \'\';\n
+  }\n
+\n
+  PhantomReporter.prototype.reportRunnerStarting = function(runner) {\n
+    this.started = true;\n
+\n
+    var suites = runner.topLevelSuites();\n
+    for (var i = 0; i < suites.length; i++) {\n
+      var suite = suites[i];\n
+      this.suites_.push(this.summarize_(suite));\n
+    }\n
+    phantom.sendMessage(\'jasmine.reportRunnerStarting\', this.suites_);\n
+  };\n
+\n
+  PhantomReporter.prototype.reportSpecStarting = function(spec) {\n
+    spec.startTime = (new Date()).getTime();\n
+    var message = {\n
+      suite : {\n
+        description : spec.suite.description\n
+      },\n
+      description : spec.description\n
+    };\n
+    phantom.sendMessage(\'jasmine.reportSpecStarting\', message);\n
+  };\n
+\n
+  PhantomReporter.prototype.suites = function() {\n
+    return this.suites_;\n
+  };\n
+\n
+  PhantomReporter.prototype.summarize_ = function(suiteOrSpec) {\n
+    var isSuite = suiteOrSpec instanceof jasmine.Suite;\n
+    var summary = {\n
+      id: suiteOrSpec.id,\n
+      name: suiteOrSpec.description,\n
+      type: isSuite ? \'suite\' : \'spec\',\n
+      children: []\n
+    };\n
+\n
+    if (isSuite) {\n
+      var children = suiteOrSpec.children();\n
+      for (var i = 0; i < children.length; i++) {\n
+        summary.children.push(this.summarize_(children[i]));\n
+      }\n
+    }\n
+    return summary;\n
+  };\n
+\n
+  PhantomReporter.prototype.results = function() {\n
+    return this.results_;\n
+  };\n
+\n
+  PhantomReporter.prototype.resultsForSpec = function(specId) {\n
+    return this.results_[specId];\n
+  };\n
+\n
+  function map(values, f) {\n
+    var result = [];\n
+    for (var ii = 0; ii < values.length; ii++) {\n
+      result.push(f(values[ii]));\n
+    }\n
+    return result;\n
+  }\n
+\n
+  PhantomReporter.prototype.reportRunnerResults = function(runner) {\n
+    this.finished = true;\n
+    var specIds = map(runner.specs(), function(a){return a.id;});\n
+    var summary = this.resultsForSpecs(specIds);\n
+    phantom.sendMessage(\'jasmine.reportRunnerResults\',summary);\n
+    phantom.sendMessage(\'jasmine.reportJUnitResults\', this.generateJUnitSummary(runner));\n
+    phantom.sendMessage(\'jasmine.done.PhantomReporter\');\n
+  };\n
+\n
+  PhantomReporter.prototype.reportSuiteResults = function(suite) {\n
+    if (suite.specs().length) {\n
+      suite.timestamp = new Date();\n
+      suite.duration = suite.timestamp.getTime() - suite.specs()[0].startTime;\n
+      phantom.sendMessage(\'jasmine.reportSuiteResults\',{\n
+        description : suite.description,\n
+        results : suite.results()\n
+      });\n
+    }\n
+  };\n
+\n
+  function stringify(obj) {\n
+    if (typeof obj !== \'object\') return obj;\n
+\n
+    var cache = [], keyMap = [], index;\n
+\n
+    var string = JSON.stringify(obj, function(key, value) {\n
+      // Let json stringify falsy values\n
+      if (!value) return value;\n
+\n
+      // If we\'re a node\n
+      if (value instanceof Node) return \'[ Node ]\';\n
+\n
+      // jasmine-given has expectations on Specs. We intercept to return a\n
+      // String to avoid stringifying the entire Jasmine environment, which\n
+      // results in exponential string growth\n
+      if (value instanceof jasmine.Spec) return \'[ Spec: \' + value.description + \' ]\';\n
+\n
+      // If we\'re a window (logic stolen from jQuery)\n
+      if (value.window && value.window === value.window.window) return \'[ Window ]\';\n
+\n
+      // Simple function reporting\n
+      if (typeof value === \'function\') return \'[ Function ]\';\n
+\n
+      if (typeof value === \'object\' && value !== null) {\n
+\n
+        if (index = cache.indexOf(value) !== -1) {\n
+          // If we have it in cache, report the circle with the key we first found it in\n
+          return \'[ Circular {\' + (keyMap[index] || \'root\') + \'} ]\';\n
+        }\n
+        cache.push(value);\n
+        keyMap.push(key);\n
+      }\n
+      return value;\n
+    });\n
+    return string;\n
+  }\n
+\n
+  PhantomReporter.prototype.reportSpecResults = function(spec) {\n
+    spec.duration = (new Date()).getTime() - spec.startTime;\n
+    var _results = spec.results();\n
+    var results = {\n
+      description : _results.description,\n
+      messages    : _results.getItems(),\n
+      failedCount : _results.failedCount,\n
+      totalCount  : _results.totalCount,\n
+      passedCount : _results.passedCount,\n
+      skipped     : _results.skipped,\n
+      passed      : _results.passed(),\n
+      msg         : _results.failedCount > 0 ? "failed" : "passed"\n
+    };\n
+    this.results_[spec.id] = results;\n
+\n
+    // Quick hack to alleviate cyclical object breaking JSONification.\n
+    for (var ii = 0; ii < results.messages.length; ii++) {\n
+      var item = results.messages[ii];\n
+      if (item.expected) {\n
+        item.expected = stringify(item.expected);\n
+      }\n
+      if (item.actual) {\n
+        item.actual = stringify(item.actual);\n
+      }\n
+    }\n
+\n
+    phantom.sendMessage( \'jasmine.reportSpecResults\', spec.id, results, this.getFullName(spec));\n
+  };\n
+\n
+  PhantomReporter.prototype.getFullName = function(spec) {\n
+    return getNestedSuiteName(spec.suite, \':: \') +  \':: \' + spec.description;\n
+  };\n
+\n
+  PhantomReporter.prototype.resultsForSpecs = function(specIds){\n
+    var results = {};\n
+    for (var i = 0; i < specIds.length; i++) {\n
+      var specId = specIds[i];\n
+      results[specId] = this.summarizeResult_(this.results_[specId]);\n
+    }\n
+    return results;\n
+  };\n
+\n
+  PhantomReporter.prototype.summarizeResult_ = function(result){\n
+    var summaryMessages = [];\n
+    var messagesLength = result.messages.length;\n
+    for (var messageIndex = 0; messageIndex < messagesLength; messageIndex++) {\n
+      var resultMessage = result.messages[messageIndex];\n
+      summaryMessages.push({\n
+        text: resultMessage.type === \'log\' ? resultMessage.toString() : jasmine.undefined,\n
+        passed: resultMessage.passed ? resultMessage.passed() : true,\n
+        type: resultMessage.type,\n
+        message: resultMessage.message,\n
+        trace: {\n
+          stack: resultMessage.passed && !resultMessage.passed() ? resultMessage.trace.stack : jasmine.undefined\n
+        }\n
+      });\n
+    }\n
+\n
+    return {\n
+      result : result.result,\n
+      messages : summaryMessages\n
+    };\n
+  };\n
+\n
+  function getNestedSuiteName(suite, sep) {\n
+    var names = [];\n
+    while (suite) {\n
+      names.unshift(suite.description);\n
+      suite = suite.parentSuite;\n
+    }\n
+    return names.join(sep ? sep : \' \');\n
+  }\n
+\n
+  function getTopLevelSuiteId(suite) {\n
+    var id;\n
+    while (suite) {\n
+      id = suite.id;\n
+      suite = suite.parentSuite;\n
+    }\n
+    return id;\n
+  }\n
+\n
+  PhantomReporter.prototype.generateJUnitSummary = function(runner) {\n
+    var consolidatedSuites = {},\n
+        suites = map(runner.suites(), function(suite) {\n
+          var failures = 0;\n
+\n
+          var testcases = map(suite.specs(), function(spec) {\n
+            var failureMessages = [];\n
+            if (spec.results().failedCount) {\n
+              failures++;\n
+              var resultsItems = spec.results().items_;\n
+              for (var ii = 0; ii < resultsItems; ii++) {\n
+                var expectation = resultsItems[ii];\n
+                if (!expectation.passed()) {\n
+                  failureMessages.push(expectation.message);\n
+                }\n
+              }\n
+            }\n
+            return {\n
+              assertions: spec.results().items_.length,\n
+              className: getNestedSuiteName(spec.suite),\n
+              name: spec.description,\n
+              time: spec.duration / 1000,\n
+              failureMessages: failureMessages\n
+            };\n
+          });\n
+\n
+          var data = {\n
+              name: getNestedSuiteName(suite),\n
+              time: suite.duration / 1000,\n
+              timestamp: suite.timestamp,\n
+              tests: suite.specs().length,\n
+              errors: 0, // TODO: These exist in the JUnit XML but not sure how they map to jasmine things\n
+              testcases: testcases,\n
+              failures: failures\n
+            };\n
+\n
+          if (suite.parentSuite) {\n
+            consolidatedSuites[getTopLevelSuiteId(suite)].push(data);\n
+          } else {\n
+            consolidatedSuites[suite.id] = [data];\n
+          }\n
+          return data;\n
+        });\n
+\n
+    return {\n
+      suites: suites,\n
+      consolidatedSuites: consolidatedSuites\n
+    };\n
+  };\n
+\n
+  jasmine.getEnv().addReporter( new PhantomReporter() );\n
+}());\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8597</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>reporter.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

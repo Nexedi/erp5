@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272520.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_dataSchemaSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_dataSchema\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should be equal to `hot.getSchema()` when dataSchema is defined in settings (as object)\', function () {\n
+    var schema = {id: null, name: {first: null, last: null}, cars: [{brand: null}]},\n
+      hot = handsontable({\n
+        data: [],\n
+        dataSchema: schema,\n
+        minRows: 5,\n
+        minCols: 4,\n
+        colHeaders: [\'ID\', \'First Name\', \'Last Name\'],\n
+        columns: [\n
+          {data: "id"},\n
+          {data: "name.first"},\n
+          {data: "name.last"}\n
+        ],\n
+        minSpareRows: 1\n
+      });\n
+\n
+    expect(JSON.stringify(hot.getSchema())).toEqual(JSON.stringify(schema));\n
+  });\n
+\n
+  it(\'should be equal to `hot.getSchema()` when dataSchema is defined in settings (as function)\', function () {\n
+    var schema = {id: null, name: {first: null, last: null}, cars: [{brand: null}]},\n
+      hot = handsontable({\n
+        data: [],\n
+        dataSchema: function() {\n
+          return schema;\n
+        },\n
+        minRows: 5,\n
+        minCols: 4,\n
+        colHeaders: [\'ID\', \'First Name\', \'Last Name\'],\n
+        columns: [\n
+          {data: "id"},\n
+          {data: "name.first"},\n
+          {data: "name.last"}\n
+        ],\n
+        minSpareRows: 1\n
+      });\n
+    expect(JSON.stringify(hot.getSchema())).toEqual(JSON.stringify(schema));\n
+  });\n
+\n
+  it(\'should be equal to `hot.getSchema()` when dataSchema is generated based on data structure\', function () {\n
+    var hot = handsontable({\n
+        data: [\n
+          {id: 1, name: {first: \'Alan\', last: \'Pakoli\'}, cars: [{brand: \'Ford\'}]}\n
+        ],\n
+        minRows: 5,\n
+        minCols: 4,\n
+        colHeaders: [\'ID\', \'First Name\', \'Last Name\'],\n
+        columns: [\n
+          {data: "id"},\n
+          {data: "name.first"},\n
+          {data: "name.last"}\n
+        ],\n
+        minSpareRows: 1\n
+      });\n
+\n
+    expect(JSON.stringify(hot.getSchema())).\n
+      toEqual(JSON.stringify({id: null, name: {first: null, last: null}, cars: [{brand: null}]}));\n
+  });\n
+\n
+  it(\'should create new row from dataSchema\', function () {\n
+    handsontable({\n
+      data: [],\n
+      dataSchema: {id: null, name: {first: null, last: null}, address: null},\n
+      minRows: 5,\n
+      minCols: 4,\n
+      colHeaders: [\'ID\', \'First Name\', \'Last Name\', \'Address\'],\n
+      columns: [\n
+        {data: "id"},\n
+        {data: "name.first"},\n
+        {data: "name.last"},\n
+        {data: "address"}\n
+      ],\n
+      minSpareRows: 1\n
+    });\n
+    selectCell(0, 1);\n
+\n
+    keyDownUp(\'enter\');\n
+    keyProxy().val(\'Ted\');\n
+    keyDownUp(\'enter\');\n
+    expect(getData()[0].name.first).toEqual(\'Ted\');\n
+  });\n
+\n
+  it(\'should create new row from dataSchema (functional)\', function () {\n
+    handsontable({\n
+      data: [],\n
+      dataSchema: function (index) {\n
+        return {id: 1000 + index, name: {first: null, last: null}, address: null}\n
+      },\n
+      isEmptyRow: function (r) {\n
+        var row = this.getData()[r];\n
+\n
+        return (row.name.first === null || row.name.first === \'\') &&\n
+          (row.name.last === null || row.name.last === \'\') &&\n
+          (row.address === null || row.address === \'\');\n
+      },\n
+      minRows: 5,\n
+      minCols: 4,\n
+      colHeaders: [\'ID\', \'First Name\', \'Last Name\', \'Address\'],\n
+      columns: [\n
+        {data: "id"},\n
+        {data: "name.first"},\n
+        {data: "name.last"},\n
+        {data: "address"}\n
+      ],\n
+      minSpareRows: 1\n
+    });\n
+    selectCell(4, 1);\n
+\n
+    expect(countRows()).toEqual(5);\n
+    keyDownUp(\'enter\');\n
+    keyProxy().val(\'Ted\');\n
+\n
+    // need it in next frame as long as HT is rendered in async\n
+    keyDownUp(\'enter\');\n
+    // need it in next frame as long as HT is rendered in async\n
+    keyDownUp(\'enter\');\n
+\n
+    expect(getData()[4].name.first).toEqual(\'Ted\');\n
+    expect(getData()[4].id).toEqual(1004);\n
+    expect(countRows()).toEqual(6); //row should be added by keepEmptyRows\n
+  });\n
+\n
+  it("should translate prop to col, when prop is a function", function () {\n
+\n
+    var idAccessor = createAccessorForProperty(\'id\');\n
+    var nameAccessor = createAccessorForProperty(\'name\');\n
+\n
+    hot = handsontable({\n
+      data: [\n
+        Model({\n
+          id: 1,\n
+          name: \'Tom\'\n
+        }),\n
+        Model({\n
+          id: 2,\n
+          name: \'Hanna\'\n
+        }),\n
+        Model({\n
+          id: 3,\n
+          name: \'Jerry\'\n
+        })\n
+      ],\n
+      dataSchema: Model,\n
+      columns: [\n
+        {\n
+          data: idAccessor\n
+        },\n
+        {\n
+          data: nameAccessor\n
+        }\n
+      ]\n
+    });\n
+\n
+    expect(hot.propToCol(idAccessor)).toEqual(0);\n
+    expect(hot.propToCol(nameAccessor)).toEqual(1);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4712</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_dataSchemaSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

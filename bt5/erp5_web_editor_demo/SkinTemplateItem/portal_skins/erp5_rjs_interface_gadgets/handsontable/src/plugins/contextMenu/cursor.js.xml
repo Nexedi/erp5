@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272711.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>cursor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {getWindowScrollLeft, getWindowScrollTop,} from \'./../../helpers/dom/element\';\n
+import {pageX, pageY} from \'./../../helpers/dom/event\';\n
+\n
+/**\n
+ * Helper class for checking if element will fit at the desired side of cursor.\n
+ *\n
+ * @class Cursor\n
+ * @plugin ContextMenu\n
+ */\n
+class Cursor {\n
+  constructor(object) {\n
+    let windowScrollTop = getWindowScrollTop();\n
+    let windowScrollLeft = getWindowScrollLeft();\n
+    let top, topRelative;\n
+    let left, leftRelative;\n
+    let scrollTop, scrollLeft;\n
+    let cellHeight, cellWidth;\n
+\n
+    this.type = this.getSourceType(object);\n
+\n
+    /* jshint -W020 */\n
+    if (this.type === \'literal\') {\n
+      top = parseInt(object.top, 10);\n
+      left = parseInt(object.left, 10);\n
+      cellHeight = object.height;\n
+      cellWidth = object.width;\n
+\n
+    } else if (this.type === \'event\') {\n
+      top = parseInt(pageY(object), 10);\n
+      left = parseInt(pageX(object), 10);\n
+      cellHeight = object.target.clientHeight;\n
+      cellWidth = object.target.clientWidth;\n
+    }\n
+    topRelative = top - windowScrollTop;\n
+    leftRelative = left - windowScrollLeft;\n
+    scrollTop = windowScrollTop;\n
+    scrollLeft = windowScrollLeft;\n
+\n
+    this.top = top;\n
+    this.topRelative = topRelative;\n
+    this.left = left;\n
+    this.leftRelative = leftRelative;\n
+    this.scrollTop = scrollTop;\n
+    this.scrollLeft = scrollLeft;\n
+    this.cellHeight = cellHeight;\n
+    this.cellWidth = cellWidth;\n
+  }\n
+\n
+  /**\n
+   * Get source type name.\n
+   *\n
+   * @param {*} object Event or Object with coordinates.\n
+   * @returns {String} Returns one of this values: `\'literal\'`, `\'event\'`.\n
+   */\n
+  getSourceType(object) {\n
+    let type = \'literal\';\n
+\n
+    if (object instanceof Event) {\n
+      type = \'event\';\n
+    }\n
+\n
+    return type;\n
+  }\n
+\n
+  /**\n
+   * Checks if element can be placed above the cursor.\n
+   *\n
+   * @param {HTMLElement} element Element to check if it\'s size will fit above the cursor.\n
+   * @returns {Boolean}\n
+   */\n
+  fitsAbove(element) {\n
+    return this.topRelative >= element.offsetHeight;\n
+  }\n
+\n
+  /**\n
+   * Checks if element can be placed below the cursor.\n
+   *\n
+   * @param {HTMLElement} element Element to check if it\'s size will fit below the cursor.\n
+   * @param {Number} [viewportHeight]\n
+   * @returns {Boolean}\n
+   */\n
+  fitsBelow(element, viewportHeight = window.innerHeight) {\n
+    return this.topRelative + element.offsetHeight <= viewportHeight;\n
+  }\n
+\n
+  /**\n
+   * Checks if element can be placed on the right of the cursor.\n
+   *\n
+   * @param {HTMLElement} element Element to check if it\'s size will fit on the right of the cursor.\n
+   * @param {Number} [viewportWidth]\n
+   * @returns {Boolean}\n
+   */\n
+  fitsOnRight(element, viewportWidth = window.innerWidth) {\n
+    return this.leftRelative + this.cellWidth + element.offsetWidth <= viewportWidth;\n
+  }\n
+\n
+  /**\n
+   * Checks if element can be placed on the left on the cursor.\n
+   *\n
+   * @param {HTMLElement} element Element to check if it\'s size will fit on the left of the cursor.\n
+   * @returns {Boolean}\n
+   */\n
+  fitsOnLeft(element) {\n
+    return this.leftRelative >= element.offsetWidth;\n
+  }\n
+}\n
+\n
+export {Cursor};\n
+\n
+// temp for tests only!\n
+Handsontable.plugins.utils = Handsontable.plugins.utils || {};\n
+Handsontable.plugins.utils.Cursor = Cursor;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3181</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>cursor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

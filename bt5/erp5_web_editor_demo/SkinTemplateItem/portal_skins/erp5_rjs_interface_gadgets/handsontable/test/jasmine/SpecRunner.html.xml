@@ -1,0 +1,304 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272544.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SpecRunner.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+  <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />\n
+  <meta charset="utf-8">\n
+  <meta http-equiv="cache-control" content="no-cache" />\n
+  <meta http-equiv="expires" content="0" />\n
+  <title>Jasmine Spec Runner</title>\n
+  <link rel="stylesheet" type="text/css" href="lib/jasmine/jasmine.css">\n
+\n
+  \n
+  \n
+      <link rel="stylesheet" type="text/css" href="css/SpecRunner.css">\n
+    \n
+  \n
+      <link rel="stylesheet" type="text/css" href="../../dist/handsontable.css">\n
+    \n
+  \n
+      <link rel="stylesheet" type="text/css" href="../../plugins/removeRow/handsontable.removeRow.css">\n
+    \n
+  \n
+      <link rel="stylesheet" type="text/css" href="../../demo/js/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">\n
+    \n
+  \n
+      <link rel="stylesheet" type="text/css" href="../../demo/js/pikaday/css/pikaday.css">\n
+    \n
+  \n
+\n
+  <script src="lib/jasmine/phantom-polyfill.js"></script>\n
+  <script src="lib/jasmine/jasmine.js"></script>\n
+  <script src="lib/jasmine/jasmine-html.js"></script>\n
+\n
+  \n
+    \n
+      <script src="../../demo/js/jquery.min.js"></script>\n
+    \n
+      <script src="../../lib/numeral/numeral.js"></script>\n
+    \n
+      <script src="../../demo/js/moment/moment.js"></script>\n
+    \n
+      <script src="../../demo/js/pikaday/pikaday.js"></script>\n
+    \n
+      <script src="../../demo/js/ZeroClipboard.js"></script>\n
+    \n
+      <script src="lib/jasmine-extensions.js"></script>\n
+    \n
+      <script src="spec/SpecHelper.js"></script>\n
+    \n
+      <script src="lib/nodeShim.js"></script>\n
+    \n
+      <script src="spec/test-init.js"></script>\n
+    \n
+      <script src="../../dist/handsontable.js"></script>\n
+    \n
+      <script src="../../demo/js/numeral.de-de.js"></script>\n
+    \n
+      <script src="../../demo/js/backbone/lodash.underscore.js"></script>\n
+    \n
+      <script src="../../demo/js/backbone/backbone.js"></script>\n
+    \n
+      <script src="../../demo/js/backbone/backbone-relational/backbone-relational.js"></script>\n
+    \n
+      <script src="../../demo/js/jquery-ui/js/jquery-ui.custom.js"></script>\n
+    \n
+      <script src="../../plugins/removeRow/handsontable.removeRow.js"></script>\n
+    \n
+      <script src="spec/ColHeaderSpec.js"></script>\n
+    \n
+      <script src="spec/Core_alterSpec.js"></script>\n
+    \n
+      <script src="spec/Core_beforeKeyDownSpec.js"></script>\n
+    \n
+      <script src="spec/Core_beforechangeSpec.js"></script>\n
+    \n
+      <script src="spec/Core_copySpec.js"></script>\n
+    \n
+      <script src="spec/Core_countSpec.js"></script>\n
+    \n
+      <script src="spec/Core_dataSchemaSpec.js"></script>\n
+    \n
+      <script src="spec/Core_datachangeSpec.js"></script>\n
+    \n
+      <script src="spec/Core_destroyEditorSpec.js"></script>\n
+    \n
+      <script src="spec/Core_destroySpec.js"></script>\n
+    \n
+      <script src="spec/Core_getCellMetaSpec.js"></script>\n
+    \n
+      <script src="spec/Core_getColHeaderSpec.js"></script>\n
+    \n
+      <script src="spec/Core_getDataAt___Spec.js"></script>\n
+    \n
+      <script src="spec/Core_getRowHeaderSpec.js"></script>\n
+    \n
+      <script src="spec/Core_initSpec.js"></script>\n
+    \n
+      <script src="spec/Core_isEmptySpec.js"></script>\n
+    \n
+      <script src="spec/Core_keepEmptyRowsSpec.js"></script>\n
+    \n
+      <script src="spec/Core_listenSpec.js"></script>\n
+    \n
+      <script src="spec/Core_loadDataSpec.js"></script>\n
+    \n
+      <script src="spec/Core_navigationSpec.js"></script>\n
+    \n
+      <script src="spec/Core_onKeyDownSpec.js"></script>\n
+    \n
+      <script src="spec/Core_pasteSpec.js"></script>\n
+    \n
+      <script src="spec/Core_populateFromArraySpec.js"></script>\n
+    \n
+      <script src="spec/Core_reCreateSpec.js"></script>\n
+    \n
+      <script src="spec/Core_removeCellMetaSpec.js"></script>\n
+    \n
+      <script src="spec/Core_renderSpec.js"></script>\n
+    \n
+      <script src="spec/Core_selectionSpec.js"></script>\n
+    \n
+      <script src="spec/Core_setCellMetaSpec.js"></script>\n
+    \n
+      <script src="spec/Core_setDataAtCellSpec.js"></script>\n
+    \n
+      <script src="spec/Core_spliceSpec.js"></script>\n
+    \n
+      <script src="spec/Core_updateSpec.js"></script>\n
+    \n
+      <script src="spec/Core_validateSpec.js"></script>\n
+    \n
+      <script src="spec/Core_viewSpec.js"></script>\n
+    \n
+      <script src="spec/DomSpec.js"></script>\n
+    \n
+      <script src="spec/EventManagerSpec.js"></script>\n
+    \n
+      <script src="spec/FillHandleSpec.js"></script>\n
+    \n
+      <script src="spec/PerformanceSpec.js"></script>\n
+    \n
+      <script src="spec/PluginHooksSpec.js"></script>\n
+    \n
+      <script src="spec/RowHeaderSpec.js"></script>\n
+    \n
+      <script src="spec/multiMapSpec.js"></script>\n
+    \n
+      <script src="spec/editors/autocompleteEditorSpec.js"></script>\n
+    \n
+      <script src="spec/editors/baseEditorSpec.js"></script>\n
+    \n
+      <script src="spec/editors/dateEditorSpec.js"></script>\n
+    \n
+      <script src="spec/editors/dropdownEditorSpec.js"></script>\n
+    \n
+      <script src="spec/editors/handsontableEditorSpec.js"></script>\n
+    \n
+      <script src="spec/editors/noEditorSpec.js"></script>\n
+    \n
+      <script src="spec/editors/numericEditorSpec.js"></script>\n
+    \n
+      <script src="spec/editors/passwordEditorSpec.js"></script>\n
+    \n
+      <script src="spec/editors/selectEditorSpec.js"></script>\n
+    \n
+      <script src="spec/editors/textEditorSpec.js"></script>\n
+    \n
+      <script src="spec/helpers/ObjectSpec.js"></script>\n
+    \n
+      <script src="spec/helpers/StringSpec.js"></script>\n
+    \n
+      <script src="spec/helpers/UnicodeSpec.js"></script>\n
+    \n
+      <script src="spec/renderers/autocompleteRendererSpec.js"></script>\n
+    \n
+      <script src="spec/renderers/cellDecoratorSpec.js"></script>\n
+    \n
+      <script src="spec/renderers/checkboxRendererSpec.js"></script>\n
+    \n
+      <script src="spec/renderers/numericRendererSpec.js"></script>\n
+    \n
+      <script src="spec/renderers/passwordRendererSpec.js"></script>\n
+    \n
+      <script src="spec/renderers/textRendererSpec.js"></script>\n
+    \n
+      <script src="spec/settings/colWidthsSpec.js"></script>\n
+    \n
+      <script src="spec/settings/copyableSpec.js"></script>\n
+    \n
+      <script src="spec/settings/currentRowClassNameSpec.js"></script>\n
+    \n
+      <script src="spec/settings/editorSpec.js"></script>\n
+    \n
+      <script src="spec/settings/fragmentSelectionSpec.js"></script>\n
+    \n
+      <script src="spec/settings/rendererSpec.js"></script>\n
+    \n
+      <script src="spec/settings/tableClassNameSpec.js"></script>\n
+    \n
+      <script src="spec/utils/ghostTableSpec.js"></script>\n
+    \n
+      <script src="spec/utils/samplesGeneratorSpec.js"></script>\n
+    \n
+      <script src="spec/validators/dateValidatorSpec.js"></script>\n
+    \n
+      <script src="spec/validators/numericValidatorSpec.js"></script>\n
+    \n
+      <script src="../../src/plugins/autoColumnSize/test/autoColumnSize.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/autoRowSize/test/autoRowSize.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/columnSorting/test/columnSorting.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/contextMenu/test/contextMenu.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/contextMenu/test/cursor.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/contextMenuCopyPaste/test/contextMenuCopyPaste.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/copyPaste/test/copyPaste.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/customBorders/test/customBorders.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/dragToScroll/test/dragToScroll.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/grouping/test/grouping.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/manualColumnFreeze/test/manualColumnFreeze.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/manualColumnMove/test/manualColumnMove.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/manualColumnResize/test/manualColumnResize.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/manualRowMove/test/manualRowMove.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/manualRowResize/test/manualRowResize.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/mergeCells/test/MergeCells.canMergeRange.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/observeChanges/test/observeChanges.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/persistentState/test/persistentState.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/search/test/search.spec.js"></script>\n
+    \n
+      <script src="../../src/plugins/undoRedo/test/UndoRedo.spec.js"></script>\n
+    \n
+      <script src="../../plugins/removeRow/test/jquery.handsontable.removeRow.spec.js"></script>\n
+    \n
+      <script src="spec/MemoryLeakTest.js"></script>\n
+    \n
+  \n
+\n
+  <script src="lib/jasmine/reporter.js"></script>\n
+  <script src="lib/jquery.simulate.js"></script>\n
+  <script src="lib/jasmine/jasmine-helper.js"></script>\n
+\n
+</head>\n
+<body>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8844</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>SpecRunner.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

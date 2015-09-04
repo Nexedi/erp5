@@ -1,0 +1,248 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272620.32</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>selection.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {addClass} from \'./../../../helpers/dom/element\';\n
+import {WalkontableBorder} from \'./border\';\n
+import {WalkontableCellCoords} from \'./cell/coords\';\n
+import {WalkontableCellRange} from \'./cell/range\';\n
+\n
+\n
+/**\n
+ * @class WalkontableSelection\n
+ */\n
+class WalkontableSelection {\n
+  /**\n
+   * @param {Object} settings\n
+   * @param {WalkontableCellRange} cellRange\n
+   */\n
+  constructor(settings, cellRange) {\n
+    this.settings = settings;\n
+    this.cellRange = cellRange || null;\n
+    this.instanceBorders = {};\n
+  }\n
+\n
+  /**\n
+   * Each Walkontable clone requires it\'s own border for every selection. This method creates and returns selection\n
+   * borders per instance\n
+   *\n
+   * @param {Walkontable} wotInstance\n
+   * @returns {WalkontableBorder}\n
+   */\n
+  getBorder(wotInstance) {\n
+    if (this.instanceBorders[wotInstance.guid]) {\n
+      return this.instanceBorders[wotInstance.guid];\n
+    }\n
+    // where is this returned?\n
+    this.instanceBorders[wotInstance.guid] = new WalkontableBorder(wotInstance, this.settings);\n
+  }\n
+\n
+  /**\n
+   * Checks if selection is empty\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isEmpty() {\n
+    return this.cellRange === null;\n
+  }\n
+\n
+  /**\n
+   * Adds a cell coords to the selection\n
+   *\n
+   * @param {WalkontableCellCoords} coords\n
+   */\n
+  add(coords) {\n
+    if (this.isEmpty()) {\n
+      this.cellRange = new WalkontableCellRange(coords, coords, coords);\n
+\n
+    } else {\n
+      this.cellRange.expand(coords);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * If selection range from or to property equals oldCoords, replace it with newCoords. Return boolean\n
+   * information about success\n
+   *\n
+   * @param {WalkontableCellCoords} oldCoords\n
+   * @param {WalkontableCellCoords} newCoords\n
+   * @returns {Boolean}\n
+   */\n
+  replace(oldCoords, newCoords) {\n
+    if (!this.isEmpty()) {\n
+      if (this.cellRange.from.isEqual(oldCoords)) {\n
+        this.cellRange.from = newCoords;\n
+\n
+        return true;\n
+      }\n
+      if (this.cellRange.to.isEqual(oldCoords)) {\n
+        this.cellRange.to = newCoords;\n
+\n
+        return true;\n
+      }\n
+    }\n
+\n
+    return false;\n
+  }\n
+\n
+  /**\n
+   * Clears selection\n
+   */\n
+  clear() {\n
+    this.cellRange = null;\n
+  }\n
+\n
+  /**\n
+   * Returns the top left (TL) and bottom right (BR) selection coordinates\n
+   *\n
+   * @returns {Array} Returns array of coordinates for example `[1, 1, 5, 5]`\n
+   */\n
+  getCorners() {\n
+    let topLeft = this.cellRange.getTopLeftCorner();\n
+    let bottomRight = this.cellRange.getBottomRightCorner();\n
+\n
+    return [\n
+      topLeft.row,\n
+      topLeft.col,\n
+      bottomRight.row,\n
+      bottomRight.col\n
+    ];\n
+  }\n
+\n
+  /**\n
+   * Adds class name to cell element at given coords\n
+   *\n
+   * @param {Walkontable} wotInstance Walkontable instance\n
+   * @param {Number} sourceRow Cell row coord\n
+   * @param {Number} sourceColumn Cell column coord\n
+   * @param {String} className Class name\n
+   */\n
+  addClassAtCoords(wotInstance, sourceRow, sourceColumn, className) {\n
+    let TD = wotInstance.wtTable.getCell(new WalkontableCellCoords(sourceRow, sourceColumn));\n
+\n
+    if (typeof TD === \'object\') {\n
+      addClass(TD, className);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * @param wotInstance\n
+   */\n
+  draw(wotInstance) {\n
+    if (this.isEmpty()) {\n
+      if (this.settings.border) {\n
+        let border = this.getBorder(wotInstance);\n
+\n
+        if (border) {\n
+          border.disappear();\n
+        }\n
+      }\n
+\n
+      return;\n
+    }\n
+    let renderedRows = wotInstance.wtTable.getRenderedRowsCount();\n
+    let renderedColumns = wotInstance.wtTable.getRenderedColumnsCount();\n
+    let corners = this.getCorners();\n
+    let sourceRow, sourceCol, TH;\n
+\n
+    for (let column = 0; column < renderedColumns; column++) {\n
+      sourceCol = wotInstance.wtTable.columnFilter.renderedToSource(column);\n
+\n
+      if (sourceCol >= corners[1] && sourceCol <= corners[3]) {\n
+        TH = wotInstance.wtTable.getColumnHeader(sourceCol);\n
+\n
+        if (TH && this.settings.highlightColumnClassName) {\n
+          addClass(TH, this.settings.highlightColumnClassName);\n
+        }\n
+      }\n
+    }\n
+\n
+    for (let row = 0; row < renderedRows; row++) {\n
+      sourceRow = wotInstance.wtTable.rowFilter.renderedToSource(row);\n
+\n
+      if (sourceRow >= corners[0] && sourceRow <= corners[2]) {\n
+        TH = wotInstance.wtTable.getRowHeader(sourceRow);\n
+\n
+        if (TH && this.settings.highlightRowClassName) {\n
+          addClass(TH, this.settings.highlightRowClassName);\n
+        }\n
+      }\n
+\n
+      for (let column = 0; column < renderedColumns; column++) {\n
+        sourceCol = wotInstance.wtTable.columnFilter.renderedToSource(column);\n
+\n
+        if (sourceRow >= corners[0] && sourceRow <= corners[2] && sourceCol >= corners[1] && sourceCol <= corners[3]) {\n
+          // selected cell\n
+          if (this.settings.className) {\n
+            this.addClassAtCoords(wotInstance, sourceRow, sourceCol, this.settings.className);\n
+          }\n
+        } else if (sourceRow >= corners[0] && sourceRow <= corners[2]) {\n
+          // selection is in this row\n
+          if (this.settings.highlightRowClassName) {\n
+            this.addClassAtCoords(wotInstance, sourceRow, sourceCol, this.settings.highlightRowClassName);\n
+          }\n
+        } else if (sourceCol >= corners[1] && sourceCol <= corners[3]) {\n
+          // selection is in this column\n
+          if (this.settings.highlightColumnClassName) {\n
+            this.addClassAtCoords(wotInstance, sourceRow, sourceCol, this.settings.highlightColumnClassName);\n
+          }\n
+        }\n
+      }\n
+    }\n
+    wotInstance.getSetting(\'onBeforeDrawBorders\', corners, this.settings.className);\n
+\n
+    if (this.settings.border) {\n
+      let border = this.getBorder(wotInstance);\n
+\n
+      if (border) {\n
+        // warning! border.appear modifies corners!\n
+        border.appear(corners);\n
+      }\n
+    }\n
+  }\n
+}\n
+\n
+export {WalkontableSelection};\n
+\n
+window.WalkontableSelection = WalkontableSelection;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5698</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>selection.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

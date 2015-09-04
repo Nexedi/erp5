@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272523.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_destroyEditorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_destroyEditor\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'editor should not be visible\', function () {\n
+    handsontable();\n
+    selectCell(1, 1);\n
+\n
+    keyDownUp(\'enter\');\n
+\n
+    destroyEditor();\n
+    expect(isEditorVisible()).toEqual(false);\n
+  });\n
+\n
+  it(\'value should be saved\', function () {\n
+    handsontable();\n
+    selectCell(1, 1);\n
+\n
+    keyDownUp(\'enter\');\n
+    keyProxy().val(\'Ted\');\n
+\n
+    destroyEditor();\n
+    expect(getDataAtCell(1, 1)).toEqual(\'Ted\');\n
+  });\n
+\n
+  it(\'cell should be selected\', function () {\n
+    handsontable();\n
+    selectCell(1, 1);\n
+\n
+    keyDownUp(\'enter\');\n
+\n
+    destroyEditor();\n
+    expect(getSelected()).toEqual([1, 1, 1, 1]);\n
+  });\n
+\n
+  it(\'should revert original value when param set to true\', function () {\n
+    handsontable();\n
+    selectCell(1, 1);\n
+\n
+    keyDownUp(\'enter\');\n
+    keyProxy().val(\'Ted\');\n
+\n
+    destroyEditor(true);\n
+    expect(getDataAtCell(1, 1)).toEqual(null);\n
+  });\n
+\n
+  it("should not destroy editor on scroll", function () {\n
+    this.$container.css({\n
+      width: 200,\n
+      height: 100\n
+    });\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(20, 10)\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    var editor = $(\'.handsontableInputHolder\');\n
+\n
+    expect(editor.is(\':visible\')).toBe(true);\n
+\n
+    this.$container.scroll();\n
+\n
+    expect(editor.is(\':visible\')).toBe(true);\n
+\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1592</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_destroyEditorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

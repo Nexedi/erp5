@@ -1,0 +1,552 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272682.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>comments.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  addClass,\n
+  closest,\n
+  getWindowScrollLeft,\n
+  getWindowScrollTop,\n
+  hasClass,\n
+  offset,\n
+    } from \'./../../helpers/dom/element\';\n
+import {EventManager} from \'./../../eventManager\';\n
+import {WalkontableCellCoords} from \'./../../3rdparty/walkontable/src/cell/coords\';\n
+import {registerPlugin, getPlugin} from \'./../../plugins\';\n
+import BasePlugin from \'./../_base\';\n
+import {CommentEditor} from \'./commentEditor\';\n
+\n
+/**\n
+ * @plugin Comments\n
+ *\n
+ * @description\n
+ * With option `comments: true`, you can manage cell comments programmatically or through the context menu.\n
+ * To initialize Handsontable with predefined comments, provide comment cell property: `{row: 1, col: 1, comment: "Test comment"}`\n
+ *\n
+ * @example\n
+ *\n
+ * ```js\n
+ * ...\n
+ * var hot = new Handsontable(document.getElementById(\'example\'), {\n
+ *   date: getData(),\n
+ *   comments: true,\n
+ *   cell: [\n
+ *     {row: 1, col: 1, comment: \'Foo\'},\n
+ *     {row: 2, col: 2, comment: \'Bar\'}\n
+ *   ]\n
+ * });\n
+ * // Access to comments plugin instance:\n
+ * var commentsPlugin = hot.getPlugin(\'comments\');\n
+ *\n
+ * // Managing comments programmatically:\n
+ * commentsPlugin.editor.setValue(\'Cell comment text\');\n
+ * commentsPlugin.showAtCell(1, 6);\n
+ * commentsPlugin.saveCommentAtCell(1, 6);\n
+ * commentsPlugin.removeCommentAtCell(1, 6);\n
+ * ...\n
+ * // You can also set range once and use proper methods:\n
+ * commentsPlugin.setRange({row: 1, col: 6});\n
+ * commentsPlugin.editor.setValue(\'Cell comment text\');\n
+ *\n
+ * commentsPlugin.show();\n
+ * commentsPlugin.saveComment();\n
+ * commentsPlugin.removeComment();\n
+ * ...\n
+ * ```\n
+ */\n
+class Comments extends BasePlugin {\n
+  constructor(hotInstance) {\n
+    super(hotInstance);\n
+    /**\n
+     * Instance of {@link CommentEditor}\n
+     *\n
+     * @type {CommentEditor}\n
+     */\n
+    this.editor = null;\n
+\n
+    /**\n
+     * Instance of {@link EventManager}\n
+     *\n
+     * @private\n
+     * @type {EventManager}\n
+     */\n
+    this.eventManager = null;\n
+\n
+    /**\n
+     * Current cell range\n
+     *\n
+     * @type {Object}\n
+     */\n
+    this.range = {};\n
+\n
+    /**\n
+     * @private\n
+     * @type {Boolean}\n
+     */\n
+    this.mouseDown = false;\n
+\n
+    /**\n
+     * @private\n
+     * @type {Boolean}\n
+     */\n
+    this.contextMenuEvent = false;\n
+\n
+    /**\n
+     * @private\n
+     * @type {*}\n
+     */\n
+    this.timer = null;\n
+  }\n
+\n
+  /**\n
+   * Check if the plugin is enabled in the handsontable settings.\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isEnabled() {\n
+    return this.hot.getSettings().comments;\n
+  }\n
+\n
+  /**\n
+   * Enable plugin for this Handsontable instance.\n
+   */\n
+  enablePlugin() {\n
+    if (this.enabled) {\n
+      return;\n
+    }\n
+    if (!this.editor) {\n
+      this.editor = new CommentEditor();\n
+    }\n
+    if (!this.eventManager) {\n
+      this.eventManager = new EventManager(this);\n
+    }\n
+    this.addHook(\'afterContextMenuDefaultOptions\', (options) => this.addToContextMenu(options));\n
+    this.addHook(\'afterRenderer\', (TD, row, col, prop, value, cellProperties) => this.onAfterRenderer(TD, cellProperties));\n
+    this.addHook(\'afterScrollVertically\', () => this.refreshEditorPosition());\n
+    this.addHook(\'afterColumnResize\', () => this.refreshEditorPosition());\n
+    this.addHook(\'afterRowResize\', () => this.refreshEditorPosition());\n
+    this.registerListeners();\n
+    super.enablePlugin();\n
+  }\n
+\n
+  /**\n
+   * Register all necessary DOM listeners.\n
+   *\n
+   * @private\n
+   */\n
+  registerListeners() {\n
+    this.eventManager.addEventListener(document, \'mouseover\', (event) => this.onMouseOver(event));\n
+    this.eventManager.addEventListener(document, \'mousedown\', (event) => this.onMouseDown(event));\n
+    this.eventManager.addEventListener(document, \'mousemove\', (event) => this.onMouseMove(event));\n
+    this.eventManager.addEventListener(document, \'mouseup\', (event) => this.onMouseUp(event));\n
+    this.eventManager.addEventListener(this.editor.getInputElement(), \'blur\', (event) => this.onEditorBlur(event));\n
+  }\n
+\n
+  /**\n
+   * Set current cell range to be able to use general methods like {@link Comments#saveComment},\n
+   * {@link Comments#removeComment}, {@link Comments#show}.\n
+   *\n
+   * @param {Object} range Object with `row` and `col` properties.\n
+   */\n
+  setRange(range) {\n
+    this.range = range;\n
+  }\n
+\n
+  /**\n
+   * Clear current selected cell.\n
+   */\n
+  clearRange() {\n
+    this.range = {};\n
+  }\n
+\n
+  /**\n
+   * Check if event target is cell with comment.\n
+   *\n
+   * @param {Event} event DOM event\n
+   * @returns {Boolean}\n
+   */\n
+  targetIsCellWithComment(event) {\n
+    return hasClass(event.target, \'htCommentCell\') && closest(event.target, [this.hot.rootElement]) ? true : false;\n
+  }\n
+\n
+  /**\n
+   * Check if event target is comment textarea.\n
+   *\n
+   * @param {Event} event DOM event\n
+   * @returns {Boolean}\n
+   */\n
+  targetIsCommentTextArea(event) {\n
+    return this.editor.getInputElement() === event.target;\n
+  }\n
+\n
+  /**\n
+   * Save comment for cell according to previously set range (see {@link Comments#setRange}).\n
+   */\n
+  saveComment() {\n
+    if (!this.range.from) {\n
+      throw new Error(\'Before using this method, first set cell range (hot.getPlugin("comment").setRange())\');\n
+    }\n
+    let comment = this.editor.getValue();\n
+    let row = this.range.from.row;\n
+    let col = this.range.from.col;\n
+\n
+    this.hot.setCellMeta(row, col, \'comment\', comment);\n
+    this.hot.render();\n
+  }\n
+\n
+  /**\n
+   * Save comment for cell.\n
+   *\n
+   * @param {Number} row Row index\n
+   * @param {Number} col Column index\n
+   */\n
+  saveCommentAtCell(row, col) {\n
+    this.setRange({\n
+      from: new WalkontableCellCoords(row, col)\n
+    });\n
+    this.saveComment();\n
+  }\n
+\n
+  /**\n
+   * Remove comment for cell according to previously set range (see {@link Comments#setRange}).\n
+   */\n
+  removeComment() {\n
+    if (!this.range.from) {\n
+      throw new Error(\'Before using this method, first set cell range (hot.getPlugin("comment").setRange())\');\n
+    }\n
+    this.hot.removeCellMeta(this.range.from.row, this.range.from.col, \'comment\');\n
+    this.hot.render();\n
+    this.hide();\n
+  }\n
+\n
+  /**\n
+   * Remove comment.\n
+   *\n
+   * @param {Number} row Row index\n
+   * @param {Number} col Column index\n
+   */\n
+  removeCommentAtCell(row, col) {\n
+    this.setRange({\n
+      from: new WalkontableCellCoords(row, col)\n
+    });\n
+    this.removeComment();\n
+  }\n
+\n
+  /**\n
+   * Show comment editor according to previously set range (see {@link Comments#setRange}).\n
+   *\n
+   * @returns {Boolean} Returns `true` if comment editor was showed\n
+   */\n
+  show() {\n
+    if (!this.range.from) {\n
+      throw new Error(\'Before using this method, first set cell range (hot.getPlugin("comment").setRange())\');\n
+    }\n
+    let meta = this.hot.getCellMeta(this.range.from.row, this.range.from.col);\n
+\n
+    this.refreshEditorPosition(true);\n
+    this.editor.setValue(meta.comment || \'\');\n
+    this.editor.show();\n
+\n
+    return true;\n
+  }\n
+\n
+  /**\n
+   * Show comment editor according to cell coordinates.\n
+   *\n
+   * @param {Number} row Row index\n
+   * @param {Number} col Column index\n
+   * @returns {Boolean} Returns `true` if comment editor was showed\n
+   */\n
+  showAtCell(row, col) {\n
+    this.setRange({\n
+      from: new WalkontableCellCoords(row, col)\n
+    });\n
+\n
+    return this.show();\n
+  }\n
+\n
+  /**\n
+   * Hide all comments input editors.\n
+   */\n
+  hide() {\n
+    this.editor.hide();\n
+  }\n
+\n
+  /**\n
+   * Refresh comment editor position\n
+   *\n
+   * @param {Boolean} [force=false] If `true` then recalculation will be trigger forced.\n
+   */\n
+  refreshEditorPosition(force = false) {\n
+    if (!force && (!this.range.from || !this.editor.isVisible())) {\n
+      return;\n
+    }\n
+    let TD = this.hot.view.wt.wtTable.getCell(this.range.from);\n
+    let cellOffset = offset(TD);\n
+    let lastColWidth = this.hot.getColWidth(this.range.from.col);\n
+    let cellTopOffset = cellOffset.top;\n
+    let cellLeftOffset = cellOffset.left;\n
+    let verticalCompensation = 0;\n
+    let horizontalCompensation = 0;\n
+\n
+    if (this.hot.view.wt.wtViewport.hasVerticalScroll()) {\n
+      cellTopOffset = cellTopOffset - this.hot.view.wt.wtOverlays.topOverlay.getScrollPosition();\n
+      verticalCompensation = 20;\n
+    }\n
+    if (this.hot.view.wt.wtViewport.hasHorizontalScroll()) {\n
+      cellLeftOffset = cellLeftOffset - this.hot.view.wt.wtOverlays.leftOverlay.getScrollPosition();\n
+      horizontalCompensation = 20;\n
+    }\n
+    let x = cellLeftOffset + lastColWidth;\n
+    let y = cellTopOffset;\n
+\n
+    let rect = this.hot.view.wt.wtTable.holder.getBoundingClientRect();\n
+    let holderPos = {\n
+      left: rect.left + getWindowScrollLeft() + horizontalCompensation,\n
+      right: rect.right + getWindowScrollLeft() - 15,\n
+      top: rect.top + getWindowScrollTop() + verticalCompensation,\n
+      bottom: rect.bottom + getWindowScrollTop()\n
+    };\n
+\n
+    if (x <= holderPos.left || x > holderPos.right || y <= holderPos.top || y > holderPos.bottom) {\n
+      this.hide();\n
+    } else {\n
+      this.editor.setPosition(x, y);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Mouse down DOM listener.\n
+   *\n
+   * @private\n
+   * @param {Event} event\n
+   */\n
+  onMouseDown(event) {\n
+    this.mouseDown = true;\n
+\n
+    if (!this.hot.view || !this.hot.view.wt) {\n
+      return;\n
+    }\n
+    if (!this.contextMenuEvent && !this.targetIsCommentTextArea(event) && !this.targetIsCellWithComment(event)) {\n
+      this.hide();\n
+    }\n
+    this.contextMenuEvent = false;\n
+  }\n
+\n
+  /**\n
+   * Mouse over DOM listener.\n
+   *\n
+   * @private\n
+   * @param {Event} event\n
+   */\n
+  onMouseOver(event) {\n
+    if (this.mouseDown || this.editor.isFocused()) {\n
+      return;\n
+    }\n
+    if (this.targetIsCellWithComment(event)) {\n
+      let coordinates = this.hot.view.wt.wtTable.getCoords(event.target);\n
+      let range = {\n
+        from: new WalkontableCellCoords(coordinates.row, coordinates.col)\n
+      };\n
+      this.setRange(range);\n
+      this.show();\n
+\n
+    } else if (!this.targetIsCommentTextArea(event) && !this.editor.isFocused()) {\n
+      this.hide();\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Mouse move DOM listener.\n
+   *\n
+   * @private\n
+   * @param {Event} event\n
+   */\n
+  onMouseMove(event) {\n
+    // Fix for Chrome issues about not firing mousedown events on textarea corner handler\n
+    // https://code.google.com/p/chromium/issues/detail?id=453023\n
+    if (this.targetIsCommentTextArea(event)) {\n
+      this.mouseDown = true;\n
+\n
+      clearTimeout(this.timer);\n
+      this.timer = setTimeout(() => {\n
+        this.mouseDown = false;\n
+      }, 200);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Mouse up DOM listener.\n
+   *\n
+   * @private\n
+   * @param {Event} event\n
+   */\n
+  onMouseUp(event) {\n
+    this.mouseDown = false;\n
+  }\n
+\n
+  /***\n
+   * After renderer Handsontable hook listener.\n
+   *\n
+   * @private\n
+   * @param {HTMLTableCellElement} TD\n
+   * @param {Object} cellProperties\n
+   */\n
+  onAfterRenderer(TD, cellProperties) {\n
+    if (cellProperties.comment) {\n
+      addClass(TD, cellProperties.commentedCellClassName);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Comment input blur DOM event listener\n
+   *\n
+   * @private\n
+   * @param {Event} event\n
+   */\n
+  onEditorBlur(event) {\n
+    this.saveComment();\n
+  }\n
+\n
+  /**\n
+   * Check if there is a comment for selected range.\n
+   *\n
+   * @private\n
+   * @returns {Boolean}\n
+   */\n
+  checkSelectionCommentsConsistency() {\n
+    const selected = this.hot.getSelectedRange();\n
+\n
+    if (!selected) {\n
+      return false;\n
+    }\n
+    let hasComment = false;\n
+    let cell = selected.from; // IN EXCEL THERE IS COMMENT ONLY FOR TOP LEFT CELL IN SELECTION\n
+\n
+    if (this.hot.getCellMeta(cell.row, cell.col).comment) {\n
+      hasComment = true;\n
+    }\n
+\n
+    return hasComment;\n
+  }\n
+\n
+  /**\n
+   * Listen on context menu add/edit comment action.\n
+   *\n
+   * @private\n
+   */\n
+  onContextMenuAddComment() {\n
+    let coords = this.hot.getSelectedRange();\n
+\n
+    this.contextMenuEvent = true;\n
+    this.setRange({\n
+      from: coords.from\n
+    });\n
+    this.show();\n
+    setTimeout(() => {\n
+      if (this.hot) {\n
+        this.hot.deselectCell();\n
+        this.editor.focus();\n
+      }\n
+    }, 10);\n
+  }\n
+\n
+  /**\n
+   * Listen on context menu remove comment action.\n
+   *\n
+   * @private\n
+   * @param {String} key\n
+   * @param {Array} selection\n
+   */\n
+  onContextMenuRemoveComment(key, selection) {\n
+    this.contextMenuEvent = true;\n
+    this.removeCommentAtCell(selection.start.row, selection.start.col);\n
+  }\n
+\n
+  /**\n
+   * Add Comments to context menu.\n
+   *\n
+   * @private\n
+   * @param {Object} defaultOptions\n
+   */\n
+  addToContextMenu(defaultOptions) {\n
+    defaultOptions.items.push(\n
+      Handsontable.plugins.ContextMenu.SEPARATOR,\n
+      {\n
+        key: \'commentsAddEdit\',\n
+        name: () => {\n
+          return this.checkSelectionCommentsConsistency() ? \'Edit Comment\' : \'Add Comment\';\n
+        },\n
+        callback: () => this.onContextMenuAddComment(),\n
+        disabled: function () {\n
+          return this.getSelected() ? false: true;\n
+        }\n
+      },\n
+      {\n
+        key: \'commentsRemove\',\n
+        name: function () {\n
+          return \'Delete Comment\';\n
+        },\n
+        callback: (key, selection) => this.onContextMenuRemoveComment(key, selection),\n
+        disabled: () => {\n
+          return !this.checkSelectionCommentsConsistency();\n
+        }\n
+      }\n
+    );\n
+  }\n
+\n
+  /**\n
+   * Destroy plugin instance.\n
+   */\n
+  destroy() {\n
+    if (this.editor) {\n
+      this.editor.destroy();\n
+    }\n
+    super.destroy();\n
+  }\n
+}\n
+\n
+export {Comments};\n
+\n
+registerPlugin(\'comments\', Comments);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12892</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>comments.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

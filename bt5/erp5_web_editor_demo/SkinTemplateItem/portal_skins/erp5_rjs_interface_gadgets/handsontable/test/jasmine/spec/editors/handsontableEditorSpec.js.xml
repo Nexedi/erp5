@@ -1,0 +1,303 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272536.34</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>handsontableEditorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'HandsontableEditor\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  function getManufacturerData() {\n
+    return [\n
+      {name: "BMW", country: "Germany", owner: "Bayerische Motoren Werke AG"},\n
+      {name: "Chrysler", country: "USA", owner: "Chrysler Group LLC"},\n
+      {name: "Nissan", country: "Japan", owner: "Nissan Motor Company Ltd"},\n
+      {name: "Suzuki", country: "Japan", owner: "Suzuki Motor Corporation"},\n
+      {name: "Toyota", country: "Japan", owner: "Toyota Motor Corporation"},\n
+      {name: "Volvo", country: "Sweden", owner: "Zhejiang Geely Holding Group"}\n
+    ]\n
+  }\n
+\n
+  it(\'should create an editor that is a Handsontable instance\', function () {\n
+    handsontable({\n
+      columns: [\n
+        {\n
+          type: \'handsontable\',\n
+          handsontable: {\n
+            colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+            data: getManufacturerData()\n
+          }\n
+        }\n
+      ]\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDownUp(\'enter\');\n
+    expect(this.$container.find(\'.handsontableEditor:visible\').length).toEqual(1);\n
+  });\n
+\n
+  it(\'should destroy the editor when Esc is pressed\', function () {\n
+    handsontable({\n
+      columns: [\n
+        {\n
+          type: \'handsontable\',\n
+          handsontable: {\n
+            colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+            data: getManufacturerData()\n
+          }\n
+        }\n
+      ]\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDownUp(\'enter\');\n
+    keyDownUp(\'esc\');\n
+    expect(this.$container.find(\'.handsontableEditor:visible\').length).toEqual(0);\n
+  });\n
+\n
+  it(\'Enter pressed in nested HT should set the value and hide the editor\', function () {\n
+    handsontable({\n
+      columns: [\n
+        {\n
+          type: \'handsontable\',\n
+          handsontable: {\n
+            colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+            data: getManufacturerData()\n
+          }\n
+        }\n
+      ]\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDownUp(\'enter\');\n
+    keyDownUp(\'arrow_down\');\n
+    keyDownUp(\'enter\');\n
+    expect(this.$container.find(\'.handsontableEditor:visible\').length).toEqual(0);\n
+    expect(getDataAtCell(2, 0)).toEqual(\'BMW\');\n
+  });\n
+\n
+  it(\'should keep focus on textarea after arrow is pressed\', function () {\n
+    var hot = handsontable({\n
+      columns: [\n
+        {\n
+          type: \'handsontable\',\n
+          handsontable: {\n
+            colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+            data: getManufacturerData()\n
+          }\n
+        }\n
+      ]\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDownUp(\'enter\');\n
+    keyDownUp(\'arrow_down\');\n
+    expect(document.activeElement).toEqual(hot.getActiveEditor().TEXTAREA);\n
+  });\n
+\n
+  it(\'should focus the TD after HT editor is prepared and destroyed\', function () {\n
+    handsontable({\n
+      columns: [\n
+        {\n
+          type: \'handsontable\',\n
+          handsontable: {\n
+            colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+            data: getManufacturerData()\n
+          }\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(2, 0);\n
+    keyDownUp(\'arrow_down\');\n
+    keyDownUp(\'arrow_down\');\n
+\n
+    expect(getSelected()).toEqual([4, 0, 4, 0]);\n
+  });\n
+\n
+  it(\'should focus the TD after HT editor is prepared, finished (by keyboard) and destroyed\', function () {\n
+    var selections = [];\n
+\n
+    handsontable({\n
+      columns: [\n
+        {\n
+          type: \'handsontable\',\n
+          handsontable: {\n
+            colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+            data: getManufacturerData(),\n
+            afterSelection: function () {\n
+              selections.push([\'inner\', arguments[0]]); //arguments[0] is selection start row\n
+            }\n
+          }\n
+        }\n
+      ],\n
+      afterSelection: function () {\n
+        selections.push([\'outer\', arguments[0]]); //arguments[0] is selection start row\n
+      }\n
+    });\n
+    expect(selections.length).toBe(0);\n
+\n
+    selectCell(1, 0);\n
+    expect(selections[0]).toEqual([\'outer\', 1]);\n
+\n
+    keyDownUp(\'arrow_down\');\n
+    expect(selections[1]).toEqual([\'outer\', 2]);\n
+\n
+    keyDownUp(\'enter\');\n
+\n
+    keyDownUp(\'arrow_down\');\n
+    expect(selections[2]).toEqual([\'inner\', 0]);\n
+\n
+    keyDownUp(\'esc\');\n
+    keyDownUp(\'arrow_down\');\n
+    expect(selections[3]).toEqual([\'outer\', 3]);\n
+\n
+    expect(selections.length).toBe(4);\n
+  });\n
+\n
+  describe("strict mode", function () {\n
+    it("should open editor and select cell (0, 0) in inner HOT", function () {\n
+      var hot = handsontable({\n
+        columns: [\n
+          {\n
+            type: \'handsontable\',\n
+            handsontable: {\n
+              colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+              data: getManufacturerData()\n
+            },\n
+            strict: true\n
+          }\n
+        ]\n
+      });\n
+      selectCell(2, 0);\n
+\n
+      keyDownUp(\'enter\');\n
+\n
+      var ht = Handsontable.editors.getEditor(\'handsontable\', hot);\n
+      var innerHot = ht.htEditor;\n
+\n
+      expect(innerHot.getSelected()).toEqual([0, 0, 0, 0]);\n
+    });\n
+\n
+    it("should hide textarea", function () {\n
+      var hot = handsontable({\n
+        columns: [\n
+          {\n
+            type: \'handsontable\',\n
+            handsontable: {\n
+              colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+              data: getManufacturerData()\n
+            },\n
+            strict: true\n
+          }\n
+        ]\n
+      });\n
+      selectCell(2, 0);\n
+\n
+      keyDownUp(\'enter\');\n
+\n
+      expect(hot.getActiveEditor().TEXTAREA.style.visibility).toEqual(\'hidden\');\n
+\n
+    });\n
+  });\n
+\n
+  describe("non strict mode", function () {\n
+\n
+    it("should open editor and DO NOT select any cell in inner HOT", function () {\n
+      var hot = handsontable({\n
+        columns: [\n
+          {\n
+            type: \'handsontable\',\n
+            handsontable: {\n
+              colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+              data: getManufacturerData()\n
+            }\n
+          }\n
+        ]\n
+      });\n
+      selectCell(2, 0);\n
+\n
+      keyDownUp(\'enter\');\n
+\n
+      var ht = Handsontable.editors.getEditor(\'handsontable\', hot);\n
+      var innerHot = ht.htEditor;\n
+\n
+      expect(innerHot.getSelected()).toBeUndefined();\n
+    });\n
+\n
+    it("should show textarea", function () {\n
+      var hot = handsontable({\n
+        columns: [\n
+          {\n
+            type: \'handsontable\',\n
+            handsontable: {\n
+              colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+              data: getManufacturerData()\n
+            }\n
+          }\n
+        ]\n
+      });\n
+      selectCell(2, 0);\n
+\n
+      keyDownUp(\'enter\');\n
+      expect(hot.getActiveEditor().TEXTAREA.style.visibility).toEqual(\'visible\');\n
+\n
+    });\n
+\n
+  });\n
+\n
+\n
+\n
+\n
+\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6649</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>handsontableEditorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

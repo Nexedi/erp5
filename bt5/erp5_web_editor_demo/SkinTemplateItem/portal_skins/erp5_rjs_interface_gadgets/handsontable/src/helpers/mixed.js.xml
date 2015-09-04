@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272633.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mixed.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\n
+/**\n
+ * Converts any value to string.\n
+ *\n
+ * @param {*} value\n
+ * @returns {String}\n
+ */\n
+export function stringify(value) {\n
+  switch (typeof value) {\n
+    case \'string\':\n
+    case \'number\':\n
+      return value + \'\';\n
+\n
+    case \'object\':\n
+      if (value === null) {\n
+        return \'\';\n
+      }\n
+      else {\n
+        return value.toString();\n
+      }\n
+      break;\n
+    case \'undefined\':\n
+      return \'\';\n
+\n
+    default:\n
+      return value.toString();\n
+  }\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>442</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>mixed.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

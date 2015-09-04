@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272590.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>test-init.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+afterEach(function () {\n
+  window.scrollTo(0, 0)\n
+});\n
+\n
+//otherwise jasmine/reporter.js throws errors in IE8 / IE8 Standards mode\n
+//http://stackoverflow.com/questions/3629183/why-doesnt-indexof-work-on-an-array-ie8\n
+if (!Array.prototype.indexOf) {\n
+  Array.prototype.indexOf = function (elt /*, from*/) {\n
+    var len = this.length >>> 0;\n
+\n
+    var from = Number(arguments[1]) || 0;\n
+    from = (from < 0)\n
+      ? Math.ceil(from)\n
+      : Math.floor(from);\n
+    if (from < 0)\n
+      from += len;\n
+\n
+    for (; from < len; from++) {\n
+      if (from in this &&\n
+        this[from] === elt)\n
+        return from;\n
+    }\n
+    return -1;\n
+  };\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>621</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>test-init.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,578 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272423.23</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>samples.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*This file is only needed for demo purposes in demo/ subdirectory */\n
+\n
+html {\n
+  height: 100%;\n
+}\n
+\n
+body {\n
+  margin: 0;\n
+  background-color: #FFF;\n
+  font-family: Verdana, Helvetica, Arial, FreeSans, sans-serif;\n
+  color: #454545;\n
+  font-size: 14px;\n
+  min-width: 700px;\n
+  height: 100%;\n
+}\n
+\n
+sup {\n
+  font-size: 80%;\n
+  background: lightgoldenrodyellow;\n
+}\n
+\n
+.clear {\n
+  clear: left;\n
+}\n
+\n
+.wrapper {\n
+  display: table;\n
+  width: 100%;\n
+  height: 100%;\n
+}\n
+\n
+.wrapper-row {\n
+  display: table-row;\n
+  height: 100%;\n
+}\n
+\n
+#container {\n
+  display: table-cell;\n
+  height: 100%;\n
+  padding-top: 70px;\n
+  padding-left: 40px;\n
+  padding-bottom: 60px;\n
+  position: relative;\n
+}\n
+\n
+.rowLayout {\n
+  clear: left;\n
+}\n
+\n
+.columnLayout {\n
+  float: left;\n
+  background-color: #FFF;\n
+  min-height: 100%;\n
+  position: relative;\n
+}\n
+\n
+.descLayout {\n
+  width: 600px;\n
+  margin-bottom: 60px;\n
+}\n
+\n
+.descLayout.noMargin {\n
+  margin-bottom: 0;\n
+}\n
+\n
+.codeLayout {\n
+  float: left;\n
+  background-color: #F5F5FF;\n
+  margin-bottom: 60px;\n
+  border: 2px solid #4285c8;\n
+}\n
+\n
+.codeLayout pre {\n
+  padding: 0 10px 0 10px;\n
+}\n
+\n
+body.home .descLayout {\n
+  margin-bottom: 30px;\n
+}\n
+\n
+body.home .codeLayout {\n
+  border: 2px solid #F5F5FF;\n
+}\n
+\n
+body.home .codeLayoutExpanded {\n
+  border: 2px solid #4285c8;\n
+}\n
+\n
+body.home .codeLayout .jsFiddle {\n
+  margin-bottom: 0;\n
+}\n
+\n
+body.home .codeLayoutExpanded .jsFiddle {\n
+  margin-bottom: 18px;\n
+}\n
+\n
+/*\n
+global menu\n
+*/\n
+\n
+#global-menu-clone {\n
+  background: #efefef;\n
+  box-shadow: inset -4px 0px 4px -4px rgba(0, 0, 0, 0.20);\n
+  width: 250px;\n
+  min-width: 250px;\n
+  display: table-cell;\n
+  vertical-align: top;\n
+  padding: 20px 10px 20px 20px;\n
+  z-index: 12;\n
+  position: relative;\n
+}\n
+\n
+#global-menu-clone ul {\n
+  list-style: none;\n
+  margin: 20px 0 0 0;\n
+  padding-left: 10px;\n
+}\n
+\n
+#global-menu-clone h3 {\n
+  margin: 0;\n
+  font-size: 14px;\n
+  font-weight: normal;\n
+  font-style: normal;\n
+  line-height: normal; /*reset Twitter Bootstrap rule*/\n
+}\n
+\n
+#global-menu-clone li h3 {\n
+  color: #999;\n
+  cursor: pointer;\n
+}\n
+\n
+#global-menu-clone li h3::after {\n
+  content: "\\25be";\n
+  margin: 0 0 0 6px;\n
+}\n
+\n
+#global-menu-clone li.current h3 {\n
+  color: #454545;\n
+}\n
+\n
+#global-menu-clone li {\n
+  padding: 0 0 10px 0;\n
+  margin: 0;\n
+}\n
+\n
+#global-menu > ul > li {\n
+  padding: 0 0 20px 0;\n
+}\n
+\n
+#global-menu-clone li a {\n
+  color: #999;\n
+  text-decoration: none;\n
+}\n
+\n
+#global-menu-clone li.current h3,\n
+#global-menu-clone li h3:hover,\n
+#global-menu-clone li a:hover,\n
+#global-menu-clone li a.current {\n
+  color: #454545;\n
+}\n
+\n
+#global-menu-clone li a.current {\n
+  font-weight: bold;\n
+}\n
+\n
+/**\n
+ * headers\n
+ */\n
+\n
+h1, h2, .tagline {\n
+  font-family: Verdana, Helvetica, Arial, FreeSans, sans-serif;\n
+}\n
+\n
+h1 {\n
+  margin: 0 0 40px 0;\n
+  font-size: 24px;\n
+  font-weight: 700;\n
+  font-style: normal;\n
+  padding-left: 10px;\n
+}\n
+\n
+h1 .ver {\n
+  font-size: 10px;\n
+}\n
+\n
+h2 {\n
+  margin-top: 12px;\n
+  font-size: 26px;\n
+  font-weight: 700;\n
+  font-style: normal;\n
+}\n
+\n
+h3 {\n
+  margin-top: 15px;\n
+  font-size: 14px;\n
+  font-weight: 400;\n
+  font-style: normal;\n
+}\n
+\n
+/**\n
+ * text\n
+ */\n
+\n
+a {\n
+  text-decoration: none;\n
+  color: #4267B6;\n
+  cursor: pointer;\n
+}\n
+\n
+a:hover {\n
+  text-decoration: underline;\n
+}\n
+\n
+.tagline {\n
+  font-size: 15px;\n
+  width: 300px;\n
+  color: #646464;\n
+\n
+  margin-top: -40px;\n
+}\n
+\n
+h1 .small {\n
+  font-size: 16px;\n
+  font-weight: normal;\n
+}\n
+\n
+.footer-text {\n
+  font-size: 13px;\n
+  position: absolute;\n
+  bottom: -25px;\n
+  left: 0;\n
+}\n
+\n
+.nobreak {\n
+  white-space: nowrap;\n
+}\n
+\n
+pre {\n
+  clear: left;\n
+}\n
+\n
+ul,\n
+ol,\n
+p,\n
+.descLayout pre {\n
+  margin-bottom: 1.5em;\n
+  clear: left;\n
+}\n
+\n
+li {\n
+  margin-bottom: 1.3em;\n
+}\n
+\n
+ul.tight li {\n
+  margin-bottom: 0.3em;\n
+}\n
+\n
+ul {\n
+  padding-left: 30px;\n
+}\n
+\n
+ul ul {\n
+  margin-top: 1.5em;\n
+}\n
+\n
+.descLayout code {\n
+  white-space: nowrap;\n
+  margin: 0 2px;\n
+  padding: 0 5px;\n
+  border: 1px solid #ECECEC;\n
+  background-color: #FAFAFA;\n
+  border-radius: 3px;\n
+  font-size: 90%;\n
+  font-family: Consolas, Courier, monospace;\n
+}\n
+\n
+.descLayout pre code {\n
+  white-space: pre-wrap;\n
+  padding: 3px 5px;\n
+}\n
+\n
+kbd {\n
+  background-color: #e7e7e7;\n
+  background-image: -moz-linear-gradient(#fefefe, #e7e7e7);\n
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);\n
+  background-image: linear-gradient(#fefefe, #e7e7e7);\n
+  background-repeat: repeat-x;\n
+  border-radius: 2px;\n
+  border: 1px solid #cfcfcf;\n
+  color: #000;\n
+  padding: 3px 5px 0 5px;\n
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;\n
+  display: inline-block;\n
+}\n
+\n
+/**\n
+ * jsFiddle\n
+ */\n
+\n
+.jsFiddle {\n
+  margin-bottom: 18px;\n
+  /*margin-top: -2px;*/\n
+  /*margin-left: -2px;*/\n
+  clear: both;\n
+  float: left;\n
+}\n
+\n
+.jsFiddleLink {\n
+  background-color: #4285c8;\n
+  color: white;\n
+}\n
+\n
+.jsFiddleLink:hover {\n
+  background-color: #3D63AA;\n
+}\n
+\n
+/**\n
+ * warning\n
+ */\n
+\n
+.warning {\n
+  border: 1px solid #D4D8EB;\n
+  padding: 10px;\n
+  background: #F0F1F8;\n
+  box-shadow: 2px 2px 7px #777;\n
+  margin-bottom: 40px;\n
+}\n
+\n
+.warning strong {\n
+  background: #747477;\n
+  color: #FFF;\n
+  border-radius: 4px;\n
+  padding: 2px 4px;\n
+}\n
+\n
+.warning li,\n
+.warning p:last-child {\n
+  margin-bottom: 0;\n
+}\n
+\n
+/**\n
+ * Handsontable\n
+ */\n
+\n
+.handsontable {\n
+  color: #000;\n
+  font-size: 12px;\n
+}\n
+\n
+.handsontable li {\n
+  margin-bottom: 0; /* will be not needed after Handsontable 0.8.16 */\n
+}\n
+\n
+/**\n
+ * Highlight.js\n
+ */\n
+\n
+.codeLayout {\n
+  font-size: 14px;\n
+}\n
+\n
+.codeLayout pre code {\n
+  padding: 0;\n
+  background: none;\n
+}\n
+\n
+/**\n
+ * documentation excerpts\n
+ */\n
+\n
+dl {\n
+  background: #FDFFFF;\n
+  border-left: 4px solid #F5F5FF;\n
+  padding: 1px 10px 1px 10px;\n
+  margin: 30px 0;\n
+}\n
+\n
+dl dt {\n
+  font-size: 14px;\n
+  font-weight: bold;\n
+  font-style: italic;\n
+  padding: 0;\n
+  margin: 15px 0 5px;\n
+}\n
+\n
+dl dd {\n
+  margin: 10px 0 0 0;\n
+  padding: 0;\n
+}\n
+\n
+/**\n
+ * home page\n
+ */\n
+#githubWatch {\n
+  position: absolute;\n
+  top: 31px;\n
+  left: 322px;\n
+  z-index: 10;\n
+}\n
+\n
+#githubFork {\n
+  position: absolute;\n
+  top: 31px;\n
+  left: 432px;\n
+  z-index: 10;\n
+}\n
+\n
+#domainNotice {\n
+  display: none;\n
+}\n
+\n
+body.home pre {\n
+  display: none;\n
+}\n
+\n
+.state-loaded {\n
+  display: none;\n
+}\n
+\n
+.alert {\n
+  color: #c09853;\n
+  padding: 8px 35px 8px 14px;\n
+  margin-bottom: 20px;\n
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);\n
+  background-color: #fcf8e3;\n
+  border: 1px solid #fbeed5;\n
+  -webkit-border-radius: 4px;\n
+  -moz-border-radius: 4px;\n
+  border-radius: 4px;\n
+}\n
+\n
+/**\n
+* buttons\n
+**/\n
+\n
+#outside-links-wrapper {\n
+  position: absolute;\n
+  top: 20px;\n
+  right: 20px;\n
+  z-index: 11;\n
+}\n
+\n
+button,\n
+.button {\n
+  font-family: Helvetica, Arial, FreeSans, sans-serif; /*Firefox tries to use system font on button*/\n
+  display: inline-block;\n
+  padding: 6px 9px;\n
+  margin: 0 2px 0 0;\n
+  font-size: 13px;\n
+  line-height: 24px;\n
+  text-align: center;\n
+  white-space: nowrap;\n
+  vertical-align: middle;\n
+  cursor: pointer;\n
+  border: none;\n
+  -moz-user-select: none;\n
+  background-color: #9a9a9a;\n
+  color: white;\n
+}\n
+\n
+button:last-child,\n
+.button:last-child {\n
+  margin-right: 0;\n
+}\n
+\n
+.button.button-light {\n
+  margin-right: 0;\n
+}\n
+\n
+button:hover,\n
+.button:hover {\n
+  background-color: #7a7a7a;\n
+  text-decoration: none;\n
+}\n
+\n
+.button.button-secondary {\n
+  background-color: #bbb;\n
+}\n
+\n
+.button.button-secondary:hover {\n
+  background-color: #aaa;\n
+}\n
+\n
+button.mini {\n
+  padding: 3px 5px;\n
+  font-size: 11px;\n
+  line-height: 16px;\n
+  margin-top: -3px;\n
+}\n
+\n
+.show-source {\n
+  background-color: #8fbb6d;\n
+}\n
+\n
+.show-source:hover {\n
+  background-color: #76bb4c;\n
+}\n
+\n
+.show-source:before {\n
+  content: \'Show source code\';\n
+}\n
+\n
+.show-source.shown:before {\n
+  content: \'Hide source code\';\n
+}\n
+\n
+.inline-buttons button,\n
+.inline-buttons .button {\n
+  float: left;\n
+}\n
+\n
+.button-github {\n
+  background-color: #4285c8;\n
+}\n
+\n
+.button-github:hover {\n
+  background-color: #3D63AA;\n
+}\n
+\n
+.button-twitter {\n
+  background-color: #00ACED;\n
+}\n
+\n
+.button-twitter:hover {\n
+  background-color: #0095CC;\n
+}\n
+\n
+.button-google-groups {\n
+  background-color: #D44332;\n
+}\n
+\n
+.button-google-groups:hover {\n
+  background-color: #BC2520;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7505</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>samples.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

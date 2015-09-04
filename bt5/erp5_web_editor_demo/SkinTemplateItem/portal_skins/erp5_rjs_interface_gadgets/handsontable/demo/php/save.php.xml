@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272278.98</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>save.php</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?php\n
+/**\n
+ * This is an example code that shows how you can save Handsontable data on server using PHP with PDO (SQLite).\n
+ * This code is not intended to be maximally efficient nor safe. It is for demonstrational purposes only.\n
+ * Changes and more examples in different languages are welcome.\n
+ *\n
+ * Copyright 2012, Marcin Warpechowski\n
+ * Licensed under the MIT license.\n
+ * http://github.com/handsontable/handsontable/\n
+ */\n
+\n
+require_once(\'functions.php\');\n
+\n
+try {\n
+  //open the database\n
+  $db =  getConnection();\n
+  createCarsTable($db);\n
+\n
+  $colMap = array(\n
+    0 => \'manufacturer\',\n
+    1 => \'year\',\n
+    2 => \'price\'\n
+  );\n
+\n
+  if (isset($_POST[\'changes\']) && $_POST[\'changes\']) {\n
+    foreach ($_POST[\'changes\'] as $change) {\n
+      $rowId  = $change[0] + 1;\n
+      $colId  = $change[1];\n
+      $newVal = $change[3];\n
+\n
+      if (!isset($colMap[$colId])) {\n
+        echo "\\n spadam";\n
+        continue;\n
+      }\n
+\n
+      $select = $db->prepare(\'SELECT id FROM cars WHERE id=? LIMIT 1\');\n
+      $select->execute(array(\n
+        $rowId\n
+      ));\n
+\n
+      if ($row = $select->fetch()) {\n
+        $query = $db->prepare(\'UPDATE cars SET `\' . $colMap[$colId] . \'` = :newVal WHERE id = :id\');\n
+      } else {\n
+        $query = $db->prepare(\'INSERT INTO cars (id, `\' . $colMap[$colId] . \'`) VALUES(:id, :newVal)\');\n
+      }\n
+      $query->bindValue(\':id\', $rowId, PDO::PARAM_INT);\n
+      $query->bindValue(\':newVal\', $newVal, PDO::PARAM_STR);\n
+      $query->execute();\n
+    }\n
+  } elseif (isset($_POST[\'data\']) && $_POST[\'data\']) {\n
+    $select = $db->prepare(\'DELETE FROM cars\');\n
+    $select->execute();\n
+\n
+    for ($r = 0, $rlen = count($_POST[\'data\']); $r < $rlen; $r++) {\n
+      $rowId = $r + 1;\n
+      for ($c = 0, $clen = count($_POST[\'data\'][$r]); $c < $clen; $c++) {\n
+        if (!isset($colMap[$c])) {\n
+          continue;\n
+        }\n
+\n
+        $newVal = $_POST[\'data\'][$r][$c];\n
+\n
+        $select = $db->prepare(\'SELECT id FROM cars WHERE id=? LIMIT 1\');\n
+        $select->execute(array(\n
+          $rowId\n
+        ));\n
+\n
+        if ($row = $select->fetch()) {\n
+          $query = $db->prepare(\'UPDATE cars SET `\' . $colMap[$c] . \'` = :newVal WHERE id = :id\');\n
+        } else {\n
+          $query = $db->prepare(\'INSERT INTO cars (id, `\' . $colMap[$c] . \'`) VALUES(:id, :newVal)\');\n
+        }\n
+        $query->bindValue(\':id\', $rowId, PDO::PARAM_INT);\n
+        $query->bindValue(\':newVal\', $newVal, PDO::PARAM_STR);\n
+        $query->execute();\n
+      }\n
+    }\n
+  }\n
+\n
+  $out = array(\n
+    \'result\' => \'ok\'\n
+  );\n
+  echo json_encode($out);\n
+\n
+  closeConnection($db);\n
+}\n
+catch (PDOException $e) {\n
+  print \'Exception : \' . $e->getMessage();\n
+}\n
+?>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2579</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>save.php</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

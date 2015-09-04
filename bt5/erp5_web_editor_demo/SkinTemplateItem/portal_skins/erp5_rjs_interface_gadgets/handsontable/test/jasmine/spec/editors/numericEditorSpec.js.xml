@@ -1,0 +1,502 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272540.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>numericEditorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'NumericEditor\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfObjects = function () {\n
+    return [\n
+      {id: 1, name: "Ted", lastName: "Right"},\n
+      {id: 2, name: "Frank", lastName: "Honest"},\n
+      {id: 3, name: "Joan", lastName: "Well"},\n
+      {id: 4, name: "Sid", lastName: "Strong"},\n
+      {id: 5, name: "Jane", lastName: "Neat"},\n
+      {id: 6, name: "Chuck", lastName: "Jackson"},\n
+      {id: 7, name: "Meg", lastName: "Jansen"},\n
+      {id: 8, name: "Rob", lastName: "Norris"},\n
+      {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+      {id: 10, name: "Eve", lastName: "Branson"}\n
+    ];\n
+  };\n
+\n
+  it(\'should convert numeric value to number (object data source)\', function () {\n
+\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDown(\'enter\');\n
+    document.activeElement.value = \'999\';\n
+\n
+    destroyEditor();\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(typeof getDataAtCell(2, 0)).toEqual(\'number\');\n
+      expect(getDataAtCell(2, 0)).toEqual(999);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should allow custom validator\', function () {\n
+\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      allowInvalid: false,\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', validator: function(val, cb) {\n
+          cb(parseInt(val, 10) > 100);\n
+        }},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDown(\'enter\');\n
+    document.activeElement.value = \'99\';\n
+\n
+    destroyEditor();\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getDataAtCell(2, 0)).not.toEqual(99); //should be ignored\n
+    });\n
+\n
+    runs(function () {\n
+      document.activeElement.value = \'999\';\n
+\n
+      onAfterValidate.reset();\n
+      destroyEditor();\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getDataAtCell(2, 0)).toEqual(999);\n
+    });\n
+\n
+  });\n
+\n
+  it("should convert string in format \'XX.XX\' to a float with the same value", function() {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'99.99\';\n
+\n
+    onAfterValidate.reset();\n
+    destroyEditor();\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getDataAtCell(2, 0)).toEqual(parseFloat(99.99));\n
+    });\n
+\n
+  });\n
+\n
+  it("should convert string in format \'XX.XX\' to a float when passing float without leading zero", function() {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'.74\';\n
+\n
+    onAfterValidate.reset();\n
+    destroyEditor();\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getDataAtCell(2, 0)).toEqual(parseFloat(0.74));\n
+    });\n
+\n
+  });\n
+\n
+  it("should convert string in format \'XX,XX\' (with comma as separator) to a float with the same value if the numeric locale specifies comma as the precision delimiter (language=de)", function() {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', language: \'de\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'99,99\';\n
+\n
+    onAfterValidate.reset();\n
+    destroyEditor();\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getDataAtCell(2, 0)).toEqual(parseFloat(99.99));\n
+    });\n
+\n
+  });\n
+\n
+  it("should display a string in a format \'$X,XXX.XX\' when using language=en, appropriate format in column settings and \'XXXX.XX\' as an input string", function() {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', format: \'$0,0.00\', language: \'en\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'2456.22\';\n
+\n
+    onAfterValidate.reset();\n
+    destroyEditor();\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getCell(2, 0).innerHTML).toEqual(\'$2,456.22\');\n
+    });\n
+\n
+  });\n
+\n
+  it("should display a string in a format \'X XXX,XX €\' when using language=de, appropriate format in column settings and \'XXXX,XX\' as an input string (that comes from manual input)", function() {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', format: \'0,0.00 $\', language: \'de\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'2456,22\';\n
+\n
+    onAfterValidate.reset();\n
+    destroyEditor();\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getCell(2, 0).innerHTML).toEqual(\'2 456,22 €\');\n
+    });\n
+\n
+  });\n
+\n
+  it("should display a string in a format \'X XXX,XX €\' when using language=de, appropriate format in column settings and \'XXXX.XX\' as an input string (that comes from paste)", function() {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', format: \'0,0.00 $\', language: \'de\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'2456.22\';\n
+\n
+    onAfterValidate.reset();\n
+    destroyEditor();\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getCell(2, 0).innerHTML).toEqual(\'2 456,22 €\');\n
+    });\n
+\n
+  });\n
+\n
+  it("should not validate input values in different formats than \'XX.XX\' and \'XX,XX\'", function() {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    selectCell(2, 0);\n
+\n
+    function manuallySetValueTo(val) {\n
+      keyDown(\'enter\');\n
+\n
+      document.activeElement.value = val;\n
+\n
+      onAfterValidate.reset();\n
+      destroyEditor();\n
+    }\n
+\n
+    manuallySetValueTo(\'22.22\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect($(getCell(2, 0)).hasClass(\'htInvalid\')).toBe(false); // should validate alright\n
+      manuallySetValueTo(\'2,000,000.22\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect($(getCell(2, 0)).hasClass(\'htInvalid\')).toBe(true);\n
+      manuallySetValueTo(\'11,11\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect($(getCell(2, 0)).hasClass(\'htInvalid\')).toBe(false); // should validate alright\n
+      manuallySetValueTo(\'one thounsand\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect($(getCell(2, 0)).hasClass(\'htInvalid\')).toBe(true);\n
+      manuallySetValueTo(\'99d99\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect($(getCell(2, 0)).hasClass(\'htInvalid\')).toBe(true);\n
+    });\n
+  });\n
+\n
+  it("should paste formatted data if source cell has format", function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', format: \'0,0.00 $\', language: \'de\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+    selectCell(2, 0);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    document.activeElement.value = \'€123,00\';\n
+\n
+    onAfterValidate.reset();\n
+    destroyEditor();\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getCell(2, 0).innerHTML).toEqual(\'123,00 €\');\n
+    });\n
+\n
+  });\n
+\n
+  it("should display a string in a format \'X XXX,XX €\' when using language=de, appropriate format in column settings and \'XXXX,XX\' as an input string and ignore not needed zeros at the end", function() {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right", money: 0},\n
+        {id: 2, name: "Frank", lastName: "Honest", money: 0},\n
+        {id: 3, name: "Joan", lastName: "Well", money: 0},\n
+        {id: 4, name: "Sid", lastName: "Strong", money: 0},\n
+        {id: 5, name: "Jane", lastName: "Neat", money: 0},\n
+        {id: 6, name: "Chuck", lastName: "Jackson", money: 0},\n
+        {id: 7, name: "Meg", lastName: "Jansen", money: 0},\n
+        {id: 8, name: "Rob", lastName: "Norris", money: 0},\n
+        {id: 9, name: "Sean", lastName: "O\'Hara", money: 0},\n
+        {id: 10, name: "Eve", lastName: "Branson", money: 0}\n
+      ],\n
+      columns: [\n
+        {data: \'id\', type: \'numeric\', format: \'0,0.00 $\', language: \'de\'},\n
+        {data: \'name\'},\n
+        {data: \'lastName\'},\n
+        {data: \'money\', type: \'numeric\', format: \'$0,0.00\', language: \'en\'}\n
+      ],\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    selectCell(2, 0);\n
+\n
+    function manuallySetValueTo(val) {\n
+      keyDown(\'enter\');\n
+\n
+      document.activeElement.value = val;\n
+\n
+      onAfterValidate.reset();\n
+      destroyEditor();\n
+    }\n
+\n
+    manuallySetValueTo(\'2456,220\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getCell(2, 0).innerHTML).toEqual(\'2 456,22 €\');\n
+    });\n
+\n
+    runs(function () {\n
+      deselectCell();\n
+      selectCell(2, 3);\n
+      manuallySetValueTo(\'2456.220\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getCell(2, 3).innerHTML).toEqual(\'$2,456.22\');\n
+    });\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12012</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>numericEditorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

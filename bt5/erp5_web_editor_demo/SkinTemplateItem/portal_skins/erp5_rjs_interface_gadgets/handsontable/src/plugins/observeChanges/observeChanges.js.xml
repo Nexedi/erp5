@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272670.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>observeChanges.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {registerPlugin} from \'./../../plugins\';\n
+import jsonpatch from \'jsonpatch\';\n
+\n
+export {ObserveChanges};\n
+\n
+//registerPlugin(\'observeChanges\', ObserveChanges);\n
+\n
+/**\n
+ * @private\n
+ * @class ObserveChanges\n
+ * @plugin ObserveChanges\n
+ * @dependencies jsonpatch\n
+ */\n
+function ObserveChanges() {\n
+\n
+}\n
+\n
+Handsontable.hooks.add(\'afterLoadData\', init);\n
+Handsontable.hooks.add(\'afterUpdateSettings\', init);\n
+\n
+Handsontable.hooks.register(\'afterChangesObserved\');\n
+\n
+\n
+function init() {\n
+  var instance = this;\n
+  var pluginEnabled = instance.getSettings().observeChanges;\n
+\n
+  if (pluginEnabled) {\n
+    if (instance.observer) {\n
+      destroy.call(instance); //destroy observer for old data object\n
+    }\n
+    createObserver.call(instance);\n
+    bindEvents.call(instance);\n
+\n
+  } else if (!pluginEnabled) {\n
+    destroy.call(instance);\n
+  }\n
+}\n
+\n
+function createObserver() {\n
+  var instance = this;\n
+\n
+  instance.observeChangesActive = true;\n
+\n
+  instance.pauseObservingChanges = function() {\n
+    instance.observeChangesActive = false;\n
+  };\n
+\n
+  instance.resumeObservingChanges = function() {\n
+    instance.observeChangesActive = true;\n
+  };\n
+\n
+  instance.observedData = instance.getData();\n
+  instance.observer = jsonpatch.observe(instance.observedData, function(patches) {\n
+    if (instance.observeChangesActive) {\n
+      runHookForOperation.call(instance, patches);\n
+      instance.render();\n
+    }\n
+\n
+    instance.runHooks(\'afterChangesObserved\');\n
+  });\n
+}\n
+\n
+function runHookForOperation(rawPatches) {\n
+  var instance = this;\n
+  var patches = cleanPatches(rawPatches);\n
+\n
+  for (var i = 0, len = patches.length; i < len; i++) {\n
+    var patch = patches[i];\n
+    var parsedPath = parsePath(patch.path);\n
+\n
+\n
+    switch (patch.op) {\n
+      case \'add\':\n
+        if (isNaN(parsedPath.col)) {\n
+          instance.runHooks(\'afterCreateRow\', parsedPath.row);\n
+        } else {\n
+          instance.runHooks(\'afterCreateCol\', parsedPath.col);\n
+        }\n
+        break;\n
+\n
+      case \'remove\':\n
+        if (isNaN(parsedPath.col)) {\n
+          instance.runHooks(\'afterRemoveRow\', parsedPath.row, 1);\n
+        } else {\n
+          instance.runHooks(\'afterRemoveCol\', parsedPath.col, 1);\n
+        }\n
+        break;\n
+\n
+      case \'replace\':\n
+        instance.runHooks(\'afterChange\', [parsedPath.row, parsedPath.col, null, patch.value], \'external\');\n
+        break;\n
+    }\n
+  }\n
+\n
+  function cleanPatches(rawPatches) {\n
+    var patches;\n
+\n
+    patches = removeLengthRelatedPatches(rawPatches);\n
+    patches = removeMultipleAddOrRemoveColPatches(patches);\n
+\n
+    return patches;\n
+  }\n
+\n
+  /**\n
+   * Removing or adding column will produce one patch for each table row.\n
+   * This function leaves only one patch for each column add/remove operation\n
+   */\n
+  function removeMultipleAddOrRemoveColPatches(rawPatches) {\n
+    var newOrRemovedColumns = [];\n
+\n
+    return rawPatches.filter(function(patch) {\n
+      var parsedPath = parsePath(patch.path);\n
+\n
+      if ([\'add\', \'remove\'].indexOf(patch.op) != -1 && !isNaN(parsedPath.col)) {\n
+        if (newOrRemovedColumns.indexOf(parsedPath.col) != -1) {\n
+          return false;\n
+        } else {\n
+          newOrRemovedColumns.push(parsedPath.col);\n
+        }\n
+      }\n
+\n
+      return true;\n
+    });\n
+\n
+  }\n
+\n
+  /**\n
+   * If observeChanges uses native Object.observe method, then it produces patches for length property.\n
+   * This function removes them.\n
+   */\n
+  function removeLengthRelatedPatches(rawPatches) {\n
+    return rawPatches.filter(function(patch) {\n
+      return !/[/]length/ig.test(patch.path);\n
+    });\n
+  }\n
+\n
+  function parsePath(path) {\n
+    var match = path.match(/^\\/(\\d+)\\/?(.*)?$/);\n
+    return {\n
+      row: parseInt(match[1], 10),\n
+      col: /^\\d*$/.test(match[2]) ? parseInt(match[2], 10) : match[2]\n
+    };\n
+  }\n
+}\n
+\n
+function destroy() {\n
+  var instance = this;\n
+\n
+  if (instance.observer) {\n
+    destroyObserver.call(instance);\n
+    unbindEvents.call(instance);\n
+  }\n
+}\n
+\n
+function destroyObserver() {\n
+  var instance = this;\n
+\n
+  jsonpatch.unobserve(instance.observedData, instance.observer);\n
+  delete instance.observedData;\n
+  delete instance.observeChangesActive;\n
+  delete instance.pauseObservingChanges;\n
+  delete instance.resumeObservingChanges;\n
+}\n
+\n
+function bindEvents() {\n
+  var instance = this;\n
+  instance.addHook(\'afterDestroy\', destroy);\n
+\n
+  instance.addHook(\'afterCreateRow\', afterTableAlter);\n
+  instance.addHook(\'afterRemoveRow\', afterTableAlter);\n
+\n
+  instance.addHook(\'afterCreateCol\', afterTableAlter);\n
+  instance.addHook(\'afterRemoveCol\', afterTableAlter);\n
+\n
+  instance.addHook(\'afterChange\', function(changes, source) {\n
+    if (source != \'loadData\') {\n
+      afterTableAlter.call(this);\n
+    }\n
+  });\n
+}\n
+\n
+function unbindEvents() {\n
+  var instance = this;\n
+  instance.removeHook(\'afterDestroy\', destroy);\n
+\n
+  instance.removeHook(\'afterCreateRow\', afterTableAlter);\n
+  instance.removeHook(\'afterRemoveRow\', afterTableAlter);\n
+\n
+  instance.removeHook(\'afterCreateCol\', afterTableAlter);\n
+  instance.removeHook(\'afterRemoveCol\', afterTableAlter);\n
+\n
+  instance.removeHook(\'afterChange\', afterTableAlter);\n
+}\n
+\n
+function afterTableAlter() {\n
+  var instance = this;\n
+\n
+  instance.pauseObservingChanges();\n
+\n
+  instance.addHookOnce(\'afterChangesObserved\', function() {\n
+    instance.resumeObservingChanges();\n
+  });\n
+\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5112</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>observeChanges.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

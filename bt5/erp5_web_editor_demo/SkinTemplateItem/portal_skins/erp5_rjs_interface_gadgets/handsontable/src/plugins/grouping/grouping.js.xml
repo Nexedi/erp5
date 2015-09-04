@@ -1,0 +1,1536 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272717.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>grouping.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  addClass,\n
+  removeClass,\n
+  hasClass,\n
+  index as elementIndex,\n
+    } from \'./../../helpers/dom/element\';\n
+import {stopImmediatePropagation} from \'./../../helpers/dom/event\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+//export {Grouping};\n
+\n
+//registerPlugin(\'grouping\', Grouping);\n
+\n
+/* jshint sub:true */\n
+\n
+/**\n
+ * @private\n
+ * @class Grouping\n
+ * @plugin Grouping\n
+ */\n
+function Grouping(instance) {\n
+  /**\n
+   * array of items\n
+   * @type {Array}\n
+   */\n
+  var groups = [];\n
+\n
+  /**\n
+   * group definition\n
+   * @type {{id: String, level: Number, rows: Array, cols: Array, hidden: Number}}\n
+   */\n
+  var item = {\n
+    id: \'\',\n
+    level: 0,\n
+    hidden: 0,\n
+    rows: [],\n
+    cols: []\n
+  };\n
+\n
+  /**\n
+   * total rows and cols merged in groups\n
+   * @type {{rows: number, cols: number}}\n
+   */\n
+  var counters = {\n
+    rows: 0,\n
+    cols: 0\n
+  };\n
+\n
+  /**\n
+   * Number of group levels in each dimension\n
+   * @type {{rows: number, cols: number}}\n
+   */\n
+  var levels = {\n
+    rows: 0,\n
+    cols: 0\n
+  };\n
+\n
+  /**\n
+   * List of hidden rows\n
+   * @type {Array}\n
+   */\n
+  var hiddenRows = [];\n
+\n
+  /**\n
+   * List of hidden columns\n
+   * @type {Array}\n
+   */\n
+  var hiddenCols = [];\n
+\n
+  /**\n
+   * Classes used\n
+   */\n
+  var classes = {\n
+    \'groupIndicatorContainer\': \'htGroupIndicatorContainer\',\n
+    \'groupIndicator\': function (direction) {\n
+      return \'ht\' + direction + \'Group\';\n
+    },\n
+    \'groupStart\': \'htGroupStart\',\n
+    \'collapseButton\': \'htCollapseButton\',\n
+    \'expandButton\': \'htExpandButton\',\n
+    \'collapseGroupId\': function (id) {\n
+      return \'htCollapse-\' + id;\n
+    },\n
+    \'collapseFromLevel\': function (direction, level) {\n
+      return \'htCollapse\' + direction + \'FromLevel-\' + level;\n
+    },\n
+    \'clickable\': \'clickable\',\n
+    \'levelTrigger\': \'htGroupLevelTrigger\'\n
+  };\n
+\n
+  /**\n
+   * compare object properties\n
+   * @param {String} property\n
+   * @param {String} orderDirection\n
+   * @returns {Function}\n
+   */\n
+  var compare = function (property, orderDirection) {\n
+    return function (item1, item2) {\n
+      return typeof (orderDirection) === \'undefined\' || orderDirection === \'asc\' ? item1[property] - item2[property] : item2[property] - item1[property];\n
+    };\n
+  };\n
+\n
+  /**\n
+   * Create range array between from and to\n
+   * @param {Number} from\n
+   * @param {Number} to\n
+   * @returns {Array}\n
+   */\n
+  var range = function (from, to) {\n
+    var arr = [];\n
+    while (from <= to) {\n
+      arr.push(from++);\n
+    }\n
+\n
+    return arr;\n
+  };\n
+\n
+  /**\n
+   * * Get groups for range\n
+   * @param from\n
+   * @param to\n
+   * @returns {{total: {rows: number, cols: number}, groups: Array}}\n
+   */\n
+  var getRangeGroups = function (dataType, from, to) {\n
+    var cells = [],\n
+      cell = {\n
+        row: null,\n
+        col: null\n
+      };\n
+\n
+    if (dataType == "cols") {\n
+      // get all rows for selected columns\n
+      while (from <= to) {\n
+        cell = {\n
+          row: -1,\n
+          col: from++\n
+        };\n
+        cells.push(cell);\n
+      }\n
+\n
+    } else {\n
+      // get all columns for selected rows\n
+      while (from <= to) {\n
+        cell = {\n
+          row: from++,\n
+          col: -1\n
+        };\n
+        cells.push(cell);\n
+      }\n
+    }\n
+\n
+    var cellsGroups = getCellsGroups(cells),\n
+      totalRows = 0,\n
+      totalCols = 0;\n
+\n
+    // for selected cells, calculate total groups divided into rows and columns\n
+    for (var i = 0; i < cellsGroups.length; i++) {\n
+      totalRows += cellsGroups[i].filter(function (item) {\n
+        return item[\'rows\'];\n
+      }).length;\n
+\n
+      totalCols += cellsGroups[i].filter(function (item) {\n
+        return item[\'cols\'];\n
+      }).length;\n
+    }\n
+\n
+    return {\n
+      total: {\n
+        rows: totalRows,\n
+        cols: totalCols\n
+      },\n
+      groups: cellsGroups\n
+    };\n
+  };\n
+\n
+  /**\n
+   * Get all groups for cells\n
+   * @param {Array} cells [{row:0, col:0}, {row:0, col:1}, {row:1, col:2}]\n
+   * @returns {Array}\n
+   */\n
+  var getCellsGroups = function (cells) {\n
+    var _groups = [];\n
+\n
+    for (var i = 0; i < cells.length; i++) {\n
+      _groups.push(getCellGroups(cells[i]));\n
+    }\n
+\n
+    return _groups;\n
+  };\n
+\n
+  /**\n
+   * Get all groups for cell\n
+   * @param {Object} coords {row:1, col:2}\n
+   * @param {Number} groupLevel Optional\n
+   * @param {String} groupType Optional\n
+   * @returns {Array}\n
+   */\n
+  var getCellGroups = function (coords, groupLevel, groupType) {\n
+    var row = coords.row,\n
+      col = coords.col;\n
+\n
+    // for row = -1 and col = -1, get all columns and rows\n
+    var tmpRow = (row === -1 ? 0 : row),\n
+      tmpCol = (col === -1 ? 0 : col);\n
+\n
+    var _groups = [];\n
+\n
+    for (var i = 0; i < groups.length; i++) {\n
+      var group = groups[i],\n
+        id = group[\'id\'],\n
+        level = group[\'level\'],\n
+        rows = group[\'rows\'] || [],\n
+        cols = group[\'cols\'] || [];\n
+\n
+      if (_groups.indexOf(id) === -1) {\n
+        if (rows.indexOf(tmpRow) !== -1 || cols.indexOf(tmpCol) !== -1) {\n
+          _groups.push(group);\n
+        }\n
+      }\n
+    }\n
+\n
+    // add col groups\n
+    if (col === -1) {\n
+      _groups = _groups.concat(getColGroups());\n
+    } else if (row === -1) {\n
+      // add row groups\n
+      _groups = _groups.concat(getRowGroups());\n
+    }\n
+\n
+    if (groupLevel) {\n
+      _groups = _groups.filter(function (item) {\n
+        return item[\'level\'] === groupLevel;\n
+      });\n
+    }\n
+\n
+    if (groupType) {\n
+      if (groupType === \'cols\') {\n
+        _groups = _groups.filter(function (item) {\n
+          return item[\'cols\'];\n
+        });\n
+      } else if (groupType === \'rows\') {\n
+        _groups = _groups.filter(function (item) {\n
+          return item[\'rows\'];\n
+        });\n
+      }\n
+    }\n
+\n
+    // remove duplicates\n
+    var tmp = [];\n
+    return _groups.filter(function (item) {\n
+      if (tmp.indexOf(item.id) === -1) {\n
+        tmp.push(item.id);\n
+        return item;\n
+      }\n
+    });\n
+  };\n
+\n
+  /**\n
+   * get group by id\n
+   * @param id\n
+   * @returns {Object} group\n
+   */\n
+  var getGroupById = function (id) {\n
+    for (var i = 0, groupsLength = groups.length; i < groupsLength; i++) {\n
+      if (groups[i].id == id) {\n
+        return groups[i];\n
+      }\n
+    }\n
+    return false;\n
+  };\n
+\n
+  /**\n
+   * get group by row and level\n
+   * @param row\n
+   * @param level\n
+   * @returns {Object} group\n
+   */\n
+  var getGroupByRowAndLevel = function (row, level) {\n
+    for (var i = 0, groupsLength = groups.length; i < groupsLength; i++) {\n
+      if (groups[i].level == level && groups[i].rows && groups[i].rows.indexOf(row) > -1) {\n
+        return groups[i];\n
+      }\n
+    }\n
+    return false;\n
+  };\n
+\n
+  /**\n
+   * get group by row and level\n
+   * @param row\n
+   * @param level\n
+   * @returns {Object} group\n
+   */\n
+  var getGroupByColAndLevel = function (col, level) {\n
+    for (var i = 0, groupsLength = groups.length; i < groupsLength; i++) {\n
+      if (groups[i].level == level && groups[i].cols && groups[i].cols.indexOf(col) > -1) {\n
+        return groups[i];\n
+      }\n
+    }\n
+    return false;\n
+  };\n
+\n
+  /**\n
+   * get total column groups\n
+   * @returns {*|Array}\n
+   */\n
+  var getColGroups = function () {\n
+    var result = [];\n
+    for (var i = 0, groupsLength = groups.length; i < groupsLength; i++) {\n
+      if (Array.isArray(groups[i][\'cols\'])) {\n
+        result.push(groups[i]);\n
+      }\n
+    }\n
+    return result;\n
+  };\n
+\n
+  /**\n
+   * get total col groups by level\n
+   * @param {Number} level\n
+   * @returns {*|Array}\n
+   */\n
+  var getColGroupsByLevel = function (level) {\n
+    var result = [];\n
+    for (var i = 0, groupsLength = groups.length; i < groupsLength; i++) {\n
+      if (groups[i][\'cols\'] && groups[i][\'level\'] === level) {\n
+        result.push(groups[i]);\n
+      }\n
+    }\n
+    return result;\n
+  };\n
+\n
+  /**\n
+   * get total row groups\n
+   * @returns {*|Array}\n
+   */\n
+  var getRowGroups = function () {\n
+    var result = [];\n
+    for (var i = 0, groupsLength = groups.length; i < groupsLength; i++) {\n
+      if (Array.isArray(groups[i][\'rows\'])) {\n
+        result.push(groups[i]);\n
+      }\n
+    }\n
+    return result;\n
+  };\n
+\n
+  /**\n
+   * get total row groups by level\n
+   * @param {Number} level\n
+   * @returns {*|Array}\n
+   */\n
+  var getRowGroupsByLevel = function (level) {\n
+    var result = [];\n
+    for (var i = 0, groupsLength = groups.length; i < groupsLength; i++) {\n
+      if (groups[i][\'rows\'] && groups[i][\'level\'] === level) {\n
+        result.push(groups[i]);\n
+      }\n
+    }\n
+    return result;\n
+  };\n
+\n
+  /**\n
+   * get last inserted range level in columns\n
+   * @param {Array} rangeGroups\n
+   * @returns {number}\n
+   */\n
+  var getLastLevelColsInRange = function (rangeGroups) {\n
+    var level = 0;\n
+\n
+    if (rangeGroups.length) {\n
+      rangeGroups.forEach(function (items) {\n
+        items = items.filter(function (item) {\n
+          return item[\'cols\'];\n
+        });\n
+\n
+        if (items.length) {\n
+          var sortedGroup = items.sort(compare(\'level\', \'desc\')),\n
+            lastLevel = sortedGroup[0].level;\n
+\n
+          if (level < lastLevel) {\n
+            level = lastLevel;\n
+          }\n
+        }\n
+      });\n
+    }\n
+\n
+    return level;\n
+  };\n
+\n
+  /**\n
+   * get last inserted range level in rows\n
+   * @param {Array} rangeGroups\n
+   * @returns {number}\n
+   */\n
+  var getLastLevelRowsInRange = function (rangeGroups) {\n
+    var level = 0;\n
+\n
+    if (rangeGroups.length) {\n
+      rangeGroups.forEach(function (items) {\n
+        items = items.filter(function (item) {\n
+          return item[\'rows\'];\n
+        });\n
+\n
+        if (items.length) {\n
+          var sortedGroup = items.sort(compare(\'level\', \'desc\')),\n
+            lastLevel = sortedGroup[0].level;\n
+\n
+          if (level < lastLevel) {\n
+            level = lastLevel;\n
+          }\n
+        }\n
+      });\n
+    }\n
+\n
+    return level;\n
+  };\n
+\n
+  /**\n
+   * create group for cols\n
+   * @param {Number} from\n
+   * @param {Number} to\n
+   */\n
+  var groupCols = function (from, to) {\n
+    var rangeGroups = getRangeGroups("cols", from, to),\n
+      lastLevel = getLastLevelColsInRange(rangeGroups.groups);\n
+\n
+    if (lastLevel === levels.cols) {\n
+      levels.cols++;\n
+    } else if (lastLevel > levels.cols) {\n
+      levels.cols = lastLevel + 1;\n
+    }\n
+\n
+    if (!counters.cols) {\n
+      counters.cols = getColGroups().length;\n
+    }\n
+\n
+    counters.cols++;\n
+    groups.push({\n
+      id: \'c\' + counters.cols,\n
+      level: lastLevel + 1,\n
+      cols: range(from, to),\n
+      hidden: 0\n
+    });\n
+  };\n
+\n
+  /**\n
+   * create group for rows\n
+   * @param {Number} from\n
+   * @param {Number} to\n
+   */\n
+  var groupRows = function (from, to) {\n
+    var rangeGroups = getRangeGroups("rows", from, to),\n
+      lastLevel = getLastLevelRowsInRange(rangeGroups.groups);\n
+\n
+    levels.rows = Math.max(levels.rows, lastLevel + 1);\n
+\n
+\n
+    if (!counters.rows) {\n
+      counters.rows = getRowGroups().length;\n
+    }\n
+\n
+    counters.rows++;\n
+    groups.push({\n
+      id: \'r\' + counters.rows,\n
+      level: lastLevel + 1,\n
+      rows: range(from, to),\n
+      hidden: 0\n
+    });\n
+  };\n
+\n
+  /**\n
+   * show or hide groups\n
+   * @param showHide\n
+   * @param groups\n
+   */\n
+  var showHideGroups = function (hidden, groups) {\n
+    var level;\n
+    for (var i = 0, groupsLength = groups.length; i < groupsLength; i++) {\n
+      groups[i].hidden = hidden;\n
+      level = groups[i].level;\n
+\n
+      if (!hiddenRows[level]) {\n
+        hiddenRows[level] = [];\n
+      }\n
+      if (!hiddenCols[level]) {\n
+        hiddenCols[level] = [];\n
+      }\n
+\n
+      if (groups[i].rows) {\n
+        for (var j = 0, rowsLength = groups[i].rows.length; j < rowsLength; j++) {\n
+          if (hidden > 0) {\n
+            hiddenRows[level][groups[i].rows[j]] = true;\n
+          } else {\n
+            hiddenRows[level][groups[i].rows[j]] = void 0;\n
+          }\n
+        }\n
+      } else if (groups[i].cols) {\n
+        for (var j = 0, colsLength = groups[i].cols.length; j < colsLength; j++) {\n
+          if (hidden > 0) {\n
+            hiddenCols[level][groups[i].cols[j]] = true;\n
+          } else {\n
+            hiddenCols[level][groups[i].cols[j]] = void 0;\n
+          }\n
+        }\n
+      }\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Check if the next cell of the dimension (row / column) contains a group at the same level\n
+   * @param dimension\n
+   * @param currentPosition\n
+   * @param level\n
+   * @param currentGroupId\n
+   * @returns {boolean}\n
+   */\n
+  var nextIndexSharesLevel = function (dimension, currentPosition, level, currentGroupId) {\n
+    var nextCellGroupId\n
+      , levelsByOrder;\n
+\n
+    switch (dimension) {\n
+      case \'rows\':\n
+        nextCellGroupId = getGroupByRowAndLevel(currentPosition + 1, level).id;\n
+        levelsByOrder = Handsontable.Grouping.getGroupLevelsByRows();\n
+        break;\n
+      case \'cols\':\n
+        nextCellGroupId = getGroupByColAndLevel(currentPosition + 1, level).id;\n
+        levelsByOrder = Handsontable.Grouping.getGroupLevelsByCols();\n
+        break;\n
+    }\n
+\n
+    return !!(levelsByOrder[currentPosition + 1] && levelsByOrder[currentPosition + 1].indexOf(level) > -1 && currentGroupId == nextCellGroupId);\n
+\n
+  };\n
+\n
+  /**\n
+   * Check if the previous cell of the dimension (row / column) contains a group at the same level\n
+   * @param dimension\n
+   * @param currentPosition\n
+   * @param level\n
+   * @param currentGroupId\n
+   * @returns {boolean}\n
+   */\n
+  var previousIndexSharesLevel = function (dimension, currentPosition, level, currentGroupId) {\n
+    var previousCellGroupId\n
+      , levelsByOrder;\n
+\n
+    switch (dimension) {\n
+      case \'rows\':\n
+        previousCellGroupId = getGroupByRowAndLevel(currentPosition - 1, level).id;\n
+        levelsByOrder = Handsontable.Grouping.getGroupLevelsByRows();\n
+        break;\n
+      case \'cols\':\n
+        previousCellGroupId = getGroupByColAndLevel(currentPosition - 1, level).id;\n
+        levelsByOrder = Handsontable.Grouping.getGroupLevelsByCols();\n
+        break;\n
+    }\n
+\n
+    return !!(levelsByOrder[currentPosition - 1] && levelsByOrder[currentPosition - 1].indexOf(level) > -1 && currentGroupId == previousCellGroupId);\n
+\n
+  };\n
+\n
+  /**\n
+   * Check if the provided index is at the end of the group indicator line\n
+   * @param dimension\n
+   * @param index\n
+   * @param level\n
+   * @param currentGroupId\n
+   * @returns {boolean}\n
+   */\n
+  var isLastIndexOfTheLine = function (dimension, index, level, currentGroupId) {\n
+    if (index === 0) {\n
+      return false;\n
+    }\n
+    var levelsByOrder\n
+      , entriesLength\n
+      , previousSharesLevel = previousIndexSharesLevel(dimension, index, level, currentGroupId)\n
+      , nextSharesLevel = nextIndexSharesLevel(dimension, index, level, currentGroupId)\n
+      , nextIsHidden = false;\n
+\n
+    switch (dimension) {\n
+      case \'rows\':\n
+        levelsByOrder = Handsontable.Grouping.getGroupLevelsByRows();\n
+        entriesLength = instance.countRows();\n
+        for (var i = 0; i <= levels.rows; i++) {\n
+          if (hiddenRows[i] && hiddenRows[i][index + 1]) {\n
+            nextIsHidden = true;\n
+            break;\n
+          }\n
+        }\n
+        break;\n
+      case \'cols\':\n
+        levelsByOrder = Handsontable.Grouping.getGroupLevelsByCols();\n
+        entriesLength = instance.countCols();\n
+        for (var i = 0; i <= levels.cols; i++) {\n
+          if (hiddenCols[i] && hiddenCols[i][index + 1]) {\n
+            nextIsHidden = true;\n
+            break;\n
+          }\n
+        }\n
+        break;\n
+    }\n
+\n
+    if (previousSharesLevel) {\n
+      if (index == entriesLength - 1) {\n
+        return true;\n
+      } else if (!nextSharesLevel || (nextSharesLevel && nextIsHidden)) {\n
+        return true;\n
+      } else if (!levelsByOrder[index + 1]) {\n
+        return true;\n
+      }\n
+    }\n
+    return false;\n
+  };\n
+\n
+  /**\n
+   * Check if all rows/cols are hidden\n
+   * @param dataType\n
+   */\n
+  var isLastHidden = function (dataType) {\n
+    var levelAmount;\n
+\n
+    switch (dataType) {\n
+      case \'rows\':\n
+        levelAmount = levels.rows;\n
+        for (var j = 0; j <= levelAmount; j++) {\n
+          if (hiddenRows[j] && hiddenRows[j][instance.countRows() - 1]) {\n
+            return true;\n
+          }\n
+        }\n
+\n
+        break;\n
+      case \'cols\':\n
+        levelAmount = levels.cols;\n
+        for (var j = 0; j <= levelAmount; j++) {\n
+          if (hiddenCols[j] && hiddenCols[j][instance.countCols() - 1]) {\n
+            return true;\n
+          }\n
+        }\n
+        break;\n
+    }\n
+\n
+    return false;\n
+  };\n
+\n
+  /**\n
+   * Check if the provided index is at the beginning of the group indicator line\n
+   * @param dimension\n
+   * @param index\n
+   * @param level\n
+   * @param currentGroupId\n
+   * @returns {boolean}\n
+   */\n
+  var isFirstIndexOfTheLine = function (dimension, index, level, currentGroupId) {\n
+    var levelsByOrder\n
+      , entriesLength\n
+      , currentGroup = getGroupById(currentGroupId)\n
+      , previousAreHidden = false\n
+      , arePreviousHidden = function (dimension) {\n
+        var hidden = false\n
+          , hiddenArr = dimension == \'rows\' ? hiddenRows : hiddenCols;\n
+        for (var i = 0; i <= levels[dimension]; i++) {\n
+          tempInd = index;\n
+          while (currentGroup[dimension].indexOf(tempInd) > -1) {\n
+            hidden = !!(hiddenArr[i] && hiddenArr[i][tempInd]);\n
+            tempInd--;\n
+          }\n
+          if (hidden) {\n
+            break;\n
+          }\n
+        }\n
+        return hidden;\n
+      }\n
+      , previousSharesLevel = previousIndexSharesLevel(dimension, index, level, currentGroupId)\n
+      , nextSharesLevel = nextIndexSharesLevel(dimension, index, level, currentGroupId)\n
+      , tempInd;\n
+\n
+    switch (dimension) {\n
+      case \'rows\':\n
+        levelsByOrder = Handsontable.Grouping.getGroupLevelsByRows();\n
+        entriesLength = instance.countRows();\n
+        previousAreHidden = arePreviousHidden(dimension);\n
+        break;\n
+      case \'cols\':\n
+        levelsByOrder = Handsontable.Grouping.getGroupLevelsByCols();\n
+        entriesLength = instance.countCols();\n
+        previousAreHidden = arePreviousHidden(dimension);\n
+        break;\n
+    }\n
+\n
+    if (index == entriesLength - 1) {\n
+      return false;\n
+    }\n
+    else if (index === 0) {\n
+      if (nextSharesLevel) {\n
+        return true;\n
+      }\n
+    } else if (!previousSharesLevel || (previousSharesLevel && previousAreHidden)) {\n
+      if (nextSharesLevel) {\n
+        return true;\n
+      }\n
+    } else if (!levelsByOrder[index - 1]) {\n
+      if (nextSharesLevel) {\n
+        return true;\n
+      }\n
+    }\n
+    return false;\n
+  };\n
+\n
+  /**\n
+   * Add group expander button\n
+   * @param dimension\n
+   * @param index\n
+   * @param level\n
+   * @param id\n
+   * @param elem\n
+   * @returns {*}\n
+   */\n
+  var addGroupExpander = function (dataType, index, level, id, elem) {\n
+    var previousIndexGroupId;\n
+\n
+    switch (dataType) {\n
+      case \'rows\':\n
+        previousIndexGroupId = getGroupByRowAndLevel(index - 1, level).id;\n
+        break;\n
+      case \'cols\':\n
+        previousIndexGroupId = getGroupByColAndLevel(index - 1, level).id;\n
+        break;\n
+    }\n
+\n
+    if (!previousIndexGroupId) {\n
+      return null;\n
+    }\n
+\n
+    if (index > 0) {\n
+      if (previousIndexSharesLevel(dataType, index - 1, level, previousIndexGroupId) && previousIndexGroupId != id) {\n
+\n
+        var expanderButton = document.createElement(\'DIV\');\n
+        addClass(expanderButton, classes.expandButton);\n
+        expanderButton.id = \'htExpand-\' + previousIndexGroupId;\n
+        expanderButton.appendChild(document.createTextNode(\'+\'));\n
+        expanderButton.setAttribute(\'data-level\', level);\n
+        expanderButton.setAttribute(\'data-type\', dataType);\n
+        expanderButton.setAttribute(\'data-hidden\', "1");\n
+\n
+        elem.appendChild(expanderButton);\n
+\n
+        return expanderButton;\n
+      }\n
+    }\n
+    return null;\n
+  };\n
+\n
+  /**\n
+   * Check if provided cell is collapsed (either by rows or cols)\n
+   * @param currentPosition\n
+   * @returns {boolean}\n
+   */\n
+  var isCollapsed = function (currentPosition) {\n
+    var rowGroups = getRowGroups()\n
+      , colGroups = getColGroups();\n
+\n
+    for (var i = 0, rowGroupsCount = rowGroups.length; i < rowGroupsCount; i++) {\n
+      if (rowGroups[i].rows.indexOf(currentPosition.row) > -1 && rowGroups[i].hidden) {\n
+        return true;\n
+      }\n
+    }\n
+\n
+    if (currentPosition.col === null) { // if col is set to null, check only rows\n
+      return false;\n
+    }\n
+\n
+    for (var i = 0, colGroupsCount = colGroups.length; i < colGroupsCount; i++) {\n
+      if (colGroups[i].cols.indexOf(currentPosition.col) > -1 && colGroups[i].hidden) {\n
+        return true;\n
+      }\n
+    }\n
+\n
+    return false;\n
+  };\n
+\n
+  return {\n
+\n
+    /**\n
+     * all groups for ht instance\n
+     */\n
+    getGroups: function () {\n
+      return groups;\n
+    },\n
+    /**\n
+     * All levels for rows and cols respectively\n
+     */\n
+    getLevels: function () {\n
+      return levels;\n
+    },\n
+    /**\n
+     * Current instance\n
+     */\n
+    instance: instance,\n
+    /**\n
+     * Initial setting for minSpareRows\n
+     */\n
+    baseSpareRows: instance.getSettings().minSpareRows,\n
+    /**\n
+     * Initial setting for minSpareCols\n
+     */\n
+    baseSpareCols: instance.getSettings().minSpareCols,\n
+\n
+    getRowGroups: getRowGroups,\n
+    getColGroups: getColGroups,\n
+    /**\n
+     * init group\n
+     * @param {Object} settings, could be an array of objects [{cols: [0,1,2]}, {cols: [3,4,5]}, {rows: [0,1]}]\n
+     */\n
+    init: function () {\n
+      var groupsSetting = instance.getSettings().groups;\n
+      if (groupsSetting) {\n
+        if (Array.isArray(groupsSetting)) {\n
+          Handsontable.Grouping.initGroups(groupsSetting);\n
+        }\n
+      }\n
+    },\n
+\n
+    /**\n
+     * init groups from configuration on startup\n
+     */\n
+    initGroups: function (initialGroups) {\n
+      var that = this;\n
+\n
+      groups = [];\n
+\n
+      initialGroups.forEach(function (item) {\n
+        var _group = [],\n
+          isRow = false,\n
+          isCol = false;\n
+\n
+        if (Array.isArray(item.rows)) {\n
+          _group = item.rows;\n
+          isRow = true;\n
+        } else if (Array.isArray(item.cols)) {\n
+          _group = item.cols;\n
+          isCol = true;\n
+        }\n
+\n
+        var from = _group[0],\n
+          to = _group[_group.length - 1];\n
+\n
+        if (isRow) {\n
+          groupRows(from, to);\n
+        } else if (isCol) {\n
+          groupCols(from, to);\n
+        }\n
+      });\n
+//      this.render();\n
+    },\n
+\n
+    /**\n
+     * Remove all existing groups\n
+     */\n
+    resetGroups: function () {\n
+      groups = [];\n
+      counters = {\n
+        rows: 0,\n
+        cols: 0\n
+      };\n
+      levels = {\n
+        rows: 0,\n
+        cols: 0\n
+      };\n
+\n
+      var allOccurrences;\n
+      for (var i in classes) {\n
+        if (typeof classes[i] != \'function\') {\n
+          allOccurrences = document.querySelectorAll(\'.\' + classes[i]);\n
+          for (var j = 0, occurrencesLength = allOccurrences.length; j < occurrencesLength; j++) {\n
+            removeClass(allOccurrences[j], classes[i]);\n
+          }\n
+        }\n
+      }\n
+\n
+      var otherClasses = [\'htGroupColClosest\', \'htGroupCol\'];\n
+      for (var i = 0, otherClassesLength = otherClasses.length; i < otherClassesLength; i++) {\n
+        allOccurrences = document.querySelectorAll(\'.\' + otherClasses[i]);\n
+        for (var j = 0, occurrencesLength = allOccurrences.length; j < occurrencesLength; j++) {\n
+          removeClass(allOccurrences[j], otherClasses[i]);\n
+        }\n
+      }\n
+    },\n
+    /**\n
+     * Update groups from the instance settings\n
+     */\n
+    updateGroups: function () {\n
+      var groupSettings = this.getSettings().groups;\n
+\n
+      Handsontable.Grouping.resetGroups();\n
+      Handsontable.Grouping.initGroups(groupSettings);\n
+    },\n
+    afterGetRowHeader: function (row, TH) {\n
+      if (!TH.parentNode) {\n
+        return;\n
+      }\n
+      var currentRowHidden = false;\n
+      for (var i = 0, levels = hiddenRows.length; i < levels; i++) {\n
+        if (hiddenRows[i] && hiddenRows[i][row] === true) {\n
+          currentRowHidden = true;\n
+        }\n
+      }\n
+\n
+      if (currentRowHidden) {\n
+        addClass(TH.parentNode, \'hidden\');\n
+      } else if (!currentRowHidden && hasClass(TH.parentNode, \'hidden\')) {\n
+        removeClass(TH.parentNode, \'hidden\');\n
+      }\n
+\n
+    },\n
+    afterGetColHeader: function (col, TH) {\n
+      var rowHeaders = this.view.wt.wtSettings.getSetting(\'rowHeaders\').length\n
+        , thisColgroup = instance.rootElement.querySelectorAll(\'colgroup col:nth-child(\' + parseInt(col + rowHeaders + 1, 10) + \')\');\n
+\n
+      if (thisColgroup.length === 0) {\n
+        return;\n
+      }\n
+\n
+      var currentColHidden = false;\n
+      for (var i = 0, levels = hiddenCols.length; i < levels; i++) {\n
+        if (hiddenCols[i] && hiddenCols[i][col] === true) {\n
+          currentColHidden = true;\n
+        }\n
+      }\n
+\n
+      if (currentColHidden) {\n
+        for (var i = 0, colsAmount = thisColgroup.length; i < colsAmount; i++) {\n
+          addClass(thisColgroup[i], \'hidden\');\n
+        }\n
+      } else if (!currentColHidden && hasClass(thisColgroup[0], \'hidden\')) {\n
+        for (var i = 0, colsAmount = thisColgroup.length; i < colsAmount; i++) {\n
+          removeClass(thisColgroup[i], \'hidden\');\n
+        }\n
+      }\n
+    },\n
+    /**\n
+     * Create a renderer for additional row/col headers, acting as group indicators\n
+     * @param walkontableConfig\n
+     * @param direction\n
+     */\n
+    groupIndicatorsFactory: function (renderersArr, direction) {\n
+      var groupsLevelsList\n
+        , getCurrentLevel\n
+        , getCurrentGroupId\n
+        , dataType\n
+        , getGroupByIndexAndLevel\n
+        , headersType\n
+        , currentHeaderModifier\n
+        , createLevelTriggers;\n
+\n
+      switch (direction) {\n
+        case \'horizontal\':\n
+          groupsLevelsList = Handsontable.Grouping.getGroupLevelsByCols();\n
+          getCurrentLevel = function (elem) {\n
+            return Array.prototype.indexOf.call(elem.parentNode.parentNode.childNodes, elem.parentNode) + 1;\n
+          };\n
+          getCurrentGroupId = function (col, level) {\n
+            return getGroupByColAndLevel(col, level).id;\n
+          };\n
+          dataType = \'cols\';\n
+          getGroupByIndexAndLevel = function (col, level) {\n
+            return getGroupByColAndLevel(col - 1, level);\n
+          };\n
+          headersType = "columnHeaders";\n
+          currentHeaderModifier = function (headerRenderers) {\n
+            if (headerRenderers.length === 1) {\n
+              var oldFn = headerRenderers[0];\n
+\n
+              headerRenderers[0] = function (index, elem, level) {\n
+\n
+                if (index < -1) {\n
+                  makeGroupIndicatorsForLevel()(index, elem, level);\n
+                } else {\n
+                  removeClass(elem, classes.groupIndicatorContainer);\n
+                  oldFn(index, elem, level);\n
+                }\n
+              };\n
+            }\n
+            return function () {\n
+              return headerRenderers;\n
+            };\n
+          };\n
+          createLevelTriggers = true;\n
+          break;\n
+        case \'vertical\':\n
+          groupsLevelsList = Handsontable.Grouping.getGroupLevelsByRows();\n
+          getCurrentLevel = function (elem) {\n
+            return elementIndex(elem) + 1;\n
+          };\n
+          getCurrentGroupId = function (row, level) {\n
+            return getGroupByRowAndLevel(row, level).id;\n
+          };\n
+          dataType = \'rows\';\n
+          getGroupByIndexAndLevel = function (row, level) {\n
+            return getGroupByRowAndLevel(row - 1, level);\n
+          };\n
+          headersType = "rowHeaders";\n
+          currentHeaderModifier = function (headerRenderers) {\n
+            return headerRenderers;\n
+          };\n
+          break;\n
+      }\n
+\n
+      var createButton = function (parent) {\n
+        var button = document.createElement(\'div\');\n
+\n
+        parent.appendChild(button);\n
+\n
+        return {\n
+          button: button,\n
+          addClass: function (className) {\n
+            addClass(button, className);\n
+          }\n
+        };\n
+      };\n
+\n
+      var makeGroupIndicatorsForLevel = function () {\n
+        var directionClassname = direction.charAt(0).toUpperCase() + direction.slice(1); // capitalize the first letter\n
+\n
+        return function (index, elem, level) { // header rendering function\n
+\n
+          level++;\n
+          var child\n
+            , collapseButton;\n
+\n
+          /* jshint -W084 */\n
+          while (child = elem.lastChild) {\n
+            elem.removeChild(child);\n
+          }\n
+\n
+          addClass(elem, classes.groupIndicatorContainer);\n
+\n
+          var currentGroupId = getCurrentGroupId(index, level);\n
+\n
+          if (index > -1 && (groupsLevelsList[index] && groupsLevelsList[index].indexOf(level) > -1)) {\n
+\n
+            collapseButton = createButton(elem);\n
+            collapseButton.addClass(classes.groupIndicator(directionClassname));\n
+\n
+            if (isFirstIndexOfTheLine(dataType, index, level, currentGroupId)) { // add a little thingy and the top of the group indicator\n
+              collapseButton.addClass(classes.groupStart);\n
+            }\n
+\n
+            if (isLastIndexOfTheLine(dataType, index, level, currentGroupId)) { // add [+]/[-] button at the end of the line\n
+              collapseButton.button.appendChild(document.createTextNode(\'-\'));\n
+              collapseButton.addClass(classes.collapseButton);\n
+              collapseButton.button.id = classes.collapseGroupId(currentGroupId);\n
+              collapseButton.button.setAttribute(\'data-level\', level);\n
+              collapseButton.button.setAttribute(\'data-type\', dataType);\n
+            }\n
+\n
+          }\n
+\n
+          if (createLevelTriggers) {\n
+            var rowInd = elementIndex(elem.parentNode);\n
+            if (index === -1 || (index < -1 && rowInd === Handsontable.Grouping.getLevels().cols + 1) ||\n
+                (rowInd === 0 && Handsontable.Grouping.getLevels().cols === 0)) {\n
+              collapseButton = createButton(elem);\n
+              collapseButton.addClass(classes.levelTrigger);\n
+\n
+              if (index === -1) {\n
+                collapseButton.button.id = classes.collapseFromLevel("Cols", level);\n
+                collapseButton.button.appendChild(document.createTextNode(level));\n
+              } else if (index < -1 && rowInd === Handsontable.Grouping.getLevels().cols + 1 ||\n
+                  (rowInd === 0 && Handsontable.Grouping.getLevels().cols === 0)) {\n
+                var colInd = elementIndex(elem) + 1;\n
+                collapseButton.button.id = classes.collapseFromLevel("Rows", colInd);\n
+                collapseButton.button.appendChild(document.createTextNode(colInd));\n
+              }\n
+            }\n
+          }\n
+\n
+          // add group expending button\n
+          var expanderButton = addGroupExpander(dataType, index, level, currentGroupId, elem);\n
+          if (index > 0) {\n
+            var previousGroupObj = getGroupByIndexAndLevel(index - 1, level);\n
+\n
+            if (expanderButton && previousGroupObj.hidden) {\n
+              addClass(expanderButton, classes.clickable);\n
+            }\n
+          }\n
+\n
+          updateHeaderWidths();\n
+\n
+        };\n
+      };\n
+\n
+\n
+      renderersArr = currentHeaderModifier(renderersArr);\n
+\n
+\n
+      if (counters[dataType] > 0) {\n
+        for (var i = 0; i < levels[dataType] + 1; i++) { // for each level of col groups add a header renderer\n
+          if (!Array.isArray(renderersArr)) {\n
+            renderersArr = typeof renderersArr === \'function\' ? renderersArr() : new Array(renderersArr);\n
+          }\n
+          renderersArr.unshift(makeGroupIndicatorsForLevel());\n
+        }\n
+      }\n
+    },\n
+    /**\n
+     * Get group levels array arranged by rows\n
+     * @returns {Array}\n
+     */\n
+    getGroupLevelsByRows: function () {\n
+      var rowGroups = getRowGroups()\n
+        , result = [];\n
+\n
+      for (var i = 0, groupsLength = rowGroups.length; i < groupsLength; i++) {\n
+        if (rowGroups[i].rows) {\n
+          for (var j = 0, groupRowsLength = rowGroups[i].rows.length; j < groupRowsLength; j++) {\n
+            if (!result[rowGroups[i].rows[j]]) {\n
+              result[rowGroups[i].rows[j]] = [];\n
+            }\n
+            result[rowGroups[i].rows[j]].push(rowGroups[i].level);\n
+          }\n
+        }\n
+      }\n
+      return result;\n
+    },\n
+    /**\n
+     * Get group levels array arranged by cols\n
+     * @returns {Array}\n
+     */\n
+    getGroupLevelsByCols: function () {\n
+      var colGroups = getColGroups()\n
+        , result = [];\n
+\n
+      for (var i = 0, groupsLength = colGroups.length; i < groupsLength; i++) {\n
+        if (colGroups[i].cols) {\n
+          for (var j = 0, groupColsLength = colGroups[i].cols.length; j < groupColsLength; j++) {\n
+            if (!result[colGroups[i].cols[j]]) {\n
+              result[colGroups[i].cols[j]] = [];\n
+            }\n
+            result[colGroups[i].cols[j]].push(colGroups[i].level);\n
+          }\n
+        }\n
+      }\n
+      return result;\n
+    },\n
+    /**\n
+     * Toggle the group visibility ( + / - event handler)\n
+     * @param event\n
+     * @param coords\n
+     * @param TD\n
+     */\n
+    toggleGroupVisibility: function (event, coords, TD) {\n
+      if (hasClass(event.target, classes.expandButton) ||\n
+          hasClass(event.target, classes.collapseButton) ||\n
+          hasClass(event.target, classes.levelTrigger)) {\n
+        var element = event.target\n
+          , elemIdSplit = element.id.split(\'-\');\n
+\n
+        var groups = []\n
+          , id\n
+          , level\n
+          , type\n
+          , hidden;\n
+\n
+        var prepareGroupData = function (componentElement) {\n
+          if (componentElement) {\n
+            element = componentElement;\n
+          }\n
+\n
+          elemIdSplit = element.id.split(\'-\');\n
+\n
+          id = elemIdSplit[1];\n
+          level = parseInt(element.getAttribute(\'data-level\'), 10);\n
+          type = element.getAttribute(\'data-type\');\n
+          hidden = parseInt(element.getAttribute(\'data-hidden\'));\n
+\n
+          if (isNaN(hidden)) {\n
+            hidden = 1;\n
+          } else {\n
+            hidden = (hidden ? 0 : 1);\n
+          }\n
+\n
+          element.setAttribute(\'data-hidden\', hidden.toString());\n
+\n
+\n
+          groups.push(getGroupById(id));\n
+        };\n
+\n
+        if (element.className.indexOf(classes.levelTrigger) > -1) { // show levels below, hide all above\n
+          var groupsInLevel\n
+            , groupsToExpand = []\n
+            , groupsToCollapse = []\n
+            , levelType = element.id.indexOf("Rows") > -1 ? "rows" : "cols";\n
+\n
+          for (var i = 1, levelsCount = levels[levelType]; i <= levelsCount; i++) {\n
+            groupsInLevel = levelType == "rows" ? getRowGroupsByLevel(i) : getColGroupsByLevel(i);\n
+\n
+            if (i >= parseInt(elemIdSplit[1], 10)) {\n
+              for (var j = 0, groupCount = groupsInLevel.length; j < groupCount; j++) {\n
+                groupsToCollapse.push(groupsInLevel[j]);\n
+              }\n
+            } else {\n
+              for (var j = 0, groupCount = groupsInLevel.length; j < groupCount; j++) {\n
+                groupsToExpand.push(groupsInLevel[j]);\n
+              }\n
+            }\n
+          }\n
+\n
+          showHideGroups(true, groupsToCollapse);\n
+          showHideGroups(false, groupsToExpand);\n
+\n
+        } else {\n
+          prepareGroupData();\n
+          showHideGroups(hidden, groups);\n
+        }\n
+\n
+        // add the expander button to a dummy spare row/col, if no longer needed -> remove it\n
+        /* jshint -W038 */\n
+        type = type || levelType;\n
+\n
+        var lastHidden = isLastHidden(type)\n
+          , typeUppercase = type.charAt(0).toUpperCase() + type.slice(1)\n
+          , spareElements = Handsontable.Grouping[\'baseSpare\' + typeUppercase];\n
+\n
+        if (lastHidden) {\n
+          /* jshint -W041 */\n
+          if (spareElements == 0) {\n
+            instance.alter(\'insert_\' + type.slice(0, -1), instance[\'count\' + typeUppercase]());\n
+            Handsontable.Grouping["dummy" + type.slice(0, -1)] = true;\n
+          }\n
+        } else {\n
+          /* jshint -W041 */\n
+          if (spareElements == 0) {\n
+            if (Handsontable.Grouping["dummy" + type.slice(0, -1)]) {\n
+              instance.alter(\'remove_\' + type.slice(0, -1), instance[\'count\' + typeUppercase]() - 1);\n
+              Handsontable.Grouping["dummy" + type.slice(0, -1)] = false;\n
+            }\n
+          }\n
+        }\n
+\n
+        instance.render();\n
+        stopImmediatePropagation(event);\n
+      }\n
+    },\n
+    /**\n
+     * Modify the delta when changing cells using keyobard\n
+     * @param position\n
+     * @returns {Function}\n
+     */\n
+    modifySelectionFactory: function (position) {\n
+      var instance = this.instance;\n
+      var currentlySelected\n
+        , nextPosition = new WalkontableCellCoords(0, 0)\n
+        , nextVisible = function (direction, currentPosition) { // updates delta to skip to the next visible cell\n
+          var updateDelta = 0;\n
+\n
+          switch (direction) {\n
+            case \'down\':\n
+              while (isCollapsed(currentPosition)) {\n
+                updateDelta++;\n
+                currentPosition.row += 1;\n
+              }\n
+              break;\n
+            case \'up\':\n
+              while (isCollapsed(currentPosition)) {\n
+                updateDelta--;\n
+                currentPosition.row -= 1;\n
+              }\n
+              break;\n
+            case \'right\':\n
+              while (isCollapsed(currentPosition)) {\n
+                updateDelta++;\n
+                currentPosition.col += 1;\n
+              }\n
+              break;\n
+            case \'left\':\n
+              while (isCollapsed(currentPosition)) {\n
+                updateDelta--;\n
+                currentPosition.col -= 1;\n
+              }\n
+              break;\n
+          }\n
+\n
+          return updateDelta;\n
+        }\n
+        , updateDelta = function (delta, nextPosition) {\n
+          if (delta.row > 0) { // moving down\n
+            if (isCollapsed(nextPosition)) {\n
+              delta.row += nextVisible(\'down\', nextPosition);\n
+            }\n
+          } else if (delta.row < 0) { // moving up\n
+            if (isCollapsed(nextPosition)) {\n
+              delta.row += nextVisible(\'up\', nextPosition);\n
+            }\n
+          }\n
+\n
+          if (delta.col > 0) { // moving right\n
+            if (isCollapsed(nextPosition)) {\n
+              delta.col += nextVisible(\'right\', nextPosition);\n
+            }\n
+          } else if (delta.col < 0) { // moving left\n
+            if (isCollapsed(nextPosition)) {\n
+              delta.col += nextVisible(\'left\', nextPosition);\n
+            }\n
+          }\n
+        };\n
+\n
+      /* jshint -W027 */\n
+      switch (position) {\n
+        case \'start\':\n
+          return function (delta) {\n
+            currentlySelected = instance.getSelected();\n
+            nextPosition.row = currentlySelected[0] + delta.row;\n
+            nextPosition.col = currentlySelected[1] + delta.col;\n
+\n
+            updateDelta(delta, nextPosition);\n
+          };\n
+          break;\n
+        case \'end\':\n
+          return function (delta) {\n
+            currentlySelected = instance.getSelected();\n
+            nextPosition.row = currentlySelected[2] + delta.row;\n
+            nextPosition.col = currentlySelected[3] + delta.col;\n
+\n
+            updateDelta(delta, nextPosition);\n
+          };\n
+          break;\n
+      }\n
+    },\n
+    modifyRowHeight: function (height, row) {\n
+      if (instance.view.wt.wtTable.rowFilter && isCollapsed({row: row, col: null})) {\n
+        return 0;\n
+      }\n
+    },\n
+    validateGroups: function () {\n
+\n
+      var areRangesOverlapping = function (a, b) {\n
+        if ((a[0] < b[0] && a[1] < b[1] && b[0] <= a[1]) ||\n
+            (a[0] > b[0] && b[1] < a[1] && a[0] <= b[1])) {\n
+          return true;\n
+        }\n
+      };\n
+\n
+      var configGroups = instance.getSettings().groups\n
+        , cols = []\n
+        , rows = [];\n
+\n
+      for (var i = 0, groupsLength = configGroups.length; i < groupsLength; i++) {\n
+        if (configGroups[i].rows) {\n
+          /* jshint -W027 */\n
+          if(configGroups[i].rows.length === 1) { // single-entry group\n
+            throw new Error("Grouping error:  Group {" + configGroups[i].rows[0] + "} is invalid. Cannot define single-entry groups.");\n
+            return false;\n
+          } else if(configGroups[i].rows.length === 0) {\n
+            throw new Error("Grouping error:  Cannot define empty groups.");\n
+            return false;\n
+          }\n
+\n
+          rows.push(configGroups[i].rows);\n
+\n
+          for (var j = 0, rowsLength = rows.length; j < rowsLength; j++) {\n
+            if (areRangesOverlapping(configGroups[i].rows, rows[j])) {\n
+\n
+              throw new Error("Grouping error:  ranges {" + configGroups[i].rows[0] + ", " + configGroups[i].rows[1] + "} and {" + rows[j][0] + ", " + rows[j][1] + "} are overlapping.");\n
+              return false;\n
+            }\n
+          }\n
+        } else if (configGroups[i].cols) {\n
+\n
+          if(configGroups[i].cols.length === 1) { // single-entry group\n
+            throw new Error("Grouping error:  Group {" + configGroups[i].cols[0] + "} is invalid. Cannot define single-entry groups.");\n
+            return false;\n
+          } else if(configGroups[i].cols.length === 0) {\n
+            throw new Error("Grouping error:  Cannot define empty groups.");\n
+            return false;\n
+          }\n
+\n
+          cols.push(configGroups[i].cols);\n
+\n
+          for (var j = 0, colsLength = cols.length; j < colsLength; j++) {\n
+            if (areRangesOverlapping(configGroups[i].cols, cols[j])) {\n
+\n
+              throw new Error("Grouping error:  ranges {" + configGroups[i].cols[0] + ", " + configGroups[i].cols[1] + "} and {" + cols[j][0] + ", " + cols[j][1] + "} are overlapping.");\n
+              return false;\n
+            }\n
+          }\n
+        }\n
+      }\n
+\n
+      return true;\n
+    },\n
+    afterGetRowHeaderRenderers: function (arr) {\n
+      Handsontable.Grouping.groupIndicatorsFactory(arr, \'vertical\');\n
+    },\n
+    afterGetColumnHeaderRenderers: function (arr) {\n
+      Handsontable.Grouping.groupIndicatorsFactory(arr, \'horizontal\');\n
+    },\n
+    hookProxy: function (fn, arg) {\n
+      return function () {\n
+        if (instance.getSettings().groups) {\n
+          return arg ? Handsontable.Grouping[fn](arg).apply(this, arguments) : Handsontable.Grouping[fn].apply(this, arguments);\n
+        } else {\n
+          return void 0;\n
+        }\n
+      };\n
+    }\n
+  };\n
+}\n
+\n
+Grouping.prototype.beforeInit = function() {\n
+\n
+};\n
+\n
+/**\n
+ * create new instance\n
+ */\n
+var init = function () {\n
+  var instance = this,\n
+    groupingSetting = !!(instance.getSettings().groups);\n
+\n
+\n
+  if (groupingSetting) {\n
+    var headerUpdates = {};\n
+\n
+    Handsontable.Grouping = new Grouping(instance);\n
+\n
+    if (!instance.getSettings().rowHeaders) { // force using rowHeaders  --  needs to be changed later\n
+      headerUpdates.rowHeaders = true;\n
+    }\n
+    if (!instance.getSettings().colHeaders) { // force using colHeaders  --  needs to be changed later\n
+      headerUpdates.colHeaders = true;\n
+    }\n
+    if (headerUpdates.colHeaders || headerUpdates.rowHeaders) {\n
+      instance.updateSettings(headerUpdates);\n
+    }\n
+\n
+    var groupConfigValid = Handsontable.Grouping.validateGroups();\n
+    if (!groupConfigValid) {\n
+      return;\n
+    }\n
+\n
+    instance.addHook(\'beforeInit\', Handsontable.Grouping.hookProxy(\'init\'));\n
+    instance.addHook(\'afterUpdateSettings\', Handsontable.Grouping.hookProxy(\'updateGroups\'));\n
+    instance.addHook(\'afterGetColumnHeaderRenderers\', Handsontable.Grouping.hookProxy(\'afterGetColumnHeaderRenderers\'));\n
+    instance.addHook(\'afterGetRowHeaderRenderers\', Handsontable.Grouping.hookProxy(\'afterGetRowHeaderRenderers\'));\n
+    instance.addHook(\'afterGetRowHeader\', Handsontable.Grouping.hookProxy(\'afterGetRowHeader\'));\n
+    instance.addHook(\'afterGetColHeader\', Handsontable.Grouping.hookProxy(\'afterGetColHeader\'));\n
+    instance.addHook(\'beforeOnCellMouseDown\', Handsontable.Grouping.hookProxy(\'toggleGroupVisibility\'));\n
+    instance.addHook(\'modifyTransformStart\', Handsontable.Grouping.hookProxy(\'modifySelectionFactory\', \'start\'));\n
+    instance.addHook(\'modifyTransformEnd\', Handsontable.Grouping.hookProxy(\'modifySelectionFactory\', \'end\'));\n
+    instance.addHook(\'modifyRowHeight\', Handsontable.Grouping.hookProxy(\'modifyRowHeight\'));\n
+  }\n
+};\n
+\n
+/**\n
+ * Update headers widths for the group indicators\n
+ */\n
+// TODO: this needs cleaning up\n
+var updateHeaderWidths = function () {\n
+  var colgroups = document.querySelectorAll(\'colgroup\');\n
+  for (var i = 0, colgroupsLength = colgroups.length; i < colgroupsLength; i++) {\n
+    var rowHeaders = colgroups[i].querySelectorAll(\'col.rowHeader\');\n
+    if (rowHeaders.length === 0) {\n
+      return;\n
+    }\n
+    for (var j = 0, rowHeadersLength = rowHeaders.length + 1; j < rowHeadersLength; j++) {\n
+      if (rowHeadersLength == 2) {\n
+        return;\n
+      }\n
+      if (j < Handsontable.Grouping.getLevels().rows + 1) {\n
+        if (j == Handsontable.Grouping.getLevels().rows) {\n
+          addClass(rowHeaders[j], \'htGroupColClosest\');\n
+        } else {\n
+          addClass(rowHeaders[j], \'htGroupCol\');\n
+        }\n
+      }\n
+    }\n
+  }\n
+};\n
+\n
+Handsontable.hooks.add(\'beforeInit\', init);\n
+\n
+Handsontable.hooks.add(\'afterUpdateSettings\', function () {\n
+\n
+  if (this.getSettings().groups && !Handsontable.Grouping) {\n
+    init.call(this, arguments);\n
+  } else if (!this.getSettings().groups && Handsontable.Grouping) {\n
+    Handsontable.Grouping.resetGroups();\n
+    Handsontable.Grouping = void 0;\n
+  }\n
+});\n
+\n
+Handsontable.plugins.Grouping = Grouping;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>43688</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>grouping.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

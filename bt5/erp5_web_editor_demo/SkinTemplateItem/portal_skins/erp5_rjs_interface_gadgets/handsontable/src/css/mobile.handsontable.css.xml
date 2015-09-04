@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272731.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mobile.handsontable.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+\n
+ Handsontable Mobile Text Editor stylesheet\n
+\n
+ */\n
+\n
+.handsontable.mobile,\n
+.handsontable.mobile .wtHolder {\n
+  -webkit-touch-callout:none;\n
+  -webkit-user-select:none;\n
+  -khtml-user-select:none;\n
+  -moz-user-select:none;\n
+  -ms-user-select:none;\n
+  user-select:none;\n
+  -webkit-tap-highlight-color:rgba(0,0,0,0);\n
+  -webkit-overflow-scrolling: touch;\n
+}\n
+\n
+.htMobileEditorContainer {\n
+  display: none;\n
+  position: absolute;\n
+  top: 0;\n
+  width: 70%;\n
+  height: 54pt;\n
+  background: #f8f8f8;\n
+  border-radius: 20px;\n
+  border: 1px solid #ebebeb;\n
+  z-index: 999;\n
+  box-sizing: border-box;\n
+  -webkit-box-sizing: border-box;\n
+  -webkit-text-size-adjust: none;\n
+}\n
+\n
+.topLeftSelectionHandle:not(.ht_master .topLeftSelectionHandle),\n
+.topLeftSelectionHandle-HitArea:not(.ht_master .topLeftSelectionHandle-HitArea) {\n
+  z-index: 9999;\n
+}\n
+\n
+/* Initial left/top coordinates - overwritten when actual position is set */\n
+.topLeftSelectionHandle,\n
+.topLeftSelectionHandle-HitArea,\n
+.bottomRightSelectionHandle,\n
+.bottomRightSelectionHandle-HitArea {\n
+  left: -10000px;\n
+  top: -10000px;\n
+}\n
+\n
+.htMobileEditorContainer.active {\n
+  display: block;\n
+}\n
+\n
+.htMobileEditorContainer .inputs {\n
+  position: absolute;\n
+  right: 210pt;\n
+  bottom: 10pt;\n
+  top: 10pt;\n
+  left: 14px;\n
+  height: 34pt;\n
+}\n
+\n
+.htMobileEditorContainer .inputs textarea {\n
+  font-size: 13pt;\n
+  border: 1px solid #a1a1a1;\n
+  -webkit-appearance: none;\n
+  -webkit-box-shadow: none;\n
+  -moz-box-shadow: none;\n
+  box-shadow: none;\n
+  position: absolute;\n
+  left: 14px;\n
+  right: 14px;\n
+  top: 0;\n
+  bottom: 0;\n
+  padding: 7pt;\n
+}\n
+\n
+.htMobileEditorContainer .cellPointer {\n
+  position: absolute;\n
+  top: -13pt;\n
+  height: 0;\n
+  width: 0;\n
+  left: 30px;\n
+\n
+  border-left: 13pt solid transparent;\n
+  border-right: 13pt solid transparent;\n
+  border-bottom: 13pt solid #ebebeb;\n
+}\n
+\n
+.htMobileEditorContainer .cellPointer.hidden {\n
+  display: none;\n
+}\n
+\n
+.htMobileEditorContainer .cellPointer:before {\n
+  content: \'\';\n
+  display: block;\n
+  position: absolute;\n
+  top: 2px;\n
+  height: 0;\n
+  width: 0;\n
+  left: -13pt;\n
+\n
+  border-left: 13pt solid transparent;\n
+  border-right: 13pt solid transparent;\n
+  border-bottom: 13pt solid #f8f8f8;\n
+}\n
+\n
+.htMobileEditorContainer .moveHandle {\n
+  position: absolute;\n
+  top: 10pt;\n
+  left: 5px;\n
+  width: 30px;\n
+  bottom: 0px;\n
+  cursor: move;\n
+  z-index: 9999;\n
+}\n
+\n
+.htMobileEditorContainer .moveHandle:after {\n
+  content: "..\\a..\\a..\\a..";\n
+  white-space: pre;\n
+  line-height: 10px;\n
+  font-size: 20pt;\n
+  display: inline-block;\n
+  margin-top: -8px;\n
+  color: #ebebeb;\n
+}\n
+\n
+.htMobileEditorContainer .positionControls {\n
+  width: 205pt;\n
+  position: absolute;\n
+  right: 5pt;\n
+  top: 0;\n
+  bottom: 0;\n
+}\n
+\n
+.htMobileEditorContainer .positionControls > div {\n
+  width: 50pt;\n
+  height: 100%;\n
+  float: left;\n
+}\n
+\n
+.htMobileEditorContainer .positionControls > div:after {\n
+  content: " ";\n
+  display: block;\n
+  width: 15pt;\n
+  height: 15pt;\n
+  text-align: center;\n
+  line-height: 50pt;\n
+}\n
+\n
+.htMobileEditorContainer .leftButton:after,\n
+.htMobileEditorContainer .rightButton:after,\n
+.htMobileEditorContainer .upButton:after,\n
+.htMobileEditorContainer .downButton:after {\n
+  transform-origin: 5pt 5pt;\n
+  -webkit-transform-origin: 5pt 5pt;\n
+  margin: 21pt 0 0 21pt;\n
+}\n
+\n
+.htMobileEditorContainer .leftButton:after {\n
+  border-top: 2px solid #288ffe;\n
+  border-left: 2px solid #288ffe;\n
+  -webkit-transform: rotate(-45deg);\n
+  /*margin-top: 17pt;*/\n
+  /*margin-left: 20pt;*/\n
+}\n
+.htMobileEditorContainer .leftButton:active:after {\n
+  border-color: #cfcfcf;\n
+}\n
+\n
+.htMobileEditorContainer .rightButton:after {\n
+  border-top: 2px solid #288ffe;\n
+  border-left: 2px solid #288ffe;\n
+  -webkit-transform: rotate(135deg);\n
+  /*margin-top: 17pt;*/\n
+  /*margin-left: 10pt;*/\n
+}\n
+.htMobileEditorContainer .rightButton:active:after {\n
+  border-color: #cfcfcf;\n
+}\n
+\n
+.htMobileEditorContainer .upButton:after {\n
+  /*border-top: 2px solid #cfcfcf;*/\n
+  border-top: 2px solid #288ffe;\n
+  border-left: 2px solid #288ffe;\n
+  -webkit-transform: rotate(45deg);\n
+  /*margin-top: 22pt;*/\n
+  /*margin-left: 15pt;*/\n
+}\n
+.htMobileEditorContainer .upButton:active:after {\n
+  border-color: #cfcfcf;\n
+}\n
+\n
+.htMobileEditorContainer .downButton:after {\n
+  border-top: 2px solid #288ffe;\n
+  border-left: 2px solid #288ffe;\n
+  -webkit-transform: rotate(225deg);\n
+  /*margin-top: 15pt;*/\n
+  /*margin-left: 15pt;*/\n
+}\n
+.htMobileEditorContainer .downButton:active:after {\n
+  border-color: #cfcfcf;\n
+}\n
+\n
+.handsontable.hide-tween {\n
+  -webkit-animation: opacity-hide 0.3s;\n
+  animation: opacity-hide 0.3s;\n
+  animation-fill-mode: forwards;\n
+  -webkit-animation-fill-mode: forwards;\n
+}\n
+\n
+.handsontable.show-tween {\n
+  -webkit-animation: opacity-show 0.3s;\n
+  animation: opacity-show 0.3s;\n
+  animation-fill-mode: forwards;\n
+  -webkit-animation-fill-mode: forwards;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4620</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>mobile.handsontable.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

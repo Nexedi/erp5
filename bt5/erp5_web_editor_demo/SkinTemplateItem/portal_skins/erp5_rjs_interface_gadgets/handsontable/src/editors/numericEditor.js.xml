@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272752.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>numericEditor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import numeral from \'numeral\';\n
+import {getEditor, registerEditor} from \'./../editors\';\n
+import {TextEditor} from \'./textEditor\';\n
+\n
+\n
+/**\n
+ * @private\n
+ * @editor NumericEditor\n
+ * @class NumericEditor\n
+ * @dependencies TextEditor numeral\n
+ */\n
+class NumericEditor extends TextEditor {\n
+  /**\n
+   * @param {*} initialValue\n
+   */\n
+  beginEditing(initialValue) {\n
+    if (typeof(initialValue) === \'undefined\' && this.originalValue) {\n
+      if (typeof this.cellProperties.language !== \'undefined\') {\n
+        numeral.language(this.cellProperties.language);\n
+      }\n
+      let decimalDelimiter = numeral.languageData().delimiters.decimal;\n
+      initialValue = (\'\' + this.originalValue).replace(\'.\', decimalDelimiter);\n
+    }\n
+    super.beginEditing(initialValue);\n
+  }\n
+}\n
+\n
+export {NumericEditor};\n
+\n
+registerEditor(\'numeric\', NumericEditor);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>817</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>numericEditor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

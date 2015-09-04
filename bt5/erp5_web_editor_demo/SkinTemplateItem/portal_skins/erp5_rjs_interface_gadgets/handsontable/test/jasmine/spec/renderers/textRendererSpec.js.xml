@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272530.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>textRendererSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'TextRenderer\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should render string\', function () {\n
+    handsontable();\n
+    setDataAtCell(2, 2, "string");\n
+\n
+    expect(getCell(2, 2).innerHTML).toEqual("string");\n
+  });\n
+\n
+  it(\'should render number\', function () {\n
+    handsontable();\n
+    setDataAtCell(2, 2, 13);\n
+\n
+    expect(getCell(2, 2).innerHTML).toEqual("13");\n
+  });\n
+\n
+  it(\'should render boolean true\', function () {\n
+    handsontable();\n
+    setDataAtCell(2, 2, true);\n
+\n
+    expect(getCell(2, 2).innerHTML).toEqual("true");\n
+  });\n
+\n
+  it(\'should render boolean false\', function () {\n
+    handsontable();\n
+    setDataAtCell(2, 2, false);\n
+\n
+    expect(getCell(2, 2).innerHTML).toEqual("false");\n
+  });\n
+\n
+  it(\'should render null\', function () {\n
+    handsontable();\n
+    setDataAtCell(2, 2, null);\n
+\n
+    expect(getCell(2, 2).innerHTML).toEqual(\'\');\n
+  });\n
+\n
+  it(\'should render undefined\', function () {\n
+    handsontable();\n
+    setDataAtCell(2, 2, (function () {\n
+    })());\n
+\n
+    expect(getCell(2, 2).innerHTML).toEqual(\'\');\n
+  });\n
+\n
+  it(\'should add class name `htDimmed` to a read only cell\', function () {\n
+    var DIV = document.createElement(\'DIV\');\n
+    var instance = new Handsontable.Core(DIV, {});\n
+\n
+    var TD = document.createElement(\'TD\');\n
+    TD.className = "someClass";\n
+    Handsontable.renderers.TextRenderer(instance, TD, 0, 0, 0, \'\', {readOnly: true, readOnlyCellClassName: \'htDimmed\'});\n
+    expect(TD.className).toEqual(\'someClass htDimmed\');\n
+\n
+    instance.destroy();\n
+  });\n
+\n
+  it(\'should render a multiline string\', function () {\n
+    handsontable();\n
+    setDataAtCell(1, 2, "a b");\n
+    setDataAtCell(2, 2, "a\\nb");\n
+\n
+    expect($(getCell(2, 2)).height()).toBeGreaterThan($(getCell(1, 2)).height());\n
+  });\n
+\n
+  it(\'should wrap text when column width is limited\', function () {\n
+    handsontable({\n
+      colWidths: [100]\n
+    });\n
+    setDataAtCell(0, 0, "short text");\n
+    setDataAtCell(1, 0, "long long long long long long long text");\n
+\n
+    expect($(getCell(1, 0)).height()).toBeGreaterThan($(getCell(0, 0)).height());\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2253</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>textRendererSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

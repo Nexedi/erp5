@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272586.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>coords.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>describe("WalkontableCellCoords", function () {\n
+  describe("isValid", function () {\n
+\n
+    var table = document.createElement(\'table\');\n
+    var wrapper = document.createElement(\'div\');\n
+    var container = document.createElement(\'div\');\n
+    wrapper.appendChild(container);\n
+    container.appendChild(table);\n
+\n
+    var wot = new Walkontable({\n
+      table: table,\n
+      data: [],\n
+      totalRows: 10,\n
+      totalColumns: 5\n
+    });\n
+\n
+    it("should be false if one of the arguments is smaller than 0", function () {\n
+      var cellCoords = new WalkontableCellCoords(-1, 0);\n
+      var result = cellCoords.isValid(wot);\n
+      expect(result).toBe(false);\n
+\n
+      cellCoords = new WalkontableCellCoords(0, -1);\n
+      result = cellCoords.isValid(wot);\n
+      expect(result).toBe(false);\n
+    });\n
+\n
+    it("should be true if row is within the total number of rows", function () {\n
+      var cellCoords = new WalkontableCellCoords(9, 1);\n
+      var result = cellCoords.isValid(wot);\n
+      expect(result).toBe(true);\n
+    });\n
+\n
+    it("should be false if row is greater than total number of rows", function () {\n
+      var cellCoords = new WalkontableCellCoords(10, 1);\n
+      var result = cellCoords.isValid(wot);\n
+      expect(result).toBe(false);\n
+    });\n
+\n
+    it("should be true if column is within the total number of columns", function () {\n
+      var cellCoords = new WalkontableCellCoords(1, 4);\n
+      var result = cellCoords.isValid(wot);\n
+      expect(result).toBe(true);\n
+    });\n
+\n
+    it("should be false if column is greater than total number of columns", function () {\n
+      var cellCoords = new WalkontableCellCoords(1, 5);\n
+      var result = cellCoords.isValid(wot);\n
+      expect(result).toBe(false);\n
+    });\n
+  });\n
+\n
+  describe("isEqual", function () {\n
+    it("should be equal to itself", function () {\n
+      var cellCoords = new WalkontableCellCoords(1, 1);\n
+      var result = cellCoords.isEqual(cellCoords);\n
+      expect(result).toBe(true);\n
+    });\n
+\n
+    it("should be equal to another instance with the same row and column", function () {\n
+      var cellCoords = new WalkontableCellCoords(1, 1);\n
+      var cellCoords2 = new WalkontableCellCoords(1, 1);\n
+      var result = cellCoords.isEqual(cellCoords2);\n
+      expect(result).toBe(true);\n
+    });\n
+\n
+    it("should not be equal to an instance with different row or column", function () {\n
+      var cellCoords = new WalkontableCellCoords(1, 1);\n
+      var cellCoords2 = new WalkontableCellCoords(2, 1);\n
+      var result = cellCoords.isEqual(cellCoords2);\n
+      expect(result).toBe(false);\n
+    });\n
+  });\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2534</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>coords.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

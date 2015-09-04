@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272527.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>cellDecoratorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'CellDecorator\', function () {\n
+\tvar id = \'testContainer\';\n
+\n
+\tbeforeEach(function () {\n
+\t\tthis.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+\t});\n
+\n
+\tafterEach(function () {\n
+\t\tif (this.$container) {\n
+\t\t\tdestroy();\n
+\t\t\tthis.$container.remove();\n
+\t\t}\n
+\t});\n
+\n
+\tvar arrayOfObjects = function () {\n
+\t\treturn [\n
+\t\t{id: 1, name: "Ted", lastName: "Right"},\n
+\t\t{id: 2, name: "Frank", lastName: "Honest"},\n
+\t\t{id: 3, name: "Joan", lastName: "Well"}\n
+\t\t];\n
+\t};\n
+\n
+\tit(\'should add an appropriate class name to every cell, if wordWrap=false is set to the whole table\', function () {\n
+\t\tvar hot = handsontable({\n
+\t\t\tdata: arrayOfObjects(),\n
+\t\t\tcolumns: [\n
+\t\t\t{data: \'id\'},\n
+\t\t\t{data: \'name\'},\n
+\t\t\t{data: \'lastName\'}\n
+\t\t\t],\n
+\t\t\twordWrap: false\n
+\t\t});\n
+\n
+\t\tvar cols = countCols(),\n
+\t\t\t\trows = countRows();\n
+\n
+\t\tfor(var i = 0; i < cols; i++) {\n
+\t\t\tfor(var j = 0; j < rows; j++) {\n
+\t\t\t\texpect($(getCell(i,j)).hasClass(hot.getSettings().noWordWrapClassName)).toBe(true);\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\n
+\tit(\'should add an appropriate class name to every cell in a column, if wordWrap=false is set to the column settings\', function () {\n
+\t\tvar hot = handsontable({\n
+\t\t\tdata: arrayOfObjects(),\n
+\t\t\tcolumns: [\n
+\t\t\t{data: \'id\'},\n
+\t\t\t{data: \'name\', wordWrap: false},\n
+\t\t\t{data: \'lastName\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\tvar rows = countRows();\n
+\n
+\t\tfor(var i = 0; i < rows; i++) {\n
+\t\t\t\texpect($(getCell(i,1)).hasClass(hot.getSettings().noWordWrapClassName)).toBe(true);\n
+\t\t}\n
+\n
+\t\tfor(var i = 0; i < rows; i++) {\n
+\t\t\t\texpect($(getCell(i,0)).hasClass(hot.getSettings().noWordWrapClassName)).toBe(false); // no class added to other columns\n
+\t\t\t\texpect($(getCell(i,2)).hasClass(hot.getSettings().noWordWrapClassName)).toBe(false);\n
+\t\t}\n
+\t});\n
+\n
+\tit(\'should add an appropriate class to a cell, if wordWrap=false is set to a single cell\', function () {\n
+\t\tvar hot = handsontable({\n
+\t\t\tdata: arrayOfObjects(),\n
+\t\t\tcolumns: [\n
+\t\t\t{data: \'id\'},\n
+\t\t\t{data: \'name\'},\n
+\t\t\t{data: \'lastName\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\texpect($(getCell(1,1)).hasClass(hot.getSettings().noWordWrapClassName)).toBe(false);\n
+\n
+\t\tgetCellMeta(1,1).wordWrap = false;\n
+\t\trender();\n
+\n
+\t\texpect($(getCell(1,1)).hasClass(hot.getSettings().noWordWrapClassName)).toBe(true);\n
+\n
+\t});\n
+\n
+\tit(\'should set "white-space" css parameter to "nowrap" if htNoWrap class is added to a cell\', function () {\n
+\t\tvar hot = handsontable({\n
+\t\t\tdata: arrayOfObjects(),\n
+\t\t\tcolumns: [\n
+\t\t\t{data: \'id\'},\n
+\t\t\t{data: \'name\'},\n
+\t\t\t{data: \'lastName\'}\n
+\t\t\t]\n
+\t\t});\n
+\n
+\t\texpect(window.getComputedStyle(getCell(1,1)).whiteSpace).toNotEqual("nowrap");\n
+\n
+\t\tgetCellMeta(1,1).wordWrap = false;\n
+\t\trender();\n
+\n
+\t\texpect(window.getComputedStyle(getCell(1,1)).whiteSpace).toEqual("nowrap");\n
+\n
+\t});\n
+\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2601</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>cellDecoratorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

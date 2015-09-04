@@ -1,0 +1,719 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272543.35</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SpecHelper.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var spec = function () {\n
+  return jasmine.getEnv().currentSpec;\n
+};\n
+\n
+var handsontable = function (options) {\n
+  var currentSpec = spec();\n
+  currentSpec.$container.handsontable(options);\n
+  currentSpec.$container[0].focus(); //otherwise TextEditor tests do not pass in IE8\n
+  return currentSpec.$container.data(\'handsontable\');\n
+};\n
+\n
+beforeEach(function () {\n
+  var matchers = {\n
+    toBeInArray: function (arr) {\n
+      return ($.inArray(this.actual, arr) > -1);\n
+    },\n
+    toBeAroundValue: function (val) {\n
+      this.message = function (val) {\n
+        return [\n
+          "Expected " + this.actual + " to be around " + val + " (between " + (val - 1) + " and " + (val + 1) + ")",\n
+          "Expected " + this.actual + " NOT to be around " + val + " (between " + (val - 1) + " and " + (val + 1) + ")"\n
+        ];\n
+      };\n
+      return (this.actual >= val - 1 && this.actual <= val + 1);\n
+    }\n
+  };\n
+\n
+  this.addMatchers(matchers);\n
+});\n
+\n
+/**\n
+ * As for v. 0.11 the only scrolling method is native scroll, which creates copies of main htCore table inside of the container.\n
+ * Therefore, simple $(".htCore") will return more than one object. Most of the time, you\'re interested in the original\n
+ * htCore, not the copies made by native scroll.\n
+ *\n
+ * This method returns the original htCore object\n
+ *\n
+ * @returns {jqObject} reference to the original htCore\n
+ */\n
+\n
+var getHtCore = function () {\n
+  return spec().$container.find(\'.htCore\').first();\n
+};\n
+\n
+var getTopClone = function () {\n
+  return spec().$container.find(\'.ht_clone_top\');\n
+};\n
+\n
+var getLeftClone = function () {\n
+  return spec().$container.find(\'.ht_clone_left\');\n
+};\n
+\n
+var getCornerClone = function () {\n
+  return spec().$container.find(\'.ht_clone_corner\');\n
+};\n
+\n
+//Rename me to countTD\n
+var countCells = function () {\n
+  return getHtCore().find(\'tbody td\').length;\n
+};\n
+\n
+var isEditorVisible = function () {\n
+  return !!(keyProxy().is(\':visible\') && keyProxy().parent().is(\':visible\') && !keyProxy().parent().is(\'.htHidden\'));\n
+};\n
+\n
+var isFillHandleVisible = function () {\n
+  return !!spec().$container.find(\'.wtBorder.corner:visible\').length;\n
+};\n
+\n
+var getCorrespondingOverlay = function (cell, container) {\n
+  var overlay = $(cell).parents(".handsontable");\n
+  if(overlay[0] == container[0]) {\n
+    return $(".ht_master");\n
+  } else {\n
+    return $(overlay[0]);\n
+  }\n
+};\n
+\n
+\n
+/**\n
+ * Shows context menu\n
+ */\n
+var contextMenu = function (cell) {\n
+  var hot = spec().$container.data(\'handsontable\');\n
+  var selected = hot.getSelected();\n
+\n
+  if (!selected) {\n
+    hot.selectCell(0, 0);\n
+    selected = hot.getSelected();\n
+  }\n
+  if (!cell) {\n
+    cell = getCell(selected[0], selected[1]);\n
+  }\n
+  var cellOffset = $(cell).offset();\n
+\n
+  $(cell).simulate(\'contextmenu\',{\n
+    clientX: cellOffset.left,\n
+    clientY: cellOffset.top\n
+  });\n
+};\n
+\n
+var closeContextMenu = function () {\n
+  $(document).simulate(\'mousedown\');\n
+//  $(document).trigger(\'mousedown\');\n
+};\n
+\n
+\n
+/**\n
+ * Shows dropdown menu\n
+ */\n
+var dropdownMenu = function (columnIndex) {\n
+  var hot = spec().$container.data(\'handsontable\');\n
+  var th = hot.view.wt.wtTable.getColumnHeader(columnIndex || 0);\n
+  var button = th.querySelector(\'.changeType\');\n
+\n
+  if (button) {\n
+    $(button).simulate(\'mousedown\');\n
+    $(button).simulate(\'click\');\n
+  }\n
+};\n
+\n
+var closeDropdownMenu = function () {\n
+  $(document).simulate(\'mousedown\');\n
+};\n
+\n
+/**\n
+ * Returns a function that triggers a mouse event\n
+ * @param {String} type Event type\n
+ * @return {Function}\n
+ */\n
+var handsontableMouseTriggerFactory = function (type, button) {\n
+  return function (element) {\n
+    if (!(element instanceof jQuery)) {\n
+      element = $(element);\n
+    }\n
+    var ev = $.Event(type);\n
+    ev.which = button || 1; //left click by default\n
+    element.simulate(type,ev);\n
+//    element.trigger(ev);\n
+  }\n
+};\n
+\n
+var mouseDown = handsontableMouseTriggerFactory(\'mousedown\');\n
+var mouseUp = handsontableMouseTriggerFactory(\'mouseup\');\n
+var mouseDoubleClick = function (element) {\n
+  mouseDown(element);\n
+  mouseUp(element);\n
+  mouseDown(element);\n
+  mouseUp(element);\n
+};\n
+\n
+var mouseRightDown = handsontableMouseTriggerFactory(\'mousedown\', 3);\n
+var mouseRightUp = handsontableMouseTriggerFactory(\'mouseup\', 3);\n
+\n
+/**\n
+ * Returns a function that triggers a key event\n
+ * @param {String} type Event type\n
+ * @return {Function}\n
+ */\n
+var handsontableKeyTriggerFactory = function (type) {\n
+  return function (key, extend) {\n
+    var ev = {};// $.Event(type);\n
+\n
+    if (typeof key === \'string\') {\n
+      if (key.indexOf(\'shift+\') > -1) {\n
+        key = key.substring(6);\n
+        ev.shiftKey = true;\n
+      }\n
+\n
+      if (key.indexOf(\'ctrl+\') > -1) {\n
+        key = key.substring(5);\n
+        ev.ctrlKey = true;\n
+        ev.metaKey = true;\n
+      }\n
+\n
+      switch (key) {\n
+        case \'tab\':\n
+          ev.keyCode = 9;\n
+          break;\n
+\n
+        case \'enter\':\n
+          ev.keyCode = 13;\n
+          break;\n
+\n
+        case \'esc\':\n
+          ev.keyCode = 27;\n
+          break;\n
+\n
+        case \'f2\':\n
+          ev.keyCode = 113;\n
+          break;\n
+\n
+        case \'arrow_left\':\n
+          ev.keyCode = 37;\n
+          break;\n
+\n
+        case \'arrow_up\':\n
+          ev.keyCode = 38;\n
+          break;\n
+\n
+        case \'arrow_right\':\n
+          ev.keyCode = 39;\n
+          break;\n
+\n
+        case \'arrow_down\':\n
+          ev.keyCode = 40;\n
+          break;\n
+\n
+        case \'ctrl\':\n
+          ev.keyCode = 17;\n
+          break;\n
+\n
+        case \'shift\':\n
+          ev.keyCode = 16;\n
+          break;\n
+\n
+        case \'backspace\':\n
+          ev.keyCode = 8;\n
+          break;\n
+\n
+        case \'delete\':\n
+          ev.keyCode = 46;\n
+          break;\n
+\n
+        case \'space\':\n
+          ev.keyCode = 32;\n
+          break;\n
+\n
+        case \'x\':\n
+          ev.keyCode = 88;\n
+          break;\n
+\n
+        case \'c\':\n
+          ev.keyCode = 67;\n
+          break;\n
+\n
+        case \'v\':\n
+          ev.keyCode = 86;\n
+          break;\n
+\n
+        default:\n
+          throw new Error(\'Unrecognised key name: \' + key);\n
+      }\n
+    }\n
+    else if (typeof key === \'number\') {\n
+      ev.keyCode = key;\n
+    }\n
+\n
+\n
+//    ev.originalEvent = {}; //needed as long Handsontable searches for event.originalEvent\n
+    $.extend(ev, extend);\n
+    $(document.activeElement).simulate(type, ev);\n
+  }\n
+};\n
+\n
+var keyDown = handsontableKeyTriggerFactory(\'keydown\');\n
+var keyUp = handsontableKeyTriggerFactory(\'keyup\');\n
+\n
+/**\n
+ * Presses keyDown, then keyUp\n
+ */\n
+var keyDownUp = function (key, extend) {\n
+  if (typeof key === \'string\' && key.indexOf(\'shift+\') > -1) {\n
+    keyDown(\'shift\');\n
+  }\n
+\n
+  keyDown(key, extend);\n
+  keyUp(key, extend);\n
+\n
+  if (typeof key === \'string\' && key.indexOf(\'shift+\') > -1) {\n
+    keyUp(\'shift\');\n
+  }\n
+};\n
+\n
+/**\n
+ * Returns current value of the keyboard proxy textarea\n
+ * @return {String}\n
+ */\n
+var keyProxy = function () {\n
+  return spec().$container.find(\'textarea.handsontableInput\');\n
+};\n
+\n
+var serveImmediatePropagation = function (event) {\n
+  if (event != null && event.isImmediatePropagationEnabled == null) {\n
+    event.stopImmediatePropagation = function () {\n
+      this.isImmediatePropagationEnabled = false;\n
+      this.cancelBubble = true;\n
+    };\n
+    event.isImmediatePropagationEnabled = true;\n
+    event.isImmediatePropagationStopped = function () {\n
+      return !this.isImmediatePropagationEnabled;\n
+    };\n
+  }\n
+  return event;\n
+};\n
+\n
+var triggerTouchEvent = function (type, target, pageX, pageY) {\n
+  var e = document.createEvent(\'TouchEvent\');\n
+  var targetCoords = target.getBoundingClientRect();\n
+  var touches\n
+    , targetTouches\n
+    , changedTouches;\n
+\n
+  if(!pageX && !pageY) {\n
+    pageX = parseInt(targetCoords.left + 3,10);\n
+    pageY = parseInt(targetCoords.top + 3,10);\n
+  }\n
+\n
+  var touch = document.createTouch(window, target, 0, pageX, pageY, pageX, pageY);\n
+\n
+  if (type == \'touchend\') {\n
+    touches = document.createTouchList();\n
+    targetTouches = document.createTouchList();\n
+    changedTouches = document.createTouchList(touch);\n
+  } else {\n
+    touches = document.createTouchList(touch);\n
+    targetTouches = document.createTouchList(touch);\n
+    changedTouches = document.createTouchList(touch);\n
+  }\n
+\n
+  e.initTouchEvent(type, true, true, window, null, 0, 0, 0, 0, false, false, false, false, touches, targetTouches, changedTouches, 1, 0);\n
+  target.dispatchEvent(e);\n
+};\n
+\n
+var autocompleteEditor = function () {\n
+  return spec().$container.find(\'.handsontableInput\');\n
+};\n
+\n
+/**\n
+ * Sets text cursor inside keyboard proxy\n
+ */\n
+var setCaretPosition = function (pos) {\n
+  var el = keyProxy()[0];\n
+  if (el.setSelectionRange) {\n
+    el.focus();\n
+    el.setSelectionRange(pos, pos);\n
+  }\n
+  else if (el.createTextRange) {\n
+    var range = el.createTextRange();\n
+    range.collapse(true);\n
+    range.moveEnd(\'character\', pos);\n
+    range.moveStart(\'character\', pos);\n
+    range.select();\n
+  }\n
+};\n
+\n
+/**\n
+ * Returns autocomplete instance\n
+ */\n
+var autocomplete = function () {\n
+  return spec().$container.find(\'.autocompleteEditor\');\n
+};\n
+\n
+/**\n
+ * Triggers paste string on current selection\n
+ */\n
+var triggerPaste = function (str) {\n
+  spec().$container.data(\'handsontable\').copyPaste.triggerPaste(null, str);\n
+};\n
+\n
+/**\n
+ * Calls a method in current Handsontable instance, returns its output\n
+ * @param method\n
+ * @return {Function}\n
+ */\n
+\n
+var handsontableMethodFactory = function (method) {\n
+  return function () {\n
+\n
+    var instance;\n
+    try{\n
+      instance = spec().$container.handsontable(\'getInstance\');\n
+    } catch (err) {\n
+      console.error(err);\n
+    }\n
+\n
+    if (!instance) {\n
+      if (method === \'destroy\') {\n
+        return; //we can forgive this... maybe it was destroyed in the test\n
+      }\n
+      throw new Error(\'Something wrong with the test spec: Handsontable instance not found\');\n
+    } else {\n
+      if (method === \'destroy\') {\n
+        spec().$container.removeData();\n
+      }\n
+    }\n
+\n
+    return instance[method].apply(instance, arguments);\n
+  }\n
+};\n
+\n
+var getInstance = handsontableMethodFactory(\'getInstance\');\n
+var countRows = handsontableMethodFactory(\'countRows\');\n
+var countCols = handsontableMethodFactory(\'countCols\');\n
+var selectCell = handsontableMethodFactory(\'selectCell\');\n
+var deselectCell = handsontableMethodFactory(\'deselectCell\');\n
+var getSelected = handsontableMethodFactory(\'getSelected\');\n
+var setDataAtCell = handsontableMethodFactory(\'setDataAtCell\');\n
+var setDataAtRowProp = handsontableMethodFactory(\'setDataAtRowProp\');\n
+var getCell = handsontableMethodFactory(\'getCell\');\n
+var getCellMeta = handsontableMethodFactory(\'getCellMeta\');\n
+var setCellMeta = handsontableMethodFactory(\'setCellMeta\');\n
+var removeCellMeta = handsontableMethodFactory(\'removeCellMeta\');\n
+var getCellRenderer = handsontableMethodFactory(\'getCellRenderer\');\n
+var getCellEditor = handsontableMethodFactory(\'getCellEditor\');\n
+var getCellValidator = handsontableMethodFactory(\'getCellValidator\');\n
+var getData = handsontableMethodFactory(\'getData\');\n
+var getCopyableData = handsontableMethodFactory(\'getCopyableData\');\n
+var getDataAtCell = handsontableMethodFactory(\'getDataAtCell\');\n
+var getDataAtRowProp = handsontableMethodFactory(\'getDataAtRowProp\');\n
+var getDataAtRow = handsontableMethodFactory(\'getDataAtRow\');\n
+var getDataAtCol = handsontableMethodFactory(\'getDataAtCol\');\n
+var getSourceDataAtCol = handsontableMethodFactory(\'getSourceDataAtCol\');\n
+var getSourceDataAtRow = handsontableMethodFactory(\'getSourceDataAtRow\');\n
+var getRowHeader = handsontableMethodFactory(\'getRowHeader\');\n
+var getColHeader = handsontableMethodFactory(\'getColHeader\');\n
+var alter = handsontableMethodFactory(\'alter\');\n
+var spliceCol = handsontableMethodFactory(\'spliceCol\');\n
+var spliceRow = handsontableMethodFactory(\'spliceRow\');\n
+var populateFromArray = handsontableMethodFactory(\'populateFromArray\');\n
+var loadData = handsontableMethodFactory(\'loadData\');\n
+var destroyEditor = handsontableMethodFactory(\'destroyEditor\');\n
+var render = handsontableMethodFactory(\'render\');\n
+var updateSettings = handsontableMethodFactory(\'updateSettings\');\n
+var destroy = handsontableMethodFactory(\'destroy\');\n
+var addHook = handsontableMethodFactory(\'addHook\');\n
+var getActiveEditor = handsontableMethodFactory(\'getActiveEditor\');\n
+\n
+/**\n
+ * Returns column width for HOT container\n
+ * @param $elem\n
+ * @param col\n
+ * @returns {Number}\n
+ */\n
+function colWidth($elem, col) {\n
+  var TD = $elem[0].querySelector(\'TBODY TR\').querySelectorAll(\'TD\')[col];\n
+  if (!TD) {\n
+    throw new Error("Cannot find table column of index \'" + col + "\'");\n
+  }\n
+  return TD.offsetWidth;\n
+}\n
+\n
+/**\n
+ * Returns row height for HOT container\n
+ * @param $elem\n
+ * @param row\n
+ * @returns {Number}\n
+ */\n
+function rowHeight($elem, row) {\n
+  var TD = $elem[0].querySelector(\'tbody tr:nth-child(\' + (row + 1) +\') td\');\n
+  if (!TD) {\n
+    throw new Error("Cannot find table row of index \'" + row + "\'");\n
+  }\n
+\n
+  return Handsontable.Dom.outerHeight(TD);\n
+}\n
+\n
+/**\n
+ * Returns value that has been rendered in table cell\n
+ * @param {Number} trIndex\n
+ * @param {Number} tdIndex\n
+ * @returns {String}\n
+ */\n
+function getRenderedValue(trIndex, tdIndex) {\n
+  return spec().$container.find(\'tbody tr\').eq(trIndex).find(\'td\').eq(tdIndex).html();\n
+}\n
+\n
+/**\n
+ * Returns nodes that have been rendered in table cell\n
+ * @param {Number} trIndex\n
+ * @param {Number} tdIndex\n
+ * @returns {String}\n
+ */\n
+function getRenderedContent(trIndex, tdIndex) {\n
+  return spec().$container.find(\'tbody tr\').eq(trIndex).find(\'td\').eq(tdIndex).children()\n
+}\n
+\n
+/**\n
+ * Model factory, which creates object with private properties, accessible by setters and getters.\n
+ * Created for the purpose of testing HOT with Backbone-like Models\n
+ * @param opts\n
+ * @returns {{}}\n
+ * @constructor\n
+ */\n
+function Model(opts) {\n
+\n
+  var obj = {};\n
+\n
+  var _data = $.extend({\n
+    id: undefined,\n
+    name: undefined,\n
+    address: undefined\n
+  }, opts);\n
+\n
+  obj.attr = function (name, value) {\n
+    if (typeof value == \'undefined\') {\n
+      return this.get(name);\n
+    } else {\n
+      return this.set(name, value);\n
+    }\n
+  };\n
+\n
+  obj.get = function (name) {\n
+    return _data[name];\n
+  };\n
+\n
+  obj.set = function (name, value) {\n
+    _data[name] = value;\n
+    return this;\n
+  }\n
+\n
+  return obj;\n
+\n
+}\n
+/**\n
+ * Factory which produces an accessor for objects of type "Model" (see above).\n
+ * This function should be used to create accessor for a given property name and pass it as `data` option in column\n
+ * configuration.\n
+ *\n
+ * @param name - name of the property for which an accessor function will be created\n
+ * @returns {Function}\n
+ */\n
+function createAccessorForProperty(name) {\n
+  return function (obj, value) {\n
+    return obj.attr(name, value);\n
+  };\n
+}\n
+\n
+function resizeColumn(displayedColumnIndex, width) {\n
+  var $container = spec().$container;\n
+  var $th = $container.find(\'thead tr:eq(0) th:eq(\' + displayedColumnIndex +\')\');\n
+\n
+  $th.simulate(\'mouseover\');\n
+\n
+  var $resizer = $container.find(\'.manualColumnResizer\');\n
+  var resizerPosition = $resizer.position();\n
+\n
+  $resizer.simulate(\'mousedown\',{\n
+    clientX: resizerPosition.left\n
+  });\n
+\n
+\n
+  var delta = width - $th.width() - 2;\n
+  var newPosition = resizerPosition.left + delta;\n
+  $resizer.simulate(\'mousemove\',\n
+    {clientX: newPosition}\n
+  );\n
+\n
+  $resizer.simulate(\'mouseup\');\n
+}\n
+\n
+function resizeRow(displayedRowIndex, height) {\n
+\n
+  var $container = spec().$container;\n
+  var $th = $container.find(\'tbody tr:eq(\' + displayedRowIndex + \') th:eq(0)\');\n
+\n
+  $th.simulate(\'mouseover\');\n
+\n
+  var $resizer = $container.find(\'.manualRowResizer\');\n
+  var resizerPosition = $resizer.position();\n
+\n
+  $resizer.simulate(\'mousedown\',{\n
+    clientY: resizerPosition.top\n
+  });\n
+\n
+  var delta = height - $th.height() - 2;\n
+\n
+  if (delta < 0) {\n
+    delta = 0;\n
+  }\n
+\n
+  $resizer.simulate(\'mousemove\',{\n
+    clientY: resizerPosition.top + delta\n
+  });\n
+\n
+  $resizer.simulate(\'mouseup\');\n
+}\n
+\n
+function moveSecondDisplayedRowBeforeFirstRow(container, secondDisplayedRowIndex) {\n
+  var $mainContainer = container.parents(".handsontable").not("[class*=clone]").not("[class*=master]").first(),\n
+    $rowHeaders = container.find(\'tbody tr th\'),\n
+    $firstRowHeader = $rowHeaders.eq(secondDisplayedRowIndex - 1),\n
+    $secondRowHeader = $rowHeaders.eq(secondDisplayedRowIndex);\n
+\n
+  $secondRowHeader.simulate(\'mouseover\');\n
+  var $manualRowMover = $mainContainer.find(\'.manualRowMover\');\n
+\n
+  if ($manualRowMover.length) {\n
+    $manualRowMover.simulate(\'mousedown\',{\n
+      clientY: $manualRowMover[0].getBoundingClientRect().top\n
+    });\n
+\n
+    $manualRowMover.simulate(\'mousemove\',{\n
+      clientY:$manualRowMover[0].getBoundingClientRect().top - 20\n
+    });\n
+\n
+    $firstRowHeader.simulate(\'mouseover\');\n
+    $secondRowHeader.simulate(\'mouseup\');\n
+  }\n
+}\n
+\n
+function moveFirstDisplayedRowAfterSecondRow(container, firstDisplayedRowIndex) {\n
+  var $mainContainer = container.parents(".handsontable").not("[class*=clone]").not("[class*=master]").first(),\n
+    $rowHeaders = container.find(\'tbody tr th\'),\n
+    $firstRowHeader = $rowHeaders.eq(firstDisplayedRowIndex),\n
+    $secondRowHeader = $rowHeaders.eq(firstDisplayedRowIndex + 1);\n
+\n
+  $secondRowHeader.simulate(\'mouseover\');\n
+  var $manualRowMover = $mainContainer.find(\'.manualRowMover\');\n
+\n
+  if($manualRowMover.length) {\n
+    $manualRowMover.simulate(\'mousedown\',{\n
+      clientY: $manualRowMover[0].getBoundingClientRect().top\n
+    });\n
+\n
+    $manualRowMover.simulate(\'mousemove\',{\n
+      clientY:$manualRowMover[0].getBoundingClientRect().top + 20\n
+    });\n
+\n
+    $firstRowHeader.simulate(\'mouseover\');\n
+    $secondRowHeader.simulate(\'mouseup\');\n
+  }\n
+}\n
+\n
+function moveSecondDisplayedColumnBeforeFirstColumn(container, secondDisplayedColIndex){\n
+  var $mainContainer = container.parents(".handsontable").not("[class*=clone]").not("[class*=master]").first();\n
+  var $colHeaders = container.find(\'thead tr:eq(0) th\');\n
+  var $firstColHeader = $colHeaders.eq(secondDisplayedColIndex - 1);\n
+  var $secondColHeader = $colHeaders.eq(secondDisplayedColIndex);\n
+\n
+  //Enter the second column header\n
+  $secondColHeader.simulate(\'mouseover\');\n
+  var $manualColumnMover = $mainContainer.find(\'.manualColumnMover\');\n
+\n
+  //Grab the second column\n
+  $manualColumnMover.simulate(\'mousedown\',{\n
+    pageX : $manualColumnMover[0].getBoundingClientRect().left\n
+  });\n
+\n
+  //Drag the second column over the first column\n
+  $manualColumnMover.simulate(\'mousemove\',{\n
+    pageX : $manualColumnMover[0].getBoundingClientRect().left - 20\n
+  });\n
+\n
+  $firstColHeader.simulate(\'mouseover\');\n
+\n
+  //Drop the second column\n
+  $secondColHeader.simulate(\'mouseup\');\n
+}\n
+\n
+function moveFirstDisplayedColumnAfterSecondColumn(container, firstDisplayedColIndex){\n
+  var $mainContainer = container.parents(".handsontable").not("[class*=clone]").not("[class*=master]").first();\n
+  var $colHeaders = container.find(\'thead tr:eq(0) th\');\n
+  var $firstColHeader = $colHeaders.eq(firstDisplayedColIndex);\n
+  var $secondColHeader = $colHeaders.eq(firstDisplayedColIndex + 1);\n
+\n
+  //Enter the first column header\n
+  $firstColHeader.simulate(\'mouseover\');\n
+  var $manualColumnMover = $mainContainer.find(\'.manualColumnMover\');\n
+\n
+  //Grab the first column\n
+  $manualColumnMover.simulate(\'mousedown\',{\n
+    pageX:$manualColumnMover[0].getBoundingClientRect().left\n
+  });\n
+\n
+  //Drag the first column over the second column\n
+  $manualColumnMover.simulate(\'mousemove\',{\n
+    pageX:$manualColumnMover[0].getBoundingClientRect().left + 20\n
+  });\n
+\n
+  $secondColHeader.simulate(\'mouseover\');\n
+\n
+  //Drop the first column\n
+  $firstColHeader.simulate(\'mouseup\');\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>18868</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>SpecHelper.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

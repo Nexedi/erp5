@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272508.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_beforechangeSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_beforechange\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'this.rootElement should point to handsontable rootElement\', function () {\n
+    var output = null;\n
+\n
+    handsontable({\n
+      beforeChange: function () {\n
+        output = this.rootElement;\n
+      }\n
+    });\n
+    setDataAtCell(0, 0, "test");\n
+\n
+\n
+    expect(output).toEqual(this.$container[0]);\n
+  });\n
+\n
+  it(\'should remove change from stack\', function () {\n
+    var output = null;\n
+\n
+    handsontable({\n
+      data : [["a", "b"], ["c", "d"]],\n
+      beforeChange: function (changes) {\n
+        changes[1] = null;\n
+      },\n
+      afterChange : function (changes) {\n
+        output = changes;\n
+      }\n
+    });\n
+    setDataAtCell([[0, 0, "test"], [1, 0, "test"], [1, 1, "test"]]);\n
+\n
+    expect(getDataAtCell(0,0)).toEqual("test");\n
+    expect(getDataAtCell(1,0)).toEqual("c");\n
+    expect(getDataAtCell(1,1)).toEqual("test");\n
+    expect(output).toEqual([[0, 0, "a", "test"], [1, 1, "d", "test"]]);\n
+  });\n
+\n
+  it(\'should drop all changes when beforeChange return false\', function () {\n
+    var fired = false;\n
+\n
+    handsontable({\n
+      data : [["a", "b"], ["c", "d"]],\n
+      beforeChange: function (changes) {\n
+        fired = true;\n
+        return false;\n
+      }\n
+    });\n
+    setDataAtCell([[0, 0, "test"], [1, 0, "test"], [1, 1, "test"]]);\n
+\n
+    expect(getDataAtCell(0,0)).toEqual("a");\n
+    expect(getDataAtCell(1,0)).toEqual("c");\n
+    expect(getDataAtCell(1,1)).toEqual("d");\n
+  });\n
+\n
+  function beforechangeOnKeyFactory(keyCode) {\n
+    return function () {\n
+      var called = false;\n
+\n
+      handsontable({\n
+        beforeChange: function (changes) {\n
+          if (changes[0][2] === "test" && changes[0][3] === "") {\n
+            called = true;\n
+          }\n
+        }\n
+      });\n
+\n
+      setDataAtCell(0, 0, "test");\n
+      selectCell(0, 0);\n
+\n
+      keyDown(keyCode);\n
+\n
+      expect(called).toEqual(true);\n
+    }\n
+  }\n
+\n
+  it(\'should be called on Delete key\', beforechangeOnKeyFactory(46)); //46 = Delete key\n
+\n
+  it(\'should be called on Backspace key\', beforechangeOnKeyFactory(8)); //8 = Backspace key\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2257</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_beforechangeSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

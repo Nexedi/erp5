@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272505.43</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>RowHeaderSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'RowHeader\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should not show row headers by default\', function () {\n
+    var that = this;\n
+    handsontable();\n
+\n
+    expect(that.$container.find(\'tbody th\').length).toEqual(0);\n
+  });\n
+\n
+  it(\'should show row headers if true\', function () {\n
+    var that = this;\n
+    handsontable({\n
+      rowHeaders: true\n
+    });\n
+\n
+    expect(that.$container.find(\'tbody th\').length).toBeGreaterThan(0);\n
+  });\n
+\n
+  it(\'should show row headers numbered 1-10 by default\', function () {\n
+    var that = this;\n
+    var startRows = 5;\n
+    handsontable({\n
+      startRows: startRows,\n
+      rowHeaders: true\n
+    });\n
+\n
+    var ths = getLeftClone().find(\'tbody th\');\n
+    expect(ths.length).toEqual(startRows);\n
+    expect($.trim(ths.eq(0).text())).toEqual(\'1\');\n
+    expect($.trim(ths.eq(1).text())).toEqual(\'2\');\n
+    expect($.trim(ths.eq(2).text())).toEqual(\'3\');\n
+    expect($.trim(ths.eq(3).text())).toEqual(\'4\');\n
+    expect($.trim(ths.eq(4).text())).toEqual(\'5\');\n
+  });\n
+\n
+  it(\'should show row headers with custom label\', function () {\n
+    var that = this;\n
+    var startRows = 5;\n
+    handsontable({\n
+      startRows: startRows,\n
+      rowHeaders: [\'First\', \'Second\', \'Third\']\n
+    });\n
+\n
+    var ths = getLeftClone().find(\'tbody th\');\n
+    expect(ths.length).toEqual(startRows);\n
+    expect($.trim(ths.eq(0).text())).toEqual(\'First\');\n
+    expect($.trim(ths.eq(1).text())).toEqual(\'Second\');\n
+    expect($.trim(ths.eq(2).text())).toEqual(\'Third\');\n
+    expect($.trim(ths.eq(3).text())).toEqual(\'4\');\n
+    expect($.trim(ths.eq(4).text())).toEqual(\'5\');\n
+  });\n
+\n
+  it(\'should not show row headers if false\', function () {\n
+    var that = this;\n
+    handsontable({\n
+      rowHeaders: false\n
+    });\n
+\n
+    expect(getLeftClone().find(\'tbody th\').length).toEqual(0);\n
+  });\n
+\n
+  it(\'should hide rows headers after updateSetting\', function(){\n
+    var hot  = handsontable({\n
+      startRows: 5,\n
+      rowHeaders: true\n
+    });\n
+\n
+    expect(getLeftClone().find(\'tbody th\').length).toEqual(5);\n
+\n
+    hot.updateSettings({\n
+      rowHeaders: false\n
+    });\n
+\n
+    expect(getLeftClone().find(\'tbody th\').length).toEqual(0);\n
+  });\n
+\n
+  it(\'should show rows headers after updateSettings\', function(){\n
+    var hot  = handsontable({\n
+      startRows: 5,\n
+      rowHeaders: false\n
+    });\n
+\n
+    expect(getLeftClone().find(\'tbody th\').length).toEqual(0);\n
+\n
+    hot.updateSettings({\n
+      rowHeaders: true\n
+    });\n
+\n
+    expect(getLeftClone().find(\'tbody th\').length).toEqual(5);\n
+  });\n
+\n
+  it(\'should show/hide rows headers after multiple updateSettings\', function(){\n
+    var hot  = handsontable({\n
+      startRows: 5,\n
+      rowHeaders: false\n
+    });\n
+\n
+    expect(getLeftClone().find(\'tbody th\').length).toEqual(0);\n
+\n
+    hot.updateSettings({\n
+      rowHeaders: true\n
+    });\n
+\n
+    expect(getLeftClone().find(\'tbody th\').length).toEqual(5);\n
+\n
+    hot.updateSettings({\n
+      rowHeaders: false\n
+    });\n
+\n
+    expect(getLeftClone().find(\'tbody th\').length).toEqual(0);\n
+\n
+    hot.updateSettings({\n
+      rowHeaders: true\n
+    });\n
+\n
+    expect(getLeftClone().find(\'tbody th\').length).toEqual(5);\n
+\n
+  });\n
+\n
+  it(\'should show new rows headers after updateSettings\', function(){\n
+    var hot  = handsontable({\n
+      startCols: 3,\n
+      rowHeaders: [\'A\', \'B\', \'C\']\n
+    });\n
+\n
+    var leftClone = getLeftClone();\n
+\n
+    expect(leftClone.find(\'tbody tr:eq(0) th:eq(0)\').text()).toEqual(\'A\');\n
+    expect(leftClone.find(\'tbody tr:eq(1) th:eq(0)\').text()).toEqual(\'B\');\n
+    expect(leftClone.find(\'tbody tr:eq(2) th:eq(0)\').text()).toEqual(\'C\');\n
+\n
+    hot.updateSettings({\n
+      rowHeaders: [\'X\', \'Y\', \'Z\']\n
+    });\n
+\n
+    expect(leftClone.find(\'tbody tr:eq(0) th:eq(0)\').text()).toEqual(\'X\');\n
+    expect(leftClone.find(\'tbody tr:eq(1) th:eq(0)\').text()).toEqual(\'Y\');\n
+    expect(leftClone.find(\'tbody tr:eq(2) th:eq(0)\').text()).toEqual(\'Z\');\n
+\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3996</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>RowHeaderSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

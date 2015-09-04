@@ -1,0 +1,436 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272537.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dateEditorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'DateEditor\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  function getDates(){\n
+    return [\n
+      ["01/14/2006"],\n
+      ["12/01/2008"],\n
+      ["11/19/2011"],\n
+      ["02/02/2004"],\n
+      ["07/24/2011"]\n
+    ];\n
+  }\n
+\n
+  it("should display Pikday calendar", function () {\n
+    handsontable({\n
+      data: getDates(),\n
+      columns: [\n
+        {\n
+          type: \'date\'\n
+        }\n
+      ]\n
+    });\n
+\n
+    expect($(\'.pika-single\').is(\':visible\')).toBe(false);\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    expect($(\'.pika-single\').is(\':visible\')).toBe(true);\n
+  });\n
+\n
+  it("should pass date picker config object to Pikday", function () {\n
+    var onOpenSpy = jasmine.createSpy(\'open\');\n
+    var onCloseSpy = jasmine.createSpy(\'close\');\n
+    var hot = handsontable({\n
+      data: getDates(),\n
+      columns: [\n
+        {\n
+          type: \'date\',\n
+          datePickerConfig: {\n
+            firstDay: 1,\n
+            field: \'field\', // read only - shouldn\'t overwrite\n
+            trigger: \'trigger\', // read only - shouldn\'t overwrite\n
+            container: \'container\', // read only - shouldn\'t overwrite\n
+            bound: true, // read only - shouldn\'t overwrite\n
+            i18n: {\n
+              previousMonth: \'Poprzedni\',\n
+              nextMonth     : \'Następny\',\n
+              months        : [\'January\',\'February\',\'March\',\'April\',\'May\',\'June\',\'July\',\'August\',\'September\',\'October\',\'November\',\'December\'],\n
+              weekdays      : [\'Sunday\',\'Monday\',\'Tuesday\',\'Wednesday\',\'Thursday\',\'Friday\',\'Saturday\'],\n
+              weekdaysShort : [\'Sun\',\'Mon\',\'Tue\',\'Wed\',\'Thu\',\'Fri\',\'Sat\']\n
+            },\n
+            onOpen: onOpenSpy,\n
+            onClose: onCloseSpy\n
+          }\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+    keyDown(\'esc\');\n
+\n
+    var config = hot.getActiveEditor().$datePicker.config();\n
+\n
+    expect(config.field instanceof HTMLElement).toBe(true);\n
+    expect(config.trigger instanceof HTMLElement).toBe(true);\n
+    expect(config.container instanceof HTMLElement).toBe(true);\n
+    expect(config.bound).toBe(false);\n
+    expect(config.firstDay).toBe(1);\n
+    expect(config.i18n.previousMonth).toBe(\'Poprzedni\');\n
+    expect(config.i18n.nextMonth).toBe(\'Następny\');\n
+    expect(onOpenSpy).toHaveBeenCalled();\n
+    expect(onCloseSpy).toHaveBeenCalled();\n
+  });\n
+\n
+  it("should remove any HTML connected with Pikaday Calendar", function () {\n
+    handsontable({\n
+      data: getDates(),\n
+      columns: [\n
+        {\n
+          type: \'date\'\n
+        }\n
+      ]\n
+    });\n
+\n
+    expect($(\'.pika-single\').length).toBe(0);\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    expect($(\'.pika-single\').length).toBe(1);\n
+\n
+    destroy();\n
+\n
+    expect($(\'.pika-single\').length).toBe(0);\n
+  });\n
+\n
+  it("should select date corresponding to cell value", function () {\n
+    handsontable({\n
+      data: getDates(),\n
+      columns: [\n
+        {\n
+          type: \'date\',\n
+          dateFormat: \'MM/DD/YYYY\'\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    var date = new Date(getDates()[0][0]);\n
+\n
+    expect($(\'.pika-single\').find(\'.pika-select-year\').find(\':selected\').val()).toMatch(date.getFullYear());\n
+    expect($(\'.pika-single\').find(\'.pika-select-month\').find(\':selected\').val()).toMatch(date.getMonth());\n
+    expect($(\'.pika-single\').find(\'.pika-table .is-selected\').text()).toMatch(date.getDate());\n
+  });\n
+\n
+  it("should save new date after clicked on calendar", function () {\n
+    handsontable({\n
+      data: getDates(),\n
+      columns: [\n
+        {\n
+          type: \'date\',\n
+          dateFormat: \'MM/DD/YYYY\'\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    expect(getDataAtCell(0, 0)).toMatch(\'01/14/2006\');\n
+\n
+    keyDown(\'enter\');\n
+\n
+    mouseDown($(\'.pika-single\').find(\'.pika-table tbody tr:eq(0) td:eq(0) button\'));\n
+\n
+    waits(150);\n
+    runs(function () {\n
+      expect(getDataAtCell(0, 0)).toMatch(\'01/01/2006\');\n
+    });\n
+  });\n
+\n
+  it("should display fill handle after selected date on calendar", function () {\n
+    handsontable({\n
+      data: getDates(),\n
+      columns: [\n
+        {\n
+          type: \'date\',\n
+          dateFormat: \'MM/DD/YYYY\'\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    expect(getDataAtCell(0, 0)).toMatch(\'01/14/2006\');\n
+\n
+    keyDown(\'enter\');\n
+\n
+    mouseDown($(\'.pika-single\').find(\'.pika-table tbody tr:eq(0) td:eq(0) button\'));\n
+\n
+    waits(150);\n
+    runs(function () {\n
+      expect(getDataAtCell(0, 0)).toMatch(\'01/01/2006\');\n
+      expect($(\'.htBorders .current.corner\').is(\':visible\')).toBe(true);\n
+    });\n
+  });\n
+\n
+  it("should setup in settings and display defaultDate on calendar", function () {\n
+    handsontable({\n
+      data: getDates(),\n
+      minSpareRows: 1,\n
+      columns: [\n
+        {\n
+          type: \'date\',\n
+          dateFormat: \'MM/DD/YYYY\',\n
+          defaultDate: \'01/01/1900\'\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(5, 0);\n
+    expect(getDataAtCell(5, 0)).toMatch(null);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    var date = new Date(\'01/01/1900\');\n
+\n
+    expect($(\'.pika-single\').find(\'.pika-select-year\').find(\':selected\').val()).toMatch(date.getFullYear());\n
+    expect($(\'.pika-single\').find(\'.pika-select-month\').find(\':selected\').val()).toMatch(date.getMonth());\n
+    expect($(\'.pika-single\').find(\'.pika-table .is-selected\').text()).toMatch(date.getDate());\n
+\n
+    keyDown(\'enter\');\n
+\n
+    waits(150);\n
+    runs(function () {\n
+      expect(getDataAtCell(5, 0)).toMatch(\'01/01/1900\');\n
+    });\n
+  });\n
+\n
+  it("should close calendar after picking new date", function () {\n
+    handsontable({\n
+      data: getDates(),\n
+      columns: [\n
+        {\n
+          type: \'date\',\n
+          dateFormat: \'MM/DD/YYYY\'\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+\n
+    expect($(\'.pika-single\').is(\':visible\')).toBe(true);\n
+\n
+    mouseDown($(\'.pika-single\').find(\'.pika-table tbody tr:eq(0) td:eq(0) button\'));\n
+\n
+    expect($(\'.pika-single\').is(\':visible\')).toBe(false);\n
+\n
+  });\n
+\n
+  it("should enable to input any value in textarea", function () {\n
+    var hot = handsontable({\n
+      data: getDates(),\n
+      columns: [\n
+        {\n
+          type: \'date\'\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var editor = hot.getActiveEditor();\n
+\n
+    editor.beginEditing();\n
+\n
+    expect(editor.isOpened()).toBe(true);\n
+\n
+    editor.TEXTAREA.value = \'foo\';\n
+    keyDownUp(\'o\'.charCodeAt(0));\n
+\n
+    expect(editor.getValue()).toEqual(\'foo\');\n
+\n
+    editor.finishEditing();\n
+\n
+    waits(30);\n
+    runs(function() {\n
+      expect(getDataAtCell(0, 0)).toEqual(\'foo\');\n
+    });\n
+\n
+  });\n
+\n
+  it("should restore original when edited and pressed ESC ", function () {\n
+    var hot = handsontable({\n
+      data: getDates(),\n
+      columns: [\n
+        {\n
+          type: \'date\'\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var editor = hot.getActiveEditor();\n
+\n
+    editor.beginEditing();\n
+\n
+    expect(editor.isOpened()).toBe(true);\n
+\n
+    editor.TEXTAREA.value = \'foo\';\n
+\n
+    expect(editor.getValue()).toEqual(\'foo\');\n
+\n
+    keyDownUp(Handsontable.helper.KEY_CODES.ESCAPE); //cancel editing\n
+\n
+    editor.finishEditing();\n
+\n
+    waits(30);\n
+\n
+    runs(function() {\n
+      expect(getDataAtCell(0, 0)).toEqual(\'01/14/2006\');\n
+    });\n
+\n
+  });\n
+\n
+  it("should display a calendar based on a current date, even if a date in a wrong format was entered previously", function () {\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+      columns: [\n
+        {type: \'date\'},\n
+        {type: \'date\', dateFormat: \'YYYY-MM-DD\'}\n
+      ],\n
+      minSpareRows: 1\n
+    }),\n
+      resultDate;\n
+\n
+    setDataAtCell(4,1, \'15-11-11\');\n
+\n
+    waits(100);\n
+    runs(function() {\n
+\n
+      selectCell(5,1);\n
+      keyDown(\'enter\');\n
+\n
+      expect($(\'.pika-single\').is(\':visible\')).toBe(true);\n
+\n
+      mouseDown($(\'.pika-single\').find(\'.pika-table tbody tr:eq(3) td:eq(3) button\'));\n
+    });\n
+\n
+    waits(100);\n
+    runs(function() {\n
+      resultDate = getDataAtCell(5,1);\n
+\n
+      expect(moment(resultDate).year()).toEqual(moment().year());\n
+      expect(moment(resultDate).month()).toEqual(moment().month());\n
+    });\n
+\n
+  });\n
+\n
+  it("should display Pikaday Calendar bottom of the selected cell", function() {\n
+    var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+        columns: [\n
+          {type: \'date\'},\n
+          {type: \'date\'}\n
+        ]\n
+      }),\n
+      cellOffset,\n
+      datePickerOffset;\n
+\n
+    selectCell(1, 1);\n
+    keyDown(\'enter\');\n
+\n
+    cellOffset = $(hot.getActiveEditor().TD).offset();\n
+    datePickerOffset = $(\'.pika-single\').offset();\n
+\n
+    // 23 is a height of the editor cell\n
+    expect(cellOffset.top + 23 === datePickerOffset.top).toBe(true);\n
+    expect(cellOffset.left === datePickerOffset.left).toBe(true);\n
+  });\n
+\n
+  it("should display Pikaday Calendar bottom of the selected cell when table have scrolls", function() {\n
+    var container = $(\'#testContainer\');\n
+\n
+    container[0].style.height = \'300px\';\n
+    container[0].style.width = \'200px\';\n
+    container[0].style.overflow = \'hidden\';\n
+\n
+    var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(30, 10),\n
+        columns: [\n
+          {type: \'date\'},\n
+          {type: \'date\'},\n
+          {type: \'date\'},\n
+          {type: \'date\'},\n
+          {type: \'date\'},\n
+          {type: \'date\'},\n
+          {type: \'date\'}\n
+        ]\n
+      }),\n
+      cellOffset,\n
+      datePickerOffset;\n
+\n
+    selectCell(20, 6);\n
+    keyDown(\'enter\');\n
+\n
+    cellOffset = $(hot.getActiveEditor().TD).offset();\n
+    datePickerOffset = $(\'.pika-single\').offset();\n
+\n
+    // 23 is a height of the editor cell\n
+    if(!!navigator.userAgent.match(/MSIE 10/)) { // IE10 hack\n
+      expect(datePickerOffset.top).toBeAroundValue(cellOffset.top + 23);\n
+    } else {\n
+      expect(cellOffset.top + 23 === datePickerOffset.top).toBe(true);\n
+    }\n
+    expect(cellOffset.left === datePickerOffset.left).toBe(true);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9885</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dateEditorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272742.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>renderers.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Utility to register renderers and common namespace for keeping reference to all renderers classes\n
+ */\n
+\n
+import {toUpperCaseFirst} from \'./helpers/string\';\n
+\n
+var registeredRenderers = {};\n
+\n
+// support for older versions of Handsontable\n
+Handsontable.renderers = Handsontable.renderers || {};\n
+Handsontable.renderers.registerRenderer = registerRenderer;\n
+Handsontable.renderers.getRenderer = getRenderer;\n
+\n
+/**\n
+ * Registers renderer under given name\n
+ * @param {String} rendererName\n
+ * @param {Function} rendererFunction\n
+ */\n
+function registerRenderer(rendererName, rendererFunction) {\n
+  var registerName;\n
+\n
+  registeredRenderers[rendererName] = rendererFunction;\n
+\n
+  registerName = toUpperCaseFirst(rendererName) + \'Renderer\';\n
+  // support for older versions of Handsontable\n
+  Handsontable.renderers[registerName] = rendererFunction;\n
+  Handsontable[registerName] = rendererFunction;\n
+}\n
+\n
+/**\n
+ * @param {String|Function} rendererName\n
+ * @returns {Function} rendererFunction\n
+ */\n
+function getRenderer(rendererName) {\n
+  if (typeof rendererName == \'function\') {\n
+    return rendererName;\n
+  }\n
+\n
+  if (typeof rendererName != \'string\') {\n
+    throw Error(\'Only strings and functions can be passed as "renderer" parameter\');\n
+  }\n
+\n
+  if (!(rendererName in registeredRenderers)) {\n
+    throw Error(\'No editor registered under name "\' + rendererName + \'"\');\n
+  }\n
+\n
+  return registeredRenderers[rendererName];\n
+}\n
+\n
+/**\n
+ * @param rendererName\n
+ * @returns {Boolean}\n
+ */\n
+function hasRenderer(rendererName) {\n
+  return rendererName in registeredRenderers;\n
+}\n
+\n
+export {registerRenderer, getRenderer, hasRenderer};\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1578</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>renderers.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

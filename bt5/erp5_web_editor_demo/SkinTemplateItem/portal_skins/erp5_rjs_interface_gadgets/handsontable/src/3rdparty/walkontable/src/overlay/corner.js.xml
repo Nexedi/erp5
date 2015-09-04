@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272617.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>corner.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  outerHeight,\n
+  outerWidth,\n
+  setOverlayPosition,\n
+    } from \'./../../../../helpers/dom/element\';\n
+import {WalkontableOverlay} from \'./_base\';\n
+\n
+\n
+/**\n
+ * @class WalkontableCornerOverlay\n
+ */\n
+class WalkontableCornerOverlay extends WalkontableOverlay {\n
+  /**\n
+   * @param {Walkontable} wotInstance\n
+   */\n
+  constructor(wotInstance) {\n
+    super(wotInstance);\n
+    this.clone = this.makeClone(WalkontableOverlay.CLONE_CORNER);\n
+  }\n
+\n
+  /**\n
+   * Checks if overlay should be fully rendered\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  shouldBeRendered() {\n
+    return (this.wot.getSetting(\'fixedRowsTop\') || this.wot.getSetting(\'columnHeaders\').length) &&\n
+        (this.wot.getSetting(\'fixedColumnsLeft\') || this.wot.getSetting(\'rowHeaders\').length) ? true : false;\n
+  }\n
+\n
+  /**\n
+   * Updates the corner overlay position\n
+   */\n
+  resetFixedPosition() {\n
+    if (!this.wot.wtTable.holder.parentNode) {\n
+      // removed from DOM\n
+      return;\n
+    }\n
+    let overlayRoot = this.clone.wtTable.holder.parentNode;\n
+    let tableHeight = outerHeight(this.clone.wtTable.TABLE);\n
+    let tableWidth = outerWidth(this.clone.wtTable.TABLE);\n
+\n
+    if (this.trimmingContainer === window) {\n
+      let box = this.wot.wtTable.hider.getBoundingClientRect();\n
+      let top = Math.ceil(box.top);\n
+      let left = Math.ceil(box.left);\n
+      let bottom = Math.ceil(box.bottom);\n
+      let right = Math.ceil(box.right);\n
+      let finalLeft;\n
+      let finalTop;\n
+\n
+      if (left < 0 && (right - overlayRoot.offsetWidth) > 0) {\n
+        finalLeft = -left + \'px\';\n
+      } else {\n
+        finalLeft = \'0\';\n
+      }\n
+\n
+      if (top < 0 && (bottom - overlayRoot.offsetHeight) > 0) {\n
+        finalTop = -top + \'px\';\n
+      } else {\n
+        finalTop = \'0\';\n
+      }\n
+      setOverlayPosition(overlayRoot, finalLeft, finalTop);\n
+    }\n
+    overlayRoot.style.height = (tableHeight === 0 ? tableHeight : tableHeight + 4) + \'px\';\n
+    overlayRoot.style.width = (tableWidth === 0 ? tableWidth : tableWidth + 4) + \'px\';\n
+  }\n
+}\n
+\n
+export {WalkontableCornerOverlay};\n
+\n
+window.WalkontableCornerOverlay = WalkontableCornerOverlay;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2053</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>corner.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

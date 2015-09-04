@@ -1,0 +1,567 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272693.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>customBorders.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {registerPlugin} from \'./../../plugins\';\n
+import {WalkontableCellRange} from \'./../../3rdparty/walkontable/src/cell/range\';\n
+import {WalkontableSelection} from \'./../../3rdparty/walkontable/src/selection\';\n
+\n
+//registerPlugin(\'customBorders\', CustomBorders);\n
+\n
+/**\n
+ * @private\n
+ * @class CustomBorders\n
+ * @plugin CustomBorders\n
+ */\n
+function CustomBorders () {\n
+\n
+}\n
+\n
+//  /***\n
+//   * Array for all custom border objects (for redraw)\n
+//   * @type {{}}\n
+//   */\n
+//  var bordersArray = {},\n
+      /***\n
+   * Current instance (table where borders should be placed)\n
+   */\n
+var instance;\n
+\n
+\n
+/***\n
+ * Check if plugin should be enabled\n
+ */\n
+var checkEnable = function (customBorders) {\n
+  if(typeof customBorders === "boolean"){\n
+    if (customBorders === true){\n
+      return true;\n
+    }\n
+  }\n
+\n
+  if(typeof customBorders === "object"){\n
+    if(customBorders.length > 0) {\n
+      return true;\n
+    }\n
+  }\n
+  return false;\n
+};\n
+\n
+\n
+/***\n
+ * Initialize plugin\n
+  */\n
+var init = function () {\n
+\n
+  if(checkEnable(this.getSettings().customBorders)){\n
+    if(!this.customBorders){\n
+      instance = this;\n
+      this.customBorders = new CustomBorders();\n
+    }\n
+  }\n
+};\n
+\n
+/***\n
+ * get index of border setting\n
+ * @param className\n
+ * @returns {number}\n
+ */\n
+var getSettingIndex = function (className) {\n
+  for (var i = 0; i < instance.view.wt.selections.length; i++){\n
+    if (instance.view.wt.selections[i].settings.className == className){\n
+      return i;\n
+    }\n
+  }\n
+  return -1;\n
+};\n
+\n
+/***\n
+ * Insert WalkontableSelection instance into Walkontable.settings\n
+ * @param border\n
+ */\n
+var insertBorderIntoSettings = function (border) {\n
+  var coordinates = {\n
+    row: border.row,\n
+    col: border.col\n
+  };\n
+  var selection = new WalkontableSelection(border, new WalkontableCellRange(coordinates, coordinates, coordinates));\n
+  var index = getSettingIndex(border.className);\n
+\n
+  if(index >=0) {\n
+    instance.view.wt.selections[index] = selection;\n
+  } else {\n
+    instance.view.wt.selections.push(selection);\n
+  }\n
+};\n
+\n
+/***\n
+ * Prepare borders from setting (single cell)\n
+ *\n
+ * @param row\n
+ * @param col\n
+ * @param borderObj\n
+ */\n
+var prepareBorderFromCustomAdded = function (row, col, borderObj){\n
+  var border = createEmptyBorders(row, col);\n
+  border = extendDefaultBorder(border, borderObj);\n
+  this.setCellMeta(row, col, \'borders\', border);\n
+\n
+  insertBorderIntoSettings(border);\n
+};\n
+\n
+/***\n
+ * Prepare borders from setting (object)\n
+ * @param rowObj\n
+ */\n
+var prepareBorderFromCustomAddedRange = function (rowObj) {\n
+  var range = rowObj.range;\n
+\n
+  for (var row = range.from.row; row <= range.to.row; row ++) {\n
+    for (var col = range.from.col; col<= range.to.col; col++){\n
+\n
+      var border = createEmptyBorders(row, col);\n
+      var add = 0;\n
+\n
+      if(row == range.from.row) {\n
+        add++;\n
+        if(rowObj.hasOwnProperty(\'top\')){\n
+          border.top = rowObj.top;\n
+        }\n
+      }\n
+\n
+      if(row == range.to.row){\n
+        add++;\n
+        if(rowObj.hasOwnProperty(\'bottom\')){\n
+          border.bottom = rowObj.bottom;\n
+        }\n
+      }\n
+\n
+      if(col == range.from.col) {\n
+        add++;\n
+        if(rowObj.hasOwnProperty(\'left\')){\n
+          border.left = rowObj.left;\n
+        }\n
+      }\n
+\n
+\n
+      if (col == range.to.col) {\n
+        add++;\n
+        if(rowObj.hasOwnProperty(\'right\')){\n
+          border.right = rowObj.right;\n
+        }\n
+      }\n
+\n
+\n
+      if(add>0){\n
+        this.setCellMeta(row, col, \'borders\', border);\n
+        insertBorderIntoSettings(border);\n
+      }\n
+    }\n
+  }\n
+};\n
+\n
+/***\n
+ * Create separated class name for borders for each cell\n
+ * @param row\n
+ * @param col\n
+ * @returns {string}\n
+ */\n
+var createClassName = function (row, col) {\n
+  return "border_row" + row + "col" + col;\n
+};\n
+\n
+\n
+/***\n
+ * Create default single border for each position (top/right/bottom/left)\n
+ * @returns {{width: number, color: string}}\n
+ */\n
+var createDefaultCustomBorder = function () {\n
+  return {\n
+    width: 1,\n
+    color: \'#000\'\n
+  };\n
+};\n
+\n
+\n
+/***\n
+ * Create default object for empty border\n
+ * @returns {{hide: boolean}}\n
+ */\n
+var createSingleEmptyBorder = function () {\n
+  return {\n
+    hide: true\n
+  };\n
+};\n
+\n
+\n
+/***\n
+ * Create default Handsontable border object\n
+ * @returns {{width: number, color: string, cornerVisible: boolean}}\n
+ */\n
+var createDefaultHtBorder = function () {\n
+  return {\n
+    width: 1,\n
+    color: \'#000\',\n
+    cornerVisible: false\n
+  };\n
+};\n
+\n
+/***\n
+ * Prepare empty border for each cell with all custom borders hidden\n
+ *\n
+ * @param row\n
+ * @param col\n
+ * @returns {{className: *, border: *, row: *, col: *, top: {hide: boolean}, right: {hide: boolean}, bottom: {hide: boolean}, left: {hide: boolean}}}\n
+ */\n
+var createEmptyBorders = function (row, col){\n
+  return {\n
+    className: createClassName(row, col),\n
+    border: createDefaultHtBorder(),\n
+    row: row,\n
+    col: col,\n
+    top: createSingleEmptyBorder(),\n
+    right: createSingleEmptyBorder(),\n
+    bottom: createSingleEmptyBorder(),\n
+    left: createSingleEmptyBorder()\n
+  };\n
+};\n
+\n
+\n
+var extendDefaultBorder = function (defaultBorder, customBorder){\n
+\n
+  if(customBorder.hasOwnProperty(\'border\')){\n
+    defaultBorder.border = customBorder.border;\n
+  }\n
+\n
+  if(customBorder.hasOwnProperty(\'top\')){\n
+    defaultBorder.top = customBorder.top;\n
+  }\n
+\n
+  if(customBorder.hasOwnProperty(\'right\')){\n
+    defaultBorder.right = customBorder.right;\n
+  }\n
+\n
+  if(customBorder.hasOwnProperty(\'bottom\')){\n
+    defaultBorder.bottom = customBorder.bottom;\n
+  }\n
+\n
+  if(customBorder.hasOwnProperty(\'left\')){\n
+    defaultBorder.left = customBorder.left;\n
+  }\n
+  return defaultBorder;\n
+};\n
+\n
+/***\n
+ * Remove borders divs from DOM\n
+ *\n
+ * @param borderClassName\n
+ */\n
+var removeBordersFromDom = function (borderClassName) {\n
+  var borders = document.querySelectorAll("." + borderClassName);\n
+\n
+  for(var i = 0; i< borders.length; i++) {\n
+    if (borders[i]) {\n
+      if(borders[i].nodeName != \'TD\') {\n
+        var parent = borders[i].parentNode;\n
+\n
+        if(parent.parentNode) {\n
+          parent.parentNode.removeChild(parent);\n
+        }\n
+      }\n
+    }\n
+  }\n
+};\n
+\n
+\n
+/***\n
+ * Remove border (triggered from context menu)\n
+ *\n
+ * @param row\n
+ * @param col\n
+ */\n
+var removeAllBorders = function(row,col) {\n
+  var borderClassName = createClassName(row,col);\n
+  removeBordersFromDom(borderClassName);\n
+  this.removeCellMeta(row, col, \'borders\');\n
+};\n
+\n
+/***\n
+ * Set borders for each cell re. to border position\n
+ *\n
+ * @param row\n
+ * @param col\n
+ * @param place\n
+ * @param remove\n
+ */\n
+var setBorder = function (row, col,place, remove){\n
+\n
+  var bordersMeta = this.getCellMeta(row, col).borders;\n
+  /* jshint ignore:start */\n
+  if (!bordersMeta || bordersMeta.border == undefined){\n
+    bordersMeta = createEmptyBorders(row, col);\n
+  }\n
+  /* jshint ignore:end */\n
+\n
+  if (remove) {\n
+    bordersMeta[place] = createSingleEmptyBorder();\n
+  } else {\n
+    bordersMeta[place] = createDefaultCustomBorder();\n
+  }\n
+\n
+  this.setCellMeta(row, col, \'borders\', bordersMeta);\n
+\n
+  var borderClassName = createClassName(row,col);\n
+  removeBordersFromDom(borderClassName);\n
+  insertBorderIntoSettings(bordersMeta);\n
+\n
+  this.render();\n
+};\n
+\n
+\n
+/***\n
+ * Prepare borders based on cell and border position\n
+ *\n
+ * @param range\n
+ * @param place\n
+ * @param remove\n
+ */\n
+var prepareBorder = function (range, place, remove) {\n
+\n
+  if (range.from.row == range.to.row && range.from.col == range.to.col){\n
+    if(place == "noBorders"){\n
+      removeAllBorders.call(this, range.from.row, range.from.col);\n
+    } else {\n
+      setBorder.call(this, range.from.row, range.from.col, place, remove);\n
+    }\n
+  } else {\n
+    switch (place) {\n
+      case "noBorders":\n
+        for(var column = range.from.col; column <= range.to.col; column++){\n
+          for(var row = range.from.row; row <= range.to.row; row++) {\n
+            removeAllBorders.call(this, row, column);\n
+          }\n
+        }\n
+        break;\n
+      case "top":\n
+        for(var topCol = range.from.col; topCol <= range.to.col; topCol++){\n
+          setBorder.call(this, range.from.row, topCol, place, remove);\n
+        }\n
+        break;\n
+      case "right":\n
+        for(var rowRight = range.from.row; rowRight <=range.to.row; rowRight++){\n
+          setBorder.call(this,rowRight, range.to.col, place);\n
+        }\n
+        break;\n
+      case "bottom":\n
+        for(var bottomCol = range.from.col; bottomCol <= range.to.col; bottomCol++){\n
+          setBorder.call(this, range.to.row, bottomCol, place);\n
+        }\n
+        break;\n
+      case "left":\n
+        for(var rowLeft = range.from.row; rowLeft <=range.to.row; rowLeft++){\n
+          setBorder.call(this,rowLeft, range.from.col, place);\n
+        }\n
+        break;\n
+    }\n
+  }\n
+};\n
+\n
+/***\n
+ * Check if selection has border by className\n
+ *\n
+ * @param hot\n
+ * @param direction\n
+ */\n
+var checkSelectionBorders = function (hot, direction) {\n
+  var atLeastOneHasBorder = false;\n
+\n
+  hot.getSelectedRange().forAll(function(r, c) {\n
+    var metaBorders = hot.getCellMeta(r,c).borders;\n
+\n
+    if (metaBorders) {\n
+      if(direction) {\n
+        if (!metaBorders[direction].hasOwnProperty(\'hide\')){\n
+          atLeastOneHasBorder = true;\n
+          return false; //breaks forAll\n
+        }\n
+      } else {\n
+        atLeastOneHasBorder = true;\n
+        return false; //breaks forAll\n
+      }\n
+    }\n
+  });\n
+  return atLeastOneHasBorder;\n
+};\n
+\n
+\n
+/***\n
+ * Mark label in contextMenu as selected\n
+ *\n
+ * @param label\n
+ * @returns {string}\n
+ */\n
+var markSelected = function (label) {\n
+  return "<span class=\'selected\'>" + String.fromCharCode(10003) + "</span>" + label; // workaround for https://github.com/handsontable/handsontable/issues/1946\n
+};\n
+\n
+/***\n
+ * Add border options to context menu\n
+ *\n
+ * @param defaultOptions\n
+ */\n
+var addBordersOptionsToContextMenu = function (defaultOptions) {\n
+  if(!this.getSettings().customBorders){\n
+    return;\n
+  }\n
+\n
+  defaultOptions.items.push(Handsontable.plugins.ContextMenu.SEPARATOR);\n
+\n
+  defaultOptions.items.push({\n
+    key: \'borders\',\n
+    name: \'Borders\',\n
+    submenu: {\n
+      items: [\n
+        {\n
+          key: \'borders:top\',\n
+          name: function () {\n
+            var label = "Top";\n
+            var hasBorder = checkSelectionBorders(this, \'top\');\n
+            if(hasBorder) {\n
+              label = markSelected(label);\n
+            }\n
+\n
+            return label;\n
+          },\n
+          callback: function () {\n
+            var hasBorder = checkSelectionBorders(this, \'top\');\n
+            prepareBorder.call(this, this.getSelectedRange(), \'top\', hasBorder);\n
+          },\n
+          disabled: false\n
+        },\n
+        {\n
+          key: \'borders:right\',\n
+          name: function () {\n
+            var label = \'Right\';\n
+            var hasBorder = checkSelectionBorders(this, \'right\');\n
+            if(hasBorder) {\n
+              label = markSelected(label);\n
+            }\n
+            return label;\n
+          },\n
+          callback: function () {\n
+            var hasBorder = checkSelectionBorders(this, \'right\');\n
+            prepareBorder.call(this, this.getSelectedRange(), \'right\', hasBorder);\n
+          },\n
+          disabled: false\n
+        },\n
+        {\n
+          key: \'borders:bottom\',\n
+          name: function () {\n
+            var label = \'Bottom\';\n
+            var hasBorder = checkSelectionBorders(this, \'bottom\');\n
+            if(hasBorder) {\n
+              label = markSelected(label);\n
+            }\n
+            return label;\n
+          },\n
+          callback: function () {\n
+            var hasBorder = checkSelectionBorders(this, \'bottom\');\n
+            prepareBorder.call(this, this.getSelectedRange(), \'bottom\', hasBorder);\n
+          },\n
+          disabled: false\n
+        },\n
+        {\n
+          key: \'borders:left\',\n
+          name: function () {\n
+            var label = \'Left\';\n
+            var hasBorder = checkSelectionBorders(this, \'left\');\n
+            if(hasBorder) {\n
+              label = markSelected(label);\n
+            }\n
+\n
+            return label;\n
+          },\n
+          callback: function () {\n
+            var hasBorder = checkSelectionBorders(this, \'left\');\n
+            prepareBorder.call(this, this.getSelectedRange(), \'left\', hasBorder);\n
+          },\n
+          disabled: false\n
+        },\n
+        {\n
+          key: \'borders:no_borders\',\n
+          name: \'Remove border(s)\',\n
+            callback: function () {\n
+            prepareBorder.call(this, this.getSelectedRange(), \'noBorders\');\n
+          },\n
+          disabled: function () {\n
+            return !checkSelectionBorders(this);\n
+          }\n
+        }\n
+      ]\n
+    }\n
+  });\n
+};\n
+\n
+Handsontable.hooks.add(\'beforeInit\', init);\n
+Handsontable.hooks.add(\'afterContextMenuDefaultOptions\', addBordersOptionsToContextMenu);\n
+\n
+\n
+Handsontable.hooks.add(\'afterInit\', function () {\n
+  var customBorders = this.getSettings().customBorders;\n
+\n
+  if (customBorders) {\n
+    for (var i = 0; i < customBorders.length; i++) {\n
+      if (customBorders[i].range) {\n
+        prepareBorderFromCustomAddedRange.call(this, customBorders[i]);\n
+\n
+      } else {\n
+        prepareBorderFromCustomAdded.call(this, customBorders[i].row, customBorders[i].col, customBorders[i]);\n
+      }\n
+    }\n
+\n
+    this.render();\n
+    this.view.wt.draw(true);\n
+  }\n
+});\n
+\n
+Handsontable.CustomBorders = CustomBorders;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12743</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>customBorders.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

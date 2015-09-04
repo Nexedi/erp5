@@ -1,0 +1,426 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272734.43</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>classes.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* jshint ignore:start */\n
+(function(global) {\n
+  \'use strict\';\n
+  if (global.$traceurRuntime) {\n
+    return;\n
+  }\n
+  var $Object = Object;\n
+  var $TypeError = TypeError;\n
+  var $create = $Object.create;\n
+  var $defineProperties = $Object.defineProperties;\n
+  var $defineProperty = $Object.defineProperty;\n
+  var $freeze = $Object.freeze;\n
+  var $getOwnPropertyDescriptor = $Object.getOwnPropertyDescriptor;\n
+  var $getOwnPropertyNames = $Object.getOwnPropertyNames;\n
+  var $keys = $Object.keys;\n
+  var $hasOwnProperty = $Object.prototype.hasOwnProperty;\n
+  var $preventExtensions = Object.preventExtensions;\n
+  var $seal = Object.seal;\n
+  var $isExtensible = Object.isExtensible;\n
+  function nonEnum(value) {\n
+    return {\n
+      configurable: true,\n
+      enumerable: false,\n
+      value: value,\n
+      writable: true\n
+    };\n
+  }\n
+  var method = nonEnum;\n
+  var counter = 0;\n
+  function newUniqueString() {\n
+    return \'__$\' + Math.floor(Math.random() * 1e9) + \'$\' + ++counter + \'$__\';\n
+  }\n
+  var symbolInternalProperty = newUniqueString();\n
+  var symbolDescriptionProperty = newUniqueString();\n
+  var symbolDataProperty = newUniqueString();\n
+  var symbolValues = $create(null);\n
+  var privateNames = $create(null);\n
+  function isPrivateName(s) {\n
+    return privateNames[s];\n
+  }\n
+  function createPrivateName() {\n
+    var s = newUniqueString();\n
+    privateNames[s] = true;\n
+    return s;\n
+  }\n
+  function isShimSymbol(symbol) {\n
+    return typeof symbol === \'object\' && symbol instanceof SymbolValue;\n
+  }\n
+  function typeOf(v) {\n
+    if (isShimSymbol(v))\n
+      return \'symbol\';\n
+    return typeof v;\n
+  }\n
+  function Symbol(description) {\n
+    var value = new SymbolValue(description);\n
+    if (!(this instanceof Symbol))\n
+      return value;\n
+    throw new TypeError(\'Symbol cannot be new\\\'ed\');\n
+  }\n
+  $defineProperty(Symbol.prototype, \'constructor\', nonEnum(Symbol));\n
+  $defineProperty(Symbol.prototype, \'toString\', method(function() {\n
+    var symbolValue = this[symbolDataProperty];\n
+    if (!getOption(\'symbols\'))\n
+      return symbolValue[symbolInternalProperty];\n
+    if (!symbolValue)\n
+      throw TypeError(\'Conversion from symbol to string\');\n
+    var desc = symbolValue[symbolDescriptionProperty];\n
+    if (desc === undefined)\n
+      desc = \'\';\n
+    return \'Symbol(\' + desc + \')\';\n
+  }));\n
+  $defineProperty(Symbol.prototype, \'valueOf\', method(function() {\n
+    var symbolValue = this[symbolDataProperty];\n
+    if (!symbolValue)\n
+      throw TypeError(\'Conversion from symbol to string\');\n
+    if (!getOption(\'symbols\'))\n
+      return symbolValue[symbolInternalProperty];\n
+    return symbolValue;\n
+  }));\n
+  function SymbolValue(description) {\n
+    var key = newUniqueString();\n
+    $defineProperty(this, symbolDataProperty, {value: this});\n
+    $defineProperty(this, symbolInternalProperty, {value: key});\n
+    $defineProperty(this, symbolDescriptionProperty, {value: description});\n
+    freeze(this);\n
+    symbolValues[key] = this;\n
+  }\n
+  $defineProperty(SymbolValue.prototype, \'constructor\', nonEnum(Symbol));\n
+  $defineProperty(SymbolValue.prototype, \'toString\', {\n
+    value: Symbol.prototype.toString,\n
+    enumerable: false\n
+  });\n
+  $defineProperty(SymbolValue.prototype, \'valueOf\', {\n
+    value: Symbol.prototype.valueOf,\n
+    enumerable: false\n
+  });\n
+  var hashProperty = createPrivateName();\n
+  var hashPropertyDescriptor = {value: undefined};\n
+  var hashObjectProperties = {\n
+    hash: {value: undefined},\n
+    self: {value: undefined}\n
+  };\n
+  var hashCounter = 0;\n
+  function getOwnHashObject(object) {\n
+    var hashObject = object[hashProperty];\n
+    if (hashObject && hashObject.self === object)\n
+      return hashObject;\n
+    if ($isExtensible(object)) {\n
+      hashObjectProperties.hash.value = hashCounter++;\n
+      hashObjectProperties.self.value = object;\n
+      hashPropertyDescriptor.value = $create(null, hashObjectProperties);\n
+      $defineProperty(object, hashProperty, hashPropertyDescriptor);\n
+      return hashPropertyDescriptor.value;\n
+    }\n
+    return undefined;\n
+  }\n
+  function freeze(object) {\n
+    getOwnHashObject(object);\n
+    return $freeze.apply(this, arguments);\n
+  }\n
+  function preventExtensions(object) {\n
+    getOwnHashObject(object);\n
+    return $preventExtensions.apply(this, arguments);\n
+  }\n
+  function seal(object) {\n
+    getOwnHashObject(object);\n
+    return $seal.apply(this, arguments);\n
+  }\n
+  freeze(SymbolValue.prototype);\n
+  function isSymbolString(s) {\n
+    return symbolValues[s] || privateNames[s];\n
+  }\n
+  function toProperty(name) {\n
+    if (isShimSymbol(name))\n
+      return name[symbolInternalProperty];\n
+    return name;\n
+  }\n
+  function removeSymbolKeys(array) {\n
+    var rv = [];\n
+    for (var i = 0; i < array.length; i++) {\n
+      if (!isSymbolString(array[i])) {\n
+        rv.push(array[i]);\n
+      }\n
+    }\n
+    return rv;\n
+  }\n
+  function getOwnPropertyNames(object) {\n
+    return removeSymbolKeys($getOwnPropertyNames(object));\n
+  }\n
+  function keys(object) {\n
+    return removeSymbolKeys($keys(object));\n
+  }\n
+  function getOwnPropertySymbols(object) {\n
+    var rv = [];\n
+    var names = $getOwnPropertyNames(object);\n
+    for (var i = 0; i < names.length; i++) {\n
+      var symbol = symbolValues[names[i]];\n
+      if (symbol) {\n
+        rv.push(symbol);\n
+      }\n
+    }\n
+    return rv;\n
+  }\n
+  function getOwnPropertyDescriptor(object, name) {\n
+    return $getOwnPropertyDescriptor(object, toProperty(name));\n
+  }\n
+  function hasOwnProperty(name) {\n
+    return $hasOwnProperty.call(this, toProperty(name));\n
+  }\n
+  function getOption(name) {\n
+    return global.traceur && global.traceur.options[name];\n
+  }\n
+  function defineProperty(object, name, descriptor) {\n
+    if (isShimSymbol(name)) {\n
+      name = name[symbolInternalProperty];\n
+    }\n
+    $defineProperty(object, name, descriptor);\n
+    return object;\n
+  }\n
+  function polyfillObject(Object) {\n
+    $defineProperty(Object, \'defineProperty\', {value: defineProperty});\n
+    $defineProperty(Object, \'getOwnPropertyNames\', {value: getOwnPropertyNames});\n
+    $defineProperty(Object, \'getOwnPropertyDescriptor\', {value: getOwnPropertyDescriptor});\n
+    $defineProperty(Object.prototype, \'hasOwnProperty\', {value: hasOwnProperty});\n
+    $defineProperty(Object, \'freeze\', {value: freeze});\n
+    $defineProperty(Object, \'preventExtensions\', {value: preventExtensions});\n
+    $defineProperty(Object, \'seal\', {value: seal});\n
+    $defineProperty(Object, \'keys\', {value: keys});\n
+  }\n
+  function exportStar(object) {\n
+    for (var i = 1; i < arguments.length; i++) {\n
+      var names = $getOwnPropertyNames(arguments[i]);\n
+      for (var j = 0; j < names.length; j++) {\n
+        var name = names[j];\n
+        if (isSymbolString(name))\n
+          continue;\n
+        (function(mod, name) {\n
+          $defineProperty(object, name, {\n
+            get: function() {\n
+              return mod[name];\n
+            },\n
+            enumerable: true\n
+          });\n
+        })(arguments[i], names[j]);\n
+      }\n
+    }\n
+    return object;\n
+  }\n
+  function isObject(x) {\n
+    return x != null && (typeof x === \'object\' || typeof x === \'function\');\n
+  }\n
+  function toObject(x) {\n
+    if (x == null)\n
+      throw $TypeError();\n
+    return $Object(x);\n
+  }\n
+  function checkObjectCoercible(argument) {\n
+    if (argument == null) {\n
+      throw new TypeError(\'Value cannot be converted to an Object\');\n
+    }\n
+    return argument;\n
+  }\n
+  function polyfillSymbol(global, Symbol) {\n
+    if (!global.Symbol) {\n
+      global.Symbol = Symbol;\n
+      Object.getOwnPropertySymbols = getOwnPropertySymbols;\n
+    }\n
+    if (!global.Symbol.iterator) {\n
+      global.Symbol.iterator = Symbol(\'Symbol.iterator\');\n
+    }\n
+  }\n
+  function setupGlobals(global) {\n
+    polyfillSymbol(global, Symbol);\n
+    global.Reflect = global.Reflect || {};\n
+    global.Reflect.global = global.Reflect.global || global;\n
+    polyfillObject(global.Object);\n
+  }\n
+  setupGlobals(global);\n
+  global.$traceurRuntime = {\n
+    checkObjectCoercible: checkObjectCoercible,\n
+    createPrivateName: createPrivateName,\n
+    defineProperties: $defineProperties,\n
+    defineProperty: $defineProperty,\n
+    exportStar: exportStar,\n
+    getOwnHashObject: getOwnHashObject,\n
+    getOwnPropertyDescriptor: $getOwnPropertyDescriptor,\n
+    getOwnPropertyNames: $getOwnPropertyNames,\n
+    isObject: isObject,\n
+    isPrivateName: isPrivateName,\n
+    isSymbolString: isSymbolString,\n
+    keys: $keys,\n
+    setupGlobals: setupGlobals,\n
+    toObject: toObject,\n
+    toProperty: toProperty,\n
+    typeof: typeOf\n
+  };\n
+})(window);\n
+(function() {\n
+  \'use strict\';\n
+  var $toProperty = $traceurRuntime.toProperty;\n
+\n
+  function spread() {\n
+    var rv = [],\n
+      j = 0,\n
+      iterResult;\n
+    for (var i = 0; i < arguments.length; i++) {\n
+      var valueToSpread = $traceurRuntime.checkObjectCoercible(arguments[i]);\n
+      if (typeof valueToSpread[$toProperty(Symbol.iterator)] !== \'function\') {\n
+        throw new TypeError(\'Cannot spread non-iterable object.\');\n
+      }\n
+      var iter = valueToSpread[$toProperty(Symbol.iterator)]();\n
+      while (!(iterResult = iter.next()).done) {\n
+        rv[j++] = iterResult.value;\n
+      }\n
+    }\n
+    return rv;\n
+  }\n
+  $traceurRuntime.spread = spread;\n
+})();\n
+(function() {\n
+  \'use strict\';\n
+  var $Object = Object;\n
+  var $TypeError = TypeError;\n
+  var $create = $Object.create;\n
+  var $defineProperties = $traceurRuntime.defineProperties;\n
+  var $defineProperty = $traceurRuntime.defineProperty;\n
+  var $getOwnPropertyDescriptor = $traceurRuntime.getOwnPropertyDescriptor;\n
+  var $getPrototypeOf = Object.getPrototypeOf;\n
+  var $toProperty = $traceurRuntime.toProperty;\n
+  var $__0 = Object,\n
+    getOwnPropertyNames = $__0.getOwnPropertyNames,\n
+    getOwnPropertySymbols = $__0.getOwnPropertySymbols;\n
+  function superDescriptor(homeObject, name) {\n
+    var proto = $getPrototypeOf(homeObject);\n
+    do {\n
+      var result = $getOwnPropertyDescriptor(proto, name);\n
+      if (result)\n
+        return result;\n
+      proto = $getPrototypeOf(proto);\n
+    } while (proto);\n
+    return undefined;\n
+  }\n
+  function superConstructor(ctor) {\n
+    return ctor.__proto__;\n
+  }\n
+  function superCall(self, homeObject, name, args) {\n
+    return superGet(self, homeObject, name).apply(self, args);\n
+  }\n
+  function superGet(self, homeObject, name) {\n
+    var descriptor = superDescriptor(homeObject, name);\n
+    if (descriptor) {\n
+      if (!descriptor.get)\n
+        return descriptor.value;\n
+      return descriptor.get.call(self);\n
+    }\n
+    return undefined;\n
+  }\n
+  function superSet(self, homeObject, name, value) {\n
+    var descriptor = superDescriptor(homeObject, name);\n
+    if (descriptor && descriptor.set) {\n
+      descriptor.set.call(self, value);\n
+      return value;\n
+    }\n
+    throw $TypeError(("super has no setter \'" + name + "\'."));\n
+  }\n
+  function getDescriptors(object) {\n
+    var descriptors = {};\n
+    var names = getOwnPropertyNames(object);\n
+    for (var i = 0; i < names.length; i++) {\n
+      var name = names[i];\n
+      descriptors[name] = $getOwnPropertyDescriptor(object, name);\n
+    }\n
+    var symbols = getOwnPropertySymbols(object);\n
+    for (var i = 0; i < symbols.length; i++) {\n
+      var symbol = symbols[i];\n
+      descriptors[$toProperty(symbol)] = $getOwnPropertyDescriptor(object, $toProperty(symbol));\n
+    }\n
+    return descriptors;\n
+  }\n
+  function createClass(ctor, object, staticObject, superClass) {\n
+    $defineProperty(object, \'constructor\', {\n
+      value: ctor,\n
+      configurable: true,\n
+      enumerable: false,\n
+      writable: true\n
+    });\n
+    if (arguments.length > 3) {\n
+      if (typeof superClass === \'function\')\n
+        ctor.__proto__ = superClass;\n
+      ctor.prototype = $create(getProtoParent(superClass), getDescriptors(object));\n
+    } else {\n
+      ctor.prototype = object;\n
+    }\n
+    $defineProperty(ctor, \'prototype\', {\n
+      configurable: false,\n
+      writable: false\n
+    });\n
+    return $defineProperties(ctor, getDescriptors(staticObject));\n
+  }\n
+  function getProtoParent(superClass) {\n
+    if (typeof superClass === \'function\') {\n
+      var prototype = superClass.prototype;\n
+      if ($Object(prototype) === prototype || prototype === null)\n
+        return superClass.prototype;\n
+      throw new $TypeError(\'super prototype must be an Object or null\');\n
+    }\n
+    if (superClass === null)\n
+      return null;\n
+    throw new $TypeError(("Super expression must either be null or a function, not " + typeof superClass + "."));\n
+  }\n
+  function defaultSuperCall(self, homeObject, args) {\n
+    if ($getPrototypeOf(homeObject) !== null)\n
+      superCall(self, homeObject, \'constructor\', args);\n
+  }\n
+  $traceurRuntime.createClass = createClass;\n
+  $traceurRuntime.defaultSuperCall = defaultSuperCall;\n
+  $traceurRuntime.superCall = superCall;\n
+  $traceurRuntime.superConstructor = superConstructor;\n
+  $traceurRuntime.superGet = superGet;\n
+  $traceurRuntime.superSet = superSet;\n
+})();\n
+/* jshint ignore:end */\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12526</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>classes.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

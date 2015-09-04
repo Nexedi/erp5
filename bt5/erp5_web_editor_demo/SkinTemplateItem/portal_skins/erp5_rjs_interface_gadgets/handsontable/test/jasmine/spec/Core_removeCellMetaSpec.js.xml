@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272525.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_removeCellMetaSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_removeCellMeta\', function () {\r\n
+  var id = \'testContainer\';\r\n
+\r\n
+  beforeEach(function () {\r\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\r\n
+  });\r\n
+\r\n
+  afterEach(function () {\r\n
+    if (this.$container) {\r\n
+      destroy();\r\n
+      this.$container.remove();\r\n
+    }\r\n
+  });\r\n
+\r\n
+  it(\'should remove meta for cell\', function () {\r\n
+    handsontable({\r\n
+      data: [\r\n
+        [1, 2, 3, 4],\r\n
+        [5, 6, 7, 8],\r\n
+        [0, 9, 8, 7]\r\n
+      ]\r\n
+    });\r\n
+    var border = {\r\n
+      top:{\r\n
+\r\n
+      },\r\n
+      left:{\r\n
+\r\n
+      }\r\n
+    };\r\n
+\r\n
+    setCellMeta(0,0,\'borders\', border);\r\n
+    expect(getCellMeta(0,0).borders).toEqual(border);\r\n
+\r\n
+    removeCellMeta(0,0,\'borders\');\r\n
+    expect(getCellMeta(0,0).borders).toBeUndefined();\r\n
+  });\r\n
+\r\n
+\r\n
+});\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>768</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_removeCellMetaSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

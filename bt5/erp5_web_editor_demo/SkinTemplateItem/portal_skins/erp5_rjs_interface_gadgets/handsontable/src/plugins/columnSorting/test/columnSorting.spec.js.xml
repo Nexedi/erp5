@@ -1,0 +1,1225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272679.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>columnSorting.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'ColumnSorting\', function() {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function() {\n
+    this.$container = $(\'<div id="\' + id + \'" style="overflow: auto; width: 300px; height: 200px;"></div>\').appendTo(\'body\');\n
+\n
+    this.sortByColumn = function(columnIndex) {\n
+//      this.$container.find(\'th span.columnSorting:eq(\' + columnIndex + \')\').click();\n
+      this.$container.find(\'th span.columnSorting:eq(\' + columnIndex + \')\').simulate(\'click\');\n
+    };\n
+  });\n
+\n
+  afterEach(function() {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfObjects = function() {\n
+    return [\n
+      {id: 1, name: "Ted", lastName: "Right"},\n
+      {id: 2, name: "Frank", lastName: "Honest"},\n
+      {id: 3, name: "Joan", lastName: "Well"},\n
+      {id: 4, name: "Sid", lastName: "Strong"},\n
+      {id: 5, name: "Jane", lastName: "Neat"},\n
+      {id: 6, name: "Chuck", lastName: "Jackson"},\n
+      {id: 7, name: "Meg", lastName: "Jansen"},\n
+      {id: 8, name: "Rob", lastName: "Norris"},\n
+      {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+      {id: 10, name: "Eve", lastName: "Branson"}\n
+    ];\n
+  };\n
+\n
+\n
+  it(\'should sort table by first visible column\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, 9, 3, 4, 5, 6, 7, 8, 9],\n
+        [9, 8, 7, 6, 5, 4, 3, 2, 1],\n
+        [8, 7, 6, 5, 4, 3, 3, 1, 9],\n
+        [0, 3, 0, 5, 6, 7, 8, 9, 1]\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(1)\').text()).toEqual(\'9\');\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(2)\').text()).toEqual(\'3\');\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(3)\').text()).toEqual(\'4\');\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(1)\').text()).toEqual(\'3\');\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(2)\').text()).toEqual(\'0\');\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(3)\').text()).toEqual(\'5\');\n
+  });\n
+\n
+\n
+  it(\'should sort numbers descending after 2 clicks on table header\', function() {\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      colHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    this.sortByColumn(0);\n
+    this.sortByColumn(0);\n
+\n
+    expect(this.$container.find(\'tr td\').first().html()).toEqual(\'10\');\n
+  });\n
+\n
+  it(\'should remove specified row from sorted table and NOT sort the table again\', function() {\n
+\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [3, \'D\'],\n
+        [2, \'A\'],\n
+        [0, \'C\']\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    this.sortByColumn(0);\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    expect(htCore.find(\'tbody tr\').length).toEqual(4);\n
+\n
+    //Now if sort is launched, sorting ordered will be reversed\n
+    hot.sortOrder = false;\n
+\n
+\n
+    hot.alter(\'remove_row\', 0);\n
+\n
+    expect(htCore.find(\'tbody tr\').length).toEqual(3);\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+  });\n
+\n
+  it(\'should add an empty row to sorted table\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'A\'],\n
+        [3, \'D\'],\n
+        [2, \'C\']\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    this.sortByColumn(0);\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr\').length).toEqual(4);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    hot.alter(\'insert_row\', 1, 2);\n
+\n
+    expect(htCore.find(\'tbody tr\').length).toEqual(6);\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'\');\n
+    expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(4) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(htCore.find(\'tbody tr:eq(5) td:eq(0)\').text()).toEqual(\'3\');\n
+  });\n
+\n
+  it(\'should add an empty row to sorted table at a given index\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'A\'],\n
+        [3, \'D\'],\n
+        [2, \'C\']\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(htCore.find(\'tbody tr:eq(4) td:eq(0)\').text()).toEqual(\'\');\n
+\n
+    hot.alter(\'insert_row\', 2);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'\');\n
+\n
+    expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'2\');\n
+  });\n
+\n
+  it(\'should NOT sort the table after value update in sorted column\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'A\'],\n
+        [3, \'D\'],\n
+        [2, \'C\']\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+\n
+    this.sortByColumn(0);\n
+    this.sortByColumn(0);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+\n
+    hot.setDataAtCell(1, 0, 20);\n
+\n
+    render();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'20\');\n
+\n
+\n
+  });\n
+\n
+  it(\'should sort date columns\', function() {\n
+\n
+    var hot = handsontable({\n
+      data: [\n
+        ["Mercedes", "A 160", "01/14/2006", 6999.9999],\n
+        ["Citroen", "C4 Coupe", "12/01/2008", 8330],\n
+        ["Audi", "A4 Avant", "11/19/2011", 33900],\n
+        ["Opel", "Astra", "02/02/2004", 7000],\n
+        ["BMW", "320i Coupe", "07/24/2011", 30500]\n
+      ],\n
+      columns: [\n
+        {},\n
+        {},\n
+        {\n
+          type: \'date\',\n
+          dateFormat: \'mm/dd/yy\'\n
+        },\n
+        {\n
+          type: \'numeric\'\n
+        }\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(2)\').text()).toMatch(/01\\/14\\/2006/);\n
+\n
+    htCore.find(\'th span.columnSorting:eq(2)\').simulate(\'click\');  // DESC sort after first click\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(2)\').text()).toMatch(/02\\/02\\/2004/);\n
+\n
+    htCore.find(\'th span.columnSorting:eq(2)\').simulate(\'click\');  // ASC sort after second click\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(2)\').text()).toMatch(/11\\/19\\/2011/);\n
+\n
+\n
+  });\n
+\n
+  it(\'should sort table with multiple row headers\', function() {\n
+\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      columns: [\n
+        {},\n
+        {},\n
+        {\n
+          type: \'date\',\n
+          dateFormat: \'mm/dd/yy\'\n
+        },\n
+        {\n
+          type: \'numeric\'\n
+        }\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: true,\n
+      removeRowPlugin: true //this plugin ads an extra row header, so now we have 2 instead of 1\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+\n
+    this.sortByColumn(0); // sort by first column\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').text()).toEqual(\'D\');\n
+\n
+    this.sortByColumn(1);  // sort by second column\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').text()).toEqual(\'A\');\n
+\n
+\n
+  });\n
+\n
+  it(\'should allow to define sorting column and order during initialization\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: {\n
+        column: 0,\n
+        sortOrder: true\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').text()).toEqual(\'D\');\n
+  });\n
+\n
+  it(\'should allow to change sorting column with updateSettings\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: {\n
+        column: 0,\n
+        sortOrder: true\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').text()).toEqual(\'D\');\n
+\n
+    updateSettings({\n
+      columnSorting: {\n
+        column: 1,\n
+        sortOrder: true\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').text()).toEqual(\'A\');\n
+  });\n
+\n
+  it(\'should allow to change sorting order with updateSettings\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: {\n
+        column: 0,\n
+        sortOrder: true\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+\n
+    updateSettings({\n
+      columnSorting: {\n
+        column: 0,\n
+        sortOrder: false\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'3\');\n
+  });\n
+\n
+  it("should NOT sort spare rows", function() {\n
+    var myData = [\n
+      {a: false, b: 2, c: 3},\n
+      {a: true, b: 11, c: -4},\n
+      {a: false, b: 10, c: 11}\n
+    ];\n
+\n
+    function customIsEmptyRow(row) {\n
+      var data = getData();\n
+      return data[row].isNew;\n
+    }\n
+\n
+    handsontable({\n
+      data: myData,\n
+      minSpareRows: 1,\n
+      rowHeaders: true,\n
+      colHeaders: ["A", "B", "C"],\n
+      columns: [\n
+        {data: "a", type: "checkbox"},\n
+        {data: "b", type: "text"},\n
+        {data: "c", type: "text"}\n
+      ],\n
+      dataSchema: {isNew: true, a: false}, // default for a to avoid #bad value#\n
+      columnSorting: true,\n
+      isEmptyRow: customIsEmptyRow\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0) :checkbox\').is(\':checked\')).toBe(false);\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0) :checkbox\').is(\':checked\')).toBe(true);\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0) :checkbox\').is(\':checked\')).toBe(false);\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(0) :checkbox\').is(\':checked\')).toBe(false); //spare row\n
+\n
+    updateSettings({\n
+      columnSorting: {\n
+        column: 0,\n
+        sortOrder: true\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0) :checkbox\').is(\':checked\')).toBe(false);\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0) :checkbox\').is(\':checked\')).toBe(false);\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0) :checkbox\').is(\':checked\')).toBe(true);\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(0) :checkbox\').is(\':checked\')).toBe(false); //spare row\n
+  });\n
+\n
+  it("should reset column sorting with updateSettings", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: {\n
+        column: 0,\n
+        sortOrder: true\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+\n
+    updateSettings({\n
+      columnSorting: true\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+  });\n
+\n
+  it("should expose sort method when columnSorting is enabled", function() {\n
+    var hot = handsontable();\n
+\n
+    expect(hot.getSettings()[\'columnSorting\']).toBeFalsy();\n
+    expect(hot.sort).toBeUndefined();\n
+\n
+    updateSettings({\n
+      columnSorting: true\n
+    });\n
+\n
+    expect(hot.getSettings()[\'columnSorting\']).toBe(true);\n
+    expect(hot.sort).toBeDefined();\n
+    expect(typeof hot.sort).toBe(\'function\');\n
+\n
+    updateSettings({\n
+      columnSorting: false\n
+    });\n
+\n
+    expect(hot.getSettings()[\'columnSorting\']).toBeFalsy();\n
+    expect(hot.sort).toBeUndefined();\n
+\n
+  });\n
+\n
+  it("should sort table using HOT.sort method", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      columnSorting: true\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'2\');\n
+\n
+    hot.sort(0, true);\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+  });\n
+\n
+  it("should reset column sorting with updateSettings", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: {\n
+        column: 0,\n
+        sortOrder: true\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+\n
+    updateSettings({\n
+      columnSorting: true\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+  });\n
+\n
+  it("should fire beforeColumnSort event before sorting data", function() {\n
+\n
+    var hot = handsontable({\n
+      data: [\n
+        [2],\n
+        [4],\n
+        [1],\n
+        [3]\n
+      ],\n
+      columnSorting: true\n
+    });\n
+\n
+    this.beforeColumnSortHandler = function() {\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'2\');\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'4\');\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'3\');\n
+    };\n
+\n
+    spyOn(this, \'beforeColumnSortHandler\');\n
+\n
+    hot.addHook(\'beforeColumnSort\', this.beforeColumnSortHandler);\n
+\n
+    var sortColumn = 0;\n
+    var sortOrder = true;\n
+\n
+    hot.sort(sortColumn, sortOrder);\n
+\n
+    expect(this.beforeColumnSortHandler.callCount).toEqual(1);\n
+    expect(this.beforeColumnSortHandler).toHaveBeenCalledWith(sortColumn, sortOrder, void 0, void 0, void 0, void 0);\n
+  });\n
+\n
+  it("should add beforeColumnSort event listener in constructor", function() {\n
+\n
+    var beforeColumnSortCallback = jasmine.createSpy(\'beforeColumnSortHandler\');\n
+\n
+    var hot = handsontable({\n
+      data: [[2], [4], [1], [3]],\n
+      columnSorting: true,\n
+      beforeColumnSort: beforeColumnSortCallback\n
+    });\n
+\n
+    var sortColumn = 0;\n
+    var sortOrder = true;\n
+\n
+    hot.sort(sortColumn, sortOrder);\n
+\n
+    expect(beforeColumnSortCallback.callCount).toEqual(1);\n
+    expect(beforeColumnSortCallback).toHaveBeenCalledWith(sortColumn, sortOrder, void 0, void 0, void 0, void 0);\n
+  });\n
+\n
+  it("should fire afterColumnSort event before data has been sorted", function() {\n
+\n
+    var hot = handsontable({\n
+      data: [\n
+        [2],\n
+        [4],\n
+        [1],\n
+        [3]\n
+      ],\n
+      columnSorting: true\n
+    });\n
+\n
+    this.afterColumnSortHandler = function() {\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'2\');\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'3\');\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'4\');\n
+    };\n
+\n
+    spyOn(this, \'afterColumnSortHandler\');\n
+\n
+    hot.addHook(\'afterColumnSort\', this.afterColumnSortHandler);\n
+\n
+    var sortColumn = 0;\n
+    var sortOrder = true;\n
+\n
+    hot.sort(sortColumn, sortOrder);\n
+\n
+    expect(this.afterColumnSortHandler.callCount).toEqual(1);\n
+    expect(this.afterColumnSortHandler).toHaveBeenCalledWith(sortColumn, sortOrder, void 0, void 0, void 0, void 0);\n
+  });\n
+\n
+  it("should add afterColumnSort event listener in constructor", function() {\n
+\n
+    var afterColumnSortCallback = jasmine.createSpy(\'afterColumnSortHandler\');\n
+\n
+    var hot = handsontable({\n
+      data: [[2], [4], [1], [3]],\n
+      columnSorting: true,\n
+      afterColumnSort: afterColumnSortCallback\n
+    });\n
+\n
+    var sortColumn = 0;\n
+    var sortOrder = true;\n
+\n
+    hot.sort(sortColumn, sortOrder);\n
+\n
+    expect(afterColumnSortCallback.callCount).toEqual(1);\n
+    expect(afterColumnSortCallback).toHaveBeenCalledWith(sortColumn, sortOrder, void 0, void 0, void 0, void 0);\n
+  });\n
+\n
+\n
+  it("should insert row when plugin is enabled, but table hasn\'t been sorted", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      columnSorting: true\n
+    });\n
+\n
+    expect(countRows()).toEqual(4);\n
+    expect(hot.sortColumn).toBeUndefined();\n
+\n
+    alter(\'insert_row\');\n
+\n
+    expect(countRows()).toEqual(5);\n
+  });\n
+\n
+  it("should remove row when plugin is enabled, but table hasn\'t been sorted", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      columnSorting: true\n
+    });\n
+\n
+    expect(countRows()).toEqual(4);\n
+    expect(hot.sortColumn).toBeUndefined();\n
+\n
+    alter(\'remove_row\');\n
+\n
+    expect(countRows()).toEqual(3);\n
+  });\n
+\n
+  it("should display new row added directly to dataSource, when observeChanges plugin is enabled", function() {\n
+    var data = [\n
+      [1, \'B\'],\n
+      [0, \'A\'],\n
+      [3, \'D\'],\n
+      [2, \'C\']\n
+    ];\n
+\n
+    var hot = handsontable({\n
+      data: data,\n
+      colHeaders: true,\n
+      columnSorting: true,\n
+      observeChanges: true\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'2\');\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    expect(htCore.find(\'tbody tr\').length).toEqual(4);\n
+\n
+    var afterChangesObservedCallback = jasmine.createSpy(\'afterChangesObservedCallback\');\n
+    hot.addHook(\'afterChangesObserved\', afterChangesObservedCallback);\n
+\n
+    data.push([5, \'E\']);\n
+\n
+    waitsFor(function() {\n
+      return afterChangesObservedCallback.calls.length > 0;\n
+    }, \'afterChangesObserved event fire\', 1000);\n
+\n
+    runs(function() {\n
+      expect(countRows()).toEqual(5);\n
+      expect(this.$container.find(\'tbody tr:eq(4) td:eq(0)\').text()).toEqual(\'5\');\n
+      expect(this.$container.find(\'tbody tr:eq(4) td:eq(1)\').text()).toEqual(\'E\');\n
+    });\n
+\n
+\n
+  });\n
+\n
+  xit("should not display new row added directly to dataSource, when observeChanges plugin is explicitly disabled", function() {\n
+    var data = [\n
+      [1, \'B\'],\n
+      [0, \'A\'],\n
+      [3, \'D\'],\n
+      [2, \'C\']\n
+    ];\n
+\n
+    var hot = handsontable({\n
+      data: data,\n
+      colHeaders: true,\n
+      columnSorting: true,\n
+      observeChanges: false\n
+    });\n
+\n
+    var afterChangesObservedCallback = jasmine.createSpy(\'afterChangesObservedCallback\');\n
+    hot.addHook(\'afterChangesObserved\', afterChangesObservedCallback);\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'2\');\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    expect(htCore.find(\'tbody tr\').length).toEqual(4);\n
+\n
+    data.push([5, \'E\']);\n
+\n
+    waits(100);\n
+\n
+    runs(function() {\n
+      expect(countRows()).toEqual(4);\n
+      expect(afterChangesObservedCallback).not.toHaveBeenCalled();\n
+    });\n
+\n
+\n
+  });\n
+\n
+  it("should display new row added directly to dataSource, when observeChanges plugin status is undefined", function() {\n
+    var data = [\n
+      [1, \'B\'],\n
+      [0, \'A\'],\n
+      [3, \'D\'],\n
+      [2, \'C\']\n
+    ];\n
+\n
+    var onUpdateSettings = jasmine.createSpy(\'onUpdateSettings\');\n
+\n
+    var hot = handsontable({\n
+      data: data,\n
+      colHeaders: true,\n
+      columnSorting: true,\n
+      afterUpdateSettings: onUpdateSettings\n
+    });\n
+\n
+    var afterChangesObservedCallback = jasmine.createSpy(\'afterChangesObservedCallback\');\n
+    hot.addHook(\'afterChangesObserved\', afterChangesObservedCallback);\n
+\n
+    var htCore = getHtCore();\n
+\n
+    //columnSorting enables observeChanges plugin by asynchronously invoking updateSettings\n
+    waitsFor(function() {\n
+      return onUpdateSettings.calls.length > 0;\n
+    }, \'Update settings\', 1000);\n
+\n
+\n
+    runs(function() {\n
+      expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+      expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'0\');\n
+      expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+      expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'2\');\n
+\n
+      this.sortByColumn(0);\n
+\n
+      expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+      expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+      expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'2\');\n
+      expect(htCore.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+      expect(htCore.find(\'tbody tr\').length).toEqual(4);\n
+\n
+      var afterChangesObservedCallback = jasmine.createSpy(\'afterChangesObservedCallback\');\n
+      hot.addHook(\'afterChangesObserved\', afterChangesObservedCallback);\n
+\n
+      data.push([5, \'E\']);\n
+    });\n
+\n
+    waitsFor(function() {\n
+      return afterChangesObservedCallback.calls.length > 0;\n
+    }, \'afterChangesObserved event fire\', 1000);\n
+\n
+    runs(function() {\n
+      expect(countRows()).toEqual(5);\n
+      expect(htCore.find(\'tbody tr:eq(4) td:eq(0)\').text()).toEqual(\'5\');\n
+      expect(htCore.find(\'tbody tr:eq(4) td:eq(1)\').text()).toEqual(\'E\');\n
+    });\n
+\n
+\n
+  });\n
+\n
+  it("should apply sorting when there are two tables and only one has sorting enabled and has been already sorted (#1020)", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      columnSorting: {\n
+        column: 1\n
+      }\n
+    });\n
+\n
+    this.$container2 = $(\'<div id="\' + id + \'-2"></div>\').appendTo(\'body\');\n
+    this.$container2.handsontable();\n
+    var hot2 = this.$container2.handsontable(\'getInstance\');\n
+\n
+    selectCell(0, 1);\n
+    keyDown(\'enter\');\n
+    expect($(\'.handsontableInput\').val()).toEqual(\'A\');\n
+\n
+    this.$container2.handsontable(\'destroy\');\n
+    this.$container2.remove();\n
+  });\n
+\n
+  it("should reset sorting after loading new data", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      columnSorting: true\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'2\');\n
+\n
+    hot.sort(0, true);\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    loadData([\n
+      [50, \'E\'],\n
+      [10, \'G\'],\n
+      [30, \'F\'],\n
+      [60, \'I\'],\n
+      [40, \'J\'],\n
+      [20, \'H\']\n
+    ]);\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'50\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'10\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'30\');\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'60\');\n
+    expect(this.$container.find(\'tbody tr:eq(4) td:eq(0)\').text()).toEqual(\'40\');\n
+    expect(this.$container.find(\'tbody tr:eq(5) td:eq(0)\').text()).toEqual(\'20\');\n
+\n
+  });\n
+\n
+  it("should reset sorting after loading new data (default sorting column and order set)", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, \'B\'],\n
+        [0, \'D\'],\n
+        [3, \'A\'],\n
+        [2, \'C\']\n
+      ],\n
+      columnSorting: {\n
+        column: 1,\n
+        sortOrder: true\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'0\');\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').text()).toEqual(\'A\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(1)\').text()).toEqual(\'B\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(1)\').text()).toEqual(\'C\');\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(1)\').text()).toEqual(\'D\');\n
+\n
+    hot.sort(0, true);\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'0\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    loadData([\n
+      [50, \'E\'],\n
+      [10, \'G\'],\n
+      [30, \'F\'],\n
+      [60, \'I\'],\n
+      [40, \'J\'],\n
+      [20, \'H\']\n
+    ]);\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'50\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'30\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'10\');\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(0)\').text()).toEqual(\'20\');\n
+    expect(this.$container.find(\'tbody tr:eq(4) td:eq(0)\').text()).toEqual(\'60\');\n
+    expect(this.$container.find(\'tbody tr:eq(5) td:eq(0)\').text()).toEqual(\'40\');\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(1)\').text()).toEqual(\'E\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(1)\').text()).toEqual(\'F\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(1)\').text()).toEqual(\'G\');\n
+    expect(this.$container.find(\'tbody tr:eq(3) td:eq(1)\').text()).toEqual(\'H\');\n
+    expect(this.$container.find(\'tbody tr:eq(4) td:eq(1)\').text()).toEqual(\'I\');\n
+    expect(this.$container.find(\'tbody tr:eq(5) td:eq(1)\').text()).toEqual(\'J\');\n
+\n
+  });\n
+\n
+  it(\'should return updated data at specyfied row after sorted\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, "Ted", "Right"],\n
+        [2, "Frank", "Honest"],\n
+        [3, "Joan", "Well"],\n
+        [4, "Sid", "Strong"],\n
+        [5, "Jane", "Neat"]\n
+      ],\n
+      colHeaders: true,\n
+      rowHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtRow(0)).toEqual([1, "Ted", "Right"]);\n
+    expect(getDataAtRow(4)).toEqual([5, "Jane", "Neat"]);\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtRow(0)).toEqual([5, "Jane", "Neat"]);\n
+    expect(getDataAtRow(4)).toEqual([1, "Ted", "Right"]);\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtRow(0)).toEqual([1, "Ted", "Right"]);\n
+    expect(getDataAtRow(4)).toEqual([5, "Jane", "Neat"]);\n
+  });\n
+\n
+  it(\'should return updated data at specyfied col after sorted\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, "Ted", "Right"],\n
+        [2, "Frank", "Honest"],\n
+        [3, "Joan", "Well"],\n
+        [4, "Sid", "Strong"],\n
+        [5, "Jane", "Neat"]\n
+      ],\n
+      colHeaders: true,\n
+      rowHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtCol(0)).toEqual([1, 2, 3, 4, 5]);\n
+    expect(getDataAtCol(1)).toEqual(["Ted", "Frank", "Joan", "Sid", "Jane"]);\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtCol(0)).toEqual([5, 4, 3, 2, 1]);\n
+    expect(getDataAtCol(1)).toEqual(["Jane", "Sid", "Joan", "Frank", "Ted"]);\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtCol(0)).toEqual([1, 2, 3, 4, 5]);\n
+    expect(getDataAtCol(1)).toEqual(["Ted", "Frank", "Joan", "Sid", "Jane"]);\n
+  });\n
+\n
+\n
+  it(\'should return original data source at specyfied row after sorted\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, "Ted", "Right"],\n
+        [2, "Frank", "Honest"],\n
+        [3, "Joan", "Well"],\n
+        [4, "Sid", "Strong"],\n
+        [5, "Jane", "Neat"]\n
+      ],\n
+      colHeaders: true,\n
+      rowHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtRow(0)).toEqual([1, "Ted", "Right"]);\n
+    expect(getDataAtRow(4)).toEqual([5, "Jane", "Neat"]);\n
+\n
+    expect(getSourceDataAtRow(0)).toEqual([1, "Ted", "Right"]);\n
+    expect(getSourceDataAtRow(4)).toEqual([5, "Jane", "Neat"]);\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtRow(0)).toEqual([5, "Jane", "Neat"]);\n
+    expect(getDataAtRow(4)).toEqual([1, "Ted", "Right"]);\n
+\n
+    expect(getSourceDataAtRow(0)).toEqual([1, "Ted", "Right"]);\n
+    expect(getSourceDataAtRow(4)).toEqual([5, "Jane", "Neat"]);\n
+\n
+  });\n
+\n
+  it(\'should return original data source at specyfied col after sorted\', function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, "Ted", "Right"],\n
+        [2, "Frank", "Honest"],\n
+        [3, "Joan", "Well"],\n
+        [4, "Sid", "Strong"],\n
+        [5, "Jane", "Neat"]\n
+      ],\n
+      colHeaders: true,\n
+      rowHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtCol(0)).toEqual([1, 2, 3, 4, 5]);\n
+    expect(getDataAtCol(1)).toEqual(["Ted", "Frank", "Joan", "Sid", "Jane"]);\n
+\n
+    expect(getSourceDataAtCol(0)).toEqual([1, 2, 3, 4, 5]);\n
+    expect(getSourceDataAtCol(1)).toEqual(["Ted", "Frank", "Joan", "Sid", "Jane"]);\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtCol(0)).toEqual([5, 4, 3, 2, 1]);\n
+    expect(getDataAtCol(1)).toEqual(["Jane", "Sid", "Joan", "Frank", "Ted"]);\n
+\n
+    expect(getSourceDataAtCol(0)).toEqual([1, 2, 3, 4, 5]);\n
+    expect(getSourceDataAtCol(1)).toEqual(["Ted", "Frank", "Joan", "Sid", "Jane"]);\n
+\n
+    this.sortByColumn(0);\n
+\n
+    expect(getDataAtCol(0)).toEqual([1, 2, 3, 4, 5]);\n
+    expect(getDataAtCol(1)).toEqual(["Ted", "Frank", "Joan", "Sid", "Jane"]);\n
+\n
+    expect(getSourceDataAtCol(0)).toEqual([1, 2, 3, 4, 5]);\n
+    expect(getSourceDataAtCol(1)).toEqual(["Ted", "Frank", "Joan", "Sid", "Jane"]);\n
+  });\n
+\n
+  it("should ignore case when sorting", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, "albuquerque"],\n
+        [2, "Alabama"],\n
+        [3, "Missouri"]\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    this.sortByColumn(1);\n
+    expect(getDataAtCol(0)).toEqual([2, 1, 3]);\n
+    expect(getDataAtCol(1)).toEqual(["Alabama", "albuquerque", "Missouri"]);\n
+\n
+    this.sortByColumn(1);\n
+    expect(getDataAtCol(0)).toEqual([3, 1, 2]);\n
+    expect(getDataAtCol(1)).toEqual(["Missouri", "albuquerque", "Alabama"]);\n
+\n
+  });\n
+\n
+  it("should push empty cells to the end of sorted column", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, "Ted", "Right"],\n
+        [2, "", "Honest"],\n
+        [3, "", "Well"],\n
+        [4, "Sid", "Strong"],\n
+        [5, "Jane", "Neat"],\n
+      ],\n
+      colHeaders: true,\n
+      rowHeaders: true,\n
+      columnSorting: true,\n
+      minSpareRows: 1\n
+    });\n
+\n
+    this.sortByColumn(1);\n
+    expect(getDataAtCol(0)).toEqual([5, 4, 1, 2, 3, null]);\n
+    expect(getDataAtCol(1)).toEqual(["Jane", "Sid", "Ted", "", "", null]);\n
+\n
+    this.sortByColumn(1);\n
+    expect(getDataAtCol(0)).toEqual([1, 4, 5, 2, 3, null]);\n
+    expect(getDataAtCol(1)).toEqual(["Ted", "Sid", "Jane", "", "", null]);\n
+\n
+  });\n
+\n
+  it("should add a sorting indicator to the column header after it\'s been sorted, only if sortIndicator property is set to true", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        [1, "Ted", "Right"],\n
+        [2, "", "Honest"],\n
+        [3, "", "Well"],\n
+        [4, "Sid", "Strong"],\n
+        [5, "Jane", "Neat"],\n
+      ],\n
+      colHeaders: true,\n
+      columnSorting: true\n
+    });\n
+\n
+    this.sortByColumn(1);\n
+\n
+    var sortedColumn = this.$container.find(\'th span.columnSorting\')[1],\n
+      afterValue = window.getComputedStyle(sortedColumn, \':after\').getPropertyValue(\'content\');\n
+\n
+    expect(afterValue === \'\' || afterValue === \'none\').toBe(true);\n
+\n
+    // ---------------------------------\n
+    // INDICATOR SET FOR THE WHOLE TABLE\n
+    // ---------------------------------\n
+\n
+    hot.updateSettings({\n
+      sortIndicator: true\n
+    });\n
+\n
+    this.sortByColumn(1);\n
+\n
+    //ascending\n
+    sortedColumn = this.$container.find(\'th span.columnSorting\')[1];\n
+    afterValue = window.getComputedStyle(sortedColumn, \':after\').getPropertyValue(\'content\');\n
+    expect(afterValue.indexOf(String.fromCharCode(9650))).toBeGreaterThan(-1);\n
+\n
+    this.sortByColumn(1);\n
+\n
+    //descending\n
+    sortedColumn = this.$container.find(\'th span.columnSorting\')[1];\n
+    afterValue = window.getComputedStyle(sortedColumn, \':after\').getPropertyValue(\'content\');\n
+    expect(afterValue.indexOf(String.fromCharCode(9660))).toBeGreaterThan(-1);\n
+\n
+    this.sortByColumn(1);\n
+\n
+    sortedColumn = this.$container.find(\'th span.columnSorting\')[1];\n
+    afterValue = window.getComputedStyle(sortedColumn, \':after\').getPropertyValue(\'content\');\n
+    expect(afterValue === \'\' || afterValue === \'none\').toBe(true);\n
+\n
+    // ---------------------------------\n
+    // INDICATOR SET FOR A SINGLE COLUMN\n
+    // ---------------------------------\n
+\n
+    hot.updateSettings({\n
+      sortIndicator: void 0,\n
+      columns: [\n
+        {},\n
+        {},\n
+        {sortIndicator: true}\n
+      ]\n
+    });\n
+\n
+    this.sortByColumn(0);\n
+    sortedColumn = this.$container.find(\'th span.columnSorting\')[0];\n
+    afterValue = window.getComputedStyle(sortedColumn, \':after\').getPropertyValue(\'content\');\n
+    expect(afterValue === \'\' || afterValue === \'none\').toBe(true);\n
+\n
+    this.sortByColumn(1);\n
+    sortedColumn = this.$container.find(\'th span.columnSorting\')[1];\n
+    afterValue = window.getComputedStyle(sortedColumn, \':after\').getPropertyValue(\'content\');\n
+    expect(afterValue === \'\' || afterValue === \'none\').toBe(true);\n
+\n
+    this.sortByColumn(2);\n
+    sortedColumn = this.$container.find(\'th span.columnSorting\')[2];\n
+    afterValue = window.getComputedStyle(sortedColumn, \':after\').getPropertyValue(\'content\');\n
+    expect(afterValue.indexOf(String.fromCharCode(9650))).toBeGreaterThan(-1);\n
+\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>35823</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>columnSorting.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

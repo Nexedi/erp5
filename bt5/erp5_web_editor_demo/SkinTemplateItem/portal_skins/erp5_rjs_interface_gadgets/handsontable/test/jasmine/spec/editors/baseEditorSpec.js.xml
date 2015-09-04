@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272536.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>baseEditorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'BaseEditor\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'" style="width: 300px; height: 200px; overflow: auto"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  describe("ctrl + enter when editor is active", function() {\n
+    it("should populate value from the currently active cell to every cell in the selected range", function() {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(6,6)\n
+      });\n
+\n
+      selectCell(1, 1, 2, 2);\n
+\n
+      expect(getDataAtCell(1,1)).toEqual("B2");\n
+      expect(getDataAtCell(2,2)).toEqual("C3");\n
+\n
+      keyDown(Handsontable.helper.KEY_CODES.ENTER);\n
+      keyDown(\'ctrl+enter\');\n
+\n
+      expect(getDataAtCell(1,1)).toEqual("B2");\n
+      expect(getDataAtCell(1,2)).toEqual("B2");\n
+      expect(getDataAtCell(2,1)).toEqual("B2");\n
+      expect(getDataAtCell(2,2)).toEqual("B2");\n
+\n
+      loadData(Handsontable.helper.createSpreadsheetData(6,6));\n
+\n
+      selectCell(1, 2, 2, 1);\n
+\n
+      expect(getDataAtCell(1,2)).toEqual("C2");\n
+      expect(getDataAtCell(2,1)).toEqual("B3");\n
+\n
+      keyDown(Handsontable.helper.KEY_CODES.ENTER);\n
+      keyDown(\'ctrl+enter\');\n
+\n
+      expect(getDataAtCell(1,1)).toEqual("C2");\n
+      expect(getDataAtCell(1,2)).toEqual("C2");\n
+      expect(getDataAtCell(2,1)).toEqual("C2");\n
+      expect(getDataAtCell(2,2)).toEqual("C2");\n
+\n
+      loadData(Handsontable.helper.createSpreadsheetData(6,6));\n
+      selectCell(2, 2, 1, 1);\n
+      expect(getDataAtCell(2,2)).toEqual("C3");\n
+\n
+      keyDown(Handsontable.helper.KEY_CODES.ENTER);\n
+      keyDown(\'ctrl+enter\');\n
+\n
+      expect(getDataAtCell(1,1)).toEqual("C3");\n
+      expect(getDataAtCell(1,2)).toEqual("C3");\n
+      expect(getDataAtCell(2,1)).toEqual("C3");\n
+      expect(getDataAtCell(2,2)).toEqual("C3");\n
+\n
+      loadData(Handsontable.helper.createSpreadsheetData(6,6));\n
+      selectCell(2, 1, 1, 2);\n
+      expect(getDataAtCell(2,1)).toEqual("B3");\n
+\n
+      keyDown(Handsontable.helper.KEY_CODES.ENTER);\n
+      keyDown(\'ctrl+enter\');\n
+\n
+      expect(getDataAtCell(1,1)).toEqual("B3");\n
+      expect(getDataAtCell(1,2)).toEqual("B3");\n
+      expect(getDataAtCell(2,1)).toEqual("B3");\n
+      expect(getDataAtCell(2,2)).toEqual("B3");\n
+\n
+    });\n
+  });\n
+\n
+  it("should exported all editors into Handsontable.editors object", function() {\n
+    expect(Handsontable.editors.AutocompleteEditor).toBeDefined();\n
+    expect(Handsontable.editors.BaseEditor).toBeDefined();\n
+    expect(Handsontable.editors.CheckboxEditor).toBeDefined();\n
+    expect(Handsontable.editors.DateEditor).toBeDefined();\n
+    expect(Handsontable.editors.DropdownEditor).toBeDefined();\n
+    expect(Handsontable.editors.HandsontableEditor).toBeDefined();\n
+    expect(Handsontable.editors.MobileEditor).toBeDefined();\n
+    expect(Handsontable.editors.NumericEditor).toBeDefined();\n
+    expect(Handsontable.editors.PasswordEditor).toBeDefined();\n
+    expect(Handsontable.editors.SelectEditor).toBeDefined();\n
+    expect(Handsontable.editors.TextEditor).toBeDefined();\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3115</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>baseEditorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

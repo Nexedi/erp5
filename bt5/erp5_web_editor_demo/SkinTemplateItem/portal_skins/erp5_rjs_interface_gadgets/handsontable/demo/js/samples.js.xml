@@ -1,0 +1,466 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272407.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>samples.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded\n
+ *\n
+ * contentloaded.js\n
+ *\n
+ * Author: Diego Perini (diego.perini at gmail.com)\n
+ * Summary: cross-browser wrapper for DOMContentLoaded\n
+ * Updated: 20101020\n
+ * License: MIT\n
+ * Version: 1.2\n
+ *\n
+ * URL:\n
+ * http://javascript.nwbox.com/ContentLoaded/\n
+ * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE\n
+ *\n
+ */\n
+\n
+// @win window reference\n
+// @fn function reference\n
+function contentLoaded(win, fn) {\n
+\n
+  var done = false, top = true,\n
+\n
+    doc = win.document,\n
+    root = doc.documentElement,\n
+    modern = doc.addEventListener,\n
+\n
+    add = modern ? \'addEventListener\' : \'attachEvent\',\n
+    rem = modern ? \'removeEventListener\' : \'detachEvent\',\n
+    pre = modern ? \'\' : \'on\',\n
+\n
+    init = function(e) {\n
+      if (e.type == \'readystatechange\' && doc.readyState != \'complete\') return;\n
+      (e.type == \'load\' ? win : doc)[rem](pre + e.type, init, false);\n
+      if (!done && (done = true)) fn.call(win, e.type || e);\n
+    },\n
+\n
+    poll = function() {\n
+      try { root.doScroll(\'left\'); } catch(e) { setTimeout(poll, 50); return; }\n
+      init(\'poll\');\n
+    };\n
+\n
+  if (doc.readyState == \'complete\') fn.call(win, \'lazy\');\n
+  else {\n
+    if (!modern && root.doScroll) {\n
+      try { top = !win.frameElement; } catch(e) { }\n
+      if (top) poll();\n
+    }\n
+    doc[add](pre + \'DOMContentLoaded\', init, false);\n
+    doc[add](pre + \'readystatechange\', init, false);\n
+    win[add](pre + \'load\', init, false);\n
+  }\n
+}\n
+\n
+\n
+function ajax(url, method, params, callback) {\n
+  var obj;\n
+\n
+  try {\n
+    obj = new XMLHttpRequest();\n
+  } catch (e) {\n
+    try {\n
+      obj = new ActiveXObject("Msxml2.XMLHTTP");\n
+    } catch (e) {\n
+      try {\n
+        obj = new ActiveXObject("Microsoft.XMLHTTP");\n
+      } catch (e) {\n
+        alert("Your browser does not support Ajax.");\n
+        return false;\n
+      }\n
+    }\n
+  }\n
+  obj.onreadystatechange = function () {\n
+    if (obj.readyState == 4) {\n
+      callback(obj);\n
+    }\n
+  };\n
+  obj.open(method, url, true);\n
+  obj.setRequestHeader("X-Requested-With", "XMLHttpRequest");\n
+  obj.setRequestHeader("Content-type","application/x-www-form-urlencoded");\n
+  obj.send(params);\n
+\n
+  return obj;\n
+}\n
+\n
+(function () {\n
+\n
+\n
+  function trimCodeBlock(code, pad) {\n
+    var i, ilen;\n
+    pad = pad || 0;\n
+    code = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); //escape html special chars\n
+    code = code.split(\'\\n\');\n
+    for (i = 0; i < 10; i++) {\n
+      if (code[0].trim() === \'\') {\n
+        code.splice(0, 1);\n
+      }\n
+    }\n
+    var offset = 0;\n
+    for (i = 0, ilen = code[0].length; i < ilen; i++) {\n
+      if (code[0].charAt(i) != " ") {\n
+        break;\n
+      }\n
+      offset++;\n
+    }\n
+    for (i = 0, ilen = code.length; i < ilen; i++) {\n
+      code[i] = new Array(pad + 1).join(\' \') + code[i].substring(offset);\n
+    }\n
+    return code;\n
+  }\n
+\n
+  function bindDumpButton() {\n
+\n
+    Handsontable.Dom.addEvent(document.body, \'click\', function (e) {\n
+\n
+      var element = e.target || e.srcElement;\n
+\n
+      if (element.nodeName == "BUTTON" && element.name == \'dump\') {\n
+        var name = element.getAttribute(\'data-dump\');\n
+        var instance = element.getAttribute(\'data-instance\');\n
+        var hot = window[instance];\n
+        console.log(\'data of \' + name, hot.getData());\n
+      }\n
+    });\n
+  }\n
+\n
+  function bindFiddleButton() {\n
+    Handsontable.Dom.addEvent(document.body, \'click\', function (e) {\n
+      var element = e.target || e.srcElement;\n
+\n
+      if (element.className == "jsFiddleLink") {\n
+\n
+        var keys = [\'common\'];\n
+        var runfiddle = element.getAttribute(\'data-runfiddle\');\n
+\n
+        if (!runfiddle) {\n
+          throw new Error("Edit in jsFiddle button does not contain runfiddle data");\n
+        }\n
+        keys.push(runfiddle);\n
+\n
+        var index = window.location.href.lastIndexOf("/") + 1;\n
+        var baseUrl = window.location.href.substr(0, index);\n
+\n
+        var tags = [];\n
+        var css = \'\';\n
+        var js = \'\';\n
+        var html = \'\';\n
+        var onDomReady = true;\n
+\n
+        tags.push(\'</style><!-- Ugly Hack due to jsFiddle issue: http://goo.gl/BUfGZ -->\\n\');\n
+        tags.push(\'<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>\\n\');\n
+\n
+        for (var i = 0, ilen = keys.length; i < ilen; i++) {\n
+\n
+          var dataFillde = document.querySelectorAll(\'[data-jsfiddle=\' + keys[i] + \']\');\n
+\n
+          for (var x = 0, len = dataFillde.length; x < len; x++) {\n
+\n
+            var tag;\n
+\n
+\n
+            if (dataFillde[x].nodeName === \'LINK\') {\n
+              tag = dataFillde[x].outerHTML;\n
+            }\n
+            else if (dataFillde[x].nodeName === \'SCRIPT\' && dataFillde[x].src) {\n
+              tag = dataFillde[x].outerHTML;\n
+            }\n
+            else if (dataFillde[x].nodeName === \'SCRIPT\') {\n
+              js += trimCodeBlock(dataFillde[x].innerHTML, 2).join(\'\\n\') + \'\\n\';\n
+            }\n
+            else if (dataFillde[x].nodeName === \'STYLE\') {\n
+              css += trimCodeBlock(dataFillde[x].innerHTML).join(\'\\n\') + \'\\n\';\n
+            }\n
+            else { //DIV\n
+\n
+              var clone = dataFillde[x].cloneNode(true);\n
+              var clonedExample = clone.querySelector(\'#\' + runfiddle);\n
+              clonedExample.innerHTML = \'\'; //clear example HTML, just leave container\n
+              var originalHT = dataFillde[x].querySelector(\'#\' + runfiddle);\n
+\n
+              var originalStyle = originalHT.getAttribute(\'data-originalstyle\');\n
+              if (originalStyle) {\n
+                clonedExample.setAttribute(\'style\', originalStyle);\n
+              }\n
+\n
+              var aName = clone.querySelectorAll(\'a[name]\');\n
+              var hotHidden = clone.querySelectorAll(\'handsontable.hidden\');\n
+\n
+              for (var n = 0, nLen = aName.length; n < nLen; n++) {\n
+                aName[n].parentNode.removeChild(aName[n]);\n
+              }\n
+\n
+              for (var h = 0, hLen = hotHidden.length; h < hLen; h++) {\n
+                hotHidden[h].parentNode.removeChild(hotHidden[h]);\n
+              }\n
+\n
+              html += trimCodeBlock(clone.innerHTML).join(\'\\n\');\n
+            }\n
+            if (tag) {\n
+              tag = tag.replace(\' data-jsfiddle="\' + keys[i] + \'"\', \'\');\n
+\n
+              if (tag.indexOf(\'href="http\') === -1 && tag.indexOf(\'href="//\') && tag.indexOf(\'src="http\') === -1 && tag.indexOf(\'src="//\')) {\n
+                tag = tag.replace(\'href="\', \'href="\' + baseUrl);\n
+                tag = tag.replace(\'src="\', \'src="\' + baseUrl);\n
+                tag = tag.replace(\'demo/../\', \'\');\n
+\n
+                if (this.nodeName === \'LINK\' && this.rel === "import") {\n
+                  //web component imports must be loaded throught a CORS-enabling proxy, because our local server does not support it yet\n
+                  tag = tag.replace(\'href="http://\', \'href="http://www.corsproxy.com/\');\n
+                  onDomReady = false;\n
+                }\n
+              }\n
+\n
+              tags.push(tag)\n
+            }\n
+          }\n
+\n
+        }\n
+\n
+        tags.push(\'\');\n
+        tags.push(\'<style type="text/css">\');\n
+        tags.push(\'body {background: white; margin: 20px;}\');\n
+        tags.push(\'h2 {margin: 20px 0;}\');\n
+        css = tags.join(\'\\n\') + \'\\n\' + css;\n
+\n
+        js += trimCodeBlock(bindDumpButton.toString(), 2).join(\'\\n\') + \'\\n\';\n
+        js += \'  bindDumpButton();\\n\\n\';\n
+\n
+        if (onDomReady) {\n
+          js = \'$(document).ready(function () {\\n\\n\' + js + \'});\';\n
+        }\n
+\n
+        var form = document.createElement(\'FORM\');\n
+        form.action = \'http://jsfiddle.net/api/post/library/pure/\';\n
+        form.method = \'POST\';\n
+        form.target = \'_blank\';\n
+        form.innerHTML = \'<input type="text" name="title" value="Handsontable example">\' +\n
+        \'<textarea name="html">\' + html.replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\') + \'</textarea>\' +\n
+        \'<textarea name="js">\' + js.replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\') + \'</textarea>\' +\n
+        \'<textarea name="css">\' + css.replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\') + \'</textarea>\';\n
+\n
+        form.style.visibility = \'hidden\';\n
+//        var form = $(\'<form action="http://jsfiddle.net/api/post/library/pure/" method="post" target="_blank">\' +\n
+//          \'<input type="text" name="title" value="Handsontable example">\' +\n
+//          \'<textarea name="html">\' + html.replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\') + \'</textarea>\' +\n
+//          \'<textarea name="js">\' + js.replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\') + \'</textarea>\' +\n
+//          \'<textarea name="css">\' + css.replace(/</g, \'&lt;\').replace(/>/g, \'&gt;\') + \'</textarea>\' +\n
+//          \'</form>\');\n
+//        form.css({\n
+//          visibility: \'hidden\'\n
+//        });\n
+\n
+        document.body.appendChild(form);\n
+        form.submit();\n
+        form.parentNode.removeChild(form);\n
+\n
+\n
+      }\n
+    });\n
+  }\n
+\n
+  function init() {\n
+    var codes = document.querySelectorAll(\'.descLayout pre.javascript code\');\n
+    for (var i = 0, lenI = codes.length; i < lenI; i++) {\n
+      var scriptS = codes[i];\n
+      var codeS = trimCodeBlock(codes[i].innerHTML);\n
+      scriptS.innerHTML = codeS.join(\'\\n\');\n
+    }\n
+\n
+    var scripts = document.querySelectorAll(\'.codeLayout script\');\n
+    for (var j = 0, lenJ = scripts.length; j < lenJ; j++) {\n
+      var script = scripts[j];\n
+      var pre = document.createElement(\'PRE\');\n
+      pre.className = \'javascript\';\n
+\n
+      var code = document.createElement(\'CODE\');\n
+      var codeInner = trimCodeBlock(script.innerHTML);\n
+      codeInner = codeInner.join(\'<br>\').replace(/  /g, "&nbsp;&nbsp;");\n
+      code.innerHTML = codeInner;\n
+      pre.appendChild(code);\n
+      script.parentNode.insertBefore(pre, script.nextSibling);\n
+    }\n
+    hljs.initHighlighting();\n
+\n
+    bindFiddleButton();\n
+    bindDumpButton();\n
+    updateFooter();\n
+  }\n
+\n
+  function updateFooter () {\n
+    var footer = document.querySelector(".footer-text");\n
+    if(!footer) {\n
+      return true;\n
+    }\n
+    // Email obfuscator script 2.1 by Tim Williams, University of Arizona\n
+    // Random encryption key feature by Andrew Moulden, Site Engineering Ltd\n
+    // This code is freeware provided these four comment lines remain intact\n
+    // A wizard to generate this code is at http://www.jottings.com/obfuscator/\n
+\n
+    var coded = "1iffw@1R42Vw4nR0fi.Gwa";\n
+    var key = "GF9al7W2hVXHzeENn30K6QkruRfxov1IATMigJ4BcYLmZSyd5swUpDOCtqb8Pj";\n
+    var shift = coded.length;\n
+    var link = "";\n
+    var ltr;\n
+\n
+    for (var i = 0; i < coded.length; i++) {\n
+      if (key.indexOf(coded.charAt(i)) == -1) {\n
+        ltr = coded.charAt(i)\n
+        link += (ltr)\n
+      }\n
+      else {\n
+        ltr = (key.indexOf(coded.charAt(i)) - shift + key.length) % key.length\n
+        link += (key.charAt(ltr))\n
+      }\n
+    }\n
+\n
+    footer.innerHTML = \'Handsontable &copy; 2012-\' + new Date().getFullYear() + \' Nextgen. Contact us at <a href="mailto:\' + link + \'">\'+ link +\'</a>.<br> Code and documentation licensed under the The MIT License.\';\n
+\n
+  }\n
+\n
+  function initSidebar() {\n
+\n
+    function collapseAll(menu) {\n
+\n
+      var ul = menu.querySelectorAll(\'ul ul\');\n
+      for (var i = 0, len = ul.length; i < len; i++) {\n
+        ul[i].style.display = \'none\';\n
+      }\n
+      var current = menu.querySelectorAll(\'.current\');\n
+      for (var x = 0, xLen = current.length; x < xLen; x++) {\n
+        current[x].className = current[x].className.replace(\'current\', \'\');\n
+      }\n
+    }\n
+\n
+    function expandOne(menu, expand, isImmediate) {\n
+      collapseAll(menu, isImmediate);\n
+      var elem = expand;\n
+      while (elem != menu) {\n
+        elem.className = elem.className + \' current\';\n
+        if (elem.nodeName == "UL") {\n
+          elem.style.display = \'block\';\n
+        }\n
+        elem = elem.parentNode;\n
+      }\n
+    }\n
+\n
+    function importFromHtml(element, html, startWord, endWord) {\n
+      if (element) {\n
+        var fragment = html.substring(html.indexOf(startWord), html.indexOf(endWord));\n
+        var DIV = document.createElement("DIV");\n
+        DIV.style.display = \'none\';\n
+        DIV.innerHTML = fragment;\n
+        element.appendChild(DIV);\n
+        DIV.style.display = \'block\';\n
+      }\n
+    }\n
+\n
+    function onMenuLoad(html) {\n
+      html = html.response || html.responseText;\n
+      //top menu\n
+      importFromHtml(document.getElementById(\'outside-links-wrapper\'), html, "<!-- outside-links start -->", "<!-- outside-links end -->");\n
+\n
+      //left menu\n
+      var menu = document.getElementById(\'global-menu-clone\');\n
+      importFromHtml(menu, html, "<!-- menu start -->", "<!-- menu end -->");\n
+      bindMenuEvents(menu);\n
+      var link = menu.querySelectorAll(\'a\');\n
+\n
+      for (var i = 0; i < link.length; i++) {\n
+        link[i].href = link[i].href.replace(/demo\\//, "");\n
+        if (link[i].href === window.location.href) {\n
+          link[i].className = \'current\';\n
+          //expandOne(menu, link[i], true);\n
+        }\n
+      }\n
+    }\n
+\n
+    function bindMenuEvents(menu) {\n
+      //collapseAll(menu, true);\n
+      //Handsontable.Dom.addEvent(menu, \'click\', function (ev) {\n
+      //  var element = ev.target || ev.srcElement;\n
+      //\n
+      //  if (element.nodeName == "H3") {\n
+      //    if (element.parentNode.className.indexOf(\'current\') != -1) {\n
+      //      collapseAll(menu);\n
+      //    }\n
+      //    else {\n
+      //      expandOne(menu, element.parentNode.querySelector("ul"));\n
+      //    }\n
+      //  }\n
+      //});\n
+    }\n
+\n
+    var menu = document.querySelector("#global-menu");\n
+    if (menu) {\n
+      bindMenuEvents(menu);\n
+    }\n
+    else {\n
+      ajax("../index.html", \'GET\', \'\', onMenuLoad);\n
+    }\n
+\n
+  }\n
+\n
+\n
+  var initAll = function () {\n
+    init();\n
+    initSidebar();\n
+  };\n
+\n
+  contentLoaded(window, function (event) {\n
+    initAll();\n
+  });\n
+\n
+//if(document.addEventListener) {\n
+//  document.addEventListener(\'DOMContentLoaded\', initAll, false);\n
+//} else {\n
+//  document.attachEvent(\'DOMContentLoaded\', initAll);\n
+//}\n
+\n
+\n
+})();\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13534</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>samples.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

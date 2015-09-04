@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272518.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>PluginHooksSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'PluginHooks\', function () {\n
+\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  describe(\'unit tests\', function() {\n
+    it(\'should create global empty bucket on construct\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+\n
+      expect(hooks.globalBucket).toBeDefined();\n
+      expect(hooks.globalBucket.afterInit).toEqual([]);\n
+      expect(hooks.globalBucket.beforeInit).toEqual([]);\n
+      expect(hooks.globalBucket.init).toEqual([]);\n
+    });\n
+\n
+    it(\'should create empty object (bucket) on createEmptyBucket call\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var bucket = hooks.createEmptyBucket();\n
+\n
+      expect(bucket.afterInit).toEqual([]);\n
+      expect(bucket.beforeInit).toEqual([]);\n
+      expect(bucket.init).toEqual([]);\n
+      expect(bucket).not.toBe(hooks.createEmptyBucket());\n
+    });\n
+\n
+    it(\'should create and get local bucket when context is passed\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var context = {};\n
+      var bucket = hooks.getBucket(context);\n
+\n
+      expect(context.pluginHookBucket).toBeDefined();\n
+      expect(context.pluginHookBucket).toBe(bucket);\n
+    });\n
+\n
+    it(\'should get global bucket when context is empty\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var bucket = hooks.getBucket();\n
+\n
+      expect(bucket).toBe(hooks.globalBucket);\n
+    });\n
+\n
+    it(\'should add hooks as array\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var fn1 = function () {};\n
+      var fn2 = function () {};\n
+      var fn3 = function () {};\n
+      var context = {};\n
+      var bucket = {};\n
+\n
+      spyOn(hooks, \'getBucket\').andReturn(bucket);\n
+      spyOn(hooks, \'register\');\n
+\n
+      hooks.add(\'test\', [fn1, fn2, fn3, fn3, fn3], context);\n
+\n
+      expect(hooks.getBucket.calls.length).toBe(5);\n
+      expect(hooks.getBucket.mostRecentCall.args[0]).toBe(context);\n
+      expect(hooks.register.calls.length).toBe(1);\n
+      expect(hooks.register.mostRecentCall.args[0]).toBe(\'test\');\n
+\n
+      expect(bucket.test.length).toBe(3);\n
+      expect(bucket.test[0]).toBe(fn1);\n
+      expect(bucket.test[1]).toBe(fn2);\n
+      expect(bucket.test[2]).toBe(fn3);\n
+    });\n
+\n
+    it(\'should add hook as function\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var fn1 = function () {};\n
+      var fn2 = function () {};\n
+      var context = {};\n
+      var bucket = {test: []};\n
+\n
+      spyOn(hooks, \'getBucket\').andReturn(bucket);\n
+      spyOn(hooks, \'register\');\n
+\n
+      hooks.add(\'test\', fn1, context);\n
+      hooks.add(\'test\', fn1);\n
+      hooks.add(\'test\', fn2, context);\n
+\n
+      expect(hooks.getBucket.calls.length).toBe(3);\n
+      expect(hooks.getBucket.calls[0].args[0]).toBe(context);\n
+      expect(hooks.getBucket.calls[1].args[0]).toBe(null);\n
+      expect(hooks.getBucket.calls[2].args[0]).toBe(context);\n
+      expect(hooks.register).not.toHaveBeenCalled();\n
+\n
+      expect(bucket.test.length).toBe(2);\n
+      expect(bucket.test[0]).toBe(fn1);\n
+      expect(bucket.test[1]).toBe(fn2);\n
+    });\n
+\n
+    it(\'should add hook once as array\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var fn1 = function () {};\n
+      var fn2 = function () {};\n
+      var fn3 = function () {};\n
+      var context = {};\n
+      var bucket = {};\n
+\n
+      spyOn(hooks, \'add\');\n
+\n
+      hooks.once(\'test\', [fn1, fn2, fn3, fn3, fn3], context);\n
+\n
+      expect(fn1.runOnce).toBe(true);\n
+      expect(fn2.runOnce).toBe(true);\n
+      expect(fn3.runOnce).toBe(true);\n
+      expect(hooks.add.calls.length).toBe(5);\n
+      expect(hooks.add.mostRecentCall.args[0]).toBe(\'test\');\n
+      expect(hooks.add.mostRecentCall.args[1]).toBe(fn3);\n
+      expect(hooks.add.mostRecentCall.args[2]).toBe(context);\n
+    });\n
+\n
+    it(\'should add hook once as function\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var fn1 = function () {};\n
+      var fn2 = function () {};\n
+      var context = {};\n
+      var bucket = {};\n
+\n
+      spyOn(hooks, \'add\');\n
+\n
+      hooks.once(\'test\', fn1, context);\n
+      hooks.once(\'test\', fn2);\n
+\n
+      expect(fn1.runOnce).toBe(true);\n
+      expect(fn2.runOnce).toBe(true);\n
+      expect(hooks.add.calls.length).toBe(2);\n
+      expect(hooks.add.calls[0].args[0]).toBe(\'test\')\n
+      expect(hooks.add.calls[0].args[1]).toBe(fn1);\n
+      expect(hooks.add.calls[0].args[2]).toBe(context);\n
+      expect(hooks.add.calls[1].args[0]).toBe(\'test\')\n
+      expect(hooks.add.calls[1].args[1]).toBe(fn2);\n
+      expect(hooks.add.calls[1].args[2]).toBe(null);\n
+    });\n
+\n
+    it(\'should remove hook\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var fn1 = function () {};\n
+      var fn2 = function () {};\n
+      var fn3 = function () {};\n
+      var context = {};\n
+      var bucket = {test: [fn1, fn2]};\n
+      var result;\n
+\n
+      spyOn(hooks, \'getBucket\').andReturn(bucket);\n
+\n
+      result = hooks.remove(\'test2\', fn1);\n
+\n
+      expect(result).toBe(false);\n
+      expect(bucket.test.length).toBe(2);\n
+\n
+      result = hooks.remove(\'test\', fn3);\n
+\n
+      expect(result).toBe(false);\n
+      expect(bucket.test.length).toBe(2);\n
+\n
+      result = hooks.remove(\'test\', fn1);\n
+\n
+      expect(result).toBe(true);\n
+      expect(bucket.test[0].skip).toBe(true);\n
+      expect(bucket.test.length).toBe(2);\n
+    });\n
+\n
+    it(\'should run hook\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var fn1 = jasmine.createSpy(\'fn1\').andReturn(\'Foo\');\n
+      var fn2 = jasmine.createSpy(\'fn2\').andReturn(\'Bar\');\n
+      var fn3 = jasmine.createSpy(\'fn3\');\n
+      var context = {};\n
+      var bucket = {test: [fn1, fn2]};\n
+      var result;\n
+\n
+      hooks.globalBucket.test = [fn3];\n
+\n
+      spyOn(hooks, \'getBucket\').andReturn(bucket);\n
+      spyOn(hooks, \'remove\');\n
+\n
+      result = hooks.run(context, \'test\');\n
+\n
+      expect(result).toBe(\'Bar\');\n
+      expect(hooks.getBucket).toHaveBeenCalledWith(context);\n
+      expect(hooks.remove).not.toHaveBeenCalled();\n
+      expect(fn1).toHaveBeenCalled();\n
+      expect(fn2).toHaveBeenCalled();\n
+      expect(fn3).toHaveBeenCalled();\n
+\n
+      fn1.reset();\n
+      fn1.runOnce = true;\n
+      fn2.reset();\n
+      fn3.reset();\n
+      result = hooks.run(context, \'test\', 1, 2, \'AB\');\n
+\n
+      expect(result).toBe(\'Bar\');\n
+      expect(hooks.remove).toHaveBeenCalledWith(\'test\', fn1, context);\n
+      expect(fn1).toHaveBeenCalledWith(1, 2, \'AB\', void 0, void 0, void 0);\n
+      expect(fn2).toHaveBeenCalledWith(\'Foo\', 2, \'AB\', void 0, void 0, void 0);\n
+      expect(fn3).toHaveBeenCalledWith(1, 2, \'AB\', void 0, void 0, void 0);\n
+    });\n
+\n
+    it(\'should run hooks added as once\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var fn1 = jasmine.createSpy(\'fn1\').andReturn(\'Foo\');\n
+      var fn2 = jasmine.createSpy(\'fn2\').andReturn(\'Bar\');\n
+      var fn3 = jasmine.createSpy(\'fn3\');\n
+      var context = {pluginHookBucket: {test: [fn1, fn2]}};\n
+      var result;\n
+\n
+      fn1.runOnce = true;\n
+      fn2.runOnce = true;\n
+      fn3.runOnce = true;\n
+      hooks.globalBucket = {test: [fn3]}\n
+\n
+      hooks.run(context, \'test\');\n
+      hooks.run(context, \'test\');\n
+      hooks.run(context, \'test\');\n
+\n
+      expect(fn1.calls.length).toBe(1);\n
+      expect(fn2.calls.length).toBe(1);\n
+      expect(fn3.calls.length).toBe(1);\n
+    });\n
+\n
+    it(\'should destroy hooks\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+      var fn1 = jasmine.createSpy(\'fn1\').andReturn(\'Foo\');\n
+      var fn2 = jasmine.createSpy(\'fn2\').andReturn(\'Bar\');\n
+      var fn3 = jasmine.createSpy(\'fn3\');\n
+      var context = {};\n
+      var bucket = {test: [fn1, fn2, fn3], test2: [fn3]};\n
+\n
+      spyOn(hooks, \'getBucket\').andReturn(bucket);\n
+\n
+      hooks.destroy(context);\n
+\n
+      expect(hooks.getBucket).toHaveBeenCalledWith(context);\n
+      expect(bucket.test.length).toBe(0);\n
+      expect(bucket.test2.length).toBe(0);\n
+    });\n
+\n
+    it(\'should register hook\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+\n
+      spyOn(hooks, \'isRegistered\').andReturn(false);\n
+\n
+      hooks.register(\'test\');\n
+\n
+      expect(hooks.isRegistered).toHaveBeenCalledWith(\'test\');\n
+      expect(hooks.getRegistered().indexOf(\'test\')).toBeGreaterThan(-1);\n
+\n
+      hooks.isRegistered.andReturn(true);\n
+      hooks.register(\'test2\');\n
+\n
+      expect(hooks.isRegistered).toHaveBeenCalledWith(\'test2\');\n
+      expect(hooks.getRegistered().indexOf(\'test2\')).toBe(-1);\n
+    });\n
+\n
+    it(\'should deregister hook\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+\n
+      spyOn(hooks, \'isRegistered\').andReturn(false);\n
+      hooks.register(\'test\');\n
+\n
+      hooks.deregister(\'test\');\n
+\n
+      expect(hooks.isRegistered).toHaveBeenCalledWith(\'test\');\n
+      expect(hooks.getRegistered().indexOf(\'test\')).toBeGreaterThan(-1);\n
+\n
+      hooks.isRegistered.andReturn(true);\n
+      hooks.deregister(\'test2\');\n
+\n
+      expect(hooks.isRegistered).toHaveBeenCalledWith(\'test2\');\n
+      expect(hooks.getRegistered().indexOf(\'test2\')).toBe(-1);\n
+    });\n
+\n
+    it(\'should returns `true` if hooks is registered\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+\n
+      hooks.register(\'test\');\n
+\n
+      expect(hooks.isRegistered(\'test\')).toBe(true);\n
+      expect(hooks.isRegistered(\'test2\')).toBe(false);\n
+    });\n
+\n
+    it(\'should returns array of registered hooks\', function () {\n
+      var hooks = new Handsontable.utils.Hooks();\n
+\n
+      expect(hooks.getRegistered().length).toBeGreaterThan(0);\n
+    });\n
+  });\n
+\n
+\n
+  it(\'should add a many local hooks at init (as array)\', function () {\n
+    var handler1 = jasmine.createSpy(\'handler1\');\n
+    var handler2 = jasmine.createSpy(\'handler2\');\n
+    var handler3 = jasmine.createSpy(\'handler3\');\n
+\n
+    handsontable({\n
+      afterInit: [handler1, handler2, handler3]\n
+    });\n
+\n
+    expect(handler1).toHaveBeenCalled();\n
+    expect(handler2).toHaveBeenCalled();\n
+    expect(handler3).toHaveBeenCalled();\n
+  });\n
+\n
+  it(\'should remove a global hook\', function () {\n
+    var\n
+      test = 0,\n
+      hook = function () {\n
+        test = 5;\n
+      };\n
+\n
+    Handsontable.hooks.add(\'afterInit\', hook);\n
+    Handsontable.hooks.remove(\'afterInit\', hook);\n
+\n
+    handsontable();\n
+\n
+    expect(test).toEqual(0);\n
+  });\n
+\n
+  it(\'should remove a local hook\', function () {\n
+    var\n
+      test = 0,\n
+      hook = function () {\n
+        test = 5;\n
+      };\n
+\n
+    handsontable();\n
+\n
+    getInstance().addHook(\'afterInit\', hook);\n
+    getInstance().removeHook(\'afterInit\', hook);\n
+\n
+    expect(test).toEqual(0);\n
+  });\n
+\n
+  it(\'should run global hook\', function () {\n
+    var test = 0;\n
+\n
+    Handsontable.hooks.add(\'afterInit\', function () {\n
+      test = 5;\n
+    });\n
+    handsontable();\n
+    expect(test).toEqual(5);\n
+  });\n
+\n
+  it(\'should run local hook\', function () {\n
+    var test = 0;\n
+\n
+    handsontable();\n
+\n
+    getInstance().addHook(\'myHook\', function () {\n
+      test += 5;\n
+    });\n
+    getInstance().runHooks(\'myHook\');\n
+    getInstance().runHooks(\'myHook\');\n
+\n
+    expect(test).toEqual(10);\n
+  });\n
+\n
+  it(\'should run local hook once\', function () {\n
+    var test = 0;\n
+\n
+    handsontable();\n
+\n
+    getInstance().addHookOnce(\'myHook\', function () {\n
+      test += 5;\n
+    });\n
+    getInstance().runHooks(\'myHook\');\n
+    getInstance().runHooks(\'myHook\');\n
+\n
+    expect(test).toEqual(5);\n
+  });\n
+\n
+  it(\'should run all hooks\', function () {\n
+    var test = 0;\n
+\n
+    Handsontable.hooks.add(\'afterInit\', function () {\n
+      test += 5;\n
+    });\n
+\n
+    handsontable({\n
+      afterInit: function () {\n
+        test += 5;\n
+      }\n
+    });\n
+\n
+    expect(test).toEqual(10);\n
+  });\n
+\n
+  it(\'list of all avaliable plugin hooks should be exposed as a public method\', function () {\n
+    var hooks = Handsontable.hooks.getRegistered(); //this is used in demo/callbacks.html\n
+\n
+    expect(hooks.indexOf(\'beforeInit\')).toBeGreaterThan(-1);\n
+  });\n
+\n
+  it(\'should add a local hook with addHooks method\', function(){\n
+    var hot1 = handsontable();\n
+\n
+    var test = 0;\n
+\n
+    hot1.addHook(\'myHook\', function(){\n
+      test += 5;\n
+    });\n
+    hot1.runHooks(\'myHook\');\n
+\n
+    expect(test).toEqual(5);\n
+  });\n
+\n
+  it(\'should remove a local hook with removeHook method\', function(){\n
+    var hot1 = handsontable();\n
+\n
+    var test = 0;\n
+    var handler = function(){\n
+      test += 5;\n
+    };\n
+\n
+    hot1.addHook(\'myHook\', handler);\n
+\n
+    hot1.runHooks(\'myHook\');\n
+    hot1.runHooks(\'myHook\');\n
+    expect(test).toEqual(10);\n
+\n
+    hot1.removeHook(\'myHook\', handler);\n
+    hot1.runHooks(\'myHook\');\n
+\n
+    expect(test).toEqual(10);\n
+  });\n
+\n
+  it(\'should add a local hook with addHookOnce method and run it just once\', function(){\n
+    var hot1 = handsontable();\n
+\n
+    var test = 0;\n
+    var handler = function(){\n
+      test += 5;\n
+    };\n
+\n
+    hot1.addHookOnce(\'myHook\', handler);\n
+\n
+    hot1.runHooks(\'myHook\');\n
+    hot1.runHooks(\'myHook\');\n
+    expect(test).toEqual(5);\n
+\n
+  });\n
+\n
+  it(\'should run hook with runHooks and return value\', function(){\n
+    var hot = handsontable();\n
+\n
+    var handler = function(){\n
+      return 5;\n
+    };\n
+\n
+    hot.addHook(\'myHook\', handler);\n
+\n
+    expect(hot.runHooks(\'myHook\')).toEqual(5);\n
+  });\n
+\n
+  it(\'should run two "once" hooks in desired order\', function(){\n
+    var hot = handsontable();\n
+    var arr = [];\n
+\n
+    hot.addHookOnce(\'myHook\', function(){\n
+      arr.push(1);\n
+    });\n
+\n
+    hot.addHookOnce(\'myHook\', function(){\n
+      arr.push(2);\n
+    });\n
+\n
+    hot.runHooks(\'myHook\');\n
+\n
+    expect(arr).toEqual([1,2]);\n
+  });\n
+\n
+  it(\'should execute two "once" hooks in desired order\', function(){\n
+    var hot = handsontable();\n
+    var str = \'a\';\n
+\n
+    hot.addHookOnce(\'myHook\', function(str){\n
+      return str + \'b\';\n
+    });\n
+\n
+    hot.addHookOnce(\'myHook\', function(str){\n
+      return str + \'c\';\n
+    });\n
+\n
+    expect(hot.runHooks(\'myHook\', str)).toEqual(\'abc\');\n
+  });\n
+\n
+  it(\'adding same hook twice should register it only once (without an error)\', function () {\n
+    var i = 0;\n
+    var fn = function(){\n
+      i++;\n
+    };\n
+\n
+    var hot = handsontable({\n
+      afterOnCellMouseOver: fn\n
+    });\n
+\n
+    hot.getInstance().updateSettings({afterOnCellMouseOver: fn});\n
+    hot.runHooks(\'afterOnCellMouseOver\');\n
+\n
+    expect(i).toEqual(1);\n
+  });\n
+\n
+  describe("controlling handler queue execution", function () {\n
+    it("should execute all handlers if none of them hasn\'t skipped", function () {\n
+\n
+      var handler1 = jasmine.createSpy(\'handler1\');\n
+      var handler2 = jasmine.createSpy(\'handler2\');\n
+      var handler3 = jasmine.createSpy(\'handler3\');\n
+\n
+      var hot = handsontable();\n
+\n
+      hot.addHook(\'fakeEvent\', handler1);\n
+      hot.addHook(\'fakeEvent\', handler2);\n
+      hot.addHook(\'fakeEvent\', handler3);\n
+\n
+      expect(handler1).not.toHaveBeenCalled();\n
+      expect(handler2).not.toHaveBeenCalled();\n
+      expect(handler3).not.toHaveBeenCalled();\n
+\n
+      hot.runHooks(\'fakeEvent\');\n
+\n
+      expect(handler1).toHaveBeenCalled();\n
+      expect(handler2).toHaveBeenCalled();\n
+      expect(handler3).toHaveBeenCalled();\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14788</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>PluginHooksSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

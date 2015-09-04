@@ -1,0 +1,407 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272744.38</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>textEditor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  addClass,\n
+  getCaretPosition,\n
+  getComputedStyle,\n
+  getCssTransform,\n
+  getScrollableElement,\n
+  innerWidth,\n
+  offset,\n
+  resetCssTransform,\n
+  setCaretPosition,\n
+    } from \'./../helpers/dom/element\';\n
+import autoResize from \'autoResize\';\n
+import {BaseEditor} from \'./_baseEditor\';\n
+import {eventManager as eventManagerObject} from \'./../eventManager\';\n
+import {getEditor, registerEditor} from \'./../editors\';\n
+import {KEY_CODES} from \'./../helpers/unicode\';\n
+import {stopPropagation, stopImmediatePropagation, isImmediatePropagationStopped} from \'./../helpers/dom/event\';\n
+\n
+var TextEditor = BaseEditor.prototype.extend();\n
+\n
+\n
+/**\n
+ * @private\n
+ * @editor TextEditor\n
+ * @class TextEditor\n
+ * @dependencies autoResize\n
+ */\n
+TextEditor.prototype.init = function() {\n
+  var that = this;\n
+  this.createElements();\n
+  this.eventManager = eventManagerObject(this);\n
+  this.bindEvents();\n
+  this.autoResize = autoResize();\n
+\n
+  this.instance.addHook(\'afterDestroy\', function() {\n
+    that.destroy();\n
+  });\n
+};\n
+\n
+TextEditor.prototype.getValue = function() {\n
+  return this.TEXTAREA.value;\n
+};\n
+\n
+TextEditor.prototype.setValue = function(newValue) {\n
+  this.TEXTAREA.value = newValue;\n
+};\n
+\n
+var onBeforeKeyDown = function onBeforeKeyDown(event) {\n
+  var instance = this,\n
+    that = instance.getActiveEditor(),\n
+    ctrlDown;\n
+\n
+  // catch CTRL but not right ALT (which in some systems triggers ALT+CTRL)\n
+  ctrlDown = (event.ctrlKey || event.metaKey) && !event.altKey;\n
+\n
+  // Process only events that have been fired in the editor\n
+  if (event.target !== that.TEXTAREA || isImmediatePropagationStopped(event)) {\n
+    return;\n
+  }\n
+\n
+  if (event.keyCode === 17 || event.keyCode === 224 || event.keyCode === 91 || event.keyCode === 93) {\n
+    // when CTRL or its equivalent is pressed and cell is edited, don\'t prepare selectable text in textarea\n
+    stopImmediatePropagation(event);\n
+    return;\n
+  }\n
+\n
+  switch (event.keyCode) {\n
+    case KEY_CODES.ARROW_RIGHT:\n
+      if (that.isInFullEditMode()) {\n
+        if ((!that.isWaiting() && !that.allowKeyEventPropagation) ||\n
+            (!that.isWaiting() && that.allowKeyEventPropagation && !that.allowKeyEventPropagation(event.keyCode))) {\n
+          stopImmediatePropagation(event);\n
+        }\n
+      }\n
+      break;\n
+    case KEY_CODES.ARROW_LEFT:\n
+      if (that.isInFullEditMode()) {\n
+        if ((!that.isWaiting() && !that.allowKeyEventPropagation) ||\n
+            (!that.isWaiting() && that.allowKeyEventPropagation && !that.allowKeyEventPropagation(event.keyCode))) {\n
+          stopImmediatePropagation(event);\n
+        }\n
+      }\n
+      break;\n
+    case KEY_CODES.ARROW_UP:\n
+    case KEY_CODES.ARROW_DOWN:\n
+      if (that.isInFullEditMode()) {\n
+        if ((!that.isWaiting() && !that.allowKeyEventPropagation) ||\n
+            (!that.isWaiting() && that.allowKeyEventPropagation && !that.allowKeyEventPropagation(event.keyCode))) {\n
+          stopImmediatePropagation(event);\n
+        }\n
+      }\n
+      break;\n
+\n
+    case KEY_CODES.ENTER:\n
+      var selected = that.instance.getSelected();\n
+      var isMultipleSelection = !(selected[0] === selected[2] && selected[1] === selected[3]);\n
+      if ((ctrlDown && !isMultipleSelection) || event.altKey) { //if ctrl+enter or alt+enter, add new line\n
+        if (that.isOpened()) {\n
+          var caretPosition = getCaretPosition(that.TEXTAREA),\n
+            value = that.getValue();\n
+\n
+          var newValue = value.slice(0, caretPosition) + \'\\n\' + value.slice(caretPosition);\n
+\n
+          that.setValue(newValue);\n
+\n
+          setCaretPosition(that.TEXTAREA, caretPosition + 1);\n
+\n
+        } else {\n
+          that.beginEditing(that.originalValue + \'\\n\');\n
+        }\n
+        stopImmediatePropagation(event);\n
+      }\n
+      event.preventDefault(); //don\'t add newline to field\n
+      break;\n
+\n
+    case KEY_CODES.A:\n
+    case KEY_CODES.X:\n
+    case KEY_CODES.C:\n
+    case KEY_CODES.V:\n
+      if (ctrlDown) {\n
+        stopImmediatePropagation(event); //CTRL+A, CTRL+C, CTRL+V, CTRL+X should only work locally when cell is edited (not in table context)\n
+      }\n
+      break;\n
+\n
+    case KEY_CODES.BACKSPACE:\n
+    case KEY_CODES.DELETE:\n
+    case KEY_CODES.HOME:\n
+    case KEY_CODES.END:\n
+      stopImmediatePropagation(event); //backspace, delete, home, end should only work locally when cell is edited (not in table context)\n
+      break;\n
+  }\n
+\n
+  if ([KEY_CODES.ARROW_UP, KEY_CODES.ARROW_RIGHT, KEY_CODES.ARROW_DOWN, KEY_CODES.ARROW_LEFT].indexOf(event.keyCode) === -1) {\n
+    that.autoResize.resize(String.fromCharCode(event.keyCode));\n
+  }\n
+};\n
+\n
+\n
+\n
+TextEditor.prototype.open = function() {\n
+  this.refreshDimensions(); //need it instantly, to prevent https://github.com/handsontable/handsontable/issues/348\n
+\n
+  this.instance.addHook(\'beforeKeyDown\', onBeforeKeyDown);\n
+};\n
+\n
+TextEditor.prototype.close = function() {\n
+  this.textareaParentStyle.display = \'none\';\n
+\n
+  this.autoResize.unObserve();\n
+\n
+  if (document.activeElement === this.TEXTAREA) {\n
+    this.instance.listen(); //don\'t refocus the table if user focused some cell outside of HT on purpose\n
+  }\n
+  this.instance.removeHook(\'beforeKeyDown\', onBeforeKeyDown);\n
+};\n
+\n
+TextEditor.prototype.focus = function() {\n
+  this.TEXTAREA.focus();\n
+  setCaretPosition(this.TEXTAREA, this.TEXTAREA.value.length);\n
+};\n
+\n
+TextEditor.prototype.createElements = function() {\n
+  //    this.$body = $(document.body);\n
+\n
+  this.TEXTAREA = document.createElement(\'TEXTAREA\');\n
+\n
+  addClass(this.TEXTAREA, \'handsontableInput\');\n
+\n
+  this.textareaStyle = this.TEXTAREA.style;\n
+  this.textareaStyle.width = 0;\n
+  this.textareaStyle.height = 0;\n
+\n
+  this.TEXTAREA_PARENT = document.createElement(\'DIV\');\n
+  addClass(this.TEXTAREA_PARENT, \'handsontableInputHolder\');\n
+\n
+  this.textareaParentStyle = this.TEXTAREA_PARENT.style;\n
+  this.textareaParentStyle.top = 0;\n
+  this.textareaParentStyle.left = 0;\n
+  this.textareaParentStyle.display = \'none\';\n
+\n
+  this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);\n
+\n
+  this.instance.rootElement.appendChild(this.TEXTAREA_PARENT);\n
+\n
+  var that = this;\n
+  this.instance._registerTimeout(setTimeout(function() {\n
+    that.refreshDimensions();\n
+  }, 0));\n
+};\n
+\n
+TextEditor.prototype.checkEditorSection = function() {\n
+  if (this.row < this.instance.getSettings().fixedRowsTop) {\n
+    if (this.col < this.instance.getSettings().fixedColumnsLeft) {\n
+      return \'corner\';\n
+    } else {\n
+      return \'top\';\n
+    }\n
+  } else {\n
+    if (this.col < this.instance.getSettings().fixedColumnsLeft) {\n
+      return \'left\';\n
+    }\n
+  }\n
+};\n
+\n
+TextEditor.prototype.getEditedCell = function() {\n
+  var editorSection = this.checkEditorSection(),\n
+    editedCell;\n
+\n
+  switch (editorSection) {\n
+    case \'top\':\n
+      editedCell = this.instance.view.wt.wtOverlays.topOverlay.clone.wtTable.getCell({\n
+        row: this.row,\n
+        col: this.col\n
+      });\n
+      this.textareaParentStyle.zIndex = 101;\n
+      break;\n
+    case \'corner\':\n
+      editedCell = this.instance.view.wt.wtOverlays.topLeftCornerOverlay.clone.wtTable.getCell({\n
+        row: this.row,\n
+        col: this.col\n
+      });\n
+      this.textareaParentStyle.zIndex = 103;\n
+      break;\n
+    case \'left\':\n
+      editedCell = this.instance.view.wt.wtOverlays.leftOverlay.clone.wtTable.getCell({\n
+        row: this.row,\n
+        col: this.col\n
+      });\n
+      this.textareaParentStyle.zIndex = 102;\n
+      break;\n
+    default:\n
+      editedCell = this.instance.getCell(this.row, this.col);\n
+      this.textareaParentStyle.zIndex = "";\n
+      break;\n
+  }\n
+\n
+  return editedCell != -1 && editedCell != -2 ? editedCell : void 0;\n
+};\n
+\n
+\n
+TextEditor.prototype.refreshDimensions = function() {\n
+  if (this.state !== Handsontable.EditorState.EDITING) {\n
+    return;\n
+  }\n
+  this.TD = this.getEditedCell();\n
+\n
+  // TD is outside of the viewport.\n
+  if (!this.TD) {\n
+    this.close();\n
+\n
+    return;\n
+  }\n
+  var currentOffset = offset(this.TD),\n
+    containerOffset = offset(this.instance.rootElement),\n
+    scrollableContainer = getScrollableElement(this.TD),\n
+    editTop = currentOffset.top - containerOffset.top - 1 - (scrollableContainer.scrollTop || 0),\n
+    editLeft = currentOffset.left - containerOffset.left - 1 - (scrollableContainer.scrollLeft || 0),\n
+\n
+    settings = this.instance.getSettings(),\n
+    rowHeadersCount = settings.rowHeaders ? 1 : 0,\n
+    colHeadersCount = settings.colHeaders ? 1 : 0,\n
+    editorSection = this.checkEditorSection(),\n
+    backgroundColor = this.TD.style.backgroundColor,\n
+    cssTransformOffset;\n
+\n
+  // TODO: Refactor this to the new instance.getCell method (from #ply-59), after 0.12.1 is released\n
+  switch (editorSection) {\n
+    case \'top\':\n
+      cssTransformOffset = getCssTransform(this.instance.view.wt.wtOverlays.topOverlay.clone.wtTable.holder.parentNode);\n
+      break;\n
+    case \'left\':\n
+      cssTransformOffset = getCssTransform(this.instance.view.wt.wtOverlays.leftOverlay.clone.wtTable.holder.parentNode);\n
+      break;\n
+    case \'corner\':\n
+      cssTransformOffset = getCssTransform(this.instance.view.wt.wtOverlays.topLeftCornerOverlay.clone.wtTable.holder.parentNode);\n
+      break;\n
+  }\n
+\n
+  if (this.instance.getSelected()[0] === 0) {\n
+    editTop += 1;\n
+  }\n
+\n
+  if (this.instance.getSelected()[1] === 0) {\n
+    editLeft += 1;\n
+  }\n
+\n
+  if (cssTransformOffset && cssTransformOffset != -1) {\n
+    this.textareaParentStyle[cssTransformOffset[0]] = cssTransformOffset[1];\n
+  } else {\n
+    resetCssTransform(this.textareaParentStyle);\n
+  }\n
+\n
+  this.textareaParentStyle.top = editTop + \'px\';\n
+  this.textareaParentStyle.left = editLeft + \'px\';\n
+  ///end prepare textarea position\n
+\n
+  var cellTopOffset = this.TD.offsetTop - this.instance.view.wt.wtOverlays.topOverlay.getScrollPosition(),\n
+    cellLeftOffset = this.TD.offsetLeft - this.instance.view.wt.wtOverlays.leftOverlay.getScrollPosition();\n
+\n
+  let width = innerWidth(this.TD) - 8;\n
+  // 10 is TEXTAREAs padding\n
+  let maxWidth = this.instance.view.maximumVisibleElementWidth(cellLeftOffset) - 9;\n
+  let height = this.TD.scrollHeight + 1;\n
+  // 10 is TEXTAREAs border and padding\n
+  let maxHeight = Math.max(this.instance.view.maximumVisibleElementHeight(cellTopOffset) - 2, 23);\n
+\n
+  const cellComputedStyle = getComputedStyle(this.TD);\n
+\n
+  this.TEXTAREA.style.fontSize = cellComputedStyle.fontSize;\n
+  this.TEXTAREA.style.fontFamily = cellComputedStyle.fontFamily;\n
+\n
+  this.TEXTAREA.style.backgroundColor = \'\'; //RESET STYLE\n
+\n
+  this.TEXTAREA.style.backgroundColor = backgroundColor ? backgroundColor : getComputedStyle(this.TEXTAREA).backgroundColor;\n
+\n
+  this.autoResize.init(this.TEXTAREA, {\n
+    minHeight: Math.min(height, maxHeight),\n
+    maxHeight: maxHeight, //TEXTAREA should never be wider than visible part of the viewport (should not cover the scrollbar)\n
+    minWidth: Math.min(width, maxWidth),\n
+    maxWidth: maxWidth //TEXTAREA should never be wider than visible part of the viewport (should not cover the scrollbar)\n
+  }, true);\n
+\n
+  this.textareaParentStyle.display = \'block\';\n
+};\n
+\n
+TextEditor.prototype.bindEvents = function() {\n
+  var editor = this;\n
+\n
+  this.eventManager.addEventListener(this.TEXTAREA, \'cut\', function(event) {\n
+    stopPropagation(event);\n
+  });\n
+\n
+  this.eventManager.addEventListener(this.TEXTAREA, \'paste\', function(event) {\n
+    stopPropagation(event);\n
+  });\n
+\n
+  this.instance.addHook(\'afterScrollVertically\', function() {\n
+    editor.refreshDimensions();\n
+  });\n
+\n
+  this.instance.addHook(\'afterColumnResize\', function() {\n
+    editor.refreshDimensions();\n
+    editor.focus();\n
+  });\n
+\n
+  this.instance.addHook(\'afterRowResize\', function() {\n
+    editor.refreshDimensions();\n
+    editor.focus();\n
+  });\n
+\n
+  this.instance.addHook(\'afterDestroy\', function() {\n
+    editor.eventManager.destroy();\n
+  });\n
+};\n
+\n
+TextEditor.prototype.destroy = function() {\n
+  this.eventManager.destroy();\n
+};\n
+\n
+export {TextEditor};\n
+\n
+registerEditor(\'text\', TextEditor);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>11514</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>textEditor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

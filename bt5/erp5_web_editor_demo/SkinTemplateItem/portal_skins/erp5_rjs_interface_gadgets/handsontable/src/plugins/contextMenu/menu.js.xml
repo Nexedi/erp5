@@ -1,0 +1,580 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272712.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>menu.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  addClass,\n
+  empty,\n
+  fastInnerHTML,\n
+  getComputedStyle,\n
+  getScrollbarWidth,\n
+  getWindowScrollLeft,\n
+  getWindowScrollTop,\n
+  hasClass,\n
+  removeClass,\n
+} from \'./../../helpers/dom/element\';\n
+import {stopPropagation, stopImmediatePropagation, pageX, pageY} from \'./../../helpers/dom/event\';\n
+import {EventManager} from \'./../../eventManager\';\n
+import {extend, isObject, objectEach} from \'./../../helpers/object\';\n
+import {arrayEach} from \'./../../helpers/array\';\n
+import {SEPARATOR, predefinedItems} from \'./predefinedItems\';\n
+import {Cursor} from \'./cursor\';\n
+import {KEY_CODES} from \'./../../helpers/unicode\';\n
+import {isSeparator, isDisabled, hasSubMenu, normalizeSelection} from \'./utils\';\n
+\n
+\n
+/**\n
+ * @class Menu\n
+ * @plugin ContextMenu\n
+ */\n
+class Menu {\n
+  constructor(hotInstance, options = {parent: null, name: null, className: \'htMenu\'}) {\n
+    this.hot = hotInstance;\n
+    this.options = options;\n
+    this.eventManager = new EventManager(this);\n
+    this.container = this.createContainer(this.options.name);\n
+    this.hotMenu = null;\n
+    this.hotSubMenus = {};\n
+    this.parentMenu = this.options.parent || null;\n
+    this.menuItems = null;\n
+    this._afterScrollCallback = null;\n
+\n
+    this.registerEvents();\n
+  }\n
+\n
+  /**\n
+   * Register event listeners.\n
+   *\n
+   * @private\n
+   */\n
+  registerEvents() {\n
+    this.eventManager.addEventListener(document.documentElement, \'mousedown\', (event) => this.close());\n
+    this.eventManager.addEventListener(this.container, \'mousedown\', (event) => this.executeCommand(event));\n
+  }\n
+\n
+  /**\n
+   * Set array of objects which defines menu items.\n
+   *\n
+   * @param {Array} menuItems Menu items to display.\n
+   */\n
+  setMenuItems(menuItems) {\n
+    this.menuItems = menuItems;\n
+  }\n
+\n
+  /**\n
+   * Check is menu is using as sub-menu.\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isSubMenu() {\n
+    return this.parentMenu !== null;\n
+  }\n
+\n
+  /**\n
+   * Open menu.\n
+   */\n
+  open() {\n
+    this.container.removeAttribute(\'style\');\n
+    this.container.style.display = \'block\';\n
+\n
+    let settings = {\n
+      data: this.menuItems,\n
+      colHeaders: false,\n
+      colWidths: [200],\n
+      autoRowSize: false,\n
+      readOnly: true,\n
+      copyPaste: false,\n
+      columns: [{\n
+        data: \'name\',\n
+        renderer: (hot, TD, row, col, prop, value) => this.menuItemRenderer(hot, TD, row, col, prop, value)\n
+      }],\n
+      renderAllRows: true,\n
+      beforeKeyDown: (event) => this.onBeforeKeyDown(event),\n
+      afterOnCellMouseOver: (event, coords, TD) => this.openSubMenu(coords.row)\n
+    };\n
+    this.hotMenu = new Handsontable.Core(this.container, settings);\n
+    this.hotMenu.addHook(\'afterInit\', () => this.onAfterInit());\n
+    this.hotMenu.init();\n
+    this.hotMenu.listen();\n
+    this.blockMainTableCallbacks();\n
+  }\n
+\n
+  /**\n
+   * Close menu.\n
+   *\n
+   * @param {Boolean} [closeParent=false] if `true` try to close parent menu if exists.\n
+   */\n
+  close(closeParent = false) {\n
+    if (!this.isOpened()) {\n
+      return;\n
+    }\n
+    if (closeParent && this.parentMenu) {\n
+      this.parentMenu.close();\n
+    } else {\n
+      this.closeAllSubMenus();\n
+      this.container.style.display = \'none\';\n
+      this.releaseMainTableCallbacks();\n
+      this.hotMenu.destroy();\n
+      this.hotMenu = null;\n
+      this.hot.listen();\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Open sub menu at row index.\n
+   *\n
+   * @param {Number} row Row index.\n
+   * @returns {Menu|Boolean} Returns created menu or `false` if no one menu was created.\n
+   */\n
+  openSubMenu(row) {\n
+    let cell = this.hotMenu.getCell(row, 0);\n
+\n
+    this.closeAllSubMenus();\n
+\n
+    if (!hasSubMenu(cell)) {\n
+      return false;\n
+    }\n
+    let dataItem = this.hotMenu.getData()[row];\n
+    let subMenu = new Menu(this.hot, {\n
+      parent: this,\n
+      name: dataItem.name,\n
+      className: this.options.className\n
+    });\n
+    subMenu.setMenuItems(dataItem.submenu.items);\n
+    subMenu.open();\n
+    subMenu.setPosition(cell.getBoundingClientRect());\n
+    this.hotSubMenus[dataItem.key] = subMenu;\n
+\n
+    return subMenu;\n
+  }\n
+\n
+  /**\n
+   * Close sub menu at row index.\n
+   *\n
+   * @param {Number} row Row index.\n
+   */\n
+  closeSubMenu(row) {\n
+    let dataItem = this.hotMenu.getData()[row];\n
+    let menus = this.hotSubMenus[dataItem.key];\n
+\n
+    if (menus) {\n
+      menus.destroy();\n
+      this.hotSubMenus[dataItem.key] = null;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Close all opened sub menus.\n
+   */\n
+  closeAllSubMenus() {\n
+    arrayEach(this.hotMenu.getData(), (value, row) => this.closeSubMenu(row));\n
+    this.hotMenu.listen();\n
+  }\n
+\n
+  /**\n
+   * Destroy instance.\n
+   */\n
+  destroy() {\n
+    this.close();\n
+    this.parentMenu = null;\n
+    this.eventManager.destroy();\n
+  }\n
+\n
+  /**\n
+   * Checks if menu was opened.\n
+   *\n
+   * @returns {Boolean} Returns `true` if menu was opened.\n
+   */\n
+  isOpened() {\n
+    return this.hotMenu !== null;\n
+  }\n
+\n
+  /**\n
+   * Execute menu command.\n
+   *\n
+   * @param {Event} event\n
+   */\n
+  executeCommand(event) {\n
+    if (!this.isOpened() || !this.hotMenu.getSelected()) {\n
+      return;\n
+    }\n
+    const selectedItem = this.hotMenu.getData()[this.hotMenu.getSelected()[0]];\n
+    const selRange = this.hot.getSelectedRange();\n
+    const normalizedSelection = selRange ? normalizeSelection(selRange) : {};\n
+\n
+    this.hot.runHooks(\'menuExecuteCommand\', this.parentMenu || this, selectedItem.key, normalizedSelection, event);\n
+  }\n
+\n
+  /**\n
+   * Set menu position based on dom event or based on literal object.\n
+   *\n
+   * @param {Event|Object} coords Event or literal Object with coordinates.\n
+   */\n
+  setPosition(coords) {\n
+    const cursor = new Cursor(coords);\n
+\n
+    if (cursor.fitsBelow(this.container)) {\n
+      this.setPositionBelowCursor(cursor);\n
+\n
+    } else if (cursor.fitsAbove(this.container)) {\n
+      this.setPositionAboveCursor(cursor);\n
+\n
+    } else {\n
+      this.setPositionBelowCursor(cursor);\n
+    }\n
+    if (cursor.fitsOnRight(this.container)) {\n
+      this.setPositionOnRightOfCursor(cursor);\n
+    } else {\n
+      this.setPositionOnLeftOfCursor(cursor);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Set menu position above cursor object.\n
+   *\n
+   * @param {Cursor} cursor\n
+   */\n
+  setPositionAboveCursor(cursor) {\n
+    let top = cursor.top - this.container.offsetHeight;\n
+\n
+    /* jshint -W020 */\n
+    if (this.isSubMenu()) {\n
+      top = window.scrollY + cursor.top + cursor.cellHeight - this.container.offsetHeight + 3;\n
+    }\n
+    this.container.style.top = top + \'px\';\n
+  }\n
+\n
+  /**\n
+   * Set menu position below cursor object.\n
+   *\n
+   * @param {Cursor} cursor\n
+   */\n
+  setPositionBelowCursor(cursor) {\n
+    let top = cursor.top - 1;\n
+\n
+    /* jshint -W020 */\n
+    if (this.isSubMenu()) {\n
+      top = cursor.top + window.scrollY - 1;\n
+    }\n
+    this.container.style.top = top + \'px\';\n
+  }\n
+\n
+  /**\n
+   * Set menu position on the right of cursor object.\n
+   *\n
+   * @param {Cursor} cursor\n
+   */\n
+  setPositionOnRightOfCursor(cursor) {\n
+    let left;\n
+\n
+    if (this.isSubMenu()) {\n
+      left = window.scrollX + 1 + cursor.left + cursor.cellWidth;\n
+    } else {\n
+      left = 1 + cursor.left;\n
+    }\n
+    this.container.style.left = left + \'px\';\n
+  }\n
+\n
+  /**\n
+   * Set menu position on the left of cursor object.\n
+   *\n
+   * @param {Cursor} cursor\n
+   */\n
+  setPositionOnLeftOfCursor(cursor) {\n
+    this.container.style.left = (cursor.left - this.container.offsetWidth + getScrollbarWidth() + 4) + \'px\';\n
+  }\n
+\n
+  /**\n
+   * Select first cell in opened menu.\n
+   */\n
+  selectFirstCell() {\n
+    let firstCell = this.hotMenu.getCell(0, 0);\n
+\n
+    if (isSeparator(firstCell) || isDisabled(firstCell)) {\n
+      this.selectNextCell(0, 0);\n
+    } else {\n
+      this.hotMenu.selectCell(0, 0);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Select last cell in opened menu.\n
+   */\n
+  selectLastCell() {\n
+    let lastRow = this.hotMenu.countRows() - 1;\n
+    let lastCell = this.hotMenu.getCell(lastRow, 0);\n
+\n
+    if (isSeparator(lastCell) || isDisabled(lastCell)) {\n
+      this.selectPrevCell(lastRow, 0);\n
+    } else {\n
+      this.hotMenu.selectCell(lastRow, 0);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Select next cell in opened menu.\n
+   *\n
+   * @param {Number} row Row index.\n
+   * @param {Number} col Column indx.\n
+   */\n
+  selectNextCell(row, col) {\n
+    let nextRow = row + 1;\n
+    let nextCell = nextRow < this.hotMenu.countRows() ? this.hotMenu.getCell(nextRow, col) : null;\n
+\n
+    if (!nextCell) {\n
+      return;\n
+    }\n
+    if (isSeparator(nextCell) || isDisabled(nextCell)) {\n
+      this.selectNextCell(nextRow, col);\n
+    } else {\n
+      this.hotMenu.selectCell(nextRow, col);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Select previous cell in opened menu.\n
+   *\n
+   * @param {Number} row Row index.\n
+   * @param {Number} col Column index.\n
+   */\n
+  selectPrevCell(row, col) {\n
+    let prevRow = row - 1;\n
+    let prevCell = prevRow >= 0 ? this.hotMenu.getCell(prevRow, col) : null;\n
+\n
+    if (!prevCell) {\n
+      return;\n
+    }\n
+    if (isSeparator(prevCell) || isDisabled(prevCell)) {\n
+      this.selectPrevCell(prevRow, col);\n
+    } else {\n
+      this.hotMenu.selectCell(prevRow, col);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Menu item renderer.\n
+   *\n
+   * @private\n
+   */\n
+  menuItemRenderer(hot, TD, row, col, prop, value) {\n
+    let item = hot.getData()[row];\n
+    let wrapper = document.createElement(\'div\');\n
+\n
+    let isSubMenu = (item) => {\n
+      return item.hasOwnProperty(\'submenu\');\n
+    };\n
+    let itemIsSeparator = (item) => {\n
+      return new RegExp(SEPARATOR, \'i\').test(item.name);\n
+    };\n
+    let itemIsDisabled = (item) => {\n
+      return item.disabled === true || (typeof item.disabled == \'function\' && item.disabled.call(this.hot) === true);\n
+    };\n
+\n
+    if (typeof value === \'function\') {\n
+      value = value.call(this.hot);\n
+    }\n
+    empty(TD);\n
+    TD.appendChild(wrapper);\n
+\n
+    if (itemIsSeparator(item)) {\n
+      addClass(TD, \'htSeparator\');\n
+    } else {\n
+      fastInnerHTML(wrapper, value);\n
+    }\n
+    if (itemIsDisabled(item)) {\n
+      addClass(TD, \'htDisabled\');\n
+      this.eventManager.addEventListener(wrapper, \'mouseenter\', () => hot.deselectCell);\n
+\n
+    } else if (isSubMenu(item)) {\n
+      addClass(TD, \'htSubmenu\');\n
+      this.eventManager.addEventListener(wrapper, \'mouseenter\', () => hot.selectCell(row, col));\n
+\n
+    } else {\n
+      removeClass(TD, \'htSubmenu\');\n
+      removeClass(TD, \'htDisabled\');\n
+      this.eventManager.addEventListener(wrapper, \'mouseenter\', () => hot.selectCell(row, col));\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Create container/wrapper for handsontable.\n
+   *\n
+   * @private\n
+   * @param {String} [name] Class name\n
+   * @returns {HTMLElement}\n
+   */\n
+  createContainer(name = null) {\n
+    if (name) {\n
+      name = name.replace(/ /g, \'_\');\n
+      name = this.options.className + \'Sub_\' + name;\n
+    }\n
+    let container;\n
+\n
+    if (name) {\n
+      container = document.querySelector(\'.\' + this.options.className + \'.\' + name);\n
+    } else {\n
+      container = document.querySelector(\'.\' + this.options.className);\n
+    }\n
+    if (!container) {\n
+      container = document.createElement(\'div\');\n
+      addClass(container, this.options.className);\n
+\n
+      if (name) {\n
+        addClass(container, name);\n
+      }\n
+      document.getElementsByTagName(\'body\')[0].appendChild(container);\n
+    }\n
+\n
+    return container;\n
+  }\n
+\n
+  /**\n
+   * @private\n
+   */\n
+  blockMainTableCallbacks() {\n
+    this._afterScrollCallback = function() {};\n
+    this.hot.addHook(\'afterScrollVertically\', this._afterScrollCallback);\n
+    this.hot.addHook(\'afterScrollHorizontally\', this._afterScrollCallback);\n
+  }\n
+\n
+  /**\n
+   * @private\n
+   */\n
+  releaseMainTableCallbacks() {\n
+    if (this._afterScrollCallback) {\n
+      this.hot.removeHook(\'afterScrollVertically\', this._afterScrollCallback);\n
+      this.hot.removeHook(\'afterScrollHorizontally\', this._afterScrollCallback);\n
+      this._afterScrollCallback = null;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * On before key down listener\n
+   *\n
+   * @private\n
+   * @param {Event} event\n
+   */\n
+  onBeforeKeyDown(event) {\n
+    let selection = this.hotMenu.getSelected();\n
+    let stopEvent = false;\n
+\n
+    switch (event.keyCode) {\n
+      case KEY_CODES.ESCAPE:\n
+        this.close();\n
+        stopEvent = true;\n
+        break;\n
+\n
+      case KEY_CODES.ENTER:\n
+        if (selection) {\n
+          if (this.hotMenu.getData()[selection[0]].submenu) {\n
+            stopEvent = true;\n
+          } else {\n
+            this.executeCommand(event);\n
+            this.close(true);\n
+          }\n
+        }\n
+        break;\n
+\n
+      case KEY_CODES.ARROW_DOWN:\n
+        if (selection) {\n
+          this.selectNextCell(selection[0], selection[1]);\n
+        } else {\n
+          this.selectFirstCell();\n
+        }\n
+        stopEvent = true;\n
+        break;\n
+\n
+      case KEY_CODES.ARROW_UP:\n
+        if (selection) {\n
+          this.selectPrevCell(selection[0], selection[1]);\n
+        } else {\n
+          this.selectLastCell();\n
+        }\n
+        stopEvent = true;\n
+        break;\n
+\n
+      case KEY_CODES.ARROW_RIGHT:\n
+        if (selection) {\n
+          let menu = this.openSubMenu(selection[0]);\n
+\n
+          if (menu) {\n
+            menu.selectFirstCell();\n
+          }\n
+        }\n
+        stopEvent = true;\n
+\n
+        break;\n
+\n
+      case KEY_CODES.ARROW_LEFT:\n
+        if (selection && this.parentMenu) {\n
+          this.parentMenu.closeAllSubMenus();\n
+          stopEvent = true;\n
+        }\n
+        break;\n
+    }\n
+    if (stopEvent) {\n
+      event.preventDefault();\n
+      stopImmediatePropagation(event);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * On after init listener.\n
+   *\n
+   * @private\n
+   */\n
+  onAfterInit() {\n
+    const data = this.hotMenu.getSettings().data;\n
+    const hiderStyle = this.hotMenu.view.wt.wtTable.hider.style;\n
+    const holderStyle = this.hotMenu.view.wt.wtTable.holder.style;\n
+    let currentHiderWidth = parseInt(hiderStyle.width, 10);\n
+    let realHeight = 0;\n
+\n
+    arrayEach(data, (value) => realHeight += value.name === SEPARATOR ? 1 : 26);\n
+    holderStyle.width = currentHiderWidth + 22 + \'px\';\n
+    holderStyle.height = realHeight + 4 + \'px\';\n
+  }\n
+}\n
+\n
+export {Menu};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13434</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>menu.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

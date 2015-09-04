@@ -1,0 +1,3898 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272724.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>core.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>116936</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>core.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import numeral from \'numeral\';\n
+import {addClass, empty, isChildOfWebComponentTable, removeClass} from \'./helpers/dom/element\';\n
+import {columnFactory} from \'./helpers/setting\';\n
+import {DataMap} from \'./dataMap\';\n
+import {EditorManager} from \'./editorManager\';\n
+import {eventManager as eventManagerObject} from \'./eventManager\';\n
+import {extend, duckSchema, isObjectEquals, deepClone} from \'./helpers/object\';\n
+import {getPlugin} from \'./plugins\';\n
+import {getRenderer} from \'./renderers\';\n
+import {randomString} from \'./helpers/string\';\n
+import {TableView} from \'./tableView\';\n
+import {translateRowsToColumns, cellMethodLookupFactory, spreadsheetColumnLabel} from \'./helpers/data\';\n
+import {WalkontableCellCoords} from \'./3rdparty/walkontable/src/cell/coords\';\n
+import {WalkontableCellRange} from \'./3rdparty/walkontable/src/cell/range\';\n
+import {WalkontableSelection} from \'./3rdparty/walkontable/src/selection\';\n
+import {WalkontableViewportColumnsCalculator} from \'./3rdparty/walkontable/src/calculator/viewportColumns\';\n
+\n
+Handsontable.activeGuid = null;\n
+\n
+/**\n
+ * Handsontable constructor\n
+ *\n
+ * @core\n
+ * @dependencies numeral\n
+ * @constructor Core\n
+ * @description\n
+ *\n
+ * After Handsontable is constructed, you can modify the grid behavior using the available public methods.\n
+ *\n
+ * ---\n
+ * ## How to call methods\n
+ *\n
+ * These are 2 equal ways to call a Handsontable method:\n
+ *\n
+ * ```js\n
+ * // all following examples assume that you constructed Handsontable like this\n
+ * var ht = new Handsontable(document.getElementById(\'example1\'), options);\n
+ *\n
+ * // now, to use setDataAtCell method, you can either:\n
+ * ht.setDataAtCell(0, 0, \'new value\');\n
+ * ```\n
+ *\n
+ * Alternatively, you can call the method using jQuery wrapper (__obsolete__, requires initialization using our jQuery guide\n
+ * ```js\n
+ *   $(\'#example1\').handsontable(\'setDataAtCell\', 0, 0, \'new value\');\n
+ * ```\n
+ * ---\n
+ */\n
+Handsontable.Core = function Core(rootElement, userSettings) {\n
+  var priv\n
+    , datamap\n
+    , grid\n
+    , selection\n
+    , editorManager\n
+    , instance = this\n
+    , GridSettings = function() {}\n
+    , eventManager = eventManagerObject(instance);\n
+\n
+  extend(GridSettings.prototype, DefaultSettings.prototype); //create grid settings as a copy of default settings\n
+  extend(GridSettings.prototype, userSettings); //overwrite defaults with user settings\n
+  extend(GridSettings.prototype, expandType(userSettings));\n
+\n
+  this.rootElement = rootElement;\n
+  this.isHotTableEnv = isChildOfWebComponentTable(this.rootElement);\n
+  Handsontable.eventManager.isHotTableEnv = this.isHotTableEnv;\n
+\n
+  this.container = document.createElement(\'DIV\');\n
+  this.renderCall = false;\n
+\n
+  rootElement.insertBefore(this.container, rootElement.firstChild);\n
+\n
+  this.guid = \'ht_\' + randomString(); //this is the namespace for global events\n
+\n
+  if (!this.rootElement.id || this.rootElement.id.substring(0, 3) === "ht_") {\n
+    this.rootElement.id = this.guid; //if root element does not have an id, assign a random id\n
+  }\n
+  priv = {\n
+    cellSettings: [],\n
+    columnSettings: [],\n
+    columnsSettingConflicts: [\'data\', \'width\'],\n
+    settings: new GridSettings(), // current settings instance\n
+    selRange: null, //exposed by public method `getSelectedRange`\n
+    isPopulated: null,\n
+    scrollable: null,\n
+    firstRun: true\n
+  };\n
+\n
+  grid = {\n
+    /**\n
+     * Inserts or removes rows and columns\n
+     *\n
+     * @memberof Core#\n
+     * @function alter\n
+     * @private\n
+     * @param {String} action Possible values: "insert_row", "insert_col", "remove_row", "remove_col"\n
+     * @param {Number} index\n
+     * @param {Number} amount\n
+     * @param {String} [source] Optional. Source of hook runner.\n
+     * @param {Boolean} [keepEmptyRows] Optional. Flag for preventing deletion of empty rows.\n
+     */\n
+    alter: function(action, index, amount, source, keepEmptyRows) {\n
+      var delta;\n
+\n
+      amount = amount || 1;\n
+\n
+      switch (action) {\n
+        case "insert_row":\n
+\n
+          if (instance.getSettings().maxRows === instance.countRows()) {\n
+            return;\n
+          }\n
+\n
+          delta = datamap.createRow(index, amount);\n
+\n
+          if (delta) {\n
+            if (selection.isSelected() && priv.selRange.from.row >= index) {\n
+              priv.selRange.from.row = priv.selRange.from.row + delta;\n
+              selection.transformEnd(delta, 0); //will call render() internally\n
+            }\n
+            else {\n
+              selection.refreshBorders(); //it will call render and prepare methods\n
+            }\n
+          }\n
+          break;\n
+\n
+        case "insert_col":\n
+          // //column order may have changes, so we need to translate the selection column index -> source array index\n
+          // index = instance.runHooksAndReturn(\'modifyCol\', index);\n
+          delta = datamap.createCol(index, amount);\n
+\n
+          if (delta) {\n
+\n
+            if (Array.isArray(instance.getSettings().colHeaders)) {\n
+              var spliceArray = [index, 0];\n
+              spliceArray.length += delta; //inserts empty (undefined) elements at the end of an array\n
+              Array.prototype.splice.apply(instance.getSettings().colHeaders, spliceArray); //inserts empty (undefined) elements into the colHeader array\n
+            }\n
+\n
+            if (selection.isSelected() && priv.selRange.from.col >= index) {\n
+              priv.selRange.from.col = priv.selRange.from.col + delta;\n
+              selection.transformEnd(0, delta); //will call render() internally\n
+            }\n
+            else {\n
+              selection.refreshBorders(); //it will call render and prepare methods\n
+            }\n
+          }\n
+          break;\n
+\n
+        case "remove_row":\n
+          //column order may have changes, so we need to translate the selection column index -> source array index\n
+          index = instance.runHooks(\'modifyCol\', index);\n
+\n
+          datamap.removeRow(index, amount);\n
+          priv.cellSettings.splice(index, amount);\n
+\n
+          var fixedRowsTop = instance.getSettings().fixedRowsTop;\n
+          if (fixedRowsTop >= index + 1) {\n
+            instance.getSettings().fixedRowsTop -= Math.min(amount, fixedRowsTop - index);\n
+          }\n
+\n
+          grid.adjustRowsAndCols();\n
+          selection.refreshBorders(); //it will call render and prepare methods\n
+          break;\n
+\n
+        case "remove_col":\n
+          datamap.removeCol(index, amount);\n
+\n
+          for (var row = 0, len = datamap.getAll().length; row < len; row++) {\n
+            if (row in priv.cellSettings) {  //if row hasn\'t been rendered it wouldn\'t have cellSettings\n
+              priv.cellSettings[row].splice(index, amount);\n
+            }\n
+          }\n
+\n
+          var fixedColumnsLeft = instance.getSettings().fixedColumnsLeft;\n
+          if (fixedColumnsLeft >= index + 1) {\n
+            instance.getSettings().fixedColumnsLeft -= Math.min(amount, fixedColumnsLeft - index);\n
+          }\n
+\n
+          if (Array.isArray(instance.getSettings().colHeaders)) {\n
+            if (typeof index == \'undefined\') {\n
+              index = -1;\n
+            }\n
+            instance.getSettings().colHeaders.splice(index, amount);\n
+          }\n
+\n
+          //priv.columnSettings.splice(index, amount);\n
+\n
+          grid.adjustRowsAndCols();\n
+          selection.refreshBorders(); //it will call render and prepare methods\n
+          break;\n
+\n
+        /* jshint ignore:start */\n
+        default:\n
+          throw new Error(\'There is no such action "\' + action + \'"\');\n
+          break;\n
+        /* jshint ignore:end */\n
+      }\n
+\n
+      if (!keepEmptyRows) {\n
+        grid.adjustRowsAndCols(); //makes sure that we did not add rows that will be removed in next refresh\n
+      }\n
+    },\n
+\n
+    /**\n
+     * Makes sure there are empty rows at the bottom of the table\n
+     */\n
+    adjustRowsAndCols: function() {\n
+      if (priv.settings.minRows) {\n
+        // should I add empty rows to data source to meet minRows?\n
+        let rows = instance.countRows();\n
+\n
+        if (rows < priv.settings.minRows) {\n
+          for (let r = 0, minRows = priv.settings.minRows; r < minRows - rows; r++) {\n
+            datamap.createRow(instance.countRows(), 1, true);\n
+          }\n
+        }\n
+      }\n
+      if (priv.settings.minSpareRows) {\n
+        let emptyRows = instance.countEmptyRows(true);\n
+\n
+        // should I add empty rows to meet minSpareRows?\n
+        if (emptyRows < priv.settings.minSpareRows) {\n
+          for (; emptyRows < priv.settings.minSpareRows && instance.countRows() < priv.settings.maxRows; emptyRows++) {\n
+            datamap.createRow(instance.countRows(), 1, true);\n
+          }\n
+        }\n
+      }\n
+      {\n
+        let emptyCols;\n
+\n
+        // count currently empty cols\n
+        if (priv.settings.minCols || priv.settings.minSpareCols) {\n
+          emptyCols = instance.countEmptyCols(true);\n
+        }\n
+\n
+        // should I add empty cols to meet minCols?\n
+        if (priv.settings.minCols && !priv.settings.columns && instance.countCols() < priv.settings.minCols) {\n
+          for (; instance.countCols() < priv.settings.minCols; emptyCols++) {\n
+            datamap.createCol(instance.countCols(), 1, true);\n
+          }\n
+        }\n
+        // should I add empty cols to meet minSpareCols?\n
+        if (priv.settings.minSpareCols && !priv.settings.columns && instance.dataType === \'array\' &&\n
+            emptyCols < priv.settings.minSpareCols) {\n
+          for (; emptyCols < priv.settings.minSpareCols && instance.countCols() < priv.settings.maxCols; emptyCols++) {\n
+            datamap.createCol(instance.countCols(), 1, true);\n
+          }\n
+        }\n
+      }\n
+      let rowCount = instance.countRows();\n
+      let colCount = instance.countCols();\n
+\n
+      if (rowCount === 0 || colCount === 0) {\n
+        selection.deselect();\n
+      }\n
+\n
+      if (selection.isSelected()) {\n
+        let selectionChanged = false;\n
+        let fromRow = priv.selRange.from.row;\n
+        let fromCol = priv.selRange.from.col;\n
+        let toRow = priv.selRange.to.row;\n
+        let toCol = priv.selRange.to.col;\n
+\n
+        // if selection is outside, move selection to last row\n
+        if (fromRow > rowCount - 1) {\n
+          fromRow = rowCount - 1;\n
+          selectionChanged = true;\n
+\n
+          if (toRow > fromRow) {\n
+            toRow = fromRow;\n
+          }\n
+        } else if (toRow > rowCount - 1) {\n
+          toRow = rowCount - 1;\n
+          selectionChanged = true;\n
+\n
+          if (fromRow > toRow) {\n
+            fromRow = toRow;\n
+          }\n
+        }\n
+        // if selection is outside, move selection to last row\n
+        if (fromCol > colCount - 1) {\n
+          fromCol = colCount - 1;\n
+          selectionChanged = true;\n
+\n
+          if (toCol > fromCol) {\n
+            toCol = fromCol;\n
+          }\n
+        } else if (toCol > colCount - 1) {\n
+          toCol = colCount - 1;\n
+          selectionChanged = true;\n
+\n
+          if (fromCol > toCol) {\n
+            fromCol = toCol;\n
+          }\n
+        }\n
+\n
+        if (selectionChanged) {\n
+          instance.selectCell(fromRow, fromCol, toRow, toCol);\n
+        }\n
+      }\n
+      if (instance.view) {\n
+        instance.view.wt.wtOverlays.adjustElementsSize();\n
+      }\n
+    },\n
+\n
+    /**\n
+     * Populate cells at position with 2d array\n
+     *\n
+     * @private\n
+     * @param {Object} start Start selection position\n
+     * @param {Array} input 2d array\n
+     * @param {Object} [end] End selection position (only for drag-down mode)\n
+     * @param {String} [source="populateFromArray"]\n
+     * @param {String} [method="overwrite"]\n
+     * @param {String} direction (left|right|up|down)\n
+     * @param {Array} deltas array\n
+     * @returns {Object|undefined} ending td in pasted area (only if any cell was changed)\n
+     */\n
+    populateFromArray: function(start, input, end, source, method, direction, deltas) {\n
+      var r, rlen, c, clen, setData = [], current = {};\n
+      rlen = input.length;\n
+      if (rlen === 0) {\n
+        return false;\n
+      }\n
+\n
+      var repeatCol\n
+        , repeatRow\n
+        , cmax\n
+        , rmax;\n
+\n
+      // insert data with specified pasteMode method\n
+      switch (method) {\n
+        case \'shift_down\' :\n
+          repeatCol = end ? end.col - start.col + 1 : 0;\n
+          repeatRow = end ? end.row - start.row + 1 : 0;\n
+          input = translateRowsToColumns(input);\n
+          for (c = 0, clen = input.length, cmax = Math.max(clen, repeatCol); c < cmax; c++) {\n
+            if (c < clen) {\n
+              for (r = 0, rlen = input[c].length; r < repeatRow - rlen; r++) {\n
+                input[c].push(input[c][r % rlen]);\n
+              }\n
+              input[c].unshift(start.col + c, start.row, 0);\n
+              instance.spliceCol.apply(instance, input[c]);\n
+            }\n
+            else {\n
+              input[c % clen][0] = start.col + c;\n
+              instance.spliceCol.apply(instance, input[c % clen]);\n
+            }\n
+          }\n
+          break;\n
+\n
+        case \'shift_right\' :\n
+          repeatCol = end ? end.col - start.col + 1 : 0;\n
+          repeatRow = end ? end.row - start.row + 1 : 0;\n
+          for (r = 0, rlen = input.length, rmax = Math.max(rlen, repeatRow); r < rmax; r++) {\n
+            if (r < rlen) {\n
+              for (c = 0, clen = input[r].length; c < repeatCol - clen; c++) {\n
+                input[r].push(input[r][c % clen]);\n
+              }\n
+              input[r].unshift(start.row + r, start.col, 0);\n
+              instance.spliceRow.apply(instance, input[r]);\n
+            }\n
+            else {\n
+              input[r % rlen][0] = start.row + r;\n
+              instance.spliceRow.apply(instance, input[r % rlen]);\n
+            }\n
+          }\n
+          break;\n
+\n
+        /* jshint ignore:start */\n
+        case \'overwrite\':\n
+        default:\n
+          /* jshint ignore:end */\n
+          // overwrite and other not specified options\n
+          current.row = start.row;\n
+          current.col = start.col;\n
+\n
+          var iterators = {row: 0, col: 0}, // number of packages\n
+            selected = { // selected range\n
+              row: (end && start) ? (end.row - start.row + 1) : 1,\n
+              col: (end && start) ? (end.col - start.col + 1) : 1\n
+            },\n
+            pushData = true;\n
+\n
+          if ([\'up\', \'left\'].indexOf(direction) !== -1) {\n
+            iterators = {\n
+              row: Math.ceil(selected.row / rlen) || 1,\n
+              col: Math.ceil(selected.col / input[0].length) || 1\n
+            };\n
+          } else if ([\'down\', \'right\'].indexOf(direction) !== -1) {\n
+            iterators = {\n
+              row: 1,\n
+              col: 1\n
+            };\n
+          }\n
+\n
+\n
+          for (r = 0; r < rlen; r++) {\n
+            if ((end && current.row > end.row) || (!priv.settings.allowInsertRow && current.row > instance.countRows() - 1) || (current.row >= priv.settings.maxRows)) {\n
+              break;\n
+            }\n
+            current.col = start.col;\n
+            clen = input[r] ? input[r].length : 0;\n
+            for (c = 0; c < clen; c++) {\n
+              if ((end && current.col > end.col) || (!priv.settings.allowInsertColumn && current.col > instance.countCols() - 1) || (current.col >= priv.settings.maxCols)) {\n
+                break;\n
+              }\n
+\n
+              if (!instance.getCellMeta(current.row, current.col).readOnly) {\n
+                var result,\n
+                  value = input[r][c],\n
+                  orgValue = instance.getDataAtCell(current.row, current.col),\n
+                  index = {\n
+                    row: r,\n
+                    col: c\n
+                  },\n
+                  valueSchema,\n
+                  orgValueSchema;\n
+\n
+                if (source === \'autofill\') {\n
+                  result = instance.runHooks(\'beforeAutofillInsidePopulate\', index, direction, input, deltas, iterators, selected);\n
+\n
+                  if (result) {\n
+                    iterators = typeof(result.iterators) !== \'undefined\' ? result.iterators : iterators;\n
+                    value = typeof(result.value) !== \'undefined\' ? result.value : value;\n
+                  }\n
+                }\n
+                if (value !== null && typeof value === \'object\') {\n
+                  if (orgValue === null || typeof orgValue !== \'object\') {\n
+                    pushData = false;\n
+\n
+                  } else {\n
+                    orgValueSchema = duckSchema(orgValue[0] || orgValue);\n
+                    valueSchema = duckSchema(value[0] || value);\n
+\n
+                    /* jshint -W073 */\n
+                    if (isObjectEquals(orgValueSchema, valueSchema)) {\n
+                      value = deepClone(value);\n
+                    } else {\n
+                      pushData = false;\n
+                    }\n
+                  }\n
+\n
+                } else if (orgValue !== null && typeof orgValue === \'object\') {\n
+                  pushData = false;\n
+                }\n
+                if (pushData) {\n
+                  setData.push([current.row, current.col, value]);\n
+                }\n
+                pushData = true;\n
+              }\n
+\n
+              current.col++;\n
+\n
+              if (end && c === clen - 1) {\n
+                c = -1;\n
+\n
+                if ([\'down\', \'right\'].indexOf(direction) !== -1) {\n
+                  iterators.col++;\n
+                } else if ([\'up\', \'left\'].indexOf(direction) !== -1) {\n
+                  if (iterators.col > 1) {\n
+                    iterators.col--;\n
+                  }\n
+                }\n
+\n
+              }\n
+            }\n
+\n
+            current.row++;\n
+            iterators.col = 1;\n
+\n
+            if (end && r === rlen - 1) {\n
+              r = -1;\n
+\n
+              if ([\'down\', \'right\'].indexOf(direction) !== -1) {\n
+                iterators.row++;\n
+              } else if ([\'up\', \'left\'].indexOf(direction) !== -1) {\n
+                if (iterators.row > 1) {\n
+                  iterators.row--;\n
+                }\n
+              }\n
+\n
+            }\n
+          }\n
+          instance.setDataAtCell(setData, null, null, source || \'populateFromArray\');\n
+          break;\n
+      }\n
+    }\n
+  };\n
+\n
+  this.selection = selection = { //this public assignment is only temporary\n
+    inProgress: false,\n
+\n
+    selectedHeader: {\n
+      cols: false,\n
+      rows: false\n
+    },\n
+\n
+    /**\n
+     * @param {Number} rows\n
+     * @param {Number} cols\n
+     */\n
+    setSelectedHeaders: function(rows, cols) {\n
+      instance.selection.selectedHeader.rows = rows;\n
+      instance.selection.selectedHeader.cols = cols;\n
+    },\n
+\n
+    /**\n
+     * Sets inProgress to `true`. This enables onSelectionEnd and onSelectionEndByProp to function as desired.\n
+     */\n
+    begin: function() {\n
+      instance.selection.inProgress = true;\n
+    },\n
+\n
+    /**\n
+     * Sets inProgress to `false`. Triggers onSelectionEnd and onSelectionEndByProp.\n
+     */\n
+    finish: function() {\n
+      var sel = instance.getSelected();\n
+      Handsontable.hooks.run(instance, "afterSelectionEnd", sel[0], sel[1], sel[2], sel[3]);\n
+      Handsontable.hooks.run(instance, "afterSelectionEndByProp", sel[0], instance.colToProp(sel[1]), sel[2], instance.colToProp(sel[3]));\n
+      instance.selection.inProgress = false;\n
+    },\n
+\n
+    /**\n
+     * @returns {Boolean}\n
+     */\n
+    isInProgress: function() {\n
+      return instance.selection.inProgress;\n
+    },\n
+\n
+    /**\n
+     * Starts selection range on given td object.\n
+     *\n
+     * @param {WalkontableCellCoords} coords\n
+     * @param keepEditorOpened\n
+     */\n
+    setRangeStart: function(coords, keepEditorOpened) {\n
+      Handsontable.hooks.run(instance, "beforeSetRangeStart", coords);\n
+      priv.selRange = new WalkontableCellRange(coords, coords, coords);\n
+      selection.setRangeEnd(coords, null, keepEditorOpened);\n
+    },\n
+\n
+    /**\n
+     * Ends selection range on given td object.\n
+     *\n
+     * @param {WalkontableCellCoords} coords\n
+     * @param {Boolean} [scrollToCell=true] If `true`, viewport will be scrolled to range end\n
+     * @param {Boolean} [keepEditorOpened] If `true`, cell editor will be still opened after changing selection range\n
+     */\n
+    setRangeEnd: function(coords, scrollToCell, keepEditorOpened) {\n
+      if (priv.selRange === null) {\n
+        return;\n
+      }\n
+      var disableVisualSelection;\n
+\n
+      //trigger handlers\n
+      Handsontable.hooks.run(instance, "beforeSetRangeEnd", coords);\n
+      instance.selection.begin();\n
+      priv.selRange.to = new WalkontableCellCoords(coords.row, coords.col);\n
+\n
+      if (!priv.settings.multiSelect) {\n
+        priv.selRange.from = coords;\n
+      }\n
+      // set up current selection\n
+      instance.view.wt.selections.current.clear();\n
+\n
+      disableVisualSelection = instance.getCellMeta(priv.selRange.highlight.row, priv.selRange.highlight.col).disableVisualSelection;\n
+\n
+      if (typeof disableVisualSelection === \'string\') {\n
+        disableVisualSelection = [disableVisualSelection];\n
+      }\n
+\n
+      if (disableVisualSelection === false ||\n
+          Array.isArray(disableVisualSelection) && disableVisualSelection.indexOf(\'current\') === -1) {\n
+        instance.view.wt.selections.current.add(priv.selRange.highlight);\n
+      }\n
+      // set up area selection\n
+      instance.view.wt.selections.area.clear();\n
+\n
+      if ((disableVisualSelection === false ||\n
+          Array.isArray(disableVisualSelection) && disableVisualSelection.indexOf(\'area\') === -1) &&\n
+          selection.isMultiple()) {\n
+        instance.view.wt.selections.area.add(priv.selRange.from);\n
+        instance.view.wt.selections.area.add(priv.selRange.to);\n
+      }\n
+      // set up highlight\n
+      if (priv.settings.currentRowClassName || priv.settings.currentColClassName) {\n
+        instance.view.wt.selections.highlight.clear();\n
+        instance.view.wt.selections.highlight.add(priv.selRange.from);\n
+        instance.view.wt.selections.highlight.add(priv.selRange.to);\n
+      }\n
+\n
+      // trigger handlers\n
+      Handsontable.hooks.run(instance, "afterSelection",\n
+        priv.selRange.from.row, priv.selRange.from.col, priv.selRange.to.row, priv.selRange.to.col);\n
+      Handsontable.hooks.run(instance, "afterSelectionByProp",\n
+        priv.selRange.from.row, datamap.colToProp(priv.selRange.from.col), priv.selRange.to.row, datamap.colToProp(priv.selRange.to.col));\n
+\n
+      if (scrollToCell !== false && instance.view.mainViewIsActive()) {\n
+        if (priv.selRange.from && !selection.isMultiple()) {\n
+          instance.view.scrollViewport(priv.selRange.from);\n
+        } else {\n
+          instance.view.scrollViewport(coords);\n
+        }\n
+      }\n
+      selection.refreshBorders(null, keepEditorOpened);\n
+    },\n
+\n
+    /**\n
+     * Destroys editor, redraws borders around cells, prepares editor.\n
+     *\n
+     * @param {Boolean} [revertOriginal]\n
+     * @param {Boolean} [keepEditor]\n
+     */\n
+    refreshBorders: function(revertOriginal, keepEditor) {\n
+      if (!keepEditor) {\n
+        editorManager.destroyEditor(revertOriginal);\n
+      }\n
+      instance.view.render();\n
+\n
+      if (selection.isSelected() && !keepEditor) {\n
+        editorManager.prepareEditor();\n
+      }\n
+    },\n
+\n
+    /**\n
+     * Returns information if we have a multiselection.\n
+     *\n
+     * @returns {Boolean}\n
+     */\n
+    isMultiple: function() {\n
+      var isMultiple = !(priv.selRange.to.col === priv.selRange.from.col && priv.selRange.to.row === priv.selRange.from.row)\n
+        , modifier = Handsontable.hooks.run(instance, \'afterIsMultipleSelection\', isMultiple);\n
+\n
+      if (isMultiple) {\n
+        return modifier;\n
+      }\n
+    },\n
+\n
+    /**\n
+     * Selects cell relative to current cell (if possible).\n
+     */\n
+    transformStart: function(rowDelta, colDelta, force, keepEditorOpened) {\n
+      var delta = new WalkontableCellCoords(rowDelta, colDelta),\n
+        rowTransformDir = 0,\n
+        colTransformDir = 0,\n
+        totalRows,\n
+        totalCols,\n
+        coords;\n
+\n
+      instance.runHooks(\'modifyTransformStart\', delta);\n
+      totalRows = instance.countRows();\n
+      totalCols = instance.countCols();\n
+\n
+      /* jshint ignore:start */\n
+      if (priv.selRange.highlight.row + rowDelta > totalRows - 1) {\n
+        if (force && priv.settings.minSpareRows > 0) {\n
+          instance.alter("insert_row", totalRows);\n
+          totalRows = instance.countRows();\n
+\n
+        } else if (priv.settings.autoWrapCol) {\n
+          delta.row = 1 - totalRows;\n
+          delta.col = priv.selRange.highlight.col + delta.col == totalCols - 1 ? 1 - totalCols : 1;\n
+        }\n
+      } else if (priv.settings.autoWrapCol && priv.selRange.highlight.row + delta.row < 0 && priv.selRange.highlight.col + delta.col >= 0) {\n
+        delta.row = totalRows - 1;\n
+        delta.col = priv.selRange.highlight.col + delta.col == 0 ? totalCols - 1 : -1;\n
+      }\n
+\n
+      if (priv.selRange.highlight.col + delta.col > totalCols - 1) {\n
+        if (force && priv.settings.minSpareCols > 0) {\n
+          instance.alter("insert_col", totalCols);\n
+          totalCols = instance.countCols();\n
+\n
+        } else if (priv.settings.autoWrapRow) {\n
+          delta.row = priv.selRange.highlight.row + delta.row == totalRows - 1 ? 1 - totalRows : 1;\n
+          delta.col = 1 - totalCols;\n
+        }\n
+      } else if (priv.settings.autoWrapRow && priv.selRange.highlight.col + delta.col < 0 && priv.selRange.highlight.row + delta.row >= 0) {\n
+        delta.row = priv.selRange.highlight.row + delta.row == 0 ? totalRows - 1 : -1;\n
+        delta.col = totalCols - 1;\n
+      }\n
+      /* jshint ignore:end */\n
+\n
+      coords = new WalkontableCellCoords(priv.selRange.highlight.row + delta.row, priv.selRange.highlight.col + delta.col);\n
+\n
+      if (coords.row < 0) {\n
+        rowTransformDir = -1;\n
+        coords.row = 0;\n
+\n
+      } else if (coords.row > 0 && coords.row >= totalRows) {\n
+        rowTransformDir = 1;\n
+        coords.row = totalRows - 1;\n
+      }\n
+\n
+      if (coords.col < 0) {\n
+        colTransformDir = -1;\n
+        coords.col = 0;\n
+\n
+      } else if (coords.col > 0 && coords.col >= totalCols) {\n
+        colTransformDir = 1;\n
+        coords.col = totalCols - 1;\n
+      }\n
+      instance.runHooks(\'afterModifyTransformStart\', coords, rowTransformDir, colTransformDir);\n
+      selection.setRangeStart(coords, keepEditorOpened);\n
+    },\n
+\n
+    /**\n
+     * Sets selection end cell relative to current selection end cell (if possible).\n
+     */\n
+    transformEnd: function(rowDelta, colDelta) {\n
+      var delta = new WalkontableCellCoords(rowDelta, colDelta),\n
+        rowTransformDir = 0,\n
+        colTransformDir = 0,\n
+        totalRows,\n
+        totalCols,\n
+        coords;\n
+\n
+      instance.runHooks(\'modifyTransformEnd\', delta);\n
+\n
+      totalRows = instance.countRows();\n
+      totalCols = instance.countCols();\n
+      coords = new WalkontableCellCoords(priv.selRange.to.row + delta.row, priv.selRange.to.col + delta.col);\n
+\n
+      if (coords.row < 0) {\n
+        rowTransformDir = -1;\n
+        coords.row = 0;\n
+\n
+      } else if (coords.row > 0 && coords.row >= totalRows) {\n
+        rowTransformDir = 1;\n
+        coords.row = totalRows - 1;\n
+      }\n
+\n
+      if (coords.col < 0) {\n
+        colTransformDir = -1;\n
+        coords.col = 0;\n
+\n
+      } else if (coords.col > 0 && coords.col >= totalCols) {\n
+        colTransformDir = 1;\n
+        coords.col = totalCols - 1;\n
+      }\n
+      instance.runHooks(\'afterModifyTransformEnd\', coords, rowTransformDir, colTransformDir);\n
+      selection.setRangeEnd(coords, true);\n
+    },\n
+\n
+    /**\n
+     * Returns `true` if currently there is a selection on screen, `false` otherwise.\n
+     *\n
+     * @returns {Boolean}\n
+     */\n
+    isSelected: function() {\n
+      return (priv.selRange !== null);\n
+    },\n
+\n
+    /**\n
+     * Returns `true` if coords is within current selection coords.\n
+     *\n
+     * @param {WalkontableCellCoords} coords\n
+     * @returns {Boolean}\n
+     */\n
+    inInSelection: function(coords) {\n
+      if (!selection.isSelected()) {\n
+        return false;\n
+      }\n
+      return priv.selRange.includes(coords);\n
+    },\n
+\n
+    /**\n
+     * Deselects all selected cells\n
+     */\n
+    deselect: function() {\n
+      if (!selection.isSelected()) {\n
+        return;\n
+      }\n
+      instance.selection.inProgress = false; //needed by HT inception\n
+      priv.selRange = null;\n
+      instance.view.wt.selections.current.clear();\n
+      instance.view.wt.selections.area.clear();\n
+      if (priv.settings.currentRowClassName || priv.settings.currentColClassName) {\n
+        instance.view.wt.selections.highlight.clear();\n
+      }\n
+      editorManager.destroyEditor();\n
+      selection.refreshBorders();\n
+      Handsontable.hooks.run(instance, \'afterDeselect\');\n
+    },\n
+\n
+    /**\n
+     * Select all cells\n
+     */\n
+    selectAll: function() {\n
+      if (!priv.settings.multiSelect) {\n
+        return;\n
+      }\n
+      selection.setRangeStart(new WalkontableCellCoords(0, 0));\n
+      selection.setRangeEnd(new WalkontableCellCoords(instance.countRows() - 1, instance.countCols() - 1), false);\n
+    },\n
+\n
+    /**\n
+     * Deletes data from selected cells\n
+     */\n
+    empty: function() {\n
+      if (!selection.isSelected()) {\n
+        return;\n
+      }\n
+      var topLeft = priv.selRange.getTopLeftCorner();\n
+      var bottomRight = priv.selRange.getBottomRightCorner();\n
+      var r, c, changes = [];\n
+      for (r = topLeft.row; r <= bottomRight.row; r++) {\n
+        for (c = topLeft.col; c <= bottomRight.col; c++) {\n
+          if (!instance.getCellMeta(r, c).readOnly) {\n
+            changes.push([r, c, \'\']);\n
+          }\n
+        }\n
+      }\n
+      instance.setDataAtCell(changes);\n
+    }\n
+  };\n
+\n
+  this.init = function() {\n
+    Handsontable.hooks.run(instance, \'beforeInit\');\n
+\n
+    if (Handsontable.mobileBrowser) {\n
+      addClass(instance.rootElement, \'mobile\');\n
+    }\n
+\n
+    this.updateSettings(priv.settings, true);\n
+\n
+    this.view = new TableView(this);\n
+    editorManager = new EditorManager(instance, priv, selection, datamap);\n
+\n
+    this.forceFullRender = true; //used when data was changed\n
+\n
+    Handsontable.hooks.run(instance, \'init\');\n
+    this.view.render();\n
+\n
+    if (typeof priv.firstRun === \'object\') {\n
+      Handsontable.hooks.run(instance, \'afterChange\', priv.firstRun[0], priv.firstRun[1]);\n
+      priv.firstRun = false;\n
+    }\n
+    Handsontable.hooks.run(instance, \'afterInit\');\n
+  };\n
+\n
+  function ValidatorsQueue() { //moved this one level up so it can be used in any function here. Probably this should be moved to a separate file\n
+    var resolved = false;\n
+\n
+    return {\n
+      validatorsInQueue: 0,\n
+      addValidatorToQueue: function() {\n
+        this.validatorsInQueue++;\n
+        resolved = false;\n
+      },\n
+      removeValidatorFormQueue: function() {\n
+        this.validatorsInQueue = this.validatorsInQueue - 1 < 0 ? 0 : this.validatorsInQueue - 1;\n
+        this.checkIfQueueIsEmpty();\n
+      },\n
+      onQueueEmpty: function() {\n
+      },\n
+      checkIfQueueIsEmpty: function() {\n
+        /* jshint ignore:start */\n
+        if (this.validatorsInQueue == 0 && resolved == false) {\n
+          resolved = true;\n
+          this.onQueueEmpty();\n
+        }\n
+        /* jshint ignore:end */\n
+      }\n
+    };\n
+  }\n
+\n
+  function validateChanges(changes, source, callback) {\n
+    var waitingForValidator = new ValidatorsQueue();\n
+    waitingForValidator.onQueueEmpty = resolve;\n
+\n
+    for (var i = changes.length - 1; i >= 0; i--) {\n
+      if (changes[i] === null) {\n
+        changes.splice(i, 1);\n
+      }\n
+      else {\n
+        var row = changes[i][0];\n
+        var col = datamap.propToCol(changes[i][1]);\n
+        //column order may have changes, so we need to translate physical col index (stored in datasource) to logical (displayed to user)\n
+        var logicalCol = instance.runHooks(\'modifyCol\', col);\n
+        var cellProperties = instance.getCellMeta(row, logicalCol);\n
+\n
+        if (cellProperties.type === \'numeric\' && typeof changes[i][3] === \'string\') {\n
+          if (changes[i][3].length > 0 && (/^-?[\\d\\s]*(\\.|\\,)?\\d*$/.test(changes[i][3]) || cellProperties.format )) {\n
+            var len = changes[i][3].length;\n
+            if (typeof cellProperties.language == \'undefined\') {\n
+              numeral.language(\'en\');\n
+            }\n
+            //this input in format XXXX.XX is likely to come from paste. Let\'s parse it using international rules\n
+            else if (changes[i][3].indexOf(".") === len - 3 && changes[i][3].indexOf(",") === -1) {\n
+              numeral.language(\'en\');\n
+            }\n
+            else {\n
+              numeral.language(cellProperties.language);\n
+            }\n
+            if (numeral.validate(changes[i][3])) {\n
+              changes[i][3] = numeral().unformat(changes[i][3]);\n
+            }\n
+          }\n
+        }\n
+\n
+        /* jshint ignore:start */\n
+        if (instance.getCellValidator(cellProperties)) {\n
+          waitingForValidator.addValidatorToQueue();\n
+          instance.validateCell(changes[i][3], cellProperties, (function(i, cellProperties) {\n
+              return function(result) {\n
+                if (typeof result !== \'boolean\') {\n
+                  throw new Error("Validation error: result is not boolean");\n
+                }\n
+                if (result === false && cellProperties.allowInvalid === false) {\n
+                  changes.splice(i, 1);         // cancel the change\n
+                  cellProperties.valid = true;  // we cancelled the change, so cell value is still valid\n
+                  --i;\n
+                }\n
+                waitingForValidator.removeValidatorFormQueue();\n
+              };\n
+            })(i, cellProperties)\n
+            , source);\n
+        }\n
+        /* jshint ignore:end */\n
+      }\n
+    }\n
+    waitingForValidator.checkIfQueueIsEmpty();\n
+\n
+    function resolve() {\n
+      var beforeChangeResult;\n
+\n
+      if (changes.length) {\n
+        beforeChangeResult = Handsontable.hooks.run(instance, "beforeChange", changes, source);\n
+        if (typeof beforeChangeResult === \'function\') {\n
+          console.warn("Your beforeChange callback returns a function. It\'s not supported since Handsontable 0.12.1 (and the returned function will not be executed).");\n
+        } else if (beforeChangeResult === false) {\n
+          changes.splice(0, changes.length); //invalidate all changes (remove everything from array)\n
+        }\n
+      }\n
+      callback(); //called when async validators are resolved and beforeChange was not async\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Internal function to apply changes. Called after validateChanges\n
+   *\n
+   * @private\n
+   * @param {Array} changes Array in form of [row, prop, oldValue, newValue]\n
+   * @param {String} source String that identifies how this change will be described in changes array (useful in onChange callback)\n
+   * @fires Hooks#beforeChangeRender\n
+   * @fires Hooks#afterChange\n
+   */\n
+  function applyChanges(changes, source) {\n
+    var i = changes.length - 1;\n
+\n
+    if (i < 0) {\n
+      return;\n
+    }\n
+\n
+    for (; 0 <= i; i--) {\n
+      if (changes[i] === null) {\n
+        changes.splice(i, 1);\n
+        continue;\n
+      }\n
+\n
+      if (changes[i][2] == null && changes[i][3] == null) {\n
+        continue;\n
+      }\n
+\n
+      if (priv.settings.allowInsertRow) {\n
+        while (changes[i][0] > instance.countRows() - 1) {\n
+          datamap.createRow();\n
+        }\n
+      }\n
+\n
+      if (instance.dataType === \'array\' && priv.settings.allowInsertColumn) {\n
+        while (datamap.propToCol(changes[i][1]) > instance.countCols() - 1) {\n
+          datamap.createCol();\n
+        }\n
+      }\n
+\n
+      datamap.set(changes[i][0], changes[i][1], changes[i][3]);\n
+    }\n
+\n
+    instance.forceFullRender = true; //used when data was changed\n
+    grid.adjustRowsAndCols();\n
+    Handsontable.hooks.run(instance, \'beforeChangeRender\', changes, source);\n
+    selection.refreshBorders(null, true);\n
+    instance.view.wt.wtOverlays.adjustElementsSize();\n
+    Handsontable.hooks.run(instance, \'afterChange\', changes, source || \'edit\');\n
+  }\n
+\n
+  this.validateCell = function(value, cellProperties, callback, source) {\n
+    var validator = instance.getCellValidator(cellProperties);\n
+\n
+    function done(valid) {\n
+      var col = cellProperties.col,\n
+        row = cellProperties.row,\n
+        td = instance.getCell(row, col, true);\n
+\n
+      if (td) {\n
+        instance.view.wt.wtSettings.settings.cellRenderer(row, col, td);\n
+      }\n
+      callback(valid);\n
+    }\n
+\n
+    if (Object.prototype.toString.call(validator) === \'[object RegExp]\') {\n
+      validator = (function(validator) {\n
+        return function(value, callback) {\n
+          callback(validator.test(value));\n
+        };\n
+      })(validator);\n
+    }\n
+\n
+    if (typeof validator == \'function\') {\n
+\n
+      value = Handsontable.hooks.run(instance, "beforeValidate", value, cellProperties.row, cellProperties.prop, source);\n
+\n
+      // To provide consistent behaviour, validation should be always asynchronous\n
+      instance._registerTimeout(setTimeout(function() {\n
+        validator.call(cellProperties, value, function(valid) {\n
+          valid = Handsontable.hooks.run(instance, "afterValidate", valid, value, cellProperties.row, cellProperties.prop, source);\n
+          cellProperties.valid = valid;\n
+\n
+          done(valid);\n
+          Handsontable.hooks.run(instance, "postAfterValidate", valid, value, cellProperties.row, cellProperties.prop, source);\n
+        });\n
+      }, 0));\n
+\n
+    } else {\n
+      //resolve callback even if validator function was not found\n
+      cellProperties.valid = true;\n
+      done(cellProperties.valid);\n
+    }\n
+  };\n
+\n
+  function setDataInputToArray(row, propOrCol, value) {\n
+    if (typeof row === "object") { //is it an array of changes\n
+      return row;\n
+    }\n
+    else {\n
+      return [\n
+        [row, propOrCol, value]\n
+      ];\n
+    }\n
+  }\n
+\n
+  /**\n
+   * @description\n
+   * Set new value to a cell. To change many cells at once, pass an array of `changes` in format `[[row, col, value], ...]` as\n
+   * the only parameter. `col` is the index of __visible__ column (note that if columns were reordered,\n
+   * the current order will be used). `source` is a flag for before/afterChange events. If you pass only array of\n
+   * changes then `source` could be set as second parameter.\n
+   *\n
+   * @memberof Core#\n
+   * @function setDataAtCell\n
+   * @param {Number|Array} row or array of changes in format `[[row, col, value], ...]`\n
+   * @param {Number|String} col or source String\n
+   * @param {String} value\n
+   * @param {String} [source] String that identifies how this change will be described in changes array (useful in onChange callback)\n
+   */\n
+  this.setDataAtCell = function(row, col, value, source) {\n
+    var input = setDataInputToArray(row, col, value)\n
+      , i\n
+      , ilen\n
+      , changes = []\n
+      , prop;\n
+\n
+    for (i = 0, ilen = input.length; i < ilen; i++) {\n
+      if (typeof input[i] !== \'object\') {\n
+        throw new Error(\'Method `setDataAtCell` accepts row number or changes array of arrays as its first parameter\');\n
+      }\n
+      if (typeof input[i][1] !== \'number\') {\n
+        throw new Error(\'Method `setDataAtCell` accepts row and column number as its parameters. If you want to use object property name, use method `setDataAtRowProp`\');\n
+      }\n
+      prop = datamap.colToProp(input[i][1]);\n
+      changes.push([\n
+        input[i][0],\n
+        prop,\n
+        datamap.get(input[i][0], prop),\n
+        input[i][2]\n
+      ]);\n
+    }\n
+\n
+    if (!source && typeof row === "object") {\n
+      source = col;\n
+    }\n
+\n
+    validateChanges(changes, source, function() {\n
+      applyChanges(changes, source);\n
+    });\n
+  };\n
+\n
+\n
+  /**\n
+   * Same as above, except instead of `col`, you provide name of the object property (e.g. `[0, \'first.name\', \'Jennifer\']`).\n
+   *\n
+   * @memberof Core#\n
+   * @function setDataAtRowProp\n
+   * @param {Number|Array} row or array of changes in format `[[row, prop, value], ...]`\n
+   * @param {String} prop or source String\n
+   * @param {String} value\n
+   * @param {String} [source] String that identifies how this change will be described in changes array (useful in onChange callback)\n
+   */\n
+  this.setDataAtRowProp = function(row, prop, value, source) {\n
+    var input = setDataInputToArray(row, prop, value)\n
+      , i\n
+      , ilen\n
+      , changes = [];\n
+\n
+    for (i = 0, ilen = input.length; i < ilen; i++) {\n
+      changes.push([\n
+        input[i][0],\n
+        input[i][1],\n
+        datamap.get(input[i][0], input[i][1]),\n
+        input[i][2]\n
+      ]);\n
+    }\n
+\n
+    if (!source && typeof row === "object") {\n
+      source = prop;\n
+    }\n
+\n
+    validateChanges(changes, source, function() {\n
+      applyChanges(changes, source);\n
+    });\n
+  };\n
+\n
+  /**\n
+   * Listen to keyboard input on document body.\n
+   *\n
+   * @memberof Core#\n
+   * @function listen\n
+   * @since 0.11\n
+   */\n
+  this.listen = function() {\n
+    Handsontable.activeGuid = instance.guid;\n
+\n
+    if (document.activeElement && document.activeElement !== document.body) {\n
+      document.activeElement.blur();\n
+    }\n
+    else if (!document.activeElement) { //IE\n
+      document.body.focus();\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Stop listening to keyboard input on document body.\n
+   *\n
+   * @memberof Core#\n
+   * @function unlisten\n
+   * @since 0.11\n
+   */\n
+  this.unlisten = function() {\n
+    Handsontable.activeGuid = null;\n
+  };\n
+\n
+  /**\n
+   * Returns `true` if current Handsontable instance is listening to keyboard input on document body.\n
+   *\n
+   * @memberof Core#\n
+   * @function isListening\n
+   * @since 0.11\n
+   * @returns {Boolean}\n
+   */\n
+  this.isListening = function() {\n
+    return Handsontable.activeGuid === instance.guid;\n
+  };\n
+\n
+  /**\n
+   * Destroys current editor, renders and selects current cell.\n
+   *\n
+   * @memberof Core#\n
+   * @function destroyEditor\n
+   * @param {Boolean} [revertOriginal] If != `true`, edited data is saved. Otherwise previous value is restored\n
+   */\n
+  this.destroyEditor = function(revertOriginal) {\n
+    selection.refreshBorders(revertOriginal);\n
+  };\n
+\n
+  /**\n
+   * Populate cells at position with 2D input array (e.g. `[[1, 2], [3, 4]]`).\n
+   * Use `endRow`, `endCol` when you want to cut input when certain row is reached.\n
+   * Optional `source` parameter (default value "populateFromArray") is used to identify this call in the resulting events (beforeChange, afterChange).\n
+   * Optional `populateMethod` parameter (default value "overwrite", possible values "shift_down" and "shift_right")\n
+   * has the same effect as pasteMethod option (see Options page)\n
+   *\n
+   * @memberof Core#\n
+   * @function populateFromArray\n
+   * @since 0.9.0\n
+   * @param {Number} row Start row\n
+   * @param {Number} col Start column\n
+   * @param {Array} input 2d array\n
+   * @param {Number} [endRow] End row (use when you want to cut input when certain row is reached)\n
+   * @param {Number} [endCol] End column (use when you want to cut input when certain column is reached)\n
+   * @param {String} [source="populateFromArray"]\n
+   * @param {String} [method="overwrite"]\n
+   * @param {String} direction edit (left|right|up|down)\n
+   * @param {Array} deltas array\n
+   * @returns {Object|undefined} ending td in pasted area (only if any cell was changed)\n
+   */\n
+  this.populateFromArray = function(row, col, input, endRow, endCol, source, method, direction, deltas) {\n
+    var c;\n
+\n
+    if (!(typeof input === \'object\' && typeof input[0] === \'object\')) {\n
+      throw new Error("populateFromArray parameter `input` must be an array of arrays"); //API changed in 0.9-beta2, let\'s check if you use it correctly\n
+    }\n
+    c = typeof endRow === \'number\' ? new WalkontableCellCoords(endRow, endCol) : null;\n
+\n
+    return grid.populateFromArray(new WalkontableCellCoords(row, col), input, c, source, method, direction, deltas);\n
+  };\n
+\n
+  /**\n
+   * Adds/removes data from the column. This function works is modelled after Array.splice.\n
+   * Parameter `col` is the index of column in which do you want to do splice.\n
+   * Parameter `index` is the row index at which to start changing the array.\n
+   * If negative, will begin that many elements from the end. Parameter `amount`, is the number of old array elements to remove.\n
+   * If the amount is 0, no elements are removed. Fourth and further parameters are the `elements` to add to the array.\n
+   * If you don\'t specify any elements, spliceCol simply removes elements from the array.\n
+   * {@link DataMap#spliceCol}\n
+   *\n
+   * @memberof Core#\n
+   * @function spliceCol\n
+   * @since 0.9-beta2\n
+   * @param {Number} col Index of column in which do you want to do splice.\n
+   * @param {Number} index Index at which to start changing the array. If negative, will begin that many elements from the end\n
+   * @param {Number} amount An integer indicating the number of old array elements to remove. If amount is 0, no elements are removed\n
+   * @param {*} [elements] The elements to add to the array. If you don\'t specify any elements, spliceCol simply removes elements from the array\n
+   */\n
+  this.spliceCol = function(col, index, amount/*, elements... */) {\n
+    return datamap.spliceCol.apply(datamap, arguments);\n
+  };\n
+\n
+  /**\n
+   * Adds/removes data from the row. This function works is modelled after Array.splice.\n
+   * Parameter `row` is the index of row in which do you want to do splice.\n
+   * Parameter `index` is the column index at which to start changing the array.\n
+   * If negative, will begin that many elements from the end. Parameter `amount`, is the number of old array elements to remove.\n
+   * If the amount is 0, no elements are removed. Fourth and further parameters are the `elements` to add to the array.\n
+   * If you don\'t specify any elements, spliceCol simply removes elements from the array.\n
+   * {@link DataMap#spliceRow}\n
+   *\n
+   * @memberof Core#\n
+   * @function spliceRow\n
+   * @since 0.11\n
+   * @param {Number} row Index of column in which do you want to do splice.\n
+   * @param {Number} index Index at which to start changing the array. If negative, will begin that many elements from the end\n
+   * @param {Number} amount An integer indicating the number of old array elements to remove. If amount is 0, no elements are removed\n
+   * @param {*} [elements] The elements to add to the array. If you don\'t specify any elements, spliceCol simply removes elements from the array\n
+   */\n
+  this.spliceRow = function(row, index, amount/*, elements... */) {\n
+    return datamap.spliceRow.apply(datamap, arguments);\n
+  };\n
+\n
+  /**\n
+   * Return index of the currently selected cells as an array `[startRow, startCol, endRow, endCol]`.\n
+   *\n
+   * Start row and start col are the coordinates of the active cell (where the selection was started).\n
+   *\n
+   * @memberof Core#\n
+   * @function getSelected\n
+   * @returns {Array}\n
+   */\n
+  this.getSelected = function() { //https://github.com/handsontable/handsontable/issues/44  //cjl\n
+    if (selection.isSelected()) {\n
+      return [priv.selRange.from.row, priv.selRange.from.col, priv.selRange.to.row, priv.selRange.to.col];\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Returns current selection as a WalkontableCellRange object.\n
+   *\n
+   * @memberof Core#\n
+   * @function getSelectedRange\n
+   * @since 0.11\n
+   * @returns {WalkontableCellRange} Returns `undefined` if there is no selection.\n
+   */\n
+  this.getSelectedRange = function() { //https://github.com/handsontable/handsontable/issues/44  //cjl\n
+    if (selection.isSelected()) {\n
+      return priv.selRange;\n
+    }\n
+  };\n
+\n
+\n
+  /**\n
+   * Rerender the table.\n
+   *\n
+   * @memberof Core#\n
+   * @function render\n
+   */\n
+  this.render = function() {\n
+    if (instance.view) {\n
+      instance.renderCall = true;\n
+      instance.forceFullRender = true; //used when data was changed\n
+      selection.refreshBorders(null, true);\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Reset all cells in the grid to contain data from the data array.\n
+   *\n
+   * @memberof Core#\n
+   * @function loadData\n
+   * @param {Array} data\n
+   * @fires Hooks#afterLoadData\n
+   * @fires Hooks#afterChange\n
+   */\n
+  this.loadData = function(data) {\n
+    if (typeof data === \'object\' && data !== null) {\n
+      if (!(data.push && data.splice)) { //check if data is array. Must use duck-type check so Backbone Collections also pass it\n
+        //when data is not an array, attempt to make a single-row array of it\n
+        data = [data];\n
+      }\n
+    }\n
+    else if (data === null) {\n
+      data = [];\n
+      var row;\n
+      for (var r = 0, rlen = priv.settings.startRows; r < rlen; r++) {\n
+        row = [];\n
+        for (var c = 0, clen = priv.settings.startCols; c < clen; c++) {\n
+          row.push(null);\n
+        }\n
+        data.push(row);\n
+      }\n
+    }\n
+    else {\n
+      throw new Error("loadData only accepts array of objects or array of arrays (" + typeof data + " given)");\n
+    }\n
+\n
+    priv.isPopulated = false;\n
+    GridSettings.prototype.data = data;\n
+\n
+    if (Array.isArray(priv.settings.dataSchema) || Array.isArray(data[0])) {\n
+      instance.dataType = \'array\';\n
+    }\n
+    else if (typeof priv.settings.dataSchema === \'function\') {\n
+      instance.dataType = \'function\';\n
+    }\n
+    else {\n
+      instance.dataType = \'object\';\n
+    }\n
+\n
+    datamap = new DataMap(instance, priv, GridSettings);\n
+\n
+    clearCellSettingCache();\n
+\n
+    grid.adjustRowsAndCols();\n
+    Handsontable.hooks.run(instance, \'afterLoadData\');\n
+\n
+    if (priv.firstRun) {\n
+      priv.firstRun = [null, \'loadData\'];\n
+    }\n
+    else {\n
+      Handsontable.hooks.run(instance, \'afterChange\', null, \'loadData\');\n
+      instance.render();\n
+    }\n
+\n
+    priv.isPopulated = true;\n
+\n
+\n
+    function clearCellSettingCache() {\n
+      priv.cellSettings.length = 0;\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Return the current data object (the same that was passed by `data` configuration option or `loadData` method).\n
+   * Optionally you can provide cell range `row`, `col`, `row2`, `col2` to get only a fragment of grid data.\n
+   *\n
+   * @memberof Core#\n
+   * @function getData\n
+   * @param {Number} [r] From row\n
+   * @param {Number} [c] From col\n
+   * @param {Number} [r2] To row\n
+   * @param {Number} [c2] To col\n
+   * @returns {Array|Object}\n
+   */\n
+  this.getData = function(r, c, r2, c2) {\n
+    if (typeof r === \'undefined\') {\n
+      return datamap.getAll();\n
+    } else {\n
+      return datamap.getRange(new WalkontableCellCoords(r, c), new WalkontableCellCoords(r2, c2), datamap.DESTINATION_RENDERER);\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Get value of selected range. Each column is separated by tab, each row is separated by new line character.\n
+   * {@link DataMap#getCopyableText}\n
+   *\n
+   * @memberof Core#\n
+   * @function getCopyableData\n
+   * @since 0.11\n
+   * @param {Number} startRow From row\n
+   * @param {Number} startCol From col\n
+   * @param {Number} endRow To row\n
+   * @param {Number} endCol To col\n
+   * @returns {Array|Object}\n
+   */\n
+  this.getCopyableData = function(startRow, startCol, endRow, endCol) {\n
+    return datamap.getCopyableText(new WalkontableCellCoords(startRow, startCol), new WalkontableCellCoords(endRow, endCol));\n
+  };\n
+\n
+  /**\n
+   * Get schema provided by constructor settings or if it doesn\'t exist return schema based on data\n
+   * structure on the first row.\n
+   *\n
+   * @memberof Core#\n
+   * @function getSchema\n
+   * @since 0.13.2\n
+   * @returns {Object}\n
+   */\n
+  this.getSchema = function() {\n
+    return datamap.getSchema();\n
+  };\n
+\n
+  /**\n
+   * Use it if you need to change configuration after initialization.\n
+   *\n
+   * @memberof Core#\n
+   * @function updateSettings\n
+   * @param {Object} settings Settings to update\n
+   * @param {Boolean} init\n
+   * @fires Hooks#afterCellMetaReset\n
+   * @fires Hooks#afterUpdateSettings\n
+   */\n
+  this.updateSettings = function(settings, init) {\n
+    var i, clen;\n
+\n
+    if (typeof settings.rows !== "undefined") {\n
+      throw new Error("\'rows\' setting is no longer supported. do you mean startRows, minRows or maxRows?");\n
+    }\n
+    if (typeof settings.cols !== "undefined") {\n
+      throw new Error("\'cols\' setting is no longer supported. do you mean startCols, minCols or maxCols?");\n
+    }\n
+\n
+    for (i in settings) {\n
+      if (i === \'data\') {\n
+        continue; //loadData will be triggered later\n
+      }\n
+      else {\n
+        if (Handsontable.hooks.getRegistered().indexOf(i) > -1) {\n
+          if (typeof settings[i] === \'function\' || Array.isArray(settings[i])) {\n
+            instance.addHook(i, settings[i]);\n
+          }\n
+        }\n
+        else {\n
+          // Update settings\n
+          if (!init && settings.hasOwnProperty(i)) {\n
+            GridSettings.prototype[i] = settings[i];\n
+          }\n
+        }\n
+      }\n
+    }\n
+\n
+    // Load data or create data map\n
+    if (settings.data === void 0 && priv.settings.data === void 0) {\n
+      instance.loadData(null); //data source created just now\n
+    }\n
+    else if (settings.data !== void 0) {\n
+      instance.loadData(settings.data); //data source given as option\n
+    }\n
+    else if (settings.columns !== void 0) {\n
+      datamap.createMap();\n
+    }\n
+\n
+    // Init columns constructors configuration\n
+    clen = instance.countCols();\n
+\n
+    //Clear cellSettings cache\n
+    priv.cellSettings.length = 0;\n
+\n
+    if (clen > 0) {\n
+      var proto, column;\n
+\n
+      for (i = 0; i < clen; i++) {\n
+        priv.columnSettings[i] = columnFactory(GridSettings, priv.columnsSettingConflicts);\n
+\n
+        // shortcut for prototype\n
+        proto = priv.columnSettings[i].prototype;\n
+\n
+        // Use settings provided by user\n
+        if (GridSettings.prototype.columns) {\n
+          column = GridSettings.prototype.columns[i];\n
+          extend(proto, column);\n
+          extend(proto, expandType(column));\n
+        }\n
+      }\n
+    }\n
+\n
+    if (typeof settings.cell !== \'undefined\') {\n
+      for (i in settings.cell) {\n
+        if (settings.cell.hasOwnProperty(i)) {\n
+          var cell = settings.cell[i];\n
+          instance.setCellMetaObject(cell.row, cell.col, cell);\n
+        }\n
+      }\n
+    }\n
+\n
+    Handsontable.hooks.run(instance, \'afterCellMetaReset\');\n
+\n
+    if (typeof settings.className !== "undefined") {\n
+      if (GridSettings.prototype.className) {\n
+        removeClass(instance.rootElement, GridSettings.prototype.className);\n
+//        instance.rootElement.removeClass(GridSettings.prototype.className);\n
+      }\n
+      if (settings.className) {\n
+        addClass(instance.rootElement, settings.className);\n
+//        instance.rootElement.addClass(settings.className);\n
+      }\n
+    }\n
+\n
+    if (typeof settings.height != \'undefined\') {\n
+      var height = settings.height;\n
+\n
+      if (typeof height == \'function\') {\n
+        height = height();\n
+      }\n
+\n
+      instance.rootElement.style.height = height + \'px\';\n
+    }\n
+\n
+    if (typeof settings.width != \'undefined\') {\n
+      var width = settings.width;\n
+\n
+      if (typeof width == \'function\') {\n
+        width = width();\n
+      }\n
+\n
+      instance.rootElement.style.width = width + \'px\';\n
+    }\n
+\n
+    /* jshint ignore:start */\n
+    if (height) {\n
+      instance.rootElement.style.overflow = \'hidden\';\n
+    }\n
+    /* jshint ignore:end */\n
+\n
+    if (!init) {\n
+      Handsontable.hooks.run(instance, \'afterUpdateSettings\');\n
+    }\n
+\n
+    grid.adjustRowsAndCols();\n
+    if (instance.view && !priv.firstRun) {\n
+      instance.forceFullRender = true; //used when data was changed\n
+      selection.refreshBorders(null, true);\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Get value from selected cell.\n
+   *\n
+   * @memberof Core#\n
+   * @function getValue\n
+   * @since 0.11\n
+   * @returns {*} Returns value of selected cell\n
+   */\n
+  this.getValue = function() {\n
+    var sel = instance.getSelected();\n
+    if (GridSettings.prototype.getValue) {\n
+      if (typeof GridSettings.prototype.getValue === \'function\') {\n
+        return GridSettings.prototype.getValue.call(instance);\n
+      }\n
+      else if (sel) {\n
+        return instance.getData()[sel[0]][GridSettings.prototype.getValue];\n
+      }\n
+    }\n
+    else if (sel) {\n
+      return instance.getDataAtCell(sel[0], sel[1]);\n
+    }\n
+  };\n
+\n
+  function expandType(obj) {\n
+    if (!obj.hasOwnProperty(\'type\')) {\n
+      //ignore obj.prototype.type\n
+      return;\n
+    }\n
+\n
+    var type, expandedType = {};\n
+\n
+    if (typeof obj.type === \'object\') {\n
+      type = obj.type;\n
+    }\n
+    else if (typeof obj.type === \'string\') {\n
+      type = Handsontable.cellTypes[obj.type];\n
+      if (type === void 0) {\n
+        throw new Error(\'You declared cell type "\' + obj.type +\n
+          \'" as a string that is not mapped to a known object. Cell type must be an object or a string mapped to an object in Handsontable.cellTypes\');\n
+      }\n
+    }\n
+\n
+\n
+    for (var i in type) {\n
+      if (type.hasOwnProperty(i) && !obj.hasOwnProperty(i)) {\n
+        expandedType[i] = type[i];\n
+      }\n
+    }\n
+\n
+    return expandedType;\n
+\n
+  }\n
+\n
+  /**\n
+   * Get object settings.\n
+   *\n
+   * @memberof Core#\n
+   * @function getSettings\n
+   * @returns {Object} Returns an object containing the current grid settings\n
+   */\n
+  this.getSettings = function() {\n
+    return priv.settings;\n
+  };\n
+\n
+  /**\n
+   * Clears grid.\n
+   *\n
+   * @memberof Core#\n
+   * @function clear\n
+   * @since 0.11\n
+   */\n
+  this.clear = function() {\n
+    selection.selectAll();\n
+    selection.empty();\n
+  };\n
+\n
+  /**\n
+   * @memberof Core#\n
+   * @function alter\n
+   * @param {String} action See grid.alter for possible values: `"insert_row"`, `"insert_col"`, `"remove_row"`, `"remove_col"`\n
+   * @param {Number} index\n
+   * @param {Number} amount\n
+   * @param {String} [source] Source of hook runner\n
+   * @param {Boolean} [keepEmptyRows] Flag for preventing deletion of empty rows\n
+   * @description\n
+   *\n
+   * Insert new row(s) above the row at given `index`. If index is `null` or `undefined`, the new row will be\n
+   * added after the current last row. Default `amount` equals 1.\n
+   * ```js\n
+   * var hot = new Handsontable(document.getElementById(\'example\'));\n
+   * hot.alter(\'insert_row\', 10);\n
+   * ```\n
+   *\n
+   * Insert new column(s) before the column at given `index`. If index is `null` or `undefined`, the new column\n
+   * will be added after the current last column. Default `amount` equals 1\n
+   * ```js\n
+   * var hot = new Handsontable(document.getElementById(\'example\'));\n
+   * hot.alter(\'insert_col\', 10);\n
+   * ```\n
+   *\n
+   * Remove the row(s) at given `index`. Default `amount` equals 1\n
+   * ```js\n
+   * var hot = new Handsontable(document.getElementById(\'example\'));\n
+   * hot.alter(\'remove_row\', 10);\n
+   * ```\n
+   *\n
+   * Remove the column(s) at given `index`. Default `amount` equals 1\n
+   * ```js\n
+   * var hot = new Handsontable(document.getElementById(\'example\'));\n
+   * hot.alter(\'remove_col\', 10);\n
+   * ```\n
+   */\n
+  this.alter = function(action, index, amount, source, keepEmptyRows) {\n
+    grid.alter(action, index, amount, source, keepEmptyRows);\n
+  };\n
+\n
+  /**\n
+   * Returns TD element for given `row`, `col` if it is rendered on screen.\n
+   * Returns `null` if the TD is not rendered on screen (probably because that part of table is not visible).\n
+   *\n
+   * @memberof Core#\n
+   * @function getCell\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {Boolean} topmost\n
+   * @returns {Element}\n
+   */\n
+  this.getCell = function(row, col, topmost) {\n
+    return instance.view.getCellAtCoords(new WalkontableCellCoords(row, col), topmost);\n
+  };\n
+\n
+  /**\n
+   * Returns coordinates for the provided element.\n
+   *\n
+   * @memberof Core#\n
+   * @function getCoords\n
+   * @param {Element} elem\n
+   * @returns {WalkontableCellCoords}\n
+   */\n
+  this.getCoords = function(elem) {\n
+    return this.view.wt.wtTable.getCoords.call(this.view.wt.wtTable, elem);\n
+  };\n
+\n
+  /**\n
+   * Returns property name that corresponds with the given column index. {@link DataMap#colToProp}\n
+   *\n
+   * @memberof Core#\n
+   * @function colToProp\n
+   * @param {Number} col Column index\n
+   * @returns {String}\n
+   */\n
+  this.colToProp = function(col) {\n
+    return datamap.colToProp(col);\n
+  };\n
+\n
+  /**\n
+   * Returns column index that corresponds with the given property. {@link DataMap#propToCol}\n
+   *\n
+   * @memberof Core#\n
+   * @function propToCol\n
+   * @param {String} prop\n
+   * @returns {Number}\n
+   */\n
+  this.propToCol = function(prop) {\n
+    return datamap.propToCol(prop);\n
+  };\n
+\n
+  /**\n
+   * @description\n
+   * Return cell value at `row`, `col`. `row` and `col` are the __visible__ indexes (note that if columns were reordered or sorted,\n
+   * the current order will be used).\n
+   *\n
+   * @memberof Core#\n
+   * @function getDataAtCell\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @returns {*}\n
+   */\n
+  this.getDataAtCell = function(row, col) {\n
+    return datamap.get(row, datamap.colToProp(col));\n
+  };\n
+\n
+  /**\n
+   * Return value at `row`, `prop`. {@link DataMap#get}\n
+   *\n
+   * @memberof Core#\n
+   * @function getDataAtRowProp\n
+   * @param {Number} row\n
+   * @param {String} prop\n
+   * @returns {*}\n
+   */\n
+  this.getDataAtRowProp = function(row, prop) {\n
+    return datamap.get(row, prop);\n
+  };\n
+\n
+  /**\n
+   * @description\n
+   * Returns array of column values from the data source. `col` is the __visible__ index of the column.\n
+   *\n
+   * @memberof Core#\n
+   * @function getDataAtCol\n
+   * @since 0.9-beta2\n
+   * @param {Number} col\n
+   * @returns {Array}\n
+   */\n
+  this.getDataAtCol = function(col) {\n
+    var out = [];\n
+    return out.concat.apply(out, datamap.getRange(\n
+      new WalkontableCellCoords(0, col), new WalkontableCellCoords(priv.settings.data.length - 1, col), datamap.DESTINATION_RENDERER));\n
+  };\n
+\n
+  /**\n
+   * Given the object property name (e.g. `\'first.name\'`), returns array of column values from the data source.\n
+   *\n
+   * @memberof Core#\n
+   * @function getDataAtProp\n
+   * @since 0.9-beta2\n
+   * @param {String} prop\n
+   * @returns {*}\n
+   */\n
+  this.getDataAtProp = function(prop) {\n
+    var out = [],\n
+      range;\n
+\n
+    range = datamap.getRange(\n
+      new WalkontableCellCoords(0, datamap.propToCol(prop)),\n
+      new WalkontableCellCoords(priv.settings.data.length - 1, datamap.propToCol(prop)),\n
+      datamap.DESTINATION_RENDERER);\n
+\n
+    return out.concat.apply(out, range);\n
+  };\n
+\n
+  /**\n
+   * Returns array of column values from the data source. `col` is the index of the row in the data source.\n
+   *\n
+   * @memberof Core#\n
+   * @function getSourceDataAtCol\n
+   * @since 0.11.0-beta3\n
+   * @param {Number} col\n
+   * @returns {Array}\n
+   */\n
+  this.getSourceDataAtCol = function(col) {\n
+    var out = [],\n
+      data = priv.settings.data;\n
+\n
+    for (var i = 0; i < data.length; i++) {\n
+      out.push(data[i][col]);\n
+    }\n
+\n
+    return out;\n
+  };\n
+\n
+  /**\n
+   * Returns a single row of the data (array or object, depending on what you have). `row` is the index of the row in the data source.\n
+   *\n
+   * @memberof Core#\n
+   * @function getSourceDataAtRow\n
+   * @since 0.11.0-beta3\n
+   * @param {Number} row\n
+   * @returns {Array|Object}\n
+   */\n
+  this.getSourceDataAtRow = function(row) {\n
+    return priv.settings.data[row];\n
+  };\n
+\n
+  /**\n
+   * @description\n
+   * Returns a single row of the data (array or object, depending on what you have). `row` is the __visible__ index of the row.\n
+   *\n
+   * @memberof Core#\n
+   * @function getDataAtRow\n
+   * @param {Number} row\n
+   * @returns {*}\n
+   * @since 0.9-beta2\n
+   */\n
+  this.getDataAtRow = function(row) {\n
+    var data = datamap.getRange(new WalkontableCellCoords(row, 0), new WalkontableCellCoords(row, this.countCols() - 1), datamap.DESTINATION_RENDERER);\n
+\n
+    return data[0];\n
+  };\n
+\n
+  /**\n
+   * Remove `key` property object from cell meta data corresponding to params `row`, `col`.\n
+   *\n
+   * @memberof Core#\n
+   * @function removeCellMeta\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {String} key\n
+   */\n
+  this.removeCellMeta = function(row, col, key) {\n
+    var cellMeta = instance.getCellMeta(row, col);\n
+    /* jshint ignore:start */\n
+    if (cellMeta[key] != undefined) {\n
+      delete priv.cellSettings[row][col][key];\n
+    }\n
+    /* jshint ignore:end */\n
+  };\n
+\n
+  /**\n
+   * Set cell meta data object `prop` to corresponding params `row`, `col`\n
+   *\n
+   * @memberof Core#\n
+   * @function setCellMetaObject\n
+   * @since 0.11\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {Object} prop\n
+   */\n
+  this.setCellMetaObject = function(row, col, prop) {\n
+    if (typeof prop === \'object\') {\n
+      for (var key in prop) {\n
+        if (prop.hasOwnProperty(key)) {\n
+          var value = prop[key];\n
+          this.setCellMeta(row, col, key, value);\n
+        }\n
+      }\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Sets cell meta data object `key` corresponding to params `row`, `col`.\n
+   *\n
+   * @memberof Core#\n
+   * @function setCellMeta\n
+   * @since 0.11\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {String} key\n
+   * @param {String} val\n
+   * @fires Hooks#afterSetCellMeta\n
+   */\n
+  this.setCellMeta = function(row, col, key, val) {\n
+    if (!priv.cellSettings[row]) {\n
+      priv.cellSettings[row] = [];\n
+    }\n
+    if (!priv.cellSettings[row][col]) {\n
+      priv.cellSettings[row][col] = new priv.columnSettings[col]();\n
+    }\n
+    priv.cellSettings[row][col][key] = val;\n
+    Handsontable.hooks.run(instance, \'afterSetCellMeta\', row, col, key, val);\n
+  };\n
+\n
+  /**\n
+   * Return cell properties for given `row`, `col` coordinates.\n
+   *\n
+   * @memberof Core#\n
+   * @function getCellMeta\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @returns {Object}\n
+   * @fires Hooks#beforeGetCellMeta\n
+   * @fires Hooks#afterGetCellMeta\n
+   */\n
+  this.getCellMeta = function(row, col) {\n
+    var prop = datamap.colToProp(col)\n
+      , cellProperties;\n
+\n
+    row = translateRowIndex(row);\n
+    col = translateColIndex(col);\n
+\n
+    if (!priv.columnSettings[col]) {\n
+      priv.columnSettings[col] = columnFactory(GridSettings, priv.columnsSettingConflicts);\n
+    }\n
+\n
+    if (!priv.cellSettings[row]) {\n
+      priv.cellSettings[row] = [];\n
+    }\n
+    if (!priv.cellSettings[row][col]) {\n
+      priv.cellSettings[row][col] = new priv.columnSettings[col]();\n
+    }\n
+\n
+    cellProperties = priv.cellSettings[row][col]; //retrieve cellProperties from cache\n
+\n
+    cellProperties.row = row;\n
+    cellProperties.col = col;\n
+    cellProperties.prop = prop;\n
+    cellProperties.instance = instance;\n
+\n
+    Handsontable.hooks.run(instance, \'beforeGetCellMeta\', row, col, cellProperties);\n
+    extend(cellProperties, expandType(cellProperties)); //for `type` added in beforeGetCellMeta\n
+\n
+    if (cellProperties.cells) {\n
+      var settings = cellProperties.cells.call(cellProperties, row, col, prop);\n
+\n
+      if (settings) {\n
+        extend(cellProperties, settings);\n
+        extend(cellProperties, expandType(settings)); //for `type` added in cells\n
+      }\n
+    }\n
+\n
+    Handsontable.hooks.run(instance, \'afterGetCellMeta\', row, col, cellProperties);\n
+\n
+    return cellProperties;\n
+  };\n
+\n
+  /**\n
+   * Checks if the data format and config allows user to modify the column structure.\n
+   * @returns {boolean}\n
+   */\n
+  this.isColumnModificationAllowed = function() {\n
+    return !(instance.dataType === \'object\' || instance.getSettings().columns);\n
+  };\n
+\n
+  /**\n
+   * If displayed rows order is different than the order of rows stored in memory (i.e. sorting is applied)\n
+   * we need to translate logical (stored) row index to physical (displayed) index.\n
+   *\n
+   * @memberof Core#\n
+   * @function translateRowIndex\n
+   * @param {Number} row Original row index\n
+   * @returns {Number} Translated row index\n
+   * @fires Hooks#modifyRow\n
+   */\n
+  function translateRowIndex(row) {\n
+    return Handsontable.hooks.run(instance, \'modifyRow\', row);\n
+  }\n
+\n
+  /**\n
+   * If displayed columns order is different than the order of columns stored in memory (i.e. column were moved using manualColumnMove plugin)\n
+   * we need to translate logical (stored) column index to physical (displayed) index.\n
+   *\n
+   * @memberof Core#\n
+   * @function translateColIndex\n
+   * @param {Number} col Original column index\n
+   * @returns {Number} Translated column index\n
+   * @fires Hooks#modifyCol\n
+   */\n
+  function translateColIndex(col) {\n
+    // warning: this must be done after datamap.colToProp\n
+    return Handsontable.hooks.run(instance, \'modifyCol\', col);\n
+  }\n
+\n
+  var rendererLookup = cellMethodLookupFactory(\'renderer\');\n
+\n
+  /**\n
+   * Get cell renderer type by `row` and `col`.\n
+   *\n
+   * @memberof Core#\n
+   * @function getCellRenderer\n
+   * @since 0.11\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @returns {Function} Returns rederer type\n
+   */\n
+  this.getCellRenderer = function(row, col) {\n
+    var renderer = rendererLookup.call(this, row, col);\n
+\n
+    return getRenderer(renderer);\n
+  };\n
+\n
+  /**\n
+   * Get cell editor by `row` and `col`.\n
+   *\n
+   * @memberof Core#\n
+   * @function getCellEditor\n
+   * @returns {*}\n
+   */\n
+  this.getCellEditor = cellMethodLookupFactory(\'editor\');\n
+\n
+  /**\n
+   * Get cell validator by `row` and `col`\n
+   *\n
+   * @memberof Core#\n
+   * @function getCellValidator\n
+   * @returns {*}\n
+   */\n
+  this.getCellValidator = cellMethodLookupFactory(\'validator\');\n
+\n
+\n
+  /**\n
+   * Validates all cells using their validator functions and calls callback when finished. Does not render the view.\n
+   *\n
+   * @memberof Core#\n
+   * @function validateCells\n
+   * @param {Function} callback\n
+   */\n
+  this.validateCells = function(callback) {\n
+    var waitingForValidator = new ValidatorsQueue();\n
+    waitingForValidator.onQueueEmpty = callback;\n
+\n
+    /* jshint ignore:start */\n
+    var i = instance.countRows() - 1;\n
+    while (i >= 0) {\n
+      var j = instance.countCols() - 1;\n
+      while (j >= 0) {\n
+        waitingForValidator.addValidatorToQueue();\n
+        instance.validateCell(instance.getDataAtCell(i, j), instance.getCellMeta(i, j), function() {\n
+          waitingForValidator.removeValidatorFormQueue();\n
+        }, \'validateCells\');\n
+        j--;\n
+      }\n
+      i--;\n
+    }\n
+    /* jshint ignore:end */\n
+    waitingForValidator.checkIfQueueIsEmpty();\n
+  };\n
+\n
+  /**\n
+   * Returns array of row headers (if they are enabled). If param `row` given, return header at given row as string.\n
+   *\n
+   * @memberof Core#\n
+   * @function getRowHeader\n
+   * @param {Number} [row]\n
+   * @returns {Array|String}\n
+   */\n
+  this.getRowHeader = function(row) {\n
+    if (row === void 0) {\n
+      var out = [];\n
+      for (var i = 0, ilen = instance.countRows(); i < ilen; i++) {\n
+        out.push(instance.getRowHeader(i));\n
+      }\n
+      return out;\n
+    }\n
+    else if (Array.isArray(priv.settings.rowHeaders) && priv.settings.rowHeaders[row] !== void 0) {\n
+      return priv.settings.rowHeaders[row];\n
+    }\n
+    else if (typeof priv.settings.rowHeaders === \'function\') {\n
+      return priv.settings.rowHeaders(row);\n
+    }\n
+    else if (priv.settings.rowHeaders && typeof priv.settings.rowHeaders !== \'string\' && typeof priv.settings.rowHeaders !== \'number\') {\n
+      return row + 1;\n
+    }\n
+    else {\n
+      return priv.settings.rowHeaders;\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Returns information of this table is configured to display row headers.\n
+   *\n
+   * @memberof Core#\n
+   * @function hasRowHeaders\n
+   * @returns {Boolean}\n
+   * @since 0.11\n
+   */\n
+  this.hasRowHeaders = function() {\n
+    return !!priv.settings.rowHeaders;\n
+  };\n
+\n
+  /**\n
+   * Returns information of this table is configured to display column headers.\n
+   *\n
+   * @memberof Core#\n
+   * @function hasColHeaders\n
+   * @since 0.11\n
+   * @returns {Boolean}\n
+   */\n
+  this.hasColHeaders = function() {\n
+    if (priv.settings.colHeaders !== void 0 && priv.settings.colHeaders !== null) { //Polymer has empty value = null\n
+      return !!priv.settings.colHeaders;\n
+    }\n
+    for (var i = 0, ilen = instance.countCols(); i < ilen; i++) {\n
+      if (instance.getColHeader(i)) {\n
+        return true;\n
+      }\n
+    }\n
+    return false;\n
+  };\n
+\n
+  /**\n
+   * Return array of column headers (if they are enabled). If param `col` given, return header at given column as string\n
+   *\n
+   * @memberof Core#\n
+   * @function getColHeader\n
+   * @param {Number} [col] Column index\n
+   * @returns {Array|String}\n
+   */\n
+  this.getColHeader = function(col) {\n
+    if (col === void 0) {\n
+      var out = [];\n
+      for (var i = 0, ilen = instance.countCols(); i < ilen; i++) {\n
+        out.push(instance.getColHeader(i));\n
+      }\n
+      return out;\n
+    }\n
+    else {\n
+      var baseCol = col;\n
+\n
+      col = Handsontable.hooks.run(instance, \'modifyCol\', col);\n
+\n
+      if (priv.settings.columns && priv.settings.columns[col] && priv.settings.columns[col].title) {\n
+        return priv.settings.columns[col].title;\n
+      }\n
+      else if (Array.isArray(priv.settings.colHeaders) && priv.settings.colHeaders[col] !== void 0) {\n
+        return priv.settings.colHeaders[col];\n
+      }\n
+      else if (typeof priv.settings.colHeaders === \'function\') {\n
+        return priv.settings.colHeaders(col);\n
+      }\n
+      else if (priv.settings.colHeaders && typeof priv.settings.colHeaders !== \'string\' && typeof priv.settings.colHeaders !== \'number\') {\n
+        return spreadsheetColumnLabel(baseCol); //see #1458\n
+      }\n
+      else {\n
+        return priv.settings.colHeaders;\n
+      }\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Return column width from settings (no guessing). Private use intended.\n
+   *\n
+   * @private\n
+   * @memberof Core#\n
+   * @function _getColWidthFromSettings\n
+   * @param {Number} col\n
+   * @returns {Number}\n
+   */\n
+  this._getColWidthFromSettings = function(col) {\n
+    var cellProperties = instance.getCellMeta(0, col);\n
+    var width = cellProperties.width;\n
+\n
+    if (width === void 0 || width === priv.settings.width) {\n
+      width = cellProperties.colWidths;\n
+    }\n
+    if (width !== void 0 && width !== null) {\n
+      switch (typeof width) {\n
+        case \'object\': // array\n
+          width = width[col];\n
+          break;\n
+\n
+        case \'function\':\n
+          width = width(col);\n
+          break;\n
+      }\n
+      if (typeof width === \'string\') {\n
+        width = parseInt(width, 10);\n
+      }\n
+    }\n
+\n
+    return width;\n
+  };\n
+\n
+  /**\n
+   * Return column width\n
+   *\n
+   * @memberof Core#\n
+   * @function getColWidth\n
+   * @since 0.11\n
+   * @param {Number} col\n
+   * @returns {Number}\n
+   * @fires Hooks#modifyColWidth\n
+   */\n
+  this.getColWidth = function(col) {\n
+    let width = instance._getColWidthFromSettings(col);\n
+\n
+    width = Handsontable.hooks.run(instance, \'modifyColWidth\', width, col);\n
+\n
+    if (width === void 0) {\n
+      width = WalkontableViewportColumnsCalculator.DEFAULT_WIDTH;\n
+    }\n
+\n
+    return width;\n
+  };\n
+\n
+  /**\n
+   * Return row height from settings (no guessing). Private use intended.\n
+   *\n
+   * @private\n
+   * @memberof Core#\n
+   * @function _getRowHeightFromSettings\n
+   * @param {Number} row\n
+   * @returns {Number}\n
+   */\n
+  this._getRowHeightFromSettings = function(row) {\n
+    //let cellProperties = instance.getCellMeta(row, 0);\n
+    //let height = cellProperties.height;\n
+    //\n
+    //if (height === void 0 || height === priv.settings.height) {\n
+    //  height = cellProperties.rowHeights;\n
+    //}\n
+    var height = priv.settings.rowHeights;\n
+\n
+    if (height !== void 0 && height !== null) {\n
+      switch (typeof height) {\n
+        case \'object\': // array\n
+          height = height[row];\n
+          break;\n
+\n
+        case \'function\':\n
+          height = height(row);\n
+          break;\n
+      }\n
+      if (typeof height === \'string\') {\n
+        height = parseInt(height, 10);\n
+      }\n
+    }\n
+\n
+    return height;\n
+  };\n
+\n
+  /**\n
+   * Return row height.\n
+   *\n
+   * @memberof Core#\n
+   * @function getRowHeight\n
+   * @since 0.11\n
+   * @param {Number} row\n
+   * @returns {Number}\n
+   * @fires Hooks#modifyRowHeight\n
+   */\n
+  this.getRowHeight = function(row) {\n
+    var height = instance._getRowHeightFromSettings(row);\n
+\n
+    height = Handsontable.hooks.run(instance, \'modifyRowHeight\', height, row);\n
+\n
+    return height;\n
+  };\n
+\n
+  /**\n
+   * Returns total number of rows in the grid.\n
+   *\n
+   * @memberof Core#\n
+   * @function countRows\n
+   * @returns {Number} Total number in rows the grid\n
+   */\n
+  this.countRows = function() {\n
+    return priv.settings.data.length;\n
+  };\n
+\n
+  /**\n
+   * Returns total number of columns in the grid.\n
+   *\n
+   * @memberof Core#\n
+   * @function countCols\n
+   * @returns {Number} Total number of columns\n
+   */\n
+  this.countCols = function() {\n
+    if (instance.dataType === \'object\' || instance.dataType === \'function\') {\n
+      if (priv.settings.columns && priv.settings.columns.length) {\n
+        return priv.settings.columns.length;\n
+      }\n
+      else {\n
+        return datamap.colToPropCache.length;\n
+      }\n
+    }\n
+    else if (instance.dataType === \'array\') {\n
+      if (priv.settings.columns && priv.settings.columns.length) {\n
+        return priv.settings.columns.length;\n
+      }\n
+      else if (priv.settings.data && priv.settings.data[0] && priv.settings.data[0].length) {\n
+        return priv.settings.data[0].length;\n
+      }\n
+      else {\n
+        return 0;\n
+      }\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Get index of first visible row.\n
+   *\n
+   * @memberof Core#\n
+   * @function rowOffset\n
+   * @returns {Number} Returns index of first visible row\n
+   */\n
+  this.rowOffset = function() {\n
+    return instance.view.wt.wtTable.getFirstRenderedRow();\n
+  };\n
+\n
+  /**\n
+   * Get index of first visible column.\n
+   *\n
+   * @memberof Core#\n
+   * @function colOffset\n
+   * @returns {Number} Return index of first visible column.\n
+   */\n
+  this.colOffset = function() {\n
+    return instance.view.wt.wtTable.getFirstRenderedColumn();\n
+  };\n
+\n
+  /**\n
+   * Return number of rendered rows (including rows partially or fully rendered outside viewport).\n
+   *\n
+   * @memberof Core#\n
+   * @function countRenderedRows\n
+   * @returns {Number} Returns -1 if table is not visible\n
+   */\n
+  this.countRenderedRows = function() {\n
+    return instance.view.wt.drawn ? instance.view.wt.wtTable.getRenderedRowsCount() : -1;\n
+  };\n
+\n
+  /**\n
+   * Return number of visible rows (rendered rows that fully fit inside viewport).\n
+   *\n
+   * @memberof Core#\n
+   * @function countVisibleRows\n
+   * @returns {Number} Returns -1 if table is not visible\n
+   */\n
+  this.countVisibleRows = function() {\n
+    return instance.view.wt.drawn ? instance.view.wt.wtTable.getVisibleRowsCount() : -1;\n
+  };\n
+\n
+  /**\n
+   * Return number of visible columns.\n
+   *\n
+   * @memberof Core#\n
+   * @function countRenderedCols\n
+   * @returns {Number} Returns -1 if table is not visible\n
+   */\n
+  this.countRenderedCols = function() {\n
+    return instance.view.wt.drawn ? instance.view.wt.wtTable.getRenderedColumnsCount() : -1;\n
+  };\n
+\n
+  /**\n
+   * Return number of visible columns. Returns -1 if table is not visible\n
+   *\n
+   * @memberof Core#\n
+   * @function countVisibleCols\n
+   * @return {Number}\n
+   */\n
+  this.countVisibleCols = function() {\n
+    return instance.view.wt.drawn ? instance.view.wt.wtTable.getVisibleColumnsCount() : -1;\n
+  };\n
+\n
+  /**\n
+   * Returns number of empty rows. If the optional ending parameter is `true`, returns\n
+   * number of empty rows at the bottom of the table.\n
+   *\n
+   * @memberof Core#\n
+   * @function countEmptyRows\n
+   * @param {Boolean} [ending] If `true`, will only count empty rows at the end of the data source\n
+   * @returns {Number} Count empty rows\n
+   * @fires Hooks#modifyRow\n
+   */\n
+  this.countEmptyRows = function(ending) {\n
+    var i = instance.countRows() - 1,\n
+      empty = 0,\n
+      row;\n
+\n
+    while (i >= 0) {\n
+      row = Handsontable.hooks.run(this, \'modifyRow\', i);\n
+\n
+      if (instance.isEmptyRow(row)) {\n
+        empty++;\n
+\n
+      } else if (ending) {\n
+        break;\n
+      }\n
+      i--;\n
+    }\n
+\n
+    return empty;\n
+  };\n
+\n
+  /**\n
+   * Returns number of empty columns. If the optional ending parameter is `true`, returns number of empty\n
+   * columns at right hand edge of the table.\n
+   *\n
+   * @memberof Core#\n
+   * @function countEmptyCols\n
+   * @param {Boolean} [ending] If `true`, will only count empty columns at the end of the data source row\n
+   * @returns {Number} Count empty cols\n
+   */\n
+  this.countEmptyCols = function(ending) {\n
+    if (instance.countRows() < 1) {\n
+      return 0;\n
+    }\n
+\n
+    var i = instance.countCols() - 1\n
+      , empty = 0;\n
+    while (i >= 0) {\n
+      if (instance.isEmptyCol(i)) {\n
+        empty++;\n
+      }\n
+      else if (ending) {\n
+        break;\n
+      }\n
+      i--;\n
+    }\n
+    return empty;\n
+  };\n
+\n
+  /**\n
+   * Check is `row` is empty.\n
+   *\n
+   * @memberof Core#\n
+   * @function isEmptyRow\n
+   * @param {Number} row Row index\n
+   * @returns {Boolean} Return `true` if the row at the given `row` is empty, `false` otherwise.\n
+   */\n
+  this.isEmptyRow = function(row) {\n
+    return priv.settings.isEmptyRow.call(instance, row);\n
+  };\n
+\n
+  /**\n
+   * Check is `col` is empty.\n
+   *\n
+   * @memberof Core#\n
+   * @function isEmptyCol\n
+   * @param {Number} col Column index\n
+   * @returns {Boolean} Return `true` if the column at the given `col` is empty, `false` otherwise.\n
+   */\n
+  this.isEmptyCol = function(col) {\n
+    return priv.settings.isEmptyCol.call(instance, col);\n
+  };\n
+\n
+  /**\n
+   * Select cell `row`, `col` or range of cells finishing at `endRow`, `endCol`.\n
+   * By default, viewport will be scrolled to selection and after `selectCell` call instance will be listening\n
+   * to keyboard input on document.\n
+   *\n
+   * @memberof Core#\n
+   * @function selectCell\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {Number} [endRow]\n
+   * @param {Number} [endCol]\n
+   * @param {Boolean} [scrollToCell=true] If `true`, viewport will be scrolled to the selection\n
+   * @param {Boolean} [changeListener=true] If `false`, Handsontable will not change keyboard events listener to\n
+   *                                        himself (default `true`)\n
+   * @returns {Boolean}\n
+   */\n
+  this.selectCell = function(row, col, endRow, endCol, scrollToCell, changeListener) {\n
+    var coords;\n
+\n
+    changeListener = typeof changeListener === \'undefined\' || changeListener === true;\n
+\n
+    if (typeof row !== \'number\' || row < 0 || row >= instance.countRows()) {\n
+      return false;\n
+    }\n
+    if (typeof col !== \'number\' || col < 0 || col >= instance.countCols()) {\n
+      return false;\n
+    }\n
+    if (typeof endRow !== \'undefined\') {\n
+      if (typeof endRow !== \'number\' || endRow < 0 || endRow >= instance.countRows()) {\n
+        return false;\n
+      }\n
+      if (typeof endCol !== \'number\' || endCol < 0 || endCol >= instance.countCols()) {\n
+        return false;\n
+      }\n
+    }\n
+    coords = new WalkontableCellCoords(row, col);\n
+    priv.selRange = new WalkontableCellRange(coords, coords, coords);\n
+\n
+    if (document.activeElement && document.activeElement !== document.documentElement &&\n
+      document.activeElement !== document.body) {\n
+      // needed or otherwise prepare won\'t focus the cell. selectionSpec tests this (should move focus to selected cell)\n
+      document.activeElement.blur();\n
+    }\n
+    if (changeListener) {\n
+      instance.listen();\n
+    }\n
+\n
+    if (typeof endRow === \'undefined\') {\n
+      selection.setRangeEnd(priv.selRange.from, scrollToCell);\n
+\n
+    } else {\n
+      selection.setRangeEnd(new WalkontableCellCoords(endRow, endCol), scrollToCell);\n
+    }\n
+    instance.selection.finish();\n
+\n
+    return true;\n
+  };\n
+\n
+  /**\n
+   * Select cell `row`, `prop` or range finishing at `endRow`, `endProp`. By default, viewport will be scrolled to selection.\n
+   *\n
+   * @memberof Core#\n
+   * @function selectCellByProp\n
+   * @param {Number} row\n
+   * @param {Object} prop\n
+   * @param {Number} [endRow]\n
+   * @param {Object} [endProp]\n
+   * @param {Boolean} [scrollToCell=true] If `true`, viewport will be scrolled to the selection\n
+   * @returns {Boolean}\n
+   */\n
+  this.selectCellByProp = function(row, prop, endRow, endProp, scrollToCell) {\n
+    /* jshint ignore:start */\n
+    arguments[1] = datamap.propToCol(arguments[1]);\n
+    if (typeof arguments[3] !== "undefined") {\n
+      arguments[3] = datamap.propToCol(arguments[3]);\n
+    }\n
+    return instance.selectCell.apply(instance, arguments);\n
+    /* jshint ignore:end */\n
+  };\n
+\n
+  /**\n
+   * Deselects current cell selection on grid.\n
+   *\n
+   * @memberof Core#\n
+   * @function deselectCell\n
+   */\n
+  this.deselectCell = function() {\n
+    selection.deselect();\n
+  };\n
+\n
+  /**\n
+   * Remove grid from DOM.\n
+   *\n
+   * @memberof Core#\n
+   * @function destroy\n
+   * @fires Hooks#afterDestroy\n
+   */\n
+  this.destroy = function() {\n
+\n
+    instance._clearTimeouts();\n
+    if (instance.view) { //in case HT is destroyed before initialization has finished\n
+      instance.view.destroy();\n
+    }\n
+    empty(instance.rootElement);\n
+    eventManager.destroy();\n
+\n
+    Handsontable.hooks.run(instance, \'afterDestroy\');\n
+    Handsontable.hooks.destroy(instance);\n
+\n
+    for (var i in instance) {\n
+      if (instance.hasOwnProperty(i)) {\n
+        //replace instance methods with post mortem\n
+        if (typeof instance[i] === "function") {\n
+          instance[i] = postMortem;\n
+        }\n
+        //replace instance properties with null (restores memory)\n
+        //it should not be necessary but this prevents a memory leak side effects that show itself in Jasmine tests\n
+        else if (i !== "guid") {\n
+          instance[i] = null;\n
+        }\n
+      }\n
+    }\n
+\n
+\n
+    //replace private properties with null (restores memory)\n
+    //it should not be necessary but this prevents a memory leak side effects that show itself in Jasmine tests\n
+    priv = null;\n
+    datamap = null;\n
+    grid = null;\n
+    selection = null;\n
+    editorManager = null;\n
+    instance = null;\n
+    GridSettings = null;\n
+  };\n
+\n
+  /**\n
+   * Replacement for all methods after Handsotnable was destroyed.\n
+   *\n
+   * @private\n
+   */\n
+  function postMortem() {\n
+    throw new Error("This method cannot be called because this Handsontable instance has been destroyed");\n
+  }\n
+\n
+  /**\n
+   * Returns active editor object. {@link Handsontable.EditorManager#getActiveEditor}\n
+   *\n
+   * @memberof Core#\n
+   * @function getActiveEditor\n
+   * @returns {Object}\n
+   */\n
+  this.getActiveEditor = function() {\n
+    return editorManager.getActiveEditor();\n
+  };\n
+\n
+  /**\n
+   * Returns plugin instance by plugin name\n
+   *\n
+   * @memberof Core#\n
+   * @function getPlugin\n
+   * @param {String} pluginName\n
+   * @returns {*}\n
+   * @since 0.15.0\n
+   */\n
+  this.getPlugin = function(pluginName) {\n
+    return getPlugin(this, pluginName);\n
+  };\n
+\n
+  /**\n
+   * Return Handsontable instance.\n
+   *\n
+   * @memberof Core#\n
+   * @function getInstance\n
+   * @returns {Handsontable}\n
+   */\n
+  this.getInstance = function() {\n
+    return instance;\n
+  };\n
+\n
+  /**\n
+   * Adds listener to specified hook name and only for this Handsontable instance.\n
+   *\n
+   * @memberof Core#\n
+   * @function addHook\n
+   * @see Hooks#add\n
+   * @param {String} key Hook name\n
+   * @param {Function|Array} callback Function or array of Functions\n
+   *\n
+   * @example\n
+   * ```js\n
+   * hot.addHook(\'beforeInit\', myCallback);\n
+   * ```\n
+   */\n
+  this.addHook = function(key, callback) {\n
+    Handsontable.hooks.add(key, callback, instance);\n
+  };\n
+\n
+  /**\n
+   * Adds listener to specified hook name and only for this Handsontable instance. After hook runs this\n
+   * listener will be automatically removed.\n
+   *\n
+   * @memberof Core#\n
+   * @function addHookOnce\n
+   * @see Hooks#once\n
+   * @param {String} key Hook name\n
+   * @param {Function|Array} callback Function or array of Functions\n
+   *\n
+   * @example\n
+   * ```js\n
+   * hot.addHookOnce(\'beforeInit\', myCallback);\n
+   * ```\n
+   */\n
+  this.addHookOnce = function(key, callback) {\n
+    Handsontable.hooks.once(key, callback, instance);\n
+  };\n
+\n
+  /**\n
+   * Removes the hook listener previously registered with {@link Core#addHook}.\n
+   *\n
+   * @memberof Core#\n
+   * @function removeHook\n
+   * @see Hooks#remove\n
+   * @param {String} key Hook name\n
+   * @param {Function} callback Function which have been registered via {@link Core#addHook}\n
+   *\n
+   * @example\n
+   * ```js\n
+   * hot.removeHook(\'beforeInit\', myCallback);\n
+   * ```\n
+   */\n
+  this.removeHook = function(key, callback) {\n
+    Handsontable.hooks.remove(key, callback, instance);\n
+  };\n
+\n
+  /**\n
+   * @memberof Core#\n
+   * @function runHooks\n
+   * @see Hooks#run\n
+   * @param {String} key Hook name\n
+   * @param {*} [p1]\n
+   * @param {*} [p2]\n
+   * @param {*} [p3]\n
+   * @param {*} [p4]\n
+   * @param {*} [p5]\n
+   * @param {*} [p6]\n
+   * @returns {*}\n
+   *\n
+   * @example\n
+   * ```js\n
+   * hot.runHooks(\'beforeInit\');\n
+   * ```\n
+   */\n
+  this.runHooks = function(key, p1, p2, p3, p4, p5, p6) {\n
+    return Handsontable.hooks.run(instance, key, p1, p2, p3, p4, p5, p6);\n
+  };\n
+\n
+  this.timeouts = [];\n
+\n
+  /**\n
+   * Sets timeout. Purpose of this method is to clear all known timeouts when `destroy` method is called.\n
+   *\n
+   * @param {*} handle\n
+   * @private\n
+   */\n
+  this._registerTimeout = function(handle) {\n
+    this.timeouts.push(handle);\n
+  };\n
+\n
+  /**\n
+   * Clears all known timeouts.\n
+   *\n
+   * @private\n
+   */\n
+  this._clearTimeouts = function() {\n
+    for (var i = 0, ilen = this.timeouts.length; i < ilen; i++) {\n
+      clearTimeout(this.timeouts[i]);\n
+    }\n
+  };\n
+\n
+  /**\n
+   * Handsontable version\n
+   *\n
+   * @type {String}\n
+   */\n
+  this.version = Handsontable.version;\n
+\n
+  Handsontable.hooks.run(instance, \'construct\');\n
+};\n
+\n
+/**\n
+ * @alias Options\n
+ * @constructor\n
+ * @description\n
+\n
+ * ## Constructor options\n
+ *\n
+ * Constructor options are applied using an object literal passed as a first argument to the Handsontable constructor.\n
+ *\n
+ * ```js\n
+ * var hot = new Handsontable(document.getElementById(\'example1\'), {\n
+ *   data: myArray,\n
+ *   width: 400,\n
+ *   height: 300\n
+ * })\n
+ * ```\n
+ *\n
+ * ---\n
+ * ## Cascading configuration\n
+ *\n
+ * Handsontable 0.9 and newer is using *Cascading Configuration*, which is fast way to provide configuration options\n
+ * for whole table, its columns and particular cells.\n
+ *\n
+ * Consider the following example:\n
+ * ```js\n
+ * var hot = new Handsontable(document.getElementById(\'example\'), {\n
+ *   readOnly: true,\n
+ *   columns: [\n
+ *     {readOnly: false},\n
+ *     {},\n
+ *     {}\n
+ *   ],\n
+ *   cells: function (row, col, prop) {\n
+ *     var cellProperties = {};\n
+ *\n
+ *     if (row === 0 && col === 0) {\n
+ *       cellProperties.readOnly = true;\n
+ *     }\n
+ *\n
+ *     return cellProperties;\n
+ *   }\n
+ * });\n
+ * ```\n
+ *\n
+ * The above notation will result in all TDs being *read only*, except for first column TDs which will be *editable*, except for the TD in top left corner which will still be *read only*.\n
+ *\n
+ * ### The Cascading Configuration model\n
+ *\n
+ * ##### 1. Constructor\n
+ *\n
+ * Configuration options that are provided using first-level `handsontable(container, {option: "value"})` and `updateSettings` method.\n
+ *\n
+ * ##### 2. Columns\n
+ *\n
+ * Configuration options that are provided using second-level object `handsontable(container, {columns: {option: "value"}]})`\n
+ *\n
+ * ##### 3. Cells\n
+ *\n
+ * Configuration options that are provided using second-level function `handsontable(container, {cells: function: (row, col, prop){ }})`\n
+ *\n
+ * ---\n
+ * ## Architecture performance\n
+ *\n
+ * The Cascading Configuration model is based on prototypical inheritance. It is much faster and memory efficient compared\n
+ * to the previous model that used jQuery extend. See: [http://jsperf.com/extending-settings](http://jsperf.com/extending-settings).\n
+ *\n
+ * ---\n
+ * __Important notice:__ In order for the data separation to work properly, make sure that each instance of Handsontable has a unique `id`.\n
+ */\n
+var DefaultSettings = function() {\n
+};\n
+\n
+DefaultSettings.prototype = {\n
+  /**\n
+   * @description\n
+   * Initial data source that will be bound to the data grid __by reference__ (editing data grid alters the data source).\n
+   * Can be Array of Array, Array of Objects or Function.\n
+   *\n
+   * See [Understanding binding as reference](http://handsontable.com/demo/understanding_reference.html).\n
+   *\n
+   * @type {Array|Function}\n
+   * @default undefined\n
+   */\n
+  data: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Defines the structure of a new row when data source is an object.\n
+   * Default like the first data row Array or Object.\n
+   *\n
+   *  See [demo/datasources.html](http://handsontable.com/demo/datasources.html) for examples.\n
+   *\n
+   * @type {Object}\n
+   * @default undefined\n
+   */\n
+  dataSchema: void 0,\n
+\n
+  /**\n
+   * Width of the grid. Can be a number or a function that returns a number.\n
+   *\n
+   * @type {Number|Function}\n
+   * @default undefined\n
+   */\n
+  width: void 0,\n
+\n
+  /**\n
+   * Height of the grid. Can be a number or a function that returns a number.\n
+   *\n
+   * @type {Number|Function}\n
+   * @default undefined\n
+   */\n
+  height: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Initial number of rows.\n
+   *\n
+   * __Notice:__ This option only has effect in Handsontable constructor and only if `data` option is not provided\n
+   *\n
+   * @type {Number}\n
+   * @default 5\n
+   */\n
+  startRows: 5,\n
+\n
+  /**\n
+   * @description\n
+   * Initial number of columns.\n
+   *\n
+   * __Notice:__ This option only has effect in Handsontable constructor and only if `data` option is not provided\n
+   *\n
+   * @type {Number}\n
+   * @default 5\n
+   */\n
+  startCols: 5,\n
+\n
+  /**\n
+   * Setting `true` or `false` will enable or disable the default row headers (1, 2, 3).\n
+   * You can also define an array `[\'One\', \'Two\', \'Three\', ...]` or a function to define the headers.\n
+   * If a function is set the index of the row is passed as a parameter.\n
+   *\n
+   * @type {Boolean|Array|Function}\n
+   * @default null\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * // as boolean\n
+   * rowHeaders: true,\n
+   * ...\n
+   *\n
+   * ...\n
+   * // as array\n
+   * rowHeaders: [1, 2, 3],\n
+   * ...\n
+   *\n
+   * ...\n
+   * // as function\n
+   * rowHeaders: function(index) {\n
+   *   return index + \': AB\';\n
+   * },\n
+   * ...\n
+   * ```\n
+   */\n
+  rowHeaders: null,\n
+\n
+  /**\n
+   * Setting `true` or `false` will enable or disable the default column headers (A, B, C).\n
+   * You can also define an array `[\'One\', \'Two\', \'Three\', ...]` or a function to define the headers.\n
+   * If a function is set the index of the column is passed as a parameter.\n
+   *\n
+   * @type {Boolean|Array|Function}\n
+   * @default null\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * // as boolean\n
+   * colHeaders: true,\n
+   * ...\n
+   *\n
+   * ...\n
+   * // as array\n
+   * colHeaders: [\'A\', \'B\', \'C\'],\n
+   * ...\n
+   *\n
+   * ...\n
+   * // as function\n
+   * colHeaders: function(index) {\n
+   *   return index + \': AB\';\n
+   * },\n
+   * ...\n
+   * ```\n
+   */\n
+  colHeaders: null,\n
+\n
+  /**\n
+   * Defines column widths in pixels. Accepts number, string (that will be converted to number),\n
+   * array of numbers (if you want to define column width separately for each column) or a\n
+   * function (if you want to set column width dynamically on each render).\n
+   *\n
+   * @type {Array|Function|Number|String}\n
+   * @default undefined\n
+   */\n
+  colWidths: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Defines the cell properties and data binding for certain columns.\n
+   *\n
+   * __Notice:__ Using this option sets a fixed number of columns (options `startCols`, `minCols`, `maxCols` will be ignored).\n
+   *\n
+   * See [demo/datasources.html](http://handsontable.com/demo/datasources.html) for examples.\n
+   *\n
+   * @type {Array}\n
+   * @default undefined\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * var exampleContainer = document.getElementById(\'example\');\n
+   * var hot = new Handsontable(exampleContainer, {\n
+   *   columns: [\n
+   *     {\n
+   *       // column options for the first column\n
+   *       type: \'numeric\',\n
+   *       format: \'0,0.00 $\'\n
+   *     },\n
+   *     {\n
+   *       // column options for the second column\n
+   *       type: \'text\',\n
+   *       readOnly: true\n
+   *     }\n
+   *   ]\n
+   * });\n
+   * ...\n
+   * ```\n
+   */\n
+  columns: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Defines the cell properties for given `row`, `col`, `prop` coordinates.\n
+   * Any constructor or column option may be overwritten for a particular cell (row/column combination), using `cell`\n
+   * array passed to the Handsontable constructor. Or using `cells` function property to the Handsontable constructor.\n
+   *\n
+   * @type {Function}\n
+   * @default undefined\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * var hot = new Handsontable(document.getElementById(\'example\'), {\n
+   *   cells: function (row, col, prop) {\n
+   *     var cellProperties = {};\n
+   *\n
+   *     if (row === 0 && col === 0) {\n
+   *       cellProperties.readOnly = true;\n
+   *     }\n
+   *\n
+   *     return cellProperties;\n
+   *   }\n
+   * });\n
+   * ...\n
+   * ```\n
+   */\n
+  cells: void 0,\n
+\n
+  /**\n
+   * Any constructor or column option may be overwritten for a particular cell (row/column combination), using `cell`\n
+   * array passed to the Handsontable constructor.\n
+   *\n
+   * @type {Array}\n
+   * @default []\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * var hot = new Handsontable(document.getElementById(\'example\'), {\n
+   *   cell: [\n
+   *     {row: 0, col: 0, readOnly: true}\n
+   *   ]\n
+   * });\n
+   * ...\n
+   * ```\n
+   */\n
+  cell: [],\n
+\n
+  /**\n
+   * @description\n
+   * If `true`, enables {@link Comments} plugin, which enables applying cell comments through the context menu\n
+   * (configurable with context menu keys commentsAddEdit, commentsRemove).\n
+   *\n
+   * To initialize Handsontable with predefined comments, provide cell coordinates and comment texts in form of an array.\n
+   *\n
+   * See [Comments](http://handsontable.com/demo/comments.html) demo for examples.\n
+   *\n
+   * @since 0.11.0\n
+   * @type {Boolean|Array}\n
+   * @default false\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * var hot = new Handsontable(document.getElementById(\'example\'), {\n
+   *   comments: [{row: 1, col: 1, comment: "Test comment"}]\n
+   * });\n
+   * ...\n
+   * ```\n
+   */\n
+  comments: false,\n
+\n
+  /**\n
+   * @description\n
+   * If `true`, enables Custom Borders plugin, which enables applying custom borders through the context menu (configurable with context menu key borders).\n
+   *\n
+   * To initialize Handsontable with predefined custom borders, provide cell coordinates and border styles in form of an array.\n
+   *\n
+   * See [Custom Borders](http://handsontable.com/demo/custom_borders.html) demo for examples.\n
+   *\n
+   * @since 0.11.0\n
+   * @type {Boolean|Array}\n
+   * @default false\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * var hot = new Handsontable(document.getElementById(\'example\'), {\n
+   *   customBorders: [\n
+   *     {range: {\n
+   *       from: {row: 1, col: 1},\n
+   *       to: {row: 3, col: 4}},\n
+   *       left: {},\n
+   *       right: {},\n
+   *       top: {},\n
+   *       bottom: {}\n
+   *     }\n
+   *   ],\n
+   * });\n
+   * ...\n
+   *\n
+   * // or\n
+   * ...\n
+   * var hot = new Handsontable(document.getElementById(\'example\'), {\n
+   *   customBorders: [\n
+   *     {row: 2, col: 2, left: {width: 2, color: \'red\'},\n
+   *       right: {width: 1, color: \'green\'}, top: \'\', bottom: \'\'}\n
+   *   ],\n
+   * });\n
+   * ...\n
+   * ```\n
+   */\n
+  customBorders: false,\n
+\n
+  /**\n
+   * Minimum number of rows. At least that amount of rows will be created during initialization.\n
+   *\n
+   * @type {Number}\n
+   * @default 0\n
+   */\n
+  minRows: 0,\n
+\n
+  /**\n
+   * Minimum number of columns. At least that many of columns will be created during initialization.\n
+   *\n
+   * @type {Number}\n
+   * @default 0\n
+   */\n
+  minCols: 0,\n
+\n
+  /**\n
+   * Maximum number of rows.\n
+   *\n
+   * @type {Number}\n
+   * @default Infinity\n
+   */\n
+  maxRows: Infinity,\n
+\n
+  /**\n
+   * Maximum number of cols.\n
+   *\n
+   * @type {Number}\n
+   * @default Infinity\n
+   */\n
+  maxCols: Infinity,\n
+\n
+  /**\n
+   * When set to 1 (or more), Handsontable will add a new row at the end of grid if there are no more empty rows.\n
+   *\n
+   * @type {Number}\n
+   * @default 0\n
+   */\n
+  minSpareRows: 0,\n
+\n
+  /**\n
+   * When set to 1 (or more), Handsontable will add a new column at the end of grid if there are no more empty columns.\n
+   *\n
+   * @type {Number}\n
+   * @default 0\n
+   */\n
+  minSpareCols: 0,\n
+\n
+  /**\n
+   * @type {Boolean}\n
+   * @default true\n
+   */\n
+  allowInsertRow: true,\n
+\n
+  /**\n
+   * @type {Boolean}\n
+   * @default true\n
+   */\n
+  allowInsertColumn: true,\n
+\n
+  /**\n
+   * @type {Boolean}\n
+   * @default true\n
+   */\n
+  allowRemoveRow: true,\n
+\n
+  /**\n
+   * @type {Boolean}\n
+   * @default true\n
+   */\n
+  allowRemoveColumn: true,\n
+\n
+  /**\n
+   * If true, selection of multiple cells using keyboard or mouse is allowed.\n
+   *\n
+   * @type {Boolean}\n
+   * @default true\n
+   */\n
+  multiSelect: true,\n
+\n
+  /**\n
+   * Enables the fill handle (drag-down and copy-down) functionality, which shows the small rectangle in bottom\n
+   * right corner of the selected area, that let\'s you expand values to the adjacent cells.\n
+   *\n
+   * Possible values: `true` (to enable in all directions), `"vertical"` or `"horizontal"` (to enable in one direction),\n
+   * `false` (to disable completely). Setting to `true` enables the fillHandle plugin.\n
+   *\n
+   * @type {Boolean|String}\n
+   * @default true\n
+   */\n
+  fillHandle: true,\n
+\n
+  /**\n
+   * Allows to specify the number of rows fixed (aka freezed) on the top of the table.\n
+   *\n
+   * @type {Number}\n
+   * @default 0\n
+   */\n
+  fixedRowsTop: 0,\n
+\n
+  /**\n
+   * Allows to specify the number of columns fixed (aka freezed) on the left side of the table.\n
+   *\n
+   * @type {Number}\n
+   * @default 0\n
+   */\n
+  fixedColumnsLeft: 0,\n
+\n
+  /**\n
+   * If `true`, mouse click outside the grid will deselect the current selection.\n
+   *\n
+   * @type {Boolean}\n
+   * @default true\n
+   */\n
+  outsideClickDeselects: true,\n
+\n
+  /**\n
+   * If `true`, <kbd>ENTER</kbd> begins editing mode (like Google Docs). If `false`, <kbd>ENTER</kbd> moves to next\n
+   * row (like Excel) and adds new row if necessary. <kbd>TAB</kbd> adds new column if necessary.\n
+   *\n
+   * @type {Boolean}\n
+   * @default true\n
+   */\n
+  enterBeginsEditing: true,\n
+\n
+  /**\n
+   * Defines cursor move after <kbd>ENTER</kbd> is pressed (<kbd>SHIFT</kbd> + <kbd>ENTER</kbd> uses negative vector).\n
+   * Can be an object or a function that returns an object. The event argument passed to the function\n
+   * is a DOM Event object received after a <kbd>ENTER</kbd> key has been pressed. This event object can be used to check\n
+   * whether user pressed <kbd>ENTER</kbd> or <kbd>SHIFT</kbd> + <kbd>ENTER</kbd>.\n
+   *\n
+   * @type {Object|Function}\n
+   * @default {row: 1, col: 0}\n
+   */\n
+  enterMoves: {row: 1, col: 0},\n
+\n
+  /**\n
+   * Defines cursor move after <kbd>TAB</kbd> is pressed (<kbd>SHIFT</kbd> + <kbd>TAB</kbd> uses negative vector).\n
+   * Can be an object or a function that returns an object. The event argument passed to the function\n
+   * is a DOM Event object received after a <kbd>TAB</kbd> key has been pressed. This event object can be used to check\n
+   * whether user pressed <kbd>TAB</kbd> or <kbd>SHIFT</kbd> + <kbd>TAB</kbd>.\n
+   *\n
+   * @type {Object}\n
+   * @default {row: 0, col: 1}\n
+   */\n
+  tabMoves: {row: 0, col: 1},\n
+\n
+  /**\n
+   * If `true`, pressing <kbd>TAB</kbd> or right arrow in the last column will move to first column in next row\n
+   *\n
+   * @type {Boolean}\n
+   * @default false\n
+   */\n
+  autoWrapRow: false,\n
+\n
+  /**\n
+   * If `true`, pressing <kbd>ENTER</kbd> or down arrow in the last row will move to first row in next column\n
+   *\n
+   * @type {Boolean}\n
+   * @default false\n
+   */\n
+  autoWrapCol: false,\n
+\n
+  /**\n
+   * Maximum number of rows than can be copied to clipboard using <kbd>CTRL</kbd> + <kbd>C</kbd>.\n
+   *\n
+   * @type {Number}\n
+   * @default 1000\n
+   */\n
+  copyRowsLimit: 1000,\n
+\n
+  /**\n
+   * Maximum number of columns than can be copied to clipboard using <kbd>CTRL</kbd> + <kbd>C</kbd>.\n
+   *\n
+   * @type {Number}\n
+   * @default 1000\n
+   */\n
+  copyColsLimit: 1000,\n
+\n
+  /**\n
+   * Defines paste (<kbd>CTRL</kbd> + <kbd>V</kbd>) behavior. Default value `"overwrite"` will paste clipboard value over current selection.\n
+   * When set to `"shift_down"`, clipboard data will be pasted in place of current selection, while all selected cells are moved down.\n
+   * When set to `"shift_right"`, clipboard data will be pasted in place of current selection, while all selected cells are moved right.\n
+   *\n
+   * @type {String}\n
+   * @default \'overwrite\'\n
+   */\n
+  pasteMode: \'overwrite\',\n
+\n
+  /**\n
+   * @description\n
+   * Turn on saving the state of column sorting, columns positions and columns sizes in local storage.\n
+   *\n
+   * You can save any sort of data in local storage in to preserve table state between page reloads.\n
+   * In order to enable data storage mechanism, `persistentState` option must be set to `true` (you can set it\n
+   * either during Handsontable initialization or using the `updateSettings` method). When `persistentState` is enabled it exposes 3 hooks:\n
+   *\n
+   * __persistentStateSave__ (key: String, value: Mixed)\n
+   *\n
+   *   * Saves value under given key in browser local storage.\n
+   *\n
+   * __persistentStateLoad__ (key: String, valuePlaceholder: Object)\n
+   *\n
+   *   * Loads `value`, saved under given key, form browser local storage. The loaded `value` will be saved in `valuePlaceholder.value`\n
+   *     (this is due to specific behaviour of `Hooks.run()` method). If no value have been saved under key `valuePlaceholder.value`\n
+   *     will be `undefined`.\n
+   *\n
+   * __persistentStateReset__ (key: String)\n
+   *\n
+   *   * Clears the value saved under `key`. If no `key` is given, all values associated with table will be cleared.\n
+   *\n
+   * __Note:__ The main reason behind using `persistentState` hooks rather than regular LocalStorage API is that it\n
+   * ensures separation of data stored by multiple Handsontable instances. In other words, if you have two (or more)\n
+   * instances of Handsontable on one page, data saved by one instance won\'t be accessible by the second instance.\n
+   * Those two instances can store data under the same key and no data would be overwritten.\n
+   *\n
+   * __Important:__ In order for the data separation to work properly, make sure that each instance of Handsontable has a unique `id`.\n
+   *\n
+   * @type {Boolean}\n
+   * @default false\n
+   */\n
+  persistentState: false,\n
+\n
+  /**\n
+   * Class name for all visible rows in current selection.\n
+   *\n
+   * @type {String}\n
+   * @default undefined\n
+   */\n
+  currentRowClassName: void 0,\n
+\n
+  /**\n
+   * Class name for all visible columns in current selection.\n
+   *\n
+   * @type {String}\n
+   * @default undefined\n
+   */\n
+  currentColClassName: void 0,\n
+\n
+  /**\n
+   * Class name for all handsontable container element.\n
+   *\n
+   * @type {String|Array}\n
+   * @default undefined\n
+   */\n
+  className: void 0,\n
+\n
+  /**\n
+   * Class name for all tables inside container element.\n
+   *\n
+   * @since 0.17.0\n
+   * @type {String|Array}\n
+   * @default undefined\n
+   */\n
+  tableClassName: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * [Column stretching](http://handsontable.com/demo/scroll.html) mode. Possible values: `"none"`, `"last"`, `"all"`.\n
+   *\n
+   * @type {String}\n
+   * @default \'none\'\n
+   */\n
+  stretchH: \'none\',\n
+\n
+  /**\n
+   * Lets you overwrite the default `isEmptyRow` method.\n
+   *\n
+   * @type {Function}\n
+   * @param {Number} row\n
+   * @returns {Boolean}\n
+   */\n
+  isEmptyRow: function(row) {\n
+    var col, colLen, value, meta;\n
+\n
+    for (col = 0, colLen = this.countCols(); col < colLen; col++) {\n
+      value = this.getDataAtCell(row, col);\n
+\n
+      if (value !== \'\' && value !== null && typeof value !== \'undefined\') {\n
+        if (typeof value === \'object\') {\n
+          meta = this.getCellMeta(row, col);\n
+\n
+          return isObjectEquals(this.getSchema()[meta.prop], value);\n
+        }\n
+        return false;\n
+      }\n
+    }\n
+\n
+    return true;\n
+  },\n
+\n
+  /**\n
+   * Lets you overwrite the default `isEmptyCol` method.\n
+   *\n
+   * @type {Function}\n
+   * @param {Number} col\n
+   * @returns {Boolean}\n
+   */\n
+  isEmptyCol: function(col) {\n
+    var row, rowLen, value;\n
+\n
+    for (row = 0, rowLen = this.countRows(); row < rowLen; row++) {\n
+      value = this.getDataAtCell(row, col);\n
+\n
+      if (value !== \'\' && value !== null && typeof value !== \'undefined\') {\n
+        return false;\n
+      }\n
+    }\n
+\n
+    return true;\n
+  },\n
+\n
+  /**\n
+   * When set to `true`, the table is rerendered when it is detected that it was made visible in DOM.\n
+   *\n
+   * @type {Boolean}\n
+   * @default true\n
+   */\n
+  observeDOMVisibility: true,\n
+\n
+  /**\n
+   * If set to `true`, cells will accept value that is marked as invalid by cell `validator`, with a background color\n
+   * automatically applied using CSS class `htInvalid`. If set to `false`, cells will not accept invalid value.\n
+   *\n
+   * @type {Boolean}\n
+   * @default true\n
+   * @since 0.9.5\n
+   */\n
+  allowInvalid: true,\n
+\n
+  /**\n
+   * CSS class name for cells that did not pass validation.\n
+   *\n
+   * @type {String}\n
+   * @default \'htInvalid\'\n
+   */\n
+  invalidCellClassName: \'htInvalid\',\n
+\n
+  /**\n
+   * When set to an non-empty string, displayed as the cell content for empty cells.\n
+   *\n
+   * @type {Boolean|String}\n
+   * @default false\n
+   */\n
+  placeholder: false,\n
+\n
+  /**\n
+   * CSS class name for cells that have a placeholder in use.\n
+   *\n
+   * @type {String}\n
+   * @default \'htPlaceholder\'\n
+   */\n
+  placeholderCellClassName: \'htPlaceholder\',\n
+\n
+  /**\n
+   * CSS class name for read-only cells.\n
+   *\n
+   * @type {String}\n
+   * @default \'htDimmed\'\n
+   */\n
+  readOnlyCellClassName: \'htDimmed\',\n
+\n
+  /**\n
+   * String may be one of the following predefined values: `autocomplete`, `checkbox`, `text`, `numeric`. Function will\n
+   * receive the following arguments: `function(instance, TD, row, col, prop, value, cellProperties) {}`.\n
+   * You can map your own function to a string like this: `Handsontable.cellLookup.renderer.myRenderer = myRenderer;`\n
+   *\n
+   * @type {String|Function}\n
+   * @default undefined\n
+   */\n
+  renderer: void 0,\n
+\n
+  /**\n
+   * @type {String}\n
+   * @default \'htCommentCell\'\n
+   */\n
+  commentedCellClassName: \'htCommentCell\',\n
+\n
+  /**\n
+   * Setting to `true` enables selecting just a fragment of the text within a single cell or between adjacent cells.\n
+   *\n
+   * @type {Boolean}\n
+   * @default false\n
+   */\n
+  fragmentSelection: false,\n
+\n
+  /**\n
+   * @description\n
+   * Make cell [read only](http://handsontable.com/demo/readonly.html).\n
+   *\n
+   * @type {Boolean}\n
+   * @default false\n
+   */\n
+  readOnly: false,\n
+\n
+  /**\n
+   * @description\n
+   * Setting to true enables the search plugin (see [demo](http://handsontable.com/demo/search.html)).\n
+   *\n
+   * @type {Boolean}\n
+   * @default false\n
+   */\n
+  search: false,\n
+\n
+  /**\n
+   * @description\n
+   * Shortcut to define combination of cell renderer and editor for the column.\n
+   *\n
+   * Possible values:\n
+   *  * text\n
+   *  * [numeric](http://handsontable.com/demo/numeric.html)\n
+   *  * [date](http://handsontable.com/demo/date.html)\n
+   *  * [checkbox](http://handsontable.com/demo/checkbox.html)\n
+   *  * [autocomplete](http://handsontable.com/demo/autocomplete.html)\n
+   *  * [handsontable](http://handsontable.com/demo/handsontable.html)\n
+   *\n
+   * @type {String}\n
+   * @default \'text\'\n
+   */\n
+  type: \'text\',\n
+\n
+  /**\n
+   * @description\n
+   * Make cell copyable (pressing <kbd>CTRL</kbd> + <kbd>C</kbd> on your keyboard moves its value to system clipboard).\n
+   *\n
+   * __Note:__ this setting is `false` by default for cells with type `password`.\n
+   *\n
+   * @type {Boolean}\n
+   * @default true\n
+   * @since 0.10.2\n
+   */\n
+  copyable: true,\n
+\n
+  /**\n
+   * String, rendering function or boolean.\n
+   *\n
+   * String may be one of the following predefined values:\n
+   *  * [autocomplete](http://handsontable.com/demo/autocomplete.html)\n
+   *  * [checkbox](http://handsontable.com/demo/checkbox.html)\n
+   *  * [date](http://handsontable.com/demo/date.html)\n
+   *  * [dropdown](http://handsontable.com/demo/dropdown.html)\n
+   *  * [handsontable](http://handsontable.com/demo/handsontable.html)\n
+   *  * [mobile](http://docs.handsontable.com/demo-mobiles-and-tablets.html)\n
+   *  * [password](http://handsontable.com/demo/password.html)\n
+   *  * [select](http://handsontable.com/demo/selectEditor.html)\n
+   *  * text\n
+   *\n
+   * Or you can disable cell editing passing `false`.\n
+   *\n
+   * @type {String|Function|Boolean}\n
+   * @default \'text\'\n
+   */\n
+  editor: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Autocomplete definitions. See [demo/autocomplete.html](http://handsontable.com/demo/autocomplete.html) for examples and definitions.\n
+   *\n
+   * @type {Array}\n
+   * @default undefined\n
+   */\n
+  autoComplete: void 0,\n
+\n
+  /**\n
+   * Setting to true enables the debug mode, currently used to test the correctness of the row and column\n
+   * header fixed positioning on a layer above the master table.\n
+   *\n
+   * @type {Boolean}\n
+   * @default false\n
+   */\n
+  debug: false,\n
+\n
+  /**\n
+   * When set to `true`, the text of the cell content is wrapped if it does not fit in the fixed column width.\n
+   *\n
+   * @type {Boolean}\n
+   * @default true\n
+   * @since 0.11.0\n
+   */\n
+  wordWrap: true,\n
+\n
+  /**\n
+   * CSS class name added to cells with cell meta `wordWrap: false`.\n
+   *\n
+   * @type {String}\n
+   * @default \'htNoWrap\'\n
+   * @since 0.11.0\n
+   */\n
+  noWordWrapClassName: \'htNoWrap\',\n
+\n
+  /**\n
+   * @description\n
+   * Defines if the right-click context menu should be enabled. Context menu allows to create new row or\n
+   * column at any place in the grid. Possible values: `true` (to enable basic options), `false` (to disable completely)\n
+   * or array of any available strings: `["row_above", "row_below", "col_left", "col_right",\n
+   * "remove_row", "remove_col", "undo", "redo", "sep1", "sep2", "sep3"]`.\n
+   *\n
+   * See [demo/contextmenu.html](http://handsontable.com/demo/contextmenu.html) for examples.\n
+   *\n
+   * @type {Boolean|Array|Object}\n
+   * @default undefined\n
+   */\n
+  contextMenu: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Defines if the dropdown menu in headers should be enabled. Dropdown menu allows to put custom or predefined actions\n
+   * which can intreact with selected column.\n
+   * Possible values: `true` (to enable basic options), `false` (to disable completely)\n
+   * or array of any available strings: `["row_above", "row_below", "col_left", "col_right",\n
+   * "remove_row", "remove_col", "undo", "redo", "clear_column", "sep1", "sep2", "sep3"]`.\n
+   *\n
+   * See [demo/dropdownmenu.html](http://handsontable.com/demo/dropdownmenu.html) for examples.\n
+   *\n
+   * @type {Boolean|Array|Object}\n
+   * @default undefined\n
+   */\n
+  dropdownMenu: void 0,\n
+\n
+  /**\n
+   * If `true`, undo/redo functionality is enabled.\n
+   *\n
+   * @type {Boolean}\n
+   * @default undefined\n
+   */\n
+  undo: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Turn on [Column sorting](http://handsontable.com/demo/sorting.html).\n
+   *\n
+   * @type {Boolean|Object}\n
+   * @default undefined\n
+   */\n
+  columnSorting: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Turn on [Manual column move](http://docs.handsontable.com/demo-resizing.html), if set to a boolean or define initial\n
+   * column order, if set to an array of column indexes.\n
+   *\n
+   * @type {Boolean|Array}\n
+   * @default undefined\n
+   */\n
+  manualColumnMove: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Turn on [Manual column resize](http://docs.handsontable.com/demo-resizing.html), if set to a boolean or define initial\n
+   * column resized widths, if set to an array of numbers.\n
+   *\n
+   * @type {Boolean|Array}\n
+   * @default undefined\n
+   */\n
+  manualColumnResize: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Turn on [Manual row move](http://docs.handsontable.com/demo-resizing.html), if set to a boolean or define initial\n
+   * row order, if set to an array of row indexes.\n
+   *\n
+   * @type {Boolean|Array}\n
+   * @default undefined\n
+   * @since 0.11.0\n
+   */\n
+  manualRowMove: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Turn on [Manual row resize](http://docs.handsontable.com/demo-resizing.html), if set to a boolean or define initial\n
+   * row resized heights, if set to an array of numbers.\n
+   *\n
+   * @type {Boolean|Array}\n
+   * @default undefined\n
+   * @since 0.11.0\n
+   */\n
+  manualRowResize: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Setting to true or array enables the mergeCells plugin, which enables the merging of the cells. (see [demo](http://handsontable.com/demo/merge_cells.html)).\n
+   * You can provide the merged cells on the pageload if you feed the mergeCells option with an array.\n
+   *\n
+   * @type {Boolean|Array}\n
+   * @default false\n
+   */\n
+  mergeCells: false,\n
+\n
+  /**\n
+   * Number of rows to be prerendered before and after the viewport is changed. Default value is `\'auto\'` which means\n
+   * that Handsontable tries to calculates offset for best performance.\n
+   *\n
+   * @type {Number|String}\n
+   * @default \'auto\'\n
+   */\n
+  viewportRowRenderingOffset: \'auto\',\n
+\n
+  /**\n
+   * Number of columns to be prerendered before and after the viewport is changed. Default value is `\'auto\'` which means\n
+   * that Handsontable tries to calculates offset for best performance.\n
+   *\n
+   * @type {Number|String}\n
+   * @default \'auto\'\n
+   */\n
+  viewportColumnRenderingOffset: \'auto\',\n
+\n
+  /**\n
+   * @description\n
+   * If `true`, enables Grouping plugin, which enables applying expandable row and column groups.\n
+   * To initialize Handsontable with predefined groups, provide row or column group start and end coordinates in form of an array.\n
+   *\n
+   * See [Grouping](http://handsontable.com/demo/grouping.html) demo for examples.\n
+   *\n
+   * @type {Boolean|Array}\n
+   * @default undefined\n
+   * @since 0.11.4\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * // as boolean\n
+   * groups: true,\n
+   * ...\n
+   *\n
+   * ...\n
+   * // as array\n
+   * groups: [{cols: [0, 2]}, {cols: [5, 15], rows: [0, 5]}],\n
+   * ...\n
+   * ```\n
+   */\n
+  groups: void 0,\n
+\n
+  /**\n
+   * A usually small function or regular expression that validates the input.\n
+   * After you determine if the input is valid, execute `callback(true)` or `callback(false)` to proceed with the execution.\n
+   * In function, `this` binds to cellProperties.\n
+   *\n
+   * @type {Function|RegExp}\n
+   * @default undefined\n
+   * @since 0.9.5\n
+   */\n
+  validator: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Disable visual cells selection.\n
+   *\n
+   * Possible values:\n
+   *  * `true` - Disables any type of visual selection (current and area selection),\n
+   *  * `false` - Enables any type of visual selection. This is default value.\n
+   *  * `current` - Disables to appear only current selected cell.\n
+   *  * `area` - Disables to appear only multiple selected cells.\n
+   *\n
+   * @type {Boolean|String|Array}\n
+   * @default false\n
+   * @since 0.13.2\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * // as boolean\n
+   * disableVisualSelection: true,\n
+   * ...\n
+   *\n
+   * ...\n
+   * // as string (\'current\' or \'area\')\n
+   * disableVisualSelection: \'current\',\n
+   * ...\n
+   *\n
+   * ...\n
+   * // as array\n
+   * disableVisualSelection: [\'current\', \'area\'],\n
+   * ...\n
+   * ```\n
+   */\n
+  disableVisualSelection: false,\n
+\n
+  /**\n
+   * @description\n
+   * Set whether to display the current sorting indicator (a triangle icon in the column header, specifying the sorting order).\n
+   *\n
+   * @type {Boolean}\n
+   * @default false\n
+   * @since 0.15.0-beta3\n
+   */\n
+  sortIndicator: false,\n
+  manualColumnFreeze: void 0,\n
+\n
+  /**\n
+   * @description\n
+   * Defines whether Handsontable should trim the whitespace at the begging and the end of the cell contents\n
+   *\n
+   * @type {Boolean}\n
+   * @default true\n
+   */\n
+  trimWhitespace: true,\n
+  settings: void 0,\n
+  source: void 0,\n
+  title: void 0,\n
+  checkedTemplate: void 0,\n
+  uncheckedTemplate: void 0,\n
+  format: void 0,\n
+\n
+  /**\n
+   * Enables or disables autoColumnSize plugin. Default value is `undefined` which is the same effect as `true`.\n
+   * Disable this plugin can increase performance.\n
+   *\n
+   * Column width calculations are divided into sync and async part. Each of this part has own advantages and\n
+   * disadvantages. Synchronous counting is faster but it blocks browser UI and asynchronous is slower but it does not\n
+   * block Browser UI.\n
+   *\n
+   * To configure this sync/async line you can pass absolute value (columns) or percentage.\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * // as number (300 columns in sync, rest async)\n
+   * autoColumnSize: {syncLimit: 300},\n
+   * ...\n
+   *\n
+   * ...\n
+   * // as string (percent)\n
+   * autoColumnSize: {syncLimit: \'40%\'},\n
+   * ...\n
+   * ```\n
+   *\n
+   * `syncLimit` options is available since 0.16.0.\n
+   *\n
+   * @type {Object|Boolean}\n
+   * @default {syncLimit: 50}\n
+   */\n
+  autoColumnSize: void 0,\n
+\n
+  /**\n
+   * Enables or disables autoRowSize plugin. Default value is `undefined` which is the same effect as `true`.\n
+   * Disable this plugin can increase performance.\n
+   *\n
+   * Row height calculations are divided into sync and async part. Each of this part has own advantages and\n
+   * disadvantages. Synchronous counting is faster but it blocks browser UI and asynchronous is slower but it does not\n
+   * block Browser UI.\n
+   *\n
+   * To configure this sync/async line you can pass absolute value (rows) or percentage.\n
+   * @example\n
+   * ```js\n
+   * ...\n
+   * // as number (300 columns in sync, rest async)\n
+   * autoRowSize: {syncLimit: 300},\n
+   * ...\n
+   *\n
+   * ...\n
+   * // as string (percent)\n
+   * autoRowSize: {syncLimit: \'40%\'},\n
+   * ...\n
+   * ```\n
+   *\n
+   * `syncLimit` options is available since 0.16.0.\n
+   *\n
+   * @type {Object|Boolean}\n
+   * @default {syncLimit: 1000}\n
+   */\n
+  autoRowSize: void 0\n
+};\n
+Handsontable.DefaultSettings = DefaultSettings;\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

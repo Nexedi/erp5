@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272701.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>search.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {addClass, removeClass} from \'./../../helpers/dom/element\';\n
+import {registerRenderer, getRenderer} from \'./../../renderers\';\n
+\n
+/**\n
+ * @private\n
+ * @plugin Search\n
+ * @class Search\n
+ */\n
+Handsontable.Search = function Search(instance) {\n
+  this.query = function (queryStr, callback, queryMethod) {\n
+    var rowCount = instance.countRows();\n
+    var colCount = instance.countCols();\n
+    var queryResult = [];\n
+\n
+    if (!callback) {\n
+      callback = Handsontable.Search.global.getDefaultCallback();\n
+    }\n
+\n
+    if (!queryMethod) {\n
+      queryMethod = Handsontable.Search.global.getDefaultQueryMethod();\n
+    }\n
+\n
+    for (var rowIndex = 0; rowIndex < rowCount; rowIndex++) {\n
+      for (var colIndex = 0; colIndex < colCount; colIndex++) {\n
+        var cellData = instance.getDataAtCell(rowIndex, colIndex);\n
+        var cellProperties = instance.getCellMeta(rowIndex, colIndex);\n
+        var cellCallback = cellProperties.search.callback || callback;\n
+        var cellQueryMethod = cellProperties.search.queryMethod || queryMethod;\n
+        var testResult = cellQueryMethod(queryStr, cellData);\n
+\n
+        if (testResult) {\n
+          var singleResult = {\n
+            row: rowIndex,\n
+            col: colIndex,\n
+            data: cellData\n
+          };\n
+\n
+          queryResult.push(singleResult);\n
+        }\n
+\n
+        if (cellCallback) {\n
+          cellCallback(instance, rowIndex, colIndex, cellData, testResult);\n
+        }\n
+      }\n
+    }\n
+\n
+    return queryResult;\n
+\n
+  };\n
+\n
+};\n
+\n
+Handsontable.Search.DEFAULT_CALLBACK = function (instance, row, col, data, testResult) {\n
+  instance.getCellMeta(row, col).isSearchResult = testResult;\n
+};\n
+\n
+Handsontable.Search.DEFAULT_QUERY_METHOD = function (query, value) {\n
+\n
+  if (typeof query == \'undefined\' || query == null || !query.toLowerCase || query.length === 0) {\n
+    return false;\n
+  }\n
+\n
+  if(typeof value == \'undefined\' || value == null) {\n
+    return false;\n
+  }\n
+\n
+  return value.toString().toLowerCase().indexOf(query.toLowerCase()) != -1;\n
+};\n
+\n
+Handsontable.Search.DEFAULT_SEARCH_RESULT_CLASS = \'htSearchResult\';\n
+\n
+Handsontable.Search.global = (function () {\n
+\n
+  var defaultCallback = Handsontable.Search.DEFAULT_CALLBACK;\n
+  var defaultQueryMethod = Handsontable.Search.DEFAULT_QUERY_METHOD;\n
+  var defaultSearchResultClass = Handsontable.Search.DEFAULT_SEARCH_RESULT_CLASS;\n
+\n
+  return {\n
+    getDefaultCallback: function () {\n
+      return defaultCallback;\n
+    },\n
+\n
+    setDefaultCallback: function (newDefaultCallback) {\n
+      defaultCallback = newDefaultCallback;\n
+    },\n
+\n
+    getDefaultQueryMethod: function () {\n
+      return defaultQueryMethod;\n
+    },\n
+\n
+    setDefaultQueryMethod: function (newDefaultQueryMethod) {\n
+      defaultQueryMethod = newDefaultQueryMethod;\n
+    },\n
+\n
+    getDefaultSearchResultClass: function () {\n
+      return defaultSearchResultClass;\n
+    },\n
+\n
+    setDefaultSearchResultClass: function (newSearchResultClass) {\n
+      defaultSearchResultClass = newSearchResultClass;\n
+    }\n
+  };\n
+\n
+})();\n
+\n
+\n
+\n
+Handsontable.SearchCellDecorator = function (instance, TD, row, col, prop, value, cellProperties) {\n
+  var searchResultClass = (cellProperties.search !== null && typeof cellProperties.search == \'object\' &&\n
+      cellProperties.search.searchResultClass) || Handsontable.Search.global.getDefaultSearchResultClass();\n
+\n
+  if (cellProperties.isSearchResult) {\n
+    addClass(TD, searchResultClass);\n
+  } else {\n
+    removeClass(TD, searchResultClass);\n
+  }\n
+};\n
+\n
+var originalBaseRenderer = getRenderer(\'base\');\n
+\n
+registerRenderer(\'base\', function (instance, TD, row, col, prop, value, cellProperties) {\n
+  originalBaseRenderer.apply(this, arguments);\n
+  Handsontable.SearchCellDecorator.apply(this, arguments);\n
+});\n
+\n
+\n
+function init() {\n
+  /* jshint ignore:start */\n
+  var instance = this;\n
+  /* jshint ignore:end */\n
+\n
+  var pluginEnabled = !!instance.getSettings().search;\n
+\n
+  if (pluginEnabled) {\n
+    instance.search = new Handsontable.Search(instance);\n
+  } else {\n
+    delete instance.search;\n
+  }\n
+}\n
+\n
+Handsontable.hooks.add(\'afterInit\', init);\n
+Handsontable.hooks.add(\'afterUpdateSettings\', init);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3990</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>search.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

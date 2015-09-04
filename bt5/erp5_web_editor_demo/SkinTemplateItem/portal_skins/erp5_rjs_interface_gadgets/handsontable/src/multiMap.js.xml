@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272729.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>multiMap.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+export {MultiMap};\n
+\n
+// TODO: Global expose for tests\n
+window.MultiMap = MultiMap;\n
+\n
+function MultiMap() {\n
+  var map = {\n
+    arrayMap: [],\n
+    weakMap: new WeakMap()\n
+  };\n
+\n
+  return {\n
+    \'get\': function (key) {\n
+      if (canBeAnArrayMapKey(key)) {\n
+        return map.arrayMap[key];\n
+      } else if (canBeAWeakMapKey(key)) {\n
+        return map.weakMap.get(key);\n
+      }\n
+    },\n
+\n
+    \'set\': function (key, value) {\n
+      if (canBeAnArrayMapKey(key)) {\n
+        map.arrayMap[key] = value;\n
+      } else if (canBeAWeakMapKey(key)) {\n
+        map.weakMap.set(key, value);\n
+      } else {\n
+        throw new Error(\'Invalid key type\');\n
+      }\n
+\n
+\n
+    },\n
+\n
+    \'delete\': function (key) {\n
+      if (canBeAnArrayMapKey(key)) {\n
+        delete map.arrayMap[key];\n
+      } else if (canBeAWeakMapKey(key)) {\n
+        map.weakMap[\'delete\'](key);  //Delete must be called using square bracket notation, because IE8 does not handle using `delete` with dot notation\n
+      }\n
+    }\n
+  };\n
+\n
+  function canBeAnArrayMapKey(obj){\n
+    return obj !== null && !isNaNSymbol(obj) && (typeof obj == \'string\' || typeof obj == \'number\');\n
+  }\n
+\n
+  function canBeAWeakMapKey(obj){\n
+    return obj !== null && (typeof obj == \'object\' || typeof obj == \'function\');\n
+  }\n
+\n
+  function isNaNSymbol(obj){\n
+    return obj !== obj; // NaN === NaN is always false\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1307</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>multiMap.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,516 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272710.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>predefinedItems.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {objectEach, clone} from \'./../../helpers/object\';\n
+import {rangeEach} from \'./../../helpers/number\';\n
+import {align, getAlignmentClasses, getValidSelection, checkSelectionConsistency, markLabelAsSelected} from \'./utils\';\n
+\n
+export const ROW_ABOVE = \'row_above\';\n
+export const ROW_BELOW = \'row_below\';\n
+export const COLUMN_LEFT = \'col_left\';\n
+export const COLUMN_RIGHT = \'col_right\';\n
+export const CLEAR_COLUMN = \'clear_column\';\n
+export const REMOVE_ROW = \'remove_row\';\n
+export const REMOVE_COLUMN = \'remove_col\';\n
+export const UNDO = \'undo\';\n
+export const REDO = \'redo\';\n
+export const READ_ONLY = \'make_read_only\';\n
+export const ALIGNMENT = \'alignment\';\n
+export const SEPARATOR = \'---------\';\n
+export const ITEMS = [\n
+  ROW_ABOVE, ROW_BELOW, COLUMN_LEFT, COLUMN_RIGHT, CLEAR_COLUMN, REMOVE_ROW, REMOVE_COLUMN, UNDO, REDO, READ_ONLY,\n
+  ALIGNMENT, SEPARATOR\n
+];\n
+\n
+/**\n
+ * Gets new object with all predefined menu items.\n
+ *\n
+ * @returns {Object}\n
+ */\n
+export function predefinedItems() {\n
+  const items = {};\n
+\n
+  objectEach(_predefinedItems, (value, key) => items[key] = clone(value));\n
+\n
+  return items;\n
+}\n
+\n
+const _predefinedItems = {\n
+  [SEPARATOR]: {\n
+    name: SEPARATOR\n
+  },\n
+  [ROW_ABOVE]: {\n
+    key: ROW_ABOVE,\n
+    name: \'Insert row above\',\n
+\n
+    callback: function(key, selection) {\n
+      this.alter(\'insert_row\', selection.start.row);\n
+    },\n
+    disabled: function() {\n
+      let selected = getValidSelection(this);\n
+\n
+      if (!selected) {\n
+        return true;\n
+      }\n
+      let entireColumnSelection = [0, selected[1], this.countRows() - 1, selected[1]];\n
+\n
+      return entireColumnSelection.join(\',\') === selected.join(\',\');\n
+    },\n
+    hidden: function() {\n
+      return !this.getSettings().allowInsertRow;\n
+    }\n
+  },\n
+  [ROW_BELOW]: {\n
+    key: ROW_BELOW,\n
+    name: \'Insert row below\',\n
+\n
+    callback: function(key, selection) {\n
+      this.alter(\'insert_row\', selection.end.row + 1);\n
+    },\n
+    disabled: function() {\n
+      let selected = getValidSelection(this);\n
+\n
+      if (!selected) {\n
+        return true;\n
+      }\n
+      let entireColumnSelection = [0, selected[1], this.countRows() - 1, selected[1]];\n
+\n
+      return entireColumnSelection.join(\',\') === selected.join(\',\');\n
+    },\n
+    hidden: function() {\n
+      return !this.getSettings().allowInsertRow;\n
+    }\n
+  },\n
+  [COLUMN_LEFT]: {\n
+    key: COLUMN_LEFT,\n
+    name: \'Insert column on the left\',\n
+    callback: function(key, selection) {\n
+      this.alter(\'insert_col\', selection.start.col);\n
+    },\n
+    disabled: function() {\n
+      let selected = getValidSelection(this);\n
+\n
+      if (!selected) {\n
+        return true;\n
+      }\n
+      if (!this.isColumnModificationAllowed()) {\n
+        return true;\n
+      }\n
+      let entireRowSelection = [selected[0], 0, selected[0], this.countCols() - 1];\n
+      let rowSelected = entireRowSelection.join(\',\') == selected.join(\',\');\n
+\n
+      return selected[1] < 0 || this.countCols() >= this.getSettings().maxCols || rowSelected;\n
+    },\n
+    hidden: function() {\n
+      return !this.getSettings().allowInsertColumn;\n
+    }\n
+  },\n
+  [COLUMN_RIGHT]: {\n
+    key: COLUMN_RIGHT,\n
+    name: \'Insert column on the right\',\n
+\n
+    callback: function(key, selection) {\n
+      this.alter(\'insert_col\', selection.end.col + 1);\n
+    },\n
+    disabled: function() {\n
+      let selected = getValidSelection(this);\n
+\n
+      if (!selected) {\n
+        return true;\n
+      }\n
+      if (!this.isColumnModificationAllowed()) {\n
+        return true;\n
+      }\n
+      let entireRowSelection = [selected[0], 0, selected[0], this.countCols() - 1];\n
+      let rowSelected = entireRowSelection.join(\',\') == selected.join(\',\');\n
+\n
+      return selected[1] < 0 || this.countCols() >= this.getSettings().maxCols || rowSelected;\n
+    },\n
+    hidden: function() {\n
+      return !this.getSettings().allowInsertColumn;\n
+    }\n
+  },\n
+  [CLEAR_COLUMN]: {\n
+    key: CLEAR_COLUMN,\n
+    name: \'Clear column\',\n
+\n
+    callback: function(key, selection) {\n
+      let column = selection.start.col;\n
+\n
+      rangeEach(Math.max(selection.start.row, selection.end.row), (row) => this.setDataAtCell(row, column, \'\'));\n
+    },\n
+    disabled: function() {\n
+      let selected = getValidSelection(this);\n
+\n
+      if (!selected) {\n
+        return true;\n
+      }\n
+      let entireRowSelection = [selected[0], 0, selected[0], this.countCols() - 1];\n
+      let rowSelected = entireRowSelection.join(\',\') == selected.join(\',\');\n
+\n
+      return selected[1] < 0 || this.countCols() >= this.getSettings().maxCols || rowSelected;\n
+    }\n
+  },\n
+  [REMOVE_ROW]: {\n
+    key: REMOVE_ROW,\n
+    name: \'Remove row\',\n
+\n
+    callback: function(key, selection) {\n
+      let amount = selection.end.row - selection.start.row + 1;\n
+\n
+      this.alter(\'remove_row\', selection.start.row, amount);\n
+    },\n
+    disabled: function() {\n
+      let selected = getValidSelection(this);\n
+\n
+      if (!selected) {\n
+        return true;\n
+      }\n
+      let entireColumnSelection = [0, selected[1], this.countRows() - 1, selected[1]];\n
+\n
+      return entireColumnSelection.join(\',\') === selected.join(\',\');\n
+    },\n
+    hidden: function() {\n
+      return !this.getSettings().allowRemoveRow;\n
+    }\n
+  },\n
+  [REMOVE_COLUMN]: {\n
+    key: REMOVE_COLUMN,\n
+    name: \'Remove column\',\n
+\n
+    callback: function(key, selection) {\n
+      let amount = selection.end.col - selection.start.col + 1;\n
+\n
+      this.alter(\'remove_col\', selection.start.col, amount);\n
+    },\n
+    disabled: function() {\n
+      let selected = getValidSelection(this);\n
+\n
+      if (!selected) {\n
+        return true;\n
+      }\n
+      if (!this.isColumnModificationAllowed()) {\n
+        return true;\n
+      }\n
+      let entireRowSelection = [selected[0], 0, selected[0], this.countCols() - 1];\n
+      let rowSelected = entireRowSelection.join(\',\') == selected.join(\',\');\n
+\n
+      return (selected[1] < 0 || rowSelected);\n
+    },\n
+    hidden: function() {\n
+      return !this.getSettings().allowRemoveColumn;\n
+    }\n
+  },\n
+  [UNDO]: {\n
+    key: UNDO,\n
+    name: \'Undo\',\n
+\n
+    callback: function() {\n
+      this.undo();\n
+    },\n
+    disabled: function() {\n
+      return this.undoRedo && !this.undoRedo.isUndoAvailable();\n
+    }\n
+  },\n
+  [REDO]: {\n
+    key: REDO,\n
+    name: \'Redo\',\n
+\n
+    callback: function() {\n
+      this.redo();\n
+    },\n
+    disabled: function() {\n
+      return this.undoRedo && !this.undoRedo.isRedoAvailable();\n
+    }\n
+  },\n
+  [READ_ONLY]: {\n
+    key: READ_ONLY,\n
+    name: function() {\n
+      let label = \'Read only\';\n
+      let atLeastOneReadOnly = checkSelectionConsistency(this.getSelectedRange(), (row, col) => this.getCellMeta(row, col).readOnly);\n
+\n
+      if (atLeastOneReadOnly) {\n
+        label = markLabelAsSelected(label);\n
+      }\n
+\n
+      return label;\n
+    },\n
+    callback: function() {\n
+      let range = this.getSelectedRange();\n
+      let atLeastOneReadOnly = checkSelectionConsistency(range, (row, col) => this.getCellMeta(row, col).readOnly);\n
+\n
+      range.forAll((row, col) => {\n
+        this.getCellMeta(row, col).readOnly = atLeastOneReadOnly ? false : true;\n
+      });\n
+      this.render();\n
+    },\n
+    disabled: function() {\n
+      return this.getSelectedRange() ? false : true;\n
+    }\n
+  },\n
+  [ALIGNMENT]: {\n
+    key: ALIGNMENT,\n
+    name: \'Alignment\',\n
+    disabled: function() {\n
+      return this.getSelectedRange() ? false : true;\n
+    },\n
+    submenu: {\n
+      items: [\n
+        {\n
+          key: `${ALIGNMENT}:left`,\n
+          name: function() {\n
+            let label = \'Left\';\n
+            let hasClass = checkSelectionConsistency(this.getSelectedRange(), (row, col) => {\n
+              let className = this.getCellMeta(row, col).className;\n
+\n
+              if (className && className.indexOf(\'htLeft\') !== -1) {\n
+                return true;\n
+              }\n
+            });\n
+\n
+            if (hasClass) {\n
+              label = markLabelAsSelected(label);\n
+            }\n
+\n
+            return label;\n
+          },\n
+          callback: function() {\n
+            let range = this.getSelectedRange();\n
+            let stateBefore = getAlignmentClasses(range, (row, col) => this.getCellMeta(row, col).className);\n
+            let type = \'horizontal\';\n
+            let alignment = \'htLeft\';\n
+\n
+            this.runHooks(\'beforeCellAlignment\', stateBefore, range, type, alignment);\n
+            align(range, type, alignment, (row, col) => this.getCellMeta(row, col));\n
+            this.render();\n
+          },\n
+          disabled: false\n
+        },\n
+        {\n
+          key: `${ALIGNMENT}:center`,\n
+          name: function() {\n
+            let label = \'Center\';\n
+            let hasClass = checkSelectionConsistency(this.getSelectedRange(), (row, col) => {\n
+              let className = this.getCellMeta(row, col).className;\n
+\n
+              if (className && className.indexOf(\'htCenter\') !== -1) {\n
+                return true;\n
+              }\n
+            });\n
+\n
+            if (hasClass) {\n
+              label = markLabelAsSelected(label);\n
+            }\n
+\n
+            return label;\n
+          },\n
+          callback: function() {\n
+            let range = this.getSelectedRange();\n
+            let stateBefore = getAlignmentClasses(range, (row, col) => this.getCellMeta(row, col).className);\n
+            let type = \'horizontal\';\n
+            let alignment = \'htCenter\';\n
+\n
+            this.runHooks(\'beforeCellAlignment\', stateBefore, range, type, alignment);\n
+            align(range, type, alignment, (row, col) => this.getCellMeta(row, col));\n
+            this.render();\n
+          },\n
+          disabled: false\n
+        },\n
+        {\n
+          key: `${ALIGNMENT}:right`,\n
+          name: function() {\n
+            let label = \'Right\';\n
+            let hasClass = checkSelectionConsistency(this.getSelectedRange(), (row, col) => {\n
+              let className = this.getCellMeta(row, col).className;\n
+\n
+              if (className && className.indexOf(\'htRight\') !== -1) {\n
+                return true;\n
+              }\n
+            });\n
+\n
+            if (hasClass) {\n
+              label = markLabelAsSelected(label);\n
+            }\n
+\n
+            return label;\n
+          },\n
+          callback: function() {\n
+            let range = this.getSelectedRange();\n
+            let stateBefore = getAlignmentClasses(range, (row, col) => this.getCellMeta(row, col).className);\n
+            let type = \'horizontal\';\n
+            let alignment = \'htRight\';\n
+\n
+            this.runHooks(\'beforeCellAlignment\', stateBefore, range, type, alignment);\n
+            align(range, type, alignment, (row, col) => this.getCellMeta(row, col));\n
+            this.render();\n
+          },\n
+          disabled: false\n
+        },\n
+        {\n
+          key: `${ALIGNMENT}:justify`,\n
+          name: function() {\n
+            let label = \'Justify\';\n
+            let hasClass = checkSelectionConsistency(this.getSelectedRange(), (row, col) => {\n
+              let className = this.getCellMeta(row, col).className;\n
+\n
+              if (className && className.indexOf(\'htJustify\') !== -1) {\n
+                return true;\n
+              }\n
+            });\n
+\n
+            if (hasClass) {\n
+              label = markLabelAsSelected(label);\n
+            }\n
+\n
+            return label;\n
+          },\n
+          callback: function() {\n
+            let range = this.getSelectedRange();\n
+            let stateBefore = getAlignmentClasses(range, (row, col) => this.getCellMeta(row, col).className);\n
+            let type = \'horizontal\';\n
+            let alignment = \'htJustify\';\n
+\n
+            this.runHooks(\'beforeCellAlignment\', stateBefore, range, type, alignment);\n
+            align(range, type, alignment, (row, col) => this.getCellMeta(row, col));\n
+            this.render();\n
+          },\n
+          disabled: false\n
+        },\n
+        {\n
+          name: SEPARATOR\n
+        },\n
+        {\n
+          key: `${ALIGNMENT}:top`,\n
+          name: function() {\n
+            let label = \'Top\';\n
+            let hasClass = checkSelectionConsistency(this.getSelectedRange(), (row, col) => {\n
+              let className = this.getCellMeta(row, col).className;\n
+\n
+              if (className && className.indexOf(\'htTop\') !== -1) {\n
+                return true;\n
+              }\n
+            });\n
+\n
+            if (hasClass) {\n
+              label = markLabelAsSelected(label);\n
+            }\n
+            return label;\n
+          },\n
+          callback: function() {\n
+            let range = this.getSelectedRange();\n
+            let stateBefore = getAlignmentClasses(range, (row, col) => this.getCellMeta(row, col).className);\n
+            let type = \'vertical\';\n
+            let alignment = \'htTop\';\n
+\n
+            this.runHooks(\'beforeCellAlignment\', stateBefore, range, type, alignment);\n
+            align(range, type, alignment, (row, col) => this.getCellMeta(row, col));\n
+            this.render();\n
+          },\n
+          disabled: false\n
+        },\n
+        {\n
+          key: `${ALIGNMENT}:middle`,\n
+          name: function() {\n
+            let label = \'Middle\';\n
+            let hasClass = checkSelectionConsistency(this.getSelectedRange(), (row, col) => {\n
+              let className = this.getCellMeta(row, col).className;\n
+\n
+              if (className && className.indexOf(\'htMiddle\') !== -1) {\n
+                return true;\n
+              }\n
+            });\n
+\n
+            if (hasClass) {\n
+              label = markLabelAsSelected(label);\n
+            }\n
+\n
+            return label;\n
+          },\n
+          callback: function() {\n
+            let range = this.getSelectedRange();\n
+            let stateBefore = getAlignmentClasses(range, (row, col) => this.getCellMeta(row, col).className);\n
+            let type = \'vertical\';\n
+            let alignment = \'htMiddle\';\n
+\n
+            this.runHooks(\'beforeCellAlignment\', stateBefore, range, type, alignment);\n
+            align(range, type, alignment, (row, col) => this.getCellMeta(row, col));\n
+            this.render();\n
+          },\n
+          disabled: false\n
+        },\n
+        {\n
+          key: `${ALIGNMENT}:bottom`,\n
+          name: function() {\n
+            let label = \'Bottom\';\n
+            let hasClass = checkSelectionConsistency(this.getSelectedRange(), (row, col) => {\n
+              let className = this.getCellMeta(row, col).className;\n
+\n
+              if (className && className.indexOf(\'htBottom\') !== -1) {\n
+                return true;\n
+              }\n
+            });\n
+\n
+            if (hasClass) {\n
+              label = markLabelAsSelected(label);\n
+            }\n
+\n
+            return label;\n
+          },\n
+          callback: function() {\n
+            let range = this.getSelectedRange();\n
+            let stateBefore = getAlignmentClasses(range, (row, col) => this.getCellMeta(row, col).className);\n
+            let type = \'vertical\';\n
+            let alignment = \'htBottom\';\n
+\n
+            this.runHooks(\'beforeCellAlignment\', stateBefore, range, type, alignment);\n
+            align(range, type, alignment, (row, col) => this.getCellMeta(row, col));\n
+            this.render();\n
+          },\n
+          disabled: false\n
+        }\n
+      ]\n
+    }\n
+  }\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14551</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>predefinedItems.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

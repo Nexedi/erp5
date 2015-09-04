@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272595.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jasmine-html-hacks.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+function applyHtmlReporterHacks(htmlReporter) {\n
+  var appendSummaryToSuiteDiv = jasmine.HtmlReporter.SpecView.prototype.appendSummaryToSuiteDiv;\n
+  jasmine.HtmlReporter.SpecView.prototype.appendSummaryToSuiteDiv = function () {\n
+    appendSummaryToSuiteDiv.call(this);\n
+\n
+    var time = (this.spec.finishedAt.getTime() - this.spec.startedAt.getTime() ) / 1000;\n
+    this.spec.durationSec = time;\n
+    this.summary.innerHTML += \' (\' + time.toFixed(2) + \' s)\';\n
+\n
+    var suite = this.spec.suite;\n
+    while (suite.parentSuite) {\n
+      suite = suite.parentSuite;\n
+    }\n
+\n
+    if (!suite.longestDuration) {\n
+      suite.longestDuration = this.spec;\n
+    }\n
+    else if (this.spec.durationSec > suite.longestDuration.durationSec) {\n
+      suite.longestDuration = this.spec;\n
+    }\n
+  };\n
+\n
+  var refresh = jasmine.HtmlReporter.SuiteView.prototype.refresh;\n
+  jasmine.HtmlReporter.SuiteView.prototype.refresh = function () {\n
+    refresh.call(this);\n
+    if (this.suite.longestDuration) {\n
+      this.element.firstChild.innerHTML += " (longest " + this.suite.longestDuration.durationSec.toFixed(2) + \' s)\';\n
+    }\n
+  };\n
+\n
+  var reportSpecStarting = htmlReporter.reportSpecStarting;\n
+  htmlReporter.reportSpecStarting = function (spec) {\n
+    reportSpecStarting(spec);\n
+    spec.startedAt = new Date();\n
+  };\n
+\n
+  var reportSpecResults = htmlReporter.reportSpecResults;\n
+  htmlReporter.reportSpecResults = function (spec) {\n
+    spec.finishedAt = new Date();\n
+    reportSpecResults(spec)\n
+  };\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1453</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jasmine-html-hacks.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

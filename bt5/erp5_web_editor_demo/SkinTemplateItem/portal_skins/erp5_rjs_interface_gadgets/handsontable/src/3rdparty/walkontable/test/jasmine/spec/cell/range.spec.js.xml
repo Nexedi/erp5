@@ -1,0 +1,1301 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272587.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>range.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe("WalkontableCellRange", function () {\n
+  describe("getAll", function () {\n
+    it("should get all cells in range", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(3, 3);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+      var all = range.getAll();\n
+      expect(all.length).toBe(9);\n
+      expect(all[0].row).toBe(from.row);\n
+      expect(all[0].col).toBe(from.col);\n
+      expect(all[1].row).toBe(1);\n
+      expect(all[1].col).toBe(2);\n
+      expect(all[8].row).toBe(to.row);\n
+      expect(all[8].col).toBe(to.col);\n
+    });\n
+\n
+    it("should get all cells in range (reverse order)", function () {\n
+      var from = new WalkontableCellCoords(3, 3);\n
+      var to = new WalkontableCellCoords(1, 1);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+      var all = range.getAll();\n
+      expect(all.length).toBe(9);\n
+      expect(all[0].row).toBe(to.row);\n
+      expect(all[0].col).toBe(to.col);\n
+      expect(all[1].row).toBe(1);\n
+      expect(all[1].col).toBe(2);\n
+      expect(all[8].row).toBe(from.row);\n
+      expect(all[8].col).toBe(from.col);\n
+    });\n
+  });\n
+\n
+  describe("getInner", function () {\n
+    it("should get cells in range excluding from and to", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(3, 3);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+      var inner = range.getInner();\n
+      expect(inner.length).toBe(7);\n
+      expect(inner[1].row).toBe(1);\n
+      expect(inner[1].col).toBe(3);\n
+    });\n
+\n
+    it("should get cells in range excluding from and to (reverse order)", function () {\n
+      var from = new WalkontableCellCoords(3, 3);\n
+      var to = new WalkontableCellCoords(1, 1);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+      var inner = range.getInner();\n
+      expect(inner.length).toBe(7);\n
+      expect(inner[1].row).toBe(1);\n
+      expect(inner[1].col).toBe(3);\n
+    });\n
+  });\n
+\n
+  describe("includes", function () {\n
+    it("should return true if range is a single cell and the same cell is given", function () {\n
+      var from = new WalkontableCellCoords(0, 0);\n
+      var to = new WalkontableCellCoords(0, 0);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+      expect(range.includes(new WalkontableCellCoords(0, 0))).toBe(true);\n
+    });\n
+\n
+    it("should return true if given cell is within the range", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(3, 3);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+      expect(range.includes(new WalkontableCellCoords(1, 1))).toBe(true);\n
+      expect(range.includes(new WalkontableCellCoords(3, 1))).toBe(true);\n
+      expect(range.includes(new WalkontableCellCoords(3, 3))).toBe(true);\n
+      expect(range.includes(new WalkontableCellCoords(1, 3))).toBe(true);\n
+      expect(range.includes(new WalkontableCellCoords(2, 2))).toBe(true);\n
+      expect(range.includes(new WalkontableCellCoords(1, 2))).toBe(true);\n
+      expect(range.includes(new WalkontableCellCoords(2, 1))).toBe(true);\n
+    });\n
+\n
+    it("should return false if given cell outside the range", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(3, 3);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+      expect(range.includes(new WalkontableCellCoords(0, 0))).toBe(false);\n
+      expect(range.includes(new WalkontableCellCoords(4, 4))).toBe(false);\n
+      expect(range.includes(new WalkontableCellCoords(1, 4))).toBe(false);\n
+      expect(range.includes(new WalkontableCellCoords(4, 1))).toBe(false);\n
+      expect(range.includes(new WalkontableCellCoords(-1, -1))).toBe(false);\n
+    });\n
+  });\n
+\n
+  describe("includesRange", function () {\n
+    describe("B has more than one cell", function () {\n
+      /*\n
+       +----------+\n
+       |  a       |\n
+       | +------+ |\n
+       | |    b | |\n
+       | |      | |\n
+       | +------+ |\n
+       +----------+\n
+       */\n
+      it("B is included in A, none of borders touch each other", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 1);\n
+        var bBottomRight = new WalkontableCellCoords(4, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +----------+\n
+       |  b       |\n
+       | +------+ |\n
+       | |   a  | |\n
+       | |      | |\n
+       | +------+ |\n
+       +----------+\n
+       */\n
+      it("A is included in B, none of borders touch each other", function () {\n
+        var aTopLeft = new WalkontableCellCoords(1, 1);\n
+        var aBottomRight = new WalkontableCellCoords(4, 4);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(false);\n
+      });\n
+\n
+      /*\n
+       +-----------+\n
+       | a |   b | |\n
+       |   |     | |\n
+       |   +-----+ |\n
+       +-----------+\n
+       */\n
+      it("B is included in A, top borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 1);\n
+        var bBottomRight = new WalkontableCellCoords(4, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +---------+\n
+       | a |   b |\n
+       |   |     |\n
+       |   +-----|\n
+       |         |\n
+       +---------+\n
+       */\n
+      it("B is included in A, top and right borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 1);\n
+        var bBottomRight = new WalkontableCellCoords(4, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +---------+\n
+       |   +-----|\n
+       | a |   b |\n
+       |   |     |\n
+       |   +-----|\n
+       +---------+\n
+       */\n
+      it("B is included in A, right borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 1);\n
+        var bBottomRight = new WalkontableCellCoords(4, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +---------+\n
+       |   +-----|\n
+       | a |   b |\n
+       |   |     |\n
+       +---------+\n
+       */\n
+      it("B is included in A, bottom and right borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 1);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +-----------+\n
+       |   +-----+ |\n
+       | a |   b | |\n
+       |   |     | |\n
+       +-----------+\n
+       */\n
+      it("B is included in A, bottom borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 1);\n
+        var bBottomRight = new WalkontableCellCoords(5, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +-----------+\n
+       |-----+   a |\n
+       |   b |     |\n
+       |     |     |\n
+       +-----------+\n
+       */\n
+      it("B is included in A, bottom and left borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +-----------+\n
+       |-----+   a |\n
+       |   b |     |\n
+       |     |     |\n
+       |-----+     |\n
+       +-----------+\n
+       */\n
+      it("B is included in A, left borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 0);\n
+        var bBottomRight = new WalkontableCellCoords(4, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +-----------+\n
+       |   b |   a |\n
+       |     |     |\n
+       |-----+     |\n
+       +-----------+\n
+       */\n
+      it("B is included in A, top and left borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(4, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +------------+\n
+       |  a |   b | |\n
+       |    |     | |\n
+       +------------+\n
+       */\n
+      it("B is included in A, top and bottom borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 1);\n
+        var bBottomRight = new WalkontableCellCoords(5, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +----------+\n
+       |  a |   b |\n
+       |    |     |\n
+       +----------+\n
+       */\n
+      it("B is included in A, top, right and bottom borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 1);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +----------+\n
+       |  b |   a |\n
+       |    |     |\n
+       +----------+\n
+       */\n
+      it("B is included in A, top, left and bottom borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +----------+\n
+       | a        |\n
+       |----------|\n
+       |  b       |\n
+       |----------|\n
+       +----------+\n
+       */\n
+      it("B is included in A, left and right borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 0);\n
+        var bBottomRight = new WalkontableCellCoords(4, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +----------+\n
+       | a        |\n
+       |----------|\n
+       |  b       |\n
+       +----------+\n
+       */\n
+      it("B is included in A, left, bottom and right borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +----------+\n
+       | b        |\n
+       |----------|\n
+       |  a       |\n
+       +----------+\n
+       */\n
+      it("B is included in A, left, top and right borders touch", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(4, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+    });\n
+    describe("B has exactly one cell", function () {\n
+\n
+      /*\n
+       +----------+\n
+       |  a       |\n
+       | +------+ |\n
+       | |    b | |\n
+       | |      | |\n
+       | +------+ |\n
+       +----------+\n
+       */\n
+      it("B is included in A, none of borders touch each other", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 1);\n
+        var bBottomRight = new WalkontableCellCoords(1, 1);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.includesRange(b)).toBe(true);\n
+      });\n
+\n
+    });\n
+  });\n
+\n
+  describe("expand", function () {\n
+    it("should not change range if expander to a cell that fits within the range", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(3, 3);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+\n
+      var topLeft = range.getTopLeftCorner();\n
+      var bottomRight = range.getBottomRightCorner();\n
+\n
+      var expander = new WalkontableCellCoords(3, 1);\n
+      var res = range.expand(expander);\n
+      expect(res).toBe(false);\n
+      var topLeft2 = range.getTopLeftCorner();\n
+      var bottomRight2 = range.getBottomRightCorner();\n
+      expect(topLeft2).toEqual(topLeft);\n
+      expect(bottomRight2).toEqual(bottomRight);\n
+    });\n
+\n
+    it("should change range if expander to a cell outside of the cell range", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(3, 3);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+\n
+      var topLeft = range.getTopLeftCorner();\n
+\n
+      var expander = new WalkontableCellCoords(4, 4);\n
+      var res = range.expand(expander);\n
+      expect(res).toBe(true);\n
+      var topLeft2 = range.getTopLeftCorner();\n
+      var bottomRight2 = range.getBottomRightCorner();\n
+      expect(topLeft2).toEqual(topLeft);\n
+      expect(bottomRight2).toEqual(expander);\n
+    });\n
+\n
+    it("should change range if expander to a cell outside of the cell range (inverted)", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(3, 3);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+\n
+      var topLeft = range.getTopLeftCorner();\n
+\n
+      var expander = new WalkontableCellCoords(4, 4);\n
+      var res = range.expand(expander);\n
+      expect(res).toBe(true);\n
+      var topLeft2 = range.getTopLeftCorner();\n
+      var bottomRight2 = range.getBottomRightCorner();\n
+      expect(topLeft2).toEqual(topLeft);\n
+      expect(bottomRight2).toEqual(expander);\n
+    });\n
+\n
+    it("should change range if expander to a cell outside of the cell range (bottom left)", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(3, 3);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+\n
+      var expander = new WalkontableCellCoords(3, 0);\n
+      var res = range.expand(expander);\n
+      expect(res).toBe(true);\n
+      var topLeft2 = range.getTopLeftCorner();\n
+      var bottomRight2 = range.getBottomRightCorner();\n
+      expect(topLeft2).toEqual(new WalkontableCellCoords(1, 0));\n
+      expect(bottomRight2).toEqual(new WalkontableCellCoords(3, 3));\n
+    });\n
+\n
+    it("should change range if expander to a cell outside of the cell range (inverted top right)", function () {\n
+      var from = new WalkontableCellCoords(2, 0);\n
+      var to = new WalkontableCellCoords(1, 0);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+\n
+      var expander = new WalkontableCellCoords(1, 1);\n
+      var res = range.expand(expander);\n
+      expect(res).toBe(true);\n
+      var topLeft2 = range.getTopLeftCorner();\n
+      var bottomRight2 = range.getBottomRightCorner();\n
+      expect(topLeft2).toEqual(new WalkontableCellCoords(1, 0));\n
+      expect(bottomRight2).toEqual(new WalkontableCellCoords(2, 1));\n
+    });\n
+\n
+    it("should change range if expander to a cell outside of the cell range (inverted bottom left)", function () {\n
+      var from = new WalkontableCellCoords(2, 1);\n
+      var to = new WalkontableCellCoords(1, 1);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+\n
+      var expander = new WalkontableCellCoords(3, 0);\n
+      var res = range.expand(expander);\n
+      expect(res).toBe(true);\n
+      var topLeft2 = range.getTopLeftCorner();\n
+      var bottomRight2 = range.getBottomRightCorner();\n
+      expect(topLeft2).toEqual(new WalkontableCellCoords(1, 0));\n
+      expect(bottomRight2).toEqual(new WalkontableCellCoords(3, 1));\n
+    });\n
+  });\n
+\n
+  describe("overlaps", function () {\n
+\n
+\n
+    describe("positive", function () {\n
+      /*\n
+             +-------+\n
+             |       |\n
+             |   b   |\n
+       +-------+     |\n
+       |     +-|-----+\n
+       |   a   |\n
+       |       |\n
+       +-------+\n
+       */\n
+      it("overlapping from NE", function () {\n
+        var aTopLeft = new WalkontableCellCoords(3, 0);\n
+        var aBottomRight = new WalkontableCellCoords(8, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 3);\n
+        var bBottomRight = new WalkontableCellCoords(5, 8);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +---------+\n
+       |      +-------+\n
+       |      |  |    |\n
+       |  a   |  |  b |\n
+       |      |  |    |\n
+       |      +-------+\n
+       +---------+\n
+       */\n
+      it("overlapping from E", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 3);\n
+        var bBottomRight = new WalkontableCellCoords(4, 6);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +--------+\n
+       |        |\n
+       |  a     |\n
+       |    +---------+\n
+       |    |   |     |\n
+       +----|---+     |\n
+            |      b  |\n
+            |         |\n
+            +---------+\n
+       */\n
+      it("overlapping from SE", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(3, 3);\n
+        var bBottomRight = new WalkontableCellCoords(8, 8);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +---------+\n
+       |    a    |\n
+       | +-----+ |\n
+       +-|-----|-+\n
+         |  b  |\n
+         +-----+\n
+       */\n
+      it("overlapping from S", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(3, 1);\n
+        var bBottomRight = new WalkontableCellCoords(6, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+           +--------+\n
+           |      a |\n
+       +--------+   |\n
+       |   |    |   |\n
+       |   +----|---+\n
+       | b      |\n
+       +--------+\n
+       */\n
+      it("overlapping from SW", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 3);\n
+        var aBottomRight = new WalkontableCellCoords(5, 8);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(3, 0);\n
+        var bBottomRight = new WalkontableCellCoords(8, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+           +-------+\n
+       +---|--+    |\n
+       |   |  |    |\n
+       | b |  |  a |\n
+       |   |  |    |\n
+       +---|--+    |\n
+           +-------+\n
+       */\n
+      it("overlapping from S", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 3);\n
+        var aBottomRight = new WalkontableCellCoords(5, 8);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 1);\n
+        var bBottomRight = new WalkontableCellCoords(4, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +------+\n
+       | b    |\n
+       |   +-------+\n
+       |   |  |    |\n
+       +---|--+  a |\n
+           |       |\n
+           +-------+\n
+       */\n
+      it("overlapping from NW", function () {\n
+        var aTopLeft = new WalkontableCellCoords(3, 3);\n
+        var aBottomRight = new WalkontableCellCoords(8, 8);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +---------+\n
+       |    b    |\n
+       | +-----+ |\n
+       +-|-----|-+\n
+         |  a  |\n
+         +-----+\n
+       */\n
+      it("overlapping from N", function () {\n
+        var aTopLeft = new WalkontableCellCoords(3, 1);\n
+        var aBottomRight = new WalkontableCellCoords(6, 4);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +----------+\n
+       |  a       |\n
+       | +------+ |\n
+       | |    b | |\n
+       | |      | |\n
+       | +------+ |\n
+       +----------+\n
+       */\n
+      it("overlapping when includes", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 1);\n
+        var bBottomRight = new WalkontableCellCoords(4, 4);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+       +----------+\n
+       |  b       |\n
+       | +------+ |\n
+       | |    a | |\n
+       | |      | |\n
+       | +------+ |\n
+       +----------+\n
+       */\n
+      it("overlapping when included", function () {\n
+        var aTopLeft = new WalkontableCellCoords(1, 1);\n
+        var aBottomRight = new WalkontableCellCoords(4, 4);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+\n
+      /*\n
+\n
+       b-> +----------+\n
+           |  a       |\n
+           |          |\n
+           |          |\n
+           +----------+\n
+       */\n
+      it("overlapping when A includes B and B has only one cell, and this cell is A\'s top left corner", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(0, 0);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+\n
+       +----------+ <- b\n
+       |  a       |\n
+       |          |\n
+       |          |\n
+       +----------+\n
+       */\n
+      it("overlapping when A includes B and B has only one cell, and this cell is A\'s top right corner", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 5);\n
+        var bBottomRight = new WalkontableCellCoords(0, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+\n
+           +----------+\n
+           |  a       |\n
+           |          |\n
+           |          |\n
+      b -> +----------+\n
+       */\n
+      it("overlapping when A includes B and B has only one cell, and this cell is A\'s bottom left corner", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(5, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 0);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+\n
+       +----------+\n
+       |  a       |\n
+       |          |\n
+       |          |\n
+       +----------+ <- b\n
+       */\n
+      it("overlapping when A includes B and B has only one cell, and this cell is A\'s bottom right corner", function () {\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(5, 5);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+      });\n
+\n
+      /*\n
+            +----+\n
+            |b   |\n
+       +----+----+\n
+       |   a|\n
+       +----+\n
+       */\n
+      it("overlapping by touching from NE", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(5, 0);\n
+        var aBottomRight = new WalkontableCellCoords(10, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 5);\n
+        var bBottomRight = new WalkontableCellCoords(5, 10);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+\n
+      });\n
+\n
+      /*\n
+       +----+----+\n
+       |   a|   b|\n
+       +----+----+\n
+       */\n
+      it("overlapping by touching from E", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 5);\n
+        var bBottomRight = new WalkontableCellCoords(5, 10);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+\n
+      });\n
+\n
+      /*\n
+       +----+\n
+       |   a|\n
+       +----+----+\n
+            |   b|\n
+            +----+\n
+       */\n
+      it("overlapping by touching from SE", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(5, 5);\n
+        var bBottomRight = new WalkontableCellCoords(10, 10);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+\n
+      });\n
+\n
+      /*\n
+       +----+\n
+       |   a|\n
+       +----+\n
+       |   b|\n
+       +----+\n
+       */\n
+      it("overlapping by touching from S", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(5, 5);\n
+        var bBottomRight = new WalkontableCellCoords(10, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+\n
+      });\n
+\n
+      /*\n
+            +----+\n
+            |   a|\n
+       +----+----+\n
+       |   b|\n
+       +----+\n
+       */\n
+      it("overlapping by touching from SW", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 5);\n
+        var aBottomRight = new WalkontableCellCoords(5, 10);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(5, 0);\n
+        var bBottomRight = new WalkontableCellCoords(10, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+\n
+      });\n
+\n
+      /*\n
+       +----+----+\n
+       |   b|   a|\n
+       +----+----+\n
+       */\n
+      it("overlapping by touching from W", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 5);\n
+        var aBottomRight = new WalkontableCellCoords(5, 10);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+\n
+      });\n
+\n
+      /*\n
+       +----+\n
+       |   b|\n
+       +----+----+\n
+            |   a|\n
+            +----+\n
+       */\n
+      it("overlapping by touching from NW", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(5, 5);\n
+        var aBottomRight = new WalkontableCellCoords(10, 10);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+\n
+      });\n
+\n
+      /*\n
+       +----+\n
+       |   b|\n
+       +----+\n
+       |   a|\n
+       +----+\n
+       */\n
+      it("overlapping by touching from E", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(5, 0);\n
+        var aBottomRight = new WalkontableCellCoords(10, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(true);\n
+\n
+      });\n
+\n
+    });\n
+\n
+    describe("negative", function () {\n
+      /*\n
+             +---+\n
+             |  b|\n
+             +---+\n
+       +------+\n
+       |      |\n
+       |  a   |\n
+       |      |\n
+       +------+\n
+       */\n
+      it("not overlapping from NE", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(6, 0);\n
+        var aBottomRight = new WalkontableCellCoords(11, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 3);\n
+        var bBottomRight = new WalkontableCellCoords(5, 8);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(false);\n
+\n
+      });\n
+\n
+      /*\n
+       +------+\n
+       |      | +--+\n
+       |   a  | | b|\n
+       |      | +--+\n
+       +------+\n
+       */\n
+      it("not overlapping from E", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 6);\n
+        var bBottomRight = new WalkontableCellCoords(4, 9);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(false);\n
+\n
+      });\n
+\n
+      /*\n
+       +----+\n
+       |a   |\n
+       |    | +----+\n
+       +----+ |b   |\n
+              |    |\n
+              +----+\n
+       */\n
+      it("not overlapping from SE", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(1, 6);\n
+        var bBottomRight = new WalkontableCellCoords(4, 9);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(false);\n
+\n
+      });\n
+\n
+      /*\n
+       +----+\n
+       |a   |\n
+       |    |\n
+       +----+\n
+       +----+\n
+       |b   |\n
+       |    |\n
+       +----+\n
+       */\n
+      it("not overlapping from S", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 0);\n
+        var aBottomRight = new WalkontableCellCoords(5, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(6, 0);\n
+        var bBottomRight = new WalkontableCellCoords(11, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(false);\n
+\n
+      });\n
+\n
+      /*\n
+           +----+\n
+           |a   |\n
+           |    |\n
+           +----+\n
+       +----+\n
+       |b   |\n
+       |    |\n
+       +----+\n
+       */\n
+      it("not overlapping from SW", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 3);\n
+        var aBottomRight = new WalkontableCellCoords(5, 8);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(6, 0);\n
+        var bBottomRight = new WalkontableCellCoords(11, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(false);\n
+\n
+      });\n
+\n
+      /*\n
+            +------+\n
+       +--+ |      |\n
+       | b| |   a  |\n
+       +--+ |      |\n
+            +------+\n
+       */\n
+      it("not overlapping from W", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 6);\n
+        var aBottomRight = new WalkontableCellCoords(5, 11);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(3, 0);\n
+        var bBottomRight = new WalkontableCellCoords(6, 3);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(false);\n
+\n
+      });\n
+\n
+      /*\n
+       +----+\n
+       |b   |\n
+       |    | +----+\n
+       +----+ | a  |\n
+              |    |\n
+              +----+\n
+       */\n
+      it("not overlapping from NW", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(0, 6);\n
+        var aBottomRight = new WalkontableCellCoords(3, 11);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(false);\n
+\n
+      });\n
+\n
+      /*\n
+       +----+\n
+       |b   |\n
+       +----+\n
+       +----+\n
+       |   a|\n
+       +----+\n
+       */\n
+      it("not overlapping from N", function () {\n
+\n
+        var aTopLeft = new WalkontableCellCoords(6, 0);\n
+        var aBottomRight = new WalkontableCellCoords(11, 5);\n
+        var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+        var bTopLeft = new WalkontableCellCoords(0, 0);\n
+        var bBottomRight = new WalkontableCellCoords(5, 5);\n
+        var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+        expect(a.overlaps(b)).toBe(false);\n
+\n
+      });\n
+\n
+    });\n
+\n
+  });\n
+\n
+  describe("expand by range", function () {\n
+    it("should not expand range A with range B if A includes B", function () {\n
+      var aTopLeft = new WalkontableCellCoords(0, 0);\n
+      var aBottomRight = new WalkontableCellCoords(5, 5);\n
+      var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+      var bTopLeft = new WalkontableCellCoords(2, 2);\n
+      var bBottomRight = new WalkontableCellCoords(4, 4);\n
+      var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+\n
+      expect(a.expandByRange(b)).toBe(false);\n
+\n
+      expect(a.getTopLeftCorner().row).toEqual(0);\n
+      expect(a.getTopLeftCorner().col).toEqual(0);\n
+      expect(a.getBottomRightCorner().row).toEqual(5);\n
+      expect(a.getBottomRightCorner().col).toEqual(5);\n
+    });\n
+\n
+    it("should not expand range A with range B if A and B don\'t overlap", function () {\n
+      var aTopLeft = new WalkontableCellCoords(0, 0);\n
+      var aBottomRight = new WalkontableCellCoords(5, 5);\n
+      var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+      var bTopLeft = new WalkontableCellCoords(10, 10);\n
+      var bBottomRight = new WalkontableCellCoords(15, 15);\n
+      var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+\n
+      expect(a.expandByRange(b)).toBe(false);\n
+\n
+      expect(a.getTopLeftCorner().row).toEqual(0);\n
+      expect(a.getTopLeftCorner().col).toEqual(0);\n
+      expect(a.getBottomRightCorner().row).toEqual(5);\n
+      expect(a.getBottomRightCorner().col).toEqual(5);\n
+    });\n
+\n
+    it("should not expand range A with range B", function () {\n
+      var aTopLeft = new WalkontableCellCoords(0, 0);\n
+      var aBottomRight = new WalkontableCellCoords(5, 5);\n
+      var a = new WalkontableCellRange(aTopLeft, aTopLeft, aBottomRight);\n
+\n
+      var bTopLeft = new WalkontableCellCoords(2, 2);\n
+      var bBottomRight = new WalkontableCellCoords(7, 7);\n
+      var b = new WalkontableCellRange(bTopLeft, bTopLeft, bBottomRight);\n
+\n
+\n
+      expect(a.expandByRange(b)).toBe(true);\n
+\n
+      expect(a.getTopLeftCorner().row).toEqual(0);\n
+      expect(a.getTopLeftCorner().col).toEqual(0);\n
+      expect(a.getBottomRightCorner().row).toEqual(7);\n
+      expect(a.getBottomRightCorner().col).toEqual(7);\n
+    });\n
+  });\n
+\n
+  describe("forAll", function () {\n
+    it("callback should be called for all cells in the range", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(3, 3);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+      var forAllCallback = jasmine.createSpy(\'beforeColumnSortHandler\');\n
+      range.forAll(forAllCallback);\n
+      expect(forAllCallback.callCount).toBe(9);\n
+    });\n
+\n
+    it("callback should be called with row, column parameters", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(2, 2);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+      var rows = [];\n
+      var cols = [];\n
+      range.forAll(function (row, col) {\n
+        rows.push(row);\n
+        cols.push(col);\n
+      });\n
+      expect(rows).toEqual([1, 1, 2, 2]);\n
+      expect(cols).toEqual([1, 2, 1, 2]);\n
+    });\n
+\n
+    it("iteration should be interrupted when callback returns false", function () {\n
+      var from = new WalkontableCellCoords(1, 1);\n
+      var to = new WalkontableCellCoords(2, 2);\n
+      var range = new WalkontableCellRange(from, from, to);\n
+      var callCount = 0;\n
+      range.forAll(function (row, col) {\n
+        callCount++;\n
+        if (callCount == 2) {\n
+          return false;\n
+        }\n
+      });\n
+      expect(callCount).toBe(2);\n
+    });\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>41492</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>range.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

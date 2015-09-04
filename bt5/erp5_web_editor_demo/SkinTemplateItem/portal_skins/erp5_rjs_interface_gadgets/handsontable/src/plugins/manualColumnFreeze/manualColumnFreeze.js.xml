@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272664.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>manualColumnFreeze.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+import BasePlugin from \'./../_base\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+/**\n
+ * This plugin allows to manually "freeze" and "unfreeze" a column using the Context Menu\n
+ *\n
+ * @plugin ManualColumnFreeze\n
+ */\n
+class ManualColumnFreeze extends BasePlugin {\n
+\n
+  constructor(hotInstance) {\n
+    super(hotInstance);\n
+  }\n
+\n
+  enablePlugin() {\n
+    if (this.enabled) {\n
+      return;\n
+    }\n
+\n
+    this.addHook(\'modifyCol\', (col) => this.onModifyCol(col));\n
+    this.addHook(\'afterContextMenuDefaultOptions\', (defaultOptions) => this.addContextMenuEntry(defaultOptions));\n
+\n
+    super.enablePlugin();\n
+  }\n
+\n
+  isEnabled() {\n
+    return !!this.hot.getSettings().manualColumnFreeze;\n
+  }\n
+\n
+  init() {\n
+    super.init();\n
+\n
+    // update plugin usages count for manualColumnPositions\n
+    if (typeof this.hot.manualColumnPositionsPluginUsages !== \'undefined\') {\n
+      this.hot.manualColumnPositionsPluginUsages.push(\'manualColumnFreeze\');\n
+    } else {\n
+      this.hot.manualColumnPositionsPluginUsages = [\'manualColumnFreeze\'];\n
+    }\n
+\n
+    this.fixedColumnsCount = this.hot.getSettings().fixedColumnsLeft;\n
+  }\n
+\n
+  /**\n
+   * \'modiftyCol\' callback, prevent doubling the column translation\n
+   *\n
+   * @private\n
+   * @param {Number} col\n
+   */\n
+  onModifyCol(col) {\n
+    // if another plugin is using manualColumnPositions to modify column order, do not double the translation\n
+    if (this.hot.manualColumnPositionsPluginUsages.length > 1) {\n
+      return col;\n
+    }\n
+\n
+    return this.getModifiedColumnIndex(col);\n
+  }\n
+\n
+  getModifiedColumnIndex(col) {\n
+    return this.hot.manualColumnPositions[col];\n
+  }\n
+\n
+  /**\n
+   * Add the manualColumnFreeze context menu entries\n
+   *\n
+   * @private\n
+   * @param {Object} defaultOptions\n
+   */\n
+  addContextMenuEntry(defaultOptions) {\n
+    let _this = this;\n
+\n
+    defaultOptions.items.push(\n
+      Handsontable.plugins.ContextMenu.SEPARATOR, {\n
+        key: \'freeze_column\',\n
+        name: function() {\n
+          let selectedColumn = _this.hot.getSelected()[1];\n
+\n
+          if (selectedColumn > _this.fixedColumnsCount - 1) {\n
+            return \'Freeze this column\';\n
+          } else {\n
+            return \'Unfreeze this column\';\n
+          }\n
+        },\n
+        disabled: function() {\n
+          let selection = _this.hot.getSelected();\n
+\n
+          return selection[1] !== selection[3];\n
+        },\n
+        callback: function() {\n
+          let selectedColumn = _this.hot.getSelected()[1];\n
+\n
+          if (selectedColumn > _this.fixedColumnsCount - 1) {\n
+            _this.freezeColumn(selectedColumn);\n
+          } else {\n
+            _this.unfreezeColumn(selectedColumn);\n
+          }\n
+        }\n
+      });\n
+  }\n
+\n
+  /**\n
+   * Freeze the given column (add it to fixed columns)\n
+   *\n
+   * @param {Number} col\n
+   */\n
+  freezeColumn(col) {\n
+    if (col <= this.fixedColumnsCount - 1) {\n
+      return; // already fixed\n
+    }\n
+\n
+    let modifiedColumn = this.getModifiedColumnIndex(col) || col;\n
+\n
+    this.checkPositionData(modifiedColumn);\n
+    this.modifyColumnOrder(modifiedColumn, col, null, \'freeze\');\n
+\n
+    this.addFixedColumn();\n
+\n
+    this.hot.view.wt.wtOverlays.leftOverlay.refresh();\n
+    this.hot.view.wt.wtOverlays.adjustElementsSize();\n
+  }\n
+\n
+  /**\n
+   * Unfreeze the given column (remove it from fixed columns and bring to it\'s previous position)\n
+   *\n
+   * @param {Number} col\n
+   */\n
+  unfreezeColumn(col) {\n
+    if (col > this.fixedColumnsCount - 1) {\n
+      return; // not fixed\n
+    }\n
+\n
+    let returnCol = this.getBestColumnReturnPosition(col);\n
+    let modifiedColumn = this.getModifiedColumnIndex(col) || col;\n
+\n
+    this.checkPositionData(modifiedColumn);\n
+    this.modifyColumnOrder(modifiedColumn, col, returnCol, \'unfreeze\');\n
+    this.removeFixedColumn();\n
+\n
+    this.hot.view.wt.wtOverlays.leftOverlay.refresh();\n
+    this.hot.view.wt.wtOverlays.adjustElementsSize();\n
+  }\n
+\n
+  /**\n
+   * Increments the fixed columns count by one\n
+   */\n
+  addFixedColumn() {\n
+    this.hot.updateSettings({\n
+      fixedColumnsLeft: this.fixedColumnsCount + 1\n
+    });\n
+\n
+    this.fixedColumnsCount++;\n
+  }\n
+\n
+  /**\n
+   * Decrements the fixed columns count by one\n
+   */\n
+  removeFixedColumn() {\n
+    this.hot.updateSettings({\n
+      fixedColumnsLeft: this.fixedColumnsCount - 1\n
+    });\n
+\n
+    this.fixedColumnsCount--;\n
+  }\n
+\n
+  /**\n
+   * Checks whether \'manualColumnPositions\' array needs creating and/or initializing\n
+   *\n
+   * @param {Number} [col]\n
+   */\n
+  checkPositionData(col) {\n
+    if (!this.hot.manualColumnPositions || this.hot.manualColumnPositions.length === 0) {\n
+      if (!this.hot.manualColumnPositions) {\n
+        this.hot.manualColumnPositions = [];\n
+      }\n
+    }\n
+    if (col) {\n
+      if (!this.hot.manualColumnPositions[col]) {\n
+        this.createPositionData(col + 1);\n
+      }\n
+    } else {\n
+      this.createPositionData(this.hot.countCols());\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Fills the \'manualColumnPositions\' array with consecutive column indexes\n
+   *\n
+   * @param {Number} len\n
+   */\n
+  createPositionData(len) {\n
+    if (this.hot.manualColumnPositions.length < len) {\n
+      for (let i = this.hot.manualColumnPositions.length; i < len; i++) {\n
+        this.hot.manualColumnPositions[i] = i;\n
+      }\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Updates the column order array used by modifyCol callback\n
+   *\n
+   * @param {Number} col\n
+   * @param {Number} actualCol column index of the currently selected cell\n
+   * @param {Number|null} returnCol suggested return slot for the unfreezed column (can be null)\n
+   * @param {String} action \'freeze\' or \'unfreeze\'\n
+   */\n
+  modifyColumnOrder(col, actualCol, returnCol, action) {\n
+    if (returnCol == null) {\n
+      returnCol = col;\n
+    }\n
+\n
+    if (action === \'freeze\') {\n
+      this.hot.manualColumnPositions.splice(this.fixedColumnsCount, 0, this.hot.manualColumnPositions.splice(actualCol, 1)[0]);\n
+    } else if (action === \'unfreeze\') {\n
+      this.hot.manualColumnPositions.splice(returnCol, 0, this.hot.manualColumnPositions.splice(actualCol, 1)[0]);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Estimates the most fitting return position for unfreezed column\n
+   *\n
+   * @param {Number} col\n
+   */\n
+  getBestColumnReturnPosition(col) {\n
+    let i = this.fixedColumnsCount;\n
+    let j = this.getModifiedColumnIndex(i);\n
+    let initialCol = this.getModifiedColumnIndex(col);\n
+\n
+    while (j < initialCol) {\n
+      i++;\n
+      j = this.getModifiedColumnIndex(i);\n
+    }\n
+\n
+    return i - 1;\n
+  }\n
+\n
+}\n
+\n
+export {ManualColumnFreeze};\n
+\n
+registerPlugin(\'manualColumnFreeze\', ManualColumnFreeze);
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6288</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>manualColumnFreeze.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

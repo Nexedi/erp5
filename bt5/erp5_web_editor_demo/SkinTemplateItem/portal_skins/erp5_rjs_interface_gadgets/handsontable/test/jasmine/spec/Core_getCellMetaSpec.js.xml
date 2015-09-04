@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272509.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_getCellMetaSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_getCellMeta\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should not allow manual editing of a read only cell\', function () {\n
+    var allCellsReadOnly = false;\n
+\n
+    handsontable({\n
+      cells: function () {\n
+        return {readOnly: allCellsReadOnly}\n
+      }\n
+    });\n
+    allCellsReadOnly = true;\n
+    selectCell(2, 2);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    expect(isEditorVisible()).toEqual(false);\n
+  });\n
+\n
+  it(\'should allow manual editing of cell that is no longer read only\', function () {\n
+    var allCellsReadOnly = true;\n
+\n
+    handsontable({\n
+      cells: function () {\n
+        return {readOnly: allCellsReadOnly};\n
+      }\n
+    });\n
+    allCellsReadOnly = false;\n
+    selectCell(2, 2);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    expect(isEditorVisible()).toEqual(true);\n
+  });\n
+\n
+  it(\'should move the selection to the cell below, when hitting the ENTER key on a read-only cell\', function () {\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(3,3),\n
+      cells: function () {\n
+        return {readOnly: true};\n
+      }\n
+    });\n
+\n
+    selectCell(0,0);\n
+    expect(getCellMeta(0,0).readOnly).toBe(true);\n
+    keyDown(\'enter\');\n
+    expect(getSelected()).toEqual([1, 0, 1, 0]);\n
+\n
+  });\n
+\n
+  it(\'should use default cell editor for a cell that has declared only cell renderer\', function () {\n
+    handsontable({\n
+      cells: function () {\n
+        return {\n
+          renderer: function (instance, td, row, col, prop, value, cellProperties) {\n
+              //taken from demo/renderers.html\n
+              Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+              $(td).css({\n
+                background: \'yellow\'\n
+              });\n
+            }\n
+        }\n
+      }\n
+    });\n
+    selectCell(2, 2);\n
+\n
+    keyDown(\'enter\');\n
+    document.activeElement.value = \'new value\';\n
+    destroyEditor();\n
+    expect(getDataAtCell(2, 2)).toEqual(\'new value\');\n
+  });\n
+\n
+  it(\'should allow to use type and renderer in `flat` notation\', function () {\n
+    handsontable({\n
+      data: [\n
+        [1, 2, 3, 4],\n
+        [5, 6, 7, 8],\n
+        [0, 9, 8, 7]\n
+      ],\n
+      cells: function (row, col) {\n
+        if (row === 2 && col === 2) {\n
+          return {\n
+            type: \'checkbox\',\n
+            renderer: function (instance, td, row, col, prop, value, cellProperties) {\n
+                //taken from demo/renderers.html\n
+                Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+\n
+                td.style.backgroundColor = \'yellow\';\n
+            }\n
+          }\n
+        }\n
+      }\n
+    });\n
+\n
+    expect(getCell(2, 2).style.backgroundColor).toEqual(\'yellow\');\n
+    expect(getCell(1, 1).style.backgroundColor).toEqual(\'\');\n
+  });\n
+\n
+  it(\'this in cells should point to cellProperties\', function () {\n
+    var called = 0\n
+      , _row\n
+      , _this;\n
+\n
+    handsontable({\n
+      cells: function (row, col, prop) {\n
+        called++;\n
+        _row = row;\n
+        _this = this;\n
+      }\n
+    });\n
+\n
+    var HOT = getInstance();\n
+\n
+    expect(called).toBeGreaterThan(0);\n
+    expect(_this.row).toEqual(_row);\n
+    expect(_this.instance).toBe(HOT);\n
+  });\n
+\n
+  it("should get proper cellProperties when order of displayed rows is different than order of stored data", function () {\n
+    var hot = handsontable({\n
+      data: [\n
+        [\'C\'],\n
+        [\'A\'],\n
+        [\'B\']\n
+      ],\n
+      minSpareRows: 1,\n
+      cells: function (row, col, prop) {\n
+        var cellProperties = {};\n
+        if (getData()[row][col] === \'A\') {\n
+          cellProperties.readOnly = true;\n
+        }\n
+        return cellProperties;\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'C\');\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').hasClass(\'htDimmed\')).toBe(false);\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'A\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').hasClass(\'htDimmed\')).toBe(true);\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'B\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').hasClass(\'htDimmed\')).toBe(false);\n
+\n
+    //Column sorting changes the order of displayed rows while keeping table data unchanged\n
+    updateSettings({\n
+      columnSorting: {\n
+        column: 0,\n
+        order: true\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'A\');\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').hasClass(\'htDimmed\')).toBe(true);\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'B\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').hasClass(\'htDimmed\')).toBe(false);\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'C\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').hasClass(\'htDimmed\')).toBe(false);\n
+\n
+\n
+\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4961</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_getCellMetaSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

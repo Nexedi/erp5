@@ -1,0 +1,446 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272590.28</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>selection.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'WalkontableSelection\', function () {\n
+  var $table\n
+    , $container\n
+    , $wrapper\n
+    , debug = false;\n
+\n
+  beforeEach(function () {\n
+    $wrapper = $(\'<div></div>\').css({\'overflow\': \'hidden\'});\n
+    $wrapper.width(100).height(200);\n
+    $container = $(\'<div></div>\');\n
+    $table = $(\'<table></table>\'); //create a table that is not attached to document\n
+    $wrapper.append($container);\n
+    $container.append($table);\n
+    $wrapper.appendTo(\'body\');\n
+    createDataArray();\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (!debug) {\n
+      $(\'.wtHolder\').remove();\n
+    }\n
+    $wrapper.remove();\n
+  });\n
+\n
+  it("should add/remove class to selection when cell is clicked", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          className: \'current\'\n
+        })\n
+      ],\n
+      onCellMouseDown: function (event, coords, TD) {\n
+        wt.selections.current.clear();\n
+        wt.selections.current.add(coords);\n
+        wt.draw();\n
+      }\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    var $td1 = $table.find(\'tbody td:eq(0)\');\n
+    var $td2 = $table.find(\'tbody td:eq(1)\');\n
+    $td1.simulate(\'mousedown\');\n
+    expect($td1.hasClass(\'current\')).toEqual(true);\n
+\n
+    $td2.simulate(\'mousedown\');\n
+    expect($td1.hasClass(\'current\')).toEqual(false);\n
+    expect($td2.hasClass(\'current\')).toEqual(true);\n
+  });\n
+\n
+  it("should add class to selection on all overlays", function () {\n
+    $wrapper.width(300).height(300);\n
+\n
+    this.data = Handsontable.helper.createSpreadsheetData(10, 10);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          className: \'current\'\n
+        }),\n
+        new WalkontableSelection({\n
+          className: \'area\'\n
+        })\n
+      ],\n
+      fixedColumnsLeft: 2,\n
+      fixedRowsTop: 2\n
+    });\n
+    shimSelectionProperties(wt);\n
+\n
+    wt.selections.area.add(new WalkontableCellCoords(1, 1));\n
+    wt.selections.area.add(new WalkontableCellCoords(1, 2));\n
+    wt.selections.area.add(new WalkontableCellCoords(2, 1));\n
+    wt.selections.area.add(new WalkontableCellCoords(2, 2));\n
+\n
+    wt.draw();\n
+\n
+    var tds = $wrapper.find(\'td:contains(B2), td:contains(B3), td:contains(C2), td:contains(C3)\');\n
+    expect(tds.length).toBeGreaterThan(4);\n
+    for (var i = 0, ilen = tds.length; i < ilen; i++) {\n
+      expect(tds[i].className).toContain("area");\n
+    }\n
+  });\n
+\n
+  it("should not add class to selection until it is rerendered", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          className: \'current\'\n
+        })\n
+      ]\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+    wt.selections.current.add(new WalkontableCellCoords(0, 0));\n
+\n
+    var $td1 = $table.find(\'tbody td:eq(0)\');\n
+    expect($td1.hasClass(\'current\')).toEqual(false);\n
+\n
+    wt.draw();\n
+    expect($td1.hasClass(\'current\')).toEqual(true);\n
+  });\n
+\n
+  it("should add/remove border to selection when cell is clicked", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          border: {\n
+            width: 1,\n
+            color: \'red\',\n
+            style: \'solid\'\n
+          }\n
+        })\n
+      ],\n
+      onCellMouseDown: function (event, coords, TD) {\n
+        wt.selections.current.clear();\n
+        wt.selections.current.add(coords);\n
+        wt.draw();\n
+      }\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    var $td1 = $table.find(\'tbody tr:eq(1) td:eq(0)\');\n
+    var $td2 = $table.find(\'tbody tr:eq(2) td:eq(1)\');\n
+    var $top = $(wt.selections.current.getBorder(wt).top); //cheat... get border for ht_master\n
+    $td1.simulate(\'mousedown\');\n
+    var pos1 = $top.position();\n
+    expect(pos1.top).toBeGreaterThan(0);\n
+    expect(pos1.left).toBe(0);\n
+\n
+    $td2.simulate(\'mousedown\');\n
+    var pos2 = $top.position();\n
+    expect(pos2.top).toBeGreaterThan(pos1.top);\n
+    expect(pos2.left).toBeGreaterThan(pos1.left);\n
+  });\n
+\n
+  it("should add a selection that is outside of the viewport", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          border: {\n
+            width: 1,\n
+            color: \'red\',\n
+            style: \'solid\'\n
+          }\n
+        })\n
+      ]\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    wt.selections.current.add([20, 0]);\n
+    expect(wt.wtTable.getCoords($table.find(\'tbody tr:first td:first\')[0])).toEqual(new WalkontableCellCoords(0, 0));\n
+  });\n
+\n
+  it("should not scroll the viewport after selection is cleared", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          border: {\n
+            width: 1,\n
+            color: \'red\',\n
+            style: \'solid\'\n
+          }\n
+        })\n
+      ]\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    wt.selections.current.add(new WalkontableCellCoords(0, 0));\n
+    wt.draw();\n
+    expect(wt.wtTable.getFirstVisibleRow()).toEqual(0);\n
+    wt.scrollVertical(10).draw();\n
+    expect(wt.wtTable.getFirstVisibleRow()).toEqual(10);\n
+    expect(wt.wtTable.getLastVisibleRow()).toEqual(17);\n
+    wt.selections.current.clear();\n
+    expect(wt.wtTable.getFirstVisibleRow()).toEqual(10);\n
+    expect(wt.wtTable.getLastVisibleRow()).toEqual(17);\n
+  });\n
+\n
+  it("should clear a selection that has more than one cell", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          border: {\n
+            width: 1,\n
+            color: \'red\',\n
+            style: \'solid\'\n
+          }\n
+        })\n
+      ]\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    wt.selections.current.add(new WalkontableCellCoords(0, 0));\n
+    wt.selections.current.add(new WalkontableCellCoords(0, 1));\n
+    wt.selections.current.clear();\n
+\n
+    expect(wt.selections.current.cellRange).toEqual(null);\n
+  });\n
+\n
+  it("should highlight cells in selected row & column", function () {\n
+    $wrapper.width(300);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          highlightRowClassName: \'highlightRow\',\n
+          highlightColumnClassName: \'highlightColumn\'\n
+        })\n
+      ]\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    wt.selections.current.add(new WalkontableCellCoords(0, 0));\n
+    wt.selections.current.add(new WalkontableCellCoords(0, 1));\n
+    wt.draw(true);\n
+\n
+    expect($table.find(\'.highlightRow\').length).toEqual(2);\n
+    expect($table.find(\'.highlightColumn\').length).toEqual(wt.wtTable.getRenderedRowsCount() * 2 - 2);\n
+  });\n
+\n
+  it("should highlight cells in selected row & column, when same class is shared between 2 selection definitions", function () {\n
+    $wrapper.width(300);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          highlightRowClassName: \'highlightRow\',\n
+          highlightColumnClassName: \'highlightColumn\'\n
+        }),\n
+        new WalkontableSelection({\n
+          highlightRowClassName: \'highlightRow\',\n
+          highlightColumnClassName: \'highlightColumn\'\n
+        })\n
+      ]\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    wt.selections.current.add(new WalkontableCellCoords(0, 0));\n
+    wt.draw(true);\n
+\n
+    expect($table.find(\'.highlightRow\').length).toEqual(3);\n
+    expect($table.find(\'.highlightColumn\').length).toEqual(wt.wtTable.getRenderedRowsCount() - 1);\n
+  });\n
+\n
+  it("should remove highlight when selection is deselected", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          highlightRowClassName: \'highlightRow\',\n
+          highlightColumnClassName: \'highlightColumn\'\n
+        })\n
+      ]\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    wt.selections.current.add(new WalkontableCellCoords(0, 0));\n
+    wt.selections.current.add(new WalkontableCellCoords(0, 1));\n
+    wt.draw();\n
+\n
+    wt.selections.current.clear();\n
+    wt.draw();\n
+\n
+    expect($table.find(\'.highlightRow\').length).toEqual(0);\n
+    expect($table.find(\'.highlightColumn\').length).toEqual(0);\n
+  });\n
+\n
+  it("should add/remove appropriate class to the row/column headers of selected cells", function() {\n
+    $wrapper.width(300);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      rowHeaders: [function (row, TH) {\n
+        TH.innerHTML = row + 1;\n
+      }],\n
+      columnHeaders: [function (row, TH) {\n
+        TH.innerHTML = row + 1;\n
+      }],\n
+      selections: [\n
+        new WalkontableSelection({\n
+          highlightRowClassName: \'highlightRow\',\n
+          highlightColumnClassName: \'highlightColumn\'\n
+        })\n
+      ]\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    wt.selections.current.add(new WalkontableCellCoords(1, 1));\n
+    wt.selections.current.add(new WalkontableCellCoords(2, 2));\n
+    wt.draw();\n
+\n
+    // left side:\n
+    // -2 -> because one row is partially visible\n
+\n
+    // right side:\n
+    // *2 -> because there are 2 columns selected\n
+    // +2 -> because there are the headers\n
+    // -4 -> because 4 cells are selected = there are overlapping highlightRow class\n
+    expect($table.find(\'.highlightRow\').length).toEqual(wt.wtViewport.columnsVisibleCalculator.count * 2 + 2 - 4);\n
+    expect($table.find(\'.highlightColumn\').length - 2).toEqual(wt.wtViewport.rowsVisibleCalculator.count * 2 + 2 - 4);\n
+    expect($table.find(\'.highlightColumn\').length).toEqual(14);\n
+    expect(getTableTopClone().find(\'.highlightColumn\').length).toEqual(2);\n
+    expect(getTableTopClone().find(\'.highlightRow\').length).toEqual(0);\n
+    expect(getTableLeftClone().find(\'.highlightColumn\').length).toEqual(0);\n
+    expect(getTableLeftClone().find(\'.highlightRow\').length).toEqual(2);\n
+\n
+    var $colHeaders = $table.find("thead tr:first-child th"),\n
+        $rowHeaders = $table.find("tbody tr th:first-child");\n
+\n
+    expect($colHeaders.eq(2).hasClass(\'highlightColumn\')).toBe(true);\n
+    expect($colHeaders.eq(3).hasClass(\'highlightColumn\')).toBe(true);\n
+\n
+    expect($rowHeaders.eq(1).hasClass(\'highlightRow\')).toBe(true);\n
+    expect($rowHeaders.eq(2).hasClass(\'highlightRow\')).toBe(true);\n
+\n
+    wt.selections.current.clear();\n
+    wt.draw();\n
+\n
+    expect($table.find(\'.highlightRow\').length).toEqual(0);\n
+    expect($table.find(\'.highlightColumn\').length).toEqual(0);\n
+    expect(getTableTopClone().find(\'.highlightColumn\').length).toEqual(0);\n
+    expect(getTableTopClone().find(\'.highlightRow\').length).toEqual(0);\n
+    expect(getTableLeftClone().find(\'.highlightColumn\').length).toEqual(0);\n
+    expect(getTableLeftClone().find(\'.highlightRow\').length).toEqual(0);\n
+  });\n
+\n
+  describe("replace", function() {\n
+    it("should replace range from property and return true", function() {\n
+      var wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        selections: [\n
+          new WalkontableSelection({\n
+            border: {\n
+              width: 1,\n
+              color: \'red\',\n
+              style: \'solid\'\n
+            }\n
+          })\n
+        ]\n
+      });\n
+      shimSelectionProperties(wt);\n
+      wt.selections.current.add(new WalkontableCellCoords(1, 1));\n
+      wt.selections.current.add(new WalkontableCellCoords(3, 3));\n
+      var result = wt.selections.current.replace(new WalkontableCellCoords(3, 3), new WalkontableCellCoords(4, 4));\n
+      expect(result).toBe(true);\n
+      expect(wt.selections.current.getCorners()).toEqual([1, 1, 4, 4]);\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12485</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>selection.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

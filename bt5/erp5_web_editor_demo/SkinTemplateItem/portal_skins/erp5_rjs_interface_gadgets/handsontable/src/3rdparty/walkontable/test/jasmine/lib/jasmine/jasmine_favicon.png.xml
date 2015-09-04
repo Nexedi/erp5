@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272599.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jasmine_favicon.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAFzUkdC
+AK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dE
+AP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAuBJREFUOMulkktIVGEYht//nP+cGU9z
+8zgXS6JUtMjxkpeMMosi0loEQS2E7gRF0KZNixbRphsVBQUtoiKiC0VR0T0No9IaLZkyR8dyxjKd
+GtMZz+jonP9vURNSuIie1fvB9718N4JfTE63T1+/qWZ3e1uH5/69uotabGQQAAyylDK/omzFtKzM
+AgKu64mx+NUrt09qseEIxpPvzq187WvU2j69jR07se9Gbs60IomK0tZt6/Z6PzRFggNd/NNggF+/
+c9Frs5qcyTqaFIXFBfPSnE4jlSRhzYZ1K6dnZ2Xfunr99radO7bbXelmxhhEUYTf19EWjWr9fxmM
+xkc1zhnhADhjKKuY786YmuE2WyzgnIMQgthQNPH0ybMHOuOJZJ2QFLWP66/V3rlfLxACQggAQDGZ
+wcEBAJwzNDe+7HjV4KkbP7qYFLHYSLT93fu3s4vzl9lU1cYwhveRJ/gYbYJFdiIW1kApNRSVFJam
+Wk2uYKDbPzwS134bOB3q1IoF5cuLSormyZJkYVRHJNGLltBDWI0OZLoKoTochty8WZmVSxYuHY1p
+csMLzyNqMilqVfXimrWb124pLCvJNxhTCGMMBAQZJA85qT2YYprxcwwAeiIB2WDEkuqlVefPXjoq
+zikrWL5rz66DxXPLs4hICeccgiCA6ToEXUK2vRQyU9D/NcRlg0wopRAEAmWSYvU2NbeKfX3fAm88
+zR6HXc1yuZzpnDES6u0d+ODzRWypqsmQooBSimBnZ+j4/iMHGp83NLW2eN+1tnhb/O2dbSS5gzTV
+6spzzyxXlBSl62Ow010wq/LwqWOHqCQTQRDQ5feHVlWtrvzyJeQbf4XffxDuH+yrr2+8mYzNFrNN
+GxqK29Q0IwiBruucAAR/IGACgoHu9s+B7h6RUuiJMdTefXAvHP4e+DOPTmTwLTzQ42l49VK1p9ku
+nD535vzZy0fio2PD+BdKS/IXV1cv2kjIxJ3+Nz8AZ9spJvY2PKEAAAAASUVORK5CYII=</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>905</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jasmine_favicon.png</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

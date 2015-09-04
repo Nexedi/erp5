@@ -1,0 +1,419 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272577.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>event.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'WalkontableEvent\', function () {\n
+  var $table\n
+    , debug = false;\n
+\n
+  beforeEach(function () {\n
+    $table = $(\'<table></table>\'); //create a table that is not attached to document\n
+    $table.appendTo(\'body\');\n
+    createDataArray();\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (!debug) {\n
+      $(\'.wtHolder\').remove();\n
+    }\n
+  });\n
+\n
+  it("should call `onCellMouseDown` callback", function () {\n
+    var myCoords = null\n
+      , myTD = null\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        onCellMouseDown: function (event, coords, TD) {\n
+          myCoords = coords;\n
+          myTD = TD;\n
+        }\n
+      });\n
+    wt.draw();\n
+\n
+    var $td = $table.find(\'tbody tr:eq(1) td:eq(1)\');\n
+    $td.simulate(\'mousedown\');\n
+\n
+    expect(myCoords).toEqual(new WalkontableCellCoords(1, 1));\n
+    expect(myTD).toEqual($td[0]);\n
+  });\n
+\n
+  it("should call `onCellMouseOver` callback", function () {\n
+    var myCoords = null\n
+      , myTD = null\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        onCellMouseOver: function (event, coords, TD) {\n
+          myCoords = coords;\n
+          myTD = TD;\n
+        }\n
+      });\n
+    wt.draw();\n
+\n
+\n
+    var $td = $table.find(\'tbody tr:eq(1) td:eq(1)\');\n
+    $td.simulate(\'mouseover\');\n
+\n
+    expect(myCoords).toEqual(new WalkontableCellCoords(1, 1));\n
+    expect(myTD).toEqual($td[0]);\n
+  });\n
+\n
+  it("should call `onCellDblClick` callback", function () {\n
+    var myCoords = null\n
+      , myTD = null\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        onCellDblClick: function (event, coords, TD) {\n
+          myCoords = coords;\n
+          myTD = TD;\n
+        }\n
+      });\n
+    wt.draw();\n
+\n
+    var $td = $table.find(\'tbody tr:eq(1) td:eq(1)\');\n
+    $td.simulate(\'mousedown\');\n
+    $td.simulate(\'mouseup\');\n
+    $td.simulate(\'mousedown\');\n
+    $td.simulate(\'mouseup\');\n
+    expect(myCoords).toEqual(new WalkontableCellCoords(1, 1));\n
+    expect(myTD).toEqual($td[0]);\n
+  });\n
+\n
+  it("should call `onCellDblClick` callback, even when it is set only after first click", function () {\n
+    var myCoords = null\n
+      , myTD = null\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns\n
+      });\n
+    wt.draw();\n
+\n
+    var $td = $table.find(\'tbody tr:eq(1) td:eq(1)\');\n
+    $td.simulate(\'mousedown\');\n
+    $td.simulate(\'mouseup\');\n
+    $td.simulate(\'mousedown\');\n
+    wt.update(\'onCellDblClick\', function (event, coords, TD) {\n
+      myCoords = coords;\n
+      myTD = TD;\n
+    });\n
+    $td.simulate(\'mouseup\');\n
+    expect(myCoords).toEqual(new WalkontableCellCoords(1, 1));\n
+    expect(myTD).toEqual($td[0]);\n
+  });\n
+\n
+  it("should call `onCellMouseDown` callback when clicked on TH", function () {\n
+    var called = false\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        columnHeaders: [function (col, TH) {\n
+          TH.innerHTML = col + 1;\n
+        }],\n
+        onCellMouseDown: function (event, coords, TD) {\n
+          called = true\n
+        }\n
+      });\n
+    wt.draw();\n
+\n
+    var $th = $table.find(\'th:first\');\n
+\n
+    $th.simulate(\'mousedown\');\n
+    expect(called).toEqual(true);\n
+  });\n
+\n
+  it("should call `onCellMouseOver` callback when clicked on TH", function () {\n
+    var called\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        columnHeaders: [function (col, TH) {\n
+          TH.innerHTML = col + 1;\n
+        }],\n
+        onCellMouseOver: function (event, coords, TD) {\n
+          called = coords;\n
+        }\n
+      });\n
+    wt.draw();\n
+\n
+    var $th = $table.find(\'th:first\');\n
+    $th.simulate(\'mouseover\');\n
+    expect(called.row).toEqual(-1);\n
+    expect(called.col).toEqual(0);\n
+  });\n
+\n
+  it("should call `onCellDblClick` callback when clicked on TH", function () {\n
+    var called = false\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        columnHeaders: [function (col, TH) {\n
+          TH.innerHTML = col + 1;\n
+        }],\n
+        onCellDblClick: function (event, coords, TD) {\n
+          called = true\n
+        }\n
+      });\n
+    wt.draw();\n
+\n
+    var $th = $table.find(\'th:first\');\n
+    $th.simulate(\'mousedown\');\n
+    $th.simulate(\'mouseup\');\n
+    $th.simulate(\'mousedown\');\n
+    $th.simulate(\'mouseup\');\n
+    expect(called).toEqual(true);\n
+  });\n
+\n
+  it("should not call `onCellDblClick` callback when right-clicked", function () {\n
+    var called = false\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        onCellDblClick: function (event, coords, TD) {\n
+          called = true\n
+        }\n
+      });\n
+    wt.draw();\n
+\n
+    var $td = $table.find(\'tbody tr:first td:first\');\n
+    var options = {\n
+      button: 2\n
+      };\n
+    $td.simulate(\'mousedown\',options);\n
+    $td.simulate(\'mouseup\',options);\n
+    $td.simulate(\'mousedown\',options);\n
+    $td.simulate(\'mouseup\',options);\n
+    expect(called).toEqual(false);\n
+  });\n
+\n
+  it("should not call `onCellDblClick` when first mouse up came from mouse drag", function () {\n
+    var called = false\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        onCellDblClick: function (event, coords, TD) {\n
+          called = true\n
+        }\n
+      });\n
+    wt.draw();\n
+\n
+    var $td = $table.find(\'tbody tr:first td:first\');\n
+    var $td2 = $table.find(\'tbody tr:first td:eq(1)\');\n
+    $td2.simulate(\'mousedown\');\n
+    $td.simulate(\'mouseup\');\n
+    $td.simulate(\'mousedown\');\n
+    $td.simulate(\'mouseup\');\n
+    expect(called).toEqual(false);\n
+  });\n
+\n
+  it("border click should call `onCellMouseDown` callback", function () {\n
+    var myCoords = null\n
+      , myTD = null\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        selections: [\n
+          new WalkontableSelection({\n
+            className: \'current\',\n
+            border: {\n
+              width: 1,\n
+              color: \'red\',\n
+              style: \'solid\'\n
+            }\n
+          })\n
+        ],\n
+        onCellMouseDown: function (event, coords, TD) {\n
+          myCoords = coords;\n
+          myTD = TD;\n
+        }\n
+      });\n
+    shimSelectionProperties(wt);\n
+    wt.selections.current.add(new WalkontableCellCoords(1, 1));\n
+    wt.draw();\n
+\n
+    var $td = $table.find(\'tbody tr:eq(1) td:eq(1)\');\n
+    var $border = $table.parents(\'.wtHolder\').find(\'.wtBorder:first\');\n
+    $border.simulate(\'mousedown\');\n
+\n
+    expect(myCoords).toEqual(new WalkontableCellCoords(1, 1));\n
+    expect(myTD).toEqual($td[0]);\n
+  });\n
+\n
+  it("border click should call `onCellDblClick` callback", function () {\n
+    var myCoords = null\n
+      , myTD = null\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        selections: [\n
+          new WalkontableSelection({\n
+            className: \'current\',\n
+            border: {\n
+              width: 1,\n
+              color: \'red\',\n
+              style: \'solid\'\n
+            }\n
+          })\n
+        ],\n
+        onCellDblClick: function (event, coords, TD) {\n
+          myCoords = coords;\n
+          myTD = TD;\n
+        }\n
+      });\n
+    shimSelectionProperties(wt);\n
+    wt.selections.current.add(new WalkontableCellCoords(1, 1));\n
+    wt.draw();\n
+\n
+    var $td = $table.find(\'tbody tr:eq(1) td:eq(1)\');\n
+    var $border = $table.parents(\'.wtHolder\').find(\'.wtBorder:first\');\n
+    $border.simulate(\'mousedown\');\n
+    $border.simulate(\'mouseup\');\n
+    $border.simulate(\'mousedown\');\n
+    $border.simulate(\'mouseup\');\n
+    expect(myCoords).toEqual(new WalkontableCellCoords(1, 1));\n
+    expect(myTD).toEqual($td[0]);\n
+  });\n
+\n
+  //corner\n
+\n
+  it("should call `onCellCornerMouseDown` callback", function () {\n
+    var clicked = false\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        selections: [\n
+          new WalkontableSelection({\n
+            className: \'current\',\n
+            border: {\n
+              width: 1,\n
+              color: \'red\',\n
+              style: \'solid\'\n
+            }\n
+          })\n
+        ],\n
+        onCellCornerMouseDown: function (event) {\n
+          clicked = true;\n
+        }\n
+      });\n
+    shimSelectionProperties(wt);\n
+    wt.selections.current.add(new WalkontableCellCoords(10, 2));\n
+    wt.draw();\n
+\n
+    var $td = $table.parents(\'.wtHolder\').find(\'.current.corner\');\n
+    $td.simulate(\'mousedown\');\n
+    expect(clicked).toEqual(true);\n
+  });\n
+\n
+  it("should call `onCellCornerDblClick` callback, even when it is set only after first click", function () {\n
+    var clicked = false\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        selections: [\n
+          new WalkontableSelection({\n
+            className: \'current\',\n
+            border: {\n
+              width: 1,\n
+              color: \'red\',\n
+              style: \'solid\'\n
+            }\n
+          })\n
+        ]\n
+      });\n
+    shimSelectionProperties(wt);\n
+    wt.selections.current.add(new WalkontableCellCoords(10, 2));\n
+    wt.draw();\n
+\n
+    var $td = $table.parents(\'.wtHolder\').find(\'.current.corner\');\n
+    $td.simulate(\'mousedown\');\n
+    $td.simulate(\'mouseup\');\n
+    $td.simulate(\'mousedown\');\n
+    wt.update(\'onCellCornerDblClick\', function (event) {\n
+      clicked = true;\n
+    });\n
+    $td.simulate(\'mouseup\');\n
+    expect(clicked).toEqual(true);\n
+  });\n
+\n
+  it("should call `onDraw` callback after render", function () {\n
+    var count = 0\n
+      , wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns,\n
+        onDraw: function () {\n
+          count++;\n
+        }\n
+      });\n
+    wt.draw();\n
+    expect(count).toEqual(1);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10341</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>event.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

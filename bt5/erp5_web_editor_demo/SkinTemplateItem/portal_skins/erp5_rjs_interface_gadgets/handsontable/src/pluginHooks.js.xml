@@ -1,0 +1,907 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272642.62</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>pluginHooks.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+/**\n
+ * @description\n
+ * Handsontable events are the common interface that function in 2 ways: as __callbacks__ and as __hooks__.\n
+ *\n
+ * @example\n
+ *\n
+ * ```js\n
+ * // Using events as callbacks:\n
+ * ...\n
+ * var hot1 = new Handsontable(document.getElementById(\'example1\'), {\n
+ *   afterChange: function(changes, source) {\n
+ *     $.ajax({\n
+ *       url: "save.php",\n
+ *       data: change\n
+ *     });\n
+ *   }\n
+ * });\n
+ * ...\n
+ * ```\n
+ *\n
+ * ```js\n
+ * // Using events as plugin hooks:\n
+ * ...\n
+ * var hot1 = new Handsontable(document.getElementById(\'example1\'), {\n
+ *   myPlugin: true\n
+ * });\n
+ *\n
+ * var hot2 = new Handsontable(document.getElementById(\'example2\'), {\n
+ *   myPlugin: false\n
+ * });\n
+ *\n
+ * // global hook\n
+ * Handsontable.hooks.add(\'afterChange\', function() {\n
+ *   // Fired twice - for hot1 and hot2\n
+ *   if (this.getSettings().myPlugin) {\n
+ *     // function body - will only run for hot1\n
+ *   }\n
+ * });\n
+ *\n
+ * // local hook (has same effect as a callback)\n
+ * hot2.addHook(\'afterChange\', function() {\n
+ *   // function body - will only run in #example2\n
+ * });\n
+ * ```\n
+ * ...\n
+ */\n
+\n
+// @TODO: Move plugin description hooks to plugin?\n
+const REGISTERED_HOOKS = [\n
+  /**\n
+   * Callback fired after reset cell\'s meta.\n
+   *\n
+   * @event Hooks#afterCellMetaReset\n
+   * @since 0.11\n
+   */\n
+  "afterCellMetaReset",\n
+\n
+  /**\n
+   * @description\n
+   * Callback fired after one or more cells is changed. Its main use case is to save the input.\n
+   *\n
+   * __Note:__ For performance reasons, the `changes` array is null for `"loadData"` source.\n
+   *\n
+   * @event Hooks#afterChange\n
+   * @param {Array} changes 2D array containing information about each of the edited cells `[[row, prop, oldVal, newVal], ...]`\n
+   * @param {String} source Is one of the strings: `"alter", "empty", "edit", "populateFromArray", "loadData", "autofill", "paste"`.\n
+   */\n
+  "afterChange",\n
+  "afterChangesObserved",\n
+  "afterColumnMove",\n
+  "afterColumnResize",\n
+  "afterContextMenuDefaultOptions",\n
+  "afterContextMenuHide",\n
+  "afterContextMenuShow",\n
+  "afterCopyLimit",\n
+\n
+  /**\n
+   * Callback is fired when a new column is created.\n
+   *\n
+   * @event Hooks#afterCreateCol\n
+   * @param {Number} index Represents the index of first newly created column in the data source array.\n
+   * @param {Number} amount Number of newly created columns in the data source array.\n
+   */\n
+  "afterCreateCol",\n
+\n
+  /**\n
+   * Callback is fired when a new row is created.\n
+   *\n
+   * @event Hooks#afterCreateRow\n
+   * @param {Number} index Represents the index of first newly created row in the data source array.\n
+   * @param {Number} amount Number of newly created rows in the data source array.\n
+   */\n
+  "afterCreateRow",\n
+\n
+  /**\n
+   * Event called when current cell is deselected.\n
+   *\n
+   * @event Hooks#afterDeselect\n
+   */\n
+  "afterDeselect",\n
+\n
+  /**\n
+   * Callback fired after destroying Handsontable instance.\n
+   *\n
+   * @event Hooks#afterDestroy\n
+   */\n
+  "afterDestroy",\n
+\n
+  /**\n
+   * @event Hooks#afterDocumentKeyDown\n
+   */\n
+  "afterDocumentKeyDown",\n
+\n
+  /**\n
+   * Callback fired after getting cell settings.\n
+   *\n
+   * @event Hooks#afterGetCellMeta\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {Object} cellProperties\n
+   */\n
+  "afterGetCellMeta",\n
+\n
+  /**\n
+   * Callback fired after getting info about column header.\n
+   *\n
+   * @event Hooks#afterGetColHeader\n
+   * @param {Number} col\n
+   * @param {Element} TH\n
+   */\n
+  "afterGetColHeader",\n
+\n
+  /**\n
+   * @event Hooks#afterGetRowHeader\n
+   */\n
+  "afterGetRowHeader",\n
+\n
+  /**\n
+   * Callback fired after Handsontable instance is initiated.\n
+   *\n
+   * @event Hooks#afterInit\n
+   */\n
+  "afterInit",\n
+\n
+  /**\n
+   * @event Hooks#afterIsMultipleSelectionCheck\n
+   */\n
+  "afterIsMultipleSelectionCheck",\n
+\n
+  /**\n
+   * Callback fired after new data is loaded (by `loadData` method) into the data source array.\n
+   *\n
+   * @event Hooks#afterLoadData\n
+   */\n
+  "afterLoadData",\n
+\n
+  /**\n
+   * @event Hooks#afterMomentumScroll\n
+   */\n
+  "afterMomentumScroll",\n
+\n
+  /**\n
+   * @event Hooks#afterOnCellCornerMouseDown\n
+   * @since 0.11\n
+   * @param {Object} event\n
+   */\n
+  "afterOnCellCornerMouseDown",\n
+\n
+  /**\n
+   * Callback fired after clicking on a cell or row/column header.\n
+   * In case the row/column header was clicked, the index is negative.\n
+   * For example clicking on the row header of cell (0, 0) results with `afterOnCellMouseDown` called with coords `{row: 0, col: -1}`.\n
+   *\n
+   * @event Hooks#afterOnCellMouseDown\n
+   * @since 0.11\n
+   * @param {Object} event\n
+   * @param {Object} coords\n
+   * @param {Object} TD\n
+   */\n
+  "afterOnCellMouseDown",\n
+\n
+  /**\n
+   * Callback fired after hovering a cell or row/column header with the mouse cursor.\n
+   * In case the row/column header was hovered, the index is negative.\n
+   * For example clicking on the row header of cell (0, 0) results with `afterOnCellMouseOver` called with coords `{row: 0, col: -1}`.\n
+   *\n
+   * @event Hooks#afterOnCellMouseOver\n
+   * @since 0.11\n
+   * @param {Object} event\n
+   * @param {Object} coords\n
+   * @param {Object} TD\n
+   */\n
+  "afterOnCellMouseOver",\n
+\n
+  /**\n
+   * Callback is fired when one or more columns are removed.\n
+   *\n
+   * @event Hooks#afterRemoveCol\n
+   * @param {Number} index Is an index of starter column.\n
+   * @param {Number} amount Is an amount of removed columns.\n
+   */\n
+  "afterRemoveCol",\n
+\n
+  /**\n
+   * Callback is fired when one or more rows are removed.\n
+   *\n
+   * @event Hooks#afterRemoveRow\n
+   * @param {Number} index Is an index of starter row.\n
+   * @param {Number} amount Is an amount of removed rows.\n
+   */\n
+  "afterRemoveRow",\n
+\n
+  /**\n
+   * Callback fired after Handsontable table is rendered.\n
+   *\n
+   * @event Hooks#afterRender\n
+   * @param {Boolean} isForced Is `true` if rendering was triggered by a change of settings or data; or `false` if\n
+   *                           rendering was triggered by scrolling or moving selection.\n
+   */\n
+  "afterRender",\n
+\n
+  /**\n
+   * @event Hooks#afterRenderer\n
+   * @since 0.11\n
+   * @param {Object} TD\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {String} prop\n
+   * @param {String} value\n
+   * @param {Object} cellProperties\n
+   */\n
+  "afterRenderer",\n
+  "afterRowMove",\n
+  "afterRowResize",\n
+\n
+  /**\n
+   * @event Hooks#afterScrollHorizontally\n
+   * @since 0.11\n
+   */\n
+  "afterScrollHorizontally",\n
+\n
+  /**\n
+   * @event Hooks#afterScrollVertically\n
+   * @since 0.11\n
+   */\n
+  "afterScrollVertically",\n
+\n
+  /**\n
+   * Callback fired while one or more cells are being selected (on mouse move).\n
+   *\n
+   * @event Hooks#afterSelection\n
+   * @param {Number} r Selection start row\n
+   * @param {Number} c Selection start column\n
+   * @param {Number} r2 Selection end row\n
+   * @param {Number} c2 Selection end column\n
+   */\n
+  "afterSelection",\n
+\n
+  /**\n
+   * The same as above, but data source object property name is used instead of the column number.\n
+   *\n
+   * @event Hooks#afterSelectionByProp\n
+   * @param {Number} r Selection start row\n
+   * @param {String} p Selection start data source object property\n
+   * @param {Number} r2 Selection end row\n
+   * @param {String} p2 Selection end data source object property\n
+   */\n
+  "afterSelectionByProp",\n
+\n
+  /**\n
+   * Callback fired after one or more cells are selected (on mouse up).\n
+   *\n
+   * @event Hooks#afterSelectionEnd\n
+   * @param {Number} r Selection start row\n
+   * @param {Number} c Selection start column\n
+   * @param {Number} r2 Selection end row\n
+   * @param {Number} c2 Selection end column\n
+   */\n
+  "afterSelectionEnd",\n
+\n
+  /**\n
+   * The same as above, but data source object property name is used instead of the column number.\n
+   *\n
+   * @event Hooks#afterSelectionEndByProp\n
+   * @param {Number} r Selection start row\n
+   * @param {String} p Selection start data source object property\n
+   * @param {Number} r2 Selection end row\n
+   * @param {String} p2 Selection end data source object property\n
+   */\n
+  "afterSelectionEndByProp",\n
+\n
+  /**\n
+   * Called after cell meta was changed, e.g. using the context menu.\n
+   *\n
+   * @event Hooks#afterSetCellMeta\n
+   * @since 0.11.0\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {String} key\n
+   * @param {*} value\n
+   */\n
+  "afterSetCellMeta",\n
+\n
+  /**\n
+   * @event Hooks#afterUpdateSettings\n
+   */\n
+  "afterUpdateSettings",\n
+\n
+  /**\n
+   * @description\n
+   * A plugin hook executed after validator function, only if validator function is defined.\n
+   * Validation result is the first parameter. This can be used to determinate if validation passed successfully or not.\n
+   *\n
+   * __You can cancel current change by returning false.__\n
+   *\n
+   * @event Hooks#afterValidate\n
+   * @since 0.9.5\n
+   * @param {Boolean} isValid\n
+   * @param {*} value\n
+   * @param {Number} row\n
+   * @param {String} prop\n
+   * @param {String} source\n
+   */\n
+  "afterValidate",\n
+\n
+  /**\n
+   * @event Hooks#beforeAutofill\n
+   * @param {Object} start Object containing information about first filled cell: `{row: 2, col: 0}`\n
+   * @param {Object} end Object containing information about last filled cell: `{row: 4, col: 1}`\n
+   * @param {Array} data 2D array containing information about fill pattern: `[["1", "Ted"], ["1", "John"]]`\n
+   */\n
+  "beforeAutofill",\n
+\n
+  /**\n
+   * @event Hooks#beforeCellAlignment\n
+   */\n
+  "beforeCellAlignment",\n
+\n
+  /**\n
+   * Callback fired before one or more cells is changed. Its main purpose is to alter changes silently before input.\n
+   *\n
+   * @event Hooks#beforeChange\n
+   * @param {Array} changes 2D array containing information about each of the edited cells.\n
+   * @param {String} source The name of a source of changes.\n
+   * @example\n
+   * ```js\n
+   * // To disregard a single change, set changes[i] to null or remove it from array using changes.splice(i, 1).\n
+   * ...\n
+   * new Handsontable(document.getElementById(\'example\'), {\n
+   *   beforeChange: function(changes, source) {\n
+   *     // [[row, prop, oldVal, newVal], ...]\n
+   *     changes[0] = null;\n
+   *   }\n
+   * });\n
+   * ...\n
+   *\n
+   * // To alter a single change, overwrite the desired value to changes[i][3].\n
+   * ...\n
+   * new Handsontable(document.getElementById(\'example\'), {\n
+   *   beforeChange: function(changes, source) {\n
+   *     // [[row, prop, oldVal, newVal], ...]\n
+   *     changes[0][1] = 10;\n
+   *   }\n
+   * });\n
+   * ...\n
+   *\n
+   * // To cancel all edit, return false from the callback or set array length to 0 (changes.length = 0).\n
+   * ...\n
+   * new Handsontable(document.getElementById(\'example\'), {\n
+   *   beforeChange: function(changes, source) {\n
+   *     // [[row, prop, oldVal, newVal], ...]\n
+   *     return false;\n
+   *   }\n
+   * });\n
+   * ...\n
+   * ```\n
+   */\n
+  "beforeChange",\n
+\n
+  /**\n
+   * @event Hooks#beforeChangeRender\n
+   * @since 0.11\n
+   */\n
+  "beforeChangeRender",\n
+\n
+  /**\n
+   * @event Hooks#beforeDrawBorders\n
+   */\n
+  "beforeDrawBorders",\n
+\n
+  /**\n
+   * Callback fired before getting cell settings.\n
+   *\n
+   * @event Hooks#beforeGetCellMeta\n
+   * @param {Number} row\n
+   * @param {Number} col\n
+   * @param {Object} cellProperties\n
+   */\n
+  "beforeGetCellMeta",\n
+\n
+  /**\n
+   * @description\n
+   * Callback fired before Handsontable instance is initiated.\n
+   *\n
+   * @event Hooks#beforeInit\n
+   */\n
+\n
+  "beforeInit",\n
+\n
+  /**\n
+   * Callback fired before Walkontable instance is initiated.\n
+   *\n
+   * @since 0.11\n
+   * @event Hooks#beforeInitWalkontable\n
+   */\n
+  "beforeInitWalkontable",\n
+\n
+  /**\n
+   * Callback fired before keydown event is handled. It can be used to overwrite default key bindings.\n
+   * Caution - in your `beforeKeyDown` handler you need to call `event.stopImmediatePropagation()` to prevent default key behavior.\n
+   *\n
+   * @event Hooks#beforeKeyDown\n
+   * @since 0.9.0\n
+   * @param {Object} event Original DOM event\n
+   */\n
+  "beforeKeyDown",\n
+\n
+  /**\n
+   * @event Hooks#beforeOnCellMouseDown\n
+   */\n
+  "beforeOnCellMouseDown",\n
+\n
+  /**\n
+   * Callback is fired when one or more columns are about to be removed.\n
+   *\n
+   * @event Hooks#beforeRemoveCol\n
+   * @param {Number} index Index of starter column.\n
+   * @param {Number} amount Amount of columns to be removed.\n
+   */\n
+  "beforeRemoveCol",\n
+\n
+  /**\n
+   * Callback is fired when one or more rows are about to be removed.\n
+   *\n
+   * @event Hooks#beforeRemoveRow\n
+   * @param {Number} index Index of starter column.\n
+   * @param {Number} amount Amount of columns to be removed.\n
+   */\n
+  "beforeRemoveRow",\n
+\n
+  /**\n
+   * Callback fired before Handsontable table is rendered.\n
+   *\n
+   * @event Hooks#beforeRender\n
+   * @param {Boolean} isForced If `true` rendering was triggered by a change of settings or data; or `false` if\n
+   *                           rendering was triggered by scrolling or moving selection.\n
+   */\n
+  "beforeRender",\n
+\n
+  /**\n
+   * Callback fired before setting range is ended.\n
+   *\n
+   * @event Hooks#beforeSetRangeEnd\n
+   * @param {Array} coords WalkontableCellCoords array.\n
+   */\n
+  "beforeSetRangeEnd",\n
+\n
+  /**\n
+   * @event Hooks#beforeTouchScroll\n
+   */\n
+  "beforeTouchScroll",\n
+\n
+  /**\n
+   * @description\n
+   * A plugin hook executed before validator function, only if validator function is defined.\n
+   * This can be used to manipulate value of changed cell before it is applied to the validator function.\n
+   *\n
+   * __Notice:__ this will not affect values of changes. This will change value ONLY for validation!\n
+   *\n
+   * @event Hooks#beforeValidate\n
+   * @since 0.9.5\n
+   * @param {*} value\n
+   * @param {Number} row\n
+   * @param {String} prop\n
+   * @param {String} source\n
+   */\n
+  "beforeValidate",\n
+\n
+  /**\n
+   * Callback fired after Handsontable instance is constructed (via `new` operator).\n
+   *\n
+   * @event Hooks#construct\n
+   * @since 0.16.1\n
+   */\n
+  "construct",\n
+\n
+  /**\n
+   * Callback fired after Handsontable instance is initiated but before table is rendered.\n
+   *\n
+   * @event Hooks#init\n
+   * @since 0.16.1\n
+   */\n
+  "init",\n
+\n
+  /**\n
+   * Callback fired after column modify.\n
+   *\n
+   * @event Hooks#modifyCol\n
+   * @since 0.11\n
+   * @param {Number} col\n
+   */\n
+  "modifyCol",\n
+\n
+  /**\n
+   * Callback fired after modify column\'s width.\n
+   *\n
+   * @event Hooks#modifyColWidth\n
+   * @since 0.11\n
+   * @param {Number} width\n
+   * @param {Number} col\n
+   */\n
+  "modifyColWidth",\n
+\n
+  /**\n
+   * Callback fired after row modify.\n
+   *\n
+   * @event Hooks#modifyRow\n
+   * @since 0.11\n
+   * @param {Number} row\n
+   */\n
+  "modifyRow",\n
+\n
+  /**\n
+   * Callback fired after modify height of row.\n
+   *\n
+   * @event Hooks#modifyRowHeight\n
+   * @since 0.11\n
+   * @param {Number} height\n
+   * @param {Number} row\n
+   */\n
+  "modifyRowHeight",\n
+\n
+  /**\n
+   * @event Hooks#persistentStateLoad\n
+   */\n
+  "persistentStateLoad",\n
+\n
+  /**\n
+   * @event Hooks#persistentStateReset\n
+   */\n
+  "persistentStateReset",\n
+\n
+  /**\n
+   * @event Hooks#persistentStateSave\n
+   */\n
+  "persistentStateSave"\n
+];\n
+\n
+import {EventManager} from \'./eventManager\';\n
+import {arrayEach} from \'./helpers/array\';\n
+import {objectEach} from \'./helpers/object\';\n
+\n
+class Hooks {\n
+  /**\n
+   *\n
+   */\n
+  constructor() {\n
+    this.globalBucket = this.createEmptyBucket();\n
+  }\n
+\n
+  /**\n
+   * Returns new object with empty handlers related to every registered hook name.\n
+   *\n
+   * @returns {Object}\n
+   *\n
+   * @example\n
+   * ```js\n
+   * Handsontable.hooks.createEmptyBucket();\n
+   * // Results:\n
+   * {\n
+   * ...\n
+   * afterCreateCol: [],\n
+   * afterCreateRow: [],\n
+   * beforeInit: [],\n
+   * ...\n
+   * }\n
+   * ```\n
+   */\n
+  createEmptyBucket() {\n
+    const bucket = Object.create(null);\n
+\n
+    arrayEach(REGISTERED_HOOKS, (hook) => (bucket[hook] = []));\n
+\n
+    return bucket;\n
+  }\n
+\n
+  /**\n
+   * Get hook bucket based on context object or if argument is `undefined` get global hook bucked.\n
+   *\n
+   * @param {Object} [context=null]\n
+   * @returns {Object} Returns global or handsontable instance bucket\n
+   */\n
+  getBucket(context = null) {\n
+    if (context) {\n
+      if (!context.pluginHookBucket) {\n
+        context.pluginHookBucket = this.createEmptyBucket();\n
+      }\n
+\n
+      return context.pluginHookBucket;\n
+    }\n
+\n
+    return this.globalBucket;\n
+  }\n
+\n
+  /**\n
+   * Adds listener (globally or locally) to specified hook name.\n
+   *\n
+   * @see Core#addHook\n
+   * @param {String} key Hook/Event name\n
+   * @param {Function|Array} callback Callback function or array of functions\n
+   * @param {Object} [context=null]\n
+   * @returns {Hooks} Instance of Hooks\n
+   *\n
+   * @example\n
+   * ```js\n
+   * Handsontable.hooks.add(\'beforeInit\', myCallback, hotInstance);\n
+   * ```\n
+   */\n
+  add(key, callback, context = null) {\n
+    if (Array.isArray(callback)) {\n
+      arrayEach(callback, (c) => (this.add(key, c, context)));\n
+\n
+    } else {\n
+      const bucket = this.getBucket(context);\n
+\n
+      if (typeof bucket[key] === \'undefined\') {\n
+        this.register(key);\n
+        bucket[key] = [];\n
+      }\n
+      callback.skip = false;\n
+\n
+      if (bucket[key].indexOf(callback) === -1) {\n
+        // only add a hook if it has not already been added (adding the same hook twice is now silently ignored)\n
+        bucket[key].push(callback);\n
+      }\n
+    }\n
+\n
+    return this;\n
+  }\n
+\n
+  /**\n
+   * Adds listener to specified hook. After hook runs this listener will be automatically removed.\n
+   *\n
+   * @see Core#addHookOnce\n
+   * @param {String} key Hook/Event name\n
+   * @param {Function} callback Callback function\n
+   * @param {Object} [context=null]\n
+   *\n
+   * @example\n
+   * ```js\n
+   * Handsontable.hooks.once(\'beforeInit\', myCallback, hotInstance);\n
+   * ```\n
+   */\n
+  once(key, callback, context = null) {\n
+    if (Array.isArray(callback)) {\n
+      arrayEach(callback, (c) => (this.once(key, c, context)));\n
+\n
+    } else {\n
+      callback.runOnce = true;\n
+      this.add(key, callback, context);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Removes listener from hooks.\n
+   *\n
+   * @see Core#removeHook\n
+   * @param {String} key Hook/Event name\n
+   * @param {Function} callback Callback function\n
+   * @param {Object} [context=null]\n
+   * @return {Boolean} Returns `true` if hook was removed\n
+   *\n
+   * @example\n
+   * ```js\n
+   * Handsontable.hooks.remove(\'beforeInit\', myCallback);\n
+   * ```\n
+   */\n
+  remove(key, callback, context = null) {\n
+    let bucket = this.getBucket(context);\n
+\n
+    if (typeof bucket[key] !== \'undefined\') {\n
+      if (bucket[key].indexOf(callback) >= 0) {\n
+        callback.skip = true;\n
+\n
+        return true;\n
+      }\n
+    }\n
+\n
+    return false;\n
+  }\n
+\n
+  /**\n
+   * Run all local and global listeners by hook name.\n
+   *\n
+   * @see Core#runHooks\n
+   * @param {Object} context\n
+   * @param {String} key Hook/Event name\n
+   * @param {*} [p1]\n
+   * @param {*} [p2]\n
+   * @param {*} [p3]\n
+   * @param {*} [p4]\n
+   * @param {*} [p5]\n
+   * @param {*} [p6]\n
+   * @returns {*}\n
+   *\n
+   * @example\n
+   * ```js\n
+   * Handsontable.hooks.run(hot, \'beforeInit\');\n
+   * ```\n
+   */\n
+  run(context, key, p1, p2, p3, p4, p5, p6) {\n
+    {\n
+      const globalHandlers = this.globalBucket[key];\n
+      let index = -1;\n
+      let length = globalHandlers ? globalHandlers.length : 0;\n
+\n
+      if (length) {\n
+        // Do not optimise this loop with arrayEach or arrow function! If you do You\'ll decrease perf because of GC.\n
+        while (++index < length) {\n
+          if (!globalHandlers[index] || globalHandlers[index].skip) {\n
+            continue;\n
+          }\n
+          // performance considerations - http://jsperf.com/call-vs-apply-for-a-plugin-architecture\n
+          let res = globalHandlers[index].call(context, p1, p2, p3, p4, p5, p6);\n
+\n
+          if (res !== void 0) {\n
+            p1 = res;\n
+          }\n
+          if (globalHandlers[index] && globalHandlers[index].runOnce) {\n
+            this.remove(key, globalHandlers[index]);\n
+          }\n
+        }\n
+      }\n
+    }\n
+    {\n
+      const localHandlers = this.getBucket(context)[key];\n
+      let index = -1;\n
+      let length = localHandlers ? localHandlers.length : 0;\n
+\n
+      if (length) {\n
+        // Do not optimise this loop with arrayEach or arrow function! If you do You\'ll decrease perf because of GC.\n
+        while (++index < length) {\n
+          if (!localHandlers[index] || localHandlers[index].skip) {\n
+            continue;\n
+          }\n
+          // performance considerations - http://jsperf.com/call-vs-apply-for-a-plugin-architecture\n
+          let res = localHandlers[index].call(context, p1, p2, p3, p4, p5, p6);\n
+\n
+          if (res !== void 0) {\n
+            p1 = res;\n
+          }\n
+          if (localHandlers[index] && localHandlers[index].runOnce) {\n
+            this.remove(key, localHandlers[index], context);\n
+          }\n
+        }\n
+      }\n
+    }\n
+\n
+    return p1;\n
+  }\n
+\n
+  /**\n
+   * Destroy all listeners connected to the context. If context is not exists then listeners will by destroy\n
+   * from globally.\n
+   *\n
+   * @param {Object} [context=null]\n
+   */\n
+  destroy(context = null) {\n
+    objectEach(this.getBucket(context), (value, key, bucket) => (bucket[key].length = 0));\n
+  }\n
+\n
+  /**\n
+   * Registers a hook name (adds it to the list of the known hook names). Used by plugins. It is not necessary to call,\n
+   * register, but if you use it, your plugin hook will be used returned by getRegistered\n
+   * (which itself is used in the demo http://handsontable.com/demo/callbacks.html).\n
+   *\n
+   * @param key {String} Hook name\n
+   *\n
+   * @example\n
+   * ```js\n
+   * Handsontable.hooks.register(\'myHook\');\n
+   * ```\n
+   */\n
+  register(key) {\n
+    if (!this.isRegistered(key)) {\n
+      REGISTERED_HOOKS.push(key);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Unregister a hook name (removes it from the list of known hook names).\n
+   *\n
+   * @param key {String} Hook name\n
+   *\n
+   * @example\n
+   * ```js\n
+   * Handsontable.hooks.deregister(\'myHook\');\n
+   * ```\n
+   */\n
+  deregister(key) {\n
+    if (this.isRegistered(key)) {\n
+      REGISTERED_HOOKS.splice(REGISTERED_HOOKS.indexOf(key), 1);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Returns boolean information if a hook by such name has been registered.\n
+   *\n
+   * @param key {String} Hook name\n
+   * @returns {Boolean}\n
+   *\n
+   * @example\n
+   * ```js\n
+   * Handsontable.hooks.isRegistered(\'beforeInit\');\n
+   * // Results:\n
+   * true\n
+   * ```\n
+   */\n
+  isRegistered(key) {\n
+    return REGISTERED_HOOKS.indexOf(key) >= 0;\n
+  }\n
+\n
+  /**\n
+   * Returns an array of registered hooks.\n
+   *\n
+   * @returns {Array}\n
+   *\n
+   * @example\n
+   * ```js\n
+   * Handsontable.hooks.getRegistered();\n
+   * // Results:\n
+   * [\n
+   * ...\n
+   *   "beforeInit",\n
+   *   "beforeRender",\n
+   *   "beforeSetRangeEnd",\n
+   *   "beforeDrawBorders",\n
+   *   "beforeChange",\n
+   * ...\n
+   * ]\n
+   * ```\n
+   */\n
+  getRegistered() {\n
+    return REGISTERED_HOOKS;\n
+  }\n
+}\n
+\n
+export {Hooks};\n
+\n
+// temp for tests only!\n
+Handsontable.utils = Handsontable.utils || {};\n
+Handsontable.utils.Hooks = Hooks;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>21852</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>pluginHooks.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

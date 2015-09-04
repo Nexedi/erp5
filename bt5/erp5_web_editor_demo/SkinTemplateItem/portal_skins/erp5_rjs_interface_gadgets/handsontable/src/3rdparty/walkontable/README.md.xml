@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272606.67</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>README.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Walkontable\n
+\n
+This is a playground for next table view engine that will enable virtual rendering in [Handsontable](http://handsontable.com/).\n
+\n
+Works in IE8+, FF3.6+, latest Opera, Safari and Chrome.\n
+\n
+Built with almost full TDD test coverage (Jasmine).\n
+\n
+## Bugs\n
+\n
+This code was created with the intention to be used as part of Handsontable and will only be supported by the author\n
+when used in that way. This may change in future. Thanks for understanding.\n
+\n
+## Design considerations\n
+\n
+Why it is important to cache DOM: http://jsperf.com/dom-caching-excercise\n
+\n
+## License\n
+\n
+(The MIT License)\n
+\n
+Copyright (c) 2012-2014 Marcin Warpechowski \n
+Copyright (c) 2015 Handsoncode sp. z o.o. &lt;hello@handsontable.com&gt;\n
+\n
+Permission is hereby granted, free of charge, to any person obtaining\n
+a copy of this software and associated documentation files (the\n
+\'Software\'), to deal in the Software without restriction, including\n
+without limitation the rights to use, copy, modify, merge, publish,\n
+distribute, sublicense, and/or sell copies of the Software, and to\n
+permit persons to whom the Software is furnished to do so, subject to\n
+the following conditions:\n
+\n
+The above copyright notice and this permission notice shall be\n
+included in all copies or substantial portions of the Software.\n
+\n
+THE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\n
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\n
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\n
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\n
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\n
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\n
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1731</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>README.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

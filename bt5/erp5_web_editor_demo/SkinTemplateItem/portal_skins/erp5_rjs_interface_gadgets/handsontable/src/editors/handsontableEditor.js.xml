@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272746.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>handsontableEditor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {KEY_CODES} from \'./../helpers/unicode\';\n
+import {extend} from \'./../helpers/object\';\n
+import {setCaretPosition} from \'./../helpers/dom/element\';\n
+import {stopImmediatePropagation, isImmediatePropagationStopped} from \'./../helpers/dom/event\';\n
+import {getEditor, registerEditor} from \'./../editors\';\n
+import {TextEditor} from \'./textEditor\';\n
+\n
+var HandsontableEditor = TextEditor.prototype.extend();\n
+\n
+\n
+/**\n
+ * @private\n
+ * @editor HandsontableEditor\n
+ * @class HandsontableEditor\n
+ * @dependencies TextEditor\n
+ */\n
+HandsontableEditor.prototype.createElements = function() {\n
+  TextEditor.prototype.createElements.apply(this, arguments);\n
+\n
+  var DIV = document.createElement(\'DIV\');\n
+  DIV.className = \'handsontableEditor\';\n
+  this.TEXTAREA_PARENT.appendChild(DIV);\n
+\n
+  this.htContainer = DIV;\n
+  this.htEditor = new Handsontable(DIV, {\n
+    autoColumnSize: false,\n
+    autoRowSize: false\n
+  });\n
+\n
+  this.assignHooks();\n
+};\n
+\n
+HandsontableEditor.prototype.prepare = function(td, row, col, prop, value, cellProperties) {\n
+\n
+  TextEditor.prototype.prepare.apply(this, arguments);\n
+\n
+  var parent = this;\n
+\n
+  var options = {\n
+    startRows: 0,\n
+    startCols: 0,\n
+    minRows: 0,\n
+    minCols: 0,\n
+    className: \'listbox\',\n
+    copyPaste: false,\n
+    autoColumnSize: false,\n
+    autoRowSize: false,\n
+    cells: function() {\n
+      return {\n
+        readOnly: true\n
+      };\n
+    },\n
+    fillHandle: false,\n
+    afterOnCellMouseDown: function() {\n
+      var value = this.getValue();\n
+      if (value !== void 0) { //if the value is undefined then it means we don\'t want to set the value\n
+        parent.setValue(value);\n
+      }\n
+      parent.instance.destroyEditor();\n
+    }\n
+  };\n
+\n
+  if (this.cellProperties.handsontable) {\n
+    extend(options, cellProperties.handsontable);\n
+  }\n
+  if (this.htEditor) {\n
+    this.htEditor.destroy();\n
+  }\n
+\n
+  this.htEditor = new Handsontable(this.htContainer, options);\n
+\n
+  //this.$htContainer.handsontable(\'destroy\');\n
+  //this.$htContainer.handsontable(options);\n
+};\n
+\n
+var onBeforeKeyDown = function(event) {\n
+  if (isImmediatePropagationStopped(event)) {\n
+    return;\n
+  }\n
+  var editor = this.getActiveEditor();\n
+\n
+  var innerHOT = editor.htEditor.getInstance(); //Handsontable.tmpHandsontable(editor.htContainer, \'getInstance\');\n
+\n
+  var rowToSelect;\n
+\n
+  if (event.keyCode == KEY_CODES.ARROW_DOWN) {\n
+    if (!innerHOT.getSelected()) {\n
+      rowToSelect = 0;\n
+    } else {\n
+      var selectedRow = innerHOT.getSelected()[0];\n
+      var lastRow = innerHOT.countRows() - 1;\n
+      rowToSelect = Math.min(lastRow, selectedRow + 1);\n
+    }\n
+  } else if (event.keyCode == KEY_CODES.ARROW_UP) {\n
+    if (innerHOT.getSelected()) {\n
+      var selectedRow = innerHOT.getSelected()[0];\n
+      rowToSelect = selectedRow - 1;\n
+    }\n
+  }\n
+\n
+  if (rowToSelect !== void 0) {\n
+    if (rowToSelect < 0) {\n
+      innerHOT.deselectCell();\n
+    } else {\n
+      innerHOT.selectCell(rowToSelect, 0);\n
+    }\n
+    if (innerHOT.getData().length) {\n
+      event.preventDefault();\n
+      stopImmediatePropagation(event);\n
+\n
+      editor.instance.listen();\n
+      editor.TEXTAREA.focus();\n
+    }\n
+  }\n
+};\n
+\n
+HandsontableEditor.prototype.open = function() {\n
+\n
+  this.instance.addHook(\'beforeKeyDown\', onBeforeKeyDown);\n
+\n
+  TextEditor.prototype.open.apply(this, arguments);\n
+\n
+  this.htEditor.render();\n
+\n
+  if (this.cellProperties.strict) {\n
+    this.htEditor.selectCell(0, 0);\n
+    this.TEXTAREA.style.visibility = \'hidden\';\n
+  } else {\n
+    this.htEditor.deselectCell();\n
+    this.TEXTAREA.style.visibility = \'visible\';\n
+  }\n
+\n
+  setCaretPosition(this.TEXTAREA, 0, this.TEXTAREA.value.length);\n
+\n
+};\n
+\n
+HandsontableEditor.prototype.close = function() {\n
+  this.instance.removeHook(\'beforeKeyDown\', onBeforeKeyDown);\n
+  this.instance.listen();\n
+\n
+  TextEditor.prototype.close.apply(this, arguments);\n
+};\n
+\n
+HandsontableEditor.prototype.focus = function() {\n
+  this.instance.listen();\n
+  TextEditor.prototype.focus.apply(this, arguments);\n
+};\n
+\n
+HandsontableEditor.prototype.beginEditing = function(initialValue) {\n
+  var onBeginEditing = this.instance.getSettings().onBeginEditing;\n
+\n
+  if (onBeginEditing && onBeginEditing() === false) {\n
+    return;\n
+  }\n
+  TextEditor.prototype.beginEditing.apply(this, arguments);\n
+};\n
+\n
+HandsontableEditor.prototype.finishEditing = function(isCancelled, ctrlDown) {\n
+  if (this.htEditor.isListening()) { //if focus is still in the HOT editor\n
+\n
+    //if (Handsontable.tmpHandsontable(this.htContainer,\'isListening\')) { //if focus is still in the HOT editor\n
+    //if (this.$htContainer.handsontable(\'isListening\')) { //if focus is still in the HOT editor\n
+    this.instance.listen(); //return the focus to the parent HOT instance\n
+  }\n
+\n
+  if (this.htEditor.getSelected()) {\n
+    //if (Handsontable.tmpHandsontable(this.htContainer,\'getSelected\')) {\n
+    //if (this.$htContainer.handsontable(\'getSelected\')) {\n
+    //  var value = this.$htContainer.handsontable(\'getInstance\').getValue();\n
+    var value = this.htEditor.getInstance().getValue();\n
+    //var value = Handsontable.tmpHandsontable(this.htContainer,\'getInstance\').getValue();\n
+    if (value !== void 0) { //if the value is undefined then it means we don\'t want to set the value\n
+      this.setValue(value);\n
+    }\n
+  }\n
+\n
+  return TextEditor.prototype.finishEditing.apply(this, arguments);\n
+};\n
+\n
+HandsontableEditor.prototype.assignHooks = function() {\n
+  var _this = this;\n
+\n
+  this.instance.addHook(\'afterDestroy\', function() {\n
+    if (_this.htEditor) {\n
+      _this.htEditor.destroy();\n
+    }\n
+  });\n
+};\n
+\n
+export {HandsontableEditor};\n
+\n
+registerEditor(\'handsontable\', HandsontableEditor);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5438</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>handsontableEditor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

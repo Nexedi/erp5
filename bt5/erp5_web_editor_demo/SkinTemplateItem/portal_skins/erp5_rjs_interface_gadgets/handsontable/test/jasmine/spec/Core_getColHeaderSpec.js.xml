@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272494.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_getColHeaderSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core.getColHeader\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'when not configured, should return undefined\', function () {\n
+    handsontable();\n
+    expect(getColHeader(1)).toEqual(void 0);\n
+  });\n
+\n
+  it(\'when configured as true, should return the Excel-style column title\', function () {\n
+    handsontable({\n
+      colHeaders: true\n
+    });\n
+    expect(getColHeader(30)).toEqual(\'AE\');\n
+  });\n
+\n
+  it(\'when configured as array, should return value at index\', function () {\n
+    handsontable({\n
+      colHeaders: [\'One\', \'Two\', \'Three\', \'Four\', \'Five\']\n
+    });\n
+    expect(getColHeader(1)).toEqual(\'Two\');\n
+  });\n
+\n
+  it(\'when configured as function, should return function output\', function () {\n
+    handsontable({\n
+      colHeaders: function (index) {\n
+        return \'col\' + index;\n
+      }\n
+    });\n
+    expect(getColHeader(1)).toEqual(\'col1\');\n
+  });\n
+\n
+  it(\'when configured as static value, should return the value\', function () {\n
+    handsontable({\n
+      colHeaders: \'static\'\n
+    });\n
+    expect(getColHeader(1)).toEqual(\'static\');\n
+  });\n
+\n
+  it(\'when configured as HTML value, should render that as HTML\', function () {\n
+    handsontable({\n
+      colHeaders: function (index) {\n
+        return \'<b>col\' + index + \'</b>\';\n
+      }\n
+    });\n
+    expect(getColHeader(1)).toEqual(\'<b>col1</b>\');\n
+  });\n
+\n
+  it(\'when no argument given, should return as much column headers as there are columns\', function () {\n
+    handsontable({\n
+      colHeaders: true,\n
+      startCols: 3\n
+    });\n
+    expect(getColHeader()).toEqual([\'A\', \'B\', \'C\']);\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1749</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_getColHeaderSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

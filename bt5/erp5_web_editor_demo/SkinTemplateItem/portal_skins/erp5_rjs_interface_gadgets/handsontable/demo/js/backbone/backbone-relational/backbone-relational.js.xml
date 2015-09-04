@@ -1,0 +1,1776 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272324.74</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>backbone-relational.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* vim: set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab: */\n
+/**\n
+ * Backbone-relational.js 0.7.1\n
+ * (c) 2011-2013 Paul Uithol and contributors (https://github.com/PaulUithol/Backbone-relational/graphs/contributors)\n
+ * \n
+ * Backbone-relational may be freely distributed under the MIT license; see the accompanying LICENSE.txt.\n
+ * For details and documentation: https://github.com/PaulUithol/Backbone-relational.\n
+ * Depends on Backbone (and thus on Underscore as well): https://github.com/documentcloud/backbone.\n
+ */\n
+( function( undefined ) {\n
+\t"use strict";\n
+\t\n
+\t/**\n
+\t * CommonJS shim\n
+\t **/\n
+\tvar _, Backbone, exports;\n
+\tif ( typeof window === \'undefined\' ) {\n
+\t\t_ = require( \'underscore\' );\n
+\t\tBackbone = require( \'backbone\' );\n
+\t\texports = module.exports = Backbone;\n
+\t}\n
+\telse {\n
+\t\t_ = window._;\n
+\t\tBackbone = window.Backbone;\n
+\t\texports = window;\n
+\t}\n
+\n
+\tBackbone.Relational = {\n
+\t\tshowWarnings: true\n
+\t};\n
+\n
+\t/**\n
+\t * Semaphore mixin; can be used as both binary and counting.\n
+\t **/\n
+\tBackbone.Semaphore = {\n
+\t\t_permitsAvailable: null,\n
+\t\t_permitsUsed: 0,\n
+\t\t\n
+\t\tacquire: function() {\n
+\t\t\tif ( this._permitsAvailable && this._permitsUsed >= this._permitsAvailable ) {\n
+\t\t\t\tthrow new Error( \'Max permits acquired\' );\n
+\t\t\t}\n
+\t\t\telse {\n
+\t\t\t\tthis._permitsUsed++;\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\trelease: function() {\n
+\t\t\tif ( this._permitsUsed === 0 ) {\n
+\t\t\t\tthrow new Error( \'All permits released\' );\n
+\t\t\t}\n
+\t\t\telse {\n
+\t\t\t\tthis._permitsUsed--;\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\tisLocked: function() {\n
+\t\t\treturn this._permitsUsed > 0;\n
+\t\t},\n
+\t\t\n
+\t\tsetAvailablePermits: function( amount ) {\n
+\t\t\tif ( this._permitsUsed > amount ) {\n
+\t\t\t\tthrow new Error( \'Available permits cannot be less than used permits\' );\n
+\t\t\t}\n
+\t\t\tthis._permitsAvailable = amount;\n
+\t\t}\n
+\t};\n
+\t\n
+\t/**\n
+\t * A BlockingQueue that accumulates items while blocked (via \'block\'),\n
+\t * and processes them when unblocked (via \'unblock\').\n
+\t * Process can also be called manually (via \'process\').\n
+\t */\n
+\tBackbone.BlockingQueue = function() {\n
+\t\tthis._queue = [];\n
+\t};\n
+\t_.extend( Backbone.BlockingQueue.prototype, Backbone.Semaphore, {\n
+\t\t_queue: null,\n
+\t\t\n
+\t\tadd: function( func ) {\n
+\t\t\tif ( this.isBlocked() ) {\n
+\t\t\t\tthis._queue.push( func );\n
+\t\t\t}\n
+\t\t\telse {\n
+\t\t\t\tfunc();\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\tprocess: function() {\n
+\t\t\twhile ( this._queue && this._queue.length ) {\n
+\t\t\t\tthis._queue.shift()();\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\tblock: function() {\n
+\t\t\tthis.acquire();\n
+\t\t},\n
+\t\t\n
+\t\tunblock: function() {\n
+\t\t\tthis.release();\n
+\t\t\tif ( !this.isBlocked() ) {\n
+\t\t\t\tthis.process();\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\tisBlocked: function() {\n
+\t\t\treturn this.isLocked();\n
+\t\t}\n
+\t});\n
+\t/**\n
+\t * Global event queue. Accumulates external events (\'add:<key>\', \'remove:<key>\' and \'update:<key>\')\n
+\t * until the top-level object is fully initialized (see \'Backbone.RelationalModel\').\n
+\t */\n
+\tBackbone.Relational.eventQueue = new Backbone.BlockingQueue();\n
+\t\n
+\t/**\n
+\t * Backbone.Store keeps track of all created (and destruction of) Backbone.RelationalModel.\n
+\t * Handles lookup for relations.\n
+\t */\n
+\tBackbone.Store = function() {\n
+\t\tthis._collections = [];\n
+\t\tthis._reverseRelations = [];\n
+\t\tthis._subModels = [];\n
+\t\tthis._modelScopes = [ exports ];\n
+\t};\n
+\t_.extend( Backbone.Store.prototype, Backbone.Events, {\n
+\t\taddModelScope: function( scope ) {\n
+\t\t\tthis._modelScopes.push( scope );\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Add a set of subModelTypes to the store, that can be used to resolve the \'_superModel\'\n
+\t\t * for a model later in \'setupSuperModel\'.\n
+\t\t *\n
+\t\t * @param {Backbone.RelationalModel} subModelTypes\n
+\t\t * @param {Backbone.RelationalModel} superModelType\n
+\t\t */\n
+\t\taddSubModels: function( subModelTypes, superModelType ) {\n
+\t\t\tthis._subModels.push({\n
+\t\t\t\t\'superModelType\': superModelType,\n
+\t\t\t\t\'subModels\': subModelTypes\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Check if the given modelType is registered as another model\'s subModel. If so, add it to the super model\'s\n
+\t\t * \'_subModels\', and set the modelType\'s \'_superModel\', \'_subModelTypeName\', and \'_subModelTypeAttribute\'.\n
+\t\t *\n
+\t\t * @param {Backbone.RelationalModel} modelType\n
+\t\t */\n
+\t\tsetupSuperModel: function( modelType ) {\n
+\t\t\t_.find( this._subModels || [], function( subModelDef ) {\n
+\t\t\t\treturn _.find( subModelDef.subModels || [], function( subModelTypeName, typeValue ) {\n
+\t\t\t\t\tvar subModelType = this.getObjectByName( subModelTypeName );\n
+\n
+\t\t\t\t\tif ( modelType === subModelType ) {\n
+\t\t\t\t\t\t// Set \'modelType\' as a child of the found superModel\n
+\t\t\t\t\t\tsubModelDef.superModelType._subModels[ typeValue ] = modelType;\n
+\n
+\t\t\t\t\t\t// Set \'_superModel\', \'_subModelTypeValue\', and \'_subModelTypeAttribute\' on \'modelType\'.\n
+\t\t\t\t\t\tmodelType._superModel = subModelDef.superModelType;\n
+\t\t\t\t\t\tmodelType._subModelTypeValue = typeValue;\n
+\t\t\t\t\t\tmodelType._subModelTypeAttribute = subModelDef.superModelType.prototype.subModelTypeAttribute;\n
+\t\t\t\t\t\treturn true;\n
+\t\t\t\t\t}\n
+\t\t\t\t}, this );\n
+\t\t\t}, this );\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Add a reverse relation. Is added to the \'relations\' property on model\'s prototype, and to\n
+\t\t * existing instances of \'model\' in the store as well.\n
+\t\t * @param {Object} relation\n
+\t\t * @param {Backbone.RelationalModel} relation.model\n
+\t\t * @param {String} relation.type\n
+\t\t * @param {String} relation.key\n
+\t\t * @param {String|Object} relation.relatedModel\n
+\t\t */\n
+\t\taddReverseRelation: function( relation ) {\n
+\t\t\tvar exists = _.any( this._reverseRelations || [], function( rel ) {\n
+\t\t\t\treturn _.all( relation || [], function( val, key ) {\n
+\t\t\t\t\treturn val === rel[ key ];\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t\t\n
+\t\t\tif ( !exists && relation.model && relation.type ) {\n
+\t\t\t\tthis._reverseRelations.push( relation );\n
+\t\t\t\tthis._addRelation( relation.model, relation );\n
+\t\t\t\tthis.retroFitRelation( relation );\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t_addRelation: function( model, relation ) {\n
+\t\t\tif ( !model.prototype.relations ) {\n
+\t\t\t\tmodel.prototype.relations = [];\n
+\t\t\t}\n
+\t\t\tmodel.prototype.relations.push( relation );\n
+\n
+\t\t\t_.each( model._subModels || [], function( subModel ) {\n
+\t\t\t\tthis._addRelation( subModel, relation );\n
+\t\t\t}, this );\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Add a \'relation\' to all existing instances of \'relation.model\' in the store\n
+\t\t * @param {Object} relation\n
+\t\t */\n
+\t\tretroFitRelation: function( relation ) {\n
+\t\t\tvar coll = this.getCollection( relation.model );\n
+\t\t\tcoll.each( function( model ) {\n
+\t\t\t\tif ( !( model instanceof relation.model ) ) {\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tnew relation.type( model, relation );\n
+\t\t\t}, this);\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Find the Store\'s collection for a certain type of model.\n
+\t\t * @param {Backbone.RelationalModel} model\n
+\t\t * @return {Backbone.Collection} A collection if found (or applicable for \'model\'), or null\n
+\t\t */\n
+\t\tgetCollection: function( model ) {\n
+\t\t\tif ( model instanceof Backbone.RelationalModel ) {\n
+\t\t\t\tmodel = model.constructor;\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tvar rootModel = model;\n
+\t\t\twhile ( rootModel._superModel ) {\n
+\t\t\t\trootModel = rootModel._superModel;\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tvar coll = _.detect( this._collections, function( c ) {\n
+\t\t\t\treturn c.model === rootModel;\n
+\t\t\t});\n
+\t\t\t\n
+\t\t\tif ( !coll ) {\n
+\t\t\t\tcoll = this._createCollection( rootModel );\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\treturn coll;\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Find a type on the global object by name. Splits name on dots.\n
+\t\t * @param {String} name\n
+\t\t * @return {Object}\n
+\t\t */\n
+\t\tgetObjectByName: function( name ) {\n
+\t\t\tvar parts = name.split( \'.\' ),\n
+\t\t\t\ttype = null;\n
+\n
+\t\t\t_.find( this._modelScopes || [], function( scope ) {\n
+\t\t\t\ttype = _.reduce( parts || [], function( memo, val ) {\n
+\t\t\t\t\treturn memo ? memo[ val ] : undefined;\n
+\t\t\t\t}, scope );\n
+\n
+\t\t\t\tif ( type && type !== scope ) {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\t\t\t}, this );\n
+\n
+\t\t\treturn type;\n
+\t\t},\n
+\t\t\n
+\t\t_createCollection: function( type ) {\n
+\t\t\tvar coll;\n
+\t\t\t\n
+\t\t\t// If \'type\' is an instance, take its constructor\n
+\t\t\tif ( type instanceof Backbone.RelationalModel ) {\n
+\t\t\t\ttype = type.constructor;\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\t// Type should inherit from Backbone.RelationalModel.\n
+\t\t\tif ( type.prototype instanceof Backbone.RelationalModel ) {\n
+\t\t\t\tcoll = new Backbone.Collection();\n
+\t\t\t\tcoll.model = type;\n
+\t\t\t\t\n
+\t\t\t\tthis._collections.push( coll );\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\treturn coll;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Find the attribute that is to be used as the `id` on a given object\n
+\t\t * @param type\n
+\t\t * @param {String|Number|Object|Backbone.RelationalModel} item\n
+\t\t * @return {String|Number}\n
+\t\t */\n
+\t\tresolveIdForItem: function( type, item ) {\n
+\t\t\tvar id = _.isString( item ) || _.isNumber( item ) ? item : null;\n
+\n
+\t\t\tif ( id === null ) {\n
+\t\t\t\tif ( item instanceof Backbone.RelationalModel ) {\n
+\t\t\t\t\tid = item.id;\n
+\t\t\t\t}\n
+\t\t\t\telse if ( _.isObject( item ) ) {\n
+\t\t\t\t\tid = item[ type.prototype.idAttribute ];\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// Make all falsy values `null` (except for 0, which could be an id.. see \'/issues/179\')\n
+\t\t\tif ( !id && id !== 0 ) {\n
+\t\t\t\tid = null;\n
+\t\t\t}\n
+\n
+\t\t\treturn id;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t *\n
+\t\t * @param type\n
+\t\t * @param {String|Number|Object|Backbone.RelationalModel} item\n
+\t\t */\n
+\t\tfind: function( type, item ) {\n
+\t\t\tvar id = this.resolveIdForItem( type, item );\n
+\t\t\tvar coll = this.getCollection( type );\n
+\t\t\t\n
+\t\t\t// Because the found object could be of any of the type\'s superModel\n
+\t\t\t// types, only return it if it\'s actually of the type asked for.\n
+\t\t\tif ( coll ) {\n
+\t\t\t\tvar obj = coll.get( id );\n
+\n
+\t\t\t\tif ( obj instanceof type ) {\n
+\t\t\t\t\treturn obj;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn null;\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Add a \'model\' to its appropriate collection. Retain the original contents of \'model.collection\'.\n
+\t\t * @param {Backbone.RelationalModel} model\n
+\t\t */\n
+\t\tregister: function( model ) {\n
+\t\t\tvar coll = this.getCollection( model );\n
+\n
+\t\t\tif ( coll ) {\n
+\t\t\t\tif ( coll.get( model ) ) {\n
+\t\t\t\t\tif ( Backbone.Relational.showWarnings && typeof console !== \'undefined\' ) {\n
+\t\t\t\t\t\tconsole.warn( \'Duplicate id! Old RelationalModel:%o, New RelationalModel:%o\', coll.get( model ), model );\n
+\t\t\t\t\t}\n
+\t\t\t\t\tthrow new Error( "Cannot instantiate more than one Backbone.RelationalModel with the same id per type!" );\n
+\t\t\t\t}\n
+\n
+\t\t\t\tvar modelColl = model.collection;\n
+\t\t\t\tcoll.add( model );\n
+\t\t\t\tmodel.bind( \'destroy\', this.unregister, this );\n
+\t\t\t\tmodel.collection = modelColl;\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Explicitly update a model\'s id in its store collection\n
+\t\t * @param {Backbone.RelationalModel} model\n
+\t\t */\n
+\t\tupdate: function( model ) {\n
+\t\t\tvar coll = this.getCollection( model );\n
+\t\t\tcoll._onModelEvent( \'change:\' + model.idAttribute, model, coll );\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Remove a \'model\' from the store.\n
+\t\t * @param {Backbone.RelationalModel} model\n
+\t\t */\n
+\t\tunregister: function( model ) {\n
+\t\t\tmodel.unbind( \'destroy\', this.unregister );\n
+\t\t\tvar coll = this.getCollection( model );\n
+\t\t\tcoll && coll.remove( model );\n
+\t\t}\n
+\t});\n
+\tBackbone.Relational.store = new Backbone.Store();\n
+\t\n
+\t/**\n
+\t * The main Relation class, from which \'HasOne\' and \'HasMany\' inherit. Internally, \'relational:<key>\' events\n
+\t * are used to regulate addition and removal of models from relations.\n
+\t *\n
+\t * @param {Backbone.RelationalModel} instance\n
+\t * @param {Object} options\n
+\t * @param {string} options.key\n
+\t * @param {Backbone.RelationalModel.constructor} options.relatedModel\n
+\t * @param {Boolean|String} [options.includeInJSON=true] Serialize the given attribute for related model(s)\' in toJSON, or just their ids.\n
+\t * @param {Boolean} [options.createModels=true] Create objects from the contents of keys if the object is not found in Backbone.store.\n
+\t * @param {Object} [options.reverseRelation] Specify a bi-directional relation. If provided, Relation will reciprocate\n
+\t *    the relation to the \'relatedModel\'. Required and optional properties match \'options\', except that it also needs\n
+\t *    {Backbone.Relation|String} type (\'HasOne\' or \'HasMany\').\n
+\t */\n
+\tBackbone.Relation = function( instance, options ) {\n
+\t\tthis.instance = instance;\n
+\t\t// Make sure \'options\' is sane, and fill with defaults from subclasses and this object\'s prototype\n
+\t\toptions = _.isObject( options ) ? options : {};\n
+\t\tthis.reverseRelation = _.defaults( options.reverseRelation || {}, this.options.reverseRelation );\n
+\t\tthis.reverseRelation.type = !_.isString( this.reverseRelation.type ) ? this.reverseRelation.type :\n
+\t\t\tBackbone[ this.reverseRelation.type ] || Backbone.Relational.store.getObjectByName( this.reverseRelation.type );\n
+\t\tthis.model = options.model || this.instance.constructor;\n
+\t\tthis.options = _.defaults( options, this.options, Backbone.Relation.prototype.options );\n
+\t\t\n
+\t\tthis.key = this.options.key;\n
+\t\tthis.keySource = this.options.keySource || this.key;\n
+\t\tthis.keyDestination = this.options.keyDestination || this.keySource || this.key;\n
+\n
+\t\t// \'exports\' should be the global object where \'relatedModel\' can be found on if given as a string.\n
+\t\tthis.relatedModel = this.options.relatedModel;\n
+\t\tif ( _.isString( this.relatedModel ) ) {\n
+\t\t\tthis.relatedModel = Backbone.Relational.store.getObjectByName( this.relatedModel );\n
+\t\t}\n
+\n
+\t\tif ( !this.checkPreconditions() ) {\n
+\t\t\treturn;\n
+\t\t}\n
+\n
+\t\tif ( instance ) {\n
+\t\t\tvar contentKey = this.keySource;\n
+\t\t\tif ( contentKey !== this.key && typeof this.instance.get( this.key ) === \'object\' ) {\n
+\t\t\t\tcontentKey = this.key;\n
+\t\t\t}\n
+\n
+\t\t\tthis.keyContents = this.instance.get( contentKey );\n
+\n
+\t\t\t// Explicitly clear \'keySource\', to prevent a leaky abstraction if \'keySource\' differs from \'key\'.\n
+\t\t\tif ( this.keySource !== this.key ) {\n
+\t\t\t\tthis.instance.unset( this.keySource, { silent: true } );\n
+\t\t\t}\n
+\n
+\t\t\t// Add this Relation to instance._relations\n
+\t\t\tthis.instance._relations.push( this );\n
+\t\t}\n
+\n
+\t\t// Add the reverse relation on \'relatedModel\' to the store\'s reverseRelations\n
+\t\tif ( !this.options.isAutoRelation && this.reverseRelation.type && this.reverseRelation.key ) {\n
+\t\t\tBackbone.Relational.store.addReverseRelation( _.defaults( {\n
+\t\t\t\t\tisAutoRelation: true,\n
+\t\t\t\t\tmodel: this.relatedModel,\n
+\t\t\t\t\trelatedModel: this.model,\n
+\t\t\t\t\treverseRelation: this.options // current relation is the \'reverseRelation\' for its own reverseRelation\n
+\t\t\t\t},\n
+\t\t\t\tthis.reverseRelation // Take further properties from this.reverseRelation (type, key, etc.)\n
+\t\t\t) );\n
+\t\t}\n
+\n
+\t\t_.bindAll( this, \'_modelRemovedFromCollection\', \'_relatedModelAdded\', \'_relatedModelRemoved\' );\n
+\n
+\t\tif ( instance ) {\n
+\t\t\tthis.initialize();\n
+\n
+\t\t\tif ( options.autoFetch ) {\n
+\t\t\t\tthis.instance.fetchRelated( options.key, _.isObject( options.autoFetch ) ? options.autoFetch : {} );\n
+\t\t\t}\n
+\n
+\t\t\t// When a model in the store is destroyed, check if it is \'this.instance\'.\n
+\t\t\tBackbone.Relational.store.getCollection( this.instance )\n
+\t\t\t\t.bind( \'relational:remove\', this._modelRemovedFromCollection );\n
+\n
+\t\t\t// When \'relatedModel\' are created or destroyed, check if it affects this relation.\n
+\t\t\tBackbone.Relational.store.getCollection( this.relatedModel )\n
+\t\t\t\t.bind( \'relational:add\', this._relatedModelAdded )\n
+\t\t\t\t.bind( \'relational:remove\', this._relatedModelRemoved );\n
+\t\t}\n
+\t};\n
+\t// Fix inheritance :\\\n
+\tBackbone.Relation.extend = Backbone.Model.extend;\n
+\t// Set up all inheritable **Backbone.Relation** properties and methods.\n
+\t_.extend( Backbone.Relation.prototype, Backbone.Events, Backbone.Semaphore, {\n
+\t\toptions: {\n
+\t\t\tcreateModels: true,\n
+\t\t\tincludeInJSON: true,\n
+\t\t\tisAutoRelation: false,\n
+\t\t\tautoFetch: false\n
+\t\t},\n
+\t\t\n
+\t\tinstance: null,\n
+\t\tkey: null,\n
+\t\tkeyContents: null,\n
+\t\trelatedModel: null,\n
+\t\treverseRelation: null,\n
+\t\trelated: null,\n
+\t\t\n
+\t\t_relatedModelAdded: function( model, coll, options ) {\n
+\t\t\t// Allow \'model\' to set up its relations, before calling \'tryAddRelated\'\n
+\t\t\t// (which can result in a call to \'addRelated\' on a relation of \'model\')\n
+\t\t\tvar dit = this;\n
+\t\t\tmodel.queue( function() {\n
+\t\t\t\tdit.tryAddRelated( model, options );\n
+\t\t\t});\n
+\t\t},\n
+\t\t\n
+\t\t_relatedModelRemoved: function( model, coll, options ) {\n
+\t\t\tthis.removeRelated( model, options );\n
+\t\t},\n
+\t\t\n
+\t\t_modelRemovedFromCollection: function( model ) {\n
+\t\t\tif ( model === this.instance ) {\n
+\t\t\t\tthis.destroy();\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Check several pre-conditions.\n
+\t\t * @return {Boolean} True if pre-conditions are satisfied, false if they\'re not.\n
+\t\t */\n
+\t\tcheckPreconditions: function() {\n
+\t\t\tvar i = this.instance,\n
+\t\t\t\tk = this.key,\n
+\t\t\t\tm = this.model,\n
+\t\t\t\trm = this.relatedModel,\n
+\t\t\t\twarn = Backbone.Relational.showWarnings && typeof console !== \'undefined\';\n
+\n
+\t\t\tif ( !m || !k || !rm ) {\n
+\t\t\t\twarn && console.warn( \'Relation=%o; no model, key or relatedModel (%o, %o, %o)\', this, m, k, rm );\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\t\t\t// Check if the type in \'model\' inherits from Backbone.RelationalModel\n
+\t\t\tif ( !( m.prototype instanceof Backbone.RelationalModel ) ) {\n
+\t\t\t\twarn && console.warn( \'Relation=%o; model does not inherit from Backbone.RelationalModel (%o)\', this, i );\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\t\t\t// Check if the type in \'relatedModel\' inherits from Backbone.RelationalModel\n
+\t\t\tif ( !( rm.prototype instanceof Backbone.RelationalModel ) ) {\n
+\t\t\t\twarn && console.warn( \'Relation=%o; relatedModel does not inherit from Backbone.RelationalModel (%o)\', this, rm );\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\t\t\t// Check if this is not a HasMany, and the reverse relation is HasMany as well\n
+\t\t\tif ( this instanceof Backbone.HasMany && this.reverseRelation.type === Backbone.HasMany ) {\n
+\t\t\t\twarn && console.warn( \'Relation=%o; relation is a HasMany, and the reverseRelation is HasMany as well.\', this );\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\n
+\t\t\t// Check if we\'re not attempting to create a duplicate relationship\n
+\t\t\tif ( i && i._relations.length ) {\n
+\t\t\t\tvar exists = _.any( i._relations || [], function( rel ) {\n
+\t\t\t\t\t\tvar hasReverseRelation = this.reverseRelation.key && rel.reverseRelation.key;\n
+\t\t\t\t\t\treturn rel.relatedModel === rm && rel.key === k &&\n
+\t\t\t\t\t\t\t( !hasReverseRelation || this.reverseRelation.key === rel.reverseRelation.key );\n
+\t\t\t\t\t}, this );\n
+\n
+\t\t\t\tif ( exists ) {\n
+\t\t\t\t\twarn && console.warn( \'Relation=%o between instance=%o.%s and relatedModel=%o.%s already exists\',\n
+\t\t\t\t\t\tthis, i, k, rm, this.reverseRelation.key );\n
+\t\t\t\t\treturn false;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn true;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Set the related model(s) for this relation\n
+\t\t * @param {Backbone.Model|Backbone.Collection} related\n
+\t\t * @param {Object} [options]\n
+\t\t */\n
+\t\tsetRelated: function( related, options ) {\n
+\t\t\tthis.related = related;\n
+\n
+\t\t\tthis.instance.acquire();\n
+\t\t\tthis.instance.attributes[ this.key ] = related;\n
+\t\t\tthis.instance.release();\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Determine if a relation (on a different RelationalModel) is the reverse\n
+\t\t * relation of the current one.\n
+\t\t * @param {Backbone.Relation} relation\n
+\t\t * @return {Boolean}\n
+\t\t */\n
+\t\t_isReverseRelation: function( relation ) {\n
+\t\t\tif ( relation.instance instanceof this.relatedModel && this.reverseRelation.key === relation.key &&\n
+\t\t\t\t\tthis.key === relation.reverseRelation.key ) {\n
+\t\t\t\treturn true;\n
+\t\t\t}\n
+\t\t\treturn false;\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Get the reverse relations (pointing back to \'this.key\' on \'this.instance\') for the currently related model(s).\n
+\t\t * @param {Backbone.RelationalModel} [model] Get the reverse relations for a specific model.\n
+\t\t *    If not specified, \'this.related\' is used.\n
+\t\t * @return {Backbone.Relation[]}\n
+\t\t */\n
+\t\tgetReverseRelations: function( model ) {\n
+\t\t\tvar reverseRelations = [];\n
+\t\t\t// Iterate over \'model\', \'this.related.models\' (if this.related is a Backbone.Collection), or wrap \'this.related\' in an array.\n
+\t\t\tvar models = !_.isUndefined( model ) ? [ model ] : this.related && ( this.related.models || [ this.related ] );\n
+\t\t\t_.each( models || [], function( related ) {\n
+\t\t\t\t_.each( related.getRelations() || [], function( relation ) {\n
+\t\t\t\t\t\tif ( this._isReverseRelation( relation ) ) {\n
+\t\t\t\t\t\t\treverseRelations.push( relation );\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}, this );\n
+\t\t\t}, this );\n
+\t\t\t\n
+\t\t\treturn reverseRelations;\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Rename options.silent to options.silentChange, so events propagate properly.\n
+\t\t * (for example in HasMany, from \'addRelated\'->\'handleAddition\')\n
+\t\t * @param {Object} [options]\n
+\t\t * @return {Object}\n
+\t\t */\n
+\t\tsanitizeOptions: function( options ) {\n
+\t\t\toptions = options ? _.clone( options ) : {};\n
+\t\t\tif ( options.silent ) {\n
+\t\t\t\toptions.silentChange = true;\n
+\t\t\t\tdelete options.silent;\n
+\t\t\t}\n
+\t\t\treturn options;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Rename options.silentChange to options.silent, so events are silenced as intended in Backbone\'s\n
+\t\t * original functions.\n
+\t\t * @param {Object} [options]\n
+\t\t * @return {Object}\n
+\t\t */\n
+\t\tunsanitizeOptions: function( options ) {\n
+\t\t\toptions = options ? _.clone( options ) : {};\n
+\t\t\tif ( options.silentChange ) {\n
+\t\t\t\toptions.silent = true;\n
+\t\t\t\tdelete options.silentChange;\n
+\t\t\t}\n
+\t\t\treturn options;\n
+\t\t},\n
+\t\t\n
+\t\t// Cleanup. Get reverse relation, call removeRelated on each.\n
+\t\tdestroy: function() {\n
+\t\t\tBackbone.Relational.store.getCollection( this.instance )\n
+\t\t\t\t.unbind( \'relational:remove\', this._modelRemovedFromCollection );\n
+\t\t\t\n
+\t\t\tBackbone.Relational.store.getCollection( this.relatedModel )\n
+\t\t\t\t.unbind( \'relational:add\', this._relatedModelAdded )\n
+\t\t\t\t.unbind( \'relational:remove\', this._relatedModelRemoved );\n
+\t\t\t\n
+\t\t\t_.each( this.getReverseRelations() || [], function( relation ) {\n
+\t\t\t\trelation.removeRelated( this.instance );\n
+\t\t\t}, this );\n
+\t\t}\n
+\t});\n
+\t\n
+\tBackbone.HasOne = Backbone.Relation.extend({\n
+\t\toptions: {\n
+\t\t\treverseRelation: { type: \'HasMany\' }\n
+\t\t},\n
+\t\t\n
+\t\tinitialize: function() {\n
+\t\t\t_.bindAll( this, \'onChange\' );\n
+\n
+\t\t\tthis.instance.bind( \'relational:change:\' + this.key, this.onChange );\n
+\n
+\t\t\tvar model = this.findRelated( { silent: true } );\n
+\t\t\tthis.setRelated( model );\n
+\n
+\t\t\t// Notify new \'related\' object of the new relation.\n
+\t\t\t_.each( this.getReverseRelations() || [], function( relation ) {\n
+\t\t\t\trelation.addRelated( this.instance );\n
+\t\t\t}, this );\n
+\t\t},\n
+\t\t\n
+\t\tfindRelated: function( options ) {\n
+\t\t\tvar item = this.keyContents;\n
+\t\t\tvar model = null;\n
+\t\t\t\n
+\t\t\tif ( item instanceof this.relatedModel ) {\n
+\t\t\t\tmodel = item;\n
+\t\t\t}\n
+\t\t\telse if ( item || item === 0 ) { // since 0 can be a valid `id` as well\n
+\t\t\t\tmodel = this.relatedModel.findOrCreate( item, { create: this.options.createModels } );\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\treturn model;\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * If the key is changed, notify old & new reverse relations and initialize the new relation\n
+\t\t */\n
+\t\tonChange: function( model, attr, options ) {\n
+\t\t\t// Don\'t accept recursive calls to onChange (like onChange->findRelated->findOrCreate->initializeRelations->addRelated->onChange)\n
+\t\t\tif ( this.isLocked() ) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t\tthis.acquire();\n
+\t\t\toptions = this.sanitizeOptions( options );\n
+\t\t\t\n
+\t\t\t// \'options._related\' is set by \'addRelated\'/\'removeRelated\'. If it is set, the change\n
+\t\t\t// is the result of a call from a relation. If it\'s not, the change is the result of \n
+\t\t\t// a \'set\' call on this.instance.\n
+\t\t\tvar changed = _.isUndefined( options._related );\n
+\t\t\tvar oldRelated = changed ? this.related : options._related;\n
+\t\t\t\n
+\t\t\tif ( changed ) {\t\n
+\t\t\t\tthis.keyContents = attr;\n
+\t\t\t\t\n
+\t\t\t\t// Set new \'related\'\n
+\t\t\t\tif ( attr instanceof this.relatedModel ) {\n
+\t\t\t\t\tthis.related = attr;\n
+\t\t\t\t}\n
+\t\t\t\telse if ( attr ) {\n
+\t\t\t\t\tvar related = this.findRelated( options );\n
+\t\t\t\t\tthis.setRelated( related );\n
+\t\t\t\t}\n
+\t\t\t\telse {\n
+\t\t\t\t\tthis.setRelated( null );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\t// Notify old \'related\' object of the terminated relation\n
+\t\t\tif ( oldRelated && this.related !== oldRelated ) {\n
+\t\t\t\t_.each( this.getReverseRelations( oldRelated ) || [], function( relation ) {\n
+\t\t\t\t\trelation.removeRelated( this.instance, options );\n
+\t\t\t\t}, this );\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\t// Notify new \'related\' object of the new relation. Note we do re-apply even if this.related is oldRelated;\n
+\t\t\t// that can be necessary for bi-directional relations if \'this.instance\' was created after \'this.related\'.\n
+\t\t\t// In that case, \'this.instance\' will already know \'this.related\', but the reverse might not exist yet.\n
+\t\t\t_.each( this.getReverseRelations() || [], function( relation ) {\n
+\t\t\t\trelation.addRelated( this.instance, options );\n
+\t\t\t}, this);\n
+\t\t\t\n
+\t\t\t// Fire the \'update:<key>\' event if \'related\' was updated\n
+\t\t\tif ( !options.silentChange && this.related !== oldRelated ) {\n
+\t\t\t\tvar dit = this;\n
+\t\t\t\tBackbone.Relational.eventQueue.add( function() {\n
+\t\t\t\t\tdit.instance.trigger( \'update:\' + dit.key, dit.instance, dit.related, options );\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t\tthis.release();\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * If a new \'this.relatedModel\' appears in the \'store\', try to match it to the last set \'keyContents\'\n
+\t\t */\n
+\t\ttryAddRelated: function( model, options ) {\n
+\t\t\tif ( this.related ) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t\toptions = this.sanitizeOptions( options );\n
+\t\t\t\n
+\t\t\tvar item = this.keyContents;\n
+\t\t\tif ( item || item === 0 ) { // since 0 can be a valid `id` as well\n
+\t\t\t\tvar id = Backbone.Relational.store.resolveIdForItem( this.relatedModel, item );\n
+\t\t\t\tif ( !_.isNull( id ) && model.id === id ) {\n
+\t\t\t\t\tthis.addRelated( model, options );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\taddRelated: function( model, options ) {\n
+\t\t\tif ( model !== this.related ) {\n
+\t\t\t\tvar oldRelated = this.related || null;\n
+\t\t\t\tthis.setRelated( model );\n
+\t\t\t\tthis.onChange( this.instance, model, { _related: oldRelated } );\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\tremoveRelated: function( model, options ) {\n
+\t\t\tif ( !this.related ) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tif ( model === this.related ) {\n
+\t\t\t\tvar oldRelated = this.related || null;\n
+\t\t\t\tthis.setRelated( null );\n
+\t\t\t\tthis.onChange( this.instance, model, { _related: oldRelated } );\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\t\n
+\tBackbone.HasMany = Backbone.Relation.extend({\n
+\t\tcollectionType: null,\n
+\t\t\n
+\t\toptions: {\n
+\t\t\treverseRelation: { type: \'HasOne\' },\n
+\t\t\tcollectionType: Backbone.Collection,\n
+\t\t\tcollectionKey: true,\n
+\t\t\tcollectionOptions: {}\n
+\t\t},\n
+\t\t\n
+\t\tinitialize: function() {\n
+\t\t\t_.bindAll( this, \'onChange\', \'handleAddition\', \'handleRemoval\', \'handleReset\' );\n
+\t\t\tthis.instance.bind( \'relational:change:\' + this.key, this.onChange );\n
+\t\t\t\n
+\t\t\t// Handle a custom \'collectionType\'\n
+\t\t\tthis.collectionType = this.options.collectionType;\n
+\t\t\tif ( _.isString( this.collectionType ) ) {\n
+\t\t\t\tthis.collectionType = Backbone.Relational.store.getObjectByName( this.collectionType );\n
+\t\t\t}\n
+\t\t\tif ( !this.collectionType.prototype instanceof Backbone.Collection ){\n
+\t\t\t\tthrow new Error( \'collectionType must inherit from Backbone.Collection\' );\n
+\t\t\t}\n
+\n
+\t\t\t// Handle cases where a model/relation is created with a collection passed straight into \'attributes\'\n
+\t\t\tif ( this.keyContents instanceof Backbone.Collection ) {\n
+\t\t\t\tthis.setRelated( this._prepareCollection( this.keyContents ) );\n
+\t\t\t}\n
+\t\t\telse {\n
+\t\t\t\tthis.setRelated( this._prepareCollection() );\n
+\t\t\t}\n
+\n
+\t\t\tthis.findRelated( { silent: true } );\n
+\t\t},\n
+\t\t\n
+\t\t_getCollectionOptions: function() {\n
+\t\t\treturn _.isFunction( this.options.collectionOptions ) ?\n
+\t\t\t\tthis.options.collectionOptions( this.instance ) :\n
+\t\t\t\tthis.options.collectionOptions;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Bind events and setup collectionKeys for a collection that is to be used as the backing store for a HasMany.\n
+\t\t * If no \'collection\' is supplied, a new collection will be created of the specified \'collectionType\' option.\n
+\t\t * @param {Backbone.Collection} [collection]\n
+\t\t */\n
+\t\t_prepareCollection: function( collection ) {\n
+\t\t\tif ( this.related ) {\n
+\t\t\t\tthis.related\n
+\t\t\t\t\t.unbind( \'relational:add\', this.handleAddition )\n
+\t\t\t\t\t.unbind( \'relational:remove\', this.handleRemoval )\n
+\t\t\t\t\t.unbind( \'relational:reset\', this.handleReset )\n
+\t\t\t}\n
+\n
+\t\t\tif ( !collection || !( collection instanceof Backbone.Collection ) ) {\n
+\t\t\t\tcollection = new this.collectionType( [], this._getCollectionOptions() );\n
+\t\t\t}\n
+\n
+\t\t\tcollection.model = this.relatedModel;\n
+\t\t\t\n
+\t\t\tif ( this.options.collectionKey ) {\n
+\t\t\t\tvar key = this.options.collectionKey === true ? this.options.reverseRelation.key : this.options.collectionKey;\n
+\t\t\t\t\n
+\t\t\t\tif ( collection[ key ] && collection[ key ] !== this.instance ) {\n
+\t\t\t\t\tif ( Backbone.Relational.showWarnings && typeof console !== \'undefined\' ) {\n
+\t\t\t\t\t\tconsole.warn( \'Relation=%o; collectionKey=%s already exists on collection=%o\', this, key, this.options.collectionKey );\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t\telse if ( key ) {\n
+\t\t\t\t\tcollection[ key ] = this.instance;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tcollection\n
+\t\t\t\t.bind( \'relational:add\', this.handleAddition )\n
+\t\t\t\t.bind( \'relational:remove\', this.handleRemoval )\n
+\t\t\t\t.bind( \'relational:reset\', this.handleReset );\n
+\t\t\t\n
+\t\t\treturn collection;\n
+\t\t},\n
+\t\t\n
+\t\tfindRelated: function( options ) {\n
+\t\t\tif ( this.keyContents ) {\n
+\t\t\t\tvar models = [];\n
+\n
+\t\t\t\tif ( this.keyContents instanceof Backbone.Collection ) {\n
+\t\t\t\t\tmodels = this.keyContents.models;\n
+\t\t\t\t}\n
+\t\t\t\telse {\n
+\t\t\t\t\t// Handle cases the an API/user supplies just an Object/id instead of an Array\n
+\t\t\t\t\tthis.keyContents = _.isArray( this.keyContents ) ? this.keyContents : [ this.keyContents ];\n
+\n
+\t\t\t\t\t// Try to find instances of the appropriate \'relatedModel\' in the store\n
+\t\t\t\t\t_.each( this.keyContents || [], function( item ) {\n
+\t\t\t\t\t\tvar model = null;\n
+\t\t\t\t\t\tif ( item instanceof this.relatedModel ) {\n
+\t\t\t\t\t\t\tmodel = item;\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t\telse if ( item || item === 0 ) { // since 0 can be a valid `id` as well\n
+\t\t\t\t\t\t\tmodel = this.relatedModel.findOrCreate( item, { create: this.options.createModels } );\n
+\t\t\t\t\t\t}\n
+\n
+\t\t\t\t\t\tif ( model && !this.related.get( model ) ) {\n
+\t\t\t\t\t\t\tmodels.push( model );\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}, this );\n
+\t\t\t\t}\n
+\n
+\t\t\t\t// Add all found \'models\' in on go, so \'add\' will only be called once (and thus \'sort\', etc.)\n
+\t\t\t\tif ( models.length ) {\n
+\t\t\t\t\toptions = this.unsanitizeOptions( options );\n
+\t\t\t\t\tthis.related.add( models, options );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * If the key is changed, notify old & new reverse relations and initialize the new relation\n
+\t\t */\n
+\t\tonChange: function( model, attr, options ) {\n
+\t\t\toptions = this.sanitizeOptions( options );\n
+\t\t\tthis.keyContents = attr;\n
+\t\t\t\n
+\t\t\t// Replace \'this.related\' by \'attr\' if it is a Backbone.Collection\n
+\t\t\tif ( attr instanceof Backbone.Collection ) {\n
+\t\t\t\tthis._prepareCollection( attr );\n
+\t\t\t\tthis.related = attr;\n
+\t\t\t}\n
+\t\t\t// Otherwise, \'attr\' should be an array of related object ids.\n
+\t\t\t// Re-use the current \'this.related\' if it is a Backbone.Collection, and remove any current entries.\n
+\t\t\t// Otherwise, create a new collection.\n
+\t\t\telse {\n
+\t\t\t\tvar oldIds = {}, newIds = {};\n
+\n
+\t\t\t\tif ( !_.isArray( attr ) && attr !== undefined ) {\n
+\t\t\t\t\tattr = [ attr ];\n
+\t\t\t\t}\n
+\n
+\t\t\t\t_.each( attr, function( attributes ) {\n
+\t\t\t\t\tnewIds[ attributes.id ] = true;\n
+\t\t\t\t});\n
+\n
+\t\t\t\tvar coll = this.related;\n
+\t\t\t\tif ( coll instanceof Backbone.Collection ) {\n
+\t\t\t\t\t// Make sure to operate on a copy since we\'re removing while iterating\n
+\t\t\t\t\t_.each( coll.models.slice(0) , function( model ) {\n
+\t\t\t\t\t\t// When fetch is called with the \'keepNewModels\' option, we don\'t want to remove\n
+\t\t\t\t\t\t// client-created new models when the fetch is completed.\n
+\t\t\t\t\t\tif ( !options.keepNewModels || !model.isNew() ) {\n
+\t\t\t\t\t\t\toldIds[ model.id ] = true;\n
+\t\t\t\t\t\t\tcoll.remove( model, { silent: (model.id in newIds) } );\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t});\n
+\t\t\t\t} else {\n
+\t\t\t\t\tcoll = this._prepareCollection();\n
+\t\t\t\t}\n
+\n
+\t\t\t\t_.each( attr, function( attributes ) {\n
+\t\t\t\t\tvar model = this.relatedModel.findOrCreate( attributes, { create: this.options.createModels } );\n
+\t\t\t\t\tif (model) {\n
+\t\t\t\t\t\tcoll.add( model, { silent: (model.id in oldIds)} );\n
+\t\t\t\t\t}\n
+\t\t\t\t}, this );\n
+\n
+\t\t\t\tthis.setRelated( coll );\n
+\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tvar dit = this;\n
+\t\t\tBackbone.Relational.eventQueue.add( function() {\n
+\t\t\t\t!options.silentChange && dit.instance.trigger( \'update:\' + dit.key, dit.instance, dit.related, options );\n
+\t\t\t});\n
+\t\t},\n
+\t\t\n
+\t\ttryAddRelated: function( model, options ) {\n
+\t\t\toptions = this.sanitizeOptions( options );\n
+\t\t\tif ( !this.related.get( model ) ) {\n
+\t\t\t\t// Check if this new model was specified in \'this.keyContents\'\n
+\t\t\t\tvar item = _.any( this.keyContents || [], function( item ) {\n
+\t\t\t\t\tvar id = Backbone.Relational.store.resolveIdForItem( this.relatedModel, item );\n
+\t\t\t\t\treturn !_.isNull( id ) && id === model.id;\n
+\t\t\t\t}, this );\n
+\t\t\t\t\n
+\t\t\t\tif ( item ) {\n
+\t\t\t\t\tthis.related.add( model, options );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * When a model is added to a \'HasMany\', trigger \'add\' on \'this.instance\' and notify reverse relations.\n
+\t\t * (should be \'HasOne\', must set \'this.instance\' as their related).\n
+\t\t */\n
+\t\thandleAddition: function( model, coll, options ) {\n
+\t\t\t//console.debug(\'handleAddition called; args=%o\', arguments);\n
+\t\t\t// Make sure the model is in fact a valid model before continuing.\n
+\t\t\t// (it can be invalid as a result of failing validation in Backbone.Collection._prepareModel)\n
+\t\t\tif ( !( model instanceof Backbone.Model ) ) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\toptions = this.sanitizeOptions( options );\n
+\t\t\t\n
+\t\t\t_.each( this.getReverseRelations( model ) || [], function( relation ) {\n
+\t\t\t\trelation.addRelated( this.instance, options );\n
+\t\t\t}, this );\n
+\n
+\t\t\t// Only trigger \'add\' once the newly added model is initialized (so, has its relations set up)\n
+\t\t\tvar dit = this;\n
+\t\t\tBackbone.Relational.eventQueue.add( function() {\n
+\t\t\t\t!options.silentChange && dit.instance.trigger( \'add:\' + dit.key, model, dit.related, options );\n
+\t\t\t});\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * When a model is removed from a \'HasMany\', trigger \'remove\' on \'this.instance\' and notify reverse relations.\n
+\t\t * (should be \'HasOne\', which should be nullified)\n
+\t\t */\n
+\t\thandleRemoval: function( model, coll, options ) {\n
+\t\t\t//console.debug(\'handleRemoval called; args=%o\', arguments);\n
+\t\t\tif ( !( model instanceof Backbone.Model ) ) {\n
+\t\t\t\treturn;\n
+\t\t\t}\n
+\n
+\t\t\toptions = this.sanitizeOptions( options );\n
+\t\t\t\n
+\t\t\t_.each( this.getReverseRelations( model ) || [], function( relation ) {\n
+\t\t\t\trelation.removeRelated( this.instance, options );\n
+\t\t\t}, this );\n
+\t\t\t\n
+\t\t\tvar dit = this;\n
+\t\t\tBackbone.Relational.eventQueue.add( function() {\n
+\t\t\t\t!options.silentChange && dit.instance.trigger( \'remove:\' + dit.key, model, dit.related, options );\n
+\t\t\t});\n
+\t\t},\n
+\n
+\t\thandleReset: function( coll, options ) {\n
+\t\t\toptions = this.sanitizeOptions( options );\n
+\n
+\t\t\tvar dit = this;\n
+\t\t\tBackbone.Relational.eventQueue.add( function() {\n
+\t\t\t\t!options.silentChange && dit.instance.trigger( \'reset:\' + dit.key, dit.related, options );\n
+\t\t\t});\n
+\t\t},\n
+\t\t\n
+\t\taddRelated: function( model, options ) {\n
+\t\t\tvar dit = this;\n
+\t\t\toptions = this.unsanitizeOptions( options );\n
+\t\t\tmodel.queue( function() { // Queued to avoid errors for adding \'model\' to the \'this.related\' set twice\n
+\t\t\t\tif ( dit.related && !dit.related.get( model ) ) {\n
+\t\t\t\t\tdit.related.add( model, options );\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t},\n
+\t\t\n
+\t\tremoveRelated: function( model, options ) {\n
+\t\t\toptions = this.unsanitizeOptions( options );\n
+\t\t\tif ( this.related.get( model ) ) {\n
+\t\t\t\tthis.related.remove( model, options );\n
+\t\t\t}\n
+\t\t}\n
+\t});\n
+\t\n
+\t/**\n
+\t * A type of Backbone.Model that also maintains relations to other models and collections.\n
+\t * New events when compared to the original:\n
+\t *  - \'add:<key>\' (model, related collection, options)\n
+\t *  - \'remove:<key>\' (model, related collection, options)\n
+\t *  - \'update:<key>\' (model, related model or collection, options)\n
+\t */\n
+\tBackbone.RelationalModel = Backbone.Model.extend({\n
+\t\trelations: null, // Relation descriptions on the prototype\n
+\t\t_relations: null, // Relation instances\n
+\t\t_isInitialized: false,\n
+\t\t_deferProcessing: false,\n
+\t\t_queue: null,\n
+\t\t\n
+\t\tsubModelTypeAttribute: \'type\',\n
+\t\tsubModelTypes: null,\n
+\t\t\n
+\t\tconstructor: function( attributes, options ) {\n
+\t\t\t// Nasty hack, for cases like \'model.get( <HasMany key> ).add( item )\'.\n
+\t\t\t// Defer \'processQueue\', so that when \'Relation.createModels\' is used we:\n
+\t\t\t// a) Survive \'Backbone.Collection.add\'; this takes care we won\'t error on "can\'t add model to a set twice"\n
+\t\t\t//    (by creating a model from properties, having the model add itself to the collection via one of\n
+\t\t\t//    its relations, then trying to add it to the collection).\n
+\t\t\t// b) Trigger \'HasMany\' collection events only after the model is really fully set up.\n
+\t\t\t// Example that triggers both a and b: "p.get(\'jobs\').add( { company: c, person: p } )".\n
+\t\t\tvar dit = this;\n
+\t\t\tif ( options && options.collection ) {\n
+\t\t\t\tthis._deferProcessing = true;\n
+\t\t\t\t\n
+\t\t\t\tvar processQueue = function( model ) {\n
+\t\t\t\t\tif ( model === dit ) {\n
+\t\t\t\t\t\tdit._deferProcessing = false;\n
+\t\t\t\t\t\tdit.processQueue();\n
+\t\t\t\t\t\toptions.collection.unbind( \'relational:add\', processQueue );\n
+\t\t\t\t\t}\n
+\t\t\t\t};\n
+\t\t\t\toptions.collection.bind( \'relational:add\', processQueue );\n
+\t\t\t\t\n
+\t\t\t\t// So we do process the queue eventually, regardless of whether this model really gets added to \'options.collection\'.\n
+\t\t\t\t_.defer( function() {\n
+\t\t\t\t\tprocessQueue( dit );\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tthis._queue = new Backbone.BlockingQueue();\n
+\t\t\tthis._queue.block();\n
+\t\t\tBackbone.Relational.eventQueue.block();\n
+\t\t\t\n
+\t\t\tBackbone.Model.apply( this, arguments );\n
+\t\t\t\n
+\t\t\t// Try to run the global queue holding external events\n
+\t\t\tBackbone.Relational.eventQueue.unblock();\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Override \'trigger\' to queue \'change\' and \'change:*\' events\n
+\t\t */\n
+\t\ttrigger: function( eventName ) {\n
+\t\t\tif ( eventName.length > 5 && \'change\' === eventName.substr( 0, 6 ) ) {\n
+\t\t\t\tvar dit = this, args = arguments;\n
+\t\t\t\tBackbone.Relational.eventQueue.add( function() {\n
+\t\t\t\t\tBackbone.Model.prototype.trigger.apply( dit, args );\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t\telse {\n
+\t\t\t\tBackbone.Model.prototype.trigger.apply( this, arguments );\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\treturn this;\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Initialize Relations present in this.relations; determine the type (HasOne/HasMany), then creates a new instance.\n
+\t\t * Invoked in the first call so \'set\' (which is made from the Backbone.Model constructor).\n
+\t\t */\n
+\t\tinitializeRelations: function() {\n
+\t\t\tthis.acquire(); // Setting up relations often also involve calls to \'set\', and we only want to enter this function once\n
+\t\t\tthis._relations = [];\n
+\t\t\t\n
+\t\t\t_.each( this.relations || [], function( rel ) {\n
+\t\t\t\tvar type = !_.isString( rel.type ) ? rel.type :\tBackbone[ rel.type ] || Backbone.Relational.store.getObjectByName( rel.type );\n
+\t\t\t\tif ( type && type.prototype instanceof Backbone.Relation ) {\n
+\t\t\t\t\tnew type( this, rel ); // Also pushes the new Relation into _relations\n
+\t\t\t\t}\n
+\t\t\t\telse {\n
+\t\t\t\t\tBackbone.Relational.showWarnings && typeof console !== \'undefined\' && console.warn( \'Relation=%o; missing or invalid type!\', rel );\n
+\t\t\t\t}\n
+\t\t\t}, this );\n
+\t\t\t\n
+\t\t\tthis._isInitialized = true;\n
+\t\t\tthis.release();\n
+\t\t\tthis.processQueue();\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * When new values are set, notify this model\'s relations (also if options.silent is set).\n
+\t\t * (Relation.setRelated locks this model before calling \'set\' on it to prevent loops)\n
+\t\t */\n
+\t\tupdateRelations: function( options ) {\n
+\t\t\tif ( this._isInitialized && !this.isLocked() ) {\n
+\t\t\t\t_.each( this._relations || [], function( rel ) {\n
+\t\t\t\t\t// Update from data in `rel.keySource` if set, or `rel.key` otherwise\n
+\t\t\t\t\tvar val = this.attributes[ rel.keySource ] || this.attributes[ rel.key ];\n
+\t\t\t\t\tif ( rel.related !== val ) {\n
+\t\t\t\t\t\tthis.trigger( \'relational:change:\' + rel.key, this, val, options || {} );\n
+\t\t\t\t\t}\n
+\t\t\t\t}, this );\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Either add to the queue (if we\'re not initialized yet), or execute right away.\n
+\t\t */\n
+\t\tqueue: function( func ) {\n
+\t\t\tthis._queue.add( func );\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Process _queue\n
+\t\t */\n
+\t\tprocessQueue: function() {\n
+\t\t\tif ( this._isInitialized && !this._deferProcessing && this._queue.isBlocked() ) {\n
+\t\t\t\tthis._queue.unblock();\n
+\t\t\t}\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Get a specific relation.\n
+\t\t * @param key {string} The relation key to look for.\n
+\t\t * @return {Backbone.Relation} An instance of \'Backbone.Relation\', if a relation was found for \'key\', or null.\n
+\t\t */\n
+\t\tgetRelation: function( key ) {\n
+\t\t\treturn _.detect( this._relations, function( rel ) {\n
+\t\t\t\tif ( rel.key === key ) {\n
+\t\t\t\t\treturn true;\n
+\t\t\t\t}\n
+\t\t\t}, this );\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Get all of the created relations.\n
+\t\t * @return {Backbone.Relation[]}\n
+\t\t */\n
+\t\tgetRelations: function() {\n
+\t\t\treturn this._relations;\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Retrieve related objects.\n
+\t\t * @param key {string} The relation key to fetch models for.\n
+\t\t * @param [options] {Object} Options for \'Backbone.Model.fetch\' and \'Backbone.sync\'.\n
+\t\t * @param [update=false] {boolean} Whether to force a fetch from the server (updating existing models).\n
+\t\t * @return {jQuery.when[]} An array of request objects\n
+\t\t */\n
+\t\tfetchRelated: function( key, options, update ) {\n
+\t\t\toptions || ( options = {} );\n
+\t\t\tvar setUrl,\n
+\t\t\t\trequests = [],\n
+\t\t\t\trel = this.getRelation( key ),\n
+\t\t\t\tkeyContents = rel && rel.keyContents,\n
+\t\t\t\ttoFetch = keyContents && _.select( _.isArray( keyContents ) ? keyContents : [ keyContents ], function( item ) {\n
+\t\t\t\t\tvar id = Backbone.Relational.store.resolveIdForItem( rel.relatedModel, item );\n
+\t\t\t\t\treturn !_.isNull( id ) && ( update || !Backbone.Relational.store.find( rel.relatedModel, id ) );\n
+\t\t\t\t}, this );\n
+\t\t\t\n
+\t\t\tif ( toFetch && toFetch.length ) {\n
+\t\t\t\t// Create a model for each entry in \'keyContents\' that is to be fetched\n
+\t\t\t\tvar models = _.map( toFetch, function( item ) {\n
+\t\t\t\t\tvar model;\n
+\n
+\t\t\t\t\tif ( _.isObject( item ) ) {\n
+\t\t\t\t\t\tmodel = rel.relatedModel.findOrCreate( item );\n
+\t\t\t\t\t}\n
+\t\t\t\t\telse {\n
+\t\t\t\t\t\tvar attrs = {};\n
+\t\t\t\t\t\tattrs[ rel.relatedModel.prototype.idAttribute ] = item;\n
+\t\t\t\t\t\tmodel = rel.relatedModel.findOrCreate( attrs );\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\treturn model;\n
+\t\t\t\t}, this );\n
+\t\t\t\t\n
+\t\t\t\t// Try if the \'collection\' can provide a url to fetch a set of models in one request.\n
+\t\t\t\tif ( rel.related instanceof Backbone.Collection && _.isFunction( rel.related.url ) ) {\n
+\t\t\t\t\tsetUrl = rel.related.url( models );\n
+\t\t\t\t}\n
+\t\t\t\t\n
+\t\t\t\t// An assumption is that when \'Backbone.Collection.url\' is a function, it can handle building of set urls.\n
+\t\t\t\t// To make sure it can, test if the url we got by supplying a list of models to fetch is different from\n
+\t\t\t\t// the one supplied for the default fetch action (without args to \'url\').\n
+\t\t\t\tif ( setUrl && setUrl !== rel.related.url() ) {\n
+\t\t\t\t\tvar opts = _.defaults(\n
+\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\terror: function() {\n
+\t\t\t\t\t\t\t\tvar args = arguments;\n
+\t\t\t\t\t\t\t\t_.each( models || [], function( model ) {\n
+\t\t\t\t\t\t\t\t\tmodel.trigger( \'destroy\', model, model.collection, options );\n
+\t\t\t\t\t\t\t\t\toptions.error && options.error.apply( model, args );\n
+\t\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t\t},\n
+\t\t\t\t\t\t\turl: setUrl\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\toptions,\n
+\t\t\t\t\t\t{ add: true }\n
+\t\t\t\t\t);\n
+\n
+\t\t\t\t\trequests = [ rel.related.fetch( opts ) ];\n
+\t\t\t\t}\n
+\t\t\t\telse {\n
+\t\t\t\t\trequests = _.map( models || [], function( model ) {\n
+\t\t\t\t\t\tvar opts = _.defaults(\n
+\t\t\t\t\t\t\t{\n
+\t\t\t\t\t\t\t\terror: function() {\n
+\t\t\t\t\t\t\t\t\tmodel.trigger( \'destroy\', model, model.collection, options );\n
+\t\t\t\t\t\t\t\t\toptions.error && options.error.apply( model, arguments );\n
+\t\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t\t},\n
+\t\t\t\t\t\t\toptions\n
+\t\t\t\t\t\t);\n
+\t\t\t\t\t\treturn model.fetch( opts );\n
+\t\t\t\t\t}, this );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\treturn requests;\n
+\t\t},\n
+\n
+\t\tget: function( attr ) {\n
+\t\t\tvar originalResult = Backbone.Model.prototype.get.call( this, attr );\n
+\n
+\t\t\t// Use `originalResult` get if dotNotation not enabled or not required because no dot is in `attr`\n
+\t\t\tif ( !this.dotNotation || attr.indexOf( \'.\' ) === -1 ) {\n
+\t\t\t\treturn originalResult;\n
+\t\t\t}\n
+\n
+\t\t\t// Go through all splits and return the final result\n
+\t\t\tvar splits = attr.split( \'.\' );\n
+\t\t\tvar result = _.reduce(splits, function( model, split ) {\n
+\t\t\t\tif ( !( model instanceof Backbone.Model ) ) {\n
+\t\t\t\t\tthrow new Error( \'Attribute must be an instanceof Backbone.Model. Is: \' + model + \', currentSplit: \' + split );\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn Backbone.Model.prototype.get.call( model, split );\n
+\t\t\t}, this );\n
+\n
+\t\t\tif ( originalResult !== undefined && result !== undefined ) {\n
+\t\t\t\tthrow new Error( "Ambiguous result for \'" + attr + "\'. direct result: " + originalResult + ", dotNotation: " + result );\n
+\t\t\t}\n
+\n
+\t\t\treturn originalResult || result;\n
+\t\t},\n
+\t\t\n
+\t\tset: function( key, value, options ) {\n
+\t\t\tBackbone.Relational.eventQueue.block();\n
+\t\t\t\n
+\t\t\t// Duplicate backbone\'s behavior to allow separate key/value parameters, instead of a single \'attributes\' object\n
+\t\t\tvar attributes;\n
+\t\t\tif ( _.isObject( key ) || key == null ) {\n
+\t\t\t\tattributes = key;\n
+\t\t\t\toptions = value;\n
+\t\t\t}\n
+\t\t\telse {\n
+\t\t\t\tattributes = {};\n
+\t\t\t\tattributes[ key ] = value;\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tvar result = Backbone.Model.prototype.set.apply( this, arguments );\n
+\t\t\t\n
+\t\t\t// Ideal place to set up relations :)\n
+\t\t\tif ( !this._isInitialized && !this.isLocked() ) {\n
+\t\t\t\tthis.constructor.initializeModelHierarchy();\n
+\n
+\t\t\t\tBackbone.Relational.store.register( this );\n
+\n
+\t\t\t\tthis.initializeRelations();\n
+\t\t\t}\n
+\t\t\t// Update the \'idAttribute\' in Backbone.store if; we don\'t want it to miss an \'id\' update due to {silent:true}\n
+\t\t\telse if ( attributes && this.idAttribute in attributes ) {\n
+\t\t\t\tBackbone.Relational.store.update( this );\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tif ( attributes ) {\n
+\t\t\t\tthis.updateRelations( options );\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\t// Try to run the global queue holding external events\n
+\t\t\tBackbone.Relational.eventQueue.unblock();\n
+\t\t\t\n
+\t\t\treturn result;\n
+\t\t},\n
+\t\t\n
+\t\tunset: function( attribute, options ) {\n
+\t\t\tBackbone.Relational.eventQueue.block();\n
+\t\t\t\n
+\t\t\tvar result = Backbone.Model.prototype.unset.apply( this, arguments );\n
+\t\t\tthis.updateRelations( options );\n
+\t\t\t\n
+\t\t\t// Try to run the global queue holding external events\n
+\t\t\tBackbone.Relational.eventQueue.unblock();\n
+\t\t\t\n
+\t\t\treturn result;\n
+\t\t},\n
+\t\t\n
+\t\tclear: function( options ) {\n
+\t\t\tBackbone.Relational.eventQueue.block();\n
+\t\t\t\n
+\t\t\tvar result = Backbone.Model.prototype.clear.apply( this, arguments );\n
+\t\t\tthis.updateRelations( options );\n
+\t\t\t\n
+\t\t\t// Try to run the global queue holding external events\n
+\t\t\tBackbone.Relational.eventQueue.unblock();\n
+\t\t\t\n
+\t\t\treturn result;\n
+\t\t},\n
+\n
+\t\tclone: function() {\n
+\t\t\tvar attributes = _.clone( this.attributes );\n
+\t\t\tif ( !_.isUndefined( attributes[ this.idAttribute ] ) ) {\n
+\t\t\t\tattributes[ this.idAttribute ] = null;\n
+\t\t\t}\n
+\n
+\t\t\t_.each( this.getRelations() || [], function( rel ) {\n
+\t\t\t\t\tdelete attributes[ rel.key ];\n
+\t\t\t\t});\n
+\n
+\t\t\treturn new this.constructor( attributes );\n
+\t\t},\n
+\t\t\n
+\t\t/**\n
+\t\t * Convert relations to JSON, omits them when required\n
+\t\t */\n
+\t\ttoJSON: function(options) {\n
+\t\t\t// If this Model has already been fully serialized in this branch once, return to avoid loops\n
+\t\t\tif ( this.isLocked() ) {\n
+\t\t\t\treturn this.id;\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tthis.acquire();\n
+\t\t\tvar json = Backbone.Model.prototype.toJSON.call( this, options );\n
+\t\t\t\n
+\t\t\tif ( this.constructor._superModel && !( this.constructor._subModelTypeAttribute in json ) ) {\n
+\t\t\t\tjson[ this.constructor._subModelTypeAttribute ] = this.constructor._subModelTypeValue;\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\t_.each( this._relations || [], function( rel ) {\n
+\t\t\t\tvar value = json[ rel.key ];\n
+\n
+\t\t\t\tif ( rel.options.includeInJSON === true) {\n
+\t\t\t\t\tif ( value && _.isFunction( value.toJSON ) ) {\n
+\t\t\t\t\t\tjson[ rel.keyDestination ] = value.toJSON( options );\n
+\t\t\t\t\t}\n
+\t\t\t\t\telse {\n
+\t\t\t\t\t\tjson[ rel.keyDestination ] = null;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t\telse if ( _.isString( rel.options.includeInJSON ) ) {\n
+\t\t\t\t\tif ( value instanceof Backbone.Collection ) {\n
+\t\t\t\t\t\tjson[ rel.keyDestination ] = value.pluck( rel.options.includeInJSON );\n
+\t\t\t\t\t}\n
+\t\t\t\t\telse if ( value instanceof Backbone.Model ) {\n
+\t\t\t\t\t\tjson[ rel.keyDestination ] = value.get( rel.options.includeInJSON );\n
+\t\t\t\t\t}\n
+\t\t\t\t\telse {\n
+\t\t\t\t\t\tjson[ rel.keyDestination ] = null;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t\telse if ( _.isArray( rel.options.includeInJSON ) ) {\n
+\t\t\t\t\tif ( value instanceof Backbone.Collection ) {\n
+\t\t\t\t\t\tvar valueSub = [];\n
+\t\t\t\t\t\tvalue.each( function( model ) {\n
+\t\t\t\t\t\t\tvar curJson = {};\n
+\t\t\t\t\t\t\t_.each( rel.options.includeInJSON, function( key ) {\n
+\t\t\t\t\t\t\t\tcurJson[ key ] = model.get( key );\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t\tvalueSub.push( curJson );\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t\tjson[ rel.keyDestination ] = valueSub;\n
+\t\t\t\t\t}\n
+\t\t\t\t\telse if ( value instanceof Backbone.Model ) {\n
+\t\t\t\t\t\tvar valueSub = {};\n
+\t\t\t\t\t\t_.each( rel.options.includeInJSON, function( key ) {\n
+\t\t\t\t\t\t\tvalueSub[ key ] = value.get( key );\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t\tjson[ rel.keyDestination ] = valueSub;\n
+\t\t\t\t\t}\n
+\t\t\t\t\telse {\n
+\t\t\t\t\t\tjson[ rel.keyDestination ] = null;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t\telse {\n
+\t\t\t\t\tdelete json[ rel.key ];\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif ( rel.keyDestination !== rel.key ) {\n
+\t\t\t\t\tdelete json[ rel.key ];\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t\t\n
+\t\t\tthis.release();\n
+\t\t\treturn json;\n
+\t\t}\n
+\t},\n
+\t{\n
+\t\tsetup: function( superModel ) {\n
+\t\t\t// We don\'t want to share a relations array with a parent, as this will cause problems with\n
+\t\t\t// reverse relations.\n
+\t\t\tthis.prototype.relations = ( this.prototype.relations || [] ).slice( 0 );\n
+\n
+\t\t\tthis._subModels = {};\n
+\t\t\tthis._superModel = null;\n
+\n
+\t\t\t// If this model has \'subModelTypes\' itself, remember them in the store\n
+\t\t\tif ( this.prototype.hasOwnProperty( \'subModelTypes\' ) ) {\n
+\t\t\t\tBackbone.Relational.store.addSubModels( this.prototype.subModelTypes, this );\n
+\t\t\t}\n
+\t\t\t// The \'subModelTypes\' property should not be inherited, so reset it.\n
+\t\t\telse {\n
+\t\t\t\tthis.prototype.subModelTypes = null;\n
+\t\t\t}\n
+\n
+\t\t\t// Initialize all reverseRelations that belong to this new model.\n
+\t\t\t_.each( this.prototype.relations || [], function( rel ) {\n
+\t\t\t\tif ( !rel.model ) {\n
+\t\t\t\t\trel.model = this;\n
+\t\t\t\t}\n
+\n
+\t\t\t\tif ( rel.reverseRelation && rel.model === this ) {\n
+\t\t\t\t\tvar preInitialize = true;\n
+\t\t\t\t\tif ( _.isString( rel.relatedModel ) ) {\n
+\t\t\t\t\t\t/**\n
+\t\t\t\t\t\t * The related model might not be defined for two reasons\n
+\t\t\t\t\t\t *  1. it never gets defined, e.g. a typo\n
+\t\t\t\t\t\t *  2. it is related to itself\n
+\t\t\t\t\t\t * In neither of these cases do we need to pre-initialize reverse relations.\n
+\t\t\t\t\t\t */\n
+\t\t\t\t\t\tvar relatedModel = Backbone.Relational.store.getObjectByName( rel.relatedModel );\n
+\t\t\t\t\t\tpreInitialize = relatedModel && ( relatedModel.prototype instanceof Backbone.RelationalModel );\n
+\t\t\t\t\t}\n
+\n
+\t\t\t\t\tvar type = !_.isString( rel.type ) ? rel.type : Backbone[ rel.type ] || Backbone.Relational.store.getObjectByName( rel.type );\n
+\t\t\t\t\tif ( preInitialize && type && type.prototype instanceof Backbone.Relation ) {\n
+\t\t\t\t\t\tnew type( null, rel );\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t}, this );\n
+\t\t\t\n
+\t\t\treturn this;\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Create a \'Backbone.Model\' instance based on \'attributes\'.\n
+\t\t * @param {Object} attributes\n
+\t\t * @param {Object} [options]\n
+\t\t * @return {Backbone.Model}\n
+\t\t */\n
+\t\tbuild: function( attributes, options ) {\n
+\t\t\tvar model = this;\n
+\n
+\t\t\t// \'build\' is a possible entrypoint; it\'s possible no model hierarchy has been determined yet.\n
+\t\t\tthis.initializeModelHierarchy();\n
+\n
+\t\t\t// Determine what type of (sub)model should be built if applicable.\n
+\t\t\t// Lookup the proper subModelType in \'this._subModels\'.\n
+\t\t\tif ( this._subModels && this.prototype.subModelTypeAttribute in attributes ) {\n
+\t\t\t\tvar subModelTypeAttribute = attributes[ this.prototype.subModelTypeAttribute ];\n
+\t\t\t\tvar subModelType = this._subModels[ subModelTypeAttribute ];\n
+\t\t\t\tif ( subModelType ) {\n
+\t\t\t\t\tmodel = subModelType;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\treturn new model( attributes, options );\n
+\t\t},\n
+\n
+\t\tinitializeModelHierarchy: function() {\n
+\t\t\t// If we\'re here for the first time, try to determine if this modelType has a \'superModel\'.\n
+\t\t\tif ( _.isUndefined( this._superModel ) || _.isNull( this._superModel ) ) {\n
+\t\t\t\tBackbone.Relational.store.setupSuperModel( this );\n
+\n
+\t\t\t\t// If a superModel has been found, copy relations from the _superModel if they haven\'t been\n
+\t\t\t\t// inherited automatically (due to a redefinition of \'relations\').\n
+\t\t\t\t// Otherwise, make sure we don\'t get here again for this type by making \'_superModel\' false so we fail\n
+\t\t\t\t// the isUndefined/isNull check next time.\n
+\t\t\t\tif ( this._superModel ) {\n
+\t\t\t\t\t//\n
+\t\t\t\t\tif ( this._superModel.prototype.relations ) {\n
+\t\t\t\t\t\tvar supermodelRelationsExist = _.any( this.prototype.relations || [], function( rel ) {\n
+\t\t\t\t\t\t\treturn rel.model && rel.model !== this;\n
+\t\t\t\t\t\t}, this );\n
+\n
+\t\t\t\t\t\tif ( !supermodelRelationsExist ) {\n
+\t\t\t\t\t\t\tthis.prototype.relations = this._superModel.prototype.relations.concat( this.prototype.relations );\n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t\telse {\n
+\t\t\t\t\tthis._superModel = false;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// If we came here through \'build\' for a model that has \'subModelTypes\', and not all of them have been resolved yet, try to resolve each.\n
+\t\t\tif ( this.prototype.subModelTypes && _.keys( this.prototype.subModelTypes ).length !== _.keys( this._subModels ).length ) {\n
+\t\t\t\t_.each( this.prototype.subModelTypes || [], function( subModelTypeName ) {\n
+\t\t\t\t\tvar subModelType = Backbone.Relational.store.getObjectByName( subModelTypeName );\n
+\t\t\t\t\tsubModelType && subModelType.initializeModelHierarchy();\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t},\n
+\n
+\t\t/**\n
+\t\t * Find an instance of `this` type in \'Backbone.Relational.store\'.\n
+\t\t * - If `attributes` is a string or a number, `findOrCreate` will just query the `store` and return a model if found.\n
+\t\t * - If `attributes` is an object and is found in the store, the model will be updated with `attributes` unless `options.update` is `false`. \n
+\t\t *   Otherwise, a new model is created with `attributes` (unless `options.create` is explicitly set to `false`).\n
+\t\t * @param {Object|String|Number} attributes Either a model\'s id, or the attributes used to create or update a model.\n
+\t\t * @param {Object} [options]\n
+\t\t * @param {Boolean} [options.create=true]\n
+\t\t * @param {Boolean} [options.update=true]\n
+\t\t * @return {Backbone.RelationalModel}\n
+\t\t */\n
+\t\tfindOrCreate: function( attributes, options ) {\n
+\t\t\toptions || ( options = {} );\n
+\t\t\tvar parsedAttributes = (_.isObject( attributes ) && this.prototype.parse) ? this.prototype.parse( attributes ) : attributes;\n
+\t\t\t// Try to find an instance of \'this\' model type in the store\n
+\t\t\tvar model = Backbone.Relational.store.find( this, parsedAttributes );\n
+\n
+\t\t\t// If we found an instance, update it with the data in \'item\' (unless \'options.update\' is false).\n
+\t\t\t// If not, create an instance (unless \'options.create\' is false).\n
+\t\t\tif ( _.isObject( attributes ) ) {\n
+\t\t\t\tif ( model && options.update !== false ) {\n
+\t\t\t\t\tmodel.set( parsedAttributes, options );\n
+\t\t\t\t}\n
+\t\t\t\telse if ( !model && options.create !== false ) {\n
+\t\t\t\t\tmodel = this.build( attributes, options );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\treturn model;\n
+\t\t}\n
+\t});\n
+\t_.extend( Backbone.RelationalModel.prototype, Backbone.Semaphore );\n
+\t\n
+\t/**\n
+\t * Override Backbone.Collection._prepareModel, so objects will be built using the correct type\n
+\t * if the collection.model has subModels.\n
+\t */\n
+\tBackbone.Collection.prototype.__prepareModel = Backbone.Collection.prototype._prepareModel;\n
+\tBackbone.Collection.prototype._prepareModel = function ( attrs, options ) {\n
+\t\tvar model;\n
+\t\t\n
+\t\tif ( attrs instanceof Backbone.Model ) {\n
+\t\t\tif ( !attrs.collection ) {\n
+\t\t\t\tattrs.collection = this;\n
+\t\t\t}\n
+\t\t\tmodel = attrs;\n
+\t\t}\n
+\t\telse {\n
+\t\t\toptions || (options = {});\n
+\t\t\toptions.collection = this;\n
+\t\t\t\n
+\t\t\tif ( typeof this.model.findOrCreate !== \'undefined\' ) {\n
+\t\t\t\tmodel = this.model.findOrCreate( attrs, options );\n
+\t\t\t}\n
+\t\t\telse {\n
+\t\t\t\tmodel = new this.model( attrs, options );\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tif ( !model._validate( attrs, options ) ) {\n
+\t\t\t\tmodel = false;\n
+\t\t\t}\n
+\t\t}\n
+\t\t\n
+\t\treturn model;\n
+\t};\n
+\n
+\t\n
+\t/**\n
+\t * Override Backbone.Collection.add, so objects fetched from the server multiple times will\n
+\t * update the existing Model. Also, trigger \'relational:add\'.\n
+\t */\n
+\tvar add = Backbone.Collection.prototype.__add = Backbone.Collection.prototype.add;\n
+\tBackbone.Collection.prototype.add = function( models, options ) {\n
+\t\toptions || (options = {});\n
+\t\tif ( !_.isArray( models ) ) {\n
+\t\t\tmodels = [ models ];\n
+\t\t}\n
+\n
+\t\tvar modelsToAdd = [];\n
+\n
+\t\t//console.debug( \'calling add on coll=%o; model=%o, options=%o\', this, models, options );\n
+\t\t_.each( models || [], function( model ) {\n
+\t\t\tif ( !( model instanceof Backbone.Model ) ) {\n
+\t\t\t\t// `_prepareModel` attempts to find `model` in Backbone.store through `findOrCreate`,\n
+\t\t\t\t// and sets the new properties on it if is found. Otherwise, a new model is instantiated.\n
+\t\t\t\tmodel = Backbone.Collection.prototype._prepareModel.call( this, model, options );\n
+\t\t\t}\n
+\n
+\t\t\tif ( model instanceof Backbone.Model && !this.get( model ) && !this.get( model.cid ) ) {\n
+\t\t\t\tmodelsToAdd.push( model );\n
+\t\t\t}\n
+\t\t}, this );\n
+\n
+\t\t// Add \'models\' in a single batch, so the original add will only be called once (and thus \'sort\', etc).\n
+\t\tif ( modelsToAdd.length ) {\n
+\t\t\tadd.call( this, modelsToAdd, options );\n
+\n
+\t\t\t_.each( modelsToAdd || [], function( model ) {\n
+\t\t\t\tthis.trigger( \'relational:add\', model, this, options );\n
+\t\t\t}, this );\n
+\t\t}\n
+\t\t\n
+\t\treturn this;\n
+\t};\n
+\t\n
+\t/**\n
+\t * Override \'Backbone.Collection.remove\' to trigger \'relational:remove\'.\n
+\t */\n
+\tvar remove = Backbone.Collection.prototype.__remove = Backbone.Collection.prototype.remove;\n
+\tBackbone.Collection.prototype.remove = function( models, options ) {\n
+\t\toptions || (options = {});\n
+\t\tif ( !_.isArray( models ) ) {\n
+\t\t\tmodels = [ models ];\n
+\t\t}\n
+\t\telse {\n
+\t\t\tmodels = models.slice( 0 );\n
+\t\t}\n
+\n
+\t\t//console.debug(\'calling remove on coll=%o; models=%o, options=%o\', this, models, options );\n
+\t\t_.each( models || [], function( model ) {\n
+\t\t\tmodel = this.get( model ) || this.get( model.cid );\n
+\n
+\t\t\tif ( model instanceof Backbone.Model ) {\n
+\t\t\t\tremove.call( this, model, options );\n
+\t\t\t\tthis.trigger(\'relational:remove\', model, this, options);\n
+\t\t\t}\n
+\t\t}, this );\n
+\t\t\n
+\t\treturn this;\n
+\t};\n
+\n
+\t/**\n
+\t * Override \'Backbone.Collection.reset\' to trigger \'relational:reset\'.\n
+\t */\n
+\tvar reset = Backbone.Collection.prototype.__reset = Backbone.Collection.prototype.reset;\n
+\tBackbone.Collection.prototype.reset = function( models, options ) {\n
+\t\treset.call( this, models, options );\n
+\t\tthis.trigger( \'relational:reset\', this, options );\n
+\n
+\t\treturn this;\n
+\t};\n
+\n
+\t/**\n
+\t * Override \'Backbone.Collection.sort\' to trigger \'relational:reset\'.\n
+\t */\n
+\tvar sort = Backbone.Collection.prototype.__sort = Backbone.Collection.prototype.sort;\n
+\tBackbone.Collection.prototype.sort = function( options ) {\n
+\t\tsort.call( this, options );\n
+\t\tthis.trigger( \'relational:reset\', this, options );\n
+\n
+\t\treturn this;\n
+\t};\n
+\t\n
+\t/**\n
+\t * Override \'Backbone.Collection.trigger\' so \'add\', \'remove\' and \'reset\' events are queued until relations\n
+\t * are ready.\n
+\t */\n
+\tvar trigger = Backbone.Collection.prototype.__trigger = Backbone.Collection.prototype.trigger;\n
+\tBackbone.Collection.prototype.trigger = function( eventName ) {\n
+\t\tif ( eventName === \'add\' || eventName === \'remove\' || eventName === \'reset\' ) {\n
+\t\t\tvar dit = this, args = arguments;\n
+\t\t\t\n
+\t\t\tif (eventName === \'add\') {\n
+\t\t\t\targs = _.toArray( args );\n
+\t\t\t\t// the fourth argument in case of a regular add is the option object.\n
+\t\t\t\t// we need to clone it, as it could be modified while we wait on the eventQueue to be unblocked\n
+\t\t\t\tif (_.isObject( args[3] ) ) {\n
+\t\t\t\t\targs[3] = _.clone( args[3] );\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tBackbone.Relational.eventQueue.add( function() {\n
+\t\t\t\ttrigger.apply( dit, args );\n
+\t\t\t});\n
+\t\t}\n
+\t\telse {\n
+\t\t\ttrigger.apply( this, arguments );\n
+\t\t}\n
+\t\t\n
+\t\treturn this;\n
+\t};\n
+\n
+\t// Override .extend() to automatically call .setup()\n
+\tBackbone.RelationalModel.extend = function( protoProps, classProps ) {\n
+\t\tvar child = Backbone.Model.extend.apply( this, arguments );\n
+\t\t\n
+\t\tchild.setup( this );\n
+\n
+\t\treturn child;\n
+\t};\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>56918</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>backbone-relational.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

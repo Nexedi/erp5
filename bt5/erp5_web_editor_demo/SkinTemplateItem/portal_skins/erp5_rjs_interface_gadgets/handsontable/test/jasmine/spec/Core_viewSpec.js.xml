@@ -1,0 +1,675 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272541.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_viewSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_view\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should focus cell after viewport is scrolled using down arrow\', function () {\n
+    this.$container[0].style.width = \'400px\';\n
+    this.$container[0].style.height = \'60px\';\n
+\n
+    handsontable({\n
+      startRows: 20\n
+    });\n
+    selectCell(0, 0);\n
+\n
+    expect(document.activeElement.nodeName).toBe(\'BODY\');\n
+\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+\n
+    expect(getSelected()).toEqual([4, 0, 4, 0]);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    expect(isEditorVisible()).toEqual(true);\n
+  });\n
+\n
+  it("should not render \'undefined\' class name", function() {\n
+    this.$container[0].style.width = \'501px\';\n
+    this.$container[0].style.height = \'100px\';\n
+    this.$container[0].style.overflow = \'hidden\';\n
+\n
+    var hot = handsontable({\n
+      startRows: 10,\n
+      startCols: 5,\n
+      colWidths: [47, 47, 47, 47, 47],\n
+      rowHeaders: true,\n
+      colHeaders: true,\n
+      stretchH: \'all\'\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    expect(this.$container.find(\'.undefined\').length).toBe(0);\n
+  });\n
+\n
+  xit(\'should scroll viewport when partially visible cell is clicked\', function () {\n
+    this.$container[0].style.width = \'400px\';\n
+    this.$container[0].style.height = \'60px\';\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(10, 3),\n
+      height: 60\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(this.$container.height()).toEqual(60);\n
+    expect(this.$container.find(\'.wtHolder .wtHider\').height()).toBeGreaterThan(60);\n
+\n
+    expect(htCore.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(htCore.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(htCore.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A3");\n
+\n
+    htCore.find(\'tr:eq(3) td:eq(0)\').simulate(\'mousedown\');\n
+    expect(htCore.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A2"); //test whether it scrolled\n
+    expect(htCore.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A3"); //test whether it scrolled\n
+    expect(htCore.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A4"); //test whether it scrolled\n
+    expect(getSelected()).toEqual([3, 0, 3, 0]); //test whether it is selected\n
+  });\n
+\n
+  xit(\'should scroll viewport, respecting fixed rows\', function () {\n
+    this.$container[0].style.width = \'200px\';\n
+    this.$container[0].style.height = \'100px\';\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(10, 9),\n
+      fixedRowsTop: 1\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(htCore.find(\'tr:eq(0) td:eq(1)\').html()).toEqual("B1");\n
+    expect(htCore.find(\'tr:eq(0) td:eq(2)\').html()).toEqual("C1");\n
+\n
+    selectCell(0, 0);\n
+\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+\n
+    expect(htCore.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(htCore.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A3");\n
+    expect(htCore.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A4");\n
+\n
+  });\n
+\n
+  xit(\'should enable to change fixedRowsTop with updateSettings\', function () {\n
+    this.$container[0].style.width = \'400px\';\n
+    this.$container[0].style.height = \'60px\';\n
+\n
+    var HOT = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(10, 9),\n
+      fixedRowsTop: 1,\n
+      width: 200,\n
+      height: 100\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var htCore = getHtCore();\n
+    var topClone = this.$container.find(\'.ht_clone_top\');\n
+\n
+    expect(topClone.find(\'tr\').length).toEqual(1);\n
+    expect(topClone.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+\n
+    expect(htCore.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(htCore.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(htCore.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A3");\n
+    expect(htCore.find(\'tr:eq(3) td:eq(0)\').html()).toEqual("A4");\n
+\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+\n
+    expect(topClone.find(\'tr\').length).toEqual(1);\n
+    expect(topClone.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+\n
+    expect(htCore.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(htCore.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A3");\n
+    expect(htCore.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A4");\n
+    expect(htCore.find(\'tr:eq(3) td:eq(0)\').html()).toEqual("A5");\n
+\n
+    selectCell(0, 0);\n
+\n
+    expect(htCore.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(htCore.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(htCore.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A3");\n
+    expect(htCore.find(\'tr:eq(3) td:eq(0)\').html()).toEqual("A4");\n
+\n
+    HOT.updateSettings({\n
+      fixedRowsTop: 2\n
+    });\n
+\n
+    expect(topClone.find(\'tr\').length).toEqual(2);\n
+    expect(topClone.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(topClone.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+\n
+    expect(htCore.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(htCore.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(htCore.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A3");\n
+    expect(htCore.find(\'tr:eq(3) td:eq(0)\').html()).toEqual("A4");\n
+\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+    keyDown(\'arrow_down\');\n
+\n
+    expect(htCore.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(htCore.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(htCore.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A4");\n
+    expect(htCore.find(\'tr:eq(3) td:eq(0)\').html()).toEqual("A5");\n
+\n
+  });\n
+\n
+  it(\'should scroll viewport, respecting fixed columns\', function () {\n
+    this.$container[0].style.width = \'200px\';\n
+    this.$container[0].style.height = \'100px\';\n
+\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(10, 9),\n
+      fixedColumnsLeft: 1\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+    var leftClone = this.$container.find(\'.ht_clone_left\');\n
+\n
+\n
+    expect(leftClone.find(\'tr:eq(0) td\').length).toEqual(1);\n
+    expect(leftClone.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(leftClone.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(leftClone.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A3");\n
+\n
+    expect(htCore.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(htCore.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(htCore.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A3");\n
+\n
+    selectCell(0, 3);\n
+\n
+    keyDown(\'arrow_right\');\n
+    keyDown(\'arrow_right\');\n
+    keyDown(\'arrow_right\');\n
+    keyDown(\'arrow_right\');\n
+\n
+    expect(leftClone.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(leftClone.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(leftClone.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A3");\n
+\n
+\n
+  });\n
+\n
+  it(\'should enable to change fixedColumnsLeft with updateSettings\', function () {\n
+    this.$container[0].style.width = \'200px\';\n
+    this.$container[0].style.height = \'100px\';\n
+\n
+    var HOT = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(10, 9),\n
+      fixedColumnsLeft: 1\n
+    });\n
+\n
+\n
+    selectCell(0, 0);\n
+\n
+    var leftClone = this.$container.find(\'.ht_clone_left\');\n
+\n
+    expect(leftClone.find(\'tr:eq(0) td\').length).toEqual(1);\n
+    expect(leftClone.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(leftClone.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(leftClone.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A3");\n
+\n
+    keyDown(\'arrow_right\');\n
+    keyDown(\'arrow_right\');\n
+    keyDown(\'arrow_right\');\n
+    keyDown(\'arrow_right\');\n
+\n
+    expect(leftClone.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(leftClone.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(leftClone.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A3");\n
+\n
+    selectCell(0, 0);\n
+\n
+    HOT.updateSettings({\n
+      fixedColumnsLeft: 2\n
+    });\n
+\n
+    expect(leftClone.find(\'tr:eq(0) td\').length).toEqual(2);\n
+    expect(leftClone.find(\'tr:eq(0) td:eq(0)\').html()).toEqual("A1");\n
+    expect(leftClone.find(\'tr:eq(0) td:eq(1)\').html()).toEqual("B1");\n
+    expect(leftClone.find(\'tr:eq(1) td:eq(0)\').html()).toEqual("A2");\n
+    expect(leftClone.find(\'tr:eq(1) td:eq(1)\').html()).toEqual("B2");\n
+    expect(leftClone.find(\'tr:eq(2) td:eq(0)\').html()).toEqual("A3");\n
+    expect(leftClone.find(\'tr:eq(2) td:eq(1)\').html()).toEqual("B3");\n
+\n
+\n
+\n
+  });\n
+\n
+  it(\'should not scroll viewport when last cell is clicked\', function () {\n
+    handsontable({\n
+      startRows: 40\n
+    });\n
+\n
+    var lastScroll;\n
+\n
+    $(window).scrollTop(10000);\n
+    lastScroll = $(window).scrollTop();\n
+    render(); //renders synchronously so we don\'t have to put stuff in waits/runs\n
+    selectCell(39, 0);\n
+\n
+    expect($(window).scrollTop()).toEqual(lastScroll);\n
+\n
+    keyDown(\'arrow_right\');\n
+\n
+    expect(getSelected()).toEqual([39, 1, 39, 1]);\n
+    expect($(window).scrollTop()).toEqual(lastScroll);\n
+  });\n
+\n
+  it(\'should not shrink table when width and height is not specified for container\', function () {\n
+\n
+    var initHeight;\n
+\n
+    runs(function () {\n
+      this.$container[0].style.overflow = \'hidden\';\n
+      this.$container.wrap(\'<div style="width: 50px;"></div>\');\n
+      handsontable({\n
+        startRows: 10,\n
+        startCols: 10\n
+      });\n
+    });\n
+\n
+    waits(250);\n
+\n
+    runs(function () {\n
+      initHeight = this.$container.height();\n
+    });\n
+\n
+    waits(250);\n
+\n
+    runs(function () {\n
+      expect(this.$container.height()).toEqual(initHeight);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should allow height to be a number\', function () {\n
+    handsontable({\n
+      startRows: 10,\n
+      startCols: 10,\n
+      height: 107\n
+    });\n
+\n
+    expect(this.$container.height()).toEqual(107);\n
+  });\n
+\n
+  it(\'should allow height to be a function\', function () {\n
+    handsontable({\n
+      startRows: 10,\n
+      startCols: 10,\n
+      height: function () {\n
+        return 107;\n
+      }\n
+    });\n
+\n
+    expect(this.$container.height()).toEqual(107);\n
+  });\n
+\n
+  it(\'should allow width to be a number\', function () {\n
+    handsontable({\n
+      startRows: 10,\n
+      startCols: 10,\n
+      width: 107\n
+    });\n
+\n
+    expect(this.$container.width()).toEqual(107); //rootElement is full width but this should do the trick\n
+  });\n
+\n
+  it(\'should allow width to be a function\', function () {\n
+    handsontable({\n
+      startRows: 10,\n
+      startCols: 10,\n
+      width: function () {\n
+        return 107;\n
+      }\n
+    });\n
+\n
+    expect(this.$container.width()).toEqual(107); //rootElement is full width but this should do the trick\n
+  });\n
+\n
+  it("should fire beforeRender event after table has been scrolled", function () {\n
+    this.$container[0].style.width = \'400px\';\n
+    this.$container[0].style.height = \'60px\';\n
+    this.$container[0].style.overflow = \'hidden\';\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(100, 3)\n
+    });\n
+\n
+    var beforeRenderCallback = jasmine.createSpy(\'beforeRenderCallback\');\n
+\n
+    hot.addHook(\'beforeRender\', beforeRenderCallback);\n
+\n
+    this.$container.find(".ht_master .wtHolder").scrollTop(1000);\n
+\n
+    waitsFor(function(){\n
+      return beforeRenderCallback.calls.length > 0;\n
+    }, \'beforeRender event to fire\', 1000);\n
+\n
+  });\n
+\n
+  it("should fire afterRender event after table has been scrolled", function () {\n
+    this.$container[0].style.width = \'400px\';\n
+    this.$container[0].style.height = \'60px\';\n
+    this.$container[0].style.overflow = \'hidden\';\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(20, 3)\n
+    });\n
+\n
+    var afterRenderCallback = jasmine.createSpy(\'afterRenderCallback\');\n
+\n
+    hot.addHook(\'afterRender\', afterRenderCallback);\n
+\n
+    this.$container.find(".ht_master .wtHolder").first().scrollTop(1000);\n
+\n
+    waitsFor(function(){\n
+      return afterRenderCallback.calls.length > 0;\n
+    }, \'afterRender event to fire\', 1000);\n
+\n
+  });\n
+\n
+  //TODO fix these tests - https://github.com/handsontable/handsontable/issues/1559\n
+  describe(\'maximumVisibleElementWidth\', function () {\n
+    it(\'should return maximum width until right edge of the viewport\', function () {\n
+      var hot = handsontable({\n
+        startRows: 2,\n
+        startCols: 10,\n
+        width: 100,\n
+        height: 100\n
+      });\n
+\n
+      expect(hot.view.maximumVisibleElementWidth(0)).toEqual(100);\n
+    });\n
+\n
+    it(\'should return maximum width until right edge of the viewport (excluding the scrollbar)\', function () {\n
+      var hot = handsontable({\n
+        startRows: 10,\n
+        startCols: 10,\n
+        width: 100,\n
+        height: 100\n
+      });\n
+\n
+      expect(hot.view.maximumVisibleElementWidth(200)).toBeLessThan(100);\n
+    });\n
+  });\n
+\n
+  describe(\'maximumVisibleElementHeight\', function () {\n
+    it(\'should return maximum height until bottom edge of the viewport\', function () {\n
+      var hot = handsontable({\n
+        startRows: 10,\n
+        startCols: 2,\n
+        width: 120,\n
+        height: 100\n
+      });\n
+\n
+      expect(hot.view.maximumVisibleElementHeight(0)).toEqual(100);\n
+    });\n
+\n
+    it(\'should return maximum height until bottom edge of the viewport (excluding the scrollbar)\', function () {\n
+      var hot = handsontable({\n
+        startRows: 10,\n
+        startCols: 10,\n
+        width: 120,\n
+        height: 100\n
+      });\n
+\n
+      expect(hot.view.maximumVisibleElementHeight()).toBeLessThan(100);\n
+    });\n
+  });\n
+\n
+  describe(\'fixed column row heights\', function () {\n
+    it(\'should be the same as the row heights in the main table\', function () {\n
+        var hot = handsontable({\n
+          data: [["A","B","C","D"],["a","b","c\\nc","d"],["aa","bb","cc","dd"]],\n
+          startRows: 3,\n
+          startCols: 4,\n
+          fixedColumnsLeft: 2\n
+        });\n
+\n
+        expect(hot.getCell(1,2).clientHeight).toEqual(hot.getCell(1,1).clientHeight);\n
+\n
+        hot.setDataAtCell(1,2,"c");\n
+\n
+        expect(hot.getCell(1,2).clientHeight).toEqual(hot.getCell(1,1).clientHeight);\n
+    });\n
+\n
+    it(\'should be the same as the row heights in the main table (after scroll)\', function () {\n
+      var myData = Handsontable.helper.createSpreadsheetData(20, 4);\n
+      myData[1][3] = "very\\nlong\\ntext";\n
+      myData[5][3] = "very\\nlong\\ntext";\n
+      myData[10][3] = "very\\nlong\\ntext";\n
+      myData[15][3] = "very\\nlong\\ntext";\n
+\n
+      var hot = handsontable({\n
+        data: myData,\n
+        startRows: 3,\n
+        startCols: 4,\n
+        fixedRowsTop: 2,\n
+        fixedColumnsLeft: 2,\n
+        width: 200,\n
+        height: 200\n
+      });\n
+\n
+      var mainHolder = hot.view.wt.wtTable.holder;\n
+\n
+      $(mainHolder).scrollTop(200);\n
+      hot.render();\n
+\n
+      var masterTD = this.$container.find(\'.ht_master tbody tr:eq(5) td:eq(1)\')[0];\n
+      var cloneTD = this.$container.find(\'.ht_clone_left tbody tr:eq(5) td:eq(1)\')[0];\n
+\n
+      expect(cloneTD.clientHeight).toEqual(masterTD.clientHeight);\n
+    });\n
+\n
+    it(\'should be the same as the row heights in the main table (after scroll, in corner)\', function () {\n
+      var myData = Handsontable.helper.createSpreadsheetData(20, 4);\n
+      myData[1][3] = "very\\nlong\\ntext";\n
+      myData[5][3] = "very\\nlong\\ntext";\n
+      myData[10][3] = "very\\nlong\\ntext";\n
+      myData[15][3] = "very\\nlong\\ntext";\n
+\n
+      var hot = handsontable({\n
+        data: myData,\n
+        startRows: 3,\n
+        startCols: 4,\n
+        fixedRowsTop: 2,\n
+        fixedColumnsLeft: 2,\n
+        width: 200,\n
+        height: 200\n
+      });\n
+\n
+      var rowHeight = hot.getCell(1,3).clientHeight;\n
+      var mainHolder = hot.view.wt.wtTable.holder;\n
+\n
+      expect(this.$container.find(\'.ht_clone_corner tbody tr:eq(1) td:eq(1)\')[0].clientHeight).toEqual(rowHeight);\n
+\n
+      $(mainHolder).scrollTop(200);\n
+      hot.render();\n
+\n
+      expect(this.$container.find(\'.ht_clone_corner tbody tr:eq(1) td:eq(1)\')[0].clientHeight).toEqual(rowHeight);\n
+    });\n
+\n
+  });\n
+\n
+  describe(\'fixed column widths\', function () {\n
+    it("should set the columns width correctly after changes made during updateSettings", function () {\n
+      var hot = handsontable({\n
+        startRows: 2,\n
+        fixedColumnsLeft: 2,\n
+        columns: [{\n
+          width: 50\n
+        }, {\n
+          width: 80\n
+        }, {\n
+          width: 110\n
+        }, {\n
+          width: 140\n
+        }, {\n
+          width: 30\n
+        }, {\n
+          width: 30\n
+        }, {\n
+          width: 30\n
+        }]\n
+      });\n
+\n
+      var leftClone = this.$container.find(\'.ht_clone_left\');\n
+\n
+      expect(Handsontable.Dom.outerWidth(leftClone.find("tbody tr:nth-child(1) td:nth-child(2)")[0])).toEqual(80);\n
+\n
+      hot.updateSettings({\n
+        manualColumnMove: [2, 0, 1],\n
+        fixedColumnsLeft: 1\n
+      });\n
+\n
+      expect(leftClone.find("tbody tr:nth-child(1) td:nth-child(2)")[0]).toBe(undefined);\n
+\n
+      hot.updateSettings({\n
+        manualColumnMove: false,\n
+        fixedColumnsLeft: 2\n
+      });\n
+\n
+      expect(Handsontable.Dom.outerWidth(leftClone.find("tbody tr:nth-child(1) td:nth-child(2)")[0])).toEqual(80);\n
+\n
+    });\n
+  });\n
+\n
+  describe(\'stretchH\', function () {\n
+\n
+    it("should stretch all visible columns with the ratio appropriate to the container\'s width", function() {\n
+\n
+      this.$container[0].style.width = \'300px\';\n
+\n
+      var hot = handsontable({\n
+        startRows: 5,\n
+        startCols: 5,\n
+        rowHeaders: true,\n
+        colHeaders: true,\n
+        stretchH: \'all\'\n
+      }),\n
+      rowHeaderWidth = hot.view.wt.wtViewport.getRowHeaderWidth(),\n
+      expectedCellWidth = (parseInt(this.$container[0].style.width,10) - rowHeaderWidth) / 5;\n
+\n
+      expect(getCell(0,0).offsetWidth).toEqual(expectedCellWidth);\n
+      expect(getCell(0,1).offsetWidth).toEqual(expectedCellWidth);\n
+      expect(getCell(0,2).offsetWidth).toEqual(expectedCellWidth);\n
+      expect(getCell(0,3).offsetWidth).toEqual(expectedCellWidth);\n
+      expect(getCell(0,4).offsetWidth).toEqual(expectedCellWidth);\n
+\n
+\n
+      this.$container[0].style.width = \'\';\n
+      this.$container.wrap(\'<div class="temp_wrapper" style="width:400px;"></div>\');\n
+      hot.render();\n
+\n
+      expectedCellWidth = (parseInt($(\'.temp_wrapper\')[0].style.width,10) - rowHeaderWidth) / 5;\n
+\n
+      expect(getCell(0,0).offsetWidth).toEqual(expectedCellWidth);\n
+      expect(getCell(0,1).offsetWidth).toEqual(expectedCellWidth);\n
+      expect(getCell(0,2).offsetWidth).toEqual(expectedCellWidth);\n
+      expect(getCell(0,3).offsetWidth).toEqual(expectedCellWidth);\n
+      expect(getCell(0,4).offsetWidth).toEqual(expectedCellWidth);\n
+\n
+      this.$container.unwrap();\n
+    });\n
+\n
+    it("should stretch all visible columns with overflow hidden", function() {\n
+      this.$container[0].style.width = \'501px\';\n
+      this.$container[0].style.height = \'100px\';\n
+      this.$container[0].style.overflow = \'hidden\';\n
+\n
+      var hot = handsontable({\n
+        startRows: 10,\n
+        startCols: 5,\n
+        colWidths: [47, 47, 47, 47, 47],\n
+        rowHeaders: true,\n
+        colHeaders: true,\n
+        stretchH: \'all\'\n
+      });\n
+\n
+      var masterTH = this.$container[0].querySelectorAll(".ht_master thead tr th");\n
+      var overlayTH = this.$container[0].querySelectorAll(".ht_clone_top thead tr th");\n
+\n
+\n
+      expect(masterTH[0].offsetWidth).toEqual(50);\n
+      expect(overlayTH[0].offsetWidth).toEqual(50);\n
+\n
+\n
+      expect(masterTH[1].offsetWidth).toBeInArray([86, 87, 88]);\n
+      expect(overlayTH[1].offsetWidth).toBeInArray([86, 87, 88]); //if you get 90, it means it is calculated before scrollbars were applied\n
+\n
+      expect(masterTH[2].offsetWidth).toEqual(overlayTH[2].offsetWidth);\n
+      expect(masterTH[3].offsetWidth).toEqual(overlayTH[3].offsetWidth);\n
+      expect(masterTH[4].offsetWidth).toEqual(overlayTH[4].offsetWidth);\n
+      expect(masterTH[5].offsetWidth).toEqual(overlayTH[5].offsetWidth);\n
+    });\n
+\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>19551</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_viewSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

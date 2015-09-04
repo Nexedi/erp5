@@ -1,0 +1,404 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272659.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>multipleSelectionHandles.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {getWindowScrollTop, hasClass, getWindowScrollLeft} from \'./../../helpers/dom/element\';\n
+import BasePlugin from \'./../_base\';\n
+import {EventManager} from \'./../../eventManager\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+/**\n
+ * @private\n
+ * @class MultipleSelectionHandles\n
+ * @plugin MultipleSelectionHandles\n
+ */\n
+\n
+class MultipleSelectionHandles extends BasePlugin {\n
+  /**\n
+   * @param {Object} hotInstance\n
+   */\n
+  constructor(hotInstance) {\n
+    super(hotInstance);\n
+    /**\n
+     * @type {Array}\n
+     */\n
+    this.dragged = [];\n
+    /**\n
+     * Instance of EventManager.\n
+     *\n
+     * @type {EventManager}\n
+     */\n
+    this.eventManager = null;\n
+    /**\n
+     * @type {null}\n
+     */\n
+    this.lastSetCell = null;\n
+  }\n
+\n
+  /**\n
+   * Check if the plugin is enabled in the handsontable settings.\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isEnabled() {\n
+    return Handsontable.mobileBrowser;\n
+  }\n
+\n
+  /**\n
+   * Enable plugin for this Handsontable instance.\n
+   */\n
+  enablePlugin() {\n
+    if (this.enabled) {\n
+      return;\n
+    }\n
+    if (!this.eventManager) {\n
+      this.eventManager = new EventManager(this);\n
+    }\n
+    this.registerListeners();\n
+    super.enablePlugin();\n
+  }\n
+\n
+  /**\n
+   * Bind the touch events\n
+   * @private\n
+   */\n
+  registerListeners() {\n
+    var _this = this;\n
+\n
+    function removeFromDragged(query) {\n
+\n
+      if (_this.dragged.length === 1) {\n
+        // clear array\n
+        _this.dragged.splice(0, _this.dragged.length);\n
+\n
+        return true;\n
+      }\n
+\n
+      var entryPosition = _this.dragged.indexOf(query);\n
+\n
+      if (entryPosition == -1) {\n
+        return false;\n
+      } else if (entryPosition === 0) {\n
+        _this.dragged = _this.dragged.slice(0, 1);\n
+      } else if (entryPosition == 1) {\n
+        _this.dragged = _this.dragged.slice(-1);\n
+      }\n
+    }\n
+\n
+    this.eventManager.addEventListener(this.hot.rootElement, \'touchstart\', function(event) {\n
+      let selectedRange;\n
+\n
+      if (hasClass(event.target, "topLeftSelectionHandle-HitArea")) {\n
+        selectedRange = _this.hot.getSelectedRange();\n
+\n
+        _this.dragged.push("topLeft");\n
+\n
+        _this.touchStartRange = {\n
+          width: selectedRange.getWidth(),\n
+          height: selectedRange.getHeight(),\n
+          direction: selectedRange.getDirection()\n
+        };\n
+\n
+        event.preventDefault();\n
+        return false;\n
+\n
+      } else if (hasClass(event.target, "bottomRightSelectionHandle-HitArea")) {\n
+        selectedRange = _this.hot.getSelectedRange();\n
+\n
+        _this.dragged.push("bottomRight");\n
+\n
+        _this.touchStartRange = {\n
+          width: selectedRange.getWidth(),\n
+          height: selectedRange.getHeight(),\n
+          direction: selectedRange.getDirection()\n
+        };\n
+\n
+        event.preventDefault();\n
+        return false;\n
+      }\n
+    });\n
+\n
+    this.eventManager.addEventListener(this.hot.rootElement, \'touchend\', function(event) {\n
+      if (hasClass(event.target, "topLeftSelectionHandle-HitArea")) {\n
+        removeFromDragged.call(_this, "topLeft");\n
+\n
+        _this.touchStartRange = void 0;\n
+\n
+        event.preventDefault();\n
+        return false;\n
+\n
+      } else if (hasClass(event.target, "bottomRightSelectionHandle-HitArea")) {\n
+        removeFromDragged.call(_this, "bottomRight");\n
+\n
+        _this.touchStartRange = void 0;\n
+\n
+        event.preventDefault();\n
+        return false;\n
+      }\n
+    });\n
+\n
+    this.eventManager.addEventListener(this.hot.rootElement, \'touchmove\', function(event) {\n
+      let scrollTop = getWindowScrollTop(),\n
+        scrollLeft = getWindowScrollLeft(),\n
+        endTarget,\n
+        targetCoords,\n
+        selectedRange,\n
+        rangeWidth,\n
+        rangeHeight,\n
+        rangeDirection,\n
+        newRangeCoords;\n
+\n
+      if (_this.dragged.length === 0) {\n
+        return;\n
+      }\n
+\n
+      endTarget = document.elementFromPoint(\n
+        event.touches[0].screenX - scrollLeft,\n
+        event.touches[0].screenY - scrollTop);\n
+\n
+      if (!endTarget || endTarget === _this.lastSetCell) {\n
+        return;\n
+      }\n
+\n
+      if (endTarget.nodeName == "TD" || endTarget.nodeName == "TH") {\n
+        targetCoords = _this.hot.getCoords(endTarget);\n
+\n
+        if (targetCoords.col == -1) {\n
+          targetCoords.col = 0;\n
+        }\n
+\n
+        selectedRange = _this.hot.getSelectedRange();\n
+        rangeWidth = selectedRange.getWidth();\n
+        rangeHeight = selectedRange.getHeight();\n
+        rangeDirection = selectedRange.getDirection();\n
+\n
+        if (rangeWidth == 1 && rangeHeight == 1) {\n
+          _this.hot.selection.setRangeEnd(targetCoords);\n
+        }\n
+\n
+        newRangeCoords = _this.getCurrentRangeCoords(selectedRange, targetCoords, _this.touchStartRange.direction, rangeDirection, _this.dragged[0]);\n
+\n
+        if (newRangeCoords.start !== null) {\n
+          _this.hot.selection.setRangeStart(newRangeCoords.start);\n
+        }\n
+\n
+        _this.hot.selection.setRangeEnd(newRangeCoords.end);\n
+\n
+        _this.lastSetCell = endTarget;\n
+\n
+      }\n
+\n
+      event.preventDefault();\n
+    });\n
+  }\n
+\n
+  getCurrentRangeCoords(selectedRange, currentTouch, touchStartDirection, currentDirection, draggedHandle) {\n
+    var topLeftCorner = selectedRange.getTopLeftCorner(),\n
+      bottomRightCorner = selectedRange.getBottomRightCorner(),\n
+      bottomLeftCorner = selectedRange.getBottomLeftCorner(),\n
+      topRightCorner = selectedRange.getTopRightCorner();\n
+\n
+    var newCoords = {\n
+      start: null,\n
+      end: null\n
+    };\n
+\n
+    switch (touchStartDirection) {\n
+      case "NE-SW":\n
+        switch (currentDirection) {\n
+          case "NE-SW":\n
+          case "NW-SE":\n
+            if (draggedHandle == "topLeft") {\n
+              newCoords = {\n
+                start: new WalkontableCellCoords(currentTouch.row, selectedRange.highlight.col),\n
+                end: new WalkontableCellCoords(bottomLeftCorner.row, currentTouch.col)\n
+              };\n
+            } else {\n
+              newCoords = {\n
+                start: new WalkontableCellCoords(selectedRange.highlight.row, currentTouch.col),\n
+                end: new WalkontableCellCoords(currentTouch.row, topLeftCorner.col)\n
+              };\n
+            }\n
+            break;\n
+          case "SE-NW":\n
+            if (draggedHandle == "bottomRight") {\n
+              newCoords = {\n
+                start: new WalkontableCellCoords(bottomRightCorner.row, currentTouch.col),\n
+                end: new WalkontableCellCoords(currentTouch.row, topLeftCorner.col)\n
+              };\n
+            }\n
+            break;\n
+          //case "SW-NE":\n
+          //  break;\n
+        }\n
+        break;\n
+      case "NW-SE":\n
+        switch (currentDirection) {\n
+          case "NE-SW":\n
+            if (draggedHandle == "topLeft") {\n
+              newCoords = {\n
+                start: currentTouch,\n
+                end: bottomLeftCorner\n
+              };\n
+            } else {\n
+              newCoords.end = currentTouch;\n
+            }\n
+            break;\n
+          case "NW-SE":\n
+            if (draggedHandle == "topLeft") {\n
+              newCoords = {\n
+                start: currentTouch,\n
+                end: bottomRightCorner\n
+              };\n
+            } else {\n
+              newCoords.end = currentTouch;\n
+            }\n
+            break;\n
+          case "SE-NW":\n
+            if (draggedHandle == "topLeft") {\n
+              newCoords = {\n
+                start: currentTouch,\n
+                end: topLeftCorner\n
+              };\n
+            } else {\n
+              newCoords.end = currentTouch;\n
+            }\n
+            break;\n
+          case "SW-NE":\n
+            if (draggedHandle == "topLeft") {\n
+              newCoords = {\n
+                start: currentTouch,\n
+                end: topRightCorner\n
+              };\n
+            } else {\n
+              newCoords.end = currentTouch;\n
+            }\n
+            break;\n
+        }\n
+        break;\n
+      case "SW-NE":\n
+        switch (currentDirection) {\n
+          case "NW-SE":\n
+            if (draggedHandle == "bottomRight") {\n
+              newCoords = {\n
+                start: new WalkontableCellCoords(currentTouch.row, topLeftCorner.col),\n
+                end: new WalkontableCellCoords(bottomLeftCorner.row, currentTouch.col)\n
+              };\n
+            } else {\n
+              newCoords = {\n
+                start: new WalkontableCellCoords(topLeftCorner.row, currentTouch.col),\n
+                end: new WalkontableCellCoords(currentTouch.row, bottomRightCorner.col)\n
+              };\n
+            }\n
+            break;\n
+          //case "NE-SW":\n
+          //\n
+          //  break;\n
+          case "SW-NE":\n
+            if (draggedHandle == "topLeft") {\n
+              newCoords = {\n
+                start: new WalkontableCellCoords(selectedRange.highlight.row, currentTouch.col),\n
+                end: new WalkontableCellCoords(currentTouch.row, bottomRightCorner.col)\n
+              };\n
+            } else {\n
+              newCoords = {\n
+                start: new WalkontableCellCoords(currentTouch.row, topLeftCorner.col),\n
+                end: new WalkontableCellCoords(topLeftCorner.row, currentTouch.col)\n
+              };\n
+            }\n
+            break;\n
+          case "SE-NW":\n
+            if (draggedHandle == "bottomRight") {\n
+              newCoords = {\n
+                start: new WalkontableCellCoords(currentTouch.row, topRightCorner.col),\n
+                end: new WalkontableCellCoords(topLeftCorner.row, currentTouch.col)\n
+              };\n
+            } else if (draggedHandle == "topLeft") {\n
+              newCoords = {\n
+                start: bottomLeftCorner,\n
+                end: currentTouch\n
+              };\n
+            }\n
+            break;\n
+        }\n
+        break;\n
+      case "SE-NW":\n
+        switch (currentDirection) {\n
+          case "NW-SE":\n
+          case "NE-SW":\n
+          case "SW-NE":\n
+            if (draggedHandle == "topLeft") {\n
+              newCoords.end = currentTouch;\n
+            }\n
+            break;\n
+          case "SE-NW":\n
+            if (draggedHandle == "topLeft") {\n
+              newCoords.end = currentTouch;\n
+            } else {\n
+              newCoords = {\n
+                start: currentTouch,\n
+                end: topLeftCorner\n
+              };\n
+            }\n
+            break;\n
+        }\n
+        break;\n
+    }\n
+\n
+    return newCoords;\n
+  }\n
+\n
+  /**\n
+   * Check if user is currently dragging the handle.\n
+   *\n
+   * @returns {boolean} Dragging state\n
+   */\n
+  isDragged() {\n
+    return this.dragged.length > 0;\n
+  }\n
+}\n
+\n
+export {MultipleSelectionHandles};\n
+\n
+registerPlugin(\'multipleSelectionHandles\', MultipleSelectionHandles);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10235</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>multipleSelectionHandles.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

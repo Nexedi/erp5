@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272529.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>autocompleteRendererSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'AutocompleteRenderer\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should contain down arrow glyph\', function () {\n
+\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      type: \'autocomplete\',\n
+      afterValidate: onAfterValidate\n
+    });\n
+    setDataAtCell(2, 2, \'string\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation\', 1000);\n
+\n
+    runs(function () {\n
+      var html = getCell(2, 2).innerHTML;\n
+      expect(html).toContain(\'string\');\n
+      expect(html).toContain(\'\\u25BC\');\n
+    });\n
+\n
+  });\n
+\n
+  it("should open cell editor after clicking on arrow glyph", function () {\n
+\n
+    var hot = handsontable({\n
+      type: \'autocomplete\'\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+\n
+    expect(hot.getActiveEditor().isOpened()).toBe(false);\n
+\n
+    $(getCell(0, 0)).find(\'.htAutocompleteArrow\').simulate(\'mousedown\');\n
+\n
+    expect(hot.getActiveEditor().isOpened()).toBe(true);\n
+\n
+  });\n
+\n
+  it("should open cell editor after clicking on arrow glyph, after the table has been destroyed and reinitialized (#1367)", function () {\n
+    var hot = handsontable({\n
+      type: \'autocomplete\'\n
+    });\n
+\n
+    destroy();\n
+\n
+    hot = handsontable({\n
+      type: \'autocomplete\'\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+\n
+    expect(hot.getActiveEditor().isOpened()).toBe(false);\n
+\n
+    $(getCell(0, 0)).find(\'.htAutocompleteArrow\').simulate(\'mousedown\');\n
+\n
+    expect(hot.getActiveEditor().isOpened()).toBe(true);\n
+  });\n
+\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1685</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>autocompleteRendererSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

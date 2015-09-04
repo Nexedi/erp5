@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272612.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>viewportRows.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+const privatePool = new WeakMap();\n
+\n
+/**\n
+ * Calculates indexes of rows to render OR rows that are visible.\n
+ * To redo the calculation, you need to create a new calculator.\n
+ *\n
+ * @class WalkontableViewportRowsCalculator\n
+ */\n
+class WalkontableViewportRowsCalculator {\n
+  /**\n
+   * Default row height\n
+   *\n
+   * @type {Number}\n
+   */\n
+  static get DEFAULT_HEIGHT() {\n
+    return 23;\n
+  }\n
+\n
+  /**\n
+   * @param {Number} viewportHeight Height of the viewport\n
+   * @param {Number} scrollOffset Current vertical scroll position of the viewport\n
+   * @param {Number} totalRows Total number of rows\n
+   * @param {Function} rowHeightFn Function that returns the height of the row at a given index (in px)\n
+   * @param {Function} overrideFn Function that changes calculated this.startRow, this.endRow (used by MergeCells plugin)\n
+   * @param {Boolean} onlyFullyVisible if `true`, only startRow and endRow will be indexes of rows that are fully in viewport\n
+   */\n
+  constructor(viewportHeight, scrollOffset, totalRows, rowHeightFn, overrideFn, onlyFullyVisible) {\n
+    privatePool.set(this, {\n
+      viewportHeight,\n
+      scrollOffset,\n
+      totalRows,\n
+      rowHeightFn,\n
+      overrideFn,\n
+      onlyFullyVisible\n
+    });\n
+\n
+    /**\n
+     * Number of rendered/visible rows\n
+     *\n
+     * @type {Number}\n
+     */\n
+    this.count = 0;\n
+\n
+    /**\n
+     * Index of the first rendered/visible row (can be overwritten using overrideFn)\n
+     *\n
+     * @type {Number|null}\n
+     */\n
+    this.startRow = null;\n
+\n
+    /**\n
+     * Index of the last rendered/visible row (can be overwritten using overrideFn)\n
+     *\n
+     * @type {null}\n
+     */\n
+    this.endRow = null;\n
+\n
+    /**\n
+     * Position of the first rendered/visible row (in px)\n
+     *\n
+     * @type {Number|null}\n
+     */\n
+    this.startPosition = null;\n
+\n
+    this.calculate();\n
+  }\n
+\n
+  /**\n
+   * Calculates viewport\n
+   */\n
+  calculate() {\n
+    let sum = 0;\n
+    let needReverse = true;\n
+    let startPositions = [];\n
+\n
+    let priv = privatePool.get(this);\n
+    let onlyFullyVisible = priv.onlyFullyVisible;\n
+    let overrideFn = priv.overrideFn;\n
+    let rowHeightFn = priv.rowHeightFn;\n
+    let scrollOffset = priv.scrollOffset;\n
+    let totalRows = priv.totalRows;\n
+    let viewportHeight = priv.viewportHeight;\n
+\n
+    // Calculate the number (start and end index) of rows needed\n
+    for (let i = 0; i < totalRows; i++) {\n
+      let rowHeight = rowHeightFn(i);\n
+\n
+      if (rowHeight === undefined) {\n
+        rowHeight = WalkontableViewportRowsCalculator.DEFAULT_HEIGHT;\n
+      }\n
+      if (sum <= scrollOffset && !onlyFullyVisible) {\n
+        this.startRow = i;\n
+      }\n
+\n
+      // the row is within the "visible range"\n
+      if (sum >= scrollOffset && sum + rowHeight <= scrollOffset + viewportHeight) {\n
+        if (this.startRow === null) {\n
+          this.startRow = i;\n
+        }\n
+        this.endRow = i;\n
+      }\n
+      startPositions.push(sum);\n
+      sum += rowHeight;\n
+\n
+      if (!onlyFullyVisible) {\n
+        this.endRow = i;\n
+      }\n
+      if (sum >= scrollOffset + viewportHeight) {\n
+        needReverse = false;\n
+        break;\n
+      }\n
+    }\n
+\n
+    //If the estimation has reached the last row and there is still some space available in the viewport,\n
+    //we need to render in reverse in order to fill the whole viewport with rows\n
+    if (this.endRow === totalRows - 1 && needReverse) {\n
+      this.startRow = this.endRow;\n
+\n
+      while (this.startRow > 0) {\n
+        // rowHeight is the height of the last row\n
+        let viewportSum = startPositions[this.endRow] + rowHeight - startPositions[this.startRow - 1];\n
+\n
+        if (viewportSum <= viewportHeight || !onlyFullyVisible) {\n
+          this.startRow--;\n
+        }\n
+        if (viewportSum >= viewportHeight) {\n
+          break;\n
+        }\n
+      }\n
+    }\n
+\n
+    if (this.startRow !== null && overrideFn) {\n
+      overrideFn(this);\n
+    }\n
+    this.startPosition = startPositions[this.startRow];\n
+\n
+    if (this.startPosition == void 0) {\n
+      this.startPosition = null;\n
+    }\n
+    if (this.startRow !== null) {\n
+      this.count = this.endRow - this.startRow + 1;\n
+    }\n
+  }\n
+}\n
+\n
+export {WalkontableViewportRowsCalculator};\n
+\n
+window.WalkontableViewportRowsCalculator = WalkontableViewportRowsCalculator;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4114</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>viewportRows.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

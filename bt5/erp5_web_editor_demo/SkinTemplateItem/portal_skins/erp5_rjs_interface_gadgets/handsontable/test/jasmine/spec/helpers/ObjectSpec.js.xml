@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272498.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ObjectSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>describe(\'Object helper\', function () {\n
+  //\n
+  // Handsontable.helper.isObjectEquals\n
+  //\n
+  describe(\'isObjectEquals\', function() {\n
+    it("should returns true on equal objects", function () {\n
+      expect(Handsontable.helper.isObjectEquals({}, {})).toBe(true);\n
+      expect(Handsontable.helper.isObjectEquals({test: 1}, {test: 1})).toBe(true);\n
+      expect(Handsontable.helper.isObjectEquals({test: {test2: [{}]}}, {test: {test2: [{}]}})).toBe(true);\n
+\n
+      expect(Handsontable.helper.isObjectEquals([], [])).toBe(true);\n
+      expect(Handsontable.helper.isObjectEquals([33], [33])).toBe(true);\n
+      expect(Handsontable.helper.isObjectEquals([{test: 1}], [{test: 1}])).toBe(true);\n
+    });\n
+\n
+    it("should returns false for not equal objects", function () {\n
+      expect(Handsontable.helper.isObjectEquals({}, [])).toBe(false);\n
+\n
+      expect(Handsontable.helper.isObjectEquals({test: 2}, {test: 1})).toBe(false);\n
+      expect(Handsontable.helper.isObjectEquals({test: {test3: [{}]}}, {test: {test2: [{}]}})).toBe(false);\n
+\n
+      expect(Handsontable.helper.isObjectEquals([12], [33])).toBe(false);\n
+      expect(Handsontable.helper.isObjectEquals([{test: 3}], [{test: 1}])).toBe(false);\n
+    });\n
+  });\n
+\n
+  //\n
+  // Handsontable.helper.duckSchema\n
+  //\n
+  describe(\'duckSchema\', function() {\n
+    it("should returns valid schema object", function () {\n
+      expect(Handsontable.helper.duckSchema({})).toEqual({});\n
+      expect(Handsontable.helper.duckSchema({test: 1})).toEqual({test: null});\n
+      expect(Handsontable.helper.duckSchema({test: \'foo\'})).toEqual({test: null});\n
+      expect(Handsontable.helper.duckSchema({test: undefined})).toEqual({test: null});\n
+      expect(Handsontable.helper.duckSchema({test: null})).toEqual({test: null});\n
+      expect(Handsontable.helper.duckSchema({test: []})).toEqual({test: []});\n
+      expect(Handsontable.helper.duckSchema({test: [1, 2, 3]})).toEqual({test: []});\n
+    });\n
+\n
+    it("should returns valid schema object (deeply)", function () {\n
+      expect(Handsontable.helper.duckSchema({test: {a: {b: 11}}})).toEqual({test: {a: {b: null}}});\n
+      expect(Handsontable.helper.duckSchema({test: {a: {b: []}}})).toEqual({test: {a: {b: []}}});\n
+      expect(Handsontable.helper.duckSchema({test: {a: {b: [{q: 1, w: 2}]}}})).toEqual({test: {a: {b: [{q: null, w: null}]}}});\n
+    });\n
+  });\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2319</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ObjectSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

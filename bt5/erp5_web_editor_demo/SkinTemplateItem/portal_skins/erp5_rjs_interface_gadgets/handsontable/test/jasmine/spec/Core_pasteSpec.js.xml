@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272543.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_pasteSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_paste\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfArrays = function () {\n
+    return [\n
+      ["", "Kia", "Nissan", "Toyota", "Honda"],\n
+      ["2008", 10, 11, 12, 13],\n
+      ["2009", 20, 11, 14, 13],\n
+      ["2010", 30, 15, 12, 13]\n
+    ];\n
+  };\n
+\n
+  it(\'should not create new rows or columns when allowInsertRow and allowInsertColumn equal false\', function () {\n
+    handsontable({\n
+      data: arrayOfArrays(),\n
+      pasteMode: \'shift_down\',\n
+      allowInsertRow:false,\n
+      allowInsertColumn: false\n
+    });\n
+\n
+    selectCell(3, 4); //selectAll\n
+    triggerPaste(\'Kia\\tNissan\\tToyota\');\n
+\n
+    waits(60);\n
+\n
+    runs(function () {\n
+      var expected = arrayOfArrays();\n
+      expected[3][4] = "Kia";\n
+      expect(getData()).toEqual(expected);\n
+    });\n
+\n
+  });\n
+\n
+ it(\'should shift data down instead of overwrite when paste (when allowInsertRow = false)\', function () {\n
+    handsontable({\n
+      data: arrayOfArrays(),\n
+      pasteMode: \'shift_down\',\n
+      allowInsertRow:false\n
+    });\n
+\n
+    selectCell(1, 0); //selectAll\n
+    triggerPaste(\'Kia\\tNissan\\tToyota\');\n
+\n
+    waits(60);\n
+\n
+    runs(function () {\n
+      expect(getData().length).toEqual(4);\n
+      expect(getData(0,0,2,4)).toEqual([["", "Kia", "Nissan", "Toyota", "Honda"],["Kia", "Nissan", "Toyota", 12, 13], ["2008", 10, 11, 14, 13]]);\n
+    });\n
+\n
+  });\n
+\n
+ it(\'should shift data down instead of overwrite when paste (minSpareRows > 0)\', function () {\n
+    handsontable({\n
+      data: arrayOfArrays(),\n
+      pasteMode: \'shift_down\',\n
+      minSpareRows: 1\n
+    });\n
+\n
+    selectCell(1, 0); //selectAll\n
+    triggerPaste(\'Kia\\tNissan\\tToyota\');\n
+\n
+    waits(60);\n
+\n
+    runs(function () {\n
+      expect(getData().length).toEqual(6);\n
+      expect(getData(0,0,2,4)).toEqual([["", "Kia", "Nissan", "Toyota", "Honda"],["Kia", "Nissan", "Toyota", 12, 13], ["2008", 10, 11, 14, 13]]);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should shift right insert instead of overwrite when paste\', function () {\n
+    handsontable({\n
+      data: arrayOfArrays(),\n
+      pasteMode: \'shift_right\',\n
+      allowInsertColumn: false\n
+    });\n
+\n
+    selectCell(1, 0); //selectAll\n
+    triggerPaste(\'Kia\\tNissan\\tToyota\');\n
+\n
+    waits(60);\n
+\n
+    runs(function () {\n
+      expect(getData()[0].length).toEqual(5);\n
+      expect(getDataAtRow(1)).toEqual(["Kia", "Nissan", "Toyota", "2008", 10]);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should shift right insert instead of overwrite when paste (minSpareCols > 0)\', function () {\n
+    handsontable({\n
+      data: arrayOfArrays(),\n
+      pasteMode: \'shift_right\',\n
+      minSpareCols: 1\n
+    });\n
+\n
+    selectCell(1, 0); //selectAll\n
+    triggerPaste(\'Kia\\tNissan\\tToyota\');\n
+\n
+    waits(60);\n
+\n
+    runs(function () {\n
+      expect(getData()[0].length).toEqual(9);\n
+      expect(getDataAtRow(1)).toEqual(["Kia", "Nissan", "Toyota", "2008", 10, 11, 12, 13, null]);\n
+    });\n
+\n
+  });\n
+\n
+  it(\'should not throw an error when changes are null in `once` hook\', function () {\n
+    var errors = 0;\n
+\n
+    try {\n
+      handsontable({\n
+        data: arrayOfArrays(),\n
+        afterChange: function (changes, source) {\n
+          if (source === \'loadData\') return;\n
+\n
+          loadData(arrayOfArrays());\n
+        }\n
+      });\n
+\n
+      selectCell(1, 0); //selectAll\n
+      triggerPaste(\'Kia\\tNissan\\tToyota\');\n
+\n
+    } catch (e) {\n
+      errors++;\n
+    }\n
+\n
+    waits(60);\n
+\n
+    runs(function () {\n
+      expect(errors).toEqual(0);\n
+    });\n
+\n
+  });\n
+\n
+  it("should not paste any data, if no cell is selected", function () {\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(3, 1)\n
+    });\n
+\n
+    var copiedData1 = "foo";\n
+    var copiedData2 = "bar";\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'A1\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'A2\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'A3\');\n
+\n
+    expect(getSelected()).toBeUndefined();\n
+\n
+    hot.copyPaste.triggerPaste($.Event(), copiedData1);\n
+\n
+    waits(100);\n
+\n
+    runs(function(){\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'A1\');\n
+      expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'A2\');\n
+      expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'A3\');\n
+    });\n
+\n
+    runs(function(){\n
+      selectCell(1, 0, 2, 0);\n
+\n
+      hot.copyPaste.triggerPaste($.Event(), copiedData2);\n
+    });\n
+\n
+    waits(100);\n
+\n
+    runs(function(){\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'A1\');\n
+      expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(copiedData2);\n
+      expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(copiedData2);\n
+    });\n
+\n
+  });\n
+\n
+  it("should not paste any data, if no cell is selected (select/deselect cell using mouse)", function () {\n
+\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(3, 1)\n
+    });\n
+\n
+    var copiedData = "foo";\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'A1\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'A2\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'A3\');\n
+\n
+    this.$container.find(\'tbody tr:eq(1) td:eq(0)\').simulate(\'mousedown\');\n
+    this.$container.find(\'tbody tr:eq(1) td:eq(0)\').simulate(\'mouseup\');\n
+\n
+    expect(getSelected()).toEqual([1, 0, 1, 0]);\n
+\n
+    $(\'html\').simulate(\'mousedown\');\n
+\n
+    expect(getSelected()).toBeUndefined();\n
+\n
+    hot.copyPaste.triggerPaste($.Event(), copiedData);\n
+\n
+    waits(100);\n
+\n
+    runs(function(){\n
+      expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'A1\');\n
+      expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'A2\');\n
+      expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'A3\');\n
+    });\n
+\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5979</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_pasteSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

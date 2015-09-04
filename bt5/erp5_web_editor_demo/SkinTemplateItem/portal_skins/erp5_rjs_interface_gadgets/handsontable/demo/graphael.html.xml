@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272312.23</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>graphael.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>gRaphaël integration - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies apart from jQuery)\n
+  -->\n
+  <script data-jsfiddle="common" src="../demo/js/jquery.min.js"></script>\n
+\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <script data-jsfiddle="common" src="js/raphael/raphael-min.js"></script>\n
+  <script data-jsfiddle="common" src="js/raphael/g.raphael-min.js"></script>\n
+  <script data-jsfiddle="common" src="js/raphael/g.bar-min.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+  <style type="text/css">\n
+    #example1 {\n
+      float: left;\n
+      margin-top: 30px;\n
+    }\n
+\n
+    #example1-side {\n
+      margin-top: 30px;\n
+      display: inline-block;\n
+    }\n
+\n
+    #graphael-example {\n
+      margin-bottom: 30px;\n
+    }\n
+\n
+    #example1-side:after {\n
+      content: "";\n
+      display: table;\n
+      clear: both;\n
+    }\n
+  </style>\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="gRaphael charts integration">\n
+  <meta property="og:description"\n
+        content="">\n
+  <meta property="og:url" content="http://handsontable.com/demo/graphael.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/graphael.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+          <div class="descLayout">\n
+            <div class="pad" data-jsfiddle="example1">\n
+              <a name="lazy"></a>\n
+\n
+              <h2>gRaphaël bar chart integration example</h2>\n
+\n
+              <p>The following demo shows an example of data visualisation using <a href="http://g.raphaeljs.com/"\n
+                                                                                    rel="nofollow">gRaphaël\'s</a> bar\n
+                charts.</p>\n
+\n
+              <ul>\n
+                <li>Choosing any of the <em>Aggregate</em> buttons changes the currently used column</li>\n
+                <li>Editing data in the grid automatically refreshes the chart with updated values.</li>\n
+              </ul>\n
+\n
+              <div id="example1"></div>\n
+              <div id="example1-side">\n
+                <div id="graphael-example"></div>\n
+                <div class="aggregation">Aggregate:\n
+                  <button data-aggregate="0" title="Aggregates the Cars column">\n
+                    Cars\n
+                  </button>\n
+                  <button data-aggregate="1" title="Aggregates the Years column">\n
+                    Years\n
+                  </button>\n
+                  <button data-aggregate="2" title="Aggregates the Colors column">\n
+                    Colors\n
+                  </button>\n
+                </div>\n
+              </div>\n
+            </div>\n
+          </div>\n
+\n
+          <div class="codeLayout">\n
+            <div class="pad">\n
+              <div class="jsFiddle">\n
+                <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+              </div>\n
+\n
+              <script data-jsfiddle="example1">\n
+                var data = [\n
+                    [\'Nissan\', 2009, \'black\'],\n
+                    [\'Nissan\', 2006, \'blue\'],\n
+                    [\'Chrysler\', 2004, \'yellow\'],\n
+                    [\'Volvo\', 2012, \'white\'],\n
+                    [\'Nissan\', 2006, \'blue\'],\n
+                    [\'Chevrolet\', 2004, \'yellow\'],\n
+                    [\'Volvo\', 2012, "red"],\n
+                    [\'Ford\', 2006, \'yellow\'],\n
+                    [\'Chevrolet\', 2004, \'yellow\'],\n
+                    [\'Ford\', 2012, \'yellow\']\n
+                  ],\n
+                  container = document.getElementById(\'example1\'),\n
+                  r = Raphael(\'graphael-example\', 250, 250),\n
+                  chartData = [],\n
+                  activeColumn = 0,\n
+                  lastChange = null,\n
+                  hot;\n
+\n
+                hot = new Handsontable(container, {\n
+                  data: data,\n
+                  width: 250,\n
+                  colHeaders: [\'Car\', \'Year\', \'Color\'],\n
+                  rowHeaders: true,\n
+                  afterChange: refreshChart\n
+                });\n
+                chartData = [\n
+                  gatherColData(0),\n
+                  gatherColData(1),\n
+                  gatherColData(2)\n
+                ];\n
+                renderChart();\n
+\n
+                function fin() {\n
+                  var label = chartData[activeColumn].labels[$(\'path\').toArray().indexOf(this.bar[0])];\n
+\n
+                  this.flag = r.popup(this.bar.x, this.bar.y, label + " - " + this.bar.value || \'0\').insertBefore(this);\n
+                }\n
+\n
+                function fout() {\n
+                  this.flag.animate({opacity: 0}, 300, function () {\n
+                    this.remove();\n
+                  });\n
+                }\n
+\n
+                function refreshChart(changes, source) {\n
+                  if (source != \'loadData\') {\n
+                    chartData[changes[0][1]] = gatherColData(changes[0][1]);\n
+                    activeColumn = changes[0][1];\n
+\n
+                    renderChart();\n
+                  }\n
+                }\n
+\n
+                function renderChart() {\n
+                  r.clear();\n
+                  r.text(125, 25, \'Aggregated by \' + $(".aggregation button[data-aggregate=\'" + activeColumn + "\']").text()).attr({ font: "20px sans-serif" });\n
+                  r.barchart(10, 75, 220, 200, [chartData[activeColumn].values]).hover(fin, fout);\n
+                }\n
+\n
+                function gatherColData(colNum) {\n
+                  var data = hot.getDataAtCol(colNum),\n
+                    chartData = {labels: [], values: []},\n
+                    entryIndex = -1,\n
+                    labelsSize;\n
+\n
+                  for (var i = 0; i < data.length; i++) {\n
+                    entryIndex = chartData.labels.indexOf(data[i]);\n
+\n
+                    if (entryIndex != -1) {\n
+                      chartData.values[entryIndex]++;\n
+                    } else {\n
+                      labelsSize = chartData.labels.length;\n
+                      chartData.labels[labelsSize] = data[i];\n
+                      chartData.values[labelsSize] = 1;\n
+                    }\n
+                  }\n
+\n
+                  return chartData;\n
+                }\n
+\n
+                $(\'.aggregation\').on(\'click\', \'button\', function () {\n
+                  activeColumn = $(this).attr(\'data-aggregate\');\n
+                  renderChart();\n
+                });\n
+\n
+              </script>\n
+            </div>\n
+          </div>\n
+        </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7941</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>graphael.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272531.56</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_beforeKeyDownSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_beforeKeyDown\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should run beforeKeyDown hook\', function () {\n
+    var called = false;\n
+\n
+    handsontable({\n
+      data : [[1,2,3,4,5],[1,2,3,4,5]],\n
+      beforeKeyDown: function (event) {\n
+        called = true;\n
+      }\n
+    });\n
+    selectCell(0,0);\n
+\n
+    keyDown(\'arrow_right\');\n
+\n
+    expect(called).toEqual(true);\n
+  });\n
+\n
+  it(\'should run afterDocumentKeyDown and beforeKeyDown hook\', function () {\n
+    var called = [];\n
+\n
+    handsontable({\n
+      data : [[1,2,3,4,5],[1,2,3,4,5]],\n
+      afterDocumentKeyDown: function () {\n
+        called.push("afterDocumentKeyDown");\n
+      },\n
+      beforeKeyDown: function () {\n
+        called.push("beforeKeyDown");\n
+      }\n
+    });\n
+    selectCell(0,0);\n
+\n
+    keyDown(\'arrow_right\');\n
+\n
+    expect(called).toEqual(["afterDocumentKeyDown", "beforeKeyDown"]);\n
+  });\n
+\n
+  it(\'should prevent hook from running default action\', function () {\n
+    var called = false;\n
+\n
+    handsontable({\n
+      data : [[1,2,3,4,5],[1,2,3,4,5]],\n
+      beforeKeyDown: function (event) {\n
+\n
+        event = serveImmediatePropagation(event);\n
+\n
+        event.stopImmediatePropagation();\n
+        called = true;\n
+      }\n
+    });\n
+    selectCell(0,0);\n
+\n
+    keyDown(\'arrow_right\');\n
+\n
+    expect(getSelected()).toEqual([0,0,0,0]);\n
+    expect(getSelected()).not.toEqual([0,1,0,1]);\n
+  });\n
+\n
+  it(\'should overwrite default behavior of delete key, but not this of right arrow\', function () {\n
+    var called = 0;\n
+\n
+    handsontable({\n
+      data : [[1,2,3,4,5],[1,2,3,4,5]],\n
+      beforeKeyDown: function (event) {\n
+        if (event.keyCode === 8) {\n
+          event.stopImmediatePropagation();\n
+          getInstance().alter(\'insert_row\', 1, 1);\n
+        }\n
+\n
+        called++;\n
+      }\n
+    });\n
+\n
+    selectCell(0,0);\n
+\n
+    keyDown(\'backspace\');\n
+    keyDown(\'arrow_right\');\n
+\n
+    expect(getData().length).toEqual(3);\n
+    expect(getSelected()).toEqual([0,1,0,1]);\n
+  });\n
+\n
+  it(\'should run beforeKeyDown hook in cell editor handler\', function () {\n
+    var called = 0;\n
+\n
+    handsontable({\n
+      data : [[1,2,3,4,5],[1,2,3,4,5]],\n
+      beforeKeyDown: function (event) {\n
+        called++;\n
+      }\n
+    });\n
+    selectCell(0,0);\n
+\n
+    keyDown(\'enter\');\n
+    keyDown(\'enter\');\n
+\n
+    expect(called).toEqual(2);\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2460</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_beforeKeyDownSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

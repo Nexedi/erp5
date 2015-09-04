@@ -1,0 +1,2738 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272651.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>UndoRedo.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>90646</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>UndoRedo.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'UndoRedo\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  describe("core features", function () {\n
+    describe("Array data", function () {\n
+      describe("undo", function () {\n
+        it(\'should undo single change\', function () {\n
+          handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtCell(0, 0, \'X1\');\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+        });\n
+\n
+        it(\'should undo single change on cell with validator\', function () {\n
+\n
+          var validatorSpy = jasmine.createSpy(\'validatorSpy\').andCallFake(function (value, result) {\n
+            result(true);\n
+          });\n
+\n
+          handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+            validator: validatorSpy\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtCell(0, 0, \'X1\');\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+          });\n
+\n
+\n
+        });\n
+\n
+        it(\'should undo creation of a single row\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\');\n
+\n
+          expect(countRows()).toEqual(3);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+        });\n
+\n
+        it(\'should undo creation of multiple rows\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\', 0, 5);\n
+\n
+          expect(countRows()).toEqual(7);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+        });\n
+\n
+        it(\'should undo creation of multiple rows with minSpareRows\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 1),\n
+            minSpareRows: 2\n
+          });\n
+\n
+          expect(getData()).toEqual([[\'A1\'], [\'A2\'], [null], [null]]);\n
+\n
+          setDataAtCell(2, 0, \'A3\');\n
+          setDataAtCell(4, 0, \'A4\');\n
+\n
+          expect(getData()).toEqual([[\'A1\'], [\'A2\'], [\'A3\'], [null], [\'A4\'], [null], [null]]);\n
+\n
+          HOT.undo();\n
+          HOT.undo();\n
+\n
+          expect(getData()).toEqual([[\'A1\'], [\'A2\'], [null], [null]]);\n
+        });\n
+\n
+        it(\'should undo removal of single row\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(3, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+\n
+          alter(\'remove_row\', 1);\n
+\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B3\');\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+        });\n
+\n
+        it(\'should undo removal of multiple rows\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(4, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+          expect(getDataAtCell(3, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(3, 1)).toEqual(\'B4\');\n
+\n
+          alter(\'remove_row\', 1, 2);\n
+\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B4\');\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+          expect(getDataAtCell(3, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(3, 1)).toEqual(\'B4\');\n
+        });\n
+\n
+        it(\'should undo creation of a single column (colHeaders: undefined)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 3)\n
+          });\n
+\n
+          expect(countCols()).toEqual(3);\n
+\n
+          alter(\'insert_col\');\n
+\n
+          expect(countCols()).toEqual(4);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(3);\n
+        });\n
+\n
+        it(\'should undo creation of a single column (colHeaders: true)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 3),\n
+            colHeaders: true\n
+          });\n
+\n
+          expect(countCols()).toEqual(3);\n
+          expect(getColHeader()).toEqual([\'A\', \'B\', \'C\']);\n
+\n
+          alter(\'insert_col\');\n
+\n
+          expect(countCols()).toEqual(4);\n
+          expect(getColHeader()).toEqual([\'A\', \'B\', \'C\', \'D\']);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(3);\n
+          expect(getColHeader()).toEqual([\'A\', \'B\', \'C\']);\n
+        });\n
+\n
+        it(\'should undo creation of a single column (colHeaders: Array)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 3),\n
+            colHeaders: [\'Header1\', \'Header2\', \'Header3\']\n
+          });\n
+\n
+          expect(countCols()).toEqual(3);\n
+          expect(getColHeader()).toEqual([\'Header1\', \'Header2\', \'Header3\']);\n
+\n
+          alter(\'insert_col\', 1);\n
+\n
+          expect(countCols()).toEqual(4);\n
+          expect(getColHeader()).toEqual([\'Header1\', \'B\', \'Header2\', \'Header3\']);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(3);\n
+          expect(getColHeader()).toEqual([\'Header1\', \'Header2\', \'Header3\']);\n
+        });\n
+\n
+        it(\'should undo creation of multiple columns (colHeaders: undefined)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+\n
+          expect(countCols()).toEqual(2);\n
+\n
+          alter(\'insert_col\', 1, 5);\n
+\n
+          expect(countCols()).toEqual(7);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(2);\n
+        });\n
+\n
+        it(\'should undo creation of multiple columns (colHeaders: true)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+            colHeaders: true\n
+          });\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getColHeader()).toEqual([\'A\', \'B\']);\n
+\n
+\n
+          alter(\'insert_col\', 1, 5);\n
+\n
+          expect(countCols()).toEqual(7);\n
+          expect(getColHeader()).toEqual([\'A\', \'B\', \'C\', \'D\', \'E\', \'F\', \'G\']);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getColHeader()).toEqual([\'A\', \'B\']);\n
+        });\n
+\n
+        it(\'should undo creation of multiple columns (colHeaders: Array)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+            colHeaders: [\'Header1\', \'Header2\']\n
+          });\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getColHeader()).toEqual([\'Header1\', \'Header2\']);\n
+\n
+\n
+          alter(\'insert_col\', 1, 5);\n
+\n
+          expect(countCols()).toEqual(7);\n
+          expect(getColHeader()).toEqual([\'Header1\', \'B\', \'C\', \'D\', \'E\', \'F\', \'Header2\']);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getColHeader()).toEqual([\'Header1\', \'Header2\']);\n
+        });\n
+\n
+        it(\'should undo creation of multiple columns with minSpareCols\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(1, 1),\n
+            minSpareCols: 2\n
+          });\n
+\n
+          expect(getData()).toEqual([[\'A1\', null, null]]);\n
+\n
+          setDataAtCell(0, 1, \'B1\');\n
+          setDataAtCell(0, 3, \'C1\');\n
+\n
+          expect(getData()).toEqual([[\'A1\', \'B1\', null, \'C1\', null, null]]);\n
+\n
+          HOT.undo();\n
+          HOT.undo();\n
+\n
+          expect(getData()).toEqual([[\'A1\', null, null]]);\n
+        });\n
+\n
+        it(\'should undo removal of single column (colHeaders: undefined)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 3)\n
+          });\n
+\n
+          expect(countCols()).toEqual(3);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(0, 2)).toEqual(\'C1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(1, 2)).toEqual(\'C2\');\n
+\n
+          alter(\'remove_col\', 1);\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'C1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'C2\');\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(3);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(0, 2)).toEqual(\'C1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(1, 2)).toEqual(\'C2\');\n
+        });\n
+\n
+        it(\'should undo removal of single column (colHeaders: true)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+            colHeaders: true\n
+          });\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getColHeader()).toEqual([\'A\', \'B\']);\n
+\n
+          alter(\'remove_col\');\n
+\n
+          expect(countCols()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toBeUndefined();\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toBeUndefined();\n
+          expect(getColHeader()).toEqual([\'A\']);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+\n
+          expect(getColHeader()).toEqual([\'A\', \'B\']);\n
+\n
+        });\n
+\n
+        it(\'should undo removal of single column (colHeaders: Array)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+            colHeaders: [\'Header1\', \'Header2\']\n
+          });\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getColHeader()).toEqual([\'Header1\', \'Header2\']);\n
+\n
+          alter(\'remove_col\');\n
+\n
+          expect(countCols()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toBeUndefined();\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toBeUndefined();\n
+          expect(getColHeader()).toEqual([\'Header1\']);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+\n
+          expect(getColHeader()).toEqual([\'Header1\', \'Header2\']);\n
+\n
+        });\n
+\n
+\n
+        it(\'should undo removal of multiple columns (colHeaders: undefined)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 4)\n
+          });\n
+\n
+          expect(countCols()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(0, 2)).toEqual(\'C1\');\n
+          expect(getDataAtCell(0, 3)).toEqual(\'D1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(1, 2)).toEqual(\'C2\');\n
+          expect(getDataAtCell(1, 3)).toEqual(\'D2\');\n
+\n
+          alter(\'remove_col\', 1, 2);\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'D1\');\n
+          expect(getDataAtCell(0, 2)).toBeUndefined();\n
+          expect(getDataAtCell(0, 3)).toBeUndefined();\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'D2\');\n
+          expect(getDataAtCell(1, 2)).toBeUndefined();\n
+          expect(getDataAtCell(1, 3)).toBeUndefined();\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(0, 2)).toEqual(\'C1\');\n
+          expect(getDataAtCell(0, 3)).toEqual(\'D1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(1, 2)).toEqual(\'C2\');\n
+          expect(getDataAtCell(1, 3)).toEqual(\'D2\');\n
+        });\n
+\n
+        it(\'should undo removal of multiple columns (colHeaders: true)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 4),\n
+            colHeaders: true\n
+          });\n
+\n
+          expect(countCols()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(0, 2)).toEqual(\'C1\');\n
+          expect(getDataAtCell(0, 3)).toEqual(\'D1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(1, 2)).toEqual(\'C2\');\n
+          expect(getDataAtCell(1, 3)).toEqual(\'D2\');\n
+          expect(getColHeader()).toEqual([\'A\', \'B\', \'C\', \'D\']);\n
+\n
+          alter(\'remove_col\', 1, 3);\n
+\n
+          expect(countCols()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toBeUndefined();\n
+          expect(getDataAtCell(0, 2)).toBeUndefined();\n
+          expect(getDataAtCell(0, 3)).toBeUndefined();\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toBeUndefined();\n
+          expect(getDataAtCell(1, 2)).toBeUndefined();\n
+          expect(getDataAtCell(1, 3)).toBeUndefined();\n
+          expect(getColHeader()).toEqual([\'A\']);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(0, 2)).toEqual(\'C1\');\n
+          expect(getDataAtCell(0, 3)).toEqual(\'D1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(1, 2)).toEqual(\'C2\');\n
+          expect(getDataAtCell(1, 3)).toEqual(\'D2\');\n
+          expect(getColHeader()).toEqual([\'A\', \'B\', \'C\', \'D\']);\n
+        });\n
+\n
+        it(\'should undo removal of multiple columns (colHeaders: Array)\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 4),\n
+            colHeaders: [\'Header1\', \'Header2\', \'Header3\', \'Header4\']\n
+          });\n
+\n
+          expect(countCols()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(0, 2)).toEqual(\'C1\');\n
+          expect(getDataAtCell(0, 3)).toEqual(\'D1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(1, 2)).toEqual(\'C2\');\n
+          expect(getDataAtCell(1, 3)).toEqual(\'D2\');\n
+          expect(getColHeader()).toEqual([\'Header1\', \'Header2\', \'Header3\', \'Header4\']);\n
+\n
+          alter(\'remove_col\', 1, 2);\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'D1\');\n
+          expect(getDataAtCell(0, 2)).toBeUndefined();\n
+          expect(getDataAtCell(0, 3)).toBeUndefined();\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'D2\');\n
+          expect(getDataAtCell(1, 2)).toBeUndefined();\n
+          expect(getDataAtCell(1, 3)).toBeUndefined();\n
+          expect(getColHeader()).toEqual([\'Header1\', \'Header4\']);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(0, 2)).toEqual(\'C1\');\n
+          expect(getDataAtCell(0, 3)).toEqual(\'D1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(1, 2)).toEqual(\'C2\');\n
+          expect(getDataAtCell(1, 3)).toEqual(\'D2\');\n
+          expect(getColHeader()).toEqual([\'Header1\', \'Header2\', \'Header3\', \'Header4\']);\n
+        });\n
+\n
+        it("should undo multiple changes", function () {\n
+          handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtCell(0, 0, \'X1\');\n
+          setDataAtCell(1, 0, \'X2\');\n
+          setDataAtCell(0, 1, \'Y1\');\n
+          setDataAtCell(1, 1, \'Y2\');\n
+\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'Y2\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'A2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'A2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'A2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+        });\n
+\n
+        it("should undo multiple changes in cells with validators", function () {\n
+\n
+          var validatorSpy = jasmine.createSpy(\'validatorSpy\').andCallFake(function (value, result) {\n
+            result(true);\n
+          });\n
+\n
+          handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+            validator: validatorSpy\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtCell(0, 0, \'X1\');\n
+          setDataAtCell(1, 0, \'X2\');\n
+          setDataAtCell(0, 1, \'Y1\');\n
+          setDataAtCell(1, 1, \'Y2\');\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length == 4;\n
+          }, \'validatorSpy call after modification\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'Y2\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validatorSpy call after first undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validatorSpy call after second undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validatorSpy call after third undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'A2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validatorSpy call after fourth undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'A2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waits(100);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'A2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+          });\n
+\n
+\n
+        });\n
+\n
+        it(\'should undo multiple row creations\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+\n
+          expect(countRows()).toEqual(6);\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(5);\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(4);\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(3);\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(2);\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(2);\n
+\n
+        });\n
+\n
+        it(\'should undo multiple row removals\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(4, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+          expect(getDataAtCell(3, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(3, 1)).toEqual(\'B4\');\n
+\n
+          alter(\'remove_row\');\n
+          alter(\'remove_row\');\n
+          alter(\'remove_row\');\n
+\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+          expect(getDataAtCell(3, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(3, 1)).toEqual(\'B4\');\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+          expect(getDataAtCell(3, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(3, 1)).toEqual(\'B4\');\n
+        });\n
+\n
+        it(\'should undo changes only for table where the change actually took place\', function () {\n
+          this.$container2 = $(\'<div id="\' + id + \'-2"></div>\').appendTo(\'body\');\n
+\n
+          var hot1 = handsontable({\n
+            data: [\n
+              [1],\n
+              [2],\n
+              [3]\n
+            ]\n
+          });\n
+\n
+          this.$container2.handsontable({\n
+            data: [\n
+              [\'A\'],\n
+              [\'B\'],\n
+              [\'C\']\n
+            ]\n
+          });\n
+\n
+          var hot2 = this.$container2.handsontable(\'getInstance\');\n
+\n
+          hot1.setDataAtCell(0, 0, 4);\n
+          expect(hot1.getDataAtCell(0, 0)).toEqual(4);\n
+          expect(hot2.getDataAtCell(0, 0)).toEqual(\'A\');\n
+\n
+          hot2.undo();\n
+          expect(hot2.getDataAtCell(0, 0)).toEqual(\'A\');\n
+          expect(hot1.getDataAtCell(0, 0)).toEqual(4);\n
+\n
+          hot1.undo();\n
+          expect(hot2.getDataAtCell(0, 0)).toEqual(\'A\');\n
+          expect(hot1.getDataAtCell(0, 0)).toEqual(1);\n
+\n
+          hot2.destroy();\n
+          this.$container2.remove();\n
+        });\n
+      });\n
+      describe("redo", function () {\n
+        it(\'should redo single change\', function () {\n
+          handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtCell(0, 0, \'new value\');\n
+\n
+          expect(getDataAtCell(0, 0)).toBe(\'new value\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'new value\');\n
+        });\n
+\n
+        it(\'should redo single change in cell with validator\', function () {\n
+          var validatorSpy = jasmine.createSpy(\'validatorSpy\').andCallFake(function (value, result) {\n
+            result(true);\n
+          });\n
+\n
+          handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+            validator: validatorSpy\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtCell(0, 0, \'new value\');\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after change\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'new value\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after redo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'new value\');\n
+          });\n
+\n
+        });\n
+\n
+        it(\'should redo creation of a single row\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\');\n
+\n
+          expect(countRows()).toEqual(3);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          HOT.redo();\n
+\n
+          expect(countRows()).toEqual(3);\n
+        });\n
+\n
+        it(\'should redo creation of multiple rows\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\', 0, 5);\n
+\n
+          expect(countRows()).toEqual(7);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          HOT.redo();\n
+\n
+          expect(countRows()).toEqual(7);\n
+        });\n
+\n
+        it(\'should redo removal of single row\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(3, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+\n
+          alter(\'remove_row\', 1);\n
+\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B3\');\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+\n
+          HOT.redo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B3\');\n
+\n
+\n
+        });\n
+\n
+        it(\'should redo removal of multiple rows\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(4, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+          expect(getDataAtCell(3, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(3, 1)).toEqual(\'B4\');\n
+\n
+          alter(\'remove_row\', 1, 2);\n
+\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B4\');\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+          expect(getDataAtCell(3, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(3, 1)).toEqual(\'B4\');\n
+\n
+          HOT.redo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B4\');\n
+        });\n
+\n
+        it(\'should redo creation of a single column\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+\n
+          expect(countCols()).toEqual(2);\n
+\n
+          alter(\'insert_col\');\n
+\n
+          expect(countCols()).toEqual(3);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(2);\n
+\n
+          HOT.redo();\n
+\n
+          expect(countCols()).toEqual(3);\n
+        });\n
+\n
+        it(\'should redo creation of multiple columns\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+\n
+          expect(countCols()).toEqual(2);\n
+\n
+          alter(\'insert_col\', 1, 5);\n
+\n
+          expect(countCols()).toEqual(7);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(2);\n
+\n
+          HOT.redo();\n
+\n
+          expect(countCols()).toEqual(7);\n
+        });\n
+\n
+        it(\'should redo removal of single column\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+\n
+          alter(\'remove_col\');\n
+\n
+          expect(countCols()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toBeUndefined();\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toBeUndefined();\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+\n
+          HOT.redo();\n
+\n
+          expect(countCols()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toBeUndefined();\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toBeUndefined();\n
+        });\n
+\n
+        it(\'should redo removal of multiple columns\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 4)\n
+          });\n
+\n
+          expect(countCols()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(0, 2)).toEqual(\'C1\');\n
+          expect(getDataAtCell(0, 3)).toEqual(\'D1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(1, 2)).toEqual(\'C2\');\n
+          expect(getDataAtCell(1, 3)).toEqual(\'D2\');\n
+\n
+          alter(\'remove_col\', 1, 3);\n
+\n
+          expect(countCols()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toBeUndefined();\n
+          expect(getDataAtCell(0, 2)).toBeUndefined();\n
+          expect(getDataAtCell(0, 3)).toBeUndefined();\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toBeUndefined();\n
+          expect(getDataAtCell(1, 2)).toBeUndefined();\n
+          expect(getDataAtCell(1, 3)).toBeUndefined();\n
+\n
+          HOT.undo();\n
+\n
+          expect(countCols()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(0, 2)).toEqual(\'C1\');\n
+          expect(getDataAtCell(0, 3)).toEqual(\'D1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(1, 2)).toEqual(\'C2\');\n
+          expect(getDataAtCell(1, 3)).toEqual(\'D2\');\n
+\n
+          HOT.redo();\n
+\n
+          expect(countCols()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toBeUndefined();\n
+          expect(getDataAtCell(0, 2)).toBeUndefined();\n
+          expect(getDataAtCell(0, 3)).toBeUndefined();\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toBeUndefined();\n
+          expect(getDataAtCell(1, 2)).toBeUndefined();\n
+          expect(getDataAtCell(1, 3)).toBeUndefined();\n
+        });\n
+\n
+        it("should redo multiple changes", function () {\n
+          handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtCell(0, 0, \'X1\');\n
+          setDataAtCell(1, 0, \'X2\');\n
+          setDataAtCell(0, 1, \'Y1\');\n
+          setDataAtCell(1, 1, \'Y2\');\n
+\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'Y2\');\n
+\n
+          HOT.undo();\n
+          HOT.undo();\n
+          HOT.undo();\n
+          HOT.undo();\n
+\n
+          expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'A2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'A2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'Y2\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+          expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+          expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+          expect(getDataAtCell(1, 1)).toBe(\'Y2\');\n
+\n
+        });\n
+\n
+        it("should redo multiple changes in cell with validator", function () {\n
+\n
+          var validatorSpy = jasmine.createSpy(\'validatorSpy\').andCallFake(function (value, result) {\n
+            result(true);\n
+          });\n
+\n
+          handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2),\n
+            validator: validatorSpy\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtCell(0, 0, \'X1\');\n
+          setDataAtCell(1, 0, \'X2\');\n
+          setDataAtCell(0, 1, \'Y1\');\n
+          setDataAtCell(1, 1, \'Y2\');\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after change\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'Y2\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 1st undo\', 1000);\n
+\n
+          runs(function () {\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 2nd undo\', 1000);\n
+\n
+          runs(function () {\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 3rd undo\', 1000);\n
+\n
+          runs(function () {\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 4th undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'A2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 1st redo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'A2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 2nd redo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'B1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 3rd redo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'B2\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 4th redo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'Y2\');\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waits(100);\n
+\n
+          runs(function () {\n
+\n
+            expect(validatorSpy).not.toHaveBeenCalled();\n
+\n
+            expect(getDataAtCell(0, 0)).toBe(\'X1\');\n
+            expect(getDataAtCell(1, 0)).toBe(\'X2\');\n
+            expect(getDataAtCell(0, 1)).toBe(\'Y1\');\n
+            expect(getDataAtCell(1, 1)).toBe(\'Y2\');\n
+          });\n
+\n
+        });\n
+\n
+        it(\'should redo multiple row creations\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+\n
+          expect(countRows()).toEqual(6);\n
+\n
+          HOT.undo();\n
+          HOT.undo();\n
+          HOT.undo();\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(3);\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(4);\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(5);\n
+\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(6);\n
+\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(6);\n
+\n
+\n
+        });\n
+\n
+        it(\'should undo multiple row removals\', function () {\n
+          var HOT = handsontable({\n
+            data: Handsontable.helper.createSpreadsheetData(4, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+          expect(getDataAtCell(3, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(3, 1)).toEqual(\'B4\');\n
+\n
+          alter(\'remove_row\');\n
+          alter(\'remove_row\');\n
+          alter(\'remove_row\');\n
+\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+\n
+          HOT.undo();\n
+          HOT.undo();\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(4);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+          expect(getDataAtCell(3, 0)).toEqual(\'A4\');\n
+          expect(getDataAtCell(3, 1)).toEqual(\'B4\');\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+          expect(getDataAtCell(2, 0)).toEqual(\'A3\');\n
+          expect(getDataAtCell(2, 1)).toEqual(\'B3\');\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+          expect(getDataAtCell(1, 0)).toEqual(\'A2\');\n
+          expect(getDataAtCell(1, 1)).toEqual(\'B2\');\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+          expect(getDataAtCell(0, 1)).toEqual(\'B1\');\n
+        });\n
+\n
+        it(\'should redo changes only for table where the change actually took place\', function () {\n
+          this.$container2 = $(\'<div id="\' + id + \'-2"></div>\').appendTo(\'body\');\n
+\n
+          var hot1 = handsontable({\n
+            data: [\n
+              [1],\n
+              [2],\n
+              [3]\n
+            ]\n
+          });\n
+\n
+          this.$container2.handsontable({\n
+            data: [\n
+              [\'A\'],\n
+              [\'B\'],\n
+              [\'C\']\n
+            ]\n
+          });\n
+\n
+          var hot2 = this.$container2.handsontable(\'getInstance\');\n
+\n
+          hot1.setDataAtCell(0, 0, 4);\n
+          expect(hot1.getDataAtCell(0, 0)).toEqual(4);\n
+          expect(hot2.getDataAtCell(0, 0)).toEqual(\'A\');\n
+\n
+          hot1.undo();\n
+          expect(hot1.getDataAtCell(0, 0)).toEqual(1);\n
+          expect(hot2.getDataAtCell(0, 0)).toEqual(\'A\');\n
+\n
+          hot2.redo();\n
+          expect(hot1.getDataAtCell(0, 0)).toEqual(1);\n
+          expect(hot2.getDataAtCell(0, 0)).toEqual(\'A\');\n
+\n
+          hot1.redo();\n
+          expect(hot1.getDataAtCell(0, 0)).toEqual(4);\n
+          expect(hot2.getDataAtCell(0, 0)).toEqual(\'A\');\n
+\n
+          hot2.destroy();\n
+          this.$container2.remove();\n
+        });\n
+      });\n
+    });\n
+\n
+    describe("Object data", function () {\n
+\n
+      function createObjectData() {\n
+        return [\n
+          {name: \'Timothy\', surname: "Dalton"},\n
+          {name: \'Sean\', surname: "Connery"},\n
+          {name: \'Roger\', surname: "Moore"}\n
+        ];\n
+      }\n
+\n
+      describe("undo", function () {\n
+        it(\'should undo single change\', function () {\n
+          handsontable({\n
+            data: createObjectData()\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtRowProp(0, 0, \'Pearce\');\n
+          expect(getDataAtRowProp(0, 0)).toBe(\'Pearce\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'Timothy\');\n
+        });\n
+\n
+        it(\'should undo single change in cell with validator\', function () {\n
+\n
+          var validatorSpy = jasmine.createSpy(\'validatorSpy\').andCallFake(function (value, result) {\n
+            result(true);\n
+          });\n
+\n
+          handsontable({\n
+            data: createObjectData(),\n
+            validator: validatorSpy\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtRowProp(0, 0, \'Pearce\');\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after changes\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, 0)).toBe(\'Pearce\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after undo\', 1000);\n
+\n
+          runs(function () {\n
+            return expect(getDataAtCell(0, 0)).toBe(\'Timothy\');\n
+          });\n
+\n
+        });\n
+\n
+        it(\'should undo creation of a single row\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData().slice(0, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\');\n
+\n
+          expect(countRows()).toEqual(3);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+        });\n
+\n
+        it(\'should undo creation of multiple rows\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData().slice(0, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\', 0, 5);\n
+\n
+          expect(countRows()).toEqual(7);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+        });\n
+\n
+        it(\'should undo removal of single row\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData().slice(0, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+\n
+          alter(\'remove_row\');\n
+\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBeNull();\n
+          expect(getDataAtRowProp(1, \'surname\')).toBeNull();\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+        });\n
+\n
+        it(\'should undo removal of multiple rows\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData()\n
+          });\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+          expect(getDataAtRowProp(2, \'name\')).toEqual(\'Roger\');\n
+          expect(getDataAtRowProp(2, \'surname\')).toEqual(\'Moore\');\n
+\n
+          alter(\'remove_row\', 1, 2);\n
+\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBeNull();\n
+          expect(getDataAtRowProp(1, \'surname\')).toBeNull();\n
+          expect(getDataAtRowProp(2, \'name\')).toBeNull();\n
+          expect(getDataAtRowProp(2, \'surname\')).toBeNull();\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+          expect(getDataAtRowProp(2, \'name\')).toEqual(\'Roger\');\n
+          expect(getDataAtRowProp(2, \'surname\')).toEqual(\'Moore\');\n
+        });\n
+\n
+        it("should undo multiple changes", function () {\n
+          handsontable({\n
+            data: createObjectData().slice(0, 2)\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtRowProp(0, \'name\', \'Pierce\');\n
+          setDataAtRowProp(0, \'surname\', \'Brosnan\');\n
+          setDataAtRowProp(1, \'name\', \'Daniel\');\n
+          setDataAtRowProp(1, \'surname\', \'Craig\');\n
+\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Craig\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+\n
+          HOT.undo();\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+\n
+          HOT.undo();\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+        });\n
+\n
+        it("should undo multiple changes in cells with validators", function () {\n
+\n
+          var validatorSpy = jasmine.createSpy(\'validatorSpy\').andCallFake(function (value, result) {\n
+            result(true);\n
+          });\n
+\n
+          handsontable({\n
+            data: createObjectData().slice(0, 2),\n
+            validator: validatorSpy\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtRowProp(0, \'name\', \'Pierce\');\n
+          setDataAtRowProp(0, \'surname\', \'Brosnan\');\n
+          setDataAtRowProp(1, \'name\', \'Daniel\');\n
+          setDataAtRowProp(1, \'surname\', \'Craig\');\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length == 4;\n
+          }, \'validator spy call after undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Craig\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Dalton\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after undo\', 1000);\n
+\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Timothy\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Dalton\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waits(100);\n
+\n
+          runs(function () {\n
+            expect(validatorSpy).not.toHaveBeenCalled();\n
+\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Timothy\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Dalton\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+          });\n
+\n
+        });\n
+\n
+        it(\'should undo multiple row creations\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData().slice(0, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+\n
+          expect(countRows()).toEqual(6);\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(5);\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(4);\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(3);\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(2);\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(2);\n
+\n
+        });\n
+\n
+        it(\'should undo multiple row removals\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData()\n
+          });\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+          expect(getDataAtRowProp(2, \'name\')).toEqual(\'Roger\');\n
+          expect(getDataAtRowProp(2, \'surname\')).toEqual(\'Moore\');\n
+\n
+          alter(\'remove_row\');\n
+          alter(\'remove_row\');\n
+\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+          expect(getDataAtRowProp(2, \'name\')).toEqual(\'Roger\');\n
+          expect(getDataAtRowProp(2, \'surname\')).toEqual(\'Moore\');\n
+\n
+          HOT.undo();\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+          expect(getDataAtRowProp(2, \'name\')).toEqual(\'Roger\');\n
+          expect(getDataAtRowProp(2, \'surname\')).toEqual(\'Moore\');\n
+\n
+        });\n
+      });\n
+\n
+      describe("redo", function () {\n
+        it(\'should redo single change\', function () {\n
+          handsontable({\n
+            data: createObjectData()\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtRowProp(0, 0, \'Pearce\');\n
+          expect(getDataAtRowProp(0, 0)).toBe(\'Pearce\');\n
+\n
+          HOT.undo();\n
+          expect(getDataAtCell(0, 0)).toBe(\'Timothy\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtRowProp(0, 0)).toBe(\'Pearce\');\n
+        });\n
+\n
+        it(\'should redo single change in cell with validator\', function () {\n
+\n
+          var validatorSpy = jasmine.createSpy(\'validatorSpy\').andCallFake(function (value, result) {\n
+            result(true);\n
+          });\n
+\n
+          handsontable({\n
+            data: createObjectData(),\n
+            validator: validatorSpy\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtRowProp(0, 0, \'Pearce\');\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after change\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, 0)).toBe(\'Pearce\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtCell(0, 0)).toBe(\'Timothy\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, 0)).toBe(\'Pearce\');\n
+          });\n
+\n
+\n
+        });\n
+\n
+        it(\'should redo creation of a single row\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData().slice(0, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\');\n
+\n
+          expect(countRows()).toEqual(3);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          HOT.redo();\n
+\n
+          expect(countRows()).toEqual(3);\n
+        });\n
+\n
+        it(\'should redo creation of multiple rows\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData().slice(0, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\', 0, 5);\n
+\n
+          expect(countRows()).toEqual(7);\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          HOT.redo();\n
+\n
+          expect(countRows()).toEqual(7);\n
+        });\n
+\n
+        it(\'should redo removal of single row\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData().slice(0, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+\n
+          alter(\'remove_row\');\n
+\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBeNull();\n
+          expect(getDataAtRowProp(1, \'surname\')).toBeNull();\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+\n
+          HOT.redo();\n
+\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBeNull();\n
+          expect(getDataAtRowProp(1, \'surname\')).toBeNull();\n
+        });\n
+\n
+        it(\'should redo removal of multiple rows\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData()\n
+          });\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+          expect(getDataAtRowProp(2, \'name\')).toEqual(\'Roger\');\n
+          expect(getDataAtRowProp(2, \'surname\')).toEqual(\'Moore\');\n
+\n
+          alter(\'remove_row\', 1, 2);\n
+\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBeNull();\n
+          expect(getDataAtRowProp(1, \'surname\')).toBeNull();\n
+          expect(getDataAtRowProp(2, \'name\')).toBeNull();\n
+          expect(getDataAtRowProp(2, \'surname\')).toBeNull();\n
+\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+          expect(getDataAtRowProp(2, \'name\')).toEqual(\'Roger\');\n
+          expect(getDataAtRowProp(2, \'surname\')).toEqual(\'Moore\');\n
+\n
+          HOT.redo();\n
+\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBeNull();\n
+          expect(getDataAtRowProp(1, \'surname\')).toBeNull();\n
+          expect(getDataAtRowProp(2, \'name\')).toBeNull();\n
+          expect(getDataAtRowProp(2, \'surname\')).toBeNull();\n
+        });\n
+\n
+        it("should redo multiple changes", function () {\n
+          handsontable({\n
+            data: createObjectData().slice(0, 2)\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtRowProp(0, \'name\', \'Pierce\');\n
+          setDataAtRowProp(0, \'surname\', \'Brosnan\');\n
+          setDataAtRowProp(1, \'name\', \'Daniel\');\n
+          setDataAtRowProp(1, \'surname\', \'Craig\');\n
+\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Craig\');\n
+\n
+          HOT.undo();\n
+          HOT.undo();\n
+          HOT.undo();\n
+          HOT.undo();\n
+\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Craig\');\n
+\n
+          HOT.redo();\n
+          expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+          expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toBe(\'Craig\');\n
+\n
+        });\n
+\n
+        it("should redo multiple changes in cells with validators", function () {\n
+\n
+          var validatorSpy = jasmine.createSpy(\'validatorSpy\').andCallFake(function (value, result) {\n
+            result(true);\n
+          });\n
+\n
+          handsontable({\n
+            data: createObjectData().slice(0, 2),\n
+            validator: validatorSpy\n
+          });\n
+          var HOT = getInstance();\n
+\n
+          setDataAtRowProp(0, \'name\', \'Pierce\');\n
+          setDataAtRowProp(0, \'surname\', \'Brosnan\');\n
+          setDataAtRowProp(1, \'name\', \'Daniel\');\n
+          setDataAtRowProp(1, \'surname\', \'Craig\');\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after change\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Craig\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 1st undo\', 1000);\n
+\n
+          runs(function () {\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 2nd undo\', 1000);\n
+\n
+          runs(function () {\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 3rd undo\', 1000);\n
+\n
+          runs(function () {\n
+            validatorSpy.reset();\n
+            HOT.undo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 4th undo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Timothy\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Dalton\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 1st redo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Dalton\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 2nd redo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Sean\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 3rd redo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Connery\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waitsFor(function () {\n
+            return validatorSpy.calls.length;\n
+          }, \'validator spy call after 4th redo\', 1000);\n
+\n
+          runs(function () {\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Craig\');\n
+\n
+            validatorSpy.reset();\n
+            HOT.redo();\n
+          });\n
+\n
+          waits(100);\n
+\n
+          runs(function () {\n
+\n
+            expect(validatorSpy).not.toHaveBeenCalled();\n
+\n
+            expect(getDataAtRowProp(0, \'name\')).toBe(\'Pierce\');\n
+            expect(getDataAtRowProp(0, \'surname\')).toBe(\'Brosnan\');\n
+            expect(getDataAtRowProp(1, \'name\')).toBe(\'Daniel\');\n
+            expect(getDataAtRowProp(1, \'surname\')).toBe(\'Craig\');\n
+          });\n
+\n
+        });\n
+\n
+        it(\'should redo multiple row creations\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData().slice(0, 2)\n
+          });\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+          alter(\'insert_row\');\n
+\n
+          expect(countRows()).toEqual(6);\n
+\n
+          HOT.undo();\n
+          HOT.undo();\n
+          HOT.undo();\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(2);\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(3);\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(4);\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(5);\n
+\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(6);\n
+\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(6);\n
+\n
+\n
+        });\n
+\n
+        it(\'should undo multiple row removals\', function () {\n
+          var HOT = handsontable({\n
+            data: createObjectData()\n
+          });\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+          expect(getDataAtRowProp(2, \'name\')).toEqual(\'Roger\');\n
+          expect(getDataAtRowProp(2, \'surname\')).toEqual(\'Moore\');\n
+\n
+          alter(\'remove_row\');\n
+          alter(\'remove_row\');\n
+\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+\n
+          HOT.undo();\n
+          HOT.undo();\n
+          HOT.undo();\n
+\n
+          expect(countRows()).toEqual(3);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+          expect(getDataAtRowProp(2, \'name\')).toEqual(\'Roger\');\n
+          expect(getDataAtRowProp(2, \'surname\')).toEqual(\'Moore\');\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(2);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+          expect(getDataAtRowProp(1, \'name\')).toEqual(\'Sean\');\n
+          expect(getDataAtRowProp(1, \'surname\')).toEqual(\'Connery\');\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+\n
+          HOT.redo();\n
+          expect(countRows()).toEqual(1);\n
+          expect(getDataAtRowProp(0, \'name\')).toEqual(\'Timothy\');\n
+          expect(getDataAtRowProp(0, \'surname\')).toEqual(\'Dalton\');\n
+        });\n
+\n
+      });\n
+    });\n
+  });\n
+\n
+  describe("plugin features", function () {\n
+\n
+    describe("cell alignment", function () {\n
+\n
+      it("should undo a sequence of aligning cells", function () {\n
+        var hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(9, 9),\n
+          contextMenu: true,\n
+          colWidths: [50, 50, 50, 50, 50, 50, 50, 50, 50],\n
+          rowHeights: [50, 50, 50, 50, 50, 50, 50, 50, 50]\n
+        });\n
+\n
+        // top 3 rows center\n
+        selectCell(0, 0, 2, 8);\n
+        hot.getPlugin(\'contextMenu\').executeCommand(\'alignment:center\');\n
+\n
+        // middle 3 rows unchanged - left\n
+\n
+        // bottom 3 rows right\n
+        selectCell(6, 0, 8, 8);\n
+        hot.getPlugin(\'contextMenu\').executeCommand(\'alignment:right\');\n
+\n
+        // left 3 columns - middle\n
+        selectCell(0, 0, 8, 2);\n
+        hot.getPlugin(\'contextMenu\').executeCommand(\'alignment:middle\');\n
+\n
+        //middle 3 columns unchanged - top\n
+\n
+        // right 3 columns - bottom\n
+        selectCell(0, 6, 8, 8);\n
+        hot.getPlugin(\'contextMenu\').executeCommand(\'alignment:bottom\');\n
+\n
+        var cellMeta = hot.getCellMeta(0, 0);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(0, 7);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(5, 1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(5, 7);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(7, 1);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(7, 5);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(7, 7);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toBeGreaterThan(-1);\n
+\n
+        hot.undo();\n
+        cellMeta = hot.getCellMeta(0, 7);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toEqual(-1);\n
+\n
+        cellMeta = hot.getCellMeta(5, 7);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toEqual(-1);\n
+\n
+        cellMeta = hot.getCellMeta(7, 7);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toEqual(-1);\n
+\n
+        hot.undo();\n
+\n
+        cellMeta = hot.getCellMeta(0, 0);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toEqual(-1);\n
+\n
+        cellMeta = hot.getCellMeta(5, 1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toEqual(-1);\n
+\n
+        cellMeta = hot.getCellMeta(7, 1);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toEqual(-1);\n
+\n
+        hot.undo();\n
+\n
+        cellMeta = hot.getCellMeta(7, 1);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toEqual(-1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toEqual(-1);\n
+\n
+        cellMeta = hot.getCellMeta(7, 5);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toEqual(-1);\n
+\n
+        cellMeta = hot.getCellMeta(7, 7);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toEqual(-1);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toEqual(-1);\n
+\n
+        hot.undo();\n
+\n
+        // check if all cells are either non-adjusted or adjusted to the left (as default)\n
+        var finish;\n
+        for (var i = 0; i < 9; i++) {\n
+          for (var j = 0; j < 9; j++) {\n
+            cellMeta = hot.getCellMeta(i, j);\n
+            finish = cellMeta.className === void 0 || cellMeta.className.trim() === \'\' || cellMeta.className.trim() === \'htLeft\';\n
+            expect(finish).toBe(true);\n
+          }\n
+        }\n
+\n
+      });\n
+\n
+      it("should redo a sequence of aligning cells", function () {\n
+        var hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(9, 9),\n
+          contextMenu: true,\n
+          colWidths: [50, 50, 50, 50, 50, 50, 50, 50, 50],\n
+          rowHeights: [50, 50, 50, 50, 50, 50, 50, 50, 50]\n
+        });\n
+\n
+        // top 3 rows center\n
+        selectCell(0, 0, 2, 8);\n
+        hot.getPlugin(\'contextMenu\').executeCommand(\'alignment:center\');\n
+\n
+        // middle 3 rows unchanged - left\n
+\n
+        // bottom 3 rows right\n
+        selectCell(6, 0, 8, 8);\n
+        hot.getPlugin(\'contextMenu\').executeCommand(\'alignment:right\');\n
+\n
+        // left 3 columns - middle\n
+        selectCell(0, 0, 8, 2);\n
+        hot.getPlugin(\'contextMenu\').executeCommand(\'alignment:middle\');\n
+\n
+        //middle 3 columns unchanged - top\n
+\n
+        // right 3 columns - bottom\n
+        selectCell(0, 6, 8, 8);\n
+        hot.getPlugin(\'contextMenu\').executeCommand(\'alignment:bottom\');\n
+\n
+        var cellMeta = hot.getCellMeta(0, 0);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(0, 7);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(5, 1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(5, 7);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(7, 1);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(7, 5);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+\n
+        cellMeta = hot.getCellMeta(7, 7);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toBeGreaterThan(-1);\n
+\n
+        hot.undo();\n
+        hot.undo();\n
+        hot.undo();\n
+        hot.undo();\n
+\n
+        // check if all cells are either non-adjusted or adjusted to the left (as default)\n
+        var finish;\n
+        for (var i = 0; i < 9; i++) {\n
+          for (var j = 0; j < 9; j++) {\n
+            cellMeta = hot.getCellMeta(i, j);\n
+            finish = cellMeta.className === void 0 || cellMeta.className.trim() === \'\' || cellMeta.className.trim() === \'htLeft\';\n
+            expect(finish).toBe(true);\n
+          }\n
+        }\n
+\n
+        hot.redo();\n
+        cellMeta = hot.getCellMeta(0, 0);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+        cellMeta = hot.getCellMeta(1, 5);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+        cellMeta = hot.getCellMeta(2, 8);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+\n
+        hot.redo();\n
+        cellMeta = hot.getCellMeta(6, 0);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+        cellMeta = hot.getCellMeta(7, 5);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+        cellMeta = hot.getCellMeta(8, 8);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+\n
+        hot.redo();\n
+        cellMeta = hot.getCellMeta(0, 0);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+        cellMeta = hot.getCellMeta(5, 1);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toBeGreaterThan(-1);\n
+        cellMeta = hot.getCellMeta(8, 2);\n
+        expect(cellMeta.className.indexOf(\'htMiddle\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+\n
+        hot.redo();\n
+        cellMeta = hot.getCellMeta(0, 6);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htCenter\')).toBeGreaterThan(-1);\n
+        cellMeta = hot.getCellMeta(5, 7);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toBeGreaterThan(-1);\n
+        cellMeta = hot.getCellMeta(8, 8);\n
+        expect(cellMeta.className.indexOf(\'htBottom\')).toBeGreaterThan(-1);\n
+        expect(cellMeta.className.indexOf(\'htRight\')).toBeGreaterThan(-1);\n
+      });\n
+\n
+    });\n
+\n
+    it("should exposed new methods when plugin is enabled", function () {\n
+      var hot = handsontable({\n
+        undo: false\n
+      });\n
+\n
+      expect(hot.undo).toBeUndefined();\n
+      expect(hot.redo).toBeUndefined();\n
+      expect(hot.isUndoAvailable).toBeUndefined();\n
+      expect(hot.isRedoAvailable).toBeUndefined();\n
+      expect(hot.clearUndo).toBeUndefined();\n
+\n
+      updateSettings({\n
+        undo: true\n
+      });\n
+\n
+      expect(typeof hot.undo).toEqual(\'function\');\n
+      expect(typeof hot.redo).toEqual(\'function\');\n
+      expect(typeof hot.isUndoAvailable).toEqual(\'function\');\n
+      expect(typeof hot.isRedoAvailable).toEqual(\'function\');\n
+      expect(typeof hot.clearUndo).toEqual(\'function\');\n
+\n
+    });\n
+\n
+    it("should remove exposed methods when plugin is disbaled", function () {\n
+      var hot = handsontable({\n
+        undo: true\n
+      });\n
+\n
+      expect(typeof hot.undo).toEqual(\'function\');\n
+      expect(typeof hot.redo).toEqual(\'function\');\n
+      expect(typeof hot.isUndoAvailable).toEqual(\'function\');\n
+      expect(typeof hot.isRedoAvailable).toEqual(\'function\');\n
+      expect(typeof hot.clearUndo).toEqual(\'function\');\n
+\n
+      updateSettings({\n
+        undo: false\n
+      });\n
+\n
+      expect(hot.undo).toBeUndefined();\n
+      expect(hot.redo).toBeUndefined();\n
+      expect(hot.isUndoAvailable).toBeUndefined();\n
+      expect(hot.isRedoAvailable).toBeUndefined();\n
+      expect(hot.clearUndo).toBeUndefined();\n
+\n
+    });\n
+\n
+    describe("Keyboard shortcuts", function () {\n
+      it(\'should undo single change after hitting CTRL+Z\', function () {\n
+        handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+        });\n
+        var HOT = getInstance();\n
+\n
+        selectCell(0, 0);\n
+        setDataAtCell(0, 0, \'new value\');\n
+\n
+//        var keyboardEvent = $.Event(\'keydown\', {ctrlKey: true, keyCode: \'Z\'.charCodeAt(0)});\n
+//        this.$container.trigger(keyboardEvent);\n
+        this.$container.simulate(\'keydown\', {ctrlKey: true, keyCode: \'Z\'.charCodeAt(0)});\n
+        expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+      });\n
+\n
+      it(\'should redo single change after hitting CTRL+Y\', function () {\n
+        handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+        });\n
+        var HOT = getInstance();\n
+\n
+        selectCell(0, 0);\n
+        setDataAtCell(0, 0, \'new value\');\n
+\n
+        expect(getDataAtCell(0, 0)).toBe(\'new value\');\n
+\n
+        HOT.undo();\n
+        expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+\n
+//        var keyboardEvent = $.Event(\'keydown\', {ctrlKey: true, keyCode: \'Y\'.charCodeAt(0)});\n
+//        this.$container.trigger(keyboardEvent);\n
+        this.$container.simulate(\'keydown\', {ctrlKey: true, keyCode: \'Y\'.charCodeAt(0)});\n
+\n
+        expect(getDataAtCell(0, 0)).toBe(\'new value\');\n
+      });\n
+\n
+      it(\'should redo single change after hitting CTRL+SHIFT+Z\', function () {\n
+        handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(2, 2)\n
+        });\n
+        var HOT = getInstance();\n
+\n
+        selectCell(0, 0);\n
+        setDataAtCell(0, 0, \'new value\');\n
+\n
+        expect(getDataAtCell(0, 0)).toBe(\'new value\');\n
+\n
+        HOT.undo();\n
+        expect(getDataAtCell(0, 0)).toBe(\'A1\');\n
+\n
+//        var keyboardEvent = $.Event(\'keydown\', {ctrlKey: true, shiftKey: true, keyCode: \'Z\'.charCodeAt(0)});\n
+//        this.$container.trigger(keyboardEvent);\n
+        this.$container.simulate(\'keydown\', {ctrlKey: true, shiftKey: true, keyCode: \'Z\'.charCodeAt(0)});\n
+\n
+        expect(getDataAtCell(0, 0)).toBe(\'new value\');\n
+      });\n
+\n
+    });\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

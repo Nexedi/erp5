@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272713.04</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>utils.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {hasClass} from \'./../../helpers/dom/element\';\n
+\n
+export function normalizeSelection(selRange) {\n
+  return {\n
+    start: selRange.getTopLeftCorner(),\n
+    end: selRange.getBottomRightCorner()\n
+  };\n
+}\n
+\n
+export function isSeparator(cell) {\n
+  return hasClass(cell, \'htSeparator\');\n
+}\n
+\n
+export function hasSubMenu(cell) {\n
+  return hasClass(cell, \'htSubmenu\');\n
+}\n
+\n
+export function isDisabled(cell) {\n
+  return hasClass(cell, \'htDisabled\');\n
+}\n
+\n
+export function getValidSelection(hot) {\n
+  let selected = hot.getSelected();\n
+\n
+  if (!selected) {\n
+    return null;\n
+  }\n
+  if (selected[0] < 0) {\n
+    return null;\n
+  }\n
+  if (hot.countRows() >= hot.getSettings().maxRows) {\n
+    return null;\n
+  }\n
+\n
+  return selected;\n
+}\n
+\n
+export function prepareVerticalAlignClass(className, alignment) {\n
+  if (className.indexOf(alignment) != -1) {\n
+    return className;\n
+  }\n
+  className = className\n
+    .replace(\'htTop\', \'\')\n
+    .replace(\'htMiddle\', \'\')\n
+    .replace(\'htBottom\', \'\')\n
+    .replace(\'  \', \'\');\n
+\n
+  className += \' \' + alignment;\n
+\n
+  return className;\n
+}\n
+\n
+export function prepareHorizontalAlignClass(className, alignment) {\n
+  if (className.indexOf(alignment) != -1) {\n
+    return className;\n
+  }\n
+  className = className\n
+    .replace(\'htLeft\', \'\')\n
+    .replace(\'htCenter\', \'\')\n
+    .replace(\'htRight\', \'\')\n
+    .replace(\'htJustify\', \'\')\n
+    .replace(\'  \', \'\');\n
+\n
+  className += \' \' + alignment;\n
+\n
+  return className;\n
+}\n
+\n
+export function getAlignmentClasses(range, callback) {\n
+  const classes = {};\n
+\n
+  for (let row = range.from.row; row <= range.to.row; row++) {\n
+    for (let col = range.from.col; col <= range.to.col; col++) {\n
+      if (!classes[row]) {\n
+        classes[row] = [];\n
+      }\n
+      classes[row][col] = callback(row, col);\n
+    }\n
+  }\n
+\n
+  return classes;\n
+}\n
+\n
+export function align(range, type, alignment, cellDescriptor) {\n
+  if (range.from.row == range.to.row && range.from.col == range.to.col) {\n
+    applyAlignClassName(range.from.row, range.from.col, type, alignment, cellDescriptor);\n
+  } else {\n
+    for (let row = range.from.row; row <= range.to.row; row++) {\n
+      for (let col = range.from.col; col <= range.to.col; col++) {\n
+        applyAlignClassName(row, col, type, alignment, cellDescriptor);\n
+      }\n
+    }\n
+  }\n
+}\n
+\n
+function applyAlignClassName(row, col, type, alignment, cellDescriptor) {\n
+  let cellMeta = cellDescriptor(row, col);\n
+  let className = alignment;\n
+\n
+  if (cellMeta.className) {\n
+    if (type === \'vertical\') {\n
+      className = prepareVerticalAlignClass(cellMeta.className, alignment);\n
+    } else {\n
+      className = prepareHorizontalAlignClass(cellMeta.className, alignment);\n
+    }\n
+  }\n
+  cellMeta.className = className;\n
+}\n
+\n
+export function checkSelectionConsistency(range, comparator) {\n
+  let result = false;\n
+\n
+  if (range) {\n
+    range.forAll(function(row, col) {\n
+      if (comparator(row, col)) {\n
+        result = true;\n
+\n
+        return false;\n
+      }\n
+    });\n
+  }\n
+\n
+  return result;\n
+}\n
+\n
+export function markLabelAsSelected(label) {\n
+  // workaround for https://github.com/handsontable/handsontable/issues/1946\n
+  return \'<span class="selected">\' + String.fromCharCode(10003) + \'</span>\' + label;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3078</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>utils.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

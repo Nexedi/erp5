@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272416.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>site.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>html { margin: 0; padding: 0; }\n
+body { font-size: 100%; margin: 0; padding: 1.75em; font-family: \'Helvetica Neue\', Arial, sans-serif; }\n
+\n
+h1 { font-size: 1.75em; margin: 0 0 0.6em 0; }\n
+h2 { font-size: 1.25em; margin: 0 0 0.6em 0; }\n
+\n
+a { color: #2996cc; }\n
+a:hover { text-decoration: none; }\n
+\n
+p { line-height: 1.5em; }\n
+.small { color: #666; font-size: 0.875em; }\n
+.large { font-size: 1.25em; }\n
+\n
+\n
+label {\n
+    font-weight: bold;\n
+}\n
+\n
+input[type="text"] {\n
+    margin: 0.5em 0 3em 0;\n
+    padding: 0.5em;\n
+}\n
+\n
+button#datepicker-button {\n
+    margin-bottom: 3em;\n
+}\n
+\n
+.flow-element {\n
+    display: inline-block;\n
+    margin-right: 3em;\n
+    vertical-align: top;\n
+}\n
+.flow-element:last-child {\n
+    margin-right: 0;\n
+}\n
+.flow-element input {\n
+    margin-top: 0;\n
+}\n
+\n
+#container {\n
+    min-height: 15em;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>774</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>site.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

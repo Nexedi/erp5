@@ -1,0 +1,523 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272620.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>border.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  getComputedStyle,\n
+  getTrimmingContainer,\n
+  innerWidth,\n
+  offset,\n
+  outerHeight,\n
+  outerWidth,\n
+    } from \'./../../../helpers/dom/element\';\n
+import {stopImmediatePropagation} from \'./../../../helpers/dom/event\';\n
+import {EventManager} from \'./../../../eventManager\';\n
+import {WalkontableCellCoords} from \'./cell/coords\';\n
+\n
+\n
+class WalkontableBorder {\n
+  /**\n
+   * @param {Walkontable} wotInstance\n
+   * @param {Object} settings\n
+   */\n
+  constructor(wotInstance, settings) {\n
+    if (!settings) {\n
+      return;\n
+    }\n
+    this.eventManager = new EventManager(wotInstance);\n
+    this.instance = wotInstance;\n
+    this.wot = wotInstance;\n
+    this.settings = settings;\n
+    this.mouseDown = false;\n
+    this.main = null;\n
+\n
+    this.top = null;\n
+    this.left = null;\n
+    this.bottom = null;\n
+    this.right = null;\n
+\n
+    this.topStyle = null;\n
+    this.leftStyle = null;\n
+    this.bottomStyle = null;\n
+    this.rightStyle = null;\n
+\n
+    this.cornerDefaultStyle = {\n
+      width: \'5px\',\n
+      height: \'5px\',\n
+      borderWidth: \'2px\',\n
+      borderStyle: \'solid\',\n
+      borderColor: \'#FFF\'\n
+    };\n
+    this.corner = null;\n
+    this.cornerStyle = null;\n
+\n
+    this.createBorders(settings);\n
+    this.registerListeners();\n
+  }\n
+\n
+  /**\n
+   * Register all necessary events\n
+   */\n
+  registerListeners() {\n
+    this.eventManager.addEventListener(document.body, \'mousedown\', () => this.onMouseDown());\n
+    this.eventManager.addEventListener(document.body, \'mouseup\', () => this.onMouseUp());\n
+\n
+    for (let c = 0, len = this.main.childNodes.length; c < len; c++) {\n
+      this.eventManager.addEventListener(this.main.childNodes[c], \'mouseenter\', (event) => this.onMouseEnter(event));\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Mouse down listener\n
+   *\n
+   * @private\n
+   */\n
+  onMouseDown() {\n
+    this.mouseDown = true;\n
+  }\n
+\n
+  /**\n
+   * Mouse up listener\n
+   *\n
+   * @private\n
+   */\n
+  onMouseUp() {\n
+    this.mouseDown = false;\n
+  }\n
+\n
+  /**\n
+   * Mouse enter listener\n
+   *\n
+   * @private\n
+   * @param {Event} event Dom event\n
+   */\n
+  onMouseEnter(event) {\n
+    if (!this.mouseDown || !this.wot.getSetting(\'hideBorderOnMouseDownOver\')) {\n
+      return;\n
+    }\n
+    event.preventDefault();\n
+    stopImmediatePropagation(event);\n
+\n
+    let _this = this;\n
+    let bounds = this.getBoundingClientRect();\n
+    this.style.display = \'none\';\n
+\n
+    function isOutside(event) {\n
+      if (event.clientY < Math.floor(bounds.top)) {\n
+        return true;\n
+      }\n
+      if (event.clientY > Math.ceil(bounds.top + bounds.height)) {\n
+        return true;\n
+      }\n
+      if (event.clientX < Math.floor(bounds.left)) {\n
+        return true;\n
+      }\n
+      if (event.clientX > Math.ceil(bounds.left + bounds.width)) {\n
+        return true;\n
+      }\n
+    }\n
+    function handler(event) {\n
+      if (isOutside(event)) {\n
+        _this.eventManager.removeEventListener(document.body, \'mousemove\', handler);\n
+        _this.style.display = \'block\';\n
+      }\n
+    }\n
+    this.eventManager.addEventListener(document.body, \'mousemove\', handler);\n
+  }\n
+\n
+  /**\n
+   * Create border elements\n
+   *\n
+   * @param {Object} settings\n
+   */\n
+  createBorders(settings) {\n
+    this.main = document.createElement(\'div\');\n
+\n
+    let borderDivs = [\'top\', \'left\', \'bottom\', \'right\', \'corner\'];\n
+    let style = this.main.style;\n
+    style.position = \'absolute\';\n
+    style.top = 0;\n
+    style.left = 0;\n
+\n
+    for (let i = 0; i < 5; i++) {\n
+      let position = borderDivs[i];\n
+      let div = document.createElement(\'div\');\n
+      div.className = \'wtBorder \' + (this.settings.className || \'\'); // + borderDivs[i];\n
+\n
+      if (this.settings[position] && this.settings[position].hide) {\n
+        div.className += \' hidden\';\n
+      }\n
+      style = div.style;\n
+      style.backgroundColor = (this.settings[position] && this.settings[position].color) ? this.settings[position].color : settings.border.color;\n
+      style.height = (this.settings[position] && this.settings[position].width) ? this.settings[position].width + \'px\' : settings.border.width + \'px\';\n
+      style.width = (this.settings[position] && this.settings[position].width) ? this.settings[position].width + \'px\' : settings.border.width + \'px\';\n
+\n
+      this.main.appendChild(div);\n
+    }\n
+    this.top = this.main.childNodes[0];\n
+    this.left = this.main.childNodes[1];\n
+    this.bottom = this.main.childNodes[2];\n
+    this.right = this.main.childNodes[3];\n
+\n
+    this.topStyle = this.top.style;\n
+    this.leftStyle = this.left.style;\n
+    this.bottomStyle = this.bottom.style;\n
+    this.rightStyle = this.right.style;\n
+\n
+    this.corner = this.main.childNodes[4];\n
+    this.corner.className += \' corner\';\n
+    this.cornerStyle = this.corner.style;\n
+    this.cornerStyle.width = this.cornerDefaultStyle.width;\n
+    this.cornerStyle.height = this.cornerDefaultStyle.height;\n
+    this.cornerStyle.border = [\n
+      this.cornerDefaultStyle.borderWidth,\n
+      this.cornerDefaultStyle.borderStyle,\n
+      this.cornerDefaultStyle.borderColor\n
+    ].join(\' \');\n
+\n
+    if (Handsontable.mobileBrowser) {\n
+      this.createMultipleSelectorHandles();\n
+    }\n
+    this.disappear();\n
+\n
+    if (!this.wot.wtTable.bordersHolder) {\n
+      this.wot.wtTable.bordersHolder = document.createElement(\'div\');\n
+      this.wot.wtTable.bordersHolder.className = \'htBorders\';\n
+      this.wot.wtTable.spreader.appendChild(this.wot.wtTable.bordersHolder);\n
+    }\n
+    this.wot.wtTable.bordersHolder.insertBefore(this.main, this.wot.wtTable.bordersHolder.firstChild);\n
+  }\n
+\n
+  /**\n
+   * Create multiple selector handler for mobile devices\n
+   */\n
+  createMultipleSelectorHandles() {\n
+    this.selectionHandles = {\n
+      topLeft: document.createElement(\'DIV\'),\n
+      topLeftHitArea: document.createElement(\'DIV\'),\n
+      bottomRight: document.createElement(\'DIV\'),\n
+      bottomRightHitArea: document.createElement(\'DIV\')\n
+    };\n
+    let width = 10;\n
+    let hitAreaWidth = 40;\n
+\n
+    this.selectionHandles.topLeft.className = \'topLeftSelectionHandle\';\n
+    this.selectionHandles.topLeftHitArea.className = \'topLeftSelectionHandle-HitArea\';\n
+    this.selectionHandles.bottomRight.className = \'bottomRightSelectionHandle\';\n
+    this.selectionHandles.bottomRightHitArea.className = \'bottomRightSelectionHandle-HitArea\';\n
+\n
+    this.selectionHandles.styles = {\n
+      topLeft: this.selectionHandles.topLeft.style,\n
+      topLeftHitArea: this.selectionHandles.topLeftHitArea.style,\n
+      bottomRight: this.selectionHandles.bottomRight.style,\n
+      bottomRightHitArea: this.selectionHandles.bottomRightHitArea.style\n
+    };\n
+\n
+    let hitAreaStyle = {\n
+      \'position\': \'absolute\',\n
+      \'height\': hitAreaWidth + \'px\',\n
+      \'width\': hitAreaWidth + \'px\',\n
+      \'border-radius\': parseInt(hitAreaWidth / 1.5, 10) + \'px\'\n
+    };\n
+\n
+    for (let prop in hitAreaStyle) {\n
+      if (hitAreaStyle.hasOwnProperty(prop)) {\n
+        this.selectionHandles.styles.bottomRightHitArea[prop] = hitAreaStyle[prop];\n
+        this.selectionHandles.styles.topLeftHitArea[prop] = hitAreaStyle[prop];\n
+      }\n
+    }\n
+\n
+    let handleStyle = {\n
+      \'position\': \'absolute\',\n
+      \'height\': width + \'px\',\n
+      \'width\': width + \'px\',\n
+      \'border-radius\': parseInt(width / 1.5, 10) + \'px\',\n
+      \'background\': \'#F5F5FF\',\n
+      \'border\': \'1px solid #4285c8\'\n
+    };\n
+\n
+    for (let prop in handleStyle) {\n
+      if (handleStyle.hasOwnProperty(prop)) {\n
+        this.selectionHandles.styles.bottomRight[prop] = handleStyle[prop];\n
+        this.selectionHandles.styles.topLeft[prop] = handleStyle[prop];\n
+      }\n
+    }\n
+    this.main.appendChild(this.selectionHandles.topLeft);\n
+    this.main.appendChild(this.selectionHandles.bottomRight);\n
+    this.main.appendChild(this.selectionHandles.topLeftHitArea);\n
+    this.main.appendChild(this.selectionHandles.bottomRightHitArea);\n
+  }\n
+\n
+  isPartRange(row, col) {\n
+    if (this.wot.selections.area.cellRange) {\n
+      if (row != this.wot.selections.area.cellRange.to.row || col != this.wot.selections.area.cellRange.to.col) {\n
+        return true;\n
+      }\n
+    }\n
+\n
+    return false;\n
+  }\n
+\n
+  updateMultipleSelectionHandlesPosition(row, col, top, left, width, height) {\n
+    let handleWidth = parseInt(this.selectionHandles.styles.topLeft.width, 10);\n
+    let hitAreaWidth = parseInt(this.selectionHandles.styles.topLeftHitArea.width, 10);\n
+\n
+    this.selectionHandles.styles.topLeft.top = parseInt(top - handleWidth, 10) + "px";\n
+    this.selectionHandles.styles.topLeft.left = parseInt(left - handleWidth, 10) + "px";\n
+\n
+    this.selectionHandles.styles.topLeftHitArea.top = parseInt(top - (hitAreaWidth / 4) * 3, 10) + "px";\n
+    this.selectionHandles.styles.topLeftHitArea.left = parseInt(left - (hitAreaWidth / 4) * 3, 10) + "px";\n
+\n
+    this.selectionHandles.styles.bottomRight.top = parseInt(top + height, 10) + "px";\n
+    this.selectionHandles.styles.bottomRight.left = parseInt(left + width, 10) + "px";\n
+\n
+    this.selectionHandles.styles.bottomRightHitArea.top = parseInt(top + height - hitAreaWidth / 4, 10) + "px";\n
+    this.selectionHandles.styles.bottomRightHitArea.left = parseInt(left + width - hitAreaWidth / 4, 10) + "px";\n
+\n
+    if (this.settings.border.multipleSelectionHandlesVisible && this.settings.border.multipleSelectionHandlesVisible()) {\n
+      this.selectionHandles.styles.topLeft.display = "block";\n
+      this.selectionHandles.styles.topLeftHitArea.display = "block";\n
+\n
+      if (!this.isPartRange(row, col)) {\n
+        this.selectionHandles.styles.bottomRight.display = "block";\n
+        this.selectionHandles.styles.bottomRightHitArea.display = "block";\n
+      } else {\n
+        this.selectionHandles.styles.bottomRight.display = "none";\n
+        this.selectionHandles.styles.bottomRightHitArea.display = "none";\n
+      }\n
+    } else {\n
+      this.selectionHandles.styles.topLeft.display = "none";\n
+      this.selectionHandles.styles.bottomRight.display = "none";\n
+      this.selectionHandles.styles.topLeftHitArea.display = "none";\n
+      this.selectionHandles.styles.bottomRightHitArea.display = "none";\n
+    }\n
+\n
+    if (row == this.wot.wtSettings.getSetting(\'fixedRowsTop\') || col == this.wot.wtSettings.getSetting(\'fixedColumnsLeft\')) {\n
+      this.selectionHandles.styles.topLeft.zIndex = "9999";\n
+      this.selectionHandles.styles.topLeftHitArea.zIndex = "9999";\n
+    } else {\n
+      this.selectionHandles.styles.topLeft.zIndex = "";\n
+      this.selectionHandles.styles.topLeftHitArea.zIndex = "";\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Show border around one or many cells\n
+   *\n
+   * @param {Array} corners\n
+   */\n
+  appear(corners) {\n
+    if (this.disabled) {\n
+      return;\n
+    }\n
+    var isMultiple,\n
+      fromTD,\n
+      toTD,\n
+      fromOffset,\n
+      toOffset,\n
+      containerOffset,\n
+      top,\n
+      minTop,\n
+      left,\n
+      minLeft,\n
+      height,\n
+      width,\n
+      fromRow,\n
+      fromColumn,\n
+      toRow,\n
+      toColumn,\n
+      ilen;\n
+\n
+    if (this.wot.cloneOverlay instanceof WalkontableTopOverlay || this.wot.cloneOverlay instanceof WalkontableCornerOverlay) {\n
+      ilen = this.wot.getSetting(\'fixedRowsTop\');\n
+    } else {\n
+      ilen = this.wot.wtTable.getRenderedRowsCount();\n
+    }\n
+\n
+    for (let i = 0; i < ilen; i++) {\n
+      let s = this.wot.wtTable.rowFilter.renderedToSource(i);\n
+\n
+      if (s >= corners[0] && s <= corners[2]) {\n
+        fromRow = s;\n
+        break;\n
+      }\n
+    }\n
+\n
+    for (let i = ilen - 1; i >= 0; i--) {\n
+      let s = this.wot.wtTable.rowFilter.renderedToSource(i);\n
+\n
+      if (s >= corners[0] && s <= corners[2]) {\n
+        toRow = s;\n
+        break;\n
+      }\n
+    }\n
+\n
+    ilen = this.wot.wtTable.getRenderedColumnsCount();\n
+\n
+    for (let i = 0; i < ilen; i++) {\n
+      let s = this.wot.wtTable.columnFilter.renderedToSource(i);\n
+\n
+      if (s >= corners[1] && s <= corners[3]) {\n
+        fromColumn = s;\n
+        break;\n
+      }\n
+    }\n
+\n
+    for (let i = ilen - 1; i >= 0; i--) {\n
+      let s = this.wot.wtTable.columnFilter.renderedToSource(i);\n
+\n
+      if (s >= corners[1] && s <= corners[3]) {\n
+        toColumn = s;\n
+        break;\n
+      }\n
+    }\n
+    if (fromRow === void 0 || fromColumn === void 0) {\n
+      this.disappear();\n
+\n
+      return;\n
+    }\n
+    isMultiple = (fromRow !== toRow || fromColumn !== toColumn);\n
+    fromTD = this.wot.wtTable.getCell(new WalkontableCellCoords(fromRow, fromColumn));\n
+    toTD = isMultiple ? this.wot.wtTable.getCell(new WalkontableCellCoords(toRow, toColumn)) : fromTD;\n
+    fromOffset = offset(fromTD);\n
+    toOffset = isMultiple ? offset(toTD) : fromOffset;\n
+    containerOffset = offset(this.wot.wtTable.TABLE);\n
+\n
+    minTop = fromOffset.top;\n
+    height = toOffset.top + outerHeight(toTD) - minTop;\n
+    minLeft = fromOffset.left;\n
+    width = toOffset.left + outerWidth(toTD) - minLeft;\n
+\n
+    top = minTop - containerOffset.top - 1;\n
+    left = minLeft - containerOffset.left - 1;\n
+    let style = getComputedStyle(fromTD);\n
+\n
+    if (parseInt(style.borderTopWidth, 10) > 0) {\n
+      top += 1;\n
+      height = height > 0 ? height - 1 : 0;\n
+    }\n
+    if (parseInt(style.borderLeftWidth, 10) > 0) {\n
+      left += 1;\n
+      width = width > 0 ? width - 1 : 0;\n
+    }\n
+\n
+    this.topStyle.top = top + \'px\';\n
+    this.topStyle.left = left + \'px\';\n
+    this.topStyle.width = width + \'px\';\n
+    this.topStyle.display = \'block\';\n
+\n
+    this.leftStyle.top = top + \'px\';\n
+    this.leftStyle.left = left + \'px\';\n
+    this.leftStyle.height = height + \'px\';\n
+    this.leftStyle.display = \'block\';\n
+\n
+    let delta = Math.floor(this.settings.border.width / 2);\n
+\n
+    this.bottomStyle.top = top + height - delta + \'px\';\n
+    this.bottomStyle.left = left + \'px\';\n
+    this.bottomStyle.width = width + \'px\';\n
+    this.bottomStyle.display = \'block\';\n
+\n
+    this.rightStyle.top = top + \'px\';\n
+    this.rightStyle.left = left + width - delta + \'px\';\n
+    this.rightStyle.height = height + 1 + \'px\';\n
+    this.rightStyle.display = \'block\';\n
+\n
+    if (Handsontable.mobileBrowser || (!this.hasSetting(this.settings.border.cornerVisible) || this.isPartRange(toRow, toColumn))) {\n
+      this.cornerStyle.display = \'none\';\n
+    } else {\n
+      this.cornerStyle.top = top + height - 4 + \'px\';\n
+      this.cornerStyle.left = left + width - 4 + \'px\';\n
+      this.cornerStyle.borderRightWidth = this.cornerDefaultStyle.borderWidth;\n
+      this.cornerStyle.width = this.cornerDefaultStyle.width;\n
+      this.cornerStyle.display = \'block\';\n
+\n
+      if (toColumn === this.wot.getSetting(\'totalColumns\') - 1) {\n
+        let trimmingContainer = getTrimmingContainer(this.wot.wtTable.TABLE);\n
+        let cornerOverlappingContainer = toTD.offsetLeft + outerWidth(toTD) >= innerWidth(trimmingContainer);\n
+\n
+        if (cornerOverlappingContainer) {\n
+          this.cornerStyle.left = Math.floor(left + width - 3 - parseInt(this.cornerDefaultStyle.width) / 2) + "px";\n
+          this.cornerStyle.borderRightWidth = 0;\n
+        }\n
+      }\n
+    }\n
+\n
+    if (Handsontable.mobileBrowser) {\n
+      this.updateMultipleSelectionHandlesPosition(fromRow, fromColumn, top, left, width, height);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Hide border\n
+   */\n
+  disappear() {\n
+    this.topStyle.display = \'none\';\n
+    this.leftStyle.display = \'none\';\n
+    this.bottomStyle.display = \'none\';\n
+    this.rightStyle.display = \'none\';\n
+    this.cornerStyle.display = \'none\';\n
+\n
+    if (Handsontable.mobileBrowser) {\n
+      this.selectionHandles.styles.topLeft.display = \'none\';\n
+      this.selectionHandles.styles.bottomRight.display = \'none\';\n
+    }\n
+  }\n
+\n
+  /**\n
+   * @param {Function} setting\n
+   * @returns {*}\n
+   */\n
+  hasSetting(setting) {\n
+    if (typeof setting === \'function\') {\n
+      return setting();\n
+    }\n
+\n
+    return !!setting;\n
+  }\n
+}\n
+\n
+export {WalkontableBorder};\n
+\n
+window.WalkontableBorder = WalkontableBorder;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>15196</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>border.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

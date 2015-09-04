@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272542.47</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_setDataAtCellSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_setDataAtCell\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfNestedObjects = function () {\n
+    return [\n
+      {id: 1, name: {\n
+        first: "Ted",\n
+        last: "Right"\n
+      }},\n
+      {id: 2, name: {\n
+        first: "Frank",\n
+        last: "Honest"\n
+      }},\n
+      {id: 3, name: {\n
+        first: "Joan",\n
+        last: "Well"\n
+      }}\n
+    ]\n
+  };\n
+\n
+  var htmlText = "Ben & Jerry\'s";\n
+\n
+  it(\'HTML special chars should be preserved in data map but escaped in DOM\', function () {\n
+    //https://github.com/handsontable/handsontable/issues/147\n
+    handsontable();\n
+    var td = setDataAtCell(0, 0, htmlText);\n
+    selectCell(0, 0);\n
+//    $(td).trigger("dblclick");\n
+    $(td).simulate("dblclick");\n
+    deselectCell();\n
+    expect(getDataAtCell(0, 0)).toEqual(htmlText);\n
+  });\n
+\n
+  it(\'should correctly paste string that contains "quotes"\', function () {\n
+    //https://github.com/handsontable/handsontable/issues/205\n
+    var called;\n
+    runs(function () {\n
+      handsontable({\n
+        afterChange: function (changes, source) {\n
+          if (source === \'paste\') {\n
+            called = true;\n
+          }\n
+        }\n
+      });\n
+      selectCell(0, 0);\n
+      triggerPaste(\'1\\nThis is a "test" and a test\\n2\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return (called === true)\n
+    }, "onChange callback called", 1000);\n
+\n
+    runs(function () {\n
+      expect(getDataAtCell(0, 0)).toEqual(\'1\');\n
+      expect(getDataAtCell(1, 0)).toEqual(\'This is a "test" and a test\');\n
+      expect(getDataAtCell(2, 0)).toEqual(\'2\');\n
+    });\n
+  });\n
+\n
+  it(\'should correctly paste string when dataSchema is used\', function () {\n
+    //https://github.com/handsontable/handsontable/issues/237\n
+    var called;\n
+    runs(function () {\n
+      handsontable({\n
+        colHeaders: true,\n
+        dataSchema: {\n
+          col1: null,\n
+          col2: null,\n
+          col3: null\n
+        },\n
+        afterChange: function (changes, source) {\n
+          if (source === \'paste\') {\n
+            called = true;\n
+          }\n
+        }\n
+      });\n
+      selectCell(0, 0);\n
+      triggerPaste(\'1\\tTest\\t2\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return (called === true)\n
+    }, "onChange callback called", 1000);\n
+\n
+    runs(function () {\n
+      expect(getDataAtCell(0, 0)).toEqual(\'1\');\n
+      expect(getDataAtCell(0, 1)).toEqual(\'Test\');\n
+      expect(getDataAtCell(0, 2)).toEqual(\'2\');\n
+    });\n
+  });\n
+\n
+  it(\'should paste not more rows than maxRows\', function () {\n
+    var called;\n
+    runs(function () {\n
+      handsontable({\n
+        minSpareRows: 1,\n
+        minRows: 5,\n
+        maxRows: 10,\n
+        afterChange: function (changes, source) {\n
+          if (source === \'paste\') {\n
+            called = true;\n
+          }\n
+        }\n
+      });\n
+      selectCell(4, 0);\n
+      triggerPaste(\'1\\n2\\n3\\n4\\n5\\n6\\n7\\n8\\n9\\n10\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return (called === true)\n
+    }, "onChange callback called", 1000);\n
+\n
+    runs(function () {\n
+      expect(countRows()).toEqual(10);\n
+      expect(getDataAtCell(9, 0)).toEqual(\'6\');\n
+    });\n
+  });\n
+\n
+  it(\'should paste not more cols than maxCols\', function () {\n
+    var called;\n
+\n
+    runs(function () {\n
+      handsontable({\n
+        minSpareCols: 1,\n
+        minCols: 5,\n
+        maxCols: 10,\n
+        afterChange: function (changes, source) {\n
+          if (source === \'paste\') {\n
+            called = true;\n
+          }\n
+        }\n
+      });\n
+      selectCell(0, 4);\n
+      triggerPaste(\'1\\t2\\t3\\t4\\t5\\t6\\t7\\t8\\t9\\t10\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return (called === true)\n
+    }, "onChange callback called", 1000);\n
+\n
+    runs(function () {\n
+      expect(countCols()).toEqual(10);\n
+      expect(getDataAtCell(0, 9)).toEqual(\'6\');\n
+    });\n
+  });\n
+\n
+  it(\'should paste not more rows & cols than maxRows & maxCols\', function () {\n
+    var called;\n
+    runs(function () {\n
+      handsontable({\n
+        minSpareRows: 1,\n
+        minSpareCols: 1,\n
+        minRows: 5,\n
+        minCols: 5,\n
+        maxRows: 6,\n
+        maxCols: 6,\n
+        afterChange: function (changes, source) {\n
+          if (source === \'paste\') {\n
+            called = true;\n
+          }\n
+        }\n
+      });\n
+      selectCell(4, 4);\n
+      triggerPaste(\'1\\t2\\t3\\n4\\t5\\t6\\n7\\t8\\t9\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return (called === true)\n
+    }, "onChange callback called", 1000);\n
+\n
+    runs(function () {\n
+      expect(countRows()).toEqual(6);\n
+      expect(countCols()).toEqual(6);\n
+      expect(getDataAtCell(5, 5)).toEqual(\'5\');\n
+    });\n
+  });\n
+\n
+  //https://github.com/handsontable/handsontable/issues/250\n
+  it(\'should create new rows when pasting into grid with object data source\', function () {\n
+    var called;\n
+    runs(function () {\n
+      handsontable({\n
+        data: arrayOfNestedObjects(),\n
+        colHeaders: true,\n
+        columns: [\n
+          {data: "id"},\n
+          {data: "name.last"},\n
+          {data: "name.first"}\n
+        ],\n
+        minSpareRows: 1,\n
+        afterChange: function (changes, source) {\n
+          if (source === \'paste\') {\n
+            called = true;\n
+          }\n
+        }\n
+      });\n
+      selectCell(3, 0);\n
+      triggerPaste(\'a\\tb\\tc\\nd\\te\\tf\\ng\\th\\ti\');\n
+    });\n
+\n
+    waitsFor(function () {\n
+      return (called === true)\n
+    }, "onChange callback called", 1000);\n
+\n
+    runs(function () {\n
+      expect(countRows()).toEqual(7);\n
+      expect(getDataAtCell(5, 2)).toEqual(\'i\');\n
+    });\n
+  });\n
+\n
+  //https://handsontable.com/demo/datasources.html\n
+  it(\'should work with functional data source\', function () {\n
+    handsontable({\n
+      data: [\n
+        model({id: 1, name: "Ted Right", address: ""}),\n
+        model({id: 2, name: "Frank Honest", address: ""}),\n
+        model({id: 3, name: "Joan Well", address: ""})\n
+      ],\n
+      dataSchema: model,\n
+      startRows: 5,\n
+      startCols: 3,\n
+      colHeaders: [\'ID\', \'Name\', \'Address\'],\n
+      columns: [\n
+        {data: property("id")},\n
+        {data: property("name")},\n
+        {data: property("address")}\n
+      ],\n
+      minSpareRows: 1\n
+    });\n
+\n
+    function model(opts) {\n
+      var _pub = {},\n
+        _priv = $.extend({\n
+          id: undefined,\n
+          name: undefined,\n
+          address: undefined\n
+        }, opts);\n
+\n
+      _pub.attr = function (attr, val) {\n
+        if (typeof val === \'undefined\') {\n
+          return _priv[attr];\n
+        }\n
+        _priv[attr] = val;\n
+\n
+        return _pub;\n
+      };\n
+\n
+      return _pub;\n
+    }\n
+\n
+    function property(attr) {\n
+      return function (row, value) {\n
+        return row.attr(attr, value);\n
+      }\n
+    }\n
+\n
+    expect(getDataAtCell(1, 1)).toEqual(\'Frank Honest\');\n
+    setDataAtCell(1, 1, \'Something Else\');\n
+    expect(getDataAtCell(1, 1)).toEqual(\'Something Else\');\n
+  });\n
+\n
+  it(\'should accept changes array as 1st param and source as 2nd param\', function () {\n
+    var callCount = 0\n
+      , lastSource = \'\';\n
+    handsontable({\n
+      afterChange: function (changes, source) {\n
+        callCount++;\n
+        lastSource = source;\n
+      }\n
+    });\n
+\n
+    setDataAtCell([[0, 0, \'new value\']], \'customSource\');\n
+    expect(getDataAtCell(0, 0)).toEqual(\'new value\');\n
+    expect(lastSource).toEqual(\'customSource\');\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7193</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_setDataAtCellSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

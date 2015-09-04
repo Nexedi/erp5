@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272516.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>samplesGeneratorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>describe(\'SamplesGenerator\', function () {\n
+\n
+  var SamplesGenerator = Handsontable.utils.SamplesGenerator;\n
+\n
+  it(\'should internally call `generateSamples` when calling `generateRowSamples`\', function () {\n
+    var sg = new SamplesGenerator();\n
+\n
+    spyOn(sg, \'generateSamples\').andReturn(\'test\');\n
+\n
+    var result = sg.generateRowSamples(\'first param\', \'second param\');\n
+\n
+    expect(result).toBe(\'test\');\n
+    expect(sg.generateSamples.calls.length).toBe(1);\n
+    expect(sg.generateSamples.calls[0].args[0]).toBe(\'row\');\n
+    expect(sg.generateSamples.calls[0].args[1]).toBe(\'second param\');\n
+    expect(sg.generateSamples.calls[0].args[2]).toBe(\'first param\');\n
+  });\n
+\n
+  it(\'should internally call `generateSamples` when calling `generateColumnSamples`\', function () {\n
+    var sg = new SamplesGenerator();\n
+\n
+    spyOn(sg, \'generateSamples\').andReturn(\'test\');\n
+\n
+    var result = sg.generateColumnSamples(\'first param\', \'second param\');\n
+\n
+    expect(result).toBe(\'test\');\n
+    expect(sg.generateSamples.calls.length).toBe(1);\n
+    expect(sg.generateSamples.calls[0].args[0]).toBe(\'col\');\n
+    expect(sg.generateSamples.calls[0].args[1]).toBe(\'second param\');\n
+    expect(sg.generateSamples.calls[0].args[2]).toBe(\'first param\');\n
+  });\n
+\n
+  it(\'should generate collection of Maps when range is passed as Number\', function () {\n
+    var sg = new SamplesGenerator();\n
+\n
+    spyOn(sg, \'generateSample\').andCallFake(function(type, range, index) {\n
+      var map = new Map();\n
+\n
+      map.set(index, {type: type, range: range, index: index});\n
+\n
+      return map;\n
+    });\n
+\n
+    var result = sg.generateSamples(\'row\', 10, 1);\n
+\n
+    expect(result instanceof Map).toBe(true);\n
+    expect(result.size).toBe(1);\n
+    expect(result.get(1).get(1).type).toBe(\'row\');\n
+  });\n
+\n
+  it(\'should generate collection of Maps when range is passed as Object\', function () {\n
+    var sg = new SamplesGenerator();\n
+\n
+    spyOn(sg, \'generateSample\').andCallFake(function(type, range, index) {\n
+      var map = new Map();\n
+\n
+      map.set(index, {type: type, range: range, index: index});\n
+\n
+      return map;\n
+    });\n
+\n
+    var result = sg.generateSamples(\'col\', 10, {from: 4, to: 12});\n
+\n
+    expect(result instanceof Map).toBe(true);\n
+    expect(result.size).toBe(9);\n
+    expect(result.get(7).get(7).type).toBe(\'col\');\n
+  });\n
+\n
+  it(\'should generate row sample\', function () {\n
+    var sg = new SamplesGenerator(function(row, col) {\n
+      var data = [\n
+        [1, 2, 3, 44],\n
+        [\'AA\', \'BB\', \'C\', \'D\'],\n
+        [\'zz\', \'xxx\', \'c-c\', \'vvvvv\']\n
+      ];\n
+\n
+      return data[row][col];\n
+    });\n
+\n
+    spyOn(sg, \'dataFactory\').andCallThrough();\n
+\n
+    var result = sg.generateSample(\'row\', {from: 1, to: 3}, 1);\n
+\n
+    expect(sg.dataFactory.calls.length).toBe(3);\n
+    expect(sg.dataFactory.mostRecentCall.args[0]).toBe(1);\n
+    expect(sg.dataFactory.mostRecentCall.args[1]).toBe(3);\n
+    expect(result instanceof Map).toBe(true);\n
+    expect(result.size).toBe(2);\n
+    expect(result.get(1).strings.length).toBe(2);\n
+    expect(result.get(1).strings[0].value).toBe(\'C\');\n
+    expect(result.get(1).strings[1].value).toBe(\'D\');\n
+    expect(result.get(1).strings[0].col).toBe(2);\n
+    expect(result.get(1).strings[1].col).toBe(3);\n
+    expect(result.get(2).strings.length).toBe(1);\n
+    expect(result.get(2).strings[0].value).toBe(\'BB\');\n
+    expect(result.get(2).strings[0].col).toBe(1);\n
+  });\n
+\n
+  it(\'should generate column sample\', function () {\n
+    var sg = new SamplesGenerator(function(row, col) {\n
+      var data = [\n
+        [1, 2, 3, 44],\n
+        [\'AA\', \'BB\', \'C\', \'D\'],\n
+        [\'zz\', \'xxx\', \'c-c\', \'vvvvv\']\n
+      ];\n
+\n
+      return data[row][col];\n
+    });\n
+\n
+    spyOn(sg, \'dataFactory\').andCallThrough();\n
+\n
+    var result = sg.generateSample(\'col\', {from: 0, to: 2}, 1);\n
+\n
+    expect(sg.dataFactory.calls.length).toBe(3);\n
+    expect(sg.dataFactory.mostRecentCall.args[0]).toBe(2);\n
+    expect(sg.dataFactory.mostRecentCall.args[1]).toBe(1);\n
+    expect(result instanceof Map).toBe(true);\n
+    expect(result.size).toBe(3);\n
+    expect(result.get(1).strings.length).toBe(1);\n
+    expect(result.get(1).strings[0].value).toBe(\'2\');\n
+    expect(result.get(1).strings[0].row).toBe(0);\n
+    expect(result.get(2).strings.length).toBe(1);\n
+    expect(result.get(2).strings[0].value).toBe(\'BB\');\n
+    expect(result.get(2).strings[0].row).toBe(1);\n
+    expect(result.get(3).strings.length).toBe(1);\n
+    expect(result.get(3).strings[0].value).toBe(\'xxx\');\n
+    expect(result.get(3).strings[0].row).toBe(2);\n
+  });\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4399</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>samplesGeneratorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272639.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>event.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\n
+export function stopImmediatePropagation(event) {\n
+  event.isImmediatePropagationEnabled = false;\n
+  event.cancelBubble = true;\n
+}\n
+\n
+export function isImmediatePropagationStopped(event) {\n
+  return event.isImmediatePropagationEnabled === false;\n
+}\n
+\n
+export function stopPropagation(event) {\n
+  // ie8\n
+  //http://msdn.microsoft.com/en-us/library/ie/ff975462(v=vs.85).aspx\n
+  if (typeof event.stopPropagation === \'function\') {\n
+    event.stopPropagation();\n
+  }\n
+  else {\n
+    event.cancelBubble = true;\n
+  }\n
+}\n
+\n
+export function pageX(event) {\n
+  if (event.pageX) {\n
+    return event.pageX;\n
+  }\n
+\n
+  var scrollLeft = getWindowScrollLeft();\n
+  var cursorX = event.clientX + scrollLeft;\n
+\n
+  return cursorX;\n
+}\n
+\n
+export function pageY(event) {\n
+  if (event.pageY) {\n
+    return event.pageY;\n
+  }\n
+\n
+  var scrollTop = getWindowScrollTop();\n
+  var cursorY = event.clientY + scrollTop;\n
+\n
+  return cursorY;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>871</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>event.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

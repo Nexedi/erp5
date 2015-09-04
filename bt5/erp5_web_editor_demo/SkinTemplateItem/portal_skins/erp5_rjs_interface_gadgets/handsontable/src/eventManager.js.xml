@@ -1,0 +1,320 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272720.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>eventManager.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {polymerWrap, closest} from \'./helpers/dom/element\';\n
+import {isWebComponentSupportedNatively} from \'./helpers/browser\';\n
+\n
+\n
+/**\n
+ * Event DOM manager for internal use in Handsontable.\n
+ *\n
+ * @class EventManager\n
+ * @private\n
+ * @util\n
+ */\n
+class EventManager {\n
+  /**\n
+   * @param {Object} [context=null]\n
+   */\n
+  constructor(context = null) {\n
+    this.context = context || this;\n
+\n
+    if (!this.context.eventListeners) {\n
+      this.context.eventListeners = [];\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Add event\n
+   *\n
+   * @param {Element} element\n
+   * @param {String} eventName\n
+   * @param {Function} callback\n
+   * @returns {Function} Returns function which you can easily call to remove that event\n
+   */\n
+  addEventListener(element, eventName, callback) {\n
+    let context = this.context;\n
+\n
+    function callbackProxy(event) {\n
+      if (event.target == void 0 && event.srcElement != void 0) {\n
+        if (event.definePoperty) {\n
+          event.definePoperty(\'target\', {\n
+            value: event.srcElement\n
+          });\n
+        } else {\n
+          event.target = event.srcElement;\n
+        }\n
+      }\n
+      if (event.preventDefault == void 0) {\n
+        if (event.definePoperty) {\n
+          event.definePoperty(\'preventDefault\', {\n
+            value: function() {\n
+              this.returnValue = false;\n
+            }\n
+          });\n
+        } else {\n
+          event.preventDefault = function () {\n
+            this.returnValue = false;\n
+          };\n
+        }\n
+      }\n
+      event = extendEvent(context, event);\n
+\n
+      /* jshint validthis:true */\n
+      callback.call(this, event);\n
+    }\n
+    this.context.eventListeners.push({\n
+      element: element,\n
+      event: eventName,\n
+      callback: callback,\n
+      callbackProxy: callbackProxy\n
+    });\n
+\n
+    if (window.addEventListener) {\n
+      element.addEventListener(eventName, callbackProxy, false);\n
+    } else {\n
+      element.attachEvent(\'on\' + eventName, callbackProxy);\n
+    }\n
+    Handsontable.countEventManagerListeners ++;\n
+\n
+    return () => {\n
+      this.removeEventListener(element, eventName, callback);\n
+    };\n
+  }\n
+\n
+  /**\n
+   * Remove event\n
+   *\n
+   * @param {Element} element\n
+   * @param {String} eventName\n
+   * @param {Function} callback\n
+   */\n
+  removeEventListener(element, eventName, callback) {\n
+    let len = this.context.eventListeners.length;\n
+    let tmpEvent;\n
+\n
+    while (len--) {\n
+      tmpEvent = this.context.eventListeners[len];\n
+\n
+      if (tmpEvent.event == eventName && tmpEvent.element == element) {\n
+        if (callback && callback != tmpEvent.callback) {\n
+          continue;\n
+        }\n
+        this.context.eventListeners.splice(len, 1);\n
+\n
+        if (tmpEvent.element.removeEventListener) {\n
+          tmpEvent.element.removeEventListener(tmpEvent.event, tmpEvent.callbackProxy, false);\n
+        } else {\n
+          tmpEvent.element.detachEvent(\'on\' + tmpEvent.event, tmpEvent.callbackProxy);\n
+        }\n
+        Handsontable.countEventManagerListeners --;\n
+      }\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Clear all events\n
+   *\n
+   * @since 0.15.0-beta3\n
+   */\n
+  clearEvents() {\n
+    if (!this.context) {\n
+      return;\n
+    }\n
+    let len = this.context.eventListeners.length;\n
+\n
+    while (len--) {\n
+      let event = this.context.eventListeners[len];\n
+\n
+      if (event) {\n
+        this.removeEventListener(event.element, event.event, event.callback);\n
+      }\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Clear all events\n
+   */\n
+  clear() {\n
+    this.clearEvents();\n
+  }\n
+\n
+  /**\n
+   * Destroy instance\n
+   */\n
+  destroy() {\n
+    this.clearEvents();\n
+    this.context = null;\n
+  }\n
+\n
+  /**\n
+   * Trigger event\n
+   *\n
+   * @param {Element} element\n
+   * @param {String} eventName\n
+   */\n
+  fireEvent(element, eventName) {\n
+    let options = {\n
+      bubbles: true,\n
+      cancelable: (eventName !== \'mousemove\'),\n
+      view: window,\n
+      detail: 0,\n
+      screenX: 0,\n
+      screenY: 0,\n
+      clientX: 1,\n
+      clientY: 1,\n
+      ctrlKey: false,\n
+      altKey: false,\n
+      shiftKey: false,\n
+      metaKey: false,\n
+      button: 0,\n
+      relatedTarget: undefined\n
+    };\n
+    var event;\n
+\n
+    if (document.createEvent) {\n
+      event = document.createEvent(\'MouseEvents\');\n
+      event.initMouseEvent(eventName, options.bubbles, options.cancelable,\n
+        options.view, options.detail,\n
+        options.screenX, options.screenY, options.clientX, options.clientY,\n
+        options.ctrlKey, options.altKey, options.shiftKey, options.metaKey,\n
+        options.button, options.relatedTarget || document.body.parentNode);\n
+\n
+    } else {\n
+      event = document.createEventObject();\n
+    }\n
+\n
+    if (element.dispatchEvent) {\n
+      element.dispatchEvent(event);\n
+    } else {\n
+      element.fireEvent(\'on\' + eventName, event);\n
+    }\n
+  }\n
+}\n
+\n
+/**\n
+ * @param {Object} context\n
+ * @param {Event} event\n
+ * @private\n
+ * @returns {*}\n
+ */\n
+function extendEvent(context, event) {\n
+  let componentName = \'HOT-TABLE\';\n
+  let isHotTableSpotted;\n
+  let fromElement;\n
+  let realTarget;\n
+  let target;\n
+  let len;\n
+\n
+  event.isTargetWebComponent = false;\n
+  event.realTarget = event.target;\n
+\n
+  if (!Handsontable.eventManager.isHotTableEnv) {\n
+    return event;\n
+  }\n
+  event = polymerWrap(event);\n
+  len = event.path ? event.path.length : 0;\n
+\n
+  while (len --) {\n
+    if (event.path[len].nodeName === componentName) {\n
+      isHotTableSpotted = true;\n
+\n
+    } else if (isHotTableSpotted && event.path[len].shadowRoot) {\n
+      target = event.path[len];\n
+\n
+      break;\n
+    }\n
+    if (len === 0 && !target) {\n
+      target = event.path[len];\n
+    }\n
+  }\n
+  if (!target) {\n
+    target = event.target;\n
+  }\n
+  event.isTargetWebComponent = true;\n
+\n
+  if (isWebComponentSupportedNatively()) {\n
+    event.realTarget = event.srcElement || event.toElement;\n
+\n
+  } else if (context instanceof Handsontable.Core || context instanceof Walkontable) {\n
+    // Polymer doesn\'t support `event.target` property properly we must emulate it ourselves\n
+    if (context instanceof Handsontable.Core) {\n
+      fromElement = context.view.wt.wtTable.TABLE;\n
+\n
+    } else if (context instanceof Walkontable) {\n
+      // .wtHider\n
+      fromElement = context.wtTable.TABLE.parentNode.parentNode;\n
+    }\n
+    realTarget = closest(event.target, [componentName], fromElement);\n
+\n
+    if (realTarget) {\n
+      event.realTarget = fromElement.querySelector(componentName) || event.target;\n
+    } else {\n
+      event.realTarget = event.target;\n
+    }\n
+  }\n
+\n
+  Object.defineProperty(event, \'target\', {\n
+    get: function() {\n
+      return polymerWrap(target);\n
+    },\n
+    enumerable: true,\n
+    configurable: true\n
+  });\n
+\n
+  return event;\n
+}\n
+\n
+export {EventManager, eventManager};\n
+\n
+window.Handsontable = window.Handsontable || {};\n
+// used to debug memory leaks\n
+Handsontable.countEventManagerListeners = 0;\n
+// support for older versions of Handsontable, deprecated\n
+Handsontable.eventManager = eventManager;\n
+\n
+function eventManager(context) {\n
+  return new EventManager(context);\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6690</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>eventManager.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

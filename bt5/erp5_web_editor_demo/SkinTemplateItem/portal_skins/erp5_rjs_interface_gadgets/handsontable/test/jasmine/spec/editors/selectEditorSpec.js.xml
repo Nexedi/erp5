@@ -1,0 +1,322 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272534.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>selectEditorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'SelectEditor\', function () {\n
+\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it("should display select", function () {\n
+     handsontable({\n
+       columns: [\n
+         {\n
+           editor: \'select\'\n
+         }\n
+       ]\n
+     });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var editor = $(\'.htSelectEditor\');\n
+\n
+    expect(editor.length).toEqual(1);\n
+    expect(editor.is(\'select\')).toBe(true);\n
+    expect(editor.is(\':visible\')).toBe(false);\n
+\n
+    keyDown(\'enter\');\n
+\n
+    expect(editor.is(\':visible\')).toBe(true);\n
+    expect(editor.offset()).toEqual($(getCell(0, 0)).offset());\n
+  });\n
+\n
+  it("should display and correctly reposition select editor while scrolling", function () {\n
+     var hot = handsontable({\n
+       width: 200,\n
+       height: 200,\n
+       data: Handsontable.helper.createSpreadsheetData(100, 100),\n
+       columns: [\n
+         {\n
+           editor: \'select\'\n
+         }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {editor: \'select\'}\n
+       ]\n
+     });\n
+    var mainHolder = hot.view.wt.wtTable.holder;\n
+\n
+    selectCell(0, 0);\n
+    keyDown(\'enter\');\n
+    keyUp(\'enter\');\n
+\n
+    mainHolder.scrollTop = 10;\n
+    mainHolder.scrollLeft = 20;\n
+    var editor = $(\'.htSelectEditor\');\n
+\n
+    waits(200);\n
+\n
+    runs(function() {\n
+      expect(editor.css(\'top\')).toEqual(\'-10px\');\n
+      expect(editor.css(\'left\')).toEqual(\'-20px\');\n
+    });\n
+  });\n
+\n
+  it("should populate select with given options (array)", function () {\n
+    var options = [\n
+      \'Misubishi\', \'Chevrolet\', \'Lamborgini\'\n
+    ];\n
+\n
+    handsontable({\n
+      columns: [\n
+        {\n
+          editor: \'select\',\n
+          selectOptions: options\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var editor = $(\'.htSelectEditor\');\n
+\n
+    keyDown(\'enter\');\n
+\n
+    var $options = editor.find(\'option\');\n
+\n
+    expect($options.length).toEqual(options.length);\n
+    expect($options.eq(0).val()).toMatch(options[0]);\n
+    expect($options.eq(0).html()).toMatch(options[0]);\n
+    expect($options.eq(1).val()).toMatch(options[1]);\n
+    expect($options.eq(1).html()).toMatch(options[1]);\n
+    expect($options.eq(2).val()).toMatch(options[2]);\n
+    expect($options.eq(2).html()).toMatch(options[2]);\n
+  });\n
+\n
+  it("should populate select with given options (object)", function () {\n
+    var options = {\n
+      \'mit\' : \'Misubishi\',\n
+      \'che\' : \'Chevrolet\',\n
+      \'lam\' : \'Lamborgini\'\n
+    };\n
+\n
+    handsontable({\n
+      columns: [\n
+        {\n
+          editor: \'select\',\n
+          selectOptions: options\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var editor = $(\'.htSelectEditor\');\n
+\n
+    keyDown(\'enter\');\n
+\n
+    var $options = editor.find(\'option\');\n
+\n
+    expect($options.eq(0).val()).toMatch(\'mit\');\n
+    expect($options.eq(0).html()).toMatch(options[\'mit\']);\n
+    expect($options.eq(1).val()).toMatch(\'che\');\n
+    expect($options.eq(1).html()).toMatch(options[\'che\']);\n
+    expect($options.eq(2).val()).toMatch(\'lam\');\n
+    expect($options.eq(2).html()).toMatch(options[\'lam\']);\n
+  });\n
+\n
+  it("should populate select with given options (function:array)", function () {\n
+    var options = function () {\n
+      return [\n
+        \'Misubishi\', \'Chevrolet\', \'Lamborgini\'\n
+      ];\n
+    };\n
+\n
+    handsontable({\n
+      columns: [\n
+        {\n
+          editor: \'select\',\n
+          selectOptions: options\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var editor = $(\'.htSelectEditor\');\n
+\n
+    keyDown(\'enter\');\n
+\n
+    var $options = editor.find(\'option\');\n
+\n
+    expect($options.length).toEqual(options().length);\n
+    expect($options.eq(0).val()).toMatch(options()[0]);\n
+    expect($options.eq(0).html()).toMatch(options()[0]);\n
+    expect($options.eq(1).val()).toMatch(options()[1]);\n
+    expect($options.eq(1).html()).toMatch(options()[1]);\n
+    expect($options.eq(2).val()).toMatch(options()[2]);\n
+    expect($options.eq(2).html()).toMatch(options()[2]);\n
+  });\n
+\n
+  it("should populate select with given options (function:object)", function () {\n
+    var options = function () {\n
+      return {\n
+        \'mit\' : \'Misubishi\',\n
+        \'che\' : \'Chevrolet\',\n
+        \'lam\' : \'Lamborgini\'\n
+      }\n
+    };\n
+\n
+    handsontable({\n
+      columns: [\n
+        {\n
+          editor: \'select\',\n
+          selectOptions: options\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var editor = $(\'.htSelectEditor\');\n
+\n
+    keyDown(\'enter\');\n
+\n
+    var $options = editor.find(\'option\');\n
+\n
+    expect($options.eq(0).val()).toMatch(\'mit\');\n
+    expect($options.eq(0).html()).toMatch(options()[\'mit\']);\n
+    expect($options.eq(1).val()).toMatch(\'che\');\n
+    expect($options.eq(1).html()).toMatch(options()[\'che\']);\n
+    expect($options.eq(2).val()).toMatch(\'lam\');\n
+    expect($options.eq(2).html()).toMatch(options()[\'lam\']);\n
+  });\n
+\n
+  it("should mark option matching cell value as selected", function () {\n
+    var options = [\n
+      \'Misubishi\', \'Chevrolet\', \'Lamborgini\'\n
+    ];\n
+\n
+    handsontable({\n
+      data: [\n
+        [\'Misubishi\'],\n
+        [\'Lamborgini\'],\n
+        [\'Chevrolet\']\n
+      ],\n
+      columns: [\n
+        {\n
+          editor: \'select\',\n
+          selectOptions: options\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var editor = $(\'.htSelectEditor\');\n
+\n
+    keyDown(\'enter\');\n
+\n
+    expect(editor.find(\'option:selected\').text()).toEqual(getDataAtCell(0, 0));\n
+\n
+    keyDown(\'enter\');\n
+\n
+    selectCell(1, 0);\n
+    keyDown(\'enter\');\n
+\n
+    expect(editor.find(\'option:selected\').text()).toEqual(getDataAtCell(1, 0));\n
+\n
+    keyDown(\'enter\');\n
+\n
+    selectCell(2, 0);\n
+    keyDown(\'enter\');\n
+\n
+    expect(editor.find(\'option:selected\').text()).toEqual(getDataAtCell(2, 0));\n
+\n
+    keyDown(\'enter\');\n
+  });\n
+\n
+  it("should not prevent the default event action when select is clicked", function () {\n
+\n
+    var options = function () {\n
+      return [\n
+        \'Misubishi\', \'Chevrolet\', \'Lamborgini\'\n
+      ];\n
+    };\n
+\n
+    handsontable({\n
+      columns: [\n
+        {\n
+          editor: \'select\',\n
+          selectOptions: options\n
+        }\n
+      ]\n
+    });\n
+\n
+    selectCell(0, 0);\n
+\n
+    var editor = $(\'.htSelectEditor\');\n
+\n
+    keyDown(\'enter\');\n
+    var select = editor.find(\'select\');\n
+\n
+    var selectMouseDownListener = jasmine.createSpy(\'selectMouseDownListener\');\n
+    $(\'body\').on(\'mousedown\', selectMouseDownListener);\n
+\n
+    editor.mousedown();\n
+\n
+    expect(selectMouseDownListener.calls.length).toEqual(1);\n
+\n
+    var event = selectMouseDownListener.calls[0].args[0];\n
+\n
+    expect(event).toBeDefined();\n
+    expect(event.isDefaultPrevented()).toBe(false);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6517</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>selectEditorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

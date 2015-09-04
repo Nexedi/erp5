@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272725.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>cellTypes.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * Cell type is just a shortcut for setting bunch of cellProperties (used in getCellMeta)\n
+ */\n
+\n
+import {isMobileBrowser} from \'./helpers/browser\';\n
+import {getEditorConstructor} from \'./editors\';\n
+import {getRenderer} from \'./renderers\';\n
+\n
+import {AutocompleteEditor} from \'./editors/autocompleteEditor\';\n
+import {CheckboxEditor} from \'./editors/checkboxEditor\';\n
+import {DateEditor} from \'./editors/dateEditor\';\n
+import {DropdownEditor} from \'./editors/dropdownEditor\';\n
+import {HandsontableEditor} from \'./editors/handsontableEditor\';\n
+import {MobileTextEditor} from \'./editors/mobileTextEditor\';\n
+import {NumericEditor} from \'./editors/numericEditor\';\n
+import {PasswordEditor} from \'./editors/passwordEditor\';\n
+import {SelectEditor} from \'./editors/selectEditor\';\n
+import {TextEditor} from \'./editors/textEditor\';\n
+\n
+import {AutocompleteRenderer} from \'./renderers/autocompleteRenderer\';\n
+import {CheckboxRenderer} from \'./renderers/checkboxRenderer\';\n
+import {HtmlRenderer} from \'./renderers/htmlRenderer\';\n
+import {NumericRenderer} from \'./renderers/numericRenderer\';\n
+import {PasswordRenderer} from \'./renderers/passwordRenderer\';\n
+import {TextRenderer} from \'./renderers/textRenderer\';\n
+\n
+import {AutocompleteValidator} from \'./validators/autocompleteValidator\';\n
+import {DateValidator} from \'./validators/dateValidator\';\n
+import {NumericValidator} from \'./validators/numericValidator\';\n
+\n
+\n
+Handsontable.mobileBrowser = isMobileBrowser();\n
+\n
+Handsontable.AutocompleteCell = {\n
+  editor: getEditorConstructor(\'autocomplete\'),\n
+  renderer: getRenderer(\'autocomplete\'),\n
+  validator: Handsontable.AutocompleteValidator\n
+};\n
+\n
+Handsontable.CheckboxCell = {\n
+  editor: getEditorConstructor(\'checkbox\'),\n
+  renderer: getRenderer(\'checkbox\')\n
+};\n
+\n
+Handsontable.TextCell = {\n
+  editor: Handsontable.mobileBrowser ? getEditorConstructor(\'mobile\') : getEditorConstructor(\'text\'),\n
+  renderer: getRenderer(\'text\')\n
+};\n
+\n
+Handsontable.NumericCell = {\n
+  editor: getEditorConstructor(\'numeric\'),\n
+  renderer: getRenderer(\'numeric\'),\n
+  validator: Handsontable.NumericValidator,\n
+  dataType: \'number\'\n
+};\n
+\n
+Handsontable.DateCell = {\n
+  editor: getEditorConstructor(\'date\'),\n
+  validator: Handsontable.DateValidator,\n
+  // displays small gray arrow on right side of the cell\n
+  renderer: getRenderer(\'autocomplete\')\n
+};\n
+\n
+Handsontable.HandsontableCell = {\n
+  editor: getEditorConstructor(\'handsontable\'),\n
+  //displays small gray arrow on right side of the cell\n
+  renderer: getRenderer(\'autocomplete\')\n
+};\n
+\n
+Handsontable.PasswordCell = {\n
+  editor: getEditorConstructor(\'password\'),\n
+  renderer: getRenderer(\'password\'),\n
+  copyable: false\n
+};\n
+\n
+Handsontable.DropdownCell = {\n
+  editor: getEditorConstructor(\'dropdown\'),\n
+  //displays small gray arrow on right side of the cell\n
+  renderer: getRenderer(\'autocomplete\'),\n
+  validator: Handsontable.AutocompleteValidator\n
+};\n
+\n
+//here setup the friendly aliases that are used by cellProperties.type\n
+Handsontable.cellTypes = {\n
+  text: Handsontable.TextCell,\n
+  date: Handsontable.DateCell,\n
+  numeric: Handsontable.NumericCell,\n
+  checkbox: Handsontable.CheckboxCell,\n
+  autocomplete: Handsontable.AutocompleteCell,\n
+  handsontable: Handsontable.HandsontableCell,\n
+  password: Handsontable.PasswordCell,\n
+  dropdown: Handsontable.DropdownCell\n
+};\n
+\n
+//here setup the friendly aliases that are used by cellProperties.renderer and cellProperties.editor\n
+Handsontable.cellLookup = {\n
+  validator: {\n
+    numeric: Handsontable.NumericValidator,\n
+    autocomplete: Handsontable.AutocompleteValidator\n
+  }\n
+};\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3460</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>cellTypes.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

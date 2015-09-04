@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272510.52</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_countSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_count\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    destroy();\n
+    this.$container.remove();\n
+  });\n
+\n
+  describe(\'countVisibleRows\', function () {\n
+    it(\'should return number of visible rows\', function () {\n
+      var instance = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        height: 100\n
+      });\n
+      expect(instance.countVisibleRows()).toEqual(4);\n
+    });\n
+\n
+    it(\'should return -1 if table is not rendered\', function () {\n
+      this.$container.remove();\n
+      var instance = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        width: 100\n
+      });\n
+      expect(instance.countVisibleRows()).toEqual(-1);\n
+    });\n
+  });\n
+\n
+  describe(\'countRenderedRows\', function () {\n
+    it(\'should return number of rendered rows\', function () {\n
+      var instance = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        height: 100,\n
+        viewportRowRenderingOffset: 0\n
+      });\n
+      expect(instance.countRenderedRows()).toEqual(5);\n
+    });\n
+\n
+    it(\'should return number of rendered rows, including rows rendered becausee of viewportRowRenderingOffset\', function () {\n
+      var instance = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(50, 10),\n
+        height: 100,\n
+        viewportRowRenderingOffset: 20\n
+      });\n
+      expect(instance.countRenderedRows()).toEqual(25);\n
+    });\n
+\n
+    it(\'should return -1 if table is not rendered\', function () {\n
+      this.$container.remove();\n
+      var instance = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        width: 100\n
+      });\n
+      expect(instance.countRenderedRows()).toEqual(-1);\n
+    });\n
+  });\n
+\n
+  describe(\'countVisibleCols\', function () {\n
+    xit(\'should return number of visible columns\', function () {\n
+      var instance = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        width: 100\n
+      });\n
+      expect(instance.countVisibleCols()).toEqual(2);\n
+    });\n
+\n
+    it(\'should return -1 if table is not rendered\', function () {\n
+      this.$container.remove();\n
+      var instance = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        width: 100\n
+      });\n
+      expect(instance.countVisibleCols()).toEqual(-1);\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2456</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_countSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,631 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272753.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dataMap.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import SheetClip from \'SheetClip\';\n
+import {cellMethodLookupFactory} from \'./helpers/data\';\n
+import {columnFactory} from \'./helpers/setting\';\n
+import {duckSchema, deepExtend} from \'./helpers/object\';\n
+import {extendArray, to2dArray} from \'./helpers/array\';\n
+import {MultiMap} from \'./multiMap\';\n
+\n
+\n
+/**\n
+ * Utility class that gets and saves data from/to the data source using mapping of columns numbers to object property names\n
+ * @todo refactor arguments of methods getRange, getText to be numbers (not objects)\n
+ * @todo remove priv, GridSettings from object constructor\n
+ *\n
+ * @param {Object} instance Instance of Handsontable\n
+ * @param {*} priv\n
+ * @param {*} GridSettings Grid settings\n
+ * @util\n
+ * @class DataMap\n
+ * @dependencies SheetClip\n
+ */\n
+function DataMap(instance, priv, GridSettings) {\n
+  this.instance = instance;\n
+  this.priv = priv;\n
+  this.GridSettings = GridSettings;\n
+  this.dataSource = this.instance.getSettings().data;\n
+\n
+  if (this.dataSource[0]) {\n
+    this.duckSchema = this.recursiveDuckSchema(this.dataSource[0]);\n
+  }\n
+  else {\n
+    this.duckSchema = {};\n
+  }\n
+  this.createMap();\n
+}\n
+\n
+DataMap.prototype.DESTINATION_RENDERER = 1;\n
+DataMap.prototype.DESTINATION_CLIPBOARD_GENERATOR = 2;\n
+\n
+/**\n
+ * @param {Object|Array} object\n
+ * @returns {Object|Array}\n
+ */\n
+DataMap.prototype.recursiveDuckSchema = function(object) {\n
+  return duckSchema(object);\n
+};\n
+\n
+/**\n
+ * @param {Object} schema\n
+ * @param {Number} lastCol\n
+ * @param {Number} parent\n
+ * @returns {Number}\n
+ */\n
+DataMap.prototype.recursiveDuckColumns = function (schema, lastCol, parent) {\n
+  var prop, i;\n
+  if (typeof lastCol === \'undefined\') {\n
+    lastCol = 0;\n
+    parent = \'\';\n
+  }\n
+  if (typeof schema === "object" && !Array.isArray(schema)) {\n
+    for (i in schema) {\n
+      if (schema.hasOwnProperty(i)) {\n
+        if (schema[i] === null) {\n
+          prop = parent + i;\n
+          this.colToPropCache.push(prop);\n
+          this.propToColCache.set(prop, lastCol);\n
+\n
+          lastCol++;\n
+        }\n
+        else {\n
+          lastCol = this.recursiveDuckColumns(schema[i], lastCol, i + \'.\');\n
+        }\n
+      }\n
+    }\n
+  }\n
+  return lastCol;\n
+};\n
+\n
+DataMap.prototype.createMap = function () {\n
+  var i, ilen, schema = this.getSchema();\n
+  if (typeof schema === "undefined") {\n
+    throw new Error("trying to create `columns` definition but you didnt\' provide `schema` nor `data`");\n
+  }\n
+  this.colToPropCache = [];\n
+  this.propToColCache = new MultiMap();\n
+  var columns = this.instance.getSettings().columns;\n
+  if (columns) {\n
+    for (i = 0, ilen = columns.length; i < ilen; i++) {\n
+\n
+      if (typeof columns[i].data != \'undefined\'){\n
+        this.colToPropCache[i] = columns[i].data;\n
+        this.propToColCache.set(columns[i].data, i);\n
+      }\n
+\n
+    }\n
+  }\n
+  else {\n
+    this.recursiveDuckColumns(schema);\n
+  }\n
+};\n
+\n
+/**\n
+ * Returns property name that corresponds with the given column index.\n
+ *\n
+ * @param {Number} col\n
+ * @returns {Number}\n
+ */\n
+DataMap.prototype.colToProp = function (col) {\n
+  col = Handsontable.hooks.run(this.instance, \'modifyCol\', col);\n
+\n
+  if (this.colToPropCache && typeof this.colToPropCache[col] !== \'undefined\') {\n
+    return this.colToPropCache[col];\n
+  }\n
+\n
+  return col;\n
+};\n
+\n
+/**\n
+ * @param {Object} prop\n
+ * @fires Hooks#modifyCol\n
+ * @returns {*}\n
+ */\n
+DataMap.prototype.propToCol = function (prop) {\n
+  var col;\n
+\n
+  if (typeof this.propToColCache.get(prop) !== \'undefined\') {\n
+    col = this.propToColCache.get(prop);\n
+  } else {\n
+    col = prop;\n
+  }\n
+  col = Handsontable.hooks.run(this.instance, \'modifyCol\', col);\n
+\n
+  return col;\n
+};\n
+\n
+/**\n
+ * @returns {Object}\n
+ */\n
+DataMap.prototype.getSchema = function () {\n
+  var schema = this.instance.getSettings().dataSchema;\n
+  if (schema) {\n
+    if (typeof schema === \'function\') {\n
+      return schema();\n
+    }\n
+    return schema;\n
+  }\n
+\n
+  return this.duckSchema;\n
+};\n
+\n
+/**\n
+ * Creates row at the bottom of the data array.\n
+ *\n
+ * @param {Number} [index] Index of the row before which the new row will be inserted\n
+ * @fires Hooks#afterCreateRow\n
+ * @returns {Number} Returns number of created rows\n
+ */\n
+DataMap.prototype.createRow = function (index, amount, createdAutomatically) {\n
+  var row, colCount = this.instance.countCols(),\n
+    numberOfCreatedRows = 0,\n
+    currentIndex;\n
+\n
+  if (!amount) {\n
+    amount = 1;\n
+  }\n
+\n
+  if (typeof index !== \'number\' || index >= this.instance.countRows()) {\n
+    index = this.instance.countRows();\n
+  }\n
+\n
+  currentIndex = index;\n
+  var maxRows = this.instance.getSettings().maxRows;\n
+  while (numberOfCreatedRows < amount && this.instance.countRows() < maxRows) {\n
+\n
+    if (this.instance.dataType === \'array\') {\n
+      row = [];\n
+      for (var c = 0; c < colCount; c++) {\n
+        row.push(null);\n
+      }\n
+\n
+    } else if (this.instance.dataType === \'function\') {\n
+      row = this.instance.getSettings().dataSchema(index);\n
+\n
+    } else {\n
+      row = {};\n
+      deepExtend(row, this.getSchema());\n
+    }\n
+\n
+    if (index === this.instance.countRows()) {\n
+      this.dataSource.push(row);\n
+\n
+    } else {\n
+      this.dataSource.splice(index, 0, row);\n
+    }\n
+\n
+    numberOfCreatedRows++;\n
+    currentIndex++;\n
+  }\n
+\n
+\n
+  Handsontable.hooks.run(this.instance, \'afterCreateRow\', index, numberOfCreatedRows, createdAutomatically);\n
+  this.instance.forceFullRender = true; //used when data was changed\n
+\n
+  return numberOfCreatedRows;\n
+};\n
+\n
+/**\n
+ * Creates col at the right of the data array.\n
+ *\n
+ * @param {Number} [index] Index of the column before which the new column will be inserted\n
+ * @param {Number} [amount]\n
+ * @param {Number} [createdAutomatically]\n
+ * @fires Hooks#afterCreateCol\n
+ * @returns {Number} Returns number of created columns\n
+ */\n
+DataMap.prototype.createCol = function (index, amount, createdAutomatically) {\n
+  if (!this.instance.isColumnModificationAllowed()) {\n
+    throw new Error("Cannot create new column. When data source in an object, " +\n
+      "you can only have as much columns as defined in first data row, data schema or in the \'columns\' setting." +\n
+      "If you want to be able to add new columns, you have to use array datasource.");\n
+  }\n
+  var rlen = this.instance.countRows(),\n
+    data = this.dataSource,\n
+    constructor, numberOfCreatedCols = 0,\n
+    currentIndex;\n
+\n
+  if (!amount) {\n
+    amount = 1;\n
+  }\n
+\n
+  currentIndex = index;\n
+\n
+  var maxCols = this.instance.getSettings().maxCols;\n
+  while (numberOfCreatedCols < amount && this.instance.countCols() < maxCols) {\n
+    constructor = columnFactory(this.GridSettings, this.priv.columnsSettingConflicts);\n
+    if (typeof index !== \'number\' || index >= this.instance.countCols()) {\n
+      for (var r = 0; r < rlen; r++) {\n
+        if (typeof data[r] === \'undefined\') {\n
+          data[r] = [];\n
+        }\n
+        data[r].push(null);\n
+      }\n
+      // Add new column constructor\n
+      this.priv.columnSettings.push(constructor);\n
+\n
+    } else {\n
+      for (var r = 0; r < rlen; r++) {\n
+        data[r].splice(currentIndex, 0, null);\n
+      }\n
+      // Add new column constructor at given index\n
+      this.priv.columnSettings.splice(currentIndex, 0, constructor);\n
+    }\n
+\n
+    numberOfCreatedCols++;\n
+    currentIndex++;\n
+  }\n
+\n
+  Handsontable.hooks.run(this.instance, \'afterCreateCol\', index, numberOfCreatedCols, createdAutomatically);\n
+  this.instance.forceFullRender = true; //used when data was changed\n
+\n
+  return numberOfCreatedCols;\n
+};\n
+\n
+/**\n
+ * Removes row from the data array.\n
+ *\n
+ * @param {Number} [index] Index of the row to be removed. If not provided, the last row will be removed\n
+ * @param {Number} [amount] Amount of the rows to be removed. If not provided, one row will be removed\n
+ * @fires Hooks#beforeRemoveRow\n
+ * @fires Hooks#afterRemoveRow\n
+ */\n
+DataMap.prototype.removeRow = function (index, amount) {\n
+  if (!amount) {\n
+    amount = 1;\n
+  }\n
+  if (typeof index !== \'number\') {\n
+    index = -amount;\n
+  }\n
+\n
+  index = (this.instance.countRows() + index) % this.instance.countRows();\n
+\n
+  // We have to map the physical row ids to logical and than perform removing with (possibly) new row id\n
+  var logicRows = this.physicalRowsToLogical(index, amount);\n
+\n
+  var actionWasNotCancelled = Handsontable.hooks.run(this.instance, \'beforeRemoveRow\', index, amount);\n
+\n
+  if (actionWasNotCancelled === false) {\n
+    return;\n
+  }\n
+\n
+  var data = this.dataSource;\n
+  var newData = data.filter(function(row, index) {\n
+    return logicRows.indexOf(index) == -1;\n
+  });\n
+\n
+  data.length = 0;\n
+  Array.prototype.push.apply(data, newData);\n
+\n
+  Handsontable.hooks.run(this.instance, \'afterRemoveRow\', index, amount);\n
+\n
+  this.instance.forceFullRender = true; //used when data was changed\n
+};\n
+\n
+/**\n
+ * Removes column from the data array.\n
+ *\n
+ * @param {Number} [index] Index of the column to be removed. If not provided, the last column will be removed\n
+ * @param {Number} [amount] Amount of the columns to be removed. If not provided, one column will be removed\n
+ * @fires Hooks#beforeRemoveCol\n
+ * @fires Hooks#afterRemoveCol\n
+ */\n
+DataMap.prototype.removeCol = function (index, amount) {\n
+  if (this.instance.dataType === \'object\' || this.instance.getSettings().columns) {\n
+    throw new Error("cannot remove column with object data source or columns option specified");\n
+  }\n
+  if (!amount) {\n
+    amount = 1;\n
+  }\n
+  if (typeof index !== \'number\') {\n
+    index = -amount;\n
+  }\n
+\n
+  index = (this.instance.countCols() + index) % this.instance.countCols();\n
+\n
+  var actionWasNotCancelled = Handsontable.hooks.run(this.instance, \'beforeRemoveCol\', index, amount);\n
+\n
+  if (actionWasNotCancelled === false) {\n
+    return;\n
+  }\n
+\n
+  var data = this.dataSource;\n
+  for (var r = 0, rlen = this.instance.countRows(); r < rlen; r++) {\n
+    data[r].splice(index, amount);\n
+  }\n
+  this.priv.columnSettings.splice(index, amount);\n
+\n
+  Handsontable.hooks.run(this.instance, \'afterRemoveCol\', index, amount);\n
+  this.instance.forceFullRender = true; //used when data was changed\n
+};\n
+\n
+/**\n
+ * Add/Removes data from the column.\n
+ *\n
+ * @param {Number} col Index of column in which do you want to do splice\n
+ * @param {Number} index Index at which to start changing the array. If negative, will begin that many elements from the end\n
+ * @param {Number} amount An integer indicating the number of old array elements to remove. If amount is 0, no elements are removed\n
+ * @returns {Array} Returns removed portion of columns\n
+ */\n
+DataMap.prototype.spliceCol = function (col, index, amount/*, elements...*/) {\n
+  var elements = 4 <= arguments.length ? [].slice.call(arguments, 3) : [];\n
+\n
+  var colData = this.instance.getDataAtCol(col);\n
+  var removed = colData.slice(index, index + amount);\n
+  var after = colData.slice(index + amount);\n
+\n
+  extendArray(elements, after);\n
+  var i = 0;\n
+  while (i < amount) {\n
+    elements.push(null); //add null in place of removed elements\n
+    i++;\n
+  }\n
+  to2dArray(elements);\n
+  this.instance.populateFromArray(index, col, elements, null, null, \'spliceCol\');\n
+\n
+  return removed;\n
+};\n
+\n
+/**\n
+ * Add/Removes data from the row.\n
+ *\n
+ * @param {Number} row Index of row in which do you want to do splice\n
+ * @param {Number} index Index at which to start changing the array. If negative, will begin that many elements from the end\n
+ * @param {Number} amount An integer indicating the number of old array elements to remove. If amount is 0, no elements are removed\n
+ * @returns {Array} Returns removed portion of rows\n
+ */\n
+DataMap.prototype.spliceRow = function (row, index, amount/*, elements...*/) {\n
+  var elements = 4 <= arguments.length ? [].slice.call(arguments, 3) : [];\n
+\n
+  var rowData = this.instance.getSourceDataAtRow(row);\n
+  var removed = rowData.slice(index, index + amount);\n
+  var after = rowData.slice(index + amount);\n
+\n
+  extendArray(elements, after);\n
+  var i = 0;\n
+  while (i < amount) {\n
+    elements.push(null); //add null in place of removed elements\n
+    i++;\n
+  }\n
+  this.instance.populateFromArray(row, index, [elements], null, null, \'spliceRow\');\n
+\n
+  return removed;\n
+};\n
+\n
+/**\n
+ * Returns single value from the data array.\n
+ *\n
+ * @param {Number} row\n
+ * @param {Number} prop\n
+ */\n
+DataMap.prototype.get = function (row, prop) {\n
+  row = Handsontable.hooks.run(this.instance, \'modifyRow\', row);\n
+\n
+  if (typeof prop === \'string\' && prop.indexOf(\'.\') > -1) {\n
+    var sliced = prop.split(".");\n
+    var out = this.dataSource[row];\n
+    if (!out) {\n
+      return null;\n
+    }\n
+    for (var i = 0, ilen = sliced.length; i < ilen; i++) {\n
+      out = out[sliced[i]];\n
+      if (typeof out === \'undefined\') {\n
+        return null;\n
+      }\n
+    }\n
+    return out;\n
+  } else if (typeof prop === \'function\') {\n
+    /**\n
+     *  allows for interacting with complex structures, for example\n
+     *  d3/jQuery getter/setter properties:\n
+     *\n
+     *    {columns: [{\n
+     *      data: function(row, value){\n
+     *        if(arguments.length === 1){\n
+     *          return row.property();\n
+     *        }\n
+     *        row.property(value);\n
+     *      }\n
+     *    }]}\n
+     */\n
+    return prop(this.dataSource.slice(\n
+      row,\n
+      row + 1)[0]);\n
+  } else {\n
+    return this.dataSource[row] ? this.dataSource[row][prop] : null;\n
+  }\n
+};\n
+\n
+var copyableLookup = cellMethodLookupFactory(\'copyable\', false);\n
+\n
+/**\n
+ * Returns single value from the data array (intended for clipboard copy to an external application).\n
+ *\n
+ * @param {Number} row\n
+ * @param {Number} prop\n
+ * @returns {String}\n
+ */\n
+DataMap.prototype.getCopyable = function (row, prop) {\n
+  if (copyableLookup.call(this.instance, row, this.propToCol(prop))) {\n
+    return this.get(row, prop);\n
+  }\n
+  return \'\';\n
+};\n
+\n
+/**\n
+ * Saves single value to the data array.\n
+ *\n
+ * @param {Number} row\n
+ * @param {Number} prop\n
+ * @param {String} value\n
+ * @param {String} [source] Source of hook runner.\n
+ */\n
+DataMap.prototype.set = function (row, prop, value, source) {\n
+  row = Handsontable.hooks.run(this.instance, \'modifyRow\', row, source || "datamapGet");\n
+\n
+  if (typeof prop === \'string\' && prop.indexOf(\'.\') > -1) {\n
+    var sliced = prop.split(".");\n
+    var out = this.dataSource[row];\n
+    for (var i = 0, ilen = sliced.length - 1; i < ilen; i++) {\n
+\n
+      if (typeof out[sliced[i]] === \'undefined\') {\n
+        out[sliced[i]] = {};\n
+      }\n
+      out = out[sliced[i]];\n
+    }\n
+    out[sliced[i]] = value;\n
+\n
+  } else if (typeof prop === \'function\') {\n
+    /* see the `function` handler in `get` */\n
+    prop(this.dataSource.slice(row, row + 1)[0], value);\n
+\n
+  } else {\n
+    this.dataSource[row][prop] = value;\n
+  }\n
+};\n
+\n
+/**\n
+ * This ridiculous piece of code maps rows Id that are present in table data to those displayed for user.\n
+ * The trick is, the physical row id (stored in settings.data) is not necessary the same\n
+ * as the logical (displayed) row id (e.g. when sorting is applied).\n
+ *\n
+ * @param {Number} index\n
+ * @param {Number} amount\n
+ * @fires Hooks#modifyRow\n
+ * @returns {Number}\n
+ */\n
+DataMap.prototype.physicalRowsToLogical = function (index, amount) {\n
+  var totalRows = this.instance.countRows();\n
+  var physicRow = (totalRows + index) % totalRows;\n
+  var logicRows = [];\n
+  var rowsToRemove = amount;\n
+  var row;\n
+\n
+  while (physicRow < totalRows && rowsToRemove) {\n
+    row = Handsontable.hooks.run(this.instance, \'modifyRow\', physicRow);\n
+    logicRows.push(row);\n
+\n
+    rowsToRemove--;\n
+    physicRow++;\n
+  }\n
+\n
+  return logicRows;\n
+};\n
+\n
+/**\n
+ * Clears the data array.\n
+ */\n
+DataMap.prototype.clear = function () {\n
+  for (var r = 0; r < this.instance.countRows(); r++) {\n
+    for (var c = 0; c < this.instance.countCols(); c++) {\n
+      this.set(r, this.colToProp(c), \'\');\n
+    }\n
+  }\n
+};\n
+\n
+/**\n
+ * Returns the data array.\n
+ *\n
+ * @returns {Array}\n
+ */\n
+DataMap.prototype.getAll = function () {\n
+  return this.dataSource;\n
+};\n
+\n
+/**\n
+ * Returns data range as array.\n
+ *\n
+ * @param {Object} [start] Start selection position\n
+ * @param {Object} [end] End selection position\n
+ * @param {Number} destination Destination of datamap.get\n
+ * @returns {Array}\n
+ */\n
+DataMap.prototype.getRange = function (start, end, destination) {\n
+  var r, rlen, c, clen, output = [],\n
+    row;\n
+\n
+  var getFn = destination === this.DESTINATION_CLIPBOARD_GENERATOR ? this.getCopyable : this.get;\n
+\n
+  rlen = Math.max(start.row, end.row);\n
+  clen = Math.max(start.col, end.col);\n
+\n
+  for (r = Math.min(start.row, end.row); r <= rlen; r++) {\n
+    row = [];\n
+    for (c = Math.min(start.col, end.col); c <= clen; c++) {\n
+      row.push(getFn.call(this, r, this.colToProp(c)));\n
+    }\n
+    output.push(row);\n
+  }\n
+\n
+  return output;\n
+};\n
+\n
+/**\n
+ * Return data as text (tab separated columns).\n
+ *\n
+ * @param {Object} [start] Start selection position\n
+ * @param {Object} [end] End selection position\n
+ * @returns {String}\n
+ */\n
+DataMap.prototype.getText = function (start, end) {\n
+  return SheetClip.stringify(this.getRange(start, end, this.DESTINATION_RENDERER));\n
+};\n
+\n
+/**\n
+ * Return data as copyable text (tab separated columns intended for clipboard copy to an external application).\n
+ *\n
+ * @param {Object} [start] Start selection position\n
+ * @param {Object} [end] End selection position\n
+ * @returns {String}\n
+ */\n
+DataMap.prototype.getCopyableText = function (start, end) {\n
+  return SheetClip.stringify(this.getRange(start, end, this.DESTINATION_CLIPBOARD_GENERATOR));\n
+};\n
+\n
+export {DataMap};\n
+\n
+// Support for older hot versions\n
+Handsontable.DataMap = DataMap;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>16797</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dataMap.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

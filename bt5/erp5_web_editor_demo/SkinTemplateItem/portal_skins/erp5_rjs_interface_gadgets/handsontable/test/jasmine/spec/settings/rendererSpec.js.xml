@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272501.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>rendererSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'settings\', function () {\n
+  describe(\'renderer\', function () {\n
+    var id = \'testContainer\';\n
+\n
+    beforeEach(function () {\n
+      this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+    });\n
+\n
+    afterEach(function () {\n
+      if (this.$container) {\n
+        destroy();\n
+        this.$container.remove();\n
+      }\n
+    });\n
+\n
+    describe(\'defined in constructor\', function () {\n
+      it(\'should use text renderer by default\', function () {\n
+        var originalTextRenderer = Handsontable.TextCell.renderer;\n
+        spyOn(Handsontable.TextCell, \'renderer\');\n
+        Handsontable.renderers.registerRenderer(\'text\', Handsontable.TextCell.renderer);\n
+\n
+        handsontable();\n
+        expect(Handsontable.TextCell.renderer).toHaveBeenCalled();\n
+\n
+        Handsontable.renderers.registerRenderer(\'text\', originalTextRenderer);\n
+\n
+      });\n
+\n
+      it(\'should use renderer from predefined string\', function () {\n
+\n
+        var originalTextRenderer = Handsontable.renderers.TextRenderer;\n
+        spyOn(Handsontable.renderers, \'TextRenderer\');\n
+        Handsontable.renderers.registerRenderer(\'text\', Handsontable.renderers.TextRenderer);\n
+\n
+        var originalCheckboxRenderer = Handsontable.renderers.CheckboxRenderer;\n
+        spyOn(Handsontable.renderers, \'CheckboxRenderer\');\n
+        Handsontable.renderers.registerRenderer(\'checkbox\', Handsontable.renderers.CheckboxRenderer);\n
+\n
+\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              renderer: \'checkbox\'\n
+            }\n
+          ]\n
+        });\n
+        expect(Handsontable.renderers.TextRenderer).not.toHaveBeenCalled();\n
+        expect(Handsontable.renderers.CheckboxRenderer).toHaveBeenCalled();\n
+\n
+        Handsontable.renderers.registerRenderer(\'text\', originalTextRenderer);\n
+        Handsontable.renderers.registerRenderer(\'checkbox\', originalCheckboxRenderer);\n
+      });\n
+\n
+      it(\'should use renderer from custom function\', function () {\n
+        var called = false;\n
+\n
+        function myRenderer() {\n
+          called = true;\n
+        }\n
+\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              renderer: myRenderer\n
+            }\n
+          ]\n
+        });\n
+\n
+        expect(called).toBe(true);\n
+      });\n
+\n
+      it(\'should use renderer from custom string\', function () {\n
+        var myRenderer = jasmine.createSpy(\'myRenderer\');\n
+\n
+        Handsontable.renderers.registerRenderer(\'myRenderer\', myRenderer);\n
+\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              renderer: \'myRenderer\'\n
+            }\n
+          ]\n
+        });\n
+\n
+        expect(myRenderer).toHaveBeenCalled();\n
+      });\n
+\n
+      it(\'should support legacy namespace (pre-0.10.0) of cell renderers\', function () {\n
+        var count = 0;\n
+        handsontable({\n
+          renderer: function () {\n
+            count++;\n
+            Handsontable.TextCell.renderer.apply(this, arguments);\n
+          }\n
+        });\n
+        expect(count).toBeGreaterThan(0);\n
+      });\n
+    });\n
+\n
+    it("should call renderer with cellProperties.row, cellProperties.col matching row and col arguments", function () {\n
+\n
+      var rendererSpy = jasmine.createSpy(\'rendererSpy\').andCallThrough();\n
+      var cellPropertiesCache = [];\n
+      rendererSpy.plan = function (instance, TD, row, col, prop, value, cellProperties) {\n
+        cellPropertiesCache.push({\n
+          row: cellProperties.row,\n
+          col: cellProperties.col\n
+        });\n
+      };\n
+\n
+      handsontable({\n
+        renderer: rendererSpy\n
+      });\n
+\n
+      for (var i = 0, len = rendererSpy.calls.length; i < len; i++){\n
+        var args = rendererSpy.calls[i].args;\n
+        var row = args[2];\n
+        var col = args[3];\n
+        var cellProperties = cellPropertiesCache[i];\n
+\n
+        expect(row).toEqual(cellProperties.row);\n
+        expect(col).toEqual(cellProperties.col);\n
+      }\n
+\n
+    });\n
+\n
+    it("should call cells function before passing cellProperties to renderer", function () {\n
+\n
+      var rendererSpy = jasmine.createSpy(\'rendererSpy\').andCallThrough();\n
+      var cellPropertiesCache = [];\n
+      rendererSpy.plan = function (instance, TD, row, col, prop, value, cellProperties) {\n
+        cellPropertiesCache.push({\n
+          cellsRow: cellProperties.cellsRow,\n
+          cellsCol: cellProperties.cellsCol\n
+        });\n
+      };\n
+\n
+      handsontable({\n
+        renderer: rendererSpy,\n
+        cells: function (row, col) {\n
+          return {\n
+            cellsRow: row,\n
+            cellsCol: col\n
+          }\n
+        }\n
+      });\n
+\n
+      for (var i = 0, len = rendererSpy.calls.length; i < len; i++){\n
+        var args = rendererSpy.calls[i].args;\n
+        var row = args[2];\n
+        var col = args[3];\n
+        var cellProperties = cellPropertiesCache[i];\n
+\n
+        expect(row).toEqual(cellProperties.cellsRow);\n
+        expect(col).toEqual(cellProperties.cellsCol);\n
+      }\n
+\n
+    });\n
+\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4762</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>rendererSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

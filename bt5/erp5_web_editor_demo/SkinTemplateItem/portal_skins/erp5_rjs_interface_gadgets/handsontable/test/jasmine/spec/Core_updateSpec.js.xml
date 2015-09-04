@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272520.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_updateSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_updateSettings\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should inherit cell type\', function () {\n
+\n
+    handsontable({\n
+      data : [[1,2]],\n
+      columns : [\n
+        { },\n
+        { type : \'checkbox\' }\n
+      ],\n
+      cells : function (row, col, prop) {\n
+        if (row === 0 && col === 0) {\n
+          return {\n
+            type : \'numeric\'\n
+          }\n
+        }\n
+      }\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).type).toEqual(\'numeric\');\n
+    expect(getCellMeta(0, 1).type).toEqual(\'checkbox\');\n
+\n
+  });\n
+\n
+  it(\'should ignore mixed in properties to the cell array option\', function() {\n
+    Array.prototype.willFail = "BOOM";\n
+\n
+    handsontable({\n
+      data : [[1, true]],\n
+      columns : [\n
+        { type : \'numeric\' },\n
+        { type : \'checkbox\' }\n
+      ]\n
+    });\n
+\n
+    updateSettings({ cell: new Array() });\n
+  });\n
+\n
+  it(\'should not reset columns types to text\', function () {\n
+    handsontable({\n
+      data : [[1, true]],\n
+      columns : [\n
+        { type : \'numeric\' },\n
+        { type : \'checkbox\' }\n
+      ]\n
+    });\n
+\n
+    var td = this.$container.find(\'td\');\n
+\n
+    expect(td.eq(0).text()).toEqual(\'1\');\n
+    expect(td.eq(1).text()).toEqual(\'\');\n
+\n
+    updateSettings({});\n
+\n
+    expect(td.eq(0).text()).toEqual(\'1\');\n
+    expect(td.eq(1).text()).toEqual(\'\');\n
+\n
+  });\n
+\n
+  it(\'should update readOnly global setting\', function(){\n
+    handsontable({\n
+      readOnly: true,\n
+      data : [[\'foo\', \'bar\']],\n
+      columns : [\n
+        { },\n
+        { }\n
+      ]\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).readOnly).toBe(true);\n
+    expect($(getCell(0, 0)).hasClass(\'htDimmed\')).toBe(true);\n
+\n
+    expect(getCellMeta(0, 1).readOnly).toBe(true);\n
+    expect($(getCell(0, 1)).hasClass(\'htDimmed\')).toBe(true);\n
+\n
+    updateSettings({\n
+      readOnly: false\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).readOnly).toBe(false);\n
+    expect($(getCell(0, 0)).hasClass(\'htDimmed\')).toBe(false);\n
+\n
+    expect(getCellMeta(0, 1).readOnly).toBe(false);\n
+    expect($(getCell(0, 1)).hasClass(\'htDimmed\')).toBe(false);\n
+  });\n
+\n
+  it(\'should update readOnly columns setting\', function(){\n
+    handsontable({\n
+      data : [[\'foo\', true]],\n
+      columns : [\n
+        { type : \'text\',\n
+          readOnly: true\n
+        },\n
+        { type : \'checkbox\' }\n
+      ]\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).readOnly).toBe(true);\n
+    expect($(getCell(0, 0)).hasClass(\'htDimmed\')).toBe(true);\n
+\n
+    expect(getCellMeta(0, 1).readOnly).toBe(false);\n
+    expect($(getCell(0, 1)).hasClass(\'htDimmed\')).toBe(false);\n
+\n
+    updateSettings({\n
+      columns: [\n
+        { type : \'text\',\n
+          readOnly: false\n
+        },\n
+        { type : \'checkbox\' }\n
+      ]\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).readOnly).toBe(false);\n
+    expect($(getCell(0, 0)).hasClass(\'htDimmed\')).toBe(false);\n
+\n
+    expect(getCellMeta(0, 1).readOnly).toBe(false);\n
+    expect($(getCell(0, 1)).hasClass(\'htDimmed\')).toBe(false);\n
+  });\n
+\n
+  it(\'should update readOnly columns setting and override global setting\', function(){\n
+    handsontable({\n
+      readOnly: true,\n
+      data : [[\'foo\', true]],\n
+      columns : [\n
+        { type : \'text\'\n
+        },\n
+        { type : \'checkbox\' }\n
+      ]\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).readOnly).toBe(true);\n
+    expect($(getCell(0, 0)).hasClass(\'htDimmed\')).toBe(true);\n
+\n
+    expect(getCellMeta(0, 1).readOnly).toBe(true);\n
+    expect($(getCell(0, 1)).hasClass(\'htDimmed\')).toBe(false);\n
+\n
+    updateSettings({\n
+      columns: [\n
+        { type : \'text\',\n
+          readOnly: false\n
+        },\n
+        { type : \'checkbox\' }\n
+      ]\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).readOnly).toBe(false);\n
+    expect($(getCell(0, 0)).hasClass(\'htDimmed\')).toBe(false);\n
+\n
+    expect(getCellMeta(0, 1).readOnly).toBe(true);\n
+    expect($(getCell(0, 1)).hasClass(\'htDimmed\')).toBe(false);\n
+  });\n
+\n
+  it("should not alter the columns object during init", function () {\n
+\n
+    var columns = [\n
+      {\n
+        type: \'text\'\n
+      }\n
+    ];\n
+\n
+    var columnsCopy = JSON.parse(JSON.stringify(columns));\n
+\n
+    handsontable({\n
+      columns: columns\n
+    });\n
+\n
+    expect(columns).toEqual(columnsCopy);\n
+\n
+\n
+  });\n
+\n
+  it("should update column type", function () {\n
+\n
+    var columns = [\n
+      {\n
+        type: \'text\'\n
+      }\n
+    ];\n
+\n
+    handsontable({\n
+      columns: columns\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).type).toEqual(\'text\');\n
+    expect(getCellRenderer(0, 0)).toBe(Handsontable.renderers.TextRenderer);\n
+    expect(getCellEditor(0, 0)).toBe(Handsontable.TextCell.editor);\n
+\n
+    columns[0].type = \'date\';\n
+\n
+    updateSettings({\n
+      columns: columns\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).type).toEqual(\'date\');\n
+    expect(getCellRenderer(0, 0)).toBe(Handsontable.renderers.AutocompleteRenderer);\n
+    expect(getCellEditor(0, 0)).toEqual(Handsontable.DateCell.editor);\n
+\n
+});\n
+\n
+  it("should update cell type functions, even if new type does not implement all of those functions", function () {\n
+\n
+    var columns = [\n
+      {\n
+        type: \'numeric\'\n
+      }\n
+    ];\n
+\n
+    handsontable({\n
+      columns: columns\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).type).toEqual(\'numeric\');\n
+    expect(getCellRenderer(0, 0)).toBe(Handsontable.renderers.NumericRenderer);\n
+    expect(getCellEditor(0, 0)).toBe(Handsontable.NumericCell.editor);\n
+    expect(getCellValidator(0, 0)).toBe(Handsontable.NumericCell.validator);\n
+\n
+    columns[0].type = \'text\';\n
+\n
+    updateSettings({\n
+      columns: columns\n
+    });\n
+\n
+    expect(getCellMeta(0, 0).type).toEqual(\'text\');\n
+    expect(getCellRenderer(0, 0)).toBe(Handsontable.renderers.TextRenderer);\n
+    expect(getCellEditor(0, 0)).toEqual(Handsontable.TextCell.editor);\n
+    expect(Handsontable.TextCell.validator).toBeUndefined();\n
+    expect(getCellValidator(0, 0)).toBeUndefined();\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5810</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_updateSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

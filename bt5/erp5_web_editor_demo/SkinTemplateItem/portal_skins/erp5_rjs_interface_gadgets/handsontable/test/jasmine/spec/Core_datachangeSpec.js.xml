@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272517.22</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_datachangeSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_datachange\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should call onChange callback\', function () {\n
+    var output = null;\n
+\n
+    handsontable({\n
+      afterChange: function (changes) {\n
+        output = changes;\n
+      }\n
+    });\n
+    setDataAtCell(1, 2, "test");\n
+\n
+    expect(output[0][0]).toEqual(1);\n
+    expect(output[0][1]).toEqual(2);\n
+    expect(output[0][2]).toEqual(null);\n
+    expect(output[0][3]).toEqual("test");\n
+  });\n
+\n
+  it(\'should use custom source for datachange\', function () {\n
+    var output = null,\n
+        src    = null;\n
+\n
+    handsontable({\n
+      afterChange: function (changes, source) {\n
+        output = changes;\n
+        src = source;\n
+      }\n
+    });\n
+    setDataAtCell(1, 2, "abc", "test");\n
+\n
+    expect(output[0][3]).toEqual("abc");\n
+    expect(src).toEqual("test");\n
+  });\n
+\n
+  it(\'should use custom source for datachange with array\', function () {\n
+    var output = null,\n
+        src    = null;\n
+\n
+    handsontable({\n
+      afterChange: function (changes, source) {\n
+        output = changes;\n
+        src = source;\n
+      }\n
+    });\n
+    setDataAtCell([[1, 2, "abc"]], "test");\n
+\n
+    expect(output[0][3]).toEqual("abc");\n
+    expect(src).toEqual("test");\n
+  });\n
+\n
+  it(\'should trigger datachange event\', function () {\n
+    var output = null;\n
+\n
+    handsontable();\n
+    Handsontable.hooks.add("afterChange", function (changes) {\n
+      output = changes;\n
+    });\n
+    setDataAtCell(1, 2, "test");\n
+\n
+    expect(output[0][0]).toEqual(1);\n
+    expect(output[0][1]).toEqual(2);\n
+    expect(output[0][2]).toEqual(null);\n
+    expect(output[0][3]).toEqual("test");\n
+  });\n
+\n
+  it(\'this.rootElement should point to handsontable rootElement\', function () {\n
+    var output = null;\n
+    var $container = this.$container;\n
+\n
+    handsontable({\n
+      afterChange: function () {\n
+        output = this.rootElement;\n
+      }\n
+    });\n
+    setDataAtCell(0, 0, "test");\n
+\n
+    expect(output).toEqual($container[0]);\n
+  });\n
+\n
+  it(\'onChange should be triggered after data is rendered to DOM (init)\', function () {\n
+    var output = null;\n
+    var $container = this.$container;\n
+\n
+    handsontable({\n
+      data: [\n
+        [\'Joe Red\']\n
+      ],\n
+      afterChange: function (changes, source) {\n
+        if (source === \'loadData\') {\n
+          output = $container.find(\'table.htCore tbody td:first\').html();\n
+        }\n
+      }\n
+    });\n
+\n
+    expect(output).toEqual(\'Joe Red\');\n
+  });\n
+\n
+  it(\'onChange should be triggered after data is rendered to DOM (setDataAtCell)\', function () {\n
+    var output = null;\n
+    var $container = this.$container;\n
+\n
+    handsontable({\n
+      data: [\n
+        [\'Joe Red\']\n
+      ],\n
+      afterChange: function (changes, source) {\n
+        if (source === \'edit\') {\n
+          output = $container.find(\'table.htCore tbody td:first\').html();\n
+        }\n
+      }\n
+    });\n
+    setDataAtCell(0, 0, \'Alice Red\');\n
+\n
+    expect(output).toEqual(\'Alice Red\');\n
+  });\n
+\n
+  it(\'onChange event object should contain documented keys and values when triggered by edit\', function () {\n
+    var sampleData = [\n
+      {\n
+        col1: \'a\',\n
+        col2: \'b\',\n
+        col3: \'c\'\n
+      }\n
+    ];\n
+    var event = null;\n
+\n
+    handsontable({\n
+      data: sampleData,\n
+      afterChange: function (changes, source) {\n
+        if (\'edit\' == source) {\n
+          event = changes.shift();\n
+        }\n
+      }\n
+    });\n
+    setDataAtCell(0, 0, "test");\n
+\n
+    expect(event[0]).toEqual(0);\n
+    expect(event[1]).toEqual(\'col1\');\n
+    expect(event[2]).toEqual(\'a\');\n
+    expect(event[3]).toEqual(\'test\');\n
+  });\n
+\n
+  it(\'source parameter should be `edit` when cell value is changed through editor\', function () {\n
+    var sources = [];\n
+\n
+    handsontable({\n
+      data: [\n
+        [\'Joe Red\']\n
+      ],\n
+      afterChange: function (changes, source) {\n
+        sources.push(source);\n
+      }\n
+    });\n
+    selectCell(0, 0);\n
+\n
+    keyDown(\'enter\');\n
+    document.activeElement.value = \'Ted\';\n
+    keyDown(\'enter\');\n
+\n
+    expect(sources).toEqual([\'loadData\', \'edit\']); //loadData is always the first source\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4148</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_datachangeSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

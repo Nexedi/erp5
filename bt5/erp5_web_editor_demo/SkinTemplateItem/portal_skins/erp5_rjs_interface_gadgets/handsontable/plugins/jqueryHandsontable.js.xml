@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272491.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jqueryHandsontable.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+if (window.jQuery) {\n
+  (function (window, $, Handsontable) {\n
+    $.fn.handsontable = function (action) {\n
+      var i\n
+        , ilen\n
+        , args\n
+        , output\n
+        , userSettings\n
+        , $this = this.first() // Use only first element from list\n
+        , instance = $this.data(\'handsontable\');\n
+\n
+      // Init case\n
+      if (typeof action !== \'string\') {\n
+        userSettings = action || {};\n
+        if (instance) {\n
+          instance.updateSettings(userSettings);\n
+        }\n
+        else {\n
+          instance = new Handsontable.Core($this[0], userSettings);\n
+          $this.data(\'handsontable\', instance);\n
+          instance.init();\n
+        }\n
+\n
+        return $this;\n
+      }\n
+      // Action case\n
+      else {\n
+        args = [];\n
+        if (arguments.length > 1) {\n
+          for (i = 1, ilen = arguments.length; i < ilen; i++) {\n
+            args.push(arguments[i]);\n
+          }\n
+        }\n
+\n
+        if (instance) {\n
+          if (typeof instance[action] !== \'undefined\') {\n
+            output = instance[action].apply(instance, args);\n
+\n
+            if (action === \'destroy\'){\n
+              $this.removeData();\n
+            }\n
+          }\n
+          else {\n
+            throw new Error(\'Handsontable do not provide action: \' + action);\n
+          }\n
+        }\n
+\n
+        return output;\n
+      }\n
+    };\n
+  })(window, jQuery, Handsontable);\n
+}\n
+\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1333</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jqueryHandsontable.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

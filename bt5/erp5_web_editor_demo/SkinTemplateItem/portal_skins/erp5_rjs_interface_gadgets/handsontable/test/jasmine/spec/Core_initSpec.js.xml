@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272511.9</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_initSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_init\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should respect startRows and startCols when no data is provided\', function () {\n
+    this.$container.remove();\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+    handsontable();\n
+\n
+    expect(countRows()).toEqual(5); //as given in README.md\n
+    expect(countCols()).toEqual(5); //as given in README.md\n
+  });\n
+\n
+  it(\'should respect width provided in inline style\', function () {\n
+    this.$container.css({\n
+      overflow: \'auto\',\n
+      width: \'200px\'\n
+    });\n
+    handsontable({\n
+      data: [\n
+        ["ABC", "ABC", "ABC", "ABC", "ABC", "ABC", "ABC", "ABC", "ABC"]\n
+      ]\n
+    });\n
+\n
+    expect(this.$container.width()).toEqual(200);\n
+  });\n
+\n
+  it(\'should respect width provided in CSS class\', function () {\n
+    $(\'<style>.myTable {overflow: auto; width: 200px}</style>\').appendTo(\'head\');\n
+    this.$container.addClass(\'myTable\');\n
+    handsontable({\n
+      data: [\n
+        ["ABC", "ABC", "ABC", "ABC", "ABC", "ABC", "ABC", "ABC", "ABC"]\n
+      ]\n
+    });\n
+\n
+    expect(this.$container.width()).toEqual(200);\n
+  });\n
+\n
+  it(\'should construct when container is not appended to document\', function () {\n
+    this.$container.remove();\n
+    handsontable();\n
+    expect(getData()).toBeTruthy();\n
+  });\n
+\n
+  it(\'Handsontable.Dom should be available as a helper to the plugins\', function () {\n
+    //all public methods of Handsontable.Dom should be exposed here\n
+    expect(Handsontable.Dom.closest).toBeDefined();\n
+    expect(Handsontable.Dom.isChildOf).toBeDefined();\n
+    expect(Handsontable.Dom.index).toBeDefined();\n
+    expect(Handsontable.Dom.hasClass).toBeDefined();\n
+    expect(Handsontable.Dom.addClass).toBeDefined();\n
+    expect(Handsontable.Dom.removeClass).toBeDefined();\n
+    expect(Handsontable.Dom.removeTextNodes).toBeDefined();\n
+    expect(Handsontable.Dom.empty).toBeDefined();\n
+    expect(Handsontable.Dom.fastInnerHTML).toBeDefined();\n
+    expect(Handsontable.Dom.fastInnerText).toBeDefined();\n
+    expect(Handsontable.Dom.isVisible).toBeDefined();\n
+    expect(Handsontable.Dom.offset).toBeDefined();\n
+    expect(Handsontable.Dom.getComputedStyle).toBeDefined();\n
+    expect(Handsontable.Dom.outerWidth).toBeDefined();\n
+    expect(Handsontable.Dom.outerHeight).toBeDefined();\n
+    expect(Handsontable.Dom.getCaretPosition).toBeDefined();\n
+    expect(Handsontable.Dom.setCaretPosition).toBeDefined();\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2599</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_initSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

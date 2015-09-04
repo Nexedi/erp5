@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272740.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>textRenderer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {empty, fastInnerText} from \'./../helpers/dom/element\';\n
+import {stringify} from \'./../helpers/mixed\';\n
+import {getRenderer, registerRenderer} from \'./../renderers\';\n
+\n
+/**\n
+ * Default text renderer\n
+ *\n
+ * @private\n
+ * @renderer TextRenderer\n
+ * @param {Object} instance Handsontable instance\n
+ * @param {Element} TD Table cell where to render\n
+ * @param {Number} row\n
+ * @param {Number} col\n
+ * @param {String|Number} prop Row object property name\n
+ * @param value Value to render (remember to escape unsafe HTML before inserting to DOM!)\n
+ * @param {Object} cellProperties Cell properties (shared by cell renderer and editor)\n
+ */\n
+function textRenderer(instance, TD, row, col, prop, value, cellProperties) {\n
+  getRenderer(\'base\').apply(this, arguments);\n
+\n
+  if (!value && cellProperties.placeholder) {\n
+    value = cellProperties.placeholder;\n
+  }\n
+\n
+  var escaped = stringify(value);\n
+\n
+  if(!instance.getSettings().trimWhitespace) {\n
+    escaped = escaped.replace(/ /g, String.fromCharCode(160));\n
+  }\n
+\n
+  if (cellProperties.rendererTemplate) {\n
+    empty(TD);\n
+    var TEMPLATE = document.createElement(\'TEMPLATE\');\n
+    TEMPLATE.setAttribute(\'bind\', \'{{}}\');\n
+    TEMPLATE.innerHTML = cellProperties.rendererTemplate;\n
+    HTMLTemplateElement.decorate(TEMPLATE);\n
+    TEMPLATE.model = instance.getSourceDataAtRow(row);\n
+    TD.appendChild(TEMPLATE);\n
+  }\n
+  else {\n
+    // this is faster than innerHTML. See: https://github.com/handsontable/handsontable/wiki/JavaScript-&-DOM-performance-tips\n
+    fastInnerText(TD, escaped);\n
+  }\n
+}\n
+\n
+export {textRenderer};\n
+\n
+registerRenderer(\'text\', textRenderer);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1575</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>textRenderer.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

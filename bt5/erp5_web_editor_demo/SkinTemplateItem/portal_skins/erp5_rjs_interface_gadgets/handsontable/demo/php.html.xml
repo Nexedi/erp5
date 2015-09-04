@@ -1,0 +1,264 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272280.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>php.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>PHP example - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies apart from jQuery)\n
+  -->\n
+  <script data-jsfiddle="common" src="../demo/js/jquery.min.js"></script>\n
+\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="PHP example - Handsontable">\n
+  <meta property="og:description"\n
+        content="This page loads and saves data on server. In this example, client side uses $.ajax. Server side uses PHP with PDO (SQLite)">\n
+  <meta property="og:url" content="http://handsontable.com/demo/php.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/php.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+      <div class="descLayout">\n
+        <div class="pad" data-jsfiddle="example1">\n
+          <h2>PHP example</h2>\n
+\n
+          <p>This page loads and saves data on server. In this example, client side uses <b>$.ajax</b>. Server side uses\n
+            <b>PHP with PDO (SQLite)</b>.</p>\n
+\n
+          <p>Please note. This page and the PHP scripts are a work in progress. They are not yet configured on GitHub.\n
+            Please run it on your own localhost.</p>\n
+\n
+          <p>\n
+            <button name="load">Load</button>\n
+            <button name="save">Save</button>\n
+            <button name="reset">Reset</button>\n
+            <label><input type="checkbox" name="autosave" checked="checked" autocomplete="off"> Autosave</label>\n
+          </p>\n
+\n
+          <div id="exampleConsole" class="console">Click "Load" to load data from server</div>\n
+\n
+          <div id="example1"></div>\n
+\n
+          <p>\n
+            <button name="dump" data-dump="#example1" data-instance="hot" title="Prints current data source to Firebug/Chrome Dev Tools">\n
+              Dump data to console\n
+            </button>\n
+          </p>\n
+        </div>\n
+      </div>\n
+\n
+      <div class="codeLayout">\n
+        <div class="pad">\n
+          <script>\n
+            var\n
+              $container = $("#example1"),\n
+              $console = $("#exampleConsole"),\n
+              $parent = $container.parent(),\n
+              autosaveNotification,\n
+              hot;\n
+\n
+            hot = new Handsontable($container[0], {\n
+              columnSorting: true,\n
+              startRows: 8,\n
+              startCols: 3,\n
+              rowHeaders: true,\n
+              colHeaders: [\'Manufacturer\', \'Year\', \'Price\'],\n
+              columns: [\n
+                {},\n
+                {},\n
+                {}\n
+              ],\n
+              minSpareCols: 0,\n
+              minSpareRows: 1,\n
+              contextMenu: true,\n
+              afterChange: function (change, source) {\n
+                var data;\n
+\n
+                if (source === \'loadData\' || !$parent.find(\'input[name=autosave]\').is(\':checked\')) {\n
+                  return;\n
+                }\n
+                data = change[0];\n
+\n
+                // transform sorted row to original row\n
+                data[0] = hot.sortIndex[data[0]] ? hot.sortIndex[data[0]][0] : data[0];\n
+\n
+                clearTimeout(autosaveNotification);\n
+                $.ajax({\n
+                  url: \'php/save.php\',\n
+                  dataType: \'json\',\n
+                  type: \'POST\',\n
+                  data: {changes: change}, // contains changed cells\' data\n
+                  success: function () {\n
+                    $console.text(\'Autosaved (\' + change.length + \' cell\' + (change.length > 1 ? \'s\' : \'\') + \')\');\n
+\n
+                    autosaveNotification = setTimeout(function () {\n
+                      $console.text(\'Changes will be autosaved\');\n
+                    }, 1000);\n
+                  }\n
+                });\n
+              }\n
+            });\n
+\n
+            $parent.find(\'button[name=load]\').click(function () {\n
+              $.ajax({\n
+                url: \'php/load.php\',\n
+                dataType: \'json\',\n
+                type: \'GET\',\n
+                success: function (res) {\n
+                  var data = [], row;\n
+\n
+                  for (var i = 0, ilen = res.cars.length; i < ilen; i++) {\n
+                    row = [];\n
+                    row[0] = res.cars[i].manufacturer;\n
+                    row[1] = res.cars[i].year;\n
+                    row[2] = res.cars[i].price;\n
+                    data[res.cars[i].id - 1] = row;\n
+                  }\n
+                  $console.text(\'Data loaded\');\n
+                  hot.loadData(data);\n
+                }\n
+              });\n
+            }).click(); // execute immediately\n
+\n
+            $parent.find(\'button[name=save]\').click(function () {\n
+              $.ajax({\n
+                url: \'php/save.php\',\n
+                data: {data: hot.getData()}, // returns all cells\' data\n
+                dataType: \'json\',\n
+                type: \'POST\',\n
+                success: function (res) {\n
+                  if (res.result === \'ok\') {\n
+                    $console.text(\'Data saved\');\n
+                  }\n
+                  else {\n
+                    $console.text(\'Save error\');\n
+                  }\n
+                },\n
+                error: function () {\n
+                  $console.text(\'Save error\');\n
+                }\n
+              });\n
+            });\n
+\n
+            $parent.find(\'button[name=reset]\').click(function () {\n
+              $.ajax({\n
+                url: \'php/reset.php\',\n
+                success: function () {\n
+                  $parent.find(\'button[name=load]\').click();\n
+                },\n
+                error: function () {\n
+                  $console.text(\'Data reset failed\');\n
+                }\n
+              });\n
+            });\n
+\n
+            $parent.find(\'input[name=autosave]\').click(function () {\n
+              if ($(this).is(\':checked\')) {\n
+                $console.text(\'Changes will be autosaved\');\n
+              }\n
+              else {\n
+                $console.text(\'Changes will not be autosaved\');\n
+              }\n
+            });\n
+          </script>\n
+        </div>\n
+      </div>\n
+    </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7556</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>php.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

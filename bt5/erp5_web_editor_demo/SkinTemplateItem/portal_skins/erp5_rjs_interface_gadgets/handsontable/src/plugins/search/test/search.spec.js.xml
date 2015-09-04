@@ -1,0 +1,510 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272700.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>search.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Search plugin\', function () {\n
+\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  describe("enabling/disabling plugin", function () {\n
+    it("should expose `search` object when plugin is enabled", function () {\n
+\n
+      var hot = handsontable({\n
+        search: true\n
+      });\n
+\n
+      expect(hot.search).toBeDefined();\n
+\n
+    });\n
+\n
+    it("should NOT expose `search` object when plugin is disabled", function () {\n
+\n
+      var hot = handsontable({\n
+        search: false\n
+      });\n
+\n
+      expect(hot.search).not.toBeDefined();\n
+\n
+    });\n
+\n
+    it("plugin should be disabled by default", function () {\n
+\n
+      var hot = handsontable();\n
+\n
+      expect(hot.search).not.toBeDefined();\n
+\n
+    });\n
+\n
+    it("should disable plugin using updateSettings", function () {\n
+\n
+      var hot = handsontable({\n
+        search: true\n
+      });\n
+\n
+      expect(hot.search).toBeDefined();\n
+\n
+      updateSettings({\n
+        search: false\n
+      });\n
+\n
+      expect(hot.search).not.toBeDefined();\n
+\n
+    });\n
+\n
+    it("should enable plugin using updateSettings", function () {\n
+\n
+      var hot = handsontable({\n
+        search: false\n
+      });\n
+\n
+      expect(hot.search).not.toBeDefined();\n
+\n
+      updateSettings({\n
+        search: true\n
+      });\n
+\n
+      expect(hot.search).toBeDefined();\n
+\n
+    });\n
+  });\n
+\n
+  describe("query method", function () {\n
+\n
+    afterEach(function () {\n
+      Handsontable.Search.global.setDefaultQueryMethod(Handsontable.Search.DEFAULT_QUERY_METHOD);\n
+    });\n
+\n
+    it("should use the default query method if no queryMethod is passed to query function", function () {\n
+\n
+      spyOn(Handsontable.Search, \'DEFAULT_QUERY_METHOD\');\n
+\n
+      var defaultQueryMethod = Handsontable.Search.DEFAULT_QUERY_METHOD;\n
+\n
+      Handsontable.Search.global.setDefaultQueryMethod(defaultQueryMethod);\n
+\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'A\');\n
+\n
+      expect(defaultQueryMethod.calls.length).toEqual(25);\n
+\n
+    });\n
+\n
+    it("should use the custom default query method if no queryMethod is passed to query function", function () {\n
+\n
+      var customDefaultQueryMethod = jasmine.createSpy(\'customDefaultQueryMethod\');\n
+\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      Handsontable.Search.global.setDefaultQueryMethod(customDefaultQueryMethod);\n
+\n
+      var searchResult = hot.search.query(\'A\');\n
+\n
+      expect(customDefaultQueryMethod.calls.length).toEqual(25);\n
+\n
+    });\n
+\n
+    it("should use the query method from the constructor if no queryMethod is passed to query function", function () {\n
+\n
+      var customQueryMethod = jasmine.createSpy(\'customDefaultQueryMethod\');\n
+\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: {\n
+          queryMethod: customQueryMethod\n
+        }\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'A\');\n
+\n
+      expect(customQueryMethod.calls.length).toEqual(25);\n
+\n
+    });\n
+\n
+    it("should use method passed to query function", function () {\n
+\n
+      var customQueryMethod = jasmine.createSpy(\'customQueryMethod\');\n
+\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'A\', null, customQueryMethod);\n
+\n
+      expect(customQueryMethod.calls.length).toEqual(25);\n
+\n
+    });\n
+  });\n
+\n
+  describe("default query method", function () {\n
+\n
+    it("should use query method to find phrase", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'A\');\n
+\n
+      expect(searchResult.length).toEqual(5);\n
+\n
+      for(var i = 0; i < searchResult.length; i++){\n
+        expect(searchResult[i].row).toEqual(i);\n
+        expect(searchResult[i].col).toEqual(0);\n
+        expect(searchResult[i].data).toEqual(hot.getDataAtCell(i, 0));\n
+      }\n
+\n
+    });\n
+\n
+    it("default query method should be case insensitive", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'a\');\n
+\n
+      expect(searchResult.length).toEqual(5);\n
+\n
+      searchResult = hot.search.query(\'A\');\n
+\n
+      expect(searchResult.length).toEqual(5);\n
+\n
+    });\n
+\n
+    it("default query method should work with numeric values", function () {\n
+      var hot = handsontable({\n
+        data: [\n
+          [1, 2],\n
+          [22, 4]\n
+        ],\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'2\');\n
+\n
+      expect(searchResult.length).toEqual(2);\n
+\n
+    });\n
+\n
+    it("default query method should interpret query as string, not regex", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'A*\');\n
+\n
+      expect(searchResult.length).toEqual(0);\n
+\n
+    });\n
+\n
+    it("default query method should always return false if query string is empty", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'A\');\n
+\n
+      expect(searchResult.length).toEqual(5);\n
+\n
+      var searchResult = hot.search.query(\'\');\n
+\n
+      expect(searchResult.length).toEqual(0);\n
+\n
+    });\n
+\n
+    it("default query method should always return false if no query string has been specified", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'A\');\n
+\n
+      expect(searchResult.length).toEqual(5);\n
+\n
+      var searchResult = hot.search.query();\n
+\n
+      expect(searchResult.length).toEqual(0);\n
+\n
+    });\n
+\n
+    it("default query method should always return false if no query string is not a string", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'A\');\n
+\n
+      expect(searchResult.length).toEqual(5);\n
+\n
+      var searchResult = hot.search.query([1, 2, 3]);\n
+\n
+      expect(searchResult.length).toEqual(0);\n
+\n
+    });\n
+\n
+  });\n
+\n
+\n
+  describe("search callback", function () {\n
+\n
+    afterEach(function () {\n
+      Handsontable.Search.global.setDefaultCallback(Handsontable.Search.DEFAULT_CALLBACK);\n
+    });\n
+\n
+    it("should invoke default callback for each cell", function () {\n
+\n
+      spyOn(Handsontable.Search, \'DEFAULT_CALLBACK\');\n
+\n
+      var defaultCallback = Handsontable.Search.DEFAULT_CALLBACK;\n
+\n
+      Handsontable.Search.global.setDefaultCallback(defaultCallback);\n
+\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'A\');\n
+\n
+      expect(defaultCallback.calls.length).toEqual(25)\n
+\n
+    });\n
+\n
+    it("should change the default callback", function () {\n
+\n
+      spyOn(Handsontable.Search, \'DEFAULT_CALLBACK\');\n
+\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var defaultCallback = jasmine.createSpy(\'defaultCallback\');\n
+      Handsontable.Search.global.setDefaultCallback(defaultCallback);\n
+\n
+      var searchResult = hot.search.query(\'A\');\n
+\n
+      expect(Handsontable.Search.DEFAULT_CALLBACK).not.toHaveBeenCalled();\n
+      expect(defaultCallback.calls.length).toEqual(25);\n
+\n
+    });\n
+\n
+    it("should invoke callback passed in constructor", function () {\n
+\n
+      var searchCallback = jasmine.createSpy(\'searchCallback\');\n
+\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: {\n
+          callback: searchCallback\n
+        }\n
+      });\n
+\n
+\n
+\n
+      var searchResult = hot.search.query(\'A\');\n
+\n
+      expect(searchCallback.calls.length).toEqual(25);\n
+\n
+    });\n
+\n
+    it("should invoke custom callback for each cell which has been tested", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchCallback = jasmine.createSpy(\'searchCallback\');\n
+\n
+      var searchResult = hot.search.query(\'A\', searchCallback);\n
+\n
+      expect(searchCallback.calls.length).toEqual(25)\n
+\n
+      for(var rowIndex = 0, rowCount = countRows(); rowIndex < rowCount; rowIndex++){\n
+        for (var colIndex = 0, colCount = countCols(); colIndex < colCount; colIndex++){\n
+          var callArgs = searchCallback.calls[rowIndex * 5 + colIndex].args;\n
+          expect(callArgs[0]).toEqual(hot);\n
+          expect(callArgs[1]).toEqual(rowIndex);\n
+          expect(callArgs[2]).toEqual(colIndex);\n
+          expect(callArgs[3]).toEqual(hot.getDataAtCell(rowIndex, colIndex));\n
+\n
+          if (colIndex == 0){\n
+            expect(callArgs[4]).toBe(true);\n
+          } else {\n
+            expect(callArgs[4]).toBe(false);\n
+          }\n
+\n
+        }\n
+\n
+      }\n
+\n
+    });\n
+\n
+  });\n
+\n
+  describe("default search callback", function () {\n
+    it("should add isSearchResult = true, to cell properties of all matched cells", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'2\');\n
+\n
+      for (var rowIndex = 0, rowCount = countRows(); rowIndex < rowCount; rowIndex++){\n
+        for (var colIndex = 0, colCount = countCols(); colIndex < colCount; colIndex++){\n
+\n
+          var cellProperties = getCellMeta(rowIndex, colIndex);\n
+\n
+          if (rowIndex == 1){\n
+            expect(cellProperties.isSearchResult).toBeTruthy();\n
+          } else {\n
+            expect(cellProperties.isSearchResult).toBeFalsy();\n
+          }\n
+        }\n
+      }\n
+\n
+    });\n
+  });\n
+\n
+  describe("search result decorator", function () {\n
+    it("should add default search result class to cells which mach the query", function () {\n
+\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: true\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'2\');\n
+\n
+      render();\n
+\n
+      for (var rowIndex = 0, rowCount = countRows(); rowIndex < rowCount; rowIndex++){\n
+        for (var colIndex = 0, colCount = countCols(); colIndex < colCount; colIndex++){\n
+\n
+          var cell = getCell(rowIndex, colIndex);\n
+\n
+          if (rowIndex == 1 ){\n
+            expect($(cell).hasClass(Handsontable.Search.DEFAULT_SEARCH_RESULT_CLASS)).toBe(true);\n
+          } else {\n
+            expect($(cell).hasClass(Handsontable.Search.DEFAULT_SEARCH_RESULT_CLASS)).toBe(false);\n
+          }\n
+        }\n
+      }\n
+\n
+    });\n
+\n
+    it("should add custom search result class to cells which mach the query", function () {\n
+\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        search: {\n
+          searchResultClass: \'customSearchResultClass\'\n
+        }\n
+      });\n
+\n
+      var searchResult = hot.search.query(\'2\');\n
+\n
+      render();\n
+\n
+      for (var rowIndex = 0, rowCount = countRows(); rowIndex < rowCount; rowIndex++){\n
+        for (var colIndex = 0, colCount = countCols(); colIndex < colCount; colIndex++){\n
+\n
+          var cell = getCell(rowIndex, colIndex);\n
+\n
+          if ( rowIndex == 1 ){\n
+            expect($(cell).hasClass(\'customSearchResultClass\')).toBe(true);\n
+          } else {\n
+            expect($(cell).hasClass(\'customSearchResultClass\')).toBe(false);\n
+          }\n
+        }\n
+      }\n
+\n
+    });\n
+  });\n
+\n
+  describe("HOT properties compatibility", function () {\n
+    it("should work properly when the last row is empty", function () { // connected with https://github.com/handsontable/handsontable/issues/1606\n
+      var hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+          colHeaders: true,\n
+          search: true,\n
+          minSpareRows: 1\n
+        })\n
+        , errorThrown = false;\n
+\n
+      try {\n
+        hot.search.query("A");\n
+      } catch (err) {\n
+        var errorThrown = true;\n
+      }\n
+\n
+      expect(errorThrown).toBe(false);\n
+\n
+    });\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12306</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>search.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

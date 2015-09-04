@@ -1,0 +1,1052 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272415.61</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>pikaday.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*!\n
+ * Pikaday\n
+ *\n
+ * Copyright © 2014 David Bushell | BSD & MIT license | https://github.com/dbushell/Pikaday\n
+ */\n
+\n
+(function (root, factory)\n
+{\n
+    \'use strict\';\n
+\n
+    var moment;\n
+    if (typeof exports === \'object\') {\n
+        // CommonJS module\n
+        // Load moment.js as an optional dependency\n
+        try { moment = require(\'moment\'); } catch (e) {}\n
+        module.exports = factory(moment);\n
+    } else if (typeof define === \'function\' && define.amd) {\n
+        // AMD. Register as an anonymous module.\n
+        define(function (req)\n
+        {\n
+            // Load moment.js as an optional dependency\n
+            var id = \'moment\';\n
+            try { moment = req(id); } catch (e) {}\n
+            return factory(moment);\n
+        });\n
+    } else {\n
+        root.Pikaday = factory(root.moment);\n
+    }\n
+}(this, function (moment)\n
+{\n
+    \'use strict\';\n
+\n
+    /**\n
+     * feature detection and helper functions\n
+     */\n
+    var hasMoment = typeof moment === \'function\',\n
+\n
+    hasEventListeners = !!window.addEventListener,\n
+\n
+    document = window.document,\n
+\n
+    sto = window.setTimeout,\n
+\n
+    addEvent = function(el, e, callback, capture)\n
+    {\n
+        if (hasEventListeners) {\n
+            el.addEventListener(e, callback, !!capture);\n
+        } else {\n
+            el.attachEvent(\'on\' + e, callback);\n
+        }\n
+    },\n
+\n
+    removeEvent = function(el, e, callback, capture)\n
+    {\n
+        if (hasEventListeners) {\n
+            el.removeEventListener(e, callback, !!capture);\n
+        } else {\n
+            el.detachEvent(\'on\' + e, callback);\n
+        }\n
+    },\n
+\n
+    fireEvent = function(el, eventName, data)\n
+    {\n
+        var ev;\n
+\n
+        if (document.createEvent) {\n
+            ev = document.createEvent(\'HTMLEvents\');\n
+            ev.initEvent(eventName, true, false);\n
+            ev = extend(ev, data);\n
+            el.dispatchEvent(ev);\n
+        } else if (document.createEventObject) {\n
+            ev = document.createEventObject();\n
+            ev = extend(ev, data);\n
+            el.fireEvent(\'on\' + eventName, ev);\n
+        }\n
+    },\n
+\n
+    trim = function(str)\n
+    {\n
+        return str.trim ? str.trim() : str.replace(/^\\s+|\\s+$/g,\'\');\n
+    },\n
+\n
+    hasClass = function(el, cn)\n
+    {\n
+        return (\' \' + el.className + \' \').indexOf(\' \' + cn + \' \') !== -1;\n
+    },\n
+\n
+    addClass = function(el, cn)\n
+    {\n
+        if (!hasClass(el, cn)) {\n
+            el.className = (el.className === \'\') ? cn : el.className + \' \' + cn;\n
+        }\n
+    },\n
+\n
+    removeClass = function(el, cn)\n
+    {\n
+        el.className = trim((\' \' + el.className + \' \').replace(\' \' + cn + \' \', \' \'));\n
+    },\n
+\n
+    isArray = function(obj)\n
+    {\n
+        return (/Array/).test(Object.prototype.toString.call(obj));\n
+    },\n
+\n
+    isDate = function(obj)\n
+    {\n
+        return (/Date/).test(Object.prototype.toString.call(obj)) && !isNaN(obj.getTime());\n
+    },\n
+\n
+    isLeapYear = function(year)\n
+    {\n
+        // solution by Matti Virkkunen: http://stackoverflow.com/a/4881951\n
+        return year % 4 === 0 && year % 100 !== 0 || year % 400 === 0;\n
+    },\n
+\n
+    getDaysInMonth = function(year, month)\n
+    {\n
+        return [31, isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];\n
+    },\n
+\n
+    setToStartOfDay = function(date)\n
+    {\n
+        if (isDate(date)) date.setHours(0,0,0,0);\n
+    },\n
+\n
+    compareDates = function(a,b)\n
+    {\n
+        // weak date comparison (use setToStartOfDay(date) to ensure correct result)\n
+        return a.getTime() === b.getTime();\n
+    },\n
+\n
+    extend = function(to, from, overwrite)\n
+    {\n
+        var prop, hasProp;\n
+        for (prop in from) {\n
+            hasProp = to[prop] !== undefined;\n
+            if (hasProp && typeof from[prop] === \'object\' && from[prop] !== null && from[prop].nodeName === undefined) {\n
+                if (isDate(from[prop])) {\n
+                    if (overwrite) {\n
+                        to[prop] = new Date(from[prop].getTime());\n
+                    }\n
+                }\n
+                else if (isArray(from[prop])) {\n
+                    if (overwrite) {\n
+                        to[prop] = from[prop].slice(0);\n
+                    }\n
+                } else {\n
+                    to[prop] = extend({}, from[prop], overwrite);\n
+                }\n
+            } else if (overwrite || !hasProp) {\n
+                to[prop] = from[prop];\n
+            }\n
+        }\n
+        return to;\n
+    },\n
+\n
+    adjustCalendar = function(calendar) {\n
+        if (calendar.month < 0) {\n
+            calendar.year -= Math.ceil(Math.abs(calendar.month)/12);\n
+            calendar.month += 12;\n
+        }\n
+        if (calendar.month > 11) {\n
+            calendar.year += Math.floor(Math.abs(calendar.month)/12);\n
+            calendar.month -= 12;\n
+        }\n
+        return calendar;\n
+    },\n
+\n
+    /**\n
+     * defaults and localisation\n
+     */\n
+    defaults = {\n
+\n
+        // bind the picker to a form field\n
+        field: null,\n
+\n
+        // automatically show/hide the picker on `field` focus (default `true` if `field` is set)\n
+        bound: undefined,\n
+\n
+        // position of the datepicker, relative to the field (default to bottom & left)\n
+        // (\'bottom\' & \'left\' keywords are not used, \'top\' & \'right\' are modifier on the bottom/left position)\n
+        position: \'bottom left\',\n
+\n
+        // automatically fit in the viewport even if it means repositioning from the position option\n
+        reposition: true,\n
+\n
+        // the default output format for `.toString()` and `field` value\n
+        format: \'YYYY-MM-DD\',\n
+\n
+        // the initial date to view when first opened\n
+        defaultDate: null,\n
+\n
+        // make the `defaultDate` the initial selected value\n
+        setDefaultDate: false,\n
+\n
+        // first day of week (0: Sunday, 1: Monday etc)\n
+        firstDay: 0,\n
+\n
+        // the minimum/earliest date that can be selected\n
+        minDate: null,\n
+        // the maximum/latest date that can be selected\n
+        maxDate: null,\n
+\n
+        // number of years either side, or array of upper/lower range\n
+        yearRange: 10,\n
+\n
+        // show week numbers at head of row\n
+        showWeekNumber: false,\n
+\n
+        // used internally (don\'t config outside)\n
+        minYear: 0,\n
+        maxYear: 9999,\n
+        minMonth: undefined,\n
+        maxMonth: undefined,\n
+\n
+        isRTL: false,\n
+\n
+        // Additional text to append to the year in the calendar title\n
+        yearSuffix: \'\',\n
+\n
+        // Render the month after year in the calendar title\n
+        showMonthAfterYear: false,\n
+\n
+        // how many months are visible\n
+        numberOfMonths: 1,\n
+\n
+        // when numberOfMonths is used, this will help you to choose where the main calendar will be (default `left`, can be set to `right`)\n
+        // only used for the first display or when a selected date is not visible\n
+        mainCalendar: \'left\',\n
+\n
+        // Specify a DOM element to render the calendar in\n
+        container: undefined,\n
+\n
+        // internationalization\n
+        i18n: {\n
+            previousMonth : \'Previous Month\',\n
+            nextMonth     : \'Next Month\',\n
+            months        : [\'January\',\'February\',\'March\',\'April\',\'May\',\'June\',\'July\',\'August\',\'September\',\'October\',\'November\',\'December\'],\n
+            weekdays      : [\'Sunday\',\'Monday\',\'Tuesday\',\'Wednesday\',\'Thursday\',\'Friday\',\'Saturday\'],\n
+            weekdaysShort : [\'Sun\',\'Mon\',\'Tue\',\'Wed\',\'Thu\',\'Fri\',\'Sat\']\n
+        },\n
+\n
+        // callback function\n
+        onSelect: null,\n
+        onOpen: null,\n
+        onClose: null,\n
+        onDraw: null\n
+    },\n
+\n
+\n
+    /**\n
+     * templating functions to abstract HTML rendering\n
+     */\n
+    renderDayName = function(opts, day, abbr)\n
+    {\n
+        day += opts.firstDay;\n
+        while (day >= 7) {\n
+            day -= 7;\n
+        }\n
+        return abbr ? opts.i18n.weekdaysShort[day] : opts.i18n.weekdays[day];\n
+    },\n
+\n
+    renderDay = function(d, m, y, isSelected, isToday, isDisabled, isEmpty)\n
+    {\n
+        if (isEmpty) {\n
+            return \'<td class="is-empty"></td>\';\n
+        }\n
+        var arr = [];\n
+        if (isDisabled) {\n
+            arr.push(\'is-disabled\');\n
+        }\n
+        if (isToday) {\n
+            arr.push(\'is-today\');\n
+        }\n
+        if (isSelected) {\n
+            arr.push(\'is-selected\');\n
+        }\n
+        return \'<td data-day="\' + d + \'" class="\' + arr.join(\' \') + \'">\' +\n
+                 \'<button class="pika-button pika-day" type="button" \' +\n
+                    \'data-pika-year="\' + y + \'" data-pika-month="\' + m + \'" data-pika-day="\' + d + \'">\' +\n
+                        d +\n
+                 \'</button>\' +\n
+               \'</td>\';\n
+    },\n
+\n
+    renderWeek = function (d, m, y) {\n
+        // Lifted from http://javascript.about.com/library/blweekyear.htm, lightly modified.\n
+        var onejan = new Date(y, 0, 1),\n
+            weekNum = Math.ceil((((new Date(y, m, d) - onejan) / 86400000) + onejan.getDay()+1)/7);\n
+        return \'<td class="pika-week">\' + weekNum + \'</td>\';\n
+    },\n
+\n
+    renderRow = function(days, isRTL)\n
+    {\n
+        return \'<tr>\' + (isRTL ? days.reverse() : days).join(\'\') + \'</tr>\';\n
+    },\n
+\n
+    renderBody = function(rows)\n
+    {\n
+        return \'<tbody>\' + rows.join(\'\') + \'</tbody>\';\n
+    },\n
+\n
+    renderHead = function(opts)\n
+    {\n
+        var i, arr = [];\n
+        if (opts.showWeekNumber) {\n
+            arr.push(\'<th></th>\');\n
+        }\n
+        for (i = 0; i < 7; i++) {\n
+            arr.push(\'<th scope="col"><abbr title="\' + renderDayName(opts, i) + \'">\' + renderDayName(opts, i, true) + \'</abbr></th>\');\n
+        }\n
+        return \'<thead>\' + (opts.isRTL ? arr.reverse() : arr).join(\'\') + \'</thead>\';\n
+    },\n
+\n
+    renderTitle = function(instance, c, year, month, refYear)\n
+    {\n
+        var i, j, arr,\n
+            opts = instance._o,\n
+            isMinYear = year === opts.minYear,\n
+            isMaxYear = year === opts.maxYear,\n
+            html = \'<div class="pika-title">\',\n
+            monthHtml,\n
+            yearHtml,\n
+            prev = true,\n
+            next = true;\n
+\n
+        for (arr = [], i = 0; i < 12; i++) {\n
+            arr.push(\'<option value="\' + (year === refYear ? i - c : 12 + i - c) + \'"\' +\n
+                (i === month ? \' selected\': \'\') +\n
+                ((isMinYear && i < opts.minMonth) || (isMaxYear && i > opts.maxMonth) ? \'disabled\' : \'\') + \'>\' +\n
+                opts.i18n.months[i] + \'</option>\');\n
+        }\n
+        monthHtml = \'<div class="pika-label">\' + opts.i18n.months[month] + \'<select class="pika-select pika-select-month">\' + arr.join(\'\') + \'</select></div>\';\n
+\n
+        if (isArray(opts.yearRange)) {\n
+            i = opts.yearRange[0];\n
+            j = opts.yearRange[1] + 1;\n
+        } else {\n
+            i = year - opts.yearRange;\n
+            j = 1 + year + opts.yearRange;\n
+        }\n
+\n
+        for (arr = []; i < j && i <= opts.maxYear; i++) {\n
+            if (i >= opts.minYear) {\n
+                arr.push(\'<option value="\' + i + \'"\' + (i === year ? \' selected\': \'\') + \'>\' + (i) + \'</option>\');\n
+            }\n
+        }\n
+        yearHtml = \'<div class="pika-label">\' + year + opts.yearSuffix + \'<select class="pika-select pika-select-year">\' + arr.join(\'\') + \'</select></div>\';\n
+\n
+        if (opts.showMonthAfterYear) {\n
+            html += yearHtml + monthHtml;\n
+        } else {\n
+            html += monthHtml + yearHtml;\n
+        }\n
+\n
+        if (isMinYear && (month === 0 || opts.minMonth >= month)) {\n
+            prev = false;\n
+        }\n
+\n
+        if (isMaxYear && (month === 11 || opts.maxMonth <= month)) {\n
+            next = false;\n
+        }\n
+\n
+        if (c === 0) {\n
+            html += \'<button class="pika-prev\' + (prev ? \'\' : \' is-disabled\') + \'" type="button">\' + opts.i18n.previousMonth + \'</button>\';\n
+        }\n
+        if (c === (instance._o.numberOfMonths - 1) ) {\n
+            html += \'<button class="pika-next\' + (next ? \'\' : \' is-disabled\') + \'" type="button">\' + opts.i18n.nextMonth + \'</button>\';\n
+        }\n
+\n
+        return html += \'</div>\';\n
+    },\n
+\n
+    renderTable = function(opts, data)\n
+    {\n
+        return \'<table cellpadding="0" cellspacing="0" class="pika-table">\' + renderHead(opts) + renderBody(data) + \'</table>\';\n
+    },\n
+\n
+\n
+    /**\n
+     * Pikaday constructor\n
+     */\n
+    Pikaday = function(options)\n
+    {\n
+        var self = this,\n
+            opts = self.config(options);\n
+\n
+        self._onMouseDown = function(e)\n
+        {\n
+            if (!self._v) {\n
+                return;\n
+            }\n
+            e = e || window.event;\n
+            var target = e.target || e.srcElement;\n
+            if (!target) {\n
+                return;\n
+            }\n
+\n
+            if (!hasClass(target, \'is-disabled\')) {\n
+                if (hasClass(target, \'pika-button\') && !hasClass(target, \'is-empty\')) {\n
+                    self.setDate(new Date(target.getAttribute(\'data-pika-year\'), target.getAttribute(\'data-pika-month\'), target.getAttribute(\'data-pika-day\')));\n
+                    if (opts.bound) {\n
+                        sto(function() {\n
+                            self.hide();\n
+                            if (opts.field) {\n
+                                opts.field.blur();\n
+                            }\n
+                        }, 100);\n
+                    }\n
+                    return;\n
+                }\n
+                else if (hasClass(target, \'pika-prev\')) {\n
+                    self.prevMonth();\n
+                }\n
+                else if (hasClass(target, \'pika-next\')) {\n
+                    self.nextMonth();\n
+                }\n
+            }\n
+            if (!hasClass(target, \'pika-select\')) {\n
+                if (e.preventDefault) {\n
+                    e.preventDefault();\n
+                } else {\n
+                    e.returnValue = false;\n
+                    return false;\n
+                }\n
+            } else {\n
+                self._c = true;\n
+            }\n
+        };\n
+\n
+        self._onChange = function(e)\n
+        {\n
+            e = e || window.event;\n
+            var target = e.target || e.srcElement;\n
+            if (!target) {\n
+                return;\n
+            }\n
+            if (hasClass(target, \'pika-select-month\')) {\n
+                self.gotoMonth(target.value);\n
+            }\n
+            else if (hasClass(target, \'pika-select-year\')) {\n
+                self.gotoYear(target.value);\n
+            }\n
+        };\n
+\n
+        self._onInputChange = function(e)\n
+        {\n
+            var date;\n
+\n
+            if (e.firedBy === self) {\n
+                return;\n
+            }\n
+            if (hasMoment) {\n
+                date = moment(opts.field.value, opts.format);\n
+                date = (date && date.isValid()) ? date.toDate() : null;\n
+            }\n
+            else {\n
+                date = new Date(Date.parse(opts.field.value));\n
+            }\n
+            self.setDate(isDate(date) ? date : null);\n
+            if (!self._v) {\n
+                self.show();\n
+            }\n
+        };\n
+\n
+        self._onInputFocus = function()\n
+        {\n
+            self.show();\n
+        };\n
+\n
+        self._onInputClick = function()\n
+        {\n
+            self.show();\n
+        };\n
+\n
+        self._onInputBlur = function()\n
+        {\n
+            if (!self._c) {\n
+                self._b = sto(function() {\n
+                    self.hide();\n
+                }, 50);\n
+            }\n
+            self._c = false;\n
+        };\n
+\n
+        self._onClick = function(e)\n
+        {\n
+            e = e || window.event;\n
+            var target = e.target || e.srcElement,\n
+                pEl = target;\n
+\n
+            if (!target) {\n
+                return;\n
+            }\n
+            if (!hasEventListeners && hasClass(target, \'pika-select\')) {\n
+                if (!target.onchange) {\n
+                    target.setAttribute(\'onchange\', \'return;\');\n
+                    addEvent(target, \'change\', self._onChange);\n
+                }\n
+            }\n
+            do {\n
+                if (pEl === opts.trigger) {\n
+                    return;\n
+                }\n
+            }\n
+            while ((pEl = pEl.parentNode));\n
+            if (self._v && pEl !== opts.trigger) {\n
+                self.hide();\n
+            }\n
+        };\n
+\n
+        self.el = document.createElement(\'div\');\n
+        self.el.className = \'pika-single\' + (opts.isRTL ? \' is-rtl\' : \'\');\n
+\n
+        addEvent(self.el, \'mousedown\', self._onMouseDown, true);\n
+        addEvent(self.el, \'change\', self._onChange);\n
+\n
+        if (opts.field) {\n
+            if (opts.container) {\n
+                opts.container.appendChild(self.el);\n
+            } else if (opts.bound) {\n
+                document.body.appendChild(self.el);\n
+            } else {\n
+                opts.field.parentNode.insertBefore(self.el, opts.field.nextSibling);\n
+            }\n
+            addEvent(opts.field, \'change\', self._onInputChange);\n
+\n
+            if (!opts.defaultDate) {\n
+                if (hasMoment && opts.field.value) {\n
+                    opts.defaultDate = moment(opts.field.value, opts.format).toDate();\n
+                } else {\n
+                    opts.defaultDate = new Date(Date.parse(opts.field.value));\n
+                }\n
+                opts.setDefaultDate = true;\n
+            }\n
+        }\n
+\n
+        var defDate = opts.defaultDate;\n
+\n
+        if (isDate(defDate)) {\n
+            if (opts.setDefaultDate) {\n
+                self.setDate(defDate, true);\n
+            } else {\n
+                self.gotoDate(defDate);\n
+            }\n
+        } else {\n
+            self.gotoDate(new Date());\n
+        }\n
+\n
+        if (opts.bound) {\n
+            this.hide();\n
+            self.el.className += \' is-bound\';\n
+            addEvent(opts.trigger, \'click\', self._onInputClick);\n
+            addEvent(opts.trigger, \'focus\', self._onInputFocus);\n
+            addEvent(opts.trigger, \'blur\', self._onInputBlur);\n
+        } else {\n
+            this.show();\n
+        }\n
+    };\n
+\n
+\n
+    /**\n
+     * public Pikaday API\n
+     */\n
+    Pikaday.prototype = {\n
+\n
+\n
+        /**\n
+         * configure functionality\n
+         */\n
+        config: function(options)\n
+        {\n
+            if (!this._o) {\n
+                this._o = extend({}, defaults, true);\n
+            }\n
+\n
+            var opts = extend(this._o, options, true);\n
+\n
+            opts.isRTL = !!opts.isRTL;\n
+\n
+            opts.field = (opts.field && opts.field.nodeName) ? opts.field : null;\n
+\n
+            opts.bound = !!(opts.bound !== undefined ? opts.field && opts.bound : opts.field);\n
+\n
+            opts.trigger = (opts.trigger && opts.trigger.nodeName) ? opts.trigger : opts.field;\n
+\n
+            var nom = parseInt(opts.numberOfMonths, 10) || 1;\n
+            opts.numberOfMonths = nom > 4 ? 4 : nom;\n
+\n
+            if (!isDate(opts.minDate)) {\n
+                opts.minDate = false;\n
+            }\n
+            if (!isDate(opts.maxDate)) {\n
+                opts.maxDate = false;\n
+            }\n
+            if ((opts.minDate && opts.maxDate) && opts.maxDate < opts.minDate) {\n
+                opts.maxDate = opts.minDate = false;\n
+            }\n
+            if (opts.minDate) {\n
+                setToStartOfDay(opts.minDate);\n
+                opts.minYear  = opts.minDate.getFullYear();\n
+                opts.minMonth = opts.minDate.getMonth();\n
+            }\n
+            if (opts.maxDate) {\n
+                setToStartOfDay(opts.maxDate);\n
+                opts.maxYear  = opts.maxDate.getFullYear();\n
+                opts.maxMonth = opts.maxDate.getMonth();\n
+            }\n
+\n
+            if (isArray(opts.yearRange)) {\n
+                var fallback = new Date().getFullYear() - 10;\n
+                opts.yearRange[0] = parseInt(opts.yearRange[0], 10) || fallback;\n
+                opts.yearRange[1] = parseInt(opts.yearRange[1], 10) || fallback;\n
+            } else {\n
+                opts.yearRange = Math.abs(parseInt(opts.yearRange, 10)) || defaults.yearRange;\n
+                if (opts.yearRange > 100) {\n
+                    opts.yearRange = 100;\n
+                }\n
+            }\n
+\n
+            return opts;\n
+        },\n
+\n
+        /**\n
+         * return a formatted string of the current selection (using Moment.js if available)\n
+         */\n
+        toString: function(format)\n
+        {\n
+            return !isDate(this._d) ? \'\' : hasMoment ? moment(this._d).format(format || this._o.format) : this._d.toDateString();\n
+        },\n
+\n
+        /**\n
+         * return a Moment.js object of the current selection (if available)\n
+         */\n
+        getMoment: function()\n
+        {\n
+            return hasMoment ? moment(this._d) : null;\n
+        },\n
+\n
+        /**\n
+         * set the current selection from a Moment.js object (if available)\n
+         */\n
+        setMoment: function(date, preventOnSelect)\n
+        {\n
+            if (hasMoment && moment.isMoment(date)) {\n
+                this.setDate(date.toDate(), preventOnSelect);\n
+            }\n
+        },\n
+\n
+        /**\n
+         * return a Date object of the current selection\n
+         */\n
+        getDate: function()\n
+        {\n
+            return isDate(this._d) ? new Date(this._d.getTime()) : null;\n
+        },\n
+\n
+        /**\n
+         * set the current selection\n
+         */\n
+        setDate: function(date, preventOnSelect)\n
+        {\n
+            if (!date) {\n
+                this._d = null;\n
+\n
+                if (this._o.field) {\n
+                    this._o.field.value = \'\';\n
+                    fireEvent(this._o.field, \'change\', { firedBy: this });\n
+                }\n
+\n
+                return this.draw();\n
+            }\n
+            if (typeof date === \'string\') {\n
+                date = new Date(Date.parse(date));\n
+            }\n
+            if (!isDate(date)) {\n
+                return;\n
+            }\n
+\n
+            var min = this._o.minDate,\n
+                max = this._o.maxDate;\n
+\n
+            if (isDate(min) && date < min) {\n
+                date = min;\n
+            } else if (isDate(max) && date > max) {\n
+                date = max;\n
+            }\n
+\n
+            this._d = new Date(date.getTime());\n
+            setToStartOfDay(this._d);\n
+            this.gotoDate(this._d);\n
+\n
+            if (this._o.field) {\n
+                this._o.field.value = this.toString();\n
+                fireEvent(this._o.field, \'change\', { firedBy: this });\n
+            }\n
+            if (!preventOnSelect && typeof this._o.onSelect === \'function\') {\n
+                this._o.onSelect.call(this, this.getDate());\n
+            }\n
+        },\n
+\n
+        /**\n
+         * change view to a specific date\n
+         */\n
+        gotoDate: function(date)\n
+        {\n
+            var newCalendar = true;\n
+\n
+            if (!isDate(date)) {\n
+                return;\n
+            }\n
+\n
+            if (this.calendars) {\n
+                var firstVisibleDate = new Date(this.calendars[0].year, this.calendars[0].month, 1),\n
+                    lastVisibleDate = new Date(this.calendars[this.calendars.length-1].year, this.calendars[this.calendars.length-1].month, 1),\n
+                    visibleDate = date.getTime();\n
+                // get the end of the month\n
+                lastVisibleDate.setMonth(lastVisibleDate.getMonth()+1);\n
+                lastVisibleDate.setDate(lastVisibleDate.getDate()-1);\n
+                newCalendar = (visibleDate < firstVisibleDate.getTime() || lastVisibleDate.getTime() < visibleDate);\n
+            }\n
+\n
+            if (newCalendar) {\n
+                this.calendars = [{\n
+                    month: date.getMonth(),\n
+                    year: date.getFullYear()\n
+                }];\n
+                if (this._o.mainCalendar === \'right\') {\n
+                    this.calendars[0].month += 1 - this._o.numberOfMonths;\n
+                }\n
+            }\n
+\n
+            this.adjustCalendars();\n
+        },\n
+\n
+        adjustCalendars: function() {\n
+            this.calendars[0] = adjustCalendar(this.calendars[0]);\n
+            for (var c = 1; c < this._o.numberOfMonths; c++) {\n
+                this.calendars[c] = adjustCalendar({\n
+                    month: this.calendars[0].month + c,\n
+                    year: this.calendars[0].year\n
+                });\n
+            }\n
+            this.draw();\n
+        },\n
+\n
+        gotoToday: function()\n
+        {\n
+            this.gotoDate(new Date());\n
+        },\n
+\n
+        /**\n
+         * change view to a specific month (zero-index, e.g. 0: January)\n
+         */\n
+        gotoMonth: function(month)\n
+        {\n
+            if (!isNaN(month)) {\n
+                this.calendars[0].month = parseInt(month, 10);\n
+                this.adjustCalendars();\n
+            }\n
+        },\n
+\n
+        nextMonth: function()\n
+        {\n
+            this.calendars[0].month++;\n
+            this.adjustCalendars();\n
+        },\n
+\n
+        prevMonth: function()\n
+        {\n
+            this.calendars[0].month--;\n
+            this.adjustCalendars();\n
+        },\n
+\n
+        /**\n
+         * change view to a specific full year (e.g. "2012")\n
+         */\n
+        gotoYear: function(year)\n
+        {\n
+            if (!isNaN(year)) {\n
+                this.calendars[0].year = parseInt(year, 10);\n
+                this.adjustCalendars();\n
+            }\n
+        },\n
+\n
+        /**\n
+         * change the minDate\n
+         */\n
+        setMinDate: function(value)\n
+        {\n
+            this._o.minDate = value;\n
+        },\n
+\n
+        /**\n
+         * change the maxDate\n
+         */\n
+        setMaxDate: function(value)\n
+        {\n
+            this._o.maxDate = value;\n
+        },\n
+\n
+        /**\n
+         * refresh the HTML\n
+         */\n
+        draw: function(force)\n
+        {\n
+            if (!this._v && !force) {\n
+                return;\n
+            }\n
+            var opts = this._o,\n
+                minYear = opts.minYear,\n
+                maxYear = opts.maxYear,\n
+                minMonth = opts.minMonth,\n
+                maxMonth = opts.maxMonth,\n
+                html = \'\';\n
+\n
+            if (this._y <= minYear) {\n
+                this._y = minYear;\n
+                if (!isNaN(minMonth) && this._m < minMonth) {\n
+                    this._m = minMonth;\n
+                }\n
+            }\n
+            if (this._y >= maxYear) {\n
+                this._y = maxYear;\n
+                if (!isNaN(maxMonth) && this._m > maxMonth) {\n
+                    this._m = maxMonth;\n
+                }\n
+            }\n
+\n
+            for (var c = 0; c < opts.numberOfMonths; c++) {\n
+                html += \'<div class="pika-lendar">\' + renderTitle(this, c, this.calendars[c].year, this.calendars[c].month, this.calendars[0].year) + this.render(this.calendars[c].year, this.calendars[c].month) + \'</div>\';\n
+            }\n
+\n
+            this.el.innerHTML = html;\n
+\n
+            if (opts.bound) {\n
+                if(opts.field.type !== \'hidden\') {\n
+                    sto(function() {\n
+                        opts.trigger.focus();\n
+                    }, 1);\n
+                }\n
+            }\n
+\n
+            if (typeof this._o.onDraw === \'function\') {\n
+                var self = this;\n
+                sto(function() {\n
+                    self._o.onDraw.call(self);\n
+                }, 0);\n
+            }\n
+        },\n
+\n
+        adjustPosition: function()\n
+        {\n
+            if (this._o.container) return;\n
+            var field = this._o.trigger, pEl = field,\n
+            width = this.el.offsetWidth, height = this.el.offsetHeight,\n
+            viewportWidth = window.innerWidth || document.documentElement.clientWidth,\n
+            viewportHeight = window.innerHeight || document.documentElement.clientHeight,\n
+            scrollTop = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop,\n
+            left, top, clientRect;\n
+\n
+            if (typeof field.getBoundingClientRect === \'function\') {\n
+                clientRect = field.getBoundingClientRect();\n
+                left = clientRect.left + window.pageXOffset;\n
+                top = clientRect.bottom + window.pageYOffset;\n
+            } else {\n
+                left = pEl.offsetLeft;\n
+                top  = pEl.offsetTop + pEl.offsetHeight;\n
+                while((pEl = pEl.offsetParent)) {\n
+                    left += pEl.offsetLeft;\n
+                    top  += pEl.offsetTop;\n
+                }\n
+            }\n
+\n
+            // default position is bottom & left\n
+            if ((this._o.reposition && left + width > viewportWidth) ||\n
+                (\n
+                    this._o.position.indexOf(\'right\') > -1 &&\n
+                    left - width + field.offsetWidth > 0\n
+                )\n
+            ) {\n
+                left = left - width + field.offsetWidth;\n
+            }\n
+            if ((this._o.reposition && top + height > viewportHeight + scrollTop) ||\n
+                (\n
+                    this._o.position.indexOf(\'top\') > -1 &&\n
+                    top - height - field.offsetHeight > 0\n
+                )\n
+            ) {\n
+                top = top - height - field.offsetHeight;\n
+            }\n
+\n
+            this.el.style.cssText = [\n
+                \'position: absolute\',\n
+                \'left: \' + left + \'px\',\n
+                \'top: \' + top + \'px\'\n
+            ].join(\';\');\n
+        },\n
+\n
+        /**\n
+         * render HTML for a particular month\n
+         */\n
+        render: function(year, month)\n
+        {\n
+            var opts   = this._o,\n
+                now    = new Date(),\n
+                days   = getDaysInMonth(year, month),\n
+                before = new Date(year, month, 1).getDay(),\n
+                data   = [],\n
+                row    = [];\n
+            setToStartOfDay(now);\n
+            if (opts.firstDay > 0) {\n
+                before -= opts.firstDay;\n
+                if (before < 0) {\n
+                    before += 7;\n
+                }\n
+            }\n
+            var cells = days + before,\n
+                after = cells;\n
+            while(after > 7) {\n
+                after -= 7;\n
+            }\n
+            cells += 7 - after;\n
+            for (var i = 0, r = 0; i < cells; i++)\n
+            {\n
+                var day = new Date(year, month, 1 + (i - before)),\n
+                    isDisabled = (opts.minDate && day < opts.minDate) || (opts.maxDate && day > opts.maxDate),\n
+                    isSelected = isDate(this._d) ? compareDates(day, this._d) : false,\n
+                    isToday = compareDates(day, now),\n
+                    isEmpty = i < before || i >= (days + before);\n
+\n
+                row.push(renderDay(1 + (i - before), month, year, isSelected, isToday, isDisabled, isEmpty));\n
+\n
+                if (++r === 7) {\n
+                    if (opts.showWeekNumber) {\n
+                        row.unshift(renderWeek(i - before, month, year));\n
+                    }\n
+                    data.push(renderRow(row, opts.isRTL));\n
+                    row = [];\n
+                    r = 0;\n
+                }\n
+            }\n
+            return renderTable(opts, data);\n
+        },\n
+\n
+        isVisible: function()\n
+        {\n
+            return this._v;\n
+        },\n
+\n
+        show: function()\n
+        {\n
+            if (!this._v) {\n
+                removeClass(this.el, \'is-hidden\');\n
+                this._v = true;\n
+                this.draw();\n
+                if (this._o.bound) {\n
+                    addEvent(document, \'click\', this._onClick);\n
+                    this.adjustPosition();\n
+                }\n
+                if (typeof this._o.onOpen === \'function\') {\n
+                    this._o.onOpen.call(this);\n
+                }\n
+            }\n
+        },\n
+\n
+        hide: function()\n
+        {\n
+            var v = this._v;\n
+            if (v !== false) {\n
+                if (this._o.bound) {\n
+                    removeEvent(document, \'click\', this._onClick);\n
+                }\n
+                this.el.style.cssText = \'\';\n
+                addClass(this.el, \'is-hidden\');\n
+                this._v = false;\n
+                if (v !== undefined && typeof this._o.onClose === \'function\') {\n
+                    this._o.onClose.call(this);\n
+                }\n
+            }\n
+        },\n
+\n
+        /**\n
+         * GAME OVER\n
+         */\n
+        destroy: function()\n
+        {\n
+            this.hide();\n
+            removeEvent(this.el, \'mousedown\', this._onMouseDown, true);\n
+            removeEvent(this.el, \'change\', this._onChange);\n
+            if (this._o.field) {\n
+                removeEvent(this._o.field, \'change\', this._onInputChange);\n
+                if (this._o.bound) {\n
+                    removeEvent(this._o.trigger, \'click\', this._onInputClick);\n
+                    removeEvent(this._o.trigger, \'focus\', this._onInputFocus);\n
+                    removeEvent(this._o.trigger, \'blur\', this._onInputBlur);\n
+                }\n
+            }\n
+            if (this.el.parentNode) {\n
+                this.el.parentNode.removeChild(this.el);\n
+            }\n
+        }\n
+\n
+    };\n
+\n
+    return Pikaday;\n
+\n
+}));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>31642</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>pikaday.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272635.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>string.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\n
+import {stringify} from \'./mixed\';\n
+\n
+/**\n
+ * Convert string to upper case first letter.\n
+ *\n
+ * @param {String} string String to convert.\n
+ * @returns {String}\n
+ */\n
+export function toUpperCaseFirst(string) {\n
+  return string[0].toUpperCase() + string.substr(1);\n
+}\n
+\n
+/**\n
+ * Compare strings case insensitively.\n
+ *\n
+ * @param {...String} strings Strings to compare.\n
+ * @returns {Boolean}\n
+ */\n
+export function equalsIgnoreCase(...strings) {\n
+  let unique = [];\n
+  let length = strings.length;\n
+\n
+  while (length --) {\n
+    let string = stringify(strings[length]).toLowerCase();\n
+\n
+    if (unique.indexOf(string) === -1) {\n
+      unique.push(string);\n
+    }\n
+  }\n
+\n
+  return unique.length === 1;\n
+}\n
+\n
+/**\n
+ * Generates a random hex string. Used as namespace for Handsontable instance events.\n
+ * @return {String} - 16 character random string: "92b1bfc74ec4"\n
+ */\n
+export function randomString() {\n
+  function s4() {\n
+    return Math.floor((1 + Math.random()) * 0x10000)\n
+      .toString(16)\n
+      .substring(1);\n
+  }\n
+\n
+  return s4() + s4() + s4() + s4();\n
+}\n
+\n
+/**\n
+ * Checks if value is valid percent.\n
+ *\n
+ * @param {String} value\n
+ * @returns {Boolean}\n
+ */\n
+export function isPercentValue(value) {\n
+  return /^([0-9][0-9]?\\%$)|(^100\\%$)/.test(value);\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1210</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>string.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

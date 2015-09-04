@@ -1,0 +1,393 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272691.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>autofill.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {offset, outerHeight, outerWidth} from \'./../../helpers/dom/element\';\n
+import {eventManager as eventManagerObject} from \'./../../eventManager\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+import {WalkontableCellCoords} from \'./../../3rdparty/walkontable/src/cell/coords\';\n
+\n
+export {Autofill};\n
+\n
+function getDeltas(start, end, data, direction) {\n
+  var\n
+  // rows\n
+    rlength = data.length,\n
+  // cols\n
+    clength = data ? data[0].length : 0,\n
+    deltas = [],\n
+    arr = [],\n
+    diffRow, diffCol,\n
+    startValue, endValue,\n
+    delta;\n
+\n
+  diffRow = end.row - start.row;\n
+  diffCol = end.col - start.col;\n
+\n
+  if ([\'down\', \'up\'].indexOf(direction) !== -1) {\n
+    for (var col = 0; col <= diffCol; col++) {\n
+      startValue = parseInt(data[0][col], 10);\n
+      endValue = parseInt(data[rlength - 1][col], 10);\n
+      delta = (direction === \'down\' ? (endValue - startValue) : (startValue - endValue)) / (rlength - 1) || 0;\n
+\n
+      arr.push(delta);\n
+    }\n
+    deltas.push(arr);\n
+  }\n
+\n
+  if ([\'right\', \'left\'].indexOf(direction) !== -1) {\n
+    for (var row = 0; row <= diffRow; row++) {\n
+      startValue = parseInt(data[row][0], 10);\n
+      endValue = parseInt(data[row][clength - 1], 10);\n
+      delta = (direction === \'right\' ? (endValue - startValue) : (startValue - endValue)) / (clength - 1) || 0;\n
+\n
+      arr = [];\n
+      arr.push(delta);\n
+\n
+      deltas.push(arr);\n
+    }\n
+  }\n
+\n
+  return deltas;\n
+}\n
+\n
+/**\n
+ * This plugin provides "drag-down" and "copy-down" functionalities, both operated\n
+ * using the small square in the right bottom of the cell selection.\n
+ *\n
+ * "Drag-down" expands the value of the selected cells to the neighbouring\n
+ * cells when you drag the small square in the corner.\n
+ *\n
+ * "Copy-down" copies the value of the selection to all empty cells\n
+ * below when you double click the small square.\n
+ *\n
+ * @class Autofill\n
+ * @plugin Autofill\n
+ */\n
+function Autofill(instance) {\n
+  var\n
+    _this = this,\n
+    mouseDownOnCellCorner = false,\n
+    wtOnCellCornerMouseDown,\n
+    wtOnCellMouseOver,\n
+    eventManager;\n
+\n
+  this.instance = instance;\n
+  this.addingStarted = false;\n
+\n
+  eventManager = eventManagerObject(instance);\n
+\n
+  function mouseUpCallback(event) {\n
+    if (!instance.autofill) {\n
+      return true;\n
+    }\n
+\n
+    if (instance.autofill.handle && instance.autofill.handle.isDragged) {\n
+      if (instance.autofill.handle.isDragged > 1) {\n
+        instance.autofill.apply();\n
+      }\n
+      instance.autofill.handle.isDragged = 0;\n
+      mouseDownOnCellCorner = false;\n
+    }\n
+  }\n
+\n
+  function mouseMoveCallback(event) {\n
+    var tableBottom, tableRight;\n
+\n
+    if (!_this.instance.autofill) {\n
+      return false;\n
+    }\n
+    tableBottom = offset(_this.instance.table).top - (window.pageYOffset ||\n
+      document.documentElement.scrollTop) + outerHeight(_this.instance.table);\n
+    tableRight = offset(_this.instance.table).left - (window.pageXOffset ||\n
+      document.documentElement.scrollLeft) + outerWidth(_this.instance.table);\n
+\n
+    // dragged outside bottom\n
+    if (_this.addingStarted === false && _this.instance.autofill.handle.isDragged > 0 && event.clientY > tableBottom &&\n
+      event.clientX <= tableRight) {\n
+      _this.instance.mouseDragOutside = true;\n
+      _this.addingStarted = true;\n
+\n
+    } else {\n
+      _this.instance.mouseDragOutside = false;\n
+    }\n
+\n
+    if (_this.instance.mouseDragOutside) {\n
+      setTimeout(function () {\n
+        _this.addingStarted = false;\n
+        _this.instance.alter(\'insert_row\');\n
+      }, 200);\n
+    }\n
+  }\n
+\n
+  eventManager.addEventListener(document, \'mouseup\', mouseUpCallback);\n
+  eventManager.addEventListener(document, \'mousemove\', mouseMoveCallback);\n
+\n
+  // Appeding autofill-specific methods to walkontable event settings\n
+  wtOnCellCornerMouseDown = this.instance.view.wt.wtSettings.settings.onCellCornerMouseDown;\n
+\n
+  this.instance.view.wt.wtSettings.settings.onCellCornerMouseDown = function (event) {\n
+    instance.autofill.handle.isDragged = 1;\n
+    mouseDownOnCellCorner = true;\n
+    wtOnCellCornerMouseDown(event);\n
+  };\n
+\n
+  wtOnCellMouseOver = this.instance.view.wt.wtSettings.settings.onCellMouseOver;\n
+\n
+  this.instance.view.wt.wtSettings.settings.onCellMouseOver = function (event, coords, TD, wt) {\n
+    if (instance.autofill && mouseDownOnCellCorner && !instance.view.isMouseDown() &&\n
+      instance.autofill.handle && instance.autofill.handle.isDragged) {\n
+      instance.autofill.handle.isDragged++;\n
+      instance.autofill.showBorder(coords);\n
+      instance.autofill.checkIfNewRowNeeded();\n
+    }\n
+    wtOnCellMouseOver(event, coords, TD, wt);\n
+  };\n
+\n
+  this.instance.view.wt.wtSettings.settings.onCellCornerDblClick = function () {\n
+    instance.autofill.selectAdjacent();\n
+  };\n
+}\n
+\n
+/**\n
+ * Create fill handle and fill border objects\n
+ *\n
+ * @function init\n
+ * @memberof Autofill#\n
+ */\n
+Autofill.prototype.init = function () {\n
+  this.handle = {};\n
+};\n
+\n
+/**\n
+ * Hide fill handle and fill border permanently\n
+ *\n
+ * @function disable\n
+ * @memberof Autofill#\n
+ */\n
+Autofill.prototype.disable = function () {\n
+  this.handle.disabled = true;\n
+};\n
+\n
+/**\n
+ * Selects cells down to the last row in the left column, then fills down to that cell\n
+ *\n
+ * @function selectAdjacent\n
+ * @memberof Autofill#\n
+ */\n
+Autofill.prototype.selectAdjacent = function () {\n
+  var select, data, r, maxR, c;\n
+\n
+  if (this.instance.selection.isMultiple()) {\n
+    select = this.instance.view.wt.selections.area.getCorners();\n
+\n
+  } else {\n
+    select = this.instance.view.wt.selections.current.getCorners();\n
+  }\n
+  data = this.instance.getData();\n
+\n
+  rows: for (r = select[2] + 1; r < this.instance.countRows(); r++) {\n
+    for (c = select[1]; c <= select[3]; c++) {\n
+      if (data[r][c]) {\n
+        break rows;\n
+      }\n
+    }\n
+    if (!!data[r][select[1] - 1] || !!data[r][select[3] + 1]) {\n
+      maxR = r;\n
+    }\n
+  }\n
+  if (maxR) {\n
+    this.instance.view.wt.selections.fill.clear();\n
+    this.instance.view.wt.selections.fill.add(new WalkontableCellCoords(select[0], select[1]));\n
+    this.instance.view.wt.selections.fill.add(new WalkontableCellCoords(maxR, select[3]));\n
+    this.apply();\n
+  }\n
+};\n
+\n
+/**\n
+ * Apply fill values to the area in fill border, omitting the selection border\n
+ *\n
+ * @function apply\n
+ * @memberof Autofill#\n
+ */\n
+Autofill.prototype.apply = function () {\n
+  var drag, select, start, end, _data, direction, deltas, selRange;\n
+\n
+  this.handle.isDragged = 0;\n
+  drag = this.instance.view.wt.selections.fill.getCorners();\n
+\n
+  if (!drag) {\n
+    return;\n
+  }\n
+  this.instance.view.wt.selections.fill.clear();\n
+\n
+  if (this.instance.selection.isMultiple()) {\n
+    select = this.instance.view.wt.selections.area.getCorners();\n
+  } else {\n
+    select = this.instance.view.wt.selections.current.getCorners();\n
+  }\n
+  Handsontable.hooks.run(this.instance, \'afterAutofillApplyValues\', select, drag);\n
+\n
+  if (drag[0] === select[0] && drag[1] < select[1]) {\n
+    direction = \'left\';\n
+\n
+    start = new WalkontableCellCoords(drag[0], drag[1]);\n
+    end = new WalkontableCellCoords(drag[2], select[1] - 1);\n
+\n
+  } else if (drag[0] === select[0] && drag[3] > select[3]) {\n
+    direction = \'right\';\n
+\n
+    start = new WalkontableCellCoords(drag[0], select[3] + 1);\n
+    end = new WalkontableCellCoords(drag[2], drag[3]);\n
+\n
+  } else if (drag[0] < select[0] && drag[1] === select[1]) {\n
+    direction = \'up\';\n
+\n
+    start = new WalkontableCellCoords(drag[0], drag[1]);\n
+    end = new WalkontableCellCoords(select[0] - 1, drag[3]);\n
+\n
+  } else if (drag[2] > select[2] && drag[1] === select[1]) {\n
+    direction = \'down\';\n
+\n
+    start = new WalkontableCellCoords(select[2] + 1, drag[1]);\n
+    end = new WalkontableCellCoords(drag[2], drag[3]);\n
+  }\n
+\n
+  if (start && start.row > -1 && start.col > -1) {\n
+    selRange = {\n
+      from: this.instance.getSelectedRange().from,\n
+      to: this.instance.getSelectedRange().to\n
+    };\n
+    _data = this.instance.getData(selRange.from.row, selRange.from.col, selRange.to.row, selRange.to.col);\n
+    deltas = getDeltas(start, end, _data, direction);\n
+\n
+    Handsontable.hooks.run(this.instance, \'beforeAutofill\', start, end, _data);\n
+    this.instance.populateFromArray(start.row, start.col, _data, end.row, end.col, \'autofill\', null, direction, deltas);\n
+\n
+    this.instance.selection.setRangeStart(new WalkontableCellCoords(drag[0], drag[1]));\n
+    this.instance.selection.setRangeEnd(new WalkontableCellCoords(drag[2], drag[3]));\n
+\n
+  } else {\n
+    // reset to avoid some range bug\n
+    this.instance.selection.refreshBorders();\n
+  }\n
+};\n
+\n
+/**\n
+ * Show fill border\n
+ *\n
+ * @function showBorder\n
+ * @memberof Autofill#\n
+ * @param {WalkontableCellCoords} coords\n
+ */\n
+Autofill.prototype.showBorder = function (coords) {\n
+  var topLeft = this.instance.getSelectedRange().getTopLeftCorner(),\n
+    bottomRight = this.instance.getSelectedRange().getBottomRightCorner();\n
+\n
+  if (this.instance.getSettings().fillHandle !== \'horizontal\' && (bottomRight.row < coords.row || topLeft.row > coords.row)) {\n
+    coords = new WalkontableCellCoords(coords.row, bottomRight.col);\n
+\n
+  } else if (this.instance.getSettings().fillHandle !== \'vertical\') {\n
+    coords = new WalkontableCellCoords(bottomRight.row, coords.col);\n
+\n
+  } else {\n
+    // wrong direction\n
+    return;\n
+  }\n
+  this.instance.view.wt.selections.fill.clear();\n
+  this.instance.view.wt.selections.fill.add(this.instance.getSelectedRange().from);\n
+  this.instance.view.wt.selections.fill.add(this.instance.getSelectedRange().to);\n
+  this.instance.view.wt.selections.fill.add(coords);\n
+  this.instance.view.render();\n
+};\n
+\n
+/**\n
+ * Adds new rows if they are needed to continue auto-filling values\n
+ * @function checkIfNewRowNeeded\n
+ * @memberof Autofill#\n
+ */\n
+Autofill.prototype.checkIfNewRowNeeded = function () {\n
+  var fillCorners,\n
+    selection,\n
+    tableRows = this.instance.countRows(),\n
+    that = this;\n
+\n
+  if (this.instance.view.wt.selections.fill.cellRange && this.addingStarted === false) {\n
+    selection = this.instance.getSelected();\n
+    fillCorners = this.instance.view.wt.selections.fill.getCorners();\n
+\n
+    if (selection[2] < tableRows - 1 && fillCorners[2] === tableRows - 1) {\n
+      this.addingStarted = true;\n
+\n
+      this.instance._registerTimeout(setTimeout(function () {\n
+        that.instance.alter(\'insert_row\');\n
+        that.addingStarted = false;\n
+      }, 200));\n
+    }\n
+  }\n
+};\n
+\n
+\n
+Handsontable.hooks.add(\'afterInit\', function () {\n
+  var autofill = new Autofill(this);\n
+\n
+  if (typeof this.getSettings().fillHandle !== \'undefined\') {\n
+    if (autofill.handle && this.getSettings().fillHandle === false) {\n
+      autofill.disable();\n
+\n
+    } else if (!autofill.handle && this.getSettings().fillHandle !== false) {\n
+      /**\n
+       * Instance of Autofill Plugin {@link Handsontable.Autofill}\n
+       *\n
+       * @alias autofill\n
+       * @memberof! Handsontable.Core#\n
+       * @type {Autofill}\n
+       */\n
+      this.autofill = autofill;\n
+      this.autofill.init();\n
+    }\n
+  }\n
+});\n
+\n
+Handsontable.Autofill = Autofill;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10662</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>autofill.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

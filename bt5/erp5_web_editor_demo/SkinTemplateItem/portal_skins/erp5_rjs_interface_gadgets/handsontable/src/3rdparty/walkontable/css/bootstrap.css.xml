@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272625.23</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>bootstrap.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*!\n
+ * Below is an unaltered fragment from Twitter Bootstrap\n
+ */\n
+\n
+/*!\n
+ * Bootstrap v2.2.1\n
+ *\n
+ * Copyright 2012 Twitter, Inc\n
+ * Licensed under the Apache License v2.0\n
+ * http://www.apache.org/licenses/LICENSE-2.0\n
+ *\n
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.\n
+ */\n
+\n
+table {\n
+  max-width: 100%;\n
+  background-color: transparent;\n
+  border-collapse: collapse;\n
+  border-spacing: 0;\n
+}\n
+\n
+.table {\n
+  width: 100%;\n
+  margin-bottom: 20px;\n
+}\n
+\n
+.table th,\n
+.table td {\n
+  padding: 8px;\n
+  line-height: 20px;\n
+  text-align: left;\n
+  vertical-align: top;\n
+  border-top: 1px solid #dddddd;\n
+}\n
+\n
+.table th {\n
+  font-weight: bold;\n
+}\n
+\n
+.table thead th {\n
+  vertical-align: bottom;\n
+}\n
+\n
+.table caption + thead tr:first-child th,\n
+.table caption + thead tr:first-child td,\n
+.table colgroup + thead tr:first-child th,\n
+.table colgroup + thead tr:first-child td,\n
+.table thead:first-child tr:first-child th,\n
+.table thead:first-child tr:first-child td {\n
+  border-top: 0;\n
+}\n
+\n
+.table tbody + tbody {\n
+  border-top: 2px solid #dddddd;\n
+}\n
+\n
+.table-condensed th,\n
+.table-condensed td {\n
+  padding: 4px 5px;\n
+}\n
+\n
+.table-bordered {\n
+  border: 1px solid #dddddd;\n
+  border-collapse: separate;\n
+  *border-collapse: collapse;\n
+  border-left: 0;\n
+  -webkit-border-radius: 4px;\n
+  -moz-border-radius: 4px;\n
+  border-radius: 4px;\n
+}\n
+\n
+.table-bordered th,\n
+.table-bordered td {\n
+  border-left: 1px solid #dddddd;\n
+}\n
+\n
+.table-bordered caption + thead tr:first-child th,\n
+.table-bordered caption + tbody tr:first-child th,\n
+.table-bordered caption + tbody tr:first-child td,\n
+.table-bordered colgroup + thead tr:first-child th,\n
+.table-bordered colgroup + tbody tr:first-child th,\n
+.table-bordered colgroup + tbody tr:first-child td,\n
+.table-bordered thead:first-child tr:first-child th,\n
+.table-bordered tbody:first-child tr:first-child th,\n
+.table-bordered tbody:first-child tr:first-child td {\n
+  border-top: 0;\n
+}\n
+\n
+.table-bordered thead:first-child tr:first-child th:first-child,\n
+.table-bordered tbody:first-child tr:first-child td:first-child {\n
+  -webkit-border-top-left-radius: 4px;\n
+  border-top-left-radius: 4px;\n
+  -moz-border-radius-topleft: 4px;\n
+}\n
+\n
+.table-bordered thead:first-child tr:first-child th:last-child,\n
+.table-bordered tbody:first-child tr:first-child td:last-child {\n
+  -webkit-border-top-right-radius: 4px;\n
+  border-top-right-radius: 4px;\n
+  -moz-border-radius-topright: 4px;\n
+}\n
+\n
+.table-bordered thead:last-child tr:last-child th:first-child,\n
+.table-bordered tbody:last-child tr:last-child td:first-child,\n
+.table-bordered tfoot:last-child tr:last-child td:first-child {\n
+  -webkit-border-radius: 0 0 0 4px;\n
+  -moz-border-radius: 0 0 0 4px;\n
+  border-radius: 0 0 0 4px;\n
+  -webkit-border-bottom-left-radius: 4px;\n
+  border-bottom-left-radius: 4px;\n
+  -moz-border-radius-bottomleft: 4px;\n
+}\n
+\n
+.table-bordered thead:last-child tr:last-child th:last-child,\n
+.table-bordered tbody:last-child tr:last-child td:last-child,\n
+.table-bordered tfoot:last-child tr:last-child td:last-child {\n
+  -webkit-border-bottom-right-radius: 4px;\n
+  border-bottom-right-radius: 4px;\n
+  -moz-border-radius-bottomright: 4px;\n
+}\n
+\n
+.table-bordered caption + thead tr:first-child th:first-child,\n
+.table-bordered caption + tbody tr:first-child td:first-child,\n
+.table-bordered colgroup + thead tr:first-child th:first-child,\n
+.table-bordered colgroup + tbody tr:first-child td:first-child {\n
+  -webkit-border-top-left-radius: 4px;\n
+  border-top-left-radius: 4px;\n
+  -moz-border-radius-topleft: 4px;\n
+}\n
+\n
+.table-bordered caption + thead tr:first-child th:last-child,\n
+.table-bordered caption + tbody tr:first-child td:last-child,\n
+.table-bordered colgroup + thead tr:first-child th:last-child,\n
+.table-bordered colgroup + tbody tr:first-child td:last-child {\n
+  -webkit-border-top-right-radius: 4px;\n
+  border-top-right-radius: 4px;\n
+  -moz-border-radius-topright: 4px;\n
+}\n
+\n
+.table-striped tbody tr:nth-child(odd) td,\n
+.table-striped tbody tr:nth-child(odd) th {\n
+  background-color: #f9f9f9;\n
+}\n
+\n
+.table-hover tbody tr:hover td,\n
+.table-hover tbody tr:hover th {\n
+  background-color: #f5f5f5;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3991</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>bootstrap.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

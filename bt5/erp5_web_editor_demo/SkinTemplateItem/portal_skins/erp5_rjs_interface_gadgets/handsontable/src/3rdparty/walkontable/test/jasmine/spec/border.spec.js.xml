@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272588.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>border.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'WalkontableBorder\', function () {\n
+  var $table,\n
+    $container,\n
+    $wrapper,\n
+    debug = false;\n
+\n
+  beforeEach(function () {\n
+    $container = $(\'<div></div>\');\n
+    $wrapper = $(\'<div></div>\');\n
+    $container.width(100).height(200);\n
+    $table = $(\'<table></table>\');\n
+    $container.append($wrapper);\n
+    $wrapper.append($table);\n
+    $container.appendTo(\'body\');\n
+    createDataArray();\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (!debug) {\n
+      $(\'.wtHolder\').remove();\n
+    }\n
+    $container.remove();\n
+  });\n
+\n
+  it("should add/remove border to selection when cell is clicked", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: 5,\n
+      totalColumns: 5,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          border: {\n
+            width: 1,\n
+            color: \'red\'\n
+          }\n
+        })\n
+      ],\n
+      onCellMouseDown: function (event, coords, TD) {\n
+        wt.selections.current.clear();\n
+        wt.selections.current.add(coords);\n
+        wt.draw();\n
+      }\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    var $td1 = $table.find(\'tbody tr:eq(1) td:eq(0)\');\n
+    var $td2 = $table.find(\'tbody tr:eq(2) td:eq(1)\');\n
+    var $top = $(wt.selections.current.getBorder(wt).top);\n
+    var $right = $(wt.selections.current.getBorder(wt).right);\n
+    var $bottom = $(wt.selections.current.getBorder(wt).bottom);\n
+    var $left = $(wt.selections.current.getBorder(wt).left);\n
+\n
+    $td1.simulate(\'mousedown\');\n
+\n
+    expect($top.css(\'height\')).toBe(\'1px\');\n
+    expect($top.position().top).toBe(23);\n
+    expect($top.position().left).toBe(0);\n
+    expect($right.css(\'width\')).toBe(\'1px\');\n
+    expect($right.position().top).toBe(23);\n
+    expect($right.position().left).toBe(49);\n
+    expect($bottom.css(\'height\')).toBe(\'1px\');\n
+    expect($bottom.position().top).toBe(46);\n
+    expect($bottom.position().left).toBe(0);\n
+    expect($left.css(\'width\')).toBe(\'1px\');\n
+    expect($left.position().top).toBe(23);\n
+    expect($left.position().left).toBe(0);\n
+\n
+    $td2.simulate(\'mousedown\');\n
+\n
+    expect($top.css(\'height\')).toBe(\'1px\');\n
+    expect($top.position().top).toBe(46);\n
+    expect($top.position().left).toBe(49);\n
+    expect($right.css(\'width\')).toBe(\'1px\');\n
+    expect($right.position().top).toBe(46);\n
+    expect($right.position().left).toBe(99);\n
+    expect($bottom.css(\'height\')).toBe(\'1px\');\n
+    expect($bottom.position().top).toBe(69);\n
+    expect($bottom.position().left).toBe(49);\n
+    expect($left.css(\'width\')).toBe(\'1px\');\n
+    expect($left.position().top).toBe(46);\n
+    expect($left.position().left).toBe(49);\n
+  });\n
+\n
+  it("should add/remove corner to selection when cell is clicked", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: 5,\n
+      totalColumns: 5,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          border: {\n
+            width: 2,\n
+            color: \'green\',\n
+            cornerVisible: function () {\n
+              return true;\n
+            }\n
+          }\n
+        }),\n
+        new WalkontableSelection({})\n
+      ],\n
+      onCellMouseDown: function (event, coords, TD) {\n
+        wt.selections.current.clear();\n
+        wt.selections.current.add(coords);\n
+        wt.draw();\n
+      }\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    var $td1 = $table.find(\'tbody tr:eq(1) td:eq(0)\');\n
+    var $td2 = $table.find(\'tbody tr:eq(2) td:eq(1)\');\n
+    var $corner = $(wt.selections.current.getBorder(wt).corner);\n
+\n
+    $td1.simulate(\'mousedown\');\n
+\n
+    expect($corner.css(\'width\')).toBe(\'5px\');\n
+    expect($corner.css(\'height\')).toBe(\'5px\');\n
+    expect($corner.position().top).toBe(42);\n
+    expect($corner.position().left).toBe(45);\n
+\n
+    $td2.simulate(\'mousedown\');\n
+\n
+    expect($corner.css(\'width\')).toBe(\'5px\');\n
+    expect($corner.css(\'height\')).toBe(\'5px\');\n
+    expect($corner.position().top).toBe(65);\n
+    expect($corner.position().left).toBe(95);\n
+  });\n
+\n
+  it("should move the fill handle / corner border to the left, if in the position it would overlap the container (e.g.: far-right)", function () {\n
+    $container.css({\n
+      overflow: \'hidden\',\n
+      width: \'200px\'\n
+    });\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: 5,\n
+      totalColumns: 4,\n
+      selections: [\n
+        new WalkontableSelection({\n
+          border: {\n
+            width: 2,\n
+            color: \'green\',\n
+            cornerVisible: function () {\n
+              return true;\n
+            }\n
+          }\n
+        }),\n
+        new WalkontableSelection({})\n
+      ],\n
+      onCellMouseDown: function (event, coords, TD) {\n
+        wt.selections.current.clear();\n
+        wt.selections.current.add(coords);\n
+        wt.draw();\n
+      }\n
+    });\n
+    shimSelectionProperties(wt);\n
+    wt.draw();\n
+\n
+    var $td1 = $table.find(\'tbody tr:eq(1) td:eq(0)\');\n
+    var $td2 = $table.find(\'tbody tr:eq(3) td:eq(3)\');\n
+    var $td3 = $table.find(\'tbody tr:eq(2) td:eq(1)\');\n
+    var $corner = $(wt.selections.current.getBorder(wt).corner);\n
+\n
+    $td1.simulate(\'mousedown\');\n
+\n
+    expect($corner.css(\'width\')).toBe(\'5px\');\n
+    expect($corner.css(\'height\')).toBe(\'5px\');\n
+    expect($corner.position().top).toBe(42);\n
+    expect($corner.position().left).toBe(45);\n
+    expect($container[0].clientWidth === $container[0].scrollWidth).toBe(true);\n
+\n
+    $td2.simulate(\'mousedown\');\n
+\n
+    expect($corner.css(\'width\')).toBe(\'5px\');\n
+    expect($corner.css(\'height\')).toBe(\'5px\');\n
+    expect($corner.position().top).toBe(88);\n
+    expect($corner.position().left).toBe(193);\n
+    expect($container[0].clientWidth === $container[0].scrollWidth).toBe(true);\n
+\n
+    $td3.simulate(\'mousedown\');\n
+\n
+    expect($corner.css(\'width\')).toBe(\'5px\');\n
+    expect($corner.css(\'height\')).toBe(\'5px\');\n
+    expect($corner.position().top).toBe(65);\n
+    expect($corner.position().left).toBe(95);\n
+    expect($container[0].clientWidth === $container[0].scrollWidth).toBe(true);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5872</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>border.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

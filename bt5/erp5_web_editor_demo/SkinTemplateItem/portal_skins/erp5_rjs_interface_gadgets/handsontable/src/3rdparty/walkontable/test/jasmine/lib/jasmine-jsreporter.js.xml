@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272596.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jasmine-jsreporter.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//fixed by warpech/jquery-handsontable (this.runnerStartedAt)\n
+/*\n
+ This file is part of the Jasmine JSReporter project from Ivan De Marino.\n
+\n
+ Copyright (C) 2011 Ivan De Marino (aka detro, aka detronizator), http://blog.ivandemarino.me, ivan.de.marino@gmail.com\n
+\n
+ Redistribution and use in source and binary forms, with or without\n
+ modification, are permitted provided that the following conditions are met:\n
+\n
+ * Redistributions of source code must retain the above copyright\n
+ notice, this list of conditions and the following disclaimer.\n
+ * Redistributions in binary form must reproduce the above copyright\n
+ notice, this list of conditions and the following disclaimer in the\n
+ documentation and/or other materials provided with the distribution.\n
+ * Neither the name of the <organization> nor the\n
+ names of its contributors may be used to endorse or promote products\n
+ derived from this software without specific prior written permission.\n
+\n
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"\n
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE\n
+ ARE DISCLAIMED. IN NO EVENT SHALL IVAN DE MARINO BE LIABLE FOR ANY\n
+ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n
+ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF\n
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+ */\n
+\n
+(function () {\n
+  // Ensure that Jasmine library is loaded first\n
+  if (!jasmine) {\n
+    throw new Exception("[Jasmine JSReporter] \'Jasmine\' library not found");\n
+  }\n
+\n
+  /**\n
+   * Calculate elapsed time, in Seconds.\n
+   * @param startMs Start time in Milliseconds\n
+   * @param finishMs Finish time in Milliseconds\n
+   * @return Elapsed time in Seconds */\n
+  function elapsedSec (startMs, finishMs) {\n
+    return (finishMs - startMs) / 1000;\n
+  }\n
+\n
+  /**\n
+   * Round an amount to the given number of Digits.\n
+   * If no number of digits is given, than \'2\' is assumed.\n
+   * @param amount Amount to round\n
+   * @param numOfDecDigits Number of Digits to round to. Default value is \'2\'.\n
+   * @return Rounded amount */\n
+  function round (amount, numOfDecDigits) {\n
+    numOfDecDigits = numOfDecDigits || 2;\n
+    return Math.round(amount * Math.pow(10, numOfDecDigits)) / Math.pow(10, numOfDecDigits);\n
+  }\n
+\n
+  /**\n
+   * Collect information about a Suite, recursively, and return a JSON result.\n
+   * @param suite The Jasmine Suite to get data from\n
+   */\n
+  function getSuiteData (suite) {\n
+    var suiteData = {\n
+        description : suite.description,\n
+        durationSec : 0,\n
+        specs: [],\n
+        suites: [],\n
+        passed: true\n
+      },\n
+      specs = suite.specs(),\n
+      suites = suite.suites(),\n
+      i, ilen;\n
+\n
+    // Loop over all the Suite\'s Specs\n
+    for (i = 0, ilen = specs.length; i < ilen; ++i) {\n
+      suiteData.specs[i] = {\n
+        description : specs[i].description,\n
+        durationSec : specs[i].durationSec,\n
+        passed : specs[i].results().passedCount === specs[i].results().totalCount,\n
+        skipped : specs[i].results().skipped,\n
+        passedCount : specs[i].results().passedCount,\n
+        failedCount : specs[i].results().failedCount,\n
+        totalCount : specs[i].results().totalCount\n
+      };\n
+      suiteData.passed = !suiteData.specs[i].passed ? false : suiteData.passed;\n
+      suiteData.durationSec += suiteData.specs[i].durationSec;\n
+    }\n
+\n
+    // Loop over all the Suite\'s sub-Suites\n
+    for (i = 0, ilen = suites.length; i < ilen; ++i) {\n
+      suiteData.suites[i] = getSuiteData(suites[i]); //< recursive population\n
+      suiteData.passed = !suiteData.suites[i].passed ? false : suiteData.passed;\n
+      suiteData.durationSec += suiteData.suites[i].durationSec;\n
+    }\n
+\n
+    // Rounding duration numbers to 3 decimal digits\n
+    suiteData.durationSec = round(suiteData.durationSec, 4);\n
+\n
+    return suiteData;\n
+  }\n
+\n
+  var JSReporter =  function () {\n
+  };\n
+\n
+  JSReporter.prototype = {\n
+    reportRunnerStarting: function () {\n
+      this.runnerStartedAt = new Date(); //in case we have filtered a single spec (SpecRunner.html?spec=something)\n
+    },\n
+\n
+    reportSpecStarting: function (spec) {\n
+      // Start timing this spec\n
+      spec.startedAt = new Date();\n
+    },\n
+\n
+    reportSpecResults: function (spec) {\n
+      // Finish timing this spec and calculate duration/delta (in sec)\n
+      spec.finishedAt = new Date();\n
+      spec.durationSec = elapsedSec((spec.startedAt || this.runnerStartedAt).getTime(), spec.finishedAt.getTime());\n
+    },\n
+\n
+    reportSuiteResults: function (suite) {\n
+      // Nothing to do\n
+    },\n
+\n
+    reportRunnerResults: function (runner) {\n
+      var suites = runner.suites(),\n
+        i, ilen;\n
+\n
+      // Attach results to the "jasmine" object to make those results easy to scrap/find\n
+      jasmine.runnerResults = {\n
+        suites: [],\n
+        durationSec : 0,\n
+        passed : true\n
+      };\n
+\n
+      // Loop over all the Suites\n
+      for (i = 0, ilen = suites.length; i < ilen; ++i) {\n
+        if (suites[i].parentSuite === null) {\n
+          jasmine.runnerResults.suites[i] = getSuiteData(suites[i]);\n
+          // If 1 suite fails, the whole runner fails\n
+          jasmine.runnerResults.passed = !jasmine.runnerResults.suites[i].passed ? false : jasmine.runnerResults.passed;\n
+          // Add up all the durations\n
+          jasmine.runnerResults.durationSec += jasmine.runnerResults.suites[i].durationSec;\n
+        }\n
+      }\n
+\n
+      // Decorate the \'jasmine\' object with getters\n
+      jasmine.getJSReport = function () {\n
+        if (jasmine.runnerResults) {\n
+          return jasmine.runnerResults;\n
+        }\n
+        return null;\n
+      };\n
+      jasmine.getJSReportAsString = function () {\n
+        return JSON.stringify(jasmine.getJSReport());\n
+      };\n
+    }\n
+  };\n
+\n
+  // export public\n
+  jasmine.JSReporter = JSReporter;\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6022</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jasmine-jsreporter.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

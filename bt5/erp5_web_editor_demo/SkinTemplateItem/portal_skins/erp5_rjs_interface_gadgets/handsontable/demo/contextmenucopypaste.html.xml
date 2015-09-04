@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272293.35</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>contextmenucopypaste.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html xmlns="http://www.w3.org/1999/html">\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Copy/Paste in the Context Menu - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies)\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Copy/Paste from theContext Menu">\n
+  <meta property="og:description"\n
+        content="This page shows how to use and configure Context Menu\'s Copy and Paste features in Handsontable.">\n
+  <meta property="og:url" content="http://handsontable.com/demo/contextmenucopypaste.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/contextmenucopypaste.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+<div class="wrapper-row">\n
+<div id="global-menu-clone">\n
+  <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+</div>\n
+\n
+<div id="container">\n
+<div class="columnLayout">\n
+\n
+<div class="rowLayout">\n
+  <div class="descLayout">\n
+    <div class="pad" data-jsfiddle="example1">\n
+      <a name="default"></a>\n
+\n
+      <h2>Copy/Paste in the Context Menu</h2>\n
+\n
+      <p>This page shows how to use and configure the Context Menu\'s Copy and Paste features in Handsontable.</p>\n
+\n
+      <p>Copy and Paste feature are available in Handsontable by default, but only as key shortcuts (<code>Ctrl (Cmd) + C</code> and <code>Ctrl (Cmd) + V</code> respectively).<br>\n
+      This plugin makes them available also as a clickable options in the context menu. Unfortunately, due to the browser\'s security restrictions, Handsontable is forced to use a third-party flash-based library. We chose to use <a rel="nofollow" title="Zero Clipboard library" href="https://github.com/zeroclipboard/zeroclipboard">ZeroClipboard</a> - it adds a small invisible flash clip to your website, allowing the user to click on it, and thus save data to the clipboard.</p>\n
+      <p>Please note, that our Copy/Paste Context Menu plugin requires some additional preparation:\n
+      <ul>\n
+        <li><code>ZeroClipboard.js</code> must be present on your server and included in your website\'s <code>script</code> tag.</li>\n
+        <li><code>ZeroClipboard.swf</code> must also be present at your server</li>\n
+      </ul>\n
+      </p>\n
+\n
+      <p>To configure Handsontable to use this plugin you need to add a <code>contextMenuCopyPaste</code> config item to your Hansontable instance.<br>\n
+      It can be set to:\n
+      <ul>\n
+        <li><code>true</code> - if the <code>ZeroClipboard.swf</code> file is placed in the same directory as the <code>ZeroClipboard.js</code>, or</li>\n
+        <li><code>{<br>\n
+          <b style="padding-left: 20px;">swfPath</b>: [path to the swf file],<br>\n
+        &nbsp;}</code></li>\n
+      </ul>\n
+\n
+      <br><br>\n
+      </p>\n
+\n
+\n
+\n
+      <div id="example1"></div>\n
+\n
+      <p>\n
+        <button name="dump" data-instance="hot1" data-dump="#example1" title="Prints current data source to Firebug/Chrome Dev Tools">Dump\n
+          data to console\n
+        </button>\n
+      </p>\n
+    </div>\n
+  </div>\n
+\n
+  <div class="codeLayout">\n
+    <div class="pad">\n
+      <div class="jsFiddle">\n
+        <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+      </div>\n
+\n
+      <script data-jsfiddle="common">\n
+        function getData() {\n
+          return [\n
+            [\'\', \'Kia\', \'Nissan\', \'Toyota\', \'Honda\'],\n
+            [\'2008\', 10, 11, 12, 13],\n
+            [\'2009\', 20, 11, 14, 13],\n
+            [\'2010\', 30, 15, 12, 13]\n
+          ];\n
+        }\n
+      </script>\n
+\n
+      <script data-jsfiddle="example1">\n
+        var container = document.getElementById(\'example1\'),\n
+          hot1;\n
+\n
+        hot1 = new Handsontable(container, {\n
+          data: getData(),\n
+          startRows: 5,\n
+          startCols: 5,\n
+          minRows: 5,\n
+          minCols: 5,\n
+          maxRows: 10,\n
+          maxCols: 10,\n
+          rowHeaders: true,\n
+          colHeaders: true,\n
+          minSpareRows: 1,\n
+          contextMenu: true,\n
+          contextMenuCopyPaste: {\n
+            swfPath: \'swf/ZeroClipboard.swf\'\n
+          }\n
+        });\n
+      </script>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+\n
+<div class="footer-text">\n
+</div>\n
+</div>\n
+\n
+</div>\n
+\n
+</div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5495</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>contextmenucopypaste.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

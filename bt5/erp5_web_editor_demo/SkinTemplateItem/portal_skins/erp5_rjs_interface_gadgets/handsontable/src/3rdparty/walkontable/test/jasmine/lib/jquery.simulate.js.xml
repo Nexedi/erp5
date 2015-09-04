@@ -1,0 +1,381 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272596.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.simulate.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*!\n
+ * jQuery Simulate v@VERSION - simulate browser mouse and keyboard events\n
+ * https://github.com/jquery/jquery-simulate\n
+ *\n
+ * Copyright 2012 jQuery Foundation and other contributors\n
+ * Released under the MIT license.\n
+ * http://jquery.org/license\n
+ *\n
+ * Date: @DATE\n
+ */\n
+\n
+;(function( $, undefined ) {\n
+\n
+  var rkeyEvent = /^key/,\n
+    rmouseEvent = /^(?:mouse|contextmenu)|click/;\n
+\n
+  $.fn.simulate = function( type, options ) {\n
+    return this.each(function() {\n
+      new $.simulate( this, type, options );\n
+    });\n
+  };\n
+\n
+  $.simulate = function( elem, type, options ) {\n
+    var method = $.camelCase( "simulate-" + type );\n
+\n
+    this.target = elem;\n
+    this.options = options;\n
+\n
+    if ( this[ method ] ) {\n
+      this[ method ]();\n
+    } else {\n
+      this.simulateEvent( elem, type, options );\n
+    }\n
+  };\n
+\n
+  $.extend( $.simulate, {\n
+\n
+    keyCode: {\n
+      BACKSPACE: 8,\n
+      COMMA: 188,\n
+      DELETE: 46,\n
+      DOWN: 40,\n
+      END: 35,\n
+      ENTER: 13,\n
+      ESCAPE: 27,\n
+      HOME: 36,\n
+      LEFT: 37,\n
+      NUMPAD_ADD: 107,\n
+      NUMPAD_DECIMAL: 110,\n
+      NUMPAD_DIVIDE: 111,\n
+      NUMPAD_ENTER: 108,\n
+      NUMPAD_MULTIPLY: 106,\n
+      NUMPAD_SUBTRACT: 109,\n
+      PAGE_DOWN: 34,\n
+      PAGE_UP: 33,\n
+      PERIOD: 190,\n
+      RIGHT: 39,\n
+      SPACE: 32,\n
+      TAB: 9,\n
+      UP: 38\n
+    },\n
+\n
+    buttonCode: {\n
+      LEFT: 0,\n
+      MIDDLE: 1,\n
+      RIGHT: 2\n
+    }\n
+  });\n
+\n
+  $.extend( $.simulate.prototype, {\n
+\n
+    simulateEvent: function( elem, type, options ) {\n
+      var event = this.createEvent( type, options );\n
+      this.dispatchEvent( elem, type, event, options );\n
+    },\n
+\n
+    createEvent: function( type, options ) {\n
+      if ( rkeyEvent.test( type ) ) {\n
+        return this.keyEvent( type, options );\n
+      }\n
+\n
+      if ( rmouseEvent.test( type ) ) {\n
+        return this.mouseEvent( type, options );\n
+      }\n
+    },\n
+\n
+    mouseEvent: function( type, options ) {\n
+      var event, eventDoc, doc, body;\n
+      options = $.extend({\n
+        bubbles: true,\n
+        cancelable: (type !== "mousemove"),\n
+        view: window,\n
+        detail: 0,\n
+        screenX: 0,\n
+        screenY: 0,\n
+        clientX: 1,\n
+        clientY: 1,\n
+        ctrlKey: false,\n
+        altKey: false,\n
+        shiftKey: false,\n
+        metaKey: false,\n
+        button: 0,\n
+        relatedTarget: undefined\n
+      }, options );\n
+\n
+      if ( document.createEvent ) {\n
+        event = document.createEvent( "MouseEvents" );\n
+        event.initMouseEvent( type, options.bubbles, options.cancelable,\n
+          options.view, options.detail,\n
+          options.screenX, options.screenY, options.clientX, options.clientY,\n
+          options.ctrlKey, options.altKey, options.shiftKey, options.metaKey,\n
+          options.button, options.relatedTarget || document.body.parentNode );\n
+\n
+        // IE 9+ creates events with pageX and pageY set to 0.\n
+        // Trying to modify the properties throws an error,\n
+        // so we define getters to return the correct values.\n
+        if ( event.pageX === 0 && event.pageY === 0 && Object.defineProperty ) {\n
+          eventDoc = event.relatedTarget.ownerDocument || document;\n
+          doc = eventDoc.documentElement;\n
+          body = eventDoc.body;\n
+\n
+          Object.defineProperty( event, "pageX", {\n
+            get: function() {\n
+              return options.clientX +\n
+                ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) -\n
+                ( doc && doc.clientLeft || body && body.clientLeft || 0 );\n
+            }\n
+          });\n
+          Object.defineProperty( event, "pageY", {\n
+            get: function() {\n
+              return options.clientY +\n
+                ( doc && doc.scrollTop || body && body.scrollTop || 0 ) -\n
+                ( doc && doc.clientTop || body && body.clientTop || 0 );\n
+            }\n
+          });\n
+        }\n
+      } else if ( document.createEventObject ) {\n
+\n
+        try {\n
+          event = document.createEventObject(options);\n
+        } catch (e) {\n
+          event = document.createEventObject();\n
+          $.extend( event, options );\n
+        }\n
+\n
+\n
+        // standards event.button uses constants defined here: http://msdn.microsoft.com/en-us/library/ie/ff974877(v=vs.85).aspx\n
+        // old IE event.button uses constants defined here: http://msdn.microsoft.com/en-us/library/ie/ms533544(v=vs.85).aspx\n
+        // so we actually need to map the standard back to oldIE\n
+        event.button = {\n
+          0: 1,\n
+          1: 4,\n
+          2: 2\n
+        }[ event.button ] || ( event.button === -1 ? 0 : event.button );\n
+      }\n
+\n
+      return event;\n
+    },\n
+\n
+    keyEvent: function( type, options ) {\n
+      var event;\n
+      options = $.extend({\n
+        bubbles: true,\n
+        cancelable: true,\n
+        view: window,\n
+        ctrlKey: false,\n
+        altKey: false,\n
+        shiftKey: false,\n
+        metaKey: false,\n
+        keyCode: 0,\n
+        charCode: undefined\n
+      }, options );\n
+\n
+      if ( document.createEvent ) {\n
+        try {\n
+          event = document.createEvent( "KeyEvents" );\n
+          event.initKeyEvent( type, options.bubbles, options.cancelable, options.view,\n
+            options.ctrlKey, options.altKey, options.shiftKey, options.metaKey,\n
+            options.keyCode, options.charCode );\n
+          // initKeyEvent throws an exception in WebKit\n
+          // see: http://stackoverflow.com/questions/6406784/initkeyevent-keypress-only-works-in-firefox-need-a-cross-browser-solution\n
+          // and also https://bugs.webkit.org/show_bug.cgi?id=13368\n
+          // fall back to a generic event until we decide to implement initKeyboardEvent\n
+        } catch( err ) {\n
+          event = document.createEvent( "Events" );\n
+          event.initEvent( type, options.bubbles, options.cancelable );\n
+          $.extend( event, {\n
+            view: options.view,\n
+            ctrlKey: options.ctrlKey,\n
+            altKey: options.altKey,\n
+            shiftKey: options.shiftKey,\n
+            metaKey: options.metaKey,\n
+            keyCode: options.keyCode,\n
+            charCode: options.charCode\n
+          });\n
+        }\n
+      } else if ( document.createEventObject ) {\n
+        event = document.createEventObject();\n
+        $.extend( event, options );\n
+      }\n
+\n
+      if ( !!/msie [\\w.]+/.exec( navigator.userAgent.toLowerCase() ) || (({}).toString.call( window.opera ) === "[object Opera]") ) {\n
+        event.keyCode = (options.charCode > 0) ? options.charCode : options.keyCode;\n
+        event.charCode = undefined;\n
+      }\n
+\n
+      return event;\n
+    },\n
+\n
+    dispatchEvent: function( elem, type, event ) {\n
+      if ( elem[ type ] ) {\n
+        elem[ type ]();\n
+      } else if ( elem.dispatchEvent ) {\n
+        elem.dispatchEvent( event );\n
+      } else if ( elem.fireEvent ) {\n
+        elem.fireEvent( "on" + type, event );\n
+      }\n
+    },\n
+\n
+    simulateFocus: function() {\n
+      var focusinEvent,\n
+        triggered = false,\n
+        element = $( this.target );\n
+\n
+      function trigger() {\n
+        triggered = true;\n
+      }\n
+\n
+      element.bind( "focus", trigger );\n
+      element[ 0 ].focus();\n
+\n
+      if ( !triggered ) {\n
+        focusinEvent = $.Event( "focusin" );\n
+        focusinEvent.preventDefault();\n
+        element.trigger( focusinEvent );\n
+        element.triggerHandler( "focus" );\n
+      }\n
+      element.unbind( "focus", trigger );\n
+    },\n
+\n
+    simulateBlur: function() {\n
+      var focusoutEvent,\n
+        triggered = false,\n
+        element = $( this.target );\n
+\n
+      function trigger() {\n
+        triggered = true;\n
+      }\n
+\n
+      element.bind( "blur", trigger );\n
+      element[ 0 ].blur();\n
+\n
+      // blur events are async in IE\n
+      setTimeout(function() {\n
+        // IE won\'t let the blur occur if the window is inactive\n
+        if ( element[ 0 ].ownerDocument.activeElement === element[ 0 ] ) {\n
+          element[ 0 ].ownerDocument.body.focus();\n
+        }\n
+\n
+        // Firefox won\'t trigger events if the window is inactive\n
+        // IE doesn\'t trigger events if we had to manually focus the body\n
+        if ( !triggered ) {\n
+          focusoutEvent = $.Event( "focusout" );\n
+          focusoutEvent.preventDefault();\n
+          element.trigger( focusoutEvent );\n
+          element.triggerHandler( "blur" );\n
+        }\n
+        element.unbind( "blur", trigger );\n
+      }, 1 );\n
+    }\n
+  });\n
+\n
+\n
+\n
+  /** complex events **/\n
+\n
+  function findCenter( elem ) {\n
+    var offset,\n
+      document = $( elem.ownerDocument );\n
+    elem = $( elem );\n
+    offset = elem.offset();\n
+\n
+    return {\n
+      x: offset.left + elem.outerWidth() / 2 - document.scrollLeft(),\n
+      y: offset.top + elem.outerHeight() / 2 - document.scrollTop()\n
+    };\n
+  }\n
+\n
+  function findCorner( elem ) {\n
+    var offset,\n
+      document = $( elem.ownerDocument );\n
+    elem = $( elem );\n
+    offset = elem.offset();\n
+\n
+    return {\n
+      x: offset.left - document.scrollLeft(),\n
+      y: offset.top - document.scrollTop()\n
+    };\n
+  }\n
+\n
+  $.extend( $.simulate.prototype, {\n
+    simulateDrag: function() {\n
+      var i = 0,\n
+        target = this.target,\n
+        options = this.options,\n
+        center = options.handle === "corner" ? findCorner( target ) : findCenter( target ),\n
+        x = Math.floor( center.x ),\n
+        y = Math.floor( center.y ),\n
+        coord = { clientX: x, clientY: y },\n
+        dx = options.dx || ( options.x !== undefined ? options.x - x : 0 ),\n
+        dy = options.dy || ( options.y !== undefined ? options.y - y : 0 ),\n
+        moves = options.moves || 3;\n
+\n
+      this.simulateEvent( target, "mousedown", coord );\n
+\n
+      for ( ; i < moves ; i++ ) {\n
+        x += dx / moves;\n
+        y += dy / moves;\n
+\n
+        coord = {\n
+          clientX: Math.round( x ),\n
+          clientY: Math.round( y )\n
+        };\n
+\n
+        this.simulateEvent( target.ownerDocument, "mousemove", coord );\n
+      }\n
+\n
+      if ( $.contains( document, target ) ) {\n
+        this.simulateEvent( target, "mouseup", coord );\n
+        this.simulateEvent( target, "click", coord );\n
+      } else {\n
+        this.simulateEvent( document, "mouseup", coord );\n
+      }\n
+    }\n
+  });\n
+\n
+})( jQuery );\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9801</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery.simulate.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

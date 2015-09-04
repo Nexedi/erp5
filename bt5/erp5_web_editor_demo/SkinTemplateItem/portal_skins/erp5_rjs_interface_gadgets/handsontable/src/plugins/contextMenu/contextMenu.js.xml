@@ -1,0 +1,317 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272713.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>contextMenu.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import BasePlugin from \'./../_base\';\n
+import {arrayEach} from \'./../../helpers/array\';\n
+import {objectEach} from \'./../../helpers/object\';\n
+import {CommandExecutor} from \'./commandExecutor\';\n
+import {EventManager} from \'./../../eventManager\';\n
+import {hasClass} from \'./../../helpers/dom/element\';\n
+import {ItemsFactory} from \'./itemsFactory\';\n
+import {Menu} from \'./menu\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+import {stopPropagation} from \'./../../helpers/dom/event\';\n
+import {\n
+  ROW_ABOVE,\n
+  ROW_BELOW,\n
+  COLUMN_LEFT,\n
+  COLUMN_RIGHT,\n
+  REMOVE_ROW,\n
+  REMOVE_COLUMN,\n
+  UNDO,\n
+  REDO,\n
+  READ_ONLY,\n
+  ALIGNMENT,\n
+  SEPARATOR,\n
+  predefinedItems\n
+} from \'./predefinedItems\';\n
+\n
+\n
+/**\n
+ * @plugin ContextMenu\n
+ */\n
+class ContextMenu extends BasePlugin {\n
+  /**\n
+   * Default menu items order when `contextMenu` is enabled by `true`.\n
+   *\n
+   * @returns {Array}\n
+   */\n
+  static get DEFAULT_ITEMS() {\n
+    return [\n
+      ROW_ABOVE, ROW_BELOW,\n
+      SEPARATOR,\n
+      COLUMN_LEFT, COLUMN_RIGHT,\n
+      SEPARATOR,\n
+      REMOVE_ROW, REMOVE_COLUMN,\n
+      SEPARATOR,\n
+      UNDO, REDO,\n
+      SEPARATOR,\n
+      READ_ONLY,\n
+      SEPARATOR,\n
+      ALIGNMENT\n
+    ];\n
+  }\n
+\n
+  constructor(hotInstance) {\n
+    super(hotInstance);\n
+    /**\n
+     * Instance of {@link EventManager}.\n
+     *\n
+     * @type EventManager\n
+     */\n
+    this.eventManager = new EventManager(this);\n
+    /**\n
+     * Instance of {@link CommandExecutor}.\n
+     *\n
+     * @type CommandExecutor\n
+     */\n
+    this.commandExecutor = new CommandExecutor(this.hot);\n
+    /**\n
+     * Instance of {@link ItemsFactory}.\n
+     *\n
+     * @type ItemsFactory\n
+     */\n
+    this.itemsFactory = null;\n
+    /**\n
+     * Instance of {@link Menu}.\n
+     *\n
+     * @type Menu\n
+     */\n
+    this.menu = null;\n
+  }\n
+\n
+  /**\n
+   * Check if the plugin is enabled in the handsontable settings.\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isEnabled() {\n
+    return this.hot.getSettings().contextMenu;\n
+  }\n
+\n
+  /**\n
+   * Enable plugin for this Handsontable instance.\n
+   */\n
+  enablePlugin() {\n
+    if (this.enabled) {\n
+      return;\n
+    }\n
+    this.itemsFactory = new ItemsFactory(this.hot, ContextMenu.DEFAULT_ITEMS);\n
+\n
+    const settings = this.hot.getSettings().contextMenu;\n
+    let predefinedItems = {\n
+      items: this.itemsFactory.getVisibleItems(settings)\n
+    };\n
+    this.registerEvents();\n
+\n
+    this.callOnPluginsReady(() => {\n
+      this.hot.runHooks(\'afterContextMenuDefaultOptions\', predefinedItems);\n
+\n
+      this.itemsFactory.setPredefinedItems(predefinedItems.items);\n
+      let menuItems = this.itemsFactory.getVisibleItems(settings);\n
+\n
+      this.menu = new Menu(this.hot, {className: \'htContextMenu\'});\n
+      this.menu.setMenuItems(menuItems);\n
+      this.addHook(\'menuExecuteCommand\', (menu, ...params) => {\n
+        if (menu === this.menu) {\n
+          this.executeCommand.apply(this, params);\n
+        }\n
+      });\n
+      if (typeof settings.callback === \'function\') {\n
+        this.commandExecutor.setCommonCallback(settings.callback);\n
+      }\n
+      super.enablePlugin();\n
+\n
+      // Register all commands. Predefined and added by user or by plugins\n
+      arrayEach(menuItems, (command) => this.commandExecutor.registerCommand(command.key, command));\n
+    });\n
+  }\n
+\n
+  /**\n
+   * Disable plugin for this Handsontable instance.\n
+   */\n
+  disablePlugin() {\n
+    this.close();\n
+\n
+    if (this.menu) {\n
+      this.menu.destroy();\n
+      this.menu = null;\n
+    }\n
+    super.disablePlugin();\n
+  }\n
+\n
+  /**\n
+   * Register dom listeners.\n
+   *\n
+   * @private\n
+   */\n
+  registerEvents() {\n
+    this.eventManager.addEventListener(this.hot.rootElement, \'contextmenu\', (event) => this.onContextMenu(event));\n
+  }\n
+\n
+  /**\n
+   * Open menu and re-position it based on dom event object.\n
+   *\n
+   * @param {Event} event\n
+   */\n
+  open(event) {\n
+    if (!this.menu) {\n
+      return;\n
+    }\n
+    this.menu.open();\n
+    this.menu.setPosition(event);\n
+\n
+    // ContextMenu is not detected HotTableEnv correctly because is injected outside hot-table\n
+    this.menu.hotMenu.isHotTableEnv = this.hot.isHotTableEnv;\n
+    Handsontable.eventManager.isHotTableEnv = this.hot.isHotTableEnv;\n
+    this.hot.runHooks(\'afterContextMenuShow\', this.menu.hotMenu);\n
+  }\n
+\n
+  /**\n
+   * Close menu.\n
+   */\n
+  close() {\n
+    if (!this.menu) {\n
+      return;\n
+    }\n
+    this.menu.close();\n
+    this.hot.runHooks(\'afterContextMenuHide\', this.hot);\n
+  }\n
+\n
+  /**\n
+   * Execute context menu command.\n
+   *\n
+   * You can execute all predefined commands:\n
+   *  * `\'row_above\'` - Insert row above\n
+   *  * `\'row_below\'` - Insert row below\n
+   *  * `\'col_left\'` - Insert column on the left\n
+   *  * `\'col_right\'` - Insert column on the right\n
+   *  * `\'clear_column\'` - Clear selected column\n
+   *  * `\'remove_row\'` - Remove row\n
+   *  * `\'remove_col\'` - Remove column\n
+   *  * `\'undo\'` - Undo last action\n
+   *  * `\'redo\'` - Redo last action\n
+   *  * `\'make_read_only\'` - Make cell read only\n
+   *  * `\'alignment:left\'` - Alignment to the left\n
+   *  * `\'alignment:top\'` - Alignment to the top\n
+   *  * `\'alignment:right\'` - Alignment to the right\n
+   *  * `\'alignment:bottom\'` - Alignment to the bottom\n
+   *  * `\'alignment:middle\'` - Alignment to the middle\n
+   *  * `\'alignment:center\'` - Alignment to the center (justify)\n
+   *\n
+   * Or you can execute command registered in settings where `key` is your command name.\n
+   *\n
+   * @param {String} commandName\n
+   * @param {*} params\n
+   */\n
+  executeCommand(...params) {\n
+    this.commandExecutor.execute.apply(this.commandExecutor, params);\n
+  }\n
+\n
+  /**\n
+   * Destroy instance.\n
+   */\n
+  destroy() {\n
+    this.close();\n
+\n
+    if (this.menu) {\n
+      this.menu.destroy();\n
+    }\n
+    super.destroy();\n
+  }\n
+\n
+  /**\n
+   * On context menu listener.\n
+   *\n
+   * @private\n
+   * @param {Event} event\n
+   */\n
+  onContextMenu(event) {\n
+    let settings = this.hot.getSettings();\n
+    let showRowHeaders = settings.rowHeaders;\n
+    let showColHeaders = settings.colHeaders;\n
+\n
+    function isValidElement(element) {\n
+      return element.nodeName === \'TD\' || element.parentNode.nodeName === \'TD\';\n
+    }\n
+    // if event is from hot-table we must get web component element not element inside him\n
+    let element = event.realTarget;\n
+    this.close();\n
+\n
+    event.preventDefault();\n
+    stopPropagation(event);\n
+\n
+    if (!(showRowHeaders || showColHeaders)) {\n
+      if (!isValidElement(element) && !(hasClass(element, \'current\') && hasClass(element, \'wtBorder\'))) {\n
+        return;\n
+      }\n
+    } else if (showRowHeaders && showColHeaders) {\n
+      // do nothing after right-click on corner header\n
+      let containsCornerHeader = element.parentNode.querySelectorAll(\'.cornerHeader\').length > 0;\n
+\n
+      if (containsCornerHeader) {\n
+        return;\n
+      }\n
+    }\n
+    this.open(event);\n
+  }\n
+}\n
+\n
+ContextMenu.SEPARATOR = {\n
+  name: SEPARATOR\n
+};\n
+\n
+\n
+Handsontable.hooks.register(\'afterContextMenuDefaultOptions\');\n
+Handsontable.hooks.register(\'afterContextMenuShow\');\n
+Handsontable.hooks.register(\'afterContextMenuHide\');\n
+Handsontable.hooks.register(\'afterContextMenuExecute\');\n
+\n
+export {ContextMenu};\n
+\n
+registerPlugin(\'contextMenu\', ContextMenu);\n
+\n
+Handsontable.plugins = Handsontable.plugins || {};\n
+Handsontable.plugins.ContextMenu = ContextMenu;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6991</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>contextMenu.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

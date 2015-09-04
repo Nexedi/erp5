@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272501.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>editorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'settings\', function () {\n
+  describe(\'editor\', function () {\n
+    var id = \'testContainer\';\n
+\n
+    beforeEach(function () {\n
+      this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+    });\n
+\n
+    afterEach(function () {\n
+      if (this.$container) {\n
+        destroy();\n
+        this.$container.remove();\n
+      }\n
+    });\n
+\n
+    describe(\'defined in constructor\', function () {\n
+      it(\'should use text editor by default\', function () {\n
+        var textEditorPrototype = Handsontable.editors.TextEditor.prototype;\n
+        spyOn(textEditorPrototype, \'init\').andCallThrough();\n
+        handsontable();\n
+        selectCell(0, 0);\n
+        expect(textEditorPrototype.init).toHaveBeenCalled();\n
+      });\n
+\n
+      it(\'should use editor from predefined string\', function () {\n
+\n
+        var textEditorPrototype = Handsontable.editors.TextEditor.prototype;\n
+        var checkboxEditorPrototype = Handsontable.editors.CheckboxEditor.prototype;\n
+\n
+        spyOn(textEditorPrototype, \'init\');\n
+        spyOn(checkboxEditorPrototype, \'init\');\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              editor: \'checkbox\'\n
+            }\n
+          ]\n
+        });\n
+        selectCell(0, 0);\n
+        expect(textEditorPrototype.init).not.toHaveBeenCalled();\n
+        expect(checkboxEditorPrototype.init).toHaveBeenCalled();\n
+      });\n
+\n
+      it(\'should use editor class passed directly\', function () {\n
+        var customEditor = jasmine.createSpy(\'customEditor\');\n
+        customEditor.plan = function(){\n
+          this.prepare = function(){};\n
+        };\n
+\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              editor: customEditor\n
+            }\n
+          ]\n
+        });\n
+        selectCell(0, 0);\n
+\n
+        expect(customEditor).toHaveBeenCalled();\n
+      });\n
+\n
+      it(\'should use editor from custom string\', function () {\n
+        var customEditor = jasmine.createSpy(\'customEditor\');\n
+        customEditor.plan = function(){\n
+          this.prepare = function(){};\n
+        };\n
+\n
+        Handsontable.editors.registerEditor(\'myEditor\', customEditor);\n
+\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              editor: \'myEditor\'\n
+            }\n
+          ]\n
+        });\n
+        selectCell(0, 0);\n
+\n
+        expect(customEditor).toHaveBeenCalled();\n
+      });\n
+    });\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2290</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>editorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

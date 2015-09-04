@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272694.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>touchScroll.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {addClass, removeClass} from \'./../../helpers/dom/element\';\n
+import BasePlugin from \'./../_base\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+\n
+/**\n
+ * @plugin TouchScroll\n
+ * @class TouchScroll\n
+ */\n
+class TouchScroll extends BasePlugin {\n
+  /**\n
+   * @param {Handsontable} hotInstance\n
+   */\n
+  constructor(hotInstance) {\n
+    super(hotInstance);\n
+\n
+    this.hot.addHook(\'afterInit\', () => this.afterInit());\n
+    this.hot.addHook(\'afterUpdateSettings\', () => this.onAfterUpdateSettings());\n
+    this.scrollbars = [];\n
+    this.clones = [];\n
+  }\n
+\n
+  /**\n
+   * Initialize plugin\n
+   */\n
+  afterInit() {\n
+    this.registerEvents();\n
+    this.onAfterUpdateSettings();\n
+  }\n
+\n
+  onAfterUpdateSettings() {\n
+    var _this = this;\n
+\n
+    // Wait for the overlays to render and update their .needFullRender property\n
+    this.hot.addHookOnce(\'afterRender\', function() {\n
+      let wtOverlays = _this.hot.view.wt.wtOverlays;\n
+\n
+      _this.scrollbars = [];\n
+      _this.scrollbars.push(wtOverlays.topOverlay);\n
+      _this.scrollbars.push(wtOverlays.leftOverlay);\n
+\n
+      if (wtOverlays.topLeftCornerOverlay) {\n
+        _this.scrollbars.push(wtOverlays.topLeftCornerOverlay);\n
+      }\n
+      _this.clones = [];\n
+\n
+      if (wtOverlays.topOverlay.needFullRender) {\n
+        _this.clones.push(wtOverlays.topOverlay.clone.wtTable.holder.parentNode);\n
+      }\n
+      if (wtOverlays.leftOverlay.needFullRender) {\n
+        _this.clones.push(wtOverlays.leftOverlay.clone.wtTable.holder.parentNode);\n
+      }\n
+      if (wtOverlays.topLeftCornerOverlay) {\n
+        _this.clones.push(wtOverlays.topLeftCornerOverlay.clone.wtTable.holder.parentNode);\n
+      }\n
+    });\n
+  }\n
+\n
+  /**\n
+   * Register all necessary events\n
+   */\n
+  registerEvents() {\n
+    this.hot.addHook(\'beforeTouchScroll\', () => this.onBeforeTouchScroll());\n
+    this.hot.addHook(\'afterMomentumScroll\', () => this.onAfterMomentumScroll());\n
+  }\n
+\n
+  /**\n
+   * Touch scroll listener\n
+   */\n
+  onBeforeTouchScroll() {\n
+    Handsontable.freezeOverlays = true;\n
+\n
+    for (let i = 0, cloneCount = this.clones.length; i < cloneCount; i++) {\n
+      addClass(this.clones[i], \'hide-tween\');\n
+    }\n
+  }\n
+\n
+  /**\n
+   * After momentum scroll listener\n
+   */\n
+  onAfterMomentumScroll() {\n
+    Handsontable.freezeOverlays = false;\n
+    var _that = this;\n
+\n
+    for (let i = 0, cloneCount = this.clones.length; i < cloneCount; i++) {\n
+      removeClass(this.clones[i], \'hide-tween\');\n
+    }\n
+\n
+    for (let i = 0, cloneCount = this.clones.length; i < cloneCount; i++) {\n
+      addClass(this.clones[i], \'show-tween\');\n
+    }\n
+\n
+    setTimeout(function() {\n
+      for (let i = 0, cloneCount = _that.clones.length; i < cloneCount; i++) {\n
+        removeClass(_that.clones[i], \'show-tween\');\n
+      }\n
+    }, 400);\n
+\n
+    for (let i = 0, cloneCount = this.scrollbars.length; i < cloneCount; i++) {\n
+      this.scrollbars[i].refresh();\n
+      this.scrollbars[i].resetFixedPosition();\n
+    }\n
+    this.hot.view.wt.wtOverlays.syncScrollWithMaster();\n
+  }\n
+}\n
+\n
+export {TouchScroll};\n
+\n
+registerPlugin(\'touchScroll\', TouchScroll);\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2971</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>touchScroll.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

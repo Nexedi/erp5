@@ -1,0 +1,494 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272495.26</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_loadDataSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_loadData\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfArrays = function () {\n
+    return [\n
+      ["", "Kia", "Nissan", "Toyota", "Honda"],\n
+      ["2008", 10, 11, 12, 13],\n
+      ["2009", 20, 11, 14, 13],\n
+      ["2010", 30, 15, 12, 13]\n
+    ];\n
+  };\n
+\n
+  var arrayOfObjects = function () {\n
+    return [\n
+      {id: 1, name: "Ted", lastName: "Right"},\n
+      {id: 2, name: "Frank", lastName: "Honest"},\n
+      {id: 3, name: "Joan", lastName: "Well"},\n
+      {id: 4, name: "Sid", lastName: "Strong"},\n
+      {id: 5, name: "Jane", lastName: "Neat"},\n
+      {id: 6, name: "Chuck", lastName: "Jackson"},\n
+      {id: 7, name: "Meg", lastName: "Jansen"},\n
+      {id: 8, name: "Rob", lastName: "Norris"},\n
+      {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+      {id: 10, name: "Eve", lastName: "Branson"}\n
+    ];\n
+  };\n
+\n
+  var arrayOfNestedObjects = function () {\n
+    return [\n
+      {id: 1, name: {\n
+        first: "Ted",\n
+        last: "Right"\n
+      }},\n
+      {id: 2, name: {\n
+        first: "Frank",\n
+        last: "Honest"\n
+      }},\n
+      {id: 3, name: {\n
+        first: "Joan",\n
+        last: "Well"\n
+      }}\n
+    ]\n
+  };\n
+\n
+  var htmlData = [\n
+    [\'<b>H&M</b>\']\n
+  ];\n
+\n
+  it(\'should allow array of arrays\', function () {\n
+    handsontable();\n
+    loadData(arrayOfArrays());\n
+    expect(getDataAtCell(0, 2)).toEqual("Nissan");\n
+  });\n
+\n
+  it(\'should allow array of objects\', function () {\n
+    handsontable({\n
+      columns: [\n
+        {data: "id"},\n
+        {data: "lastName"},\n
+        {data: "name"}\n
+      ]\n
+    });\n
+    loadData(arrayOfObjects());\n
+    expect(getDataAtCell(0, 2)).toEqual("Ted");\n
+  });\n
+\n
+  it(\'should allow array of nested objects\', function () {\n
+    handsontable({\n
+      data: arrayOfNestedObjects(),\n
+      colHeaders: true,\n
+      columns: [\n
+        {data: "id"},\n
+        {data: "name.last"},\n
+        {data: "name.first"}\n
+      ]\n
+    });\n
+    expect(getDataAtCell(0, 2)).toEqual("Ted");\n
+  });\n
+\n
+  it(\'should figure out default column names for array of nested objects\', function () {\n
+    handsontable({\n
+      data: arrayOfNestedObjects(),\n
+      colHeaders: true\n
+    });\n
+    expect(getDataAtCell(0, 2)).toEqual("Right");\n
+  });\n
+\n
+  it(\'should trigger onChange callback when loaded array of arrays\', function () {\n
+    var called = false;\n
+\n
+    handsontable({\n
+      afterChange: function (changes, source) {\n
+        if (source === \'loadData\') {\n
+          called = true;\n
+        }\n
+      }\n
+    });\n
+    loadData(arrayOfArrays());\n
+\n
+    expect(called).toEqual(true);\n
+  });\n
+\n
+  it(\'should trigger onChange callback when loaded array of objects\', function () {\n
+    var called = false;\n
+\n
+    handsontable({\n
+      afterChange: function (changes, source) {\n
+        if (source === \'loadData\') {\n
+          called = true;\n
+        }\n
+      }\n
+    });\n
+    loadData(arrayOfObjects());\n
+\n
+    expect(called).toEqual(true);\n
+  });\n
+\n
+  it(\'should trigger onChange callback when loaded array of nested objects\', function () {\n
+    var called = false;\n
+\n
+    handsontable({\n
+      afterChange: function (changes, source) {\n
+        if (source === \'loadData\') {\n
+          called = true;\n
+        }\n
+      }\n
+    });\n
+    loadData(arrayOfNestedObjects());\n
+\n
+    expect(called).toEqual(true);\n
+  });\n
+\n
+  it(\'should create new rows for array of arrays (and respect minRows)\', function () {\n
+    handsontable({\n
+      minRows: 20, //minRows should be respected\n
+      data: arrayOfArrays()\n
+    });\n
+\n
+    expect(countRows()).toEqual(20); //TODO why this must be checked after render?\n
+  });\n
+\n
+  it(\'should create new rows for array of nested objects (and respect minRows)\', function () {\n
+    handsontable({\n
+      minRows: 20, //minRows should be respected\n
+      data: arrayOfNestedObjects()\n
+    });\n
+\n
+    expect(countRows()).toEqual(20); //TODO why this must be checked after render?\n
+  });\n
+\n
+  it(\'HTML special chars should be escaped by default\', function () {\n
+    handsontable();\n
+    loadData(htmlData);\n
+\n
+    expect(getCell(0, 0).innerHTML).toEqual(\'&lt;b&gt;H&amp;M&lt;/b&gt;\');\n
+  });\n
+\n
+  it(\'should create as many rows as needed by array of objects\', function () {\n
+    handsontable({\n
+      minRows: 6,\n
+      data: arrayOfObjects()\n
+    });\n
+\n
+    expect(getCell(9, 1).innerHTML).toEqual(\'Eve\');\n
+  });\n
+\n
+  //https://github.com/handsontable/handsontable/pull/233\n
+  it(\'should not invoke the cells callback multiple times with the same row/col (without overlays)\', function () {\n
+    var cellsSpy = jasmine.createSpy(\'cellsSpy\');\n
+\n
+    handsontable({\n
+      data: arrayOfNestedObjects(),\n
+      colWidths: [90, 90, 90],\n
+      rowHeights: [23, 23, 23],\n
+      cells: cellsSpy\n
+    });\n
+    //\n
+    expect(cellsSpy.calls.length).toEqual(31);\n
+\n
+  });\n
+\n
+  it(\'should not invoke the cells callback multiple times with the same row/col (with overlays)\', function () {\n
+    var cellsSpy = jasmine.createSpy(\'cellsSpy\');\n
+\n
+    handsontable({\n
+      data: arrayOfNestedObjects(),\n
+      colHeaders: true,\n
+      rowHeaders: true,\n
+      colWidths: [90, 90, 90],\n
+      rowHeights: [90, 90, 90],\n
+      cells: cellsSpy\n
+    });\n
+\n
+    expect(cellsSpy.calls.length).toEqual(40);\n
+  });\n
+\n
+  it(\'should remove grid rows if new data source has less of them\', function () {\n
+    var data1 = [\n
+      ["a"],\n
+      ["b"],\n
+      ["c"],\n
+      ["d"],\n
+      ["e"],\n
+      ["f"],\n
+      ["g"],\n
+      ["h"]\n
+    ];\n
+\n
+    var data2 = [\n
+      ["a"],\n
+      ["b"],\n
+      ["c"],\n
+      ["d"],\n
+      ["e"]\n
+    ];\n
+\n
+    handsontable({\n
+      data: data1,\n
+      rowHeaders: true,\n
+      colHeaders: true\n
+    });\n
+    selectCell(7, 0);\n
+    loadData(data2);\n
+\n
+    expect(countRows()).toBe(data2.length);\n
+    expect(getSelected()).toEqual([4, 0, 4, 0]);\n
+  });\n
+\n
+  it(\'should remove grid rows if new data source has less of them (with minSpareRows)\', function () {\n
+    var data1 = [\n
+      ["a"],\n
+      ["b"],\n
+      ["c"],\n
+      ["d"],\n
+      ["e"],\n
+      ["f"],\n
+      ["g"],\n
+      ["h"]\n
+    ];\n
+    var data2 = [\n
+      ["a"],\n
+      ["b"],\n
+      ["c"],\n
+      ["d"],\n
+      ["e"]\n
+    ];\n
+\n
+    handsontable({\n
+      data: data1,\n
+      minSpareCols: 1,\n
+      minSpareRows: 1,\n
+      rowHeaders: true,\n
+      colHeaders: true\n
+    });\n
+    selectCell(8, 0);\n
+    loadData(data2);\n
+\n
+    expect(countRows()).toBe(6); //+1 because of minSpareRows\n
+    expect(getSelected()).toEqual([5, 0, 5, 0]);\n
+  });\n
+\n
+  it(\'loading empty data should remove all rows\', function () {\n
+    var data1 = [\n
+      ["a"],\n
+      ["b"],\n
+      ["c"],\n
+      ["d"],\n
+      ["e"],\n
+      ["f"],\n
+      ["g"],\n
+      ["h"]\n
+    ];\n
+\n
+    var data2 = [];\n
+\n
+    handsontable({\n
+      data: data1,\n
+      rowHeaders: true,\n
+      colHeaders: true\n
+    });\n
+    selectCell(7, 0);\n
+    loadData(data2);\n
+\n
+    expect(countRows()).toBe(0);\n
+    expect(getSelected()).toEqual(null);\n
+  });\n
+\n
+  it(\'should only have as many columns as in settings\', function () {\n
+    var data1 = arrayOfArrays();\n
+\n
+    handsontable({\n
+      data: data1,\n
+      columns: [\n
+        { data: 1 },\n
+        { data: 3 }\n
+      ]\n
+    });\n
+\n
+    expect(countCols()).toBe(2);\n
+  });\n
+\n
+  it(\'should throw error when trying to load a string (constructor)\', function () {\n
+    var errors = 0;\n
+\n
+    try {\n
+      handsontable({\n
+        data: "string"\n
+      });\n
+    }\n
+    catch (e) {\n
+      errors++;\n
+    }\n
+\n
+    expect(errors).toBe(1);\n
+  });\n
+\n
+  it(\'should throw error when trying to load a string (loadData)\', function () {\n
+    var errors = 0;\n
+\n
+    try {\n
+      handsontable();\n
+      loadData("string");\n
+    }\n
+    catch (e) {\n
+      errors++;\n
+    }\n
+\n
+    expect(errors).toBe(1);\n
+  });\n
+\n
+  it(\'should load Backbone Collection as data source\', function () {\n
+    // code borrowed from demo/backbone.js\n
+\n
+    var CarModel = Backbone.Model.extend({});\n
+\n
+    var CarCollection = Backbone.Collection.extend({\n
+      model: CarModel,\n
+      // Backbone.Collection doesn\'t support `splice`, yet! Easy to add.\n
+      splice: hacked_splice\n
+    });\n
+    var cars = new CarCollection();\n
+\n
+    cars.add([\n
+      {make: "Dodge", model: "Ram", year: 2012, weight: 6811},\n
+      {make: "Toyota", model: "Camry", year: 2012, weight: 3190},\n
+      {make: "Smart", model: "Fortwo", year: 2012, weight: 1808}\n
+    ]);\n
+\n
+    handsontable({\n
+      data: cars,\n
+      columns: [\n
+        attr("make"),\n
+        attr("model"),\n
+        attr("year")\n
+      ]\n
+    });\n
+\n
+    // use the "good" Collection methods to emulate Array.splice\n
+    function hacked_splice(index, howMany /* model1, ... modelN */) {\n
+      var args = _.toArray(arguments).slice(2).concat({at: index}),\n
+        removed = this.models.slice(index, index + howMany);\n
+      this.remove(removed).add.apply(this, args);\n
+\n
+      return removed;\n
+    }\n
+\n
+    // normally, you\'d get these from the server with .fetch()\n
+    function attr(attr) {\n
+      // this lets us remember `attr` for when when it is get/set\n
+      return {data: function (car, value) {\n
+        if (_.isUndefined(value)) {\n
+          return car.get(attr);\n
+        }\n
+        car.set(attr, value);\n
+      }};\n
+    }\n
+\n
+    expect(countRows()).toBe(3);\n
+  });\n
+\n
+  it(\'should clear cell properties after loadData\', function () {\n
+    handsontable();\n
+    loadData(arrayOfArrays());\n
+\n
+    getCellMeta(0, 0).foo = \'bar\';\n
+\n
+    expect(getCellMeta(0, 0).foo).toEqual("bar");\n
+\n
+    loadData(arrayOfArrays());\n
+\n
+    expect(getCellMeta(0, 0).foo).toBeUndefined();\n
+  });\n
+\n
+  it(\'should clear cell properties after loadData, but before rendering new data\', function () {\n
+    handsontable();\n
+    loadData(arrayOfArrays());\n
+\n
+    getCellMeta(0, 0).valid = false;\n
+    render();\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').hasClass(\'htInvalid\')).toEqual(true);\n
+\n
+    loadData(arrayOfArrays());\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').hasClass(\'htInvalid\')).toEqual(false);\n
+\n
+  });\n
+\n
+  // https://github.com/handsontable/handsontable/issues/1700\n
+  // can\'t edit anything after starting editing cell with no nested object\n
+  it(\'should correct behave with cell with no nested object data source corresponding to column mapping\', function () {\n
+\n
+    var objectData = [\n
+      {id: 1, user: {name: {first: "Ted", last: "Right"}}},\n
+      {id: 2, user: {name: {}}},\n
+      {id: 3}\n
+    ];\n
+\n
+    handsontable({\n
+      data: objectData,\n
+      columns: [\n
+        {data: \'id\'},\n
+        {data: \'user.name.first\'},\n
+        {data: \'user.name.last\'}\n
+      ]\n
+    });\n
+\n
+    mouseDoubleClick(getCell(1, 1));\n
+    document.activeElement.value = \'Harry\';\n
+    deselectCell();\n
+    expect(objectData[1].user.name.first).toEqual(\'Harry\');\n
+\n
+    mouseDoubleClick(getCell(2, 1));\n
+    document.activeElement.value = \'Barry\';\n
+    deselectCell();\n
+    expect(objectData[2].user.name.first).toEqual(\'Barry\');\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10620</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_loadDataSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

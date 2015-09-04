@@ -1,0 +1,371 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272646.98</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>manualColumnMove.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {addClass, hasClass, removeClass} from \'./../../helpers/dom/element\';\n
+import {eventManager as eventManagerObject} from \'./../../eventManager\';\n
+import {pageX, pageY} from \'./../../helpers/dom/event\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+export {ManualColumnMove};\n
+\n
+//registerPlugin(\'manualColumnMove\', ManualColumnMove);\n
+\n
+/**\n
+ * HandsontableManualColumnMove\n
+ *\n
+ * Has 2 UI components:\n
+ * - handle - the draggable element that sets the desired position of the column\n
+ * - guide - the helper guide that shows the desired position as a vertical guide\n
+ *\n
+ * Warning! Whenever you make a change in this file, make an analogous change in manualRowMove.js\n
+ *\n
+ * @private\n
+ * @class ManualColumnMove\n
+ * @plugin ManualColumnMove\n
+ */\n
+function ManualColumnMove() {\n
+  var startCol, endCol, startX, startOffset, currentCol, instance, currentTH, handle = document.createElement(\'DIV\'),\n
+    guide = document.createElement(\'DIV\'),\n
+    eventManager = eventManagerObject(this);\n
+\n
+  handle.className = \'manualColumnMover\';\n
+  guide.className = \'manualColumnMoverGuide\';\n
+\n
+  var saveManualColumnPositions = function() {\n
+    var instance = this;\n
+    Handsontable.hooks.run(instance, \'persistentStateSave\', \'manualColumnPositions\', instance.manualColumnPositions);\n
+  };\n
+\n
+  var loadManualColumnPositions = function() {\n
+    var instance = this;\n
+    var storedState = {};\n
+    Handsontable.hooks.run(instance, \'persistentStateLoad\', \'manualColumnPositions\', storedState);\n
+    return storedState.value;\n
+  };\n
+\n
+  function setupHandlePosition(TH) {\n
+    instance = this;\n
+    currentTH = TH;\n
+\n
+    var col = this.view.wt.wtTable.getCoords(TH).col; //getCoords returns WalkontableCellCoords\n
+    if (col >= 0) { //if not row header\n
+      currentCol = col;\n
+      var box = currentTH.getBoundingClientRect();\n
+      startOffset = box.left;\n
+      handle.style.top = box.top + \'px\';\n
+      handle.style.left = startOffset + \'px\';\n
+      instance.rootElement.appendChild(handle);\n
+    }\n
+  }\n
+\n
+  function refreshHandlePosition(TH, delta) {\n
+    var box = TH.getBoundingClientRect();\n
+    var handleWidth = 6;\n
+    if (delta > 0) {\n
+      handle.style.left = (box.left + box.width - handleWidth) + \'px\';\n
+    } else {\n
+      handle.style.left = box.left + \'px\';\n
+    }\n
+  }\n
+\n
+  function setupGuidePosition() {\n
+    var instance = this;\n
+    addClass(handle, \'active\');\n
+    addClass(guide, \'active\');\n
+    var box = currentTH.getBoundingClientRect();\n
+    guide.style.width = box.width + \'px\';\n
+    guide.style.height = instance.view.maximumVisibleElementHeight(0) + \'px\';\n
+    guide.style.top = handle.style.top;\n
+    guide.style.left = startOffset + \'px\';\n
+    instance.rootElement.appendChild(guide);\n
+  }\n
+\n
+  function refreshGuidePosition(diff) {\n
+    guide.style.left = startOffset + diff + \'px\';\n
+  }\n
+\n
+  function hideHandleAndGuide() {\n
+    removeClass(handle, \'active\');\n
+    removeClass(guide, \'active\');\n
+  }\n
+\n
+  var checkColumnHeader = function(element) {\n
+    if (element.tagName != \'BODY\') {\n
+      if (element.parentNode.tagName == \'THEAD\') {\n
+        return true;\n
+      } else {\n
+        element = element.parentNode;\n
+        return checkColumnHeader(element);\n
+      }\n
+    }\n
+    return false;\n
+  };\n
+\n
+  var getTHFromTargetElement = function(element) {\n
+    if (element.tagName != \'TABLE\') {\n
+      if (element.tagName == \'TH\') {\n
+        return element;\n
+      } else {\n
+        return getTHFromTargetElement(element.parentNode);\n
+      }\n
+    }\n
+    return null;\n
+  };\n
+\n
+  var bindEvents = function() {\n
+\n
+    var instance = this;\n
+    var pressed;\n
+\n
+    eventManager.addEventListener(instance.rootElement, \'mouseover\', function(e) {\n
+      if (checkColumnHeader(e.target)) {\n
+        var th = getTHFromTargetElement(e.target);\n
+        if (th) {\n
+          if (pressed) {\n
+            var col = instance.view.wt.wtTable.getCoords(th).col;\n
+            if (col >= 0) { //not TH above row header\n
+              endCol = col;\n
+              refreshHandlePosition(e.target, endCol - startCol);\n
+            }\n
+          } else {\n
+            setupHandlePosition.call(instance, th);\n
+          }\n
+        }\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(instance.rootElement, \'mousedown\', function(e) {\n
+      if (hasClass(e.target, \'manualColumnMover\')) {\n
+        startX = pageX(e);\n
+        setupGuidePosition.call(instance);\n
+        pressed = instance;\n
+\n
+        startCol = currentCol;\n
+        endCol = currentCol;\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(window, \'mousemove\', function(e) {\n
+      if (pressed) {\n
+        refreshGuidePosition(pageX(e) - startX);\n
+      }\n
+    });\n
+\n
+\n
+    eventManager.addEventListener(window, \'mouseup\', function(e) {\n
+      if (pressed) {\n
+        hideHandleAndGuide();\n
+        pressed = false;\n
+\n
+        createPositionData(instance.manualColumnPositions, instance.countCols());\n
+        instance.manualColumnPositions.splice(endCol, 0, instance.manualColumnPositions.splice(startCol, 1)[0]);\n
+\n
+        Handsontable.hooks.run(instance, \'beforeColumnMove\', startCol, endCol);\n
+\n
+        instance.forceFullRender = true;\n
+        instance.view.render(); //updates all\n
+\n
+        saveManualColumnPositions.call(instance);\n
+\n
+        Handsontable.hooks.run(instance, \'afterColumnMove\', startCol, endCol);\n
+\n
+        setupHandlePosition.call(instance, currentTH);\n
+      }\n
+    });\n
+\n
+    instance.addHook(\'afterDestroy\', unbindEvents);\n
+  };\n
+\n
+  var unbindEvents = function() {\n
+    eventManager.clear();\n
+  };\n
+\n
+  var createPositionData = function(positionArr, len) {\n
+    if (positionArr.length < len) {\n
+      for (var i = positionArr.length; i < len; i++) {\n
+        positionArr[i] = i;\n
+      }\n
+    }\n
+  };\n
+\n
+  this.beforeInit = function() {\n
+    this.manualColumnPositions = [];\n
+  };\n
+\n
+  this.init = function(source) {\n
+    var instance = this;\n
+\n
+    var manualColMoveEnabled = !! (this.getSettings().manualColumnMove);\n
+\n
+    if (manualColMoveEnabled) {\n
+      var initialManualColumnPositions = this.getSettings().manualColumnMove;\n
+\n
+      var loadedManualColumnPositions = loadManualColumnPositions.call(instance);\n
+\n
+      if (typeof loadedManualColumnPositions != \'undefined\') {\n
+        this.manualColumnPositions = loadedManualColumnPositions;\n
+      } else if (Array.isArray(initialManualColumnPositions)) {\n
+        this.manualColumnPositions = initialManualColumnPositions;\n
+      } else {\n
+        this.manualColumnPositions = [];\n
+      }\n
+\n
+      if (source == \'afterInit\') {\n
+\n
+        // update plugin usages count for manualColumnPositions\n
+        if (typeof instance.manualColumnPositionsPluginUsages != \'undefined\') {\n
+          instance.manualColumnPositionsPluginUsages.push(\'manualColumnMove\');\n
+        } else {\n
+          instance.manualColumnPositionsPluginUsages = [\'manualColumnMove\'];\n
+        }\n
+\n
+        bindEvents.call(this);\n
+        if (this.manualColumnPositions.length > 0) {\n
+          this.forceFullRender = true;\n
+          this.render();\n
+        }\n
+      }\n
+\n
+    } else {\n
+      var pluginUsagesIndex = instance.manualColumnPositionsPluginUsages ? instance.manualColumnPositionsPluginUsages.indexOf(\'manualColumnMove\') : -1;\n
+\n
+      if (pluginUsagesIndex > -1) {\n
+        unbindEvents.call(this);\n
+        this.manualColumnPositions = [];\n
+        instance.manualColumnPositionsPluginUsages[pluginUsagesIndex] = void 0;\n
+      }\n
+    }\n
+  };\n
+\n
+  this.modifyCol = function(col) {\n
+    //TODO test performance: http://jsperf.com/object-wrapper-vs-primitive/2\n
+    if (this.getSettings().manualColumnMove) {\n
+      if (typeof this.manualColumnPositions[col] === \'undefined\') {\n
+        createPositionData(this.manualColumnPositions, col + 1);\n
+      }\n
+      return this.manualColumnPositions[col];\n
+    }\n
+\n
+    return col;\n
+  };\n
+\n
+  // need to reconstruct manualcolpositions after removing columns\n
+  this.afterRemoveCol = function(index, amount) {\n
+    if (!this.getSettings().manualColumnMove) {\n
+      return;\n
+    }\n
+    var rmindx,\n
+      colpos = this.manualColumnPositions;\n
+\n
+    // We have removed columns, we also need to remove the indicies from manual column array\n
+    rmindx = colpos.splice(index, amount);\n
+\n
+    // We need to remap manualColPositions so it remains constant linear from 0->ncols\n
+    colpos = colpos.map(function(colpos) {\n
+      var i, newpos = colpos;\n
+\n
+      for (i = 0; i < rmindx.length; i++) {\n
+        if (colpos > rmindx[i]) {\n
+          newpos--;\n
+        }\n
+      }\n
+\n
+      return newpos;\n
+    });\n
+\n
+    this.manualColumnPositions = colpos;\n
+  };\n
+\n
+  // need to reconstruct manualcolpositions after adding columns\n
+  this.afterCreateCol = function(index, amount) {\n
+    if (!this.getSettings().manualColumnMove) {\n
+      return;\n
+    }\n
+    var colpos = this.manualColumnPositions;\n
+\n
+    if (!colpos.length) {\n
+      return;\n
+    }\n
+    var addindx = [];\n
+\n
+    for (var i = 0; i < amount; i++) {\n
+      addindx.push(index + i);\n
+    }\n
+\n
+    if (index >= colpos.length) {\n
+      colpos.concat(addindx);\n
+    } else {\n
+      // We need to remap manualColPositions so it remains constant linear from 0->ncols\n
+      colpos = colpos.map(function(colpos) {\n
+        return (colpos >= index) ? (colpos + amount) : colpos;\n
+      });\n
+\n
+      // We have added columns, we also need to add new indicies to manualcolumn position array\n
+      colpos.splice.apply(colpos, [index, 0].concat(addindx));\n
+    }\n
+\n
+    this.manualColumnPositions = colpos;\n
+  };\n
+}\n
+\n
+var htManualColumnMove = new ManualColumnMove();\n
+\n
+Handsontable.hooks.add(\'beforeInit\', htManualColumnMove.beforeInit);\n
+Handsontable.hooks.add(\'afterInit\', function () {\n
+  htManualColumnMove.init.call(this, \'afterInit\');\n
+});\n
+\n
+Handsontable.hooks.add(\'afterUpdateSettings\', function () {\n
+  htManualColumnMove.init.call(this, \'afterUpdateSettings\');\n
+});\n
+Handsontable.hooks.add(\'modifyCol\', htManualColumnMove.modifyCol);\n
+\n
+Handsontable.hooks.add(\'afterRemoveCol\', htManualColumnMove.afterRemoveCol);\n
+Handsontable.hooks.add(\'afterCreateCol\', htManualColumnMove.afterCreateCol);\n
+Handsontable.hooks.register(\'beforeColumnMove\');\n
+Handsontable.hooks.register(\'afterColumnMove\');\n
+\n
+\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9838</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>manualColumnMove.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

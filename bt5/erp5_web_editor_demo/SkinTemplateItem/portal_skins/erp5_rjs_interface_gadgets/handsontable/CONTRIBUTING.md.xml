@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272492.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CONTRIBUTING.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string># Contributing to Handsontable\n
+\n
+Your contributions to the project are very welcome. If you would like to fix a bug or propose a new feature, you can submit a Pull Request.\n
+\n
+To help us merge your Pull Request, please make sure you follow these points:\n
+\n
+1. Please make your fix on a separate branch. This makes merging much easier.\n
+2. Do not edit files in `dist/` directory (e.g: `handsontable.js`, `handsontable.css`, `handsontable.full.js`, `handsontable.full.css`). Instead, try to edit files inside the `src/` directory and then use `grunt` to make a build. More information about this on wiki page [Building](https://github.com/handsontable/handsontable/wiki/Building).\n
+3. **Very important:** For any change that you make, **please try to also add a test case(s)** in `tests/jasmine/spec/` or `src/3rdparty/walkontable/test/jasmine/spec/`. This helps us understand the issue and make sure that it will stay fixed forever. See [Testing](https://github.com/handsontable/handsontable/wiki/Testing)\n
+4. **Very important:** Please review our [coding style](https://github.com/handsontable/handsontable/wiki/Coding-style) for instructions on how to maintain a fork and submit patches.\n
+5. Describe the problem in the Pull Request description (of course you would do it, why do I mention that?)\n
+\n
+Thank you for your commitment!\n
+\n
+## Team rules\n
+\n
+The Handsontable team utilizes Git-Flow. See [How we use Git-Flow](https://github.com/handsontable/handsontable/wiki/How-we-use-Git-Flow)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1475</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>CONTRIBUTING.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

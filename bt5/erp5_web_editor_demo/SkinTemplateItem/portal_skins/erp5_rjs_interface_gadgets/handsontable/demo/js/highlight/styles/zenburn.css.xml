@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272318.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>zenburn.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+\n
+Zenburn style from voldmar.ru (c) Vladimir Epifanov <voldmar@voldmar.ru>\n
+based on dark.css by Ivan Sagalaev\n
+\n
+*/\n
+\n
+pre code {\n
+  display: block; padding: 0.5em;\n
+  background: #3F3F3F;\n
+  color: #DCDCDC;\n
+}\n
+\n
+pre .keyword,\n
+pre .tag,\n
+pre .django .tag,\n
+pre .django .keyword,\n
+pre .css .class,\n
+pre .css .id,\n
+pre .lisp .title {\n
+  color: #E3CEAB;\n
+}\n
+\n
+pre .django .template_tag,\n
+pre .django .variable,\n
+pre .django .filter .argument {\n
+  color: #DCDCDC;\n
+}\n
+\n
+pre .number,\n
+pre .date {\n
+  color: #8CD0D3;\n
+}\n
+\n
+pre .dos .envvar,\n
+pre .dos .stream,\n
+pre .variable,\n
+pre .apache .sqbracket {\n
+  color: #EFDCBC;\n
+}\n
+\n
+pre .dos .flow,\n
+pre .diff .change,\n
+pre .python .exception,\n
+pre .python .built_in,\n
+pre .literal,\n
+pre .tex .special {\n
+  color: #EFEFAF;\n
+}\n
+\n
+pre .diff .chunk,\n
+pre .ruby .subst {\n
+  color: #8F8F8F;\n
+}\n
+\n
+pre .dos .keyword,\n
+pre .python .decorator,\n
+pre .class .title,\n
+pre .haskell .label,\n
+pre .function .title,\n
+pre .ini .title,\n
+pre .diff .header,\n
+pre .ruby .class .parent,\n
+pre .apache .tag,\n
+pre .nginx .built_in,\n
+pre .tex .command,\n
+pre .input_number {\n
+    color: #efef8f;\n
+}\n
+\n
+pre .dos .winutils,\n
+pre .ruby .symbol,\n
+pre .ruby .symbol .string,\n
+pre .ruby .symbol .keyword,\n
+pre .ruby .symbol .keymethods,\n
+pre .ruby .string,\n
+pre .ruby .instancevar {\n
+  color: #DCA3A3;\n
+}\n
+\n
+pre .diff .deletion,\n
+pre .string,\n
+pre .tag .value,\n
+pre .preprocessor,\n
+pre .built_in,\n
+pre .sql .aggregate,\n
+pre .javadoc,\n
+pre .smalltalk .class,\n
+pre .smalltalk .localvars,\n
+pre .smalltalk .array,\n
+pre .css .rules .value,\n
+pre .attr_selector,\n
+pre .pseudo,\n
+pre .apache .cbracket,\n
+pre .tex .formula {\n
+  color: #CC9393;\n
+}\n
+\n
+pre .shebang,\n
+pre .diff .addition,\n
+pre .comment,\n
+pre .java .annotation,\n
+pre .template_comment,\n
+pre .pi,\n
+pre .doctype {\n
+  color: #7F9F7F;\n
+}\n
+\n
+pre .coffeescript .javascript,\n
+pre .xml .css,\n
+pre .xml .javascript,\n
+pre .xml .vbscript,\n
+pre .tex .formula {\n
+  opacity: 0.5;\n
+}\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1822</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>zenburn.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272631.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>function.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+export function proxy(fun, context) {\n
+  return function () {\n
+    return fun.apply(context, arguments);\n
+  };\n
+}\n
+\n
+/**\n
+ * Creates throttle function that invokes `func` only once per `wait` (in miliseconds).\n
+ *\n
+ * @param {Function} func\n
+ * @param {Number} wait\n
+ * @returns {Function}\n
+ */\n
+export function throttle(func, wait = 200) {\n
+  let lastCalled = 0;\n
+  let result = {\n
+    lastCallThrottled: true\n
+  };\n
+  let lastTimer = null;\n
+\n
+  function _throttle() {\n
+    const args = arguments;\n
+    let stamp = Date.now();\n
+    let needCall = false;\n
+\n
+    result.lastCallThrottled = true;\n
+\n
+    if (!lastCalled) {\n
+      lastCalled = stamp;\n
+      needCall = true;\n
+    }\n
+    let remaining = wait - (stamp - lastCalled);\n
+\n
+    if (needCall) {\n
+      result.lastCallThrottled = false;\n
+      func.apply(this, args);\n
+    } else {\n
+      if (lastTimer) {\n
+        clearTimeout(lastTimer);\n
+      }\n
+      lastTimer = setTimeout(() => {\n
+        result.lastCallThrottled = false;\n
+        func.apply(this, args);\n
+        lastCalled = 0;\n
+        lastTimer = void 0;\n
+      }, remaining);\n
+    }\n
+\n
+    return result;\n
+  }\n
+\n
+  return _throttle;\n
+}\n
+\n
+/**\n
+ * Creates throttle function that invokes `func` only once per `wait` (in miliseconds) after hits.\n
+ *\n
+ * @param {Function} func\n
+ * @param {Number} wait\n
+ * @param {Number} hits\n
+ * @returns {Function}\n
+ */\n
+export function throttleAfterHits(func, wait = 200, hits = 10) {\n
+  const funcThrottle = throttle(func, wait);\n
+  let remainHits = hits;\n
+\n
+  function _clearHits() {\n
+    remainHits = hits;\n
+  }\n
+  function _throttleAfterHits() {\n
+    if (remainHits) {\n
+      remainHits --;\n
+\n
+      return func.apply(this, arguments);\n
+    }\n
+\n
+    return funcThrottle.apply(this, arguments);\n
+  }\n
+  _throttleAfterHits.clearHits = _clearHits;\n
+\n
+  return _throttleAfterHits;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1757</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>function.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

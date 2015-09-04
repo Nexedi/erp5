@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272629.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>number.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+/**\n
+ * Checks if value of n is a numeric one\n
+ * http://jsperf.com/isnan-vs-isnumeric/4\n
+ * @param n\n
+ * @returns {boolean}\n
+ */\n
+export function isNumeric(n) {\n
+  var t = typeof n;\n
+  return t == \'number\' ? !isNaN(n) && isFinite(n) :\n
+    t == \'string\' ? !n.length ? false :\n
+      n.length == 1 ? /\\d/.test(n) :\n
+        /^\\s*[+-]?\\s*(?:(?:\\d+(?:\\.\\d+)?(?:e[+-]?\\d+)?)|(?:0x[a-f\\d]+))\\s*$/i.test(n) :\n
+      t == \'object\' ? !!n && typeof n.valueOf() == "number" && !(n instanceof Date) : false;\n
+}\n
+\n
+/**\n
+ * A specialized version of `.forEach` defined by ranges.\n
+ *\n
+ * @param {Number} rangeFrom The number from start iterate.\n
+ * @param {Number} rangeTo The number where finish iterate.\n
+ * @param {Function} iteratee The function invoked per iteration.\n
+ */\n
+export function rangeEach(rangeFrom, rangeTo, iteratee) {\n
+  let index = -1;\n
+\n
+  if (typeof rangeTo === \'function\') {\n
+    iteratee = rangeTo;\n
+    rangeTo = rangeFrom;\n
+  } else {\n
+    index = rangeFrom - 1;\n
+  }\n
+  while (++index <= rangeTo) {\n
+    if (iteratee(index) === false) {\n
+      break;\n
+    }\n
+  }\n
+}\n
+\n
+/**\n
+ * Calculate value from percent.\n
+ *\n
+ * @param {Number} value Base value from percent will be calculated.\n
+ * @param {String|Number} percent Can be Number or String (eq. `\'33%\'`).\n
+ * @returns {Number}\n
+ */\n
+export function valueAccordingPercent(value, percent) {\n
+  percent = parseInt(percent.toString().replace(\'%\', \'\'), 10);\n
+  percent = parseInt(value * percent / 100);\n
+\n
+  return percent;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1438</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>number.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

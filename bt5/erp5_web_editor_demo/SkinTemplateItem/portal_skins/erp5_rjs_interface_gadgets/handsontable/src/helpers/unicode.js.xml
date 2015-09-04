@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272629.99</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>unicode.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {arrayEach} from \'./array\';\n
+\n
+export const KEY_CODES = {\n
+  MOUSE_LEFT: 1,\n
+  MOUSE_RIGHT: 3,\n
+  MOUSE_MIDDLE: 2,\n
+  BACKSPACE: 8,\n
+  COMMA: 188,\n
+  INSERT: 45,\n
+  DELETE: 46,\n
+  END: 35,\n
+  ENTER: 13,\n
+  ESCAPE: 27,\n
+  CONTROL_LEFT: 91,\n
+  COMMAND_LEFT: 17,\n
+  COMMAND_RIGHT: 93,\n
+  ALT: 18,\n
+  HOME: 36,\n
+  PAGE_DOWN: 34,\n
+  PAGE_UP: 33,\n
+  PERIOD: 190,\n
+  SPACE: 32,\n
+  SHIFT: 16,\n
+  CAPS_LOCK: 20,\n
+  TAB: 9,\n
+  ARROW_RIGHT: 39,\n
+  ARROW_LEFT: 37,\n
+  ARROW_UP: 38,\n
+  ARROW_DOWN: 40,\n
+  F1: 112,\n
+  F2: 113,\n
+  F3: 114,\n
+  F4: 115,\n
+  F5: 116,\n
+  F6: 117,\n
+  F7: 118,\n
+  F8: 119,\n
+  F9: 120,\n
+  F10: 121,\n
+  F11: 122,\n
+  F12: 123,\n
+  A: 65,\n
+  X: 88,\n
+  C: 67,\n
+  V: 86\n
+};\n
+\n
+/**\n
+ * Returns true if keyCode represents a printable character.\n
+ *\n
+ * @param {Number} keyCode\n
+ * @returns {Boolean}\n
+ */\n
+export function isPrintableChar(keyCode) {\n
+  return ((keyCode == 32) || //space\n
+      (keyCode >= 48 && keyCode <= 57) || //0-9\n
+      (keyCode >= 96 && keyCode <= 111) || //numpad\n
+      (keyCode >= 186 && keyCode <= 192) || //;=,-./`\n
+      (keyCode >= 219 && keyCode <= 222) || //[]{}\\|"\'\n
+      keyCode >= 226 || //special chars (229 for Asian chars)\n
+      (keyCode >= 65 && keyCode <= 90)); //a-z\n
+}\n
+\n
+/**\n
+ * @param {Number} keyCode\n
+ * @returns {Boolean}\n
+ */\n
+export function isMetaKey(keyCode) {\n
+  var metaKeys = [\n
+    KEY_CODES.ARROW_DOWN,\n
+    KEY_CODES.ARROW_UP,\n
+    KEY_CODES.ARROW_LEFT,\n
+    KEY_CODES.ARROW_RIGHT,\n
+    KEY_CODES.HOME,\n
+    KEY_CODES.END,\n
+    KEY_CODES.DELETE,\n
+    KEY_CODES.BACKSPACE,\n
+    KEY_CODES.F1,\n
+    KEY_CODES.F2,\n
+    KEY_CODES.F3,\n
+    KEY_CODES.F4,\n
+    KEY_CODES.F5,\n
+    KEY_CODES.F6,\n
+    KEY_CODES.F7,\n
+    KEY_CODES.F8,\n
+    KEY_CODES.F9,\n
+    KEY_CODES.F10,\n
+    KEY_CODES.F11,\n
+    KEY_CODES.F12,\n
+    KEY_CODES.TAB,\n
+    KEY_CODES.PAGE_DOWN,\n
+    KEY_CODES.PAGE_UP,\n
+    KEY_CODES.ENTER,\n
+    KEY_CODES.ESCAPE,\n
+    KEY_CODES.SHIFT,\n
+    KEY_CODES.CAPS_LOCK,\n
+    KEY_CODES.ALT\n
+  ];\n
+\n
+  return metaKeys.indexOf(keyCode) !== -1;\n
+}\n
+\n
+/**\n
+ * @param {Number} keyCode\n
+ * @returns {Boolean}\n
+ */\n
+export function isCtrlKey(keyCode) {\n
+  return [KEY_CODES.CONTROL_LEFT, 224, KEY_CODES.COMMAND_LEFT, KEY_CODES.COMMAND_RIGHT].indexOf(keyCode) !== -1;\n
+}\n
+\n
+/**\n
+ * @param {Number} keyCode\n
+ * @param {String} baseCode\n
+ * @returns {Boolean}\n
+ */\n
+export function isKey(keyCode, baseCode) {\n
+  let keys = baseCode.split(\'|\');\n
+  let result = false;\n
+\n
+  arrayEach(keys, function(key) {\n
+    if (keyCode === KEY_CODES[key]) {\n
+      result = true;\n
+\n
+      return false;\n
+    }\n
+  });\n
+\n
+  return result;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2453</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>unicode.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

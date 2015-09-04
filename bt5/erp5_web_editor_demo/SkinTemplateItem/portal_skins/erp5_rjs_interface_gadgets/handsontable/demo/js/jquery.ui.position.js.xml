@@ -1,0 +1,536 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272336.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.ui.position.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*! jQuery UI - v1.10.3 - 2013-11-07\n
+* http://jqueryui.com\n
+* Includes: jquery.ui.position.js\n
+* Copyright 2013 jQuery Foundation and other contributors; Licensed MIT */\n
+\n
+(function( $, undefined ) {\n
+\n
+$.ui = $.ui || {};\n
+\n
+var cachedScrollbarWidth,\n
+\tmax = Math.max,\n
+\tabs = Math.abs,\n
+\tround = Math.round,\n
+\trhorizontal = /left|center|right/,\n
+\trvertical = /top|center|bottom/,\n
+\troffset = /[\\+\\-]\\d+(\\.[\\d]+)?%?/,\n
+\trposition = /^\\w+/,\n
+\trpercent = /%$/,\n
+\t_position = $.fn.position;\n
+\n
+function getOffsets( offsets, width, height ) {\n
+\treturn [\n
+\t\tparseFloat( offsets[ 0 ] ) * ( rpercent.test( offsets[ 0 ] ) ? width / 100 : 1 ),\n
+\t\tparseFloat( offsets[ 1 ] ) * ( rpercent.test( offsets[ 1 ] ) ? height / 100 : 1 )\n
+\t];\n
+}\n
+\n
+function parseCss( element, property ) {\n
+\treturn parseInt( $.css( element, property ), 10 ) || 0;\n
+}\n
+\n
+function getDimensions( elem ) {\n
+\tvar raw = elem[0];\n
+\tif ( raw.nodeType === 9 ) {\n
+\t\treturn {\n
+\t\t\twidth: elem.width(),\n
+\t\t\theight: elem.height(),\n
+\t\t\toffset: { top: 0, left: 0 }\n
+\t\t};\n
+\t}\n
+\tif ( $.isWindow( raw ) ) {\n
+\t\treturn {\n
+\t\t\twidth: elem.width(),\n
+\t\t\theight: elem.height(),\n
+\t\t\toffset: { top: elem.scrollTop(), left: elem.scrollLeft() }\n
+\t\t};\n
+\t}\n
+\tif ( raw.preventDefault ) {\n
+\t\treturn {\n
+\t\t\twidth: 0,\n
+\t\t\theight: 0,\n
+\t\t\toffset: { top: raw.pageY, left: raw.pageX }\n
+\t\t};\n
+\t}\n
+\treturn {\n
+\t\twidth: elem.outerWidth(),\n
+\t\theight: elem.outerHeight(),\n
+\t\toffset: elem.offset()\n
+\t};\n
+}\n
+\n
+$.position = {\n
+\tscrollbarWidth: function() {\n
+\t\tif ( cachedScrollbarWidth !== undefined ) {\n
+\t\t\treturn cachedScrollbarWidth;\n
+\t\t}\n
+\t\tvar w1, w2,\n
+\t\t\tdiv = $( "<div style=\'display:block;width:50px;height:50px;overflow:hidden;\'><div style=\'height:100px;width:auto;\'></div></div>" ),\n
+\t\t\tinnerDiv = div.children()[0];\n
+\n
+\t\t$( "body" ).append( div );\n
+\t\tw1 = innerDiv.offsetWidth;\n
+\t\tdiv.css( "overflow", "scroll" );\n
+\n
+\t\tw2 = innerDiv.offsetWidth;\n
+\n
+\t\tif ( w1 === w2 ) {\n
+\t\t\tw2 = div[0].clientWidth;\n
+\t\t}\n
+\n
+\t\tdiv.remove();\n
+\n
+\t\treturn (cachedScrollbarWidth = w1 - w2);\n
+\t},\n
+\tgetScrollInfo: function( within ) {\n
+\t\tvar overflowX = within.isWindow ? "" : within.element.css( "overflow-x" ),\n
+\t\t\toverflowY = within.isWindow ? "" : within.element.css( "overflow-y" ),\n
+\t\t\thasOverflowX = overflowX === "scroll" ||\n
+\t\t\t\t( overflowX === "auto" && within.width < within.element[0].scrollWidth ),\n
+\t\t\thasOverflowY = overflowY === "scroll" ||\n
+\t\t\t\t( overflowY === "auto" && within.height < within.element[0].scrollHeight );\n
+\t\treturn {\n
+\t\t\twidth: hasOverflowY ? $.position.scrollbarWidth() : 0,\n
+\t\t\theight: hasOverflowX ? $.position.scrollbarWidth() : 0\n
+\t\t};\n
+\t},\n
+\tgetWithinInfo: function( element ) {\n
+\t\tvar withinElement = $( element || window ),\n
+\t\t\tisWindow = $.isWindow( withinElement[0] );\n
+\t\treturn {\n
+\t\t\telement: withinElement,\n
+\t\t\tisWindow: isWindow,\n
+\t\t\toffset: withinElement.offset() || { left: 0, top: 0 },\n
+\t\t\tscrollLeft: withinElement.scrollLeft(),\n
+\t\t\tscrollTop: withinElement.scrollTop(),\n
+\t\t\twidth: isWindow ? withinElement.width() : withinElement.outerWidth(),\n
+\t\t\theight: isWindow ? withinElement.height() : withinElement.outerHeight()\n
+\t\t};\n
+\t}\n
+};\n
+\n
+$.fn.position = function( options ) {\n
+\tif ( !options || !options.of ) {\n
+\t\treturn _position.apply( this, arguments );\n
+\t}\n
+\n
+\t// make a copy, we don\'t want to modify arguments\n
+\toptions = $.extend( {}, options );\n
+\n
+\tvar atOffset, targetWidth, targetHeight, targetOffset, basePosition, dimensions,\n
+\t\ttarget = $( options.of ),\n
+\t\twithin = $.position.getWithinInfo( options.within ),\n
+\t\tscrollInfo = $.position.getScrollInfo( within ),\n
+\t\tcollision = ( options.collision || "flip" ).split( " " ),\n
+\t\toffsets = {};\n
+\n
+\tdimensions = getDimensions( target );\n
+\tif ( target[0].preventDefault ) {\n
+\t\t// force left top to allow flipping\n
+\t\toptions.at = "left top";\n
+\t}\n
+\ttargetWidth = dimensions.width;\n
+\ttargetHeight = dimensions.height;\n
+\ttargetOffset = dimensions.offset;\n
+\t// clone to reuse original targetOffset later\n
+\tbasePosition = $.extend( {}, targetOffset );\n
+\n
+\t// force my and at to have valid horizontal and vertical positions\n
+\t// if a value is missing or invalid, it will be converted to center\n
+\t$.each( [ "my", "at" ], function() {\n
+\t\tvar pos = ( options[ this ] || "" ).split( " " ),\n
+\t\t\thorizontalOffset,\n
+\t\t\tverticalOffset;\n
+\n
+\t\tif ( pos.length === 1) {\n
+\t\t\tpos = rhorizontal.test( pos[ 0 ] ) ?\n
+\t\t\t\tpos.concat( [ "center" ] ) :\n
+\t\t\t\trvertical.test( pos[ 0 ] ) ?\n
+\t\t\t\t\t[ "center" ].concat( pos ) :\n
+\t\t\t\t\t[ "center", "center" ];\n
+\t\t}\n
+\t\tpos[ 0 ] = rhorizontal.test( pos[ 0 ] ) ? pos[ 0 ] : "center";\n
+\t\tpos[ 1 ] = rvertical.test( pos[ 1 ] ) ? pos[ 1 ] : "center";\n
+\n
+\t\t// calculate offsets\n
+\t\thorizontalOffset = roffset.exec( pos[ 0 ] );\n
+\t\tverticalOffset = roffset.exec( pos[ 1 ] );\n
+\t\toffsets[ this ] = [\n
+\t\t\thorizontalOffset ? horizontalOffset[ 0 ] : 0,\n
+\t\t\tverticalOffset ? verticalOffset[ 0 ] : 0\n
+\t\t];\n
+\n
+\t\t// reduce to just the positions without the offsets\n
+\t\toptions[ this ] = [\n
+\t\t\trposition.exec( pos[ 0 ] )[ 0 ],\n
+\t\t\trposition.exec( pos[ 1 ] )[ 0 ]\n
+\t\t];\n
+\t});\n
+\n
+\t// normalize collision option\n
+\tif ( collision.length === 1 ) {\n
+\t\tcollision[ 1 ] = collision[ 0 ];\n
+\t}\n
+\n
+\tif ( options.at[ 0 ] === "right" ) {\n
+\t\tbasePosition.left += targetWidth;\n
+\t} else if ( options.at[ 0 ] === "center" ) {\n
+\t\tbasePosition.left += targetWidth / 2;\n
+\t}\n
+\n
+\tif ( options.at[ 1 ] === "bottom" ) {\n
+\t\tbasePosition.top += targetHeight;\n
+\t} else if ( options.at[ 1 ] === "center" ) {\n
+\t\tbasePosition.top += targetHeight / 2;\n
+\t}\n
+\n
+\tatOffset = getOffsets( offsets.at, targetWidth, targetHeight );\n
+\tbasePosition.left += atOffset[ 0 ];\n
+\tbasePosition.top += atOffset[ 1 ];\n
+\n
+\treturn this.each(function() {\n
+\t\tvar collisionPosition, using,\n
+\t\t\telem = $( this ),\n
+\t\t\telemWidth = elem.outerWidth(),\n
+\t\t\telemHeight = elem.outerHeight(),\n
+\t\t\tmarginLeft = parseCss( this, "marginLeft" ),\n
+\t\t\tmarginTop = parseCss( this, "marginTop" ),\n
+\t\t\tcollisionWidth = elemWidth + marginLeft + parseCss( this, "marginRight" ) + scrollInfo.width,\n
+\t\t\tcollisionHeight = elemHeight + marginTop + parseCss( this, "marginBottom" ) + scrollInfo.height,\n
+\t\t\tposition = $.extend( {}, basePosition ),\n
+\t\t\tmyOffset = getOffsets( offsets.my, elem.outerWidth(), elem.outerHeight() );\n
+\n
+\t\tif ( options.my[ 0 ] === "right" ) {\n
+\t\t\tposition.left -= elemWidth;\n
+\t\t} else if ( options.my[ 0 ] === "center" ) {\n
+\t\t\tposition.left -= elemWidth / 2;\n
+\t\t}\n
+\n
+\t\tif ( options.my[ 1 ] === "bottom" ) {\n
+\t\t\tposition.top -= elemHeight;\n
+\t\t} else if ( options.my[ 1 ] === "center" ) {\n
+\t\t\tposition.top -= elemHeight / 2;\n
+\t\t}\n
+\n
+\t\tposition.left += myOffset[ 0 ];\n
+\t\tposition.top += myOffset[ 1 ];\n
+\n
+\t\t// if the browser doesn\'t support fractions, then round for consistent results\n
+\t\tif ( !$.support.offsetFractions ) {\n
+\t\t\tposition.left = round( position.left );\n
+\t\t\tposition.top = round( position.top );\n
+\t\t}\n
+\n
+\t\tcollisionPosition = {\n
+\t\t\tmarginLeft: marginLeft,\n
+\t\t\tmarginTop: marginTop\n
+\t\t};\n
+\n
+\t\t$.each( [ "left", "top" ], function( i, dir ) {\n
+\t\t\tif ( $.ui.position[ collision[ i ] ] ) {\n
+\t\t\t\t$.ui.position[ collision[ i ] ][ dir ]( position, {\n
+\t\t\t\t\ttargetWidth: targetWidth,\n
+\t\t\t\t\ttargetHeight: targetHeight,\n
+\t\t\t\t\telemWidth: elemWidth,\n
+\t\t\t\t\telemHeight: elemHeight,\n
+\t\t\t\t\tcollisionPosition: collisionPosition,\n
+\t\t\t\t\tcollisionWidth: collisionWidth,\n
+\t\t\t\t\tcollisionHeight: collisionHeight,\n
+\t\t\t\t\toffset: [ atOffset[ 0 ] + myOffset[ 0 ], atOffset [ 1 ] + myOffset[ 1 ] ],\n
+\t\t\t\t\tmy: options.my,\n
+\t\t\t\t\tat: options.at,\n
+\t\t\t\t\twithin: within,\n
+\t\t\t\t\telem : elem\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\tif ( options.using ) {\n
+\t\t\t// adds feedback as second argument to using callback, if present\n
+\t\t\tusing = function( props ) {\n
+\t\t\t\tvar left = targetOffset.left - position.left,\n
+\t\t\t\t\tright = left + targetWidth - elemWidth,\n
+\t\t\t\t\ttop = targetOffset.top - position.top,\n
+\t\t\t\t\tbottom = top + targetHeight - elemHeight,\n
+\t\t\t\t\tfeedback = {\n
+\t\t\t\t\t\ttarget: {\n
+\t\t\t\t\t\t\telement: target,\n
+\t\t\t\t\t\t\tleft: targetOffset.left,\n
+\t\t\t\t\t\t\ttop: targetOffset.top,\n
+\t\t\t\t\t\t\twidth: targetWidth,\n
+\t\t\t\t\t\t\theight: targetHeight\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\telement: {\n
+\t\t\t\t\t\t\telement: elem,\n
+\t\t\t\t\t\t\tleft: position.left,\n
+\t\t\t\t\t\t\ttop: position.top,\n
+\t\t\t\t\t\t\twidth: elemWidth,\n
+\t\t\t\t\t\t\theight: elemHeight\n
+\t\t\t\t\t\t},\n
+\t\t\t\t\t\thorizontal: right < 0 ? "left" : left > 0 ? "right" : "center",\n
+\t\t\t\t\t\tvertical: bottom < 0 ? "top" : top > 0 ? "bottom" : "middle"\n
+\t\t\t\t\t};\n
+\t\t\t\tif ( targetWidth < elemWidth && abs( left + right ) < targetWidth ) {\n
+\t\t\t\t\tfeedback.horizontal = "center";\n
+\t\t\t\t}\n
+\t\t\t\tif ( targetHeight < elemHeight && abs( top + bottom ) < targetHeight ) {\n
+\t\t\t\t\tfeedback.vertical = "middle";\n
+\t\t\t\t}\n
+\t\t\t\tif ( max( abs( left ), abs( right ) ) > max( abs( top ), abs( bottom ) ) ) {\n
+\t\t\t\t\tfeedback.important = "horizontal";\n
+\t\t\t\t} else {\n
+\t\t\t\t\tfeedback.important = "vertical";\n
+\t\t\t\t}\n
+\t\t\t\toptions.using.call( this, props, feedback );\n
+\t\t\t};\n
+\t\t}\n
+\n
+\t\telem.offset( $.extend( position, { using: using } ) );\n
+\t});\n
+};\n
+\n
+$.ui.position = {\n
+\tfit: {\n
+\t\tleft: function( position, data ) {\n
+\t\t\tvar within = data.within,\n
+\t\t\t\twithinOffset = within.isWindow ? within.scrollLeft : within.offset.left,\n
+\t\t\t\touterWidth = within.width,\n
+\t\t\t\tcollisionPosLeft = position.left - data.collisionPosition.marginLeft,\n
+\t\t\t\toverLeft = withinOffset - collisionPosLeft,\n
+\t\t\t\toverRight = collisionPosLeft + data.collisionWidth - outerWidth - withinOffset,\n
+\t\t\t\tnewOverRight;\n
+\n
+\t\t\t// element is wider than within\n
+\t\t\tif ( data.collisionWidth > outerWidth ) {\n
+\t\t\t\t// element is initially over the left side of within\n
+\t\t\t\tif ( overLeft > 0 && overRight <= 0 ) {\n
+\t\t\t\t\tnewOverRight = position.left + overLeft + data.collisionWidth - outerWidth - withinOffset;\n
+\t\t\t\t\tposition.left += overLeft - newOverRight;\n
+\t\t\t\t// element is initially over right side of within\n
+\t\t\t\t} else if ( overRight > 0 && overLeft <= 0 ) {\n
+\t\t\t\t\tposition.left = withinOffset;\n
+\t\t\t\t// element is initially over both left and right sides of within\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif ( overLeft > overRight ) {\n
+\t\t\t\t\t\tposition.left = withinOffset + outerWidth - data.collisionWidth;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tposition.left = withinOffset;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t// too far left -> align with left edge\n
+\t\t\t} else if ( overLeft > 0 ) {\n
+\t\t\t\tposition.left += overLeft;\n
+\t\t\t// too far right -> align with right edge\n
+\t\t\t} else if ( overRight > 0 ) {\n
+\t\t\t\tposition.left -= overRight;\n
+\t\t\t// adjust based on position and margin\n
+\t\t\t} else {\n
+\t\t\t\tposition.left = max( position.left - collisionPosLeft, position.left );\n
+\t\t\t}\n
+\t\t},\n
+\t\ttop: function( position, data ) {\n
+\t\t\tvar within = data.within,\n
+\t\t\t\twithinOffset = within.isWindow ? within.scrollTop : within.offset.top,\n
+\t\t\t\touterHeight = data.within.height,\n
+\t\t\t\tcollisionPosTop = position.top - data.collisionPosition.marginTop,\n
+\t\t\t\toverTop = withinOffset - collisionPosTop,\n
+\t\t\t\toverBottom = collisionPosTop + data.collisionHeight - outerHeight - withinOffset,\n
+\t\t\t\tnewOverBottom;\n
+\n
+\t\t\t// element is taller than within\n
+\t\t\tif ( data.collisionHeight > outerHeight ) {\n
+\t\t\t\t// element is initially over the top of within\n
+\t\t\t\tif ( overTop > 0 && overBottom <= 0 ) {\n
+\t\t\t\t\tnewOverBottom = position.top + overTop + data.collisionHeight - outerHeight - withinOffset;\n
+\t\t\t\t\tposition.top += overTop - newOverBottom;\n
+\t\t\t\t// element is initially over bottom of within\n
+\t\t\t\t} else if ( overBottom > 0 && overTop <= 0 ) {\n
+\t\t\t\t\tposition.top = withinOffset;\n
+\t\t\t\t// element is initially over both top and bottom of within\n
+\t\t\t\t} else {\n
+\t\t\t\t\tif ( overTop > overBottom ) {\n
+\t\t\t\t\t\tposition.top = withinOffset + outerHeight - data.collisionHeight;\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tposition.top = withinOffset;\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t// too far up -> align with top\n
+\t\t\t} else if ( overTop > 0 ) {\n
+\t\t\t\tposition.top += overTop;\n
+\t\t\t// too far down -> align with bottom edge\n
+\t\t\t} else if ( overBottom > 0 ) {\n
+\t\t\t\tposition.top -= overBottom;\n
+\t\t\t// adjust based on position and margin\n
+\t\t\t} else {\n
+\t\t\t\tposition.top = max( position.top - collisionPosTop, position.top );\n
+\t\t\t}\n
+\t\t}\n
+\t},\n
+\tflip: {\n
+\t\tleft: function( position, data ) {\n
+\t\t\tvar within = data.within,\n
+\t\t\t\twithinOffset = within.offset.left + within.scrollLeft,\n
+\t\t\t\touterWidth = within.width,\n
+\t\t\t\toffsetLeft = within.isWindow ? within.scrollLeft : within.offset.left,\n
+\t\t\t\tcollisionPosLeft = position.left - data.collisionPosition.marginLeft,\n
+\t\t\t\toverLeft = collisionPosLeft - offsetLeft,\n
+\t\t\t\toverRight = collisionPosLeft + data.collisionWidth - outerWidth - offsetLeft,\n
+\t\t\t\tmyOffset = data.my[ 0 ] === "left" ?\n
+\t\t\t\t\t-data.elemWidth :\n
+\t\t\t\t\tdata.my[ 0 ] === "right" ?\n
+\t\t\t\t\t\tdata.elemWidth :\n
+\t\t\t\t\t\t0,\n
+\t\t\t\tatOffset = data.at[ 0 ] === "left" ?\n
+\t\t\t\t\tdata.targetWidth :\n
+\t\t\t\t\tdata.at[ 0 ] === "right" ?\n
+\t\t\t\t\t\t-data.targetWidth :\n
+\t\t\t\t\t\t0,\n
+\t\t\t\toffset = -2 * data.offset[ 0 ],\n
+\t\t\t\tnewOverRight,\n
+\t\t\t\tnewOverLeft;\n
+\n
+\t\t\tif ( overLeft < 0 ) {\n
+\t\t\t\tnewOverRight = position.left + myOffset + atOffset + offset + data.collisionWidth - outerWidth - withinOffset;\n
+\t\t\t\tif ( newOverRight < 0 || newOverRight < abs( overLeft ) ) {\n
+\t\t\t\t\tposition.left += myOffset + atOffset + offset;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\telse if ( overRight > 0 ) {\n
+\t\t\t\tnewOverLeft = position.left - data.collisionPosition.marginLeft + myOffset + atOffset + offset - offsetLeft;\n
+\t\t\t\tif ( newOverLeft > 0 || abs( newOverLeft ) < overRight ) {\n
+\t\t\t\t\tposition.left += myOffset + atOffset + offset;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t},\n
+\t\ttop: function( position, data ) {\n
+\t\t\tvar within = data.within,\n
+\t\t\t\twithinOffset = within.offset.top + within.scrollTop,\n
+\t\t\t\touterHeight = within.height,\n
+\t\t\t\toffsetTop = within.isWindow ? within.scrollTop : within.offset.top,\n
+\t\t\t\tcollisionPosTop = position.top - data.collisionPosition.marginTop,\n
+\t\t\t\toverTop = collisionPosTop - offsetTop,\n
+\t\t\t\toverBottom = collisionPosTop + data.collisionHeight - outerHeight - offsetTop,\n
+\t\t\t\ttop = data.my[ 1 ] === "top",\n
+\t\t\t\tmyOffset = top ?\n
+\t\t\t\t\t-data.elemHeight :\n
+\t\t\t\t\tdata.my[ 1 ] === "bottom" ?\n
+\t\t\t\t\t\tdata.elemHeight :\n
+\t\t\t\t\t\t0,\n
+\t\t\t\tatOffset = data.at[ 1 ] === "top" ?\n
+\t\t\t\t\tdata.targetHeight :\n
+\t\t\t\t\tdata.at[ 1 ] === "bottom" ?\n
+\t\t\t\t\t\t-data.targetHeight :\n
+\t\t\t\t\t\t0,\n
+\t\t\t\toffset = -2 * data.offset[ 1 ],\n
+\t\t\t\tnewOverTop,\n
+\t\t\t\tnewOverBottom;\n
+\t\t\tif ( overTop < 0 ) {\n
+\t\t\t\tnewOverBottom = position.top + myOffset + atOffset + offset + data.collisionHeight - outerHeight - withinOffset;\n
+\t\t\t\tif ( ( position.top + myOffset + atOffset + offset) > overTop && ( newOverBottom < 0 || newOverBottom < abs( overTop ) ) ) {\n
+\t\t\t\t\tposition.top += myOffset + atOffset + offset;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\telse if ( overBottom > 0 ) {\n
+\t\t\t\tnewOverTop = position.top -  data.collisionPosition.marginTop + myOffset + atOffset + offset - offsetTop;\n
+\t\t\t\tif ( ( position.top + myOffset + atOffset + offset) > overBottom && ( newOverTop > 0 || abs( newOverTop ) < overBottom ) ) {\n
+\t\t\t\t\tposition.top += myOffset + atOffset + offset;\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t}\n
+\t},\n
+\tflipfit: {\n
+\t\tleft: function() {\n
+\t\t\t$.ui.position.flip.left.apply( this, arguments );\n
+\t\t\t$.ui.position.fit.left.apply( this, arguments );\n
+\t\t},\n
+\t\ttop: function() {\n
+\t\t\t$.ui.position.flip.top.apply( this, arguments );\n
+\t\t\t$.ui.position.fit.top.apply( this, arguments );\n
+\t\t}\n
+\t}\n
+};\n
+\n
+// fraction support test\n
+(function () {\n
+\tvar testElement, testElementParent, testElementStyle, offsetLeft, i,\n
+\t\tbody = document.getElementsByTagName( "body" )[ 0 ],\n
+\t\tdiv = document.createElement( "div" );\n
+\n
+\t//Create a "fake body" for testing based on method used in jQuery.support\n
+\ttestElement = document.createElement( body ? "div" : "body" );\n
+\ttestElementStyle = {\n
+\t\tvisibility: "hidden",\n
+\t\twidth: 0,\n
+\t\theight: 0,\n
+\t\tborder: 0,\n
+\t\tmargin: 0,\n
+\t\tbackground: "none"\n
+\t};\n
+\tif ( body ) {\n
+\t\t$.extend( testElementStyle, {\n
+\t\t\tposition: "absolute",\n
+\t\t\tleft: "-1000px",\n
+\t\t\ttop: "-1000px"\n
+\t\t});\n
+\t}\n
+\tfor ( i in testElementStyle ) {\n
+\t\ttestElement.style[ i ] = testElementStyle[ i ];\n
+\t}\n
+\ttestElement.appendChild( div );\n
+\ttestElementParent = body || document.documentElement;\n
+\ttestElementParent.insertBefore( testElement, testElementParent.firstChild );\n
+\n
+\tdiv.style.cssText = "position: absolute; left: 10.7432222px;";\n
+\n
+\toffsetLeft = $( div ).offset().left;\n
+\t$.support.offsetFractions = offsetLeft > 10 && offsetLeft < 11;\n
+\n
+\ttestElement.innerHTML = "";\n
+\ttestElementParent.removeChild( testElement );\n
+})();\n
+\n
+}( jQuery ) );\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>15619</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery.ui.position.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

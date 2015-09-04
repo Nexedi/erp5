@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272277.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>load.php</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?php\n
+/**\n
+ * This is an example code that shows how you can load Handsontable data from server using PHP with PDO (SQLite).\n
+ * This code is not intended to be maximally efficient nor safe. It is for demonstrational purposes only.\n
+ * Changes and more examples in different languages are welcome.\n
+ *\n
+ * Copyright 2012, Marcin Warpechowski\n
+ * Licensed under the MIT license.\n
+ * http://github.com/handsontable/handsontable/\n
+ */\n
+\n
+require_once(\'functions.php\');\n
+\n
+try {\n
+\n
+\n
+  //open the database\n
+  $db = getConnection();\n
+\n
+  if(!carsTableExists($db)){\n
+      resetCarsTable($db);\n
+  }\n
+\n
+  //select all data from the table\n
+  $result = loadCars($db);\n
+\n
+  $out = array(\n
+    \'cars\' => $result->fetchAll(PDO::FETCH_ASSOC)\n
+  );\n
+  echo json_encode($out);\n
+\n
+  // close the database connection\n
+  closeConnection($db);\n
+}\n
+catch (PDOException $e) {\n
+  print \'Exception : \' . $e->getMessage();\n
+}\n
+?>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>870</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>load.php</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

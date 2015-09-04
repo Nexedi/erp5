@@ -1,0 +1,545 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272698.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MergeCells.canMergeRange.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe("handsontable.MergeCells", function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  describe("canMergeRange", function () {\n
+    it("should return false if start and end cell is the same", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 5)\n
+      });\n
+      var mergeCells = new Handsontable.MergeCells(hot);\n
+      var coordsFrom = new WalkontableCellCoords(0, 1);\n
+      var cellRange = new WalkontableCellRange(coordsFrom, coordsFrom, new WalkontableCellCoords(0, 1));\n
+      var result = mergeCells.canMergeRange(cellRange);\n
+      expect(result).toBe(false);\n
+    });\n
+\n
+    it("should return true for 2 consecutive cells in the same column", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 5)\n
+      });\n
+      var mergeCells = new Handsontable.MergeCells(hot);\n
+      var coordsFrom = new WalkontableCellCoords(0, 1);\n
+      var cellRange = new WalkontableCellRange(coordsFrom, coordsFrom, new WalkontableCellCoords(1, 1));\n
+      var result = mergeCells.canMergeRange(cellRange);\n
+      expect(result).toBe(true);\n
+    });\n
+\n
+    it("should return true for 2 consecutive cells in the same row", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 5)\n
+      });\n
+      var mergeCells = new Handsontable.MergeCells(hot);\n
+      var coordsFrom = new WalkontableCellCoords(0, 1);\n
+      var cellRange = new WalkontableCellRange(coordsFrom, coordsFrom, new WalkontableCellCoords(0, 2));\n
+      var result = mergeCells.canMergeRange(cellRange);\n
+      expect(result).toBe(true);\n
+    });\n
+\n
+    it("should return true for 4 neighboring cells", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 5)\n
+      });\n
+      var mergeCells = new Handsontable.MergeCells(hot);\n
+      var coordsFrom = new WalkontableCellCoords(0, 1);\n
+      var cellRange = new WalkontableCellRange(coordsFrom, coordsFrom, new WalkontableCellCoords(1, 2));\n
+      var result = mergeCells.canMergeRange(cellRange);\n
+      expect(result).toBe(true);\n
+    });\n
+  });\n
+\n
+  describe("mergeCells option", function () {\n
+    it("should merge cell in startup", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 5),\n
+        mergeCells: [\n
+          {row: 0, col: 0, rowspan: 2, colspan: 2}\n
+        ]\n
+      });\n
+      var TD = hot.rootElement.querySelector(\'td\');\n
+      expect(TD.getAttribute(\'rowspan\')).toBe(\'2\');\n
+      expect(TD.getAttribute(\'colspan\')).toBe(\'2\');\n
+    });\n
+  });\n
+\n
+  describe("mergeCells copy", function () {\n
+    it("should not copy text of cells that are merged into another cell", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 5),\n
+        mergeCells: [\n
+          {row: 0, col: 0, rowspan: 2, colspan: 2}\n
+        ]\n
+      });\n
+      expect(hot.getCopyableData(0, 0, 2, 2)).toBe("A1\\t\\tC1\\n\\t\\tC2\\nA3\\tB3\\tC3\\n");\n
+    });\n
+  });\n
+\n
+  describe("merged cells selection", function () {\n
+\n
+    it("should select the whole range of cells which form a merged cell", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(4, 4),\n
+        mergeCells: [\n
+          {\n
+            row: 0,\n
+            col: 0,\n
+            colspan: 4,\n
+            rowspan: 1\n
+          }\n
+        ]\n
+      });\n
+\n
+      var $table = this.$container.find(\'table.htCore\');\n
+      var $td = $table.find(\'tr:eq(0) td:eq(0)\');\n
+\n
+      expect($td.attr(\'rowspan\')).toEqual(\'1\');\n
+      expect($td.attr(\'colspan\')).toEqual(\'4\');\n
+\n
+      expect(hot.getSelected()).toBeUndefined();\n
+\n
+      hot.selectCell(0, 0);\n
+\n
+      expect(hot.getSelected()).toEqual([0, 0, 0, 3]);\n
+\n
+      deselectCell();\n
+\n
+      hot.selectCell(0, 1);\n
+\n
+      expect(hot.getSelected()).toEqual([0, 0, 0, 3]);\n
+    });\n
+\n
+    it("should always make a rectangular selection, when selecting merged and not merged cells", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(4, 4),\n
+        mergeCells: [\n
+          {\n
+            row: 1,\n
+            col: 1,\n
+            colspan: 3,\n
+            rowspan: 2\n
+          }\n
+        ]\n
+      });\n
+\n
+      var $table = this.$container.find(\'table.htCore\');\n
+      var $td = $table.find(\'tr:eq(1) td:eq(1)\');\n
+\n
+      expect($td.attr(\'rowspan\')).toEqual(\'2\');\n
+      expect($td.attr(\'colspan\')).toEqual(\'3\');\n
+\n
+      expect(hot.getSelected()).toBeUndefined();\n
+\n
+\n
+      hot.selectCell(0, 0);\n
+\n
+      expect(hot.getSelected()).toEqual([0, 0, 0, 0]);\n
+\n
+      deselectCell();\n
+\n
+      hot.selectCell(0, 0, 1, 1);\n
+\n
+      expect(hot.getSelected()).not.toEqual([0, 0, 1, 1]);\n
+      expect(hot.getSelected()).toEqual([0, 0, 2, 3]);\n
+\n
+      deselectCell();\n
+\n
+      hot.selectCell(0, 1, 1, 1);\n
+\n
+      expect(hot.getSelected()).toEqual([0, 1, 2, 3]);\n
+\n
+\n
+    });\n
+\n
+    it("should not switch the selection start point when selecting from non-merged cells to merged cells", function() {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 10),\n
+        mergeCells: [\n
+          {row: 1, col: 1, rowspan: 3, colspan: 3},\n
+          {row: 3, col: 4, rowspan: 2, colspan: 2}\n
+        ]\n
+      });\n
+\n
+      $(hot.getCell(6,6)).simulate(\'mousedown\');\n
+\n
+      expect(hot.getSelectedRange().from.col).toEqual(6);\n
+      expect(hot.getSelectedRange().from.row).toEqual(6);\n
+\n
+      $(hot.getCell(1,1)).simulate(\'mouseenter\');\n
+\n
+      expect(hot.getSelectedRange().from.col).toEqual(6);\n
+      expect(hot.getSelectedRange().from.row).toEqual(6);\n
+\n
+      $(hot.getCell(3,3)).simulate(\'mouseenter\');\n
+\n
+      expect(hot.getSelectedRange().from.col).toEqual(6);\n
+      expect(hot.getSelectedRange().from.row).toEqual(6);\n
+\n
+      $(hot.getCell(4,4)).simulate(\'mouseenter\');\n
+\n
+      expect(hot.getSelectedRange().from.col).toEqual(6);\n
+      expect(hot.getSelectedRange().from.row).toEqual(6);\n
+\n
+    });\n
+\n
+    it("should select cells in the correct direction when changing selections around a merged range", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 10),\n
+        mergeCells: [\n
+          {row: 4, col: 4, rowspan: 2, colspan: 2}\n
+        ]\n
+      });\n
+\n
+      hot.selectCell(5,5,5,2);\n
+      expect(hot.getSelectedRange().getDirection()).toEqual("SE-NW");\n
+\n
+      hot.selectCell(4,4,2,5);\n
+      expect(hot.getSelectedRange().getDirection()).toEqual("SW-NE");\n
+\n
+      hot.selectCell(4,4,5,7);\n
+      expect(hot.getSelectedRange().getDirection()).toEqual("NW-SE");\n
+\n
+      hot.selectCell(4,5,7,5);\n
+      expect(hot.getSelectedRange().getDirection()).toEqual("NE-SW");\n
+    });\n
+\n
+    it("should not add an area class to the selected cell if a single merged cell is selected", function() {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(6, 6),\n
+        mergeCells: [\n
+          {\n
+            row: 1,\n
+            col: 1,\n
+            colspan: 3,\n
+            rowspan: 2\n
+          }\n
+        ]\n
+      });\n
+\n
+      selectCell(1,1);\n
+      expect(getCell(1,1).className.indexOf(\'area\')).toEqual(-1);\n
+\n
+      selectCell(1,1,4,4);\n
+      expect(getCell(1,1).className.indexOf(\'area\')).toNotEqual(-1);\n
+\n
+      selectCell(1,1);\n
+      expect(getCell(1,1).className.indexOf(\'area\')).toEqual(-1);\n
+\n
+      selectCell(0,0);\n
+      expect(getCell(1,1).className.indexOf(\'area\')).toEqual(-1);\n
+\n
+    });\n
+\n
+  });\n
+\n
+  describe("modifyTransform", function () {\n
+\n
+    it("should not transform arrow right when entering a merged cell", function () {\n
+      var mergeCellsSettings = [\n
+        {row: 1, col: 1, rowspan: 3, colspan: 3}\n
+      ];\n
+      var coords = new WalkontableCellCoords(1, 0);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var mergeCells = new Handsontable.MergeCells(mergeCellsSettings);\n
+      var inDelta = new WalkontableCellCoords(0, 1);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(0, 1));\n
+    });\n
+\n
+    it("should transform arrow right when leaving a merged cell", function () {\n
+      var mergeCellsSettings = [\n
+        {row: 1, col: 1, rowspan: 3, colspan: 3}\n
+      ];\n
+      var coords = new WalkontableCellCoords(1, 1);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var mergeCells = new Handsontable.MergeCells(mergeCellsSettings);\n
+      var inDelta = new WalkontableCellCoords(0, 1);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(0, 3));\n
+    });\n
+\n
+    it("should transform arrow right when leaving a merged cell (return to desired row)", function () {\n
+      var mergeCellsSettings = [\n
+        {row: 1, col: 1, rowspan: 3, colspan: 3}\n
+      ];\n
+      var mergeCells = new Handsontable.MergeCells(mergeCellsSettings);\n
+\n
+      var coords = new WalkontableCellCoords(2, 0);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var inDelta = new WalkontableCellCoords(0, 1);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(-1, 1));\n
+\n
+      var coords = new WalkontableCellCoords(1, 1);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var inDelta = new WalkontableCellCoords(0, 1);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(1, 3));\n
+    });\n
+\n
+    it("should transform arrow left when entering a merged cell", function () {\n
+      var mergeCellsSettings = [\n
+        {row: 1, col: 1, rowspan: 3, colspan: 3}\n
+      ];\n
+      var coords = new WalkontableCellCoords(1, 4);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var mergeCells = new Handsontable.MergeCells(mergeCellsSettings);\n
+      var inDelta = new WalkontableCellCoords(0, -1);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(0, -3));\n
+    });\n
+\n
+    it("should not transform arrow left when leaving a merged cell", function () {\n
+      var mergeCellsSettings = [\n
+        {row: 1, col: 1, rowspan: 3, colspan: 3}\n
+      ];\n
+      var coords = new WalkontableCellCoords(1, 1);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var mergeCells = new Handsontable.MergeCells(mergeCellsSettings);\n
+      var inDelta = new WalkontableCellCoords(0, -1);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(0, -1));\n
+    });\n
+\n
+    it("should transform arrow left when leaving a merged cell (return to desired row)", function () {\n
+      var mergeCellsSettings = [\n
+        {row: 1, col: 1, rowspan: 3, colspan: 3}\n
+      ];\n
+      var mergeCells = new Handsontable.MergeCells(mergeCellsSettings);\n
+\n
+      var coords = new WalkontableCellCoords(2, 4);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var inDelta = new WalkontableCellCoords(0, -1);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(-1, -3));\n
+\n
+      var coords = new WalkontableCellCoords(1, 1);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var inDelta = new WalkontableCellCoords(0, -1);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(1, -1));\n
+    });\n
+\n
+    it("should not transform arrow down when entering a merged cell", function () {\n
+      var mergeCellsSettings = [\n
+        {row: 1, col: 1, rowspan: 3, colspan: 3}\n
+      ];\n
+      var coords = new WalkontableCellCoords(0, 1);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var mergeCells = new Handsontable.MergeCells(mergeCellsSettings);\n
+      var inDelta = new WalkontableCellCoords(0, -1);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(0, -1));\n
+    });\n
+\n
+    it("should transform arrow down when leaving a merged cell", function () {\n
+      var mergeCellsSettings = [\n
+        {row: 1, col: 1, rowspan: 3, colspan: 3}\n
+      ];\n
+      var coords = new WalkontableCellCoords(1, 1);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var mergeCells = new Handsontable.MergeCells(mergeCellsSettings);\n
+      var inDelta = new WalkontableCellCoords(1, 0);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(3, 0));\n
+    });\n
+\n
+    it("should transform arrow up when entering a merged cell", function () {\n
+      var mergeCellsSettings = [\n
+        {row: 1, col: 1, rowspan: 3, colspan: 3}\n
+      ];\n
+      var coords = new WalkontableCellCoords(4, 1);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var mergeCells = new Handsontable.MergeCells(mergeCellsSettings);\n
+      var inDelta = new WalkontableCellCoords(-1, 0);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(-3, 0));\n
+    });\n
+\n
+    it("should not transform arrow up when leaving a merged cell", function () {\n
+      var mergeCellsSettings = [\n
+        {row: 1, col: 1, rowspan: 3, colspan: 3}\n
+      ];\n
+      var coords = new WalkontableCellCoords(1, 1);\n
+      var currentSelection = new WalkontableCellRange(coords, coords, coords);\n
+      var mergeCells = new Handsontable.MergeCells(mergeCellsSettings);\n
+      var inDelta = new WalkontableCellCoords(-1, 0);\n
+      mergeCells.modifyTransform("modifyTransformStart", currentSelection, inDelta);\n
+      expect(inDelta).toEqual(new WalkontableCellCoords(-1, 0));\n
+    });\n
+\n
+  });\n
+\n
+  describe("merged cells scroll", function () {\n
+    it("getCell should return merged cell parent", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 5),\n
+        mergeCells: [\n
+          {row: 0, col: 0, rowspan: 2, colspan: 2}\n
+        ],\n
+        height: 100,\n
+        width: 400\n
+      });\n
+\n
+      var mergedCellParent = hot.getCell(0, 0);\n
+      var mergedCellHidden = hot.getCell(1, 1);\n
+\n
+      expect(mergedCellHidden).toBe(mergedCellParent);\n
+    });\n
+\n
+    it("should scroll viewport to beginning of a merged cell when it\'s clicked", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 5),\n
+        mergeCells: [\n
+          {row: 5, col: 0, rowspan: 2, colspan: 2}\n
+        ],\n
+        height: 100,\n
+        width: 400\n
+      });\n
+\n
+      var mainHolder = hot.view.wt.wtTable.holder;\n
+\n
+      mainHolder.scrollTop = 130;\n
+      hot.render();\n
+\n
+      expect(mainHolder.scrollTop).toBe(130);\n
+\n
+      var TD = hot.getCell(5, 0);\n
+      mouseDown(TD);\n
+      mouseUp(TD);\n
+      var mergedCellScrollTop = mainHolder.scrollTop;\n
+      expect(mergedCellScrollTop).toBeLessThan(130);\n
+      expect(mergedCellScrollTop).toBeGreaterThan(0);\n
+\n
+      mainHolder.scrollTop = 0;\n
+      hot.render();\n
+\n
+      mainHolder.scrollTop = 130;\n
+      hot.render();\n
+\n
+      TD = hot.getCell(5, 2);\n
+      mouseDown(TD);\n
+      mouseUp(TD);\n
+      var regularCellScrollTop = mainHolder.scrollTop;\n
+      expect(mergedCellScrollTop).toBe(regularCellScrollTop);\n
+    });\n
+\n
+    it("should render whole merged cell even when most rows are not in the viewport - scrolled to top", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(40, 5),\n
+        mergeCells: [\n
+          {row: 1, col: 0, rowspan: 21, colspan: 2},\n
+          {row: 21, col: 2, rowspan: 18, colspan: 2}\n
+        ],\n
+        height: 100,\n
+        width: 400\n
+      });\n
+\n
+      expect(hot.countRenderedRows()).toBe(39);\n
+    });\n
+\n
+    it("should render whole merged cell even when most rows are not in the viewport - scrolled to bottom", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(40, 5),\n
+        mergeCells: [\n
+          {row: 1, col: 0, rowspan: 21, colspan: 2},\n
+          {row: 21, col: 2, rowspan: 18, colspan: 2}\n
+        ],\n
+        height: 100,\n
+        width: 400\n
+      });\n
+\n
+      var mainHolder = hot.view.wt.wtTable.holder;\n
+\n
+      $(mainHolder).scrollTop(99999);\n
+      hot.render();\n
+\n
+      expect(hot.countRenderedRows()).toBe(39);\n
+    });\n
+\n
+    it("should render whole merged cell even when most columns are not in the viewport - scrolled to the left", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(5, 40),\n
+        mergeCells: [\n
+          {row: 0, col: 1, rowspan: 2, colspan: 21},\n
+          {row: 2, col: 21, rowspan: 2, colspan: 18}\n
+        ],\n
+        height: 100,\n
+        width: 400\n
+      });\n
+\n
+      expect(hot.countRenderedCols()).toBe(39);\n
+    });\n
+\n
+    it("should render whole merged cell even when most columns are not in the viewport - scrolled to the right", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(5, 40),\n
+        mergeCells: [\n
+          {row: 0, col: 1, rowspan: 2, colspan: 21},\n
+          {row: 2, col: 21, rowspan: 2, colspan: 18}\n
+        ],\n
+        height: 100,\n
+        width: 400\n
+      });\n
+\n
+      this.$container.scrollLeft(99999);\n
+      hot.render();\n
+\n
+      expect(hot.countRenderedCols()).toBe(39);\n
+    });\n
+\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17881</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>MergeCells.canMergeRange.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

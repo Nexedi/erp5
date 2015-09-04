@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272623.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>index.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+function init() {\n
+  var displayRows = 10;\n
+\n
+  function createButton(label, fn, newLine) {\n
+    var TABLE = document.getElementsByTagName(\'TABLE\')[0];\n
+\n
+    if (newLine) {\n
+      var BR = document.createElement(\'BR\');\n
+      TABLE.parentNode.insertBefore(BR, TABLE);\n
+    }\n
+\n
+    var BUTTON = document.createElement(\'BUTTON\');\n
+    BUTTON.innerHTML = label;\n
+    $(BUTTON).on(\'mousedown\', fn);\n
+    TABLE.parentNode.insertBefore(BUTTON, TABLE);\n
+  }\n
+\n
+  /**\n
+   * Data source\n
+   */\n
+\n
+  function randomString(length, chars) {\n
+    var result = \'\';\n
+    for (var i = length; i > 0; --i) result += chars.charAt(Math.round(Math.random() * (chars.length - 1)));\n
+    return result;\n
+  }\n
+\n
+  function createData(rows) {\n
+    var arr = [];\n
+    var arrPart = [];\n
+    var str = \'abcdefghijklmnopqrstuvwxyz\';\n
+    var i;\n
+\n
+    for (i = 0; i < 100; i++) {\n
+      arrPart.push([\n
+        i,\n
+        randomString(3 * (1 + Math.sin(i)), str),\n
+        randomString(3 * (1 + Math.sin(i + 2)), str),\n
+        randomString(3 * (1 + Math.sin(i + 4)), str),\n
+        randomString(3 * (1 + Math.sin(i + 6)), str),\n
+        randomString(3 * (1 + Math.sin(i + 8)), str),\n
+        randomString(3 * (1 + Math.sin(i + 10)), str)\n
+      ]);\n
+    }\n
+\n
+    for (i = 0; i < rows; i++) {\n
+      arr.push(arrPart[i % 100]); //clone 100 row chunks until array has size of 100000\n
+    }\n
+\n
+    return arr;\n
+  }\n
+\n
+  createButton(\'100k rows\', function () {\n
+    arr = createData(100000);\n
+    wt.draw();\n
+  });\n
+\n
+  createButton(\'1k rows\', function () {\n
+    arr = createData(1000);\n
+    wt.draw();\n
+  });\n
+\n
+  /**\n
+   * Init Walkontable\n
+   */\n
+  var arr = createData(100000);\n
+\n
+  var wt = new Walkontable({\n
+    table: document.getElementsByTagName(\'TABLE\')[0],\n
+    data: function (row, col) {\n
+      return arr[row][col];\n
+    },\n
+    totalRows: function () {\n
+      return arr.length;\n
+    },\n
+    totalColumns: function () {\n
+      return arr[0].length;\n
+    },\n
+    rowHeaders: [function (row, TH) {\n
+      TH.innerHTML = row + 1;\n
+    }],\n
+    selections: {\n
+      area: {\n
+        className: \'area\',\n
+        border: {\n
+          width: 1,\n
+          color: \'#5292F7\'\n
+          //,style: \'solid\'\n
+        }\n
+      },\n
+      current: {\n
+        className: \'current\',\n
+        border: {\n
+          width: 2,\n
+          color: \'#5292F7\'\n
+          //,style: \'solid\'\n
+        }\n
+      }\n
+    },\n
+    onCellMouseDown: function (event, coords, TD) {\n
+      if (wt.selections.area.isSelected(coords, TD) > -1) {\n
+        wt.selections.area.remove(coords, TD);\n
+      }\n
+      else {\n
+        wt.selections.area.add(coords, TD);\n
+      }\n
+\n
+      wt.selections.current.clear();\n
+      wt.selections.current.add(coords, TD);\n
+      wt.draw();\n
+    }\n
+  });\n
+  wt.draw();\n
+}\n
+\n
+window.onload = init;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2663</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>index.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

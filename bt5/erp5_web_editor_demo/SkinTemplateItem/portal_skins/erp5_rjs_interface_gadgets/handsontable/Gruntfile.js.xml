@@ -1,0 +1,344 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272272.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Gruntfile.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * This file is used to build Handsontable from `src/*`\n
+ *\n
+ * Installation:\n
+ * 1. Install Grunt CLI (`npm install -g grunt-cli`)\n
+ * 1. Install Grunt 0.4.0 and other dependencies (`npm install`)\n
+ *\n
+ * Build:\n
+ * Execute `grunt` from root directory of this directory (where Gruntfile.js is)\n
+ * To execute automatically after each change, execute `grunt --force default watch`\n
+ * To execute build followed by the test run, execute `grunt test`\n
+ *\n
+ * Result:\n
+ * building Handsontable will create files:\n
+ *  - dist/handsontable.js\n
+ *  - dist/handsontable.css\n
+ *  - dist/handsontable.full.js\n
+ *  - dist/handsontable.full.css\n
+ *  - dist/handsontable.full.min.js\n
+ *  - dist/handsontable.full.min.css\n
+ *\n
+ * See http://gruntjs.com/getting-started for more information about Grunt\n
+ */\n
+var browsers = [\n
+  {\n
+    browserName: \'firefox\',\n
+    platform: \'Windows 7\'\n
+  },\n
+  {\n
+    browserName: \'chrome\',\n
+    platform: \'Windows 7\'\n
+  },\n
+  {\n
+    browserName: \'opera\',\n
+    platform: \'Windows 7\'\n
+  },\n
+  //{\n
+  //  browserName: \'internet explorer\',\n
+  //  version: \'8\',\n
+  //  platform: \'Windows 7\'\n
+  //},\n
+  //{\n
+  //  browserName: \'internet explorer\',\n
+  //  version: \'9\',\n
+  //  platform: \'Windows 7\'\n
+  //},\n
+  {\n
+    browserName: \'internet explorer\',\n
+    version: \'10\',\n
+    platform: \'Windows 8\'\n
+  }\n
+];\n
+\n
+module.exports = function (grunt) {\n
+\n
+  require(\'time-grunt\')(grunt);\n
+  require(\'load-grunt-tasks\')(grunt);\n
+\n
+  grunt.initConfig({\n
+    pkg: grunt.file.readJSON(\'package.json\'),\n
+    gitinfo: {},\n
+\n
+    meta: {\n
+      src: [\n
+        \'src/*.js\',\n
+        \'src/editors/*.js\',\n
+        \'src/plugins/**/!(*.spec).js\',\n
+        \'src/renderers/*.js\',\n
+        \'src/validators/*.js\',\n
+        \'src/shims/*.js\',\n
+        \'src/3rdparty/*.js\'\n
+      ],\n
+      walkontable: [\n
+        \'src/3rdparty/walkontable/src/*.js\'\n
+      ],\n
+      vendor: [\n
+        \'lib/numeral/numeral.js\'\n
+      ]\n
+    },\n
+\n
+    watch: {\n
+      options: {\n
+        livereload: true // works with Chrome LiveReload extension. See: https://github.com/gruntjs/grunt-contrib-watch\n
+      },\n
+      files: [\n
+        \'src/**/*(*.js|*.css|*.html)\',\n
+        \'!src/3rdparty/walkontable/test/**/*\',\n
+        \'lib/**/*(*.js|*.css)\'\n
+      ],\n
+      tasks: [\'build-dev\']\n
+    },\n
+\n
+    jasmine: {\n
+      handsontable: {\n
+        src: [\n
+          \'dist/handsontable.js\',\n
+          \'demo/js/numeral.de-de.js\',\n
+          \'demo/js/backbone/lodash.underscore.js\',\n
+          \'demo/js/backbone/backbone.js\',\n
+          \'demo/js/backbone/backbone-relational/backbone-relational.js\',\n
+          \'demo/js/jquery-ui/js/jquery-ui.custom.js\',\n
+          \'plugins/removeRow/handsontable.removeRow.js\'\n
+        ],\n
+        options: {\n
+          specs: [\n
+            \'test/jasmine/spec/*Spec.js\',\n
+            \'test/jasmine/spec/!(mobile)*/*Spec.js\',\n
+            \'src/plugins/*/test/*.spec.js\',\n
+            \'plugins/*/test/*.spec.js\',\n
+            \'test/jasmine/spec/MemoryLeakTest.js\'\n
+          ],\n
+          styles: [\n
+            \'test/jasmine/css/SpecRunner.css\',\n
+            \'dist/handsontable.css\',\n
+            \'plugins/removeRow/handsontable.removeRow.css\',\n
+            \'demo/js/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css\',\n
+            \'demo/js/pikaday/css/pikaday.css\'\n
+          ],\n
+          vendor: [\n
+            \'demo/js/jquery.min.js\',\n
+            \'lib/numeral/numeral.js\',\n
+            \'demo/js/moment/moment.js\',\n
+            \'demo/js/pikaday/pikaday.js\',\n
+            \'demo/js/ZeroClipboard.js\',\n
+            \'test/jasmine/lib/jasmine-extensions.js\'\n
+          ],\n
+          helpers: [\n
+            \'test/jasmine/spec/SpecHelper.js\',\n
+            \'test/jasmine/lib/nodeShim.js\',\n
+            \'test/jasmine/spec/test-init.js\'\n
+          ],\n
+          outfile: \'test/jasmine/SpecRunner.html\',\n
+          template: \'test/jasmine/templates/SpecRunner.tmpl\',\n
+          keepRunner: true\n
+        }\n
+      },\n
+      walkontable: {\n
+        src: [\n
+          \'dist/handsontable.js\'\n
+        ],\n
+        options: {\n
+          specs: [\n
+            \'src/3rdparty/walkontable/test/jasmine/spec/**/*.spec.js\'\n
+          ],\n
+          styles: [\n
+            \'src/3rdparty/walkontable/css/walkontable.css\'\n
+          ],\n
+          vendor: [\n
+            \'demo/js/jquery.min.js\',\n
+            \'lib/numeral/numeral.js\',\n
+            \'demo/js/moment/moment.js\',\n
+            \'demo/js/pikaday/pikaday.js\',\n
+            \'demo/js/ZeroClipboard.js\',\n
+            \'demo/js/numeral.de-de.js\'\n
+          ],\n
+          helpers: [\n
+            \'src/3rdparty/walkontable/test/jasmine/SpecHelper.js\',\n
+            \'test/jasmine/lib/nodeShim.js\',\n
+            \'src/3rdparty/walkontable/test/jasmine/test-init.js\'\n
+\n
+          ],\n
+          outfile: \'src/3rdparty/walkontable/test/jasmine/SpecRunner.html\',\n
+          template: \'test/jasmine/templates/SpecRunner.tmpl\',\n
+          keepRunner: true\n
+        }\n
+      },\n
+      mobile: {\n
+        src: [\n
+          \'dist/handsontable.js\',\n
+          \'demo/js/numeral.de-de.js\',\n
+          \'demo/js/backbone/lodash.underscore.js\',\n
+          \'demo/js/backbone/backbone.js\',\n
+          \'demo/js/backbone/backbone-relational/backbone-relational.js\',\n
+          \'demo/js/jquery-ui/js/jquery-ui.custom.js\',\n
+          \'plugins/removeRow/handsontable.removeRow.js\'\n
+        ],\n
+        options: {\n
+          specs: [\n
+            \'test/jasmine/spec/mobile/*Spec.js\',\n
+            \'src/plugins/*/test/mobile/*.spec.js\'\n
+          ],\n
+          styles: [\n
+            \'test/jasmine/css/SpecRunner.css\',\n
+            \'dist/handsontable.css\',\n
+            \'plugins/removeRow/handsontable.removeRow.css\',\n
+            \'demo/js/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css\',\n
+            \'demo/js/pikaday/css/pikaday.css\'\n
+          ],\n
+          vendor: [\n
+            \'demo/js/jquery.min.js\',\n
+            \'lib/numeral/numeral.js\',\n
+            \'demo/js/ZeroClipboard.js\',\n
+            \'demo/js/moment/moment.js\',\n
+            \'demo/js/pikaday/pikaday.js\',\n
+            \'test/jasmine/lib/jasmine-extensions.js\'\n
+          ],\n
+          helpers: [\n
+            \'test/jasmine/spec/SpecHelper.js\',\n
+            \'test/jasmine/spec/MobileSpecHelper.js\',\n
+            \'test/jasmine/lib/nodeShim.js\',\n
+            \'test/jasmine/spec/test-init.js\'\n
+          ],\n
+          outfile: \'test/jasmine/MobileSpecRunner.html\',\n
+          template: \'test/jasmine/templates/SpecRunner.tmpl\',\n
+          keepRunner: true\n
+        }\n
+      }\n
+    },\n
+\n
+    connect: {\n
+      server: {\n
+        options: {\n
+          port: 8080,\n
+          base: \'.\',\n
+          keepalive: true\n
+        }\n
+      },\n
+      sauce: {\n
+        options: {\n
+          port: 9999,\n
+          base: \'.\',\n
+          keepalive: false\n
+        }\n
+      }\n
+    },\n
+    \'saucelabs-jasmine\': {\n
+      handsontable: {\n
+        options: {\n
+          urls: [\'http://localhost:9999/test/jasmine/SpecRunner.html\'],\n
+//          build: process.env.TRAVIS_JOB_ID,\n
+          build: \'<%= pkg.version %>-<%= gitinfo.local.branch.current.name %>\',\n
+          concurrency: 3,\n
+          browsers: browsers,\n
+          testname: "Development test (Handsontable)"\n
+        }\n
+      },\n
+      walkontable: {\n
+        options: {\n
+          urls: [\'http://localhost:9999/src/3rdparty/walkontable/test/jasmine/SpecRunner.html\'],\n
+//          build: process.env.TRAVIS_JOB_ID,\n
+          build: \'<%= pkg.version %>-<%= gitinfo.local.branch.current.name %>\',\n
+          concurrency: 3,\n
+          browsers: browsers,\n
+          testname: "Development test (Walkontable)"\n
+        }\n
+      }\n
+    },\n
+\n
+    jshint: {\n
+      options: {\n
+        jshintrc: true\n
+      },\n
+      handsontable: \'<%= meta.src %>\',\n
+      walkontable: \'<%= meta.walkontable %>\'\n
+    },\n
+\n
+    hotBuilder: {\n
+      handsontable: {\n
+        files: {\n
+          \'dist\': \'package.json\'\n
+        }\n
+      },\n
+      handsontableDev: {\n
+        files: {\n
+          \'dist\': \'package.json\'\n
+        },\n
+        options: {\n
+          devMode: true\n
+        }\n
+      },\n
+      handsontableCustom: {\n
+        files: {\n
+          \'dist\': \'package.json\'\n
+        },\n
+        options: {\n
+          disableUI: false\n
+        }\n
+      },\n
+      options: {\n
+        minify: true\n
+      }\n
+    }\n
+  });\n
+\n
+  // Default task.\n
+  grunt.registerTask(\'default\', [\'jshint\', \'gitinfo\', \'build\']);\n
+  grunt.registerTask(\'build\', [\'hotBuilder:handsontable\']);\n
+  grunt.registerTask(\'build-dev\', [\'hotBuilder:handsontableDev\']);\n
+  grunt.registerTask(\'build-custom\', [\'hotBuilder:handsontableCustom\']);\n
+  grunt.registerTask(\'test\', [\'default\', \'jasmine:handsontable\', \'jasmine:walkontable\', \'jasmine:mobile:build\']);\n
+  grunt.registerTask(\'test:handsontable\', [\'default\', \'jasmine:handsontable\']);\n
+  grunt.registerTask(\'test:walkontable\', [\'default\', \'jasmine:walkontable\']);\n
+  grunt.registerTask(\'test:mobile\', [\'default\', \'jasmine:mobile:build\']);\n
+  grunt.registerTask(\'sauce\', [\'default\', \'connect:sauce\', \'saucelabs-jasmine:walkontable\', \'saucelabs-jasmine:handsontable\']);\n
+  grunt.registerTask(\'sauce:handsontable\', [\'default\', \'connect:sauce\', \'saucelabs-jasmine:handsontable\']);\n
+  grunt.registerTask(\'sauce:walkontable\', [\'default\', \'connect:sauce\', \'saucelabs-jasmine:walkontable\']);\n
+\n
+  grunt.loadTasks(\'tasks\');\n
+  grunt.loadNpmTasks(\'hot-builder\');\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8972</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Gruntfile.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

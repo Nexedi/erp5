@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272480.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>validation.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Validation - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies)\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Validation">\n
+  <meta property="og:description"\n
+        content="Use the validator method to easily validate synchronous or asynchronous changes to a cell.">\n
+  <meta property="og:url" content="http://handsontable.com/demo/validation.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/validation.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+      <div class="descLayout">\n
+        <div class="pad" data-jsfiddle="example1">\n
+          <h2>Validation</h2>\n
+\n
+          <p>Use the <b>validator</b> (see <a\n
+            href="https://github.com/handsontable/handsontable/wiki/Options">Options wiki page</a>) method to easily\n
+            validate synchronous or asynchronous changes to a cell. If you\n
+            need more control, <b>beforeValidate</b> and <b>afterValidate</b> plugin hooks are available (see <a\n
+              href="https://github.com/handsontable/handsontable/wiki/Events">Events wiki page</a>).\n
+          </p>\n
+\n
+          <p>In the below example, <code>email_validator_fn</code> is an async validator that resolves after 1000 ms.\n
+          </p>\n
+\n
+          <p>Use the <b>allowInvalid</b> option (see <a\n
+            href="https://github.com/handsontable/handsontable/wiki/Options">Options wiki page</a>) to define if the\n
+            grid should accept input that does not validate.</p>\n
+\n
+          <p>\n
+            If you need to modify the input (e.g. censor bad words, uppercase first letter), use the plugin hook <b>beforeChange</b>\n
+            (see <a\n
+            href="https://github.com/handsontable/handsontable/wiki/Events">Events wiki page</a>).\n
+          </p>\n
+\n
+          <div id="example1"></div>\n
+\n
+          <p>Callback console: <span class="code">[[row, col, oldValue, newValue], ...]</span></p>\n
+\n
+          <pre id="example1console" class="console">Edit the above grid to see callback</pre>\n
+\n
+          <p>\n
+            <button name="dump" data-dump="#example1" data-instance="hot"\n
+                    title="Prints current data source to Firebug/Chrome Dev Tools">\n
+              Dump data to console\n
+            </button>\n
+          </p>\n
+        </div>\n
+      </div>\n
+\n
+      <div class="codeLayout">\n
+        <div class="pad">\n
+          <div class="jsFiddle">\n
+            <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+          </div>\n
+\n
+          <script data-jsfiddle="example1">\n
+            var people = [\n
+                {id: 1, name: {first: \'Joe\', last: \'Fabiano\'}, ip: \'0.0.0.1\', email: \'Joe.Fabiano@ex.com\'},\n
+                {id: 2, name: {first: \'Fred\', last: \'Wecler\'}, ip: \'0.0.0.1\', email: \'Fred.Wecler@ex.com\'},\n
+                {id: 3, name: {first: \'Steve\', last: \'Wilson\'}, ip: \'0.0.0.1\', email: \'Steve.Wilson@ex.com\'},\n
+                {id: 4, name: {first: \'Maria\', last: \'Fernandez\'}, ip: \'0.0.0.1\', email: \'M.Fernandez@ex.com\'},\n
+                {id: 5, name: {first: \'Pierre\', last: \'Barbault\'}, ip: \'0.0.0.1\', email: \'Pierre.Barbault@ex.com\'},\n
+                {id: 6, name: {first: \'Nancy\', last: \'Moore\'}, ip: \'0.0.0.1\', email: \'Nancy.Moore@ex.com\'},\n
+                {id: 7, name: {first: \'Barbara\', last: \'MacDonald\'}, ip: \'0.0.0.1\', email: \'B.MacDonald@ex.com\'},\n
+                {id: 8, name: {first: \'Wilma\', last: \'Williams\'}, ip: \'0.0.0.1\', email: \'Wilma.Williams@ex.com\'},\n
+                {id: 9, name: {first: \'Sasha\', last: \'Silver\'}, ip: \'0.0.0.1\', email: \'Sasha.Silver@ex.com\'},\n
+                {id: 10, name: {first: \'Don\', last: \'Pérignon\'}, ip: \'0.0.0.1\', email: \'Don.Pérignon@ex.com\'},\n
+                {id: 11, name: {first: \'Aaron\', last: \'Kinley\'}, ip: \'0.0.0.1\', email: \'Aaron.Kinley@ex.com\'}\n
+              ],\n
+              example1 = document.getElementById(\'example1\'),\n
+              example1console = document.getElementById(\'example1console\'),\n
+              settings1,\n
+              ipValidatorRegexp,\n
+              emailValidator;\n
+\n
+            ipValidatorRegexp = /^(?:\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b|null)$/;\n
+            emailValidator = function (value, callback) {\n
+              setTimeout(function(){\n
+                if (/.+@.+/.test(value)) {\n
+                  callback(true);\n
+                }\n
+                else {\n
+                  callback(false);\n
+                }\n
+              }, 1000);\n
+            };\n
+\n
+            settings1 = {\n
+              data: people,\n
+              minSpareRows: 1,\n
+              contextMenu: true,\n
+              beforeChange: function (changes, source) {\n
+                for (var i = changes.length - 1; i >= 0; i--) {\n
+                  // gently don\'t accept the word "foo" (remove the change at index i)\n
+                  if (changes[i][3] === \'foo\') {\n
+                    changes.splice(i, 1);\n
+                  }\n
+                  // if any of pasted cells contains the word "nuke", reject the whole paste\n
+                  else if (changes[i][3] === \'nuke\') {\n
+                    return false;\n
+                  }\n
+                  // capitalise first letter in column 1 and 2\n
+                  else if ((changes[i][1] === \'name.first\' || changes[i][1] === \'name.last\') && changes[i][3].charAt(0)) {\n
+                    changes[i][3] = changes[i][3].charAt(0).toUpperCase() + changes[i][3].slice(1);\n
+                  }\n
+                }\n
+              },\n
+              afterChange: function (changes, source) {\n
+                if (source !== \'loadData\') {\n
+                  example1console.innerText = JSON.stringify(changes);\n
+                }\n
+              },\n
+              colHeaders: [\'ID\', \'First name\', \'Last name\', \'IP\', \'E-mail\'],\n
+              columns: [\n
+                {data: \'id\', type: \'numeric\'},\n
+                {data: \'name.first\'},\n
+                {data: \'name.last\'},\n
+                {data: \'ip\', validator: ipValidatorRegexp, allowInvalid: true},\n
+                {data: \'email\', validator: emailValidator, allowInvalid: false}\n
+              ]\n
+            };\n
+            var hot = new Handsontable(example1, settings1);\n
+          </script>\n
+        </div>\n
+      </div>\n
+    </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7986</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>validation.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

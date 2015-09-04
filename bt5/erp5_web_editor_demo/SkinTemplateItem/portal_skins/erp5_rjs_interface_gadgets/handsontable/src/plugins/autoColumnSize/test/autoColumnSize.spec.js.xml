@@ -1,0 +1,355 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272702.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>autoColumnSize.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'AutoColumnSize\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfObjects = function () {\n
+    return [\n
+      {id: "Short", name: "Somewhat long", lastName: "The very very very longest one", nestedData: [{id: 1000}]}\n
+    ];\n
+  };\n
+\n
+  it(\'should apply auto size by default\', function () {\n
+    handsontable({\n
+      data: arrayOfObjects()\n
+    });\n
+\n
+    var width0 = colWidth(this.$container, 0);\n
+    var width1 = colWidth(this.$container, 1);\n
+    var width2 = colWidth(this.$container, 2);\n
+\n
+    expect(width0).toBeLessThan(width1);\n
+    expect(width1).toBeLessThan(width2);\n
+  });\n
+\n
+  it(\'should correctly detect column width with colHeaders\', function () {\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      autoColumnSize: true,\n
+      colHeaders: [\'Identifier\'],\n
+      columns: [\n
+        {data: \'id\'}\n
+      ]\n
+    });\n
+\n
+    expect(colWidth(this.$container, 0)).toBeAroundValue(56);\n
+  });\n
+\n
+  it(\'should correctly detect column width with columns.title\', function () {\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      autoColumnSize: true,\n
+      columns: [\n
+        {data: \'id\', title: \'Identifier\'}\n
+      ]\n
+    });\n
+\n
+    expect(colWidth(this.$container, 0)).toBeAroundValue(56);\n
+  });\n
+\n
+  // https://github.com/handsontable/handsontable/issues/2684\n
+  it(\'should correctly detect column width when table is hidden on init (display: none)\', function () {\n
+    this.$container.css(\'display\', \'none\');\n
+    var hot = handsontable({\n
+      data: arrayOfObjects(),\n
+      autoColumnSize: true,\n
+      colHeaders: [\'Identifier\', \'First Name\']\n
+    });\n
+\n
+    waits(200);\n
+\n
+    runs(function() {\n
+      this.$container.css(\'display\', \'block\');\n
+      hot.render();\n
+\n
+      expect(colWidth(this.$container, 0)).toBeAroundValue(56);\n
+    });\n
+  });\n
+\n
+  it(\'should be possible to disable plugin using updateSettings\', function () {\n
+\n
+    handsontable({\n
+      data: arrayOfObjects()\n
+    });\n
+\n
+    var width0 = colWidth(this.$container, 0);\n
+    var width1 = colWidth(this.$container, 1);\n
+    var width2 = colWidth(this.$container, 2);\n
+\n
+    expect(width0).toBeLessThan(width1);\n
+    expect(width1).toBeLessThan(width2);\n
+\n
+    updateSettings({\n
+      autoColumnSize: false\n
+    });\n
+\n
+    width0 = colWidth(this.$container, 0);\n
+    width1 = colWidth(this.$container, 1);\n
+    width2 = colWidth(this.$container, 2);\n
+\n
+    expect(width0).toEqual(width1);\n
+    expect(width0).toEqual(width2);\n
+    expect(width1).toEqual(width2);\n
+  });\n
+\n
+  it(\'should apply disabling/enabling plugin using updateSettings, only to a particular HOT instance\', function () {\n
+\n
+    this.$container2 = $(\'<div id="\' + id + \'-2"></div>\').appendTo(\'body\');\n
+\n
+\n
+    handsontable({\n
+      data: arrayOfObjects()\n
+    });\n
+\n
+    this.$container2.handsontable({\n
+      data: arrayOfObjects()\n
+    });\n
+\n
+    var widths = {\n
+      1: [],\n
+      2: []\n
+    };\n
+\n
+    widths[1][0] = colWidth(this.$container, 0);\n
+    widths[1][1] = colWidth(this.$container, 1);\n
+    widths[1][2] = colWidth(this.$container, 2);\n
+\n
+    widths[2][0] = colWidth(this.$container2, 0);\n
+    widths[2][1] = colWidth(this.$container2, 1);\n
+    widths[2][2] = colWidth(this.$container2, 2);\n
+\n
+    expect(widths[1][0]).toBeLessThan(widths[1][1]);\n
+    expect(widths[1][1]).toBeLessThan(widths[1][2]);\n
+\n
+    expect(widths[2][0]).toBeLessThan(widths[2][1]);\n
+    expect(widths[2][1]).toBeLessThan(widths[2][2]);\n
+\n
+    updateSettings({\n
+      autoColumnSize: false\n
+    });\n
+\n
+    widths[1][0] = colWidth(this.$container, 0);\n
+    widths[1][1] = colWidth(this.$container, 1);\n
+    widths[1][2] = colWidth(this.$container, 2);\n
+\n
+    widths[2][0] = colWidth(this.$container2, 0);\n
+    widths[2][1] = colWidth(this.$container2, 1);\n
+    widths[2][2] = colWidth(this.$container2, 2);\n
+\n
+    expect(widths[1][0]).toEqual(widths[1][1]);\n
+    expect(widths[1][0]).toEqual(widths[1][2]);\n
+    expect(widths[1][1]).toEqual(widths[1][2]);\n
+\n
+    expect(widths[2][0]).toBeLessThan(widths[2][1]);\n
+    expect(widths[2][1]).toBeLessThan(widths[2][2]);\n
+\n
+    this.$container2.handsontable(\'destroy\');\n
+    this.$container2.remove();\n
+  });\n
+\n
+  it(\'should be possible to enable plugin using updateSettings\', function () {\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      autoColumnSize: false\n
+    });\n
+\n
+    var width0 = colWidth(this.$container, 0);\n
+    var width1 = colWidth(this.$container, 1);\n
+    var width2 = colWidth(this.$container, 2);\n
+\n
+    expect(width0).toEqual(width1);\n
+    expect(width0).toEqual(width2);\n
+    expect(width1).toEqual(width2);\n
+\n
+    updateSettings({\n
+      autoColumnSize: true\n
+    });\n
+\n
+    width0 = colWidth(this.$container, 0);\n
+    width1 = colWidth(this.$container, 1);\n
+    width2 = colWidth(this.$container, 2);\n
+\n
+    expect(width0).toBeLessThan(width1);\n
+    expect(width1).toBeLessThan(width2);\n
+  });\n
+\n
+  it(\'should consider CSS style of each instance separately\', function () {\n
+    var $style = $(\'<style>.big .htCore td {font-size: 40px; line-height: 1.1;}</style>\').appendTo(\'head\');\n
+    var $container1 = $(\'<div id="hot1"></div>\').appendTo(\'body\').handsontable({\n
+      data: arrayOfObjects()\n
+    });\n
+    var $container2 = $(\'<div id="hot2"></div>\').appendTo(\'body\').handsontable({\n
+      data: arrayOfObjects()\n
+    });\n
+    var hot1 = $container1.handsontable(\'getInstance\');\n
+    var hot2 = $container2.handsontable(\'getInstance\');\n
+\n
+    expect(colWidth($container1, 0)).toEqual(colWidth($container2, 0));\n
+\n
+    $container1.addClass(\'big\');\n
+    hot1.render();\n
+    hot2.render();\n
+    expect(colWidth($container1, 0)).toBeGreaterThan(colWidth($container2, 0));\n
+\n
+    $container1.removeClass(\'big\').handsontable(\'render\');\n
+    $container2.addClass(\'big\').handsontable(\'render\');\n
+    expect(colWidth($container1, 0)).toBeLessThan(colWidth($container2, 0));\n
+\n
+    $style.remove();\n
+    $container1.handsontable(\'destroy\');\n
+    $container1.remove();\n
+    $container2.handsontable(\'destroy\');\n
+    $container2.remove();\n
+  });\n
+\n
+  it(\'should consider CSS class of the <table> element (e.g. when used with Bootstrap)\', function () {\n
+    var $style = $(\'<style>.htCore.big-table td {font-size: 32px}</style>\').appendTo(\'head\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      autoColumnSize: true\n
+    });\n
+\n
+    var width = colWidth(this.$container, 0);\n
+\n
+    this.$container.find(\'table\').addClass(\'big-table\');\n
+    render();\n
+    expect(colWidth(this.$container, 0)).toBeGreaterThan(width);\n
+\n
+    $style.remove();\n
+  });\n
+\n
+  it(\'should destroy temporary element\', function () {\n
+    handsontable({\n
+      autoColumnSize: true\n
+    });\n
+\n
+    expect(document.querySelector(\'.htAutoSize\')).toBe(null);\n
+  });\n
+\n
+  it(\'should not trigger autoColumnSize when column width is defined (through colWidths)\', function () {\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      autoColumnSize: true,\n
+      colWidths: [70, 70, 70],\n
+      width: 500,\n
+      height: 100,\n
+      rowHeaders: true\n
+    });\n
+\n
+    setDataAtCell(0, 0, \'LongLongLongLong\');\n
+\n
+    expect(colWidth(this.$container, 0)).toBe(70);\n
+  });\n
+\n
+  it(\'should not trigger autoColumnSize when column width is defined (through columns.width)\', function () {\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      autoColumnSize: true,\n
+      colWidth: 77,\n
+      columns: [\n
+        {width: 70},\n
+        {width: 70},\n
+        {width: 70}\n
+      ],\n
+      width: 500,\n
+      height: 100,\n
+      rowHeaders: true\n
+    });\n
+\n
+    setDataAtCell(0, 0, \'LongLongLongLong\');\n
+\n
+    expect(colWidth(this.$container, 0)).toBe(70);\n
+  });\n
+\n
+  it(\'should consider renderer that uses conditional formatting for specific row & column index\', function () {\n
+    var data = arrayOfObjects();\n
+    data.push({id: "2", name: "Rocket Man", lastName: "In a tin can"});\n
+    handsontable({\n
+      data: data,\n
+      columns: [\n
+        {data: \'id\'},\n
+        {data: \'name\'}\n
+      ],\n
+      autoColumnSize: true,\n
+      renderer: function (instance, td, row, col, prop, value, cellProperties) {\n
+        //taken from demo/renderers.html\n
+        Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+        if (row === 1 && col === 0) {\n
+          td.style.padding = "100px";\n
+        }\n
+      }\n
+    });\n
+\n
+    expect(colWidth(this.$container, 0)).toBeGreaterThan(colWidth(this.$container, 1));\n
+  });\n
+\n
+  it(\'should\\\'t serialize value if it is array (nested data sources)\', function () {\n
+    var spy = jasmine.createSpy(\'renderer\');\n
+\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      autoColumnSize: true,\n
+      columns: [\n
+        {data: \'nestedData\'}\n
+      ],\n
+      renderer: spy\n
+    });\n
+\n
+    expect(spy.mostRecentCall.args[5]).toEqual([{id: 1000}]);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8650</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>autoColumnSize.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272727.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>samplesGenerator.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {addClass, outerHeight, outerWidth} from \'./../helpers/dom/element\';\n
+import {arrayEach} from \'./../helpers/array\';\n
+import {objectEach} from \'./../helpers/object\';\n
+import {rangeEach} from \'./../helpers/number\';\n
+import {stringify} from \'./../helpers/mixed\';\n
+\n
+/**\n
+ * @private\n
+ */\n
+class SamplesGenerator {\n
+  /**\n
+   * Number of samples to take of each value length.\n
+   *\n
+   * @type {Number}\n
+   */\n
+  static get SAMPLE_COUNT() {\n
+    return 3;\n
+  }\n
+\n
+  /**\n
+   * @param {Function} dataFactory Function which gave data to collect samples.\n
+   */\n
+  constructor(dataFactory) {\n
+    /**\n
+     * Samples prepared for calculations.\n
+     *\n
+     * @type {Map}\n
+     * @default {null}\n
+     */\n
+    this.samples = null;\n
+    /**\n
+     * Function which give the data to collect samples.\n
+     *\n
+     * @type {Function}\n
+     */\n
+    this.dataFactory = dataFactory;\n
+  }\n
+\n
+  /**\n
+   * Generate samples for row. You can control which area should be sampled by passing `rowRange` object and `colRange` object.\n
+   *\n
+   * @param {Object|Number} rowRange\n
+   * @param {Object} colRange\n
+   * @returns {Object}\n
+   */\n
+  generateRowSamples(rowRange, colRange) {\n
+    return this.generateSamples(\'row\', colRange, rowRange);\n
+  }\n
+\n
+  /**\n
+   * Generate samples for column. You can control which area should be sampled by passing `colRange` object and `rowRange` object.\n
+   *\n
+   * @param {Object} colRange Column index.\n
+   * @param {Object} rowRange Column index.\n
+   * @returns {Object}\n
+   */\n
+  generateColumnSamples(colRange, rowRange) {\n
+    return this.generateSamples(\'col\', rowRange, colRange);\n
+  }\n
+\n
+  /**\n
+   * Generate collection of samples.\n
+   *\n
+   * @param {String} type Type to generate. Can be `col` or `row`.\n
+   * @param {Object} range\n
+   * @param {Object|Number} specifierRange\n
+   * @returns {Map}\n
+   */\n
+  generateSamples(type, range, specifierRange) {\n
+    const samples = new Map();\n
+\n
+    if (typeof specifierRange === \'number\') {\n
+      specifierRange = {from: specifierRange, to: specifierRange};\n
+    }\n
+    rangeEach(specifierRange.from, specifierRange.to, (index) => {\n
+      const sample = this.generateSample(type, range, index);\n
+\n
+      samples.set(index, sample);\n
+    });\n
+\n
+    return samples;\n
+  }\n
+\n
+  /**\n
+   * Generate sample for specified type (`row` or `col`).\n
+   *\n
+   * @param {String} type Samples type `row` or `col`.\n
+   * @param {Object} range\n
+   * @param {Number} specifierValue\n
+   * @returns {Map}\n
+   */\n
+  generateSample(type, range, specifierValue) {\n
+    const samples = new Map();\n
+\n
+    rangeEach(range.from, range.to, (index) => {\n
+      let value;\n
+\n
+      if (type === \'row\') {\n
+        value = this.dataFactory(specifierValue, index);\n
+\n
+      } else if (type === \'col\') {\n
+        value = this.dataFactory(index, specifierValue);\n
+\n
+      } else {\n
+        throw new Error(\'Unsupported sample type\');\n
+      }\n
+      if (!Array.isArray(value)) {\n
+        value = stringify(value);\n
+      }\n
+      let len = value.length;\n
+\n
+      if (!samples.has(len)) {\n
+        samples.set(len, {\n
+          needed: SamplesGenerator.SAMPLE_COUNT,\n
+          strings: []\n
+        });\n
+      }\n
+      let sample = samples.get(len);\n
+\n
+      if (sample.needed) {\n
+        sample.strings.push({value, [type === \'row\' ? \'col\' : \'row\']: index});\n
+        sample.needed--;\n
+      }\n
+    });\n
+\n
+    return samples;\n
+  }\n
+}\n
+\n
+export {SamplesGenerator};\n
+\n
+// temp for tests only!\n
+Handsontable.utils = Handsontable.utils || {};\n
+Handsontable.utils.SamplesGenerator = SamplesGenerator;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3407</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>samplesGenerator.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

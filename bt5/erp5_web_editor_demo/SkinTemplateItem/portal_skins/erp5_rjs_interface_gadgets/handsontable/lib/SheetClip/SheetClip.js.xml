@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272898.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SheetClip.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * SheetClip - Spreadsheet Clipboard Parser\n
+ * version 0.2\n
+ *\n
+ * This tiny library transforms JavaScript arrays to strings that are pasteable by LibreOffice, OpenOffice,\n
+ * Google Docs and Microsoft Excel.\n
+ *\n
+ * Copyright 2012, Marcin Warpechowski\n
+ * Licensed under the MIT license.\n
+ * http://github.com/warpech/sheetclip/\n
+ */\n
+/*jslint white: true*/\n
+(function (global) {\n
+  "use strict";\n
+\n
+  function countQuotes(str) {\n
+    return str.split(\'"\').length - 1;\n
+  }\n
+\n
+  var SheetClip = {\n
+    /**\n
+     * Decode spreadsheet string into array\n
+     *\n
+     * @param {String} str\n
+     * @returns {Array}\n
+     */\n
+    parse: function (str) {\n
+      var r, rLen, rows, arr = [], a = 0, c, cLen, multiline, last;\n
+\n
+      rows = str.split(\'\\n\');\n
+\n
+      if (rows.length > 1 && rows[rows.length - 1] === \'\') {\n
+        rows.pop();\n
+      }\n
+      for (r = 0, rLen = rows.length; r < rLen; r += 1) {\n
+        rows[r] = rows[r].split(\'\\t\');\n
+\n
+        for (c = 0, cLen = rows[r].length; c < cLen; c += 1) {\n
+          if (!arr[a]) {\n
+            arr[a] = [];\n
+          }\n
+          if (multiline && c === 0) {\n
+            last = arr[a].length - 1;\n
+            arr[a][last] = arr[a][last] + \'\\n\' + rows[r][0];\n
+\n
+            if (multiline && (countQuotes(rows[r][0]) & 1)) { //& 1 is a bitwise way of performing mod 2\n
+              multiline = false;\n
+              arr[a][last] = arr[a][last].substring(0, arr[a][last].length - 1).replace(/""/g, \'"\');\n
+            }\n
+          }\n
+          else {\n
+            if (c === cLen - 1 && rows[r][c].indexOf(\'"\') === 0 && (countQuotes(rows[r][c]) & 1)) {\n
+              arr[a].push(rows[r][c].substring(1).replace(/""/g, \'"\'));\n
+              multiline = true;\n
+            }\n
+            else {\n
+              arr[a].push(rows[r][c].replace(/""/g, \'"\'));\n
+              multiline = false;\n
+            }\n
+          }\n
+        }\n
+        if (!multiline) {\n
+          a += 1;\n
+        }\n
+      }\n
+\n
+      return arr;\n
+    },\n
+\n
+    /**\n
+     * Encode array into valid spreadsheet string\n
+     *\n
+     * @param arr\n
+     * @returns {String}\n
+     */\n
+    stringify: function (arr) {\n
+      var r, rLen, c, cLen, str = \'\', val;\n
+\n
+      for (r = 0, rLen = arr.length; r < rLen; r += 1) {\n
+        cLen = arr[r].length;\n
+\n
+        for (c = 0; c < cLen; c += 1) {\n
+          if (c > 0) {\n
+            str += \'\\t\';\n
+          }\n
+          val = arr[r][c];\n
+\n
+          if (typeof val === \'string\') {\n
+            if (val.indexOf(\'\\n\') > -1) {\n
+              str += \'"\' + val.replace(/"/g, \'""\') + \'"\';\n
+            }\n
+            else {\n
+              str += val;\n
+            }\n
+          }\n
+          else if (val === null || val === void 0) { // void 0 resolves to undefined\n
+            str += \'\';\n
+          }\n
+          else {\n
+            str += val;\n
+          }\n
+        }\n
+        str += \'\\n\';\n
+      }\n
+\n
+      return str;\n
+    }\n
+  };\n
+\n
+  if (typeof exports !== \'undefined\') {\n
+    exports.parse = SheetClip.parse;\n
+    exports.stringify = SheetClip.stringify;\n
+  } else {\n
+    global.SheetClip = SheetClip;\n
+  }\n
+}(window));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2977</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>SheetClip.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272686.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>contextMenuCopyPaste.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {removeClass} from \'./../../helpers/dom/element\';\n
+import {eventManager as eventManagerObject} from \'./../../eventManager\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+import BasePlugin from \'./../_base\';\n
+import ZeroClipboard from \'zeroclipboard\';\n
+\n
+/**\n
+ * @plugin ContextMenuCopyPaste\n
+ * @dependencies ContextMenu zeroclipboard\n
+ */\n
+class ContextMenuCopyPaste extends BasePlugin {\n
+  /**\n
+   * @param {Object} hotInstance\n
+   */\n
+  constructor(hotInstance) {\n
+    super(hotInstance);\n
+\n
+    this.swfPath = null;\n
+    this.hotContextMenu = null;\n
+    this.outsideClickDeselectsCache = null;\n
+\n
+    this.hot.addHook(\'afterContextMenuShow\', (htContextMenu) => this.setupZeroClipboard(htContextMenu));\n
+    this.hot.addHook(\'afterInit\', () => this.afterInit());\n
+    this.hot.addHook(\'afterContextMenuDefaultOptions\', (options) => this.addToContextMenu(options));\n
+  }\n
+\n
+  /**\n
+   *\n
+   */\n
+  afterInit() {\n
+    if (!this.hot.getSettings().contextMenuCopyPaste) {\n
+      return;\n
+\n
+    } else if (typeof this.hot.getSettings().contextMenuCopyPaste == \'object\') {\n
+      this.swfPath = this.hot.getSettings().contextMenuCopyPaste.swfPath;\n
+    }\n
+\n
+    if (typeof ZeroClipboard === \'undefined\') {\n
+      console.error(\'To be able to use the Copy/Paste feature from the context menu, you need to manualy include ZeroClipboard.js file to your website.\');\n
+    }\n
+    try {\n
+      /* jshint -W031 */\n
+      new ActiveXObject(\'ShockwaveFlash.ShockwaveFlash\');\n
+    } catch(exception) {\n
+      if (\'undefined\' == typeof navigator.mimeTypes[\'application/x-shockwave-flash\']) {\n
+        console.error(\'To be able to use the Copy/Paste feature from the context menu, your browser needs to have Flash Plugin installed.\');\n
+      }\n
+    }\n
+    this.prepareZeroClipboard();\n
+  }\n
+\n
+  /**\n
+   * Prepare ZeroClipboard config values\n
+   */\n
+  prepareZeroClipboard() {\n
+    if (this.swfPath) {\n
+      ZeroClipboard.config({\n
+        swfPath: this.swfPath\n
+      });\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Get value to copy\n
+   *\n
+   * @returns {String}\n
+   */\n
+  getCopyValue() {\n
+    this.hot.copyPaste.setCopyableText();\n
+\n
+    return this.hot.copyPaste.copyPasteInstance.elTextarea.value;\n
+  }\n
+\n
+  /**\n
+   * Add Copy and Paste functionality to context menu\n
+   *\n
+   * @param defaultOptions\n
+   */\n
+  addToContextMenu (defaultOptions) {\n
+    if (!this.hot.getSettings().contextMenuCopyPaste) {\n
+      return;\n
+    }\n
+    defaultOptions.items.unshift({\n
+        key: \'copy\',\n
+        name: \'Copy\'\n
+      }, {\n
+        key: \'paste\',\n
+        name: \'Paste\',\n
+        callback: function () {\n
+          this.copyPaste.triggerPaste();\n
+        }\n
+      },\n
+      Handsontable.plugins.ContextMenu.SEPARATOR\n
+    );\n
+  }\n
+\n
+  /**\n
+   * @param {Object} hotContextMenu\n
+   */\n
+  setupZeroClipboard(hotContextMenu) {\n
+    var data, zeroClipboardInstance;\n
+\n
+    if (!this.hot.getSettings().contextMenuCopyPaste) {\n
+      return;\n
+    }\n
+    this.hotContextMenu = hotContextMenu;\n
+    data = this.hotContextMenu.getData();\n
+\n
+    // find position of \'copy\' option\n
+    for (var i = 0, ilen = data.length; i < ilen; i++) {\n
+      /*jshint -W083 */\n
+      if (data[i].key === \'copy\') {\n
+        zeroClipboardInstance = new ZeroClipboard(this.hotContextMenu.getCell(i, 0));\n
+\n
+        zeroClipboardInstance.off();\n
+        zeroClipboardInstance.on(\'copy\', (event) => {\n
+          var clipboard = event.clipboardData;\n
+\n
+          clipboard.setData(\'text/plain\', this.getCopyValue());\n
+          this.hot.getSettings().outsideClickDeselects = this.outsideClickDeselectsCache;\n
+        });\n
+\n
+        this.bindEvents();\n
+        break;\n
+      }\n
+    }\n
+  }\n
+\n
+  removeCurrentClass() {\n
+    if (this.hotContextMenu.rootElement) {\n
+      var element = this.hotContextMenu.rootElement.querySelector(\'td.current\');\n
+\n
+      if ( element ) {\n
+        removeClass(element, \'current\');\n
+      }\n
+    }\n
+    this.outsideClickDeselectsCache = this.hot.getSettings().outsideClickDeselects;\n
+    this.hot.getSettings().outsideClickDeselects = false;\n
+  }\n
+\n
+  removeZeroClipboardClass() {\n
+    if (this.hotContextMenu.rootElement) {\n
+      var element = this.hotContextMenu.rootElement.querySelector(\'td.zeroclipboard-is-hover\');\n
+\n
+      if ( element ) {\n
+        removeClass(element, \'zeroclipboard-is-hover\');\n
+      }\n
+    }\n
+    this.hot.getSettings().outsideClickDeselects = this.outsideClickDeselectsCache;\n
+  }\n
+\n
+  /**\n
+   * Add all necessary event listeners\n
+   */\n
+  bindEvents() {\n
+    var eventManager = eventManagerObject(this.hotContextMenu);\n
+\n
+    eventManager.addEventListener(document, \'mouseenter\', () => this.removeCurrentClass());\n
+    eventManager.addEventListener(document, \'mouseleave\', () => this.removeZeroClipboardClass());\n
+  }\n
+}\n
+\n
+export {ContextMenuCopyPaste};\n
+\n
+registerPlugin(\'contextMenuCopyPaste\', ContextMenuCopyPaste);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4661</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>contextMenuCopyPaste.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

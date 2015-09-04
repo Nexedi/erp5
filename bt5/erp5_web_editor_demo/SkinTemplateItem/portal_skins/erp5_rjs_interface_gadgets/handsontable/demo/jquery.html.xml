@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272314.01</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>jQuery - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies apart from jQuery)\n
+  -->\n
+  <script data-jsfiddle="common" src="js/jquery.min.js"></script>\n
+\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Integrate with Backbone.js">\n
+  <meta property="og:description"\n
+        content="Bind your Backbone collections to Handsontable">\n
+  <meta property="og:url" content="http://handsontable.com/demo/backbone.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/backbone.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+          <div class="descLayout">\n
+            <div class="pad" data-jsfiddle="hot">\n
+              <h2>jQuery</h2>\n
+\n
+              <p>\n
+                jQuery is a library, which makes DOM manipulations and event handling easier. <br><br>\n
+                Handsontable is fully compatible with jQuery - the small example below shows that the integration\n
+                between the two is quick and intuitive.\n
+              </p>\n
+\n
+              <p>\n
+                In order to use Handsontable as a jQuery plugin, you need to do some preparation:\n
+              <ul>\n
+                <li>Include jQuery to your page, before including Handsontable<br>\n
+                <pre><code style="white-space: pre-line;">\n
+                  &lt;script src="handsontable/lib/jquery.min.js"&gt;&lt;/script&gt;<br>\n
+                  &lt;script src="handsontable/dist/handsontable.full.js"&gt;&lt;/script&gt;<br>\n
+                  &lt;link rel="stylesheet" media="screen" href="handsontable/dist/handsontable.full.css"&gt;<br>\n
+                </code></pre>\n
+                </li>\n
+              <li>\n
+                Run <code>handsontable()</code> plugin constructor on an empty div as in the below code example:\n
+              </li>\n
+              </ul>\n
+              </p>\n
+\n
+              <div id="hot"></div>\n
+\n
+            </div>\n
+          </div>\n
+\n
+          <div class="codeLayout">\n
+            <div class="pad">\n
+              <div class="jsFiddle">\n
+                <button class="jsFiddleLink" data-runfiddle="hot">Edit in jsFiddle</button>\n
+              </div>\n
+              <script data-jsfiddle="common">\n
+                function getData() {\n
+                  return [\n
+                    [\'\', \'Kia\', \'Nissan\', \'Toyota\', \'Honda\'],\n
+                    [\'2008\', 10, 11, 12, 13],\n
+                    [\'2009\', 20, 11, 14, 13],\n
+                    [\'2010\', 30, 15, 12, 13]\n
+                  ];\n
+                }\n
+              </script>\n
+              <script data-jsfiddle="hot">\n
+                // Instead of creating a new Handsontable instance with the container element passed as an argument,\n
+                // you can simply call .handsontable method on a jQuery DOM object.\n
+                var $container = $("#hot");\n
+\n
+                $container.handsontable({\n
+                  data: getData(),\n
+                  startRows: 5,\n
+                  startCols: 5,\n
+                  minRows: 5,\n
+                  minCols: 5,\n
+                  maxRows: 10,\n
+                  maxCols: 10,\n
+                  rowHeaders: true,\n
+                  colHeaders: true,\n
+                  minSpareRows: 1,\n
+                  contextMenu: true\n
+                });\n
+\n
+                // This way, you can access Handsontable api methods by passing their names as an argument, e.g.:\n
+                var hotInstance = $("#hot").handsontable(\'getInstance\');\n
+              </script>\n
+            </div>\n
+          </div>\n
+        </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5273</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jquery.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

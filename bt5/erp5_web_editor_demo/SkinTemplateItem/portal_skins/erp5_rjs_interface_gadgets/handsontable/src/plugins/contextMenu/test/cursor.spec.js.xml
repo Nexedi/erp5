@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272709.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>cursor.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>describe(\'ContextMenu\', function () {\n
+  describe(\'Cursor\', function () {\n
+    it(\'should initialize internal properties on construct (object literal)\', function() {\n
+      var coords = {\n
+        top: 10,\n
+        left: 50,\n
+        width: 100,\n
+        height: 200\n
+      };\n
+      var cursor = new Handsontable.plugins.utils.Cursor(coords);\n
+\n
+      expect(cursor.top).toBe(coords.top);\n
+      expect(cursor.topRelative).toBeLessThan(coords.top + 1);\n
+      expect(cursor.left).toBe(coords.left);\n
+      expect(cursor.leftRelative).toBeLessThan(coords.left + 1);\n
+      expect(cursor.scrollLeft).toBeGreaterThan(-1);\n
+      expect(cursor.scrollTop).toBeGreaterThan(-1);\n
+      expect(cursor.cellHeight).toBe(coords.height);\n
+      expect(cursor.cellWidth).toBe(coords.width);\n
+    });\n
+\n
+    it(\'should returns boolean value related to if element fits above the cursor\', function() {\n
+      var coords = {\n
+        top: 10,\n
+        left: 50,\n
+        width: 100,\n
+        height: 200\n
+      };\n
+      var cursor = new Handsontable.plugins.utils.Cursor(coords);\n
+      var fakeElement = {\n
+        offsetHeight: 9\n
+      };\n
+\n
+      expect(cursor.fitsAbove(fakeElement)).toBe(true);\n
+\n
+      fakeElement.offsetHeight = 10;\n
+\n
+      expect(cursor.fitsAbove(fakeElement)).toBe(true);\n
+\n
+      fakeElement.offsetHeight = 11;\n
+\n
+      expect(cursor.fitsAbove(fakeElement)).toBe(false);\n
+    });\n
+\n
+    it(\'should returns boolean value related to if element fits below the cursor\', function() {\n
+      var coords = {\n
+        top: 10,\n
+        left: 50,\n
+        width: 100,\n
+        height: 200\n
+      };\n
+      var cursor = new Handsontable.plugins.utils.Cursor(coords);\n
+      var fakeElement = {\n
+        offsetHeight: 9\n
+      };\n
+      var viewportHeight = 100;\n
+\n
+      expect(cursor.fitsBelow(fakeElement, viewportHeight)).toBe(true);\n
+\n
+      fakeElement.offsetHeight = 90;\n
+\n
+      expect(cursor.fitsBelow(fakeElement, viewportHeight)).toBe(true);\n
+\n
+      fakeElement.offsetHeight = 91;\n
+\n
+      expect(cursor.fitsBelow(fakeElement, viewportHeight)).toBe(false);\n
+    });\n
+\n
+    it(\'should returns boolean value related to if element fits on the right of the cursor\', function() {\n
+      var coords = {\n
+        top: 10,\n
+        left: 20,\n
+        width: 30,\n
+        height: 200\n
+      };\n
+      var cursor = new Handsontable.plugins.utils.Cursor(coords);\n
+      var fakeElement = {\n
+        offsetWidth: 9\n
+      };\n
+      var viewportWidth = 100;\n
+\n
+      expect(cursor.fitsOnRight(fakeElement, viewportWidth)).toBe(true);\n
+\n
+      fakeElement.offsetWidth = 50;\n
+\n
+      expect(cursor.fitsOnRight(fakeElement, viewportWidth)).toBe(true);\n
+\n
+      fakeElement.offsetWidth = 51;\n
+\n
+      expect(cursor.fitsOnRight(fakeElement, viewportWidth)).toBe(false);\n
+    });\n
+\n
+    it(\'should returns boolean value related to if element fits on the left of the cursor\', function() {\n
+      var coords = {\n
+        top: 10,\n
+        left: 50,\n
+        width: 100,\n
+        height: 200\n
+      };\n
+      var cursor = new Handsontable.plugins.utils.Cursor(coords);\n
+      var fakeElement = {\n
+        offsetWidth: 9\n
+      };\n
+\n
+      expect(cursor.fitsOnLeft(fakeElement)).toBe(true);\n
+\n
+      fakeElement.offsetWidth = 50;\n
+\n
+      expect(cursor.fitsOnLeft(fakeElement)).toBe(true);\n
+\n
+      fakeElement.offsetWidth = 51;\n
+\n
+      expect(cursor.fitsOnLeft(fakeElement)).toBe(false);\n
+    });\n
+  });\n
+});\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3288</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>cursor.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

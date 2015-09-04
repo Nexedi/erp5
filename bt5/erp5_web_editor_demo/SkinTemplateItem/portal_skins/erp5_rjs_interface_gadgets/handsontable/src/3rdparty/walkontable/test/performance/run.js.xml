@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272567.32</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>run.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ This file is used to run PhantomJS\n
+\n
+ Running performance tests in PhantomJS\n
+\n
+ 1. Install PhantomJS from here: http://phantomjs.org/download.html\n
+ 2. Add PhantomJS to your system path (Win/Linux instructions here: http://www.java.com/en/download/help/path.xml)\n
+ 3. Execute command: phantomjs run.js\n
+ */\n
+\n
+var system = require(\'system\');\n
+\n
+var page = require(\'webpage\').create(),\n
+  url = \'./basic.html\';\n
+\n
+// Route "console.log()" calls from within the Page context to the main Phantom context (i.e. current "this")\n
+page.onConsoleMessage = function (msg) {\n
+  console.log(msg);\n
+  if (msg.indexOf(\'finished\') > -1) {\n
+    phantom.exit();\n
+  }\n
+};\n
+\n
+page.open(url, function (status) {\n
+  if (status !== "success") {\n
+    console.log("Unable to access network");\n
+    phantom.exit();\n
+  }\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>780</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>run.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

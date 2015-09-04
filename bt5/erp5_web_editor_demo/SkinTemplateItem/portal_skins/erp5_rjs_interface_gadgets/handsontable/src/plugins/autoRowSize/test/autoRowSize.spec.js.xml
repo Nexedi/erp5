@@ -1,0 +1,373 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272704.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>autoRowSize.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'AutoRowSize\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  function arrayOfObjects() {\n
+    return [\n
+      {id: "Short"},\n
+      {id: "Somewhat\\nlong"},\n
+      {id: "The\\nvery\\nvery\\nvery\\nlongest one"}\n
+    ];\n
+  }\n
+  function arrayOfObjects2() {\n
+    return [\n
+      {id: "Short", name: "Somewhat long"},\n
+      {id: "Somewhat long", name: "The very very longest one"},\n
+      {id: "The very very very longest one", name: "Short"}\n
+    ];\n
+  }\n
+\n
+  it(\'should apply auto size by default\', function () {\n
+    handsontable({\n
+      data: arrayOfObjects()\n
+    });\n
+\n
+    var height0 = rowHeight(this.$container, 0);\n
+    var height1 = rowHeight(this.$container, 1);\n
+    var height2 = rowHeight(this.$container, 2);\n
+\n
+    expect(height0).toBeLessThan(height1);\n
+    expect(height1).toBeLessThan(height2);\n
+  });\n
+\n
+  it(\'should correctly detect row height when table is hidden on init (display: none)\', function () {\n
+    this.$container.css(\'display\', \'none\');\n
+    var hot = handsontable({\n
+      data: arrayOfObjects(),\n
+      rowHeaders: true,\n
+      autoRowSize: true\n
+    });\n
+\n
+    waits(200);\n
+\n
+    runs(function() {\n
+      this.$container.css(\'display\', \'block\');\n
+      hot.render();\n
+\n
+      expect(rowHeight(this.$container, 0)).toBeAroundValue(24);\n
+      expect(rowHeight(this.$container, 1)).toBeAroundValue(43);\n
+      expect(rowHeight(this.$container, 2)).toBeAroundValue(106);\n
+    });\n
+  });\n
+\n
+  it(\'should be possible to disable plugin using updateSettings\', function () {\n
+    var hot = handsontable({\n
+      data: arrayOfObjects()\n
+    });\n
+\n
+    var height0 = rowHeight(this.$container, 0);\n
+    var height1 = rowHeight(this.$container, 1);\n
+    var height2 = rowHeight(this.$container, 2);\n
+\n
+    expect(height0).toBeLessThan(height1);\n
+    expect(height1).toBeLessThan(height2);\n
+\n
+    updateSettings({\n
+      autoRowSize: false\n
+    });\n
+    hot.setDataAtCell(0, 0, \'A\\nB\\nC\');\n
+\n
+    var height4 = rowHeight(this.$container, 0);\n
+\n
+    expect(height4).toBeGreaterThan(height0);\n
+  });\n
+\n
+  it(\'should be possible to enable plugin using updateSettings\', function () {\n
+    handsontable({\n
+      data: arrayOfObjects(),\n
+      autoRowSize: false\n
+    });\n
+\n
+    var height0 = parseInt(getCell(0, 0).style.height || 0);\n
+    var height1 = parseInt(getCell(1, 0).style.height || 0);\n
+    var height2 = parseInt(getCell(2, 0).style.height || 0);\n
+\n
+    expect(height0).toEqual(height1);\n
+    expect(height0).toEqual(height2);\n
+    expect(height1).toEqual(height2);\n
+\n
+    updateSettings({\n
+      autoRowSize: true\n
+    });\n
+\n
+    height0 = parseInt(getCell(0, 0).style.height || 0);\n
+    height1 = parseInt(getCell(1, 0).style.height || 0);\n
+    height2 = parseInt(getCell(2, 0).style.height || 0);\n
+\n
+    expect(height0).toBeLessThan(height1);\n
+    expect(height1).toBeLessThan(height2);\n
+  });\n
+\n
+  it(\'should consider CSS style of each instance separately\', function () {\n
+    var $style = $(\'<style>.big .htCore td {font-size: 40px;line-height: 1.1}</style>\').appendTo(\'head\');\n
+    var $container1 = $(\'<div id="hot1"></div>\').appendTo(\'body\').handsontable({\n
+      data: arrayOfObjects(),\n
+      autoRowSize: true\n
+    });\n
+    var $container2 = $(\'<div id="hot2"></div>\').appendTo(\'body\').handsontable({\n
+      data: arrayOfObjects(),\n
+      autoRowSize: true\n
+    });\n
+    var hot1 = $container1.handsontable(\'getInstance\');\n
+    var hot2 = $container2.handsontable(\'getInstance\');\n
+\n
+    expect(parseInt(hot1.getCell(0, 0).style.height || 0)).toEqual(parseInt(hot2.getCell(0, 0).style.height || 0));\n
+\n
+    $container1.addClass(\'big\');\n
+    hot1.render();\n
+    hot2.render();\n
+\n
+    expect(parseInt(hot1.getCell(2, 0).style.height || 0)).toBeGreaterThan(parseInt(hot2.getCell(2, 0).style.height || 0));\n
+\n
+    $container1.removeClass(\'big\');\n
+    hot1.render();\n
+    $container2.addClass(\'big\');\n
+    hot2.render();\n
+\n
+    expect(parseInt(hot1.getCell(2, 0).style.height || 0)).toBeLessThan(parseInt(hot2.getCell(2, 0).style.height || 0));\n
+\n
+    $style.remove();\n
+    $container1.handsontable(\'destroy\');\n
+    $container1.remove();\n
+    $container2.handsontable(\'destroy\');\n
+    $container2.remove();\n
+  });\n
+\n
+  it(\'should consider CSS class of the <table> element (e.g. when used with Bootstrap)\', function () {\n
+    var $style = $(\'<style>.htCore.big-table td {font-size: 32px;line-height: 1.1}</style>\').appendTo(\'head\');\n
+\n
+    var hot = handsontable({\n
+      data: arrayOfObjects(),\n
+      autoRowSize: true\n
+    });\n
+    var height = parseInt(hot.getCell(2, 0).style.height || 0);\n
+\n
+    this.$container.find(\'table\').addClass(\'big-table\');\n
+    hot.getPlugin(\'autoRowSize\').clearCache();\n
+    render();\n
+    expect(parseInt(hot.getCell(2, 0).style.height || 0)).toBeGreaterThan(height);\n
+\n
+    $style.remove();\n
+  });\n
+\n
+  it(\'should not trigger autoColumnSize when column width is defined (through colWidths)\', function () {\n
+    var hot = handsontable({\n
+      data: arrayOfObjects(),\n
+      autoRowSize: true,\n
+      rowHeights: [70, 70, 70],\n
+      width: 500,\n
+      height: 100,\n
+      rowHeaders: true\n
+    });\n
+\n
+    setDataAtCell(0, 0, \'LongLongLongLong\');\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(69); // -1px of cell border\n
+  });\n
+\n
+  // Currently columns.height is not supported\n
+  xit(\'should not trigger autoColumnSize when column width is defined (through columns.width)\', function () {\n
+    var hot = handsontable({\n
+      data: arrayOfObjects(),\n
+      autoRowSize: true,\n
+      rowHeights: 77,\n
+      columns: [\n
+        {height: 70},\n
+        {height: 70},\n
+        {height: 70}\n
+      ],\n
+      width: 500,\n
+      height: 100,\n
+      rowHeaders: true\n
+    });\n
+\n
+    setDataAtCell(0, 0, \'LongLongLongLong\');\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(69); // -1px of cell border\n
+  });\n
+\n
+  it(\'should consider renderer that uses conditional formatting for specific row & column index\', function () {\n
+    var data = arrayOfObjects();\n
+    data.push({id: "2", name: "Rocket Man", lastName: "In a tin can"});\n
+\n
+    var hot = handsontable({\n
+      data: data,\n
+      columns: [\n
+        {data: \'id\'},\n
+        {data: \'name\'}\n
+      ],\n
+      autoRowSize: true,\n
+      renderer: function (instance, td, row, col, prop, value, cellProperties) {\n
+        // taken from demo/renderers.html\n
+        Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+\n
+        if (row === 1 && col === 0) {\n
+          td.style.padding = "100px";\n
+        }\n
+      }\n
+    });\n
+\n
+    expect(parseInt(hot.getCell(1, 0).style.height || 0)).toBe(242);\n
+  });\n
+\n
+  it(\'should destroy temporary element\', function () {\n
+    handsontable({\n
+      autoRowSize: true\n
+    });\n
+\n
+    expect(document.querySelector(\'.htAutoSize\')).toBe(null);\n
+  });\n
+\n
+  it(\'should recalculate heights after column resize\', function () {\n
+    var hot = handsontable({\n
+      data: arrayOfObjects2(),\n
+      colWidths: 250,\n
+      manualColumnResize: true,\n
+      autoRowSize: true,\n
+      rowHeaders: true,\n
+      colHeaders: true\n
+    });\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(22); // -1px of cell border\n
+    expect(parseInt(hot.getCell(1, -1).style.height || 0)).toBe(22); // -1px of cell border\n
+    expect(parseInt(hot.getCell(2, -1).style.height || 0)).toBe(22); // -1px of cell border\n
+\n
+    resizeColumn.call(this, 1, 100);\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(22);\n
+    expect(parseInt(hot.getCell(1, -1).style.height || 0)).toBe(22);\n
+    expect(parseInt(hot.getCell(2, -1).style.height || 0)).toBe(42);\n
+\n
+    resizeColumn.call(this, 1, 50);\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(22);\n
+    expect(parseInt(hot.getCell(1, -1).style.height || 0)).toBe(42);\n
+    expect(parseInt(hot.getCell(2, -1).style.height || 0)).toBe(126);\n
+\n
+    resizeColumn.call(this, 1, 200);\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(22);\n
+    expect(parseInt(hot.getCell(1, -1).style.height || 0)).toBe(22);\n
+    expect(parseInt(hot.getCell(2, -1).style.height || 0)).toBe(22);\n
+  });\n
+\n
+  it(\'should recalculate heights after column moved\', function () {\n
+    var hot = handsontable({\n
+      data: arrayOfObjects2(),\n
+      colWidths: [250, 50],\n
+      manualColumnMove: true,\n
+      autoRowSize: true,\n
+      rowHeaders: true,\n
+      colHeaders: true\n
+    });\n
+\n
+    window.hot = hot;\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(42); // -1px of cell border\n
+    expect(parseInt(hot.getCell(1, -1).style.height || 0)).toBe(105); // -1px of cell border\n
+    expect(parseInt(hot.getCell(2, -1).style.height || 0)).toBe(22); // -1px of cell border\n
+\n
+    moveSecondDisplayedColumnBeforeFirstColumn(getHtCore(), 2);\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(22);\n
+    expect(parseInt(hot.getCell(1, -1).style.height || 0)).toBe(42);\n
+    expect(parseInt(hot.getCell(2, -1).style.height || 0)).toBe(126);\n
+  });\n
+\n
+  it(\'should recalculate heights with manualRowResize when changing text to multiline\', function () {\n
+    var hot = handsontable({\n
+      data: arrayOfObjects2(),\n
+      colWidths: 250,\n
+      manualRowResize: [23, 50],\n
+      autoRowSize: true,\n
+      rowHeaders: true,\n
+      colHeaders: true\n
+    });\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(22); // -1px of cell border\n
+    expect(parseInt(hot.getCell(1, -1).style.height || 0)).toBe(49); // -1px of cell border\n
+    expect(parseInt(hot.getCell(2, -1).style.height || 0)).toBe(22); // -1px of cell border\n
+\n
+    hot.setDataAtCell(1, 0, \'A\\nB\\nC\\nD\\nE\');\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(22);\n
+    expect(parseInt(hot.getCell(1, -1).style.height || 0)).toBe(105);\n
+    expect(parseInt(hot.getCell(2, -1).style.height || 0)).toBe(22);\n
+  });\n
+\n
+  it(\'should recalculate heights after moved row\', function () {\n
+    var hot = handsontable({\n
+      data: arrayOfObjects2(),\n
+      colWidths: 250,\n
+      manualRowResize: [23, 50],\n
+      manualRowMove: true,\n
+      autoRowSize: true,\n
+      rowHeaders: true,\n
+      colHeaders: true\n
+    });\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(22); // -1px of cell border\n
+    expect(parseInt(hot.getCell(1, -1).style.height || 0)).toBe(49); // -1px of cell border\n
+    expect(parseInt(hot.getCell(2, -1).style.height || 0)).toBe(22); // -1px of cell border\n
+\n
+    moveSecondDisplayedRowBeforeFirstRow(getHtCore(), 0);\n
+\n
+    expect(parseInt(hot.getCell(0, -1).style.height || 0)).toBe(49);\n
+    expect(parseInt(hot.getCell(1, -1).style.height || 0)).toBe(22);\n
+    expect(parseInt(hot.getCell(2, -1).style.height || 0)).toBe(22);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10571</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>autoRowSize.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

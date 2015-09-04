@@ -1,0 +1,313 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272515.84</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ghostTableSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'GhostTable\', function () {\n
+\n
+  var hotSettings = {\n
+    data: [[\'A\', \'1\', \'A\\nB\\nC\'], [\'B\', \'2\', \'A-----B-------C\'], [\'C\', \'3\', \'A---\\n--B-------C\']]\n
+  };\n
+  var GhostTable = Handsontable.utils.GhostTable;\n
+  var gt;\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="testContainer"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+\n
+      if (gt) {\n
+        gt.clean();\n
+      }\n
+    }\n
+  });\n
+\n
+  describe(\'row\', function() {\n
+    it(\'should throw exception if we try to add column after added row\', function () {\n
+      var hot = handsontable(hotSettings);\n
+      var exception = false;\n
+      var samples = new Map();\n
+      gt = new GhostTable(hot);\n
+\n
+      gt.addRow(0, samples);\n
+\n
+      try {\n
+        gt.addColumn(0, samples);\n
+      } catch (ex) {\n
+        exception = true;\n
+      }\n
+\n
+      expect(exception).toBe(true);\n
+    });\n
+\n
+    it(\'should create container element only for first row\', function () {\n
+      var hot = handsontable(hotSettings);\n
+      var samples = new Map();\n
+      gt = new GhostTable(hot);\n
+\n
+      spyOn(gt, \'createContainer\').andCallThrough();\n
+\n
+      gt.addRow(0, samples);\n
+      gt.addRow(0, samples);\n
+      gt.addRow(0, samples);\n
+      gt.addRow(1, samples);\n
+      gt.addRow(2, samples);\n
+\n
+      expect(gt.createContainer.calls.length).toBe(1);\n
+      expect(gt.createContainer.mostRecentCall.args[0]).toBe(\'handsontable\');\n
+    });\n
+\n
+    it(\'should add row to rows collection after call `addRow` method\', function () {\n
+      var hot = handsontable(hotSettings);\n
+      var samples = new Map();\n
+      gt = new GhostTable(hot);\n
+\n
+      expect(gt.rows.length).toBe(0);\n
+\n
+      samples.clear();\n
+      samples.set(0, {strings: [{value: \'Foo\', row: 0}, {value: \'Foo Bar\', row: 0}]});\n
+\n
+      gt.addRow(0, samples);\n
+\n
+      expect(gt.rows.length).toBe(1);\n
+      expect(gt.rows[0].row).toBe(0);\n
+      expect(gt.rows[0].table.className).toBe(\'htCore\');\n
+      expect(gt.rows[0].table.nodeName).toBe(\'TABLE\');\n
+      expect(gt.rows[0].table.querySelectorAll(\'colgroup > col\').length).toBe(3);\n
+      expect(gt.rows[0].table.querySelector(\'tbody > tr > td\').innerHTML).toBe(\'Foo\');\n
+\n
+      samples.clear();\n
+      samples.set(0, {strings: [{value: \'Bar\', row: 1}, {value: \'Baz1234\', row: 1}]});\n
+\n
+      gt.addRow(1, samples);\n
+\n
+      expect(gt.rows.length).toBe(2);\n
+      expect(gt.rows[1].row).toBe(1);\n
+      expect(gt.rows[1].table.className).toBe(\'htCore\');\n
+      expect(gt.rows[1].table.nodeName).toBe(\'TABLE\');\n
+      expect(gt.rows[1].table.querySelectorAll(\'colgroup > col\').length).toBe(3);\n
+      expect(gt.rows[1].table.querySelector(\'tbody > tr > td\').innerHTML).toBe(\'Bar\');\n
+    });\n
+\n
+    it(\'should get valid heights\', function () {\n
+      var hot = handsontable(hotSettings);\n
+      var heightSpy = jasmine.createSpy();\n
+      var samples = new Map();\n
+      gt = new GhostTable(hot);\n
+\n
+      samples.clear();\n
+      samples.set(0, {strings: [{value: \'Foo\', row: 0}, {value: \'Foo.....Bar\', row: 0}]});\n
+\n
+      gt.addRow(0, samples);\n
+\n
+      samples.clear();\n
+      samples.set(0, {strings: [{value: \'Foo\\nBar\\nsqw\', row: 1}]});\n
+\n
+      gt.addRow(1, samples);\n
+\n
+      samples.clear();\n
+      samples.set(0, {strings: [{value: \'Foo\', row: 0}, {value: \'Foo Bar\', row: 0}]});\n
+\n
+      gt.addRow(2, samples);\n
+      gt.getHeights(heightSpy);\n
+\n
+      expect(heightSpy.calls.length).toBe(3);\n
+      expect(heightSpy.calls[0].args[0]).toBe(0);\n
+      expect(heightSpy.calls[0].args[1]).toBeAroundValue(23);\n
+      expect(heightSpy.calls[1].args[0]).toBe(1);\n
+      expect(heightSpy.calls[1].args[1]).toBeAroundValue(64);\n
+      expect(heightSpy.calls[2].args[0]).toBe(2);\n
+      expect(heightSpy.calls[2].args[1]).toBeAroundValue(43);\n
+    });\n
+  });\n
+\n
+  describe(\'column\', function() {\n
+    it(\'should throw exception if we try to add row after added column\', function () {\n
+      var hot = handsontable(hotSettings);\n
+      var exception = false;\n
+      var samples = new Map();\n
+      gt = new GhostTable(hot);\n
+\n
+      gt.addColumn(0, samples);\n
+\n
+      try {\n
+        gt.addRow(0, samples);\n
+      } catch (ex) {\n
+        exception = true;\n
+      }\n
+\n
+      expect(exception).toBe(true);\n
+    });\n
+\n
+    it(\'should create container element only for first column\', function () {\n
+      var hot = handsontable(hotSettings);\n
+      var samples = new Map();\n
+      gt = new GhostTable(hot);\n
+\n
+      spyOn(gt, \'createContainer\').andCallThrough();\n
+\n
+      gt.addColumn(0, samples);\n
+      gt.addColumn(0, samples);\n
+      gt.addColumn(0, samples);\n
+      gt.addColumn(1, samples);\n
+      gt.addColumn(2, samples);\n
+\n
+      expect(gt.createContainer.calls.length).toBe(1);\n
+      expect(gt.createContainer.mostRecentCall.args[0]).toBe(\'handsontable\');\n
+    });\n
+\n
+    it(\'should add column to columns collection after call `addColumn` method\', function () {\n
+      var hot = handsontable(hotSettings);\n
+      var samples = new Map();\n
+      gt = new GhostTable(hot);\n
+\n
+      expect(gt.columns.length).toBe(0);\n
+\n
+      samples.clear();\n
+      samples.set(0, {strings: [{value: \'Foo\', col: 0}, {value: \'Foo Bar\', col: 0}]});\n
+\n
+      gt.addColumn(0, samples);\n
+\n
+      expect(gt.columns.length).toBe(1);\n
+      expect(gt.columns[0].col).toBe(0);\n
+      expect(gt.columns[0].table.className).toBe(\'htCore\');\n
+      expect(gt.columns[0].table.style.width).toBe(\'auto\');\n
+      expect(gt.columns[0].table.style.tableLayout).toBe(\'auto\');\n
+      expect(gt.columns[0].table.nodeName).toBe(\'TABLE\');\n
+      expect(gt.columns[0].table.querySelectorAll(\'thead > tr > th\').length).toBe(1);\n
+      expect(gt.columns[0].table.querySelector(\'tbody > tr > td\').innerHTML).toBe(\'Foo\');\n
+\n
+      samples.clear();\n
+      samples.set(0, {strings: [{value: \'Bar\', row: 1}, {value: \'Baz1234\', row: 1}]});\n
+\n
+      gt.addColumn(1, samples);\n
+\n
+      expect(gt.columns.length).toBe(2);\n
+      expect(gt.columns[1].col).toBe(1);\n
+      expect(gt.columns[1].table.className).toBe(\'htCore\');\n
+      expect(gt.columns[1].table.nodeName).toBe(\'TABLE\');\n
+      expect(gt.columns[1].table.querySelectorAll(\'thead > tr > th\').length).toBe(1);\n
+      expect(gt.columns[1].table.querySelector(\'tbody > tr > td\').innerHTML).toBe(\'Bar\');\n
+    });\n
+\n
+    it(\'should get valid widths\', function () {\n
+      var hot = handsontable(hotSettings);\n
+      var widthSpy = jasmine.createSpy();\n
+      var samples = new Map();\n
+      gt = new GhostTable(hot);\n
+\n
+      samples.clear();\n
+      samples.set(0, {strings: [{value: \'Foo\', col: 0}, {value: \'Foo.....Bar\', col: 0}]});\n
+\n
+      gt.addColumn(0, samples);\n
+\n
+      samples.clear();\n
+      samples.set(0, {strings: [{value: \'Foo\\nBar\\nsqw\', col: 1}]});\n
+\n
+      gt.addColumn(1, samples);\n
+\n
+      samples.clear();\n
+      samples.set(0, {strings: [{value: \'Foo\', col: 0}, {value: \'Foo Bar\', col: 0}]});\n
+\n
+      gt.addColumn(2, samples);\n
+      gt.getWidths(widthSpy);\n
+\n
+      expect(widthSpy.calls.length).toBe(3);\n
+      expect(widthSpy.calls[0].args[0]).toBe(0);\n
+      expect(widthSpy.calls[0].args[1]).toBeAroundValue(66);\n
+      expect(widthSpy.calls[1].args[0]).toBe(1);\n
+      expect(widthSpy.calls[1].args[1]).toBeAroundValue(32);\n
+      expect(widthSpy.calls[2].args[0]).toBe(2);\n
+      expect(widthSpy.calls[2].args[1]).toBeAroundValue(53);\n
+    });\n
+  });\n
+\n
+  it(\'should reset internal state after call `clean` method\', function () {\n
+    var hot = handsontable(hotSettings);\n
+    var samples = new Map();\n
+    gt = new GhostTable(hot);\n
+\n
+    gt.addColumn(0, samples);\n
+    gt.rows.push({});\n
+    gt.getWidths(function() {});\n
+\n
+    expect(gt.columns.length).toBe(1);\n
+    expect(gt.samples).toBeDefined();\n
+    expect(gt.injected).toBe(true);\n
+    expect(gt.container).toBeDefined();\n
+    expect(document.querySelector(\'.htGhostTable\')).toBeDefined();\n
+\n
+    gt.clean();\n
+\n
+    expect(gt.columns.length).toBe(0);\n
+    expect(gt.samples).toBe(null);\n
+    expect(gt.injected).toBe(false);\n
+    expect(gt.container).toBe(null);\n
+    expect(document.querySelector(\'.htGhostTable\')).toBe(null);\n
+  });\n
+\n
+  it(\'should be detected as vertical if at least one row is added\', function () {\n
+    var hot = handsontable(hotSettings);\n
+    var samples = new Map();\n
+    var gt = new GhostTable(hot);\n
+\n
+    gt.addRow(0, samples);\n
+\n
+    expect(gt.isVertical()).toBe(true);\n
+    expect(gt.isHorizontal()).toBe(false);\n
+  });\n
+\n
+  it(\'should be detected as horizontal if at least one column is added\', function () {\n
+    var hot = handsontable(hotSettings);\n
+    var samples = new Map();\n
+    var gt = new GhostTable(hot);\n
+\n
+    gt.addColumn(0, samples);\n
+\n
+    expect(gt.isVertical()).toBe(false);\n
+    expect(gt.isHorizontal()).toBe(true);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8494</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ghostTableSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

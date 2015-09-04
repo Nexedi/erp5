@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272310.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>github-buttons.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/**\n
+ * GitHub Buttons on the homepage\n
+ * Adapted from https://github.com/mdo/github-buttons/\n
+ * Copyright 2014 Mark Otto. Released under Apache 2.0.\n
+ */\n
+\n
+var user = "handsontable",\n
+  repo = "handsontable",\n
+  head = document.getElementsByTagName(\'head\')[0];\n
+\n
+// Add commas to numbers\n
+function addCommas(n) {\n
+  return String(n).replace(/(\\d)(?=(\\d{3})+$)/g, \'$1,\')\n
+}\n
+\n
+function jsonp(path) {\n
+  var el = document.createElement(\'script\');\n
+  el.src = path + \'?callback=callback\';\n
+  head.insertBefore(el, head.firstChild);\n
+}\n
+\n
+function callback(obj) {\n
+  if(obj.data.watchers) {\n
+    var watchCount = document.getElementById("githubWatch").querySelector(".gh-count");\n
+    var forkCount = document.getElementById("githubFork").querySelector(".gh-count");\n
+    watchCount.innerHTML = addCommas(obj.data.watchers);\n
+    forkCount.innerHTML = addCommas(obj.data.forks);\n
+    watchCount.style.display = \'block\';\n
+    forkCount.style.display = \'block\';\n
+  }\n
+}\n
+\n
+//cross browser DOMContentLoaded, works also in async scripts\n
+contentLoaded(window, function() {\n
+  jsonp(\'https://api.github.com/repos/\' + user + \'/\' + repo);\n
+});\n
+\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1104</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>github-buttons.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

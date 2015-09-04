@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272512.35</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_renderSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_render\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'all cells should get green background\', function () {\n
+    function greenCell(instance, td, row, col, prop, value, cellProperties) {\n
+      Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+      td.style.backgroundColor = "green";\n
+\n
+    }\n
+\n
+    handsontable({\n
+      data: [\n
+        ["a", "b"],\n
+        ["c", "d"]\n
+      ],\n
+      minRows: 4,\n
+      minCols: 4,\n
+      minSpareRows: 4,\n
+      minSpareCols: 4,\n
+      cells: function () {\n
+        return {\n
+          renderer: greenCell\n
+        };\n
+      }\n
+    });\n
+\n
+    var $tds = this.$container.find(\'.htCore tbody td\');\n
+    $tds.each(function () {\n
+      expect(this.style.backgroundColor).toEqual(\'green\');\n
+    });\n
+  });\n
+\n
+  it(\'render should update border dimensions\', function () {\n
+    var data = [\n
+      ["a", "b"],\n
+      ["c", "d"]\n
+    ];\n
+\n
+    handsontable({\n
+      data: data,\n
+      minRows: 4,\n
+      minCols: 4,\n
+      minSpareRows: 4,\n
+      minSpareCols: 4\n
+    });\n
+\n
+    selectCell(1, 1);\n
+    data[1][1] = "dddddddddddddddddddd";\n
+    render();\n
+\n
+    var $td = this.$container.find(\'.htCore tbody tr:eq(1) td:eq(1)\');\n
+    expect(this.$container.find(\'.wtBorder.current\').width()).toBeGreaterThan($td.width());\n
+  });\n
+\n
+  it(\'should not render table twice\', function () {\n
+    var counter = 0;\n
+\n
+    handsontable({\n
+      data: [\n
+        [\'Joe Red\']\n
+      ],\n
+      afterRender: function () {\n
+        counter++;\n
+      }\n
+    });\n
+    populateFromArray(0, 0, [[\'t\', \'e\', \'s\', \'t\']]);\n
+\n
+    expect(counter).toEqual(2); // 1 from load and 1 from populateFromArray\n
+  });\n
+\n
+  it(\'should run afterRenderer hook\', function () {\n
+    var lastCellProperties;\n
+\n
+    handsontable({\n
+      data : [[1,2,3,4,5],[1,2,3,4,5]],\n
+      afterRenderer: function (td, row, col, prop, value, cellProperties) {\n
+        td.innerHTML = \'Changed by plugin\';\n
+        if(!cellProperties) {\n
+          throw new Error();\n
+        }\n
+        lastCellProperties = cellProperties;\n
+      }\n
+    });\n
+\n
+    expect(this.$container.find(\'td:eq(0)\')[0].innerHTML).toEqual(\'Changed by plugin\');\n
+    expect(lastCellProperties.row).toEqual(1);\n
+    expect(lastCellProperties.col).toEqual(4);\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2386</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_renderSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

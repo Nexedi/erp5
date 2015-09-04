@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272578.71</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>scrollbarNative.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'WalkontableScrollbarNative\', function () {\n
+  var $table\n
+    , $container\n
+    , $wrapper\n
+    , debug = false;\n
+\n
+  beforeEach(function () {\n
+    $wrapper = $(\'<div></div>\').css({\'overflow\': \'hidden\'});\n
+    $wrapper.width(100).height(200);\n
+    $container = $(\'<div></div>\');\n
+    $table = $(\'<table></table>\'); //create a table that is not attached to document\n
+    $wrapper.append($container);\n
+    $container.append($table);\n
+    $wrapper.appendTo(\'body\');\n
+    createDataArray();\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (!debug) {\n
+      $(\'.wtHolder\').remove();\n
+    }\n
+    $wrapper.remove();\n
+  });\n
+\n
+  it("initial render should be no different than the redraw (vertical)", function () {\n
+    createDataArray(100, 1);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+\n
+    var tds = $table.find(\'td\').length;\n
+    wt.draw();\n
+\n
+    expect($table.find(\'td\').length).toEqual(tds);\n
+  });\n
+\n
+  it("initial render should be no different than the redraw (horizontal)", function () {\n
+    createDataArray(1, 50);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+\n
+    var tds = $table.find(\'td\').length;\n
+    wt.draw();\n
+\n
+    expect($table.find(\'td\').length).toEqual(tds);\n
+  });\n
+\n
+  it("scrolling 50px down should render 2 more rows", function () {\n
+    createDataArray(20, 4);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+\n
+    var lastRenderedRow = wt.wtTable.getLastRenderedRow();\n
+\n
+    $(wt.wtTable.holder).scrollTop(50);\n
+    wt.draw();\n
+\n
+    expect(wt.wtTable.getLastRenderedRow()).toEqual(lastRenderedRow + 2);\n
+  });\n
+\n
+  it("should recognize the scrollHandler properly, even if the \'overflow\' property is assigned in an external stylesheet", function () {\n
+    $wrapper.css({\n
+      \'overflow\': \'\'\n
+    });\n
+    $wrapper.addClass(\'testOverflowHidden\');\n
+\n
+    createDataArray(20, 4);\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+\n
+    wt.wtOverlays.topOverlay.scrollTo(3);\n
+    expect($(wt.wtTable.holder).scrollTop()).toEqual(69);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2395</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>scrollbarNative.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

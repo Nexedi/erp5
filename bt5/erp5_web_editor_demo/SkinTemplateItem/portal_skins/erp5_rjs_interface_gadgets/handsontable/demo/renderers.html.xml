@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272485.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>renderers.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Cell types - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies apart from jQuery)\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Cell types">\n
+  <meta property="og:description"\n
+        content="This example shows the default renderers and editors available in Handsontable.">\n
+  <meta property="og:url" content="http://handsontable.com/demo/renderers.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/renderers.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+      <div class="descLayout">\n
+        <div class="pad">\n
+          <h2>Cell types</h2>\n
+\n
+          <p>This page is an introduction to Handsontable cell types:</p>\n
+\n
+          <ul>\n
+            <li><a href="#preview">Preview of built-in and custom cell types</a></li>\n
+            <li><a href="#anatomy">Anatomy of a cell type</a></li>\n
+          </ul>\n
+        </div>\n
+      </div>\n
+    </div>\n
+\n
+    <div class="rowLayout">\n
+      <div class="descLayout">\n
+        <div class="pad" data-jsfiddle="example1">\n
+          <a name="preview"></a>\n
+\n
+          <h2>Preview of built-in and custom cell types</h2>\n
+\n
+          <p>The below example shows all built-in cell types (in other words, combinations of cell renderers and\n
+            editors)\n
+            available in Handsontable:</p>\n
+\n
+          <ul>\n
+            <li>text</li>\n
+            <li><a href="numeric.html">numeric</a></li>\n
+            <li>checkbox</li>\n
+            <li><a href="date.html">date</a></li>\n
+            <li><a href="autocomplete.html">autocomplete</a></li>\n
+          </ul>\n
+\n
+          <p>The same example also shows the declaration of custom cell renderers, namely <code>yellowRenderer</code>\n
+            and\n
+            <code>greenRenderer</code>.\n
+          </p>\n
+\n
+          <div id="example1"></div>\n
+\n
+          <p>\n
+            <button name="dump" data-instance="hot1" data-dump="#example1" title="Prints current data source to Firebug/Chrome Dev Tools">\n
+              Dump\n
+              data to console\n
+            </button>\n
+          </p>\n
+        </div>\n
+      </div>\n
+\n
+      <div class="codeLayout">\n
+        <div class="pad">\n
+          <div class="jsFiddle">\n
+            <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+          </div>\n
+\n
+          <script data-jsfiddle="example1">\n
+            var data = [\n
+                {id: 1, name: \'Ted\', isActive: true, color: \'orange\', date: \'2008-01-01\'},\n
+                {id: 2, name: \'John\', isActive: false, color: \'black\', date: null},\n
+                {id: 3, name: \'Al\', isActive: true, color: \'red\', date: null},\n
+                {id: 4, name: \'Ben\', isActive: false, color: \'blue\', date: null}\n
+              ],\n
+              container = document.getElementById(\'example1\'),\n
+              hot1,\n
+              yellowRenderer,\n
+              greenRenderer;\n
+\n
+            yellowRenderer = function(instance, td, row, col, prop, value, cellProperties) {\n
+              Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+              td.style.backgroundColor = \'yellow\';\n
+\n
+            };\n
+\n
+            greenRenderer = function(instance, td, row, col, prop, value, cellProperties) {\n
+              Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+              td.style.backgroundColor = \'green\';\n
+\n
+            };\n
+\n
+            hot1 = new Handsontable(container, {\n
+              data: data,\n
+              startRows: 5,\n
+              colHeaders: true,\n
+              minSpareRows: 1,\n
+              columns: [\n
+                {data: "id", type: \'text\'},\n
+                // \'text\' is default, you don\'t actually have to declare it\n
+                {data: "name", renderer: yellowRenderer},\n
+                // use default \'text\' cell type but overwrite its renderer with yellowRenderer\n
+                {data: "isActive", type: \'checkbox\'},\n
+                {data: "date", type: \'date\', dateFormat: \'YYYY-MM-DD\'},\n
+                {data: "color",\n
+                  type: \'autocomplete\',\n
+                  source: ["yellow", "red", "orange", "green", "blue", "gray", "black", "white"]\n
+                }\n
+              ],\n
+              cell: [\n
+                {row: 1, col: 0, renderer: greenRenderer}\n
+              ],\n
+              cells: function (row, col, prop) {\n
+                if (row === 0 && col === 0) {\n
+                  this.renderer = greenRenderer;\n
+                }\n
+              }\n
+            });\n
+          </script>\n
+        </div>\n
+      </div>\n
+    </div>\n
+\n
+    <div class="rowLayout">\n
+      <div class="descLayout">\n
+        <div class="pad">\n
+          <a name="anatomy"></a>\n
+\n
+          <h2>Anatomy of a cell type</h2>\n
+\n
+          <p>A cell type is a predefined set of cell properties. Cell type defines what <strong>renderer</strong>\n
+            and <strong>editor</strong> should be used for a cell. They can also define any different cell property that\n
+            will be assumed for each matching cell.</p>\n
+\n
+          <p>For example writing:</p>\n
+\n
+        <pre class="javascript"><code>\n
+          columns: [{\n
+            type: \'text\'\n
+          }]\n
+        </code></pre>\n
+\n
+          <p>Equals:</p>\n
+\n
+        <pre class="javascript"><code>\n
+          columns: [{\n
+            renderer: Handsontable.renderers.TextRenderer,\n
+            editor: Handsontable.editors.TextEditor\n
+          }]\n
+        </code></pre>\n
+\n
+          This mapping is defined in file <a\n
+          href="https://github.com/handsontable/handsontable/blob/master/src/cellTypes.js">src/cellTypes.js</a>\n
+        </div>\n
+      </div>\n
+    </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7292</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>renderers.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

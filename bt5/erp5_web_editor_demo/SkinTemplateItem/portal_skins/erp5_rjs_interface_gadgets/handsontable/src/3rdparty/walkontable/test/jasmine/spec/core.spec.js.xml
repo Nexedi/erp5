@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272578.3</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>core.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'WalkontableCore\', function () {\n
+  var $table\n
+    , $container\n
+    , $wrapper\n
+    , debug = false;\n
+\n
+  beforeEach(function () {\n
+    $wrapper = $(\'<div></div>\').css({\'overflow\': \'hidden\'});\n
+    $container = $(\'<div></div>\');\n
+    $table = $(\'<table></table>\'); //create a table that is not attached to document\n
+    $wrapper.append($container);\n
+    $container.append($table);\n
+    $wrapper.appendTo(\'body\');\n
+    createDataArray(100, 4);\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (!debug) {\n
+      $(\'.wtHolder\').remove();\n
+    }\n
+\n
+    $wrapper.remove();\n
+  });\n
+\n
+  it("first row should have the same text as in data source", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+    var TDs = $table.find(\'tbody tr:first td\');\n
+    expect(TDs[0].innerHTML).toBe(\'0\');\n
+    expect(TDs[1].innerHTML).toBe(\'a\');\n
+  });\n
+\n
+  it("should bootstrap table if empty TABLE is given", function () {\n
+    $wrapper.width(200).height(200);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      renderAllRows: true\n
+    });\n
+    wt.draw();\n
+\n
+    expect($table.find(\'td\').length).toBe(400);\n
+  });\n
+\n
+  it("should bootstrap column headers if THEAD is given", function () {\n
+    $table.remove();\n
+    $table = $(\'<table><thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead></table>\');\n
+    $table.appendTo(\'body\');\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      rowHeaders: [function (row, TH) {\n
+        TH.innerHTML = row + 1;\n
+      }]\n
+    });\n
+    wt.draw();\n
+    expect($table.find(\'thead th\').length).toBe(5); //include corner TH\n
+    expect($table.find(\'tbody tr:first th\').length).toBe(1);\n
+    expect($table.find(\'tbody tr:first td\').length).toBe(4);\n
+  });\n
+\n
+  it("should figure out how many columns to display if width param given", function () {\n
+    $wrapper.width(100);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+    expect($table.find(\'tbody tr:first td\').length).toBe(2);\n
+  });\n
+\n
+  it("should not render table that is removed from DOM", function () {\n
+    $wrapper.remove();\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+    expect(wt.drawn).toBe(false);\n
+    expect(wt.drawInterrupted).toBe(true);\n
+  });\n
+\n
+  it("should not render table that is `display: none`", function () {\n
+    var $div = $(\'<div style="display: none"></div>\').appendTo(\'body\');\n
+    $div.append($table);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+    expect(wt.drawn).toBe(false);\n
+    expect(wt.drawInterrupted).toBe(true);\n
+\n
+    $div.remove();\n
+  });\n
+\n
+  it("should render empty table (limited height)", function () {\n
+    createDataArray(0, 5);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+    wt.draw(); //second render was giving "Cannot read property \'firstChild\' of null" sometimes\n
+  });\n
+\n
+  it("should render empty table (unlimited height)", function () {\n
+    createDataArray(0, 5);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+    wt.draw(); //second render was giving "Cannot read property \'firstChild\' of null" sometimes\n
+  });\n
+\n
+  it("should render empty then filled table (limited height)", function () {\n
+    createDataArray(0, 5);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+    createDataArray(1, 5);\n
+    wt.draw(); //second render was giving "Cannot read property \'firstChild\' of null" sometimes\n
+  });\n
+\n
+  it("should render empty then filled table (unlimited height)", function () {\n
+    createDataArray(0, 5);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+    createDataArray(1, 5);\n
+    wt.draw(); //second render was giving "Cannot read property \'firstChild\' of null" sometimes\n
+  });\n
+\n
+  it("should render table with rows but no columns", function () {\n
+    createDataArray(5, 0);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4896</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>core.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

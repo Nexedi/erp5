@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272696.67</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>manualRowMove.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {addClass, hasClass, removeClass} from \'./../../helpers/dom/element\';\n
+import {eventManager as eventManagerObject} from \'./../../eventManager\';\n
+import {pageX, pageY} from \'./../../helpers/dom/event\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+export {ManualRowMove};\n
+\n
+//registerPlugin(\'manualRowMove\', ManualRowMove);\n
+\n
+/**\n
+ * HandsontableManualRowMove\n
+ *\n
+ * Has 2 UI components:\n
+ * - handle - the draggable element that sets the desired position of the row\n
+ * - guide - the helper guide that shows the desired position as a horizontal guide\n
+ *\n
+ * Warning! Whenever you make a change in this file, make an analogous change in manualRowMove.js\n
+ *\n
+ * @private\n
+ * @class ManualRowMove\n
+ * @plugin ManualRowMove\n
+ */\n
+function ManualRowMove() {\n
+\n
+  var startRow,\n
+    endRow,\n
+    startY,\n
+    startOffset,\n
+    currentRow,\n
+    currentTH,\n
+    handle = document.createElement(\'DIV\'),\n
+    guide = document.createElement(\'DIV\'),\n
+    eventManager = eventManagerObject(this);\n
+\n
+  handle.className = \'manualRowMover\';\n
+  guide.className = \'manualRowMoverGuide\';\n
+\n
+  var saveManualRowPositions = function() {\n
+    var instance = this;\n
+    Handsontable.hooks.run(instance, \'persistentStateSave\', \'manualRowPositions\', instance.manualRowPositions);\n
+  };\n
+\n
+  var loadManualRowPositions = function() {\n
+    var instance = this,\n
+      storedState = {};\n
+    Handsontable.hooks.run(instance, \'persistentStateLoad\', \'manualRowPositions\', storedState);\n
+    return storedState.value;\n
+  };\n
+\n
+  function setupHandlePosition(TH) {\n
+    var instance = this;\n
+    currentTH = TH;\n
+\n
+    var row = this.view.wt.wtTable.getCoords(TH).row; //getCoords returns WalkontableCellCoords\n
+    if (row >= 0) { //if not row header\n
+      currentRow = row;\n
+      var box = currentTH.getBoundingClientRect();\n
+      startOffset = box.top;\n
+      handle.style.top = startOffset + \'px\';\n
+      handle.style.left = box.left + \'px\';\n
+      instance.rootElement.appendChild(handle);\n
+    }\n
+  }\n
+\n
+  function refreshHandlePosition(TH, delta) {\n
+    var box = TH.getBoundingClientRect();\n
+    var handleHeight = 6;\n
+    if (delta > 0) {\n
+      handle.style.top = (box.top + box.height - handleHeight) + \'px\';\n
+    } else {\n
+      handle.style.top = box.top + \'px\';\n
+    }\n
+  }\n
+\n
+  function setupGuidePosition() {\n
+    var instance = this;\n
+    addClass(handle, \'active\');\n
+    addClass(guide, \'active\');\n
+    var box = currentTH.getBoundingClientRect();\n
+    guide.style.width = instance.view.maximumVisibleElementWidth(0) + \'px\';\n
+    guide.style.height = box.height + \'px\';\n
+    guide.style.top = startOffset + \'px\';\n
+    guide.style.left = handle.style.left;\n
+    instance.rootElement.appendChild(guide);\n
+  }\n
+\n
+  function refreshGuidePosition(diff) {\n
+    guide.style.top = startOffset + diff + \'px\';\n
+  }\n
+\n
+  function hideHandleAndGuide() {\n
+    removeClass(handle, \'active\');\n
+    removeClass(guide, \'active\');\n
+  }\n
+\n
+  var checkRowHeader = function(element) {\n
+    if (element.tagName != \'BODY\') {\n
+      if (element.parentNode.tagName == \'TBODY\') {\n
+        return true;\n
+      } else {\n
+        element = element.parentNode;\n
+        return checkRowHeader(element);\n
+      }\n
+    }\n
+    return false;\n
+  };\n
+\n
+  var getTHFromTargetElement = function(element) {\n
+    if (element.tagName != \'TABLE\') {\n
+      if (element.tagName == \'TH\') {\n
+        return element;\n
+      } else {\n
+        return getTHFromTargetElement(element.parentNode);\n
+      }\n
+    }\n
+    return null;\n
+  };\n
+\n
+  var bindEvents = function() {\n
+    var instance = this;\n
+    var pressed;\n
+\n
+\n
+    eventManager.addEventListener(instance.rootElement, \'mouseover\', function(e) {\n
+      if (checkRowHeader(e.target)) {\n
+        var th = getTHFromTargetElement(e.target);\n
+        if (th) {\n
+          if (pressed) {\n
+            endRow = instance.view.wt.wtTable.getCoords(th).row;\n
+            refreshHandlePosition(th, endRow - startRow);\n
+          } else {\n
+            setupHandlePosition.call(instance, th);\n
+          }\n
+        }\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(instance.rootElement, \'mousedown\', function(e) {\n
+      if (hasClass(e.target, \'manualRowMover\')) {\n
+        startY = pageY(e);\n
+        setupGuidePosition.call(instance);\n
+        pressed = instance;\n
+\n
+        startRow = currentRow;\n
+        endRow = currentRow;\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(window, \'mousemove\', function(e) {\n
+      if (pressed) {\n
+        refreshGuidePosition(pageY(e) - startY);\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(window, \'mouseup\', function(e) {\n
+      if (pressed) {\n
+        hideHandleAndGuide();\n
+        pressed = false;\n
+\n
+        createPositionData(instance.manualRowPositions, instance.countRows());\n
+        instance.manualRowPositions.splice(endRow, 0, instance.manualRowPositions.splice(startRow, 1)[0]);\n
+\n
+        Handsontable.hooks.run(instance, \'beforeRowMove\', startRow, endRow);\n
+\n
+        instance.forceFullRender = true;\n
+        instance.view.render(); //updates all\n
+\n
+        saveManualRowPositions.call(instance);\n
+\n
+        Handsontable.hooks.run(instance, \'afterRowMove\', startRow, endRow);\n
+\n
+        setupHandlePosition.call(instance, currentTH);\n
+      }\n
+    });\n
+\n
+    instance.addHook(\'afterDestroy\', unbindEvents);\n
+  };\n
+\n
+  var unbindEvents = function() {\n
+    eventManager.clear();\n
+  };\n
+\n
+  var createPositionData = function(positionArr, len) {\n
+    if (positionArr.length < len) {\n
+      for (var i = positionArr.length; i < len; i++) {\n
+        positionArr[i] = i;\n
+      }\n
+    }\n
+  };\n
+\n
+  this.beforeInit = function() {\n
+    this.manualRowPositions = [];\n
+  };\n
+\n
+  this.init = function(source) {\n
+    var instance = this;\n
+    var manualRowMoveEnabled = !! (instance.getSettings().manualRowMove);\n
+\n
+    if (manualRowMoveEnabled) {\n
+      var initialManualRowPositions = instance.getSettings().manualRowMove;\n
+      var loadedManualRowPostions = loadManualRowPositions.call(instance);\n
+\n
+      // update plugin usages count for manualColumnPositions\n
+      if (typeof instance.manualRowPositionsPluginUsages != \'undefined\') {\n
+        instance.manualRowPositionsPluginUsages.push(\'manualColumnMove\');\n
+      } else {\n
+        instance.manualRowPositionsPluginUsages = [\'manualColumnMove\'];\n
+      }\n
+\n
+      if (typeof loadedManualRowPostions != \'undefined\') {\n
+        this.manualRowPositions = loadedManualRowPostions;\n
+      } else if (Array.isArray(initialManualRowPositions)) {\n
+        this.manualRowPositions = initialManualRowPositions;\n
+      } else {\n
+        this.manualRowPositions = [];\n
+      }\n
+\n
+      if (source === \'afterInit\') {\n
+        bindEvents.call(this);\n
+        if (this.manualRowPositions.length > 0) {\n
+          instance.forceFullRender = true;\n
+          instance.render();\n
+        }\n
+      }\n
+    } else {\n
+      var pluginUsagesIndex = instance.manualRowPositionsPluginUsages ? instance.manualRowPositionsPluginUsages.indexOf(\'manualColumnMove\') : -1;\n
+      if (pluginUsagesIndex > -1) {\n
+        unbindEvents.call(this);\n
+        instance.manualRowPositions = [];\n
+        instance.manualRowPositionsPluginUsages[pluginUsagesIndex] = void 0;\n
+      }\n
+    }\n
+\n
+  };\n
+\n
+  this.modifyRow = function(row) {\n
+    var instance = this;\n
+    if (instance.getSettings().manualRowMove) {\n
+      if (typeof instance.manualRowPositions[row] === \'undefined\') {\n
+        createPositionData(this.manualRowPositions, row + 1);\n
+      }\n
+      return instance.manualRowPositions[row];\n
+    }\n
+\n
+    return row;\n
+  };\n
+}\n
+\n
+var htManualRowMove = new ManualRowMove();\n
+\n
+Handsontable.hooks.add(\'beforeInit\', htManualRowMove.beforeInit);\n
+Handsontable.hooks.add(\'afterInit\',  function () {\n
+  htManualRowMove.init.call(this, \'afterInit\');\n
+});\n
+\n
+Handsontable.hooks.add(\'afterUpdateSettings\', function () {\n
+  htManualRowMove.init.call(this, \'afterUpdateSettings\');\n
+});\n
+\n
+Handsontable.hooks.add(\'modifyRow\', htManualRowMove.modifyRow);\n
+Handsontable.hooks.register(\'beforeRowMove\');\n
+Handsontable.hooks.register(\'afterRowMove\');\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7772</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>manualRowMove.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

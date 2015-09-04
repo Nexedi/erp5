@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272684.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>contextMenuCopyPaste.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe("ContextMenuCopyPaste", function () {\n
+  var id = \'testContainer\';\n
+\n
+  if (typeof navigator.mimeTypes[\'application/x-shockwave-flash\'] === "undefined") {\n
+    navigator.mimeTypes[\'application/x-shockwave-flash\'] = {}; //mock Adobe Flash plugin so that contextMenuCopyPaste.js does not throw an error in PhantomJS\n
+  }\n
+\n
+  beforeEach(function () {\n
+    $(\'head\').append(\'<script src="../../demo/js/ZeroClipboard.js"></script>\');\n
+\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+    var wrapper = $(\'<div></div>\').css({\n
+      width: 400,\n
+      height: 200,\n
+      overflow: \'scroll\'\n
+    });\n
+\n
+    this.$wrapper = this.$container.wrap(wrapper).parent();\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+    this.$wrapper.remove();\n
+\n
+    $(\'head\').find(\'script[src*=ZeroClipboard]\').remove();\n
+    delete ZeroClipboard;\n
+  });\n
+\n
+  it("should add Copy and Paste context menu options at the beginning by default", function () {\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetObjectData(10, 5),\n
+      rowHeaders: true,\n
+      colHeaders: true,\n
+      minSpareRows: 1,\n
+      contextMenu: true,\n
+      contextMenuCopyPaste: {\n
+        swfPath: "../../demo/swf/ZeroClipboard.swf"\n
+      }\n
+    });\n
+\n
+    selectCell(1, 1);\n
+\n
+    contextMenu();\n
+\n
+    var $contextMenuEntries = $(\'.htContextMenu .ht_master .htCore tbody\').find(\'td\')\n
+      , $copyButton = $contextMenuEntries.find(\'div\').filter(function () {\n
+        return (/Copy/i).test($(this).text())\n
+      }).parents(\'td\')\n
+      , $pasteButton = $contextMenuEntries.find(\'div\').filter(function () {\n
+        return (/Paste/i).test($(this).text())\n
+      }).parents(\'td\');\n
+\n
+    expect($contextMenuEntries.index($copyButton)).toEqual(0);\n
+    expect($contextMenuEntries.index($pasteButton)).toEqual(1);\n
+\n
+  });\n
+\n
+  it("should add Copy and Paste context menu options at the provided index", function () {\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetObjectData(10, 5),\n
+      rowHeaders: true,\n
+      colHeaders: true,\n
+      minSpareRows: 1,\n
+      contextMenu: [\'row_above\', \'copy\', \'paste\', \'row_below\'],\n
+      contextMenuCopyPaste: {\n
+        swfPath: "../../demo/swf/ZeroClipboard.swf"\n
+      }\n
+    });\n
+\n
+    selectCell(1, 1);\n
+\n
+    contextMenu();\n
+\n
+    var $contextMenuEntries = $(\'.htContextMenu .ht_master .htCore tbody\').find(\'td\')\n
+      , $copyButton = $contextMenuEntries.find(\'div\').filter(function () {\n
+        return (/Copy/i).test($(this).text())\n
+      }).parents(\'td\')\n
+      , $pasteButton = $contextMenuEntries.find(\'div\').filter(function () {\n
+        return (/Paste/i).test($(this).text())\n
+      }).parents(\'td\');\n
+\n
+    expect($contextMenuEntries.not(\'[class*=htSeparator]\').index($copyButton)).toEqual(1);\n
+    expect($contextMenuEntries.not(\'[class*=htSeparator]\').index($pasteButton)).toEqual(2);\n
+  });\n
+\n
+\n
+  // currently not needed - cannot trigger copy action programically\n
+  xdescribe("Copy context menu option", function () {\n
+\n
+    xit("should allow to copy single cell\'s data", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetObjectData(10, 5),\n
+        rowHeaders: true,\n
+        colHeaders: true,\n
+        minSpareRows: 1,\n
+        contextMenu: true,\n
+        contextMenuCopyPaste: {\n
+          swfPath: "swf/ZeroClipboard.swf"\n
+        }\n
+      });\n
+\n
+      selectCell(1,1);\n
+\n
+      contextMenu();\n
+\n
+      var copyButton = $(\'.htContextMenu .ht_master .htCore tbody\').find(\'td\').find(\'div\').filter(function(){\n
+        return (/Paste/i).test($(this).text())\n
+      }).parents(\'td\');\n
+\n
+      copyButton.trigger(\'mousedown\');\n
+\n
+    });\n
+\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3670</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>contextMenuCopyPaste.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272903.16</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>es6collections.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*!\n
+ * Copyright (C) 2011 by Andrea Giammarchi, @WebReflection\n
+ *\n
+ * Permission is hereby granted, free of charge, to any person obtaining a copy\n
+ * of this software and associated documentation files (the "Software"), to deal\n
+ * in the Software without restriction, including without limitation the rights\n
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n
+ * copies of the Software, and to permit persons to whom the Software is\n
+ * furnished to do so, subject to the following conditions:\n
+ *\n
+ * The above copyright notice and this permission notice shall be included in\n
+ * all copies or substantial portions of the Software.\n
+ *\n
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n
+ * THE SOFTWARE.\n
+ */\n
+(function(exports) {\n
+  \'use strict\';\n
+  //shared pointer\n
+  var i;\n
+  //shortcuts\n
+  var defineProperty = Object.defineProperty,\n
+    is = function(a, b) {\n
+      return isNaN(a) ? isNaN(b) : a === b;\n
+    };\n
+\n
+\n
+  //Polyfill global objects\n
+  if (typeof WeakMap == \'undefined\') {\n
+    exports.WeakMap = createCollection({\n
+      // WeakMap#delete(key:void*):boolean\n
+      \'delete\': sharedDelete,\n
+      // WeakMap#clear():\n
+      clear: sharedClear,\n
+      // WeakMap#get(key:void*):void*\n
+      get: sharedGet,\n
+      // WeakMap#has(key:void*):boolean\n
+      has: mapHas,\n
+      // WeakMap#set(key:void*, value:void*):void\n
+      set: sharedSet\n
+    }, true);\n
+  }\n
+\n
+  if (typeof Map == \'undefined\') {\n
+    exports.Map = createCollection({\n
+      // WeakMap#delete(key:void*):boolean\n
+      \'delete\': sharedDelete,\n
+      //:was Map#get(key:void*[, d3fault:void*]):void*\n
+      // Map#has(key:void*):boolean\n
+      has: mapHas,\n
+      // Map#get(key:void*):boolean\n
+      get: sharedGet,\n
+      // Map#set(key:void*, value:void*):void\n
+      set: sharedSet,\n
+      // Map#keys(void):Iterator\n
+      keys: sharedKeys,\n
+      // Map#values(void):Iterator\n
+      values: sharedValues,\n
+      // Map#entries(void):Iterator\n
+      entries: mapEntries,\n
+      // Map#forEach(callback:Function, context:void*):void ==> callback.call(context, key, value, mapObject) === not in specs`\n
+      forEach: sharedForEach,\n
+      // Map#clear():\n
+      clear: sharedClear\n
+    });\n
+  }\n
+\n
+  if (typeof Set == \'undefined\') {\n
+    exports.Set = createCollection({\n
+      // Set#has(value:void*):boolean\n
+      has: setHas,\n
+      // Set#add(value:void*):boolean\n
+      add: sharedAdd,\n
+      // Set#delete(key:void*):boolean\n
+      \'delete\': sharedDelete,\n
+      // Set#clear():\n
+      clear: sharedClear,\n
+      // Set#keys(void):Iterator\n
+      keys: sharedValues, // specs actually say "the same function object as the initial value of the values property"\n
+      // Set#values(void):Iterator\n
+      values: sharedValues,\n
+      // Set#entries(void):Iterator\n
+      entries: setEntries,\n
+      // Set#forEach(callback:Function, context:void*):void ==> callback.call(context, value, index) === not in specs\n
+      forEach: sharedForEach\n
+    });\n
+  }\n
+\n
+  if (typeof WeakSet == \'undefined\') {\n
+    exports.WeakSet = createCollection({\n
+      // WeakSet#delete(key:void*):boolean\n
+      \'delete\': sharedDelete,\n
+      // WeakSet#add(value:void*):boolean\n
+      add: sharedAdd,\n
+      // WeakSet#clear():\n
+      clear: sharedClear,\n
+      // WeakSet#has(value:void*):boolean\n
+      has: setHas\n
+    }, true);\n
+  }\n
+\n
+\n
+  /**\n
+   * ES6 collection constructor\n
+   * @return {Function} a collection class\n
+   */\n
+  function createCollection(proto, objectOnly) {\n
+    function Collection(a) {\n
+      if (!this || this.constructor !== Collection) return new Collection(a);\n
+      this._keys = [];\n
+      this._values = [];\n
+      this._itp = []; // iteration pointers\n
+      this.objectOnly = objectOnly;\n
+\n
+      //parse initial iterable argument passed\n
+      if (a) init.call(this, a);\n
+    }\n
+\n
+    //define size for non object-only collections\n
+    if (!objectOnly) {\n
+      defineProperty(proto, \'size\', {\n
+        get: sharedSize\n
+      });\n
+    }\n
+\n
+    //set prototype\n
+    proto.constructor = Collection;\n
+    Collection.prototype = proto;\n
+\n
+    return Collection;\n
+  }\n
+\n
+\n
+  /** parse initial iterable argument passed */\n
+  function init(a) {\n
+    var i;\n
+    //init Set argument, like `[1,2,3,{}]`\n
+    if (this.add) a.forEach(this.add, this);\n
+    //init Map argument like `[[1,2], [{}, 4]]`\n
+    else a.forEach(function(a) {\n
+      this.set(a[0], a[1])\n
+    }, this);\n
+  }\n
+\n
+\n
+  /** delete */\n
+  function sharedDelete(key) {\n
+    if (this.has(key)) {\n
+      this._keys.splice(i, 1);\n
+      this._values.splice(i, 1);\n
+      // update iteration pointers\n
+      this._itp.forEach(function(p) {\n
+        if (i < p[0]) p[0]--;\n
+      });\n
+    }\n
+    // Aurora here does it while Canary doesn\'t\n
+    return -1 < i;\n
+  };\n
+\n
+  function sharedGet(key) {\n
+    return this.has(key) ? this._values[i] : undefined;\n
+  }\n
+\n
+  function has(list, key) {\n
+    if (this.objectOnly && key !== Object(key)) throw new TypeError("Invalid value used as weak collection key");\n
+    //NaN or 0 passed\n
+    if (key != key || key === 0) for (i = list.length; i-- && !is(list[i], key);) {} else i = list.indexOf(key);\n
+    return -1 < i;\n
+  }\n
+\n
+  function setHas(value) {\n
+    return has.call(this, this._values, value);\n
+  }\n
+\n
+  function mapHas(value) {\n
+    return has.call(this, this._keys, value);\n
+  }\n
+\n
+  /** @chainable */\n
+  function sharedSet(key, value) {\n
+    this.has(key) ? this._values[i] = value : this._values[this._keys.push(key) - 1] = value;\n
+    return this;\n
+  }\n
+\n
+  /** @chainable */\n
+  function sharedAdd(value) {\n
+    if (!this.has(value)) this._values.push(value);\n
+    return this;\n
+  }\n
+\n
+  function sharedClear() {\n
+    this._values.length = 0;\n
+  }\n
+\n
+  /** keys, values, and iterate related methods */\n
+  function sharedKeys() {\n
+    return sharedIterator(this._itp, this._keys);\n
+  }\n
+\n
+  function sharedValues() {\n
+    return sharedIterator(this._itp, this._values);\n
+  }\n
+\n
+  function mapEntries() {\n
+    return sharedIterator(this._itp, this._keys, this._values);\n
+  }\n
+\n
+  function setEntries() {\n
+    return sharedIterator(this._itp, this._values, this._values);\n
+  }\n
+\n
+  function sharedIterator(itp, array, array2) {\n
+    var p = [0],\n
+      done = false;\n
+    itp.push(p);\n
+    return {\n
+      next: function() {\n
+        var v, k = p[0];\n
+        if (!done && k < array.length) {\n
+          v = array2 ? [array[k], array2[k]] : array[k];\n
+          p[0]++;\n
+        } else {\n
+          done = true;\n
+          itp.splice(itp.indexOf(p), 1);\n
+        }\n
+        return {\n
+          done: done,\n
+          value: v\n
+        };\n
+      }\n
+    };\n
+  }\n
+\n
+  function sharedSize() {\n
+    return this._values.length;\n
+  }\n
+\n
+  function sharedForEach(callback, context) {\n
+    var it = this.entries();\n
+    for (;;) {\n
+      var r = it.next();\n
+      if (r.done) break;\n
+      callback.call(context, r.value[1], r.value[0], this);\n
+    }\n
+  }\n
+\n
+})(typeof exports != \'undefined\' && typeof global != \'undefined\' ? global : window);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7151</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>es6collections.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

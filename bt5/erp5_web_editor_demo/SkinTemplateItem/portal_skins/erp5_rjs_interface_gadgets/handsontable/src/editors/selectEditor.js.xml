@@ -1,0 +1,298 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272745.05</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>selectEditor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  addClass,\n
+  empty,\n
+  fastInnerHTML,\n
+  getComputedStyle,\n
+  getCssTransform,\n
+  getScrollableElement,\n
+  offset,\n
+  outerHeight,\n
+  outerWidth,\n
+  resetCssTransform,\n
+    } from \'./../helpers/dom/element\';\n
+import {stopImmediatePropagation} from \'./../helpers/dom/event\';\n
+import {KEY_CODES} from \'./../helpers/unicode\';\n
+import {getEditor, registerEditor} from \'./../editors\';\n
+import {BaseEditor} from \'./_baseEditor\';\n
+\n
+var SelectEditor = BaseEditor.prototype.extend();\n
+\n
+\n
+/**\n
+ * @private\n
+ * @editor SelectEditor\n
+ * @class SelectEditor\n
+ */\n
+SelectEditor.prototype.init = function() {\n
+  this.select = document.createElement(\'SELECT\');\n
+  addClass(this.select, \'htSelectEditor\');\n
+  this.select.style.display = \'none\';\n
+  this.instance.rootElement.appendChild(this.select);\n
+  this.registerHooks();\n
+};\n
+\n
+SelectEditor.prototype.registerHooks = function() {\n
+  this.instance.addHook(\'afterScrollVertically\', () => this.refreshDimensions());\n
+  this.instance.addHook(\'afterColumnResize\', () => this.refreshDimensions());\n
+  this.instance.addHook(\'afterRowResize\', () => this.refreshDimensions());\n
+};\n
+\n
+SelectEditor.prototype.prepare = function() {\n
+  BaseEditor.prototype.prepare.apply(this, arguments);\n
+\n
+  var selectOptions = this.cellProperties.selectOptions;\n
+  var options;\n
+\n
+  if (typeof selectOptions == \'function\') {\n
+    options = this.prepareOptions(selectOptions(this.row, this.col, this.prop));\n
+  } else {\n
+    options = this.prepareOptions(selectOptions);\n
+  }\n
+\n
+  empty(this.select);\n
+\n
+  for (var option in options) {\n
+    if (options.hasOwnProperty(option)) {\n
+      var optionElement = document.createElement(\'OPTION\');\n
+      optionElement.value = option;\n
+      fastInnerHTML(optionElement, options[option]);\n
+      this.select.appendChild(optionElement);\n
+    }\n
+  }\n
+};\n
+\n
+SelectEditor.prototype.prepareOptions = function(optionsToPrepare) {\n
+  var preparedOptions = {};\n
+\n
+  if (Array.isArray(optionsToPrepare)) {\n
+    for (var i = 0, len = optionsToPrepare.length; i < len; i++) {\n
+      preparedOptions[optionsToPrepare[i]] = optionsToPrepare[i];\n
+    }\n
+  } else if (typeof optionsToPrepare == \'object\') {\n
+    preparedOptions = optionsToPrepare;\n
+  }\n
+\n
+  return preparedOptions;\n
+\n
+};\n
+\n
+SelectEditor.prototype.getValue = function() {\n
+  return this.select.value;\n
+};\n
+\n
+SelectEditor.prototype.setValue = function(value) {\n
+  this.select.value = value;\n
+};\n
+\n
+var onBeforeKeyDown = function(event) {\n
+  var instance = this;\n
+  var editor = instance.getActiveEditor();\n
+\n
+  switch (event.keyCode) {\n
+    case KEY_CODES.ARROW_UP:\n
+      var previousOptionIndex = editor.select.selectedIndex - 1;\n
+      if (previousOptionIndex >= 0) {\n
+        editor.select[previousOptionIndex].selected = true;\n
+      }\n
+\n
+      stopImmediatePropagation(event);\n
+      event.preventDefault();\n
+      break;\n
+\n
+    case KEY_CODES.ARROW_DOWN:\n
+      var nextOptionIndex = editor.select.selectedIndex + 1;\n
+      if (nextOptionIndex <= editor.select.length - 1) {\n
+        editor.select[nextOptionIndex].selected = true;\n
+      }\n
+\n
+      stopImmediatePropagation(event);\n
+      event.preventDefault();\n
+      break;\n
+  }\n
+};\n
+\n
+// TODO: Refactor this with the use of new getCell() after 0.12.1\n
+SelectEditor.prototype.checkEditorSection = function() {\n
+  if (this.row < this.instance.getSettings().fixedRowsTop) {\n
+    if (this.col < this.instance.getSettings().fixedColumnsLeft) {\n
+      return \'corner\';\n
+    } else {\n
+      return \'top\';\n
+    }\n
+  } else {\n
+    if (this.col < this.instance.getSettings().fixedColumnsLeft) {\n
+      return \'left\';\n
+    }\n
+  }\n
+};\n
+\n
+SelectEditor.prototype.open = function() {\n
+  this._opened = true;\n
+  this.refreshDimensions();\n
+  this.select.style.display = \'\';\n
+  this.instance.addHook(\'beforeKeyDown\', onBeforeKeyDown);\n
+};\n
+\n
+SelectEditor.prototype.close = function() {\n
+  this._opened = false;\n
+  this.select.style.display = \'none\';\n
+  this.instance.removeHook(\'beforeKeyDown\', onBeforeKeyDown);\n
+};\n
+\n
+SelectEditor.prototype.focus = function() {\n
+  this.select.focus();\n
+};\n
+\n
+SelectEditor.prototype.refreshDimensions = function() {\n
+  if (this.state !== Handsontable.EditorState.EDITING) {\n
+    return;\n
+  }\n
+  this.TD = this.getEditedCell();\n
+\n
+  // TD is outside of the viewport.\n
+  if (!this.TD) {\n
+    this.close();\n
+\n
+    return;\n
+  }\n
+  var\n
+    width = outerWidth(this.TD) + 1,\n
+    height = outerHeight(this.TD) + 1,\n
+    currentOffset = offset(this.TD),\n
+    containerOffset = offset(this.instance.rootElement),\n
+    scrollableContainer = getScrollableElement(this.TD),\n
+    editTop = currentOffset.top - containerOffset.top - 1 - (scrollableContainer.scrollTop || 0),\n
+    editLeft = currentOffset.left - containerOffset.left - 1 - (scrollableContainer.scrollLeft || 0),\n
+    editorSection = this.checkEditorSection(),\n
+    cssTransformOffset;\n
+\n
+  const settings = this.instance.getSettings();\n
+  let rowHeadersCount = settings.rowHeaders ? 1 : 0;\n
+  let colHeadersCount = settings.colHeaders ? 1 : 0;\n
+\n
+  switch (editorSection) {\n
+    case \'top\':\n
+      cssTransformOffset = getCssTransform(this.instance.view.wt.wtOverlays.topOverlay.clone.wtTable.holder.parentNode);\n
+      break;\n
+    case \'left\':\n
+      cssTransformOffset = getCssTransform(this.instance.view.wt.wtOverlays.leftOverlay.clone.wtTable.holder.parentNode);\n
+      break;\n
+    case \'corner\':\n
+      cssTransformOffset = getCssTransform(this.instance.view.wt.wtOverlays.topLeftCornerOverlay.clone.wtTable.holder.parentNode);\n
+      break;\n
+  }\n
+  if (this.instance.getSelected()[0] === 0) {\n
+    editTop += 1;\n
+  }\n
+\n
+  if (this.instance.getSelected()[1] === 0) {\n
+    editLeft += 1;\n
+  }\n
+\n
+  var selectStyle = this.select.style;\n
+\n
+  if (cssTransformOffset && cssTransformOffset != -1) {\n
+    selectStyle[cssTransformOffset[0]] = cssTransformOffset[1];\n
+  } else {\n
+    resetCssTransform(this.select);\n
+  }\n
+  const cellComputedStyle = getComputedStyle(this.TD);\n
+\n
+  if (parseInt(cellComputedStyle.borderTopWidth, 10) > 0) {\n
+    height -= 1;\n
+  }\n
+  if (parseInt(cellComputedStyle.borderLeftWidth, 10) > 0) {\n
+    width -= 1;\n
+  }\n
+\n
+  selectStyle.height = height + \'px\';\n
+  selectStyle.minWidth = width + \'px\';\n
+  selectStyle.top = editTop + \'px\';\n
+  selectStyle.left = editLeft + \'px\';\n
+  selectStyle.margin = \'0px\';\n
+};\n
+\n
+SelectEditor.prototype.getEditedCell = function() {\n
+  var editorSection = this.checkEditorSection(),\n
+    editedCell;\n
+\n
+  switch (editorSection) {\n
+    case \'top\':\n
+      editedCell = this.instance.view.wt.wtOverlays.topOverlay.clone.wtTable.getCell({\n
+        row: this.row,\n
+        col: this.col\n
+      });\n
+      this.select.style.zIndex = 101;\n
+      break;\n
+    case \'corner\':\n
+      editedCell = this.instance.view.wt.wtOverlays.topLeftCornerOverlay.clone.wtTable.getCell({\n
+        row: this.row,\n
+        col: this.col\n
+      });\n
+      this.select.style.zIndex = 103;\n
+      break;\n
+    case \'left\':\n
+      editedCell = this.instance.view.wt.wtOverlays.leftOverlay.clone.wtTable.getCell({\n
+        row: this.row,\n
+        col: this.col\n
+      });\n
+      this.select.style.zIndex = 102;\n
+      break;\n
+    default:\n
+      editedCell = this.instance.getCell(this.row, this.col);\n
+      this.select.style.zIndex = \'\';\n
+      break;\n
+  }\n
+\n
+  return editedCell != -1 && editedCell != -2 ? editedCell : void 0;\n
+};\n
+\n
+export {SelectEditor};\n
+\n
+registerEditor(\'select\', SelectEditor);\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7130</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>selectEditor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

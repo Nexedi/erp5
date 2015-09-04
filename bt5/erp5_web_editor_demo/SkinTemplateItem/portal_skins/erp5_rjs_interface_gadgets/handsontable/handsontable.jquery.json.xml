@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272274.12</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>handsontable.jquery.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "name": "handsontable",\n
+  "title": "Handsontable",\n
+  "version": "0.17.0",\n
+  "author": {\n
+    "name": "Marcin Warpechowski",\n
+    "email": "hello@handsontable.com",\n
+    "url": "http://www.nextgen.pl/"\n
+  },\n
+  "licenses": [\n
+    {\n
+      "type": "MIT",\n
+      "url": "https://raw.github.com/handsontable/handsontable/master/LICENSE"\n
+    }\n
+  ],\n
+  "description": "Spreadsheet-like data grid editor that provides copy/paste functionality compatible with Excel/Google Docs",\n
+  "homepage": "http://handsontable.com/",\n
+  "docs": "https://github.com/handsontable/handsontable",\n
+  "demo": "http://handsontable.com/",\n
+  "download": "https://github.com/handsontable/handsontable/archive/master.zip",\n
+  "keywords": [\n
+    "grid",\n
+    "datagrid",\n
+    "table",\n
+    "ui",\n
+    "input",\n
+    "ajax",\n
+    "handsontable",\n
+    "spreadsheet"\n
+  ],\n
+  "bugs": "https://github.com/handsontable/handsontable/issues",\n
+  "dependencies": {\n
+    "jquery": ">=1.7",\n
+    "bootstrap-typeahead.js": "2.1.1",\n
+    "contextMenu": ">=1.5.25"\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1004</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>handsontable.jquery.json</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

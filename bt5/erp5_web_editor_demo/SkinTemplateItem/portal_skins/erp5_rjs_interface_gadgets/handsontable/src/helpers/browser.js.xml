@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272634.37</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>browser.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+var _isIE8 = !(document.createTextNode(\'test\').textContent);\n
+\n
+export function isIE8() {\n
+  return _isIE8;\n
+}\n
+\n
+var _isIE9 = !!(document.documentMode);\n
+\n
+export function isIE9() {\n
+  return _isIE9;\n
+}\n
+\n
+var _isSafari = (/Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor));\n
+\n
+export function isSafari() {\n
+  return _isSafari;\n
+}\n
+\n
+var _isChrome = (/Chrome/.test(navigator.userAgent) && /Google/.test(navigator.vendor));\n
+\n
+export function isChrome() {\n
+  return _isChrome;\n
+}\n
+\n
+export function isMobileBrowser(userAgent) {\n
+  if (!userAgent) {\n
+    userAgent = navigator.userAgent;\n
+  }\n
+\n
+  return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent));\n
+}\n
+\n
+export function isTouchSupported() {\n
+  return (\'ontouchstart\' in window);\n
+}\n
+\n
+/**\n
+ * Checks if browser is support web components natively\n
+ *\n
+ * @returns {Boolean}\n
+ */\n
+export function isWebComponentSupportedNatively() {\n
+  var test = document.createElement(\'div\');\n
+\n
+  return test.createShadowRoot && test.createShadowRoot.toString().match(/\\[native code\\]/) ? true : false;\n
+}\n
+\n
+var _hasCaptionProblem;\n
+\n
+function detectCaptionProblem() {\n
+  var TABLE = document.createElement(\'TABLE\');\n
+  TABLE.style.borderSpacing = 0;\n
+  TABLE.style.borderWidth = 0;\n
+  TABLE.style.padding = 0;\n
+  var TBODY = document.createElement(\'TBODY\');\n
+  TABLE.appendChild(TBODY);\n
+  TBODY.appendChild(document.createElement(\'TR\'));\n
+  TBODY.firstChild.appendChild(document.createElement(\'TD\'));\n
+  TBODY.firstChild.firstChild.innerHTML = \'<tr><td>t<br>t</td></tr>\';\n
+\n
+  var CAPTION = document.createElement(\'CAPTION\');\n
+  CAPTION.innerHTML = \'c<br>c<br>c<br>c\';\n
+  CAPTION.style.padding = 0;\n
+  CAPTION.style.margin = 0;\n
+  TABLE.insertBefore(CAPTION, TBODY);\n
+\n
+  document.body.appendChild(TABLE);\n
+  _hasCaptionProblem = (TABLE.offsetHeight < 2 * TABLE.lastChild.offsetHeight); //boolean\n
+  document.body.removeChild(TABLE);\n
+}\n
+\n
+export function hasCaptionProblem() {\n
+  if (_hasCaptionProblem === void 0) {\n
+    detectCaptionProblem();\n
+  }\n
+\n
+  return _hasCaptionProblem;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2016</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>browser.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272484.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>conditional.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Conditional formatting - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies)\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Conditional formatting - Handsontable">\n
+  <meta property="og:description"\n
+        content="This demo shows how to use the cell type renderer feature to make some conditional formatting">\n
+  <meta property="og:url" content="http://handsontable.com/demo/conditional.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/conditional.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+      <div class="descLayout">\n
+        <div class="pad" data-jsfiddle="example1">\n
+          <h2>Conditional formatting</h2>\n
+\n
+          <p>This demo shows how to use the cell type renderer feature to make some conditional formatting:</p>\n
+\n
+          <ol>\n
+            <li>first row is <span style="font-weight: bold">read-only</span>, and formatted in <span\n
+              style="color: green; font-weight: bold">green bold</span> text\n
+            </li>\n
+            <li>all cells in the Nissan column are written in <span style="font-style: italic">italic</span></li>\n
+            <li>empty cells have <span style="background: silver">silver</span> background</li>\n
+            <li>negative numbers are written in <span style="color: red">red</span></li>\n
+          </ol>\n
+\n
+          <div id="example1"></div>\n
+\n
+          <style>\n
+            .negative {\n
+              color: red;\n
+            }\n
+          </style>\n
+\n
+          <p>\n
+            <button name="dump" data-dump="#example1" data-instance="hot1" title="Prints current data source to Firebug/Chrome Dev Tools">\n
+              Dump data to console\n
+            </button>\n
+          </p>\n
+        </div>\n
+      </div>\n
+\n
+      <div class="codeLayout">\n
+        <div class="pad">\n
+          <div class="jsFiddle">\n
+            <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+          </div>\n
+\n
+          <script data-jsfiddle="example1">\n
+            var data = [\n
+                [\'\', \'Kia\', \'Nissan\', \'Toyota\', \'Honda\'],\n
+                [\'2008\', -5, \'\', 12, 13],\n
+                [\'2009\', \'\', -11, 14, 13],\n
+                [\'2010\', \'\', 15, -12, \'readOnly\']\n
+              ],\n
+              container,\n
+              hot1;\n
+\n
+            function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {\n
+              Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+              td.style.fontWeight = \'bold\';\n
+              td.style.color = \'green\';\n
+              td.style.background = \'#CEC\';\n
+            }\n
+\n
+            function negativeValueRenderer(instance, td, row, col, prop, value, cellProperties) {\n
+              Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+\n
+              // if row contains negative number\n
+              if (parseInt(value, 10) < 0) {\n
+                // add class "negative"\n
+                td.className = \'negative\';\n
+              }\n
+\n
+              if (!value || value === \'\') {\n
+                td.style.background = \'#EEE\';\n
+              }\n
+              else {\n
+                if (value === \'Nissan\') {\n
+                  td.style.fontStyle = \'italic\';\n
+                }\n
+                td.style.background = \'\';\n
+              }\n
+            }\n
+            // maps function to lookup string\n
+            Handsontable.renderers.registerRenderer(\'negativeValueRenderer\', negativeValueRenderer);\n
+\n
+            container = document.getElementById(\'example1\');\n
+            hot1 = new Handsontable(container, {\n
+              data: data,\n
+              startRows: 5,\n
+              startCols: 5,\n
+              minSpareRows: 1,\n
+              contextMenu: true,\n
+              onSelection: function (row, col, row2, col2) {\n
+                var meta = this.getCellMeta(row2, col2);\n
+\n
+                if (meta.readOnly) {\n
+                  this.updateSettings({fillHandle: false});\n
+                }\n
+                else {\n
+                  this.updateSettings({fillHandle: true});\n
+                }\n
+              },\n
+              cells: function (row, col, prop) {\n
+                var cellProperties = {};\n
+\n
+                if (row === 0 || this.instance.getData()[row][col] === \'readOnly\') {\n
+                  cellProperties.readOnly = true; // make cell read-only if it is first row or the text reads \'readOnly\'\n
+                }\n
+                if (row === 0) {\n
+                  cellProperties.renderer = firstRowRenderer; // uses function directly\n
+                }\n
+                else {\n
+                  cellProperties.renderer = "negativeValueRenderer"; // uses lookup map\n
+                }\n
+\n
+                return cellProperties;\n
+              }\n
+            });\n
+          </script>\n
+        </div>\n
+      </div>\n
+    </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6521</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>conditional.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

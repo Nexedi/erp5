@@ -1,0 +1,291 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272292.03</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>callbacks.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Callbacks - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies apart from jQuery)\n
+  -->\n
+  <script data-jsfiddle="common" src="../demo/js/jquery.min.js"></script>\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+  <script src="js/json2.min.js"></script>\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Callbacks">\n
+  <meta property="og:description"\n
+        content="This page shows usage of some callbacks available in Handsontable">\n
+  <meta property="og:url" content="http://handsontable.com/demo/callbacks.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/callbacks.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+      <div class="descLayout">\n
+        <div class="pad" data-jsfiddle="example1">\n
+          <h2>Callbacks</h2>\n
+\n
+          <p>\n
+            This page shows usage of some callbacks available in Handsontable. Full list of callbacks is available in <a\n
+            href="https://github.com/handsontable/handsontable">README.md</a>.\n
+          </p>\n
+\n
+          <p>\n
+            If you require a new callback to be added to Handsontable, please open an <a\n
+            href="https://github.com/handsontable/handsontable/issues">Issue</a>.\n
+          </p>\n
+\n
+          <p>\n
+            Note that some checkboxes below are initially unchecked (not all callbacks are displayed on this page by default).\n
+          </p>\n
+\n
+          <div id="example1"></div>\n
+\n
+          <p>\n
+            <button name="dump" data-dump="#example1" data-instance="hot" title="Prints current data source to Firebug/Chrome Dev Tools">\n
+              Dump data to console\n
+            </button>\n
+          </p>\n
+\n
+          <h3>Events log\n
+            <button onclick="$(\'#example1_events\').empty()">\n
+              Clear\n
+            </button>\n
+          </h3>\n
+\n
+          <div id="example1_events"\n
+               style="height: 250px; overflow: hidden; background-color: #fdfdfd; font-size: 11px"></div>\n
+\n
+          <p>Choose events to be logged:</p>\n
+\n
+          <ul class="tight" id="hooksList">\n
+            <li><label><input type="checkbox" id="check_select_all"> <strong>select all</strong></label></li>\n
+          </ul>\n
+        </div>\n
+      </div>\n
+\n
+      <div class="codeLayout">\n
+        <div class="pad">\n
+          <div class="jsFiddle">\n
+            <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+          </div>\n
+\n
+          <script data-jsfiddle="example1">\n
+            var data = [\n
+                [\'\', \'Maserati\', \'Mazda\', \'Mercedes\', \'Mini\', \'Mitsubishi\'],\n
+                [\'2009\', 0, 2941, 4303, 354, 5814],\n
+                [\'2010\', 3, 2905, 2867, 412, 5284],\n
+                [\'2011\', 4, 2517, 4822, 552, 6127],\n
+                [\'2012\', 2, 2422, 5399, 776, 4151]\n
+              ],\n
+              example1 = document.getElementById(\'example1\'),\n
+              config,\n
+              $hooksList,\n
+              hooks,\n
+              hot;\n
+\n
+            config = {\n
+              data: data,\n
+              minRows: 5,\n
+              minCols: 6,\n
+              minSpareRows: 1,\n
+              autoWrapRow: true,\n
+              colHeaders: true,\n
+              contextMenu: true\n
+            };\n
+\n
+            $hooksList = $(\'#hooksList\');\n
+            hooks = Handsontable.hooks.getRegistered();\n
+\n
+            hooks.forEach(function(hook) {\n
+              var checked = \'\';\n
+\n
+              if (hook !== \'modifyRowHeight\' && hook !== \'modifyRow\' && hook !== \'modifyCol\' &&\n
+                  hook !== \'afterRenderer\' && hook !== \'beforeGetCellMeta\' && hook !== \'afterGetCellMeta\') {\n
+                checked = \'checked\';\n
+\n
+              }\n
+              $hooksList.append(\'<li><label><input type="checkbox" \' + checked + \' id="check_\' + hook + \'"> \' + hook + \'</label></li>\');\n
+              config[hook] = function() {\n
+                log_events(hook, arguments);\n
+              }\n
+            });\n
+\n
+            var start = (new Date()).getTime();\n
+            var i = 0;\n
+            var timer;\n
+            var example1_events = document.getElementById("example1_events");\n
+\n
+            function log_events(event, data) {\n
+              if (document.getElementById(\'check_\' + event).checked) {\n
+                var now = (new Date()).getTime(),\n
+                  diff = now - start,\n
+                  vals, str, div, text;\n
+\n
+                vals = [\n
+                  i,\n
+                  "@" + numeral(diff / 1000).format(\'0.000\'),\n
+                  "[" + event + "]"\n
+                ];\n
+\n
+                for (var d = 0; d < data.length; d++) {\n
+                  try {\n
+                    str = JSON.stringify(data[d]);\n
+                  }\n
+                  catch (e) {\n
+                    str = data[d].toString(); // JSON.stringify breaks on circular reference to a HTML node\n
+                  }\n
+\n
+                  if (str === void 0) {\n
+                    continue;\n
+                  }\n
+\n
+                  if (str.length > 20) {\n
+                    str = Object.prototype.toString.call(data[d]);\n
+                  }\n
+                  if (d < data.length - 1) {\n
+                    str += \',\';\n
+                  }\n
+                  vals.push(str);\n
+                }\n
+\n
+                if (window.console) {\n
+                  console.log(i,\n
+                    "@" + numeral(diff / 1000).format(\'0.000\'),\n
+                    "[" + event + "]",\n
+                    data);\n
+                }\n
+                div = document.createElement("DIV");\n
+                text = document.createTextNode(vals.join(" "));\n
+\n
+                div.appendChild(text);\n
+                example1_events.appendChild(div);\n
+                clearTimeout(timer);\n
+                timer = setTimeout(function() {\n
+                  example1_events.scrollTop = example1_events.scrollHeight;\n
+                }, 10);\n
+\n
+                i++;\n
+              }\n
+            }\n
+\n
+            example1 = document.getElementById(\'example1\');\n
+            hot = new Handsontable(example1,config);\n
+\n
+            $(\'#check_select_all\').click(function () {\n
+              var state = this.checked;\n
+\n
+              $(\'input[type=checkbox]\').each(function () {\n
+                if (state === true) {\n
+                  if (this.id === \'check_modifyRow\') {\n
+                    return; //too much noise in the log\n
+                  }\n
+                }\n
+                this.checked = state;\n
+              });\n
+            });\n
+\n
+            $(\'input[type=checkbox]\').click(function () {\n
+              if (!this.checked) {\n
+                document.getElementById(\'check_select_all\').checked = false;\n
+              }\n
+            });\n
+          </script>\n
+        </div>\n
+      </div>\n
+    </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8313</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>callbacks.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

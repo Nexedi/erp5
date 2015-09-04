@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272502.47</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fragmentSelectionSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'settings\', function () {\n
+  describe(\'fragmentSelection\', function () {\n
+    var id = \'testContainer\';\n
+\n
+    beforeEach(function () {\n
+      this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+    });\n
+\n
+    afterEach(function () {\n
+      if (this.$container) {\n
+        destroy();\n
+        this.$container.remove();\n
+      }\n
+    });\n
+\n
+    /**\n
+     * Returns current text selection or false if there is no text selection\n
+     * @returns {*}\n
+     */\n
+    function getSelected() {\n
+      var text = "";\n
+      if (window.getSelection //IE8\n
+        && window.getSelection().toString()\n
+        && $(window.getSelection()).attr(\'type\') != "Caret") {\n
+        text = window.getSelection();\n
+        return text.toString();\n
+      }\n
+      else { //standards\n
+        var selection = document.selection && document.selection.createRange();\n
+\n
+        if (!(typeof selection === "undefined")\n
+          && selection.text\n
+          && selection.text.toString()) {\n
+          text = selection.text;\n
+          return text.toString();\n
+        }\n
+      }\n
+\n
+      return false;\n
+    }\n
+\n
+    /**\n
+     * Selects a <fromEl> node at as many siblings as given in the <cells> value\n
+     * Note: IE8 fallback assumes that a node contains exactly one word\n
+     * @param fromEl\n
+     * @param siblings\n
+     */\n
+    function selectElementText(fromEl, siblings) {\n
+      var doc = window.document, sel, range;\n
+      if (window.getSelection && doc.createRange) { //standards\n
+        sel = window.getSelection();\n
+        range = doc.createRange();\n
+        range.setStartBefore(fromEl, 0);\n
+        while (siblings > 1) {\n
+          fromEl = fromEl.nextSibling;\n
+          siblings--;\n
+        }\n
+        range.setEndAfter(fromEl, 0);\n
+        sel.removeAllRanges();\n
+        sel.addRange(range);\n
+      } else if (doc.body.createTextRange) { //IE8\n
+        range = doc.body.createTextRange();\n
+        range.moveToElementText(fromEl);\n
+        range.moveEnd(\'word\', siblings + 1);\n
+        range.select();\n
+      }\n
+    }\n
+\n
+    describe(\'constructor\', function () {\n
+      it(\'should disallow fragmentSelection when set to false\', function () {\n
+        handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(4, 4),\n
+          fragmentSelection: false\n
+        });\n
+        selectElementText(this.$container.find(\'tr:eq(0) td:eq(1)\')[0], 3);\n
+\n
+        mouseDown(this.$container.find(\'tr:eq(0) td:eq(3)\'));\n
+        mouseUp(this.$container.find(\'tr:eq(0) td:eq(3)\'));\n
+\n
+        var sel = getSelected();\n
+        expect(sel).toEqual(false);\n
+      });\n
+\n
+      it(\'should allow fragmentSelection when set to true\', function () {\n
+        handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(4, 4),\n
+          fragmentSelection: true\n
+        });\n
+        selectElementText(this.$container.find(\'td\')[1], 3);\n
+\n
+        mouseDown(this.$container.find(\'tr:eq(0) td:eq(3)\'));\n
+        mouseUp(this.$container.find(\'tr:eq(0) td:eq(3)\'));\n
+\n
+        var sel = getSelected();\n
+        sel = sel.replace(/\\s/g, \'\'); //tabs and spaces between <td>s are inconsistent in browsers, so let\'s ignore them\n
+        expect(sel).toEqual(\'B1C1D1\');\n
+      });\n
+\n
+      it(\'should disallow fragmentSelection of Handsontable chrome (anything that is not table) when set to false\', function () {\n
+        handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(4, 4),\n
+          fragmentSelection: false\n
+        });\n
+        var $div = $(\'<div style="position: absolute; top: 0; left: 0">Text</div>\');\n
+        this.$container.append($div);\n
+        selectElementText($div[0], 1);\n
+\n
+        mouseDown($div);\n
+\n
+        var sel = getSelected();\n
+        expect(sel).toEqual(false);\n
+      });\n
+\n
+      it(\'should disallow fragmentSelection of Handsontable chrome (anything that is not table) when set to true\', function () {\n
+        handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(4, 4),\n
+          fragmentSelection: true\n
+        });\n
+        var $div = $(\'<div style="position: absolute; top: 0; left: 0">Text</div>\');\n
+        this.$container.append($div);\n
+        selectElementText($div[0], 1);\n
+\n
+        mouseDown($div);\n
+\n
+        var sel = getSelected();\n
+        expect(sel).toEqual(false);\n
+      });\n
+    });\n
+\n
+    describe(\'dynamic\', function () {\n
+      it(\'should disallow fragmentSelection when set to false\', function () {\n
+        handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(4, 4),\n
+          fragmentSelection: true\n
+        });\n
+        updateSettings({fragmentSelection: false});\n
+        selectElementText(this.$container.find(\'tr:eq(0) td:eq(1)\')[0], 3);\n
+\n
+        mouseDown(this.$container.find(\'tr:eq(0) td:eq(3)\'));\n
+        mouseUp(this.$container.find(\'tr:eq(0) td:eq(3)\'));\n
+\n
+        var sel = getSelected();\n
+        expect(sel).toEqual(false);\n
+      });\n
+\n
+      it(\'should allow fragmentSelection when set to true\', function () {\n
+        handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(4, 4),\n
+          fragmentSelection: false\n
+        });\n
+        updateSettings({fragmentSelection: true});\n
+        selectElementText(this.$container.find(\'td\')[1], 3);\n
+\n
+        mouseDown(this.$container.find(\'tr:eq(0) td:eq(3)\'));\n
+        mouseUp(this.$container.find(\'tr:eq(0) td:eq(3)\'));\n
+\n
+        var sel = getSelected();\n
+        sel = sel.replace(/\\s/g, \'\'); //tabs and spaces between <td>s are inconsistent in browsers, so let\'s ignore them\n
+        expect(sel).toEqual(\'B1C1D1\');\n
+      });\n
+    });\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5433</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>fragmentSelectionSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

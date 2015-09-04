@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272525.12</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_populateFromArraySpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_populateFromArray\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  var arrayOfArrays = function () {\n
+    return [\n
+      ["", "Kia", "Nissan", "Toyota", "Honda", "Mix"],\n
+      ["2008", 10, 11, 12, 13, {a: 1, b: 2}],\n
+      ["2009", 20, 11, 14, 13, {a: 1, b: 2}],\n
+      ["2010", 30, 15, 12, 13, {a: 1, b: 2}]\n
+    ];\n
+  };\n
+\n
+  it(\'should call onChange callback\', function () {\n
+    var output = null;\n
+\n
+    handsontable({\n
+      data : arrayOfArrays(),\n
+      afterChange: function (changes) {\n
+        output = changes;\n
+      }\n
+    });\n
+    populateFromArray(0, 0, [["test","test"],["test","test"]], 1, 1);\n
+\n
+    expect(output).toEqual([[0,0,\'\',\'test\'],[0,1,\'Kia\',\'test\'],[1,0,\'2008\',\'test\'],[1,1,10,\'test\']]);\n
+  });\n
+\n
+  it(\'should populate single value for whole selection\', function () {\n
+    var output = null;\n
+\n
+    handsontable({\n
+      data : arrayOfArrays(),\n
+      afterChange: function (changes) {\n
+        output = changes;\n
+      }\n
+    });\n
+    populateFromArray(0, 0, [["test"]], 3, 0);\n
+\n
+    expect(output).toEqual([[0,0,\'\',\'test\'],[1,0,\'2008\',\'test\'],[2,0,\'2009\',\'test\'],[3,0,\'2010\',\'test\']]);\n
+  });\n
+\n
+  it(\'should populate value for whole selection only if populated data isn\\\'t an array\', function () {\n
+    var output = null;\n
+\n
+    handsontable({\n
+      data : arrayOfArrays(),\n
+      afterChange: function (changes) {\n
+        output = changes;\n
+      }\n
+    });\n
+    populateFromArray(0, 0, [[\'test\'], [[1, 2, 3]]], 3, 0);\n
+\n
+    expect(output).toEqual([[0, 0, \'\', \'test\' ], [2, 0, \'2009\', \'test\']]);\n
+  });\n
+\n
+  it(\'should populate value for whole selection only if populated data isn\\\'t an object\', function () {\n
+    var output = null;\n
+\n
+    handsontable({\n
+      data : arrayOfArrays(),\n
+      afterChange: function (changes) {\n
+        output = changes;\n
+      }\n
+    });\n
+    populateFromArray(0, 0, [[\'test\'], [{test: 1}]], 3, 0);\n
+\n
+    expect(output).toEqual([[0, 0, \'\', \'test\' ], [2, 0, \'2009\', \'test\']]);\n
+  });\n
+\n
+  it(\'shouldn\\\'t populate value if original value doesn\\\'t have the same data structure\', function () {\n
+    var output = null;\n
+\n
+    handsontable({\n
+      data : arrayOfArrays(),\n
+      afterChange: function (changes) {\n
+        output = changes;\n
+      }\n
+    });\n
+    populateFromArray(1, 3, [[\'test\']], 1, 5);\n
+\n
+    expect(output).toEqual([[1, 3, 12, \'test\' ], [1, 4, 13, \'test\']]);\n
+  });\n
+\n
+  it(\'should shift values down\', function () {\n
+    var output = null;\n
+\n
+    handsontable({\n
+      data : arrayOfArrays(),\n
+      afterChange: function (changes) {\n
+        output = changes;\n
+      },\n
+      minSpareRows: 1\n
+    });\n
+    populateFromArray(0, 0, [["test","test2"],["test3","test4"]], 2, 2, null, \'shift_down\');\n
+\n
+    expect(getData()).toEqual([\n
+      ["test", "test2", "test", "Toyota", "Honda", "Mix"],\n
+      ["test3", "test4", "test3", 12, 13, { a : 1, b : 2 }],\n
+      ["test", "test2", "test", 14, 13, { a : 1, b : 2 }],\n
+      ["", "Kia", "Nissan", 12, 13, { a : 1, b : 2 }],\n
+      ["2008", 10, 11, null, null, null],\n
+      ["2009", 20, 11, null, null, null],\n
+      ["2010", 30, 15, null, null, null],\n
+      [null, null, null, null, null, null]\n
+    ]);\n
+  });\n
+\n
+  it(\'should shift values right\', function () {\n
+    var output = null;\n
+\n
+    handsontable({\n
+      data : arrayOfArrays(),\n
+      afterChange: function (changes) {\n
+        output = changes;\n
+      },\n
+      minSpareCols: 1\n
+    });\n
+    populateFromArray(0, 0, [["test","test2"],["test3","test4"]], 2, 2, null, \'shift_right\');\n
+\n
+    expect(getData()).toEqual([\n
+      ["test", "test2", "test", "", "Kia", "Nissan", "Toyota", "Honda", "Mix", null],\n
+      ["test3", "test4", "test3", "2008", 10, {a: 1, b: 2}, 12, 13, null, null],\n
+      ["test", "test2", "test", "2009", 20, {a: 1, b: 2}, 14, 13, null, null],\n
+      ["2010", 30, 15, 12, 13, {a: 1, b: 2}, null, null, null, null]\n
+    ]);\n
+  });\n
+\n
+  it(\'should run beforeAutofillInsidePopulate hook for each inserted value\', function () {\n
+    var called = 0;\n
+\n
+    var hot = handsontable({\n
+      data : arrayOfArrays()\n
+    });\n
+\n
+    hot.addHook(\'beforeAutofillInsidePopulate\', function (index) {\n
+      called++;\n
+    });\n
+\n
+    populateFromArray(0, 0, [["test","test2"],["test3","test4"]], 1, 1, \'autofill\', \'overwrite\');\n
+\n
+    expect(called).toEqual(4);\n
+  });\n
+\n
+  it(\'should run beforeAutofillInsidePopulate hook and could change cell data before insert if returned object with value property\', function () {\n
+\n
+    var hot = handsontable({\n
+      data : arrayOfArrays()\n
+    });\n
+\n
+    hot.addHook(\'beforeAutofillInsidePopulate\', function (index) {\n
+      return {\n
+        value: \'my_test\'\n
+      };\n
+    });\n
+\n
+    populateFromArray(0, 0, [["test","test2"],["test3","test4"]], 1, 1, \'autofill\', \'overwrite\');\n
+\n
+    expect(getDataAtCell(0,0)).toEqual(\'my_test\');\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4877</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_populateFromArraySpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

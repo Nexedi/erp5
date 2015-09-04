@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272738.65</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>numericRenderer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\n
+import numeral from \'numeral\';\n
+import {addClass} from \'./../helpers/dom/element\';\n
+import {getRenderer, registerRenderer} from \'./../renderers\';\n
+import {isNumeric} from \'./../helpers/number\';\n
+\n
+/**\n
+ * Numeric cell renderer\n
+ *\n
+ * @private\n
+ * @renderer NumericRenderer\n
+ * @dependencies numeral\n
+ * @param {Object} instance Handsontable instance\n
+ * @param {Element} TD Table cell where to render\n
+ * @param {Number} row\n
+ * @param {Number} col\n
+ * @param {String|Number} prop Row object property name\n
+ * @param value Value to render (remember to escape unsafe HTML before inserting to DOM!)\n
+ * @param {Object} cellProperties Cell properties (shared by cell renderer and editor)\n
+ */\n
+function numericRenderer(instance, TD, row, col, prop, value, cellProperties) {\n
+  if (isNumeric(value)) {\n
+    if (typeof cellProperties.language !== \'undefined\') {\n
+      numeral.language(cellProperties.language);\n
+    }\n
+    value = numeral(value).format(cellProperties.format || \'0\'); //docs: http://numeraljs.com/\n
+    addClass(TD, \'htNumeric\');\n
+  }\n
+  getRenderer(\'text\')(instance, TD, row, col, prop, value, cellProperties);\n
+}\n
+\n
+export {numericRenderer};\n
+\n
+registerRenderer(\'numeric\', numericRenderer);\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1175</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>numericRenderer.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272506.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_listenSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_listen\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should listen to changes when cell is selected\', function () {\n
+    var hot = handsontable();\n
+    hot.selectCell(0, 0);\n
+    expect(hot.isListening()).toEqual(true);\n
+  });\n
+\n
+  it(\'should\\\'t listen to changes when cell is selected via `selectCell` when `changeListener` argument is `false`\', function () {\n
+    var hot = handsontable();\n
+\n
+    hot.unlisten();\n
+\n
+    expect(hot.isListening()).toEqual(false);\n
+\n
+    hot.selectCell(0, 0, undefined, undefined, true, false);\n
+\n
+    expect(hot.isListening()).toEqual(false);\n
+  });\n
+\n
+  it(\'should unlisten changes\', function () {\n
+    var hot = handsontable();\n
+    hot.selectCell(0, 0);\n
+    expect(hot.isListening()).toEqual(true);\n
+    hot.unlisten();\n
+    expect(hot.isListening()).toEqual(false);\n
+  });\n
+\n
+  it(\'should listen to changes, when called after unlisten\', function () {\n
+    var hot = handsontable();\n
+    hot.selectCell(0, 0);\n
+    hot.unlisten();\n
+    hot.listen();\n
+    expect(hot.isListening()).toEqual(true);\n
+  });\n
+\n
+  it(\'when second instance is created, first should unlisten automatically\', function () {\n
+    var $container1 = $(\'<div id="hot1"></div>\').appendTo(\'body\').handsontable();\n
+    $container1.handsontable(\'selectCell\', 0, 0);\n
+    var $container2 = $(\'<div id="hot2"></div>\').appendTo(\'body\').handsontable();\n
+    $container2.handsontable(\'selectCell\', 0, 0);\n
+\n
+    expect($container1.handsontable(\'isListening\')).toEqual(false);\n
+    expect($container2.handsontable(\'isListening\')).toEqual(true);\n
+\n
+    $container1.handsontable(\'destroy\');\n
+    $container1.remove();\n
+    $container2.handsontable(\'destroy\');\n
+    $container2.remove();\n
+  });\n
+\n
+  it(\'when listen is called on first instance, second should unlisten automatically\', function () {\n
+    var $container1 = $(\'<div id="hot1"></div>\').appendTo(\'body\').handsontable();\n
+    $container1.handsontable(\'selectCell\', 0, 0);\n
+    var $container2 = $(\'<div id="hot2"></div>\').appendTo(\'body\').handsontable();\n
+    $container2.handsontable(\'selectCell\', 0, 0);\n
+\n
+    $container1.handsontable(\'listen\');\n
+    expect($container1.handsontable(\'isListening\')).toEqual(true);\n
+    expect($container2.handsontable(\'isListening\')).toEqual(false);\n
+\n
+    $container1.handsontable(\'destroy\');\n
+    $container1.remove();\n
+    $container2.handsontable(\'destroy\');\n
+    $container2.remove();\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2570</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_listenSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

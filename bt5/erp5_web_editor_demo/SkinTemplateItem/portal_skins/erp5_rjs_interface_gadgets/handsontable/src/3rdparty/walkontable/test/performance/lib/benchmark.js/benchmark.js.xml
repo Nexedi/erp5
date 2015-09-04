@@ -1,0 +1,3977 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272572.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>benchmark.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>113469</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>benchmark.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*!\n
+ * Benchmark.js v1.0.0 <http://benchmarkjs.com/>\n
+ * Copyright 2010-2012 Mathias Bynens <http://mths.be/>\n
+ * Based on JSLitmus.js, copyright Robert Kieffer <http://broofa.com/>\n
+ * Modified by John-David Dalton <http://allyoucanleet.com/>\n
+ * Available under MIT license <http://mths.be/mit>\n
+ */\n
+;(function(window, undefined) {\n
+  \'use strict\';\n
+\n
+  /** Used to assign each benchmark an incrimented id */\n
+  var counter = 0;\n
+\n
+  /** Detect DOM document object */\n
+  var doc = isHostType(window, \'document\') && document;\n
+\n
+  /** Detect free variable `define` */\n
+  var freeDefine = typeof define == \'function\' &&\n
+    typeof define.amd == \'object\' && define.amd && define;\n
+\n
+  /** Detect free variable `exports` */\n
+  var freeExports = typeof exports == \'object\' && exports &&\n
+    (typeof global == \'object\' && global && global == global.global && (window = global), exports);\n
+\n
+  /** Detect free variable `require` */\n
+  var freeRequire = typeof require == \'function\' && require;\n
+\n
+  /** Used to crawl all properties regardless of enumerability */\n
+  var getAllKeys = Object.getOwnPropertyNames;\n
+\n
+  /** Used to get property descriptors */\n
+  var getDescriptor = Object.getOwnPropertyDescriptor;\n
+\n
+  /** Used in case an object doesn\'t have its own method */\n
+  var hasOwnProperty = {}.hasOwnProperty;\n
+\n
+  /** Used to check if an object is extensible */\n
+  var isExtensible = Object.isExtensible || function() { return true; };\n
+\n
+  /** Used to access Wade Simmons\' Node microtime module */\n
+  var microtimeObject = req(\'microtime\');\n
+\n
+  /** Used to access the browser\'s high resolution timer */\n
+  var perfObject = isHostType(window, \'performance\') && performance;\n
+\n
+  /** Used to call the browser\'s high resolution timer */\n
+  var perfName = perfObject && (\n
+    perfObject.now && \'now\' ||\n
+      perfObject.webkitNow && \'webkitNow\'\n
+    );\n
+\n
+  /** Used to access Node\'s high resolution timer */\n
+  var processObject = isHostType(window, \'process\') && process;\n
+\n
+  /** Used to check if an own property is enumerable */\n
+  var propertyIsEnumerable = {}.propertyIsEnumerable;\n
+\n
+  /** Used to set property descriptors */\n
+  var setDescriptor = Object.defineProperty;\n
+\n
+  /** Used to resolve a value\'s internal [[Class]] */\n
+  var toString = {}.toString;\n
+\n
+  /** Used to prevent a `removeChild` memory leak in IE < 9 */\n
+  var trash = doc && doc.createElement(\'div\');\n
+\n
+  /** Used to integrity check compiled tests */\n
+  var uid = \'uid\' + (+new Date);\n
+\n
+  /** Used to avoid infinite recursion when methods call each other */\n
+  var calledBy = {};\n
+\n
+  /** Used to avoid hz of Infinity */\n
+  var divisors = {\n
+    \'1\': 4096,\n
+    \'2\': 512,\n
+    \'3\': 64,\n
+    \'4\': 8,\n
+    \'5\': 0\n
+  };\n
+\n
+  /**\n
+   * T-Distribution two-tailed critical values for 95% confidence\n
+   * http://www.itl.nist.gov/div898/handbook/eda/section3/eda3672.htm\n
+   */\n
+  var tTable = {\n
+    \'1\':  12.706,\'2\':  4.303, \'3\':  3.182, \'4\':  2.776, \'5\':  2.571, \'6\':  2.447,\n
+    \'7\':  2.365, \'8\':  2.306, \'9\':  2.262, \'10\': 2.228, \'11\': 2.201, \'12\': 2.179,\n
+    \'13\': 2.16,  \'14\': 2.145, \'15\': 2.131, \'16\': 2.12,  \'17\': 2.11,  \'18\': 2.101,\n
+    \'19\': 2.093, \'20\': 2.086, \'21\': 2.08,  \'22\': 2.074, \'23\': 2.069, \'24\': 2.064,\n
+    \'25\': 2.06,  \'26\': 2.056, \'27\': 2.052, \'28\': 2.048, \'29\': 2.045, \'30\': 2.042,\n
+    \'infinity\': 1.96\n
+  };\n
+\n
+  /**\n
+   * Critical Mann-Whitney U-values for 95% confidence\n
+   * http://www.saburchill.com/IBbiology/stats/003.html\n
+   */\n
+  var uTable = {\n
+    \'5\':  [0, 1, 2],\n
+    \'6\':  [1, 2, 3, 5],\n
+    \'7\':  [1, 3, 5, 6, 8],\n
+    \'8\':  [2, 4, 6, 8, 10, 13],\n
+    \'9\':  [2, 4, 7, 10, 12, 15, 17],\n
+    \'10\': [3, 5, 8, 11, 14, 17, 20, 23],\n
+    \'11\': [3, 6, 9, 13, 16, 19, 23, 26, 30],\n
+    \'12\': [4, 7, 11, 14, 18, 22, 26, 29, 33, 37],\n
+    \'13\': [4, 8, 12, 16, 20, 24, 28, 33, 37, 41, 45],\n
+    \'14\': [5, 9, 13, 17, 22, 26, 31, 36, 40, 45, 50, 55],\n
+    \'15\': [5, 10, 14, 19, 24, 29, 34, 39, 44, 49, 54, 59, 64],\n
+    \'16\': [6, 11, 15, 21, 26, 31, 37, 42, 47, 53, 59, 64, 70, 75],\n
+    \'17\': [6, 11, 17, 22, 28, 34, 39, 45, 51, 57, 63, 67, 75, 81, 87],\n
+    \'18\': [7, 12, 18, 24, 30, 36, 42, 48, 55, 61, 67, 74, 80, 86, 93, 99],\n
+    \'19\': [7, 13, 19, 25, 32, 38, 45, 52, 58, 65, 72, 78, 85, 92, 99, 106, 113],\n
+    \'20\': [8, 14, 20, 27, 34, 41, 48, 55, 62, 69, 76, 83, 90, 98, 105, 112, 119, 127],\n
+    \'21\': [8, 15, 22, 29, 36, 43, 50, 58, 65, 73, 80, 88, 96, 103, 111, 119, 126, 134, 142],\n
+    \'22\': [9, 16, 23, 30, 38, 45, 53, 61, 69, 77, 85, 93, 101, 109, 117, 125, 133, 141, 150, 158],\n
+    \'23\': [9, 17, 24, 32, 40, 48, 56, 64, 73, 81, 89, 98, 106, 115, 123, 132, 140, 149, 157, 166, 175],\n
+    \'24\': [10, 17, 25, 33, 42, 50, 59, 67, 76, 85, 94, 102, 111, 120, 129, 138, 147, 156, 165, 174, 183, 192],\n
+    \'25\': [10, 18, 27, 35, 44, 53, 62, 71, 80, 89, 98, 107, 117, 126, 135, 145, 154, 163, 173, 182, 192, 201, 211],\n
+    \'26\': [11, 19, 28, 37, 46, 55, 64, 74, 83, 93, 102, 112, 122, 132, 141, 151, 161, 171, 181, 191, 200, 210, 220, 230],\n
+    \'27\': [11, 20, 29, 38, 48, 57, 67, 77, 87, 97, 107, 118, 125, 138, 147, 158, 168, 178, 188, 199, 209, 219, 230, 240, 250],\n
+    \'28\': [12, 21, 30, 40, 50, 60, 70, 80, 90, 101, 111, 122, 132, 143, 154, 164, 175, 186, 196, 207, 218, 228, 239, 250, 261, 272],\n
+    \'29\': [13, 22, 32, 42, 52, 62, 73, 83, 94, 105, 116, 127, 138, 149, 160, 171, 182, 193, 204, 215, 226, 238, 249, 260, 271, 282, 294],\n
+    \'30\': [13, 23, 33, 43, 54, 65, 76, 87, 98, 109, 120, 131, 143, 154, 166, 177, 189, 200, 212, 223, 235, 247, 258, 270, 282, 293, 305, 317]\n
+  };\n
+\n
+  /**\n
+   * An object used to flag environments/features.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @type Object\n
+   */\n
+  var support = {};\n
+\n
+  (function() {\n
+\n
+    /**\n
+     * Detect Adobe AIR.\n
+     *\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    support.air = isClassOf(window.runtime, \'ScriptBridgingProxyObject\');\n
+\n
+    /**\n
+     * Detect if `arguments` objects have the correct internal [[Class]] value.\n
+     *\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    support.argumentsClass = isClassOf(arguments, \'Arguments\');\n
+\n
+    /**\n
+     * Detect if in a browser environment.\n
+     *\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    support.browser = doc && isHostType(window, \'navigator\');\n
+\n
+    /**\n
+     * Detect if strings support accessing characters by index.\n
+     *\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    support.charByIndex =\n
+      // IE 8 supports indexes on string literals but not string objects\n
+      (\'x\'[0] + Object(\'x\')[0]) == \'xx\';\n
+\n
+    /**\n
+     * Detect if strings have indexes as own properties.\n
+     *\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    support.charByOwnIndex =\n
+      // Narwhal, Rhino, RingoJS, IE 8, and Opera < 10.52 support indexes on\n
+      // strings but don\'t detect them as own properties\n
+      support.charByIndex && hasKey(\'x\', \'0\');\n
+\n
+    /**\n
+     * Detect if Java is enabled/exposed.\n
+     *\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    support.java = isClassOf(window.java, \'JavaPackage\');\n
+\n
+    /**\n
+     * Detect if the Timers API exists.\n
+     *\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    support.timeout = isHostType(window, \'setTimeout\') && isHostType(window, \'clearTimeout\');\n
+\n
+    /**\n
+     * Detect if functions support decompilation.\n
+     *\n
+     * @name decompilation\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    try {\n
+      // Safari 2.x removes commas in object literals\n
+      // from Function#toString results\n
+      // http://webk.it/11609\n
+      // Firefox 3.6 and Opera 9.25 strip grouping\n
+      // parentheses from Function#toString results\n
+      // http://bugzil.la/559438\n
+      support.decompilation = Function(\n
+        \'return (\' + (function(x) { return { \'x\': \'\' + (1 + x) + \'\', \'y\': 0 }; }) + \')\'\n
+      )()(0).x === \'1\';\n
+    } catch(e) {\n
+      support.decompilation = false;\n
+    }\n
+\n
+    /**\n
+     * Detect ES5+ property descriptor API.\n
+     *\n
+     * @name descriptors\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    try {\n
+      var o = {};\n
+      support.descriptors = (setDescriptor(o, o, o), \'value\' in getDescriptor(o, o));\n
+    } catch(e) {\n
+      support.descriptors = false;\n
+    }\n
+\n
+    /**\n
+     * Detect ES5+ Object.getOwnPropertyNames().\n
+     *\n
+     * @name getAllKeys\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    try {\n
+      support.getAllKeys = /\\bvalueOf\\b/.test(getAllKeys(Object.prototype));\n
+    } catch(e) {\n
+      support.getAllKeys = false;\n
+    }\n
+\n
+    /**\n
+     * Detect if own properties are iterated before inherited properties (all but IE < 9).\n
+     *\n
+     * @name iteratesOwnLast\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    support.iteratesOwnFirst = (function() {\n
+      var props = [];\n
+      function ctor() { this.x = 1; }\n
+      ctor.prototype = { \'y\': 1 };\n
+      for (var prop in new ctor) { props.push(prop); }\n
+      return props[0] == \'x\';\n
+    }());\n
+\n
+    /**\n
+     * Detect if a node\'s [[Class]] is resolvable (all but IE < 9)\n
+     * and that the JS engine errors when attempting to coerce an object to a\n
+     * string without a `toString` property value of `typeof` "function".\n
+     *\n
+     * @name nodeClass\n
+     * @memberOf Benchmark.support\n
+     * @type Boolean\n
+     */\n
+    try {\n
+      support.nodeClass = ({ \'toString\': 0 } + \'\', toString.call(doc || 0) != \'[object Object]\');\n
+    } catch(e) {\n
+      support.nodeClass = true;\n
+    }\n
+  }());\n
+\n
+  /**\n
+   * Timer object used by `clock()` and `Deferred#resolve`.\n
+   *\n
+   * @private\n
+   * @type Object\n
+   */\n
+  var timer = {\n
+\n
+    /**\n
+     * The timer namespace object or constructor.\n
+     *\n
+     * @private\n
+     * @memberOf timer\n
+     * @type Function|Object\n
+     */\n
+    \'ns\': Date,\n
+\n
+    /**\n
+     * Starts the deferred timer.\n
+     *\n
+     * @private\n
+     * @memberOf timer\n
+     * @param {Object} deferred The deferred instance.\n
+     */\n
+    \'start\': null, // lazy defined in `clock()`\n
+\n
+    /**\n
+     * Stops the deferred timer.\n
+     *\n
+     * @private\n
+     * @memberOf timer\n
+     * @param {Object} deferred The deferred instance.\n
+     */\n
+    \'stop\': null // lazy defined in `clock()`\n
+  };\n
+\n
+  /** Shortcut for inverse results */\n
+  var noArgumentsClass = !support.argumentsClass,\n
+    noCharByIndex = !support.charByIndex,\n
+    noCharByOwnIndex = !support.charByOwnIndex;\n
+\n
+  /** Math shortcuts */\n
+  var abs   = Math.abs,\n
+    floor = Math.floor,\n
+    max   = Math.max,\n
+    min   = Math.min,\n
+    pow   = Math.pow,\n
+    sqrt  = Math.sqrt;\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * The Benchmark constructor.\n
+   *\n
+   * @constructor\n
+   * @param {String} name A name to identify the benchmark.\n
+   * @param {Function|String} fn The test to benchmark.\n
+   * @param {Object} [options={}] Options object.\n
+   * @example\n
+   *\n
+   * // basic usage (the `new` operator is optional)\n
+   * var bench = new Benchmark(fn);\n
+   *\n
+   * // or using a name first\n
+   * var bench = new Benchmark(\'foo\', fn);\n
+   *\n
+   * // or with options\n
+   * var bench = new Benchmark(\'foo\', fn, {\n
+   *\n
+   *   // displayed by Benchmark#toString if `name` is not available\n
+   *   \'id\': \'xyz\',\n
+   *\n
+   *   // called when the benchmark starts running\n
+   *   \'onStart\': onStart,\n
+   *\n
+   *   // called after each run cycle\n
+   *   \'onCycle\': onCycle,\n
+   *\n
+   *   // called when aborted\n
+   *   \'onAbort\': onAbort,\n
+   *\n
+   *   // called when a test errors\n
+   *   \'onError\': onError,\n
+   *\n
+   *   // called when reset\n
+   *   \'onReset\': onReset,\n
+   *\n
+   *   // called when the benchmark completes running\n
+   *   \'onComplete\': onComplete,\n
+   *\n
+   *   // compiled/called before the test loop\n
+   *   \'setup\': setup,\n
+   *\n
+   *   // compiled/called after the test loop\n
+   *   \'teardown\': teardown\n
+   * });\n
+   *\n
+   * // or name and options\n
+   * var bench = new Benchmark(\'foo\', {\n
+   *\n
+   *   // a flag to indicate the benchmark is deferred\n
+   *   \'defer\': true,\n
+   *\n
+   *   // benchmark test function\n
+   *   \'fn\': function(deferred) {\n
+   *     // call resolve() when the deferred test is finished\n
+   *     deferred.resolve();\n
+   *   }\n
+   * });\n
+   *\n
+   * // or options only\n
+   * var bench = new Benchmark({\n
+   *\n
+   *   // benchmark name\n
+   *   \'name\': \'foo\',\n
+   *\n
+   *   // benchmark test as a string\n
+   *   \'fn\': \'[1,2,3,4].sort()\'\n
+   * });\n
+   *\n
+   * // a test\'s `this` binding is set to the benchmark instance\n
+   * var bench = new Benchmark(\'foo\', function() {\n
+   *   \'My name is \'.concat(this.name); // My name is foo\n
+   * });\n
+   */\n
+  function Benchmark(name, fn, options) {\n
+    var me = this;\n
+\n
+    // allow instance creation without the `new` operator\n
+    if (me == null || me.constructor != Benchmark) {\n
+      return new Benchmark(name, fn, options);\n
+    }\n
+    // juggle arguments\n
+    if (isClassOf(name, \'Object\')) {\n
+      // 1 argument (options)\n
+      options = name;\n
+    }\n
+    else if (isClassOf(name, \'Function\')) {\n
+      // 2 arguments (fn, options)\n
+      options = fn;\n
+      fn = name;\n
+    }\n
+    else if (isClassOf(fn, \'Object\')) {\n
+      // 2 arguments (name, options)\n
+      options = fn;\n
+      fn = null;\n
+      me.name = name;\n
+    }\n
+    else {\n
+      // 3 arguments (name, fn [, options])\n
+      me.name = name;\n
+    }\n
+    setOptions(me, options);\n
+    me.id || (me.id = ++counter);\n
+    me.fn == null && (me.fn = fn);\n
+    me.stats = deepClone(me.stats);\n
+    me.times = deepClone(me.times);\n
+  }\n
+\n
+  /**\n
+   * The Deferred constructor.\n
+   *\n
+   * @constructor\n
+   * @memberOf Benchmark\n
+   * @param {Object} clone The cloned benchmark instance.\n
+   */\n
+  function Deferred(clone) {\n
+    var me = this;\n
+    if (me == null || me.constructor != Deferred) {\n
+      return new Deferred(clone);\n
+    }\n
+    me.benchmark = clone;\n
+    clock(me);\n
+  }\n
+\n
+  /**\n
+   * The Event constructor.\n
+   *\n
+   * @constructor\n
+   * @memberOf Benchmark\n
+   * @param {String|Object} type The event type.\n
+   */\n
+  function Event(type) {\n
+    var me = this;\n
+    return (me == null || me.constructor != Event)\n
+      ? new Event(type)\n
+      : (type instanceof Event)\n
+      ? type\n
+      : extend(me, { \'timeStamp\': +new Date }, typeof type == \'string\' ? { \'type\': type } : type);\n
+  }\n
+\n
+  /**\n
+   * The Suite constructor.\n
+   *\n
+   * @constructor\n
+   * @memberOf Benchmark\n
+   * @param {String} name A name to identify the suite.\n
+   * @param {Object} [options={}] Options object.\n
+   * @example\n
+   *\n
+   * // basic usage (the `new` operator is optional)\n
+   * var suite = new Benchmark.Suite;\n
+   *\n
+   * // or using a name first\n
+   * var suite = new Benchmark.Suite(\'foo\');\n
+   *\n
+   * // or with options\n
+   * var suite = new Benchmark.Suite(\'foo\', {\n
+   *\n
+   *   // called when the suite starts running\n
+   *   \'onStart\': onStart,\n
+   *\n
+   *   // called between running benchmarks\n
+   *   \'onCycle\': onCycle,\n
+   *\n
+   *   // called when aborted\n
+   *   \'onAbort\': onAbort,\n
+   *\n
+   *   // called when a test errors\n
+   *   \'onError\': onError,\n
+   *\n
+   *   // called when reset\n
+   *   \'onReset\': onReset,\n
+   *\n
+   *   // called when the suite completes running\n
+   *   \'onComplete\': onComplete\n
+   * });\n
+   */\n
+  function Suite(name, options) {\n
+    var me = this;\n
+\n
+    // allow instance creation without the `new` operator\n
+    if (me == null || me.constructor != Suite) {\n
+      return new Suite(name, options);\n
+    }\n
+    // juggle arguments\n
+    if (isClassOf(name, \'Object\')) {\n
+      // 1 argument (options)\n
+      options = name;\n
+    } else {\n
+      // 2 arguments (name [, options])\n
+      me.name = name;\n
+    }\n
+    setOptions(me, options);\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * Note: Some array methods have been implemented in plain JavaScript to avoid\n
+   * bugs in IE, Opera, Rhino, and Mobile Safari.\n
+   *\n
+   * IE compatibility mode and IE < 9 have buggy Array `shift()` and `splice()`\n
+   * functions that fail to remove the last element, `object[0]`, of\n
+   * array-like-objects even though the `length` property is set to `0`.\n
+   * The `shift()` method is buggy in IE 8 compatibility mode, while `splice()`\n
+   * is buggy regardless of mode in IE < 9 and buggy in compatibility mode in IE 9.\n
+   *\n
+   * In Opera < 9.50 and some older/beta Mobile Safari versions using `unshift()`\n
+   * generically to augment the `arguments` object will pave the value at index 0\n
+   * without incrimenting the other values\'s indexes.\n
+   * https://github.com/documentcloud/underscore/issues/9\n
+   *\n
+   * Rhino and environments it powers, like Narwhal and RingoJS, may have\n
+   * buggy Array `concat()`, `reverse()`, `shift()`, `slice()`, `splice()` and\n
+   * `unshift()` functions that make sparse arrays non-sparse by assigning the\n
+   * undefined indexes a value of undefined.\n
+   * https://github.com/mozilla/rhino/commit/702abfed3f8ca043b2636efd31c14ba7552603dd\n
+   */\n
+\n
+  /**\n
+   * Creates an array containing the elements of the host array followed by the\n
+   * elements of each argument in order.\n
+   *\n
+   * @memberOf Benchmark.Suite\n
+   * @returns {Array} The new array.\n
+   */\n
+  function concat() {\n
+    var value,\n
+      j = -1,\n
+      length = arguments.length,\n
+      result = slice.call(this),\n
+      index = result.length;\n
+\n
+    while (++j < length) {\n
+      value = arguments[j];\n
+      if (isClassOf(value, \'Array\')) {\n
+        for (var k = 0, l = value.length; k < l; k++, index++) {\n
+          if (k in value) {\n
+            result[index] = value[k];\n
+          }\n
+        }\n
+      } else {\n
+        result[index++] = value;\n
+      }\n
+    }\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * Utility function used by `shift()`, `splice()`, and `unshift()`.\n
+   *\n
+   * @private\n
+   * @param {Number} start The index to start inserting elements.\n
+   * @param {Number} deleteCount The number of elements to delete from the insert point.\n
+   * @param {Array} elements The elements to insert.\n
+   * @returns {Array} An array of deleted elements.\n
+   */\n
+  function insert(start, deleteCount, elements) {\n
+    // `result` should have its length set to the `deleteCount`\n
+    // see https://bugs.ecmascript.org/show_bug.cgi?id=332\n
+    var deleteEnd = start + deleteCount,\n
+      elementCount = elements ? elements.length : 0,\n
+      index = start - 1,\n
+      length = start + elementCount,\n
+      object = this,\n
+      result = Array(deleteCount),\n
+      tail = slice.call(object, deleteEnd);\n
+\n
+    // delete elements from the array\n
+    while (++index < deleteEnd) {\n
+      if (index in object) {\n
+        result[index - start] = object[index];\n
+        delete object[index];\n
+      }\n
+    }\n
+    // insert elements\n
+    index = start - 1;\n
+    while (++index < length) {\n
+      object[index] = elements[index - start];\n
+    }\n
+    // append tail elements\n
+    start = index--;\n
+    length = max(0, (object.length >>> 0) - deleteCount + elementCount);\n
+    while (++index < length) {\n
+      if ((index - start) in tail) {\n
+        object[index] = tail[index - start];\n
+      } else if (index in object) {\n
+        delete object[index];\n
+      }\n
+    }\n
+    // delete excess elements\n
+    deleteCount = deleteCount > elementCount ? deleteCount - elementCount : 0;\n
+    while (deleteCount--) {\n
+      index = length + deleteCount;\n
+      if (index in object) {\n
+        delete object[index];\n
+      }\n
+    }\n
+    object.length = length;\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * Rearrange the host array\'s elements in reverse order.\n
+   *\n
+   * @memberOf Benchmark.Suite\n
+   * @returns {Array} The reversed array.\n
+   */\n
+  function reverse() {\n
+    var upperIndex,\n
+      value,\n
+      index = -1,\n
+      object = Object(this),\n
+      length = object.length >>> 0,\n
+      middle = floor(length / 2);\n
+\n
+    if (length > 1) {\n
+      while (++index < middle) {\n
+        upperIndex = length - index - 1;\n
+        value = upperIndex in object ? object[upperIndex] : uid;\n
+        if (index in object) {\n
+          object[upperIndex] = object[index];\n
+        } else {\n
+          delete object[upperIndex];\n
+        }\n
+        if (value != uid) {\n
+          object[index] = value;\n
+        } else {\n
+          delete object[index];\n
+        }\n
+      }\n
+    }\n
+    return object;\n
+  }\n
+\n
+  /**\n
+   * Removes the first element of the host array and returns it.\n
+   *\n
+   * @memberOf Benchmark.Suite\n
+   * @returns {Mixed} The first element of the array.\n
+   */\n
+  function shift() {\n
+    return insert.call(this, 0, 1)[0];\n
+  }\n
+\n
+  /**\n
+   * Creates an array of the host array\'s elements from the start index up to,\n
+   * but not including, the end index.\n
+   *\n
+   * @memberOf Benchmark.Suite\n
+   * @param {Number} start The starting index.\n
+   * @param {Number} end The end index.\n
+   * @returns {Array} The new array.\n
+   */\n
+  function slice(start, end) {\n
+    var index = -1,\n
+      object = Object(this),\n
+      length = object.length >>> 0,\n
+      result = [];\n
+\n
+    start = toInteger(start);\n
+    start = start < 0 ? max(length + start, 0) : min(start, length);\n
+    start--;\n
+    end = end == null ? length : toInteger(end);\n
+    end = end < 0 ? max(length + end, 0) : min(end, length);\n
+\n
+    while ((++index, ++start) < end) {\n
+      if (start in object) {\n
+        result[index] = object[start];\n
+      }\n
+    }\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * Allows removing a range of elements and/or inserting elements into the\n
+   * host array.\n
+   *\n
+   * @memberOf Benchmark.Suite\n
+   * @param {Number} start The start index.\n
+   * @param {Number} deleteCount The number of elements to delete.\n
+   * @param {Mixed} [val1, val2, ...] values to insert at the `start` index.\n
+   * @returns {Array} An array of removed elements.\n
+   */\n
+  function splice(start, deleteCount) {\n
+    var object = Object(this),\n
+      length = object.length >>> 0;\n
+\n
+    start = toInteger(start);\n
+    start = start < 0 ? max(length + start, 0) : min(start, length);\n
+\n
+    // support the de-facto SpiderMonkey extension\n
+    // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/splice#Parameters\n
+    // https://bugs.ecmascript.org/show_bug.cgi?id=429\n
+    deleteCount = arguments.length == 1\n
+      ? length - start\n
+      : min(max(toInteger(deleteCount), 0), length - start);\n
+\n
+    return insert.call(object, start, deleteCount, slice.call(arguments, 2));\n
+  }\n
+\n
+  /**\n
+   * Converts the specified `value` to an integer.\n
+   *\n
+   * @private\n
+   * @param {Mixed} value The value to convert.\n
+   * @returns {Number} The resulting integer.\n
+   */\n
+  function toInteger(value) {\n
+    value = +value;\n
+    return value === 0 || !isFinite(value) ? value || 0 : value - (value % 1);\n
+  }\n
+\n
+  /**\n
+   * Appends arguments to the host array.\n
+   *\n
+   * @memberOf Benchmark.Suite\n
+   * @returns {Number} The new length.\n
+   */\n
+  function unshift() {\n
+    var object = Object(this);\n
+    insert.call(object, 0, 0, arguments);\n
+    return object.length;\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * A generic `Function#bind` like method.\n
+   *\n
+   * @private\n
+   * @param {Function} fn The function to be bound to `thisArg`.\n
+   * @param {Mixed} thisArg The `this` binding for the given function.\n
+   * @returns {Function} The bound function.\n
+   */\n
+  function bind(fn, thisArg) {\n
+    return function() { fn.apply(thisArg, arguments); };\n
+  }\n
+\n
+  /**\n
+   * Creates a function from the given arguments string and body.\n
+   *\n
+   * @private\n
+   * @param {String} args The comma separated function arguments.\n
+   * @param {String} body The function body.\n
+   * @returns {Function} The new function.\n
+   */\n
+  function createFunction() {\n
+    // lazy define\n
+    createFunction = function(args, body) {\n
+      var result,\n
+        anchor = freeDefine ? define.amd : Benchmark,\n
+        prop = uid + \'createFunction\';\n
+\n
+      runScript((freeDefine ? \'define.amd.\' : \'Benchmark.\') + prop + \'=function(\' + args + \'){\' + body + \'}\');\n
+      result = anchor[prop];\n
+      delete anchor[prop];\n
+      return result;\n
+    };\n
+    // fix JaegerMonkey bug\n
+    // http://bugzil.la/639720\n
+    createFunction = support.browser && (createFunction(\'\', \'return"\' + uid + \'"\') || noop)() == uid ? createFunction : Function;\n
+    return createFunction.apply(null, arguments);\n
+  }\n
+\n
+  /**\n
+   * Delay the execution of a function based on the benchmark\'s `delay` property.\n
+   *\n
+   * @private\n
+   * @param {Object} bench The benchmark instance.\n
+   * @param {Object} fn The function to execute.\n
+   */\n
+  function delay(bench, fn) {\n
+    bench._timerId = setTimeout(fn, bench.delay * 1e3);\n
+  }\n
+\n
+  /**\n
+   * Destroys the given element.\n
+   *\n
+   * @private\n
+   * @param {Element} element The element to destroy.\n
+   */\n
+  function destroyElement(element) {\n
+    trash.appendChild(element);\n
+    trash.innerHTML = \'\';\n
+  }\n
+\n
+  /**\n
+   * Iterates over an object\'s properties, executing the `callback` for each.\n
+   * Callbacks may terminate the loop by explicitly returning `false`.\n
+   *\n
+   * @private\n
+   * @param {Object} object The object to iterate over.\n
+   * @param {Function} callback The function executed per own property.\n
+   * @param {Object} options The options object.\n
+   * @returns {Object} Returns the object iterated over.\n
+   */\n
+  function forProps() {\n
+    var forShadowed,\n
+      skipSeen,\n
+      forArgs = true,\n
+      shadowed = [\'constructor\', \'hasOwnProperty\', \'isPrototypeOf\', \'propertyIsEnumerable\', \'toLocaleString\', \'toString\', \'valueOf\'];\n
+\n
+    (function(enumFlag, key) {\n
+      // must use a non-native constructor to catch the Safari 2 issue\n
+      function Klass() { this.valueOf = 0; };\n
+      Klass.prototype.valueOf = 0;\n
+      // check various for-in bugs\n
+      for (key in new Klass) {\n
+        enumFlag += key == \'valueOf\' ? 1 : 0;\n
+      }\n
+      // check if `arguments` objects have non-enumerable indexes\n
+      for (key in arguments) {\n
+        key == \'0\' && (forArgs = false);\n
+      }\n
+      // Safari 2 iterates over shadowed properties twice\n
+      // http://replay.waybackmachine.org/20090428222941/http://tobielangel.com/2007/1/29/for-in-loop-broken-in-safari/\n
+      skipSeen = enumFlag == 2;\n
+      // IE < 9 incorrectly makes an object\'s properties non-enumerable if they have\n
+      // the same name as other non-enumerable properties in its prototype chain.\n
+      forShadowed = !enumFlag;\n
+    }(0));\n
+\n
+    // lazy define\n
+    forProps = function(object, callback, options) {\n
+      options || (options = {});\n
+\n
+      var result = object;\n
+      object = Object(object);\n
+\n
+      var ctor,\n
+        key,\n
+        keys,\n
+        skipCtor,\n
+        done = !result,\n
+        which = options.which,\n
+        allFlag = which == \'all\',\n
+        index = -1,\n
+        iteratee = object,\n
+        length = object.length,\n
+        ownFlag = allFlag || which == \'own\',\n
+        seen = {},\n
+        skipProto = isClassOf(object, \'Function\'),\n
+        thisArg = options.bind;\n
+\n
+      if (thisArg !== undefined) {\n
+        callback = bind(callback, thisArg);\n
+      }\n
+      // iterate all properties\n
+      if (allFlag && support.getAllKeys) {\n
+        for (index = 0, keys = getAllKeys(object), length = keys.length; index < length; index++) {\n
+          key = keys[index];\n
+          if (callback(object[key], key, object) === false) {\n
+            break;\n
+          }\n
+        }\n
+      }\n
+      // else iterate only enumerable properties\n
+      else {\n
+        for (key in object) {\n
+          // Firefox < 3.6, Opera > 9.50 - Opera < 11.60, and Safari < 5.1\n
+          // (if the prototype or a property on the prototype has been set)\n
+          // incorrectly set a function\'s `prototype` property [[Enumerable]] value\n
+          // to `true`. Because of this we standardize on skipping the `prototype`\n
+          // property of functions regardless of their [[Enumerable]] value.\n
+          if ((done =\n
+            !(skipProto && key == \'prototype\') &&\n
+              !(skipSeen && (hasKey(seen, key) || !(seen[key] = true))) &&\n
+              (!ownFlag || ownFlag && hasKey(object, key)) &&\n
+              callback(object[key], key, object) === false)) {\n
+            break;\n
+          }\n
+        }\n
+        // in IE < 9 strings don\'t support accessing characters by index\n
+        if (!done && (forArgs && isArguments(object) ||\n
+          ((noCharByIndex || noCharByOwnIndex) && isClassOf(object, \'String\') &&\n
+            (iteratee = noCharByIndex ? object.split(\'\') : object)))) {\n
+          while (++index < length) {\n
+            if ((done =\n
+              callback(iteratee[index], String(index), object) === false)) {\n
+              break;\n
+            }\n
+          }\n
+        }\n
+        if (!done && forShadowed) {\n
+          // Because IE < 9 can\'t set the `[[Enumerable]]` attribute of an existing\n
+          // property and the `constructor` property of a prototype defaults to\n
+          // non-enumerable, we manually skip the `constructor` property when we\n
+          // think we are iterating over a `prototype` object.\n
+          ctor = object.constructor;\n
+          skipCtor = ctor && ctor.prototype && ctor.prototype.constructor === ctor;\n
+          for (index = 0; index < 7; index++) {\n
+            key = shadowed[index];\n
+            if (!(skipCtor && key == \'constructor\') &&\n
+              hasKey(object, key) &&\n
+              callback(object[key], key, object) === false) {\n
+              break;\n
+            }\n
+          }\n
+        }\n
+      }\n
+      return result;\n
+    };\n
+    return forProps.apply(null, arguments);\n
+  }\n
+\n
+  /**\n
+   * Gets the name of the first argument from a function\'s source.\n
+   *\n
+   * @private\n
+   * @param {Function} fn The function.\n
+   * @returns {String} The argument name.\n
+   */\n
+  function getFirstArgument(fn) {\n
+    return (!hasKey(fn, \'toString\') &&\n
+      (/^[\\s(]*function[^(]*\\(([^\\s,)]+)/.exec(fn) || 0)[1]) || \'\';\n
+  }\n
+\n
+  /**\n
+   * Computes the arithmetic mean of a sample.\n
+   *\n
+   * @private\n
+   * @param {Array} sample The sample.\n
+   * @returns {Number} The mean.\n
+   */\n
+  function getMean(sample) {\n
+    return reduce(sample, function(sum, x) {\n
+      return sum + x;\n
+    }) / sample.length || 0;\n
+  }\n
+\n
+  /**\n
+   * Gets the source code of a function.\n
+   *\n
+   * @private\n
+   * @param {Function} fn The function.\n
+   * @param {String} altSource A string used when a function\'s source code is unretrievable.\n
+   * @returns {String} The function\'s source code.\n
+   */\n
+  function getSource(fn, altSource) {\n
+    var result = altSource;\n
+    if (isStringable(fn)) {\n
+      result = String(fn);\n
+    } else if (support.decompilation) {\n
+      // escape the `{` for Firefox 1\n
+      result = (/^[^{]+\\{([\\s\\S]*)}\\s*$/.exec(fn) || 0)[1];\n
+    }\n
+    // trim string\n
+    result = (result || \'\').replace(/^\\s+|\\s+$/g, \'\');\n
+\n
+    // detect strings containing only the "use strict" directive\n
+    return /^(?:\\/\\*+[\\w|\\W]*?\\*\\/|\\/\\/.*?[\\n\\r\\u2028\\u2029]|\\s)*(["\'])use strict\\1;?$/.test(result)\n
+      ? \'\'\n
+      : result;\n
+  }\n
+\n
+  /**\n
+   * Checks if a value is an `arguments` object.\n
+   *\n
+   * @private\n
+   * @param {Mixed} value The value to check.\n
+   * @returns {Boolean} Returns `true` if the value is an `arguments` object, else `false`.\n
+   */\n
+  function isArguments() {\n
+    // lazy define\n
+    isArguments = function(value) {\n
+      return toString.call(value) == \'[object Arguments]\';\n
+    };\n
+    if (noArgumentsClass) {\n
+      isArguments = function(value) {\n
+        return hasKey(value, \'callee\') &&\n
+          !(propertyIsEnumerable && propertyIsEnumerable.call(value, \'callee\'));\n
+      };\n
+    }\n
+    return isArguments(arguments[0]);\n
+  }\n
+\n
+  /**\n
+   * Checks if an object is of the specified class.\n
+   *\n
+   * @private\n
+   * @param {Mixed} value The value to check.\n
+   * @param {String} name The name of the class.\n
+   * @returns {Boolean} Returns `true` if the value is of the specified class, else `false`.\n
+   */\n
+  function isClassOf(value, name) {\n
+    return value != null && toString.call(value) == \'[object \' + name + \']\';\n
+  }\n
+\n
+  /**\n
+   * Host objects can return type values that are different from their actual\n
+   * data type. The objects we are concerned with usually return non-primitive\n
+   * types of object, function, or unknown.\n
+   *\n
+   * @private\n
+   * @param {Mixed} object The owner of the property.\n
+   * @param {String} property The property to check.\n
+   * @returns {Boolean} Returns `true` if the property value is a non-primitive, else `false`.\n
+   */\n
+  function isHostType(object, property) {\n
+    var type = object != null ? typeof object[property] : \'number\';\n
+    return !/^(?:boolean|number|string|undefined)$/.test(type) &&\n
+      (type == \'object\' ? !!object[property] : true);\n
+  }\n
+\n
+  /**\n
+   * Checks if a given `value` is an object created by the `Object` constructor\n
+   * assuming objects created by the `Object` constructor have no inherited\n
+   * enumerable properties and that there are no `Object.prototype` extensions.\n
+   *\n
+   * @private\n
+   * @param {Mixed} value The value to check.\n
+   * @returns {Boolean} Returns `true` if the `value` is a plain `Object` object, else `false`.\n
+   */\n
+  function isPlainObject(value) {\n
+    // avoid non-objects and false positives for `arguments` objects in IE < 9\n
+    var result = false;\n
+    if (!(value && typeof value == \'object\') || isArguments(value)) {\n
+      return result;\n
+    }\n
+    // IE < 9 presents DOM nodes as `Object` objects except they have `toString`\n
+    // methods that are `typeof` "string" and still can coerce nodes to strings.\n
+    // Also check that the constructor is `Object` (i.e. `Object instanceof Object`)\n
+    var ctor = value.constructor;\n
+    if ((support.nodeClass || !(typeof value.toString != \'function\' && typeof (value + \'\') == \'string\')) &&\n
+      (!isClassOf(ctor, \'Function\') || ctor instanceof ctor)) {\n
+      // In most environments an object\'s own properties are iterated before\n
+      // its inherited properties. If the last iterated property is an object\'s\n
+      // own property then there are no inherited enumerable properties.\n
+      if (support.iteratesOwnFirst) {\n
+        forProps(value, function(subValue, subKey) {\n
+          result = subKey;\n
+        });\n
+        return result === false || hasKey(value, result);\n
+      }\n
+      // IE < 9 iterates inherited properties before own properties. If the first\n
+      // iterated property is an object\'s own property then there are no inherited\n
+      // enumerable properties.\n
+      forProps(value, function(subValue, subKey) {\n
+        result = !hasKey(value, subKey);\n
+        return false;\n
+      });\n
+      return result === false;\n
+    }\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * Checks if a value can be safely coerced to a string.\n
+   *\n
+   * @private\n
+   * @param {Mixed} value The value to check.\n
+   * @returns {Boolean} Returns `true` if the value can be coerced, else `false`.\n
+   */\n
+  function isStringable(value) {\n
+    return hasKey(value, \'toString\') || isClassOf(value, \'String\');\n
+  }\n
+\n
+  /**\n
+   * Wraps a function and passes `this` to the original function as the\n
+   * first argument.\n
+   *\n
+   * @private\n
+   * @param {Function} fn The function to be wrapped.\n
+   * @returns {Function} The new function.\n
+   */\n
+  function methodize(fn) {\n
+    return function() {\n
+      var args = [this];\n
+      args.push.apply(args, arguments);\n
+      return fn.apply(null, args);\n
+    };\n
+  }\n
+\n
+  /**\n
+   * A no-operation function.\n
+   *\n
+   * @private\n
+   */\n
+  function noop() {\n
+    // no operation performed\n
+  }\n
+\n
+  /**\n
+   * A wrapper around require() to suppress `module missing` errors.\n
+   *\n
+   * @private\n
+   * @param {String} id The module id.\n
+   * @returns {Mixed} The exported module or `null`.\n
+   */\n
+  function req(id) {\n
+    try {\n
+      var result = freeExports && freeRequire(id);\n
+    } catch(e) { }\n
+    return result || null;\n
+  }\n
+\n
+  /**\n
+   * Runs a snippet of JavaScript via script injection.\n
+   *\n
+   * @private\n
+   * @param {String} code The code to run.\n
+   */\n
+  function runScript(code) {\n
+    var anchor = freeDefine ? define.amd : Benchmark,\n
+      script = doc.createElement(\'script\'),\n
+      sibling = doc.getElementsByTagName(\'script\')[0],\n
+      parent = sibling.parentNode,\n
+      prop = uid + \'runScript\',\n
+      prefix = \'(\' + (freeDefine ? \'define.amd.\' : \'Benchmark.\') + prop + \'||function(){})();\';\n
+\n
+    // Firefox 2.0.0.2 cannot use script injection as intended because it executes\n
+    // asynchronously, but that\'s OK because script injection is only used to avoid\n
+    // the previously commented JaegerMonkey bug.\n
+    try {\n
+      // remove the inserted script *before* running the code to avoid differences\n
+      // in the expected script element count/order of the document.\n
+      script.appendChild(doc.createTextNode(prefix + code));\n
+      anchor[prop] = function() { destroyElement(script); };\n
+    } catch(e) {\n
+      parent = parent.cloneNode(false);\n
+      sibling = null;\n
+      script.text = code;\n
+    }\n
+    parent.insertBefore(script, sibling);\n
+    delete anchor[prop];\n
+  }\n
+\n
+  /**\n
+   * A helper function for setting options/event handlers.\n
+   *\n
+   * @private\n
+   * @param {Object} bench The benchmark instance.\n
+   * @param {Object} [options={}] Options object.\n
+   */\n
+  function setOptions(bench, options) {\n
+    options = extend({}, bench.constructor.options, options);\n
+    bench.options = forOwn(options, function(value, key) {\n
+      if (value != null) {\n
+        // add event listeners\n
+        if (/^on[A-Z]/.test(key)) {\n
+          forEach(key.split(\' \'), function(key) {\n
+            bench.on(key.slice(2).toLowerCase(), value);\n
+          });\n
+        } else if (!hasKey(bench, key)) {\n
+          bench[key] = deepClone(value);\n
+        }\n
+      }\n
+    });\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * Handles cycling/completing the deferred benchmark.\n
+   *\n
+   * @memberOf Benchmark.Deferred\n
+   */\n
+  function resolve() {\n
+    var me = this,\n
+      clone = me.benchmark,\n
+      bench = clone._original;\n
+\n
+    if (bench.aborted) {\n
+      // cycle() -> clone cycle/complete event -> compute()\'s invoked bench.run() cycle/complete\n
+      me.teardown();\n
+      clone.running = false;\n
+      cycle(me);\n
+    }\n
+    else if (++me.cycles < clone.count) {\n
+      // continue the test loop\n
+      if (support.timeout) {\n
+        // use setTimeout to avoid a call stack overflow if called recursively\n
+        setTimeout(function() { clone.compiled.call(me, timer); }, 0);\n
+      } else {\n
+        clone.compiled.call(me, timer);\n
+      }\n
+    }\n
+    else {\n
+      timer.stop(me);\n
+      me.teardown();\n
+      delay(clone, function() { cycle(me); });\n
+    }\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * A deep clone utility.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Mixed} value The value to clone.\n
+   * @returns {Mixed} The cloned value.\n
+   */\n
+  function deepClone(value) {\n
+    var accessor,\n
+      circular,\n
+      clone,\n
+      ctor,\n
+      descriptor,\n
+      extensible,\n
+      key,\n
+      length,\n
+      markerKey,\n
+      parent,\n
+      result,\n
+      source,\n
+      subIndex,\n
+      data = { \'value\': value },\n
+      index = 0,\n
+      marked = [],\n
+      queue = { \'length\': 0 },\n
+      unmarked = [];\n
+\n
+    /**\n
+     * An easily detectable decorator for cloned values.\n
+     */\n
+    function Marker(object) {\n
+      this.raw = object;\n
+    }\n
+\n
+    /**\n
+     * The callback used by `forProps()`.\n
+     */\n
+    function forPropsCallback(subValue, subKey) {\n
+      // exit early to avoid cloning the marker\n
+      if (subValue && subValue.constructor == Marker) {\n
+        return;\n
+      }\n
+      // add objects to the queue\n
+      if (subValue === Object(subValue)) {\n
+        queue[queue.length++] = { \'key\': subKey, \'parent\': clone, \'source\': value };\n
+      }\n
+      // assign non-objects\n
+      else {\n
+        try {\n
+          // will throw an error in strict mode if the property is read-only\n
+          clone[subKey] = subValue;\n
+        } catch(e) { }\n
+      }\n
+    }\n
+\n
+    /**\n
+     * Gets an available marker key for the given object.\n
+     */\n
+    function getMarkerKey(object) {\n
+      // avoid collisions with existing keys\n
+      var result = uid;\n
+      while (object[result] && object[result].constructor != Marker) {\n
+        result += 1;\n
+      }\n
+      return result;\n
+    }\n
+\n
+    do {\n
+      key = data.key;\n
+      parent = data.parent;\n
+      source = data.source;\n
+      clone = value = source ? source[key] : data.value;\n
+      accessor = circular = descriptor = false;\n
+\n
+      // create a basic clone to filter out functions, DOM elements, and\n
+      // other non `Object` objects\n
+      if (value === Object(value)) {\n
+        // use custom deep clone function if available\n
+        if (isClassOf(value.deepClone, \'Function\')) {\n
+          clone = value.deepClone();\n
+        } else {\n
+          ctor = value.constructor;\n
+          switch (toString.call(value)) {\n
+            case \'[object Array]\':\n
+              clone = new ctor(value.length);\n
+              break;\n
+\n
+            case \'[object Boolean]\':\n
+              clone = new ctor(value == true);\n
+              break;\n
+\n
+            case \'[object Date]\':\n
+              clone = new ctor(+value);\n
+              break;\n
+\n
+            case \'[object Object]\':\n
+              isPlainObject(value) && (clone = {});\n
+              break;\n
+\n
+            case \'[object Number]\':\n
+            case \'[object String]\':\n
+              clone = new ctor(value);\n
+              break;\n
+\n
+            case \'[object RegExp]\':\n
+              clone = ctor(value.source,\n
+                (value.global     ? \'g\' : \'\') +\n
+                  (value.ignoreCase ? \'i\' : \'\') +\n
+                  (value.multiline  ? \'m\' : \'\'));\n
+          }\n
+        }\n
+        // continue clone if `value` doesn\'t have an accessor descriptor\n
+        // http://es5.github.com/#x8.10.1\n
+        if (clone && clone != value &&\n
+          !(descriptor = source && support.descriptors && getDescriptor(source, key),\n
+            accessor = descriptor && (descriptor.get || descriptor.set))) {\n
+          // use an existing clone (circular reference)\n
+          if ((extensible = isExtensible(value))) {\n
+            markerKey = getMarkerKey(value);\n
+            if (value[markerKey]) {\n
+              circular = clone = value[markerKey].raw;\n
+            }\n
+          } else {\n
+            // for frozen/sealed objects\n
+            for (subIndex = 0, length = unmarked.length; subIndex < length; subIndex++) {\n
+              data = unmarked[subIndex];\n
+              if (data.object === value) {\n
+                circular = clone = data.clone;\n
+                break;\n
+              }\n
+            }\n
+          }\n
+          if (!circular) {\n
+            // mark object to allow quickly detecting circular references and tie it to its clone\n
+            if (extensible) {\n
+              value[markerKey] = new Marker(clone);\n
+              marked.push({ \'key\': markerKey, \'object\': value });\n
+            } else {\n
+              // for frozen/sealed objects\n
+              unmarked.push({ \'clone\': clone, \'object\': value });\n
+            }\n
+            // iterate over object properties\n
+            forProps(value, forPropsCallback, { \'which\': \'all\' });\n
+          }\n
+        }\n
+      }\n
+      if (parent) {\n
+        // for custom property descriptors\n
+        if (accessor || (descriptor && !(descriptor.configurable && descriptor.enumerable && descriptor.writable))) {\n
+          if (\'value\' in descriptor) {\n
+            descriptor.value = clone;\n
+          }\n
+          setDescriptor(parent, key, descriptor);\n
+        }\n
+        // for default property descriptors\n
+        else {\n
+          parent[key] = clone;\n
+        }\n
+      } else {\n
+        result = clone;\n
+      }\n
+    } while ((data = queue[index++]));\n
+\n
+    // remove markers\n
+    for (index = 0, length = marked.length; index < length; index++) {\n
+      data = marked[index];\n
+      delete data.object[data.key];\n
+    }\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * An iteration utility for arrays and objects.\n
+   * Callbacks may terminate the loop by explicitly returning `false`.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Array|Object} object The object to iterate over.\n
+   * @param {Function} callback The function called per iteration.\n
+   * @param {Mixed} thisArg The `this` binding for the callback.\n
+   * @returns {Array|Object} Returns the object iterated over.\n
+   */\n
+  function each(object, callback, thisArg) {\n
+    var result = object;\n
+    object = Object(object);\n
+\n
+    var fn = callback,\n
+      index = -1,\n
+      length = object.length,\n
+      isSnapshot = !!(object.snapshotItem && (length = object.snapshotLength)),\n
+      isSplittable = (noCharByIndex || noCharByOwnIndex) && isClassOf(object, \'String\'),\n
+      isConvertable = isSnapshot || isSplittable || \'item\' in object,\n
+      origObject = object;\n
+\n
+    // in Opera < 10.5 `hasKey(object, \'length\')` returns `false` for NodeLists\n
+    if (length === length >>> 0) {\n
+      if (isConvertable) {\n
+        // the third argument of the callback is the original non-array object\n
+        callback = function(value, index) {\n
+          return fn.call(this, value, index, origObject);\n
+        };\n
+        // in IE < 9 strings don\'t support accessing characters by index\n
+        if (isSplittable) {\n
+          object = object.split(\'\');\n
+        } else {\n
+          object = [];\n
+          while (++index < length) {\n
+            // in Safari 2 `index in object` is always `false` for NodeLists\n
+            object[index] = isSnapshot ? result.snapshotItem(index) : result[index];\n
+          }\n
+        }\n
+      }\n
+      forEach(object, callback, thisArg);\n
+    } else {\n
+      forOwn(object, callback, thisArg);\n
+    }\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * Copies enumerable properties from the source(s) object to the destination object.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Object} destination The destination object.\n
+   * @param {Object} [source={}] The source object.\n
+   * @returns {Object} The destination object.\n
+   */\n
+  function extend(destination, source) {\n
+    // Chrome < 14 incorrectly sets `destination` to `undefined` when we `delete arguments[0]`\n
+    // http://code.google.com/p/v8/issues/detail?id=839\n
+    var result = destination;\n
+    delete arguments[0];\n
+\n
+    forEach(arguments, function(source) {\n
+      forProps(source, function(value, key) {\n
+        result[key] = value;\n
+      });\n
+    });\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * A generic `Array#filter` like method.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Array} array The array to iterate over.\n
+   * @param {Function|String} callback The function/alias called per iteration.\n
+   * @param {Mixed} thisArg The `this` binding for the callback.\n
+   * @returns {Array} A new array of values that passed callback filter.\n
+   * @example\n
+   *\n
+   * // get odd numbers\n
+   * Benchmark.filter([1, 2, 3, 4, 5], function(n) {\n
+   *   return n % 2;\n
+   * }); // -> [1, 3, 5];\n
+   *\n
+   * // get fastest benchmarks\n
+   * Benchmark.filter(benches, \'fastest\');\n
+   *\n
+   * // get slowest benchmarks\n
+   * Benchmark.filter(benches, \'slowest\');\n
+   *\n
+   * // get benchmarks that completed without erroring\n
+   * Benchmark.filter(benches, \'successful\');\n
+   */\n
+  function filter(array, callback, thisArg) {\n
+    var result;\n
+\n
+    if (callback == \'successful\') {\n
+      // callback to exclude those that are errored, unrun, or have hz of Infinity\n
+      callback = function(bench) { return bench.cycles && isFinite(bench.hz); };\n
+    }\n
+    else if (callback == \'fastest\' || callback == \'slowest\') {\n
+      // get successful, sort by period + margin of error, and filter fastest/slowest\n
+      result = filter(array, \'successful\').sort(function(a, b) {\n
+        a = a.stats; b = b.stats;\n
+        return (a.mean + a.moe > b.mean + b.moe ? 1 : -1) * (callback == \'fastest\' ? 1 : -1);\n
+      });\n
+      result = filter(result, function(bench) {\n
+        return result[0].compare(bench) == 0;\n
+      });\n
+    }\n
+    return result || reduce(array, function(result, value, index) {\n
+      return callback.call(thisArg, value, index, array) ? (result.push(value), result) : result;\n
+    }, []);\n
+  }\n
+\n
+  /**\n
+   * A generic `Array#forEach` like method.\n
+   * Callbacks may terminate the loop by explicitly returning `false`.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Array} array The array to iterate over.\n
+   * @param {Function} callback The function called per iteration.\n
+   * @param {Mixed} thisArg The `this` binding for the callback.\n
+   * @returns {Array} Returns the array iterated over.\n
+   */\n
+  function forEach(array, callback, thisArg) {\n
+    var index = -1,\n
+      length = (array = Object(array)).length >>> 0;\n
+\n
+    if (thisArg !== undefined) {\n
+      callback = bind(callback, thisArg);\n
+    }\n
+    while (++index < length) {\n
+      if (index in array &&\n
+        callback(array[index], index, array) === false) {\n
+        break;\n
+      }\n
+    }\n
+    return array;\n
+  }\n
+\n
+  /**\n
+   * Iterates over an object\'s own properties, executing the `callback` for each.\n
+   * Callbacks may terminate the loop by explicitly returning `false`.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Object} object The object to iterate over.\n
+   * @param {Function} callback The function executed per own property.\n
+   * @param {Mixed} thisArg The `this` binding for the callback.\n
+   * @returns {Object} Returns the object iterated over.\n
+   */\n
+  function forOwn(object, callback, thisArg) {\n
+    return forProps(object, callback, { \'bind\': thisArg, \'which\': \'own\' });\n
+  }\n
+\n
+  /**\n
+   * Converts a number to a more readable comma-separated string representation.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Number} number The number to convert.\n
+   * @returns {String} The more readable string representation.\n
+   */\n
+  function formatNumber(number) {\n
+    number = String(number).split(\'.\');\n
+    return number[0].replace(/(?=(?:\\d{3})+$)(?!\\b)/g, \',\') +\n
+      (number[1] ? \'.\' + number[1] : \'\');\n
+  }\n
+\n
+  /**\n
+   * Checks if an object has the specified key as a direct property.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Object} object The object to check.\n
+   * @param {String} key The key to check for.\n
+   * @returns {Boolean} Returns `true` if key is a direct property, else `false`.\n
+   */\n
+  function hasKey() {\n
+    // lazy define for worst case fallback (not as accurate)\n
+    hasKey = function(object, key) {\n
+      var parent = object != null && (object.constructor || Object).prototype;\n
+      return !!parent && key in Object(object) && !(key in parent && object[key] === parent[key]);\n
+    };\n
+    // for modern browsers\n
+    if (isClassOf(hasOwnProperty, \'Function\')) {\n
+      hasKey = function(object, key) {\n
+        return object != null && hasOwnProperty.call(object, key);\n
+      };\n
+    }\n
+    // for Safari 2\n
+    else if ({}.__proto__ == Object.prototype) {\n
+      hasKey = function(object, key) {\n
+        var result = false;\n
+        if (object != null) {\n
+          object = Object(object);\n
+          object.__proto__ = [object.__proto__, object.__proto__ = null, result = key in object][0];\n
+        }\n
+        return result;\n
+      };\n
+    }\n
+    return hasKey.apply(this, arguments);\n
+  }\n
+\n
+  /**\n
+   * A generic `Array#indexOf` like method.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Array} array The array to iterate over.\n
+   * @param {Mixed} value The value to search for.\n
+   * @param {Number} [fromIndex=0] The index to start searching from.\n
+   * @returns {Number} The index of the matched value or `-1`.\n
+   */\n
+  function indexOf(array, value, fromIndex) {\n
+    var index = toInteger(fromIndex),\n
+      length = (array = Object(array)).length >>> 0;\n
+\n
+    index = (index < 0 ? max(0, length + index) : index) - 1;\n
+    while (++index < length) {\n
+      if (index in array && value === array[index]) {\n
+        return index;\n
+      }\n
+    }\n
+    return -1;\n
+  }\n
+\n
+  /**\n
+   * Modify a string by replacing named tokens with matching object property values.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {String} string The string to modify.\n
+   * @param {Object} object The template object.\n
+   * @returns {String} The modified string.\n
+   */\n
+  function interpolate(string, object) {\n
+    forOwn(object, function(value, key) {\n
+      // escape regexp special characters in `key`\n
+      string = string.replace(RegExp(\'#\\\\{\' + key.replace(/([.*+?^=!:${}()|[\\]\\/\\\\])/g, \'\\\\$1\') + \'\\\\}\', \'g\'), value);\n
+    });\n
+    return string;\n
+  }\n
+\n
+  /**\n
+   * Invokes a method on all items in an array.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Array} benches Array of benchmarks to iterate over.\n
+   * @param {String|Object} name The name of the method to invoke OR options object.\n
+   * @param {Mixed} [arg1, arg2, ...] Arguments to invoke the method with.\n
+   * @returns {Array} A new array of values returned from each method invoked.\n
+   * @example\n
+   *\n
+   * // invoke `reset` on all benchmarks\n
+   * Benchmark.invoke(benches, \'reset\');\n
+   *\n
+   * // invoke `emit` with arguments\n
+   * Benchmark.invoke(benches, \'emit\', \'complete\', listener);\n
+   *\n
+   * // invoke `run(true)`, treat benchmarks as a queue, and register invoke callbacks\n
+   * Benchmark.invoke(benches, {\n
+   *\n
+   *   // invoke the `run` method\n
+   *   \'name\': \'run\',\n
+   *\n
+   *   // pass a single argument\n
+   *   \'args\': true,\n
+   *\n
+   *   // treat as queue, removing benchmarks from front of `benches` until empty\n
+   *   \'queued\': true,\n
+   *\n
+   *   // called before any benchmarks have been invoked.\n
+   *   \'onStart\': onStart,\n
+   *\n
+   *   // called between invoking benchmarks\n
+   *   \'onCycle\': onCycle,\n
+   *\n
+   *   // called after all benchmarks have been invoked.\n
+   *   \'onComplete\': onComplete\n
+   * });\n
+   */\n
+  function invoke(benches, name) {\n
+    var args,\n
+      bench,\n
+      queued,\n
+      index = -1,\n
+      eventProps = { \'currentTarget\': benches },\n
+      options = { \'onStart\': noop, \'onCycle\': noop, \'onComplete\': noop },\n
+      result = map(benches, function(bench) { return bench; });\n
+\n
+    /**\n
+     * Invokes the method of the current object and if synchronous, fetches the next.\n
+     */\n
+    function execute() {\n
+      var listeners,\n
+        async = isAsync(bench);\n
+\n
+      if (async) {\n
+        // use `getNext` as the first listener\n
+        bench.on(\'complete\', getNext);\n
+        listeners = bench.events.complete;\n
+        listeners.splice(0, 0, listeners.pop());\n
+      }\n
+      // execute method\n
+      result[index] = isClassOf(bench && bench[name], \'Function\') ? bench[name].apply(bench, args) : undefined;\n
+      // if synchronous return true until finished\n
+      return !async && getNext();\n
+    }\n
+\n
+    /**\n
+     * Fetches the next bench or executes `onComplete` callback.\n
+     */\n
+    function getNext(event) {\n
+      var cycleEvent,\n
+        last = bench,\n
+        async = isAsync(last);\n
+\n
+      if (async) {\n
+        last.off(\'complete\', getNext);\n
+        last.emit(\'complete\');\n
+      }\n
+      // emit "cycle" event\n
+      eventProps.type = \'cycle\';\n
+      eventProps.target = last;\n
+      cycleEvent = Event(eventProps);\n
+      options.onCycle.call(benches, cycleEvent);\n
+\n
+      // choose next benchmark if not exiting early\n
+      if (!cycleEvent.aborted && raiseIndex() !== false) {\n
+        bench = queued ? benches[0] : result[index];\n
+        if (isAsync(bench)) {\n
+          delay(bench, execute);\n
+        }\n
+        else if (async) {\n
+          // resume execution if previously asynchronous but now synchronous\n
+          while (execute()) { }\n
+        }\n
+        else {\n
+          // continue synchronous execution\n
+          return true;\n
+        }\n
+      } else {\n
+        // emit "complete" event\n
+        eventProps.type = \'complete\';\n
+        options.onComplete.call(benches, Event(eventProps));\n
+      }\n
+      // When used as a listener `event.aborted = true` will cancel the rest of\n
+      // the "complete" listeners because they were already called above and when\n
+      // used as part of `getNext` the `return false` will exit the execution while-loop.\n
+      if (event) {\n
+        event.aborted = true;\n
+      } else {\n
+        return false;\n
+      }\n
+    }\n
+\n
+    /**\n
+     * Checks if invoking `Benchmark#run` with asynchronous cycles.\n
+     */\n
+    function isAsync(object) {\n
+      // avoid using `instanceof` here because of IE memory leak issues with host objects\n
+      var async = args[0] && args[0].async;\n
+      return Object(object).constructor == Benchmark && name == \'run\' &&\n
+        ((async == null ? object.options.async : async) && support.timeout || object.defer);\n
+    }\n
+\n
+    /**\n
+     * Raises `index` to the next defined index or returns `false`.\n
+     */\n
+    function raiseIndex() {\n
+      var length = result.length;\n
+      if (queued) {\n
+        // if queued remove the previous bench and subsequent skipped non-entries\n
+        do {\n
+          ++index > 0 && shift.call(benches);\n
+        } while ((length = benches.length) && !(\'0\' in benches));\n
+      }\n
+      else {\n
+        while (++index < length && !(index in result)) { }\n
+      }\n
+      // if we reached the last index then return `false`\n
+      return (queued ? length : index < length) ? index : (index = false);\n
+    }\n
+\n
+    // juggle arguments\n
+    if (isClassOf(name, \'String\')) {\n
+      // 2 arguments (array, name)\n
+      args = slice.call(arguments, 2);\n
+    } else {\n
+      // 2 arguments (array, options)\n
+      options = extend(options, name);\n
+      name = options.name;\n
+      args = isClassOf(args = \'args\' in options ? options.args : [], \'Array\') ? args : [args];\n
+      queued = options.queued;\n
+    }\n
+\n
+    // start iterating over the array\n
+    if (raiseIndex() !== false) {\n
+      // emit "start" event\n
+      bench = result[index];\n
+      eventProps.type = \'start\';\n
+      eventProps.target = bench;\n
+      options.onStart.call(benches, Event(eventProps));\n
+\n
+      // end early if the suite was aborted in an "onStart" listener\n
+      if (benches.aborted && benches.constructor == Suite && name == \'run\') {\n
+        // emit "cycle" event\n
+        eventProps.type = \'cycle\';\n
+        options.onCycle.call(benches, Event(eventProps));\n
+        // emit "complete" event\n
+        eventProps.type = \'complete\';\n
+        options.onComplete.call(benches, Event(eventProps));\n
+      }\n
+      // else start\n
+      else {\n
+        if (isAsync(bench)) {\n
+          delay(bench, execute);\n
+        } else {\n
+          while (execute()) { }\n
+        }\n
+      }\n
+    }\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * Creates a string of joined array values or object key-value pairs.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Array|Object} object The object to operate on.\n
+   * @param {String} [separator1=\',\'] The separator used between key-value pairs.\n
+   * @param {String} [separator2=\': \'] The separator used between keys and values.\n
+   * @returns {String} The joined result.\n
+   */\n
+  function join(object, separator1, separator2) {\n
+    var result = [],\n
+      length = (object = Object(object)).length,\n
+      arrayLike = length === length >>> 0;\n
+\n
+    separator2 || (separator2 = \': \');\n
+    each(object, function(value, key) {\n
+      result.push(arrayLike ? value : key + separator2 + value);\n
+    });\n
+    return result.join(separator1 || \',\');\n
+  }\n
+\n
+  /**\n
+   * A generic `Array#map` like method.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Array} array The array to iterate over.\n
+   * @param {Function} callback The function called per iteration.\n
+   * @param {Mixed} thisArg The `this` binding for the callback.\n
+   * @returns {Array} A new array of values returned by the callback.\n
+   */\n
+  function map(array, callback, thisArg) {\n
+    return reduce(array, function(result, value, index) {\n
+      result[index] = callback.call(thisArg, value, index, array);\n
+      return result;\n
+    }, Array(Object(array).length >>> 0));\n
+  }\n
+\n
+  /**\n
+   * Retrieves the value of a specified property from all items in an array.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Array} array The array to iterate over.\n
+   * @param {String} property The property to pluck.\n
+   * @returns {Array} A new array of property values.\n
+   */\n
+  function pluck(array, property) {\n
+    return map(array, function(object) {\n
+      return object == null ? undefined : object[property];\n
+    });\n
+  }\n
+\n
+  /**\n
+   * A generic `Array#reduce` like method.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark\n
+   * @param {Array} array The array to iterate over.\n
+   * @param {Function} callback The function called per iteration.\n
+   * @param {Mixed} accumulator Initial value of the accumulator.\n
+   * @returns {Mixed} The accumulator.\n
+   */\n
+  function reduce(array, callback, accumulator) {\n
+    var noaccum = arguments.length < 3;\n
+    forEach(array, function(value, index) {\n
+      accumulator = noaccum ? (noaccum = false, value) : callback(accumulator, value, index, array);\n
+    });\n
+    return accumulator;\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * Aborts all benchmarks in the suite.\n
+   *\n
+   * @name abort\n
+   * @memberOf Benchmark.Suite\n
+   * @returns {Object} The suite instance.\n
+   */\n
+  function abortSuite() {\n
+    var event,\n
+      me = this,\n
+      resetting = calledBy.resetSuite;\n
+\n
+    if (me.running) {\n
+      event = Event(\'abort\');\n
+      me.emit(event);\n
+      if (!event.cancelled || resetting) {\n
+        // avoid infinite recursion\n
+        calledBy.abortSuite = true;\n
+        me.reset();\n
+        delete calledBy.abortSuite;\n
+\n
+        if (!resetting) {\n
+          me.aborted = true;\n
+          invoke(me, \'abort\');\n
+        }\n
+      }\n
+    }\n
+    return me;\n
+  }\n
+\n
+  /**\n
+   * Adds a test to the benchmark suite.\n
+   *\n
+   * @memberOf Benchmark.Suite\n
+   * @param {String} name A name to identify the benchmark.\n
+   * @param {Function|String} fn The test to benchmark.\n
+   * @param {Object} [options={}] Options object.\n
+   * @returns {Object} The benchmark instance.\n
+   * @example\n
+   *\n
+   * // basic usage\n
+   * suite.add(fn);\n
+   *\n
+   * // or using a name first\n
+   * suite.add(\'foo\', fn);\n
+   *\n
+   * // or with options\n
+   * suite.add(\'foo\', fn, {\n
+   *   \'onCycle\': onCycle,\n
+   *   \'onComplete\': onComplete\n
+   * });\n
+   *\n
+   * // or name and options\n
+   * suite.add(\'foo\', {\n
+   *   \'fn\': fn,\n
+   *   \'onCycle\': onCycle,\n
+   *   \'onComplete\': onComplete\n
+   * });\n
+   *\n
+   * // or options only\n
+   * suite.add({\n
+   *   \'name\': \'foo\',\n
+   *   \'fn\': fn,\n
+   *   \'onCycle\': onCycle,\n
+   *   \'onComplete\': onComplete\n
+   * });\n
+   */\n
+  function add(name, fn, options) {\n
+    var me = this,\n
+      bench = Benchmark(name, fn, options),\n
+      event = Event({ \'type\': \'add\', \'target\': bench });\n
+\n
+    if (me.emit(event), !event.cancelled) {\n
+      me.push(bench);\n
+    }\n
+    return me;\n
+  }\n
+\n
+  /**\n
+   * Creates a new suite with cloned benchmarks.\n
+   *\n
+   * @name clone\n
+   * @memberOf Benchmark.Suite\n
+   * @param {Object} options Options object to overwrite cloned options.\n
+   * @returns {Object} The new suite instance.\n
+   */\n
+  function cloneSuite(options) {\n
+    var me = this,\n
+      result = new me.constructor(extend({}, me.options, options));\n
+\n
+    // copy own properties\n
+    forOwn(me, function(value, key) {\n
+      if (!hasKey(result, key)) {\n
+        result[key] = value && isClassOf(value.clone, \'Function\')\n
+          ? value.clone()\n
+          : deepClone(value);\n
+      }\n
+    });\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * An `Array#filter` like method.\n
+   *\n
+   * @name filter\n
+   * @memberOf Benchmark.Suite\n
+   * @param {Function|String} callback The function/alias called per iteration.\n
+   * @returns {Object} A new suite of benchmarks that passed callback filter.\n
+   */\n
+  function filterSuite(callback) {\n
+    var me = this,\n
+      result = new me.constructor;\n
+\n
+    result.push.apply(result, filter(me, callback));\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * Resets all benchmarks in the suite.\n
+   *\n
+   * @name reset\n
+   * @memberOf Benchmark.Suite\n
+   * @returns {Object} The suite instance.\n
+   */\n
+  function resetSuite() {\n
+    var event,\n
+      me = this,\n
+      aborting = calledBy.abortSuite;\n
+\n
+    if (me.running && !aborting) {\n
+      // no worries, `resetSuite()` is called within `abortSuite()`\n
+      calledBy.resetSuite = true;\n
+      me.abort();\n
+      delete calledBy.resetSuite;\n
+    }\n
+    // reset if the state has changed\n
+    else if ((me.aborted || me.running) &&\n
+      (me.emit(event = Event(\'reset\')), !event.cancelled)) {\n
+      me.running = false;\n
+      if (!aborting) {\n
+        invoke(me, \'reset\');\n
+      }\n
+    }\n
+    return me;\n
+  }\n
+\n
+  /**\n
+   * Runs the suite.\n
+   *\n
+   * @name run\n
+   * @memberOf Benchmark.Suite\n
+   * @param {Object} [options={}] Options object.\n
+   * @returns {Object} The suite instance.\n
+   * @example\n
+   *\n
+   * // basic usage\n
+   * suite.run();\n
+   *\n
+   * // or with options\n
+   * suite.run({ \'async\': true, \'queued\': true });\n
+   */\n
+  function runSuite(options) {\n
+    var me = this;\n
+\n
+    me.reset();\n
+    me.running = true;\n
+    options || (options = {});\n
+\n
+    invoke(me, {\n
+      \'name\': \'run\',\n
+      \'args\': options,\n
+      \'queued\': options.queued,\n
+      \'onStart\': function(event) {\n
+        me.emit(event);\n
+      },\n
+      \'onCycle\': function(event) {\n
+        var bench = event.target;\n
+        if (bench.error) {\n
+          me.emit({ \'type\': \'error\', \'target\': bench });\n
+        }\n
+        me.emit(event);\n
+        event.aborted = me.aborted;\n
+      },\n
+      \'onComplete\': function(event) {\n
+        me.running = false;\n
+        me.emit(event);\n
+      }\n
+    });\n
+    return me;\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * Executes all registered listeners of the specified event type.\n
+   *\n
+   * @memberOf Benchmark, Benchmark.Suite\n
+   * @param {String|Object} type The event type or object.\n
+   * @returns {Mixed} Returns the return value of the last listener executed.\n
+   */\n
+  function emit(type) {\n
+    var listeners,\n
+      me = this,\n
+      event = Event(type),\n
+      events = me.events,\n
+      args = (arguments[0] = event, arguments);\n
+\n
+    event.currentTarget || (event.currentTarget = me);\n
+    event.target || (event.target = me);\n
+    delete event.result;\n
+\n
+    if (events && (listeners = hasKey(events, event.type) && events[event.type])) {\n
+      forEach(listeners.slice(), function(listener) {\n
+        if ((event.result = listener.apply(me, args)) === false) {\n
+          event.cancelled = true;\n
+        }\n
+        return !event.aborted;\n
+      });\n
+    }\n
+    return event.result;\n
+  }\n
+\n
+  /**\n
+   * Returns an array of event listeners for a given type that can be manipulated\n
+   * to add or remove listeners.\n
+   *\n
+   * @memberOf Benchmark, Benchmark.Suite\n
+   * @param {String} type The event type.\n
+   * @returns {Array} The listeners array.\n
+   */\n
+  function listeners(type) {\n
+    var me = this,\n
+      events = me.events || (me.events = {});\n
+\n
+    return hasKey(events, type) ? events[type] : (events[type] = []);\n
+  }\n
+\n
+  /**\n
+   * Unregisters a listener for the specified event type(s),\n
+   * or unregisters all listeners for the specified event type(s),\n
+   * or unregisters all listeners for all event types.\n
+   *\n
+   * @memberOf Benchmark, Benchmark.Suite\n
+   * @param {String} [type] The event type.\n
+   * @param {Function} [listener] The function to unregister.\n
+   * @returns {Object} The benchmark instance.\n
+   * @example\n
+   *\n
+   * // unregister a listener for an event type\n
+   * bench.off(\'cycle\', listener);\n
+   *\n
+   * // unregister a listener for multiple event types\n
+   * bench.off(\'start cycle\', listener);\n
+   *\n
+   * // unregister all listeners for an event type\n
+   * bench.off(\'cycle\');\n
+   *\n
+   * // unregister all listeners for multiple event types\n
+   * bench.off(\'start cycle complete\');\n
+   *\n
+   * // unregister all listeners for all event types\n
+   * bench.off();\n
+   */\n
+  function off(type, listener) {\n
+    var me = this,\n
+      events = me.events;\n
+\n
+    events && each(type ? type.split(\' \') : events, function(listeners, type) {\n
+      var index;\n
+      if (typeof listeners == \'string\') {\n
+        type = listeners;\n
+        listeners = hasKey(events, type) && events[type];\n
+      }\n
+      if (listeners) {\n
+        if (listener) {\n
+          index = indexOf(listeners, listener);\n
+          if (index > -1) {\n
+            listeners.splice(index, 1);\n
+          }\n
+        } else {\n
+          listeners.length = 0;\n
+        }\n
+      }\n
+    });\n
+    return me;\n
+  }\n
+\n
+  /**\n
+   * Registers a listener for the specified event type(s).\n
+   *\n
+   * @memberOf Benchmark, Benchmark.Suite\n
+   * @param {String} type The event type.\n
+   * @param {Function} listener The function to register.\n
+   * @returns {Object} The benchmark instance.\n
+   * @example\n
+   *\n
+   * // register a listener for an event type\n
+   * bench.on(\'cycle\', listener);\n
+   *\n
+   * // register a listener for multiple event types\n
+   * bench.on(\'start cycle\', listener);\n
+   */\n
+  function on(type, listener) {\n
+    var me = this,\n
+      events = me.events || (me.events = {});\n
+\n
+    forEach(type.split(\' \'), function(type) {\n
+      (hasKey(events, type)\n
+        ? events[type]\n
+        : (events[type] = [])\n
+        ).push(listener);\n
+    });\n
+    return me;\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * Aborts the benchmark without recording times.\n
+   *\n
+   * @memberOf Benchmark\n
+   * @returns {Object} The benchmark instance.\n
+   */\n
+  function abort() {\n
+    var event,\n
+      me = this,\n
+      resetting = calledBy.reset;\n
+\n
+    if (me.running) {\n
+      event = Event(\'abort\');\n
+      me.emit(event);\n
+      if (!event.cancelled || resetting) {\n
+        // avoid infinite recursion\n
+        calledBy.abort = true;\n
+        me.reset();\n
+        delete calledBy.abort;\n
+\n
+        if (support.timeout) {\n
+          clearTimeout(me._timerId);\n
+          delete me._timerId;\n
+        }\n
+        if (!resetting) {\n
+          me.aborted = true;\n
+          me.running = false;\n
+        }\n
+      }\n
+    }\n
+    return me;\n
+  }\n
+\n
+  /**\n
+   * Creates a new benchmark using the same test and options.\n
+   *\n
+   * @memberOf Benchmark\n
+   * @param {Object} options Options object to overwrite cloned options.\n
+   * @returns {Object} The new benchmark instance.\n
+   * @example\n
+   *\n
+   * var bizarro = bench.clone({\n
+   *   \'name\': \'doppelganger\'\n
+   * });\n
+   */\n
+  function clone(options) {\n
+    var me = this,\n
+      result = new me.constructor(extend({}, me, options));\n
+\n
+    // correct the `options` object\n
+    result.options = extend({}, me.options, options);\n
+\n
+    // copy own custom properties\n
+    forOwn(me, function(value, key) {\n
+      if (!hasKey(result, key)) {\n
+        result[key] = deepClone(value);\n
+      }\n
+    });\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * Determines if a benchmark is faster than another.\n
+   *\n
+   * @memberOf Benchmark\n
+   * @param {Object} other The benchmark to compare.\n
+   * @returns {Number} Returns `-1` if slower, `1` if faster, and `0` if indeterminate.\n
+   */\n
+  function compare(other) {\n
+    var critical,\n
+      zStat,\n
+      me = this,\n
+      sample1 = me.stats.sample,\n
+      sample2 = other.stats.sample,\n
+      size1 = sample1.length,\n
+      size2 = sample2.length,\n
+      maxSize = max(size1, size2),\n
+      minSize = min(size1, size2),\n
+      u1 = getU(sample1, sample2),\n
+      u2 = getU(sample2, sample1),\n
+      u = min(u1, u2);\n
+\n
+    function getScore(xA, sampleB) {\n
+      return reduce(sampleB, function(total, xB) {\n
+        return total + (xB > xA ? 0 : xB < xA ? 1 : 0.5);\n
+      }, 0);\n
+    }\n
+\n
+    function getU(sampleA, sampleB) {\n
+      return reduce(sampleA, function(total, xA) {\n
+        return total + getScore(xA, sampleB);\n
+      }, 0);\n
+    }\n
+\n
+    function getZ(u) {\n
+      return (u - ((size1 * size2) / 2)) / sqrt((size1 * size2 * (size1 + size2 + 1)) / 12);\n
+    }\n
+\n
+    // exit early if comparing the same benchmark\n
+    if (me == other) {\n
+      return 0;\n
+    }\n
+    // reject the null hyphothesis the two samples come from the\n
+    // same population (i.e. have the same median) if...\n
+    if (size1 + size2 > 30) {\n
+      // ...the z-stat is greater than 1.96 or less than -1.96\n
+      // http://www.statisticslectures.com/topics/mannwhitneyu/\n
+      zStat = getZ(u);\n
+      return abs(zStat) > 1.96 ? (zStat > 0 ? -1 : 1) : 0;\n
+    }\n
+    // ...the U value is less than or equal the critical U value\n
+    // http://www.geoib.com/mann-whitney-u-test.html\n
+    critical = maxSize < 5 || minSize < 3 ? 0 : uTable[maxSize][minSize - 3];\n
+    return u <= critical ? (u == u1 ? 1 : -1) : 0;\n
+  }\n
+\n
+  /**\n
+   * Reset properties and abort if running.\n
+   *\n
+   * @memberOf Benchmark\n
+   * @returns {Object} The benchmark instance.\n
+   */\n
+  function reset() {\n
+    var data,\n
+      event,\n
+      me = this,\n
+      index = 0,\n
+      changes = { \'length\': 0 },\n
+      queue = { \'length\': 0 };\n
+\n
+    if (me.running && !calledBy.abort) {\n
+      // no worries, `reset()` is called within `abort()`\n
+      calledBy.reset = true;\n
+      me.abort();\n
+      delete calledBy.reset;\n
+    }\n
+    else {\n
+      // a non-recursive solution to check if properties have changed\n
+      // http://www.jslab.dk/articles/non.recursive.preorder.traversal.part4\n
+      data = { \'destination\': me, \'source\': extend({}, me.constructor.prototype, me.options) };\n
+      do {\n
+        forOwn(data.source, function(value, key) {\n
+          var changed,\n
+            destination = data.destination,\n
+            currValue = destination[key];\n
+\n
+          if (value && typeof value == \'object\') {\n
+            if (isClassOf(value, \'Array\')) {\n
+              // check if an array value has changed to a non-array value\n
+              if (!isClassOf(currValue, \'Array\')) {\n
+                changed = currValue = [];\n
+              }\n
+              // or has changed its length\n
+              if (currValue.length != value.length) {\n
+                changed = currValue = currValue.slice(0, value.length);\n
+                currValue.length = value.length;\n
+              }\n
+            }\n
+            // check if an object has changed to a non-object value\n
+            else if (!currValue || typeof currValue != \'object\') {\n
+              changed = currValue = {};\n
+            }\n
+            // register a changed object\n
+            if (changed) {\n
+              changes[changes.length++] = { \'destination\': destination, \'key\': key, \'value\': currValue };\n
+            }\n
+            queue[queue.length++] = { \'destination\': currValue, \'source\': value };\n
+          }\n
+          // register a changed primitive\n
+          else if (value !== currValue && !(value == null || isClassOf(value, \'Function\'))) {\n
+            changes[changes.length++] = { \'destination\': destination, \'key\': key, \'value\': value };\n
+          }\n
+        });\n
+      }\n
+      while ((data = queue[index++]));\n
+\n
+      // if changed emit the `reset` event and if it isn\'t cancelled reset the benchmark\n
+      if (changes.length && (me.emit(event = Event(\'reset\')), !event.cancelled)) {\n
+        forEach(changes, function(data) {\n
+          data.destination[data.key] = data.value;\n
+        });\n
+      }\n
+    }\n
+    return me;\n
+  }\n
+\n
+  /**\n
+   * Displays relevant benchmark information when coerced to a string.\n
+   *\n
+   * @name toString\n
+   * @memberOf Benchmark\n
+   * @returns {String} A string representation of the benchmark instance.\n
+   */\n
+  function toStringBench() {\n
+    var me = this,\n
+      error = me.error,\n
+      hz = me.hz,\n
+      id = me.id,\n
+      stats = me.stats,\n
+      size = stats.sample.length,\n
+      pm = support.java ? \'+/-\' : \'\\xb1\',\n
+      result = me.name || (isNaN(id) ? id : \'<Test #\' + id + \'>\');\n
+\n
+    if (error) {\n
+      result += \': \' + join(error);\n
+    } else {\n
+      result += \' x \' + formatNumber(hz.toFixed(hz < 100 ? 2 : 0)) + \' ops/sec \' + pm +\n
+        stats.rme.toFixed(2) + \'% (\' + size + \' run\' + (size == 1 ? \'\' : \'s\') + \' sampled)\';\n
+    }\n
+    return result;\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * Clocks the time taken to execute a test per cycle (secs).\n
+   *\n
+   * @private\n
+   * @param {Object} bench The benchmark instance.\n
+   * @returns {Number} The time taken.\n
+   */\n
+  function clock() {\n
+    var applet,\n
+      options = Benchmark.options,\n
+      template = { \'begin\': \'s$=new n$\', \'end\': \'r$=(new n$-s$)/1e3\', \'uid\': uid },\n
+      timers = [{ \'ns\': timer.ns, \'res\': max(0.0015, getRes(\'ms\')), \'unit\': \'ms\' }];\n
+\n
+    // lazy define for hi-res timers\n
+    clock = function(clone) {\n
+      var deferred;\n
+      if (clone instanceof Deferred) {\n
+        deferred = clone;\n
+        clone = deferred.benchmark;\n
+      }\n
+\n
+      var bench = clone._original,\n
+        fn = bench.fn,\n
+        fnArg = deferred ? getFirstArgument(fn) || \'deferred\' : \'\',\n
+        stringable = isStringable(fn);\n
+\n
+      var source = {\n
+        \'setup\': getSource(bench.setup, preprocess(\'m$.setup()\')),\n
+        \'fn\': getSource(fn, preprocess(\'m$.fn(\' + fnArg + \')\')),\n
+        \'fnArg\': fnArg,\n
+        \'teardown\': getSource(bench.teardown, preprocess(\'m$.teardown()\'))\n
+      };\n
+\n
+      var count = bench.count = clone.count,\n
+        decompilable = support.decompilation || stringable,\n
+        id = bench.id,\n
+        isEmpty = !(source.fn || stringable),\n
+        name = bench.name || (typeof id == \'number\' ? \'<Test #\' + id + \'>\' : id),\n
+        ns = timer.ns,\n
+        result = 0;\n
+\n
+      // init `minTime` if needed\n
+      clone.minTime = bench.minTime || (bench.minTime = bench.options.minTime = options.minTime);\n
+\n
+      // repair nanosecond timer\n
+      // (some Chrome builds erase the `ns` variable after millions of executions)\n
+      if (applet) {\n
+        try {\n
+          ns.nanoTime();\n
+        } catch(e) {\n
+          // use non-element to avoid issues with libs that augment them\n
+          ns = timer.ns = new applet.Packages.nano;\n
+        }\n
+      }\n
+\n
+      // Compile in setup/teardown functions and the test loop.\n
+      // Create a new compiled test, instead of using the cached `bench.compiled`,\n
+      // to avoid potential engine optimizations enabled over the life of the test.\n
+      var compiled = bench.compiled = createFunction(preprocess(\'t$\'), interpolate(\n
+        preprocess(deferred\n
+          ? \'var d$=this,#{fnArg}=d$,m$=d$.benchmark._original,f$=m$.fn,su$=m$.setup,td$=m$.teardown;\' +\n
+          // when `deferred.cycles` is `0` then...\n
+          \'if(!d$.cycles){\' +\n
+          // set `deferred.fn`\n
+          \'d$.fn=function(){var #{fnArg}=d$;if(typeof f$=="function"){try{#{fn}\\n}catch(e$){f$(d$)}}else{#{fn}\\n}};\' +\n
+          // set `deferred.teardown`\n
+          \'d$.teardown=function(){d$.cycles=0;if(typeof td$=="function"){try{#{teardown}\\n}catch(e$){td$()}}else{#{teardown}\\n}};\' +\n
+          // execute the benchmark\'s `setup`\n
+          \'if(typeof su$=="function"){try{#{setup}\\n}catch(e$){su$()}}else{#{setup}\\n};\' +\n
+          // start timer\n
+          \'t$.start(d$);\' +\n
+          // execute `deferred.fn` and return a dummy object\n
+          \'}d$.fn();return{}\'\n
+\n
+          : \'var r$,s$,m$=this,f$=m$.fn,i$=m$.count,n$=t$.ns;#{setup}\\n#{begin};\' +\n
+          \'while(i$--){#{fn}\\n}#{end};#{teardown}\\nreturn{elapsed:r$,uid:"#{uid}"}\'),\n
+        source\n
+      ));\n
+\n
+      try {\n
+        if (isEmpty) {\n
+          // Firefox may remove dead code from Function#toString results\n
+          // http://bugzil.la/536085\n
+          throw new Error(\'The test "\' + name + \'" is empty. This may be the result of dead code removal.\');\n
+        }\n
+        else if (!deferred) {\n
+          // pretest to determine if compiled code is exits early, usually by a\n
+          // rogue `return` statement, by checking for a return object with the uid\n
+          bench.count = 1;\n
+          compiled = (compiled.call(bench, timer) || {}).uid == uid && compiled;\n
+          bench.count = count;\n
+        }\n
+      } catch(e) {\n
+        compiled = null;\n
+        clone.error = e || new Error(String(e));\n
+        bench.count = count;\n
+      }\n
+      // fallback when a test exits early or errors during pretest\n
+      if (decompilable && !compiled && !deferred && !isEmpty) {\n
+        compiled = createFunction(preprocess(\'t$\'), interpolate(\n
+          preprocess(\n
+            (clone.error && !stringable\n
+              ? \'var r$,s$,m$=this,f$=m$.fn,i$=m$.count\'\n
+              : \'function f$(){#{fn}\\n}var r$,s$,m$=this,i$=m$.count\'\n
+              ) +\n
+              \',n$=t$.ns;#{setup}\\n#{begin};m$.f$=f$;while(i$--){m$.f$()}#{end};\' +\n
+              \'delete m$.f$;#{teardown}\\nreturn{elapsed:r$}\'\n
+          ),\n
+          source\n
+        ));\n
+\n
+        try {\n
+          // pretest one more time to check for errors\n
+          bench.count = 1;\n
+          compiled.call(bench, timer);\n
+          bench.compiled = compiled;\n
+          bench.count = count;\n
+          delete clone.error;\n
+        }\n
+        catch(e) {\n
+          bench.count = count;\n
+          if (clone.error) {\n
+            compiled = null;\n
+          } else {\n
+            bench.compiled = compiled;\n
+            clone.error = e || new Error(String(e));\n
+          }\n
+        }\n
+      }\n
+      // assign `compiled` to `clone` before calling in case a deferred benchmark\n
+      // immediately calls `deferred.resolve()`\n
+      clone.compiled = compiled;\n
+      // if no errors run the full test loop\n
+      if (!clone.error) {\n
+        result = compiled.call(deferred || bench, timer).elapsed;\n
+      }\n
+      return result;\n
+    };\n
+\n
+    /*------------------------------------------------------------------------*/\n
+\n
+    /**\n
+     * Gets the current timer\'s minimum resolution (secs).\n
+     */\n
+    function getRes(unit) {\n
+      var measured,\n
+        begin,\n
+        count = 30,\n
+        divisor = 1e3,\n
+        ns = timer.ns,\n
+        sample = [];\n
+\n
+      // get average smallest measurable time\n
+      while (count--) {\n
+        if (unit == \'us\') {\n
+          divisor = 1e6;\n
+          if (ns.stop) {\n
+            ns.start();\n
+            while (!(measured = ns.microseconds())) { }\n
+          } else if (ns[perfName]) {\n
+            divisor = 1e3;\n
+            measured = Function(\'n\', \'var r,s=n.\' + perfName + \'();while(!(r=n.\' + perfName + \'()-s)){};return r\')(ns);\n
+          } else {\n
+            begin = ns();\n
+            while (!(measured = ns() - begin)) { }\n
+          }\n
+        }\n
+        else if (unit == \'ns\') {\n
+          divisor = 1e9;\n
+          if (ns.nanoTime) {\n
+            begin = ns.nanoTime();\n
+            while (!(measured = ns.nanoTime() - begin)) { }\n
+          } else {\n
+            begin = (begin = ns())[0] + (begin[1] / divisor);\n
+            while (!(measured = ((measured = ns())[0] + (measured[1] / divisor)) - begin)) { }\n
+            divisor = 1;\n
+          }\n
+        }\n
+        else {\n
+          begin = new ns;\n
+          while (!(measured = new ns - begin)) { }\n
+        }\n
+        // check for broken timers (nanoTime may have issues)\n
+        // http://alivebutsleepy.srnet.cz/unreliable-system-nanotime/\n
+        if (measured > 0) {\n
+          sample.push(measured);\n
+        } else {\n
+          sample.push(Infinity);\n
+          break;\n
+        }\n
+      }\n
+      // convert to seconds\n
+      return getMean(sample) / divisor;\n
+    }\n
+\n
+    /**\n
+     * Replaces all occurrences of `$` with a unique number and\n
+     * template tokens with content.\n
+     */\n
+    function preprocess(code) {\n
+      return interpolate(code, template).replace(/\\$/g, /\\d+/.exec(uid));\n
+    }\n
+\n
+    /*------------------------------------------------------------------------*/\n
+\n
+    // detect nanosecond support from a Java applet\n
+    each(doc && doc.applets || [], function(element) {\n
+      return !(timer.ns = applet = \'nanoTime\' in element && element);\n
+    });\n
+\n
+    // check type in case Safari returns an object instead of a number\n
+    try {\n
+      if (typeof timer.ns.nanoTime() == \'number\') {\n
+        timers.push({ \'ns\': timer.ns, \'res\': getRes(\'ns\'), \'unit\': \'ns\' });\n
+      }\n
+    } catch(e) { }\n
+\n
+    // detect Chrome\'s microsecond timer:\n
+    // enable benchmarking via the --enable-benchmarking command\n
+    // line switch in at least Chrome 7 to use chrome.Interval\n
+    try {\n
+      if ((timer.ns = new (window.chrome || window.chromium).Interval)) {\n
+        timers.push({ \'ns\': timer.ns, \'res\': getRes(\'us\'), \'unit\': \'us\' });\n
+      }\n
+    } catch(e) { }\n
+\n
+    // detect `performance.now` microsecond resolution timer\n
+    if ((timer.ns = perfName && perfObject)) {\n
+      timers.push({ \'ns\': timer.ns, \'res\': getRes(\'us\'), \'unit\': \'us\' });\n
+    }\n
+\n
+    // detect Node\'s nanosecond resolution timer available in Node >= 0.8\n
+    if (processObject && typeof (timer.ns = processObject.hrtime) == \'function\') {\n
+      timers.push({ \'ns\': timer.ns, \'res\': getRes(\'ns\'), \'unit\': \'ns\' });\n
+    }\n
+\n
+    // detect Wade Simmons\' Node microtime module\n
+    if (microtimeObject && typeof (timer.ns = microtimeObject.now) == \'function\') {\n
+      timers.push({ \'ns\': timer.ns,  \'res\': getRes(\'us\'), \'unit\': \'us\' });\n
+    }\n
+\n
+    // pick timer with highest resolution\n
+    timer = reduce(timers, function(timer, other) {\n
+      return other.res < timer.res ? other : timer;\n
+    });\n
+\n
+    // remove unused applet\n
+    if (timer.unit != \'ns\' && applet) {\n
+      applet = destroyElement(applet);\n
+    }\n
+    // error if there are no working timers\n
+    if (timer.res == Infinity) {\n
+      throw new Error(\'Benchmark.js was unable to find a working timer.\');\n
+    }\n
+    // use API of chosen timer\n
+    if (timer.unit == \'ns\') {\n
+      if (timer.ns.nanoTime) {\n
+        extend(template, {\n
+          \'begin\': \'s$=n$.nanoTime()\',\n
+          \'end\': \'r$=(n$.nanoTime()-s$)/1e9\'\n
+        });\n
+      } else {\n
+        extend(template, {\n
+          \'begin\': \'s$=n$()\',\n
+          \'end\': \'r$=n$(s$);r$=r$[0]+(r$[1]/1e9)\'\n
+        });\n
+      }\n
+    }\n
+    else if (timer.unit == \'us\') {\n
+      if (timer.ns.stop) {\n
+        extend(template, {\n
+          \'begin\': \'s$=n$.start()\',\n
+          \'end\': \'r$=n$.microseconds()/1e6\'\n
+        });\n
+      } else if (perfName) {\n
+        extend(template, {\n
+          \'begin\': \'s$=n$.\' + perfName + \'()\',\n
+          \'end\': \'r$=(n$.\' + perfName + \'()-s$)/1e3\'\n
+        });\n
+      } else {\n
+        extend(template, {\n
+          \'begin\': \'s$=n$()\',\n
+          \'end\': \'r$=(n$()-s$)/1e6\'\n
+        });\n
+      }\n
+    }\n
+\n
+    // define `timer` methods\n
+    timer.start = createFunction(preprocess(\'o$\'),\n
+      preprocess(\'var n$=this.ns,#{begin};o$.elapsed=0;o$.timeStamp=s$\'));\n
+\n
+    timer.stop = createFunction(preprocess(\'o$\'),\n
+      preprocess(\'var n$=this.ns,s$=o$.timeStamp,#{end};o$.elapsed=r$\'));\n
+\n
+    // resolve time span required to achieve a percent uncertainty of at most 1%\n
+    // http://spiff.rit.edu/classes/phys273/uncert/uncert.html\n
+    options.minTime || (options.minTime = max(timer.res / 2 / 0.01, 0.05));\n
+    return clock.apply(null, arguments);\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * Computes stats on benchmark results.\n
+   *\n
+   * @private\n
+   * @param {Object} bench The benchmark instance.\n
+   * @param {Object} options The options object.\n
+   */\n
+  function compute(bench, options) {\n
+    options || (options = {});\n
+\n
+    var async = options.async,\n
+      elapsed = 0,\n
+      initCount = bench.initCount,\n
+      minSamples = bench.minSamples,\n
+      queue = [],\n
+      sample = bench.stats.sample;\n
+\n
+    /**\n
+     * Adds a clone to the queue.\n
+     */\n
+    function enqueue() {\n
+      queue.push(bench.clone({\n
+        \'_original\': bench,\n
+        \'events\': {\n
+          \'abort\': [update],\n
+          \'cycle\': [update],\n
+          \'error\': [update],\n
+          \'start\': [update]\n
+        }\n
+      }));\n
+    }\n
+\n
+    /**\n
+     * Updates the clone/original benchmarks to keep their data in sync.\n
+     */\n
+    function update(event) {\n
+      var clone = this,\n
+        type = event.type;\n
+\n
+      if (bench.running) {\n
+        if (type == \'start\') {\n
+          // Note: `clone.minTime` prop is inited in `clock()`\n
+          clone.count = bench.initCount;\n
+        }\n
+        else {\n
+          if (type == \'error\') {\n
+            bench.error = clone.error;\n
+          }\n
+          if (type == \'abort\') {\n
+            bench.abort();\n
+            bench.emit(\'cycle\');\n
+          } else {\n
+            event.currentTarget = event.target = bench;\n
+            bench.emit(event);\n
+          }\n
+        }\n
+      } else if (bench.aborted) {\n
+        // clear abort listeners to avoid triggering bench\'s abort/cycle again\n
+        clone.events.abort.length = 0;\n
+        clone.abort();\n
+      }\n
+    }\n
+\n
+    /**\n
+     * Determines if more clones should be queued or if cycling should stop.\n
+     */\n
+    function evaluate(event) {\n
+      var critical,\n
+        df,\n
+        mean,\n
+        moe,\n
+        rme,\n
+        sd,\n
+        sem,\n
+        variance,\n
+        clone = event.target,\n
+        done = bench.aborted,\n
+        now = +new Date,\n
+        size = sample.push(clone.times.period),\n
+        maxedOut = size >= minSamples && (elapsed += now - clone.times.timeStamp) / 1e3 > bench.maxTime,\n
+        times = bench.times,\n
+        varOf = function(sum, x) { return sum + pow(x - mean, 2); };\n
+\n
+      // exit early for aborted or unclockable tests\n
+      if (done || clone.hz == Infinity) {\n
+        maxedOut = !(size = sample.length = queue.length = 0);\n
+      }\n
+\n
+      if (!done) {\n
+        // sample mean (estimate of the population mean)\n
+        mean = getMean(sample);\n
+        // sample variance (estimate of the population variance)\n
+        variance = reduce(sample, varOf, 0) / (size - 1) || 0;\n
+        // sample standard deviation (estimate of the population standard deviation)\n
+        sd = sqrt(variance);\n
+        // standard error of the mean (a.k.a. the standard deviation of the sampling distribution of the sample mean)\n
+        sem = sd / sqrt(size);\n
+        // degrees of freedom\n
+        df = size - 1;\n
+        // critical value\n
+        critical = tTable[Math.round(df) || 1] || tTable.infinity;\n
+        // margin of error\n
+        moe = sem * critical;\n
+        // relative margin of error\n
+        rme = (moe / mean) * 100 || 0;\n
+\n
+        extend(bench.stats, {\n
+          \'deviation\': sd,\n
+          \'mean\': mean,\n
+          \'moe\': moe,\n
+          \'rme\': rme,\n
+          \'sem\': sem,\n
+          \'variance\': variance\n
+        });\n
+\n
+        // Abort the cycle loop when the minimum sample size has been collected\n
+        // and the elapsed time exceeds the maximum time allowed per benchmark.\n
+        // We don\'t count cycle delays toward the max time because delays may be\n
+        // increased by browsers that clamp timeouts for inactive tabs.\n
+        // https://developer.mozilla.org/en/window.setTimeout#Inactive_tabs\n
+        if (maxedOut) {\n
+          // reset the `initCount` in case the benchmark is rerun\n
+          bench.initCount = initCount;\n
+          bench.running = false;\n
+          done = true;\n
+          times.elapsed = (now - times.timeStamp) / 1e3;\n
+        }\n
+        if (bench.hz != Infinity) {\n
+          bench.hz = 1 / mean;\n
+          times.cycle = mean * bench.count;\n
+          times.period = mean;\n
+        }\n
+      }\n
+      // if time permits, increase sample size to reduce the margin of error\n
+      if (queue.length < 2 && !maxedOut) {\n
+        enqueue();\n
+      }\n
+      // abort the invoke cycle when done\n
+      event.aborted = done;\n
+    }\n
+\n
+    // init queue and begin\n
+    enqueue();\n
+    invoke(queue, {\n
+      \'name\': \'run\',\n
+      \'args\': { \'async\': async },\n
+      \'queued\': true,\n
+      \'onCycle\': evaluate,\n
+      \'onComplete\': function() { bench.emit(\'complete\'); }\n
+    });\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * Cycles a benchmark until a run `count` can be established.\n
+   *\n
+   * @private\n
+   * @param {Object} clone The cloned benchmark instance.\n
+   * @param {Object} options The options object.\n
+   */\n
+  function cycle(clone, options) {\n
+    options || (options = {});\n
+\n
+    var deferred;\n
+    if (clone instanceof Deferred) {\n
+      deferred = clone;\n
+      clone = clone.benchmark;\n
+    }\n
+\n
+    var clocked,\n
+      cycles,\n
+      divisor,\n
+      event,\n
+      minTime,\n
+      period,\n
+      async = options.async,\n
+      bench = clone._original,\n
+      count = clone.count,\n
+      times = clone.times;\n
+\n
+    // continue, if not aborted between cycles\n
+    if (clone.running) {\n
+      // `minTime` is set to `Benchmark.options.minTime` in `clock()`\n
+      cycles = ++clone.cycles;\n
+      clocked = deferred ? deferred.elapsed : clock(clone);\n
+      minTime = clone.minTime;\n
+\n
+      if (cycles > bench.cycles) {\n
+        bench.cycles = cycles;\n
+      }\n
+      if (clone.error) {\n
+        event = Event(\'error\');\n
+        event.message = clone.error;\n
+        clone.emit(event);\n
+        if (!event.cancelled) {\n
+          clone.abort();\n
+        }\n
+      }\n
+    }\n
+\n
+    // continue, if not errored\n
+    if (clone.running) {\n
+      // time taken to complete last test cycle\n
+      bench.times.cycle = times.cycle = clocked;\n
+      // seconds per operation\n
+      period = bench.times.period = times.period = clocked / count;\n
+      // ops per second\n
+      bench.hz = clone.hz = 1 / period;\n
+      // avoid working our way up to this next time\n
+      bench.initCount = clone.initCount = count;\n
+      // do we need to do another cycle?\n
+      clone.running = clocked < minTime;\n
+\n
+      if (clone.running) {\n
+        // tests may clock at `0` when `initCount` is a small number,\n
+        // to avoid that we set its count to something a bit higher\n
+        if (!clocked && (divisor = divisors[clone.cycles]) != null) {\n
+          count = floor(4e6 / divisor);\n
+        }\n
+        // calculate how many more iterations it will take to achive the `minTime`\n
+        if (count <= clone.count) {\n
+          count += Math.ceil((minTime - clocked) / period);\n
+        }\n
+        clone.running = count != Infinity;\n
+      }\n
+    }\n
+    // should we exit early?\n
+    event = Event(\'cycle\');\n
+    clone.emit(event);\n
+    if (event.aborted) {\n
+      clone.abort();\n
+    }\n
+    // figure out what to do next\n
+    if (clone.running) {\n
+      // start a new cycle\n
+      clone.count = count;\n
+      if (deferred) {\n
+        clone.compiled.call(deferred, timer);\n
+      } else if (async) {\n
+        delay(clone, function() { cycle(clone, options); });\n
+      } else {\n
+        cycle(clone);\n
+      }\n
+    }\n
+    else {\n
+      // fix TraceMonkey bug associated with clock fallbacks\n
+      // http://bugzil.la/509069\n
+      if (support.browser) {\n
+        runScript(uid + \'=1;delete \' + uid);\n
+      }\n
+      // done\n
+      clone.emit(\'complete\');\n
+    }\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * Runs the benchmark.\n
+   *\n
+   * @memberOf Benchmark\n
+   * @param {Object} [options={}] Options object.\n
+   * @returns {Object} The benchmark instance.\n
+   * @example\n
+   *\n
+   * // basic usage\n
+   * bench.run();\n
+   *\n
+   * // or with options\n
+   * bench.run({ \'async\': true });\n
+   */\n
+  function run(options) {\n
+    var me = this,\n
+      event = Event(\'start\');\n
+\n
+    // set `running` to `false` so `reset()` won\'t call `abort()`\n
+    me.running = false;\n
+    me.reset();\n
+    me.running = true;\n
+\n
+    me.count = me.initCount;\n
+    me.times.timeStamp = +new Date;\n
+    me.emit(event);\n
+\n
+    if (!event.cancelled) {\n
+      options = { \'async\': ((options = options && options.async) == null ? me.async : options) && support.timeout };\n
+\n
+      // for clones created within `compute()`\n
+      if (me._original) {\n
+        if (me.defer) {\n
+          Deferred(me);\n
+        } else {\n
+          cycle(me, options);\n
+        }\n
+      }\n
+      // for original benchmarks\n
+      else {\n
+        compute(me, options);\n
+      }\n
+    }\n
+    return me;\n
+  }\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  // Firefox 1 erroneously defines variable and argument names of functions on\n
+  // the function itself as non-configurable properties with `undefined` values.\n
+  // The bugginess continues as the `Benchmark` constructor has an argument\n
+  // named `options` and Firefox 1 will not assign a value to `Benchmark.options`,\n
+  // making it non-writable in the process, unless it is the first property\n
+  // assigned by for-in loop of `extend()`.\n
+  extend(Benchmark, {\n
+\n
+    /**\n
+     * The default options copied by benchmark instances.\n
+     *\n
+     * @static\n
+     * @memberOf Benchmark\n
+     * @type Object\n
+     */\n
+    \'options\': {\n
+\n
+      /**\n
+       * A flag to indicate that benchmark cycles will execute asynchronously\n
+       * by default.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Boolean\n
+       */\n
+      \'async\': false,\n
+\n
+      /**\n
+       * A flag to indicate that the benchmark clock is deferred.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Boolean\n
+       */\n
+      \'defer\': false,\n
+\n
+      /**\n
+       * The delay between test cycles (secs).\n
+       * @memberOf Benchmark.options\n
+       * @type Number\n
+       */\n
+      \'delay\': 0.005,\n
+\n
+      /**\n
+       * Displayed by Benchmark#toString when a `name` is not available\n
+       * (auto-generated if absent).\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type String\n
+       */\n
+      \'id\': undefined,\n
+\n
+      /**\n
+       * The default number of times to execute a test on a benchmark\'s first cycle.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Number\n
+       */\n
+      \'initCount\': 1,\n
+\n
+      /**\n
+       * The maximum time a benchmark is allowed to run before finishing (secs).\n
+       *\n
+       * Note: Cycle delays aren\'t counted toward the maximum time.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Number\n
+       */\n
+      \'maxTime\': 5,\n
+\n
+      /**\n
+       * The minimum sample size required to perform statistical analysis.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Number\n
+       */\n
+      \'minSamples\': 5,\n
+\n
+      /**\n
+       * The time needed to reduce the percent uncertainty of measurement to 1% (secs).\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Number\n
+       */\n
+      \'minTime\': 0,\n
+\n
+      /**\n
+       * The name of the benchmark.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type String\n
+       */\n
+      \'name\': undefined,\n
+\n
+      /**\n
+       * An event listener called when the benchmark is aborted.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Function\n
+       */\n
+      \'onAbort\': undefined,\n
+\n
+      /**\n
+       * An event listener called when the benchmark completes running.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Function\n
+       */\n
+      \'onComplete\': undefined,\n
+\n
+      /**\n
+       * An event listener called after each run cycle.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Function\n
+       */\n
+      \'onCycle\': undefined,\n
+\n
+      /**\n
+       * An event listener called when a test errors.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Function\n
+       */\n
+      \'onError\': undefined,\n
+\n
+      /**\n
+       * An event listener called when the benchmark is reset.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Function\n
+       */\n
+      \'onReset\': undefined,\n
+\n
+      /**\n
+       * An event listener called when the benchmark starts running.\n
+       *\n
+       * @memberOf Benchmark.options\n
+       * @type Function\n
+       */\n
+      \'onStart\': undefined\n
+    },\n
+\n
+    /**\n
+     * Platform object with properties describing things like browser name,\n
+     * version, and operating system.\n
+     *\n
+     * @static\n
+     * @memberOf Benchmark\n
+     * @type Object\n
+     */\n
+    \'platform\': req(\'platform\') || window.platform || {\n
+\n
+      /**\n
+       * The platform description.\n
+       *\n
+       * @memberOf Benchmark.platform\n
+       * @type String\n
+       */\n
+      \'description\': window.navigator && navigator.userAgent || null,\n
+\n
+      /**\n
+       * The name of the browser layout engine.\n
+       *\n
+       * @memberOf Benchmark.platform\n
+       * @type String|Null\n
+       */\n
+      \'layout\': null,\n
+\n
+      /**\n
+       * The name of the product hosting the browser.\n
+       *\n
+       * @memberOf Benchmark.platform\n
+       * @type String|Null\n
+       */\n
+      \'product\': null,\n
+\n
+      /**\n
+       * The name of the browser/environment.\n
+       *\n
+       * @memberOf Benchmark.platform\n
+       * @type String|Null\n
+       */\n
+      \'name\': null,\n
+\n
+      /**\n
+       * The name of the product\'s manufacturer.\n
+       *\n
+       * @memberOf Benchmark.platform\n
+       * @type String|Null\n
+       */\n
+      \'manufacturer\': null,\n
+\n
+      /**\n
+       * The name of the operating system.\n
+       *\n
+       * @memberOf Benchmark.platform\n
+       * @type String|Null\n
+       */\n
+      \'os\': null,\n
+\n
+      /**\n
+       * The alpha/beta release indicator.\n
+       *\n
+       * @memberOf Benchmark.platform\n
+       * @type String|Null\n
+       */\n
+      \'prerelease\': null,\n
+\n
+      /**\n
+       * The browser/environment version.\n
+       *\n
+       * @memberOf Benchmark.platform\n
+       * @type String|Null\n
+       */\n
+      \'version\': null,\n
+\n
+      /**\n
+       * Return platform description when the platform object is coerced to a string.\n
+       *\n
+       * @memberOf Benchmark.platform\n
+       * @type Function\n
+       * @returns {String} The platform description.\n
+       */\n
+      \'toString\': function() {\n
+        return this.description || \'\';\n
+      }\n
+    },\n
+\n
+    /**\n
+     * The semantic version number.\n
+     *\n
+     * @static\n
+     * @memberOf Benchmark\n
+     * @type String\n
+     */\n
+    \'version\': \'1.0.0\',\n
+\n
+    // an object of environment/feature detection flags\n
+    \'support\': support,\n
+\n
+    // clone objects\n
+    \'deepClone\': deepClone,\n
+\n
+    // iteration utility\n
+    \'each\': each,\n
+\n
+    // augment objects\n
+    \'extend\': extend,\n
+\n
+    // generic Array#filter\n
+    \'filter\': filter,\n
+\n
+    // generic Array#forEach\n
+    \'forEach\': forEach,\n
+\n
+    // generic own property iteration utility\n
+    \'forOwn\': forOwn,\n
+\n
+    // converts a number to a comma-separated string\n
+    \'formatNumber\': formatNumber,\n
+\n
+    // generic Object#hasOwnProperty\n
+    // (trigger hasKey\'s lazy define before assigning it to Benchmark)\n
+    \'hasKey\': (hasKey(Benchmark, \'\'), hasKey),\n
+\n
+    // generic Array#indexOf\n
+    \'indexOf\': indexOf,\n
+\n
+    // template utility\n
+    \'interpolate\': interpolate,\n
+\n
+    // invokes a method on each item in an array\n
+    \'invoke\': invoke,\n
+\n
+    // generic Array#join for arrays and objects\n
+    \'join\': join,\n
+\n
+    // generic Array#map\n
+    \'map\': map,\n
+\n
+    // retrieves a property value from each item in an array\n
+    \'pluck\': pluck,\n
+\n
+    // generic Array#reduce\n
+    \'reduce\': reduce\n
+  });\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  extend(Benchmark.prototype, {\n
+\n
+    /**\n
+     * The number of times a test was executed.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Number\n
+     */\n
+    \'count\': 0,\n
+\n
+    /**\n
+     * The number of cycles performed while benchmarking.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Number\n
+     */\n
+    \'cycles\': 0,\n
+\n
+    /**\n
+     * The number of executions per second.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Number\n
+     */\n
+    \'hz\': 0,\n
+\n
+    /**\n
+     * The compiled test function.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Function|String\n
+     */\n
+    \'compiled\': undefined,\n
+\n
+    /**\n
+     * The error object if the test failed.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Object\n
+     */\n
+    \'error\': undefined,\n
+\n
+    /**\n
+     * The test to benchmark.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Function|String\n
+     */\n
+    \'fn\': undefined,\n
+\n
+    /**\n
+     * A flag to indicate if the benchmark is aborted.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Boolean\n
+     */\n
+    \'aborted\': false,\n
+\n
+    /**\n
+     * A flag to indicate if the benchmark is running.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Boolean\n
+     */\n
+    \'running\': false,\n
+\n
+    /**\n
+     * Compiled into the test and executed immediately **before** the test loop.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Function|String\n
+     * @example\n
+     *\n
+     * // basic usage\n
+     * var bench = Benchmark({\n
+     *   \'setup\': function() {\n
+     *     var c = this.count,\n
+     *         element = document.getElementById(\'container\');\n
+     *     while (c--) {\n
+     *       element.appendChild(document.createElement(\'div\'));\n
+     *     }\n
+     *   },\n
+     *   \'fn\': function() {\n
+     *     element.removeChild(element.lastChild);\n
+     *   }\n
+     * });\n
+     *\n
+     * // compiles to something like:\n
+     * var c = this.count,\n
+     *     element = document.getElementById(\'container\');\n
+     * while (c--) {\n
+     *   element.appendChild(document.createElement(\'div\'));\n
+     * }\n
+     * var start = new Date;\n
+     * while (count--) {\n
+     *   element.removeChild(element.lastChild);\n
+     * }\n
+     * var end = new Date - start;\n
+     *\n
+     * // or using strings\n
+     * var bench = Benchmark({\n
+     *   \'setup\': \'\\\n
+     *     var a = 0;\\n\\\n
+     *     (function() {\\n\\\n
+     *       (function() {\\n\\\n
+     *         (function() {\',\n
+     *   \'fn\': \'a += 1;\',\n
+     *   \'teardown\': \'\\\n
+     *          }())\\n\\\n
+     *        }())\\n\\\n
+     *      }())\'\n
+     * });\n
+     *\n
+     * // compiles to something like:\n
+     * var a = 0;\n
+     * (function() {\n
+     *   (function() {\n
+     *     (function() {\n
+     *       var start = new Date;\n
+     *       while (count--) {\n
+     *         a += 1;\n
+     *       }\n
+     *       var end = new Date - start;\n
+     *     }())\n
+     *   }())\n
+     * }())\n
+     */\n
+    \'setup\': noop,\n
+\n
+    /**\n
+     * Compiled into the test and executed immediately **after** the test loop.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Function|String\n
+     */\n
+    \'teardown\': noop,\n
+\n
+    /**\n
+     * An object of stats including mean, margin or error, and standard deviation.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Object\n
+     */\n
+    \'stats\': {\n
+\n
+      /**\n
+       * The margin of error.\n
+       *\n
+       * @memberOf Benchmark#stats\n
+       * @type Number\n
+       */\n
+      \'moe\': 0,\n
+\n
+      /**\n
+       * The relative margin of error (expressed as a percentage of the mean).\n
+       *\n
+       * @memberOf Benchmark#stats\n
+       * @type Number\n
+       */\n
+      \'rme\': 0,\n
+\n
+      /**\n
+       * The standard error of the mean.\n
+       *\n
+       * @memberOf Benchmark#stats\n
+       * @type Number\n
+       */\n
+      \'sem\': 0,\n
+\n
+      /**\n
+       * The sample standard deviation.\n
+       *\n
+       * @memberOf Benchmark#stats\n
+       * @type Number\n
+       */\n
+      \'deviation\': 0,\n
+\n
+      /**\n
+       * The sample arithmetic mean.\n
+       *\n
+       * @memberOf Benchmark#stats\n
+       * @type Number\n
+       */\n
+      \'mean\': 0,\n
+\n
+      /**\n
+       * The array of sampled periods.\n
+       *\n
+       * @memberOf Benchmark#stats\n
+       * @type Array\n
+       */\n
+      \'sample\': [],\n
+\n
+      /**\n
+       * The sample variance.\n
+       *\n
+       * @memberOf Benchmark#stats\n
+       * @type Number\n
+       */\n
+      \'variance\': 0\n
+    },\n
+\n
+    /**\n
+     * An object of timing data including cycle, elapsed, period, start, and stop.\n
+     *\n
+     * @memberOf Benchmark\n
+     * @type Object\n
+     */\n
+    \'times\': {\n
+\n
+      /**\n
+       * The time taken to complete the last cycle (secs).\n
+       *\n
+       * @memberOf Benchmark#times\n
+       * @type Number\n
+       */\n
+      \'cycle\': 0,\n
+\n
+      /**\n
+       * The time taken to complete the benchmark (secs).\n
+       *\n
+       * @memberOf Benchmark#times\n
+       * @type Number\n
+       */\n
+      \'elapsed\': 0,\n
+\n
+      /**\n
+       * The time taken to execute the test once (secs).\n
+       *\n
+       * @memberOf Benchmark#times\n
+       * @type Number\n
+       */\n
+      \'period\': 0,\n
+\n
+      /**\n
+       * A timestamp of when the benchmark started (ms).\n
+       *\n
+       * @memberOf Benchmark#times\n
+       * @type Number\n
+       */\n
+      \'timeStamp\': 0\n
+    },\n
+\n
+    // aborts benchmark (does not record times)\n
+    \'abort\': abort,\n
+\n
+    // creates a new benchmark using the same test and options\n
+    \'clone\': clone,\n
+\n
+    // compares benchmark\'s hertz with another\n
+    \'compare\': compare,\n
+\n
+    // executes listeners\n
+    \'emit\': emit,\n
+\n
+    // get listeners\n
+    \'listeners\': listeners,\n
+\n
+    // unregister listeners\n
+    \'off\': off,\n
+\n
+    // register listeners\n
+    \'on\': on,\n
+\n
+    // reset benchmark properties\n
+    \'reset\': reset,\n
+\n
+    // runs the benchmark\n
+    \'run\': run,\n
+\n
+    // pretty print benchmark info\n
+    \'toString\': toStringBench\n
+  });\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  extend(Deferred.prototype, {\n
+\n
+    /**\n
+     * The deferred benchmark instance.\n
+     *\n
+     * @memberOf Benchmark.Deferred\n
+     * @type Object\n
+     */\n
+    \'benchmark\': null,\n
+\n
+    /**\n
+     * The number of deferred cycles performed while benchmarking.\n
+     *\n
+     * @memberOf Benchmark.Deferred\n
+     * @type Number\n
+     */\n
+    \'cycles\': 0,\n
+\n
+    /**\n
+     * The time taken to complete the deferred benchmark (secs).\n
+     *\n
+     * @memberOf Benchmark.Deferred\n
+     * @type Number\n
+     */\n
+    \'elapsed\': 0,\n
+\n
+    /**\n
+     * A timestamp of when the deferred benchmark started (ms).\n
+     *\n
+     * @memberOf Benchmark.Deferred\n
+     * @type Number\n
+     */\n
+    \'timeStamp\': 0,\n
+\n
+    // cycles/completes the deferred benchmark\n
+    \'resolve\': resolve\n
+  });\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  extend(Event.prototype, {\n
+\n
+    /**\n
+     * A flag to indicate if the emitters listener iteration is aborted.\n
+     *\n
+     * @memberOf Benchmark.Event\n
+     * @type Boolean\n
+     */\n
+    \'aborted\': false,\n
+\n
+    /**\n
+     * A flag to indicate if the default action is cancelled.\n
+     *\n
+     * @memberOf Benchmark.Event\n
+     * @type Boolean\n
+     */\n
+    \'cancelled\': false,\n
+\n
+    /**\n
+     * The object whose listeners are currently being processed.\n
+     *\n
+     * @memberOf Benchmark.Event\n
+     * @type Object\n
+     */\n
+    \'currentTarget\': undefined,\n
+\n
+    /**\n
+     * The return value of the last executed listener.\n
+     *\n
+     * @memberOf Benchmark.Event\n
+     * @type Mixed\n
+     */\n
+    \'result\': undefined,\n
+\n
+    /**\n
+     * The object to which the event was originally emitted.\n
+     *\n
+     * @memberOf Benchmark.Event\n
+     * @type Object\n
+     */\n
+    \'target\': undefined,\n
+\n
+    /**\n
+     * A timestamp of when the event was created (ms).\n
+     *\n
+     * @memberOf Benchmark.Event\n
+     * @type Number\n
+     */\n
+    \'timeStamp\': 0,\n
+\n
+    /**\n
+     * The event type.\n
+     *\n
+     * @memberOf Benchmark.Event\n
+     * @type String\n
+     */\n
+    \'type\': \'\'\n
+  });\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  /**\n
+   * The default options copied by suite instances.\n
+   *\n
+   * @static\n
+   * @memberOf Benchmark.Suite\n
+   * @type Object\n
+   */\n
+  Suite.options = {\n
+\n
+    /**\n
+     * The name of the suite.\n
+     *\n
+     * @memberOf Benchmark.Suite.options\n
+     * @type String\n
+     */\n
+    \'name\': undefined\n
+  };\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  extend(Suite.prototype, {\n
+\n
+    /**\n
+     * The number of benchmarks in the suite.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @type Number\n
+     */\n
+    \'length\': 0,\n
+\n
+    /**\n
+     * A flag to indicate if the suite is aborted.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @type Boolean\n
+     */\n
+    \'aborted\': false,\n
+\n
+    /**\n
+     * A flag to indicate if the suite is running.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @type Boolean\n
+     */\n
+    \'running\': false,\n
+\n
+    /**\n
+     * An `Array#forEach` like method.\n
+     * Callbacks may terminate the loop by explicitly returning `false`.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @param {Function} callback The function called per iteration.\n
+     * @returns {Object} The suite iterated over.\n
+     */\n
+    \'forEach\': methodize(forEach),\n
+\n
+    /**\n
+     * An `Array#indexOf` like method.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @param {Mixed} value The value to search for.\n
+     * @returns {Number} The index of the matched value or `-1`.\n
+     */\n
+    \'indexOf\': methodize(indexOf),\n
+\n
+    /**\n
+     * Invokes a method on all benchmarks in the suite.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @param {String|Object} name The name of the method to invoke OR options object.\n
+     * @param {Mixed} [arg1, arg2, ...] Arguments to invoke the method with.\n
+     * @returns {Array} A new array of values returned from each method invoked.\n
+     */\n
+    \'invoke\': methodize(invoke),\n
+\n
+    /**\n
+     * Converts the suite of benchmarks to a string.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @param {String} [separator=\',\'] A string to separate each element of the array.\n
+     * @returns {String} The string.\n
+     */\n
+    \'join\': [].join,\n
+\n
+    /**\n
+     * An `Array#map` like method.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @param {Function} callback The function called per iteration.\n
+     * @returns {Array} A new array of values returned by the callback.\n
+     */\n
+    \'map\': methodize(map),\n
+\n
+    /**\n
+     * Retrieves the value of a specified property from all benchmarks in the suite.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @param {String} property The property to pluck.\n
+     * @returns {Array} A new array of property values.\n
+     */\n
+    \'pluck\': methodize(pluck),\n
+\n
+    /**\n
+     * Removes the last benchmark from the suite and returns it.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @returns {Mixed} The removed benchmark.\n
+     */\n
+    \'pop\': [].pop,\n
+\n
+    /**\n
+     * Appends benchmarks to the suite.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @returns {Number} The suite\'s new length.\n
+     */\n
+    \'push\': [].push,\n
+\n
+    /**\n
+     * Sorts the benchmarks of the suite.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @param {Function} [compareFn=null] A function that defines the sort order.\n
+     * @returns {Object} The sorted suite.\n
+     */\n
+    \'sort\': [].sort,\n
+\n
+    /**\n
+     * An `Array#reduce` like method.\n
+     *\n
+     * @memberOf Benchmark.Suite\n
+     * @param {Function} callback The function called per iteration.\n
+     * @param {Mixed} accumulator Initial value of the accumulator.\n
+     * @returns {Mixed} The accumulator.\n
+     */\n
+    \'reduce\': methodize(reduce),\n
+\n
+    // aborts all benchmarks in the suite\n
+    \'abort\': abortSuite,\n
+\n
+    // adds a benchmark to the suite\n
+    \'add\': add,\n
+\n
+    // creates a new suite with cloned benchmarks\n
+    \'clone\': cloneSuite,\n
+\n
+    // executes listeners of a specified type\n
+    \'emit\': emit,\n
+\n
+    // creates a new suite of filtered benchmarks\n
+    \'filter\': filterSuite,\n
+\n
+    // get listeners\n
+    \'listeners\': listeners,\n
+\n
+    // unregister listeners\n
+    \'off\': off,\n
+\n
+    // register listeners\n
+    \'on\': on,\n
+\n
+    // resets all benchmarks in the suite\n
+    \'reset\': resetSuite,\n
+\n
+    // runs all benchmarks in the suite\n
+    \'run\': runSuite,\n
+\n
+    // array methods\n
+    \'concat\': concat,\n
+\n
+    \'reverse\': reverse,\n
+\n
+    \'shift\': shift,\n
+\n
+    \'slice\': slice,\n
+\n
+    \'splice\': splice,\n
+\n
+    \'unshift\': unshift\n
+  });\n
+\n
+  /*--------------------------------------------------------------------------*/\n
+\n
+  // expose Deferred, Event and Suite\n
+  extend(Benchmark, {\n
+    \'Deferred\': Deferred,\n
+    \'Event\': Event,\n
+    \'Suite\': Suite\n
+  });\n
+\n
+  // expose Benchmark\n
+  // some AMD build optimizers, like r.js, check for specific condition patterns like the following:\n
+  if (typeof define == \'function\' && typeof define.amd == \'object\' && define.amd) {\n
+    // define as an anonymous module so, through path mapping, it can be aliased\n
+    define(function() {\n
+      return Benchmark;\n
+    });\n
+  }\n
+  // check for `exports` after `define` in case a build optimizer adds an `exports` object\n
+  else if (freeExports) {\n
+    // in Node.js or RingoJS v0.8.0+\n
+    if (typeof module == \'object\' && module && module.exports == freeExports) {\n
+      (module.exports = Benchmark).Benchmark = Benchmark;\n
+    }\n
+    // in Narwhal or RingoJS v0.7.0-\n
+    else {\n
+      freeExports.Benchmark = Benchmark;\n
+    }\n
+  }\n
+  // in a browser or Rhino\n
+  else {\n
+    // use square bracket notation so Closure Compiler won\'t munge `Benchmark`\n
+    // http://code.google.com/closure/compiler/docs/api-tutorial3.html#export\n
+    window[\'Benchmark\'] = Benchmark;\n
+  }\n
+\n
+  // trigger clock\'s lazy define early to avoid a security error\n
+  if (support.air) {\n
+    clock({ \'_original\': { \'fn\': noop, \'count\': 1, \'options\': {} } });\n
+  }\n
+}(this));
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

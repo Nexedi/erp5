@@ -1,0 +1,463 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272696.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>manualRowMove.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'manualRowMove\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should change row order at init\', function () {\n
+    handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"},\n
+        {id: 6, name: "Chuck", lastName: "Jackson"},\n
+        {id: 7, name: "Meg", lastName: "Jansen"},\n
+        {id: 8, name: "Rob", lastName: "Norris"},\n
+        {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+        {id: 10, name: "Eve", lastName: "Branson"}\n
+      ],\n
+      manualRowMove: [1, 2, 0]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'1\');\n
+  });\n
+\n
+  it(\'should change the default row order with updateSettings\', function () {\n
+    handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"},\n
+        {id: 6, name: "Chuck", lastName: "Jackson"},\n
+        {id: 7, name: "Meg", lastName: "Jansen"},\n
+        {id: 8, name: "Rob", lastName: "Norris"},\n
+        {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+        {id: 10, name: "Eve", lastName: "Branson"}\n
+      ],\n
+      manualRowMove: true\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    updateSettings({\n
+      manualRowMove: [2, 1, 0]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'1\');\n
+  });\n
+\n
+  it(\'should change row order with updateSettings\', function () {\n
+    handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"},\n
+        {id: 6, name: "Chuck", lastName: "Jackson"},\n
+        {id: 7, name: "Meg", lastName: "Jansen"},\n
+        {id: 8, name: "Rob", lastName: "Norris"},\n
+        {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+        {id: 10, name: "Eve", lastName: "Branson"}\n
+      ],\n
+      manualRowMove: [1, 2, 0]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'1\');\n
+\n
+    updateSettings({\n
+      manualRowMove: [2, 1, 0]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'1\');\n
+  });\n
+\n
+  it(\'should reset row order\', function () {\n
+    handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"},\n
+        {id: 6, name: "Chuck", lastName: "Jackson"},\n
+        {id: 7, name: "Meg", lastName: "Jansen"},\n
+        {id: 8, name: "Rob", lastName: "Norris"},\n
+        {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+        {id: 10, name: "Eve", lastName: "Branson"}\n
+      ],\n
+      manualRowMove: [1, 2, 0]\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'1\');\n
+\n
+    updateSettings({\n
+      manualRowMove: true\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+  });\n
+\n
+  it(\'should move rows for manualRowMove: true\', function () {\n
+\n
+    this.$container.height(150);\n
+\n
+    var hot = handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"},\n
+        {id: 6, name: "Chuck", lastName: "Jackson"},\n
+        {id: 7, name: "Meg", lastName: "Jansen"},\n
+        {id: 8, name: "Rob", lastName: "Norris"},\n
+        {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+        {id: 10, name: "Eve10", lastName: "Branson"}\n
+      ],\n
+      rowHeaders: true,\n
+      manualRowMove: true\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+\n
+    var htCore = getHtCore();\n
+\n
+    selectCell(7, 0);\n
+\n
+    var lastRenderedRowIndex = hot.view.wt.wtTable.getLastRenderedRow();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(\' + (lastRenderedRowIndex - 1) + \') td:eq(0)\').text()).toEqual(\'9\');\n
+    expect(htCore.find(\'tbody tr:eq(\' + (lastRenderedRowIndex) + \') td:eq(0)\').text()).toEqual(\'10\');\n
+\n
+    waits(500);\n
+\n
+    runs(function () {\n
+      moveSecondDisplayedRowBeforeFirstRow(htCore, lastRenderedRowIndex);\n
+\n
+      expect(htCore.find(\'tbody tr:eq(\' + (lastRenderedRowIndex - 1) + \') td:eq(0)\').text()).toEqual(\'10\');\n
+      expect(htCore.find(\'tbody tr:eq(\' + (lastRenderedRowIndex) + \') td:eq(0)\').text()).toEqual(\'9\');\n
+    });\n
+  });\n
+\n
+  it(\'should not move rows for manualRowMove: false\', function () {\n
+\n
+    this.$container.height(150);\n
+\n
+    var hot = handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"},\n
+        {id: 6, name: "Chuck", lastName: "Jackson"},\n
+        {id: 7, name: "Meg", lastName: "Jansen"},\n
+        {id: 8, name: "Rob", lastName: "Norris"},\n
+        {id: 9, name: "Sean", lastName: "O\'Hara"},\n
+        {id: 10, name: "Eve10", lastName: "Branson"}\n
+      ],\n
+      rowHeaders: true,\n
+      manualRowMove: false\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    var htCore = getHtCore();\n
+\n
+    selectCell(7, 0);\n
+\n
+    var lastRenderedRowIndex = hot.view.wt.wtTable.getLastRenderedRow();\n
+    expect(htCore.find(\'tbody tr:eq(\' + (lastRenderedRowIndex - 1) + \') td:eq(0)\').text()).toEqual(\'9\');\n
+    expect(htCore.find(\'tbody tr:eq(\' + (lastRenderedRowIndex) + \') td:eq(0)\').text()).toEqual(\'10\');\n
+\n
+    waits(500);\n
+\n
+    runs(function () {\n
+      moveSecondDisplayedRowBeforeFirstRow(htCore, lastRenderedRowIndex - 1);\n
+\n
+      expect(htCore.find(\'tbody tr:eq(\' + (lastRenderedRowIndex - 1) + \') td:eq(0)\').text()).toEqual(\'9\');\n
+      expect(htCore.find(\'tbody tr:eq(\' + (lastRenderedRowIndex) + \') td:eq(0)\').text()).toEqual(\'10\');\n
+    });\n
+  });\n
+\n
+  it(\'should trigger an afterRowMove event after row move\', function () {\n
+    var afterMoveRowCallback = jasmine.createSpy(\'afterMoveRowCallback\');\n
+\n
+    this.$container.height(150);\n
+\n
+    var hot = handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"},\n
+        {id: 6, name: "Chuck", lastName: "Jackson"},\n
+        {id: 7, name: "Meg", lastName: "Jansen"},\n
+        {id: 8, name: "Rob", lastName: "Norris"},\n
+        {id: 9, name: "Sean", lastName: "O\'Hara"}\n
+      ],\n
+      rowHeaders: true,\n
+      manualRowMove: true,\n
+      afterRowMove: afterMoveRowCallback\n
+    });\n
+\n
+    expect(this.$container.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(this.$container.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(this.$container.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    var htCore = getHtCore();\n
+    var lastVisibleRowIndex = hot.view.wt.wtTable.getLastVisibleRow();\n
+\n
+    selectCell(7, 0);\n
+\n
+    waits(500);\n
+\n
+    runs(function () {\n
+\n
+      moveSecondDisplayedRowBeforeFirstRow(htCore, lastVisibleRowIndex);\n
+\n
+      expect(htCore.find(\'tbody tr:eq(\' + (lastVisibleRowIndex - 1) + \') td:eq(0)\').text()).toEqual(\'9\');\n
+      expect(htCore.find(\'tbody tr:eq(\' + (lastVisibleRowIndex - 2) + \') td:eq(0)\').text()).toEqual(\'7\');\n
+      expect(htCore.find(\'tbody tr:eq(\' + (lastVisibleRowIndex) + \') td:eq(0)\').text()).toEqual(\'8\');\n
+\n
+      expect(afterMoveRowCallback).toHaveBeenCalledWith(lastVisibleRowIndex, lastVisibleRowIndex - 1, void 0, void 0, void 0, void 0);\n
+    });\n
+  });\n
+\n
+  it("should not select the column when the user clicks the move handler", function() {\n
+    var hot = handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"},\n
+        {id: 6, name: "Chuck", lastName: "Jackson"},\n
+        {id: 7, name: "Meg", lastName: "Jansen"},\n
+        {id: 8, name: "Rob", lastName: "Norris"},\n
+        {id: 9, name: "Sean", lastName: "O\'Hara"}\n
+      ],\n
+      rowHeaders: true,\n
+      manualRowMove: true\n
+    });\n
+\n
+    var $rowHeader = this.$container.find(\'tbody tr:eq(2) th:eq(1)\');\n
+    $rowHeader.simulate("mouseover");\n
+\n
+    var $manualRowMover = this.$container.find(\'.manualRowMover\');\n
+    $manualRowMover.eq(1).simulate(\'mousedown\');\n
+\n
+    expect(hot.getSelected()).toEqual(undefined);\n
+  });\n
+\n
+  it("should display the move handle in the correct place after the table has been scrolled", function () {\n
+    var hot = handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(20, 20),\n
+      rowHeaders: true,\n
+      manualRowMove: true,\n
+      height: 100,\n
+      width: 200\n
+    });\n
+\n
+    var mainHolder = hot.view.wt.wtTable.holder;\n
+\n
+    var $rowHeader = this.$container.find(\'.ht_clone_left tbody tr:eq(2) th:eq(0)\');\n
+    $rowHeader.simulate("mouseover");\n
+\n
+    var $handle = this.$container.find(\'.manualRowMover\');\n
+    $handle[0].style.background = "red";\n
+\n
+    expect($rowHeader.offset().left).toEqual($handle.offset().left);\n
+    expect($rowHeader.offset().top).toEqual($handle.offset().top);\n
+\n
+    $(mainHolder).scrollTop(200);\n
+    hot.render();\n
+\n
+    $rowHeader = this.$container.find(\'.ht_clone_left tbody tr:eq(2) th:eq(0)\');\n
+    $rowHeader.simulate("mouseover");\n
+    expect($rowHeader.offset().left).toEqual($handle.offset().left);\n
+    expect($rowHeader.offset().top).toEqual($handle.offset().top);\n
+  });\n
+\n
+  it("should move the first row to the second row", function () {\n
+    handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"}\n
+      ],\n
+      rowHeaders: true,\n
+      manualRowMove: true\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    moveFirstDisplayedRowAfterSecondRow(htCore, 0);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+  });\n
+\n
+  it("should move the second row to the third row", function () {\n
+    handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"}\n
+      ],\n
+      rowHeaders: true,\n
+      manualRowMove: true\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'2\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'3\');\n
+\n
+    moveFirstDisplayedRowAfterSecondRow(htCore, 1);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(0) td:eq(0)\').text()).toEqual(\'1\');\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\').text()).toEqual(\'3\');\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\').text()).toEqual(\'2\');\n
+  });\n
+\n
+  it("moving row should keep cell meta created using cells function", function () {\n
+    handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"}\n
+      ],\n
+      rowHeaders: true,\n
+      manualRowMove: true,\n
+      cells: function (row, col) {\n
+        if (row == 1 && col == 0) {\n
+          this.readOnly = true;\n
+        }\n
+      }\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\')[0].className.indexOf("htDimmed")).toBeGreaterThan(-1);\n
+\n
+    moveFirstDisplayedRowAfterSecondRow(htCore, 1);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\')[0].className.indexOf("htDimmed")).toBeGreaterThan(-1);\n
+  });\n
+\n
+  it("moving row should keep cell meta created using cell array", function () {\n
+    handsontable({\n
+      data: [\n
+        {id: 1, name: "Ted", lastName: "Right"},\n
+        {id: 2, name: "Frank", lastName: "Honest"},\n
+        {id: 3, name: "Joan", lastName: "Well"},\n
+        {id: 4, name: "Sid", lastName: "Strong"},\n
+        {id: 5, name: "Jane", lastName: "Neat"}\n
+      ],\n
+      rowHeaders: true,\n
+      manualRowMove: true,\n
+      cell: [\n
+        {row: 1, col: 0, readOnly: true}\n
+      ]\n
+    });\n
+\n
+    var htCore = getHtCore();\n
+\n
+    expect(htCore.find(\'tbody tr:eq(1) td:eq(0)\')[0].className.indexOf("htDimmed")).toBeGreaterThan(-1);\n
+\n
+    moveFirstDisplayedRowAfterSecondRow(htCore, 1);\n
+\n
+    expect(htCore.find(\'tbody tr:eq(2) td:eq(0)\')[0].className.indexOf("htDimmed")).toBeGreaterThan(-1);\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>15293</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>manualRowMove.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

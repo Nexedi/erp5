@@ -1,0 +1,695 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272716.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>grouping.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe("Grouping plugin:", function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  describe("Initialization", function () {\n
+\n
+    it("should not enable plugin if \'groups\' config option is not set or set to false", function () {\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10)\n
+      });\n
+      expect(Handsontable.Grouping).toBeFalsy();\n
+\n
+      hot.updateSettings({\n
+        groups: false\n
+      });\n
+      expect(Handsontable.Grouping).toBeFalsy();\n
+\n
+      hot.updateSettings({\n
+        groups: [{rows: [2, 4]}]\n
+      });\n
+      expect(Handsontable.Grouping).toBeTruthy();\n
+\n
+      hot.updateSettings({\n
+        groups: false\n
+      });\n
+      expect(Handsontable.Grouping).toBeFalsy();\n
+\n
+    });\n
+\n
+    it("should create as many row/col groups as provided in the configuration", function () {\n
+      var groupConfig = [\n
+        { rows: [2, 4] },\n
+        { rows: [5, 6] },\n
+        { rows: [7, 9] },\n
+        { cols: [7, 9] },\n
+        { cols: [7, 9] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      var groups = Handsontable.Grouping;\n
+\n
+      expect(groups.getRowGroups().length).toEqual(3);\n
+      expect(groups.getColGroups().length).toEqual(2);\n
+\n
+      hot.updateSettings({\n
+        groups: [\n
+          { cols: [1, 2] },\n
+          { rows: [1, 2] },\n
+          { rows: [3, 5] }\n
+        ]\n
+      });\n
+\n
+      expect(groups.getRowGroups().length).toEqual(2);\n
+      expect(groups.getColGroups().length).toEqual(1);\n
+    });\n
+\n
+    it("should throw an error when trying to define an empty group", function () {\n
+      var groupConfig = [\n
+        { rows: [2, 4] },\n
+        { rows: [3, 6] }\n
+      ];\n
+\n
+      var caught = false\n
+        , hot;\n
+\n
+      try {\n
+        hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+          groups: groupConfig\n
+        });\n
+      } catch(err) {\n
+        caught = true;\n
+      }\n
+\n
+      expect(caught).toBe(true);\n
+\n
+      caught = true;\n
+\n
+      groupConfig = [\n
+        { cols: [2, 4] },\n
+        { cols: [0] }\n
+      ];\n
+\n
+      try {\n
+        hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+          groups: groupConfig\n
+        });\n
+      } catch(err) {\n
+        caught = true;\n
+      }\n
+\n
+      expect(caught).toBe(true);\n
+    });\n
+\n
+    it("should throw an error when trying to define a one-entry group", function () {\n
+      var groupConfig = [\n
+        { rows: [2, 4] },\n
+        { rows: [3, 6] }\n
+      ];\n
+\n
+      var caught = false\n
+        , hot;\n
+\n
+      try {\n
+        hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+          groups: groupConfig\n
+        });\n
+      } catch(err) {\n
+        caught = true;\n
+      }\n
+\n
+      expect(caught).toBe(true);\n
+\n
+      caught = true;\n
+\n
+      groupConfig = [\n
+        { cols: [2, 4] },\n
+        { cols: [3] }\n
+      ];\n
+\n
+      try {\n
+        hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+          groups: groupConfig\n
+        });\n
+      } catch(err) {\n
+        caught = true;\n
+      }\n
+\n
+      expect(caught).toBe(true);\n
+    });\n
+\n
+    it("should throw an error when groups in the configuration overlap", function () {\n
+      var groupConfig = [\n
+        { rows: [2, 4] },\n
+        { rows: [3, 6] }\n
+      ];\n
+\n
+      var caught = false\n
+        , hot;\n
+\n
+      try {\n
+        hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+          groups: groupConfig\n
+        });\n
+      } catch(err) {\n
+        caught = true;\n
+      }\n
+\n
+      expect(caught).toBe(true);\n
+\n
+      caught = true;\n
+\n
+      groupConfig = [\n
+        { cols: [2, 4] },\n
+        { cols: [3, 6] }\n
+      ];\n
+\n
+      try {\n
+        hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+          groups: groupConfig\n
+        });\n
+      } catch(err) {\n
+        caught = true;\n
+      }\n
+\n
+      expect(caught).toBe(true);\n
+    });\n
+\n
+    it("should arrange groups in levels if ranges contain themselves", function () {\n
+      var groupConfig = [\n
+        { rows: [2, 8] },\n
+        { rows: [5, 6] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      var groups = Handsontable.Grouping;\n
+\n
+      expect(groups.getLevels().rows).toEqual(2);\n
+\n
+      var groupConfig = [\n
+        { rows: [2, 8] },\n
+        { rows: [3, 7] },\n
+        { rows: [4, 6] },\n
+        { cols: [2, 8] },\n
+        { cols: [5, 6] }\n
+      ];\n
+\n
+      hot = updateSettings({\n
+        groups: groupConfig\n
+      });\n
+\n
+      expect(groups.getLevels().rows).toEqual(3);\n
+      expect(groups.getLevels().cols).toEqual(2);\n
+\n
+    });\n
+\n
+  });\n
+\n
+  describe("GUI:", function () {\n
+    it("should create additional column header levels for each column group level + one empty level", function () {\n
+      var groupConfig = [\n
+        { cols: [2, 4] },\n
+        { cols: [5, 6] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      expect(this.$container.find(".ht_master thead tr").length).toEqual(3); // 1 level + 1 empty + 1 standard header\n
+\n
+      groupConfig = [\n
+        { cols: [2, 8] },\n
+        { cols: [3, 4] }\n
+      ];\n
+      hot.updateSettings({groups: groupConfig});\n
+\n
+      expect(this.$container.find(".ht_master thead tr").length).toEqual(4); // 2 levels + 1 empty + 1 standard header\n
+\n
+      groupConfig = [\n
+        { cols: [2, 4] },\n
+        { cols: [5, 6] }\n
+      ];\n
+      hot.updateSettings({groups: groupConfig});\n
+\n
+      expect(this.$container.find(".ht_master thead tr").length).toEqual(3); // 1 level + 1 empty + 1 standard header\n
+    });\n
+\n
+    it("should create additional row header levels for each row group level + one empty level", function () {\n
+      var groupConfig = [\n
+        { rows: [2, 4] },\n
+        { rows: [5, 6] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      expect(this.$container.find(".ht_master tbody tr:first-child th").length).toEqual(3); // 1 level + 1 empty + 1 standard header\n
+\n
+      groupConfig = [\n
+        { rows: [2, 8] },\n
+        { rows: [3, 4] }\n
+      ];\n
+      hot.updateSettings({groups: groupConfig});\n
+\n
+      expect(this.$container.find(".ht_master tbody tr:first-child th").length).toEqual(4); // 2 levels + 1 empty + 1 standard header\n
+\n
+      groupConfig = [\n
+        { rows: [2, 4] },\n
+        { rows: [5, 6] }\n
+      ];\n
+      hot.updateSettings({groups: groupConfig});\n
+\n
+      expect(this.$container.find(".ht_master tbody tr:first-child th").length).toEqual(3); // 1 level + 1 empty + 1 standard header\n
+\n
+    });\n
+\n
+    it("should add \'htGroupIndicatorContainer\' class to every cell in group indicator rows and columns", function () {\n
+      var groupConfig = [\n
+        { rows: [2, 4] },\n
+        { rows: [5, 6] },\n
+        { cols: [5, 9] },\n
+        { cols: [6, 7] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      var rowGroupHeaders = this.$container.find("tbody tr th").not(":last-of-type");\n
+      for(var i = 0, rowHeadersCount = rowGroupHeaders.length; i < rowHeadersCount; i++) {\n
+          expect(Handsontable.Dom.hasClass(rowGroupHeaders[i], \'htGroupIndicatorContainer\')).toBe(true);\n
+      }\n
+\n
+      var colGroupHeaders = this.$container.find("thead tr").not(":last-of-type").find("th");\n
+      for(var i = 0, colHeadersCount = colGroupHeaders.length; i < colHeadersCount; i++) {\n
+        expect(Handsontable.Dom.hasClass(colGroupHeaders[i], \'htGroupIndicatorContainer\')).toBe(true);\n
+      }\n
+\n
+    });\n
+\n
+    it(\'should add a div element with "htHorizontalGroup" class to every th element responsible for indicating a column group\', function () {\n
+      var groupConfig = [\n
+        { cols: [5, 9] },\n
+        { cols: [6, 7] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      var rowHeaders = this.$container.find(".ht_master thead tr:first-child .htGroupIndicatorContainer").slice(6);\n
+      for(var i = 0, rowHeadersCount = rowHeaders.length; i < rowHeadersCount; i++) {\n
+        expect($(rowHeaders[i]) .find("div.htHorizontalGroup").length).toEqual(1);\n
+      }\n
+\n
+      rowHeaders = this.$container.find(".ht_master thead tr:nth-child(2) .htGroupIndicatorContainer").slice(7, 9);\n
+      for(var i = 0, rowHeadersCount = rowHeaders.length; i < rowHeadersCount; i++) {\n
+        expect($(rowHeaders[i]) .find("div.htHorizontalGroup").length).toEqual(1);\n
+      }\n
+\n
+    });\n
+\n
+    it("should add a \'htGroupStart\' class to a div in every first th of the horizontal \'group line\'", function () {\n
+      var groupConfig = [\n
+        { cols: [5, 9] },\n
+        { cols: [6, 7] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      var rowHeaders = this.$container.find(".ht_master thead tr:first-child .htGroupIndicatorContainer").slice(6,7);\n
+        expect($(rowHeaders[0]) .find("div.htGroupStart").length).toEqual(1);\n
+\n
+      rowHeaders = this.$container.find(".ht_master thead tr:nth-child(2) .htGroupIndicatorContainer").slice(7, 8);\n
+        expect($(rowHeaders[0]) .find("div.htGroupStart").length).toEqual(1);\n
+    });\n
+\n
+    it("should add a htCollapseButton class to a div in every last th of the horizontal \'group line\'", function () {\n
+      var groupConfig = [\n
+        { cols: [5, 9] },\n
+        { cols: [6, 7] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      var rowHeaders = this.$container.find(".ht_master thead tr:first-child .htGroupIndicatorContainer").slice(10,11);\n
+      expect($(rowHeaders[0]) .find("div.htCollapseButton").length).toEqual(1);\n
+\n
+      rowHeaders = this.$container.find(".ht_master thead tr:nth-child(2) .htGroupIndicatorContainer").slice(8, 9);\n
+      expect($(rowHeaders[0]) .find("div.htCollapseButton").length).toEqual(1);\n
+    });\n
+\n
+    it(\'should add a div element with "htVerticalGroup" class to every th element responsible for indicating a row group\', function () {\n
+      var groupConfig = [\n
+        { rows: [5, 9] },\n
+        { rows: [6, 7] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      var rowHeaders = this.$container.find(".ht_master tbody tr th:first-child.htGroupIndicatorContainer").slice(6);\n
+      for(var i = 0, rowHeadersCount = rowHeaders.length; i < rowHeadersCount; i++) {\n
+        expect($(rowHeaders[i]) .find("div.htVerticalGroup").length).toEqual(1);\n
+      }\n
+\n
+      rowHeaders = this.$container.find(".ht_master tbody tr th:nth-child(2).htGroupIndicatorContainer").slice(6, 8);\n
+      for(var i = 0, rowHeadersCount = rowHeaders.length; i < rowHeadersCount; i++) {\n
+        expect($(rowHeaders[i]) .find("div.htVerticalGroup").length).toEqual(1);\n
+      }\n
+\n
+    });\n
+\n
+    it("should add a \'htGroupStart\' class to a div in every first th of the horizontal \'group line\'", function () {\n
+      var groupConfig = [\n
+        { rows: [5, 9] },\n
+        { rows: [6, 7] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      var rowHeaders = this.$container.find(".ht_master tbody tr th:first-child.htGroupIndicatorContainer").slice(5,6);\n
+      expect($(rowHeaders[0]) .find("div.htGroupStart").length).toEqual(1);\n
+\n
+      rowHeaders = this.$container.find(".ht_master tbody tr th:nth-child(2).htGroupIndicatorContainer").slice(6, 7);\n
+      expect($(rowHeaders[0]) .find("div.htGroupStart").length).toEqual(1);\n
+    });\n
+\n
+    it("should add a htCollapseButton class to a div in every last th of the horizontal \'group line\'", function () {\n
+      var groupConfig = [\n
+        { rows: [5, 9] },\n
+        { rows: [6, 7] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      var rowHeaders = this.$container.find(".ht_master tbody tr th:first-child.htGroupIndicatorContainer").slice(9,10);\n
+      expect($(rowHeaders[0]) .find("div.htCollapseButton").length).toEqual(1);\n
+\n
+      rowHeaders = this.$container.find(".ht_master tbody tr th:nth-child(2).htGroupIndicatorContainer").slice(7, 8);\n
+      expect($(rowHeaders[0]) .find("div.htCollapseButton").length).toEqual(1);\n
+    });\n
+\n
+    it("should add a div with class \'htExpandButton\' to every th following the last group indicator", function () {\n
+\n
+      var groupConfig = [\n
+        { rows: [4, 8] },\n
+        { rows: [5, 6] },\n
+        { cols: [4, 8] },\n
+        { cols: [5, 6] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      var rowHeaders = this.$container.find(".ht_master tbody tr th:first-child.htGroupIndicatorContainer").slice(9,10);\n
+      if(rowHeaders.length > 0) { // if needed row header is rendered - depends on viewportColumnRenderingOffset and window size\n
+        expect($(rowHeaders[0]).find("div.htExpandButton").length).toEqual(1);\n
+      }\n
+\n
+      rowHeaders = this.$container.find(".ht_master tbody tr th:nth-child(2).htGroupIndicatorContainer").slice(7, 8);\n
+      if(rowHeaders.length > 0) { // if needed row header is rendered - depends on viewportColumnRenderingOffset and window size\n
+        expect($(rowHeaders[0]).find("div.htExpandButton").length).toEqual(1);\n
+      }\n
+\n
+      rowHeaders = this.$container.find(".ht_master thead tr:first-child .htGroupIndicatorContainer").slice(13,14);\n
+      if(rowHeaders.length > 0) { // if needed row header is rendered - depends on viewportColumnRenderingOffset and window size\n
+        expect($(rowHeaders[0]) .find("div.htExpandButton").length).toEqual(1);\n
+      }\n
+\n
+      rowHeaders = this.$container.find(".ht_master thead tr:nth-child(2) .htGroupIndicatorContainer").slice(11, 12);\n
+      if(rowHeaders.length > 0) { // if needed row header is rendered - depends on viewportColumnRenderingOffset and window size\n
+        expect($(rowHeaders[0]).find("div.htExpandButton ").length).toEqual(1);\n
+      }\n
+    });\n
+\n
+  });\n
+\n
+  describe("Events:", function() {\n
+\n
+    it("should add \'hidden\' class to appropriate rows after a collapse button (-) is clicked", function () {\n
+      var groupConfig = [\n
+        { rows: [4, 8] },\n
+        { rows: [5, 6] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      for(var i = 5; i < 9; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master tbody tr:nth-child("+ i +")")[0],"hidden")).toBe(false);\n
+      }\n
+\n
+      mouseDown($("#htCollapse-r1")[0]);\n
+\n
+      for(var i = 5; i < 9; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master tbody tr:nth-child("+ i +")")[0],"hidden")).toBe(true);\n
+      }\n
+    });\n
+\n
+    it("should add \'hidden\' class to appropriate col element after a collapse button (-) is clicked", function () {\n
+      var groupConfig = [\n
+        { cols: [4, 8] },\n
+        { cols: [5, 6] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      for(var i = 7; i < 11; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master colgroup col:nth-child("+ i +")")[0],"hidden")).toBe(false);\n
+      }\n
+\n
+      mouseDown($("#htCollapse-c1")[0]);\n
+\n
+      for(var i = 7; i < 11; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master colgroup col:nth-child("+ i +")")[0],"hidden")).toBe(true);\n
+      }\n
+    });\n
+\n
+    it("should remove the \'hidden\' class from the appropriate rows after an expand button (+) is clicked", function () {\n
+      var groupConfig = [\n
+        { rows: [4, 8] },\n
+        { rows: [5, 6] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      mouseDown($("#htCollapse-r1")[0]);\n
+\n
+      for(var i = 5; i < 9; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master tbody tr:nth-child("+ i +")")[0],"hidden")).toBe(true);\n
+      }\n
+\n
+      mouseDown($("#htExpand-r1")[0]);\n
+\n
+      for(var i = 5; i < 9; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master tbody tr:nth-child("+ i +")")[0],"hidden")).toBe(false);\n
+      }\n
+    });\n
+\n
+    it("should remove the \'hidden\' class from the appropriate col elements after an expand button (+) is clicked", function () {\n
+      var groupConfig = [\n
+        { cols: [4, 8] },\n
+        { cols: [5, 6] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(10, 10),\n
+        groups: groupConfig\n
+      });\n
+\n
+      mouseDown($("#htCollapse-c1")[0]);\n
+\n
+      for(var i = 7; i < 11; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master colgroup col:nth-child("+ i +")")[0],"hidden")).toBe(true);\n
+      }\n
+\n
+      mouseDown($("#htExpand-c1")[0]);\n
+\n
+      for(var i = 7; i < 11; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master colgroup col:nth-child("+ i +")")[0],"hidden")).toBe(false);\n
+      }\n
+\n
+    });\n
+\n
+\n
+    it("should hide all levels above the level connected to the clicked level trigger, after clicking it", function () {\n
+      var groupConfig = [\n
+        { rows: [2, 5] },\n
+        { rows: [3, 4] },\n
+        { rows: [6, 8] },\n
+        { cols: [2, 5] },\n
+        { cols: [3, 4] },\n
+        { cols: [6, 8] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(11, 11),\n
+        groups: groupConfig\n
+      });\n
+\n
+      // rows\n
+      for(var i = 3; i < 9; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master tbody tr:nth-child("+ i +")")[0],"hidden")).toBe(false);\n
+      }\n
+      mouseDown($("#htCollapseRowsFromLevel-1")[0]);\n
+\n
+      for(var i = 3; i < 9; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master tbody tr:nth-child("+ i +")")[0],"hidden")).toBe(true);\n
+      }\n
+\n
+      mouseDown($("#htCollapseRowsFromLevel-3")[0]);\n
+      for(var i = 3; i < 9; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master tbody tr:nth-child("+ i +")")[0],"hidden")).toBe(false);\n
+      }\n
+\n
+      mouseDown($("#htCollapseRowsFromLevel-2")[0]);\n
+      for(var i = 4; i < 5; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master tbody tr:nth-child("+ i +")")[0],"hidden")).toBe(true);\n
+      }\n
+\n
+      mouseDown($("#htCollapseRowsFromLevel-3")[0]);\n
+      for(var i = 4; i < 5; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master tbody tr:nth-child("+ i +")")[0],"hidden")).toBe(false);\n
+      }\n
+\n
+      //cols\n
+      for(var i = 7; i < 13; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master colgroup col:nth-child("+ i +")")[0],"hidden")).toBe(false);\n
+      }\n
+\n
+      mouseDown($("#htCollapseColsFromLevel-1")[0]);\n
+      for(var i = 7; i < 13; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master colgroup col:nth-child("+ i +")")[0],"hidden")).toBe(true);\n
+      }\n
+\n
+      mouseDown($("#htCollapseColsFromLevel-3")[0]);\n
+      for(var i = 7; i < 13; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master colgroup col:nth-child("+ i +")")[0],"hidden")).toBe(false);\n
+      }\n
+\n
+      mouseDown($("#htCollapseColsFromLevel-2")[0]);\n
+      for(var i = 8; i < 9; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master colgroup col:nth-child("+ i +")")[0],"hidden")).toBe(true);\n
+      }\n
+\n
+      mouseDown($("#htCollapseColsFromLevel-3")[0]);\n
+      for(var i = 8; i < 9; i++) {\n
+        expect(Handsontable.Dom.hasClass(this.$container.find(".ht_master colgroup col:nth-child("+ i +")")[0],"hidden")).toBe(false);\n
+      }\n
+\n
+\n
+    });\n
+\n
+\n
+    it("should add a dummy row/col if all rows are collapsed", function () {\n
+      var groupConfig = [\n
+        { rows: [0, 4] }\n
+      ];\n
+      var hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 5),\n
+        groups: groupConfig\n
+      });\n
+\n
+      // rows\n
+      mouseDown($("#htCollapse-r1")[0]);\n
+\n
+      expect(this.$container.find(".ht_master tbody tr").not(".hidden").length).toEqual(1);\n
+\n
+      mouseDown($("#htExpand-r1")[0]);\n
+\n
+      expect(this.$container.find(".ht_master tbody tr").not(".hidden").length).toEqual(5);\n
+\n
+      // cols\n
+\n
+      groupConfig = [\n
+        { cols: [0, 4] }\n
+      ];\n
+\n
+      hot.updateSettings({ groups: groupConfig });\n
+\n
+      mouseDown($("#htCollapse-c1")[0]);\n
+\n
+      expect(this.$container.find(".ht_master colgroup col").not(".hidden, .rowHeader").length).toEqual(1);\n
+\n
+      mouseDown($("#htExpand-c1")[0]);\n
+\n
+      expect(this.$container.find(".ht_master colgroup col").not(".hidden, .rowHeader").length).toEqual(5);\n
+\n
+\n
+    });\n
+\n
+  });\n
+});\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>21294</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>grouping.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

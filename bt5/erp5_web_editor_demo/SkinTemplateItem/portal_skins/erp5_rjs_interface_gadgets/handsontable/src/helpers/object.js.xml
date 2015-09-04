@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272633.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>object.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+/**\n
+ * Generate schema for passed object.\n
+ *\n
+ * @param {Array|Object} object\n
+ * @returns {Array|Object}\n
+ */\n
+export function duckSchema(object) {\n
+  var schema;\n
+\n
+  if (Array.isArray(object)) {\n
+    schema = [];\n
+  } else {\n
+    schema = {};\n
+\n
+    objectEach(object, function(value, key) {\n
+      if (value && typeof value === \'object\' && !Array.isArray(value)) {\n
+        schema[key] = duckSchema(value);\n
+\n
+      } else if (Array.isArray(value)) {\n
+        if (value.length && typeof value[0] === \'object\' && !Array.isArray(value[0])) {\n
+          schema[key] = [duckSchema(value[0])];\n
+        } else {\n
+          schema[key] = [];\n
+        }\n
+\n
+      } else {\n
+        schema[key] = null;\n
+      }\n
+    });\n
+  }\n
+\n
+  return schema;\n
+}\n
+\n
+/**\n
+ * Inherit without without calling parent constructor, and setting `Child.prototype.constructor` to `Child` instead of `Parent`.\n
+ * Creates temporary dummy function to call it as constructor.\n
+ * Described in ticket: https://github.com/handsontable/handsontable/pull/516\n
+ *\n
+ * @param  {Object} Child  child class\n
+ * @param  {Object} Parent parent class\n
+ * @return {Object}        extended Child\n
+ */\n
+export function inherit(Child, Parent) {\n
+  Parent.prototype.constructor = Parent;\n
+  Child.prototype = new Parent();\n
+  Child.prototype.constructor = Child;\n
+\n
+  return Child;\n
+}\n
+\n
+/**\n
+ * Perform shallow extend of a target object with extension\'s own properties\n
+ * @param {Object} target An object that will receive the new properties\n
+ * @param {Object} extension An object containing additional properties to merge into the target\n
+ */\n
+export function extend(target, extension) {\n
+  objectEach(extension, function(value, key) {\n
+    target[key] = value;\n
+  });\n
+}\n
+\n
+/**\n
+ * Perform deep extend of a target object with extension\'s own properties\n
+ * @param {Object} target An object that will receive the new properties\n
+ * @param {Object} extension An object containing additional properties to merge into the target\n
+ */\n
+export function deepExtend(target, extension) {\n
+  objectEach(extension, function(value, key) {\n
+    if (extension[key] && typeof extension[key] === \'object\') {\n
+      if (!target[key]) {\n
+        if (Array.isArray(extension[key])) {\n
+          target[key] = [];\n
+        }\n
+        else {\n
+          target[key] = {};\n
+        }\n
+      }\n
+      deepExtend(target[key], extension[key]);\n
+\n
+    } else {\n
+      target[key] = extension[key];\n
+    }\n
+  });\n
+}\n
+\n
+/**\n
+ * Perform deep clone of an object.\n
+ * WARNING! Only clones JSON properties. Will cause error when `obj` contains a function, Date, etc.\n
+ *\n
+ * @param {Object} obj An object that will be cloned\n
+ * @return {Object}\n
+ */\n
+export function deepClone(obj) {\n
+  if (typeof obj === "object") {\n
+    return JSON.parse(JSON.stringify(obj));\n
+  }\n
+\n
+  return obj;\n
+}\n
+\n
+/**\n
+ * Shallow clone object.\n
+ *\n
+ * @param {Object} object\n
+ * @returns {Object}\n
+ */\n
+export function clone(object) {\n
+  let result = {};\n
+\n
+  objectEach(object, (value, key) => result[key] = value);\n
+\n
+  return result;\n
+}\n
+\n
+/**\n
+ * Checks if two objects or arrays are (deep) equal\n
+ *\n
+ * @param {Object|Array} object1\n
+ * @param {Object|Array} object2\n
+ * @returns {Boolean}\n
+ */\n
+export function isObjectEquals(object1, object2) {\n
+  return JSON.stringify(object1) === JSON.stringify(object2);\n
+}\n
+\n
+/**\n
+ * Determines whether given object is a plain Object.\n
+ * Note: String and Array are not plain Objects\n
+ * @param {*} obj\n
+ * @returns {boolean}\n
+ */\n
+export function isObject(obj) {\n
+  return Object.prototype.toString.call(obj) == \'[object Object]\';\n
+}\n
+\n
+export function getPrototypeOf(obj) {\n
+  var prototype;\n
+\n
+  /* jshint ignore:start */\n
+  if(typeof obj.__proto__ == "object"){\n
+    prototype = obj.__proto__;\n
+  } else {\n
+    var oldConstructor,\n
+      constructor = obj.constructor;\n
+\n
+    if (typeof obj.constructor == "function") {\n
+      oldConstructor = constructor;\n
+\n
+      if (delete obj.constructor){\n
+        constructor = obj.constructor; // get real constructor\n
+        obj.constructor = oldConstructor; // restore constructor\n
+      }\n
+\n
+\n
+    }\n
+\n
+    prototype = constructor ? constructor.prototype : null; // needed for IE\n
+  }\n
+  /* jshint ignore:end */\n
+\n
+  return prototype;\n
+}\n
+\n
+export function defineGetter(object, property, value, options) {\n
+  options.value = value;\n
+  options.writable = options.writable === false ? false : true;\n
+  options.enumerable = options.enumerable === false ? false : true;\n
+  options.configurable = options.configurable === false ? false : true;\n
+\n
+  Object.defineProperty(object, property, options);\n
+}\n
+\n
+/**\n
+ * A specialized version of `.forEach` for objects.\n
+ *\n
+ * @param {Object} object The object to iterate over.\n
+ * @param {Function} iteratee The function invoked per iteration.\n
+ * @returns {Object} Returns `object`.\n
+ */\n
+export function objectEach(object, iteratee) {\n
+  for (let key in object) {\n
+    if (!object.hasOwnProperty || (object.hasOwnProperty && object.hasOwnProperty(key))) {\n
+      if (iteratee(object[key], key, object) === false) {\n
+        break;\n
+      }\n
+    }\n
+  }\n
+\n
+  return object;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4926</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>object.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

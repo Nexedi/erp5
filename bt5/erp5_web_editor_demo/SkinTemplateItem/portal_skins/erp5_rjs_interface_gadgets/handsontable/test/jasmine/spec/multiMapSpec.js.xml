@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272504.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>multiMapSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>describe(\'MultiMap\', function () {\n
+\n
+  beforeEach(function () {\n
+    this.multiMap = new MultiMap();\n
+  });\n
+\n
+  afterEach(function () {\n
+    delete this.multiMap;\n
+  });\n
+\n
+  it("should use string as key", function () {\n
+    this.multiMap.set(\'foo\', \'bar\');\n
+\n
+    expect(this.multiMap.get(\'foo\')).toEqual(\'bar\');\n
+\n
+  });\n
+\n
+  it("should use integer as key", function () {\n
+    this.multiMap.set(1, \'bar\');\n
+\n
+    expect(this.multiMap.get(1)).toEqual(\'bar\');\n
+\n
+  });\n
+\n
+  it("should use integer as key", function () {\n
+    this.multiMap.set(1.2, \'bar\');\n
+\n
+    expect(this.multiMap.get(1.2)).toEqual(\'bar\');\n
+    expect(this.multiMap.get(1.3)).toBeUndefined();\n
+\n
+  });\n
+\n
+  it("should use plain object as key", function () {\n
+    var keyObj1 = {};\n
+    var keyObj2 = {};\n
+\n
+    this.multiMap.set(keyObj1, \'bar\');\n
+\n
+    expect(this.multiMap.get(keyObj1)).toEqual(\'bar\');\n
+    expect(this.multiMap.get(keyObj2)).toBeUndefined();\n
+\n
+  });\n
+\n
+  it("should use array as key", function () {\n
+    var keyArray1 = [];\n
+    var keyArray2 = [];\n
+\n
+    this.multiMap.set(keyArray1, \'bar\');\n
+\n
+    expect(this.multiMap.get(keyArray1)).toEqual(\'bar\');\n
+    expect(this.multiMap.get(keyArray2)).toBeUndefined();\n
+\n
+  });\n
+\n
+  it("should use regexp as key", function () {\n
+    var keyRegexp1 = /test/;\n
+    var keyRegexp2 = /test/;\n
+\n
+    this.multiMap.set(keyRegexp1, \'bar\');\n
+\n
+    expect(this.multiMap.get(keyRegexp1)).toEqual(\'bar\');\n
+    expect(this.multiMap.get(keyRegexp2)).toBeUndefined();\n
+\n
+  });\n
+\n
+  it("should not use boolean as key", function () {\n
+\n
+    var tryToSetBooleanKey = function () {\n
+      this.multiMap.set(false, \'bar\');\n
+    };\n
+\n
+    expect(tryToSetBooleanKey).toThrow();\n
+\n
+  });\n
+\n
+  it("should not set null as key", function () {\n
+\n
+    var tryToSetNullKey = function () {\n
+      this.multiMap.set(null, \'bar\');\n
+    };\n
+\n
+    expect(tryToSetNullKey).toThrow();\n
+\n
+  });\n
+\n
+  it("should not set undefined as key", function () {\n
+\n
+    var tryToSetUndefinedKey = function () {\n
+      this.multiMap.set(undefined, \'bar\');\n
+    };\n
+\n
+    expect(tryToSetUndefinedKey).toThrow();\n
+\n
+  });\n
+\n
+  it("should not set NaN as key", function () {\n
+\n
+    var tryToSetNaNKey = function () {\n
+      this.multiMap.set(NaN, \'bar\');\n
+    };\n
+\n
+    expect(tryToSetNaNKey).toThrow();\n
+\n
+  });\n
+\n
+\n
+\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2199</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>multiMapSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

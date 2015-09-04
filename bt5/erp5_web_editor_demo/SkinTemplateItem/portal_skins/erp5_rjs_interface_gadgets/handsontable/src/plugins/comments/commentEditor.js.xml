@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272682.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>commentEditor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\n
+import {addClass} from \'./../../helpers/dom/element\';\n
+\n
+/**\n
+ * Comment editor for Comments plugin.\n
+ *\n
+ * @class CommentEditor\n
+ * @plugin Comments\n
+ */\n
+class CommentEditor {\n
+  static get CLASS_EDITOR_CONTAINER() {\n
+    return \'htCommentsContainer\';\n
+  }\n
+  static get CLASS_EDITOR() {\n
+    return \'htComments\';\n
+  }\n
+  static get CLASS_INPUT() {\n
+    return \'htCommentTextArea\';\n
+  }\n
+  static get CLASS_CELL() {\n
+    return \'htCommentCell\';\n
+  }\n
+\n
+  constructor() {\n
+    this.editor = this.createEditor();\n
+    this.editorStyle = this.editor.style;\n
+    this.editorStyle.position = \'absolute\';\n
+    // above cell editor\n
+    this.editorStyle.zIndex = 100;\n
+    this.hide();\n
+  }\n
+\n
+  /**\n
+   * Set position of comments editor according to x, y coords\n
+   *\n
+   * @param {Number} x\n
+   * @param {Number} y\n
+   */\n
+  setPosition(x, y) {\n
+    this.editorStyle.left = x + \'px\';\n
+    this.editorStyle.top = y + \'px\';\n
+  }\n
+\n
+  /**\n
+   * Show comments editor\n
+   */\n
+  show() {\n
+    this.editorStyle.display = \'block\';\n
+  }\n
+\n
+  /**\n
+   * Hide comments editor\n
+   */\n
+  hide() {\n
+    this.editorStyle.display = \'none\';\n
+  }\n
+\n
+  /**\n
+   * Checks if editor is visible\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isVisible() {\n
+    return this.editorStyle.display === \'block\';\n
+  }\n
+\n
+  /**\n
+   * Set comment value\n
+   *\n
+   * @param {String} [value]\n
+   */\n
+  setValue(value = \'\') {\n
+    value = value || \'\';\n
+    this.getInputElement().value = value;\n
+  }\n
+\n
+  /**\n
+   * Get comment value\n
+   *\n
+   * @returns {String}\n
+   */\n
+  getValue() {\n
+    return this.getInputElement().value;\n
+  }\n
+\n
+  /**\n
+   * Checks if comment input element is focused\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isFocused() {\n
+    return document.activeElement === this.getInputElement();\n
+  }\n
+\n
+  /**\n
+   * Focus comments input element\n
+   */\n
+  focus() {\n
+    this.getInputElement().focus();\n
+  }\n
+\n
+  /**\n
+   * Create editor for comment textarea\n
+   *\n
+   * @returns {Element}\n
+   */\n
+  createEditor() {\n
+    let container = document.querySelector(\'.\' + CommentEditor.CLASS_EDITOR_CONTAINER);\n
+    let editor;\n
+    let textArea;\n
+\n
+    if (!container) {\n
+      container = document.createElement(\'div\');\n
+      addClass(container, CommentEditor.CLASS_EDITOR_CONTAINER);\n
+      document.body.appendChild(container);\n
+    }\n
+    editor = document.createElement(\'div\');\n
+    addClass(editor, CommentEditor.CLASS_EDITOR);\n
+\n
+    textArea = document.createElement(\'textarea\');\n
+    addClass(textArea, CommentEditor.CLASS_INPUT);\n
+\n
+    editor.appendChild(textArea);\n
+    container.appendChild(editor);\n
+\n
+    return editor;\n
+  }\n
+\n
+  /**\n
+   * Get input element\n
+   *\n
+   * @returns {HTMLElement}\n
+   */\n
+  getInputElement() {\n
+    return this.editor.querySelector(\'.\' + CommentEditor.CLASS_INPUT);\n
+  }\n
+\n
+  /**\n
+   * Destroy comment editor\n
+   */\n
+  destroy() {\n
+    this.editor.parentNode.removeChild(this.editor);\n
+    this.editor = null;\n
+    this.editorStyle = null;\n
+  }\n
+}\n
+\n
+export {CommentEditor};\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2837</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>commentEditor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

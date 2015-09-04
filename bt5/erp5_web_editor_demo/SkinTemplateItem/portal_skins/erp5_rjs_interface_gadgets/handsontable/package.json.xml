@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272486.2</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>package.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "name": "handsontable",\n
+  "description": "Spreadsheet-like data grid editor that provides copy/paste functionality compatible with Excel/Google Docs",\n
+  "homepage": "http://handsontable.com/",\n
+  "repository": {\n
+    "type": "git",\n
+    "url": "https://github.com/handsontable/handsontable.git"\n
+  },\n
+  "bugs": {\n
+    "url": "https://github.com/handsontable/handsontable/issues"\n
+  },\n
+  "author": "Handsoncode <hello@handsontable.com>",\n
+  "version": "0.17.0",\n
+  "keywords": [\n
+    "data",\n
+    "grid",\n
+    "table",\n
+    "editor",\n
+    "grid-editor",\n
+    "data-grid",\n
+    "data-table",\n
+    "spreadsheet",\n
+    "excel",\n
+    "tabular-data",\n
+    "edit-cell",\n
+    "editable-table",\n
+    "data-spreadsheet"\n
+  ],\n
+  "devDependencies": {\n
+    "grunt": "~0.4.5",\n
+    "grunt-contrib-connect": "~0.8.0",\n
+    "grunt-contrib-jasmine": "~0.5.1",\n
+    "grunt-contrib-jshint": "~0.10.0",\n
+    "grunt-contrib-watch": "~0.6.1",\n
+    "grunt-gitinfo": "~0.1.6",\n
+    "hot-builder": "^0.2.3",\n
+    "grunt-saucelabs": "~8.3.3",\n
+    "load-grunt-tasks": "^3.0.0",\n
+    "time-grunt": "~1.0.0"\n
+  },\n
+  "scripts": {\n
+    "test": "grunt test -v"\n
+  },\n
+  "browser": "./src/browser.js",\n
+  "license": "MIT"\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1159</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>package.json</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272619.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>core.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  addClass,\n
+  fastInnerText,\n
+  isVisible,\n
+  removeClass,\n
+    } from \'./../../../helpers/dom/element\';\n
+import {objectEach} from \'./../../../helpers/object\';\n
+import {toUpperCaseFirst, randomString} from \'./../../../helpers/string\';\n
+import {WalkontableEvent} from \'./event\';\n
+import {WalkontableOverlays} from \'./overlays\';\n
+import {WalkontableScroll} from \'./scroll\';\n
+import {WalkontableSettings} from \'./settings\';\n
+import {WalkontableTable} from \'./table\';\n
+import {WalkontableViewport} from \'./viewport\';\n
+\n
+\n
+/**\n
+ * @class Walkontable\n
+ */\n
+class Walkontable {\n
+  /**\n
+   * @param {Object} settings\n
+   */\n
+  constructor(settings) {\n
+    let originalHeaders = [];\n
+\n
+    // this is the namespace for global events\n
+    this.guid = \'wt_\' + randomString();\n
+\n
+    // bootstrap from settings\n
+    if (settings.cloneSource) {\n
+      this.cloneSource = settings.cloneSource;\n
+      this.cloneOverlay = settings.cloneOverlay;\n
+      this.wtSettings = settings.cloneSource.wtSettings;\n
+      this.wtTable = new WalkontableTable(this, settings.table, settings.wtRootElement);\n
+      this.wtScroll = new WalkontableScroll(this);\n
+      this.wtViewport = settings.cloneSource.wtViewport;\n
+      this.wtEvent = new WalkontableEvent(this);\n
+      this.selections = this.cloneSource.selections;\n
+    } else {\n
+      this.wtSettings = new WalkontableSettings(this, settings);\n
+      this.wtTable = new WalkontableTable(this, settings.table);\n
+      this.wtScroll = new WalkontableScroll(this);\n
+      this.wtViewport = new WalkontableViewport(this);\n
+      this.wtEvent = new WalkontableEvent(this);\n
+      this.selections = this.getSetting(\'selections\');\n
+      this.wtOverlays = new WalkontableOverlays(this);\n
+      this.exportSettingsAsClassNames();\n
+    }\n
+\n
+    // find original headers\n
+    if (this.wtTable.THEAD.childNodes.length && this.wtTable.THEAD.childNodes[0].childNodes.length) {\n
+      for (let c = 0, clen = this.wtTable.THEAD.childNodes[0].childNodes.length; c < clen; c++) {\n
+        originalHeaders.push(this.wtTable.THEAD.childNodes[0].childNodes[c].innerHTML);\n
+      }\n
+      if (!this.getSetting(\'columnHeaders\').length) {\n
+        this.update(\'columnHeaders\', [\n
+          function(column, TH) {\n
+            fastInnerText(TH, originalHeaders[column]);\n
+          }\n
+        ]);\n
+      }\n
+    }\n
+    this.drawn = false;\n
+    this.drawInterrupted = false;\n
+  }\n
+\n
+  /**\n
+   * Force rerender of Walkontable\n
+   *\n
+   * @param {Boolean} [fastDraw=false] When `true`, try to refresh only the positions of borders without rerendering\n
+   *                                   the data. It will only work if WalkontableTable.draw() does not force\n
+   *                                   rendering anyway\n
+   * @returns {Walkontable}\n
+   */\n
+  draw(fastDraw = false) {\n
+    this.drawInterrupted = false;\n
+\n
+    if (!fastDraw && !isVisible(this.wtTable.TABLE)) {\n
+      // draw interrupted because TABLE is not visible\n
+      this.drawInterrupted = true;\n
+    } else {\n
+      this.wtTable.draw(fastDraw);\n
+    }\n
+\n
+    return this;\n
+  }\n
+\n
+  /**\n
+   * Returns the TD at coords. If topmost is set to true, returns TD from the topmost overlay layer,\n
+   * if not set or set to false, returns TD from the master table.\n
+   *\n
+   * @param {WalkontableCellCoords} coords\n
+   * @param {Boolean} [topmost=false]\n
+   * @returns {Object}\n
+   */\n
+  getCell(coords, topmost = false) {\n
+    if (!topmost) {\n
+      return this.wtTable.getCell(coords);\n
+    }\n
+\n
+    let fixedRows = this.wtSettings.getSetting(\'fixedRowsTop\');\n
+    let fixedColumns = this.wtSettings.getSetting(\'fixedColumnsLeft\');\n
+\n
+    if (coords.row < fixedRows && coords.col < fixedColumns) {\n
+      return this.wtOverlays.topLeftCornerOverlay.clone.wtTable.getCell(coords);\n
+\n
+    } else if (coords.row < fixedRows) {\n
+      return this.wtOverlays.topOverlay.clone.wtTable.getCell(coords);\n
+\n
+    } else if (coords.col < fixedColumns) {\n
+      return this.wtOverlays.leftOverlay.clone.wtTable.getCell(coords);\n
+    }\n
+\n
+    return this.wtTable.getCell(coords);\n
+  }\n
+\n
+  /**\n
+   * @param {Object} settings\n
+   * @param {*} value\n
+   * @returns {Walkontable}\n
+   */\n
+  update(settings, value) {\n
+    return this.wtSettings.update(settings, value);\n
+  }\n
+\n
+  /**\n
+   * Scroll the viewport to a row at the given index in the data source\n
+   *\n
+   * @param {Number} row\n
+   * @returns {Walkontable}\n
+   */\n
+  scrollVertical(row) {\n
+    this.wtOverlays.topOverlay.scrollTo(row);\n
+    this.getSetting(\'onScrollVertically\');\n
+\n
+    return this;\n
+  }\n
+\n
+  /**\n
+   * Scroll the viewport to a column at the given index in the data source\n
+   *\n
+   * @param {Number} column\n
+   * @returns {Walkontable}\n
+   */\n
+  scrollHorizontal(column) {\n
+    this.wtOverlays.leftOverlay.scrollTo(column);\n
+    this.getSetting(\'onScrollHorizontally\');\n
+\n
+    return this;\n
+  }\n
+\n
+  /**\n
+   * Scrolls the viewport to a cell (rerenders if needed)\n
+   *\n
+   * @param {WalkontableCellCoords} coords\n
+   * @returns {Walkontable}\n
+   */\n
+  scrollViewport(coords) {\n
+    this.wtScroll.scrollViewport(coords);\n
+\n
+    return this;\n
+  }\n
+\n
+  /**\n
+   * @returns {Array}\n
+   */\n
+  getViewport() {\n
+    return [\n
+      this.wtTable.getFirstVisibleRow(),\n
+      this.wtTable.getFirstVisibleColumn(),\n
+      this.wtTable.getLastVisibleRow(),\n
+      this.wtTable.getLastVisibleColumn()\n
+    ];\n
+  }\n
+\n
+  /**\n
+   * Get overlay name\n
+   *\n
+   * @returns {String}\n
+   */\n
+  getOverlayName() {\n
+    return this.cloneOverlay ? this.cloneOverlay.type : \'master\';\n
+  }\n
+\n
+  /**\n
+   * Export settings as class names added to the parent element of the table.\n
+   */\n
+  exportSettingsAsClassNames() {\n
+    let toExport = {\n
+      rowHeaders: [\'array\'],\n
+      columnHeaders: [\'array\']\n
+    };\n
+    let allClassNames = [];\n
+    let newClassNames = [];\n
+\n
+    objectEach(toExport, (optionType, key) => {\n
+      if (optionType.indexOf(\'array\') > -1 && this.getSetting(key).length) {\n
+        newClassNames.push(\'ht\' + toUpperCaseFirst(key));\n
+      }\n
+      allClassNames.push(\'ht\' + toUpperCaseFirst(key));\n
+    });\n
+    removeClass(this.wtTable.wtRootElement.parentNode, allClassNames);\n
+    addClass(this.wtTable.wtRootElement.parentNode, newClassNames);\n
+  }\n
+\n
+  /**\n
+   * Get/Set Walkontable instance setting\n
+   *\n
+   * @param {String} key\n
+   * @param {*} [param1]\n
+   * @param {*} [param2]\n
+   * @param {*} [param3]\n
+   * @param {*} [param4]\n
+   * @returns {*}\n
+   */\n
+  getSetting(key, param1, param2, param3, param4) {\n
+    // this is faster than .apply - https://github.com/handsontable/handsontable/wiki/JavaScript-&-DOM-performance-tips\n
+    return this.wtSettings.getSetting(key, param1, param2, param3, param4);\n
+  }\n
+\n
+  /**\n
+   * Checks if setting exists\n
+   *\n
+   * @param {String} key\n
+   * @returns {Boolean}\n
+   */\n
+  hasSetting(key) {\n
+    return this.wtSettings.has(key);\n
+  }\n
+\n
+  /**\n
+   * Destroy instance\n
+   */\n
+  destroy() {\n
+    this.wtOverlays.destroy();\n
+    this.wtEvent.destroy();\n
+  }\n
+}\n
+\n
+export {Walkontable};\n
+\n
+window.Walkontable = Walkontable;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6772</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>core.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

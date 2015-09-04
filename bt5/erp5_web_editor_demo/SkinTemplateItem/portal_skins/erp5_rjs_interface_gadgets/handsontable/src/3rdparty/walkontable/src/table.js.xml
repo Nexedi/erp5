@@ -1,0 +1,574 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272622.67</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>table.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  getStyle,\n
+  getTrimmingContainer,\n
+  hasClass,\n
+  index,\n
+  offset,\n
+  removeClass,\n
+  removeTextNodes,\n
+    } from \'./../../../helpers/dom/element\';\n
+import {WalkontableCellCoords} from \'./cell/coords\';\n
+import {WalkontableCellRange} from \'./cell/range\';\n
+import {WalkontableColumnFilter} from \'./filter/column\';\n
+import {WalkontableCornerOverlay} from \'./overlay/corner\';\n
+import {WalkontableDebugOverlay} from \'./overlay/debug\';\n
+import {WalkontableLeftOverlay} from \'./overlay/left\';\n
+import {WalkontableRowFilter} from \'./filter/row\';\n
+import {WalkontableTableRenderer} from \'./tableRenderer\';\n
+import {WalkontableTopOverlay} from \'./overlay/top\';\n
+\n
+\n
+class WalkontableTable {\n
+  /**\n
+   * @param {Walkontable} wotInstance\n
+   * @param {HTMLTableElement} table\n
+   */\n
+  constructor(wotInstance, table) {\n
+    this.wot = wotInstance;\n
+    // legacy support\n
+    this.instance = this.wot;\n
+    this.TABLE = table;\n
+    this.TBODY = null;\n
+    this.THEAD = null;\n
+    this.COLGROUP = null;\n
+    this.tableOffset = 0;\n
+    this.holderOffset = 0;\n
+\n
+    removeTextNodes(this.TABLE);\n
+\n
+    this.spreader = this.createSpreader(this.TABLE);\n
+    this.hider = this.createHider(this.spreader);\n
+    this.holder = this.createHolder(this.hider);\n
+\n
+    this.wtRootElement = this.holder.parentNode;\n
+    this.alignOverlaysWithTrimmingContainer();\n
+    this.fixTableDomTree();\n
+\n
+    this.colgroupChildrenLength = this.COLGROUP.childNodes.length;\n
+    this.theadChildrenLength = this.THEAD.firstChild ? this.THEAD.firstChild.childNodes.length : 0;\n
+    this.tbodyChildrenLength = this.TBODY.childNodes.length;\n
+\n
+    this.rowFilter = null;\n
+    this.columnFilter = null;\n
+  }\n
+\n
+  /**\n
+   *\n
+   */\n
+  fixTableDomTree() {\n
+    this.TBODY = this.TABLE.querySelector(\'tbody\');\n
+\n
+    if (!this.TBODY) {\n
+      this.TBODY = document.createElement(\'tbody\');\n
+      this.TABLE.appendChild(this.TBODY);\n
+    }\n
+    this.THEAD = this.TABLE.querySelector(\'thead\');\n
+\n
+    if (!this.THEAD) {\n
+      this.THEAD = document.createElement(\'thead\');\n
+      this.TABLE.insertBefore(this.THEAD, this.TBODY);\n
+    }\n
+    this.COLGROUP = this.TABLE.querySelector(\'colgroup\');\n
+\n
+    if (!this.COLGROUP) {\n
+      this.COLGROUP = document.createElement(\'colgroup\');\n
+      this.TABLE.insertBefore(this.COLGROUP, this.THEAD);\n
+    }\n
+\n
+    if (this.wot.getSetting(\'columnHeaders\').length && !this.THEAD.childNodes.length) {\n
+      this.THEAD.appendChild(document.createElement(\'TR\'));\n
+    }\n
+  }\n
+\n
+  /**\n
+   * @param table\n
+   * @returns {HTMLElement}\n
+   */\n
+  createSpreader(table) {\n
+    const parent = table.parentNode;\n
+    let spreader;\n
+\n
+    if (!parent || parent.nodeType !== 1 || !hasClass(parent, \'wtHolder\')) {\n
+      spreader = document.createElement(\'div\');\n
+      spreader.className = \'wtSpreader\';\n
+\n
+      if (parent) {\n
+        // if TABLE is detached (e.g. in Jasmine test), it has no parentNode so we cannot attach holder to it\n
+        parent.insertBefore(spreader, table);\n
+      }\n
+      spreader.appendChild(table);\n
+    }\n
+    spreader.style.position = \'relative\';\n
+\n
+    return spreader;\n
+  }\n
+\n
+  /**\n
+   * @param spreader\n
+   * @returns {HTMLElement}\n
+   */\n
+  createHider(spreader) {\n
+    const parent = spreader.parentNode;\n
+    let hider;\n
+\n
+    if (!parent || parent.nodeType !== 1 || !hasClass(parent, \'wtHolder\')) {\n
+      hider = document.createElement(\'div\');\n
+      hider.className = \'wtHider\';\n
+\n
+      if (parent) {\n
+        // if TABLE is detached (e.g. in Jasmine test), it has no parentNode so we cannot attach holder to it\n
+        parent.insertBefore(hider, spreader);\n
+      }\n
+      hider.appendChild(spreader);\n
+    }\n
+\n
+    return hider;\n
+  }\n
+\n
+  /**\n
+   *\n
+   * @param hider\n
+   * @returns {HTMLElement}\n
+   */\n
+  createHolder(hider) {\n
+    const parent = hider.parentNode;\n
+    let holder;\n
+\n
+    if (!parent || parent.nodeType !== 1 || !hasClass(parent, \'wtHolder\')) {\n
+      holder = document.createElement(\'div\');\n
+      holder.style.position = \'relative\';\n
+      holder.className = \'wtHolder\';\n
+\n
+      if (parent) {\n
+        // if TABLE is detached (e.g. in Jasmine test), it has no parentNode so we cannot attach holder to it\n
+        parent.insertBefore(holder, hider);\n
+      }\n
+      if (!this.isWorkingOnClone()) {\n
+        holder.parentNode.className += \'ht_master handsontable\';\n
+      }\n
+      holder.appendChild(hider);\n
+    }\n
+\n
+    return holder;\n
+  }\n
+\n
+  alignOverlaysWithTrimmingContainer() {\n
+    const trimmingElement = getTrimmingContainer(this.wtRootElement);\n
+\n
+    if (!this.isWorkingOnClone()) {\n
+      this.holder.parentNode.style.position = \'relative\';\n
+\n
+      if (trimmingElement !== window) {\n
+        this.holder.style.width = getStyle(trimmingElement, \'width\');\n
+        this.holder.style.height = getStyle(trimmingElement, \'height\');\n
+        this.holder.style.overflow = \'\';\n
+      } else {\n
+        this.holder.style.overflow = \'visible\';\n
+        this.wtRootElement.style.overflow = \'visible\';\n
+      }\n
+    }\n
+  }\n
+\n
+  isWorkingOnClone() {\n
+    return !!this.wot.cloneSource;\n
+  }\n
+\n
+  /**\n
+   * Redraws the table\n
+   *\n
+   * @param fastDraw {Boolean} If TRUE, will try to avoid full redraw and only update the border positions. If FALSE or UNDEFINED, will perform a full redraw\n
+   * @returns {WalkontableTable}\n
+   */\n
+  draw(fastDraw) {\n
+    if (!this.isWorkingOnClone()) {\n
+      this.holderOffset = offset(this.holder);\n
+      fastDraw = this.wot.wtViewport.createRenderCalculators(fastDraw);\n
+    }\n
+\n
+    if (!fastDraw) {\n
+      if (this.isWorkingOnClone()) {\n
+        this.tableOffset = this.wot.cloneSource.wtTable.tableOffset;\n
+      } else {\n
+        this.tableOffset = offset(this.TABLE);\n
+      }\n
+      let startRow;\n
+\n
+      if (this.wot.cloneOverlay instanceof WalkontableDebugOverlay ||\n
+          this.wot.cloneOverlay instanceof WalkontableTopOverlay ||\n
+          this.wot.cloneOverlay instanceof WalkontableCornerOverlay) {\n
+        startRow = 0;\n
+      } else {\n
+        startRow = this.wot.wtViewport.rowsRenderCalculator.startRow;\n
+      }\n
+      let startColumn;\n
+\n
+      if (this.wot.cloneOverlay instanceof WalkontableDebugOverlay ||\n
+          this.wot.cloneOverlay instanceof WalkontableLeftOverlay ||\n
+          this.wot.cloneOverlay instanceof WalkontableCornerOverlay) {\n
+        startColumn = 0;\n
+      } else {\n
+        startColumn = this.wot.wtViewport.columnsRenderCalculator.startColumn;\n
+      }\n
+      this.rowFilter = new WalkontableRowFilter(startRow, this.wot.getSetting(\'totalRows\'), this.wot.getSetting(\'columnHeaders\').length);\n
+      this.columnFilter = new WalkontableColumnFilter(startColumn, this.wot.getSetting(\'totalColumns\'), this.wot.getSetting(\'rowHeaders\').length);\n
+      this._doDraw(); //creates calculator after draw\n
+\n
+      this.alignOverlaysWithTrimmingContainer();\n
+\n
+    } else {\n
+      if (!this.isWorkingOnClone()) {\n
+        // in case we only scrolled without redraw, update visible rows information in oldRowsCalculator\n
+        this.wot.wtViewport.createVisibleCalculators();\n
+      }\n
+      if (this.wot.wtOverlays) {\n
+        this.wot.wtOverlays.refresh(true);\n
+      }\n
+    }\n
+    this.refreshSelections(fastDraw);\n
+\n
+    if (!this.isWorkingOnClone()) {\n
+      this.wot.wtOverlays.topOverlay.resetFixedPosition();\n
+      this.wot.wtOverlays.leftOverlay.resetFixedPosition();\n
+\n
+      if (this.wot.wtOverlays.topLeftCornerOverlay) {\n
+        this.wot.wtOverlays.topLeftCornerOverlay.resetFixedPosition();\n
+      }\n
+    }\n
+    this.wot.drawn = true;\n
+\n
+    return this;\n
+  }\n
+\n
+  _doDraw() {\n
+    const wtRenderer = new WalkontableTableRenderer(this);\n
+\n
+    wtRenderer.render();\n
+  }\n
+\n
+  removeClassFromCells(className) {\n
+    const nodes = this.TABLE.querySelectorAll(\'.\' + className);\n
+\n
+    for (let i = 0, len = nodes.length; i < len; i++) {\n
+      removeClass(nodes[i], className);\n
+    }\n
+  }\n
+\n
+  refreshSelections(fastDraw) {\n
+    if (!this.wot.selections) {\n
+      return;\n
+    }\n
+    let len = this.wot.selections.length;\n
+\n
+    if (fastDraw) {\n
+      for (let i = 0; i < len; i++) {\n
+        // there was no rerender, so we need to remove classNames by ourselves\n
+        if (this.wot.selections[i].settings.className) {\n
+          this.removeClassFromCells(this.wot.selections[i].settings.className);\n
+        }\n
+        if (this.wot.selections[i].settings.highlightRowClassName) {\n
+          this.removeClassFromCells(this.wot.selections[i].settings.highlightRowClassName);\n
+        }\n
+        if (this.wot.selections[i].settings.highlightColumnClassName) {\n
+          this.removeClassFromCells(this.wot.selections[i].settings.highlightColumnClassName);\n
+        }\n
+      }\n
+    }\n
+    for (let i = 0; i < len; i++) {\n
+      this.wot.selections[i].draw(this.wot, fastDraw);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Get cell element at coords.\n
+   *\n
+   * @param {WalkontableCellCoords} coords\n
+   * @returns {HTMLElement|Number} HTMLElement on success or Number one of the exit codes on error:\n
+   *  -1 row before viewport\n
+   *  -2 row after viewport\n
+   */\n
+  getCell(coords) {\n
+    if (this.isRowBeforeRenderedRows(coords.row)) {\n
+      // row before rendered rows\n
+      return -1;\n
+\n
+    } else if (this.isRowAfterRenderedRows(coords.row)) {\n
+      // row after rendered rows\n
+      return -2;\n
+    }\n
+    const TR = this.TBODY.childNodes[this.rowFilter.sourceToRendered(coords.row)];\n
+\n
+    if (TR) {\n
+      return TR.childNodes[this.columnFilter.sourceColumnToVisibleRowHeadedColumn(coords.col)];\n
+    }\n
+  }\n
+\n
+  /**\n
+   * getColumnHeader\n
+   *\n
+   * @param {Number} col Column index\n
+   * @param {Number} [level=0] Header level (0 = most distant to the table)\n
+   * @returns {Object} HTMLElement on success or undefined on error\n
+   */\n
+  getColumnHeader(col, level = 0) {\n
+    const TR = this.THEAD.childNodes[level];\n
+\n
+    if (TR) {\n
+      return TR.childNodes[this.columnFilter.sourceColumnToVisibleRowHeadedColumn(col)];\n
+    }\n
+  }\n
+\n
+  /**\n
+   * getRowHeader\n
+   *\n
+   * @param {Number} row Row index\n
+   * @returns {HTMLElement} HTMLElement on success or Number one of the exit codes on error: `null table doesn\'t have row headers`\n
+   */\n
+  getRowHeader(row) {\n
+    if (this.columnFilter.sourceColumnToVisibleRowHeadedColumn(0) === 0) {\n
+      return null;\n
+    }\n
+    const TR = this.TBODY.childNodes[this.rowFilter.sourceToRendered(row)];\n
+\n
+    if (TR) {\n
+      return TR.childNodes[0];\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Returns cell coords object for a given TD\n
+   *\n
+   * @param {HTMLTableCellElement} TD\n
+   * @returns {WalkontableCellCoords}\n
+   */\n
+  getCoords(TD) {\n
+    const TR = TD.parentNode;\n
+    let row = index(TR);\n
+\n
+    if (TR.parentNode === this.THEAD) {\n
+      row = this.rowFilter.visibleColHeadedRowToSourceRow(row);\n
+    } else {\n
+      row = this.rowFilter.renderedToSource(row);\n
+    }\n
+\n
+    return new WalkontableCellCoords(row, this.columnFilter.visibleRowHeadedColumnToSourceColumn(TD.cellIndex));\n
+  }\n
+\n
+  getTrForRow(row) {\n
+    return this.TBODY.childNodes[this.rowFilter.sourceToRendered(row)];\n
+  }\n
+\n
+  getFirstRenderedRow() {\n
+    return this.wot.wtViewport.rowsRenderCalculator.startRow;\n
+  }\n
+\n
+  getFirstVisibleRow() {\n
+    return this.wot.wtViewport.rowsVisibleCalculator.startRow;\n
+  }\n
+\n
+  getFirstRenderedColumn() {\n
+    return this.wot.wtViewport.columnsRenderCalculator.startColumn;\n
+  }\n
+\n
+  /**\n
+   * @returns {Number} Returns -1 if no row is visible\n
+   */\n
+  getFirstVisibleColumn() {\n
+    return this.wot.wtViewport.columnsVisibleCalculator.startColumn;\n
+  }\n
+\n
+  /**\n
+   * @returns {Number} Returns -1 if no row is visible\n
+   */\n
+  getLastRenderedRow() {\n
+    return this.wot.wtViewport.rowsRenderCalculator.endRow;\n
+  }\n
+\n
+  getLastVisibleRow() {\n
+    return this.wot.wtViewport.rowsVisibleCalculator.endRow;\n
+  }\n
+\n
+  getLastRenderedColumn() {\n
+    return this.wot.wtViewport.columnsRenderCalculator.endColumn;\n
+  }\n
+\n
+  /**\n
+   * @returns {Number} Returns -1 if no column is visible\n
+   */\n
+  getLastVisibleColumn() {\n
+    return this.wot.wtViewport.columnsVisibleCalculator.endColumn;\n
+  }\n
+\n
+  isRowBeforeRenderedRows(row) {\n
+    return (this.rowFilter.sourceToRendered(row) < 0 && row >= 0);\n
+  }\n
+\n
+  isRowAfterViewport(row) {\n
+    return (row > this.getLastVisibleRow());\n
+  }\n
+\n
+  isRowAfterRenderedRows(row) {\n
+    return (row > this.getLastRenderedRow());\n
+  }\n
+\n
+  isColumnBeforeViewport(column) {\n
+    return this.columnFilter.sourceToRendered(column) < 0 && column >= 0;\n
+  }\n
+\n
+  isColumnAfterViewport(column) {\n
+    return column > this.getLastVisibleColumn();\n
+  }\n
+\n
+  isLastRowFullyVisible() {\n
+    return this.getLastVisibleRow() === this.getLastRenderedRow();\n
+  }\n
+\n
+  isLastColumnFullyVisible() {\n
+    return this.getLastVisibleColumn() === this.getLastRenderedColumn();\n
+  }\n
+\n
+  getRenderedColumnsCount() {\n
+    if (this.wot.cloneOverlay instanceof WalkontableDebugOverlay) {\n
+      return this.wot.getSetting(\'totalColumns\');\n
+\n
+    } else if (this.wot.cloneOverlay instanceof WalkontableLeftOverlay || this.wot.cloneOverlay instanceof WalkontableCornerOverlay) {\n
+      return this.wot.getSetting(\'fixedColumnsLeft\');\n
+\n
+    } else {\n
+      return this.wot.wtViewport.columnsRenderCalculator.count;\n
+    }\n
+  }\n
+\n
+  getRenderedRowsCount() {\n
+    if (this.wot.cloneOverlay instanceof WalkontableDebugOverlay) {\n
+      return this.wot.getSetting(\'totalRows\');\n
+\n
+    } else if (this.wot.cloneOverlay instanceof WalkontableTopOverlay ||\n
+      this.wot.cloneOverlay instanceof WalkontableCornerOverlay) {\n
+      return this.wot.getSetting(\'fixedRowsTop\');\n
+    }\n
+\n
+    return this.wot.wtViewport.rowsRenderCalculator.count;\n
+  }\n
+\n
+  getVisibleRowsCount() {\n
+    return this.wot.wtViewport.rowsVisibleCalculator.count;\n
+  }\n
+\n
+  allRowsInViewport() {\n
+    return this.wot.getSetting(\'totalRows\') == this.getVisibleRowsCount();\n
+  }\n
+\n
+  /**\n
+   * Checks if any of the row\'s cells content exceeds its initial height, and if so, returns the oversized height\n
+   *\n
+   * @param {Number} sourceRow\n
+   * @returns {Number}\n
+   */\n
+  getRowHeight(sourceRow) {\n
+    let height = this.wot.wtSettings.settings.rowHeight(sourceRow);\n
+    let oversizedHeight = this.wot.wtViewport.oversizedRows[sourceRow];\n
+\n
+    if (oversizedHeight !== void 0) {\n
+      height = height ? Math.max(height, oversizedHeight) : oversizedHeight;\n
+    }\n
+\n
+    return height;\n
+  }\n
+\n
+  getColumnHeaderHeight(level) {\n
+    let height = this.wot.wtSettings.settings.defaultRowHeight;\n
+    let oversizedHeight = this.wot.wtViewport.oversizedColumnHeaders[level];\n
+\n
+    if (oversizedHeight !== void 0) {\n
+      height = height ? Math.max(height, oversizedHeight) : oversizedHeight;\n
+    }\n
+\n
+    return height;\n
+  }\n
+\n
+  getVisibleColumnsCount() {\n
+    return this.wot.wtViewport.columnsVisibleCalculator.count;\n
+  }\n
+\n
+  allColumnsInViewport() {\n
+    return this.wot.getSetting(\'totalColumns\') == this.getVisibleColumnsCount();\n
+  }\n
+\n
+  getColumnWidth(sourceColumn) {\n
+    let width = this.wot.wtSettings.settings.columnWidth;\n
+\n
+    if (typeof width === \'function\') {\n
+      width = width(sourceColumn);\n
+\n
+    } else if (typeof width === \'object\') {\n
+      width = width[sourceColumn];\n
+    }\n
+\n
+    return width || this.wot.wtSettings.settings.defaultColumnWidth;\n
+  }\n
+\n
+  getStretchedColumnWidth(sourceColumn) {\n
+    let width = this.getColumnWidth(sourceColumn);\n
+    let calculator = this.wot.wtViewport.columnsRenderCalculator;\n
+\n
+    if (calculator) {\n
+      let stretchedWidth = calculator.getStretchedColumnWidth(sourceColumn, width);\n
+\n
+      if (stretchedWidth) {\n
+        width = stretchedWidth;\n
+      }\n
+    }\n
+\n
+    return width;\n
+  }\n
+}\n
+\n
+\n
+export {WalkontableTable};\n
+\n
+window.WalkontableTable = WalkontableTable;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>15114</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>table.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

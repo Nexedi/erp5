@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272726.38</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>browser.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+let version = Handsontable.version;\n
+let buildDate = Handsontable.buildDate;\n
+\n
+window.Handsontable = function Handsontable(rootElement, userSettings) {\n
+  var instance = new Handsontable.Core(rootElement, userSettings || {});\n
+\n
+  instance.init();\n
+\n
+  return instance;\n
+};\n
+\n
+Handsontable.version = version;\n
+Handsontable.buildDate = buildDate;\n
+\n
+import \'./shims/classes\';\n
+import \'es6collections\';\n
+\n
+Handsontable.plugins = {};\n
+\n
+import {Hooks} from \'./pluginHooks\';\n
+\n
+if (!Handsontable.hooks) {\n
+  Handsontable.hooks = new Hooks();\n
+}\n
+\n
+import \'./core\';\n
+import \'./renderers/_cellDecorator\';\n
+import \'./cellTypes\';\n
+import \'./../plugins/jqueryHandsontable\';\n
+\n
+// export helpers\n
+import * as arrayHelpers from \'./helpers/array\';\n
+import * as browserHelpers from \'./helpers/browser\';\n
+import * as dataHelpers from \'./helpers/data\';\n
+import * as functionHelpers from \'./helpers/function\';\n
+import * as mixedHelpers from \'./helpers/mixed\';\n
+import * as numberHelpers from \'./helpers/number\';\n
+import * as objectHelpers from \'./helpers/object\';\n
+import * as settingHelpers from \'./helpers/setting\';\n
+import * as stringHelpers from \'./helpers/string\';\n
+import * as unicodeHelpers from \'./helpers/unicode\';\n
+\n
+const helpers = [arrayHelpers, browserHelpers, dataHelpers, functionHelpers, mixedHelpers, numberHelpers, objectHelpers,\n
+  settingHelpers, stringHelpers, unicodeHelpers];\n
+\n
+Handsontable.helper = {};\n
+\n
+arrayHelpers.arrayEach(helpers, (helper) => {\n
+  arrayHelpers.arrayEach(Object.getOwnPropertyNames(helper), (key) => {\n
+    if (key.charAt(0) !== \'_\') {\n
+      Handsontable.helper[key] = helper[key];\n
+    }\n
+  });\n
+});\n
+\n
+// export helpers\n
+import * as domHelpers from \'./helpers/dom/element\';\n
+import * as domEventHelpers from \'./helpers/dom/event\';\n
+\n
+Handsontable.dom = {};\n
+Handsontable.Dom = Handsontable.dom; // legacy support\n
+\n
+arrayHelpers.arrayEach([domHelpers, domEventHelpers], (helper) => {\n
+  arrayHelpers.arrayEach(Object.getOwnPropertyNames(helper), (key) => {\n
+    if (key.charAt(0) !== \'_\') {\n
+      Handsontable.dom[key] = helper[key];\n
+    }\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2023</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>browser.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

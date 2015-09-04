@@ -1,0 +1,410 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272702.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>autoColumnSize.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import BasePlugin from \'./../_base\';\n
+import {arrayEach, arrayFilter} from \'./../../helpers/array\';\n
+import {cancelAnimationFrame, requestAnimationFrame, isVisible} from \'./../../helpers/dom/element\';\n
+import {GhostTable} from \'./../../utils/ghostTable\';\n
+import {isObject, objectEach} from \'./../../helpers/object\';\n
+import {isPercentValue, rangeEach} from \'./../../helpers/number\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+import {SamplesGenerator} from \'./../../utils/samplesGenerator\';\n
+import {valueAccordingPercent} from \'./../../helpers/string\';\n
+import {WalkontableViewportColumnsCalculator} from \'./../../3rdparty/walkontable/src/calculator/viewportColumns\';\n
+\n
+/**\n
+ * @plugin AutoColumnSize\n
+ *\n
+ * @description\n
+ * This plugin allows to set columns width related to the widest cell in column.\n
+ *\n
+ * Default value is `undefined` which is the same effect as `true`. Enable this plugin can decrease performance.\n
+ *\n
+ * Column width calculations are divided into sync and async part. Each of this part has own advantages and\n
+ * disadvantages. Synchronous counting is faster but it blocks browser UI and asynchronous is slower but it does not\n
+ * block Browser UI.\n
+ *\n
+ * To configure this plugin see {@link Options#autoColumnSize}.\n
+ *\n
+ *\n
+ * @example\n
+ *\n
+ * ```js\n
+ * ...\n
+ * var hot = new Handsontable(document.getElementById(\'example\'), {\n
+ *   date: getData(),\n
+ *   autoColumnSize: true\n
+ * });\n
+ * // Access to plugin instance:\n
+ * var plugin = hot.getPlugin(\'autoColumnSize\');\n
+ *\n
+ * plugin.getColumnWidth(4);\n
+ *\n
+ * if (plugin.isEnabled()) {\n
+ *   // code...\n
+ * }\n
+ * ...\n
+ * ```\n
+ */\n
+class AutoColumnSize extends BasePlugin {\n
+  static get CALCULATION_STEP() {\n
+    return 50;\n
+  }\n
+  static get SYNC_CALCULATION_LIMIT() {\n
+    return 50;\n
+  }\n
+\n
+  constructor(hotInstance) {\n
+    super(hotInstance);\n
+    /**\n
+     * Cached columns widths.\n
+     *\n
+     * @type {Array}\n
+     */\n
+    this.widths = [];\n
+    /**\n
+     * Instance of GhostTable for rows and columns size calculations.\n
+     *\n
+     * @type {GhostTable}\n
+     */\n
+    this.ghostTable = new GhostTable(this.hot);\n
+    /**\n
+     * Instance of SamplesGenerator for generating samples necessary for columns width calculations.\n
+     *\n
+     * @type {SamplesGenerator}\n
+     */\n
+    this.samplesGenerator = new SamplesGenerator((row, col) => this.hot.getDataAtCell(row, col));\n
+    /**\n
+     * @type {Boolean}\n
+     */\n
+    this.firstCalculation = true;\n
+    /**\n
+     * @type {Boolean}\n
+     */\n
+    this.inProgress = false;\n
+  }\n
+\n
+  /**\n
+   * Check if the plugin is enabled in the handsontable settings.\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isEnabled() {\n
+    return this.hot.getSettings().autoColumnSize !== false && !this.hot.getSettings().colWidths;\n
+  }\n
+\n
+  /**\n
+   * Enable plugin for this Handsontable instance.\n
+   */\n
+  enablePlugin() {\n
+    if (this.enabled) {\n
+      return;\n
+    }\n
+    this.addHook(\'afterLoadData\', () => this.onAfterLoadData());\n
+    this.addHook(\'beforeChange\', (changes) => this.onBeforeChange(changes));\n
+    this.addHook(\'beforeColumnResize\', (col, size, isDblClick) => this.onBeforeColumnResize(col, size, isDblClick));\n
+    this.addHook(\'beforeRender\', (force) => this.onBeforeRender(force));\n
+    this.addHook(\'modifyColWidth\', (width, col) => this.getColumnWidth(col, width));\n
+    super.enablePlugin();\n
+  }\n
+\n
+  /**\n
+   * Calculate columns width.\n
+   *\n
+   * @param {Number|Object} colRange Column range object.\n
+   * @param {Number|Object} rowRange Row range object.\n
+   * @param {Boolean} [force=false] If `true` force calculate width even when value was cached earlier.\n
+   */\n
+  calculateColumnsWidth(colRange = {from: 0, to: this.hot.countCols() - 1}, rowRange = {from: 0, to: this.hot.countRows() - 1}, force = false) {\n
+    if (typeof colRange === \'number\') {\n
+      colRange = {from: colRange, to: colRange};\n
+    }\n
+    if (typeof rowRange === \'number\') {\n
+      rowRange = {from: rowRange, to: rowRange};\n
+    }\n
+    rangeEach(colRange.from, colRange.to, (col) => {\n
+      if (force || (this.widths[col] === void 0 && !this.hot._getColWidthFromSettings(col))) {\n
+        const samples = this.samplesGenerator.generateColumnSamples(col, rowRange);\n
+\n
+        samples.forEach((sample, col) => this.ghostTable.addColumn(col, sample));\n
+      }\n
+    });\n
+\n
+    if (this.ghostTable.columns.length) {\n
+      this.ghostTable.getWidths((col, width) => this.widths[col] = width);\n
+      this.ghostTable.clean();\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Calculate all columns width.\n
+   *\n
+   * @param {Object|Number} rowRange Row range object.\n
+   */\n
+  calculateAllColumnsWidth(rowRange = {from: 0, to: this.hot.countRows() - 1}) {\n
+    let current = 0;\n
+    let length = this.hot.countCols() - 1;\n
+    let timer = null;\n
+\n
+    this.inProgress = true;\n
+\n
+    let loop = () => {\n
+      // When hot was destroyed after calculating finished cancel frame\n
+      if (!this.hot) {\n
+        cancelAnimationFrame(timer);\n
+        this.inProgress = false;\n
+\n
+        return;\n
+      }\n
+      this.calculateColumnsWidth({from: current, to: Math.min(current + AutoColumnSize.CALCULATION_STEP, length)}, rowRange);\n
+      current = current + AutoColumnSize.CALCULATION_STEP + 1;\n
+\n
+      if (current < length) {\n
+        timer = requestAnimationFrame(loop);\n
+      } else {\n
+        cancelAnimationFrame(timer);\n
+        this.inProgress = false;\n
+\n
+        // @TODO Should call once per render cycle, currently fired separately in different plugins\n
+        this.hot.view.wt.wtOverlays.adjustElementsSize(true);\n
+        // tmp\n
+        if (this.hot.view.wt.wtOverlays.leftOverlay.needFullRender) {\n
+          this.hot.view.wt.wtOverlays.leftOverlay.clone.draw();\n
+        }\n
+      }\n
+    };\n
+    // sync\n
+    if (this.firstCalculation && this.getSyncCalculationLimit()) {\n
+      this.calculateColumnsWidth({from: 0, to: this.getSyncCalculationLimit()}, rowRange);\n
+      this.firstCalculation = false;\n
+      current = this.getSyncCalculationLimit() + 1;\n
+    }\n
+    // async\n
+    if (current < length) {\n
+      loop();\n
+    } else {\n
+      this.inProgress = false;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Recalculate all columns width (overwrite cache values).\n
+   */\n
+  recalculateAllColumnsWidth() {\n
+    if (isVisible(this.hot.view.wt.wtTable.TABLE)) {\n
+      this.clearCache();\n
+      this.calculateAllColumnsWidth();\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Get value which tells how much columns will be calculated synchronously. Rest columns will be calculated asynchronously.\n
+   *\n
+   * @returns {Number}\n
+   */\n
+  getSyncCalculationLimit() {\n
+    let limit = AutoColumnSize.SYNC_CALCULATION_LIMIT;\n
+    let colsLimit = this.hot.countCols() - 1;\n
+\n
+    if (isObject(this.hot.getSettings().autoColumnSize)) {\n
+      limit = this.hot.getSettings().autoColumnSize.syncLimit;\n
+\n
+      if (isPercentValue(limit)) {\n
+        limit = valueAccordingPercent(colsLimit, limit);\n
+      } else {\n
+        // Force to Number\n
+        limit = limit >> 0;\n
+      }\n
+    }\n
+\n
+    return Math.min(limit, colsLimit);\n
+  }\n
+\n
+  /**\n
+   * Get calculated column height.\n
+   *\n
+   * @param {Number} col Column index.\n
+   * @param {Number} [defaultWidth] Default column width. It will be pick up if no calculated width found.\n
+   * @param {Boolean} [keepMinimum=true] If `true` then returned value won\'t be smaller then 50 (default column width).\n
+   * @returns {Number}\n
+   */\n
+  getColumnWidth(col, defaultWidth = void 0, keepMinimum = true) {\n
+    let width = defaultWidth;\n
+\n
+    if (width === void 0) {\n
+      width = this.widths[col];\n
+\n
+      if (keepMinimum && typeof width === \'number\') {\n
+        width = Math.max(width, WalkontableViewportColumnsCalculator.DEFAULT_WIDTH);\n
+      }\n
+    }\n
+\n
+    return width;\n
+  }\n
+\n
+  /**\n
+   * Get first visible column.\n
+   *\n
+   * @returns {Number} Returns column index or -1 if table is not rendered.\n
+   */\n
+  getFirstVisibleColumn() {\n
+    const wot = this.hot.view.wt;\n
+\n
+    if (wot.wtViewport.columnsVisibleCalculator) {\n
+      return wot.wtTable.getFirstVisibleColumn();\n
+    }\n
+    if (wot.wtViewport.columnsRenderCalculator) {\n
+      return wot.wtTable.getFirstRenderedColumn();\n
+    }\n
+\n
+    return -1;\n
+  }\n
+\n
+  /**\n
+   * Get last visible column.\n
+   *\n
+   * @returns {Number} Returns column index or -1 if table is not rendered.\n
+   */\n
+  getLastVisibleColumn() {\n
+    const wot = this.hot.view.wt;\n
+\n
+    if (wot.wtViewport.columnsVisibleCalculator) {\n
+      return wot.wtTable.getLastVisibleColumn();\n
+    }\n
+    if (wot.wtViewport.columnsRenderCalculator) {\n
+      return wot.wtTable.getLastRenderedColumn();\n
+    }\n
+\n
+    return -1;\n
+  }\n
+\n
+  /**\n
+   * Clear cached widths.\n
+   */\n
+  clearCache() {\n
+    this.widths.length = 0;\n
+  }\n
+\n
+  /**\n
+   * Check if all widths were calculated. If not then return `true` (need recalculate).\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isNeedRecalculate() {\n
+    return arrayFilter(this.widths, (item) => (item === void 0)).length ? true : false;\n
+  }\n
+\n
+  /**\n
+   * On before render listener.\n
+   *\n
+   * @private\n
+   */\n
+  onBeforeRender() {\n
+    let force = this.hot.renderCall;\n
+    this.calculateColumnsWidth({from: this.getFirstVisibleColumn(), to: this.getLastVisibleColumn()}, void 0, force);\n
+\n
+    if (this.isNeedRecalculate() && !this.inProgress) {\n
+      this.calculateAllColumnsWidth();\n
+    }\n
+  }\n
+\n
+  /**\n
+   * On after load data listener.\n
+   *\n
+   * @private\n
+   */\n
+  onAfterLoadData() {\n
+    if (this.hot.view) {\n
+      this.recalculateAllColumnsWidth();\n
+    } else {\n
+      // first load - initialization\n
+      setTimeout(() => {\n
+        if (this.hot) {\n
+          this.recalculateAllColumnsWidth();\n
+        }\n
+      }, 0);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * On before change listener.\n
+   *\n
+   * @private\n
+   * @param {Array} changes\n
+   */\n
+  onBeforeChange(changes) {\n
+    arrayEach(changes, (data) => this.widths[data[1]] = void 0);\n
+  }\n
+\n
+  /**\n
+   * On before column resize listener.\n
+   *\n
+   * @private\n
+   * @param {Number} col\n
+   * @param {Number} size\n
+   * @param {Boolean} isDblClick\n
+   * @returns {Number}\n
+   */\n
+  onBeforeColumnResize(col, size, isDblClick) {\n
+    if (isDblClick) {\n
+      this.calculateColumnsWidth(col, void 0, true);\n
+      size = this.getColumnWidth(col, void 0, false);\n
+    }\n
+\n
+    return size;\n
+  }\n
+\n
+  /**\n
+   * Destroy plugin instance.\n
+   */\n
+  destroy() {\n
+    this.ghostTable.clean();\n
+    super.destroy();\n
+  }\n
+}\n
+\n
+export {AutoColumnSize};\n
+\n
+registerPlugin(\'autoColumnSize\', AutoColumnSize);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10080</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>autoColumnSize.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

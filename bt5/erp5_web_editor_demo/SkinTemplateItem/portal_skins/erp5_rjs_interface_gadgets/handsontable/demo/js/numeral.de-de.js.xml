@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272333.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>numeral.de-de.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*! \n
+ * numeral.js language configuration\n
+ * language : German (de) – generally useful in Germany, Austria, Luxembourg, Belgium\n
+ * author : Marco Krage : https://github.com/sinky\n
+ */\n
+(function () {\n
+    var language = {\n
+        delimiters: {\n
+            thousands: \' \',\n
+            decimal: \',\'\n
+        },\n
+        abbreviations: {\n
+            thousand: \'k\',\n
+            million: \'m\',\n
+            billion: \'b\',\n
+            trillion: \'t\'\n
+        },\n
+        ordinal: function (number) {\n
+            return \'.\';\n
+        },\n
+        currency: {\n
+            symbol: \'€\'\n
+        }\n
+    };\n
+\n
+    // Node\n
+    if (typeof module !== \'undefined\' && module.exports) {\n
+        module.exports = language;\n
+    }\n
+    // Browser\n
+    if (typeof window !== \'undefined\' && this.numeral && this.numeral.language) {\n
+        this.numeral.language(\'de\', language);\n
+        this.numeral.language(\'de-de\', language);\n
+    }\n
+}());
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>901</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>numeral.de-de.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

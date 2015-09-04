@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272532.12</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Core_destroySpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Core_destroy\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should remove table from the root element\', function () {\n
+    handsontable();\n
+    destroy();\n
+\n
+    expect(this.$container.html()).toEqual(\'\');\n
+  });\n
+\n
+  it(\'should remove events from the root element, document element and window\', function () {\n
+    var x = handsontable();\n
+\n
+    expect(x.eventListeners.length > 0).toBeTruthy();\n
+    destroy();\n
+    expect(x.eventListeners).toBeNull();\n
+    $(document.documentElement).off(\'.copypaste\'); //remove copypaste.js listeners, which are not removed by destroy (because copypaste is a singleton for whole page)\n
+  });\n
+\n
+  it(\'should NOT remove events from document element and window for other Handsontable instances on the page\', function () {\n
+    //test based on Core_selectionSpec.js (should deselect currently selected cell)\n
+    handsontable();\n
+\n
+    var $tmp = $(\'<div id="tmp"></div>\').appendTo(document.body);\n
+    $tmp.handsontable();\n
+    $tmp.handsontable(\'destroy\');\n
+    $tmp.remove();\n
+\n
+    selectCell(0, 0);\n
+\n
+//    $("html").triggerHandler(\'mousedown\');\n
+\n
+    $(\'html\').simulate(\'mousedown\');\n
+\n
+    expect(getSelected()).toBeUndefined();\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1387</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Core_destroySpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

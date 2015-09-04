@@ -1,0 +1,295 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272500.54</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>colWidthsSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'settings\', function () {\n
+  describe(\'colWidths\', function () {\n
+    var id = \'testContainer\';\n
+\n
+    beforeEach(function () {\n
+      this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+    });\n
+\n
+    afterEach(function () {\n
+      if (this.$container) {\n
+        destroy();\n
+        this.$container.remove();\n
+      }\n
+    });\n
+\n
+    describe(\'defined in constructor\', function () {\n
+      it(\'should consider colWidths provided as number\', function () {\n
+        handsontable({\n
+          colWidths: 123\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider colWidths provided as string\', function () {\n
+        handsontable({\n
+          colWidths: "123"\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider colWidths provided as array of numbers\', function () {\n
+        handsontable({\n
+          colWidths: [123]\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider colWidths provided as array of strings\', function () {\n
+        handsontable({\n
+          colWidths: ["123"]\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider colWidth provided as function that returns number\', function () {\n
+        handsontable({\n
+          colWidths: function (index) {\n
+            if (index === 0) {\n
+              return 123;\n
+            }\n
+            return 50;\n
+          }\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider colWidth provided as function that returns string\', function () {\n
+        handsontable({\n
+          colWidths: function (index) {\n
+            if (index === 0) {\n
+              return "123";\n
+            }\n
+            return "50";\n
+          }\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+    });\n
+\n
+    describe(\'defined in updateSettings\', function () {\n
+      it(\'should consider colWidths provided as number\', function () {\n
+        handsontable();\n
+        updateSettings({\n
+          colWidths: 123\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider colWidths provided as string\', function () {\n
+        handsontable();\n
+        updateSettings({\n
+          colWidths: "123"\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider colWidths provided as array of numbers\', function () {\n
+        handsontable();\n
+        updateSettings({\n
+          colWidths: [123]\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider colWidths provided as array of strings\', function () {\n
+        handsontable();\n
+        updateSettings({\n
+          colWidths: ["123"]\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider colWidth provided as function that returns number\', function () {\n
+        handsontable();\n
+        updateSettings({\n
+          colWidths: function (index) {\n
+            if (index === 0) {\n
+              return 123;\n
+            }\n
+            return 50;\n
+          }\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider colWidth provided as function that returns string\', function () {\n
+        handsontable();\n
+        updateSettings({\n
+          colWidths: function (index) {\n
+            if (index === 0) {\n
+              return "123";\n
+            }\n
+            return "50";\n
+          }\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+    });\n
+\n
+    describe(\'defined in columns\', function () {\n
+      it(\'should consider width provided as number\', function () {\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              width: 123\n
+            }\n
+          ]\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider width provided as string\', function () {\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              width: "123"\n
+            }\n
+          ]\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider width provided as array of numbers\', function () {\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              width: [123]\n
+            }\n
+          ]\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider width provided as array of strings\', function () {\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              width: ["123"]\n
+            }\n
+          ]\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider width provided as function that returns number\', function () {\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              width: function (index) {\n
+                if (index === 0) {\n
+                  return 123;\n
+                }\n
+                return 50;\n
+              }\n
+            }\n
+          ]\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider width provided as function that returns string\', function () {\n
+        handsontable({\n
+          columns: [\n
+            {\n
+              width: function (index) {\n
+                if (index === 0) {\n
+                  return "123";\n
+                }\n
+                return "50";\n
+              }\n
+            }\n
+          ]\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+    });\n
+\n
+    describe(\'defined in cells\', function () {\n
+      it(\'should consider width provided as number\', function () {\n
+        handsontable({\n
+          cells: function (row, col) {\n
+            if (col === 0) {\n
+              this.width = 123;\n
+            }\n
+          }\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+\n
+      it(\'should consider width provided as string\', function () {\n
+        handsontable({\n
+          cells: function (row, col) {\n
+            if (col === 0) {\n
+              this.width = "123";\n
+            }\n
+          }\n
+        });\n
+\n
+        expect(colWidth(this.$container, 0)).toBe(123);\n
+      });\n
+    });\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6253</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>colWidthsSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

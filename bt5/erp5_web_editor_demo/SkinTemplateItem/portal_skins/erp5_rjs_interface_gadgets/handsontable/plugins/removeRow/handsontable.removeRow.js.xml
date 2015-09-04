@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272491.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>handsontable.removeRow.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function (Handsontable) {\n
+  "use strict";\n
+  /**\n
+   * Handsontable RemoveRow plugin. See `demo/buttons.html` for example usage\n
+   * This plugin is not a part of the Handsontable build (to use it, you must load it after loading Handsontable)\n
+   * See `test/removeRowSpec.js` for tests\n
+   */\n
+  function removeRow() {\n
+\n
+    var eventManager = Handsontable.eventManager(this);\n
+\n
+    function bindMouseEvents() {\n
+      var instance = this;\n
+\n
+      eventManager.addEventListener(instance.rootElement, \'mouseover\', function (e) {\n
+        if(checkRowHeader(e.target)) {\n
+          var element = getElementFromTargetElement(e.target);\n
+          if (element) {\n
+            var btn = getButton(element);\n
+            if (btn) {\n
+              btn.style.display = \'block\';\n
+            }\n
+          }\n
+        }\n
+      });\n
+\n
+      eventManager.addEventListener(instance.rootElement, \'mouseout\', function (e) {\n
+        if(checkRowHeader(e.target)) {\n
+          var element = getElementFromTargetElement(e.target);\n
+          if (element) {\n
+            var btn = getButton(element);\n
+            if (btn) {\n
+              btn.style.display = \'none\';\n
+            }\n
+          }\n
+        }\n
+      });\n
+\n
+//      instance.rootElement.on(\'mouseover.removeRow\', \'tbody th, tbody td\', function () {\n
+//        getButton(this).show();\n
+//      });\n
+//\n
+//      instance.rootElement.on(\'mouseout.removeRow\', \'tbody th, tbody td\', function () {\n
+//        getButton(this).hide();\n
+//      });\n
+    }\n
+\n
+    var getElementFromTargetElement = function (element) {\n
+      if (element.tagName != \'TABLE\') {\n
+        if (element.tagName == \'TH\' || element.tagName == \'TD\') {\n
+          return element;\n
+        } else {\n
+          return getElementFromTargetElement(element.parentNode);\n
+        }\n
+      }\n
+      return null;\n
+    };\n
+\n
+    var checkRowHeader = function (element) {\n
+      if (element.tagName != \'BODY\') {\n
+        if (element.parentNode.tagName == \'TBODY\') {\n
+          return true;\n
+        } else {\n
+          element = element.parentNode;\n
+          return checkRowHeader(element);\n
+        }\n
+      }\n
+      return false;\n
+    };\n
+\n
+    function unbindMouseEvents() {\n
+      eventManager.clear();\n
+    }\n
+\n
+    function getButton(td) {\n
+      var btn = td.querySelector(\'.btn\');\n
+\n
+      if (!btn) {\n
+        var parent = td.parentNode.querySelector(\'th.htRemoveRow\');\n
+\n
+        if (parent) {\n
+          btn = parent.querySelector(\'.btn\');\n
+        }\n
+      }\n
+\n
+      return btn;\n
+    }\n
+\n
+    this.init = function () {\n
+      var instance = this;\n
+      var pluginEnabled = !!(instance.getSettings().removeRowPlugin);\n
+\n
+      if (pluginEnabled) {\n
+        bindMouseEvents.call(this);\n
+        Handsontable.Dom.addClass(instance.rootElement, \'htRemoveRow\');\n
+      } else {\n
+        unbindMouseEvents.call(this);\n
+        Handsontable.Dom.removeClass(instance.rootElement, \'htRemoveRow\');\n
+      }\n
+    };\n
+\n
+    this.beforeInitWalkontable = function (walkontableConfig) {\n
+      var instance = this;\n
+\n
+      /**\n
+       * rowHeaders is a function, so to alter the actual value we need to alter the result returned by this function\n
+       */\n
+      var baseRowHeaders = walkontableConfig.rowHeaders;\n
+      walkontableConfig.rowHeaders = function () {\n
+\n
+        var pluginEnabled = !!(instance.getSettings().removeRowPlugin);\n
+\n
+        var newRowHeader = function (row, elem) {\n
+          var child\n
+            , div;\n
+\n
+          while (child = elem.lastChild) {\n
+            elem.removeChild(child);\n
+          }\n
+          elem.className = \'htNoFrame htRemoveRow\';\n
+          if (row > -1) {\n
+            div = document.createElement(\'div\');\n
+            div.className = \'btn\';\n
+            div.appendChild(document.createTextNode(\'x\'));\n
+            elem.appendChild(div);\n
+\n
+            eventManager.addEventListener(div, \'mouseup\', function () {\n
+              instance.alter(\'remove_row\', row);\n
+            });\n
+          }\n
+        };\n
+\n
+        return pluginEnabled ? Array.prototype.concat.call([], newRowHeader, baseRowHeaders()) : baseRowHeaders();\n
+      };\n
+    }\n
+  }\n
+\n
+  var htRemoveRow = new removeRow();\n
+\n
+  Handsontable.hooks.add(\'beforeInitWalkontable\', function (walkontableConfig) {\n
+    htRemoveRow.beforeInitWalkontable.call(this, walkontableConfig);\n
+  });\n
+\n
+  Handsontable.hooks.add(\'beforeInit\', function () {\n
+    htRemoveRow.init.call(this)\n
+  });\n
+\n
+  Handsontable.hooks.add(\'afterUpdateSettings\', function () {\n
+    htRemoveRow.init.call(this)\n
+  });\n
+\n
+})(Handsontable);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4377</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>handsontable.removeRow.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

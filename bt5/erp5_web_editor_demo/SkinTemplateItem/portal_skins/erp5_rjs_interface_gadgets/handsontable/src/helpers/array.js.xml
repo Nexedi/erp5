@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272631.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>array.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+export function to2dArray(arr) {\n
+  var i = 0\n
+    , ilen = arr.length;\n
+  while (i < ilen) {\n
+    arr[i] = [arr[i]];\n
+    i++;\n
+  }\n
+}\n
+\n
+export function extendArray(arr, extension) {\n
+  var i = 0\n
+    , ilen = extension.length;\n
+  while (i < ilen) {\n
+    arr.push(extension[i]);\n
+    i++;\n
+  }\n
+}\n
+\n
+export function pivot(arr) {\n
+  var pivotedArr = [];\n
+\n
+  if(!arr || arr.length === 0 || !arr[0] || arr[0].length === 0){\n
+    return pivotedArr;\n
+  }\n
+\n
+  var rowCount = arr.length;\n
+  var colCount = arr[0].length;\n
+\n
+  for(var i = 0; i < rowCount; i++){\n
+    for(var j = 0; j < colCount; j++){\n
+      if(!pivotedArr[j]){\n
+        pivotedArr[j] = [];\n
+      }\n
+\n
+      pivotedArr[j][i] = arr[i][j];\n
+    }\n
+  }\n
+\n
+  return pivotedArr;\n
+}\n
+\n
+/**\n
+ * A specialized version of `.reduce` for arrays without support for callback\n
+ * shorthands and `this` binding.\n
+ *\n
+ * {@link https://github.com/lodash/lodash/blob/master/lodash.js}\n
+ *\n
+ * @param {Array} array The array to iterate over.\n
+ * @param {Function} iteratee The function invoked per iteration.\n
+ * @param {*} [accumulator] The initial value.\n
+ * @param {Boolean} [initFromArray] Specify using the first element of `array` as the initial value.\n
+ * @returns {*} Returns the accumulated value.\n
+ */\n
+function arrayReduce(array, iteratee, accumulator, initFromArray) {\n
+  let index = -1,\n
+    length = array.length;\n
+\n
+  if (initFromArray && length) {\n
+    accumulator = array[++index];\n
+  }\n
+  while (++index < length) {\n
+    accumulator = iteratee(accumulator, array[index], index, array);\n
+  }\n
+\n
+  return accumulator;\n
+}\n
+\n
+/**\n
+ * A specialized version of `.filter` for arrays without support for callback\n
+ * shorthands and `this` binding.\n
+ *\n
+ * {@link https://github.com/lodash/lodash/blob/master/lodash.js}\n
+ *\n
+ * @param {Array} array The array to iterate over.\n
+ * @param {Function} predicate The function invoked per iteration.\n
+ * @returns {Array} Returns the new filtered array.\n
+ */\n
+export function arrayFilter(array, predicate) {\n
+  let index = -1,\n
+    length = array.length,\n
+    resIndex = -1,\n
+    result = [];\n
+\n
+  while (++index < length) {\n
+    let value = array[index];\n
+\n
+    if (predicate(value, index, array)) {\n
+      result[++resIndex] = value;\n
+    }\n
+  }\n
+\n
+  return result;\n
+}\n
+\n
+/**\n
+ * A specialized version of `.forEach` for arrays without support for callback\n
+ * shorthands and `this` binding.\n
+ *\n
+ * {@link https://github.com/lodash/lodash/blob/master/lodash.js}\n
+ *\n
+ * @param {Array} array The array to iterate over.\n
+ * @param {Function} iteratee The function invoked per iteration.\n
+ * @returns {Array} Returns `array`.\n
+ */\n
+export function arrayEach(array, iteratee) {\n
+  let index = -1,\n
+    length = array.length;\n
+\n
+  while (++index < length) {\n
+    if (iteratee(array[index], index, array) === false) {\n
+      break;\n
+    }\n
+  }\n
+\n
+  return array;\n
+}\n
+\n
+/**\n
+ * Calculate sum value for each item of the array.\n
+ *\n
+ * @param {Array} array The array to process.\n
+ * @returns {Number} Returns calculated sum value.\n
+ */\n
+export function arraySum(array) {\n
+  return arrayReduce(array, (a, b) => (a + b), 0);\n
+}\n
+\n
+/**\n
+ * Calculate average value for each item of the array.\n
+ *\n
+ * @param {Array} array The array to process.\n
+ * @returns {Number} Returns calculated average value.\n
+ */\n
+export function arrayAvg(array) {\n
+  if (!array.length) {\n
+    return 0;\n
+  }\n
+\n
+  return arraySum(array) / array.length;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3281</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>array.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

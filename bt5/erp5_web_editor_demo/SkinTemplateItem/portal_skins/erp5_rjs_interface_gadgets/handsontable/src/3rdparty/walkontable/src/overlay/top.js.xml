@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272616.81</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>top.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  addClass,\n
+  getScrollbarWidth,\n
+  getScrollTop,\n
+  getWindowScrollLeft,\n
+  hasClass,\n
+  outerHeight,\n
+  removeClass,\n
+  setOverlayPosition,\n
+    } from \'./../../../../helpers/dom/element\';\n
+import {WalkontableOverlay} from \'./_base\';\n
+\n
+\n
+/**\n
+ * @class WalkontableTopOverlay\n
+ */\n
+class WalkontableTopOverlay extends WalkontableOverlay {\n
+  /**\n
+   * @param {Walkontable} wotInstance\n
+   */\n
+  constructor(wotInstance) {\n
+    super(wotInstance);\n
+    this.clone = this.makeClone(WalkontableOverlay.CLONE_TOP);\n
+  }\n
+\n
+  /**\n
+   * Checks if overlay should be fully rendered\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  shouldBeRendered() {\n
+    return this.wot.getSetting(\'fixedRowsTop\') || this.wot.getSetting(\'columnHeaders\').length ? true : false;\n
+  }\n
+\n
+  /**\n
+   * Updates the top overlay position\n
+   */\n
+  resetFixedPosition() {\n
+    if (!this.needFullRender || !this.wot.wtTable.holder.parentNode) {\n
+      // removed from DOM\n
+      return;\n
+    }\n
+    let overlayRoot = this.clone.wtTable.holder.parentNode;\n
+    let headerPosition = 0;\n
+\n
+    if (this.wot.wtOverlays.leftOverlay.trimmingContainer === window) {\n
+      let box = this.wot.wtTable.hider.getBoundingClientRect();\n
+      let top = Math.ceil(box.top);\n
+      let bottom = Math.ceil(box.bottom);\n
+      let finalLeft;\n
+      let finalTop;\n
+\n
+      finalLeft = this.wot.wtTable.hider.style.left;\n
+      finalLeft = finalLeft === \'\' ? 0 : finalLeft;\n
+\n
+      if (top < 0 && (bottom - overlayRoot.offsetHeight) > 0) {\n
+        finalTop = -top;\n
+      } else {\n
+        finalTop = 0;\n
+      }\n
+      headerPosition = finalTop;\n
+      finalTop = finalTop + \'px\';\n
+\n
+      setOverlayPosition(overlayRoot, finalLeft, finalTop);\n
+\n
+    } else {\n
+      headerPosition = this.getScrollPosition();\n
+    }\n
+    this.adjustHeaderBordersPosition(headerPosition);\n
+  }\n
+\n
+  /**\n
+   * Sets the main overlay\'s vertical scroll position\n
+   *\n
+   * @param {Number} pos\n
+   */\n
+  setScrollPosition(pos) {\n
+    if (this.mainTableScrollableElement === window) {\n
+      window.scrollTo(getWindowScrollLeft(), pos);\n
+\n
+    } else {\n
+      this.mainTableScrollableElement.scrollTop = pos;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Triggers onScroll hook callback\n
+   */\n
+  onScroll() {\n
+    this.wot.getSetting(\'onScrollVertically\');\n
+  }\n
+\n
+  /**\n
+   * Calculates total sum cells height\n
+   *\n
+   * @param {Number} from Row index which calculates started from\n
+   * @param {Number} to Row index where calculation is finished\n
+   * @returns {Number} Height sum\n
+   */\n
+  sumCellSizes(from, to) {\n
+    let sum = 0;\n
+    let defaultRowHeight = this.wot.wtSettings.settings.defaultRowHeight;\n
+\n
+    while (from < to) {\n
+      sum += this.wot.wtTable.getRowHeight(from) || defaultRowHeight;\n
+      from++;\n
+    }\n
+\n
+    return sum;\n
+  }\n
+\n
+  /**\n
+   * Adjust overlay root element, childs and master table element sizes (width, height).\n
+   *\n
+   * @param {Boolean} [force=false]\n
+   */\n
+  adjustElementsSize(force = false) {\n
+    if (this.needFullRender || force) {\n
+      this.adjustRootElementSize();\n
+      this.adjustRootChildsSize();\n
+\n
+      if (!force) {\n
+        this.isElementSizesAdjusted = true;\n
+      }\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Adjust overlay root element size (width and height).\n
+   */\n
+  adjustRootElementSize() {\n
+    let masterHolder = this.wot.wtTable.holder;\n
+    let scrollbarWidth = masterHolder.clientWidth !== masterHolder.offsetWidth ? getScrollbarWidth() : 0;\n
+    let overlayRoot = this.clone.wtTable.holder.parentNode;\n
+    let overlayRootStyle = overlayRoot.style;\n
+    let tableHeight;\n
+\n
+    if (this.trimmingContainer !== window) {\n
+      overlayRootStyle.width = this.wot.wtViewport.getWorkspaceWidth() - scrollbarWidth + \'px\';\n
+    }\n
+    this.clone.wtTable.holder.style.width = overlayRootStyle.width;\n
+\n
+    tableHeight = outerHeight(this.clone.wtTable.TABLE);\n
+    overlayRootStyle.height = (tableHeight === 0 ? tableHeight : tableHeight + 4) + \'px\';\n
+  }\n
+\n
+  /**\n
+   * Adjust overlay root childs size\n
+   */\n
+  adjustRootChildsSize() {\n
+    let scrollbarWidth = getScrollbarWidth();\n
+\n
+    this.clone.wtTable.hider.style.width = this.hider.style.width;\n
+    this.clone.wtTable.holder.style.width = this.clone.wtTable.holder.parentNode.style.width;\n
+\n
+    if (scrollbarWidth === 0) {\n
+      scrollbarWidth = 30;\n
+    }\n
+    this.clone.wtTable.holder.style.height = parseInt(this.clone.wtTable.holder.parentNode.style.height, 10) + scrollbarWidth + \'px\';\n
+  }\n
+\n
+  /**\n
+   * Adjust the overlay dimensions and position\n
+   */\n
+  applyToDOM() {\n
+    let total = this.wot.getSetting(\'totalRows\');\n
+\n
+    if (!this.isElementSizesAdjusted) {\n
+      this.adjustElementsSize();\n
+    }\n
+    if (typeof this.wot.wtViewport.rowsRenderCalculator.startPosition === \'number\') {\n
+      this.spreader.style.top = this.wot.wtViewport.rowsRenderCalculator.startPosition + \'px\';\n
+\n
+    } else if (total === 0) {\n
+      // can happen if there are 0 rows\n
+      this.spreader.style.top = \'0\';\n
+\n
+    } else {\n
+      throw new Error("Incorrect value of the rowsRenderCalculator");\n
+    }\n
+    this.spreader.style.bottom = \'\';\n
+\n
+    if (this.needFullRender) {\n
+      this.syncOverlayOffset();\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Synchronize calculated left position to an element\n
+   */\n
+  syncOverlayOffset() {\n
+    if (typeof this.wot.wtViewport.columnsRenderCalculator.startPosition === \'number\') {\n
+      this.clone.wtTable.spreader.style.left = this.wot.wtViewport.columnsRenderCalculator.startPosition + \'px\';\n
+\n
+    } else {\n
+      this.clone.wtTable.spreader.style.left = \'\';\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Scrolls vertically to a row\n
+   *\n
+   * @param sourceRow {Number} Row index which you want to scroll to\n
+   * @param [bottomEdge=false] {Boolean} if `true`, scrolls according to the bottom edge (top edge is by default)\n
+   */\n
+  scrollTo(sourceRow, bottomEdge) {\n
+    let newY = this.getTableParentOffset();\n
+    let sourceInstance = this.wot.cloneSource ? this.wot.cloneSource : this.wot;\n
+    let mainHolder = sourceInstance.wtTable.holder;\n
+    let scrollbarCompensation = 0;\n
+\n
+    if (bottomEdge && mainHolder.offsetHeight !== mainHolder.clientHeight) {\n
+      scrollbarCompensation = getScrollbarWidth();\n
+    }\n
+\n
+    if (bottomEdge) {\n
+      newY += this.sumCellSizes(0, sourceRow + 1);\n
+      newY -= this.wot.wtViewport.getViewportHeight();\n
+      // Fix 1 pixel offset when cell is selected\n
+      newY += 1;\n
+\n
+    } else {\n
+      newY += this.sumCellSizes(this.wot.getSetting(\'fixedRowsTop\'), sourceRow);\n
+    }\n
+    newY += scrollbarCompensation;\n
+\n
+    this.setScrollPosition(newY);\n
+  }\n
+\n
+  /**\n
+   * Gets table parent top position\n
+   *\n
+   * @returns {Number}\n
+   */\n
+  getTableParentOffset() {\n
+    if (this.mainTableScrollableElement === window) {\n
+      return this.wot.wtTable.holderOffset.top;\n
+\n
+    } else {\n
+      return 0;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Gets the main overlay\'s vertical scroll position\n
+   *\n
+   * @returns {Number} Main table\'s vertical scroll position\n
+   */\n
+  getScrollPosition() {\n
+    return getScrollTop(this.mainTableScrollableElement);\n
+  }\n
+\n
+  /**\n
+   * Adds css classes to hide the header border\'s header (cell-selection border hiding issue)\n
+   *\n
+   * @param {Number} position Header Y position if trimming container is window or scroll top if not\n
+   */\n
+  adjustHeaderBordersPosition(position) {\n
+    if (this.wot.getSetting(\'fixedRowsTop\') === 0 && this.wot.getSetting(\'columnHeaders\').length > 0) {\n
+      let masterParent = this.wot.wtTable.holder.parentNode;\n
+      let previousState = hasClass(masterParent, \'innerBorderTop\');\n
+\n
+      if (position) {\n
+        addClass(masterParent, \'innerBorderTop\');\n
+      } else {\n
+        removeClass(masterParent, \'innerBorderTop\');\n
+      }\n
+      if (!previousState && position || previousState && !position) {\n
+        this.wot.wtOverlays.adjustElementsSize();\n
+      }\n
+    }\n
+    // nasty workaround for double border in the header, TODO: find a pure-css solution\n
+    if (this.wot.getSetting(\'rowHeaders\').length === 0) {\n
+      let secondHeaderCell = this.clone.wtTable.THEAD.querySelector(\'th:nth-of-type(2)\');\n
+\n
+      if (secondHeaderCell) {\n
+        secondHeaderCell.style[\'border-left-width\'] = 0;\n
+      }\n
+    }\n
+  }\n
+}\n
+\n
+export {WalkontableTopOverlay};\n
+\n
+window.WalkontableTopOverlay = WalkontableTopOverlay;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8002</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>top.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

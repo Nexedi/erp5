@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272528.1</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>numericRendererSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'NumericRenderer\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'should render formatted number\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      cells: function () {\n
+        return {\n
+          type: \'numeric\',\n
+          format: \'$0,0.00\'\n
+        }\n
+      },\n
+      afterValidate: onAfterValidate\n
+    });\n
+    setDataAtCell(2, 2, \'1000.234\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation 2\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getCell(2, 2).innerHTML).toEqual(\'$1,000.23\');\n
+    });\n
+  });\n
+\n
+  it(\'should render signed number\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      cells: function () {\n
+        return {\n
+          type: \'numeric\',\n
+          format: \'$0,0.00\'\n
+        }\n
+      },\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(2, 2, \'-1000.234\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation 2\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getCell(2, 2).innerHTML).toEqual(\'-$1,000.23\');\n
+    });\n
+  });\n
+\n
+  xit(\'should render string as it is\', function () {\n
+    var onAfterValidate = jasmine.createSpy(\'onAfterValidate\');\n
+\n
+    handsontable({\n
+      cells: function () {\n
+        return {\n
+          type: \'numeric\',\n
+          format: \'$0,0.00\'\n
+        }\n
+      },\n
+      afterValidate: onAfterValidate\n
+    });\n
+\n
+    setDataAtCell(2, 2, \'123 simple test\');\n
+\n
+    waitsFor(function () {\n
+      return onAfterValidate.calls.length > 0;\n
+    }, \'Cell validation 2\', 1000);\n
+\n
+    runs(function () {\n
+      expect(getCell(2, 2).innerHTML).toEqual(\'123 simple test\');\n
+    });\n
+  });\n
+\n
+  it(\'should add class name `htNumeric` to the cell if it renders a number\', function () {\n
+    var DIV = document.createElement(\'DIV\');\n
+    var instance = new Handsontable(DIV, {});\n
+    var TD = document.createElement(\'TD\');\n
+    TD.className = \'someClass\';\n
+    Handsontable.renderers.NumericRenderer(instance, TD, 0, 0, 0, 123, {});\n
+    expect(TD.className).toEqual(\'someClass htNumeric\');\n
+    instance.destroy();\n
+  });\n
+\n
+  it(\'should add class name `htNumeric` to the cell if it renders a numeric string\', function () {\n
+    var DIV = document.createElement(\'DIV\');\n
+    var instance = new Handsontable(DIV, {});\n
+    var TD = document.createElement(\'TD\');\n
+    TD.className = \'someClass\';\n
+    Handsontable.renderers.NumericRenderer(instance, TD, 0, 0, 0, \'123\', {});\n
+    expect(TD.className).toEqual(\'someClass htNumeric\');\n
+    instance.destroy();\n
+  });\n
+\n
+  it(\'should not add class name `htNumeric` to the cell if it renders a text\', function () {\n
+    var DIV = document.createElement(\'DIV\');\n
+    var instance = new Handsontable(DIV, {});\n
+    var TD = document.createElement(\'TD\');\n
+    TD.className = \'someClass\';\n
+    Handsontable.renderers.NumericRenderer(instance, TD, 0, 0, 0, \'abc\', {});\n
+    expect(TD.className).toEqual(\'someClass\');\n
+    instance.destroy();\n
+  });\n
+\n
+  it(\'should add class name `htDimmed` to a read only cell\', function () {\n
+    var DIV = document.createElement(\'DIV\');\n
+    var instance = new Handsontable(DIV, {});\n
+    var TD = document.createElement(\'TD\');\n
+    Handsontable.renderers.NumericRenderer(instance, TD, 0, 0, 0, 123, {readOnly: true, readOnlyCellClassName: \'htDimmed\'});\n
+    expect(TD.className).toContain(\'htDimmed\');\n
+    instance.destroy();\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3628</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>numericRendererSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

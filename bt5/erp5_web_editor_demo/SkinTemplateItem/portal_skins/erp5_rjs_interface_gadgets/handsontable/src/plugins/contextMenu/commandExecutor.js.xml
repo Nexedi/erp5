@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272706.31</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>commandExecutor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {arrayEach} from \'./../../helpers/array\';\n
+\n
+/**\n
+ * Command executor for ContextMenu.\n
+ *\n
+ * @class CommandExecutor\n
+ * @plugin ContextMenu\n
+ */\n
+class CommandExecutor {\n
+  constructor(hotInstance) {\n
+    this.hot = hotInstance;\n
+    this.commands = {};\n
+    this.commonCallback = null;\n
+  }\n
+\n
+  /**\n
+   * Register command.\n
+   *\n
+   * @param {String} name Command name.\n
+   * @param {Object} commandDescriptor Command descriptor object with properties like `key` (command id),\n
+   *                                   `callback` (task to execute), `name` (command name), `disabled` (command availability).\n
+   */\n
+  registerCommand(name, commandDescriptor) {\n
+    this.commands[name] = commandDescriptor;\n
+  }\n
+\n
+  /**\n
+   * Set common callback which will be trigger on every executed command.\n
+   *\n
+   * @param {Function} callback Function which will be fired on every command execute.\n
+   */\n
+  setCommonCallback(callback) {\n
+    this.commonCallback = callback;\n
+  }\n
+\n
+  /**\n
+   * Execute command by its name.\n
+   *\n
+   * @param {String} commandName Command id.\n
+   * @param {*} params Arguments passed to command task.\n
+   */\n
+  execute(commandName, ...params) {\n
+    let commandSplit = commandName.split(\':\');\n
+    commandName = commandSplit[0];\n
+\n
+    let subCommandName = commandSplit.length === 2 ? commandSplit[1] : null;\n
+    let command = this.commands[commandName];\n
+\n
+    if (!command) {\n
+      throw new Error(`Menu command \'${commandName}\' not exists.`);\n
+    }\n
+    if (subCommandName && command.submenu) {\n
+      command = findSubCommand(subCommandName, command.submenu.items);\n
+    }\n
+    if (command.disabled === true) {\n
+      return;\n
+    }\n
+    if (typeof command.disabled == \'function\' && command.disabled.call(this.hot) === true) {\n
+      return;\n
+    }\n
+    if (command.hasOwnProperty(\'submenu\')) {\n
+      return;\n
+    }\n
+    let callbacks = [];\n
+\n
+    if (typeof command.callback === \'function\') {\n
+      callbacks.push(command.callback);\n
+    }\n
+    if (typeof this.commonCallback === \'function\') {\n
+      callbacks.push(this.commonCallback);\n
+    }\n
+    params.unshift(commandSplit.join(\':\'));\n
+    arrayEach(callbacks, (callback) => callback.apply(this.hot, params));\n
+  }\n
+}\n
+\n
+function findSubCommand(subCommandName, subCommands) {\n
+  let command;\n
+\n
+  arrayEach(subCommands, (cmd) => {\n
+    let cmds = cmd.key ? cmd.key.split(\':\') : null;\n
+\n
+    if (Array.isArray(cmds) && cmds[1] === subCommandName) {\n
+      command = cmd;\n
+\n
+      return false;\n
+    }\n
+  });\n
+\n
+  return command;\n
+}\n
+\n
+export {CommandExecutor};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2467</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>commandExecutor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,519 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272905.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>json-patch-duplex.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// json-patch-duplex.js 0.3.6\n
+// (c) 2013 Joachim Wester\n
+// MIT license\n
+var jsonpatch;\n
+(function (jsonpatch) {\n
+    var objOps = {\n
+        add: function (obj, key) {\n
+            obj[key] = this.value;\n
+            return true;\n
+        },\n
+        remove: function (obj, key) {\n
+            delete obj[key];\n
+            return true;\n
+        },\n
+        replace: function (obj, key) {\n
+            obj[key] = this.value;\n
+            return true;\n
+        },\n
+        move: function (obj, key, tree) {\n
+            var temp = { op: "_get", path: this.from };\n
+            apply(tree, [temp]);\n
+            apply(tree, [\n
+                { op: "remove", path: this.from }\n
+            ]);\n
+            apply(tree, [\n
+                { op: "add", path: this.path, value: temp.value }\n
+            ]);\n
+            return true;\n
+        },\n
+        copy: function (obj, key, tree) {\n
+            var temp = { op: "_get", path: this.from };\n
+            apply(tree, [temp]);\n
+            apply(tree, [\n
+                { op: "add", path: this.path, value: temp.value }\n
+            ]);\n
+            return true;\n
+        },\n
+        test: function (obj, key) {\n
+            return (JSON.stringify(obj[key]) === JSON.stringify(this.value));\n
+        },\n
+        _get: function (obj, key) {\n
+            this.value = obj[key];\n
+        }\n
+    };\n
+\n
+    var arrOps = {\n
+        add: function (arr, i) {\n
+            arr.splice(i, 0, this.value);\n
+            return true;\n
+        },\n
+        remove: function (arr, i) {\n
+            arr.splice(i, 1);\n
+            return true;\n
+        },\n
+        replace: function (arr, i) {\n
+            arr[i] = this.value;\n
+            return true;\n
+        },\n
+        move: objOps.move,\n
+        copy: objOps.copy,\n
+        test: objOps.test,\n
+        _get: objOps._get\n
+    };\n
+\n
+    var observeOps = {\n
+        add: function (patches, path) {\n
+            var patch = {\n
+                op: "add",\n
+                path: path + escapePathComponent(this.name),\n
+                value: this.object[this.name]\n
+            };\n
+            patches.push(patch);\n
+        },\n
+        \'delete\': function (patches, path) {\n
+            var patch = {\n
+                op: "remove",\n
+                path: path + escapePathComponent(this.name)\n
+            };\n
+            patches.push(patch);\n
+        },\n
+        update: function (patches, path) {\n
+            var patch = {\n
+                op: "replace",\n
+                path: path + escapePathComponent(this.name),\n
+                value: this.object[this.name]\n
+            };\n
+            patches.push(patch);\n
+        }\n
+    };\n
+\n
+    function escapePathComponent(str) {\n
+        if (str.indexOf(\'/\') === -1 && str.indexOf(\'~\') === -1) {\n
+            return str;\n
+        }\n
+\n
+        return str.replace(/~/g, \'~0\').replace(/\\//g, \'~1\');\n
+    }\n
+\n
+    function _getPathRecursive(root, obj) {\n
+        var found;\n
+        for (var key in root) {\n
+            if (root.hasOwnProperty(key)) {\n
+                if (root[key] === obj) {\n
+                    return escapePathComponent(key) + \'/\';\n
+                } else if (typeof root[key] === \'object\') {\n
+                    found = _getPathRecursive(root[key], obj);\n
+                    /* jshint ignore:start */\n
+                    if (found != \'\') {\n
+                        return escapePathComponent(key) + \'/\' + found;\n
+                    }\n
+                    /* jshint ignore:end */\n
+                }\n
+            }\n
+        }\n
+        return \'\';\n
+    }\n
+\n
+    function getPath(root, obj) {\n
+        if (root === obj) {\n
+            return \'/\';\n
+        }\n
+        var path = _getPathRecursive(root, obj);\n
+        if (path === \'\') {\n
+            throw new Error("Object not found in root");\n
+        }\n
+        return \'/\' + path;\n
+    }\n
+\n
+    var beforeDict = [];\n
+    /* jshint ignore:start */\n
+    jsonpatch.intervals;\n
+    /* jshint ignore:end */\n
+    var Mirror = (function () {\n
+        function Mirror(obj) {\n
+            this.observers = [];\n
+            this.obj = obj;\n
+        }\n
+        return Mirror;\n
+    })();\n
+\n
+    var ObserverInfo = (function () {\n
+        function ObserverInfo(callback, observer) {\n
+            this.callback = callback;\n
+            this.observer = observer;\n
+        }\n
+        return ObserverInfo;\n
+    })();\n
+\n
+    function getMirror(obj) {\n
+        for (var i = 0, ilen = beforeDict.length; i < ilen; i++) {\n
+            if (beforeDict[i].obj === obj) {\n
+                return beforeDict[i];\n
+            }\n
+        }\n
+    }\n
+    function removeMirror(obj) {\n
+        for (var i = 0, ilen = beforeDict.length; i < ilen; i++) {\n
+            if (beforeDict[i] === obj) {\n
+              beforeDict.splice(i, 1);\n
+            }\n
+        }\n
+    }\n
+\n
+    function getObserverFromMirror(mirror, callback) {\n
+        for (var j = 0, jlen = mirror.observers.length; j < jlen; j++) {\n
+            if (mirror.observers[j].callback === callback) {\n
+                return mirror.observers[j].observer;\n
+            }\n
+        }\n
+    }\n
+\n
+    function removeObserverFromMirror(mirror, observer) {\n
+        for (var j = 0, jlen = mirror.observers.length; j < jlen; j++) {\n
+            if (mirror.observers[j].observer === observer) {\n
+                mirror.observers.splice(j, 1);\n
+\n
+                if (!mirror.observers.length) {\n
+                    removeMirror(mirror);\n
+                }\n
+                return;\n
+            }\n
+        }\n
+    }\n
+\n
+    function unobserve(root, observer) {\n
+        generate(observer);\n
+        if (Object.observe) {\n
+            _unobserve(observer, root);\n
+        } else {\n
+            clearTimeout(observer.next);\n
+        }\n
+\n
+        var mirror = getMirror(root);\n
+        removeObserverFromMirror(mirror, observer);\n
+    }\n
+    jsonpatch.unobserve = unobserve;\n
+\n
+    function observe(obj, callback) {\n
+        var patches = [];\n
+        var root = obj;\n
+        var observer;\n
+        var mirror = getMirror(obj);\n
+\n
+        if (!mirror) {\n
+            mirror = new Mirror(obj);\n
+            beforeDict.push(mirror);\n
+        } else {\n
+            observer = getObserverFromMirror(mirror, callback);\n
+        }\n
+\n
+        if (observer) {\n
+            return observer;\n
+        }\n
+\n
+        if (Object.observe) {\n
+            observer = function (arr) {\n
+                //This "refresh" is needed to begin observing new object properties\n
+                _unobserve(observer, obj);\n
+                _observe(observer, obj);\n
+\n
+                var a = 0, alen = arr.length;\n
+                /* jshint ignore:start */\n
+                while (a < alen) {\n
+                    if (!(arr[a].name === \'length\' && _isArray(arr[a].object)) && !(arr[a].name === \'__Jasmine_been_here_before__\')) {\n
+                        var type = arr[a].type;\n
+\n
+                        switch (type) {\n
+                            case \'new\':\n
+                                type = \'add\';\n
+                                break;\n
+\n
+                            case \'deleted\':\n
+                                type = \'delete\';\n
+                                break;\n
+\n
+                            case \'updated\':\n
+                                type = \'update\';\n
+                                break;\n
+                        }\n
+\n
+                        observeOps[type].call(arr[a], patches, getPath(root, arr[a].object));\n
+                    }\n
+                    a++;\n
+                }\n
+                /* jshint ignore:end */\n
+\n
+                if (patches) {\n
+                    if (callback) {\n
+                        callback(patches);\n
+                    }\n
+                }\n
+                observer.patches = patches;\n
+                patches = [];\n
+            };\n
+        } else {\n
+            observer = {};\n
+\n
+            mirror.value = JSON.parse(JSON.stringify(obj));\n
+\n
+            if (callback) {\n
+                //callbacks.push(callback); this has no purpose\n
+                observer.callback = callback;\n
+                observer.next = null;\n
+                var intervals = this.intervals || [100, 1000, 10000, 60000];\n
+                var currentInterval = 0;\n
+\n
+                var dirtyCheck = function () {\n
+                    generate(observer);\n
+                };\n
+                var fastCheck = function () {\n
+                    clearTimeout(observer.next);\n
+                    observer.next = setTimeout(function () {\n
+                        dirtyCheck();\n
+                        currentInterval = 0;\n
+                        observer.next = setTimeout(slowCheck, intervals[currentInterval++]);\n
+                    }, 0);\n
+                };\n
+                var slowCheck = function () {\n
+                    dirtyCheck();\n
+                    if (currentInterval == intervals.length) {\n
+                        currentInterval = intervals.length - 1;\n
+                    }\n
+                    observer.next = setTimeout(slowCheck, intervals[currentInterval++]);\n
+                };\n
+                if (typeof window !== \'undefined\') {\n
+                    if (window.addEventListener) {\n
+                        window.addEventListener(\'mousedown\', fastCheck);\n
+                        window.addEventListener(\'mouseup\', fastCheck);\n
+                        window.addEventListener(\'keydown\', fastCheck);\n
+                    } else {\n
+                        window.attachEvent(\'onmousedown\', fastCheck);\n
+                        window.attachEvent(\'onmouseup\', fastCheck);\n
+                        window.attachEvent(\'onkeydown\', fastCheck);\n
+                    }\n
+                }\n
+                observer.next = setTimeout(slowCheck, intervals[currentInterval++]);\n
+            }\n
+        }\n
+        observer.patches = patches;\n
+        observer.object = obj;\n
+\n
+        mirror.observers.push(new ObserverInfo(callback, observer));\n
+\n
+        return _observe(observer, obj);\n
+    }\n
+    jsonpatch.observe = observe;\n
+\n
+    /// Listen to changes on an object tree, accumulate patches\n
+    function _observe(observer, obj) {\n
+        if (Object.observe) {\n
+            Object.observe(obj, observer);\n
+            for (var key in obj) {\n
+                if (obj.hasOwnProperty(key)) {\n
+                    var v = obj[key];\n
+                    if (v && typeof (v) === "object") {\n
+                        _observe(observer, v);\n
+                    }\n
+                }\n
+            }\n
+        }\n
+        return observer;\n
+    }\n
+\n
+    function _unobserve(observer, obj) {\n
+        if (Object.observe) {\n
+            Object.unobserve(obj, observer);\n
+            for (var key in obj) {\n
+                if (obj.hasOwnProperty(key)) {\n
+                    var v = obj[key];\n
+                    if (v && typeof (v) === "object") {\n
+                        _unobserve(observer, v);\n
+                    }\n
+                }\n
+            }\n
+        }\n
+        return observer;\n
+    }\n
+\n
+    function generate(observer) {\n
+        if (Object.observe) {\n
+            Object.deliverChangeRecords(observer);\n
+        } else {\n
+            var mirror;\n
+            for (var i = 0, ilen = beforeDict.length; i < ilen; i++) {\n
+                if (beforeDict[i].obj === observer.object) {\n
+                    mirror = beforeDict[i];\n
+                    break;\n
+                }\n
+            }\n
+            if (mirror) {\n
+                _generate(mirror.value, observer.object, observer.patches, "");\n
+            }\n
+        }\n
+        var temp = observer.patches;\n
+        if (temp.length > 0) {\n
+            observer.patches = [];\n
+            if (observer.callback) {\n
+                observer.callback(temp);\n
+            }\n
+        }\n
+        return temp;\n
+    }\n
+    jsonpatch.generate = generate;\n
+\n
+    var _objectKeys;\n
+    if (Object.keys) {\n
+        _objectKeys = Object.keys;\n
+    } else {\n
+        _objectKeys = function (obj) {\n
+            var keys = [];\n
+            for (var o in obj) {\n
+                if (obj.hasOwnProperty(o)) {\n
+                    keys.push(o);\n
+                }\n
+            }\n
+            return keys;\n
+        };\n
+    }\n
+\n
+    // Dirty check if obj is different from mirror, generate patches and update mirror\n
+    function _generate(mirror, obj, patches, path) {\n
+        var newKeys = _objectKeys(obj);\n
+        var oldKeys = _objectKeys(mirror);\n
+        var changed = false;\n
+        var deleted = false;\n
+\n
+        for (var t = oldKeys.length - 1; t >= 0; t--) {\n
+            var key = oldKeys[t];\n
+            var oldVal = mirror[key];\n
+            if (obj.hasOwnProperty(key)) {\n
+                var newVal = obj[key];\n
+                if (oldVal instanceof Object) {\n
+                    _generate(oldVal, newVal, patches, path + "/" + escapePathComponent(key));\n
+                } else {\n
+                    if (oldVal != newVal) {\n
+                        changed = true;\n
+                        patches.push({ op: "replace", path: path + "/" + escapePathComponent(key), value: newVal });\n
+                        mirror[key] = newVal;\n
+                    }\n
+                }\n
+            } else {\n
+                patches.push({ op: "remove", path: path + "/" + escapePathComponent(key) });\n
+                delete mirror[key];\n
+                deleted = true;\n
+            }\n
+        }\n
+\n
+        if (!deleted && newKeys.length == oldKeys.length) {\n
+            return;\n
+        }\n
+\n
+        for (var t = 0; t < newKeys.length; t++) {\n
+            var key = newKeys[t];\n
+            if (!mirror.hasOwnProperty(key)) {\n
+                patches.push({ op: "add", path: path + "/" + escapePathComponent(key), value: obj[key] });\n
+                mirror[key] = JSON.parse(JSON.stringify(obj[key]));\n
+            }\n
+        }\n
+    }\n
+\n
+    var _isArray;\n
+    if (Array.isArray) {\n
+        _isArray = Array.isArray;\n
+    } else {\n
+        _isArray = function (obj) {\n
+            return obj.push && typeof obj.length === \'number\';\n
+        };\n
+    }\n
+\n
+    /// Apply a json-patch operation on an object tree\n
+    function apply(tree, patches) {\n
+        var result = false, p = 0, plen = patches.length, patch;\n
+        while (p < plen) {\n
+            patch = patches[p];\n
+\n
+            // Find the object\n
+            var keys = patch.path.split(\'/\');\n
+            var obj = tree;\n
+            var t = 1;\n
+            var len = keys.length;\n
+            while (true) {\n
+                if (_isArray(obj)) {\n
+                    var index = parseInt(keys[t], 10);\n
+                    t++;\n
+                    if (t >= len) {\n
+                        result = arrOps[patch.op].call(patch, obj, index, tree);\n
+                        break;\n
+                    }\n
+                    obj = obj[index];\n
+                } else {\n
+                    var key = keys[t];\n
+                    if (key.indexOf(\'~\') != -1) {\n
+                        key = key.replace(/~1/g, \'/\').replace(/~0/g, \'~\');\n
+                    }\n
+                    t++;\n
+                    if (t >= len) {\n
+                        result = objOps[patch.op].call(patch, obj, key, tree);\n
+                        break;\n
+                    }\n
+                    obj = obj[key];\n
+                }\n
+            }\n
+            p++;\n
+        }\n
+        return result;\n
+    }\n
+    jsonpatch.apply = apply;\n
+})(jsonpatch || (jsonpatch = {}));\n
+\n
+if (typeof exports !== "undefined") {\n
+    exports.apply = jsonpatch.apply;\n
+    exports.observe = jsonpatch.observe;\n
+    exports.unobserve = jsonpatch.unobserve;\n
+    exports.generate = jsonpatch.generate;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>14972</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>json-patch-duplex.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

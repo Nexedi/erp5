@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272299.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>LICENSE-colors</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\n
+chroma.js includes colors from colorbrewer2.org,\n
+which are released under the following license:\n
+\n
+\n
+Copyright (c) 2002 Cynthia Brewer, Mark Harrower, \n
+and The Pennsylvania State University.\n
+\n
+Licensed under the Apache License, Version 2.0 (the "License"); \n
+you may not use this file except in compliance with the License.\n
+You may obtain a copy of the License at\t\n
+http://www.apache.org/licenses/LICENSE-2.0\n
+\n
+Unless required by applicable law or agreed to in writing, \n
+software distributed under the License is distributed on an \n
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, \n
+either express or implied. See the License for the specific \n
+language governing permissions and limitations under the License.\n
+\n
+\n
+Named colors are taken from X11 Color Names.\n
+http://www.w3.org/TR/css3-color/#svg-color\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>806</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>LICENSE-colors</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

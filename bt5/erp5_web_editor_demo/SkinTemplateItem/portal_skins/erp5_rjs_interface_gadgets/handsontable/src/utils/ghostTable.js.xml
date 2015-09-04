@@ -1,0 +1,397 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272728.79</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ghostTable.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {addClass, outerHeight, outerWidth} from \'./../helpers/dom/element\';\n
+import {arrayEach} from \'./../helpers/array\';\n
+import {objectEach} from \'./../helpers/object\';\n
+import {rangeEach} from \'./../helpers/number\';\n
+import {stringify} from \'./../helpers/mixed\';\n
+\n
+/**\n
+ * @private\n
+ */\n
+class GhostTable {\n
+  /**\n
+   * @param {Core} hotInstance\n
+   */\n
+  constructor(hotInstance) {\n
+    /**\n
+     * Handsontable instance.\n
+     *\n
+     * @type {Core}\n
+     */\n
+    this.hot = hotInstance;\n
+    /**\n
+     * Container element where every table will be injected.\n
+     *\n
+     * @type {HTMLElement|null}\n
+     */\n
+    this.container = null;\n
+    /**\n
+     * Flag which determine is table was injected to DOM.\n
+     *\n
+     * @type {Boolean}\n
+     */\n
+    this.injected = false;\n
+    /**\n
+     * Added rows collection.\n
+     *\n
+     * @type {Array}\n
+     */\n
+    this.rows = [];\n
+    /**\n
+     * Added columns collection.\n
+     *\n
+     * @type {Array}\n
+     */\n
+    this.columns = [];\n
+    /**\n
+     * Samples prepared for calculations.\n
+     *\n
+     * @type {Map}\n
+     * @default {null}\n
+     */\n
+    this.samples = null;\n
+  }\n
+\n
+  /**\n
+   * Add row.\n
+   *\n
+   * @param {Number} row Row index.\n
+   * @param {Map} samples Samples Map object.\n
+   */\n
+  addRow(row, samples) {\n
+    if (this.columns.length) {\n
+      throw new Error(\'Doesn\\\'t support multi-dimensional table\');\n
+    }\n
+    if (!this.rows.length) {\n
+      this.container = this.createContainer(this.hot.rootElement.className);\n
+    }\n
+    const rowObject = {row: row};\n
+    this.rows.push(rowObject);\n
+\n
+    this.samples = samples;\n
+    this.table = this.createTable(this.hot.table.className);\n
+    this.table.colGroup.appendChild(this.createColGroupsCol());\n
+    this.table.tr.appendChild(this.createRow(row));\n
+    this.container.container.appendChild(this.table.fragment);\n
+\n
+    rowObject.table = this.table.table;\n
+  }\n
+\n
+  /**\n
+   * Add column.\n
+   *\n
+   * @param {Number} column Column index.\n
+   * @param {Map} samples Samples Map object.\n
+   */\n
+  addColumn(column, samples) {\n
+    if (this.rows.length) {\n
+      throw new Error(\'Doesn\\\'t support multi-dimensional table\');\n
+    }\n
+    if (!this.columns.length) {\n
+      this.container = this.createContainer(this.hot.rootElement.className);\n
+    }\n
+    const columnObject = {col: column};\n
+    this.columns.push(columnObject);\n
+\n
+    this.samples = samples;\n
+    this.table = this.createTable(this.hot.table.className);\n
+\n
+    if (this.hot.getColHeader(column) !== null) {\n
+      this.hot.view.appendColHeader(column, this.table.th);\n
+    }\n
+    this.table.tBody.appendChild(this.createCol(column));\n
+    this.container.container.appendChild(this.table.fragment);\n
+\n
+    columnObject.table = this.table.table;\n
+  }\n
+\n
+  /**\n
+   * Get calculated heights.\n
+   *\n
+   * @param {Function} callback Callback which will be fired for each calculated row.\n
+   */\n
+  getHeights(callback) {\n
+    if (!this.injected) {\n
+      this.injectTable();\n
+    }\n
+    arrayEach(this.rows, (row) => {\n
+      // -1 <- reduce border-top from table\n
+      callback(row.row, outerHeight(row.table) - 1);\n
+    });\n
+  }\n
+\n
+  /**\n
+   * Get calculated widths.\n
+   *\n
+   * @param {Function} callback Callback which will be fired for each calculated column.\n
+   */\n
+  getWidths(callback) {\n
+    if (!this.injected) {\n
+      this.injectTable();\n
+    }\n
+    arrayEach(this.columns, (column) => {\n
+      callback(column.col, outerWidth(column.table));\n
+    });\n
+  }\n
+\n
+  /**\n
+   * Create colgroup col elements.\n
+   *\n
+   * @returns {DocumentFragment}\n
+   */\n
+  createColGroupsCol() {\n
+    const d = document;\n
+    const fragment = d.createDocumentFragment();\n
+\n
+    fragment.appendChild(this.createColElement(-1));\n
+\n
+    this.samples.forEach((sample) => {\n
+      arrayEach(sample.strings, (string) => {\n
+        fragment.appendChild(this.createColElement(string.col));\n
+      });\n
+    });\n
+\n
+    return fragment;\n
+  }\n
+\n
+  /**\n
+   * Create table row element.\n
+   *\n
+   * @param {Number} row Row index.\n
+   * @returns {DocumentFragment} Returns created table row elements.\n
+   */\n
+  createRow(row) {\n
+    const d = document;\n
+    const fragment = d.createDocumentFragment();\n
+    const th = d.createElement(\'th\');\n
+\n
+    if (this.hot.getRowHeader(row) !== null) {\n
+      this.hot.view.appendRowHeader(row, th);\n
+    }\n
+    fragment.appendChild(th);\n
+\n
+    this.samples.forEach((sample) => {\n
+      arrayEach(sample.strings, (string) => {\n
+        let column = string.col;\n
+        let cellProperties = this.hot.getCellMeta(row, column);\n
+\n
+        cellProperties.col = column;\n
+        cellProperties.row = row;\n
+\n
+        let renderer = this.hot.getCellRenderer(cellProperties);\n
+        const td = d.createElement(\'td\');\n
+\n
+        renderer(this.hot, td, row, column, this.hot.colToProp(column), string.value, cellProperties);\n
+        fragment.appendChild(td);\n
+      });\n
+    });\n
+\n
+    return fragment;\n
+  }\n
+\n
+  /**\n
+   * Create table column elements.\n
+   *\n
+   * @param {Number} column Column index.\n
+   * @returns {DocumentFragment} Returns created column table column elements.\n
+   */\n
+  createCol(column) {\n
+    const d = document;\n
+    const fragment = d.createDocumentFragment();\n
+\n
+    this.samples.forEach((sample) => {\n
+      arrayEach(sample.strings, (string) => {\n
+        let row = string.row;\n
+        let cellProperties = this.hot.getCellMeta(row, column);\n
+\n
+        cellProperties.col = column;\n
+        cellProperties.row = row;\n
+\n
+        let renderer = this.hot.getCellRenderer(cellProperties);\n
+        const td = d.createElement(\'td\');\n
+        const tr = d.createElement(\'tr\');\n
+\n
+        renderer(this.hot, td, row, column, this.hot.colToProp(row), string.value, cellProperties);\n
+        tr.appendChild(td);\n
+        fragment.appendChild(tr);\n
+      });\n
+    });\n
+\n
+    return fragment;\n
+  }\n
+\n
+  /**\n
+   * Remove table from document and reset internal state.\n
+   */\n
+  clean() {\n
+    this.rows.length = 0;\n
+    this.columns.length = 0;\n
+\n
+    if (this.samples) {\n
+      this.samples.clear();\n
+    }\n
+    this.samples = null;\n
+    this.removeTable();\n
+  }\n
+\n
+  /**\n
+   * Inject generated table into document.\n
+   *\n
+   * @param {HTMLElement} [parent=null]\n
+   */\n
+  injectTable(parent = null) {\n
+    if (!this.injected) {\n
+      (parent || this.hot.rootElement).appendChild(this.container.fragment);\n
+      this.injected = true;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Remove table from document.\n
+   */\n
+  removeTable() {\n
+    if (this.injected && this.container.container.parentNode) {\n
+      this.container.container.parentNode.removeChild(this.container.container);\n
+      this.container = null;\n
+      this.injected = false;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Create col element.\n
+   *\n
+   * @param {Number} column Column index.\n
+   * @returns {HTMLElement}\n
+   */\n
+  createColElement(column) {\n
+    const d = document;\n
+    const col = d.createElement(\'col\');\n
+\n
+    col.style.width = this.hot.view.wt.wtTable.getStretchedColumnWidth(column) + \'px\';\n
+\n
+    return col;\n
+  }\n
+\n
+  /**\n
+   * Create table element.\n
+   *\n
+   * @param {String} className\n
+   * @returns {Object}\n
+   */\n
+  createTable(className = \'\') {\n
+    const d = document;\n
+    const fragment = d.createDocumentFragment();\n
+    const table = d.createElement(\'table\');\n
+    const tHead = d.createElement(\'thead\');\n
+    const tBody = d.createElement(\'tbody\');\n
+    const colGroup = d.createElement(\'colgroup\');\n
+    const tr = d.createElement(\'tr\');\n
+    const th = d.createElement(\'th\');\n
+\n
+    if (this.isVertical()) {\n
+      table.appendChild(colGroup);\n
+    }\n
+    if (this.isHorizontal()) {\n
+      tr.appendChild(th);\n
+      tHead.appendChild(tr);\n
+      table.style.tableLayout = \'auto\';\n
+      table.style.width = \'auto\';\n
+    }\n
+    table.appendChild(tHead);\n
+\n
+    if (this.isVertical()) {\n
+      tBody.appendChild(tr);\n
+    }\n
+    table.appendChild(tBody);\n
+    addClass(table, className);\n
+    fragment.appendChild(table);\n
+\n
+    return {fragment, table, tHead, tBody, colGroup, tr, th};\n
+  }\n
+\n
+  /**\n
+   * Create container for tables.\n
+   *\n
+   * @param {String} className\n
+   * @returns {Object}\n
+   */\n
+  createContainer(className = \'\') {\n
+    const d = document;\n
+    const fragment = d.createDocumentFragment();\n
+    const container = d.createElement(\'div\');\n
+\n
+    className = \'htGhostTable htAutoSize \' + className.trim();\n
+    addClass(container, className);\n
+    fragment.appendChild(container);\n
+\n
+    return {fragment, container};\n
+  }\n
+\n
+  /**\n
+   * Checks if table is raised vertically (checking rows).\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isVertical() {\n
+    return this.rows.length && !this.columns.length ? true : false;\n
+  }\n
+\n
+  /**\n
+   * Checks if table is raised horizontally (checking columns).\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isHorizontal() {\n
+    return this.columns.length && !this.rows.length ? true : false;\n
+  }\n
+}\n
+\n
+export {GhostTable};\n
+\n
+// temp for tests only!\n
+Handsontable.utils = Handsontable.utils || {};\n
+Handsontable.utils.GhostTable = GhostTable;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8629</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ghostTable.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

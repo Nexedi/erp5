@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272612.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>viewportColumns.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+const privatePool = new WeakMap();\n
+\n
+/**\n
+ * Calculates indexes of columns to render OR columns that are visible.\n
+ * To redo the calculation, you need to create a new calculator.\n
+ *\n
+ * @class WalkontableViewportColumnsCalculator\n
+ */\n
+class WalkontableViewportColumnsCalculator {\n
+  /**\n
+   * Default column width\n
+   *\n
+   * @type {Number}\n
+   */\n
+  static get DEFAULT_WIDTH() {\n
+    return 50;\n
+  }\n
+\n
+  /**\n
+   * @param {Number} viewportWidth Width of the viewport\n
+   * @param {Number} scrollOffset Current horizontal scroll position of the viewport\n
+   * @param {Number} totalColumns Total number of rows\n
+   * @param {Function} columnWidthFn Function that returns the width of the column at a given index (in px)\n
+   * @param {Function} overrideFn Function that changes calculated this.startRow, this.endRow (used by MergeCells plugin)\n
+   * @param {Boolean} onlyFullyVisible if `true`, only startRow and endRow will be indexes of rows that are fully in viewport\n
+   * @param {Boolean} stretchH\n
+   */\n
+  constructor(viewportWidth, scrollOffset, totalColumns, columnWidthFn, overrideFn, onlyFullyVisible, stretchH) {\n
+    privatePool.set(this, {\n
+      viewportWidth,\n
+      scrollOffset,\n
+      totalColumns,\n
+      columnWidthFn,\n
+      overrideFn,\n
+      onlyFullyVisible\n
+    });\n
+\n
+    /**\n
+     * Number of rendered/visible columns\n
+     *\n
+     * @type {Number}\n
+     */\n
+    this.count = 0;\n
+\n
+    /**\n
+     * Index of the first rendered/visible column (can be overwritten using overrideFn)\n
+     *\n
+     * @type {Number|null}\n
+     */\n
+    this.startColumn = null;\n
+\n
+    /**\n
+     * Index of the last rendered/visible column (can be overwritten using overrideFn)\n
+     *\n
+     * @type {null}\n
+     */\n
+    this.endColumn = null;\n
+\n
+    /**\n
+     * Position of the first rendered/visible column (in px)\n
+     *\n
+     * @type {Number|null}\n
+     */\n
+    this.startPosition = null;\n
+\n
+    this.stretchAllRatio = 0;\n
+    this.stretchLastWidth = 0;\n
+    this.stretch = stretchH;\n
+    this.totalTargetWidth = 0;\n
+    this.needVerifyLastColumnWidth = true;\n
+    this.stretchAllColumnsWidth = [];\n
+\n
+    this.calculate();\n
+  }\n
+\n
+  /**\n
+   * Calculates viewport\n
+   */\n
+  calculate() {\n
+    let sum = 0;\n
+    let needReverse = true;\n
+    let startPositions = [];\n
+    let columnWidth;\n
+\n
+    let priv = privatePool.get(this);\n
+    let onlyFullyVisible = priv.onlyFullyVisible;\n
+    let overrideFn = priv.overrideFn;\n
+    let scrollOffset = priv.scrollOffset;\n
+    let totalColumns = priv.totalColumns;\n
+    let viewportWidth = priv.viewportWidth;\n
+\n
+    for (let i = 0; i < totalColumns; i++) {\n
+      columnWidth = this._getColumnWidth(i);\n
+\n
+      if (sum <= scrollOffset && !onlyFullyVisible) {\n
+        this.startColumn = i;\n
+      }\n
+\n
+      if (sum >= scrollOffset && sum + columnWidth <= scrollOffset + viewportWidth) {\n
+        if (this.startColumn == null) {\n
+          this.startColumn = i;\n
+        }\n
+        this.endColumn = i;\n
+      }\n
+      startPositions.push(sum);\n
+      sum += columnWidth;\n
+\n
+      if (!onlyFullyVisible) {\n
+        this.endColumn = i;\n
+      }\n
+      if (sum >= scrollOffset + viewportWidth) {\n
+        needReverse = false;\n
+        break;\n
+      }\n
+    }\n
+\n
+    if (this.endColumn === totalColumns - 1 && needReverse) {\n
+      this.startColumn = this.endColumn;\n
+\n
+      while (this.startColumn > 0) {\n
+        let viewportSum = startPositions[this.endColumn] + columnWidth - startPositions[this.startColumn - 1];\n
+\n
+        if (viewportSum <= viewportWidth || !onlyFullyVisible) {\n
+          this.startColumn--;\n
+        }\n
+        if (viewportSum > viewportWidth) {\n
+          break;\n
+        }\n
+      }\n
+    }\n
+\n
+    if (this.startColumn !== null && overrideFn) {\n
+      overrideFn(this);\n
+    }\n
+    this.startPosition = startPositions[this.startColumn];\n
+\n
+    if (this.startPosition == void 0) {\n
+      this.startPosition = null;\n
+    }\n
+    if (this.startColumn !== null) {\n
+      this.count = this.endColumn - this.startColumn + 1;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Recalculate columns stretching.\n
+   *\n
+   * @param {Number} totalWidth\n
+   */\n
+  refreshStretching(totalWidth) {\n
+    if (this.stretch === \'none\') {\n
+      return;\n
+    }\n
+    let sumAll = 0;\n
+    let columnWidth;\n
+    let remainingSize;\n
+\n
+    let priv = privatePool.get(this);\n
+    let totalColumns = priv.totalColumns;\n
+\n
+    for (let i = 0; i < totalColumns; i++) {\n
+      columnWidth = this._getColumnWidth(i);\n
+      sumAll += columnWidth;\n
+    }\n
+    this.totalTargetWidth = totalWidth;\n
+    remainingSize = sumAll - totalWidth;\n
+\n
+    if (this.stretch === \'all\' && remainingSize < 0) {\n
+      this.stretchAllRatio = totalWidth / sumAll;\n
+      this.stretchAllColumnsWidth = [];\n
+      this.needVerifyLastColumnWidth = true;\n
+\n
+    } else if (this.stretch === \'last\' && totalWidth !== Infinity) {\n
+      this.stretchLastWidth = -remainingSize + this._getColumnWidth(totalColumns - 1);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Get stretched column width based on stretchH (all or last) setting passed in handsontable instance.\n
+   *\n
+   * @param {Number} column\n
+   * @param {Number} baseWidth\n
+   * @returns {Number|null}\n
+   */\n
+  getStretchedColumnWidth(column, baseWidth) {\n
+    let result = null;\n
+\n
+    if (this.stretch === \'all\' && this.stretchAllRatio !== 0) {\n
+      result = this._getStretchedAllColumnWidth(column, baseWidth);\n
+\n
+    } else if (this.stretch === \'last\' && this.stretchLastWidth !== 0) {\n
+      result = this._getStretchedLastColumnWidth(column);\n
+    }\n
+\n
+    return result;\n
+  }\n
+\n
+  /**\n
+   * @param {Number} column\n
+   * @param {Number} baseWidth\n
+   * @returns {Number}\n
+   * @private\n
+   */\n
+  _getStretchedAllColumnWidth(column, baseWidth) {\n
+    let sumRatioWidth = 0;\n
+    let priv = privatePool.get(this);\n
+    let totalColumns = priv.totalColumns;\n
+\n
+    if (!this.stretchAllColumnsWidth[column]) {\n
+      this.stretchAllColumnsWidth[column] = Math.round(baseWidth * this.stretchAllRatio);\n
+    }\n
+\n
+    if (this.stretchAllColumnsWidth.length === totalColumns && this.needVerifyLastColumnWidth) {\n
+      this.needVerifyLastColumnWidth = false;\n
+\n
+      for (let i = 0; i < this.stretchAllColumnsWidth.length; i++) {\n
+        sumRatioWidth += this.stretchAllColumnsWidth[i];\n
+      }\n
+      if (sumRatioWidth !== this.totalTargetWidth) {\n
+        this.stretchAllColumnsWidth[this.stretchAllColumnsWidth.length - 1] += this.totalTargetWidth - sumRatioWidth;\n
+      }\n
+    }\n
+\n
+    return this.stretchAllColumnsWidth[column];\n
+  }\n
+\n
+  /**\n
+   * @param {Number} column\n
+   * @returns {Number|null}\n
+   * @private\n
+   */\n
+  _getStretchedLastColumnWidth(column) {\n
+    let priv = privatePool.get(this);\n
+    let totalColumns = priv.totalColumns;\n
+\n
+    if (column === totalColumns - 1) {\n
+      return this.stretchLastWidth;\n
+    }\n
+\n
+    return null;\n
+  }\n
+\n
+  /**\n
+   * @param {Number} column\n
+   * @returns {Number}\n
+   * @private\n
+   */\n
+  _getColumnWidth(column) {\n
+    let width = privatePool.get(this).columnWidthFn(column);\n
+\n
+    if (width === undefined) {\n
+      width = WalkontableViewportColumnsCalculator.DEFAULT_WIDTH;\n
+    }\n
+\n
+    return width;\n
+  }\n
+}\n
+\n
+export {WalkontableViewportColumnsCalculator};\n
+\n
+window.WalkontableViewportColumnsCalculator = WalkontableViewportColumnsCalculator;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6989</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>viewportColumns.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

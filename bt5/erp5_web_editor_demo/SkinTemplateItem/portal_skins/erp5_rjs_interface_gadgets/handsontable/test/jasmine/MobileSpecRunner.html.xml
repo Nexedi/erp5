@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272546.03</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MobileSpecRunner.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+<head>\n
+  <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />\n
+  <meta charset="utf-8">\n
+  <meta http-equiv="cache-control" content="no-cache" />\n
+  <meta http-equiv="expires" content="0" />\n
+  <title>Jasmine Spec Runner</title>\n
+  <link rel="stylesheet" type="text/css" href="lib/jasmine/jasmine.css">\n
+\n
+  \n
+  \n
+      <link rel="stylesheet" type="text/css" href="css/SpecRunner.css">\n
+    \n
+  \n
+      <link rel="stylesheet" type="text/css" href="../../dist/handsontable.css">\n
+    \n
+  \n
+      <link rel="stylesheet" type="text/css" href="../../plugins/removeRow/handsontable.removeRow.css">\n
+    \n
+  \n
+      <link rel="stylesheet" type="text/css" href="../../demo/js/jquery-ui/css/ui-bootstrap/jquery-ui.custom.css">\n
+    \n
+  \n
+      <link rel="stylesheet" type="text/css" href="../../demo/js/pikaday/css/pikaday.css">\n
+    \n
+  \n
+\n
+  <script src="lib/jasmine/phantom-polyfill.js"></script>\n
+  <script src="lib/jasmine/jasmine.js"></script>\n
+  <script src="lib/jasmine/jasmine-html.js"></script>\n
+\n
+  \n
+    \n
+      <script src="../../demo/js/jquery.min.js"></script>\n
+    \n
+      <script src="../../lib/numeral/numeral.js"></script>\n
+    \n
+      <script src="../../demo/js/ZeroClipboard.js"></script>\n
+    \n
+      <script src="../../demo/js/moment/moment.js"></script>\n
+    \n
+      <script src="../../demo/js/pikaday/pikaday.js"></script>\n
+    \n
+      <script src="lib/jasmine-extensions.js"></script>\n
+    \n
+      <script src="spec/SpecHelper.js"></script>\n
+    \n
+      <script src="spec/MobileSpecHelper.js"></script>\n
+    \n
+      <script src="lib/nodeShim.js"></script>\n
+    \n
+      <script src="spec/test-init.js"></script>\n
+    \n
+      <script src="../../dist/handsontable.js"></script>\n
+    \n
+      <script src="../../demo/js/numeral.de-de.js"></script>\n
+    \n
+      <script src="../../demo/js/backbone/lodash.underscore.js"></script>\n
+    \n
+      <script src="../../demo/js/backbone/backbone.js"></script>\n
+    \n
+      <script src="../../demo/js/backbone/backbone-relational/backbone-relational.js"></script>\n
+    \n
+      <script src="../../demo/js/jquery-ui/js/jquery-ui.custom.js"></script>\n
+    \n
+      <script src="../../plugins/removeRow/handsontable.removeRow.js"></script>\n
+    \n
+      <script src="spec/mobile/mobileTextEditorSpec.js"></script>\n
+    \n
+      <script src="../../src/plugins/multipleSelectionHandles/test/mobile/multipleSelectionHandles.spec.js"></script>\n
+    \n
+  \n
+\n
+  <script src="lib/jasmine/reporter.js"></script>\n
+  <script src="lib/jquery.simulate.js"></script>\n
+  <script src="lib/jasmine/jasmine-helper.js"></script>\n
+\n
+</head>\n
+<body>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2541</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>MobileSpecRunner.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

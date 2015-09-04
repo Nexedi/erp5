@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272739.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>checkboxRenderer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {empty, addClass, hasClass} from \'./../helpers/dom/element\';\n
+import {equalsIgnoreCase} from \'./../helpers/string\';\n
+import {EventManager} from \'./../eventManager\';\n
+import {getRenderer, registerRenderer} from \'./../renderers\';\n
+import {KEY_CODES} from \'./../helpers/unicode\';\n
+import {stopPropagation, stopImmediatePropagation, isImmediatePropagationStopped} from \'./../helpers/dom/event\';\n
+\n
+const isListeningKeyDownEvent = new WeakMap();\n
+const BAD_VALUE_CLASS = \'htBadValue\';\n
+\n
+/**\n
+ * Checkbox renderer\n
+ *\n
+ * @private\n
+ * @renderer CheckboxRenderer\n
+ * @param {Object} instance Handsontable instance\n
+ * @param {Element} TD Table cell where to render\n
+ * @param {Number} row\n
+ * @param {Number} col\n
+ * @param {String|Number} prop Row object property name\n
+ * @param value Value to render (remember to escape unsafe HTML before inserting to DOM!)\n
+ * @param {Object} cellProperties Cell properties (shared by cell renderer and editor)\n
+ */\n
+function checkboxRenderer(instance, TD, row, col, prop, value, cellProperties) {\n
+  const eventManager = new EventManager(instance);\n
+  const input = createInput();\n
+\n
+  if (typeof cellProperties.checkedTemplate === \'undefined\') {\n
+    cellProperties.checkedTemplate = true;\n
+  }\n
+  if (typeof cellProperties.uncheckedTemplate === \'undefined\') {\n
+    cellProperties.uncheckedTemplate = false;\n
+  }\n
+  empty(TD); // TODO identify under what circumstances this line can be removed\n
+\n
+  if (value === cellProperties.checkedTemplate || equalsIgnoreCase(value, cellProperties.checkedTemplate)) {\n
+    input.checked = true;\n
+    TD.appendChild(input);\n
+  }\n
+  else if (value === cellProperties.uncheckedTemplate || equalsIgnoreCase(value, cellProperties.uncheckedTemplate)) {\n
+    TD.appendChild(input);\n
+  }\n
+  else if (value === null) { // default value\n
+    addClass(input, \'noValue\');\n
+    TD.appendChild(input);\n
+  }\n
+  else {\n
+    input.style.display = \'none\';\n
+    addClass(input, BAD_VALUE_CLASS);\n
+    TD.appendChild(input);\n
+    TD.appendChild(document.createTextNode(\'#bad-value#\'));\n
+  }\n
+\n
+  if (cellProperties.readOnly) {\n
+    eventManager.addEventListener(input, \'click\', preventDefault);\n
+  } else {\n
+    eventManager.addEventListener(input, \'mousedown\', stopPropagation);\n
+    eventManager.addEventListener(input, \'mouseup\', stopPropagation);\n
+    eventManager.addEventListener(input, \'change\', (event) => {\n
+      instance.setDataAtRowProp(row, prop, event.target.checked ? cellProperties.checkedTemplate : cellProperties.uncheckedTemplate);\n
+    });\n
+  }\n
+\n
+  if (!isListeningKeyDownEvent.has(instance)) {\n
+    isListeningKeyDownEvent.set(instance, true);\n
+    instance.addHook(\'beforeKeyDown\', onBeforeKeyDown);\n
+  }\n
+\n
+  /**\n
+   * On before key down DOM listener.\n
+   *\n
+   * @private\n
+   * @param {Event} event\n
+   */\n
+  function onBeforeKeyDown(event) {\n
+    const allowedKeys = [\n
+      KEY_CODES.SPACE,\n
+      KEY_CODES.ENTER,\n
+      KEY_CODES.DELETE,\n
+      KEY_CODES.BACKSPACE\n
+    ];\n
+\n
+    if (allowedKeys.indexOf(event.keyCode) !== -1 && !isImmediatePropagationStopped(event)) {\n
+      eachSelectedCheckboxCell(function() {\n
+        stopImmediatePropagation(event);\n
+        event.preventDefault();\n
+      });\n
+    }\n
+    if (event.keyCode == KEY_CODES.SPACE || event.keyCode == KEY_CODES.ENTER) {\n
+      toggleSelected();\n
+    }\n
+    if (event.keyCode == KEY_CODES.DELETE || event.keyCode == KEY_CODES.BACKSPACE) {\n
+      toggleSelected(false);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Toggle checkbox checked property\n
+   *\n
+   * @private\n
+   * @param {Boolean} [checked=null]\n
+   */\n
+  function toggleSelected(checked = null) {\n
+    eachSelectedCheckboxCell(function(checkboxes) {\n
+      for (let i = 0, len = checkboxes.length; i < len; i++) {\n
+        // Block changing checked property on toggle keys (SPACE and ENTER)\n
+        if (hasClass(checkboxes[i], BAD_VALUE_CLASS) && checked === null) {\n
+          return;\n
+        }\n
+        toggleCheckbox(checkboxes[i], checked);\n
+      }\n
+    });\n
+  }\n
+\n
+  /**\n
+   * Toggle checkbox element.\n
+   *\n
+   * @private\n
+   * @param {HTMLInputElement} checkbox\n
+   * @param {Boolean} [checked=null]\n
+   */\n
+  function toggleCheckbox(checkbox, checked = null) {\n
+    if (checked === null) {\n
+      checkbox.checked = !checkbox.checked;\n
+    } else {\n
+      checkbox.checked = checked;\n
+    }\n
+    eventManager.fireEvent(checkbox, \'change\');\n
+  }\n
+\n
+  /**\n
+   * Call callback for each found selected cell with checkbox type.\n
+   *\n
+   * @private\n
+   * @param {Function} callback\n
+   */\n
+  function eachSelectedCheckboxCell(callback) {\n
+    const selRange = instance.getSelectedRange();\n
+    const topLeft = selRange.getTopLeftCorner();\n
+    const bottomRight = selRange.getBottomRightCorner();\n
+\n
+    for (let row = topLeft.row; row <= bottomRight.row; row++) {\n
+      for (let col = topLeft.col; col <= bottomRight.col; col++) {\n
+        let cell = instance.getCell(row, col);\n
+        let cellProperties = instance.getCellMeta(row, col);\n
+        let checkboxes = cell.querySelectorAll(\'input[type=checkbox]\');\n
+\n
+        if (checkboxes.length > 0 && !cellProperties.readOnly) {\n
+          callback(checkboxes);\n
+        }\n
+      }\n
+    }\n
+  }\n
+}\n
+\n
+export {checkboxRenderer};\n
+\n
+registerRenderer(\'checkbox\', checkboxRenderer);\n
+\n
+\n
+/**\n
+ * Create input element.\n
+ *\n
+ * @returns {Node}\n
+ */\n
+function createInput() {\n
+  let input = document.createElement(\'INPUT\');\n
+\n
+  input.className = \'htCheckboxRendererInput\';\n
+  input.type = \'checkbox\';\n
+  input.setAttribute(\'autocomplete\', \'off\');\n
+\n
+  return input.cloneNode(false);\n
+}\n
+\n
+function preventDefault(event) {\n
+  event.preventDefault();\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5430</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>checkboxRenderer.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

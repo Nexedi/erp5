@@ -1,0 +1,451 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272704.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>autoRowSize.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import BasePlugin from \'./../_base\';\n
+import {arrayEach, arrayFilter} from \'./../../helpers/array\';\n
+import {cancelAnimationFrame, requestAnimationFrame, isVisible} from \'./../../helpers/dom/element\';\n
+import {GhostTable} from \'./../../utils/ghostTable\';\n
+import {isObject, objectEach} from \'./../../helpers/object\';\n
+import {isPercentValue, rangeEach} from \'./../../helpers/number\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+import {SamplesGenerator} from \'./../../utils/samplesGenerator\';\n
+import {valueAccordingPercent} from \'./../../helpers/string\';\n
+\n
+\n
+/**\n
+ * @plugin AutoRowSize\n
+ *\n
+ * @description\n
+ * This plugin allows to set row height related to the highest cell in row.\n
+ *\n
+ * Default value is `undefined` which is the same effect as `false`. Enable this plugin can decrease performance.\n
+ *\n
+ * Row height calculations are divided into sync and async part. Each of this part has own advantages and\n
+ * disadvantages. Synchronous counting is faster but it blocks browser UI and asynchronous is slower but it does not\n
+ * block Browser UI.\n
+ *\n
+ * To configure this plugin see {@link Options#autoRowSize}.\n
+ *\n
+ *\n
+ * @example\n
+ *\n
+ * ```js\n
+ * ...\n
+ * var hot = new Handsontable(document.getElementById(\'example\'), {\n
+ *   date: getData(),\n
+ *   autoRowSize: true\n
+ * });\n
+ * // Access to plugin instance:\n
+ * var plugin = hot.getPlugin(\'autoRowSize\');\n
+ *\n
+ * plugin.getRowHeight(4);\n
+ *\n
+ * if (plugin.isEnabled()) {\n
+ *   // code...\n
+ * }\n
+ * ...\n
+ * ```\n
+ */\n
+class AutoRowSize extends BasePlugin {\n
+  static get CALCULATION_STEP() {\n
+    return 50;\n
+  }\n
+  static get SYNC_CALCULATION_LIMIT() {\n
+    return 500;\n
+  }\n
+\n
+  constructor(hotInstance) {\n
+    super(hotInstance);\n
+    /**\n
+     * Cached rows heights.\n
+     *\n
+     * @type {Array}\n
+     */\n
+    this.heights = [];\n
+    /**\n
+     * Instance of GhostTable for rows and columns size calculations.\n
+     *\n
+     * @type {GhostTable}\n
+     */\n
+    this.ghostTable = new GhostTable(this.hot);\n
+    /**\n
+     * Instance of SamplesGenerator for generating samples necessary for rows height calculations.\n
+     *\n
+     * @type {SamplesGenerator}\n
+     */\n
+    this.samplesGenerator = new SamplesGenerator((row, col) => this.hot.getDataAtCell(row, col));\n
+    /**\n
+     * @type {Boolean}\n
+     */\n
+    this.firstCalculation = true;\n
+    /**\n
+     * @type {Boolean}\n
+     */\n
+    this.inProgress = false;\n
+  }\n
+\n
+  /**\n
+   * Check if the plugin is enabled in the handsontable settings.\n
+   *\n
+   * @returns {Boolean}\n
+   */\n
+  isEnabled() {\n
+    return this.hot.getSettings().autoRowSize === true || isObject(this.hot.getSettings().autoRowSize);\n
+  }\n
+\n
+  /**\n
+   * Enable plugin for this Handsontable instance.\n
+   */\n
+  enablePlugin() {\n
+    if (this.enabled) {\n
+      return;\n
+    }\n
+    this.addHook(\'afterLoadData\', () => this.onAfterLoadData());\n
+    this.addHook(\'beforeChange\', (changes) => this.onBeforeChange(changes));\n
+    this.addHook(\'beforeColumnMove\', () => this.recalculateAllRowsHeight());\n
+    this.addHook(\'beforeColumnResize\', () => this.recalculateAllRowsHeight());\n
+    this.addHook(\'beforeColumnSort\', () => this.clearCache());\n
+    this.addHook(\'beforeRender\', (force) => this.onBeforeRender(force));\n
+    this.addHook(\'beforeRowMove\', (rowStart, rowEnd) => this.onBeforeRowMove(rowStart, rowEnd));\n
+    this.addHook(\'beforeRowResize\', (row, size, isDblClick) => this.onBeforeRowResize(row, size, isDblClick));\n
+    this.addHook(\'modifyRowHeight\', (height, row) => this.getRowHeight(row, height));\n
+    super.enablePlugin();\n
+  }\n
+\n
+  /**\n
+   * Disable plugin for this Handsontable instance.\n
+   */\n
+  disablePlugin() {\n
+    super.disablePlugin();\n
+  }\n
+\n
+  /**\n
+   * Calculate rows height.\n
+   *\n
+   * @param {Number|Object} rowRange Row range object.\n
+   * @param {Number|Object} colRange Column range object.\n
+   * @param {Boolean} [force=false] If `true` force calculate height even when value was cached earlier.\n
+   */\n
+  calculateRowsHeight(rowRange = {from: 0, to: this.hot.countRows() - 1}, colRange = {from: 0, to: this.hot.countCols() - 1}, force = false) {\n
+    if (typeof rowRange === \'number\') {\n
+      rowRange = {from: rowRange, to: rowRange};\n
+    }\n
+    if (typeof colRange === \'number\') {\n
+      colRange = {from: colRange, to: colRange};\n
+    }\n
+    rangeEach(rowRange.from, rowRange.to, (row) => {\n
+      // For rows we must calculate row height even when user had set height value manually.\n
+      // We can shrink column but cannot shrink rows!\n
+      if (force || this.heights[row] === void 0) {\n
+        const samples = this.samplesGenerator.generateRowSamples(row, colRange);\n
+\n
+        samples.forEach((sample, row) => this.ghostTable.addRow(row, sample));\n
+      }\n
+    });\n
+    if (this.ghostTable.rows.length) {\n
+      this.ghostTable.getHeights((row, height) => this.heights[row] = height);\n
+      this.ghostTable.clean();\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Calculate all rows height.\n
+   *\n
+   * @param {Object|Number} colRange Column range object.\n
+   */\n
+  calculateAllRowsHeight(colRange = {from: 0, to: this.hot.countCols() - 1}) {\n
+    let current = 0;\n
+    let length = this.hot.countRows() - 1;\n
+    let timer = null;\n
+\n
+    this.inProgress = true;\n
+\n
+    let loop = () => {\n
+      // When hot was destroyed after calculating finished cancel frame\n
+      if (!this.hot) {\n
+        cancelAnimationFrame(timer);\n
+        this.inProgress = false;\n
+\n
+        return;\n
+      }\n
+      this.calculateRowsHeight({from: current, to: Math.min(current + AutoRowSize.CALCULATION_STEP, length)}, colRange);\n
+      current = current + AutoRowSize.CALCULATION_STEP + 1;\n
+\n
+      if (current < length) {\n
+        timer = requestAnimationFrame(loop);\n
+      } else {\n
+        cancelAnimationFrame(timer);\n
+        this.inProgress = false;\n
+\n
+        // @TODO Should call once per render cycle, currently fired separately in different plugins\n
+        this.hot.view.wt.wtOverlays.adjustElementsSize(true);\n
+        // tmp\n
+        if (this.hot.view.wt.wtOverlays.leftOverlay.needFullRender) {\n
+          this.hot.view.wt.wtOverlays.leftOverlay.clone.draw();\n
+        }\n
+      }\n
+    };\n
+    // sync\n
+    if (this.firstCalculation && this.getSyncCalculationLimit()) {\n
+      this.calculateRowsHeight({from: 0, to: this.getSyncCalculationLimit()}, colRange);\n
+      this.firstCalculation = false;\n
+      current = this.getSyncCalculationLimit() + 1;\n
+    }\n
+    // async\n
+    if (current < length) {\n
+      loop();\n
+    } else {\n
+      this.inProgress = false;\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Recalculate all rows height (overwrite cache values).\n
+   */\n
+  recalculateAllRowsHeight() {\n
+    if (isVisible(this.hot.view.wt.wtTable.TABLE)) {\n
+      this.clearCache();\n
+      this.calculateAllRowsHeight();\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Get value which tells how much rows will be calculated synchronously. Rest rows will be calculated asynchronously.\n
+   *\n
+   * @returns {Number}\n
+   */\n
+  getSyncCalculationLimit() {\n
+    let limit = AutoRowSize.SYNC_CALCULATION_LIMIT;\n
+    let rowsLimit = this.hot.countRows() - 1;\n
+\n
+    if (isObject(this.hot.getSettings().autoRowSize)) {\n
+      limit = this.hot.getSettings().autoRowSize.syncLimit;\n
+\n
+      if (isPercentValue(limit)) {\n
+        limit = valueAccordingPercent(rowsLimit, limit);\n
+      } else {\n
+        // Force to Number\n
+        limit = limit >> 0;\n
+      }\n
+    }\n
+\n
+    return Math.min(limit, rowsLimit);\n
+  }\n
+\n
+  /**\n
+   * Get calculated row height.\n
+   *\n
+   * @param {Number} row Row index.\n
+   * @param {Number} [defaultHeight] Default row height. It will be pick up if no calculated height found.\n
+   * @returns {Number}\n
+   */\n
+  getRowHeight(row, defaultHeight = void 0) {\n
+    let height = defaultHeight;\n
+\n
+    if (this.heights[row] !== void 0 && this.heights[row] > (defaultHeight || 0)) {\n
+      height = this.heights[row];\n
+    }\n
+\n
+    return height;\n
+  }\n
+\n
+  /**\n
+   * Get first visible row.\n
+   *\n
+   * @returns {Number} Returns row index or -1 if table is not rendered.\n
+   */\n
+  getFirstVisibleRow() {\n
+    const wot = this.hot.view.wt;\n
+\n
+    if (wot.wtViewport.rowsVisibleCalculator) {\n
+      return wot.wtTable.getFirstVisibleRow();\n
+    }\n
+    if (wot.wtViewport.rowsRenderCalculator) {\n
+      return wot.wtTable.getFirstRenderedRow();\n
+    }\n
+\n
+    return -1;\n
+  }\n
+\n
+  /**\n
+   * Get last visible row.\n
+   *\n
+   * @returns {Number} Returns row index or -1 if table is not rendered.\n
+   */\n
+  getLastVisibleRow() {\n
+    const wot = this.hot.view.wt;\n
+\n
+    if (wot.wtViewport.rowsVisibleCalculator) {\n
+      return wot.wtTable.getLastVisibleRow();\n
+    }\n
+    if (wot.wtViewport.rowsRenderCalculator) {\n
+      return wot.wtTable.getLastRenderedRow();\n
+    }\n
+\n
+    return -1;\n
+  }\n
+\n
+  /**\n
+   * Clear cached heights.\n
+   */\n
+  clearCache() {\n
+    this.heights.length = 0;\n
+  }\n
+\n
+  /**\n
+   * Clear cache by range.\n
+   *\n
+   * @param {Object|Number} range Row range object.\n
+   */\n
+  clearCacheByRange(range) {\n
+    if (typeof range === \'number\') {\n
+      range = {from: range, to: range};\n
+    }\n
+    rangeEach(Math.min(range.from, range.to), Math.max(range.from, range.to), (row) => this.heights[row] = void 0);\n
+  }\n
+\n
+  /**\n
+   * @returns {Boolean}\n
+   */\n
+  isNeedRecalculate() {\n
+     return arrayFilter(this.heights, (item) => (item === void 0)).length ? true : false;\n
+  }\n
+\n
+  /**\n
+   * On before render listener.\n
+   *\n
+   * @private\n
+   */\n
+  onBeforeRender() {\n
+    let force = this.hot.renderCall;\n
+    this.calculateRowsHeight({from: this.getFirstVisibleRow(), to: this.getLastVisibleRow()}, void 0, force);\n
+\n
+    if (this.isNeedRecalculate() && !this.inProgress) {\n
+      this.calculateAllRowsHeight();\n
+    }\n
+  }\n
+\n
+  /**\n
+   * On before row move listener.\n
+   *\n
+   * @private\n
+   * @param {Number} from Row index where was grabbed.\n
+   * @param {Number} to Destination row index.\n
+   */\n
+  onBeforeRowMove(from, to) {\n
+    this.clearCacheByRange({from, to});\n
+    this.calculateAllRowsHeight();\n
+  }\n
+\n
+  /**\n
+   * On before row resize listener.\n
+   *\n
+   * @private\n
+   * @param {Number} row\n
+   * @param {Number} size\n
+   * @param {Boolean} isDblClick\n
+   * @returns {Number}\n
+   */\n
+  onBeforeRowResize(row, size, isDblClick) {\n
+    if (isDblClick) {\n
+      this.calculateRowsHeight(row, void 0, true);\n
+      size = this.getRowHeight(row);\n
+    }\n
+\n
+    return size;\n
+  }\n
+\n
+  /**\n
+   * On after load data listener.\n
+   *\n
+   * @private\n
+   */\n
+  onAfterLoadData() {\n
+    if (this.hot.view) {\n
+      this.recalculateAllRowsHeight();\n
+    } else {\n
+      // first load - initialization\n
+      setTimeout(() => {\n
+        if (this.hot) {\n
+          this.recalculateAllRowsHeight();\n
+        }\n
+      }, 0);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * On before change listener.\n
+   *\n
+   * @private\n
+   * @param {Array} changes\n
+   */\n
+  onBeforeChange(changes) {\n
+    let range = null;\n
+\n
+    if (changes.length === 1) {\n
+      range = changes[0][0];\n
+    } else if (changes.length > 1) {\n
+      range = {\n
+        from: changes[0][0],\n
+        to: changes[changes.length - 1][0]\n
+      };\n
+    }\n
+    if (range !== null) {\n
+      this.clearCacheByRange(range);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * Destroy plugin instance.\n
+   */\n
+  destroy() {\n
+    this.ghostTable.clean();\n
+    super.destroy();\n
+  }\n
+}\n
+\n
+export {AutoRowSize};\n
+\n
+registerPlugin(\'autoRowSize\', AutoRowSize);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10859</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>autoRowSize.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

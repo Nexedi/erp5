@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272909.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>.jshintrc</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\n
+  "esnext": true,\n
+  "boss": false,\n
+  "browser": true,\n
+  "camelcase": true,\n
+  "curly": true,\n
+  "debug": false,\n
+  "devel": false,\n
+  "eqeqeq": false, // Should be true\n
+  "eqnull": true, // Should be false\n
+  "evil": false,\n
+  "forin": true,\n
+  "freeze": true,\n
+  "funcscope": false,\n
+  "immed": true,\n
+  "indent": 2,\n
+  "latedef": false,\n
+  "laxbreak": false,\n
+  "laxcomma": true, // Should be false\n
+  "loopfunc": false,\n
+  "maxdepth": 5,\n
+  "maxlen": 190,\n
+  "maxparams": 9,\n
+  "multistr": false,\n
+  "newcap": true,\n
+  "nonbsp": true,\n
+  "nonew": true,\n
+  "notypeof": false,\n
+  "predef": [],\n
+  "proto": false,\n
+  "shadow": true, // Should be false\n
+  "sub": false,\n
+  "supernew": false,\n
+  "undef": false,\n
+  "unused": false\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>704</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>.jshintrc</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

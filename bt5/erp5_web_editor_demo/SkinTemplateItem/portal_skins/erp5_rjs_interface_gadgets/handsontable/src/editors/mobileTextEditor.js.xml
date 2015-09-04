@@ -1,0 +1,387 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272751.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>mobileTextEditor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {KEY_CODES} from \'./../helpers/unicode\';\n
+import {stopImmediatePropagation, isImmediatePropagationStopped} from \'./../helpers/dom/event\';\n
+import {\n
+  addClass,\n
+  getScrollLeft,\n
+  getScrollTop,\n
+  hasClass,\n
+  isChildOf,\n
+  offset,\n
+  outerHeight,\n
+  outerWidth,\n
+  removeClass,\n
+  setCaretPosition,\n
+    } from \'./../helpers/dom/element\';\n
+import {getEditor, registerEditor} from \'./../editors\';\n
+import {BaseEditor} from \'./_baseEditor\';\n
+import {eventManager as eventManagerObject} from \'./../eventManager\';\n
+\n
+var\n
+  MobileTextEditor = BaseEditor.prototype.extend(),\n
+  domDimensionsCache = {};\n
+\n
+\n
+/**\n
+ * @private\n
+ * @editor MobileTextEditor\n
+ * @class MobileTextEditor\n
+ */\n
+var createControls = function () {\n
+  this.controls = {};\n
+\n
+  this.controls.leftButton = document.createElement(\'DIV\');\n
+  this.controls.leftButton.className = \'leftButton\';\n
+  this.controls.rightButton = document.createElement(\'DIV\');\n
+  this.controls.rightButton.className = \'rightButton\';\n
+  this.controls.upButton = document.createElement(\'DIV\');\n
+  this.controls.upButton.className = \'upButton\';\n
+  this.controls.downButton = document.createElement(\'DIV\');\n
+  this.controls.downButton.className = \'downButton\';\n
+\n
+  for (var button in this.controls) {\n
+    if (this.controls.hasOwnProperty(button)) {\n
+      this.positionControls.appendChild(this.controls[button]);\n
+    }\n
+  }\n
+};\n
+\n
+MobileTextEditor.prototype.valueChanged = function() {\n
+  return this.initValue != this.getValue();\n
+};\n
+\n
+MobileTextEditor.prototype.init = function() {\n
+  var that = this;\n
+  this.eventManager = eventManagerObject(this.instance);\n
+\n
+  this.createElements();\n
+  this.bindEvents();\n
+\n
+  this.instance.addHook(\'afterDestroy\', function() {\n
+    that.destroy();\n
+  });\n
+\n
+};\n
+\n
+MobileTextEditor.prototype.getValue = function() {\n
+  return this.TEXTAREA.value;\n
+};\n
+\n
+MobileTextEditor.prototype.setValue = function(newValue) {\n
+  this.initValue = newValue;\n
+\n
+  this.TEXTAREA.value = newValue;\n
+};\n
+\n
+MobileTextEditor.prototype.createElements = function() {\n
+  this.editorContainer = document.createElement(\'DIV\');\n
+  this.editorContainer.className = "htMobileEditorContainer";\n
+\n
+  this.cellPointer = document.createElement(\'DIV\');\n
+  this.cellPointer.className = "cellPointer";\n
+\n
+  this.moveHandle = document.createElement(\'DIV\');\n
+  this.moveHandle.className = "moveHandle";\n
+\n
+  this.inputPane = document.createElement(\'DIV\');\n
+  this.inputPane.className = "inputs";\n
+\n
+  this.positionControls = document.createElement(\'DIV\');\n
+  this.positionControls.className = "positionControls";\n
+\n
+  this.TEXTAREA = document.createElement(\'TEXTAREA\');\n
+  addClass(this.TEXTAREA, \'handsontableInput\');\n
+\n
+  this.inputPane.appendChild(this.TEXTAREA);\n
+\n
+  this.editorContainer.appendChild(this.cellPointer);\n
+  this.editorContainer.appendChild(this.moveHandle);\n
+  this.editorContainer.appendChild(this.inputPane);\n
+  this.editorContainer.appendChild(this.positionControls);\n
+\n
+  createControls.call(this);\n
+\n
+  document.body.appendChild(this.editorContainer);\n
+};\n
+\n
+MobileTextEditor.prototype.onBeforeKeyDown = function(event) {\n
+  var instance = this;\n
+  var that = instance.getActiveEditor();\n
+\n
+  if (event.target !== that.TEXTAREA || isImmediatePropagationStopped(event)) {\n
+    return;\n
+  }\n
+\n
+  switch (event.keyCode) {\n
+    case KEY_CODES.ENTER:\n
+      that.close();\n
+      event.preventDefault(); //don\'t add newline to field\n
+      break;\n
+    case KEY_CODES.BACKSPACE:\n
+      stopImmediatePropagation(event); //backspace, delete, home, end should only work locally when cell is edited (not in table context)\n
+      break;\n
+  }\n
+};\n
+\n
+MobileTextEditor.prototype.open = function() {\n
+  this.instance.addHook(\'beforeKeyDown\', this.onBeforeKeyDown);\n
+\n
+  addClass(this.editorContainer, \'active\');\n
+  removeClass(this.cellPointer, \'hidden\');\n
+\n
+  this.updateEditorPosition();\n
+};\n
+\n
+MobileTextEditor.prototype.focus = function() {\n
+  this.TEXTAREA.focus();\n
+  setCaretPosition(this.TEXTAREA, this.TEXTAREA.value.length);\n
+};\n
+\n
+MobileTextEditor.prototype.close = function() {\n
+  this.TEXTAREA.blur();\n
+  this.instance.removeHook(\'beforeKeyDown\', this.onBeforeKeyDown);\n
+\n
+  removeClass(this.editorContainer, \'active\');\n
+};\n
+\n
+MobileTextEditor.prototype.scrollToView = function() {\n
+  var coords = this.instance.getSelectedRange().highlight;\n
+  this.instance.view.scrollViewport(coords);\n
+};\n
+\n
+MobileTextEditor.prototype.hideCellPointer = function() {\n
+  if (!hasClass(this.cellPointer, \'hidden\')) {\n
+    addClass(this.cellPointer, \'hidden\');\n
+  }\n
+};\n
+\n
+MobileTextEditor.prototype.updateEditorPosition = function(x, y) {\n
+  if (x && y) {\n
+    x = parseInt(x, 10);\n
+    y = parseInt(y, 10);\n
+\n
+    this.editorContainer.style.top = y + "px";\n
+    this.editorContainer.style.left = x + "px";\n
+\n
+  } else {\n
+    var selection = this.instance.getSelected(),\n
+      selectedCell = this.instance.getCell(selection[0], selection[1]);\n
+\n
+    //cache sizes\n
+    if (!domDimensionsCache.cellPointer) {\n
+      domDimensionsCache.cellPointer = {\n
+        height: outerHeight(this.cellPointer),\n
+        width: outerWidth(this.cellPointer)\n
+      };\n
+    }\n
+    if (!domDimensionsCache.editorContainer) {\n
+      domDimensionsCache.editorContainer = {\n
+        width: outerWidth(this.editorContainer)\n
+      };\n
+    }\n
+\n
+    if (selectedCell !== undefined) {\n
+      var scrollLeft = this.instance.view.wt.wtOverlays.leftOverlay\n
+          .trimmingContainer == window ? 0 : getScrollLeft(this.instance.view.wt.wtOverlays.leftOverlay.holder);\n
+      var scrollTop = this.instance.view.wt.wtOverlays.topOverlay\n
+          .trimmingContainer == window ? 0 : getScrollTop(this.instance.view.wt.wtOverlays.topOverlay.holder);\n
+\n
+      var selectedCellOffset = offset(selectedCell),\n
+        selectedCellWidth = outerWidth(selectedCell),\n
+        currentScrollPosition = {\n
+          x: scrollLeft,\n
+          y: scrollTop\n
+        };\n
+\n
+      this.editorContainer.style.top = parseInt(selectedCellOffset.top + outerHeight(selectedCell) -\n
+          currentScrollPosition.y + domDimensionsCache.cellPointer.height, 10) + "px";\n
+      this.editorContainer.style.left = parseInt((window.innerWidth / 2) - (domDimensionsCache.editorContainer.width / 2), 10) + "px";\n
+\n
+      if (selectedCellOffset.left + selectedCellWidth / 2 > parseInt(this.editorContainer.style.left, 10) +\n
+          domDimensionsCache.editorContainer.width) {\n
+        this.editorContainer.style.left = window.innerWidth - domDimensionsCache.editorContainer.width + "px";\n
+\n
+      } else if (selectedCellOffset.left + selectedCellWidth / 2 < parseInt(this.editorContainer.style.left, 10) + 20) {\n
+        this.editorContainer.style.left = 0 + "px";\n
+      }\n
+\n
+      this.cellPointer.style.left = parseInt(selectedCellOffset.left - (domDimensionsCache.cellPointer.width / 2) -\n
+        offset(this.editorContainer).left + (selectedCellWidth / 2) - currentScrollPosition.x, 10) + "px";\n
+    }\n
+  }\n
+};\n
+\n
+\n
+// For the optional dont-affect-editor-by-zooming feature:\n
+\n
+//MobileTextEditor.prototype.updateEditorDimensions = function () {\n
+//  if(!this.beginningWindowWidth) {\n
+//    this.beginningWindowWidth = window.innerWidth;\n
+//    this.beginningEditorWidth = Handsontable.outerWidth(this.editorContainer);\n
+//    this.scaleRatio = this.beginningEditorWidth / this.beginningWindowWidth;\n
+//\n
+//    this.editorContainer.style.width = this.beginningEditorWidth + "px";\n
+//    return;\n
+//  }\n
+//\n
+//  var currentScaleRatio = this.beginningEditorWidth / window.innerWidth;\n
+//  //if(currentScaleRatio > this.scaleRatio + 0.2 || currentScaleRatio < this.scaleRatio - 0.2) {\n
+//  if(currentScaleRatio != this.scaleRatio) {\n
+//    this.editorContainer.style["zoom"] = (1 - ((currentScaleRatio * this.scaleRatio) - this.scaleRatio)) * 100 + "%";\n
+//  }\n
+//\n
+//};\n
+\n
+MobileTextEditor.prototype.updateEditorData = function() {\n
+  var selected = this.instance.getSelected(),\n
+    selectedValue = this.instance.getDataAtCell(selected[0], selected[1]);\n
+\n
+  this.row = selected[0];\n
+  this.col = selected[1];\n
+  this.setValue(selectedValue);\n
+  this.updateEditorPosition();\n
+};\n
+\n
+MobileTextEditor.prototype.prepareAndSave = function() {\n
+  var val;\n
+\n
+  if (!this.valueChanged()) {\n
+    return true;\n
+  }\n
+\n
+  if (this.instance.getSettings().trimWhitespace) {\n
+    val = [\n
+      [String.prototype.trim.call(this.getValue())]\n
+    ];\n
+  } else {\n
+    val = [\n
+      [this.getValue()]\n
+    ];\n
+  }\n
+\n
+\n
+  this.saveValue(val);\n
+};\n
+\n
+MobileTextEditor.prototype.bindEvents = function() {\n
+  var that = this;\n
+\n
+  this.eventManager.addEventListener(this.controls.leftButton, "touchend", function(event) {\n
+    that.prepareAndSave();\n
+    that.instance.selection.transformStart(0, - 1, null, true);\n
+    that.updateEditorData();\n
+    event.preventDefault();\n
+  });\n
+  this.eventManager.addEventListener(this.controls.rightButton, "touchend", function(event) {\n
+    that.prepareAndSave();\n
+    that.instance.selection.transformStart(0, 1, null, true);\n
+    that.updateEditorData();\n
+    event.preventDefault();\n
+  });\n
+  this.eventManager.addEventListener(this.controls.upButton, "touchend", function(event) {\n
+    that.prepareAndSave();\n
+    that.instance.selection.transformStart(-1, 0, null, true);\n
+    that.updateEditorData();\n
+    event.preventDefault();\n
+  });\n
+  this.eventManager.addEventListener(this.controls.downButton, "touchend", function(event) {\n
+    that.prepareAndSave();\n
+    that.instance.selection.transformStart(1, 0, null, true);\n
+    that.updateEditorData();\n
+    event.preventDefault();\n
+  });\n
+\n
+  this.eventManager.addEventListener(this.moveHandle, "touchstart", function(event) {\n
+    if (event.touches.length == 1) {\n
+      var touch = event.touches[0],\n
+        onTouchPosition = {\n
+          x: that.editorContainer.offsetLeft,\n
+          y: that.editorContainer.offsetTop\n
+        }, onTouchOffset = {\n
+          x: touch.pageX - onTouchPosition.x,\n
+          y: touch.pageY - onTouchPosition.y\n
+        };\n
+\n
+      that.eventManager.addEventListener(this, "touchmove", function(event) {\n
+        var touch = event.touches[0];\n
+        that.updateEditorPosition(touch.pageX - onTouchOffset.x, touch.pageY - onTouchOffset.y);\n
+        that.hideCellPointer();\n
+        event.preventDefault();\n
+      });\n
+\n
+    }\n
+  });\n
+\n
+  this.eventManager.addEventListener(document.body, "touchend", function(event) {\n
+    if (!isChildOf(event.target, that.editorContainer) && !isChildOf(event.target, that.instance.rootElement)) {\n
+      that.close();\n
+    }\n
+  });\n
+\n
+  this.eventManager.addEventListener(this.instance.view.wt.wtOverlays.leftOverlay.holder, "scroll", function(event) {\n
+    if (that.instance.view.wt.wtOverlays.leftOverlay.trimmingContainer != window) {\n
+      that.hideCellPointer();\n
+    }\n
+  });\n
+\n
+  this.eventManager.addEventListener(this.instance.view.wt.wtOverlays.topOverlay.holder, "scroll", function(event) {\n
+    if (that.instance.view.wt.wtOverlays.topOverlay.trimmingContainer != window) {\n
+      that.hideCellPointer();\n
+    }\n
+  });\n
+\n
+};\n
+\n
+MobileTextEditor.prototype.destroy = function() {\n
+  this.eventManager.clear();\n
+\n
+  this.editorContainer.parentNode.removeChild(this.editorContainer);\n
+};\n
+\n
+export {MobileTextEditor};\n
+\n
+registerEditor(\'mobile\', MobileTextEditor);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10899</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>mobileTextEditor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

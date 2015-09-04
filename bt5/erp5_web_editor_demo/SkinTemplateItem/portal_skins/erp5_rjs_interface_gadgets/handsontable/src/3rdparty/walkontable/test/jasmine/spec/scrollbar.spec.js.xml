@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272573.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>scrollbar.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'WalkontableScrollbar\', function () {\n
+  var $table\n
+    , $container\n
+    , $wrapper\n
+    , debug = false;\n
+\n
+  beforeEach(function () {\n
+    $wrapper = $(\'<div></div>\').css({\'overflow\': \'hidden\'});\n
+    $container = $(\'<div></div>\');\n
+    $table = $(\'<table></table>\'); //create a table that is not attached to document\n
+    $wrapper.append($container);\n
+    $container.append($table);\n
+    $wrapper.appendTo(\'body\');\n
+    createDataArray();\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (!debug) {\n
+      $(\'.wtHolder\').remove();\n
+    }\n
+    $wrapper.remove();\n
+  });\n
+\n
+  it("should table in DIV.wtHolder that contains 2 scrollbars", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+\n
+    expect($table.parents(\'.wtHolder\').length).toEqual(1);\n
+  });\n
+\n
+  it("scrolling should have no effect when totalRows is smaller than height", function () {\n
+    this.data.splice(5, this.data.length - 5);\n
+\n
+    try {\n
+      var wt = new Walkontable({\n
+        table: $table[0],\n
+        data: getData,\n
+        totalRows: getTotalRows,\n
+        totalColumns: getTotalColumns\n
+      });\n
+      wt.draw();\n
+\n
+      wt.wtOverlays.topOverlay.onScroll(1);\n
+      expect(wt.getViewport()[0]).toEqual(0);\n
+      wt.wtOverlays.topOverlay.onScroll(-1);\n
+      expect(wt.getViewport()[0]).toEqual(0);\n
+    }\n
+    catch (e) {\n
+      expect(e).toBeUndefined();\n
+    }\n
+  });\n
+\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1454</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>scrollbar.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

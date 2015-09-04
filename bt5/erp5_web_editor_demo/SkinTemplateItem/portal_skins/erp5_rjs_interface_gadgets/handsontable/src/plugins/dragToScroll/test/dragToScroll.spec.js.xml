@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272688.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dragToScroll.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//if (typeof DragToScroll === \'undefined\' && typeof require !== \'undefined\') {\n
+//  // having this allows you to run this test using:\n
+//  // jasmine-node src/plugins/dragToScroll/test/dragToScroll.spec.js\n
+//  eval(require(\'fs\').readFileSync(__dirname + \'/../dragToScroll.js\', \'utf8\'));\n
+//}\n
+\n
+describe("DragToScroll", function () {\n
+  function createBoundaries() {\n
+    return {\n
+      top: 100,\n
+      left: 100,\n
+      width: 900,\n
+      height: 900,\n
+      bottom: 1000,\n
+      right: 1000\n
+    };\n
+  }\n
+\n
+  if (typeof DragToScroll !== \'undefined\') {\n
+    var dragToScroll = new DragToScroll();\n
+  }\n
+  else {\n
+    var dragToScroll = new Handsontable.plugins.DragToScroll();\n
+  }\n
+  dragToScroll.setBoundaries(createBoundaries());\n
+\n
+  it(\'exact top, exact left should be in boundaries\', function () {\n
+    dragToScroll.setCallback(function (scrollX, scrollY) {\n
+      expect(scrollX).toEqual(0);\n
+      expect(scrollY).toEqual(0);\n
+    });\n
+\n
+    dragToScroll.check(100, 100);\n
+  });\n
+\n
+  it(\'exact bottom, exact right should be in boundaries\', function () {\n
+    dragToScroll.setCallback(function (scrollX, scrollY) {\n
+      expect(scrollX).toEqual(0);\n
+      expect(scrollY).toEqual(0);\n
+    });\n
+\n
+    dragToScroll.check(1000, 1000);\n
+  });\n
+\n
+  it(\'less than top, less than left should be out in "top" direction\', function () {\n
+    dragToScroll.setCallback(function (scrollX, scrollY) {\n
+      expect(scrollX).toEqual(-1);\n
+      expect(scrollY).toEqual(-1);\n
+    });\n
+\n
+    dragToScroll.check(99, 99);\n
+  });\n
+\n
+  it(\'exact top, less than left should be out in "left" direction\', function () {\n
+    dragToScroll.setCallback(function (scrollX, scrollY) {\n
+      expect(scrollX).toEqual(-1);\n
+      expect(scrollY).toEqual(0);\n
+    });\n
+\n
+    dragToScroll.check(99, 100);\n
+  });\n
+\n
+  it(\'less than top, more than right should be out in "top" direction\', function () {\n
+    dragToScroll.setCallback(function (scrollX, scrollY) {\n
+      expect(scrollX).toEqual(1);\n
+      expect(scrollY).toEqual(-1);\n
+    });\n
+\n
+    dragToScroll.check(1001, 99)\n
+  });\n
+\n
+  it(\'more than bottom, more than right should be out in "bottom" direction\', function () {\n
+    dragToScroll.setCallback(function (scrollX, scrollY) {\n
+      expect(scrollX).toEqual(1);\n
+      expect(scrollY).toEqual(1);\n
+    });\n
+\n
+    dragToScroll.check(1001, 1001);\n
+  });\n
+\n
+  it(\'exact bottom, more than right should be out in "right" direction\', function () {\n
+    dragToScroll.setCallback(function (scrollX, scrollY) {\n
+      expect(scrollX).toEqual(1);\n
+      expect(scrollY).toEqual(0);\n
+    });\n
+\n
+    dragToScroll.check(1001, 1000);\n
+  });\n
+\n
+  it(\'more than bottom, less than left should be out in "bottom" direction\', function () {\n
+    dragToScroll.setCallback(function (scrollX, scrollY) {\n
+      expect(scrollX).toEqual(-1);\n
+      expect(scrollY).toEqual(1);\n
+    });\n
+\n
+    dragToScroll.check(99, 1001);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2803</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dragToScroll.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

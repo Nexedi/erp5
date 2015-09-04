@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272705.83</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>itemsFactory.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {objectEach, isObject, extend} from \'./../../helpers/object\';\n
+import {arrayEach} from \'./../../helpers/array\';\n
+import {\n
+  SEPARATOR,\n
+  ITEMS,\n
+  predefinedItems\n
+} from \'./predefinedItems\';\n
+\n
+\n
+/**\n
+ * Predefined items class factory for menu items.\n
+ *\n
+ * @class ItemsFactory\n
+ * @plugin ContextMenu\n
+ */\n
+class ItemsFactory {\n
+  constructor(hotInstance, orderPattern = null) {\n
+    this.hot = hotInstance;\n
+    this.predefinedItems = predefinedItems();\n
+    this.defaultOrderPattern = orderPattern;\n
+  }\n
+\n
+  /**\n
+   * Set predefined items.\n
+   *\n
+   * @param {Array} predefinedItems\n
+   */\n
+  setPredefinedItems(predefinedItems) {\n
+    let items = {};\n
+\n
+    this.defaultOrderPattern.length = 0;\n
+\n
+    objectEach(predefinedItems, (value, key) => {\n
+      let menuItemKey = \'\';\n
+\n
+      if (value.name === SEPARATOR) {\n
+        items[SEPARATOR] = value;\n
+        menuItemKey = SEPARATOR;\n
+\n
+        // Menu item added as a property to array\n
+      } else if (isNaN(parseInt(key, 10))) {\n
+        value.key = value.key === void 0 ? key : value.key;\n
+        items[key] = value;\n
+        menuItemKey = value.key;\n
+\n
+      } else {\n
+        items[value.key] = value;\n
+        menuItemKey = value.key;\n
+      }\n
+      this.defaultOrderPattern.push(menuItemKey);\n
+    });\n
+    this.predefinedItems = items;\n
+  }\n
+\n
+  /**\n
+   * Get only visible menu items based on pattern.\n
+   *\n
+   * @param {Array|Object|Boolean} pattern Pattern which you can define by displaying menu items order. If `true` default\n
+   *                                       pattern will be used.\n
+   * @returns {Array}\n
+   */\n
+  getVisibleItems(pattern = null) {\n
+    let visibleItems = {};\n
+\n
+    objectEach(this.predefinedItems, (value, key) => {\n
+      if (!value.hidden || value.hidden && !value.hidden.apply(this.hot)) {\n
+        visibleItems[key] = value;\n
+      }\n
+    });\n
+\n
+    return getItems(pattern, this.defaultOrderPattern, visibleItems);\n
+  }\n
+\n
+  /**\n
+   * Get all menu items based on pattern.\n
+   *\n
+   * @param {Array|Object|Boolean} pattern Pattern which you can define by displaying menu items order. If `true` default\n
+   *                                       pattern will be used.\n
+   * @returns {Array}\n
+   */\n
+  getItems(pattern = null) {\n
+    return getItems(pattern, this.defaultOrderPattern, this.predefinedItems);\n
+  }\n
+}\n
+\n
+function getItems(pattern = null, defaultPattern = [], items = {}) {\n
+  let result = [];\n
+\n
+  if (pattern && pattern.items) {\n
+    pattern = pattern.items;\n
+\n
+  } else if (!Array.isArray(pattern)) {\n
+    pattern = defaultPattern;\n
+  }\n
+  if (isObject(pattern)) {\n
+    objectEach(pattern, (value, key) => {\n
+      let item = items[typeof value === \'string\' ? value : key];\n
+\n
+      if (!item) {\n
+        item = value;\n
+      }\n
+      if (isObject(value)) {\n
+        extend(item, value);\n
+\n
+      } else if (typeof item === \'string\') {\n
+        item = {name: item};\n
+      }\n
+      if (item.key === void 0) {\n
+        item.key = key;\n
+      }\n
+      result.push(item);\n
+    });\n
+  } else {\n
+    arrayEach(pattern, (name, key) => {\n
+      let item = items[name];\n
+\n
+      // Item deleted from settings `allowInsertRow: false` etc.\n
+      if (!item && ITEMS.indexOf(name) >= 0) {\n
+        return;\n
+      }\n
+      if (!item) {\n
+        item = {name, key: key + \'\'};\n
+      }\n
+      if (isObject(name)) {\n
+        extend(item, name);\n
+      }\n
+      if (item.key === void 0) {\n
+        item.key = key;\n
+      }\n
+      result.push(item);\n
+    });\n
+  }\n
+  // TODO: Add function which will be cut all separators on the begining\n
+  if (result[0].name === SEPARATOR) {\n
+    result.shift();\n
+  }\n
+\n
+  return result;\n
+}\n
+\n
+export {ItemsFactory};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3531</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>itemsFactory.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

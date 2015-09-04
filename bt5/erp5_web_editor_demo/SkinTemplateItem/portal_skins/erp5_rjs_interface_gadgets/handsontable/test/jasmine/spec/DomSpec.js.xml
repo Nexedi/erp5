@@ -1,0 +1,504 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272518.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>DomSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'Handsontable.Dom\', function () {\n
+\n
+  describe(\'offset\', function () {\n
+    var $window = $(window),\n
+      $forceScrollbar = $(\'<div id="forceScrollbar"></div>\').css({\n
+        position: \'absolute\',\n
+        height: \'4000px\',\n
+        width: \'4000px\',\n
+        top: 0,\n
+        left: 0\n
+      });\n
+\n
+    beforeEach(function () {\n
+      $forceScrollbar.appendTo(document.body);\n
+      this.$div = $(\'<div id="test"></div>\').appendTo($forceScrollbar);\n
+      this.div = this.$div[0];\n
+    });\n
+\n
+    afterEach(function () {\n
+      this.$div.remove();\n
+      $forceScrollbar.remove();\n
+    });\n
+\n
+    describe(\'top\', function () {\n
+      it("should return offset top with position absolute", function () {\n
+        this.$div.css({position: \'absolute\', top: 200});\n
+        expect(Handsontable.Dom.offset(this.div).top).toEqual(200);\n
+      });\n
+\n
+      it("should return offset top with position absolute & scrolled window", function () {\n
+        this.$div.css({position: \'absolute\', top: 200});\n
+        $window.scrollTop(1900);\n
+        expect(Handsontable.Dom.offset(this.div).top).toEqual(200);\n
+        $window.scrollTop(0);\n
+      });\n
+\n
+      it("should return offset top with position fixed", function () {\n
+        this.$div.css({position: \'fixed\', top: 200});\n
+        expect(Handsontable.Dom.offset(this.div).top).toEqual(200);\n
+      });\n
+\n
+      it("should return offset top with position fixed & scrolled window", function () {\n
+        this.$div.css({position: \'fixed\', top: 200});\n
+        $window.scrollTop(1900);\n
+        expect(Handsontable.Dom.offset(this.div).top).toEqual(2100); //this is the same jQuery offset returns\n
+        $window.scrollTop(0);\n
+      });\n
+    });\n
+\n
+    describe(\'left\', function () {\n
+      it("should return offset left with position absolute", function () {\n
+        this.$div.css({position: \'absolute\', left: 200});\n
+        expect(Handsontable.Dom.offset(this.div).left).toEqual(200);\n
+      });\n
+\n
+      it("should return offset left with position absolute & scrolled window", function () {\n
+        this.$div.css({position: \'absolute\', left: 200});\n
+        $window.scrollLeft(1900);\n
+        expect(Handsontable.Dom.offset(this.div).left).toEqual(200);\n
+        $window.scrollLeft(0);\n
+      });\n
+\n
+      it("should return offset left with position fixed", function () {\n
+        this.$div.css({position: \'fixed\', left: 200});\n
+        expect(Handsontable.Dom.offset(this.div).left).toEqual(200);\n
+      });\n
+\n
+      it("should return offset left with position fixed & scrolled window", function () {\n
+        this.$div.css({position: \'fixed\', left: 200});\n
+        $window.scrollLeft(1900);\n
+        expect(Handsontable.Dom.offset(this.div).left).toEqual(2100); //this is the same jQuery offset returns\n
+        $window.scrollLeft(0);\n
+      });\n
+    });\n
+  });\n
+\n
+  describe(\'isVisible\', function () {\n
+    it("should return true for appended table", function () {\n
+      var $table = $(\'<table></table>\').appendTo(\'body\');\n
+\n
+      expect(Handsontable.Dom.isVisible($table[0])).toBe(true);\n
+\n
+      $table.remove();\n
+    });\n
+\n
+    it("should return false for not appended table", function () {\n
+      var $table = $(\'<table></table>\');\n
+\n
+      expect(Handsontable.Dom.isVisible($table[0])).toBe(false);\n
+\n
+      $table.remove();\n
+    });\n
+\n
+    it("should return false for table with `display: none`", function () {\n
+      var $table = $(\'<table style="display: none"></table>\').appendTo(\'body\');\n
+\n
+      expect(Handsontable.Dom.isVisible($table[0])).toBe(false);\n
+\n
+      $table.remove();\n
+    });\n
+\n
+    it("should return false for table with parent `display: none`", function () {\n
+      var $div = $(\'<div style="display: none"></div>\').appendTo(\'body\');\n
+      var $table = $(\'<table></table>\').appendTo($div);\n
+\n
+      expect(Handsontable.Dom.isVisible($table[0])).toBe(false);\n
+\n
+      $table.remove();\n
+    });\n
+\n
+    it("should return false for something detached from DOM", function () {\n
+      var $table = $(\'<table><tr><td></td></tr></table>\').appendTo(\'body\');\n
+\n
+      var TD = $table.find(\'td\')[0];\n
+      var TR = TD.parentNode;\n
+      expect(Handsontable.Dom.isVisible(TD)).toBe(true);\n
+      TR.parentNode.removeChild(TR);\n
+      expect(Handsontable.Dom.isVisible(TD)).toBe(false);\n
+\n
+      $table.remove();\n
+    });\n
+  });\n
+\n
+  describe(\'outerHeight\', function () {\n
+    it(\'should return correct outerHeight for table\', function () {\n
+      var $table = $(\'<table style="border-width: 0;"><tbody><tr><td style="border: 1px solid black"><div style="height: 30px">test</div></td></tr></tbody></table>\').appendTo(\'body\');\n
+\n
+      expect(Handsontable.Dom.outerHeight($table[0])).toBe(38); //this is according to current stylesheet\n
+      expect($table.outerHeight()).toBe(38); //jQuery check to confirm\n
+\n
+      $table.remove();\n
+    });\n
+\n
+    it(\'should return correct outerHeight for table (with caption)\', function () {\n
+      var $table = $(\'<table style="border-width: 0;"><caption style="padding: 0; margin:0"><div style="height: 30px">caption</div></caption><tbody><tr><td style="border: 1px solid black"><div style="height: 30px">test</div></td></tr></tbody></table>\').appendTo(\'body\');\n
+\n
+      expect(Handsontable.Dom.outerHeight($table[0])).toBe(68); //this is according to current stylesheet\n
+      //expect($table.outerHeight()).toBe(68); //jQuery check is broken because of a bug in Firefox! (Firefox ignores caption, and so does jQuery)\n
+\n
+      $table.remove();\n
+    });\n
+  });\n
+\n
+  it(\'should return correct offset for table cell (table with caption)\', function () {\n
+    var $table = $(\'<table style="border-width: 0;"><caption style="padding: 0; margin:0"><div style="height: 30px">caption</div></caption><tbody><tr><td style="border: 1px solid black"><div style="height: 30px">test</div></td></tr></tbody></table>\').appendTo(\'body\');\n
+\n
+    var tableOffset = Handsontable.Dom.offset($table[0]);\n
+    var tdOffset = Handsontable.Dom.offset($table.find(\'td\')[0]);\n
+\n
+    expect(tdOffset.left - tableOffset.left).toBe(2); //this is according to current stylesheet\n
+    //expect($table.outerHeight()).toBe(68); //jQuery check is broken because of a bug in Firefox! (Firefox ignores caption, and so does jQuery)\n
+    expect(tdOffset.top - tableOffset.top).toBe(32); //this is according to current stylesheet\n
+    //expect($table.outerHeight()).toBe(68); //jQuery check is broken because of a bug in Firefox! (Firefox ignores caption, and so does jQuery)\n
+\n
+    $table.remove();\n
+  });\n
+\n
+  it("should return font size", function () {\n
+    var $html = $(\'<style>.bigText{font: 12px serif;}</style><div class="bigText"><span id="testable"></span></div>\').appendTo(\'body\');\n
+\n
+    var span = document.getElementById(\'testable\');\n
+    var compStyle = Handsontable.Dom.getComputedStyle(span);\n
+    expect(compStyle[\'fontSize\'], \'12px\');\n
+\n
+    $html.remove();\n
+  });\n
+\n
+  it("should return top border width", function () {\n
+    var $html = $(\'<style>.redBorder{border: 10px solid red;}</style><div class="redBorder" id="testable"></div>\').appendTo(\'body\');\n
+\n
+    var div = document.getElementById(\'testable\');\n
+    var compStyle = Handsontable.Dom.getComputedStyle(div);\n
+    expect(compStyle[\'borderTopWidth\'], \'10px\');\n
+\n
+    $html.remove();\n
+  });\n
+\n
+  it("should insert HTML properly", function () {\n
+    var $html = $(\'<div id="testable"></div>\').appendTo(\'body\');\n
+    var text = \'<span>test<br>test</span>\';\n
+    var div = document.getElementById(\'testable\');\n
+\n
+    Handsontable.Dom.fastInnerHTML(div, text);\n
+    Handsontable.Dom.fastInnerHTML(div, text);\n
+\n
+    expect(div.childNodes[0].childNodes.length).toEqual(3);\n
+\n
+    $html.remove();\n
+  });\n
+\n
+  it("should set the immediatePropagation properties properly for given event", function () {\n
+    var event = document.createEvent(\'MouseEvents\');\n
+    event.initMouseEvent(\'mousedown\',true,true,window, null, null, null, null, null, null, null, null, null ,null, null);\n
+\n
+    Handsontable.dom.stopImmediatePropagation(event);\n
+\n
+    expect(event.isImmediatePropagationEnabled).toBe(false);\n
+\n
+    expect(Handsontable.dom.isImmediatePropagationStopped(event)).toBe(true);\n
+  });\n
+\n
+  describe(\'getScrollableElement\', function() {\n
+    it("should return scrollable element with \'scroll\' value of \'overflow\', \'overflowX\' or \'overflowY\' property", function () {\n
+      var $html = $([\n
+        \'<div style="overflow: scroll"><span class="overflow"></span></div>\',\n
+        \'<div style="overflow-x: scroll"><span class="overflowX"></span></div>\',\n
+        \'<div style="overflow-y: scroll"><span class="overflowY"></span></div>\'\n
+      ].join(\'\')).appendTo(\'body\');\n
+\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.overflow\')[0])).toBe($html[0]);\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.overflowX\')[0])).toBe($html[1]);\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.overflowY\')[0])).toBe($html[2]);\n
+\n
+      $html.remove();\n
+    });\n
+\n
+    it("should return scrollable element with \'auto\' value of \'overflow\' or \'overflowY\' property", function () {\n
+      var $html = $([\n
+        \'<div style="overflow: auto; height: 50px;"><div class="knob" style="height: 100px"></div></div>\',\n
+        \'<div style="overflow-y: auto; height: 50px;"><div class="knob" style="height: 100px"></div></div>\',\n
+        \'<div style="overflow-y: auto; height: 50px;">\',\n
+          \'<div>\',\n
+            \'<div class="knob" style="height: 100px;"></div>\',\n
+          \'</div>\',\n
+        \'</div>\'\n
+      ].join(\'\')).appendTo(\'body\');\n
+\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.knob\')[0])).toBe($html[0]);\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.knob\')[1])).toBe($html[1]);\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.knob\')[2])).toBe($html[2]);\n
+\n
+      $html.remove();\n
+    });\n
+\n
+    it("should return scrollable element with \'auto\' value of \'overflow\' or \'overflowX\' property", function () {\n
+      var $html = $([\n
+        \'<div style="overflow: auto; width: 50px; height: 10px"><div class="knob" style="width: 100px; height: 5px"></div></div>\',\n
+        \'<div style="overflow-x: auto; width: 50px; height: 10px"><div class="knob" style="width: 100px; height: 5px"></div></div>\',\n
+        \'<div style="overflow-x: auto; width: 50px; height: 10px">\',\n
+          \'<div>\',\n
+            \'<div class="knob" style="width: 100px; height: 5px"></div>\',\n
+          \'</div>\',\n
+        \'</div>\'\n
+      ].join(\'\')).appendTo(\'body\');\n
+\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.knob\')[0])).toBe($html[0]);\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.knob\')[1])).toBe($html[1]);\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.knob\')[2])).toBe($html[2]);\n
+\n
+      $html.remove();\n
+    });\n
+\n
+    it("should return window object as scrollable element", function () {\n
+      var $html = $([\n
+        \'<div style="overflow: hidden; width: 50px; height: 10px"><div class="knob" style="width: 100px; height: 5px"></div></div>\',\n
+        \'<div style="width: 50px; height: 10px"><div class="knob" style="width: 100px; height: 5px"></div></div>\'\n
+      ].join(\'\')).appendTo(\'body\');\n
+\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.knob\')[0])).toBe(window);\n
+      expect(Handsontable.Dom.getScrollableElement($html.find(\'.knob\')[1])).toBe(window);\n
+\n
+      $html.remove();\n
+    });\n
+  });\n
+\n
+  //\n
+  // Handsontable.Dom.isChildOfWebComponentTable\n
+  //\n
+  describe(\'isChildOfWebComponentTable\', function() {\n
+    it("should return correct Boolean value depending on whether an element exists in `hot-table` or not", function () {\n
+      // skip if browser not support Shadow DOM natively\n
+      if (!document.createElement(\'div\').createShadowRoot) {\n
+        return;\n
+      }\n
+      var hotTable = document.createElement(\'hot-table\');\n
+      var outsideDiv = document.createElement(\'div\');\n
+\n
+      expect(Handsontable.Dom.isChildOfWebComponentTable(hotTable)).toBe(true);\n
+      expect(Handsontable.Dom.isChildOfWebComponentTable(outsideDiv)).toBe(false);\n
+\n
+      var hotTableDiv = document.createElement(\'div\');\n
+      hotTable.appendChild(hotTableDiv);\n
+\n
+      expect(Handsontable.Dom.isChildOfWebComponentTable(hotTableDiv)).toBe(true);\n
+\n
+      var fragment = document.createDocumentFragment();\n
+\n
+      expect(Handsontable.Dom.isChildOfWebComponentTable(fragment)).toBe(false);\n
+\n
+      var myElement = document.createElement(\'my-element\');\n
+\n
+      expect(Handsontable.Dom.isChildOfWebComponentTable(myElement)).toBe(false);\n
+\n
+      var shadowRoot = myElement.createShadowRoot();\n
+      var insideDiv = shadowRoot.appendChild(document.createElement(\'div\'));\n
+      hotTable.createShadowRoot().appendChild(myElement);\n
+\n
+      expect(Handsontable.Dom.isChildOfWebComponentTable(myElement)).toBe(true);\n
+      expect(Handsontable.Dom.isChildOfWebComponentTable(insideDiv)).toBe(true);\n
+    });\n
+  });\n
+\n
+  //\n
+  // Handsontable.Dom.polymerWrap\n
+  //\n
+  describe(\'polymerWrap\', function() {\n
+    it("should wrap element into polymer wrapper if exists", function () {\n
+      expect(Handsontable.Dom.polymerWrap(1)).toBe(1);\n
+\n
+      window.wrap = function() { return \'wrapped\'; };\n
+      window.Polymer = {};\n
+\n
+      expect(Handsontable.Dom.polymerWrap(1)).toBe(\'wrapped\');\n
+\n
+      // Test https://github.com/handsontable/handsontable/issues/2283\n
+      window.wrap = document.createElement(\'div\');\n
+\n
+      expect(Handsontable.Dom.polymerWrap(1)).toBe(1);\n
+\n
+      delete window.wrap;\n
+      delete window.Polymer;\n
+    });\n
+  });\n
+\n
+  //\n
+  // Handsontable.Dom.polymerUnwrap\n
+  //\n
+  describe(\'polymerUnwrap\', function() {\n
+    it("should unwrap element from polymer wrapper if exists", function () {\n
+      expect(Handsontable.Dom.polymerUnwrap(\'wrapped\')).toBe(\'wrapped\');\n
+\n
+      window.unwrap = function() { return 1; };\n
+      window.Polymer = {};\n
+\n
+      expect(Handsontable.Dom.polymerUnwrap(\'wrapped\')).toBe(1);\n
+\n
+      window.unwrap = document.createElement(\'div\');\n
+\n
+      expect(Handsontable.Dom.polymerUnwrap(\'wrapped\')).toBe(\'wrapped\');\n
+\n
+      delete window.unwrap;\n
+      delete window.Polymer;\n
+    });\n
+  });\n
+\n
+  //\n
+  // Handsontable.Dom.addClass\n
+  //\n
+  describe(\'addClass\', function() {\n
+    it("should add class names as string to an element", function () {\n
+      var element = document.createElement(\'div\');\n
+\n
+      expect(element.className).toBe(\'\');\n
+\n
+      Handsontable.Dom.addClass(element, \'test\');\n
+\n
+      expect(element.className).toBe(\'test\');\n
+\n
+      Handsontable.Dom.addClass(element, \'test test1 test2\');\n
+\n
+      expect(element.className).toBe(\'test test1 test2\');\n
+\n
+      Handsontable.Dom.addClass(element, \'test3\');\n
+\n
+      expect(element.className).toBe(\'test test1 test2 test3\');\n
+\n
+      Handsontable.Dom.addClass(element, \'\');\n
+\n
+      expect(element.className).toBe(\'test test1 test2 test3\');\n
+    });\n
+\n
+    it("should add class names as array to an element", function () {\n
+      var element = document.createElement(\'div\');\n
+\n
+      expect(element.className).toBe(\'\');\n
+\n
+      Handsontable.Dom.addClass(element, [\'test\']);\n
+\n
+      expect(element.className).toBe(\'test\');\n
+\n
+      Handsontable.Dom.addClass(element, [\'test1\', \'test2\', \'test3\']);\n
+\n
+      expect(element.className).toBe(\'test test1 test2 test3\');\n
+\n
+      Handsontable.Dom.addClass(element, \'test4\');\n
+\n
+      expect(element.className).toBe(\'test test1 test2 test3 test4\');\n
+\n
+      Handsontable.Dom.addClass(element, \'\');\n
+\n
+      expect(element.className).toBe(\'test test1 test2 test3 test4\');\n
+    });\n
+  });\n
+\n
+  //\n
+  // Handsontable.Dom.removeClass\n
+  //\n
+  describe(\'removeClass\', function() {\n
+    it("should remove class names as string from an element", function () {\n
+      var element = document.createElement(\'div\');\n
+\n
+      element.className = \'test test1 test2 test3 test4\';\n
+\n
+      Handsontable.Dom.removeClass(element, \'not-exists\');\n
+\n
+      expect(element.className).toBe(\'test test1 test2 test3 test4\');\n
+\n
+      Handsontable.Dom.removeClass(element, \'test\');\n
+\n
+      expect(element.className).toBe(\'test1 test2 test3 test4\');\n
+\n
+      Handsontable.Dom.removeClass(element, \'test test1 test4\');\n
+\n
+      expect(element.className).toBe(\'test2 test3\');\n
+\n
+      Handsontable.Dom.removeClass(element, \'\');\n
+\n
+      expect(element.className).toBe(\'test2 test3\');\n
+    });\n
+\n
+    it("should remove class names as array from an element", function () {\n
+      var element = document.createElement(\'div\');\n
+\n
+      element.className = \'test test1 test2 test3 test4\';\n
+\n
+      Handsontable.Dom.removeClass(element, [\'not-exists\']);\n
+\n
+      expect(element.className).toBe(\'test test1 test2 test3 test4\');\n
+\n
+      Handsontable.Dom.removeClass(element, [\'test\']);\n
+\n
+      expect(element.className).toBe(\'test1 test2 test3 test4\');\n
+\n
+      Handsontable.Dom.removeClass(element, [\'test\', \'test1\', \'test4\']);\n
+\n
+      expect(element.className).toBe(\'test2 test3\');\n
+\n
+      Handsontable.Dom.removeClass(element, [\'test\', \'\', \'\']);\n
+\n
+      expect(element.className).toBe(\'test2 test3\');\n
+    });\n
+  });\n
+\n
+  //\n
+  // Handsontable.Dom.hasClass\n
+  //\n
+  describe(\'hasClass\', function() {\n
+    it("should checks if an element has passed class name", function () {\n
+      var element = document.createElement(\'div\');\n
+\n
+      element.className = \'test test1 test2 test3 test4\';\n
+\n
+      expect(Handsontable.Dom.hasClass(element, \'not-exists\')).toBe(false);\n
+      expect(Handsontable.Dom.hasClass(element, \'test3\')).toBe(true);\n
+      expect(Handsontable.Dom.hasClass(element, \'test\')).toBe(true);\n
+      expect(Handsontable.Dom.hasClass(element, \'\')).toBe(false);\n
+    });\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17196</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>DomSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

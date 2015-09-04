@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272526.11</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>MobileSpecHelper.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var triggerTouchEvent = function (type, target, pageX, pageY) {\n
+  var e = document.createEvent(\'TouchEvent\');\n
+  var targetCoords = target.getBoundingClientRect();\n
+  var touches\n
+    , targetTouches\n
+    , changedTouches;\n
+\n
+  if(!pageX && !pageY) {\n
+    pageX = parseInt(targetCoords.left + 3,10);\n
+    pageY = parseInt(targetCoords.top + 3,10);\n
+  }\n
+\n
+  var touch = document.createTouch(window, target, 0, pageX, pageY, pageX, pageY);\n
+\n
+  if (type == \'touchend\') {\n
+    touches = document.createTouchList();\n
+    targetTouches = document.createTouchList();\n
+    changedTouches = document.createTouchList(touch);\n
+  } else {\n
+    touches = document.createTouchList(touch);\n
+    targetTouches = document.createTouchList(touch);\n
+    changedTouches = document.createTouchList(touch);\n
+  }\n
+\n
+  e.initTouchEvent(type, true, true, window, null, 0, 0, 0, 0, false, false, false, false, touches, targetTouches, changedTouches, 1, 0);\n
+  target.dispatchEvent(e);\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>939</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>MobileSpecHelper.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

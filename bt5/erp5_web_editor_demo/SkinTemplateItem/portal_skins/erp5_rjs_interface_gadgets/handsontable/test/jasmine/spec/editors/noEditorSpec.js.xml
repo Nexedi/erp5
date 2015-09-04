@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272537.3</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>noEditorSpec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'noEditor\', function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'" style="width: 300px; height: 200px; overflow: auto"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+  it(\'shouldn\\\'t begin editing when enterBeginsEditing equals true\', function () {\n
+    var\n
+      selection;\n
+\n
+    handsontable({\n
+      enterBeginsEditing: true,\n
+      editor: false\n
+    });\n
+    selectCell(2, 2);\n
+    keyDown(\'enter\');\n
+    selection = getSelected();\n
+\n
+    expect(selection).toEqual([2, 2, 2, 2]);\n
+    expect(isEditorVisible()).toEqual(false);\n
+  });\n
+\n
+  it(\'shouldn\\\'t move down after editing\', function () {\n
+    var\n
+      selection;\n
+\n
+    handsontable({\n
+      editor: false\n
+    });\n
+    selectCell(2, 2);\n
+    keyDown(\'enter\');\n
+    keyDown(\'enter\');\n
+    selection = getSelected();\n
+\n
+    expect(selection).toEqual([2, 2, 2, 2]);\n
+  });\n
+\n
+  it(\'shouldn\\\'t move down when enterBeginsEditing equals false\', function () {\n
+    var\n
+      selection;\n
+\n
+    handsontable({\n
+      enterBeginsEditing: false,\n
+      editor: false\n
+    });\n
+    selectCell(2, 2);\n
+    keyDown(\'enter\');\n
+    selection = getSelected();\n
+\n
+    expect(selection).toEqual([3, 2, 3, 2]);\n
+    expect(isEditorVisible()).toEqual(false);\n
+  });\n
+\n
+  it(\'shouldn\\\'t render any value in editor\', function () {\n
+    handsontable({\n
+      editor: false\n
+    });\n
+    setDataAtCell(2, 2, "string");\n
+    selectCell(2, 2);\n
+    keyDown(\'enter\');\n
+\n
+    expect(keyProxy().length).toEqual(0);\n
+  });\n
+\n
+  it(\'shouldn\\\'t open editor after hitting F2\', function () {\n
+    handsontable({\n
+      editor: false\n
+    });\n
+    selectCell(2, 2);\n
+\n
+    expect(isEditorVisible()).toEqual(false);\n
+\n
+    keyDown(\'f2\');\n
+\n
+    expect(isEditorVisible()).toEqual(false);\n
+  });\n
+\n
+  it(\'shouldn\\\'t open editor after hitting CapsLock\', function () {\n
+    handsontable({\n
+      editor: false\n
+    });\n
+    selectCell(2, 2);\n
+\n
+    expect(isEditorVisible()).toEqual(false);\n
+\n
+    keyDown(Handsontable.helper.KEY_CODES.CAPS_LOCK);\n
+\n
+    expect(isEditorVisible()).toEqual(false);\n
+  });\n
+\n
+  it(\'shouldn\\\'t open editor after double clicking on a cell\', function () {\n
+    var\n
+      hot = handsontable({\n
+        data: Handsontable.helper.createSpreadsheetData(5, 2),\n
+        editor: false\n
+      }),\n
+      cell, clicks = 0;\n
+\n
+    cell = $(getCell(0, 0));\n
+    clicks = 0;\n
+    window.scrollTo(0, cell.offset().top);\n
+\n
+    setTimeout(function () {\n
+      mouseDown(cell);\n
+      mouseUp(cell);\n
+      clicks++;\n
+    }, 0);\n
+\n
+    setTimeout(function () {\n
+      mouseDown(cell);\n
+      mouseUp(cell);\n
+      clicks++;\n
+    }, 100);\n
+\n
+    waitsFor(function () {\n
+      return clicks == 2;\n
+    }, \'Two clicks\', 1000);\n
+\n
+    runs(function () {\n
+      expect(hot.getActiveEditor()).toBe(undefined);\n
+      expect(isEditorVisible()).toBe(false);\n
+    });\n
+  });\n
+\n
+  it("shouldn\\\'t open editor after pressing a printable character", function () {\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(3, 3),\n
+      editor: false\n
+    });\n
+    selectCell(0, 0);\n
+\n
+    expect(isEditorVisible()).toBe(false);\n
+\n
+    this.$container.simulate(\'keydown\', {keyCode: \'a\'.charCodeAt(0)});\n
+\n
+    expect(isEditorVisible()).toBe(false);\n
+  });\n
+\n
+  it("shouldn\\\'t open editor after pressing a printable character with shift key", function () {\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(3, 3),\n
+      editor: false\n
+    });\n
+    selectCell(0, 0);\n
+\n
+    expect(isEditorVisible()).toBe(false);\n
+\n
+    this.$container.simulate(\'keydown\', {keyCode: \'a\'.charCodeAt(0), shiftKey: true});\n
+\n
+    expect(isEditorVisible()).toBe(false);\n
+  });\n
+\n
+  it("shouldn\\\'t not open editor after hitting ALT", function () {\n
+    handsontable({\n
+      data: Handsontable.helper.createSpreadsheetData(4, 4),\n
+      editor: false\n
+    });\n
+    expect(getDataAtCell(0, 0)).toEqual(\'A1\');\n
+\n
+    selectCell(0, 0);\n
+    keyDown(Handsontable.helper.KEY_CODES.ALT);\n
+\n
+    expect(isEditorVisible()).toBe(false);\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4000</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>noEditorSpec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

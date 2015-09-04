@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272448.43</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>handsontable.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Handsontable cell type - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies)\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Handsontable cell type">\n
+  <meta property="og:description"\n
+        content="This page shows very specific example of using Handsontable as a cell editor in Handsontable.">\n
+  <meta property="og:url" content="http://handsontable.com/demo/handsontable.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/handsontable.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+\n
+  <script data-jsfiddle="common">\n
+    function getCarData() {\n
+      return [\n
+        ["Nissan", 2009, "black", "black"],\n
+        ["Nissan", 2006, "blue", "blue"],\n
+        ["Chrysler", 2004, "yellow", "black"],\n
+        ["Volvo", 2012, "white", "gray"]\n
+      ];\n
+    }\n
+  </script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+      <div class="descLayout">\n
+        <div class="pad" data-jsfiddle="example1">\n
+          <a name="lazy"></a>\n
+\n
+          <h2>Handsontable cell type</h2>\n
+\n
+          <p>This page shows using Handsontable as a cell editor in Handsontable (sometimes\n
+            referred as <strong>HOT-in-HOT</strong>).</p>\n
+\n
+          <p>HOT-in-HOT opens by any of the following:</p>\n
+\n
+          <ul>\n
+            <li><kbd>F2</kbd> or <kbd>ENTER</kbd> key is pressed while the cell is selected,</li>\n
+            <li>the triangle icon is clicked,</li>\n
+            <li>the cell content is double clicked.</li>\n
+          </ul>\n
+\n
+          <p>While HOT-in-HOT is opened, the text field above the HOT-in-HOT remains focused at all times.</p>\n
+\n
+          <p>Keyboard bindings while the HOT-in-HOT is opened:</p>\n
+\n
+          <ul>\n
+            <li><kbd>ESC</kbd> - close editor (cancel change),</li>\n
+            <li><kbd>ENTER</kbd> - close editor (apply change*), move the selection in the main HOT downwards (or according to <code>enterMoves</code> setting)</li>\n
+            <li><kbd>TAB</kbd> - behave as the ENTER key, but move the selection in the main HOT to the right (or according to <code>tabMoves</code> setting)</li>\n
+            <li><kbd>Arrow down</kbd> - move the selection in HOT-in-HOT downwards. If the last row was selected, has no effect.</li>\n
+            <li><kbd>Arrow up</kbd> - move the selection in HOT-in-HOT upwards. If the first row was selected, deselect. If HOT-in-HOT was deselected, behave as the ENTER key but move the selection in the main HOT upwards</li>\n
+            <li><kbd>Arrow right</kbd> - move the text cursor in the text field to the left. If the text cursor was at the start position, behave as the ENTER key but move the selection in the main HOT to the left</li>\n
+            <li><kbd>Arrow left</kbd> - move the text cursor in the text field to the right. If the text cursor was at the end position, behave as the TAB key</li>\n
+          </ul>\n
+\n
+          <p>Mouse click outside of the editor or on one of the cells in HOT-in-HOT applies change.</p>\n
+\n
+          <p><strong>*apply change</strong> means: The value of the cell highlighted or clicked in HOT-in-HOT is applied as new cell value in the main HOT. If no cell in HOT-in-HOT is selected, the value of the text field is used instead.</p>\n
+\n
+          <div id="example1"></div>\n
+\n
+          <p>\n
+            <button name="dump" data-dump="#example1" data-instance="hot" title="Prints current data source to Firebug/Chrome Dev Tools">\n
+              Dump\n
+              data to console\n
+            </button>\n
+          </p>\n
+        </div>\n
+      </div>\n
+\n
+      <div class="codeLayout">\n
+        <div class="pad">\n
+          <div class="jsFiddle">\n
+            <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+          </div>\n
+\n
+          <script data-jsfiddle="example1">\n
+            var carData = getCarData(),\n
+              container = document.getElementById(\'example1\'),\n
+              manufacturerData,\n
+              colors,\n
+              color,\n
+              colorData = [],\n
+              hot;\n
+\n
+            manufacturerData = [\n
+              {name: \'BMW\', country: \'Germany\', owner: \'Bayerische Motoren Werke AG\'},\n
+              {name: \'Chrysler\', country: \'USA\', owner: \'Chrysler Group LLC\'},\n
+              {name: \'Nissan\', country: \'Japan\', owner: \'Nissan Motor Company Ltd\'},\n
+              {name: \'Suzuki\', country: \'Japan\', owner: \'Suzuki Motor Corporation\'},\n
+              {name: \'Toyota\', country: \'Japan\', owner: \'Toyota Motor Corporation\'},\n
+              {name: \'Volvo\', country: \'Sweden\', owner: \'Zhejiang Geely Holding Group\'}\n
+            ];\n
+            colors = [\'yellow\', \'red\', \'orange\', \'green\', \'blue\', \'gray\', \'black\', \'white\'];\n
+\n
+            while (color = colors.shift()) {\n
+              colorData.push([\n
+                [color]\n
+              ]);\n
+            }\n
+\n
+            hot = new Handsontable(container, {\n
+              data: carData,\n
+              startRows: 7,\n
+              startCols: 4,\n
+              colHeaders: [\'Car\', \'Year\', \'Chassis color\', \'Bumper color\'],\n
+              columns: [\n
+                {\n
+                  type: \'handsontable\',\n
+                  handsontable: {\n
+                    colHeaders: [\'Marque\', \'Country\', \'Parent company\'],\n
+                    data: manufacturerData\n
+                  }\n
+                },\n
+                {type: \'numeric\'},\n
+                {\n
+                  type: \'handsontable\',\n
+                  handsontable: {\n
+                    colHeaders: false,\n
+                    data: colorData\n
+                  }\n
+                },\n
+                {\n
+                  type: \'handsontable\',\n
+                  handsontable: {\n
+                    colHeaders: false,\n
+                    data: colorData\n
+                  }\n
+                }\n
+              ]\n
+            });\n
+          </script>\n
+        </div>\n
+      </div>\n
+    </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7533</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>handsontable.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272655.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>manualColumnResize.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {addClass, hasClass, removeClass} from \'./../../helpers/dom/element\';\n
+import {eventManager as eventManagerObject} from \'./../../eventManager\';\n
+import {pageX, pageY} from \'./../../helpers/dom/event\';\n
+import {registerPlugin} from \'./../../plugins\';\n
+\n
+export {ManualColumnResize};\n
+\n
+//registerPlugin(\'manualColumnResize\', ManualColumnResize);\n
+\n
+/**\n
+ * HandsontableManualColumnResize\n
+ *\n
+ * Has 2 UI components:\n
+ * - handle - the draggable element that sets the desired width of the column\n
+ * - guide - the helper guide that shows the desired width as a vertical guide\n
+ *\n
+ * Warning! Whenever you make a change in this file, make an analogous change in manualRowResize.js\n
+ *\n
+ * @private\n
+ * @class ManualColumnResize\n
+ * @plugin ManualColumnResize\n
+ */\n
+function ManualColumnResize() {\n
+  var currentTH, currentCol, currentWidth, instance, newSize, startX, startWidth, startOffset, handle = document.createElement(\'DIV\'),\n
+    guide = document.createElement(\'DIV\'),\n
+    eventManager = eventManagerObject(this);\n
+\n
+\n
+  handle.className = \'manualColumnResizer\';\n
+  guide.className = \'manualColumnResizerGuide\';\n
+\n
+  var saveManualColumnWidths = function() {\n
+    var instance = this;\n
+    Handsontable.hooks.run(instance, \'persistentStateSave\', \'manualColumnWidths\', instance.manualColumnWidths);\n
+  };\n
+\n
+  var loadManualColumnWidths = function() {\n
+    var instance = this;\n
+    var storedState = {};\n
+    Handsontable.hooks.run(instance, \'persistentStateLoad\', \'manualColumnWidths\', storedState);\n
+    return storedState.value;\n
+  };\n
+\n
+  function setupHandlePosition(TH) {\n
+    instance = this;\n
+    currentTH = TH;\n
+\n
+    var col = this.view.wt.wtTable.getCoords(TH).col; //getCoords returns WalkontableCellCoords\n
+    if (col >= 0) { //if not row header\n
+      currentCol = col;\n
+      var box = currentTH.getBoundingClientRect();\n
+      startOffset = box.left - 6;\n
+      startWidth = parseInt(box.width, 10);\n
+      handle.style.top = box.top + \'px\';\n
+      handle.style.left = startOffset + startWidth + \'px\';\n
+      instance.rootElement.appendChild(handle);\n
+    }\n
+  }\n
+\n
+  function refreshHandlePosition() {\n
+    handle.style.left = startOffset + currentWidth + \'px\';\n
+  }\n
+\n
+  function setupGuidePosition() {\n
+    var instance = this;\n
+    addClass(handle, \'active\');\n
+    addClass(guide, \'active\');\n
+    guide.style.top = handle.style.top;\n
+    guide.style.left = handle.style.left;\n
+    guide.style.height = instance.view.maximumVisibleElementHeight(0) + \'px\';\n
+    instance.rootElement.appendChild(guide);\n
+  }\n
+\n
+  function refreshGuidePosition() {\n
+    guide.style.left = handle.style.left;\n
+  }\n
+\n
+  function hideHandleAndGuide() {\n
+    removeClass(handle, \'active\');\n
+    removeClass(guide, \'active\');\n
+  }\n
+\n
+  var checkColumnHeader = function(element) {\n
+    if (element.tagName != \'BODY\') {\n
+      if (element.parentNode.tagName == \'THEAD\') {\n
+        return true;\n
+      } else {\n
+        element = element.parentNode;\n
+        return checkColumnHeader(element);\n
+      }\n
+    }\n
+    return false;\n
+  };\n
+\n
+  var getTHFromTargetElement = function(element) {\n
+    if (element.tagName != \'TABLE\') {\n
+      if (element.tagName == \'TH\') {\n
+        return element;\n
+      } else {\n
+        return getTHFromTargetElement(element.parentNode);\n
+      }\n
+    }\n
+    return null;\n
+  };\n
+\n
+  var bindEvents = function() {\n
+    var instance = this;\n
+    var pressed;\n
+    var dblclick = 0;\n
+    var autoresizeTimeout = null;\n
+\n
+    eventManager.addEventListener(instance.rootElement, \'mouseover\', function(e) {\n
+      if (checkColumnHeader(e.target)) {\n
+        var th = getTHFromTargetElement(e.target);\n
+        if (th) {\n
+          if (!pressed) {\n
+            setupHandlePosition.call(instance, th);\n
+          }\n
+        }\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(instance.rootElement, \'mousedown\', function(e) {\n
+      if (hasClass(e.target, \'manualColumnResizer\')) {\n
+        setupGuidePosition.call(instance);\n
+        pressed = instance;\n
+\n
+        if (autoresizeTimeout == null) {\n
+          autoresizeTimeout = setTimeout(function() {\n
+            if (dblclick >= 2) {\n
+              var hookNewSize = Handsontable.hooks.run(instance, \'beforeColumnResize\', currentCol, newSize, true);\n
+\n
+              if (hookNewSize !== void 0) {\n
+                newSize = hookNewSize;\n
+              }\n
+              setManualSize(currentCol, newSize);\n
+              instance.forceFullRender = true;\n
+              instance.view.render(); //updates all\n
+              instance.view.wt.wtOverlays.adjustElementsSize(true);\n
+              Handsontable.hooks.run(instance, \'afterColumnResize\', currentCol, newSize, true);\n
+            }\n
+            dblclick = 0;\n
+            autoresizeTimeout = null;\n
+          }, 500);\n
+          instance._registerTimeout(autoresizeTimeout);\n
+        }\n
+        dblclick++;\n
+\n
+        startX = pageX(e);\n
+        newSize = startWidth;\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(window, \'mousemove\', function(e) {\n
+      if (pressed) {\n
+        currentWidth = startWidth + (pageX(e) - startX);\n
+        newSize = setManualSize(currentCol, currentWidth); //save col width\n
+        refreshHandlePosition();\n
+        refreshGuidePosition();\n
+      }\n
+    });\n
+\n
+    eventManager.addEventListener(window, \'mouseup\', function() {\n
+      if (pressed) {\n
+        hideHandleAndGuide();\n
+        pressed = false;\n
+\n
+        if (newSize != startWidth) {\n
+          Handsontable.hooks.run(instance, \'beforeColumnResize\', currentCol, newSize);\n
+          instance.forceFullRender = true;\n
+          instance.view.render(); //updates all\n
+          instance.view.wt.wtOverlays.adjustElementsSize(true);\n
+\n
+          saveManualColumnWidths.call(instance);\n
+\n
+          Handsontable.hooks.run(instance, \'afterColumnResize\', currentCol, newSize);\n
+        }\n
+\n
+        setupHandlePosition.call(instance, currentTH);\n
+      }\n
+    });\n
+\n
+    instance.addHook(\'afterDestroy\', unbindEvents);\n
+  };\n
+\n
+  var unbindEvents = function() {\n
+    eventManager.clear();\n
+  };\n
+\n
+  this.init = function(source) {\n
+    this.manualColumnWidths = [];\n
+\n
+    var instance = this;\n
+    var manualColumnWidthEnabled = !! (this.getSettings().manualColumnResize);\n
+\n
+    if (manualColumnWidthEnabled) {\n
+      var initialColumnWidths = this.getSettings().manualColumnResize;\n
+      var loadedManualColumnWidths = loadManualColumnWidths.call(instance);\n
+\n
+      // update plugin usages count for manualColumnPositions\n
+      if (typeof instance.manualColumnWidthsPluginUsages != \'undefined\') {\n
+        instance.manualColumnWidthsPluginUsages.push(\'manualColumnResize\');\n
+      } else {\n
+        instance.manualColumnWidthsPluginUsages = [\'manualColumnResize\'];\n
+      }\n
+\n
+      if (typeof loadedManualColumnWidths != \'undefined\') {\n
+        this.manualColumnWidths = loadedManualColumnWidths;\n
+      } else if (Array.isArray(initialColumnWidths)) {\n
+        this.manualColumnWidths = initialColumnWidths;\n
+      } else {\n
+        this.manualColumnWidths = [];\n
+      }\n
+\n
+      if (!source) {\n
+        bindEvents.call(this);\n
+      }\n
+    } else {\n
+      var pluginUsagesIndex = instance.manualColumnWidthsPluginUsages ? instance.manualColumnWidthsPluginUsages.indexOf(\'manualColumnResize\') : -1;\n
+\n
+      if (pluginUsagesIndex > -1) {\n
+        unbindEvents.call(this);\n
+        this.manualColumnWidths = [];\n
+      }\n
+    }\n
+  };\n
+\n
+\n
+  var setManualSize = function(col, width) {\n
+    width = Math.max(width, 20);\n
+\n
+    /**\n
+     *  We need to run col through modifyCol hook, in case the order of displayed columns is different than the order\n
+     *  in data source. For instance, this order can be modified by manualColumnMove plugin.\n
+     */\n
+    col = Handsontable.hooks.run(instance, \'modifyCol\', col);\n
+    instance.manualColumnWidths[col] = width;\n
+\n
+    return width;\n
+  };\n
+\n
+  this.modifyColWidth = function(width, col) {\n
+    col = this.runHooks(\'modifyCol\', col);\n
+\n
+    if (this.getSettings().manualColumnResize && this.manualColumnWidths[col]) {\n
+      return this.manualColumnWidths[col];\n
+    }\n
+\n
+    return width;\n
+  };\n
+}\n
+var htManualColumnResize = new ManualColumnResize();\n
+\n
+Handsontable.hooks.add(\'init\', htManualColumnResize.init);\n
+Handsontable.hooks.add(\'afterUpdateSettings\', function () {\n
+  htManualColumnResize.init.call(this, \'afterUpdateSettings\');\n
+});\n
+Handsontable.hooks.add(\'modifyColWidth\', htManualColumnResize.modifyColWidth);\n
+\n
+Handsontable.hooks.register(\'afterColumnResize\');\n
+Handsontable.hooks.register(\'beforeColumnResize\');\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8268</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>manualColumnResize.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

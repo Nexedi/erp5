@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272482.02</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>heatmaps.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Heatmaps - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+  <script data-jsfiddle="common" src="bower_components/chroma-js/chroma.min.js"></script>\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Heatmaps for values in a column">\n
+  <meta property="og:description"\n
+        content="">\n
+  <meta property="og:url" content="http://handsontable.com/demo/heatmaps.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/heatmaps.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+      <div class="descLayout">\n
+        <div class="pad" data-jsfiddle="example1">\n
+          <a name="lazy"></a>\n
+\n
+          <h2>Heatmaps for values in a column</h2>\n
+\n
+          <p>\n
+            The following demo shows an example of using heatmaps for the values in tha grid\'s columns.\n
+          </p>\n
+\n
+          <p>\n
+            Changing the values in the grid automatically recalculates the font color for the whole column, thereby\n
+            updating a heatmap.\n
+          </p>\n
+\n
+          <p>\n
+            The dynamic color scale calculation is done using the excellent <a href="http://driven-by-data.net/about/chromajs">Chroma.js</a>.\n
+          </p>\n
+\n
+          <div id="example1"></div>\n
+\n
+        </div>\n
+      </div>\n
+\n
+      <div class="codeLayout">\n
+        <div class="pad">\n
+          <div class="jsFiddle">\n
+            <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+          </div>\n
+\n
+          <script data-jsfiddle="example1">\n
+            var data = [\n
+                [2002, 190251, 5090, 195341],\n
+                [2003, 224495, 6486, 230981],\n
+                [2004, 254044, 6765, 260809],\n
+                [2005, 254099, 7521, 261620],\n
+                [2006, 271108, 9449, 280557],\n
+                [2007, 280565, 11714, 292279],\n
+                [2008, 284120, 11292, 295412],\n
+                [2009, 279742, 11468, 291210],\n
+                [2010, 290411, 11806, 302217],\n
+                [2011, 290652, 10891, 301543],\n
+                [2012, 283863, 10402, 294265],\n
+                [2013, 267646, 10104, 255850]\n
+              ],\n
+              container = document.getElementById(\'example1\'),\n
+              lastChange = null,\n
+              heatmap,\n
+              heatmapScale,\n
+              hot;\n
+\n
+            heatmapScale  = chroma.scale([\'#17F556\', \'#ED6D47\']);\n
+\n
+            hot = new Handsontable(container,{\n
+              data: data,\n
+              colHeaders: ["Year", "Domestic Flights", "International Flights", "Total Flights"],\n
+              columns: [\n
+                {\n
+                  type: \'numeric\'\n
+                },\n
+                {\n
+                  type: \'numeric\',\n
+                  format: \'0,0\',\n
+                  renderer: heatmapRenderer\n
+                },\n
+                {\n
+                  type: \'numeric\',\n
+                  format: \'0,0\',\n
+                  renderer: heatmapRenderer\n
+                },\n
+                {\n
+                  type: \'numeric\',\n
+                  format: \'0,0\',\n
+                  renderer: heatmapRenderer\n
+                },\n
+              ],\n
+              afterLoadData: updateHeatmap,\n
+              beforeChangeRender: updateHeatmap\n
+            });\n
+\n
+            function updateHeatmap(change, source) {\n
+              if (change) {\n
+                heatmap[change[0][1]] = generateHeatmapData.call(this, change[0][1]);\n
+              } else {\n
+                heatmap = [];\n
+\n
+                for(var i = 1, colCount = this.countCols(); i < colCount ; i++) {\n
+                  heatmap[i] = generateHeatmapData.call(this, i);\n
+                }\n
+              }\n
+            }\n
+\n
+            function point(min, max, value) {\n
+              return (value - min) / (max - min);\n
+            }\n
+\n
+            function generateHeatmapData(colId) {\n
+              var values = this.getDataAtCol(colId);\n
+\n
+              return {\n
+                min: Math.min.apply(null, values),\n
+                max: Math.max.apply(null, values)\n
+              };\n
+            }\n
+\n
+            function heatmapRenderer(instance, td, row, col, prop, value, cellProperties) {\n
+              Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+\n
+              if (heatmap[col]) {\n
+                td.style.backgroundColor = heatmapScale(point(heatmap[col].min, heatmap[col].max, parseInt(value, 10))).hex();\n
+                td.style.textAlign = \'right\';\n
+                td.style.fontWeight = \'bold\';\n
+              }\n
+            }\n
+          </script>\n
+        </div>\n
+      </div>\n
+    </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6285</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>heatmaps.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,559 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272305.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>renderers_html.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Custom HTML in cells and headers - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies)\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <script src="js/moment/moment.js"></script>\n
+  <script src="js/pikaday/pikaday.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+  <link rel="stylesheet" href="js/pikaday/css/pikaday.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Custom HTML in cells and headers">\n
+  <meta property="og:description"\n
+        content="This example shows how to use custom cell renderers to display HTML content in a cell and header.">\n
+  <meta property="og:url" content="http://handsontable.com/demo/reference_html.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/reference_html.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+<div class="wrapper-row">\n
+<div id="global-menu-clone">\n
+  <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+</div>\n
+\n
+<div id="container">\n
+<div class="columnLayout">\n
+\n
+<div class="rowLayout">\n
+  <div class="descLayout">\n
+    <div class="pad">\n
+      <h2>Custom HTML in cells and headers</h2>\n
+\n
+      <p>On this page:</p>\n
+\n
+      <ul>\n
+        <li><a href="#cell">Rendering custom HTML in cells</a></li>\n
+        <li><a href="#header">Rendering custom HTML in header</a></li>\n
+        <li><a href="#dropdown">Changing cell type from a dropdown menu in cell header</a></li>\n
+      </ul>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div class="rowLayout">\n
+  <div class="descLayout">\n
+    <div class="pad" data-jsfiddle="example1">\n
+      <a name="cell"></a>\n
+\n
+      <h2>Rendering custom HTML in cells</h2>\n
+\n
+      <p>This example shows how to use custom cell renderers to display HTML content in a cell.</p>\n
+\n
+      <p>This is a very powerful feature. Just remember to escape any HTML code that could be used for XSS\n
+        attacks.</p>\n
+\n
+      <p>In the below configuration:</p>\n
+\n
+      <ul>\n
+        <li><strong>Title</strong> column uses built-in HTML renderer that allows any HTML. This is unsafe if your code comes from untrusted source. Take notice that a Handsontable user can use it to enter <code>&lt;script&gt;</code> or other potentially malicious tags using the cell editor!</li>\n
+        <li><strong>Description</strong> column also uses HTML renderer (same as above)</li>\n
+        <li><strong>Comments</strong> column uses a custom renderer (<code>safeHtmlRenderer</code>). This should be safe for user input, because only certain tags are allowed</li>\n
+        <li><strong>Cover</strong> column accepts image URL as a string and converts it to a <code>&lt;img&gt;</code> in the renderer</li>\n
+      </ul>\n
+\n
+      <div id="example1"></div>\n
+\n
+      <p>\n
+        <button name="dump" data-dump="#example1" data-instance="hot1" title="Prints current data source to Firebug/Chrome Dev Tools">\n
+          Dump data to console\n
+        </button>\n
+      </p>\n
+    </div>\n
+  </div>\n
+\n
+  <div class="codeLayout">\n
+    <div class="pad">\n
+      <div class="jsFiddle">\n
+        <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+      </div>\n
+\n
+      <script data-jsfiddle="example1">\n
+        var data = [\n
+            {\n
+              title: "<a href=\'http://www.amazon.com/Professional-JavaScript-Developers-Nicholas-Zakas/dp/1118026691\'>Professional JavaScript for Web Developers</a>",\n
+              description: "This <a href=\'http://bit.ly/sM1bDf\'>book</a> provides a developer-level introduction along with more advanced and useful features of <b>JavaScript</b>.",\n
+              comments: "I would rate it &#x2605;&#x2605;&#x2605;&#x2605;&#x2606;",\n
+              cover: "http://ecx.images-amazon.com/images/I/51bRhyVTVGL._SL50_.jpg"\n
+            },\n
+            {\n
+              title: "<a href=\'http://shop.oreilly.com/product/9780596517748.do\'>JavaScript: The Good Parts</a>",\n
+              description: "This book provides a developer-level introduction along with <b>more advanced</b> and useful features of JavaScript.",\n
+              comments: "This is <big>the</big> book about JavaScript",\n
+              cover: "http://ecx.images-amazon.com/images/I/51gdVAEfPUL._SL50_.jpg"\n
+            },\n
+            {\n
+              title: "<a href=\'http://shop.oreilly.com/product/9780596805531.do\'>JavaScript: The Definitive Guide</a>",\n
+              description: "<em>JavaScript: The Definitive Guide</em> provides a thorough description of the core <b>JavaScript</b> language and both the legacy and standard DOMs implemented in web browsers.",\n
+              comments: "I\'ve never actually read it, but the <a href=\'http://shop.oreilly.com/product/9780596805531.do\'>comments</a> are highly <strong>positive</strong>.",\n
+              cover: "http://ecx.images-amazon.com/images/I/51VFNL4T7kL._SL50_.jpg"\n
+            }\n
+          ],\n
+          container1,\n
+          hot1;\n
+\n
+        container1 = document.getElementById(\'example1\');\n
+        hot1 = new Handsontable(container1, {\n
+          data: data,\n
+          colWidths: [200, 200, 200, 60],\n
+          colHeaders: ["Title", "Description", "Comments", "Cover"],\n
+          columns: [\n
+            {data: "title", renderer: "html"},\n
+            {data: "description", renderer: "html"},\n
+            {data: "comments", renderer: safeHtmlRenderer},\n
+            {data: "cover", renderer: coverRenderer}\n
+          ]\n
+        });\n
+\n
+        // original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)\n
+        function strip_tags(input, allowed) {\n
+          var tags = /<\\/?([a-z][a-z0-9]*)\\b[^>]*>/gi,\n
+            commentsAndPhpTags = /<!--[\\s\\S]*?-->|<\\?(?:php)?[\\s\\S]*?\\?>/gi;\n
+\n
+          // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)\n
+          allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join(\'\');\n
+\n
+          return input.replace(commentsAndPhpTags, \'\').replace(tags, function ($0, $1) {\n
+            return allowed.indexOf(\'<\' + $1.toLowerCase() + \'>\') > -1 ? $0 : \'\';\n
+          });\n
+        }\n
+\n
+        function safeHtmlRenderer(instance, td, row, col, prop, value, cellProperties) {\n
+          var escaped = Handsontable.helper.stringify(value);\n
+          escaped = strip_tags(escaped, \'<em><b><strong><a><big>\'); //be sure you only allow certain HTML tags to avoid XSS threats (you should also remove unwanted HTML attributes)\n
+          td.innerHTML = escaped;\n
+\n
+          return td;\n
+        }\n
+\n
+        function coverRenderer (instance, td, row, col, prop, value, cellProperties) {\n
+          var escaped = Handsontable.helper.stringify(value),\n
+            img;\n
+\n
+          if (escaped.indexOf(\'http\') === 0) {\n
+            img = document.createElement(\'IMG\');\n
+            img.src = value;\n
+\n
+            Handsontable.Dom.addEvent(img, \'mousedown\', function (e){\n
+              e.preventDefault(); // prevent selection quirk\n
+            });\n
+\n
+            Handsontable.Dom.empty(td);\n
+            td.appendChild(img);\n
+          }\n
+          else {\n
+            // render as text\n
+            Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+          }\n
+\n
+          return td;\n
+        }\n
+      </script>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div class="rowLayout">\n
+  <div class="descLayout">\n
+    <div class="pad" data-jsfiddle="example2">\n
+      <a name="header"></a>\n
+\n
+      <h2>Rendering custom HTML in header</h2>\n
+\n
+      <p>You can also put HTML into row and column headers.</p>\n
+\n
+      <p>If you need to attach events to DOM elements like the checkbox below, just remember to identify the element\n
+        by class name, not by id. This is because row and column headers are duplicated in the DOM tree and id\n
+        attribute must be unique.</p>\n
+\n
+      <div id="example2"></div>\n
+\n
+      <p>\n
+        <button name="dump" data-dump="#example2" data-instance="hot2" title="Prints current data source to Firebug/Chrome Dev Tools">\n
+          Dump data to console\n
+        </button>\n
+      </p>\n
+    </div>\n
+  </div>\n
+\n
+  <div class="codeLayout">\n
+    <div class="pad">\n
+      <div class="jsFiddle">\n
+        <button class="jsFiddleLink" data-runfiddle="example2">Edit in jsFiddle</button>\n
+      </div>\n
+\n
+      <script data-jsfiddle="example2">\n
+        var\n
+          isChecked,\n
+          container2 = document.getElementById(\'example2\'),\n
+          hot2;\n
+\n
+          hot2 = new Handsontable(container2, {\n
+            startCols: 2,\n
+            columns: [\n
+              {},\n
+              {renderer: customRenderer}\n
+            ],\n
+            colHeaders: function (col) {\n
+              var txt;\n
+\n
+              switch (col) {\n
+                case 0:\n
+                  return \'"<b>Bold</b> and <em>Beautiful</em>\';\n
+\n
+                case 1:\n
+                  txt = "Some <input type=\'checkbox\' class=\'checker\' ";\n
+                  txt += isChecked ? \'checked="checked"\' : \'\';\n
+                  txt += "> checkbox";\n
+\n
+                  return txt;\n
+              }\n
+            }\n
+          });\n
+\n
+          function customRenderer(instance, td) {\n
+            Handsontable.renderers.TextRenderer.apply(this, arguments);\n
+\n
+            if (isChecked) {\n
+              td.style.backgroundColor = \'yellow\';\n
+            }\n
+            else {\n
+              td.style.backgroundColor = \'white\';\n
+            }\n
+\n
+            return td;\n
+          }\n
+\n
+          Handsontable.Dom.addEvent(container, \'mousedown\', function (event) {\n
+            if (event.target.nodeName == \'INPUT\' && event.target.className == \'checker\') {\n
+              event.stopPropagation();\n
+            }\n
+          });\n
+\n
+          Handsontable.Dom.addEvent(container, \'mouseup\', function (event) {\n
+            if (event.target.nodeName == \'INPUT\' && event.target.className == \'checker\') {\n
+              isChecked = !event.target.checked;\n
+              hot2.render();\n
+            }\n
+          });\n
+      </script>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div class="rowLayout">\n
+  <div class="descLayout">\n
+    <div class="pad" data-jsfiddle="example2">\n
+      <a name="dropdown"></a>\n
+\n
+      <h2>Changing cell type from a dropdown menu in cell header</h2>\n
+\n
+      <p>This example makes use of a plugin hook to add a custom dropdown menu to the cell header</p>\n
+\n
+      <div id="example3"></div>\n
+\n
+      <p>\n
+        <button name="dump" data-dump="#example3" data-instance="hot3" title="Prints current data source to Firebug/Chrome Dev Tools">\n
+          Dump data to console\n
+        </button>\n
+      </p>\n
+    </div>\n
+  </div>\n
+\n
+  <div class="codeLayout">\n
+    <div class="pad">\n
+      <div class="jsFiddle">\n
+        <button class="jsFiddleLink" data-runfiddle="example2">Edit in jsFiddle</button>\n
+      </div>\n
+\n
+      <style data-jsfiddle="example3">\n
+        .changeType {\n
+          border: 1px solid #bbb;\n
+          color: #bbb;\n
+          background: #eee;\n
+          border-radius: 2px;\n
+          padding: 2px;\n
+          font-size: 9px;\n
+\n
+          float: right;\n
+          line-height: 9px;\n
+          margin: 3px 3px 0 0;\n
+        }\n
+\n
+        .changeType:hover {\n
+          border: 1px solid #777;\n
+          color: #777;\n
+          cursor: pointer;\n
+        }\n
+\n
+        .changeType.pressed {\n
+          background-color: #999;\n
+        }\n
+\n
+        .changeTypeMenu {\n
+          position: absolute;\n
+          border: 1px solid #ccc;\n
+          margin-top: 18px;\n
+          box-shadow: 0 1px 3px -1px #323232;\n
+          background: white;\n
+          padding: 0;\n
+          display: none;\n
+          z-index: 10;\n
+        }\n
+\n
+        .changeTypeMenu li {\n
+          text-align: left;\n
+          list-style: none;\n
+          padding: 2px 20px;\n
+          cursor: pointer;\n
+          margin-bottom: 0;\n
+        }\n
+\n
+        .changeTypeMenu li.active:before {\n
+          content: "\\2714";\n
+          margin-left: -15px;\n
+          margin-right: 3px;\n
+        }\n
+\n
+        .changeTypeMenu li:hover {\n
+          background: #eee;\n
+        }\n
+\n
+\n
+      </style>\n
+\n
+      <script data-jsfiddle="example3">\n
+        var\n
+          data3 = [\n
+            [\'\', \'Maserati\', \'Mazda\', \'Mercedes\', \'Mini\', \'Mitsubishi\'],\n
+            [\'2009\', 0, 2941, 4303, 354, 5814],\n
+            [\'2010\', 3, 2905, 2867, 412, 5284],\n
+            [\'2011\', 4, 2517, 4822, 552, 6127],\n
+            [\'2012\', 2, 2422, 5399, 776, 4151]\n
+          ],\n
+          columns = [\n
+            {type: \'numeric\'},\n
+            {type: \'numeric\'},\n
+            {type: \'numeric\'},\n
+            {type: \'numeric\'},\n
+            {type: \'numeric\'},\n
+            {type: \'numeric\'}\n
+          ],\n
+          container = document.getElementById(\'example3\'),\n
+          hot3;\n
+\n
+        hot3 = new Handsontable(container,{\n
+          data: data3,\n
+          colHeaders: true,\n
+          minSpareRows: 1,\n
+          type: \'numeric\',\n
+          columns: columns,\n
+\n
+          afterGetColHeader: function (col, TH) {\n
+            var instance = this,\n
+              menu = buildMenu(columns[col].type),\n
+              button = buildButton();\n
+\n
+            addButtonMenuEvent(button, menu);\n
+\n
+            Handsontable.Dom.addEvent(menu, \'click\', function (event) {\n
+              if (event.target.nodeName == \'LI\') {\n
+                setColumnType(col, event.target.data[\'colType\'], instance);\n
+              }\n
+            });\n
+            TH.firstChild.appendChild(button);\n
+            TH.style[\'white-space\'] = \'normal\';\n
+          },\n
+          cells: function (row, col, prop) {\n
+            var cellProperties;\n
+\n
+            if (row === 0) {\n
+              cellProperties = {\n
+                type: \'text\' // force text type for first row\n
+              };\n
+\n
+              return cellProperties;\n
+            }\n
+          }\n
+        });\n
+\n
+        function addButtonMenuEvent(button, menu) {\n
+          Handsontable.Dom.addEvent(button, \'click\', function (event) {\n
+            var changeTypeMenu, position, removeMenu;\n
+\n
+            document.body.appendChild(menu);\n
+\n
+            event.preventDefault();\n
+            Handsontable.dom.stopImmediatePropagation(event);\n
+\n
+            changeTypeMenu = document.querySelectorAll(\'.changeTypeMenu\');\n
+\n
+            for (var i = 0, len = changeTypeMenu.length; i < len; i++) {\n
+              changeTypeMenu[i].style.display = \'none\';\n
+            }\n
+            menu.style.display = \'block\';\n
+            position = button.getBoundingClientRect();\n
+\n
+            menu.style.top = (position.top + (window.scrollY || window.pageYOffset)) + 2 + \'px\';\n
+            menu.style.left = (position.left) + \'px\';\n
+\n
+            removeMenu = function (event) {\n
+              if (event.target.nodeName == \'LI\' && event.target.parentNode.className.indexOf(\'changeTypeMenu\') !== -1) {\n
+                if (menu.parentNode) {\n
+                  menu.parentNode.removeChild(menu);\n
+                }\n
+              }\n
+            };\n
+            Handsontable.Dom.removeEvent(document, \'click\', removeMenu);\n
+            Handsontable.Dom.addEvent(document, \'click\', removeMenu);\n
+          });\n
+        }\n
+\n
+        function buildMenu(activeCellType){\n
+          var\n
+            menu = document.createElement(\'UL\'),\n
+            types = [\'text\', \'numeric\', \'date\'],\n
+            item;\n
+\n
+          menu.className = \'changeTypeMenu\';\n
+\n
+          for (var i = 0, len = types.length; i< len; i++) {\n
+            item = document.createElement(\'LI\');\n
+            if(\'innerText\' in item) {\n
+              item.innerText = types[i];\n
+            } else {\n
+              item.textContent = types[i];\n
+            }\n
+\n
+            item.data = {\'colType\': types[i]};\n
+\n
+            if (activeCellType == types[i]) {\n
+              item.className = \'active\';\n
+            }\n
+            menu.appendChild(item);\n
+          }\n
+\n
+          return menu;\n
+        }\n
+\n
+        function buildButton() {\n
+          var button = document.createElement(\'BUTTON\');\n
+\n
+          button.innerHTML = \'\\u25BC\';\n
+          button.className = \'changeType\';\n
+\n
+          return button;\n
+        }\n
+\n
+        function setColumnType(i, type, instance) {\n
+          columns[i].type = type;\n
+          instance.updateSettings({columns: columns});\n
+          instance.validateCells(function() {\n
+            instance.render();\n
+          });\n
+        }\n
+      </script>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div class="footer-text">\n
+</div>\n
+</div>\n
+\n
+</div>\n
+\n
+</div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17250</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>renderers_html.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

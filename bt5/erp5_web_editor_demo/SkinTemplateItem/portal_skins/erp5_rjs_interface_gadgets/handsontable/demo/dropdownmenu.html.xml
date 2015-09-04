@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272286.09</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dropdownmenu.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html xmlns="http://www.w3.org/1999/html">\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Dropdown Menu - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies apart from jQuery)\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Context Menu">\n
+  <meta property="og:description"\n
+        content="This page shows how to use and configure right-click context menu with Handsontable">\n
+  <meta property="og:url" content="http://handsontable.com/demo/contextmenu.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/contextmenu.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+<div class="wrapper-row">\n
+<div id="global-menu-clone">\n
+  <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+</div>\n
+\n
+<div id="container">\n
+<div class="columnLayout">\n
+\n
+<div class="rowLayout">\n
+  <div class="descLayout">\n
+    <div class="pad">\n
+      <h2>Dropdown Menu</h2>\n
+\n
+      <p>This page shows how to use and configure dropdown menu with Handsontable:</p>\n
+\n
+      <ul>\n
+        <li><a href="#default">dropdown menu with default options</a></li>\n
+        <li><a href="#specific">dropdown menu with specific options</a></li>\n
+        <li><a href="#custom">dropdown menu with fully custom configuration</a></li>\n
+      </ul>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div class="rowLayout">\n
+  <div class="descLayout">\n
+    <div class="pad" data-jsfiddle="example1">\n
+      <a name="default"></a>\n
+\n
+      <h2>Dropdown Menu with default options</h2>\n
+\n
+      <p>Tu run the basic configuration of the Dropdown Menu, just set the dropdownMenu option to true.</p>\n
+\n
+      <div id="example1"></div>\n
+      <p>\n
+        <button name="dump" data-dump="#example1" data-instance="hot1" title="Prints current data source to Firebug/Chrome Dev Tools">Dump\n
+          data to console\n
+        </button>\n
+      </p>\n
+    </div>\n
+  </div>\n
+\n
+  <div class="codeLayout">\n
+    <div class="pad">\n
+      <div class="jsFiddle">\n
+        <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+      </div>\n
+\n
+      <script data-jsfiddle="common">\n
+        function getData() {\n
+          return [\n
+            [\'\', \'Kia\', \'Nissan\', \'Toyota\', \'Honda\'],\n
+            [\'2008\', 10, 11, 12, 13],\n
+            [\'2009\', 20, 11, 14, 13],\n
+            [\'2010\', 30, 15, 12, 13]\n
+          ];\n
+        }\n
+      </script>\n
+\n
+      <script data-jsfiddle="example1">\n
+        var example1 = document.getElementById(\'example1\'),\n
+          settings1,\n
+          hot1;\n
+\n
+        settings1 = {\n
+          data: getData(),\n
+          startRows: 5,\n
+          startCols: 5,\n
+          minRows: 5,\n
+          minCols: 5,\n
+          maxRows: 10,\n
+          maxCols: 10,\n
+          rowHeaders: true,\n
+          colHeaders: true, // If you use `dropdownMenu` option you must enable colHeaders\n
+          minSpareRows: 1,\n
+          dropdownMenu: true\n
+        };\n
+        hot1 = new Handsontable(example1, settings1);\n
+      </script>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div class="rowLayout">\n
+  <div class="descLayout">\n
+    <div class="pad" data-jsfiddle="example2">\n
+      <a name="specific"></a>\n
+\n
+      <h2>Dropdown Menu with specific options</h2>\n
+\n
+      <p>You can limit options available in the dropdown menu using dropdownMenu option as an array of strings.</p>\n
+      <p>\n
+        List of commands below are common for context menu and for dropdown menu.\n
+      </p>\n
+\n
+      <ul>\n
+        <li><b>row_above</b> (designed for <a href="contextmenu.html">Context Menu</a>)</li>\n
+        <li><b>row_below</b> (designed for <a href="contextmenu.html">Context Menu</a>)</li>\n
+        <li><b>hsep1</b></li>\n
+        <li><b>col_left</b> (designed for both menus)</li>\n
+        <li><b>col_right</b> (designed for both menus)</li>\n
+        <li><b>hsep2</b></li>\n
+        <li><b>remove_row</b> (designed for <a href="contextmenu.html">Context Menu</a>)</li>\n
+        <li><b>remove_col</b> (designed for both menus)</li>\n
+        <li><b>hsep3</b></li>\n
+        <li><b>undo</b> (designed for <a href="contextmenu.html">Context Menu</a>)</li>\n
+        <li><b>redo</b> (designed for <a href="contextmenu.html">Context Menu</a>)</li>\n
+        <li><b>make_read_only</b> (designed for both menus)</li>\n
+        <li><b>alignment</b>  (designed for both menus)</li>\n
+        <li><b>clear_column</b> (designed for <a href="dropdownmenu.html">Dropdown Menu</a>)</li>\n
+        <li><b>borders</b> (only with <a href="custom_borders.html">Custom Borders</a> turned on)</li>\n
+        <li><b>commentsAddEdit</b>, <b>commentsRemove</b> (only with <a href="comments.html">Comments</a> turned on)</li>\n
+      </ul>\n
+\n
+      <div id="example2"></div>\n
+\n
+      <p>\n
+        <button name="dump" data-dump="#example2" data-instance="hot2" title="Prints current data source to Firebug/Chrome Dev Tools">Dump\n
+          data to console\n
+        </button>\n
+      </p>\n
+    </div>\n
+  </div>\n
+\n
+  <div class="codeLayout">\n
+    <div class="pad">\n
+      <div class="jsFiddle">\n
+        <button class="jsFiddleLink" data-runfiddle="example2">Edit in jsFiddle</button>\n
+      </div>\n
+\n
+      <script data-jsfiddle="example2">\n
+        var example2 = document.getElementById(\'example2\');\n
+        var settings2 = {\n
+          data: getData(),\n
+          startRows: 5,\n
+          startCols: 5,\n
+          rowHeaders: true,\n
+          colHeaders: true, // If you use `dropdownMenu` option you must enable colHeaders\n
+          minSpareRows: 1,\n
+          dropdownMenu: [\'col_left\', \'col_right\']\n
+        };\n
+        var hot2 = new Handsontable(example2, settings2);\n
+      </script>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div class="rowLayout">\n
+  <div class="descLayout">\n
+    <div class="pad" data-jsfiddle="example3">\n
+      <a name="custom"></a>\n
+\n
+      <h2>Dropdown Menu with with fully custom configuration</h2>\n
+\n
+      <p>For greatest configurability, you use dropdownMenu option as a configuration object as described in <a\n
+          href="http://medialize.github.com/jQuery-contextMenu/docs.html">jQuery contextMenu documentation</a>.</p>\n
+\n
+      <p>This example shows how to set <strong>custom text</strong>, how to <strong>disable</strong>\n
+        "Remove row" and "Insert row above" for the first row and how to add your <strong>own option</strong>.</p>\n
+\n
+      <div id="example3"></div>\n
+\n
+      <p>\n
+        <button name="dump" data-dump="#example3" data-instance="hot3" title="Prints current data source to Firebug/Chrome Dev Tools">Dump\n
+          data to console\n
+        </button>\n
+      </p>\n
+    </div>\n
+  </div>\n
+\n
+  <div class="codeLayout">\n
+    <div class="pad">\n
+      <div class="jsFiddle">\n
+        <button class="jsFiddleLink" data-runfiddle="example3">Edit in jsFiddle</button>\n
+      </div>\n
+\n
+      <script data-jsfiddle="example3">\n
+        var example3 = document.getElementById(\'example3\');\n
+        var settings3 = {\n
+          data: getData(),\n
+          startRows: 5,\n
+          startCols: 5,\n
+          rowHeaders: true,\n
+          colHeaders: true, // If you use `dropdownMenu` option you must enable colHeaders\n
+          minSpareRows: 1\n
+        };\n
+\n
+        var hot3 = new Handsontable(example3, settings3);\n
+\n
+        hot3.updateSettings({\n
+          dropdownMenu: {\n
+            callback: function (key, options) {\n
+              if (key === \'about\') {\n
+                setTimeout(function () {\n
+                  // timeout is used to make sure the menu collapsed before alert is shown\n
+                  alert("This is a dropdown menu with default and custom options mixed");\n
+                }, 100);\n
+              }\n
+            },\n
+            items: {\n
+              "col_left": {\n
+                disabled: function () {\n
+                  // if first column, disable this option\n
+                  return this.getSelected() && this.getSelected()[1] === 0;\n
+                }\n
+              },\n
+              "col_right": {},\n
+              "hsep1": "---------",\n
+              "remove_col": {\n
+                name: \'Remove this column, ok?\',\n
+                disabled: function () {\n
+                  // if first column, disable this option\n
+                  return this.getSelected() && this.getSelected()[1] === 0\n
+                }\n
+              },\n
+              "hsep2": "---------",\n
+              "about": {name: \'About this menu\'}\n
+            }\n
+          }\n
+        })\n
+      </script>\n
+    </div>\n
+  </div>\n
+</div>\n
+\n
+<div class="footer-text">\n
+</div>\n
+</div>\n
+\n
+</div>\n
+\n
+</div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9656</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dropdownmenu.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

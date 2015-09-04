@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272748.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dropdownEditor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\n
+import {getEditor, registerEditor} from \'./../editors\';\n
+import {AutocompleteEditor} from \'./autocompleteEditor\';\n
+\n
+\n
+/**\n
+ * @private\n
+ * @editor DropdownEditor\n
+ * @class DropdownEditor\n
+ * @dependencies AutocompleteEditor\n
+ */\n
+class DropdownEditor extends AutocompleteEditor {\n
+  prepare(row, col, prop, td, originalValue, cellProperties) {\n
+    super.prepare(row, col, prop, td, originalValue, cellProperties);\n
+    this.cellProperties.filter = false;\n
+    this.cellProperties.strict = true;\n
+  }\n
+}\n
+\n
+export {DropdownEditor};\n
+\n
+registerEditor(\'dropdown\', DropdownEditor);\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>562</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>dropdownEditor.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

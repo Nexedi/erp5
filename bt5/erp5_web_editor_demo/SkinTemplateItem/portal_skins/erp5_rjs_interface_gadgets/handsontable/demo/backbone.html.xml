@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272288.51</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>backbone.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html>\n
+<head>\n
+  <meta charset=\'utf-8\'>\n
+  <title>Backbone.js - Handsontable</title>\n
+\n
+  <!--\n
+  Loading Handsontable (full distribution that includes all dependencies)\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/handsontable.css">\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="../dist/pikaday/pikaday.css">\n
+  <script data-jsfiddle="common" src="../dist/pikaday/pikaday.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/moment/moment.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/zeroclipboard/ZeroClipboard.js"></script>\n
+  <script data-jsfiddle="common" src="../dist/handsontable.js"></script>\n
+\n
+  <!--\n
+  Loading demo dependencies. They are used here only to enhance the examples on this page\n
+  -->\n
+  <link data-jsfiddle="common" rel="stylesheet" media="screen" href="css/samples.css?20140331">\n
+  <script src="js/samples.js"></script>\n
+  <script data-jsfiddle="common" src="js/backbone/lodash.underscore.js"></script>\n
+  <script data-jsfiddle="common" src="js/backbone/backbone.js"></script>\n
+  <script data-jsfiddle="common" src="js/backbone/backbone-relational/backbone-relational.js"></script>\n
+  <script src="js/highlight/highlight.pack.js"></script>\n
+  <link rel="stylesheet" media="screen" href="js/highlight/styles/github.css">\n
+  <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">\n
+\n
+  <!--\n
+  Facebook open graph. Don\'t copy this to your project :)\n
+  -->\n
+  <meta property="og:title" content="Integrate with Backbone.js">\n
+  <meta property="og:description"\n
+        content="Bind your Backbone collections to Handsontable">\n
+  <meta property="og:url" content="http://handsontable.com/demo/backbone.html">\n
+  <meta property="og:image" content="http://handsontable.com/demo/image/og-image.png">\n
+  <meta property="og:image:type" content="image/png">\n
+  <meta property="og:image:width" content="409">\n
+  <meta property="og:image:height" content="164">\n
+  <link rel="canonical" href="http://handsontable.com/demo/backbone.html">\n
+\n
+  <!--\n
+  Google Analytics for GitHub Page. Don\'t copy this to your project :)\n
+  -->\n
+  <script src="js/ga.js"></script>\n
+</head>\n
+\n
+<body>\n
+\n
+\n
+<div class="wrapper">\n
+  <div class="wrapper-row">\n
+    <div id="global-menu-clone">\n
+      <h1><a href="../index.html">Handsontable</a></h1>\n
+\n
+    </div>\n
+\n
+    <div id="container">\n
+      <div class="columnLayout">\n
+\n
+        <div class="rowLayout">\n
+      <div class="descLayout">\n
+        <div class="pad" data-jsfiddle="example1">\n
+          <h2>Backbone.js</h2>\n
+\n
+          <p>\n
+            <a href="http://backbonejs.org/">Backbone.js</a> is a client-side\n
+            MV* framework that can do some pretty smart things\n
+            with data going to and coming back from a server, and has a great\n
+            event model for keeping multiple views in sync.\n
+          </p>\n
+\n
+          <p>\n
+            This little example shows how Backbone Models and Collections can\n
+            work with Handsontable. Below, you\'ll see events firing from\n
+            changes in the <code>CarCollection</code> by Handsontable or\n
+            otherwise.\n
+          </p>\n
+\n
+          <div id="example1"></div>\n
+\n
+          <p>\n
+            <button name="dump" data-instance="hot" data-dump="#example1" title="Prints current data source to Firebug/Chrome Dev Tools">\n
+              Dump data to console\n
+            </button>\n
+            <button id="add_car">Simulate a new Car</button>\n
+\n
+            <br>\n
+            <select multiple="multiple" id="example1_events" style="width: 100%; height: 100px"></select>\n
+          </p>\n
+\n
+          <p>\n
+            <strong>Please note</strong> that Backbone integration is a work in progress since Handsontable 0.8.14.\n
+            The code presented here has 2 known issues:\n
+          </p>\n
+\n
+          <ul>\n
+            <li>inserting and removing rows or columns triggers errors, both when using <code>alter</code> method and\n
+              the context menu\n
+            </li>\n
+            <li><code>minSpareRows</code> does not have effect directly after row was added from Backbone (as a\n
+              workaround, you would need to call <code>loadData</code> instead of <code>render</code>)\n
+            </li>\n
+          </ul>\n
+\n
+          <p>\n
+            Both issues will be addressed in future versions of HT. Contributions are welcome!\n
+          </p>\n
+        </div>\n
+      </div>\n
+\n
+      <div class="codeLayout">\n
+        <div class="pad">\n
+          <div class="jsFiddle">\n
+            <button class="jsFiddleLink" data-runfiddle="example1">Edit in jsFiddle</button>\n
+          </div>\n
+\n
+          <script data-jsfiddle="example1">\n
+            var\n
+              container = document.getElementById(\'example1\'),\n
+              addCar = document.getElementById(\'add_car\'),\n
+              eventHolder = document.getElementById(\'example1_events\'),\n
+              CarModel = Backbone.Model.extend({}),\n
+              CarCollection,\n
+              cars,\n
+              hot;\n
+\n
+            CarCollection = Backbone.Collection.extend({\n
+              model: CarModel,\n
+              // Backbone.Collection doesn\'t support `splice`, yet! Easy to add.\n
+              splice: hackedSplice\n
+            });\n
+\n
+            cars = new CarCollection();\n
+\n
+            // since we\'re not using a server... make up some data. This will make\n
+            // a couple CarModels from these plain old objects\n
+            cars.add([\n
+              {make: \'Dodge\', model: \'Ram\', year: 2012, weight: 6811},\n
+              {make: \'Toyota\', model: \'Camry\', year: 2012, weight: 3190},\n
+              {make: \'Smart\', model: \'Fortwo\', year: 2012, weight: 1808}\n
+            ]);\n
+\n
+            hot = new Handsontable(container, {\n
+              data: cars,\n
+              dataSchema: makeCar,\n
+              contextMenu: true,\n
+              columns: [\n
+                attr(\'make\'),\n
+                attr(\'model\'),\n
+                attr(\'year\')\n
+              ],\n
+              colHeaders: [\'Make\', \'Model\', \'Year\']\n
+              // minSpareRows: 1 //see notes on the left for `minSpareRows`\n
+            });\n
+\n
+            // this will log all the Backbone events getting fired!\n
+            cars.on(\'all\', logEvents)\n
+              .on(\'add\', function () {\n
+                hot.render();\n
+              })\n
+              .on(\'remove\', function () {\n
+                hot.render();\n
+              });\n
+\n
+            // you\'ll have to make something like these until there is a better\n
+            // way to use the string notation, i.e. "bb:make"!\n
+\n
+            // normally, you\'d get these from the server with .fetch()\n
+            function attr(attr) {\n
+              // this lets us remember `attr` for when when it is get/set\n
+              return {data: function (car, value) {\n
+                if (_.isUndefined(value)) {\n
+                  return car.get(attr);\n
+                }\n
+                car.set(attr, value);\n
+              }};\n
+            }\n
+\n
+            // just setting `dataSchema: CarModel` would be great, but it is non-\n
+            // trivial to detect constructors...\n
+            function makeCar() {\n
+              return new CarModel();\n
+            }\n
+\n
+            // use the "good" Collection methods to emulate Array.splice\n
+            function hackedSplice(index, howMany /* model1, ... modelN */) {\n
+              var args = _.toArray(arguments).slice(2).concat({at: index}),\n
+                removed = this.models.slice(index, index + howMany);\n
+\n
+              this.remove(removed).add.apply(this, args);\n
+\n
+              return removed;\n
+            }\n
+\n
+            // show a log of events getting fired\n
+            function logEvents(event, model) {\n
+              var now = new Date(),\n
+                option = document.createElement(\'OPTION\');\n
+\n
+              option.innerHTML = [\':\', now.getSeconds(), \':\', now.getMilliseconds(), \'[\' + event + \']\',\n
+                JSON.stringify(model)].join(\' \');\n
+              eventHolder.insertBefore(option, eventHolder.firstChild);\n
+            }\n
+\n
+            Handsontable.Dom.addEvent(addCar, \'click\', function () {\n
+              cars.add({make: "Tesla", model: "S", year: 2012, weight: 4647.3});\n
+            });\n
+          </script>\n
+        </div>\n
+      </div>\n
+    </div>\n
+\n
+        <div class="footer-text">\n
+        </div>\n
+      </div>\n
+\n
+    </div>\n
+\n
+  </div>\n
+</div>\n
+\n
+<div id="outside-links-wrapper"></div>\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8267</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>backbone.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

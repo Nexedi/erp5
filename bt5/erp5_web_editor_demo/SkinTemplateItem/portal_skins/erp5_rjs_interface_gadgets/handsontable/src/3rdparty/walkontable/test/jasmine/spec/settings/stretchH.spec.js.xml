@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272575.23</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>stretchH.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe("stretchH option", function () {\n
+  var $table\n
+    , $container\n
+    , $wrapper\n
+    , debug = false;\n
+\n
+  beforeEach(function () {\n
+    $wrapper = $(\'<div></div>\').css({\'overflow\': \'hidden\', \'position\': \'relative\'});\n
+    $wrapper.width(500).height(201);\n
+    $container = $(\'<div></div>\');\n
+    $table = $(\'<table></table>\'); //create a table that is not attached to document\n
+    $wrapper.append($container);\n
+    $container.append($table);\n
+    $wrapper.appendTo(\'body\');\n
+    createDataArray();\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (!debug) {\n
+      $(\'.wtHolder\').remove();\n
+    }\n
+    $wrapper.remove();\n
+  });\n
+\n
+  it("should stretch all visible columns when stretchH equals \'all\'", function () {\n
+    createDataArray(20, 2);\n
+\n
+    $wrapper.width(500).height(400);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      stretchH: \'all\',\n
+      rowHeaders: [function (row, TH) {\n
+        TH.innerHTML = row + 1;\n
+      }]\n
+    });\n
+    wt.draw();\n
+\n
+    expect($table.outerWidth()).toBeAroundValue(wt.wtTable.holder.clientWidth);\n
+    // fix differences between Mac and Linux PhantomJS\n
+    expect($table.find(\'col:eq(2)\').width() - $table.find(\'col:eq(1)\').width()).toBeInArray([-1, 0, 1]);\n
+  });\n
+\n
+  it("should stretch all visible columns when stretchH equals \'all\' and window is resized", function () {\n
+    createDataArray(20, 2);\n
+\n
+    $wrapper.width(500).height(400);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      stretchH: \'all\',\n
+      rowHeaders: [function (row, TH) {\n
+        TH.innerHTML = row + 1;\n
+      }]\n
+    });\n
+    wt.draw();\n
+\n
+    var initialTableWidth = $table.outerWidth();\n
+    expect(initialTableWidth).toBeAroundValue($table[0].clientWidth);\n
+\n
+    $wrapper.width(600).height(500);\n
+\n
+    var evt = document.createEvent(\'CustomEvent\');  // MUST be \'CustomEvent\'\n
+    evt.initCustomEvent(\'resize\', false, false, null);\n
+    window.dispatchEvent(evt);\n
+\n
+    runs(function() {\n
+      var currentTableWidth = $table.outerWidth();\n
+      expect(currentTableWidth).toBeAroundValue($table[0].clientWidth);\n
+      expect(currentTableWidth).toBeGreaterThan(initialTableWidth);\n
+    });\n
+  });\n
+\n
+  it("should stretch all visible columns when stretchH equals \'all\' (when rows are of variable height)", function () {\n
+    createDataArray(20, 2);\n
+\n
+    for(var i= 0, ilen=this.data.length; i<ilen; i++) {\n
+      if(i % 2) {\n
+        this.data[i][0] += " this is a cell that contains a lot of text, which will make it multi-line"\n
+      }\n
+    }\n
+\n
+    $wrapper.width(300);\n
+    $wrapper.css({\n
+      "overflow": "hidden"\n
+    });\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      stretchH: \'all\'\n
+    });\n
+    wt.draw();\n
+\n
+    var expectedColWidth = ((300 - Handsontable.Dom.getScrollbarWidth()) / 2);\n
+    expectedColWidth = Math.floor(expectedColWidth);\n
+\n
+    var wtHider = $table.parents(\'.wtHider\');\n
+    expect(wtHider.find(\'col:eq(0)\').width()).toBeAroundValue(expectedColWidth);\n
+    expect(wtHider.find(\'col:eq(1)\').width() - expectedColWidth).toBeInArray([0, 1]); //fix differences between Mac and Linux PhantomJS\n
+  });\n
+\n
+  it("should stretch last visible column when stretchH equals \'last\'", function () {\n
+    createDataArray(20, 2);\n
+\n
+    $wrapper.width(300).height(201);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      stretchH: \'last\',\n
+      rowHeaders: [function (row, TH) {\n
+        TH.innerHTML = row + 1;\n
+      }]\n
+    });\n
+    wt.draw();\n
+\n
+    var wtHider = $table.parents(\'.wtHider\');\n
+    expect(wtHider.outerWidth()).toBe(getTableWidth($table));\n
+    expect(wtHider.find(\'col:eq(1)\').width()).toBeLessThan(wtHider.find(\'col:eq(2)\').width());\n
+  });\n
+\n
+  it("should stretch last visible column when stretchH equals \'last\' (and no vertical scroll)", function () {\n
+    createDataArray(2, 2);\n
+\n
+    $wrapper.width(300).height(201);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      stretchH: \'last\',\n
+      rowHeaders: [function (row, TH) {\n
+        TH.innerHTML = row + 1;\n
+      }]\n
+    });\n
+    wt.draw();\n
+\n
+    var wtHider = $table.parents(\'.wtHider\');\n
+    expect(wtHider.outerWidth()).toBe(getTableWidth($table));\n
+    expect(wtHider.find(\'col:eq(1)\').width()).toBeLessThan(wtHider.find(\'col:eq(2)\').width());\n
+  });\n
+\n
+  it("should not stretch when stretchH equals \'none\'", function () {\n
+    createDataArray(20, 2);\n
+    $wrapper.width(300).height(201);\n
+\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      stretchH: \'none\',\n
+      rowHeaders: [function (row, TH) {\n
+        TH.innerHTML = row + 1;\n
+      }]\n
+    });\n
+    wt.draw();\n
+\n
+    var wtHider = $table.parents(\'.wtHider\');\n
+    expect($table.width()).toBeLessThan($wrapper.width());\n
+    expect($table.find(\'col:eq(1)\').width()).toBe($table.find(\'col:eq(2)\').width());\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5196</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>stretchH.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

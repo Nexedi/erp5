@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272900.08</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>autoResize.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * autoResize - resizes a DOM element to the width and height of another DOM element\n
+ *\n
+ * Copyright 2014, Marcin Warpechowski\n
+ * Licensed under the MIT license\n
+ */\n
+\n
+\n
+function autoResize() {\n
+  var defaults = {\n
+      minHeight: 200,\n
+      maxHeight: 300,\n
+      minWidth: 100,\n
+      maxWidth: 300\n
+    },\n
+    el,\n
+    body = document.body,\n
+    text = document.createTextNode(\'\'),\n
+    span = document.createElement(\'SPAN\'),\n
+    observe = function (element, event, handler) {\n
+      if (window.attachEvent) {\n
+        element.attachEvent(\'on\' + event, handler);\n
+      } else {\n
+        element.addEventListener(event, handler, false);\n
+      }\n
+    },\n
+    unObserve = function (element, event, handler) {\n
+      if (window.removeEventListener) {\n
+        element.removeEventListener(event, handler, false);\n
+      } else {\n
+        element.detachEvent(\'on\' + event, handler);\n
+      }\n
+    },\n
+    resize = function (newChar) {\n
+      var width, scrollHeight;\n
+\n
+      if (!newChar) {\n
+        newChar = "";\n
+      } else if (!/^[a-zA-Z \\.,\\\\\\/\\|0-9]$/.test(newChar)) {\n
+        newChar = ".";\n
+      }\n
+\n
+      if (text.textContent !== void 0) {\n
+        text.textContent = el.value + newChar;\n
+      }\n
+      else {\n
+        text.data = el.value + newChar; //IE8\n
+      }\n
+      span.style.fontSize = Handsontable.Dom.getComputedStyle(el).fontSize;\n
+      span.style.fontFamily = Handsontable.Dom.getComputedStyle(el).fontFamily;\n
+      span.style.whiteSpace = "pre";\n
+\n
+      body.appendChild(span);\n
+      width = span.clientWidth + 2;\n
+      body.removeChild(span);\n
+\n
+      el.style.height = defaults.minHeight + \'px\';\n
+\n
+      if (defaults.minWidth > width) {\n
+        el.style.width = defaults.minWidth + \'px\';\n
+\n
+      } else if (width > defaults.maxWidth) {\n
+        el.style.width = defaults.maxWidth + \'px\';\n
+\n
+      } else {\n
+        el.style.width = width + \'px\';\n
+      }\n
+      scrollHeight = el.scrollHeight ? el.scrollHeight - 1 : 0;\n
+\n
+      if (defaults.minHeight > scrollHeight) {\n
+        el.style.height = defaults.minHeight + \'px\';\n
+\n
+      } else if (defaults.maxHeight < scrollHeight) {\n
+        el.style.height = defaults.maxHeight + \'px\';\n
+        el.style.overflowY = \'visible\';\n
+\n
+      } else {\n
+        el.style.height = scrollHeight + \'px\';\n
+      }\n
+    },\n
+    delayedResize = function () {\n
+      window.setTimeout(resize, 0);\n
+    },\n
+    extendDefaults = function (config) {\n
+\n
+      if (config && config.minHeight) {\n
+        if (config.minHeight == \'inherit\') {\n
+          defaults.minHeight = el.clientHeight;\n
+        } else {\n
+          var minHeight = parseInt(config.minHeight);\n
+          if (!isNaN(minHeight)) {\n
+            defaults.minHeight = minHeight;\n
+          }\n
+        }\n
+      }\n
+\n
+      if (config && config.maxHeight) {\n
+        if (config.maxHeight == \'inherit\') {\n
+          defaults.maxHeight = el.clientHeight;\n
+        } else {\n
+          var maxHeight = parseInt(config.maxHeight);\n
+          if (!isNaN(maxHeight)) {\n
+            defaults.maxHeight = maxHeight;\n
+          }\n
+        }\n
+      }\n
+\n
+      if (config && config.minWidth) {\n
+        if (config.minWidth == \'inherit\') {\n
+          defaults.minWidth = el.clientWidth;\n
+        } else {\n
+          var minWidth = parseInt(config.minWidth);\n
+          if (!isNaN(minWidth)) {\n
+            defaults.minWidth = minWidth;\n
+          }\n
+        }\n
+      }\n
+\n
+      if (config && config.maxWidth) {\n
+        if (config.maxWidth == \'inherit\') {\n
+          defaults.maxWidth = el.clientWidth;\n
+        } else {\n
+          var maxWidth = parseInt(config.maxWidth);\n
+          if (!isNaN(maxWidth)) {\n
+            defaults.maxWidth = maxWidth;\n
+          }\n
+        }\n
+      }\n
+\n
+      if(!span.firstChild) {\n
+        span.className = "autoResize";\n
+        span.style.display = \'inline-block\';\n
+        span.appendChild(text);\n
+      }\n
+    },\n
+    init = function (el_, config, doObserve) {\n
+      el = el_;\n
+      extendDefaults(config);\n
+\n
+      if (el.nodeName == \'TEXTAREA\') {\n
+\n
+        el.style.resize = \'none\';\n
+        el.style.overflowY = \'\';\n
+        el.style.height = defaults.minHeight + \'px\';\n
+        el.style.minWidth = defaults.minWidth + \'px\';\n
+        el.style.maxWidth = defaults.maxWidth + \'px\';\n
+        el.style.overflowY = \'hidden\';\n
+      }\n
+\n
+      if(doObserve) {\n
+        observe(el, \'change\', resize);\n
+        observe(el, \'cut\', delayedResize);\n
+        observe(el, \'paste\', delayedResize);\n
+        observe(el, \'drop\', delayedResize);\n
+        observe(el, \'keydown\', delayedResize);\n
+      }\n
+\n
+      resize();\n
+    };\n
+\n
+  return {\n
+    init: function (el_, config, doObserve) {\n
+      init(el_, config, doObserve);\n
+    },\n
+    unObserve: function () {\n
+      unObserve(el, \'change\', resize);\n
+      unObserve(el, \'cut\', delayedResize);\n
+      unObserve(el, \'paste\', delayedResize);\n
+      unObserve(el, \'drop\', delayedResize);\n
+      unObserve(el, \'keydown\', delayedResize);\n
+    },\n
+    resize: resize\n
+  };\n
+}\n
+\n
+if (typeof exports !== \'undefined\') {\n
+  module.exports = autoResize;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4883</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>autoResize.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

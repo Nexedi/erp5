@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272658.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>multipleSelectionHandles.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe("MultipleSelectionHandles", function () {\n
+  var id = \'testContainer\';\n
+\n
+  beforeEach(function () {\n
+    this.$container = $(\'<div id="\' + id + \'"></div>\').appendTo(\'body\');\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (this.$container) {\n
+      destroy();\n
+      this.$container.remove();\n
+    }\n
+  });\n
+\n
+\n
+  describe("at init:", function () {\n
+\n
+    it("should add 2 visible selection handles (for each overlay) if mobile device is detected", function () {\n
+      var hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetObjectData(10, 5),\n
+          width: 400,\n
+          height: 400,\n
+          fixedRowsTop: 2,\n
+          fixedColumnsLeft: 2\n
+        })\n
+        , selected = null\n
+        , overlay = null;\n
+\n
+      if(!Handsontable.mobileBrowser) {\n
+        return true;\n
+      }\n
+\n
+\n
+      hot.selectCell(3, 3);\n
+      selected = hot.getSelected();\n
+      overlay = getCorrespondingOverlay(hot.getCell(selected[0], selected[1], true), this.$container);\n
+\n
+      expect(overlay.find(".bottomRightSelectionHandle").size()).toEqual(3); // one for area, fill and current - 2 may be redundant\n
+      expect(overlay.find(".topLeftSelectionHandle").size()).toEqual(3);\n
+\n
+      hot.selectCell(0, 0);\n
+      selected = hot.getSelected();\n
+      overlay = getCorrespondingOverlay(hot.getCell(selected[0], selected[1], true), this.$container);\n
+\n
+      expect(overlay.find(".bottomRightSelectionHandle").size()).toEqual(3); // one for area, fill and current\n
+      expect(overlay.find(".topLeftSelectionHandle").size()).toEqual(3);\n
+\n
+      hot.selectCell(0, 3);\n
+      selected = hot.getSelected();\n
+      overlay = getCorrespondingOverlay(hot.getCell(selected[0], selected[1], true), this.$container);\n
+\n
+      expect(overlay.find(".bottomRightSelectionHandle").size()).toEqual(3); // one for area, fill and current\n
+      expect(overlay.find(".topLeftSelectionHandle").size()).toEqual(3);\n
+\n
+      hot.selectCell(3, 0);\n
+      selected = hot.getSelected();\n
+      overlay = getCorrespondingOverlay(hot.getCell(selected[0], selected[1], true), this.$container);\n
+\n
+      expect(overlay.find(".bottomRightSelectionHandle").size()).toEqual(3); // one for area, fill and current\n
+      expect(overlay.find(".topLeftSelectionHandle").size()).toEqual(3);\n
+\n
+    });\n
+\n
+    it("should add a larger hit area to each selection handle if mobile device is detected", function () {\n
+      var hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetObjectData(10, 5),\n
+          width: 400,\n
+          height: 400,\n
+          fixedRowsTop: 2,\n
+          fixedColumnsLeft: 2\n
+        })\n
+        , selected = null\n
+        , overlay = null;\n
+\n
+      if(!Handsontable.mobileBrowser) {\n
+        return true;\n
+      }\n
+\n
+      hot.selectCell(3, 3);\n
+      selected = hot.getSelected();\n
+      overlay = getCorrespondingOverlay(hot.getCell(selected[0], selected[1], true), this.$container);\n
+\n
+      var topLefts = overlay.find(".topLeftSelectionHandle")\n
+        , bottomRights = overlay.find(".bottomRightSelectionHandle");\n
+\n
+      for(var elem = 0; elem < topLefts.length; elem++) {\n
+        var parent = $(topLefts[elem]).parent();\n
+\n
+        var hitArea = parent.find(".topLeftSelectionHandle-HitArea");\n
+\n
+        expect(hitArea.size()).toEqual(1);\n
+        expect(hitArea.eq(0).width()).toBeGreaterThan($(topLefts[elem]).width());\n
+        expect(hitArea.eq(0).height()).toBeGreaterThan($(topLefts[elem]).height());\n
+      }\n
+\n
+      for(var elem = 0; elem < bottomRights.length; elem++) {\n
+        var parent = $(bottomRights[elem]).parent();\n
+\n
+        var hitArea = parent.find(".bottomRightSelectionHandle-HitArea");\n
+\n
+        expect(hitArea.size()).toEqual(1);\n
+        expect(hitArea.eq(0).width()).toBeGreaterThan($(bottomRights[elem]).width());\n
+        expect(hitArea.eq(0).height()).toBeGreaterThan($(bottomRights[elem]).height());\n
+      }\n
+\n
+    });\n
+\n
+    it("should NOT add any selection handles if mobile device is NOT detected", function () {\n
+      var hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetObjectData(10, 5),\n
+          width: 400,\n
+          height: 400,\n
+          fixedRowsTop: 2,\n
+          fixedColumnsLeft: 2\n
+        })\n
+        , selected = null\n
+        , overlay = null;\n
+\n
+      if(Handsontable.mobileBrowser) {\n
+        return true;\n
+      }\n
+\n
+      hot.selectCell(3, 3);\n
+      selected = hot.getSelected();\n
+      overlay = getCorrespondingOverlay(hot.getCell(selected[0], selected[1], true), this.$container);\n
+\n
+      expect(overlay.find(".bottomRightSelectionHandle").size()).toEqual(0);\n
+      expect(overlay.find(".topLeftSelectionHandle").size()).toEqual(0);\n
+\n
+      hot.selectCell(0, 0);\n
+      selected = hot.getSelected();\n
+      overlay = getCorrespondingOverlay(hot.getCell(selected[0], selected[1], true), this.$container);\n
+\n
+      expect(overlay.find(".bottomRightSelectionHandle").size()).toEqual(0);\n
+      expect(overlay.find(".topLeftSelectionHandle").size()).toEqual(0);\n
+\n
+      hot.selectCell(0, 3);\n
+      selected = hot.getSelected();\n
+      overlay = getCorrespondingOverlay(hot.getCell(selected[0], selected[1], true), this.$container);\n
+\n
+      expect(overlay.find(".bottomRightSelectionHandle").size()).toEqual(0);\n
+      expect(overlay.find(".topLeftSelectionHandle").size()).toEqual(0);\n
+\n
+      hot.selectCell(3, 0);\n
+      selected = hot.getSelected();\n
+      overlay = getCorrespondingOverlay(hot.getCell(selected[0], selected[1], true), this.$container);\n
+\n
+      expect(overlay.find(".bottomRightSelectionHandle").size()).toEqual(0);\n
+      expect(overlay.find(".topLeftSelectionHandle").size()).toEqual(0);\n
+    });\n
+\n
+    it("should not display any selection handles between overlays, if selection is spread over more than one overlay", function () {\n
+      var hot = handsontable({\n
+          data: Handsontable.helper.createSpreadsheetObjectData(10, 7),\n
+          width: 400,\n
+          height: 400,\n
+          fixedRowsTop: 2,\n
+          fixedColumnsLeft: 2\n
+        })\n
+        , selected = null\n
+        , firstOverlay = null\n
+        , secondOverlay = null;\n
+\n
+      if(!Handsontable.mobileBrowser) {\n
+        return true;\n
+      }\n
+\n
+      hot.selectCell(1, 3, 4, 4);\n
+      selected = hot.getSelected();\n
+\n
+      firstOverlay = getCorrespondingOverlay(hot.getCell(selected[0], selected[1], true), this.$container);\n
+\n
+      var firstOverlayBottomRights = firstOverlay.find(".bottomRightSelectionHandle");\n
+\n
+      expect(firstOverlayBottomRights.size()).toEqual(3);\n
+      expect(firstOverlay.find(".topLeftSelectionHandle").size()).toEqual(3);\n
+\n
+      for(var i = 0, handleCount = firstOverlayBottomRights.length; i < handleCount; i++) {\n
+        expect(firstOverlayBottomRights.eq(i).css("display")).toEqual("none");\n
+      }\n
+    });\n
+  });\n
+\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6630</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>multipleSelectionHandles.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272607.72</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>scroll.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+/**\n
+ * @class WalkontableScroll\n
+ */\n
+class WalkontableScroll {\n
+  /**\n
+   * @param {Walkontable} wotInstance\n
+   */\n
+  constructor(wotInstance) {\n
+    this.wot = wotInstance;\n
+\n
+    // legacy support\n
+    this.instance = wotInstance;\n
+  }\n
+\n
+  /**\n
+   * Scrolls viewport to a cell by minimum number of cells\n
+   *\n
+   * @param {WalkontableCellCoords} coords\n
+   */\n
+  scrollViewport(coords) {\n
+    if (!this.wot.drawn) {\n
+      return;\n
+    }\n
+    let totalRows = this.wot.getSetting(\'totalRows\');\n
+    let totalColumns = this.wot.getSetting(\'totalColumns\');\n
+\n
+    if (coords.row < 0 || coords.row > totalRows - 1) {\n
+      throw new Error(\'row \' + coords.row + \' does not exist\');\n
+    }\n
+\n
+    if (coords.col < 0 || coords.col > totalColumns - 1) {\n
+      throw new Error(\'column \' + coords.col + \' does not exist\');\n
+    }\n
+\n
+    if (coords.row > this.instance.wtTable.getLastVisibleRow()) {\n
+      this.wot.wtOverlays.topOverlay.scrollTo(coords.row, true);\n
+\n
+    } else if (coords.row >= this.instance.getSetting(\'fixedRowsTop\') &&\n
+               coords.row < this.instance.wtTable.getFirstVisibleRow()) {\n
+      this.wot.wtOverlays.topOverlay.scrollTo(coords.row);\n
+    }\n
+\n
+    if (coords.col > this.instance.wtTable.getLastVisibleColumn()) {\n
+      this.wot.wtOverlays.leftOverlay.scrollTo(coords.col, true);\n
+\n
+    } else if (coords.col >= this.instance.getSetting(\'fixedColumnsLeft\') &&\n
+               coords.col < this.instance.wtTable.getFirstVisibleColumn()) {\n
+      this.wot.wtOverlays.leftOverlay.scrollTo(coords.col);\n
+    }\n
+  }\n
+}\n
+\n
+export {WalkontableScroll};\n
+\n
+window.WalkontableScroll = WalkontableScroll;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1582</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>scroll.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

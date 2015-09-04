@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272393.04</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ui-bg_highlight-soft_100_eeeeee_1x100.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAEAAABkEAAAAAAy19n/AAAAAmJLR0T//xSrMc0AAAAJcEhZcwAA
+AEgAAABIAEbJaz4AAABYSURBVBjTxcK9DUBAAIDRjxk0dBQaE4gR7KFVM4rEDBIjEKVV7s79OZ0t
+eHk8FR/NCAehJ6TcK3eD3/EtbsPV2AVbYmZMgh7RMdfAFaEmVIE8kR0yR4gfv1IulNTJHsTLAAAA
+JXRFWHRkYXRlOmNyZWF0ZQAyMDEzLTA1LTEyVDE5OjU1OjQyLTA3OjAwqDLZ+gAAACV0RVh0ZGF0
+ZTptb2RpZnkAMjAxMy0wNS0xMlQxOTo1NTo0Mi0wNzowMNlvYUYAAAAASUVORK5CYII=</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>278</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ui-bg_highlight-soft_100_eeeeee_1x100.png</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

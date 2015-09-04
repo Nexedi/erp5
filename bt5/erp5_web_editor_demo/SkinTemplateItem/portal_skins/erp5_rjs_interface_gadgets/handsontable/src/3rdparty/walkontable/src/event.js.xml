@@ -1,0 +1,308 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272611.18</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>event.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+import {\n
+  closest,\n
+  hasClass,\n
+  isChildOf,\n
+    } from \'./../../../helpers/dom/element\';\n
+import {eventManager as eventManagerObject} from \'./../../../eventManager\';\n
+\n
+\n
+function WalkontableEvent(instance) {\n
+  var that = this;\n
+\n
+  var eventManager = eventManagerObject(instance);\n
+\n
+  //reference to instance\n
+  this.instance = instance;\n
+\n
+  var dblClickOrigin = [null, null];\n
+  this.dblClickTimeout = [null, null];\n
+\n
+  var onMouseDown = function(event) {\n
+    var cell = that.parentCell(event.realTarget);\n
+\n
+    if (hasClass(event.realTarget, \'corner\')) {\n
+      that.instance.getSetting(\'onCellCornerMouseDown\', event, event.realTarget);\n
+    } else if (cell.TD) {\n
+      if (that.instance.hasSetting(\'onCellMouseDown\')) {\n
+        that.instance.getSetting(\'onCellMouseDown\', event, cell.coords, cell.TD, that.instance);\n
+      }\n
+    }\n
+\n
+    if (event.button !== 2) { //if not right mouse button\n
+      if (cell.TD) {\n
+        dblClickOrigin[0] = cell.TD;\n
+        clearTimeout(that.dblClickTimeout[0]);\n
+        that.dblClickTimeout[0] = setTimeout(function() {\n
+          dblClickOrigin[0] = null;\n
+        }, 1000);\n
+      }\n
+    }\n
+  };\n
+\n
+  var onTouchMove = function(event) {\n
+    that.instance.touchMoving = true;\n
+  };\n
+\n
+  var longTouchTimeout;\n
+\n
+  ///**\n
+  // * Update touch event target - if user taps on resize handle \'hit area\', update the target to the cell itself\n
+  // * @param event\n
+  // */\n
+  /*\n
+   var adjustTapTarget = function (event) {\n
+   var currentSelection\n
+   , properTarget;\n
+\n
+   if(hasClass(event.target,\'SelectionHandle\')) {\n
+   if(that.instance.selections[0].cellRange) {\n
+   currentSelection = that.instance.selections[0].cellRange.highlight;\n
+\n
+   properTarget = that.instance.getCell(currentSelection, true);\n
+   }\n
+   }\n
+\n
+   if(properTarget) {\n
+   Object.defineProperty(event,\'target\',{\n
+   value: properTarget\n
+   });\n
+   }\n
+\n
+   return event;\n
+   };*/\n
+\n
+  var onTouchStart = function(event) {\n
+    var container = this;\n
+\n
+    eventManager.addEventListener(this, \'touchmove\', onTouchMove);\n
+\n
+    //this.addEventListener("touchmove", onTouchMove, false);\n
+\n
+    // touch-and-hold event\n
+    //longTouchTimeout = setTimeout(function () {\n
+    //  if(!that.instance.touchMoving) {\n
+    //    that.instance.longTouch = true;\n
+    //\n
+    //    var targetCoords = offset(event.target);\n
+    //    var contextMenuEvent = new MouseEvent(\'contextmenu\', {\n
+    //      clientX: targetCoords.left + event.target.offsetWidth,\n
+    //      clientY: targetCoords.top + event.target.offsetHeight,\n
+    //      button: 2\n
+    //    });\n
+    //\n
+    //    that.instance.wtTable.holder.parentNode.parentNode.dispatchEvent(contextMenuEvent);\n
+    //  }\n
+    //},200);\n
+\n
+    // Prevent cell selection when scrolling with touch event - not the best solution performance-wise\n
+    that.checkIfTouchMove = setTimeout(function() {\n
+      if (that.instance.touchMoving === true) {\n
+        that.instance.touchMoving = void 0;\n
+\n
+        eventManager.removeEventListener("touchmove", onTouchMove, false);\n
+\n
+        return;\n
+      } else {\n
+        //event = adjustTapTarget(event);\n
+\n
+        onMouseDown(event);\n
+      }\n
+    }, 30);\n
+\n
+    //eventManager.removeEventListener(that.instance.wtTable.holder, "mousedown", onMouseDown);\n
+  };\n
+\n
+  var lastMouseOver;\n
+  var onMouseOver = function(event) {\n
+    var table, td;\n
+\n
+    if (that.instance.hasSetting(\'onCellMouseOver\')) {\n
+      table = that.instance.wtTable.TABLE;\n
+      td = closest(event.realTarget, [\'TD\', \'TH\'], table);\n
+\n
+      if (td && td !== lastMouseOver && isChildOf(td, table)) {\n
+        lastMouseOver = td;\n
+        that.instance.getSetting(\'onCellMouseOver\', event, that.instance.wtTable.getCoords(td), td, that.instance);\n
+      }\n
+    }\n
+  };\n
+\n
+  /*  var lastMouseOut;\n
+   var onMouseOut = function (event) {\n
+   if (that.instance.hasSetting(\'onCellMouseOut\')) {\n
+   var TABLE = that.instance.wtTable.TABLE;\n
+   var TD = closest(event.target, [\'TD\', \'TH\'], TABLE);\n
+   if (TD && TD !== lastMouseOut && isChildOf(TD, TABLE)) {\n
+   lastMouseOut = TD;\n
+   if (TD.nodeName === \'TD\') {\n
+   that.instance.getSetting(\'onCellMouseOut\', event, that.instance.wtTable.getCoords(TD), TD);\n
+   }\n
+   }\n
+   }\n
+   };*/\n
+\n
+  var onMouseUp = function(event) {\n
+    if (event.button !== 2) { //if not right mouse button\n
+      var cell = that.parentCell(event.realTarget);\n
+\n
+      if (cell.TD === dblClickOrigin[0] && cell.TD === dblClickOrigin[1]) {\n
+        if (hasClass(event.realTarget, \'corner\')) {\n
+          that.instance.getSetting(\'onCellCornerDblClick\', event, cell.coords, cell.TD, that.instance);\n
+        } else {\n
+          that.instance.getSetting(\'onCellDblClick\', event, cell.coords, cell.TD, that.instance);\n
+        }\n
+\n
+        dblClickOrigin[0] = null;\n
+        dblClickOrigin[1] = null;\n
+      } else if (cell.TD === dblClickOrigin[0]) {\n
+        dblClickOrigin[1] = cell.TD;\n
+        clearTimeout(that.dblClickTimeout[1]);\n
+        that.dblClickTimeout[1] = setTimeout(function() {\n
+          dblClickOrigin[1] = null;\n
+        }, 500);\n
+      }\n
+    }\n
+  };\n
+\n
+\n
+  var onTouchEnd = function(event) {\n
+    clearTimeout(longTouchTimeout);\n
+    //that.instance.longTouch == void 0;\n
+\n
+    event.preventDefault();\n
+\n
+    onMouseUp(event);\n
+\n
+    //eventManager.removeEventListener(that.instance.wtTable.holder, "mouseup", onMouseUp);\n
+  };\n
+\n
+  eventManager.addEventListener(this.instance.wtTable.holder, \'mousedown\', onMouseDown);\n
+\n
+  eventManager.addEventListener(this.instance.wtTable.TABLE, \'mouseover\', onMouseOver);\n
+\n
+  eventManager.addEventListener(this.instance.wtTable.holder, \'mouseup\', onMouseUp);\n
+\n
+\n
+  // check if full HOT instance, or detached WOT AND run on mobile device\n
+  if (this.instance.wtTable.holder.parentNode.parentNode && Handsontable.mobileBrowser && !that.instance.wtTable.isWorkingOnClone()) {\n
+    var classSelector = "." + this.instance.wtTable.holder.parentNode.className.split(" ").join(".");\n
+\n
+    eventManager.addEventListener(this.instance.wtTable.holder, \'touchstart\', function(event) {\n
+      that.instance.touchApplied = true;\n
+      if (isChildOf(event.target, classSelector)) {\n
+        onTouchStart.call(event.target, event);\n
+      }\n
+    });\n
+    eventManager.addEventListener(this.instance.wtTable.holder, \'touchend\', function(event) {\n
+      that.instance.touchApplied = false;\n
+      if (isChildOf(event.target, classSelector)) {\n
+        onTouchEnd.call(event.target, event);\n
+      }\n
+    });\n
+\n
+    if (!that.instance.momentumScrolling) {\n
+      that.instance.momentumScrolling = {};\n
+    }\n
+    eventManager.addEventListener(this.instance.wtTable.holder, \'scroll\', function(event) {\n
+      clearTimeout(that.instance.momentumScrolling._timeout);\n
+\n
+      if (!that.instance.momentumScrolling.ongoing) {\n
+        that.instance.getSetting(\'onBeforeTouchScroll\');\n
+      }\n
+      that.instance.momentumScrolling.ongoing = true;\n
+\n
+      that.instance.momentumScrolling._timeout = setTimeout(function() {\n
+        if (!that.instance.touchApplied) {\n
+          that.instance.momentumScrolling.ongoing = false;\n
+\n
+          that.instance.getSetting(\'onAfterMomentumScroll\');\n
+        }\n
+      }, 200);\n
+    });\n
+  }\n
+\n
+  eventManager.addEventListener(window, \'resize\', function() {\n
+    if (that.instance.getSetting(\'stretchH\') !== \'none\') {\n
+      that.instance.draw();\n
+    }\n
+  });\n
+\n
+  this.destroy = function() {\n
+    clearTimeout(this.dblClickTimeout[0]);\n
+    clearTimeout(this.dblClickTimeout[1]);\n
+\n
+    eventManager.destroy();\n
+  };\n
+}\n
+\n
+WalkontableEvent.prototype.parentCell = function(elem) {\n
+  var cell = {};\n
+  var TABLE = this.instance.wtTable.TABLE;\n
+  var TD = closest(elem, [\'TD\', \'TH\'], TABLE);\n
+\n
+  if (TD && isChildOf(TD, TABLE)) {\n
+    cell.coords = this.instance.wtTable.getCoords(TD);\n
+    cell.TD = TD;\n
+\n
+  } else if (hasClass(elem, \'wtBorder\') && hasClass(elem, \'current\')) {\n
+    cell.coords = this.instance.selections.current.cellRange.highlight; //selections.current is current selected cell\n
+    cell.TD = this.instance.wtTable.getCell(cell.coords);\n
+\n
+  } else if (hasClass(elem, \'wtBorder\') && hasClass(elem, \'area\')) {\n
+    if (this.instance.selections.area.cellRange) {\n
+      cell.coords = this.instance.selections.area.cellRange.to; //selections.area is area selected cells\n
+      cell.TD = this.instance.wtTable.getCell(cell.coords);\n
+    }\n
+  }\n
+\n
+  return cell;\n
+};\n
+\n
+export {WalkontableEvent};\n
+\n
+window.WalkontableEvent = WalkontableEvent;\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8191</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>event.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

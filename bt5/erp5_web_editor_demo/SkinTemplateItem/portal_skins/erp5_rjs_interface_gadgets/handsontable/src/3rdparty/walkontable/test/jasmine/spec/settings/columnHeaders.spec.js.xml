@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272576.04</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>columnHeaders.spec.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+describe(\'columnHeaders option\', function () {\n
+  var $table\n
+    , $container\n
+    , $wrapper\n
+    , debug = false;\n
+\n
+  beforeEach(function () {\n
+    $wrapper = $(\'<div></div>\').css({\'overflow\': \'hidden\', \'position\': \'relative\'});\n
+    $wrapper.width(500).height(201);\n
+    $container = $(\'<div></div>\');\n
+    $table = $(\'<table></table>\'); //create a table that is not attached to document\n
+    $wrapper.append($container);\n
+    $container.append($table);\n
+    $wrapper.appendTo(\'body\');\n
+    createDataArray();\n
+  });\n
+\n
+  afterEach(function () {\n
+    if (!debug) {\n
+      $(\'.wtHolder\').remove();\n
+    }\n
+    $wrapper.remove();\n
+  });\n
+\n
+  it("shouldn\\\'t add class `htColumnHeaders` when column headers are disabled", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns\n
+    });\n
+    wt.draw();\n
+\n
+    expect($wrapper.hasClass(\'htColumnHeaders\')).toBe(false);\n
+  });\n
+\n
+  it("should add class `htColumnHeaders` when column headers are enabled", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      columnHeaders: [function (col, TH) {\n
+        TH.innerHTML = col + 1;\n
+      }]\n
+    });\n
+    wt.draw();\n
+\n
+    expect($wrapper.hasClass(\'htColumnHeaders\')).toBe(true);\n
+  });\n
+\n
+  it("should create table with column headers", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      columnHeaders: [function (col, TH) {\n
+        TH.innerHTML = col + 1;\n
+      }]\n
+    });\n
+    wt.draw();\n
+\n
+    expect($wrapper.find(\'.ht_clone_left colgroup col\').length).toBe(0);\n
+    expect($wrapper.find(\'.ht_clone_left thead tr\').length).toBe(1);\n
+    expect($wrapper.find(\'.ht_clone_left tbody tr\').length).toBe(0);\n
+    expect($wrapper.find(\'.ht_clone_top colgroup col\').length).toBe(4);\n
+    expect($wrapper.find(\'.ht_clone_top thead tr\').length).toBe(1);\n
+    expect($wrapper.find(\'.ht_clone_top tbody tr\').length).toBe(0);\n
+    expect($wrapper.find(\'.ht_master colgroup col\').length).toBe(4);\n
+    expect($wrapper.find(\'.ht_master thead tr\').length).toBe(1);\n
+    expect($wrapper.find(\'.ht_master tbody tr\').length).toBe(9);\n
+  });\n
+\n
+  it("should create column headers with correct height when th has css `white-space: normal`", function () {\n
+    var style = $(\'<style>.handsontable thead th {white-space: normal;}</style>\').appendTo(\'head\');\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      columnHeaders: [function (col, TH) {\n
+        TH.innerHTML = \'Client State State\';\n
+      }],\n
+      columnWidth: 80\n
+    });\n
+    wt.draw();\n
+\n
+    expect($wrapper.find(\'.ht_clone_top thead tr\').height()).toBe(43);\n
+    style.remove();\n
+  });\n
+\n
+  it("should create column headers with correct height when th has css `white-space: pre-line` (default)", function () {\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      columnHeaders: [function (col, TH) {\n
+        TH.innerHTML = \'Client State State\';\n
+      }],\n
+      columnWidth: 80\n
+    });\n
+    wt.draw();\n
+\n
+    expect($wrapper.find(\'.ht_clone_top thead tr\').height()).toBe(23);\n
+  });\n
+\n
+  it("should generate column headers from function", function () {\n
+    var headers = ["Description", 2012, 2013, 2014];\n
+    var wt = new Walkontable({\n
+      table: $table[0],\n
+      data: getData,\n
+      totalRows: getTotalRows,\n
+      totalColumns: getTotalColumns,\n
+      columnHeaders: [function (column, TH) {\n
+        TH.innerHTML = headers[column];\n
+      }]\n
+    });\n
+    wt.draw();\n
+\n
+    var visibleHeaders = headers.slice(0, wt.wtTable.getLastRenderedColumn() + 1); // headers for rendered columns only\n
+\n
+    expect($table.find(\'thead tr:first th\').length).toBe(visibleHeaders.length);\n
+    expect($table.find(\'thead tr:first th\').text()).toEqual(visibleHeaders.join(\'\'));\n
+  });\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4060</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>columnHeaders.spec.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272562.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>README.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# Handsontable [![Build Status](https://travis-ci.org/handsontable/handsontable.png?branch=master)](https://travis-ci.org/handsontable/handsontable)\n
+\n
+Handsontable is a minimalist approach to Excel-like table editor (data grid) for HTML & JavaScript. \n
+\n
+Runs in IE 10+, Firefox, Chrome, Safari and Opera.\n
+\n
+See the demos at http://handsontable.com/ or fork the example on [JSFiddle](http://jsfiddle.net/js_ziggle/hU6Kz/3228/).\n
+\n
+## Usage\n
+\n
+First, include all the dependencies. All the files that you need are in the `dist\\` directory:\n
+\n
+```html\n
+<script src="dist/handsontable.full.js"></script>\n
+<link rel="stylesheet" media="screen" href="dist/handsontable.full.css">\n
+```\n
+\n
+Then, create a new `Handsontable` object, passing a reference to an empty div as a first argument. After that, load some data if you wish:\n
+\n
+```html\n
+<div id="hot"></div>\n
+<script>\n
+  var data = [\n
+    ["", "Kia", "Nissan", "Toyota", "Honda"],\n
+    ["2008", 10, 11, 12, 13],\n
+    ["2009", 20, 11, 14, 13],\n
+    ["2010", 30, 15, 12, 13]\n
+  ];\n
+  \n
+  var container = document.getElementById(\'hot\');\n
+  var hot = new Handsontable(container,\n
+    {\n
+      data: data,\n
+      minSpareRows: 1,\n
+      colHeaders: true,\n
+      contextMenu: true\n
+    });\n
+</script>\n
+```\n
+\n
+## API Reference\n
+\n
+Check out the new wiki pages: [Options](https://github.com/handsontable/handsontable/wiki/Options), [Methods](https://github.com/handsontable/handsontable/wiki/Methods) and [Events](https://github.com/handsontable/handsontable/wiki/Events)\n
+\n
+## Changelog\n
+\n
+To see the list of recent changes, see [Releases](https://github.com/handsontable/handsontable/releases).\n
+\n
+## Questions\n
+\n
+Please use the :new: [Handsontable Google Group](https://groups.google.com/forum/?fromgroups=#!forum/handsontable) for posting general **Questions**.\n
+\n
+Make sure the question was not answered before in [FAQ](https://github.com/handsontable/handsontable/wiki/FAQ) or [GitHub Issues](https://github.com/handsontable/handsontable/issues)\n
+\n
+## Reporting bugs and feature requests\n
+\n
+Please follow this guidelines when reporting bugs and feature requests:\n
+\n
+1. Use [GitHub Issues](https://github.com/handsontable/handsontable/issues) board to report bugs and feature requests (not our email address)\n
+2. Please **always** write steps to reproduce the error. That way we can focus on fixing the bug, not scratching our heads trying to reproduce it.\n
+3. If possible, please add a JSFiddle link that shows the problem (start by forking [this fiddle](http://jsfiddle.net/js_ziggle/hU6Kz/3228/)). It saves us much time.\n
+4. If you can\'t reproduce it on JSFiddle, please add a screenshot that shows the problem. JSFiddle is much more appreciated because it lets us start fixing straight away.\n
+\n
+Thanks for understanding!\n
+\n
+## Contributing\n
+\n
+Please see [CONTRIBUTING.md](CONTRIBUTING.md)\n
+\n
+## Contact\n
+\n
+You can contact us at hello@handsontable.com.\n
+\n
+## License\n
+\n
+The MIT License (see the [LICENSE](https://github.com/handsontable/handsontable/blob/master/LICENSE) file for the full text)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2967</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>README.md</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
