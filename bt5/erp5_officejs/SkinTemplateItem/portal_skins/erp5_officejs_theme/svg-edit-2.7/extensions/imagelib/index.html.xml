@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+<meta charset="utf-8" />\r\n
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>\r\n
+</head>\r\n
+<body>\r\n
+\r\n
+<h1>Select an image:</h1>\r\n
+<a href="smiley.svg">smiley.svg</a>\r\n
+<br>\r\n
+<a href="../../images/logo.png">logo.png</a>\r\n
+\r\n
+<script>\r\n
+/*globals $*/\r\n
+/*jslint vars: true*/\r\n
+$(\'a\').click(function() {\'use strict\';\r\n
+\tvar meta_str;\r\n
+\tvar href = this.href;\r\n
+\tvar target = window.parent;\r\n
+\t// Convert Non-SVG images to data URL first \r\n
+\t// (this could also have been done server-side by the library)\r\n
+\tif (this.href.indexOf(\'.svg\') === -1) {\r\n
+\r\n
+\t\tmeta_str = JSON.stringify({\r\n
+\t\t\tname: $(this).text(),\r\n
+\t\t\tid: href\r\n
+\t\t});\r\n
+\t\ttarget.postMessage(meta_str, \'*\');\r\n
+\r\n
+\t\tvar img = new Image();\r\n
+\t\timg.onload = function() {\r\n
+\t\t\tvar canvas = document.createElement(\'canvas\');\r\n
+\t\t\tcanvas.width = this.width;\r\n
+\t\t\tcanvas.height = this.height;\r\n
+\t\t\t// load the raster image into the canvas\r\n
+\t\t\tcanvas.getContext(\'2d\').drawImage(this, 0, 0);\r\n
+\t\t\t// retrieve the data: URL\r\n
+\t\t\tvar dataurl;\r\n
+\t\t\ttry {\r\n
+\t\t\t\tdataurl = canvas.toDataURL();\r\n
+\t\t\t} catch(err) {\r\n
+\t\t\t\t// This fails in Firefox with file:// URLs :(\r\n
+\t\t\t\talert("Data URL conversion failed: " + err);\r\n
+\t\t\t\tdataurl = "";\r\n
+\t\t\t}\r\n
+\t\t\ttarget.postMessage(\'|\' + href + \'|\' + dataurl, \'*\');\r\n
+\t\t};\r\n
+\t\timg.src = href;\r\n
+\t} else {\r\n
+\t\t// Send metadata (also indicates file is about to be sent)\r\n
+\t\tmeta_str = JSON.stringify({\r\n
+\t\t\tname: $(this).text(),\r\n
+\t\t\tid: href\r\n
+\t\t});\r\n
+\t\ttarget.postMessage(meta_str, \'*\');\r\n
+\t\t// Do ajax request for image\'s href value\r\n
+\t\t$.get(href, function(data) {\r\n
+\t\t\tdata = \'|\' + href + \'|\' + data;\r\n
+\t\t\t// This is where the magic happens!\r\n
+\t\t\ttarget.postMessage(data, \'*\');\r\n
+\t\t\t\r\n
+\t\t}, \'html\'); // \'html\' is necessary to keep returned data as a string\r\n
+\t}\r\n
+\treturn false;\r\n
+});\r\n
+\r\n
+</script>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

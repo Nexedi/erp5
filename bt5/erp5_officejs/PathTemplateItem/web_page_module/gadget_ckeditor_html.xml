@@ -123,7 +123,7 @@
 \n
   </head>\n
   <body>\n
-    <div class="ckeditor_gadget"><textarea name="text_content"></textarea></div>\n
+    <div class="ckeditor_gadget"><textarea></textarea></div>\n
   </body>\n
 </html>\n
 
@@ -263,7 +263,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.11034.42442.12066</string> </value>
+                <value> <string>945.18348.39523.50449</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -281,7 +281,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440438516.13</float>
+                        <float>1441297895.5</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

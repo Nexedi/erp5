@@ -113,9 +113,31 @@
         .push(function (element) {\n
           var textarea = element.querySelector(\'textarea\');\n
           g.props.element = element;\n
-          g.props.ckeditor = CKEDITOR.replace(textarea);\n
+          g.props.ckeditor = CKEDITOR.replace(\n
+            textarea,\n
+            {\n
+              removeButtons: \'NewPage,Preview\',\n
+              removePluggins: \'\'\n
+            }\n
+          );\n
+          g.props.ckeditor.addCommand(\'saveRJS\', {\n
+            readOnly: 1,\n
+            exec: function () {\n
+              return g.submitContent();\n
+            }\n
+          });\n
+          g.props.ckeditor.ui.addButton(\'Save\', {\n
+            label: "Save",\n
+            command: \'saveRJS\',\n
+            toolbar: \'document,1\'\n
+          });\n
+          g.props.ckeditor.on(\'maximize\', function () {\n
+            return g.maximize();\n
+          });\n
         });\n
     })\n
+    .declareAcquiredMethod("submitContent", "triggerSubmit")\n
+    .declareAcquiredMethod("maximize", "triggerMaximize")\n
     .declareMethod(\'render\', function (options) {\n
       this.props.key = options.key || "text_content";\n
       this.props.ckeditor.setData(options.value || "");\n
@@ -263,7 +285,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18348.32782.27238</string> </value>
+                <value> <string>945.34034.51991.273</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -281,7 +303,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440438538.83</float>
+                        <float>1441379761.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

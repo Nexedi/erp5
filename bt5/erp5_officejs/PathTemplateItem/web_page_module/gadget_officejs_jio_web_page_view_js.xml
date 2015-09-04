@@ -103,7 +103,7 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*globals window, rJS, Handlebars, RSVP, loopEventListener*/\n
+/*globals window, rJS, Handlebars, RSVP, loopEventListener, console*/\n
 /*jslint indent: 2, nomen: true, maxlen: 80*/\n
 (function (window, RSVP, rJS, Handlebars, loopEventListener) {\n
   "use strict";\n
@@ -113,7 +113,6 @@
       doc = gadget.options.doc;\n
     doc.parent_relative_url = "web_page_module";\n
     doc.portal_type = "Web Page";\n
-\n
     for (i = 0; i < submit_event.target.length; i += 1) {\n
       // XXX Should check input type instead\n
       if (submit_event.target[i].name) {\n
@@ -133,6 +132,22 @@
       });\n
   }\n
 \n
+  function maximize(gadget) {\n
+    var iframe = gadget.props.element.querySelector(\'iframe\'),\n
+      iframe_class_string = iframe.getAttribute(\'class\') || "",\n
+      class_name = "ui-content-maximize",\n
+      class_index = iframe_class_string.indexOf(class_name);\n
+    if (class_index === -1) {\n
+      iframe_class_string += \' \' + class_name;\n
+      iframe.setAttribute(\'style\', \'\');\n
+    } else {\n
+      iframe_class_string = iframe_class_string.substring(0, class_index)\n
+        + iframe_class_string.substring(class_index + class_name.length);\n
+      iframe.setAttribute(\'style\', \'width:100%; border: 0 none; height: 600px\');\n
+    }\n
+    iframe.setAttribute(\'class\', iframe_class_string);\n
+    return true;\n
+  }\n
 \n
   var gadget_klass = rJS(window),\n
     source = gadget_klass.__template_element\n
@@ -159,6 +174,21 @@
     .declareAcquiredMethod(\'allDocs\', \'jio_allDocs\')\n
     .declareAcquiredMethod("redirect", "redirect")\n
 \n
+    .allowPublicAcquisition(\'triggerSubmit\', function () {\n
+      return this.props.element.querySelector(\'button\').click();\n
+    })\n
+\n
+    .allowPublicAcquisition(\'triggerMaximize\', function () {\n
+      var gadget = this;\n
+      return RSVP.Queue()\n
+        .push(function () {\n
+          return maximize(gadget);\n
+        })\n
+        .fail(function (e) {\n
+          console.log(e);\n
+        });\n
+    })\n
+\n
     .declareMethod("render", function (options) {\n
       var gadget = this;\n
       gadget.options = options;\n
@@ -173,7 +203,7 @@
           });\n
         })\n
         .push(function () {\n
-          gadget.props.deferred.resolve();\n
+          return gadget.props.deferred.resolve();\n
         });\n
     })\n
 \n
@@ -199,12 +229,11 @@
           );\n
         })\n
         .push(function (text_content_gadget) {\n
-          var iframe = gadget.props.element.querySelector(\n
-              ".document-content iframe"\n
-            );\n
-          iframe.width = "100%";\n
-          iframe.height = "600px";\n
-          iframe.setAttribute("style", "border:none;");\n
+          var iframe = gadget.props.element.querySelector(\'iframe\');\n
+          iframe.setAttribute(\n
+            \'style\',\n
+            \'width:100%; border: 0 none; height: 600px\'\n
+          );\n
           text_gadget = text_content_gadget;\n
           return text_content_gadget.render({\n
             "key": \'text_content\',\n
@@ -377,7 +406,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18345.52582.54988</string> </value>
+                <value> <string>945.34033.23091.48896</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -395,7 +424,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440438395.31</float>
+                        <float>1441379636.83</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
