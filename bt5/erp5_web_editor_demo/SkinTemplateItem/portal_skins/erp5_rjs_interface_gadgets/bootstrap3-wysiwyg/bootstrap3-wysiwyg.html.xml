@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts41272936.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>bootstrap3-wysiwyg.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">\n
+    <meta charset="utf-8">\n
+\n
+    <title>bootstrap-wysihtml5</title>\n
+\n
+    <link rel="stylesheet" type="text/css" href="components/bootstrap/dist/css/bootstrap.min.css"></link>\n
+    <link rel="stylesheet" type="text/css" href="components/bootstrap/dist/css/bootstrap-theme.min.css"></link>\n
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"></link>\n
+    <link rel="stylesheet" type="text/css" href="dist/bootstrap3-wysihtml5.min.css"></link>\n
+\n
+    <link rel="http://www.renderjs.org/rel/interface" href="../dist/interface/editor_interface.html"></link>\n
+\n
+    <script src="../../dist/jquery.js"></script>\n
+    <script src="components/wysihtml5x/dist/wysihtml5x-toolbar.min.js"></script>\n
+    <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>\n
+    <script src="components/handlebars/handlebars.runtime.min.js"></script>\n
+    <script src="dist/bootstrap3-wysihtml5.min.js"></script>\n
+    <script src="../../../node_modules/rsvp/dist/rsvp-2.0.4.js"></script>\n
+    <script src="../../dist/renderjs.js"></script>\n
+    <script src="dist/gadget_bootstrap3-wysiwyg.js" type="text/javascript"></script>\n
+\n
+  </head>\n
+  <body></body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1299</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>bootstrap3-wysiwyg.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
