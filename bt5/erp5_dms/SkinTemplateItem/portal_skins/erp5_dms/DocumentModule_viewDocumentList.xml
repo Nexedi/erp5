@@ -73,6 +73,7 @@
                         <string>listbox_thumbnail</string>
                         <string>listbox_creation_date</string>
                         <string>listbox_modification_date</string>
+                        <string>listbox_download</string>
                       </list>
                     </value>
                 </item>

@@ -19,6 +19,7 @@
                 <string>selection_name</string>
                 <string>sort_columns</string>
                 <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -182,6 +183,10 @@
                         <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>download</string>
+                          <string>Download</string>
                         </tuple>
                       </list>
                     </value>
@@ -504,6 +509,17 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Documents</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>download</string>
+                          <string>File_getDownloadUrl</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>
