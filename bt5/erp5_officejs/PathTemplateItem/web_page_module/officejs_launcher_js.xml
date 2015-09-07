@@ -399,6 +399,9 @@
       return gadget.aq_pleasePublishMyState.apply(gadget, param_list)\n
         .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
     })\n
+    .allowPublicAcquisition(\'reload\', function () {\n
+      return location.reload();\n
+    })\n
     .allowPublicAcquisition("getUrlFor", function (param_list) {\n
       var options = param_list[0],\n
         key;\n
@@ -713,7 +716,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.38261.35515.4386</string> </value>
+                <value> <string>945.38286.54145.32000</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -731,7 +734,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441634809.55</float>
+                        <float>1441635494.88</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
