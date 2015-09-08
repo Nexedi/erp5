@@ -2,7 +2,7 @@
 import string
 from DummyField import fields
 from DocumentTemplate.DT_Util import html_quote
-from DateTime import DateTime
+from DateTime import DateTime, Timezones
 from cgi import escape
 import types
 from DocumentTemplate.ustr import ustr
@@ -1280,9 +1280,7 @@ class MultiCheckBoxWidget(MultiItemsWidget):
 
 MultiCheckBoxWidgetInstance = MultiCheckBoxWidget()
 
-gmt_timezones =  [('GMT%s' %zone, 'GMT%s' %zone,) for zone in range(-12, 0)]\
-                  + [('GMT', 'GMT',),] \
-                  + [('GMT+%s' %zone, 'GMT+%s' %zone,) for zone in range(1, 13)]
+gmt_timezones = [(x, x) for x in sorted(set(Timezones()))]
 
 class DateTimeWidget(Widget):
   """
