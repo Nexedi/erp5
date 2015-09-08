@@ -104,7 +104,8 @@
 (function (window, rJS, document, RSVP) {\n
   "use strict";\n
 \n
-  var timeout = 60000;\n
+  var timeout = 60000,\n
+    websocket_timeout = 5000;\n
 \n
   function S4() {\n
     return (\'0000\' + Math.floor(\n
@@ -121,6 +122,9 @@
   }\n
 \n
   function wrapJioAccess(gadget, method_name, argument_list) {\n
+    if (!gadget.state_parameter_dict.jio_created) {\n
+      return gadget.redirect({page: \'setting\'});\n
+    }\n
     return gadget.getDeclaredGadget(\'gadget_webrtc_datachannel.html\')\n
       .push(function (rtc_gadget) {\n
         gadget.state_parameter_dict.message_count += 1;\n
@@ -160,7 +164,9 @@
 \n
     .ready(function (gadget) {\n
       // Initialize the gadget local parameters\n
-      gadget.state_parameter_dict = {};\n
+      gadget.state_parameter_dict = {\n
+        jio_created: false\n
+      };\n
       return gadget.getElement()\n
         .push(function (element) {\n
           gadget.state_parameter_dict.element = element;\n
@@ -196,11 +202,17 @@
       return;\n
     })\n
 \n
+    .declareAcquiredMethod(\'redirect\', \'redirect\')\n
+\n
     .declareMethod(\'createJio\', function (options) {\n
       var context = this,\n
         socket_gadget,\n
         rtc_gadget;\n
 \n
+      if ((options === undefined) || (options.socket_url === undefined)) {\n
+        return context.redirect({page: \'setting\'});\n
+      }\n
+      context.state_parameter_dict.jio_created = true;\n
       return declareSubGadget(context, \'gadget_websocket.html\')\n
         .push(function (gadget) {\n
           socket_gadget = gadget;\n
@@ -209,41 +221,42 @@
           context.state_parameter_dict.answer_defer = RSVP.defer();\n
           context.state_parameter_dict.message_count = 0;\n
           context.state_parameter_dict.message_dict = {};\n
-          return declareSubGadget(context, \'gadget_websocket.html\')\n
-            .push(function (gadget) {\n
-              socket_gadget = gadget;\n
-              // XXX Drop hardcoded URL\n
-              return socket_gadget.createSocket(options.socket_url);\n
-            })\n
-            .push(function () {\n
-              return declareSubGadget(context, \'gadget_webrtc_datachannel.html\');\n
-            })\n
-            .push(function (gadget) {\n
-              rtc_gadget = gadget;\n
-              return rtc_gadget.createOffer(context.state_parameter_dict.uuid);\n
-            })\n
-            .push(function (description) {\n
-              // Send offer and expect answer in less than XXXms (arbitrary value...)\n
-              return RSVP.any([\n
-                RSVP.Queue()\n
-                  .push(function () {\n
-                    return RSVP.timeout(timeout);\n
-                  })\n
-                  .push(undefined, function () {\n
-                    throw new Error("No remote WebRTC connection available");\n
-                  }),\n
-                RSVP.all([\n
+          // Send offer and expect answer in less than XXXms (arbitrary value...)\n
+          return RSVP.any([\n
+            RSVP.Queue()\n
+              .push(function () {\n
+                return RSVP.timeout(websocket_timeout);\n
+              })\n
+              .push(undefined, function () {\n
+                return context.redirect({page: \'setting\'});\n
+                // throw new Error("No remote WebRTC connection available");\n
+              }),\n
+            declareSubGadget(context, \'gadget_websocket.html\')\n
+              .push(function (gadget) {\n
+                socket_gadget = gadget;\n
+                // XXX Drop hardcoded URL\n
+                return socket_gadget.createSocket(options.socket_url);\n
+              })\n
+              .push(function () {\n
+                return declareSubGadget(context, \'gadget_webrtc_datachannel.html\');\n
+              })\n
+              .push(function (gadget) {\n
+                rtc_gadget = gadget;\n
+                return rtc_gadget.createOffer(context.state_parameter_dict.uuid);\n
+              })\n
+              .push(function (description) {\n
+                return RSVP.all([\n
                   socket_gadget.send(JSON.stringify({from: context.state_parameter_dict.uuid, action: "offer", data: description})),\n
                   context.state_parameter_dict.answer_defer.promise\n
-                ])\n
-              ]);\n
-            })\n
-            .push(function (response_list) {\n
-              return rtc_gadget.registerAnswer(response_list[1]);\n
-            })\n
-            .push(function () {\n
-              return socket_gadget.close();\n
-            });\n
+                ]);\n
+              })\n
+              .push(function (response_list) {\n
+                return rtc_gadget.registerAnswer(response_list[1]);\n
+              })\n
+              .push(function () {\n
+                return socket_gadget.close();\n
+              })\n
+            ]);\n
         });\n
     })\n
     .declareMethod(\'allDocs\', function () {\n
@@ -383,7 +396,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -397,7 +410,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.38227.6078.28825</string> </value>
+                <value> <string>945.39449.60302.38024</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -415,7 +428,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441706238.46</float>
+                        <float>1441715721.23</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
