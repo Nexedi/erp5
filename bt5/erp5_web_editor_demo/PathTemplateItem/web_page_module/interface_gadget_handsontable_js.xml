@@ -109,10 +109,46 @@
 \n
   rJS(window)\n
     .declareMethod(\'getContent\', function () {\n
-      var gadget = this;\n
-      return gadget.props.hot.getData();\n
+      var gadget = this,\n
+        temp_data = gadget.props.hot.getData(),\n
+        temp_columns = gadget.props.hot.getColHeader(),\n
+        data = [],\n
+        columns = [],\n
+        content = {},\n
+        i, j;\n
+      for(i = 0; i < temp_columns.length; i += 1) {\n
+        var title = (temp_columns[i] === null ? \'\' : temp_columns[i]);\n
+        columns.push({\n
+          title: title\n
+        });\n
+      }\n
+      for(i = 0; i < temp_data.length; i += 1) {\n
+        var d = (data[i] = {}),\n
+          temp_row = temp_data[i];\n
+        for(j = 0; j < temp_row.length; j += 1) {  \n
+          d[j] = temp_row[j];\n
+        }\n
+      }\n
+      content.columns = columns;\n
+      content.data = data;\n
+      return content;\n
     })\n
     .declareMethod(\'setContent\', function (content) {\n
+      var gadget = this,\n
+        temp_columns = content.columns,\n
+        temp_data = content.data,\n
+        hot = gadget.props.hot,\n
+        data = [],\n
+        temp_row = [],\n
+        i, j;\n
+      for(i = 0; i < temp_data.length; i += 1) {\n
+        var d = (data[i] = []);\n
+        temp_row = temp_data[i];\n
+        for(j = 0; j < Object.keys(temp_row).length; j += 1) {\n
+          d.push(temp_row[j]);\n
+        }\n
+      }\n
+      hot.loadData(data);\n
       return;\n
     })\n
     .declareMethod(\'clearContent\', function () {\n
@@ -126,52 +162,15 @@
           return gadget.getContent();\n
         })\n
         .push(function(content) {\n
-          var columns = [],\n
-            data = [],\n
-            temp_columns = content[0],\n
-            temp_row, \n
-            i, j;\n
-          for(i = 0; i < temp_columns.length; i += 1) {\n
-            var title = (temp_columns[i] === null ? \'\' : temp_columns[i]);\n
-            columns.push({\n
-              title: title\n
-            });\n
-          }\n
-          for(i = 1; i < content.length; i += 1) {\n
-            var d = (data[i - 1] = {});\n
-            temp_row = content[i];\n
-            for(j = 0; j < temp_row.length; j += 1) {  \n
-              d[j] = temp_row[j];\n
-            }\n
-          }\n
-          current_state.columns = columns;\n
-          current_state.content = data;\n
+          current_state.content = content;\n
           return current_state;\n
         });\n
     })\n
     .declareMethod(\'finishStateTransfer\', function (current_state) {\n
-      var gadget = this,\n
-        content = current_state.content,\n
-        temp_columns = current_state.columns,\n
-        hot = gadget.props.hot,\n
-        data = [],\n
-        temp_row = [],\n
-        i, j;\n
-      for(i = 0; i < temp_columns.length; i += 1) {\n
-        temp_row.push(temp_columns[i].title);\n
-      }\n
-      data.push(temp_row);\n
-      for(i = 0; i < content.length; i += 1) {\n
-        var d = (data[i + 1] = []);\n
-        temp_row = content[i];\n
-        for(j = 0; j < Object.keys(temp_row).length; j += 1) {\n
-          d.push(temp_row[j]);\n
-        }\n
-      }\n
-      hot.loadData(data);\n
-      return;\n
+      return this.setContent(current_state.content);\n
     })\n
     .declareMethod(\'initSubGadget\', function () {\n
+      // hard coded data for demo purpose.\n
       var data = [["", "Ford", "Volvo", "Toyota", "Honda"],\n
                   ["2014", 10, 11, 12, 13],\n
                   ["2015", 20, 11, 14, 13],\n
@@ -329,7 +328,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.32551.63779.17083</string> </value>
+                <value> <string>945.39661.40347.63863</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -347,7 +346,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441293672.51</float>
+                        <float>1441717677.15</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

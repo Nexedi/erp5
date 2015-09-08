@@ -139,7 +139,7 @@
       var current_state = {},\n
         gadget = this;\n
       return RSVP.Queue()\n
-        .push(function(){\n
+        .push(function() {\n
           return gadget.getContent();\n
         })\n
         .push(function(content) {\n
@@ -148,8 +148,8 @@
         });\n
     })\n
     .declareMethod(\'finishStateTransfer\', function (current_state) {\n
-       return this.setContent(current_state.content);\n
-     })\n
+      return this.setContent(current_state.content);\n
+    })\n
     .declareMethod(\'initSubGadget\', function () {\n
       var data = {\n
           labels: [\'Mon\', \'Tue\', \'Wed\', \'Thu\', \'Fri\'],\n
@@ -303,7 +303,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.33714.48637.10274</string> </value>
+                <value> <string>945.39610.42841.21043</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -321,7 +321,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441361996.21</float>
+                        <float>1441714262.07</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
