@@ -79,6 +79,15 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     prevision_value = self._getTestedPropertyValue(prevision_movement,
                                                    tested_property) or 0.0
 
+    return self._comparePrevisionDecisionValue(prevision_movement,
+                                               prevision_value,
+                                               decision_movement,
+                                               decision_value)
+
+  def _comparePrevisionDecisionValue(self,
+                                     prevision_movement, prevision_value,
+                                     decision_movement, decision_value):
+    tested_property = self.getTestedProperty()
     if prevision_movement.getDelivery() == decision_movement.getRelativeUrl():
       # use delivery_ratio if specified
       if self.getProperty('use_delivery_ratio'):
