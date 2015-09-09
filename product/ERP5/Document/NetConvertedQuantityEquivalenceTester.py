@@ -45,6 +45,32 @@ class NetConvertedQuantityEquivalenceTester(FloatEquivalenceTester):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def _compare(self, prevision_movement, decision_movement):
+    tested_property = self.getTestedProperty()
+    if getattr(decision_movement, 'isPropertyRecorded',
+               lambda x:False)(tested_property):
+      decision_value = decision_movement.getRecordedProperty(tested_property) or 0.0
+    else:
+      decision_value = self._getTestedPropertyValue(decision_movement,
+                                                    tested_property) or 0.0
+
+    # XXX: QuantityDivergenceTester from Legacy Simulation: A delivery
+    # quantity of 0 is an exceptional case that we cannot really handle with
+    # the current approach of delivery ratio.
+    if decision_value == 0.0:
+      prevision_value = sum([
+        sm.getMappedProperty('corrected_quantity')
+        for sm in decision_movement.getDeliveryRelatedValueList(
+            portal_type='Simulation Movement')])
+    else:
+      prevision_value = self._getTestedPropertyValue(prevision_movement,
+                                                     tested_property) or 0.0
+
+    return self._comparePrevisionDecisionValue(prevision_movement,
+                                               prevision_value,
+                                               decision_movement,
+                                               decision_value)
+
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
     Returns a list of properties to update on decision_movement
