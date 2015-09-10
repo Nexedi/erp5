@@ -16,10 +16,12 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   # Other way would be to use all the globals variables instead of just an empty
   # dictionary, but that might hamper the speed of exec or eval.
   # Something like -- g = globals(); g['context'] = self;
-  g = {}
+  g = globals()
   g['context'] = self
   result_string = None
   ename, evalue, tb_list = None, None, None
+  # Update globals dict and use it while running exec command
+  g.update(old_local_variable_dict)
 
   # IPython expects 2 status message - 'ok', 'error'
   # Error would be updated only after the exec throws the error here, in all
@@ -36,8 +38,8 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   # a=42;print ab None          Syntax Error     None              Name Error
   # From above, it infers that the invalid syntax is being handled by exec only
   try:
-    jupyter_compiled = compile(jupyter_code, '<input>', 'eval')
-    eval_result = eval(jupyter_compiled, g, old_local_variable_dict)
+    jupyter_compiled = compile(jupyter_code, '<string>', 'eval')
+    eval_result = eval(jupyter_compiled, g, g)
     result_string = str(eval_result)
   # Trying to catch everything which results in error from eval
   # It can be just an invalid syntax, invalid expression or some error
@@ -49,8 +51,8 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
     result = StringIO()
     sys.stdout = result
     try:
-      jupyter_compiled = compile(jupyter_code, '<input>', 'exec')
-      exec(jupyter_compiled, g, old_local_variable_dict)
+      jupyter_compiled = compile(jupyter_code, '<string>', 'exec')
+      exec(jupyter_compiled, g, g)
       sys.stdout = old_stdout
       result_string = result.getvalue()
 
@@ -66,10 +68,10 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
 
   result = {
     'result_string': result_string,
-    'local_variable_dict': old_local_variable_dict,
+    'local_variable_dict': g,
     'status': status,
     'evalue': evalue,
     'ename': ename,
-    'traceback': tb_list
+    'traceback': tb_list,
   }
   return result
