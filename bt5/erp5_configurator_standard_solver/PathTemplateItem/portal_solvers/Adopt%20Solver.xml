@@ -9,7 +9,7 @@
         <item>
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
-              <tuple>
+              <list>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -17,39 +17,39 @@
                 <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
-              </tuple>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
-              <tuple>
+              <list>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
-              </tuple>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
-              <tuple>
+              <list>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
-              </tuple>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>_View_Permission</string> </key>
             <value>
-              <tuple>
+              <list>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -57,7 +57,7 @@
                 <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
-              </tuple>
+              </list>
             </value>
         </item>
         <item>
@@ -138,10 +138,6 @@
             </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>2</string> </value>
-        </item>
-        <item>
             <key> <string>permission</string> </key>
             <value>
               <none/>
@@ -154,6 +150,10 @@
         <item>
             <key> <string>solver_action_title</string> </key>
             <value> <string>Replace value</string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>AdoptSolver</string> </value>
         </item>
       </dictionary>
     </pickle>

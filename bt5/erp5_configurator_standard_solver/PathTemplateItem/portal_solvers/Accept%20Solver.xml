@@ -9,7 +9,7 @@
         <item>
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
-              <tuple>
+              <list>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -17,7 +17,7 @@
                 <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
-              </tuple>
+              </list>
             </value>
         </item>
         <item>
@@ -36,20 +36,20 @@
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
-              <tuple>
+              <list>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
-              </tuple>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>_View_Permission</string> </key>
             <value>
-              <tuple>
+              <list>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -57,7 +57,7 @@
                 <string>Author</string>
                 <string>Manager</string>
                 <string>Owner</string>
-              </tuple>
+              </list>
             </value>
         </item>
         <item>
@@ -67,15 +67,27 @@
             </value>
         </item>
         <item>
-            <key> <string>_mt_index</string> </key>
+            <key> <string>_identity_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>_tree</string> </key>
+            <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
             </value>
         </item>
         <item>
@@ -125,10 +137,6 @@
             </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>2</string> </value>
-        </item>
-        <item>
             <key> <string>line_exclusive</string> </key>
             <value> <int>0</int> </value>
         </item>
@@ -150,6 +158,10 @@
             <key> <string>solver_action_title</string> </key>
             <value> <string>Accept new value</string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>AcceptSolver</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
@@ -161,13 +173,43 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
