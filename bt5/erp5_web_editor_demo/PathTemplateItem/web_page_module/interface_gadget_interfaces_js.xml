@@ -308,7 +308,6 @@
       return new RSVP.Queue()\n
         .push(function () {\n
           return interface_gadget.declareGadget(gadget_url, {\n
-//            sandbox: \'iframe\',\n
             scope: gadget_url\n
           });\n
         })\n
@@ -317,8 +316,21 @@
         });\n
     })\n
 \n
-    .declareMethod("getDeclaredGadgetInterfaceList", function (gadget) {\n
-      return gadget.getInterfaceList();\n
+    .declareMethod("getDeclaredGadgetInterfaceList", function (gadget_data) {\n
+      var interface_gadget = this;\n
+      return RSVP.Queue()\n
+        .push(function() {\n
+          var required_gadget;\n
+          if(gadget_data.constructor === String) {\n
+            required_gadget = interface_gadget.getVerifyGadget(gadget_data);\n
+          } else {\n
+            required_gadget = gadget_data;\n
+          }\n
+          return required_gadget;\n
+        })\n
+        .push(function(gadget) {\n
+          return gadget.getInterfaceList();\n
+        });\n
     })\n
 \n
     .declareMethod("getDeclaredGadgetMethodList", function (gadget) {\n
@@ -630,7 +642,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.3617.50497.56388</string> </value>
+                <value> <string>945.42564.9271.16896</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -648,7 +660,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441292695.71</float>
+                        <float>1441891610.67</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
