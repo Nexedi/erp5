@@ -57,7 +57,8 @@ class NetConvertedQuantityEquivalenceTester(FloatEquivalenceTester):
     # XXX: QuantityDivergenceTester from Legacy Simulation: A delivery
     # quantity of 0 is an exceptional case that we cannot really handle with
     # the current approach of delivery ratio.
-    if decision_value == 0.0:
+    if (decision_movement.getPortalType() != 'Simulation Movement' and
+        decision_value == 0.0):
       prevision_value = sum([
         sm.getMappedProperty('corrected_quantity')
         for sm in decision_movement.getDeliveryRelatedValueList(
