@@ -290,7 +290,8 @@
         }\n
       }\n
       for (i = 0; i < possible_left_button_list.length; i += 1) {\n
-        if (options.hasOwnProperty(possible_left_button_list[i][0])) {\n
+        if (options.hasOwnProperty(possible_left_button_list[i][0])\n
+            && options[possible_left_button_list[i][0]]) {\n
           left_button = {\n
             title: possible_left_button_list[i][1],\n
             icon: possible_left_button_list[i][2],\n
@@ -339,7 +340,8 @@
         }\n
       }\n
       for (i = 0; i < possible_right_button_list.length; i += 1) {\n
-        if (options.hasOwnProperty(possible_right_button_list[i][0])) {\n
+        if (options.hasOwnProperty(possible_right_button_list[i][0])\n
+            && options[possible_right_button_list[i][0]]) {\n
           right_button = {\n
             title: default_right_text || possible_right_button_list[i][1],\n
             icon: default_right_icon || possible_right_button_list[i][2],\n
@@ -519,7 +521,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -533,7 +535,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.33689.22724.47940</string> </value>
+                <value> <string>945.39862.6327.58811</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -551,8 +553,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441358975.69</float>
-                        <string>GMT</string>
+                        <float>1441729356.63</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

@@ -170,8 +170,7 @@
         .push(function (url) {\n
           return gadget.updateHeader({\n
             title: "Text Documents",\n
-            right_url: url,\n
-            right_title: "New"\n
+            add_url: url\n
           });\n
         })\n
         .push(function () {\n
@@ -350,7 +349,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18324.27561.32341</string> </value>
+                <value> <string>945.39477.48217.31795</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -368,7 +367,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440437077.52</float>
+                        <float>1441729437.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

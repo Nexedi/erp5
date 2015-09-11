@@ -7,6 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -49,7 +67,24 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -266,6 +301,46 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_router_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_jio_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_translation_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_manifest_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -299,13 +374,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/gadget_officejs_text_editor_application_html</string>
+                <string>aggregate/web_page_module/officejs_launcher_html</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
-            <value> <string>E-COMMERCE</string> </value>
+            <value> <string>Text Editor</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -315,15 +390,33 @@
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value> <string>gadget_e5g_ecommerce_page_front.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
             <value> <string>hateoas/</string> </value>
         </item>
         <item>
+            <key> <string>configuration_jio_gadget_url</string> </key>
+            <value> <string>gadget_officejs_jio.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_manifest_url</string> </key>
+            <value> <string>gadget_officejs.appcache</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_e5g_ecommerce_panel.html</string> </value>
+            <value> <string>gadget_officejs_text_editor_application_panel.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_router_gadget_url</string> </key>
+            <value> <string>gadget_officejs_router.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_translation_gadget_url</string> </key>
+            <value> <string>gadget_officejs_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -373,7 +466,7 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>RJSUnsafe</string> </value>
+            <value> <string>RJS</string> </value>
         </item>
         <item>
             <key> <string>static_language_selection</string> </key>
@@ -543,9 +636,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -571,7 +662,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440069092.4</float>
+                        <float>1441812607.6</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -580,7 +671,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>embedded</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -616,7 +707,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18320.46785.6894</string> </value>
+                <value> <string>945.41250.8324.32955</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -634,7 +725,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441126272.93</float>
+                        <float>1441966702.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

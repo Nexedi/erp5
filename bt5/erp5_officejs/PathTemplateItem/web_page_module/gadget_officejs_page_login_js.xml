@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_sync.js</string> </value>
+            <value> <string>gadget_officejs_page_login.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_sync_js</string> </value>
+            <value> <string>gadget_officejs_page_login_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,10 +101,14 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/\n
+            <value> <string>/*globals window, document, RSVP, rJS, promiseEventListener, Handlebars*/\n
 /*jslint indent: 2, maxlen: 80, nomen: true*/\n
-(function (window, RSVP, rJS, promiseEventListener, Handlebars) {\n
+(function (window, document, RSVP, rJS, promiseEventListener, Handlebars) {\n
   "use strict";\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // templates\n
+  /////////////////////////////////////////////////////////////////\n
   var gadget_klass = rJS(window),\n
     templater = gadget_klass.__template_element,\n
 \n
@@ -126,7 +130,7 @@
     .declareMethod("render", function () {\n
       var gadget = this;\n
       return gadget.updateHeader({\n
-        title: "Synchronize"\n
+        title: "Connect"\n
       })\n
         .push(function () {\n
           return gadget.translateHtml(template());\n
@@ -137,35 +141,34 @@
     })\n
 \n
     .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("repair", "jio_repair")\n
-\n
     .declareService(function () {\n
       var gadget = this;\n
-\n
       return new RSVP.Queue()\n
         .push(function () {\n
+          gadget.props.element.querySelector("input[type=text]")\n
+                              .focus();\n
           return promiseEventListener(\n
-            gadget.props.element.querySelector(\'form.synchro-form\'),\n
+            gadget.props.element.querySelector(\'form.login-form\'),\n
             \'submit\',\n
             false\n
           );\n
         })\n
-        .push(function () {\n
-          gadget.props.element.querySelector("button")\n
+        .push(function (evt) {\n
+          gadget.props.element.querySelector("input[type=submit]")\n
                               .disabled = true;\n
-\n
-          return gadget.repair();\n
-        })\n
-        .push(function () {\n
-          return gadget.redirect({});\n
+          var login = evt.target.elements[0].value,\n
+            passwd = evt.target.elements[1].value;\n
+          document.cookie = "__ac=" + window.btoa(login + ":" + passwd) +\n
+                            "; path=/";\n
+          return gadget.redirect({page:"sync"});\n
         });\n
     });\n
 \n
-}(window, RSVP, rJS, promiseEventListener, Handlebars));</string> </value>
+}(window, document, RSVP, rJS, promiseEventListener, Handlebars));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Sync Page JS</string> </value>
+            <value> <string>OfficeJS Login Page JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -253,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011698.37</float>
+                        <float>1438011356.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -298,7 +301,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.34038.48545.63795</string> </value>
+                <value> <string>945.41252.5943.7082</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -316,7 +319,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441813353.14</float>
+                        <float>1441812760.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -373,7 +376,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011605.22</float>
+                        <float>1438011231.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -140,13 +140,14 @@
     if (class_index === -1) {\n
       iframe_class_string += \' \' + class_name;\n
       iframe.setAttribute(\'style\', \'\');\n
-    } else {\n
-      iframe_class_string = iframe_class_string.substring(0, class_index)\n
-        + iframe_class_string.substring(class_index + class_name.length);\n
-      iframe.setAttribute(\'style\', \'width:100%; border: 0 none; height: 600px\');\n
+      iframe.setAttribute(\'class\', iframe_class_string);\n
+      return;\n
     }\n
+    iframe_class_string = iframe_class_string.substring(0, class_index)\n
+      + iframe_class_string.substring(class_index + class_name.length);\n
+    iframe.setAttribute(\'style\', \'width:100%; border: 0 none; height: 600px\');\n
     iframe.setAttribute(\'class\', iframe_class_string);\n
-    return true;\n
+    return;\n
   }\n
 \n
   var gadget_klass = rJS(window),\n
@@ -174,10 +175,6 @@
     .declareAcquiredMethod(\'allDocs\', \'jio_allDocs\')\n
     .declareAcquiredMethod("redirect", "redirect")\n
 \n
-    .allowPublicAcquisition(\'triggerSubmit\', function () {\n
-      return this.props.element.querySelector(\'button\').click();\n
-    })\n
-\n
     .allowPublicAcquisition(\'triggerMaximize\', function () {\n
       var gadget = this;\n
       return RSVP.Queue()\n
@@ -187,6 +184,14 @@
         .fail(function (e) {\n
           console.log(e);\n
         });\n
+    })\n
+\n
+    .allowPublicAcquisition(\'triggerSubmit\', function () {\n
+      return this.props.element.querySelector(\'button\').click();\n
+    })\n
+\n
+    .declareMethod(\'triggerSubmit\', function () {\n
+      return this.props.element.querySelector(\'button\').click();\n
     })\n
 \n
     .declareMethod("render", function (options) {\n
@@ -199,7 +204,10 @@
         .push(function (html) {\n
           gadget.props.element.innerHTML = html;\n
           return gadget.updateHeader({\n
-            title: "Web Page"\n
+            title: options.doc.title + " | Web Page",\n
+            back_url: "#text_editor_list",\n
+            panel_action: false,\n
+            save_action: true\n
           });\n
         })\n
         .push(function () {\n
@@ -220,10 +228,10 @@
         })\n
         .push(function () {\n
           return gadget.declareGadget(\n
-            "gadget_ckeditor.html",\n
+            "rjsunsafe/gadget_ckeditor.html",\n
             {\n
               scope: "my_text_content",\n
-              sandbox: "dataurl",\n
+              sandbox: "iframe",\n
               element: gadget.props.element.querySelector(".document-content")\n
             }\n
           );\n
@@ -406,7 +414,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.34033.23091.48896</string> </value>
+                <value> <string>945.42760.43905.59050</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -424,7 +432,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441379636.83</float>
+                        <float>1441963997.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

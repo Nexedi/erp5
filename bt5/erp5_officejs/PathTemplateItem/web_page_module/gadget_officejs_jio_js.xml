@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_sync.js</string> </value>
+            <value> <string>gadget_officejs_jio.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,13 +81,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_sync_js</string> </value>
+            <value> <string>gadget_officejs_jio_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -101,77 +99,106 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/\n
-/*jslint indent: 2, maxlen: 80, nomen: true*/\n
-(function (window, RSVP, rJS, promiseEventListener, Handlebars) {\n
+            <value> <string>/*global window, rJS, jIO, FormData */\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, rJS, jIO) {\n
   "use strict";\n
-  var gadget_klass = rJS(window),\n
-    templater = gadget_klass.__template_element,\n
 \n
-    template = Handlebars.compile(\n
-      templater.getElementById("page-template").innerHTML\n
-    );\n
+  rJS(window)\n
 \n
-  gadget_klass\n
-    .ready(function (g) {\n
-      g.props = {};\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-        });\n
+    .ready(function (gadget) {\n
+      // Initialize the gadget local parameters\n
+      gadget.state_parameter_dict = {};\n
     })\n
 \n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareMethod("render", function () {\n
-      var gadget = this;\n
-      return gadget.updateHeader({\n
-        title: "Synchronize"\n
-      })\n
-        .push(function () {\n
-          return gadget.translateHtml(template());\n
-        })\n
-        .push(function (html) {\n
-          gadget.props.element.innerHTML = html;\n
+    .declareMethod(\'createJio\', function (jio_options) {\n
+      this.state_parameter_dict.jio_storage = jIO.createJIO({\n
+          type: "replicate",\n
+          // XXX This drop the signature lists...\n
+          query: {\n
+            query: \'portal_type:"Web Page" \',\n
+              // XX Synchonizing the whole module is too much, here is a way to start quietly\n
+              //+ \'AND local_roles: ("Owner") \'\n
+              //+ \'AND validation_state: ("draft", "released_alive", "shared_alive", "published_alive") \',\n
+            limit: [0, 1234567890]\n
+          },\n
+          use_remote_post: true,\n
+          conflict_handling: 2,\n
+          check_local_modification: true,\n
+          check_local_creation: true,\n
+          check_local_deletion: true,\n
+          check_remote_modification: true,\n
+          check_remote_creation: true,\n
+          check_remote_deletion: true,\n
+          local_sub_storage: {\n
+            type: "query",\n
+            sub_storage: {\n
+              type: "uuid",\n
+              sub_storage: {\n
+                type: "indexeddb",\n
+                database: "officejs"\n
+              }\n
+            }\n
+          },\n
+          remote_sub_storage: {\n
+            type: "erp5",\n
+            url: (new URI("hateoas"))\n
+              .absoluteTo(location.href)\n
+              .toString(),\n
+            default_view_reference: "jio_view"\n
+          }\n
         });\n
     })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("repair", "jio_repair")\n
-\n
-    .declareService(function () {\n
-      var gadget = this;\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return promiseEventListener(\n
-            gadget.props.element.querySelector(\'form.synchro-form\'),\n
-            \'submit\',\n
-            false\n
-          );\n
-        })\n
-        .push(function () {\n
-          gadget.props.element.querySelector("button")\n
-                              .disabled = true;\n
-\n
-          return gadget.repair();\n
-        })\n
-        .push(function () {\n
-          return gadget.redirect({});\n
-        });\n
+    .declareMethod(\'allDocs\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.allDocs.apply(storage, arguments);\n
+    })\n
+    .declareMethod(\'allAttachments\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.allAttachments.apply(storage, arguments);\n
+    })\n
+    .declareMethod(\'get\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.get.apply(storage, arguments);\n
+    })\n
+    .declareMethod(\'put\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.put.apply(storage, arguments);\n
+    })\n
+    .declareMethod(\'post\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.post.apply(storage, arguments);\n
+    })\n
+    .declareMethod(\'remove\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.remove.apply(storage, arguments);\n
+    })\n
+    .declareMethod(\'getAttachment\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.getAttachment.apply(storage, arguments);\n
+    })\n
+    .declareMethod(\'putAttachment\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.putAttachment.apply(storage, arguments);\n
+    })\n
+    .declareMethod(\'removeAttachment\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.removeAttachment.apply(storage, arguments);\n
+    })\n
+    .declareMethod(\'repair\', function () {\n
+      var storage = this.state_parameter_dict.jio_storage;\n
+      return storage.repair.apply(storage, arguments);\n
     });\n
 \n
-}(window, RSVP, rJS, promiseEventListener, Handlebars));</string> </value>
+}(window, rJS, jIO));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Sync Page JS</string> </value>
+            <value> <string>Jio Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -253,7 +280,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011698.37</float>
+                        <float>1441645260.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -298,7 +325,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.34038.48545.63795</string> </value>
+                <value> <string>945.43851.47565.8721</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -316,7 +343,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441813353.14</float>
+                        <float>1441969006.79</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -373,7 +400,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011605.22</float>
+                        <float>1441643341.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -124,8 +124,8 @@
       <div class="ui-grid-b ui-responsive">\n
         <div class="ui-block-a"></div>\n
         <div class="ui-block-b">\n
-          <form class="synchro-form">\n
-            <input data-inline="true" type="submit" value="Launch" data-i18n="[value]Launch" data-theme="b">\n
+          <form class="synchro-form view-web-page-form">\n
+            <button type="submit" data-i18n="Launch Synchronization" data-theme="b">Launch Synchronization</button>\n
           </form>\n
         </div>\n
         <div class="ui-block-c"></div>\n
@@ -278,7 +278,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18325.20042.14250</string> </value>
+                <value> <string>945.41276.23899.60552</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -296,7 +296,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440439752.77</float>
+                        <float>1441814187.24</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_sync.js</string> </value>
+            <value> <string>gadget_officejs.appcache</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,17 +81,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_sync_js</string> </value>
+            <value> <string>gadget_officejs_appcache</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -101,77 +99,78 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/\n
-/*jslint indent: 2, maxlen: 80, nomen: true*/\n
-(function (window, RSVP, rJS, promiseEventListener, Handlebars) {\n
-  "use strict";\n
-  var gadget_klass = rJS(window),\n
-    templater = gadget_klass.__template_element,\n
-\n
-    template = Handlebars.compile(\n
-      templater.getElementById("page-template").innerHTML\n
-    );\n
-\n
-  gadget_klass\n
-    .ready(function (g) {\n
-      g.props = {};\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-        });\n
-    })\n
-\n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareMethod("render", function () {\n
-      var gadget = this;\n
-      return gadget.updateHeader({\n
-        title: "Synchronize"\n
-      })\n
-        .push(function () {\n
-          return gadget.translateHtml(template());\n
-        })\n
-        .push(function (html) {\n
-          gadget.props.element.innerHTML = html;\n
-        });\n
-    })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("repair", "jio_repair")\n
-\n
-    .declareService(function () {\n
-      var gadget = this;\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return promiseEventListener(\n
-            gadget.props.element.querySelector(\'form.synchro-form\'),\n
-            \'submit\',\n
-            false\n
-          );\n
-        })\n
-        .push(function () {\n
-          gadget.props.element.querySelector("button")\n
-                              .disabled = true;\n
-\n
-          return gadget.repair();\n
-        })\n
-        .push(function () {\n
-          return gadget.redirect({});\n
-        });\n
-    });\n
-\n
-}(window, RSVP, rJS, promiseEventListener, Handlebars));</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+CACHE MANIFEST\n
+# generated on Fri, 06 Feb 2015 15:31:33 +0000\n
+# XXX + fonts\n
+# images/ajax-loader.gif\n
+CACHE:\n
+https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css\n
+https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot?v=4.0.3\n
+https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot?#iefix&v=4.0.3\n
+https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.woff?v=4.0.3\n
+https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.ttf?v=4.0.3\n
+https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular\n
+URI.js\n
+dygraph.js\n
+gadget_erp5.css\n
+gadget_global.js\n
+gadget_jio.html\n
+gadget_jio.js\n
+gadget_translate.html\n
+gadget_translate.js\n
+handlebars.js\n
+i18next.js\n
+jiodev.js\n
+jquery.js\n
+jquerymobile.css\n
+jquerymobile.js\n
+renderjs.js\n
+rsvp.js\n
+gadget_officejs_page_text_editor_list.js\n
+gadget_officejs_page_text_editor_list.html\n
+gadget_officejs_header.js\n
+gadget_officejs_header.html\n
+gadget_officejs_jio_web_page_view.js\n
+gadget_officejs_jio_web_page_view.html\n
+gadget_officejs_text_editor_application_panel.js\n
+gadget_officejs_text_editor_application_panel.html\n
+gadget_officejs_router.html\n
+gadget_officejs_router.js\n
+gadget_officejs_jio.html\n
+gadget_officejs_jio.js\n
+gadget_officejs_page_share_webrtc_jio.js\n
+gadget_officejs_page_share_webrtc_jio.html\n
+gadget_officejs_webrtc_jio.js\n
+gadget_officejs_webrtc_jio.html\n
+gadget_officejs_page_text_editor_list.html\n
+gadget_officejs_page_text_editor_list.js\n
+gadget_officejs_page_add_text_document.html\n
+gadget_officejs_page_add_text_document.js\n
+gadget_officejs_translation.js\n
+gadget_officejs_translation.html\n
+gadget_officejs_translation_data.js\n
+gadget_officejs_widget_listbox.js\n
+gadget_officejs_widget_listbox.html\n
+gadget_officejs_page_sync.js\n
+gadget_officejs_page_sync.html\n
+officejs_launcher.js\n
+officejs_launcher.html\n
+rjsunsafe/gadget_ckeditor.js\n
+rjsunsafe/gadget_ckeditor.html\n
+NETWORK:\n
+*
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Sync Page JS</string> </value>
+            <value> <string>RenderJS Gadget OfficeJS AppCache</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -253,7 +252,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011698.37</float>
+                        <float>1441731873.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -298,7 +297,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.34038.48545.63795</string> </value>
+                <value> <string>945.43854.16066.11281</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -316,7 +315,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441813353.14</float>
+                        <float>1441969739.85</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -373,7 +372,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011605.22</float>
+                        <float>1441730475.18</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

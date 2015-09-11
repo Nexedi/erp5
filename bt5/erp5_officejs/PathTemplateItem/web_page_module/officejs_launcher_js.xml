@@ -482,6 +482,12 @@
     .allowPublicAcquisition("jio_repair", function (param_list) {\n
       return callJioGadget(this, "repair", param_list);\n
     })\n
+    .allowPublicAcquisition("triggerSubmit", function (param_list) {\n
+      return this.getDeclaredGadget(MAIN_SCOPE)\n
+        .push(function (main_gadget) {\n
+          return main_gadget.triggerSubmit(param_list);\n
+        });\n
+    })\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -718,7 +724,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -732,7 +738,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.39476.14059.34508</string> </value>
+                <value> <string>945.39852.16132.21538</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -750,8 +756,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441706203.86</float>
-                        <string>GMT</string>
+                        <float>1441729471.18</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

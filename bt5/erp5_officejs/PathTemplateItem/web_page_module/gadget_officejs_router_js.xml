@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_sync.js</string> </value>
+            <value> <string>gadget_officejs_router.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,13 +81,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_sync_js</string> </value>
+            <value> <string>gadget_officejs_router_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -101,77 +99,72 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/\n
-/*jslint indent: 2, maxlen: 80, nomen: true*/\n
-(function (window, RSVP, rJS, promiseEventListener, Handlebars) {\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS */\n
+/*jslint nomen: true, indent: 2, maxerr: 3*/\n
+(function (window, rJS) {\n
   "use strict";\n
-  var gadget_klass = rJS(window),\n
-    templater = gadget_klass.__template_element,\n
 \n
-    template = Handlebars.compile(\n
-      templater.getElementById("page-template").innerHTML\n
-    );\n
+  var gadget_klass = rJS(window),\n
+    MAIN_PAGE_PREFIX = "gadget_officejs_",\n
+    DEFAULT_PAGE = "text_editor_list";\n
 \n
   gadget_klass\n
-    .ready(function (g) {\n
-      g.props = {};\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-        });\n
+    .declareAcquiredMethod(\'pleaseRedirectMyHash\', \'pleaseRedirectMyHash\')\n
+    .declareAcquiredMethod(\'jio_get\', \'jio_get\')\n
+\n
+    .ready(function (gadget) {\n
+      gadget.props = {};\n
     })\n
-\n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareMethod("render", function () {\n
+    .declareMethod(\'route\', function (options) {\n
       var gadget = this;\n
-      return gadget.updateHeader({\n
-        title: "Synchronize"\n
-      })\n
-        .push(function () {\n
-          return gadget.translateHtml(template());\n
-        })\n
-        .push(function (html) {\n
-          gadget.props.element.innerHTML = html;\n
-        });\n
-    })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("repair", "jio_repair")\n
-\n
-    .declareService(function () {\n
-      var gadget = this;\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return promiseEventListener(\n
-            gadget.props.element.querySelector(\'form.synchro-form\'),\n
-            \'submit\',\n
-            false\n
-          );\n
-        })\n
-        .push(function () {\n
-          gadget.props.element.querySelector("button")\n
-                              .disabled = true;\n
-\n
-          return gadget.repair();\n
-        })\n
-        .push(function () {\n
-          return gadget.redirect({});\n
+      gadget.options = options;\n
+      if (options.jio_key === undefined || options.jio_key === \'\') {\n
+        if (options.page === undefined || options.page === \'\') {\n
+          options.page = DEFAULT_PAGE;\n
+        }\n
+        return {\n
+          url: MAIN_PAGE_PREFIX + "page_" + options.page + ".html",\n
+          options: options\n
+        };\n
+      }\n
+      return gadget.jio_get(options.jio_key)\n
+        .push(function (doc) {\n
+          var sub_options = {},\n
+            base_portal_type = doc.portal_type.toLowerCase().replace(/\\s/g, "_");\n
+          sub_options = {\n
+            doc: doc,\n
+            jio_key: options.jio_key,\n
+            search: options.search\n
+          };\n
+          if (base_portal_type.search(/_temp$/) >= 0) {\n
+            //Remove "_temp"\n
+            base_portal_type = base_portal_type.substr(\n
+              0,\n
+              base_portal_type.length - 5\n
+            );\n
+          }\n
+          return {\n
+            url: MAIN_PAGE_PREFIX + "jio_"\n
+              + base_portal_type\n
+              + "_" + options.page + ".html",\n
+            options: sub_options\n
+          };\n
         });\n
     });\n
 \n
-}(window, RSVP, rJS, promiseEventListener, Handlebars));</string> </value>
+}(window, rJS));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Sync Page JS</string> </value>
+            <value> <string>OfficeJS router Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -253,7 +246,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011698.37</float>
+                        <float>1441648217.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -298,7 +291,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.34038.48545.63795</string> </value>
+                <value> <string>945.38531.43749.63146</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -316,7 +309,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441813353.14</float>
+                        <float>1441649525.84</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -373,7 +366,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011605.22</float>
+                        <float>1441648101.99</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_sync.js</string> </value>
+            <value> <string>gadget_officejs_text_editor_application_panel.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,13 +81,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_sync_js</string> </value>
+            <value> <string>gadget_officejs_text_editor_application_panel_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -101,77 +99,115 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/\n
-/*jslint indent: 2, maxlen: 80, nomen: true*/\n
-(function (window, RSVP, rJS, promiseEventListener, Handlebars) {\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener */\n
+(function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
   "use strict";\n
-  var gadget_klass = rJS(window),\n
-    templater = gadget_klass.__template_element,\n
 \n
-    template = Handlebars.compile(\n
-      templater.getElementById("page-template").innerHTML\n
-    );\n
+  var gadget_klass = rJS(window),\n
+    source_header = gadget_klass.__template_element\n
+                         .getElementById("panel-template-header")\n
+                         .innerHTML,\n
+    panel_template_header = Handlebars.compile(source_header),\n
+    source_body = gadget_klass.__template_element\n
+                         .getElementById("panel-template-body")\n
+                         .innerHTML,\n
+    panel_template_body = Handlebars.compile(source_body);\n
 \n
   gadget_klass\n
+\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+\n
+    // Assign the element to a variable\n
+    // Init local properties\n
     .ready(function (g) {\n
       g.props = {};\n
+    })\n
+\n
+\n
+    .ready(function (g) {\n
       return g.getElement()\n
         .push(function (element) {\n
           g.props.element = element;\n
+          g.props.jelement = $(element.querySelector("div"));\n
         });\n
     })\n
 \n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareMethod("render", function () {\n
-      var gadget = this;\n
-      return gadget.updateHeader({\n
-        title: "Synchronize"\n
-      })\n
-        .push(function () {\n
-          return gadget.translateHtml(template());\n
-        })\n
-        .push(function (html) {\n
-          gadget.props.element.innerHTML = html;\n
+    .ready(function (g) {\n
+      g.props.jelement.panel({\n
+        display: "overlay",\n
+        position: "left",\n
+        theme: "d"\n
+        // animate: false\n
+      });\n
+    })\n
+\n
+\n
+    .ready(function (g) {\n
+      return g.translateHtml(panel_template_header() + panel_template_body())\n
+        .push(function (my_translated_or_plain_html) {\n
+          g.props.jelement.html(my_translated_or_plain_html);\n
+          g.props.jelement.trigger("create");\n
         });\n
     })\n
 \n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("repair", "jio_repair")\n
+    .declareMethod(\'toggle\', function () {\n
+      this.props.jelement.panel("toggle");\n
+    })\n
 \n
+    .declareMethod(\'render\', function () {\n
+      return;\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared services\n
+    /////////////////////////////////////////////////////////////////\n
     .declareService(function () {\n
-      var gadget = this;\n
+      var panel_gadget,\n
+        form_list,\n
+        event_list,\n
+        i,\n
+        len;\n
+\n
+\n
+      function formSubmit() {\n
+        panel_gadget.toggle();\n
+      }\n
+\n
+      panel_gadget = this;\n
+      form_list = panel_gadget.props.element.querySelectorAll(\'form\');\n
+      event_list = [];\n
+\n
+      // XXX: not robust - Will break when search field is active\n
+      for (i = 0, len = form_list.length; i < len; i += 1) {\n
+        event_list[i] = loopEventListener(\n
+          form_list[i],\n
+          \'submit\',\n
+          false,\n
+          formSubmit\n
+        );\n
+      }\n
 \n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return promiseEventListener(\n
-            gadget.props.element.querySelector(\'form.synchro-form\'),\n
-            \'submit\',\n
-            false\n
-          );\n
-        })\n
-        .push(function () {\n
-          gadget.props.element.querySelector("button")\n
-                              .disabled = true;\n
-\n
-          return gadget.repair();\n
-        })\n
-        .push(function () {\n
-          return gadget.redirect({});\n
+          return RSVP.all(event_list);\n
         });\n
     });\n
 \n
-}(window, RSVP, rJS, promiseEventListener, Handlebars));</string> </value>
+\n
+}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Sync Page JS</string> </value>
+            <value> <string>Text Editor Application Panel Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -253,7 +289,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011698.37</float>
+                        <float>1441645930.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -298,7 +334,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.34038.48545.63795</string> </value>
+                <value> <string>945.38557.26146.25275</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -316,7 +352,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441813353.14</float>
+                        <float>1441651247.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -373,7 +409,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011605.22</float>
+                        <float>1441645380.75</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

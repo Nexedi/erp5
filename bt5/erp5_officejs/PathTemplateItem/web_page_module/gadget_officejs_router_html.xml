@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,8 +70,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_sync.js</string> </value>
+            <value> <string>gadget_officejs_router.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,17 +85,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_sync_js</string> </value>
+            <value> <string>gadget_officejs_router_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -101,77 +103,36 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/\n
-/*jslint indent: 2, maxlen: 80, nomen: true*/\n
-(function (window, RSVP, rJS, promiseEventListener, Handlebars) {\n
-  "use strict";\n
-  var gadget_klass = rJS(window),\n
-    templater = gadget_klass.__template_element,\n
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
+    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
+    <title>OfficeJS Router Gadget</title>\n
 \n
-    template = Handlebars.compile(\n
-      templater.getElementById("page-template").innerHTML\n
-    );\n
+    <!-- renderjs -->\n
+    <script src="rsvp.js" type="text/javascript"></script>\n
+    <script src="renderjs.js" type="text/javascript"></script>\n
 \n
-  gadget_klass\n
-    .ready(function (g) {\n
-      g.props = {};\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-        });\n
-    })\n
+    <!-- custom script -->\n
+    <script src="gadget_officejs_router.js" type="text/javascript"></script>\n
 \n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareMethod("render", function () {\n
-      var gadget = this;\n
-      return gadget.updateHeader({\n
-        title: "Synchronize"\n
-      })\n
-        .push(function () {\n
-          return gadget.translateHtml(template());\n
-        })\n
-        .push(function (html) {\n
-          gadget.props.element.innerHTML = html;\n
-        });\n
-    })\n
-\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("repair", "jio_repair")\n
-\n
-    .declareService(function () {\n
-      var gadget = this;\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return promiseEventListener(\n
-            gadget.props.element.querySelector(\'form.synchro-form\'),\n
-            \'submit\',\n
-            false\n
-          );\n
-        })\n
-        .push(function () {\n
-          gadget.props.element.querySelector("button")\n
-                              .disabled = true;\n
-\n
-          return gadget.repair();\n
-        })\n
-        .push(function () {\n
-          return gadget.redirect({});\n
-        });\n
-    });\n
-\n
-}(window, RSVP, rJS, promiseEventListener, Handlebars));</string> </value>
+  </head>\n
+  <body>\n
+  </body>\n
+</html>
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Sync Page JS</string> </value>
+            <value> <string>OfficeJS router Gadget</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -253,7 +214,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011698.37</float>
+                        <float>1441648207.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -298,7 +259,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.34038.48545.63795</string> </value>
+                <value> <string>945.38511.34416.16452</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -316,7 +277,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441813353.14</float>
+                        <float>1441648301.49</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -373,7 +334,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011605.22</float>
+                        <float>1441648100.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

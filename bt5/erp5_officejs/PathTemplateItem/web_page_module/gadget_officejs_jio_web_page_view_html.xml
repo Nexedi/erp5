@@ -123,15 +123,13 @@
 \n
         <form class="view-web-page-form">\n
 \n
-                <div class="left">\n
+                <div class="center">\n
                         <div class="ui-field-contain">\n
 \n
                   <label data-i18n="Title:">Title:</label>\n
                   <input type="text" name="title" value="{{title}}">\n
                 </div>\n
-                </div>\n
-                <div class="right">\n
-                  <button type="submit" data-i18n="Save">Save</button>\n
+                  <button type="submit" data-i18n="Save" style="display:none;">Save</button>\n
                 </div>\n
             <div class="ui-field-contain">\n
             <fieldset data-role="collapsible">\n
@@ -313,7 +311,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18366.4767.50841</string> </value>
+                <value> <string>945.34162.16498.45226</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -331,7 +329,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440439622.69</float>
+                        <float>1441723579.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
