@@ -399,7 +399,17 @@ html.ui-mobile body form .ui-content-header-inline {\n
   padding-bottom: 1em;\n
 }\n
 \n
-\n
+/* Maximize content section*/\n
+html body .ui-content-maximize {\n
+  position: fixed;\n
+  right: 0;\n
+  bottom: 0;\n
+  top: 2.4em !important;\n
+  left: 0 !important;\n
+  z-index: 900 !important;\n
+  overflow: hidden !important;\n
+  height: 100%;\n
+  width: 100%;}\n
 \n
 /*\n
    -------------------------------------------------------------------------\n
@@ -5114,7 +5124,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -5128,7 +5138,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.18481.169.54254</string> </value>
+                <value> <string>945.32762.57047.24388</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -5146,8 +5156,8 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1436538928.6</float>
-                        <string>GMT</string>
+                        <float>1441376614.38</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
