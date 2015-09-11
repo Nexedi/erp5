@@ -691,7 +691,7 @@ class BusinessProcess(Path, XMLObject):
     filter_trade_phase = frozenset(trade_phase).intersection
     for trade_model_path in self.getTradeModelPathValueList(context=amount, trade_phase=trade_phase):
       id_index += 1
-      movement = newTempSimulationMovement(trade_model_path,
+      movement = newTempSimulationMovement(explanation,
         '%s_%s' % (base_id, id_index), notify_workflow=False)
       kw = self._getPropertyAndCategoryDict(explanation, amount, trade_model_path, delay_mode=delay_mode)
       trade_phase = filter_trade_phase(trade_model_path.getTradePhaseList())
