@@ -116,9 +116,14 @@ if group_value is not None:\n
   section_list.extend(getDependantSectionList(group_value, section))\n
 \n
 def createBalanceTransaction(section):\n
+  balance_date = at_date + 1\n
+  # We discard hours, minutes and seconds and at the same time, make sure the date\n
+  # is in its "normal timezone". For example, when at_date is the day of a dailight saving\n
+  # time switch, we want this date to be in the new timezone.\n
+  balance_date = DateTime(balance_date.year(), balance_date.month(), balance_date.day())\n
   return portal.accounting_module.newContent(\n
                           portal_type=\'Balance Transaction\',\n
-                          start_date=(at_date + 1).earliestTime(),\n
+                          start_date=balance_date,\n
                           title=context.getTitle() or Base_translateString(\'Balance Transaction\'),\n
                           destination_section_value=section,\n
                           resource=section_currency,\n
