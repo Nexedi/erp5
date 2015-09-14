@@ -54,6 +54,7 @@
 """\n
 if response_event_notification_message:\n
   temp_event = context.getPortalObject().event_module.newContent(\n
+    temp_object=True,\n
     portal_type=response_event_portal_type,\n
     source=default_destination or context.getDestination(),\n
     destination=context.getSource(),\n
