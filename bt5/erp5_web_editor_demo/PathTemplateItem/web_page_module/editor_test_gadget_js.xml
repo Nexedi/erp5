@@ -106,7 +106,60 @@
 (function (window, document, rJS, promiseEventListener) {\n
   "use strict";\n
 \n
-  var DEFAULT_GADGET_URL = "interface_gadget_bootstrap3_wysiwyg.html";\n
+  var DEFAULT_GADGET_URL = "interface_gadget_bootstrap3_wysiwyg.html",\n
+    JIO_STORAGE_TYPE = "local",\n
+    DAV_URL = "",\n
+    DAV_USER = "",\n
+    DAV_PASSWORD = "";\n
+\n
+  function createJio_indexeddb(gadget) {\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget.createJio({\n
+          type: "indexeddb",\n
+          database: "jio_demo"\n
+        });\n
+      });\n
+  }\n
+\n
+  function createJio_local(gadget) {\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget.createJio({\n
+          type: "query",\n
+          sub_storage: {\n
+            type: "document",\n
+            document_id: "/",\n
+            sub_storage: { type: "local" }\n
+          }\n
+        });\n
+      });\n
+  }\n
+\n
+  function createJio_dav(gadget) {\n
+    return gadget.getDeclaredGadget("jio_gadget")\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget.createJio({\n
+          type: "drivetojiomapping",\n
+          sub_storage: {\n
+            type: "dav",\n
+            url: DAV_URL,\n
+            basic_login: btoa(DAV_USER + ":" + DAV_PASSWORD)\n
+          }\n
+        });\n
+      });\n
+  }\n
+\n
+  function createJio(gadget) {\n
+    switch (JIO_STORAGE_TYPE) {\n
+    case "indexeddb":\n
+      return createJio_indexeddb(gadget);\n
+    case "local":\n
+      return createJio_local(gadget);\n
+    case "dav":\n
+      return createJio_dav(gadget);\n
+    }\n
+  }\n
 \n
   function declareSubGadget(gadget, sub_gadget_url) {\n
     return gadget.declareGadget(sub_gadget_url, {\n
@@ -115,64 +168,44 @@
       scope: "sub_gadget"\n
     });\n
   }\n
-  function getAvailableSubGadgetList(gadget) {\n
-    var main_gadget = gadget.props.content_element.querySelector(\'form.main-gadget-select-form\'),\n
-      gadget_option_list = main_gadget.main_gadget_selector.querySelectorAll(\'option\'),\n
-      gadget_list = [],\n
-      i;\n
-    for(i = 0; i < gadget_option_list.length; i += 1) {\n
-      gadget_list.push({\n
-        url: gadget_option_list[i].value,\n
-        display_name: gadget_option_list[i].innerHTML\n
-      });\n
-    }\n
-    return gadget_list;\n
-  }\n
-  function filterSimilarSubGadgetList(gadget, sub_gadget_url) {\n
-    var available_subgadget_list,\n
-      interface_url_list;\n
-    return RSVP.Queue()\n
-      .push(function() {\n
-        return gadget.getVerifyGadget(sub_gadget_url);\n
-      })\n
-      .push(function(sub_gadget) {\n
-        return RSVP.all([\n
-          gadget.getDeclaredGadgetInterfaceList(sub_gadget),\n
-          getAvailableSubGadgetList(gadget)\n
-        ]);\n
-      })\n
-      .push(function(result_data) {\n
-        var item,\n
-          status_list = [];\n
-        interface_url_list = result_data[0],\n
-        available_subgadget_list = result_data[1];\n
-        for(item in available_subgadget_list) {\n
-          status_list.push(gadget.verifyGadgetInterfaceImplementation(available_subgadget_list[item].url, interface_url_list));\n
-        }\n
-        return RSVP.all(status_list);\n
-      })\n
-      .push(function(result_list) {\n
-        return [available_subgadget_list, result_list];\n
-      });\n
-  }\n
+\n
   function updateSimilarGadgetOptionList(gadget, sub_gadget_url) {\n
+    var jio;\n
     return RSVP.Queue()\n
       .push(function() {\n
-        return filterSimilarSubGadgetList(gadget, sub_gadget_url);\n
+        return gadget.getDeclaredGadget("jio_gadget");\n
       })\n
-      .push(function(filtered_list) {\n
+      .push(function(jio_gadget) {\n
+        jio = jio_gadget;\n
+        return jio.get(sub_gadget_url);\n
+      })\n
+      .push(function(sub_gadget_data) {\n
+        var interface_url = sub_gadget_data.interface_url,\n
+          options = {};\n
+        options.query = \'(interface_url:"\' + interface_url + \'") AND (type:"gadget")\';\n
+        return jio.allDocs(options);\n
+      })\n
+      .push(function(query_result) {\n
+        var i,\n
+          matched_gadget_data = [],\n
+          data = query_result.data,\n
+          rows = data.rows;\n
+        for (i = 0; i < data.total_rows; i += 1) {\n
+          matched_gadget_data.push(jio.get(rows[i].id));\n
+        }\n
+        return RSVP.all(matched_gadget_data);\n
+      })\n
+      .push(function(similar_gadget_data) {\n
         var select = gadget.props.content_element.querySelector(\'form.similar-gadget-select-form\').similar_gadget_selector,\n
           i;\n
         select.innerHTML = "";\n
-        for(i = 0; i < filtered_list[1].length; i += 1) {\n
-          if(filtered_list[1][i]) {\n
-            var option = document.createElement("option");\n
-            option.text = filtered_list[0][i].display_name;\n
-            option.value = filtered_list[0][i].url;\n
-            select.appendChild(option);\n
-          }\n
+        for(i = 0; i < similar_gadget_data.length; i += 1) {\n
+          var option = document.createElement("option");\n
+          option.text = similar_gadget_data[i].title;\n
+          option.value = similar_gadget_data[i].url;\n
+          select.appendChild(option);\n
         }\n
-        select.value = filtered_list[0][0].url;\n
+        select.value = similar_gadget_data[0].url;\n
         return;\n
       });\n
   }\n
@@ -233,15 +266,25 @@
   rJS(window)\n
 \n
     .ready(function (g) {\n
-      g.props = {};\n
-      return g.getElement()\n
+      var gadget = g,\n
+        jio;\n
+      gadget.props = {};\n
+      return gadget.getElement()\n
         .push(function (element) {\n
           $(element).trigger("create");\n
-          g.props.element = element;\n
-          g.props.content_element = element.querySelector(\'.gadget-content\');\n
+          gadget.props.element = element;\n
+          gadget.props.content_element = element.querySelector(\'.gadget-content\');\n
+          return createJio(gadget);\n
+        })\n
+        .push(function() {\n
+          return gadget.getDeclaredGadget("jio_gadget");\n
+        })\n
+        .push(function(jio_gadget) {\n
+          jio = jio_gadget;\n
           $.getJSON("gadget_info.json", function(data) {\n
-            var select = g.props.content_element.querySelector(\'form.main-gadget-select-form\').main_gadget_selector,\n
+            var select = gadget.props.content_element.querySelector(\'form.main-gadget-select-form\').main_gadget_selector,\n
               key;\n
+            gadget.props.data = data;\n
             select.innerHTML = "";\n
             for(key in data) {\n
               var option = document.createElement("option");\n
@@ -249,20 +292,56 @@
               option.value = data[key];\n
               select.appendChild(option);\n
             }\n
+            var temp_list = [],\n
+              status_list = [],\n
+              interface_list = [],\n
+              available_subgadget_list = [];\n
+            return new RSVP.Queue()\n
+              .push(function() {\n
+                var item;\n
+                for (item in data) {\n
+                  available_subgadget_list.push({url:data[item], title:item});\n
+                  temp_list.push(gadget.verifyGadgetInterfaceImplementation(data[item]));\n
+                }\n
+                return RSVP.all(temp_list);\n
+              })\n
+              .push(function(temp_list_1) {\n
+                status_list = temp_list_1;\n
+                temp_list = [];\n
+                var item;\n
+                for (item in data) {\n
+                  temp_list.push(gadget.getDeclaredGadgetInterfaceList(data[item]));\n
+                }\n
+                return RSVP.all(temp_list);\n
+              })\n
+              .push(function(temp_list_2) {\n
+                interface_list = temp_list_2;\n
+                var item,\n
+                  put_list = [];\n
+                for (item in available_subgadget_list) {\n
+                  if(status_list[item]) {\n
+                    var content = {\n
+                      "title": available_subgadget_list[item].title,\n
+                      "url": available_subgadget_list[item].url,\n
+                      "type": "gadget",\n
+                      "interface_url": interface_list[item][0]\n
+                    };\n
+                    jio.put(available_subgadget_list[item].url, content);\n
+                  }\n
+                }\n
+                return RSVP.all(put_list);\n
+              })\n
+              .push(function() {\n
+                return declareSubGadget(gadget, DEFAULT_GADGET_URL);\n
+              })\n
+              .push(function() {\n
+                return gadget.subgadget_initSubGadget();\n
+              })\n
+              .push(function() {\n
+                return gadgetSwitchHandler(gadget);\n
+              });\n
+  \n
           });\n
-        });\n
-    })\n
-    .declareMethod(\'render\', function () {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function() {\n
-          return declareSubGadget(gadget, DEFAULT_GADGET_URL);\n
-        })\n
-        .push(function() {\n
-          return gadget.subgadget_initSubGadget();\n
-        })\n
-        .push(function() {\n
-          return gadgetSwitchHandler(gadget);\n
         });\n
     })\n
 \n
@@ -442,7 +521,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.33605.45148.55005</string> </value>
+                <value> <string>945.47991.22634.26641</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -460,7 +539,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441354709.61</float>
+                        <float>1442218093.98</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
