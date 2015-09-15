@@ -115,10 +115,10 @@
 \n
     <link rel="http://www.renderjs.org/rel/interface" href="editor_interface.html"></link>\n
 \n
-    <script src="tinymce/js/tinymce/tinymce.js"></script>\n
     <script src="jquery.js"></script>\n
     <script src="rsvp.js"></script>\n
     <script src="renderjs.js"></script>\n
+    <script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>\n
     <script src="interface_gadget_tinymce.js" type="text/javascript"></script>\n
   </head>\n
   <body>\n
@@ -264,7 +264,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.33600.34754.53230</string> </value>
+                <value> <string>945.40798.17513.32324</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -282,7 +282,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441353714.75</float>
+                        <float>1441787790.36</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

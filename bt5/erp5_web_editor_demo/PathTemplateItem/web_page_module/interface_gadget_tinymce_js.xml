@@ -100,20 +100,23 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>/*jslint indent: 2 */\n
-/*global window, jQuery, rJS, RSVP*/\n
+/*global window, jQuery, rJS, RSVP, tinymce*/\n
 "use strict";\n
 \n
 (function (window, $, rJS, RSVP) {\n
 \n
   rJS(window).\n
     declareMethod(\'getContent\', function () {\n
+      var gadget = this;\n
       return tinymce.activeEditor.getContent();\n
     })\n
     .declareMethod(\'setContent\', function (content) {\n
+      var gadget = this;\n
       return tinymce.activeEditor.setContent(content);\n
     })\n
     .declareMethod(\'clearContent\', function () {\n
-      return tinymce.activeEditor.setContent(\'\');\n
+      var gadget = this;\n
+      return gadget.props.editor.setContent(\'\');\n
     })\n
     .declareMethod(\'initStateTransfer\', function () {\n
       var current_state = {},\n
@@ -128,34 +131,34 @@
         });\n
     })\n
     .declareMethod(\'finishStateTransfer\', function (current_state) {\n
-      return this.setContent(current_state.content);\n
+      return this.setContent(current_state.content);co\n
     })\n
     .declareMethod(\'initSubGadget\', function () {\n
-      this.editor = $(\'.textarea\');\n
-      tinymce.init({\n
-          selector: "#mytextarea",\n
-          theme: "modern",\n
-          width: \'100%\',\n
-          height: \'600\',\n
-          plugins: [\n
-               "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",\n
-               "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
-               "save table contextmenu directionality emoticons template paste textcolor"\n
-          ],\n
-          toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons", \n
-          style_formats: [\n
-               {title: \'Bold text\', inline: \'b\'},\n
-               {title: \'Red text\', inline: \'span\', styles: {color: \'#ff0000\'}},\n
-               {title: \'Red header\', block: \'h1\', styles: {color: \'#ff0000\'}},\n
-               {title: \'Example 1\', inline: \'span\', classes: \'example1\'},\n
-               {title: \'Example 2\', inline: \'span\', classes: \'example2\'},\n
-               {title: \'Table styles\'},\n
-               {title: \'Table row 1\', selector: \'tr\', classes: \'tablerow1\'}\n
-          ]      \n
+      return tinymce.init({\n
+        selector: "#mytextarea",\n
+        theme: "modern",\n
+        width: \'100%\',\n
+        height: \'600\',\n
+        plugins: [\n
+             "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",\n
+             "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",\n
+             "save table contextmenu directionality emoticons template paste textcolor"\n
+        ],\n
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons", \n
+        style_formats: [\n
+             {title: \'Bold text\', inline: \'b\'},\n
+             {title: \'Red text\', inline: \'span\', styles: {color: \'#ff0000\'}},\n
+             {title: \'Red header\', block: \'h1\', styles: {color: \'#ff0000\'}},\n
+             {title: \'Example 1\', inline: \'span\', classes: \'example1\'},\n
+             {title: \'Example 2\', inline: \'span\', classes: \'example2\'},\n
+             {title: \'Table styles\'},\n
+             {title: \'Table row 1\', selector: \'tr\', classes: \'tablerow1\'}\n
+          ]\n
       });\n
     })\n
 \n
     .ready(function (g) {\n
+      g.props = {};\n
     });\n
 \n
 }(window, jQuery, rJS, RSVP));\n
@@ -294,7 +297,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.33593.23703.31453</string> </value>
+                <value> <string>945.40809.19530.56627</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -312,7 +315,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441353720.28</float>
+                        <float>1441787867.6</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
