@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,8 +70,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_bootstrap3-wysiwyg.js</string> </value>
+            <value> <string>editor_interface.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>editor_gadget_bootstrap3-wysiwyg.js</string> </value>
+            <value> <string>interface_gadget_editor_interface_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -101,46 +105,48 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*jslint indent: 2 */\n
-/*global window, jQuery, rJS*/\n
-"use strict";\n
-\n
-(function (window, $, rJS) {\n
-\n
-  rJS(window).\n
-    declareMethod(\'getContent\', function () {\n
-      return rJS(this).editor.html();\n
-    })\n
-    .declareMethod(\'setContent\', function (content) {\n
-      rJS(this).editor.html(content);\n
-    })\n
-    .declareMethod(\'clearContent\', function () {\n
-      rJS(this).editor.html(\'\');\n
-    })\n
-    .declareMethod(\'setEditor\', function () {\n
-      document.body.innerHTML =\'<div class="container" style=" width: 100%; height: 600px;">\'\n
-                              +\'<div class="jumbotron" style="margin-left:0px; height: 600px;">\'\n
-                              +\'<textarea class="textarea" placeholder="Enter text ..." \'\n
-                              +\'style="width: 100%; height: 400px; font-size: 14px; line-height: 18px;">\'\n
-                              +\'</textarea></div</div>\';\n
-      this.editor = $(\'.textarea\');\n
-      this.editor.wysihtml5({\n
-        toolbar: {\n
-          fa: true\n
-        }\n
-      });\n
-    })\n
-\n
-    .ready(function (g) {\n
-    });\n
-\n
-}(window, jQuery, rJS));
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+  </head>\n
+  <body>\n
+    <h1>Editor Interface</h1>\n
+    <h3>An interface defining the methods for text editor.</h3>\n
+    <dl>\n
+      <dt>getContent</dt>\n
+      <dd>to fetch the contect from the text editor</dd>\n
+      <dl></dl>\n
+      <dt>setContent</dt>\n
+      <dd>to set the contect to the text editor</dd>\n
+      <dl>\n
+        <dt data-parameter-required="required" data-parameter-type="string">content</dt>\n
+        <dd>the content to be set in the text editor</dd>\n
+      </dl>\n
+      <dt>clearContent</dt>\n
+      <dd>to clear the contect of the text editor</dd>\n
+      <dl></dl>\n
+      <dt>initSubGadget</dt>\n
+      <dd>to initiate the current gadget</dd>\n
+      <dl></dl>\n
+      <dt>initStateTransfer</dt>\n
+      <dd>to initiate state transfer before gadget switch</dd>\n
+      <dl></dl>\n
+      <dt>finishStateTransfer</dt>\n
+      <dd>to finish state transfer after gadget switch</dd>\n
+      <dl>\n
+        <dt data-parameter-required="required" data-parameter-type="string">current_state</dt>\n
+        <dd>the current state to be transfer to next gadget</dd>\n
+      </dl>\n
+    </dl>\n
+  </body>\n
+</html>\n
+
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Editor Gadget Bootstrap3 wysiwyg JS</string> </value>
+            <value> <string>Editor Interface</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -226,7 +232,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438768024.7</float>
+                        <float>1441290714.22</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -271,7 +277,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.1997.11510.44544</string> </value>
+                <value> <string>945.32551.59721.3328</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -289,7 +295,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439471143.4</float>
+                        <float>1442305594.48</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -348,7 +354,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438767532.07</float>
+                        <float>1441284333.1</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

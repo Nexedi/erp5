@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>editor_interface.html</string> </value>
+            <value> <string>spreadsheet_interface.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>editor_interface_html</string> </value>
+            <value> <string>interface_gadget_spreadsheet_interface_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -110,8 +110,8 @@
   <head>\n
   </head>\n
   <body>\n
-    <h1>Editor Interface</h1>\n
-    <h3>An interface defining the methods for text editor.</h3>\n
+    <h1>Spreadsheet Interface</h1>\n
+    <h3>An interface defining the methods for Spreadsheet.</h3>\n
     <dl>\n
       <dt>getContent</dt>\n
       <dd>to fetch the contect from the text editor</dd>\n
@@ -146,7 +146,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Editor Interface</string> </value>
+            <value> <string>Spreadsheet Interface</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -232,7 +232,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441290714.22</float>
+                        <float>1438594082.15</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -277,7 +277,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.32448.54149.26265</string> </value>
+                <value> <string>945.32447.5178.12202</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -295,7 +295,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441284657.06</float>
+                        <float>1442305566.11</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -354,7 +354,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441284333.1</float>
+                        <float>1438344898.3</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
