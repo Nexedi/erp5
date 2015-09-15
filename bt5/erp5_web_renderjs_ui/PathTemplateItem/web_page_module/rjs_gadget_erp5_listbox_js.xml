@@ -108,9 +108,11 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-/*global window, document, rJS, URI, RSVP, UriTemplate */\n
+/*global window, document, rJS, URI, RSVP, UriTemplate, QueryFactory, loopEventListener */\n
 (function (window, document, rJS, URI, RSVP, UriTemplate) {\n
   "use strict";\n
+\n
+\n
 \n
   rJS(window)\n
     /////////////////////////////////////////////////////////////////\n
@@ -132,6 +134,7 @@
         });\n
     })\n
 \n
+\n
     //////////////////////////////////////////////\n
     // acquired method\n
     //////////////////////////////////////////////\n
@@ -140,6 +143,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
+    .declareAcquiredMethod("triggleSortEditor", "triggleSortEditor")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
     //////////////////////////////////////////////\n
@@ -155,6 +159,9 @@
 \n
       gadget.props.field_json = field_json;\n
       gadget.props.extended_search = options.extended_search;\n
+      if (options.extended_sort_list) {\n
+        gadget.props.extended_sort_list =  Object.keys(options.extended_sort_list).map(function (key) {return options.extended_sort_list[key]; });\n
+      }\n
       if (field_json.show_anchor) {\n
         th = document.createElement("th");\n
         th.textContent = "Jump";\n
@@ -188,13 +195,14 @@
     //////////////////////////////////////////////\n
     // render the listbox in an asynchronous way\n
     //////////////////////////////////////////////\n
-    .declareService(function () {\n
+    .declareMethod(\'createListboxItem\', function (options) {\n
       var gadget = this,\n
         props = gadget.props,\n
         field_json = props.field_json,\n
         begin_from = props.begin_from,\n
         table = props.element.querySelector(\'table\'),\n
         original_tfoot = props.element.querySelector(\'tfoot\'),\n
+        original_tbody = props.element.querySelector(\'tbody\'),\n
         tbody = document.createElement("tbody"),\n
         url_query =  props.extended_search,\n
         query_string = "",\n
@@ -206,8 +214,10 @@
         tmp_query,\n
         domain_query,\n
         domain_tree_map,\n
+        sort_list = options.sort_list || [],\n
         operator,\n
         i,\n
+        j,\n
         list_method_promise = function () {\n
           return gadget.jio_allDocs.apply(gadget, arguments);\n
         };\n
@@ -219,43 +229,42 @@
      //   return previous + next[0] + \':= "\' + url_query + \'" OR \';\n
      // }\n
      //rebuild query\n
-     //don\'t know a good idea\n
       if (url_query) {\n
         domain_tree_map = props.field_json.domain_tree_map;\n
-        tmp_query = url_query.split(" OR ");\n
-        operator = " OR ";\n
-        if (tmp_query.length === 1) {\n
-          tmp_query = url_query.split(" AND ");\n
-          operator = " AND ";\n
-        }\n
+        tmp_query = QueryFactory.create(url_query);\n
+        operator = tmp_query.operator ? " " + tmp_query.operator + " " : " AND ";\n
+        tmp_query = tmp_query.query_list || [tmp_query];\n
+\n
         url_query = "";\n
         for (i = 0; i < tmp_query.length; i += 1) {\n
           if (i !== 0) {\n
             url_query += operator;\n
           }\n
-          if (tmp_query[i].indexOf("Domain:") !== -1) {\n
-            domain_query = tmp_query[i].split(":")[1].split("/");\n
+          if (tmp_query[i].key === "Domain") {\n
+            domain_query = tmp_query[i].value.split("/");\n
             if (domain_query[0] !== "--") {\n
               url_query += "category.base_category_uid: " + domain_tree_map[domain_query[0]].uid;\n
               domain_tree_map = domain_tree_map[domain_query[0]].sub_categories;\n
-              for (i = 1; i < domain_query.length - 1; i += 1) {\n
-                last_uid = domain_tree_map[domain_query[i]].uid;\n
-                domain_tree_map = domain_tree_map[domain_query[i]].sub_categories;\n
+              for (j = 1; j < domain_query.length - 1; j += 1) {\n
+                last_uid = domain_tree_map[domain_query[j]].uid;\n
+                domain_tree_map = domain_tree_map[domain_query[j]].sub_categories;\n
               }\n
-              if (i < domain_query.length && domain_query[i] !== "--") {\n
+              if (j < domain_query.length && domain_query[j] !== "--") {\n
                 url_query += operator;\n
-                url_query += "category.category_uid: " + domain_tree_map[domain_query[i]].uid;\n
-              } else if (i !== 1) {\n
+                url_query += "category.category_uid: " + domain_tree_map[domain_query[j]].uid;\n
+              } else if (j !== 1) {\n
                 url_query += operator;\n
                 url_query += "category.category_uid: " + last_uid;\n
               }\n
             }\n
           } else {\n
-            url_query += tmp_query[i];\n
+            if (tmp_query[i].operator) {\n
+              url_query +=  tmp_query[i].key + ":" + tmp_query[i].operator + tmp_query[i].value;\n
+            } else {\n
+              url_query += tmp_query[i].key + ":" + tmp_query[i].value;\n
+            }\n
           }\n
         }\n
-\n
-\n
         //query_string = field_json.column_list.reduce(buildQueryString, \' AND (\').replace(new RegExp("OR " + \'$\'), \')\');\n
         if (field_json.list_method_template === undefined) {\n
           query_string = \' AND \' + url_query;\n
@@ -268,12 +277,15 @@
         select_list.push(field_json.column_list[i][0]);\n
       }\n
 \n
+      select_list.push("uid");\n
+
       return gadget.jio_allDocs({\n
         // XXX Not jIO compatible, but until a better api is found...\n
         "list_method_template": field_json.list_method_template,\n
         "query": new URI(field_json.query).query(true).query + query_string,\n
         "limit": [begin_from, lines + 1],\n
-        "select_list": select_list\n
+        "select_list": select_list,\n
+        "sort_on": sort_list\n
         }).push(function (result) {\n
         var promise_list = [result];\n
         counter = Math.min(result.data.total_rows, lines);\n
@@ -293,8 +305,7 @@
         return RSVP.all(promise_list);\n
 \n
       }).push(function (result_list) {\n
-        var j,\n
-          tr,\n
+        var tr,\n
           th,\n
           a,\n
           result = result_list[0],\n
@@ -322,6 +333,7 @@
         dataset = result;\n
         for (i = 0; i < counter; i += 1) {\n
           tr = document.createElement("tr");\n
+          tr.setAttribute("value", result.data.rows[i].value.uid);\n
           tmp_url = result_list[i + 1];\n
 \n
           if (field_json.show_anchor) {\n
@@ -456,7 +468,7 @@
         fragment.appendChild(tbody);\n
         fragment.appendChild(tfoot);\n
 \n
-        for (len = table.children.length; len > 0; len -= 1) {\n
+        for (len = table.children.length; len > 1; len -= 1) {\n
           table.removeChild(table.lastChild);\n
         }\n
         // NOTE: for passing translations, temp must contain a table\n
@@ -471,8 +483,58 @@
           table.appendChild(temp);\n
         });\n
     })\n
+    .declareService(function () {\n
+      var gadget = this;\n
+      return gadget.createListboxItem({"sort_list": gadget.props.extended_sort_list});\n
+    })\n
+    .declareService(function () {\n
+      var gadget = this,\n
+        sort_form = gadget.props.element.querySelector(".sort_form");\n
+      loopEventListener(\n
+        sort_form,\n
+        "submit",\n
+        false,\n
+        function () {\n
+          gadget.triggleSortEditor();\n
+        }\n
+      );\n
+    })\n
+    .declareService(function () {\n
+      var gadget = this,\n
+        hide_form = gadget.props.element.querySelector(".hide_form");\n
+      /* hide form */\n
+      loopEventListener(\n
+        hide_form,\n
+        "submit",\n
+        false,\n
+        function () {\n
+          var tr_list = gadget.props.element.querySelector("tbody").querySelectorAll("tr"),\n
+            thead_tr = gadget.props.element.querySelector("thead").querySelector("tr"),\n
+            i,\n
+            th,\n
+            hide_form_elements,\n
+            checkbox;\n
 \n
+          hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
+          if (hide_form_elements.length > 0) {\n
+            for (i = 0; i < hide_form_elements.length; i += 1) {\n
+              hide_form_elements[i].parentElement.removeChild(hide_form_elements[i]);\n
+            }\n
+            return;\n
+          }\n
+          th = document.createElement("th");\n
 \n
+          th.setAttribute("class", "hide_form_element");\n
+          thead_tr.insertBefore(th, thead_tr.firstChild);\n
+          for (i = 0; i < tr_list.length; i += 1) {\n
+            checkbox = document.createElement("input");\n
+            checkbox.setAttribute("type", "checkbox");\n
+            checkbox.setAttribute("class", "hide_form_element");\n
+            tr_list[i].insertBefore(checkbox, tr_list[i].firstChild);\n
+          }\n
+        }\n
+      );\n
+    })\n
     .declareMethod("getContent", function () {\n
       var form_gadget = this,\n
         k,\n
@@ -651,7 +713,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.28372.10785.47223</string> </value>
+                <value> <string>945.49507.40992.33228</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -669,7 +731,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441041243.42</float>
+                        <float>1442308372.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,12 +70,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_filter_editor.html</string> </value>
+            <value> <string>gadget_erp5_sort_editor.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_filtereditor_html</string> </value>
+            <value> <string>rjs_gadget_erp5_sorteditor_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -105,120 +101,260 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 Filter Editor</title>\n
+/*jslint indent: 2, maxerr: 3, nomen: true */\n
+/*global window, document, rJS, URI, RSVP, UriTemplate, Handlebars, $, loopEventListener */\n
+(function (window, document, rJS, RSVP) {\n
+  "use strict";\n
+  var gadget_klass = rJS(window),\n
+    option_source = gadget_klass.__template_element\n
+                      .getElementById("option-template")\n
+                      .innerHTML,\n
+    option_template = Handlebars.compile(option_source),\n
+    selected_option_source = gadget_klass.__template_element\n
+                      .getElementById("selected-option-template")\n
+                      .innerHTML,\n
+    selected_option_template = Handlebars.compile(selected_option_source),\n
+    sort_source = gadget_klass.__template_element\n
+                         .getElementById("sort-template")\n
+                         .innerHTML,\n
+    sort_template = Handlebars.compile(sort_source);\n
 \n
-    <!-- renderjs -->\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="handlebars.js"></script>\n
 \n
-    <!-- custom script -->\n
-    <script src="gadget_erp5_filter_editor.js"></script>\n
-    \n
-    <script id="option-template" type="text/x-handlebars-template">\n
-      <option value="{{value}}" data-i18n="{{text}}">{{text}}</option>\n
-    </script>\n
+  function createSortItem(gadget, sort_value) {\n
+    var div = document.createElement("div"),\n
+      container = document.createElement("form"),\n
+      minus_button = document.createElement("input"),\n
+      column_list = gadget.props.column_list,\n
+      select_reference = document.createElement("select"),\n
+      select_operator = document.createElement("select"),\n
+      sort_value_list = [],\n
+      i,\n
+      tmp = "";\n
+    if (sort_value) {\n
+      sort_value_list = sort_value.split(",");\n
+    }\n
+    minus_button.setAttribute("type", "button");\n
+    container.appendChild(select_reference);\n
+    container.appendChild(select_operator);\n
+    container.appendChild(minus_button);\n
+    container.setAttribute("class", "sortForm");\n
+    div.appendChild(container);\n
+    for (i = 0; i < column_list.length; i += 1) {\n
+      if (column_list[i][0] === sort_value_list[0]) {\n
+        tmp +=  selected_option_template({\n
+          value: column_list[i][0],\n
+          text: column_list[i][1]\n
+        });\n
+      } else {\n
+        tmp += option_template({\n
+          value: column_list[i][0],\n
+          text: column_list[i][1]\n
+        });\n
+      }\n
+    }\n
+    select_reference.innerHTML = tmp;\n
+    $(select_reference).selectmenu();\n
+    tmp = "";\n
+    if (sort_value_list[1] === "ascending") {\n
+      tmp += selected_option_template({\n
+        value: "ascending",\n
+        text: "ascending"\n
+      });\n
+    } else {\n
+      tmp += option_template({\n
+        value: "ascending",\n
+        text: "ascending"\n
+      });\n
+    }\n
 \n
-    <script id="selected-option-template" type="text/x-handlebars-template">\n
-      <option selected="selected" data-i18n="{{text}}" value="{{value}}">{{text}}</option>\n
-    </script>\n
+    if (sort_value_list[1] === "descending") {\n
+      tmp += selected_option_template({\n
+        value: "descending",\n
+        text: "descending"\n
+      });\n
+    } else {\n
+      tmp += option_template({\n
+        value: "descending",\n
+        text: "descending"\n
+      });\n
+    }\n
 \n
-    \n
-    <script id="option-template" type="text/x-handlebars-template">\n
-      <option value="{{value}}" data-i18n="{{text}}">{{text}}</option>\n
-    </script>\n
-    \n
-    <script id="selected-option-template" type="text/x-handlebars-template">\n
-      <option selected="selected" data-i18n="{{text}}" value="{{value}}">{{text}}</option>\n
-    </script>\n
-    \n
+    select_operator.innerHTML = tmp;\n
+    $(select_operator).selectmenu();\n
 \n
-    \n
-    \n
-    \n
-    <script id="filter-template" type="text/x-handlebars-template">\n
-      <div class="ui-panel-inner">\n
-      \n
-        <div data-role="header" role="banner" class="ui-header ui-bar-inherit">\n
-          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
-           <div class="ui-controlgroup-controls">\n
-            <form class="delete">\n
-              <button data-rel="close" type="submit" class="close responsive ui-first-child ui-btn ui-btn-icon-left ui-icon-times">Close</button>\n
-            </form>\n
-           </div>\n
-          </div>\n
-         \n
-         <h1 class="ui-title" role="heading" aria-level="1">Filter Editor</h1>\n
-         <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
-           <div class="ui-controlgroup-controls">\n
-            <form class="submit">\n
-             <button data-rel="save" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check">Save</button>\n
-           </form>\n
-           </div>\n
-         </div>\n
-        </div>\n
+    loopEventListener(\n
+      minus_button,\n
+      "click",\n
+      false,\n
+      function () {\n
+        container.parentElement.removeChild(container);\n
+      }\n
+    );\n
+    return div;\n
+  }\n
 \n
-    \n
-         <section class="ui-content-header-plain">\n
-           <h3 class="ui-content-title ui-body-c">\n
-            <span class="ui-icon ui-icon-custom">&nbsp;</span>\n
-              Custom Filter\n
-            </h3>\n
-         </section>\n
-         <section class="ui-body-c ui-content-section">\n
-          <fieldset data-role="controlgroup" class="ui-controlgroup ui-corner-all">\n
-           \n
-                <div class="ui-radio">\n
-                  <label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-on">All criterions(AND)</label>\n
-                  <input type="radio" value="Off" name="heard_about" id="heard_about_a" class="and checkboxradio" data-cacheval="true" data-enhanced="true">\n
-                </div>\n
-                \n
-                <div class="ui-radio">\n
-                  <label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-off">At lease one(OR)</label>\n
-                  <input type="radio" value="Off" name="heard_about" id="heard_about_b" class="or checkboxradio" data-cacheval="false" data-enhanced="true">\n
-                </div>\n
 \n
-           </fieldset>\n
-         \n
 \n
-           <div class="filter_item_container">\n
-           </div>\n
-           <form class="plus">\n
-             <button type="submit" class="plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-notext"></button>\n
-           </form>\n
-         </section>\n
-      \n
-      \n
-   \n
-      <section class="ui-content-header-plain">\n
-           <h3 class="ui-content-title ui-body-c">\n
-            <span class="ui-icon ui-icon-custom">&nbsp;</span>\n
-              Predefined Filter\n
-            </h3>\n
-         </section>\n
-      <section class="ui-body-c ui-content-section">\n
-        <div class="domain_tree_container">\n
-        </div>\n
-      </section>\n
-     </div>\n
-    </script>\n
-    \n
-  </head>\n
-  <body>\n
-    <div class="jqm-navmenu-panel"></div>\n
-  </body>\n
-</html>
+  rJS(window)\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+          g.props.jelement = $(element.querySelector(".jqm-navmenu-panel"));\n
+        });\n
+    })\n
+    .ready(function (g) {\n
+      g.props.jelement.panel({\n
+        display: "overlay",\n
+        position: "right",\n
+        theme: "c"\n
+      });\n
+    })\n
+    .ready(function (g) {\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          var tmp = sort_template();\n
+          return g.translateHtml(tmp);\n
+        })\n
+        .push(function (translated_html) {\n
+          g.props.jelement.html(translated_html);\n
+          g.props.jelement.trigger("create");\n
+        });\n
+    })\n
+\n
+\n
+    //////////////////////////////////////////////\n
+    // acquired method\n
+    //////////////////////////////////////////////\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
+    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    .declareMethod(\'toggle\', function () {\n
+      var gadget = this,\n
+        options = gadget.props.options;\n
+      this.props.jelement.panel("toggle");\n
+      if (gadget.props.column_list === "") {\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
+          })\n
+          .push(function (result) {\n
+            gadget.props.column_list = result.data._embedded._view.listbox.column_list;\n
+          });\n
+      }\n
+    })\n
+    //////////////////////////////////////////////\n
+    // initialize the gadget content\n
+    //////////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+      var gadget = this,\n
+        i,\n
+        container = gadget.props.element.querySelector(".sort_item_container"),\n
+        sort_form_list;\n
+      sort_form_list = gadget.props.element.querySelectorAll(".sortForm");\n
+      for (i = 0; i < sort_form_list.length; i += 1) {\n
+        sort_form_list[i].parentElement.removeChild(sort_form_list[i]);\n
+      }\n
+      gadget.props.options = options;\n
+      gadget.props.column_list = "";\n
+      if (options.sortEditor) {\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
+          })\n
+          .push(function (result) {\n
+            var key;\n
+            gadget.props.column_list = result.data._embedded._view.listbox.column_list;\n
+            for (key in options.sortEditor.sort_list) {\n
+              if (options.sortEditor.sort_list.hasOwnProperty(key)) {\n
+                if (options.sortEditor.sort_list[key] !== "") {\n
+                  container.insertBefore(createSortItem(gadget, options.sortEditor.sort_list[key]), container.lastChild);\n
+                }\n
+              }\n
+            }\n
+          });\n
+      }\n
+    })\n
+    //////////////////////////////////////////////\n
+    .declareService(function () {\n
+      var gadget = this;\n
+      function plusItem() {\n
+        var container = gadget.props.element.querySelector(".sort_item_container");\n
+        container.insertBefore(createSortItem(gadget), container.lastChild);\n
+      }\n
+      loopEventListener(\n
+        gadget.props.element.querySelector(".plus"),\n
+        "submit",\n
+        false,\n
+        plusItem\n
+      );\n
+\n
+      loopEventListener(\n
+        gadget.props.element.querySelector(".delete"),\n
+        "submit",\n
+        false,\n
+        function () {\n
+          gadget.props.jelement.panel("toggle");\n
+        }\n
+      );\n
+\n
+      loopEventListener(\n
+        gadget.props.element.querySelector(".submit"),\n
+        "submit",\n
+        false,\n
+        function () {\n
+          var sort_list = gadget.props.element.querySelectorAll(".sortForm"),\n
+            sort_query = [],\n
+            sort_item,\n
+            sort_item_query,\n
+            i;\n
+          for (i = 0; i < sort_list.length; i += 1) {\n
+            sort_item = sort_list[i];\n
+            sort_item_query = sort_item[0][sort_item[0].selectedIndex].value + "," + sort_item[1][sort_item[1].selectedIndex].value + ",";\n
+            sort_query.push(sort_item_query);\n
+          }\n
+          sort_query.push("");\n
+          return new RSVP.Queue()\n
+            .push(function () {\n
+              if (gadget.props.options.filterEditor) {\n
+                return gadget.pleasePublishMyState({\n
+                  "extended_search": gadget.props.options.filterEditor.extended_search || "",\n
+                  "sort_list": sort_query\n
+                });\n
+              }\n
+              if (gadget.props.options.sortEditor) {\n
+                return gadget.pleasePublishMyState({\n
+                  "extended_search": gadget.props.options.sortEditor.extended_search || "",\n
+                  "sort_list": sort_query\n
+                });\n
+              }\n
+              return gadget.pleasePublishMyState({\n
+                "sort_list": sort_query\n
+              });\n
+            })\n
+            .push(function (url) {\n
+              gadget.props.jelement.panel("toggle");\n
+              return gadget.pleaseRedirectMyHash(url);\n
+            });\n
+        }\n
+      );\n
+    });\n
+\n
+}(window, document, rJS, RSVP));
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Erp5 Filter Editor</string> </value>
+            <value> <string>Gadget Erp5 Sort Editor JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -282,7 +418,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>test</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -304,7 +440,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439819451.71</float>
+                        <float>1442289048.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -349,7 +485,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.37783.58290.59204</string> </value>
+                <value> <string>945.49555.29942.44322</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -367,7 +503,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442309257.72</float>
+                        <float>1442311229.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -396,7 +532,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>test</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -426,7 +562,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439819302.25</float>
+                        <float>1442289000.01</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

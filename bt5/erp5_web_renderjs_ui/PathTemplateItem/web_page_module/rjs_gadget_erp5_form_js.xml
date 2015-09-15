@@ -221,6 +221,9 @@
       if (form_definition.extended_search) {\n
         suboption_dict.extended_search = form_definition.extended_search;\n
       }\n
+      if (form_definition.extended_sort_list) {\n
+        suboption_dict.extended_sort_list = form_definition.extended_sort_list;\n
+      }\n
 \n
       form_gadget.props.gadget_list = [];\n
       form_gadget.props.id = erp5_document._id;\n
@@ -500,7 +503,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -514,7 +517,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.22467.53128.26641</string> </value>
+                <value> <string>945.49324.9572.9676</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -532,8 +535,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1436753892.36</float>
-                        <string>GMT+2</string>
+                        <float>1442309628.83</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

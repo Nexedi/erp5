@@ -102,10 +102,9 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener, document */\n
+/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener, document, QueryFactory */\n
 (function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
   "use strict";\n
-\n
   /////////////////////////////////////////////////////////////////\n
   // templates\n
   /////////////////////////////////////////////////////////////////\n
@@ -147,7 +146,7 @@
         if (select === "keyword" && filterforms[i][0][filterforms[i][0].selectedIndex].value !== "Searchable Text") {\n
           value = "%" + value + "%";\n
         } else {\n
-          value = select + " " + value;\n
+          value = select + value;\n
         }\n
         if (filterforms[i][0][filterforms[i][0].selectedIndex].value === "Searchable Text") {\n
           query += value;\n
@@ -170,10 +169,13 @@
         query += gadget.props.tree_path[i];\n
       }\n
       if (gadget.props.tree_path[gadget.props.tree_path.length - 1] !== \'--\') {\n
-        query += "/" + gadget.props.tree_path[gadget.props.tree_path.length - 1];\n
+        if (gadget.props.tree_path.length === 1) {\n
+          query += gadget.props.tree_path[0];\n
+        } else {\n
+          query += "/" + gadget.props.tree_path[gadget.props.tree_path.length - 1];\n
+        }\n
       }\n
     }\n
-\n
     return new RSVP.Queue()\n
       .push(function () {\n
         return gadget.pleasePublishMyState({\n
@@ -235,12 +237,12 @@
         if (key === selected_value) {\n
           tmp += selected_option_template({\n
             value: key,\n
-            text: key\n
+            text: domain_tree_map[key].title\n
           });\n
         } else {\n
           tmp += option_template({\n
             value: key,\n
-            text: key\n
+            text: domain_tree_map[key].title\n
           });\n
         }\n
       }\n
@@ -263,7 +265,7 @@
   }\n
 \n
 \n
-  function createFilterItem(gadget, select, input_value) {\n
+  function createFilterItem(gadget, select, input_value, operator) {\n
     var div = document.createElement("div"),\n
       container = document.createElement("form"),\n
       minus_button = document.createElement("input"),\n
@@ -273,7 +275,6 @@
       default_select = "Searchable Text",\n
       select_options,\n
       select_options_value,\n
-      value_list = ["", ""],\n
       options_map = {\n
         "date_float": ["Equals To", "Greater Than", "Less Than", "Not Greater Than", "Not Less Than"],\n
         "date_float_value": ["", ">", "<", "<=", ">="],\n
@@ -296,16 +297,13 @@
     function createSelectOperator(event) {\n
       var html = "",\n
         j;\n
-      if (input_value !== undefined) {\n
-        value_list = input_value.split(" ");\n
-      }\n
       if (event.target.value.indexOf(\'date\') !== -1) {\n
         text.setAttribute("type", "date");\n
-        value_list[value_list.length - 1] = value_list[value_list.length - 1].replace(/\\//g, "-");\n
+        input_value = input_value ? input_value.replace(/\\//g, "-") : "";\n
       } else {\n
         text.setAttribute("type", "text");\n
       }\n
-      text.setAttribute("value", value_list[value_list.length - 1] || "");\n
+      text.setAttribute("value", input_value || "");\n
       if (event.target.value.indexOf(\'date\') !== -1 ||\n
           event.target.value.indexOf(\'quantity\') !== -1 ||\n
           event.target.value.indexOf(\'price\') !== -1) {\n
@@ -320,7 +318,7 @@
       }\n
 \n
       for (j = 0; j < select_options.length; j += 1) {\n
-        if (value_list[0] === select_options_value[j]) {\n
+        if (operator === select_options_value[j]) {\n
           html += selected_option_template({\n
             value: select_options_value[j],\n
             text: select_options[j]\n
@@ -468,8 +466,7 @@
         item,\n
         and = gadget.props.element.querySelector(".and"),\n
         or = gadget.props.element.querySelector(".or"),\n
-        select_list,\n
-        query;\n
+        query = "";\n
       while (container.firstChild !==  container.lastChild) {\n
         container.removeChild(container.firstChild);\n
       }\n
@@ -478,21 +475,71 @@
       }\n
 \n
       this.props.options = options;\n
-      if (options.filterEditor !== undefined || options.pg !== undefined) {\n
+      if (options.filterEditor !== undefined || options.pg !== undefined || options.sortEditor) {\n
         gadget.props.tree_path = [];\n
-        query = options.filterEditor ? options.filterEditor.extended_search : options.pg.fg.erp5_searchfield.extended_search;\n
+        if (options.filterEditor) {\n
+          query = options.filterEditor.extended_search;\n
+        } else if (options.sortEditor) {\n
+          query = options.sortEditor.extended_search;\n
+        } else if (options.pg.fg.erp5_searchfield) {\n
+          query = options.pg.fg.erp5_searchfield.extended_search;\n
+        }\n
+        if (query === undefined) {\n
+          query = "";\n
+        }\n
         return new RSVP.Queue()\n
           .push(function () {\n
             return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
           })\n
           .push(function (result) {\n
+            var query_list = QueryFactory.create(query),\n
+              j = 0,\n
+              key,\n
+              domain_tree_map = result.data._embedded._view.listbox.domain_tree_map,\n
+              domain_tree_list;\n
+            gadget.props.options = result.data._embedded._view.listbox.column_list;\n
+            gadget.props.domain_tree_map = result.data._embedded._view.listbox.domain_tree_map;\n
+            if (query_list.operator === "OR") {\n
+              or.checked = true;\n
+              or.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
+            } else {\n
+              and.checked = true;\n
+              and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
+            }\n
+            query_list = query_list.query_list || [query_list];\n
+            for (i = 0; i < query_list.length; i += 1) {\n
+              key = query_list[i].key;\n
+              if (key !== "Domain") {\n
+                if (key === undefined) {\n
+                  item = createFilterItem(gadget, "Searchable Text", query_list[i].value);\n
+                } else {\n
+                  item = createFilterItem(gadget, key, query_list[i].value, query_list[i].operator);\n
+                }\n
+                container.insertBefore(item, container.lastChild);\n
+              } else {\n
+                domain_tree_list = query_list[i].value.split("/");\n
+                createDomainTree(gadget, domain_tree_map, domain_tree_list[0]);\n
+                for (j = 0; j < domain_tree_list.length; j += 1) {\n
+                  domain_tree_map = domain_tree_map[domain_tree_list[j]].sub_categories;\n
+                  if (Object.keys(domain_tree_map).length !== 0) {\n
+                    createDomainTree(gadget, domain_tree_map, domain_tree_list[j + 1]);\n
+                  }\n
+                }\n
+              }\n
+            }\n
+            if (gadget.props.element.querySelector(".filterForm") === null) {\n
+              container.insertBefore(createFilterItem(gadget), container.lastChild);\n
+            }\n
+            if (gadget.props.element.querySelector(".domain_tree") === null) {\n
+              createDomainTree(gadget);\n
+            }\n
+            /*\n
             var query_list = query.split(" OR "),\n
               j = 0,\n
               domain_tree_map = result.data._embedded._view.listbox.domain_tree_map,\n
               domain_tree_list;\n
             gadget.props.options = result.data._embedded._view.listbox.column_list;\n
             gadget.props.domain_tree_map = result.data._embedded._view.listbox.domain_tree_map;\n
-\n
             if (query_list.length === 1) {\n
               query_list = query.split(" AND ");\n
               and.checked = true;\n
@@ -527,7 +574,8 @@
             }\n
             if (gadget.props.element.querySelector(".domain_tree") === null) {\n
               createDomainTree(gadget);\n
-            }\n
+            }*/\n
+\n
           });\n
       }\n
     })\n
@@ -536,26 +584,22 @@
     // declared services\n
     /////////////////////////////////////////////////////////////////\n
     .declareService(function () {\n
-      var gadget = this;\n
+      var gadget = this,\n
+        item;\n
       function closeFilterEditor() {\n
         gadget.props.jelement.panel("toggle");\n
       }\n
-      function plusItem() {\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            return createFilterItem(gadget);\n
-          })\n
-          .push(function (item) {\n
-            var container = gadget.props.element.querySelector(".filter_item_container");\n
-            container.insertBefore(item, container.lastChild);\n
-          });\n
-      }\n
+\n
 \n
       loopEventListener(\n
         gadget.props.element.querySelector(".plus"),\n
         "submit",\n
         false,\n
-        plusItem\n
+        function () {\n
+          var container = gadget.props.element.querySelector(".filter_item_container");\n
+          item = createFilterItem(gadget);\n
+          container.insertBefore(item, container.lastChild);\n
+        }\n
       );\n
       loopEventListener(\n
         gadget.props.element.querySelector(".delete"),\n
@@ -710,7 +754,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.28374.52028.3822</string> </value>
+                <value> <string>945.49499.52520.15308</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -728,7 +772,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441041247.46</float>
+                        <float>1442307606.31</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

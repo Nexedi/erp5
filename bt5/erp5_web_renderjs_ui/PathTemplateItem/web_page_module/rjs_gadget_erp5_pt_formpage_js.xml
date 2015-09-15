@@ -174,8 +174,12 @@
           var sub_options = options.fg;\n
           if (sub_options === undefined) {\n
             sub_options = {};\n
-            if(options.filterEditor) {\n
+            if (options.filterEditor) {\n
               sub_options.erp5_searchfield = options.filterEditor;\n
+            } else {\n
+              if (options.sortEditor) {\n
+                sub_options.erp5_searchfield = options.sortEditor;\n
+              }\n
             }\n
           }\n
           sub_options.erp5_document = erp5_document;\n
@@ -337,7 +341,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.12418.34036.47547</string> </value>
+                <value> <string>945.49277.33497.32034</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -355,7 +359,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440083034.81</float>
+                        <float>1442308423.62</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
