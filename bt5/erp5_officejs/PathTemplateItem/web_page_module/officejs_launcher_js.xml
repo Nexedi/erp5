@@ -329,25 +329,6 @@
           g.props.content_element = element.querySelector(\'.gadget-content\');\n
         });\n
     })\n
-\n
-    .ready(function (g) {\n
-      // Extract configuration parameters stored in HTML\n
-      // XXX Will work only if top gadget...\n
-      var element_list =\n
-        document.querySelectorAll("[data-renderjs-configuration]"),\n
-        len = element_list.length,\n
-        key,\n
-        value,\n
-        i;\n
-\n
-      for (i = 0; i < len; i += 1) {\n
-        key = element_list[i].getAttribute(\'data-renderjs-configuration\');\n
-        value = element_list[i].textContent;\n
-        if (value !== "") {\n
-          g.props[key] = value;\n
-        }\n
-      }\n
-    })\n
     // Configure setting storage\n
     .ready(function (g) {\n
       return g.getDeclaredGadget("setting_gadget")\n
@@ -359,11 +340,38 @@
         });\n
     })\n
     .ready(function (g) {\n
+      // Extract configuration parameters stored in HTML\n
+      // XXX Will work only if top gadget...\n
+      var element_list =\n
+        document.querySelectorAll("[data-renderjs-configuration]"),\n
+        len = element_list.length,\n
+        key,\n
+        value,\n
+        i,\n
+        queue = new RSVP.Queue();\n
+\n
+      function push(a, b) {\n
+        queue.push(function () {\n
+          return setSetting(g, a, b);\n
+        });\n
+      }\n
+\n
+      for (i = 0; i < len; i += 1) {\n
+        key = element_list[i].getAttribute(\'data-renderjs-configuration\');\n
+        value = element_list[i].textContent;\n
+        if (value !== "") {\n
+          g.props[key] = value;\n
+          push(key, value);\n
+        }\n
+      }\n
+      return queue;\n
+    })\n
+    .ready(function (g) {\n
       return setSetting(g, \'hateoas_url\',\n
           (new URI(g.props.hateoas_url))\n
             .absoluteTo(location.href)\n
             .toString()\n
-      );\n
+        );\n
     })\n
     // Configure jIO storage\n
     .ready(function (g) {\n
@@ -419,17 +427,7 @@
       return location.reload();\n
     })\n
     .allowPublicAcquisition("getUrlFor", function (param_list) {\n
-      var options = param_list[0],\n
-        key;\n
-      for (key in options) {\n
-        if (options.hasOwnProperty(key)) {\n
-          if (options[key] === undefined) {\n
-            throw new Error("Can not generate URL for: " +\n
-                            JSON.stringify(options));\n
-          }\n
-        }\n
-      }\n
-      return this.aq_pleasePublishMyState(options);\n
+      return this.aq_pleasePublishMyState(param_list[0]);\n
     })\n
 \n
     .allowPublicAcquisition("updateHeader", function (param_list) {\n
@@ -460,6 +458,22 @@
           if (result_list.length === 2) {\n
             gadget.props.header_argument_list.right_title = result_list[1];\n
           }\n
+\n
+          // XXX Sven hack: number of _url determine padding for\n
+          // subheader on ui-content\n
+          var key,\n
+            count = 0;\n
+          for (key in gadget.props.header_argument_list) {\n
+            if (gadget.props.header_argument_list.hasOwnProperty(key)) {\n
+              if (key.indexOf(\'_url\') > -1) {\n
+                count += 1;\n
+              }\n
+            }\n
+          }\n
+          if (count > 2) {\n
+            console.log(\'Has subheader\');\n
+            gadget.props.sub_header_class = "ui-has-subheader";\n
+          }\n
         });\n
     })\n
 \n
@@ -478,6 +492,12 @@
     })\n
     .allowPublicAcquisition("jio_get", function (param_list) {\n
       return callJioGadget(this, "get", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
+      return callJioGadget(this, "getAttachment", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_putAttachment", function (param_list) {\n
+      return callJioGadget(this, "putAttachment", param_list);\n
     })\n
     .allowPublicAcquisition("jio_repair", function (param_list) {\n
       return callJioGadget(this, "repair", param_list);\n
@@ -724,7 +744,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -738,7 +758,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.39852.16132.21538</string> </value>
+                <value> <string>945.51276.58336.63624</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -756,8 +776,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441729471.18</float>
-                        <string>UTC</string>
+                        <float>1442414233.9</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
