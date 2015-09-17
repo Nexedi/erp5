@@ -66,16 +66,30 @@ if response_event_notification_message:\n
     language=event.getLanguage(),\n
     content_type=response_event_content_type or event.getContentType())\n
 \n
+  try:\n
+    title_field_id = \'your_response_event_title\'\n
+    field = getattr(context, dialog_id)[title_field_id]\n
+    original_title = field.getFieldValue(title_field_id, \'default\')[0](field, title_field_id)\n
+  except (AttributeError, KeyError):\n
+    original_title = \'\'\n
+  if original_title:\n
+    reply_subject = original_title\n
+  else:\n
+    reply_subject = event.getReplySubject()\n
   temp_event.Event_setTextContentFromNotificationMessage(\n
      reference=response_event_notification_message,\n
-     substitution_method_parameter_dict=dict(reply_body=event.getReplyBody(),\n
-                                             reply_subject=event.getReplySubject()))\n
-                                             \n
+     substitution_method_parameter_dict=dict(\n
+       reply_body=event.getReplyBody(),\n
+       reply_subject=reply_subject))\n
+  title = temp_event.getTitle()\n
+  if reply_subject not in title:\n
+    title = \'%s (%s)\' % (title, reply_subject)\n
+\n
   # XXX this relies on formulator internals, we force the variables in request and\n
   # re-render the form.\n
   request = container.REQUEST\n
   request.set(\'your_response_event_notification_message\', \'\')\n
-  request.set(\'your_response_event_title\', temp_event.getTitle())\n
+  request.set(\'your_response_event_title\', title)\n
   request.set(\'your_response_event_text_content\', temp_event.getTextContent())\n
   request.set(\'your_response_event_resource\', temp_event.getResource())\n
 \n
@@ -84,7 +98,7 @@ return context.Ticket_viewCreateResponseWorkflowActionDialog()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>response_event_portal_type, response_event_notification_message, response_event_resource, response_event_text_content, response_event_content_type, default_destination, **kw</string> </value>
+            <value> <string>response_event_portal_type, response_event_notification_message, response_event_resource, response_event_text_content, response_event_content_type, default_destination, dialog_id, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
