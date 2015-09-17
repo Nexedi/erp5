@@ -2445,17 +2445,22 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             pass
 
       if editable_field is not None:
-        # XXX what if the object does not have uid?
-        key = '%s_%s' % (editable_field.getId(), self.getUid())
+        uid = self.getUid()
+        key = '%s_%s' % (editable_field.getId(), uid)
         if sql in editable_column_id_set:
           listbox_defines_column_as_editable = True
-          # Like any other field in ERP5, always use the value entered by the
-          # user if any. This duplicates some work done by field.render
-          try:
-            display_value = editable_field._get_user_input_value(
-              editable_field.generate_field_key(key=key), request)
-          except (KeyError, AttributeError):
+          if uid is None:
             display_value = original_value
+          else:
+            # Like any other field in ERP5, always use the value entered by the
+            # user if any. However, it's only possible if keys are unique,
+            # so this is skipped if there's no uid.
+            # This duplicates some work done by field.render
+            try:
+              display_value = editable_field._get_user_input_value(
+                editable_field.generate_field_key(key=key), request)
+            except (KeyError, AttributeError):
+              display_value = original_value
           # If error on current field, we should display message
           if key in error_dict:
             error_text = error_dict[key].error_text
