@@ -51,24 +51,20 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Form.Report import ReportSection\n
-result = []\n
-\n
-history_dict = context.Base_getWorkflowHistory()\n
-for workflow_id, workflow_history in history_dict.items():\n
-  workflow_title = context.portal_workflow[workflow_id].title or workflow_id\n
-  result.append(\n
-    ReportSection(\n
-      path=context.getPhysicalPath(),\n
-      level=1,\n
-      form_id=\'Base_viewWorkflowHistory\',\n
-      selection_params={\'workflow_id\': workflow_id,\n
-                        \'workflow_title\' : workflow_title},\n
-      listbox_display_mode=\'FlatListMode\',\n
-      temporary_selection=False,\n
-      )\n
-  )\n
-\n
-return result\n
+path = context.getPhysicalPath()\n
+portal_workflow = context.getPortalObject().portal_workflow\n
+return [\n
+  ReportSection(\n
+    form_id="Base_viewWorkflowHistory",\n
+    level=1,\n
+    listbox_display_mode="FlatListMode",\n
+    path=path,\n
+    selection_params={\n
+      "workflow_id": workflow_id,\n
+      "workflow_title": portal_workflow[workflow_id].title or workflow_id},\n
+    temporary_selection=False)\n
+  for workflow_id in context.Base_getWorkflowHistory()\n
+]\n
 </string> </value>
         </item>
         <item>
