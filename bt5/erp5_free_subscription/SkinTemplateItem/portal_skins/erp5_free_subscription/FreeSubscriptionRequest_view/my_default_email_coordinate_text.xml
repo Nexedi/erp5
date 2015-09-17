@@ -10,16 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
-                <string>columns</string>
-                <string>selection_name</string>
-                <string>title</string>
+                <string>enabled</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_default_email_coordinate_text</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -56,6 +53,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -75,80 +78,36 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>default_email_coordinate_text</string>
-                          <string>Recipient Email</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Sender</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Recipient</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Subscription</string>
-                        </tuple>
-                        <tuple>
-                          <string>free_subscription_request_type_title</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_mode_listbox</string> </value>
+                    <value> <string>my_email</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Free Subscription Request</string>
-                          <string>Free Subscription Request</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>free_subscription_request_module_selection</string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Free Subscription Requests</string> </value>
-                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: (here.hasDefaultEmail() and not here.getDefaultEmail().isDetailed()) or not here.hasDefaultEmail()</string> </value>
         </item>
       </dictionary>
     </pickle>

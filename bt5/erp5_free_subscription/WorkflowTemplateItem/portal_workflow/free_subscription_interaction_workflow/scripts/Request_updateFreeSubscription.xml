@@ -59,13 +59,18 @@ if request.getFreeSubscriptionRequestType() == "unsubscription":\n
 elif request.getFreeSubscriptionRequestType() == "subscription":\n
   from DateTime import DateTime\n
   portal = request.getPortalObject()\n
+  destination_value = request.getDestinationValue()\n
   free_subscription = portal.free_subscription_module.newContent(\n
     source=request.getSource(),\n
-    destination=request.getDestination(),\n
+    destination_value=destination_value,\n
     resource=request.getResource(),\n
     effective_date=DateTime())\n
   free_subscription.validate()\n
   request.setFollowUpValue(free_subscription)\n
+  career_role_list = destination_value.getCareerRoleList([])\n
+  if not any([x.split("/")[0] == "newsletter_subscriber" for x in career_role_list]):\n
+    career_role_list.append(\'newsletter_subscriber\')\n
+    destination_value.setCareerRoleList(career_role_list)\n
 </string> </value>
         </item>
         <item>

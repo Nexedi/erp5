@@ -54,7 +54,6 @@
 
 from Products.ERP5Type.Message import translateString\n
 portal = context.getPortalObject()\n
-format_address = portal.ERP5Site_formatFrenchAddressText\n
 \n
 def getSubstitutionMappingDict():\n
   destination = event_value.getDestinationValue()\n
@@ -67,7 +66,7 @@ def getSubstitutionMappingDict():\n
     kw[\'telephone\'] = destination.getDefaultTelephoneText() or \'\'\n
     kw[\'mobile\'] = destination.getMobileTelephoneText() or \'\'\n
     kw[\'creation_date\'] = destination.getCreationDate()\n
-    kw[\'origin_campaign\'] = destination.getOriginReference()\n
+    #kw[\'origin_campaign\'] = destination.getOriginReference()\n
 \n
     if destination.getPortalType() == \'Person\':\n
       kw[\'first_name\'] = destination.getFirstName()\n
@@ -88,7 +87,7 @@ def getSubstitutionMappingDict():\n
   hmac = portal.Base_getHMACHexdigest(key=portal.Base_getEventHMACKey(), message=event_value.getId())\n
   kw["image_parameters"] = "/Base_openEvent?id=%s&hash=%s" %(event_value.getId(), hmac)\n
   kw["newsletter_parameters"] = "/Base_readEvent?id=%s&hash=%s" %(event_value.getId(), hmac)\n
-  kw["unsubscribe_parameters"] = "/Base_unsubscribe?id=%s&hash=%s" %(event_value.getId(), hmac)\n
+  kw["unsubscribe_parameters"] = "/Base_unsubscribeFromEvent?id=%s&hash=%s" %(event_value.getId(), hmac)\n
 \n
   return kw\n
 \n

@@ -54,8 +54,42 @@
 Intent is to ignore accept/accept race conditions but complain about\n
 any other race condition (ex: accept/reject).\n
 """\n
-if context.getValidationState() != \'accepted\':\n
+if not context.getReference():\n
+  context.FreeSubscriptionRequest_generateReference()\n
+if context.getValidationState() != \'submitted\':\n
+  return\n
+person = context.getDestinationValue()\n
+if person:\n
+  email = person.getDefaultEmailCoordinateText()\n
+  if email and not context.getDefaultEmailCoordinateText():  # XXX workaround to fill the email field if not already set\n
+    context.setDefaultEmailCoordinateText(email)\n
   context.accept()\n
+elif context.getDefaultEmailCoordinateText():\n
+  email = context.getDefaultEmailCoordinateText()\n
+  portal = context.getPortalObject()\n
+  person = portal.portal_catalog.getResultValue(\n
+    portal_type="Person",\n
+    reference=email,\n
+    )\n
+  if person:\n
+    context.reject(comment="Person already in the user data base")\n
+  else:\n
+    person = portal.portal_catalog.getResultValue(\n
+      portal_type="Person",\n
+      default_email_text=email,\n
+    )\n
+    if not person:\n
+      person = portal.person_module.newContent(\n
+        portal_type="Person",\n
+        default_email_text=email,\n
+        title=email,\n
+        )\n
+      person.validate()\n
+    elif person.getReference():\n
+      context.reject(comment="Person already in the user data base")\n
+      return\n
+    context.setDestination(person.getRelativeUrl())\n
+    context.accept()\n
 </string> </value>
         </item>
         <item>
