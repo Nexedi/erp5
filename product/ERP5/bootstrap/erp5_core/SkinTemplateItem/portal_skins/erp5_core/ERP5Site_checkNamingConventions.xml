@@ -64,11 +64,11 @@
 # - Check script names (from skin folders and workflows).\n
 import re\n
 ABBREVIATION_WORD_SET = ((\n
-  "BBAN", "BIC", "BOM", "CAD", "CRM", "CSV", "CTX", "DMS", "EAN", "ERP5",\n
-  "FAX", "GAP", "HTML", "IBAN", "ID", "KM", "MIME", "NVP", "ODT", "PDF",\n
-  "PDM", "PO", "RAM", "RSS", "SMS", "SQL", "SVN", "TALES", "TSV", "UBM",\n
-  "UID", "UOM", "URI", "URL", "VADS", "VAT", "VCS", "VPN", "ZODB",\n
-  "DNS", "IP", "CSS", "IMAP", "XML", "GPG", "GID", "TCP", "SOAP", "MRP",\n
+  "BBAN", "BIC", "BOM", "CAD", "CRM", "CSS", "CSV", "CTX", "DMS", "DNS",\n
+  "EAN", "ERP5", "FAX", "GAP", "GID", "GPG", "HTML", "HTTP", "IBAN", "ID",\n
+  "IMAP", "IP", "KM", "MIME", "MRP", "NVP", "ODT", "PDF", "PDM", "PO",\n
+  "RAM", "RSS", "SMS", "SOAP", "SQL", "SVN", "TALES", "TCP", "TSV", "UBM",\n
+  "UID", "UOM", "URI", "URL", "VADS", "VAT", "VCS", "VPN", "XML", "ZODB",\n
 ))\n
 \n
 # List of words that do not need to be titlecased\n
