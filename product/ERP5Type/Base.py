@@ -2947,9 +2947,13 @@ class Base( CopyContainer,
     if id[:1] != '_' and id[:3] != 'aq_':
       skin_info = SKINDATA.get(thread.get_ident())
       if skin_info is not None:
-        object = skinResolve(self.getPortalObject(), (skin_info[0], skin), id)
+        portal = self.getPortalObject()
+        object = skinResolve(portal, (skin_info[0], skin), id)
         if object is not None:
-          return object.__of__(self)
+          # First wrap at the portal to set the owner of the executing script.
+          # This mimics the usual way to get an object from skin folders,
+          # and it's required when 'object' is an script with proxy roles.
+          return object.__of__(portal).__of__(self)
     raise AttributeError(id)
 
   def _getAcquireLocalRoles(self):
