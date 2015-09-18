@@ -2948,7 +2948,8 @@ class Base( CopyContainer,
       skin_info = SKINDATA.get(thread.get_ident())
       if skin_info is not None:
         portal = self.getPortalObject()
-        object = skinResolve(portal, (skin_info[1], skin), id)
+        _, skin_selection_name, _, _ = skin_info
+        object = skinResolve(portal, (skin_selection_name, skin), id)
         if object is not None:
           # First wrap at the portal to set the owner of the executing script.
           # This mimics the usual way to get an object from skin folders,
