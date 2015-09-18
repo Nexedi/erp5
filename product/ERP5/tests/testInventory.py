@@ -2351,7 +2351,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                            resource_uid=resource_value.getUid())
     self._testGetInventory(expected=3,
                            resource_uid=resource_value.getUid(),
-                           optimise__=False)
+                           optimisation__=False)
 
   def stepTestFullInventoryMultipleNodeAndResource(
         self, sequence=None, sequence_list=None, **kw):
@@ -2544,7 +2544,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                            node_uid=node_value.getUid(),
                            resource_uid=resource_value.getUid())
     self._testGetInventory(expected=100,
-                           optimise__=False,
+                           optimisation__=False,
                            to_date=DateTime(self.full_inventory_start_date_1),
                            section_uid=section_value.getUid(),
                            node_uid=node_value.getUid(),
@@ -2999,7 +2999,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
 
     [test]
     getInventory(resource=X) should return 3
-    getInventory(resource=X, optimise__=False) should return 3
+    getInventory(resource=X, optimisation__=False) should return 3
     """
     if not run: return
 
