@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,7 +66,9 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>classification/collaborative/team</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -76,18 +78,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
-            <key> <string>contributors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>officejs_launcher.html</string> </value>
+            <value> <string>gadget_erp5_router.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -97,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>officejs_launcher_html</string> </value>
+            <value> <string>rjs_gadget_erp5_router_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +97,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -117,85 +109,37 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!doctype html>\n
-<html manifest="${manifest_url}">\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-    <link rel="shortcut icon" href="favicon.ico">\n
+/*global window, rJS */\n
+/*jslint nomen: true, indent: 2 */\n
+(function (window, rJS) {\n
+  "use strict";\n
 \n
-    <title>${application_title}</title>\n
+  rJS(window)\n
 \n
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />\n
-    <link rel="stylesheet" href="jquerymobile.css">\n
-    <link rel="stylesheet" href="gadget_erp5.css">\n
+    .declareMethod(\'route\', function (options) {\n
 \n
-    <script data-renderjs-configuration="application_title" type="text/x-renderjs-configuration">${application_title}</script>\n
-    <script data-renderjs-configuration="panel_gadget" type="text/x-renderjs-configuration">${panel_gadget}</script>\n
-    <script data-renderjs-configuration="action_view" type="text/x-renderjs-configuration">${action_view}</script>\n
-    <script data-renderjs-configuration="default_view_reference" type="text/x-renderjs-configuration">${default_view_reference}</script>\n
-    <script data-renderjs-configuration="hateoas_url" type="text/x-renderjs-configuration">${hateoas_url}</script>\n
+      if ((options.jio_key !== undefined) && (options.page === undefined)) {\n
+        options.page = "form";\n
+        // XXX Hardcoded default \'view\'\n
+        options.view = options.view || \'view\';\n
+      }\n
+      if (options.page === undefined) {\n
+        options.page = \'front\';\n
+      }\n
+      return {\n
+        url: "gadget_erp5_page_" + options.page + ".html",\n
+        options: options\n
+      };\n
+    });\n
 \n
-    <script src="jquery.js"></script>\n
-    <script src="jquerymobile.js"></script>\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="gadget_global.js" ></script>\n
-    <script src="officejs_launcher.js"></script>\n
-\n
-  </head>\n
-\n
-  <body>\n
-    <div data-role="page">\n
-\n
-      <!--div  data-role="panel" id="mypanel" data-position="left" data-display="overlay" data-theme="d">\n
-      </div-->\n
-\n
-      <!--div data-role="header" class="gadget-header" data-theme="a">\n
-        <a href="#mypanel" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all"></a>\n
-        <div><h1 class="ui-title"></h1></div>\n
-      </div-->\n
-\n
-      <div data-gadget-url="gadget_jio.html"\n
-          data-gadget-scope="setting_gadget"\n
-          data-gadget-sandbox="public"></div>\n
-\n
-      <div data-gadget-url="${router_gadget}"\n
-          data-gadget-scope="router"\n
-          data-gadget-sandbox="public"></div>\n
-\n
-      <div data-gadget-url="${translation_gadget}"\n
-          data-gadget-scope="translation_gadget"\n
-          data-gadget-sandbox="public"></div>\n
-\n
-      <div data-gadget-url="${header_gadget}"\n
-          data-gadget-scope="header"\n
-          data-gadget-sandbox="public"></div>\n
-\n
-      <div data-gadget-url="${jio_gadget}"\n
-          data-gadget-scope="jio_gadget"\n
-          data-gadget-sandbox="public"></div>\n
-\n
-      <div data-gadget-url="${panel_gadget}"\n
-          data-gadget-scope="panel"\n
-          data-gadget-sandbox="public"></div>\n
-\n
-      <div role="main" class="ui-content gadget-content"></div>\n
-    </div>\n
-\n
-  </body>\n
-</html>\n
+}(window, rJS));\n
 
 
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Application Launcher</string> </value>
+            <value> <string>ERP5 Gadget Router JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -281,7 +225,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440771124.2</float>
+                        <float>1441962261.87</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -326,7 +270,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.51278.32202.51865</string> </value>
+                <value> <string>945.54079.55977.57258</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,7 +288,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442414326.94</float>
+                        <float>1442582410.13</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -401,7 +345,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440770776.61</float>
+                        <float>1441962223.77</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

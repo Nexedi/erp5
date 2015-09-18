@@ -138,7 +138,7 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
     .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
     //////////////////////////////////////////////\n
@@ -219,14 +219,13 @@
 \n
       if (field_json.list_method_template !== undefined) {\n
         list_method_promise = function (option_dict) {\n
-          return gadget.jio_getAttachment({\n
+          return gadget.jio_getAttachment(\n
             // XXX Ugly hardcoded meaningless id...\n
-            "_id": "erp5",\n
-            "_attachment": new UriTemplate.parse(field_json.list_method_template)\n
-                                      .expand(option_dict)\n
-          })\n
+            "erp5",\n
+            new UriTemplate.parse(field_json.list_method_template)\n
+                           .expand(option_dict)\n
+          )\n
             .push(function (catalog_json) {\n
-              catalog_json = catalog_json.data;\n
               var data = catalog_json._embedded.contents,\n
                 count = data.length,\n
                 k,\n
@@ -262,7 +261,7 @@
         counter = Math.min(result.data.total_rows, lines);\n
         for (i = 0; i < counter; i += 1) {\n
           promise_list.push(\n
-            gadget.whoWantToDisplayThis(result.data.rows[i].id)\n
+            gadget.getUrlFor({jio_key: result.data.rows[i].id})\n
           );\n
         }\n
         return RSVP.all(promise_list);\n
@@ -613,7 +612,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -627,7 +626,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.12333.61899.20616</string> </value>
+                <value> <string>945.52783.20655.48793</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -645,8 +644,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1436145492.07</float>
-                        <string>GMT+2</string>
+                        <float>1442504640.91</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

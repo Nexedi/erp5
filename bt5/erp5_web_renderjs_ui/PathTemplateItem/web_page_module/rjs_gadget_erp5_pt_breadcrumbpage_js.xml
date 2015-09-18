@@ -135,10 +135,9 @@
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
-    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
-    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -166,16 +165,16 @@
               });\n
             } else {\n
               // Parent is an ERP5 document\n
-              return gadget.whoWantToDisplayThis(jio_key)\n
+              return gadget.getUrlFor({jio_key: jio_key})\n
                 .push(function (parent_href) {\n
                   parent_list.unshift({\n
                     title: parent_link.name,\n
                     link: parent_href\n
                   });\n
-                  return gadget.jio_getAttachment({"_id": jio_key, "_attachment": "links"});\n
+                  return gadget.jio_getAttachment(jio_key, "links");\n
                 })\n
                 .push(function (result) {\n
-                  handleParent(result.data._links.parent || "#");\n
+                  handleParent(result._links.parent || "#");\n
                 });\n
             }\n
 \n
@@ -183,13 +182,13 @@
         });\n
       }\n
 \n
-      return gadget.whoWantToDisplayThisPage({name: options.view, editable: options.editable})\n
+      return gadget.getUrlFor({jio_key: options.jio_key, view: options.view, editable: options.editable})\n
         .push(function (back_url) {\n
           header_options.back_url = back_url;\n
-          return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": "links"});\n
+          return gadget.jio_getAttachment(options.jio_key, "links");\n
         })\n
         .push(function (result) {\n
-          erp5_document = result.data;\n
+          erp5_document = result;\n
           header_options.page_title = erp5_document.title;\n
           parent_queue = new RSVP.Queue();\n
 \n
@@ -205,7 +204,7 @@
         })\n
         .push(function (my_translated_html) {\n
           gadget.props.element.innerHTML = my_translated_html;\n
-          return gadget.renderPageHeader(header_options);\n
+          return gadget.updateHeader(header_options);\n
         });\n
     });\n
 \n
@@ -344,7 +343,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49124.20596.60757</string> </value>
+                <value> <string>945.52768.52090.60757</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -362,7 +361,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423066901.42</float>
+                        <float>1442504878.86</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

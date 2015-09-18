@@ -199,6 +199,46 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_translation_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_jio_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_panel_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_header_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -232,8 +272,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
                 <string>caching_policy/hateoas</string>
+                <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
               </tuple>
             </value>
         </item>
@@ -248,6 +288,24 @@
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
             <value> <string>hateoas/</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_header_gadget_url</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_jio_gadget_url</string> </key>
+            <value> <string>gadget_erp5_jio.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_panel_gadget_url</string> </key>
+            <value> <string>gadget_erp5_panel.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_translation_gadget_url</string> </key>
+            <value> <string>gadget_officejs_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -267,9 +325,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>RenderJS Gadget ERP5</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -470,7 +526,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -484,7 +540,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.53459.40487.3686</string> </value>
+                <value> <string>945.49893.7308.27852</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -502,8 +558,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439219895.9</float>
-                        <string>UTC</string>
+                        <float>1442331571.5</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

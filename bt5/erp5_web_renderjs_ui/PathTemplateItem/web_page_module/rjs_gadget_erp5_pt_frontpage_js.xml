@@ -138,8 +138,7 @@
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("whoWantToDisplayThis",\n
-                           "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -157,7 +156,7 @@
             i;\n
           for (i = 0; i < result.data.rows.length; i += 1) {\n
             result_list.push(RSVP.all([\n
-              gadget.whoWantToDisplayThis(result.data.rows[i].id),\n
+              gadget.getUrlFor({jio_key: result.data.rows[i].id}),\n
               result.data.rows[i].value.title || result.data.rows[i].id,\n
               result.data.rows[i].value.business_application_title\n
             ]));\n
@@ -370,7 +369,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.11553.26313.55261</string> </value>
+                <value> <string>945.49517.32009.34013</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -388,7 +387,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1425475569.42</float>
+                        <float>1442308668.56</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

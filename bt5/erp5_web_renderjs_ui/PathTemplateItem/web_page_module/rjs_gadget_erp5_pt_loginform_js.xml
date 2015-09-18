@@ -124,7 +124,7 @@
     /////////////////////////////////////////////////////////////////\n
     // handle acquisition\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
 \n
     /////////////////////////////////////////////////////////////////\n
@@ -161,7 +161,7 @@
 \n
           document.cookie = "__ac=" + window.btoa(login + ":" + passwd);\n
           // XXX Hardcoded non generic redirection to the frontpage\n
-          return form_gadget.pleaseRedirectMyHash("#");\n
+          return form_gadget.redirect({});\n
         });\n
 \n
     });\n
@@ -286,7 +286,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -300,7 +300,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.35810.36101.14694</string> </value>
+                <value> <string>945.43780.3884.33979</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -318,8 +318,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1430143960.53</float>
-                        <string>UTC</string>
+                        <float>1442484467.19</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

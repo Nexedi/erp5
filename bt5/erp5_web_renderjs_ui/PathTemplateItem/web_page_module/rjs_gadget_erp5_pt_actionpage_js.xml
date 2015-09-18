@@ -138,8 +138,8 @@
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
-    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -150,14 +150,14 @@
         result_list,\n
         view_list;\n
 \n
-      return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": "links"})\n
+      return gadget.jio_getAttachment(options.jio_key, "links")\n
         .push(function (result) {\n
           var i,\n
             promise_list = [\n
-              gadget.whoWantToDisplayThisPage({name: options.view, editable: options.editable}),\n
-              gadget.whoWantToDisplayThisPage({name: options.view, editable: options.editable, page: "breadcrumb"})\n
+              gadget.getUrlFor({jio_key: options.jio_key, view: options.view, editable: options.editable}),\n
+              gadget.getUrlFor({jio_key: options.jio_key, view: options.view, editable: options.editable, page: "breadcrumb"})\n
             ];\n
-          erp5_document = result.data;\n
+          erp5_document = result;\n
           view_list = erp5_document._links.action_workflow || [];\n
 \n
           if (view_list.constructor !== Array) {\n
@@ -165,8 +165,9 @@
           }\n
 \n
           for (i = 0; i < view_list.length; i += 1) {\n
-            promise_list.push(gadget.whoWantToDisplayThisPage({\n
-              name: view_list[i].href\n
+            promise_list.push(gadget.getUrlFor({\n
+              jio_key: options.jio_key,\n
+              view: view_list[i].href\n
             }));\n
           }\n
           return RSVP.all(promise_list);\n
@@ -194,7 +195,7 @@
         .push(function (my_translated_html) {\n
           gadget.props.element.innerHTML = my_translated_html;\n
 \n
-          return gadget.renderPageHeader({\n
+          return gadget.updateHeader({\n
             back_url: result_list[0],\n
             page_title: erp5_document.title,\n
             breadcrumb_url: result_list[1]\n
@@ -339,7 +340,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49126.4849.49664</string> </value>
+                <value> <string>945.52786.43920.26777</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -357,7 +358,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423066988.75</float>
+                        <float>1442504825.27</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

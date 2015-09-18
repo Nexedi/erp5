@@ -109,8 +109,8 @@
     /////////////////////////////////////////////////////////////////\n
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
-    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -133,7 +133,7 @@
         .push(function () {\n
           var new_content_action = options.erp5_document._links.action_object_new_content_action;\n
           if (new_content_action !== undefined) {\n
-            new_content_action = gadget.whoWantToDisplayThisPage({name: new_content_action.href, editable: true});\n
+            new_content_action = gadget.getUrlFor({jio_key: options.jio_key, view: new_content_action.href, editable: true});\n
           } else {\n
             new_content_action = "";\n
           }\n
@@ -141,16 +141,16 @@
           return RSVP.all([\n
             gadget.getDeclaredGadget("erp5_searchfield"),\n
             gadget.getDeclaredGadget("erp5_form"),\n
-            gadget.whoWantToDisplayThisPage({name: options.view, page: "breadcrumb"}),\n
+            gadget.getUrlFor({jio_key: options.jio_key, view: options.view, page: "breadcrumb"}),\n
             new_content_action,\n
-            gadget.whoWantToDisplayThisPage({page: "action", name: options.view})\n
+            gadget.getUrlFor({jio_key: options.jio_key, page: "action", view: options.view})\n
           ]);\n
         })\n
         .push(function (all_gadget) {\n
           return RSVP.all([\n
             all_gadget[0].render(search_options),\n
             all_gadget[1].render(form_options),\n
-            gadget.renderPageHeader({\n
+            gadget.updateHeader({\n
               panel_action: true,\n
               jump_url: "",\n
               cut_url: "",\n
@@ -301,7 +301,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49123.7425.11349</string> </value>
+                <value> <string>945.52360.36060.34423</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -319,7 +319,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423066273.81</float>
+                        <float>1442480580.57</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

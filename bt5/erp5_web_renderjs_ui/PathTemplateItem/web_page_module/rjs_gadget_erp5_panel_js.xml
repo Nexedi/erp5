@@ -99,9 +99,7 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*jslint nomen: true, indent: 2, maxerr: 3 */\n
+            <value> <string>/*jslint nomen: true, indent: 2, maxerr: 3 */\n
 /*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener */\n
 (function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
   "use strict";\n
@@ -133,12 +131,7 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("changeLanguage", "changeLanguage")\n
-    .declareAcquiredMethod("getLanguageList", "getLanguageList")\n
-    .declareAcquiredMethod(\n
-      "whoWantToDisplayThisFrontPage",\n
-      "whoWantToDisplayThisFrontPage"\n
-    )\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
 \n
     // Assign the element to a variable\n
     .ready(function (g) {\n
@@ -162,41 +155,22 @@
       return new RSVP.Queue()\n
         .push(function () {\n
           return RSVP.all([\n
-            g.whoWantToDisplayThisFrontPage("front"),\n
-            g.whoWantToDisplayThisFrontPage("history"),\n
-            g.getLanguageList(),\n
-            g.whoWantToDisplayThisFrontPage("logout")\n
+            g.getUrlFor({page: "front"}),\n
+            g.getUrlFor({page: "history"}),\n
+            g.getUrlFor({page: "preference"}),\n
+            g.getUrlFor({page: "logout"})\n
           ]);\n
         })\n
         .push(function (all_result) {\n
-          var raw_language_list = JSON.parse(all_result[2]),\n
-            len = raw_language_list.length,\n
-            i,\n
-            i_len,\n
-            language_list,\n
-            tmp;\n
-\n
           // XXX: Customize panel header!\n
-          tmp = panel_template_header();\n
-\n
-          // languages\n
-          if (len > 0) {\n
-            language_list = [];\n
-            for (i = 0, i_len = len; i < i_len; i += 1) {\n
-              language_list.push({"count": i, "lang": raw_language_list[i]});\n
-            }\n
-          }\n
-\n
+          var tmp = panel_template_header();\n
           tmp += panel_template_body({\n
             "module_href": all_result[0],\n
             "history_href": all_result[1],\n
-            "language_list": language_list,\n
+            "preference_href": all_result[2],\n
+            // "language_list": language_list,\n
             "logout_href": all_result[3]\n
           });\n
-\n
-          if (len > 0) {\n
-            return g.translateHtml(tmp);\n
-          }\n
           return tmp;\n
         })\n
         .push(function (my_translated_or_plain_html) {\n
@@ -220,45 +194,22 @@
     // declared services\n
     /////////////////////////////////////////////////////////////////\n
     .declareService(function () {\n
-      var panel_gadget,\n
-        form_list,\n
-        event_list,\n
-        handler,\n
-        i,\n
-        len;\n
-\n
-      function translate(my_event) {\n
-        return panel_gadget.changeLanguage(my_event.target.lang.value);\n
-      }\n
+      var panel_gadget = this;\n
 \n
       function formSubmit() {\n
         panel_gadget.toggle();\n
       }\n
 \n
-      panel_gadget = this;\n
-      form_list = panel_gadget.props.element.querySelectorAll(\'form\');\n
-      event_list = [];\n
-      handler = [formSubmit];\n
+      return loopEventListener(\n
+        panel_gadget.props.element.querySelector(\'form\'),\n
+        \'submit\',\n
+        false,\n
+        formSubmit\n
+      );\n
 \n
-      // XXX: not robust - Will break when search field is active\n
-      for (i = 0, len = form_list.length; i < len; i += 1) {\n
-        event_list[i] = loopEventListener(\n
-          form_list[i],\n
-          \'submit\',\n
-          false,\n
-          handler[i] || translate\n
-        );\n
-      }\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return RSVP.all(event_list);\n
-        });\n
     });\n
 \n
-}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));
-
-]]></string> </value>
+}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -379,7 +330,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -393,7 +344,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.36081.11434.7048</string> </value>
+                <value> <string>945.53861.25077.18602</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -411,8 +362,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1433732853.87</float>
-                        <string>UTC</string>
+                        <float>1442569620.96</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

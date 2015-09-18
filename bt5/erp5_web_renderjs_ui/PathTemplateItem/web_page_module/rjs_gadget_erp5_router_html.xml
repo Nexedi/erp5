@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,14 +64,26 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_form.js</string> </value>
+            <value> <string>gadget_erp5_router.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_formpage_js</string> </value>
+            <value> <string>rjs_gadget_erp5_router_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +101,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -101,107 +113,30 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, URI */\n
-/*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, URI) {\n
-  "use strict";\n
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <meta charset="utf-8" />\n
+    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
+    <title>Router Gadget</title>\n
 \n
-  var gadget_klass = rJS(window);\n
-  // DEFAULT_VIEW_REFERENCE = "view";\n
+    <!-- renderjs -->\n
+    <script src="rsvp.js" type="text/javascript"></script>\n
+    <script src="renderjs.js" type="text/javascript"></script>\n
 \n
-  gadget_klass\n
-    /////////////////////////////////////////////////////////////////\n
-    // ready\n
-    /////////////////////////////////////////////////////////////////\n
-    // Init local properties\n
-    .ready(function (g) {\n
-      g.props = {};\n
-    })\n
+    <script src="gadget_erp5_router.js" type="text/javascript"></script>\n
 \n
-    // Assign the element to a variable\n
-    .ready(function (g) {\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-        });\n
-    })\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // Acquired methods\n
-    /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
-\n
-    /////////////////////////////////////////////////////////////////\n
-    // declared methods\n
-    /////////////////////////////////////////////////////////////////\n
-    .declareMethod(\'triggerSubmit\', function () {\n
-      return this.getDeclaredGadget(\'fg\')\n
-        .push(function (g) {\n
-          return g.triggerSubmit();\n
-        });\n
-    })\n
-    .declareMethod("render", function (options) {\n
-      var gadget = this,\n
-        element = gadget.props.element,\n
-        erp5_document,\n
-        erp5_form,\n
-        form_gadget;\n
-\n
-      gadget.props.jio_key = options.jio_key;\n
-\n
-      return gadget.jio_getAttachment(options.jio_key, options.view)\n
-        .push(function (result) {\n
-          var uri = new URI(result._embedded._view._links.form_definition.href);\n
-          erp5_document = result;\n
-          return gadget.jio_getAttachment(uri.segment(2), "view");\n
-        })\n
-        .push(function (result) {\n
-          erp5_form = result;\n
-\n
-          var url = "gadget_erp5_pt_" + erp5_form.pt;\n
-          // XXX Hardcoded specific behaviour for form_view\n
-          if ((options.editable !== undefined) && (erp5_form.pt === "form_view")) {\n
-            url += "_editable";\n
-          }\n
-          url += ".html";\n
-\n
-          return gadget.declareGadget(url, {\n
-            scope: "fg"\n
-          });\n
-        })\n
-        .push(function (result) {\n
-          var sub_options = options.fg || {};\n
-          sub_options.erp5_document = erp5_document;\n
-          sub_options.form_definition = erp5_form;\n
-          sub_options.view = options.view;\n
-          sub_options.action_view = options.action_view;\n
-          sub_options.jio_key = options.jio_key;\n
-          sub_options.editable = options.editable;\n
-\n
-          form_gadget = result;\n
-          return form_gadget.render(sub_options);\n
-        })\n
-        .push(function () {\n
-          return form_gadget.getElement();\n
-        })\n
-        .push(function (fragment) {\n
-          // Clear first to DOM, append after to reduce flickering/manip\n
-          while (element.firstChild) {\n
-            element.removeChild(element.firstChild);\n
-          }\n
-          element.appendChild(fragment);\n
-        });\n
-    });\n
-\n
-}(window, rJS, URI));
+  </head>\n
+  <body>\n
+  </body>\n
+</html>\n
+
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Doc JS</string> </value>
+            <value> <string>ERP5 Gadget Router</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -287,7 +222,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411464845.21</float>
+                        <float>1441962282.18</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -332,7 +267,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52795.14466.59955</string> </value>
+                <value> <string>945.43744.60869.2304</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -350,7 +285,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442581661.41</float>
+                        <float>1442582305.38</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
@@ -407,7 +342,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411464822.6</float>
+                        <float>1441962223.79</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

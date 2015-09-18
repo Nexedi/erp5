@@ -132,11 +132,10 @@
     /////////////////////////////////////////////////////////////////\n
     // acquisition\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("aq_putAttachment", "aq_putAttachment")\n
-    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
-    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
-    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
-    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")\n
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
@@ -213,12 +212,12 @@
               section.innerHTML = my_translation_html;\n
               return RSVP.all([\n
                 erp5_form.render(form_options),\n
-                form_gadget.whoWantToDisplayThis(options.jio_key),\n
-                form_gadget.whoWantToDisplayThisPage({page: "breadcrumb"})\n
+                form_gadget.getUrlFor({jio_key: form_gadget.props.id}),\n
+                form_gadget.getUrlFor({jio_key: form_gadget.props.id, page: "breadcrumb"})\n
               ]);\n
             })\n
             .push(function (all_result) {\n
-              return form_gadget.renderPageHeader({\n
+              return form_gadget.updateHeader({\n
                 cancel_url: all_result[1],\n
                 page_title: options.erp5_document.title,\n
                 breadcrumb_url: all_result[2],\n
@@ -247,35 +246,30 @@
             data[form_gadget.props.form_id.key] =\n
                                     form_gadget.props.form_id[\'default\'];\n
             // XXX Hardcoded\n
-            data.dialog_id =\n
-                                    form_gadget.props.form_id[\'default\'];\n
-            data.dialog_method = \n
-                                    form_gadget.props.action.action;\n
+            data.dialog_id = form_gadget.props.form_id[\'default\'];\n
+            data.dialog_method = form_gadget.props.action.action;\n
             for (key in content_dict) {\n
               if (content_dict.hasOwnProperty(key)) {\n
                 data[key] = content_dict[key];\n
               }\n
             }\n
 \n
-            return form_gadget.aq_putAttachment({\n
-              "_id": form_gadget.props.id,\n
-              "_attachment": form_gadget.props.action.href,\n
-              "_data": data\n
-            });\n
+            return form_gadget.jio_putAttachment(\n
+              form_gadget.props.id,\n
+              form_gadget.props.action.href,\n
+              data\n
+            );\n
 \n
           })\n
           .push(function (evt) {\n
             var location = evt.target.getResponseHeader("X-Location");\n
             if (location === undefined || location === null) {\n
               // No redirection, stay on the same document\n
-              return form_gadget.whoWantToDisplayThisPage({name: "view"});\n
+              return form_gadget.getUrlFor({jio_key: form_gadget.props.id, view: "view"});\n
             }\n
-            return form_gadget.whoWantToDisplayThis(new URI(location).segment(2), {editable: form_gadget.props.editable});\n
-          })\n
-          .push(function (url) {\n
             return RSVP.all([\n
               form_gadget.notifySubmitted(),\n
-              form_gadget.pleaseRedirectMyHash(url)\n
+              form_gadget.redirect({jio_key: new URI(location).segment(2), editable: form_gadget.props.editable})\n
             ]);\n
           });\n
       }\n
@@ -412,7 +406,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -426,7 +420,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.54421.21287.62378</string> </value>
+                <value> <string>945.54063.48707.15940</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -444,8 +438,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1430897308.57</float>
-                        <string>UTC</string>
+                        <float>1442581458.69</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

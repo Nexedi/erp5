@@ -128,11 +128,10 @@
         });\n
     })\n
 \n
-    .declareAcquiredMethod("aq_putAttachment", "aq_putAttachment")\n
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
-    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
-    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")\n
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")\n
 \n
@@ -162,24 +161,24 @@
 \n
           new_content_action = options.erp5_document._links.action_object_new_content_action;\n
           if (new_content_action !== undefined) {\n
-            new_content_action = form_gadget.whoWantToDisplayThisPage({name: new_content_action.href, editable: true});\n
+            new_content_action = form_gadget.getUrlFor({jio_key: options.jio_key, view: new_content_action.href, editable: true});\n
           } else {\n
             new_content_action = "";\n
           }\n
 \n
           return RSVP.all([\n
             erp5_form.render(form_options),\n
-            form_gadget.whoWantToDisplayThis(options.jio_key),\n
-            form_gadget.whoWantToDisplayThisPage({page: "tab", name: options.view}),\n
-            form_gadget.whoWantToDisplayThisPage({page: "action", name: options.view, editable: true}),\n
-            form_gadget.whoWantToDisplayThisPage({page: "breadcrumb", name: options.view, editable: true}),\n
+            form_gadget.getUrlFor({jio_key: options.jio_key}),\n
+            form_gadget.getUrlFor({jio_key: options.jio_key, page: "tab", view: options.view}),\n
+            form_gadget.getUrlFor({jio_key: options.jio_key, page: "action", view: options.view, editable: true}),\n
+            form_gadget.getUrlFor({jio_key: options.jio_key, page: "breadcrumb", view: options.view, editable: true}),\n
             new_content_action,\n
-            form_gadget.whoWantToDisplayThis((new URI(options.erp5_document._links.parent.href)).segment(2))\n
+            form_gadget.getUrlFor({jio_key: (new URI(options.erp5_document._links.parent.href)).segment(2)})\n
           ]);\n
         })\n
         .push(function (all_result) {\n
 \n
-          return form_gadget.renderPageHeader({\n
+          return form_gadget.updateHeader({\n
             tab_url: all_result[2],\n
             cut_url: "",\n
             actions_url: all_result[3],\n
@@ -218,11 +217,11 @@
 \n
                   return RSVP.all([\n
                     form_gadget.notifySubmitting(),\n
-                    form_gadget.aq_putAttachment({\n
-                      "_id": form_gadget.props.id,\n
-                      "_attachment": form_gadget.props.action.href,\n
-                      "_data": data\n
-                    })\n
+                    form_gadget.jio_putAttachment(\n
+                      form_gadget.props.id,\n
+                      form_gadget.props.action.href,\n
+                      data\n
+                    )\n
                   ]);\n
                 })\n
                 .push(form_gadget.notifySubmitted.bind(form_gadget));\n
@@ -360,7 +359,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -374,7 +373,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.1808.36899.34116</string> </value>
+                <value> <string>945.52387.43932.904</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -392,8 +391,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1433215251.09</float>
-                        <string>UTC</string>
+                        <float>1442505369.77</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

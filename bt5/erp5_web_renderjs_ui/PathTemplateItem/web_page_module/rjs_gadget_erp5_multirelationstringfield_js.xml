@@ -292,7 +292,7 @@ promiseEventListener */\n
     if (field_json.allow_jump && allow_jump) {\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return gadget.whoWantToDisplayThis(field_json.relation_item_relative_url[i]);\n
+          return gadget.getUrlFor({jio_key: field_json.relation_item_relative_url[i]});\n
         })\n
         .push(function (my_url) {\n
           a2.href = my_url;\n
@@ -325,8 +325,7 @@ promiseEventListener */\n
     .declareAcquiredMethod("notifyChange", "notifyChange")\n
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
-    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -476,7 +475,7 @@ promiseEventListener */\n
               props.select_uid_list[i] = element.getAttribute("name");\n
               wrapper.querySelector("input").value = element.textContent;\n
               clearResults(wrapper, "skip");\n
-              return my_gadget.whoWantToDisplayThis(jump_url);\n
+              return my_gadget.getUrlFor({jio_key: jump_url});\n
             }\n
           }).push(function (my_url) {\n
             if (my_url !== undefined) {\n
@@ -670,7 +669,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -684,7 +683,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.32225.48051.5563</string> </value>
+                <value> <string>945.52422.65165.14080</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -702,8 +701,8 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1434097633.56</float>
-                        <string>UTC</string>
+                        <float>1442502322.12</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

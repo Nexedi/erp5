@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5.js</string> </value>
+            <value> <string>erp5_launcher.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -101,12 +101,12 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, document, rJS, RSVP, jQuery, console, jQuery, XMLHttpRequest, loopEventListener, URI, location */\n
-/*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, document, rJS, RSVP, $, XMLHttpRequest, console, loopEventListener, location) {\n
+/*globals window, document, RSVP, rJS,\n
+          loopEventListener, jQuery, URI, location, XMLHttpRequest, console*/\n
+/*jslint indent: 2, maxlen: 80*/\n
+(function (window, document, RSVP, rJS, loopEventListener,\n
+           $, XMLHttpRequest, location, console) {\n
   "use strict";\n
-\n
-  var DEFAULT_VIEW_REFERENCE = "view";\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // Desactivate jQuery Mobile URL management\n
@@ -116,9 +116,33 @@
   $.mobile.hashListeningEnabled = false;\n
   $.mobile.pushStateEnabled = false;\n
 \n
-  /////////////////////////////////////////////////////////////////\n
-  // Some functions\n
-  /////////////////////////////////////////////////////////////////\n
+  var MAIN_SCOPE = "m";\n
+\n
+  function renderMainGadget(gadget, url, options) {\n
+    return gadget.declareGadget(url, {\n
+      scope: MAIN_SCOPE\n
+    })\n
+      .push(function (page_gadget) {\n
+        if (page_gadget.render === undefined) {\n
+          return [page_gadget];\n
+        }\n
+        return RSVP.all([\n
+          page_gadget,\n
+          page_gadget.render(options)\n
+        ]);\n
+      })\n
+      .push(function (all_result) {\n
+        return all_result[0];\n
+      });\n
+  }\n
+\n
+  function initHeaderOptions(gadget) {\n
+    gadget.props.header_argument_list = {\n
+      panel_action: true,\n
+      title: gadget.props.application_title || "OfficeJS"\n
+    };\n
+  }\n
+\n
   function route(my_root_gadget, my_scope, my_method, my_param_list) {\n
     return RSVP.Queue()\n
       .push(function () {\n
@@ -132,58 +156,77 @@
       });\n
   }\n
 \n
-  function createJio(gadget) {\n
-    return gadget.getDeclaredGadget("jio_gadget")\n
-      .push(function (jio_gadget) {\n
-        return jio_gadget.createJio({\n
-          type: "erp5",\n
-          url: (new URI(gadget.props.hateoas_url)).absoluteTo(location.href).toString(),\n
-          default_view_reference: gadget.props.default_view_reference\n
-        });\n
-        /*\n
-        return jio_gadget.createJio({\n
-          type: "restattachment",\n
-          sub_storage: {\n
-            type: "erp5",\n
-            url: (new URI("hateoas/")).absoluteTo(location.href).toString()\n
-          }\n
-        });\n
-        */\n
+  function updateHeader(gadget) {\n
+    return gadget.getDeclaredGadget("header")\n
+      .push(function (header_gadget) {\n
+        return header_gadget.render(gadget.props.header_argument_list);\n
       });\n
   }\n
 \n
-  function renderPage(gadget, page_name, options) {\n
-    return gadget.declareGadget(page_name, {\n
-      scope: "pg"\n
-    })\n
-      .push(function (page_gadget) {\n
-        var sub_options = options.pg || {},\n
-          key;\n
-        delete options.pg;\n
-        for (key in options) {\n
-          if (options.hasOwnProperty(key)) {\n
-            sub_options[key] = options[key];\n
-          }\n
+  function increaseLoadingCounter(gadget) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        gadget.props.loading_counter += 1;\n
+        if (gadget.props.loading_counter === 1) {\n
+          return gadget.getDeclaredGadget("header")\n
+            .push(function (header_gadget) {\n
+              return header_gadget.notifyLoading();\n
+            });\n
         }\n
-        return RSVP.all([\n
-          page_gadget,\n
-          page_gadget.render(sub_options)\n
-        ]);\n
+      });\n
+  }\n
+\n
+  function decreaseLoadingCounter(gadget) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        gadget.props.loading_counter -= 1;\n
+        if (gadget.props.loading_counter < 0) {\n
+          gadget.props.loading_counter = 0;\n
+          // throw new Error("Unexpected negative loading counter");\n
+        }\n
+        if (gadget.props.loading_counter === 0) {\n
+          return gadget.getDeclaredGadget("header")\n
+            .push(function (header_gadget) {\n
+              return header_gadget.notifyLoaded();\n
+            });\n
+        }\n
+      });\n
+  }\n
+\n
+  function callJioGadget(gadget, method, param_list) {\n
+    var called = false;\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        called = true;\n
+        return increaseLoadingCounter(gadget);\n
       })\n
-      .push(function (all_result) {\n
-        return all_result[0];\n
+      .push(function () {\n
+        return gadget.getDeclaredGadget("jio_gadget");\n
+      })\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget[method].apply(jio_gadget, param_list);\n
+      })\n
+      .push(function (result) {\n
+        return decreaseLoadingCounter(gadget)\n
+          .push(function () {\n
+            return result;\n
+          });\n
+      }, function (error) {\n
+        if (called) {\n
+          return decreaseLoadingCounter(gadget)\n
+            .push(function () {\n
+              throw error;\n
+            });\n
+        }\n
+        throw error;\n
       });\n
   }\n
 \n
   function displayErrorContent(gadget, error) {\n
     // Do not break the application in case of errors.\n
-    // Display it to the user for now, and allow user to go back to the frontpage\n
+    // Display it to the user for now,\n
+    // and allow user to go back to the frontpage\n
     var error_text = "";\n
-    if ((error.target !== undefined) && (error.target.status === 401)) {\n
-      // Redirect to the login view\n
-      return gadget.aq_pleasePublishMyState({page: "login"})\n
-        .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
-    }\n
     if (error instanceof RSVP.CancellationError) {\n
       return;\n
     }\n
@@ -199,22 +242,23 @@
     }\n
 \n
     console.error(error);\n
-    console.error(error.stack);\n
+    if (error instanceof Error) {\n
+      console.error(error.stack);\n
+    }\n
     // XXX Improve error rendering\n
-    gadget.props.article.innerHTML = "<br/><br/><br/><pre></pre>";\n
-    gadget.props.article.querySelector(\'pre\').textContent = "Error: " + error_text;\n
+    gadget.props.content_element.innerHTML = "<br/><br/><br/><pre></pre>";\n
+    gadget.props.content_element.querySelector(\'pre\').textContent =\n
+      "Error: " + error_text;\n
+    // XXX Notify error\n
   }\n
 \n
   function displayError(gadget, error) {\n
-    return gadget.getDeclaredGadget("header")\n
-      .push(function (g) {\n
-        return g.notifyError();\n
-      })\n
+    return new RSVP.Queue()\n
       .push(function () {\n
         return displayErrorContent(gadget, error);\n
       })\n
       .push(function () {\n
-        return gadget.dropGadget("pg")\n
+        return gadget.dropGadget(MAIN_SCOPE)\n
           .push(undefined, function () {\n
             // Do not crash the app if the pg gadget in not defined\n
             // ie, keep the original error on screen\n
@@ -223,357 +267,298 @@
       });\n
   }\n
 \n
-  /////////////////////////////////////////////////////////////////\n
-  // Gadget behaviour\n
-  /////////////////////////////////////////////////////////////////\n
+  function getSetting(gadget, key, default_value) {\n
+    return gadget.getDeclaredGadget("setting_gadget")\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget.get("setting");\n
+      })\n
+      .push(function (doc) {\n
+        return doc[key] || default_value;\n
+      }, function (error) {\n
+        if (error.status_code === 404) {\n
+          return default_value;\n
+        }\n
+        throw error;\n
+      });\n
+  }\n
 \n
+  function setSetting(gadget, key, value) {\n
+    var jio_gadget;\n
+    return gadget.getDeclaredGadget("setting_gadget")\n
+      .push(function (result) {\n
+        jio_gadget = result;\n
+        return jio_gadget.get("setting");\n
+      })\n
+      .push(undefined, function (error) {\n
+        if (error.status_code === 404) {\n
+          return {};\n
+        }\n
+        throw error;\n
+      })\n
+      .push(function (doc) {\n
+        doc[key] = value;\n
+        return jio_gadget.put(\'setting\', doc);\n
+      });\n
+  }\n
+\n
+  //////////////////////////////////////////\n
+  // Page rendering\n
+  //////////////////////////////////////////\n
+/*\n
+  function redirectToDefaultPage(gadget) {\n
+    return gadget.pleaseRedirectMyHash(\'#\');\n
+  }\n
+*/\n
   rJS(window)\n
-    /////////////////////////////////////////////////////////////////\n
-    // ready\n
-    /////////////////////////////////////////////////////////////////\n
-    // Init local properties\n
     .ready(function (g) {\n
-      g.props = {\n
-        translation_lookup: ""\n
-      };\n
-//      return g.getDeclaredGadget("breadcrumb")\n
-//        .push(function (sub_gadget) {\n
-//          g.props.breadcrumb_gadget = sub_gadget;\n
-//        });\n
-    })\n
-\n
-    .ready(function (g) {\n
+      g.props = {};\n
       return g.getElement()\n
         .push(function (element) {\n
-          g.props.element = element;\n
-          g.props.article = element.querySelector("article");\n
-\n
-          // XXX Will work only if top gadget...\n
-          var element_list = document.querySelectorAll("[data-renderjs-configuration]"),\n
-            len = element_list.length,\n
-            key,\n
-            value,\n
-            i;\n
-\n
-          for (i = 0; i < len; i += 1) {\n
-            key = element_list[i].getAttribute(\'data-renderjs-configuration\');\n
-            value = element_list[i].textContent;\n
-            if (value !== "") {\n
-              g.props[key] = value;\n
-            }\n
-          }\n
-        });\n
-    })\n
-    // Configure jIO to use localstorage\n
-    // And load configuration from server\n
-    .ready(function (g) {\n
-      return createJio(g);\n
-    })\n
-    .ready(function (g) {\n
-      return g.getDeclaredGadget("header")\n
-        .push(function (header_gadget) {\n
-          return header_gadget.getElement();\n
-        })\n
-        .push(function (element) {\n
           $(element).trigger("create");\n
+          g.props.loading_counter = 0;\n
+          g.props.element = element;\n
+          g.props.content_element = element.querySelector(\'.gadget-content\');\n
         });\n
     })\n
-    /////////////////////////////////////////////////////////////////\n
-    // handle acquisition\n
-    /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    // Configure setting storage\n
+    .ready(function (g) {\n
+      return g.getDeclaredGadget("setting_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.createJio({\n
+            type: "indexeddb",\n
+            database: "setting"\n
+          });\n
+        });\n
+    })\n
+    .ready(function (g) {\n
+      // Extract configuration parameters stored in HTML\n
+      // XXX Will work only if top gadget...\n
+      var element_list =\n
+        document.querySelectorAll("[data-renderjs-configuration]"),\n
+        len = element_list.length,\n
+        key,\n
+        value,\n
+        i,\n
+        queue = new RSVP.Queue();\n
 \n
-    /////////////////////////////////////////////////////////////////\n
-    // published methods\n
-    /////////////////////////////////////////////////////////////////\n
-    // bridge translation gadget\n
-    // XXX: fix translations, getTranslationMethod not used, no?\n
-    .allowPublicAcquisition("getTranslationMethod", function () {\n
-      var root = (new URI(this.props.hateoas_url)).absoluteTo(location.href).toString();\n
-      return root + this.props.translation_lookup;\n
-    })\n
-    .allowPublicAcquisition("changeLanguage", function (param_list) {\n
-      if (this.setLanguage) {\n
-        return route(this, "translate", "changeLanguage", param_list);\n
-      }\n
-    })\n
-    .allowPublicAcquisition("getLanguageList", function (param_list) {\n
-      if (this.setLanguage) {\n
-        return route(this, "translate", "getLanguageList", param_list);\n
-      }\n
-      return JSON.stringify([]);\n
-    })\n
-    .allowPublicAcquisition("translateHtml", function (param_list) {\n
-      if (this.setLanguage) {\n
-        return route(this, "translate", "translateHtml", param_list);\n
-      }\n
-      return param_list;\n
-    })\n
-    // Bridge to jio gadget\n
-    .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.allDocs.apply(jio_gadget, param_list);\n
+      function push(a, b) {\n
+        queue.push(function () {\n
+          return setSetting(g, a, b);\n
         });\n
+      }\n
+\n
+      for (i = 0; i < len; i += 1) {\n
+        key = element_list[i].getAttribute(\'data-renderjs-configuration\');\n
+        value = element_list[i].textContent;\n
+        if (value !== "") {\n
+          g.props[key] = value;\n
+          push(key, value);\n
+        }\n
+      }\n
+      return queue;\n
     })\n
-    .allowPublicAcquisition("aq_putAttachment", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.putAttachment(\n
-            param_list[0]._id,\n
-            param_list[0]._attachment,\n
-            JSON.stringify(param_list[0]._data)\n
-          );\n
-        });\n
+    .ready(function (g) {\n
+      return setSetting(g, \'hateoas_url\',\n
+          (new URI(g.props.hateoas_url))\n
+            .absoluteTo(location.href)\n
+            .toString()\n
+        );\n
     })\n
-    .allowPublicAcquisition("jio_get", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.get(param_list[0]._id);\n
+    // Configure jIO storage\n
+    .ready(function (g) {\n
+      var jio_gadget;\n
+      return g.getDeclaredGadget("jio_gadget")\n
+        .push(function (result) {\n
+          jio_gadget = result;\n
+          return getSetting(g, \'jio_storage_description\');\n
         })\n
         .push(function (result) {\n
-          return {data: result};\n
+          return jio_gadget.createJio(result);\n
         });\n
     })\n
-    .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
-      return this.getDeclaredGadget("jio_gadget")\n
-        .push(function (jio_gadget) {\n
-          return jio_gadget.getAttachment(\n
-            param_list[0]._id,\n
-            param_list[0]._attachment,\n
-            {format: "json"}\n
-          );\n
-        })\n
-        .push(function (json) {\n
-          return {data: json};\n
+    .ready(function (g) {\n
+      return g.getDeclaredGadget(\'panel\')\n
+        .push(function (panel_gadget) {\n
+          return panel_gadget.render();\n
         });\n
     })\n
-    .allowPublicAcquisition("whoWantToDisplayThis", function (param_list) {\n
-      // Hey, I want to display some URL\n
-      var options = {\n
-        jio_key: param_list[0],\n
-        view: DEFAULT_VIEW_REFERENCE\n
-      };\n
-      if (param_list[1] !== undefined) {\n
-        if (param_list[1].editable !== undefined) {\n
-          options.editable = param_list[1].editable;\n
-        }\n
-      }\n
-      return this.aq_pleasePublishMyState(options);\n
+\n
+    //////////////////////////////////////////\n
+    // Acquired method\n
+    //////////////////////////////////////////\n
+    .declareAcquiredMethod(\'pleaseRedirectMyHash\', \'pleaseRedirectMyHash\')\n
+\n
+    //////////////////////////////////////////\n
+    // Allow Acquisition\n
+    //////////////////////////////////////////\n
+    .allowPublicAcquisition("getSetting", function (argument_list) {\n
+      return getSetting(this, argument_list[0], argument_list[1]);\n
     })\n
-    .allowPublicAcquisition("whoWantToDisplayThisPage", function (param_list) {\n
-      // Hey, I want to display some URL\n
-      var options = {\n
-        jio_key: this.state_parameter_dict.jio_key,\n
-        view: param_list[0].name || DEFAULT_VIEW_REFERENCE\n
-      };\n
-      if (param_list[0].editable !== undefined) {\n
-        options.editable = param_list[0].editable;\n
-      }\n
-      if (param_list[0].page !== undefined) {\n
-        options.page = param_list[0].page;\n
-      }\n
-      return this.aq_pleasePublishMyState(options);\n
+    .allowPublicAcquisition("setSetting", function (argument_list) {\n
+      return setSetting(this, argument_list[0], argument_list[1]);\n
     })\n
-    .allowPublicAcquisition("whoWantToDisplayThisFrontPage", function (param_list) {\n
-      // Hey, I want to display some URL\n
-      var options = {\n
-        page: param_list[0]\n
-      };\n
-      return this.aq_pleasePublishMyState(options);\n
+    .allowPublicAcquisition("translateHtml", function (argument_list) {\n
+      return this.getDeclaredGadget("translation_gadget")\n
+        .push(function (translation_gadget) {\n
+          return translation_gadget.translateHtml(argument_list[0]);\n
+        });\n
     })\n
 \n
-    .allowPublicAcquisition("renderPageHeader", function (param_list) {\n
-      // XXX Sven hack: number of _url determine padding for subheader on ui-content \n
-      function hasSubNavigation(my_param_dict) {\n
-        var i,\n
-          count = 0;\n
-        for (i in my_param_dict) {\n
-          if (my_param_dict.hasOwnProperty(i) && i.indexOf("_url") > -1) {\n
-            count += 1;\n
-          }\n
-        }\n
-        return count;\n
-      }\n
-\n
-      if (hasSubNavigation(param_list[0]) > 2) {\n
-        this.props.sub_header_class = "ui-has-subheader";\n
-      }\n
-      this.props.header_argument_list = param_list;\n
-    })\n
-\n
-    .allowPublicAcquisition(\'reportServiceError\', function (param_list, gadget_scope) {\n
-      if (gadget_scope === undefined) {\n
-        // don\'t fail in case of dropped subgadget (like previous page)\n
-        // only accept errors from header, panel and displayed page\n
-        return;\n
-      }\n
-      return displayError(this, param_list[0]);\n
-    })\n
-\n
-    // bridge notifications\n
-    // XXX: called twice, 2nd time after header loaded to translate header\n
-    .allowPublicAcquisition(\'notifyUpdate\', function () {\n
-      return route(this, "header", \'notifyUpdate\');\n
-    })\n
+    // XXX Those methods may be directly integrated into the header,\n
+    // as it handles the submit triggering\n
     .allowPublicAcquisition(\'notifySubmitting\', function () {\n
       return route(this, "header", \'notifySubmitting\');\n
     })\n
-\n
     .allowPublicAcquisition(\'notifySubmitted\', function () {\n
       return route(this, "header", "notifySubmitted");\n
     })\n
     .allowPublicAcquisition(\'notifyChange\', function () {\n
       return route(this, "header", \'notifyChange\');\n
     })\n
-    .allowPublicAcquisition(\'notifyLoading\', function () {\n
-      return route(this, "pg", "notifyLoading");\n
+\n
+    .allowPublicAcquisition("translate", function (argument_list) {\n
+      return this.getDeclaredGadget("translation_gadget")\n
+        .push(function (translation_gadget) {\n
+          return translation_gadget.translate(argument_list[0]);\n
+        });\n
     })\n
-    .allowPublicAcquisition(\'notifyLoaded\', function () {\n
-      return route(this, "pg", "notifyLoaded");\n
+    .allowPublicAcquisition("redirect", function (param_list) {\n
+      var gadget = this;\n
+      return gadget.aq_pleasePublishMyState.apply(gadget, param_list)\n
+        .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
     })\n
-    .allowPublicAcquisition(\'triggerSubmit\', function () {\n
-      return route(this, "pg", "triggerSubmit");\n
+    .allowPublicAcquisition(\'reload\', function () {\n
+      return location.reload();\n
+    })\n
+    .allowPublicAcquisition("getUrlFor", function (param_list) {\n
+      return this.aq_pleasePublishMyState(param_list[0]);\n
     })\n
 \n
-    // bridge panel\n
+    .allowPublicAcquisition("updateHeader", function (param_list) {\n
+      var gadget = this;\n
+      initHeaderOptions(gadget);\n
+      return this.getDeclaredGadget("translation_gadget")\n
+        .push(function (translation_gadget) {\n
+          var promise_list = [],\n
+            key;\n
+          for (key in param_list[0]) {\n
+            if (param_list[0].hasOwnProperty(key)) {\n
+              gadget.props.header_argument_list[key] = param_list[0][key];\n
+            }\n
+          }\n
+\n
+          promise_list.push(translation_gadget.translate(\n
+            gadget.props.header_argument_list.title\n
+          ));\n
+          if (gadget.props.header_argument_list.hasOwnProperty(\'right_title\')) {\n
+            promise_list.push(translation_gadget.translate(\n
+              gadget.props.header_argument_list.right_title\n
+            ));\n
+          }\n
+          return RSVP.all(promise_list);\n
+        })\n
+        .push(function (result_list) {\n
+          gadget.props.header_argument_list.title = result_list[0];\n
+          if (result_list.length === 2) {\n
+            gadget.props.header_argument_list.right_title = result_list[1];\n
+          }\n
+\n
+          // XXX Sven hack: number of _url determine padding for\n
+          // subheader on ui-content\n
+          var key,\n
+            count = 0;\n
+          for (key in gadget.props.header_argument_list) {\n
+            if (gadget.props.header_argument_list.hasOwnProperty(key)) {\n
+              if (key.indexOf(\'_url\') > -1) {\n
+                count += 1;\n
+              }\n
+            }\n
+          }\n
+          if (count > 2) {\n
+            console.log(\'Has subheader\');\n
+            gadget.props.sub_header_class = "ui-has-subheader";\n
+          }\n
+        });\n
+    })\n
+\n
     .allowPublicAcquisition(\'triggerPanel\', function () {\n
       return route(this, "panel", "toggle");\n
     })\n
 \n
-    // bridge configuration panel\n
-    .allowPublicAcquisition(\'setPanelContent\', function (param_list) {\n
-      return route(this, "configuration", "setPanelContent", param_list);\n
+    .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
+      return callJioGadget(this, "allDocs", param_list);\n
     })\n
-    .allowPublicAcquisition(\'setPanelHeader\', function (param_list) {\n
-      return route(this, "configuration", "setPanelHeader", param_list);\n
+    .allowPublicAcquisition("jio_post", function (param_list) {\n
+      return callJioGadget(this, "post", param_list);\n
     })\n
-    .allowPublicAcquisition(\'togglePanel\', function () {\n
-      return route(this, "configuration", "togglePanel");\n
+    .allowPublicAcquisition("jio_put", function (param_list) {\n
+      return callJioGadget(this, "put", param_list);\n
     })\n
-    // root\n
-    .allowPublicAcquisition(\'getSiteRoot\', function () {\n
-      return this.getSiteRoot();\n
+    .allowPublicAcquisition("jio_get", function (param_list) {\n
+      return callJioGadget(this, "get", param_list);\n
     })\n
-\n
+    .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
+      return callJioGadget(this, "getAttachment", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_putAttachment", function (param_list) {\n
+      return callJioGadget(this, "putAttachment", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_repair", function (param_list) {\n
+      return callJioGadget(this, "repair", param_list);\n
+    })\n
+    .allowPublicAcquisition("triggerSubmit", function (param_list) {\n
+      return this.getDeclaredGadget(MAIN_SCOPE)\n
+        .push(function (main_gadget) {\n
+          return main_gadget.triggerSubmit(param_list);\n
+        });\n
+    })\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-\n
-    // XXX translate: called before ready(), so props is not available.\n
-    // Needed to lookup to retrieve HAL to fetch site module/runner languages \n
-    .declareMethod(\'getSiteRoot\', function () {\n
-      return (new URI(this.props.hateoas_url)).absoluteTo(location.href).toString();\n
-    })\n
-\n
-    // Render the page\n
-    .declareMethod(\'configure\', function (options) {\n
-      var gadget = this,\n
-        elements,\n
-        div,\n
-        key;\n
-      for (key in options) {\n
-        if (options.hasOwnProperty(key)) {\n
-          if (key === "translation_lookup") {\n
-            gadget.setLanguage = true;\n
-          }\n
-          gadget.props[key] = options[key];\n
-        }\n
-      }\n
-      if (gadget.setLanguage) {\n
-        elements = gadget.props.element;\n
-        div = document.createElement("div");\n
-        elements.appendChild(div);\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            return gadget.declareGadget("gadget_translate.html",\n
-                                        {scope: "translate"});\n
-          })\n
-          .push(function () {\n
-            return gadget.dropGadget("panel");\n
-          })\n
-          .push(function () {\n
-            return gadget.declareGadget(gadget.props.panel_gadget,\n
-                                         {scope: "panel",\n
-                                          element: div});\n
-          })\n
-          .push(function () {\n
-            return createJio(gadget);\n
-          });\n
-      }\n
-    })\n
-\n
     // Render the page\n
     .declareMethod(\'render\', function (options) {\n
-      var gadget = this,\n
-        header_gadget,\n
-        main_gadget;\n
+      var gadget = this;\n
 \n
       gadget.props.options = options;\n
+      // Reinitialize the loading counter\n
+      gadget.props.loading_counter = 0;\n
+      // By default, init the header options to be empty\n
+      // (ERP5 title by default + sidebar)\n
+      initHeaderOptions(gadget);\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return RSVP.all([\n
-            gadget.getDeclaredGadget("header"),\n
-            gadget.getDeclaredGadget("panel"),\n
-            gadget.getDeclaredGadget("configuration")\n
-          ]);\n
-        })\n
-        .push(function (my_gadget_list) {\n
-          header_gadget = my_gadget_list[0];\n
-          return RSVP.all([\n
-            header_gadget.notifyLoading(),\n
-            my_gadget_list[1].render({}),\n
-            my_gadget_list[2].render({})\n
-          ]);\n
+          return increaseLoadingCounter(gadget);\n
         })\n
         .push(function () {\n
-          // By default, init the header options to be empty (ERP5 title by default + sidebar)\n
-          gadget.props.header_argument_list = [{\n
-            panel_action: true,\n
-            page_title: gadget.props.application_title || "ERP5"\n
-          }];\n
-\n
-          gadget.state_parameter_dict = {\n
-            jio_key: options.jio_key,\n
-            view: options.view\n
-          };\n
-\n
-          if ((options.jio_key !== undefined) && (options.page === undefined)) {\n
-            options.page = "form";\n
-            options.view = options.view || DEFAULT_VIEW_REFERENCE;\n
-          }\n
-          if (options.page === undefined) {\n
-            // Not rendering a jio document and not page requested.\n
-            // URL is probably empty: redirect to the frontpage\n
-            // Check if a custom frontpage is defined\n
-            if (!gadget.props.frontpage_gadget) {\n
-              return gadget.aq_pleasePublishMyState({page: \'front\'})\n
-                .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
-            }\n
-            return renderPage(gadget, gadget.props.frontpage_gadget, options);\n
-          }\n
-\n
-          return renderPage(gadget, "gadget_erp5_page_" + options.page + ".html", options);\n
+          return gadget.getDeclaredGadget(\'router\');\n
         })\n
-\n
-        .push(function (result) {\n
-          main_gadget = result;\n
-\n
-          return header_gadget.render.apply(header_gadget, gadget.props.header_argument_list);\n
+        .push(function (router_gadget) {\n
+          return router_gadget.route(options);\n
         })\n
-        .push(function () {\n
+        .push(function (route_result) {\n
+          return renderMainGadget(\n
+            gadget,\n
+            route_result.url,\n
+            route_result.options\n
+          );\n
+        })\n
+        .push(function (main_gadget) {\n
+          var input;\n
           // Append loaded gadget in the page\n
           if (main_gadget !== undefined) {\n
             return main_gadget.getElement()\n
               .push(function (fragment) {\n
-                var element = gadget.props.article,\n
+                var element = gadget.props.content_element,\n
                   content_container = document.createElement("div");\n
-                content_container.className = "ui-content " + (gadget.props.sub_header_class || "");\n
+                content_container.className = "ui-content " +\n
+                  (gadget.props.sub_header_class || "");\n
                 // reset subheader indicator\n
                 delete gadget.props.sub_header_class;\n
 \n
                 // go to the top of the page\n
                 window.scrollTo(0, 0);\n
+\n
+                updateHeader(gadget);\n
 \n
                 // Clear first to DOM, append after to reduce flickering/manip\n
                 while (element.firstChild) {\n
@@ -583,24 +568,51 @@
                 element.appendChild(content_container);\n
 \n
                 $(element).trigger("create");\n
-                return header_gadget.notifyLoaded();\n
+\n
+                input = element.querySelector("input");\n
+                if (input !== null) {\n
+                  input.focus();\n
+                  input.select();\n
+                }\n
+                // XXX Drop notification\n
+                // return header_gadget.notifyLoaded();\n
               });\n
           }\n
         })\n
-\n
+        .push(function () {\n
+          return decreaseLoadingCounter(gadget);\n
+        }, function (error) {\n
+          return decreaseLoadingCounter(gadget)\n
+            .push(function () {\n
+              throw error;\n
+            });\n
+        })\n
         .push(undefined, function (error) {\n
           return displayError(gadget, error);\n
         });\n
     })\n
 \n
+    /////////////////////////////////\n
+    // Handle sub gadgets services\n
+    /////////////////////////////////\n
+    .allowPublicAcquisition(\'reportServiceError\', function (param_list,\n
+                                                            gadget_scope) {\n
+      if (gadget_scope === undefined) {\n
+        // don\'t fail in case of dropped subgadget (like previous page)\n
+        return;\n
+      }\n
+      return displayError(this, param_list[0]);\n
+    })\n
+\n
     .declareService(function () {\n
       ////////////////////////////////////\n
-      // Form submit listening. Prevent browser to automatically handle the form submit in case of a bug\n
+      // Form submit listening. Prevent browser to automatically\n
+      // handle the form submit in case of a bug\n
       ////////////////////////////////////\n
       var gadget = this;\n
 \n
       function catchFormSubmit() {\n
-        return displayError(new Error("Unexpected form submit"));\n
+        return displayError(gadget, new Error("Unexpected form submit"));\n
       }\n
 \n
       // Listen to form submit\n
@@ -612,13 +624,14 @@
       );\n
     });\n
 \n
-}(window, document, rJS, RSVP, jQuery, XMLHttpRequest, console, loopEventListener, location));
+}(window, document, RSVP, rJS, loopEventListener, jQuery,\n
+  XMLHttpRequest, location, console));
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget ERP5 JS</string> </value>
+            <value> <string>ERP5 Launcher JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -749,7 +762,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.18121.53382.40174</string> </value>
+                <value> <string>945.54027.26221.22152</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -767,7 +780,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432647072.98</float>
+                        <float>1442581058.21</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

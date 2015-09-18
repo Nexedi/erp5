@@ -123,17 +123,15 @@
     /////////////////////////////////////////////////////////////////\n
     // handle acquisition\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("whoWantToDisplayThisFrontPage",\n
-      "whoWantToDisplayThisFrontPage")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
      .declareMethod("render", function () {\n
-      var gadget = this,\n
-        a;\n
+      var gadget = this;\n
       return new RSVP.Queue()\n
         .push(function () {\n
           return gadget.translateHtml(gadget.props.element.innerHTML);\n
@@ -153,12 +151,9 @@
             false\n
           );\n
         })\n
-        .push(function (evt) {\n
+        .push(function () {\n
           document.cookie = "__ac=" + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";\n
-          return form_gadget.whoWantToDisplayThisFrontPage("login");\n
-        })\n
-        .push(function (url) {\n
-          return form_gadget.pleaseRedirectMyHash(url);\n
+          return form_gadget.redirect({page: "login"});\n
         });\n
     });\n
 }(window, document, rJS, RSVP, promiseEventListener));</string> </value>
@@ -282,7 +277,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -296,7 +291,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>942.40612.39127.41710</string> </value>
+                <value> <string>945.52448.28806.29303</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -314,8 +309,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1430152079.87</float>
-                        <string>UTC</string>
+                        <float>1442581739.77</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

@@ -279,7 +279,7 @@ promiseEventListener */\n
     if (target_url && field_json.allow_jump) {\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return my_gadget.whoWantToDisplayThis(target_url);\n
+          return my_gadget.getUrlFor({jio_key: target_url});\n
         })\n
         .push(function (my_url) {\n
           var plane = props.plane;\n
@@ -425,8 +425,7 @@ promiseEventListener */\n
     .declareAcquiredMethod("notifyChange", "notifyChange")\n
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
-    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -746,7 +745,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -760,7 +759,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.42133.40166.22033</string> </value>
+                <value> <string>945.52421.57221.18466</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -778,8 +777,8 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1434088187.82</float>
-                        <string>UTC</string>
+                        <float>1442502350.67</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

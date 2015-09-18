@@ -137,9 +137,9 @@
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
-    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -150,9 +150,9 @@
         tab_list = [],\n
         gadget = this;\n
 \n
-      return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": "links"})\n
+      return gadget.jio_getAttachment(options.jio_key, "links")\n
         .push(function (result) {\n
-          var erp5_document = result.data,\n
+          var erp5_document = result,\n
             i,\n
             promise_list = [];\n
           view_list = erp5_document._links.view;\n
@@ -167,13 +167,15 @@
             if (options.view === view_list[i].href) {\n
               matching = i;\n
             }\n
-            promise_list.push(gadget.whoWantToDisplayThisPage({\n
-              name: view_list[i].href,\n
+            promise_list.push(gadget.getUrlFor({\n
+              jio_key: options.jio_key,\n
+              view: view_list[i].href,\n
               editable: true\n
             }));\n
           }\n
-          promise_list.push(gadget.whoWantToDisplayThisPage({\n
-            name: "view"\n
+          promise_list.push(gadget.getUrlFor({\n
+            jio_key: options.jio_key,\n
+            view: "view"\n
           }));\n
           return RSVP.all(promise_list);\n
         })\n
@@ -207,16 +209,17 @@
           gadget.props.element.innerHTML = my_translated_html;\n
 \n
           if (matching !== undefined) {\n
-            return gadget.renderPageHeader({\n
+            return gadget.updateHeader({\n
               cancel_url: tab_list[matching].link\n
             });\n
           }\n
-          return gadget.whoWantToDisplayThisPage({\n
-            name: "view",\n
+          return gadget.getUrlFor({\n
+            jio_key: options.jio_key,\n
+            view: "view",\n
             editable: true\n
           })\n
             .push(function (url) {\n
-              return gadget.renderPageHeader({cancel_url: url});\n
+              return gadget.updateHeader({cancel_url: url});\n
             });\n
 \n
         });\n
@@ -359,7 +362,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.49264.57640.4352</string> </value>
+                <value> <string>945.52770.44221.26572</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -377,7 +380,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1423065230.54</float>
+                        <float>1442504976.31</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

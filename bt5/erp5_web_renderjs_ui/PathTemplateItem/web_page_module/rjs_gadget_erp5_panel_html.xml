@@ -144,7 +144,8 @@
           <li class="ui-first-child"><a href="{{module_href}}" class="ui-btn ui-btn-icon-left ui-icon-puzzle-piece" data-i18n="Modules">Modules</a></li>\n
           <li><a class="ui-btn ui-btn-icon-left ui-icon-clipboard" data-i18n="Worklists">Worklists</a></li>\n
           <li><a href="{{history_href}}" class="ui-btn ui-btn-icon-left ui-icon-history" data-i18n="History">History</a></li>\n
-          <li><a class="ui-btn ui-btn-icon-left ui-icon-gear" data-i18n="Preference">Preferences</a></li>\n
+          <li><a href="{{preference_href}}" class="ui-btn ui-btn-icon-left ui-icon-gear" data-i18n="Preference">Preferences</a></li>\n
+          <!--div>\n
           {{#if language_list}}\n
             <li data-role="collapsible" data-enhanced="true" data-collapsed="true" data-collapsed-icon="comment-o" class="ui-collapsible ui-collapsible-collapsed">\n
               <h4 class="ui-collapsible-heading ui-collapsible-heading-collapsed ui-li-divider ui-li-has-icon">\n
@@ -168,6 +169,7 @@
               </div>\n
             </li>\n
           {{/if}}\n
+          <div-->\n
           <li class="ui-last-child"><a href="{{logout_href}}" class="ui-btn ui-btn-icon-left ui-icon-power-off" data-i18n="Logout">Logout</a></li>\n
         </ul>\n
       </div>\n
@@ -305,7 +307,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -319,7 +321,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.36243.6132.18568</string> </value>
+                <value> <string>945.53847.62160.33314</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -337,7 +339,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1437641090.96</float>
+                        <float>1442568863.26</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

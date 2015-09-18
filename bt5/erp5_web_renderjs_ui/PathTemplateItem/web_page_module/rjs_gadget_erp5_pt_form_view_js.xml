@@ -121,9 +121,8 @@
     /////////////////////////////////////////////////////////////////\n
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("renderPageHeader", "renderPageHeader")\n
-    .declareAcquiredMethod("whoWantToDisplayThisPage", "whoWantToDisplayThisPage")\n
-    .declareAcquiredMethod("whoWantToDisplayThis", "whoWantToDisplayThis")\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -155,15 +154,15 @@
 \n
           return RSVP.all([\n
             form_gadget.render(form_options),\n
-            gadget.whoWantToDisplayThisPage({name: options.view, editable: true}),\n
-            gadget.whoWantToDisplayThisPage({page: "action", name: options.view}),\n
-            gadget.whoWantToDisplayThisPage({page: "breadcrumb", name: options.view}),\n
-            gadget.whoWantToDisplayThis((new URI(options.erp5_document._links.parent.href)).segment(2))\n
+            gadget.getUrlFor({jio_key: options.jio_key, view: options.view, editable: true}),\n
+            gadget.getUrlFor({jio_key: options.jio_key, page: "action", view: options.view}),\n
+            gadget.getUrlFor({jio_key: options.jio_key, page: "breadcrumb", view: options.view}),\n
+            gadget.getUrlFor({jio_key: (new URI(options.erp5_document._links.parent.href)).segment(2)})\n
           ]);\n
         })\n
         .push(function (all_result) {\n
 \n
-          return gadget.renderPageHeader({\n
+          return gadget.updateHeader({\n
             jump_url: "",\n
             actions_url: all_result[2],\n
             previous_url: "",\n
@@ -300,7 +299,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -314,7 +313,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.21776.61223.15274</string> </value>
+                <value> <string>945.52385.13762.21094</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -332,7 +331,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421415462.01</float>
+                        <float>1442481653.09</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
