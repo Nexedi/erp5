@@ -412,6 +412,19 @@
           return translation_gadget.translateHtml(argument_list[0]);\n
         });\n
     })\n
+\n
+    // XXX Those methods may be directly integrated into the header,\n
+    // as it handles the submit triggering\n
+    .allowPublicAcquisition(\'notifySubmitting\', function () {\n
+      return route(this, "header", \'notifySubmitting\');\n
+    })\n
+    .allowPublicAcquisition(\'notifySubmitted\', function () {\n
+      return route(this, "header", "notifySubmitted");\n
+    })\n
+    .allowPublicAcquisition(\'notifyChange\', function () {\n
+      return route(this, "header", \'notifyChange\');\n
+    })\n
+\n
     .allowPublicAcquisition("translate", function (argument_list) {\n
       return this.getDeclaredGadget("translation_gadget")\n
         .push(function (translation_gadget) {\n
@@ -758,7 +771,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.51276.58336.63624</string> </value>
+                <value> <string>945.52706.38062.18636</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -776,7 +789,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442414233.9</float>
+                        <float>1442500011.1</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
