@@ -432,7 +432,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
 
     security.declarePublic('getAllowedRolesAndUsers')
-    def getAllowedRolesAndUsers(self, sql_catalog_id=None, **kw):
+    def getAllowedRolesAndUsers(self, sql_catalog_id=None, local_roles=None):
       """
         Return allowed roles and users.
 
@@ -472,7 +472,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       # Patch for ERP5 by JP Smets in order
       # to implement worklists and search of local roles
-      local_roles = kw.get('local_roles', None)
       if local_roles:
         local_role_dict = dict(catalog.getSQLCatalogLocalRoleKeysList())
         role_dict = dict(catalog.getSQLCatalogRoleKeysList())
@@ -513,7 +512,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       return allowedRolesAndUsers, role_column_dict, local_role_column_dict
 
-    def getSecurityUidDictAndRoleColumnDict(self, sql_catalog_id=None, **kw):
+    def getSecurityUidDictAndRoleColumnDict(self, sql_catalog_id=None, local_roles=None):
       """
         Return a dict of local_roles_group_id -> security Uids and a
         dictionnary containing available role columns.
@@ -523,7 +522,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         catalogs.
       """
       allowedRolesAndUsers, role_column_dict, local_role_column_dict = \
-          self.getAllowedRolesAndUsers(**kw)
+          self.getAllowedRolesAndUsers(
+            sql_catalog_id=sql_catalog_id,
+            local_roles=local_roles,
+          )
       catalog = self.getSQLCatalog(sql_catalog_id)
       method = getattr(catalog, catalog.sql_search_security, None)
       if allowedRolesAndUsers:
@@ -562,7 +564,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return security_uid_dict, role_column_dict, local_role_column_dict
 
     security.declarePublic('getSecurityQuery')
-    def getSecurityQuery(self, query=None, sql_catalog_id=None, **kw):
+    def getSecurityQuery(self, query=None, sql_catalog_id=None, local_roles=None, **kw):
       """
         Build a query based on allowed roles or on a list of security_uid
         values. The query takes into account the fact that some roles are
@@ -576,7 +578,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         return query
       original_query = query
       security_uid_dict, role_column_dict, local_role_column_dict = \
-          self.getSecurityUidDictAndRoleColumnDict(sql_catalog_id=sql_catalog_id, **kw)
+          self.getSecurityUidDictAndRoleColumnDict(
+            sql_catalog_id=sql_catalog_id,
+            local_roles=local_roles,
+          )
 
       role_query = None
       security_uid_query = None
@@ -634,7 +639,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return query
 
     # searchResults has inherited security assertions.
-    def searchResults(self, query=None, **kw):
+    def searchResults(self, query=None, sql_catalog_id=None, local_roles=None, **kw):
         """
         Calls ZCatalog.searchResults with extra arguments that
         limit the results to what the user is allowed to see.
@@ -645,8 +650,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
         #    kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
-        catalog_id = self.getPreferredSQLCatalogId(kw.pop("sql_catalog_id", None))
-        query = self.getSecurityQuery(query=query, sql_catalog_id=catalog_id, **kw)
+        catalog_id = self.getPreferredSQLCatalogId(sql_catalog_id)
+        query = self.getSecurityQuery(
+          query=query,
+          sql_catalog_id=catalog_id,
+          local_roles=local_roles,
+        )
         kw.setdefault('limit', self.default_result_limit)
         # get catalog from preference
         #LOG("searchResult", INFO, catalog_id)
@@ -691,7 +700,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         except IndexError:
           return None
 
-    def countResults(self, query=None, **kw):
+    def countResults(self, query=None, sql_catalog_id=None, local_roles=None, **kw):
         """
             Calls ZCatalog.countResults with extra arguments that
             limit the results to what the user is allowed to see.
@@ -703,8 +712,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    now = DateTime()
         #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
-        catalog_id = self.getPreferredSQLCatalogId(kw.pop("sql_catalog_id", None))
-        query = self.getSecurityQuery(query=query, sql_catalog_id=catalog_id, **kw)
+        catalog_id = self.getPreferredSQLCatalogId(sql_catalog_id)
+        query = self.getSecurityQuery(
+          query=query,
+          sql_catalog_id=catalog_id,
+          local_roles=local_roles,
+        )
         kw.setdefault('limit', self.default_count_limit)
         # get catalog from preference
         return ZCatalog.countResults(self, query=query, sql_catalog_id=catalog_id, **kw)
