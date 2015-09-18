@@ -168,7 +168,7 @@
           data-gadget-scope="translation_gadget"\n
           data-gadget-sandbox="public"></div>\n
 \n
-      <div data-gadget-url="gadget_officejs_header.html"\n
+      <div data-gadget-url="${header_gadget}"\n
           data-gadget-scope="header"\n
           data-gadget-sandbox="public"></div>\n
 \n
@@ -326,7 +326,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.38184.6119.32017</string> </value>
+                <value> <string>945.51278.32202.51865</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -344,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441628774.12</float>
+                        <float>1442414326.94</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
