@@ -56,11 +56,8 @@ def _create_default_https_context(purpose=ssl.Purpose.SERVER_AUTH, cafile=None,
 ssl._create_default_https_context = _create_default_https_context
 
 class TestTemplateTool(ERP5TypeTestCase):
+  """Test the template tool
   """
-  Test the template tool
-  """
-  run_all_test = 1
-  quiet = 1
   test_tool_id = 'test_portal_templates'
 
   def getBusinessTemplateList(self):
@@ -109,7 +106,7 @@ class TestTemplateTool(ERP5TypeTestCase):
                       if m.method_id == 'Folder_reindexAll']
     self.assertEqual(len(message_list), 0)
 
-  def testUpdateBT5FromRepository(self, quiet=quiet, run=run_all_test):
+  def testUpdateBT5FromRepository(self):
     """ Test the list of bt5 returned for upgrade """
     # edit bt5 revision so that it will be marked as updatable
     erp5_base = self.templates_tool.getInstalledBusinessTemplate('erp5_base',
@@ -282,12 +279,79 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertFalse(compareVersionStrings('1.0rc1', '>= 1.0'))
     self.assertTrue(compareVersionStrings('1.0rc1', '>= 1.0rc1'))
 
-  def test_getInstalledBusinessTemplate(self):
-    self.assertNotEquals(None, self.getPortal()\
-        .portal_templates.getInstalledBusinessTemplate('erp5_core'))
 
-    self.assertEqual(None, self.getPortal()\
-        .portal_templates.getInstalledBusinessTemplate('erp5_toto'))
+  def test_getInstalledBusinessTemplate_installed(self):
+    test_bt = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title='erp5_test_bt_%s' % self.id())
+    test_bt.install()
+    self.tic()
+    self.assertEqual(test_bt,
+      self.portal.portal_templates.getInstalledBusinessTemplate('erp5_test_bt_%s' % self.id()))
+
+  def test_getInstalledBusinessTemplate_erp5_core_installed(self):
+    erp5_core = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_core')
+    self.assertNotEqual(None, erp5_core)
+    self.assertEqual('Business Template', erp5_core.getPortalType())
+
+  def test_getInstalledBusinessTemplate_not_installed(self):
+    self.assertEquals(None,
+     self.portal.portal_templates.getInstalledBusinessTemplate('not_installed'))
+
+  def test_getInstalledBusinessTemplate_provision(self):
+    test_bt = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title='test_bt_%s' % self.id(),
+      provision_list=['erp5_test_bt_%s' % self.id()])
+    test_bt.install()
+    self.tic()
+    self.assertEqual(test_bt,
+      self.portal.portal_templates.getInstalledBusinessTemplate('erp5_test_bt_%s' % self.id()))
+
+  def test_getInstalledBusinessTemplate_replaced(self):
+    test_bt_v1 = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title='test_bt_%s' % self.id(),
+      version='1')
+    test_bt_v1.install()
+    self.tic()
+    test_bt_v2 = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title='test_bt_%s' % self.id(),
+      version='2')
+    test_bt_v2.install()
+    self.assertEqual('replaced', test_bt_v1.getInstallationState())
+    self.tic()
+    self.assertEqual(test_bt_v2,
+      self.portal.portal_templates.getInstalledBusinessTemplate('test_bt_%s' % self.id()))
+
+  def test_getInstalledBusinessTemplate_uninstalled(self):
+    test_bt = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title='test_bt_%s' % self.id())
+    test_bt.install()
+    test_bt.uninstall()
+    self.tic()
+    self.assertEqual(None,
+      self.portal.portal_templates.getInstalledBusinessTemplate('test_bt_%s' % self.id()))
+
+  def test_getInstalledBusinessTemplate_replaced_then_uninstalled(self):
+    test_bt_v1 = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title='test_bt_%s' % self.id(),
+      version='1')
+    test_bt_v1.install()
+    self.tic()
+    test_bt_v2 = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title='test_bt_%s' % self.id(),
+      version='2')
+    test_bt_v2.install()
+    self.assertEqual('replaced', test_bt_v1.getInstallationState())
+    self.tic()
+    test_bt_v2.uninstall()
+    self.assertEqual(None,
+      self.portal.portal_templates.getInstalledBusinessTemplate('test_bt_%s' % self.id()))
 
   def test_revision(self):
     template_tool = self.portal.portal_templates

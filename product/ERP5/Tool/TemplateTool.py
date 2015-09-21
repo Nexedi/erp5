@@ -114,9 +114,9 @@ class TemplateTool (BaseTool):
     manage_overview = DTMLFile('explainTemplateTool', _dtmldir)
 
     def getInstalledBusinessTemplate(self, title, strict=False, **kw):
-      """
-        Return an installed version of business template of a certain title.
+      """Returns an installed version of business template of a given title.
 
+        Returns None if business template is not installed or has been uninstalled.
         It not "installed" business template is found, look at replaced ones.
         This is mostly usefull if we are looking for the installed business
         template in a transaction replacing an existing business template.
@@ -132,7 +132,15 @@ class TemplateTool (BaseTool):
           state = bt.getInstallationState()
           if state == 'installed':
             return bt
-          if state == 'replaced' and not strict:
+          if state == 'not_installed':
+            last_transition = bt.workflow_history \
+              ['business_template_installation_workflow'][-1]
+            if last_transition['action'] == 'uninstall': # There is not uninstalled state !
+              t = last_transition['time']
+              if last_time < t:
+                last_bt = None
+                last_time = t
+          elif state == 'replaced' and not strict:
             t = bt.workflow_history \
               ['business_template_installation_workflow'][-1]['time']
             if last_time < t:
