@@ -331,7 +331,7 @@
                    "extended_search": gadget.props.options.extended_search,\n
                    "sort_list": sort_query});\n
               }\n
-              return gadget.redirect({jio_key: options.jio_key, view: options.view, "sort_list": sort_query});\n
+              return gadget.redirect({jio_key: gadget.props.options.jio_key, view: gadget.props.options.view, "sort_list": sort_query});\n
             });\n
         });\n
     });\n
@@ -473,7 +473,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58533.55345.57856</string> </value>
+                <value> <string>945.58543.30164.36744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -491,7 +491,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442850207.57</float>
+                        <float>1442851961.02</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
