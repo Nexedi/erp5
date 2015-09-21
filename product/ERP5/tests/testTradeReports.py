@@ -1194,35 +1194,25 @@ class TestTradeReports(ERP5ReportTestCase):
         get_value('default',
                   render_format='list', REQUEST=self.portal.REQUEST)
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEqual(8, len(data_line_list))
+    self.assertEqual(5, len(data_line_list))
     order_workflow_name = 'Sale Order - Order Workflow'
     causality_workflow_name = 'Sale Order - Causality Workflow'
-    self.checkLineProperties(data_line_list[0],
+    self.checkLineProperties(data_line_list[2],
                              translated_portal_type=order_workflow_name)
-    self.checkLineProperties(data_line_list[1],
+    self.checkLineProperties(data_line_list[3],
                              translated_portal_type='',
                              state='Cancelled',
                              count=1)
-    self.checkLineProperties(data_line_list[2],
-                             translated_portal_type='',
-                             state='Draft',
-                             count=2)
-    self.checkLineProperties(data_line_list[3],
-                             translated_portal_type=causality_workflow_name)
     self.checkLineProperties(data_line_list[4],
                              translated_portal_type='',
                              state='Draft',
-                             count=3)
-    self.checkLineProperties(data_line_list[5],
-                             translated_portal_type='All')
-    self.checkLineProperties(data_line_list[6],
-                             translated_portal_type='',
-                             state='Cancelled',
-                             count=1)
-    self.checkLineProperties(data_line_list[7],
+                             count=2)
+    self.checkLineProperties(data_line_list[0],
+                             translated_portal_type=causality_workflow_name)
+    self.checkLineProperties(data_line_list[1],
                              translated_portal_type='',
                              state='Draft',
-                             count=5)
+                             count=3)
 
 
 def test_suite():
