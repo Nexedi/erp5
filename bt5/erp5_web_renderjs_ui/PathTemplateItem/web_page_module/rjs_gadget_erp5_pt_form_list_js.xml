@@ -140,10 +140,12 @@
       form_options.erp5_document = options.erp5_document;\n
       form_options.form_definition = options.form_definition;\n
       // XXX not generic, fix later\n
-      if (options.erp5_searchfield) {\n
-        form_options.form_definition.extended_search =  options.erp5_searchfield.extended_search;\n
-        form_options.form_definition.extended_sort_list = options.erp5_searchfield.sort_list;\n
-        search_options.extended_search = options.erp5_searchfield.extended_search;\n
+      if (options.extended_search) {\n
+        form_options.form_definition.extended_search =  options.extended_search;\n
+        search_options.extended_search = options.extended_search;\n
+      }\n
+      if (options.sort_list) {\n
+         form_options.form_definition.sort_list = options.sort_list;\n
       }\n
       form_options.view = options.view;\n
 \n
@@ -348,7 +350,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.49301.25010.20189</string> </value>
+                <value> <string>945.58541.12756.33723</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -366,7 +368,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442309537.27</float>
+                        <float>1442850245.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

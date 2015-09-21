@@ -159,8 +159,8 @@
 \n
       gadget.props.field_json = field_json;\n
       gadget.props.extended_search = options.extended_search;\n
-      if (options.extended_sort_list) {\n
-        gadget.props.extended_sort_list =  Object.keys(options.extended_sort_list).map(function (key) {return options.extended_sort_list[key]; });\n
+      if (options.sort_list) {\n
+        gadget.props.sort_list =  Object.keys(options.sort_list).map(function (key) {return options.sort_list[key]; });\n
       }\n
       if (field_json.show_anchor) {\n
         th = document.createElement("th");\n
@@ -485,7 +485,7 @@
     })\n
     .declareService(function () {\n
       var gadget = this;\n
-      return gadget.createListboxItem({"sort_list": gadget.props.extended_sort_list});\n
+      return gadget.createListboxItem({"sort_list": gadget.props.sort_list});\n
     })\n
     .declareService(function () {\n
       var gadget = this,\n
@@ -713,7 +713,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.49507.40992.33228</string> </value>
+                <value> <string>945.58413.7711.46148</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -731,7 +731,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442308372.06</float>
+                        <float>1442850295.84</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

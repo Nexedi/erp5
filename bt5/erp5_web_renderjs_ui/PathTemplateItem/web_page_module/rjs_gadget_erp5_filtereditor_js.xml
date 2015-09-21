@@ -133,6 +133,7 @@
       query = "",\n
       value,\n
       select,\n
+      options = gadget.props.render_options,\n
       filterforms = gadget.props.element.querySelectorAll(".filterForm"),\n
       and = gadget.props.element.querySelector(".and");\n
     operator = and.checked ? " AND " : " OR ";\n
@@ -176,6 +177,9 @@
         }\n
       }\n
     }\n
+    gadget.props.jelement.panel("toggle");\n
+    return gadget.redirect({jio_key: options.jio_key, view: options.view, "extended_search": query});\n
+  /*\n
     return new RSVP.Queue()\n
       .push(function () {\n
         return gadget.pleasePublishMyState({\n
@@ -185,7 +189,7 @@
       .push(function (url) {\n
         gadget.props.jelement.panel("toggle");\n
         return gadget.pleaseRedirectMyHash(url);\n
-      });\n
+      });*/\n
   }\n
 \n
 \n
@@ -400,10 +404,8 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("whoWantToDisplayThisFrontPage", "whoWantToDisplayThisFrontPage")\n
-    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
-    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
-\n
+    .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     // Assign the element to a variable\n
     .ready(function (g) {\n
       return g.getElement()\n
@@ -436,7 +438,6 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareMethod(\'toggle\', function () {\n
       var gadget = this,\n
         options = gadget.props.options;\n
@@ -446,12 +447,12 @@
         gadget.props.change = false;\n
         return new RSVP.Queue()\n
           .push(function () {\n
-            return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
+            return gadget.jio_getAttachment(options.jio_key, options.view);\n
           })\n
           .push(function (result) {\n
             var container = gadget.props.element.querySelector(".filter_item_container");\n
-            gadget.props.options = result.data._embedded._view.listbox.column_list;\n
-            gadget.props.domain_tree_map = result.data._embedded._view.listbox.domain_tree_map;\n
+            gadget.props.options = result._embedded._view.listbox.column_list;\n
+            gadget.props.domain_tree_map = result._embedded._view.listbox.domain_tree_map;\n
             container.insertBefore(createFilterItem(gadget), container.lastChild);\n
             createDomainTree(gadget);\n
           });\n
@@ -473,32 +474,27 @@
       while (domain_tree_container.firstChild) {\n
         domain_tree_container.removeChild(domain_tree_container.firstChild);\n
       }\n
-\n
+      options.view = options.view || \'view\';\n
+      this.props.render_options = options;\n
       this.props.options = options;\n
-      if (options.filterEditor !== undefined || options.pg !== undefined || options.sortEditor) {\n
+      if (options.extended_search || options.sortEditor) {\n
         gadget.props.tree_path = [];\n
-        if (options.filterEditor) {\n
-          query = options.filterEditor.extended_search;\n
-        } else if (options.sortEditor) {\n
-          query = options.sortEditor.extended_search;\n
-        } else if (options.pg.fg.erp5_searchfield) {\n
-          query = options.pg.fg.erp5_searchfield.extended_search;\n
-        }\n
+        query = options.extended_search;\n
         if (query === undefined) {\n
           query = "";\n
         }\n
         return new RSVP.Queue()\n
           .push(function () {\n
-            return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
+            return gadget.jio_getAttachment(options.jio_key, options.view);\n
           })\n
           .push(function (result) {\n
             var query_list = QueryFactory.create(query),\n
               j = 0,\n
               key,\n
-              domain_tree_map = result.data._embedded._view.listbox.domain_tree_map,\n
+              domain_tree_map = result._embedded._view.listbox.domain_tree_map,\n
               domain_tree_list;\n
-            gadget.props.options = result.data._embedded._view.listbox.column_list;\n
-            gadget.props.domain_tree_map = result.data._embedded._view.listbox.domain_tree_map;\n
+            gadget.props.options = result._embedded._view.listbox.column_list;\n
+            gadget.props.domain_tree_map = result._embedded._view.listbox.domain_tree_map;\n
             if (query_list.operator === "OR") {\n
               or.checked = true;\n
               or.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
@@ -754,7 +750,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.49499.52520.15308</string> </value>
+                <value> <string>945.58516.23819.36949</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -772,7 +768,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442307606.31</float>
+                        <float>1442848653.18</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

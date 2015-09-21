@@ -221,8 +221,8 @@
       if (form_definition.extended_search) {\n
         suboption_dict.extended_search = form_definition.extended_search;\n
       }\n
-      if (form_definition.extended_sort_list) {\n
-        suboption_dict.extended_sort_list = form_definition.extended_sort_list;\n
+      if (form_definition.sort_list) {\n
+        suboption_dict.sort_list = form_definition.sort_list;\n
       }\n
 \n
       form_gadget.props.gadget_list = [];\n
@@ -517,7 +517,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.49324.9572.9676</string> </value>
+                <value> <string>945.58401.24333.56064</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -535,7 +535,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442309628.83</float>
+                        <float>1442850517.84</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -235,8 +235,7 @@
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
-    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
     .declareMethod(\'toggle\', function () {\n
       var gadget = this,\n
         options = gadget.props.options;\n
@@ -244,10 +243,10 @@
       if (gadget.props.column_list === "") {\n
         return new RSVP.Queue()\n
           .push(function () {\n
-            return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
+            return gadget.jio_getAttachment(options.jio_key, options.view);\n
           })\n
           .push(function (result) {\n
-            gadget.props.column_list = result.data._embedded._view.listbox.column_list;\n
+            gadget.props.column_list = result._embedded._view.listbox.column_list;\n
           });\n
       }\n
     })\n
@@ -263,20 +262,22 @@
       for (i = 0; i < sort_form_list.length; i += 1) {\n
         sort_form_list[i].parentElement.removeChild(sort_form_list[i]);\n
       }\n
+      options.view  = options.view || "view";\n
       gadget.props.options = options;\n
+      \n
       gadget.props.column_list = "";\n
-      if (options.sortEditor) {\n
+      if (options.sort_list) {\n
         return new RSVP.Queue()\n
           .push(function () {\n
-            return gadget.jio_getAttachment({"_id": options.jio_key, "_attachment": options.view});\n
+            return gadget.jio_getAttachment(options.jio_key, options.view);\n
           })\n
           .push(function (result) {\n
             var key;\n
-            gadget.props.column_list = result.data._embedded._view.listbox.column_list;\n
-            for (key in options.sortEditor.sort_list) {\n
-              if (options.sortEditor.sort_list.hasOwnProperty(key)) {\n
-                if (options.sortEditor.sort_list[key] !== "") {\n
-                  container.insertBefore(createSortItem(gadget, options.sortEditor.sort_list[key]), container.lastChild);\n
+            gadget.props.column_list = result._embedded._view.listbox.column_list;\n
+            for (key in options.sort_list) {\n
+              if (options.sort_list.hasOwnProperty(key)) {\n
+                if (options.sort_list[key] !== "") {\n
+                  container.insertBefore(createSortItem(gadget, options.sort_list[key]), container.lastChild);\n
                 }\n
               }\n
             }\n
@@ -324,28 +325,15 @@
           sort_query.push("");\n
           return new RSVP.Queue()\n
             .push(function () {\n
-              if (gadget.props.options.filterEditor) {\n
-                return gadget.pleasePublishMyState({\n
-                  "extended_search": gadget.props.options.filterEditor.extended_search || "",\n
-                  "sort_list": sort_query\n
-                });\n
-              }\n
-              if (gadget.props.options.sortEditor) {\n
-                return gadget.pleasePublishMyState({\n
-                  "extended_search": gadget.props.options.sortEditor.extended_search || "",\n
-                  "sort_list": sort_query\n
-                });\n
-              }\n
-              return gadget.pleasePublishMyState({\n
-                "sort_list": sort_query\n
-              });\n
-            })\n
-            .push(function (url) {\n
               gadget.props.jelement.panel("toggle");\n
-              return gadget.pleaseRedirectMyHash(url);\n
+              if (gadget.props.options.extended_search) {\n
+                 return  gadget.redirect({jio_key: gadget.props.options.jio_key, view: gadget.props.options.view,\n
+                   "extended_search": gadget.props.options.extended_search,\n
+                   "sort_list": sort_query});\n
+              }\n
+              return gadget.redirect({jio_key: options.jio_key, view: options.view, "sort_list": sort_query});\n
             });\n
-        }\n
-      );\n
+        });\n
     });\n
 \n
 }(window, document, rJS, RSVP));
@@ -485,7 +473,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.49555.29942.44322</string> </value>
+                <value> <string>945.58533.55345.57856</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -503,7 +491,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442311229.21</float>
+                        <float>1442850207.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
