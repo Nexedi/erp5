@@ -6333,7 +6333,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     # check the previously existing instance now behaves as the overriden class
     self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
     # test uninstall is effective
-    self.uninstallBusinessTemplate('test_bt')
+    self.uninstallBusinessTemplate('test_167_InstanceAndRelatedClassDefinedInSameBT')
     # check both File instances no longer behave like being overriden
     self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
 
@@ -6375,7 +6375,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
-                          title='test_bt',
+                          title='test_bt_%s' % self.id(),
                           template_tool_id_list=('dummy_type_provider', ),
                           template_portal_type_id_list=('Dummy Type',),
                           template_portal_type_role_list=('Dummy Type', ),
@@ -6473,7 +6473,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
-                          title='test_bt',
+                          title='test_bt_%s' % self.id(),
                           template_tool_id_list=('dummy_type_provider', ),)
     self.tic()
     bt.build()
@@ -6506,7 +6506,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     # contain type_provider.
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
-                          title='test_bt',)
+                          title='test_bt_%s' % self.id(),)
     self.tic()
     bt.build()
     self.tic()
@@ -6536,7 +6536,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
-                          title='test_bt',
+                          title='test_bt_%s' % self.id(),
                           template_action_path_list=(
                              'portal_actions | test_global_action',),)
     self.tic()
@@ -6583,7 +6583,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
-                          title='test_bt',
+                          title='test_bt_%s' % self.id(),
                           template_path_list=(
                             'exported_path',))
     self.tic()
