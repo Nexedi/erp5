@@ -133,6 +133,7 @@
       operator,\n
       query,\n
       value,\n
+      key,\n
       simple_query_list = [],\n
       complex_query,\n
       select,\n
@@ -143,23 +144,32 @@
     //build simple&complex query\n
     for (i = 0; i < filterforms.length; i += 1) {\n
       value = filterforms[i][2].value;\n
-      select = filterforms[i][1][filterforms[i][1].selectedIndex].value;\n
-      if (select === "keyword") {\n
-        value = "%" + value + "%";\n
+      if (value !== "") {\n
+        select = filterforms[i][1][filterforms[i][1].selectedIndex].value;\n
+        if (select === "keyword") {\n
+          value = "%" + value + "%";\n
+        }\n
+        if (filterforms[i][0][filterforms[i][0].selectedIndex].value === "Searchable Text") {\n
+          key = "";\n
+        } else {\n
+          key = filterforms[i][0][filterforms[i][0].selectedIndex].value;\n
+        }\n
+        simple_query_list.push(new SimpleQuery({\n
+          key: key,\n
+          type: "simple",\n
+          value: value}));\n
       }\n
-\n
-      simple_query_list.push(new SimpleQuery({key: filterforms[i][0][filterforms[i][0].selectedIndex].value,\n
-                                   type: "simple",\n
-                                   value: value}));\n
     }\n
 \n
     if (gadget.props.tree_path[0] !== "--") {\n
       value = "";\n
       for (i = 0; i < gadget.props.tree_path.length; i += 1) {\n
-        if (i !== 0) {\n
-          value += "/";\n
+        if (gadget.props.tree_path[i] !== "--") {\n
+          if (i !== 0) {\n
+            value += "/";\n
+          }\n
+          value += gadget.props.tree_path[i];\n
         }\n
-        value += gadget.props.tree_path[i];\n
       }\n
       simple_query_list.push(new SimpleQuery({key: "Domain",\n
                                               type: "simple",\n
@@ -697,7 +707,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.59775.20113.30310</string> </value>
+                <value> <string>945.59871.22998.37307</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -715,7 +725,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442924165.3</float>
+                        <float>1442930119.85</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
