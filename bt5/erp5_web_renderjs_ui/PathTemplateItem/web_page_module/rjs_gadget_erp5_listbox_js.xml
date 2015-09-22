@@ -281,6 +281,7 @@
           query_string = url_query;\n
         }\n
       }\n
+      \n
       if (hide_item.length > 0) {\n
         tmp_hide_item = "catalog.uid: (";\n
         for (i = 0; i < hide_item.length; i += 1) {\n
@@ -291,12 +292,14 @@
             tmp_hide_item += ")";\n
           }\n
         }\n
-      }\n
       \n
-      if (query_string !== "") {\n
-        query_string += \' AND \' + tmp_hide_item;\n
-      } else {\n
-        query_string = tmp_hide_item;\n
+        if (query_string !== "" ) {\n
+          query_string += \' AND \' + tmp_hide_item;\n
+        } else if (field_json.list_method_template === undefined) {\n
+          query_string = \' AND \' + tmp_hide_item;\n
+        } else {\n
+          query_string = tmp_hide_item;\n
+        }\n
       }\n
 \n
       for (i = 0; i < field_json.column_list.length; i += 1) {\n
@@ -742,7 +745,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.59588.57633.38263</string> </value>
+                <value> <string>945.59867.56911.41898</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -760,7 +763,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442925702.6</float>
+                        <float>1442931020.38</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
