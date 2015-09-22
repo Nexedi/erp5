@@ -1052,9 +1052,8 @@ class TestERP5Credential(ERP5TypeTestCase):
                                  last_name="Test",
                                  reference="vifibtest")
     portal_catalog = self.portal.portal_catalog
-    credential_request = portal_catalog.getResultValue(
-        portal_type="Credential Request", reference="vifibtest",
-        first_name="Vifib", last_name="Test")
+    credential_request, = portal_catalog(
+        portal_type="Credential Request", reference="vifibtest")
     mail_message = portal_catalog.getResultValue(
         portal_type="Mail Message",
         default_follow_up_uid=credential_request.getUid())
