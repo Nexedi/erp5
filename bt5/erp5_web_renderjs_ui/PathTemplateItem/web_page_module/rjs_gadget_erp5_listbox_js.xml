@@ -501,8 +501,7 @@
         temp_table.appendChild(fragment);\n
         temp.appendChild(temp_table);\n
         table.appendChild(temp.querySelector("tbody"));\n
-        return temp.querySelector("tfoot").innerHTML;\n
-       //return gadget.translateHtml(temp.querySelector("tfoot").innerHTML);\n
+        return gadget.translateHtml(temp.querySelector("tfoot").innerHTML);\n
       })\n
         .push(function (my_translated_html) {\n
           var temp = document.createElement("tfoot");\n
@@ -743,7 +742,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.59587.50428.36590</string> </value>
+                <value> <string>945.59588.57633.38263</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -761,7 +760,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442912932.75</float>
+                        <float>1442925702.6</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
