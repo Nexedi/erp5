@@ -102,7 +102,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener, document, QueryFactory */\n
+/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener, document, QueryFactory,\n
+  SimpleQuery, ComplexQuery, Query*/\n
 (function (window, rJS, Handlebars, $, RSVP, loopEventListener) {\n
   "use strict";\n
   /////////////////////////////////////////////////////////////////\n
@@ -130,53 +131,49 @@
   function submitFilterQuery(gadget) {\n
     var i,\n
       operator,\n
-      query = "",\n
+      query,\n
       value,\n
+      simple_query_list = [],\n
+      complex_query,\n
       select,\n
       options = gadget.props.render_options,\n
       filterforms = gadget.props.element.querySelectorAll(".filterForm"),\n
       and = gadget.props.element.querySelector(".and");\n
-    operator = and.checked ? " AND " : " OR ";\n
+    operator = and.checked ? "AND" : "OR";\n
+    //build simple&complex query\n
     for (i = 0; i < filterforms.length; i += 1) {\n
-      if (filterforms[i][2].value !== "") {\n
-        if (i !== 0) {\n
-          query += operator;\n
-        }\n
-        value = filterforms[i][2].value;\n
-        select = filterforms[i][1][filterforms[i][1].selectedIndex].value;\n
-        if (select === "keyword" && filterforms[i][0][filterforms[i][0].selectedIndex].value !== "Searchable Text") {\n
-          value = "%" + value + "%";\n
-        } else {\n
-          value = select + value;\n
-        }\n
-        if (filterforms[i][0][filterforms[i][0].selectedIndex].value === "Searchable Text") {\n
-          query += value;\n
-        } else {\n
-          query += filterforms[i][0][filterforms[i][0].selectedIndex].value + ":" + value;\n
-        }\n
+      value = filterforms[i][2].value;\n
+      select = filterforms[i][1][filterforms[i][1].selectedIndex].value;\n
+      if (select === "keyword") {\n
+        value = "%" + value + "%";\n
       }\n
-    }\n
 \n
+      simple_query_list.push(new SimpleQuery({key: filterforms[i][0][filterforms[i][0].selectedIndex].value,\n
+                                   type: "simple",\n
+                                   value: value}));\n
+    }\n
 \n
     if (gadget.props.tree_path[0] !== "--") {\n
-      if (query !== "") {\n
-        query += operator;\n
-      }\n
-      query += "Domain:";\n
-      for (i = 0; i < gadget.props.tree_path.length - 1; i += 1) {\n
+      value = "";\n
+      for (i = 0; i < gadget.props.tree_path.length; i += 1) {\n
         if (i !== 0) {\n
-          query += "/";\n
+          value += "/";\n
         }\n
-        query += gadget.props.tree_path[i];\n
+        value += gadget.props.tree_path[i];\n
       }\n
-      if (gadget.props.tree_path[gadget.props.tree_path.length - 1] !== \'--\') {\n
-        if (gadget.props.tree_path.length === 1) {\n
-          query += gadget.props.tree_path[0];\n
-        } else {\n
-          query += "/" + gadget.props.tree_path[gadget.props.tree_path.length - 1];\n
-        }\n
-      }\n
+      simple_query_list.push(new SimpleQuery({key: "Domain",\n
+                                              type: "simple",\n
+                                              value: value}));\n
     }\n
+\n
+    complex_query = new ComplexQuery({\n
+      operator: operator,\n
+      query_list: simple_query_list,\n
+      type: "complex"\n
+    });\n
+\n
+    query = Query.objectToSearchText(complex_query);\n
+\n
     gadget.props.jelement.panel("toggle");\n
 \n
     return gadget.redirect({jio_key: options.jio_key, view: options.view,\n
@@ -261,7 +258,7 @@
   }\n
 \n
 \n
-  function createFilterItem(gadget, select, input_value, operator) {\n
+  function createFilterItem(gadget, simple_query) {\n
     var div = document.createElement("div"),\n
       container = document.createElement("form"),\n
       minus_button = document.createElement("input"),\n
@@ -282,6 +279,11 @@
 \n
       text = document.createElement("input"),\n
       select_operator = document.createElement("select");\n
+\n
+    if (simple_query === undefined) {\n
+      simple_query = {};\n
+    }\n
+\n
     minus_button.setAttribute("type", "button");\n
 \n
     container.appendChild(select_reference);\n
@@ -295,11 +297,11 @@
         j;\n
       if (event.target.value.indexOf(\'date\') !== -1) {\n
         text.setAttribute("type", "date");\n
-        input_value = input_value ? input_value.replace(/\\//g, "-") : "";\n
+        simple_query.value = simple_query.value ? simple_query.value.replace(/\\//g, "-") : "";\n
       } else {\n
         text.setAttribute("type", "text");\n
       }\n
-      text.setAttribute("value", input_value || "");\n
+      text.setAttribute("value", simple_query.value || "");\n
       if (event.target.value.indexOf(\'date\') !== -1 ||\n
           event.target.value.indexOf(\'quantity\') !== -1 ||\n
           event.target.value.indexOf(\'price\') !== -1) {\n
@@ -314,7 +316,7 @@
       }\n
 \n
       for (j = 0; j < select_options.length; j += 1) {\n
-        if (operator === select_options_value[j]) {\n
+        if (simple_query.operator === select_options_value[j]) {\n
           html += selected_option_template({\n
             value: select_options_value[j],\n
             text: select_options[j]\n
@@ -338,7 +340,7 @@
       text: "Searchable Text"\n
     });\n
     for (i = 0; i < gadget.props.options.length; i += 1) {\n
-      if (select === gadget.props.options[i][0]) {\n
+      if (simple_query.key === gadget.props.options[i][0]) {\n
         default_select = gadget.props.options[i][0];\n
         tmp += selected_option_template({\n
           value: gadget.props.options[i][0],\n
@@ -498,11 +500,7 @@
             for (i = 0; i < query_list.length; i += 1) {\n
               key = query_list[i].key;\n
               if (key !== "Domain") {\n
-                if (key === undefined) {\n
-                  item = createFilterItem(gadget, "Searchable Text", query_list[i].value);\n
-                } else {\n
-                  item = createFilterItem(gadget, key, query_list[i].value, query_list[i].operator);\n
-                }\n
+                item = createFilterItem(gadget, query_list[i]);\n
                 container.insertBefore(item, container.lastChild);\n
               } else {\n
                 domain_tree_list = query_list[i].value.split("/");\n
@@ -521,49 +519,6 @@
             if (gadget.props.element.querySelector(".domain_tree") === null) {\n
               createDomainTree(gadget);\n
             }\n
-            /*\n
-            var query_list = query.split(" OR "),\n
-              j = 0,\n
-              domain_tree_map = result.data._embedded._view.listbox.domain_tree_map,\n
-              domain_tree_list;\n
-            gadget.props.options = result.data._embedded._view.listbox.column_list;\n
-            gadget.props.domain_tree_map = result.data._embedded._view.listbox.domain_tree_map;\n
-            if (query_list.length === 1) {\n
-              query_list = query.split(" AND ");\n
-              and.checked = true;\n
-              and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
-            } else {\n
-              or.checked = true;\n
-              or.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
-            }\n
-\n
-            for (i = 0; i < query_list.length; i += 1) {\n
-              select_list = query_list[i].split(":");\n
-              if (select_list[0] !== "Domain") {\n
-                if (select_list.length === 1) {\n
-                  item = createFilterItem(gadget, "Searchable Text", query_list[i]);\n
-                } else {\n
-                  item = createFilterItem(gadget, select_list[0], select_list[1]);\n
-                }\n
-                container.insertBefore(item, container.lastChild);\n
-              } else {\n
-                domain_tree_list = select_list[1].split("/");\n
-                createDomainTree(gadget, domain_tree_map, domain_tree_list[0]);\n
-                for (j = 0; j < domain_tree_list.length; j += 1) {\n
-                  domain_tree_map = domain_tree_map[domain_tree_list[j]].sub_categories;\n
-                  if (Object.keys(domain_tree_map).length !== 0) {\n
-                    createDomainTree(gadget, domain_tree_map, domain_tree_list[j + 1]);\n
-                  }\n
-                }\n
-              }\n
-            }\n
-            if (gadget.props.element.querySelector(".filterForm") === null) {\n
-              container.insertBefore(createFilterItem(gadget), container.lastChild);\n
-            }\n
-            if (gadget.props.element.querySelector(".domain_tree") === null) {\n
-              createDomainTree(gadget);\n
-            }*/\n
-\n
           });\n
       }\n
     })\n
@@ -742,7 +697,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.59593.40491.64017</string> </value>
+                <value> <string>945.59775.20113.30310</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -760,7 +715,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442913595.39</float>
+                        <float>1442924165.3</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
