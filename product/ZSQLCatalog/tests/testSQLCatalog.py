@@ -227,7 +227,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
   def catalog(self, reference_tree, kw, check_search_text=True,
       check_select_expression=True, expected_failure=False):
     reference_param_dict = self._catalog._queryResults(query_table='foo', **kw)
-    query = self._catalog.buildQuery(kw)
+    query = self._catalog.buildEntireQuery(kw).query
     assertEqual = self.assertEqual
     if expected_failure:
       assertEqual = unittest.expectedFailure(assertEqual)
