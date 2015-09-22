@@ -656,11 +656,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           sql_catalog_id=catalog_id,
           local_roles=local_roles,
         )
+        if query is not None:
+          kw['query'] = query
         kw.setdefault('limit', self.default_result_limit)
         # get catalog from preference
         #LOG("searchResult", INFO, catalog_id)
         #         LOG("searchResult", INFO, ZCatalog.searchResults(self, query=query, sql_catalog_id=catalog_id, src__=1, **kw))
-        return ZCatalog.searchResults(self, query=query, sql_catalog_id=catalog_id, **kw)
+        return ZCatalog.searchResults(self, sql_catalog_id=catalog_id, **kw)
 
     __call__ = searchResults
 
@@ -718,9 +720,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           sql_catalog_id=catalog_id,
           local_roles=local_roles,
         )
+        if query is not None:
+          kw['query'] = query
         kw.setdefault('limit', self.default_count_limit)
         # get catalog from preference
-        return ZCatalog.countResults(self, query=query, sql_catalog_id=catalog_id, **kw)
+        return ZCatalog.countResults(self, sql_catalog_id=catalog_id, **kw)
 
     security.declarePrivate('unrestrictedCountResults')
     def unrestrictedCountResults(self, REQUEST=None, **kw):
