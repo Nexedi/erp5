@@ -526,7 +526,7 @@
     })\n
     .declareService(function () {\n
       var gadget = this,\n
-        selected_uid_list = [],\n
+        selected_uid_list,\n
         hide_form = gadget.props.element.querySelector(".hide_form");\n
       /* hide form */\n
       loopEventListener(\n
@@ -543,6 +543,7 @@
             checkbox;\n
           hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
           if (hide_form_elements.length > 0) {\n
+            selected_uid_list = [];\n
             for (i = 0; i < hide_form_elements.length; i += 1) {\n
               if (hide_form_elements[i].checked) {\n
                 selected_uid_list.push(hide_form_elements[i].parentElement.getAttribute("value"));\n
@@ -746,7 +747,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.59933.16005.14882</string> </value>
+                <value> <string>945.59934.39249.4522</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -764,7 +765,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442933675.92</float>
+                        <float>1442934055.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
