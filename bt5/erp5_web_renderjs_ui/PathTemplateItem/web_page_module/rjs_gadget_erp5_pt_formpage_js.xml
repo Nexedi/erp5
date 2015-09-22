@@ -174,6 +174,7 @@
           var sub_options = {};\n
           sub_options.extended_search = options.extended_search;\n
           sub_options.sort_list = options.sort_list;\n
+          sub_options.hide_item = options.hide_item;\n
           sub_options.erp5_document = erp5_document;\n
           sub_options.form_definition = erp5_form;\n
           sub_options.view = options.view;\n
@@ -333,7 +334,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58508.55936.1041</string> </value>
+                <value> <string>945.58540.1924.39543</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -351,7 +352,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442850001.74</float>
+                        <float>1442911674.99</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

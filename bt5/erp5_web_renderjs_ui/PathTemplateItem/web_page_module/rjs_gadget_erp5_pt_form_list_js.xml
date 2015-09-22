@@ -147,7 +147,11 @@
       if (options.sort_list) {\n
          form_options.form_definition.sort_list = options.sort_list;\n
       }\n
+      if (options.hide_item) {\n
+        form_options.form_definition.hide_item = options.hide_item;\n
+      }\n
       form_options.view = options.view;\n
+      form_options.jio_key = options.jio_key;\n
 \n
       return new RSVP.Queue()\n
         .push(function () {\n
@@ -350,7 +354,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58541.12756.33723</string> </value>
+                <value> <string>945.59555.45930.37939</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -368,7 +372,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442850245.08</float>
+                        <float>1442911550.48</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

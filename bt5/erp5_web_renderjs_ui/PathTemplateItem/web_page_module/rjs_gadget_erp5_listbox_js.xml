@@ -142,6 +142,8 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
     .declareAcquiredMethod("triggleSortEditor", "triggleSortEditor")\n
     //////////////////////////////////////////////\n
@@ -159,8 +161,13 @@
 \n
       gadget.props.field_json = field_json;\n
       gadget.props.extended_search = options.extended_search;\n
+      gadget.props.jio_key = options.jio_key;\n
+      gadget.props.view = options.view;\n
       if (options.sort_list) {\n
-        gadget.props.sort_list =  Object.keys(options.sort_list).map(function (key) {return options.sort_list[key]; });\n
+        gadget.props.sort_list = Object.keys(options.sort_list).map(function (key) {return options.sort_list[key]; });\n
+      }\n
+      if (options.hide_item) {\n
+        gadget.props.hide_item = Object.keys(options.hide_item).map(function (key) {return options.hide_item[key]; });\n
       }\n
       if (field_json.show_anchor) {\n
         th = document.createElement("th");\n
@@ -195,7 +202,7 @@
     //////////////////////////////////////////////\n
     // render the listbox in an asynchronous way\n
     //////////////////////////////////////////////\n
-    .declareMethod(\'createListboxItem\', function (options) {\n
+    .declareService(function () {\n
       var gadget = this,\n
         props = gadget.props,\n
         field_json = props.field_json,\n
@@ -214,7 +221,9 @@
         tmp_query,\n
         domain_query,\n
         domain_tree_map,\n
-        sort_list = options.sort_list || [],\n
+        hide_item = gadget.props.hide_item || [],\n
+        tmp_hide_item,\n
+        sort_list = gadget.props.sort_list || [],\n
         operator,\n
         i,\n
         j,\n
@@ -271,6 +280,23 @@
         } else {\n
           query_string = url_query;\n
         }\n
+      }\n
+      if (hide_item.length > 0) {\n
+        tmp_hide_item = "catalog.uid: (";\n
+        for (i = 0; i < hide_item.length; i += 1) {\n
+          tmp_hide_item += hide_item[i];\n
+          if (i !== hide_item.length - 1) {\n
+            tmp_hide_item += ", ";\n
+          } else {\n
+            tmp_hide_item += ")";\n
+          }\n
+        }\n
+      }\n
+      \n
+      if (query_string !== "") {\n
+        query_string += \' AND \' + tmp_hide_item;\n
+      } else {\n
+        query_string = tmp_hide_item;\n
       }\n
 \n
       for (i = 0; i < field_json.column_list.length; i += 1) {\n
@@ -475,17 +501,14 @@
         temp_table.appendChild(fragment);\n
         temp.appendChild(temp_table);\n
         table.appendChild(temp.querySelector("tbody"));\n
-        return gadget.translateHtml(temp.querySelector("tfoot").innerHTML);\n
+        return temp.querySelector("tfoot").innerHTML;\n
+       //return gadget.translateHtml(temp.querySelector("tfoot").innerHTML);\n
       })\n
         .push(function (my_translated_html) {\n
           var temp = document.createElement("tfoot");\n
           temp.innerHTML = my_translated_html;\n
           table.appendChild(temp);\n
         });\n
-    })\n
-    .declareService(function () {\n
-      var gadget = this;\n
-      return gadget.createListboxItem({"sort_list": gadget.props.sort_list});\n
     })\n
     .declareService(function () {\n
       var gadget = this,\n
@@ -501,6 +524,7 @@
     })\n
     .declareService(function () {\n
       var gadget = this,\n
+        selected_uid_list = [],\n
         hide_form = gadget.props.element.querySelector(".hide_form");\n
       /* hide form */\n
       loopEventListener(\n
@@ -513,14 +537,20 @@
             i,\n
             th,\n
             hide_form_elements,\n
+            hide_form_element_head,\n
             checkbox;\n
-\n
           hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
           if (hide_form_elements.length > 0) {\n
             for (i = 0; i < hide_form_elements.length; i += 1) {\n
+              if (hide_form_elements[i].checked) {\n
+                selected_uid_list.push(hide_form_elements[i].parentElement.getAttribute("value"));\n
+              }\n
               hide_form_elements[i].parentElement.removeChild(hide_form_elements[i]);\n
             }\n
-            return;\n
+\n
+            return gadget.redirect({jio_key: gadget.props.jio_key, view: gadget.props.view,\n
+              "extended_search": gadget.props.extended_search || "", "sort_list": gadget.props.sort_list || "",\n
+              "hide_item": selected_uid_list});\n
           }\n
           th = document.createElement("th");\n
 \n
@@ -713,7 +743,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58413.7711.46148</string> </value>
+                <value> <string>945.59587.50428.36590</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -731,7 +761,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442850295.84</float>
+                        <float>1442912932.75</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

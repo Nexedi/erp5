@@ -178,18 +178,10 @@
       }\n
     }\n
     gadget.props.jelement.panel("toggle");\n
-    return gadget.redirect({jio_key: options.jio_key, view: options.view, "extended_search": query});\n
-  /*\n
-    return new RSVP.Queue()\n
-      .push(function () {\n
-        return gadget.pleasePublishMyState({\n
-          "extended_search": query\n
-        });\n
-      })\n
-      .push(function (url) {\n
-        gadget.props.jelement.panel("toggle");\n
-        return gadget.pleaseRedirectMyHash(url);\n
-      });*/\n
+\n
+    return gadget.redirect({jio_key: options.jio_key, view: options.view,\n
+              "extended_search": query, "sort_list": options.sort_list || "",\n
+              "hide_item": options.hide_item || ""});\n
   }\n
 \n
 \n
@@ -750,7 +742,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58516.23819.36949</string> </value>
+                <value> <string>945.59593.40491.64017</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -768,7 +760,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442848653.18</float>
+                        <float>1442913595.39</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -326,12 +326,9 @@
           return new RSVP.Queue()\n
             .push(function () {\n
               gadget.props.jelement.panel("toggle");\n
-              if (gadget.props.options.extended_search) {\n
-                 return  gadget.redirect({jio_key: gadget.props.options.jio_key, view: gadget.props.options.view,\n
-                   "extended_search": gadget.props.options.extended_search,\n
-                   "sort_list": sort_query});\n
-              }\n
-              return gadget.redirect({jio_key: gadget.props.options.jio_key, view: gadget.props.options.view, "sort_list": sort_query});\n
+              return gadget.redirect({jio_key: gadget.props.options.jio_key, view: gadget.props.options.view,\n
+                "extended_search": gadget.props.options.extended_search || "", "sort_list": sort_query,\n
+                "hide_item": gadget.props.options.hide_item || ""});\n
             });\n
         });\n
     });\n
@@ -473,7 +470,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58543.30164.36744</string> </value>
+                <value> <string>945.59595.22725.716</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -491,7 +488,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442851961.02</float>
+                        <float>1442913587.3</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
