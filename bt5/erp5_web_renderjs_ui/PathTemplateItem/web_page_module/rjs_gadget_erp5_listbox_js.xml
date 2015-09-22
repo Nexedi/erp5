@@ -561,6 +561,7 @@
           for (i = 0; i < tr_list.length; i += 1) {\n
             checkbox = document.createElement("input");\n
             checkbox.setAttribute("type", "checkbox");\n
+            checkbox.setAttribute("checked", true);\n
             checkbox.setAttribute("class", "hide_form_element");\n
             tr_list[i].insertBefore(checkbox, tr_list[i].firstChild);\n
           }\n
@@ -745,7 +746,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.59867.56911.41898</string> </value>
+                <value> <string>945.59933.16005.14882</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -763,7 +764,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442931020.38</float>
+                        <float>1442933675.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
