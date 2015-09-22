@@ -111,7 +111,7 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
 
     # We should have one acknowledgement in the event module for seb
     acknowledgement_list = module.searchFolder(portal_type='Acknowledgement',
-        destination = person.getRelativeUrl())
+        destination_uid=person.getUid())
     self.assertEqual(1, len(acknowledgement_list))
 
     acknowledgement = acknowledgement_list[0].getObject()
