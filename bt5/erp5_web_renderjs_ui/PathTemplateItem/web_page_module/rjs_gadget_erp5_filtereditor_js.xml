@@ -175,20 +175,21 @@
                                               type: "simple",\n
                                               value: value}));\n
     }\n
+    if (simple_query_list.length > 0) {\n
+      complex_query = new ComplexQuery({\n
+        operator: operator,\n
+        query_list: simple_query_list,\n
+        type: "complex"\n
+      });\n
 \n
-    complex_query = new ComplexQuery({\n
-      operator: operator,\n
-      query_list: simple_query_list,\n
-      type: "complex"\n
-    });\n
+      query = Query.objectToSearchText(complex_query);\n
 \n
-    query = Query.objectToSearchText(complex_query);\n
+      gadget.props.jelement.panel("toggle");\n
 \n
-    gadget.props.jelement.panel("toggle");\n
-\n
-    return gadget.redirect({jio_key: options.jio_key, view: options.view,\n
-              "extended_search": query, "sort_list": options.sort_list || "",\n
-              "hide_item": options.hide_item || ""});\n
+      return gadget.redirect({jio_key: options.jio_key, view: options.view,\n
+                "extended_search": query, "sort_list": options.sort_list || "",\n
+                "hide_item": options.hide_item || ""});\n
+    }\n
   }\n
 \n
 \n
@@ -707,7 +708,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.59871.22998.37307</string> </value>
+                <value> <string>945.60010.1085.56388</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -725,7 +726,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442930119.85</float>
+                        <float>1442938284.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
