@@ -129,9 +129,9 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           if len(business_link_value_list) > 0:
             # use only Business Link related movements
             kw['causality_uid'] = [link_value.getUid() for link_value in business_link_value_list]
-        movement_list = self.searchMovementList(
-          applied_rule_uid=applied_rule_uid,
-          **kw)
+        if applied_rule_uid is not None:
+          kw['applied_rule_uid'] = applied_rule_uid
+        movement_list = self.searchMovementList(**kw)
         if not movement_list:
           return []
     # Collect
