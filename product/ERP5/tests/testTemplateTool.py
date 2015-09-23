@@ -44,16 +44,18 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 # Specify svn.erp5.org certificate file.
 import ssl
-_create_default_https_context_orig = ssl._create_default_https_context
-def _create_default_https_context(purpose=ssl.Purpose.SERVER_AUTH, cafile=None,
-                           capath=None, cadata=None):
-  return _create_default_https_context_orig(
-    purpose,
-    cafile=os.path.join(os.path.dirname(__file__), 'svn.erp5.org.cert'),
-    capath=capath,
-    cadata=cadata,
-  )
-ssl._create_default_https_context = _create_default_https_context
+if hasattr(ssl, '_create_default_https_context'):
+  # On python >= 2.7.9 we patch ssl module to accept our svn.erp5.org certificate
+  _create_default_https_context_orig = ssl._create_default_https_context
+  def _create_default_https_context(purpose=ssl.Purpose.SERVER_AUTH, cafile=None,
+                             capath=None, cadata=None):
+    return _create_default_https_context_orig(
+      purpose,
+      cafile=os.path.join(os.path.dirname(__file__), 'svn.erp5.org.cert'),
+      capath=capath,
+      cadata=cadata,
+    )
+  ssl._create_default_https_context = _create_default_https_context
 
 class TestTemplateTool(ERP5TypeTestCase):
   """Test the template tool
