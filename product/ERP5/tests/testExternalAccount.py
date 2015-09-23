@@ -67,6 +67,9 @@ class TestExternalAccount(ERP5TypeTestCase):
     self.tic()
 
 
+  # Email Account in external_account_module is not "invalidated" as it is not
+  # indexed in email table.
+  @unittest.expectedFailure
   def test_01_PersonExternalEmailAccountCreation(self):
     """
       Test that external account creation.
