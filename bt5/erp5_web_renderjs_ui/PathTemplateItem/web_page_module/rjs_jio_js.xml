@@ -1128,6 +1128,507 @@ var UriTemplate = (function () {\n
         }\n
     }\n
 ));\n
+;// Copyright (c) 2013 Pieroxy <pieroxy@pieroxy.net>\n
+// This work is free. You can redistribute it and/or modify it\n
+// under the terms of the WTFPL, Version 2\n
+// For more information see LICENSE.txt or http://www.wtfpl.net/\n
+//\n
+// For more information, the home page:\n
+// http://pieroxy.net/blog/pages/lz-string/testing.html\n
+//\n
+// LZ-based compression algorithm, version 1.4.4\n
+var LZString = (function() {\n
+\n
+// private property\n
+var f = String.fromCharCode;\n
+var keyStrBase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";\n
+var keyStrUriSafe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";\n
+var baseReverseDic = {};\n
+\n
+function getBaseValue(alphabet, character) {\n
+  if (!baseReverseDic[alphabet]) {\n
+    baseReverseDic[alphabet] = {};\n
+    for (var i=0 ; i<alphabet.length ; i++) {\n
+      baseReverseDic[alphabet][alphabet.charAt(i)] = i;\n
+    }\n
+  }\n
+  return baseReverseDic[alphabet][character];\n
+}\n
+\n
+var LZString = {\n
+  compressToBase64 : function (input) {\n
+    if (input == null) return "";\n
+    var res = LZString._compress(input, 6, function(a){return keyStrBase64.charAt(a);});\n
+    switch (res.length % 4) { // To produce valid Base64\n
+    default: // When could this happen ?\n
+    case 0 : return res;\n
+    case 1 : return res+"===";\n
+    case 2 : return res+"==";\n
+    case 3 : return res+"=";\n
+    }\n
+  },\n
+\n
+  decompressFromBase64 : function (input) {\n
+    if (input == null) return "";\n
+    if (input == "") return null;\n
+    return LZString._decompress(input.length, 32, function(index) { return getBaseValue(keyStrBase64, input.charAt(index)); });\n
+  },\n
+\n
+  compressToUTF16 : function (input) {\n
+    if (input == null) return "";\n
+    return LZString._compress(input, 15, function(a){return f(a+32);}) + " ";\n
+  },\n
+\n
+  decompressFromUTF16: function (compressed) {\n
+    if (compressed == null) return "";\n
+    if (compressed == "") return null;\n
+    return LZString._decompress(compressed.length, 16384, function(index) { return compressed.charCodeAt(index) - 32; });\n
+  },\n
+\n
+  //compress into uint8array (UCS-2 big endian format)\n
+  compressToUint8Array: function (uncompressed) {\n
+    var compressed = LZString.compress(uncompressed);\n
+    var buf=new Uint8Array(compressed.length*2); // 2 bytes per character\n
+\n
+    for (var i=0, TotalLen=compressed.length; i<TotalLen; i++) {\n
+      var current_value = compressed.charCodeAt(i);\n
+      buf[i*2] = current_value >>> 8;\n
+      buf[i*2+1] = current_value % 256;\n
+    }\n
+    return buf;\n
+  },\n
+\n
+  //decompress from uint8array (UCS-2 big endian format)\n
+  decompressFromUint8Array:function (compressed) {\n
+    if (compressed===null || compressed===undefined){\n
+        return LZString.decompress(compressed);\n
+    } else {\n
+        var buf=new Array(compressed.length/2); // 2 bytes per character\n
+        for (var i=0, TotalLen=buf.length; i<TotalLen; i++) {\n
+          buf[i]=compressed[i*2]*256+compressed[i*2+1];\n
+        }\n
+\n
+        var result = [];\n
+        buf.forEach(function (c) {\n
+          result.push(f(c));\n
+        });\n
+        return LZString.decompress(result.join(\'\'));\n
+\n
+    }\n
+\n
+  },\n
+\n
+\n
+  //compress into a string that is already URI encoded\n
+  compressToEncodedURIComponent: function (input) {\n
+    if (input == null) return "";\n
+    return LZString._compress(input, 6, function(a){return keyStrUriSafe.charAt(a);});\n
+  },\n
+\n
+  //decompress from an output of compressToEncodedURIComponent\n
+  decompressFromEncodedURIComponent:function (input) {\n
+    if (input == null) return "";\n
+    if (input == "") return null;\n
+    input = input.replace(/ /g, "+");\n
+    return LZString._decompress(input.length, 32, function(index) { return getBaseValue(keyStrUriSafe, input.charAt(index)); });\n
+  },\n
+\n
+  compress: function (uncompressed) {\n
+    return LZString._compress(uncompressed, 16, function(a){return f(a);});\n
+  },\n
+  _compress: function (uncompressed, bitsPerChar, getCharFromInt) {\n
+    if (uncompressed == null) return "";\n
+    var i, value,\n
+        context_dictionary= {},\n
+        context_dictionaryToCreate= {},\n
+        context_c="",\n
+        context_wc="",\n
+        context_w="",\n
+        context_enlargeIn= 2, // Compensate for the first entry which should not count\n
+        context_dictSize= 3,\n
+        context_numBits= 2,\n
+        context_data=[],\n
+        context_data_val=0,\n
+        context_data_position=0,\n
+        ii;\n
+\n
+    for (ii = 0; ii < uncompressed.length; ii += 1) {\n
+      context_c = uncompressed.charAt(ii);\n
+      if (!Object.prototype.hasOwnProperty.call(context_dictionary,context_c)) {\n
+        context_dictionary[context_c] = context_dictSize++;\n
+        context_dictionaryToCreate[context_c] = true;\n
+      }\n
+\n
+      context_wc = context_w + context_c;\n
+      if (Object.prototype.hasOwnProperty.call(context_dictionary,context_wc)) {\n
+        context_w = context_wc;\n
+      } else {\n
+        if (Object.prototype.hasOwnProperty.call(context_dictionaryToCreate,context_w)) {\n
+          if (context_w.charCodeAt(0)<256) {\n
+            for (i=0 ; i<context_numBits ; i++) {\n
+              context_data_val = (context_data_val << 1);\n
+              if (context_data_position == bitsPerChar-1) {\n
+                context_data_position = 0;\n
+                context_data.push(getCharFromInt(context_data_val));\n
+                context_data_val = 0;\n
+              } else {\n
+                context_data_position++;\n
+              }\n
+            }\n
+            value = context_w.charCodeAt(0);\n
+            for (i=0 ; i<8 ; i++) {\n
+              context_data_val = (context_data_val << 1) | (value&1);\n
+              if (context_data_position == bitsPerChar-1) {\n
+                context_data_position = 0;\n
+                context_data.push(getCharFromInt(context_data_val));\n
+                context_data_val = 0;\n
+              } else {\n
+                context_data_position++;\n
+              }\n
+              value = value >> 1;\n
+            }\n
+          } else {\n
+            value = 1;\n
+            for (i=0 ; i<context_numBits ; i++) {\n
+              context_data_val = (context_data_val << 1) | value;\n
+              if (context_data_position ==bitsPerChar-1) {\n
+                context_data_position = 0;\n
+                context_data.push(getCharFromInt(context_data_val));\n
+                context_data_val = 0;\n
+              } else {\n
+                context_data_position++;\n
+              }\n
+              value = 0;\n
+            }\n
+            value = context_w.charCodeAt(0);\n
+            for (i=0 ; i<16 ; i++) {\n
+              context_data_val = (context_data_val << 1) | (value&1);\n
+              if (context_data_position == bitsPerChar-1) {\n
+                context_data_position = 0;\n
+                context_data.push(getCharFromInt(context_data_val));\n
+                context_data_val = 0;\n
+              } else {\n
+                context_data_position++;\n
+              }\n
+              value = value >> 1;\n
+            }\n
+          }\n
+          context_enlargeIn--;\n
+          if (context_enlargeIn == 0) {\n
+            context_enlargeIn = Math.pow(2, context_numBits);\n
+            context_numBits++;\n
+          }\n
+          delete context_dictionaryToCreate[context_w];\n
+        } else {\n
+          value = context_dictionary[context_w];\n
+          for (i=0 ; i<context_numBits ; i++) {\n
+            context_data_val = (context_data_val << 1) | (value&1);\n
+            if (context_data_position == bitsPerChar-1) {\n
+              context_data_position = 0;\n
+              context_data.push(getCharFromInt(context_data_val));\n
+              context_data_val = 0;\n
+            } else {\n
+              context_data_position++;\n
+            }\n
+            value = value >> 1;\n
+          }\n
+\n
+\n
+        }\n
+        context_enlargeIn--;\n
+        if (context_enlargeIn == 0) {\n
+          context_enlargeIn = Math.pow(2, context_numBits);\n
+          context_numBits++;\n
+        }\n
+        // Add wc to the dictionary.\n
+        context_dictionary[context_wc] = context_dictSize++;\n
+        context_w = String(context_c);\n
+      }\n
+    }\n
+\n
+    // Output the code for w.\n
+    if (context_w !== "") {\n
+      if (Object.prototype.hasOwnProperty.call(context_dictionaryToCreate,context_w)) {\n
+        if (context_w.charCodeAt(0)<256) {\n
+          for (i=0 ; i<context_numBits ; i++) {\n
+            context_data_val = (context_data_val << 1);\n
+            if (context_data_position == bitsPerChar-1) {\n
+              context_data_position = 0;\n
+              context_data.push(getCharFromInt(context_data_val));\n
+              context_data_val = 0;\n
+            } else {\n
+              context_data_position++;\n
+            }\n
+          }\n
+          value = context_w.charCodeAt(0);\n
+          for (i=0 ; i<8 ; i++) {\n
+            context_data_val = (context_data_val << 1) | (value&1);\n
+            if (context_data_position == bitsPerChar-1) {\n
+              context_data_position = 0;\n
+              context_data.push(getCharFromInt(context_data_val));\n
+              context_data_val = 0;\n
+            } else {\n
+              context_data_position++;\n
+            }\n
+            value = value >> 1;\n
+          }\n
+        } else {\n
+          value = 1;\n
+          for (i=0 ; i<context_numBits ; i++) {\n
+            context_data_val = (context_data_val << 1) | value;\n
+            if (context_data_position == bitsPerChar-1) {\n
+              context_data_position = 0;\n
+              context_data.push(getCharFromInt(context_data_val));\n
+              context_data_val = 0;\n
+            } else {\n
+              context_data_position++;\n
+            }\n
+            value = 0;\n
+          }\n
+          value = context_w.charCodeAt(0);\n
+          for (i=0 ; i<16 ; i++) {\n
+            context_data_val = (context_data_val << 1) | (value&1);\n
+            if (context_data_position == bitsPerChar-1) {\n
+              context_data_position = 0;\n
+              context_data.push(getCharFromInt(context_data_val));\n
+              context_data_val = 0;\n
+            } else {\n
+              context_data_position++;\n
+            }\n
+            value = value >> 1;\n
+          }\n
+        }\n
+        context_enlargeIn--;\n
+        if (context_enlargeIn == 0) {\n
+          context_enlargeIn = Math.pow(2, context_numBits);\n
+          context_numBits++;\n
+        }\n
+        delete context_dictionaryToCreate[context_w];\n
+      } else {\n
+        value = context_dictionary[context_w];\n
+        for (i=0 ; i<context_numBits ; i++) {\n
+          context_data_val = (context_data_val << 1) | (value&1);\n
+          if (context_data_position == bitsPerChar-1) {\n
+            context_data_position = 0;\n
+            context_data.push(getCharFromInt(context_data_val));\n
+            context_data_val = 0;\n
+          } else {\n
+            context_data_position++;\n
+          }\n
+          value = value >> 1;\n
+        }\n
+\n
+\n
+      }\n
+      context_enlargeIn--;\n
+      if (context_enlargeIn == 0) {\n
+        context_enlargeIn = Math.pow(2, context_numBits);\n
+        context_numBits++;\n
+      }\n
+    }\n
+\n
+    // Mark the end of the stream\n
+    value = 2;\n
+    for (i=0 ; i<context_numBits ; i++) {\n
+      context_data_val = (context_data_val << 1) | (value&1);\n
+      if (context_data_position == bitsPerChar-1) {\n
+        context_data_position = 0;\n
+        context_data.push(getCharFromInt(context_data_val));\n
+        context_data_val = 0;\n
+      } else {\n
+        context_data_position++;\n
+      }\n
+      value = value >> 1;\n
+    }\n
+\n
+    // Flush the last char\n
+    while (true) {\n
+      context_data_val = (context_data_val << 1);\n
+      if (context_data_position == bitsPerChar-1) {\n
+        context_data.push(getCharFromInt(context_data_val));\n
+        break;\n
+      }\n
+      else context_data_position++;\n
+    }\n
+    return context_data.join(\'\');\n
+  },\n
+\n
+  decompress: function (compressed) {\n
+    if (compressed == null) return "";\n
+    if (compressed == "") return null;\n
+    return LZString._decompress(compressed.length, 32768, function(index) { return compressed.charCodeAt(index); });\n
+  },\n
+\n
+  _decompress: function (length, resetValue, getNextValue) {\n
+    var dictionary = [],\n
+        next,\n
+        enlargeIn = 4,\n
+        dictSize = 4,\n
+        numBits = 3,\n
+        entry = "",\n
+        result = [],\n
+        i,\n
+        w,\n
+        bits, resb, maxpower, power,\n
+        c,\n
+        data = {val:getNextValue(0), position:resetValue, index:1};\n
+\n
+    for (i = 0; i < 3; i += 1) {\n
+      dictionary[i] = i;\n
+    }\n
+\n
+    bits = 0;\n
+    maxpower = Math.pow(2,2);\n
+    power=1;\n
+    while (power!=maxpower) {\n
+      resb = data.val & data.position;\n
+      data.position >>= 1;\n
+      if (data.position == 0) {\n
+        data.position = resetValue;\n
+        data.val = getNextValue(data.index++);\n
+      }\n
+      bits |= (resb>0 ? 1 : 0) * power;\n
+      power <<= 1;\n
+    }\n
+\n
+    switch (next = bits) {\n
+      case 0:\n
+          bits = 0;\n
+          maxpower = Math.pow(2,8);\n
+          power=1;\n
+          while (power!=maxpower) {\n
+            resb = data.val & data.position;\n
+            data.position >>= 1;\n
+            if (data.position == 0) {\n
+              data.position = resetValue;\n
+              data.val = getNextValue(data.index++);\n
+            }\n
+            bits |= (resb>0 ? 1 : 0) * power;\n
+            power <<= 1;\n
+          }\n
+        c = f(bits);\n
+        break;\n
+      case 1:\n
+          bits = 0;\n
+          maxpower = Math.pow(2,16);\n
+          power=1;\n
+          while (power!=maxpower) {\n
+            resb = data.val & data.position;\n
+            data.position >>= 1;\n
+            if (data.position == 0) {\n
+              data.position = resetValue;\n
+              data.val = getNextValue(data.index++);\n
+            }\n
+            bits |= (resb>0 ? 1 : 0) * power;\n
+            power <<= 1;\n
+          }\n
+        c = f(bits);\n
+        break;\n
+      case 2:\n
+        return "";\n
+    }\n
+    dictionary[3] = c;\n
+    w = c;\n
+    result.push(c);\n
+    while (true) {\n
+      if (data.index > length) {\n
+        return "";\n
+      }\n
+\n
+      bits = 0;\n
+      maxpower = Math.pow(2,numBits);\n
+      power=1;\n
+      while (power!=maxpower) {\n
+        resb = data.val & data.position;\n
+        data.position >>= 1;\n
+        if (data.position == 0) {\n
+          data.position = resetValue;\n
+          data.val = getNextValue(data.index++);\n
+        }\n
+        bits |= (resb>0 ? 1 : 0) * power;\n
+        power <<= 1;\n
+      }\n
+\n
+      switch (c = bits) {\n
+        case 0:\n
+          bits = 0;\n
+          maxpower = Math.pow(2,8);\n
+          power=1;\n
+          while (power!=maxpower) {\n
+            resb = data.val & data.position;\n
+            data.position >>= 1;\n
+            if (data.position == 0) {\n
+              data.position = resetValue;\n
+              data.val = getNextValue(data.index++);\n
+            }\n
+            bits |= (resb>0 ? 1 : 0) * power;\n
+            power <<= 1;\n
+          }\n
+\n
+          dictionary[dictSize++] = f(bits);\n
+          c = dictSize-1;\n
+          enlargeIn--;\n
+          break;\n
+        case 1:\n
+          bits = 0;\n
+          maxpower = Math.pow(2,16);\n
+          power=1;\n
+          while (power!=maxpower) {\n
+            resb = data.val & data.position;\n
+            data.position >>= 1;\n
+            if (data.position == 0) {\n
+              data.position = resetValue;\n
+              data.val = getNextValue(data.index++);\n
+            }\n
+            bits |= (resb>0 ? 1 : 0) * power;\n
+            power <<= 1;\n
+          }\n
+          dictionary[dictSize++] = f(bits);\n
+          c = dictSize-1;\n
+          enlargeIn--;\n
+          break;\n
+        case 2:\n
+          return result.join(\'\');\n
+      }\n
+\n
+      if (enlargeIn == 0) {\n
+        enlargeIn = Math.pow(2, numBits);\n
+        numBits++;\n
+      }\n
+\n
+      if (dictionary[c]) {\n
+        entry = dictionary[c];\n
+      } else {\n
+        if (c === dictSize) {\n
+          entry = w + w.charAt(0);\n
+        } else {\n
+          return null;\n
+        }\n
+      }\n
+      result.push(entry);\n
+\n
+      // Add w+entry[0] to the dictionary.\n
+      dictionary[dictSize++] = w + entry.charAt(0);\n
+      enlargeIn--;\n
+\n
+      w = entry;\n
+\n
+      if (enlargeIn == 0) {\n
+        enlargeIn = Math.pow(2, numBits);\n
+        numBits++;\n
+      }\n
+\n
+    }\n
+  }\n
+};\n
+  return LZString;\n
+})();\n
+\n
+if (typeof define === \'function\' && define.amd) {\n
+  define(function () { return LZString; });\n
+} else if( typeof module !== \'undefined\' && module != null ) {\n
+  module.exports = LZString\n
+}\n
 ;//! moment.js\n
 //! version : 2.5.0\n
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors\n
@@ -5479,9 +5980,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     MSEC: MSEC\n
   };\n
 }(window, moment));\n
-;/*global window, RSVP, Blob, XMLHttpRequest, QueryFactory, Query, FileReader */\n
-(function (window, RSVP, Blob, QueryFactory, Query,\n
-           FileReader) {\n
+;/*global window, RSVP, Blob, XMLHttpRequest, QueryFactory, Query, atob,\n
+  FileReader, ArrayBuffer, Uint8Array */\n
+(function (window, RSVP, Blob, QueryFactory, Query, atob,\n
+           FileReader, ArrayBuffer, Uint8Array) {\n
   "use strict";\n
 \n
   var util = {},\n
@@ -5653,6 +6155,25 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     });\n
   }\n
   util.readBlobAsDataURL = readBlobAsDataURL;\n
+\n
+  // https://gist.github.com/davoclavo/4424731\n
+  function dataURItoBlob(dataURI) {\n
+    // convert base64 to raw binary data held in a string\n
+    var byteString = atob(dataURI.split(\',\')[1]),\n
+    // separate out the mime component\n
+      mimeString = dataURI.split(\',\')[0].split(\':\')[1],\n
+    // write the bytes of the string to an ArrayBuffer\n
+      arrayBuffer = new ArrayBuffer(byteString.length),\n
+      _ia = new Uint8Array(arrayBuffer),\n
+      i;\n
+    mimeString = mimeString.slice(0, mimeString.length - ";base64".length);\n
+    for (i = 0; i < byteString.length; i += 1) {\n
+      _ia[i] = byteString.charCodeAt(i);\n
+    }\n
+    return new Blob([arrayBuffer], {type: mimeString});\n
+  }\n
+\n
+  util.dataURItoBlob = dataURItoBlob;\n
 \n
   // tools\n
   function checkId(argument_list, storage, method_name) {\n
@@ -5996,7 +6517,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   jIO = new JioBuilder();\n
   window.jIO = jIO;\n
 \n
-}(window, RSVP, Blob, QueryFactory, Query, FileReader));\n
+}(window, RSVP, Blob, QueryFactory, Query, atob,\n
+  FileReader, ArrayBuffer, Uint8Array));\n
 ;/*\n
  * Rusha, a JavaScript implementation of the Secure Hash Algorithm, SHA-1,\n
  * as defined in FIPS PUB 180-1, tuned for high performance with large inputs.\n
@@ -6223,7 +6745,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         var ceilHeapSize = function (v) {\n
             // The asm.js spec says:\n
             // The heap object\'s byteLength must be either\n
-            // 2^n for n in [12, 24) or 2^24 * n for n ≥ 1.\n
+            // 2^n for n in [12, 24) or 2^24 * n for n â‰¥ 1.\n
             // Also, byteLengths smaller than 2^16 are deprecated.\n
             var p;\n
             // If v is smaller than 2^16, the smallest possible solution\n
@@ -7228,8 +7750,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
  */\n
 \n
 /*jslint nomen: true*/\n
-/*global jIO, sessionStorage, localStorage, Blob, RSVP, atob,\n
-         ArrayBuffer, Uint8Array*/\n
+/*global jIO, sessionStorage, localStorage, RSVP */\n
 \n
 /**\n
  * JIO Local Storage. Type = \'local\'.\n
@@ -7245,8 +7766,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
  * @class LocalStorage\n
  */\n
 \n
-(function (jIO, sessionStorage, localStorage, Blob, RSVP,\n
-           atob, ArrayBuffer, Uint8Array) {\n
+(function (jIO, sessionStorage, localStorage, RSVP) {\n
   "use strict";\n
 \n
   function LocalStorage(spec) {\n
@@ -7283,23 +7803,6 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     return attachments;\n
   };\n
 \n
-  // https://gist.github.com/davoclavo/4424731\n
-  function dataURItoBlob(dataURI) {\n
-    // convert base64 to raw binary data held in a string\n
-    var byteString = atob(dataURI.split(\',\')[1]),\n
-      // separate out the mime component\n
-      mimeString = dataURI.split(\',\')[0].split(\':\')[1],\n
-      // write the bytes of the string to an ArrayBuffer\n
-      arrayBuffer = new ArrayBuffer(byteString.length),\n
-      _ia = new Uint8Array(arrayBuffer),\n
-      i;\n
-    mimeString = mimeString.slice(0, mimeString.length - ";base64".length);\n
-    for (i = 0; i < byteString.length; i += 1) {\n
-      _ia[i] = byteString.charCodeAt(i);\n
-    }\n
-    return new Blob([arrayBuffer], {type: mimeString});\n
-  }\n
-\n
   LocalStorage.prototype.getAttachment = function (id, name) {\n
     restrictDocumentId(id);\n
 \n
@@ -7311,7 +7814,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         404\n
       );\n
     }\n
-    return dataURItoBlob(textstring);\n
+    return jIO.util.dataURItoBlob(textstring);\n
   };\n
 \n
   LocalStorage.prototype.putAttachment = function (id, name, blob) {\n
@@ -7348,8 +7851,121 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   jIO.addStorage(\'local\', LocalStorage);\n
 \n
-}(jIO, sessionStorage, localStorage, Blob, RSVP,\n
-  atob, ArrayBuffer, Uint8Array));\n
+}(jIO, sessionStorage, localStorage, RSVP));\n
+;/*jslint nomen: true*/\n
+/*global RSVP, Blob, LZString, DOMException*/\n
+(function (RSVP, Blob, LZString, DOMException) {\n
+  "use strict";\n
+\n
+  /**\n
+   * The jIO ZipStorage extension\n
+   *\n
+   * @class ZipStorage\n
+   * @constructor\n
+   */\n
+\n
+  var MIME_TYPE = "application/x-jio-utf16_lz_string";\n
+\n
+  function ZipStorage(spec) {\n
+    this._sub_storage = jIO.createJIO(spec.sub_storage);\n
+  }\n
+\n
+  ZipStorage.prototype.get = function () {\n
+    return this._sub_storage.get.apply(this._sub_storage,\n
+                                        arguments);\n
+  };\n
+\n
+  ZipStorage.prototype.post = function () {\n
+    return this._sub_storage.post.apply(this._sub_storage,\n
+                                        arguments);\n
+  };\n
+\n
+  ZipStorage.prototype.put = function () {\n
+    return this._sub_storage.put.apply(this._sub_storage,\n
+                                       arguments);\n
+  };\n
+\n
+  ZipStorage.prototype.remove = function () {\n
+    return this._sub_storage.remove.apply(this._sub_storage,\n
+                                          arguments);\n
+  };\n
+\n
+  ZipStorage.prototype.hasCapacity = function () {\n
+    return this._sub_storage.hasCapacity.apply(this._sub_storage,\n
+                                               arguments);\n
+  };\n
+\n
+  ZipStorage.prototype.buildQuery = function () {\n
+    return this._sub_storage.buildQuery.apply(this._sub_storage,\n
+                                              arguments);\n
+  };\n
+\n
+  ZipStorage.prototype.getAttachment = function (id, name) {\n
+    var that = this;\n
+    return that._sub_storage.getAttachment(id, name)\n
+      .push(function (blob) {\n
+        if (blob.type !== MIME_TYPE) {\n
+          return blob;\n
+        }\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            return jIO.util.readBlobAsText(blob, \'utf16\');\n
+          })\n
+          .push(function (evt) {\n
+            var result =\n
+              LZString.decompressFromUTF16(evt.target.result);\n
+            if (result === \'\') {\n
+              return blob;\n
+            }\n
+            try {\n
+              return jIO.util.dataURItoBlob(\n
+                result\n
+              );\n
+            } catch (error) {\n
+              if (error instanceof DOMException) {\n
+                return blob;\n
+              }\n
+              throw error;\n
+            }\n
+          });\n
+      });\n
+  };\n
+\n
+  function myEndsWith(str, query) {\n
+    return (str.indexOf(query) === str.length - query.length);\n
+  }\n
+\n
+  ZipStorage.prototype.putAttachment = function (id, name, blob) {\n
+    var that = this;\n
+    if ((blob.type.indexOf("text/") === 0) || myEndsWith(blob.type, "xml") ||\n
+        myEndsWith(blob.type, "json")) {\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return jIO.util.readBlobAsDataURL(blob);\n
+        })\n
+        .push(function (data) {\n
+          var result = LZString.compressToUTF16(data.target.result);\n
+          blob = new Blob([result],\n
+                          {type: MIME_TYPE});\n
+          return that._sub_storage.putAttachment(id, name, blob);\n
+        });\n
+    }\n
+    return this._sub_storage.putAttachment.apply(this._sub_storage,\n
+                                                 arguments);\n
+  };\n
+\n
+  ZipStorage.prototype.removeAttachment = function () {\n
+    return this._sub_storage.removeAttachment.apply(this._sub_storage,\n
+                                                    arguments);\n
+  };\n
+\n
+  ZipStorage.prototype.allAttachments = function () {\n
+    return this._sub_storage.allAttachments.apply(this._sub_storage,\n
+                                                  arguments);\n
+  };\n
+\n
+  jIO.addStorage(\'zip\', ZipStorage);\n
+}(RSVP, Blob, LZString, DOMException));\n
 ;/*\n
  * Copyright 2013, Nexedi SA\n
  * Released under the LGPL license.\n
@@ -7434,16 +8050,27 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   }\n
 \n
   DavStorage.prototype.put = function (id, param) {\n
+    var that = this;\n
     id = restrictDocumentId(id);\n
     if (Object.getOwnPropertyNames(param).length > 0) {\n
       // Reject if param has some properties\n
       throw new jIO.util.jIOError("Can not store properties: " +\n
                                   Object.getOwnPropertyNames(param), 400);\n
     }\n
-    return ajax(this, {\n
-      type: "MKCOL",\n
-      url: this._url + id\n
-    });\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return ajax(that, {\n
+          type: "MKCOL",\n
+          url: that._url + id\n
+        });\n
+      })\n
+      .push(undefined, function (err) {\n
+        if ((err.target !== undefined) &&\n
+            (err.target.status === 405)) {\n
+          return;\n
+        }\n
+        throw err;\n
+      });\n
   };\n
 \n
   DavStorage.prototype.remove = function (id) {\n
@@ -7537,13 +8164,24 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
 \n
   DavStorage.prototype.putAttachment = function (id, name, blob) {\n
+    var that = this;\n
     id = restrictDocumentId(id);\n
     restrictAttachmentId(name);\n
-    return ajax(this, {\n
-      type: "PUT",\n
-      url: this._url + id + name,\n
-      data: blob\n
-    });\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return ajax(that, {\n
+          type: "PUT",\n
+          url: that._url + id + name,\n
+          data: blob\n
+        });\n
+      })\n
+      .push(undefined, function (error) {\n
+        if (error.target.status === 403) {\n
+          throw new jIO.util.jIOError("Cannot access subdocument", 404);\n
+        }\n
+        throw error;\n
+      });\n
   };\n
 \n
   DavStorage.prototype.getAttachment = function (id, name) {\n
@@ -8780,8 +9418,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
 }(jIO, RSVP, Blob));\n
 ;/*jslint nomen: true*/\n
-/*global Blob, atob, btoa*/\n
-(function (jIO, Blob, atob, btoa) {\n
+/*global Blob, atob, btoa, RSVP*/\n
+(function (jIO, Blob, atob, btoa, RSVP) {\n
   "use strict";\n
 \n
   /**\n
@@ -8793,6 +9431,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   function DocumentStorage(spec) {\n
     this._sub_storage = jIO.createJIO(spec.sub_storage);\n
     this._document_id = spec.document_id;\n
+    this._repair_attachment = spec.repair_attachment || false;\n
   }\n
 \n
   var DOCUMENT_EXTENSION = ".json",\n
@@ -8855,17 +9494,100 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   };\n
 \n
   DocumentStorage.prototype.remove = function (id) {\n
-    return this._sub_storage.removeAttachment(\n
-      this._document_id,\n
-      getSubAttachmentIdFromParam(id)\n
-    )\n
+    var context = this;\n
+    return this.allAttachments(id)\n
+      .push(function (result) {\n
+        var key,\n
+          promise_list = [];\n
+        for (key in result) {\n
+          if (result.hasOwnProperty(key)) {\n
+            promise_list.push(context.removeAttachment(id, key));\n
+          }\n
+        }\n
+        return RSVP.all(promise_list);\n
+      })\n
+      .push(function () {\n
+        return context._sub_storage.removeAttachment(\n
+          context._document_id,\n
+          getSubAttachmentIdFromParam(id)\n
+        );\n
+      })\n
       .push(function () {\n
         return id;\n
       });\n
   };\n
 \n
   DocumentStorage.prototype.repair = function () {\n
-    return this._sub_storage.repair.apply(this._sub_storage, arguments);\n
+    var context = this;\n
+    return this._sub_storage.repair.apply(this._sub_storage, arguments)\n
+      .push(function (result) {\n
+        if (context._repair_attachment) {\n
+          return context._sub_storage.allAttachments(context._document_id)\n
+            .push(function (result_dict) {\n
+              var promise_list = [],\n
+                id_dict = {},\n
+                attachment_dict = {},\n
+                id,\n
+                attachment,\n
+                exec,\n
+                key;\n
+              for (key in result_dict) {\n
+                if (result_dict.hasOwnProperty(key)) {\n
+                  id = undefined;\n
+                  attachment = undefined;\n
+                  if (DOCUMENT_REGEXP.test(key)) {\n
+                    try {\n
+                      id = atob(DOCUMENT_REGEXP.exec(key)[1]);\n
+                    } catch (error) {\n
+                      // Check if unable to decode base64 data\n
+                      if (!error instanceof ReferenceError) {\n
+                        throw error;\n
+                      }\n
+                    }\n
+                    if (id !== undefined) {\n
+                      id_dict[id] = null;\n
+                    }\n
+                  } else if (ATTACHMENT_REGEXP.test(key)) {\n
+                    exec = ATTACHMENT_REGEXP.exec(key);\n
+                    try {\n
+                      id = atob(exec[1]);\n
+                      attachment = atob(exec[2]);\n
+                    } catch (error) {\n
+                      // Check if unable to decode base64 data\n
+                      if (!error instanceof ReferenceError) {\n
+                        throw error;\n
+                      }\n
+                    }\n
+                    if (attachment !== undefined) {\n
+                      if (!id_dict.hasOwnProperty(id)) {\n
+                        if (!attachment_dict.hasOwnProperty(id)) {\n
+                          attachment_dict[id] = {};\n
+                        }\n
+                        attachment_dict[id][attachment] = null;\n
+                      }\n
+                    }\n
+                  }\n
+                }\n
+              }\n
+              for (id in attachment_dict) {\n
+                if (attachment_dict.hasOwnProperty(id)) {\n
+                  if (!id_dict.hasOwnProperty(id)) {\n
+                    for (attachment in attachment_dict[id]) {\n
+                      if (attachment_dict[id].hasOwnProperty(attachment)) {\n
+                        promise_list.push(context.removeAttachment(\n
+                          id,\n
+                          attachment\n
+                        ));\n
+                      }\n
+                    }\n
+                  }\n
+                }\n
+              }\n
+              return RSVP.all(promise_list);\n
+            });\n
+        }\n
+        return result;\n
+      });\n
   };\n
 \n
   DocumentStorage.prototype.hasCapacity = function (capacity) {\n
@@ -8922,7 +9644,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   jIO.addStorage(\'document\', DocumentStorage);\n
 \n
-}(jIO, Blob, atob, btoa));\n
+}(jIO, Blob, atob, btoa, RSVP));\n
 ;/*\n
  * Copyright 2014, Nexedi SA\n
  * Released under the LGPL license.\n
@@ -9372,8 +10094,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   };\n
 \n
   jIO.addStorage("indexeddb", IndexedDBStorage);\n
-}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange));\n
-
+}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange));
 
 ]]></string> </value>
         </item>
@@ -9443,7 +10164,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -9465,8 +10186,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898405.92</float>
-                        <string>GMT</string>
+                        <float>1439486598.76</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -9496,7 +10217,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xiaowu</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -9510,7 +10231,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>944.18505.23776.13585</string> </value>
+                <value> <string>945.58550.42410.4027</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -9528,8 +10249,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1436516024.47</float>
-                        <string>GMT+2</string>
+                        <float>1443021965.78</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -9555,7 +10276,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -9585,8 +10306,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405087167.31</float>
-                        <string>GMT</string>
+                        <float>1439486581.3</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
