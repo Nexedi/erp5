@@ -48,6 +48,7 @@ class TestExternalAccount(ERP5TypeTestCase):
     """
     return ('erp5_core_proxy_field_legacy',
             'erp5_base',
+            'erp5_ingestion_mysql_innodb_catalog',
             'erp5_external_account',)
 
   def afterSetUp(self):
