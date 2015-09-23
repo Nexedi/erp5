@@ -269,7 +269,7 @@ Hé Hé Hé!""", page.asText().strip())
     webpage_list = self.setupWebSitePages(prefix=page_reference)
 
     # set default web page for section
-    found_by_reference = portal.portal_catalog(name=page_reference,
+    found_by_reference = portal.portal_catalog(reference=page_reference,
                                                portal_type='Web Page')
     found = found_by_reference[0].getObject()
     websection.edit(categories_list=['aggregate/%s' % found.getRelativeUrl()])
