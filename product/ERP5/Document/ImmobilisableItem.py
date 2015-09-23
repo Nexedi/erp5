@@ -246,7 +246,6 @@ class ImmobilisableItem(Item, Amount):
       return self.getImmobilisationRelatedMovementList(from_date=from_date,
                                                        to_date=to_date,
                                                        filter_valid=filter_valid,
-                                                       immobilisation_and_owner_change=1,
                                                        **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
