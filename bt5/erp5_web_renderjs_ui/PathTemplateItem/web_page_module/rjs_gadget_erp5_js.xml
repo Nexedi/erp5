@@ -495,13 +495,6 @@
     .allowPublicAcquisition(\'triggerPanel\', function () {\n
       return route(this, "panel", "toggle");\n
     })\n
-    .allowPublicAcquisition(\'triggerFilterEditor\', function () {\n
-      return route(this, "filterEditor", "toggle");\n
-    })\n
-    .allowPublicAcquisition("triggleSortEditor", function () {\n
-      return route(this, "sortEditor", "toggle");\n
-    })\n
-\n
     .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
       return callJioGadget(this, "allDocs", param_list);\n
     })\n
