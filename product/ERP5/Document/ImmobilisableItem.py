@@ -665,14 +665,13 @@ class ImmobilisableItem(Item, Amount):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getRemainingAmortisationDuration')
-    def getRemainingAmortisationDuration(self, at_date=None, **kw):
+    def getRemainingAmortisationDuration(self, at_date=None, immo_period_list=None, **kw):
       """
       Returns the calculated remaining amortisation duration for the item.
       It is based on the latest immobilisation period at given date, or now.
       """
       if at_date is None:
         at_date = DateTime()
-      immo_period_list = kw.get('immo_period_list', None)
       new_kw = dict(kw)
       if new_kw.has_key('to_date'):
         del new_kw['to_date']
@@ -695,7 +694,7 @@ class ImmobilisableItem(Item, Amount):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getRemainingDurability')
-    def getRemainingDurability(self, at_date=None, **kw):
+    def getRemainingDurability(self, at_date=None, immo_period_list=None, **kw):
       """
       Returns the durability of the item at the given date, or now.
       The durability is quantity of something which corresponds to the 'life' of the item
@@ -713,7 +712,6 @@ class ImmobilisableItem(Item, Amount):
       if at_date is None:
         at_date = DateTime()
 
-      immo_period_list = kw.get('immo_period_list', None)
       new_kw = dict(kw)
       if new_kw.has_key('to_date'):
         del new_kw['to_date']
