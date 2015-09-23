@@ -175,6 +175,7 @@
           sub_options.extended_search = options.extended_search;\n
           sub_options.sort_list = options.sort_list;\n
           sub_options.hide_item = options.hide_item;\n
+          sub_options.domain_tree = options.domain_tree;\n
           sub_options.erp5_document = erp5_document;\n
           sub_options.form_definition = erp5_form;\n
           sub_options.view = options.view;\n
@@ -334,7 +335,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58540.1924.39543</string> </value>
+                <value> <string>945.59567.60083.25890</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -352,7 +353,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442911674.99</float>
+                        <float>1443010200.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

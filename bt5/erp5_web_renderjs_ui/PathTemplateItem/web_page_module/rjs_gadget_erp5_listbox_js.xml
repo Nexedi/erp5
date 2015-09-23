@@ -108,7 +108,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-/*global window, document, rJS, URI, RSVP, UriTemplate, QueryFactory, loopEventListener */\n
+/*global window, document, rJS, URI, RSVP, UriTemplate, QueryFactory, loopEventListener, Query */\n
 (function (window, document, rJS, URI, RSVP, UriTemplate) {\n
   "use strict";\n
 \n
@@ -145,7 +145,7 @@
     .declareAcquiredMethod("redirect", "redirect")\n
     .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
-    .declareAcquiredMethod("triggleSortEditor", "triggleSortEditor")\n
+    .declareAcquiredMethod("triggerSortEditor", "triggerSortEditor")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
     //////////////////////////////////////////////\n
@@ -161,6 +161,7 @@
 \n
       gadget.props.field_json = field_json;\n
       gadget.props.extended_search = options.extended_search;\n
+      gadget.props.domain_tree = options.domain_tree;\n
       gadget.props.jio_key = options.jio_key;\n
       gadget.props.view = options.view;\n
       if (options.sort_list) {\n
@@ -209,22 +210,20 @@
         begin_from = props.begin_from,\n
         table = props.element.querySelector(\'table\'),\n
         original_tfoot = props.element.querySelector(\'tfoot\'),\n
-        original_tbody = props.element.querySelector(\'tbody\'),\n
         tbody = document.createElement("tbody"),\n
         url_query =  props.extended_search,\n
+        domain_tree = props.domain_tree,\n
+        domain_tree_query,\n
+        domain_tree_string,\n
+        domain_tree_query_list,\n
         query_string = "",\n
         lines = field_json.lines,\n
         select_list = [],\n
         dataset,\n
-        last_uid,\n
         counter,\n
-        tmp_query,\n
-        domain_query,\n
-        domain_tree_map,\n
         hide_item = gadget.props.hide_item || [],\n
         tmp_hide_item,\n
         sort_list = gadget.props.sort_list || [],\n
-        operator,\n
         i,\n
         j,\n
         list_method_promise = function () {\n
@@ -239,41 +238,6 @@
      // }\n
      //rebuild query\n
       if (url_query) {\n
-        domain_tree_map = props.field_json.domain_tree_map;\n
-        tmp_query = QueryFactory.create(url_query);\n
-        operator = tmp_query.operator ? " " + tmp_query.operator + " " : " AND ";\n
-        tmp_query = tmp_query.query_list || [tmp_query];\n
-\n
-        url_query = "";\n
-        for (i = 0; i < tmp_query.length; i += 1) {\n
-          if (i !== 0) {\n
-            url_query += operator;\n
-          }\n
-          if (tmp_query[i].key === "Domain") {\n
-            domain_query = tmp_query[i].value.split("/");\n
-            if (domain_query[0] !== "--") {\n
-              url_query += "category.base_category_uid: " + domain_tree_map[domain_query[0]].uid;\n
-              domain_tree_map = domain_tree_map[domain_query[0]].sub_categories;\n
-              for (j = 1; j < domain_query.length - 1; j += 1) {\n
-                last_uid = domain_tree_map[domain_query[j]].uid;\n
-                domain_tree_map = domain_tree_map[domain_query[j]].sub_categories;\n
-              }\n
-              if (j < domain_query.length && domain_query[j] !== "--") {\n
-                url_query += operator;\n
-                url_query += "category.category_uid: " + domain_tree_map[domain_query[j]].uid;\n
-              } else if (j !== 1) {\n
-                url_query += operator;\n
-                url_query += "category.category_uid: " + last_uid;\n
-              }\n
-            }\n
-          } else {\n
-            if (tmp_query[i].operator) {\n
-              url_query +=  tmp_query[i].key + ":" + tmp_query[i].operator + tmp_query[i].value;\n
-            } else {\n
-              url_query += tmp_query[i].key + ":" + tmp_query[i].value;\n
-            }\n
-          }\n
-        }\n
         //query_string = field_json.column_list.reduce(buildQueryString, \' AND (\').replace(new RegExp("OR " + \'$\'), \')\');\n
         if (field_json.list_method_template === undefined) {\n
           query_string = \' AND \' + url_query;\n
@@ -281,7 +245,25 @@
           query_string = url_query;\n
         }\n
       }\n
-      \n
+\n
+      if (domain_tree) {\n
+        domain_tree_query = QueryFactory.create(domain_tree);\n
+        if (domain_tree_query.query_list) {\n
+          domain_tree_query_list = [domain_tree_query.query_list[0], domain_tree_query.query_list[domain_tree_query.query_list.length - 1]];\n
+          domain_tree_query.query_list = domain_tree_query_list;\n
+        }\n
+        domain_tree_string =  Query.objectToSearchText(domain_tree_query);\n
+        if (query_string !== "") {\n
+          query_string += \' AND \' + domain_tree_string;\n
+        } else if (field_json.list_method_template === undefined) {\n
+          query_string = \' AND \' + domain_tree_string;\n
+        } else {\n
+          query_string = domain_tree_string;\n
+        }\n
+      }\n
+\n
+\n
+\n
       if (hide_item.length > 0) {\n
         tmp_hide_item = "catalog.uid: (";\n
         for (i = 0; i < hide_item.length; i += 1) {\n
@@ -292,8 +274,8 @@
             tmp_hide_item += ")";\n
           }\n
         }\n
-      \n
-        if (query_string !== "" ) {\n
+\n
+        if (query_string !== "") {\n
           query_string += \' AND \' + tmp_hide_item;\n
         } else if (field_json.list_method_template === undefined) {\n
           query_string = \' AND \' + tmp_hide_item;\n
@@ -520,7 +502,7 @@
         "submit",\n
         false,\n
         function () {\n
-          gadget.triggleSortEditor();\n
+          gadget.triggerSortEditor();\n
         }\n
       );\n
     })\n
@@ -539,7 +521,6 @@
             i,\n
             th,\n
             hide_form_elements,\n
-            hide_form_element_head,\n
             checkbox;\n
           hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
           if (hide_form_elements.length > 0) {\n
@@ -552,7 +533,9 @@
             }\n
 \n
             return gadget.redirect({jio_key: gadget.props.jio_key, view: gadget.props.view,\n
-              "extended_search": gadget.props.extended_search || "", "sort_list": gadget.props.sort_list || "",\n
+              "extended_search": gadget.props.extended_search || "",\n
+              "domain_tree": gadget.props.domain_tree || "",\n
+              "sort_list": gadget.props.sort_list || "",\n
               "hide_item": selected_uid_list});\n
           }\n
           th = document.createElement("th");\n
@@ -747,7 +730,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.59934.39249.4522</string> </value>
+                <value> <string>945.61307.7519.27835</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -765,7 +748,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442934055.69</float>
+                        <float>1443018723.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

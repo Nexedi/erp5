@@ -145,7 +145,7 @@
          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
            <div class="ui-controlgroup-controls">\n
               <form class="submit">\n
-             <button data-rel="save" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check">Save</button>\n
+             <button data-rel="save" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check">Submit</button>\n
            </form>\n
            </div>\n
          </div>\n
@@ -287,7 +287,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>test</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -301,7 +301,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.49372.46702.47957</string> </value>
+                <value> <string>945.58401.24333.56064</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -319,7 +319,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442299971.28</float>
+                        <float>1442993692.55</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

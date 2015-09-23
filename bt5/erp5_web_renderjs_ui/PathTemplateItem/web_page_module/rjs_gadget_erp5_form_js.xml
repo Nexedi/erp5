@@ -213,8 +213,7 @@
         parent_element = document.createElement("div");\n
       suboption_dict.jio_key = options.jio_key;\n
       suboption_dict.view = options.view;\n
-      delete options.erp5_document;\n
-      delete options.form_definition;\n
+\n
 \n
 //       options = options.form_gadget || {};\n
       form_gadget.state_parameter_dict = options.form_gadget || {};\n
@@ -227,6 +226,10 @@
       }\n
       if (form_definition.hide_item) {\n
         suboption_dict.hide_item = form_definition.hide_item;\n
+      }\n
+      \n
+      if (form_definition.domain_tree) {\n
+        suboption_dict.domain_tree = form_definition.domain_tree;\n
       }\n
 \n
       form_gadget.props.gadget_list = [];\n
@@ -521,7 +524,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.59569.17291.44356</string> </value>
+                <value> <string>945.61212.37056.32187</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -539,7 +542,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442911758.8</float>
+                        <float>1443019673.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

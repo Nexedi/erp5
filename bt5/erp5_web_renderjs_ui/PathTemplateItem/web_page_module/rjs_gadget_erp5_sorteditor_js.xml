@@ -102,7 +102,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-/*global window, document, rJS, URI, RSVP, UriTemplate, Handlebars, $, loopEventListener */\n
+/*global window, document, rJS, URI, RSVP, UriTemplate, Handlebars, $, loopEventListener*/\n
 (function (window, document, rJS, RSVP) {\n
   "use strict";\n
   var gadget_klass = rJS(window),\n
@@ -237,18 +237,7 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("redirect", "redirect")\n
     .declareMethod(\'toggle\', function () {\n
-      var gadget = this,\n
-        options = gadget.props.options;\n
       this.props.jelement.panel("toggle");\n
-      if (gadget.props.column_list === "") {\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            return gadget.jio_getAttachment(options.jio_key, options.view);\n
-          })\n
-          .push(function (result) {\n
-            gadget.props.column_list = result._embedded._view.listbox.column_list;\n
-          });\n
-      }\n
     })\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
@@ -264,25 +253,23 @@
       }\n
       options.view  = options.view || "view";\n
       gadget.props.options = options;\n
-      \n
+\n
       gadget.props.column_list = "";\n
-      if (options.sort_list) {\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            return gadget.jio_getAttachment(options.jio_key, options.view);\n
-          })\n
-          .push(function (result) {\n
-            var key;\n
-            gadget.props.column_list = result._embedded._view.listbox.column_list;\n
-            for (key in options.sort_list) {\n
-              if (options.sort_list.hasOwnProperty(key)) {\n
-                if (options.sort_list[key] !== "") {\n
-                  container.insertBefore(createSortItem(gadget, options.sort_list[key]), container.lastChild);\n
-                }\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.jio_getAttachment(options.jio_key, options.view);\n
+        })\n
+        .push(function (result) {\n
+          var key;\n
+          gadget.props.column_list = result._embedded._view.listbox.column_list;\n
+          for (key in options.form_definition.sort_list) {\n
+            if (options.form_definition.sort_list.hasOwnProperty(key)) {\n
+              if (options.form_definition.sort_list[key] !== "") {\n
+                container.insertBefore(createSortItem(gadget, options.form_definition.sort_list[key]), container.lastChild);\n
               }\n
             }\n
-          });\n
-      }\n
+          }\n
+        });\n
     })\n
     //////////////////////////////////////////////\n
     .declareService(function () {\n
@@ -327,10 +314,13 @@
             .push(function () {\n
               gadget.props.jelement.panel("toggle");\n
               return gadget.redirect({jio_key: gadget.props.options.jio_key, view: gadget.props.options.view,\n
-                "extended_search": gadget.props.options.extended_search || "", "sort_list": sort_query,\n
-                "hide_item": gadget.props.options.hide_item || ""});\n
+                "extended_search": gadget.props.options.form_definition.extended_search || "",\n
+                "domain_tree": gadget.props.options.form_definition.domain_tree || "",\n
+                "sort_list": sort_query,\n
+                "hide_item": gadget.props.options.form_definition.hide_item || ""});\n
             });\n
-        });\n
+        }\n
+      );\n
     });\n
 \n
 }(window, document, rJS, RSVP));
@@ -470,7 +460,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.59595.22725.716</string> </value>
+                <value> <string>945.61360.46259.34611</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -488,7 +478,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442913587.3</float>
+                        <float>1443019877.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

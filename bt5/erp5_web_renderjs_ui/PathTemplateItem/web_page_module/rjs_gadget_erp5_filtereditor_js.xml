@@ -131,12 +131,14 @@
   function submitFilterQuery(gadget) {\n
     var i,\n
       operator,\n
-      query,\n
+      query = "",\n
       value,\n
       key,\n
       simple_query_list = [],\n
       complex_query,\n
       select,\n
+      domain_tree_query = "",\n
+      domain_tree_query_list = [],\n
       options = gadget.props.render_options,\n
       filterforms = gadget.props.element.querySelectorAll(".filterForm"),\n
       and = gadget.props.element.querySelector(".and");\n
@@ -154,41 +156,64 @@
         } else {\n
           key = filterforms[i][0][filterforms[i][0].selectedIndex].value;\n
         }\n
-        simple_query_list.push(new SimpleQuery({\n
-          key: key,\n
-          type: "simple",\n
-          value: value}));\n
+        simple_query_list.push(new SimpleQuery(\n
+          {\n
+            key: key,\n
+            type: "simple",\n
+            value: value\n
+          }\n
+        ));\n
       }\n
     }\n
 \n
     if (gadget.props.tree_path[0] !== "--") {\n
-      value = "";\n
       for (i = 0; i < gadget.props.tree_path.length; i += 1) {\n
         if (gadget.props.tree_path[i] !== "--") {\n
-          if (i !== 0) {\n
-            value += "/";\n
+          if (i === 0) {\n
+            domain_tree_query_list.push(new SimpleQuery(\n
+              {\n
+                key: "category.base_category_uid",\n
+                type: "simple",\n
+                value: gadget.props.tree_path[i]\n
+              }\n
+            ));\n
+          } else {\n
+            domain_tree_query_list.push(new SimpleQuery(\n
+              {\n
+                key: "category.category_uid",\n
+                type: "simple",\n
+                value: gadget.props.tree_path[i]\n
+              }\n
+            ));\n
           }\n
-          value += gadget.props.tree_path[i];\n
         }\n
       }\n
-      simple_query_list.push(new SimpleQuery({key: "Domain",\n
-                                              type: "simple",\n
-                                              value: value}));\n
     }\n
-    if (simple_query_list.length > 0) {\n
-      complex_query = new ComplexQuery({\n
-        operator: operator,\n
-        query_list: simple_query_list,\n
-        type: "complex"\n
-      });\n
+    if (simple_query_list.length > 0 || domain_tree_query_list.length > 0) {\n
+      if (simple_query_list.length > 0) {\n
+        complex_query = new ComplexQuery({\n
+          operator: operator,\n
+          query_list: simple_query_list,\n
+          type: "complex"\n
+        });\n
+        query = Query.objectToSearchText(complex_query);\n
+      }\n
 \n
-      query = Query.objectToSearchText(complex_query);\n
+      if (domain_tree_query_list.length > 0) {\n
+        domain_tree_query = new ComplexQuery({\n
+          operator: "AND",\n
+          query_list: domain_tree_query_list,\n
+          type: "complex"\n
+        });\n
+        domain_tree_query = Query.objectToSearchText(domain_tree_query);\n
+      }\n
 \n
       gadget.props.jelement.panel("toggle");\n
 \n
       return gadget.redirect({jio_key: options.jio_key, view: options.view,\n
-                "extended_search": query, "sort_list": options.sort_list || "",\n
-                "hide_item": options.hide_item || ""});\n
+                "extended_search": query, "domain_tree": domain_tree_query,\n
+                "sort_list": options.form_definition.sort_list || "",\n
+                "hide_item": options.form_definition.hide_item || ""});\n
     }\n
   }\n
 \n
@@ -444,24 +469,7 @@
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'toggle\', function () {\n
-      var gadget = this,\n
-        options = gadget.props.options;\n
-      gadget.props.jelement.panel("toggle");\n
-      if (gadget.props.element.querySelector(".filterForm") === null || gadget.props.change) {\n
-        gadget.props.tree_path = [];\n
-        gadget.props.change = false;\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            return gadget.jio_getAttachment(options.jio_key, options.view);\n
-          })\n
-          .push(function (result) {\n
-            var container = gadget.props.element.querySelector(".filter_item_container");\n
-            gadget.props.options = result._embedded._view.listbox.column_list;\n
-            gadget.props.domain_tree_map = result._embedded._view.listbox.domain_tree_map;\n
-            container.insertBefore(createFilterItem(gadget), container.lastChild);\n
-            createDomainTree(gadget);\n
-          });\n
-      }\n
+      this.props.jelement.panel("toggle");\n
     })\n
 \n
     .declareMethod(\'render\', function (options) {\n
@@ -469,6 +477,7 @@
         domain_tree_container = this.props.element.querySelector(".domain_tree_container"),\n
         i,\n
         gadget = this,\n
+        domain_tree,\n
         item,\n
         and = gadget.props.element.querySelector(".and"),\n
         or = gadget.props.element.querySelector(".or"),\n
@@ -479,27 +488,23 @@
       while (domain_tree_container.firstChild) {\n
         domain_tree_container.removeChild(domain_tree_container.firstChild);\n
       }\n
-      options.view = options.view || \'view\';\n
       this.props.render_options = options;\n
       this.props.options = options;\n
-      if (options.extended_search || options.sortEditor) {\n
-        gadget.props.tree_path = [];\n
-        query = options.extended_search;\n
-        if (query === undefined) {\n
-          query = "";\n
-        }\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            return gadget.jio_getAttachment(options.jio_key, options.view);\n
-          })\n
-          .push(function (result) {\n
-            var query_list = QueryFactory.create(query),\n
-              j = 0,\n
-              key,\n
-              domain_tree_map = result._embedded._view.listbox.domain_tree_map,\n
-              domain_tree_list;\n
-            gadget.props.options = result._embedded._view.listbox.column_list;\n
-            gadget.props.domain_tree_map = result._embedded._view.listbox.domain_tree_map;\n
+      gadget.props.tree_path = [];\n
+      query = options.form_definition.extended_search || "";\n
+      domain_tree = options.form_definition.domain_tree || "";\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.jio_getAttachment(options.jio_key, options.view);\n
+        })\n
+        .push(function (result) {\n
+          var query_list,\n
+            domain_tree_map = result._embedded._view.listbox.domain_tree_map,\n
+            domain_tree_query_list;\n
+          gadget.props.options = result._embedded._view.listbox.column_list;\n
+          gadget.props.domain_tree_map = result._embedded._view.listbox.domain_tree_map;\n
+          if (query !== "") {\n
+            query_list = QueryFactory.create(query);\n
             if (query_list.operator === "OR") {\n
               or.checked = true;\n
               or.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
@@ -509,30 +514,30 @@
             }\n
             query_list = query_list.query_list || [query_list];\n
             for (i = 0; i < query_list.length; i += 1) {\n
-              key = query_list[i].key;\n
-              if (key !== "Domain") {\n
-                item = createFilterItem(gadget, query_list[i]);\n
-                container.insertBefore(item, container.lastChild);\n
-              } else {\n
-                domain_tree_list = query_list[i].value.split("/");\n
-                createDomainTree(gadget, domain_tree_map, domain_tree_list[0]);\n
-                for (j = 0; j < domain_tree_list.length; j += 1) {\n
-                  domain_tree_map = domain_tree_map[domain_tree_list[j]].sub_categories;\n
-                  if (Object.keys(domain_tree_map).length !== 0) {\n
-                    createDomainTree(gadget, domain_tree_map, domain_tree_list[j + 1]);\n
-                  }\n
-                }\n
+              item = createFilterItem(gadget, query_list[i]);\n
+              container.insertBefore(item, container.lastChild);\n
+            }\n
+          } else {\n
+            container.insertBefore(createFilterItem(gadget), container.lastChild);\n
+          }\n
+\n
+          if (domain_tree !== "") {\n
+            domain_tree_query_list = QueryFactory.create(domain_tree);\n
+            domain_tree_query_list = domain_tree_query_list.query_list || [domain_tree_query_list];\n
+            for (i = 0; i < domain_tree_query_list.length; i += 1) {\n
+              if (Object.keys(domain_tree_map).length !== 0) {\n
+                createDomainTree(gadget, domain_tree_map, domain_tree_query_list[i].value);\n
               }\n
+              domain_tree_map = domain_tree_map[domain_tree_query_list[i].value].sub_categories;\n
             }\n
-            if (gadget.props.element.querySelector(".filterForm") === null) {\n
-              container.insertBefore(createFilterItem(gadget), container.lastChild);\n
+            if (Object.keys(domain_tree_map).length !== 0) {\n
+              createDomainTree(gadget, domain_tree_map, "--");\n
             }\n
-            if (gadget.props.element.querySelector(".domain_tree") === null) {\n
-              createDomainTree(gadget);\n
-            }\n
-          });\n
-      }\n
-    })\n
+          } else {\n
+            createDomainTree(gadget);\n
+          }\n
+        });\n
+      })\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared services\n
@@ -708,7 +713,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.60010.1085.56388</string> </value>
+                <value> <string>945.61379.4089.58965</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -726,7 +731,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442938284.06</float>
+                        <float>1443020437.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
