@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_web_page_view.html</string> </value>
+            <value> <string>gadget_officejs_page_jio_dav_configurator.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_web_page_view_html</string> </value>
+            <value> <string>gadget_officejs_page_jio_dav_configurator_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -113,63 +113,72 @@
     <meta charset="utf-8">\n
     <meta name="viewport" content="width=device-width, initial-scale=1">\n
 \n
-    <title>OfficeJS Jio Web Page View</title>\n
+    <title>OfficeJS jIO DAV Configurator Page</title>\n
 \n
     <script src="rsvp.js"></script>\n
     <script src="renderjs.js"></script>\n
-    <script src="handlebars.js"></script>\n
 \n
-    <script class="view-web-page-template" type="text/x-handlebars-template">\n
-\n
-        <form class="view-web-page-form">\n
-\n
-                <div class="center">\n
-                        <div class="ui-field-contain">\n
-\n
-                  <label data-i18n="Title:">Title:</label>\n
-                  <input type="text" name="title" value="{{title}}">\n
-                </div>\n
-                  <button type="submit" data-i18n="Save" style="display:none;">Save</button>\n
-                </div>\n
-            <div class="ui-field-contain">\n
-            <fieldset data-role="collapsible">\n
-              <legend>Extra Properties</legend>\n
-\n
-                <div class="ui-field-contain">\n
-                  <label data-i18n="Reference:">Reference:</label>\n
-                  <input type="text" name="reference" value="{{reference}}">\n
-                </div>\n
-\n
-                <div class="ui-field-contain">\n
-                  <label data-i18n="Version:">Version:</label>\n
-                  <input type="text" name="version" value="{{version}}"></label>\n
-                </div>\n
-\n
-              <div class="ui-field-contain">\n
-                <label data-i18n="Language:">Language:</label>\n
-                <input type="text" name="language" value="{{language}}">\n
-              </div>\n
-\n
-              <div class="ui-field-contain">\n
-                <label data-i18n="Description:">Description:</label>\n
-                <textarea name="description">{{description}}</textarea>\n
-              </div>\n
-            </div>\n
-\n
-            </fieldset>\n
-            <div class=\'document-content\'></div>\n
-\n
-          </div>\n
-\n
-        </form>\n
-\n
-    </script>\n
-\n
-    <script src="gadget_officejs_jio_web_page_view.js"></script>\n
+    <script src="gadget_officejs_page_jio_dav_configurator.js"></script>\n
 \n
   </head>\n
 \n
   <body>\n
+    <article class="ui-content ui-body-c">\n
+      <section class="ui-content-header-plain">\n
+        <h3 class="ui-content-title ui-body-c">\n
+          <span class="ui-icon ui-icon-custom ui-icon-database">&nbsp;</span>\n
+          Your WebDAV Connection parameters\n
+        </h3>\n
+      </section>\n
+      <section class="ui-body-c ui-content-section">\n
+        <form class="dav-configuration-form">\n
+\n
+          <div class="ui-form">\n
+            <div class="ui-field-contain">\n
+              <label data-i18n="Connection URL:">Connection URL:</label>\n
+              <input type="url" name="dav_url" required value=""/>\n
+            </div>\n
+            <div class="ui-field-contain">\n
+              <label data-i18n="Username:">Username:</label>\n
+              <input type="text" name="dav_username" value=""/>\n
+            </div>\n
+            <div class="ui-field-contain">\n
+              <label data-i18n="Password:">Password:</label>\n
+              <input type="password" name="dav_password" value=""/>\n
+            </div>\n
+          </div>\n
+          <div class="select-storage ui-controlgroup ui-controlgroup-horizontal">\n
+            <div class="ui-grid-b ui-responsive">\n
+              <div class="ui-block-a"></div>\n
+              <div class="ui-block-b"></div>\n
+              <div class="ui-block-c">\n
+                <button type="submit" data-i18n="Connect" class="ui-btn-btn-right">Connect</button>\n
+              </div>\n
+            </div>\n
+          </div>\n
+        </form>\n
+      </section>\n
+    </article>\n
+    <article class="ui-content ui-body-c">\n
+      <section class="ui-content-header-plain">\n
+        <h3 class="ui-content-title ui-body-c">\n
+          <span class="ui-icon ui-icon-custom ui-icon-file-text-o">&nbsp;</span>\n
+          Your Text Documents\n
+        </h3>\n
+      </section>\n
+      <section class="ui-body-c ui-content-section">\n
+        <div class="ui-controlgroup ui-controlgroup-horizontal">\n
+          <div class="ui-grid-a ui-responsive">\n
+            <div class="ui-block-a">\n
+              <a class="ui-btn" href="#page=sync">Synchronize</a>\n
+            </div>\n
+            <div class="ui-block-b">\n
+              <a class="ui-btn" href="#page=document_list">Go to document List</a>\n
+            </div>\n
+          </div>\n
+        </div>\n
+      </section>\n
+    </article>\n
   </body>\n
 </html>\n
 
@@ -178,7 +187,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Web Page View</string> </value>
+            <value> <string>OfficeJS jIO DAV Configurator Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -215,6 +224,12 @@
                     <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -260,7 +275,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442854134.29</float>
+                        <float>1442831613.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -305,7 +320,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58608.59350.33075</string> </value>
+                <value> <string>945.58544.33560.24866</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -323,7 +338,64 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442858061.15</float>
+                        <float>1443010638.45</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>cedric.le.ninivin</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1442830550.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

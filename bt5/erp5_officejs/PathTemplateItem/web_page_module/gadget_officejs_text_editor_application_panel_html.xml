@@ -141,7 +141,7 @@
       <div class="ui-content">\n
         <ul data-role="listview" class="ui-listview">\n
           <li><a href="#page=text_editor_list" data-i18n="Text Documents">Text Documents</a></li>\n
-          <li><a href="#page=login" data-i18n="Connect to ERP5">Connect to ERP5</a></li>\n
+          <li><a href="#page=jio_configurator" data-i18n="Storage Configuration">Storage Configuration</a></li>\n
           <li><a href="#page=sync" data-i18n="Sync">Sync</a></li>\n
           <li class="ui-last-child"><a href="#page=logout" data-i18n="Logout">Logout</a></li>\n
         </ul>\n
@@ -292,7 +292,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.41275.34997.17220</string> </value>
+                <value> <string>945.58601.10119.52531</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -310,7 +310,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441814393.93</float>
+                        <float>1443018532.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

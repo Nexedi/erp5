@@ -101,7 +101,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/\n
 /*jslint indent: 2, maxlen: 80, nomen: true*/\n
 (function (window, RSVP, rJS, promiseEventListener, Handlebars) {\n
   "use strict";\n
@@ -156,12 +158,17 @@
 \n
           return gadget.repair();\n
         })\n
-        .push(function () {\n
+        .push(function (result) {\n
+          if (result !== undefined && result.hasOwnProperty(\'redirect\')){\n
+            return gadget.redirect(result.redirect);\n
+          }\n
           return gadget.redirect({});\n
         });\n
     });\n
 \n
-}(window, RSVP, rJS, promiseEventListener, Handlebars));</string> </value>
+}(window, RSVP, rJS, promiseEventListener, Handlebars));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -202,12 +209,6 @@
                     <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -253,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011698.37</float>
+                        <float>1442854079.85</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -298,7 +299,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.34038.48545.63795</string> </value>
+                <value> <string>945.58607.65382.65228</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -316,64 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441813353.14</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1438011605.22</float>
+                        <float>1442858160.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

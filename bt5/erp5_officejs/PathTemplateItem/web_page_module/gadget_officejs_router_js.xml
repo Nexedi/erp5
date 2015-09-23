@@ -121,7 +121,7 @@
       var gadget = this;\n
       gadget.options = options;\n
       if (options.jio_key === undefined || options.jio_key === \'\') {\n
-        if (options.page === undefined || options.page === \'\') {\n
+        if (options.page === undefined || options.page === \'\' || options.page === "document_list") {\n
           options.page = DEFAULT_PAGE;\n
         }\n
         return {\n
@@ -291,7 +291,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.38531.43749.63146</string> </value>
+                <value> <string>945.54379.5447.43417</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -309,7 +309,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441649525.84</float>
+                        <float>1442858756.66</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

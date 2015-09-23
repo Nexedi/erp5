@@ -110,9 +110,14 @@
 \n
   function saveContent(gadget, submit_event) {\n
     var i,\n
-      doc = gadget.options.doc;\n
+      doc = gadget.options.doc,\n
+      today = new Date();\n
     doc.parent_relative_url = "web_page_module";\n
     doc.portal_type = "Web Page";\n
+    // Supsended until modification_date is handled for synchronization\n
+    //doc.modification_date = today.getDate()\n
+    //  + \'/\' + (today.getMonth() - 2)\n
+    //  + \'/\' + today.getFullYear();\n
     for (i = 0; i < submit_event.target.length; i += 1) {\n
       // XXX Should check input type instead\n
       if (submit_event.target[i].name) {\n
@@ -205,7 +210,7 @@
           gadget.props.element.innerHTML = html;\n
           return gadget.updateHeader({\n
             title: options.doc.title + " | Web Page",\n
-            back_url: "#text_editor_list",\n
+            back_url: "#page=text_editor_list",\n
             panel_action: false,\n
             save_action: true\n
           });\n
@@ -320,12 +325,6 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-                    </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -369,7 +368,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440171628.6</float>
+                        <float>1442854047.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -414,7 +413,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.42760.43905.59050</string> </value>
+                <value> <string>945.61376.26272.49152</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -432,64 +431,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441963997.94</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1440171548.22</float>
+                        <float>1443020943.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -99,7 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, jIO, FormData */\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, jIO, FormData */\n
 /*jslint indent: 2, maxerr: 3 */\n
 (function (window, rJS, jIO) {\n
   "use strict";\n
@@ -111,42 +113,27 @@
       gadget.state_parameter_dict = {};\n
     })\n
 \n
+    .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("getSetting", "getSetting")\n
+\n
     .declareMethod(\'createJio\', function (jio_options) {\n
-      this.state_parameter_dict.jio_storage = jIO.createJIO({\n
-          type: "replicate",\n
-          // XXX This drop the signature lists...\n
-          query: {\n
-            query: \'portal_type:"Web Page" \',\n
-              // XX Synchonizing the whole module is too much, here is a way to start quietly\n
-              //+ \'AND local_roles: ("Owner") \'\n
-              //+ \'AND validation_state: ("draft", "released_alive", "shared_alive", "published_alive") \',\n
-            limit: [0, 1234567890]\n
-          },\n
-          use_remote_post: true,\n
-          conflict_handling: 2,\n
-          check_local_modification: true,\n
-          check_local_creation: true,\n
-          check_local_deletion: true,\n
-          check_remote_modification: true,\n
-          check_remote_creation: true,\n
-          check_remote_deletion: true,\n
-          local_sub_storage: {\n
-            type: "query",\n
+      var gadget = this;\n
+      if (jio_options === undefined) {\n
+        jio_options = {\n
+          type: "query",\n
+          sub_storage: {\n
+            type: "uuid",\n
             sub_storage: {\n
-              type: "uuid",\n
-              sub_storage: {\n
-                type: "indexeddb",\n
-                database: "officejs"\n
-              }\n
+              type: "indexeddb",\n
+              database: "officejs"\n
             }\n
-          },\n
-          remote_sub_storage: {\n
-            type: "erp5",\n
-            url: (new URI("hateoas"))\n
-              .absoluteTo(location.href)\n
-              .toString(),\n
-            default_view_reference: "jio_view"\n
           }\n
+        };\n
+      }\n
+      this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);\n
+      return this.getSetting("jio_storage_name")\n
+        .push(function (jio_storage_name) {\n
+          gadget.state_parameter_dict.jio_storage_name = jio_storage_name;\n
         });\n
     })\n
     .declareMethod(\'allDocs\', function () {\n
@@ -186,11 +173,26 @@
       return storage.removeAttachment.apply(storage, arguments);\n
     })\n
     .declareMethod(\'repair\', function () {\n
-      var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.repair.apply(storage, arguments);\n
+      var gadget = this,\n
+        storage = gadget.state_parameter_dict.jio_storage;\n
+      return storage.repair.apply(storage, arguments)\n
+        .push(undefined, function (error) {\n
+          if(error.hasOwnProperty("currentTarget") &&\n
+             error.currentTarget.status === 401 &&\n
+             gadget.state_parameter_dict.jio_storage_name === "ERP5") {\n
+            return {\n
+                redirect: {\n
+                  page: "login"\n
+                }\n
+              };\n
+          }\n
+          throw error;\n
+        });\n
     });\n
 \n
-}(window, rJS, jIO));</string> </value>
+}(window, rJS, jIO));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -325,7 +327,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.43851.47565.8721</string> </value>
+                <value> <string>945.58667.36801.48622</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -343,7 +345,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441969006.79</float>
+                        <float>1442858006.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

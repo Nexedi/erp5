@@ -341,6 +341,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_header_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -374,7 +384,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/officejs_launcher_html</string>
+                <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
               </tuple>
             </value>
         </item>
@@ -397,6 +407,10 @@
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
             <value> <string>hateoas/</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_header_gadget_url</string> </key>
+            <value> <string>gadget_officejs_header.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
@@ -707,7 +721,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.41250.8324.32955</string> </value>
+                <value> <string>945.58604.38981.59955</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -725,7 +739,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441966702.43</float>
+                        <float>1442858486.32</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

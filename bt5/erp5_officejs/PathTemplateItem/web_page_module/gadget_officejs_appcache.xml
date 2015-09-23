@@ -128,35 +128,43 @@ jquerymobile.css\n
 jquerymobile.js\n
 renderjs.js\n
 rsvp.js\n
-gadget_officejs_page_text_editor_list.js\n
-gadget_officejs_page_text_editor_list.html\n
-gadget_officejs_header.js\n
 gadget_officejs_header.html\n
-gadget_officejs_jio_web_page_view.js\n
-gadget_officejs_jio_web_page_view.html\n
-gadget_officejs_text_editor_application_panel.js\n
-gadget_officejs_text_editor_application_panel.html\n
-gadget_officejs_router.html\n
-gadget_officejs_router.js\n
 gadget_officejs_jio.html\n
-gadget_officejs_jio.js\n
-gadget_officejs_page_share_webrtc_jio.js\n
-gadget_officejs_page_share_webrtc_jio.html\n
-gadget_officejs_webrtc_jio.js\n
-gadget_officejs_webrtc_jio.html\n
-gadget_officejs_page_text_editor_list.html\n
-gadget_officejs_page_text_editor_list.js\n
+gadget_officejs_jio_web_page_view.html\n
 gadget_officejs_page_add_text_document.html\n
-gadget_officejs_page_add_text_document.js\n
-gadget_officejs_translation.js\n
-gadget_officejs_translation.html\n
-gadget_officejs_translation_data.js\n
-gadget_officejs_widget_listbox.js\n
-gadget_officejs_widget_listbox.html\n
-gadget_officejs_page_sync.js\n
+gadget_officejs_page_jio_configurator.html\n
+gadget_officejs_page_jio_dav_configurator.html\n
+gadget_officejs_page_login.html\n
+gadget_officejs_page_logout.html\n
+gadget_officejs_page_share_webrtc_jio.html\n
 gadget_officejs_page_sync.html\n
-officejs_launcher.js\n
-officejs_launcher.html\n
+gadget_officejs_page_text_editor_list.html\n
+gadget_officejs_router.html\n
+gadget_officejs_text_editor_application.html\n
+gadget_officejs_text_editor_application_panel.html\n
+gadget_officejs_translation.html\n
+gadget_officejs_webrtc_jio.html\n
+gadget_officejs_widget_listbox.html\n
+gadget_officejs_header.js\n
+gadget_officejs_jio.js\n
+gadget_officejs_jio_web_page_view.js\n
+gadget_officejs_page_add_text_document.js\n
+gadget_officejs_page_jio_configurator.js\n
+gadget_officejs_page_jio_dav_configurator.js\n
+gadget_officejs_page_login.js\n
+gadget_officejs_page_logout.js\n
+gadget_officejs_page_share_webrtc_jio.js\n
+gadget_officejs_page_sync.js\n
+gadget_officejs_page_text_editor_list.js\n
+gadget_officejs_router.js\n
+gadget_officejs_text_editor_application.js\n
+gadget_officejs_text_editor_application_panel.js\n
+gadget_officejs_translation.js\n
+gadget_officejs_translation_data.js\n
+gadget_officejs_webrtc_jio.js\n
+gadget_officejs_widget_listbox.js\n
+erp5_launcher.js\n
+erp5_launcher.html\n
 rjsunsafe/gadget_ckeditor.js\n
 rjsunsafe/gadget_ckeditor.html\n
 NETWORK:\n
@@ -203,12 +211,6 @@ NETWORK:\n
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-                    </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -252,7 +254,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441731873.74</float>
+                        <float>1442854040.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -297,7 +299,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.43854.16066.11281</string> </value>
+                <value> <string>945.61166.25675.50432</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -315,64 +317,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441969739.85</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1441730475.18</float>
+                        <float>1443009061.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

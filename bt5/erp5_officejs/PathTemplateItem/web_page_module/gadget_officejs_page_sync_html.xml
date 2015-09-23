@@ -121,15 +121,27 @@
     <script src="gadget_global.js" ></script>\n
 \n
     <script id="page-template" type="text/x-handlebars-template">\n
-      <div class="ui-grid-b ui-responsive">\n
-        <div class="ui-block-a"></div>\n
-        <div class="ui-block-b">\n
-          <form class="synchro-form view-web-page-form">\n
-            <button type="submit" data-i18n="Launch Synchronization" data-theme="b">Launch Synchronization</button>\n
-          </form>\n
-        </div>\n
-        <div class="ui-block-c"></div>\n
-      </div>\n
+      <article class="ui-content ui-body-c">\n
+        <section class="ui-content-header-plain">\n
+          <h3 class="ui-content-title ui-body-c">\n
+            <span class="ui-icon ui-icon-custom ui-icon-refresh">&nbsp;</span>\n
+            Synchronize your data\n
+          </h3>\n
+        </section>\n
+        <section class="ui-body-c ui-content-section">\n
+          <div class="ui-controlgroup ui-controlgroup-horizontal">\n
+            <div class="ui-grid-b ui-responsive">\n
+              <div class="ui-block-a"></div>\n
+              <div class="ui-block-b">\n
+                <form class="synchro-form view-web-page-form">\n
+                  <button type="submit" data-i18n="Launch Synchronization" data-theme="b">Launch Synchronization</button>\n
+                </form>\n
+              </div>\n
+              <div class="ui-block-c"></div>\n
+            </div>\n
+          </div>\n
+        </section>\n
+      </article>\n
     </script>\n
 \n
     <script src="gadget_officejs_page_sync.js"></script>\n
@@ -184,12 +196,6 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-                    </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -233,7 +239,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438011705.1</float>
+                        <float>1442854019.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -278,7 +284,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.41276.23899.60552</string> </value>
+                <value> <string>945.58606.64610.54852</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -296,64 +302,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441814187.24</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1438011607.44</float>
+                        <float>1443012064.85</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
