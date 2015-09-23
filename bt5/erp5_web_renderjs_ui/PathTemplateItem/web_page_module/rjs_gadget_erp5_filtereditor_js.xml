@@ -139,7 +139,7 @@
       select,\n
       domain_tree_query = "",\n
       domain_tree_query_list = [],\n
-      options = gadget.props.render_options,\n
+      options = gadget.props.options,\n
       filterforms = gadget.props.element.querySelectorAll(".filterForm"),\n
       and = gadget.props.element.querySelector(".and");\n
     operator = and.checked ? "AND" : "OR";\n
@@ -375,17 +375,17 @@
       value: "Searchable Text",\n
       text: "Searchable Text"\n
     });\n
-    for (i = 0; i < gadget.props.options.length; i += 1) {\n
-      if (simple_query.key === gadget.props.options[i][0]) {\n
-        default_select = gadget.props.options[i][0];\n
+    for (i = 0; i < gadget.props.column_list.length; i += 1) {\n
+      if (simple_query.key === gadget.props.column_list[i][0]) {\n
+        default_select = gadget.props.column_list[i][0];\n
         tmp += selected_option_template({\n
-          value: gadget.props.options[i][0],\n
-          text: gadget.props.options[i][1]\n
+          value: gadget.props.column_list[i][0],\n
+          text: gadget.props.column_list[i][1]\n
         });\n
       } else {\n
         tmp += option_template({\n
-          value: gadget.props.options[i][0],\n
-          text: gadget.props.options[i][1]\n
+          value: gadget.props.column_list[i][0],\n
+          text: gadget.props.column_list[i][1]\n
         });\n
       }\n
     }\n
@@ -488,7 +488,7 @@
       while (domain_tree_container.firstChild) {\n
         domain_tree_container.removeChild(domain_tree_container.firstChild);\n
       }\n
-      this.props.render_options = options;\n
+\n
       this.props.options = options;\n
       gadget.props.tree_path = [];\n
       query = options.form_definition.extended_search || "";\n
@@ -501,7 +501,7 @@
           var query_list,\n
             domain_tree_map = result._embedded._view.listbox.domain_tree_map,\n
             domain_tree_query_list;\n
-          gadget.props.options = result._embedded._view.listbox.column_list;\n
+          gadget.props.column_list = result._embedded._view.listbox.column_list;\n
           gadget.props.domain_tree_map = result._embedded._view.listbox.domain_tree_map;\n
           if (query !== "") {\n
             query_list = QueryFactory.create(query);\n
@@ -537,7 +537,7 @@
             createDomainTree(gadget);\n
           }\n
         });\n
-      })\n
+    })\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared services\n
@@ -713,7 +713,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61379.4089.58965</string> </value>
+                <value> <string>945.61440.63604.7355</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -731,7 +731,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443020437.71</float>
+                        <float>1443024276.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
