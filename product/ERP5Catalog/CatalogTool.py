@@ -667,36 +667,36 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     __call__ = searchResults
 
     security.declarePrivate('unrestrictedSearchResults')
-    def unrestrictedSearchResults(self, REQUEST=None, **kw):
+    def unrestrictedSearchResults(self, **kw):
         """Calls ZSQLCatalog.searchResults directly without restrictions.
         """
         kw.setdefault('limit', self.default_result_limit)
-        return ZCatalog.searchResults(self, REQUEST, **kw)
+        return ZCatalog.searchResults(self, **kw)
 
     # We use a string for permissions here due to circular reference in import
     # from ERP5Type.Permissions
     security.declareProtected('Search ZCatalog', 'getResultValue')
-    def getResultValue(self, query=None, **kw):
+    def getResultValue(self, **kw):
         """
         A method to factor common code used to search a single
         object in the database.
         """
         kw.setdefault('limit', 1)
-        result = self.searchResults(query=query, **kw)
+        result = self.searchResults(**kw)
         try:
           return result[0].getObject()
         except IndexError:
           return None
 
     security.declarePrivate('unrestrictedGetResultValue')
-    def unrestrictedGetResultValue(self, query=None, **kw):
+    def unrestrictedGetResultValue(self, **kw):
         """
         A method to factor common code used to search a single
         object in the database. Same as getResultValue but without
         taking into account security.
         """
         kw.setdefault('limit', 1)
-        result = self.unrestrictedSearchResults(query=query, **kw)
+        result = self.unrestrictedSearchResults(**kw)
         try:
           return result[0].getObject()
         except IndexError:
