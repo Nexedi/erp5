@@ -235,6 +235,21 @@
     return s;\n
   }\n
 \n
+  function getHumanReadableDate() {\n
+    return new Date().toString().slice(0, -16); // get rid of timezone info\n
+  }\n
+\n
+\n
+  function sequentialMessages(li, new_msg) { \n
+    if (li === null) {\n
+      return false;\n
+    }\n
+    if ($(li).children(\'li\').last().children(\'label\').attr("class").toString() == new_msg.toString()) {\n
+      return true;\n
+    }\n
+    return false;\n
+  }\n
+  \n
   function getLogString(text, is_incomming) {\n
     var prefix,\n
       date = new Date(),\n
@@ -335,10 +350,10 @@
         parameter.contact.sort(compareContact);\n
         gadget.props.header_element.innerHTML = gadget.props.header_template({\n
           left_url: result_list[0],\n
-          left_title: "Reset Password",\n
+          left_title: "gear",\n
           title: "Contact",\n
           right_url: result_list[1],\n
-          right_title: "New"\n
+          right_title: "plus"\n
         });\n
         gadget.props.content_element.innerHTML =\n
           gadget.props.contact_template(parameter);\n
@@ -351,14 +366,36 @@
 \n
     var new_element = document.createElement(\'div\'),\n
       theme = "a",\n
-      style = "padding-right: 5em;";\n
-    if (!is_incoming) {\n
-      style = "text-align: right; padding-left: 5em;";\n
+      timestamp_class, final_text, msg_class;\n
+    if (is_incoming) {\n
+      msg_class = "msg incoming-msg ui-li-static ui-body-a";\n
+      timestamp_class = "incoming-timestamp";\n
+    } else {\n
+      msg_class = "msg outgoing-msg ui-li-static ui-body-a";\n
+      timestamp_class = "outgoing-timestamp";\n
+    }\n
+    var timestamp = getHumanReadableDate();\n
+    final_text = Handlebars.Utils.escapeExpression(text);\n
+    var reg = "((http(s)?:\\/\\/)|(www\\\\.))[a-zA-Z0-9-._~:/?#@!$&\'()*+,;=%]{2,256}";\n
+    \n
+    // before appending new element, check to see if the previous was the same sender\n
+    // that is, if prev message was incoming or outgoing\n
+    // this way we can combine chat bubbles from the same user\n
+    if (gadget.props.contact_dict[jid].conversation_element.children.length !== 0) {\n
+      var li = gadget.props.contact_dict[jid].conversation_element;\n
+      if (sequentialMessages(li, is_incoming + " " + timestamp_class)) {\n
+        final_text = $(li).children(\'li\').last().children(\'p\').text() + "\\n" + text;\n
+        // get <p> tag from last conversation element, prepend it to text, remove old element\n
+        $(li).children(\'li\').last().hide();\n
+      }\n
     }\n
     new_element.innerHTML = gadget.props.message_template({\n
       theme: theme,\n
-      style: style,\n
-      text: text\n
+      msg_class: msg_class,\n
+      text: final_text.replace(new RegExp(reg,\'ig\'), " <A target=\\"_blank\\" HREF=\\"$&\\">$&</A>"),\n
+      timestamp: timestamp,\n
+      timestamp_class: timestamp_class,\n
+      sender: is_incoming // change this to something else\n
     });\n
     gadget.props.contact_dict[jid].conversation_element\n
                                   .appendChild(new_element.firstChild);\n
@@ -385,7 +422,7 @@
             });\n
         }\n
       }(),\n
-      addLog(gadget, jid, text, is_incoming)\n
+      addLog(gadget, jid, text, is_incoming) // non-html, merged text is sent to history\n
     ]);\n
   }\n
 \n
@@ -404,7 +441,7 @@
       .push(function (result) {\n
         gadget.props.header_element.innerHTML = gadget.props.header_template({\n
           left_url: dialog_url,\n
-          left_title: "Back",\n
+          left_title: "carat-l",\n
           title: "History of " + jid\n
         });\n
         gadget.props.content_element.innerHTML = gadget.props.history_template({\n
@@ -415,7 +452,7 @@
   }\n
 \n
   function renderDialogPage(gadget, connection_gadget) {\n
-    var jid,\n
+    var jid, message_box,\n
       contact_url;\n
     return RSVP.Queue()\n
       .push(function () {\n
@@ -430,15 +467,15 @@
         var last_child;\n
         gadget.props.header_element.innerHTML = gadget.props.header_template({\n
           left_url: contact_url,\n
-          left_title: "Back",\n
+          left_title: "carat-l",\n
           title: jid,\n
           right_url: history_url,\n
-          right_title: "History"\n
+          right_title: "bars"\n
         });\n
         gadget.props.content_element.innerHTML =\n
           gadget.props.dialog_template({});\n
         $(gadget.props.element).trigger("create");\n
-\n
+        gadget.props.content_element.querySelector(".message-form")[0].focus();\n
         gadget.props.content_element.querySelector(".discussion-content")\n
                                     .appendChild(\n
             gadget.props.contact_dict[jid].conversation_element\n
@@ -538,7 +575,7 @@
         contact_url = contact;\n
         gadget.props.header_element.innerHTML = gadget.props.header_template({\n
           left_url: contact_url,\n
-          left_title: "Back",\n
+          left_title: "carat-l",\n
           title: "New Contact"\n
         });\n
         gadget.props.content_element.innerHTML =\n
@@ -576,7 +613,7 @@
       .push(function (contact_url) {\n
         gadget.props.header_element.innerHTML = gadget.props.header_template({\n
           left_url: contact_url,\n
-          left_title: "Back",\n
+          left_title: "carat-l",\n
           title: "Reset Password"\n
         });\n
         gadget.props.content_element.innerHTML =\n
@@ -749,7 +786,7 @@
         // Bye dear contact\n
         gadget.props.contact_dict[from].offline = true;\n
       } else {\n
-        // Bye dear contact\n
+        // Hello dear contact\n
         gadget.props.contact_dict[from].offline = false;\n
       }\n
       if ((gadget.props.options !== undefined) &&\n
@@ -1030,8 +1067,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1439212776.16</float>
-                        <string>GMT</string>
+                        <float>1442839765.51</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

@@ -110,7 +110,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <!doctype html>\n
-<html>\n
+<html manifest="./gadget_jabberclient.appcache">\n
   <head>\n
     <meta charset="utf-8">\n
     <meta name="viewport" content="width=device-width, initial-scale=1">\n
@@ -119,6 +119,11 @@
     <link id="favicon" rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAERAAAAAAAAEQEAAAAAAAEQARAAAAAAARAAEQAAAAARAAARAAAAABAAAAEQAAAAAAAAABEAAAAAAAAAEQAAAAAAAAABEAAAAAAAAAARAAAAAAAAABEAAAAAAAAAAQAAAAAAAAAAD//wAA//8AAP7/AAD8fwAA+X8AAPM/AADznwAA558AAO/PAAD/5wAA/+cAAP/zAAD/+QAA//kAAP/9AAD//wAA">\n
 \n
     <link rel="stylesheet" href="jquerymobile.css">\n
+\n
+\n
+    <!-- stylesheets for jabberclient -->\n
+    <link rel="stylesheet" type="text/css" href="gadget_jabberclient.css" />\n
+\n
 \n
     <script src="jquery.js"></script>\n
     <script src="jquerymobile.js"></script>\n
@@ -246,17 +251,17 @@
         </div>\n
       </div>\n
     </script>\n
-    <script class="message-template" type="text/x-handlebars-template"><li data-theme="{{theme}}" style="{{style}}"><pre style="white-space: pre-wrap;">{{text}}</pre></li></script>\n
+    <script class="message-template" type="text/x-handlebars-template"><li data-theme="{{theme}}" class="{{msg_class}}" style=""><p style="white-space: pre-wrap; word-wrap: break-word; font-size: 14px;">{{{text}}}</p><label style="{{timestamp_style}}" class="{{sender}} {{timestamp_class}}">{{timestamp}}</label></li></script>\n
     \n
     <script class="history-template" type="text/x-handlebars-template"><pre style="white-space: pre-wrap;">{{text}}</pre></script>\n
 \n
     <script class="header-template" type="text/x-handlebars-template">\n
       {{#if left_url}}\n
-        <a href="{{left_url}}" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all">{{left_title}}</a>\n
+        <a href="{{left_url}}" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-notext ui-icon-{{left_title}}"></a>\n
       {{/if}}\n
       <h1 class="ui-title">{{title}}</h1>\n
       {{#if right_url}}\n
-        <a href="{{right_url}}" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all">{{right_title}}</a>\n
+        <a href="{{right_url}}" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-notext ui-icon-{{right_title}}"></a>\n
       {{/if}}\n
     </script>\n
   </head>\n
@@ -439,8 +444,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1438695309.09</float>
-                        <string>GMT</string>
+                        <float>1442849581.82</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
