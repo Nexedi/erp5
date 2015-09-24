@@ -137,9 +137,9 @@
       <div class="ui-grid-b ui-responsive">\n
         <div class="ui-block-a"></div>\n
         <div class="ui-block-b">\n
-          <ul data-role="listview" data-inset="true">\n
+          <ul data-role="listview" data-inset="true" data-split-icon="delete" data-split-theme="c">\n
             {{#each contact}}\n
-              <li>\n
+              <li class="ui-li-has-alt" id="{{list_id}}">\n
               {{#if status}}\n
                 {{#if url}}\n
                   <a href="{{url}}" class="ui-btn ui-btn-icon-left ui-icon-check">\n
@@ -161,6 +161,7 @@
                   {{jid}}\n
                 {{/if}}\n
               {{/if}}\n
+              <a href="{{remove_url}}" class="ui-btn ui-btn-icon-notext ui-icon-delete ui-btn-c" title="Remove"></a>\n
               </li>\n
             {{/each}}\n
           </ul>\n

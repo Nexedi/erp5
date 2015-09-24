@@ -125,6 +125,7 @@
     PAGE_HISTORY = "history",\n
     PAGE_NEW_CONTACT = "subscribe",\n
     PAGE_PASSWORD = "password",\n
+    PAGE_REMOVE_CONTACT = "remove",\n
     DEFAULT_PAGE = PAGE_CONTACT,\n
     CONNECTION_GADGET_URL = "./gadget_jabberconnection.html",\n
     CONNECTION_GADGET_SCOPE = "connection",\n
@@ -698,6 +699,9 @@
           g.props.header_template = Handlebars.compile(\n
             document.querySelector(".header-template").innerHTML\n
           );\n
+          g.props.remove_contact_template = Handlebars.compile(\n
+            document.querySelector(".remove-contact-template").innerHTML\n
+          );\n
         });\n
     })\n
     // Configure jIO storage\n
@@ -887,6 +891,8 @@
           method = renderHistoryPage;\n
         } else if (options.page === PAGE_PASSWORD) {\n
           method = renderResetPasswordPage;\n
+        } else if (options.page == PAGE_REMOVE_CONTACT) {\n
+          method = renderRemovePage;  \n
         } else {\n
           throw new Error("not implemented page " + options.page);\n
         }\n

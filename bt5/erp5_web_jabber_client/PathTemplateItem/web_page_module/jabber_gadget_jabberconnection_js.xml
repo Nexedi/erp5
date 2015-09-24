@@ -232,7 +232,7 @@
 \n
   function deferServerDisconnection(gadget) {\n
     enqueueDefer(gadget, function () {\n
-      // Try to auto connection\n
+      // Try to auto connect\n
       if (gadget.props.connection !== undefined) {\n
         gadget.props.connection.disconnect();\n
         delete gadget.props.connection;\n
@@ -248,18 +248,9 @@
     }\n
 \n
     enqueueDefer(gadget, function () {\n
-      // Try to auto connection\n
+      // Try to auto connect\n
       if (gadget.props.server !== undefined) {\n
         gadget.props.connection = new Strophe.Connection(gadget.props.server);\n
-\n
-//         gadget.props.connection.rawInput = function (data) {\n
-//           console.log("RECEIVING SOMETHING");\n
-//           console.log(data);\n
-//         };\n
-//         gadget.props.connection.rawOutput = function (data) {\n
-//           console.log("SENDING SOMETHING");\n
-//           console.log(data);\n
-//         };\n
 \n
         gadget.props.connection.connect(\n
           gadget.props.jid,\n
@@ -414,6 +405,34 @@
       this.props.connection.send(\n
         $pres().tree()\n
       );\n
+    })\n
+\n
+    .declareMethod(\'removeContact\', function (jid) {\n
+      var defer = RSVP.defer();\n
+        function jsonifyResponse(domElt) {\n
+          try {\n
+            var result = [],\n
+              type = domElt.getAttribute(\'type\');\n
+            if(type === "result") {\n
+              result.push("Contact Remove Success.");\n
+            }\n
+            else {\n
+              throw new Error("Contact Remove Failure.");\n
+            }\n
+            defer.resolve(result);\n
+          } catch (error) {\n
+            defer.reject(error);\n
+          }\n
+        }\n
+        var uid = this.props.jid.split(\'@\')[0];\n
+        this.props.connection.sendIQ(\n
+          $iq({type: "set"})\n
+          .c("query", {xmlns: Strophe.NS.ROSTER})\n
+          .c("item", {jid: jid, subscription: "remove"}),\n
+          jsonifyResponse,\n
+          defer.reject\n
+       );\n
+       return defer.promise;\n
     })\n
 \n
     .declareMethod(\'requestSubscribe\', function (jid) {\n
@@ -601,8 +620,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1436191748.38</float>
-                        <string>GMT</string>
+                        <float>1443097880.51</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
