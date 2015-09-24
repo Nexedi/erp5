@@ -2424,11 +2424,16 @@ class Catalog(Folder,
                           ignore_empty_string=1, only_group_columns=False,
                           limit=None, extra_column_list=(),
                           **kw):
-    query = self.buildEntireQuery(kw, query_table=query_table,
-      ignore_empty_string=ignore_empty_string, limit=limit,
-      extra_column_list=extra_column_list)
-    result = query.asSQLExpression(self, only_group_columns).asSQLExpressionDict()
-    return result
+    return self.buildEntireQuery(
+      kw,
+      query_table=query_table,
+      ignore_empty_string=ignore_empty_string,
+      limit=limit,
+      extra_column_list=extra_column_list,
+    ).asSQLExpression(
+      self,
+      only_group_columns,
+    ).asSQLExpressionDict()
 
   # Compatibililty SQL Sql
   buildSqlQuery = buildSQLQuery
