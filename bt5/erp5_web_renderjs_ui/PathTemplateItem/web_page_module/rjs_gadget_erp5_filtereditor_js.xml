@@ -189,24 +189,24 @@
         }\n
       }\n
     }\n
-    if (simple_query_list.length > 0 || domain_tree_query_list.length > 0) {\n
-      if (simple_query_list.length > 0) {\n
-        complex_query = new ComplexQuery({\n
-          operator: operator,\n
-          query_list: simple_query_list,\n
-          type: "complex"\n
-        });\n
-        query = Query.objectToSearchText(complex_query);\n
-      }\n
 \n
-      if (domain_tree_query_list.length > 0) {\n
-        domain_tree_query = new ComplexQuery({\n
-          operator: "AND",\n
-          query_list: domain_tree_query_list,\n
-          type: "complex"\n
-        });\n
-        domain_tree_query = Query.objectToSearchText(domain_tree_query);\n
-      }\n
+    if (simple_query_list.length > 0) {\n
+      complex_query = new ComplexQuery({\n
+        operator: operator,\n
+        query_list: simple_query_list,\n
+        type: "complex"\n
+      });\n
+      query = Query.objectToSearchText(complex_query);\n
+    }\n
+\n
+    if (domain_tree_query_list.length > 0) {\n
+      domain_tree_query = new ComplexQuery({\n
+        operator: "AND",\n
+        query_list: domain_tree_query_list,\n
+        type: "complex"\n
+      });\n
+      domain_tree_query = Query.objectToSearchText(domain_tree_query);\n
+     }\n
 \n
       gadget.props.jelement.panel("toggle");\n
 \n
@@ -214,7 +214,7 @@
                 "extended_search": query, "domain_tree": domain_tree_query,\n
                 "sort_list": options.form_definition.sort_list || "",\n
                 "hide_item": options.form_definition.hide_item || ""});\n
-    }\n
+\n
   }\n
 \n
 \n
@@ -713,7 +713,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61444.40283.6724</string> </value>
+                <value> <string>945.62459.61529.51251</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -731,7 +731,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443084057.26</float>
+                        <float>1443085290.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
