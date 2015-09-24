@@ -117,13 +117,20 @@
 \n
     <script src="rsvp.js"></script>\n
     <script src="renderjs.js"></script>\n
-    <script src="handlebars.js"></script>\n
     <script src="gadget_global.js" ></script>\n
 \n
-    <script id="page-template" type="text/x-handlebars-template">\n
-    <div class="ui-grid-b ui-responsive">\n
-      <div class="ui-block-a"></div>\n
-      <div class="ui-block-b">\n
+    <script src="gadget_officejs_page_login.js"></script>\n
+  </head>\n
+\n
+  <body>\n
+    <article class="ui-content ui-body-c">\n
+      <section class="ui-content-header-plain">\n
+        <h3 class="ui-content-title ui-body-c">\n
+          <span class="ui-icon ui-icon-custom ui-icon-user">&nbsp;</span>\n
+          Login\n
+        </h3>\n
+      </section>\n
+      <section class="ui-body-c ui-content-section">\n
         <form class="login-form">\n
           <div class="ui-field-contain">\n
             <label data-i18n="Login">Login</label>\n
@@ -133,17 +140,18 @@
             <label data-i18n="Password">Password</label>\n
             <input type="password" name="passwd" placeholder="Ex: A1bcF$99" value="" required>\n
           </div>\n
-          <input data-inline="true" type="submit" data-i18n="[value]Log In" value="Log In" data-theme="b">\n
+          <div class="ui-grid-b ui-responsive">\n
+            <div class="ui-block-a">\n
+            </div>\n
+            <div class="ui-block-b">\n
+            </div>\n
+            <div class="ui-block-c">\n
+              <button class="ui-btn ui-btn-b" type="submit" data-i18n="Log In">Log In</button>\n
+            </div>\n
+          </div>\n
         </form>\n
-      </div>\n
-      <div class="ui-block-c"></div>\n
-    </div>\n
-    </script>\n
-\n
-    <script src="gadget_officejs_page_login.js"></script>\n
-  </head>\n
-\n
-  <body>\n
+      </section>\n
+    </article>\n
   </body>\n
 </html>\n
 
@@ -285,7 +293,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18369.48314.20172</string> </value>
+                <value> <string>945.62650.43414.46660</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -303,7 +311,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441812708.55</float>
+                        <float>1443096971.41</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

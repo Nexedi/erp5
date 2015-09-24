@@ -144,7 +144,6 @@
         .push(function () {\n
           var doc = {\n
             // XXX Hardcoded\n
-            title: "Undefined Title",\n
             parent_relative_url: "web_page_module",\n
             portal_type: "Web Page"\n
           };\n
@@ -296,7 +295,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.18327.39274.43895</string> </value>
+                <value> <string>945.34038.48545.63795</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -314,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440437280.54</float>
+                        <float>1443093586.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

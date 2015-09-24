@@ -113,18 +113,18 @@
         type: "replicate",\n
         // XXX This drop the signature lists...\n
         query: {\n
-          query: \'portal_type:"Web Page" \',\n
+          query: \'portal_type:"Web Page" \'\n
           // XX Synchonizing the whole module is too much, here is a way to start quietly\n
           // Supsended until modification_date is handled for synchronization\n
-          //  + \' AND modification_date:>="\'\n
-          //  + today.getDate() + \'/\' + (today.getMonth() - 2) + \'/\' + today.getFullYear()  + \'" \',\n
+            + \' AND modification_date:>="\'\n
+            + today.getDate() + \'/\' + (today.getMonth() - 2) + \'/\' + today.getFullYear()  + \'" \',\n
           limit: [0, 1234567890]\n
         },\n
         use_remote_post: true,\n
         conflict_handling: 2,\n
         check_local_modification: true,\n
         check_local_creation: true,\n
-        check_local_deletion: true,\n
+        check_local_deletion: false,\n
         check_remote_modification: true,\n
         check_remote_creation: true,\n
         check_remote_deletion: true,\n
@@ -379,7 +379,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61375.20078.28842</string> </value>
+                <value> <string>945.62750.27719.2184</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -397,7 +397,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443020972.18</float>
+                        <float>1443102632.01</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

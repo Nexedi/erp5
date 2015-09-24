@@ -114,10 +114,9 @@
       today = new Date();\n
     doc.parent_relative_url = "web_page_module";\n
     doc.portal_type = "Web Page";\n
-    // Supsended until modification_date is handled for synchronization\n
-    //doc.modification_date = today.getDate()\n
-    //  + \'/\' + (today.getMonth() - 2)\n
-    //  + \'/\' + today.getFullYear();\n
+    doc.modification_date = today.getDate()\n
+      + \'/\' + (today.getMonth() + 1)\n
+      + \'/\' + today.getFullYear();\n
     for (i = 0; i < submit_event.target.length; i += 1) {\n
       // XXX Should check input type instead\n
       if (submit_event.target[i].name) {\n
@@ -202,6 +201,7 @@
     .declareMethod("render", function (options) {\n
       var gadget = this;\n
       gadget.options = options;\n
+      gadget.options.doc.title = gadget.options.doc.title || "";\n
       return new RSVP.Queue()\n
         .push(function () {\n
           return gadget.translateHtml(template(options.doc));\n
@@ -413,7 +413,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61376.26272.49152</string> </value>
+                <value> <string>945.62635.52426.43195</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -431,7 +431,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443020943.97</float>
+                        <float>1443095776.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

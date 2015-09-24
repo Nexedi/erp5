@@ -101,22 +101,15 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*globals window, document, RSVP, rJS, promiseEventListener, Handlebars*/\n
+            <value> <string>/*globals window, document, RSVP, rJS, promiseEventListener*/\n
 /*jslint indent: 2, maxlen: 80, nomen: true*/\n
-(function (window, document, RSVP, rJS, promiseEventListener, Handlebars) {\n
+(function (window, document, RSVP, rJS, promiseEventListener) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
   // templates\n
   /////////////////////////////////////////////////////////////////\n
-  var gadget_klass = rJS(window),\n
-    templater = gadget_klass.__template_element,\n
-\n
-    template = Handlebars.compile(\n
-      templater.getElementById("page-template").innerHTML\n
-    );\n
-\n
-  gadget_klass\n
+  rJS(window)\n
     .ready(function (g) {\n
       g.props = {};\n
       return g.getElement()\n
@@ -131,13 +124,7 @@
       var gadget = this;\n
       return gadget.updateHeader({\n
         title: "Connect"\n
-      })\n
-        .push(function () {\n
-          return gadget.translateHtml(template());\n
-        })\n
-        .push(function (html) {\n
-          gadget.props.element.innerHTML = html;\n
-        });\n
+      });\n
     })\n
 \n
     .declareAcquiredMethod("redirect", "redirect")\n
@@ -154,7 +141,7 @@
           );\n
         })\n
         .push(function (evt) {\n
-          gadget.props.element.querySelector("input[type=submit]")\n
+          gadget.props.element.querySelector("button")\n
                               .disabled = true;\n
           var login = evt.target.elements[0].value,\n
             passwd = evt.target.elements[1].value;\n
@@ -164,7 +151,7 @@
         });\n
     });\n
 \n
-}(window, document, RSVP, rJS, promiseEventListener, Handlebars));</string> </value>
+}(window, document, RSVP, rJS, promiseEventListener));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -301,7 +288,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.41252.5943.7082</string> </value>
+                <value> <string>945.62644.11371.29525</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -319,7 +306,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441812760.42</float>
+                        <float>1443096382.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
