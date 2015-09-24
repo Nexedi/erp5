@@ -2489,36 +2489,40 @@ class Catalog(Folder,
     """
     return getComparisonOperatorInstance(operator)
 
-  PROPAGATE_PARAMETER_SET = ('selection_domain',
-                             'selection_report',
-                             # XXX should get the next parameters from
-                             # the ZSQLMethod class itself
-                             'zsql_brain')
-  def _queryResults(self, REQUEST=None, build_sql_query_method=None, **kw):
-    """ Returns a list of brains from a set of constraints on variables """
+
+  def queryResults(
+        self,
+        sql_method,
+        REQUEST=None,
+        src__=0,
+        build_sql_query_method=None,
+        selection_domain=None,
+        selection_report=None,
+        # XXX should get zsql_brain from ZSQLMethod class itself
+        zsql_brain=None,
+        implicit_join=False,
+        **kw
+      ):
     if build_sql_query_method is None:
       build_sql_query_method = self.buildSQLQuery
-    kw.setdefault('implicit_join', False)
-    query = build_sql_query_method(REQUEST=REQUEST, **kw)
-    # XXX: decide if this should be made normal
-    ENFORCE_SEPARATION = True
-    if ENFORCE_SEPARATION:
-      # Some parameters must be propagated:
-      kw = {name: kw[name] for name in self.PROPAGATE_PARAMETER_SET
-                           if name in kw}
-    kw['where_expression'] = query['where_expression']
-    kw['sort_on'] = query['order_by_expression']
-    kw['from_table_list'] = query['from_table_list']
-    kw['from_expression'] = query['from_expression']
-    kw['limit_expression'] = query['limit_expression']
-    kw['select_expression'] = query['select_expression']
-    kw['group_by_expression'] = query['group_by_expression']
-    # XXX: why not kw.update(query)??
-    return kw
-
-  def queryResults(self, sql_method, REQUEST=None, src__=0, build_sql_query_method=None, **kw):
-    sql_kw = self._queryResults(REQUEST=REQUEST, build_sql_query_method=build_sql_query_method, **kw)
-    return sql_method(src__=src__, **sql_kw)
+    query = build_sql_query_method(
+      REQUEST=REQUEST,
+      implicit_join=implicit_join,
+      **kw
+    )
+    return sql_method(
+      src__=src__,
+      zsql_brain=zsql_brain,
+      selection_domain=selection_domain,
+      selection_report=selection_report,
+      where_expression=query['where_expression'],
+      select_expression=query['select_expression'],
+      group_by_expression=query['group_by_expression'],
+      from_table_list=query['from_table_list'],
+      from_expression=query['from_expression'],
+      sort_on=query['order_by_expression'],
+      limit_expression=query['limit_expression'],
+    )
 
   def getSearchResultsMethod(self):
     return getattr(self, self.sql_search_results)

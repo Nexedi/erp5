@@ -226,7 +226,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
 
   def catalog(self, reference_tree, kw, check_search_text=True,
       check_select_expression=True, expected_failure=False):
-    reference_param_dict = self._catalog._queryResults(query_table='foo', **kw)
+    reference_param_dict = self._catalog.buildSQLQuery(query_table='foo', **kw)
     query = self._catalog.buildEntireQuery(kw).query
     assertEqual = self.assertEqual
     if expected_failure:
@@ -236,7 +236,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
     search_text = query.asSearchTextExpression(self._catalog)
     if check_search_text:
       # XXX: sould "keyword" be always used for search text searches ?
-      search_text_param_dict = self._catalog._queryResults(query_table='foo', keyword=search_text)
+      search_text_param_dict = self._catalog.buildSQLQuery(query_table='foo', keyword=search_text)
       if not check_select_expression:
         search_text_param_dict.pop('select_expression')
         reference_param_dict.pop('select_expression')
