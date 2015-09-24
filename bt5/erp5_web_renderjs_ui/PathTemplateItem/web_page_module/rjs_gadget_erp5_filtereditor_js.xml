@@ -210,7 +210,7 @@
 \n
       gadget.props.jelement.panel("toggle");\n
 \n
-      return gadget.redirect({jio_key: options.jio_key, view: options.view,\n
+      return gadget.redirect({jio_key: options.jio_key,\n
                 "extended_search": query, "domain_tree": domain_tree_query,\n
                 "sort_list": options.form_definition.sort_list || "",\n
                 "hide_item": options.form_definition.hide_item || ""});\n
@@ -713,7 +713,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61440.63604.7355</string> </value>
+                <value> <string>945.61444.40283.6724</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -731,7 +731,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443024276.82</float>
+                        <float>1443084057.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

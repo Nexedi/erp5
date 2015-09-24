@@ -532,7 +532,7 @@
               hide_form_elements[i].parentElement.removeChild(hide_form_elements[i]);\n
             }\n
 \n
-            return gadget.redirect({jio_key: gadget.props.jio_key, view: gadget.props.view,\n
+            return gadget.redirect({jio_key: gadget.props.jio_key,\n
               "extended_search": gadget.props.extended_search || "",\n
               "domain_tree": gadget.props.domain_tree || "",\n
               "sort_list": gadget.props.sort_list || "",\n
@@ -730,7 +730,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61307.7519.27835</string> </value>
+                <value> <string>945.61352.3504.31146</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -748,7 +748,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443018723.19</float>
+                        <float>1443084102.55</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
