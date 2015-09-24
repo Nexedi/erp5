@@ -67,16 +67,13 @@ product = context.portal_catalog.getResultValue(portal_type=\'Product\',\n
                                              title=howto_dict[\'sale_howto_product_title\'])\n
 \n
 my_organisation = context.portal_catalog.getResultValue(portal_type=\'Organisation\',\n
-                                                        title=howto_dict[\'sale_howto_organisation_title\'],\n
-                                                        corporate_name=howto_dict[\'sale_howto_organisation_title\'])\n
+                                                        title=howto_dict[\'sale_howto_organisation_title\'])\n
 \n
 organisation = context.portal_catalog.getResultValue(portal_type=\'Organisation\',\n
-                                                     title=howto_dict[\'sale_howto_organisation2_title\'],\n
-                                                     corporate_name=howto_dict[\'sale_howto_organisation2_title\'])\n
+                                                     title=howto_dict[\'sale_howto_organisation2_title\'])\n
 \n
 person = context.portal_catalog.getResultValue(portal_type=\'Person\',\n
-                                         title=howto_dict[\'sale_howto_person_title\'],\n
-                                         career_subordination_title=howto_dict[\'sale_howto_organisation_title\'])\n
+                                         title=howto_dict[\'sale_howto_person_title\'])\n
 \n
 \n
 sale_order = portal.sale_order_module.newContent(\n
