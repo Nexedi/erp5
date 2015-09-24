@@ -53,7 +53,7 @@
             <value> <string>project_uid_list = [x.uid for x in context.portal_catalog(\n
      relative_url=\'%s/%%\' % context.getRelativeUrl())] + [context.getUid()]\n
 \n
-return context.portal_catalog(selection=selection, \n
+return context.portal_catalog(\n
                                                          selection_report=selection_report,\n
                                                          portal_type=portal_type,\n
             related_source_project_or_destination_project = project_uid_list )\n
