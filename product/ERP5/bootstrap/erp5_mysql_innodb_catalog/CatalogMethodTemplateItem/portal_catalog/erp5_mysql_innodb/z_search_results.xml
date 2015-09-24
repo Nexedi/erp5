@@ -20,7 +20,6 @@ where_expression\r\n
 select_expression\r\n
 group_by_expression\r\n
 from_table_list:list\r\n
-valid_from_table_list:list\r\n
 from_expression\r\n
 sort_on\r\n
 limit_expression\r\n
@@ -72,11 +71,7 @@ FROM\n
   <dtml-if from_expression>\n
     <dtml-var from_expression>\n
   <dtml-else>\n
-    <dtml-if valid_from_table_list>\n
-      <dtml-in valid_from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
-    <dtml-else>\n
-      <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
-    </dtml-if>\n
+    <dtml-in from_table_list> <dtml-var sequence-item> AS <dtml-var sequence-key><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>\n
   </dtml-if>\n
   <dtml-if selection_domain>\n
     <dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain, category_table_alias = \'domain_category\')">\n
