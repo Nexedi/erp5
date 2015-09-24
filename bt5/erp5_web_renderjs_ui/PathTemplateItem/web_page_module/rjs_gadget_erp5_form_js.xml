@@ -213,6 +213,7 @@
         parent_element = document.createElement("div");\n
       suboption_dict.jio_key = options.jio_key;\n
       suboption_dict.view = options.view;\n
+      suboption_dict.begin_from = options.begin_from;\n
 \n
 \n
 //       options = options.form_gadget || {};\n
@@ -524,7 +525,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61212.37056.32187</string> </value>
+                <value> <string>945.61367.58694.36949</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -542,7 +543,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443019673.69</float>
+                        <float>1443103892.32</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -143,7 +143,6 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
     .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
     .declareAcquiredMethod("triggerSortEditor", "triggerSortEditor")\n
     //////////////////////////////////////////////\n
@@ -415,8 +414,12 @@
           setNext();\n
         }\n
         return RSVP.all([\n
-          gadget.getUrlFor({command: \'change\', options: prev_param}),\n
-          gadget.getUrlFor({command: \'change\', options: next_param})\n
+          gadget.getUrlFor({command: \'change\', options: {jio_key: gadget.props.jio_key, "extended_search": gadget.props.extended_search || "",\n
+                            "domain_tree": gadget.props.domain_tree || "", "sort_list": gadget.props.sort_list || "",\n
+                            "begin_from":prev_param.begin_from}}),\n
+          gadget.getUrlFor({command: \'change\', options: {jio_key: gadget.props.jio_key, "extended_search": gadget.props.extended_search || "",\n
+                            "domain_tree": gadget.props.domain_tree || "", "sort_list": gadget.props.sort_list || "",\n
+                            "begin_from":next_param.begin_from}})\n
         ]);\n
 \n
       }).push(function (url_list) {\n
@@ -730,7 +733,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61352.3504.31146</string> </value>
+                <value> <string>945.62766.49396.3532</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -748,7 +751,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443084102.55</float>
+                        <float>1443103658.85</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
