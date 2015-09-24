@@ -342,9 +342,11 @@
         for (key2 in contact_dict) {\n
           parameter.contact.push({\n
             jid: key2,\n
+            list_id: key2.split("@")[0],\n
             url: result_list[i],\n
             new_message: !contact_dict[key2].read,\n
-            status: !contact_dict[key2].offline\n
+            status: !contact_dict[key2].offline,\n
+            remove_url: result_list[i].replace("dialog", "remove")\n
           });\n
           i += 1;\n
         }\n
@@ -451,6 +453,53 @@
         $(gadget.props.element).trigger("create");\n
       });\n
   }\n
+  \n
+  function renderRemovePage(gadget, connection_gadget) {\n
+    var contact_url, jid;\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return gadget.aq_pleasePublishMyState({page: PAGE_CONTACT});\n
+      })\n
+      .push(function (contact) {\n
+        contact_url = contact;\n
+        jid = gadget.props.options.jid;\n
+        gadget.props.header_element.innerHTML = gadget.props.header_template({\n
+          left_url: contact_url,\n
+          left_title: "carat-l",\n
+          title: "Delete Contact"\n
+        });\n
+        gadget.props.content_element.innerHTML =\n
+          gadget.props.remove_contact_template({\n
+            contact: jid\n
+          });\n
+        $(gadget.props.element).trigger("create");\n
+\n
+        gadget.props.content_element.querySelector("input[type=text]")\n
+                             .focus();\n
+        gadget.props.content_element.querySelector("input[type=text]")\n
+                             .select();\n
+        return promiseEventListener(\n
+          gadget.props.content_element.querySelector(\'form.remove-contact-form\'),\n
+          \'submit\',\n
+          false\n
+        );\n
+      })\n
+      // XXX need to remove contact from list after removal\n
+      .push(function (submit_event) {\n
+        gadget.props.content_element.querySelector("input[type=submit]")\n
+                                .disabled = true;\n
+        connection_gadget.requestUnsubscribe(\n
+          submit_event.target[0].value\n
+        );\n
+        // unsubscribe and remove do different things, but let\'s do both to make sure\n
+        return connection_gadget.removeContact(\n
+          submit_event.target[0].value\n
+        );\n
+      })\n
+      .push(function () {\n
+        return redirectToDefaultPage(gadget);\n
+      });\n
+  }\n
 \n
   function renderDialogPage(gadget, connection_gadget) {\n
     var jid, message_box,\n
@@ -488,15 +537,32 @@
         }\n
         gadget.props.contact_dict[jid].read = true;\n
 \n
-        function sendMessageHandler(submit_event) {\n
-          var text = submit_event.target[0].value;\n
-          submit_event.target[0].value = "";\n
-          return RSVP.all([\n
-            connection_gadget.sendMessage(jid, text),\n
-            updateConversation(gadget, jid, text, false)\n
-          ]);\n
+        function sendMessageHandler(e) {\n
+          // don\'t send empty messages  \n
+          if (!message_box.value.trim()) {\n
+            if (e.which === 13 && !e.shiftKey) {\n
+              e.preventDefault();\n
+            } \n
+            return true;\n
+          }\n
+          // send messages when the field is focused and Enter is pressed  \n
+          if (e.which == 13 && !e.shiftKey) {\n
+            e.preventDefault(); // prevent newline from being added before sending\n
+            var text = message_box.value;\n
+            message_box.value = "";\n
+            return RSVP.all([\n
+              connection_gadget.sendMessage(jid, text),\n
+              updateConversation(gadget, jid, text, false)\n
+            ]);\n
+          }\n
         }\n
-\n
+        \n
+        // add keypress listener to textarea\n
+        message_box = document.getElementById(\'jabber-message\');\n
+        message_box.addEventListener(\'keypress\', function(e) {\n
+          sendMessageHandler(e);\n
+        });\n
+        \n
         return loopEventListener(\n
           gadget.props.content_element.querySelector(\'form.message-form\'),\n
           \'submit\',\n
@@ -786,13 +852,13 @@
         type = argument_list[2];\n
 \n
       initializeContact(gadget, from);\n
-      if ((type === "unavailable") || (type === "unsubscribed")) {\n
+       if (type === "unavailable") {\n
         // Bye dear contact\n
         gadget.props.contact_dict[from].offline = true;\n
       } else {\n
         // Hello dear contact\n
         gadget.props.contact_dict[from].offline = false;\n
-      }\n
+      } \n
       if ((gadget.props.options !== undefined) &&\n
           (gadget.props.options.page === PAGE_CONTACT)) {\n
         return gadget.getDeclaredGadget(CONNECTION_GADGET_SCOPE)\n
@@ -1073,7 +1139,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442839765.51</float>
+                        <float>1443097975.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
