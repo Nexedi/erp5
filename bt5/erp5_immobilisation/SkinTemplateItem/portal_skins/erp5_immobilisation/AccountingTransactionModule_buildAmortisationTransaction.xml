@@ -52,8 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-builder_kw = {\'activate_kw\':{\'tag\':\'build_amortisation_transaction\'},\n
-              \'update_requested\':1}\n
+builder_kw = {\'activate_kw\':{\'tag\':\'build_amortisation_transaction\'}}\n
 applied_rule_list = []\n
 if len(item_uid_list) > 0:\n
   item_value_list = [context.portal_catalog.getObject(uid) for uid in item_uid_list]\n
