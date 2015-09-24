@@ -64,7 +64,7 @@ box = context.restrictedTraverse(box_relative_url)\n
 portal_selection = context.getPortalObject().portal_selections\n
 \n
 # do validation\n
-form = getattr(context,form_id)\n
+form = getattr(box, form_id)\n
 try:\n
   # Validate\n
   form.validate_all_to_request(request, key_prefix=form_fields_main_prefix)\n
