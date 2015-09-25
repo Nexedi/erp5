@@ -52,33 +52,28 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
     Lists each variation
   """
   # Stock management
-  def getInventory(self, **kw):
-    simulation_tool = getToolByName(self, 'portal_simulation')
-    return simulation_tool.getInventory(
-                   node_uid=self.node_uid,
-                   variation_text=self.variation_text,
-                   resource_uid=self.resource_uid, **kw)
+  def _callSimulationTool(self, method_id, **kw):
+    return getattr(
+      self.getPortalObject().portal_simulation,
+      method_id,
+    )(
+      node_uid=self.node_uid,
+      variation_text=self.variation_text,
+      resource_uid=self.resource_uid,
+      **kw
+    )
 
-  def getCurrentInventory(self,**kw):
-    simulation_tool = getToolByName(self, 'portal_simulation')
-    return simulation_tool.getCurrentInventory(
-                             node_uid=self.node_uid,
-                             variation_text=self.variation_text,
-                             resource_uid=self.resource_uid, **kw)
+  def getInventory(self, **kw):
+    return self._callSimulationTool('getInventory', **kw)
+
+  def getCurrentInventory(self, **kw):
+    return self._callSimulationTool('getCurrentInventory', **kw)
 
   def getFutureInventory(self,**kw):
-    simulation_tool = getToolByName(self,'portal_simulation')
-    return simulation_tool.getFutureInventory(
-                              node_uid=self.node_uid,
-                              variation_text=self.variation_text,
-                              resource_uid=self.resource_uid, **kw)
+    return self._callSimulationTool('getFutureInventory', **kw)
 
   def getAvailableInventory(self,**kw):
-    simulation_tool = getToolByName(self,'portal_simulation')
-    return simulation_tool.getAvailableInventory(
-                             node_uid=self.node_uid,
-                             variation_text=self.variation_text,
-                             resource_uid=self.resource_uid, **kw)
+    return self._callSimulationTool('getAvailableInventory', **kw)
 
   def getQuantityUnit(self, **kw):
     resource = self.getResourceValue()
