@@ -16,7 +16,10 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   # Other way would be to use all the globals variables instead of just an empty
   # dictionary, but that might hamper the speed of exec or eval.
   # Something like -- g = globals(); g['context'] = self;
-  g = globals()
+  g = {}
+
+  # Saving the initial globals dict so as to compare it after code execution
+  globals_dict = globals()
   g['context'] = self
   result_string = None
   ename, evalue, tb_list = None, None, None
@@ -66,9 +69,16 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
       sys.stdout.flush()
       sys.stderr.flush()
 
+  # Difference between the globals variable before and after exec/eval so that
+  # we don't have to save unnecessary variables in database which might or might
+  # not be picklabale
+  local_variable_dict = old_local_variable_dict
+  local_variable_dict_new = {key: val for key, val in g.items() if key not in globals_dict.keys()}
+  local_variable_dict.update(local_variable_dict_new)
+
   result = {
     'result_string': result_string,
-    'local_variable_dict': g,
+    'local_variable_dict': local_variable_dict,
     'status': status,
     'evalue': evalue,
     'ename': ename,
