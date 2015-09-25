@@ -51,6 +51,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>kwd = context.ERP5Accounting_getParams(selection_name)\n
+# cleanup unsupported catalog parameters\n
+kwd.pop(\'period_start_date\', None)\n
+kwd.pop(\'detailed_from_date_summary\', None)\n
 \n
 if kw.get(\'stat\'):\n
   selection_params = context.portal_selections.getSelectionParamsFor(selection_name)\n
@@ -62,15 +65,14 @@ if kw.get(\'stat\'):\n
     kwd[\'selection_domain\'] = selection_domain\n
   if selection_report:\n
     kwd[\'selection_report\'] = selection_report\n
-  if selection_params.get(\'closed_summary\'):\n
-    kwd[\'closed_summary\'] = selection_params[\'closed_summary\']\n
   if context.portal_selections.getSelectionInvertModeFor(selection_name):\n
     kwd[\'stock.node_uid\'] = context.portal_selections.getSelectionInvertModeUidListFor(selection_name)\n
   # is list filtered ?\n
   elif \'title\' in selection_params or \\\n
-     \'preferred_gap_id\' in selection_params or\\\n
-     \'id\' in selection_params or \\\n
-     \'transalated_validation_state_title\' in selection_params:\n
+      \'preferred_gap_id\' in selection_params or\\\n
+      \'id\' in selection_params or \\\n
+      \'transalated_validation_state_title\' in selection_params:\n
+    selection_params[\'ignore_unknown_columns\'] = True\n
     # if yes, apply the same filter here\n
     kwd[\'stock.node_uid\'] = [x.uid for x in\n
                          context.portal_catalog(**selection_params)]\n
@@ -79,6 +81,7 @@ if kw.get(\'stat\'):\n
   return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
 \n
 kwd[\'stock.node_uid\'] = brain.uid\n
+\n
 return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
 # vim: syntax=python\n
 </string> </value>
