@@ -132,6 +132,8 @@ if params.get(\'node_uid\'):\n
     is_pl_account = node.isMemberOf(\'account_type/expense\')\\\n
                  or node.isMemberOf(\'account_type/income\')\n
 \n
+# remove unknown catalog keys from params\n
+params.pop(\'detailed_from_date_summary\', None)\n
 \n
 period_start_date = params.pop(\'period_start_date\', None)\n
 if is_pl_account and not from_date:\n

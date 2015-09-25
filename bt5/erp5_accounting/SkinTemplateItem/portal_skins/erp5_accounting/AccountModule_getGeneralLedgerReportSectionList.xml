@@ -99,10 +99,7 @@ request.other[\'is_accounting_report\'] = True\n
 params = dict(precision=precision,\n
               section_uid=section_uid,\n
               simulation_state=simulation_state,\n
-              period_start_date=period_start_date,\n
-              movement_portal_type=portal.getPortalAccountingMovementTypeList(),\n
-              no_mirror_section_uid_cache=1,\n
-              hide_grouping=request.get(\'omit_grouping_reference\', False))\n
+              )\n
 project = request.get(\'project\')\n
 if project:\n
   if project == \'None\':\n
@@ -137,6 +134,11 @@ if mirror_section:\n
   params[\'mirror_section_uid\'] = mirror_section_uid\n
 \n
 default_selection_params = params.copy()\n
+default_selection_params[\'period_start_date\'] = period_start_date\n
+default_selection_params[\'movement_portal_type\'] = portal.getPortalAccountingMovementTypeList()\n
+default_selection_params[\'no_mirror_section_uid_cache\'] = 1\n
+default_selection_params[\'hide_grouping\'] = request.get(\'omit_grouping_reference\', False) # XXX is this still used ?\n
+\n
 \n
 # if user request report without grouping reference, don\'t show accounts that only have grouped lines in the period.\n
 if request.get(\'omit_grouping_reference\', False):\n
@@ -173,7 +175,7 @@ account_columns = (\n
 # export mode have a different layout\n
 if export:\n
   account_columns = context.AccountModule_getGeneralLedgerColumnItemList()\n
-  \n
+\n
 # utility functions\n
 traverse = portal.restrictedTraverse\n
 account_name_cache = {}\n
@@ -273,7 +275,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                             **params):\n
   key = (inventory.node_relative_url, None, None)\n
   existing_section_dict[key] = True\n
-  \n
+\n
   selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
