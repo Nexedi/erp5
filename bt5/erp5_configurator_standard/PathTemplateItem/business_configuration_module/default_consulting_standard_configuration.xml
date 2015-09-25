@@ -163,10 +163,6 @@
             </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>2</string> </value>
-        </item>
-        <item>
             <key> <string>modification_date</string> </key>
             <value>
               <object>

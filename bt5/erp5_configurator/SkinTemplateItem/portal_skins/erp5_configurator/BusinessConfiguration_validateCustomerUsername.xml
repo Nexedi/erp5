@@ -103,9 +103,9 @@ return 1\n
             <value>
               <tuple>
                 <string>Manager</string>
-	      </tuple>
-	    </value>
-	</item>
+              </tuple>
+            </value>
+        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>BusinessConfiguration_validateCustomerUsername</string> </value>
