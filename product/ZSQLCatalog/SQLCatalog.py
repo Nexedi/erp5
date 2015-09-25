@@ -2122,7 +2122,7 @@ class Catalog(Folder,
       result = script(value)
     return result
 
-  def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key, wrap):
+  def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key, wrap, ignore_unknown_columns):
     """
     node
       Abstract syntax tree node (see SearchText/AdvancedSearchTextParser.py,
@@ -2141,7 +2141,11 @@ class Catalog(Folder,
       result = search_key.buildQuery(wrap(_dequote(node.getValue())),
         comparison_operator=node.getComparisonOperator())
     elif node.isColumn():
-      result = self.buildQueryFromAbstractSyntaxTreeNode(node.getSubNode(), node.getColumnName())
+      result = self.buildQueryFromAbstractSyntaxTreeNode(
+        node.getSubNode(),
+        node.getColumnName(),
+        ignore_unknown_columns=ignore_unknown_columns,
+      )
     else:
       query_list = []
       value_dict = {}
@@ -2151,7 +2155,12 @@ class Catalog(Folder,
           value_dict.setdefault(subnode.getComparisonOperator(),
             []).append(wrap(_dequote(subnode.getValue())))
         else:
-          subquery = self._buildQueryFromAbstractSyntaxTreeNode(subnode, search_key, wrap)
+          subquery = self._buildQueryFromAbstractSyntaxTreeNode(
+            subnode,
+            search_key,
+            wrap,
+            ignore_unknown_columns,
+          )
           if subquery is not None:
             append(subquery)
       logical_operator = node.getLogicalOperator()
@@ -2169,7 +2178,7 @@ class Catalog(Folder,
         result = None
     return result
 
-  def buildQueryFromAbstractSyntaxTreeNode(self, node, key, wrap=lambda x: x):
+  def buildQueryFromAbstractSyntaxTreeNode(self, node, key, wrap=lambda x: x, ignore_unknown_columns=True):
     """
       Build a query from given Abstract Syntax Tree (AST) node by recursing in
       its childs.
@@ -2189,8 +2198,11 @@ class Catalog(Folder,
       search_key = SearchKeyWrapperForScriptableKey(key, script)
       related_key_definition = None
     if search_key is None:
+      message = 'Unknown column ' + repr(key)
+      if not ignore_unknown_columns:
+        raise ValueError(message)
       # Unknown, skip loudly
-      LOG('SQLCatalog', WARNING, 'Unknown column %r, skipped.' % (key, ))
+      LOG('SQLCatalog', WARNING, message)
       result = None
     else:
       if related_key_definition is None:
@@ -2199,7 +2211,7 @@ class Catalog(Folder,
         build_key = search_key.getSearchKey(sql_catalog=self,
           related_key_definition=related_key_definition)
       result = self._buildQueryFromAbstractSyntaxTreeNode(node, build_key,
-        wrap)
+        wrap, ignore_unknown_columns)
       if related_key_definition is not None:
         result = search_key.buildQuery(sql_catalog=self,
           related_key_definition=related_key_definition,
@@ -2219,7 +2231,7 @@ class Catalog(Folder,
     return self._parseSearchText(self.getSearchKey(
       column, search_key=search_key), search_text, is_valid=is_valid)
 
-  def buildQuery(self, kw, ignore_empty_string=True, operator='and'):
+  def buildQuery(self, kw, ignore_empty_string=True, operator='and', ignore_unknown_columns=True):
     query_list = []
     append = query_list.append
     # unknown_column_dict: contains all (key, value) pairs which could not be
@@ -2290,7 +2302,9 @@ class Catalog(Folder,
               result = self.buildSingleQuery(key, raw_value, search_key_name)
             else:
               result = self.buildQueryFromAbstractSyntaxTreeNode(
-                abstract_syntax_tree, key, wrap)
+                abstract_syntax_tree, key, wrap,
+                ignore_unknown_columns=ignore_unknown_columns,
+              )
         else:
           # Any other type, just create a query. (can be a DateTime, ...)
           result = self.buildSingleQuery(key, value)
@@ -2302,7 +2316,11 @@ class Catalog(Folder,
     if len(empty_value_dict):
       LOG('SQLCatalog', WARNING, 'Discarding columns with empty values: %r' % (empty_value_dict, ))
     if len(unknown_column_dict):
-      LOG('SQLCatalog', WARNING, 'Unknown columns %r, skipped.' % (unknown_column_dict.keys(), ))
+      message = 'Unknown columns ' + repr(unknown_column_dict.keys())
+      if ignore_unknown_columns:
+        LOG('SQLCatalog', WARNING, message)
+      else:
+        raise TypeError(message)
     return ComplexQuery(query_list, logical_operator=operator,
         unknown_column_dict=unknown_column_dict)
 
@@ -2356,7 +2374,8 @@ class Catalog(Folder,
     return order_by_list
 
   def buildEntireQuery(self, kw, query_table='catalog', ignore_empty_string=1,
-                       limit=None, extra_column_list=()):
+                       limit=None, extra_column_list=(),
+                       ignore_unknown_columns=True):
     kw = self.getCannonicalArgumentDict(kw)
     group_by_list = kw.pop('group_by_list', [])
     select_dict = kw.pop('select_dict', {})
@@ -2383,7 +2402,7 @@ class Catalog(Folder,
     # new API.
     order_by_override_list = kw.pop('select_expression_key', ())
     return EntireQuery(
-      query=self.buildQuery(kw, ignore_empty_string=ignore_empty_string),
+      query=self.buildQuery(kw, ignore_empty_string=ignore_empty_string, ignore_unknown_columns=ignore_unknown_columns),
       order_by_list=order_by_list,
       order_by_override_list=order_by_override_list,
       group_by_list=group_by_list,
@@ -2398,6 +2417,7 @@ class Catalog(Folder,
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, only_group_columns=False,
                           limit=None, extra_column_list=(),
+                          ignore_unknown_columns=True,
                           **kw):
     return self.buildEntireQuery(
       kw,
@@ -2405,6 +2425,7 @@ class Catalog(Folder,
       ignore_empty_string=ignore_empty_string,
       limit=limit,
       extra_column_list=extra_column_list,
+      ignore_unknown_columns=ignore_unknown_columns,
     ).asSQLExpression(
       self,
       only_group_columns,
