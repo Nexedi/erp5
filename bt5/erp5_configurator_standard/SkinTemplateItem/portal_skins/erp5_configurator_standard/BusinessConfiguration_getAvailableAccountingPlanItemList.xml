@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return [(gap[\'name\'], gap[\'id\']) for gap in context.BusinessConfiguration_getAvailableGAPList()]\n
+            <value> <string>return [(\'\', \'\')] + [(gap[\'name\'], gap[\'id\']) for gap in context.BusinessConfiguration_getAvailableGAPList()]\n
 </string> </value>
         </item>
         <item>
