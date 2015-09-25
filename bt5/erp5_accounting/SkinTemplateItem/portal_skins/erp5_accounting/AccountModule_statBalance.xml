@@ -75,12 +75,17 @@ elif \'title\' in selection_params or \\\n
    \'preferred_gap_id\' in selection_params or \\\n
    \'id\' in selection_params or \\\n
    \'translated_validation_state_title\' in selection_params:\n
+  selection_params[\'ignore_unknown_columns\'] = True\n
   # if list is filtered, apply the same filter here\n
   params[\'node_uid\'] = [x.uid for x in\n
                         portal.portal_catalog(**selection_params)]\n
 else:\n
   # make sure we only have Accounts as nodes\n
   params[\'node_category\'] = [\'account_type\',]\n
+\n
+# Remove params used internally by ERP5Accounting_getParams before passing to inventory API\n
+params.pop("period_start_date", None)\n
+params.pop("detailed_from_date_summary", None)\n
 \n
 return portal.portal_simulation.getInventoryAssetPrice( **params )\n
 </string> </value>

@@ -114,8 +114,10 @@ if kw.get(\'where_expression\'):\n
 if not \'parent_portal_type\' in params:\n
   params.setdefault(\'portal_type\', portal.getPortalAccountingMovementTypeList())\n
 \n
-period_start_date = params.pop(\'period_start_date\', None)\n
+# Remove unsupported inventory API parameters\n
+params.pop(\'detailed_from_date_summary\', None)\n
 \n
+period_start_date = params.pop(\'period_start_date\', None)\n
 if period_start_date and params.get(\'node_uid\'):\n
   # find the node for this node_uid\n
   if context.getUid() == params[\'node_uid\']: # I bet it\'s context\n
