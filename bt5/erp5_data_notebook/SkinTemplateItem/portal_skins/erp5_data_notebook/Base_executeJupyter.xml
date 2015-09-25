@@ -68,9 +68,6 @@ selection_id = \'python_shell_selection\'\n
 portal = context.getPortalObject()\n
 portal_selections = portal.portal_selections\n
 \n
-if not portal.Base_checkPermission(\'portal_components\', \'Manage portal\'):\n
-  return "User doesn\'t have permission to execute code remotely"\n
-\n
 # The boolean values via requests are received as \n
 request_reference = {\'True\': True, \'False\': False}.get(request_reference, False)\n
 if request_reference:\n
