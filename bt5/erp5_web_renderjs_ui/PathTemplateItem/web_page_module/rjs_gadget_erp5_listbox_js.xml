@@ -163,11 +163,9 @@
       gadget.props.domain_tree = options.domain_tree;\n
       gadget.props.jio_key = options.jio_key;\n
       gadget.props.view = options.view;\n
+      gadget.props.hide_item = options.hide_item;\n
       if (options.sort_list) {\n
         gadget.props.sort_list = Object.keys(options.sort_list).map(function (key) {return options.sort_list[key]; });\n
-      }\n
-      if (options.hide_item) {\n
-        gadget.props.hide_item = Object.keys(options.hide_item).map(function (key) {return options.hide_item[key]; });\n
       }\n
       if (field_json.show_anchor) {\n
         th = document.createElement("th");\n
@@ -220,7 +218,7 @@
         select_list = [],\n
         dataset,\n
         counter,\n
-        hide_item = gadget.props.hide_item || [],\n
+        hide_item = gadget.props.hide_item,\n
         tmp_hide_item,\n
         sort_list = gadget.props.sort_list || [],\n
         i,\n
@@ -263,23 +261,13 @@
 \n
 \n
 \n
-      if (hide_item.length > 0) {\n
-        tmp_hide_item = "catalog.uid: (";\n
-        for (i = 0; i < hide_item.length; i += 1) {\n
-          tmp_hide_item += hide_item[i];\n
-          if (i !== hide_item.length - 1) {\n
-            tmp_hide_item += ", ";\n
-          } else {\n
-            tmp_hide_item += ")";\n
-          }\n
-        }\n
-\n
+      if (hide_item) {\n
         if (query_string !== "") {\n
-          query_string += \' AND \' + tmp_hide_item;\n
+          query_string += \' AND \' + hide_item;\n
         } else if (field_json.list_method_template === undefined) {\n
-          query_string = \' AND \' + tmp_hide_item;\n
+          query_string = \' AND \' + hide_item;\n
         } else {\n
-          query_string = tmp_hide_item;\n
+          query_string = hide_item;\n
         }\n
       }\n
 \n
@@ -512,6 +500,7 @@
     .declareService(function () {\n
       var gadget = this,\n
         selected_uid_list,\n
+        selected_uid_query,\n
         hide_form = gadget.props.element.querySelector(".hide_form");\n
       /* hide form */\n
       loopEventListener(\n
@@ -525,21 +514,24 @@
             th,\n
             hide_form_elements,\n
             checkbox;\n
-          hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
+\n
+          hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element:checked");\n
           if (hide_form_elements.length > 0) {\n
-            selected_uid_list = [];\n
+            selected_uid_query = "catalog.uid: (";\n
             for (i = 0; i < hide_form_elements.length; i += 1) {\n
-              if (hide_form_elements[i].checked) {\n
-                selected_uid_list.push(hide_form_elements[i].parentElement.getAttribute("value"));\n
+              selected_uid_query += hide_form_elements[i].parentElement.getAttribute("value");\n
+              if (i !== hide_form_elements.length - 1) {\n
+                selected_uid_query += ", ";\n
+              } else {\n
+                selected_uid_query += ")";\n
               }\n
-              hide_form_elements[i].parentElement.removeChild(hide_form_elements[i]);\n
             }\n
 \n
             return gadget.redirect({jio_key: gadget.props.jio_key,\n
               "extended_search": gadget.props.extended_search || "",\n
               "domain_tree": gadget.props.domain_tree || "",\n
               "sort_list": gadget.props.sort_list || "",\n
-              "hide_item": selected_uid_list});\n
+              "hide_item": selected_uid_query});\n
           }\n
           th = document.createElement("th");\n
 \n
@@ -733,7 +725,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.62766.49396.3532</string> </value>
+                <value> <string>945.64123.65425.24012</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -751,7 +743,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443103658.85</float>
+                        <float>1443185166.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -170,6 +170,7 @@
       }\n
       if (options.hide_item) {\n
         form_options.form_definition.hide_item = options.hide_item;\n
+        search_options.hide_item = options.hide_item;\n
       }\n
       \n
       if (options.domain_tree) {\n
@@ -384,7 +385,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61352.44246.61576</string> </value>
+                <value> <string>945.64053.62550.18722</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -402,7 +403,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443103764.9</float>
+                        <float>1443185583.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

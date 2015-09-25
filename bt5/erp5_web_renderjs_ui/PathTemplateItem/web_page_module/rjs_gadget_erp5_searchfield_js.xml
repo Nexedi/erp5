@@ -145,6 +145,8 @@
       var append_class,\n
         append_attribute,\n
         placeholder = "",\n
+        value,\n
+        hide_value,\n
         is_disabled = option_dict.disabled,\n
         search_gadget = this;\n
 \n
@@ -152,11 +154,14 @@
         append_class = " ui-disabled";\n
         append_attribute = \' disabled="disabled\';\n
       }\n
-\n
+      value = option_dict.extended_search || "";\n
+      if (option_dict.hide_item) {\n
+        value = (value === ""? option_dict.hide_item : value + " AND " + option_dict.hide_item);\n
+      }\n
       return new RSVP.Queue()\n
         .push(function () {\n
           return search_gadget.translateHtml(panel_template({\n
-            widget_value: option_dict.extended_search || placeholder,\n
+            widget_value: value,\n
             widget_theme: option_dict.theme || "c",\n
             widget_status_attribute: append_attribute || placeholder,\n
             widget_status_class: append_class || placeholder\n
@@ -348,7 +353,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.13775.30295.64870</string> </value>
+                <value> <string>945.64076.531.55330</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -366,7 +371,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440164409.77</float>
+                        <float>1443183688.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
