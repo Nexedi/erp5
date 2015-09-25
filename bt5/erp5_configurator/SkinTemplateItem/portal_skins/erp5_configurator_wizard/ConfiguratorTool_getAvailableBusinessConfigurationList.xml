@@ -55,11 +55,13 @@
  The business configurations without Resource and with the state of the related workflow\n
  equals to \'End\' are just ignored.\n
 """\n
-bc_list = list(context.business_configuration_module.searchFolder(\n
+bc_list = context.business_configuration_module.searchFolder(\n
                               portal_type="Business Configuration",\n
-                              simulation_state="draft", \n
-                              resource = "%/workflow_module/%"))\n
-bc_list = [bc for bc in bc_list if bc.getResourceValue() is not None]\n
+                              simulation_state="draft",\n
+                              resource_relative_url="workflow_module/%")\n
+\n
+bc_list = [bc.getObject() for bc in bc_list if bc.getResourceValue() is not None]\n
+\n
 bc_tuple_list = []\n
 index = 0\n
 while True:\n
