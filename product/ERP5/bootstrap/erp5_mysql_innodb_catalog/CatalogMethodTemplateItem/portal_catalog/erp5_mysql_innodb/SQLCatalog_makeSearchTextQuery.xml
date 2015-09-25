@@ -73,7 +73,7 @@ node = context.Base_getAdvancedSearchSyntaxTreeNode(value, column=column)\n
 if node is None:\n
   return context.buildSingleQuery(column, value)\n
 else:\n
-  return context.buildQueryFromAbstractSyntaxTreeNode(node, column)\n
+  return context.buildQueryFromAbstractSyntaxTreeNode(node, column, ignore_unknown_columns=True)\n
 </string> </value>
         </item>
         <item>
