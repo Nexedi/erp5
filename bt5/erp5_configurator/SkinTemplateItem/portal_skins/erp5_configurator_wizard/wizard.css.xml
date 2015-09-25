@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts02634727.61</string> </value>
+            <value> <string>ts43176936.92</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -90,6 +90,7 @@
   font-size: 10px;\n
   float: left;\n
   padding-top: 15px;\n
+  padding-left: 15px;\n
 }\n
 \n
 .box button {\n
@@ -137,7 +138,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2234</int> </value>
+            <value> <int>2256</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
