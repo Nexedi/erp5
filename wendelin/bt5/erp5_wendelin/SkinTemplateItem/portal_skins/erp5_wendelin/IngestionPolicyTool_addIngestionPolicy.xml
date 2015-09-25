@@ -57,6 +57,7 @@ from DateTime import DateTime\n
 \n
 now = DateTime()\n
 ingestion_policy = context.newContent( \\\n
+      id = reference,\n
       portal_type =\'Ingestion Policy\',\n
       reference = reference,\n
       version = \'001\',\n
