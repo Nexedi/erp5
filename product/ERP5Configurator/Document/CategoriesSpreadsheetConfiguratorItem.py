@@ -167,4 +167,4 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         result.append(('/'.join(title_list[1:]),
                        '/'.join(path.split('/')[1:])))
 
-    return result
+    return sorted(result)
