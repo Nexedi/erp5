@@ -357,7 +357,7 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>getStartDate</string>
+                          <string>start_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
