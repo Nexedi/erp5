@@ -130,7 +130,6 @@
 \n
   function submitFilterQuery(gadget) {\n
     var i,\n
-      operator,\n
       query = "",\n
       value,\n
       key,\n
@@ -142,7 +141,10 @@
       options = gadget.props.options,\n
       filterforms = gadget.props.element.querySelectorAll(".filterForm"),\n
       and = gadget.props.element.querySelector(".and");\n
-    operator = and.checked ? "AND" : "OR";\n
+    //when OR is selected, since OR with Related Query is not supported,\n
+    // see https://git.erp5.org/gitweb/erp5.git/blob/HEAD:/product/ZSQLCatalog/Query/ComplexQuery.py?js=1#l113\n
+    //convert OR to NOT with AND\n
+    //a + b = NOT ( NOT (a) AND NOT (b)) \n
     //build simple&complex query\n
     for (i = 0; i < filterforms.length; i += 1) {\n
       value = filterforms[i][2].value;\n
@@ -156,15 +158,34 @@
         } else {\n
           key = filterforms[i][0][filterforms[i][0].selectedIndex].value;\n
         }\n
-        simple_query_list.push(new SimpleQuery(\n
-          {\n
-            key: key,\n
-            type: "simple",\n
-            value: value\n
-          }\n
-        ));\n
+        if (and.checked || filterforms.length === 1) {\n
+          simple_query_list.push(new SimpleQuery(\n
+            {\n
+              key: key,\n
+              type: "simple",\n
+              value: value\n
+            }\n
+          ));\n
+        } else {\n
+          simple_query_list.push(new ComplexQuery(\n
+            {\n
+              operator: "NOT",\n
+              query_list: [new SimpleQuery(\n
+                {\n
+                  key: key,\n
+                  type: "simple",\n
+                  value: value\n
+                }\n
+              )],\n
+              type: "complex"\n
+            }\n
+          ));\n
+        }\n
       }\n
     }\n
+\n
+\n
+\n
 \n
     if (gadget.props.tree_path[0] !== "--") {\n
       for (i = 0; i < gadget.props.tree_path.length; i += 1) {\n
@@ -192,11 +213,18 @@
 \n
     if (simple_query_list.length > 0) {\n
       complex_query = new ComplexQuery({\n
-        operator: operator,\n
+        operator: "AND",\n
         query_list: simple_query_list,\n
         type: "complex"\n
       });\n
-      query = Query.objectToSearchText(complex_query);\n
+      if (!and.checked && filterforms.length > 1) {\n
+        complex_query = new ComplexQuery({\n
+          operator: "NOT",\n
+          query_list: [complex_query],\n
+          type: "complex"\n
+        });\n
+      }\n
+      query = complex_query.toString();\n
     }\n
 \n
     if (domain_tree_query_list.length > 0) {\n
@@ -206,14 +234,14 @@
         type: "complex"\n
       });\n
       domain_tree_query = Query.objectToSearchText(domain_tree_query);\n
-     }\n
+    }\n
 \n
-      gadget.props.jelement.panel("toggle");\n
+    gadget.props.jelement.panel("toggle");\n
 \n
-      return gadget.redirect({jio_key: options.jio_key,\n
-                "extended_search": query, "domain_tree": domain_tree_query,\n
-                "sort_list": options.form_definition.sort_list || "",\n
-                "hide_item": options.form_definition.hide_item || ""});\n
+    return gadget.redirect({jio_key: options.jio_key,\n
+              "extended_search": query, "domain_tree": domain_tree_query,\n
+              "sort_list": options.form_definition.sort_list || "",\n
+              "hide_item": options.form_definition.hide_item || ""});\n
 \n
   }\n
 \n
@@ -474,7 +502,6 @@
 \n
     .declareMethod(\'render\', function (options) {\n
       var container = this.props.element.querySelector(".filter_item_container"),\n
-        domain_tree_container = this.props.element.querySelector(".domain_tree_container"),\n
         i,\n
         gadget = this,\n
         domain_tree,\n
@@ -500,16 +527,24 @@
           gadget.props.domain_tree_map = result._embedded._view.listbox.domain_tree_map;\n
           if (query !== "") {\n
             query_list = QueryFactory.create(query);\n
-            if (query_list.operator === "OR") {\n
+            if (query_list.operator === "OR" || query_list.operator === "NOT") {\n
               or.checked = true;\n
               or.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
             } else {\n
               and.checked = true;\n
               and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
             }\n
-            query_list = query_list.query_list || [query_list];\n
+            if (or.checked) {\n
+              query_list = query_list.query_list[0].query_list;\n
+            } else {\n
+              query_list = query_list.query_list || [query_list];\n
+            }\n
             for (i = 0; i < query_list.length; i += 1) {\n
-              item = createFilterItem(gadget, query_list[i]);\n
+              if (or.checked) {\n
+                item = createFilterItem(gadget, query_list[i].query_list[0]);\n
+              } else {\n
+                item = createFilterItem(gadget, query_list[i]);\n
+              }\n
               container.insertBefore(item, container.lastChild);\n
             }\n
           } else {\n
@@ -710,7 +745,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.62461.33513.45533</string> </value>
+                <value> <string>946.3040.41776.59886</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -728,7 +763,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443426358.29</float>
+                        <float>1443452242.14</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
