@@ -156,6 +156,14 @@
                           <string>time</string>
                           <string>Time</string>
                         </tuple>
+                        <tuple>
+                          <string>comment</string>
+                          <string>Comment</string>
+                        </tuple>
+                        <tuple>
+                          <string>error_message</string>
+                          <string>Error Message</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
