@@ -54,10 +54,11 @@
   Handle appended data chunks.\n
 """\n
 data_stream = state_change[\'object\']\n
+argument_list = state_change['kwargs']['workflow_method_args']\n
 \n
 # call you own script to handle newly appended data which \n
 # is not processed yet\n
-data_stream.DataStream_transformTail()\n
+data_stream.DataStream_transformTail(*argument_list)\n
 </string> </value>
         </item>
         <item>
