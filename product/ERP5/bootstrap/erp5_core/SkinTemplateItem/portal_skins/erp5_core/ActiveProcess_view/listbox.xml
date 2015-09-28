@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>editable_columns</string>
                 <string>list_method</string>
                 <string>title</string>
               </list>
@@ -92,6 +93,21 @@
                         <tuple>
                           <string>result</string>
                           <string>Result</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>detail</string>
+                          <string>detail</string>
+                        </tuple>
+                        <tuple>
+                          <string>result</string>
+                          <string>result</string>
                         </tuple>
                       </list>
                     </value>
