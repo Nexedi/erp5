@@ -407,7 +407,7 @@ div.pre div {\n
 span.pre_wrap {\n
  white-space: pre-wrap;\n
 }\n
-span.pre {\n
+div.pre, span.pre {\n
  font-family: monospace;\n
  color: black;\n
  white-space: pre-wrap;\n
