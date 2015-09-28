@@ -108,7 +108,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-/*global window, document, rJS, URI, RSVP, UriTemplate, QueryFactory, loopEventListener, Query */\n
+/*global window, document, rJS, URI, RSVP, UriTemplate, QueryFactory, loopEventListener, Query, SimpleQuery, ComplexQuery*/\n
 (function (window, document, rJS, URI, RSVP, UriTemplate) {\n
   "use strict";\n
 \n
@@ -513,20 +513,24 @@
             hide_form_elements,\n
             hide_submit_form = document.createElement("form"),\n
             hide_show_all = document.createElement("button"),\n
+            query_list = [],\n
             checkbox;\n
           hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element:checked");\n
 \n
           if (hide_form_elements.length > 0) {\n
-            selected_uid_query = "catalog.uid: (";\n
             for (i = 0; i < hide_form_elements.length; i += 1) {\n
-              selected_uid_query += hide_form_elements[i].parentElement.getAttribute("value");\n
-              hide_form_elements[i].parentElement.removeChild(hide_form_elements[i]);\n
-              if (i !== hide_form_elements.length - 1) {\n
-                selected_uid_query += ", ";\n
-              } else {\n
-                selected_uid_query += ")";\n
-              }\n
+              query_list.push(new SimpleQuery({\n
+                key: "catalog.uid",\n
+                type: "simple",\n
+                value: hide_form_elements[i].parentElement.getAttribute("value")\n
+              }));\n
             }\n
+\n
+            selected_uid_query = new ComplexQuery({\n
+              operator: "OR",\n
+              query_list: query_list,\n
+              type: "complex"\n
+            });\n
 \n
             hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
             for (i = 0; i < hide_form_elements.length; i += 1) {\n
@@ -536,7 +540,7 @@
               "extended_search": gadget.props.extended_search || "",\n
               "domain_tree": gadget.props.domain_tree || "",\n
               "sort_list": gadget.props.sort_list || "",\n
-              "hide_item": selected_uid_query});\n
+              "hide_item": Query.objectToSearchText(selected_uid_query)});\n
           }\n
 \n
           hide_show_all.setAttribute("type", "submit");\n
@@ -747,7 +751,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.64213.19729.53691</string> </value>
+                <value> <string>946.2679.13824.6365</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -765,7 +769,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443190830.65</float>
+                        <float>1443430519.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
