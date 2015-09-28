@@ -132,6 +132,7 @@
     var i,\n
       query = "",\n
       value,\n
+      simple_operator = "",\n
       key,\n
       simple_query_list = [],\n
       complex_query,\n
@@ -139,6 +140,7 @@
       domain_tree_query = "",\n
       domain_tree_query_list = [],\n
       options = gadget.props.options,\n
+      date_float_value = ["", ">", "<", "<=", ">="],\n
       filterforms = gadget.props.element.querySelectorAll(".filterForm"),\n
       and = gadget.props.element.querySelector(".and");\n
     //when OR is selected, since OR with Related Query is not supported,\n
@@ -152,6 +154,8 @@
         select = filterforms[i][1][filterforms[i][1].selectedIndex].value;\n
         if (select === "keyword") {\n
           value = "%" + value + "%";\n
+        } else if (date_float_value.indexOf(select) !== -1) {\n
+          simple_operator = select;\n
         }\n
         if (filterforms[i][0][filterforms[i][0].selectedIndex].value === "Searchable Text") {\n
           key = "";\n
@@ -162,6 +166,7 @@
           simple_query_list.push(new SimpleQuery(\n
             {\n
               key: key,\n
+              operator: simple_operator,\n
               type: "simple",\n
               value: value\n
             }\n
@@ -173,6 +178,7 @@
               query_list: [new SimpleQuery(\n
                 {\n
                   key: key,\n
+                  operator: simple_operator,\n
                   type: "simple",\n
                   value: value\n
                 }\n
@@ -745,7 +751,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.3040.41776.59886</string> </value>
+                <value> <string>946.3061.5336.46745</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -763,7 +769,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443452242.14</float>
+                        <float>1443453599.6</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
