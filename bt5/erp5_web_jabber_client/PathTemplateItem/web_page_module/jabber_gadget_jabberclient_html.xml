@@ -110,7 +110,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <!doctype html>\n
-<html>\n
+<html manifest="./gadget_jabberclient.appcache">\n
   <head>\n
     <meta charset="utf-8">\n
     <meta name="viewport" content="width=device-width, initial-scale=1">\n
