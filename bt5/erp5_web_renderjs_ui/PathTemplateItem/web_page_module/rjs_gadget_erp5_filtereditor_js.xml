@@ -482,12 +482,7 @@
         and = gadget.props.element.querySelector(".and"),\n
         or = gadget.props.element.querySelector(".or"),\n
         query = "";\n
-      while (container.firstChild !==  container.lastChild) {\n
-        container.removeChild(container.firstChild);\n
-      }\n
-      while (domain_tree_container.firstChild) {\n
-        domain_tree_container.removeChild(domain_tree_container.firstChild);\n
-      }\n
+\n
 \n
       this.props.options = options;\n
       gadget.props.tree_path = [];\n
@@ -518,6 +513,8 @@
               container.insertBefore(item, container.lastChild);\n
             }\n
           } else {\n
+            and.checked = true;\n
+            and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
             container.insertBefore(createFilterItem(gadget), container.lastChild);\n
           }\n
 \n
@@ -713,7 +710,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.62459.61529.51251</string> </value>
+                <value> <string>945.62461.33513.45533</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -731,7 +728,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443085290.67</float>
+                        <float>1443426358.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
