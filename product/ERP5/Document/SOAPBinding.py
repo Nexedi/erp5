@@ -93,7 +93,10 @@ class SOAPBinding(Base):
       wsdl.build_interface_document(self.absolute_url())
       return wsdl.get_interface_document()
     REQUEST.stdin.seek(0)
-    ctx = MethodContext(server)
+    if hasattr(MethodContext, 'SERVER'):
+      ctx = MethodContext(server, MethodContext.SERVER)
+    else: # BBB spyne < 2.12
+      ctx = MethodContext(server)
     ctx.in_string = REQUEST.stdin
     ctx, = server.generate_contexts(ctx)
     ctx.udc = self
