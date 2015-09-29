@@ -526,13 +526,33 @@
             i,\n
             th,\n
             hide_form_elements,\n
+            all_hide_form_elements,\n
             hide_submit_form = document.createElement("form"),\n
             hide_show_all = document.createElement("button"),\n
             query_list = [],\n
             checkbox;\n
+          all_hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
           hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element:checked");\n
 \n
-          if (hide_form_elements.length > 0) {\n
+          if (all_hide_form_elements.length > 0) {\n
+            //if nothing is selected, show all\n
+            if (hide_form_elements.length === 0) {\n
+              return gadget.redirect({jio_key: gadget.props.jio_key,\n
+                "extended_search": gadget.props.extended_search || "",\n
+                "domain_tree": gadget.props.domain_tree || "",\n
+                "sort_list": gadget.props.sort_list || ""});\n
+            }\n
+\n
+            //all selected\n
+            //no need to submit\n
+            if (hide_form_elements.length + 1 === all_hide_form_elements.length) {\n
+              for (i = 0; i < all_hide_form_elements.length; i += 1) {\n
+                all_hide_form_elements[i].parentElement.removeChild(all_hide_form_elements[i]);\n
+              }\n
+              return;\n
+            }\n
+\n
+            //a part is selected\n
             for (i = 0; i < hide_form_elements.length; i += 1) {\n
               query_list.push(new SimpleQuery({\n
                 key: "catalog.uid",\n
@@ -547,10 +567,6 @@
               type: "complex"\n
             });\n
 \n
-            hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
-            for (i = 0; i < hide_form_elements.length; i += 1) {\n
-              hide_form_elements[i].parentElement.removeChild(hide_form_elements[i]);\n
-            }\n
             return gadget.redirect({jio_key: gadget.props.jio_key,\n
               "extended_search": gadget.props.extended_search || "",\n
               "domain_tree": gadget.props.domain_tree || "",\n
@@ -766,7 +782,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4198.62902.20684</string> </value>
+                <value> <string>946.4319.25695.31351</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -784,7 +800,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443526476.63</float>
+                        <float>1443529209.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
