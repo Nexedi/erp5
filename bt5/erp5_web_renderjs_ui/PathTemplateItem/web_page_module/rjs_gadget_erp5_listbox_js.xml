@@ -145,6 +145,7 @@
     .declareAcquiredMethod("redirect", "redirect")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
     .declareAcquiredMethod("triggerSortEditor", "triggerSortEditor")\n
+    .declareAcquiredMethod("showQueryError", "showQueryError")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
     //////////////////////////////////////////////\n
@@ -497,6 +498,12 @@
           var temp = document.createElement("tfoot");\n
           temp.innerHTML = my_translated_html;\n
           table.appendChild(temp);\n
+        })\n
+        .fail(function (error) {\n
+          if (error.target.status === 500) {\n
+            return gadget.showQueryError("     Unsupportred Query");\n
+          }\n
+          throw error;\n
         });\n
     })\n
     .declareService(function () {\n
@@ -782,7 +789,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4319.25695.31351</string> </value>
+                <value> <string>946.4415.55526.9147</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -800,7 +807,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443529209.21</float>
+                        <float>1443535241.5</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

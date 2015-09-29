@@ -152,6 +152,17 @@
           return sortEditor.toggle();\n
         });\n
     })\n
+    .allowPublicAcquisition("showQueryError", function (param) {\n
+      var gadget = this;\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+           return gadget.getDeclaredGadget("erp5_searchfield");\n
+        })\n
+        .push(function (searchField) {\n
+          return searchField.showQueryError(param);\n
+        });\n
+    })\n
+    \n
  \n
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
@@ -160,6 +171,7 @@
 \n
       form_options.erp5_document = options.erp5_document;\n
       form_options.form_definition = options.form_definition;\n
+      search_options.jio_key = options.jio_key;\n
       // XXX not generic, fix later\n
       if (options.extended_search) {\n
         form_options.form_definition.extended_search =  options.extended_search;\n
@@ -385,7 +397,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.64053.62550.18722</string> </value>
+                <value> <string>946.4412.4475.4949</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -403,7 +415,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443185583.96</float>
+                        <float>1443534607.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -99,7 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, RSVP, loopEventListener, Handlebars */\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, RSVP, loopEventListener, Handlebars */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
 (function (window, rJS, RSVP, loopEventListener, Handlebars) {\n
   "use strict";\n
@@ -135,8 +137,7 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
-    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
     .declareAcquiredMethod("triggerFilterEditor", "triggerFilterEditor")\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -149,7 +150,7 @@
         hide_value,\n
         is_disabled = option_dict.disabled,\n
         search_gadget = this;\n
-\n
+      search_gadget.props.jio_key = option_dict.jio_key;\n
       if (is_disabled) {\n
         append_class = " ui-disabled";\n
         append_attribute = \' disabled="disabled\';\n
@@ -173,7 +174,10 @@
           return search_gadget;\n
         });\n
     })\n
-\n
+    .declareMethod("showQueryError", function (param) {\n
+      var input = this.props.element.querySelector(\'input[name="search"]\');\n
+      input.value += param;\n
+    })\n
     .declareMethod(\'getContent\', function () {\n
       var input = this.props.element.querySelector(\'input\'),\n
         result = {};\n
@@ -183,7 +187,12 @@
     })\n
 \n
     .declareService(function () {\n
-      var gadget = this;\n
+      var gadget = this,\n
+        i,\n
+        query_list,\n
+        tmp,\n
+        hide_query,\n
+        search_query;\n
 \n
       function filterSubmit(evt) {\n
         return gadget.triggerFilterEditor();\n
@@ -195,12 +204,41 @@
             return gadget.getContent();\n
           })\n
           .push(function (data) {\n
-            return gadget.pleasePublishMyState({\n
-              "extended_search": data.search\n
-            });\n
-          })\n
-          .push(function (url) {\n
-            return gadget.pleaseRedirectMyHash(url);\n
+            if (data.search) {\n
+              query_list = [];\n
+              search_query = QueryFactory.create(data.search);\n
+              if (search_query instanceof SimpleQuery) {\n
+                tmp = [search_query];\n
+              } else {\n
+                tmp = search_query.query_list;\n
+              }\n
+              for (i = 0; i < tmp.length; i += 1) {\n
+                if (tmp[i] instanceof SimpleQuery) {\n
+                  if (tmp[i].key !== "catalog.uid") {\n
+                    query_list.push(tmp[i]);\n
+                  } else {\n
+                    hide_query = new ComplexQuery({\n
+                      operator: "AND",\n
+                      query_list: [tmp[i]],\n
+                      type: "complex"\n
+                    });\n
+                  }\n
+                } else {\n
+                  //only have one complex query\n
+                  hide_query = search_query.query_list[i];\n
+                }\n
+              }\n
+\n
+              return gadget.redirect({jio_key: gadget.props.jio_key,\n
+                "extended_search": Query.objectToSearchText(new ComplexQuery({\n
+                   operator: search_query.operator || "AND",\n
+                   query_list: query_list,\n
+                   type: "complex"\n
+                })),\n
+                "hide_item": hide_query ? Query.objectToSearchText(hide_query) : ""});\n
+            }\n
+            return gadget.redirect({jio_key: gadget.props.jio_key,\n
+                "extended_search": "", "hide_item": ""});\n
           });\n
       }\n
       // Listen to form submit\n
@@ -218,7 +256,9 @@
       );\n
     });\n
 \n
-}(window, rJS, RSVP, loopEventListener, Handlebars));</string> </value>
+}(window, rJS, RSVP, loopEventListener, Handlebars));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -353,7 +393,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.64076.531.55330</string> </value>
+                <value> <string>946.4406.57134.42359</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -371,7 +411,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443183688.67</float>
+                        <float>1443534489.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

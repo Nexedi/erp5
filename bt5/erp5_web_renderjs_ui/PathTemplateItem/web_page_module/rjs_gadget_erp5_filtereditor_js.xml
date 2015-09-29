@@ -529,6 +529,7 @@
         })\n
         .push(function (result) {\n
           var query_list,\n
+            query_item_list,\n
             domain_tree_map = result._embedded._view.listbox.domain_tree_map,\n
             domain_tree_query_list;\n
           gadget.props.column_list = result._embedded._view.listbox.column_list;\n
@@ -542,16 +543,17 @@
               and.checked = true;\n
               and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
             }\n
-            if (or.checked) {\n
-              query_list = query_list.query_list[0].query_list || [];\n
+            //OR built by itself\n
+            if (or.checked && query_list.operator === "NOT") {\n
+                query_item_list = query_list.query_list[0].query_list || [];\n
             } else {\n
-              query_list = query_list.query_list || [query_list];\n
+              query_item_list = query_list.query_list || [query_list];\n
             }\n
-            for (i = 0; i < query_list.length; i += 1) {\n
-              if (or.checked) {\n
-                item = createFilterItem(gadget, query_list[i].query_list[0]);\n
+            for (i = 0; i < query_item_list.length; i += 1) {\n
+              if (or.checked && query_list.operator === "NOT") {\n
+                item = createFilterItem(gadget, query_item_list[i].query_list[0]);\n
               } else {\n
-                item = createFilterItem(gadget, query_list[i]);\n
+                item = createFilterItem(gadget, query_item_list[i]);\n
               }\n
               container.insertBefore(item, container.lastChild);\n
             }\n
@@ -753,7 +755,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4083.26515.61815</string> </value>
+                <value> <string>946.4378.65397.6826</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -771,7 +773,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443514871.92</float>
+                        <float>1443533150.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
