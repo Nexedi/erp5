@@ -152,8 +152,6 @@
         </div>\n
          <section class="ui-body-c ui-content-section">\n
            <div class="sort_item_container">\n
-           <div></div>\n
-           <div></div>\n
            </div>\n
            <form class="plus">\n
              <button type="submit" class="plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-notext"></button>\n
@@ -301,7 +299,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58401.24333.56064</string> </value>
+                <value> <string>945.60934.57457.64460</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -319,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442993692.55</float>
+                        <float>1443515526.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

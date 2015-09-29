@@ -331,7 +331,8 @@
   function createFilterItem(gadget, simple_query) {\n
     var div = document.createElement("div"),\n
       container = document.createElement("form"),\n
-      minus_button = document.createElement("input"),\n
+      minus_button = document.createElement("span"),\n
+      div_text = document.createElement("div"),\n
       select_reference = document.createElement("select"),\n
       i,\n
       tmp = "",\n
@@ -354,11 +355,12 @@
       simple_query = {};\n
     }\n
 \n
-    minus_button.setAttribute("type", "button");\n
-\n
+    minus_button.setAttribute("class", "ui-icon ui-icon-delete ui-icon-shadow");\n
+    div_text.setAttribute("class", "ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset");\n
     container.appendChild(select_reference);\n
     container.appendChild(select_operator);\n
-    container.appendChild(text);\n
+    div_text.appendChild(text);\n
+    container.appendChild(div_text);\n
     container.appendChild(minus_button);\n
     container.setAttribute("class", "filterForm");\n
     div.appendChild(container);\n
@@ -433,7 +435,7 @@
       "click",\n
       false,\n
       function () {\n
-        container.parentElement.removeChild(container);\n
+        div.parentElement.removeChild(div);\n
       }\n
     );\n
     loopEventListener(\n
@@ -541,7 +543,7 @@
               and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
             }\n
             if (or.checked) {\n
-              query_list = query_list.query_list[0].query_list;\n
+              query_list = query_list.query_list[0].query_list || [];\n
             } else {\n
               query_list = query_list.query_list || [query_list];\n
             }\n
@@ -751,7 +753,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.3061.5336.46745</string> </value>
+                <value> <string>946.4083.26515.61815</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -769,7 +771,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443453599.6</float>
+                        <float>1443514871.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
