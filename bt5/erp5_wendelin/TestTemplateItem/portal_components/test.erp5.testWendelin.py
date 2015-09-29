@@ -144,7 +144,7 @@ class Test(ERP5TypeTestCase):
     # override DataStream_transformTail to actually do transformation on appenData
     start = data_stream.getSize()
     script_id = 'DataStream_transformTail'
-    script_content_list = ['', """
+    script_content_list = ["*argument_list", """
 # created by testWendelin.test_01_1_IngestionTail
 start = %s
 end  = %s
@@ -154,7 +154,10 @@ context.activate().DataStream_readChunkListAndTransform( \
   %s, \
   transform_script_id = 'DataStream_copyCSVToDataArray', \
   data_array_reference=context.getReference())""" %(start, start + 10450, 10450)]
-    createZODBPythonScript(portal.portal_skins.custom, script_id, *script_content_list)
+    createZODBPythonScript(
+      portal.portal_skins.custom, 
+      script_id, 
+      *script_content_list)
     
     number_string_list = []
     for my_list in list(chunks(range(10001, 200001), 10)):
