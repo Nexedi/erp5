@@ -155,7 +155,9 @@
         tr = document.createElement("tr"),\n
         document_table = gadget.props.element.querySelector(\'.document_table\'),\n
         th,\n
+        tmp,\n
         length_table = field_json.column_list.length,\n
+        j,\n
         i;\n
 \n
       gadget.props.field_json = field_json;\n
@@ -164,9 +166,11 @@
       gadget.props.jio_key = options.jio_key;\n
       gadget.props.view = options.view;\n
       gadget.props.hide_item = options.hide_item;\n
+      gadget.props.sort_list = [];\n
       if (options.sort_list) {\n
         gadget.props.sort_list = Object.keys(options.sort_list).map(function (key) {return options.sort_list[key]; });\n
       }\n
+\n
       if (field_json.show_anchor) {\n
         th = document.createElement("th");\n
         th.textContent = "Jump";\n
@@ -176,6 +180,17 @@
       for (i = 0; i < length_table; i += 1) {\n
         th = document.createElement("th");\n
         th.textContent = field_json.column_list[i][1];\n
+        for (j = 0; j < gadget.props.sort_list.length; j += 1) {\n
+          tmp = gadget.props.sort_list[j].split(",");\n
+          if (tmp[0] === gadget.props.field_json.column_list[i][0]) {\n
+            if (tmp[1] === "ascending") {\n
+              th.setAttribute("class", "ui-icon-arrow-up");\n
+            } else {\n
+              th.setAttribute("class", "ui-icon-arrow-down");\n
+            }\n
+            break;\n
+          }\n
+        }\n
         th.setAttribute("data-i18n", field_json.column_list[i][1]);\n
         tr.appendChild(th);\n
       }\n
@@ -751,7 +766,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.2679.13824.6365</string> </value>
+                <value> <string>946.4198.62902.20684</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -769,7 +784,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443430519.63</float>
+                        <float>1443526476.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
