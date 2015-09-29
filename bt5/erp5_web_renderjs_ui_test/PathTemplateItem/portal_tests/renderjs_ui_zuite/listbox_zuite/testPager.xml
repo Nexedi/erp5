@@ -135,7 +135,7 @@
 \n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'sort_item_container\']/div[3]</td>\n
+  <td>//div[@class=\'sort_item_container\']/div[1]</td>\n
   <td></td>\n
 </tr>\n
 \n
