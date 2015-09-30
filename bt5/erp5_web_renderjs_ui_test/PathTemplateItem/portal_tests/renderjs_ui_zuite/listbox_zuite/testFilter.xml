@@ -120,6 +120,12 @@
 </tr>\n
 \n
 <tr>\n
+  <td>pause</td>\n
+  <td>3000</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
   <td>click</td>\n
   <td>//form[@class=\'hide_form\']/button</td>\n
   <td></td>\n

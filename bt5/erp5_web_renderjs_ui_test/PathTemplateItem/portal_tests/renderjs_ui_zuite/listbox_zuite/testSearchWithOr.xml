@@ -132,13 +132,6 @@
 </tr>\n
 \n
 \n
-<tr>\n
-  <td>click</td>\n
-  <td>//form[@class=\'plus\']/button</td>\n
-  <td></td>\n
-</tr>\n
-\n
-\n
 \n
 <tr>\n
   <td>click</td>\n
@@ -172,6 +165,12 @@
 </tr>\n
 \n
 <tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]/form/div/div/select</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
   <td>select</td>\n
   <td>//div[@class="filter_item_container"]/div[2]/form/div/div/select</td>\n
   <td>index=1</td>\n
@@ -181,6 +180,19 @@
   <td>type</td>\n
   <td>//div[@class="filter_item_container"]/div[2]/form/div/input</td>\n
   <td>1</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'plus\']/button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[3]/form/div/div/select</td>\n
+  <td></td>\n
 </tr>\n
 \n
 \n

@@ -163,6 +163,12 @@
   <td>0</td>\n
 </tr>\n
 \n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]/form/div/div/select</td>\n
+  <td></td>\n
+</tr>\n
+\n
 \n
 <tr>\n
   <td>select</td>\n

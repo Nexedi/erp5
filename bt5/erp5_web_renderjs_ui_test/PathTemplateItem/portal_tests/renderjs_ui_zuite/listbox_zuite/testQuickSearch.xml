@@ -233,7 +233,7 @@
 \n
 <tr>\n
   <td>type</td>\n
-  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]/div/input</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]/input</td>\n
   <td>T%</td>\n
 </tr>\n
 \n
