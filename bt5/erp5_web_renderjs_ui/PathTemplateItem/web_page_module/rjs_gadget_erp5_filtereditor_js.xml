@@ -328,15 +328,9 @@
   }\n
 \n
 \n
-  function createFilterItem(gadget, simple_query) {\n
-    var div = document.createElement("div"),\n
-      container = document.createElement("form"),\n
-      minus_button = document.createElement("span"),\n
-      div_text = document.createElement("div"),\n
-      select_reference = document.createElement("select"),\n
-      i,\n
-      tmp = "",\n
-      default_select = "Searchable Text",\n
+  function createSelectOperator(type, operator) {\n
+    var html = "",\n
+      select_operator = document.createElement("select"),\n
       select_options,\n
       select_options_value,\n
       options_map = {\n
@@ -347,9 +341,50 @@
         "other": ["Exact Match", "keyword"],\n
         "other_value": ["", "keyword"]\n
       },\n
+      j;\n
 \n
-      text = document.createElement("input"),\n
-      select_operator = document.createElement("select");\n
+    if (type.indexOf(\'date\') !== -1 ||\n
+        type.indexOf(\'quantity\') !== -1 ||\n
+        type.indexOf(\'price\') !== -1) {\n
+      select_options = options_map.date_float;\n
+      select_options_value = options_map.date_float_value;\n
+    } else if (type === "Searchable Text") {\n
+      select_options = options_map.searchable_text;\n
+      select_options_value = options_map.searchable_text_value;\n
+    } else {\n
+      select_options = options_map.other;\n
+      select_options_value = options_map.other_value;\n
+    }\n
+\n
+    for (j = 0; j < select_options.length; j += 1) {\n
+      if (operator === select_options_value[j]) {\n
+        html += selected_option_template({\n
+          value: select_options_value[j],\n
+          text: select_options[j]\n
+        });\n
+      } else {\n
+        html += option_template({\n
+          value: select_options_value[j],\n
+          text: select_options[j]\n
+        });\n
+      }\n
+    }\n
+    select_operator.innerHTML = html;\n
+    return select_operator;\n
+  }\n
+\n
+\n
+  function createFilterItem(gadget, simple_query) {\n
+    var div = document.createElement("div"),\n
+      container = document.createElement("form"),\n
+      minus_button = document.createElement("span"),\n
+      div_text = document.createElement("div"),\n
+      select_reference = document.createElement("select"),\n
+      i,\n
+      operator,\n
+      tmp = "",\n
+      default_select = "Searchable Text",\n
+      text = document.createElement("input");\n
 \n
     if (simple_query === undefined) {\n
       simple_query = {};\n
@@ -357,60 +392,13 @@
 \n
     minus_button.setAttribute("class", "ui-icon ui-icon-delete ui-icon-shadow");\n
     div_text.setAttribute("class", "ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset");\n
-    container.appendChild(select_reference);\n
-    container.appendChild(select_operator);\n
-    div_text.appendChild(text);\n
-    container.appendChild(div_text);\n
-    container.appendChild(minus_button);\n
-    container.setAttribute("class", "filterForm");\n
-    div.appendChild(container);\n
-    function createSelectOperator(event) {\n
-      var html = "",\n
-        j;\n
-      if (event.target.value.indexOf(\'date\') !== -1) {\n
-        text.setAttribute("type", "date");\n
-        simple_query.value = simple_query.value ? simple_query.value.replace(/\\//g, "-") : "";\n
-      } else {\n
-        text.setAttribute("type", "text");\n
-      }\n
-      text.setAttribute("value", simple_query.value || "");\n
-      if (event.target.value.indexOf(\'date\') !== -1 ||\n
-          event.target.value.indexOf(\'quantity\') !== -1 ||\n
-          event.target.value.indexOf(\'price\') !== -1) {\n
-        select_options = options_map.date_float;\n
-        select_options_value = options_map.date_float_value;\n
-      } else if (event.target.value === "Searchable Text") {\n
-        select_options = options_map.searchable_text;\n
-        select_options_value = options_map.searchable_text_value;\n
-      } else {\n
-        select_options = options_map.other;\n
-        select_options_value = options_map.other_value;\n
-      }\n
-\n
-      for (j = 0; j < select_options.length; j += 1) {\n
-        if (simple_query.operator === select_options_value[j]) {\n
-          html += selected_option_template({\n
-            value: select_options_value[j],\n
-            text: select_options[j]\n
-          });\n
-        } else {\n
-          html += option_template({\n
-            value: select_options_value[j],\n
-            text: select_options[j]\n
-          });\n
-        }\n
-      }\n
-      select_operator.innerHTML = html;\n
-      $(select_operator).selectmenu();\n
-      $(select_operator).selectmenu(\'refresh\');\n
-    }\n
-\n
 \n
     tmp = "";\n
     tmp += option_template({\n
       value: "Searchable Text",\n
       text: "Searchable Text"\n
     });\n
+\n
     for (i = 0; i < gadget.props.column_list.length; i += 1) {\n
       if (simple_query.key === gadget.props.column_list[i][0]) {\n
         default_select = gadget.props.column_list[i][0];\n
@@ -425,36 +413,84 @@
         });\n
       }\n
     }\n
-\n
     select_reference.innerHTML = tmp;\n
-    createSelectOperator({"target": {"value": default_select}});\n
-\n
-    $(select_reference).selectmenu();\n
-    loopEventListener(\n
-      minus_button,\n
-      "click",\n
-      false,\n
-      function () {\n
-        div.parentElement.removeChild(div);\n
-      }\n
-    );\n
-    loopEventListener(\n
-      select_reference,\n
-      "change",\n
-      false,\n
-      createSelectOperator\n
-    );\n
-    loopEventListener(\n
-      container,\n
-      "submit",\n
-      false,\n
-      function () {\n
-        return submitFilterQuery(gadget);\n
-      }\n
-    );\n
+    if (simple_query.key && simple_query.key.indexOf(\'date\') !== -1) {\n
+      text.setAttribute("type", "date");\n
+      simple_query.value = simple_query.value ? simple_query.value.replace(/\\//g, "-") : "";\n
+    } else {\n
+      text.setAttribute("type", "text");\n
+    }\n
+    text.setAttribute("value", simple_query.value || "");\n
+    operator = createSelectOperator(default_select, simple_query.operator);\n
+    container.appendChild(select_reference);\n
+    container.appendChild(operator);\n
+    div_text.appendChild(text);\n
+    container.appendChild(div_text);\n
+    container.appendChild(minus_button);\n
+    container.setAttribute("class", "filterForm");\n
+    div.appendChild(container);\n
     return div;\n
   }\n
 \n
+\n
+  function createTranslatedItem(gadget, value) {\n
+    var container = gadget.props.element.querySelector(".filter_item_container"),\n
+      item = createFilterItem(gadget, value);\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return gadget.translateHtml(item.innerHTML);\n
+      })\n
+      .push(function (innerHTML) {\n
+        var select_list,\n
+          i;\n
+        item.innerHTML = innerHTML;\n
+        select_list = item.querySelectorAll("select");\n
+        for (i = 0; i < select_list.length; i += 1) {\n
+          $(select_list[i]).selectmenu();\n
+        }\n
+        container.insertBefore(item, container.lastChild);\n
+\n
+        loopEventListener(\n
+          select_list[0],\n
+          "change",\n
+          false,\n
+          function (event) {\n
+            return new RSVP.Queue()\n
+              .push(function () {\n
+                var tmp = document.createElement("div");\n
+                tmp.appendChild(createSelectOperator(event.target.value));\n
+                if (event.target.value.indexOf(\'date\') !== -1) {\n
+                  item.querySelector("input").setAttribute("type", "date");\n
+                } else {\n
+                  item.querySelector("input").setAttribute("type", "text");\n
+                }\n
+                return gadget.translateHtml(tmp.innerHTML);\n
+              })\n
+              .push(function (innerHTML) {\n
+                select_list[1].innerHTML = innerHTML;\n
+                $(select_list[1]).selectmenu(\'refresh\');\n
+              });\n
+          }\n
+        );\n
+        loopEventListener(\n
+          item.querySelector(".filterForm"),\n
+          "submit",\n
+          false,\n
+          function () {\n
+            return submitFilterQuery(gadget);\n
+          }\n
+        );\n
+\n
+        loopEventListener(\n
+          item.querySelector(".ui-icon-delete"),\n
+          "click",\n
+          false,\n
+          function () {\n
+            container.removeChild(item);\n
+          }\n
+        );\n
+      });\n
+  }\n
 \n
   gadget_klass\n
     /////////////////////////////////////////////////////////////////\n
@@ -509,11 +545,9 @@
     })\n
 \n
     .declareMethod(\'render\', function (options) {\n
-      var container = this.props.element.querySelector(".filter_item_container"),\n
-        i,\n
+      var i,\n
         gadget = this,\n
         domain_tree,\n
-        item,\n
         and = gadget.props.element.querySelector(".and"),\n
         or = gadget.props.element.querySelector(".or"),\n
         query = "";\n
@@ -530,38 +564,11 @@
         .push(function (result) {\n
           var query_list,\n
             query_item_list,\n
+            queue = new RSVP.Queue(),\n
             domain_tree_map = result._embedded._view.listbox.domain_tree_map,\n
             domain_tree_query_list;\n
           gadget.props.column_list = result._embedded._view.listbox.column_list;\n
           gadget.props.domain_tree_map = result._embedded._view.listbox.domain_tree_map;\n
-          if (query !== "") {\n
-            query_list = QueryFactory.create(query);\n
-            if (query_list.operator === "OR" || query_list.operator === "NOT") {\n
-              or.checked = true;\n
-              or.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
-            } else {\n
-              and.checked = true;\n
-              and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
-            }\n
-            //OR built by itself\n
-            if (or.checked && query_list.operator === "NOT") {\n
-                query_item_list = query_list.query_list[0].query_list || [];\n
-            } else {\n
-              query_item_list = query_list.query_list || [query_list];\n
-            }\n
-            for (i = 0; i < query_item_list.length; i += 1) {\n
-              if (or.checked && query_list.operator === "NOT") {\n
-                item = createFilterItem(gadget, query_item_list[i].query_list[0]);\n
-              } else {\n
-                item = createFilterItem(gadget, query_item_list[i]);\n
-              }\n
-              container.insertBefore(item, container.lastChild);\n
-            }\n
-          } else {\n
-            and.checked = true;\n
-            and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
-            container.insertBefore(createFilterItem(gadget), container.lastChild);\n
-          }\n
 \n
           if (domain_tree !== "") {\n
             domain_tree_query_list = QueryFactory.create(domain_tree);\n
@@ -578,6 +585,37 @@
           } else {\n
             createDomainTree(gadget);\n
           }\n
+\n
+\n
+\n
+          if (query !== "") {\n
+            query_list = QueryFactory.create(query);\n
+            if (query_list.operator === "OR" || query_list.operator === "NOT") {\n
+              or.checked = true;\n
+              or.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
+            } else {\n
+              and.checked = true;\n
+              and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
+            }\n
+            //OR built by itself\n
+            if (or.checked && query_list.operator === "NOT") {\n
+              query_item_list = query_list.query_list[0].query_list || [];\n
+            } else {\n
+              query_item_list = query_list.query_list || [query_list];\n
+            }\n
+            for (i = 0; i < query_item_list.length; i += 1) {\n
+              if (or.checked && query_list.operator === "NOT") {\n
+                queue.push(createTranslatedItem(gadget, query_item_list[i].query_list[0]));\n
+              } else {\n
+                queue.push(createTranslatedItem(gadget, query_item_list[i]));\n
+              }\n
+            }\n
+          } else {\n
+            and.checked = true;\n
+            and.parentElement.children[0].setAttribute("class", "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left  ui-radio-on");\n
+            queue.push(createTranslatedItem(gadget));\n
+          }\n
+          return queue;\n
         });\n
     })\n
 \n
@@ -585,21 +623,17 @@
     // declared services\n
     /////////////////////////////////////////////////////////////////\n
     .declareService(function () {\n
-      var gadget = this,\n
-        item;\n
+      var gadget = this;\n
       function closeFilterEditor() {\n
         gadget.props.jelement.panel("toggle");\n
       }\n
-\n
 \n
       loopEventListener(\n
         gadget.props.element.querySelector(".plus"),\n
         "submit",\n
         false,\n
         function () {\n
-          var container = gadget.props.element.querySelector(".filter_item_container");\n
-          item = createFilterItem(gadget);\n
-          container.insertBefore(item, container.lastChild);\n
+          createTranslatedItem(gadget);\n
         }\n
       );\n
       loopEventListener(\n
@@ -755,7 +789,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4378.65397.6826</string> </value>
+                <value> <string>946.5968.16440.8482</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -773,7 +807,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443533150.45</float>
+                        <float>1443627977.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

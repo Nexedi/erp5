@@ -136,16 +136,16 @@
           <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
            <div class="ui-controlgroup-controls">\n
             <form class="delete">\n
-              <button data-rel="close" type="submit" class="close responsive ui-first-child ui-btn ui-btn-icon-left ui-icon-times">Close</button>\n
+              <button data-i18n="Close" data-rel="close" type="submit" class="close responsive ui-first-child ui-btn ui-btn-icon-left ui-icon-times">Close</button>\n
             </form>\n
            </div>\n
           </div>\n
          \n
-         <h1 class="ui-title" role="heading" aria-level="1">Sort Editor</h1>\n
+         <h1 class="ui-title" role="heading" data-i18n="sort Editor" aria-level="1">Sort Editor</h1>\n
          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
            <div class="ui-controlgroup-controls">\n
               <form class="submit">\n
-             <button data-rel="save" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check">Submit</button>\n
+             <button data-rel="save" data-i18n="Submit" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check">Submit</button>\n
            </form>\n
            </div>\n
          </div>\n
@@ -299,7 +299,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.60934.57457.64460</string> </value>
+                <value> <string>946.4096.6867.34269</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -317,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443515526.27</float>
+                        <float>1443620255.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

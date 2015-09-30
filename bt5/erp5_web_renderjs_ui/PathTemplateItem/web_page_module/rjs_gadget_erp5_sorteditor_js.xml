@@ -153,7 +153,6 @@
       }\n
     }\n
     select_reference.innerHTML = tmp;\n
-    $(select_reference).selectmenu();\n
     tmp = "";\n
     if (sort_value_list[1] === "ascending") {\n
       tmp += selected_option_template({\n
@@ -180,17 +179,35 @@
     }\n
 \n
     select_operator.innerHTML = tmp;\n
-    $(select_operator).selectmenu();\n
 \n
-    loopEventListener(\n
-      minus_button,\n
-      "click",\n
-      false,\n
-      function () {\n
-        div.parentElement.removeChild(div);\n
-      }\n
-    );\n
     return div;\n
+  }\n
+\n
+  function createTranslatedItem(gadget, key) {\n
+    var container = gadget.props.element.querySelector(".sort_item_container"),\n
+      sort_item = createSortItem(gadget, key);\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return gadget.translateHtml(sort_item.innerHTML);\n
+      })\n
+      .push(function (innerHTML) {\n
+        var select_list,\n
+          i;\n
+        sort_item.innerHTML = innerHTML;\n
+        select_list = sort_item.querySelectorAll("select");\n
+        for (i = 0; i < select_list.length; i += 1) {\n
+          $(select_list[i]).selectmenu();\n
+        }\n
+        container.insertBefore(sort_item, container.lastChild);\n
+        loopEventListener(\n
+          sort_item.querySelector(".ui-icon-delete"),\n
+          "click",\n
+          false,\n
+          function () {\n
+            container.removeChild(sort_item);\n
+          }\n
+        );\n
+      });\n
   }\n
 \n
 \n
@@ -245,7 +262,6 @@
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
         i,\n
-        container = gadget.props.element.querySelector(".sort_item_container"),\n
         sort_form_list;\n
       sort_form_list = gadget.props.element.querySelectorAll(".sortForm");\n
       for (i = 0; i < sort_form_list.length; i += 1) {\n
@@ -259,29 +275,29 @@
           return gadget.jio_getAttachment(options.jio_key, options.view);\n
         })\n
         .push(function (result) {\n
-          var key;\n
+          var key,\n
+            queue = new RSVP.Queue();\n
           gadget.props.column_list = result._embedded._view.listbox.column_list;\n
           for (key in options.form_definition.sort_list) {\n
             if (options.form_definition.sort_list.hasOwnProperty(key)) {\n
               if (options.form_definition.sort_list[key] !== "") {\n
-                container.insertBefore(createSortItem(gadget, options.form_definition.sort_list[key]), container.lastChild);\n
+                queue.push(createTranslatedItem(gadget, options.form_definition.sort_list[key]));\n
               }\n
             }\n
           }\n
+          return queue;\n
         });\n
     })\n
     //////////////////////////////////////////////\n
     .declareService(function () {\n
       var gadget = this;\n
-      function plusItem() {\n
-        var container = gadget.props.element.querySelector(".sort_item_container");\n
-        container.insertBefore(createSortItem(gadget), container.lastChild);\n
-      }\n
       loopEventListener(\n
         gadget.props.element.querySelector(".plus"),\n
         "submit",\n
         false,\n
-        plusItem\n
+        function () {\n
+          return createTranslatedItem(gadget);\n
+        }\n
       );\n
 \n
       loopEventListener(\n
@@ -459,7 +475,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.62441.17317.23193</string> </value>
+                <value> <string>946.6000.3675.35362</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -477,7 +493,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443515446.86</float>
+                        <float>1443629882.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

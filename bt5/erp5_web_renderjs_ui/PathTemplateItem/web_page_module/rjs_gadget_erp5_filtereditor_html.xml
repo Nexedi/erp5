@@ -148,16 +148,16 @@
           <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
            <div class="ui-controlgroup-controls">\n
             <form class="delete">\n
-              <button data-rel="close" type="submit" class="close responsive ui-first-child ui-btn ui-btn-icon-left ui-icon-times">Close</button>\n
+              <button data-rel="close" type="submit" data-i18n="Close" class="close responsive ui-first-child ui-btn ui-btn-icon-left ui-icon-times">Close</button>\n
             </form>\n
            </div>\n
           </div>\n
          \n
-         <h1 class="ui-title" role="heading" aria-level="1">Filter Editor</h1>\n
+         <h1 class="ui-title" role="heading" data-i18n="Filter Editor" aria-level="1">Filter Editor</h1>\n
          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
            <div class="ui-controlgroup-controls">\n
             <form class="submit">\n
-             <button data-rel="save" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check">Submit</button>\n
+             <button data-rel="save" data-i18n="submit" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check">Submit</button>\n
            </form>\n
            </div>\n
          </div>\n
@@ -165,7 +165,7 @@
 \n
     \n
          <section class="ui-content-header-plain">\n
-           <h3 class="ui-content-title ui-body-c">\n
+           <h3 class="ui-content-title ui-body-c" data-i18n="Custom Filter">\n
             <span class="ui-icon ui-icon-custom">&nbsp;</span>\n
               Custom Filter\n
             </h3>\n
@@ -174,12 +174,12 @@
           <fieldset data-role="controlgroup" class="ui-controlgroup ui-corner-all">\n
            \n
                 <div class="ui-radio">\n
-                  <label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-on">All criterions(AND)</label>\n
+                  <label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-on" data-i18n="All criterions(AND)">All criterions(AND)</label>\n
                   <input type="radio" value="Off" name="heard_about" id="heard_about_a" class="and checkboxradio" data-cacheval="true" data-enhanced="true">\n
                 </div>\n
                 \n
                 <div class="ui-radio">\n
-                  <label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-off">At lease one(OR)</label>\n
+                  <label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-off" data-i18n="At lease one(OR)">At lease one(OR)</label>\n
                   <input type="radio" value="Off" name="heard_about" id="heard_about_b" class="or checkboxradio" data-cacheval="false" data-enhanced="true">\n
                 </div>\n
 \n
@@ -196,7 +196,7 @@
       \n
    \n
       <section class="ui-content-header-plain">\n
-           <h3 class="ui-content-title ui-body-c">\n
+           <h3 class="ui-content-title ui-body-c" data-i18n="Predefined Filter">\n
             <span class="ui-icon ui-icon-custom">&nbsp;</span>\n
               Predefined Filter\n
             </h3>\n
@@ -349,7 +349,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58401.24333.56064</string> </value>
+                <value> <string>946.2931.62817.63914</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -367,7 +367,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442993681.59</float>
+                        <float>1443620387.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
