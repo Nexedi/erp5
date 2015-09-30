@@ -245,7 +245,7 @@
 \n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]/div/input</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]/div//input</td>\n
   <td>0</td>\n
 </tr>\n
 \n
@@ -257,7 +257,7 @@
 \n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//div[@class="filter_item_container"]/div[2]/form/div[3]/div/input</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]/form/div[3]/div//input</td>\n
   <td>1</td>\n
 </tr>\n
 \n

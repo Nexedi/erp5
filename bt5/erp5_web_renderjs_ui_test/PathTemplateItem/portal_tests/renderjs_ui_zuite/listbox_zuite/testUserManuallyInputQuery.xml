@@ -191,6 +191,13 @@
 \n
 \n
 <tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]/form/div/div/select</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
   <td>verifyValue</td>\n
   <td>//div[@class="filter_item_container"]/div[1]/form/div/div/select</td>\n
   <td>id</td>\n
@@ -199,7 +206,7 @@
 \n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]/div/input</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]//input</td>\n
   <td>9</td>\n
 </tr>\n
 \n
@@ -213,7 +220,7 @@
 \n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//div[@class="filter_item_container"]/div[2]/form/div[3]/div/input</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]/form/div[3]//input</td>\n
   <td>Title</td>\n
 </tr>\n
 \n
@@ -276,6 +283,12 @@
 \n
 \n
 <tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]/form/div/div/select</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
   <td>verifyValue</td>\n
   <td>//div[@class="filter_item_container"]/div[1]/form/div/div/select</td>\n
   <td>id</td>\n
@@ -284,7 +297,7 @@
 \n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]/div/input</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]//input</td>\n
   <td>9</td>\n
 </tr>\n
 \n
@@ -298,7 +311,7 @@
 \n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//div[@class="filter_item_container"]/div[2]/form/div[3]/div/input</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]/form/div[3]//input</td>\n
   <td>Title</td>\n
 </tr>\n
 \n

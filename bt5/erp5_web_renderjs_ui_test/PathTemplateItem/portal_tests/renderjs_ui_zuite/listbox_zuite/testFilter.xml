@@ -303,6 +303,12 @@
 </tr>\n
 \n
 <tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]/form/div/div/select</td>\n
+  <td>index=1</td>\n
+</tr>\n
+\n
+<tr>\n
   <td>select</td>\n
   <td>//div[@class="filter_item_container"]/div[1]/form/div/div/select</td>\n
   <td>index=1</td>\n
@@ -310,7 +316,7 @@
 \n
 <tr>\n
   <td>type</td>\n
-  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]/div/input</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]//input</td>\n
   <td>7</td>\n
 </tr>\n
 \n
