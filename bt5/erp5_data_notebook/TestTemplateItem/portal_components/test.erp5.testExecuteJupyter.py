@@ -39,7 +39,7 @@ class TestExecuteJupyter(SecurityTestCase):
     """
     self.notebook_module = self.portal.getDefaultModule(portal_type='Data Notebook')
     self.assertTrue(self.notebook_module is not None)
-    
+
     # Create user to be used in tests
     user_folder = self.getPortal().acl_users
     user_folder._doAddUser('dev_user', '', ['Manager',], [])
@@ -96,7 +96,7 @@ class TestExecuteJupyter(SecurityTestCase):
     result_title = [obj.getTitle() for obj in notebook_search_result]
     if result_title:
       self.assertEquals(notebook.getTitle(), result_title[0])
-  
+
   def testUserCanCreateNotebookWithCode(self):
     """
     Test if user can create Data Notebook Message object or not
@@ -105,8 +105,8 @@ class TestExecuteJupyter(SecurityTestCase):
 
     notebook = self._newNotebook(reference='new_notebook_with_code')
     self.tic()
-  
-    notebook_code='some_random_invalid_notebook_code %s' % time.time() 
+
+    notebook_code='some_random_invalid_notebook_code %s' % time.time()
     self._newNotebookMessage(
                             notebook_module=notebook,
                             notebook_code=notebook_code
@@ -155,7 +155,7 @@ class TestExecuteJupyter(SecurityTestCase):
     python_expression = "print 52"
     reference = 'Test.Notebook.AddNewNotebookMessage %s' % time.time()
     title = 'Test NB Title %s' % time.time()
-    
+
     # Calling the function twice, first to create a new notebook and then
     # sending python_expression to check if it adds to the same notebook
     portal.Base_executeJupyter(title=title, reference=reference)

@@ -61,12 +61,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
-import json\n
+            <value> <string>import json\n
 \n
-selection_id = \'python_shell_selection\'\n
 portal = context.getPortalObject()\n
-portal_selections = portal.portal_selections\n
 \n
 # The boolean values via requests are received as \n
 request_reference = {\'True\': True, \'False\': False}.get(request_reference, False)\n
@@ -129,9 +126,20 @@ result = {\n
   u\'status\': status\n
 }\n
 \n
-data_notebook_message.edit(notebook_code_result=code_result)\n
-\n
-return json.dumps(result)\n
+try:\n
+  serialized_result = json.dumps(result)\n
+  data_notebook_message.edit(notebook_code_result=code_result)\n
+except UnicodeDecodeError:\n
+  result = {\n
+    u\'code_result\': None,\n
+    u\'ename\': u\'UnicodeDecodeError\',\n
+    u\'evalue\': None,\n
+    u\'traceback\': None,\n
+    u\'status\': u\'error\'\n
+  }\n
+  serialized_result = json.dumps(result)\n
+  \n
+return serialized_result\n
 </string> </value>
         </item>
         <item>
