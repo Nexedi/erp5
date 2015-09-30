@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -148,6 +148,7 @@
                         <string>my_view_mode_listbox_description</string>
                         <string>my_view_mode_read_only_id</string>
                         <string>my_view_mode_reference_as_name</string>
+                        <string>listbox_description</string>
                       </list>
                     </value>
                 </item>
