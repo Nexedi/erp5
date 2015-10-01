@@ -453,7 +453,10 @@ class ColumnMap(object):
   def asSQLColumn(self, raw_column, group=DEFAULT_GROUP_ID):
     if self.catalog_table_name is None or raw_column in self.column_ignore_set or \
        '.' in raw_column or '*' in raw_column:
-      result = raw_column
+      if raw_column.endswith('__score__'):
+        result = raw_column.replace('.', '_')
+      else:
+        result = raw_column
     else:
       if raw_column.endswith('__score__'):
         raw_column = raw_column[:-9]
@@ -464,7 +467,10 @@ class ColumnMap(object):
       if group is DEFAULT_GROUP_ID:
         group, column = self.related_key_dict.get(column, (group, raw_column))
       alias = self.table_alias_dict[(group, self.column_map[(group, column)])]
-      result = '`%s`.`%s%s`' % (alias, column, column_suffix)
+      if column_suffix:
+        result = '%s_%s%s' % (alias, column, column_suffix)
+      else:
+        result = '`%s`.`%s`' % (alias, column)
       if function is not None:
         result = '%s(%s)' % (function, result)
     return result
