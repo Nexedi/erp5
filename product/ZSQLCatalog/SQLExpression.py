@@ -133,6 +133,8 @@ class SQLExpression(object):
       warnings.warn("Providing a 'from_expression' is deprecated.",
                     DeprecationWarning)
     self.from_expression = from_expression
+    self._select_dict = self._getSelectDict()[0]
+    self._reversed_select_dict = {y: x for x, y in self._select_dict.iteritems()}
 
   def getTableAliasDict(self):
     """
@@ -239,6 +241,7 @@ class SQLExpression(object):
       if column.endswith('__score__') and column not in order_by_dict:
         continue
       expression = conflictSafeGet(order_by_dict, column, str(column))
+      expression = self._reversed_select_dict.get(expression, expression)
       if cast not in (None, ''):
         expression = 'CAST(%s AS %s)' % (expression, cast)
       if direction is not None:
@@ -304,7 +307,7 @@ class SQLExpression(object):
       If there are nested SQLExpression, it merges (union of sets) them with
       local value.
     """
-    result = set(self.group_by_list)
+    result = {self._reversed_select_dict.get(x, x) for x in self.group_by_list}
     for sql_expression in self.sql_expression_list:
       result.update(sql_expression.getGroupByset())
     return result
@@ -363,7 +366,7 @@ class SQLExpression(object):
       checks that they don't alias different columns with the same name. If
       they do, it raises a ValueError.
     """
-    return self._getSelectDict()[0]
+    return self._select_dict
 
   def getSelectExpression(self):
     """
