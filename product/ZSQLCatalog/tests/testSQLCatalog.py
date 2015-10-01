@@ -728,27 +728,27 @@ class TestSQLCatalog(ERP5TypeTestCase):
     order_by_expression = sql_expression.getOrderByExpression()
     self.assertNotEqual(order_by_expression, '')
     # ... and not sort by relevance
-    self.assertFalse('MATCH' in order_by_expression, order_by_expression)
+    self.assertEqual('`foo`.`fulltext`', order_by_expression)
     # order_by_list on fulltext column + '__score__, resulting "ORDER BY" must be non-empty.
     sql_expression = self.asSQLExpression({'fulltext': 'foo',
       'order_by_list': [('fulltext__score__', ), ]})
     order_by_expression = sql_expression.getOrderByExpression()
     self.assertNotEqual(order_by_expression, '')
     # ... and must sort by relevance
-    self.assertTrue('MATCH' in order_by_expression, order_by_expression)
+    self.assertEqual('fulltext__score__', order_by_expression)
     # ordering on fulltext column with sort order specified must preserve
     # sorting by relevance.
     for direction in ('ASC', 'DESC'):
       sql_expression = self.asSQLExpression({'fulltext': 'foo',
         'order_by_list': [('fulltext__score__', direction), ]})
       order_by_expression = sql_expression.getOrderByExpression()
-      self.assertTrue('MATCH' in order_by_expression, (order_by_expression, direction))
+      self.assertEqual('fulltext__score__ %s' % direction, order_by_expression)
     # Providing a None cast should work too
     for direction in ('ASC', 'DESC'):
       sql_expression = self.asSQLExpression({'fulltext': 'foo',
         'order_by_list': [('fulltext__score__', direction, None), ]})
       order_by_expression = sql_expression.getOrderByExpression()
-      self.assertTrue('MATCH' in order_by_expression, (order_by_expression, direction))
+      self.assertEqual('fulltext__score__ %s' % direction, order_by_expression)
 
   def test_logicalOperators(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='AN ORB'),
