@@ -47,7 +47,6 @@ import random
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
-from Products.ERP5.Document.MirrorMovementGroup import _isMirrored
 
 from Testing import ZopeTestCase
 from zLOG import LOG, INFO
