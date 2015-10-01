@@ -117,7 +117,7 @@
           // XX Synchonizing the whole module is too much, here is a way to start quietly\n
           // Supsended until modification_date is handled for synchronization\n
             + \' AND modification_date:>="\'\n
-            + today.getDate() + \'/\' + (today.getMonth() - 2) + \'/\' + today.getFullYear()  + \'" \',\n
+            + \'01/\' + (today.getMonth() - 2) + \'/\' + today.getFullYear()  + \'" \',\n
           limit: [0, 1234567890]\n
         },\n
         use_remote_post: true,\n
@@ -397,7 +397,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443102632.01</float>
+                        <float>1443192309.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

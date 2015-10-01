@@ -101,7 +101,7 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, jIO, FormData */\n
+/*global window, rJS, jIO, FormData, XMLHttpRequestProgressEvent */\n
 /*jslint indent: 2, maxerr: 3 */\n
 (function (window, rJS, jIO) {\n
   "use strict";\n
@@ -177,14 +177,14 @@
         storage = gadget.state_parameter_dict.jio_storage;\n
       return storage.repair.apply(storage, arguments)\n
         .push(undefined, function (error) {\n
-          if(error.hasOwnProperty("currentTarget") &&\n
-             error.currentTarget.status === 401 &&\n
-             gadget.state_parameter_dict.jio_storage_name === "ERP5") {\n
+          if (error instanceof XMLHttpRequestProgressEvent &&\n
+              error.currentTarget.status === 401 &&\n
+              gadget.state_parameter_dict.jio_storage_name === "ERP5") {\n
             return {\n
-                redirect: {\n
-                  page: "login"\n
-                }\n
-              };\n
+              redirect: {\n
+                page: "login"\n
+              }\n
+            };\n
           }\n
           throw error;\n
         });\n
@@ -327,7 +327,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58667.36801.48622</string> </value>
+                <value> <string>945.63008.32756.3891</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -345,7 +345,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442858006.69</float>
+                        <float>1443118127.75</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
