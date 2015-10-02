@@ -61,9 +61,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>import json\n
+            <value> <string>portal = context.getPortalObject()\n
+# Check permissions for current user \n
+if not portal.Base_checkPermission(\'portal_components\', \'Manage Portal\'):\n
+  return "You are not authorized to access the script"\n
 \n
-portal = context.getPortalObject()\n
+import json\n
 \n
 # The boolean values via requests are received as \n
 request_reference = {\'True\': True, \'False\': False}.get(request_reference, False)\n
