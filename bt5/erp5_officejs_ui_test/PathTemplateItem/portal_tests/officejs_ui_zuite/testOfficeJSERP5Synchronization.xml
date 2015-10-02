@@ -40,7 +40,7 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test RenderJS UI</title>\n
+<title>Test OfficeJS UI</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
@@ -222,12 +222,37 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//a[@data-i18n=\'Sync\']</td>\n
+  <td>//a[@data-i18n=\'Storage Configuration\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//a[@data-i18n=\'Sync\']</td>\n
+  <td>//a[@data-i18n=\'Storage Configuration\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//form[@class=\'select-erp5-form\']/button[@data-i18n=\'ERP5\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>pause</td>\n
+  <td>1000</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//form[@class=\'select-erp5-form\']/button[@data-i18n=\'ERP5\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Synchronize\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n=\'Synchronize\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -386,7 +411,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testOfficeJSSynchronization</string> </value>
+            <value> <string>testOfficeJSERP5Synchronization</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
