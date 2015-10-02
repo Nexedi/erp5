@@ -167,19 +167,17 @@ class TestExecuteJupyter(SecurityTestCase):
                               )
     self.tic()
 
-    notebook_list = portal.portal_catalog(
+    notebook = portal.portal_catalog.getResultValue(
                                           portal_type='Data Notebook',
                                           reference=reference
                                           )
 
-    notebook_message_search_result = portal.portal_catalog(
+    notebook_message_search_result = portal.portal_catalog.getResultValue(
                                               portal_type='Data Notebook',
+                                              reference=reference,
                                               notebook_code=python_expression
                                               )
-
-    result = [obj.getId() for obj in notebook_message_search_result]
-
-    self.assertIn(notebook_list[0].getId(), result)
+    self.assertEquals(notebook.getId(), notebook_message_search_result.getId())
 
   def testBaseExecuteJupyterErrorHandling(self):
     """
