@@ -1,5 +1,5 @@
 <module>
- <id>data_notebook</id>
+ <id>data_notebook_module</id>
  <permission_list>
   <permission type='tuple'>
    <name>Access Transient Objects</name>
