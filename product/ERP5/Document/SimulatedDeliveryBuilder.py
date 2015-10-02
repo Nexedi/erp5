@@ -314,12 +314,12 @@ class SimulatedDeliveryBuilder(BuilderMixin):
 
     for s_m_list_per_movement in delivery_dict.values():
       total_quantity = sum([quantity_dict.get(s_m,
-                                              s_m.getMappedProperty('quantity')) \
+                                              s_m.getProperty('quantity')) \
                             for s_m in s_m_list_per_movement])
       if total_quantity != 0.0:
         for s_m in s_m_list_per_movement:
           delivery_ratio = quantity_dict.get(s_m,
-                                             s_m.getMappedProperty('quantity')) \
+                                             s_m.getProperty('quantity')) \
                                              / total_quantity
           s_m.edit(delivery_ratio=delivery_ratio)
       else:

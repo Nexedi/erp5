@@ -70,7 +70,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>mapped_property_listbox</string>
                       </list>
                     </value>
                 </item>
@@ -90,7 +89,6 @@
                         <string>listbox_divergence_provider</string>
                         <string>listbox_matching_provider</string>
                         <string>listbox_updating_provider</string>
-                        <string>mapped_property_listbox_mapping_property_list</string>
                       </list>
                     </value>
                 </item>

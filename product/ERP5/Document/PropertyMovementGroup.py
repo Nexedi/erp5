@@ -40,7 +40,7 @@ class PropertyMovementGroup(MovementGroup):
 
   def _getPropertyDict(self, movement, **kw):
     property_dict = {}
-    getProperty = getattr(movement, 'getMappedProperty', movement.getProperty)
+    getProperty = movement.getProperty
     for prop in self.getTestedPropertyList():
       property_dict[prop] = getProperty(prop)
     return property_dict

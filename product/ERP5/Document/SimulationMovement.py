@@ -759,34 +759,3 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     movement -- not applicable
     """
     raise NotImplementedError
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getMappedProperty')
-  def getMappedProperty(self, property):
-    mapping = self.getPropertyMappingValue()
-    if mapping is not None:
-      # Special case: corrected quantity is difficult to handle,
-      # because, if quantity is inverse in the mapping, other
-      # parameters, profit quantity (deprecated) and delivery error,
-      # must be inverse as well.
-      if property == 'corrected_quantity':
-        mapped_quantity_id = mapping.getMappedPropertyId('quantity')
-        quantity = mapping.getMappedProperty(self, 'quantity')
-        profit_quantity = self.getProfitQuantity() or 0
-        delivery_error = self.getDeliveryError() or 0
-        if mapped_quantity_id[:1] == '-':
-          # XXX what about if "quantity | -something_different" is
-          # specified?
-          return quantity + profit_quantity - delivery_error
-        else:
-          return quantity - profit_quantity + delivery_error
-      return mapping.getMappedProperty(self, property)
-    return self.getProperty(property)
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'setMappedProperty')
-  def setMappedProperty(self, property, value):
-    mapping = self.getPropertyMappingValue()
-    if mapping is not None:
-      return mapping.setMappedProperty(self, property, value)
-    return self.setProperty(property, value)

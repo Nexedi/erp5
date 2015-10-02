@@ -368,11 +368,11 @@ class FakeMovement:
     """
     total_quantity = 0
     for movement in self.__movement_list:
-      total_quantity += movement.getMappedProperty('quantity')
+      total_quantity += movement.getProperty('quantity')
 
     if total_quantity:
       for movement in self.__movement_list:
-        quantity = movement.getMappedProperty('quantity')
+        quantity = movement.getProperty('quantity')
         movement._setDeliveryRatio(quantity*float(delivery_ratio)/total_quantity)
     else:
       # Distribute equally ratio to all movements
@@ -431,11 +431,7 @@ class FakeMovement:
     """
     total_quantity = 0
     for movement in self.getMovementList():
-      getMappedProperty = getattr(movement, 'getMappedProperty', None)
-      if getMappedProperty is None:
-        quantity = movement.getQuantity()
-      else:
-        quantity = getMappedProperty('quantity')
+      quantity = movement.getQuantity()
       if quantity:
         total_quantity += quantity
     return total_quantity
@@ -443,11 +439,7 @@ class FakeMovement:
   def _getPriceDict(self):
     price_dict = {}
     for movement in self.getMovementList():
-      getMappedProperty = getattr(movement, 'getMappedProperty', None)
-      if getMappedProperty is None:
-        quantity = movement.getQuantity()
-      else:
-        quantity = getMappedProperty('quantity')
+      quantity = movement.getQuantity()
       if quantity:
         price = movement.getPrice() or 0
         quantity += price_dict.setdefault(price, 0)
@@ -506,12 +498,6 @@ class FakeMovement:
 
     return self.__movement_list[0].getVariationCategoryList(
         omit_optional_variation=omit_optional_variation, **kw)
-
-  def getMappedProperty(self, property):
-    if property == 'quantity':
-      return self.getQuantity()
-    else:
-      raise NotImplementedError
 
   def __repr__(self):
     repr_str = '<%s object at 0x%x for %r' % (self.__class__.__name__,

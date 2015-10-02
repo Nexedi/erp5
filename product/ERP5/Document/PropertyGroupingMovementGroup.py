@@ -52,7 +52,7 @@ class PropertyGroupingMovementGroup(MovementGroup):
     tested_property_list = self.getTestedPropertyList()
     for movement in movement_list:
       key_value_list = []
-      getProperty = getattr(movement, 'getMappedProperty', movement.getProperty)
+      getProperty = movement.getProperty
       for prop in tested_property_list:
         key_value_list.append((prop, getProperty(prop)))
       # key_value_list as a grouping key

@@ -98,10 +98,7 @@ class GeneratedDeliveryBuilder(BuilderMixin):
     """
     Initialize or update delivery movement properties.
     """
-    if getattr(simulation_movement, 'getMappedProperty', None) is not None:
-      property_dict['quantity'] = simulation_movement.getMappedProperty('quantity')
-    else:
-      property_dict['quantity'] = simulation_movement.getQuantity()
+    property_dict['quantity'] = simulation_movement.getQuantity()
     property_dict['price'] = simulation_movement.getPrice()
     if update_existing_movement:
       property_dict['quantity'] = (delivery_movement.getQuantity() or 0.0) + property_dict['quantity']

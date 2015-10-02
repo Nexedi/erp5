@@ -44,7 +44,7 @@ class CategoryMovementGroup(PropertyMovementGroup):
 
   def _getPropertyDict(self, movement, **kw):
     property_dict = {}
-    getProperty = getattr(movement, 'getMappedProperty', movement.getProperty)
+    getProperty = movement.getProperty
     for prop in self.getTestedPropertyList():
       list_prop = prop + '_list'
       property_dict[list_prop] = (list if prop == 'specialise' else
