@@ -61,15 +61,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-# Check permissions for current user \n
+            <value> <string>"""\n
+Python script to create Data Notebook or update existing Data Notebooks\n
+identifying notebook by reference from user.\n
+\n
+Expected behaviour from this script:-\n
+1. Return unauthorized message for non-developer user.\n
+2. Create new \'Data Notebook\' for new reference.\n
+3. Add new \'Data Notebook Message\'to the existing Data Notebook on basis of reference.\n
+4. Return python dictionary containing list of all notebooks for \'request_reference=True\'\n
+"""\n
+\n
+portal = context.getPortalObject()\n
+# Check permissions for current user and display message to non-authorized user \n
 if not portal.Base_checkPermission(\'portal_components\', \'Manage Portal\'):\n
   return "You are not authorized to access the script"\n
 \n
 import json\n
 \n
-# The boolean values via requests are received as \n
+# Convert the request_reference argument string to their respeced boolean values\n
 request_reference = {\'True\': True, \'False\': False}.get(request_reference, False)\n
+\n
+# Return python dictionary with title and reference of all notebooks\n
+# for request_reference=True\n
 if request_reference:\n
   data_notebook_list = portal.portal_catalog(portal_type=\'Data Notebook\')\n
   notebook_detail_list = [{\'reference\': obj.getReference(), \'title\': obj.getTitle()} for obj in data_notebook_list]\n
@@ -79,15 +93,16 @@ if not reference:\n
   message = "Please set or use reference for the notebook you want to use"\n
   return message\n
 \n
+# Take python_expression as \'\' for empty code from jupyter frontend\n
 if not python_expression:\n
   python_expression = \'\'\n
 \n
-data_notebook_list = portal.portal_catalog(portal_type=\'Data Notebook\',\n
+# Get Data Notebook with the specific reference\n
+data_notebook = portal.portal_catalog.getResultValue(portal_type=\'Data Notebook\',\n
                       reference=reference)\n
 \n
-if data_notebook_list:\n
-  data_notebook = data_notebook_list[0]\n
-else:\n
+# Create new Data Notebook if reference doesn\'t match with any from existing ones\n
+if not data_notebook:\n
   notebook_module = portal.getDefaultModule(portal_type=\'Data Notebook\')\n
   data_notebook = notebook_module.DataNotebookModule_addDataNotebook(\n
     title=title,\n
@@ -95,21 +110,26 @@ else:\n
     batch_mode=True\n
   )\n
 \n
+# Add new Data Notebook Message to the Data Notebook\n
 data_notebook_message = data_notebook.DataNotebook_addDataNotebookMessage(\n
   notebook_code=python_expression,\n
   batch_mode=True\n
 )\n
 \n
-#Getting active_process associated with data_notebook object\n
+# Get active_process associated with data_notebook object\n
 process_id = data_notebook.getProcess()\n
 active_process = portal.portal_activities[process_id]\n
+# Add a result object to Active Process object\n
 result_list = active_process.getResultList()\n
 \n
+# Get local variables saves in Active Result, local varibales are saved as\n
+# persistent mapping object\n
 old_local_variable_dict = result_list[0].summary\n
 if not old_local_variable_dict:\n
   old_local_variable_dict = context.Base_addPersistentMapping()\n
 \n
-# pass all to code runner\n
+# Pass all to code Base_runJupyter external function which would execute the code\n
+# and returns a dict of result\n
 final_result = context.Base_runJupyter(python_expression, old_local_variable_dict)\n
 code_result = final_result[\'result_string\']\n
 new_local_variable_dict = final_result[\'local_variable_dict\']\n
@@ -118,6 +138,8 @@ evalue = final_result[\'evalue\']\n
 traceback = final_result[\'traceback\']\n
 status = final_result[\'status\']\n
 \n
+# Call to function to update persistent mapping object with new local variables\n
+# and save the variables in the Active Result pertaining to the current Data Notebook\n
 new_dict = context.Base_updatePersistentMapping(new_local_variable_dict)\n
 result_list[0].edit(summary=new_dict)\n
 \n
@@ -129,6 +151,7 @@ result = {\n
   u\'status\': status\n
 }\n
 \n
+# Catch exception while seriaizing the result to be passed to jupyter frontend\n
 try:\n
   serialized_result = json.dumps(result)\n
   data_notebook_message.edit(notebook_code_result=code_result)\n
