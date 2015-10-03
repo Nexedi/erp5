@@ -238,8 +238,6 @@ class SQLExpression(object):
     append = result.append
     order_by_dict = self._getOrderByDict()
     for (column, direction, cast) in self.getOrderByList():
-      if column.endswith('__score__') and column not in order_by_dict:
-        continue
       expression = conflictSafeGet(order_by_dict, column, str(column))
       expression = self._reversed_select_dict.get(expression, expression)
       if cast not in (None, ''):

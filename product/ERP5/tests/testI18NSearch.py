@@ -83,7 +83,7 @@ class TestI18NSearch(ERP5TypeTestCase):
     self.assertTrue('ORDER BY\n  `full_text`.`SearchableText` ASC' in self.portal.portal_catalog(SearchableText='Faure', sort_on=(('SearchableText', 'ascending'),), src__=1))
 
     # check sort on fulltext search score
-    self.assertTrue('ORDER BY\n  SearchableText__score__ ASC' in self.portal.portal_catalog(SearchableText='Faure', sort_on=(('SearchableText__score__', 'ascending'),), src__=1))
+    self.assertTrue('ORDER BY\n  full_text_SearchableText__score__ ASC' in self.portal.portal_catalog(SearchableText='Faure', sort_on=(('SearchableText__score__', 'ascending'),), src__=1))
 
   def test_catalog_full_text_title(self):
     # check if 'é' == 'e' collation works
@@ -115,12 +115,12 @@ class TestI18NSearch(ERP5TypeTestCase):
       }))
 
     # check sort on fulltext search score
-    self.assertFalse('ORDER BY\n  title__score__' in self.portal.portal_catalog(**{
+    self.assertTrue('ORDER BY\n  catalog_full_text_title__score__' in self.portal.portal_catalog(**{
       'catalog_full_text.title':'Faure',
       'sort_on':(('catalog_full_text.title__score__', 'ascending'),),
       'src__':1
       }))
-    self.assertTrue('ORDER BY\n  title__score__' in self.portal.portal_catalog(**{
+    self.assertTrue('ORDER BY\n  catalog_full_text_title__score__' in self.portal.portal_catalog(**{
       'catalog_full_text.title':'Faure',
       'sort_on':(('title__score__', 'ascending'),),
       'src__':1
@@ -156,7 +156,7 @@ class TestI18NSearch(ERP5TypeTestCase):
     self.assertTrue('ORDER BY\n  `catalog`.`title` ASC' in self.portal.portal_catalog(title='Faure', sort_on=(('title', 'ascending'),), src__=1))
 
     # check sort on fulltext search score
-    self.assertTrue('ORDER BY\n  title__score__' in self.portal.portal_catalog(title='Faure', sort_on=(('title__score__', 'ascending'),), src__=1))
+    self.assertTrue('ORDER BY\n  catalog_full_text_title__score__' in self.portal.portal_catalog(title='Faure', sort_on=(('title__score__', 'ascending'),), src__=1))
 
 def test_suite():
   suite = unittest.TestSuite()
