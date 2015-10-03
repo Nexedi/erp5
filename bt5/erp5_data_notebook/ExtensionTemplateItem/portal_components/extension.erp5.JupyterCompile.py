@@ -3,6 +3,7 @@
 from StringIO import StringIO
 from IPython.utils import py3compat
 from IPython.utils.py3compat import unicode_type
+from Products.ERP5Type.Globals import  PersistentMapping
 
 import sys
 import traceback
@@ -85,3 +86,19 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
     'traceback': tb_list,
   }
   return result
+
+def AddPersistentMapping(self):
+  """
+  Function to add PersistentMapping object which can be used as a dictionary
+  """
+  new_dict = PersistentMapping()
+  return new_dict
+
+def UpdatePersistentMapping(self, existing_dict):
+  """
+  Function to update PersistentMapping object
+  """
+  new_dict = PersistentMapping()
+  for key, value in existing_dict.iteritems():
+    new_dict[key]=value
+  return new_dict
