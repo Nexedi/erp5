@@ -61,7 +61,6 @@ class ISQLExpression(Interface):
                where_expression_operator=None,
                sql_expression_list=None,
                select_dict=None,
-               auto_extend_select_list=False,
                limit=None,
                from_expression=None):
     """
@@ -101,11 +100,6 @@ class ISQLExpression(Interface):
         Key is column alias.
         Value is column name, or Null. If it is Null, the alias will also be
         used as column name.
-      auto_extend_select_list (boolean)
-        If True, select_list is automatically extended to have columns
-        used in group_by_list and order_by_list. It is useful when use
-        select_expression in inner query and use group_by_expression or
-        order_by_expression in outer query.
       limit (1-tuple, 2-tuple, other)
         First item is the number of lines expected, second one if given is the
         offset of limited result list within the unlimited result list.

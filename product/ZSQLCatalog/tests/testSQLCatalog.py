@@ -728,27 +728,27 @@ class TestSQLCatalog(ERP5TypeTestCase):
     order_by_expression = sql_expression.getOrderByExpression()
     self.assertNotEqual(order_by_expression, '')
     # ... and not sort by relevance
-    self.assertEqual('`foo`.`fulltext`', order_by_expression)
+    self.assertFalse('MATCH' in order_by_expression, order_by_expression)
     # order_by_list on fulltext column + '__score__, resulting "ORDER BY" must be non-empty.
     sql_expression = self.asSQLExpression({'fulltext': 'foo',
       'order_by_list': [('fulltext__score__', ), ]})
     order_by_expression = sql_expression.getOrderByExpression()
     self.assertNotEqual(order_by_expression, '')
     # ... and must sort by relevance
-    self.assertEqual('foo_fulltext__score__', order_by_expression)
+    self.assertTrue('MATCH' in order_by_expression, order_by_expression)
     # ordering on fulltext column with sort order specified must preserve
     # sorting by relevance.
     for direction in ('ASC', 'DESC'):
       sql_expression = self.asSQLExpression({'fulltext': 'foo',
         'order_by_list': [('fulltext__score__', direction), ]})
       order_by_expression = sql_expression.getOrderByExpression()
-      self.assertEqual('foo_fulltext__score__ %s' % direction, order_by_expression)
+      self.assertTrue('MATCH' in order_by_expression, (order_by_expression, direction))
     # Providing a None cast should work too
     for direction in ('ASC', 'DESC'):
       sql_expression = self.asSQLExpression({'fulltext': 'foo',
         'order_by_list': [('fulltext__score__', direction, None), ]})
       order_by_expression = sql_expression.getOrderByExpression()
-      self.assertEqual('foo_fulltext__score__ %s' % direction, order_by_expression)
+      self.assertTrue('MATCH' in order_by_expression, (order_by_expression, direction))
 
   def test_logicalOperators(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='AN ORB'),
@@ -758,42 +758,6 @@ class TestSQLCatalog(ERP5TypeTestCase):
         ReferenceQuery(operator='in', default=['AN', 'ORB']),
         operator='and'),
       {'default': 'AN OR ORB'})
-
-  def test_auto_extend_select_list(self):
-    # by default select_list is not automatically extended by
-    # order_by_list or group_by_list.
-    sql_expression = self.asSQLExpression({
-      'order_by_list': [('default',),]})
-    select_dict = sql_expression.getSelectDict()
-    self.assertEqual({}, select_dict)
-    sql_expression = self.asSQLExpression({
-      'group_by_list': ['default',]})
-    select_dict = sql_expression.getSelectDict()
-    self.assertEqual({}, select_dict)
-    # select_list is extended if auto_extend_select_list is enabled.
-    sql_expression = self.asSQLExpression({
-      'order_by_list': [('default',),]},
-      auto_extend_select_list=True)
-    select_dict = sql_expression.getSelectDict()
-    self.assertEqual({'foo_default__ext__': '`foo`.`default`'}, select_dict)
-    sql_expression = self.asSQLExpression({
-      'group_by_list': ['default',]},
-      auto_extend_select_list=True)
-    select_dict = sql_expression.getSelectDict()
-    self.assertEqual({'foo_default__ext__': '`foo`.`default`'}, select_dict)
-    # fulltext score is automatically added in select_dict even if
-    # auto_extend_select_list is not enabled.
-    sql_expression = self.asSQLExpression({
-      'fulltext': 'foo',
-      'order_by_list': [('fulltext__score__',),]})
-    select_dict = sql_expression.getSelectDict()
-    self.assertEqual(['foo_fulltext__score__'], select_dict.keys())
-    sql_expression = self.asSQLExpression({
-      'fulltext': 'foo',
-      'order_by_list': [('fulltext__score__',),]},
-      auto_extend_select_list=True)
-    select_dict = sql_expression.getSelectDict()
-    self.assertEqual(['foo_fulltext__score__'], select_dict.keys())
 
   def _searchTextInDictQuery(self, column):
     self.catalog(ReferenceQuery(ReferenceQuery(

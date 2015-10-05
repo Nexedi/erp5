@@ -2350,8 +2350,7 @@ class Catalog(Folder,
     return order_by_list
 
   def buildEntireQuery(self, kw, query_table='catalog', ignore_empty_string=1,
-                       limit=None, auto_extend_select_list=False,
-                       extra_column_list=()):
+                       limit=None, extra_column_list=()):
     group_by_list = kw.pop('group_by_list', kw.pop('group_by', kw.pop('group_by_expression', ())))
     if isinstance(group_by_list, basestring):
       group_by_list = [x.strip() for x in group_by_list.split(',')]
@@ -2418,21 +2417,18 @@ class Catalog(Folder,
       implicit_join=implicit_join,
       limit=limit,
       catalog_table_name=query_table,
-      auto_extend_select_list=auto_extend_select_list,
       extra_column_list=extra_column_list,
       from_expression=from_expression)
 
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, only_group_columns=False,
-                          limit=None, auto_extend_select_list=False,
-                          extra_column_list=(),
+                          limit=None, extra_column_list=(),
                           **kw):
     return self.buildEntireQuery(
       kw,
       query_table=query_table,
       ignore_empty_string=ignore_empty_string,
       limit=limit,
-      auto_extend_select_list=auto_extend_select_list,
       extra_column_list=extra_column_list,
     ).asSQLExpression(
       self,
