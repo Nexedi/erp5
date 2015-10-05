@@ -2346,7 +2346,13 @@ class Catalog(Folder,
     elif order_by_expression is not None:
       if not isinstance(order_by_expression, basestring):
         raise TypeError, 'order_by_expression must be a basestring instance. Got %r.' % (order_by_expression, )
-      order_by_list = [[x.strip()] for x in order_by_expression.split(',')]
+      for x in order_by_expression.split(','):
+        x = x.strip()
+        item = x.rsplit(None, 1)
+        if len(item) > 1 and item[-1].upper() in ('ASC', 'DESC'):
+          append(item)
+        else:
+          append([x])
     return order_by_list
 
   def buildEntireQuery(self, kw, query_table='catalog', ignore_empty_string=1,
