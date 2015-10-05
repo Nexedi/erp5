@@ -2357,24 +2357,9 @@ class Catalog(Folder,
 
   def buildEntireQuery(self, kw, query_table='catalog', ignore_empty_string=1,
                        limit=None, extra_column_list=()):
-    group_by_list = kw.pop('group_by_list', kw.pop('group_by', kw.pop('group_by_expression', ())))
-    if isinstance(group_by_list, basestring):
-      group_by_list = [x.strip() for x in group_by_list.split(',')]
-    select_dict = kw.pop('select_dict', kw.pop('select_list', kw.pop('select_expression', None)))
-    if isinstance(select_dict, basestring):
-      if len(select_dict):
-        real_select_dict = {}
-        for column in select_dict.split(','):
-          index = column.lower().find(' as ')
-          if index != -1:
-            real_select_dict[column[index + 4:].strip()] = column[:index].strip()
-          else:
-            real_select_dict[column.strip()] = None
-        select_dict = real_select_dict
-      else:
-        select_dict = None
-    elif isinstance(select_dict, (list, tuple)):
-      select_dict = dict.fromkeys(select_dict)
+    kw = self.getCannonicalArgumentDict(kw)
+    group_by_list = kw.pop('group_by_list', [])
+    select_dict = kw.pop('select_dict', {})
     # Handle left_join_list
     left_join_list = kw.pop('left_join_list', ())
     # Handle implicit_join. It's True by default, as there's a lot of code
@@ -2383,23 +2368,7 @@ class Catalog(Folder,
     # catalog.searchResults(...) or catalog(...) directly.
     implicit_join = kw.pop('implicit_join', True)
     # Handle order_by_list
-    order_by_list = kw.pop('order_by_list', None)
-    sort_on = kw.pop('sort_on', None)
-    sort_order = kw.pop('sort_order', None)
-    order_by_expression = kw.pop('order_by_expression', None)
-    if order_by_list is None:
-      order_by_list = self.buildOrderByList(
-        sort_on=sort_on,
-        sort_order=sort_order,
-        order_by_expression=order_by_expression
-      )
-    else:
-      if sort_on is not None:
-        LOG('SQLCatalog', WARNING, 'order_by_list and sort_on were given, ignoring sort_on.')
-      if sort_order is not None:
-        LOG('SQLCatalog', WARNING, 'order_by_list and sort_order were given, ignoring sort_order.')
-      if order_by_expression is not None:
-        LOG('SQLCatalog', WARNING, 'order_by_list and order_by_expression were given, ignoring order_by_expression.')
+    order_by_list = kw.pop('order_by_list', [])
     # Handle from_expression
     from_expression = kw.pop('from_expression', None)
     # Handle where_expression
@@ -2443,6 +2412,64 @@ class Catalog(Folder,
 
   # Compatibililty SQL Sql
   buildSqlQuery = buildSQLQuery
+
+  security.declarePublic('getCannonicalArgumentDict')
+  def getCannonicalArgumentDict(self, kw):
+    """
+    Convert some catalog arguments to generic arguments.
+
+    group_by, group_by_expression -> group_by_list
+    select_list, select_expression -> select_dict
+    sort_on, sort_on_order, order_by_expression -> order_list
+    """
+    kw = kw.copy()
+    group_by = kw.pop('group_by', None)
+    group_by_expression = kw.pop('group_by_expression', None)
+    group_by_list = kw.pop('group_by_list', None) or group_by or group_by_expression or []
+    if isinstance(group_by_list, basestring):
+      group_by_list = [x.strip() for x in group_by_list.split(',')]
+    kw['group_by_list'] = group_by_list
+
+    select_list = kw.pop('select_list', None)
+    select_expression = kw.pop('select_expression', None)
+    select_dict = kw.pop('select_dict', None) or select_list or select_expression or {}
+    if isinstance(select_dict, (list, tuple)):
+      select_dict = dict.fromkeys(select_dict)
+    if isinstance(select_dict, basestring):
+      if len(select_dict):
+        real_select_dict = {}
+        for column in select_dict.split(','):
+          index = column.lower().find(' as ')
+          if index != -1:
+            real_select_dict[column[index + 4:].strip()] = column[:index].strip()
+          else:
+            real_select_dict[column.strip()] = None
+        select_dict = real_select_dict
+      else:
+        select_dict = None
+    elif isinstance(select_dict, (list, tuple)):
+      select_dict = dict.fromkeys(select_dict)
+    kw['select_dict'] = select_dict
+
+    order_by_list = kw.pop('order_by_list', None)
+    sort_on = kw.pop('sort_on', None)
+    sort_order = kw.pop('sort_order', None)
+    order_by_expression = kw.pop('order_by_expression', None)
+    if order_by_list is None:
+      order_by_list = self.buildOrderByList(
+        sort_on=sort_on,
+        sort_order=sort_order,
+        order_by_expression=order_by_expression,
+      )
+    else:
+      if sort_on is not None:
+        LOG('SQLCatalog', WARNING, 'order_by_list and sort_on were given, ignoring sort_on.')
+      if sort_order is not None:
+        LOG('SQLCatalog', WARNING, 'order_by_list and sort_order were given, ignoring sort_order.')
+      if order_by_expression is not None:
+        LOG('SQLCatalog', WARNING, 'order_by_list and order_by_expression were given, ignoring order_by_expression.')
+    kw['order_by_list'] = order_by_list or []
+    return kw
 
   @transactional_cache_decorator('SQLCatalog._getSearchKeyDict')
   @caching_instance_method(id='SQLCatalog._getSearchKeyDict',
@@ -2788,7 +2815,6 @@ class Catalog(Folder,
             'isInventoryMovement': ob.isInventoryMovement,
             }
         return getEngine().getContext(data)
-
 
 InitializeClass(Catalog)
 
