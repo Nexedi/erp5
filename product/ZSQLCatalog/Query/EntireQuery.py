@@ -61,7 +61,6 @@ class EntireQuery(object):
                left_join_list=(),
                limit=None,
                catalog_table_name=None,
-               auto_extend_select_list=False,
                extra_column_list=(),
                from_expression=None,
                order_by_override_list=None,
@@ -77,7 +76,6 @@ class EntireQuery(object):
     self.extra_column_list = list(extra_column_list)
     self.from_expression = from_expression
     self.implicit_join = implicit_join
-    self.auto_extend_select_list = auto_extend_select_list
 
   def asSearchTextExpression(self, sql_catalog):
     return self.query.asSearchTextExpression(sql_catalog)
@@ -213,7 +211,6 @@ class EntireQuery(object):
       order_by_list=self.order_by_list,
       group_by_list=self.group_by_list,
       select_dict=self.final_select_dict,
-      auto_extend_select_list=self.auto_extend_select_list,
       limit=self.limit,
       where_expression_operator='and',
       sql_expression_list=self.sql_expression_list)

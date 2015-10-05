@@ -35,6 +35,7 @@ from DateTime import DateTime
 
 from Products.ERP5.tests.testAccounting import AccountingTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
+from Products.ERP5Type.tests.utils import todo_erp5
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
@@ -798,9 +799,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.goods_sales,
                           source_credit=300.0)))
 
+  @todo_erp5
   def test_Resource_zGetMovementHistoryList(self):
-    # Check if Resource_zGetMovementHistoryList works fine with derived_merge optimizer.
-    # see https://bugs.launchpad.net/maria/+bug/985828
+    # TODO: Fix Resource_zGetMovementHistoryList so that we don't need to workaround
+    #       new behaviour of MariaDB.
+    #       Indeed, https://bugs.launchpad.net/maria/+bug/985828 has been marked
+    #       as WONTFIX.
     q = self.portal.erp5_sql_connection.manage_test
     q("SET optimizer_switch = 'derived_merge=on'")
     try:

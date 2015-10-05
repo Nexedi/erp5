@@ -2015,7 +2015,6 @@ class SimulationTool(BaseTool):
       """
       kw['movement_list_mode'] = 1
       kw.update(self._getDefaultGroupByParameters(**kw))
-      kw['auto_extend_select_list'] = True
       sql_kw = self._generateSQLKeywordDict(**kw)
 
       return self.Resource_zGetMovementHistoryList(

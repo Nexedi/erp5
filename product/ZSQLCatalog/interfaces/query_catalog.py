@@ -64,8 +64,7 @@ class ISearchKeyCatalog(Interface):
     """
 
   def buildEntireQuery(kw, query_table='catalog', ignore_empty_string=1,
-                       limit=None, auto_extend_select_list=False,
-                       extra_column_list=None):
+                       limit=None, extra_column_list=None):
     """
       Construct and return an instance of EntireQuery class from given
       parameters by calling buildQuery.
@@ -96,11 +95,6 @@ class ISearchKeyCatalog(Interface):
          - type cast (see SQL documentation of 'CAST')
         Sort will happen on given parameter name (its column if it's a column
         name, corresponding virtual column otherwise - as for related keys).
-      auto_extend_select_list (boolean)
-        If True, select_list is automatically extended to have columns
-        used in group_by_list and order_by_list. It is useful when use
-        select_expression in inner query and use group_by_expression or
-        order_by_expression in outer query.
       Extra parameters are passed through to buildQuery.
 
       Backward compatibility parameters:
@@ -146,8 +140,7 @@ class ISearchKeyCatalog(Interface):
 
   def buildSQLQuery(query_table='catalog', REQUEST=None,
                     ignore_empty_string=1, only_group_columns=False,
-                    limit=None, auto_extend_select_list=False,
-                    extra_column_list=(),
+                    limit=None, extra_column_list=None,
                     **kw):
     """
       Return an SQLExpression-generated dictionary (see

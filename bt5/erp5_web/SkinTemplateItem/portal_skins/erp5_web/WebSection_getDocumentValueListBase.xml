@@ -140,11 +140,6 @@ try:\n
   kw[\'effective_date\'] = effective_date\n
 \n
   if not all_versions:\n
-    group_by_list = list(kw.get(\'group_by_list\', []))\n
-    if all_languages:\n
-      kw[\'group_by_list\'] = group_by_list + [\'reference\', \'language\']\n
-    else:\n
-      kw[\'group_by_list\'] = group_by_list + [\'reference\',]\n
     return current_section.WebSection_zGetDocumentValueList(language=language,\n
                                                             all_languages=all_languages,\n
                                                             src__=src__,\n

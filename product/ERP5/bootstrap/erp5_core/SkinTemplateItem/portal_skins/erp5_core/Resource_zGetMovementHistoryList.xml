@@ -419,7 +419,6 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>from_expression\r\n
 from_table_list:list\r\n
-select_expression\r\n
 where_expression\r\n
 order_by_expression\r\n
 group_by_expression\r\n
@@ -513,9 +512,6 @@ SELECT\n
   stock.payment_request_uid AS payment_request_uid,\n
   stock.node_uid AS node_uid,\n
   stock.section_uid AS section_uid\n
-<dtml-if select_expression>\n
-  ,<dtml-var select_expression>\n
-</dtml-if>\n
 FROM\n
 <dtml-if from_expression>\n
   <dtml-var from_expression>\n
@@ -627,10 +623,6 @@ LIMIT\n
 </dtml-if>\n
 \n
 ) AS q1\n
-<dtml-if order_by_expression>\n
-ORDER BY\n
-  <dtml-var order_by_expression>\n
-</dtml-if>\n
 
 
 ]]></string> </value>
