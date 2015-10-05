@@ -64,7 +64,7 @@ kw</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), auto_extend_select_list=True, **kw)"\n
+<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), **kw)"\n
           selection_domain="kw.get(\'selection_domain\', None)"\n
           selection_report="kw.get(\'selection_report\', None)">\n
 \n

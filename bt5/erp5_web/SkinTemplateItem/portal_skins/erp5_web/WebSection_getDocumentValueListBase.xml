@@ -104,6 +104,7 @@ from zExceptions import Unauthorized\n
 \n
 try:\n
   portal = container.getPortalObject()\n
+  kw = portal.portal_catalog.getSQLCatalog().getCannonicalArgumentDict(kw)\n
 \n
   # First find the Web Section or Web Site we belong to\n
   current_section = context.getWebSectionValue()\n
@@ -125,9 +126,9 @@ try:\n
                         \'public\', \'validated\')\n
   kw[\'validation_state\'] = validation_state\n
 \n
-  if \'sort_on\' not in kw:\n
+  if \'order_by_list\' not in kw:\n
     # XXX Do not sort by default, as it increases query time\n
-    kw[\'sort_on\'] = [(\'int_index\', \'DESC\'), (\'reference\', \'DESC\')]\n
+    kw[\'order_by_list\'] = [(\'int_index\', \'DESC\'), (\'reference\', \'DESC\')]\n
 \n
   if effective_date is None:\n
     if now is None:\n
@@ -140,11 +141,19 @@ try:\n
   kw[\'effective_date\'] = effective_date\n
 \n
   if not all_versions:\n
-    group_by_list = list(kw.get(\'group_by_list\', []))\n
+    group_by_list = set(kw.get(\'group_by_list\', []))\n
     if all_languages:\n
-      kw[\'group_by_list\'] = group_by_list + [\'reference\', \'language\']\n
+      kw[\'group_by_list\'] = list(group_by_list.union([\'reference\', \'language\']))\n
     else:\n
-      kw[\'group_by_list\'] = group_by_list + [\'reference\',]\n
+      kw[\'group_by_list\'] = list(group_by_list.union([\'reference\']))\n
+\n
+    # Extend select_dict by order_by_list and group_by_list columns.\n
+    extra_column_list = filter(\n
+      lambda x: not x.endswith(\'__score__\'),\n
+      {i[0] for i in kw.get(\'order_by_list\', [])}.union(\n
+        set(kw.get(\'group_by_list\', []))))\n
+    kw.setdefault(\'select_dict\', {}).update({\n
+      \'%s__ext__\' % x.replace(\'.\', \'_\'): x for x in extra_column_list})\n
     return current_section.WebSection_zGetDocumentValueList(language=language,\n
                                                             all_languages=all_languages,\n
                                                             src__=src__,\n
