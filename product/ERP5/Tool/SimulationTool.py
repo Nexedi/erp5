@@ -477,11 +477,12 @@ class SimulationTool(BaseTool):
     def _generateSQLKeywordDictFromKeywordDict(self, table='stock', sql_kw={},
                                                new_kw={}):
         ctool = getToolByName(self, 'portal_catalog')
-        sql_kw = sql_kw.copy()
-        new_kw = new_kw.copy()
+        catalog = ctool.getSQLCatalog()
+        sql_kw = catalog.getCannonicalArgumentDict(sql_kw)
+        new_kw = catalog.getCannonicalArgumentDict(new_kw)
 
         # Group-by expression  (eg. group_by=['node_uid'])
-        group_by = new_kw.pop('group_by', [])
+        group_by = new_kw.pop('group_by_list', [])
 
         # group by from stock table (eg. group_by_node=True)
         # prepend table name to avoid ambiguities.
@@ -503,7 +504,7 @@ class SimulationTool(BaseTool):
         group_by.extend(related_key_dict_passthrough_group_by)
 
         if group_by:
-          new_kw['group_by'] = group_by
+          new_kw['group_by_list'] = group_by
 
         # select expression
         select_dict = new_kw.setdefault('select_dict', {})
@@ -556,16 +557,23 @@ class SimulationTool(BaseTool):
           new_kw['query'] = simulation_query
 
         # Sort on
-        if 'sort_on' in new_kw:
-          table_column_list = ctool.getSQLCatalog()._getCatalogSchema(
+        if 'order_by_list' in new_kw:
+          table_column_list = catalog._getCatalogSchema(
                                                               table=table)
-          sort_on = new_kw['sort_on']
+          sort_on = new_kw['order_by_list']
           new_sort_on = []
           for column_id, sort_direction in sort_on:
             if column_id in table_column_list:
               column_id = '%s.%s' % (table, column_id)
             new_sort_on.append((column_id, sort_direction))
-          new_kw['sort_on'] = tuple(new_sort_on)
+          new_kw['order_by_list'] = tuple(new_sort_on)
+
+        # Extend select_dict by order_by_list columns.
+        extra_column_list = filter(
+          lambda x: not x.endswith('__score__'),
+          {i[0] for i in new_kw.get('order_by_list', [])})
+        new_kw.setdefault('select_dict', {}).update({
+          '%s__ext__' % x.replace('.', '_'): x for x in extra_column_list})
 
         # Remove some internal parameters that does not have any meaning for
         # catalog
@@ -2015,7 +2023,6 @@ class SimulationTool(BaseTool):
       """
       kw['movement_list_mode'] = 1
       kw.update(self._getDefaultGroupByParameters(**kw))
-      kw['auto_extend_select_list'] = True
       sql_kw = self._generateSQLKeywordDict(**kw)
 
       return self.Resource_zGetMovementHistoryList(
