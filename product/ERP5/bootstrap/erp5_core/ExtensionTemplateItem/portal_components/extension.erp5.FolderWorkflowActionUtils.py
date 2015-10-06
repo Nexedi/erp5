@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from Products.PythonScripts.standard import Object
 from hashlib import md5
 
 # Some workflow does not make sense in the context of mass transition and are
@@ -60,9 +59,6 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   selection_tool = portal.portal_selections
 
   selection_name = request['selection_name']
-
-  form = getattr(portal, form_id)
-  listbox = getattr(form, 'listbox', None)
 
   # guess all column name from catalog schema
   possible_state_list = [column_name.split('.')[1] for column_name in
@@ -111,7 +107,6 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   else:
     getObject = portal.portal_catalog.getObject
     selected_document_list = [getObject(uid) for uid in selection_uid_list]
-    marker = []
     # this will be a dictionnary with (portal_type, workflow_id, workflow_state)
     # as keys, and (count, a random document) as values
     workflow_state_dict = {}
@@ -128,7 +123,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
             workflow_state_dict[key] = document, document_count + 1
 
 
-    for (ptype, workflow_id, state), (doc, document_count) in\
+    for (ptype, workflow_id, _), (doc, document_count) in\
                 workflow_state_dict.iteritems():
       workflow = wf_tool.getWorkflowById(workflow_id)
       state_var = workflow.variables.getStateVar()
@@ -172,7 +167,6 @@ def getWorkflowActionDocumentList(self, **kw):
   selection_name = kw['module_selection_name']
   document_list = []
   portal = self.getPortalObject()
-  getObject = portal.portal_catalog.getObject
   wtool = portal.portal_workflow
   selection_tool = portal.portal_selections
 
