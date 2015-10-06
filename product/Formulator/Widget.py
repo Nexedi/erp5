@@ -629,6 +629,8 @@ class TextAreaWidget(Widget):
         if value is None:
             return ''
         if not isinstance(value, (tuple, list)):
+            if not isinstance(value, basestring):
+                value = str(value)
             value = value.split('\n')
         line_separator = '<br/>'
         value_list = [escape(part).replace('\n', line_separator) for part in value]
