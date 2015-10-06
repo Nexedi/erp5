@@ -27,6 +27,7 @@
 
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 import time
 import json
@@ -67,6 +68,79 @@ class TestExecuteJupyter(SecurityTestCase):
       notebook_code=notebook_code,
       batch_mode=True
       )
+
+  def testJupyterCompileErrorHandling(self):
+    """
+    Test if JupyterCompile portal_component can handle error in efficinet way.
+    Take the case in wich one line in a statement is valid and another is not.
+    """
+    portal = self.getPortalObject()
+    script_id = "JupyterCompile_errorResult"
+    script_container = portal.portal_skins.custom
+
+    new_test_title = "Wendelin Test"
+    # Check if the existing title is different from new_test_title or not
+    if portal.getTitle()==new_test_title:
+      new_test_title = "Wenedlin"
+
+    python_script = """
+context.setTitle('%s')
+print an_undefined_variable
+"""%new_test_title
+
+    # Create python_script object with the above given code and containers
+    createZODBPythonScript(script_container, script_id, '', python_script)
+
+    # Call the above created script in jupyter_code
+    jupyter_code = """
+portal = context.getPortalObject()
+portal.%s()
+"""%script_id
+
+    # Make call to Base_runJupyter to run the jupyter code which is making
+    # a call to the newly created ZODB pyton_script
+    result = portal.Base_runJupyter(jupyter_code=jupyter_code, old_local_variable_dict={})
+
+    # Test if the status of returned messgae from Base_runJupyter call is 'error'
+    self.assertEquals(result['status'], 'error')
+    # Test that calling Base_runJupyter shouldn't change the context Title
+    self.assertNotEqual(portal.getTitle(), new_test_title)
+
+  def testJupyterCompileErrorHandlingForTransactionAndNormalPythonScript(self):
+    """
+    Test Base_runJupyter for error handling in case python_script contains simple
+    python code(addition an setting varibale value) as well as transaction.
+    We expect that the local varibles a,b,c shouldn't set themselves due to failure
+    in transaction.
+    """
+    portal = self.getPortalObject()
+
+    new_test_title = "Wendelin Test"
+    # Check if the existing title is different from new_test_title or not
+    if portal.getTitle()==new_test_title:
+      new_test_title = "Wenedlin"
+
+    # Python script where we use transaction as well as normal python variables
+    jupyter_code = """
+a = 1
+b = 2
+context.setTitle('%s')
+c = a+b
+print c
+print an_undefined_variable
+"""%new_test_title
+
+    # Make call to Base_runJupyter to run the jupyter code which is making
+    # a call to the newly created ZODB pyton_script
+    result = portal.Base_runJupyter(jupyter_code=jupyter_code, old_local_variable_dict={})
+
+    # Test if the status of returned messgae from Base_runJupyter call is 'error'
+    self.assertEquals(result['status'], 'error')
+    # Test that calling Base_runJupyter shouldn't change the context Title
+    self.assertNotEqual(portal.getTitle(), new_test_title)
+    # Test if the local variables a, b, c are set for there values or not
+    local_variable_list = ['a', 'b', 'c']
+    self.assertFalse(set(local_variable_list).issubset(set(result['local_variable_dict'].keys())))
 
   def testUserCannotAccessBaseExecuteJupyter(self):
     """
