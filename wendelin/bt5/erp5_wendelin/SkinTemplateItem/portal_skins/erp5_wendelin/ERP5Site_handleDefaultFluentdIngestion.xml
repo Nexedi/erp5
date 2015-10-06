@@ -61,13 +61,15 @@
                                                       -> Data Stream\n
 """\n
 from DateTime import DateTime\n
+from zExceptions import NotFound\n
 \n
 now = DateTime()\n
 request = context.REQUEST\n
 portal_catalog = context.portal_catalog\n
 \n
 # keep backwards compatability\n
-reference = request.get(\'reference\', request.get(\'input_stream_ref\'))\n
+reference = request.get(\'reference\', \\\n
+              request.get(\'input_stream_ref\'))\n
 data_chunk = request.get(\'data_chunk\')\n
 \n
 # XXX: add start_data and stop_date so all searches are time aware\n
@@ -124,6 +126,13 @@ if data_chunk is not None and reference is not None:\n
       # objects in data_ingestion_module. We can use same approach and same \n
       # business process for analytics stage (just different trade_state / phase)?\n
       # JP: we should use this approach at a later stage\n
+      # this approach can be hooked through interaction workflow on data stream\n
+    else:\n
+      raise NotFound(\'No data stream configuration found.\')      \n
+  else:\n
+    raise NotFound(\'No data supply configuration found.\')\n
+else:\n
+  raise NotFound(\'No data or any configuration not found.\')\n
 
 
 ]]></string> </value>
