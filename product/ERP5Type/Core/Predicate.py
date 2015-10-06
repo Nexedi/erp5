@@ -313,8 +313,6 @@ class Predicate(XMLObject):
     # Now merge identity and membership criteria
     if len(sql_text):
       catalog_kw['where_expression'] = SQLQuery(sql_text)
-    else:
-      catalog_kw['where_expression'] = ''
     # force implicit join
     catalog_kw['implicit_join'] = True
     sql_query = portal_catalog.buildSQLQuery(**catalog_kw)
