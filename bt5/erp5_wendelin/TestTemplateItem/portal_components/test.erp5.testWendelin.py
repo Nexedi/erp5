@@ -28,6 +28,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from wendelin.bigarray.array_zodb import ZBigArray
+from zExceptions import NotFound
 import msgpack
 import numpy as np
 import string
@@ -35,7 +36,7 @@ import random
 
 def getRandomString():
   return 'test_%s' %''.join([random.choice(string.ascii_letters + string.digits) \
-    for n in xrange(32)])
+    for _ in xrange(32)])
     
 def chunks(l, n):
   """Yield successive n-sized chunks from l."""
@@ -75,9 +76,9 @@ class Test(ERP5TypeTestCase):
     Test we can import certain libraries but still failure to do so should be a  		 
     a test step failure rather than global test failure. 		 
     """ 		 
-    import scipy 		 
-    import sklearn
-    import pandas
+    import scipy as _	 
+    import sklearn as _
+    import pandas as _
 
   def test_01_IngestionFromFluentd(self):
     """
@@ -95,7 +96,7 @@ class Test(ERP5TypeTestCase):
     # make sure real_data tail is also a full line
     real_data += '\n'
 
-    ingestion_policy, data_supply, data_stream, data_array = \
+    ingestion_policy, _, data_stream, data_array = \
       self.stepSetupIngestion(reference)
     
     # simulate fluentd by setting proper values in REQUEST
@@ -121,6 +122,11 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(np.average(zarray), np.average(np.arange(100001)))
     self.assertTrue(np.array_equal(zarray, np.arange(100001)))
     
+    # test ingesting with bad reference and raise of NotFound
+    request.set('reference', reference + 'not_existing')
+    self.assertRaises(NotFound, ingestion_policy.ingest)
+    
+    
   def test_01_1_IngestionTail(self):
     """
     Test real time convertion to a numpy array by appending data to a data stream.
@@ -135,7 +141,7 @@ class Test(ERP5TypeTestCase):
     # make sure real_data tail is also a full line
     real_data += '\n'
 
-    ingestion_policy, data_supply, data_stream, data_array = self.stepSetupIngestion(reference)
+    _, _, data_stream, data_array = self.stepSetupIngestion(reference)
     data_stream.appendData(real_data)
     self.tic()
     
@@ -189,7 +195,7 @@ context.activate().DataStream_readChunkListAndTransform( \
     offset = max_elements / jobs
     start = 0
     end = start + offset
-    for i in range(jobs):
+    for _ in range(jobs):
       # calculate directly expectations
       expected_result_list.append(np.average(expected_numpy_array[start:end]))
       data_array.activate(
@@ -219,7 +225,7 @@ context.activate().DataStream_readChunkListAndTransform( \
 
     portal.log( real_data)
     
-    ingestion_policy, data_supply, data_stream, data_array = self.stepSetupIngestion(reference)
+    _, _, data_stream, _ = self.stepSetupIngestion(reference)
     data_stream.appendData(real_data)
     self.tic()
     
