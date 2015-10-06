@@ -264,3 +264,10 @@ class WebSite(WebSection):
         return section_list
       else:
         return []
+
+    def _edit(self, **kw):
+      # migrate beforeTraverse hook if missing
+      if getattr(self, '__before_traverse__', None) is None and self.getPortalType() == 'Web Site':
+        handle = self.meta_type + '/' + self.getId()
+        BeforeTraverse.registerBeforeTraverse(self, WebSiteTraversalHook(), handle)
+      super(WebSite, self)._edit(**kw)
