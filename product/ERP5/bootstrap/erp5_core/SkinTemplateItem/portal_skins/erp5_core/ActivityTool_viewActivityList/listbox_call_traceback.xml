@@ -71,6 +71,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -114,7 +118,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: "<pre>" + cell.call_traceback + "</pre>"
+python: \'<pre>\' + getattr(cell, \'call_traceback\', \'\') + \'</pre>\'
 
 ]]></string> </value>
         </item>

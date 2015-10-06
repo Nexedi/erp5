@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>count_method</string>
                 <string>editable_columns</string>
@@ -89,6 +90,17 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>call_traceback</string>
+                          <string>Call Traceback</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -135,10 +147,6 @@
                         <tuple>
                           <string>processing</string>
                           <string>Processing</string>
-                        </tuple>
-                        <tuple>
-                          <string>call_traceback</string>
-                          <string>Call Traceback</string>
                         </tuple>
                       </list>
                     </value>
