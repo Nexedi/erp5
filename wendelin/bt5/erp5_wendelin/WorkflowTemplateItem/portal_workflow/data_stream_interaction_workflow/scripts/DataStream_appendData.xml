@@ -58,7 +58,10 @@ argument_list = state_change[\'kwargs\'][\'workflow_method_args\']\n
 \n
 # call you own script to handle newly appended data which \n
 # is not processed yet\n
-data_stream.DataStream_transformTail(*argument_list)\n
+# Note: this will serialize argument_list to activity\'s mysql table\n
+# in case of big packets this can be slow, in =case of small appends it can be \n
+# acceptable.\n
+data_stream.activate().DataStream_transformTail(*argument_list)\n
 </string> </value>
         </item>
         <item>
