@@ -1,6 +1,7 @@
 <base_category_list>
  <portal_type id="Bug">
   <item>aggregate</item>
+  <item>follow_up</item>
  </portal_type>
  <portal_type id="Bug Module">
   <item>business_application</item>

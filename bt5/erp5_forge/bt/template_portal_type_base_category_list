@@ -1,5 +1,6 @@
 Bug Module | business_application
 Bug | aggregate
+Bug | follow_up
 Glossary Module | business_application
 Glossary Term | business_field
 Glossary Term | causality
