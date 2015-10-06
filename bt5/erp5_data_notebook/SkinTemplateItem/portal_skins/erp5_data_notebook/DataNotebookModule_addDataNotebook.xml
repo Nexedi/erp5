@@ -50,17 +50,28 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
+            <value> <string>"""\n
+Python script to add a new notebook to Data Notebook module.\n
+This script also concerns for assigning an Active Process for each data notebook\n
+created.\n
+"""\n
+from Products.CMFActivity.ActiveResult import ActiveResult\n
 \n
+# Comment out person in case addition of person required to Data Notebook object\n
 #person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
 \n
+# Create new ActiveProcess object and getting its id\n
 active_process = context.portal_activities.newActiveProcess()\n
 active_process_id = active_process.getId()\n
 \n
+# Creating new dictionary via external method to save results in ZODB\n
 new_dict = context.Base_addPersistentMapping()\n
+# Add new ActiveResult object and add it to the activeprocess concerned with ...\n
+# Data Notebook in concern\n
 result = ActiveResult(summary=new_dict)\n
 active_process.activateResult(result)\n
 \n
+# Create new notebook\n
 notebook = context.newContent(\n
     title=title,\n
     reference=reference,\n
@@ -68,14 +79,17 @@ notebook = context.newContent(\n
     portal_type=\'Data Notebook\'\n
   )\n
 \n
+# Return notebook for batch_mode, used in tests\n
 if batch_mode:\n
   return notebook\n
 \n
+# Add status message to be displayed after new notebook creation\n
 translateString = context.Base_translateString\n
 portal_status_message = translateString(\n
   "New Notebook created"\n
 )\n
 \n
+# Redirect the notebook view with the status message being displayed\n
 return notebook.Base_redirect(\'view\',\n
   keep_items=dict(portal_status_message=portal_status_message), **kw)\n
 </string> </value>
