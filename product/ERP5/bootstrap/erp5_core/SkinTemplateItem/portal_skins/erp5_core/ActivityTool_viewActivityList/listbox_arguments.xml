@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_call_traceback</string> </value>
+            <value> <string>listbox_arguments</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Traceback</string> </value>
+                    <value> <string>Arguments</string> </value>
                 </item>
               </dictionary>
             </value>
