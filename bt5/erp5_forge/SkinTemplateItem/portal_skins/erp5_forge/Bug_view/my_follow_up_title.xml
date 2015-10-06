@@ -10,11 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
                 <string>columns</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -141,6 +141,10 @@
                         <tuple>
                           <string>Support Request</string>
                           <string>Support Request</string>
+                        </tuple>
+                        <tuple>
+                          <string>Discussion Thread</string>
+                          <string>Discussion Thread</string>
                         </tuple>
                       </list>
                     </value>
