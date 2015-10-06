@@ -223,7 +223,7 @@ class Predicate(XMLObject):
     catalog_kw.update(kw) # query_table, REQUEST, ignore_empty_string, **kw
     criterion_list = self.getCriterionList()
     # BBB: accessor is not present on old Predicate property sheet.
-    if criterion_list or getattr(self, 'isEmptyPredicateValid', lambda: True)():
+    if criterion_list or getattr(self, 'isEmptyCriterionValid', lambda: True)():
       for criterion in criterion_list:
         p = criterion.property
         if criterion.min:
