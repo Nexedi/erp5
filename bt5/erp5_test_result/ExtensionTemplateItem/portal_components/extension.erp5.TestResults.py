@@ -284,7 +284,7 @@ def TestResult_sendEmailNotification(self, mail_to=None, mail_from=None,
     if full_stderr or tcr in unknown_status_test_case_list:
       extend_attachment(tcr.getProperty('stderr', '').splitlines())
     elif tcr in failed_test_case_list:
-      tb_list = tcr.getProperty('stderr').split(separator1)[1:]
+      tb_list = tcr.getProperty('stderr', '').split(separator1)[1:]
       if len(tb_list):
         for tb in tb_list[:-1]:
           extend_attachment(tb.splitlines())
