@@ -481,7 +481,7 @@ class SimulationTool(BaseTool):
         new_kw = new_kw.copy()
 
         # Group-by expression  (eg. group_by=['node_uid'])
-        group_by = new_kw.pop('group_by', [])
+        group_by = new_kw.pop('group_by_list', [])
 
         # group by from stock table (eg. group_by_node=True)
         # prepend table name to avoid ambiguities.
@@ -496,14 +496,14 @@ class SimulationTool(BaseTool):
 
         # group by involving a related key (eg. group_by=['product_line_uid'])
         related_key_dict_passthrough_group_by = new_kw.get(
-                'related_key_dict_passthrough', {}).pop('group_by', [])
+                'related_key_dict_passthrough', {}).pop('group_by_list', [])
         if isinstance(related_key_dict_passthrough_group_by, basestring):
           related_key_dict_passthrough_group_by = (
                 related_key_dict_passthrough_group_by,)
         group_by.extend(related_key_dict_passthrough_group_by)
 
         if group_by:
-          new_kw['group_by'] = group_by
+          new_kw['group_by_list'] = group_by
 
         # select expression
         select_dict = new_kw.setdefault('select_dict', {})
@@ -810,7 +810,7 @@ class SimulationTool(BaseTool):
           else:
             related_group_by.append(value)
         if len(related_group_by):
-          new_kw['related_key_dict_passthrough']['group_by'] = related_group_by
+          new_kw['related_key_dict_passthrough']['group_by_list'] = related_group_by
 
       #variation_category_uid_list = self._generatePropertyUidList(variation_category)
       #if len(variation_category_uid_list) :
@@ -1536,14 +1536,14 @@ class SimulationTool(BaseTool):
           group_by_id_list_append(group_by_id)
       # Add related key group by
       if 'select_list' in new_kw.get("related_key_dict_passthrough", []):
-        for group_by_id in new_kw["related_key_dict_passthrough"]['group_by']:
+        for group_by_id in new_kw["related_key_dict_passthrough"]['group_by_list']:
           if group_by_id in new_kw["related_key_dict_passthrough"]["select_list"]:
             group_by_id_list_append(group_by_id)
           else:
             # XXX-Aurel : to review & change, must prevent coming here before
             raise ValueError, "Impossible to group by %s" %(group_by_id)
       elif "group_by" in new_kw.get("related_key_dict_passthrough", []):
-        raise ValueError, "Impossible to group by %s" %(new_kw["related_key_dict_passthrough"]['group_by'],)
+        raise ValueError, "Impossible to group by %s" %(new_kw["related_key_dict_passthrough"]['group_by_list'],)
 
       if len(group_by_id_list):
         def getInventoryListKey(line):
@@ -1705,7 +1705,7 @@ class SimulationTool(BaseTool):
       # clause. Note that the call to 'mergeZRDBResults' will crash if the GROUP
       # clause contains a column not requested in the SELECT clause.
       kw.update(self._getDefaultGroupByParameters(**kw), ignore_group_by=1)
-      group_by_list = self._generateKeywordDict(**kw)[1].get('group_by', ())
+      group_by_list = self._generateKeywordDict(**kw)[1].get('group_by_list', ())
 
       results = []
       edit_result = {}
@@ -2015,6 +2015,15 @@ class SimulationTool(BaseTool):
       """
       kw['movement_list_mode'] = 1
       kw.update(self._getDefaultGroupByParameters(**kw))
+
+      # Extend select_dict by order_by_list columns.
+      catalog = self.getPortalObject().portal_catalog.getSQLCatalog()
+      kw = catalog.getCannonicalArgumentDict(kw)
+      extra_column_set = {i[0] for i in kw.get('order_by_list', ())}
+      kw.setdefault('select_dict', {}).update(
+        (x.replace('.', '_') + '__ext__', x)
+        for x in extra_column_set if not x.endswith('__score__'))
+
       sql_kw = self._generateSQLKeywordDict(**kw)
 
       return self.Resource_zGetMovementHistoryList(
