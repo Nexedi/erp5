@@ -48,19 +48,8 @@
               <tuple>
                 <string>W:265,  0: Bad indentation. Found 12 spaces, expected 10 (bad-indentation)</string>
                 <string>W:266,  0: Bad indentation. Found 16 spaces, expected 12 (bad-indentation)</string>
-                <string>W: 13,  0: Anomalous backslash in string: \'\\s\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
-                <string>W: 13,  0: Anomalous backslash in string: \'\\d\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
-                <string>W: 13,  0: Anomalous backslash in string: \'\\s\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
-                <string>W: 13,  0: Anomalous backslash in string: \'\\s\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
-                <string>W: 13,  0: Anomalous backslash in string: \'\\s\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
-                <string>W: 13,  0: Anomalous backslash in string: \'\\d\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
-                <string>W: 13,  0: Anomalous backslash in string: \'\\d\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
-                <string>W: 27,  0: Anomalous backslash in string: \'\\d\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
-                <string>W: 27,  0: Anomalous backslash in string: \'\\d\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
-                <string>W: 29,  0: Anomalous backslash in string: \'\\d\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
                 <string>W:110,  6: Unused variable \'junk\' (unused-variable)</string>
                 <string>W:190,  4: Unused variable \'only_func_test\' (unused-variable)</string>
-                <string>W:338,  2: Unreachable code (unreachable)</string>
               </tuple>
             </value>
         </item>

@@ -10,7 +10,7 @@ separator1 = '=' * 70
 separator2 = '-' * 70
 
 RUN_RE = re.compile(
-    'Ran\s*(?P<all_tests>\d+)\s*test(s)?\s*in\s*(?P<seconds>\d+.\d+)s',
+    r'Ran\s*(?P<all_tests>\d+)\s*test(s)?\s*in\s*(?P<seconds>\d+.\d+)s',
     re.DOTALL)
 
 STATUS_RE = re.compile(r"""
@@ -24,11 +24,11 @@ STATUS_RE = re.compile(r"""
     """, re.DOTALL | re.VERBOSE)
 
 FTEST_PASS_FAIL_RE = re.compile(
-    '.*Functional Tests, (?P<passes>\d+) Passes, (?P<failures>\d+) Failures')
-  
-SVN_INFO_REV_RE = re.compile("Revision: (?P<rev>\d+)")
+    r'.*Functional Tests, (?P<passes>\d+) Passes, (?P<failures>\d+) Failures')
 
-TRACEBACK_RE = re.compile(separator1 + "\n(?P<tb>.*)", re.DOTALL)
+SVN_INFO_REV_RE = re.compile(r"Revision: (?P<rev>\d+)")
+
+TRACEBACK_RE = re.compile(separator1 + "\n(?P<tb>.*)", re.DOTALL)  # XXX how does "\n" is interpreted here?
 
 def parseTestSuiteResults(file_handler):
   """
@@ -36,7 +36,7 @@ def parseTestSuiteResults(file_handler):
     Return:
       - successfull tests
       - failed tests
-      - errors 
+      - errors
       - log files
 
     # Note: this can be debugged with:
@@ -63,7 +63,7 @@ def parseTestSuiteResults(file_handler):
     if file_data != '':
       test_results.setdefault(test_name, {})[file_name] = file_data
       sorted_test_dict[test_index] = test_name
-  
+
   for sort_test_key in sorted(sorted_test_dict.keys()):
     test_id = sorted_test_dict[sort_test_key]
     test_result_detail = test_results[test_id]
@@ -116,7 +116,7 @@ def parseTestSuiteResults(file_handler):
         passes = int(groupdict.get('passes', 0))
         failures = int(groupdict.get('failures', 0))
         all_tests = passes + failures
-      
+
     else:
       # get all tests and elapsed time
       search = RUN_RE.search(test_log)
@@ -334,48 +334,41 @@ def TestResultModule_viewTestResultChart(self, REQUEST,
   This is experimental use of matplotlib, not integrated with a field.
   """
   return 'disabled'
-  # XXX matplotlib cannot be imported it $HOME is not writable
-  os.environ['HOME'] = '/tmp'
+  ## XXX matplotlib cannot be imported it $HOME is not writable
+  #os.environ['HOME'] = '/tmp'
 
-  # use a backend that doesn't need a $DISPLAY
-  try:
-    import matplotlib
-  except ImportError:
-    return
-  matplotlib.use('Cairo')
-  try:
-    import pylab
-  except ImportError:
-    return
-  
-  revision_list = []
-  all_test_list = []
-  success_list = []
+  ## use a backend that doesn't need a $DISPLAY
+  #import matplotlib
+  #matplotlib.use('Cairo')
+  #import pylab
 
-  for test in self.searchFolder(
-                    title=title,
-                    int_index=dict(range='minmax',
-                                   query=(min_rev or 0,
-                                          max_rev or sys.maxint))):
-    test = test.getObject()
-    if not test.getIntIndex():
-      continue
-    revision_list.append(test.getIntIndex())
-    all_tests = int(test.getProperty('all_tests', 0))
-    all_test_list.append(all_tests)
-    failures = (int(test.getProperty('errors', 0)) +
-                int(test.getProperty('failures', 0)))
-    success_list.append(all_tests - failures)
+  #revision_list = []
+  #all_test_list = []
+  #success_list = []
 
-  pylab.plot(revision_list, all_test_list)
-  pylab.plot(revision_list, success_list)
-  pylab.xlabel('svn revision')
-  pylab.legend(['all tests', 'success'])
+  #for test in self.searchFolder(
+  #                  title=title,
+  #                  int_index=dict(range='minmax',
+  #                                 query=(min_rev or 0,
+  #                                        max_rev or sys.maxint))):
+  #  test = test.getObject()
+  #  if not test.getIntIndex():
+  #    continue
+  #  revision_list.append(test.getIntIndex())
+  #  all_tests = int(test.getProperty('all_tests', 0))
+  #  all_test_list.append(all_tests)
+  #  failures = (int(test.getProperty('errors', 0)) +
+  #              int(test.getProperty('failures', 0)))
+  #  success_list.append(all_tests - failures)
 
-  # returns the image
-  out = StringIO()
-  pylab.savefig(out, format='png')
-  REQUEST.RESPONSE.setHeader('Content-type', 'image/png')
-  pylab.close()
-  return out.getvalue()
+  #pylab.plot(revision_list, all_test_list)
+  #pylab.plot(revision_list, success_list)
+  #pylab.xlabel('svn revision')
+  #pylab.legend(['all tests', 'success'])
 
+  ## returns the image
+  #out = StringIO()
+  #pylab.savefig(out, format='png')
+  #REQUEST.RESPONSE.setHeader('Content-type', 'image/png')
+  #pylab.close()
+  #return out.getvalue()
