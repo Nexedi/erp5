@@ -1562,12 +1562,16 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     """
     return ()
 
-  def log(self, description, content='', level=INFO):
-    """Put a log message """
+  def log(self, *args, **kw):
+    """Put a log message
+
+    See the warning in Products.ERP5Type.Log.log
+    Catchall parameters also make this method not publishable to avoid DoS.
+    """
     warnings.warn("The usage of ERP5Site.log is deprecated.\n"
                   "Please use Products.ERP5Type.Log.log instead.",
                   DeprecationWarning)
-    unrestrictedLog(description, content = content, level = level)
+    unrestrictedLog(*args, **kw)
 
   security.declarePublic('setPlacelessDefaultReindexParameters')
   def setPlacelessDefaultReindexParameters(self, **kw):
