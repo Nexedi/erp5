@@ -3044,12 +3044,16 @@ class Base( CopyContainer,
     return Error(**kw)
 
   security.declarePublic('log')
-  def log(self, description, content='', level=INFO):
-    """Put a log message """
+  def log(self, *args, **kw):
+    """Put a log message
+
+    See the warning in Products.ERP5Type.Log.log
+    Catchall parameters also make this method not publishable to avoid DoS.
+    """
     warnings.warn("The usage of Base.log is deprecated.\n"
                   "Please use Products.ERP5Type.Log.log instead.",
                   DeprecationWarning)
-    unrestrictedLog(description, content = content, level = level)
+    unrestrictedLog(*args, **kw)
 
   # Dublin Core Emulation for CMF interoperatibility
   # CMF Dublin Core Compatibility

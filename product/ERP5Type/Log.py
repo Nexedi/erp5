@@ -43,8 +43,17 @@ from traceback import extract_stack
 
 marker_ = []
 def log(description, content=marker_, level=INFO):
-    """Put a log message. This method is supposed to be used by
-    restricted environment, such as Script (Python)."""
+    """Put a log message
+
+    This method is supposed to be used by restricted environment,
+    such as Script (Python).
+
+    WARNING: When called with more than 1 argument, the first one is appended
+             to the usual information about the caller, in order to form a
+             subsystem string. Because a logging.Logger object is created for
+             each subsystem, and is never freed, you can experience memory
+             leaks if description is not constant.
+    """
     if content is marker_: # allow for content only while keeping interface
         description, content = content, description
     st = extract_stack()
