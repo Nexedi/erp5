@@ -222,8 +222,7 @@ class Predicate(XMLObject):
     catalog_kw = {}
     catalog_kw.update(kw) # query_table, REQUEST, ignore_empty_string, **kw
     criterion_list = self.getCriterionList()
-    # BBB: accessor is not present on old Predicate property sheet.
-    if criterion_list or getattr(self, 'isEmptyCriterionValid', lambda: True)():
+    if criterion_list:
       for criterion in criterion_list:
         p = criterion.property
         if criterion.min:
@@ -248,10 +247,6 @@ class Predicate(XMLObject):
             else:
               f = (i,) if i in f else ()
             catalog_kw[p] = list(f)
-    else:
-      # By catalog definition, no object has uid 0, so this condition forces an
-      # empty result.
-      catalog_kw['uid'] = 0
 
     portal_catalog = getToolByName(self, 'portal_catalog')
 
@@ -301,6 +296,13 @@ class Predicate(XMLObject):
       and_expression = ' AND '.join(expression_list)
       if and_expression:
         multimembership_select_list.append(and_expression)
+
+    # BBB: accessor is not present on old Predicate property sheet.
+    if not getattr(self, 'isEmptyCriterionValid', lambda: True)() and \
+      not catalog_kw and not membership_select_list and not multimembership_select_list:
+      # By catalog definition, no object has uid 0, so this condition forces an
+      # empty result.
+      catalog_kw['uid'] = 0
 
     # Build the join where expression
     join_select_list = []
