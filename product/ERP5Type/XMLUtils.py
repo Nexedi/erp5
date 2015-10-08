@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import iterparse, Element, TreeBuilder, XMLParser
-from .XMLMatrix import INFINITE_SET
+from .mixin.matrix import INFINITE_SET
 
 class RestrictedElement(Element):
   __allow_access_to_unprotected_subobjects__ = 1
