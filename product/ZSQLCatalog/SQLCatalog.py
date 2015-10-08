@@ -2178,7 +2178,7 @@ class Catalog(Folder,
         result = None
     return result
 
-  def buildQueryFromAbstractSyntaxTreeNode(self, node, key, wrap=lambda x: x, ignore_unknown_columns=True):
+  def buildQueryFromAbstractSyntaxTreeNode(self, node, key, wrap=lambda x: x, ignore_unknown_columns=False):
     """
       Build a query from given Abstract Syntax Tree (AST) node by recursing in
       its childs.
@@ -2231,7 +2231,7 @@ class Catalog(Folder,
     return self._parseSearchText(self.getSearchKey(
       column, search_key=search_key), search_text, is_valid=is_valid)
 
-  def buildQuery(self, kw, ignore_empty_string=True, operator='and', ignore_unknown_columns=True):
+  def buildQuery(self, kw, ignore_empty_string=True, operator='and', ignore_unknown_columns=False):
     query_list = []
     append = query_list.append
     # unknown_column_dict: contains all (key, value) pairs which could not be
@@ -2375,7 +2375,7 @@ class Catalog(Folder,
 
   def buildEntireQuery(self, kw, query_table='catalog', ignore_empty_string=1,
                        limit=None, extra_column_list=(),
-                       ignore_unknown_columns=True):
+                       ignore_unknown_columns=False):
     kw = self.getCannonicalArgumentDict(kw)
     group_by_list = kw.pop('group_by_list', [])
     select_dict = kw.pop('select_dict', {})
@@ -2417,7 +2417,7 @@ class Catalog(Folder,
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, only_group_columns=False,
                           limit=None, extra_column_list=(),
-                          ignore_unknown_columns=True,
+                          ignore_unknown_columns=False,
                           **kw):
     return self.buildEntireQuery(
       kw,

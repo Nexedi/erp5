@@ -52,11 +52,12 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
     Lists each variation
   """
   # Stock management
-  def _callSimulationTool(self, method_id, **kw):
+  def _callSimulationTool(self, method_id, ignore_unknown_columns=True, **kw):
     return getattr(
       self.getPortalObject().portal_simulation,
       method_id,
     )(
+      ignore_unknown_columns=ignore_unknown_columns,
       node_uid=self.node_uid,
       variation_text=self.variation_text,
       resource_uid=self.resource_uid,

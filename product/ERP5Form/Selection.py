@@ -210,6 +210,7 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           kw = self.params.copy()
         else:
           kw = params.copy()
+        kw.setdefault("ignore_unknown_columns", True)
         # Always remove '-C'-named parameter.
         kw.pop('-C', None)
         if self.invert_mode is not 0:

@@ -60,6 +60,7 @@ if not kw:\n
 portal = context.getPortalObject()\n
 person = portal.portal_catalog.getResultValue(portal_type="Person",\n
                                               validation_state="validated",\n
+                                              ignore_unknown_columns=True,\n
                                               **kw)\n
 \n
 return json.dumps(dict(response=(person is not None)))\n

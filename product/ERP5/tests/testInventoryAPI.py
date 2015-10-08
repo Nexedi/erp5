@@ -1693,10 +1693,6 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertRaises(ValueError,
                       getMovementHistoryList,
                       section_category='group/notexists')
-    # (but other arguments are ignored)
-    self.assertEqual(len(getMovementHistoryList(
-                        section_category='group/level1',
-                        ignored='argument')), 1)
 
   @expectedFailure
   def testDoubleSectionCategory(self):
