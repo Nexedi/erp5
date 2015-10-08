@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   Read tail of a Data Stream and aplly needed transformations.\n
   This script is called every time we appendData to a Stream\n
   using data_stream_interaction_workflow.\n
@@ -58,15 +60,15 @@
   The idea is to provide close to real time data transformations.\n
   As transformation is quite specific we leave this script empty so developers\n
   can hook in and add needed transformations.\n
-  \n
-  Interesting here is to use OffsetIndex property sheet which allows to place\n
-  marker till where a Data Stream has been processed.\n
 """\n
-</string> </value>
+assert start_offset < end_offset\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*argument_list</string> </value>
+            <value> <string>start_offset, end_offset</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

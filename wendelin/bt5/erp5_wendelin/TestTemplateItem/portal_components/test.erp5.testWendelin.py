@@ -150,7 +150,7 @@ class Test(ERP5TypeTestCase):
     # override DataStream_transformTail to actually do transformation on appenData
     start = data_stream.getSize()
     script_id = 'DataStream_transformTail'
-    script_content_list = ["*argument_list", """
+    script_content_list = ["start_offset, end_offset", """
 # created by testWendelin.test_01_1_IngestionTail
 start = %s
 end  = %s
