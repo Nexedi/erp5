@@ -439,6 +439,11 @@ from the distributor.")
           log("ValueError", exc_info=sys.exc_info())
           if node_test_suite is not None:
             node_test_suite.retry_software_count += 1
+          if remote_test_result_needs_cleanup:
+            test_result.reportFailure(
+              command='', stdout='',
+              stderr="ValueError was raised : %s" % (e,),
+            )
         except CancellationError, e:
           log("CancellationError", exc_info=sys.exc_info())
           self.process_manager.under_cancellation = False
