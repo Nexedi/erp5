@@ -234,7 +234,7 @@ def create_datetime_text_sub_form():
                         title = "Timezone",
                         required = 0,
                         default = 'GMT',
-                        items = Widget.gmt_timezones,
+                        items = Widget.all_timezones,
                         size = 1)
   sub_form.add_fields([hour, minute, ampm, timezone], "time")
   return sub_form
@@ -292,7 +292,7 @@ def create_datetime_list_sub_form():
                         title = "Timezone",
                         required = 0,
                         default = 'GMT',
-                        items = Widget.gmt_timezones,
+                        items = Widget.all_timezones,
                         size = 1)
   sub_form.add_group("time")
 

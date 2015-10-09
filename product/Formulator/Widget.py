@@ -1282,7 +1282,7 @@ class MultiCheckBoxWidget(MultiItemsWidget):
 
 MultiCheckBoxWidgetInstance = MultiCheckBoxWidget()
 
-gmt_timezones = [(x, x) for x in sorted(set(Timezones()))]
+all_timezones = [('', '')] + [(x, x) for x in sorted(set(Timezones()))]
 
 class DateTimeWidget(Widget):
   """
@@ -1369,9 +1369,8 @@ class DateTimeWidget(Widget):
                                   title="Default Timezone",
                                   description=(
       "The default timezone display when inputing a new date"),
-                                  default="GMT",
-                                  items=gmt_timezones,
-                                  required=1,
+                                  default="",
+                                  items=all_timezones,
                                   size=1)
 
   input_order = fields.ListField('input_order',
