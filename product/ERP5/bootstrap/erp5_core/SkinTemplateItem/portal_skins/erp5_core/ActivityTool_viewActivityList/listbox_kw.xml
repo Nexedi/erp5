@@ -11,13 +11,14 @@
             <value>
               <list>
                 <string>css_class</string>
+                <string>default</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_call_traceback</string> </value>
+            <value> <string>listbox_kw</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -54,6 +55,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -81,6 +92,10 @@
                     <value> <string>pre</string> </value>
                 </item>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_text_area_field</string> </value>
                 </item>
@@ -94,10 +109,23 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Traceback</string> </value>
+                    <value> <string>Keywords</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: modules[\'json\'].dumps(cell.kw, indent=True)</string> </value>
         </item>
       </dictionary>
     </pickle>
