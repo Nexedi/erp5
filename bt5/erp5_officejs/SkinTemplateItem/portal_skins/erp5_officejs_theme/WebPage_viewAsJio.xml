@@ -80,7 +80,7 @@
                         <string>my_language</string>
                         <string>my_version</string>
                         <string>my_portal_type</string>
-                        <string>my_modification_date</string>
+                        <string>your_modification_date</string>
                       </list>
                     </value>
                 </item>

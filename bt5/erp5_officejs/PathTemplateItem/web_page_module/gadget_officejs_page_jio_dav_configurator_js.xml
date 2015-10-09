@@ -132,7 +132,7 @@
           type: "uuid",\n
           sub_storage: {\n
             type: "indexeddb",\n
-            database: "officejs"\n
+            database: "officejs-dav"\n
           }\n
         }\n
       },\n
@@ -355,7 +355,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61335.62217.48981</string> </value>
+                <value> <string>945.61336.46618.42325</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -373,7 +373,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443017802.67</float>
+                        <float>1444319088.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

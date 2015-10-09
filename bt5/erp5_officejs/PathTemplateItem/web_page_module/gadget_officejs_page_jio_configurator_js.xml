@@ -108,44 +108,47 @@
   "use strict";\n
 \n
   function setERP5Configuration(gadget) {\n
-    var today = new Date(),\n
-      configuration = {\n
-        type: "replicate",\n
-        // XXX This drop the signature lists...\n
-        query: {\n
-          query: \'portal_type:"Web Page" \'\n
-          // XX Synchonizing the whole module is too much, here is a way to start quietly\n
-          // Supsended until modification_date is handled for synchronization\n
-            + \' AND modification_date:>="\'\n
-            + \'01/\' + (today.getMonth() - 2) + \'/\' + today.getFullYear()  + \'" \',\n
-          limit: [0, 1234567890]\n
-        },\n
-        use_remote_post: true,\n
-        conflict_handling: 2,\n
-        check_local_modification: true,\n
-        check_local_creation: true,\n
-        check_local_deletion: false,\n
-        check_remote_modification: true,\n
-        check_remote_creation: true,\n
-        check_remote_deletion: true,\n
-        local_sub_storage: {\n
-          type: "query",\n
+    var old_date = new Date(),\n
+      configuration = {};\n
+    // We are looking for documents modified in the past 3 month\n
+    old_date = new Date(old_date.getFullYear(), old_date.getMonth() - 3);\n
+    configuration = {\n
+      type: "replicate",\n
+      // XXX This drop the signature lists...\n
+      query: {\n
+        query: \'portal_type:"Web Page" \'\n
+        // XX Synchonizing the whole module is too much, here is a way to start quietly\n
+        // Supsended until modification_date is handled for synchronization\n
+          + \' AND modification_date:>="\'\n
+          + old_date.toISOString() + \'" \',\n
+        limit: [0, 1234567890]\n
+      },\n
+      use_remote_post: true,\n
+      conflict_handling: 1,\n
+      check_local_modification: true,\n
+      check_local_creation: true,\n
+      check_local_deletion: false,\n
+      check_remote_modification: true,\n
+      check_remote_creation: true,\n
+      check_remote_deletion: true,\n
+      local_sub_storage: {\n
+        type: "query",\n
+        sub_storage: {\n
+          type: "uuid",\n
           sub_storage: {\n
-            type: "uuid",\n
-            sub_storage: {\n
-              type: "indexeddb",\n
-              database: "officejs"\n
-            }\n
+            type: "indexeddb",\n
+            database: "officejs-erp5"\n
           }\n
-        },\n
-        remote_sub_storage: {\n
-          type: "erp5",\n
-          url: (new URI("hateoas"))\n
-            .absoluteTo(location.href)\n
-            .toString(),\n
-          default_view_reference: "jio_view"\n
         }\n
-      };\n
+      },\n
+      remote_sub_storage: {\n
+        type: "erp5",\n
+        url: (new URI("hateoas"))\n
+          .absoluteTo(location.href)\n
+          .toString(),\n
+        default_view_reference: "jio_view"\n
+      }\n
+    };\n
     return gadget.setSetting(\'jio_storage_description\', configuration)\n
       .push(function () {\n
         return gadget.setSetting(\'jio_storage_name\', "ERP5");\n
@@ -162,7 +165,7 @@
         type: "uuid",\n
         sub_storage: {\n
           type: "indexeddb",\n
-          database: "officejs"\n
+          database: "officejs-local"\n
         }\n
       }\n
     };\n
@@ -379,7 +382,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.62750.27719.2184</string> </value>
+                <value> <string>946.20489.39650.26470</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -397,7 +400,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443192309.89</float>
+                        <float>1444412978.56</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
