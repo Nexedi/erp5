@@ -6745,7 +6745,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         var ceilHeapSize = function (v) {\n
             // The asm.js spec says:\n
             // The heap object\'s byteLength must be either\n
-            // 2^n for n in [12, 24) or 2^24 * n for n â‰¥ 1.\n
+            // 2^n for n in [12, 24) or 2^24 * n for n ≥ 1.\n
             // Also, byteLengths smaller than 2^16 are deprecated.\n
             var p;\n
             // If v is smaller than 2^16, the smallest possible solution\n
@@ -7971,6 +7971,274 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
  * Released under the LGPL license.\n
  * http://www.gnu.org/licenses/lgpl.html\n
  */\n
+/**\n
+ * JIO Dropbox Storage. Type = "dropbox".\n
+ * Dropbox "database" storage.\n
+ */\n
+/*global Blob, jIO, RSVP, UriTemplate*/\n
+/*jslint nomen: true*/\n
+\n
+(function (jIO, RSVP, Blob, UriTemplate) {\n
+  "use strict";\n
+  var UPLOAD_URL = "https://content.dropboxapi.com/1/files_put/" +\n
+      "{+root}{+id}{+name}{?access_token}",\n
+    upload_template = UriTemplate.parse(UPLOAD_URL),\n
+    CREATE_DIR_URL = "https://api.dropboxapi.com/1/fileops/create_folder" +\n
+      "{?access_token,root,path}",\n
+    create_dir_template = UriTemplate.parse(CREATE_DIR_URL),\n
+    REMOVE_URL = "https://api.dropboxapi.com/1/fileops/delete/" +\n
+      "{?access_token,root,path}",\n
+    remote_template = UriTemplate.parse(REMOVE_URL),\n
+    GET_URL = "https://content.dropboxapi.com/1/files" +\n
+      "{/root,id}{+name}{?access_token}",\n
+    get_template = UriTemplate.parse(GET_URL),\n
+    //LIST_URL = \'https://api.dropboxapi.com/1/metadata/sandbox/\';\n
+    METADATA_URL = "https://api.dropboxapi.com/1/metadata" +\n
+      "{/root}{+id}{?access_token}",\n
+    metadata_template = UriTemplate.parse(METADATA_URL);\n
+\n
+  function restrictDocumentId(id) {\n
+    if (id.indexOf("/") !== 0) {\n
+      throw new jIO.util.jIOError("id " + id + " is forbidden (no begin /)",\n
+                                  400);\n
+    }\n
+    if (id.lastIndexOf("/") !== (id.length - 1)) {\n
+      throw new jIO.util.jIOError("id " + id + " is forbidden (no end /)",\n
+                                  400);\n
+    }\n
+    return id;\n
+  }\n
+\n
+  function restrictAttachmentId(id) {\n
+    if (id.indexOf("/") !== -1) {\n
+      throw new jIO.util.jIOError("attachment " + id + " is forbidden",\n
+                                  400);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * The JIO Dropbox Storage extension\n
+   *\n
+   * @class DropboxStorage\n
+   * @constructor\n
+   */\n
+  function DropboxStorage(spec) {\n
+    if (typeof spec.access_token !== \'string\' || !spec.access_token) {\n
+      throw new TypeError("Access Token\' must be a string " +\n
+                          "which contains more than one character.");\n
+    }\n
+    if (typeof spec.root !== \'string\' || !spec.root ||\n
+        (spec.root !== "dropbox" && spec.root !== "sandbox")) {\n
+      throw new TypeError("root must be \'dropbox\' or \'sandbox\'");\n
+    }\n
+    this._access_token = spec.access_token;\n
+    this._root = spec.root;\n
+  }\n
+\n
+  DropboxStorage.prototype.put = function (id, param) {\n
+    var that = this;\n
+    id = restrictDocumentId(id);\n
+    if (Object.getOwnPropertyNames(param).length > 0) {\n
+      // Reject if param has some properties\n
+      throw new jIO.util.jIOError("Can not store properties: " +\n
+                                  Object.getOwnPropertyNames(param), 400);\n
+    }\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.ajax({\n
+          type: "POST",\n
+          url: create_dir_template.expand({\n
+            access_token: that._access_token,\n
+            root: that._root,\n
+            path: id\n
+          })\n
+        });\n
+      })\n
+      .push(undefined, function (err) {\n
+        if ((err.target !== undefined) &&\n
+            (err.target.status === 405)) {\n
+          // Directory already exists, no need to fail\n
+          return;\n
+        }\n
+        throw err;\n
+      });\n
+  };\n
+\n
+  DropboxStorage.prototype.remove = function (id) {\n
+    id = restrictDocumentId(id);\n
+    return jIO.util.ajax({\n
+      type: "POST",\n
+      url: remote_template.expand({\n
+        access_token: this._access_token,\n
+        root: this._root,\n
+        path: id\n
+      })\n
+    });\n
+  };\n
+\n
+  DropboxStorage.prototype.get = function (id) {\n
+    var that = this;\n
+\n
+    if (id === "/") {\n
+      return {};\n
+    }\n
+    id = restrictDocumentId(id);\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.ajax({\n
+          type: "GET",\n
+          url: metadata_template.expand({\n
+            access_token: that._access_token,\n
+            root: that._root,\n
+            id: id\n
+          })\n
+        });\n
+      })\n
+      .push(function (evt) {\n
+        var obj = JSON.parse(evt.target.response ||\n
+                             evt.target.responseText);\n
+        if (obj.is_dir) {\n
+          return {};\n
+        }\n
+        throw new jIO.util.jIOError("Not a directory: " + id, 404);\n
+      }, function (error) {\n
+        if (error.target !== undefined && error.target.status === 404) {\n
+          throw new jIO.util.jIOError("Cannot find document: " + id, 404);\n
+        }\n
+        throw error;\n
+      });\n
+  };\n
+\n
+  DropboxStorage.prototype.allAttachments = function (id) {\n
+\n
+    var that = this;\n
+    id = restrictDocumentId(id);\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.ajax({\n
+          type: "GET",\n
+          url: metadata_template.expand({\n
+            access_token: that._access_token,\n
+            root: that._root,\n
+            id: id\n
+          })\n
+        });\n
+      })\n
+      .push(function (evt) {\n
+        var obj = JSON.parse(evt.target.response || evt.target.responseText),\n
+          i,\n
+          result = {};\n
+        if (!obj.is_dir) {\n
+          throw new jIO.util.jIOError("Not a directory: " + id, 404);\n
+        }\n
+        for (i = 0; i < obj.contents.length; i += 1) {\n
+          if (!obj.contents[i].is_dir) {\n
+            result[obj.contents[i].path.split("/").pop()] = {};\n
+          }\n
+        }\n
+        return result;\n
+      }, function (error) {\n
+        if (error.target !== undefined && error.target.status === 404) {\n
+          throw new jIO.util.jIOError("Cannot find document: " + id, 404);\n
+        }\n
+        throw error;\n
+      });\n
+  };\n
+\n
+  //currently, putAttachment will fail with files larger than 150MB,\n
+  //due to the Dropbox API. the API provides the "chunked_upload" method\n
+  //to pass this limit, but upload process becomes more complex to implement.\n
+  //\n
+  //putAttachment will also create a folder if you try to put an attachment\n
+  //to an inexisting foler.\n
+\n
+  DropboxStorage.prototype.putAttachment = function (id, name, blob) {\n
+    id = restrictDocumentId(id);\n
+    restrictAttachmentId(name);\n
+\n
+    return jIO.util.ajax({\n
+      type: "PUT",\n
+      url: upload_template.expand({\n
+        root: this._root,\n
+        id: id,\n
+        name: name,\n
+        access_token: this._access_token\n
+      }),\n
+      dataType: blob.type,\n
+      data: blob\n
+    });\n
+  };\n
+\n
+  DropboxStorage.prototype.getAttachment = function (id, name) {\n
+    var that = this;\n
+\n
+    id = restrictDocumentId(id);\n
+    restrictAttachmentId(name);\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.ajax({\n
+          type: "GET",\n
+          dataType: "blob",\n
+          url: get_template.expand({\n
+            root: that._root,\n
+            id: id,\n
+            name: name,\n
+            access_token: that._access_token\n
+          })\n
+        });\n
+      })\n
+      .push(function (evt) {\n
+        return new Blob(\n
+          [evt.target.response || evt.target.responseText],\n
+          {"type": evt.target.getResponseHeader(\'Content-Type\') ||\n
+            "application/octet-stream"}\n
+        );\n
+      }, function (error) {\n
+        if (error.target !== undefined && error.target.status === 404) {\n
+          throw new jIO.util.jIOError("Cannot find attachment: " +\n
+                                      id + ", " + name, 404);\n
+        }\n
+        throw error;\n
+      });\n
+  };\n
+\n
+  //removeAttachment removes also directories.(due to Dropbox API)\n
+\n
+  DropboxStorage.prototype.removeAttachment = function (id, name) {\n
+    var that = this;\n
+    id = restrictDocumentId(id);\n
+    restrictAttachmentId(name);\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.ajax({\n
+          type: "POST",\n
+          url: remote_template.expand({\n
+            access_token: that._access_token,\n
+            root: that._root,\n
+            path: id + name\n
+          })\n
+        });\n
+      }).push(undefined, function (error) {\n
+        if (error.target !== undefined && error.target.status === 404) {\n
+          throw new jIO.util.jIOError("Cannot find attachment: " +\n
+                                      id + ", " + name, 404);\n
+        }\n
+        throw error;\n
+      });\n
+  };\n
+\n
+  jIO.addStorage(\'dropbox\', DropboxStorage);\n
+\n
+}(jIO, RSVP, Blob, UriTemplate));\n
+;/*\n
+ * Copyright 2013, Nexedi SA\n
+ * Released under the LGPL license.\n
+ * http://www.gnu.org/licenses/lgpl.html\n
+ */\n
 \n
 /*jslint nomen: true*/\n
 /*global jIO, RSVP, DOMParser, Blob */\n
@@ -8595,7 +8863,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
           },\n
           form_data_json = {},\n
           field,\n
-          key;\n
+          key,\n
+          prefix_length;\n
 \n
         form_data_json.form_id = {\n
           "key": [form.form_id.key],\n
@@ -8605,15 +8874,20 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         for (key in form) {\n
           if (form.hasOwnProperty(key)) {\n
             field = form[key];\n
-            if ((key.indexOf(\'my_\') === 0) &&\n
-                (field.editable) &&\n
+            prefix_length = 0;\n
+            if (key.indexOf(\'my_\') === 0 && field.editable) {\n
+              prefix_length = 3;\n
+            }\n
+            if (key.indexOf(\'your_\') === 0) {\n
+              prefix_length = 5;\n
+            }\n
+            if ((prefix_length !== 0) &&\n
                 (allowed_field_dict.hasOwnProperty(field.type))) {\n
-\n
-              form_data_json[key.substring(3)] = {\n
+              form_data_json[key.substring(prefix_length)] = {\n
                 "default": field["default"],\n
                 "key": field.key\n
               };\n
-              converted_json[key.substring(3)] = field["default"];\n
+              converted_json[key.substring(prefix_length)] = field["default"];\n
             }\n
           }\n
         }\n
@@ -10231,7 +10505,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58550.42410.4027</string> </value>
+                <value> <string>946.20166.17792.35464</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -10249,7 +10523,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443021965.78</float>
+                        <float>1444411451.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
