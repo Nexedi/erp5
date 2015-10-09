@@ -67,6 +67,55 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
+  <td>//button[@data-i18n=\'Menu\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>pause</td>\n
+  <td>500</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//button[@data-i18n=\'Menu\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Storage Configuration\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n=\'Storage Configuration\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//form[@class=\'select-erp5-form\']/button[@data-i18n=\'ERP5\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>pause</td>\n
+  <td>1000</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//form[@class=\'select-erp5-form\']/button[@data-i18n=\'ERP5\']</td>\n
+  <td></td>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//form[@class=\'select-erp5-form\']/button[@data-i18n=\'ERP5\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//a[@data-i18n=\'Go to document List\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
   <td>//a[@data-i18n=\'Add\']</td>\n
   <td></td>\n
 </tr>\n
@@ -228,21 +277,6 @@
 <tr>\n
   <td>click</td>\n
   <td>//a[@data-i18n=\'Storage Configuration\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//form[@class=\'select-erp5-form\']/button[@data-i18n=\'ERP5\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>pause</td>\n
-  <td>1000</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//form[@class=\'select-erp5-form\']/button[@data-i18n=\'ERP5\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
