@@ -7,6 +7,7 @@ from Products.ERP5Type.Globals import  PersistentMapping
 
 import sys
 import traceback
+import transaction
 
 def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   """
@@ -60,7 +61,10 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
       sys.stdout = old_stdout
       result_string = result.getvalue()
 
+    # Catching exception to show it to jupyter frontend
     except Exception:
+      # Abort transaction in case of error in script
+      transaction.abort()
       etype, evalue, tb = sys.exc_info()
       tb_list = traceback.format_exception(etype, evalue, tb)
       status = u'error'
