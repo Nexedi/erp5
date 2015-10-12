@@ -27,10 +27,11 @@
 
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
-from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript
 
 import time
 import json
+import transaction
 
 class TestExecuteJupyter(SecurityTestCase):
   
@@ -69,27 +70,29 @@ class TestExecuteJupyter(SecurityTestCase):
       batch_mode=True
       )
 
-  def testJupyterCompileErrorHandling(self):
+  def testJupyterCompileErrorRaise(self):
     """
-    Test if JupyterCompile portal_component can handle error in efficinet way.
-    Take the case in wich one line in a statement is valid and another is not.
+    Test if JupyterCompile portal_component raises error on the server side.
+    Take the case in which one line in a statement is valid and another is not.
     """
     portal = self.getPortalObject()
     script_id = "JupyterCompile_errorResult"
     script_container = portal.portal_skins.custom
 
-    new_test_title = "Wendelin Test"
+    new_test_title = "Wendelin Test 1"
     # Check if the existing title is different from new_test_title or not
     if portal.getTitle()==new_test_title:
-      new_test_title = "Wenedlin"
+      new_test_title = "Wendelin"
 
     python_script = """
-context.setTitle('%s')
+portal = context.getPortalObject()
+portal.setTitle('%s')
 print an_undefined_variable
 """%new_test_title
 
     # Create python_script object with the above given code and containers
     createZODBPythonScript(script_container, script_id, '', python_script)
+    self.tic()
 
     # Call the above created script in jupyter_code
     jupyter_code = """
@@ -98,49 +101,23 @@ portal.%s()
 """%script_id
 
     # Make call to Base_runJupyter to run the jupyter code which is making
-    # a call to the newly created ZODB pyton_script
-    result = portal.Base_runJupyter(jupyter_code=jupyter_code, old_local_variable_dict={})
+    # a call to the newly created ZODB python_script and assert if the call raises
+    # NameError as we are sending an invalid python_code to it
+    self.assertRaises(
+                      NameError,
+                      portal.Base_runJupyter,
+                      jupyter_code=jupyter_code,
+                      old_local_variable_dict={}
+                      )
+    # Abort the current transaction of test so that we can proceed to new one
+    transaction.abort()
+    # Clear the portal cache from previous transaction
+    self.portal.portal_caches.clearAllCache()
+    # Remove the ZODB python script created above
+    removeZODBPythonScript(script_container, script_id)
 
-    # Test if the status of returned messgae from Base_runJupyter call is 'error'
-    self.assertEquals(result['status'], 'error')
     # Test that calling Base_runJupyter shouldn't change the context Title
     self.assertNotEqual(portal.getTitle(), new_test_title)
-
-  def testJupyterCompileErrorHandlingForTransactionAndNormalPythonScript(self):
-    """
-    Test Base_runJupyter for error handling in case python_script contains simple
-    python code(addition an setting varibale value) as well as transaction.
-    We expect that the local varibles a,b,c shouldn't set themselves due to failure
-    in transaction.
-    """
-    portal = self.getPortalObject()
-
-    new_test_title = "Wendelin Test"
-    # Check if the existing title is different from new_test_title or not
-    if portal.getTitle()==new_test_title:
-      new_test_title = "Wenedlin"
-
-    # Python script where we use transaction as well as normal python variables
-    jupyter_code = """
-a = 1
-b = 2
-context.setTitle('%s')
-c = a+b
-print c
-print an_undefined_variable
-"""%new_test_title
-
-    # Make call to Base_runJupyter to run the jupyter code which is making
-    # a call to the newly created ZODB pyton_script
-    result = portal.Base_runJupyter(jupyter_code=jupyter_code, old_local_variable_dict={})
-
-    # Test if the status of returned messgae from Base_runJupyter call is 'error'
-    self.assertEquals(result['status'], 'error')
-    # Test that calling Base_runJupyter shouldn't change the context Title
-    self.assertNotEqual(portal.getTitle(), new_test_title)
-    # Test if the local variables a, b, c are set for there values or not
-    local_variable_list = ['a', 'b', 'c']
-    self.assertFalse(set(local_variable_list).issubset(set(result['local_variable_dict'].keys())))
 
   def testUserCannotAccessBaseExecuteJupyter(self):
     """
@@ -255,10 +232,9 @@ print an_undefined_variable
 
   def testBaseExecuteJupyterErrorHandling(self):
     """
-    Test if the error message are saved by the Data Notebook Message portal
-    type. We don't want to ignore the error message or show the error message
-    as erp5 html. Best way would be to catch te exception and display it on
-    notebook frontend.
+    Test if the Base_executeJupyter with invalid python code raises error on
+    server side. We are not catching the exception here. Expected result is
+    raise of exception.
     """
     portal = self.portal
     self.login('dev_user')
@@ -266,15 +242,13 @@ print an_undefined_variable
     reference = 'Test.Notebook.ExecuteJupyterErrorHandling %s' % time.time()
     title = 'Test NB Title %s' % time.time()
 
-    result = portal.Base_executeJupyter(
-                              title=title,
-                              reference=reference,
-                              python_expression=python_expression
-                              )
-    self.tic()
-
-    expected_status = 'error'
-    self.assertEquals(json.loads(result)['status'].rstrip(), expected_status)
+    self.assertRaises(
+                      NameError, 
+                      portal.Base_executeJupyter,
+                      title=title,
+                      reference=reference,
+                      python_expression=python_expression
+                      )
 
   def testBaseExecuteJupyterSaveActiveResult(self):
     """
