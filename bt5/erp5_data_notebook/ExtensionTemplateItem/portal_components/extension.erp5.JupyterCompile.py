@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from StringIO import StringIO
-from IPython.utils import py3compat
-from IPython.utils.py3compat import unicode_type
 from Products.ERP5Type.Globals import  PersistentMapping
 
 import sys
-import traceback
-import transaction
 
 def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   """
@@ -29,8 +25,10 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   g.update(old_local_variable_dict)
 
   # IPython expects 2 status message - 'ok', 'error'
-  # Error would be updated only after the exec throws the error here, in all
-  # other cases, status would be 'ok'
+  # XXX: The focus is on 'ok' status only, we're letting errors to be raised on
+  # erp5 for now, so as not to hinder the transactions while catching them.
+  # TODO: This can be refactored by using client side error handling instead of
+  # catching errors on server/erp5.
   status = u'ok'
 
   # eval used before exec because exec can handle the error raised by both eval
@@ -55,24 +53,17 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
     old_stdout = sys.stdout
     result = StringIO()
     sys.stdout = result
-    try:
-      jupyter_compiled = compile(jupyter_code, '<string>', 'exec')
-      exec(jupyter_compiled, g, g)
-      sys.stdout = old_stdout
-      result_string = result.getvalue()
 
-    # Catching exception to show it to jupyter frontend
-    except Exception:
-      # Abort transaction in case of error in script
-      transaction.abort()
-      etype, evalue, tb = sys.exc_info()
-      tb_list = traceback.format_exception(etype, evalue, tb)
-      status = u'error'
-      ename = unicode_type(etype.__name__)
-      evalue = py3compat.safe_unicode(evalue)
-
-      sys.stdout.flush()
-      sys.stderr.flush()
+    # Letting the code fail in case of error while executing the python script/code
+    # XXX: Need to be refactored so to acclimitize transactions failure as well as
+    # normal python code failure and show it to user on jupyter frontend.
+    # Decided to let this fail silently in backend without letting the frontend
+    # user know the error so as to let tranasction or its error be handled by ZODB
+    # in uniform way instead of just using half transactions.
+    jupyter_compiled = compile(jupyter_code, '<string>', 'exec')
+    exec(jupyter_compiled, g, g)
+    sys.stdout = old_stdout
+    result_string = result.getvalue()
 
   # Difference between the globals variable before and after exec/eval so that
   # we don't have to save unnecessary variables in database which might or might
