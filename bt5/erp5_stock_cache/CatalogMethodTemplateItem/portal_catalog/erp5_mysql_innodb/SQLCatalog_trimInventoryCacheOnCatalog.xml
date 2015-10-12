@@ -52,6 +52,10 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Errors import ProgrammingError\n
 \n
+zTrimInventoryCacheFromDateOnCatalog = getattr(context, \'SimulationTool_zTrimInventoryCacheFromDateOnCatalog\', None)\n
+if zTrimInventoryCacheFromDateOnCatalog is None:\n
+  return\n
+\n
 min_date = None\n
 for loop_item in xrange(len(uid)):\n
     if not isInventoryMovement[loop_item] and isMovement[loop_item] and getResourceUid[loop_item]:\n
@@ -67,7 +71,7 @@ for loop_item in xrange(len(uid)):\n
                 min_date = getStartDate[loop_item]\n
 \n
 try:\n
-    context.SimulationTool_zTrimInventoryCacheFromDateOnCatalog(uid_list=uid, min_date=min_date)\n
+    zTrimInventoryCacheFromDateOnCatalog(uid_list=uid, min_date=min_date)\n
 except ProgrammingError:\n
     # Create table if it does not exits\n
     # Then no need to flush an empty table\n
