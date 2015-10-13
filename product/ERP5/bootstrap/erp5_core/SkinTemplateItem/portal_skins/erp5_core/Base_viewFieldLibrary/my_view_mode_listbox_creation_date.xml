@@ -10,13 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>date_only</string>
                 <string>editable</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_description</string> </value>
+            <value> <string>my_view_mode_listbox_creation_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -72,12 +73,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>date_only</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_description</string> </value>
+                    <value> <string>your_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
