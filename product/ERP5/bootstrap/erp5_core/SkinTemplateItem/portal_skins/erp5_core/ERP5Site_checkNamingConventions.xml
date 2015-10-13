@@ -124,6 +124,11 @@ def checkField(folder, form, field):\n
   path = folder.id + \'/\' + form.id\n
   error_message = checkTitle(path, field.id, field.title(), field)\n
   template_field = getFieldFromProxyField(field)\n
+  if path.endswith("FieldLibrary"):\n
+    if not(template_field is field):\n
+      if not(1 in [field.id.startswith(x) for x in (\'my_view_mode_\',\n
+                           \'my_core_mode_\', \'my_report_mode_\', \'my_list_mode_\', \'my_dialog_mode_\')]):\n
+        error_message += "%s: %s : Bad ID for a Field Library Field" % (path, field.id)\n
   if template_field is None:\n
     if field.get_value(\'enabled\'):\n
       error_message += "Could not get a field from a proxy field %s" % field.id\n
@@ -210,6 +215,9 @@ for folder in context.portal_skins.objectValues(spec=(\'Folder\',)):\n
     message = checkTitle(\'/\'.join([folder.id, form.id]), \'Title of the Form itself\', form.title)\n
     if message:\n
       message_list.append(message)\n
+    if form.id.endswith("FieldLibrary"):\n
+      if not(form.id.startswith("Base_")):\n
+        message_list.append("%s/%s : Bad Form ID for a Field Library Form" % (folder.id, form.id))\n
     for group in form.get_groups():\n
       if group == \'hidden\':\n
         continue\n
@@ -262,6 +270,8 @@ for ptype in context.portal_types.objectValues():\n
   if message:\n
     message_list.append(message)\n
 \n
+if batch_mode:\n
+  return message_list\n
 if message_list:\n
   return ("%d problems found:\\n\\n" % len(message_list)) + \'\\n\'.join(message_list)\n
 return "OK"\n
@@ -271,7 +281,7 @@ return "OK"\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>batch_mode=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
