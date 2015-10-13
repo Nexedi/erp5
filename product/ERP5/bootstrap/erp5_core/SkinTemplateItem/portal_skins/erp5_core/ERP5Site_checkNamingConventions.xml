@@ -128,9 +128,8 @@ def checkField(folder, form, field):\n
     if field.get_value(\'enabled\'):\n
       error_message += "Could not get a field from a proxy field %s" % field.id\n
   else:\n
-    if template_field.meta_type == \'ListBox\':\n
-      a = template_field.getListMethodName()\n
     if isListBox(field):\n
+      a = template_field.getListMethodName()\n
       path += \'/listbox\'\n
       for x in \'columns\', \'all_columns\':\n
         for id, title in field.get_value(x):\n
