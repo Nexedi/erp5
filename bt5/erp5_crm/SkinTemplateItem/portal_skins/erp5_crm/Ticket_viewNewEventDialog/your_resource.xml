@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Ticket_getEventResourceItemList</string> </value>
+            <value> <string>python: here.Ticket_getResourceItemList(portal_type=\'Event\', include_context=False)</string> </value>
         </item>
       </dictionary>
     </pickle>

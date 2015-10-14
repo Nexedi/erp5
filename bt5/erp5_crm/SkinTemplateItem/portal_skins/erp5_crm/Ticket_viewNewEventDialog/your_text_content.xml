@@ -13,9 +13,9 @@
                 <string>css_class</string>
                 <string>default</string>
                 <string>editable</string>
-                <string>height</string>
+                <string>enabled</string>
+                <string>text_editor</string>
                 <string>title</string>
-                <string>width</string>
               </list>
             </value>
         </item>
@@ -63,11 +63,19 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -78,19 +86,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>text_editor</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
-                    <key> <string>width</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -113,6 +119,10 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_text_content</string> </value>
                 </item>
@@ -121,23 +131,58 @@
                     <value> <string>Base_viewCRMFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string>text_area</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Message</string> </value>
                 </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
-                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>string:</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>not: request/mass_workflow_action | nothing</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: context.Base_getEditorFieldPreferredTextEditor(content_type=request.get(\'your_content_type\') or context.Ticket_getPreferredFollowUpEventContentType())</string> </value>
         </item>
       </dictionary>
     </pickle>

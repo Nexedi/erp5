@@ -323,13 +323,18 @@
                 <td>ZUITE-TEST-CREATE-EVENT-EVENT-001</td>\n
               </tr>\n
               <tr>\n
+                <td>select</td>\n
+                <td>//select[@name="field_your_destination"]</td>\n
+                <td>functional_test_username</td>\n
+              </tr>\n
+              <tr>\n
                 <td>type</td>\n
                 <td>//textarea[@name="field_your_text_content"]</td>\n
                 <td>Annoucing the developer hiring campaign and describing the progression of SlapOS Project.</td>\n
               </tr>\n
               <tr>\n
                 <td>click</td>\n
-                <td>//input[@name="field_your_direction" and @value="outgoing"]</td>\n
+                <td>//input[@name="field_your_event_workflow_action" and @value="plan"]</td>\n
                 <td></td>\n
               </tr>\n
               <tr>\n

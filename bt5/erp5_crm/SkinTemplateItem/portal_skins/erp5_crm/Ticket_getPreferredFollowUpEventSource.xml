@@ -50,10 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return [(context.Base_translateString("Send it immediately"), "send"),\n
-      (context.Base_translateString("Plan it at the given date"),\'plan\'),\n
-      (context.Base_translateString("Declare as Delivered"),\'deliver\'),\n
-      (context.Base_translateString("Edit it as a draft"),"draft")]\n
+            <value> <string>"""Returns the default sender for response events.\n
+\n
+This script is here so that we can easily customized depending on the context event, ticket or user preferences.\n
+"""\n
+\n
+if context.hasSource():\n
+  return context.getSource()\n
+logged_in_user = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
+if logged_in_user is not None:\n
+  return logged_in_user.getRelativeUrl()\n
+return \'\'\n
 </string> </value>
         </item>
         <item>
@@ -62,7 +69,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_getWorkflowActionList</string> </value>
+            <value> <string>Ticket_getPreferredFollowUpEventSource</string> </value>
         </item>
       </dictionary>
     </pickle>

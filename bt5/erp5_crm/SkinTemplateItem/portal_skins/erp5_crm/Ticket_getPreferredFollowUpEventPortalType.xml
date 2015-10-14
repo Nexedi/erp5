@@ -50,10 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return [(context.Base_translateString("Send it immediately"), "send"),\n
-      (context.Base_translateString("Plan it at the given date"),\'plan\'),\n
-      (context.Base_translateString("Declare as Delivered"),\'deliver\'),\n
-      (context.Base_translateString("Edit it as a draft"),"draft")]\n
+            <value> <string>"""Returns the default portal type for response events.\n
+\n
+This script is here so that we can easily customized depending on the context event, ticket or user preferences.\n
+"""\n
+\n
+return \'Mail Message\'\n
 </string> </value>
         </item>
         <item>
@@ -62,7 +64,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Event_getWorkflowActionList</string> </value>
+            <value> <string>Ticket_getPreferredFollowUpEventPortalType</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -32,6 +32,8 @@
                 <string>cancel_action</string>
                 <string>delete</string>
                 <string>delete_action</string>
+                <string>deliver</string>
+                <string>initial_deliver_action</string>
                 <string>initial_stop_action</string>
                 <string>plan</string>
                 <string>plan_action</string>

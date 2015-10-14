@@ -51,11 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This script creates a new event with given metadata and\n
-  attaches it to the current ticket.\n
 """\n
-\n
-\n
 portal = context.getPortalObject()\n
 translateString = portal.Base_translateString\n
 module = portal.getDefaultModule(portal_type)\n
@@ -63,45 +59,50 @@ module = portal.getDefaultModule(portal_type)\n
 if not portal.Base_checkPermission(module.getId(), "Add portal content"):\n
   return context.Base_redirect(form_id,\n
                                keep_items=dict(\n
-       portal_status_message=translateString("You do not have permission to add new event.")))\n
-  \n
-# Create a new event\n
-event = module.newContent(portal_type=portal_type, \n
-                          title=title,\n
-                          text_content=text_content,\n
-                          content_type=portal.portal_preferences.getPreferredTextEditor() and \'text/html\' or \'text/plain\',\n
-                          resource=resource,\n
-                          source=source,\n
-                          destination=destination,\n
-                          start_date=DateTime(),\n
-                          follow_up=context.getRelativeUrl())\n
+     portal_status_message=translateString("You do not have permission to add new event.")))\n
 \n
+# Create a new event\n
+response = module.newContent(portal_type=portal_type,\n
+                             source=source,\n
+                             destination=destination,\n
+                             resource=resource,\n
+                             title=title,\n
+                             text_content=text_content,\n
+                             start_date=start_date,\n
+                             follow_up_value=context,\n
+                             content_type=content_type)\n
 \n
 if notification_message:\n
-  event.Event_setTextContentFromNotificationMessage(\n
-     reference=notification_message)\n
+  response.Event_setTextContentFromNotificationMessage(\n
+    reference=notification_message\n
+  )\n
 \n
-# Trigger appropriate workflow action\n
-if not keep_draft:\n
-  if direction == \'incoming\':\n
-    # Support event_workflow and event_simulation_workflow\n
-    if portal.portal_workflow.isTransitionPossible(event, \'receive\'):\n
-      event.receive()\n
-    if portal.portal_workflow.isTransitionPossible(event, \'stop\'):\n
-      event.stop()\n
-  else:\n
-    event.plan()\n
+if workflow_action:\n
+  portal.portal_workflow.doActionFor(\n
+    context,\n
+    workflow_action,\n
+  )\n
 \n
-# Redirect to event\n
-portal_status_message = translateString(\n
+message = translateString(\n
   "Created and associated a new ${portal_type} to the ticket.", \n
   mapping=dict(portal_type = translateString(portal_type)))\n
-return event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
+\n
+if event_workflow_action == \'send\':\n
+  response.start()\n
+elif event_workflow_action == \'plan\':\n
+  response.plan()\n
+elif event_workflow_action == \'deliver\':\n
+  response.deliver()\n
+elif event_workflow_action == \'draft\':\n
+  pass\n
+else:\n
+  raise NotImplementedError(\'Do not know what to do\')\n
+return response.Base_redirect(\'view\', keep_items={\'portal_status_message\': message})\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', portal_type=None, title=None, resource=None, text_content=None,direction=None, source=None, destination=None, keep_draft=False, notification_message=None, **kw</string> </value>
+            <value> <string>form_id=None, portal_type=None, resource=None,  title=None, text_content=None, start_date=None, event_workflow_action=None, notification_message=None, source=None, destination=None, content_type=None, workflow_action=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
