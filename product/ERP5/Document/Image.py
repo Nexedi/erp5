@@ -335,6 +335,11 @@ class Image(TextConvertableMixin, File, OFSImage):
       parameter_list.append('-')
 
     if format:
+      # Is there a way to make 'convert' fail if the format is unknown,
+      # instead of treating this whole parameter as an output file path?
+      # As a workaround, we run 'convert' in a non-writeable directory.
+      if '/' in format or os.access('/', os.W_OK):
+        raise ConversionError
       parameter_list.append('%s:-' % format)
     else:
       parameter_list.append('-')
@@ -350,6 +355,7 @@ class Image(TextConvertableMixin, File, OFSImage):
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE,
+                               cwd='/',
                                close_fds=True)
     try:
         # XXX: The only portable way is to pass what stdin.write can accept,
