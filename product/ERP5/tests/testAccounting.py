@@ -3549,6 +3549,103 @@ class TestTransactions(AccountingTestCase):
                         organisation1.getRelativeUrl())],
                        self.portal.Account_getDestinationSectionItemList())
 
+  def test_AccountingTransaction_getListBoxColumnList_does_not_enable_section_column_when_only_two_sections(self):
+    # AccountingTransaction_getListBoxColumnList is the script returning the
+    # columns to display in AccountingTransaction_view.
+    at = self._makeOne(
+      portal_type='Accounting Transaction',
+      source_section_value=self.section,
+      destination_section_value=self.organisation_module.client_1,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    self.assertNotIn(
+      ('getDestinationSectionTitle', 'Third Party'),
+      at.AccountingTransaction_getListBoxColumnList(source=True))
+    self.assertNotIn(
+      ('getSourceSectionTitle', 'Third Party'),
+      at.AccountingTransaction_getListBoxColumnList(source=False))
+
+  def test_AccountingTransaction_getListBoxColumnList_enables_destination_section_column_when_more_than_two_sections(self):
+    # AccountingTransaction_getListBoxColumnList is the script returning the
+    # columns to display in AccountingTransaction_view.
+    at = self._makeOne(
+      portal_type='Accounting Transaction',
+      source_section_value=self.section,
+      destination_section_value=self.organisation_module.client_1,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  destination_section_value=self.organisation_module.client_2,
+                  source_credit=500)))
+    # Only the source view have one extra column, because from destination point
+    # of view, there is only one mirror section
+    self.assertIn(
+      ('getDestinationSectionTitle', 'Third Party'),
+      at.AccountingTransaction_getListBoxColumnList(source=True))
+    self.assertNotIn(
+      ('getSourceSectionTitle', 'Third Party'),
+      at.AccountingTransaction_getListBoxColumnList(source=False))
+
+  def test_AccountingTransaction_getListBoxColumnList_enables_source_section_column_when_more_than_two_sections(self):
+    at = self._makeOne(
+      portal_type='Accounting Transaction',
+      destination_section_value=self.section,
+      source_section_value=self.organisation_module.client_1,
+      lines=(dict(destination_value=self.account_module.goods_purchase,
+                  destination_debit=500),
+             dict(destination_value=self.account_module.receivable,
+                  source_section_value=self.organisation_module.client_2,
+                  destination_credit=500)))
+    # Only the destination view have one extra column, because from source point
+    # of view, there is only one mirror section
+    self.assertNotIn(
+      ('getDestinationSectionTitle', 'Third Party'),
+      at.AccountingTransaction_getListBoxColumnList(source=True))
+    self.assertIn(
+      ('getSourceSectionTitle', 'Third Party'),
+      at.AccountingTransaction_getListBoxColumnList(source=False))
+
+  def test_AccountingTransaction_getListBoxColumnList_enables_source_section_column_when_same_section_both_sides(self):
+    # Edge case, source section from the transaction is also used as destination section on a line
+    # does not make much sense, but have to be visible when looking at transaction
+    at = self._makeOne(
+      portal_type='Accounting Transaction',
+      source_section_value=self.section,
+      destination_section_value=self.organisation_module.client_1,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  destination_section_value=self.section, # Source section is also destination section here
+                  source_credit=500)))
+    self.assertIn(
+      ('getDestinationSectionTitle', 'Third Party'),
+      at.AccountingTransaction_getListBoxColumnList(source=True))
+    self.assertNotIn(
+      ('getSourceSectionTitle', 'Third Party'),
+      at.AccountingTransaction_getListBoxColumnList(source=False))
+
+  def test_AccountingTransaction_getListBoxColumnList_enables_destination_section_column_when_same_section_both_sides(self):
+    # Edge case, destination section from the transaction is also used as source section on a line
+    # does not make much sense, but have to be visible when looking at transaction
+    at = self._makeOne(
+      portal_type='Accounting Transaction',
+      destination_section_value=self.section,
+      source_section_value=self.organisation_module.client_1,
+      lines=(dict(destination_value=self.account_module.goods_purchase,
+                  destination_debit=500),
+             dict(destination_value=self.account_module.receivable,
+                  source_section_value=self.section, # Destination section is also here section here
+                  destination_credit=500)))
+    self.assertNotIn(
+      ('getDestinationSectionTitle', 'Third Party'),
+      at.AccountingTransaction_getListBoxColumnList(source=True))
+    self.assertIn(
+      ('getSourceSectionTitle', 'Third Party'),
+      at.AccountingTransaction_getListBoxColumnList(source=False))
+
+
 class TestAccountingWithSequences(ERP5TypeTestCase):
   """The first test for Accounting
   """
