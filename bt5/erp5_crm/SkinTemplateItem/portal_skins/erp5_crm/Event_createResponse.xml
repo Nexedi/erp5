@@ -79,6 +79,9 @@ if response_workflow_action == \'send\':\n
 elif response_workflow_action == \'plan\':\n
   response.plan()\n
   return context.Base_redirect(form_id, keep_items={\'portal_status_message\': message})\n
+elif response_workflow_action == \'stop\':\n
+  response.stop()\n
+  return response.Base_redirect(\'view\', keep_items={\'portal_status_message\': message})\n
 elif response_workflow_action == \'draft\':\n
   return response.Base_redirect(\'view\', keep_items={\'portal_status_message\': message})\n
 else:\n
