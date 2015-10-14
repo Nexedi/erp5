@@ -505,7 +505,7 @@
         })\n
         .fail(function (error) {\n
           if (error.target && error.target.status === 500) {\n
-            return gadget.showQueryError("     Unsupportred Query");\n
+            return gadget.showQueryError("     Unsupported Query");\n
           }\n
           throw error;\n
         });\n
@@ -806,7 +806,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.5543.47694.6075</string> </value>
+                <value> <string>946.5879.32028.47257</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -824,7 +824,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443622529.3</float>
+                        <float>1444722552.95</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

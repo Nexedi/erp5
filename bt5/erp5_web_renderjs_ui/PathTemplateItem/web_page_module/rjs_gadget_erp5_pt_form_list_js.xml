@@ -187,6 +187,7 @@
       \n
       if (options.domain_tree) {\n
         form_options.form_definition.domain_tree = options.domain_tree;\n
+        search_options.domain_tree = options.domain_tree;\n
       }\n
       form_options.begin_from = options.begin_from;\n
       form_options.view = options.view;\n
@@ -397,7 +398,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4412.4475.4949</string> </value>
+                <value> <string>946.4414.7934.44748</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -415,7 +416,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443534607.25</float>
+                        <float>1444816468.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

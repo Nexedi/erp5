@@ -123,7 +123,7 @@
    <script id="panel-template" type="text/x-handlebars-template">\n
       <div class="field_container">\n
         <div class="ui-field-contain">\n
-          <div class="css-compatability-helper">\n
+          <div class="bottom">\n
               <div class="ui-input-text ui-body-{{theme}} ui-input-has-icon ui-corner-all ui-shadow-inset ui-input-has-clear {{status_class}} {{css_class}}">\n
                 <form class="save_form document_form">\n
                   <input type="text" data-enhanced="true" value="{{widget_value}}" name="search" {{widget_status_attribute}} />\n
@@ -290,7 +290,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.13789.16491.47428</string> </value>
+                <value> <string>946.26055.51865.42035</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -308,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1440168925.51</float>
+                        <float>1444746743.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

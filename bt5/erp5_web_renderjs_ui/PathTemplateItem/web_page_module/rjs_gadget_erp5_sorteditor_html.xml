@@ -141,7 +141,7 @@
            </div>\n
           </div>\n
          \n
-         <h1 class="ui-title" role="heading" data-i18n="sort Editor" aria-level="1">Sort Editor</h1>\n
+         <h1 class="ui-title" role="heading" data-i18n="Sort Editor" aria-level="1">Sort Editor</h1>\n
          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
            <div class="ui-controlgroup-controls">\n
               <form class="submit">\n
@@ -299,7 +299,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4096.6867.34269</string> </value>
+                <value> <string>946.5841.39273.59596</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -317,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443620255.9</float>
+                        <float>1444813823.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

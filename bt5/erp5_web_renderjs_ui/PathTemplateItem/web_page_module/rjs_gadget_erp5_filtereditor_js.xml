@@ -633,7 +633,7 @@
         "submit",\n
         false,\n
         function () {\n
-          createTranslatedItem(gadget);\n
+          return createTranslatedItem(gadget);\n
         }\n
       );\n
       loopEventListener(\n
@@ -789,7 +789,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.5968.16440.8482</string> </value>
+                <value> <string>946.26033.17518.45738</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -807,7 +807,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443627977.21</float>
+                        <float>1444745422.24</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

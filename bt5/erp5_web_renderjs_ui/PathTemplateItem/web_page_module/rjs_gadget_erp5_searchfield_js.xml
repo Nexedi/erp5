@@ -101,7 +101,7 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP, loopEventListener, Handlebars */\n
+/*global window, rJS, RSVP, loopEventListener, Handlebars, QueryFactory, SimpleQuery, ComplexQuery, Query */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
 (function (window, rJS, RSVP, loopEventListener, Handlebars) {\n
   "use strict";\n
@@ -147,7 +147,6 @@
         append_attribute,\n
         placeholder = "",\n
         value,\n
-        hide_value,\n
         is_disabled = option_dict.disabled,\n
         search_gadget = this;\n
       search_gadget.props.jio_key = option_dict.jio_key;\n
@@ -156,8 +155,12 @@
         append_attribute = \' disabled="disabled\';\n
       }\n
       value = option_dict.extended_search || "";\n
+      if (option_dict.domain_tree) {\n
+        value = (value === "" ? option_dict.domain_tree : value + " AND " + option_dict.domain_tree);\n
+      }\n
+\n
       if (option_dict.hide_item) {\n
-        value = (value === ""? option_dict.hide_item : value + " AND " + option_dict.hide_item);\n
+        value = (value === "" ? option_dict.hide_item : value + " AND " + option_dict.hide_item);\n
       }\n
       return new RSVP.Queue()\n
         .push(function () {\n
@@ -190,15 +193,17 @@
       var gadget = this,\n
         i,\n
         query_list,\n
+        domain_tree_list,\n
+        domain_tree_query,\n
         tmp,\n
         hide_query,\n
         search_query;\n
 \n
-      function filterSubmit(evt) {\n
+      function filterSubmit() {\n
         return gadget.triggerFilterEditor();\n
       }\n
 \n
-      function formSubmit(evt) {\n
+      function formSubmit() {\n
         return new RSVP.Queue()\n
           .push(function () {\n
             return gadget.getContent();\n
@@ -206,6 +211,7 @@
           .push(function (data) {\n
             if (data.search) {\n
               query_list = [];\n
+              domain_tree_list = [];\n
               search_query = QueryFactory.create(data.search);\n
               if (search_query instanceof SimpleQuery) {\n
                 tmp = [search_query];\n
@@ -214,8 +220,10 @@
               }\n
               for (i = 0; i < tmp.length; i += 1) {\n
                 if (tmp[i] instanceof SimpleQuery) {\n
-                  if (tmp[i].key !== "catalog.uid") {\n
+                  if (tmp[i].key !== "catalog.uid" && tmp[i].key.indexOf("category") === -1) {\n
                     query_list.push(tmp[i]);\n
+                  } else if (tmp[i].key.indexOf("category") !== -1) {\n
+                    domain_tree_list.push(tmp[i]);\n
                   } else {\n
                     hide_query = new ComplexQuery({\n
                       operator: "AND",\n
@@ -229,16 +237,25 @@
                 }\n
               }\n
 \n
+              if (domain_tree_list.length) {\n
+                domain_tree_query = new ComplexQuery({\n
+                  operator: "AND",\n
+                  query_list: domain_tree_list,\n
+                  type: "complex"\n
+                });\n
+              }\n
               return gadget.redirect({jio_key: gadget.props.jio_key,\n
                 "extended_search": Query.objectToSearchText(new ComplexQuery({\n
-                   operator: search_query.operator || "AND",\n
-                   query_list: query_list,\n
-                   type: "complex"\n
+                  operator: search_query.operator || "AND",\n
+                  query_list: query_list,\n
+                  type: "complex"\n
                 })),\n
-                "hide_item": hide_query ? Query.objectToSearchText(hide_query) : ""});\n
+                "domain_tree": domain_tree_query ? Query.objectToSearchText(domain_tree_query) : "",\n
+                "hide_item": hide_query ? Query.objectToSearchText(hide_query) : ""\n
+                });\n
             }\n
             return gadget.redirect({jio_key: gadget.props.jio_key,\n
-                "extended_search": "", "hide_item": ""});\n
+                "extended_search": "", "domain_tree": "", "hide_item": ""});\n
           });\n
       }\n
       // Listen to form submit\n
@@ -393,7 +410,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4406.57134.42359</string> </value>
+                <value> <string>946.27251.38084.62685</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -411,7 +428,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443534489.37</float>
+                        <float>1444824166.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
