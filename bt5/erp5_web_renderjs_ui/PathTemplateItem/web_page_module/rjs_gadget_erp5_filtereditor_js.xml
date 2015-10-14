@@ -577,6 +577,11 @@
               if (Object.keys(domain_tree_map).length !== 0) {\n
                 createDomainTree(gadget, domain_tree_map, domain_tree_query_list[i].value);\n
               }\n
+              //if there has an error in uid\n
+              if (domain_tree_map[domain_tree_query_list[i].value] === undefined) {\n
+                domain_tree_map = {};\n
+                break;\n
+              }\n
               domain_tree_map = domain_tree_map[domain_tree_query_list[i].value].sub_categories;\n
             }\n
             if (Object.keys(domain_tree_map).length !== 0) {\n
@@ -789,7 +794,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.26033.17518.45738</string> </value>
+                <value> <string>946.27361.45605.54152</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -807,7 +812,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444745422.24</float>
+                        <float>1444825245.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
