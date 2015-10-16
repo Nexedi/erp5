@@ -426,7 +426,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       '''
       if name == self.getStateVariable():
           return self._getWorkflowStateOf(ob, 1)
-      vdef = self.getVariableValueList().get(name)
+      vdef = self.getVariableValueList()[name]
       if vdef.getInfoGuard() is not None and not vdef.getInfoGuard().check(
           getSecurityManager(), self, ob):
           return default
@@ -979,6 +979,18 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       return root
     return etree.tostring(root, encoding='utf-8',
                           xml_declaration=True, pretty_print=True)
+
+  # Get list of portal types for workflow
+  def getPortalTypeListForWorkflow(self):
+    """
+      Get list of portal types for workflow.
+    """
+    result = []
+    workflow_id = self.getId()
+    for portal_type in self.getPortalObject().portal_types.objectValues():
+      if workflow_id in portal_type.getTypeWorkflowList():
+        result.append(portal_type.getId())
+    return result
 
   def _executeMetaTransition(self, ob, new_state_id):
     """
