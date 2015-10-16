@@ -66,7 +66,7 @@ except:\n
   return {}\n
 \n
 # If this is a worklist action, read the worklist definition\n
-worklist = getattr(workflow.worklists, action[\'worklist_id\'])\n
+worklist = workflow.getWorklistValueList()[action[\'worklist_id\']]\n
 for varkey in worklist.getVarMatchKeys():\n
   kw[varkey] = worklist.getVarMatch(varkey)\n
   \n
