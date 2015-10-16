@@ -74,6 +74,10 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
       possible_transition_list.append(tr_path)
       self.setCategoryList(possible_transition_list)
 
+  def getTransitions(self):
+    # return possible transition id list:
+    return self.getDestinationIdList()
+
   def setPermission(self, permission, acquired, roles, REQUEST=None):
       """Set a permission for this State."""
       permission_role = self.erp5_permission_roles
