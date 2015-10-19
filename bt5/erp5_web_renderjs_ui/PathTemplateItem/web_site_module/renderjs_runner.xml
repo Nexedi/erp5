@@ -272,8 +272,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>caching_policy/hateoas</string>
                 <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
+                <string>caching_policy/must-revalidate</string>
               </tuple>
             </value>
         </item>
@@ -540,7 +540,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.49893.7308.27852</string> </value>
+                <value> <string>945.49899.34411.54152</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -558,7 +558,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442331571.5</float>
+                        <float>1444639310.19</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
