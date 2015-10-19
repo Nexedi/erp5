@@ -583,3 +583,4 @@ class Matrix(object):
       LOG('XMLMatrix notifyAfterUpdateRelatedContent _renameCellRange', 0, str(new_cell_range))
       self._renameCellRange(*new_cell_range,**kwd)
 
+InitializeClass(Matrix)
