@@ -1,0 +1,4 @@
+web_page_module/webmanifest_*
+web_page_module/webmanifest_test_*
+web_page_module/gadget_interfaces*
+web_site_module/webmanifest*

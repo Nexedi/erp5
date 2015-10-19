@@ -1,0 +1,852 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>webmanifest_launcher.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>webmanifest_launcher_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*globals window, document, RSVP, rJS,\n
+          loopEventListener, jQuery, URI, location, XMLHttpRequest, console*/\n
+/*jslint indent: 2, maxlen: 80*/\n
+(function (window, document, RSVP, rJS, loopEventListener,\n
+           $, XMLHttpRequest, location, console) {\n
+  "use strict";\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Desactivate jQuery Mobile URL management\n
+  /////////////////////////////////////////////////////////////////\n
+  $.mobile.ajaxEnabled = false;\n
+  $.mobile.linkBindingEnabled = false;\n
+  $.mobile.hashListeningEnabled = false;\n
+  $.mobile.pushStateEnabled = false;\n
+\n
+  var MAIN_SCOPE = "m";\n
+\n
+  function renderMainGadget(gadget, url, options) {\n
+    return gadget.declareGadget(url, {\n
+      scope: MAIN_SCOPE\n
+    })\n
+      .push(function (page_gadget) {\n
+        if (page_gadget.render === undefined) {\n
+          return [page_gadget];\n
+        }\n
+        return RSVP.all([\n
+          page_gadget,\n
+          page_gadget.render(options)\n
+        ]);\n
+      })\n
+      .push(function (all_result) {\n
+        return all_result[0];\n
+      });\n
+  }\n
+\n
+  function initHeaderOptions(gadget) {\n
+    gadget.props.header_argument_list = {\n
+      panel_action: true,\n
+      title: gadget.props.application_title || "Webmanifest Demo"\n
+    };\n
+  }\n
+\n
+  function route(my_root_gadget, my_scope, my_method, my_param_list) {\n
+    return RSVP.Queue()\n
+      .push(function () {\n
+        return my_root_gadget.getDeclaredGadget(my_scope);\n
+      })\n
+      .push(function (my_gadget) {\n
+        if (my_param_list) {\n
+          return my_gadget[my_method].apply(my_gadget, my_param_list);\n
+        }\n
+        return my_gadget[my_method]();\n
+      });\n
+  }\n
+\n
+  function updateHeader(gadget) {\n
+    return gadget.getDeclaredGadget("header")\n
+      .push(function (header_gadget) {\n
+        return header_gadget.render(gadget.props.header_argument_list);\n
+      });\n
+  }\n
+\n
+  function increaseLoadingCounter(gadget) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        gadget.props.loading_counter += 1;\n
+        if (gadget.props.loading_counter === 1) {\n
+          return gadget.getDeclaredGadget("header")\n
+            .push(function (header_gadget) {\n
+              return header_gadget.notifyLoading();\n
+            });\n
+        }\n
+      });\n
+  }\n
+\n
+  function decreaseLoadingCounter(gadget) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        gadget.props.loading_counter -= 1;\n
+        if (gadget.props.loading_counter < 0) {\n
+          gadget.props.loading_counter = 0;\n
+          // throw new Error("Unexpected negative loading counter");\n
+        }\n
+        if (gadget.props.loading_counter === 0) {\n
+          return gadget.getDeclaredGadget("header")\n
+            .push(function (header_gadget) {\n
+              return header_gadget.notifyLoaded();\n
+            });\n
+        }\n
+      });\n
+  }\n
+\n
+  function callJioGadget(gadget, method, param_list) {\n
+    var called = false;\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        called = true;\n
+        return increaseLoadingCounter(gadget);\n
+      })\n
+      .push(function () {\n
+        return gadget.getDeclaredGadget("jio_gadget");\n
+      })\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget[method].apply(jio_gadget, param_list);\n
+      })\n
+      .push(function (result) {\n
+        return decreaseLoadingCounter(gadget)\n
+          .push(function () {\n
+            return result;\n
+          });\n
+      }, function (error) {\n
+        if (called) {\n
+          return decreaseLoadingCounter(gadget)\n
+            .push(function () {\n
+              throw error;\n
+            });\n
+        }\n
+        throw error;\n
+      });\n
+  }\n
+\n
+  function displayErrorContent(gadget, error) {\n
+    // Do not break the application in case of errors.\n
+    // Display it to the user for now,\n
+    // and allow user to go back to the frontpage\n
+    var error_text = "";\n
+    if (error instanceof RSVP.CancellationError) {\n
+      return;\n
+    }\n
+\n
+    if (error instanceof XMLHttpRequest) {\n
+      error_text = error.toString() + " " +\n
+        error.status + " " +\n
+        error.statusText;\n
+    } else if (error instanceof Error) {\n
+      error_text = error.toString();\n
+    } else {\n
+      error_text = JSON.stringify(error);\n
+    }\n
+\n
+    console.error(error);\n
+    if (error instanceof Error) {\n
+      console.error(error.stack);\n
+    }\n
+    // XXX Improve error rendering\n
+    gadget.props.content_element.innerHTML = "<br/><br/><br/><pre></pre>";\n
+    gadget.props.content_element.querySelector(\'pre\').textContent =\n
+      "Error: " + error_text;\n
+    // XXX Notify error\n
+  }\n
+\n
+  function displayError(gadget, error) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return displayErrorContent(gadget, error);\n
+      })\n
+      .push(function () {\n
+        return gadget.dropGadget(MAIN_SCOPE)\n
+          .push(undefined, function () {\n
+            // Do not crash the app if the pg gadget in not defined\n
+            // ie, keep the original error on screen\n
+            return;\n
+          });\n
+      });\n
+  }\n
+\n
+  function getSetting(gadget, key, default_value) {\n
+    return gadget.getDeclaredGadget("setting_gadget")\n
+      .push(function (jio_gadget) {\n
+        return jio_gadget.get("setting");\n
+      })\n
+      .push(function (doc) {\n
+        return doc[key] || default_value;\n
+      }, function (error) {\n
+        if (error.status_code === 404) {\n
+          return default_value;\n
+        }\n
+        throw error;\n
+      });\n
+  }\n
+\n
+  function setSetting(gadget, key, value) {\n
+    var jio_gadget;\n
+    return gadget.getDeclaredGadget("setting_gadget")\n
+      .push(function (result) {\n
+        jio_gadget = result;\n
+        return jio_gadget.get("setting");\n
+      })\n
+      .push(undefined, function (error) {\n
+        if (error.status_code === 404) {\n
+          return {};\n
+        }\n
+        throw error;\n
+      })\n
+      .push(function (doc) {\n
+        doc[key] = value;\n
+        return jio_gadget.put(\'setting\', doc);\n
+      });\n
+  }\n
+\n
+  //////////////////////////////////////////\n
+  // Page rendering\n
+  //////////////////////////////////////////\n
+/*\n
+  function redirectToDefaultPage(gadget) {\n
+    return gadget.pleaseRedirectMyHash(\'#\');\n
+  }\n
+*/\n
+  rJS(window)\n
+    .ready(function (g) {\n
+      g.props = {};\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          $(element).trigger("create");\n
+          g.props.loading_counter = 0;\n
+          g.props.element = element;\n
+          g.props.content_element = element.querySelector(\'.gadget-content\');\n
+        });\n
+    })\n
+    // Configure setting storage\n
+    .ready(function (g) {\n
+      return g.getDeclaredGadget("setting_gadget")\n
+        .push(function (jio_gadget) {\n
+          return jio_gadget.createJio({\n
+            type: "indexeddb",\n
+            database: "setting"\n
+          });\n
+        });\n
+    })\n
+    .ready(function (g) {\n
+      // Extract configuration parameters stored in HTML\n
+      // XXX Will work only if top gadget...\n
+      var element_list =\n
+        document.querySelectorAll("[data-renderjs-configuration]"),\n
+        len = element_list.length,\n
+        key,\n
+        value,\n
+        i,\n
+        queue = new RSVP.Queue();\n
+\n
+      function push(a, b) {\n
+        queue.push(function () {\n
+          return setSetting(g, a, b);\n
+        });\n
+      }\n
+\n
+      for (i = 0; i < len; i += 1) {\n
+        key = element_list[i].getAttribute(\'data-renderjs-configuration\');\n
+        value = element_list[i].textContent;\n
+        if (value !== "") {\n
+          g.props[key] = value;\n
+          push(key, value);\n
+        }\n
+      }\n
+      return queue;\n
+    })\n
+    .ready(function (g) {\n
+      return setSetting(g, \'hateoas_url\',\n
+          (new URI(g.props.hateoas_url))\n
+            .absoluteTo(location.href)\n
+            .toString()\n
+        );\n
+    })\n
+    // Configure jIO storage\n
+    .ready(function (g) {\n
+      var jio_gadget;\n
+      return g.getDeclaredGadget("jio_gadget")\n
+        .push(function (result) {\n
+          jio_gadget = result;\n
+          return getSetting(g, \'jio_storage_description\');\n
+        })\n
+        .push(function (result) {\n
+          return jio_gadget.createJio(result);\n
+        });\n
+    })\n
+    .ready(function (g) {\n
+      return g.getDeclaredGadget(\'panel\')\n
+        .push(function (panel_gadget) {\n
+          return panel_gadget.render();\n
+        });\n
+    })\n
+\n
+    //////////////////////////////////////////\n
+    // Acquired method\n
+    //////////////////////////////////////////\n
+    .declareAcquiredMethod(\'pleaseRedirectMyHash\', \'pleaseRedirectMyHash\')\n
+\n
+    //////////////////////////////////////////\n
+    // Allow Acquisition\n
+    //////////////////////////////////////////\n
+    .allowPublicAcquisition("getSetting", function (argument_list) {\n
+      return getSetting(this, argument_list[0], argument_list[1]);\n
+    })\n
+    .allowPublicAcquisition("setSetting", function (argument_list) {\n
+      return setSetting(this, argument_list[0], argument_list[1]);\n
+    })\n
+    .allowPublicAcquisition("translateHtml", function (argument_list) {\n
+      return this.getDeclaredGadget("translation_gadget")\n
+        .push(function (translation_gadget) {\n
+          return translation_gadget.translateHtml(argument_list[0]);\n
+        });\n
+    })\n
+\n
+    // XXX Those methods may be directly integrated into the header,\n
+    // as it handles the submit triggering\n
+    .allowPublicAcquisition(\'notifySubmitting\', function () {\n
+      return route(this, "header", \'notifySubmitting\');\n
+    })\n
+    .allowPublicAcquisition(\'notifySubmitted\', function () {\n
+      return route(this, "header", "notifySubmitted");\n
+    })\n
+    .allowPublicAcquisition(\'notifyChange\', function () {\n
+      return route(this, "header", \'notifyChange\');\n
+    })\n
+\n
+    .allowPublicAcquisition("translate", function (argument_list) {\n
+      return this.getDeclaredGadget("translation_gadget")\n
+        .push(function (translation_gadget) {\n
+          return translation_gadget.translate(argument_list[0]);\n
+        });\n
+    })\n
+    .allowPublicAcquisition("redirect", function (param_list) {\n
+      var gadget = this;\n
+      return gadget.aq_pleasePublishMyState.apply(gadget, param_list)\n
+        .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+    })\n
+    .allowPublicAcquisition(\'reload\', function () {\n
+      return location.reload();\n
+    })\n
+    .allowPublicAcquisition("getUrlFor", function (param_list) {\n
+      return this.aq_pleasePublishMyState(param_list[0]);\n
+    })\n
+\n
+    .allowPublicAcquisition("updateHeader", function (param_list) {\n
+      var gadget = this;\n
+      initHeaderOptions(gadget);\n
+      return this.getDeclaredGadget("translation_gadget")\n
+        .push(function (translation_gadget) {\n
+          var promise_list = [],\n
+            key;\n
+          for (key in param_list[0]) {\n
+            if (param_list[0].hasOwnProperty(key)) {\n
+              gadget.props.header_argument_list[key] = param_list[0][key];\n
+            }\n
+          }\n
+\n
+          promise_list.push(translation_gadget.translate(\n
+            gadget.props.header_argument_list.title\n
+          ));\n
+          if (gadget.props.header_argument_list.hasOwnProperty(\'right_title\')) {\n
+            promise_list.push(translation_gadget.translate(\n
+              gadget.props.header_argument_list.right_title\n
+            ));\n
+          }\n
+          return RSVP.all(promise_list);\n
+        })\n
+        .push(function (result_list) {\n
+          gadget.props.header_argument_list.title = result_list[0];\n
+          if (result_list.length === 2) {\n
+            gadget.props.header_argument_list.right_title = result_list[1];\n
+          }\n
+\n
+          // XXX Sven hack: number of _url determine padding for\n
+          // subheader on ui-content\n
+          var key,\n
+            count = 0;\n
+          for (key in gadget.props.header_argument_list) {\n
+            if (gadget.props.header_argument_list.hasOwnProperty(key)) {\n
+              if (key.indexOf(\'_url\') > -1) {\n
+                count += 1;\n
+              }\n
+            }\n
+          }\n
+          if (count > 2) {\n
+            console.log(\'Has subheader\');\n
+            gadget.props.sub_header_class = "ui-has-subheader";\n
+          }\n
+        });\n
+    })\n
+\n
+    .allowPublicAcquisition(\'triggerPanel\', function () {\n
+      return route(this, "panel", "toggle");\n
+    })\n
+\n
+    .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
+      return callJioGadget(this, "allDocs", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_post", function (param_list) {\n
+      return callJioGadget(this, "post", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_put", function (param_list) {\n
+      return callJioGadget(this, "put", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_get", function (param_list) {\n
+      return callJioGadget(this, "get", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_getAttachment", function (param_list) {\n
+      return callJioGadget(this, "getAttachment", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_putAttachment", function (param_list) {\n
+      return callJioGadget(this, "putAttachment", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_repair", function (param_list) {\n
+      return callJioGadget(this, "repair", param_list);\n
+    })\n
+    .allowPublicAcquisition("triggerSubmit", function (param_list) {\n
+      return this.getDeclaredGadget(MAIN_SCOPE)\n
+        .push(function (main_gadget) {\n
+          return main_gadget.triggerSubmit(param_list);\n
+        });\n
+    })\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    // Render the page\n
+    .declareMethod(\'render\', function (options) {\n
+      var gadget = this;\n
+\n
+      gadget.props.options = options;\n
+      // Reinitialize the loading counter\n
+      gadget.props.loading_counter = 0;\n
+      // By default, init the header options to be empty\n
+      // (ERP5 title by default + sidebar)\n
+      initHeaderOptions(gadget);\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return increaseLoadingCounter(gadget);\n
+        })\n
+        .push(function () {\n
+          return gadget.getDeclaredGadget(\'router\');\n
+        })\n
+        .push(function (router_gadget) {\n
+          return router_gadget.route(options);\n
+        })\n
+        .push(function (route_result) {\n
+          return renderMainGadget(\n
+            gadget,\n
+            route_result.url,\n
+            route_result.options\n
+          );\n
+        })\n
+        .push(function (main_gadget) {\n
+          var input;\n
+          // Append loaded gadget in the page\n
+          if (main_gadget !== undefined) {\n
+            return main_gadget.getElement()\n
+              .push(function (fragment) {\n
+                var element = gadget.props.content_element,\n
+                  content_container = document.createElement("div");\n
+                content_container.className = "ui-content " +\n
+                  (gadget.props.sub_header_class || "");\n
+                // reset subheader indicator\n
+                delete gadget.props.sub_header_class;\n
+\n
+                // go to the top of the page\n
+                window.scrollTo(0, 0);\n
+\n
+                updateHeader(gadget);\n
+\n
+                // Clear first to DOM, append after to reduce flickering/manip\n
+                while (element.firstChild) {\n
+                  element.removeChild(element.firstChild);\n
+                }\n
+                content_container.appendChild(fragment);\n
+                element.appendChild(content_container);\n
+\n
+                $(element).trigger("create");\n
+\n
+                input = element.querySelector("input");\n
+                if (input !== null) {\n
+                  input.focus();\n
+                  input.select();\n
+                }\n
+                // XXX Drop notification\n
+                // return header_gadget.notifyLoaded();\n
+              });\n
+          }\n
+        })\n
+        .push(function () {\n
+          return decreaseLoadingCounter(gadget);\n
+        }, function (error) {\n
+          return decreaseLoadingCounter(gadget)\n
+            .push(function () {\n
+              throw error;\n
+            });\n
+        })\n
+        .push(undefined, function (error) {\n
+          return displayError(gadget, error);\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////\n
+    // Handle sub gadgets services\n
+    /////////////////////////////////\n
+    .allowPublicAcquisition(\'reportServiceError\', function (param_list,\n
+                                                            gadget_scope) {\n
+      if (gadget_scope === undefined) {\n
+        // don\'t fail in case of dropped subgadget (like previous page)\n
+        return;\n
+      }\n
+      return displayError(this, param_list[0]);\n
+    })\n
+\n
+    .declareService(function () {\n
+      ////////////////////////////////////\n
+      // Form submit listening. Prevent browser to automatically\n
+      // handle the form submit in case of a bug\n
+      ////////////////////////////////////\n
+      var gadget = this;\n
+\n
+      function catchFormSubmit() {\n
+        return displayError(gadget, new Error("Unexpected form submit"));\n
+      }\n
+\n
+      // Listen to form submit\n
+      return loopEventListener(\n
+        gadget.props.element,\n
+        \'submit\',\n
+        false,\n
+        catchFormSubmit\n
+      );\n
+    });\n
+\n
+}(window, document, RSVP, rJS, loopEventListener, jQuery,\n
+  XMLHttpRequest, location, console));
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Webmanifest Launcher JS</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1444136845.03</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>946.15832.63781.3976</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1444133606.7</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1444133293.04</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
