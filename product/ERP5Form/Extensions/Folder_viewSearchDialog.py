@@ -321,7 +321,7 @@ def getSearchDialog(self, REQUEST=None):
   # possible workflow states
   for type_name in allowed_content_types:
     for workflow in workflow_tool.getWorkflowsFor(type_name):
-      workflow_id = workflow.getId()
+      workflow_id = workflow.id
       state_var = workflow.getStateVariable()
 
       if state_var in workflow_set:
