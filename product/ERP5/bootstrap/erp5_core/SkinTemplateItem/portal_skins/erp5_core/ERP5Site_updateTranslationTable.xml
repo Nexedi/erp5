@@ -74,7 +74,7 @@ portal_workflow = context.portal_workflow\n
 portal_type_list = context.portal_types.objectValues()\n
 chain_dict = portal_workflow.getChainsByType()\n
 for portal_type in portal_type_list:\n
-  pt_id = portal_type.getId()\n
+  pt_id = portal_type.id\n
   associated_workflow_id_list = []\n
   associated_workflow_id_list.extend(portal_type.getTypeWorkflowList())\n
   if pt_id in chain_dict:\n
@@ -96,7 +96,7 @@ for portal_type in portal_type_list:\n
                                translated_message=translated_message))\n
 \n
           # translate state title as well\n
-          state_title = state.getTitle()\n
+          state_title = state.title\n
           if state_title is not None and state_title != \'\':\n
             state_var_title = \'%s_title\' % state_var\n
             msg_id = getMessageIdWithContext(state_title, \'state\', wf_id)\n
