@@ -584,7 +584,7 @@
                 $(element).trigger("create");\n
 \n
                 input = element.querySelector("input");\n
-                if (input !== null) {\n
+                if ((input !== null) && (!input.readOnly)) {\n
                   input.focus();\n
                   input.select();\n
                 }\n
@@ -776,7 +776,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.35764.39446.32955</string> </value>
+                <value> <string>946.36079.54772.16059</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -794,7 +794,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445329252.77</float>
+                        <float>1445348158.92</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
