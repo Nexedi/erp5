@@ -550,6 +550,12 @@
           return increaseLoadingCounter(gadget);\n
         })\n
         .push(function () {\n
+          return gadget.getDeclaredGadget(\'panel\');\n
+        })\n
+        .push(function (panel_gadget) {\n
+          return panel_gadget.close();\n
+        })\n
+        .push(function () {\n
           return gadget.getDeclaredGadget(\'router\');\n
         })\n
         .push(function (router_gadget) {\n
@@ -782,7 +788,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.36079.64367.63812</string> </value>
+                <value> <string>946.36189.7510.51302</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -800,7 +806,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445350562.81</float>
+                        <float>1445354882.08</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
