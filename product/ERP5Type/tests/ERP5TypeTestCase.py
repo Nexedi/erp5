@@ -952,7 +952,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         # force convert edit_workflow: Why have to load edit_workflow this way?
         edit_workflow = workflow_tool._getOb('edit_workflow', None)
         if edit_workflow is not None:
-          new_workflow = workflow_tool.dc_workflow_asERP5Object(workflow_tool, workflow, temp=0)
+          new_workflow = workflow_tool.dc_workflow_asERP5Object(workflow_tool, edit_workflow, temp=0)
           for ptype_id in type_workflow_dict:
             ptype = getattr(self.portal.portal_types, ptype_id, None)
             if ptype is not None and 'edit_workflow' in workflow_tool.getChainsByType()[ptype_id]:
