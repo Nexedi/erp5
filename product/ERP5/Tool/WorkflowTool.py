@@ -106,6 +106,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
   # Declarative Security
   security = ClassSecurityInfo()
 
+  _product_interfaces = OriginalWorkflowTool._product_interfaces
+  _chains_by_type = OriginalWorkflowTool._chains_by_type
+  _default_chain = OriginalWorkflowTool._default_chain
+  _default_cataloging = OriginalWorkflowTool._default_cataloging
   manage_options = OriginalWorkflowTool.manage_options
   manage_overview = OriginalWorkflowTool.manage_overview
   _manage_selectWorkflows = OriginalWorkflowTool._manage_selectWorkflows
@@ -555,7 +559,9 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
               tr_var_path = '/'.join(tr_var_path.split('/')[2:])
               new_category.append(tr_var_path)
               tr_var.setCausalityList(new_category)
+        # move dc workflow to trash bin
         self._finalizeWorkflowConversion(dc_workflow)
+        # override temporary id:
         workflow.setId(workflow.default_reference)
       return workflow
 
@@ -941,7 +947,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       else:
         type_value.addTypeWorkflowList(wf_id)
     if dc_wf_id_list != []:
-      self.setChainForPortalTypes((type_value.getId(),), tuple(dc_wf_id_list))
+      self.setChainForPortalTypes((type_value.id,), tuple(dc_wf_id_list))
 
 InitializeClass(WorkflowTool)
 
