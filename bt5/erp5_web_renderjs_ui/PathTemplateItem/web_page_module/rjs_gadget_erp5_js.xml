@@ -499,6 +499,9 @@
     .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
       return callJioGadget(this, "allDocs", param_list);\n
     })\n
+    .allowPublicAcquisition("jio_remove", function (param_list) {\n
+      return callJioGadget(this, "remove", param_list);\n
+    })\n
     .allowPublicAcquisition("jio_post", function (param_list) {\n
       return callJioGadget(this, "post", param_list);\n
     })\n
@@ -513,6 +516,9 @@
     })\n
     .allowPublicAcquisition("jio_putAttachment", function (param_list) {\n
       return callJioGadget(this, "putAttachment", param_list);\n
+    })\n
+    .allowPublicAcquisition("jio_removeAttachment", function (param_list) {\n
+      return callJioGadget(this, "removeAttachment", param_list);\n
     })\n
     .allowPublicAcquisition("jio_repair", function (param_list) {\n
       return callJioGadget(this, "repair", param_list);\n
@@ -776,7 +782,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.36079.54772.16059</string> </value>
+                <value> <string>946.36079.64367.63812</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -794,7 +800,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445348158.92</float>
+                        <float>1445350562.81</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
