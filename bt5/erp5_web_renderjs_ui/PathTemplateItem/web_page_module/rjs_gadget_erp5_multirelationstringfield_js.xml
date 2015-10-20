@@ -292,7 +292,12 @@ promiseEventListener */\n
     if (field_json.allow_jump && allow_jump) {\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return gadget.getUrlFor({jio_key: field_json.relation_item_relative_url[i]});\n
+          return gadget.getUrlFor({\n
+            command: \'index\',\n
+            options: {\n
+              jio_key: field_json.relation_item_relative_url[i]\n
+            }\n
+          });\n
         })\n
         .push(function (my_url) {\n
           a2.href = my_url;\n
@@ -475,7 +480,12 @@ promiseEventListener */\n
               props.select_uid_list[i] = element.getAttribute("name");\n
               wrapper.querySelector("input").value = element.textContent;\n
               clearResults(wrapper, "skip");\n
-              return my_gadget.getUrlFor({jio_key: jump_url});\n
+              return my_gadget.getUrlFor({\n
+                command: \'index\',\n
+                options: {\n
+                  jio_key: jump_url\n
+                }\n
+              });\n
             }\n
           }).push(function (my_url) {\n
             if (my_url !== undefined) {\n
@@ -683,7 +693,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52422.65165.14080</string> </value>
+                <value> <string>945.52745.24179.54220</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -701,7 +711,7 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442502322.12</float>
+                        <float>1444984956.18</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

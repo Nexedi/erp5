@@ -165,7 +165,7 @@
               });\n
             } else {\n
               // Parent is an ERP5 document\n
-              return gadget.getUrlFor({jio_key: jio_key})\n
+              return gadget.getUrlFor({command: \'display\', options: {jio_key: jio_key}})\n
                 .push(function (parent_href) {\n
                   parent_list.unshift({\n
                     title: parent_link.name,\n
@@ -182,7 +182,7 @@
         });\n
       }\n
 \n
-      return gadget.getUrlFor({jio_key: options.jio_key, view: options.view, editable: options.editable})\n
+      return gadget.getUrlFor({command: \'change\', options: {page: undefined}})\n
         .push(function (back_url) {\n
           header_options.back_url = back_url;\n
           return gadget.jio_getAttachment(options.jio_key, "links");\n
@@ -343,7 +343,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52768.52090.60757</string> </value>
+                <value> <string>946.30044.42475.51968</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -361,7 +361,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442504878.86</float>
+                        <float>1444986060.46</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

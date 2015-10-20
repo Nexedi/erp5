@@ -137,7 +137,7 @@
     \n
   </head>\n
   <body>\n
-    <form class="save_form document_form"></form>\n
+    <div class="save_form document_form"></div>\n
   </body>\n
 </html>
 
@@ -262,7 +262,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>super_sven</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -276,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>939.54156.55991.39765</string> </value>
+                <value> <string>945.50880.23560.7150</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1419427478.55</float>
+                        <float>1442998364.27</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -304,11 +304,6 @@
   //////////////////////////////////////////\n
   // Page rendering\n
   //////////////////////////////////////////\n
-/*\n
-  function redirectToDefaultPage(gadget) {\n
-    return gadget.pleaseRedirectMyHash(\'#\');\n
-  }\n
-*/\n
   rJS(window)\n
     .ready(function (g) {\n
       g.props = {};\n
@@ -382,11 +377,12 @@
           return panel_gadget.render();\n
         });\n
     })\n
-\n
-    //////////////////////////////////////////\n
-    // Acquired method\n
-    //////////////////////////////////////////\n
-    .declareAcquiredMethod(\'pleaseRedirectMyHash\', \'pleaseRedirectMyHash\')\n
+    .ready(function (g) {\n
+      return g.getDeclaredGadget(\'router\')\n
+        .push(function (router_gadget) {\n
+          return router_gadget.start();\n
+        });\n
+    })\n
 \n
     //////////////////////////////////////////\n
     // Allow Acquisition\n
@@ -422,16 +418,32 @@
           return translation_gadget.translate(argument_list[0]);\n
         });\n
     })\n
+\n
     .allowPublicAcquisition("redirect", function (param_list) {\n
-      var gadget = this;\n
-      return gadget.aq_pleasePublishMyState.apply(gadget, param_list)\n
-        .push(gadget.pleaseRedirectMyHash.bind(gadget));\n
+      return this.getDeclaredGadget(\'router\')\n
+        .push(function (router_gadget) {\n
+          return router_gadget.getCommandUrlFor.apply(router_gadget,\n
+                                                      param_list);\n
+        })\n
+        .push(function (hash) {\n
+          window.location.replace(hash);\n
+        });\n
     })\n
     .allowPublicAcquisition(\'reload\', function () {\n
       return location.reload();\n
     })\n
+    .allowPublicAcquisition("getUrlParameter", function (param_list) {\n
+      return this.getDeclaredGadget(\'router\')\n
+        .push(function (router_gadget) {\n
+          return router_gadget.getUrlParameter.apply(router_gadget, param_list);\n
+        });\n
+    })\n
     .allowPublicAcquisition("getUrlFor", function (param_list) {\n
-      return this.aq_pleasePublishMyState(param_list[0]);\n
+      return this.getDeclaredGadget(\'router\')\n
+        .push(function (router_gadget) {\n
+          return router_gadget.getCommandUrlFor.apply(router_gadget,\n
+                                                      param_list);\n
+        });\n
     })\n
 \n
     .allowPublicAcquisition("updateHeader", function (param_list) {\n
@@ -475,7 +487,6 @@
             }\n
           }\n
           if (count > 2) {\n
-            console.log(\'Has subheader\');\n
             gadget.props.sub_header_class = "ui-has-subheader";\n
           }\n
         });\n
@@ -515,8 +526,11 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
+    .allowPublicAcquisition("renderApplication", function (param_list) {\n
+      return this.renderXXX.apply(this, param_list);\n
+    })\n
     // Render the page\n
-    .declareMethod(\'render\', function (options) {\n
+    .declareMethod(\'renderXXX\', function (options) {\n
       var gadget = this;\n
 \n
       gadget.props.options = options;\n
@@ -762,7 +776,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.54027.26221.22152</string> </value>
+                <value> <string>946.35764.39446.32955</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -780,7 +794,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442581058.21</float>
+                        <float>1445329252.77</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

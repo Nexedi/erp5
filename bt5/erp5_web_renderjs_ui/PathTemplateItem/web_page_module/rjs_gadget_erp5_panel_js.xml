@@ -155,10 +155,10 @@
       return new RSVP.Queue()\n
         .push(function () {\n
           return RSVP.all([\n
-            g.getUrlFor({page: "front"}),\n
-            g.getUrlFor({page: "history"}),\n
-            g.getUrlFor({page: "preference"}),\n
-            g.getUrlFor({page: "logout"})\n
+            g.getUrlFor({command: \'display\', options: {page: "front"}}),\n
+            g.getUrlFor({command: \'display\', options: {page: "history"}}),\n
+            g.getUrlFor({command: \'display\', options: {page: "preference"}}),\n
+            g.getUrlFor({command: \'display\', options: {page: "logout"}})\n
           ]);\n
         })\n
         .push(function (all_result) {\n
@@ -344,7 +344,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.53861.25077.18602</string> </value>
+                <value> <string>946.30031.56342.5324</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -362,7 +362,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442569620.96</float>
+                        <float>1444985342.36</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

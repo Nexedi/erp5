@@ -122,6 +122,12 @@
 \n
   </head>\n
   <body>\n
+\n
+    <!-- XXX action, method, fieldset -->\n
+    <form class="dialog_form">\n
+      <button type="submit" data-i18n="Submit" class="ui-btn ui-btn-b ui-btn-inline\n
+        ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>\n
+\n
        <div data-gadget-url="gadget_erp5_searchfield.html"\n
               data-gadget-scope="erp5_searchfield"\n
               data-gadget-sandbox="public"></div>\n
@@ -129,6 +135,8 @@
       <div data-gadget-url="gadget_erp5_form.html"\n
               data-gadget-scope="erp5_form"\n
               data-gadget-sandbox="public"></div>\n
+\n
+    </form>\n
 \n
   </body>\n
 </html>
@@ -268,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>936.46405.53164.22289</string> </value>
+                <value> <string>945.61017.50891.24046</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -286,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1407339467.24</float>
+                        <float>1442998685.54</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

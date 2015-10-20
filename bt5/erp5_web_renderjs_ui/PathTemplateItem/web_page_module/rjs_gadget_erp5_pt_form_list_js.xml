@@ -99,18 +99,41 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, RSVP */\n
+            <value> <string>/*global window, rJS, RSVP, loopEventListener */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP) {\n
+(function (window, rJS, RSVP, loopEventListener) {\n
   "use strict";\n
 \n
   rJS(window)\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
 \n
+    // Assign the element to a variable\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
+\n
+    .ready(function (g) {\n
+      return g.getGadgetPath()\n
+        .push(function (path) {\n
+          g.props.path = path;\n
+        });\n
+    })\n
     /////////////////////////////////////////////////////////////////\n
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("updateHeader", "updateHeader")\n
     .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -122,18 +145,21 @@
 \n
       form_options.erp5_document = options.erp5_document;\n
       form_options.form_definition = options.form_definition;\n
-      // XXX not generic, fix later\n
-      if (options.erp5_searchfield) {\n
-        form_options.form_definition.extended_search =  options.erp5_searchfield.extended_search;\n
-        search_options.extended_search = options.erp5_searchfield.extended_search;\n
-      }\n
       form_options.view = options.view;\n
 \n
       return new RSVP.Queue()\n
         .push(function () {\n
+          return gadget.getUrlParameter(\'extended_search\');\n
+        })\n
+        .push(function (extended_search) {\n
+          // XXX not generic, fix later\n
+          if (extended_search) {\n
+            form_options.form_definition.extended_search = extended_search;\n
+            search_options.extended_search = extended_search;\n
+          }\n
           var new_content_action = options.erp5_document._links.action_object_new_content_action;\n
           if (new_content_action !== undefined) {\n
-            new_content_action = gadget.getUrlFor({jio_key: options.jio_key, view: new_content_action.href, editable: true});\n
+            new_content_action = gadget.getUrlFor({command: \'change\', options: {view: new_content_action.href, editable: true}});\n
           } else {\n
             new_content_action = "";\n
           }\n
@@ -141,9 +167,9 @@
           return RSVP.all([\n
             gadget.getDeclaredGadget("erp5_searchfield"),\n
             gadget.getDeclaredGadget("erp5_form"),\n
-            gadget.getUrlFor({jio_key: options.jio_key, view: options.view, page: "breadcrumb"}),\n
+            gadget.getUrlFor({command: \'change\', options: {page: "breadcrumb"}}),\n
             new_content_action,\n
-            gadget.getUrlFor({jio_key: options.jio_key, page: "action", view: options.view})\n
+            gadget.getUrlFor({command: \'change\', options: {page: "action"}})\n
           ]);\n
         })\n
         .push(function (all_gadget) {\n
@@ -164,9 +190,30 @@
           ]);\n
         });\n
 \n
+    })\n
+\n
+    .declareService(function () {\n
+      var gadget = this;\n
+\n
+      function formSubmit() {\n
+        return gadget.getDeclaredGadget("erp5_searchfield")\n
+          .push(function (search_gadget) {\n
+            return search_gadget.getContent();\n
+          })\n
+          .push(function (data) {\n
+            return gadget.redirect({command: \'change\', options: {extended_search: data.search, begin_from: undefined}});\n
+          });\n
+      }\n
+      // Listen to form submit\n
+      return loopEventListener(\n
+        gadget.props.element.querySelector(\'form\'),\n
+        \'submit\',\n
+        false,\n
+        formSubmit\n
+      );\n
     });\n
 \n
-}(window, rJS, RSVP));</string> </value>
+}(window, rJS, RSVP, loopEventListener));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -301,7 +348,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52360.36060.34423</string> </value>
+                <value> <string>946.34728.38206.10615</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -319,7 +366,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442480580.57</float>
+                        <float>1445329431.72</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

@@ -156,7 +156,7 @@
             i;\n
           for (i = 0; i < result.data.rows.length; i += 1) {\n
             result_list.push(RSVP.all([\n
-              gadget.getUrlFor({jio_key: result.data.rows[i].id}),\n
+              gadget.getUrlFor({command: \'display\', options: {jio_key: result.data.rows[i].id}}),\n
               result.data.rows[i].value.title || result.data.rows[i].id,\n
               result.data.rows[i].value.business_application_title\n
             ]));\n
@@ -369,7 +369,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.49517.32009.34013</string> </value>
+                <value> <string>946.4325.1841.2867</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -387,7 +387,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442308668.56</float>
+                        <float>1445266444.15</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

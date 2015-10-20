@@ -135,8 +135,6 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
-    .declareAcquiredMethod("pleaseRedirectMyHash", "pleaseRedirectMyHash")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -163,44 +161,18 @@
           }));\n
         })\n
         .push(function (my_translated_html) {\n
-          search_gadget.props.element.querySelector("form").innerHTML =\n
+          search_gadget.props.element.querySelector("div").innerHTML =\n
             my_translated_html;\n
           return search_gadget;\n
         });\n
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
-      var input = this.__element.querySelector(\'input\'),\n
+      var input = this.props.element.querySelector(\'input\'),\n
         result = {};\n
 \n
       result[input.getAttribute(\'name\')] = input.value;\n
       return result;\n
-    })\n
-\n
-    .declareService(function () {\n
-      var search_form = this;\n
-\n
-      function formSubmit() {\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            return search_form.getContent();\n
-          })\n
-          .push(function (data) {\n
-            return search_form.pleasePublishMyState({\n
-              "extended_search": data.search\n
-            });\n
-          })\n
-          .push(function (url) {\n
-            return search_form.pleaseRedirectMyHash(url);\n
-          });\n
-      }\n
-      // Listen to form submit\n
-      return loopEventListener(\n
-        search_form.props.element.querySelector(\'form\'),\n
-        \'submit\',\n
-        false,\n
-        formSubmit\n
-      );\n
     });\n
 \n
 }(window, rJS, RSVP, loopEventListener, Handlebars));</string> </value>
@@ -324,7 +296,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -338,7 +310,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.11553.26313.55261</string> </value>
+                <value> <string>945.61050.10650.48093</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -356,7 +328,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421080302.1</float>
+                        <float>1445265843.55</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

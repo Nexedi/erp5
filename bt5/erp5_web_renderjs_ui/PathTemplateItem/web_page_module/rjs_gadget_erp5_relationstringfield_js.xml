@@ -279,7 +279,12 @@ promiseEventListener */\n
     if (target_url && field_json.allow_jump) {\n
       return new RSVP.Queue()\n
         .push(function () {\n
-          return my_gadget.getUrlFor({jio_key: target_url});\n
+          return my_gadget.getUrlFor({\n
+            command: \'index\',\n
+            options: {\n
+              jio_key: target_url\n
+            }\n
+          });\n
         })\n
         .push(function (my_url) {\n
           var plane = props.plane;\n
@@ -759,7 +764,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52421.57221.18466</string> </value>
+                <value> <string>945.64113.53120.10205</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -777,7 +782,7 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442502350.67</float>
+                        <float>1444727907.98</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

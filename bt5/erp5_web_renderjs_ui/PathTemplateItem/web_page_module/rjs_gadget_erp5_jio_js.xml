@@ -99,9 +99,11 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, RSVP */\n
-/*jslint indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP) {\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, RSVP, UriTemplate, URI */\n
+/*jslint indent: 2, maxerr: 3, nomen: true */\n
+(function (window, rJS, RSVP, UriTemplate, URI) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -134,9 +136,44 @@
         });\n
     })\n
 \n
-    .declareMethod(\'allDocs\', function () {\n
+    .declareMethod(\'allDocs\', function (option_dict) {\n
+      // throw new Error(\'do not use all docs\');\n
       var storage = this.state_parameter_dict.jio_storage;\n
-      return storage.allDocs.apply(storage, arguments);\n
+\n
+      if (option_dict.list_method_template === undefined) {\n
+        return storage.allDocs.apply(storage, arguments);\n
+      }\n
+      return storage.getAttachment(\n
+        // XXX Ugly hardcoded meaningless id...\n
+        "erp5",\n
+        new UriTemplate.parse(option_dict.list_method_template)\n
+                       .expand(option_dict),\n
+        {format: "json"}\n
+      )\n
+        .push(function (catalog_json) {\n
+          var data = catalog_json._embedded.contents,\n
+            count = data.length,\n
+            k,\n
+            uri,\n
+            item,\n
+            result = [];\n
+          for (k = 0; k < count; k += 1) {\n
+            item = data[k];\n
+            uri = new URI(item._links.self.href);\n
+            delete item._links;\n
+            result.push({\n
+              id: uri.segment(2),\n
+              doc: {},\n
+              value: item\n
+            });\n
+          }\n
+          return {\n
+            data: {\n
+              rows: result,\n
+              total_rows: result.length\n
+            }\n
+          };\n
+        });\n
     })\n
     .declareMethod(\'getAttachment\', function (id, name) {\n
       return this.state_parameter_dict.jio_storage.getAttachment(id, name, {format: "json"});\n
@@ -145,7 +182,9 @@
       return this.state_parameter_dict.jio_storage.putAttachment(id, name, JSON.stringify(json));\n
     });\n
 \n
-}(window, rJS, RSVP));</string> </value>
+}(window, rJS, RSVP, UriTemplate, URI));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -280,7 +319,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.54088.9321.61678</string> </value>
+                <value> <string>946.24288.2744.26624</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -298,7 +337,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442582911.35</float>
+                        <float>1444640714.39</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

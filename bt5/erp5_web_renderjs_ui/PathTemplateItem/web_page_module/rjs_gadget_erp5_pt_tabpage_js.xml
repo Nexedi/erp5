@@ -167,16 +167,17 @@
             if (options.view === view_list[i].href) {\n
               matching = i;\n
             }\n
-            promise_list.push(gadget.getUrlFor({\n
-              jio_key: options.jio_key,\n
+            promise_list.push(gadget.getUrlFor({command: \'change\', options: {\n
               view: view_list[i].href,\n
-              editable: true\n
-            }));\n
+              editable: true,\n
+              page: undefined\n
+            }}));\n
           }\n
-          promise_list.push(gadget.getUrlFor({\n
-            jio_key: options.jio_key,\n
-            view: "view"\n
-          }));\n
+          promise_list.push(gadget.getUrlFor({command: \'change\', options: {\n
+            view: "view",\n
+            page: undefined,\n
+            editable: undefined\n
+          }}));\n
           return RSVP.all(promise_list);\n
         })\n
         .push(function (all_result) {\n
@@ -213,11 +214,10 @@
               cancel_url: tab_list[matching].link\n
             });\n
           }\n
-          return gadget.getUrlFor({\n
-            jio_key: options.jio_key,\n
+          return gadget.getUrlFor({command: \'change\', options: {\n
             view: "view",\n
             editable: true\n
-          })\n
+          }})\n
             .push(function (url) {\n
               return gadget.updateHeader({cancel_url: url});\n
             });\n
@@ -362,7 +362,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52770.44221.26572</string> </value>
+                <value> <string>946.30248.23538.25292</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -380,7 +380,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442504976.31</float>
+                        <float>1444998449.41</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

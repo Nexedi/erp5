@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP, URI */\n
+/*global window, rJS, RSVP */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP, URI) {\n
+(function (window, rJS, RSVP) {\n
   "use strict";\n
 \n
   // Precompile the templates while loading the first gadget instance\n
@@ -154,10 +154,12 @@
 \n
           return RSVP.all([\n
             form_gadget.render(form_options),\n
-            gadget.getUrlFor({jio_key: options.jio_key, view: options.view, editable: true}),\n
-            gadget.getUrlFor({jio_key: options.jio_key, page: "action", view: options.view}),\n
-            gadget.getUrlFor({jio_key: options.jio_key, page: "breadcrumb", view: options.view}),\n
-            gadget.getUrlFor({jio_key: (new URI(options.erp5_document._links.parent.href)).segment(2)})\n
+            gadget.getUrlFor({command: \'change\', options: {editable: true}}),\n
+            gadget.getUrlFor({command: \'change\', options: {page: "action"}}),\n
+            gadget.getUrlFor({command: \'change\', options: {page: "breadcrumb"}}),\n
+            gadget.getUrlFor({command: \'history_previous\'}),\n
+            gadget.getUrlFor({command: \'selection_previous\'}),\n
+            gadget.getUrlFor({command: \'selection_next\'})\n
           ]);\n
         })\n
         .push(function (all_result) {\n
@@ -165,8 +167,8 @@
           return gadget.updateHeader({\n
             jump_url: "",\n
             actions_url: all_result[2],\n
-            previous_url: "",\n
-            next_url: "",\n
+            previous_url: all_result[5],\n
+            next_url: all_result[6],\n
             export_url: "",\n
             edit_url: all_result[1],\n
             selection_url: all_result[4],\n
@@ -176,7 +178,7 @@
         });\n
     });\n
 \n
-}(window, rJS, RSVP, URI));
+}(window, rJS, RSVP));
 
 ]]></string> </value>
         </item>
@@ -313,7 +315,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52385.13762.21094</string> </value>
+                <value> <string>946.35769.25581.7594</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -331,7 +333,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442481653.09</float>
+                        <float>1445329536.24</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

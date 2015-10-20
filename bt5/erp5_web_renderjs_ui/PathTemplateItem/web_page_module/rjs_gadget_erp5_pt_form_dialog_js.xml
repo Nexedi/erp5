@@ -212,8 +212,8 @@
               section.innerHTML = my_translation_html;\n
               return RSVP.all([\n
                 erp5_form.render(form_options),\n
-                form_gadget.getUrlFor({jio_key: form_gadget.props.id}),\n
-                form_gadget.getUrlFor({jio_key: form_gadget.props.id, page: "breadcrumb"})\n
+                form_gadget.getUrlFor({command: \'change\', options: {page: undefined, view: undefined}}),\n
+                form_gadget.getUrlFor({command: \'change\', options: {page: "breadcrumb"}})\n
               ]);\n
             })\n
             .push(function (all_result) {\n
@@ -265,11 +265,11 @@
             var location = evt.target.getResponseHeader("X-Location");\n
             if (location === undefined || location === null) {\n
               // No redirection, stay on the same document\n
-              return form_gadget.getUrlFor({jio_key: form_gadget.props.id, view: "view"});\n
+              return form_gadget.getUrlFor({command: \'change\', options: {view: "view", page: undefined}});\n
             }\n
             return RSVP.all([\n
               form_gadget.notifySubmitted(),\n
-              form_gadget.redirect({jio_key: new URI(location).segment(2), editable: form_gadget.props.editable})\n
+              form_gadget.redirect({command: \'display\', options: {jio_key: new URI(location).segment(2), editable: form_gadget.props.editable}})\n
             ]);\n
           });\n
       }\n
@@ -420,7 +420,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.54063.48707.15940</string> </value>
+                <value> <string>946.30291.61878.2013</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -438,7 +438,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442581458.69</float>
+                        <float>1445000905.46</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

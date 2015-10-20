@@ -99,9 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, RSVP, loopEventListener, URI, document */\n
+            <value> <string>/*global window, rJS, RSVP, loopEventListener, document */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP, loopEventListener, URI) {\n
+(function (window, rJS, RSVP, loopEventListener) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -161,19 +161,19 @@
 \n
           new_content_action = options.erp5_document._links.action_object_new_content_action;\n
           if (new_content_action !== undefined) {\n
-            new_content_action = form_gadget.getUrlFor({jio_key: options.jio_key, view: new_content_action.href, editable: true});\n
+            new_content_action = form_gadget.getUrlFor({command: \'change\', options: {view: new_content_action.href, editable: true}});\n
           } else {\n
             new_content_action = "";\n
           }\n
 \n
           return RSVP.all([\n
             erp5_form.render(form_options),\n
-            form_gadget.getUrlFor({jio_key: options.jio_key}),\n
-            form_gadget.getUrlFor({jio_key: options.jio_key, page: "tab", view: options.view}),\n
-            form_gadget.getUrlFor({jio_key: options.jio_key, page: "action", view: options.view, editable: true}),\n
-            form_gadget.getUrlFor({jio_key: options.jio_key, page: "breadcrumb", view: options.view, editable: true}),\n
+            form_gadget.getUrlFor({command: \'change\', options: {}}),\n
+            form_gadget.getUrlFor({command: \'change\', options: {page: "tab"}}),\n
+            form_gadget.getUrlFor({command: \'change\', options: {page: "action", editable: true}}),\n
+            form_gadget.getUrlFor({command: \'change\', options: {page: "breadcrumb", editable: true}}),\n
             new_content_action,\n
-            form_gadget.getUrlFor({jio_key: (new URI(options.erp5_document._links.parent.href)).segment(2)})\n
+            form_gadget.getUrlFor({command: \'history_previous\'})\n
           ]);\n
         })\n
         .push(function (all_result) {\n
@@ -238,7 +238,7 @@
       );\n
     });\n
 \n
-}(window, rJS, RSVP, loopEventListener, URI));</string> </value>
+}(window, rJS, RSVP, loopEventListener));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -373,7 +373,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52387.43932.904</string> </value>
+                <value> <string>946.30054.11308.16162</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -391,7 +391,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442505369.77</float>
+                        <float>1445329477.85</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

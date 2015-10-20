@@ -136,10 +136,9 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
-    .declareAcquiredMethod("pleasePublishMyState", "pleasePublishMyState")\n
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
@@ -155,7 +154,6 @@
         i;\n
 \n
       gadget.props.field_json = field_json;\n
-      gadget.props.begin_from = parseInt(options.begin_from, 10) || 0;\n
       gadget.props.extended_search = options.extended_search;\n
       if (field_json.show_anchor) {\n
         th = document.createElement("th");\n
@@ -172,6 +170,14 @@
       thead.appendChild(tr);\n
       return new RSVP.Queue()\n
         .push(function () {\n
+          // XXX Fix in case of multiple listboxes\n
+          return gadget.getUrlParameter(field_json.key + \'_begin_from\');\n
+        })\n
+        .push(function (result) {\n
+          if (result === undefined) {\n
+            result = \'0\';\n
+          }\n
+          gadget.props.begin_from = parseInt(result, 10) || 0;\n
           return gadget.translateHtml(document_table.innerHTML);\n
         })\n
         .push(function (my_translate_html) {\n
@@ -197,9 +203,8 @@
         dataset,\n
         counter,\n
         i,\n
-        list_method_promise = function () {\n
-          return gadget.jio_allDocs.apply(gadget, arguments);\n
-        };\n
+        gadget_path;\n
+\n
       if (field_json.query === undefined) {\n
         original_tfoot.textContent = "Unsupported list method: \'" + field_json.list_method + "\'";\n
         return;\n
@@ -217,51 +222,30 @@
         select_list.push(field_json.column_list[i][0]);\n
       }\n
 \n
-      if (field_json.list_method_template !== undefined) {\n
-        list_method_promise = function (option_dict) {\n
-          return gadget.jio_getAttachment(\n
-            // XXX Ugly hardcoded meaningless id...\n
-            "erp5",\n
-            new UriTemplate.parse(field_json.list_method_template)\n
-                           .expand(option_dict)\n
-          )\n
-            .push(function (catalog_json) {\n
-              var data = catalog_json._embedded.contents,\n
-                count = data.length,\n
-                k,\n
-                uri,\n
-                item,\n
-                result = [];\n
-              for (k = 0; k < count; k += 1) {\n
-                item = data[k];\n
-                uri = new URI(item._links.self.href);\n
-                delete item._links;\n
-                result.push({\n
-                  id: uri.segment(2),\n
-                  doc: {},\n
-                  value: item\n
-                });\n
-              }\n
-              return {\n
-                data: {\n
-                  rows: result,\n
-                  total_rows: result.length\n
-                }\n
-              };\n
-            });\n
-        };\n
-      }\n
-\n
-      return list_method_promise({\n
-        "query": new URI(field_json.query).query(true).query + query_string,\n
-        "limit": [begin_from, begin_from + lines + 1],\n
-        "select_list": select_list\n
-      }).push(function (result) {\n
+      return this.getGadgetPath()\n
+        .push(function (result) {\n
+          gadget_path = result;\n
+          return gadget.jio_allDocs({\n
+            // XXX Not jIO compatible, but until a better api is found...\n
+            "list_method_template": field_json.list_method_template,\n
+            "query": new URI(field_json.query).query(true).query + query_string,\n
+            "limit": [begin_from, lines + 1],\n
+            "select_list": select_list\n
+          });\n
+        }).push(function (result) {\n
         var promise_list = [result];\n
         counter = Math.min(result.data.total_rows, lines);\n
         for (i = 0; i < counter; i += 1) {\n
           promise_list.push(\n
-            gadget.getUrlFor({jio_key: result.data.rows[i].id})\n
+            gadget.getUrlFor({\n
+              command: \'index\',\n
+              options: {\n
+                jio_key: result.data.rows[i].id,\n
+                selection_index: begin_from + i,\n
+                query: new URI(field_json.query).query(true).query + query_string,\n
+                list_method_template: field_json.list_method_template\n
+              }\n
+            })\n
           );\n
         }\n
         return RSVP.all(promise_list);\n
@@ -355,20 +339,19 @@
 \n
         function setNext() {\n
           if (dataset.data.rows.length > lines) {\n
-            next_param.begin_from = begin_from + lines;\n
+            next_param[gadget.props.field_json.key + \'_begin_from\'] = begin_from + lines;\n
           }\n
         }\n
 \n
         if (begin_from === 0) {\n
           setNext();\n
         } else {\n
-          prev_param.begin_from = begin_from - lines;\n
+          prev_param[gadget.props.field_json.key + \'_begin_from\'] = begin_from - lines;\n
           setNext();\n
         }\n
-\n
         return RSVP.all([\n
-          gadget.pleasePublishMyState(prev_param),\n
-          gadget.pleasePublishMyState(next_param)\n
+          gadget.getUrlFor({command: \'change\', options: prev_param}),\n
+          gadget.getUrlFor({command: \'change\', options: next_param})\n
         ]);\n
 \n
       }).push(function (url_list) {\n
@@ -626,7 +609,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52783.20655.48793</string> </value>
+                <value> <string>946.34578.58020.60808</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -644,7 +627,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442504640.91</float>
+                        <float>1445266646.36</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

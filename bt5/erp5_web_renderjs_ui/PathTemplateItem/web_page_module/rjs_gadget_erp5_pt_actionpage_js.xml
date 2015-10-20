@@ -154,8 +154,8 @@
         .push(function (result) {\n
           var i,\n
             promise_list = [\n
-              gadget.getUrlFor({jio_key: options.jio_key, view: options.view, editable: options.editable}),\n
-              gadget.getUrlFor({jio_key: options.jio_key, view: options.view, editable: options.editable, page: "breadcrumb"})\n
+              gadget.getUrlFor({command: \'change\', options: {page: undefined}}),\n
+              gadget.getUrlFor({command: \'change\', options: {page: "breadcrumb"}})\n
             ];\n
           erp5_document = result;\n
           view_list = erp5_document._links.action_workflow || [];\n
@@ -165,10 +165,7 @@
           }\n
 \n
           for (i = 0; i < view_list.length; i += 1) {\n
-            promise_list.push(gadget.getUrlFor({\n
-              jio_key: options.jio_key,\n
-              view: view_list[i].href\n
-            }));\n
+            promise_list.push(gadget.getUrlFor({command: \'change\', options: {view: view_list[i].href, page: undefined, editable: undefined}}));\n
           }\n
           return RSVP.all(promise_list);\n
         })\n
@@ -340,7 +337,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52786.43920.26777</string> </value>
+                <value> <string>946.30039.19211.22562</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -358,7 +355,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442504825.27</float>
+                        <float>1444985792.56</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
