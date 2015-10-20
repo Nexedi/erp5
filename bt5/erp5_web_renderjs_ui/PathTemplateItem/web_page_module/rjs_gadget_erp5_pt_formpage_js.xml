@@ -131,7 +131,6 @@
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -332,7 +331,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52795.14466.59955</string> </value>
+                <value> <string>946.30055.63361.39150</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -350,7 +349,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442581661.41</float>
+                        <float>1445267203.04</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

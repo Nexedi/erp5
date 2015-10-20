@@ -125,7 +125,6 @@
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("redirect", "redirect")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -291,7 +290,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.52448.28806.29303</string> </value>
+                <value> <string>945.54068.65304.28450</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -309,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442581739.77</float>
+                        <float>1444986748.98</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
