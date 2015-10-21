@@ -20,6 +20,7 @@ group_method_id_list
 tag_list
 serialization_tag_list
 </params>
+SET SESSION sql_mode='TRADITIONAL'; <dtml-var sql_delimiter>
 INSERT INTO <dtml-var table>
 (uid, path, active_process_uid, date, method_id, processing_node, processing, priority, group_method_id, tag, serialization_tag, message)
 VALUES
