@@ -112,7 +112,7 @@ class TypesTool(TypeProvider):
       pass
     try:
       script = self.getPortalObject().portal_workflow \
-        .dynamic_class_generation_interaction_workflow.scripts \
+        .dynamic_class_generation_interaction_workflow.getScriptValueList() \
         .DynamicClassGeneration_resetDynamicDocuments
       new = '.resetDynamicDocumentsOnceAtTransactionBoundary('
       if new not in script._body:
