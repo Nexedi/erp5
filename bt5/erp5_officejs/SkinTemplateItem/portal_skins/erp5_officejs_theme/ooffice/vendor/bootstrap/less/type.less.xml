@@ -1,0 +1,325 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314532.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>type.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//\n
+// Typography\n
+// --------------------------------------------------\n
+\n
+\n
+// Headings\n
+// -------------------------\n
+\n
+h1, h2, h3, h4, h5, h6,\n
+.h1, .h2, .h3, .h4, .h5, .h6 {\n
+  font-family: @headings-font-family;\n
+  font-weight: @headings-font-weight;\n
+  line-height: @headings-line-height;\n
+  color: @headings-color;\n
+\n
+  small,\n
+  .small {\n
+    font-weight: normal;\n
+    line-height: 1;\n
+    color: @headings-small-color;\n
+  }\n
+}\n
+\n
+h1,\n
+h2,\n
+h3 {\n
+  margin-top: @line-height-computed;\n
+  margin-bottom: (@line-height-computed / 2);\n
+\n
+  small,\n
+  .small {\n
+    font-size: 65%;\n
+  }\n
+}\n
+h4,\n
+h5,\n
+h6 {\n
+  margin-top: (@line-height-computed / 2);\n
+  margin-bottom: (@line-height-computed / 2);\n
+\n
+  small,\n
+  .small {\n
+    font-size: 75%;\n
+  }\n
+}\n
+\n
+h1, .h1 { font-size: @font-size-h1; }\n
+h2, .h2 { font-size: @font-size-h2; }\n
+h3, .h3 { font-size: @font-size-h3; }\n
+h4, .h4 { font-size: @font-size-h4; }\n
+h5, .h5 { font-size: @font-size-h5; }\n
+h6, .h6 { font-size: @font-size-h6; }\n
+\n
+\n
+// Body text\n
+// -------------------------\n
+\n
+p {\n
+  margin: 0 0 (@line-height-computed / 2);\n
+}\n
+\n
+.lead {\n
+  margin-bottom: @line-height-computed;\n
+  font-size: floor(@font-size-base * 1.15);\n
+  font-weight: 200;\n
+  line-height: 1.4;\n
+\n
+  @media (min-width: @screen-sm-min) {\n
+    font-size: (@font-size-base * 1.5);\n
+  }\n
+}\n
+\n
+\n
+// Emphasis & misc\n
+// -------------------------\n
+\n
+// Ex: 14px base font * 85% = about 12px\n
+small,\n
+.small  { font-size: 85%; }\n
+\n
+// Undo browser default styling\n
+cite    { font-style: normal; }\n
+\n
+// Contextual emphasis\n
+.text-muted {\n
+  color: @text-muted;\n
+}\n
+.text-primary {\n
+  color: @brand-primary;\n
+  &:hover {\n
+    color: darken(@brand-primary, 10%);\n
+  }\n
+}\n
+.text-warning {\n
+  color: @state-warning-text;\n
+  &:hover {\n
+    color: darken(@state-warning-text, 10%);\n
+  }\n
+}\n
+.text-danger {\n
+  color: @state-danger-text;\n
+  &:hover {\n
+    color: darken(@state-danger-text, 10%);\n
+  }\n
+}\n
+.text-success {\n
+  color: @state-success-text;\n
+  &:hover {\n
+    color: darken(@state-success-text, 10%);\n
+  }\n
+}\n
+.text-info {\n
+  color: @state-info-text;\n
+  &:hover {\n
+    color: darken(@state-info-text, 10%);\n
+  }\n
+}\n
+\n
+// Alignment\n
+.text-left           { text-align: left; }\n
+.text-right          { text-align: right; }\n
+.text-center         { text-align: center; }\n
+\n
+\n
+// Page header\n
+// -------------------------\n
+\n
+.page-header {\n
+  padding-bottom: ((@line-height-computed / 2) - 1);\n
+  margin: (@line-height-computed * 2) 0 @line-height-computed;\n
+  border-bottom: 1px solid @page-header-border-color;\n
+}\n
+\n
+\n
+// Lists\n
+// --------------------------------------------------\n
+\n
+// Unordered and Ordered lists\n
+ul,\n
+ol {\n
+  margin-top: 0;\n
+  margin-bottom: (@line-height-computed / 2);\n
+  ul,\n
+  ol {\n
+    margin-bottom: 0;\n
+  }\n
+}\n
+\n
+// List options\n
+\n
+// Unstyled keeps list items block level, just removes default browser padding and list-style\n
+.list-unstyled {\n
+  padding-left: 0;\n
+  list-style: none;\n
+}\n
+\n
+// Inline turns list items into inline-block\n
+.list-inline {\n
+  .list-unstyled();\n
+\n
+  > li {\n
+    display: inline-block;\n
+    padding-left: 5px;\n
+    padding-right: 5px;\n
+\n
+    &:first-child {\n
+      padding-left: 0;\n
+    }\n
+  }\n
+}\n
+\n
+// Description Lists\n
+dl {\n
+  margin-top: 0; // Remove browser default\n
+  margin-bottom: @line-height-computed;\n
+}\n
+dt,\n
+dd {\n
+  line-height: @line-height-base;\n
+}\n
+dt {\n
+  font-weight: bold;\n
+}\n
+dd {\n
+  margin-left: 0; // Undo browser default\n
+}\n
+\n
+// Horizontal description lists\n
+//\n
+// Defaults to being stacked without any of the below styles applied, until the\n
+// grid breakpoint is reached (default of ~768px).\n
+\n
+@media (min-width: @grid-float-breakpoint) {\n
+  .dl-horizontal {\n
+    dt {\n
+      float: left;\n
+      width: (@component-offset-horizontal - 20);\n
+      clear: left;\n
+      text-align: right;\n
+      .text-overflow();\n
+    }\n
+    dd {\n
+      margin-left: @component-offset-horizontal;\n
+      .clearfix(); // Clear the floated `dt` if an empty `dd` is present\n
+    }\n
+  }\n
+}\n
+\n
+// MISC\n
+// ----\n
+\n
+// Abbreviations and acronyms\n
+abbr[title],\n
+// Add data-* attribute to help out our tooltip plugin, per https://github.com/twbs/bootstrap/issues/5257\n
+abbr[data-original-title] {\n
+  cursor: help;\n
+  border-bottom: 1px dotted @abbr-border-color;\n
+}\n
+.initialism {\n
+  font-size: 90%;\n
+  text-transform: uppercase;\n
+}\n
+\n
+// Blockquotes\n
+blockquote {\n
+  padding: (@line-height-computed / 2) @line-height-computed;\n
+  margin: 0 0 @line-height-computed;\n
+  border-left: 5px solid @blockquote-border-color;\n
+  p {\n
+    font-size: (@font-size-base * 1.25);\n
+    font-weight: 300;\n
+    line-height: 1.25;\n
+  }\n
+  p:last-child {\n
+    margin-bottom: 0;\n
+  }\n
+  small,\n
+  .small {\n
+    display: block;\n
+    line-height: @line-height-base;\n
+    color: @blockquote-small-color;\n
+    &:before {\n
+      content: \'\\2014 \\00A0\'; // EM DASH, NBSP\n
+    }\n
+  }\n
+\n
+  // Float right with text-align: right\n
+  &.pull-right {\n
+    padding-right: 15px;\n
+    padding-left: 0;\n
+    border-right: 5px solid @blockquote-border-color;\n
+    border-left: 0;\n
+    p,\n
+    small,\n
+    .small {\n
+      text-align: right;\n
+    }\n
+    small,\n
+    .small {\n
+      &:before {\n
+        content: \'\';\n
+      }\n
+      &:after {\n
+        content: \'\\00A0 \\2014\'; // NBSP, EM DASH\n
+      }\n
+    }\n
+  }\n
+}\n
+\n
+// Quotes\n
+blockquote:before,\n
+blockquote:after {\n
+  content: "";\n
+}\n
+\n
+// Addresses\n
+address {\n
+  margin-bottom: @line-height-computed;\n
+  font-style: normal;\n
+  line-height: @line-height-base;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5179</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

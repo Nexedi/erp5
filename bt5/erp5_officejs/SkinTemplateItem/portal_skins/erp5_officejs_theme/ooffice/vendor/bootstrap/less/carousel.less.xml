@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314530.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>carousel.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//\n
+// Carousel\n
+// --------------------------------------------------\n
+\n
+\n
+// Wrapper for the slide container and indicators\n
+.carousel {\n
+  position: relative;\n
+}\n
+\n
+.carousel-inner {\n
+  position: relative;\n
+  overflow: hidden;\n
+  width: 100%;\n
+\n
+  > .item {\n
+    display: none;\n
+    position: relative;\n
+    .transition(.6s ease-in-out left);\n
+\n
+    // Account for jankitude on images\n
+    > img,\n
+    > a > img {\n
+      .img-responsive();\n
+      line-height: 1;\n
+    }\n
+  }\n
+\n
+  > .active,\n
+  > .next,\n
+  > .prev { display: block; }\n
+\n
+  > .active {\n
+    left: 0;\n
+  }\n
+\n
+  > .next,\n
+  > .prev {\n
+    position: absolute;\n
+    top: 0;\n
+    width: 100%;\n
+  }\n
+\n
+  > .next {\n
+    left: 100%;\n
+  }\n
+  > .prev {\n
+    left: -100%;\n
+  }\n
+  > .next.left,\n
+  > .prev.right {\n
+    left: 0;\n
+  }\n
+\n
+  > .active.left {\n
+    left: -100%;\n
+  }\n
+  > .active.right {\n
+    left: 100%;\n
+  }\n
+\n
+}\n
+\n
+// Left/right controls for nav\n
+// ---------------------------\n
+\n
+.carousel-control {\n
+  position: absolute;\n
+  top: 0;\n
+  left: 0;\n
+  bottom: 0;\n
+  width: @carousel-control-width;\n
+  .opacity(@carousel-control-opacity);\n
+  font-size: @carousel-control-font-size;\n
+  color: @carousel-control-color;\n
+  text-align: center;\n
+  text-shadow: @carousel-text-shadow;\n
+  // We can\'t have this transition here because WebKit cancels the carousel\n
+  // animation if you trip this while in the middle of another animation.\n
+\n
+  // Set gradients for backgrounds\n
+  &.left {\n
+    #gradient > .horizontal(@start-color: rgba(0,0,0,.5); @end-color: rgba(0,0,0,.0001));\n
+  }\n
+  &.right {\n
+    left: auto;\n
+    right: 0;\n
+    #gradient > .horizontal(@start-color: rgba(0,0,0,.0001); @end-color: rgba(0,0,0,.5));\n
+  }\n
+\n
+  // Hover/focus state\n
+  &:hover,\n
+  &:focus {\n
+    outline: none;\n
+    color: @carousel-control-color;\n
+    text-decoration: none;\n
+    .opacity(.9);\n
+  }\n
+\n
+  // Toggles\n
+  .icon-prev,\n
+  .icon-next,\n
+  .glyphicon-chevron-left,\n
+  .glyphicon-chevron-right {\n
+    position: absolute;\n
+    top: 50%;\n
+    z-index: 5;\n
+    display: inline-block;\n
+  }\n
+  .icon-prev,\n
+  .glyphicon-chevron-left {\n
+    left: 50%;\n
+  }\n
+  .icon-next,\n
+  .glyphicon-chevron-right {\n
+    right: 50%;\n
+  }\n
+  .icon-prev,\n
+  .icon-next {\n
+    width:  20px;\n
+    height: 20px;\n
+    margin-top: -10px;\n
+    margin-left: -10px;\n
+    font-family: serif;\n
+  }\n
+\n
+  .icon-prev {\n
+    &:before {\n
+      content: \'\\2039\';// SINGLE LEFT-POINTING ANGLE QUOTATION MARK (U+2039)\n
+    }\n
+  }\n
+  .icon-next {\n
+    &:before {\n
+      content: \'\\203a\';// SINGLE RIGHT-POINTING ANGLE QUOTATION MARK (U+203A)\n
+    }\n
+  }\n
+}\n
+\n
+// Optional indicator pips\n
+//\n
+// Add an unordered list with the following class and add a list item for each\n
+// slide your carousel holds.\n
+\n
+.carousel-indicators {\n
+  position: absolute;\n
+  bottom: 10px;\n
+  left: 50%;\n
+  z-index: 15;\n
+  width: 60%;\n
+  margin-left: -30%;\n
+  padding-left: 0;\n
+  list-style: none;\n
+  text-align: center;\n
+\n
+  li {\n
+    display: inline-block;\n
+    width:  10px;\n
+    height: 10px;\n
+    margin: 1px;\n
+    text-indent: -999px;\n
+    border: 1px solid @carousel-indicator-border-color;\n
+    border-radius: 10px;\n
+    cursor: pointer;\n
+\n
+    // IE8-9 hack for event handling\n
+    //\n
+    // Internet Explorer 8-9 does not support clicks on elements without a set\n
+    // `background-color`. We cannot use `filter` since that\'s not viewed as a\n
+    // background color by the browser. Thus, a hack is needed.\n
+    //\n
+    // For IE8, we set solid black as it doesn\'t support `rgba()`. For IE9, we\n
+    // set alpha transparency for the best results possible.\n
+    background-color: #000 \\9; // IE8\n
+    background-color: rgba(0,0,0,0); // IE9\n
+  }\n
+  .active {\n
+    margin: 0;\n
+    width:  12px;\n
+    height: 12px;\n
+    background-color: @carousel-indicator-active-bg;\n
+  }\n
+}\n
+\n
+// Optional captions\n
+// -----------------------------\n
+// Hidden by default for smaller viewports\n
+.carousel-caption {\n
+  position: absolute;\n
+  left: 15%;\n
+  right: 15%;\n
+  bottom: 20px;\n
+  z-index: 10;\n
+  padding-top: 20px;\n
+  padding-bottom: 20px;\n
+  color: @carousel-caption-color;\n
+  text-align: center;\n
+  text-shadow: @carousel-text-shadow;\n
+  & .btn {\n
+    text-shadow: none; // No shadow for button elements in carousel-caption\n
+  }\n
+}\n
+\n
+\n
+// Scale up controls for tablets and up\n
+@media screen and (min-width: @screen-sm-min) {\n
+\n
+  // Scale up the controls a smidge\n
+  .carousel-control {\n
+    .glyphicons-chevron-left,\n
+    .glyphicons-chevron-right,\n
+    .icon-prev,\n
+    .icon-next {\n
+      width: 30px;\n
+      height: 30px;\n
+      margin-top: -15px;\n
+      margin-left: -15px;\n
+      font-size: 30px;\n
+    }\n
+  }\n
+\n
+  // Show and left align the captions\n
+  .carousel-caption {\n
+    left: 20%;\n
+    right: 20%;\n
+    padding-bottom: 30px;\n
+  }\n
+\n
+  // Move up the indicators\n
+  .carousel-indicators {\n
+    bottom: 20px;\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4592</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

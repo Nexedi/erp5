@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308810.9</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>scroller.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+.ps-scrollbar-x-rail {\n
+    z-index: 1;\n
+}\n
+\n
+.ps-scrollbar-y-rail {\n
+    z-index: 1;\n
+    right: 1px !important;\n
+    width: 9px !important;\n
+    margin-top: 1px;\n
+    margin-bottom: 1px;\n
+\n
+    &.always-visible-y {\n
+        opacity: 1 !important;\n
+    }\n
+\n
+    .ps-scrollbar-y  {\n
+        background-color: @gray-light;\n
+\n
+        &.always-visible-y {\n
+            right: 0px !important;\n
+            width: 9px;\n
+\n
+            background-color: @gray-light;\n
+            .background-ximage(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAYAAACZ3F9/AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RURFNzkyNkE0RTFGMTFFNDkyRUNFRUEwNkNERTY4N0QiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RURFNzkyNkI0RTFGMTFFNDkyRUNFRUEwNkNERTY4N0QiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpFREU3OTI2ODRFMUYxMUU0OTJFQ0VFQTA2Q0RFNjg3RCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpFREU3OTI2OTRFMUYxMUU0OTJFQ0VFQTA2Q0RFNjg3RCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PtLoUWcAAAA2SURBVHjaYvz//z8DCFy4cAHCgABGEGFoaAjmfPz4EUOOAaQRppkUwDhq46iNdLORGUQABBgA2y5vq3CS7yUAAAAASUVORK5CYII=\',\n
+             \'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAaCAYAAACkVDyJAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RDlFQjdBRjE0RTFGMTFFNDk3Q0ZDOUVBNkQwRkFGNTYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RDlFQjdBRjI0RTFGMTFFNDk3Q0ZDOUVBNkQwRkFGNTYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpEOUVCN0FFRjRFMUYxMUU0OTdDRkM5RUE2RDBGQUY1NiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpEOUVCN0FGMDRFMUYxMUU0OTdDRkM5RUE2RDBGQUY1NiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PupPpWQAAABYSURBVHjaYvz//z8DMrhw4QKqABQYGBgwMuABnz59wqqPj48PRR8TA50BCxYxRjLNIkrfoPDhfzJ9QJS+0TgcjcPROByNw9E4HI3D0TgcjcPROCQDAAQYAPFLF1XTzO2YAAAAAElFTkSuQmCC\', 14px);\n
+\n
+            background-repeat: no-repeat;\n
+            background-position: 0 center;\n
+            .border-radius(2px);\n
+            border:1px solid @gray;\n
+            -o-transition: background-color .5s 0 linear;\n
+            -webkit-transition: background-color .5s 0 linear;\n
+            -moz-transition: background-color .5s 0 linear;\n
+            transition: background-color .5s 0 linear;\n
+        }\n
+    }\n
+\n
+    &:hover,\n
+    .hover {\n
+        .ps-scrollbar-y  {\n
+            &.always-visible-y {\n
+                background-color: @gray;\n
+                background-position: -7px center;\n
+            }\n
+        }\n
+    }\n
+\n
+    &.in-scrolling {\n
+        .ps-scrollbar-y  {\n
+            &.always-visible-y {\n
+                background-color: @gray-soft;\n
+                border-color: @gray-soft;\n
+                background-position: -7px center;\n
+            }\n
+        }\n
+    }\n
+}\n
+\n
+.ps-container:hover .ps-scrollbar-y-rail,\n
+.ps-container.hover .ps-scrollbar-y-rail,\n
+.ps-container .ps-scrollbar-y-rail:hover,\n
+.ps-container .ps-scrollbar-y-rail.hover,\n
+.ps-container .ps-scrollbar-y-rail.in-scrolling {\n
+    background-color: transparent !important;\n
+    opacity: 1 !important;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4315</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

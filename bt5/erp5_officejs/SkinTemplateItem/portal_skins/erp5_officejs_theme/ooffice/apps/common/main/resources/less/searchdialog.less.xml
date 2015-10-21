@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308810.99</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>searchdialog.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\r\n
+.search {\r\n
+    .body {\r\n
+        padding: 24px 0;\r\n
+\r\n
+        .box {\r\n
+            padding-left: 18px;\r\n
+            padding-bottom: 16px;\r\n
+        }\r\n
+\r\n
+        .input-row {\r\n
+            height: @input-height-base;\r\n
+            width: 510px;\r\n
+            margin-bottom: 10px;\r\n
+\r\n
+            .row-el {\r\n
+                margin-top: 3px;\r\n
+                margin-right: 10px;\r\n
+            }\r\n
+        }\r\n
+\r\n
+        input[type=text] {\r\n
+            display: inline-block;\r\n
+            width: 470px;\r\n
+        }\r\n
+\r\n
+        #sd-text-search {\r\n
+            &:not(.clear) {\r\n
+                margin-left: 8px;\r\n
+            }\r\n
+\r\n
+            &.clear {\r\n
+                width: 100%;\r\n
+            }\r\n
+        }\r\n
+\r\n
+        #sd-text-replace, #search-label-replace {\r\n
+            margin-left: 36px;\r\n
+        }\r\n
+\r\n
+        #search-label-replace {\r\n
+            padding-top: 3px;\r\n
+        }\r\n
+\r\n
+        .btn.normal {\r\n
+            width: 100px;\r\n
+\r\n
+            &.iconic {\r\n
+                width: 45px;\r\n
+                padding-top: 2px;\r\n
+\r\n
+                span.icon {\r\n
+                    display: inline-block;\r\n
+                    width: 16px;\r\n
+                    height: 16px;\r\n
+                    .background-ximage(\'@{common-image-path}/@{common-controls}\', \'@{common-image-path}/@{common-controls2x}\', 100px);\r\n
+\r\n
+                    &.back {\r\n
+                        background-position: @search-dlg-offset-x @search-dlg-offset-y;\r\n
+                    }\r\n
+\r\n
+                    &.next {\r\n
+                        background-position: @search-dlg-offset-x @search-dlg-offset-y - 16px;\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+\r\n
+            &.right {\r\n
+                float: right;\r\n
+            }\r\n
+        }\r\n
+\r\n
+        .separator.horizontal {\r\n
+            width: 100%;\r\n
+        }\r\n
+\r\n
+        .footer {\r\n
+            padding: 20px;\r\n
+            &.right {\r\n
+                text-align: right;\r\n
+            }\r\n
+        }\r\n
+    }\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1911</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

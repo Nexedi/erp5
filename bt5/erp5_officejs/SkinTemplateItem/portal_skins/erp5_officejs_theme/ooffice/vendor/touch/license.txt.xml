@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314632.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>license.txt</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/plain</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+Sencha Touch & Sencha Touch Charts - JavaScript Libraries\n
+Copyright (c) 2010-2012, Sencha, Inc.\n
+All rights reserved.\n
+licensing@sencha.com\n
+\n
+http://www.sencha.com/products/touch/license.php\n
+\n
+\n
+Open Source License\n
+------------------------------------------------------------------------------------------\n
+This version of Sencha Touch and Sencha Touch Charts is licensed under the terms of the Open\n
+Source GPL 3.0 license.\n
+\n
+http://www.gnu.org/licenses/gpl.html\n
+\n
+There are several FLOSS exceptions available for use with this release for\n
+open source applications that are distributed under a license other than the GPL.\n
+\n
+* Open Source License Exception for Applications\n
+\n
+  http://www.sencha.com/products/floss-exception.php\n
+\n
+* Open Source License Exception for Development\n
+\n
+  http://www.sencha.com/products/ux-exception.php\n
+\n
+\n
+Alternate Licensing for Sencha Touch\n
+------------------------------------------------------------------------------------------\n
+Commercial and OEM Licenses are available for an alternate download of Sencha Touch.\n
+This is the appropriate option if you are creating proprietary applications and you are\n
+not prepared to distribute and share the source code of your application under the\n
+GPL v3 license. Please visit http://www.sencha.com/store/touch/license.php for more details.\n
+\n
+\n
+Alternate Licensing for Sencha Touch Charts\n
+------------------------------------------------------------------------------------------\n
+Commercial and OEM Licenses are available for an alternate download of Sencha Touch Charts.\n
+This is the appropriate option if you are creating proprietary applications and you are\n
+not prepared to distribute and share the source code of your application under the\n
+GPL v3 license.\n
+\n
+Sencha Touch Charts is available commercially only as a part of Sencha Complete or Sencha\n
+Complete Team.  Please visit http://www.sencha.com/products/complete/license or\n
+http://www.sencha.com/products/complete-team/license for more details.\n
+\n
+\n
+Third Party Content\n
+------------------------------------------------------------------------------------------\n
+The following third party software is distributed with Sencha Touch and is\n
+provided under other licenses and/or has source available from other locations.\n
+\n
+Library: JSON parser\n
+License: Public Domain\n
+Location: http://www.JSON.org/js.html\n
+\n
+Library: flexible-js-formatting - date parsing and formatting\n
+License: MIT\n
+Location: http://code.google.com/p/flexible-js-formatting/\n
+\n
+Library: Jasmine Š unit testing\n
+License: MIT\n
+Location: https://github.com/pivotal/jasmine\n
+\n
+\n
+--\n
+\n
+THIS SOFTWARE IS DISTRIBUTED "AS-IS" WITHOUT ANY WARRANTIES, CONDITIONS AND REPRESENTATIONS WHETHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, MERCHANTABLE QUALITY, FITNESS FOR A PARTICULAR PURPOSE, DURABILITY, NON-INFRINGEMENT, PERFORMANCE AND THOSE ARISING BY STATUTE OR FROM CUSTOM OR USAGE OF TRADE OR COURSE OF DEALING.
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2927</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

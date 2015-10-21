@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308769.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lv.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\r\n
+  "SSE.controller.Main.convertationErrorText": "Conversion failed.",\r\n
+  "SSE.controller.Main.convertationTimeoutText": "Conversion timeout exceeded.",\r\n
+  "SSE.controller.Main.criticalErrorExtText": "Press \\"OK\\" to reload view page.",\r\n
+  "SSE.controller.Main.criticalErrorTitle": "Error",\r\n
+  "SSE.controller.Main.downloadErrorText": "Download failed.",\r\n
+  "SSE.controller.Main.errorDefaultMessage": "Error code: %1",\r\n
+  "SSE.controller.Main.errorKeyEncrypt": "Unknown key descriptor",\r\n
+  "SSE.controller.Main.errorKeyExpire": "Key descriptor expired",\r\n
+  "SSE.controller.Main.errorUsersExceed": "The number of users allowed by the pricing plan was exceeded",\r\n
+  "SSE.controller.Main.notcriticalErrorTitle": "Warning",\r\n
+  "SSE.controller.Main.printText": "Drukā...",\r\n
+  "SSE.controller.Main.textAnonymous": "Anonymous",\r\n
+  "SSE.controller.Main.textLoadingDocument": "Loading document",\r\n
+  "SSE.controller.Main.unknownErrorText": "Unknown error.",\r\n
+  "SSE.controller.Main.unsupportedBrowserErrorText ": "Your browser is not supported.",\r\n
+  "SSE.controller.Main.uploadImageExtMessage": "Unknown image format.",\r\n
+  "SSE.controller.Main.uploadImageFileCountMessage": "No images uploaded.",\r\n
+  "SSE.controller.Main.uploadImageSizeMessage": "Maximium image size limit exceeded.",\r\n
+  "SSE.view.OpenCsvPanel.txtDelimiter": "Norobežotājs",\r\n
+  "SSE.view.OpenCsvPanel.txtEncoding": "Kodēšana",\r\n
+  "SSE.view.OpenCsvPanel.txtHint": "Lūdzu ievadiet informāciju augstāk.",\r\n
+  "SSE.view.OpenCsvPanel.txtSpace": "Space",\r\n
+  "SSE.view.OpenCsvPanel.txtTab": "Tab",\r\n
+  "SSE.view.OpenCsvPanel.txtTitle": "Izvēlieties CSV atvēršanas opcijas",\r\n
+  "SSE.view.phone.toolbar.Search.searchText": "Search",\r\n
+  "SSE.view.phone.toolbar.View.doneText": "Done",\r\n
+  "SSE.view.tablet.toolbar.Search.searchText": "Search",\r\n
+  "SSE.view.tablet.toolbar.View.doneText": "Done"\r\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1853</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

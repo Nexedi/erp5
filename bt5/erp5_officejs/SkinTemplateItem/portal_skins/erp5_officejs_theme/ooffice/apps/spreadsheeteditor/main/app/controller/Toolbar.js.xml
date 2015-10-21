@@ -1,0 +1,1942 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308425.78</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Toolbar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>97630</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Pdata" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * (c) Copyright Ascensio System SIA 2010-2015\r\n
+ *\r\n
+ * This program is a free software product. You can redistribute it and/or \r\n
+ * modify it under the terms of the GNU Affero General Public License (AGPL) \r\n
+ * version 3 as published by the Free Software Foundation. In accordance with \r\n
+ * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect \r\n
+ * that Ascensio System SIA expressly excludes the warranty of non-infringement\r\n
+ * of any third-party rights.\r\n
+ *\r\n
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied \r\n
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For \r\n
+ * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html\r\n
+ *\r\n
+ * You can contact Ascensio System SIA at Lubanas st. 125a-25, Riga, Latvia,\r\n
+ * EU, LV-1021.\r\n
+ *\r\n
+ * The  interactive user interfaces in modified source and object code versions\r\n
+ * of the Program must display Appropriate Legal Notices, as required under \r\n
+ * Section 5 of the GNU AGPL version 3.\r\n
+ *\r\n
+ * Pursuant to Section 7(b) of the License you must retain the original Product\r\n
+ * logo when distributing the program. Pursuant to Section 7(e) we decline to\r\n
+ * grant you any rights under trademark law for use of our trademarks.\r\n
+ *\r\n
+ * All the Product\'s GUI elements, including illustrations and icon sets, as\r\n
+ * well as technical writing content are licensed under the terms of the\r\n
+ * Creative Commons Attribution-ShareAlike 4.0 International. See the License\r\n
+ * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode\r\n
+ *\r\n
+ */\r\n
+ define(["core", "common/main/lib/component/Window", "common/main/lib/view/CopyWarningDialog", "common/main/lib/view/ImageFromUrlDialog", "spreadsheeteditor/main/app/view/Toolbar", "spreadsheeteditor/main/app/collection/TableTemplates", "spreadsheeteditor/main/app/view/HyperlinkSettingsDialog", "spreadsheeteditor/main/app/view/TableOptionsDialog"], function () {\r\n
+    SSE.Controllers.Toolbar = Backbone.Controller.extend({\r\n
+        models: [],\r\n
+        collections: [],\r\n
+        views: ["Toolbar"],\r\n
+        initialize: function () {\r\n
+            var me = this;\r\n
+            this.addListeners({\r\n
+                "Statusbar": {\r\n
+                    "sheet:changed": _.bind(this.onApiSheetChanged, this)\r\n
+                }\r\n
+            });\r\n
+            this.editMode = true;\r\n
+            this._isAddingShape = false;\r\n
+            this._state = {\r\n
+                prstyle: undefined,\r\n
+                clrtext: undefined,\r\n
+                pralign: undefined,\r\n
+                clrback: undefined,\r\n
+                valign: undefined,\r\n
+                can_undo: undefined,\r\n
+                can_redo: undefined,\r\n
+                bold: undefined,\r\n
+                italic: undefined,\r\n
+                underline: undefined,\r\n
+                wrap: undefined,\r\n
+                merge: undefined,\r\n
+                filter: undefined,\r\n
+                angle: undefined,\r\n
+                controlsdisabled: {\r\n
+                    rows: undefined,\r\n
+                    cols: undefined,\r\n
+                    filters: undefined,\r\n
+                },\r\n
+                show_copywarning: true,\r\n
+                selection_type: undefined\r\n
+            };\r\n
+            var checkInsertAutoshape = function (e, action) {\r\n
+                var cmp = $(e.target),\r\n
+                cmp_sdk = cmp.closest("#editor_sdk"),\r\n
+                btn_id = cmp.closest("button").attr("id");\r\n
+                if (btn_id === undefined) {\r\n
+                    btn_id = cmp.closest(".btn-group").attr("id");\r\n
+                }\r\n
+                if (me.api && me.api.asc_isAddAutoshape()) {\r\n
+                    if (cmp_sdk.length <= 0 || action == "cancel") {\r\n
+                        if (me.toolbar.btnInsertText.pressed && btn_id != me.toolbar.btnInsertText.id || me.toolbar.btnInsertShape.pressed && btn_id != me.toolbar.btnInsertShape.id) {\r\n
+                            me._isAddingShape = false;\r\n
+                            me._addAutoshape(false);\r\n
+                            me.toolbar.btnInsertShape.toggle(false, true);\r\n
+                            me.toolbar.btnInsertText.toggle(false, true);\r\n
+                            Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                        } else {\r\n
+                            if (me.toolbar.btnInsertShape.pressed && btn_id == me.toolbar.btnInsertShape.id) {\r\n
+                                _.defer(function () {\r\n
+                                    me.api.asc_endAddShape();\r\n
+                                    Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                                },\r\n
+                                100);\r\n
+                            }\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+            };\r\n
+            this.checkInsertAutoshape = function (cmp) {\r\n
+                checkInsertAutoshape({},\r\n
+                cmp.action);\r\n
+            };\r\n
+            this._addAutoshape = function (isstart, type) {\r\n
+                if (this.api) {\r\n
+                    if (isstart) {\r\n
+                        this.api.asc_startAddShape(type);\r\n
+                        $(document.body).on("mouseup", checkInsertAutoshape);\r\n
+                    } else {\r\n
+                        this.api.asc_endAddShape();\r\n
+                        $(document.body).off("mouseup", checkInsertAutoshape);\r\n
+                    }\r\n
+                }\r\n
+            };\r\n
+            this.onApiEndAddShape = function () {\r\n
+                if (this.toolbar.btnInsertShape.pressed) {\r\n
+                    this.toolbar.btnInsertShape.toggle(false, true);\r\n
+                }\r\n
+                if (this.toolbar.btnInsertText.pressed) {\r\n
+                    this.toolbar.btnInsertText.toggle(false, true);\r\n
+                }\r\n
+                $(document.body).off("mouseup", checkInsertAutoshape);\r\n
+            };\r\n
+        },\r\n
+        onLaunch: function () {\r\n
+            this.toolbar = this.createView("Toolbar");\r\n
+            this.toolbar.on("render:after", _.bind(this.onToolbarAfterRender, this));\r\n
+        },\r\n
+        onToolbarAfterRender: function (toolbar) {\r\n
+            var me = this;\r\n
+            toolbar.btnNewDocument.on("click", _.bind(this.onNewDocument, this));\r\n
+            toolbar.btnOpenDocument.on("click", _.bind(this.onOpenDocument, this));\r\n
+            toolbar.btnPrint.on("click", _.bind(this.onPrint, this));\r\n
+            toolbar.btnPrint.menu.on("item:click", _.bind(this.onPrintMenu, this));\r\n
+            toolbar.btnSave.on("click", _.bind(this.onSave, this));\r\n
+            toolbar.btnUndo.on("click", _.bind(this.onUndo, this));\r\n
+            toolbar.btnRedo.on("click", _.bind(this.onRedo, this));\r\n
+            toolbar.btnCopy.on("click", _.bind(this.onCopyPaste, this, true));\r\n
+            toolbar.btnPaste.on("click", _.bind(this.onCopyPaste, this, false));\r\n
+            toolbar.btnIncFontSize.on("click", _.bind(this.onIncreaseFontSize, this));\r\n
+            toolbar.btnDecFontSize.on("click", _.bind(this.onDecreaseFontSize, this));\r\n
+            toolbar.btnBold.on("click", _.bind(this.onBold, this));\r\n
+            toolbar.btnItalic.on("click", _.bind(this.onItalic, this));\r\n
+            toolbar.btnUnderline.on("click", _.bind(this.onUnderline, this));\r\n
+            toolbar.btnTextColor.on("click", _.bind(this.onTextColor, this));\r\n
+            toolbar.btnBackColor.on("click", _.bind(this.onBackColor, this));\r\n
+            toolbar.mnuTextColorPicker.on("select", _.bind(this.onTextColorSelect, this));\r\n
+            toolbar.mnuBackColorPicker.on("select", _.bind(this.onBackColorSelect, this));\r\n
+            toolbar.btnBorders.on("click", _.bind(this.onBorders, this));\r\n
+            toolbar.btnBorders.menu.on("item:click", _.bind(this.onBordersMenu, this));\r\n
+            toolbar.mnuBorderWidth.on("item:toggle", _.bind(this.onBordersWidth, this));\r\n
+            toolbar.mnuBorderColorPicker.on("select", _.bind(this.onBordersColor, this));\r\n
+            toolbar.btnAlignLeft.on("click", _.bind(this.onHorizontalAlign, this, "left"));\r\n
+            toolbar.btnAlignCenter.on("click", _.bind(this.onHorizontalAlign, this, "center"));\r\n
+            toolbar.btnAlignRight.on("click", _.bind(this.onHorizontalAlign, this, "right"));\r\n
+            toolbar.btnAlignJust.on("click", _.bind(this.onHorizontalAlign, this, "justify"));\r\n
+            toolbar.btnHorizontalAlign.menu.on("item:click", _.bind(this.onHorizontalAlignMenu, this));\r\n
+            toolbar.btnVerticalAlign.menu.on("item:click", _.bind(this.onVerticalAlignMenu, this));\r\n
+            toolbar.btnMerge.on("click", _.bind(this.onMergeCellsMenu, this, toolbar.btnMerge.menu, toolbar.btnMerge.menu.items[0]));\r\n
+            toolbar.btnMerge.menu.on("item:click", _.bind(this.onMergeCellsMenu, this));\r\n
+            toolbar.btnAlignTop.on("click", _.bind(this.onVerticalAlign, this, "top"));\r\n
+            toolbar.btnAlignMiddle.on("click", _.bind(this.onVerticalAlign, this, "center"));\r\n
+            toolbar.btnAlignBottom.on("click", _.bind(this.onVerticalAlign, this, "bottom"));\r\n
+            toolbar.btnWrap.on("click", _.bind(this.onWrap, this));\r\n
+            toolbar.btnTextOrient.menu.on("item:click", _.bind(this.onTextOrientationMenu, this));\r\n
+            toolbar.btnInsertImage.menu.on("item:click", _.bind(this.onInsertImageMenu, this));\r\n
+            toolbar.btnInsertHyperlink.on("click", _.bind(this.onHyperlink, this));\r\n
+            toolbar.btnInsertChart.on("click", _.bind(this.onInsertChart, this));\r\n
+            toolbar.btnEditChart.on("click", _.bind(this.onInsertChart, this));\r\n
+            toolbar.btnInsertText.on("click", _.bind(this.onInsertText, this));\r\n
+            toolbar.btnInsertShape.menu.on("hide:after", _.bind(this.onInsertShapeHide, this));\r\n
+            toolbar.btnSortDown.on("click", _.bind(this.onSortType, this, "ascending"));\r\n
+            toolbar.btnSortUp.on("click", _.bind(this.onSortType, this, "descending"));\r\n
+            toolbar.mnuitemSortAZ.on("click", _.bind(this.onSortType, this, "ascending"));\r\n
+            toolbar.mnuitemSortZA.on("click", _.bind(this.onSortType, this, "descending"));\r\n
+            toolbar.btnSetAutofilter.on("click", _.bind(this.onAutoFilter, this));\r\n
+            toolbar.mnuitemAutoFilter.on("click", _.bind(this.onAutoFilter, this));\r\n
+            toolbar.btnClearAutofilter.on("click", _.bind(this.onClearFilter, this));\r\n
+            toolbar.mnuitemClearFilter.on("click", _.bind(this.onClearFilter, this));\r\n
+            toolbar.btnTableTemplate.menu.on("show:after", _.bind(this.onTableTplMenuOpen, this));\r\n
+            toolbar.btnPercentStyle.on("click", _.bind(this.onNumberFormat, this));\r\n
+            toolbar.btnCurrencyStyle.on("click", _.bind(this.onNumberFormat, this));\r\n
+            toolbar.btnDecDecimal.on("click", _.bind(this.onDecrement, this));\r\n
+            toolbar.btnIncDecimal.on("click", _.bind(this.onIncrement, this));\r\n
+            toolbar.btnInsertFormula.on("click", _.bind(this.onInsertFormulaMenu, this));\r\n
+            toolbar.btnSettings.on("click", _.bind(this.onAdvSettingsClick, this));\r\n
+            toolbar.btnInsertFormula.menu.on("item:click", _.bind(this.onInsertFormulaMenu, this));\r\n
+            toolbar.btnClearStyle.menu.on("item:click", _.bind(this.onClearStyleMenu, this));\r\n
+            toolbar.btnAddCell.menu.on("item:click", _.bind(this.onCellInsertMenu, this));\r\n
+            toolbar.btnCopyStyle.on("toggle", _.bind(this.onCopyStyleToggle, this));\r\n
+            toolbar.btnDeleteCell.menu.on("item:click", _.bind(this.onCellDeleteMenu, this));\r\n
+            toolbar.btnColorSchemas.menu.on("item:click", _.bind(this.onColorSchemaClick, this));\r\n
+            toolbar.cmbFontName.on("selected", _.bind(this.onFontNameSelect, this));\r\n
+            toolbar.cmbFontName.on("show:after", _.bind(this.onFontNameOpen, this));\r\n
+            toolbar.cmbFontName.on("hide:after", _.bind(this.onHideMenus, this));\r\n
+            toolbar.cmbFontName.on("combo:blur", _.bind(this.onComboBlur, this));\r\n
+            toolbar.cmbFontSize.on("selected", _.bind(this.onFontSizeSelect, this));\r\n
+            toolbar.cmbFontSize.on("changed:before", _.bind(this.onFontSizeChanged, this, true));\r\n
+            toolbar.cmbFontSize.on("changed:after", _.bind(this.onFontSizeChanged, this, false));\r\n
+            toolbar.cmbFontSize.on("show:after", _.bind(this.onFontSizeOpen, this));\r\n
+            toolbar.cmbFontSize.on("hide:after", _.bind(this.onHideMenus, this));\r\n
+            toolbar.cmbFontSize.on("combo:blur", _.bind(this.onComboBlur, this));\r\n
+            if (toolbar.mnuZoomIn) {\r\n
+                toolbar.mnuZoomIn.on("click", _.bind(this.onZoomInClick, this));\r\n
+            }\r\n
+            if (toolbar.mnuZoomOut) {\r\n
+                toolbar.mnuZoomOut.on("click", _.bind(this.onZoomOutClick, this));\r\n
+            }\r\n
+            toolbar.btnShowMode.menu.on("item:click", _.bind(this.onHideMenu, this));\r\n
+            toolbar.listStyles.on("click", _.bind(this.onListStyleSelect, this));\r\n
+            toolbar.btnNumberFormat.menu.on("item:click", _.bind(this.onNumberFormatMenu, this));\r\n
+            toolbar.btnCurrencyStyle.menu.on("item:click", _.bind(this.onNumberFormatMenu, this));\r\n
+            toolbar.mnuitemCompactToolbar.on("toggle", _.bind(this.onChangeViewMode, this));\r\n
+            $("#id-toolbar-menu-new-fontcolor").on("click", _.bind(this.onNewTextColor, this));\r\n
+            $("#id-toolbar-menu-new-paracolor").on("click", _.bind(this.onNewBackColor, this));\r\n
+            $("#id-toolbar-menu-new-bordercolor").on("click", _.bind(this.onNewBorderColor, this));\r\n
+            _.each(toolbar.btnNumberFormat.menu.items, function (item) {\r\n
+                if (item.menu) {\r\n
+                    item.menu.on("item:click", _.bind(me.onNumberFormatMenu, me));\r\n
+                }\r\n
+            });\r\n
+            this.onSetupCopyStyleButton();\r\n
+        },\r\n
+        setApi: function (api) {\r\n
+            this.api = api;\r\n
+            this.api.asc_registerCallback("asc_onInitTablePictures", _.bind(this.onApiInitTableTemplates, this));\r\n
+            this.api.asc_registerCallback("asc_onInitEditorStyles", _.bind(this.onApiInitEditorStyles, this));\r\n
+            this.api.asc_registerCallback("asc_onСoAuthoringDisconnect", _.bind(this.onApiCoAuthoringDisconnect, this));\r\n
+            Common.NotificationCenter.on("api:disconnect", _.bind(this.onApiCoAuthoringDisconnect, this));\r\n
+            Common.NotificationCenter.on("copywarning:show", _.bind(function () {\r\n
+                this._state.show_copywarning = false;\r\n
+            },\r\n
+            this));\r\n
+        },\r\n
+        onNewDocument: function (btn, e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_openNewDocument();\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "New Document");\r\n
+        },\r\n
+        onOpenDocument: function (btn, e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_loadDocumentFromDisk();\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Open Document");\r\n
+        },\r\n
+        onPrint: function (e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_Print();\r\n
+                Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+                Common.component.Analytics.trackEvent("Print");\r\n
+                Common.component.Analytics.trackEvent("ToolBar", "Print");\r\n
+            }\r\n
+        },\r\n
+        onPrintMenu: function (menu, item) {\r\n
+            if (item.value === "print" && this.api) {\r\n
+                this.api.asc_Print();\r\n
+                Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+                Common.component.Analytics.trackEvent("Print");\r\n
+                Common.component.Analytics.trackEvent("ToolBar", "Print");\r\n
+            }\r\n
+        },\r\n
+        onSave: function (e) {\r\n
+            if (this.api) {\r\n
+                var isModified = this.api.asc_isDocumentCanSave();\r\n
+                var isSyncButton = $(".btn-icon", this.toolbar.btnSave.cmpEl).hasClass("btn-synch");\r\n
+                if (!isModified && !isSyncButton) {\r\n
+                    return;\r\n
+                }\r\n
+                Common.Gateway.save(this.api.asc_nativeGetFile());\r\n
+                //this.api.asc_Save();\r\n
+            }\r\n
+            Common.component.Analytics.trackEvent("Save");\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Save");\r\n
+        },\r\n
+        onUndo: function (btn, e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_Undo();\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Undo");\r\n
+        },\r\n
+        onRedo: function (btn, e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_Redo();\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Redo");\r\n
+        },\r\n
+        onCopyPaste: function (copy, e) {\r\n
+            var me = this;\r\n
+            if (me.api) {\r\n
+                if (typeof window["AscDesktopEditor"] === "object") {\r\n
+                    copy ? me.api.asc_Copy() : me.api.asc_Paste();\r\n
+                    Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                } else {\r\n
+                    var value = window.localStorage.getItem("sse-hide-copywarning");\r\n
+                    if (! (value && parseInt(value) == 1) && this._state.show_copywarning) {\r\n
+                        (new Common.Views.CopyWarningDialog({\r\n
+                            handler: function (dontshow) {\r\n
+                                copy ? me.api.asc_Copy() : me.api.asc_Paste();\r\n
+                                if (dontshow) {\r\n
+                                    window.localStorage.setItem("sse-hide-copywarning", 1);\r\n
+                                }\r\n
+                                Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                            }\r\n
+                        })).show();\r\n
+                    } else {\r\n
+                        copy ? me.api.asc_Copy() : me.api.asc_Paste();\r\n
+                        Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                    }\r\n
+                }\r\n
+                Common.component.Analytics.trackEvent("ToolBar", "Copy Warning");\r\n
+            } else {\r\n
+                Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+            }\r\n
+        },\r\n
+        onIncreaseFontSize: function (e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_increaseFontSize();\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar, {\r\n
+                restorefocus: true\r\n
+            });\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Font Size");\r\n
+        },\r\n
+        onDecreaseFontSize: function (e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_decreaseFontSize();\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar, {\r\n
+                restorefocus: true\r\n
+            });\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Font Size");\r\n
+        },\r\n
+        onBold: function (btn, e) {\r\n
+            this._state.bold = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellBold(btn.pressed);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar, {\r\n
+                restorefocus: true\r\n
+            });\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Bold");\r\n
+        },\r\n
+        onItalic: function (btn, e) {\r\n
+            this._state.italic = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellItalic(btn.pressed);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar, {\r\n
+                restorefocus: true\r\n
+            });\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Italic");\r\n
+        },\r\n
+        onUnderline: function (btn, e) {\r\n
+            this._state.underline = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellUnderline(btn.pressed);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar, {\r\n
+                restorefocus: true\r\n
+            });\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Underline");\r\n
+        },\r\n
+        onTextColor: function () {\r\n
+            this.toolbar.mnuTextColorPicker.trigger("select", this.toolbar.mnuTextColorPicker, this.toolbar.mnuTextColorPicker.currentColor, true);\r\n
+        },\r\n
+        onBackColor: function () {\r\n
+            this.toolbar.mnuBackColorPicker.trigger("select", this.toolbar.mnuBackColorPicker, this.toolbar.mnuBackColorPicker.currentColor, true);\r\n
+        },\r\n
+        onTextColorSelect: function (picker, color, fromBtn) {\r\n
+            this._state.clrtext_asccolor = this._state.clrtext = undefined;\r\n
+            var clr = (typeof(color) == "object") ? color.color : color;\r\n
+            this.toolbar.btnTextColor.currentColor = color;\r\n
+            $(".btn-color-value-line", this.toolbar.btnTextColor.cmpEl).css("background-color", "#" + clr);\r\n
+            this.toolbar.mnuTextColorPicker.currentColor = color;\r\n
+            if (this.api) {\r\n
+                this.toolbar.btnTextColor.ischanged = (fromBtn !== true);\r\n
+                this.api.asc_setCellTextColor(Common.Utils.ThemeColor.getRgbColor(color));\r\n
+                this.toolbar.btnTextColor.ischanged = false;\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar, {\r\n
+                restorefocus: true\r\n
+            });\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Text Color");\r\n
+        },\r\n
+        onBackColorSelect: function (picker, color, fromBtn) {\r\n
+            this._state.clrshd_asccolor = this._state.clrback = undefined;\r\n
+            var clr = (typeof(color) == "object") ? color.color : color;\r\n
+            this.toolbar.btnBackColor.currentColor = color;\r\n
+            $(".btn-color-value-line", this.toolbar.btnBackColor.cmpEl).css("background-color", clr == "transparent" ? "transparent" : "#" + clr);\r\n
+            this.toolbar.mnuBackColorPicker.currentColor = color;\r\n
+            if (this.api) {\r\n
+                this.toolbar.btnBackColor.ischanged = (fromBtn !== true);\r\n
+                this.api.asc_setCellBackgroundColor(color == "transparent" ? null : Common.Utils.ThemeColor.getRgbColor(color));\r\n
+                this.toolbar.btnBackColor.ischanged = false;\r\n
+            }\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Background Color");\r\n
+        },\r\n
+        onNewTextColor: function (picker, color) {\r\n
+            this.toolbar.mnuTextColorPicker.addNewColor();\r\n
+        },\r\n
+        onNewBackColor: function (picker, color) {\r\n
+            this.toolbar.mnuBackColorPicker.addNewColor();\r\n
+        },\r\n
+        onNewBorderColor: function (picker, color) {\r\n
+            this.toolbar.btnBorders.menu.hide();\r\n
+            this.toolbar.btnBorders.toggle(false, true);\r\n
+            this.toolbar.mnuBorderColorPicker.addNewColor();\r\n
+        },\r\n
+        onBorders: function (btn) {\r\n
+            var menuItem;\r\n
+            _.each(btn.menu.items, function (item) {\r\n
+                if (btn.options.borderId == item.options.borderId) {\r\n
+                    menuItem = item;\r\n
+                    return false;\r\n
+                }\r\n
+            });\r\n
+            if (menuItem) {\r\n
+                this.onBordersMenu(btn.menu, menuItem);\r\n
+            }\r\n
+        },\r\n
+        onBordersMenu: function (menu, item) {\r\n
+            var me = this;\r\n
+            if (me.api && !_.isUndefined(item.options.borderId)) {\r\n
+                var btnBorders = me.toolbar.btnBorders,\r\n
+                new_borders = [],\r\n
+                bordersWidth = btnBorders.options.borderswidth,\r\n
+                bordersColor = btnBorders.options.borderscolor;\r\n
+                if (btnBorders.rendered) {\r\n
+                    var iconEl = $(".btn-icon", btnBorders.cmpEl);\r\n
+                    if (iconEl) {\r\n
+                        iconEl.removeClass(btnBorders.options.icls);\r\n
+                        btnBorders.options.icls = item.options.icls;\r\n
+                        iconEl.addClass(btnBorders.options.icls);\r\n
+                    }\r\n
+                }\r\n
+                btnBorders.options.borderId = item.options.borderId;\r\n
+                if (item.options.borderId == "inner") {\r\n
+                    new_borders[c_oAscBorderOptions.InnerV] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                    new_borders[c_oAscBorderOptions.InnerH] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                } else {\r\n
+                    if (item.options.borderId == "all") {\r\n
+                        new_borders[c_oAscBorderOptions.InnerV] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                        new_borders[c_oAscBorderOptions.InnerH] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                        new_borders[c_oAscBorderOptions.Left] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                        new_borders[c_oAscBorderOptions.Top] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                        new_borders[c_oAscBorderOptions.Right] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                        new_borders[c_oAscBorderOptions.Bottom] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                    } else {\r\n
+                        if (item.options.borderId == "outer") {\r\n
+                            new_borders[c_oAscBorderOptions.Left] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                            new_borders[c_oAscBorderOptions.Top] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                            new_borders[c_oAscBorderOptions.Right] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                            new_borders[c_oAscBorderOptions.Bottom] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                        } else {\r\n
+                            if (item.options.borderId != "none") {\r\n
+                                new_borders[item.options.borderId] = new Asc.asc_CBorder(bordersWidth, bordersColor);\r\n
+                            }\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+                me.api.asc_setCellBorders(new_borders);\r\n
+                Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                Common.component.Analytics.trackEvent("ToolBar", "Borders");\r\n
+            }\r\n
+        },\r\n
+        onBordersWidth: function (menu, item, state) {\r\n
+            if (state) {\r\n
+                $("#id-toolbar-mnu-item-border-width .menu-item-icon").css("border-width", (item.value == "thin" ? 1 : (item.value == "medium" ? 2 : 3)) + "px");\r\n
+                this.toolbar.btnBorders.options.borderswidth = item.value;\r\n
+                Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+                Common.component.Analytics.trackEvent("ToolBar", "Border Width");\r\n
+            }\r\n
+        },\r\n
+        onBordersColor: function (picker, color) {\r\n
+            $("#id-toolbar-mnu-item-border-color .menu-item-icon").css("border-color", "#" + ((typeof(color) == "object") ? color.color : color));\r\n
+            this.toolbar.btnBorders.options.borderscolor = Common.Utils.ThemeColor.getRgbColor(color);\r\n
+            this.toolbar.mnuBorderColorPicker.currentColor = color;\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Border Color");\r\n
+        },\r\n
+        onHorizontalAlign: function (type, btn, e) {\r\n
+            this._state.pralign = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellAlign(!btn.pressed ? "left" : type);\r\n
+                this.toolbar.btnWrap.allowDepress = !(type == "justify");\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Horizontal align");\r\n
+        },\r\n
+        onHorizontalAlignMenu: function (menu, item) {\r\n
+            var btnHorizontalAlign = this.toolbar.btnHorizontalAlign,\r\n
+            iconEl = $(".btn-icon", btnHorizontalAlign.cmpEl);\r\n
+            if (iconEl) {\r\n
+                iconEl.removeClass(btnHorizontalAlign.options.icls);\r\n
+                btnHorizontalAlign.options.icls = !item.checked ? "btn-align-left" : item.options.icls;\r\n
+                iconEl.addClass(btnHorizontalAlign.options.icls);\r\n
+            }\r\n
+            this._state.pralign = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellAlign(!item.checked ? "left" : item.value);\r\n
+            }\r\n
+            this.toolbar.btnWrap.allowDepress = !(item.value == "justify");\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Horizontal Align");\r\n
+        },\r\n
+        onVerticalAlignMenu: function (menu, item) {\r\n
+            var btnVerticalAlign = this.toolbar.btnVerticalAlign,\r\n
+            iconEl = $(".btn-icon", btnVerticalAlign.cmpEl);\r\n
+            if (iconEl) {\r\n
+                iconEl.removeClass(btnVerticalAlign.options.icls);\r\n
+                btnVerticalAlign.options.icls = !item.checked ? "btn-valign-bottom" : item.options.icls;\r\n
+                iconEl.addClass(btnVerticalAlign.options.icls);\r\n
+            }\r\n
+            this._state.valign = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellVertAlign(!item.checked ? "bottom" : item.value);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Vertical Align");\r\n
+        },\r\n
+        onVerticalAlign: function (type, btn, e) {\r\n
+            this._state.valign = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellVertAlign(!btn.pressed ? "bottom" : type);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Vertical align");\r\n
+        },\r\n
+        onMergeCellsMenu: function (menu, item) {\r\n
+            var me = this;\r\n
+            function doMergeCells(how) {\r\n
+                me._state.merge = undefined;\r\n
+                me.api.asc_mergeCells(how);\r\n
+                Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                Common.component.Analytics.trackEvent("ToolBar", "Merge");\r\n
+            }\r\n
+            if (me.api) {\r\n
+                var merged = me.api.asc_getCellInfo().asc_getFlags().asc_getMerge();\r\n
+                if (!merged && me.api.asc_mergeCellsDataLost(item.value)) {\r\n
+                    Common.UI.warning({\r\n
+                        msg: me.warnMergeLostData,\r\n
+                        buttons: ["yes", "no"],\r\n
+                        callback: function (btn) {\r\n
+                            if (btn == "ok") {\r\n
+                                doMergeCells(item.value);\r\n
+                            } else {\r\n
+                                me.toolbar.btnMerge.toggle(false, true);\r\n
+                                Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                                Common.component.Analytics.trackEvent("ToolBar", "Merge");\r\n
+                            }\r\n
+                        }\r\n
+                    });\r\n
+                } else {\r\n
+                    doMergeCells(item.value);\r\n
+                }\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Merge cells");\r\n
+        },\r\n
+        onWrap: function (btn, e) {\r\n
+            this._state.wrap = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellTextWrap(btn.pressed);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Wrap");\r\n
+        },\r\n
+        onTextOrientationMenu: function (menu, item) {\r\n
+            var angle = 0;\r\n
+            switch (item.value) {\r\n
+            case "countcw":\r\n
+                angle = 45;\r\n
+                break;\r\n
+            case "clockwise":\r\n
+                angle = -45;\r\n
+                break;\r\n
+            case "rotateup":\r\n
+                angle = 90;\r\n
+                break;\r\n
+            case "rotatedown":\r\n
+                angle = -90;\r\n
+                break;\r\n
+            }\r\n
+            this._state.angle = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellAngle(angle);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Text orientation");\r\n
+        },\r\n
+        onInsertImageMenu: function (menu, item, e) {\r\n
+            if (item.value === "file") {\r\n
+                this.toolbar.fireEvent("insertimage", this.toolbar);\r\n
+                if (this.api) {\r\n
+                    this.api.asc_showImageFileDialog();\r\n
+                }\r\n
+                Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+                Common.component.Analytics.trackEvent("ToolBar", "Image");\r\n
+            } else {\r\n
+                var me = this;\r\n
+                (new Common.Views.ImageFromUrlDialog({\r\n
+                    handler: function (result, value) {\r\n
+                        if (result == "ok") {\r\n
+                            if (me.api) {\r\n
+                                var checkUrl = value.replace(/\\s/g, "");\r\n
+                                if (!_.isEmpty(checkUrl)) {\r\n
+                                    me.toolbar.fireEvent("insertimage", me.toolbar);\r\n
+                                    me.api.asc_addImageDrawingObject(checkUrl);\r\n
+                                    Common.component.Analytics.trackEvent("ToolBar", "Image");\r\n
+                                } else {\r\n
+                                    Common.UI.warning({\r\n
+                                        msg: this.textEmptyImgUrl\r\n
+                                    });\r\n
+                                }\r\n
+                            }\r\n
+                            Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                        }\r\n
+                    }\r\n
+                })).show();\r\n
+            }\r\n
+        },\r\n
+        onHyperlink: function (btn) {\r\n
+            var me = this;\r\n
+            var win, props;\r\n
+            if (me.api) {\r\n
+                var wc = me.api.asc_getWorksheetsCount(),\r\n
+                i = -1,\r\n
+                items = [];\r\n
+                while (++i < wc) {\r\n
+                    if (!this.api.asc_isWorksheetHidden(i)) {\r\n
+                        items.push({\r\n
+                            displayValue: me.api.asc_getWorksheetName(i),\r\n
+                            value: me.api.asc_getWorksheetName(i)\r\n
+                        });\r\n
+                    }\r\n
+                }\r\n
+                var handlerDlg = function (dlg, result) {\r\n
+                    if (result == "ok") {\r\n
+                        props = dlg.getSettings();\r\n
+                        me.api.asc_insertHyperlink(props);\r\n
+                    }\r\n
+                    Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                };\r\n
+                var cell = me.api.asc_getCellInfo(),\r\n
+                seltype = cell.asc_getFlags().asc_getSelectionType();\r\n
+                props = cell.asc_getHyperlink();\r\n
+                win = new SSE.Views.HyperlinkSettingsDialog({\r\n
+                    handler: handlerDlg\r\n
+                });\r\n
+                win.show();\r\n
+                win.setSettings({\r\n
+                    sheets: items,\r\n
+                    currentSheet: me.api.asc_getWorksheetName(me.api.asc_getActiveWorksheetIndex()),\r\n
+                    props: props,\r\n
+                    text: cell.asc_getText(),\r\n
+                    isLock: cell.asc_getFlags().asc_getLockText(),\r\n
+                    allowInternal: (seltype !== c_oAscSelectionType.RangeImage && seltype !== c_oAscSelectionType.RangeShape && seltype !== c_oAscSelectionType.RangeShapeText && seltype !== c_oAscSelectionType.RangeChart && seltype !== c_oAscSelectionType.RangeChartText)\r\n
+                });\r\n
+            }\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Add Hyperlink");\r\n
+        },\r\n
+        onInsertChart: function (btn) {\r\n
+            if (!this.editMode) {\r\n
+                return;\r\n
+            }\r\n
+            var me = this,\r\n
+            info = me.api.asc_getCellInfo();\r\n
+            if (info.asc_getFlags().asc_getSelectionType() != c_oAscSelectionType.RangeImage) {\r\n
+                var win, props;\r\n
+                if (me.api) {\r\n
+                    props = me.api.asc_getChartObject();\r\n
+                    if (props) {\r\n
+                        var ischartedit = (me.toolbar.mode.isEditDiagram || info.asc_getFlags().asc_getSelectionType() == c_oAscSelectionType.RangeChart || info.asc_getFlags().asc_getSelectionType() == c_oAscSelectionType.RangeChartText);\r\n
+                        (new SSE.Views.ChartSettingsDlg({\r\n
+                            chartSettings: props,\r\n
+                            api: me.api,\r\n
+                            handler: function (result, value) {\r\n
+                                if (result == "ok") {\r\n
+                                    if (me.api) {\r\n
+                                        (ischartedit) ? me.api.asc_editChartDrawingObject(value.chartSettings) : me.api.asc_addChartDrawingObject(value.chartSettings);\r\n
+                                    }\r\n
+                                }\r\n
+                                Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                            }\r\n
+                        })).show();\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+        },\r\n
+        onInsertText: function (btn, e) {\r\n
+            if (this.api) {\r\n
+                this._addAutoshape(btn.pressed, "textRect");\r\n
+            }\r\n
+            if (this.toolbar.btnInsertShape.pressed) {\r\n
+                this.toolbar.btnInsertShape.toggle(false, true);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar, this.toolbar.btnInsertShape);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Add Text");\r\n
+        },\r\n
+        onInsertShapeHide: function (btn, e) {\r\n
+            if (this.toolbar.btnInsertShape.pressed && !this._isAddingShape) {\r\n
+                this.toolbar.btnInsertShape.toggle(false, true);\r\n
+            }\r\n
+            this._isAddingShape = false;\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+        },\r\n
+        onSortType: function (type, btn) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_sortColFilter(type, "");\r\n
+            }\r\n
+        },\r\n
+        onAutoFilter: function (btn) {\r\n
+            this._state.filter = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_addAutoFilter();\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Auto filter");\r\n
+        },\r\n
+        onClearFilter: function (btn) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_clearFilter();\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Clear filter");\r\n
+        },\r\n
+        onNumberFormat: function (btn) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellFormat(btn.options.formatId);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Number Format");\r\n
+        },\r\n
+        onNumberFormatMenu: function (menu, item) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellFormat(item.value);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Number Format");\r\n
+        },\r\n
+        onDecrement: function (btn) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_decreaseCellDigitNumbers();\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Decrement");\r\n
+        },\r\n
+        onIncrement: function (btn) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_increaseCellDigitNumbers();\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Increment");\r\n
+        },\r\n
+        onInsertFormulaMenu: function (menu, item, e) {\r\n
+            if (this.api) {\r\n
+                if (item.value === "more") {\r\n
+                    var controller = this.getApplication().getController("FormulaDialog");\r\n
+                    if (controller) {\r\n
+                        this.api.asc_enableKeyEvents(false);\r\n
+                        controller.showDialog();\r\n
+                    }\r\n
+                } else {\r\n
+                    item.value = item.value || "SUM";\r\n
+                    this.api.asc_insertFormula(item.value, true);\r\n
+                    Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+                    Common.component.Analytics.trackEvent("ToolBar", "Insert formula");\r\n
+                }\r\n
+            }\r\n
+        },\r\n
+        onClearStyleMenu: function (menu, item, e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_emptyCells(item.value);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Clear");\r\n
+        },\r\n
+        onCopyStyleToggle: function (btn, state, e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_formatPainter(state ? 1 : 0);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            this.modeAlwaysSetStyle = state;\r\n
+        },\r\n
+        onCellInsertMenu: function (menu, item, e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_insertCells(item.value);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Cell insert");\r\n
+        },\r\n
+        onCellDeleteMenu: function (menu, item, e) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_deleteCells(item.value);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Cell delete");\r\n
+        },\r\n
+        onColorSchemaClick: function (menu, item) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_ChangeColorScheme(item.value);\r\n
+                Common.component.Analytics.trackEvent("ToolBar", "Color Scheme");\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+        },\r\n
+        onComboBlur: function () {\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+        },\r\n
+        onFontNameSelect: function (combo, record) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellFontName(record.name);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar, {\r\n
+                restorefocus: true\r\n
+            });\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Font Name");\r\n
+        },\r\n
+        onFontNameOpen: function (combo) {\r\n
+            _.delay(function () {\r\n
+                $("input", combo.cmpEl).select().focus();\r\n
+            },\r\n
+            10);\r\n
+        },\r\n
+        onFontSizeSelect: function (combo, record) {\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellFontSize(record.value);\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar, {\r\n
+                restorefocus: true\r\n
+            });\r\n
+            Common.component.Analytics.trackEvent("ToolBar", "Font Size");\r\n
+        },\r\n
+        onFontSizeChanged: function (before, combo, record, e) {\r\n
+            var value, me = this;\r\n
+            if (before) {\r\n
+                var item = combo.store.findWhere({\r\n
+                    displayValue: record.value\r\n
+                });\r\n
+                if (!item) {\r\n
+                    value = /^\\+?(\\d*\\.?\\d+)$|^\\+?(\\d+\\.?\\d*)$/.exec(record.value);\r\n
+                    if (!value) {\r\n
+                        value = this._getApiTextSize();\r\n
+                        Common.UI.error({\r\n
+                            msg: this.textFontSizeErr,\r\n
+                            callback: function () {\r\n
+                                _.defer(function (btn) {\r\n
+                                    me.api.asc_enableKeyEvents(false);\r\n
+                                    $("input", combo.cmpEl).focus();\r\n
+                                });\r\n
+                            }\r\n
+                        });\r\n
+                        combo.setRawValue(value);\r\n
+                        e.preventDefault();\r\n
+                        return false;\r\n
+                    }\r\n
+                }\r\n
+            } else {\r\n
+                value = parseFloat(record.value);\r\n
+                value = value > 300 ? 300 : value < 1 ? 1 : Math.floor((value + 0.4) * 2) / 2;\r\n
+                combo.setRawValue(value);\r\n
+                if (this.api) {\r\n
+                    this.api.asc_setCellFontSize(value);\r\n
+                }\r\n
+                Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+            }\r\n
+        },\r\n
+        onFontSizeOpen: function (combo) {\r\n
+            _.delay(function () {\r\n
+                $("input", combo.cmpEl).select().focus();\r\n
+            },\r\n
+            10);\r\n
+        },\r\n
+        onAdvSettingsClick: function (btn, e) {\r\n
+            this.toolbar.fireEvent("file:settings", this);\r\n
+            btn.cmpEl.blur();\r\n
+        },\r\n
+        onZoomInClick: function (btn) {\r\n
+            if (this.api) {\r\n
+                var f = this.api.asc_getZoom() + 0.1;\r\n
+                if (f > 0 && !(f > 2)) {\r\n
+                    this.api.asc_setZoom(f);\r\n
+                }\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+        },\r\n
+        onZoomOutClick: function (btn) {\r\n
+            if (this.api) {\r\n
+                var f = this.api.asc_getZoom() - 0.1;\r\n
+                if (! (f < 0.5)) {\r\n
+                    this.api.asc_setZoom(f);\r\n
+                }\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+        },\r\n
+        onHideMenu: function (menu, item) {\r\n
+            var params = {},\r\n
+            option;\r\n
+            switch (item.value) {\r\n
+            case "title":\r\n
+                params.title = item.checked;\r\n
+                option = "sse-hidden-title";\r\n
+                break;\r\n
+            case "formula":\r\n
+                params.formula = item.checked;\r\n
+                option = "sse-hidden-formula";\r\n
+                break;\r\n
+            case "headings":\r\n
+                params.headings = item.checked;\r\n
+                break;\r\n
+            case "gridlines":\r\n
+                params.gridlines = item.checked;\r\n
+                break;\r\n
+            case "freezepanes":\r\n
+                params.freezepanes = true;\r\n
+                break;\r\n
+            }\r\n
+            this.hideElements(params);\r\n
+            option && localStorage.setItem(option, item.checked);\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+        },\r\n
+        onListStyleSelect: function (combo, record) {\r\n
+            this._state.prstyle = undefined;\r\n
+            if (this.api) {\r\n
+                this.api.asc_setCellStyle(record.get("name"));\r\n
+                Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+                Common.component.Analytics.trackEvent("ToolBar", "Style");\r\n
+            }\r\n
+        },\r\n
+        createDelayedElements: function () {\r\n
+            var me = this;\r\n
+            this.api.asc_registerCallback("asc_onShowChartDialog", _.bind(this.onApiChartDblClick, this));\r\n
+            this.api.asc_registerCallback("asc_onCanUndoChanged", _.bind(this.onApiCanRevert, this, "undo"));\r\n
+            this.api.asc_registerCallback("asc_onCanRedoChanged", _.bind(this.onApiCanRevert, this, "redo"));\r\n
+            this.api.asc_registerCallback("asc_onEditCell", _.bind(this.onApiEditCell, this));\r\n
+            this.api.asc_registerCallback("asc_onEndAddShape", _.bind(this.onApiEndAddShape, this));\r\n
+            this.api.asc_registerCallback("asc_onZoomChanged", _.bind(this.onApiZoomChange, this));\r\n
+            this.api.asc_registerCallback("asc_onSheetsChanged", _.bind(this.onApiSheetChanged, this));\r\n
+            this.api.asc_registerCallback("asc_onStopFormatPainter", _.bind(this.onApiStyleChange, this));\r\n
+            this.api.asc_registerCallback("asc_onUpdateSheetViewSettings", _.bind(this.onApiSheetChanged, this));\r\n
+            Common.util.Shortcuts.delegateShortcuts({\r\n
+                shortcuts: {\r\n
+                    "command+l,ctrl+l": function (e) {\r\n
+                        if (me.editMode && me.api.asc_getCellInfo().asc_getIsFormatTable() !== true) {\r\n
+                            me._setTableFormat(me.toolbar.mnuTableTemplatePicker.store.at(23).get("name"));\r\n
+                        }\r\n
+                        return false;\r\n
+                    },\r\n
+                    "command+shift+l,ctrl+shift+l": function (e) {\r\n
+                        me._state.filter = undefined;\r\n
+                        if (me.editMode && me.api) {\r\n
+                            me.api.asc_addAutoFilter();\r\n
+                        }\r\n
+                        return false;\r\n
+                    },\r\n
+                    "command+s,ctrl+s": function (e) {\r\n
+                        me.onSave();\r\n
+                        e.preventDefault();\r\n
+                        e.stopPropagation();\r\n
+                    },\r\n
+                    "command+k,ctrl+k": function (e) {\r\n
+                        if (me.editMode && !me.toolbar.mode.isEditDiagram && !me.api.isCellEdited) {\r\n
+                            me.onHyperlink();\r\n
+                        }\r\n
+                        e.preventDefault();\r\n
+                    }\r\n
+                }\r\n
+            });\r\n
+            this.wrapOnSelectionChanged = _.bind(this.onApiSelectionChanged, this);\r\n
+            this.api.asc_registerCallback("asc_onSelectionChanged", this.wrapOnSelectionChanged);\r\n
+            this.onApiSelectionChanged(this.api.asc_getCellInfo());\r\n
+            this.api.asc_registerCallback("asc_onEditorSelectionChanged", _.bind(this.onApiEditorSelectionChanged, this));\r\n
+            this.attachToControlEvents();\r\n
+            this.onApiSheetChanged();\r\n
+            Common.NotificationCenter.on("cells:range", _.bind(this.onCellsRange, this));\r\n
+        },\r\n
+        onChangeViewMode: function (item, compact) {\r\n
+            var me = this,\r\n
+            toolbarFull = $("#id-toolbar-full"),\r\n
+            toolbarShort = $("#id-toolbar-short");\r\n
+            me.toolbar.isCompactView = compact;\r\n
+            if (toolbarFull && toolbarShort) {\r\n
+                me.api.asc_unregisterCallback("asc_onSelectionChanged", me.wrapOnSelectionChanged);\r\n
+                if (compact) {\r\n
+                    toolbarShort.css({\r\n
+                        display: "table"\r\n
+                    });\r\n
+                    toolbarFull.css({\r\n
+                        display: "none"\r\n
+                    });\r\n
+                    toolbarShort.parent().css({\r\n
+                        height: "41px"\r\n
+                    });\r\n
+                    me.toolbar.rendererComponents("short");\r\n
+                } else {\r\n
+                    toolbarShort.css({\r\n
+                        display: "none"\r\n
+                    });\r\n
+                    toolbarFull.css({\r\n
+                        display: "table"\r\n
+                    });\r\n
+                    toolbarShort.parent().css({\r\n
+                        height: "67px"\r\n
+                    });\r\n
+                    me.toolbar.rendererComponents("full");\r\n
+                    _.defer(function () {\r\n
+                        var listStylesVisible = (me.toolbar.listStyles.rendered);\r\n
+                        if (me.toolbar.listStyles.menuPicker.store.length > 0 && listStylesVisible) {\r\n
+                            me.toolbar.listStyles.fillComboView(me.toolbar.listStyles.menuPicker.getSelectedRec(), true);\r\n
+                        }\r\n
+                    },\r\n
+                    100);\r\n
+                }\r\n
+                me._state.coauthdisable = undefined;\r\n
+                me.api.asc_registerCallback("asc_onSelectionChanged", me.wrapOnSelectionChanged);\r\n
+                me.onApiSelectionChanged(me.api.asc_getCellInfo());\r\n
+                window.localStorage.setItem("sse-toolbar-compact", compact ? 1 : 0);\r\n
+                Common.NotificationCenter.trigger("layout:changed", "toolbar");\r\n
+            }\r\n
+        },\r\n
+        fillTableTemplates: function () {\r\n
+            var me = this;\r\n
+            function createPicker(element) {\r\n
+                var picker = new Common.UI.DataView({\r\n
+                    el: element,\r\n
+                    store: me.getCollection("TableTemplates"),\r\n
+                    itemTemplate: _.template(\'<div class="item-template"><img src="<%= imageUrl %>" id="<%= id %>"></div>\')\r\n
+                });\r\n
+                picker.on("item:click", function (picker, item, record) {\r\n
+                    if (me.api) {\r\n
+                        me._setTableFormat(record.get("name"));\r\n
+                        Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                        Common.component.Analytics.trackEvent("ToolBar", "Table Templates");\r\n
+                    }\r\n
+                });\r\n
+                if (picker.scroller) {\r\n
+                    picker.scroller.update({});\r\n
+                }\r\n
+                return picker;\r\n
+            }\r\n
+            if (_.isUndefined(this.toolbar.mnuTableTemplatePicker)) {\r\n
+                this.toolbar.mnuTableTemplatePicker = createPicker($("#id-toolbar-menu-table-templates"));\r\n
+            }\r\n
+            if (_.isUndefined(this.toolbar.mnuTableTemplatePickerShort)) {\r\n
+                this.toolbar.mnuTableTemplatePickerShort = createPicker($("#id-toolbar-short-menu-table-templates"));\r\n
+            }\r\n
+        },\r\n
+        onTableTplMenuOpen: function (cmp) {\r\n
+            var scroller = this.toolbar.mnuTableTemplatePicker.scroller;\r\n
+            if (scroller) {\r\n
+                scroller.update();\r\n
+                scroller.scrollTop(0);\r\n
+            }\r\n
+        },\r\n
+        onApiInitTableTemplates: function (images) {\r\n
+            var store = this.getCollection("TableTemplates");\r\n
+            if (store) {\r\n
+                var templates = [];\r\n
+                _.each(images, function (item) {\r\n
+                    templates.push({\r\n
+                        name: item.asc_getName(),\r\n
+                        caption: item.asc_getDisplayName(),\r\n
+                        type: item.asc_getType(),\r\n
+                        imageUrl: item.asc_getImage(),\r\n
+                        allowSelected: false,\r\n
+                        selected: false\r\n
+                    });\r\n
+                });\r\n
+                store.reset();\r\n
+                store.add(templates);\r\n
+            }\r\n
+            this.fillTableTemplates();\r\n
+        },\r\n
+        onApiInitEditorStyles: function (styles) {\r\n
+            window.styles_loaded = false;\r\n
+            var self = this,\r\n
+            listStyles = self.toolbar.listStyles;\r\n
+            if (!listStyles) {\r\n
+                self.styles = styles;\r\n
+                return;\r\n
+            }\r\n
+            var canvasDefaultStyles = document.createElement("canvas");\r\n
+            canvasDefaultStyles.id = "bigimgdefaultstyles";\r\n
+            var isDocStyles = styles.asc_getDocStylesImage().length > 0;\r\n
+            var fillStyles = function () {\r\n
+                listStyles.menuPicker.store.reset([]);\r\n
+                var thumbWidth = styles.asc_getStyleThumbnailWidth(),\r\n
+                thumbHeight = styles.asc_getStyleThumbnailHeight();\r\n
+                var merged_array = styles.asc_getDefaultStyles();\r\n
+                isDocStyles && (merged_array = merged_array.concat(styles.asc_getDocStyles()));\r\n
+                var thumb = document.createElement("canvas");\r\n
+                var ctx = thumb.getContext("2d");\r\n
+                thumb.width = thumbWidth;\r\n
+                thumb.height = thumbHeight;\r\n
+                _.each(merged_array, function (style) {\r\n
+                    ctx.clearRect(0, 0, thumbWidth, thumbHeight);\r\n
+                    ctx.save();\r\n
+                    ctx.translate(0, -style.asc_getThumbnailOffset() * thumbHeight);\r\n
+                    ctx.drawImage(((style.asc_getType() == c_oAscStyleImage.Default) ? canvasDefaultStyles : canvasDocStyles), 0, 0);\r\n
+                    ctx.restore();\r\n
+                    listStyles.menuPicker.store.add({\r\n
+                        imageUrl: thumb.toDataURL(),\r\n
+                        name: style.asc_getName(),\r\n
+                        uid: Common.UI.getId()\r\n
+                    });\r\n
+                });\r\n
+                if (listStyles.menuPicker.store.length > 0 && listStyles.rendered) {\r\n
+                    listStyles.fillComboView(listStyles.menuPicker.store.at(0), true);\r\n
+                    listStyles.selectByIndex(0);\r\n
+                }\r\n
+                window.styles_loaded = true;\r\n
+            };\r\n
+            var imgDefaultStyles = new Image(),\r\n
+            imgLoaded = 1;\r\n
+            if (isDocStyles) {\r\n
+                imgLoaded++;\r\n
+                var canvasDocStyles = document.createElement("canvas");\r\n
+                canvasDocStyles.id = "bigimgdocstyles";\r\n
+                var imgDocStyles = new Image();\r\n
+                imgDocStyles.onload = function () {\r\n
+                    canvasDocStyles.width = imgDocStyles.width;\r\n
+                    canvasDocStyles.height = imgDocStyles.height;\r\n
+                    canvasDocStyles.getContext("2d").drawImage(imgDocStyles, 0, 0);\r\n
+                    if (! (--imgLoaded > 0)) {\r\n
+                        fillStyles();\r\n
+                    }\r\n
+                };\r\n
+            }\r\n
+            imgDefaultStyles.onload = function () {\r\n
+                canvasDefaultStyles.width = imgDefaultStyles.width;\r\n
+                canvasDefaultStyles.height = imgDefaultStyles.height;\r\n
+                canvasDefaultStyles.getContext("2d").drawImage(imgDefaultStyles, 0, 0);\r\n
+                if (! (--imgLoaded > 0)) {\r\n
+                    fillStyles();\r\n
+                }\r\n
+            };\r\n
+            imgDefaultStyles.src = styles.asc_getDefaultStylesImage();\r\n
+            imgDocStyles && (imgDocStyles.src = styles.asc_getDocStylesImage());\r\n
+        },\r\n
+        onApiCoAuthoringDisconnect: function () {\r\n
+            this.toolbar.setMode({\r\n
+                isDisconnected: true\r\n
+            });\r\n
+            this.editMode = false;\r\n
+        },\r\n
+        onApiChartDblClick: function () {\r\n
+            this.onInsertChart(this.btnInsertChart);\r\n
+        },\r\n
+        onApiCanRevert: function (which, can) {\r\n
+            if (which == "undo") {\r\n
+                if (this._state.can_undo !== can) {\r\n
+                    this.toolbar.btnUndo.setDisabled(!can);\r\n
+                    this._state.can_undo = can;\r\n
+                }\r\n
+            } else {\r\n
+                if (this._state.can_redo !== can) {\r\n
+                    this.toolbar.btnRedo.setDisabled(!can);\r\n
+                    this._state.can_redo = can;\r\n
+                }\r\n
+            }\r\n
+        },\r\n
+        setDisabledComponents: function (components, disable) {\r\n
+            _.each([].concat(components), function (component) {\r\n
+                if (component.isDisabled() !== disable) {\r\n
+                    component.setDisabled(disable);\r\n
+                }\r\n
+            });\r\n
+        },\r\n
+        onApiEditCell: function (state) {\r\n
+            var toolbar = this.toolbar;\r\n
+            if (toolbar.mode.isEditDiagram) {\r\n
+                is_cell_edited = (state == c_oAscCellEditorState.editStart);\r\n
+                toolbar.lockToolbar(SSE.enumLock.editCell, state == c_oAscCellEditorState.editStart, {\r\n
+                    array: [toolbar.btnDecDecimal, toolbar.btnIncDecimal, toolbar.btnNumberFormat]\r\n
+                });\r\n
+            } else {\r\n
+                if (state == c_oAscCellEditorState.editStart || state == c_oAscCellEditorState.editEnd) {\r\n
+                    toolbar.lockToolbar(SSE.enumLock.editCell, state == c_oAscCellEditorState.editStart, {\r\n
+                        array: [toolbar.btnClearStyle.menu.items[1], toolbar.btnClearStyle.menu.items[2], toolbar.btnClearStyle.menu.items[3], toolbar.btnClearStyle.menu.items[4], toolbar.mnuitemClearFilter],\r\n
+                        merge: true,\r\n
+                        clear: [SSE.enumLock.editFormula, SSE.enumLock.editText]\r\n
+                    });\r\n
+                    var is_cell_edited = (state == c_oAscCellEditorState.editStart);\r\n
+                    (is_cell_edited) ? Common.util.Shortcuts.suspendEvents("command+l, ctrl+l, command+shift+l, ctrl+shift+l, command+k, ctrl+k, command+alt+h, ctrl+alt+h") : Common.util.Shortcuts.resumeEvents("command+l, ctrl+l, command+shift+l, ctrl+shift+l, command+k, ctrl+k, command+alt+h, ctrl+alt+h");\r\n
+                    if (is_cell_edited) {\r\n
+                        toolbar.listStyles.suspendEvents();\r\n
+                        toolbar.listStyles.menuPicker.selectRecord(null);\r\n
+                        toolbar.listStyles.resumeEvents();\r\n
+                        this._state.prstyle = undefined;\r\n
+                    }\r\n
+                } else {\r\n
+                    if (state == c_oAscCellEditorState.editText) {\r\n
+                        var is_text = true,\r\n
+                        is_formula = false;\r\n
+                    } else {\r\n
+                        if (state == c_oAscCellEditorState.editFormula) {\r\n
+                            is_text = !(is_formula = true);\r\n
+                        } else {\r\n
+                            if (state == c_oAscCellEditorState.editEmptyCell) {\r\n
+                                is_text = is_formula = false;\r\n
+                            }\r\n
+                        }\r\n
+                    }\r\n
+                    toolbar.lockToolbar(SSE.enumLock.editFormula, is_formula, {\r\n
+                        array: [toolbar.cmbFontName, toolbar.cmbFontSize, toolbar.btnIncFontSize, toolbar.btnDecFontSize, toolbar.btnBold, toolbar.btnItalic, toolbar.btnUnderline, toolbar.btnTextColor]\r\n
+                    });\r\n
+                    toolbar.lockToolbar(SSE.enumLock.editText, is_text, {\r\n
+                        array: [toolbar.btnInsertFormula]\r\n
+                    });\r\n
+                }\r\n
+            }\r\n
+            this._state.coauthdisable = undefined;\r\n
+            this._state.selection_type = undefined;\r\n
+            this.checkInsertAutoshape({\r\n
+                action: "cancel"\r\n
+            });\r\n
+        },\r\n
+        onApiZoomChange: function (zf, type) {\r\n
+            switch (type) {\r\n
+            case 1:\r\n
+                case 2:\r\n
+                case 0:\r\n
+                default:\r\n
+                $(".menu-zoom .zoom", this.toolbar.el).html(Math.floor((zf + 0.005) * 100) + "%");\r\n
+            }\r\n
+        },\r\n
+        onApiSheetChanged: function () {\r\n
+            if (this.api) {\r\n
+                var params = this.api.asc_getSheetViewSettings(),\r\n
+                menu = this.toolbar.btnShowMode.menu;\r\n
+                if (menu) {\r\n
+                    menu.items[3].setChecked(!params.asc_getShowRowColHeaders());\r\n
+                    menu.items[4].setChecked(!params.asc_getShowGridLines());\r\n
+                    menu.items[5].setChecked(params.asc_getIsFreezePane());\r\n
+                }\r\n
+            }\r\n
+        },\r\n
+        onApiEditorSelectionChanged: function (fontobj) {\r\n
+            if (!this.editMode) {\r\n
+                return;\r\n
+            }\r\n
+            var toolbar = this.toolbar,\r\n
+            val;\r\n
+            var fontparam = fontobj.asc_getName();\r\n
+            if (fontparam != toolbar.cmbFontName.getValue()) {\r\n
+                Common.NotificationCenter.trigger("fonts:change", fontobj);\r\n
+            }\r\n
+            if (!toolbar.mode.isEditDiagram) {\r\n
+                val = fontobj.asc_getBold();\r\n
+                if (this._state.bold !== val) {\r\n
+                    toolbar.btnBold.toggle(val === true, true);\r\n
+                    this._state.bold = val;\r\n
+                }\r\n
+                val = fontobj.asc_getItalic();\r\n
+                if (this._state.italic !== val) {\r\n
+                    toolbar.btnItalic.toggle(val === true, true);\r\n
+                    this._state.italic = val;\r\n
+                }\r\n
+                val = fontobj.asc_getUnderline();\r\n
+                if (this._state.underline !== val) {\r\n
+                    toolbar.btnUnderline.toggle(val === true, true);\r\n
+                    this._state.underline = val;\r\n
+                }\r\n
+            }\r\n
+            var str_size = fontobj.asc_getSize();\r\n
+            if (toolbar.cmbFontSize.getValue() != str_size) {\r\n
+                toolbar.cmbFontSize.setValue((str_size !== undefined) ? str_size : "");\r\n
+            }\r\n
+            var clr, color, fontColorPicker = this.toolbar.mnuTextColorPicker;\r\n
+            if (!toolbar.btnTextColor.ischanged && !fontColorPicker.isDummy) {\r\n
+                color = fontobj.asc_getColor();\r\n
+                if (color) {\r\n
+                    if (color.get_type() == c_oAscColor.COLOR_TYPE_SCHEME) {\r\n
+                        clr = {\r\n
+                            color: Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()),\r\n
+                            effectValue: color.get_value()\r\n
+                        };\r\n
+                    } else {\r\n
+                        clr = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b());\r\n
+                    }\r\n
+                }\r\n
+                var type1 = typeof(clr),\r\n
+                type2 = typeof(this._state.clrtext);\r\n
+                if ((type1 !== type2) || (type1 == "object" && (clr.effectValue !== this._state.clrtext.effectValue || this._state.clrtext.color.indexOf(clr.color) < 0)) || (type1 != "object" && this._state.clrtext !== undefined && this._state.clrtext.indexOf(clr) < 0)) {\r\n
+                    if (_.isObject(clr)) {\r\n
+                        var isselected = false;\r\n
+                        for (var i = 0; i < 10; i++) {\r\n
+                            if (Common.Utils.ThemeColor.ThemeValues[i] == clr.effectValue) {\r\n
+                                fontColorPicker.select(clr, true);\r\n
+                                isselected = true;\r\n
+                                break;\r\n
+                            }\r\n
+                        }\r\n
+                        if (!isselected) {\r\n
+                            fontColorPicker.clearSelection();\r\n
+                        }\r\n
+                    } else {\r\n
+                        fontColorPicker.select(clr, true);\r\n
+                    }\r\n
+                    this._state.clrtext = clr;\r\n
+                }\r\n
+                this._state.clrtext_asccolor = color;\r\n
+            }\r\n
+        },\r\n
+        onApiSelectionChanged: function (info) {\r\n
+            if (!this.editMode) {\r\n
+                return;\r\n
+            }\r\n
+            var selectionType = info.asc_getFlags().asc_getSelectionType();\r\n
+            var coauth_disable = (!this.toolbar.mode.isEditDiagram) ? (info.asc_getLocked() === true) : false;\r\n
+            if (this._disableEditOptions(selectionType, coauth_disable)) {\r\n
+                return;\r\n
+            }\r\n
+            var me = this,\r\n
+            toolbar = this.toolbar,\r\n
+            fontobj = info.asc_getFont(),\r\n
+            val;\r\n
+            var fontparam = fontobj.asc_getName();\r\n
+            if (fontparam != toolbar.cmbFontName.getValue()) {\r\n
+                Common.NotificationCenter.trigger("fonts:change", fontobj);\r\n
+            }\r\n
+            if (!toolbar.mode.isEditDiagram) {\r\n
+                val = fontobj.asc_getBold();\r\n
+                if (this._state.bold !== val) {\r\n
+                    toolbar.btnBold.toggle(val === true, true);\r\n
+                    this._state.bold = val;\r\n
+                }\r\n
+                val = fontobj.asc_getItalic();\r\n
+                if (this._state.italic !== val) {\r\n
+                    toolbar.btnItalic.toggle(val === true, true);\r\n
+                    this._state.italic = val;\r\n
+                }\r\n
+                val = fontobj.asc_getUnderline();\r\n
+                if (this._state.underline !== val) {\r\n
+                    toolbar.btnUnderline.toggle(val === true, true);\r\n
+                    this._state.underline = val;\r\n
+                }\r\n
+            }\r\n
+            var str_size = fontobj.asc_getSize();\r\n
+            if (toolbar.cmbFontSize.getValue() != str_size) {\r\n
+                toolbar.cmbFontSize.setValue((str_size !== undefined) ? str_size : "");\r\n
+            }\r\n
+            var clr, color, fontColorPicker = this.toolbar.mnuTextColorPicker,\r\n
+            paragraphColorPicker = this.toolbar.mnuBackColorPicker;\r\n
+            if (!toolbar.btnTextColor.ischanged && !fontColorPicker.isDummy) {\r\n
+                color = fontobj.asc_getColor();\r\n
+                if (color) {\r\n
+                    if (color.get_type() == c_oAscColor.COLOR_TYPE_SCHEME) {\r\n
+                        clr = {\r\n
+                            color: Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()),\r\n
+                            effectValue: color.get_value()\r\n
+                        };\r\n
+                    } else {\r\n
+                        clr = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b());\r\n
+                    }\r\n
+                }\r\n
+                var type1 = typeof(clr),\r\n
+                type2 = typeof(this._state.clrtext);\r\n
+                if ((type1 !== type2) || (type1 == "object" && (clr.effectValue !== this._state.clrtext.effectValue || this._state.clrtext.color.indexOf(clr.color) < 0)) || (type1 != "object" && this._state.clrtext !== undefined && this._state.clrtext.indexOf(clr) < 0)) {\r\n
+                    if (_.isObject(clr)) {\r\n
+                        var isselected = false;\r\n
+                        for (var i = 0; i < 10; i++) {\r\n
+                            if (Common.Utils.ThemeColor.ThemeValues[i] == clr.effectValue) {\r\n
+                                fontColorPicker.select(clr, true);\r\n
+                                isselected = true;\r\n
+                                break;\r\n
+                            }\r\n
+                        }\r\n
+                        if (!isselected) {\r\n
+                            fontColorPicker.clearSelection();\r\n
+                        }\r\n
+                    } else {\r\n
+                        fontColorPicker.select(clr, true);\r\n
+                    }\r\n
+                    this._state.clrtext = clr;\r\n
+                }\r\n
+                this._state.clrtext_asccolor = color;\r\n
+            }\r\n
+            if (!toolbar.btnBackColor.ischanged && !paragraphColorPicker.isDummy) {\r\n
+                color = info.asc_getFill().asc_getColor();\r\n
+                if (color) {\r\n
+                    if (color.get_type() == c_oAscColor.COLOR_TYPE_SCHEME) {\r\n
+                        clr = {\r\n
+                            color: Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b()),\r\n
+                            effectValue: color.get_value()\r\n
+                        };\r\n
+                    } else {\r\n
+                        clr = Common.Utils.ThemeColor.getHexColor(color.get_r(), color.get_g(), color.get_b());\r\n
+                    }\r\n
+                } else {\r\n
+                    clr = "transparent";\r\n
+                }\r\n
+                type1 = typeof(clr);\r\n
+                type2 = typeof(this._state.clrback);\r\n
+                if ((type1 !== type2) || (type1 == "object" && (clr.effectValue !== this._state.clrback.effectValue || this._state.clrback.color.indexOf(clr.color) < 0)) || (type1 != "object" && this._state.clrback !== undefined && this._state.clrback.indexOf(clr) < 0)) {\r\n
+                    if (_.isObject(clr)) {\r\n
+                        var isselected = false;\r\n
+                        for (i = 0; i < 10; i++) {\r\n
+                            if (Common.Utils.ThemeColor.ThemeValues[i] == clr.effectValue) {\r\n
+                                paragraphColorPicker.select(clr, true);\r\n
+                                isselected = true;\r\n
+                                break;\r\n
+                            }\r\n
+                        }\r\n
+                        if (!isselected) {\r\n
+                            paragraphColorPicker.clearSelection();\r\n
+                        }\r\n
+                    } else {\r\n
+                        paragraphColorPicker.select(clr, true);\r\n
+                    }\r\n
+                    this._state.clrback = clr;\r\n
+                }\r\n
+                this._state.clrshd_asccolor = color;\r\n
+            }\r\n
+            if (selectionType == c_oAscSelectionType.RangeChart || selectionType == c_oAscSelectionType.RangeChartText) {\r\n
+                return;\r\n
+            }\r\n
+            if (!toolbar.mode.isEditDiagram) {\r\n
+                fontparam = info.asc_getHorAlign();\r\n
+                if (this._state.pralign !== fontparam) {\r\n
+                    this._state.pralign = fontparam;\r\n
+                    var index = -1,\r\n
+                    align;\r\n
+                    switch (fontparam) {\r\n
+                    case "left":\r\n
+                        index = 0;\r\n
+                        align = "btn-align-left";\r\n
+                        break;\r\n
+                    case "center":\r\n
+                        index = 1;\r\n
+                        align = "btn-align-center";\r\n
+                        break;\r\n
+                    case "right":\r\n
+                        index = 2;\r\n
+                        align = "btn-align-right";\r\n
+                        break;\r\n
+                    case "justify":\r\n
+                        index = 3;\r\n
+                        align = "btn-align-just";\r\n
+                        break;\r\n
+                    default:\r\n
+                        index = -255;\r\n
+                        align = "btn-align-left";\r\n
+                        break;\r\n
+                    }\r\n
+                    if (! (index < 0)) {\r\n
+                        toolbar.btnAlignRight.toggle(index === 2, true);\r\n
+                        toolbar.btnAlignLeft.toggle(index === 0, true);\r\n
+                        toolbar.btnAlignCenter.toggle(index === 1, true);\r\n
+                        toolbar.btnAlignJust.toggle(index === 3, true);\r\n
+                        toolbar.btnHorizontalAlign.menu.items[index].setChecked(true, false);\r\n
+                    } else {\r\n
+                        if (index == -255) {\r\n
+                            toolbar.btnAlignRight.toggle(false, true);\r\n
+                            toolbar.btnAlignLeft.toggle(false, true);\r\n
+                            toolbar.btnAlignCenter.toggle(false, true);\r\n
+                            toolbar.btnAlignJust.toggle(false, true);\r\n
+                            this._clearChecked(toolbar.btnHorizontalAlign.menu);\r\n
+                        }\r\n
+                    }\r\n
+                    var btnHorizontalAlign = this.toolbar.btnHorizontalAlign;\r\n
+                    if (btnHorizontalAlign.rendered) {\r\n
+                        var hIconEl = $(".btn-icon", btnHorizontalAlign.cmpEl);\r\n
+                        if (hIconEl) {\r\n
+                            hIconEl.removeClass(btnHorizontalAlign.options.icls);\r\n
+                            btnHorizontalAlign.options.icls = align;\r\n
+                            hIconEl.addClass(btnHorizontalAlign.options.icls);\r\n
+                        }\r\n
+                    }\r\n
+                    toolbar.btnTextOrient.menu.items[1].setDisabled(fontparam == "justify");\r\n
+                    toolbar.btnTextOrient.menu.items[2].setDisabled(fontparam == "justify");\r\n
+                }\r\n
+                fontparam = info.asc_getVertAlign();\r\n
+                if (this._state.valign !== fontparam) {\r\n
+                    this._state.valign = fontparam;\r\n
+                    index = -1;\r\n
+                    align = "";\r\n
+                    switch (fontparam) {\r\n
+                    case "top":\r\n
+                        index = 0;\r\n
+                        align = "btn-valign-top";\r\n
+                        break;\r\n
+                    case "center":\r\n
+                        index = 1;\r\n
+                        align = "btn-valign-middle";\r\n
+                        break;\r\n
+                    case "bottom":\r\n
+                        index = 2;\r\n
+                        align = "btn-valign-bottom";\r\n
+                        break;\r\n
+                    }\r\n
+                    if (index > -1) {\r\n
+                        toolbar.btnAlignTop.toggle(index === 0, true);\r\n
+                        toolbar.btnAlignMiddle.toggle(index === 1, true);\r\n
+                        toolbar.btnAlignBottom.toggle(index === 2, true);\r\n
+                        toolbar.btnVerticalAlign.menu.items[index].setChecked(true, false);\r\n
+                        var btnVerticalAlign = this.toolbar.btnVerticalAlign;\r\n
+                        if (btnVerticalAlign.rendered) {\r\n
+                            var vIconEl = $(".btn-icon", btnVerticalAlign.cmpEl);\r\n
+                            if (vIconEl) {\r\n
+                                vIconEl.removeClass(btnVerticalAlign.options.icls);\r\n
+                                btnVerticalAlign.options.icls = align;\r\n
+                                vIconEl.addClass(btnVerticalAlign.options.icls);\r\n
+                            }\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+                var need_disable = this._state.controlsdisabled.filters || (info.asc_getIsFormatTable() === true);\r\n
+                toolbar.lockToolbar(SSE.enumLock.ruleMerge, need_disable, {\r\n
+                    array: [toolbar.btnMerge]\r\n
+                });\r\n
+                val = info.asc_getFlags().asc_getMerge();\r\n
+                if (this._state.merge !== val) {\r\n
+                    toolbar.btnMerge.toggle(val === true, true);\r\n
+                    this._state.merge = val;\r\n
+                }\r\n
+                val = info.asc_getIsAutoFilter();\r\n
+                if (this._state.filter !== val) {\r\n
+                    toolbar.btnSetAutofilter.toggle(val === true, true);\r\n
+                    toolbar.mnuitemAutoFilter.setChecked(val === true, true);\r\n
+                    this._state.filter = val;\r\n
+                }\r\n
+                need_disable = this._state.controlsdisabled.filters || (val === null);\r\n
+                toolbar.lockToolbar(SSE.enumLock.ruleFilter, need_disable, {\r\n
+                    array: [toolbar.btnSortDown, toolbar.btnSortUp, toolbar.mnuitemSortAZ, toolbar.mnuitemSortZA, toolbar.btnTableTemplate, toolbar.btnSetAutofilter, toolbar.mnuitemAutoFilter, toolbar.btnAutofilter]\r\n
+                });\r\n
+                need_disable = this._state.controlsdisabled.filters || (info.asc_getClearFilter() !== true);\r\n
+                toolbar.lockToolbar(SSE.enumLock.ruleDelFilter, need_disable, {\r\n
+                    array: [toolbar.btnClearAutofilter, toolbar.mnuitemClearFilter]\r\n
+                });\r\n
+                if (!toolbar.btnWrap.isDisabled()) {\r\n
+                    val = info.asc_getFlags().asc_getWrapText();\r\n
+                    if (this._state.wrap !== val) {\r\n
+                        toolbar.btnWrap.toggle(val === true, true);\r\n
+                        this._state.wrap = val;\r\n
+                    }\r\n
+                }\r\n
+            }\r\n
+            fontparam = toolbar.numFormatTypes[info.asc_getNumFormatType()];\r\n
+            if (!fontparam) {\r\n
+                fontparam = toolbar.numFormatTypes[1];\r\n
+            }\r\n
+            toolbar.btnNumberFormat.setCaption(fontparam);\r\n
+            val = info.asc_getAngle();\r\n
+            if (this._state.angle !== val) {\r\n
+                this._clearChecked(toolbar.btnTextOrient.menu);\r\n
+                switch (val) {\r\n
+                case 45:\r\n
+                    toolbar.btnTextOrient.menu.items[1].setChecked(true, true);\r\n
+                    break;\r\n
+                case -45:\r\n
+                    toolbar.btnTextOrient.menu.items[2].setChecked(true, true);\r\n
+                    break;\r\n
+                case 90:\r\n
+                    toolbar.btnTextOrient.menu.items[3].setChecked(true, true);\r\n
+                    break;\r\n
+                case -90:\r\n
+                    toolbar.btnTextOrient.menu.items[4].setChecked(true, true);\r\n
+                    break;\r\n
+                default:\r\n
+                    toolbar.btnTextOrient.menu.items[0].setChecked(true, true);\r\n
+                    break;\r\n
+                }\r\n
+                this._state.angle = val;\r\n
+            }\r\n
+            val = info.asc_getStyleName();\r\n
+            if (this._state.prstyle != val && !this.toolbar.listStyles.isDisabled()) {\r\n
+                var listStyle = this.toolbar.listStyles,\r\n
+                listStylesVisible = (listStyle.rendered);\r\n
+                if (listStylesVisible) {\r\n
+                    listStyle.suspendEvents();\r\n
+                    var styleRec = listStyle.menuPicker.store.findWhere({\r\n
+                        name: val\r\n
+                    });\r\n
+                    this._state.prstyle = (listStyle.menuPicker.store.length > 0) ? val : undefined;\r\n
+                    listStyle.menuPicker.selectRecord(styleRec);\r\n
+                    listStyle.resumeEvents();\r\n
+                }\r\n
+            }\r\n
+            val = (selectionType == c_oAscSelectionType.RangeRow);\r\n
+            if (this._state.controlsdisabled.rows !== val) {\r\n
+                this._state.controlsdisabled.rows = val;\r\n
+                toolbar.btnAddCell.menu.items[0].setDisabled(val);\r\n
+                toolbar.btnAddCell.menu.items[3].setDisabled(val);\r\n
+                toolbar.btnDeleteCell.menu.items[0].setDisabled(val);\r\n
+                toolbar.btnDeleteCell.menu.items[3].setDisabled(val);\r\n
+            }\r\n
+            val = (selectionType == c_oAscSelectionType.RangeCol);\r\n
+            if (this._state.controlsdisabled.cols !== val) {\r\n
+                this._state.controlsdisabled.cols = val;\r\n
+                toolbar.btnAddCell.menu.items[1].setDisabled(val);\r\n
+                toolbar.btnAddCell.menu.items[2].setDisabled(val);\r\n
+                toolbar.btnDeleteCell.menu.items[1].setDisabled(val);\r\n
+                toolbar.btnDeleteCell.menu.items[2].setDisabled(val);\r\n
+            }\r\n
+        },\r\n
+        onApiStyleChange: function () {\r\n
+            this.toolbar.btnCopyStyle.toggle(false, true);\r\n
+            this.modeAlwaysSetStyle = false;\r\n
+        },\r\n
+        updateThemeColors: function () {\r\n
+            var updateColors = function (picker, defaultColor) {\r\n
+                if (picker) {\r\n
+                    var clr;\r\n
+                    var effectcolors = Common.Utils.ThemeColor.getEffectColors();\r\n
+                    for (var i = 0; i < effectcolors.length; i++) {\r\n
+                        if (typeof(picker.currentColor) == "object" && clr === undefined && picker.currentColor.effectId == effectcolors[i].effectId) {\r\n
+                            clr = effectcolors[i];\r\n
+                        }\r\n
+                    }\r\n
+                    picker.updateColors(effectcolors, Common.Utils.ThemeColor.getStandartColors());\r\n
+                    if (picker.currentColor === undefined) {\r\n
+                        picker.currentColor = defaultColor;\r\n
+                    } else {\r\n
+                        if (clr !== undefined) {\r\n
+                            picker.currentColor = clr;\r\n
+                        }\r\n
+                    }\r\n
+                }\r\n
+            };\r\n
+            updateColors(this.toolbar.mnuTextColorPicker, Common.Utils.ThemeColor.getStandartColors()[1]);\r\n
+            if (this.toolbar.btnTextColor.currentColor === undefined) {\r\n
+                this.toolbar.btnTextColor.currentColor = Common.Utils.ThemeColor.getStandartColors()[1];\r\n
+            } else {\r\n
+                this.toolbar.btnTextColor.currentColor = this.toolbar.mnuTextColorPicker.currentColor.color || this.toolbar.mnuTextColorPicker.currentColor;\r\n
+            }\r\n
+            $(".btn-color-value-line", this.toolbar.btnTextColor.cmpEl).css("background-color", "#" + this.toolbar.btnTextColor.currentColor);\r\n
+            updateColors(this.toolbar.mnuBackColorPicker, Common.Utils.ThemeColor.getStandartColors()[3]);\r\n
+            if (this.toolbar.btnBackColor.currentColor === undefined) {\r\n
+                this.toolbar.btnBackColor.currentColor = Common.Utils.ThemeColor.getStandartColors()[3];\r\n
+            } else {\r\n
+                this.toolbar.btnBackColor.currentColor = this.toolbar.mnuBackColorPicker.currentColor.color || this.toolbar.mnuBackColorPicker.currentColor;\r\n
+            }\r\n
+            $(".btn-color-value-line", this.toolbar.btnBackColor.cmpEl).css("background-color", this.toolbar.btnBackColor.currentColor == "transparent" ? "transparent" : "#" + this.toolbar.btnBackColor.currentColor);\r\n
+            if (this._state.clrtext_asccolor !== undefined || this._state.clrshd_asccolor !== undefined) {\r\n
+                this._state.clrtext = undefined;\r\n
+                this._state.clrback = undefined;\r\n
+                this.onApiSelectionChanged(this.api.asc_getCellInfo());\r\n
+            }\r\n
+            this._state.clrtext_asccolor = undefined;\r\n
+            this._state.clrshd_asccolor = undefined;\r\n
+            updateColors(this.toolbar.mnuBorderColorPicker, Common.Utils.ThemeColor.getEffectColors()[1]);\r\n
+            this.toolbar.btnBorders.options.borderscolor = this.toolbar.mnuBorderColorPicker.currentColor.color || this.toolbar.mnuBorderColorPicker.currentColor;\r\n
+            $("#id-toolbar-mnu-item-border-color .menu-item-icon").css("border-color", "#" + this.toolbar.btnBorders.options.borderscolor);\r\n
+        },\r\n
+        hideElements: function (opts) {\r\n
+            if (!_.isUndefined(opts.title)) {\r\n
+                var headerView = this.getApplication().getController("Viewport").getView("Common.Views.Header");\r\n
+                headerView && headerView.setVisible(!opts.title);\r\n
+                Common.NotificationCenter.trigger("layout:changed", "header");\r\n
+            }\r\n
+            if (!_.isUndefined(opts.compact)) {\r\n
+                this.onChangeViewMode(opts.compact);\r\n
+            }\r\n
+            if (!_.isUndefined(opts.formula)) {\r\n
+                var cellEditor = this.getApplication().getController("CellEditor").getView("CellEditor");\r\n
+                cellEditor && cellEditor.setVisible(!opts.formula);\r\n
+                Common.NotificationCenter.trigger("layout:changed", "celleditor", opts.formula ? "hidden" : "showed");\r\n
+            }\r\n
+            if (!_.isUndefined(opts.headings)) {\r\n
+                if (this.api) {\r\n
+                    var current = this.api.asc_getSheetViewSettings();\r\n
+                    current.asc_setShowRowColHeaders(!opts.headings);\r\n
+                    this.api.asc_setSheetViewSettings(current);\r\n
+                }\r\n
+            }\r\n
+            if (!_.isUndefined(opts.gridlines)) {\r\n
+                if (this.api) {\r\n
+                    current = this.api.asc_getSheetViewSettings();\r\n
+                    current.asc_setShowGridLines(!opts.gridlines);\r\n
+                    this.api.asc_setSheetViewSettings(current);\r\n
+                }\r\n
+            }\r\n
+            if (!_.isUndefined(opts.freezepanes)) {\r\n
+                if (this.api) {\r\n
+                    this.api.asc_freezePane();\r\n
+                }\r\n
+            }\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar);\r\n
+        },\r\n
+        fillAutoShapes: function () {\r\n
+            var me = this,\r\n
+            shapesStore = this.getApplication().getCollection("ShapeGroups");\r\n
+            for (var i = 0; i < shapesStore.length - 1; i++) {\r\n
+                var shapeGroup = shapesStore.at(i);\r\n
+                var menuItem = new Common.UI.MenuItem({\r\n
+                    caption: shapeGroup.get("groupName"),\r\n
+                    menu: new Common.UI.Menu({\r\n
+                        menuAlign: "tl-tr",\r\n
+                        items: [{\r\n
+                            template: _.template(\'<div id="id-toolbar-menu-shapegroup\' + i + \'" class="menu-shape" style="width: \' + (shapeGroup.get("groupWidth") - 8) + \'px; margin-left: 5px;"></div>\')\r\n
+                        }]\r\n
+                    })\r\n
+                });\r\n
+                me.toolbar.btnInsertShape.menu.addItem(menuItem);\r\n
+                var shapePicker = new Common.UI.DataView({\r\n
+                    el: $("#id-toolbar-menu-shapegroup" + i),\r\n
+                    store: shapeGroup.get("groupStore"),\r\n
+                    itemTemplate: _.template(\'<div class="item-shape"><img src="<%= imageUrl %>" id="<%= id %>"></div>\')\r\n
+                });\r\n
+                shapePicker.on("item:click", function (picker, item, record) {\r\n
+                    if (me.api) {\r\n
+                        me._addAutoshape(true, record.get("data").shapeType);\r\n
+                        me._isAddingShape = true;\r\n
+                        if (me.toolbar.btnInsertText.pressed) {\r\n
+                            me.toolbar.btnInsertText.toggle(false, true);\r\n
+                        }\r\n
+                        Common.NotificationCenter.trigger("edit:complete", me.toolbar, me.toolbar.btnInsertShape);\r\n
+                        Common.component.Analytics.trackEvent("ToolBar", "Add Shape");\r\n
+                    }\r\n
+                });\r\n
+            }\r\n
+        },\r\n
+        attachToControlEvents: function () {},\r\n
+        onSheetChanged: function () {\r\n
+            if (this.api) {\r\n
+                var params = this.api.asc_getSheetViewSettings();\r\n
+                var menu = this.getMenuHideOptions();\r\n
+                if (menu) {\r\n
+                    menu.items.getAt(3).setChecked(!params.asc_getShowRowColHeaders());\r\n
+                    menu.items.getAt(4).setChecked(!params.asc_getShowGridLines());\r\n
+                }\r\n
+            }\r\n
+        },\r\n
+        _disableEditOptions: function (seltype, coauth_disable) {\r\n
+            if (this.api.isCellEdited) {\r\n
+                return true;\r\n
+            }\r\n
+            if (this.api.isRangeSelection) {\r\n
+                return true;\r\n
+            }\r\n
+            if (this._state.selection_type === seltype && this._state.coauthdisable === coauth_disable) {\r\n
+                return (seltype === c_oAscSelectionType.RangeImage);\r\n
+            }\r\n
+            var toolbar = this.toolbar,\r\n
+            is_chart_text = seltype == c_oAscSelectionType.RangeChartText,\r\n
+            is_chart = seltype == c_oAscSelectionType.RangeChart,\r\n
+            is_shape_text = seltype == c_oAscSelectionType.RangeShapeText,\r\n
+            is_shape = seltype == c_oAscSelectionType.RangeShape,\r\n
+            is_image = seltype == c_oAscSelectionType.RangeImage,\r\n
+            is_mode_2 = is_shape_text || is_shape || is_chart_text || is_chart;\r\n
+            if (coauth_disable) {\r\n
+                toolbar.lockToolbar(SSE.enumLock.coAuth, coauth_disable);\r\n
+            } else {\r\n
+                var _set = SSE.enumLock;\r\n
+                var type = seltype;\r\n
+                switch (seltype) {\r\n
+                case c_oAscSelectionType.RangeImage:\r\n
+                    type = _set.selImage;\r\n
+                    break;\r\n
+                case c_oAscSelectionType.RangeShape:\r\n
+                    type = _set.selShape;\r\n
+                    break;\r\n
+                case c_oAscSelectionType.RangeShapeText:\r\n
+                    type = _set.selShapeText;\r\n
+                    break;\r\n
+                case c_oAscSelectionType.RangeChart:\r\n
+                    type = _set.selChart;\r\n
+                    break;\r\n
+                case c_oAscSelectionType.RangeChartText:\r\n
+                    type = _set.selChartText;\r\n
+                    break;\r\n
+                }\r\n
+                toolbar.lockToolbar(type, type != seltype, {\r\n
+                    array: [toolbar.btnClearStyle.menu.items[1], toolbar.btnClearStyle.menu.items[2], toolbar.btnClearStyle.menu.items[3], toolbar.btnClearStyle.menu.items[4], toolbar.mnuitemSortAZ, toolbar.mnuitemSortZA, toolbar.mnuitemAutoFilter, toolbar.mnuitemClearFilter],\r\n
+                    merge: true,\r\n
+                    clear: [_set.selImage, _set.selChart, _set.selChartText, _set.selShape, _set.selShapeText, _set.coAuth]\r\n
+                });\r\n
+            }\r\n
+            $("#ce-func-label").toggleClass("disabled", is_image || is_mode_2 || coauth_disable);\r\n
+            this._state.controlsdisabled.filters = is_image || is_mode_2 || coauth_disable;\r\n
+            if (is_image || is_mode_2 || coauth_disable) {\r\n
+                toolbar.listStyles.suspendEvents();\r\n
+                toolbar.listStyles.menuPicker.selectRecord(null);\r\n
+                toolbar.listStyles.resumeEvents();\r\n
+                this._state.prstyle = undefined;\r\n
+            }\r\n
+            this._state.selection_type = seltype;\r\n
+            this._state.coauthdisable = coauth_disable;\r\n
+            return is_image;\r\n
+        },\r\n
+        _getApiTextSize: function () {\r\n
+            var cellInfo = this.api.asc_getCellInfo();\r\n
+            return cellInfo ? cellInfo.asc_getFont().asc_getSize() : 12;\r\n
+        },\r\n
+        _clearChecked: function (menu) {\r\n
+            _.each(menu.items, function (item) {\r\n
+                if (item.setChecked) {\r\n
+                    item.setChecked(false, true);\r\n
+                }\r\n
+            });\r\n
+        },\r\n
+        _setTableFormat: function (fmtname) {\r\n
+            var me = this;\r\n
+            if (me.api.isRangeSelection !== true) {\r\n
+                if (me.api.asc_getAddFormatTableOptions() != false) {\r\n
+                    var handlerDlg = function (dlg, result) {\r\n
+                        if (result == "ok") {\r\n
+                            me._state.filter = undefined;\r\n
+                            me.api.asc_setSelectionDialogMode(c_oAscSelectionDialogType.None);\r\n
+                            me.api.asc_addAutoFilter(fmtname, dlg.getSettings());\r\n
+                        }\r\n
+                        Common.NotificationCenter.trigger("edit:complete", me.toolbar);\r\n
+                    };\r\n
+                    var win = new SSE.Views.TableOptionsDialog({\r\n
+                        handler: handlerDlg\r\n
+                    });\r\n
+                    win.show();\r\n
+                    win.setSettings({\r\n
+                        api: me.api\r\n
+                    });\r\n
+                } else {\r\n
+                    me._state.filter = undefined;\r\n
+                    me.api.asc_addAutoFilter(fmtname);\r\n
+                }\r\n
+            }\r\n
+        },\r\n
+        onHideMenus: function (e) {\r\n
+            Common.NotificationCenter.trigger("edit:complete", this.toolbar, {\r\n
+                restorefocus: true\r\n
+            });\r\n
+        },\r\n
+        onSetupCopyStyleButton: function () {\r\n
+            this.modeAlwaysSetStyle = false;\r\n
+            var acsCopyFmtStyleState = {\r\n
+                kOff: 0,\r\n
+                kOn: 1,\r\n
+                kMultiple: 2\r\n
+            };\r\n
+            var me = this;\r\n
+            Common.NotificationCenter.on({\r\n
+                "edit:complete": function () {\r\n
+                    if (me.api && me.modeAlwaysSetStyle) {\r\n
+                        me.api.asc_formatPainter(acsCopyFmtStyleState.kOff);\r\n
+                        me.toolbar.btnCopyStyle.toggle(false, true);\r\n
+                        me.modeAlwaysSetStyle = false;\r\n
+                    }\r\n
+                }\r\n
+            });\r\n
+            $(me.toolbar.btnCopyStyle.cmpEl).dblclick(function () {\r\n
+                if (me.api) {\r\n
+                    me.modeAlwaysSetStyle = true;\r\n
+                    me.toolbar.btnCopyStyle.toggle(true, true);\r\n
+                    me.api.asc_formatPainter(acsCopyFmtStyleState.kMultiple);\r\n
+                }\r\n
+            });\r\n
+        },\r\n
+        onCellsRange: function (status) {\r\n
+            this.api.isRangeSelection = (status != c_oAscSelectionDialogType.None);\r\n
+            this.onApiEditCell(this.api.isRangeSelection ? c_oAscCellEditorState.editStart : c_oAscCellEditorState.editEnd);\r\n
+            var toolbar = this.toolbar;\r\n
+            toolbar.lockToolbar(SSE.enumLock.selRange, this.api.isRangeSelection);\r\n
+            this.setDisabledComponents([toolbar.btnUndo], this.api.isRangeSelection || !this.api.asc_getCanUndo());\r\n
+            this.setDisabledComponents([toolbar.btnRedo], this.api.isRangeSelection || !this.api.asc_getCanRedo());\r\n
+            this.onApiSelectionChanged(this.api.asc_getCellInfo());\r\n
+        },\r\n
+        DisableToolbar: function (disable) {\r\n
+            var mask = $(".toolbar-mask");\r\n
+            if (disable && mask.length > 0 || !disable && mask.length == 0) {\r\n
+                return;\r\n
+            }\r\n
+            var toolbar = this.toolbar;\r\n
+            toolbar.$el.find(".toolbar").toggleClass("masked", disable);\r\n
+            this.toolbar.lockToolbar(SSE.enumLock.menuFileOpen, disable, {\r\n
+                array: [toolbar.btnShowMode]\r\n
+            });\r\n
+            if (disable) {\r\n
+                mask = $("<div class=\'toolbar-mask\'>").appendTo(toolbar.$el);\r\n
+                var left = toolbar.isCompactView ? 75 : (toolbar.mode.nativeApp ? 80 : 48);\r\n
+                mask.css("left", left + "px");\r\n
+                mask.css("right", (toolbar.isCompactView ? 0 : 45) + "px");\r\n
+                Common.util.Shortcuts.suspendEvents("command+l, ctrl+l, command+shift+l, ctrl+shift+l, command+k, ctrl+k, command+alt+h, ctrl+alt+h");\r\n
+            } else {\r\n
+                mask.remove();\r\n
+                Common.util.Shortcuts.resumeEvents("command+l, ctrl+l, command+shift+l, ctrl+shift+l, command+k, ctrl+k, command+alt+h, ctrl+alt+h");\r\n
+            }\r\n
+        },\r\n
+        textEmptyImgUrl: "You need to specify image URL.",\r\n
+        warnMergeLostData: "Operation will can destroy data in the selected cells.<br>Continue?",\r\n
+        textWarning : "Warning",\r\n
+        textFontSizeErr: "The entered value must be more than 0",\r\n
+        textCancel: "Cancel"\r\n
+    });\r\n
+});
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308424.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\r\n
+<html>\r\n
+<head>\r\n
+    <title>ONLYOFFICE Document Editor</title>\r\n
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=IE8"/>\r\n
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">\r\n
+\r\n
+    <link rel="stylesheet" type="text/css" href="../../../sdk/Excel/css/main.css"/>\r\n
+\r\n
+    <!-- debug begin -->\r\n
+    <link rel="stylesheet/less" type="text/css" href="resources/less/app.less" />\r\n
+    <!-- debug end -->\r\n
+\r\n
+    <!-- splash -->        \r\n
+\r\n
+    <style type="text/css">\r\n
+        .loadmask {\r\n
+            left: 0;\r\n
+            top: 0;\r\n
+            position: absolute;\r\n
+            height: 100%;\r\n
+            width: 100%;\r\n
+            overflow: hidden;\r\n
+            border: none;\r\n
+            background-color: #f4f4f4;\r\n
+            z-index: 100;\r\n
+        }\r\n
+\r\n
+        .loader-page {\r\n
+            top: 50%;\r\n
+            left: 50%;\r\n
+            width: 50px;\r\n
+            height: 180px;\r\n
+            z-index: 100;\r\n
+            position: absolute;\r\n
+            margin-top: -100px;\r\n
+        }\r\n
+\r\n
+        .romb {\r\n
+            width: 40px;\r\n
+            height: 40px;\r\n
+            -webkit-transform: rotate(135deg) skew(20deg, 20deg);\r\n
+            -moz-transform: rotate(135deg) skew(20deg, 20deg);\r\n
+            -ms-transform: rotate(135deg) skew(20deg, 20deg);\r\n
+            -o-transform: rotate(135deg) skew(20deg, 20deg);\r\n
+            position: absolute;\r\n
+            background: red;\r\n
+            border-radius: 6px;\r\n
+            -webkit-animation: movedown 3s infinite ease;\r\n
+            -moz-animation: movedown 3s infinite ease;\r\n
+            -ms-animation: movedown 3s infinite ease;\r\n
+            -o-animation: movedown 3s infinite ease;\r\n
+            animation: movedown 3s infinite ease;\r\n
+        }\r\n
+\r\n
+        #blue {\r\n
+            z-index: 3;\r\n
+            background: #55bce6;\r\n
+            -webkit-animation-name: blue;\r\n
+            -moz-animation-name: blue;\r\n
+            -ms-animation-name: blue;\r\n
+            -o-animation-name: blue;\r\n
+            animation-name: blue;\r\n
+        }\r\n
+\r\n
+        #red {\r\n
+            z-index:1;\r\n
+            background: #de7a59;\r\n
+            -webkit-animation-name: red;\r\n
+            -moz-animation-name: red;\r\n
+            -ms-animation-name: red;\r\n
+            -o-animation-name: red;\r\n
+            animation-name: red;\r\n
+        }\r\n
+\r\n
+        #green {\r\n
+            z-index: 2;\r\n
+            background: #a1cb5c;\r\n
+            -webkit-animation-name: green;\r\n
+            -moz-animation-name: green;\r\n
+            -ms-animation-name: green;\r\n
+            -o-animation-name: green;\r\n
+            animation-name: green;\r\n
+        }\r\n
+\r\n
+        @-webkit-keyframes red {\r\n
+              0%    { top:120px; background: #de7a59; }\r\n
+             10%    { top:120px; background: #F2CBBF; }\r\n
+             14%    { background: #f4f4f4; top:120px; }\r\n
+             15%    { background: #f4f4f4; top:0;}\r\n
+             20%    { background: #E6E4E4; }\r\n
+             30%    { background: #D2D2D2; }\r\n
+             40%    { top:120px; }\r\n
+            100%    { top:120px; background: #de7a59; }\r\n
+        }\r\n
+\r\n
+        @keyframes red {\r\n
+              0%    { top:120px; background: #de7a59; }\r\n
+             10%    { top:120px; background: #F2CBBF; }\r\n
+             14%    { background: #f4f4f4; top:120px; }\r\n
+             15%    { background: #f4f4f4; top:0; }\r\n
+             20%    { background: #E6E4E4; }\r\n
+             30%    { background: #D2D2D2; }\r\n
+             40%    { top:120px; }\r\n
+            100%    { top:120px; background: #de7a59; }\r\n
+        }\r\n
+\r\n
+        @-webkit-keyframes green {\r\n
+              0%    { top:110px; background: #a1cb5c; opacity:1; }\r\n
+             10%    { top:110px; background: #CBE0AC; opacity:1; }\r\n
+             14%    { background: #f4f4f4; top:110px; opacity:1; }\r\n
+             15%    { background: #f4f4f4; top:0; opacity:1; }\r\n
+             20%    { background: #f4f4f4; top:0; opacity:0; }\r\n
+             25%    { background: #EFEFEF; top:0; opacity:1; }\r\n
+             30%    { background:#E6E4E4; }\r\n
+             70%    { top:110px; }\r\n
+            100%    { top:110px; background: #a1cb5c; }\r\n
+        }\r\n
+\r\n
+        @keyframes green {\r\n
+              0%    { top:110px; background: #a1cb5c; opacity:1; }\r\n
+             10%    { top:110px; background: #CBE0AC; opacity:1; }\r\n
+             14%    { background: #f4f4f4; top:110px; opacity:1; }\r\n
+             15%    { background: #f4f4f4; top:0; opacity:1; }\r\n
+             20%    { background: #f4f4f4; top:0; opacity:0; }\r\n
+             25%    { background: #EFEFEF; top:0; opacity:1; }\r\n
+             30%    { background:#E6E4E4; }\r\n
+             70%    { top:110px; }\r\n
+            100%    { top:110px; background: #a1cb5c; }\r\n
+        }\r\n
+\r\n
+        @-webkit-keyframes blue {\r\n
+              0%    { top:100px; background: #55bce6; opacity:1; }\r\n
+             10%    { top:100px; background: #BFE8F8; opacity:1; }\r\n
+             14%    { background: #f4f4f4; top:100px; opacity:1; }\r\n
+             15%    { background: #f4f4f4; top:0; opacity:1; }\r\n
+             20%    { background: #f4f4f4; top:0; opacity:0; }\r\n
+             25%    { background: #f4f4f4; top:0; opacity:0; }\r\n
+             45%    { background: #EFEFEF; top:0; opacity:0,2; }\r\n
+            100%    { top:100px; background: #55bce6; }\r\n
+        }\r\n
+\r\n
+        @keyframes blue {\r\n
+              0%    { top:100px; background: #55bce6; opacity:1; }\r\n
+             10%    { top:100px; background: #BFE8F8; opacity:1; }\r\n
+             14%    { background: #f4f4f4; top:100px; opacity:1; }\r\n
+             15%    { background: #f4f4f4; top:0; opacity:1; }\r\n
+             20%    { background: #f4f4f4; top:0; opacity:0; }\r\n
+             25%    { background: #f4f4f4; top:0; opacity:0; }\r\n
+             45%    { background: #EFEFEF; top:0; opacity:0,2; }\r\n
+            100%    { top:100px; background: #55bce6; }\r\n
+        }\r\n
+    </style>\r\n
+</head>\r\n
+<body>\r\n
+    <div id="loading-mask" class="loadmask">\r\n
+        <div class="loader-page">\r\n
+            <div class="romb" id="blue"></div>\r\n
+            <div class="romb" id="green"></div>\r\n
+            <div class="romb" id="red"></div>\r\n
+        </div>\r\n
+    </div>\r\n
+\r\n
+    <div id="viewport"></div>\r\n
+\r\n
+    <!-- debug begin -->\r\n
+    <script type="text/javascript">var less=less||{};less.env=\'development\';</script>\r\n
+    <script src="../../../vendor/less/dist/less-1.5.1.js" type="text/javascript"></script>\r\n
+    <!-- debug end -->\r\n
+\r\n
+    <!-- application -->\r\n
+    <script type="text/javascript" src="../../../sdk/Common/docscoapisettings.js"></script>\r\n
+    <script data-main="app" src="../../../vendor/requirejs/require.js"></script>\r\n
+\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6678</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

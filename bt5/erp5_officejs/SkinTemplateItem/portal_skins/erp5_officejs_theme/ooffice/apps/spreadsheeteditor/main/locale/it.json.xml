@@ -1,0 +1,903 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308482.4</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>it.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\r\n
+  "cancelButtonText": "Annulla",\r\n
+  "Common.Controllers.Chat.notcriticalErrorTitle": "Avviso",\r\n
+  "Common.Controllers.Chat.textEnterMessage": "Scrivi il tuo messaggio qui",\r\n
+  "Common.Controllers.Chat.textUserLimit": "Stai usando ONLYOFFICE Free Edition.<br>Solo due utenti possono modificare il documento contemporaneamente.<br>Si desidera di più? Considera l\'acquisto di ONLYOFFICE Enterprise Edition.<br><a href=\\"http:\\/\\/www.onlyoffice.com\\/free-edition.aspx\\" target=\\"_blank\\">Ulteriori informazioni</a>",\r\n
+  "Common.UI.ComboBorderSize.txtNoBorders": "Nessun bordo",\r\n
+  "Common.UI.ComboBorderSizeEditable.txtNoBorders": "Nessun bordo",\r\n
+  "Common.UI.ComboDataView.emptyComboText": "Nessuno stile",\r\n
+  "Common.UI.ExtendedColorDialog.addButtonText": "Aggiungi",\r\n
+  "Common.UI.ExtendedColorDialog.cancelButtonText": "Annulla",\r\n
+  "Common.UI.ExtendedColorDialog.textCurrent": "Attuale",\r\n
+  "Common.UI.ExtendedColorDialog.textHexErr": "Il valore inserito non è corretto.<br>Inserisci un valore tra 000000 e FFFFFF.",\r\n
+  "Common.UI.ExtendedColorDialog.textNew": "Nuovo",\r\n
+  "Common.UI.ExtendedColorDialog.textRGBErr": "Il valore inserito non è corretto.<br>Inserisci un valore numerico tra 0 e 255.",\r\n
+  "Common.UI.HSBColorPicker.textNoColor": "Nessun colore",\r\n
+  "Common.UI.SearchDialog.textHighlight": "Evidenzia risultati",\r\n
+  "Common.UI.SearchDialog.textMatchCase": "Sensibile al maiuscolo/minuscolo",\r\n
+  "Common.UI.SearchDialog.textReplaceDef": "Inserisci testo sostitutivo",\r\n
+  "Common.UI.SearchDialog.textSearchStart": "Inserisci il tuo testo qui",\r\n
+  "Common.UI.SearchDialog.textTitle": "Trova e sostituisci",\r\n
+  "Common.UI.SearchDialog.textTitle2": "Trova",\r\n
+  "Common.UI.SearchDialog.textWholeWords": "Solo parole intere",\r\n
+  "Common.UI.SearchDialog.txtBtnReplace": "Sostituisci",\r\n
+  "Common.UI.SearchDialog.txtBtnReplaceAll": "Sostituisci tutto",\r\n
+  "Common.UI.SynchronizeTip.textDontShow": "Non visualizzare più questo messaggio",\r\n
+  "Common.UI.SynchronizeTip.textSynchronize": "Il documento è stato modificato da un altro utente.<br/>Clicca per salvare le modifiche e ricaricare gli aggiornamenti.",\r\n
+  "Common.UI.Window.cancelButtonText": "Annulla",\r\n
+  "Common.UI.Window.closeButtonText": "Chiudi",\r\n
+  "Common.UI.Window.noButtonText": "No",\r\n
+  "Common.UI.Window.okButtonText": "OK",\r\n
+  "Common.UI.Window.textConfirmation": "Conferma",\r\n
+  "Common.UI.Window.textError": "Errore",\r\n
+  "Common.UI.Window.textInformation": "Informazione",\r\n
+  "Common.UI.Window.textWarning": "Avviso",\r\n
+  "Common.UI.Window.yesButtonText": "Sì",\r\n
+  "Common.Views.About.txtAddress": "indirizzo: ",\r\n
+  "Common.Views.About.txtAscAddress": "Lubanas st. 125a-25, Riga, Lettonia, UE, LV-1021",\r\n
+  "Common.Views.About.txtLicensee": "LICENZIATARIO",\r\n
+  "Common.Views.About.txtLicensor": "CONCEDENTE",\r\n
+  "Common.Views.About.txtMail": "email: ",\r\n
+  "Common.Views.About.txtPoweredBy": "Con tecnologia",\r\n
+  "Common.Views.About.txtTel": "tel.: ",\r\n
+  "Common.Views.About.txtVersion": "Versione ",\r\n
+  "Common.Views.AdvancedSettingsWindow.cancelButtonText": "Annulla",\r\n
+  "Common.Views.AdvancedSettingsWindow.okButtonText": "OK",\r\n
+  "Common.Views.Chat.textSend": "Invia",\r\n
+  "Common.Views.Comments.textAdd": "Aggiungi",\r\n
+  "Common.Views.Comments.textAddComment": "Aggiungi",\r\n
+  "Common.Views.Comments.textAddCommentToDoc": "Aggiungi commento al documento",\r\n
+  "Common.Views.Comments.textAddReply": "Aggiungi risposta",\r\n
+  "Common.Views.Comments.textAnonym": "Ospite",\r\n
+  "Common.Views.Comments.textCancel": "Annulla",\r\n
+  "Common.Views.Comments.textClose": "Chiudi",\r\n
+  "Common.Views.Comments.textComments": "Commenti",\r\n
+  "Common.Views.Comments.textEdit": "Modifica",\r\n
+  "Common.Views.Comments.textEnterCommentHint": "Inserisci commento qui",\r\n
+  "Common.Views.Comments.textOpenAgain": "Apri di nuovo",\r\n
+  "Common.Views.Comments.textReply": "Rispondi",\r\n
+  "Common.Views.Comments.textResolve": "Chiudi",\r\n
+  "Common.Views.Comments.textResolved": "Chiuso",\r\n
+  "Common.Views.CopyWarningDialog.textDontShow": "Don\'t show this message again",\r\n
+  "Common.Views.CopyWarningDialog.textMsg": "Le operazioni di copia, taglia ed incolla per mezzo dei pulsanti dell\'editor e le operazioni del menu contestuale sono effettuate solo in questa scheda. <br><br>Per copiare/incollare a/da un\'applicazione al di fuori della scheda dell\'editor  utilizza la tastiera:",\r\n
+  "Common.Views.CopyWarningDialog.textTitle": "Funzioni copia/taglia/incolla",\r\n
+  "Common.Views.CopyWarningDialog.textToCopy": "per copiare",\r\n
+  "Common.Views.CopyWarningDialog.textToCut": "for Cut",\r\n
+  "Common.Views.CopyWarningDialog.textToPaste": "per incollare",\r\n
+  "Common.Views.DocumentAccessDialog.textLoading": "Caricamento in corso...",\r\n
+  "Common.Views.DocumentAccessDialog.textTitle": "Impostazioni di condivisione",\r\n
+  "Common.Views.Header.textBack": "Va\' ai Documenti",\r\n
+  "Common.Views.ImageFromUrlDialog.cancelButtonText": "Annulla",\r\n
+  "Common.Views.ImageFromUrlDialog.okButtonText": "OK",\r\n
+  "Common.Views.ImageFromUrlDialog.textUrl": "Incolla URL immagine:",\r\n
+  "Common.Views.ImageFromUrlDialog.txtEmpty": "Questo campo è richiesto",\r\n
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "Il formato URL richiesto è \\"http://www.example.com\\"",\r\n
+  "SSE.Controllers.DocumentHolder.guestText": "Ospite",\r\n
+  "SSE.Controllers.DocumentHolder.textChangeColumnWidth": "Larghezza colonne {0} simboli ({1} pixel)",\r\n
+  "SSE.Controllers.DocumentHolder.textChangeRowHeight": "Altezza righe {0} punti ({1} pixel)",\r\n
+  "SSE.Controllers.DocumentHolder.textCtrlClick": "Premi CTRL e clicca sul collegamento",\r\n
+  "SSE.Controllers.DocumentHolder.tipIsLocked": "Questo elemento sta modificando da un altro utente.",\r\n
+  "SSE.Controllers.DocumentHolder.txtHeight": "Altezza",\r\n
+  "SSE.Controllers.DocumentHolder.txtRowHeight": "Altezza riga",\r\n
+  "SSE.Controllers.DocumentHolder.txtWidth": "Larghezza",\r\n
+  "SSE.Controllers.LeftMenu.newDocumentTitle": "Foglio elettronico senza nome",\r\n
+  "SSE.Controllers.LeftMenu.textByColumns": "Per colonne",\r\n
+  "SSE.Controllers.LeftMenu.textByRows": "Per righe",\r\n
+  "SSE.Controllers.LeftMenu.textFormulas": "Formule",\r\n
+  "SSE.Controllers.LeftMenu.textItemEntireCell": "Intero contenuto della cella",\r\n
+  "SSE.Controllers.LeftMenu.textLookin": "Cerca in",\r\n
+  "SSE.Controllers.LeftMenu.textNoTextFound": "I dati da cercare non sono stati trovati. Modifica i parametri di ricerca.",\r\n
+  "SSE.Controllers.LeftMenu.textReplaceSkipped": "La sostituzione è stata effettuata. {0} occorrenze sono state saltate.",\r\n
+  "SSE.Controllers.LeftMenu.textReplaceSuccess": "La ricerca è stata effettuata. Occorrenze sostituite: {0}",\r\n
+  "SSE.Controllers.LeftMenu.textSearch": "Ricerca",\r\n
+  "SSE.Controllers.LeftMenu.textSheet": "Foglio",\r\n
+  "SSE.Controllers.LeftMenu.textValues": "Valori",\r\n
+  "SSE.Controllers.LeftMenu.textWarning": "Avviso",\r\n
+  "SSE.Controllers.LeftMenu.textWithin": "Entro",\r\n
+  "SSE.Controllers.LeftMenu.textWorkbook": "Cartella di lavoro",\r\n
+  "SSE.Controllers.LeftMenu.warnDownloadAs": "Se continui a salvare in questo file tutte le funzioni eccetto il testo vengono perse.<br>Sei sicuro di voler continuare?",\r\n
+  "SSE.Controllers.Main.confirmMoveCellRange": "La cella di destinazione può contenere i dati. Continuare l\'operazione?",\r\n
+  "SSE.Controllers.Main.convertationErrorText": "Conversione fallita.",\r\n
+  "SSE.Controllers.Main.convertationTimeoutText": "E\' stato superato il tempo limite della conversione.",\r\n
+  "SSE.Controllers.Main.criticalErrorExtText": "Clicca su \\"OK\\" per ritornare all\'elenco dei documenti.",\r\n
+  "SSE.Controllers.Main.criticalErrorTitle": "Errore",\r\n
+  "SSE.Controllers.Main.defaultTitleText": "ONLYOFFICE Spreadsheet Editor",\r\n
+  "SSE.Controllers.Main.downloadErrorText": "Download fallito.",\r\n
+  "SSE.Controllers.Main.downloadTextText": "Download del foglio elettronico in corso...",\r\n
+  "SSE.Controllers.Main.downloadTitleText": "Download del foglio elettronico",\r\n
+  "SSE.Controllers.Main.errorArgsRange": "Un errore nella formula inserita.<br>E\' stato utilizzato un intervallo di argomenti scorretto.",\r\n
+  "SSE.Controllers.Main.errorAutoFilterChange": "Operazione non consentita. Si sta tentando di spostare le celle nella tabella del tuo foglio di lavoro.",\r\n
+  "SSE.Controllers.Main.errorAutoFilterChangeFormatTable": "Impossibile effettuare questa operazione per le celle selezionate perch\'è impossibile spostare una parte della tabella.<br> Seleziona un altro intervallo dati per spostare tutta la tabella e riprova.",\r\n
+  "SSE.Controllers.Main.errorAutoFilterDataRange": "Impossibile eseguire l\'operazione sull\'intervallo celle selezionato.<br>Seleziona un intervallo di celle uniforme all\'interno o all\'esterno della tabella e prova di nuovo.",\r\n
+  "SSE.Controllers.Main.errorBadImageUrl": "URL dell\'immagine non corretto",\r\n
+  "SSE.Controllers.Main.errorCoAuthoringDisconnect": "Connessione al server persa. Impossibile modificare il documento.",\r\n
+  "SSE.Controllers.Main.errorCountArg": "Un errore nella formula inserita.<br>E\' stato utilizzato un numero di argomento scorretto.",\r\n
+  "SSE.Controllers.Main.errorCountArgExceed": "Un errore nella formula inserita.<br>E\' stato superato il numero di argomenti.",\r\n
+  "SSE.Controllers.Main.errorDatabaseConnection": "Errore esterno.<br>Errore di connessione a banca dati. Si prega di contattare l\'assistenza tecnica nel caso in cui l\'errore persiste.",\r\n
+  "SSE.Controllers.Main.errorDataRange": "Intervallo di dati non corretto.",\r\n
+  "SSE.Controllers.Main.errorDefaultMessage": "Codice errore: %1",\r\n
+  "SSE.Controllers.Main.errorFilePassProtect": "Il documento è protetto da una password. Impossibile aprirlo.",\r\n
+  "SSE.Controllers.Main.errorFileRequest": "Errore esterno.<br>Errore di richiesta di file. Si prega di contattare l\'assistenza tecnica nel caso in cui l\'errore persiste.",\r\n
+  "SSE.Controllers.Main.errorFileVKey": "Errore esterno.<br>Chiave di sicurezza scorretta. Si prega di contattare l\'assistenza tecnica nel caso in cui l\'errore persiste.",\r\n
+  "SSE.Controllers.Main.errorFillRange": "Impossibile riempire l\'intervallo di celle selezionato.<br>Tutte le celle uite devono essere della stessa dimensione.",\r\n
+  "SSE.Controllers.Main.errorFormulaName": "Un errore nella formula inserita.<br>E\' stato il nome formula scorretto.",\r\n
+  "SSE.Controllers.Main.errorFormulaParsing": "Si è verificato un errore durante l\'analisi della formula.",\r\n
+  "SSE.Controllers.Main.errorKeyEncrypt": "Descrittore di chiave sconosciuto",\r\n
+  "SSE.Controllers.Main.errorKeyExpire": "Descrittore di chiave scaduto",\r\n
+  "SSE.Controllers.Main.errorMoveRange": "Impossibile modificare una parte della cella unita",\r\n
+  "SSE.Controllers.Main.errorOperandExpected": "Operando previsto",\r\n
+  "SSE.Controllers.Main.errorProcessSaveResult": "Salvataggio non riuscito",\r\n
+  "SSE.Controllers.Main.errorStockChart": "Ordine di righe scorretto. Per creare o grafico in pila posiziona i dati nel foglio nel seguente ordine:<br> prezzo di apertura, prezzo massimo, prezzo minimo, prezzo di chiusura.",\r\n
+  "SSE.Controllers.Main.errorUnexpectedGuid": "Errore esterno.<br>GUID inaspettato. Si prega di contattare l\'assistenza tecnica nel caso in cui l\'errore persiste.",\r\n
+  "SSE.Controllers.Main.errorUpdateVersion": "La versione file è stata moificata. La pagina verrà ricaricata.",\r\n
+  "SSE.Controllers.Main.errorUserDrop": "Impossibile accedere al file subito.",\r\n
+  "SSE.Controllers.Main.errorUsersExceed": "E\' stato superato il numero di utenti consentito dal piano tariffario",\r\n
+  "SSE.Controllers.Main.errorWrongBracketsCount": "Un errore nella formula inserita.<br>E\' stato utilizzato un numero errato tra parentesi.",\r\n
+  "SSE.Controllers.Main.errorWrongOperator": "Un errore nella formula inserita.<br>E\' stato utilizzato un operatore errato.",\r\n
+  "SSE.Controllers.Main.leavePageText": "Ci sono delle modifiche non salvate in questo foglio elettronico. Clicca su \'Rimani in questa pagina\', poi su \'Salva\' per salvarle. Clicca su \'Esci da questa pagina\' per scartare tutte le modifiche non salvate.",\r\n
+  "SSE.Controllers.Main.loadFontsTextText": "Caricamento dei dati in corso...",\r\n
+  "SSE.Controllers.Main.loadFontsTitleText": "Caricamento dei dati",\r\n
+  "SSE.Controllers.Main.loadFontTextText": "Caricamento dei dati in corso...",\r\n
+  "SSE.Controllers.Main.loadFontTitleText": "Caricamento dei dati",\r\n
+  "SSE.Controllers.Main.loadImagesTextText": "Caricamento delle immagini in corso...",\r\n
+  "SSE.Controllers.Main.loadImagesTitleText": "Caricamento delle immagini",\r\n
+  "SSE.Controllers.Main.loadImageTextText": "Caricamento dell\'immagine in corso...",\r\n
+  "SSE.Controllers.Main.loadImageTitleText": "Caricamento dell\'immagine",\r\n
+  "SSE.Controllers.Main.loadingDocumentTitleText": "Caricamento del documento",\r\n
+  "SSE.Controllers.Main.notcriticalErrorTitle": "Avviso",\r\n
+  "SSE.Controllers.Main.openTextText": "Apertura del foglio elettronico in corso...",\r\n
+  "SSE.Controllers.Main.openTitleText": "Apertura del foglio elettronico",\r\n
+  "SSE.Controllers.Main.pastInMergeAreaError": "Impossibile modificare la parte della cella unita",\r\n
+  "SSE.Controllers.Main.printTextText": "Stampa del foglio elettronico in corso...",\r\n
+  "SSE.Controllers.Main.printTitleText": "Stampa del foglio elettronico",\r\n
+  "SSE.Controllers.Main.reloadButtonText": "Ricarica pagina",\r\n
+  "SSE.Controllers.Main.requestEditFailedMessageText": "Qualcuno sta modificando questo documento. Si prega di provare più tardi.",\r\n
+  "SSE.Controllers.Main.requestEditFailedTitleText": "Accesso vietato",\r\n
+  "SSE.Controllers.Main.savePreparingText": "Preparazione al salvataggio ",\r\n
+  "SSE.Controllers.Main.savePreparingTitle": "Preparazione al salvataggio. Si prega di aspettare...",\r\n
+  "SSE.Controllers.Main.saveTextText": "Salvataggio del foglio elettronico in corso...",\r\n
+  "SSE.Controllers.Main.saveTitleText": "Salvataggio del foglio elettronico",\r\n
+  "SSE.Controllers.Main.textAnonymous": "Anonimo",\r\n
+  "SSE.Controllers.Main.textCloseTip": "\\nClicca per chiudere il consiglio",\r\n
+  "SSE.Controllers.Main.textConfirm": "Conferma",\r\n
+  "SSE.Controllers.Main.textLoadingDocument": "Caricamento del documento",\r\n
+  "SSE.Controllers.Main.textNo": "No",\r\n
+  "SSE.Controllers.Main.textPleaseWait": "L\'operazione può richiedere più tempo. Per favore, attendi...",\r\n
+  "SSE.Controllers.Main.textRecalcFormulas": "Calcolo delle formule in corso...",\r\n
+  "SSE.Controllers.Main.textShape": "Forma",\r\n
+  "SSE.Controllers.Main.textYes": "Sì",\r\n
+  "SSE.Controllers.Main.titleRecalcFormulas": "Calcolo in corso...",\r\n
+  "SSE.Controllers.Main.txtBasicShapes": "Figure di base",\r\n
+  "SSE.Controllers.Main.txtButtons": "Bottoni",\r\n
+  "SSE.Controllers.Main.txtCallouts": "Callout",\r\n
+  "SSE.Controllers.Main.txtCharts": "Grafici",\r\n
+  "SSE.Controllers.Main.txtDiagramTitle": "Titolo diagramma",\r\n
+  "SSE.Controllers.Main.txtEditingMode": "Impostazione modo di modifica...",\r\n
+  "SSE.Controllers.Main.txtFiguredArrows": "Frecce decorate",\r\n
+  "SSE.Controllers.Main.txtLines": "Linee",\r\n
+  "SSE.Controllers.Main.txtMath": "Matematica",\r\n
+  "SSE.Controllers.Main.txtRectangles": "Rettangoli",\r\n
+  "SSE.Controllers.Main.txtSeries": "Serie",\r\n
+  "SSE.Controllers.Main.txtStarsRibbons": "Stelle e nastri",\r\n
+  "SSE.Controllers.Main.txtXAxis": "Asse X",\r\n
+  "SSE.Controllers.Main.txtYAxis": "Asse Y",\r\n
+  "SSE.Controllers.Main.unknownErrorText": "Errore sconosciuto.",\r\n
+  "SSE.Controllers.Main.unsupportedBrowserErrorText": "Il tuo browser non è supportato.",\r\n
+  "SSE.Controllers.Main.uploadImageExtMessage": "Formato immagine sconosciuto.",\r\n
+  "SSE.Controllers.Main.uploadImageFileCountMessage": "Nessun immagine caricata.",\r\n
+  "SSE.Controllers.Main.uploadImageSizeMessage": "E\' stata superata la dimensione massima.",\r\n
+  "SSE.Controllers.Main.uploadImageTextText": "Caricamento dell\'immagine in corso...",\r\n
+  "SSE.Controllers.Main.uploadImageTitleText": "Caricamento dell\'immagine",\r\n
+  "SSE.Controllers.Main.warnBrowserIE9": "L\'applicazione è poco compatibile con IE9. Usa IE10 o più recente",\r\n
+  "SSE.Controllers.Main.warnBrowserZoom": "Le impostazioni correnti di zoom del tuo browser non sono completamente supportate. Per favore, ritorna allo zoom predefinito premendo Ctrl+0.",\r\n
+  "SSE.Controllers.Main.warnProcessRightsChange": "Ci stato negato il diritto alla modifica del file.",\r\n
+  "SSE.Controllers.Print.strAllSheets": "Tutti i fogli",\r\n
+  "SSE.Controllers.Print.textWarning": "Avviso",\r\n
+  "SSE.Controllers.Print.warnCheckMargings": "Margini non corretti",\r\n
+  "SSE.Controllers.Statusbar.errorLastSheet": "La cartella di lavoro deve contenere al minimo un foglio visibile.",\r\n
+  "SSE.Controllers.Statusbar.errorRemoveSheet": "Impossibile eliminare il foglio di lavoro.",\r\n
+  "SSE.Controllers.Statusbar.strSheet": "Foglio",\r\n
+  "SSE.Controllers.Statusbar.tipMoreUsers": "e %1 utenti.",\r\n
+  "SSE.Controllers.Statusbar.tipShowUsers": "Per vedere tutti gli utenti, clicca sull\'icona di sotto.",\r\n
+  "SSE.Controllers.Statusbar.tipUsers": "Il documento sta modificando da più utenti.",\r\n
+  "SSE.Controllers.Statusbar.warnDeleteSheet": "Il foglio può contenere i dati. Sei sicuro di voler proseguire?",\r\n
+  "SSE.Controllers.Statusbar.zoomText": "Zoom {0}%",\r\n
+  "SSE.Controllers.Toolbar.textCancel": "Annulla",\r\n
+  "SSE.Controllers.Toolbar.textFontSizeErr": "Il valore inserito non è corretto.<br>Inserisci un valore numerico compreso tra 1 e 100",\r\n
+  "SSE.Controllers.Toolbar.textWarning": "Avviso",\r\n
+  "SSE.Controllers.Toolbar.warnMergeLostData": "Solo i dati dalla cella sinistra superiore rimangono nella cella unita.<br>Sei sicuro di voler continuare?",\r\n
+  "SSE.Views.AutoFilterDialog.btnCustomFilter": "Personalizzato",\r\n
+  "SSE.Views.AutoFilterDialog.cancelButtonText": "Annulla",\r\n
+  "SSE.Views.AutoFilterDialog.okButtonText": "OK",\r\n
+  "SSE.Views.AutoFilterDialog.textEmptyItem": "{Blanks}",\r\n
+  "SSE.Views.AutoFilterDialog.textSelectAll": "Seleziona tutto",\r\n
+  "SSE.Views.AutoFilterDialog.textWarning": "Avviso",\r\n
+  "SSE.Views.AutoFilterDialog.txtEmpty": "Inserisci parametri del filtro",\r\n
+  "SSE.Views.AutoFilterDialog.txtTitle": "Filtro",\r\n
+  "SSE.Views.AutoFilterDialog.warnNoSelected": "Devi selezionare almeno un valore",\r\n
+  "SSE.Views.CellEditor.tipFormula": "Inserisci funzione",\r\n
+  "SSE.Views.CellRangeDialog.errorMaxRows": "ERRORE! Il numero massimo di serie di dati per grafico è 255.",\r\n
+  "SSE.Views.CellRangeDialog.textCancel": "Annulla",\r\n
+  "SSE.Views.CellRangeDialog.txtEmpty": "Questo campo è richiesto",\r\n
+  "SSE.Views.CellRangeDialog.txtInvalidRange": "ERRORE! Intervallo non valido",\r\n
+  "SSE.Views.CellRangeDialog.txtTitle": "Seleziona intervallo dati",\r\n
+  "SSE.Views.ChartSettings.textAdvanced": "Mostra impostazioni avanzate",\r\n
+  "SSE.Views.ChartSettings.textArea": "Ad area",\r\n
+  "SSE.Views.ChartSettings.textBar": "A barre",\r\n
+  "SSE.Views.ChartSettings.textChartType": "Cambia tipo grafico",\r\n
+  "SSE.Views.ChartSettings.textColumn": "Istogramma",\r\n
+  "SSE.Views.ChartSettings.textEditData": "Modifica dati",\r\n
+  "SSE.Views.ChartSettings.textHeight": "Altezza",\r\n
+  "SSE.Views.ChartSettings.textKeepRatio": "Proporzioni costanti",\r\n
+  "SSE.Views.ChartSettings.textLine": "A linee",\r\n
+  "SSE.Views.ChartSettings.textPie": "A torta",\r\n
+  "SSE.Views.ChartSettings.textPoint": "A punti",\r\n
+  "SSE.Views.ChartSettings.textSize": "Dimensione",\r\n
+  "SSE.Views.ChartSettings.textStock": "Azionario",\r\n
+  "SSE.Views.ChartSettings.textStyle": "Stile",\r\n
+  "SSE.Views.ChartSettings.textWidth": "Larghezza",\r\n
+  "SSE.Views.ChartSettingsDlg.cancelButtonText": "Annulla",\r\n
+  "SSE.Views.ChartSettingsDlg.errorMaxRows": "ERRORE! Il numero massimo di serie di dati per grafico è 255.",\r\n
+  "SSE.Views.ChartSettingsDlg.errorStockChart": "Ordine di righe scorretto. Per creare o grafico in pila posiziona i dati nel foglio nel seguente ordine:<br> prezzo di apertura, prezzo massimo, prezzo minimo, prezzo di chiusura.",\r\n
+  "SSE.Views.ChartSettingsDlg.textArea": "Ad area",\r\n
+  "SSE.Views.ChartSettingsDlg.textAuto": "Auto",\r\n
+  "SSE.Views.ChartSettingsDlg.textAxisCrosses": "Intersezione asse",\r\n
+  "SSE.Views.ChartSettingsDlg.textAxisOptions": "Opzioni assi",\r\n
+  "SSE.Views.ChartSettingsDlg.textAxisPos": "Posizione asse",\r\n
+  "SSE.Views.ChartSettingsDlg.textBar": "A barre",\r\n
+  "SSE.Views.ChartSettingsDlg.textBetweenTickMarks": "Tra segni di graduazione",\r\n
+  "SSE.Views.ChartSettingsDlg.textBillions": "Miliardi",\r\n
+  "SSE.Views.ChartSettingsDlg.textCategoryName": "Nome categoria",\r\n
+  "SSE.Views.ChartSettingsDlg.textCenter": "Al centro",\r\n
+  "SSE.Views.ChartSettingsDlg.textChartElementsLegend": "Elementi di grafico e<br/>legenda di grafico",\r\n
+  "SSE.Views.ChartSettingsDlg.textChartTitle": "Titolo di grafico",\r\n
+  "SSE.Views.ChartSettingsDlg.textColumn": "Istogramma",\r\n
+  "SSE.Views.ChartSettingsDlg.textCross": "Interseca",\r\n
+  "SSE.Views.ChartSettingsDlg.textCustom": "Personalizzato",\r\n
+  "SSE.Views.ChartSettingsDlg.textDataColumns": "in colonne",\r\n
+  "SSE.Views.ChartSettingsDlg.textDataLabels": "Etichette dati",\r\n
+  "SSE.Views.ChartSettingsDlg.textDataRange": "Intervallo di dati",\r\n
+  "SSE.Views.ChartSettingsDlg.textDataRows": "in righe",\r\n
+  "SSE.Views.ChartSettingsDlg.textDataSeries": "Serie di dati",\r\n
+  "SSE.Views.ChartSettingsDlg.textDisplayLegend": "Visualizza legenda",\r\n
+  "SSE.Views.ChartSettingsDlg.textFixed": "Riparato",\r\n
+  "SSE.Views.ChartSettingsDlg.textHigh": "In alto",\r\n
+  "SSE.Views.ChartSettingsDlg.textHorAxis": "Asse orizzontale",\r\n
+  "SSE.Views.ChartSettingsDlg.textHorGrid": "Linee orizzontali della griglia",\r\n
+  "SSE.Views.ChartSettingsDlg.textHorizontal": "Orizzontale",\r\n
+  "SSE.Views.ChartSettingsDlg.textHorTitle": "Titolo asse orizzontale",\r\n
+  "SSE.Views.ChartSettingsDlg.textHundredMil": "100 000 000",\r\n
+  "SSE.Views.ChartSettingsDlg.textHundreds": "Centinaia",\r\n
+  "SSE.Views.ChartSettingsDlg.textHundredThousands": "100 000",\r\n
+  "SSE.Views.ChartSettingsDlg.textIn": "All\'interno",\r\n
+  "SSE.Views.ChartSettingsDlg.textInnerBottom": "Basso interno",\r\n
+  "SSE.Views.ChartSettingsDlg.textInnerTop": "Alto interno",\r\n
+  "SSE.Views.ChartSettingsDlg.textInvalidRange": "ERRORE! Intervallo non valido",\r\n
+  "SSE.Views.ChartSettingsDlg.textLabelDist": "Distanza dall\'etichetta",\r\n
+  "SSE.Views.ChartSettingsDlg.textLabelInterval": "Intervallo tra le etichette",\r\n
+  "SSE.Views.ChartSettingsDlg.textLabelOptions": "Opzioni etichetta",\r\n
+  "SSE.Views.ChartSettingsDlg.textLabelPos": "Posizione etichetta",\r\n
+  "SSE.Views.ChartSettingsDlg.textLayout": "Layout",\r\n
+  "SSE.Views.ChartSettingsDlg.textLeftOverlay": "Sovrapposizione a sinistra",\r\n
+  "SSE.Views.ChartSettingsDlg.textLegendBottom": "In basso",\r\n
+  "SSE.Views.ChartSettingsDlg.textLegendLeft": "A sinistra",\r\n
+  "SSE.Views.ChartSettingsDlg.textLegendPos": "Legenda",\r\n
+  "SSE.Views.ChartSettingsDlg.textLegendRight": "A destra",\r\n
+  "SSE.Views.ChartSettingsDlg.textLegendTop": "In alto",\r\n
+  "SSE.Views.ChartSettingsDlg.textLine": "A linee",\r\n
+  "SSE.Views.ChartSettingsDlg.textLines": "Linee",\r\n
+  "SSE.Views.ChartSettingsDlg.textLow": "In basso",\r\n
+  "SSE.Views.ChartSettingsDlg.textMajor": "Principali",\r\n
+  "SSE.Views.ChartSettingsDlg.textMajorMinor": "Principali o secondarie",\r\n
+  "SSE.Views.ChartSettingsDlg.textMajorType": "Tipo principale",\r\n
+  "SSE.Views.ChartSettingsDlg.textManual": "A mano",\r\n
+  "SSE.Views.ChartSettingsDlg.textMarkers": "Indicatori",\r\n
+  "SSE.Views.ChartSettingsDlg.textMarksInterval": "Intervallo tra i segni",\r\n
+  "SSE.Views.ChartSettingsDlg.textMaxValue": "Valore massimo",\r\n
+  "SSE.Views.ChartSettingsDlg.textMillions": "Milioni",\r\n
+  "SSE.Views.ChartSettingsDlg.textMinor": "Secondarie",\r\n
+  "SSE.Views.ChartSettingsDlg.textMinorType": "Tipo secondario",\r\n
+  "SSE.Views.ChartSettingsDlg.textMinValue": "Valore minimo",\r\n
+  "SSE.Views.ChartSettingsDlg.textNextToAxis": "Vicine all\'asse",\r\n
+  "SSE.Views.ChartSettingsDlg.textNone": "Niente",\r\n
+  "SSE.Views.ChartSettingsDlg.textNoOverlay": "Nessuna sovrapposizione",\r\n
+  "SSE.Views.ChartSettingsDlg.textOnTickMarks": "Segni di graduazione",\r\n
+  "SSE.Views.ChartSettingsDlg.textOut": "All\'esterno",\r\n
+  "SSE.Views.ChartSettingsDlg.textOuterTop": "Alto esterno",\r\n
+  "SSE.Views.ChartSettingsDlg.textOverlay": "Sovrapposizione",\r\n
+  "SSE.Views.ChartSettingsDlg.textPie": "A torta",\r\n
+  "SSE.Views.ChartSettingsDlg.textPoint": "A punti",\r\n
+  "SSE.Views.ChartSettingsDlg.textReverse": "Valori in ordine inverso",\r\n
+  "SSE.Views.ChartSettingsDlg.textRightOverlay": "Sovrapposizione a destra",\r\n
+  "SSE.Views.ChartSettingsDlg.textRotated": "Ruotato",\r\n
+  "SSE.Views.ChartSettingsDlg.textSelectData": "Seleziona dati",\r\n
+  "SSE.Views.ChartSettingsDlg.textSeparator": "Separatore etichette dati",\r\n
+  "SSE.Views.ChartSettingsDlg.textSeriesName": "Nome serie",\r\n
+  "SSE.Views.ChartSettingsDlg.textShowAxis": "Visualizza asse",\r\n
+  "SSE.Views.ChartSettingsDlg.textShowBorders": "Visualizza bordi",\r\n
+  "SSE.Views.ChartSettingsDlg.textShowGrid": "Linee griglia",\r\n
+  "SSE.Views.ChartSettingsDlg.textShowValues": "Visualizza valori",\r\n
+  "SSE.Views.ChartSettingsDlg.textSmooth": "Sfumate",\r\n
+  "SSE.Views.ChartSettingsDlg.textStock": "Azionario",\r\n
+  "SSE.Views.ChartSettingsDlg.textStraight": "Rette",\r\n
+  "SSE.Views.ChartSettingsDlg.textStyle": "Stile",\r\n
+  "SSE.Views.ChartSettingsDlg.textTenMillions": "10 000 000",\r\n
+  "SSE.Views.ChartSettingsDlg.textTenThousands": "10 000",\r\n
+  "SSE.Views.ChartSettingsDlg.textThousands": "Migliaia",\r\n
+  "SSE.Views.ChartSettingsDlg.textTickOptions": "Opzioni di segni di graduazione",\r\n
+  "SSE.Views.ChartSettingsDlg.textTitle": "Grafico - Impostazioni avanzate",\r\n
+  "SSE.Views.ChartSettingsDlg.textTrillions": "Migliaia di miliardi",\r\n
+  "SSE.Views.ChartSettingsDlg.textType": "Tipo",\r\n
+  "SSE.Views.ChartSettingsDlg.textTypeData": "Tipo e dati",\r\n
+  "SSE.Views.ChartSettingsDlg.textTypeStyle": "Tipo di grafico, stile e<br/>intervallo di dati",\r\n
+  "SSE.Views.ChartSettingsDlg.textUnits": "Unità visualizzazione",\r\n
+  "SSE.Views.ChartSettingsDlg.textValue": "Valore",\r\n
+  "SSE.Views.ChartSettingsDlg.textVertAxis": "Asse verticale",\r\n
+  "SSE.Views.ChartSettingsDlg.textVertGrid": "Linee verticali della griglia",\r\n
+  "SSE.Views.ChartSettingsDlg.textVertTitle": "Titolo asse verticale",\r\n
+  "SSE.Views.ChartSettingsDlg.textXAxisTitle": "Titolo di asse X",\r\n
+  "SSE.Views.ChartSettingsDlg.textYAxisTitle": "Titolo di asse Y",\r\n
+  "SSE.Views.ChartSettingsDlg.txtEmpty": "Questo campo è richiesto",\r\n
+  "SSE.Views.DigitalFilterDialog.cancelButtonText": "Annulla",\r\n
+  "SSE.Views.DigitalFilterDialog.capAnd": "E",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition1": "uguali",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition10": "non finisce con",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition11": "contiene",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition12": "non contiene",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition2": "non è uguale",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition3": "è superiore a",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition4": "è superiore o uguale a",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition5": "è inferiore a",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition6": "è inferiore o uguale a",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition7": "inizia con",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition8": "non inizia con",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition9": "finisce con",\r\n
+  "SSE.Views.DigitalFilterDialog.capOr": "O",\r\n
+  "SSE.Views.DigitalFilterDialog.textNoFilter": "nessun filtro",\r\n
+  "SSE.Views.DigitalFilterDialog.textShowRows": "Mostra righe dove",\r\n
+  "SSE.Views.DigitalFilterDialog.textUse1": "Utilizza ? per sostituire un carattere",\r\n
+  "SSE.Views.DigitalFilterDialog.textUse2": "Utilizza * per sostituire più caratteri",\r\n
+  "SSE.Views.DigitalFilterDialog.txtTitle": "Filtro personalizzato",\r\n
+  "SSE.Views.DocumentHolder.advancedShapeText": "Impostazioni avanzate forma",\r\n
+  "SSE.Views.DocumentHolder.bottomCellText": "Allinea in basso",\r\n
+  "SSE.Views.DocumentHolder.centerCellText": "Allinea al centro",\r\n
+  "SSE.Views.DocumentHolder.chartText": "Impostazioni grafico avanzate",\r\n
+  "SSE.Views.DocumentHolder.editChartText": "Modifica dati",\r\n
+  "SSE.Views.DocumentHolder.editHyperlinkText": "Modifica collegamento ipertestuale",\r\n
+  "SSE.Views.DocumentHolder.removeHyperlinkText": "Elimina collegamento ipertestuale",\r\n
+  "SSE.Views.DocumentHolder.textArrangeBack": "Porta in secondo piano",\r\n
+  "SSE.Views.DocumentHolder.textArrangeBackward": "Porta indietro",\r\n
+  "SSE.Views.DocumentHolder.textArrangeForward": "Porta avanti",\r\n
+  "SSE.Views.DocumentHolder.textArrangeFront": "Porta in primo piano",\r\n
+  "SSE.Views.DocumentHolder.topCellText": "Allinea in alto",\r\n
+  "SSE.Views.DocumentHolder.txtAddComment": "Aggiungi commento",\r\n
+  "SSE.Views.DocumentHolder.txtArrange": "Disponi",\r\n
+  "SSE.Views.DocumentHolder.txtAscending": "Crescente",\r\n
+  "SSE.Views.DocumentHolder.txtClear": "Svuota",\r\n
+  "SSE.Views.DocumentHolder.txtClearAll": "All",\r\n
+  "SSE.Views.DocumentHolder.txtClearComments": "Comments",\r\n
+  "SSE.Views.DocumentHolder.txtClearFormat": "Format",\r\n
+  "SSE.Views.DocumentHolder.txtClearHyper": "Hyperlinks",\r\n
+  "SSE.Views.DocumentHolder.txtClearText": "Text",\r\n
+  "SSE.Views.DocumentHolder.txtColumn": "Colonna intera",\r\n
+  "SSE.Views.DocumentHolder.txtColumnWidth": "Larghezza colonna",\r\n
+  "SSE.Views.DocumentHolder.txtCopy": "Copia",\r\n
+  "SSE.Views.DocumentHolder.txtCut": "Taglia",\r\n
+  "SSE.Views.DocumentHolder.txtDelete": "Elimina",\r\n
+  "SSE.Views.DocumentHolder.txtDescending": "Decrescente",\r\n
+  "SSE.Views.DocumentHolder.txtEditComment": "Modifica commento",\r\n
+  "SSE.Views.DocumentHolder.txtFormula": "Inserisci funzione",\r\n
+  "SSE.Views.DocumentHolder.txtGroup": "Raggruppa",\r\n
+  "SSE.Views.DocumentHolder.txtHide": "Nascondi",\r\n
+  "SSE.Views.DocumentHolder.txtInsert": "Inserisci",\r\n
+  "SSE.Views.DocumentHolder.txtInsHyperlink": "Collegamento ipertestuale",\r\n
+  "SSE.Views.DocumentHolder.txtPaste": "Incolla",\r\n
+  "SSE.Views.DocumentHolder.txtRow": "Riga intera",\r\n
+  "SSE.Views.DocumentHolder.txtRowHeight": "Altezza riga",\r\n
+  "SSE.Views.DocumentHolder.txtShiftDown": "Sposta celle in basso",\r\n
+  "SSE.Views.DocumentHolder.txtShiftLeft": "Sposta celle a sinistra",\r\n
+  "SSE.Views.DocumentHolder.txtShiftRight": "Sposta celle a destra",\r\n
+  "SSE.Views.DocumentHolder.txtShiftUp": "Sposta celle in alto",\r\n
+  "SSE.Views.DocumentHolder.txtShow": "Mostra",\r\n
+  "SSE.Views.DocumentHolder.txtSort": "Ordina",\r\n
+  "SSE.Views.DocumentHolder.txtTextAdvanced": "Impostazioni avanzate testo",\r\n
+  "SSE.Views.DocumentHolder.txtUngroup": "Separa",\r\n
+  "SSE.Views.DocumentHolder.txtWidth": "Larghezza",\r\n
+  "SSE.Views.DocumentHolder.vertAlignText": "Allineamento verticale",\r\n
+  "SSE.Views.FileMenu.btnBackCaption": "Va\' ai Documenti",\r\n
+  "SSE.Views.FileMenu.btnCreateNewCaption": "Crea nuovo oggetto...",\r\n
+  "SSE.Views.FileMenu.btnDownloadCaption": "Scarica in...",\r\n
+  "SSE.Views.FileMenu.btnHelpCaption": "Guida...",\r\n
+  "SSE.Views.FileMenu.btnInfoCaption": "Informazioni foglio...",\r\n
+  "SSE.Views.FileMenu.btnPrintCaption": "Stampa",\r\n
+  "SSE.Views.FileMenu.btnRecentFilesCaption": "Apri recenti...",\r\n
+  "SSE.Views.FileMenu.btnReturnCaption": "Torna al foglio",\r\n
+  "SSE.Views.FileMenu.btnSaveCaption": "Salva",\r\n
+  "SSE.Views.FileMenu.btnSettingsCaption": "Impostazioni avanzate...",\r\n
+  "SSE.Views.FileMenu.btnToEditCaption": "Modifica foglio",\r\n
+  "SSE.Views.FileMenuPanels.CreateNew.fromBlankText": "Da vuoto",\r\n
+  "SSE.Views.FileMenuPanels.CreateNew.fromTemplateText": "Da modello",\r\n
+  "SSE.Views.FileMenuPanels.CreateNew.newDescriptionText": "Crea un nuovo foglio elettronico vuoto che potrai formattare durante la modifica. O scegli uno dei modelli per creare un foglio elettronico di un certo tipo a quale sono già applicati certi stili.",\r\n
+  "SSE.Views.FileMenuPanels.CreateNew.newDocumentText": "Nuovo foglio elettronico",\r\n
+  "SSE.Views.FileMenuPanels.DocumentInfo.txtAuthor": "Autore",\r\n
+  "SSE.Views.FileMenuPanels.DocumentRights.txtBtnAccessRights": "Cambia diritti di accesso",\r\n
+  "SSE.Views.FileMenuPanels.DocumentInfo.txtDate": "Data di creazione",\r\n
+  "SSE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Percorso",\r\n
+  "SSE.Views.FileMenuPanels.DocumentRights.txtRights": "Persone con diritti",\r\n
+  "SSE.Views.FileMenuPanels.DocumentInfo.txtTitle": "Titolo foglio elettronico",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.okButtonText": "Applica",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strAutosave": "Attiva salvataggio automatico",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strFontRender": "Hinting dei caratteri",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strLiveComment": "Attiva commenti in tempo reale",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strUnit": "Unità di misura",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strZoom": "Valore di zoom predefinito",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.text10Minutes": "Ogni 10 minuti",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.text30Minutes": "Ogni 30 minuti",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.text5Minutes": "Ogni 5 minuti",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.text60Minutes": "Ogni ora",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.textAutoSave": "Salvataggio automatico",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.textDisabled": "Disattivato",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.textMinute": "Ogni minuto",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtCm": "Centimetro",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtLiveComment": "Commenti in tempo reale",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtMac": "come OS X",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtNative": "Nativo",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtPt": "Punto",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtWin": "come Windows",\r\n
+  "SSE.Views.FileMenuPanels.Settings.txtGeneral": "Generale",\r\n
+  "SSE.Views.FileMenuPanels.Settings.txtPrint": "Stampa",\r\n
+  "SSE.Views.FormulaDialog.cancelButtonText": "Annulla",\r\n
+  "SSE.Views.FormulaDialog.okButtonText": "OK",\r\n
+  "SSE.Views.FormulaDialog.sCategoryAll": "Tutto",\r\n
+  "SSE.Views.FormulaDialog.sCategoryCube": "Cubo",\r\n
+  "SSE.Views.FormulaDialog.sCategoryDatabase": "Database",\r\n
+  "SSE.Views.FormulaDialog.sCategoryDateTime": "Data e ora",\r\n
+  "SSE.Views.FormulaDialog.sCategoryEngineering": "Ingegneristiche",\r\n
+  "SSE.Views.FormulaDialog.sCategoryFinancial": "Finanziarie",\r\n
+  "SSE.Views.FormulaDialog.sCategoryInformation": "Informazione",\r\n
+  "SSE.Views.FormulaDialog.sCategoryLogical": "Logiche",\r\n
+  "SSE.Views.FormulaDialog.sCategoryLookupAndReference": "Ricerca e riferimento",\r\n
+  "SSE.Views.FormulaDialog.sCategoryMathematics": "Matematiche e trigonometriche",\r\n
+  "SSE.Views.FormulaDialog.sCategoryStatistical": "Statistiche",\r\n
+  "SSE.Views.FormulaDialog.sCategoryTextData": "Testo e dati",\r\n
+  "SSE.Views.FormulaDialog.sDescription": "Descrizione",\r\n
+  "SSE.Views.FormulaDialog.syntaxText": "Sintassi",\r\n
+  "SSE.Views.FormulaDialog.textGroupDescription": "Seleziona gruppo di funzioni",\r\n
+  "SSE.Views.FormulaDialog.textListDescription": "Seleziona funzione",\r\n
+  "SSE.Views.FormulaDialog.txtTitle": "Inserisci funzione",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.cancelButtonText": "Annulla",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.strDisplay": "Visualizza",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.strLinkTo": "Collega a",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.strRange": "Intervallo",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.strSheet": "Foglio",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textDefault": "Intervallo selezionato",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textEmptyDesc": "Inserisci didascalia qui",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textEmptyLink": "Inserisci collegamento qui",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textEmptyTooltip": "Inserisci descrizione comando qui",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textExternalLink": "Collegamento esterno",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textInternalLink": "Intervallo di dati interno",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textInvalidRange": "ERRORE! Intervallo non valido",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textLinkType": "Tipo collegamento",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textTipText": "Testo del suggerimento",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textTitle": "Impostazioni collegamento ipertestuale",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.txtEmpty": "Questo campo è richiesto",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.txtNotUrl": "Il formato URL richiesto è \\"http://www.example.com\\"",\r\n
+  "SSE.Views.ImageSettings.textFromFile": "Da file",\r\n
+  "SSE.Views.ImageSettings.textFromUrl": "Da URL",\r\n
+  "SSE.Views.ImageSettings.textHeight": "Altezza",\r\n
+  "SSE.Views.ImageSettings.textInsert": "Sostituisci immagine",\r\n
+  "SSE.Views.ImageSettings.textKeepRatio": "Proporzioni costanti",\r\n
+  "SSE.Views.ImageSettings.textOriginalSize": "Predefinita",\r\n
+  "SSE.Views.ImageSettings.textSize": "Dimensione",\r\n
+  "SSE.Views.ImageSettings.textWidth": "Larghezza",\r\n
+  "SSE.Views.LeftMenu.tipAbout": "Informazioni su",\r\n
+  "SSE.Views.LeftMenu.tipChat": "Chat",\r\n
+  "SSE.Views.LeftMenu.tipComments": "Commenti",\r\n
+  "SSE.Views.LeftMenu.tipFile": "File",\r\n
+  "SSE.Views.LeftMenu.tipSearch": "Ricerca",\r\n
+  "SSE.Views.LeftMenu.tipSupport": "Feedback & Support",\r\n
+  "SSE.Views.MainSettingsPrint.okButtonText": "Salva",\r\n
+  "SSE.Views.MainSettingsPrint.strBottom": "In basso",\r\n
+  "SSE.Views.MainSettingsPrint.strLandscape": "Orizzontale",\r\n
+  "SSE.Views.MainSettingsPrint.strLeft": "A sinistra",\r\n
+  "SSE.Views.MainSettingsPrint.strMargins": "Margini",\r\n
+  "SSE.Views.MainSettingsPrint.strPortrait": "Verticale",\r\n
+  "SSE.Views.MainSettingsPrint.strPrint": "Stampa",\r\n
+  "SSE.Views.MainSettingsPrint.strRight": "A destra",\r\n
+  "SSE.Views.MainSettingsPrint.strTop": "In alto",\r\n
+  "SSE.Views.MainSettingsPrint.textPageOrientation": "Orientamento pagina",\r\n
+  "SSE.Views.MainSettingsPrint.textPageSize": "Dimensione pagina",\r\n
+  "SSE.Views.MainSettingsPrint.textPrintGrid": "Stampa griglia",\r\n
+  "SSE.Views.MainSettingsPrint.textPrintHeadings": "Stampa intestazioni di riga e colonna",\r\n
+  "SSE.Views.MainSettingsPrint.textSettings": "Impostazioni per",\r\n
+  "SSE.Views.OpenDialog.cancelButtonText": "Annulla",\r\n
+  "SSE.Views.OpenDialog.okButtonText": "OK",\r\n
+  "SSE.Views.OpenDialog.txtDelimiter": "Delimitatore",\r\n
+  "SSE.Views.OpenDialog.txtEncoding": "Codifica",\r\n
+  "SSE.Views.OpenDialog.txtSpace": "Spazio",\r\n
+  "SSE.Views.OpenDialog.txtTab": "Tabulazione",\r\n
+  "SSE.Views.OpenDialog.txtTitle": "Seleziona parametri CSV",\r\n
+  "SSE.Views.ParagraphSettings.strLineHeight": "Interlinea",\r\n
+  "SSE.Views.ParagraphSettings.strParagraphSpacing": "Spaziatura",\r\n
+  "SSE.Views.ParagraphSettings.strSpacingAfter": "Dopo",\r\n
+  "SSE.Views.ParagraphSettings.strSpacingBefore": "Prima",\r\n
+  "SSE.Views.ParagraphSettings.textAdvanced": "Mostra impostazioni avanzate",\r\n
+  "SSE.Views.ParagraphSettings.textAt": "A",\r\n
+  "SSE.Views.ParagraphSettings.textAtLeast": "Minima",\r\n
+  "SSE.Views.ParagraphSettings.textAuto": "Multipla",\r\n
+  "SSE.Views.ParagraphSettings.textExact": "Esatta",\r\n
+  "SSE.Views.ParagraphSettings.txtAutoText": "Auto",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.cancelButtonText": "Annulla",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.noTabs": "The specified tabs will appear in this field",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.okButtonText": "OK",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strAllCaps": "Maiuscole",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strDoubleStrike": "Barrato doppio",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strIndentsFirstLine": "Prima riga",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strIndentsLeftText": "A sinistra",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strIndentsRightText": "A destra",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strParagraphFont": "Tipo di carattere",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strParagraphIndents": "Rientri e posizionamento",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strSmallCaps": "Maiuscoletto",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strStrike": "Barrato",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strSubscript": "Pedice",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strSuperscript": "Apice",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strTabs": "Tabulazione",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textAlign": "Allineamento",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textCharacterSpacing": "Spaziatura caratteri",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textDefault": "Predefinita",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textEffects": "Effetti",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textRemove": "Elimina",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textRemoveAll": "Elimina tutto",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textSet": "Specifica",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textTabCenter": "Al centro",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textTabLeft": "A sinistra",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textTabPosition": "Posizione",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textTabRight": "A destra",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textTitle": "Paragrafo - Impostazioni avanzate",\r\n
+  "SSE.Views.PrintSettings.btnPrint": "Salva e stampa",\r\n
+  "SSE.Views.PrintSettings.cancelButtonText": "Annulla",\r\n
+  "SSE.Views.PrintSettings.strBottom": "In basso",\r\n
+  "SSE.Views.PrintSettings.strLandscape": "Orizzontale",\r\n
+  "SSE.Views.PrintSettings.strLeft": "A sinistra",\r\n
+  "SSE.Views.PrintSettings.strMargins": "Margini",\r\n
+  "SSE.Views.PrintSettings.strPortrait": "Verticale",\r\n
+  "SSE.Views.PrintSettings.strPrint": "Stampa",\r\n
+  "SSE.Views.PrintSettings.strRight": "A destra",\r\n
+  "SSE.Views.PrintSettings.strTop": "In alto",\r\n
+  "SSE.Views.PrintSettings.textActualSize": "Dimensione reale",\r\n
+  "SSE.Views.PrintSettings.textAllSheets": "Tutti i fogli",\r\n
+  "SSE.Views.PrintSettings.textCurrentSheet": "Foglio attuale",\r\n
+  "SSE.Views.PrintSettings.textFit": "Adatta alla larghezza",\r\n
+  "SSE.Views.PrintSettings.textHideDetails": "Nascondi dettagli",\r\n
+  "SSE.Views.PrintSettings.textLayout": "Layout",\r\n
+  "SSE.Views.PrintSettings.textPageOrientation": "Orientamento pagina",\r\n
+  "SSE.Views.PrintSettings.textPageSize": "Dimensione pagina",\r\n
+  "SSE.Views.PrintSettings.textPrintGrid": "Stampa griglia",\r\n
+  "SSE.Views.PrintSettings.textPrintHeadings": "Stampa intestazioni di riga e colonna",\r\n
+  "SSE.Views.PrintSettings.textPrintRange": "Area di stampa",\r\n
+  "SSE.Views.PrintSettings.textSelection": "Selezione",\r\n
+  "SSE.Views.PrintSettings.textShowDetails": "Mostra dettagli",\r\n
+  "SSE.Views.PrintSettings.textTitle": "Impostazioni stampa",\r\n
+  "SSE.Views.RightMenu.txtChartSettings": "Impostazioni grafico",\r\n
+  "SSE.Views.RightMenu.txtImageSettings": "Impostazioni immagine",\r\n
+  "SSE.Views.RightMenu.txtParagraphSettings": "Impostazioni testo",\r\n
+  "SSE.Views.RightMenu.txtSettings": "Impostazioni generali",\r\n
+  "SSE.Views.RightMenu.txtShapeSettings": "Impostazioni forma",\r\n
+  "SSE.Views.SetValueDialog.cancelButtonText": "Annulla",\r\n
+  "SSE.Views.SetValueDialog.okButtonText": "OK",\r\n
+  "SSE.Views.SetValueDialog.txtMaxText": "Il valore massimo per questo campo è {0}",\r\n
+  "SSE.Views.SetValueDialog.txtMinText": "Il valore minimo per questo campo è {0}",\r\n
+  "SSE.Views.ShapeSettings.strBackground": "Colore sfondo",\r\n
+  "SSE.Views.ShapeSettings.strChange": "Cambia forma",\r\n
+  "SSE.Views.ShapeSettings.strColor": "Colore",\r\n
+  "SSE.Views.ShapeSettings.strFill": "Riempimento",\r\n
+  "SSE.Views.ShapeSettings.strForeground": "Colore primo piano",\r\n
+  "SSE.Views.ShapeSettings.strPattern": "Modello",\r\n
+  "SSE.Views.ShapeSettings.strSize": "Dimensione",\r\n
+  "SSE.Views.ShapeSettings.strStroke": "Tratto",\r\n
+  "SSE.Views.ShapeSettings.strTransparency": "Opacità",\r\n
+  "SSE.Views.ShapeSettings.textAdvanced": "Mostra impostazioni avanzate",\r\n
+  "SSE.Views.ShapeSettings.textBorderSizeErr": "Il valore inserito non è corretto.<br>Inserisci un valore tra 0 pt e 1584 pt.",\r\n
+  "SSE.Views.ShapeSettings.textColor": "Colore di riempimento",\r\n
+  "SSE.Views.ShapeSettings.textDirection": "Direzione",\r\n
+  "SSE.Views.ShapeSettings.textEmptyPattern": "Nessun modello",\r\n
+  "SSE.Views.ShapeSettings.textFromFile": "Da file",\r\n
+  "SSE.Views.ShapeSettings.textFromUrl": "Da URL",\r\n
+  "SSE.Views.ShapeSettings.textGradient": "Sfumatura",\r\n
+  "SSE.Views.ShapeSettings.textGradientFill": "Sfumatura",\r\n
+  "SSE.Views.ShapeSettings.textImageTexture": "Immagine o trama",\r\n
+  "SSE.Views.ShapeSettings.textLinear": "Lineare",\r\n
+  "SSE.Views.ShapeSettings.textNewColor": "Colore personalizzato",\r\n
+  "SSE.Views.ShapeSettings.textNoFill": "Nessun riempimento",\r\n
+  "SSE.Views.ShapeSettings.textOriginalSize": "Dimensione originale",\r\n
+  "SSE.Views.ShapeSettings.textPatternFill": "Modello",\r\n
+  "SSE.Views.ShapeSettings.textRadial": "Radiale",\r\n
+  "SSE.Views.ShapeSettings.textSelectTexture": "Seleziona",\r\n
+  "SSE.Views.ShapeSettings.textStandartColors": "Colori standard",\r\n
+  "SSE.Views.ShapeSettings.textStretch": "Estendi",\r\n
+  "SSE.Views.ShapeSettings.textStyle": "Stile",\r\n
+  "SSE.Views.ShapeSettings.textTexture": "Da trama",\r\n
+  "SSE.Views.ShapeSettings.textThemeColors": "Colori tema",\r\n
+  "SSE.Views.ShapeSettings.textTile": "Tela",\r\n
+  "SSE.Views.ShapeSettings.txtBrownPaper": "Carta da pacchi",\r\n
+  "SSE.Views.ShapeSettings.txtCanvas": "Tappeto",\r\n
+  "SSE.Views.ShapeSettings.txtCarton": "Cartone",\r\n
+  "SSE.Views.ShapeSettings.txtDarkFabric": "Tessuto scuro",\r\n
+  "SSE.Views.ShapeSettings.txtGrain": "Grano",\r\n
+  "SSE.Views.ShapeSettings.txtGranite": "Granito",\r\n
+  "SSE.Views.ShapeSettings.txtGreyPaper": "Carta grigia",\r\n
+  "SSE.Views.ShapeSettings.txtKnit": "A maglia",\r\n
+  "SSE.Views.ShapeSettings.txtLeather": "Cuoio",\r\n
+  "SSE.Views.ShapeSettings.txtNoBorders": "Nessuna linea",\r\n
+  "SSE.Views.ShapeSettings.txtPapyrus": "Papiro",\r\n
+  "SSE.Views.ShapeSettings.txtWood": "Legno",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.cancelButtonText": "Annulla",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.okButtonText": "OK",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.strMargins": "Spaziatura interna",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textArrows": "Frecce",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textBeginSize": "Dimensioni inizio",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textBeginStyle": "Stile inizio",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textBevel": "Smussato",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textBottom": "In basso",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textCapType": "Tipo estremità",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textEndSize": "Dimensioni fine",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textEndStyle": "Stile fine",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textFlat": "Uniforme",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textHeight": "Altezza",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textJoinType": "Tipo giunzione",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textKeepRatio": "Proporzioni costanti",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textLeft": "A sinistra",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textLineStyle": "Stile linea",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textMiter": "Acuto",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textRight": "A destra",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textRound": "Rotondo",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textSize": "Dimensione",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textSquare": "Quadrato",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textTitle": "Forma - Impostazioni avanzate",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textTop": "In alto",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textWeightArrows": "Spessori e frecce",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textWidth": "Larghezza",\r\n
+  "SSE.Views.Statusbar.CopyDialog.itemCopyToEnd": "(Copia alla fine)",\r\n
+  "SSE.Views.Statusbar.CopyDialog.itemMoveToEnd": "(Sposta alla fine)",\r\n
+  "SSE.Views.Statusbar.CopyDialog.textCopyBefore": "Copia prima del foglio",\r\n
+  "SSE.Views.Statusbar.CopyDialog.textMoveBefore": "Sposta prima del foglio",\r\n
+  "SSE.Views.Statusbar.itemCopy": "Copia",\r\n
+  "SSE.Views.Statusbar.itemDelete": "Elimina",\r\n
+  "SSE.Views.Statusbar.itemHidden": "Nascosto",\r\n
+  "SSE.Views.Statusbar.itemHide": "Nascondi",\r\n
+  "SSE.Views.Statusbar.itemInsert": "Inserisci",\r\n
+  "SSE.Views.Statusbar.itemMove": "Sposta",\r\n
+  "SSE.Views.Statusbar.itemRename": "Rinomina",\r\n
+  "SSE.Views.Statusbar.itemTabColor": "Colore scheda",\r\n
+  "SSE.Views.Statusbar.RenameDialog.errNameExists": "Il foglio di lavoro con questo nome esiste già.",\r\n
+  "SSE.Views.Statusbar.RenameDialog.errNameWrongChar": "Il nome foglio non può contenere i seguenti caratteri: \\\\/*?[]:",\r\n
+  "SSE.Views.Statusbar.RenameDialog.labelSheetName": "Nome foglio",\r\n
+  "SSE.Views.Statusbar.textAverage": "MEDIA",\r\n
+  "SSE.Views.Statusbar.textCount": "CONTEGGIO",\r\n
+  "SSE.Views.Statusbar.textNewColor": "Colore personalizzato",\r\n
+  "SSE.Views.Statusbar.textNoColor": "Nessun colore",\r\n
+  "SSE.Views.Statusbar.textStandartColors": "Colori standard",\r\n
+  "SSE.Views.Statusbar.textSum": "SOMMA",\r\n
+  "SSE.Views.Statusbar.textThemeColors": "Colori tema",\r\n
+  "SSE.Views.Statusbar.tipAddTab": "Aggiungi foglio di lavoro",\r\n
+  "SSE.Views.Statusbar.tipFirst": "Scorri verso il primo foglio",\r\n
+  "SSE.Views.Statusbar.tipLast": "Scorri verso l\'ultimo foglio",\r\n
+  "SSE.Views.Statusbar.tipNext": "Scorri elenco fogli a destra",\r\n
+  "SSE.Views.Statusbar.tipPrev": "Scorri elenco fogli a sinistra",\r\n
+  "SSE.Views.Statusbar.tipZoomFactor": "Ingrandimento",\r\n
+  "SSE.Views.Statusbar.tipZoomIn": "Zoom avanti",\r\n
+  "SSE.Views.Statusbar.tipZoomOut": "Zoom indietro",\r\n
+  "SSE.Views.Statusbar.zoomText": "Zoom {0}%",\r\n
+  "SSE.Views.TableOptionsDialog.errorAutoFilterDataRange": "Impossibile eseguire l\'operazione sull\'intervallo celle selezionato.<br>Seleziona un intervallo di celle uniforme all\'interno o all\'esterno della tabella e prova di nuovo.",\r\n
+  "SSE.Views.TableOptionsDialog.textCancel": "Annulla",\r\n
+  "SSE.Views.TableOptionsDialog.txtEmpty": "Questo campo è richiesto",\r\n
+  "SSE.Views.TableOptionsDialog.txtFormat": "Crea tabella",\r\n
+  "SSE.Views.TableOptionsDialog.txtInvalidRange": "ERRORE! Intervallo non valido",\r\n
+  "SSE.Views.TableOptionsDialog.txtTitle": "Titolo",\r\n
+  "SSE.Views.Toolbar.mniImageFromFile": "Immagine da file",\r\n
+  "SSE.Views.Toolbar.mniImageFromUrl": "Immagine da URL",\r\n
+  "SSE.Views.Toolbar.textAlignBottom": "Allinea in basso",\r\n
+  "SSE.Views.Toolbar.textAlignCenter": "Allinea al centro",\r\n
+  "SSE.Views.Toolbar.textAlignJust": "Giustifica",\r\n
+  "SSE.Views.Toolbar.textAlignLeft": "Allinea a sinistra",\r\n
+  "SSE.Views.Toolbar.textAlignMiddle": "Allinea in mezzo",\r\n
+  "SSE.Views.Toolbar.textAlignRight": "Allinea a destra",\r\n
+  "SSE.Views.Toolbar.textAlignTop": "Allinea in alto",\r\n
+  "SSE.Views.Toolbar.textAllBorders": "Tutti i bordi",\r\n
+  "SSE.Views.Toolbar.textBold": "Grassetto",\r\n
+  "SSE.Views.Toolbar.textBordersColor": "Colore bordo",\r\n
+  "SSE.Views.Toolbar.textBordersWidth": "Spessore bordo",\r\n
+  "SSE.Views.Toolbar.textBottomBorders": "Bordi inferiori",\r\n
+  "SSE.Views.Toolbar.textCenterBorders": "Bordi verticali interni",\r\n
+  "SSE.Views.Toolbar.textClockwise": "Angolo in senso orario",\r\n
+  "SSE.Views.Toolbar.textCompactToolbar": "Mostra barra degli strumenti compatta",\r\n
+  "SSE.Views.Toolbar.textCounterCw": "Angolo in senso antiorario",\r\n
+  "SSE.Views.Toolbar.textDelLeft": "Sposta celle a sinistra",\r\n
+  "SSE.Views.Toolbar.textDelUp": "Sposta celle in alto",\r\n
+  "SSE.Views.Toolbar.textDiagDownBorder": "Bordo diagonale inferiore",\r\n
+  "SSE.Views.Toolbar.textDiagUpBorder": "Bordo diagonale superiore",\r\n
+  "SSE.Views.Toolbar.textEntireCol": "Colonna intera",\r\n
+  "SSE.Views.Toolbar.textEntireRow": "Riga intera",\r\n
+  "SSE.Views.Toolbar.textFreezePanes": "Blocca riquadri",\r\n
+  "SSE.Views.Toolbar.textHideFBar": "Nascondi barra di formula",\r\n
+  "SSE.Views.Toolbar.textHideGridlines": "Nascondi griglia",\r\n
+  "SSE.Views.Toolbar.textHideHeadings": "Nascondi titoli",\r\n
+  "SSE.Views.Toolbar.textHideTBar": "Nascondi barra di titolo",\r\n
+  "SSE.Views.Toolbar.textHorizontal": "Testo orizzontale",\r\n
+  "SSE.Views.Toolbar.textInsDown": "Sposta celle in basso",\r\n
+  "SSE.Views.Toolbar.textInsideBorders": "Bordi interni",\r\n
+  "SSE.Views.Toolbar.textInsRight": "Sposta celle a destra",\r\n
+  "SSE.Views.Toolbar.textItalic": "Corsivo",\r\n
+  "SSE.Views.Toolbar.textLeftBorders": "Bordi sinistri",\r\n
+  "SSE.Views.Toolbar.textMiddleBorders": "Bordi orizzontali interni",\r\n
+  "SSE.Views.Toolbar.textNewColor": "Colore personalizzato",\r\n
+  "SSE.Views.Toolbar.textNoBorders": "Nessun bordo",\r\n
+  "SSE.Views.Toolbar.textOutBorders": "Bordi esterni",\r\n
+  "SSE.Views.Toolbar.textPrint": "Stampa",\r\n
+  "SSE.Views.Toolbar.textPrintOptions": "Impostazioni stampa",\r\n
+  "SSE.Views.Toolbar.textRightBorders": "Bordi destri",\r\n
+  "SSE.Views.Toolbar.textRotateDown": "Ruota testo verso il basso",\r\n
+  "SSE.Views.Toolbar.textRotateUp": "Ruota testo verso l\'alto",\r\n
+  "SSE.Views.Toolbar.textStandartColors": "Colori standard",\r\n
+  "SSE.Views.Toolbar.textThemeColors": "Colori tema",\r\n
+  "SSE.Views.Toolbar.textTopBorders": "Bordi superiori",\r\n
+  "SSE.Views.Toolbar.textUnderline": "Sottolineato",\r\n
+  "SSE.Views.Toolbar.textZoom": "Zoom",\r\n
+  "SSE.Views.Toolbar.tipAdvSettings": "Impostazioni avanzate",\r\n
+  "SSE.Views.Toolbar.tipAlignBottom": "Allinea in basso",\r\n
+  "SSE.Views.Toolbar.tipAlignCenter": "Allinea al centro",\r\n
+  "SSE.Views.Toolbar.tipAlignJust": "Giustifica",\r\n
+  "SSE.Views.Toolbar.tipAlignLeft": "Allinea a sinistra",\r\n
+  "SSE.Views.Toolbar.tipAlignMiddle": "Allinea in mezzo",\r\n
+  "SSE.Views.Toolbar.tipAlignRight": "Allinea a destra",\r\n
+  "SSE.Views.Toolbar.tipAlignTop": "Allinea in alto",\r\n
+  "SSE.Views.Toolbar.tipAutofilter": "Ordina e filtra",\r\n
+  "SSE.Views.Toolbar.tipBack": "Indietro",\r\n
+  "SSE.Views.Toolbar.tipBorders": "Bordi",\r\n
+  "SSE.Views.Toolbar.tipCellStyle": "Stile cella",\r\n
+  "SSE.Views.Toolbar.tipClearStyle": "Cancella",\r\n
+  "SSE.Views.Toolbar.tipColorSchemas": "Cambia combinazione colori",\r\n
+  "SSE.Views.Toolbar.tipCopy": "Copia",\r\n
+  "SSE.Views.Toolbar.tipCopyStyle": "Copia stile",\r\n
+  "SSE.Views.Toolbar.tipDecDecimal": "Diminuisci decimali",\r\n
+  "SSE.Views.Toolbar.tipDecFont": "Riduci dimensione caratteri",\r\n
+  "SSE.Views.Toolbar.tipDeleteOpt": "Elimina celle",\r\n
+  "SSE.Views.Toolbar.tipDigStyleAccounting": "Stile di contabilità",\r\n
+  "SSE.Views.Toolbar.tipDigStyleCurrency": "Stile valuta",\r\n
+  "SSE.Views.Toolbar.tipDigStylePercent": "Stile percentuale",\r\n
+  "SSE.Views.Toolbar.tipEditChart": "Modifica grafico",\r\n
+  "SSE.Views.Toolbar.tipFontColor": "Colore caratteri",\r\n
+  "SSE.Views.Toolbar.tipFontName": "Nome tipo di carattere",\r\n
+  "SSE.Views.Toolbar.tipFontSize": "Dimensione carattere",\r\n
+  "SSE.Views.Toolbar.tipHAligh": "Allineamento orizzontale",\r\n
+  "SSE.Views.Toolbar.tipIncDecimal": "Aumenta decimali",\r\n
+  "SSE.Views.Toolbar.tipIncFont": "Aumenta dimensione caratteri ",\r\n
+  "SSE.Views.Toolbar.tipInsertChart": "Inserisci grafico",\r\n
+  "SSE.Views.Toolbar.tipInsertHyperlink": "Aggiungi collegamento ipertestuale",\r\n
+  "SSE.Views.Toolbar.tipInsertImage": "Inserisci immagine",\r\n
+  "SSE.Views.Toolbar.tipInsertOpt": "Inserisci celle",\r\n
+  "SSE.Views.Toolbar.tipInsertShape": "Inserisci forma",\r\n
+  "SSE.Views.Toolbar.tipInsertText": "Inserisci testo",\r\n
+  "SSE.Views.Toolbar.tipMerge": "Unisci",\r\n
+  "SSE.Views.Toolbar.tipNewDocument": "Nuovo documento",\r\n
+  "SSE.Views.Toolbar.tipNumFormat": "Formato numero",\r\n
+  "SSE.Views.Toolbar.tipOpenDocument": "Apri documento",\r\n
+  "SSE.Views.Toolbar.tipPaste": "Incolla",\r\n
+  "SSE.Views.Toolbar.tipPrColor": "Colore sfondo",\r\n
+  "SSE.Views.Toolbar.tipPrint": "Stampa",\r\n
+  "SSE.Views.Toolbar.tipRedo": "Ripristina",\r\n
+  "SSE.Views.Toolbar.tipSave": "Salva",\r\n
+  "SSE.Views.Toolbar.tipSaveCoauth": "Save your changes for the other users to see them.",\r\n
+  "SSE.Views.Toolbar.tipSynchronize": "Il documento è stato modificato da un altro utente. Clicca per salvare le modifiche e ricaricare gli aggiornamenti.",\r\n
+  "SSE.Views.Toolbar.tipTextOrientation": "Orientamento",\r\n
+  "SSE.Views.Toolbar.tipUndo": "Annulla",\r\n
+  "SSE.Views.Toolbar.tipVAligh": "Allineamento verticale",\r\n
+  "SSE.Views.Toolbar.tipViewSettings": "Mostra impostazioni",\r\n
+  "SSE.Views.Toolbar.tipWrap": "Testo a capo",\r\n
+  "SSE.Views.Toolbar.txtAccounting": "Contabilità",\r\n
+  "SSE.Views.Toolbar.txtAdditional": "Più...",\r\n
+  "SSE.Views.Toolbar.txtAscending": "Crescente",\r\n
+  "SSE.Views.Toolbar.txtClearAll": "Tutto",\r\n
+  "SSE.Views.Toolbar.txtClearComments": "Comments",\r\n
+  "SSE.Views.Toolbar.txtClearFilter": "Svuota filtro",\r\n
+  "SSE.Views.Toolbar.txtClearFormat": "Formato",\r\n
+  "SSE.Views.Toolbar.txtClearFormula": "Funzione",\r\n
+  "SSE.Views.Toolbar.txtClearHyper": "Collegamenti ipertestuali",\r\n
+  "SSE.Views.Toolbar.txtClearText": "Testo",\r\n
+  "SSE.Views.Toolbar.txtCurrency": "Valuta",\r\n
+  "SSE.Views.Toolbar.txtCustom": "Personalizzato",\r\n
+  "SSE.Views.Toolbar.txtDate": "Data",\r\n
+  "SSE.Views.Toolbar.txtDateTime": "Data e ora",\r\n
+  "SSE.Views.Toolbar.txtDescending": "Decrescente",\r\n
+  "SSE.Views.Toolbar.txtDollar": "$ Dollaro",\r\n
+  "SSE.Views.Toolbar.txtEuro": "€ Euro",\r\n
+  "SSE.Views.Toolbar.txtExp": "Esponenziale",\r\n
+  "SSE.Views.Toolbar.txtFilter": "Filtro",\r\n
+  "SSE.Views.Toolbar.txtFormula": "Inserisci funzione",\r\n
+  "SSE.Views.Toolbar.txtFraction": "Frazione",\r\n
+  "SSE.Views.Toolbar.txtFranc": "CHF Franco svizzero",\r\n
+  "SSE.Views.Toolbar.txtGeneral": "Generale",\r\n
+  "SSE.Views.Toolbar.txtInteger": "Numero intero",\r\n
+  "SSE.Views.Toolbar.txtMergeAcross": "Unisci in ciascuna riga",\r\n
+  "SSE.Views.Toolbar.txtMergeCells": "Unisci celle",\r\n
+  "SSE.Views.Toolbar.txtMergeCenter": "Unisci e centra",\r\n
+  "SSE.Views.Toolbar.txtNoBorders": "Nessun bordo",\r\n
+  "SSE.Views.Toolbar.txtNumber": "Numero",\r\n
+  "SSE.Views.Toolbar.txtPercentage": "Percentuale",\r\n
+  "SSE.Views.Toolbar.txtPound": "£ Sterlina britannica",\r\n
+  "SSE.Views.Toolbar.txtRouble": "р. Rublo",\r\n
+  "SSE.Views.Toolbar.txtScheme1": "Ufficio",\r\n
+  "SSE.Views.Toolbar.txtScheme10": "Luna",\r\n
+  "SSE.Views.Toolbar.txtScheme11": "Metro",\r\n
+  "SSE.Views.Toolbar.txtScheme12": "Modulo",\r\n
+  "SSE.Views.Toolbar.txtScheme13": "Mito",\r\n
+  "SSE.Views.Toolbar.txtScheme14": "Loggia",\r\n
+  "SSE.Views.Toolbar.txtScheme15": "Satellite",\r\n
+  "SSE.Views.Toolbar.txtScheme16": "Carta",\r\n
+  "SSE.Views.Toolbar.txtScheme17": "Solstizio",\r\n
+  "SSE.Views.Toolbar.txtScheme18": "Tecnologia",\r\n
+  "SSE.Views.Toolbar.txtScheme19": "Terra",\r\n
+  "SSE.Views.Toolbar.txtScheme2": "Scala di grigi",\r\n
+  "SSE.Views.Toolbar.txtScheme20": "Tramonto",\r\n
+  "SSE.Views.Toolbar.txtScheme21": "Verve",\r\n
+  "SSE.Views.Toolbar.txtScheme3": "Vertice",\r\n
+  "SSE.Views.Toolbar.txtScheme4": "Astro",\r\n
+  "SSE.Views.Toolbar.txtScheme5": "Città",\r\n
+  "SSE.Views.Toolbar.txtScheme6": "Viale",\r\n
+  "SSE.Views.Toolbar.txtScheme7": "Universo",\r\n
+  "SSE.Views.Toolbar.txtScheme8": "Flusso",\r\n
+  "SSE.Views.Toolbar.txtScheme9": "Galassia",\r\n
+  "SSE.Views.Toolbar.txtScientific": "Scientifico",\r\n
+  "SSE.Views.Toolbar.txtSort": "Ordina",\r\n
+  "SSE.Views.Toolbar.txtSortAZ": "Ordina dal più alto al più basso",\r\n
+  "SSE.Views.Toolbar.txtSortZA": "Ordina dal più alto al più basso",\r\n
+  "SSE.Views.Toolbar.txtSpecial": "Speciale",\r\n
+  "SSE.Views.Toolbar.txtTableTemplate": "Formatta come tabella",\r\n
+  "SSE.Views.Toolbar.txtText": "Testo",\r\n
+  "SSE.Views.Toolbar.txtTime": "Ora",\r\n
+  "SSE.Views.Toolbar.txtUnmerge": "Dividi celle",\r\n
+  "SSE.Views.Toolbar.txtYen": "¥ Yen"\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>58515</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

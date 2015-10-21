@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308426.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>LeftMenu.template</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div id="view-left-menu" class="tool-menu left">\r\n
+    <div class="tool-menu-btns">\r\n
+        <button id="left-btn-file" class="btn btn-category" content-target="left-panel-file"><span class="btn-icon btn-menu-file">&nbsp;</span></button>\r\n
+        <button id="left-btn-search" class="btn btn-category" content-target=""><span class="btn-icon btn-menu-search">&nbsp;</span></button>\r\n
+        <!-- /** coauthoring begin **/ -->\r\n
+        <button id="left-btn-comments" class="btn btn-category" content-target="left-panel-comments"><span class="btn-icon btn-menu-comments">&nbsp;</span></button>\r\n
+        <button id="left-btn-chat" class="btn btn-category" content-target="left-panel-chat"><span class="btn-icon btn-menu-chat">&nbsp;</span></button>\r\n
+        <!-- /** coauthoring end **/ -->\r\n
+        <button id="left-btn-support" class="btn btn-category" content-target=""><span class="btn-icon btn-menu-support">&nbsp;</span></button>\r\n
+        <button id="left-btn-about" class="btn btn-category" content-target=""><span class="btn-icon btn-menu-about">&nbsp;</span></button>\r\n
+    </div>\r\n
+    <div class="left-panel" style="">\r\n
+        <!-- /** coauthoring begin **/ -->\r\n
+        <div id="left-panel-comments" class="" style="display: none;" />\r\n
+        <div id="left-panel-chat" class="" style="display: none;" />\r\n
+        <!-- /** coauthoring end **/ -->\r\n
+    </div>\r\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1372</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

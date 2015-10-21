@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308809.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>header.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+#header-container {\n
+    height: @app-header-height;\n
+    display: table;\n
+\n
+    & > div {\n
+        display: table-cell;\n
+        height: @app-header-height;\n
+        white-space: nowrap;\n
+        vertical-align: middle;\n
+        color: #fff;\n
+    }\n
+}\n
+\n
+#header-logo {\n
+    background-color: @app-header-bg-color-dark;\n
+    min-width: 15px + 90px + 5px;\n
+    .background-ximage(\'@{common-image-path}/header/header-logo.png\', \'@{common-image-path}/header/header-logo@2x.png\', 86px);\n
+    background-repeat: no-repeat;\n
+    background-position: 15px center;\n
+    cursor: pointer;\n
+}\n
+\n
+#header-caption {\n
+    & > div {\n
+        position: relative;\n
+        background-color: @app-header-bg-color-dark;\n
+        color: lighten(@app-header-bg-color-light, 20%) !important;\n
+        padding-right: 15px;\n
+        cursor: default;\n
+        z-index: 1;\n
+        white-space: nowrap;\n
+        height: @app-header-height;\n
+        line-height: @app-header-height;\n
+\n
+        &:after {\n
+            content: \'\';\n
+            position: absolute;\n
+            top: 0;\n
+            right: -@app-header-height / 2;\n
+            width: @app-header-height / 2;\n
+            height: @app-header-height;\n
+            border-top: @app-header-height / 2 solid transparent;\n
+            border-left: @app-header-height / 3 solid @app-header-bg-color-dark;\n
+            border-bottom: @app-header-height / 2 solid transparent;\n
+        }\n
+    }\n
+}\n
+\n
+#header-documentcaption {\n
+    width: 100%;\n
+    max-width: 100px;\n
+    overflow: hidden;\n
+    text-overflow: ellipsis;\n
+    background-color: @app-header-bg-color;\n
+    padding: 0 15px + @app-header-height / 3;\n
+    cursor: default;\n
+}\n
+\n
+#header-back {\n
+    & > div {\n
+        position: relative;\n
+        background-color: @app-header-bg-color-light;\n
+        padding: 0 15px 0 15px + @app-header-height / 3;\n
+        cursor: pointer;\n
+        white-space: nowrap;\n
+        height: @app-header-height;\n
+        line-height: @app-header-height - 2px;\n
+\n
+        &:after {\n
+            content: \'\';\n
+            position: absolute;\n
+            top: 0;\n
+            left: 0;\n
+            width: @app-header-height / 2;\n
+            height: @app-header-height;\n
+            border-top: @app-header-height / 2 solid transparent;\n
+            border-left: @app-header-height / 3 solid @app-header-bg-color;\n
+            border-bottom: @app-header-height / 2 solid transparent;\n
+        }\n
+    }\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2346</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

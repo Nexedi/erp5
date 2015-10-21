@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314741.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>CONTRIBUTING.md</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>## How to contribute to Underscore.js\n
+\n
+* Before you open a ticket or send a pull request, [search](https://github.com/jashkenas/underscore/issues) for previous discussions about the same feature or issue. Add to the earlier ticket if you find one.\n
+\n
+* Before sending a pull request for a feature, be sure to have [tests](http://underscorejs.org/test/).\n
+\n
+* Use the same coding style as the rest of the [codebase](https://github.com/jashkenas/underscore/blob/master/underscore.js).\n
+\n
+* In your pull request, do not add documentation or re-build the minified `underscore-min.js` file. We\'ll do those things before cutting a new release.\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>632</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314531.49</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>navs.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//\n
+// Navs\n
+// --------------------------------------------------\n
+\n
+\n
+// Base class\n
+// --------------------------------------------------\n
+\n
+.nav {\n
+  margin-bottom: 0;\n
+  padding-left: 0; // Override default ul/ol\n
+  list-style: none;\n
+  .clearfix();\n
+\n
+  > li {\n
+    position: relative;\n
+    display: block;\n
+\n
+    > a {\n
+      position: relative;\n
+      display: block;\n
+      padding: @nav-link-padding;\n
+      &:hover,\n
+      &:focus {\n
+        text-decoration: none;\n
+        background-color: @nav-link-hover-bg;\n
+      }\n
+    }\n
+\n
+    // Disabled state sets text to gray and nukes hover/tab effects\n
+    &.disabled > a {\n
+      color: @nav-disabled-link-color;\n
+\n
+      &:hover,\n
+      &:focus {\n
+        color: @nav-disabled-link-hover-color;\n
+        text-decoration: none;\n
+        background-color: transparent;\n
+        cursor: not-allowed;\n
+      }\n
+    }\n
+  }\n
+\n
+  // Open dropdowns\n
+  .open > a {\n
+    &,\n
+    &:hover,\n
+    &:focus {\n
+      background-color: @nav-link-hover-bg;\n
+      border-color: @link-color;\n
+    }\n
+  }\n
+\n
+  // Nav dividers (deprecated with v3.0.1)\n
+  //\n
+  // This should have been removed in v3 with the dropping of `.nav-list`, but\n
+  // we missed it. We don\'t currently support this anywhere, but in the interest\n
+  // of maintaining backward compatibility in case you use it, it\'s deprecated.\n
+  .nav-divider {\n
+    .nav-divider();\n
+  }\n
+\n
+  // Prevent IE8 from misplacing imgs\n
+  //\n
+  // See https://github.com/h5bp/html5-boilerplate/issues/984#issuecomment-3985989\n
+  > li > a > img {\n
+    max-width: none;\n
+  }\n
+}\n
+\n
+\n
+// Tabs\n
+// -------------------------\n
+\n
+// Give the tabs something to sit on\n
+.nav-tabs {\n
+  border-bottom: 1px solid @nav-tabs-border-color;\n
+  > li {\n
+    float: left;\n
+    // Make the list-items overlay the bottom border\n
+    margin-bottom: -1px;\n
+\n
+    // Actual tabs (as links)\n
+    > a {\n
+      margin-right: 2px;\n
+      line-height: @line-height-base;\n
+      border: 1px solid transparent;\n
+      border-radius: @border-radius-base @border-radius-base 0 0;\n
+      &:hover {\n
+        border-color: @nav-tabs-link-hover-border-color @nav-tabs-link-hover-border-color @nav-tabs-border-color;\n
+      }\n
+    }\n
+\n
+    // Active state, and it\'s :hover to override normal :hover\n
+    &.active > a {\n
+      &,\n
+      &:hover,\n
+      &:focus {\n
+        color: @nav-tabs-active-link-hover-color;\n
+        background-color: @nav-tabs-active-link-hover-bg;\n
+        border: 1px solid @nav-tabs-active-link-hover-border-color;\n
+        border-bottom-color: transparent;\n
+        cursor: default;\n
+      }\n
+    }\n
+  }\n
+  // pulling this in mainly for less shorthand\n
+  &.nav-justified {\n
+    .nav-justified();\n
+    .nav-tabs-justified();\n
+  }\n
+}\n
+\n
+\n
+// Pills\n
+// -------------------------\n
+.nav-pills {\n
+  > li {\n
+    float: left;\n
+\n
+    // Links rendered as pills\n
+    > a {\n
+      border-radius: @nav-pills-border-radius;\n
+    }\n
+    + li {\n
+      margin-left: 2px;\n
+    }\n
+\n
+    // Active state\n
+    &.active > a {\n
+      &,\n
+      &:hover,\n
+      &:focus {\n
+        color: @nav-pills-active-link-hover-color;\n
+        background-color: @nav-pills-active-link-hover-bg;\n
+      }\n
+    }\n
+  }\n
+}\n
+\n
+\n
+// Stacked pills\n
+.nav-stacked {\n
+  > li {\n
+    float: none;\n
+    + li {\n
+      margin-top: 2px;\n
+      margin-left: 0; // no need for this gap between nav items\n
+    }\n
+  }\n
+}\n
+\n
+\n
+// Nav variations\n
+// --------------------------------------------------\n
+\n
+// Justified nav links\n
+// -------------------------\n
+\n
+.nav-justified {\n
+  width: 100%;\n
+\n
+  > li {\n
+    float: none;\n
+     > a {\n
+      text-align: center;\n
+      margin-bottom: 5px;\n
+    }\n
+  }\n
+\n
+  > .dropdown .dropdown-menu {\n
+    top: auto;\n
+    left: auto;\n
+  }\n
+\n
+  @media (min-width: @screen-sm-min) {\n
+    > li {\n
+      display: table-cell;\n
+      width: 1%;\n
+      > a {\n
+        margin-bottom: 0;\n
+      }\n
+    }\n
+  }\n
+}\n
+\n
+// Move borders to anchors instead of bottom of list\n
+//\n
+// Mixin for adding on top the shared `.nav-justified` styles for our tabs\n
+.nav-tabs-justified {\n
+  border-bottom: 0;\n
+\n
+  > li > a {\n
+    // Override margin from .nav-tabs\n
+    margin-right: 0;\n
+    border-radius: @border-radius-base;\n
+  }\n
+\n
+  > .active > a,\n
+  > .active > a:hover,\n
+  > .active > a:focus {\n
+    border: 1px solid @nav-tabs-justified-link-border-color;\n
+  }\n
+\n
+  @media (min-width: @screen-sm-min) {\n
+    > li > a {\n
+      border-bottom: 1px solid @nav-tabs-justified-link-border-color;\n
+      border-radius: @border-radius-base @border-radius-base 0 0;\n
+    }\n
+    > .active > a,\n
+    > .active > a:hover,\n
+    > .active > a:focus {\n
+      border-bottom-color: @nav-tabs-justified-active-link-border-color;\n
+    }\n
+  }\n
+}\n
+\n
+\n
+// Tabbable tabs\n
+// -------------------------\n
+\n
+// Hide tabbable panes to start, show them when `.active`\n
+.tab-content {\n
+  > .tab-pane {\n
+    display: none;\n
+  }\n
+  > .active {\n
+    display: block;\n
+  }\n
+}\n
+\n
+\n
+// Dropdowns\n
+// -------------------------\n
+\n
+// Specific dropdowns\n
+.nav-tabs .dropdown-menu {\n
+  // make dropdown border overlap tab border\n
+  margin-top: -1px;\n
+  // Remove the top rounded corners here since there is a hard edge above the menu\n
+  .border-top-radius(0);\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4915</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

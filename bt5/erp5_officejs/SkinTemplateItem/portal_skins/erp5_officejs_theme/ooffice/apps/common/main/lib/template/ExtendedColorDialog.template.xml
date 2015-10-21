@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308803.82</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ExtendedColorDialog.template</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div class="color-box">\r\n
+    <div id="id-hsb-colorpicker" style="vertical-align:top;">\r\n
+    </div>\r\n
+    <div class="color-info" style="">\r\n
+        <div style="margin-left:15px;">\r\n
+            <label class="color-label"><%= txtNew %></label>\r\n
+            <div id="field-new-color" class="color-cnt top"></div>\r\n
+            <div id="field-start-color" class="color-cnt bottom"></div>\r\n
+            <label class="color-label"><%= txtCurrent %></label>\r\n
+        </div>\r\n
+        <div style="padding:13px 0 2px 0;">\r\n
+            <label class="input-label">R:</label>\r\n
+            <div id="extended-spin-r" class="color-spin"></div>\r\n
+        </div>\r\n
+        <div style="padding:2px 0;">\r\n
+            <label class="input-label">G:</label>\r\n
+            <div id="extended-spin-g" class="color-spin"></div>\r\n
+        </div>\r\n
+        <div style="padding:2px 0;">\r\n
+            <label class="input-label">B:</label>\r\n
+            <div id="extended-spin-b" class="color-spin"></div>\r\n
+        </div>\r\n
+        <div style="padding:11px 0 0 0;">\r\n
+            <label class="input-label" style="width:12px;">#:</label>\r\n
+            <input id="extended-text-color" type="text" role="textbox" style="width:62px; height: 22px;">\r\n
+        </div>\r\n
+    </div>\r\n
+</div>\r\n
+<div class="footer center">\r\n
+    <button class="btn normal dlg-btn primary" result="1"><%= txtAdd %></button>\r\n
+    <button class="btn normal dlg-btn" result="0"><%= txtCancel %></button>\r\n
+</div>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1435</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

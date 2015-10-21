@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314535.37</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>composer.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\n
+    "name": "components/jquery",\n
+    "description": "jQuery JavaScript Library",\n
+    "type": "component",\n
+    "homepage": "http://jquery.com",\n
+    "license": "MIT",\n
+    "support": {\n
+        "irc": "irc://irc.freenode.org/jquery",\n
+        "issues": "http://bugs.jquery.com",\n
+        "forum": "http://forum.jquery.com",\n
+        "wiki": "http://docs.jquery.com/",\n
+        "source": "https://github.com/jquery/jquery"\n
+    },\n
+    "authors": [\n
+        {\n
+            "name": "John Resig",\n
+            "email": "jeresig@gmail.com"\n
+        }\n
+    ],\n
+    "require": {\n
+        "robloach/component-installer": "*"\n
+    },\n
+    "extra": {\n
+        "component": {\n
+            "scripts": [\n
+                "jquery.js"\n
+            ],\n
+            "files": [\n
+                "jquery.min.js",\n
+                "jquery-migrate.js",\n
+                "jquery-migrate.min.js"\n
+            ]\n
+        }\n
+    }\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>881</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

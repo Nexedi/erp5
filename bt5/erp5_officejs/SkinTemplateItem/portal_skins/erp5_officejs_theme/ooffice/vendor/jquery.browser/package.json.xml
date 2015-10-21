@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314533.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>package.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\n
+  "name": "jquery.browser",\n
+  "version": "0.0.5",\n
+  "authors": [\n
+    "Gabriel Cebrian <gabceb@gmail.com>",\n
+    "jQuery Team <https://github.com/gabceb/jquery-browser-plugin/wiki/Authors>"\n
+  ],\n
+  "description": "A jQuery plugin for browser detection.",\n
+  "repository": "git@github.com:gabceb/jquery-browser-plugin.git",\n
+  "devDependencies": {\n
+    "webserver": "*",\n
+    "utils": "*",\n
+    "grunt": "~0.4.0",\n
+    "grunt-contrib-jshint": "~0.1.1",\n
+    "grunt-contrib-uglify": "~0.2.7",\n
+    "grunt-contrib-copy": "~0.4.1",\n
+    "grunt-exec": "~0.4.2"\n
+  },\n
+  "license": "MIT",\n
+  "engines": {\n
+    "node": ">= 0.4.0"\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>615</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

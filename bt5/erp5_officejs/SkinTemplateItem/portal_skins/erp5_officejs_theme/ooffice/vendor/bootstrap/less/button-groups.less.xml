@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314529.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>button-groups.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//\n
+// Button groups\n
+// --------------------------------------------------\n
+\n
+// Make the div behave like a button\n
+.btn-group,\n
+.btn-group-vertical {\n
+  position: relative;\n
+  display: inline-block;\n
+  vertical-align: middle; // match .btn alignment given font-size hack above\n
+  > .btn {\n
+    position: relative;\n
+    float: left;\n
+    // Bring the "active" button to the front\n
+    &:hover,\n
+    &:focus,\n
+    &:active,\n
+    &.active {\n
+      z-index: 2;\n
+    }\n
+    &:focus {\n
+      // Remove focus outline when dropdown JS adds it after closing the menu\n
+      outline: none;\n
+    }\n
+  }\n
+}\n
+\n
+// Prevent double borders when buttons are next to each other\n
+.btn-group {\n
+  .btn + .btn,\n
+  .btn + .btn-group,\n
+  .btn-group + .btn,\n
+  .btn-group + .btn-group {\n
+    margin-left: -1px;\n
+  }\n
+}\n
+\n
+// Optional: Group multiple button groups together for a toolbar\n
+.btn-toolbar {\n
+  .clearfix();\n
+\n
+  .btn-group {\n
+    float: left;\n
+  }\n
+  // Space out series of button groups\n
+  > .btn,\n
+  > .btn-group {\n
+    + .btn,\n
+    + .btn-group {\n
+      margin-left: 5px;\n
+    }\n
+  }\n
+}\n
+\n
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {\n
+  border-radius: 0;\n
+}\n
+\n
+// Set corners individual because sometimes a single button can be in a .btn-group and we need :first-child and :last-child to both match\n
+.btn-group > .btn:first-child {\n
+  margin-left: 0;\n
+  &:not(:last-child):not(.dropdown-toggle) {\n
+    .border-right-radius(0);\n
+  }\n
+}\n
+// Need .dropdown-toggle since :last-child doesn\'t apply given a .dropdown-menu immediately after it\n
+.btn-group > .btn:last-child:not(:first-child),\n
+.btn-group > .dropdown-toggle:not(:first-child) {\n
+  .border-left-radius(0);\n
+}\n
+\n
+// Custom edits for including btn-groups within btn-groups (useful for including dropdown buttons within a btn-group)\n
+.btn-group > .btn-group {\n
+  float: left;\n
+}\n
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {\n
+  border-radius: 0;\n
+}\n
+.btn-group > .btn-group:first-child {\n
+  > .btn:last-child,\n
+  > .dropdown-toggle {\n
+    .border-right-radius(0);\n
+  }\n
+}\n
+.btn-group > .btn-group:last-child > .btn:first-child {\n
+  .border-left-radius(0);\n
+}\n
+\n
+// On active and open, don\'t show outline\n
+.btn-group .dropdown-toggle:active,\n
+.btn-group.open .dropdown-toggle {\n
+  outline: 0;\n
+}\n
+\n
+\n
+// Sizing\n
+//\n
+// Remix the default button sizing classes into new ones for easier manipulation.\n
+\n
+.btn-group-xs > .btn { .btn-xs(); }\n
+.btn-group-sm > .btn { .btn-sm(); }\n
+.btn-group-lg > .btn { .btn-lg(); }\n
+\n
+\n
+// Split button dropdowns\n
+// ----------------------\n
+\n
+// Give the line between buttons some depth\n
+.btn-group > .btn + .dropdown-toggle {\n
+  padding-left: 8px;\n
+  padding-right: 8px;\n
+}\n
+.btn-group > .btn-lg + .dropdown-toggle {\n
+  padding-left: 12px;\n
+  padding-right: 12px;\n
+}\n
+\n
+// The clickable button for toggling the menu\n
+// Remove the gradient and set the same inset shadow as the :active state\n
+.btn-group.open .dropdown-toggle {\n
+  .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));\n
+\n
+  // Show no shadow for `.btn-link` since it has no other button styles.\n
+  &.btn-link {\n
+    .box-shadow(none);\n
+  }\n
+}\n
+\n
+\n
+// Reposition the caret\n
+.btn .caret {\n
+  margin-left: 0;\n
+}\n
+// Carets in other button sizes\n
+.btn-lg .caret {\n
+  border-width: @caret-width-large @caret-width-large 0;\n
+  border-bottom-width: 0;\n
+}\n
+// Upside down carets for .dropup\n
+.dropup .btn-lg .caret {\n
+  border-width: 0 @caret-width-large @caret-width-large;\n
+}\n
+\n
+\n
+// Vertical button groups\n
+// ----------------------\n
+\n
+.btn-group-vertical {\n
+  > .btn,\n
+  > .btn-group,\n
+  > .btn-group > .btn {\n
+    display: block;\n
+    float: none;\n
+    width: 100%;\n
+    max-width: 100%;\n
+  }\n
+\n
+  // Clear floats so dropdown menus can be properly placed\n
+  > .btn-group {\n
+    .clearfix();\n
+    > .btn {\n
+      float: none;\n
+    }\n
+  }\n
+\n
+  > .btn + .btn,\n
+  > .btn + .btn-group,\n
+  > .btn-group + .btn,\n
+  > .btn-group + .btn-group {\n
+    margin-top: -1px;\n
+    margin-left: 0;\n
+  }\n
+}\n
+\n
+.btn-group-vertical > .btn {\n
+  &:not(:first-child):not(:last-child) {\n
+    border-radius: 0;\n
+  }\n
+  &:first-child:not(:last-child) {\n
+    border-top-right-radius: @border-radius-base;\n
+    .border-bottom-radius(0);\n
+  }\n
+  &:last-child:not(:first-child) {\n
+    border-bottom-left-radius: @border-radius-base;\n
+    .border-top-radius(0);\n
+  }\n
+}\n
+.btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn {\n
+  border-radius: 0;\n
+}\n
+.btn-group-vertical > .btn-group:first-child {\n
+  > .btn:last-child,\n
+  > .dropdown-toggle {\n
+    .border-bottom-radius(0);\n
+  }\n
+}\n
+.btn-group-vertical > .btn-group:last-child > .btn:first-child {\n
+  .border-top-radius(0);\n
+}\n
+\n
+\n
+\n
+// Justified button groups\n
+// ----------------------\n
+\n
+.btn-group-justified {\n
+  display: table;\n
+  width: 100%;\n
+  table-layout: fixed;\n
+  border-collapse: separate;\n
+  > .btn,\n
+  > .btn-group {\n
+    float: none;\n
+    display: table-cell;\n
+    width: 1%;\n
+  }\n
+  > .btn-group .btn {\n
+    width: 100%;\n
+  }\n
+}\n
+\n
+\n
+// Checkbox and radio options\n
+[data-toggle="buttons"] > .btn > input[type="radio"],\n
+[data-toggle="buttons"] > .btn > input[type="checkbox"] {\n
+  display: none;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4919</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

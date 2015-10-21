@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314631.88</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>.bower.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\n
+  "name": "sockjs",\n
+  "version": "0.3.4",\n
+  "main": "sockjs.js",\n
+  "ignore": [\n
+    "**/.*",\n
+    "node_modules",\n
+    "components"\n
+  ],\n
+  "homepage": "https://github.com/myguidingstar/bower-sockjs",\n
+  "_release": "0.3.4",\n
+  "_resolution": {\n
+    "type": "version",\n
+    "tag": "0.3.4",\n
+    "commit": "ae96e770ab85caf9073a8806a9dcd7c0ce316623"\n
+  },\n
+  "_source": "git://github.com/myguidingstar/bower-sockjs.git",\n
+  "_target": "~0.3.2",\n
+  "_originalSource": "sockjs"\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>464</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
