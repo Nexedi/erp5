@@ -50,28 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Script to convert the prices used in the transaction to the \n
-currency of the destination section\n
-form_id : Page that action is called from\n
-\n
-\n
+            <value> <string>"""Convert the amounts used in the accounting transaction to the currency of the destination section\n
 """\n
 portal = context.getPortalObject()\n
-#get the precision of the destination\n
 precision = context.getDestinationSectionValue().getPriceCurrencyValue().getQuantityPrecision()\n
-#Get all transaction lines of the transaction \n
 line_list = context.contentValues(\n
       portal_type=portal.getPortalAccountingMovementTypeList())\n
-"""\n
-For each transaction line, calculate the price of the resource\n
-(i.e. currency in which the transaction is being done) in the \n
-context of the transaction line, add the resource, price_currency\n
-and start_date categories \n
-"""\n
 \n
 for line in line_list:\n
   section = line.getDestinationSectionValue()\n
+  if section != context.getDestinationSectionValue():\n
+    continue\n
   currency = line.getResourceValue()\n
   if not exchange_rate:\n
     exchange_rate = currency.getPrice(context=line.asContext(\n
