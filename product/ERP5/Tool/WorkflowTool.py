@@ -139,9 +139,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         raise WorkflowException('No workflows found.')
       found = False
       for workflow in workflow_list:
-        if not isinstance(workflow, InteractionWorkflowDefinition) and \
-            not isinstance(workflow, InteractionWorkflow):
-          if state_id in workflow.getStateIdList():
+        if not isinstance(workflow, (InteractionWorkflowDefinition, InteractionWorkflow,)) and \
+          state_id in workflow.getStateIdList():
             found = True
             break
       if not found:
