@@ -103,6 +103,11 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//button[@data-i18n=\'Proceed\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>select</td>\n
   <td>//select[@name=\'field_your_portal_type\']</td>\n
   <td>label=Bar</td>\n
@@ -148,11 +153,6 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>click</td>\n
-  <td>link=Back</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
   <td>open</td>\n
   <td>${base_url}/bar_module/Zuite_waitForActivities</td>\n
   <td></td>\n
@@ -164,7 +164,7 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/web_site_module/renderjs_runner/#jio_key=bar_module</td>\n
+  <td>${base_url}/web_site_module/renderjs_runner/#/bar_module</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
