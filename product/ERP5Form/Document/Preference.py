@@ -86,10 +86,10 @@ class Preference( Folder ):
     self._clearCache()
     Folder._edit(self, **kw)
 
-  def enable(self):
+  def enable(self, **kw):
     """Workflow method"""
     self._clearCache()
 
-  def disable(self):
+  def disable(self, **kw):
     """Workflow method"""
     self._clearCache()

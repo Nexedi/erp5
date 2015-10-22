@@ -153,6 +153,7 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(None,
         self.getPreferenceTool().getActiveSystemPreference())
     self.assertEqual(person2.getPreferenceState(), 'enabled')
+    self.tic()
     # enabling a preference disable all other of the same level
     self.assertEqual(person1.getPreferenceState(), 'disabled')
     self.assertEqual(group.getPreferenceState(),   'enabled')
