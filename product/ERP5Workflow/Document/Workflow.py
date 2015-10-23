@@ -430,7 +430,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       if vdef.getInfoGuard() is not None and not vdef.getInfoGuard().check(
           getSecurityManager(), self, ob):
           return default
-      status = self._getStatusOf(ob)
+      status = self.getCurrentStatusDict(ob)
       if status is not None and status.has_key(name):
           value = status[name]
 
@@ -587,7 +587,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
     # Figure out the old and new states.
     state_var = self.getStateVariable()
-    status_dict = self._getStatusOf(document)
+    status_dict = self.getCurrentStatusDict(document)
     current_state_value = self._getWorkflowStateOf(document, id_only=0)
 
     if current_state_value == None:
@@ -607,7 +607,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         new_state = old_state
       else:
         new_state = new_sdef.getReference()
-      former_status = current_state_value.getReference()
+      former_status = self.getCurrentStatusDict(document)
 
     # Execute the "before" script.
     before_script_success = 1
@@ -634,39 +634,38 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
     # update variables
     state_values = None
+    # seems state variable is not used in new workflow.
     object = self.getStateChangeInformation(document, self.getSourceValue())
     if new_sdef is not None:
       state_values = getattr(new_sdef,'var_values', None)
     if state_values is None:
       state_values = {}
 
-    if state_values is None: state_values = {}
     tdef_exprs = {}
     transition_variable_list = []
     if tdef is not None:
       transition_variable_list = tdef.objectValues(portal_type='Transition Variable')
     for transition_variable in transition_variable_list:
       tdef_exprs[transition_variable.getCausalityId()] = transition_variable.getDefaultExpr()
-      if tdef_exprs[transition_variable.getCausalityId()] is None:
-        tdef_exprs[transition_variable.getCausalityId()] = self._getOb(transition_variable.getCausalityId()).getDefaultExpr()
 
     # Update all transition variables
     if form_kw is not None:
       object.REQUEST.other.update(form_kw)
       kwargs = form_kw
+
     for vdef in self.objectValues(portal_type='Variable'):
       id = vdef.getId()
-      id_no_suffix = vdef.getReference()
+      variable_reference = vdef.getReference()
       if not vdef.for_status or vdef.for_status == 0:
         continue
       expr = None
-      if id_no_suffix in state_values:
-        value = state_values[id_no_suffix]
+      if variable_reference in state_values:
+        value = state_values[variable_reference]
       elif id in tdef_exprs:
         expr = tdef_exprs[id]
-      elif not vdef.update_always and id_no_suffix in former_status:
+      elif not vdef.update_always and variable_reference in former_status:
         # Preserve former value
-        value = former_status[id_no_suffix]
+        value = former_status[variable_reference]
       else:
         if vdef.getDefaultExpr() is not None:
           expr = vdef.getDefaultExpr()
@@ -685,8 +684,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         expr = Expression(expr)
         value = expr(econtext)
       if value is None: value = ''
-      status_dict[id_no_suffix] = value
-
+      status_dict[variable_reference] = value
     # Do not proceed in case of failure of before script
     if not before_script_success:
       status_dict[state_var] = old_state # Remain in state
@@ -1012,7 +1010,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     if old_state == new_state_id:
       # Object is already in expected state
       return
-    former_status = self._getStatusOf(ob)
+    former_status = self.getCurrentStatusDict(ob)
 
     new_sdef = self._getOb(new_state_id, None)
     if new_sdef is None:
@@ -1085,7 +1083,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       res = {}
       # Always provide the state variable.
       state_var = self.getStateVariable()
-      status = self._getStatusOf(ob)
+      status = self.getCurrentStatusDict(ob)
       for id, vdef in self.getVariableValueList().iteritems():
           if vdef.for_catalog:
               if status.has_key(id):
