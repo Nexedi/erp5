@@ -61,7 +61,7 @@ if context.getPriority() != 3: # XXX 3 is Priority.USER\n
   return\n
 \n
 for preference in portal.portal_preferences.searchFolder(\n
-    owner=str(portal.portal_membership.getAuthenticatedMember()),\n
+    owner={\'query\': str(portal.portal_membership.getAuthenticatedMember()), \'key\': \'ExactMatch\'},\n
     portal_type=context.getPortalType()):\n
   preference = preference.getObject()\n
   assert portal.portal_membership.getAuthenticatedMember().allowed(preference, [\'Owner\', ]), preference\n
