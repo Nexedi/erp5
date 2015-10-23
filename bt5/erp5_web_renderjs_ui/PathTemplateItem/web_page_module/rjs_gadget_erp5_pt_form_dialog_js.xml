@@ -269,7 +269,7 @@
             }\n
             return RSVP.all([\n
               form_gadget.notifySubmitted(),\n
-              form_gadget.redirect({command: \'display\', options: {jio_key: new URI(location).segment(2), editable: form_gadget.props.editable}})\n
+              form_gadget.redirect({command: \'push_history\', options: {jio_key: new URI(location).segment(2), editable: form_gadget.props.editable}})\n
             ]);\n
           });\n
       }\n
@@ -420,7 +420,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.30291.61878.2013</string> </value>
+                <value> <string>946.39113.715.59340</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -438,7 +438,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445000905.46</float>
+                        <float>1445530221.33</float>
                         <string>GMT</string>
                       </tuple>
                     </state>

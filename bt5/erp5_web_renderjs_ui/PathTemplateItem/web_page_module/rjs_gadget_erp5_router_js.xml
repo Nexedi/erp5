@@ -131,6 +131,7 @@
     COMMAND_SELECTION_PREVIOUS = "selection_previous",\n
     COMMAND_SELECTION_NEXT = "selection_next",\n
     COMMAND_HISTORY_PREVIOUS = "history_previous",\n
+    COMMAND_PUSH_HISTORY = "push_history",\n
     VALID_URL_COMMAND_DICT = {};\n
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STATE] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;\n
@@ -138,6 +139,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_PREVIOUS] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_NEXT] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_HISTORY_PREVIOUS] = null;\n
+  VALID_URL_COMMAND_DICT[COMMAND_PUSH_HISTORY] = null;\n
 \n
   //////////////////////////////////////////////////////////////////\n
   // Change URL functions\n
@@ -316,6 +318,21 @@
         // XXX Implement history management\n
         return addHistory(gadget, previous_options);\n
       })\n
+      .push(function (id) {\n
+        next_options.history = id;\n
+        return synchronousChangeState(\n
+          getDisplayUrlFor(jio_key, next_options)\n
+        );\n
+      });\n
+  }\n
+\n
+  function execPushHistoryCommand(gadget, previous_options, next_options) {\n
+    var jio_key = next_options.jio_key;\n
+    delete next_options.jio_key;\n
+    // XXX Hack to support create dialog\n
+    delete previous_options.view;\n
+    delete previous_options.page;\n
+    return addHistory(gadget, previous_options)\n
       .push(function (id) {\n
         next_options.history = id;\n
         return synchronousChangeState(\n
@@ -515,6 +532,9 @@
     }\n
     if (command_options.path === COMMAND_HISTORY_PREVIOUS) {\n
       return execHistoryPreviousCommand(gadget, previous_options);\n
+    }\n
+    if (command_options.path === COMMAND_PUSH_HISTORY) {\n
+      return execPushHistoryCommand(gadget, previous_options, next_options);\n
     }\n
     throw new Error(\'Unsupported command \' + command_options.path);\n
 \n
@@ -786,7 +806,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.35999.6366.29491</string> </value>
+                <value> <string>946.39127.64259.52206</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -804,7 +824,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445343438.7</float>
+                        <float>1445531098.26</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
