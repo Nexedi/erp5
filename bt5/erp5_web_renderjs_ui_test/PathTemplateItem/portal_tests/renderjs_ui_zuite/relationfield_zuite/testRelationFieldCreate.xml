@@ -99,7 +99,7 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//select[@name=\'field_your_portal_type\']</td>\n
+  <td>//button[@data-i18n=\'Proceed\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -201,14 +201,18 @@
 </tr>\n
 \n
 <tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//button[@data-i18n=\'Save\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>click</td>\n
   <td>//button[@data-i18n=\'Save\']</td>\n
   <td></td>\n
 </tr>\n
-\n
 <tr>\n
-  <td>pause</td>\n
-  <td>3000</td>\n
+  <td>waitForElementPresent</td>\n
+  <td>//button[@data-i18n=\'Save\']</td>\n
   <td></td>\n
 </tr>\n
 \n
