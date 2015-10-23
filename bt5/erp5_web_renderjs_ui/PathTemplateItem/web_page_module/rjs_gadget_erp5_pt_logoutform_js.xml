@@ -152,7 +152,7 @@
         })\n
         .push(function () {\n
           document.cookie = "__ac=" + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";\n
-          return form_gadget.redirect({page: "login"});\n
+          return form_gadget.redirect({command: \'display\', options: {page: \'login\'}});\n
         });\n
     });\n
 }(window, document, rJS, RSVP, promiseEventListener));</string> </value>
@@ -290,7 +290,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.54068.65304.28450</string> </value>
+                <value> <string>946.39092.31370.59716</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -308,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444986748.98</float>
+                        <float>1445528976.8</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
