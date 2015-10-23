@@ -267,10 +267,11 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     def _restoreMailHost(self):
       """Restore original Mail Host
       """
-      cls = self.portal.MailHost.__class__
-      if cls.__bases__[0] is DummyMailHostMixin:
-        cls.__bases__ = cls.__bases__[1:]
-        pmc_init_of(cls)
+      if self.portal is not None:
+        cls = self.portal.MailHost.__class__
+        if cls.__bases__[0] is DummyMailHostMixin:
+          cls.__bases__ = cls.__bases__[1:]
+          pmc_init_of(cls)
 
     def pinDateTime(self, date_time):
       # pretend time has stopped at a certain date (i.e. the test runs

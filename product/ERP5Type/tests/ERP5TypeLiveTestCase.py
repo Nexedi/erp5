@@ -135,7 +135,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
 
       self.abort()
       self._restoreMailHost()
-      if self.activity_tool_subscribed:
+      if getattr(self, "activity_tool_subscribed", False):
         self.portal.portal_activities.subscribe()
         self.commit()
 
