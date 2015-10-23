@@ -51,6 +51,7 @@ from Products.ERP5Type.tests import ProcessingNodeTestCase as\
                                     ProcessingNodeTestCaseModule
 ProcessingNodeTestCaseModule.patchActivityTool = lambda: None
 
+_request_server_url = None
 
 class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     """ERP5TypeLiveTestCase is the default class for *all* tests
@@ -108,6 +109,11 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       request = portal.REQUEST
       with patches._requests_lock:
         patches._requests[thread.get_ident()] = request
+
+      # Make live tests run under the same server URL than the host instance.
+      if _request_server_url:
+        request['SERVER_URL'] = _request_server_url
+        request._resetURLS()
 
       self.portal = portal
       return portal
@@ -184,7 +190,7 @@ class ERP5TypeLiveTestLoader(ERP5TypeTestLoader):
         return super(ERP5TypeLiveTestLoader, self).loadTestsFromName(name,
                                                                      module)
 
-def runLiveTest(test_list, verbosity=1, stream=None, **kw):
+def runLiveTest(test_list, verbosity=1, stream=None, request_server_url=None, **kw):
   from Products.ERP5Type.tests.runUnitTest import DebugTestResult
   from StringIO import StringIO
   # Add path of the TestTemplateItem folder of the instance
@@ -196,6 +202,9 @@ def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   for product_path in Products.__path__:
     product_test_list.extend(glob(os.path.join(product_path, '*', 'tests')))
   current_syspath = set(sys.path)
+
+  global _request_server_url
+  _request_server_url = request_server_url
 
   sys.path.extend(path for path in product_test_list
                   if path not in current_syspath)

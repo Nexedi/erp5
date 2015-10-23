@@ -295,6 +295,7 @@ class Test(ERP5TypeTestCase):
     debug = int(debug) and True or False
     run_only = self._getCommaSeparatedParameterList(run_only)
     verbosity = verbose and 2 or 1
+    request_server_url = self.REQUEST.get('SERVER_URL')
 
     try:
       live_test_running = True
@@ -304,6 +305,7 @@ class Test(ERP5TypeTestCase):
                              run_only=run_only,
                              debug=debug,
                              stream=global_stream,
+                             request_server_url=request_server_url,
                              verbosity=verbosity)
       except ImportError:
         import traceback
