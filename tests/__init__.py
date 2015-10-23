@@ -81,7 +81,6 @@ class ERP5(_ERP5):
       if test_case.startswith('testLive') or test_case.startswith('testVifib') \
          or test_case.find('Performance') > 0 \
          or test_case in ('testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
-                          'testFunctionalRJS', # XXX (Romain), desactivate until URL navigation is rewritten
                           # tests reading selenium tables from erp5.com
                           # not maintained
                           'testFunctionalConfigurator',
