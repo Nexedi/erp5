@@ -56,7 +56,7 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
+  var_values = None
   # Declarative properties
   property_sheets = (
              PropertySheet.Base,
