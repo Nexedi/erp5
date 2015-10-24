@@ -1,0 +1,342 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308426.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ChartSettingsDlg.template</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div id="id-chart-settings-dlg-style" class="settings-panel active">\r\n
+    <div class="inner-content">\r\n
+        <table cols="2" style="">\r\n
+            <tr>\r\n
+                <td class="padding-large">\r\n
+                    <label class="header"><%= scope.textType %></label>\r\n
+                    <div id="chart-dlg-button-type" style="margin-right: 15px;"></div>\r\n
+                </td>\r\n
+                <td class="padding-large">\r\n
+                    <label class="header"><%= scope.textStyle %></label>\r\n
+                    <div id="chart-dlg-button-style" style=""></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+    <div class="separator horizontal padding-large"></div>\r\n
+    <div class="inner-content">\r\n
+        <table cols="2" style="width: 100%;">\r\n
+            <tr>\r\n
+                <td colspan=2 >\r\n
+                    <label class="header"><%= scope.textDataRange %></label>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-small" width="200">\r\n
+                    <div id="chart-dlg-txt-range" class="input-row" style="margin-right: 10px;"></div>\r\n
+                </td>\r\n
+                <td class="padding-small" style="text-align: right;">\r\n
+                    <button type="button" class="btn btn-text-default" id="chart-dlg-btn-data" style="min-width: 100px;"><%= scope.textSelectData %></button>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td colspan=2 class="padding-small">\r\n
+                    <label class="input-label"><%= scope.textDataSeries %></label>\r\n
+                    <div id="chart-dlg-combo-range" class="input-group-nr" style="width:120px;"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+</div>\r\n
+<div id="id-chart-settings-dlg-layout" class="settings-panel">\r\n
+    <div class="inner-content">\r\n
+        <table cols="2" style="width: 100%;">\r\n
+            <tr>\r\n
+                <td class="padding-small">\r\n
+                    <label class="input-label"><%= scope.textChartTitle %></label>\r\n
+                    <div id="chart-dlg-combo-chart-title" class="input-group-nr"></div>\r\n
+                </td>\r\n
+                <td class="padding-small">\r\n
+                    <label class="input-label" style="margin-left: 15px;"><%= scope.textLegendPos %></label>\r\n
+                    <div id="chart-dlg-combo-legend-pos" class="input-group-nr" style="margin-left: 15px;" />\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-small">\r\n
+                    <label class="input-label"><%= scope.textHorTitle %></label>\r\n
+                    <div id="chart-dlg-combo-hor-title" class="input-group-nr"></div>\r\n
+                </td>\r\n
+                <td class="padding-small">\r\n
+                    <label class="input-label" style="margin-left: 15px;"><%= scope.textVertTitle %></label>\r\n
+                    <div id="chart-dlg-combo-vert-title" class="input-group-nr" style="margin-left: 15px;" />\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-small">\r\n
+                    <label class="input-label"><%= scope.textHorGrid %></label>\r\n
+                    <div id="chart-dlg-combo-hor-grid" class="input-group-nr"></div>\r\n
+                </td>\r\n
+                <td class="padding-small">\r\n
+                    <label class="input-label" style="margin-left: 15px;"><%= scope.textVertGrid %></label>\r\n
+                    <div id="chart-dlg-combo-vert-grid" class="input-group-nr" style="margin-left: 15px;" />\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-small">\r\n
+                    <label class="input-label"><%= scope.textDataLabels %></label>\r\n
+                    <div id="chart-dlg-combo-data-labels" class="input-group-nr"></div>\r\n
+                </td>\r\n
+                <td rowspan="2" class="padding-small">\r\n
+                    <div id="chart-dlg-check-series" style="margin: 20px 0 9px 15px;"></div>\r\n
+                    <div id="chart-dlg-check-category" style="margin: 0 0 9px 15px;"></div>\r\n
+                    <div id="chart-dlg-check-value" style="margin: 0 0 5px 15px;"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-small">\r\n
+                    <label class="input-label"><%= scope.textSeparator %></label>\r\n
+                    <div id="chart-dlg-txt-separator" class="input-row" />\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-small">\r\n
+                    <label id="chart-dlg-label-lines" class="input-label"><%= scope.textLines %></label>\r\n
+                    <div id="chart-dlg-combo-lines" class="input-group-nr"></div>\r\n
+                </td>\r\n
+                <td class="padding-small" style="vertical-align: bottom;">\r\n
+                    <div id="chart-dlg-check-markers" style="margin: 0 0 4px 15px;"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+</div>\r\n
+<div id="id-chart-settings-dlg-vert" class="settings-panel">\r\n
+    <div class="inner-content">\r\n
+        <table cols="3" style="width: 100%">\r\n
+            <tr>\r\n
+                <td colspan="3">\r\n
+                    <label class="header  padding-small"><%= scope.textAxisOptions %></label>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-small" width="100">\r\n
+                    <label class="input-label"><%= scope.textMinValue %></label>\r\n
+                </td>\r\n
+                <td class="padding-small" width="115" style="padding-right: 10px;">\r\n
+                    <div id="chart-dlg-combo-mintype"></div>\r\n
+                </td>\r\n
+                <td class="padding-small" width="90">\r\n
+                    <div id="chart-dlg-input-min-value"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-large" width="100">\r\n
+                    <label class="input-label"><%= scope.textMaxValue %></label>\r\n
+                </td>\r\n
+                <td class="padding-large" width="115" style="padding-right: 10px;">\r\n
+                    <div id="chart-dlg-combo-maxtype"></div>\r\n
+                </td>\r\n
+                <td class="padding-large" width="90">\r\n
+                    <div id="chart-dlg-input-max-value"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-large" width="100">\r\n
+                    <label class="input-label"><%= scope.textAxisCrosses %></label>\r\n
+                </td>\r\n
+                <td class="padding-large" width="115" style="padding-right: 10px;">\r\n
+                    <div id="chart-dlg-combo-v-crosstype"></div>\r\n
+                </td>\r\n
+                <td class="padding-large" width="90">\r\n
+                    <div id="chart-dlg-input-v-axis-crosses"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+    <div class="inner-content">\r\n
+        <table cols="1" style="width: 100%;">\r\n
+            <tr>\r\n
+                <td class="padding-large">\r\n
+                    <label class="input-label"><%= scope.textUnits %></label>\r\n
+                    <div id="chart-dlg-combo-units" class="input-group-nr" style="width:140px;"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-large">\r\n
+                    <div id="chart-dlg-check-v-reverse"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+    <div class="separator horizontal padding-large"></div>\r\n
+    <div class="inner-content">\r\n
+        <table cols="2" style="width: 100%;">\r\n
+            <tr>\r\n
+                <td colspan=2 class="padding-small">\r\n
+                    <label class="header"><%= scope.textTickOptions %></label>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-large">\r\n
+                    <label class="input-label"><%= scope.textMajorType %></label>\r\n
+                    <div id="chart-dlg-combo-v-major-type" class="input-group-nr"></div>\r\n
+                </td>\r\n
+                <td class="padding-large">\r\n
+                    <label class="input-label" style="margin-left: 15px;"><%= scope.textMinorType %></label>\r\n
+                    <div id="chart-dlg-combo-v-minor-type" class="input-group-nr" style="margin-left: 15px;" />\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+    <div class="separator horizontal padding-large"></div>\r\n
+    <div class="inner-content">\r\n
+        <table cols="1" style="width: 100%;">\r\n
+            <tr>\r\n
+                <td class="padding-small">\r\n
+                    <label class="header"><%= scope.textLabelOptions %></label>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td>\r\n
+                    <label class="input-label"><%= scope.textLabelPos %></label>\r\n
+                    <div id="chart-dlg-combo-v-label-pos" class="input-group-nr" style="width:140px;"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+</div>\r\n
+<div id="id-chart-settings-dlg-hor" class="settings-panel">\r\n
+    <div class="inner-content">\r\n
+        <table cols="3" style="width: 100%">\r\n
+            <tr>\r\n
+                <td colspan="3">\r\n
+                    <label class="header  padding-small"><%= scope.textAxisOptions %></label>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-small" width="100">\r\n
+                    <label class="input-label"><%= scope.textAxisCrosses %></label>\r\n
+                </td>\r\n
+                <td class="padding-small" width="115" style="padding-right: 10px;">\r\n
+                    <div id="chart-dlg-combo-h-crosstype"></div>\r\n
+                </td>\r\n
+                <td class="padding-small" width="90">\r\n
+                    <div id="chart-dlg-input-h-axis-crosses"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+    <div class="inner-content">\r\n
+        <table cols="1" style="width: 100%;">\r\n
+            <tr>\r\n
+                <td class="padding-large" width="140">\r\n
+                    <label class="input-label"><%= scope.textAxisPos %></label>\r\n
+                    <div id="chart-dlg-combo-axis-pos" class="input-group-nr" style="width:140px;"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-large">\r\n
+                    <div id="chart-dlg-check-h-reverse"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+    <div class="separator horizontal padding-large"></div>\r\n
+    <div class="inner-content">\r\n
+        <table cols="2" style="width: 100%;">\r\n
+            <tr>\r\n
+                <td colspan=2 class="padding-small">\r\n
+                    <label class="header"><%= scope.textTickOptions %></label>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-small" width="140">\r\n
+                    <label class="input-label"><%= scope.textMajorType %></label>\r\n
+                    <div id="chart-dlg-combo-h-major-type" class="input-group-nr"></div>\r\n
+                </td>\r\n
+                <td class="padding-small">\r\n
+                    <label class="input-label" style="margin-left: 15px;"><%= scope.textMinorType %></label>\r\n
+                    <div id="chart-dlg-combo-h-minor-type" class="input-group-nr" style="margin-left: 15px;"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td width="100%" colspan="2">\r\n
+                    <label class="input-label"><%= scope.textMarksInterval %></label>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-large" width="140">\r\n
+                    <div id="chart-dlg-input-marks-interval"></div>\r\n
+                </td>\r\n
+                <td class="padding-large">\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+    <div class="separator horizontal padding-large"></div>\r\n
+    <div class="inner-content">\r\n
+        <table cols="2" style="width: 100%;">\r\n
+            <tr>\r\n
+                <td colspan=2 class="padding-small">\r\n
+                    <label class="header"><%= scope.textLabelOptions %></label>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td class="padding-small" width="140">\r\n
+                    <label class="input-label"><%= scope.textLabelPos %></label>\r\n
+                    <div id="chart-dlg-combo-h-label-pos" class="input-group-nr"></div>\r\n
+                </td>\r\n
+                <td class="padding-small">\r\n
+                    <label class="input-label" style="margin-left: 15px;"><%= scope.textLabelDist %></label>\r\n
+                    <div id="chart-dlg-input-label-dist" style="margin-left: 15px;"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td width="100%" colspan="2">\r\n
+                    <label class="input-label"><%= scope.textLabelInterval %></label>\r\n
+                </td>\r\n
+            </tr>\r\n
+            <tr>\r\n
+                <td width="140">\r\n
+                    <div id="chart-dlg-combo-label-int" class="input-group-nr"></div>\r\n
+                </td>\r\n
+                <td style="vertical-align: bottom;">\r\n
+                    <div id="chart-dlg-input-label-int" style="margin-left: 15px;"></div>\r\n
+                </td>\r\n
+            </tr>\r\n
+        </table>\r\n
+    </div>\r\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13374</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

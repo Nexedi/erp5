@@ -1,0 +1,901 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308482.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lv.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+{\r\n
+  "cancelButtonText": "Atcelt",\r\n
+  "Common.Controllers.Chat.textEnterMessage": "Ievadiet savu ziņu šeit",\r\n
+  "Common.UI.ComboBorderSize.txtNoBorders": "No borders",\r\n
+  "Common.UI.ComboBorderSizeEditable.txtNoBorders": "No borders",\r\n
+  "Common.UI.ComboDataView.emptyComboText": "No styles",\r\n
+  "Common.UI.ExtendedColorDialog.addButtonText": "Pievienot",\r\n
+  "Common.UI.ExtendedColorDialog.cancelButtonText": "Atcelt",\r\n
+  "Common.UI.ExtendedColorDialog.textCurrent": "Current",\r\n
+  "Common.UI.ExtendedColorDialog.textHexErr": "The entered value is incorrect.<br>Please enter a value between 000000 and FFFFFF.",\r\n
+  "Common.UI.ExtendedColorDialog.textNew": "New",\r\n
+  "Common.UI.ExtendedColorDialog.textRGBErr": "The entered value is incorrect.<br>Please enter a numeric value between 0 and 255.",\r\n
+  "Common.UI.HSBColorPicker.textNoColor": "Nav krāsu",\r\n
+  "Common.UI.SearchDialog.textHighlight": "Highlight results",\r\n
+  "Common.UI.SearchDialog.textMatchCase": "Case sensitive",\r\n
+  "Common.UI.SearchDialog.textReplaceDef": "Enter the replacement text",\r\n
+  "Common.UI.SearchDialog.textSearchStart": "Enter your text here",\r\n
+  "Common.UI.SearchDialog.textTitle": "Find and Replace",\r\n
+  "Common.UI.SearchDialog.textTitle2": "Find",\r\n
+  "Common.UI.SearchDialog.textWholeWords": "Whole words only",\r\n
+  "Common.UI.SearchDialog.txtBtnReplace": "Replace",\r\n
+  "Common.UI.SearchDialog.txtBtnReplaceAll": "Replace All",\r\n
+  "Common.UI.SynchronizeTip.textDontShow": "Vairāk nerādīt šo ziņu",\r\n
+  "Common.UI.SynchronizeTip.textSynchronize": "Dokuments ir mainījies.<br/> Pārlādējiet dokumentu, lai redzētu izmaiņas.",\r\n
+  "Common.UI.Window.cancelButtonText": "Cancel",\r\n
+  "Common.UI.Window.closeButtonText": "Close",\r\n
+  "Common.UI.Window.noButtonText": "No",\r\n
+  "Common.UI.Window.okButtonText": "OK",\r\n
+  "Common.UI.Window.textConfirmation": "Confirmation",\r\n
+  "Common.UI.Window.textError": "Error",\r\n
+  "Common.UI.Window.textInformation": "Information",\r\n
+  "Common.UI.Window.textWarning": "Warning",\r\n
+  "Common.UI.Window.yesButtonText": "Yes",\r\n
+  "Common.Views.About.txtAddress": "address: ",\r\n
+  "Common.Views.About.txtAscAddress": "Lubanas st. 125a-25, Riga, Latvia, EU, LV-1021",\r\n
+  "Common.Views.About.txtLicensee": "LICENSEE",\r\n
+  "Common.Views.About.txtLicensor": "LICENSOR",\r\n
+  "Common.Views.About.txtMail": "email: ",\r\n
+  "Common.Views.About.txtPoweredBy": "Powered by",\r\n
+  "Common.Views.About.txtTel": "tel.: ",\r\n
+  "Common.Views.About.txtVersion": "Version ",\r\n
+  "Common.Views.AdvancedSettingsWindow.cancelButtonText": "Atcelt",\r\n
+  "Common.Views.AdvancedSettingsWindow.okButtonText": "OK",\r\n
+  "Common.Views.Chat.textSend": "Sūtīt",\r\n
+  "Common.Views.Comments.textAdd": "Pievienot",\r\n
+  "Common.Views.Comments.textAddComment": "Pievienot komentāru",\r\n
+  "Common.Views.Comments.textAddCommentToDoc": "Pievienot komentāru dokumentam",\r\n
+  "Common.Views.Comments.textAddReply": "Pievienot atbildi",\r\n
+  "Common.Views.Comments.textAnonym": "Viesis",\r\n
+  "Common.Views.Comments.textCancel": "Atcelt",\r\n
+  "Common.Views.Comments.textClose": "Aizvērt",\r\n
+  "Common.Views.Comments.textComments": "Komentāri",\r\n
+  "Common.Views.Comments.textEdit": "Rediģēt",\r\n
+  "Common.Views.Comments.textEnterCommentHint": "Ievadiet Jūsu komentāru šeit",\r\n
+  "Common.Views.Comments.textOpenAgain": "Atvērt vēlreiz",\r\n
+  "Common.Views.Comments.textReply": "Atbildēt",\r\n
+  "Common.Views.Comments.textResolve": "Atrisināt",\r\n
+  "Common.Views.Comments.textResolved": "Atrisināts",\r\n
+  "Common.Views.CopyWarningDialog.textDontShow": "Don\'t show this message again",\r\n
+  "Common.Views.CopyWarningDialog.textMsg": "Drošības apsvērumu dēļ labo klikšķi izvēlnē ir atslēgti kopēt un ielīmēt funkcijas. Jūs joprojām varat darīt to, izmantojot savu tastatūru:",\r\n
+  "Common.Views.CopyWarningDialog.textTitle": "ONLYOFFICE Kopēt & Ielīmēt Funkcijas",\r\n
+  "Common.Views.CopyWarningDialog.textToCopy": "lai nokopētu",\r\n
+  "Common.Views.CopyWarningDialog.textToCut": "for Cut",\r\n
+  "Common.Views.CopyWarningDialog.textToPaste": "lai ielīmētu",\r\n
+  "Common.Views.DocumentAccessDialog.textLoading": "Loading...",\r\n
+  "Common.Views.DocumentAccessDialog.textTitle": "Sharing Settings",\r\n
+  "Common.Views.Header.textBack": "Iet uz Dokumenti",\r\n
+  "Common.Views.ImageFromUrlDialog.cancelButtonText": "Atcelt",\r\n
+  "Common.Views.ImageFromUrlDialog.okButtonText": "OK",\r\n
+  "Common.Views.ImageFromUrlDialog.textUrl": "Ielīmēt attēla URL:",\r\n
+  "Common.Views.ImageFromUrlDialog.txtEmpty": "Šis lauks ir nepieciešams",\r\n
+  "Common.Views.ImageFromUrlDialog.txtNotUrl": "Šis lauks jābūt URL formātā \\"http://www.example.com\\"",\r\n
+  "SSE.Controllers.DocumentHolder.guestText": "Guest",\r\n
+  "SSE.Controllers.DocumentHolder.textChangeColumnWidth": "Column Width {0} symbols ({1} pixels)",\r\n
+  "SSE.Controllers.DocumentHolder.textChangeRowHeight": "Row Height {0} points ({1} pixels)",\r\n
+  "SSE.Controllers.DocumentHolder.textCtrlClick": "Press CTRL and click link",\r\n
+  "SSE.Controllers.DocumentHolder.tipIsLocked": "This element is being edited by another user.",\r\n
+  "SSE.Controllers.DocumentHolder.txtHeight": "Height",\r\n
+  "SSE.Controllers.DocumentHolder.txtRowHeight": "Row Height",\r\n
+  "SSE.Controllers.DocumentHolder.txtWidth": "Width",\r\n
+  "SSE.Controllers.LeftMenu.newDocumentTitle": "Izklājlapa bez nosaukuma",\r\n
+  "SSE.Controllers.LeftMenu.textByColumns": "By columns",\r\n
+  "SSE.Controllers.LeftMenu.textByRows": "By rows",\r\n
+  "SSE.Controllers.LeftMenu.textFormulas": "Formulas",\r\n
+  "SSE.Controllers.LeftMenu.textItemEntireCell": "Entire cell contents",\r\n
+  "SSE.Controllers.LeftMenu.textLookin": "Look in",\r\n
+  "SSE.Controllers.LeftMenu.textNoTextFound": "Teksts nav atrasts",\r\n
+  "SSE.Controllers.LeftMenu.textReplaceSkipped": "The replacement has been made. Some occurrences were skipped.",\r\n
+  "SSE.Controllers.LeftMenu.textReplaceSuccess": "All occurrences have been replaced",\r\n
+  "SSE.Controllers.LeftMenu.textSearch": "Search",\r\n
+  "SSE.Controllers.LeftMenu.textSheet": "Sheet",\r\n
+  "SSE.Controllers.LeftMenu.textValues": "Values",\r\n
+  "SSE.Controllers.LeftMenu.textWarning": "Warning",\r\n
+  "SSE.Controllers.LeftMenu.textWithin": "Within",\r\n
+  "SSE.Controllers.LeftMenu.textWorkbook": "Workbook",\r\n
+  "SSE.Controllers.LeftMenu.warnDownloadAs": "Ja jūs izvēlēsieties turpināt saglabāt šajā formātā visas diagrammas un attēli tiks zaudēti.<br>Vai tiešām vēlaties turpināt?",\r\n
+  "SSE.Controllers.Main.confirmMoveCellRange": "The destination cell range can contain data. Continue the operation?",\r\n
+  "SSE.Controllers.Main.convertationErrorText": "Konversija neizdevās",\r\n
+  "SSE.Controllers.Main.convertationTimeoutText": "Konversijas taimauts pārsniegts.",\r\n
+  "SSE.Controllers.Main.criticalErrorExtText": "Press \\"OK\\" to return to document list.",\r\n
+  "SSE.Controllers.Main.criticalErrorTitle": "Kļūda",\r\n
+  "SSE.Controllers.Main.defaultTitleText": "ONLYOFFICE Spreadsheet Editor",\r\n
+  "SSE.Controllers.Main.downloadErrorText": "Lejuplāde neizdevās.",\r\n
+  "SSE.Controllers.Main.downloadTextText": "Lejuplādē izklājlapu...",\r\n
+  "SSE.Controllers.Main.downloadTitleText": "Lejuplādē izklājlapu",\r\n
+  "SSE.Controllers.Main.errorArgsRange": "Kļūda ievadītā formulā.<br>Ir izmantots nederīgs argumentu diapazons.",\r\n
+  "SSE.Controllers.Main.errorAutoFilterChange": "The operation is not allowed, as it is attempting to shift cells in a table on your worksheet.",\r\n
+  "SSE.Controllers.Main.errorAutoFilterChangeFormatTable": "The operation could not be done for the selected cells as you cannot move a part of the table.<br>Select another data range so that the whole table was shifted and try again.",\r\n
+  "SSE.Controllers.Main.errorAutoFilterDataRange": "The operation could not be done for the selected range of cells.<br>Select a uniform data range inside or outside the table and try again.",\r\n
+  "SSE.Controllers.Main.errorBadImageUrl": "Image URL is incorrect",\r\n
+  "SSE.Controllers.Main.errorCoAuthoringDisconnect": "Server connection lost. The document cannot be edited right now.",\r\n
+  "SSE.Controllers.Main.errorCountArg": "Kļūda ievadītā formulā.<br>Ir izmantots nepareizs argumentu skaits.",\r\n
+  "SSE.Controllers.Main.errorCountArgExceed": "Kļūda ievadītā formulā.<br>Ir pārsniegts argumentu skaits.",\r\n
+  "SSE.Controllers.Main.errorDatabaseConnection": "Ārēja kļūda.<br>Datubāzes savienojuma kļūda. Lūdzu, sazinieties ar atbalstu.",\r\n
+  "SSE.Controllers.Main.errorDataRange": "Incorrect data range.",\r\n
+  "SSE.Controllers.Main.errorDefaultMessage": "Kļūdas kods: %1",\r\n
+  "SSE.Controllers.Main.errorFilePassProtect": "The document is password protected and could not be opened.",\r\n
+  "SSE.Controllers.Main.errorFileRequest": "Ārēja kļūda.<br>Faila pieprasījuma kļūda. Lūdzu, sazinieties ar atbalstu.",\r\n
+  "SSE.Controllers.Main.errorFileVKey": "Ārēja kļūda.<br>Nederīgs drošības kods. Lūdzu, sazinieties ar atbalstu.",\r\n
+  "SSE.Controllers.Main.errorFillRange": "Could not fill the selected range of cells.<br>All the merged cells need to be the same size.",\r\n
+  "SSE.Controllers.Main.errorFormulaName": "Kļūda ievadītā formulā.<br>Ir izmantots nepareizs formulas nosaukums.",\r\n
+  "SSE.Controllers.Main.errorFormulaParsing": "Notika iekšēja kļūda analizējot formulu.",\r\n
+  "SSE.Controllers.Main.errorKeyEncrypt": "Unknown key descriptor",\r\n
+  "SSE.Controllers.Main.errorKeyExpire": "Key descriptor expired",\r\n
+  "SSE.Controllers.Main.errorMoveRange": "Cannot change part of a merged cell",\r\n
+  "SSE.Controllers.Main.errorOperandExpected": "Operand expected",\r\n
+  "SSE.Controllers.Main.errorProcessSaveResult": "Saving failed",\r\n
+  "SSE.Controllers.Main.errorStockChart": "Nederīga rindu kārtība. Lai izveidotu akciju diagrammu novietojiet datus lapā šādā secībā:<br> Sākumcena, maksimālā cena, minimālā cena, slēgšanas cena.",\r\n
+  "SSE.Controllers.Main.errorUnexpectedGuid": "Ārēja kļūda.<br>Nederīgs GUID. Lūdzu, sazinieties ar atbalstu.",\r\n
+  "SSE.Controllers.Main.errorUpdateVersion": "The file version has been changed. The page will be reloaded.",\r\n
+  "SSE.Controllers.Main.errorUserDrop": "The file cannot be accessed right now.",\r\n
+  "SSE.Controllers.Main.errorUsersExceed": "Count of users was exceed",\r\n
+  "SSE.Controllers.Main.errorWrongBracketsCount": "Kļūda ievadītā formulā.<br>Ir izmantots nepareizs iekavas skaits.",\r\n
+  "SSE.Controllers.Main.errorWrongOperator": "Kļūda ievadītā formulā.<br>Ir izmantots nepareizs operātors.",\r\n
+  "SSE.Controllers.Main.leavePageText": "Jums ir nesaglabātas izmaiņas šajā izklājlapā. Nooklikšķiniet \'Stay on this Page\' pēc tam \'Saglabāt\' lai saglabātu izmaiņas. Nospiediet \'Leave this Page\' lai atceltu visas izmaiņas.",\r\n
+  "SSE.Controllers.Main.loadFontsTextText": "Ielādē datus...",\r\n
+  "SSE.Controllers.Main.loadFontsTitleText": "Ielādē datus",\r\n
+  "SSE.Controllers.Main.loadFontTextText": "Ielādē datus...",\r\n
+  "SSE.Controllers.Main.loadFontTitleText": "Ielādē datus",\r\n
+  "SSE.Controllers.Main.loadImagesTextText": "Ielādē attēlus...",\r\n
+  "SSE.Controllers.Main.loadImagesTitleText": "Ielādē attēlus",\r\n
+  "SSE.Controllers.Main.loadImageTextText": "Ielādē attēlu...",\r\n
+  "SSE.Controllers.Main.loadImageTitleText": "Ielādē attēlu",\r\n
+  "SSE.Controllers.Main.loadingDocumentTitleText": "Loading Document",\r\n
+  "SSE.Controllers.Main.notcriticalErrorTitle": "Brīdinājums",\r\n
+  "SSE.Controllers.Main.openTextText": "Atvēras Izklājlapa...",\r\n
+  "SSE.Controllers.Main.openTitleText": "Atvēras Izklājlapa",\r\n
+  "SSE.Controllers.Main.pastInMergeAreaError": "Nevar mainīt apvienotas šūnas daļu",\r\n
+  "SSE.Controllers.Main.printTextText": "Drukā izklājlapu...",\r\n
+  "SSE.Controllers.Main.printTitleText": "Drukā izklājlapu",\r\n
+  "SSE.Controllers.Main.reloadButtonText": "Pārlādēt lapu",\r\n
+  "SSE.Controllers.Main.requestEditFailedMessageText": "Someone is editing this document right now. Please try again later.",\r\n
+  "SSE.Controllers.Main.requestEditFailedTitleText": "Access denied",\r\n
+  "SSE.Controllers.Main.savePreparingText": "Preparing to save",\r\n
+  "SSE.Controllers.Main.savePreparingTitle": "Preparing to save. Please wait...",\r\n
+  "SSE.Controllers.Main.saveTextText": "Saglabā Izklājlapu...",\r\n
+  "SSE.Controllers.Main.saveTitleText": "Saglabā Izklājlapu",\r\n
+  "SSE.Controllers.Main.textAnonymous": "Anonymous",\r\n
+  "SSE.Controllers.Main.textCloseTip": "\\nClick to close the tip",\r\n
+  "SSE.Controllers.Main.textConfirm": "Confirmation",\r\n
+  "SSE.Controllers.Main.textLoadingDocument": "Ielādē Dokumentu",\r\n
+  "SSE.Controllers.Main.textNo": "No",\r\n
+  "SSE.Controllers.Main.textPleaseWait": "The operation might take more time than expected. Please wait...",\r\n
+  "SSE.Controllers.Main.textRecalcFormulas": "Forumulas rēķināšana...",\r\n
+  "SSE.Controllers.Main.textShape": "Shape",\r\n
+  "SSE.Controllers.Main.textYes": "Yes",\r\n
+  "SSE.Controllers.Main.titleRecalcFormulas": "Rēķināšana...",\r\n
+  "SSE.Controllers.Main.txtBasicShapes": "Basic Shapes",\r\n
+  "SSE.Controllers.Main.txtButtons": "Buttons",\r\n
+  "SSE.Controllers.Main.txtCallouts": "Callouts",\r\n
+  "SSE.Controllers.Main.txtCharts": "Charts",\r\n
+  "SSE.Controllers.Main.txtDiagramTitle": "Diagram Title",\r\n
+  "SSE.Controllers.Main.txtEditingMode": "Set editing mode...",\r\n
+  "SSE.Controllers.Main.txtFiguredArrows": "Figured Arrows",\r\n
+  "SSE.Controllers.Main.txtLines": "Lines",\r\n
+  "SSE.Controllers.Main.txtMath": "Math",\r\n
+  "SSE.Controllers.Main.txtRectangles": "Rectangles",\r\n
+  "SSE.Controllers.Main.txtSeries": "Series",\r\n
+  "SSE.Controllers.Main.txtStarsRibbons": "Stars & Ribbons",\r\n
+  "SSE.Controllers.Main.txtXAxis": "X Axis",\r\n
+  "SSE.Controllers.Main.txtYAxis": "Y Axis",\r\n
+  "SSE.Controllers.Main.unknownErrorText": "Nezināma kļūda.",\r\n
+  "SSE.Controllers.Main.unsupportedBrowserErrorText": "Jūsu pārlūkprogramma nav atbalstīta.",\r\n
+  "SSE.Controllers.Main.uploadImageExtMessage": "Nezināms attēla formāts.",\r\n
+  "SSE.Controllers.Main.uploadImageFileCountMessage": "Nav augšupielādēto attēlu.",\r\n
+  "SSE.Controllers.Main.uploadImageSizeMessage": "Maksimālais attēla izmērs ir pārsniegts.",\r\n
+  "SSE.Controllers.Main.uploadImageTextText": "Augšuplādē attēlu...",\r\n
+  "SSE.Controllers.Main.uploadImageTitleText": "Augšuplādē attēlu",\r\n
+  "SSE.Controllers.Main.warnBrowserIE9": "The application has low capabilities on IE9. Use IE10 or higher",\r\n
+  "SSE.Controllers.Main.warnBrowserZoom": "Pārlūkprogrammas pašreizējais tālummaiņas iestatījums netiek pilnībā atbalstīts. Lūdzu atiestatīt noklusējuma tālummaiņu, nospiežot Ctrl+0.",\r\n
+  "SSE.Controllers.Main.warnProcessRightsChange": "You have been denied the right to edit the file.",\r\n
+  "SSE.Controllers.Print.strAllSheets": "All Sheets",\r\n
+  "SSE.Controllers.Print.textWarning": "Warning",\r\n
+  "SSE.Controllers.Print.warnCheckMargings": "Margins are incorrect",\r\n
+  "SSE.Controllers.Statusbar.errorLastSheet": "Darbgrāmatai jābūt vismaz viena redzama darblapa.",\r\n
+  "SSE.Controllers.Statusbar.errorRemoveSheet": "Cannot delete the worksheet.",\r\n
+  "SSE.Controllers.Statusbar.strSheet": "Lapa",\r\n
+  "SSE.Controllers.Statusbar.tipMoreUsers": "and %1 users.",\r\n
+  "SSE.Controllers.Statusbar.tipShowUsers": "To see all users click the icon below.",\r\n
+  "SSE.Controllers.Statusbar.tipUsers": "Document is currently being edited by several users.",\r\n
+  "SSE.Controllers.Statusbar.warnDeleteSheet": "Darblapa var saturēt datus. Vai tiešām vēlaties turpināt?",\r\n
+  "SSE.Controllers.Statusbar.zoomText": "Zoom {0}%",\r\n
+  "SSE.Controllers.Toolbar.textCancel": "Cancel",\r\n
+  "SSE.Controllers.Toolbar.textFontSizeErr": "The entered value must be more than 0",\r\n
+  "SSE.Controllers.Toolbar.textWarning": "Warning",\r\n
+  "SSE.Controllers.Toolbar.warnMergeLostData": "Only the data from the upper-left cell will remain in the merged cell. <br>Are you sure you want to continue?",\r\n
+  "SSE.Views.AutoFilterDialog.btnCustomFilter": "Custom Filter",\r\n
+  "SSE.Views.AutoFilterDialog.cancelButtonText": "Cancel",\r\n
+  "SSE.Views.AutoFilterDialog.okButtonText": "OK",\r\n
+  "SSE.Views.AutoFilterDialog.textEmptyItem": "{Blanks}",\r\n
+  "SSE.Views.AutoFilterDialog.textSelectAll": "Select All",\r\n
+  "SSE.Views.AutoFilterDialog.textWarning": "Warning",\r\n
+  "SSE.Views.AutoFilterDialog.txtEmpty": "Enter cell filter",\r\n
+  "SSE.Views.AutoFilterDialog.txtTitle": "Filter",\r\n
+  "SSE.Views.AutoFilterDialog.warnNoSelected": "You must choose at least one value",\r\n
+  "SSE.Views.CellEditor.tipFormula": "Insert Function",\r\n
+  "SSE.Views.CellRangeDialog.errorMaxRows": "ERROR! The maximum number of data series per chart is 255",\r\n
+  "SSE.Views.CellRangeDialog.textCancel": "Cancel",\r\n
+  "SSE.Views.CellRangeDialog.txtEmpty": "This field is required",\r\n
+  "SSE.Views.CellRangeDialog.txtInvalidRange": "ERROR! Invalid cells range",\r\n
+  "SSE.Views.CellRangeDialog.txtTitle": "Select Data Range",\r\n
+  "SSE.Views.ChartSettings.textAdvanced": "Show advanced settings",\r\n
+  "SSE.Views.ChartSettings.textArea": "Apgabals",\r\n
+  "SSE.Views.ChartSettings.textBar": "Josla",\r\n
+  "SSE.Views.ChartSettings.textChartType": "Change Chart Type",\r\n
+  "SSE.Views.ChartSettings.textColumn": "Kolonna",\r\n
+  "SSE.Views.ChartSettings.textEditData": "Edit Data",\r\n
+  "SSE.Views.ChartSettings.textHeight": "Height",\r\n
+  "SSE.Views.ChartSettings.textKeepRatio": "Constant Proportions",\r\n
+  "SSE.Views.ChartSettings.textLine": "Līnija",\r\n
+  "SSE.Views.ChartSettings.textPie": "Sektoru diagramma",\r\n
+  "SSE.Views.ChartSettings.textPoint": "Punkts",\r\n
+  "SSE.Views.ChartSettings.textSize": "Size",\r\n
+  "SSE.Views.ChartSettings.textStock": "Akcijas",\r\n
+  "SSE.Views.ChartSettings.textStyle": "Style",\r\n
+  "SSE.Views.ChartSettings.textWidth": "Width",\r\n
+  "SSE.Views.ChartSettingsDlg.cancelButtonText": "Cancel",\r\n
+  "SSE.Views.ChartSettingsDlg.errorMaxRows": "ERROR! The maximum number of data series per chart is 255",\r\n
+  "SSE.Views.ChartSettingsDlg.errorStockChart": "Nederīga rindu kārtība. Lai izveidotu akciju diagrammu novietojiet datus lapā šādā secībā:<br> Sākumcena, maksimālā cena, minimālā cena, slēgšanas cena.",\r\n
+  "SSE.Views.ChartSettingsDlg.textArea": "Apgabals",\r\n
+  "SSE.Views.ChartSettingsDlg.textAuto": "Auto",\r\n
+  "SSE.Views.ChartSettingsDlg.textAxisCrosses": "Axis Crosses",\r\n
+  "SSE.Views.ChartSettingsDlg.textAxisOptions": "Axis Options",\r\n
+  "SSE.Views.ChartSettingsDlg.textAxisPos": "Axis Position",\r\n
+  "SSE.Views.ChartSettingsDlg.textBar": "Josla",\r\n
+  "SSE.Views.ChartSettingsDlg.textBetweenTickMarks": "Between Tick Marks",\r\n
+  "SSE.Views.ChartSettingsDlg.textBillions": "Billions",\r\n
+  "SSE.Views.ChartSettingsDlg.textCategoryName": "Category Name",\r\n
+  "SSE.Views.ChartSettingsDlg.textCenter": "Center",\r\n
+  "SSE.Views.ChartSettingsDlg.textChartElementsLegend": "Chart Elements &<br/>Chart Legend",\r\n
+  "SSE.Views.ChartSettingsDlg.textChartTitle": "Grafika nosaukums",\r\n
+  "SSE.Views.ChartSettingsDlg.textColumn": "Kolonna",\r\n
+  "SSE.Views.ChartSettingsDlg.textCross": "Cross",\r\n
+  "SSE.Views.ChartSettingsDlg.textCustom": "Custom",\r\n
+  "SSE.Views.ChartSettingsDlg.textDataColumns": "Datu sērijas kolonnās",\r\n
+  "SSE.Views.ChartSettingsDlg.textDataLabels": "Data Labels",\r\n
+  "SSE.Views.ChartSettingsDlg.textDataRange": "Datu diapazons",\r\n
+  "SSE.Views.ChartSettingsDlg.textDataRows": "Datu sērijas rindās",\r\n
+  "SSE.Views.ChartSettingsDlg.textDataSeries": "Data series",\r\n
+  "SSE.Views.ChartSettingsDlg.textDisplayLegend": "Parādīt apzīmējumus",\r\n
+  "SSE.Views.ChartSettingsDlg.textFixed": "Fixed",\r\n
+  "SSE.Views.ChartSettingsDlg.textHigh": "High",\r\n
+  "SSE.Views.ChartSettingsDlg.textHorAxis": "Horizontal Axis",\r\n
+  "SSE.Views.ChartSettingsDlg.textHorGrid": "Horizontal Gridlines",\r\n
+  "SSE.Views.ChartSettingsDlg.textHorizontal": "Horizontal",\r\n
+  "SSE.Views.ChartSettingsDlg.textHorTitle": "Horizontal Axis Title",\r\n
+  "SSE.Views.ChartSettingsDlg.textHundredMil": "100 000 000",\r\n
+  "SSE.Views.ChartSettingsDlg.textHundreds": "Hundreds",\r\n
+  "SSE.Views.ChartSettingsDlg.textHundredThousands": "100 000",\r\n
+  "SSE.Views.ChartSettingsDlg.textIn": "In",\r\n
+  "SSE.Views.ChartSettingsDlg.textInnerBottom": "Inner Bottom",\r\n
+  "SSE.Views.ChartSettingsDlg.textInnerTop": "Inner Top",\r\n
+  "SSE.Views.ChartSettingsDlg.textInvalidRange": "KĻŪDA! Nederīgs šūnu diapazons",\r\n
+  "SSE.Views.ChartSettingsDlg.textLabelDist": "Axis Label Distance",\r\n
+  "SSE.Views.ChartSettingsDlg.textLabelInterval": "Interval between Labels ",\r\n
+  "SSE.Views.ChartSettingsDlg.textLabelOptions": "Label Options",\r\n
+  "SSE.Views.ChartSettingsDlg.textLabelPos": "Label Position",\r\n
+  "SSE.Views.ChartSettingsDlg.textLayout": "Layout",\r\n
+  "SSE.Views.ChartSettingsDlg.textLeftOverlay": "Left Overlay",\r\n
+  "SSE.Views.ChartSettingsDlg.textLegendBottom": "Lejā",\r\n
+  "SSE.Views.ChartSettingsDlg.textLegendLeft": "Pa kreisi",\r\n
+  "SSE.Views.ChartSettingsDlg.textLegendPos": "Legend",\r\n
+  "SSE.Views.ChartSettingsDlg.textLegendRight": "Pa labi",\r\n
+  "SSE.Views.ChartSettingsDlg.textLegendTop": "Augšā",\r\n
+  "SSE.Views.ChartSettingsDlg.textLine": "Līnija",\r\n
+  "SSE.Views.ChartSettingsDlg.textLines": "Lines ",\r\n
+  "SSE.Views.ChartSettingsDlg.textLow": "Low",\r\n
+  "SSE.Views.ChartSettingsDlg.textMajor": "Major",\r\n
+  "SSE.Views.ChartSettingsDlg.textMajorMinor": "Major and Minor",\r\n
+  "SSE.Views.ChartSettingsDlg.textMajorType": "Major Type",\r\n
+  "SSE.Views.ChartSettingsDlg.textManual": "Manual",\r\n
+  "SSE.Views.ChartSettingsDlg.textMarkers": "Markers",\r\n
+  "SSE.Views.ChartSettingsDlg.textMarksInterval": "Interval between Marks",\r\n
+  "SSE.Views.ChartSettingsDlg.textMaxValue": "Maximum Value",\r\n
+  "SSE.Views.ChartSettingsDlg.textMillions": "Millions",\r\n
+  "SSE.Views.ChartSettingsDlg.textMinor": "Minor",\r\n
+  "SSE.Views.ChartSettingsDlg.textMinorType": "Minor Type",\r\n
+  "SSE.Views.ChartSettingsDlg.textMinValue": "Minimum Value",\r\n
+  "SSE.Views.ChartSettingsDlg.textNextToAxis": "Next to axis",\r\n
+  "SSE.Views.ChartSettingsDlg.textNone": "None",\r\n
+  "SSE.Views.ChartSettingsDlg.textNoOverlay": "No Overlay",\r\n
+  "SSE.Views.ChartSettingsDlg.textOnTickMarks": "On Tick Marks",\r\n
+  "SSE.Views.ChartSettingsDlg.textOut": "Out",\r\n
+  "SSE.Views.ChartSettingsDlg.textOuterTop": "Outer Top",\r\n
+  "SSE.Views.ChartSettingsDlg.textOverlay": "Overlay",\r\n
+  "SSE.Views.ChartSettingsDlg.textPie": "Sektoru diagramma",\r\n
+  "SSE.Views.ChartSettingsDlg.textPoint": "Punkts",\r\n
+  "SSE.Views.ChartSettingsDlg.textReverse": "Values in reverse order",\r\n
+  "SSE.Views.ChartSettingsDlg.textRightOverlay": "Right Overlay",\r\n
+  "SSE.Views.ChartSettingsDlg.textRotated": "Rotated",\r\n
+  "SSE.Views.ChartSettingsDlg.textSelectData": "Select Data",\r\n
+  "SSE.Views.ChartSettingsDlg.textSeparator": "Data Labels Separator",\r\n
+  "SSE.Views.ChartSettingsDlg.textSeriesName": "Series Name",\r\n
+  "SSE.Views.ChartSettingsDlg.textShowAxis": "Parādīt asi",\r\n
+  "SSE.Views.ChartSettingsDlg.textShowBorders": "Display chart borders",\r\n
+  "SSE.Views.ChartSettingsDlg.textShowGrid": "Režģa līnijas",\r\n
+  "SSE.Views.ChartSettingsDlg.textShowValues": "Parādīt grafika vērtības",\r\n
+  "SSE.Views.ChartSettingsDlg.textSmooth": "Smooth",\r\n
+  "SSE.Views.ChartSettingsDlg.textStock": "Akcijas",\r\n
+  "SSE.Views.ChartSettingsDlg.textStraight": "Straight",\r\n
+  "SSE.Views.ChartSettingsDlg.textStyle": "Style",\r\n
+  "SSE.Views.ChartSettingsDlg.textTenMillions": "10 000 000",\r\n
+  "SSE.Views.ChartSettingsDlg.textTenThousands": "10 000",\r\n
+  "SSE.Views.ChartSettingsDlg.textThousands": "Thousands",\r\n
+  "SSE.Views.ChartSettingsDlg.textTickOptions": "Tick Options",\r\n
+  "SSE.Views.ChartSettingsDlg.textTitle": "Grafika iestatījumi",\r\n
+  "SSE.Views.ChartSettingsDlg.textTrillions": "Trillions",\r\n
+  "SSE.Views.ChartSettingsDlg.textType": "Type",\r\n
+  "SSE.Views.ChartSettingsDlg.textTypeData": "Type & Data",\r\n
+  "SSE.Views.ChartSettingsDlg.textTypeStyle": "Chart Type, Style &<br/>Data Range",\r\n
+  "SSE.Views.ChartSettingsDlg.textUnits": "Display Units",\r\n
+  "SSE.Views.ChartSettingsDlg.textValue": "Value",\r\n
+  "SSE.Views.ChartSettingsDlg.textVertAxis": "Vertical Axis",\r\n
+  "SSE.Views.ChartSettingsDlg.textVertGrid": "Vertical Gridlines",\r\n
+  "SSE.Views.ChartSettingsDlg.textVertTitle": "Vertical Axis Title",\r\n
+  "SSE.Views.ChartSettingsDlg.textXAxisTitle": "X ass virsraksts",\r\n
+  "SSE.Views.ChartSettingsDlg.textYAxisTitle": "Y ass virsraksts",\r\n
+  "SSE.Views.ChartSettingsDlg.txtEmpty": "Šis lauks ir nepieciešams",\r\n
+  "SSE.Views.DigitalFilterDialog.cancelButtonText": "Cancel",\r\n
+  "SSE.Views.DigitalFilterDialog.capAnd": "And",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition1": "equals",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition10": "does not end with",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition11": "contains",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition12": "does not contain",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition2": "does not equal",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition3": "is greater than",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition4": "is greater than or equal to",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition5": "is less than",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition6": "is less than or equal to",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition7": "begins with",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition8": "does not begin with",\r\n
+  "SSE.Views.DigitalFilterDialog.capCondition9": "ends with",\r\n
+  "SSE.Views.DigitalFilterDialog.capOr": "Or",\r\n
+  "SSE.Views.DigitalFilterDialog.textNoFilter": "no filter",\r\n
+  "SSE.Views.DigitalFilterDialog.textShowRows": "Show rows where",\r\n
+  "SSE.Views.DigitalFilterDialog.textUse1": "Use ? to present any single character",\r\n
+  "SSE.Views.DigitalFilterDialog.textUse2": "Use * to present any series of character",\r\n
+  "SSE.Views.DigitalFilterDialog.txtTitle": "Custom Filter",\r\n
+  "SSE.Views.DocumentHolder.advancedShapeText": "Shape Advanced Settings",\r\n
+  "SSE.Views.DocumentHolder.bottomCellText": "Align Bottom",\r\n
+  "SSE.Views.DocumentHolder.centerCellText": "Align Center",\r\n
+  "SSE.Views.DocumentHolder.chartText": "Chart Advanced Settings",\r\n
+  "SSE.Views.DocumentHolder.editChartText": "Edit Data",\r\n
+  "SSE.Views.DocumentHolder.editHyperlinkText": "Edit Hyperlink",\r\n
+  "SSE.Views.DocumentHolder.removeHyperlinkText": "Remove Hyperlink",\r\n
+  "SSE.Views.DocumentHolder.textArrangeBack": "Send to Background",\r\n
+  "SSE.Views.DocumentHolder.textArrangeBackward": "Move Backward",\r\n
+  "SSE.Views.DocumentHolder.textArrangeForward": "Move Forward",\r\n
+  "SSE.Views.DocumentHolder.textArrangeFront": "Bring to Foreground",\r\n
+  "SSE.Views.DocumentHolder.topCellText": "Align Top",\r\n
+  "SSE.Views.DocumentHolder.txtAddComment": "Add Comment",\r\n
+  "SSE.Views.DocumentHolder.txtArrange": "Arrange",\r\n
+  "SSE.Views.DocumentHolder.txtAscending": "Augošā secībā",\r\n
+  "SSE.Views.DocumentHolder.txtClear": "Nodzēst visu",\r\n
+  "SSE.Views.DocumentHolder.txtClearAll": "All",\r\n
+  "SSE.Views.DocumentHolder.txtClearComments": "Comments",\r\n
+  "SSE.Views.DocumentHolder.txtClearFormat": "Format",\r\n
+  "SSE.Views.DocumentHolder.txtClearHyper": "Hyperlinks",\r\n
+  "SSE.Views.DocumentHolder.txtClearText": "Text",\r\n
+  "SSE.Views.DocumentHolder.txtColumn": "Visu kolonnu",\r\n
+  "SSE.Views.DocumentHolder.txtColumnWidth": "Kolonnas platums",\r\n
+  "SSE.Views.DocumentHolder.txtCopy": "Nokopēt",\r\n
+  "SSE.Views.DocumentHolder.txtCut": "Izgriezt",\r\n
+  "SSE.Views.DocumentHolder.txtDelete": "Izdzēst",\r\n
+  "SSE.Views.DocumentHolder.txtDescending": "Dilstošā secībā",\r\n
+  "SSE.Views.DocumentHolder.txtEditComment": "Edit Comment",\r\n
+  "SSE.Views.DocumentHolder.txtFormula": "Funkcijas ievietošana",\r\n
+  "SSE.Views.DocumentHolder.txtGroup": "Group",\r\n
+  "SSE.Views.DocumentHolder.txtHide": "Paslēpt",\r\n
+  "SSE.Views.DocumentHolder.txtInsert": "Ievietot",\r\n
+  "SSE.Views.DocumentHolder.txtInsHyperlink": "Hyperlink",\r\n
+  "SSE.Views.DocumentHolder.txtPaste": "Ielīmēt",\r\n
+  "SSE.Views.DocumentHolder.txtRow": "Visu rindu",\r\n
+  "SSE.Views.DocumentHolder.txtRowHeight": "Rindas augstums",\r\n
+  "SSE.Views.DocumentHolder.txtShiftDown": "Pārbīdīt šūnas uz leju",\r\n
+  "SSE.Views.DocumentHolder.txtShiftLeft": "Pārbīdīt šūnas pa kreisi",\r\n
+  "SSE.Views.DocumentHolder.txtShiftRight": "Pārbīdīt šūnas pa labi",\r\n
+  "SSE.Views.DocumentHolder.txtShiftUp": "Pārbīdīt šūnas uz augšu",\r\n
+  "SSE.Views.DocumentHolder.txtShow": "Parādīt",\r\n
+  "SSE.Views.DocumentHolder.txtSort": "Kārtot",\r\n
+  "SSE.Views.DocumentHolder.txtTextAdvanced": "Text Advanced Settings",\r\n
+  "SSE.Views.DocumentHolder.txtUngroup": "Ungroup",\r\n
+  "SSE.Views.DocumentHolder.txtWidth": "Platums",\r\n
+  "SSE.Views.DocumentHolder.vertAlignText": "Vertical Alignment",\r\n
+  "SSE.Views.FileMenu.btnBackCaption": "Iet uz Dokumenti",\r\n
+  "SSE.Views.FileMenu.btnCreateNewCaption": "Izveidot jaunu...",\r\n
+  "SSE.Views.FileMenu.btnDownloadCaption": "Lejupielādēt kā...",\r\n
+  "SSE.Views.FileMenu.btnHelpCaption": "Palīdzība...",\r\n
+  "SSE.Views.FileMenu.btnInfoCaption": "Dokumenta informācija...",\r\n
+  "SSE.Views.FileMenu.btnPrintCaption": "Drukāt",\r\n
+  "SSE.Views.FileMenu.btnRecentFilesCaption": "Atvērt pēdejo...",\r\n
+  "SSE.Views.FileMenu.btnReturnCaption": "Atpakaļ uz izklājlapu",\r\n
+  "SSE.Views.FileMenu.btnSaveCaption": "Saglabāt",\r\n
+  "SSE.Views.FileMenu.btnSettingsCaption": "Papildu iestatījumi...",\r\n
+  "SSE.Views.FileMenu.btnToEditCaption": "Rediģēt dokumentu",\r\n
+  "SSE.Views.FileMenuPanels.CreateNew.fromBlankText": "Sākt ar tukšo",\r\n
+  "SSE.Views.FileMenuPanels.CreateNew.fromTemplateText": "No veidnes",\r\n
+  "SSE.Views.FileMenuPanels.CreateNew.newDescriptionText": "Izveidot jaunu tukšu izklājlapu, kurā jūs varēsiet piemērot stilu un formātu pēc izveides rediģēšanas laikā. Vai izvēlēties kādu no veidnēm, lai sāktu dokumentu konkrēta veida vai stilā, kur daži stili jau iepriekš piemēroti.",\r\n
+  "SSE.Views.FileMenuPanels.CreateNew.newDocumentText": "Jauna Izklājlapa",\r\n
+  "SSE.Views.FileMenuPanels.DocumentInfo.txtAuthor": "Autors",\r\n
+  "SSE.Views.FileMenuPanels.DocumentRights.txtBtnAccessRights": "Change access rights",\r\n
+  "SSE.Views.FileMenuPanels.DocumentInfo.txtDate": "Izveides datums",\r\n
+  "SSE.Views.FileMenuPanels.DocumentInfo.txtPlacement": "Vieta",\r\n
+  "SSE.Views.FileMenuPanels.DocumentRights.txtRights": "Personas kuriem ir tiesības",\r\n
+  "SSE.Views.FileMenuPanels.DocumentInfo.txtTitle": "Izklājlapas Nosaukums",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.okButtonText": "Piemērot",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strAutosave": "Turn on autosave",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strFontRender": "Font Hinting",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strLiveComment": "Turn on live commenting option",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strUnit": "Unit of Measurement",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.strZoom": "Noklusējuma tālummaiņas vērtība",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.text10Minutes": "Every 10 Minutes",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.text30Minutes": "Every 30 Minutes",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.text5Minutes": "Every 5 Minutes",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.text60Minutes": "Every Hour",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.textAutoSave": "Autosave",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.textDisabled": "Disabled",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.textMinute": "Every Minute",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtCm": "Centimeter",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtLiveComment": "Live Commenting",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtMac": "as OS X",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtNative": "Native",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtPt": "Point",\r\n
+  "SSE.Views.FileMenuPanels.MainSettingsGeneral.txtWin": "as Windows",\r\n
+  "SSE.Views.FileMenuPanels.Settings.txtGeneral": "General",\r\n
+  "SSE.Views.FileMenuPanels.Settings.txtPrint": "Print",\r\n
+  "SSE.Views.FormulaDialog.cancelButtonText": "Atcelt",\r\n
+  "SSE.Views.FormulaDialog.okButtonText": "OK",\r\n
+  "SSE.Views.FormulaDialog.sCategoryAll": "Viss",\r\n
+  "SSE.Views.FormulaDialog.sCategoryCube": "Kubs",\r\n
+  "SSE.Views.FormulaDialog.sCategoryDatabase": "Datubāze",\r\n
+  "SSE.Views.FormulaDialog.sCategoryDateTime": "Datums un laiks",\r\n
+  "SSE.Views.FormulaDialog.sCategoryEngineering": "Tehnika",\r\n
+  "SSE.Views.FormulaDialog.sCategoryFinancial": "Finanšu",\r\n
+  "SSE.Views.FormulaDialog.sCategoryInformation": "Informācija",\r\n
+  "SSE.Views.FormulaDialog.sCategoryLogical": "Loģiska",\r\n
+  "SSE.Views.FormulaDialog.sCategoryLookupAndReference": "Pārlūkošanas un atsauču",\r\n
+  "SSE.Views.FormulaDialog.sCategoryMathematics": "Matemātiskās un trigonometriskās",\r\n
+  "SSE.Views.FormulaDialog.sCategoryStatistical": "Statistiskās",\r\n
+  "SSE.Views.FormulaDialog.sCategoryTextData": "Teksts un dati",\r\n
+  "SSE.Views.FormulaDialog.sDescription": "Apraksts",\r\n
+  "SSE.Views.FormulaDialog.syntaxText": "Syntax",\r\n
+  "SSE.Views.FormulaDialog.textGroupDescription": "Izvēlieties funkcijas grupu",\r\n
+  "SSE.Views.FormulaDialog.textListDescription": "Izvēlieties funkciju",\r\n
+  "SSE.Views.FormulaDialog.txtTitle": "Ievietot funkciju",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.cancelButtonText": "Cancel",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.strDisplay": "Parādīt",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.strLinkTo": "Saistīt ar",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.strRange": "Diapazons",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.strSheet": "Lapa",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textDefault": "Selected range",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textEmptyDesc": "Ievadiet parakstu šeit",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textEmptyLink": "Ievadiet saiti šeit",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textEmptyTooltip": "Ievadiet rīka padomu šeit",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textExternalLink": "Ārējā saite",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textInternalLink": "Iekšējo datu diapazons",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textInvalidRange": "KĻŪDA! Nederīgs šūnu diapazons",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textLinkType": "Saites tips",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textTipText": "Ekrāna Padoma Teksts",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.textTitle": "Hipersaites iestatījumi",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.txtEmpty": "Šis lauks ir nepieciešams",\r\n
+  "SSE.Views.HyperlinkSettingsDialog.txtNotUrl": "Šis lauks jābūt URL formātā  \\"http://www.example.com\\"",\r\n
+  "SSE.Views.ImageSettings.textFromFile": "From File",\r\n
+  "SSE.Views.ImageSettings.textFromUrl": "From URL",\r\n
+  "SSE.Views.ImageSettings.textHeight": "Height",\r\n
+  "SSE.Views.ImageSettings.textInsert": "Replace Image",\r\n
+  "SSE.Views.ImageSettings.textKeepRatio": "Constant Proportions",\r\n
+  "SSE.Views.ImageSettings.textOriginalSize": "Default Size",\r\n
+  "SSE.Views.ImageSettings.textSize": "Size",\r\n
+  "SSE.Views.ImageSettings.textWidth": "Width",\r\n
+  "SSE.Views.LeftMenu.tipAbout": "About",\r\n
+  "SSE.Views.LeftMenu.tipChat": "Chat",\r\n
+  "SSE.Views.LeftMenu.tipComments": "Comments",\r\n
+  "SSE.Views.LeftMenu.tipFile": "Fails",\r\n
+  "SSE.Views.LeftMenu.tipSearch": "Meklēšana",\r\n
+  "SSE.Views.LeftMenu.tipSupport": "Feedback & Support",\r\n
+  "SSE.Views.MainSettingsPrint.okButtonText": "Save",\r\n
+  "SSE.Views.MainSettingsPrint.strBottom": "Bottom",\r\n
+  "SSE.Views.MainSettingsPrint.strLandscape": "Landscape",\r\n
+  "SSE.Views.MainSettingsPrint.strLeft": "Left",\r\n
+  "SSE.Views.MainSettingsPrint.strMargins": "Margins",\r\n
+  "SSE.Views.MainSettingsPrint.strPortrait": "Portrait",\r\n
+  "SSE.Views.MainSettingsPrint.strPrint": "Print",\r\n
+  "SSE.Views.MainSettingsPrint.strRight": "Right",\r\n
+  "SSE.Views.MainSettingsPrint.strTop": "Top",\r\n
+  "SSE.Views.MainSettingsPrint.textPageOrientation": "Page Orientation",\r\n
+  "SSE.Views.MainSettingsPrint.textPageSize": "Page Size",\r\n
+  "SSE.Views.MainSettingsPrint.textPrintGrid": "Print Gridlines",\r\n
+  "SSE.Views.MainSettingsPrint.textPrintHeadings": "Print Rows and Columns Headings",\r\n
+  "SSE.Views.MainSettingsPrint.textSettings": "Settings for",\r\n
+  "SSE.Views.OpenDialog.cancelButtonText": "Atcelt",\r\n
+  "SSE.Views.OpenDialog.okButtonText": "OK",\r\n
+  "SSE.Views.OpenDialog.txtDelimiter": "Norobežotājs",\r\n
+  "SSE.Views.OpenDialog.txtEncoding": "Kodēšana ",\r\n
+  "SSE.Views.OpenDialog.txtSpace": "Space",\r\n
+  "SSE.Views.OpenDialog.txtTab": "Tab",\r\n
+  "SSE.Views.OpenDialog.txtTitle": "Choose CSV options",\r\n
+  "SSE.Views.ParagraphSettings.strLineHeight": "Line Spacing",\r\n
+  "SSE.Views.ParagraphSettings.strParagraphSpacing": "Spacing",\r\n
+  "SSE.Views.ParagraphSettings.strSpacingAfter": "After",\r\n
+  "SSE.Views.ParagraphSettings.strSpacingBefore": "Before",\r\n
+  "SSE.Views.ParagraphSettings.textAdvanced": "Show advanced settings",\r\n
+  "SSE.Views.ParagraphSettings.textAt": "At",\r\n
+  "SSE.Views.ParagraphSettings.textAtLeast": "At least",\r\n
+  "SSE.Views.ParagraphSettings.textAuto": "Multiple",\r\n
+  "SSE.Views.ParagraphSettings.textExact": "Exactly",\r\n
+  "SSE.Views.ParagraphSettings.txtAutoText": "Auto",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.cancelButtonText": "Cancel",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.noTabs": "The specified tabs will appear in this field",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.okButtonText": "OK",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strAllCaps": "All caps",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strDoubleStrike": "Double strikethrough",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strIndentsFirstLine": "First Line",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strIndentsLeftText": "Left",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strIndentsRightText": "Right",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strParagraphFont": "Font",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strParagraphIndents": "Indents & Placement",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strSmallCaps": "Small caps",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strStrike": "Strikethrough",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strSubscript": "Subscript",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strSuperscript": "Superscript",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.strTabs": "Tab",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textAlign": "Alignment",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textCharacterSpacing": "Character Spacing",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textDefault": "Default Tab",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textEffects": "Effects",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textRemove": "Remove",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textRemoveAll": "Remove All",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textSet": "Specify",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textTabCenter": "Center",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textTabLeft": "Left",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textTabPosition": "Tab Position",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textTabRight": "Right",\r\n
+  "SSE.Views.ParagraphSettingsAdvanced.textTitle": "Paragraph - Advanced Settings",\r\n
+  "SSE.Views.PrintSettings.btnPrint": "Save & Print",\r\n
+  "SSE.Views.PrintSettings.cancelButtonText": "Cancel",\r\n
+  "SSE.Views.PrintSettings.strBottom": "Lejā",\r\n
+  "SSE.Views.PrintSettings.strLandscape": "Ainava",\r\n
+  "SSE.Views.PrintSettings.strLeft": "Pa kreisi",\r\n
+  "SSE.Views.PrintSettings.strMargins": "Piemales",\r\n
+  "SSE.Views.PrintSettings.strPortrait": "Portrets",\r\n
+  "SSE.Views.PrintSettings.strPrint": "Drukāt",\r\n
+  "SSE.Views.PrintSettings.strRight": "Pa labi",\r\n
+  "SSE.Views.PrintSettings.strTop": "Augšā",\r\n
+  "SSE.Views.PrintSettings.textActualSize": "Actual Size",\r\n
+  "SSE.Views.PrintSettings.textAllSheets": "All Sheets",\r\n
+  "SSE.Views.PrintSettings.textCurrentSheet": "Current Sheet",\r\n
+  "SSE.Views.PrintSettings.textFit": "Fit to width",\r\n
+  "SSE.Views.PrintSettings.textHideDetails": "Hide Details",\r\n
+  "SSE.Views.PrintSettings.textLayout": "Layout",\r\n
+  "SSE.Views.PrintSettings.textPageOrientation": "Lapas orientācija",\r\n
+  "SSE.Views.PrintSettings.textPageSize": "Lapas izmērs",\r\n
+  "SSE.Views.PrintSettings.textPrintGrid": "Drukāt režģa līnijas",\r\n
+  "SSE.Views.PrintSettings.textPrintHeadings": "Drukāt rindas un kollonas nosaukumus",\r\n
+  "SSE.Views.PrintSettings.textPrintRange": "Print Range",\r\n
+  "SSE.Views.PrintSettings.textSelection": "Selection",\r\n
+  "SSE.Views.PrintSettings.textShowDetails": "Show Details",\r\n
+  "SSE.Views.PrintSettings.textTitle": "Drukāšanas opcijas",\r\n
+  "SSE.Views.RightMenu.txtChartSettings": "Chart Settings",\r\n
+  "SSE.Views.RightMenu.txtImageSettings": "Image Settings",\r\n
+  "SSE.Views.RightMenu.txtParagraphSettings": "Text Settings",\r\n
+  "SSE.Views.RightMenu.txtSettings": "Common Settings",\r\n
+  "SSE.Views.RightMenu.txtShapeSettings": "Shape Settings",\r\n
+  "SSE.Views.SetValueDialog.cancelButtonText": "Atcelt",\r\n
+  "SSE.Views.SetValueDialog.okButtonText": "Ok",\r\n
+  "SSE.Views.SetValueDialog.txtMaxText": "Maksimālā vērtība šajā jomā ir {0}",\r\n
+  "SSE.Views.SetValueDialog.txtMinText": "Minimālā vērtība šajā jomā ir {0}",\r\n
+  "SSE.Views.ShapeSettings.strBackground": "Background color",\r\n
+  "SSE.Views.ShapeSettings.strChange": "Change Autoshape",\r\n
+  "SSE.Views.ShapeSettings.strColor": "Color",\r\n
+  "SSE.Views.ShapeSettings.strFill": "Fill",\r\n
+  "SSE.Views.ShapeSettings.strForeground": "Foreground color",\r\n
+  "SSE.Views.ShapeSettings.strPattern": "Pattern",\r\n
+  "SSE.Views.ShapeSettings.strSize": "Size",\r\n
+  "SSE.Views.ShapeSettings.strStroke": "Stroke",\r\n
+  "SSE.Views.ShapeSettings.strTransparency": "Opacity",\r\n
+  "SSE.Views.ShapeSettings.textAdvanced": "Show advanced settings",\r\n
+  "SSE.Views.ShapeSettings.textBorderSizeErr": "The entered value is incorrect.<br>Please enter a value between 0 pt and 1584 pt.",\r\n
+  "SSE.Views.ShapeSettings.textColor": "Color Fill",\r\n
+  "SSE.Views.ShapeSettings.textDirection": "Direction",\r\n
+  "SSE.Views.ShapeSettings.textEmptyPattern": "No Pattern",\r\n
+  "SSE.Views.ShapeSettings.textFromFile": "From File",\r\n
+  "SSE.Views.ShapeSettings.textFromUrl": "From URL",\r\n
+  "SSE.Views.ShapeSettings.textGradient": "Gradient",\r\n
+  "SSE.Views.ShapeSettings.textGradientFill": "Gradient Fill",\r\n
+  "SSE.Views.ShapeSettings.textImageTexture": "Picture or Texture",\r\n
+  "SSE.Views.ShapeSettings.textLinear": "Linear",\r\n
+  "SSE.Views.ShapeSettings.textNewColor": "Custom Color",\r\n
+  "SSE.Views.ShapeSettings.textNoFill": "No Fill",\r\n
+  "SSE.Views.ShapeSettings.textOriginalSize": "Original Size",\r\n
+  "SSE.Views.ShapeSettings.textPatternFill": "Pattern",\r\n
+  "SSE.Views.ShapeSettings.textRadial": "Radial",\r\n
+  "SSE.Views.ShapeSettings.textSelectTexture": "Select",\r\n
+  "SSE.Views.ShapeSettings.textStandartColors": "Standard Colors",\r\n
+  "SSE.Views.ShapeSettings.textStretch": "Stretch",\r\n
+  "SSE.Views.ShapeSettings.textStyle": "Style",\r\n
+  "SSE.Views.ShapeSettings.textTexture": "From Texture",\r\n
+  "SSE.Views.ShapeSettings.textThemeColors": "Theme Colors",\r\n
+  "SSE.Views.ShapeSettings.textTile": "Tile",\r\n
+  "SSE.Views.ShapeSettings.txtBrownPaper": "Brown Paper",\r\n
+  "SSE.Views.ShapeSettings.txtCanvas": "Canvas",\r\n
+  "SSE.Views.ShapeSettings.txtCarton": "Carton",\r\n
+  "SSE.Views.ShapeSettings.txtDarkFabric": "Dark Fabric",\r\n
+  "SSE.Views.ShapeSettings.txtGrain": "Grain",\r\n
+  "SSE.Views.ShapeSettings.txtGranite": "Granite",\r\n
+  "SSE.Views.ShapeSettings.txtGreyPaper": "Gray Paper",\r\n
+  "SSE.Views.ShapeSettings.txtKnit": "Knit",\r\n
+  "SSE.Views.ShapeSettings.txtLeather": "Leather",\r\n
+  "SSE.Views.ShapeSettings.txtNoBorders": "No Line",\r\n
+  "SSE.Views.ShapeSettings.txtPapyrus": "Papyrus",\r\n
+  "SSE.Views.ShapeSettings.txtWood": "Wood",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.cancelButtonText": "Cancel",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.okButtonText": "OK",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.strMargins": "Margins",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textArrows": "Arrows",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textBeginSize": "Begin Size",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textBeginStyle": "Begin Style",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textBevel": "Bevel",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textBottom": "Bottom",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textCapType": "Cap Type",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textEndSize": "End Size",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textEndStyle": "End Style",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textFlat": "Flat",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textHeight": "Height",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textJoinType": "Join Type",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textKeepRatio": "Constant Proportions",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textLeft": "Left",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textLineStyle": "Line Style",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textMiter": "Miter",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textRight": "Right",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textRound": "Round",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textSize": "Size",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textSquare": "Square",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textTitle": "Shape - Advanced Settings",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textTop": "Top",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textWeightArrows": "Weights & Arrows",\r\n
+  "SSE.Views.ShapeSettingsAdvanced.textWidth": "Width",\r\n
+  "SSE.Views.Statusbar.CopyDialog.itemCopyToEnd": "(Copy to end)",\r\n
+  "SSE.Views.Statusbar.CopyDialog.itemMoveToEnd": "(Move to end)",\r\n
+  "SSE.Views.Statusbar.CopyDialog.textCopyBefore": "Copy before sheet",\r\n
+  "SSE.Views.Statusbar.CopyDialog.textMoveBefore": "Move before sheet",\r\n
+  "SSE.Views.Statusbar.itemCopy": "Nokopēt",\r\n
+  "SSE.Views.Statusbar.itemDelete": "Izdzēst",\r\n
+  "SSE.Views.Statusbar.itemHidden": "Paslēpts",\r\n
+  "SSE.Views.Statusbar.itemHide": "Paslēpt",\r\n
+  "SSE.Views.Statusbar.itemInsert": "Ievietot",\r\n
+  "SSE.Views.Statusbar.itemMove": "Pārvietot",\r\n
+  "SSE.Views.Statusbar.itemRename": "Pārdēvēt",\r\n
+  "SSE.Views.Statusbar.itemTabColor": "Tab Color",\r\n
+  "SSE.Views.Statusbar.RenameDialog.errNameExists": "Worksheet with such a name already exists.",\r\n
+  "SSE.Views.Statusbar.RenameDialog.errNameWrongChar": "A sheet name cannot contain the following characters: \\\\/*?[]:",\r\n
+  "SSE.Views.Statusbar.RenameDialog.labelSheetName": "Sheet Name",\r\n
+  "SSE.Views.Statusbar.textAverage": "AVERAGE",\r\n
+  "SSE.Views.Statusbar.textCount": "COUNT",\r\n
+  "SSE.Views.Statusbar.textNewColor": "Add New Custom Color",\r\n
+  "SSE.Views.Statusbar.textNoColor": "No Color",\r\n
+  "SSE.Views.Statusbar.textStandartColors": "Standard Colors",\r\n
+  "SSE.Views.Statusbar.textSum": "SUM",\r\n
+  "SSE.Views.Statusbar.textThemeColors": "Theme Colors",\r\n
+  "SSE.Views.Statusbar.tipAddTab": "Add worksheet",\r\n
+  "SSE.Views.Statusbar.tipFirst": "Scroll to First Sheet",\r\n
+  "SSE.Views.Statusbar.tipLast": "Scroll to Last Sheet",\r\n
+  "SSE.Views.Statusbar.tipNext": "Scroll Sheet List Right",\r\n
+  "SSE.Views.Statusbar.tipPrev": "Scroll Sheet List Left",\r\n
+  "SSE.Views.Statusbar.tipZoomFactor": "Palielināšana",\r\n
+  "SSE.Views.Statusbar.tipZoomIn": "Palielināt",\r\n
+  "SSE.Views.Statusbar.tipZoomOut": "Samazināt",\r\n
+  "SSE.Views.Statusbar.zoomText": "Lielums {0}%",\r\n
+  "SSE.Views.TableOptionsDialog.errorAutoFilterDataRange": "The operation could not be done for the selected range of cells.<br>Select a uniform data range inside or outside the table and try again.",\r\n
+  "SSE.Views.TableOptionsDialog.textCancel": "Cancel",\r\n
+  "SSE.Views.TableOptionsDialog.txtEmpty": "This field is required",\r\n
+  "SSE.Views.TableOptionsDialog.txtFormat": "Create table",\r\n
+  "SSE.Views.TableOptionsDialog.txtInvalidRange": "ERROR! Invalid cells range",\r\n
+  "SSE.Views.TableOptionsDialog.txtTitle": "Title",\r\n
+  "SSE.Views.Toolbar.mniImageFromFile": "Attēls no faila",\r\n
+  "SSE.Views.Toolbar.mniImageFromUrl": "Attēls no url",\r\n
+  "SSE.Views.Toolbar.textAlignBottom": "Līdzināt uz lēju",\r\n
+  "SSE.Views.Toolbar.textAlignCenter": "Līdzināt uz centru",\r\n
+  "SSE.Views.Toolbar.textAlignJust": "Taisnots",\r\n
+  "SSE.Views.Toolbar.textAlignLeft": "Līdzināt pa kreisi",\r\n
+  "SSE.Views.Toolbar.textAlignMiddle": "Līdzināt uz vidu",\r\n
+  "SSE.Views.Toolbar.textAlignRight": "Līdzināt pa labi",\r\n
+  "SSE.Views.Toolbar.textAlignTop": "Līdzināt uz augšu",\r\n
+  "SSE.Views.Toolbar.textAllBorders": "Visas Apmales",\r\n
+  "SSE.Views.Toolbar.textBold": "Treknraksts",\r\n
+  "SSE.Views.Toolbar.textBordersColor": "Apmales krāsa",\r\n
+  "SSE.Views.Toolbar.textBordersWidth": "Apmales plātums",\r\n
+  "SSE.Views.Toolbar.textBottomBorders": "Apakšējās Apmales",\r\n
+  "SSE.Views.Toolbar.textCenterBorders": "Iekšējās Vertikālās Apmales",\r\n
+  "SSE.Views.Toolbar.textClockwise": "Angle Clockwise",\r\n
+  "SSE.Views.Toolbar.textCompactToolbar": "View Compact Toolbar",\r\n
+  "SSE.Views.Toolbar.textCounterCw": "Angle Counterclockwise",\r\n
+  "SSE.Views.Toolbar.textDelLeft": "Shift Cells Left",\r\n
+  "SSE.Views.Toolbar.textDelUp": "Shift Cells Up",\r\n
+  "SSE.Views.Toolbar.textDiagDownBorder": "Diagonal Down Border",\r\n
+  "SSE.Views.Toolbar.textDiagUpBorder": "Diagonal Up Border",\r\n
+  "SSE.Views.Toolbar.textEntireCol": "Entire Column",\r\n
+  "SSE.Views.Toolbar.textEntireRow": "Entire Row",\r\n
+  "SSE.Views.Toolbar.textFreezePanes": "Freeze Panes",\r\n
+  "SSE.Views.Toolbar.textHideFBar": "Hide Formula Bar",\r\n
+  "SSE.Views.Toolbar.textHideGridlines": "Hide Gridlines",\r\n
+  "SSE.Views.Toolbar.textHideHeadings": "Hide Headings",\r\n
+  "SSE.Views.Toolbar.textHideTBar": "Hide Title Bar",\r\n
+  "SSE.Views.Toolbar.textHorizontal": "Horizontal Text",\r\n
+  "SSE.Views.Toolbar.textInsDown": "Shift Cells Down",\r\n
+  "SSE.Views.Toolbar.textInsideBorders": "Iekšējās Apmales",\r\n
+  "SSE.Views.Toolbar.textInsRight": "Shift Cells Right",\r\n
+  "SSE.Views.Toolbar.textItalic": "Kursīvs",\r\n
+  "SSE.Views.Toolbar.textLeftBorders": "Kreisās Apmales",\r\n
+  "SSE.Views.Toolbar.textMiddleBorders": "Iekšējās Horizontālās Apmales",\r\n
+  "SSE.Views.Toolbar.textNewColor": "Pievienot jauno krāsu",\r\n
+  "SSE.Views.Toolbar.textNoBorders": "Nav apmales",\r\n
+  "SSE.Views.Toolbar.textOutBorders": "Ārējās Apmales",\r\n
+  "SSE.Views.Toolbar.textPrint": "Drukāt",\r\n
+  "SSE.Views.Toolbar.textPrintOptions": "Drukāšanas opcijas",\r\n
+  "SSE.Views.Toolbar.textRightBorders": "Labās Apmales",\r\n
+  "SSE.Views.Toolbar.textRotateDown": "Rotate Text Down",\r\n
+  "SSE.Views.Toolbar.textRotateUp": "Rotate Text Up",\r\n
+  "SSE.Views.Toolbar.textStandartColors": "Standard Colors",\r\n
+  "SSE.Views.Toolbar.textThemeColors": "Theme Colors",\r\n
+  "SSE.Views.Toolbar.textTopBorders": "Augšējās Apmales",\r\n
+  "SSE.Views.Toolbar.textUnderline": "Pasvītrots",\r\n
+  "SSE.Views.Toolbar.textZoom": "Zoom",\r\n
+  "SSE.Views.Toolbar.tipAdvSettings": "Advanced Settings",\r\n
+  "SSE.Views.Toolbar.tipAlignBottom": "Align Bottom",\r\n
+  "SSE.Views.Toolbar.tipAlignCenter": "Align Center",\r\n
+  "SSE.Views.Toolbar.tipAlignJust": "Justified",\r\n
+  "SSE.Views.Toolbar.tipAlignLeft": "Align Left",\r\n
+  "SSE.Views.Toolbar.tipAlignMiddle": "Align Middle",\r\n
+  "SSE.Views.Toolbar.tipAlignRight": "Align Right",\r\n
+  "SSE.Views.Toolbar.tipAlignTop": "Align Top",\r\n
+  "SSE.Views.Toolbar.tipAutofilter": "Sort and Filter",\r\n
+  "SSE.Views.Toolbar.tipBack": "Atpakaļ",\r\n
+  "SSE.Views.Toolbar.tipBorders": "Apmales",\r\n
+  "SSE.Views.Toolbar.tipCellStyle": "Cell Style",\r\n
+  "SSE.Views.Toolbar.tipClearStyle": "Noņemt stilu",\r\n
+  "SSE.Views.Toolbar.tipColorSchemas": "Change Color Scheme",\r\n
+  "SSE.Views.Toolbar.tipCopy": "Nokopēt",\r\n
+  "SSE.Views.Toolbar.tipCopyStyle": "Copy Style",\r\n
+  "SSE.Views.Toolbar.tipDecDecimal": "Īsāka decimāldaļa",\r\n
+  "SSE.Views.Toolbar.tipDecFont": "Decrement font size",\r\n
+  "SSE.Views.Toolbar.tipDeleteOpt": "Delete Cells",\r\n
+  "SSE.Views.Toolbar.tipDigStyleAccounting": "Accounting Style",\r\n
+  "SSE.Views.Toolbar.tipDigStyleCurrency": "Currency Style",\r\n
+  "SSE.Views.Toolbar.tipDigStylePercent": "Percent Style",\r\n
+  "SSE.Views.Toolbar.tipEditChart": "Edit Chart",\r\n
+  "SSE.Views.Toolbar.tipFontColor": "Fonta krāsa",\r\n
+  "SSE.Views.Toolbar.tipFontName": "Fonts veids",\r\n
+  "SSE.Views.Toolbar.tipFontSize": "Fonta lielums",\r\n
+  "SSE.Views.Toolbar.tipHAligh": "Horizontālā Līdzināšana",\r\n
+  "SSE.Views.Toolbar.tipIncDecimal": "Garāka decimāldaļa",\r\n
+  "SSE.Views.Toolbar.tipIncFont": "Increment font size",\r\n
+  "SSE.Views.Toolbar.tipInsertChart": "Ievietot Grafiku",\r\n
+  "SSE.Views.Toolbar.tipInsertHyperlink": "Pievienot hipersaiti",\r\n
+  "SSE.Views.Toolbar.tipInsertImage": "Ievietot attēlu",\r\n
+  "SSE.Views.Toolbar.tipInsertOpt": "Insert Cells",\r\n
+  "SSE.Views.Toolbar.tipInsertShape": "Insert Autoshape",\r\n
+  "SSE.Views.Toolbar.tipInsertText": "Insert Text",\r\n
+  "SSE.Views.Toolbar.tipMerge": "Sapludināt",\r\n
+  "SSE.Views.Toolbar.tipNewDocument": "New Document",\r\n
+  "SSE.Views.Toolbar.tipNumFormat": "Skaitļu formāts",\r\n
+  "SSE.Views.Toolbar.tipOpenDocument": "Open Document",\r\n
+  "SSE.Views.Toolbar.tipPaste": "Ielīmēt",\r\n
+  "SSE.Views.Toolbar.tipPrColor": "Fona krāsa",\r\n
+  "SSE.Views.Toolbar.tipPrint": "Drukāt",\r\n
+  "SSE.Views.Toolbar.tipRedo": "Redo",\r\n
+  "SSE.Views.Toolbar.tipSave": "Saglabāt",\r\n
+  "SSE.Views.Toolbar.tipSaveCoauth": "Save your changes for the other users to see them.",\r\n
+  "SSE.Views.Toolbar.tipSynchronize": "The document has been changed by another user. Please click to save your changes and reload the updates.",\r\n
+  "SSE.Views.Toolbar.tipTextOrientation": "Orientation",\r\n
+  "SSE.Views.Toolbar.tipUndo": "Undo",\r\n
+  "SSE.Views.Toolbar.tipVAligh": "Vertikālā Līdzināšana",\r\n
+  "SSE.Views.Toolbar.tipViewSettings": "View Settings",\r\n
+  "SSE.Views.Toolbar.tipWrap": "Aplauzt tekstu",\r\n
+  "SSE.Views.Toolbar.txtAccounting": "Grāmatvedības",\r\n
+  "SSE.Views.Toolbar.txtAdditional": "Papildu",\r\n
+  "SSE.Views.Toolbar.txtAscending": "Augošā secībā",\r\n
+  "SSE.Views.Toolbar.txtClearAll": "Viss",\r\n
+  "SSE.Views.Toolbar.txtClearComments": "Comments",\r\n
+  "SSE.Views.Toolbar.txtClearFilter": "Clear Filter",\r\n
+  "SSE.Views.Toolbar.txtClearFormat": "Formāts",\r\n
+  "SSE.Views.Toolbar.txtClearFormula": "Formula",\r\n
+  "SSE.Views.Toolbar.txtClearHyper": "Hipersaite",\r\n
+  "SSE.Views.Toolbar.txtClearText": "Teksts",\r\n
+  "SSE.Views.Toolbar.txtCurrency": "Valūta",\r\n
+  "SSE.Views.Toolbar.txtCustom": "Custom",\r\n
+  "SSE.Views.Toolbar.txtDate": "Datums",\r\n
+  "SSE.Views.Toolbar.txtDateTime": "Datums & Laiks",\r\n
+  "SSE.Views.Toolbar.txtDescending": "Dilstošā secībā",\r\n
+  "SSE.Views.Toolbar.txtDollar": "$ dolārs",\r\n
+  "SSE.Views.Toolbar.txtEuro": "€ Eiro",\r\n
+  "SSE.Views.Toolbar.txtExp": "Eksponenciāls",\r\n
+  "SSE.Views.Toolbar.txtFilter": "Filter",\r\n
+  "SSE.Views.Toolbar.txtFormula": "Ievietot formulu",\r\n
+  "SSE.Views.Toolbar.txtFraction": "Daļskaitlis",\r\n
+  "SSE.Views.Toolbar.txtFranc": "CHF Šveices franks",\r\n
+  "SSE.Views.Toolbar.txtGeneral": "Vispārīgs",\r\n
+  "SSE.Views.Toolbar.txtInteger": "Vesels skaitlis",\r\n
+  "SSE.Views.Toolbar.txtMergeAcross": "Sapludināt pāri",\r\n
+  "SSE.Views.Toolbar.txtMergeCells": "Sapludināt šūnas",\r\n
+  "SSE.Views.Toolbar.txtMergeCenter": "Sapludināt pa centru",\r\n
+  "SSE.Views.Toolbar.txtNoBorders": "Nav apmales",\r\n
+  "SSE.Views.Toolbar.txtNumber": "Skaitlis",\r\n
+  "SSE.Views.Toolbar.txtPercentage": "Procentuāli",\r\n
+  "SSE.Views.Toolbar.txtPound": "£ mārciņa",\r\n
+  "SSE.Views.Toolbar.txtRouble": "р. rublis",\r\n
+  "SSE.Views.Toolbar.txtScheme1": "Jewels",\r\n
+  "SSE.Views.Toolbar.txtScheme10": "Median",\r\n
+  "SSE.Views.Toolbar.txtScheme11": "Metro",\r\n
+  "SSE.Views.Toolbar.txtScheme12": "Module",\r\n
+  "SSE.Views.Toolbar.txtScheme13": "Opulent",\r\n
+  "SSE.Views.Toolbar.txtScheme14": "Oriel",\r\n
+  "SSE.Views.Toolbar.txtScheme15": "Origin",\r\n
+  "SSE.Views.Toolbar.txtScheme16": "Paper",\r\n
+  "SSE.Views.Toolbar.txtScheme17": "Solstice",\r\n
+  "SSE.Views.Toolbar.txtScheme18": "Technic",\r\n
+  "SSE.Views.Toolbar.txtScheme19": "Trek",\r\n
+  "SSE.Views.Toolbar.txtScheme2": "Adele",\r\n
+  "SSE.Views.Toolbar.txtScheme20": "Urban",\r\n
+  "SSE.Views.Toolbar.txtScheme21": "Verve",\r\n
+  "SSE.Views.Toolbar.txtScheme3": "Fire Inside",\r\n
+  "SSE.Views.Toolbar.txtScheme4": "Autumn",\r\n
+  "SSE.Views.Toolbar.txtScheme5": "Singing Bird",\r\n
+  "SSE.Views.Toolbar.txtScheme6": "Concourse",\r\n
+  "SSE.Views.Toolbar.txtScheme7": "Equity",\r\n
+  "SSE.Views.Toolbar.txtScheme8": "Flow",\r\n
+  "SSE.Views.Toolbar.txtScheme9": "Foundry",\r\n
+  "SSE.Views.Toolbar.txtScientific": "Zinātniskais",\r\n
+  "SSE.Views.Toolbar.txtSort": "Kārtot",\r\n
+  "SSE.Views.Toolbar.txtSortAZ": "Sort A to Z",\r\n
+  "SSE.Views.Toolbar.txtSortZA": "Sort Z to A",\r\n
+  "SSE.Views.Toolbar.txtSpecial": "Individuāli",\r\n
+  "SSE.Views.Toolbar.txtTableTemplate": "Format as Table Template",\r\n
+  "SSE.Views.Toolbar.txtText": "Teksts",\r\n
+  "SSE.Views.Toolbar.txtTime": "Laiks",\r\n
+  "SSE.Views.Toolbar.txtUnmerge": "Noņemt šūnu sapludināšanu",\r\n
+  "SSE.Views.Toolbar.txtYen": "¥ jena"\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>55900</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

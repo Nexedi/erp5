@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314531.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>panels.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//\n
+// Panels\n
+// --------------------------------------------------\n
+\n
+\n
+// Base class\n
+.panel {\n
+  margin-bottom: @line-height-computed;\n
+  background-color: @panel-bg;\n
+  border: 1px solid transparent;\n
+  border-radius: @panel-border-radius;\n
+  .box-shadow(0 1px 1px rgba(0,0,0,.05));\n
+}\n
+\n
+// Panel contents\n
+.panel-body {\n
+  padding: 15px;\n
+  .clearfix();\n
+}\n
+\n
+\n
+// List groups in panels\n
+//\n
+// By default, space out list group content from panel headings to account for\n
+// any kind of custom content between the two.\n
+\n
+.panel {\n
+  > .list-group {\n
+    margin-bottom: 0;\n
+\n
+    .list-group-item {\n
+      border-width: 1px 0;\n
+\n
+      // Remove border radius for top one\n
+      &:first-child {\n
+        .border-top-radius(0);\n
+      }\n
+      // But keep it for the last one\n
+      &:last-child {\n
+        border-bottom: 0;\n
+      }\n
+    }\n
+  }\n
+}\n
+// Collapse space between when there\'s no additional content.\n
+.panel-heading + .list-group {\n
+  .list-group-item:first-child {\n
+    border-top-width: 0;\n
+  }\n
+}\n
+\n
+\n
+// Tables in panels\n
+//\n
+// Place a non-bordered `.table` within a panel (not within a `.panel-body`) and\n
+// watch it go full width.\n
+\n
+.panel {\n
+  > .table,\n
+  > .table-responsive > .table {\n
+    margin-bottom: 0;\n
+  }\n
+  > .panel-body + .table,\n
+  > .panel-body + .table-responsive {\n
+    border-top: 1px solid @table-border-color;\n
+  }\n
+  > .table > tbody:first-child th,\n
+  > .table > tbody:first-child td {\n
+    border-top: 0;\n
+  }\n
+  > .table-bordered,\n
+  > .table-responsive > .table-bordered {\n
+    border: 0;\n
+    > thead,\n
+    > tbody,\n
+    > tfoot {\n
+      > tr {\n
+        > th:first-child,\n
+        > td:first-child {\n
+          border-left: 0;\n
+        }\n
+        > th:last-child,\n
+        > td:last-child {\n
+          border-right: 0;\n
+        }\n
+\n
+        &:last-child > th,\n
+        &:last-child > td {\n
+          border-bottom: 0;\n
+        }\n
+      }\n
+    }\n
+  }\n
+  > .table-responsive {\n
+    border: 0;\n
+    margin-bottom: 0;\n
+  }\n
+}\n
+\n
+\n
+// Optional heading\n
+.panel-heading {\n
+  padding: 10px 15px;\n
+  border-bottom: 1px solid transparent;\n
+  .border-top-radius(@panel-border-radius - 1);\n
+\n
+  > .dropdown .dropdown-toggle {\n
+    color: inherit;\n
+  }\n
+}\n
+\n
+// Within heading, strip any `h*` tag of it\'s default margins for spacing.\n
+.panel-title {\n
+  margin-top: 0;\n
+  margin-bottom: 0;\n
+  font-size: ceil((@font-size-base * 1.125));\n
+  color: inherit;\n
+\n
+  > a {\n
+    color: inherit;\n
+  }\n
+}\n
+\n
+// Optional footer (stays gray in every modifier class)\n
+.panel-footer {\n
+  padding: 10px 15px;\n
+  background-color: @panel-footer-bg;\n
+  border-top: 1px solid @panel-inner-border;\n
+  .border-bottom-radius(@panel-border-radius - 1);\n
+}\n
+\n
+\n
+// Collapsable panels (aka, accordion)\n
+//\n
+// Wrap a series of panels in `.panel-group` to turn them into an accordion with\n
+// the help of our collapse JavaScript plugin.\n
+\n
+.panel-group {\n
+  // Tighten up margin so it\'s only between panels\n
+  .panel {\n
+    margin-bottom: 0;\n
+    border-radius: @panel-border-radius;\n
+    overflow: hidden; // crop contents when collapsed\n
+    + .panel {\n
+      margin-top: 5px;\n
+    }\n
+  }\n
+\n
+  .panel-heading {\n
+    border-bottom: 0;\n
+    + .panel-collapse .panel-body {\n
+      border-top: 1px solid @panel-inner-border;\n
+    }\n
+  }\n
+  .panel-footer {\n
+    border-top: 0;\n
+    + .panel-collapse .panel-body {\n
+      border-bottom: 1px solid @panel-inner-border;\n
+    }\n
+  }\n
+}\n
+\n
+\n
+// Contextual variations\n
+.panel-default {\n
+  .panel-variant(@panel-default-border; @panel-default-text; @panel-default-heading-bg; @panel-default-border);\n
+}\n
+.panel-primary {\n
+  .panel-variant(@panel-primary-border; @panel-primary-text; @panel-primary-heading-bg; @panel-primary-border);\n
+}\n
+.panel-success {\n
+  .panel-variant(@panel-success-border; @panel-success-text; @panel-success-heading-bg; @panel-success-border);\n
+}\n
+.panel-warning {\n
+  .panel-variant(@panel-warning-border; @panel-warning-text; @panel-warning-heading-bg; @panel-warning-border);\n
+}\n
+.panel-danger {\n
+  .panel-variant(@panel-danger-border; @panel-danger-text; @panel-danger-heading-bg; @panel-danger-border);\n
+}\n
+.panel-info {\n
+  .panel-variant(@panel-info-border; @panel-info-text; @panel-info-heading-bg; @panel-info-border);\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4028</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

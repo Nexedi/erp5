@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308808.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>advanced-settings-window.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+.advanced-settings-dlg {\r\n
+    .body {\r\n
+        height: auto;\r\n
+        top: 34px;\r\n
+\r\n
+        & > div {\r\n
+            width: 100%;\r\n
+        }\r\n
+\r\n
+        .box > div {\r\n
+            display: inline-block;\r\n
+            height: 100%;\r\n
+        }\r\n
+\r\n
+        .menu-panel {\r\n
+            width: 160px;\r\n
+            padding-top: 2px;\r\n
+\r\n
+            .btn-category {\r\n
+                text-align: left;\r\n
+                padding: 8px 2px 8px 12px;\r\n
+                line-height: normal;\r\n
+                height: auto;\r\n
+            }\r\n
+        }\r\n
+\r\n
+        .content-panel {\r\n
+            vertical-align: top;\r\n
+            padding: 5px 15px 0 10px;\r\n
+\r\n
+            .inner-content {\r\n
+                padding-left: 10px;\r\n
+                padding-right: 10px;\r\n
+            }\r\n
+        }\r\n
+    }\r\n
+\r\n
+    .footer {\r\n
+        padding-top: 15px;\r\n
+\r\n
+        &.center {\r\n
+            text-align: center;\r\n
+        }\r\n
+\r\n
+        &.justify {\r\n
+            padding-left: 30px;\r\n
+            padding-right: 30px;\r\n
+        }\r\n
+    }\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>987</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

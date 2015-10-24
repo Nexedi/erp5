@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308809.58</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>dimension-picker.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>.dimension-picker {\n
+    font-size: 18px;\n
+}\n
+\n
+.dimension-picker div {\n
+    position: relative;\n
+}\n
+\n
+.dimension-picker div.dimension-picker-mousecatcher {\n
+    left: 0;\n
+    top: 0;\n
+    position: absolute !important;\n
+}\n
+\n
+.dimension-picker div.dimension-picker-highlighted {\n
+    left: 0;\n
+    top: 0;\n
+    overflow: hidden;\n
+    position: absolute;\n
+}\n
+\n
+.dimension-picker-unhighlighted {\n
+    background-repeat: repeat;\n
+    background-attachment: scroll;\n
+    background-position: 0 0;\n
+    background-color: transparent;\n
+    .background-ximage(\'@{app-image-path}/controls/dimension-picker/dimension-unhighlighted.png\', \'@{app-image-path}/controls/dimension-picker/dimension-unhighlighted@2x.png\', 18px);\n
+}\n
+\n
+.dimension-picker div.dimension-picker-highlighted {\n
+    background-repeat: repeat;\n
+    background-attachment: scroll;\n
+    background-position: 0 0;\n
+    background-color: transparent;\n
+    .background-ximage(\'@{app-image-path}/controls/dimension-picker/dimension-highlighted.png\', \'@{app-image-path}/controls/dimension-picker/dimension-highlighted@2x.png\', 18px);\n
+}\n
+\n
+.dimension-picker-status {\n
+    font-size: 12px;\n
+    text-align: center;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1129</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

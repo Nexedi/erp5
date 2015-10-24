@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314532.23</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>responsive-utilities.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+//\n
+// Responsive: Utility classes\n
+// --------------------------------------------------\n
+\n
+\n
+// IE10 in Windows (Phone) 8\n
+//\n
+// Support for responsive views via media queries is kind of borked in IE10, for\n
+// Surface/desktop in split view and for Windows Phone 8. This particular fix\n
+// must be accompanied by a snippet of JavaScript to sniff the user agent and\n
+// apply some conditional CSS to *only* the Surface/desktop Windows 8. Look at\n
+// our Getting Started page for more information on this bug.\n
+//\n
+// For more information, see the following:\n
+//\n
+// Issue: https://github.com/twbs/bootstrap/issues/10497\n
+// Docs: http://getbootstrap.com/getting-started/#browsers\n
+// Source: http://timkadlec.com/2012/10/ie10-snap-mode-and-responsive-design/\n
+\n
+@-ms-viewport {\n
+  width: device-width;\n
+}\n
+\n
+\n
+// Visibility utilities\n
+\n
+.visible-xs {\n
+  .responsive-invisibility();\n
+  @media (max-width: @screen-xs-max) {\n
+    .responsive-visibility();\n
+  }\n
+  &.visible-sm {\n
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+  &.visible-md {\n
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+  &.visible-lg {\n
+    @media (min-width: @screen-lg-min) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+}\n
+.visible-sm {\n
+  .responsive-invisibility();\n
+  &.visible-xs {\n
+    @media (max-width: @screen-xs-max) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+  @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {\n
+    .responsive-visibility();\n
+  }\n
+  &.visible-md {\n
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+  &.visible-lg {\n
+    @media (min-width: @screen-lg-min) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+}\n
+.visible-md {\n
+  .responsive-invisibility();\n
+  &.visible-xs {\n
+    @media (max-width: @screen-xs-max) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+  &.visible-sm {\n
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+  @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {\n
+    .responsive-visibility();\n
+  }\n
+  &.visible-lg {\n
+    @media (min-width: @screen-lg-min) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+}\n
+.visible-lg {\n
+  .responsive-invisibility();\n
+  &.visible-xs {\n
+    @media (max-width: @screen-xs-max) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+  &.visible-sm {\n
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+  &.visible-md {\n
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {\n
+      .responsive-visibility();\n
+    }\n
+  }\n
+  @media (min-width: @screen-lg-min) {\n
+    .responsive-visibility();\n
+  }\n
+}\n
+\n
+.hidden-xs {\n
+  .responsive-visibility();\n
+  @media (max-width: @screen-xs-max) {\n
+    .responsive-invisibility();\n
+  }\n
+  &.hidden-sm {\n
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+  &.hidden-md {\n
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+  &.hidden-lg {\n
+    @media (min-width: @screen-lg-min) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+}\n
+.hidden-sm {\n
+  .responsive-visibility();\n
+  &.hidden-xs {\n
+    @media (max-width: @screen-xs-max) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+  @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {\n
+    .responsive-invisibility();\n
+  }\n
+  &.hidden-md {\n
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+  &.hidden-lg {\n
+    @media (min-width: @screen-lg-min) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+}\n
+.hidden-md {\n
+  .responsive-visibility();\n
+  &.hidden-xs {\n
+    @media (max-width: @screen-xs-max) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+  &.hidden-sm {\n
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+  @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {\n
+    .responsive-invisibility();\n
+  }\n
+  &.hidden-lg {\n
+    @media (min-width: @screen-lg-min) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+}\n
+.hidden-lg {\n
+  .responsive-visibility();\n
+  &.hidden-xs {\n
+    @media (max-width: @screen-xs-max) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+  &.hidden-sm {\n
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+  &.hidden-md {\n
+    @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {\n
+      .responsive-invisibility();\n
+    }\n
+  }\n
+  @media (min-width: @screen-lg-min) {\n
+    .responsive-invisibility();\n
+  }\n
+}\n
+\n
+// Print utilities\n
+.visible-print {\n
+  .responsive-invisibility();\n
+}\n
+\n
+@media print {\n
+  .visible-print {\n
+    .responsive-visibility();\n
+  }\n
+  .hidden-print {\n
+    .responsive-invisibility();\n
+  }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4880</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

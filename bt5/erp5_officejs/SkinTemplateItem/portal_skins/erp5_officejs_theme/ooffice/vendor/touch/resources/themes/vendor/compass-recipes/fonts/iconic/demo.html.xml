@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314672.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>demo.html</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head>\n
+<link rel="stylesheet" href="iconic.css" type="text/css" media="screen" title="no title" charset="utf-8">\n
+\n
+<style>\n
+\tbody {\n
+\t\tfont-size:21px;\n
+\t}\n
+</style>\n
+</head>\n
+<body>\n
+<ul>\t\n
+<li><a name=\'home\' class=\'iconic home\'></a> Home</li>\n
+<li><a name=\'at\' class=\'iconic at\'></a> At Symbol</li>\n
+<li><a name=\'quote\' class=\'iconic quote\'></a> Quote</li>\n
+<li><a name=\'quote-alt\' class=\'iconic quote-alt\'></a> Quote (alternate)</li>\n
+<li><a name=\'arrow-up\' class=\'iconic arrow-up\'></a> Arrow Up</li>\n
+<li><a name=\'arrow-right\' class=\'iconic arrow-right\'></a> Arrow Right</li>\n
+<li><a name=\'arrow-bottom\' class=\'iconic arrow-bottom\'></a> Arrow Bottom</li>\n
+<li><a name=\'arrow-left\' class=\'iconic arrow-left\'></a> Arrow Left</li>\n
+<li><a name=\'arrow-up-alt\' class=\'iconic arrow-up-alt\'></a> Arrow Up (alternate)</li>\n
+<li><a name=\'arrow-right-alt\' class=\'iconic arrow-right-alt\'></a> Arrow Right (alternate)</li>\n
+<li><a name=\'arrow-bottom-alt\' class=\'iconic arrow-bottom-alt\'></a> Arrow Bottom (alternate)</li>\n
+<li><a name=\'arrow-left-alt\' class=\'iconic arrow-left-alt\'></a> Arrow Left (alternate)</li>\n
+<li><a name=\'move\' class=\'iconic move\'></a> Move</li>\n
+<li><a name=\'move-vertical\' class=\'iconic move-vertical\'></a> Move Vertical</li>\n
+<li><a name=\'move-horizontal\' class=\'iconic move-horizontal\'></a> Move Horizontal</li>\n
+<li><a name=\'move-alt\' class=\'iconic move-alt\'></a> Move (alternate)</li>\n
+<li><a name=\'move-vertical-alt\' class=\'iconic move-vertical-alt\'></a> Move Vertical (alternate)</li>\n
+<li><a name=\'move-horizontal-alt\' class=\'iconic move-horizontal-alt\'></a> Move Horizontal (alternate)</li>\n
+<li><a name=\'cursor\' class=\'iconic cursor\'></a> Cursor</li>\n
+<li><a name=\'plus\' class=\'iconic plus\'></a> Plus</li>\n
+<li><a name=\'plus-alt\' class=\'iconic plus-alt\'></a> Plus (alternate)</li>\n
+<li><a name=\'minus\' class=\'iconic minus\'></a> Minus</li>\n
+<li><a name=\'minus-alt\' class=\'iconic minus-alt\'></a> Minus (alternate)</li>\n
+<li><a name=\'new-window\' class=\'iconic new-window\'></a> New Window</li>\n
+<li><a name=\'dial\' class=\'iconic dial\'></a> Dial</li>\n
+<li><a name=\'lightbulb\' class=\'iconic lightbulb\'></a> Lightbulb</li>\n
+<li><a name=\'link\' class=\'iconic link\'></a> Link</li>\n
+<li><a name=\'image\' class=\'iconic image\'></a> Image</li>\n
+<li><a name=\'article\' class=\'iconic article\'></a> Article</li>\n
+<li><a name=\'read-more\' class=\'iconic read-more\'></a> Read More</li>\n
+<li><a name=\'headphones\' class=\'iconic headphones\'></a> Headphones</li>\n
+<li><a name=\'equalizer\' class=\'iconic equalizer\'></a> Equalizer</li>\n
+<li><a name=\'fullscreen\' class=\'iconic fullscreen\'></a> Fullscreen</li>\n
+<li><a name=\'exit-fullscreen\' class=\'iconic exit-fullscreen\'></a> Exit Fullscreen</li>\n
+<li><a name=\'spin\' class=\'iconic spin\'></a> Spin</li>\n
+<li><a name=\'spin-alt\' class=\'iconic spin-alt\'></a> Spin (alternate)</li>\n
+<li><a name=\'moon\' class=\'iconic moon\'></a> Moon</li>\n
+<li><a name=\'sun\' class=\'iconic sun\'></a> Sun</li>\n
+<li><a name=\'map-pin\' class=\'iconic map-pin\'></a> Map Pin</li>\n
+<li><a name=\'pin\' class=\'iconic pin\'></a> Pin</li>\n
+<li><a name=\'eyedropper\' class=\'iconic eyedropper\'></a> Eyedropper</li>\n
+<li><a name=\'denied\' class=\'iconic denied\'></a> Denied</li>\n
+<li><a name=\'calendar\' class=\'iconic calendar\'></a> Calendar</li>\n
+<li><a name=\'calendar-alt\' class=\'iconic calendar-alt\'></a> Calendar (alternate)</li>\n
+<li><a name=\'bolt\' class=\'iconic bolt\'></a> Bolt</li>\n
+<li><a name=\'clock\' class=\'iconic clock\'></a> Clock</li>\n
+<li><a name=\'document\' class=\'iconic document\'></a> Document</li>\n
+<li><a name=\'book\' class=\'iconic book\'></a> Book</li>\n
+<li><a name=\'book-alt\' class=\'iconic book-alt\'></a> Book (alternate)</li>\n
+<li><a name=\'magnifying-glass\' class=\'iconic magnifying-glass\'></a> Magnifying Glass</li>\n
+<li><a name=\'tag\' class=\'iconic tag\'></a> Tag</li>\n
+<li><a name=\'heart\' class=\'iconic heart\'></a> Heart</li>\n
+<li><a name=\'info\' class=\'iconic info\'></a> Info</li>\n
+<li><a name=\'chat\' class=\'iconic chat\'></a> Chat</li>\n
+<li><a name=\'chat-alt\' class=\'iconic chat-alt\'></a> Chat (alternate)</li>\n
+<li><a name=\'key\' class=\'iconic key\'></a> Key</li>\n
+<li><a name=\'unlocked\' class=\'iconic unlocked\'></a> Unlocked</li>\n
+<li><a name=\'locked\' class=\'iconic locked\'></a> Locked</li>\n
+<li><a name=\'mail\' class=\'iconic mail\'></a> Mail</li>\n
+<li><a name=\'mail\' class=\'iconic mail-alt\'></a> Mail (alternate)</li>\n
+<li><a name=\'phone\' class=\'iconic phone\'></a> Phone</li>\n
+<li><a name=\'box\' class=\'iconic box\'></a> Box</li>\n
+<li><a name=\'pencil\' class=\'iconic pencil\'></a> Pencil</li>\n
+<li><a name=\'pencil-alt\' class=\'iconic pencil-alt\'></a> Pencil (alternate)</li>\n
+<li><a name=\'comment\' class=\'iconic comment\'></a> Comment</li>\n
+<li><a name=\'comment\' class=\'iconic comment-alt\'></a> Comment (alternate)</li>\n
+<li><a name=\'rss\' class=\'iconic rss\'></a> RSS</li>\n
+<li><a name=\'star\' class=\'iconic star\'></a> Star</li>\n
+<li><a name=\'trash\' class=\'iconic trash\'></a> Trash</li>\n
+<li><a name=\'user\' class=\'iconic user\'></a> User</li>\n
+<li><a name=\'volume\' class=\'iconic volume\'></a> Volume</li>\n
+<li><a name=\'mute\' class=\'iconic mute\'></a> Mute</li>\n
+<li><a name=\'cog\' class=\'iconic cog\'></a> Cog</li>\n
+<li><a name=\'cog-alt\' class=\'iconic cog-alt\'></a> Cog (alternate)</li>\n
+<li><a name=\'x\' class=\'iconic x\'></a> X</li>\n
+<li><a name=\'x\' class=\'iconic x-alt\'></a> X (alternate)</li>\n
+<li><a name=\'check\' class=\'iconic check\'></a> Check</li>\n
+<li><a name=\'check-alt\' class=\'iconic check-alt\'></a> Check (alternate)</li>\n
+<li><a name=\'beaker\' class=\'iconic beaker\'></a> Beaker</li>\n
+<li><a name=\'beaker-alt\' class=\'iconic beaker-alt\'></a> Beaker (alternate)</li>\n
+</ul>\n
+</body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5517</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

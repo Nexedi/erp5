@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314634.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>apple.scss</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>// Let\'s start with the basics\n
+$base-color: #7c92ae;\n
+$base-gradient: \'glossy\';\n
+\n
+// Lists\n
+$list-active-gradient: \'bevel\';\n
+$list-header-bg-color: transparentize(saturate($base-color, 10%), .25);\n
+$list-header-gradient: \'matte\';\n
+\n
+// Tabs\n
+$tabs-dark: #111;\n
+\n
+@import \'sencha-touch/default/all\';\n
+\n
+@include sencha-panel;\n
+@include sencha-buttons;\n
+@include sencha-sheet;\n
+@include sencha-picker;\n
+@include sencha-tabs;\n
+@include sencha-toolbar;\n
+@include sencha-toolbar-forms;\n
+@include sencha-carousel;\n
+@include sencha-indexbar;\n
+@include sencha-list;\n
+@include sencha-list-paging;\n
+@include sencha-list-pullrefresh;\n
+@include sencha-layout;\n
+@include sencha-form;\n
+@include sencha-msgbox;\n
+@include sencha-loading-spinner;\n
+@include sencha-draw;\n
+@include sencha-charts;\n
+\n
+.x-toolbar-light .x-title {\n
+    color: #fff;\n
+    text-shadow: rgba(0, 0, 0, 0.5) 0 -0.08em 0;\n
+}\n
+\n
+.x-button-back .x-button-label {\n
+    color: #fff;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>899</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

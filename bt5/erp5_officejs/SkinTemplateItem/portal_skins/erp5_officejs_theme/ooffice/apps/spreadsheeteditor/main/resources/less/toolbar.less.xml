@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308766.37</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>toolbar.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+.toolbar {\n
+    padding: 10px 0;\n
+    background-color: @gray-light;\n
+    .box-inner-shadow(0 -1px 0 @gray-dark);\n
+\n
+    .toolbar-group {\n
+        display: table-cell;\n
+        vertical-align: top;\n
+        white-space: nowrap;\n
+        padding-left: 12px;\n
+\n
+        &:last-child {\n
+            padding-right: 12px;\n
+        }\n
+    }\n
+\n
+    .toolbar-row {\n
+        height: 20px;\n
+        font-size: 0;\n
+\n
+        &:not(:first-child) {\n
+            margin-top: 6px;\n
+        }\n
+    }\n
+\n
+    .separator {\n
+        margin-left: 12px;\n
+\n
+        &.long {\n
+            height: 46px;\n
+        }\n
+\n
+        &.short {\n
+            height: 20px;\n
+        }\n
+    }\n
+\n
+    .btn-placeholder {\n
+//        background-color: red;\n
+        display: inline-block;\n
+        width: 20px;\n
+        height: 20px;\n
+\n
+        &:not(:first-child) {\n
+            margin-left: 1px;\n
+        }\n
+\n
+        &.split {\n
+            width: 28px;\n
+        }\n
+\n
+        &.border {\n
+            border: 1px solid @gray;\n
+            .border-radius(1px);\n
+            width: 22px;\n
+            height: 22px;\n
+        }\n
+    }\n
+\n
+    &.masked {\n
+        button.disabled .btn-icon:not(.btn-print):not(.btn-save):not(.btn-save-coauth):not(.btn-settings):not(.btn-showmode) {\n
+            background-position-x: 0px !important;\n
+        }\n
+        .toolbar-group:not(.no-mask) {\n
+            opacity: 0.4;\n
+        }\n
+    }\n
+}\n
+\n
+.toolbar-mask {\n
+    position: absolute;\n
+    top: 0;\n
+    left: 48px;\n
+    right: 45px;\n
+    height: 100%;\n
+    opacity: 0;\n
+    background-color: @gray-light;\n
+    z-index: @zindex-modal - 1;\n
+}\n
+\n
+.color-schemas-menu {\n
+    span {\n
+        &.colors {\n
+            display: inline-block;\n
+            margin-right: 15px;\n
+        }\n
+\n
+        &.color {\n
+            display: inline-block;\n
+            width: 12px;\n
+            height: 12px;\n
+            margin-right: 2px;\n
+            border: 1px solid rgba(0, 0, 0, 0.2);\n
+            vertical-align: middle;\n
+        }\n
+\n
+        &.text {\n
+            vertical-align: middle;\n
+        }\n
+    }\n
+}\n
+\n
+// menu zoom\n
+.menu-zoom {\n
+    .title {\n
+        padding: 5px 0 5px 20px;\n
+        float: left;\n
+        max-width: 95px;\n
+        overflow: hidden;\n
+        text-overflow: ellipsis;\n
+    }\n
+\n
+    .zoom {\n
+        padding: 5px 3px;\n
+        float: right;\n
+    }\n
+}\n
+\n
+\n
+@toolbar-icon-size: 20px;\n
+.toolbar-btn-icon(btn-fontcolor,         0, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-valign-top,        1, @toolbar-icon-size);\n
+//\n
+.toolbar-btn-icon(btn-bold,              3, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-all,        4, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-clearstyle,        5, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-incdecimal,        6, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-decdecimal,        7, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-italic,            8, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-fillparag,         9, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-merge,            10, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-print,            11, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-redo,             12, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-save,             13, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-sort-down,        14, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-formula,          15, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-undo,             16, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-wrap,             17, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-underline,        18, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-align-left,       21, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-align-center,     19, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-align-right,      22, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-align-just,       20, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-valign-middle,    23, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-valign-bottom,    24, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-out,       25, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-top,       26, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-bottom,    27, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-left,      28, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-right,     29, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-no,        30, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-center,    31, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-hmiddle,   32, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-vmiddle,   33, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-insertimage,      34, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-inserthyperlink,  35, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-insertchart,      36, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-copy,             37, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-paste,            38, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-synch,            39, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-autofilter,       40, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-colorschemas,     41, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-newdocument,      42, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-opendocument,     43, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-incfont,          44, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-decfont,          45, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-text-orient,      46, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-insertshape,      47, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-text,             48, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-sort-up,          49, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-clear-filter,     50, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-percent-style,    51, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-currency-style,   52, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-addcell,          53, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-delcell,          54, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-ttempl,           55, @toolbar-icon-size);\n
+//\n
+.toolbar-btn-icon(btn-showmode,         56, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-settings,         57, @toolbar-icon-size);\n
+//\n
+.toolbar-btn-icon(btn-zoomin,           67, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-zoomout,          68, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-copystyle,        73, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-save-coauth,      76, @toolbar-icon-size);\n
+\n
+.toolbar-btn-icon(btn-border-diagup,    42, @toolbar-icon-size);\n
+.toolbar-btn-icon(btn-border-diagdown,  43, @toolbar-icon-size);\n
+\n
+@menu-icon-size: 22px;\n
+.menu-btn-icon(mnu-align-center,         0, @menu-icon-size);\n
+.menu-btn-icon(mnu-align-just,           1, @menu-icon-size);\n
+.menu-btn-icon(mnu-align-left,           2, @menu-icon-size);\n
+.menu-btn-icon(mnu-align-right,          3, @menu-icon-size);\n
+.menu-btn-icon(mnu-valign-bottom,        4, @menu-icon-size);\n
+.menu-btn-icon(mnu-valign-middle,        5, @menu-icon-size);\n
+.menu-btn-icon(mnu-valign-top,           6, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-all,           7, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-center,        8, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-bottom,        9, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-hmiddle,      10, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-top,          11, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-no,           12, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-out,          13, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-left,         14, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-vmiddle,      15, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-right,        16, @menu-icon-size);\n
+//\n
+.menu-btn-icon(mnu-arrange-front,       19, @menu-icon-size);\n
+.menu-btn-icon(mnu-arrange-back,        20, @menu-icon-size);\n
+.menu-btn-icon(mnu-arrange-forward,     21, @menu-icon-size);\n
+.menu-btn-icon(mnu-arrange-backward,    22, @menu-icon-size);\n
+.menu-btn-icon(mnu-sort-asc,            23, @menu-icon-size);\n
+.menu-btn-icon(mnu-sort-desc,           24, @menu-icon-size);\n
+.menu-btn-icon(mnu-filter-add,          25, @menu-icon-size);\n
+.menu-btn-icon(mnu-filter-clear,        26, @menu-icon-size);\n
+.menu-btn-icon(mnu-direct-horiz,        27, @menu-icon-size);\n
+.menu-btn-icon(mnu-direct-ccw,          28, @menu-icon-size);\n
+.menu-btn-icon(mnu-direct-cw,           29, @menu-icon-size);\n
+//\n
+.menu-btn-icon(mnu-direct-rup,          31, @menu-icon-size);\n
+.menu-btn-icon(mnu-direct-rdown,        32, @menu-icon-size);\n
+.menu-btn-icon(mnu-group,               33, @menu-icon-size);\n
+.menu-btn-icon(mnu-ungroup,             34, @menu-icon-size);\n
+//\n
+.menu-btn-icon(mnu-border-diagup,       36, @menu-icon-size);\n
+.menu-btn-icon(mnu-border-diagdown,     37, @menu-icon-size);\n
+\n
+.username-tip {\n
+    background-color: #ee3525;\n
+    border: none;\n
+    border-radius: 0;\n
+    padding: 2px 10px;\n
+    color: #ffffff;\n
+    font-family: arial;\n
+    font-size: 11px;\n
+}\n
+\n
+#id-toolbar-btn-num-format button .caption {\n
+    display: inline-block;\n
+}\n
+\n
+#id-toolbar-mnu-item-border-width {\n
+    .border-size-item {\n
+        background: ~"url(\'@{app-image-path}/toolbar/BorderSize.png\') repeat-x scroll 0 0";\n
+        width: 80px;\n
+        height: 20px;\n
+        margin-top: -3px;\n
+        margin-bottom: -2px;\n
+    }\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8983</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

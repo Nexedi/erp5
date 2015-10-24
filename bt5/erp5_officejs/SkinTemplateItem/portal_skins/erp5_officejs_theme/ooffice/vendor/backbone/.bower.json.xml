@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314516.63</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>.bower.json</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/json</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>{\n
+  "name": "backbone",\n
+  "homepage": "https://github.com/jashkenas/backbone",\n
+  "version": "1.1.0",\n
+  "_release": "1.1.0",\n
+  "_resolution": {\n
+    "type": "version",\n
+    "tag": "1.1.0",\n
+    "commit": "0a4399e3de5cb2ab75a0338669582f18c1fae3ae"\n
+  },\n
+  "_source": "git://github.com/jashkenas/backbone.git",\n
+  "_target": "~1.1.0",\n
+  "_originalSource": "backbone"\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>360</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

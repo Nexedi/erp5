@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44314663.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tabbed_book.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAB6ElEQVRoBe2avUrEQBSFN7qrjSJo
+oZb2NhYi+A4+goitFrb2voAgaGUv1r6BoFiJlWC12IkK/haKf9+FvSGzG23cIpzcC4eZSbJhvnuS
+2ckkWaPRmEMzqBgfNC7Q9TeRZdki9UmUoSrHF527RFfW7986ussO21nUM+0V1Or87oj6W9cxxeOr
+Un+kj5uoaf0u0wA7y8IAitHdLu6rWv3Pvv4GXDWIvvUngPuWyoqeqHYONytqxL+7xV/pICcZRWPI
+B7IXWWAgx9EqWkYeh8rALSin0azTUh6r38M280pCHTiBtUYA96REbEM4LGZoD0443JMSsQ3qDtv0
+MgnlmdY7pG10ViBuywKzvHMH6HZHObP6JZ2DeqV2wLKXtDnKM7EtKydLy7LAsI4Au4DmkS8AnMsC
+A2krHUtoA3nsKd/D5uqnk3qpDOyMSRnASToEG+GwoKkJUjicpEOwEQ6LmVqrBYAbzNtCOwUTn2Tn
+0iwA2LTyvqOcOe7hPBWiFdlLmudhe106hez7Mn8evpUFBnICraF15LGvDGzj0xCyzx48hmPQ8lSo
+luGwqrPOFQ57JlTLcFjVWedSdtjeKdn0MgnlmdYrpCfI3jF5nMoC8zz8AOVBRw4cX+LlmVCtKA9a
+pZ4FcGlahDbWzuEfviR/hE8rWGQAAAAASUVORK5CYII=</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>545</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

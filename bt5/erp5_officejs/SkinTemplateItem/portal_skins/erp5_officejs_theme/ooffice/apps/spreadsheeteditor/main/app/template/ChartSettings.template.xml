@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308426.48</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ChartSettings.template</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<table cols="3">\r\n
+    <tr>\r\n
+        <td colspan=3>\r\n
+            <label class="header"><%= scope.textSize %></label>\r\n
+        </td>\r\n
+    </tr>\r\n
+    <tr>\r\n
+        <td class="padding-small" width="88px">\r\n
+            <label class="input-label"><%= scope.textWidth %></label>\r\n
+            <div id="chart-spin-width"></div>\r\n
+        </td>\r\n
+        <td class="padding-small" width="28px" style="vertical-align: bottom;">\r\n
+            <div id="chart-button-ratio"></div>\r\n
+        </td>\r\n
+        <td class="padding-small" width="88px">\r\n
+            <label class="input-label"><%= scope.textHeight %></label>\r\n
+            <div id="chart-spin-height"></div>\r\n
+        </td>\r\n
+    </tr>\r\n
+</table>\r\n
+<table cols="2">\r\n
+    <tr>\r\n
+        <td class="padding-small" colspan=2>\r\n
+            <div class="separator horizontal"></div>\r\n
+        </td>\r\n
+    </tr>\r\n
+    <tr>\r\n
+        <td colspan=2>\r\n
+            <label class="header"><%= scope.textChartType %></label>\r\n
+        </td>\r\n
+    </tr>\r\n
+    <tr>\r\n
+        <td class="padding-small">\r\n
+            <div id="chart-button-type" style=""></div>\r\n
+        </td>\r\n
+        <td class="padding-small">\r\n
+            <div id="chart-button-style" style=""></div>\r\n
+        </td>\r\n
+    </tr>\r\n
+    <tr>\r\n
+        <td class="padding-small" colspan=2>\r\n
+            <div class="separator horizontal"></div>\r\n
+        </td>\r\n
+    </tr>\r\n
+    <tr>\r\n
+        <td align="center" colspan=2>\r\n
+            <label class="link" id="chart-advanced-link"><%= scope.textAdvanced %></label>\r\n
+        </td>\r\n
+    </tr>\r\n
+    <tr class="finish-cell"></tr>\r\n
+</table>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1553</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

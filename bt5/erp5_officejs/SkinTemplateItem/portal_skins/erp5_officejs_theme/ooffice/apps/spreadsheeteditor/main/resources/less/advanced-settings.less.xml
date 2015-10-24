@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts44308765.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>advanced-settings.less</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+.toolbar-btn-icon(advanced-btn-ratio, 74, 20px);\r\n
+\r\n
+.combo-arrow-style {\r\n
+    .form-control {\r\n
+        cursor: pointer;\r\n
+        background-color: white;\r\n
+\r\n
+        &.image {\r\n
+            .background-ximage(\'@{app-image-path}/right-panels/Begin-EndStyle.png\', \'@{app-image-path}/right-panels/Begin-EndStyle@2x.png\', 480px);\r\n
+            background-repeat: no-repeat;\r\n
+            background-position: 10px 0;\r\n
+            background-attachment: scroll;\r\n
+            background-color: white;\r\n
+        }\r\n
+    }\r\n
+\r\n
+    .btn {\r\n
+        &:active:not(.disabled),\r\n
+        &.active:not(.disabled){\r\n
+            .caret {\r\n
+                background-position: @arrow-small-offset-x @arrow-small-offset-y;\r\n
+            }\r\n
+        }\r\n
+    }\r\n
+}\r\n
+\r\n
+.item-arrow {\r\n
+    .background-ximage(\'@{app-image-path}/right-panels/Begin-EndStyle.png\', \'@{app-image-path}/right-panels/Begin-EndStyle@2x.png\', 480px);\r\n
+    width:44px;\r\n
+    height:20px;\r\n
+}\r\n
+\r\n
+.advanced-settings-dlg {\r\n
+    .div-category {\r\n
+        padding: 0 15px;\r\n
+        text-align: right;\r\n
+        font-weight: bold;\r\n
+        font-size: 11px;\r\n
+    }\r\n
+\r\n
+}\r\n
+\r\n
+\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1102</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
