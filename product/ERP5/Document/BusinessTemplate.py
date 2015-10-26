@@ -4569,12 +4569,15 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     xml_data = '<local_roles_item>'
     # local roles
     xml_data += '\n <local_roles>'
-    for key in sorted(local_roles_dict):
-      xml_data += "\n  <role id='%s'>" %(key,)
-      tuple = local_roles_dict[key]
-      for item in tuple:
-        xml_data += "\n   <item>%s</item>" %(item,)
-      xml_data += '\n  </role>'
+    for user_id, role_list in sorted(local_roles_dict.items()):
+      if 'Owner' in role_list:
+        # We don't export Owner role as it set automatically when installing business template.
+        role_list.remove('Owner')
+      if role_list:
+        xml_data += "\n  <role id='%s'>" %(user_id,)
+        for role in role_list:
+          xml_data += "\n   <item>%s</item>" %(role,)
+        xml_data += '\n  </role>'
     xml_data += '\n </local_roles>'
 
     if local_roles_group_id_dict:
@@ -4643,6 +4646,16 @@ class LocalRolesTemplateItem(BaseTemplateItem):
         else:
           local_roles_group_id_dict = None
           local_roles_dict, = self._objects[roles_path]
+
+        # We ignore the owner defined in local_roles_dict and set it to the user installing that business template.
+        local_roles_dict = deepcopy(local_roles_dict)
+        for user_id, group_list in list(local_roles_dict.items()):
+          if group_list == ["Owner"]:
+            del local_roles_dict[user_id]
+        user = getSecurityManager().getUser()
+        if user is not None:
+          local_roles_dict.setdefault(user.getId(), []).append('Owner')
+
         obj.__ac_local_roles__ = local_roles_dict
         if local_roles_group_id_dict:
           obj.__ac_local_roles_group_id_dict__ = local_roles_group_id_dict

@@ -31,6 +31,7 @@ import unittest
 import logging
 from unittest import expectedFailure, skip
 
+from AccessControl import getSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
 from OFS.SimpleItem import SimpleItem
@@ -2328,15 +2329,25 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     """
     Create local roles
     """
-    new_local_roles = {'ac':['Owner', 'Manager'],
-                       'group_function': ['Auditor']}
+    # We'll export an owner in local roles ...
+    new_local_roles = {
+      'ac': ['Owner', 'Manager'],
+      'group_function': ['Auditor']
+    }
+    # ... but after installing this business template, the owner
+    # will be reset:
+    expected_local_roles = {
+      'ac': ['Manager'],
+      getSecurityManager().getUser().getId(): ['Owner'],
+      'group_function': ['Auditor']
+    }
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
     self.assertTrue(module is not None)
     module.__ac_local_roles__ = new_local_roles
     self.assertEqual(module.__ac_local_roles__, new_local_roles)
-    sequence.edit(local_roles=new_local_roles)
+    sequence.edit(local_roles=expected_local_roles)
 
   def stepRemoveLocalRoles(self, sequence=None, **kw):
     """
