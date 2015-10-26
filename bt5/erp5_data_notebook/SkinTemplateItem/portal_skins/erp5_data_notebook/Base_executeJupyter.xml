@@ -152,9 +152,10 @@ result = {\n
 }\n
 \n
 # Catch exception while seriaizing the result to be passed to jupyter frontend\n
+# and in case of error put code_result as None and status as \'error\' which would\n
+# be shown by Jupyter frontend\n
 try:\n
   serialized_result = json.dumps(result)\n
-  data_notebook_line.edit(notebook_code_result=code_result)\n
 except UnicodeDecodeError:\n
   result = {\n
     u\'code_result\': None,\n
@@ -164,7 +165,9 @@ except UnicodeDecodeError:\n
     u\'status\': u\'error\'\n
   }\n
   serialized_result = json.dumps(result)\n
-  \n
+\n
+data_notebook_line.edit(notebook_code_result=code_result)\n
+\n
 return serialized_result\n
 </string> </value>
         </item>
