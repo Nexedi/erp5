@@ -88,7 +88,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DataNotebookMessage_view</string> </value>
+            <value> <string>DataNotebookLine_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -96,7 +96,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DataNotebookMessage_view</string> </value>
+            <value> <string>DataNotebookLine_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Data Notebook Message</string> </value>
+            <value> <string>Data Notebook Line</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

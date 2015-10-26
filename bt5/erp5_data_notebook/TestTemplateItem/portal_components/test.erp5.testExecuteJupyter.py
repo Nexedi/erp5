@@ -61,11 +61,11 @@ class TestExecuteJupyter(SecurityTestCase):
       batch_mode=True
       )
 
-  def _newNotebookMessage(self, notebook_module=None, notebook_code=None):
+  def _newNotebookLine(self, notebook_module=None, notebook_code=None):
     """
-    Function to create new notebook messgae
+    Function to create new notebook line
     """
-    return notebook_module.DataNotebook_addDataNotebookMessage(
+    return notebook_module.DataNotebook_addDataNotebookLine(
       notebook_code=notebook_code,
       batch_mode=True
       )
@@ -150,7 +150,7 @@ portal.%s()
 
   def testUserCanCreateNotebookWithCode(self):
     """
-    Test if user can create Data Notebook Message object or not
+    Test if user can create Data Notebook Line object or not
     """
     portal = self.portal
 
@@ -158,18 +158,18 @@ portal.%s()
     self.tic()
 
     notebook_code='some_random_invalid_notebook_code %s' % time.time()
-    self._newNotebookMessage(
+    self._newNotebookLine(
                             notebook_module=notebook,
                             notebook_code=notebook_code
                             )
     self.tic()
 
-    notebook_message_search_result = portal.portal_catalog(
+    notebook_line_search_result = portal.portal_catalog(
                                                   portal_type='Data Notebook',
                                                   notebook_code=notebook_code
                                                   )
 
-    result = [obj.getId() for obj in notebook_message_search_result]
+    result = [obj.getId() for obj in notebook_line_search_result]
 
     if result:
       self.assertIn(notebook.getId(), result)
@@ -196,15 +196,15 @@ portal.%s()
 
     self.assertEquals(len([obj.getTitle() for obj in notebook_list]), 1)
 
-  def testBaseExecuteJupyterAddNotebookMessage(self):
+  def testBaseExecuteJupyterAddNotebookLine(self):
     """
-    Test if the notebook adds code history to the Data Notebook Message
+    Test if the notebook adds code history to the Data Notebook Line
     portal type
     """
     portal = self.portal
     self.login('dev_user')
     python_expression = "print 52"
-    reference = 'Test.Notebook.AddNewNotebookMessage %s' % time.time()
+    reference = 'Test.Notebook.AddNewNotebookLine %s' % time.time()
     title = 'Test NB Title %s' % time.time()
 
     # Calling the function twice, first to create a new notebook and then
@@ -223,12 +223,12 @@ portal.%s()
                                           reference=reference
                                           )
 
-    notebook_message_search_result = portal.portal_catalog.getResultValue(
+    notebook_line_search_result = portal.portal_catalog.getResultValue(
                                               portal_type='Data Notebook',
                                               reference=reference,
                                               notebook_code=python_expression
                                               )
-    self.assertEquals(notebook.getId(), notebook_message_search_result.getId())
+    self.assertEquals(notebook.getId(), notebook_line_search_result.getId())
 
   def testBaseExecuteJupyterErrorHandling(self):
     """

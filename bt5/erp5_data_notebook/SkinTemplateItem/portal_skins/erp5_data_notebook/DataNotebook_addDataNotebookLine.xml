@@ -51,28 +51,28 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-This python script concerns with creation of new notebook message which would\n
+This python script concerns with creation of new notebook line which would\n
 have notebook_code from jupyter frontend as well as its executed result\n
 """\n
-# Create new Data Notebook Message object\n
-notebook_message = context.newContent(\n
+# Create new Data Notebook Line object\n
+notebook_line = context.newContent(\n
     notebook_code=notebook_code,\n
     notebook_code_result=notebook_code_result,\n
-    portal_type="Data Notebook Message"\n
+    portal_type="Data Notebook Line"\n
   )\n
 \n
-# Return notebook_message object for batch mode, used in tests\n
+# Return notebook_line object for batch mode, used in tests\n
 if batch_mode:\n
-  return notebook_message\n
+  return notebook_line\n
 \n
-# Add status message to be displayed after new notebook message creation\n
+# Add status message to be displayed after new notebook line creation\n
 translateString = context.Base_translateString\n
 portal_status_message = translateString(\n
-  "New Notebook message created"\n
+  "New Notebook line created"\n
 )\n
 \n
-# Redirect the notebook_message view with the status message being displayed\n
-return notebook_message.Base_redirect(\'view\',\n
+# Redirect the notebook_line view with the status message being displayed\n
+return notebook_line.Base_redirect(\'view\',\n
   keep_items=dict(portal_status_message=portal_status_message), **kw)\n
 </string> </value>
         </item>
@@ -82,7 +82,7 @@ return notebook_message.Base_redirect(\'view\',\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DataNotebook_addDataNotebookMessage</string> </value>
+            <value> <string>DataNotebook_addDataNotebookLine</string> </value>
         </item>
       </dictionary>
     </pickle>
