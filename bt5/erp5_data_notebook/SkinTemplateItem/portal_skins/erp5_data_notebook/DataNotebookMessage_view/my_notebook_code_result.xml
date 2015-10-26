@@ -257,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Notebook Cell Output</string> </value>
+                    <value> <string>Output</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

@@ -399,11 +399,11 @@
                       <list>
                         <tuple>
                           <string>notebook_code</string>
-                          <string>Notebook Cell Input</string>
+                          <string>Input</string>
                         </tuple>
                         <tuple>
                           <string>notebook_code_result</string>
-                          <string>Notebook Cell Output</string>
+                          <string>Output</string>
                         </tuple>
                       </list>
                     </value>
