@@ -68,7 +68,7 @@ identifying notebook by reference from user.\n
 Expected behaviour from this script:-\n
 1. Return unauthorized message for non-developer user.\n
 2. Create new \'Data Notebook\' for new reference.\n
-3. Add new \'Data Notebook Message\'to the existing Data Notebook on basis of reference.\n
+3. Add new \'Data Notebook Line\'to the existing Data Notebook on basis of reference.\n
 4. Return python dictionary containing list of all notebooks for \'request_reference=True\'\n
 """\n
 \n
@@ -110,8 +110,8 @@ if not data_notebook:\n
     batch_mode=True\n
   )\n
 \n
-# Add new Data Notebook Message to the Data Notebook\n
-data_notebook_message = data_notebook.DataNotebook_addDataNotebookMessage(\n
+# Add new Data Notebook Line to the Data Notebook\n
+data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(\n
   notebook_code=python_expression,\n
   batch_mode=True\n
 )\n
@@ -154,7 +154,7 @@ result = {\n
 # Catch exception while seriaizing the result to be passed to jupyter frontend\n
 try:\n
   serialized_result = json.dumps(result)\n
-  data_notebook_message.edit(notebook_code_result=code_result)\n
+  data_notebook_line.edit(notebook_code_result=code_result)\n
 except UnicodeDecodeError:\n
   result = {\n
     u\'code_result\': None,\n

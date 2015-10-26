@@ -3,7 +3,7 @@
   <item>Jupyter Notebook</item>
   <item>Reference</item>
  </portal_type>
- <portal_type id="Data Notebook Message">
+ <portal_type id="Data Notebook Line">
   <item>XMLObject</item>
  </portal_type>
 </property_sheet_list>

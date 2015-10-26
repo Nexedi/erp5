@@ -14,11 +14,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Contains code message and the value returned .</string> </value>
+            <value> <string>Contains code and the value returned by single line from Jupyter Notebook.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Data Notebook Message</string> </value>
+            <value> <string>Data Notebook Line</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

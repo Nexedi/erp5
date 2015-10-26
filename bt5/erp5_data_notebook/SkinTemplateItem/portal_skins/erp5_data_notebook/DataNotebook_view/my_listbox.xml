@@ -580,7 +580,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Notebook Message</string> </value>
+                    <value> <string>Notebook Line</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>
