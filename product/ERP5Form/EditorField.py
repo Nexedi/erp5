@@ -122,12 +122,20 @@ class EditorWidget(Widget.TextAreaWidget):
     elif text_editor == 'codemirror':
       code_mirror_support = getattr(here, 'code_mirror_support', None)
       if code_mirror_support is not None:
+        mode = "python"
+        portal_type = here.getPortalType()
+        if portal_type == "Web Page":
+          mode = "htmlmixed"
+        elif portal_type == "Web Script":
+          mode = "javascript"
+        elif portal_type == "Web Style":
+          mode = "css"
         site_root = here.getWebSiteValue() or here.getPortalObject()
         return code_mirror_support(field=field,
                                    content=value,
                                    field_id=key,
                                    portal_url=site_root.absolute_url(),
-                                   mode='python')
+                                   mode=mode)
     elif text_editor != 'text_area':
       return here.fckeditor_wysiwyg_support.pt_render(
            extra_context= {
