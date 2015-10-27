@@ -305,7 +305,7 @@
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_officejs_translation.html</string> </value>
+            <value> <string>gadget_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -540,7 +540,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.49899.34411.54152</string> </value>
+                <value> <string>946.38651.7361.44032</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -558,7 +558,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444639310.19</float>
+                        <float>1445934915.63</float>
                         <string>GMT</string>
                       </tuple>
                     </state>
