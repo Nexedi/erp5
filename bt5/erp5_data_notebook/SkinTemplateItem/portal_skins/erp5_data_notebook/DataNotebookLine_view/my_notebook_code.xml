@@ -10,8 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>width</string>
+                <string>editable</string>
                 <string>title</string>
+                <string>width</string>
               </list>
             </value>
         </item>
@@ -72,6 +73,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_text_area_field</string> </value>
