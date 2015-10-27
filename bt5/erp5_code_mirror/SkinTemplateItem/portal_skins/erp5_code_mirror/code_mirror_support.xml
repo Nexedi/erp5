@@ -125,7 +125,7 @@
    bottom: 0;\n
    top: 0 !important;\n
    left: 0 !important;\n
-   z-index: 4242 !important;\n
+   z-index: 2 !important;\n
    overflow: hidden !important;\n
  }\n
 \n
