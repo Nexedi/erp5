@@ -262,9 +262,8 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
       sci = StateChangeInfo(
       ob, self, former_status, tdef, None, None, kwargs=kw)
 
-      before_script_list = []
-      before_script_list.append(tdef.getBeforeScriptName())
-      if tdef.getBeforeScriptName() is not None:
+      before_script_list = tdef.getBeforeScriptNameList()
+      if before_script_list != [] and before_script_list is not None:
         for script_name in before_script_list:
           script = self._getOb(script_name, None)
           if script: script(sci)
@@ -328,28 +327,25 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
             ob, self, former_status, tdef, None, None, kwargs=kw)
 
       # Execute the "after" script.
-      after_script_list = []
-      after_script_list.append(tdef.getAfterScriptName())
-      if after_script_list != [] and tdef.getAfterScriptName() is not None:
+      after_script_list = tdef.getAfterScriptNameList()
+      if after_script_list != [] and after_script_list is not None:
         for script_name in after_script_list:
           # try to get the script without calling it.
-          script = self.getScriptValueList()[script_name]
+          script = self._getOb(script_name, None)
           # Pass lots of info to the script in a single parameter.
           if script: script(sci)  # May throw an exception
 
       # Queue the "Before Commit" scripts
       sm = getSecurityManager()
-      before_commit_script_list = []
-      before_commit_script_list.append(tdef.getBeforeCommitScriptName())
-      if before_commit_script_list != [] and tdef.getBeforeCommitScriptName() is not None:
+      before_commit_script_list = tdef.getBeforeCommitScriptNameList()
+      if before_commit_script_list != [] and before_commit_script_list is not None:
         for script_name in before_commit_script_list:
           transaction.get().addBeforeCommitHook(self._before_commit,
                                                 (sci, script_name, sm))
 
       # Execute "activity" scripts
-      activity_script_list = []
-      activity_script_list.append(tdef.getActivateScriptName())
-      if activity_script_list != [] and tdef.getActivateScriptName() is not None:
+      activity_script_list = tdef.getActivateScriptNameList()
+      if activity_script_list != [] and activity_script_list is not None:
         for script_name in activity_script_list:
           self.activate(activity='SQLQueue')\
               .activeScript(script_name, ob.getRelativeUrl(),
