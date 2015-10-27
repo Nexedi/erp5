@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_after_script_id</string> </value>
+            <value> <string>my_after_script_name_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x.getId(), x.getId()) for x in here.getParent().objectValues() if x.getPortalType() in [\'Transition\', \'Workflow Script\']]</string> </value>
+            <value> <string>python: [(x.getTitle(), x.getId()) for x in here.getParent().contentValues(portal_type=\'Workflow Script\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -108,8 +108,8 @@
                         <string>my_role_list</string>
                         <string>my_group_list</string>
                         <string>my_expression</string>
-                        <string>my_before_script_id</string>
-                        <string>my_after_script_id</string>
+                        <string>my_before_script_id_list</string>
+                        <string>my_after_script_id_list</string>
                       </list>
                     </value>
                 </item>

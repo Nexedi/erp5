@@ -83,10 +83,10 @@
                         <string>my_portal_type_group_filter_list</string>
                         <string>my_trigger_once_per_transaction</string>
                         <string>my_temporary_document_disallowed</string>
-                        <string>my_before_script_name</string>
-                        <string>my_after_script_name</string>
-                        <string>my_before_commit_script_name</string>
-                        <string>my_activate_script_name</string>
+                        <string>my_before_script_name_list</string>
+                        <string>my_after_script_name_list</string>
+                        <string>my_before_commit_script_name_list</string>
+                        <string>my_activate_script_name_list</string>
                       </list>
                     </value>
                 </item>
