@@ -215,7 +215,7 @@
             gadget.getDeclaredGadget("erp5_form"),\n
             gadget.getUrlFor({command: \'change\', options: {page: "breadcrumb"}}),\n
             new_content_action,\n
-            gadget.getUrlFor({command: \'change\', options: {page: "action"}})\n
+            gadget.getUrlFor({command: \'change\', options: {page: "action"}}),\n
             gadget.getDeclaredGadget("filterEditor"),\n
             gadget.getDeclaredGadget("sortEditor")\n
           ]);\n
@@ -398,7 +398,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4414.7934.44748</string> </value>
+                <value> <string>946.46100.61365.28740</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -416,7 +416,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444816468.81</float>
+                        <float>1445950207.32</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -157,6 +157,7 @@
         document_table = gadget.props.element.querySelector(\'.document_table\'),\n
         th,\n
         tmp,\n
+        sort_list,\n
         length_table = field_json.column_list.length,\n
         j,\n
         i;\n
@@ -169,7 +170,8 @@
       gadget.props.hide_item = options.hide_item;\n
       gadget.props.sort_list = [];\n
       if (options.sort_list) {\n
-        gadget.props.sort_list = Object.keys(options.sort_list).map(function (key) {return options.sort_list[key]; });\n
+        sort_list = JSON.parse(options.sort_list);\n
+        gadget.props.sort_list = Object.keys(sort_list).map(function (key) {return sort_list[key]; });\n
       }\n
 \n
       if (field_json.show_anchor) {\n
@@ -292,7 +294,6 @@
       }\n
 \n
       select_list.push("uid");\n
-
       return gadget.jio_allDocs({\n
         // XXX Not jIO compatible, but until a better api is found...\n
         "list_method_template": field_json.list_method_template,\n
@@ -417,13 +418,10 @@
           prev_param[gadget.props.field_json.key + \'_begin_from\'] = begin_from - lines;\n
           setNext();\n
         }\n
+\n
         return RSVP.all([\n
-          gadget.getUrlFor({command: \'change\', options: {jio_key: gadget.props.jio_key, "extended_search": gadget.props.extended_search || "",\n
-                            "domain_tree": gadget.props.domain_tree || "", "sort_list": gadget.props.sort_list || "",\n
-                            "begin_from":prev_param.begin_from}}),\n
-          gadget.getUrlFor({command: \'change\', options: {jio_key: gadget.props.jio_key, "extended_search": gadget.props.extended_search || "",\n
-                            "domain_tree": gadget.props.domain_tree || "", "sort_list": gadget.props.sort_list || "",\n
-                            "begin_from":next_param.begin_from}})\n
+          gadget.getUrlFor({command: \'change\', options: prev_param}),\n
+          gadget.getUrlFor({command: \'change\', options: next_param})\n
         ]);\n
 \n
       }).push(function (url_list) {\n
@@ -551,10 +549,8 @@
             //if nothing is selected, show all\n
             if (hide_form_elements.length === 0) {\n
               colspan.setAttribute("colspan", parseInt(colspan.getAttribute("colspan"), 10) - 1);\n
-              return gadget.redirect({jio_key: gadget.props.jio_key,\n
-                "extended_search": gadget.props.extended_search || "",\n
-                "domain_tree": gadget.props.domain_tree || "",\n
-                "sort_list": gadget.props.sort_list || ""});\n
+              return gadget.redirect({command: \'change\', options: {\n
+                "domain_tree": gadget.props.domain_tree || ""}});\n
             }\n
 \n
             //all selected\n
@@ -582,11 +578,8 @@
               type: "complex"\n
             });\n
 \n
-            return gadget.redirect({jio_key: gadget.props.jio_key,\n
-              "extended_search": gadget.props.extended_search || "",\n
-              "domain_tree": gadget.props.domain_tree || "",\n
-              "sort_list": gadget.props.sort_list || "",\n
-              "hide_item": Query.objectToSearchText(selected_uid_query)});\n
+            return gadget.redirect({command: \'change\', options: {\n
+              "hide_item": Query.objectToSearchText(selected_uid_query)}});\n
           }\n
 \n
           hide_show_all.setAttribute("type", "submit");\n
@@ -610,10 +603,8 @@
                 "submit",\n
                 false,\n
                 function () {\n
-                  return gadget.redirect({jio_key: gadget.props.jio_key,\n
-                    "extended_search": gadget.props.extended_search || "",\n
-                    "domain_tree": gadget.props.domain_tree || "",\n
-                    "sort_list": gadget.props.sort_list || ""});\n
+                  return gadget.redirect({command: \'change\', options: {\n
+                    "hide_item": ""}});\n
                 }\n
               );\n
               thead_tr.insertBefore(th, thead_tr.firstChild);\n
@@ -806,7 +797,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.5879.32028.47257</string> </value>
+                <value> <string>946.46337.55165.55125</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -824,7 +815,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444722552.95</float>
+                        <float>1445963866.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

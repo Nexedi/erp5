@@ -276,12 +276,16 @@
         })\n
         .push(function (result) {\n
           var key,\n
+            sort_list = {},\n
             queue = new RSVP.Queue();\n
+          if (options.form_definition.sort_list) {\n
+            sort_list = JSON.parse(options.form_definition.sort_list);\n
+          }\n
           gadget.props.column_list = result._embedded._view.listbox.column_list;\n
-          for (key in options.form_definition.sort_list) {\n
-            if (options.form_definition.sort_list.hasOwnProperty(key)) {\n
-              if (options.form_definition.sort_list[key] !== "") {\n
-                queue.push(createTranslatedItem(gadget, options.form_definition.sort_list[key]));\n
+          for (key in sort_list) {\n
+            if (sort_list.hasOwnProperty(key)) {\n
+              if (sort_list[key] !== "") {\n
+                queue.push(createTranslatedItem(gadget, sort_list[key]));\n
               }\n
             }\n
           }\n
@@ -315,24 +319,21 @@
         false,\n
         function () {\n
           var sort_list = gadget.props.element.querySelectorAll(".sortForm"),\n
-            sort_query = [],\n
+            sort_query = {},\n
             sort_item,\n
             sort_item_query,\n
             i;\n
           for (i = 0; i < sort_list.length; i += 1) {\n
             sort_item = sort_list[i];\n
             sort_item_query = sort_item[0][sort_item[0].selectedIndex].value + "," + sort_item[1][sort_item[1].selectedIndex].value + ",";\n
-            sort_query.push(sort_item_query);\n
+            sort_query[i] = sort_item_query;\n
           }\n
-          sort_query.push("");\n
+          sort_query[i] = "";\n
           return new RSVP.Queue()\n
             .push(function () {\n
               gadget.props.jelement.panel("toggle");\n
-              return gadget.redirect({jio_key: gadget.props.options.jio_key,\n
-                "extended_search": gadget.props.options.form_definition.extended_search || "",\n
-                "domain_tree": gadget.props.options.form_definition.domain_tree || "",\n
-                "sort_list": sort_query,\n
-                "hide_item": gadget.props.options.form_definition.hide_item || ""});\n
+              return gadget.redirect({command: \'change\', options: {\n
+                "sort_list": JSON.stringify(sort_query)}});\n
             });\n
         }\n
       );\n
@@ -475,7 +476,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.6000.3675.35362</string> </value>
+                <value> <string>946.46298.51121.25531</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -493,7 +494,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443629882.33</float>
+                        <float>1445963800.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
