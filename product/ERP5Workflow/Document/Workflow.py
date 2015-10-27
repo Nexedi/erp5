@@ -723,8 +723,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
             # Pass lots of info to the script in a single parameter.
             if script.getPortalType() == 'Workflow Script':
               script(sci)  # May throw an exception.
-            else:
-              raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getReference()))
+
     # Return the new state object.
     if moved_exc is not None:
         # Propagate the notification that the object has moved.
