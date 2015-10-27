@@ -534,6 +534,13 @@
    cm.setSize(undefined, parent_height);\n
  }\n
 \n
+\n
+  CodeMirror.commands.autocomplete = function(cm) {\n
+    CodeMirror.showHint(cm, CodeMirror.hint.anyword, {\n
+    } );\n
+  }\n
+\n
+\n
  updateErrorWarningMessageDivWithJump();\n
 \n
  // When hovering editor element with the mouse, seeing the title of the field is annoying...\n
