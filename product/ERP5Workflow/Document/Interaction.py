@@ -59,10 +59,6 @@ class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
   manager_bypass = 0
   method_id = None
   trigger_type = TRIGGER_WORKFLOW_METHOD
-  script_name = ()  # Executed before transition
-  after_script_name = ()  # Executed after transition
-  before_commit_script_name = () #Executed Before Commit Transaction
-  activate_script_name = ()  # Executed as activity
   portal_type_filter = None
   portal_type_group_filter = None
   once_per_transaction = False
@@ -119,8 +115,3 @@ class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
       self.guard.groups = self.getGroupList()
     if self.getExpression() is not None:
       self.guard.expr = Expression(self.getExpression())
-
-  def getMethodId(self):
-    if type(self.method_id) is type(''):
-      self.method_id = self.method_id.split()
-    return self.method_id
