@@ -356,6 +356,7 @@
 \n
  function switchToFullScreen(cm) {\n
    element = $(\'#merge\')[0];\n
+   $("#history_select_container").hide()\n
    $(cm.getWrapperElement()).css(\'height\', \'100%\');\n
    if((document.fullScreenElement &&\n
        document.fullScreenElement !== null) ||\n
@@ -378,6 +379,7 @@
  function maximize() {\n
    document.documentElement.style.overflow = "hidden";\n
    $("#merge").addClass(\'maximize\');\n
+   $("#history_select_container").hide()\n
 \n
    if(merge_mode_elem) {\n
      $("#view").height("100%");\n
@@ -414,6 +416,7 @@
 \n
          document.documentElement.style.overflow = "";\n
          $("#merge").removeClass(\'maximize\');\n
+         $("#history_select_container").show()\n
 \n
          if(merge_mode_elem) {\n
            $(\'.CodeMirror-merge\').height(cm_merge_height);\n
