@@ -344,6 +344,7 @@
 
  function switchToFullScreen(cm) {
    element = $('#merge')[0];
+   $("#history_select_container").hide();
    $(cm.getWrapperElement()).css('height', '100%');
    if((document.fullScreenElement &&
        document.fullScreenElement !== null) ||
@@ -366,6 +367,7 @@
  function maximize() {
    document.documentElement.style.overflow = "hidden";
    $("#merge").addClass('maximize');
+   $("#history_select_container").hide();
 
    if(merge_mode_elem) {
      $("#view").height("100%");
@@ -402,6 +404,7 @@
 
          document.documentElement.style.overflow = "";
          $("#merge").removeClass('maximize');
+         $("#history_select_container").show();
 
          if(merge_mode_elem) {
            $('.CodeMirror-merge').height(cm_merge_height);
