@@ -211,9 +211,8 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
   def _findAutomaticTransition(self, document, sdef):
     tdef = None
-    for tid in sdef.getDestinationIdList():
-      t = self._getOb(id=tid)
-      if t is not None and t.trigger_type == TRIGGER_AUTOMATIC:
+    for t in sdef.getDestinationValueList():
+      if t.trigger_type == TRIGGER_AUTOMATIC:
         if self._checkTransitionGuard(t, document):
           tdef = t
           break
@@ -599,6 +598,8 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       new_sdef = self.getSourceValue()
       new_state = new_sdef.getReference()
       if not new_sdef:
+        # Do nothing if there is no initial state. We may want to create
+        # workflows with no state at all, only for worklists.
         return
       former_status = {}
     else:
@@ -611,26 +612,26 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
     # Execute the "before" script.
     before_script_success = 1
-    if tdef is not None and tdef.getBeforeScriptId():
-      script_id = tdef.getBeforeScriptId()
-      script = self._getOb(script_id, None)
-      if script:
-        # Pass lots of info to the script in a single parameter.
-        if script.getTypeInfo().getId() == 'Workflow Script':
-          kwargs = form_kw
-          sci = StateChangeInfo(
-              document, self, former_status, tdef, old_sdef, new_sdef, kwargs)
-        else:
-          raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getReference()))
-        try:
-          script(sci)  # May throw an exception.
-        except ValidationFailed, validation_exc:
-          before_script_success = 0
-          before_script_error_message = deepcopy(validation_exc.msg)
-          validation_exc_traceback = sys.exc_traceback
-        except ObjectMoved, moved_exc:
-          ob = moved_exc.getNewObject()
-          # Re-raise after transition
+    if tdef is not None and tdef.getBeforeScriptIdList():
+      script_id_list = tdef.getBeforeScriptIdList()
+      kwargs = form_kw
+      sci = StateChangeInfo(
+                document, self, former_status, tdef, old_sdef, new_sdef, kwargs)
+      for script_id in script_id_list:
+        script = self._getOb(script_id, None)
+        if script:
+          # Pass lots of info to the script in a single parameter.
+          if script.getPortalType() != 'Workflow Script':
+            raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getReference()))
+          try:
+            script(sci)  # May throw an exception.
+          except ValidationFailed, validation_exc:
+            before_script_success = 0
+            before_script_error_message = deepcopy(validation_exc.msg)
+            validation_exc_traceback = sys.exc_traceback
+          except ObjectMoved, moved_exc:
+            ob = moved_exc.getNewObject()
+            # Re-raise after transition
 
     # update variables
     state_values = None
@@ -706,29 +707,58 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     self.updateRoleMappingsFor(document)
 
     # Execute the "after" script.
-    if tdef is not None:
-      script_id = getattr(tdef, 'getAfterScriptId')()
-      script = self._getOb(script_id, None)
-      if script:
-        kwargs = form_kw
-        # Script can be either script or workflow method
-        if script_id in old_sdef.getDestinationIdList() and \
-            self._getOb(script_id).trigger_type == TRIGGER_WORKFLOW_METHOD:
-          getattr(document, convertToMixedCase(self._getOb(script_id).getReference()))()
-        else:
-          # Pass lots of info to the script in a single parameter.
-          if script.getTypeInfo().getId() == 'Workflow Script':
-            sci = StateChangeInfo(
+    if tdef is not None and tdef.getAfterScriptIdList():
+      script_id_list = tdef.getAfterScriptIdList()
+      kwargs = form_kw
+      sci = StateChangeInfo(
                 document, self, former_status, tdef, old_sdef, new_sdef, kwargs)
-            script(sci)  # May throw an exception.
+      for script_id in script_id_list:
+        script = self._getOb(script_id, None)
+        if script:
+          # Script can be either script or workflow method
+          if script_id in old_sdef.getDestinationIdList() and \
+              self._getOb(script_id).trigger_type == TRIGGER_WORKFLOW_METHOD:
+            getattr(document, convertToMixedCase(self._getOb(script_id).getReference()))()
           else:
-            raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getReference()))
+            # Pass lots of info to the script in a single parameter.
+            if script.getPortalType() == 'Workflow Script':
+              script(sci)  # May throw an exception.
+            else:
+              raise NotImplementedError ('Unsupported Script %s for state %s'%(script_id, old_sdef.getReference()))
     # Return the new state object.
     if moved_exc is not None:
         # Propagate the notification that the object has moved.
         raise moved_exc
     else:
         return new_sdef
+
+  def wrapWorkflowMethod(self, ob, method_id, func, args, kw):
+    '''
+    Allows the user to request a workflow action.  This method
+    must perform its own security checks.
+    '''
+    sdef = self._getWorkflowStateOf(ob)
+    if sdef is None:
+        raise WorkflowException, 'Object is in an undefined state'
+    if method_id not in sdef.getTransitionIdList():
+        raise Unauthorized(method_id)
+    tdef = self.getTransitionValueList().get(method_id, None)
+    if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
+        raise WorkflowException, (
+            'Transition %s is not triggered by a workflow method'
+            % method_id)
+    if not self._checkTransitionGuard(tdef, ob):
+        raise Unauthorized(method_id)
+    res = func(*args, **kw)
+    try:
+        self._changeStateOf(ob, tdef, kw)
+    except ObjectDeleted:
+        # Re-raise with a different result.
+        raise ObjectDeleted(res)
+    except ObjectMoved, ex:
+        # Re-raise with a different result.
+        raise ObjectMoved(ex.getNewObject(), res)
+    return res
 
   def addTransition(self, name):
     self.newContent(portal_type='Transition')
@@ -1084,18 +1114,19 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       # Always provide the state variable.
       state_var = self.getStateVariable()
       status = self.getCurrentStatusDict(ob)
-      for id, vdef in self.getVariableValueList().iteritems():
+      for vdef_ref, vdef in self.getVariableValueList().iteritems():
           if vdef.for_catalog:
-              if status.has_key(id):
-                  value = status[id]
+              if status.has_key(vdef_ref):
+                  value = status[vdef_ref]
 
               # Not set yet.  Use a default.
               elif vdef.default_expr is not None:
                   ec = createExprContext(StateChangeInfo(ob, self, status))
-                  value = vdef.default_expr(ec)
+                  # convert string to expression before execute it.
+                  value = Expression(vdef.default_expr)(ec)
               else:
                   value = vdef.default_value
-              res[id] = value
+              res[vdef_ref] = value
       if hasattr(self, 'getSourceValue'):
         if self.getSourceValue() is not None:
           initial_state = self.getSourceValue().getReference()
