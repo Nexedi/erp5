@@ -503,15 +503,14 @@ objectExtend(HtmlTestCaseRow.prototype, {
         // Store the test HTML as a dataURL to ease debugging from posted test results
         // This code should be synchronous (no Blob asDataURL method for example)
         var aElement = this.trElement.ownerDocument.createElement("a");
-        aElement.textContent = ' (HTML)'
-        try {
-          aElement.href = 'data:text/html;base64,' + btoa(sel$('selenium_myiframe').contentWindow.document.body.innerHTML);
-          this.trElement.cells[2].appendChild(aElement);
-        } catch (error) {
-          // btoa will fail with unicode character
-          // Do not report HTML error in such case, until a cleaner dataURL is implemented
-          ;
+        aElement.textContent = ' (HTML)';
+        function b64EncodeUnicode(str) {
+          return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+            return String.fromCharCode('0x' + p1);
+          }));
         }
+        aElement.href = 'data:text/html;charset=utf-8;base64,' + b64EncodeUnicode(sel$('selenium_myiframe').contentWindow.document.body.innerHTML);
+        this.trElement.cells[2].appendChild(aElement);
     },
 
     setMessage: function(message) {
