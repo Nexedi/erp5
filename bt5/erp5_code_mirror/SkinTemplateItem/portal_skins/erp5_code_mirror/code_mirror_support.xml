@@ -238,6 +238,8 @@
  function saveComponentDocument(cm, event) {\n
    event.stopPropagation();\n
    event.preventDefault();\n
+   var document_title = document.title;\n
+   document.title = "💾💤 " + document_title\n
 \n
    clickSaveButton(\'Base_edit\');\n
 \n
@@ -272,6 +274,11 @@
                url: \'getTranslatedValidationStateTitle\',\n
                success: getTranslatedValidationStateTitleHandler});\n
      }\n
+\n
+     document.title = "💾✔ " + document_title\n
+     setTimeout(function() {\n
+       document.title =  document_title\n
+     }, 500);\n
 \n
      updateErrorWarningMessageDivWithJump();\n
 \n
