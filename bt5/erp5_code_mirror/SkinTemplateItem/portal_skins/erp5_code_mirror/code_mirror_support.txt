@@ -227,6 +227,8 @@
  function saveComponentDocument(cm, event) {
    event.stopPropagation();
    event.preventDefault();
+   var document_title = document.title;
+   document.title = "💾💤 " + document_title;
 
    clickSaveButton('Base_edit');
 
@@ -261,6 +263,10 @@
                url: 'getTranslatedValidationStateTitle',
                success: getTranslatedValidationStateTitleHandler});
      }
+     document.title = "💾✔ " + document_title;
+     setTimeout(function() {;
+       document.title =  document_title;
+     }, 500);
 
      updateErrorWarningMessageDivWithJump();
 
