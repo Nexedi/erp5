@@ -91,6 +91,7 @@ if response_event_notification_message:\n
   request.set(\'your_response_event_notification_message\', \'\')\n
   request.set(\'your_response_event_title\', title)\n
   request.set(\'your_response_event_text_content\', temp_event.getTextContent())\n
+  request.set(\'your_response_event_content_type\', temp_event.getContentType())\n
   request.set(\'your_response_event_resource\', temp_event.getResource())\n
 \n
 return context.Ticket_viewCreateResponseWorkflowActionDialog()\n

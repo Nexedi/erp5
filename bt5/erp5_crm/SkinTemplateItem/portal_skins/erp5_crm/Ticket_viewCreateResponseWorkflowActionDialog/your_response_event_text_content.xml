@@ -182,7 +182,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.Ticket_getCausalityValue().Base_getEditorFieldPreferredTextEditor(content_type=context.Ticket_getCausalityValue().Event_getPreferredResponseEventContentType())</string> </value>
+            <value> <string>python: context.Base_getEditorFieldPreferredTextEditor(content_type=request.get(\'your_response_event_content_type\') or context.Ticket_getCausalityValue().Event_getPreferredResponseEventContentType())</string> </value>
         </item>
       </dictionary>
     </pickle>
