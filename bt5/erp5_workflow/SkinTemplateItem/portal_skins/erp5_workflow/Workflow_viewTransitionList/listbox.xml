@@ -101,11 +101,11 @@
                           <string>Required Roles</string>
                         </tuple>
                         <tuple>
-                          <string>before_script_id</string>
+                          <string>before_script_id_list</string>
                           <string>Before Script</string>
                         </tuple>
                         <tuple>
-                          <string>after_script_id</string>
+                          <string>after_script_id_list</string>
                           <string>After Script</string>
                         </tuple>
                       </list>
