@@ -244,6 +244,41 @@ class SecurityTestCase(ERP5TypeTestCase):
 
   assertUserCanPassWorkflowTransition = failUnlessUserCanPassWorkflowTransition
 
+  def assertUserHasWorklist(self, username, worklist_id, document_count):
+    self.portal.portal_workflow.refreshWorklistCache()
+    self.portal.portal_caches.clearAllCache()
+    sm = getSecurityManager()
+    try:
+      self._loginAsUser(username)
+      global_action_list = [x for x in
+        self.portal.portal_workflow.listActions(object=self.portal)
+        if x['category'] == 'global']
+      worklist_action_list = [x for x in global_action_list
+        if x['worklist_id'] == worklist_id]
+      if not(worklist_action_list):
+        self.fail("User %s does not have worklist %s.\nWorklists: %s" % (
+          username, worklist_id, pformat(global_action_list)))
+      worklist_action, = worklist_action_list
+      self.assertEquals(document_count, worklist_action['count'],
+        "User %s has %s documents in her %s worklist, not %s" % (
+          username, worklist_action['count'], worklist_id, document_count))
+    finally:
+      setSecurityManager(sm)
+
+  def assertUserHasNoWorklist(self, username, worklist_id):
+    self.portal.portal_workflow.refreshWorklistCache()
+    self.portal.portal_caches.clearAllCache()
+    sm = getSecurityManager()
+    try:
+      self._loginAsUser(username)
+      worklist_action_list = [x for x in
+        self.portal.portal_workflow.listActions(object=self.portal)
+        if x['category'] == 'global' and x['worklist_id'] == worklist_id]
+      if worklist_action_list:
+        self.fail("User %s has worklist %s: %s" % (username, worklist_id, pformat(worklist_action_list)))
+    finally:
+      setSecurityManager(sm)
+
   # Simple check for an user Role
   def failIfUserHaveRoleOnDocument(self, username, role, document):
     """Fails if the user have the role on the document."""
