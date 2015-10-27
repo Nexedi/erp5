@@ -107,8 +107,11 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
       return self.getParentValue().isAccountable() and (not self.hasCellContent())
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                      'isMovingItem')
+                             'isMovingItem')
     def isMovingItem(self, item):
+      type_based_script = self._getTypeBasedMethod('isMovingItem')
+      if type_based_script:
+        return type_based_script(item)
       return self.isAccountable()
 
     def _getTotalPrice(self, default=0.0, context=None, fast=0):
