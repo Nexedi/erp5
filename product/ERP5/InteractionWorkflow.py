@@ -376,7 +376,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                         portal_type='Interaction Workflow'))
 
     for prop_id in sorted(interaction_workflow_prop_id_to_show):
-      prop_value = self.__dict__[prop_id]
+      prop_value = self.__dict__.get(prop_id, None)
       if prop_value is None or prop_value == [] or prop_value == ():
         prop_value = ''
       prop_type = interaction_workflow_prop_id_to_show[prop_id]
