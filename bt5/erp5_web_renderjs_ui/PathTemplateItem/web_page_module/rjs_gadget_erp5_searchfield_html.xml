@@ -124,9 +124,9 @@
       <div class="field_container">\n
         <div class="ui-field-contain">\n
           <div class="bottom">\n
-              <div class="ui-input-text ui-body-{{theme}} ui-input-has-icon ui-corner-all ui-shadow-inset ui-input-has-clear {{status_class}} {{css_class}}">\n
+              <div class="ui-input-text ui-body-{{theme}} ui-input-has-icon ui-corner-all ui-shadow-inset ui-input-has-clear">\n
                 <form class="save_form">\n
-                  <input type="text" data-enhanced="true" value="{{widget_value}}" name="search" {{widget_status_attribute}} />\n
+                  <input type="text" data-enhanced="true" value="{{widget_value}}" name="search" {{widget_status_attribute}} >\n
                   <div class="ui-btn ui-input-clear ui-input-btn ui-corner-all ui-icon-search ui-btn-icon-notext" data-i18n="[node]{{search_i18n}}">\n
                     {{search_i18n}}<input tabindex="-1" data-role="button" data-enhanced="true" type="submit" data-i18n="[value]{{search_i18n}}" value=" "/>\n
                   </div>\n
@@ -137,7 +137,6 @@
                   <div class="ui-input-btn">\n
                     <input data-role="button" data-enhanced="true" type="submit" data-i18n="[value]" value=" ">\n
                   </div>\n
-                 \n
               </form>\n
             </div>\n
          </div>\n
@@ -151,7 +150,6 @@
     \n
   </head>\n
   <body>\n
-    <div class="container"></div>\n
   </body>\n
 </html>
 
@@ -290,7 +288,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.46365.63113.6638</string> </value>
+                <value> <string>946.47294.45750.61781</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -308,7 +306,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445965410.12</float>
+                        <float>1446021106.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
