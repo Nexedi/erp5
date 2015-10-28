@@ -1975,7 +1975,7 @@ class RegisteredVersionPrioritySelectionTemplateItem(BaseTemplateItem):
 class WorkflowTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, tool_id='portal_workflow', **kw):
-    return ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
+    ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
   # When the root object of a workflow is modified, the entire workflow is
   # recreated: all subobjects are discarded and must be reinstalled.

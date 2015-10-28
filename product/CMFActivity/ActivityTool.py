@@ -623,7 +623,7 @@ class ActivityTool (Folder, UniqueObject):
     def __init__(self, id=None):
         if id is None:
           id = ActivityTool.id
-        return Folder.__init__(self, id)
+        Folder.__init__(self, id)
 
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
