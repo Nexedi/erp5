@@ -796,13 +796,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       data = DateTime(data)
     elif data_type == INT_TYPE :
       data = int(data)
-    elif data_type == BOOLEAN_TYPE:
-      if data == 'False':
-        data = False
-      elif data == 'True':
-        data = True
-      else:
-        raise NotImplementedError
     return data
 
 
