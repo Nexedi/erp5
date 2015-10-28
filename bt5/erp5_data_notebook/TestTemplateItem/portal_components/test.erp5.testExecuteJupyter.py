@@ -154,25 +154,25 @@ portal.%s()
     """
     portal = self.portal
 
-    notebook = self._newNotebook(reference='new_notebook_with_code')
+    notebook = self._newNotebook(reference='new_notebook_with_code %s' %time.time())
     self.tic()
 
     notebook_code='some_random_invalid_notebook_code %s' % time.time()
-    self._newNotebookLine(
+    notebook_line = self._newNotebookLine(
                             notebook_module=notebook,
                             notebook_code=notebook_code
                             )
     self.tic()
 
-    notebook_line_search_result = portal.portal_catalog(
-                                                  portal_type='Data Notebook',
-                                                  notebook_code=notebook_code
-                                                  )
+    notebook_line_search_result = portal.portal_catalog(portal_type='Data Notebook Line')
 
-    result = [obj.getId() for obj in notebook_line_search_result]
+    result_reference_list = [obj.getReference() for obj in notebook_line_search_result]
+    result_id_list = [obj.getId() for obj in notebook_line_search_result]
 
-    if result:
-      self.assertIn(notebook.getId(), result)
+    if result_reference_list:
+      self.assertIn(notebook.getReference(), result_reference_list)
+      self.assertEquals(notebook_line.getReference(), notebook.getReference())
+      self.assertIn(notebook_line.getId(), result_id_list)
 
   def testBaseExecuteJupyterAddNewNotebook(self):
     """
@@ -199,7 +199,8 @@ portal.%s()
   def testBaseExecuteJupyterAddNotebookLine(self):
     """
     Test if the notebook adds code history to the Data Notebook Line
-    portal type
+    portal type while multiple calls are made to Base_executeJupyter with
+    notebooks having same reference
     """
     portal = self.portal
     self.login('dev_user')
@@ -224,11 +225,15 @@ portal.%s()
                                           )
 
     notebook_line_search_result = portal.portal_catalog.getResultValue(
-                                              portal_type='Data Notebook',
-                                              reference=reference,
-                                              notebook_code=python_expression
+                                              portal_type='Data Notebook Line',
+                                              reference=reference
                                               )
-    self.assertEquals(notebook.getId(), notebook_line_search_result.getId())
+    # As we use timestamp in the reference and the notebook is created in this
+    # function itself so, if anyhow a new Data Notebook Line has been created,
+    # then it means that the code has been added to Input and Output of Data
+    # Notebook Line portal_type
+    if notebook_line_search_result:
+      self.assertEquals(notebook.getReference(), notebook_line_search_result.getReference())
 
   def testBaseExecuteJupyterErrorHandling(self):
     """
