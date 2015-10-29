@@ -132,38 +132,6 @@
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
-    .allowPublicAcquisition("triggerFilterEditor", function () {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-           return gadget.getDeclaredGadget("filterEditor");\n
-        })\n
-        .push(function (filterEditor) {\n
-          return filterEditor.toggle();\n
-        });\n
-    })\n
-    .allowPublicAcquisition("triggerSortEditor", function () {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-           return gadget.getDeclaredGadget("sortEditor");\n
-        })\n
-        .push(function (sortEditor) {\n
-          return sortEditor.toggle();\n
-        });\n
-    })\n
-    .allowPublicAcquisition("showQueryError", function (param) {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-           return gadget.getDeclaredGadget("erp5_searchfield");\n
-        })\n
-        .push(function (searchField) {\n
-          return searchField.showQueryError(param);\n
-        });\n
-    })\n
-    \n
- \n
     .declareMethod(\'render\', function (options) {\n
       var gadget = this,\n
         form_options = options.erp5_form || {},\n
@@ -171,27 +139,7 @@
 \n
       form_options.erp5_document = options.erp5_document;\n
       form_options.form_definition = options.form_definition;\n
-      search_options.jio_key = options.jio_key;\n
-      // XXX not generic, fix later\n
-      if (options.extended_search) {\n
-        form_options.form_definition.extended_search =  options.extended_search;\n
-        search_options.extended_search = options.extended_search;\n
-      }\n
-      if (options.sort_list) {\n
-         form_options.form_definition.sort_list = options.sort_list;\n
-      }\n
-      if (options.hide_item) {\n
-        form_options.form_definition.hide_item = options.hide_item;\n
-        search_options.hide_item = options.hide_item;\n
-      }\n
-      \n
-      if (options.domain_tree) {\n
-        form_options.form_definition.domain_tree = options.domain_tree;\n
-        search_options.domain_tree = options.domain_tree;\n
-      }\n
-      form_options.begin_from = options.begin_from;\n
       form_options.view = options.view;\n
-      form_options.jio_key = options.jio_key;\n
 \n
       return new RSVP.Queue()\n
         .push(function () {\n
@@ -215,17 +163,13 @@
             gadget.getDeclaredGadget("erp5_form"),\n
             gadget.getUrlFor({command: \'change\', options: {page: "breadcrumb"}}),\n
             new_content_action,\n
-            gadget.getUrlFor({command: \'change\', options: {page: "action"}}),\n
-            gadget.getDeclaredGadget("filterEditor"),\n
-            gadget.getDeclaredGadget("sortEditor")\n
+            gadget.getUrlFor({command: \'change\', options: {page: "action"}})\n
           ]);\n
         })\n
         .push(function (all_gadget) {\n
           return RSVP.all([\n
             all_gadget[0].render(search_options),\n
             all_gadget[1].render(form_options),\n
-            all_gadget[5].render(form_options),\n
-            all_gadget[6].render(form_options),\n
             gadget.updateHeader({\n
               panel_action: true,\n
               jump_url: "",\n
@@ -398,7 +342,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.46100.61365.28740</string> </value>
+                <value> <string>946.44927.40202.16725</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -416,7 +360,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445950207.32</float>
+                        <float>1445939450.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -9178,8 +9178,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   ERP5Storage.prototype.hasCapacity = function (name) {\n
     return ((name === "list") || (name === "query") ||\n
-            (name === "select") || (name === "limit") ||\n
-            (name === "sort"));\n
+            (name === "select") || (name === "limit"));\n
   };\n
 \n
   ERP5Storage.prototype.buildQuery = function (options) {\n
@@ -9197,8 +9196,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
               query: options.query,\n
               // XXX Force erp5 to return embedded document\n
               select_list: options.select_list || ["title", "reference"],\n
-              limit: options.limit,\n
-              sort_on: options.sort_on\n
+              limit: options.limit\n
             }),\n
           "xhrFields": {\n
             withCredentials: true\n
@@ -10493,7 +10491,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -10507,7 +10505,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.47484.49057.4949</string> </value>
+                <value> <string>946.20166.17792.35464</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -10525,7 +10523,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446033135.72</float>
+                        <float>1444411451.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

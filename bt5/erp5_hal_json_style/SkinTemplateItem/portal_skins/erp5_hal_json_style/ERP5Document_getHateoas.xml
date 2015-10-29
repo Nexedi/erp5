@@ -75,18 +75,18 @@ url_template_dict = {\n
   "traverse_template": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
                        "{&relative_url,view}",\n
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \\\n
-                     "{&query,select_list*,limit*,sort_on*}",\n
+                     "{&query,select_list*,limit*}",\n
   "custom_search_template": "%(root_url)s/%(script_id)s?mode=search" + \\\n
                      "&relative_url=%(relative_url)s" \\\n
                      "&form_relative_url=%(form_relative_url)s" \\\n
                      "&list_method=%(list_method)s" \\\n
                      "&default_param_json=%(default_param_json)s" \\\n
-                     "{&query,select_list*,limit*,sort_on*}",\n
+                     "{&query,select_list*,limit*}",\n
   "custom_search_template_no_editable": "%(root_url)s/%(script_id)s?mode=search" + \\\n
                      "&relative_url=%(relative_url)s" \\\n
                      "&list_method=%(list_method)s" \\\n
                      "&default_param_json=%(default_param_json)s" \\\n
-                     "{&query,select_list*,limit*,sort_on*}",\n
+                     "{&query,select_list*,limit*}",\n
   "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",\n
   "bulk_action": "%(root_url)s/%(script_id)s?mode=bulk",\n
   # XXX View is set by default to empty\n
@@ -97,16 +97,6 @@ url_template_dict = {\n
 }\n
 \n
 default_document_uri_template = url_template_dict["jio_get_template"]\n
-\n
-def getAllSubCategoriesAsMap(root):\n
-  result = {}\n
-  sub_categories_list = root.objectValues()\n
-  if len(sub_categories_list) != 0:\n
-    for grain in sub_categories_list:\n
-      result[grain.getUid()] = {"sub_categories": getAllSubCategoriesAsMap(grain),\n
-                               "title": grain.getTitle()}\n
-\n
-  return result\n
 \n
 def getRealRelativeUrl(document):\n
   return \'/\'.join(portal.portal_url.getRelativeContentPath(document))\n
@@ -387,14 +377,6 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
 #         line[title] = prop\n
 #         line["_relative_url"] = document.getRelativeUrl()\n
 #       line_list.append(line)\n
-    domain_tree_map = {} \n
-    domain_tree = field.get_value("domain_root_list")\n
-    for tree in domain_tree:\n
-      if hasattr(portal_categories, tree[0]):\n
-        domain_tree_map[portal_categories[tree[0]].getUid()] = {\n
-          "sub_categories":getAllSubCategoriesAsMap(portal_categories[tree[0]]),\n
-          "title": tree[1]\n
-        }\n
 \n
     result = {\n
       "type": meta_type,\n
@@ -410,7 +392,6 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "portal_type": portal_types,\n
       "lines": lines,\n
       "default_params": default_params,\n
-      "domain_tree_map": domain_tree_map,\n
       "list_method": list_method_name\n
     }\n
     if (list_method_custom is not None):\n
@@ -579,7 +560,6 @@ def renderFormDefinition(form, response_dict):\n
 \n
 mime_type = \'application/hal+json\'\n
 portal = context.getPortalObject()\n
-portal_categories = portal.portal_categories\n
 sql_catalog = portal.portal_catalog.getSQLCatalog()\n
 \n
 # Calculate the site root to prevent unexpected browsing\n
@@ -921,18 +901,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         callable_list_method = portal.portal_catalog\n
       else:\n
         callable_list_method = getattr(traversed_document, list_method)\n
-\n
-      tmp_sort_on = ()\n
-      if sort_on is not None:\n
-        for grain in sort_on:\n
-          if grain != "":\n
-            tmp_sort_on += (tuple([x for x in grain.split(",")]),)\n
-\n
       if query:\n
-        sql_list = callable_list_method(full_text=query, limit=limit, sort_on=tmp_sort_on, **catalog_kw)\n
+        sql_list = callable_list_method(full_text=query, limit=limit, **catalog_kw)\n
       else:\n
-        sql_list = callable_list_method(limit=limit, sort_on=tmp_sort_on, **catalog_kw)\n
-\n
+        sql_list = callable_list_method(limit=limit, **catalog_kw)\n
+  \n
     result_list = []\n
   \n
   #   if (select_list is None):\n
@@ -1088,7 +1061,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, restricted=0, list_method=None, default_param_json=None, form_relative_url=None, bulk_list="[]", sort_on=()</string> </value>
+            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, restricted=0, list_method=None, default_param_json=None, form_relative_url=None, bulk_list="[]"</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -108,11 +108,9 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-/*global window, document, rJS, URI, RSVP, UriTemplate, QueryFactory, loopEventListener, Query, SimpleQuery, ComplexQuery*/\n
+/*global window, document, rJS, URI, RSVP, UriTemplate */\n
 (function (window, document, rJS, URI, RSVP, UriTemplate) {\n
   "use strict";\n
-\n
-\n
 \n
   rJS(window)\n
     /////////////////////////////////////////////////////////////////\n
@@ -134,7 +132,6 @@
         });\n
     })\n
 \n
-\n
     //////////////////////////////////////////////\n
     // acquired method\n
     //////////////////////////////////////////////\n
@@ -142,10 +139,7 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
-    .declareAcquiredMethod("redirect", "redirect")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
-    .declareAcquiredMethod("triggerSortEditor", "triggerSortEditor")\n
-    .declareAcquiredMethod("showQueryError", "showQueryError")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
     //////////////////////////////////////////////\n
@@ -156,24 +150,11 @@
         tr = document.createElement("tr"),\n
         document_table = gadget.props.element.querySelector(\'.document_table\'),\n
         th,\n
-        tmp,\n
-        sort_list,\n
         length_table = field_json.column_list.length,\n
-        j,\n
         i;\n
 \n
       gadget.props.field_json = field_json;\n
       gadget.props.extended_search = options.extended_search;\n
-      gadget.props.domain_tree = options.domain_tree;\n
-      gadget.props.jio_key = options.jio_key;\n
-      gadget.props.view = options.view;\n
-      gadget.props.hide_item = options.hide_item;\n
-      gadget.props.sort_list = [];\n
-      if (options.sort_list) {\n
-        sort_list = JSON.parse(options.sort_list);\n
-        gadget.props.sort_list = Object.keys(sort_list).map(function (key) {return sort_list[key]; });\n
-      }\n
-\n
       if (field_json.show_anchor) {\n
         th = document.createElement("th");\n
         th.textContent = "Jump";\n
@@ -183,17 +164,6 @@
       for (i = 0; i < length_table; i += 1) {\n
         th = document.createElement("th");\n
         th.textContent = field_json.column_list[i][1];\n
-        for (j = 0; j < gadget.props.sort_list.length; j += 1) {\n
-          tmp = gadget.props.sort_list[j].split(",");\n
-          if (tmp[0] === gadget.props.field_json.column_list[i][0]) {\n
-            if (tmp[1] === "ascending") {\n
-              th.setAttribute("class", "ui-icon-arrow-up");\n
-            } else {\n
-              th.setAttribute("class", "ui-icon-arrow-down");\n
-            }\n
-            break;\n
-          }\n
-        }\n
         th.setAttribute("data-i18n", field_json.column_list[i][1]);\n
         tr.appendChild(th);\n
       }\n
@@ -227,23 +197,13 @@
         original_tfoot = props.element.querySelector(\'tfoot\'),\n
         tbody = document.createElement("tbody"),\n
         url_query =  props.extended_search,\n
-        domain_tree = props.domain_tree,\n
-        domain_tree_query,\n
-        domain_tree_string,\n
-        domain_tree_query_list,\n
         query_string = "",\n
         lines = field_json.lines,\n
         select_list = [],\n
         dataset,\n
         counter,\n
-        paging_info_counter,\n
-        hide_item = gadget.props.hide_item,\n
-        sort_list = gadget.props.sort_list || [],\n
-        i,\n
-        j,\n
-        list_method_promise = function () {\n
-          return gadget.jio_allDocs.apply(gadget, arguments);\n
-        };\n
+        i;\n
+\n
       if (field_json.query === undefined) {\n
         original_tfoot.textContent = "Unsupported list method: \'" + field_json.list_method + "\'";\n
         return;\n
@@ -251,56 +211,22 @@
      // function buildQueryString(previous, next) {\n
      //   return previous + next[0] + \':= "\' + url_query + \'" OR \';\n
      // }\n
-     //rebuild query\n
+\n
       if (url_query) {\n
         //query_string = field_json.column_list.reduce(buildQueryString, \' AND (\').replace(new RegExp("OR " + \'$\'), \')\');\n
-        if (field_json.list_method_template === undefined) {\n
-          query_string = \' AND \' + url_query;\n
-        } else {\n
-          query_string = url_query;\n
-        }\n
-      }\n
-\n
-      if (domain_tree) {\n
-        domain_tree_query = QueryFactory.create(domain_tree);\n
-        if (domain_tree_query.query_list) {\n
-          domain_tree_query_list = [domain_tree_query.query_list[0], domain_tree_query.query_list[domain_tree_query.query_list.length - 1]];\n
-          domain_tree_query.query_list = domain_tree_query_list;\n
-        }\n
-        domain_tree_string =  Query.objectToSearchText(domain_tree_query);\n
-        if (query_string !== "") {\n
-          query_string += \' AND \' + domain_tree_string;\n
-        } else if (field_json.list_method_template === undefined) {\n
-          query_string = \' AND \' + domain_tree_string;\n
-        } else {\n
-          query_string = domain_tree_string;\n
-        }\n
-      }\n
-\n
-\n
-\n
-      if (hide_item) {\n
-        if (query_string !== "") {\n
-          query_string += \' AND \' + hide_item;\n
-        } else if (field_json.list_method_template === undefined) {\n
-          query_string = \' AND \' + hide_item;\n
-        } else {\n
-          query_string = hide_item;\n
-        }\n
+        query_string = \' AND \' + url_query;\n
       }\n
 \n
       for (i = 0; i < field_json.column_list.length; i += 1) {\n
         select_list.push(field_json.column_list[i][0]);\n
       }\n
 \n
-      select_list.push("uid");\n
       return gadget.jio_allDocs({\n
         // XXX Not jIO compatible, but until a better api is found...\n
         "list_method_template": field_json.list_method_template,\n
         "query": new URI(field_json.query).query(true).query + query_string,\n
         "limit": [begin_from, lines + 1],\n
-        "select_list": select_list,\n
-        "sort_on": sort_list\n
+        "select_list": select_list\n
         }).push(function (result) {\n
         var promise_list = [result];\n
         counter = Math.min(result.data.total_rows, lines);\n
@@ -320,7 +246,8 @@
         return RSVP.all(promise_list);\n
 \n
       }).push(function (result_list) {\n
-        var tr,\n
+        var j,\n
+          tr,\n
           th,\n
           a,\n
           result = result_list[0],\n
@@ -348,7 +275,6 @@
         dataset = result;\n
         for (i = 0; i < counter; i += 1) {\n
           tr = document.createElement("tr");\n
-          tr.setAttribute("value", result.data.rows[i].value.uid);\n
           tmp_url = result_list[i + 1];\n
 \n
           if (field_json.show_anchor) {\n
@@ -418,7 +344,6 @@
           prev_param[gadget.props.field_json.key + \'_begin_from\'] = begin_from - lines;\n
           setNext();\n
         }\n
-\n
         return RSVP.all([\n
           gadget.getUrlFor({command: \'change\', options: prev_param}),\n
           gadget.getUrlFor({command: \'change\', options: next_param})\n
@@ -440,7 +365,6 @@
           len;\n
 \n
         th.setAttribute("colspan", field_json.column_list.length);\n
-        th.setAttribute("class", "foot_colspan");\n
         // NOTE: Romain: paging menu with 3+ buttons should have another class name (like ui-paging-grid)\n
         paging_menu.className = "ui-controlgroup ui-controlgroup-horizontal ui-corner-all ui-paging-menu";\n
         paging_wrap.className = "ui-controlgroup-controls";\n
@@ -449,18 +373,18 @@
         paging_prev.textContent = "Previous";\n
         paging_prev.setAttribute("data-i18n", "Previous");\n
         paging_prev.href = url_list[0];\n
-        paging_info.className = "paging_info ui-btn ui-disabled";\n
+        paging_info.className = "ui-btn ui-disabled";\n
         if ((begin_from === 0) && (counter === 0)) {\n
           paging_info.textContent = "No records";\n
           paging_info.setAttribute("data-i18n", "No Records");\n
         } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {\n
           paging_info.setAttribute("data-i18n", "[last]Record(s)");\n
-          paging_info_counter = "1 -" + counter;\n
-          paging_info.appendChild(document.createTextNode("Record(s) "));\n
+          paging_info.appendChild(document.createTextNode(counter));\n
+          paging_info.appendChild(document.createTextNode("Record(s)"));\n
         } else {\n
           paging_info.setAttribute("data-i18n", "[node]Record(s)");\n
           paging_info.appendChild(document.createTextNode("Records "));\n
-          paging_info_counter = (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);\n
+          paging_info.appendChild(document.createTextNode((((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter)));\n
         }\n
         // paging_info.textContent = "Page " + ((begin_from + lines) / lines);\n
         paging_next.className = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";\n
@@ -485,140 +409,23 @@
         fragment.appendChild(tbody);\n
         fragment.appendChild(tfoot);\n
 \n
-        for (len = table.children.length; len > 1; len -= 1) {\n
+        for (len = table.children.length; len > 0; len -= 1) {\n
           table.removeChild(table.lastChild);\n
         }\n
         // NOTE: for passing translations, temp must contain a table\n
         temp_table.appendChild(fragment);\n
         temp.appendChild(temp_table);\n
         table.appendChild(temp.querySelector("tbody"));\n
-        temp.appendChild(document.createElement("tbody"));\n
-        return gadget.translateHtml(temp.innerHTML);\n
+        return gadget.translateHtml(temp.querySelector("tfoot").innerHTML);\n
       })\n
         .push(function (my_translated_html) {\n
-          var temp = document.createElement("table");\n
+          var temp = document.createElement("tfoot");\n
           temp.innerHTML = my_translated_html;\n
-          temp.querySelector(".paging_info").appendChild(document.createTextNode(paging_info_counter));\n
-          table.appendChild(temp.querySelector("tfoot"));\n
-        })\n
-        .fail(function (error) {\n
-          if (error.target && error.target.status === 500) {\n
-            return gadget.showQueryError("     Unsupported Query");\n
-          }\n
-          throw error;\n
+          table.appendChild(temp);\n
         });\n
     })\n
-    .declareService(function () {\n
-      var gadget = this,\n
-        sort_form = gadget.props.element.querySelector(".sort_form");\n
-      loopEventListener(\n
-        sort_form,\n
-        "submit",\n
-        false,\n
-        function () {\n
-          gadget.triggerSortEditor();\n
-        }\n
-      );\n
-    })\n
-    .declareService(function () {\n
-      var gadget = this,\n
-        selected_uid_query,\n
-        hide_form = gadget.props.element.querySelector(".hide_form");\n
-      /* hide form */\n
-      loopEventListener(\n
-        hide_form,\n
-        "submit",\n
-        false,\n
-        function () {\n
-          var tr_list = gadget.props.element.querySelector("tbody").querySelectorAll("tr"),\n
-            thead_tr = gadget.props.element.querySelector("thead").querySelector("tr"),\n
-            i,\n
-            th,\n
-            hide_form_elements,\n
-            all_hide_form_elements,\n
-            hide_submit_form = document.createElement("form"),\n
-            hide_show_all = document.createElement("button"),\n
-            query_list = [],\n
-            translate_div,\n
-            colspan = gadget.props.element.querySelector(".foot_colspan"),\n
-            checkbox;\n
-          all_hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element");\n
-          hide_form_elements = gadget.props.element.querySelectorAll(".hide_form_element:checked");\n
 \n
-          if (all_hide_form_elements.length > 0) {\n
-            //if nothing is selected, show all\n
-            if (hide_form_elements.length === 0) {\n
-              colspan.setAttribute("colspan", parseInt(colspan.getAttribute("colspan"), 10) - 1);\n
-              return gadget.redirect({command: \'change\', options: {\n
-                "domain_tree": gadget.props.domain_tree || ""}});\n
-            }\n
 \n
-            //all selected\n
-            //no need to submit\n
-            if (hide_form_elements.length + 1 === all_hide_form_elements.length) {\n
-              colspan.setAttribute("colspan", parseInt(colspan.getAttribute("colspan"), 10) - 1);\n
-              for (i = 0; i < all_hide_form_elements.length; i += 1) {\n
-                all_hide_form_elements[i].parentElement.removeChild(all_hide_form_elements[i]);\n
-              }\n
-              return;\n
-            }\n
-\n
-            //a part is selected\n
-            for (i = 0; i < hide_form_elements.length; i += 1) {\n
-              query_list.push(new SimpleQuery({\n
-                key: "catalog.uid",\n
-                type: "simple",\n
-                value: hide_form_elements[i].parentElement.getAttribute("value")\n
-              }));\n
-            }\n
-\n
-            selected_uid_query = new ComplexQuery({\n
-              operator: "OR",\n
-              query_list: query_list,\n
-              type: "complex"\n
-            });\n
-\n
-            return gadget.redirect({command: \'change\', options: {\n
-              "hide_item": Query.objectToSearchText(selected_uid_query)}});\n
-          }\n
-\n
-          hide_show_all.setAttribute("type", "submit");\n
-          hide_show_all.setAttribute("data-i18n", "Show All");\n
-          hide_show_all.className = "ui-btn responsive ui-last-child";\n
-          translate_div = document.createElement("div");\n
-          translate_div.appendChild(hide_show_all);\n
-          return new RSVP.Queue()\n
-            .push(function () {\n
-              return gadget.translateHtml(translate_div.innerHTML);\n
-            })\n
-            .push(function (innerHTML) {\n
-              translate_div.innerHTML = innerHTML;\n
-              hide_submit_form.innerHTML = innerHTML;\n
-              th = document.createElement("th");\n
-              colspan.setAttribute("colspan", parseInt(colspan.getAttribute("colspan"), 10) + 1);\n
-              th.setAttribute("class", "hide_form_element");\n
-              th.appendChild(hide_submit_form);\n
-              loopEventListener(\n
-                hide_submit_form,\n
-                "submit",\n
-                false,\n
-                function () {\n
-                  return gadget.redirect({command: \'change\', options: {\n
-                    "hide_item": ""}});\n
-                }\n
-              );\n
-              thead_tr.insertBefore(th, thead_tr.firstChild);\n
-              for (i = 0; i < tr_list.length; i += 1) {\n
-                checkbox = document.createElement("input");\n
-                checkbox.setAttribute("type", "checkbox");\n
-                checkbox.setAttribute("checked", true);\n
-                checkbox.setAttribute("class", "hide_form_element");\n
-                tr_list[i].insertBefore(checkbox, tr_list[i].firstChild);\n
-              }\n
-            });\n
-        }\n
-      );\n
-    })\n
     .declareMethod("getContent", function () {\n
       var form_gadget = this,\n
         k,\n
@@ -797,7 +604,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.46337.55165.55125</string> </value>
+                <value> <string>946.44927.40202.16725</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -815,7 +622,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445963866.42</float>
+                        <float>1445939419.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

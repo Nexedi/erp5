@@ -348,7 +348,7 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['_links']['raw_search']['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search{&query,select_list*,limit*,sort_on*}" % self.portal.absolute_url())
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search{&query,select_list*,limit*}" % self.portal.absolute_url())
     self.assertEqual(result_dict['_links']['raw_search']['templated'], True)
     self.assertEqual(result_dict['_links']['raw_search']['name'], "Raw Search")
 

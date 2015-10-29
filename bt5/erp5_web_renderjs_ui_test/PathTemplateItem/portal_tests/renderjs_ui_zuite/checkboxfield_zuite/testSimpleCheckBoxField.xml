@@ -152,12 +152,6 @@
 </tr>\n
 \n
 <tr>\n
-  <td>pause</td>\n
-  <td>3000</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<tr>\n
   <td>click</td>\n
   <td>//a[@data-i18n=\'Tabs\']</td>\n
   <td></td>\n

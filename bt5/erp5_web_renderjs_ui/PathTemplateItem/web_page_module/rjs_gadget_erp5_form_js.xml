@@ -211,26 +211,15 @@
         form_gadget = this,\n
         suboption_dict = {},\n
         parent_element = document.createElement("div");\n
-      suboption_dict.jio_key = options.jio_key;\n
-      suboption_dict.view = options.view;\n
-      suboption_dict.begin_from = options.begin_from;\n
 \n
+      delete options.erp5_document;\n
+      delete options.form_definition;\n
 \n
 //       options = options.form_gadget || {};\n
       form_gadget.state_parameter_dict = options.form_gadget || {};\n
       // XXX Hardcoded for searchfield - remove later!\n
       if (form_definition.extended_search) {\n
         suboption_dict.extended_search = form_definition.extended_search;\n
-      }\n
-      if (form_definition.sort_list) {\n
-        suboption_dict.sort_list = form_definition.sort_list;\n
-      }\n
-      if (form_definition.hide_item) {\n
-        suboption_dict.hide_item = form_definition.hide_item;\n
-      }\n
-      \n
-      if (form_definition.domain_tree) {\n
-        suboption_dict.domain_tree = form_definition.domain_tree;\n
       }\n
 \n
       form_gadget.props.gadget_list = [];\n
@@ -511,7 +500,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>xiaowu</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -525,7 +514,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61367.58694.36949</string> </value>
+                <value> <string>944.22467.53128.26641</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -543,8 +532,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443103892.32</float>
-                        <string>UTC</string>
+                        <float>1436753892.36</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>

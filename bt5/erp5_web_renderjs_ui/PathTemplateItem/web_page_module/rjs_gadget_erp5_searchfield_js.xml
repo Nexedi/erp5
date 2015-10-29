@@ -99,9 +99,7 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*global window, rJS, RSVP, loopEventListener, Handlebars, QueryFactory, SimpleQuery, ComplexQuery, Query, document */\n
+            <value> <string>/*global window, rJS, RSVP, loopEventListener, Handlebars */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
 (function (window, rJS, RSVP, loopEventListener, Handlebars) {\n
   "use strict";\n
@@ -137,153 +135,47 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("triggerFilterEditor", "triggerFilterEditor")\n
+\n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod(\'render\', function (option_dict) {\n
-      var append_attribute,\n
+      var append_class,\n
+        append_attribute,\n
         placeholder = "",\n
-        value,\n
         is_disabled = option_dict.disabled,\n
         search_gadget = this;\n
-      search_gadget.props.jio_key = option_dict.jio_key;\n
+\n
       if (is_disabled) {\n
+        append_class = " ui-disabled";\n
         append_attribute = \' disabled="disabled\';\n
       }\n
-      value = option_dict.extended_search || "";\n
-      if (option_dict.domain_tree) {\n
-        value = (value === "" ? option_dict.domain_tree : value + " AND " + option_dict.domain_tree);\n
-      }\n
 \n
-      if (option_dict.hide_item) {\n
-        value = (value === "" ? option_dict.hide_item : value + " AND " + option_dict.hide_item);\n
-      }\n
       return new RSVP.Queue()\n
         .push(function () {\n
           return search_gadget.translateHtml(panel_template({\n
-            widget_value: value,\n
+            widget_value: option_dict.extended_search || placeholder,\n
             widget_theme: option_dict.theme || "c",\n
-            widget_status_attribute: append_attribute || placeholder\n
+            widget_status_attribute: append_attribute || placeholder,\n
+            widget_status_class: append_class || placeholder\n
           }));\n
         })\n
         .push(function (my_translated_html) {\n
-          var container = document.createElement("div");\n
-          container.setAttribute("class", "container");\n
-          container.innerHTML = my_translated_html;\n
-          search_gadget.props.element.appendChild(container);\n
+          search_gadget.props.element.querySelector("div").innerHTML =\n
+            my_translated_html;\n
+          return search_gadget;\n
         });\n
     })\n
-    .declareMethod("showQueryError", function (param) {\n
-      var input = this.props.element.querySelector(\'input[name="search"]\');\n
-      input.value += param;\n
-    })\n
+\n
     .declareMethod(\'getContent\', function () {\n
       var input = this.props.element.querySelector(\'input\'),\n
         result = {};\n
 \n
       result[input.getAttribute(\'name\')] = input.value;\n
       return result;\n
-    })\n
-\n
-    .declareService(function () {\n
-      var gadget = this,\n
-        i,\n
-        query_list,\n
-        domain_tree_list,\n
-        domain_tree_query,\n
-        tmp,\n
-        hide_query,\n
-        search_query;\n
-\n
-      function filterSubmit() {\n
-        return gadget.triggerFilterEditor();\n
-      }\n
-\n
-      function formSubmit() {\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            return gadget.getContent();\n
-          })\n
-          .push(function (data) {\n
-            if (data.search) {\n
-              query_list = [];\n
-              domain_tree_list = [];\n
-              search_query = QueryFactory.create(data.search);\n
-              if (search_query instanceof SimpleQuery) {\n
-                tmp = [search_query];\n
-              } else {\n
-                tmp = search_query.query_list;\n
-              }\n
-              for (i = 0; i < tmp.length; i += 1) {\n
-                if (tmp[i] instanceof SimpleQuery) {\n
-                  if (tmp[i].key !== "catalog.uid" && tmp[i].key.indexOf("category") === -1) {\n
-                    query_list.push(tmp[i]);\n
-                  } else if (tmp[i].key.indexOf("category") !== -1) {\n
-                    domain_tree_list.push(tmp[i]);\n
-                  } else {\n
-                    hide_query = new ComplexQuery({\n
-                      operator: "AND",\n
-                      query_list: [tmp[i]],\n
-                      type: "complex"\n
-                    });\n
-                  }\n
-                } else {\n
-                  //only have one complex query\n
-                  hide_query = search_query.query_list[i];\n
-                }\n
-              }\n
-\n
-              if (domain_tree_list.length) {\n
-                domain_tree_query = new ComplexQuery({\n
-                  operator: "AND",\n
-                  query_list: domain_tree_list,\n
-                  type: "complex"\n
-                });\n
-              }\n
-              return gadget.redirect({\n
-                command: \'change\',\n
-                options: {\n
-                  "extended_search": Query.objectToSearchText(new ComplexQuery({\n
-                    operator: search_query.operator || "AND",\n
-                    query_list: query_list,\n
-                    type: "complex"\n
-                  })),\n
-                  "domain_tree": domain_tree_query ? Query.objectToSearchText(domain_tree_query) : "",\n
-                  "hide_item": hide_query ? Query.objectToSearchText(hide_query) : ""\n
-                }\n
-              });\n
-            }\n
-            return gadget.redirect({\n
-              command: \'change\',\n
-              options: {\n
-                "extended_search": "",\n
-                "domain_tree": "",\n
-                "hide_item": ""\n
-              }\n
-            });\n
-          });\n
-      }\n
-      // Listen to form submit\n
-      loopEventListener(\n
-        gadget.props.element.querySelector(\'.save_form\'),\n
-        \'submit\',\n
-        false,\n
-        formSubmit\n
-      );\n
-\n
-      loopEventListener(\n
-        gadget.props.element.querySelector(\'.filter_form\'),\n
-        \'submit\',\n
-        false,\n
-        filterSubmit\n
-      );\n
     });\n
 \n
-}(window, rJS, RSVP, loopEventListener, Handlebars));
-
-]]></string> </value>
+}(window, rJS, RSVP, loopEventListener, Handlebars));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -404,7 +296,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -418,7 +310,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.47311.65417.26606</string> </value>
+                <value> <string>945.61050.10650.48093</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -436,8 +328,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446022123.95</float>
-                        <string>UTC</string>
+                        <float>1445265843.55</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

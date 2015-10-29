@@ -171,12 +171,7 @@
           });\n
         })\n
         .push(function (result) {\n
-          var sub_options = {};\n
-          sub_options.extended_search = options.extended_search;\n
-          sub_options.sort_list = options.sort_list;\n
-          sub_options.hide_item = options.hide_item;\n
-          sub_options.domain_tree = options.domain_tree;\n
-          sub_options.begin_from = options.begin_from;\n
+          var sub_options = options.fg || {};\n
           sub_options.erp5_document = erp5_document;\n
           sub_options.form_definition = erp5_form;\n
           sub_options.view = options.view;\n
@@ -322,7 +317,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -336,7 +331,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61210.379.61422</string> </value>
+                <value> <string>946.30055.63361.39150</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -354,8 +349,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443103808.81</float>
-                        <string>UTC</string>
+                        <float>1445267203.04</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

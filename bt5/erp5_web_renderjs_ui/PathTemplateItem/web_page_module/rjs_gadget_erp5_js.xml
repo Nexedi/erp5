@@ -495,6 +495,7 @@
     .allowPublicAcquisition(\'triggerPanel\', function () {\n
       return route(this, "panel", "toggle");\n
     })\n
+\n
     .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
       return callJioGadget(this, "allDocs", param_list);\n
     })\n
@@ -774,7 +775,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>

@@ -135,14 +135,6 @@
       <div data-gadget-url="gadget_erp5_form.html"\n
               data-gadget-scope="erp5_form"\n
               data-gadget-sandbox="public"></div>\n
-      \n
-      <div data-gadget-url="gadget_erp5_filter_editor.html"\n
-          data-gadget-scope="filterEditor"\n
-          data-gadget-sandbox="public"></div>\n
-\n
-      <div data-gadget-url="gadget_erp5_sort_editor.html"\n
-          data-gadget-scope="sortEditor"\n
-          data-gadget-sandbox="public"></div>\n
 \n
     </form>\n
 \n
@@ -270,7 +262,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -284,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>940.17393.53012.39048</string> </value>
+                <value> <string>945.61017.50891.24046</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -302,8 +294,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443017742.14</float>
-                        <string>UTC</string>
+                        <float>1442998685.54</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
