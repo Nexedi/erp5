@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>if REQUEST is None:\n
+  REQUEST = context.REQUEST\n
+if response is None:\n
+  response = REQUEST.RESPONSE\n
+\n
+web_page = context\n
+\n
+if REQUEST.getHeader(\'If-Modified-Since\', \'\') == web_page.getModificationDate().rfc822():\n
+  response.setStatus(304)\n
+  return ""\n
+\n
+portal_type = web_page.getPortalType()\n
+web_content = web_page.getTextContent()\n
+\n
+# set headers depending on type of script\n
+if (portal_type == "Web Script"):\n
+  response.setHeader(\'Content-Type\', \'application/javascript\')\n
+\n
+elif (portal_type == "Web Style"):\n
+  response.setHeader(\'Content-Type\', \'text/css\')\n
+\n
+elif (portal_type == "Web Manifest"):\n
+  response.setHeader(\'Content-Type\', \'text/cache-manifest\')\n
+\n
+else:\n
+  if (mapping_dict is not None):\n
+    web_content = web_page.TextDocument_substituteTextContent(web_page, web_content, mapping_dict=mapping_dict)\n
+  # Do not allow to put inside an iframe\n
+  response.setHeader("X-Frame-Options", "SAMEORIGIN")\n
+  response.setHeader("X-Content-Type-Options", "nosniff")\n
+\n
+  # Only fetch code (html, js, css, image) and data from this ERP5, to prevent any data leak as the web site do not control the gadget\'s code\n
+  response.setHeader("Content-Security-Policy", "default-src \'none\'; img-src \'self\' data:; media-src \'self\'; connect-src \'self\' mail.tiolive.com cedriclendav.node.vifib.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:")\n
+\n
+  response.setHeader(\'Content-Type\', \'text/html\')\n
+\n
+return web_content\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>REQUEST=None, response=None, mapping_dict=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebPage_viewAsWeb</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
