@@ -336,6 +336,8 @@ class SlapOSControler(object):
     self.log("SlapOSControler.runSoftwareRelease")
     cpu_count = os.sysconf("SC_NPROCESSORS_ONLN")
     os.putenv('MAKEFLAGS', '-j%s' % cpu_count)
+    os.putenv('NPY_NUM_BUILD_JOBS', '%s' % cpu_count)
+    os.putenv('BUNDLE_JOBS', '%s' % cpu_count)
     os.environ['PATH'] = environment['PATH']
     # a SR may fail for number of reasons (incl. network failures)
     # so be tolerant and run it a few times before giving up
