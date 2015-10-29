@@ -73,7 +73,17 @@
   <td></td>\n
 </tr>\n
 \n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
 \n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
 \n
 \n
 <!-- Initialize -->\n
@@ -159,7 +169,7 @@
 \n
 <tr>\n
   <td>type</td>\n
-  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]/div/input</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]//input</td>\n
   <td>0</td>\n
 </tr>\n
 \n
@@ -233,7 +243,7 @@
 \n
 <tr>\n
   <td>type</td>\n
-  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]/input</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]/form/div[3]//input</td>\n
   <td>T%</td>\n
 </tr>\n
 \n

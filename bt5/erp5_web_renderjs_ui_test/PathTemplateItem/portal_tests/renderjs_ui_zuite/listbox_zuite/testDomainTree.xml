@@ -73,6 +73,18 @@
   <td></td>\n
 </tr>\n
 \n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
 <!-- setting for doamin tree -->\n
 <tr>\n
   <td>open</td>\n
