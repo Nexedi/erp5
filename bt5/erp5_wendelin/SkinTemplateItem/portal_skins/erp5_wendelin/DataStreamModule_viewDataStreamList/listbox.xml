@@ -12,6 +12,9 @@
               <list>
                 <string>all_columns</string>
                 <string>columns</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>selection_name</string>
                 <string>title</string>
               </list>
             </value>
@@ -105,6 +108,10 @@
                           <string>Content Type</string>
                         </tuple>
                         <tuple>
+                          <string>size</string>
+                          <string>Size</string>
+                        </tuple>
+                        <tuple>
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
@@ -114,6 +121,33 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>publication_section</string>
+                          <string>Publication Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>region</string>
+                          <string>Region</string>
+                        </tuple>
+                        <tuple>
+                          <string>function</string>
+                          <string>Function</string>
+                        </tuple>
+                        <tuple>
+                          <string>site</string>
+                          <string>Site</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -133,6 +167,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>search_selection3242354</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
