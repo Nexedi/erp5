@@ -106,6 +106,17 @@
 (function (window, rJS, RSVP, UriTemplate, URI) {\n
   "use strict";\n
 \n
+  function wrapJioCall(gadget, method_name, argument_list) {\n
+    var storage = gadget.state_parameter_dict.jio_storage;\n
+    return storage[method_name].apply(storage, argument_list)\n
+      .push(undefined, function (error) {\n
+        if ((error.target !== undefined) && (error.target.status === 401)) {\n
+          // Redirect to the login view\n
+          return gadget.redirect({command: \'display\', options: {page: \'login\'}});\n
+        }\n
+      });\n
+  }\n
+\n
   rJS(window)\n
 \n
     .ready(function (gadget) {\n
@@ -117,6 +128,7 @@
     })\n
 \n
     .declareAcquiredMethod(\'getSetting\', \'getSetting\')\n
+    .declareAcquiredMethod(\'redirect\', \'redirect\')\n
 \n
     .declareMethod(\'createJio\', function () {\n
       var gadget = this;\n
@@ -138,17 +150,20 @@
 \n
     .declareMethod(\'allDocs\', function (option_dict) {\n
       // throw new Error(\'do not use all docs\');\n
-      var storage = this.state_parameter_dict.jio_storage;\n
 \n
       if (option_dict.list_method_template === undefined) {\n
-        return storage.allDocs.apply(storage, arguments);\n
+        return wrapJioCall(this, \'allDocs\', arguments);\n
       }\n
-      return storage.getAttachment(\n
-        // XXX Ugly hardcoded meaningless id...\n
-        "erp5",\n
-        new UriTemplate.parse(option_dict.list_method_template)\n
-                       .expand(option_dict),\n
-        {format: "json"}\n
+      return wrapJioCall(\n
+        this,\n
+        \'getAttachment\',\n
+        [\n
+          // XXX Ugly hardcoded meaningless id...\n
+          "erp5",\n
+          new UriTemplate.parse(option_dict.list_method_template)\n
+                         .expand(option_dict),\n
+          {format: "json"}\n
+        ]\n
       )\n
         .push(function (catalog_json) {\n
           var data = catalog_json._embedded.contents,\n
@@ -176,10 +191,10 @@
         });\n
     })\n
     .declareMethod(\'getAttachment\', function (id, name) {\n
-      return this.state_parameter_dict.jio_storage.getAttachment(id, name, {format: "json"});\n
+      return wrapJioCall(this, \'getAttachment\', [id, name, {format: "json"}]);\n
     })\n
     .declareMethod(\'putAttachment\', function (id, name, json) {\n
-      return this.state_parameter_dict.jio_storage.putAttachment(id, name, JSON.stringify(json));\n
+      return wrapJioCall(this, \'putAttachment\', [id, name, JSON.stringify(json)]);\n
     });\n
 \n
 }(window, rJS, RSVP, UriTemplate, URI));
@@ -305,7 +320,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -319,7 +334,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.24288.2744.26624</string> </value>
+                <value> <string>946.49070.15531.48588</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -337,8 +352,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444640714.39</float>
-                        <string>GMT</string>
+                        <float>1446127591.78</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
