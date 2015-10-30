@@ -58,11 +58,27 @@ This script is also used by notification tool, that\'s why it is in erp5_base.\n
 from email.utils import formataddr\n
 portal = context.getPortalObject()\n
 \n
-if attachment_list is None:\n
-  attachment_list = []\n
 use_activity = False\n
 mail_message = None\n
 to_url_list = []\n
+\n
+# Attachments\n
+document_type_list = list(context.getPortalEmbeddedDocumentTypeList()) + list(context.getPortalDocumentTypeList())\n
+embedded_file_list = context.getAggregateValueList(portal_type=document_type_list)\n
+for attachment in attachment_list or []:\n
+  embedded_file = context.newContent(\n
+    portal_type=\'Embedded File\',\n
+    title=attachment[\'name\'],\n
+    filename=attachment[\'name\'],\n
+    content_type=attachment[\'mime_type\'],\n
+    data=attachment[\'content\'],\n
+  )\n
+  if embedded_file not in embedded_file_list:\n
+    embedded_file_list.append(embedded_file)\n
+aggregate_list = context.getAggregateValueList()\n
+context.setAggregateValueList(\n
+  aggregate_list + [x for x in embedded_file_list if x not in aggregate_list]\n
+)\n
 \n
 if not context.isTempDocument() and to_url is None:\n
   use_activity = True\n
@@ -79,10 +95,13 @@ if to_url is None:\n
 else:\n
   to_url_list.append(to_url)\n
 \n
+if not context.hasStartDate():\n
+  context.setStartDate(DateTime())\n
+\n
 if download or not use_activity:\n
   for to_url in to_url_list:\n
-    body = body or context.getTextContent()\n
-    subject = subject or context.getTitle()\n
+    body = body or context.getTextContent() or \'\'\n
+    subject = subject or context.getTitle() or \'\'\n
 \n
     # From\n
     if from_url is None:\n
@@ -101,10 +120,6 @@ if download or not use_activity:\n
     if reply_url:\n
       additional_headers = {\'Return-Path\':reply_url}\n
 \n
-    # Attachments\n
-    document_type_list = list(context.getPortalEmbeddedDocumentTypeList()) + list(context.getPortalDocumentTypeList())\n
-    embedded_file_list = context.getAggregateValueList(portal_type=document_type_list)\n
-\n
     content_type = context.getContentType()\n
 \n
     mail_message = context.Base_createMailMessageAsString(from_url, \n
@@ -112,7 +127,6 @@ if download or not use_activity:\n
       subject,\n
       body,\n
       content_type,\n
-      attachment_list=attachment_list,\n
       embedded_file_list=embedded_file_list)\n
 \n
     if not use_activity:\n
@@ -120,8 +134,7 @@ if download or not use_activity:\n
 \n
 if use_activity:\n
   method_kw = dict(event_relative_url=context.getRelativeUrl(),\n
-                   from_url=from_url,\n
-                   attachment_list=attachment_list)\n
+                   from_url=from_url)\n
   context.activate(\n
     after_path_and_method_id=((context.getPath(),), \n
                               (\'immediateReindexObject\', \'recursiveImmediateReindexObject\'))).MailMessage_sendByActivity(\n

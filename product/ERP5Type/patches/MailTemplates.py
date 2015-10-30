@@ -71,7 +71,7 @@ if BaseMailTemplate is not None:
               headers[header]=value
       # check required values have been supplied
       errors = []
-      for param in ('mfrom','mto','subject'):
+      for param in ('mfrom','mto'):
           if not values.get(param):
               errors.append(param)
       if errors:

@@ -160,9 +160,22 @@ class EmailDocument(TextDocument):
 
   # Mail processing API
   def _getMessage(self):
+    # Email Document is not a representation of SMTP payload, thus we no longer
+    # store it in 'data' property.
     result = getattr(self, '_v_message', None)
     if result is None:
-      result = message_from_string(str(self.getData()))
+      data = self.getData()
+      if not data:
+        # Generated a mail message temporarily to provide backward compatibility.
+        data = self.Base_createMailMessageAsString(
+          from_url='from@example.com',
+          to_url='to@example.com',
+          subject=self.getTitle() or '',
+          body=self.getTextContent() or '',
+          content_type=self.getContentType(),
+          embedded_file_list=self.getAggregateValueList(),
+        )
+      result = message_from_string(data)
       self._v_message = result
     return result
 

@@ -525,8 +525,6 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     self.assertEqual(1, len(event_list))
 
     event = event_list[0]
-    self.assertEqual(mail_dict['headers']['message-id'],
-                      event.getSourceReference())
     self.assertEqual('Mail Message', event.getPortalTypeName())
     self.assertEqual('Subject', event.getTitle())
     self.assertEqual('Message', event.getTextContent())
