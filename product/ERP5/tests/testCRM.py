@@ -1111,12 +1111,6 @@ class TestCRMMailSend(BaseTestCRM):
     # content type is kept
     self.assertEqual(event.getContentType(), 'text/html')
 
-    # The getTextContent() gets the content from the file data instead the
-    # Attribute text_content.
-    self.assertTrue(event.hasFile())
-    self.assertEqual(event.text_content, text_content)
-    text_content_from_data = '<html><body>Hello<br />World</body></html>'
-    self.assertEqual(event.getTextContent(), text_content_from_data)
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
