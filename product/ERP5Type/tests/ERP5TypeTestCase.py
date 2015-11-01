@@ -905,13 +905,15 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         install_kw = None
         if get_install_kw:
           install_kw = {}
-          listbox_object_list = BusinessTemplate_getModifiedObject.__of__(bt)()
+          listbox_object_list = BusinessTemplate_getModifiedObject.__of__(bt)(
+            check_dependencies=False)
           for listbox_line in listbox_object_list:
             install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
         bt.install(light_install=light_install,
                    object_to_update=install_kw,
                    update_catalog=bt.isCatalogUpdatable(),
-                   update_translation=1)
+                   update_translation=1,
+                   check_dependencies=False)
         # Release locks
         self.commit()
         if not quiet:

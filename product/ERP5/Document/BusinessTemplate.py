@@ -5029,7 +5029,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return modified_object_list
 
     def _install(self, force=1, object_to_update=None, update_translation=0,
-                 update_catalog=False, **kw):
+                 update_catalog=False, check_dependencies=True, **kw):
       """
         Install a new Business Template, if force, all will be upgraded or installed
         otherwise depends of dict object_to_update
@@ -5052,7 +5052,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if trash_tool is None:
         raise AttributeError, 'Trash Tool is not installed'
 
-      if not force:
+      if not force and check_dependencies:
         self.checkDependencies()
 
       # always created a trash bin because we may to save object already present

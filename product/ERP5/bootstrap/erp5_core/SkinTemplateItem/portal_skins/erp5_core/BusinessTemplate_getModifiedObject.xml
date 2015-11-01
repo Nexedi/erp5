@@ -55,7 +55,7 @@ from Products.ERP5Type.Cache import CachingMethod\n
 Base_translateString = context.Base_translateString\n
 \n
 def getModifiedObjectList(context):\n
-  result = context.preinstall()\n
+  result = context.preinstall(check_dependencies=check_dependencies)\n
   return result\n
 \n
 def cacheIdGenerator(method_id, *args, **kw):\n
@@ -126,7 +126,7 @@ return object_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>check_dependencies=True, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
