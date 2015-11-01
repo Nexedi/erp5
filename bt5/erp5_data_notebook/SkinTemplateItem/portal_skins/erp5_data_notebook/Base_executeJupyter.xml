@@ -126,7 +126,7 @@ result_list = active_process.getResultList()\n
 # persistent mapping object\n
 old_local_variable_dict = result_list[0].summary\n
 if not old_local_variable_dict:\n
-  old_local_variable_dict = context.Base_addPersistentMapping()\n
+  old_local_variable_dict = context.Base_addLocalVariableDict()\n
 \n
 # Pass all to code Base_runJupyter external function which would execute the code\n
 # and returns a dict of result\n
@@ -140,7 +140,7 @@ status = final_result[\'status\']\n
 \n
 # Call to function to update persistent mapping object with new local variables\n
 # and save the variables in the Active Result pertaining to the current Data Notebook\n
-new_dict = context.Base_updatePersistentMapping(new_local_variable_dict)\n
+new_dict = context.Base_updateLocalVariableDict(new_local_variable_dict)\n
 result_list[0].edit(summary=new_dict)\n
 \n
 result = {\n
