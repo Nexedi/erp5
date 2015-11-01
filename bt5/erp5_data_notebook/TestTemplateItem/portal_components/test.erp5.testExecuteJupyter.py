@@ -107,7 +107,7 @@ portal.%s()
                       NameError,
                       portal.Base_runJupyter,
                       jupyter_code=jupyter_code,
-                      old_local_variable_dict={}
+                      old_local_variable_dict=portal.Base_addLocalVariableDict()
                       )
     # Abort the current transaction of test so that we can proceed to new one
     transaction.abort()
@@ -281,8 +281,9 @@ portal.%s()
     process_id = notebook.getProcess()
     active_process = portal.portal_activities[process_id]
     result_list = active_process.getResultList()
+    local_variable_dict = result_list[0].summary['variables']
     result = {'a':2, 'b':3}
-    self.assertDictContainsSubset(result, result_list[0].summary)
+    self.assertDictContainsSubset(result, local_variable_dict)
 
   def testBaseExecuteJupyterRerunWithPreviousLocalVariables(self):
     """

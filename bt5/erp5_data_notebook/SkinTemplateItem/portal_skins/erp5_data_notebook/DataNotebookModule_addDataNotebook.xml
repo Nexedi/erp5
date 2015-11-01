@@ -65,7 +65,7 @@ active_process = context.portal_activities.newActiveProcess()\n
 active_process_id = active_process.getId()\n
 \n
 # Creating new dictionary via external method to save results in ZODB\n
-new_dict = context.Base_addPersistentMapping()\n
+new_dict = context.Base_addLocalVariableDict()\n
 # Add new ActiveResult object and add it to the activeprocess concerned with ...\n
 # Data Notebook in concern\n
 result = ActiveResult(summary=new_dict)\n

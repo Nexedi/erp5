@@ -46,8 +46,9 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 81,  6: Use of exec (exec-used)</string>
-                <string>W: 87,  6: Use of exec (exec-used)</string>
+                <string>W: 70,  4: Use of exec (exec-used)</string>
+                <string>W: 99,  6: Use of exec (exec-used)</string>
+                <string>W:105,  6: Use of exec (exec-used)</string>
               </tuple>
             </value>
         </item>

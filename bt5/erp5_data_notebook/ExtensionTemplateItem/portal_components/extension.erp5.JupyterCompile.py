@@ -1,16 +1,29 @@
 # -*- coding: utf-8 -*-
 
 from StringIO import StringIO
+from persistent.list import PersistentList
 from Products.ERP5Type.Globals import  PersistentMapping
 
 import sys
 import ast
+import types
 
 def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   """
     Function to execute jupyter code and update the local_varibale dictionary.
     Code execution depends on 'interactivity', a.k.a , if the ast.node object has
     ast.Expr instance(valid for expressions) or not.
+    
+    old_local_variable_dict should contain both variables dict and imports list.
+    Here, imports list is basically a list of code lines which would be run
+    executed separately everytime before execution of jupyter_code to populate
+    sys modules beforehand.
+
+    For example :
+    old_local_variable_dict = {
+                                'imports': ['import numpy as np', 'import sys as sys'],
+                                'variables': {'np.split': <function split at 0x7f4e6eb48b90>}
+                                }
 
     The behaviour would be similar to that of jupyter notebook:-
     ( https://github.com/ipython/ipython/blob/master/IPython/core/interactiveshell.py#L2954 )
@@ -40,7 +53,7 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   result_string = None
   ename, evalue, tb_list = None, None, None
   # Update globals dict and use it while running exec command
-  g.update(old_local_variable_dict)
+  g.update(old_local_variable_dict['variables'])
 
   # IPython expects 2 status message - 'ok', 'error'
   # XXX: The focus is on 'ok' status only, we're letting errors to be raised on
@@ -51,6 +64,11 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
 
   # Execute only if jupyter_code is not empty
   if jupyter_code:
+    # Import all the modules from local_variable_dict['imports']
+    import_statement_code = '\n'.join(old_local_variable_dict['imports'])
+
+    exec(import_statement_code, g, g)
+  
     # Create ast parse tree
     ast_node = ast.parse(jupyter_code)
     # Get the node list from the parsed tree
@@ -103,7 +121,24 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   # not be picklabale
   local_variable_dict = old_local_variable_dict
   local_variable_dict_new = {key: val for key, val in g.items() if key not in globals_dict.keys()}
-  local_variable_dict.update(local_variable_dict_new)
+  local_variable_dict['variables'].update(local_variable_dict_new)
+
+  # Differentiate 'module' objects from local_variable_dict and save them as
+  # string in the dict as {'imports': ['import numpy as np', 'import matplotlib as mp']}
+  if 'variables' in local_variable_dict:
+    for key, val in local_variable_dict['variables'].items():
+      # Check if the val in the dict is ModuleType and remove it in case it is
+      if isinstance(val, types.ModuleType):
+        # XXX: The next line is mutating the dict, beware in case any reference
+        # is made later on to local_variable_dict['variables'] dictionary
+        local_variable_dict['variables'].pop(key)
+        # While any execution, in locals() dict, a module is saved as:
+        # code : 'from os import path'
+        # {'path': <module 'posixpath'>}
+        # So, here we would try to get the name 'posixpath' and import it as 'path'
+        module_name = val.__name__
+        import_statement = 'import %s as %s'%(module_name, key)
+        local_variable_dict['imports'].append(import_statement)
 
   result = {
     'result_string': result_string,
@@ -113,20 +148,31 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
     'ename': ename,
     'traceback': tb_list,
   }
+
   return result
 
-def AddPersistentMapping(self):
+def AddNewLocalVariableDict(self):
   """
-  Function to add PersistentMapping object which can be used as a dictionary
+  Function to add a new Local Variable for a Data Notebook
   """
   new_dict = PersistentMapping()
+  variable_dict = PersistentMapping()
+  import_list = PersistentList()
+  new_dict['variables'] = variable_dict
+  new_dict['imports'] = import_list
   return new_dict
 
-def UpdatePersistentMapping(self, existing_dict):
+def UpdateLocalVariableDict(self, existing_dict):
   """
-  Function to update PersistentMapping object
+  Function to update local_varibale_dict for a Data Notebook
   """
   new_dict = PersistentMapping()
-  for key, value in existing_dict.iteritems():
-    new_dict[key]=value
+  variable_dict = PersistentMapping()
+  import_list = PersistentList()
+  new_dict['variables'] = variable_dict
+  new_dict['imports'] = import_list
+  for key, val in existing_dict['variables'].iteritems():
+    new_dict['variables'][key] = val
+  new_dict['imports'] = PersistentList(existing_dict['imports'])
   return new_dict
+  
