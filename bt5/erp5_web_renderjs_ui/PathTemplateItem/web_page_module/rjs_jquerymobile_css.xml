@@ -1026,11 +1026,11 @@ html .ui-alt-icon .ui-radio-off:after {\n
 .ui-alt-icon .ui-btn.ui-radio-on:after {\n
 \tbackground-color: #000;\n
 }\n
-/* Loader */\n
+/* Loader\n
 .ui-icon-loading {\n
 \tbackground: url(images/ajax-loader.gif);\n
 \tbackground-size: 2.875em 2.875em;\n
-}\n
+} */\n
 /* Swatches */\n
 /* A\n
 -----------------------------------------------------------------------------------------------------------*/\n
@@ -4935,7 +4935,7 @@ html .ui-popup .ui-field-contain > label + .ui-flipswitch {\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -4949,7 +4949,7 @@ html .ui-popup .ui-field-contain > label + .ui-flipswitch {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.42715.45132.18756</string> </value>
+                <value> <string>946.44927.40202.16725</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -4967,8 +4967,8 @@ html .ui-popup .ui-field-contain > label + .ui-flipswitch {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413467019.61</float>
-                        <string>GMT</string>
+                        <float>1446483721.78</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
