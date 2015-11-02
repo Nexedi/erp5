@@ -60,6 +60,11 @@
   product\n
 """\n
 no_inventory = False\n
+\n
+# Check that the requested quantities does not exceed available inventory.\n
+# We only enforce this check for sales.\n
+check_stock_availability = False\n
+\n
 portal = context.getPortalObject()\n
 Base_translateString = portal.Base_translateString\n
 \n
@@ -73,6 +78,7 @@ if line_portal_type in portal.getPortalSaleTypeList():\n
   supply_cell_portal_type = "Sale Supply Cell"\n
   supply_line_id = "default_ssl"\n
   use_list = portal.portal_preferences.getPreferredSaleUseList()\n
+  check_stock_availability = True\n
 elif line_portal_type in portal.getPortalPurchaseTypeList():\n
   section_uid = context.getDestinationSectionUid()\n
   supply_cell_portal_type = "Purchase Supply Cell"\n
@@ -193,9 +199,9 @@ for line in listbox:\n
           request.form["field_listbox_current_quantity_new_%s"%line_id] = product.getCurrentInventory(section_uid=section_uid)\n
 \n
         # Check if quantity is available\n
-        if available_inv < line["quantity"]:\n
+        if check_stock_availability and available_inv < line["quantity"]:\n
           status_message_dict.setdefault(product.getRelativeUrl(), []).append(line[\'listbox_key\'])\n
-          \n
+\n
 status_message_list = []\n
 if status_message_dict:\n
   for product_relative_url, line_id_list in status_message_dict.items():\n
