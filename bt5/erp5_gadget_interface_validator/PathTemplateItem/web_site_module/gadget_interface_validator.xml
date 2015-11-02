@@ -426,7 +426,7 @@
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_officejs_jio.html</string> </value>
+            <value> <string>gadget_erp5_jio.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
@@ -442,7 +442,7 @@
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_officejs_translation.html</string> </value>
+            <value> <string>gadget_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -741,7 +741,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.44750.63239.42905</string> </value>
+                <value> <string>946.44751.34537.43673</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -759,7 +759,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445868451.61</float>
+                        <float>1446476438.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

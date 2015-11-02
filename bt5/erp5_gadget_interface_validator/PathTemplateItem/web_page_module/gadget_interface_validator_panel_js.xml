@@ -157,6 +157,10 @@
       this.props.jelement.panel("toggle");\n
     })\n
 \n
+    .declareMethod(\'close\', function () {\n
+      this.props.jelement.panel("close");\n
+    })\n
+\n
     .declareMethod(\'render\', function () {\n
       return;\n
     })\n
@@ -334,7 +338,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.44742.21501.55296</string> </value>
+                <value> <string>946.44742.30838.38775</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -352,7 +356,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445867908.17</float>
+                        <float>1446476219.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

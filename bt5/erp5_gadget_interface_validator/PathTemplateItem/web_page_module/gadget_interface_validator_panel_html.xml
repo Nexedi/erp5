@@ -140,7 +140,7 @@
     <script id="panel-template-body" type="text/x-handlebars-template">\n
       <div class="ui-content">\n
         <ul data-role="listview" class="ui-listview">\n
-          <li><a href="#page=form" data-i18n="Interface Validation Form">Interface Validation Form</a></li>\n
+          <li><a href="#/?page=form" data-i18n="Interface Validation Form">Interface Validation Form</a></li>\n
         </ul>\n
       </div>\n
     </script>\n
@@ -289,7 +289,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.44766.36269.12373</string> </value>
+                <value> <string>946.44825.62507.52206</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -307,7 +307,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445872917.21</float>
+                        <float>1446476148.07</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

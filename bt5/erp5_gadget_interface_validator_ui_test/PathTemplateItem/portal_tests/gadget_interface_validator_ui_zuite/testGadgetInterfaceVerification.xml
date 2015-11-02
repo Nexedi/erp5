@@ -44,7 +44,7 @@
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
-<thead>in\n
+<thead>\n
 <tr><td rowspan="1" colspan="3">Test Gadget Interface Validation UI</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
@@ -80,7 +80,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//input[@name=\'Submit\']</td>t\n
+  <td>//input[@name=\'Submit\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -160,17 +160,12 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//a[@data-i18n=\'Interface Validation Form\']</td>inp\n
+  <td>//a[@data-i18n=\'Interface Validation Form\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
   <td>//form[@class=\'interface-validation-form\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>click</td>\n
-  <td>//input[@data-i18n=\'[value]Close\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -180,7 +175,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//input[@name=\'Submit\']</td>t\n
+  <td>//input[@name=\'Submit\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -205,17 +200,12 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//a[@data-i18n=\'Home\']</td>inp\n
+  <td>//a[@data-i18n=\'Home\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
   <td>//form[@class=\'interface-validation-form\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>click</td>\n
-  <td>//input[@data-i18n=\'[value]Close\']</td>\n
   <td></td>\n
 </tr>\n
 </tbody></table>\n

@@ -501,8 +501,8 @@
         declared_method_list.push(item);\n
       }  \n
       return RSVP.all([\n
-        declared_method_list,\n
-        gadget.getDeclaredMethodList()\n
+        declared_method_list //,\n
+        // gadget.getDeclaredMethodList()\n
       ]); \n
     })\n
 \n
@@ -896,7 +896,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.46204.46630.51746</string> </value>
+                <value> <string>946.46289.58152.58624</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -914,7 +914,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445960753.22</float>
+                        <float>1446475754.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

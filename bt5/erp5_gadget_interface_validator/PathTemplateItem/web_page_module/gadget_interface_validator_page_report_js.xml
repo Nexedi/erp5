@@ -200,7 +200,7 @@
   }\n
 \n
   function updateReportData(gadget, report_data) {\n
-    var id = "#" + report_data.id,\n
+    var id = "#" + report_data.id.replace(\'/\',\'\\\\/\'),\n
       update_element = gadget.props.content_element.querySelector(id),\n
       interface_data = \'\',\n
       validation_status = report_data.validation_status,\n
@@ -299,7 +299,8 @@
           return validateAppGadgetList(gadget, gadget_list);\n
         }, function(error) {\n
           return gadget.redirect({\n
-            found: false\n
+            command: \'change\',\n
+            options: {found: false, page: \'form\'}\n
           });\n
         });\n
     })\n
@@ -472,7 +473,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.46341.46226.26060</string> </value>
+                <value> <string>946.49108.59205.8413</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -490,7 +491,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445965003.93</float>
+                        <float>1446476069.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
