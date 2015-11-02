@@ -102,35 +102,19 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Mon, 02 Nov 2015 16:36:02 +0000\n
+# generated on Mon, 02 Nov 2015 17:56:02 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot?v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.eot?#iefix&v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.woff?v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.ttf?v=4.0.3\n
-https://netdna.bootstrapcdn.com/font-awesome/4.0.3/fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
 URI.js\n
-codemirror.css\n
-codemirror.js\n
-codemirror_addon_dialog.css\n
-codemirror_addon_dialog.js\n
-codemirror_addon_display_fullscreen.css\n
-codemirror_addon_display_fullscreen.js\n
-codemirror_addon_edit_matchbrackets.js\n
-codemirror_addon_searchcursor.js\n
-codemirror_keymap_vim.js\n
-codemirror_mode_clike.js\n
-codemirror_mode_javascript.js\n
-codemirror_theme_solarized.css\n
-dygraph.js\n
 erp5_launcher.html\n
 erp5_launcher.js\n
-gadget_codemirror.css\n
-gadget_codemirror.html\n
-gadget_codemirror.js\n
 gadget_erp5.css\n
 gadget_erp5_field_checkbox.html\n
 gadget_erp5_field_checkbox.js\n
@@ -168,9 +152,6 @@ gadget_erp5_field_textarea.html\n
 gadget_erp5_field_textarea.js\n
 gadget_erp5_form.html\n
 gadget_erp5_form.js\n
-gadget_erp5_grid.css\n
-gadget_erp5_grid.html\n
-gadget_erp5_grid.js\n
 gadget_erp5_header.html\n
 gadget_erp5_header.js\n
 gadget_erp5_jio.html\n
@@ -208,17 +189,9 @@ gadget_erp5_searchfield.js\n
 gadget_global.js\n
 gadget_jio.html\n
 gadget_jio.js\n
-gadget_translate.html\n
-gadget_translate.js\n
 gadget_translation.html\n
 gadget_translation.js\n
 gadget_translation_data.js\n
-gadget_webrtc.html\n
-gadget_webrtc.js\n
-gadget_webrtc_datachannel.html\n
-gadget_webrtc_datachannel.js\n
-gadget_websocket.html\n
-gadget_websocket.js\n
 handlebars.js\n
 i18next.js\n
 jiodev.js\n
@@ -359,7 +332,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.54980.2341.31249</string> </value>
+                <value> <string>946.54998.54964.47752</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -377,7 +350,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446482188.64</float>
+                        <float>1446483371.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
