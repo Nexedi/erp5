@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from StringIO import StringIO
-from persistent.list import PersistentList
 from Products.ERP5Type.Globals import  PersistentMapping
 
 import sys
@@ -14,14 +13,14 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
     Code execution depends on 'interactivity', a.k.a , if the ast.node object has
     ast.Expr instance(valid for expressions) or not.
     
-    old_local_variable_dict should contain both variables dict and imports list.
-    Here, imports list is basically a list of code lines which would be run
+    old_local_variable_dict should contain both variables dict and modules imports.
+    Here, imports dict is key, value pair of modules and their name in sys.path,
     executed separately everytime before execution of jupyter_code to populate
     sys modules beforehand.
 
     For example :
     old_local_variable_dict = {
-                                'imports': ['import numpy as np', 'import sys as sys'],
+                                'imports': {'numpy': 'np', 'sys': 'sys'},
                                 'variables': {'np.split': <function split at 0x7f4e6eb48b90>}
                                 }
 
@@ -65,9 +64,13 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   # Execute only if jupyter_code is not empty
   if jupyter_code:
     # Import all the modules from local_variable_dict['imports']
-    import_statement_code = '\n'.join(old_local_variable_dict['imports'])
-
-    exec(import_statement_code, g, g)
+    # While any execution, in locals() dict, a module is saved as:
+    # code : 'from os import path'
+    # {'path': <module 'posixpath'>}
+    # So, here we would try to get the name 'posixpath' and import it as 'path'
+    for k, v in old_local_variable_dict['imports'].iteritems():
+      import_statement_code = 'import %s as %s'%(v, k)
+      exec(import_statement_code, g, g)
   
     # Create ast parse tree
     ast_node = ast.parse(jupyter_code)
@@ -124,21 +127,20 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   local_variable_dict['variables'].update(local_variable_dict_new)
 
   # Differentiate 'module' objects from local_variable_dict and save them as
-  # string in the dict as {'imports': ['import numpy as np', 'import matplotlib as mp']}
-  if 'variables' in local_variable_dict:
+  # string in the dict as {'imports': {'numpy': 'np', 'matplotlib': 'mp']}
+  if 'variables' and 'imports' in local_variable_dict:
     for key, val in local_variable_dict['variables'].items():
       # Check if the val in the dict is ModuleType and remove it in case it is
       if isinstance(val, types.ModuleType):
+        # Update local_variable_dict['imports'] dictionary with key, value pairs
+        # with key corresponding to module name as its imported and value as the
+        # module name being stored in sys.path
+        # For example : 'np': <numpy module at ...> -- {'np': numpy}
+        local_variable_dict['imports'][key] = val.__name__
+
         # XXX: The next line is mutating the dict, beware in case any reference
         # is made later on to local_variable_dict['variables'] dictionary
         local_variable_dict['variables'].pop(key)
-        # While any execution, in locals() dict, a module is saved as:
-        # code : 'from os import path'
-        # {'path': <module 'posixpath'>}
-        # So, here we would try to get the name 'posixpath' and import it as 'path'
-        module_name = val.__name__
-        import_statement = 'import %s as %s'%(module_name, key)
-        local_variable_dict['imports'].append(import_statement)
 
   result = {
     'result_string': result_string,
@@ -157,9 +159,9 @@ def AddNewLocalVariableDict(self):
   """
   new_dict = PersistentMapping()
   variable_dict = PersistentMapping()
-  import_list = PersistentList()
+  module_dict = PersistentMapping()
   new_dict['variables'] = variable_dict
-  new_dict['imports'] = import_list
+  new_dict['imports'] = module_dict
   return new_dict
 
 def UpdateLocalVariableDict(self, existing_dict):
@@ -169,6 +171,7 @@ def UpdateLocalVariableDict(self, existing_dict):
   new_dict = self.Base_addLocalVariableDict()
   for key, val in existing_dict['variables'].iteritems():
     new_dict['variables'][key] = val
-  new_dict['imports'] = PersistentList(existing_dict['imports'])
+  for key, val in existing_dict['imports'].iteritems():
+    new_dict['imports'][key] = val
   return new_dict
   
