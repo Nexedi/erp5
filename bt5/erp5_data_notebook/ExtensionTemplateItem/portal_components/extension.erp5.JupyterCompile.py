@@ -166,11 +166,7 @@ def UpdateLocalVariableDict(self, existing_dict):
   """
   Function to update local_varibale_dict for a Data Notebook
   """
-  new_dict = PersistentMapping()
-  variable_dict = PersistentMapping()
-  import_list = PersistentList()
-  new_dict['variables'] = variable_dict
-  new_dict['imports'] = import_list
+  new_dict = self.Base_addLocalVariableDict()
   for key, val in existing_dict['variables'].iteritems():
     new_dict['variables'][key] = val
   new_dict['imports'] = PersistentList(existing_dict['imports'])
