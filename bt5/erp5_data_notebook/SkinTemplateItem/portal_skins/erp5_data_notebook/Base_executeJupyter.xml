@@ -137,6 +137,7 @@ ename = final_result[\'ename\']\n
 evalue = final_result[\'evalue\']\n
 traceback = final_result[\'traceback\']\n
 status = final_result[\'status\']\n
+mime_type = final_result[\'mime_type\']\n
 \n
 # Call to function to update persistent mapping object with new local variables\n
 # and save the variables in the Active Result pertaining to the current Data Notebook\n
@@ -148,7 +149,8 @@ result = {\n
   u\'ename\': ename,\n
   u\'evalue\': evalue,\n
   u\'traceback\': traceback,\n
-  u\'status\': status\n
+  u\'status\': status,\n
+  u\'mime_type\': mime_type\n
 }\n
 \n
 # Catch exception while seriaizing the result to be passed to jupyter frontend\n

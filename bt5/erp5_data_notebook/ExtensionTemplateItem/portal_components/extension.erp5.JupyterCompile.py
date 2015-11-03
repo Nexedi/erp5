@@ -7,6 +7,8 @@ import sys
 import ast
 import types
 
+mime_type = 'text/plain'
+
 def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   """
     Function to execute jupyter code and update the local_varibale dictionary.
@@ -146,6 +148,7 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
     'result_string': result_string,
     'local_variable_dict': local_variable_dict,
     'status': status,
+    'mime_type': mime_type,
     'evalue': evalue,
     'ename': ename,
     'traceback': tb_list,
@@ -174,4 +177,37 @@ def UpdateLocalVariableDict(self, existing_dict):
   for key, val in existing_dict['imports'].iteritems():
     new_dict['imports'][key] = val
   return new_dict
+
+def Base_displayMatplotlibImage(self, plot_object=None):
+  """
+  External function to display Matplotlib Plot objects to jupyter function.
+  
+  Parameters
+  ----------
+  
+  plot_object : Any matplotlib object from which we can create a plot.
+                Can be <matplotlib.lines.Line2D>, <matplotlib.text.Text>, etc.
+  
+  Output
+  -----
+  
+  Returns base64 encoded string of the plot on which it has been called.
+
+  """
+  if plot_object:
+    from io import BytesIO
+    import base64
+
+    # Create a ByteFile on the server which would be used to save the plot
+    figfile = BytesIO()
+    # Save plot as 'png' format in the ByteFile
+    plot_object.savefig(figfile, format='png')
+    figfile.seek(0)
+    # Encode the value in figfile to base64 string so as to serve it jupyter frontend
+    figdata_png = base64.b64encode(figfile.getvalue())
+    # Chanage global variable 'mime_type' to 'image/png'
+    global mime_type
+    mime_type = 'image/png'
+
+    return figdata_png
   

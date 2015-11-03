@@ -46,9 +46,10 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 73,  6: Use of exec (exec-used)</string>
-                <string>W:102,  6: Use of exec (exec-used)</string>
-                <string>W:108,  6: Use of exec (exec-used)</string>
+                <string>W: 75,  6: Use of exec (exec-used)</string>
+                <string>W:104,  6: Use of exec (exec-used)</string>
+                <string>W:110,  6: Use of exec (exec-used)</string>
+                <string>W:209,  4: Using the global statement (global-statement)</string>
               </tuple>
             </value>
         </item>
