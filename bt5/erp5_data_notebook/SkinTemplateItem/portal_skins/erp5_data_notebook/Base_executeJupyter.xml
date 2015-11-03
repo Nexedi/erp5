@@ -164,7 +164,8 @@ except UnicodeDecodeError:\n
     u\'ename\': u\'UnicodeDecodeError\',\n
     u\'evalue\': None,\n
     u\'traceback\': None,\n
-    u\'status\': u\'error\'\n
+    u\'status\': u\'error\',\n
+    u\'mime_type\': mime_type\n
   }\n
   serialized_result = json.dumps(result)\n
 \n
