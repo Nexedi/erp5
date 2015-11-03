@@ -132,6 +132,7 @@
     COMMAND_SELECTION_NEXT = "selection_next",\n
     COMMAND_HISTORY_PREVIOUS = "history_previous",\n
     COMMAND_PUSH_HISTORY = "push_history",\n
+    REDIRECT_TIMEOUT = 5000,\n
     VALID_URL_COMMAND_DICT = {};\n
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STATE] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;\n
@@ -154,7 +155,7 @@
     // prevent returning unexpected response\n
     // wait for the hash change to occur\n
     // fail if nothing happens\n
-    return RSVP.timeout(\'5000\');\n
+    return RSVP.timeout(REDIRECT_TIMEOUT);\n
   }\n
 \n
   //////////////////////////////////////////////////////////////////\n
@@ -371,7 +372,7 @@
             (error.status_code === 404)) {\n
           return synchronousChangeState(\n
             getCommandUrlFor(gadget, COMMAND_HISTORY_PREVIOUS, previous_options)\n
-          );        \n
+          );\n
         }\n
         throw error;\n
       });\n
@@ -412,7 +413,7 @@
             (error.status_code === 404)) {\n
           return synchronousChangeState(\n
             getCommandUrlFor(gadget, COMMAND_HISTORY_PREVIOUS, previous_options)\n
-          );        \n
+          );\n
         }\n
         throw error;\n
       });\n
@@ -479,7 +480,7 @@
     return {\n
       url: "gadget_erp5_page_" + command_options.args.page + ".html",\n
       // XXX Drop this options thing.\n
-      // Implement a "getSelection" method \n
+      // Implement a "getSelection" method\n
       options: command_options.args\n
       // options: {}\n
     };\n
@@ -628,6 +629,18 @@
         return getCommandUrlFor(this, command, args);\n
       }\n
       return getCommandUrlFor(this, \'error\', options);\n
+    })\n
+\n
+    .declareMethod(\'redirect\', function (options) {\n
+      return this.getCommandUrlFor(options)\n
+        .push(function (hash) {\n
+          window.location.replace(hash);\n
+\n
+          // prevent returning unexpected response\n
+          // wait for the hash change to occur\n
+          // fail if nothing happens\n
+          return RSVP.timeout(REDIRECT_TIMEOUT);\n
+        });\n
     })\n
 \n
     .declareMethod(\'getUrlParameter\', function (key) {\n
@@ -792,7 +805,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -806,7 +819,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.39127.64259.52206</string> </value>
+                <value> <string>946.56060.60572.31044</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -824,8 +837,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445531098.26</float>
-                        <string>GMT</string>
+                        <float>1446547226.97</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
