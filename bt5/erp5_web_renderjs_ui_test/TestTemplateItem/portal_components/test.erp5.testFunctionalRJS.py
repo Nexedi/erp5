@@ -30,18 +30,44 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
-class TestZeleniumCore(ERP5TypeFunctionalTestCase):
+renderjs_ui_bt5_list = (
+  'erp5_web_renderjs_ui',
+  'erp5_web_renderjs_ui_test',
+  'erp5_ui_test_core',
+)
+
+class TestRenderJSUICore(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "renderjs_ui_zuite"
-  
+
   def getBusinessTemplateList(self):
-    return (
-      'erp5_web_renderjs_ui',
-      'erp5_web_renderjs_ui_test',
-      'erp5_ui_test_core',
-      )
+    return renderjs_ui_bt5_list
+
+class TestRenderJSUIPageTemplate(ERP5TypeFunctionalTestCase):
+  foreground = 0
+  run_only = "renderjs_ui_page_templates_zuite"
+
+  def getBusinessTemplateList(self):
+    return renderjs_ui_bt5_list
+
+class TestRenderJSUIPage(ERP5TypeFunctionalTestCase):
+  foreground = 0
+  run_only = "renderjs_ui_page_zuite"
+
+  def getBusinessTemplateList(self):
+    return renderjs_ui_bt5_list
+
+class TestRenderJSUIRouter(ERP5TypeFunctionalTestCase):
+  foreground = 0
+  run_only = "renderjs_ui_router_zuite"
+
+  def getBusinessTemplateList(self):
+    return renderjs_ui_bt5_list
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestZeleniumCore))
+  suite.addTest(unittest.makeSuite(TestRenderJSUICore))
+  suite.addTest(unittest.makeSuite(TestRenderJSUIPageTemplate))
+  suite.addTest(unittest.makeSuite(TestRenderJSUIPage))
+  suite.addTest(unittest.makeSuite(TestRenderJSUIRouter))
   return suite
