@@ -45,7 +45,7 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
 
   """
   # Updating global variable mime_type to its original value
-  # Required when call to Base_displayMatplotlibImage is made which is changing
+  # Required when call to Base_displayImage is made which is changing
   # the value of gloabl mime_type
   global mime_type
   mime_type = 'text/plain'
@@ -185,9 +185,9 @@ def UpdateLocalVariableDict(self, existing_dict):
     new_dict['imports'][key] = val
   return new_dict
 
-def Base_displayMatplotlibImage(self, image_object=None):
+def Base_displayImage(self, image_object=None):
   """
-  External function to display Matplotlib Plot objects to jupyter function.
+  External function to display Image objects to jupyter frontend.
   
   Parameters
   ----------
