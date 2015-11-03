@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from StringIO import StringIO
+from cStringIO import StringIO
 from Products.ERP5Type.Globals import  PersistentMapping
+from OFS.Image import Image as OFSImage
 
 import sys
 import ast
@@ -43,6 +44,12 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
       out2 = '12'
 
   """
+  # Updating global variable mime_type to its original value
+  # Required when call to Base_displayMatplotlibImage is made which is changing
+  # the value of gloabl mime_type
+  global mime_type
+  mime_type = 'text/plain'
+
   # Other way would be to use all the globals variables instead of just an empty
   # dictionary, but that might hamper the speed of exec or eval.
   # Something like -- g = globals(); g['context'] = self;
@@ -178,14 +185,15 @@ def UpdateLocalVariableDict(self, existing_dict):
     new_dict['imports'][key] = val
   return new_dict
 
-def Base_displayMatplotlibImage(self, plot_object=None):
+def Base_displayMatplotlibImage(self, image_object=None):
   """
   External function to display Matplotlib Plot objects to jupyter function.
   
   Parameters
   ----------
   
-  plot_object : Any matplotlib object from which we can create a plot.
+  image_object :Any image object from ERP5 
+                Any matplotlib object from which we can create a plot.
                 Can be <matplotlib.lines.Line2D>, <matplotlib.text.Text>, etc.
   
   Output
@@ -194,20 +202,32 @@ def Base_displayMatplotlibImage(self, plot_object=None):
   Returns base64 encoded string of the plot on which it has been called.
 
   """
-  if plot_object:
-    from io import BytesIO
-    import base64
+  if image_object:
 
-    # Create a ByteFile on the server which would be used to save the plot
-    figfile = BytesIO()
-    # Save plot as 'png' format in the ByteFile
-    plot_object.savefig(figfile, format='png')
-    figfile.seek(0)
-    # Encode the value in figfile to base64 string so as to serve it jupyter frontend
-    figdata_png = base64.b64encode(figfile.getvalue())
+    import base64
     # Chanage global variable 'mime_type' to 'image/png'
     global mime_type
-    mime_type = 'image/png'
 
-    return figdata_png
-  
+    # Image object in ERP5 is instance of OFS.Image object
+    if isinstance(image_object, OFSImage):
+      figdata = base64.b64encode(image_object.getData())
+      mime_type = image_object.getContentType()
+    else:
+      # For matplotlib objects
+      # XXX: Needs refactoring to handle cases
+
+      # Create a ByteFile on the server which would be used to save the plot
+      figfile = StringIO()
+      # Save plot as 'png' format in the ByteFile
+      image_object.savefig(figfile, format='png')
+      figfile.seek(0)
+      # Encode the value in figfile to base64 string so as to serve it jupyter frontend
+      figdata = base64.b64encode(figfile.getvalue())
+      mime_type = 'image/png'
+
+    # XXX: We are not returning anything because we want this function to be called
+    # by Base_executeJupyter , inside exec(), and its better to get the printed string
+    # instead of returned string from this function as after exec, we are getting
+    # value from stdout and using return we would get that value as string inside
+    # an string which is unfavourable.
+    print figdata
