@@ -114,6 +114,7 @@
           // Redirect to the login view\n
           return gadget.redirect({command: \'display\', options: {page: \'login\'}});\n
         }\n
+        throw error;\n
       });\n
   }\n
 \n
@@ -334,7 +335,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.49070.15531.48588</string> </value>
+                <value> <string>946.56060.11774.33006</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -352,7 +353,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446127591.78</float>
+                        <float>1446547368.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
