@@ -58,7 +58,7 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   # Saving the initial globals dict so as to compare it after code execution
   globals_dict = globals()
   g['context'] = self
-  result_string = None
+  result_string = ''
   ename, evalue, tb_list = None, None, None
   # Update globals dict and use it while running exec command
   g.update(old_local_variable_dict['variables'])
@@ -69,87 +69,88 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   # TODO: This can be refactored by using client side error handling instead of
   # catching errors on server/erp5.
   status = u'ok'
+  local_variable_dict = old_local_variable_dict
 
   # Execute only if jupyter_code is not empty
   if jupyter_code:
-    # Import all the modules from local_variable_dict['imports']
-    # While any execution, in locals() dict, a module is saved as:
-    # code : 'from os import path'
-    # {'path': <module 'posixpath'>}
-    # So, here we would try to get the name 'posixpath' and import it as 'path'
-    for k, v in old_local_variable_dict['imports'].iteritems():
-      import_statement_code = 'import %s as %s'%(v, k)
-      exec(import_statement_code, g, g)
   
     # Create ast parse tree
     ast_node = ast.parse(jupyter_code)
     # Get the node list from the parsed tree
     nodelist = ast_node.body
 
-    # If the last node is instance of ast.Expr, set its interactivity as 'last'
-    # This would be the case if the last node is expression
-    if isinstance(nodelist[-1], ast.Expr):
-      interactivity = "last"
-    else:
-      interactivity = "none"
+    # Handle case for empty nodelist(in case of comments as jupyter_code)
+    if nodelist:
+      # Import all the modules from local_variable_dict['imports']
+      # While any execution, in locals() dict, a module is saved as:
+      # code : 'from os import path'
+      # {'path': <module 'posixpath'>}
+      # So, here we would try to get the name 'posixpath' and import it as 'path'
+      for k, v in old_local_variable_dict['imports'].iteritems():
+        import_statement_code = 'import %s as %s'%(v, k)
+        exec(import_statement_code, g, g)
+      
+      # If the last node is instance of ast.Expr, set its interactivity as 'last'
+      # This would be the case if the last node is expression
+      if isinstance(nodelist[-1], ast.Expr):
+        interactivity = "last"
+      else:
+        interactivity = "none"
 
-    # Here, we define which nodes to execute with 'single' and which to execute
-    # with 'exec' mode.
-    if interactivity == 'none':
-      to_run_exec, to_run_interactive = nodelist, []
-    elif interactivity == 'last':
-      to_run_exec, to_run_interactive = nodelist[:-1], nodelist[-1:]
+      # Here, we define which nodes to execute with 'single' and which to execute
+      # with 'exec' mode.
+      if interactivity == 'none':
+        to_run_exec, to_run_interactive = nodelist, []
+      elif interactivity == 'last':
+        to_run_exec, to_run_interactive = nodelist[:-1], nodelist[-1:]
 
-    old_stdout = sys.stdout
-    result = StringIO()
-    sys.stdout = result
+      old_stdout = sys.stdout
+      result = StringIO()
+      sys.stdout = result
 
-    # Execute the nodes with 'exec' mode
-    for node in to_run_exec:
-      mod = ast.Module([node])
-      code = compile(mod, '<string>', "exec")
-      exec(code, g, g)
+      # Execute the nodes with 'exec' mode
+      for node in to_run_exec:
+        mod = ast.Module([node])
+        code = compile(mod, '<string>', "exec")
+        exec(code, g, g)
 
-    # Execute the interactive nodes with 'single' mode
-    for node in to_run_interactive:
-      mod = ast.Interactive([node])
-      code = compile(mod, '<string>', "single")
-      exec(code, g, g)
+      # Execute the interactive nodes with 'single' mode
+      for node in to_run_interactive:
+        mod = ast.Interactive([node])
+        code = compile(mod, '<string>', "single")
+        exec(code, g, g)
 
-    # Letting the code fail in case of error while executing the python script/code
-    # XXX: Need to be refactored so to acclimitize transactions failure as well as
-    # normal python code failure and show it to user on jupyter frontend.
-    # Decided to let this fail silently in backend without letting the frontend
-    # user know the error so as to let tranasction or its error be handled by ZODB
-    # in uniform way instead of just using half transactions.
+      # Letting the code fail in case of error while executing the python script/code
+      # XXX: Need to be refactored so to acclimitize transactions failure as well as
+      # normal python code failure and show it to user on jupyter frontend.
+      # Decided to let this fail silently in backend without letting the frontend
+      # user know the error so as to let tranasction or its error be handled by ZODB
+      # in uniform way instead of just using half transactions.
 
-    sys.stdout = old_stdout
-    result_string = result.getvalue()
-  else:
-    result_string = jupyter_code
+      sys.stdout = old_stdout
+      result_string = result.getvalue()
 
-  # Difference between the globals variable before and after exec/eval so that
-  # we don't have to save unnecessary variables in database which might or might
-  # not be picklabale
-  local_variable_dict = old_local_variable_dict
-  local_variable_dict_new = {key: val for key, val in g.items() if key not in globals_dict.keys()}
-  local_variable_dict['variables'].update(local_variable_dict_new)
+    # Difference between the globals variable before and after exec/eval so that
+    # we don't have to save unnecessary variables in database which might or might
+    # not be picklabale
+    local_variable_dict_new = {key: val for key, val in g.items() if key not in globals_dict.keys()}
+    local_variable_dict['variables'].update(local_variable_dict_new)
 
-  # Differentiate 'module' objects from local_variable_dict and save them as
-  # string in the dict as {'imports': {'numpy': 'np', 'matplotlib': 'mp']}
-  if 'variables' and 'imports' in local_variable_dict:
-    for key, val in local_variable_dict['variables'].items():
-      # Check if the val in the dict is ModuleType and remove it in case it is
-      if isinstance(val, types.ModuleType):
-        # Update local_variable_dict['imports'] dictionary with key, value pairs
-        # with key corresponding to module name as its imported and value as the
-        # module name being stored in sys.path
-        # For example : 'np': <numpy module at ...> -- {'np': numpy}
-        local_variable_dict['imports'][key] = val.__name__
+    # Differentiate 'module' objects from local_variable_dict and save them as
+    # string in the dict as {'imports': {'numpy': 'np', 'matplotlib': 'mp']}
+    if 'variables' and 'imports' in local_variable_dict:
+      for key, val in local_variable_dict['variables'].items():
+        # Check if the val in the dict is ModuleType and remove it in case it is
+        if isinstance(val, types.ModuleType):
+          # Update local_variable_dict['imports'] dictionary with key, value pairs
+          # with key corresponding to module name as its imported and value as the
+          # module name being stored in sys.path
+          # For example : 'np': <numpy module at ...> -- {'np': numpy}
+          local_variable_dict['imports'][key] = val.__name__
 
-        # XXX: The next line is mutating the dict, beware in case any reference
-        # is made later on to local_variable_dict['variables'] dictionary
-        local_variable_dict['variables'].pop(key)
+          # XXX: The next line is mutating the dict, beware in case any reference
+          # is made later on to local_variable_dict['variables'] dictionary
+          local_variable_dict['variables'].pop(key)
 
   result = {
     'result_string': result_string,
