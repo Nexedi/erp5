@@ -242,7 +242,8 @@
                 jio_key: result.data.rows[i].id,\n
                 selection_index: begin_from + i,\n
                 query: new URI(field_json.query).query(true).query + query_string,\n
-                list_method_template: field_json.list_method_template\n
+                list_method_template: field_json.list_method_template,\n
+                page: field_json.page\n
               }\n
             })\n
           );\n
