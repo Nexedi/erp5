@@ -55,10 +55,14 @@ class ERP5RemoteUserManager(ERP5UserManager):
     """
 
     meta_type = 'ERP5 Remote User Manager'
+    login_portal_type = 'ERP5 Remote Login'
     security = ClassSecurityInfo()
     remote_authentication_cache = None
 
-    def _doRemoteAuthentication(self, login, password):
+    def checkPersonValidity(self, person):
+        return True # XXX Really ???
+
+    def _validatePassword(self, login_object, password):
         # Do remote authentication with local ZODB caching
         # Thanks to this it is possible to login to instance, even
         # if master authentication server is down
@@ -69,6 +73,7 @@ class ERP5RemoteUserManager(ERP5UserManager):
         #
         # any other error is assumed as fatal and results in disallowing
         # authentication and clearing local cache
+        login = login_object.getReference()
         if self.remote_authentication_cache is None:
             self.remote_authentication_cache = OOBTree()
         portal = self.getPortalObject()
@@ -121,70 +126,6 @@ class ERP5RemoteUserManager(ERP5UserManager):
                 if login in self.remote_authentication_cache:
                     del self.remote_authentication_cache[login]
         return result
-
-    #
-    #   IAuthenticationPlugin implementation
-    #
-    security.declarePrivate( 'authenticateCredentials' )
-    def authenticateCredentials(self, credentials):
-        """ See IAuthenticationPlugin.
-
-        o We expect the credentials to be those returned by
-            ILoginPasswordExtractionPlugin.
-        """
-        # Forbidden the usage of the super user.
-        if credentials.get('login') == SUPER_USER:
-          return None
-
-        def _authenticateCredentials(login, password, path):
-            if not login or not password:
-                return None
-
-            user_list = self.getUserByLogin(login)
-
-            if not user_list:
-              raise _AuthenticationFailure()
-
-            user = user_list[0]
-
-            sm = getSecurityManager()
-            if sm.getUser().getId() != SUPER_USER:
-              newSecurityManager(self, self.getUser(SUPER_USER))
-            try:
-              # get assignment
-              assignment_list = [x for x in user.contentValues(portal_type="Assignment") \
-                                   if x.getValidationState() == "open"]
-              valid_assignment_list = []
-              # check dates if exist
-              login_date = DateTime()
-              for assignment in assignment_list:
-                if assignment.getStartDate() is not None and \
-                       assignment.getStartDate() > login_date:
-                  continue
-                if assignment.getStopDate() is not None and \
-                       assignment.getStopDate() < login_date:
-                  continue
-                valid_assignment_list.append(assignment)
-
-              # validate to remote ERP5 instance
-              is_authenticated = self._doRemoteAuthentication(login, password)
-              if is_authenticated:
-                return login, login
-            finally:
-              setSecurityManager(sm)
-
-            raise _AuthenticationFailure()
-
-        _authenticateCredentials = CachingMethod(_authenticateCredentials,
-                                                 id='ERP5RemoteUserManager_authenticateCredentials',
-                                                 cache_factory='erp5_content_short')
-        try:
-          return _authenticateCredentials(
-                        login=credentials.get('login'),
-                        password=credentials.get('password'),
-                        path=self.getPhysicalPath())
-        except _AuthenticationFailure:
-          return None
 
 classImplements( ERP5RemoteUserManager
                , IAuthenticationPlugin

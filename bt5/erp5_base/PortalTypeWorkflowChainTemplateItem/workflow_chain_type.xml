@@ -40,6 +40,10 @@
   <workflow>base_type_interaction_workflow, dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>ERP5 Login</type>
+  <workflow>edit_workflow, login_validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Email</type>
   <workflow>edit_workflow</workflow>
  </chain>
