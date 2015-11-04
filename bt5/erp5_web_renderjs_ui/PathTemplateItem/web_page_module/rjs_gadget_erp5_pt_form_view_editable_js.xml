@@ -112,13 +112,6 @@
     .ready(function (g) {\n
       g.props = {};\n
     })\n
-    /////////////////////////////////////////////////////////////////\n
-    // ready\n
-    /////////////////////////////////////////////////////////////////\n
-    // Init local properties\n
-    .ready(function (g) {\n
-      g.props = {};\n
-    })\n
 \n
     // Assign the element to a variable\n
     .ready(function (g) {\n
