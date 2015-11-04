@@ -345,10 +345,8 @@
       for (i = 0; i < len; i += 1) {\n
         key = element_list[i].getAttribute(\'data-renderjs-configuration\');\n
         value = element_list[i].textContent;\n
-        if (value !== "") {\n
-          g.props[key] = value;\n
-          push(key, value);\n
-        }\n
+        g.props[key] = value;\n
+        push(key, value);\n
       }\n
       return queue;\n
     })\n
