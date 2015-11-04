@@ -139,97 +139,105 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
+    .declareAcquiredMethod("getSetting", "getSetting")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
     /////////////////////////////////////////////////////////////////\n
     .declareMethod("render", function () {\n
       var gadget = this;\n
-\n
-      return gadget.jio_allDocs({\n
-        "query": \'meta_type:"ERP5 Folder" AND id:"%_module"\',\n
-        "select_list": ["title", "business_application_title"],\n
-        "limit": 1000\n
-      })\n
-        .push(function (result) {\n
-          var result_list = [],\n
-            i;\n
-          for (i = 0; i < result.data.rows.length; i += 1) {\n
-            result_list.push(RSVP.all([\n
-              gadget.getUrlFor({command: \'display\', options: {jio_key: result.data.rows[i].id}}),\n
-              result.data.rows[i].value.title || result.data.rows[i].id,\n
-              result.data.rows[i].value.business_application_title\n
-            ]));\n
-          }\n
-          return RSVP.all(result_list);\n
-        })\n
-        .push(function (document_list) {\n
-          var i,\n
-            business_application_dict = {},\n
-            business_application_list = [],\n
-            business_application,\n
-            module_info,\n
-            result_html = \'<div data-role="collapsible-set" data-theme="c">\',\n
-            doc;\n
-          for (i = 0; i < document_list.length; i += 1) {\n
-            doc = document_list[i];\n
-            if (doc[2] === undefined) {\n
-              doc[2] = "Other";\n
-            }\n
-            module_info = {\n
-              link: doc[0],\n
-              title: doc[1]\n
-            };\n
-            if (business_application_dict[doc[2]] === undefined) {\n
-              business_application_dict[doc[2]] = [module_info];\n
-              business_application_list.push(doc[2]);\n
-            } else {\n
-              business_application_dict[doc[2]].push(module_info);\n
-            }\n
-          }\n
-\n
-          business_application_list.sort(function (a, b) {\n
-            // Push the "Other" value at the end\n
-            var result = 0;\n
-            if (a === "Other") {\n
-              result = 1;\n
-            } else if (b === "Other") {\n
-              result = -1;\n
-            } else if (a < b) {\n
-              result = -1;\n
-            } else if (a > b) {\n
-              result = 1;\n
-            }\n
-            return result;\n
-          });\n
-\n
-          function sort_module(a, b) {\n
-            var result = 0;\n
-            if (a.title < b.title) {\n
-              result = -1;\n
-            } else if (a.title > b.title) {\n
-              result = 1;\n
-            }\n
-            return result;\n
-          }\n
-\n
-          for (i = 0; i < business_application_list.length; i += 1) {\n
-            business_application = business_application_list[i];\n
-            business_application_dict[business_application].sort(sort_module);\n
-\n
-            result_html += table_template({\n
-              definition_title: business_application,\n
-              documentlist: business_application_dict[business_application]\n
+          \n
+      return gadget.getSetting(\'frontpage_gadget\')\n
+        .push(function (frontpage_gadget) {\n
+          if (frontpage_gadget)\n
+            return gadget.redirect({command: \'display\', options: {page: frontpage_gadget}});\n
+    \n
+          return gadget.jio_allDocs({\n
+            "query": \'meta_type:"ERP5 Folder" AND id:"%_module"\',\n
+            "select_list": ["title", "business_application_title"],\n
+            "limit": 1000\n
+          })\n
+            .push(function (result) {\n
+              var result_list = [],\n
+                i;\n
+              for (i = 0; i < result.data.rows.length; i += 1) {\n
+                result_list.push(RSVP.all([\n
+                  gadget.getUrlFor({command: \'display\', options: {jio_key: result.data.rows[i].id}}),\n
+                  result.data.rows[i].value.title || result.data.rows[i].id,\n
+                  result.data.rows[i].value.business_application_title\n
+                ]));\n
+              }\n
+              return RSVP.all(result_list);\n
+            })\n
+            .push(function (document_list) {\n
+              var i,\n
+                business_application_dict = {},\n
+                business_application_list = [],\n
+                business_application,\n
+                module_info,\n
+                result_html = \'<div data-role="collapsible-set" data-theme="c">\',\n
+                doc;\n
+              for (i = 0; i < document_list.length; i += 1) {\n
+                doc = document_list[i];\n
+                if (doc[2] === undefined) {\n
+                  doc[2] = "Other";\n
+                }\n
+                module_info = {\n
+                  link: doc[0],\n
+                  title: doc[1]\n
+                };\n
+                if (business_application_dict[doc[2]] === undefined) {\n
+                  business_application_dict[doc[2]] = [module_info];\n
+                  business_application_list.push(doc[2]);\n
+                } else {\n
+                  business_application_dict[doc[2]].push(module_info);\n
+                }\n
+              }\n
+    \n
+              business_application_list.sort(function (a, b) {\n
+                // Push the "Other" value at the end\n
+                var result = 0;\n
+                if (a === "Other") {\n
+                  result = 1;\n
+                } else if (b === "Other") {\n
+                  result = -1;\n
+                } else if (a < b) {\n
+                  result = -1;\n
+                } else if (a > b) {\n
+                  result = 1;\n
+                }\n
+                return result;\n
+              });\n
+    \n
+              function sort_module(a, b) {\n
+                var result = 0;\n
+                if (a.title < b.title) {\n
+                  result = -1;\n
+                } else if (a.title > b.title) {\n
+                  result = 1;\n
+                }\n
+                return result;\n
+              }\n
+    \n
+              for (i = 0; i < business_application_list.length; i += 1) {\n
+                business_application = business_application_list[i];\n
+                business_application_dict[business_application].sort(sort_module);\n
+    \n
+                result_html += table_template({\n
+                  definition_title: business_application,\n
+                  documentlist: business_application_dict[business_application]\n
+                });\n
+              }\n
+    \n
+              result_html += \'</div>\';\n
+    \n
+              return gadget.translateHtml(result_html);\n
+            })\n
+            .push(function (my_translated_html) {\n
+              gadget.props.element.querySelector(\'.document_list\').innerHTML =\n
+                my_translated_html;\n
             });\n
-          }\n
-\n
-          result_html += \'</div>\';\n
-\n
-          return gadget.translateHtml(result_html);\n
-        })\n
-        .push(function (my_translated_html) {\n
-          gadget.props.element.querySelector(\'.document_list\').innerHTML =\n
-            my_translated_html;\n
         });\n
     });\n
 }(window, rJS, RSVP, Handlebars));
@@ -355,7 +363,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -369,7 +377,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4325.1841.2867</string> </value>
+                <value> <string>946.57692.14848.4300</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -387,8 +395,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445266444.15</float>
-                        <string>GMT</string>
+                        <float>1446647815.24</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
