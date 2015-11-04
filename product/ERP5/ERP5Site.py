@@ -1517,6 +1517,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
            self._getPortalConfiguration('portal_entity_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalLoginTypeList')
+  def getPortalLoginTypeList(self):
+    """
+    Returns Login types.
+    """
+    return self._getPortalGroupedTypeList('login')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER, only_visible=False):
     """

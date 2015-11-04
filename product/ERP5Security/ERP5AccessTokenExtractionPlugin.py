@@ -82,6 +82,7 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
 
         if external_login is not None:
           creds['external_login'] = external_login
+          creds['login_portal_type'] = 'Person'
           creds['remote_host'] = request.get('REMOTE_HOST', '')
           try:
             creds['remote_address'] = request.getClientAddr()

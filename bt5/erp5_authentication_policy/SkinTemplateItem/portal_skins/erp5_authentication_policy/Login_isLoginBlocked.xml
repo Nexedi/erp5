@@ -50,43 +50,78 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  Return true if user account is blocked.\n
+"""\n
+from DateTime import DateTime\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
+\n
+request = context.REQUEST\n
 portal = context.getPortalObject()\n
-person = state_change[\'object\']\n
+portal_preferences = portal.portal_preferences\n
 \n
-# check preferences and save only if set\n
-number_of_last_password_to_check = portal.portal_preferences.getPreferredNumberOfLastPasswordToCheck()\n
+if not portal_preferences.isAuthenticationPolicyEnabled():\n
+  # no policy, no sense to block account\n
+  return 0\n
 \n
-if number_of_last_password_to_check is not None and number_of_last_password_to_check:\n
-  # save password and modification date\n
-  current_password = person.getPassword()\n
-  if current_password is not None:\n
-    password_event = portal.system_event_module.newContent(portal_type = \'Password Event\',\n
-                                                           source_value = person,\n
-                                                           destination_value = person,\n
-                                                           password = current_password)\n
-    password_event.confirm()\n
-    # Person_isPasswordExpired cache the wrong result if document is not in catalog.\n
-    # As the document is created in the same transaction, it is possible to force reindexation\n
-    password_event.immediateReindexObject()\n
-</string> </value>
+now = DateTime()\n
+one_second = 1/24.0/60.0/60.0\n
+check_duration = portal_preferences.getPreferredAuthenticationFailureCheckDuration()\n
+block_duration = portal_preferences.getPreferredAuthenticationFailureBlockDuration()\n
+max_authentication_failures = portal_preferences.getPreferredMaxAuthenticationFailure()\n
+check_time = now - check_duration*one_second\n
+\n
+# some failures might be still unindexed\n
+tag = \'authentication_event_%s\' %context.getReference()\n
+unindexed_failures = portal.portal_activities.countMessageWithTag(tag)\n
+\n
+if unindexed_failures >= max_authentication_failures:\n
+  # no need to check further\n
+  return 1\n
+\n
+# some are already indexed\n
+kw = {\'portal_type\': \'Authentication Event\',\n
+      \'default_destination_uid\': context.getUid(),\n
+      \'creation_date\': Query(creation_date = check_time,\n
+                             range=\'min\'),\n
+      \'validation_state\' : \'confirmed\',\n
+      \'sort_on\' : ((\'creation_date\', \'ASC\',),),\n
+      \'limit\': max_authentication_failures\n
+      }\n
+indexed_failure_list = portal.portal_catalog(**kw)\n
+indexed_failures = len(indexed_failure_list)\n
+\n
+#context.log(\'== %s %s %s\' %(unindexed_failures, indexed_failures, max_authentication_failures))\n
+if (indexed_failures + unindexed_failures) >= max_authentication_failures:\n
+  last_authentication_failure = indexed_failure_list[-1].getObject()\n
+  block_timeout = last_authentication_failure.getCreationDate() + block_duration*one_second\n
+  if block_timeout >= now:\n
+    #context.log(\'block %s\' %context.getReference())\n
+    request.set(\'is_user_account_blocked\', True)\n
+    return 1\n
+\n
+return 0\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_changePassword</string> </value>
+            <value> <string>Login_isLoginBlocked</string> </value>
         </item>
       </dictionary>
     </pickle>

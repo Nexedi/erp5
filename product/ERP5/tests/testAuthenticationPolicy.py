@@ -66,10 +66,12 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
               reference = 'test')
     if portal.portal_catalog.getResultValue(**kw) is None:
       # add a loggable Person
-      person = portal.person_module.newContent(password = 'test',
-                                               first_name = 'First',
-                                               last_name = 'Last',
-                                               **kw)
+      person = self.createUser(
+        kw['reference'],
+        password='test',
+        person_kw={'first_name': 'First',
+                   'last_name': 'Last'},
+      )
       person.validate()
       assignment = person.newContent(portal_type = 'Assignment')
       assignment.open()
@@ -91,15 +93,32 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                           'erp5_content_short', # for authentication cache
                           ))
 
-  def _getPasswordEventList(self, person):
+  def _getPasswordEventList(self, login):
     return [x.getObject() for x in self.portal.portal_catalog(
                                                  portal_type = 'Password Event',
-                                                 default_destination_uid = person.getUid(),
+                                                 default_destination_uid = login.getUid(),
                                                  sort_on = (('creation_date', 'DESC',),))]
 
-  def _cleanUpPerson(self, person):
-    self.portal.system_event_module.manage_delObjects([x.getId() for x in self._getPasswordEventList(person)])
+  def _cleanUpLogin(self, login):
+    self.portal.system_event_module.manage_delObjects([x.getId() for x in self._getPasswordEventList(login)])
 
+
+  def createUser(self, reference, password=None, person_kw=None):
+    """
+      Modified version from ERP5TypeTestCase, that does set reference as
+      password when password is None.
+    """
+    if person_kw is None:
+      person_kw = {}
+
+    person = self.portal.person_module.newContent(portal_type='Person',
+                                                  reference=reference,
+                                                  **person_kw)
+    login = person.newContent(portal_type='ERP5 Login',
+                              reference=reference,
+                              password=password)
+    login.validate()
+    return person
 
   def test_01_BlockLogin(self):
     """
@@ -110,73 +129,74 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
     person = portal.portal_catalog.getResultValue(portal_type = 'Person',
                                                   reference = 'test')
+    login = person.objectValues(portal_type='ERP5 Login')[0]
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
     # login should be allowed
-    self.assertFalse(person.isLoginBlocked())
+    self.assertFalse(login.isLoginBlocked())
 
     # file some failures so we should detect and block account
-    person.notifyLoginFailure()
-    person.notifyLoginFailure()
-    person.notifyLoginFailure()
+    login.notifyLoginFailure()
+    login.notifyLoginFailure()
+    login.notifyLoginFailure()
     self.tic()
 
     # should be blocked
-    self.assertTrue(person.isLoginBlocked())
+    self.assertTrue(login.isLoginBlocked())
 
     # set check back interval to actualy disable blocking
     preference.setPreferredAuthenticationFailureCheckDuration(0)
     self._clearCache()
     self.tic()
     time.sleep(1) # we need to give a moment
-    self.assertFalse(person.isLoginBlocked())
+    self.assertFalse(login.isLoginBlocked())
 
     # .. and revert it back
     preference.setPreferredAuthenticationFailureCheckDuration(600)
     self._clearCache()
     self.tic()
-    self.assertTrue(person.isLoginBlocked())
+    self.assertTrue(login.isLoginBlocked())
 
     # increase failures attempts
     preference.setPreferredMaxAuthenticationFailure(4)
     self._clearCache()
     self.tic()
-    self.assertFalse(person.isLoginBlocked())
+    self.assertFalse(login.isLoginBlocked())
 
     # .. and revert it back
     preference.setPreferredMaxAuthenticationFailure(3)
     self._clearCache()
     self.tic()
-    self.assertTrue(person.isLoginBlocked())
+    self.assertTrue(login.isLoginBlocked())
 
     # set short block interval so we can test it as well
     preference.setPreferredAuthenticationFailureBlockDuration(3)
     self._clearCache()
     self.tic()
     time.sleep(4)
-    self.assertFalse(person.isLoginBlocked())
+    self.assertFalse(login.isLoginBlocked())
 
     # test multiple concurrent transactions without waiting for activities to be over
     preference.setPreferredAuthenticationFailureCheckDuration(600)
     preference.setPreferredAuthenticationFailureBlockDuration(600)
     preference.setPreferredMaxAuthenticationFailure(3)
-    person.Person_unblockLogin()
+    login.Login_unblockLogin()
     self._clearCache()
     self.tic()
 
-    person.notifyLoginFailure()
-    person.notifyLoginFailure()
-    person.notifyLoginFailure()
+    login.notifyLoginFailure()
+    login.notifyLoginFailure()
+    login.notifyLoginFailure()
 
     self.commit()
-    self.assertTrue(person.isLoginBlocked())
+    self.assertTrue(login.isLoginBlocked())
     self.tic()
-    self.assertTrue(person.isLoginBlocked())
+    self.assertTrue(login.isLoginBlocked())
 
     # test unblock account
-    person.Person_unblockLogin()
+    login.Login_unblockLogin()
     self.tic()
-    self.assertFalse(person.isLoginBlocked())
+    self.assertFalse(login.isLoginBlocked())
 
 
   def test_02_PasswordHistory(self):
@@ -186,61 +206,61 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     portal = self.getPortal()
     self.assertTrue(portal.portal_preferences.isAuthenticationPolicyEnabled())
 
-    person = portal.person_module.newContent(portal_type = 'Person',
-                                             reference = 'test-02')
+    person = self.createUser('test-02')
+    login = person.objectValues(portal_type='ERP5 Login')[0]
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
     self.tic()
 
     # Check that last (X where X is set in preferences) passwords are saved.
-    self.assertEqual([], self._getPasswordEventList(person))
+    self.assertEqual([], self._getPasswordEventList(login))
     preference.setPreferredNumberOfLastPasswordToCheck(10)
     self.tic()
     self._clearCache()
 
-    person.setPassword('12345678')
+    login.setPassword('12345678')
     self.tic()
 
     # password change date should be saved as well hashed old password value
-    old_password = person.getPassword()
-    self.assertSameSet([old_password], [x.getPassword() for x in self._getPasswordEventList(person)])
+    old_password = login.getPassword()
+    self.assertSameSet([old_password], [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # .. test one more time to check history of password is saved in a list
-    person.setPassword('123456789')
+    login.setPassword('123456789')
     self.tic()
-    old_password1 = person.getPassword()
+    old_password1 = login.getPassword()
 
     # password change date should be saved as well hashed old password value
-    self.assertSameSet([old_password1, old_password], [x.getPassword() for x in self._getPasswordEventList(person)])
+    self.assertSameSet([old_password1, old_password], [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # other methods (_setPassword)...
-    person._setPassword('123456789-1')
+    login._setPassword('123456789-1')
     self.tic()
-    old_password2 = person.getPassword()
+    old_password2 = login.getPassword()
     self.assertSameSet([old_password2, old_password1, old_password], \
-                     [x.getPassword() for x in self._getPasswordEventList(person)])
+                     [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # other methods (_forceSetPassword)...
-    person._forceSetPassword('123456789-2')
+    login._forceSetPassword('123456789-2')
     self.tic()
-    old_password3 = person.getPassword()
+    old_password3 = login.getPassword()
     self.assertSameSet([old_password3, old_password2, old_password1, old_password], \
-                     [x.getPassword() for x in self._getPasswordEventList(person)])
+                     [x.getPassword() for x in self._getPasswordEventList(login)])
 
 
     # other methods (setEncodedPassword)...
-    person.setEncodedPassword('123456789-3')
+    login.setEncodedPassword('123456789-3')
     self.tic()
-    old_password4 = person.getPassword()
+    old_password4 = login.getPassword()
     self.assertSameSet([old_password4, old_password3, old_password2, old_password1, old_password], \
-                     [x.getPassword() for x in self._getPasswordEventList(person)])
+                     [x.getPassword() for x in self._getPasswordEventList(login)])
 
     # other methods (edit)...
-    person.edit(password = '123456789-4')
+    login.edit(password = '123456789-4')
     self.tic()
-    old_password5 = person.getPassword()
+    old_password5 = login.getPassword()
     self.assertSameSet([old_password5, old_password4, old_password3, old_password2, old_password1, old_password], \
-                     [x.getPassword() for x in self._getPasswordEventList(person)])
+                     [x.getPassword() for x in self._getPasswordEventList(login)])
 
 
   def test_03_PasswordValidity(self):
@@ -258,105 +278,107 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
     self.assertTrue(portal.portal_preferences.isAuthenticationPolicyEnabled())
 
-    person = portal.person_module.newContent(portal_type = 'Person',
-                                             reference = 'test-03',
-                                             password = 'test',
-                                             first_name = 'First',
-                                             last_name = 'Last')
+    person = self.createUser(
+        'test-03',
+        password='test',
+        person_kw={'first_name': 'First',
+                   'last_name': 'Last'},
+    )
+    login = person.objectValues(portal_type='ERP5 Login')[0]
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
     self.tic()
 
     # by default an empty password if nothing set in preferences is OK
-    self.assertTrue(person.isPasswordValid(''))
+    self.assertTrue(login.isPasswordValid(''))
 
     # Not long enough passwords used
-    self._cleanUpPerson(person)
+    self._cleanUpLogin(login)
     preference.setPreferredMinPasswordLength(8)
     preference.setPreferredNumberOfLastPasswordToCheck(0)
     self.tic()
     self._clearCache()
 
-    self.assertEqual([-1], person.analyzePassword(''))
-    self.assertEqual([-1], person.analyzePassword('1234567'))
-    self.assertTrue(person.isPasswordValid('12345678'))
+    self.assertEqual([-1], login.analyzePassword(''))
+    self.assertEqual([-1], login.analyzePassword('1234567'))
+    self.assertTrue(login.isPasswordValid('12345678'))
 
     # not changed in last x days
-    self._cleanUpPerson(person)
+    self._cleanUpLogin(login)
     preference.setPreferredMinPasswordLifetimeDuration(24)
     preference.setPreferredNumberOfLastPasswordToCheck(3)
     self.tic()
     self._clearCache()
 
-    self.assertTrue(person.isPasswordValid('12345678'))
-    person.setPassword('12345678')
+    self.assertTrue(login.isPasswordValid('12345678'))
+    login.setPassword('12345678')
     self.tic()
 
     # if we try to change now we should fail with any password
-    self.assertSameSet([-3], person.analyzePassword('87654321'))
-    self.assertSameSet([-1, -3], person.analyzePassword('short')) # multiple failures
-    self.assertFalse(person.isPasswordValid('short')) # multiple failures
-    self.assertRaises(ValueError, person.setPassword, '87654321')
+    self.assertSameSet([-3], login.analyzePassword('87654321'))
+    self.assertSameSet([-1, -3], login.analyzePassword('short')) # multiple failures
+    self.assertFalse(login.isPasswordValid('short')) # multiple failures
+    self.assertRaises(ValueError, login.setPassword, '87654321')
 
     preference.setPreferredMinPasswordLifetimeDuration(0) # remove restriction
     self.tic()
     self._clearCache()
-    self.assertTrue(person.isPasswordValid('87654321')) # it's OK to change
+    self.assertTrue(login.isPasswordValid('87654321')) # it's OK to change
 
     # password not used in previous X passwords
     preference.setPreferredMinPasswordLength(None) # disable for now
-    self._cleanUpPerson(person)
+    self._cleanUpLogin(login)
     self._clearCache()
     self.tic()
 
-    person.setPassword('12345678-new')
+    login.setPassword('12345678-new')
     self.tic()
 
-    self.assertSameSet([-4], person.analyzePassword('12345678-new')) # if we try to change now we should fail with this EXACT password
-    self.assertRaises(ValueError, person.setPassword, '12345678-new')
-    self.assertTrue(person.isPasswordValid('12345678_')) # it's OK with another one not used yet
+    self.assertSameSet([-4], login.analyzePassword('12345678-new')) # if we try to change now we should fail with this EXACT password
+    self.assertRaises(ValueError, login.setPassword, '12345678-new')
+    self.assertTrue(login.isPasswordValid('12345678_')) # it's OK with another one not used yet
     for password in ['a','b','c','d', 'e', 'f']:
       # this sleep is not so beautiful, but mysql datetime columns has a
       # precision of one second only, and we use creation_date to order
       # "Password Event" objects. So without this sleep, the test is
       # failing randomly.
       time.sleep(1)
-      person.setPassword(password)
+      login.setPassword(password)
       self.tic()
     self._clearCache()
     self.tic()
 
-    self.assertTrue(person.isPasswordValid('12345678-new'))
-    self.assertTrue(person.isPasswordValid('a'))
-    self.assertTrue(person.isPasswordValid('b'))
-    self.assertTrue(person.isPasswordValid('c'))
+    self.assertTrue(login.isPasswordValid('12345678-new'))
+    self.assertTrue(login.isPasswordValid('a'))
+    self.assertTrue(login.isPasswordValid('b'))
+    self.assertTrue(login.isPasswordValid('c'))
     # only last 3 (including current one are invalid)
-    self.assertSameSet([-4], person.analyzePassword('d'))
-    self.assertSameSet([-4], person.analyzePassword('e'))
-    self.assertSameSet([-4], person.analyzePassword('f'))
+    self.assertSameSet([-4], login.analyzePassword('d'))
+    self.assertSameSet([-4], login.analyzePassword('e'))
+    self.assertSameSet([-4], login.analyzePassword('f'))
 
     # if we remove restricted then all password are usable
     preference.setPreferredNumberOfLastPasswordToCheck(None)
     self._clearCache()
     self.tic()
 
-    self.assertTrue(person.isPasswordValid('d'))
-    self.assertTrue(person.isPasswordValid('e'))
-    self.assertTrue(person.isPasswordValid('f'))
+    self.assertTrue(login.isPasswordValid('d'))
+    self.assertTrue(login.isPasswordValid('e'))
+    self.assertTrue(login.isPasswordValid('f'))
 
     # if we set only last password to check
     preference.setPreferredNumberOfLastPasswordToCheck(1)
     self._clearCache()
     self.tic()
-    self.assertTrue(person.isPasswordValid('c'))
-    self.assertTrue(person.isPasswordValid('d'))
-    self.assertTrue(person.isPasswordValid('e'))
-    self.assertSameSet([-4], person.analyzePassword('f'))
+    self.assertTrue(login.isPasswordValid('c'))
+    self.assertTrue(login.isPasswordValid('d'))
+    self.assertTrue(login.isPasswordValid('e'))
+    self.assertSameSet([-4], login.analyzePassword('f'))
 
     preference.setPreferredRegularExpressionGroupList(regular_expression_list)
     preference.setPreferredMinPasswordLength(7)
     preference.setPreferredNumberOfLastPasswordToCheck(None)
-    self._cleanUpPerson(person)
+    self._cleanUpLogin(login)
     self._clearCache()
     self.tic()
 
@@ -370,47 +392,47 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._clearCache()
     self.tic()
     for password in four_group_password_list:
-      self.assertTrue(person.isPasswordValid(password))
+      self.assertTrue(login.isPasswordValid(password))
     for password in three_group_password_list+two_group_password_list + one_group_password_list:
-      self.assertSameSet([-2], person.analyzePassword(password))
+      self.assertSameSet([-2], login.analyzePassword(password))
 
     # min 3 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(3)
     self._clearCache()
-    self._cleanUpPerson(person)
+    self._cleanUpLogin(login)
     self.tic()
     for password in four_group_password_list + three_group_password_list:
-      self.assertTrue(person.isPasswordValid(password))
+      self.assertTrue(login.isPasswordValid(password))
     for password in two_group_password_list + one_group_password_list:
-      self.assertSameSet([-2], person.analyzePassword(password))
+      self.assertSameSet([-2], login.analyzePassword(password))
 
     # min 2 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(2)
     self._clearCache()
     self.tic()
     for password in four_group_password_list + three_group_password_list + two_group_password_list:
-      self.assertTrue(person.isPasswordValid(password))
+      self.assertTrue(login.isPasswordValid(password))
     for password in one_group_password_list:
-      self.assertSameSet([-2], person.analyzePassword(password))
+      self.assertSameSet([-2], login.analyzePassword(password))
 
     # min 1 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(1)
     self._clearCache()
     self.tic()
     for password in four_group_password_list + three_group_password_list + two_group_password_list+one_group_password_list:
-      self.assertTrue(person.isPasswordValid(password))
+      self.assertTrue(login.isPasswordValid(password))
 
     # not contain the full name of the user
     preference.setPrefferedForceUsernameCheckInPassword(1)
     self._clearCache()
     self.tic()
-    self.assertSameSet([-5], person.analyzePassword('abAB#12_%s' %person.getFirstName()))
-    self.assertSameSet([-5], person.analyzePassword('abAB#12_%s' %person.getLastName()))
+    self.assertSameSet([-5], login.analyzePassword('abAB#12_%s' %person.getFirstName()))
+    self.assertSameSet([-5], login.analyzePassword('abAB#12_%s' %person.getLastName()))
     preference.setPrefferedForceUsernameCheckInPassword(0)
     self._clearCache()
     self.tic()
-    self.assertTrue(person.isPasswordValid('abAB#12_%s' %person.getFirstName()))
-    self.assertTrue(person.isPasswordValid('abAB#12_%s' %person.getLastName()))
+    self.assertTrue(login.isPasswordValid('abAB#12_%s' %person.getFirstName()))
+    self.assertTrue(login.isPasswordValid('abAB#12_%s' %person.getLastName()))
 
     # check on temp objects just passworrd length( i.e. simulating a new user account creation)
     first_name = 'John'
@@ -425,8 +447,8 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._clearCache()
     self.tic()
     # in this case which is basically used in new account creation only length of password matters
-    self.assertSameSet([-1], temp_person.Person_analyzePassword('onlyNine1'))
-    self.assertSameSet([], temp_person.Person_analyzePassword('longEnough1'))
+    self.assertSameSet([-1], temp_person.Login_analyzePassword('onlyNine1'))
+    self.assertSameSet([], temp_person.Login_analyzePassword('longEnough1'))
 
     # make sure re check works on temp as well ( i.e. min 3 out of all groups)
     preference.setPreferredRegularExpressionGroupList(regular_expression_list)
@@ -435,22 +457,22 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._clearCache()
     self.tic()
     for password in four_group_password_list + three_group_password_list:
-      self.assertSameSet([], temp_person.Person_analyzePassword(password))
+      self.assertSameSet([], temp_person.Login_analyzePassword(password))
     for password in two_group_password_list + one_group_password_list:
-      self.assertSameSet([-2], temp_person.Person_analyzePassword(password))
+      self.assertSameSet([-2], temp_person.Login_analyzePassword(password))
 
     # make sure peron's check on username works on temp as well (i.e. not contain the full name of the user)
     preference.setPrefferedForceUsernameCheckInPassword(1)
     self._clearCache()
     self.tic()
-    self.assertSameSet([-5], temp_person.Person_analyzePassword('abAB#12_%s' %first_name))
-    self.assertSameSet([-5], temp_person.Person_analyzePassword('abAB#12_%s' %last_name))
+    self.assertSameSet([-5], temp_person.Login_analyzePassword('abAB#12_%s' %first_name))
+    self.assertSameSet([-5], temp_person.Login_analyzePassword('abAB#12_%s' %last_name))
 
     preference.setPrefferedForceUsernameCheckInPassword(0)
     self._clearCache()
     self.tic()
-    self.assertSameSet([], temp_person.Person_analyzePassword('abAB#12_%s' %first_name))
-    self.assertSameSet([], temp_person.Person_analyzePassword('abAB#12_%s' %last_name))
+    self.assertSameSet([], temp_person.Login_analyzePassword('abAB#12_%s' %first_name))
+    self.assertSameSet([], temp_person.Login_analyzePassword('abAB#12_%s' %last_name))
 
     # check Base_isPasswordValid is able to work in Anonymous User fashion
     # but with already create Person object (i.e. recover password case)
@@ -461,20 +483,20 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._clearCache()
     self.tic()
 
-    person.setPassword('used_ALREADY_1234')
+    login.setPassword('used_ALREADY_1234')
     self._clearCache()
     self.tic()
 
     # emulate Anonymous User
     self.logout()
-    request.set('field_user_login', person.getReference())
-    self.assertRaises(ValidationError,  portal.Base_isPasswordValid, 'abAB#12_%s' %person.getFirstName(), request) # contains name
-    self.assertRaises(ValidationError,  portal.Base_isPasswordValid, 'abAB#12_%s' %person.getLastName(), request) # contains name
-    self.assertRaises(ValidationError,  portal.Base_isPasswordValid, 'abAB#1', request) # too short
-    self.assertRaises(ValidationError,  portal.Base_isPasswordValid, 'abABCDEFG', request) # too few groups
-    self.assertRaises(ValidationError,  portal.Base_isPasswordValid, 'used_ALREADY_1234', request) # already used
-    self.assertEqual(1, portal.Base_isPasswordValid('abAB#12_', request))
-    self.assertEqual(1, portal.Base_isPasswordValid('not_used_ALREADY_1234', request))
+    request.set('field_user_login', login.getReference())
+    self.assertRaises(ValidationError,  login.Login_isPasswordValid, 'abAB#12_%s' %person.getFirstName(), request) # contains name
+    self.assertRaises(ValidationError,  login.Login_isPasswordValid, 'abAB#12_%s' %person.getLastName(), request) # contains name
+    self.assertRaises(ValidationError,  login.Login_isPasswordValid, 'abAB#1', request) # too short
+    self.assertRaises(ValidationError,  login.Login_isPasswordValid, 'abABCDEFG', request) # too few groups
+    self.assertRaises(ValidationError,  login.Login_isPasswordValid, 'used_ALREADY_1234', request) # already used
+    self.assertEqual(1, login.Login_isPasswordValid('abAB#12_', request))
+    self.assertEqual(1, login.Login_isPasswordValid('not_used_ALREADY_1234', request))
 
   def test_04_PasswordExpire(self):
     """
@@ -485,16 +507,16 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
     self.assertTrue(portal.portal_preferences.isAuthenticationPolicyEnabled())
 
-    person = portal.person_module.newContent(portal_type = 'Person',
-                                             reference = 'test-04',
-                                             password = 'used_ALREADY_1234')
+    person = self.createUser('test-04',
+                             password='used_ALREADY_1234')
+    login = person.objectValues(portal_type='ERP5 Login')[0]
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
 
     preference.setPreferredMaxPasswordLifetimeDuration(24)
     self.tic()
     self._clearCache()
-    self.assertFalse(person.isPasswordExpired())
+    self.assertFalse(login.isPasswordExpired())
     self.assertFalse(request['is_user_account_password_expired'])
 
 
@@ -502,21 +524,21 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredMaxPasswordLifetimeDuration(4*24) # password expire in 4 days
     self.tic()
     self._clearCache()
-    self.assertFalse(person.isPasswordExpired())
+    self.assertFalse(login.isPasswordExpired())
     self.assertFalse(request['is_user_account_password_expired'])
 
     # test early warning password expire notification is detected
     preference.setPreferredPasswordLifetimeExpireWarningDuration(4*24) # password expire notification appear immediately
     self.tic()
     self._clearCache()
-    self.assertFalse(person.isPasswordExpired())
+    self.assertFalse(login.isPasswordExpired())
     self.assertTrue(request['is_user_account_password_expired_expire_date'])
 
     # test early warning password expire notification is detected
     preference.setPreferredPasswordLifetimeExpireWarningDuration(4*24-24) # password expire notification appear 3 days befor time
     self.tic()
     self._clearCache()
-    self.assertFalse(person.isPasswordExpired())
+    self.assertFalse(login.isPasswordExpired())
     self.assertFalse(request['is_user_account_password_expired_expire_date'])
 
   def test_05_HttpRequest(self):
@@ -525,50 +547,52 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     request = self.app.REQUEST
-    person = portal.portal_catalog.getResultValue(portal_type = 'Person',
-                                                  reference = 'test')
+    person = self.createUser('test-05')
+    assignment = person.newContent(portal_type = 'Assignment')
+    assignment.open()
+    login = person.objectValues(portal_type='ERP5 Login')[0]
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
-    person.setPassword('used_ALREADY_1234')
+    login.setPassword('used_ALREADY_1234')
     self.tic()
 
-    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test', 'used_ALREADY_1234')
+    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test-05', 'used_ALREADY_1234')
     response = self.publish(path)
     self.assertTrue('Welcome to ERP5' in response.getBody())
-    self.assertFalse(person.isLoginBlocked())
+    self.assertFalse(login.isLoginBlocked())
 
     # fail request #1
-    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test', 'bad_test')
+    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test-05', 'bad_test')
     response = self.publish(path)
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
-    self.assertFalse(person.isLoginBlocked())
+    self.assertFalse(login.isLoginBlocked())
 
     # fail request #2
     response = self.publish(path)
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
-    self.assertFalse(person.isLoginBlocked())
+    self.assertFalse(login.isLoginBlocked())
 
     # fail request #3
     response = self.publish(path)
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
-    self.assertTrue(person.isLoginBlocked())
+    self.assertTrue(login.isLoginBlocked())
 
     self.tic()
 
     # test message that account is blocked
-    self.assertTrue(person.isLoginBlocked())
-    path = portal.absolute_url_path() + '/logged_in?__ac_name=%s&__ac_password=%s'  %('test', 'used_ALREADY_1234')
+    self.assertTrue(login.isLoginBlocked())
+    path = portal.absolute_url_path() + '/logged_in?__ac_name=%s&__ac_password=%s'  %('test-05', 'used_ALREADY_1234')
     response = self.publish(path)
     self.assertTrue(response.getHeader("Location").endswith("login_form?portal_status_message=Account is blocked."))
 
     # test expire password message, first unblock it
-    person.Person_unblockLogin()
+    login.Login_unblockLogin()
     preference.setPreferredMaxPasswordLifetimeDuration(0)
     self.tic()
     self._clearCache()
     response = self.publish(path)
     self.assertTrue(response.getHeader("Location").endswith("login_form?portal_status_message=Password is expired."))
-    self.assertTrue(person.isPasswordExpired())
+    self.assertTrue(login.isPasswordExpired())
 
     # test we're redirected to update password due to soon expire
     preference.setPreferredMaxPasswordLifetimeDuration(24)
@@ -584,7 +608,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredPasswordLifetimeExpireWarningDuration(12)
     self.tic()
     self._clearCache()
-    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test', 'used_ALREADY_1234')
+    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test-05', 'used_ALREADY_1234')
     response = self.publish(path)
     self.assertTrue('Welcome to ERP5' in response.getBody())
 
@@ -593,18 +617,18 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       Check that expiring old Authentication Event list works.
     """
     portal = self.getPortal()
-    person = portal.portal_catalog.getResultValue(portal_type = 'Person',
-                                                  reference = 'test')
+    person = self.createUser('test-06')
+    login = person.objectValues(portal_type='ERP5 Login')[0]
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
     # file some failures so we should detect and block account
-    person.notifyLoginFailure()
-    person.notifyLoginFailure()
-    person.notifyLoginFailure()
+    login.notifyLoginFailure()
+    login.notifyLoginFailure()
+    login.notifyLoginFailure()
     self.tic()
 
     # should be blocked
-    self.assertTrue(person.isLoginBlocked())
+    self.assertTrue(login.isLoginBlocked())
 
     # set 0 check interval
     preference.setPreferredAuthenticationFailureCheckDuration(0)
@@ -612,14 +636,14 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._clearCache()
 
     time.sleep(1) # we need to give a moment
-    self.assertFalse(person.isLoginBlocked())
+    self.assertFalse(login.isLoginBlocked())
 
     # expire manually old
     portal.system_event_module.SystemEventModule_expireAuthenticationEventList()
     self.tic()
 
     self.assertEqual(3, len(portal.portal_catalog(portal_type ="Authentication Event",
-                                                 default_destination_uid = person.getUid(),
+                                                 default_destination_uid = login.getUid(),
                                                  validation_state = "expired")))
 
 

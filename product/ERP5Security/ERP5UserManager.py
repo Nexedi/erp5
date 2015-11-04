@@ -97,6 +97,7 @@ class ERP5UserManager(BasePlugin):
   """
 
   meta_type = 'ERP5 User Manager'
+  login_portal_type = 'ERP5 Login'
 
   security = ClassSecurityInfo()
 
@@ -104,6 +105,53 @@ class ERP5UserManager(BasePlugin):
 
     self._id = self.id = id
     self.title = title
+
+  def getLoginPortalType(self):
+    return self.login_portal_type
+
+  def getPersonByReference(self, reference):
+    def _getPersonRelativeUrlFromReference(reference):
+      person_url = self.REQUEST.get('_login_cache', {}).get(reference)
+      portal = self.getPortalObject()
+      if person_url is not None:
+        return person_url
+      else:
+        person_list = portal.portal_catalog.unrestrictedSearchResults(
+          select_list=('relative_url',),
+          portal_type='Person',
+          reference={'query': reference, 'key': 'ExactMatch'},
+          limit=2
+        )
+        l = len(person_list)
+        if l > 1:
+          raise RuntimeError, 'More than one Person have login %r' % \
+            (reference,)
+        elif l == 1:
+          return person_list[0]['relative_url']
+    _getPersonRelativeUrlFromReference = CachingMethod(
+      _getPersonRelativeUrlFromReference,
+      id='ERP5UserManager._getPersonRelativeUrlFromReference',
+      cache_factory='erp5_content_short')
+    person_relative_url = _getPersonRelativeUrlFromReference(reference)
+    if person_relative_url is not None:
+      return self.getPortalObject().unrestrictedTraverse(
+        person_relative_url)
+
+  def checkPersonValidity(self, person):
+    if person.getValidationState() in ('deleted',):
+      return False
+    now = DateTime()
+    for assignment in person.contentValues(portal_type="Assignment"):
+      if assignment.getValidationState() != "open":
+         continue
+      if assignment.hasStartDate() and \
+           assignment.getStartDate() > now:
+         continue
+      if assignment.hasStopDate() and \
+           assignment.getStopDate() < now:
+         continue
+      return True
+    return False
 
   #
   #   IAuthenticationPlugin implementation
@@ -128,82 +176,80 @@ class ERP5UserManager(BasePlugin):
       return None
 
     @UnrestrictedMethod
-    def _authenticateCredentials(login, password, path,
+    def _authenticateCredentials(login, password, portal_type,
       ignore_password=False):
       if not login or not (password or ignore_password):
-        return None
+        return None, None
 
-      user_list = self.getUserByLogin(login)
+      login_object = self.getLoginObject(login, portal_type)
 
-      if not user_list:
-        raise _AuthenticationFailure()
+      if not login_object:
+        raise _AuthenticationFailure(None)
 
-      user = user_list[0]
+      if login_object.getPortalType() == 'Person':
+        # BBB
+        user = login_object
+      else:
+        user = login_object.getParentValue()
 
       try:
-        # get assignment
-        assignment_list = [x for x in user.contentValues(portal_type="Assignment") if x.getValidationState() == "open"]
-        valid_assignment_list = []
-        # check dates if exist
-        login_date = DateTime()
-        for assignment in assignment_list:
-          if assignment.getStartDate() is not None and \
-              assignment.getStartDate() > login_date:
-            continue
-          if assignment.hasStopDate() and \
-              assignment.getStopDate() < login_date:
-            continue
-          valid_assignment_list.append(assignment)
-
-        if (ignore_password or pw_validate(user.getPassword(), password)) and \
-            len(valid_assignment_list) and user \
-            .getValidationState() != 'deleted': #user.getCareerRole() == 'internal':
-          return login, login # use same for user_id and login
+        if self.checkPersonValidity(user) and \
+            (ignore_password or self._validatePassword(login_object, password)):
+          return user.getReference(), login_object.getRelativeUrl()
       finally:
         pass
-      raise _AuthenticationFailure()
+      raise _AuthenticationFailure(login_object.getRelativeUrl())
 
     _authenticateCredentials = CachingMethod(
       _authenticateCredentials,
-      id='ERP5UserManager_authenticateCredentials',
+      id=self.__class__.__name__ + '_authenticateCredentials',
       cache_factory='erp5_content_short')
     try:
-      authentication_result = _authenticateCredentials(
+      user_reference, login_url = _authenticateCredentials(
         login=login,
         password=credentials.get('password'),
-        path=self.getPhysicalPath(),
+        portal_type=credentials.get('login_portal_type',
+                                    self.login_portal_type),
         ignore_password=ignore_password)
+    except _AuthenticationFailure, exception:
+      user_reference = None
+      login_url = exception.message or None
 
-    except _AuthenticationFailure:
-      authentication_result = None
-
+    if user_reference and '_login_cache' not in self.REQUEST:
+      self.REQUEST.set('_login_cache', {})
+      self.REQUEST['_login_cache'][user_reference] = login_url
     if not self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled():
       # stop here, no authentication policy enabled
       # so just return authentication check result
-      return authentication_result
+      if user_reference:
+        return (user_reference, user_reference)
+      else:
+        return None
+
+    if login_url is None:
+      return None
 
     # authentication policy enabled, we need person object anyway
-    user_list = self.getUserByLogin(credentials.get('login'))
-    if not user_list:
-      # not an ERP5 Person object
-      return None
-    user = user_list[0]
+    login = self.getPortalObject().unrestrictedTraverse(login_url)
 
-    if authentication_result is None:
+    if user_reference is None:
       # file a failed authentication attempt
-      user.notifyLoginFailure()
+      login.notifyLoginFailure()
       return None
 
     # check if password is expired
-    if user.isPasswordExpired():
-      user.notifyPasswordExpire()
+    if login.isPasswordExpired():
+      login.notifyPasswordExpire()
       return None
 
-    # check if user account is blocked
-    if user.isLoginBlocked():
+    # check if login is blocked
+    if login.isLoginBlocked():
       return None
 
-    return authentication_result
+    return (user_reference, user_reference)
+
+  def _validatePassword(self, login_object, password):
+    return pw_validate(login_object.getPassword(), password)
 
   #
   #   IUserEnumerationPlugin implementation
@@ -213,7 +259,7 @@ class ERP5UserManager(BasePlugin):
              sort_by=None, max_results=None, **kw):
     """ See IUserEnumerationPlugin.
     """
-    if id is None:
+    if not id:
       id = login
     if isinstance(id, str):
       id = (id,)
@@ -226,24 +272,69 @@ class ERP5UserManager(BasePlugin):
     id_list = []
     for user_id in id:
       if SUPER_USER == user_id:
-        info = { 'id' : SUPER_USER
-             , 'login' : SUPER_USER
-             , 'pluginid' : plugin_id
-        }
+        info = {'id' : SUPER_USER,
+                'login' : SUPER_USER,
+                'pluginid' : plugin_id,
+               }
         user_info.append(info)
       else:
         id_list.append(user_id)
 
     if id_list:
-      for user in self.getUserByLogin(tuple(id_list), exact_match=exact_match):
-        info = { 'id' : user.getReference()
-               , 'login' : user.getReference()
-               , 'pluginid' : plugin_id
-               }
-
-        user_info.append(info)
+      if exact_match:
+        for reference in id_list:
+          user = self.getPersonByReference(reference)
+          if user is not None:
+            info = {'id': reference,
+                    'login' : reference,
+                    'pluginid': plugin_id,
+                   }
+            user_info.append(info)
+      else:
+        for user in self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+          select_list=('reference',),
+          portal_type='Person',
+          reference={'query': id_list, 'key': 'Keyword'},
+        ):
+          info = {'id': user['reference'],
+                  'login' : user['reference'],
+                  'pluginid' : plugin_id,
+                 }
+          user_info.append(info)
 
     return tuple(user_info)
+
+  @transactional_cached(lambda self, *args: args)
+  def getLoginObject(self, login, portal_type):
+    try:
+      if not login:
+        return
+      catalog_result = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+        select_expression=('portal_type', 'reference', 'validation_state'),
+        portal_type=(portal_type, 'Person'),
+        reference=dict(query=login, key='ExactMatch'),
+        sort_on=(('portal_type',),),
+      )
+      for x in catalog_result:
+        if x['portal_type'] != 'Person' and x['validation_state'] != 'validated':
+          continue
+        if x['reference'] != login:
+          continue
+        x = x.getObject()
+        if x.objectIds(spec='ERP5 Login'):
+          continue # Already migrated.
+        return x
+    except ConflictError:
+      raise
+    except:
+      LOG('ERP5Security', PROBLEM, 'getLoginObject failed', error=sys.exc_info())
+      # Here we must raise an exception to prevent callers from caching
+      # a result of a degraded situation.
+      # The kind of exception does not matter as long as it's catched by
+      # PAS and causes a lookup using another plugin or user folder.
+      # As PAS does not define explicitely such exception, we must use
+      # the _SWALLOWABLE_PLUGIN_EXCEPTIONS list.
+      raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
 
   def getUserByLogin(self, login, exact_match=True):
     # Search the Catalog for login and return a list of person objects

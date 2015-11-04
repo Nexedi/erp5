@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>15</int> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>name</string> </key>
+                      <value> <string>portal_type</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>null</string> </key>
+                      <value> <int>1</int> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>t</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>width</string> </key>
+                      <value> <int>10</int> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_zGetDuplicateLoginReferenceList</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  reference, portal_type\n
+FROM\n
+  catalog\n
+WHERE\n
+  portal_type in (<dtml-in expr="portal_catalog.getPortalLoginTypeList()"><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)\n
+  AND validation_state=\'validated\'\n
+GROUP BY\n
+  reference, portal_type\n
+HAVING\n
+  count(*) > 1\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

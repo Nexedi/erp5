@@ -50,64 +50,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  File a password expire event.\n
-"""\n
-from DateTime import DateTime\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-from Products.ERP5Type.DateUtils import addToDate\n
-\n
-portal = context.getPortalObject()\n
-portal_preferences = portal.portal_preferences\n
-\n
-if not portal_preferences.isAuthenticationPolicyEnabled() or \\\n
-   not portal.portal_preferences.isPreferredSystemRecoverExpiredPassword():\n
-  # no policy, no sense to file expire at all or symply system do not configured to\n
-  return 0\n
-\n
-# Prevent creating new recovery if one was recently created\n
-recovery_list = portal.portal_catalog(\n
-  portal_type="Credential Recovery",\n
-  reference=context.getReference(),\n
-  default_destination_decision_uid=context.getUid(),\n
-  creation_date=Query(range="min", creation_date=addToDate(DateTime(), {\'day\': -1})),\n
-  limit=1)\n
-if (len(recovery_list) > 0):\n
-  return 0\n
-\n
-module = portal.getDefaultModule(portal_type=\'Credential Recovery\')\n
-credential_recovery = module.newContent(\n
-                               portal_type="Credential Recovery",\n
-                               reference=context.getReference(),\n
-                               destination_decision_value=context,\n
-                               language=portal.Localizer.get_selected_language(),\n
-                               activate_kw={\'tag\': tag})\n
-# immediate reindex allowed because it is a new object\n
-credential_recovery.immediateReindexObject()\n
-context.serialize()\n
-credential_recovery.submit()\n
-
-
-]]></string> </value>
+            <value> <string>error_list = []\n
+if context.hasReference() and \\\n
+    not len(context.objectValues(portal_type=context.getPortalObject().getPortalLoginTypeList())):\n
+  error_list.append(\'%s has no Login type sub document.\' % context.getRelativeUrl())\n
+  if fixit:\n
+    context.Person_migrateToLogin()\n
+return error_list\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
+            <value> <string>fixit=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_notifyPasswordExpire</string> </value>
+            <value> <string>Person_checkPreUpgradeLoginExistenceConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>

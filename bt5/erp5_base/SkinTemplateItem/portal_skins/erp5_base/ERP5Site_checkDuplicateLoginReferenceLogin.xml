@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+result = []\n
+sql_result = portal.ERP5Site_zGetDuplicateLoginReferenceList()\n
+if len(sql_result):\n
+  from Products.CMFActivity.ActiveResult import ActiveResult\n
+  from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery\n
+  query = ComplexQuery(\n
+    *[ComplexQuery(SimpleQuery(portal_type=i[\'portal_type\']),\n
+                   SimpleQuery(reference=i[\'reference\'])) for i in sql_result],\n
+    operator=\'OR\')\n
+  active_result = ActiveResult()\n
+  for i in portal.portal_catalog(\n
+      select_list=(\'portal_type\', \'reference\',),\n
+      query=query):\n
+    result.append(\'%r, %r, %r\' % (i[\'portal_type\'], i[\'reference\'], i[\'path\']))\n
+  active_result.edit(summary=\'Logins having the same reference exist\',\n
+                     severity=len(sql_result),\n
+                     detail=\'\\n\'.join(result))\n
+  active_process = context.newActiveProcess()\n
+  active_process.postResult(active_result)\n
+  return active_process\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_checkDuplicateLoginReferenceLogin</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

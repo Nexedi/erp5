@@ -32,14 +32,13 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.interfaces import plugins
 from Products.PluggableAuthService.utils import classImplements
-from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
 from AccessControl.SecurityManagement import getSecurityManager, \
   setSecurityManager, newSecurityManager
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 import socket
-from Products.ERP5Security.ERP5UserManager import getUserByLogin
+from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from zLOG import LOG, ERROR, INFO
 
 try:
@@ -90,7 +89,7 @@ def addERP5GoogleExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
       'ERP5GoogleExtractionPlugin+added.'
       % dispatcher.absolute_url())
 
-class ERP5ExternalOauth2ExtractionPlugin:
+class ERP5ExternalOauth2ExtractionPluginBase(BasePlugin):
 
   cache_factory_name = 'extrenal_oauth2_token_cache_factory'
   security = ClassSecurityInfo()
@@ -143,7 +142,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
     Base_createOauth2User = getattr(self.getPortalObject(),
       'Base_createOauth2User', None)
     if Base_createOauth2User is None:
-      LOG('ERP5ExternalOauth2ExtractionPlugin', INFO,
+      LOG(self.getId(), INFO,
           'No Base_createOauth2User script available, install '
             'erp5_credential_oauth2, disabled authentication.')
       return DumbHTTPExtractor().extractCredentials(request)
@@ -158,8 +157,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
           token = l[1]
 
     if token is None:
-      # no token
-      return DumbHTTPExtractor().extractCredentials(request)
+      return creds
 
     # token is available
     user = None
@@ -172,8 +170,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
         user = user_entry['reference']
 
     if user is None:
-      # fallback to default way
-      return DumbHTTPExtractor().extractCredentials(request)
+      return creds
 
     tag = '%s_user_creation_in_progress' % user.encode('hex')
 
@@ -181,7 +178,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
       self.REQUEST['USER_CREATION_IN_PROGRESS'] = user
     else:
       # create the user if not found
-      person_list = getUserByLogin(self.getPortalObject(), user)
+      person_list = self.erp5_users.getPersonByReference(user)
       if len(person_list) == 0:
         sm = getSecurityManager()
         if sm.getUser().getId() != SUPER_USER:
@@ -193,7 +190,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
           try:
             self.Base_createOauth2User(tag, **user_entry)
           except Exception:
-            LOG('ERP5ExternalOauth2ExtractionPlugin', ERROR,
+            LOG(self.getId(), ERROR,
               'Issue while calling creation script:', error=True)
             raise
         finally:
@@ -204,6 +201,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
       # allow to work w/o cache
       pass
     creds['external_login'] = user
+    creds['login_portal_type'] = self.login_portal_type
     creds['remote_host'] = request.get('REMOTE_HOST', '')
     try:
       creds['remote_address'] = request.getClientAddr()
@@ -211,7 +209,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
       creds['remote_address'] = request.get('REMOTE_ADDR', '')
     return creds
 
-class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin):
+class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPluginBase):
   """
   Plugin to authenicate as machines.
   """
@@ -219,6 +217,7 @@ class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugi
   meta_type = "ERP5 Facebook Extraction Plugin"
   prefix = 'fb_'
   header_string = 'facebook'
+  login_portal_type = 'Facebook Login'
 
   def getUserEntry(self, token):
     if facebook is None:
@@ -250,7 +249,7 @@ class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugi
         user_entry = None
     return user_entry
 
-class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin):
+class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPluginBase):
   """
   Plugin to authenicate as machines.
   """
@@ -258,6 +257,7 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin)
   meta_type = "ERP5 Google Extraction Plugin"
   prefix = 'go_'
   header_string = 'google'
+  login_portal_type = 'Google Login'
 
   def getUserEntry(self, token):
     if httplib2 is None:

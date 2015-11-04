@@ -422,8 +422,11 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
       person = self.portal.person_module.newContent(portal_type='Person',
                                                     reference=reference,
-                                                    password=password,
                                                     **person_kw)
+      login = person.newContent(portal_type='ERP5 Login',
+                                reference=reference,
+                                password=password)
+      login.validate()
       return person
 
     def createUserAssignment(self, user, assignment_kw):

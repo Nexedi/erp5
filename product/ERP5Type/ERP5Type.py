@@ -319,7 +319,7 @@ class ERP5TypeInformation(XMLObject,
       # Module
       'module',
       # Base
-      'entity',
+      'entity', 'login',
       # LEGACY - needs a warning - XXX-JPS
       'tax_movement',
     )

@@ -174,15 +174,15 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Person_getListboxUrl</string>
+                          <string>Login_getListboxUrl</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
-                          <string>Person_getListboxUrl</string>
+                          <string>Login_getListboxUrl</string>
                         </tuple>
                         <tuple>
                           <string>count</string>
-                          <string>Person_getListboxUrl</string>
+                          <string>Login_getListboxUrl</string>
                         </tuple>
                       </list>
                     </value>

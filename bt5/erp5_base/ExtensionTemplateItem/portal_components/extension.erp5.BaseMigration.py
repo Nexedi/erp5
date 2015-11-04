@@ -27,6 +27,7 @@
 ##############################################################################
 
 import erp5
+import re
 from Products.ERP5.Extensions.CheckPortalTypes import changeObjectClass
 
 def migrateToEmbeddedFile(self, force=0):
@@ -37,7 +38,50 @@ def migrateToEmbeddedFile(self, force=0):
   if portal_type in ('File', 'Image') and self.getValidationState()=='embedded':
     embedded_type = 'Embedded File'
     container = self.getParentValue()
-    id = self.id
     if force == 1:
-      changeObjectClass(container, id, getattr(erp5.portal_type, embedded_type))
+      changeObjectClass(container, self.id, getattr(erp5.portal_type, embedded_type))
     return '%s: %s -> %s' % (self.getRelativeUrl(), portal_type, embedded_type),
+
+def migrateToLogin(self):
+  assert self.getPortalType() == 'Person'
+  if len(self.objectValues(portal_type=self.getPortalObject().getPortalLoginTypeList())):
+    # already migrated
+    return
+  reference = self.getReference()
+  if not reference:
+    # no login is required
+    return
+  login_list = []
+  if re.match(r'^fb_\d+$', reference):
+    login = self.newContent(
+      portal_type='Facebook Login',
+      reference=reference,
+    )
+    login_list.append(login)
+  elif re.match(r'^go_\d+$', reference):
+    login = self.newContent(
+      portal_type='Google Login',
+      reference=reference,
+    )
+    login_list.append(login)
+  elif re.match('^bid_[^@]+@[^@]+$', reference):
+    login = self.newContent(
+      portal_type='Persona Login',
+      reference=reference,
+    )
+    login_list.append(login)
+  if self.hasPassword():
+    login = self.newContent(
+      portal_type='ERP5 Login',
+      reference=reference,
+    )
+    login._setEncodedPassword(self.getPassword())
+    login_list.append(login)
+  if not login_list:
+    login = self.newContent(
+      portal_type='ERP5 Login',
+      reference=reference,
+    )
+    login_list.append(login)
+  for login in login_list:
+    login.validate()

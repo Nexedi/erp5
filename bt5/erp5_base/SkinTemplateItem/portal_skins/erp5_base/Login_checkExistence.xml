@@ -50,19 +50,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Used to generate an URL to person object in a listbox.\n
-"""\n
-return brain.url\n
+            <value> <string>return context.getPortalObject().Base_checkLoginExistence(\n
+  portal_type=context.getPortalType(),\n
+  reference=context.getReference(),\n
+  ignore_uid=context.getUid(),\n
+)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_getListboxUrl</string> </value>
+            <value> <string>Login_checkExistence</string> </value>
         </item>
       </dictionary>
     </pickle>

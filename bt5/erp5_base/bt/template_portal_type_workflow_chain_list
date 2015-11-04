@@ -13,6 +13,8 @@ Currency Exchange Line | edit_workflow
 Currency Exchange Line | validation_workflow
 Currency | edit_workflow
 Currency | validation_workflow
+ERP5 Login | edit_workflow
+ERP5 Login | login_validation_workflow
 Email | edit_workflow
 Embedded File | document_conversion_interaction_workflow
 Embedded File | edit_workflow

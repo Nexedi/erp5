@@ -77,20 +77,21 @@ kw = {\'portal_type\': \'Authentication Event\',\n
       \'validation_state\' : \'confirmed\'}\n
 failure_list = portal.portal_catalog(**kw)\n
 for failure in failure_list:\n
-  person = failure.getDestinationValue()\n
-  if person not in all_blocked_user_login_dict.keys():\n
-    all_blocked_user_login_dict[person] = []\n
-  all_blocked_user_login_dict[person].append(failure)\n
+  login = failure.getDestinationValue()\n
+  if login not in all_blocked_user_login_dict.keys():\n
+    all_blocked_user_login_dict[login] = []\n
+  all_blocked_user_login_dict[login].append(failure)\n
 \n
 # leave only ones that are blocked:\n
-for person, failure_list in all_blocked_user_login_dict.items():\n
+for login, failure_list in all_blocked_user_login_dict.items():\n
   if len(failure_list) >= max_authentication_failures:\n
+    title = login.getParentTitle()\n
     blocked_user_login_list.append(newTempBase(portal, \n
-                                               person.getTitle(), \n
-                                               **{\'title\': person.getTitle(),\n
+                                               title, \n
+                                               **{\'title\': title,\n
                                                   \'count\':len(failure_list),\n
-                                                  \'reference\': person.getReference(),\n
-                                                  \'url\': person.absolute_url()}))\n
+                                                  \'reference\': login.getReference(),\n
+                                                  \'url\': login.absolute_url()}))\n
 return blocked_user_login_list\n
 
 

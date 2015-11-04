@@ -88,13 +88,16 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
                       'career_function': self.getFunction(),
                       'last_name': self.getLastName(),
                       'reference': self.getReference(),
-                      'password': self.getPassword(),
                         })
 
         assignment = person.newContent(portal_type="Assignment",
                                       function = self.getFunction(),
                                       group = group_id,
                                       site = site_id)
+
+        login = person.newContent(portal_type='ERP5 Login',
+                                  reference=self.getReference(),
+                                  password=self.getPassword())
 
         # Set dates are required to create valid assigments.
         now = DateTime()
@@ -103,9 +106,10 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
         # Define valid for 10 years.
         assignment.setStopDate(now + (365*10))
 
-        # Validate the Person and Assigment
+        # Validate the Person, Assigment and Login
         person.validate(comment=translateString("Validated by Configurator"))
         assignment.open(comment=translateString("Open by Configuration"))
+        login.validate(comment=translateString("Validated by Configurator"))
 
         ## add to customer template
         business_configuration = self.getBusinessConfigurationValue()

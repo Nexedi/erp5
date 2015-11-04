@@ -1108,6 +1108,7 @@ Hé Hé Hé!""", page.asText().strip())
     # authenticated
     user = self.createUser('webmaster')
     self.createUserAssignement(user, {})
+    self.tic()
     response = self.publish(path, 'webmaster:webmaster')
     last_modified_header = response.getHeader('Last-Modified')
     self.assertTrue(last_modified_header)

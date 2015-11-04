@@ -225,7 +225,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                         person.getFirstName())
       self.assertEqual(user_info["field_your_last_name"],
                         person.getLastName())
-      self.assertNotEquals(person.getPassword(), None)
       self.assertEqual(user_info["field_your_function"],
                         person.getFunction())
       self.assertEqual(user_info["field_your_default_email_text"],
@@ -236,6 +235,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       assignment_list = person.contentValues(portal_type='Assignment')
       self.assertEqual(len(assignment_list), 1)
       self.assertEqual('my_group', assignment_list[0].getGroup())
+      login_list = person.contentValues(portal_type='ERP5 Login')
+      self.assertEqual(len(login_list), 1)
+      self.assertNotEquals(login_list[0].getPassword(), None)
 
   def stepCheckSocialTitleCategory(self, sequence=None,sequence_list=None, **kw):
     """Check that the social title category is configured.

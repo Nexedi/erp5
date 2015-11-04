@@ -53,18 +53,12 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
 
   category_list = []
 
-  person_object_list = self.portal_catalog.unrestrictedSearchResults(
-    query=SimpleQuery(reference=user_name), portal_type='Person')
-
-  if len(person_object_list) != 1:
-    if len(person_object_list) > 1:
-      raise ConsistencyError, "Error: There is more than one Person with reference '%s'" % user_name
-    else:
-      # if a person_object was not found in the module, we do nothing more
-      # this happens for example when a manager with no associated person object
-      # creates a person_object for a new user
-      return []
-  person_object = person_object_list[0].getObject()
+  person_object = self.getPortalObject().acl_users.erp5_users.getPersonByReference(user_name)
+  if person_object is None:
+    # if a person_object was not found in the module, we do nothing more
+    # this happens for example when a manager with no associated person object
+    # creates a person_object for a new user
+    return []
 
   # We look for every valid assignments of this user
   for assignment in person_object.contentValues(filter={'portal_type': 'Assignment'}):

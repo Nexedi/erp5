@@ -36,6 +36,10 @@
   <workflow>currency_exchange_line_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>ERP5 Login</type>
+  <workflow>edit_workflow, login_validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Email</type>
   <workflow>edit_workflow</workflow>
  </chain>
