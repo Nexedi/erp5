@@ -190,8 +190,11 @@ def Base_displayImage(self, image_object=None):
   """
   External function to display Image objects to jupyter frontend.
 
-  XXX: This function is intented to be called from Base_executeJupyter 
-        or Jupyter frontend.That's why printing string and returning None  
+  XXX:  This function is intented to be called from Base_executeJupyter 
+        or Jupyter frontend.That's why printing string and returning None.
+        Also, it clears the plot for Matplotlib object after every call, so
+        in case of saving the plot, its essential to call Base_savePlot before
+        calling Base_displayImage.
 
   Parameters
   ----------
@@ -228,6 +231,8 @@ def Base_displayImage(self, image_object=None):
       # Encode the value in figfile to base64 string so as to serve it jupyter frontend
       figdata = base64.b64encode(figfile.getvalue())
       mime_type = 'image/png'
+      # Clear the plot figures after every execution
+      image_object.close()
 
     # XXX: We are not returning anything because we want this function to be called
     # by Base_executeJupyter , inside exec(), and its better to get the printed string
