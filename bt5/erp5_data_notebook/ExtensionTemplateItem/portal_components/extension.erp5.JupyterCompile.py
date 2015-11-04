@@ -276,10 +276,11 @@ def Base_savePlot(self, plot=None, reference=None):
   buff.seek(0)
   data = buff.getvalue()
 
-  # Add new Image object in erp5 with id and reference
   import time
   image_id = reference+str(time.time())
-  self.newContent(
+  # Add new Image object in erp5 with id and reference
+  image_module = self.getDefaultModule(portal_type='Image')
+  image_module.newContent(
     portal_type='Image',
     id=image_id,
     reference=reference,
