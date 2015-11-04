@@ -50,7 +50,7 @@
                 <string>W: 82,  6: Use of exec (exec-used)</string>
                 <string>W:111,  6: Use of exec (exec-used)</string>
                 <string>W:117,  6: Use of exec (exec-used)</string>
-                <string>W:209,  4: Using the global statement (global-statement)</string>
+                <string>W:212,  4: Using the global statement (global-statement)</string>
               </tuple>
             </value>
         </item>

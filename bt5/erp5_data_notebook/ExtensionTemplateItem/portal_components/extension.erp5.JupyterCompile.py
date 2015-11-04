@@ -188,7 +188,10 @@ def UpdateLocalVariableDict(self, existing_dict):
 def Base_displayImage(self, image_object=None):
   """
   External function to display Image objects to jupyter frontend.
-  
+
+  XXX: This function is intented to be called from Base_executeJupyter 
+        or Jupyter frontend.That's why printing string and returning None  
+
   Parameters
   ----------
   
@@ -199,7 +202,7 @@ def Base_displayImage(self, image_object=None):
   Output
   -----
   
-  Returns base64 encoded string of the plot on which it has been called.
+  Prints base64 encoded string of the plot on which it has been called.
 
   """
   if image_object:
@@ -231,3 +234,56 @@ def Base_displayImage(self, image_object=None):
     # value from stdout and using return we would get that value as string inside
     # an string which is unfavourable.
     print figdata
+    return None
+
+def Base_savePlot(self, plot=None, reference=None):
+  """
+  Saves generated plots from matplotlib in ERP5 Image module
+
+  XXX:  Use only if bt5 'erp5_wendelin' installed
+        This function is intented to be called from Base_executeJupyter 
+        or Jupyter frontend.
+
+  Parameters
+  ----------
+  plot : Matplotlib plot object
+  
+  reference: Reference of Image object which would be generated
+             Id and reference should be always unique
+  
+  Output
+  ------
+  Returns None, but saves the plot object as ERP5 image in Image Module with
+  reference same as that of data_array_object.
+  
+  """
+
+  # As already specified in docstring, this function should be called from
+  # Base_executeJupyter or Jupyter Frontend which means that it would pass
+  # through exec and hence the printed result would be caught in a string and
+  # that's why we are using print and returning None.
+  if not reference:
+    print 'No reference specified for Image object'
+    return None
+  if not plot:
+    print 'No matplotlib plot object specified'
+    return None
+
+  filename = '%s.png'%reference
+  # Save plot data in buffer
+  buff = StringIO()
+  plot.savefig(buff, format='png')
+  buff.seek(0)
+  data = buff.getvalue()
+
+  # Add new Image object in erp5 with id and reference
+  import time
+  image_id = reference+str(time.time())
+  self.newContent(
+    portal_type='Image',
+    id=image_id,
+    reference=reference,
+    data=data,
+    filename=filename)
+
+  return None
