@@ -49,12 +49,31 @@
             </value>
         </item>
         <item>
+            <key> <string>_body</string> </key>
+            <value> <string>person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
+if person is None:\n
+  return []\n
+else:\n
+  return [(x.getReference(), x.getRelativeUrl()) for x in \\\n
+          person.objectValues(portal_type=\'ERP5 Login\') \\\n
+          if x.getValidationState() == \'validated\']\n
+</string> </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, **kw</string> </value>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_getListboxUrl</string> </value>
+            <value> <string>Base_getValidatedLoginItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

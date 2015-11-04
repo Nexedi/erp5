@@ -50,20 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
+            <value> <string>form_id="view", cancel_url=None, batch_mode=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_changePassword</string> </value>
+            <value> <string>Login_unblockLogin</string> </value>
         </item>
       </dictionary>
     </pickle>

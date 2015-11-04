@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_isPasswordExpired</string> </value>
+            <value> <string>Login_isLoginBlocked</string> </value>
         </item>
       </dictionary>
     </pickle>

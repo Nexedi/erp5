@@ -25,14 +25,13 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.ERP5Type \
   import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from ZODB.POSException import ConflictError
 
 import sys
 
 from zLOG import LOG, WARNING
 
-from ERP5UserManager import SUPER_USER
+from ERP5UserManager import SUPER_USER, getUserByLogin
 
 # It can be useful to set NO_CACHE_MODE to 1 in order to debug
 # complex security issues related to caching groups. For example,
@@ -45,8 +44,8 @@ NO_CACHE_MODE = 0
 class ConsistencyError(Exception): pass
 
 manage_addERP5GroupManagerForm = PageTemplateFile(
-    'www/ERP5Security_addERP5GroupManager', globals(),
-    __name__='manage_addERP5GroupManagerForm' )
+  'www/ERP5Security_addERP5GroupManager', globals(),
+  __name__='manage_addERP5GroupManagerForm' )
 
 def addERP5GroupManager( dispatcher, id, title=None, REQUEST=None ):
   """ Add a ERP5GroupManager to a Pluggable Auth Service. """
@@ -56,10 +55,10 @@ def addERP5GroupManager( dispatcher, id, title=None, REQUEST=None ):
 
   if REQUEST is not None:
     REQUEST['RESPONSE'].redirect(
-                              '%s/manage_workspace'
-                              '?manage_tabs_message='
-                              'ERP5GroupManager+added.'
-                          % dispatcher.absolute_url())
+      '%s/manage_workspace'
+      '?manage_tabs_message='
+      'ERP5GroupManager+added.'
+      % dispatcher.absolute_url())
 
 class ERP5GroupManager(BasePlugin):
 
@@ -117,17 +116,10 @@ class ERP5GroupManager(BasePlugin):
         else:
           security_definition_list = mapping_method()
 
-        # get the person from its reference - no security check needed
-        catalog_result = self.portal_catalog.unrestrictedSearchResults(
-            portal_type="Person", query=SimpleQuery(reference=user_name))
-        if len(catalog_result) != 1: # we won't proceed with groups
-          if len(catalog_result) > 1: # configuration is screwed
-            raise ConsistencyError, 'There is more than one Person whose \
-                login is %s : %s' % (user_name,
-                repr([r.getObject() for r in catalog_result]))
-          else: # no person is linked to this user login
-            return ()
-        person_object = catalog_result[0].getObject()
+        # get the person from its login - no security check needed
+        person_object = self.erp5_users.getPersonByReference(user_name)
+        if person_object is None: # no person is linked to this user login
+          return ()
 
         # Fetch category values from defined scripts
         for (method_name, base_category_list) in security_definition_list:

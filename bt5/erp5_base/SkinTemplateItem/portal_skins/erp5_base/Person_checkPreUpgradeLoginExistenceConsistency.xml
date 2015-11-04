@@ -49,20 +49,23 @@
             </value>
         </item>
         <item>
-            <key> <string>_params</string> </key>
-            <value> <string>password, request</string> </value>
+            <key> <string>_body</string> </key>
+            <value> <string>error_list = []\n
+if context.hasReference() and \\\n
+    not len(context.objectValues(portal_type=context.getPortalObject().getPortalLoginTypeList())):\n
+  error_list.append(\'%s has no Login type sub document.\' % context.getRelativeUrl())\n
+  if fixit:\n
+    context.Person_migrateToLogin()\n
+return error_list\n
+</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <key> <string>_params</string> </key>
+            <value> <string>fixit=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_isPasswordValid</string> </value>
+            <value> <string>Person_checkPreUpgradeLoginExistenceConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>
