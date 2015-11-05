@@ -299,8 +299,7 @@
           return validateAppGadgetList(gadget, gadget_list);\n
         }, function(error) {\n
           return gadget.redirect({\n
-            command: \'change\',\n
-            options: {found: false, page: \'form\'}\n
+            found: false\n
           });\n
         });\n
     })\n
@@ -473,7 +472,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.49108.59205.8413</string> </value>
+                <value> <string>946.54878.32293.23654</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -491,7 +490,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446476069.46</float>
+                        <float>1446717974.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

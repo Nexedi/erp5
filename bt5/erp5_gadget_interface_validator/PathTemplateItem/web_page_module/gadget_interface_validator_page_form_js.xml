@@ -205,16 +205,12 @@
             if(gadget_list.length > 0) {\n
               var page_type = fetchPageType(gadget_list[0]);\n
               return gadget.redirect({\n
-                command: \'change\',\n
-                options: {\n
-                  page: page_type,\n
-                  appcache_url: appcache_url\n
-                }\n
+                page: page_type,\n
+                appcache_url: appcache_url\n
               });\n
             } else {\n
               return gadget.redirect({\n
-                command: \'change\',\n
-                options: {found: false}\n
+                found: false\n
               });\n
             }\n
           });\n
@@ -365,7 +361,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.46361.42674.38161</string> </value>
+                <value> <string>946.54877.22908.40635</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -383,7 +379,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446476000.92</float>
+                        <float>1446717901.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
