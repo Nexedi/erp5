@@ -188,7 +188,7 @@
       var gadget = this;\n
       return gadget.updateHeader({\n
         title: "Connect To DAV Storage",\n
-        back_url: "#?page=jio_configurator",\n
+        back_url: "#page=jio_configurator",\n
         panel_action: false\n
       }).push(function () {\n
         return gadget.props.deferred.resolve();\n
@@ -355,7 +355,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.54860.11845.29678</string> </value>
+                <value> <string>946.59103.36885.15735</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -373,7 +373,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446729573.71</float>
+                        <float>1446741080.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

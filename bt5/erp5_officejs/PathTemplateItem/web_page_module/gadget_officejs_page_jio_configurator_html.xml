@@ -164,10 +164,10 @@
         <div class="ui-controlgroup ui-controlgroup-horizontal">\n
           <div class="ui-grid-a ui-responsive">\n
             <div class="ui-block-a">\n
-              <a class="ui-btn" href="#?page=sync" data-i18n="Synchronize">Synchronize</a>\n
+              <a class="ui-btn" href="#page=sync" data-i18n="Synchronize">Synchronize</a>\n
             </div>\n
             <div class="ui-block-b">\n
-              <a class="ui-btn" href="#?page=document_list" data-i18n="Go to document List">Go to document List</a>\n
+              <a class="ui-btn" href="#page=document_list" data-i18n="Go to document List">Go to document List</a>\n
             </div>\n
           </div>\n
         </div>\n
@@ -311,7 +311,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4378.53544.28347</string> </value>
+                <value> <string>946.59102.20815.50705</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -329,7 +329,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446729498.99</float>
+                        <float>1446740955.07</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

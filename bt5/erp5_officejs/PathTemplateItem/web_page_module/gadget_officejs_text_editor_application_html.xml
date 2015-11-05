@@ -182,9 +182,9 @@
   <script class="panel-template" type="text/x-handlebars-template">\n
     <div class="ui-content">\n
       <ul data-role="listview" class="ui-listview">\n
-        <li><a href="#?page=text_editor_list" data-i18n="Text Documents">Text Documents</a></li>\n
-        <li><a href="#?page=sync" data-i18n="Sync">Sync</a></li>\n
-        <li class="ui-last-child"><a href="#?page=logout" data-i18n="Logout">Logout</a></li>\n
+        <li><a href="#page=text_editor_list" data-i18n="Text Documents">Text Documents</a></li>\n
+        <li><a href="#page=sync" data-i18n="Sync">Sync</a></li>\n
+        <li class="ui-last-child"><a href="#page=logout" data-i18n="Logout">Logout</a></li>\n
       </ul>\n
     </div>\n
   </script>\n
@@ -348,7 +348,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4378.53544.28347</string> </value>
+                <value> <string>946.59107.19807.14882</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -366,7 +366,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446729798.11</float>
+                        <float>1446741174.99</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
