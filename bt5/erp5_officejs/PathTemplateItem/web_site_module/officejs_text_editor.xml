@@ -430,7 +430,7 @@
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_officejs_translation.html</string> </value>
+            <value> <string>gadget_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -707,7 +707,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -721,7 +721,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58604.38981.59955</string> </value>
+                <value> <string>946.4378.53544.28347</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -739,7 +739,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442858486.32</float>
+                        <float>1446730078.39</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

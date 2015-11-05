@@ -208,7 +208,7 @@
           gadget.props.element.innerHTML = html;\n
           return gadget.updateHeader({\n
             title: options.doc.title + " | Web Page",\n
-            back_url: "#page=text_editor_list",\n
+            back_url: "#?page=text_editor_list",\n
             panel_action: false,\n
             save_action: true\n
           });\n
@@ -397,7 +397,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -411,7 +411,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.18929.62498.39526</string> </value>
+                <value> <string>946.54860.11845.29678</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -429,7 +429,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444320970.58</float>
+                        <float>1446729331.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

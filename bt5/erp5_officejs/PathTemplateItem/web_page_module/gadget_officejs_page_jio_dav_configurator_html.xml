@@ -170,10 +170,10 @@
         <div class="ui-controlgroup ui-controlgroup-horizontal">\n
           <div class="ui-grid-a ui-responsive">\n
             <div class="ui-block-a">\n
-              <a class="ui-btn" href="#page=sync">Synchronize</a>\n
+              <a class="ui-btn" href="#?page=sync">Synchronize</a>\n
             </div>\n
             <div class="ui-block-b">\n
-              <a class="ui-btn" href="#page=document_list">Go to document List</a>\n
+              <a class="ui-btn" href="#?page=document_list">Go to document List</a>\n
             </div>\n
           </div>\n
         </div>\n
@@ -306,7 +306,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -320,7 +320,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.58544.33560.24866</string> </value>
+                <value> <string>946.4378.53544.28347</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -338,7 +338,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1443010638.45</float>
+                        <float>1446729536.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
