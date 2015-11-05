@@ -132,7 +132,7 @@
             <a data-i18n="hide" class="ui-responsive ui-btn ui-btn-icon-left ui-icon-eye ui-first-child ui-override-theme ui-disabled" href="#">Hide Rows</a>\n
           </div>\n
         </div>\n
-        <h1 data-i18n="selected" class="ui-title ui-override-theme">0 items selected</h1>\n
+        <h1 data-i18n="0 items selected" class="ui-title ui-override-theme">0 items selected</h1>\n
         <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
           <div class="ui-controlgroup-controls">\n
             <a data-i18n="sort" class="ui-responsive ui-btn ui-btn-icon-left ui-icon-sort-amount-desc ui-last-child ui-override-theme ui-disabled" href="#">Sort</a>\n
