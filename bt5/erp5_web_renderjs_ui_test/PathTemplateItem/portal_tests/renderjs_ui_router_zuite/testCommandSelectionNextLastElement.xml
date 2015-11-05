@@ -40,7 +40,7 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Form View Back Link</title>\n
+<title>Test Form View Previous Link</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
@@ -51,11 +51,44 @@
 \n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>\n
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>\n
   <td></td>\n
 </tr>\n
 \n
 <!-- Wait for gadget to be loaded -->\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@data-gadget-url=\'${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Enter a search query to create a selection parameter -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>search</td>\n
+  <td>title</td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//div[@data-gadget-scope=\'erp5_searchfield\']//input[@value=\'header-submit\' and @type=\'submit\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>pause</td>\n
+  <td>1000</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForTextPresent</td>\n
+  <td>Title 1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//div[@data-gadget-scope=\'field_listbox\']//a[text()=\'Title 1\' and contains(@href, \'#!index\')]</td>\n
+  <td></td>\n
+</tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
   <td>//div[@data-gadget-url=\'${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html\']</td>\n
@@ -63,21 +96,23 @@
 </tr>\n
 <tr>\n
   <td>waitForTextPresent</td>\n
-  <td>Title 1</td>\n
+  <td>Edit</td>\n
   <td></td>\n
 </tr>\n
 \n
-<!-- Header has a link to the previous history entry -->\n
+<!-- Header has a link to the previous document in selection -->\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!history_previous\')]</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Next\' and contains(@href, \'#!selection_next\')]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!history_previous\')]</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Next\' and contains(@href, \'#!selection_next\')]</td>\n
   <td></td>\n
 </tr>\n
+\n
+<!-- It should redirect to the context of the selection if first -->\n
 <tr>\n
   <td>waitForElementPresent</td>\n
   <td>//div[@data-gadget-url=\'${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html\']</td>\n
@@ -88,6 +123,17 @@
   <td>Foos</td>\n
   <td></td>\n
 </tr>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//div[@data-gadget-scope=\'erp5_searchfield\']//input[@value=\'title\' and @type=\'text\' and @name=\'search\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForTextPresent</td>\n
+  <td>Title 1</td>\n
+  <td></td>\n
+</tr>\n
+\n
 \n
 </tbody></table>\n
 </body>\n
@@ -105,7 +151,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testFormViewBackLink</string> </value>
+            <value> <string>testCommandSelectionNextLastElement</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

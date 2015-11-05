@@ -80,7 +80,12 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@data-gadget-url=\'${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html\']</td>\n
+  <td>//div[@data-gadget-url=\'${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForTextPresent</td>\n
+  <td>Foos</td>\n
   <td></td>\n
 </tr>\n
 \n
