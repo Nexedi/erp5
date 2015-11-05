@@ -109,9 +109,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP, loopEventListener, document, jIO */\n
+/*global window, rJS, RSVP, loopEventListener, document, jIO, URI */\n
 /*jslint nomen: true, indent: 2 */\n
-(function (window, rJS, RSVP, loopEventListener, document, jIO) {\n
+(function (window, rJS, RSVP, loopEventListener, document, jIO, URI) {\n
   "use strict";\n
 \n
   // Keep reference of the latest allDocs params which reach to this view\n
@@ -165,25 +165,6 @@
     return gadget.props.jio_gadget.get(selection_id)\n
       .push(function (result) {\n
         return result.data;\n
-      });\n
-  }\n
-\n
-  function getHistory(gadget, history_id) {\n
-    var previous_id;\n
-    return gadget.props.jio_gadget.get(history_id)\n
-      .push(function (history) {\n
-        previous_id = history.previous_history_id;\n
-        return gadget.props.jio_gadget.get(history.options_id);\n
-      })\n
-      .push(function (result) {\n
-        return [result, previous_id];\n
-      }, function (error) {\n
-        // XXX Check if 404\n
-        if ((error instanceof jIO.util.jIOError) &&\n
-            (error.status_code === 404)) {\n
-          return [{data: {}}, undefined];\n
-        }\n
-        throw error;\n
       });\n
   }\n
 \n
@@ -343,6 +324,11 @@
   }\n
 \n
   function execSelectionNextCommand(gadget, previous_options) {\n
+    if (previous_options.selection === undefined) {\n
+      return synchronousChangeState(\n
+        getCommandUrlFor(gadget, COMMAND_HISTORY_PREVIOUS, previous_options)\n
+      );\n
+    }\n
     // Get the selection parameters\n
     // Query all docs with those parameters + expected index\n
     // Redirect to the result document\n
@@ -379,6 +365,11 @@
   }\n
 \n
   function execSelectionPreviousCommand(gadget, previous_options) {\n
+    if (previous_options.selection === undefined) {\n
+      return synchronousChangeState(\n
+        getCommandUrlFor(gadget, COMMAND_HISTORY_PREVIOUS, previous_options)\n
+      );\n
+    }\n
     // Get the selection parameters\n
     // Query all docs with those parameters + expected index\n
     // Redirect to the result document\n
@@ -419,21 +410,52 @@
       });\n
   }\n
 \n
+  function redirectToParent(gadget, jio_key) {\n
+    return gadget.jio_getAttachment(jio_key, "links")\n
+      .push(function (erp5_document) {\n
+        var parent_link = erp5_document._links.parent,\n
+          uri;\n
+        if (parent_link !== undefined) {\n
+          uri = new URI(parent_link.href);\n
+          return synchronousChangeState(\n
+            getDisplayUrlFor(uri.segment(2), {})\n
+          );\n
+        }\n
+      });\n
+  }\n
 \n
   function execHistoryPreviousCommand(gadget, previous_options) {\n
-    var history = previous_options.history;\n
+    var history = previous_options.history,\n
+      jio_key = previous_options.jio_key,\n
+      previous_id;\n
     if (history === undefined) {\n
-      return synchronousChangeState(\n
-        getDisplayUrlFor(undefined, {page: \'front\'})\n
-      );\n
+      if (jio_key !== undefined) {\n
+        return redirectToParent(gadget, jio_key);\n
+      }\n
     }\n
-    return getHistory(gadget, previous_options.history)\n
+\n
+    return gadget.props.jio_gadget.get(history)\n
+      .push(function (history) {\n
+        previous_id = history.previous_history_id;\n
+        return gadget.props.jio_gadget.get(history.options_id);\n
+      })\n
+      .push(function (result) {\n
+        return [result, previous_id];\n
+      }, function (error) {\n
+        // XXX Check if 404\n
+        if ((error instanceof jIO.util.jIOError) &&\n
+            (error.status_code === 404)) {\n
+          return redirectToParent(gadget, jio_key);\n
+          // return [{data: {}}, undefined];\n
+        }\n
+        throw error;\n
+      })\n
       .push(function (result_list) {\n
         var options = result_list[0].data,\n
-          jio_key = options.jio_key;\n
+          next_jio_key = options.jio_key;\n
         delete options.jio_key;\n
         return synchronousChangeState(\n
-          getDisplayUrlFor(jio_key, options)\n
+          getDisplayUrlFor(next_jio_key, options)\n
         );\n
       });\n
   }\n
@@ -668,6 +690,7 @@
 \n
     .declareAcquiredMethod(\'renderApplication\', \'renderApplication\')\n
     .declareAcquiredMethod(\'jio_allDocs\', \'jio_allDocs\')\n
+    .declareAcquiredMethod(\'jio_getAttachment\', \'jio_getAttachment\')\n
 \n
     .declareService(function () {\n
       var gadget = this;\n
@@ -681,7 +704,7 @@
         });\n
     });\n
 \n
-}(window, rJS, RSVP, loopEventListener, document, jIO));\n
+}(window, rJS, RSVP, loopEventListener, document, jIO, URI));\n
 
 
 ]]></string> </value>
@@ -819,7 +842,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.56060.60572.31044</string> </value>
+                <value> <string>946.59190.22172.6929</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -837,7 +860,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446547226.97</float>
+                        <float>1446737639.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
