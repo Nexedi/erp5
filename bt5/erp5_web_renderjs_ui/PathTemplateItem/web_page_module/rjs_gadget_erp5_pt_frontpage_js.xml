@@ -139,6 +139,7 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -230,6 +231,9 @@
         .push(function (my_translated_html) {\n
           gadget.props.element.querySelector(\'.document_list\').innerHTML =\n
             my_translated_html;\n
+          return gadget.updateHeader({\n
+            page_title: \'Modules\'\n
+          });\n
         });\n
     });\n
 }(window, rJS, RSVP, Handlebars));
@@ -355,7 +359,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -369,7 +373,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.4325.1841.2867</string> </value>
+                <value> <string>946.44927.40202.16725</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -387,8 +391,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445266444.15</float>
-                        <string>GMT</string>
+                        <float>1446803705.01</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
