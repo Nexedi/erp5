@@ -111,38 +111,29 @@
     REDIRECT_TIMEOUT = 5000;\n
 \n
   function listenHashChange(gadget) {\n
-    // Handle hash in this format: #$path1/path2?a=b&c=d\n
     function extractHashAndDispatch(evt) {\n
       var hash = (evt.newURL || window.location.toString()).split(\'#\')[1],\n
-        split,\n
-        command = "",\n
-        query = "",\n
         subhashes,\n
         subhash,\n
         keyvalue,\n
         index,\n
         args = {};\n
       if (hash !== undefined) {\n
-        split = hash.split(\'?\');\n
-        command = split[0] || "";\n
-        query = split[1] || "";\n
-      }\n
-      subhashes = query.split(\'&\');\n
-      for (index in subhashes) {\n
-        if (subhashes.hasOwnProperty(index)) {\n
-          subhash = subhashes[index];\n
-          if (subhash !== \'\') {\n
-            keyvalue = subhash.split(\'=\');\n
-            if (keyvalue.length === 2) {\n
-              args[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);\n
+        subhashes = hash.split(\'&\');\n
+        for (index in subhashes) {\n
+          if (subhashes.hasOwnProperty(index)) {\n
+            subhash = subhashes[index];\n
+            if (subhash !== \'\') {\n
+              keyvalue = subhash.split(\'=\');\n
+              if (keyvalue.length === 2) {\n
+                args[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);\n
+              }\n
             }\n
           }\n
         }\n
       }\n
 \n
       return gadget.renderApplication({\n
-        method: command[0],\n
-        path: command.substr(1),\n
         args: args\n
       });\n
 \n
@@ -165,7 +156,7 @@
     })\n
 \n
     .declareMethod("getCommandUrlFor", function(options) {\n
-      var prefix = \'?\',\n
+      var prefix = \'\',\n
         result,\n
         key;\n
       result = "#";\n
@@ -354,7 +345,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.54883.25521.16366</string> </value>
+                <value> <string>946.58912.52724.48776</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -372,7 +363,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446718128.25</float>
+                        <float>1446805302.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
