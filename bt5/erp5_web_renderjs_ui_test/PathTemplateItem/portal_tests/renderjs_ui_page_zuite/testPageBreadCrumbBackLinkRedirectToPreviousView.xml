@@ -102,7 +102,7 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Title 1\' and contains(@href, \'#!change\') and contains(@href, \'n.page=breadcrumb\')]</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Title 1\' and contains(@href, \'#!change\') and contains(@href, \'n.page=breadcrumb\') and contains(@href, \'duration_field\')]</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -147,7 +147,7 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertTextPresent</td>\n
+  <td>waitForTextPresent</td>\n
   <td>Duration Quantity</td>\n
   <td></td>\n
 </tr>\n

@@ -159,6 +159,11 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!history_previous\')]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>click</td>\n
   <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!history_previous\')]</td>\n
   <td></td>\n

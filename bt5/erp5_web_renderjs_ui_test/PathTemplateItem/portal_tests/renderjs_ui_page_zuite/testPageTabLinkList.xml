@@ -86,7 +86,7 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'View\' and contains(@href, \'#!change\') and contains(@href, \'n.view=https\') and contains(@href, \'n.page=\') and contains(@href, \'n.editable=true\')]</td>\n
+  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'View\' and contains(@href, \'#!change\') and contains(@href, \'n.view=\') and contains(@href, \'n.page=\') and contains(@href, \'n.editable=true\')]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

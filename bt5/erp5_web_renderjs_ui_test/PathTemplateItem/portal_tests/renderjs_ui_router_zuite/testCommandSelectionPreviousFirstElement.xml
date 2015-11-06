@@ -124,7 +124,7 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementPresent</td>\n
+  <td>waitForElementPresent</td>\n
   <td>//div[@data-gadget-scope=\'erp5_searchfield\']//input[@value=\'title\' and @type=\'text\' and @name=\'search\']</td>\n
   <td></td>\n
 </tr>\n
