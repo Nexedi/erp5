@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testOfficeJS</string> </value>
+            <value> <string>testFunctionalOfficeJS</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testOfficeJS</string> </value>
+            <value> <string>test.erp5.testFunctionalOfficeJS</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
