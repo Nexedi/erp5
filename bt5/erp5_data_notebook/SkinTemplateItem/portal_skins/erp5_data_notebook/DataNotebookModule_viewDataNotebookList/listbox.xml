@@ -86,10 +86,6 @@
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Client</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -123,10 +119,6 @@
                         <tuple>
                           <string>reference</string>
                           <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Client</string>
                         </tuple>
                       </list>
                     </value>
