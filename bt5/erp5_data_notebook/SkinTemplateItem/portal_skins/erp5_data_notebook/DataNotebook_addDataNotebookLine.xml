@@ -58,6 +58,7 @@ have notebook_code from jupyter frontend as well as its executed result\n
 notebook_line = context.newContent(\n
     notebook_code=notebook_code,\n
     notebook_code_result=notebook_code_result,\n
+    mime_type=mime_type,\n
     portal_type="Data Notebook Line"\n
   )\n
 \n
@@ -78,7 +79,7 @@ return notebook_line.Base_redirect(\'view\',\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>notebook_code, notebook_code_result=None, batch_mode=False, **kw</string> </value>
+            <value> <string>notebook_code, notebook_code_result=None, mime_type=\'text/plain\', batch_mode=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
