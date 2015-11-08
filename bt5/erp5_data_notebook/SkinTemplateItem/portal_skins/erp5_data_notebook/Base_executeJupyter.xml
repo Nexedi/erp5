@@ -169,7 +169,7 @@ except UnicodeDecodeError:\n
   }\n
   serialized_result = json.dumps(result)\n
 \n
-data_notebook_line.edit(notebook_code_result=code_result)\n
+data_notebook_line.edit(notebook_code_result=code_result, mime_type=mime_type)\n
 \n
 return serialized_result\n
 </string> </value>
