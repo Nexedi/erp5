@@ -25,15 +25,16 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPythonScript
 
 import time
 import json
+import base64
 import transaction
 
-class TestExecuteJupyter(SecurityTestCase):
+class TestExecuteJupyter(ERP5TypeTestCase):
   
   def afterSetUp(self):
     """
@@ -332,3 +333,63 @@ portal.%s()
 
     expected_result = portal.getTitle()
     self.assertEquals(json.loads(result)['code_result'].rstrip(), expected_result)
+
+  def testSavingModuleObjectLocalVariables(self):
+    """
+    Test to check the saving of module objects in local_variable_dict
+    and if they work as expected.
+    """
+    portal = self.portal
+    self.login('dev_user')
+    jupyter_code = """
+import imghdr as imh
+import sys
+"""
+    reference = 'Test.Notebook.ModuleObject %s' %time.time()
+    portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+      )
+    self.tic()
+
+    jupyter_code =  "print imh.__name__"
+    result = portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code)
+
+    self.assertEquals(json.loads(result)['code_result'].rstrip(), 'imghdr')
+    self.assertEquals(json.loads(result)['mime_type'].rstrip(), 'text/plain')
+
+  def testBaseDisplayImageERP5Image(self):
+    """
+    Test the fucntioning of Base_displayImage external method of erp5_data_notebook
+    BT5 for ERP5 image object as parameter and change
+    """
+    self.image_module = self.portal.getDefaultModule('Image')
+    self.assertTrue(self.image_module is not None)
+    # Create a new ERP5 image object
+    reference = 'testBase_displayImageReference'
+    data = 'qwertyuiopasdfghjklzxcvbnm<somerandomcharacterstosaveasimagedata>'
+    self.image_module.newContent(
+      portal_type='Image',
+      id='testBase_displayImageID',
+      reference=reference,
+      data=data,
+      filename='test.png'
+      )
+    self.tic()
+
+    # Call Base_displayImage from inside of Base_runJupyter
+    jupyter_code = """
+image = context.portal_catalog.getResultValue(portal_type='Image',reference=%s)
+context.Base_displayImage(image_object=image)
+"""%reference
+
+    local_variable_dict = {'imports' : {}, 'variables' : {}}
+    result = self.portal.Base_runJupyter(
+      jupyter_code=jupyter_code,
+      old_local_variable_dict=local_variable_dict
+      )
+
+    self.assertEquals(result['result_string'], base64.b64encode(data))
+    self.assertEquals(result['mime_type'], 'image/png')
