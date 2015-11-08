@@ -193,7 +193,7 @@ def Base_displayImage(self, image_object=None):
   XXX:  This function is intented to be called from Base_executeJupyter 
         or Jupyter frontend.That's why printing string and returning None.
         Also, it clears the plot for Matplotlib object after every call, so
-        in case of saving the plot, its essential to call Base_savePlot before
+        in case of saving the plot, its essential to call Base_saveImage before
         calling Base_displayImage.
 
   Parameters
@@ -242,7 +242,7 @@ def Base_displayImage(self, image_object=None):
     print figdata
     return None
 
-def Base_savePlot(self, plot=None, reference=None):
+def Base_saveImage(self, plot=None, reference=None, **kw):
   """
   Saves generated plots from matplotlib in ERP5 Image module
 
