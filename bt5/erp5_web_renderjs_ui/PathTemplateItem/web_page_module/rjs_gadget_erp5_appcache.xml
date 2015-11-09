@@ -188,6 +188,8 @@ gadget_erp5_router.html\n
 gadget_erp5_router.js\n
 gadget_erp5_searchfield.html\n
 gadget_erp5_searchfield.js\n
+gadget_erp5_sort_editor.html\n
+gadget_erp5_sort_editor.js\n
 gadget_global.js\n
 gadget_jio.html\n
 gadget_jio.js\n
@@ -334,7 +336,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.60418.11130.34628</string> </value>
+                <value> <string>946.64866.24968.29661</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -352,7 +354,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447075342.85</float>
+                        <float>1447076139.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

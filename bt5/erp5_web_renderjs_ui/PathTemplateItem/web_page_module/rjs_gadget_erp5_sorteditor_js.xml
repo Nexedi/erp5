@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,12 +70,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_field_listbox.html</string> </value>
+            <value> <string>gadget_erp5_sort_editor.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_listbox_html</string> </value>
+            <value> <string>rjs_gadget_erp5_sorteditor_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -105,55 +101,216 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title>ERP5 Listbox</title>\n
+/*jslint indent: 2, maxerr: 3, nomen: true */\n
+/*global window, document, rJS, RSVP, Handlebars, $, loopEventListener*/\n
+(function (window, document, rJS, RSVP, Handlebars, $, loopEventListener) {\n
+  "use strict";\n
+  var gadget_klass = rJS(window),\n
+    sort_item_source = gadget_klass.__template_element\n
+                         .getElementById("sort-item-template")\n
+                         .innerHTML,\n
+    sort_item_template = Handlebars.compile(sort_item_source),\n
+    sort_source = gadget_klass.__template_element\n
+                         .getElementById("sort-template")\n
+                         .innerHTML,\n
+    sort_template = Handlebars.compile(sort_source);\n
 \n
-    <!-- renderjs -->\n
-    <script src="rsvp.js" type="text/javascript"></script>\n
-    <script src="renderjs.js" type="text/javascript"></script>\n
-    <script src="URI.js" type="text/javascript"></script>\n
+  Handlebars.registerHelper(\'equal\', function (left_value, right_value, options) {\n
+    if (arguments.length < 3) {\n
+      throw new Error("Handlebars Helper equal needs 2 parameters");\n
+    }\n
+    if (left_value !== right_value) {\n
+      return options.inverse(this);\n
+    }\n
+    return options.fn(this);\n
+  });\n
 \n
 \n
-    <!-- custom script -->\n
-    <script src="gadget_erp5_field_listbox.js" type="text/javascript"></script>\n
+  function createSortItemTemplate(gadget, sort_value) {\n
+    var sort_column_list = gadget.props.sort_column_list,\n
+      sort_value_list = [],\n
+      option_list = [],\n
+      i;\n
 \n
-  </head>\n
-  <body>\n
+    if (sort_value) {\n
+      sort_value_list = sort_value.split(",");\n
+    }\n
+    for (i = 0; i < sort_column_list.length; i += 1) {\n
+      option_list.push({\n
+        "text": sort_column_list[i][1],\n
+        "value": sort_column_list[i][0],\n
+        "selected_option": sort_value_list[0]\n
+      });\n
+    }\n
 \n
-    <!-- XXX must set a theme here -->\n
-    <section class="document_table">\n
-      <div class="ui-table-header ui-header ui-bar-c ui-corner-all">\n
-        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">\n
-          <div class="ui-controlgroup-controls">\n
-            <a data-i18n="hide" class="ui-responsive ui-btn ui-btn-icon-left ui-icon-eye ui-first-child ui-override-theme ui-disabled" href="#">Hide Rows</a>\n
-          </div>\n
-        </div>\n
-        <h1 data-i18n="0 items selected" class="ui-title ui-override-theme">0 items selected</h1>\n
-        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">\n
-          <div class="ui-controlgroup-controls">\n
-            <form class="sort_form">\n
-             <button data-rel="Sort" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-sort-amount-desc ui-btn-icon-left">Sort</button>\n
-            </form>\n
-        </div>\n
-      </div>\n
-      <table class="ui-responsive ui-body-c ui-table-inset">\n
-        <thead class="ui-bar-inherit"></thead>\n
-        <tfoot class="ui-bar-inherit"></tfoot>\n
-      </table>\n
-    </section>\n
-    \n
-  </body>\n
-</html>
+    return gadget.translateHtml(sort_item_template({\n
+      option: option_list,\n
+      operator: sort_value_list[1]\n
+    }));\n
+  }\n
+\n
+\n
+\n
+\n
+  rJS(window)\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    // Init local properties\n
+    .ready(function (g) {\n
+      g.props = {};\n
+    })\n
+    .ready(function (g) {\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+        });\n
+    })\n
+\n
+\n
+\n
+    //////////////////////////////////////////////\n
+    // acquired method\n
+    //////////////////////////////////////////////\n
+    .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("trigger", "trigger")\n
+    //////////////////////////////////////////////\n
+    // initialize the gadget content\n
+    //////////////////////////////////////////////\n
+    .declareMethod(\'render\', function (options) {\n
+      var gadget = this;\n
+      gadget.props.sort_column_list = options.sort_column_list || [];\n
+      gadget.props.key = options.key;\n
+      gadget.props.sort_list = options.sort_list;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          var tmp = sort_template();\n
+          return gadget.translateHtml(tmp);\n
+        })\n
+        .push(function (translated_html) {\n
+          var tmp = document.createElement("div");\n
+          tmp.innerHTML = translated_html;\n
+          gadget.props.element.querySelector(".container").appendChild(tmp);\n
+        });\n
+    })\n
+    //////////////////////////////////////////////\n
+    .declareService(function () {\n
+      var gadget = this,\n
+        i,\n
+        list = [];\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          for (i = 0; i < gadget.props.sort_list.length; i += 1) {\n
+            if (gadget.props.sort_list[i]) {\n
+              list.push(createSortItemTemplate(gadget, gadget.props.sort_list[i]));\n
+            }\n
+          }\n
+          return RSVP.all(list);\n
+        })\n
+        .push(function (all_result) {\n
+          var innerHTML = "",\n
+            select_list;\n
+          for (i = 0; i < all_result.length; i += 1) {\n
+            innerHTML += all_result[i];\n
+          }\n
+          gadget.props.element.querySelector(".sort_item_container").innerHTML = innerHTML;\n
+          select_list = gadget.props.element.querySelector(".sort_item_container").querySelectorAll("select");\n
+          for (i = 0; i < select_list.length; i += 1) {\n
+            $(select_list[i]).selectmenu();\n
+          }\n
+        });\n
+    })\n
+    .declareService(function () {\n
+      var gadget = this,\n
+        container = gadget.props.element.querySelector(".sort_item_container");\n
+      return loopEventListener(\n
+        gadget.props.element.querySelector(".sort_editor"),\n
+        "submit",\n
+        false,\n
+        function () {\n
+          var focused = document.activeElement;\n
+          container.removeChild(focused.parentElement);\n
+        }\n
+      );\n
+    })\n
+    .declareService(function () {\n
+      var gadget = this;\n
+      return loopEventListener(\n
+        gadget.props.element.querySelector(".submit"),\n
+        "submit",\n
+        false,\n
+        function () {\n
+          var sort_list = gadget.props.element.querySelectorAll(".sort_item"),\n
+            sort_query = {},\n
+            select_list,\n
+            sort_item,\n
+            sort_item_query,\n
+            options = {},\n
+            i;\n
+\n
+          for (i = 0; i < sort_list.length; i += 1) {\n
+            sort_item = sort_list[i];\n
+            select_list = sort_item.querySelectorAll("select");\n
+            sort_item_query = select_list[0][select_list[0].selectedIndex].value\n
+              + "," + select_list[1][select_list[1].selectedIndex].value + ",";\n
+            sort_query[i] = sort_item_query;\n
+          }\n
+          sort_query[i] = "";\n
+          options[gadget.props.key] = JSON.stringify(sort_query);\n
+          return gadget.redirect({\n
+            command: \'change\',\n
+            options: options\n
+          });\n
+        }\n
+      );\n
+    })\n
+    .declareService(function () {\n
+      var gadget = this;\n
+      return loopEventListener(\n
+        gadget.props.element.querySelector(".plus"),\n
+        "submit",\n
+        false,\n
+        function () {\n
+          return new RSVP.Queue()\n
+            .push(function () {\n
+              return createSortItemTemplate(gadget);\n
+            })\n
+            .push(function (template) {\n
+              var tmp = document.createElement("div"),\n
+                container = gadget.props.element.querySelector(".sort_item_container"),\n
+                select_list,\n
+                i;\n
+              tmp.innerHTML = template;\n
+              select_list = tmp.querySelectorAll("select");\n
+              for (i = 0; i < select_list.length; i += 1) {\n
+                $(select_list[i]).selectmenu();\n
+              }\n
+              container.appendChild(tmp.querySelector("div"));\n
+            });\n
+        }\n
+      );\n
+    })\n
+    .declareService(function () {\n
+      var gadget = this;\n
+      return loopEventListener(\n
+        gadget.props.element.querySelector(".delete"),\n
+        "submit",\n
+        false,\n
+        function () {\n
+          return gadget.trigger();\n
+        }\n
+      );\n
+    });\n
+\n
+}(window, document, rJS, RSVP, Handlebars, $, loopEventListener));
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Listbox</string> </value>
+            <value> <string>Gadget Erp5 Sort Editor JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -217,7 +374,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -239,8 +396,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898405.83</float>
-                        <string>GMT</string>
+                        <float>1446143386.3</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -284,7 +441,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.60431.61199.41454</string> </value>
+                <value> <string>946.64692.4152.37478</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -302,7 +459,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446824339.44</float>
+                        <float>1447067015.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -325,11 +482,13 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -341,7 +500,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -359,8 +518,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405429265.11</float>
-                        <string>GMT</string>
+                        <float>1446143362.08</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
