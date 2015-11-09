@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts31679155.69</string> </value>
+            <value> <string>ts46846043.54</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -39,6 +39,7 @@
     <script src="../lib/handlebars.min.js" type="text/javascript"></script>\n
 \n
     <script src="../dream/mixin_promise.js" type="text/javascript"></script>\n
+    <script src="springy.js" type="text/javascript"></script>\n
     <script src="jsplumb.js" type="text/javascript"></script>\n
 \n
     <script id="node-template" type="text/x-handlebars-template">\n
@@ -81,7 +82,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1927</int> </value>
+            <value> <int>1989</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

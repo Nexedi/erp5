@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts33995381.39</string> </value>
+            <value> <string>ts47067792.54</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -45,14 +45,13 @@
   * along with DREAM.  If not, see <http://www.gnu.org/licenses/>.\n
   * ==========================================================================*/\n
  /*global console, window, RSVP, rJS, $, jsPlumb, Handlebars,\n
-     loopEventListener, promiseEventListener, DOMParser */\n
+     loopEventListener, promiseEventListener, DOMParser, Springy */\n
  /*jslint unparam: true todo: true */\n
- (function(RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser) {\n
+ (function(RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser, Springy) {\n
    "use strict";\n
    /* TODO:\n
     * less dependancies ( promise event listner ? )\n
     * no more handlebars\n
-    * auto springy layout\n
     * id should not always be modifiable\n
     * drop zoom level\n
     * rename draggable()\n
@@ -64,6 +63,75 @@
      node_template_source = gadget_klass.__template_element.getElementById("node-template").innerHTML,\n
      node_template = Handlebars.compile(node_template_source),\n
      popup_edit_template = gadget_klass.__template_element.getElementById("popup-edit-template").innerHTML;\n
+\n
+   function layoutGraph(graph_data) {\n
+     // Promise returning the graph once springy calculated the layout.\n
+     // If the graph already contain layout, return it as is.\n
+     function resolver(resolve, reject) {\n
+       try {\n
+         var springy_graph = new Springy.Graph(),\n
+             max_iterations = 100, // we stop layout after 100 iterations.\n
+             loop = 0,\n
+             springy_nodes = {},\n
+             drawn_nodes = {},\n
+             min_x=100, max_x=0, min_y=100, max_y=0;\n
+         // make a Springy graph with our graph\n
+         $.each(graph_data.node, function(key, value) {\n
+           if (value.coordinate) {\n
+             // graph already has a layout, no need to layout again\n
+             return resolve(graph_data);\n
+           }\n
+           springy_nodes[key] = springy_graph.newNode({node_id: key});\n
+         });\n
+         $.each(graph_data.edge, function(key, value) {\n
+           springy_graph.newEdge(springy_nodes[value.source], springy_nodes[value.destination]);\n
+         });\n
+\n
+         var layout = new Springy.Layout.ForceDirected(springy_graph, 400.0, 400.0, 0.5);\n
+         var renderer = new Springy.Renderer(\n
+           layout,\n
+           function clear() {},\n
+           function drawEdge(edge, p1, p2) {},\n
+           function drawNode(node, p) {\n
+             drawn_nodes[node.data.node_id] = p;\n
+             if ( ++loop > max_iterations) {\n
+               renderer.stop();\n
+             }\n
+           },\n
+           function onRenderStop() {\n
+             // calculate the min and max of x and y\n
+             $.each(graph_data.node, function(key, value) {\n
+               if (drawn_nodes[key].x > max_x) {\n
+                 max_x = drawn_nodes[key].x;\n
+               }\n
+               if (drawn_nodes[key].x < min_x) {\n
+                 min_x = drawn_nodes[key].x;\n
+               }\n
+               if (drawn_nodes[key].y > max_y) {\n
+                 max_y = drawn_nodes[key].y;\n
+               }\n
+               if (drawn_nodes[key].y < min_y) {\n
+                 min_y = drawn_nodes[key].y;\n
+               }\n
+             });\n
+             // "resample" the positions from 0 to 1, the scale used by this gadget.\n
+             // We keep a 5% margin\n
+             $.each(graph_data.node, function(key, value) {\n
+               graph_data.node[key].coordinate = {\n
+                  left: 0.05 + 0.9 * (drawn_nodes[key].x - min_x) / (max_x - min_x),\n
+                  top: 0.05 + 0.9 * (drawn_nodes[key].y - min_y) / (max_y - min_y)\n
+               };\n
+             });\n
+             resolve(graph_data);\n
+           }\n
+         );\n
+         renderer.start();\n
+        } catch (e) {\n
+         reject(e);\n
+       }\n
+     }\n
+     return new RSVP.Promise(resolver);\n
+   }\n
 \n
    function loopJsplumbBind(gadget, type, callback) {\n
      //////////////////////////\n
@@ -247,30 +315,6 @@
          element.css(j, new_value);\n
        });\n
      }\n
-     // function positionGraph(gadget) {\n
-     //   $.ajax(\n
-     //     \'/positionGraph\',\n
-     //     {\n
-     //       data: JSON.stringify(getData()),\n
-     //       contentType: \'application/json\',\n
-     //       type: \'POST\',\n
-     //       success: function (data, textStatus, jqXHR) {\n
-     //         $.each(data, function (node, pos) {\n
-     //           convertToAbsolutePosition(\n
-     //             gadget,\n
-     //             pos.left,\n
-     //             pos.top\n
-     //           );\n
-     //           updateElementCoordinate(gadget, node, {\n
-     //             top: pos.top,\n
-     //             left: pos.left\n
-     //           });\n
-     //         });\n
-     //         redraw(gadget);\n
-     //       }\n
-     //     }\n
-     //   );\n
-     // }\n
 \n
    function removeElement(gadget, node_id) {\n
      var element_id = gadget.props.node_id_to_dom_element_id[node_id];\n
@@ -754,12 +798,17 @@
 */\n
      if (data) {\n
        this.props.data = JSON.parse(data);\n
-       // load the data\n
-       $.each(this.props.data.graph.node, function(key, value) {\n
-         addNode(gadget, key, value);\n
-       });\n
-       $.each(this.props.data.graph.edge, function(key, value) {\n
-         addEdge(gadget, key, value);\n
+\n
+// XXX how to make queue ??\n
+       return layoutGraph(this.props.data.graph).then(function(graph_data) {\n
+         gadget.props.data.graph = graph_data;\n
+         // load the data\n
+         $.each(gadget.props.data.graph.node, function(key, value) {\n
+           addNode(gadget, key, value);\n
+         });\n
+         $.each(gadget.props.data.graph.edge, function(key, value) {\n
+           addEdge(gadget, key, value);\n
+         });\n
        });\n
      }\n
    })\n
@@ -815,7 +864,7 @@
      ]);\n
    });\n
 \n
- })(RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser);
+ })(RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser, Springy);
 
 ]]></string> </value>
         </item>
@@ -825,7 +874,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>29435</int> </value>
+            <value> <int>31544</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
