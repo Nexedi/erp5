@@ -116,6 +116,8 @@ URI.js\n
 erp5_launcher.html\n
 erp5_launcher.js\n
 gadget_erp5.css\n
+gadget_erp5_editor_panel.html\n
+gadget_erp5_editor_panel.js\n
 gadget_erp5_field_checkbox.html\n
 gadget_erp5_field_checkbox.js\n
 gadget_erp5_field_datetime.html\n
@@ -332,7 +334,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.55008.187.42410</string> </value>
+                <value> <string>946.60418.11130.34628</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -350,7 +352,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446547833.72</float>
+                        <float>1447075342.85</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

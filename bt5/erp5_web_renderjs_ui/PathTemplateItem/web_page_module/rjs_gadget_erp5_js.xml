@@ -489,7 +489,9 @@
     .allowPublicAcquisition(\'triggerPanel\', function () {\n
       return route(this, "panel", "toggle");\n
     })\n
-\n
+    .allowPublicAcquisition(\'renderEditorPanel\', function (param_list) {\n
+      return route(this, "editor_panel", \'render\', param_list);\n
+    })\n
     .allowPublicAcquisition("jio_allDocs", function (param_list) {\n
       return callJioGadget(this, "allDocs", param_list);\n
     })\n
@@ -548,6 +550,12 @@
         })\n
         .push(function (panel_gadget) {\n
           return panel_gadget.close();\n
+        })\n
+        .push(function () {\n
+          return gadget.getDeclaredGadget(\'editor_panel\');\n
+        })\n
+        .push(function (editor_panel) {\n
+          return editor_panel.close();\n
         })\n
         .push(function () {\n
           return gadget.getDeclaredGadget(\'router\');\n
@@ -783,7 +791,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.46191.44015.43298</string> </value>
+                <value> <string>946.64729.15844.49510</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -801,7 +809,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446546583.8</float>
+                        <float>1447075485.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
