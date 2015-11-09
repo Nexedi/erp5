@@ -135,7 +135,7 @@
 \n
 <!-- Header has a link to the previous document in selection -->\n
 <tr>\n
-  <td>assertElementPresent</td>\n
+  <td>waitForElementPresent</td>\n
   <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Next\' and contains(@href, \'#!selection_next\') and contains(@href, \'p.selection_index=0\')]</td>\n
   <td></td>\n
 </tr>\n
@@ -154,7 +154,7 @@
 \n
 <!-- Header has a link to the previous document in selection -->\n
 <tr>\n
-  <td>assertElementPresent</td>\n
+  <td>waitForElementPresent</td>\n
   <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Next\' and contains(@href, \'#!selection_next\') and contains(@href, \'p.selection_index=1\')]</td>\n
   <td></td>\n
 </tr>\n
