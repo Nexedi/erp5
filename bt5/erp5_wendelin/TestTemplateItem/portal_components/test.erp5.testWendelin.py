@@ -79,6 +79,7 @@ class Test(ERP5TypeTestCase):
     import scipy as _	 
     import sklearn as _
     import pandas as _
+    import matplotlib as _
 
   def test_01_IngestionFromFluentd(self):
     """
