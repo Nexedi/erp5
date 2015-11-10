@@ -250,16 +250,54 @@
   }\n
 \n
   //////////////////////////////////////////////////////////////////\n
+  // navigation history functions\n
+  //////////////////////////////////////////////////////////////////\n
+  function addNavigationHistoryAndDisplay(gadget, jio_key, options) {\n
+    var hash = getDisplayUrlFor(jio_key, options),\n
+      queue;\n
+    /*jslint regexp: true*/\n
+    if (jio_key && /^[^\\/]+_module\\/[^\\/]+$/.test(jio_key)) {\n
+      /*jslint regexp: false*/\n
+      // This only work for remote access to ERP5...\n
+      queue = gadget.props.jio_navigation_gadget.put(jio_key, {\n
+        access_time: (new Date().getTime()),\n
+        hash: hash\n
+      })\n
+        .push(function () {\n
+          return gadget.props.jio_navigation_gadget.allDocs({\n
+            sort_on: [[\'access_time\', \'descending\']],\n
+            // Max number of history entry\n
+            limit: [30, 9999]\n
+          });\n
+        })\n
+        .push(function (result_list) {\n
+          // Remove old accessed documents\n
+          var i,\n
+            promise_list = [];\n
+          for (i = 0; i < result_list.data.rows.length; i += 1) {\n
+            promise_list.push(\n
+              gadget.props.jio_navigation_gadget.remove(result_list.data.rows[i].id)\n
+            );\n
+          }\n
+          return RSVP.all(promise_list);\n
+        });\n
+    } else {\n
+      queue = new RSVP.Queue();\n
+    }\n
+    return queue\n
+      .push(function () {\n
+        return synchronousChangeState(hash);\n
+      });\n
+  }\n
+\n
+  //////////////////////////////////////////////////////////////////\n
   // exec command functions\n
   //////////////////////////////////////////////////////////////////\n
-  function execDisplayCommand(next_options) {\n
+  function execDisplayCommand(gadget, next_options) {\n
     // console.warn(command_options);\n
     var jio_key = next_options.jio_key;\n
     delete next_options.jio_key;\n
-    // XXX Implement history management\n
-    return synchronousChangeState(\n
-      getDisplayUrlFor(jio_key, next_options)\n
-    );\n
+    return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);\n
   }\n
 \n
   function execChangeCommand(previous_options, next_options) {\n
@@ -302,9 +340,7 @@
       })\n
       .push(function (id) {\n
         next_options.history = id;\n
-        return synchronousChangeState(\n
-          getDisplayUrlFor(jio_key, next_options)\n
-        );\n
+        return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);\n
       });\n
   }\n
 \n
@@ -317,9 +353,7 @@
     return addHistory(gadget, previous_options)\n
       .push(function (id) {\n
         next_options.history = id;\n
-        return synchronousChangeState(\n
-          getDisplayUrlFor(jio_key, next_options)\n
-        );\n
+        return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);\n
       });\n
   }\n
 \n
@@ -345,12 +379,14 @@
                 getCommandUrlFor(gadget, COMMAND_HISTORY_PREVIOUS, previous_options)\n
               );\n
             }\n
-            return synchronousChangeState(\n
-              getDisplayUrlFor(result.data.rows[0].id, {\n
+            return addNavigationHistoryAndDisplay(\n
+              gadget,\n
+              result.data.rows[0].id,\n
+              {\n
                 selection: previous_options.selection,\n
                 selection_index: parseInt(previous_options.selection_index, 10) + 1,\n
                 history: previous_options.history\n
-              })\n
+              }\n
             );\n
           });\n
       }, function (error) {\n
@@ -391,12 +427,14 @@
                 getCommandUrlFor(gadget, COMMAND_HISTORY_PREVIOUS, previous_options)\n
               );\n
             }\n
-            return synchronousChangeState(\n
-              getDisplayUrlFor(result.data.rows[0].id, {\n
+            return addNavigationHistoryAndDisplay(\n
+              gadget,\n
+              result.data.rows[0].id,\n
+              {\n
                 selection: previous_options.selection,\n
                 selection_index: parseInt(previous_options.selection_index, 10) - 1,\n
                 history: previous_options.history\n
-              })\n
+              }\n
             );\n
           });\n
       }, function (error) {\n
@@ -417,9 +455,8 @@
           uri;\n
         if (parent_link !== undefined) {\n
           uri = new URI(parent_link.href);\n
-          return synchronousChangeState(\n
-            getDisplayUrlFor(uri.segment(2), {})\n
-          );\n
+\n
+          return addNavigationHistoryAndDisplay(gadget, uri.segment(2), {});\n
         }\n
       });\n
   }\n
@@ -454,9 +491,7 @@
         var options = result_list[0].data,\n
           next_jio_key = options.jio_key;\n
         delete options.jio_key;\n
-        return synchronousChangeState(\n
-          getDisplayUrlFor(next_jio_key, options)\n
-        );\n
+        return addNavigationHistoryAndDisplay(gadget, next_jio_key, options);\n
       });\n
   }\n
 \n
@@ -484,6 +519,28 @@
           })\n
         );\n
       }\n
+    } else if (command_options.args.page === \'history\') {\n
+      // This is an adhoc route to handle local navigation history\n
+      return gadget.props.jio_navigation_gadget.allDocs({\n
+        sort_on: [[\'access_time\', \'descending\']]\n
+      })\n
+        .push(function (result) {\n
+          var result_list = result.data.rows,\n
+            id_list = [],\n
+            i;\n
+          for (i = 0; i < result_list.length; i += 1) {\n
+            id_list.push(result_list[i].id);\n
+          }\n
+\n
+          return {\n
+            url: "gadget_erp5_page_" + command_options.args.page + ".html",\n
+            // XXX Drop this options thing.\n
+            // Implement a "getSelection" method\n
+            options: {\n
+              id_list: id_list\n
+            }\n
+          };\n
+        });\n
     }\n
 \n
     if (command_options.args.page === undefined) {\n
@@ -539,7 +596,7 @@
     }\n
 \n
     if (command_options.path === COMMAND_DISPLAY_STATE) {\n
-      return execDisplayCommand(next_options);\n
+      return execDisplayCommand(gadget, next_options);\n
     }\n
     if (command_options.path === COMMAND_INDEX_STATE) {\n
       return execIndexCommand(gadget, previous_options, next_options);\n
@@ -628,6 +685,20 @@
             sub_storage: {\n
               type: "indexeddb",\n
               database: "selection"\n
+            }\n
+          });\n
+        });\n
+    })\n
+\n
+    .ready(function (gadget) {\n
+      return gadget.getDeclaredGadget("jio_navigation_history")\n
+        .push(function (jio_gadget) {\n
+          gadget.props.jio_navigation_gadget = jio_gadget;\n
+          return jio_gadget.createJio({\n
+            type: "query",\n
+            sub_storage: {\n
+              type: "indexeddb",\n
+              database: "navigation_history"\n
             }\n
           });\n
         });\n
@@ -842,7 +913,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.59190.22172.6929</string> </value>
+                <value> <string>947.784.43671.16128</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -860,7 +931,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446737639.1</float>
+                        <float>1447162652.41</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
