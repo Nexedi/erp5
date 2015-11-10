@@ -381,7 +381,7 @@ import sys
 
     # Call Base_displayImage from inside of Base_runJupyter
     jupyter_code = """
-image = context.portal_catalog.getResultValue(portal_type='Image',reference=%s)
+image = context.portal_catalog.getResultValue(portal_type='Image',reference='%s')
 context.Base_displayImage(image_object=image)
 """%reference
 
@@ -391,5 +391,5 @@ context.Base_displayImage(image_object=image)
       old_local_variable_dict=local_variable_dict
       )
 
-    self.assertEquals(result['result_string'], base64.b64encode(data))
+    self.assertEquals(result['result_string'].rstrip(), base64.b64encode(data))
     self.assertEquals(result['mime_type'], 'image/png')
