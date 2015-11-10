@@ -392,4 +392,6 @@ context.Base_displayImage(image_object=image)
       )
 
     self.assertEquals(result['result_string'].rstrip(), base64.b64encode(data))
-    self.assertEquals(result['mime_type'], 'image/png')
+    # Mime_type shouldn't be  image/png just because of filename, instead it is
+    # dependent on file and file data
+    self.assertNotEqual(result['mime_type'], 'image/png')
