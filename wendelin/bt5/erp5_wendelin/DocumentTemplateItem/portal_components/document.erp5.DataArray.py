@@ -88,12 +88,27 @@ class DataArray(BigFile):
     """
     return self.getArray()[start:end]
 
+  def getArrayIndex(self, index):
+    """
+      Implement array indexing in its most simple list alike form.
+      Any other advanced indexing techniques currently possible by getting
+      array reference directly.
+    """
+    return self.getArray()[index]
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSize')
   def getSize(self):
     """
        Implement getSize interface for ndarray
     """
     return self.getArray().nbytes
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArrayShape')
+  def getArrayShape(self):
+    """
+    Get numpy array shape-
+    """
+    return self.getArray().shape
 
   security.declareProtected(Permissions.View, 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
