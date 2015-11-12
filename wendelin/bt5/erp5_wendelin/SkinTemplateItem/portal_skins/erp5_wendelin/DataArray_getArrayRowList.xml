@@ -73,11 +73,22 @@ class SequenceSliceMap():\n
     return self.sequence_slice[index % self.length]\n
 \n
 def createTempBase(nr, row):\n
-  column_iterator = enumerate([col for col in context.DataArray_getArrayColumnList() if col[0] != \'index\'])\n
+  def getElementFromArray(array, index):\n
+    return array[index]\n
+\n
+  def getElementFromScalar(scalar, index=None):\n
+    return scalar\n
+\n
+  column_list = [col for col in context.DataArray_getArrayColumnList() if col[0] != \'index\']\n
+  column_iterator = enumerate(column_list)\n
+  if len(column_list) == 1:\n
+    getElement = getElementFromScalar\n
+  else:\n
+    getElement = getElementFromArray\n
   return newTempBase(context.getPortalObject(),\n
                      str(id(row)),\n
                      index = nr,\n
-                     **{col[0]: str(row[i]) for i, col in column_iterator})\n
+                     **{col[0]: str(getElement(row, i)) for i, col in column_iterator})\n
 \n
 \n
 length = context.getArrayShape()[0]\n
