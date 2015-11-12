@@ -126,7 +126,9 @@
     PREFIX_COMMAND = "!",\n
     // PREFIX_ERROR = "?",\n
     COMMAND_DISPLAY_STATE = "display",\n
+    COMMAND_DISPLAY_STORED_STATE = "display_stored_state",\n
     COMMAND_CHANGE_STATE = "change",\n
+    COMMAND_STORE_AND_CHANGE_STATE = "store_and_change",\n
     COMMAND_INDEX_STATE = "index",\n
     COMMAND_SELECTION_PREVIOUS = "selection_previous",\n
     COMMAND_SELECTION_NEXT = "selection_next",\n
@@ -135,7 +137,9 @@
     REDIRECT_TIMEOUT = 5000,\n
     VALID_URL_COMMAND_DICT = {};\n
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STATE] = null;\n
+  VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;\n
+  VALID_URL_COMMAND_DICT[COMMAND_STORE_AND_CHANGE_STATE] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_INDEX_STATE] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_PREVIOUS] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_NEXT] = null;\n
@@ -300,9 +304,34 @@
     return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);\n
   }\n
 \n
-  function execChangeCommand(previous_options, next_options) {\n
-    var key,\n
-      jio_key;\n
+  function execDisplayStoredStateCommand(gadget, next_options) {\n
+    // console.warn(command_options);\n
+    var jio_key = next_options.jio_key,\n
+      queue;\n
+    delete next_options.jio_key;\n
+\n
+    if (jio_key) {\n
+      queue = gadget.props.jio_state_gadget.get(jio_key)\n
+        .push(function (options) {\n
+          next_options = options;\n
+        }, function (error) {\n
+          if ((error instanceof jIO.util.jIOError) &&\n
+              (error.status_code === 404)) {\n
+            return;\n
+          }\n
+          throw error;\n
+        });\n
+    } else {\n
+      queue = new RSVP.Queue();\n
+    }\n
+    return queue\n
+      .push(function () {\n
+        return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);\n
+      });\n
+  }\n
+\n
+  function calculateChangeOptions(previous_options, next_options) {\n
+    var key;\n
     for (key in previous_options) {\n
       if (previous_options.hasOwnProperty(key)) {\n
         if (!next_options.hasOwnProperty(key)) {\n
@@ -317,11 +346,43 @@
         }\n
       }\n
     }\n
-    jio_key = next_options.jio_key;\n
-    delete next_options.jio_key;\n
+    return next_options;\n
+  }\n
+\n
+  function execChangeCommand(previous_options, next_options) {\n
+    var options,\n
+      jio_key;\n
+    options = calculateChangeOptions(previous_options, next_options);\n
+\n
+    jio_key = options.jio_key;\n
+    delete options.jio_key;\n
     return synchronousChangeState(\n
-      getDisplayUrlFor(jio_key, next_options)\n
+      getDisplayUrlFor(jio_key, options)\n
     );\n
+  }\n
+\n
+  function execStoreAndChangeCommand(gadget, previous_options, next_options) {\n
+    var options,\n
+      jio_key,\n
+      queue;\n
+    options = calculateChangeOptions(previous_options, next_options);\n
+\n
+    jio_key = options.jio_key;\n
+    delete options.jio_key;\n
+\n
+    if (jio_key) {\n
+      queue = gadget.props.jio_state_gadget.put(jio_key, options);\n
+    } else {\n
+      queue = new RSVP.Queue();\n
+    }\n
+\n
+\n
+    return queue\n
+      .push(function () {\n
+        return synchronousChangeState(\n
+          getDisplayUrlFor(jio_key, options)\n
+        );\n
+      });\n
   }\n
 \n
   function execIndexCommand(gadget, previous_options, next_options) {\n
@@ -598,11 +659,17 @@
     if (command_options.path === COMMAND_DISPLAY_STATE) {\n
       return execDisplayCommand(gadget, next_options);\n
     }\n
+    if (command_options.path === COMMAND_DISPLAY_STORED_STATE) {\n
+      return execDisplayStoredStateCommand(gadget, next_options);\n
+    }\n
     if (command_options.path === COMMAND_INDEX_STATE) {\n
       return execIndexCommand(gadget, previous_options, next_options);\n
     }\n
     if (command_options.path === COMMAND_CHANGE_STATE) {\n
       return execChangeCommand(previous_options, next_options);\n
+    }\n
+    if (command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {\n
+      return execStoreAndChangeCommand(gadget, previous_options, next_options);\n
     }\n
     if (command_options.path === COMMAND_SELECTION_NEXT) {\n
       return execSelectionNextCommand(gadget, previous_options, next_options);\n
@@ -657,7 +724,6 @@
       });\n
 \n
     }\n
-\n
     var result = loopEventListener(window, \'hashchange\', false,\n
                                    extractHashAndDispatch),\n
       event = document.createEvent("Event");\n
@@ -700,6 +766,17 @@
               type: "indexeddb",\n
               database: "navigation_history"\n
             }\n
+          });\n
+        });\n
+    })\n
+\n
+    .ready(function (gadget) {\n
+      return gadget.getDeclaredGadget("jio_document_state")\n
+        .push(function (jio_gadget) {\n
+          gadget.props.jio_state_gadget = jio_gadget;\n
+          return jio_gadget.createJio({\n
+            type: "indexeddb",\n
+            database: "document_state"\n
           });\n
         });\n
     })\n
@@ -913,7 +990,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.784.43671.16128</string> </value>
+                <value> <string>947.3470.27048.19353</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -931,7 +1008,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447162652.41</float>
+                        <float>1447323762.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
