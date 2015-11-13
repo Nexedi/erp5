@@ -141,20 +141,22 @@
   <td></td>\n
 </tr>\n
 \n
+<!-- Reindex document -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
 <!-- History only show 1 of the 3 documents accessed -->\n
 <tr>\n
-  <td>click</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'1\' and contains(@href, \'#!change\') and contains(@href, \'n.page=breadcrumb\')]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//div[@data-gadget-url=\'${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_breadcrumb.html\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>click</td>\n
-  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'ERP5\' and @href=\'#\']</td>\n
+  <td>open</td>\n
+  <td>${base_url}/web_site_module/renderjs_runner/</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
