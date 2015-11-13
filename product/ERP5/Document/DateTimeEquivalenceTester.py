@@ -76,12 +76,18 @@ class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
     # for these properties.
     absolute_tolerance_min = self.getProperty('quantity_range_min') or \
                              self.getProperty('quantity')
+    property_name = getattr(self, 'getTranslatedTestedPropertyTitle', lambda: None)() or \
+                    tested_property
+    explanation_start = 'The difference of ${property_name} between decision \
+      ${decision_value} and prevision ${prevision_value} '
     if absolute_tolerance_min is not None and \
        delta < absolute_tolerance_min:
       return (
         prevision_value, decision_value,
-        'The difference of ${property_name} between decision and prevision is less than ${value}.',
-        dict(property_name=tested_property,
+        explanation_start + 'is less than ${value}.',
+        dict(property_name=property_name,
+             decision_value=decision_value,
+             prevision_value=prevision_value,
              value=absolute_tolerance_min))
     absolute_tolerance_max = self.getProperty('quantity_range_max') or \
                              self.getProperty('quantity')
@@ -89,6 +95,13 @@ class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
        delta > absolute_tolerance_max:
       return (
         prevision_value, decision_value,
-        'The difference of ${property_name} between decision and prevision is larger than ${value}.',
-        dict(property_name=tested_property,
+        explanation_start + 'is larger than ${value}.',
+        dict(property_name=property_name,
+             decision_value=decision_value,
+             prevision_value=prevision_value,
              value=absolute_tolerance_max))
+
+# Temporary compatibility code that will fix existing data.
+# This Code must be removed in 2 years (end of 2017)
+from Products.ERP5.Document.StringEquivalenceTester import getTestedProperty
+DateTimeEquivalenceTester.getTestedProperty = getTestedProperty

@@ -11,15 +11,21 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>short_title</string> </key>
+                    <key> <string>description</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>short_title</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -77,10 +83,33 @@
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>CategoryMembershipEquivalenceTester</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>description</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
@@ -99,7 +128,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="3" aka="AAAAAAAAAAM=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
@@ -107,9 +136,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>erp5_ui</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
