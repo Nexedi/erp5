@@ -44,6 +44,7 @@ from Products.ERP5.mixin.explainable import ExplainableMixin
 
 parent_to_movement_simulation_state = {
   'cancelled'        : 'cancelled',
+  'rejected'         : 'cancelled',
   'draft'            : 'draft',
   'auto_planned'     : 'auto_planned',
   'planned'          : 'planned',
