@@ -17,8 +17,6 @@
             <value>
               <tuple>
                 <string>action_type/object_view</string>
-                <string>portal_types/Trade Quantity Divergence Tester/1</string>
-                <string>portal_types/Float Divergence Tester/2</string>
               </tuple>
             </value>
         </item>
@@ -53,10 +51,6 @@
             </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Action Information</string> </value>
-        </item>
-        <item>
             <key> <string>priority</string> </key>
             <value> <float>2.0</float> </value>
         </item>
@@ -66,7 +60,7 @@
         </item>
         <item>
             <key> <string>visible</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>
@@ -79,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/StringDivergenceTester_viewConfiguration</string> </value>
+            <value> <string>string:${object_url}/VariationDivergenceTester_viewConfiguration</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -79,10 +79,19 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
         # should not happen
         raise AttributeError, 'prevision and decision values of this divergence tester should be list, tuple or dict.'
       if not result:
+        property_name = tested_property
+        try:
+          # Get the property label to display to user
+          property_title_index = self.getTestedProperyList().index(tested_property)
+          # XXX We should use "getTranslatedTestedPropertyTitleList", but it seems to
+          # not exist for accessors having multiple possible values
+          property_name = self.getTestedPropertyTitleList()[property_title_index]
+        except ValueError, IndexError:
+          pass
         return (
           prevision_value, decision_value,
           'The value of ${property_name} is different between decision and prevision.',
-          dict(property_name=tested_property))
+          dict(property_name=property_name))
     return None
 
   def generateHashKey(self, movement):

@@ -173,24 +173,27 @@ class EquivalenceTesterMixin:
       return None
     # XXX explanation message should be provided by each class, each
     # portal type or each document.
-    message = '<a href="${decision_url}">${property_name} of ${decision_value} of ${decision_type} ${decision_title}</a> of <a href="${delivery_url}">${delivery_title}</a> is different from <a href="${prevision_url}">planned ${property_name} of ${prevision_value}</a>.'
+    introduction_message = 'On <a href="${decision_url}">${decision_type} ${decision_title}</a> '\
+               'of <a href="${delivery_url}">${delivery_title}</a> : '
     decision_movement = self.getPortalObject().unrestrictedTraverse(
       divergence_message.getProperty('object_relative_url'))
     decision_delivery = decision_movement.getRootDeliveryValue()
-    mapping = {
+    introduction_mapping = {
       'decision_url':decision_movement.absolute_url(),
-      # TODO we need a way to map the property name to the business word,
-      # eg. 'start_date' to 'Delivery Date' for trade etc.
-      'property_name':divergence_message.getProperty('tested_property'),
-      'decision_value':h(divergence_message.getProperty('decision_value')),
-      'decision_type':decision_movement.getPortalType(),
+      'decision_type':decision_movement.getTranslatedPortalType(),
       'decision_title':h(decision_movement.getTitleOrId()),
       'delivery_url':decision_delivery.absolute_url(),
       'delivery_title':h(decision_delivery.getTitleOrId()),
       'prevision_url':'#', # XXX it should be a link to the detailed view.
-      'prevision_value':h(divergence_message.getProperty('prevision_value')),
+                           # For example, we might want to show a partial view of
+                           # the original order associated with partial view of
+                           # related packing list
       }
-    return str(Message(domain='erp5_ui', message=message, mapping=mapping))
+    message = divergence_message.getProperty('message')
+    mapping = dict([(x, h(y)) for (x,y) in divergence_message.getProperty('mapping', {}).items()])
+    return str(Message(domain='erp5_ui', message=introduction_message,
+               mapping=introduction_mapping)) \
+           + str(Message(domain='erp5_ui', message=message, mapping=mapping))
 
   # Placeholder for methods to override
   def _compare(self, prevision_movement, decision_movement):

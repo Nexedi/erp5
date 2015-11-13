@@ -59,6 +59,10 @@ class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
     # What about using getCategoryMembershipList for Simulation Movements ?
     return movement.getAcquiredCategoryMembershipList(property)
 
+  @staticmethod
+  def getTestedPropertyText(movement, property):
+    return ",".join([x.getTitleOrId() for x in movement.getAcquiredValueList(property)])
+
   def _compare(self, prevision_movement, decision_movement, sorted=sorted):
     """
     If prevision_movement and decision_movement don't match, it returns a
@@ -82,11 +86,24 @@ class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
     prevision_value = self._getTestedPropertyValue(prevision_movement,
                                                    tested_property)
 
+
     # XXX do we have configurable parameter for this divergence tester ?
     # like ambiguity...
+    property_name = getattr(self, 'getTranslatedTestedPropertyTitle', lambda: None)() or \
+                    tested_property
     if sorted(decision_value) != sorted(prevision_value):
       return (
         prevision_value, decision_value,
-        'The values of ${property_name} category are different between decision and prevision.',
-        dict(property_name=tested_property))
+        'There is difference of ${property_name} between decision \
+          ${decision_value} and prevision ${prevision_value}',
+        dict(property_name=property_name,
+             prevision_value=self.getTestedPropertyText(
+                               prevision_movement, tested_property),
+             decision_value=self.getTestedPropertyText(
+                               decision_movement, tested_property)))
     return None
+
+# Temporary compatibility code that will fix existing data.
+# This Code must be removed in 2 years (end of 2017)
+from Products.ERP5.Document.StringEquivalenceTester import getTestedProperty
+CategoryMembershipEquivalenceTester.getTestedProperty = getTestedProperty
