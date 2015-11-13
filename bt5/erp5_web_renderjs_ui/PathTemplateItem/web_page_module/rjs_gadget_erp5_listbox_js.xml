@@ -108,9 +108,10 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-/*global window, document, rJS, URI, RSVP, UriTemplate */\n
-(function (window, document, rJS, URI, RSVP, UriTemplate) {\n
+/*global window, document, rJS, URI, RSVP, loopEventListener*/\n
+(function (window, document, rJS, URI, RSVP, loopEventListener) {\n
   "use strict";\n
+\n
 \n
   rJS(window)\n
     /////////////////////////////////////////////////////////////////\n
@@ -140,6 +141,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
+    .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
     //////////////////////////////////////////////\n
@@ -151,31 +153,62 @@
         document_table = gadget.props.element.querySelector(\'.document_table\'),\n
         th,\n
         length_table = field_json.column_list.length,\n
-        i;\n
+        tmp,\n
+        i,\n
+        j;\n
 \n
       gadget.props.field_json = field_json;\n
       gadget.props.extended_search = options.extended_search;\n
+      gadget.props.sort_list = [];\n
       if (field_json.show_anchor) {\n
         th = document.createElement("th");\n
         th.textContent = "Jump";\n
         th.setAttribute("data-i18n", "Jump");\n
         tr.appendChild(th);\n
       }\n
-      for (i = 0; i < length_table; i += 1) {\n
-        th = document.createElement("th");\n
-        th.textContent = field_json.column_list[i][1];\n
-        th.setAttribute("data-i18n", field_json.column_list[i][1]);\n
-        tr.appendChild(th);\n
+\n
+      //only display which is in listbox\'s column list\n
+      if (field_json.sort_column_list.length) {\n
+        field_json.sort_column_list = field_json.sort_column_list.filter(function (n) {\n
+          for (i = 0; i < field_json.column_list.length; i += 1) {\n
+            if (field_json.column_list[i][0] === n[0] && field_json.column_list[i][1] === n[1]) {\n
+              return true;\n
+            }\n
+          }\n
+          return false;\n
+        });\n
       }\n
       thead.appendChild(tr);\n
       return new RSVP.Queue()\n
         .push(function () {\n
           // XXX Fix in case of multiple listboxes\n
-          return gadget.getUrlParameter(field_json.key + \'_begin_from\');\n
+          return RSVP.all([\n
+            gadget.getUrlParameter(field_json.key + \'_begin_from\'),\n
+            gadget.getUrlParameter(field_json.key + \'_sort_list:json\')\n
+          ]);\n
         })\n
-        .push(function (result) {\n
+        .push(function (all_result) {\n
+          var result = all_result[0];\n
+          gadget.props.sort_list = all_result[1] || [];\n
           if (result === undefined) {\n
             result = \'0\';\n
+          }\n
+          for (i = 0; i < length_table; i += 1) {\n
+            th = document.createElement("th");\n
+            th.textContent = field_json.column_list[i][1];\n
+            for (j = 0; j < gadget.props.sort_list.length; j += 1) {\n
+              tmp = gadget.props.sort_list[j].split(",");\n
+              if (tmp[0] === gadget.props.field_json.column_list[i][0]) {\n
+                if (tmp[1] === "ascending") {\n
+                  th.setAttribute("class", "ui-icon-arrow-up");\n
+                } else {\n
+                  th.setAttribute("class", "ui-icon-arrow-down");\n
+                }\n
+                break;\n
+              }\n
+            }\n
+            th.setAttribute("data-i18n", field_json.column_list[i][1]);\n
+            tr.appendChild(th);\n
           }\n
           gadget.props.begin_from = parseInt(result, 10) || 0;\n
           return gadget.translateHtml(document_table.innerHTML);\n
@@ -230,8 +263,9 @@
         "list_method_template": field_json.list_method_template,\n
         "query": query_string,\n
         "limit": [begin_from, lines + 1],\n
-        "select_list": select_list\n
-        }).push(function (result) {\n
+        "select_list": select_list,\n
+        "sort_on": gadget.props.sort_list\n
+      }).push(function (result) {\n
         var promise_list = [result];\n
         counter = Math.min(result.data.total_rows, lines);\n
         for (i = 0; i < counter; i += 1) {\n
@@ -242,7 +276,8 @@
                 jio_key: result.data.rows[i].id,\n
                 selection_index: begin_from + i,\n
                 query: new URI(field_json.query).query(true).query + query_string,\n
-                list_method_template: field_json.list_method_template\n
+                list_method_template: field_json.list_method_template,\n
+                "sort_list:json": gadget.props.sort_list\n
               }\n
             })\n
           );\n
@@ -462,6 +497,24 @@
           return data;\n
         });\n
     })\n
+    .declareService(function () {\n
+      var gadget = this,\n
+        url,\n
+        options = {},\n
+        sort_form = gadget.props.element.querySelector(".sort_form");\n
+      return loopEventListener(\n
+        sort_form,\n
+        "submit",\n
+        false,\n
+        function () {\n
+          url = "gadget_erp5_sort_editor.html";\n
+          options.sort_column_list = gadget.props.field_json.sort_column_list;\n
+          options.sort_list = gadget.props.sort_list;\n
+          options.key = gadget.props.field_json.key + "_sort_list:json";\n
+          return gadget.renderEditorPanel(url, options);\n
+        }\n
+      );\n
+    })\n
 \n
     .allowPublicAcquisition("notifyInvalid", function () {\n
       return;\n
@@ -471,7 +524,7 @@
       return;\n
     });\n
 \n
-}(window, document, rJS, URI, RSVP, UriTemplate));
+}(window, document, rJS, URI, RSVP, loopEventListener));
 
 ]]></string> </value>
         </item>
@@ -608,7 +661,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.56368.46897.8174</string> </value>
+                <value> <string>947.5035.37117.26743</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -626,7 +679,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446565852.84</float>
+                        <float>1447417728.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

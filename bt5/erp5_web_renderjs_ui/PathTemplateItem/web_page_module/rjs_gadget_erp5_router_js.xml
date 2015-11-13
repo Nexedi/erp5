@@ -146,6 +146,11 @@
   VALID_URL_COMMAND_DICT[COMMAND_HISTORY_PREVIOUS] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_PUSH_HISTORY] = null;\n
 \n
+\n
+  function endsWith(str, suffix) {\n
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;\n
+  }\n
+\n
   //////////////////////////////////////////////////////////////////\n
   // Change URL functions\n
   //////////////////////////////////////////////////////////////////\n
@@ -215,6 +220,7 @@
     var result = "#" + PREFIX_COMMAND + (command || ""),\n
       prefix = "?",\n
       key,\n
+      tmp,\n
       tmp_dict;\n
     tmp_dict = gadget.props.options;\n
     for (key in tmp_dict) {\n
@@ -222,7 +228,11 @@
         if (tmp_dict[key] === undefined) {\n
           tmp_dict[key] = \'\';\n
         }\n
-        result += prefix + PREVIOUS_KEY + "." + encodeURIComponent(key) + "=" + encodeURIComponent(tmp_dict[key]);\n
+        tmp = tmp_dict[key];\n
+        if (endsWith(key, ":json")) {\n
+          tmp = JSON.stringify(tmp);\n
+        }\n
+        result += prefix + PREVIOUS_KEY + "." + encodeURIComponent(key) + "=" + encodeURIComponent(tmp);\n
         prefix = "&";\n
       }\n
     }\n
@@ -231,7 +241,11 @@
         if (options[key] === undefined) {\n
           options[key] = \'\';\n
         }\n
-        result += prefix + NEXT_KEY + "." + encodeURIComponent(key) + "=" + encodeURIComponent(options[key]);\n
+        tmp = options[key];\n
+        if (endsWith(key, ":json")) {\n
+          tmp = JSON.stringify(tmp);\n
+        }\n
+        result += prefix + NEXT_KEY + "." + encodeURIComponent(key) + "=" + encodeURIComponent(tmp);\n
         prefix = "&";\n
       }\n
     }\n
@@ -241,12 +255,17 @@
   function getDisplayUrlFor(jio_key, options) {\n
     var prefix = \'?\',\n
       result,\n
+      tmp,\n
       key;\n
     result = "#" + PREFIX_DISPLAY + (jio_key || "");\n
     for (key in options) {\n
       if (options.hasOwnProperty(key) && options[key] !== undefined) {\n
         // Don\'t keep empty values\n
-        result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(options[key]);\n
+        tmp = options[key];\n
+        if (endsWith(key, ":json")) {\n
+          tmp = JSON.stringify(tmp);\n
+        }\n
+        result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(tmp);\n
         prefix = \'&\';\n
       }\n
     }\n
@@ -392,6 +411,7 @@
     // selection_options.index = next_options.index;\n
     selection_options.query = next_options.query;\n
     selection_options.list_method_template = next_options.list_method_template;\n
+    selection_options["sort_list:json"] = next_options["sort_list:json"] || [];\n
     // Store selection in local DB\n
     return addSelection(gadget, selection_options)\n
       .push(function (id) {\n
@@ -432,7 +452,8 @@
         return gadget.jio_allDocs({\n
           "query": selection.query,\n
           "list_method_template": selection.list_method_template,\n
-          "limit": [parseInt(previous_options.selection_index, 10) + 1, 1]\n
+          "limit": [parseInt(previous_options.selection_index, 10) + 1, 1],\n
+          "sort_on": selection["sort_list:json"]\n
         })\n
           .push(function (result) {\n
             if (result.data.rows.length === 0) {\n
@@ -480,7 +501,8 @@
         return gadget.jio_allDocs({\n
           "query": selection.query,\n
           "list_method_template": selection.list_method_template,\n
-          "limit": [parseInt(previous_options.selection_index, 10) - 1, 1]\n
+          "limit": [parseInt(previous_options.selection_index, 10) - 1, 1],\n
+          "sort_on": selection["sort_list:json"]\n
         })\n
           .push(function (result) {\n
             if (result.data.rows.length === 0) {\n
@@ -698,6 +720,8 @@
         subhash,\n
         keyvalue,\n
         index,\n
+        key,\n
+        tmp,\n
         args = {};\n
       if (hash !== undefined) {\n
         split = hash.split(\'?\');\n
@@ -711,7 +735,12 @@
           if (subhash !== \'\') {\n
             keyvalue = subhash.split(\'=\');\n
             if (keyvalue.length === 2) {\n
-              args[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);\n
+              key = decodeURIComponent(keyvalue[0]);\n
+              tmp = decodeURIComponent(keyvalue[1]);\n
+              if (endsWith(key, ":json")) {\n
+                tmp = JSON.parse(tmp);\n
+              }\n
+              args[key] = tmp;\n
             }\n
           }\n
         }\n
@@ -896,12 +925,6 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-                    </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -923,7 +946,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -945,8 +968,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441962261.87</float>
-                        <string>GMT</string>
+                        <float>1447177687.37</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -990,7 +1013,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.3470.27048.19353</string> </value>
+                <value> <string>947.5039.722.46899</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1008,65 +1031,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447323762.19</float>
+                        <float>1447419956.3</float>
                         <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1441962223.77</float>
-                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

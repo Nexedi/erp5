@@ -1578,12 +1578,16 @@ html body div.ui-select div span {\n
    ------------------------------- Panel -----------------------------------\n
    -------------------------------------------------------------------------\n
 */\n
-/* reset margin for panel header/content \n
-html .ui-panel .ui-header, html .ui-panel .ui-content {\n
-    margin: -1em;\n
-    min-height: 39px;\n
+/* panel header height and border (hardcode height for now) */\n
+html .ui-panel .ui-header {\n
+  border-bottom-width: 1px;\n
+  height: 39px;\n
 }\n
-*/\n
+html .ui-panel .ui-header .ui-btn,\n
+html .ui-panel .ui-header:hover .ui-btn {\n
+  min-height: 39px;\n
+}\n
+\n
 /* we should not need to set this, JQM does it too */\n
 html .ui-panel .ui-panel-inner {\n
   padding: 0;\n
@@ -1601,13 +1605,19 @@ html .ui-panel .ui-content .bottom {\n
 html .ui-panel .ui-content .ui-field-contain {\n
   margin: 0;\n
 }\n
-\n
 /* fix font-size inside panel header/footer buttons */\n
 html body .ui-panel .ui-header .ui-controlgroup .ui-btn-icon-notext,\n
 html body .ui-panel .ui-footer .ui-controlgroup .ui-btn-icon-notext {\n
   font-size: 100%;\n
 }\n
-\n
+/* content sections inside panels */\n
+html .ui-panel .ui-panel-inner .ui-content-section {\n
+  border: 0 none;\n
+  border-radius: 0;\n
+  -moz-box-shadow: none;\n
+  -webkit-box-shadow: none;\n
+  box-shadow: none;\n
+}\n
 /* handle listviews inside panels */\n
 html body .ui-listview .ui-li-divider {\n
   font-weight: 700;\n
@@ -1637,6 +1647,56 @@ html .ui-panel .ui-listview .ui-li-has-icon a {\n
   overflow: hidden;\n
   padding: 0.2em 0;\n
 }\n
+/* form elements inside panel */\n
+html .ui-panel .ui-panel-inner .ui-corner-all {\n
+  -webkit-border-radius: 0.3125em;\n
+  border-radius: 0.3125em;\n
+}\n
+/* clean controlgroup borders (not nice, should be ui-content) */\n
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div:first-of-type .ui-btn {\n
+  -webkit-border-bottom-left-radius: 0;\n
+  -webkit-border-bottom-right-radius: 0;\n
+  border-bottom-left-radius: 0;\n
+  border-bottom-right-radius: 0;\n
+}\n
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div:last-of-type .ui-btn {\n
+  -webkit-border-top-left-radius: 0;\n
+  -webkit-border-top-right-radius: 0;\n
+  border-top-left-radius: 0;\n
+  border-top-right-radius: 0;\n
+  border-top-color: transparent;\n
+}\n
+/* XXX: not generic!!! */ \n
+/* side by side buttons (normally this should be done by postion:abs, but requires another wrapper */\n
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div:last-of-type {\n
+  display: inline-block;\n
+  vertical-align: top;\n
+  width: 81.25%; /* BAD! use wrapper & position */\n
+  padding: 0;\n
+}\n
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div:last-of-type ~ button {\n
+  vertical-align: top;\n
+  display: inline-block;\n
+  margin-left: -4px; /* to remove space between elements */\n
+  -webkit-border-bottom-right-radius: .3125em;\n
+  border-bottom-right-radius: .3125em;\n
+  border-left-color: transparent;\n
+  border-top-color: transparent;\n
+  padding-bottom: .75em;\n
+}\n
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div:last-of-type .ui-btn {\n
+  -webkit-border-bottom-right-radius: 0;\n
+  border-bottom-right-radius: 0;\n
+}\n
+/* element padding */\n
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div .ui-btn {\n
+  padding: 4px 0;\n
+}\n
+/* nasty padding */ \n
+html .ui-controlgroup-controls ~.ui-controlgroup-controls {\n
+  padding: .5em 0;\n
+}\n
+  \n
 \n
 /*\n
    -------------------------------------------------------------------------\n
@@ -5124,7 +5184,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -5138,7 +5198,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.32762.57047.24388</string> </value>
+                <value> <string>947.4015.5592.23057</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -5156,7 +5216,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441376614.38</float>
+                        <float>1447356677.5</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
