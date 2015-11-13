@@ -33,11 +33,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Title of the property used to test</string> </value>
+            <value> <string>Property used to test</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tested_property_title_property</string> </value>
+            <value> <string>tested_property_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
@@ -49,15 +49,7 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value> <string>python: None</string> </value>
-        </item>
-        <item>
-            <key> <string>translatable</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>translation_domain</string> </key>
-            <value> <string>erp5_ui</string> </value>
+            <value> <string>python: ()</string> </value>
         </item>
       </dictionary>
     </pickle>

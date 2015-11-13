@@ -87,6 +87,8 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
                                      prevision_movement, prevision_value,
                                      decision_movement, decision_value):
     tested_property = self.getTestedProperty()
+    property_name = getattr(self, 'getTranslatedTestedPropertyTitle', lambda: None)() or \
+                    tested_property
     if prevision_movement.getDelivery() == decision_movement.getRelativeUrl():
       # use delivery_ratio if specified
       if self.getProperty('use_delivery_ratio'):
@@ -105,6 +107,15 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
 
     delta = abs(decision_value - prevision_value)
 
+    def getMappingDict(**kw):
+      mapping_dict = {'property_name': property_name,
+                      'decision_value': decision_value,
+                      'prevision_value': prevision_value}
+      mapping_dict.update(**kw)
+      return mapping_dict
+
+    explanation_start = 'The difference of ${property_name} between decision \
+      ${decision_value} and prevision ${prevision_value} '
     # XXX we should use appropriate property sheets and getter methods
     # for these properties.
     # Maybe, but beware of default values of quantity when doing so
@@ -113,17 +124,15 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
        delta < (absolute_tolerance_min or - epsilon):
       return (
         prevision_value, decision_value,
-        'The difference of ${property_name} between decision and prevision is less than ${value}.',
-        dict(property_name=tested_property,
-             value=absolute_tolerance_min))
+        explanation_start + 'is less than ${value}.',
+        getMappingDict(value=absolute_tolerance_min))
     absolute_tolerance_max = self.getProperty('quantity_range_max')
     if absolute_tolerance_max is not None and \
        delta > (absolute_tolerance_max or epsilon):
       return (
         prevision_value, decision_value,
-        'The difference of ${property_name} between decision and prevision is larger than ${value}.',
-        dict(property_name=tested_property,
-             value=absolute_tolerance_max))
+        explanation_start + 'is larger than ${value}.',
+        getMappingDict(value=absolute_tolerance_max))
 
     tolerance_base = self.getProperty('tolerance_base')
     base = None
@@ -168,17 +177,15 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
              delta < relative_tolerance_min * base:
         return (
             prevision_value, decision_value,
-            'The difference of ${property_name} between decision and prevision is less than ${value} times of the prevision value.',
-            dict(property_name=tested_property,
-                 value=relative_tolerance_min))
+            explanation_start + 'is less than ${value} times of the prevision value.',
+            getMappingDict(value=relative_tolerance_min))
       relative_tolerance_max = self.getProperty('tolerance_range_max')
       if relative_tolerance_max is not None and \
              delta > relative_tolerance_max * base:
         return (
             prevision_value, decision_value,
-            'The difference of ${property_name} between decision and prevision is greater than ${value} times of the prevision value.',
-            dict(property_name=tested_property,
-                 value=relative_tolerance_max))
+            explanation_start + 'is greater than ${value} times of the prevision value.',
+            getMappingDict(value=relative_tolerance_max))
 
   def _round(self, value):
     rounding_option = ROUNDING_OPTION_DICT[self.getDecimalRoundingOption()]
@@ -194,3 +201,8 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     # converted to Decimals everywhere, then the float() call should
     # go away
     return float(result)
+
+# Temporary compatibility code that will fix existing data.
+# This Code must be removed in 2 years (end of 2017)
+from Products.ERP5.Document.StringEquivalenceTester import getTestedProperty
+FloatEquivalenceTester.getTestedProperty = getTestedProperty

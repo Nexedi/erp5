@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value> <string>python: None</string> </value>
+            <value> <string>python: ()</string> </value>
         </item>
         <item>
             <key> <string>translatable</string> </key>
