@@ -134,7 +134,7 @@
         </item>
         <item>
             <key> <string>storage_id</string> </key>
-            <value> <string>default_address</string> </value>
+            <value> <string>default_birthplace_address</string> </value>
         </item>
       </dictionary>
     </pickle>
