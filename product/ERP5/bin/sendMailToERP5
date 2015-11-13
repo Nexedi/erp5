@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import os, subprocess, sys, textwrap, traceback, urllib, urlparse
+import os, sys, traceback, urllib, urlparse
 
 # Example of configuration of postfix to deliver to ERP5:
 # - Add the following lines to master.cf:
@@ -9,28 +9,26 @@ import os, subprocess, sys, textwrap, traceback, urllib, urlparse
 # - Tell smtpd service to use the new filter, by adding:
 #   -o content_filter=erp5:
 
-class HTTPError(IOError):
-
-  def __init__(self, errcode, errmsg, result):
-    self.__dict__.update(errcode=errcode, errmsg=errmsg, result=result)
-
-  def __str__(self):
-    return '%s %s' % (self.errcode, self.errmsg)
-
-
 class urlopen(urllib.FancyURLopener, object):
   """Open a network object denoted by a URL for reading
 
-  Raise a HTTPError exception if HTTP error code is not 200.
+  HTTP error handling:
+  - ContributionTool returns a 302 to itself if successfully ingested.
+  - ERP5 returns a 302 to login_form if authentication is required.
+  - Raise otherwise, even for 307 since Python does not support POST redirect.
   """
   def __new__(cls, *args, **kw):
     self = object.__new__(cls)
     self.__init__()
     return self.open(*args, **kw)
 
+  http_error_default = urllib.URLopener.http_error_default
+
   def http_error(self, url, fp, errcode, errmsg, headers, data=None):
-    raise HTTPError(errcode, errmsg,
-      self.http_error_default(url, fp, errcode, errmsg, headers))
+    if errcode != 302 or urlparse.urlsplit(
+        headers['Location'])[2].endswith('/login_form'):
+      return self.http_error_default(url, fp, errcode, errmsg, headers)
+    return fp
 
 
 class Message(object):
@@ -75,20 +73,12 @@ class Message(object):
       else:
         user, password = urllib.splitpasswd(user)
       user = kw.pop('user', user)
-      if user is not None:
-        password = kw.pop('password', password)
-        if password is not None:
-          user = '%s:%s' % (user, password)
-        host = '%s@%s' % (user, host)
+      if user:
+        host = '%s:%s@%s' % (user, kw.pop('password', password) or '', host)
       url = urlparse.urlunsplit((scheme, host, path.rstrip('/'), '', '')) + \
         '/portal_contributions/newContent'
       kw['data'] = sys.stdin.read()
-      try:
-        result = urlopen(url, urllib.urlencode(kw))
-      except HTTPError, e:
-        if e.errcode >= 300:
-          raise
-        result = e.result
+      result = urlopen(url, urllib.urlencode(kw))
       result.read() # ERP5 does not return useful information
       print 'Message ingested'
     else:
@@ -101,12 +91,9 @@ class SimpleIngestionMap(object):
   This class maps recipients to parameters for portal_contributions/newContent
   """
   def __init__(self, ingestion_map_filename):
-    fd = file(ingestion_map_filename)
     g = {}
-    try:
-      exec fd in g
-    finally:
-      fd.close()
+    with open(ingestion_map_filename) as f:
+      exec f in g
     self._map = g['ingestion_map']
 
   def __call__(self, message, **kw):
@@ -137,7 +124,7 @@ by using it as a filter (cf documentation of /etc/postfix/master.cf).""")
                      " to the sender; 'SENDMAIL' injects it back into MTA")
   _("--user", help="use this user to connect to ERP5")
   _("--password", help="use this password to connect to ERP5")
-  _("--file_name", help="ERP5 requires a file name to guess content type")
+  _("--filename", help="ERP5 requires a file name to guess content type")
   _("--container_path", help="define where to contribute the content"
                              " (by default, it is guessed by ERP5)")
   #_("--portal_type", default="Mail Message")
@@ -147,14 +134,14 @@ database. The module must define an 'ingestion_map' variable implementing \
 'get(recipient) -> option_dict'. Example:
   ingestion_map = {
     'foo@bar.com': dict(user='foo', password='12345'),
-    'patches@prj1.org': dict(file_name='prj1.patch'),
+    'patches@prj1.org': dict(filename='prj1.patch'),
     'spam@example.invalid': dict(portal=None), # drop
   }""")
   group.add_option("--ingestion_map", help="get options from this file,"
                                            " according to recipients")
   parser.add_option_group(group)
   _ = group.add_option
-  parser.set_defaults(file_name="unnamed.eml")
+  parser.set_defaults(filename="unnamed.eml")
   return parser
 
 
