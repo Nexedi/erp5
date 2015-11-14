@@ -225,16 +225,14 @@
   }\n
 \n
   ace_editor_container_div_parent_before_maximized = null;\n
-  ace_editor_maximize_mode_message = $(\'<span id=&quot;maximize_message&quot;>Press ESC to leave maximize mode</span>\');\n
+  ace_editor_maximize_mode_message = $(\'<span id=&quot;maximize_message&quot;>Press Alt-M to leave maximize mode</span>\');\n
 \n
   function unmaximize(event) {\n
-    if(event.keyCode == 27) {\n
-      maximizeFullscreenRemoveSaveMessage();\n
-      $(\'body\').css(\'overflow\', \'visible\');\n
-      ace_editor_container_div.removeClass(\'maximize\');\n
-      ace_editor_container_div.appendTo(ace_editor_container_div_parent_before_maximized);\n
-      setContainerDivSize(event);\n
-    }\n
+    maximizeFullscreenRemoveSaveMessage();\n
+    $(\'body\').css(\'overflow\', \'visible\');\n
+    ace_editor_container_div.removeClass(\'maximize\');\n
+    ace_editor_container_div.appendTo(ace_editor_container_div_parent_before_maximized);\n
+    setContainerDivSize(event);\n
   }\n
 \n
   function maximize() {\n
@@ -253,8 +251,14 @@
     ace_editor_maximize_mode_message.animate({opacity: 0.25}, 1500,\n
                                              function() { $(this).remove(); });\n
 \n
-    $(document).keyup(unmaximize);\n
+    ace_editor.commands.addCommand({\n
+      name: \'unmaximize\',\n
+      bindKey: {win: \'Alt-m\', mac: \'Alt-m\'},\n
+      exec: unmaximize\n
+    });\n
+\n
     ace_editor.resize(true);\n
+    ace_editor.focus()\n
   }\n
 \n
   // Save source code only through an AJAX request\n
