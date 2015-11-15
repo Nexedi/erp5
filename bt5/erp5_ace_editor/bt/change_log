@@ -1,3 +1,7 @@
+2015-11-14 bk
+* change unmaximize button to Alt-m
+* set focus to ace editor after maximize
+
 2014-02-25 arnaud.fontaine
 * Allow to specify the line to go to from URL parameter.
 
