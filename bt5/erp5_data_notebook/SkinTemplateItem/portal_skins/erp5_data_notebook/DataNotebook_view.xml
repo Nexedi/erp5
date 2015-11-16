@@ -54,7 +54,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_listbox</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
@@ -67,7 +67,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_notebook_code</string>
+                        <string>listbox_notebook_code_result</string>
+                      </list>
                     </value>
                 </item>
                 <item>
