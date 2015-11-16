@@ -60,7 +60,7 @@ class NetConvertedQuantityEquivalenceTester(FloatEquivalenceTester):
     if (decision_movement.getPortalType() != 'Simulation Movement' and
         decision_value == 0.0):
       prevision_value = sum([
-        sm.getMappedProperty('corrected_quantity')
+        sm.getCorrectedQuantity()
         for sm in decision_movement.getDeliveryRelatedValueList(
             portal_type='Simulation Movement')])
     else:
