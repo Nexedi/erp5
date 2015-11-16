@@ -74,8 +74,13 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>pause</td>\n
-  <td>1000</td>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Loading\' and contains(@class, \'ui-icon-spinner\')]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementNotPresent</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Loading\' and contains(@class, \'ui-icon-spinner\')]</td>\n
   <td></td>\n
 </tr>\n
 \n
