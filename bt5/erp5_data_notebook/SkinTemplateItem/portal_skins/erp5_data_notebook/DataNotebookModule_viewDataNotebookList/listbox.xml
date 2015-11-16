@@ -11,8 +11,6 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>search_columns</string>
-                <string>selection_name</string>
                 <string>title</string>
               </list>
             </value>
@@ -86,6 +84,10 @@
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -107,25 +109,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>search_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>data_notebook_module_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
