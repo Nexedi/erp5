@@ -1,6 +1,6 @@
 <property_sheet_list>
  <portal_type id="Data Notebook">
-  <item>Jupyter Notebook</item>
+  <item>JupyterNotebook</item>
   <item>Reference</item>
  </portal_type>
  <portal_type id="Data Notebook Line">

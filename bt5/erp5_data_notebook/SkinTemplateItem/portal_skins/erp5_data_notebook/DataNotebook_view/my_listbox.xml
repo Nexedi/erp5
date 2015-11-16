@@ -11,8 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>count_method</string>
-                <string>list_method</string>
+                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -94,12 +93,12 @@
                           <string>notebook_code_result</string>
                           <string>Output</string>
                         </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -110,9 +109,14 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
+                    <key> <string>sort</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>ASC</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -125,19 +129,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
         </item>
       </dictionary>
     </pickle>
