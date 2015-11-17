@@ -170,8 +170,12 @@ class AppliedRule(XMLObject, ExplainableMixin):
     """
     return self.objectValues(portal_type=RuleMixin.movement_type)
 
-  def _migrateSimulationTree(self, get_matching_key,
-                             get_original_property_dict, root_rule=None):
+  def _migrateSimulationTree(self,
+                             get_matching_key,
+                             get_original_property_dict,
+                             root_rule=None,
+                             hook_before_edit=None,
+                             hook_after_edit=None):
     """Migrate an entire simulation tree in order to use new rules
 
     This must be called on a root applied rule, with interaction workflows
@@ -348,12 +352,19 @@ class AppliedRule(XMLObject, ExplainableMixin):
                     kw['quantity'] = quantity - old.pop('quantity')
                     if new != old or sm.quantity != quantity:
                       raise NotImplementedError # quantity_unit/efficiency ?
-                  else:
-                    recorded_property_dict.update(new)
+                  recorded_property_dict.update(new)
+
+            if hook_before_edit is not None:
+              hook_before_edit(rule, old_sm, sm, edit_kw, recorded_property_dict)
+
             if recorded_property_dict:
               sm._recorded_property_dict = PersistentMapping(
                 recorded_property_dict)
             sm._edit(**edit_kw)
+
+            if hook_after_edit is not None:
+              hook_after_edit(rule, old_sm, sm)
+
             old_dict[sm] = old_sm
             sm = None
       deleted = old_dict.items()
