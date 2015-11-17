@@ -215,7 +215,7 @@
       width = 200;\n
     ace_editor_container_div.width(width);\n
 \n
-    height = $(window).height() - ace_editor_container_div.offset().top * 2 - 1;\n
+    height = $(window).height() - ace_editor_container_div.offset().top - 40;\n
     if(height < 400)\n
       height = 400;\n
     ace_editor_container_div.height(height);\n
