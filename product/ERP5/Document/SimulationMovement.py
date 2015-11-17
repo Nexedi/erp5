@@ -166,9 +166,10 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       getState = applied_rule.getCausalityValue() \
         .aq_explicit.getSimulationMovementSimulationState
     except (AttributeError, KeyError):
-      LOG('SimulationMovement.getSimulationState', WARNING,
-          'Could not acquire simulation state from %s'
-          % self.getRelativeUrl(), error=True)
+      pass
+#      LOG('SimulationMovement.getSimulationState', WARNING,
+#          'Could not acquire simulation state from %s'
+#          % self.getRelativeUrl(), error=True)
     else:
       return getState(self)
 

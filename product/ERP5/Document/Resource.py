@@ -807,9 +807,9 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       except (ArithmeticError, AttributeError, LookupError, TypeError), error:
         # For compatibility, we only log the error and return None.
         # No exception for the moment.
-        LOG('Resource.convertQuantity', WARNING,
-            'could not convert quantity for %s (%r)'
-            % (self.getRelativeUrl(), error))
+#        LOG('Resource.convertQuantity', WARNING,
+#            'could not convert quantity for %s (%r)'
+#            % (self.getRelativeUrl(), error))
         return None
 
       if transformed_resource is not None:
