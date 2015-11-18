@@ -70,8 +70,6 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     list : (prevision_value, decision_value, message, mapping)
     """
     tested_property = self.getTestedProperty()
-    property_name = getattr(self, 'getTranslatedTestedPropertyTitle', lambda: None)() or \
-                    tested_property
     if getattr(decision_movement, 'isPropertyRecorded',
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property) or 0.0
@@ -90,6 +88,8 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
                                      prevision_movement, prevision_value,
                                      decision_movement, decision_value):
     tested_property = self.getTestedProperty()
+    property_name = getattr(self, 'getTranslatedTestedPropertyTitle', lambda: None)() or \
+                    tested_property
     if prevision_movement.getDelivery() == decision_movement.getRelativeUrl():
       # use delivery_ratio if specified
       if self.getProperty('use_delivery_ratio'):
