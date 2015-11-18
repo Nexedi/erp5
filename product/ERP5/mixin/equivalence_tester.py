@@ -230,3 +230,6 @@ class EquivalenceTesterMixin:
         if len(tested_property) == 1:
           setattr(self, 'tested_property', tested_property[0])
     return self._baseGetTestedProperty()
+
+  def getTestedPropertyList(self):
+    return [self.getTestedProperty()]
