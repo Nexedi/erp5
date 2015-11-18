@@ -27,7 +27,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/lines</string>
+                <string>elementary_type/string</string>
               </tuple>
             </value>
         </item>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value> <string>python: ()</string> </value>
+            <value> <string>python: None</string> </value>
         </item>
         <item>
             <key> <string>translatable</string> </key>
