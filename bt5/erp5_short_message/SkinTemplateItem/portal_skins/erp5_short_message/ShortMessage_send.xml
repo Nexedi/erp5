@@ -70,15 +70,18 @@ if not from_url:\n
   if context.getSourceValue():\n
     sender_phone = context.getSourceValue().getDefaultMobileTelephoneValue()\n
     if not sender_phone:\n
-      raise ValueError("The sender should have a default mobile phone")\n
+      raise ValueError("The sender(%s) should have a default mobile phone" % context.getSourceValue())\n
     #We use title of sender\n
-    from_title = sender_phone.getTitle()    \n
+    from_title = sender_phone.getTitle()\n
     from_url = sender_phone.asURL()\n
 \n
 if not body:\n
   body = context.getTextContent()\n
 \n
-context.portal_sms.send(text=body,recipient=to_url,sender=from_url,sender_title=from_title,message_type="text", \n
+if not context.getStartDate():\n
+  context.setStartDate(DateTime())\n
+\n
+context.portal_sms.send(text=body,recipient=to_url,sender=from_url,sender_title=from_title,message_type="text",\n
                         test=download, document_relative_url=context.getRelativeUrl(), **kw)\n
 </string> </value>
         </item>
