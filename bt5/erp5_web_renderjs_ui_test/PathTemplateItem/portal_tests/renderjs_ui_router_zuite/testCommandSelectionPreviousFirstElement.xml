@@ -61,6 +61,11 @@
   <td>//div[@data-gadget-url=\'${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html\']</td>\n
   <td></td>\n
 </tr>\n
+<tr>\n
+  <td>waitForTextPresent</td>\n
+  <td>Title 1</td>\n
+  <td></td>\n
+</tr>\n
 \n
 <!-- Enter a search query to create a selection parameter -->\n
 <tr>\n
@@ -74,16 +79,10 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>waitForElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Loading\' and contains(@class, \'ui-icon-spinner\')]</td>\n
+  <td>waitForTextNotPresent</td>\n
+  <td>Title 1</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <td>waitForElementNotPresent</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Loading\' and contains(@class, \'ui-icon-spinner\')]</td>\n
-  <td></td>\n
-</tr>\n
-\n
 <tr>\n
   <td>waitForTextPresent</td>\n
   <td>Title 1</td>\n
