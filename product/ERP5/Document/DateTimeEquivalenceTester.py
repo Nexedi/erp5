@@ -107,8 +107,3 @@ class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
       raise SimulationError(
         "%r: Either Absolute Tolerance, Absolute Tolerance (Min) or Absolute Tolerance"
         "(Max) *must* be defined on a DateTime Divergence Tester" % self)
-
-# Temporary compatibility code that will fix existing data.
-# This Code must be removed in 2 years (end of 2017)
-from Products.ERP5.Document.StringEquivalenceTester import getTestedProperty
-DateTimeEquivalenceTester.getTestedProperty = getTestedProperty

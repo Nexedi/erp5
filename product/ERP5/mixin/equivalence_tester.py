@@ -215,3 +215,18 @@ class EquivalenceTesterMixin:
     tested_property = self.getTestedProperty()
     return {tested_property: self._getTestedPropertyValue(prevision_movement,
                                                           tested_property)}
+
+  # Temporary compatibility code that will fix existing data.
+  # This Code must be removed in 2 years (end of 2017)
+  def getTestedProperty(self):
+    """
+    Override getTestedProperty to fix the way it is stored. Some time
+    ago it was multi-valued, which is non-sense we the implementation we
+    have on this equivalence tester.
+    """
+    tested_property = getattr(self, 'tested_property', None)
+    if tested_property != None:
+      if isinstance(tested_property, tuple):
+        if len(tested_property) == 1:
+          setattr(self, 'tested_property', tested_property[0])
+    return self._baseGetTestedProperty()
