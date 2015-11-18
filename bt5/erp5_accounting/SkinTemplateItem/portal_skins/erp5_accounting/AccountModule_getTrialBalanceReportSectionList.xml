@@ -169,8 +169,8 @@ return [ ReportSection(\n
                                   period_start_date=\n
                                           period_start_date.earliestTime(),\n
                                   section_uid=section_uid,\n
-                                  function_category=function,\n
-                                  funding_cateory=funding,\n
+                                  function=function,\n
+                                  funding=funding,\n
                                   project=project,\n
                                   portal_type=portal_type,\n
                                   simulation_state=simulation_state,\n
