@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>editable</string>
                 <string>list_method</string>
                 <string>title</string>
                 <string>url_columns</string>
@@ -104,6 +105,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
