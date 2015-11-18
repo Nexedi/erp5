@@ -1160,16 +1160,24 @@ class ERP5ReportTestCase(ERP5TypeTestCase):
     in the report_section.
     """
     result = None
-    here = report_section.getObject(self.portal)
-    report_section.pushReport(self.portal)
-    form = getattr(here, report_section.getFormId())
-    self.portal.REQUEST['here'] = here
-    if form.has_field('listbox'):
-      result = form.listbox.get_value('default',
-                                      render_format='list',
-                                      REQUEST=self.portal.REQUEST)
-    report_section.popReport(self.portal)
-    return result
+    # Use an independent request, because this is what happens when using
+    # deferred style
+    request_form = self.portal.REQUEST.form
+    try:
+      # XXX maybe there is better API than just replacing the dict
+      self.portal.REQUEST.form = dict()
+      here = report_section.getObject(self.portal)
+      report_section.pushReport(self.portal)
+      form = getattr(here, report_section.getFormId())
+      self.portal.REQUEST['here'] = here
+      if form.has_field('listbox'):
+        result = form.listbox.get_value('default',
+                                        render_format='list',
+                                        REQUEST=self.portal.REQUEST)
+      return result
+    finally:
+      report_section.popReport(self.portal)
+      self.portal.REQUEST.form = request_form
 
   def checkLineProperties(self, line, **kw):
     """Check properties of a report line.
