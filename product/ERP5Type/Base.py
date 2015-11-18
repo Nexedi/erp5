@@ -275,7 +275,7 @@ class WorkflowMethod(Method):
     log = "skip interactions for %r" % args[0]
     if WorkflowMethod._no_interaction_log != log:
       WorkflowMethod._no_interaction_log = log
-      LOG("WorkflowMethod", INFO, log)
+##      LOG("WorkflowMethod", INFO, log)
     return self.__dict__['_m'](*args, **kw)
 
   @staticmethod
