@@ -102,8 +102,3 @@ class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
              decision_value=self.getTestedPropertyText(
                                decision_movement, tested_property)))
     return None
-
-# Temporary compatibility code that will fix existing data.
-# This Code must be removed in 2 years (end of 2017)
-from Products.ERP5.Document.StringEquivalenceTester import getTestedProperty
-CategoryMembershipEquivalenceTester.getTestedProperty = getTestedProperty

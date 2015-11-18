@@ -100,8 +100,3 @@ class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
              decision_value=decision_value,
              prevision_value=prevision_value,
              value=absolute_tolerance_max))
-
-# Temporary compatibility code that will fix existing data.
-# This Code must be removed in 2 years (end of 2017)
-from Products.ERP5.Document.StringEquivalenceTester import getTestedProperty
-DateTimeEquivalenceTester.getTestedProperty = getTestedProperty

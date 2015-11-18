@@ -201,8 +201,3 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     # converted to Decimals everywhere, then the float() call should
     # go away
     return float(result)
-
-# Temporary compatibility code that will fix existing data.
-# This Code must be removed in 2 years (end of 2017)
-from Products.ERP5.Document.StringEquivalenceTester import getTestedProperty
-FloatEquivalenceTester.getTestedProperty = getTestedProperty

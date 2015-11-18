@@ -33,6 +33,7 @@ from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type.Message import Message
 from Products.PythonScripts.standard import html_quote as h
+from zLOG import LOG, WARNING
 
 class EquivalenceTesterMixin:
   """
@@ -225,5 +226,60 @@ class EquivalenceTesterMixin:
     tested_property = self.getTestedProperty()
     return {tested_property: self._getTestedPropertyValue(prevision_movement,
                                                           tested_property)}
+
+  # Temporary compatibility code that will fix existing data.
+  # This Code must be removed in 2 years (end of 2017)
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTestedProperty')
+  def getTestedProperty(self):
+    """
+    Override getTestedProperty to fix the way it is stored. Some time
+    ago it was multi-valued, which is non-sense we the implementation we
+    have on this equivalence tester.
+    """
+    tested_property = getattr(self, 'tested_property', None)
+    if (getattr(self, '_baseGetTestedPropertyList', None) is None and
+        isinstance(tested_property, tuple)):
+      if len(tested_property) == 1:
+        new_value = tested_property[0]
+      else:
+        new_value = None
+
+      setattr(self, 'tested_property', new_value)
+      LOG("equivalence_tester", WARNING,
+          "%s: Migrated tested_property: %r => %r" % (self.getRelativeUrl(),
+                                                      tested_property,
+                                                      new_value))
+
+    return self._baseGetTestedProperty()
+
+  def getTestedPropertyList(self):
+    if getattr(self, '_baseGetTestedPropertyList', None) is None:
+      return [self.getTestedProperty()]
+
+    return self._baseGetTestedPropertyList()
+
+  def getTestedPropertyTitle(self):
+    tested_property_title = getattr(self, 'tested_property_title', None)
+    if (getattr(self, '_baseGetTestedPropertyTitleList', None) is None and
+        isinstance(tested_property_title, tuple)):
+      if len(tested_property_title) == 1:
+        new_value = tested_property_title[0]
+      else:
+        new_value = None
+
+      setattr(self, 'tested_property_title', new_value)
+      LOG("equivalence_tester", WARNING,
+          "%s: Migrated tested_property_title: %r => %r" % (self.getRelativeUrl(),
+                                                            tested_property_title,
+                                                            new_value))
+
+    return self._baseGetTestedPropertyTitle()
+
+  def getTestedPropertyTitleList(self):
+    if getattr(self, '_baseGetTestedPropertyTitleList', None) is None:
+      return [self.getTestedPropertyTitle()]
+
+    return self._baseGetTestedPropertyTitleList()
 
 InitializeClass(EquivalenceTesterMixin)
