@@ -226,40 +226,47 @@ class EquivalenceTesterMixin:
     have on this equivalence tester.
     """
     tested_property = getattr(self, 'tested_property', None)
-    if tested_property != None:
-      if isinstance(tested_property, tuple):
-        if len(tested_property) == 1:
-          new_value = tested_property[0]
-        else:
-          new_value = None
 
-        setattr(self, 'tested_property', new_value)
-        LOG("equivalence_tester", WARNING,
-            "%s: Migrated tested_property: %r => %r" % (self.getRelativeUrl(),
-                                                        tested_property,
-                                                        new_value))
+    if (getattr(self, '_baseGetTestedPropertyList', None) is None and
+        isinstance(tested_property, tuple)):
+      if len(tested_property) == 1:
+        new_value = tested_property[0]
+      else:
+        new_value = None
+
+      setattr(self, 'tested_property', new_value)
+      LOG("equivalence_tester", WARNING,
+          "%s: Migrated tested_property: %r => %r" % (self.getRelativeUrl(),
+                                                      tested_property,
+                                                      new_value))
 
     return self._baseGetTestedProperty()
 
   def getTestedPropertyList(self):
-    return [self.getTestedProperty()]
+    if getattr(self, '_baseGetTestedPropertyList', None) is None:
+      return [self.getTestedProperty()]
+
+    return self._baseGetTestedPropertyList()
 
   def getTestedPropertyTitle(self):
     tested_property_title = getattr(self, 'tested_property_title', None)
-    if tested_property_title != None:
-      if isinstance(tested_property_title, tuple):
-        if len(tested_property_title) == 1:
-          new_value = tested_property_title[0]
-        else:
-          new_value = None
+    if (getattr(self, '_baseGetTestedPropertyTitleList', None) is None and
+        isinstance(tested_property_title, tuple)):
+      if len(tested_property_title) == 1:
+        new_value = tested_property_title[0]
+      else:
+        new_value = None
 
-        setattr(self, 'tested_property_title', new_value)
-        LOG("equivalence_tester", WARNING,
-            "%s: Migrated tested_property_title: %r => %r" % (self.getRelativeUrl(),
-                                                              tested_property_title,
-                                                              new_value))
+      setattr(self, 'tested_property_title', new_value)
+      LOG("equivalence_tester", WARNING,
+          "%s: Migrated tested_property_title: %r => %r" % (self.getRelativeUrl(),
+                                                            tested_property_title,
+                                                            new_value))
 
     return self._baseGetTestedPropertyTitle()
 
   def getTestedPropertyTitleList(self):
-    return [self.getTestedPropertyTitle()]
+    if getattr(self, '_baseGetTestedPropertyTitleList', None) is None:
+      return [self.getTestedPropertyTitle()]
+
+    return self._baseGetTestedPropertyTitleList()
