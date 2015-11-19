@@ -82,7 +82,7 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
         property_name = tested_property
         try:
           # Get the property label to display to user
-          property_title_index = self.getTestedProperyList().index(tested_property)
+          property_title_index = self.getTestedPropertyList().index(tested_property)
           # XXX We should use "getTranslatedTestedPropertyTitleList", but it seems to
           # not exist for accessors having multiple possible values
           property_name = self.getTestedPropertyTitleList()[property_title_index]
