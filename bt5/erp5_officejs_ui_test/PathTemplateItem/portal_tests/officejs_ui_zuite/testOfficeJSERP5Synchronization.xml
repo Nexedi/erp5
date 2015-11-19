@@ -381,6 +381,16 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
+  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
   <td>${base_url}/web_page_module/</td>\n
   <td></td>\n
 </tr>\n
