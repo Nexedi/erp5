@@ -94,6 +94,11 @@
   <td>//div[@data-gadget-url=\'${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html\']</td>\n
   <td></td>\n
 </tr>\n
+<tr>\n
+  <td>waitForTextPresent</td>\n
+  <td>Title 3</td>\n
+  <td></td>\n
+</tr>\n
 \n
 <!-- Enter a search query to create a selection parameter -->\n
 <tr>\n
@@ -106,17 +111,74 @@
   <td>//div[@data-gadget-scope=\'erp5_searchfield\']//input[@value=\'header-submit\' and @type=\'submit\']</td>\n
   <td></td>\n
 </tr>\n
+\n
 <tr>\n
-  <td>pause</td>\n
-  <td>1000</td>\n
+  <td>waitForTextNotPresent</td>\n
+  <td>Title 1</td>\n
   <td></td>\n
 </tr>\n
-\n
 <tr>\n
   <td>waitForTextPresent</td>\n
   <td>Title 1</td>\n
   <td></td>\n
 </tr>\n
+\n
+<!-- Sort -->\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//form[@class=\'sort_form\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'sort_form\']/button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//form[@class=\'plus\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'plus\']/button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class=\'sort_item_container ui-controlgroup ui-corner_all\']/div[1]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//div[@class=\'sort_item_container ui-controlgroup ui-corner_all\']/div[1]/div[2]//select</td>\n
+  <td>descending</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class="submit"]//button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForTextNotPresent</td>\n
+  <td>Title 3</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForTextPresent</td>\n
+  <td>Title 3</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Go to the last element -->\n
 <tr>\n
   <td>click</td>\n
   <td>//div[@data-gadget-scope=\'field_listbox\']//a[text()=\'Title 1\' and contains(@href, \'#!index\')]</td>\n
