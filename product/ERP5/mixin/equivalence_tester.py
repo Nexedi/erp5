@@ -243,3 +243,23 @@ class EquivalenceTesterMixin:
 
   def getTestedPropertyList(self):
     return [self.getTestedProperty()]
+
+  def getTestedPropertyTitle(self):
+    tested_property_title = getattr(self, 'tested_property_title', None)
+    if tested_property_title != None:
+      if isinstance(tested_property_title, tuple):
+        if len(tested_property_title) == 1:
+          new_value = tested_property_title[0]
+        else:
+          new_value = None
+
+        setattr(self, 'tested_property_title', new_value)
+        LOG("equivalence_tester", WARNING,
+            "%s: Migrated tested_property_title: %r => %r" % (self.getRelativeUrl(),
+                                                              tested_property_title,
+                                                              new_value))
+
+    return self._baseGetTestedPropertyTitle()
+
+  def getTestedPropertyTitleList(self):
+    return [self.getTestedPropertyTitle()]
