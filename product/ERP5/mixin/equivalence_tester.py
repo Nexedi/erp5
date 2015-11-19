@@ -32,6 +32,7 @@ from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type.Message import Message
 from Products.PythonScripts.standard import html_quote as h
+from zLOG import LOG, WARNING
 
 class EquivalenceTesterMixin:
   """
@@ -228,7 +229,16 @@ class EquivalenceTesterMixin:
     if tested_property != None:
       if isinstance(tested_property, tuple):
         if len(tested_property) == 1:
-          setattr(self, 'tested_property', tested_property[0])
+          new_value = tested_property[0]
+        else:
+          new_value = None
+
+        setattr(self, 'tested_property', new_value)
+        LOG("equivalence_tester", WARNING,
+            "%s: Migrated tested_property: %r => %r" % (self.getRelativeUrl(),
+                                                        tested_property,
+                                                        new_value))
+
     return self._baseGetTestedProperty()
 
   def getTestedPropertyList(self):
