@@ -80,7 +80,7 @@ for property_sheet in portal.portal_property_sheets.objectValues():\n
     if constraint_type:\n
       if property_sheet_id in property_sheet_by_type_dict:\n
         type_per_constraint_type.setdefault(\n
-          constraint_type, []).extend(\n
+          constraint_type, set()).update(\n
             property_sheet_by_type_dict[property_sheet_id])\n
       type_list_append(constraint_type)\n
   if type_list:\n
@@ -89,7 +89,7 @@ for property_sheet in portal.portal_property_sheets.objectValues():\n
 constraint_type_per_type = {}\n
 for property_sheet_id, category_list in constraint_type_per_id.iteritems():\n
   for portal_type in property_sheet_by_type_dict.get(property_sheet_id, []):\n
-    constraint_type_per_type.setdefault(portal_type, []).extend(category_list)\n
+    constraint_type_per_type.setdefault(portal_type, set()).update(category_list)\n
 \n
 portal_type_tool = portal.portal_types\n
 portal_type_list = constraint_type_per_type.keys()\n
