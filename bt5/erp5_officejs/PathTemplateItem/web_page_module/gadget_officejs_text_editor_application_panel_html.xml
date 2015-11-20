@@ -142,7 +142,7 @@
         <ul data-role="listview" class="ui-listview">\n
           <li><a href="#page=text_editor_list" data-i18n="Text Documents">Text Documents</a></li>\n
           <li><a href="#page=jio_configurator" data-i18n="Storage Configuration">Storage Configuration</a></li>\n
-          <li><a href="#page=sync" data-i18n="Syncronization">Syncronization</a></li>\n
+          <li><a href="#page=sync" data-i18n="Synchronization">Synchronization</a></li>\n
           <li class="ui-last-child"><a href="#page=logout" data-i18n="Logout">Logout</a></li>\n
         </ul>\n
       </div>\n
@@ -278,7 +278,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -292,7 +292,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.59108.30069.37307</string> </value>
+                <value> <string>947.12629.17894.55808</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -310,7 +310,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446741155.57</float>
+                        <float>1448034490.12</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

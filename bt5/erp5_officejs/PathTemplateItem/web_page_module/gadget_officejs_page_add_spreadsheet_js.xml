@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -78,12 +78,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_add_spreadsheet.html</string> </value>
+            <value> <string>gadget_officejs_page_add_spreadsheet.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_add_spreadsheet_html</string> </value>
+            <value> <string>gadget_officejs_page_add_spreadsheet_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,7 +99,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -113,34 +109,68 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
+            <value> <string>/*globals window, RSVP, rJS*/\n
+/*jslint indent: 2, nomen: true, maxlen: 80*/\n
+(function (window, RSVP, rJS) {\n
+  "use strict";\n
 \n
-    <title>OfficeJS Add Text Document</title>\n
+  var gadget_klass = rJS(window);\n
 \n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="handlebars.js"></script>\n
-    <script src="gadget_officejs_add_spreadsheet.js"></script>\n
+  gadget_klass\n
+    .ready(function (g) {\n
+      g.props = {};\n
+      return g.getElement()\n
+        .push(function (element) {\n
+          g.props.element = element;\n
+          g.props.deferred = RSVP.defer();\n
+        });\n
+    })\n
 \n
+    .declareAcquiredMethod("post", "jio_post")\n
+    .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("updateHeader", "updateHeader")\n
 \n
-  </head>\n
+    .declareMethod("render", function (options) {\n
+      var gadget = this;\n
+      gadget.props.options = options;\n
 \n
-  <body>\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
+      return gadget.updateHeader({\n
+        title: "New Spreadsheet"\n
+      })\n
+        .push(function () {\n
+          gadget.props.deferred.resolve();\n
+        });\n
+    })\n
+\n
+    .declareService(function () {\n
+      var gadget = this;\n
+\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.props.deferred.promise;\n
+        })\n
+        .push(function () {\n
+          var doc = {\n
+            // XXX Hardcoded\n
+            parent_relative_url: "document_module",\n
+            portal_type: "Spreadsheet"\n
+          };\n
+          return gadget.post(doc);\n
+        })\n
+        .push(function (data) {\n
+          return gadget.redirect({\n
+            jio_key: data,\n
+            page: "view"\n
+          });\n
+        });\n
+\n
+    });\n
+\n
+}(window, RSVP, rJS));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Add Spreadsheet</string> </value>
+            <value> <string>OfficeJS Add Spreadsheet JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -168,19 +198,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>edit_workflow</string> </key>
+                    <key> <string>document_publication_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>processing_status_workflow</string> </key>
+                    <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>ung_document_publication_workflow</string> </key>
+                    <key> <string>processing_status_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
@@ -202,11 +232,64 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
                 <value> <string>bk</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1444748349.49</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -220,7 +303,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.26051.22759.32017</string> </value>
+                <value> <string>947.15138.45828.46455</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -238,7 +321,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444748024.63</float>
+                        <float>1448023868.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -250,7 +333,7 @@
       </tuple>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -295,65 +378,12 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444746211.79</float>
+                        <float>1444748157.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
                 </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>bk</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1444748117.26</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-            <item>
-                <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>

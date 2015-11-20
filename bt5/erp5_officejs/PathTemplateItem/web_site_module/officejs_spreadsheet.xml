@@ -426,7 +426,7 @@
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_officejs_spreadsheet_jio.html</string> </value>
+            <value> <string>gadget_officejs_jio.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
@@ -442,7 +442,7 @@
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_officejs_translation.html</string> </value>
+            <value> <string>gadget_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -727,7 +727,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -741,7 +741,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.16175.35264.62907</string> </value>
+                <value> <string>947.15127.49489.42257</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -759,7 +759,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445074913.29</float>
+                        <float>1448031408.99</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
