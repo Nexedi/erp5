@@ -395,3 +395,38 @@ context.Base_displayImage(image_object=image)
     # Mime_type shouldn't be  image/png just because of filename, instead it is
     # dependent on file and file data
     self.assertNotEqual(result['mime_type'], 'image/png')
+
+  def testImportSameModuleDifferentNamespace(self):
+    """
+    Test if the imports of python modules with same module name but different
+    namespace work correctly as expected
+    """
+    portal = self.portal
+    self.login('dev_user')
+
+    # First we execute a jupyter_code which imports sys module as 'ss' namespace
+    jupyter_code = "import sys as ss"
+    reference = 'Test.Notebook.MutlipleImports %s' %time.time()
+    portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+      )
+    self.tic()
+
+    # Call Base_executeJupyter again with jupyter_code which imports sys module
+    # as 'ss1' namespace
+    jupyter_code1 = "import sys as ss1"
+    portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code1
+      )
+    self.tic()
+
+    # Call Base_executeJupyter to check for the name of module and match it with
+    # namespace 'ss1'
+    jupyter_code2 = "print ss1.__name__"
+    result = portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code2
+      )
+    self.assertEquals(json.loads(result)['code_result'].rstrip(), 'sys')
