@@ -97,6 +97,8 @@
                         <string>my_overdraft_facility</string>
                         <string>my_comment</string>
                         <string>my_bank_account_type</string>
+                        <string>my_iban</string>
+                        <string>my_bic_code</string>
                       </list>
                     </value>
                 </item>
