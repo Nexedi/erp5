@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -78,8 +78,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_spreadsheet_jio_configurator.js</string> </value>
+            <value> <string>gadget_officejs_page_spreadsheet_list.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,15 +93,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_spreadsheet_jio_configurator_js</string> </value>
+            <value> <string>gadget_officejs_page_spreadsheet_list_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -109,158 +115,38 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP, URI, location,\n
-    loopEventListener*/\n
-/*jslint nomen: true, indent: 2, maxerr: 3*/\n
-(function (window, rJS, RSVP) {\n
-  "use strict";\n
+<!doctype html>\n
+<html>\n
+  <head>\n
 \n
-  function setERP5Configuration(gadget) {\n
-    var today = new Date(),\n
-      configuration = {\n
-        type: "replicate",\n
-        // XXX This drop the signature lists...\n
-        query: {\n
-          query: \'portal_type:"Spreadsheet" \'\n
-          // XX Synchonizing the whole module is too much, here is a way to start quietly\n
-          // Supsended until modification_date is handled for synchronization\n
-            + \' AND modification_date:>="\'\n
-            + \'01/\' + (today.getMonth() - 2) + \'/\' + today.getFullYear()  + \'" \',\n
-          limit: [0, 1234567890]\n
-        },\n
-        use_remote_post: true,\n
-        conflict_handling: 2,\n
-        check_local_modification: true,\n
-        check_local_creation: true,\n
-        check_local_deletion: false,\n
-        check_remote_modification: true,\n
-        check_remote_creation: true,\n
-        check_remote_deletion: true,\n
-        local_sub_storage: {\n
-          type: "query",\n
-          sub_storage: {\n
-            type: "uuid",\n
-            sub_storage: {\n
-              type: "indexeddb",\n
-              database: "officejs-spreadsheet"\n
-            }\n
-          }\n
-        },\n
-        remote_sub_storage: {\n
-          type: "erp5",\n
-          url: (new URI("hateoas"))\n
-            .absoluteTo(location.href)\n
-            .toString(),\n
-          default_view_reference: "jio_view"\n
-        }\n
-      };\n
-    return gadget.setSetting(\'jio_storage_description\', configuration)\n
-      .push(function () {\n
-        return gadget.setSetting(\'jio_storage_name\', "ERP5");\n
-      })\n
-      .push(function () {\n
-        return gadget.reload();\n
-      });\n
-  }\n
+    <meta charset="utf-8">\n
+    <meta name="viewport" content="width=device-width, initial-scale=1">\n
 \n
-  function setLocalConfiguration(gadget) {\n
-    var configuration = {\n
-      type: "query",\n
-      sub_storage: {\n
-        type: "uuid",\n
-        sub_storage: {\n
-          type: "indexeddb",\n
-          database: "officejs-spreadsheet"\n
-        }\n
-      }\n
-    };\n
-    return gadget.setSetting(\'jio_storage_description\', configuration)\n
-      .push(function () {\n
-        return gadget.reload();\n
-      });\n
-  }\n
+    <title>OfficeJS Text Editor List</title>\n
 \n
-  function setDAVConfiguration(gadget) {\n
-    return gadget.redirect({page: \'jio_dav_configurator\'});\n
-  }\n
+    <script src="rsvp.js"></script>\n
+    <script src="renderjs.js"></script>\n
+    <script src="gadget_officejs_page_spreadsheet_list.js"></script>\n
 \n
-  var gadget_klass = rJS(window);\n
+  </head>\n
 \n
-  gadget_klass\n
-    .ready(function (g) {\n
-      g.props = {};\n
-      return g.getElement()\n
-        .push(function (element) {\n
-          g.props.element = element;\n
-          g.props.deferred = RSVP.defer();\n
-        });\n
-    })\n
-    .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("translateHtml", "translateHtml")\n
-    .declareAcquiredMethod("redirect", "redirect")\n
-    .declareAcquiredMethod("reload", "reload")\n
-    .declareAcquiredMethod("setSetting", "setSetting")\n
-    .declareMethod("render", function () {\n
-      var gadget = this;\n
-      return gadget.updateHeader({\n
-        title: "Storage Configuration"\n
-      }).push(function () {\n
-        return gadget.props.deferred.resolve();\n
-      });\n
-    })\n
-\n
-    /////////////////////////////////////////\n
-    // Form submit\n
-    /////////////////////////////////////////\n
-    .declareService(function () {\n
-      var gadget = this;\n
-\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return gadget.props.deferred.promise;\n
-        })\n
-        .push(function () {\n
-          return RSVP.all([\n
-            loopEventListener(\n
-              gadget.props.element.querySelector(\'form.select-erp5-form\'),\n
-              \'submit\',\n
-              true,\n
-              function () {\n
-                return setERP5Configuration(gadget);\n
-              }\n
-            ),\n
-            loopEventListener(\n
-              gadget.props.element.querySelector(\'form.select-local-form\'),\n
-              \'submit\',\n
-              true,\n
-              function () {\n
-                return setLocalConfiguration(gadget);\n
-              }\n
-            ),\n
-            loopEventListener(\n
-              gadget.props.element.querySelector(\'form.select-dav-form\'),\n
-              \'submit\',\n
-              true,\n
-              function () {\n
-                return setDAVConfiguration(gadget);\n
-              }\n
-            )\n
-          ]);\n
-        });\n
-    });\n
-\n
-\n
-}(window, rJS, RSVP));
+  <body>\n
+    <div data-gadget-url="gadget_officejs_widget_listbox.html" data-gadget-scope="listbox"></div>\n
+  </body>\n
+</html>\n
+
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS jIO Configurator Gadget JS</string> </value>
+            <value> <string>OfficeJS Spreadsheet List</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -299,6 +185,12 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>ung_document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -320,7 +212,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -342,7 +234,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444165081.38</float>
+                        <float>1448023505.12</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -373,7 +265,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>bk</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -387,7 +279,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.32047.38830.22630</string> </value>
+                <value> <string>947.15135.44751.35925</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -405,7 +297,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445269121.09</float>
+                        <float>1448023678.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -462,12 +354,65 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444164987.26</float>
+                        <float>1444144295.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
                 </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>bk</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1444144383.99</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>

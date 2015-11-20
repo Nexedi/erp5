@@ -140,10 +140,10 @@
     <script id="panel-template-body" type="text/x-handlebars-template">\n
       <div class="ui-content">\n
         <ul data-role="listview" class="ui-listview">\n
-          <li><a href="#page=spreadsheet_list" data-i18n="Spreadsheets">Spreadsheets</a></li>\n
-          <li><a href="#page=spreadsheet_jio_configurator" data-i18n="Storage Configuration">Storage Configuration</a></li>\n
-          <li><a href="#page=page_sync" data-i18n="Sync">Sync</a></li>\n
-          <li class="ui-last-child"><a href="#page=page_logout" data-i18n="Logout">Logout</a></li>\n
+          <li><a href="#page=document_list" data-i18n="Spreadsheets">Spreadsheets</a></li>\n
+          <li><a href="#page=jio_configurator" data-i18n="Storage Configuration">Storage Configuration</a></li>\n
+          <li><a href="#page=sync" data-i18n="Synchronization">Synchronization</a></li>\n
+          <li class="ui-last-child"><a href="#page=logout" data-i18n="Logout">Logout</a></li>\n
         </ul>\n
       </div>\n
     </script>\n
@@ -187,21 +187,27 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>edit_workflow</string> </key>
+                    <key> <string>document_publication_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>processing_status_workflow</string> </key>
+                    <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>ung_document_publication_workflow</string> </key>
+                    <key> <string>processing_status_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>ung_document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -221,11 +227,64 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>cedric.le.ninivin</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1448022856.62</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
                 <value> <string>edit</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -239,7 +298,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.16224.33561.57753</string> </value>
+                <value> <string>947.15270.17699.25156</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -257,7 +316,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444163187.89</float>
+                        <float>1448034445.79</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -269,7 +328,7 @@
       </tuple>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -326,7 +385,7 @@
       </tuple>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>

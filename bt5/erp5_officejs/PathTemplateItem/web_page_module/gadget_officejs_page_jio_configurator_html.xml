@@ -157,7 +157,7 @@
       <section class="ui-content-header-plain">\n
         <h3 class="ui-content-title ui-body-c">\n
           <span class="ui-icon ui-icon-custom ui-icon-file-text-o">&nbsp;</span>\n
-          Your Text Documents\n
+          Your Documents\n
         </h3>\n
       </section>\n
       <section class="ui-body-c ui-content-section">\n
@@ -297,7 +297,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -311,7 +311,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.59102.20815.50705</string> </value>
+                <value> <string>947.12629.17894.55808</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -329,7 +329,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446740955.07</float>
+                        <float>1448032104.14</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
