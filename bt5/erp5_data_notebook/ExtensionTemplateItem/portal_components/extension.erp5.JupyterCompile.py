@@ -9,6 +9,9 @@ import ast
 import types
 
 mime_type = 'text/plain'
+# IPython expects 2 status message - 'ok', 'error'
+status = u'ok'
+ename, evalue, tb_list = None, None, None
 
 def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   """
@@ -47,8 +50,11 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   # Updating global variable mime_type to its original value
   # Required when call to Base_displayImage is made which is changing
   # the value of gloabl mime_type
-  global mime_type
+  # Same for status, ename, evalue, tb_list
+  global mime_type, status, ename, evalue, tb_list
   mime_type = 'text/plain'
+  status = u'ok'
+  ename, evalue, tb_list = None, None, None
 
   # Other way would be to use all the globals variables instead of just an empty
   # dictionary, but that might hamper the speed of exec or eval.
@@ -59,16 +65,13 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   globals_dict = globals()
   g['context'] = self
   result_string = ''
-  ename, evalue, tb_list = None, None, None
   # Update globals dict and use it while running exec command
   g.update(old_local_variable_dict['variables'])
 
-  # IPython expects 2 status message - 'ok', 'error'
   # XXX: The focus is on 'ok' status only, we're letting errors to be raised on
   # erp5 for now, so as not to hinder the transactions while catching them.
   # TODO: This can be refactored by using client side error handling instead of
   # catching errors on server/erp5.
-  status = u'ok'
   local_variable_dict = old_local_variable_dict
 
   # Execute only if jupyter_code is not empty
@@ -292,5 +295,29 @@ def Base_saveImage(self, plot=None, reference=None, **kw):
     reference=reference,
     data=data,
     filename=filename)
+
+  return None
+
+def getError(self, previous=1):
+  """
+  Show error to the frontend and change status of code as 'error' from 'ok'
+  
+  Parameters
+  ----------
+  previous: Type - int. The number of the error you want to see.
+  Ex: 1 for last error
+      2 for 2nd last error and so on..
+
+  """
+  error_log_list = self.error_log._getLog()
+  if error_log_list:
+    if isinstance(previous, int):
+      # We need to get the object for last index of list
+      error = error_log_list[-previous]
+  global status, ename, evalue, tb_list
+  status = u'error'
+  ename = unicode(error['type'])
+  evalue = unicode(error['value'])
+  tb_list = [l+'\n' for l in error['tb_text'].split('\n')]
 
   return None
