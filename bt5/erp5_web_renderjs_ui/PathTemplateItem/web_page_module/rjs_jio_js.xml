@@ -64,6 +64,12 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -7967,6 +7973,195 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   jIO.addStorage(\'zip\', ZipStorage);\n
 }(RSVP, Blob, LZString, DOMException));\n
 ;/*\n
+ * Copyright 2015, Nexedi SA\n
+ * Released under the LGPL license.\n
+ * http://www.gnu.org/licenses/lgpl.html\n
+ */\n
+\n
+/*jslint nomen: true*/\n
+/*global jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer*/\n
+\n
+(function (jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer) {\n
+  "use strict";\n
+\n
+\n
+  // you the cryptography system used by this storage is AES-GCM.\n
+  // here is an example of how to generate a key to the json format.\n
+\n
+  // var key,\n
+  //     jsonKey;\n
+  // crypto.subtle.generateKey({name: "AES-GCM",length: 256},\n
+  //                           (true), ["encrypt", "decrypt"])\n
+  // .then(function(res){key = res;});\n
+  //\n
+  // window.crypto.subtle.exportKey("jwk", key)\n
+  // .then(function(res){jsonKey = val})\n
+  //\n
+  //var storage = jIO.createJIO({type: "crypt", key: jsonKey,\n
+  //                             sub_storage: {...}});\n
+\n
+  // find more informations about this cryptography system on\n
+  // https://github.com/diafygi/webcrypto-examples#aes-gcm\n
+\n
+  /**\n
+   * The JIO Cryptography Storage extension\n
+   *\n
+   * @class CryptStorage\n
+   * @constructor\n
+   */\n
+\n
+  var MIME_TYPE = "application/x-jio-aes-gcm-encryption";\n
+\n
+  function CryptStorage(spec) {\n
+    this._key = spec.key;\n
+    this._jsonKey = true;\n
+    this._sub_storage = jIO.createJIO(spec.sub_storage);\n
+  }\n
+\n
+  function convertKey(that) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return crypto.subtle.importKey("jwk", that._key,\n
+                                       "AES-GCM", false,\n
+                                       ["encrypt", "decrypt"]);\n
+      })\n
+      .push(function (res) {\n
+        that._key = res;\n
+        that._jsonKey = false;\n
+        return;\n
+      }, function () {\n
+        throw new TypeError(\n
+          "\'key\' must be a CryptoKey to JSON Web Key format"\n
+        );\n
+      });\n
+  }\n
+\n
+  CryptStorage.prototype.get = function () {\n
+    return this._sub_storage.get.apply(this._sub_storage,\n
+                                       arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.post = function () {\n
+    return this._sub_storage.post.apply(this._sub_storage,\n
+                                        arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.put = function () {\n
+    return this._sub_storage.put.apply(this._sub_storage,\n
+                                       arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.remove = function () {\n
+    return this._sub_storage.remove.apply(this._sub_storage,\n
+                                          arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.hasCapacity = function () {\n
+    return this._sub_storage.hasCapacity.apply(this._sub_storage,\n
+                                               arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.buildQuery = function () {\n
+    return this._sub_storage.buildQuery.apply(this._sub_storage,\n
+                                              arguments);\n
+  };\n
+\n
+\n
+  CryptStorage.prototype.putAttachment = function (id, name, blob) {\n
+    var initializaton_vector = crypto.getRandomValues(new Uint8Array(12)),\n
+      that = this;\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        if (that._jsonKey === true) {\n
+          return convertKey(that);\n
+        }\n
+        return;\n
+      })\n
+      .push(function () {\n
+        return jIO.util.readBlobAsDataURL(blob);\n
+      })\n
+      .push(function (dataURL) {\n
+        //string->arraybuffer\n
+        var strLen = dataURL.currentTarget.result.length,\n
+          buf = new ArrayBuffer(strLen),\n
+          bufView = new Uint8Array(buf),\n
+          i;\n
+\n
+        dataURL = dataURL.currentTarget.result;\n
+        for (i = 0; i < strLen; i += 1) {\n
+          bufView[i] = dataURL.charCodeAt(i);\n
+        }\n
+        return crypto.subtle.encrypt({\n
+          name : "AES-GCM",\n
+          iv : initializaton_vector\n
+        },\n
+                                     that._key, buf);\n
+      })\n
+      .push(function (coded) {\n
+        var blob = new Blob([initializaton_vector, coded], {type: MIME_TYPE});\n
+        return that._sub_storage.putAttachment(id, name, blob);\n
+      });\n
+  };\n
+\n
+  CryptStorage.prototype.getAttachment = function (id, name) {\n
+    var that = this;\n
+\n
+    return that._sub_storage.getAttachment(id, name)\n
+      .push(function (blob) {\n
+        if (blob.type !== MIME_TYPE) {\n
+          return blob;\n
+        }\n
+        return new RSVP.Queue()\n
+          .push(function () {\n
+            if (that._jsonKey === true) {\n
+              return convertKey(that);\n
+            }\n
+            return;\n
+          })\n
+          .push(function () {\n
+            return jIO.util.readBlobAsArrayBuffer(blob);\n
+          })\n
+          .push(function (coded) {\n
+            var initializaton_vector;\n
+\n
+            coded = coded.currentTarget.result;\n
+            initializaton_vector = new Uint8Array(coded.slice(0, 12));\n
+            return crypto.subtle.decrypt({\n
+              name : "AES-GCM",\n
+              iv : initializaton_vector\n
+            },\n
+                                         that._key, coded.slice(12));\n
+          })\n
+          .push(function (arr) {\n
+            //arraybuffer->string\n
+            arr = String.fromCharCode.apply(null, new Uint8Array(arr));\n
+            try {\n
+              return jIO.util.dataURItoBlob(arr);\n
+            } catch (error) {\n
+              if (error instanceof DOMException) {\n
+                return blob;\n
+              }\n
+              throw error;\n
+            }\n
+          }, function () { return blob; });\n
+      });\n
+  };\n
+\n
+  CryptStorage.prototype.removeAttachment = function () {\n
+    return this._sub_storage.removeAttachment.apply(this._sub_storage,\n
+                                                    arguments);\n
+  };\n
+\n
+  CryptStorage.prototype.allAttachments = function () {\n
+    return this._sub_storage.allAttachments.apply(this._sub_storage,\n
+                                                  arguments);\n
+  };\n
+\n
+  jIO.addStorage(\'crypt\', CryptStorage);\n
+\n
+}(jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer));\n
+;/*\n
  * Copyright 2013, Nexedi SA\n
  * Released under the LGPL license.\n
  * http://www.gnu.org/licenses/lgpl.html\n
@@ -8445,7 +8640,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         });\n
       })\n
       .push(undefined, function (error) {\n
-        if (error.target.status === 403) {\n
+        if (error.target.status === 403 || error.target.status === 424) {\n
           throw new jIO.util.jIOError("Cannot access subdocument", 404);\n
         }\n
         throw error;\n
@@ -8794,9 +8989,11 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 // }\n
 \n
 /*jslint nomen: true, unparam: true */\n
-/*global jIO, UriTemplate, FormData, RSVP, URI, Blob*/\n
+/*global jIO, UriTemplate, FormData, RSVP, URI, Blob, objectToSearchText,\n
+         SimpleQuery, ComplexQuery*/\n
 \n
-(function (jIO, UriTemplate, FormData, RSVP, URI, Blob) {\n
+(function (jIO, UriTemplate, FormData, RSVP, URI, Blob, objectToSearchText,\n
+           SimpleQuery, ComplexQuery) {\n
   "use strict";\n
 \n
   function getSiteDocument(storage) {\n
@@ -9182,6 +9379,38 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             (name === "sort"));\n
   };\n
 \n
+  function isSingleLocalRoles(parsed_query) {\n
+    if ((parsed_query instanceof SimpleQuery) &&\n
+        (parsed_query.key === \'local_roles\')) {\n
+      // local_roles:"Assignee"\n
+      return parsed_query.value;\n
+    }\n
+  }\n
+\n
+  function isMultipleLocalRoles(parsed_query) {\n
+    var i,\n
+      sub_query,\n
+      is_multiple = true,\n
+      local_role_list = [];\n
+    if ((parsed_query instanceof ComplexQuery) &&\n
+        (parsed_query.operator === \'OR\')) {\n
+\n
+      for (i = 0; i < parsed_query.query_list.length; i += 1) {\n
+        sub_query = parsed_query.query_list[i];\n
+        if ((sub_query instanceof SimpleQuery) &&\n
+            (sub_query.key === \'local_roles\')) {\n
+          local_role_list.push(sub_query.value);\n
+        } else {\n
+          is_multiple = false;\n
+        }\n
+      }\n
+      if (is_multiple) {\n
+        // local_roles:"Assignee" OR local_roles:"Assignor"\n
+        return local_role_list;\n
+      }\n
+    }\n
+  }\n
+\n
   ERP5Storage.prototype.buildQuery = function (options) {\n
 //     if (typeof options.query !== "string") {\n
 //       options.query = (options.query ?\n
@@ -9190,15 +9419,63 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 //     }\n
     return getSiteDocument(this)\n
       .push(function (site_hal) {\n
+        var query = options.query,\n
+          i,\n
+          parsed_query,\n
+          sub_query,\n
+          result_list,\n
+          local_roles;\n
+        if (options.query) {\n
+          parsed_query = jIO.QueryFactory.create(options.query);\n
+\n
+          result_list = isSingleLocalRoles(parsed_query);\n
+          if (result_list) {\n
+            query = undefined;\n
+            local_roles = result_list;\n
+          } else {\n
+\n
+            result_list = isMultipleLocalRoles(parsed_query);\n
+            if (result_list) {\n
+              query = undefined;\n
+              local_roles = result_list;\n
+            } else if ((parsed_query instanceof ComplexQuery) &&\n
+                       (parsed_query.operator === \'AND\')) {\n
+\n
+              // portal_type:"Person" AND local_roles:"Assignee"\n
+              for (i = 0; i < parsed_query.query_list.length; i += 1) {\n
+                sub_query = parsed_query.query_list[i];\n
+\n
+                result_list = isSingleLocalRoles(sub_query);\n
+                if (result_list) {\n
+                  local_roles = result_list;\n
+                  parsed_query.query_list.splice(i, 1);\n
+                  query = objectToSearchText(parsed_query);\n
+                  i = parsed_query.query_list.length;\n
+                } else {\n
+                  result_list = isMultipleLocalRoles(sub_query);\n
+                  if (result_list) {\n
+                    local_roles = result_list;\n
+                    parsed_query.query_list.splice(i, 1);\n
+                    query = objectToSearchText(parsed_query);\n
+                    i = parsed_query.query_list.length;\n
+                  }\n
+                }\n
+              }\n
+            }\n
+\n
+          }\n
+        }\n
+\n
         return jIO.util.ajax({\n
           "type": "GET",\n
           "url": UriTemplate.parse(site_hal._links.raw_search.href)\n
                             .expand({\n
-              query: options.query,\n
+              query: query,\n
               // XXX Force erp5 to return embedded document\n
               select_list: options.select_list || ["title", "reference"],\n
               limit: options.limit,\n
-              sort_on: options.sort_on\n
+              sort_on: options.sort_on,\n
+              local_roles: local_roles\n
             }),\n
           "xhrFields": {\n
             withCredentials: true\n
@@ -9230,7 +9507,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   jIO.addStorage("erp5", ERP5Storage);\n
 \n
-}(jIO, UriTemplate, FormData, RSVP, URI, Blob));\n
+}(jIO, UriTemplate, FormData, RSVP, URI, Blob, objectToSearchText,\n
+  SimpleQuery, ComplexQuery));\n
 ;/*jslint nomen: true*/\n
 /*global RSVP*/\n
 (function (jIO, RSVP) {\n
@@ -10273,6 +10551,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         var array_buffer_list = [],\n
           blob,\n
           i,\n
+          index,\n
           len = result_list.length;\n
         for (i = 0; i < len; i += 1) {\n
           array_buffer_list.push(result_list[i].blob);\n
@@ -10280,8 +10559,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         if ((options.start === undefined) && (options.end === undefined)) {\n
           return new Blob(array_buffer_list, {type: type});\n
         }\n
+        index = Math.floor(start / UNITE) * UNITE;\n
         blob = new Blob(array_buffer_list, {type: "application/octet-stream"});\n
-        return blob.slice(start, end, "application/octet-stream");\n
+        return blob.slice(start - index, end - index,\n
+                          "application/octet-stream");\n
       });\n
   };\n
 \n
@@ -10370,7 +10651,8 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   };\n
 \n
   jIO.addStorage("indexeddb", IndexedDBStorage);\n
-}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange));
+}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange));\n
+
 
 ]]></string> </value>
         </item>
@@ -10507,7 +10789,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.47484.49057.4949</string> </value>
+                <value> <string>947.13956.40084.22186</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -10525,7 +10807,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446033135.72</float>
+                        <float>1448293989.05</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
