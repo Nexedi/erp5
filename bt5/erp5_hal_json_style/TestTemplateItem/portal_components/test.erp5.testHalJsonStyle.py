@@ -348,7 +348,7 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['_links']['raw_search']['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search{&query,select_list*,limit*,sort_on*}" % self.portal.absolute_url())
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search{&query,select_list*,limit*,sort_on*,local_roles*}" % self.portal.absolute_url())
     self.assertEqual(result_dict['_links']['raw_search']['templated'], True)
     self.assertEqual(result_dict['_links']['raw_search']['name'], "Raw Search")
 
@@ -612,6 +612,7 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_debug'], "search")
     self.assertEqual(result_dict['_limit'], 10)
     self.assertEqual(result_dict['_query'], None)
+    self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], [])
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 10)
@@ -635,6 +636,7 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_debug'], "search")
     self.assertEqual(result_dict['_limit'], 1)
     self.assertEqual(result_dict['_query'], None)
+    self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], [])
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
@@ -661,6 +663,7 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_debug'], "search")
     self.assertEqual(result_dict['_limit'], 10)
     self.assertEqual(result_dict['_query'], None)
+    self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], ["id", "relative_url"])
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 10)
@@ -686,10 +689,33 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_debug'], "search")
     self.assertEqual(result_dict['_limit'], 10)
     self.assertEqual(result_dict['_query'], "ANIMPOSSIBLECOUSCOUSVALUEFOOTOFINDINDATA")
+    self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], [])
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 0)
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoas_local_roles_param(self):
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", local_roles=["Assignor", "Assignee"])
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_debug'], "search")
+    self.assertEqual(result_dict['_limit'], 10)
+    self.assertEqual(result_dict['_query'], None)
+    self.assertEqual(result_dict['_local_roles'], ["Assignor", "Assignee"])
+    self.assertEqual(result_dict['_select_list'], [])
+
+    self.assertEqual(len(result_dict['_embedded']['contents']), 0)
 
 class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
 

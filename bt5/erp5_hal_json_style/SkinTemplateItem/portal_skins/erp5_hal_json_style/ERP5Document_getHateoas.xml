@@ -75,18 +75,18 @@ url_template_dict = {\n
   "traverse_template": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
                        "{&relative_url,view}",\n
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \\\n
-                     "{&query,select_list*,limit*,sort_on*}",\n
+                     "{&query,select_list*,limit*,sort_on*,local_roles*}",\n
   "custom_search_template": "%(root_url)s/%(script_id)s?mode=search" + \\\n
                      "&relative_url=%(relative_url)s" \\\n
                      "&form_relative_url=%(form_relative_url)s" \\\n
                      "&list_method=%(list_method)s" \\\n
                      "&default_param_json=%(default_param_json)s" \\\n
-                     "{&query,select_list*,limit*,sort_on*}",\n
+                     "{&query,select_list*,limit*,sort_on*,local_roles*}",\n
   "custom_search_template_no_editable": "%(root_url)s/%(script_id)s?mode=search" + \\\n
                      "&relative_url=%(relative_url)s" \\\n
                      "&list_method=%(list_method)s" \\\n
                      "&default_param_json=%(default_param_json)s" \\\n
-                     "{&query,select_list*,limit*,sort_on*}",\n
+                     "{&query,select_list*,limit*,sort_on*,local_roles*}",\n
   "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",\n
   "bulk_action": "%(root_url)s/%(script_id)s?mode=bulk",\n
   # XXX View is set by default to empty\n
@@ -927,9 +927,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             tmp_sort_on += (tuple([x for x in grain.split(",")]),)\n
 \n
       if query:\n
-        sql_list = callable_list_method(full_text=query, limit=limit, sort_on=tmp_sort_on, **catalog_kw)\n
+        sql_list = callable_list_method(full_text=query, limit=limit, sort_on=tmp_sort_on, local_roles=local_roles, **catalog_kw)\n
       else:\n
-        sql_list = callable_list_method(limit=limit, sort_on=tmp_sort_on, **catalog_kw)\n
+        sql_list = callable_list_method(limit=limit, sort_on=tmp_sort_on, local_roles=local_roles, **catalog_kw)\n
 \n
     result_list = []\n
   \n
@@ -1016,6 +1016,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     result_dict[\'_embedded\'] = {"contents": result_list}\n
   \n
     result_dict[\'_query\'] = query\n
+    result_dict[\'_local_roles\'] = local_roles\n
     result_dict[\'_limit\'] = limit\n
     result_dict[\'_select_list\'] = select_list\n
   \n
@@ -1086,7 +1087,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, form=None, relative_url=None, restricted=0, list_method=None, default_param_json=None, form_relative_url=None, bulk_list="[]", sort_on=()</string> </value>
+            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, local_roles=None, form=None, relative_url=None, restricted=0, list_method=None, default_param_json=None, form_relative_url=None, bulk_list="[]", sort_on=()</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
