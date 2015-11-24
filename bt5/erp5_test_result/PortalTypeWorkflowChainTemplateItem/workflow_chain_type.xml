@@ -12,6 +12,14 @@
   <workflow>edit_workflow, test_suite_workflow</workflow>
  </chain>
  <chain>
+  <type>SlapOS Agent Distributor</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>SlapOS Agent Test Suite</type>
+  <workflow>edit_workflow, test_suite_workflow</workflow>
+ </chain>
+ <chain>
   <type>Test Node</type>
   <workflow>edit_workflow, test_node_workflow</workflow>
  </chain>
