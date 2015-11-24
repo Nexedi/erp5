@@ -248,7 +248,7 @@
       if (url_query) {\n
         //query_string = field_json.column_list.reduce(buildQueryString, \' AND (\').replace(new RegExp("OR " + \'$\'), \')\');\n
         if (query_string) {\n
-          query_string = \' AND \' + url_query;\n
+          query_string = \'(\' + query_string + \') AND (\' + url_query + \')\';\n
         } else {\n
           query_string = url_query;\n
         }\n
@@ -661,7 +661,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.5035.37117.26743</string> </value>
+                <value> <string>947.20692.23501.2577</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -679,7 +679,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447417728.47</float>
+                        <float>1448357409.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
