@@ -5,6 +5,12 @@
  <portal_type id="Scalability Test Suite">
   <item>specialise</item>
  </portal_type>
+ <portal_type id="SlapOS Agent Test Suite">
+  <item>specialise</item>
+ </portal_type>
+ <portal_type id="SlapOS Software Release Unit Test">
+  <item>specialise</item>
+ </portal_type>
  <portal_type id="Test Node">
   <item>aggregate</item>
   <item>specialise</item>

@@ -6,3 +6,4 @@ TestSuiteConstraint
 ScalabilityTestSuite
 TestNode
 ScalabilityDistributor
+SlapOSSoftwareReleaseUnitTest

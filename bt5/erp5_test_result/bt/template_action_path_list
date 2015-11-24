@@ -5,6 +5,12 @@ ERP5 Project Unit Test Distributor | view
 ERP5 Scalability Distributor | view
 Scalability Test Suite | vcs_repository
 Scalability Test Suite | view
+SlapOS Agent Distributor | view
+SlapOS Agent Test Suite | software_release_unit_test
+SlapOS Agent Test Suite | vcs_repository
+SlapOS Agent Test Suite | view
+SlapOS Software Release Unit Test | vcs_repository
+SlapOS Software Release Unit Test | view
 Task Distribution Tool | view
 Test Node Module | view
 Test Node | view

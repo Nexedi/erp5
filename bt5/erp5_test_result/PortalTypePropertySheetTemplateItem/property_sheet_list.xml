@@ -15,6 +15,18 @@
   <item>ScalabilityTestSuite</item>
   <item>TestSuite</item>
  </portal_type>
+ <portal_type id="SlapOS Agent Distributor">
+  <item>ScalabilityDistributor</item>
+ </portal_type>
+ <portal_type id="SlapOS Agent Test Suite">
+  <item>Arrow</item>
+  <item>TestSuite</item>
+ </portal_type>
+ <portal_type id="SlapOS Software Release Unit Test">
+  <item>Arrow</item>
+  <item>SlapOSSoftwareReleaseUnitTest</item>
+  <item>Url</item>
+ </portal_type>
  <portal_type id="Test Node">
   <item>DublinCore</item>
   <item>TestNode</item>

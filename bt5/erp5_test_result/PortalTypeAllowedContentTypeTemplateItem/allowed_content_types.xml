@@ -5,6 +5,10 @@
  <portal_type id="Scalability Test Suite">
   <item>Test Suite Repository</item>
  </portal_type>
+ <portal_type id="SlapOS Agent Test Suite">
+  <item>SlapOS Software Release Unit Test</item>
+  <item>Test Suite Repository</item>
+ </portal_type>
  <portal_type id="Task Distribution Tool">
   <item>Cloud Performance Unit Test Distributor</item>
   <item>ERP5 Project Unit Test Distributor</item>

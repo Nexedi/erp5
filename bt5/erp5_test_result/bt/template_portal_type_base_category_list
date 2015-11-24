@@ -1,5 +1,7 @@
 Benchmark Result | source_project
 Scalability Test Suite | specialise
+SlapOS Agent Test Suite | specialise
+SlapOS Software Release Unit Test | specialise
 Test Node | aggregate
 Test Node | specialise
 Test Result Module | business_application

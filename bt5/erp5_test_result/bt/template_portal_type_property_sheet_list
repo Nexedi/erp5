@@ -6,6 +6,12 @@ ERP5 Scalability Distributor | ScalabilityDistributor
 Scalability Test Suite | Arrow
 Scalability Test Suite | ScalabilityTestSuite
 Scalability Test Suite | TestSuite
+SlapOS Agent Distributor | ScalabilityDistributor
+SlapOS Agent Test Suite | Arrow
+SlapOS Agent Test Suite | TestSuite
+SlapOS Software Release Unit Test | Arrow
+SlapOS Software Release Unit Test | SlapOSSoftwareReleaseUnitTest
+SlapOS Software Release Unit Test | Url
 Test Node | DublinCore
 Test Node | TestNode
 Test Result Line | CommandLineResult
