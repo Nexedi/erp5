@@ -170,7 +170,8 @@
             g.getUrlFor({command: \'display\', options: {page: "front"}}),\n
             g.getUrlFor({command: \'display\', options: {page: "history"}}),\n
             g.getUrlFor({command: \'display\', options: {page: "preference"}}),\n
-            g.getUrlFor({command: \'display\', options: {page: "logout"}})\n
+            g.getUrlFor({command: \'display\', options: {page: "logout"}}),\n
+            g.getUrlFor({command: \'display\', options: {page: "worklist"}})\n
           ]);\n
         })\n
         .push(function (all_result) {\n
@@ -181,7 +182,8 @@
             "history_href": all_result[1],\n
             "preference_href": all_result[2],\n
             // "language_list": language_list,\n
-            "logout_href": all_result[3]\n
+            "logout_href": all_result[3],\n
+            "worklist_href": all_result[4]\n
           });\n
           return tmp;\n
         })\n
@@ -369,7 +371,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447320446.53</float>
+                        <float>1447406686.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
