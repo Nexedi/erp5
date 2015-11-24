@@ -108,41 +108,6 @@
 \n
   var INTERFACE_GADGET_SCOPE = "interface_gadget";\n
 \n
-  function renderInitialReport(gadget, gadget_list) {\n
-    var gadget_info_list = [],\n
-      row_list = [],\n
-      column_list = [\'Gadget Name\', \'Declared Interfaces\', \'Validation Status\'],\n
-      cell_list,\n
-      default_status = "In Progress",\n
-      content = \'\',\n
-      item;\n
-    for(item in gadget_list) {\n
-      cell_list = [];\n
-      cell_list.push({\n
-        default_class: "gadget_name",\n
-        value: gadget_list[item]\n
-      });\n
-      cell_list.push({\n
-        default_class: "interface_list",\n
-        value: default_status\n
-      });\n
-      cell_list.push({\n
-        default_class: "validation_status",\n
-        value: default_status\n
-      });\n
-      row_list.push({\n
-        "cell_list": cell_list,\n
-        "default_id": gadget_list[item].substr(0, gadget_list[item].indexOf(\'.\'))\n
-        });\n
-    }\n
-    content += report_widget_table({\n
-      column_list: column_list,\n
-      row_list: row_list\n
-    });\n
-    gadget.props.content_element.innerHTML = content;\n
-    $(gadget.props.element).trigger("create");\n
-  }\n
-\n
   function validateAppGadgetList(gadget, gadget_list){\n
     var item;\n
     for(item in gadget_list) {\n
@@ -171,7 +136,7 @@
   function verifyGadgetImplementation(gadget, verify_gadget_url) {\n
     var interface_gadget,\n
       interface_list = [],\n
-      default_validation_status = {result:"N/A"};\n
+      default_validation_status = {result:"N/A", result_message: "N/A"};\n
     return new RSVP.Queue()\n
       .push(function() {\n
         return gadget.getDeclaredGadget(INTERFACE_GADGET_SCOPE);\n
@@ -218,11 +183,13 @@
     if(report_data.validation_status === true) {\n
       validation_status = "Success";\n
       update_element.setAttribute(\'style\', \'color: green\');\n
-    }\n
-    if(report_data.validation_status === false) {\n
+    } else {\n
       validation_status = (validation_message !== undefined? validation_message : "Failure");\n
-      update_element.setAttribute(\'style\', \'cursor: pointer; color: red\');\n
-      update_element.className += "error expand";\n
+      update_element.setAttribute(\'style\', \'color: red\');\n
+      if(report_data.validation_status === false) {\n
+        update_element.className += "error expand";\n
+        update_element.setAttribute(\'style\', \'cursor: pointer; color: red\');\n
+      }\n
     }\n
     gadget.props.error_data[report_data.id] = report_data.error_detail;\n
     update_element.querySelector(".validation_status").innerHTML = validation_status;\n
@@ -282,8 +249,27 @@
 \n
     .declareMethod("render", function (options) {\n
       var gadget = this,\n
-        appcache_url = options.appcache_url,\n
-        gadget_list;\n
+        report_data;\n
+      return new RSVP.Queue()\n
+        .push(function() {\n
+          return gadget.generateInitialReportData(options);\n
+        })\n
+        .push(function(gadget_list) {\n
+          report_data = {\'gadget_list\': gadget_list};\n
+          return gadget.renderInitialReport(report_data);\n
+        })\n
+        .push(function() {\n
+          return gadget.renderFinalReport(report_data);\n
+        }, function(error) {\n
+          return gadget.redirect({\n
+            found: false\n
+          });\n
+        });\n
+    })\n
+\n
+    .declareMethod("generateInitialReportData", function(options) {\n
+      var gadget = this,\n
+        appcache_url = options.appcache_url;\n
       return new RSVP.Queue()\n
         .push(function() {\n
           return gadget.getDeclaredGadget(INTERFACE_GADGET_SCOPE);\n
@@ -292,22 +278,58 @@
           return interface_gadget.getGadgetListFromAppcache(appcache_url);\n
         })\n
         .push(function(filtered_gadget_list) {\n
-          gadget_list = filtered_gadget_list;\n
-          return renderInitialReport(gadget, gadget_list);\n
-        })\n
-        .push(function() {\n
-          return validateAppGadgetList(gadget, gadget_list);\n
-        }, function(error) {\n
-          return gadget.redirect({\n
-            found: false\n
-          });\n
+          gadget.props.gadget_list = filtered_gadget_list;\n
+          return filtered_gadget_list;\n
         });\n
     })\n
 \n
-    .declareMethod("reportPageDummyMethod1", function(param1) {\n
-      // A dummy method to fulfil the interface implementation requirement.\n
-      return;\n
+    .declareMethod("renderInitialReport", function(options) {\n
+      var gadget = this,\n
+        gadget_list = options.gadget_list, \n
+        gadget_info_list = [],\n
+        row_list = [],\n
+        column_list = [\'Gadget Name\', \'Declared Interfaces\', \'Validation Status\'],\n
+        cell_list,\n
+        default_status = "In Progress",\n
+        content = \'\',\n
+        item;\n
+      for(item in gadget_list) {\n
+        cell_list = [];\n
+        cell_list.push({\n
+          default_class: "gadget_name",\n
+          value: gadget_list[item]\n
+        });\n
+        cell_list.push({\n
+          default_class: "interface_list",\n
+          value: default_status\n
+        });\n
+        cell_list.push({\n
+          default_class: "validation_status",\n
+          value: default_status\n
+        });\n
+        row_list.push({\n
+          "cell_list": cell_list,\n
+          "default_id": gadget_list[item].substr(0, gadget_list[item].indexOf(\'.\'))\n
+        });\n
+      }\n
+      content += report_widget_table({\n
+        column_list: column_list,\n
+        row_list: row_list\n
+      });\n
+      gadget.props.content_element.innerHTML = content;\n
+      $(gadget.props.element).trigger("create");\n
     })\n
+    \n
+    .declareMethod("renderFinalReport", function(options) {\n
+      var gadget = this,\n
+        gadget_list = options.gadget_list;\n
+      return new RSVP.Queue()\n
+        .push(function() {\n
+          return validateAppGadgetList(gadget, gadget_list);\n
+        });\n
+\n
+    })\n
+\n
     /////////////////////////////////////////////////////////////////\n
     // Acquired methods\n
     /////////////////////////////////////////////////////////////////\n
@@ -472,7 +494,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.54878.32293.23654</string> </value>
+                <value> <string>947.20362.45778.153</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -490,7 +512,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446717974.43</float>
+                        <float>1448337757.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

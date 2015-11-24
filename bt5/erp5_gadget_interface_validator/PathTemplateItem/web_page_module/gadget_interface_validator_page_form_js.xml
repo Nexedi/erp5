@@ -106,18 +106,6 @@
 (function (window, rJS, RSVP, Handlebars) {\n
   "use strict";\n
 \n
-  var INTERFACE_GADGET_SCOPE = "interface_gadget";\n
-\n
-  function fetchPageType(gadget_url) {\n
-    var page_type = \'\',\n
-      key = \'_page_\';\n
-    if(gadget_url.indexOf(key) > -1) {\n
-      page_type = gadget_url.substring(gadget_url.indexOf(key) + key.length,\n
-                             gadget_url.lastIndexOf(\'.\'));\n
-    }\n
-    return page_type;\n
-  }\n
-\n
   /////////////////////////////////////////////////////////////////\n
   // Handlebars\n
   /////////////////////////////////////////////////////////////////\n
@@ -157,6 +145,10 @@
     /////////////////////////////////////////////////////////////////\n
 \n
     .declareMethod("render", function (options) {\n
+      return this.initiateForm(options);\n
+    })\n
+\n
+    .declareMethod("initiateForm", function(options) {\n
       var gadget = this;\n
       return new RSVP.Queue()\n
         .push(function() {\n
@@ -174,7 +166,24 @@
           gadget.props.content_element.querySelector("input[type=text]")\n
                                  .focus();\n
         });\n
+    })\n
 \n
+    .declareMethod("submitForm", function(options) {\n
+      var gadget = this,\n
+        appcache_url;\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          gadget.props.content_element.querySelector("input[type=submit]")\n
+                                 .disabled = true;\n
+          return options.target[0].value;\n
+        })\n
+        .push(function(submit_url) {\n
+          appcache_url = submit_url;\n
+          return gadget.redirect({\n
+            interface_type: \'report\',\n
+            appcache_url: appcache_url\n
+          });\n
+        });\n
     })\n
 \n
     .declareService(function () {\n
@@ -183,37 +192,7 @@
       ////////////////////////////////////\n
       var gadget = this;\n
       function formSubmit(submit_event) {\n
-        var interface_gadget,\n
-          appcache_url;\n
-        return new RSVP.Queue()\n
-          .push(function () {\n
-            gadget.props.content_element.querySelector("input[type=submit]")\n
-                                   .disabled = true;\n
-            return submit_event.target[0].value;\n
-          })\n
-          .push(function(submit_url) {\n
-            appcache_url = submit_url;\n
-            return gadget.getDeclaredGadget(INTERFACE_GADGET_SCOPE);\n
-          })\n
-          .push(function(i_gadget) {\n
-            var required_interface = \'gadget_interface_validator_reportpage_interface.html\',\n
-              gadget_source_url = \'gadget_interface_validator.appcache\';\n
-            interface_gadget = i_gadget;\n
-            return interface_gadget.getGadgetListImplementingInterface(required_interface, gadget_source_url);\n
-          })\n
-          .push(function(gadget_list) {\n
-            if(gadget_list.length > 0) {\n
-              var page_type = fetchPageType(gadget_list[0]);\n
-              return gadget.redirect({\n
-                page: page_type,\n
-                appcache_url: appcache_url\n
-              });\n
-            } else {\n
-              return gadget.redirect({\n
-                found: false\n
-              });\n
-            }\n
-          });\n
+        return gadget.submitForm(submit_event);\n
       }\n
       // Listen to form submit\n
       return loopEventListener(\n
@@ -361,7 +340,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.54877.22908.40635</string> </value>
+                <value> <string>947.20323.653.614</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -379,7 +358,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446717901.46</float>
+                        <float>1448337701.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

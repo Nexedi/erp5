@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_interface_validator_reportpage_interface.html</string> </value>
+            <value> <string>gadget_interface_validator_interface_form.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_interface_validator_reportpage_interface_html</string> </value>
+            <value> <string>gadget_interface_validator_interface_form_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -108,17 +108,23 @@
 <!DOCTYPE html>\n
 <html>\n
   <head>\n
-    <title>Gadget Interface Validator Reportpage Interface</title>\n
+    <title>Gadget Interface Validator Form Interface</title>\n
   </head>\n
   <body>\n
-    <h1>Gadget Interface Validator Reportpage Interface</h1>\n
-    <h3>Interface to display the interface validation report of an application.</h3>\n
+    <h1>Gadget Interface Validator Form Interface</h1>\n
+    <h3>Interface for the form page of an interface validator application.</h3>\n
     <dl>\n
-      <dt>reportPageDummyMethod1</dt>\n
-      <dd>Defining the prototype for a report page dummy method</dd>\n
+      <dt>initiateForm</dt>\n
+      <dd>A method to initiate the form with required fields and messages as per the options provided.</dd>\n
       <dl>\n
-        <dt data-parameter-required="required" data-parameter-type="int">param1</dt>\n
-        <dd>An integer parameter</dd>\n
+        <dt data-parameter-required="required">options</dt>\n
+        <dd>An object containing the display message and other parameters.</dd>\n
+      </dl>\n
+      <dt>submitForm</dt>\n
+      <dd>A method to call after submitting the form. It should fetch and process the form data, and render the next page accordingly.</dd>\n
+      <dl>\n
+        <dt data-parameter-required="required">options</dt>\n
+        <dd>An object containing the submitted form data.</dd>\n
       </dl>\n
     </dl>\n
   </body>\n
@@ -128,7 +134,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Interface Validator Reportpage Interface</string> </value>
+            <value> <string>Gadget Interface Validator Form Interface</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -214,7 +220,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445963728.87</float>
+                        <float>1448336607.88</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -259,7 +265,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.46338.32164.16076</string> </value>
+                <value> <string>947.20329.18683.47718</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -277,7 +283,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445963711.98</float>
+                        <float>1448335317.72</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -300,7 +306,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -316,7 +324,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -334,7 +342,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445963404.93</float>
+                        <float>1448335214.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

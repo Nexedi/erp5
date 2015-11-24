@@ -126,7 +126,8 @@ gadget_interface_validator_page_report.html\n
 gadget_interface_validator_page_report.js\n
 gadget_interface_validator_panel.html\n
 gadget_interface_validator_panel.js\n
-gadget_interface_validator_reportpage_interface.html\n
+gadget_interface_validator_interface_report.html\n
+gadget_interface_validator_interface_form.html\n
 gadget_interface_validator_router.html\n
 gadget_interface_validator_router.js\n
 NETWORK:\n
@@ -265,7 +266,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.46348.9104.1143</string> </value>
+                <value> <string>946.47357.40863.26214</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -283,7 +284,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446024817.39</float>
+                        <float>1448333996.38</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

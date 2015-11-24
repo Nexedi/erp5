@@ -112,7 +112,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no" />\n
     <title>Gadget Interface Validator Reportpage</title>\n
 \n
-    <link rel="http://www.renderjs.org/rel/interface" href="gadget_interface_validator_reportpage_interface.html">\n
+    <link rel="http://www.renderjs.org/rel/interface" href="gadget_interface_validator_interface_report.html" />\n
 \n
     <!-- renderjs -->\n
     <script src="rsvp.js" type="text/javascript"></script>\n
@@ -293,7 +293,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.45995.23548.62924</string> </value>
+                <value> <string>946.46352.7411.28416</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +311,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445964486.74</float>
+                        <float>1448336906.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

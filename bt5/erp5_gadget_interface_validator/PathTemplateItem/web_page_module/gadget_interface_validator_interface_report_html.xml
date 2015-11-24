@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,8 +70,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_interface_validator_router.js</string> </value>
+            <value> <string>gadget_interface_validator_interface_report.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_interface_validator_router_js</string> </value>
+            <value> <string>gadget_interface_validator_interface_report_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -101,161 +105,42 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS */\n
-/*jslint nomen: true, indent: 2 */\n
-(function (window, rJS) {\n
-  "use strict";\n
-  \n
-   var MAIN_PAGE_PREFIX = "gadget_interface_validator_",\n
-    DEFAULT_PAGE = "form",\n
-    DEFAULT_GADGET_SOURCE = \'gadget_interface_validator.appcache\',\n
-    REDIRECT_TIMEOUT = 30000,\n
-    INTERFACE_GADGET_SCOPE = "interface_gadget";\n
-\n
-  function listenHashChange(gadget) {\n
-    function extractHashAndDispatch(evt) {\n
-      var hash = (evt.newURL || window.location.toString()).split(\'#\')[1],\n
-        subhashes,\n
-        subhash,\n
-        keyvalue,\n
-        index,\n
-        args = {};\n
-      if (hash !== undefined) {\n
-        subhashes = hash.split(\'&\');\n
-        for (index in subhashes) {\n
-          if (subhashes.hasOwnProperty(index)) {\n
-            subhash = subhashes[index];\n
-            if (subhash !== \'\') {\n
-              keyvalue = subhash.split(\'=\');\n
-              if (keyvalue.length === 2) {\n
-                args[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);\n
-              }\n
-            }\n
-          }\n
-        }\n
-      }\n
-\n
-      return gadget.renderApplication({\n
-        args: args\n
-      });\n
-\n
-    }\n
-\n
-    var result = loopEventListener(window, \'hashchange\', false,\n
-                                   extractHashAndDispatch),\n
-      event = document.createEvent("Event");\n
-    event.initEvent(\'hashchange\', true, true);\n
-    event.newURL = window.location.toString();\n
-    window.dispatchEvent(event);\n
-    return result;\n
-  }\n
-\n
-  function fetchPageType(gadget_url) {\n
-    var page_type = \'\',\n
-      key = \'_page_\';\n
-    if(gadget_url.indexOf(key) > -1) {\n
-      page_type = gadget_url.substring(gadget_url.indexOf(key) + key.length,\n
-                             gadget_url.lastIndexOf(\'.\'));\n
-    }\n
-    return page_type;\n
-  }\n
-\n
-  rJS(window)\n
-    .ready(function (gadget) {\n
-      gadget.props = {\n
-        start_deferred: RSVP.defer()\n
-      };\n
-    })\n
-\n
-    .declareMethod("getCommandUrlFor", function(options) {\n
-      var prefix = \'\',\n
-        result,\n
-        key;\n
-      result = "#";\n
-      for (key in options) {\n
-        if (options.hasOwnProperty(key) && options[key] !== undefined) {\n
-          // Don\'t keep empty values\n
-          result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(options[key]);\n
-          prefix = \'&\';\n
-        }\n
-      }\n
-      return result;\n
-    })\n
-\n
-    .declareMethod(\'redirect\', function (options) {\n
-      return this.getCommandUrlFor(options)\n
-        .push(function (hash) {\n
-          window.location.replace(hash);\n
-          // prevent returning unexpected response\n
-          // wait for the hash change to occur\n
-          // fail if nothing happens\n
-          return RSVP.timeout(REDIRECT_TIMEOUT);\n
-        });\n
-    })\n
-\n
-    .declareMethod(\'route\', function (options) {\n
-      var gadget = this,\n
-        args = options.args,\n
-        page,\n
-        page_type = \'\',\n
-        interface_name = \'\',\n
-        gadget_source;\n
-      if (args.interface_type) {\n
-        interface_name = MAIN_PAGE_PREFIX + "interface_" + args.interface_type + ".html";\n
-      } else if(args.interface_name) {\n
-        interface_name = args.interface_name;\n
-      }\n
-\n
-      if(interface_name) {\n
-        gadget_source = args.gadget_source || DEFAULT_GADGET_SOURCE;\n
-        return new RSVP.Queue()\n
-          .push(function() {\n
-            return gadget.getDeclaredGadget(INTERFACE_GADGET_SCOPE);\n
-          })\n
-          .push(function(interface_gadget) {\n
-            return interface_gadget.getGadgetListImplementingInterface(interface_name, gadget_source);\n
-          })\n
-          .push(function(gadget_list) {\n
-            if(gadget_list.length > 0) {\n
-              page_type = fetchPageType(gadget_list[0]);\n
-            }\n
-            page = page_type || DEFAULT_PAGE;\n
-            return ({\n
-              url: MAIN_PAGE_PREFIX + "page_" + page + ".html",\n
-              options: args\n
-            });\n
-          });\n
-      } else {\n
-        page = args.page || DEFAULT_PAGE;\n
-        return {\n
-          url: MAIN_PAGE_PREFIX + "page_" + page + ".html",\n
-          options: args\n
-        };\n
-      }\n
-    })\n
-\n
-    .declareAcquiredMethod(\'renderApplication\', \'renderApplication\')\n
-    .declareMethod(\'start\', function () {\n
-      this.props.start_deferred.resolve();\n
-    })\n
-    .declareService(function () {\n
-      var gadget = this;\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return gadget.props.start_deferred.promise;\n
-        })\n
-        .push(function () {\n
-          return listenHashChange(gadget);\n
-        });\n
-    });\n
-\n
-}(window, rJS));
+<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+    <title>Gadget Interface Validator Reportpage Interface</title>\n
+  </head>\n
+  <body>\n
+    <h1>Gadget Interface Validator Reportpage Interface</h1>\n
+    <h3>Interface for the report page gadget of an interface validator application.</h3>\n
+    <dl>\n
+      <dt>generateInitialReportData</dt>\n
+      <dd>A method to generate the initial data for the report as per the options provided.</dd>\n
+      <dl>\n
+        <dt data-parameter-required="required">options</dt>\n
+        <dd>An object containing the form data based on which the initial report data is generated..</dd>\n
+      </dl>\n
+      <dt>renderInitialReport</dt>\n
+      <dd>A method to render initial report. It should have a list of non-verified/in-progress gadgets.</dd>\n
+      <dl>\n
+        <dt data-parameter-required="required">options</dt>\n
+        <dd>An object containing the initial report data.</dd>\n
+      </dl>\n
+      <dt>renderFinalReport</dt>\n
+      <dd>A method to render final report. It should update the initial report with verification status and other details.</dd>\n
+      <dl>\n
+        <dt data-parameter-required="required">options</dt>\n
+        <dd>An object containing the final report data. It can be raw data to be processed and displayed accordingly.</dd>\n
+      </dl>\n
+    </dl>\n
+  </body>\n
+</html>
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Interface Validator Router JS</string> </value>
+            <value> <string>Gadget Interface Validator Report Interface</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -341,7 +226,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444136829.68</float>
+                        <float>1448341256.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -386,7 +271,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.60365.46558.23108</string> </value>
+                <value> <string>947.20421.7060.5870</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -404,7 +289,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448337440.86</float>
+                        <float>1448341228.83</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -427,7 +312,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -443,7 +330,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -461,7 +348,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444133648.6</float>
+                        <float>1448340589.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
