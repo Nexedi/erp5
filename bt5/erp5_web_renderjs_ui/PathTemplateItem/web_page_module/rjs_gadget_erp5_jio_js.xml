@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP, UriTemplate, URI */\n
+/*global window, rJS, RSVP, UriTemplate, URI, objectToSearchText, SimpleQuery, ComplexQuery, jIO */\n
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-(function (window, rJS, RSVP, UriTemplate, URI) {\n
+(function (window, rJS, RSVP, UriTemplate, URI, objectToSearchText, SimpleQuery, ComplexQuery, jIO) {\n
   "use strict";\n
 \n
   function wrapJioCall(gadget, method_name, argument_list) {\n
@@ -116,6 +116,38 @@
         }\n
         throw error;\n
       });\n
+  }\n
+\n
+  function isSingleLocalRoles(parsed_query) {\n
+    if ((parsed_query instanceof SimpleQuery) &&\n
+        (parsed_query.key === \'local_roles\')) {\n
+      // local_roles:"Assignee"\n
+      return parsed_query.value;\n
+    }\n
+  }\n
+\n
+  function isMultipleLocalRoles(parsed_query) {\n
+    var i,\n
+      sub_query,\n
+      is_multiple = true,\n
+      local_role_list = [];\n
+    if ((parsed_query instanceof ComplexQuery) &&\n
+        (parsed_query.operator === \'OR\')) {\n
+\n
+      for (i = 0; i < parsed_query.query_list.length; i += 1) {\n
+        sub_query = parsed_query.query_list[i];\n
+        if ((sub_query instanceof SimpleQuery) &&\n
+            (sub_query.key === \'local_roles\')) {\n
+          local_role_list.push(sub_query.value);\n
+        } else {\n
+          is_multiple = false;\n
+        }\n
+      }\n
+      if (is_multiple) {\n
+        // local_roles:"Assignee" OR local_roles:"Assignor"\n
+        return local_role_list;\n
+      }\n
+    }\n
   }\n
 \n
   rJS(window)\n
@@ -155,6 +187,56 @@
       if (option_dict.list_method_template === undefined) {\n
         return wrapJioCall(this, \'allDocs\', arguments);\n
       }\n
+\n
+      var query = option_dict.query,\n
+        i,\n
+        parsed_query,\n
+        sub_query,\n
+        result_list,\n
+        local_roles;\n
+      if (option_dict.query) {\n
+        parsed_query = jIO.QueryFactory.create(option_dict.query);\n
+\n
+        result_list = isSingleLocalRoles(parsed_query);\n
+        if (result_list) {\n
+          query = undefined;\n
+          local_roles = result_list;\n
+        } else {\n
+\n
+          result_list = isMultipleLocalRoles(parsed_query);\n
+          if (result_list) {\n
+            query = undefined;\n
+            local_roles = result_list;\n
+          } else if ((parsed_query instanceof ComplexQuery) &&\n
+                     (parsed_query.operator === \'AND\')) {\n
+\n
+            // portal_type:"Person" AND local_roles:"Assignee"\n
+            for (i = 0; i < parsed_query.query_list.length; i += 1) {\n
+              sub_query = parsed_query.query_list[i];\n
+\n
+              result_list = isSingleLocalRoles(sub_query);\n
+              if (result_list) {\n
+                local_roles = result_list;\n
+                parsed_query.query_list.splice(i, 1);\n
+                query = objectToSearchText(parsed_query);\n
+                i = parsed_query.query_list.length;\n
+              } else {\n
+                result_list = isMultipleLocalRoles(sub_query);\n
+                if (result_list) {\n
+                  local_roles = result_list;\n
+                  parsed_query.query_list.splice(i, 1);\n
+                  query = objectToSearchText(parsed_query);\n
+                  i = parsed_query.query_list.length;\n
+                }\n
+              }\n
+            }\n
+          }\n
+\n
+        }\n
+        option_dict.query = query;\n
+        option_dict.local_roles = local_roles;\n
+      }\n
+\n
       return wrapJioCall(\n
         this,\n
         \'getAttachment\',\n
@@ -198,7 +280,7 @@
       return wrapJioCall(this, \'putAttachment\', [id, name, JSON.stringify(json)]);\n
     });\n
 \n
-}(window, rJS, RSVP, UriTemplate, URI));
+}(window, rJS, RSVP, UriTemplate, URI, objectToSearchText, SimpleQuery, ComplexQuery, jIO));
 
 ]]></string> </value>
         </item>
@@ -335,7 +417,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.56060.11774.33006</string> </value>
+                <value> <string>947.15020.24457.52667</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -353,7 +435,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446547368.37</float>
+                        <float>1448016802.0</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
