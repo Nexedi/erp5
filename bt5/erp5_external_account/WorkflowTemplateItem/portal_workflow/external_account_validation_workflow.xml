@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validation Workflow</string> </value>
+            <value> <string>External Account Validation Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>

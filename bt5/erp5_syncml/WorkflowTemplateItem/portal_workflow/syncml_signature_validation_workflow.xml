@@ -58,7 +58,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>ERP5 default workflow</string> </value>
+            <value> <string>SyncML Sinature Validation Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>
