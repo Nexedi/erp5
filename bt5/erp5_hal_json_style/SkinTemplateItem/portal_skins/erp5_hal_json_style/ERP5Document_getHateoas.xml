@@ -76,6 +76,7 @@ url_template_dict = {\n
                        "{&relative_url,view}",\n
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \\\n
                      "{&query,select_list*,limit*,sort_on*,local_roles*}",\n
+  "worklist_template": "%(root_url)s/%(script_id)s?mode=worklist",\n
   "custom_search_template": "%(root_url)s/%(script_id)s?mode=search" + \\\n
                      "&relative_url=%(relative_url)s" \\\n
                      "&form_relative_url=%(form_relative_url)s" \\\n
@@ -866,6 +867,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if traversed_document_portal_type == "ERP5 Form":\n
         renderFormDefinition(traversed_document, result_dict)\n
         REQUEST.set("X-HATEOAS-CACHE", 1)\n
+      elif relative_url == \'portal_workflow\':\n
+        result_dict[\'_links\'][\'action_worklist\'] = {\n
+          "href": url_template_dict[\'worklist_template\'] % {\n
+            "root_url": site_root.absolute_url(),\n
+            "script_id": script.id\n
+          }\n
+        }\n
   \n
     # Define document action\n
     if action_dict:\n
@@ -1064,6 +1072,44 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       return ""\n
     result_dict["result_list"] = [calculateHateoas(mode="traverse", **x) for x in json.loads(bulk_list)]\n
   \n
+  elif mode == \'worklist\':\n
+    #################################################\n
+    # Return all worklist jio urls\n
+    #################################################\n
+    if REQUEST.other[\'method\'] != "GET":\n
+      response.setStatus(405)\n
+      return ""\n
+    action_list = portal.portal_workflow.WorkflowTool_listActionParameterList()\n
+    work_list = []\n
+    for action in action_list:\n
+      query = sql_catalog.buildQuery(action[\'query\'])\\\n
+                         .asSearchTextExpression(sql_catalog)\n
+\n
+      if (action[\'local_roles\']):\n
+        # Hack to consider local_roles as a valid catalog parameter\n
+        role_query = sql_catalog.buildQuery({\'simulation_state\': action[\'local_roles\']})\\\n
+                                .asSearchTextExpression(sql_catalog)\n
+\n
+        query += \' AND %s\' % role_query.replace(\'simulation_state\', \'local_roles\')\n
+\n
+      portal_type = action[\'query\'].get(\'portal_type\', None)\n
+      if (portal_type):\n
+        if not same_type(portal_type, \'\'):\n
+          portal_type = portal_type[0]\n
+\n
+        work_list.append({\n
+          \'href\': url_template_dict["jio_search_template"] % {\n
+                    "query": make_query({"query": query})\n
+                  },\n
+          \'name\': action[\'name\'],\n
+          \'count\': action[\'count\'],\n
+          \'module\': default_document_uri_template % {\n
+                      "relative_url": portal.getDefaultModuleId(portal_type)\n
+                    }\n
+        })\n
+\n
+    result_dict["worklist"] = work_list\n
+\n
   else:\n
     raise NotImplementedError("Unsupported mode %s" % mode)\n
   \n
@@ -1072,6 +1118,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 response.setHeader(\'Content-Type\', mime_type)\n
 hateoas = calculateHateoas(is_portal=temp_is_portal, is_site_root=temp_is_site_root,\n
                            traversed_document=temp_traversed_document,\n
+                           relative_url=relative_url,\n
                            REQUEST=REQUEST, response=response, view=view, mode=mode,\n
                            query=query, select_list=select_list, limit=limit, form=form,\n
                            restricted=restricted, list_method=list_method,\n

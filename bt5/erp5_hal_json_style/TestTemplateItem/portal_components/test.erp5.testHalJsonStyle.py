@@ -47,6 +47,16 @@ def simulate(script_id, params_string, code_string):
     return decorated
   return upperWrap
 
+def createIndexedDocument():
+  def decorator(func):
+    def wrapped(self, *args, **kwargs):
+      self._makeDocument()
+      self.portal.portal_caches.clearAllCache()
+      self.tic()
+      return func(self, *args, **kwargs)
+    return wrapped
+  return decorator
+
 def do_fake_request(request_method, headers=None):
   __version__ = "0.1"
   if (headers is None):
@@ -441,6 +451,24 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
   @changeSkin('Hal')
+  def test_getHateoasDocument_portal_workflow(self):
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url='portal_workflow')
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_links']['action_worklist']['href'],
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=worklist" % self.portal.absolute_url())
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
   def test_getHateoasDocument_default_view(self):
     document = self._makeDocument()
     parent = document.getParentValue()
@@ -825,3 +853,45 @@ class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
                                                                                      self.portal.absolute_url(),
                                                                                      document.getRelativeUrl()))
     self.assertEqual(result_dict['result_list'][0]['_embedded']['_view']['_actions']['put']['method'], 'POST')
+
+class TestERP5Document_getHateoas_mode_worklist(ERP5HALJSONStyleSkinsMixin):
+
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoasWorklist_bad_method(self):
+    fake_request = do_fake_request("POST")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="worklist")
+    self.assertEquals(fake_request.RESPONSE.status, 405)
+    self.assertEquals(result, "")
+
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasWorklist_default_view(self):
+    # self._makeDocument()
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="worklist"
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    work_list = [x for x in result_dict['worklist'] if x['name'].startswith('Draft To Validate (')]
+    self.assertEqual(len(work_list), 1)
+    self.assertTrue(work_list[0]['count'] > 0)
+    self.assertEqual(work_list[0]['name'], 'Draft To Validate (%i)' % work_list[0]['count'])
+    self.assertEqual(work_list[0]['module'], 'urn:jio:get:bar_module')
+    self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
+
+    self.assertEqual(result_dict['_debug'], "worklist")
+
