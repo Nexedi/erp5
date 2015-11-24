@@ -42,6 +42,7 @@ from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Products.CMFCore.PortalFolder import ContentFilter
 
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.CopySupport import CopyContainer
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.XMLExportImport import Folder_asXML
@@ -1426,8 +1427,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       if not btree_ok:
         # We must commit if we want to keep on recursing
         transaction.savepoint(optimistic=True)
-        error_list += [(self.getRelativeUrl(), 'BTree Inconsistency',
-                       199, '(fixed)')]
+        error_list += [ConsistencyMessage(
+          self, self.getRelativeUrl(), 'BTree Inconsistency (fixed)')]
     # Call superclass
     error_list += Base.checkConsistency(self, fixit=fixit, filter=filter, **kw)
     # We must commit before listing folder contents
