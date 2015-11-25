@@ -1,0 +1,362 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title tal:content="template/title"></title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3" tal:content="template/title"></td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/FooModule_createObjects?num:int=1;portal_type=Bar</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Configure to add creation date, modification date & owner title fields -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Configure\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@id="column_4"]//select[@name="field_columns"]</td>\n
+  <td>Creation Date</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@id="column_5"]//select[@name="field_columns"]</td>\n
+  <td>Modification Date</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@id="column_6"]//select[@name="field_columns"]</td>\n
+  <td>Owner</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/0/Bar_viewCreationDateModificationDateAndOwner</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>storeText</td>\n
+  <td>creation_date</td>\n
+  <td>creation_date</td>\n
+</tr>\n
+<tr>\n
+  <td>storeText</td>\n
+  <td>modification_date</td>\n
+  <td>modification_date</td>\n
+</tr>\n
+<tr>\n
+  <td>storeText</td>\n
+  <td>owner</td>\n
+  <td>owner</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/</td>\n
+  <td></td>\n
+</tr>\n
+<!-- check the columns displayed values -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>\n
+  <td>Title 0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>\n
+  <td>${creation_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>\n
+  <td>${modification_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>\n
+  <td>${owner}</td>\n
+</tr>\n
+\n
+<!-- Check that the columns are searchable.\n
+XXX To be complete, this test would need to create data that should not match this search query...\n
+-->\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[5]//input</td>\n
+  <td>${creation_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_doSelect:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>\n
+  <td>${creation_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>\n
+  <td>${modification_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>\n
+  <td>${owner}</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>\n
+  <td>${modification_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_doSelect:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>\n
+  <td>${creation_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>\n
+  <td>${modification_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>\n
+  <td>${owner}</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[7]//input</td>\n
+  <td>${owner}</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_doSelect:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>\n
+  <td>${creation_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>\n
+  <td>${modification_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>\n
+  <td>${owner}</td>\n
+</tr>\n
+\n
+\n
+<!-- Check that the columns are sortable.\n
+-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.creation_date:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>\n
+  <td>${creation_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>\n
+  <td>${modification_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>\n
+  <td>${owner}</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.modification_date:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>\n
+  <td>${creation_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>\n
+  <td>${modification_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>\n
+  <td>${owner}</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+    <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.owner_title:asc\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>\n
+  <td>${creation_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>\n
+  <td>${modification_date}</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>\n
+  <td>${owner}</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+</tbody></table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testModuleListboxDefaultMoreColumns</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode>Test Module Listbox default more columns</unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
