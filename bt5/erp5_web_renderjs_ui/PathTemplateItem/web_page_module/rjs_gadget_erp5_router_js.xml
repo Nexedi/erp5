@@ -450,7 +450,7 @@
         return gadget.jio_allDocs({\n
           "query": selection.query,\n
           "list_method_template": selection.list_method_template,\n
-          "limit": [parseInt(previous_options.selection_index, 10) + 1, 1],\n
+          "limit": [parseInt(previous_options.selection_index || \'0\', 10) + 1, 1],\n
           "sort_on": selection["sort_list:json"]\n
         })\n
           .push(function (result) {\n
@@ -464,7 +464,7 @@
               result.data.rows[0].id,\n
               {\n
                 selection: previous_options.selection,\n
-                selection_index: parseInt(previous_options.selection_index, 10) + 1,\n
+                selection_index: parseInt(previous_options.selection_index || \'0\', 10) + 1,\n
                 history: previous_options.history\n
               }\n
             );\n
@@ -491,7 +491,7 @@
     // Redirect to the result document\n
     return getSelection(gadget, previous_options.selection)\n
       .push(function (selection) {\n
-        if (parseInt(previous_options.selection_index, 10) < 1) {\n
+        if (parseInt(previous_options.selection_index || \'0\', 10) < 1) {\n
           return synchronousChangeState(\n
             getCommandUrlFor(gadget, COMMAND_HISTORY_PREVIOUS, previous_options)\n
           );\n
@@ -1014,7 +1014,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.22368.33897.30037</string> </value>
+                <value> <string>947.22494.14742.48810</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1032,7 +1032,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448463583.21</float>
+                        <float>1448465284.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
