@@ -195,7 +195,13 @@
             return search_gadget.getContent();\n
           })\n
           .push(function (data) {\n
-            return gadget.redirect({command: \'store_and_change\', options: {extended_search: data.search, begin_from: undefined}});\n
+            var options = {\n
+              begin_from: undefined\n
+            };\n
+            if (data.search) {\n
+              options.extended_search = data.search;\n
+            }\n
+            return gadget.redirect({command: \'store_and_change\', options: options});\n
           });\n
       }\n
       // Listen to form submit\n
@@ -342,7 +348,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.821.64587.50432</string> </value>
+                <value> <string>947.22534.43106.37888</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -360,7 +366,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447166009.61</float>
+                        <float>1448467717.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
