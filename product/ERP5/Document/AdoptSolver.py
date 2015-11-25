@@ -79,7 +79,14 @@ class AdoptSolver(ConfigurablePropertySolverMixin):
           # Also, the behaviour below is naive, and could cause another
           # non-divergent Simulation Movement to become divergent.
           for simulation_movement in simulation_movement_list:
-            movement.setProperty(
+            obj = movement
+            while movement.getRootDeliveryValue() is not obj:
+              if obj.hasProperty(solved_property):
+                break
+
+              obj = obj.getParentValue()
+
+            obj.setProperty(
               solved_property,
               simulation_movement.getProperty(solved_property)
             )
