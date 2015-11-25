@@ -5,4 +5,7 @@
  <portal_type id="Specialise Divergence Tester">
   <item>SpecialiseEquivalenceTester</item>
  </portal_type>
+ <portal_type id="Variation Divergence Tester">
+  <item>MultiPropertyEquivalenceTester</item>
+ </portal_type>
 </property_sheet_list>
