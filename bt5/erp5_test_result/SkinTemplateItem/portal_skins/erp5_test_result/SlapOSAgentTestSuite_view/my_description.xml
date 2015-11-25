@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="LinesField" module="Products.Formulator.StandardFields"/>
+      <global name="TextAreaField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_suite_list</string> </value>
+            <value> <string>my_description</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -106,10 +106,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -134,9 +130,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -191,10 +185,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -219,11 +209,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <list>
-                        <string>Bonjour</string>
-                      </list>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -231,7 +217,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -271,19 +257,11 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Test Suites</string> </value>
+                    <value> <string>Description</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />
-
-]]></string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -291,23 +269,10 @@
                 </item>
                 <item>
                     <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <int>80</int> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getAggregateTitleList(portal_type="Test Suite")</string> </value>
         </item>
       </dictionary>
     </pickle>

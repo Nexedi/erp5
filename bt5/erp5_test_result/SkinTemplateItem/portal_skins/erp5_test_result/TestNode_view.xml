@@ -64,6 +64,7 @@
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
+                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -100,12 +101,22 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>not_assigned</string> </key>
+                    <value>
+                      <list>
+                        <string>my_reference</string>
+                        <string>my_master</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>right</string> </key>
                     <value>
                       <list>
                         <string>my_test_suite_max</string>
-                        <string>test_suite_list</string>
                         <string>last_check</string>
+                        <string>my_aggregate_title_list</string>
+                        <string>my_validation_state_title</string>
                       </list>
                     </value>
                 </item>
