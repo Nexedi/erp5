@@ -200,6 +200,8 @@
             };\n
             if (data.search) {\n
               options.extended_search = data.search;\n
+            } else {\n
+              options.extended_search = undefined;\n
             }\n
             return gadget.redirect({command: \'store_and_change\', options: options});\n
           });\n
@@ -348,7 +350,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.22534.43106.37888</string> </value>
+                <value> <string>947.22536.41002.36352</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -366,7 +368,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448467717.52</float>
+                        <float>1448469230.79</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
