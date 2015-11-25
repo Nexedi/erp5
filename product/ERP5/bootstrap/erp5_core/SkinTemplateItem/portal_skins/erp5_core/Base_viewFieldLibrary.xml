@@ -148,10 +148,6 @@
                         <string>my_view_mode_listbox_description</string>
                         <string>my_view_mode_read_only_id</string>
                         <string>my_view_mode_reference_as_name</string>
-                        <string>listbox_modification_date</string>
-                        <string>listbox_description</string>
-                        <string>listbox_owner_title</string>
-                        <string>listbox_creation_date</string>
                       </list>
                     </value>
                 </item>
