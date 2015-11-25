@@ -111,20 +111,17 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*globals window, rJS, Handlebars, RSVP, loopEventListener, console*/\n
+/*globals window, rJS, Handlebars, RSVP, loopEventListener, console, document*/\n
 /*jslint indent: 2, nomen: true, maxlen: 80*/\n
 (function (window, RSVP, rJS, Handlebars, loopEventListener) {\n
   "use strict";\n
 \n
   function saveContent(gadget, submit_event) {\n
     var i,\n
-      doc = gadget.options.doc,\n
-      today = new Date();\n
+      doc = gadget.options.doc;\n
     doc.parent_relative_url = "document_module";\n
     doc.portal_type = "Spreadsheet";\n
-    doc.modification_date = today.getDate()\n
-      + \'/\' + (today.getMonth() + 1)\n
-      + \'/\' + today.getFullYear();\n
+    doc.modification_date = (new Date()).toISOString();\n
     for (i = 0; i < submit_event.target.length; i += 1) {\n
       // XXX Should check input type instead\n
       if (submit_event.target[i].name) {\n
@@ -140,8 +137,8 @@
       })\n
       .push(function (data) {\n
         doc.data = data.text_content;\n
-        doc.content_type = "application/yformat.xlsy"\n
-        doc.filename = doc.title + ".xlsy"\n
+        doc.content_type = "application/yformat.xlsy";\n
+        doc.filename = doc.title + ".xlsy";\n
         return gadget.put(gadget.options.jio_key, doc);\n
       });\n
   }\n
@@ -164,6 +161,46 @@
     return;\n
   }\n
 \n
+  function getMaxHeight(wrap_obj) {\n
+    var height;\n
+    if (wrap_obj) {\n
+      height = window.innerHeight - wrap_obj.offsetTop;\n
+    } else {\n
+      height = window.innerHeight;\n
+    }\n
+    if (height < 400) {\n
+      height = 400;\n
+    }\n
+    return height + "px";\n
+  }\n
+\n
+  function switchFullscreenMode(gadget) {\n
+    var fullscreen_classname = "ui-content-fullscreen",\n
+      wrap = gadget.props.element.querySelector(\'iframe\'),\n
+      info = gadget.props.fullScreenRestore;\n
+    if (wrap.className.search(" " + fullscreen_classname) === -1) {\n
+      gadget.props.fullScreenRestore = {\n
+        scrollTop: window.pageYOffset,\n
+        scrollLeft: window.pageXOffset,\n
+        width: wrap.style.width,\n
+        height: wrap.style.height\n
+      };\n
+\n
+      wrap.style.width = "100%";\n
+      wrap.style.height = getMaxHeight();\n
+      // wrap.style.height = "auto";\n
+      wrap.className += " " + fullscreen_classname;\n
+      document.documentElement.style.overflow = "hidden";\n
+    } else {\n
+      wrap.className = wrap.className\n
+        .replace(new RegExp("\\\\s*" + fullscreen_classname + "\\\\b"), "");\n
+      document.documentElement.style.overflow = "";\n
+      wrap.style.width = info.width;\n
+      wrap.style.height = getMaxHeight(wrap);\n
+      window.scrollTo(info.scrollLeft, info.scrollTop);\n
+    }\n
+  }\n
+\n
   var gadget_klass = rJS(window),\n
     source = gadget_klass.__template_element\n
       .querySelector(".view-web-page-template")\n
@@ -183,7 +220,7 @@
     })\n
 \n
     .declareAcquiredMethod("updateHeader", "updateHeader")\n
-    .declareAcquiredMethod("get", "jio_get")\n
+    .declareAcquiredMethod("jio_get", "jio_get")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
     .declareAcquiredMethod("put", "jio_put")\n
     .declareAcquiredMethod(\'allDocs\', \'jio_allDocs\')\n
@@ -194,6 +231,17 @@
       return RSVP.Queue()\n
         .push(function () {\n
           return maximize(gadget);\n
+        })\n
+        .fail(function (e) {\n
+          console.log(e);\n
+        });\n
+    })\n
+\n
+    .allowPublicAcquisition(\'triggerFullscreen\', function () {\n
+      var gadget = this;\n
+      return RSVP.Queue()\n
+        .push(function () {\n
+          return switchFullscreenMode(gadget);\n
         })\n
         .fail(function (e) {\n
           console.log(e);\n
@@ -211,22 +259,27 @@
     .declareMethod("render", function (options) {\n
       var gadget = this;\n
       gadget.options = options;\n
-      gadget.options.doc.title = gadget.options.doc.title || "";\n
-      return new RSVP.Queue()\n
-        .push(function () {\n
-          return gadget.translateHtml(template(options.doc));\n
-        })\n
-        .push(function (html) {\n
-          gadget.props.element.innerHTML = html;\n
-          return gadget.updateHeader({\n
-            title: options.doc.title + " | Spreadsheet",\n
-            back_url: "#page=spreadsheet_list",\n
-            panel_action: false,\n
-            save_action: true\n
-          });\n
-        })\n
-        .push(function () {\n
-          return gadget.props.deferred.resolve();\n
+      return gadget.jio_get(options.jio_key)\n
+        .push(function (doc) {\n
+          gadget.options.doc = doc;\n
+          gadget.options.doc.title = gadget.options.doc.title || "";\n
+          return new RSVP.Queue()\n
+            .push(function () {\n
+              return gadget.translateHtml(template(options.doc));\n
+            })\n
+            .push(function (html) {\n
+              gadget.props.element.innerHTML = html;\n
+              return gadget.updateHeader({\n
+                page_title: options.doc.title + " | Spreadsheet",\n
+                back_url: "#page=spreadsheet_list",\n
+                panel_action: false,\n
+                // breadcrumb_url: all_result[4],\n
+                //save_action: true\n
+              });\n
+            })\n
+            .push(function () {\n
+              return gadget.props.deferred.resolve();\n
+            });\n
         });\n
     })\n
 \n
@@ -255,9 +308,10 @@
           var iframe = gadget.props.element.querySelector(\'iframe\');\n
           iframe.setAttribute(\n
             \'style\',\n
-            \'width:100%; border: 0 none; height: 600px\'\n
+            \'width:100%; border: 0 none; height: \' + getMaxHeight(iframe)\n
           );\n
           text_gadget = text_content_gadget;\n
+          switchFullscreenMode(gadget);\n
           return text_content_gadget.render({\n
             "key": \'text_content\',\n
             "value": gadget.options.doc.data\n
@@ -415,7 +469,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>bk</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -429,7 +483,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.37161.13138.58606</string> </value>
+                <value> <string>947.30190.10718.55688</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -447,7 +501,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445415095.01</float>
+                        <float>1448926957.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

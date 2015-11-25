@@ -120,13 +120,11 @@
   <head>\n
     <meta charset="utf-8">\n
     <meta name="viewport" content="width=device-width, initial-scale=1">\n
-    <title>CKEditor Gadget</title>\n
+    <title>OOffice Gadget</title>\n
 \n
     <script src="rsvp.js" type="text/javascript"></script>\n
     <script src="renderjs.js" type="text/javascript"></script>\n
 \n
-\n
-    <!--<script src="ckeditor/ckeditor.js"></script>-->\n
     <script type="text/javascript" src="ooffice/vendor/underscore/underscore.js"></script>\n
     <script type="text/javascript" src="ooffice/apps/api/documents/api.js"></script>\n
     <script src="gadget_ooffice.js" type="text/javascript"></script>\n
