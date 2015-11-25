@@ -71,6 +71,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_tested_property_title</string>
                         <string>my_movement_specialise_type_list</string>
                         <string>my_movement_exclude_specialise_type_list</string>
                       </list>
