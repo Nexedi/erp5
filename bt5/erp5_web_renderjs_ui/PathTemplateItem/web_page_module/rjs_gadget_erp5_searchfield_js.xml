@@ -169,9 +169,14 @@
 \n
     .declareMethod(\'getContent\', function () {\n
       var input = this.props.element.querySelector(\'input\'),\n
+        value = input.value,\n
         result = {};\n
 \n
-      result[input.getAttribute(\'name\')] = input.value;\n
+      if (value) {\n
+        value = value.trim();\n
+      }\n
+\n
+      result[input.getAttribute(\'name\')] = value;\n
       return result;\n
     });\n
 \n
@@ -296,7 +301,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -310,7 +315,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.61050.10650.48093</string> </value>
+                <value> <string>946.44927.40202.16725</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -328,8 +333,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445265843.55</float>
-                        <string>GMT</string>
+                        <float>1448467423.65</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
