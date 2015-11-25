@@ -157,6 +157,13 @@
           for (i = 0; i < id_list.length; i += 1) {\n
             query_list.push(new SimpleQuery({key: \'relative_url\', value: id_list[i]}));\n
           }\n
+          if (i === 0) {\n
+            return {\n
+              data: {\n
+                rows: []\n
+              }\n
+            };\n
+          }\n
           return gadget.jio_allDocs({\n
             query: objectToSearchText(new ComplexQuery({operator: \'OR\', query_list: query_list})),\n
             select_list: ["title", "portal_type"],\n
@@ -342,7 +349,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.772.27087.52821</string> </value>
+                <value> <string>947.22112.65196.42461</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -360,7 +367,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447161932.1</float>
+                        <float>1448442387.23</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
