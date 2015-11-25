@@ -71,7 +71,7 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
       token = request.form.get("access_token", None)
     if token is not None:
       token_document = self.getPortalObject().access_token_module.\
-                                        unrestrictedTraverse(token, None)
+                                        _getOb(token, None)
       # Access Token should be validated
       # Check restricted access of URL
       # Extract login information
