@@ -113,7 +113,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, rJS, DocsAPI, _*/\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, DocsAPI, _, console, document*/\n
 /*jslint nomen: true, maxlen:80, indent:2*/\n
 (function (rJS, DocsAPI, _) {\n
   "use strict";\n
@@ -222,15 +224,52 @@
     }\n
   }\n
 \n
-  function onDocumentStateChange(event) {\n
-    var isModified = event.data;\n
-    console.log(isModified);\n
-  }\n
-\n
   function onError(event) {\n
     console.log(event.data);\n
     // critical error happened\n
     // examine event.data.errorCode and event.data.errorDescription for details\n
+  }\n
+\n
+  function getMaxHeight(wrap_obj) {\n
+    var height;\n
+    if (wrap_obj) {\n
+      height = window.innerHeight - wrap_obj.offsetTop - 280;\n
+    } else {\n
+      height = window.innerHeight;\n
+    }\n
+    if (height < 400) {\n
+      height = 400;\n
+    }\n
+    return height + "px";\n
+  }\n
+\n
+  function switchFullscreenMode(gadget) {\n
+    return function (event) {\n
+      var fullscreen_classname = "ui-content-fullscreen",\n
+        info,\n
+        wrap = gadget.props.element.querySelector(\'iframe\');\n
+      if (wrap.className.search(" " + fullscreen_classname) === -1) {\n
+        gadget.props.fullScreenRestore = {\n
+          scrollTop: window.pageYOffset,\n
+          scrollLeft: window.pageXOffset,\n
+          width: wrap.width,\n
+          height: wrap.height\n
+        };\n
+\n
+        wrap.style.width = "100%";\n
+        wrap.style.height = getMaxHeight();\n
+        wrap.className += " " + fullscreen_classname;\n
+        document.documentElement.style.overflow = "hidden";\n
+      } else {\n
+        wrap.className = wrap.className\n
+          .replace(new RegExp("\\\\s*" + fullscreen_classname + "\\\\b"), "");\n
+        document.documentElement.style.overflow = "";\n
+        info = gadget.props.fullScreenRestore;\n
+        wrap.style.width = info.width;\n
+        wrap.style.height = getMaxHeight(wrap);\n
+        window.scrollTo(info.scrollLeft, info.scrollTop);\n
+      }\n
+    };\n
   }\n
 \n
   rJS(window)\n
@@ -321,12 +360,31 @@
     })\n
     .declareAcquiredMethod("submitContent", "triggerSubmit")\n
     .declareAcquiredMethod("maximize", "triggerMaximize")\n
+    .declareAcquiredMethod("fullscreen", "triggerFullscreen")\n
     .declareMethod(\'render\', function (options) {\n
-      console.log(options.value);\n
-      this.props.docEditor = new DocsAPI.DocEditor(\'oospreadsheet_gadget\', {\n
+      var placehodler = \'oospreadsheet_gadget\',\n
+        placehodler_obj = document.getElementById(placehodler),\n
+        save_button = document.querySelector("button[name=\'Base_edit:method\']"),\n
+        height,\n
+        onBack;\n
+      if (save_button) {\n
+        this.props.erp5_mode = true;\n
+        save_button.hidden = true;\n
+        height = getMaxHeight(placehodler_obj);\n
+        onBack = switchFullscreenMode(this);\n
+      } else {\n
+        height = \'100%\';\n
+        onBack = _.bind(function (event) {\n
+          this.fullscreen();\n
+        }, this);\n
+      }\n
+      console.log(options);\n
+      if (options.value === \'undefined\') { options.value = \'\'; }\n
+      this.props.docEditor = new DocsAPI.DocEditor(placehodler, {\n
         //type: urlParams[\'type\'],\n
         width: \'100%\',\n
-        height: \'100%\',\n
+        height: height,\n
+        // height: getMaxHeight(placehodler_obj),\n
         //documentType: urlParams[\'doctype\'],\n
         document: {\n
           //key: undefined,\n
@@ -344,10 +402,12 @@
         editorConfig: this.props.cfg,\n
         events: {\n
           \'onReady\': onDocEditorReady,\n
-          \'onBack\': _.bind(function (event) {\n
-            this.maximize();\n
-          }, this),\n
-          \'onDocumentStateChange\': onDocumentStateChange,\n
+          \'onBack\': onBack,\n
+          // \'onDocumentStateChange\': function (event) {\n
+          //   if (!event.data) {\n
+          //     save_button.click();\n
+          //   }\n
+          // },\n
           \'onRequestEditRights\': _.bind(function (event) {\n
             // occurs whenever the user tryes to enter edit mode\n
             this.props.docEditor.applyEditRights(true,\n
@@ -358,8 +418,13 @@
           //\'onRequestHistoryData\': onRequestHistoryData,\n
           //\'onRequestHistoryClose\': onRequestHistoryClose,\n
           \'onSave\': _.bind(function (event) {\n
-            this.props.data = event.data;\n
-            this.submitContent();\n
+            this.props.value = event.data;\n
+            if (this.props.erp5_mode) {\n
+              save_button.click();\n
+            } else {\n
+              this.submitContent();\n
+            }\n
+            // clickSaveButton(\'Base_edit\');\n
             return true;\n
             // if you want to async save process return false\n
             // and call api.processSaveResult when ready\n
@@ -368,16 +433,26 @@
         }\n
       });\n
       this.props.key = options.key || "text_content";\n
+      this.props.value = options.value;\n
+      // default FullscreenMode\n
+      if (this.props.erp5_mode) {\n
+        switchFullscreenMode(this)();\n
+      }\n
       return {};\n
     })\n
 \n
     .declareMethod(\'getContent\', function () {\n
       var result = {};\n
-      result[this.props.key] = this.props.data;\n
+      //document.getElementsByName(\'frameEditor\')[0]\n
+      //  .contentWindow.document.getElementById(\'id-toolbar-btn-save\').click();\n
+      // this.props.docEditor.processSaveResult();\n
+      result[this.props.key] = this.props.value;\n
       return result;\n
     });\n
 \n
-}(rJS, DocsAPI, _));</string> </value>
+}(rJS, DocsAPI, _));
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
