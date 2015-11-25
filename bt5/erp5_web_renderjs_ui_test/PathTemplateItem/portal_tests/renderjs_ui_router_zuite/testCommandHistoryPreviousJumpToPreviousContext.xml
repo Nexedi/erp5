@@ -148,7 +148,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'View\' and contains(@href, \'#!change\') and contains(@href, \'n.view=view\') and contains(@href, \'n.page=\') and contains(@href, \'n.editable=\')]</td>\n
+  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'View\' and contains(@href, \'#!change\') and contains(@href, \'n.view=view\') and contains(@href, \'u.page=\') and contains(@href, \'u.editable=\')]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

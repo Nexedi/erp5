@@ -70,14 +70,14 @@
 <!-- Generate back link -->\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!change\') and contains(@href, \'n.page=\')]</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!change\') and contains(@href, \'u.page=\')]</td>\n
   <td></td>\n
 </tr>\n
 \n
 <!-- Follow back link -->\n
 <tr>\n
   <td>click</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!change\') and contains(@href, \'n.page=\')]</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Back\' and contains(@href, \'#!change\') and contains(@href, \'u.page=\')]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

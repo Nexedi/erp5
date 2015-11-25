@@ -76,14 +76,14 @@
 \n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'Validate Action\' and contains(@href, \'#!change\') and contains(@href, \'validate_action\') and contains(@href, \'n.page=\') and contains(@href, \'n.editable=\')]</td>\n
+  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'Validate Action\' and contains(@href, \'#!change\') and contains(@href, \'validate_action\') and contains(@href, \'u.page=\') and contains(@href, \'u.editable=\')]</td>\n
   <td></td>\n
 </tr>\n
 \n
 <!-- Follow one link -->\n
 <tr>\n
   <td>click</td>\n
-  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'Validate Action\' and contains(@href, \'#!change\') and contains(@href, \'validate_action\') and contains(@href, \'n.page=\') and contains(@href, \'n.editable=\')]</td>\n
+  <td>//div[@data-gadget-scope=\'m\']//a[text()=\'Validate Action\' and contains(@href, \'#!change\') and contains(@href, \'validate_action\') and contains(@href, \'u.page=\') and contains(@href, \'u.editable=\')]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

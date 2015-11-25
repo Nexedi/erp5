@@ -122,6 +122,7 @@
   // DISPLAY KEY = "d"\n
   var PREVIOUS_KEY = "p",\n
     NEXT_KEY = "n",\n
+    DROP_KEY = "u",\n
     PREFIX_DISPLAY = "/",\n
     PREFIX_COMMAND = "!",\n
     // PREFIX_ERROR = "?",\n
@@ -224,10 +225,7 @@
       tmp_dict;\n
     tmp_dict = gadget.props.options;\n
     for (key in tmp_dict) {\n
-      if (tmp_dict.hasOwnProperty(key)) {\n
-        if (tmp_dict[key] === undefined) {\n
-          tmp_dict[key] = \'\';\n
-        }\n
+      if (tmp_dict.hasOwnProperty(key) && (tmp_dict[key] !== undefined)) {\n
         tmp = tmp_dict[key];\n
         if (endsWith(key, ":json")) {\n
           tmp = JSON.stringify(tmp);\n
@@ -238,14 +236,16 @@
     }\n
     for (key in options) {\n
       if (options.hasOwnProperty(key)) {\n
-        if (options[key] === undefined) {\n
-          options[key] = \'\';\n
-        }\n
         tmp = options[key];\n
-        if (endsWith(key, ":json")) {\n
-          tmp = JSON.stringify(tmp);\n
+        if (tmp === undefined) {\n
+          // Key should be dropped from the URL\n
+          result += prefix + DROP_KEY + "." + encodeURIComponent(key) + "=";\n
+        } else {\n
+          if (endsWith(key, ":json")) {\n
+            tmp = JSON.stringify(tmp);\n
+          }\n
+          result += prefix + NEXT_KEY + "." + encodeURIComponent(key) + "=" + encodeURIComponent(tmp);\n
         }\n
-        result += prefix + NEXT_KEY + "." + encodeURIComponent(key) + "=" + encodeURIComponent(tmp);\n
         prefix = "&";\n
       }\n
     }\n
@@ -349,7 +349,7 @@
       });\n
   }\n
 \n
-  function calculateChangeOptions(previous_options, next_options) {\n
+  function calculateChangeOptions(previous_options, next_options, drop_options) {\n
     var key;\n
     for (key in previous_options) {\n
       if (previous_options.hasOwnProperty(key)) {\n
@@ -358,20 +358,18 @@
         }\n
       }\n
     }\n
-    for (key in next_options) {\n
-      if (next_options.hasOwnProperty(key)) {\n
-        if (!next_options[key]) {\n
-          delete next_options[key];\n
-        }\n
+    for (key in drop_options) {\n
+      if (drop_options.hasOwnProperty(key)) {\n
+        delete next_options[key];\n
       }\n
     }\n
     return next_options;\n
   }\n
 \n
-  function execChangeCommand(previous_options, next_options) {\n
+  function execChangeCommand(previous_options, next_options, drop_options) {\n
     var options,\n
       jio_key;\n
-    options = calculateChangeOptions(previous_options, next_options);\n
+    options = calculateChangeOptions(previous_options, next_options, drop_options);\n
 \n
     jio_key = options.jio_key;\n
     delete options.jio_key;\n
@@ -380,11 +378,11 @@
     );\n
   }\n
 \n
-  function execStoreAndChangeCommand(gadget, previous_options, next_options) {\n
+  function execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options) {\n
     var options,\n
       jio_key,\n
       queue;\n
-    options = calculateChangeOptions(previous_options, next_options);\n
+    options = calculateChangeOptions(previous_options, next_options, drop_options);\n
 \n
     jio_key = options.jio_key;\n
     delete options.jio_key;\n
@@ -655,6 +653,7 @@
       split_list,\n
       previous_options = {},\n
       next_options = {},\n
+      drop_options = {},\n
       valid = true;\n
     // Rebuild the previous and next parameter dict\n
     for (key in args) {\n
@@ -668,6 +667,8 @@
           previous_options[split_list[1]] = args[key];\n
         } else if (split_list[0] === NEXT_KEY) {\n
           next_options[split_list[1]] = args[key];\n
+        } else if (split_list[0] === DROP_KEY) {\n
+          drop_options[split_list[1]] = args[key];\n
         } else {\n
           valid = false;\n
           break;\n
@@ -688,16 +689,16 @@
       return execIndexCommand(gadget, previous_options, next_options);\n
     }\n
     if (command_options.path === COMMAND_CHANGE_STATE) {\n
-      return execChangeCommand(previous_options, next_options);\n
+      return execChangeCommand(previous_options, next_options, drop_options);\n
     }\n
     if (command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {\n
-      return execStoreAndChangeCommand(gadget, previous_options, next_options);\n
+      return execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options);\n
     }\n
     if (command_options.path === COMMAND_SELECTION_NEXT) {\n
-      return execSelectionNextCommand(gadget, previous_options, next_options);\n
+      return execSelectionNextCommand(gadget, previous_options);\n
     }\n
     if (command_options.path === COMMAND_SELECTION_PREVIOUS) {\n
-      return execSelectionPreviousCommand(gadget, previous_options, next_options);\n
+      return execSelectionPreviousCommand(gadget, previous_options);\n
     }\n
     if (command_options.path === COMMAND_HISTORY_PREVIOUS) {\n
       return execHistoryPreviousCommand(gadget, previous_options);\n
@@ -1013,7 +1014,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.5039.722.46899</string> </value>
+                <value> <string>947.22368.33897.30037</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1031,7 +1032,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447419956.3</float>
+                        <float>1448463583.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

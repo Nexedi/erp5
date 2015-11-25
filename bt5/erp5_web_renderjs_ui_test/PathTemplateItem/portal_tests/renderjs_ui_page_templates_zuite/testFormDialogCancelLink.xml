@@ -80,19 +80,19 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Cancel\' and contains(@href, \'#!change\') and contains(@href, \'n.page=\') and contains(@href, \'n.view=\')]</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Cancel\' and contains(@href, \'#!change\') and contains(@href, \'u.page=\') and contains(@href, \'u.view=\')]</td>\n
   <td></td>\n
 </tr>\n
 \n
 <!-- Header has a link to the previous history entry -->\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Cancel\' and contains(@href, \'#!change\') and contains(@href, \'n.page=\') and contains(@href, \'n.view=\')]</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Cancel\' and contains(@href, \'#!change\') and contains(@href, \'u.page=\') and contains(@href, \'u.view=\')]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Cancel\' and contains(@href, \'#!change\') and contains(@href, \'n.page=\') and contains(@href, \'n.view=\')]</td>\n
+  <td>//div[@data-gadget-scope=\'header\']//a[text()=\'Cancel\' and contains(@href, \'#!change\') and contains(@href, \'u.page=\') and contains(@href, \'u.view=\')]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
