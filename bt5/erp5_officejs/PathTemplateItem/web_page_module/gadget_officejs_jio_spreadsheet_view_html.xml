@@ -115,6 +115,8 @@
 \n
     <title>OfficeJS Jio Web Page View</title>\n
 \n
+    <link rel="stylesheet" href="gadget_erp5.css">\n
+\n
     <script src="rsvp.js"></script>\n
     <script src="renderjs.js"></script>\n
     <script src="handlebars.js"></script>\n
@@ -321,7 +323,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.16435.61501.22323</string> </value>
+                <value> <string>947.29816.43224.59067</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -339,7 +341,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444332775.99</float>
+                        <float>1448904565.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
