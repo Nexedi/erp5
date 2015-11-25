@@ -275,7 +275,7 @@
               options: {\n
                 jio_key: result.data.rows[i].id,\n
                 selection_index: begin_from + i,\n
-                query: new URI(field_json.query).query(true).query + query_string,\n
+                query: query_string,\n
                 list_method_template: field_json.list_method_template,\n
                 "sort_list:json": gadget.props.sort_list\n
               }\n
@@ -661,7 +661,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.20692.23501.2577</string> </value>
+                <value> <string>947.20698.10371.47530</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -679,7 +679,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448357409.43</float>
+                        <float>1448443763.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
