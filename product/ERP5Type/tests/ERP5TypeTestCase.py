@@ -767,20 +767,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       update_business_templates = os.environ.get('update_business_templates') is not None
       erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
       if update_business_templates and erp5_load_data_fs:
-        update_only = os.environ.get('update_only', None)
         template_list[:0] = (erp5_catalog_storage, 'erp5_property_sheets',
                              'erp5_core', 'erp5_xhtml_style')
-        # Update only specified business templates, regular expression
-        # can be used.
-        if update_only is not None:
-          update_only_list = update_only.split(',')
-          matching_template_list = []
-          # First parse the template list in order to keep same order
-          for business_template in template_list:
-            for expression in update_only_list:
-              if re.search(expression, business_template):
-                matching_template_list.append(business_template)
-          template_list = matching_template_list
 
       # keep a mapping type info name -> property sheet list, to remove them in
       # tear down.
@@ -876,11 +864,28 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                      quiet=True):
       template_tool = self.portal.portal_templates
       update_business_templates = os.environ.get('update_business_templates') is not None
+      erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
       BusinessTemplate_getModifiedObject = aq_base(
         getattr(self.portal, 'BusinessTemplate_getModifiedObject', None))
 
-      # Add some business templates
+      update_only = os.environ.get('update_only', ())
+      if update_only:
+        update_only = update_only.split(',')
+
+      def _isUpdateOnlyBusinessTemplate(bt_title):
+        for expression in update_only:
+          if re.search(expression, bt_title):
+            return True
+
+        return False
+
       for url, bt_title in business_template_list:
+        if (update_business_templates and
+            erp5_load_data_fs and
+            update_only and
+            not _isUpdateOnlyBusinessTemplate(bt_title)):
+          continue
+
         start = time.time()
         get_install_kw = False
         if bt_title in template_tool.getInstalledBusinessTemplateTitleList():
