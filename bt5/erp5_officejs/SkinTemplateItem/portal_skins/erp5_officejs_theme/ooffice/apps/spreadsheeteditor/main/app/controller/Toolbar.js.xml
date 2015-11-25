@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts44308425.78</string> </value>
+            <value> <string>ts47967161.93</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>97630</int> </value>
+            <value> <int>97560</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -316,8 +316,7 @@
                 if (!isModified && !isSyncButton) {\r\n
                     return;\r\n
                 }\r\n
-                Common.Gateway.save(this.api.asc_nativeGetFile());\r\n
-                //this.api.asc_Save();\r\n
+                this.api.asc_Save();\r\n
             }\r\n
             Common.component.Analytics.trackEvent("Save");\r\n
             Common.component.Analytics.trackEvent("ToolBar", "Save");\r\n
