@@ -72,9 +72,9 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
     if token is not None:
       token_document = self.getPortalObject().access_token_module.\
                                         _getOb(token, None)
-      # Access Token should be validated
-      # Check restricted access of URL
-      # Extract login information
+      # Access Token should be validated
+      # Check restricted access of URL
+      # Extract login information
       if token_document is not None:
         external_login = None
         method = token_document._getTypeBasedMethod('getExternalLogin')

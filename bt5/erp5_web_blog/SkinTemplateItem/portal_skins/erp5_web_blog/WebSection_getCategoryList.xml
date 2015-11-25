@@ -69,7 +69,7 @@ subject_list = []\n
 for item in current_section.WebSection_getDocumentValueList(): # XXX-JPS - this will fail for performance reasons\n
   subject_list.extend([x for x in item.getSubjectList() if not x in subject_list])\n
 \n
-## Now, build the object list so that a Listbox can be used to display the results of this script.\n
+## Now, build the object list so that a Listbox can be used to display the results of this script.\n
 result = []\n
 \n
 class Category:\n

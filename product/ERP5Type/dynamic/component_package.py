@@ -101,7 +101,7 @@ class ComponentDynamicPackage(ModuleType):
       # When installing ERP5 site, erp5_core_components has not been installed
       # yet, thus this will obviously failed...
       #
-      # XXX-arnau: Is this needed as it is now done in synchronizeDynamicModules?
+      # XXX-arnau: Is this needed as it is now done in synchronizeDynamicModules?
       except AttributeError:
         return {}
 

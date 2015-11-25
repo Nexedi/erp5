@@ -2,7 +2,7 @@
 * Fix InvoiceTransaction_zSelectMovement. Maximum rows to retrieve is now 100. If there are more simulation movements then the rest is built next building time.
 
 2011-11-04 tatuya
-* Add default_tax_rule reference into  InvoiceTransaction_selectInvoiceMovement because it was wrongly removed at c7f1a35c1abdb9f93c6353c5024aaa47bf6505e0 when replacing to specify the portal type with the rule reference.
+* Add default_tax_rule reference into InvoiceTransaction_selectInvoiceMovement because it was wrongly removed at c7f1a35c1abdb9f93c6353c5024aaa47bf6505e0 when replacing to specify the portal type with the rule reference.
 
 2011-10-12 Kazuhiko
 * Fix the issue that a Invoice document can wrongly have a needless Root Applied Rule when it is created by Delivery Builder with a site which has many activity nodes.
@@ -48,7 +48,7 @@
 * Move out old tax and discount system.
 
 2009-07-09 tatuya
-* Append Japanese localized invoice style-sheet  fixing font setting. To avoid hand modification after printing Japanese invoice.
+* Append Japanese localized invoice style-sheet fixing font setting. To avoid hand modification after printing Japanese invoice.
 
 2009-07-03 romain
 * Revert latest proxy field library simplification, as the design was not finalized.
@@ -57,22 +57,22 @@
 * the erp5_invoicing is split into three business templates;
 'erp5_invoicing', 'erp5_simplified_invoicing' and
 'erp5_advanced_invoicing'.
-the erp5_invoicing now only have common invoicing setting.
-- When you want  them to work compatible with previous erp5_invoicing
+the erp5_invoicing now only have common invoicing setting.
+- When you want them to work compatible with previous erp5_invoicing
 you just install 'erp5_invoicing' and 'erp5_simplified_invoicing'
 - When you want to create invoices independently,
 you just install 'erp5_invoicing' and 'erp5_advanced_invoicing'.
 Note: You can not install both 'erp5_simplified_invoicing' and
 'erp5_advanced_invoicing' together. They cause conflicts.
-* Move Allowed Content Type  'Discount Line', 'Invoice Line', 'Payment
+* Move Allowed Content Type 'Discount Line', 'Invoice Line', 'Payment
 Condition',
- 'Tax Line' to erp5_simplified_invoicing
+ 'Tax Line' to erp5_simplified_invoicing
 * Move Base Category 'specialise' to erp5_simplified_invoicing
-* Move  Actions  to erp5_simplified_invoicing
+* Move Actions to erp5_simplified_invoicing
 * Move Paths 'purchase_invoice_builder',
-  'purchase_invoice_tax_builder', 'purchase_invoice_transaction_builder'
-  'sale_invoice_builder', 'sale_invoice_tax_builder',
-  'sale_invoice_transaction_builder' to erp5_simplified_invoicing
+  'purchase_invoice_tax_builder', 'purchase_invoice_transaction_builder'
+  'sale_invoice_builder', 'sale_invoice_tax_builder',
+  'sale_invoice_transaction_builder' to erp5_simplified_invoicing
 
 2009-05-18 yusei
 * Fix some proxy fields. proxy_listbox_ids had to be copied to new proxified fields but it was not copied.
