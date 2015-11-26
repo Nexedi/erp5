@@ -28,7 +28,6 @@
 #
 ##############################################################################
 
-from zLOG import LOG, PROBLEM
 from Products.ERP5Type.Globals import InitializeClass
 
 from AccessControl import ClassSecurityInfo
@@ -102,11 +101,11 @@ def addERP5AccessTokenExtractionPlugin(dispatcher, id, title=None, REQUEST=None)
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
-      REQUEST['RESPONSE'].redirect(
-          '%s/manage_workspace'
-          '?manage_tabs_message='
-          'ERP5AccessTokenExtractionPlugin+added.'
-          % dispatcher.absolute_url())
+    REQUEST['RESPONSE'].redirect(
+      '%s/manage_workspace'
+      '?manage_tabs_message='
+      'ERP5AccessTokenExtractionPlugin+added.'
+      % dispatcher.absolute_url())
 
 #List implementation of class
 classImplements(ERP5AccessTokenExtractionPlugin,

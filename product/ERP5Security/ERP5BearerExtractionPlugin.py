@@ -35,8 +35,8 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
-from AccessControl.SecurityManagement import getSecurityManager,\
-    setSecurityManager, newSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager, \
+  setSecurityManager, newSecurityManager
 
 #Form for new plugin in ZMI
 manage_addERP5BearerExtractionPluginForm = PageTemplateFile(
@@ -50,11 +50,11 @@ def addERP5BearerExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
-      REQUEST['RESPONSE'].redirect(
-          '%s/manage_workspace'
-          '?manage_tabs_message='
-          'ERP5BearerExtractionPlugin+added.'
-          % dispatcher.absolute_url())
+    REQUEST['RESPONSE'].redirect(
+      '%s/manage_workspace'
+      '?manage_tabs_message='
+      'ERP5BearerExtractionPlugin+added.'
+      % dispatcher.absolute_url())
 
 class ERP5BearerExtractionPlugin(BasePlugin):
   """

@@ -49,11 +49,11 @@ def addERP5ExternalAuthenticationPlugin(dispatcher, id, title=None, user_id_key=
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
-      REQUEST['RESPONSE'].redirect(
-          '%s/manage_workspace'
-          '?manage_tabs_message='
-          'ERP5ExternalAuthenticationPlugin+added.'
-          % dispatcher.absolute_url())
+    REQUEST['RESPONSE'].redirect(
+      '%s/manage_workspace'
+      '?manage_tabs_message='
+      'ERP5ExternalAuthenticationPlugin+added.'
+      % dispatcher.absolute_url())
 
 class ERP5ExternalAuthenticationPlugin(BasePlugin):
   """

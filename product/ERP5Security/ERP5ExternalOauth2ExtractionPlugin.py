@@ -35,8 +35,8 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
-from AccessControl.SecurityManagement import getSecurityManager,\
-    setSecurityManager, newSecurityManager
+from AccessControl.SecurityManagement import getSecurityManager, \
+  setSecurityManager, newSecurityManager
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 import socket
 from Products.ERP5Security.ERP5UserManager import getUserByLogin
@@ -66,11 +66,11 @@ def addERP5FacebookExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
-      REQUEST['RESPONSE'].redirect(
-          '%s/manage_workspace'
-          '?manage_tabs_message='
-          'ERP5FacebookExtractionPlugin+added.'
-          % dispatcher.absolute_url())
+    REQUEST['RESPONSE'].redirect(
+      '%s/manage_workspace'
+      '?manage_tabs_message='
+      'ERP5FacebookExtractionPlugin+added.'
+      % dispatcher.absolute_url())
 
 #Form for new plugin in ZMI
 manage_addERP5GoogleExtractionPluginForm = PageTemplateFile(
@@ -84,11 +84,11 @@ def addERP5GoogleExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
-      REQUEST['RESPONSE'].redirect(
-          '%s/manage_workspace'
-          '?manage_tabs_message='
-          'ERP5GoogleExtractionPlugin+added.'
-          % dispatcher.absolute_url())
+    REQUEST['RESPONSE'].redirect(
+      '%s/manage_workspace'
+      '?manage_tabs_message='
+      'ERP5GoogleExtractionPlugin+added.'
+      % dispatcher.absolute_url())
 
 class ERP5ExternalOauth2ExtractionPlugin:
 

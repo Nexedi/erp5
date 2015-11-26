@@ -35,9 +35,6 @@ from Products.ERP5Type.Globals import InitializeClass
 from zope.interface import Interface
 
 from AccessControl import ClassSecurityInfo
-from AccessControl.SecurityManagement import getSecurityManager,\
-                                             newSecurityManager,\
-                                             setSecurityManager
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
@@ -49,8 +46,8 @@ from Products.PluggableAuthService.plugins.CookieAuthHelper import CookieAuthHel
 
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5Security.ERP5UserManager import ERP5UserManager,\
-                                                  SUPER_USER,\
+from Products.ERP5Security.ERP5UserManager import ERP5UserManager, \
+                                                  SUPER_USER, \
                                                   _AuthenticationFailure
 
 from Crypto.Cipher import AES
@@ -136,22 +133,22 @@ manage_addERP5KeyAuthPluginForm = PageTemplateFile(
     'www/ERP5Security_addERP5KeyAuthPlugin', globals(),
     __name__='manage_addERP5KeyAuthPluginForm')
 
-def addERP5KeyAuthPlugin(dispatcher, id, title=None,\
-                         encryption_key='', cipher='AES', cookie_name='',\
+def addERP5KeyAuthPlugin(dispatcher, id, title=None,
+                         encryption_key='', cipher='AES', cookie_name='',
                          default_cookie_name='',REQUEST=None):
-    """ Add a ERP5KeyAuthPlugin to a Pluggable Auth Service. """
+  """ Add a ERP5KeyAuthPlugin to a Pluggable Auth Service. """
 
-    plugin = ERP5KeyAuthPlugin(id=id, title=title, encryption_key=encryption_key,
-                               cipher=cipher, cookie_name=cookie_name,
-                               default_cookie_name=default_cookie_name)
-    dispatcher._setObject(plugin.getId(), plugin)
+  plugin = ERP5KeyAuthPlugin(id=id, title=title, encryption_key=encryption_key,
+                             cipher=cipher, cookie_name=cookie_name,
+                             default_cookie_name=default_cookie_name)
+  dispatcher._setObject(plugin.getId(), plugin)
 
-    if REQUEST is not None:
-        REQUEST['RESPONSE'].redirect(
-                                '%s/manage_workspace'
-                                '?manage_tabs_message='
-                                'ERP5KeyAuthPlugin+added.'
-                            % dispatcher.absolute_url())
+  if REQUEST is not None:
+    REQUEST['RESPONSE'].redirect(
+      '%s/manage_workspace'
+      '?manage_tabs_message='
+      'ERP5KeyAuthPlugin+added.'
+      % dispatcher.absolute_url())
 
 class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   """
@@ -277,9 +274,9 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
       if creds:
         creds['remote_host'] = request.get('REMOTE_HOST', '')
         try:
-            creds['remote_address'] = request.getClientAddr()
+          creds['remote_address'] = request.getClientAddr()
         except AttributeError:
-            creds['remote_address'] = request.get('REMOTE_ADDR', '')
+          creds['remote_address'] = request.get('REMOTE_ADDR', '')
     except StandardError, e:
       #Log standard error to check error
       LOG('ERP5KeyAuthPlugin.extractCredentials', PROBLEM, str(e))
@@ -373,14 +370,13 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
                                                 id='ERP5KeyAuthPlugin_authenticateCredentials',
                                                 cache_factory='erp5_content_short')
       try:
-          return _authenticateCredentials(
-                          login=login)
+        return _authenticateCredentials(login=login)
       except _AuthenticationFailure:
-            return None
+        return None
       except StandardError, e:
-          #Log standard error
-          LOG('ERP5KeyAuthPlugin.authenticateCredentials', PROBLEM, str(e))
-          return None
+        #Log standard error
+        LOG('ERP5KeyAuthPlugin.authenticateCredentials', PROBLEM, str(e))
+        return None
 
   ################################
   # Properties for ZMI managment #
@@ -429,8 +425,8 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
     #Redirect
     if RESPONSE is not None:
       if error_message != '':
-          self.REQUEST.form['manage_tabs_message'] = error_message
-          return self.manage_editERP5KeyAuthPluginForm(RESPONSE)
+        self.REQUEST.form['manage_tabs_message'] = error_message
+        return self.manage_editERP5KeyAuthPluginForm(RESPONSE)
       else:
         message = "Updated"
         RESPONSE.redirect( '%s/manage_editERP5KeyAuthPluginForm'

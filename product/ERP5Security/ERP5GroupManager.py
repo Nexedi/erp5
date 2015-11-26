@@ -17,8 +17,6 @@
 
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.SecurityManagement import newSecurityManager,\
-    getSecurityManager, setSecurityManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
@@ -28,7 +26,6 @@ from Products.ERP5Type.ERP5Type \
   import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
-from Products.PluggableAuthService.PropertiedUser import PropertiedUser
 from ZODB.POSException import ConflictError
 
 import sys
@@ -130,7 +127,6 @@ class ERP5GroupManager(BasePlugin):
           else: # no person is linked to this user login
             return ()
         person_object = catalog_result[0].getObject()
-        person_id = person_object.getId()
 
         # Fetch category values from defined scripts
         for (method_name, base_category_list) in security_definition_list:

@@ -74,104 +74,104 @@ registerMultiPlugin(ERP5DumbHTTPExtractionPlugin.ERP5DumbHTTPExtractionPlugin.me
 
 def initialize(context):
 
-    context.registerClass( ERP5UserManager.ERP5UserManager
-                         , permission=ManageUsers
-                         , constructors=(
-                            ERP5UserManager.manage_addERP5UserManagerForm,
-                            ERP5UserManager.addERP5UserManager, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5UserManager.ERP5UserManager
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5UserManager.manage_addERP5UserManagerForm,
+                          ERP5UserManager.addERP5UserManager, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
-    context.registerClass( ERP5GroupManager.ERP5GroupManager
-                         , permission=ManageGroups
-                         , constructors=(
-                            ERP5GroupManager.manage_addERP5GroupManagerForm,
-                            ERP5GroupManager.addERP5GroupManager, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5GroupManager.ERP5GroupManager
+                       , permission=ManageGroups
+                       , constructors=(
+                          ERP5GroupManager.manage_addERP5GroupManagerForm,
+                          ERP5GroupManager.addERP5GroupManager, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
-    context.registerClass( ERP5RoleManager.ERP5RoleManager
-                         , permission=ManageUsers
-                         , constructors=(
-                            ERP5RoleManager.manage_addERP5RoleManagerForm,
-                            ERP5RoleManager.addERP5RoleManager, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5RoleManager.ERP5RoleManager
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5RoleManager.manage_addERP5RoleManagerForm,
+                          ERP5RoleManager.addERP5RoleManager, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
-    context.registerClass( ERP5UserFactory.ERP5UserFactory
-                         , permission=ManageUsers
-                         , constructors=(
-                            ERP5UserFactory.manage_addERP5UserFactoryForm,
-                            ERP5UserFactory.addERP5UserFactory, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5UserFactory.ERP5UserFactory
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5UserFactory.manage_addERP5UserFactoryForm,
+                          ERP5UserFactory.addERP5UserFactory, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
-    context.registerClass( ERP5KeyAuthPlugin.ERP5KeyAuthPlugin
-                         , permission=ManageUsers
-                         , constructors=(
-                            ERP5KeyAuthPlugin.manage_addERP5KeyAuthPluginForm,
-                            ERP5KeyAuthPlugin.addERP5KeyAuthPlugin, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5KeyAuthPlugin.ERP5KeyAuthPlugin
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5KeyAuthPlugin.manage_addERP5KeyAuthPluginForm,
+                          ERP5KeyAuthPlugin.addERP5KeyAuthPlugin, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
-    context.registerClass( ERP5ExternalAuthenticationPlugin.ERP5ExternalAuthenticationPlugin
-                         , permission=ManageUsers
-                         , constructors=(
-                            ERP5ExternalAuthenticationPlugin.manage_addERP5ExternalAuthenticationPluginForm,
-                            ERP5ExternalAuthenticationPlugin.addERP5ExternalAuthenticationPlugin, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5ExternalAuthenticationPlugin.ERP5ExternalAuthenticationPlugin
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5ExternalAuthenticationPlugin.manage_addERP5ExternalAuthenticationPluginForm,
+                          ERP5ExternalAuthenticationPlugin.addERP5ExternalAuthenticationPlugin, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
-    context.registerClass( ERP5BearerExtractionPlugin.ERP5BearerExtractionPlugin
-                         , permission=ManageUsers
-                         , constructors=(
-                            ERP5BearerExtractionPlugin.manage_addERP5BearerExtractionPluginForm,
-                            ERP5BearerExtractionPlugin.addERP5BearerExtractionPlugin, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5BearerExtractionPlugin.ERP5BearerExtractionPlugin
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5BearerExtractionPlugin.manage_addERP5BearerExtractionPluginForm,
+                          ERP5BearerExtractionPlugin.addERP5BearerExtractionPlugin, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
-    context.registerClass( ERP5ExternalOauth2ExtractionPlugin.ERP5FacebookExtractionPlugin
-                         , permission=ManageUsers
-                         , constructors=(
-                            ERP5ExternalOauth2ExtractionPlugin.manage_addERP5FacebookExtractionPluginForm,
-                            ERP5ExternalOauth2ExtractionPlugin.addERP5FacebookExtractionPlugin, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5ExternalOauth2ExtractionPlugin.ERP5FacebookExtractionPlugin
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5ExternalOauth2ExtractionPlugin.manage_addERP5FacebookExtractionPluginForm,
+                          ERP5ExternalOauth2ExtractionPlugin.addERP5FacebookExtractionPlugin, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
-    context.registerClass( ERP5ExternalOauth2ExtractionPlugin.ERP5GoogleExtractionPlugin
-                         , permission=ManageUsers
-                         , constructors=(
-                            ERP5ExternalOauth2ExtractionPlugin.manage_addERP5GoogleExtractionPluginForm,
-                            ERP5ExternalOauth2ExtractionPlugin.addERP5GoogleExtractionPlugin, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5ExternalOauth2ExtractionPlugin.ERP5GoogleExtractionPlugin
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5ExternalOauth2ExtractionPlugin.manage_addERP5GoogleExtractionPluginForm,
+                          ERP5ExternalOauth2ExtractionPlugin.addERP5GoogleExtractionPlugin, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
-    context.registerClass( ERP5AccessTokenExtractionPlugin.ERP5AccessTokenExtractionPlugin
-                         , permission=ManageUsers
-                         , constructors=(
-                            ERP5AccessTokenExtractionPlugin.manage_addERP5AccessTokenExtractionPluginForm,
-                            ERP5AccessTokenExtractionPlugin.addERP5AccessTokenExtractionPlugin, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5AccessTokenExtractionPlugin.ERP5AccessTokenExtractionPlugin
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5AccessTokenExtractionPlugin.manage_addERP5AccessTokenExtractionPluginForm,
+                          ERP5AccessTokenExtractionPlugin.addERP5AccessTokenExtractionPlugin, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
-    context.registerClass( ERP5DumbHTTPExtractionPlugin.ERP5DumbHTTPExtractionPlugin
-                         , permission=ManageUsers
-                         , constructors=(
-                            ERP5DumbHTTPExtractionPlugin.manage_addERP5DumbHTTPExtractionPluginForm,
-                            ERP5DumbHTTPExtractionPlugin.addERP5DumbHTTPExtractionPlugin, )
-                         , visibility=None
-                         , icon='www/portal.gif'
-                         )
+  context.registerClass( ERP5DumbHTTPExtractionPlugin.ERP5DumbHTTPExtractionPlugin
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5DumbHTTPExtractionPlugin.manage_addERP5DumbHTTPExtractionPluginForm,
+                          ERP5DumbHTTPExtractionPlugin.addERP5DumbHTTPExtractionPlugin, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
 
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 ModuleSecurityInfo('Products.ERP5Security.ERP5UserManager').declarePublic(

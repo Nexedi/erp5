@@ -69,11 +69,11 @@ def addERP5DumbHTTPExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
-      REQUEST['RESPONSE'].redirect(
-          '%s/manage_workspace'
-          '?manage_tabs_message='
-          'ERP5DumbHTTPExtractionPlugin+added.'
-          % dispatcher.absolute_url())
+    REQUEST['RESPONSE'].redirect(
+      '%s/manage_workspace'
+      '?manage_tabs_message='
+      'ERP5DumbHTTPExtractionPlugin+added.'
+      % dispatcher.absolute_url())
 
 #List implementation of class
 classImplements(ERP5DumbHTTPExtractionPlugin,
