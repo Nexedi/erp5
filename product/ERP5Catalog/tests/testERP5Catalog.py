@@ -1876,8 +1876,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # by searchFolder.
     # This will work as long as Bank Account are associated to a workflow that
     # allow deletion.
+    self.login()
     obj2.delete()
     self.tic()
+    self.login('bob')
     self.assertEqual([], [x.getObject() for x in
                            obj.searchFolder(portal_type='Bank Account')])
 

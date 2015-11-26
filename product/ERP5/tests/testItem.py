@@ -35,7 +35,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
-
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class TestItemMixin(TestSaleInvoiceMixin):
   item_portal_type = 'Item'
@@ -51,12 +51,6 @@ class TestItemMixin(TestSaleInvoiceMixin):
     """
     return TestSaleInvoiceMixin.getBusinessTemplateList(self) + \
          ('erp5_item',) + ('erp5_trade_proxy_field_legacy',)
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager', 'Member', 'Assignee'], [])
-    user = uf.getUserById('rc').__of__(uf)
-    newSecurityManager(None, user)
 
   def createOrganisation(self, title=None):
     organisation_portal_type = 'Organisation'
@@ -222,6 +216,7 @@ class TestItemMixin(TestSaleInvoiceMixin):
     self.assertEqual(packing_list.getStartDate(),self.datetime+15)
 
 
+  @UnrestrictedMethod
   def stepModifyOrderLinesQuantity(self,sequence=None, sequence_list=None, **kw):
     """
       modify order line quantities
@@ -231,6 +226,7 @@ class TestItemMixin(TestSaleInvoiceMixin):
     for order_line in order_line_list:
       order_line.edit(quantity=self.default_quantity-1)
 
+  @UnrestrictedMethod
   def stepModifyOneOrderLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
       modify order line start date
@@ -242,6 +238,7 @@ class TestItemMixin(TestSaleInvoiceMixin):
     order_line_list[-1].edit(start_date=self.datetime+15)
 
 
+  @UnrestrictedMethod
   def stepModifyOrderLinesDate(self,sequence=None, sequence_list=None, **kw):
     """
       modify order line date

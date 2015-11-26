@@ -480,7 +480,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
           collect_order_group='delivery',
           int_index=len(delivery_movement_group_list)+1
           )
-        user = uf.getUserById('test_invoice_user').__of__(uf)
+        user = uf.getUserById('test_user').__of__(uf)
         newSecurityManager(None, user)
 
   def test_01_TwoInvoicesFromTwoPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):

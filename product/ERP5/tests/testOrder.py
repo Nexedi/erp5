@@ -38,6 +38,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.CMFCore.utils import getToolByName
 
 class TestOrderMixin(SubcontentReindexingWrapper):
@@ -69,12 +70,6 @@ class TestOrderMixin(SubcontentReindexingWrapper):
             'erp5_configurator_standard_trade_template',
             'erp5_simulation_test', 'erp5_administration')
 
-  def login(self, quiet=0, run=1):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager', 'Member', 'Assignee'], [])
-    user = uf.getUserById('rc').__of__(uf)
-    newSecurityManager(None, user)
-
   def setUpPreferences(self):
     #create apparel variation preferences
     portal_preferences = self.getPreferenceTool()
@@ -95,13 +90,21 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       preference.enable()
     self.tic()
 
+  def createUser(self, name, role_list):
+    user_folder = self.getPortal().acl_users
+    user_folder._doAddUser(name, 'password', role_list, [])
+
   def afterSetUp(self):
     # XXX-Leo: cannot call super here, because other classes call
     # SuperClass.afterSetUp(self) directly... this needs to be cleaned
     # up, including consolidating all conflicting definitions of
     # .createCategories()
     #super(TestOrderMixin, self).afterSetUp()
-    self.login()
+    self.createUser('test_user',
+                    ['Assignee', 'Assignor', 'Member',
+                     'Associate', 'Auditor', 'Author'])
+    self.createUser('manager', ['Manager'])
+    self.login('manager')
     self.category_tool = self.getCategoryTool()
     portal_catalog = self.getCatalogTool()
     #portal_catalog.manage_catalogClear()
@@ -113,6 +116,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     # 1. All calculations are done relative to the same time
     # 2. We don't get random failures when tests run close to midnight
     self.pinDateTime(self.datetime)
+    self.login('test_user')
 
   def beforeTearDown(self):
     self.unpinDateTime()
@@ -231,6 +235,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     resource_list.append(resource)
     sequence.edit( resource_list = resource_list )
 
+  @UnrestrictedMethod
   def stepCreateVariatedMultipleQuantityUnitResource(self, sequence=None, sequence_list=None, **kw):
     """
     Create a resource with variation and multiple quantity units

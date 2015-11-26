@@ -41,6 +41,7 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
 
   def afterSetUp(self):
     super(TestERP5Simulation, self).afterSetUp()
+    self.login('manager')
     self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
       quantity_range_max=2,
       quantity_range_min=-1)

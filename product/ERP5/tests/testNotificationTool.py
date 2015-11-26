@@ -119,7 +119,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     newSecurityManager(None, self.old_user)
 
   def afterSetUp(self):
-    self.createUser('erp5user', ['Auditor', 'Author'])
+    self.createUser('erp5user', ['Associate', 'Auditor', 'Author'])
     self.createUser('manager', ['Manager'])
     portal = self.getPortal()
     if 'MailHost' in portal.objectIds():
@@ -134,6 +134,7 @@ class TestNotificationTool(ERP5TypeTestCase):
   def beforeTearDown(self):
     self.abort()
     # clear modules if necessary
+    self.login('manager')
     self.portal.person_module.manage_delObjects(
             list(self.portal.person_module.objectIds()))
     self.tic()

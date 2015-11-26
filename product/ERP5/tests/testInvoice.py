@@ -124,15 +124,20 @@ class TestInvoiceMixin(TestPackingListMixin):
             'use/trade/tax',
         )
 
-
   def afterSetUp(self):
+    self.createUser('test_user',
+                    ['Assignee', 'Assignor', 'Member',
+                     'Associate', 'Auditor', 'Author'])
+    self.createUser('manager', ['Manager'])
+    self.login('manager')
     self.createCategories()
     self.validateRules()
     self.createBusinessProcess()
-    self.login()
+    self.login('test_user')
 
   def beforeTearDown(self):
     self.abort()
+    self.login('manager')
     super(TestInvoiceMixin, self).beforeTearDown()
     for folder in (self.portal.accounting_module,
                    self.portal.organisation_module,
@@ -143,14 +148,6 @@ class TestInvoiceMixin(TestPackingListMixin):
                    self.portal.portal_simulation,):
       folder.manage_delObjects([x for x in folder.objectIds() if x not in ('organisation_1','organisation_2','ppl_1','ppl_2')])
     self.tic()
-
-  def login(self):
-    """login, without manager role"""
-    uf = self.getPortal().acl_users
-    uf._doAddUser('test_invoice_user', '', ['Assignee', 'Assignor', 'Member',
-                               'Associate', 'Auditor', 'Author'], [])
-    user = uf.getUserById('test_invoice_user').__of__(uf)
-    newSecurityManager(None, user)
 
   def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
     pass # see createBusinessProcess
@@ -183,7 +180,7 @@ class TestInvoiceMixin(TestPackingListMixin):
         if not account_module.has_key(account_id):
           account = account_module.newContent(account_id, gap=account_gap,
                                               account_type=account_type)
-          portal.portal_workflow.doActionFor(account, 'validate_action')
+          account.validate()
       for line_id, line_source_id, line_destination_id, line_ratio in \
           self.transaction_line_definition_list:
         trade_model_path = business_process.newContent(
@@ -2545,9 +2542,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
   """Tests for sale invoice.
   """
   quiet = 0
-
-  # fix inheritance
-  login = TestInvoiceMixin.login
 
   @UnrestrictedMethod
   def createCategories(self):

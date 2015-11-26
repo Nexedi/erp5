@@ -158,7 +158,9 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
   quiet = 0
 
   def afterSetUp(self):
+    self.stepLogin()
     self.validateRules()
+    self.tic()
 
   def enableLightInstall(self):
     """

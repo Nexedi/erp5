@@ -30,6 +30,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from testOrder import TestOrderMixin
 
 class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
@@ -47,6 +48,10 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
   component_variation_portal_type = 'Apparel Component Variation'
   transformed_resource_portal_type = 'Transformation Transformed Resource'
   operation_portal_type = 'Transformation Operation'
+
+  def afterSetUp(self, quiet=1, run=1):
+    super(TestApparelTransformation, self).afterSetUp()
+    self.login()
 
   def getTitle(self):
     return "Transformation"

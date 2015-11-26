@@ -31,6 +31,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testOrder import TestOrderMixin
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
   """
@@ -125,6 +126,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     sequence.edit(inventory_list=inventory_list)
     return inventory
 
+  @UnrestrictedMethod
   def createNotVariatedInventoryLine(self, quantity=None,
                                        sequence=None,**kw):
     """
@@ -161,6 +163,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                                     quantity=quantity)
 
 
+  @UnrestrictedMethod
   def stepModifySecondNotVariatedInventory(self, sequence=None,
                                            sequence_list=None, **kw):
     """
@@ -232,6 +235,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
 
+  @UnrestrictedMethod
   def createVariatedInventoryLine(self, sequence=None, sequence_list=None,
                                  start_date=None, quantity=None, item_list=None,
                                  **kw):
@@ -287,6 +291,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
 
+  @UnrestrictedMethod
   def createVariatedInventory(self, start_date=None,quantity=None,
                                        sequence=None,**kw):
     """

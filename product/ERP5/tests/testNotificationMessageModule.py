@@ -73,6 +73,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
   def test_01_get_document(self):
     module = self.getNotificationMessageModule()
     tool = self.getPortal().portal_notifications
+    self.login('manager')
     #Test Document A in english
     n_m_en = module.newContent(portal_type='Notification Message',
                                reference='A',
