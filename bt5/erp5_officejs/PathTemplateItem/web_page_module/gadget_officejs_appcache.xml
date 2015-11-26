@@ -102,7 +102,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Fri, 08 Oct 2015 15:31:33 +0000\n
+# generated on Fri, 26 Nov 2015 11:31:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -142,7 +142,7 @@ gadget_officejs_page_text_editor_list.html\n
 gadget_officejs_router.html\n
 gadget_officejs_text_editor_application.html\n
 gadget_officejs_text_editor_application_panel.html\n
-gadget_officejs_translation.html\n
+gadget_translation.html\n
 gadget_officejs_webrtc_jio.html\n
 gadget_officejs_widget_listbox.html\n
 gadget_officejs_header.js\n
@@ -159,8 +159,8 @@ gadget_officejs_page_text_editor_list.js\n
 gadget_officejs_router.js\n
 gadget_officejs_text_editor_application.js\n
 gadget_officejs_text_editor_application_panel.js\n
-gadget_officejs_translation.js\n
-gadget_officejs_translation_data.js\n
+gadget_translation.js\n
+gadget_translation_data.js\n
 gadget_officejs_webrtc_jio.js\n
 gadget_officejs_widget_listbox.js\n
 erp5_launcher.js\n
@@ -299,7 +299,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.10007.14873.25907</string> </value>
+                <value> <string>947.23735.40112.59716</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -317,7 +317,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444319235.36</float>
+                        <float>1448540323.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
