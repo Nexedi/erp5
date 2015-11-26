@@ -143,6 +143,8 @@ except AttributeError:\n
   # Sometime, movements doesn\'t have an explanation.\n
   explanation = None\n
 \n
+specialise_set = set()\n
+\n
 if explanation is not None:\n
   explanation_type = explanation.getPortalType()\n
   high_priority_supply_line_list = []\n
@@ -157,6 +159,7 @@ if explanation is not None:\n
         high_priority_supply_line_list.extend(list(supply_cell_list))\n
       else:\n
         high_priority_supply_line_list.append(supply_line)\n
+      specialise_set.add(supply_line.getParentValue().getRelativeUrl())\n
 \n
   # XXX FIXME: Hardcoded values\n
   if "Internal" in explanation_type:\n
@@ -170,6 +173,9 @@ if explanation is not None:\n
                                   high_priority_supply_line_list)\n
 \n
 resource = context.getResourceValue()\n
+\n
+if specialise_set:\n
+  kw[\'categories\'] = kw.get(\'categories\', []) + [\'specialise/%s\' % x for x in specialise_set]\n
 \n
 if resource is not None:\n
   if isPricingOptimise():\n

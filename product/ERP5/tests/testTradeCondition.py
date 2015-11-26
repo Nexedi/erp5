@@ -479,6 +479,24 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     # not using the supply line inside trade condition
     self.assertEqual(1, line.getPrice())
 
+  def test_supply_line_in_other_trade_condition_does_not_apply(self):
+    """Supply lines from trade condition not related to an order does not apply.
+    """
+    supply_line = self.trade_condition.newContent(
+                                    portal_type=self.supply_line_type,
+                                    resource_value=self.resource,
+                                    base_price=2)
+    self.assertEqual(None, self.order.getSpecialiseValue())
+    self.order.setSourceSectionValue(self.vendor)
+    self.order.setDestinationSectionValue(self.client)
+
+    self.tic()
+
+    line = self.order.newContent(portal_type=self.order_line_type,
+                                 resource_value=self.resource,
+                                 quantity=1)
+    # not using the supply line inside trade condition
+    self.assertEqual(None, line.getPrice())
 
   # TODO: move to testSupplyLine ! (which does not exist yet)
   def test_supply_line_section(self):
