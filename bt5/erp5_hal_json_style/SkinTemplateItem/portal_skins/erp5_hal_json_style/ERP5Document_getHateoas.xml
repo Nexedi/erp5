@@ -321,21 +321,27 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
     editable_column_list = field.get_value(\'editable_columns\')\n
 \n
     sort_column_list_tmp = field.get_value(\'sort_columns\')\n
-    search_column_list = field.get_value(\'search_columns\')\n
+    search_column_list_tmp = field.get_value(\'search_columns\')\n
     sort_column_list = []\n
-\n
-    #only get sortable column which is already displayed in listbox\n
-    #in legacy erp5 interface, all sortable columns are displayed\n
+    search_column_list = []\n
+    \n
+    #only get sortable&searchable column which is already displayed in listbox\n
     #see https://git.erp5.org/gitweb/erp5.git/blob/HEAD:/product/ERP5Form/ListBox.py?js=1#l1004\n
-    if sort_column_list_tmp:\n
-      sort_column_list = sort_column_list_tmp\n
-    elif search_column_list:\n
-      sort_column_list = search_column_list\n
+\n
+    if search_column_list_tmp:\n
+      search_column_list = search_column_list_tmp\n
     else:\n
-      #find which column can be sorted\n
       for grain in column_list:\n
         if sql_catalog.isValidColumn(grain[0]):\n
-          sort_column_list.append(grain)\n
+          search_column_list.append(grain)\n
+\n
+    \n
+    if sort_column_list_tmp:\n
+      sort_column_list = sort_column_list_tmp\n
+    else:\n
+      sort_column_list = search_column_list\n
+\n
+        \n
 \n
 \n
     # XXX \n

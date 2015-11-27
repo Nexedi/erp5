@@ -128,6 +128,12 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
     .declareAcquiredMethod("redirect", "redirect")\n
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
+    .allowPublicAcquisition("passToSearchGadget", function (argument_list) {\n
+      return this.getDeclaredGadget("erp5_searchfield")\n
+        .push(function(search_gadget) {\n
+          return search_gadget.passToSearchGadget(argument_list[0]);\n
+        });\n
+    })\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -350,7 +356,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.22536.41002.36352</string> </value>
+                <value> <string>947.23653.29305.12612</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -368,7 +374,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448469230.79</float>
+                        <float>1448535588.41</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

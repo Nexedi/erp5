@@ -142,6 +142,7 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")\n
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")\n
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")\n
+    .declareAcquiredMethod("passToSearchGadget", "passToSearchGadget")\n
     //////////////////////////////////////////////\n
     // initialize the gadget content\n
     //////////////////////////////////////////////\n
@@ -178,8 +179,31 @@
           return false;\n
         });\n
       }\n
+\n
+      if (field_json.search_column_list.length) {\n
+        field_json.search_column_list = field_json.search_column_list.filter(function (n) {\n
+          for (i = 0; i < field_json.column_list.length; i += 1) {\n
+            if (field_json.column_list[i][0] === n[0] && field_json.column_list[i][1] === n[1]) {\n
+              return true;\n
+            }\n
+          }\n
+          return false;\n
+        });\n
+      }\n
+      field_json.search_column_list.push(["searchable_text", "Searchable Text"]);\n
       thead.appendChild(tr);\n
       return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.passToSearchGadget({\n
+            "search_column_list": field_json.search_column_list,\n
+            "begin_from": field_json.key + "_begin_from"\n
+          });\n
+        })\n
+        .push(undefined, function (error) {\n
+          if (error.name !== "AcquisitionError") {\n
+            throw error;\n
+          }\n
+        })\n
         .push(function () {\n
           // XXX Fix in case of multiple listboxes\n
           return RSVP.all([\n
@@ -661,7 +685,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.20698.10371.47530</string> </value>
+                <value> <string>947.22658.54838.47564</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -679,7 +703,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448443763.96</float>
+                        <float>1448628292.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
