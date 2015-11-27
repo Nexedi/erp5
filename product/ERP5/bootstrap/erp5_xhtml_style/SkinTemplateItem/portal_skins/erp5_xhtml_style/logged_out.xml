@@ -36,21 +36,9 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block replace="nothing">\n
-<!--\n
-XXX: this page is just for backward compatibility. The log_out action sould lead to the login page with the correct transition message.\n
--->\n
-  </tal:block>\n
-  <tal:block metal:use-macro="here/main_template/macros/master">\n
-    <tal:block metal:fill-slot="main">\n
-      <tal:block tal:define="dummy python:request.RESPONSE.redirect(\'%s/login_form?portal_status_message=%s\' % (url, here.Base_translateString(\'You have been logged out.\')))" />\n
-    </tal:block>\n
-  </tal:block>\n
-</tal:block>\n
-
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal">\n
+  <tal:block tal:define="dummy python:request.RESPONSE.redirect(\'%s?portal_status_message=%s\' % (here.absolute_url(), here.Base_translateString(\'You have been logged out.\')))" />\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
