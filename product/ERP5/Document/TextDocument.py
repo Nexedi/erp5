@@ -156,8 +156,8 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         if not self.hasConversion(**kw):
           portal_transforms = portal.portal_transforms
           filename = self.getFilename()
-          if mime_type == 'text/html':
-            mime_type = 'text/x-html-safe'
+          # if mime_type == 'text/html':
+          #   mime_type = 'text/x-html-safe'
           if src_mimetype != "image/svg+xml":
             result = portal_transforms.convertToData(mime_type, text_content,
                                                    object=self, context=self,
