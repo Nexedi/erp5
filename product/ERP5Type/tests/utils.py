@@ -51,7 +51,9 @@ class FileUpload(file):
   """Act as an uploaded file.
   """
   __allow_access_to_unprotected_subobjects__ = 1
-  def __init__(self, path, name):
+  def __init__(self, path, name=None):
+    if name is None:
+      name = os.path.basename(path)
     self.filename = name
     file.__init__(self, path)
     self.headers = {}

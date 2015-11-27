@@ -78,7 +78,7 @@ class TestERP5Base(ERP5TypeTestCase):
   def makeImageFileUpload(self, filename):
     return FileUpload(
             os.path.join(os.path.dirname(__file__),
-            'test_data', 'images', filename), 'rb')
+            'test_data', 'images', filename))
 
   def login(self):
     """Create a new manager user and login.

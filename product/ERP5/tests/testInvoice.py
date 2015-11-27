@@ -1704,7 +1704,7 @@ class TestInvoice(TestInvoiceMixin):
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
                     title='Resource',)
-    file_data = FileUpload(__file__, 'rb')
+    file_data = FileUpload(__file__)
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Client')
     client_logo = client.newContent(portal_type='Embedded File',

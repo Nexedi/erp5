@@ -1108,7 +1108,7 @@ return []
     image_path = os.path.join(parent_dir,
                               'www',
                               'form_printout_icon.png')
-    file_data = FileUpload(image_path, 'rb')
+    file_data = FileUpload(image_path)
     image = self.portal.newContent(portal_type='Image', id='test_image')
     image.edit(file=file_data)
 

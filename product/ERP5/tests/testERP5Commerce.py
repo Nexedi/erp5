@@ -873,7 +873,7 @@ class TestCommerce(ERP5TypeTestCase):
     """
     product = self.getDefaultProduct()
     file_upload = FileUpload(os.path.join(os.path.dirname(__file__),
-                          'test_data', 'images', 'erp5_logo_small.png'), 'rb')
+                          'test_data', 'images', 'erp5_logo_small.png'))
     product.edit(default_image_file=file_upload)
     self.tic()
 

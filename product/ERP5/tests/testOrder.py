@@ -2776,7 +2776,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                     portal_type=self.resource_portal_type,
                     title='Resource',)
     image = FileUpload(os.path.join(os.path.dirname(__file__),
-                      'test_data', 'images', 'erp5_logo.png'), 'rb')
+                      'test_data', 'images', 'erp5_logo.png'))
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Client',
                               default_image_file=image)
@@ -2813,7 +2813,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                     portal_type=self.resource_portal_type,
                     title='Resource',)
     image = FileUpload(os.path.join(os.path.dirname(__file__),
-                      'test_data', 'images', 'erp5_logo.bmp'), 'rb')
+                      'test_data', 'images', 'erp5_logo.bmp'))
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Client',
                               default_image_file=image)

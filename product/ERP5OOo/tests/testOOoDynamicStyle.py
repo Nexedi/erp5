@@ -216,7 +216,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     filename = 'cmyk_sample.jpg'
     file_path = os.path.join(os.path.dirname(__file__), 'test_document',
         filename)
-    upload_file = FileUpload(file_path, filename)
+    upload_file = FileUpload(file_path)
     document = self.portal.portal_contributions.newContent(file=upload_file)
     addOOoTemplate = self.getPortal().manage_addProduct['ERP5OOo'].addOOoTemplate
     addOOoTemplate(id='Base_viewIncludeImageAsOdt', title='')

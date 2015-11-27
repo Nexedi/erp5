@@ -57,7 +57,7 @@ class TestScribusUtils(ERP5TypeTestCase):
   def makeFileUpload(self, filename):
     return FileUpload(
             os.path.join(os.path.dirname(__file__),
-            'data', filename), 'rb')
+            'data', filename))
 
   def test_01_SimpleModuleCreation(self):
     '''Just create a module using scribus file and pdf file with minimal
