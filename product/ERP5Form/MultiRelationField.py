@@ -619,6 +619,10 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
         try:
           related_object = portal_catalog.getObject(relation_uid)
           display_text = str(related_object.getProperty(catalog_index))
+          # XXX I think long time ago Yusei suggested to make this getProperty
+          # customizable to something different from catalog index 
+          if catalog_index == 'title_or_reference':
+            display_text = related_object.getTitle()
           found = 1
         except ValueError:
           # Catch the error raised when the uid is a string
@@ -711,6 +715,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                 related_object = None
               if related_object is not None:
                 display_text = str(related_object.getProperty(catalog_index))
+                if catalog_index == 'title_or_reference':
+                  display_text = related_object.getTitle()
 #                 found = 1
               else:
                 ##############################
@@ -776,6 +782,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
                 related_object = relation_list[0].getObject()
                 if related_object is not None:
                   display_text = str(related_object.getProperty(catalog_index))
+                  if catalog_index == 'title_or_reference':
+                    display_text = related_object.getTitle()
                   # Modify the value, in order to let the user
                   # modify it later...
                   value = display_text
@@ -816,7 +824,12 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
               else:
                 # If the length is short, raise an error
                 # len(relation_list) < MAX_SELECT:
-                menu_item_list.extend([(
+                if catalog_index == 'title_or_reference':
+                  menu_item_list.extend([(
+                                  x.getObject().getTitle(),
+                                  x.uid) for x in relation_list])
+                else:
+                  menu_item_list.extend([(
                                   x.getObject().getProperty(catalog_index),
                                   x.uid) for x in relation_list])
                 # Add blank line
