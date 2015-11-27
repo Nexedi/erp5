@@ -687,6 +687,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
             related_object = portal_catalog.getObject(relation_uid)
             if related_object is not None:
               display_text = str(related_object.getProperty(catalog_index))
+              if catalog_index == 'title_or_reference':
+                display_text = related_object.getTitle()
           menu_item_list.append((display_text, relation_uid))
           relation_editor_list.append(
             (
@@ -705,6 +707,8 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
         try:
           related_object = portal_catalog.getObject(relation_uid)
           display_text = str(related_object.getProperty(catalog_index))
+          if catalog_index == 'title_or_reference':
+            display_text = related_object.getTitle()
         except ValueError:
           if relation_uid.startswith(NEW_CONTENT_PREFIX):
             portal_type = relation_uid[len(NEW_CONTENT_PREFIX):]
