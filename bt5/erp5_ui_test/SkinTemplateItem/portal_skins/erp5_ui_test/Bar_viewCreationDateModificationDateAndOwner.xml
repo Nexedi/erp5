@@ -52,7 +52,9 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-#default_time_zone = context.getPortalObject().portal_preferences.getPreferredTimeZone()\n
+portal = context.getPortalObject()\n
+#default_time_zone = portal.portal_preferences.getPreferredTimeZone()\n
+preferred_date_order = portal.portal_preferences.getPreferredDateOrder()\n
 \n
 def format_date(date):\n
   # XXX modification date & creation date are still in server timezone.\n
@@ -60,7 +62,12 @@ def format_date(date):\n
   #\n
   # if default_time_zone:\n
   #   date = date.toZone(default_time_zone)\n
-  return "%s/%s/%s&nbsp;&nbsp;&nbsp;%s" % (date.dd(), date.mm(), date.year(), date.TimeMinutes())\n
+  if preferred_date_order == \'dmy\':\n
+    return "%s/%s/%s&nbsp;&nbsp;&nbsp;%s" % (date.dd(), date.mm(), date.year(), date.TimeMinutes())\n
+  if preferred_date_order == \'mdy\':\n
+    return "%s/%s/%s&nbsp;&nbsp;&nbsp;%s" % (date.mm(), date.dd(), date.year(), date.TimeMinutes())\n
+  # ymd\n
+  return "%s/%s/%s&nbsp;&nbsp;&nbsp;%s" % (date.year(), date.mm(), date.dd(), date.TimeMinutes())\n
 \n
 creation_date = format_date(context.getCreationDate())\n
 modification_date = format_date(context.getModificationDate())\n
