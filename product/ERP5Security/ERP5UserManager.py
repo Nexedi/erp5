@@ -18,8 +18,6 @@
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.AuthEncoding import pw_validate
-from AccessControl.SecurityManagement import getSecurityManager,\
-    setSecurityManager, newSecurityManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.PluggableAuthService import \
     _SWALLOWABLE_PLUGIN_EXCEPTIONS
@@ -42,17 +40,17 @@ manage_addERP5UserManagerForm = PageTemplateFile(
   __name__='manage_addERP5UserManagerForm' )
 
 def addERP5UserManager(dispatcher, id, title=None, REQUEST=None):
-    """ Add a ERP5UserManager to a Pluggable Auth Service. """
+  """ Add a ERP5UserManager to a Pluggable Auth Service. """
 
-    eum = ERP5UserManager(id, title)
-    dispatcher._setObject(eum.getId(), eum)
+  eum = ERP5UserManager(id, title)
+  dispatcher._setObject(eum.getId(), eum)
 
-    if REQUEST is not None:
-      REQUEST['RESPONSE'].redirect(
-        '%s/manage_workspace'
-        '?manage_tabs_message='
-        'ERP5UserManager+added.'
-        % dispatcher.absolute_url())
+  if REQUEST is not None:
+    REQUEST['RESPONSE'].redirect(
+      '%s/manage_workspace'
+      '?manage_tabs_message='
+      'ERP5UserManager+added.'
+      % dispatcher.absolute_url())
 
 class _AuthenticationFailure(Exception):
   """Raised when authentication failed, to prevent caching the fact that a user
@@ -228,13 +226,13 @@ class ERP5UserManager(BasePlugin):
     id_list = []
     for user_id in id:
       if SUPER_USER == user_id:
-      info = { 'id' : SUPER_USER
+        info = { 'id' : SUPER_USER
              , 'login' : SUPER_USER
              , 'pluginid' : plugin_id
-             }
-      user_info.append(info)
+        }
+        user_info.append(info)
       else:
-      id_list.append(user_id)
+        id_list.append(user_id)
 
     if id_list:
       for user in self.getUserByLogin(tuple(id_list), exact_match=exact_match):
