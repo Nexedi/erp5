@@ -135,6 +135,8 @@
     // acquired method\n
     //////////////////////////////////////////////\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
+    .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")\n
+    .declareAcquiredMethod("getListboxInfo", "getListboxInfo")\n
 \n
     /////////////////////////////////////////////////////////////////\n
     // declared methods\n
@@ -150,7 +152,7 @@
         append_class = " ui-disabled";\n
         append_attribute = \' disabled="disabled\';\n
       }\n
-\n
+      search_gadget.props.extended_search = option_dict.extended_search;\n
       return new RSVP.Queue()\n
         .push(function () {\n
           return search_gadget.translateHtml(panel_template({\n
@@ -178,6 +180,30 @@
 \n
       result[input.getAttribute(\'name\')] = value;\n
       return result;\n
+    })\n
+    .declareService(function () {\n
+      var gadget = this,\n
+        url,\n
+        options = {},\n
+        sort_form = gadget.props.element.querySelector(".filter_form");\n
+      return loopEventListener(\n
+        sort_form,\n
+        "submit",\n
+        false,\n
+        function () {\n
+          return new RSVP.Queue()\n
+            .push(function () {\n
+              return gadget.getListboxInfo();\n
+            })\n
+            .push(function (result) {\n
+              url = "gadget_erp5_search_editor.html";\n
+              options.extended_search  = gadget.props.extended_search;\n
+              options.begin_from = result.begin_from;\n
+              options.search_column_list = result.search_column_list;\n
+              return gadget.renderEditorPanel(url, options);\n
+            });\n
+        }\n
+      );\n
     });\n
 \n
 }(window, rJS, RSVP, loopEventListener, Handlebars));</string> </value>
@@ -315,7 +341,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.44927.40202.16725</string> </value>
+                <value> <string>947.25574.60857.20718</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -333,7 +359,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448467423.65</float>
+                        <float>1448889581.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

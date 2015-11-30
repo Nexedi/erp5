@@ -1,0 +1,436 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test RenderJS UI</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+\n
+<!-- Clean Up -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Reset Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />\n
+\n
+\n
+<!-- Initialize -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/web_site_module/renderjs_runner/</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//h3[@data-i18n=\'Other\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//h3[@data-i18n=\'Other\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Foos\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>link=Foos</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//form[@class=\'filter_form\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'filter_form\']//input</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@class=\'and checkboxradio\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@class=\'and checkboxradio\']</td>\n
+  <td>on</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//form[@class=\'plus\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'plus\']//button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]//select</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]//select</td>\n
+  <td>index=0</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]//input</td>\n
+  <td>0</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'plus\']//button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]//select</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]//select</td>\n
+  <td>index=1</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]//input</td>\n
+  <td>Title 2</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'submit\']/button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementNotPresent</td>\n
+  <td>//a[@data-i18n=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'filter_form\']//input</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@class=\'and checkboxradio\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@class=\'and checkboxradio\']</td>\n
+  <td>on</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]//select</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]//select</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]//select</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>check</td>\n
+  <td>//input[@class=\'or checkboxradio\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@class=\'and checkboxradio\']</td>\n
+  <td>off</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class=\'filter_item_container\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'submit\']/button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementNotPresent</td>\n
+  <td>//a[@data-i18n=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'filter_form\']//input</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@class=\'and checkboxradio\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@class=\'and checkboxradio\']</td>\n
+  <td>off</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@class=\'or checkboxradio\']</td>\n
+  <td>on</td>\n
+</tr>\n
+\n
+\n
+<tr>\n
+  <td>focus</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]//button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]//button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementNotPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[2]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+\n
+\n
+<tr>\n
+  <td>focus</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]//button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]//button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementNotPresent</td>\n
+  <td>//div[@class="filter_item_container"]/div[1]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//form[@class=\'submit\']/button</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementNotPresent</td>\n
+  <td>//a[@data-i18n="Previous"]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//a[@data-i18n="Previous"]</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+</tbody></table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testFilterItemAutoBuild</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

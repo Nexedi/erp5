@@ -1666,15 +1666,19 @@ html .ui-panel .ui-content-section .ui-controlgroup-controls > div:last-of-type 
   border-top-right-radius: 0;\n
   border-top-color: transparent;\n
 }\n
+\n
+html .ui-panel .ui-content-section {\n
+  margin-top: 0;\n
+}\n
 /* XXX: not generic!!! */ \n
 /* side by side buttons (normally this should be done by postion:abs, but requires another wrapper */\n
-html .ui-panel .ui-content-section .ui-controlgroup-controls > div:last-of-type {\n
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div.ui-select:last-of-type {\n
   display: inline-block;\n
   vertical-align: top;\n
   width: 81.25%; /* BAD! use wrapper & position */\n
   padding: 0;\n
 }\n
-html .ui-panel .ui-content-section .ui-controlgroup-controls > div:last-of-type ~ button {\n
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div.ui-select:last-of-type ~ button {\n
   vertical-align: top;\n
   display: inline-block;\n
   margin-left: -4px; /* to remove space between elements */\n
@@ -1684,12 +1688,12 @@ html .ui-panel .ui-content-section .ui-controlgroup-controls > div:last-of-type 
   border-top-color: transparent;\n
   padding-bottom: .75em;\n
 }\n
-html .ui-panel .ui-content-section .ui-controlgroup-controls > div:last-of-type .ui-btn {\n
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div.ui-select:last-of-type .ui-btn {\n
   -webkit-border-bottom-right-radius: 0;\n
   border-bottom-right-radius: 0;\n
 }\n
 /* element padding */\n
-html .ui-panel .ui-content-section .ui-controlgroup-controls > div .ui-btn {\n
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div.ui-select .ui-btn {\n
   padding: 4px 0;\n
 }\n
 /* nasty padding */ \n
@@ -5198,7 +5202,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.4015.5592.23057</string> </value>
+                <value> <string>947.25592.30077.20258</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -5216,7 +5220,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447356677.5</float>
+                        <float>1448651090.87</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
