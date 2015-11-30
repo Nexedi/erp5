@@ -66,19 +66,6 @@ if context.getSource():\n
 if context.getDestination():\n
   base_category_tuple += (\'destination\',)\n
 \n
-if context.getParentValue().getParentValue().getPortalType() in (\n
-    ## XXX There is no portal type group for trade conditions.\n
-    \'Sale Trade Condition\',\n
-    \'Purchase Trade Condition\',\n
-    \'Internal Trade Condition\'):\n
-  # Supply Lines from trade conditions are set as specialise to this trade condition,\n
-  # so that we can apply a predicate on movements later. Supply Lines from trade condition\n
-  # only apply on movements using these trade conditions.\n
-  category_list = context.getCategoryList() + [\'specialise/%s\' % context.getParentValue().getParentValue().getRelativeUrl()]\n
-  context = context.asContext(categories=category_list)\n
-  base_category_tuple += (\'specialise\', )\n
-\n
-\n
 #backwards compatibility\n
 mapped_value_property_list = context.getMappedValuePropertyList()\n
 if not \'priced_quantity\' in mapped_value_property_list:\n

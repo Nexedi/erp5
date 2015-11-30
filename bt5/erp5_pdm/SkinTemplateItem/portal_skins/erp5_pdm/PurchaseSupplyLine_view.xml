@@ -84,7 +84,6 @@
                     <value>
                       <list>
                         <string>my_resource_title</string>
-                        <string>my_product_line</string>
                         <string>my_source_title</string>
                         <string>my_source_reference</string>
                         <string>my_priced_quantity</string>
