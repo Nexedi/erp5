@@ -126,6 +126,9 @@ class FolderMixIn(ExtensionClass.Base):
       container = self
     temp_container = container.isTempObject()
 
+    if getattr(aq_base(self), migration_process_lock, None) is not None:
+      raise RuntimeError("Folder is running migration to HBTree")
+
     # The only case where the id is unused (because the new object is not added
     # to its parent) is when a temp object is created inside a non-temp object.
     if id is None and (temp_container or not temp_object):
@@ -171,6 +174,8 @@ class FolderMixIn(ExtensionClass.Base):
     """ delete items in this folder.
       `id` can be a list or a string.
     """
+    if getattr(aq_base(self), migration_process_lock, None) is not None:
+      raise RuntimeError("Folder is running migration to HBTree")
     error_message = 'deleteContent only accepts string or list of strings not '
     if isinstance(id, str):
       self._delObject(id)
