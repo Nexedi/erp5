@@ -84,9 +84,6 @@ from zLOG import LOG, WARNING
 import warnings
 from urlparse import urlparse
 
-# variable to inform about migration process
-migration_process_lock = "_migration_in_progress"
-
 REINDEX_SPLIT_COUNT = 100 # if folder containes more than this, reindexing should be splitted.
 from Products.ERP5Type.Message import translateString
 
@@ -103,6 +100,8 @@ def dummyTestAfter(object,REQUEST=None):
 class FolderMixIn(ExtensionClass.Base):
   """A mixin class for folder operations, add content, delete content etc.
   """
+  # flag to hold the status of migration for this folder
+  _migration_in_progress = False
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -164,6 +163,13 @@ class FolderMixIn(ExtensionClass.Base):
                            **kw)
     if temp_container:
       container._setObject(new_id, new_instance.aq_base)
+    elif self._migration_in_progress:
+      raise RuntimeError("Folder is running migration to HBTree")
+    else:
+      # make sure another zope hasn't started to migrate to HBTree
+      connection = self._p_jar
+      connection is None or connection.readCurrent(self)
+
     return new_instance
 
   security.declareProtected(
@@ -172,6 +178,8 @@ class FolderMixIn(ExtensionClass.Base):
     """ delete items in this folder.
       `id` can be a list or a string.
     """
+    if self._migration_in_progress:
+      raise RuntimeError("Folder is running migration to HBTree")
     error_message = 'deleteContent only accepts string or list of strings not '
     if isinstance(id, str):
       self._delObject(id)
@@ -637,13 +645,12 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
     # if folder is already migrated or migration process is in progress
     # do not do anything beside logging
-    if getattr(self, migration_process_lock, None) is not None \
-       or self.isHBTree():
+    if self._migration_in_progress or self.isHBTree():
       LOG('migrateToHBTree', WARNING,
         'Folder %s already migrated'%(self.getPath(),))
       return
-    # lock folder migration early
-    setattr(self, migration_process_lock, 1)
+    # lock folder migration
+    self._migration_in_progress = True
 
     # we may want to change all objects ids before migrating to new folder type
     # set new id generator here so that object created while migration
@@ -683,7 +690,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     Remove remaining attributes from previous btree
     and migration
     """
-    for attr in "_tree", "_mt_index", migration_process_lock:
+    for attr in "_tree", "_mt_index", "_migration_in_progress":
       try:
         delattr(self, attr)
       except AttributeError:
