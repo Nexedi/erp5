@@ -153,7 +153,7 @@ class ERP5UserManager(BasePlugin):
           if assignment.hasStopDate() and \
               assignment.getStopDate() < login_date:
             continue
-        valid_assignment_list.append(assignment)
+          valid_assignment_list.append(assignment)
 
         if (ignore_password or pw_validate(user.getPassword(), password)) and \
             len(valid_assignment_list) and user \
