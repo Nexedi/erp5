@@ -186,6 +186,16 @@ class TestResource(ERP5TypeTestCase):
                               quantity=0.001)
       gram_definition.validate()
 
+    # create some product line categories
+    product_line = self.portal.portal_categories.product_line
+    if product_line._getOb('a', None) is None:
+      product_line.newContent(
+          id='a',
+          portal_type='Category')
+    if product_line._getOb('b', None) is None:
+      product_line.newContent(
+          id='b',
+          portal_type='Category')
 
   def stepCreateResource(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1066,6 +1076,43 @@ class TestResource(ERP5TypeTestCase):
     # price applies
     self.assertEqual(1000, sale_order_line.getPrice())
     self.assertEqual(5000, sale_order_line.getTotalPrice())
+
+  def testGetPriceProductLine(self):
+    """Test supply line set for a product line.
+    """
+    # This supply line defines a price applicable for all resources member
+    # of product line a
+    supply = self.portal.getDefaultModule(self.sale_supply_portal_type).newContent(
+                     portal_type=self.sale_supply_portal_type)
+    supply_line = supply.newContent(portal_type=self.sale_supply_line_portal_type)
+    supply_line.setProductLineValue(self.portal.portal_categories.product_line.a)
+    supply_line.setBasePrice(1000)
+    supply.validate()
+
+    resource_a = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+    resource_a.setProductLineValue(self.portal.portal_categories.product_line.a)
+    resource_b = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+    resource_b.setProductLineValue(self.portal.portal_categories.product_line.b)
+
+    self.tic()
+    sale_order_line = self.portal.getDefaultModule("Sale Order").newContent(
+                              portal_type='Sale Order').newContent(
+                          portal_type=self.sale_order_line_portal_type,
+                          resource_value=resource_a,
+                          quantity=1)
+    # resource_a is member of product_line/a, so our supply line applies.
+    self.assertEqual(1000, sale_order_line.getPrice())
+
+    sale_order_line = self.portal.getDefaultModule("Sale Order").newContent(
+                              portal_type='Sale Order').newContent(
+                          portal_type=self.sale_order_line_portal_type,
+                          resource_value=resource_b,
+                          quantity=1)
+    # resource_b is member of product_line/b, so our supply line does not apply.
+    self.assertEqual(None, sale_order_line.getPrice())
+
 
   def testQuantityPrecision(self):
     """test how to define quantity precision on resources.

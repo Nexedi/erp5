@@ -66,6 +66,9 @@ if context.getSource():\n
 if context.getDestination():\n
   base_category_tuple += (\'destination\',)\n
 \n
+if context.hasProductLine():\n
+  base_category_tuple += (\'product_line\', )\n
+\n
 if context.getParentValue().getParentValue().getPortalType() in (\n
     ## XXX There is no portal type group for trade conditions.\n
     \'Sale Trade Condition\',\n
