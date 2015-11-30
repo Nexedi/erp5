@@ -78,6 +78,11 @@ else:\n
   if validation_state is None:\n
     validation_state = \'validated\'\n
   kw.setdefault(\'portal_type\', \'Currency Exchange Line\')\n
+\n
+  # discard `categories` that might have been passed by Movement_getPriceCalculationOperandDict\n
+  # and that searchPredicateList does not accept.\n
+  kw.pop(\'categories\', None)\n
+\n
   predicate_list = context.portal_domains.searchPredicateList(\n
       context=movement,\n
       validation_state=validation_state,\n
