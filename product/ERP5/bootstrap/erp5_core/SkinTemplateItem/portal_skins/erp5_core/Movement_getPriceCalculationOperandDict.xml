@@ -178,6 +178,10 @@ if specialise_set:\n
   kw[\'categories\'] = kw.get(\'categories\', []) + [\'specialise/%s\' % x for x in specialise_set]\n
 \n
 if resource is not None:\n
+  product_line = resource.getProductLine()\n
+  if product_line:\n
+    kw[\'categories\'] = kw.get(\'categories\', []) + [\'product_line/%s\' % product_line]\n
+\n
   if isPricingOptimise():\n
     return getOptimisedPriceCalculationOperandDict(default=default, context=context, **kw)\n
   else:\n
