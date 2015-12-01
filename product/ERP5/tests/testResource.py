@@ -192,6 +192,9 @@ class TestResource(ERP5TypeTestCase):
       product_line.newContent(
           id='a',
           portal_type='Category')
+      product_line.a.newContent(
+          id='a1',
+          portal_type='Category')
     if product_line._getOb('b', None) is None:
       product_line.newContent(
           id='b',
@@ -1092,6 +1095,9 @@ class TestResource(ERP5TypeTestCase):
     resource_a = self.portal.getDefaultModule(self.product_portal_type)\
                 .newContent(portal_type=self.product_portal_type)
     resource_a.setProductLineValue(self.portal.portal_categories.product_line.a)
+    resource_a_1 = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+    resource_a_1.setProductLineValue(self.portal.portal_categories.product_line.a.a1)
     resource_b = self.portal.getDefaultModule(self.product_portal_type)\
                 .newContent(portal_type=self.product_portal_type)
     resource_b.setProductLineValue(self.portal.portal_categories.product_line.b)
@@ -1103,6 +1109,14 @@ class TestResource(ERP5TypeTestCase):
                           resource_value=resource_a,
                           quantity=1)
     # resource_a is member of product_line/a, so our supply line applies.
+    self.assertEqual(1000, sale_order_line.getPrice())
+
+    sale_order_line = self.portal.getDefaultModule("Sale Order").newContent(
+                              portal_type='Sale Order').newContent(
+                          portal_type=self.sale_order_line_portal_type,
+                          resource_value=resource_a_1,
+                          quantity=1)
+    # resource_a_1 is member of product_line/a/a1, so our supply line applies.
     self.assertEqual(1000, sale_order_line.getPrice())
 
     sale_order_line = self.portal.getDefaultModule("Sale Order").newContent(

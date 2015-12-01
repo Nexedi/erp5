@@ -67,6 +67,9 @@ if context.getDestination():\n
   base_category_tuple += (\'destination\',)\n
 \n
 if context.hasProductLine():\n
+  category_list = context.getCategoryList() + [\n
+    pl.getRelativeUrl() for pl in context.getProductLineValue().getCategoryChildValueList()]\n
+  context = context.asContext(categories=category_list)\n
   base_category_tuple += (\'product_line\', )\n
 \n
 if context.getParentValue().getParentValue().getPortalType() in (\n
