@@ -411,6 +411,15 @@ html body .ui-content-maximize {\n
   height: 100%;\n
   width: 100%;}\n
 \n
+/* Fullscreen content section */\n
+.ui-content-fullscreen {\n
+  position: fixed;\n
+  top: 0; left: 0; right: 0; bottom: 0;\n
+  height: auto;\n
+  z-index: 2000;\n
+}\n
+\n
+\n
 /*\n
    -------------------------------------------------------------------------\n
    ---------------------- Form Field Positioning ---------------------------\n
@@ -5198,7 +5207,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.4015.5592.23057</string> </value>
+                <value> <string>947.30044.52539.27340</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -5216,7 +5225,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447356677.5</float>
+                        <float>1448920625.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
