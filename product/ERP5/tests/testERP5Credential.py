@@ -430,6 +430,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     credential_update = credential_update_module.newContent(\
         first_name='Homie',
         last_name='Simpsons', # add a 's' to the end of the last_name
+        reference='homie',
         password='new_password',
         default_email_text='homie.simpsons@fox.com',
         destination_decision=homie.getRelativeUrl())
@@ -548,13 +549,19 @@ class TestERP5Credential(ERP5TypeTestCase):
     person_module = portal.getDefaultModule('Person')
     person = person_module.newContent(title='Barney',
                              reference='barney',
-                             password='secret',
                              start_date=DateTime('1970/01/01'),
                              default_email_text='barney@duff.com')
     # create an assignment
     assignment = person.newContent(portal_type='Assignment',
                       function='member')
     assignment.open()
+    # create a login
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference=person.getReference(),
+      password='secret',
+    )
+    login.validate()
     sequence.edit(person_reference=person.getReference(),
                   default_email_text=person.getDefaultEmailText())
 
@@ -572,12 +579,18 @@ class TestERP5Credential(ERP5TypeTestCase):
       person_module = portal.getDefaultModule('Person')
       person = person_module.newContent(title=reference,
                                reference=reference,
-                               password='secret',
                                default_email_text=default_email_text)
       # create an assignment
       assignment = person.newContent(portal_type='Assignment',
                         function='member')
       assignment.open()
+      # create a login
+      login = person.newContent(
+        portal_type='ERP5 Login',
+        reference=person.getReference(),
+        password='secret',
+      )
+      login.validate()
       person_list.append(person)
 
     sequence.edit(person_list=person_list,

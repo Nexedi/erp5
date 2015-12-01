@@ -273,11 +273,10 @@ class PasswordTool(BaseTool):
       # XXX: incorrect grammar
       return error("Date has expire.")
     del self._password_request_dict[password_key]
-    persons = self.getPortalObject().acl_users.erp5_users.getUserByLogin(
-      register_user_login)
-    person = persons[0]
-    person._forceSetPassword(password)
-    person.reindexObject()
+    login = self.getPortalObject().acl_users.erp5_users.getLoginObject(
+      register_user_login, 'ERP5 Login')
+    login._forceSetPassword(password)
+    login.reindexObject()
     return redirect(REQUEST, site_url,
                     translateString("Password changed."))
 

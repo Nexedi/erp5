@@ -314,14 +314,14 @@ class TestUserManagement(ERP5TypeTestCase):
     login = [x for x in pers.objectValues(portal_type='ERP5 Login')][0]
     result = self.portal.portal_preferences.PreferenceTool_setNewPassword(
       dialog_id='PreferenceTool_viewChangePasswordDialog',
-      login=login.getRelativeUrl(),
+      reference=login.getReference(),
       current_password='wrong_secret',
       new_password='new_secret',
     )
     self.assertEqual(result, self.portal.absolute_url()+'/portal_preferences/PreferenceTool_viewChangePasswordDialog?portal_status_message=Current%20password%20is%20wrong.')
     result = self.portal.portal_preferences.PreferenceTool_setNewPassword(
       dialog_id='PreferenceTool_viewChangePasswordDialog',
-      login=login.getRelativeUrl(),
+      reference=login.getReference(),
       current_password='secret',
       new_password='new_secret',
     )
