@@ -411,6 +411,15 @@ html body .ui-content-maximize {\n
   height: 100%;\n
   width: 100%;}\n
 \n
+/* Fullscreen content section */\n
+.ui-content-fullscreen {\n
+  position: fixed;\n
+  top: 0; left: 0; right: 0; bottom: 0;\n
+  height: auto;\n
+  z-index: 2000;\n
+}\n
+\n
+\n
 /*\n
    -------------------------------------------------------------------------\n
    ---------------------- Form Field Positioning ---------------------------\n
