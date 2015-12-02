@@ -106,6 +106,9 @@
   <td></td>\n
 </tr>\n
 \n
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />\n
+\n
+\n
 <tr>\n
   <td>waitForElementPresent</td>\n
   <td>//form[@class=\'sort_form\']</td>\n
