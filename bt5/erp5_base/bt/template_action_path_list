@@ -80,6 +80,7 @@ Person | person_detailed_report
 Person | terminate_career
 Person | view
 Preference | base_preference
+Preference | change_password
 Previous Causality Movement Group | view
 Property Assignment Movement Group | view
 Property Grouping Movement Group | view
