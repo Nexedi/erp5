@@ -23,7 +23,6 @@ Attribute Unicity Constraint | view
 Base Category | view
 Base Domain | view
 Base Type | action_view
-Base Type | jump_property_sheets
 Base Type | role_view
 Base Type | translation_view
 Base Type | update_local_roles
@@ -80,17 +79,14 @@ Id Tool | view
 Memcached Plugin | view
 Memcached Tool | view
 Predicate | view
-Preference Tool Type | jump_property_sheets
 Preference Tool Type | view
 Preference Tool | advanced
 Preference Tool | view
 Preference Type | action_view
-Preference Type | jump_property_sheets
 Preference Type | role_view
 Preference Type | translation_view
 Preference Type | update_local_roles
 Preference Type | view
-Preference | change_password
 Preference | html_style_preferences
 Preference | view
 Preference | view_template
