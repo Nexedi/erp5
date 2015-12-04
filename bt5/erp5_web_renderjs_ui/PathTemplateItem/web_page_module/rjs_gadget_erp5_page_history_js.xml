@@ -101,9 +101,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, objectToSearchText */\n
+/*global window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, Query */\n
 /*jslint nomen: true, indent: 2, maxerr: 3 */\n
-(function (window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, objectToSearchText) {\n
+(function (window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, Query) {\n
   "use strict";\n
 \n
   /////////////////////////////////////////////////////////////////\n
@@ -165,7 +165,7 @@
             };\n
           }\n
           return gadget.jio_allDocs({\n
-            query: objectToSearchText(new ComplexQuery({operator: \'OR\', query_list: query_list})),\n
+            query: Query.objectToSearchText(new ComplexQuery({operator: \'OR\', query_list: query_list})),\n
             select_list: ["title", "portal_type"],\n
             limit: id_list.length\n
           });\n
@@ -212,7 +212,7 @@
             my_translated_html;\n
         });\n
     });\n
-}(window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, objectToSearchText));
+}(window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, Query));
 
 ]]></string> </value>
         </item>
@@ -349,7 +349,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.22112.65196.42461</string> </value>
+                <value> <string>947.22494.14742.48810</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -367,7 +367,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448442387.23</float>
+                        <float>1449229724.79</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

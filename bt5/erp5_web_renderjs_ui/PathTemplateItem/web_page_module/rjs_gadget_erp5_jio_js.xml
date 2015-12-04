@@ -101,13 +101,14 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP, UriTemplate, URI, objectToSearchText, SimpleQuery, ComplexQuery, jIO */\n
+/*global window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO */\n
 /*jslint indent: 2, maxerr: 3, nomen: true */\n
-(function (window, rJS, RSVP, UriTemplate, URI, objectToSearchText, SimpleQuery, ComplexQuery, jIO) {\n
+(function (window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO) {\n
   "use strict";\n
 \n
   function wrapJioCall(gadget, method_name, argument_list) {\n
     var storage = gadget.state_parameter_dict.jio_storage;\n
+\n
     return storage[method_name].apply(storage, argument_list)\n
       .push(undefined, function (error) {\n
         if ((error.target !== undefined) && (error.target.status === 401)) {\n
@@ -218,14 +219,14 @@
               if (result_list) {\n
                 local_roles = result_list;\n
                 parsed_query.query_list.splice(i, 1);\n
-                query = objectToSearchText(parsed_query);\n
+                query = Query.objectToSearchText(parsed_query);\n
                 i = parsed_query.query_list.length;\n
               } else {\n
                 result_list = isMultipleLocalRoles(sub_query);\n
                 if (result_list) {\n
                   local_roles = result_list;\n
                   parsed_query.query_list.splice(i, 1);\n
-                  query = objectToSearchText(parsed_query);\n
+                  query = Query.objectToSearchText(parsed_query);\n
                   i = parsed_query.query_list.length;\n
                 }\n
               }\n
@@ -280,7 +281,7 @@
       return wrapJioCall(this, \'putAttachment\', [id, name, JSON.stringify(json)]);\n
     });\n
 \n
-}(window, rJS, RSVP, UriTemplate, URI, objectToSearchText, SimpleQuery, ComplexQuery, jIO));
+}(window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO));
 
 ]]></string> </value>
         </item>
@@ -417,7 +418,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.15020.24457.52667</string> </value>
+                <value> <string>947.36789.31946.17646</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -435,7 +436,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448016802.0</float>
+                        <float>1449236578.55</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

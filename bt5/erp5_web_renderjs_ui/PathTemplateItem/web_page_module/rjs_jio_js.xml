@@ -3998,229 +3998,6 @@ if (typeof define === \'function\' && define.amd) {\n
         makeGlobal();\n
     }\n
 }).call(this);\n
-;/*jslint indent: 2, maxlen: 80, sloppy: true */\n
-\n
-var query_class_dict = {};\n
-;/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
-/*global parseStringToObject: true, emptyFunction: true, sortOn: true, limit:\n
-  true, select: true, window, stringEscapeRegexpCharacters: true,\n
-  deepClone, RSVP*/\n
-\n
-/**\n
- * The query to use to filter a list of objects.\n
- * This is an abstract class.\n
- *\n
- * @class Query\n
- * @constructor\n
- */\n
-function Query() {\n
-\n
-  /**\n
-   * Called before parsing the query. Must be overridden!\n
-   *\n
-   * @method onParseStart\n
-   * @param  {Object} object The object shared in the parse process\n
-   * @param  {Object} option Some option gave in parse()\n
-   */\n
-  this.onParseStart = emptyFunction;\n
-\n
-  /**\n
-   * Called when parsing a simple query. Must be overridden!\n
-   *\n
-   * @method onParseSimpleQuery\n
-   * @param  {Object} object The object shared in the parse process\n
-   * @param  {Object} option Some option gave in parse()\n
-   */\n
-  this.onParseSimpleQuery = emptyFunction;\n
-\n
-  /**\n
-   * Called when parsing a complex query. Must be overridden!\n
-   *\n
-   * @method onParseComplexQuery\n
-   * @param  {Object} object The object shared in the parse process\n
-   * @param  {Object} option Some option gave in parse()\n
-   */\n
-  this.onParseComplexQuery = emptyFunction;\n
-\n
-  /**\n
-   * Called after parsing the query. Must be overridden!\n
-   *\n
-   * @method onParseEnd\n
-   * @param  {Object} object The object shared in the parse process\n
-   * @param  {Object} option Some option gave in parse()\n
-   */\n
-  this.onParseEnd = emptyFunction;\n
-\n
-}\n
-\n
-/**\n
- * Filter the item list with matching item only\n
- *\n
- * @method exec\n
- * @param  {Array} item_list The list of object\n
- * @param  {Object} [option] Some operation option\n
- * @param  {Array} [option.select_list] A object keys to retrieve\n
- * @param  {Array} [option.sort_on] Couples of object keys and "ascending"\n
- *                 or "descending"\n
- * @param  {Array} [option.limit] Couple of integer, first is an index and\n
- *                 second is the length.\n
- */\n
-Query.prototype.exec = function (item_list, option) {\n
-  var i, promises = [];\n
-  if (!Array.isArray(item_list)) {\n
-    throw new TypeError("Query().exec(): Argument 1 is not of type \'array\'");\n
-  }\n
-  if (option === undefined) {\n
-    option = {};\n
-  }\n
-  if (typeof option !== \'object\') {\n
-    throw new TypeError("Query().exec(): " +\n
-                        "Optional argument 2 is not of type \'object\'");\n
-  }\n
-  for (i = 0; i < item_list.length; i += 1) {\n
-    if (!item_list[i]) {\n
-      promises.push(RSVP.resolve(false));\n
-    } else {\n
-      promises.push(this.match(item_list[i]));\n
-    }\n
-  }\n
-  return new RSVP.Queue()\n
-    .push(function () {\n
-      return RSVP.all(promises);\n
-    })\n
-    .push(function (answers) {\n
-      var j;\n
-      for (j = answers.length - 1; j >= 0; j -= 1) {\n
-        if (!answers[j]) {\n
-          item_list.splice(j, 1);\n
-        }\n
-      }\n
-      if (option.sort_on) {\n
-        return sortOn(option.sort_on, item_list);\n
-      }\n
-    })\n
-    .push(function () {\n
-      if (option.limit) {\n
-        return limit(option.limit, item_list);\n
-      }\n
-    })\n
-    .push(function () {\n
-      return select(option.select_list || [], item_list);\n
-    })\n
-    .push(function () {\n
-      return item_list;\n
-    });\n
-};\n
-\n
-/**\n
- * Test if an item matches this query\n
- *\n
- * @method match\n
- * @param  {Object} item The object to test\n
- * @return {Boolean} true if match, false otherwise\n
- */\n
-Query.prototype.match = function () {\n
-  return RSVP.resolve(true);\n
-};\n
-\n
-\n
-/**\n
- * Browse the Query in deep calling parser method in each step.\n
- *\n
- * `onParseStart` is called first, on end `onParseEnd` is called.\n
- * It starts from the simple queries at the bottom of the tree calling the\n
- * parser method `onParseSimpleQuery`, and go up calling the\n
- * `onParseComplexQuery` method.\n
- *\n
- * @method parse\n
- * @param  {Object} option Any options you want (except \'parsed\')\n
- * @return {Any} The parse result\n
- */\n
-Query.prototype.parse = function (option) {\n
-  var that = this,\n
-    object;\n
-  /**\n
-   * The recursive parser.\n
-   *\n
-   * @param  {Object} object The object shared in the parse process\n
-   * @param  {Object} options Some options usable in the parseMethods\n
-   * @return {Any} The parser result\n
-   */\n
-  function recParse(object, option) {\n
-    var query = object.parsed,\n
-      queue = new RSVP.Queue(),\n
-      i;\n
-\n
-    function enqueue(j) {\n
-      queue\n
-        .push(function () {\n
-          object.parsed = query.query_list[j];\n
-          return recParse(object, option);\n
-        })\n
-        .push(function () {\n
-          query.query_list[j] = object.parsed;\n
-        });\n
-    }\n
-\n
-    if (query.type === "complex") {\n
-\n
-\n
-      for (i = 0; i < query.query_list.length; i += 1) {\n
-        enqueue(i);\n
-      }\n
-\n
-      return queue\n
-        .push(function () {\n
-          object.parsed = query;\n
-          return that.onParseComplexQuery(object, option);\n
-        });\n
-\n
-    }\n
-    if (query.type === "simple") {\n
-      return that.onParseSimpleQuery(object, option);\n
-    }\n
-  }\n
-  object = {\n
-    parsed: JSON.parse(JSON.stringify(that.serialized()))\n
-  };\n
-  return new RSVP.Queue()\n
-    .push(function () {\n
-      return that.onParseStart(object, option);\n
-    })\n
-    .push(function () {\n
-      return recParse(object, option);\n
-    })\n
-    .push(function () {\n
-      return that.onParseEnd(object, option);\n
-    })\n
-    .push(function () {\n
-      return object.parsed;\n
-    });\n
-\n
-};\n
-\n
-/**\n
- * Convert this query to a parsable string.\n
- *\n
- * @method toString\n
- * @return {String} The string version of this query\n
- */\n
-Query.prototype.toString = function () {\n
-  return "";\n
-};\n
-\n
-/**\n
- * Convert this query to an jsonable object in order to be remake thanks to\n
- * QueryFactory class.\n
- *\n
- * @method serialized\n
- * @return {Object} The jsonable object\n
- */\n
-Query.prototype.serialized = function () {\n
-  return undefined;\n
-};\n
-\n
-window.Query = Query;\n
 ;/**\n
  * Parse a text request to a json query object tree\n
  *\n
@@ -4924,896 +4701,1010 @@ if ((error_count = __NODEJS_parse(string, error_offsets, error_lookaheads)) > 0)
 ;  return result;\n
 } // parseStringToObject\n
 \n
-Query.parseStringToObject = parseStringToObject;\n
-;/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
-/*global Query: true, query_class_dict: true, inherits: true,\n
-         window, QueryFactory, RSVP */\n
+;/*global RSVP, window, parseStringToObject*/\n
+/*jslint nomen: true, maxlen: 90*/\n
+(function (RSVP, window, parseStringToObject) {\n
+  "use strict";\n
 \n
-/**\n
- * The ComplexQuery inherits from Query, and compares one or several metadata\n
- * values.\n
- *\n
- * @class ComplexQuery\n
- * @extends Query\n
- * @param  {Object} [spec={}] The specifications\n
- * @param  {String} [spec.operator="AND"] The compare method to use\n
- * @param  {String} spec.key The metadata key\n
- * @param  {String} spec.value The value of the metadata to compare\n
- */\n
-function ComplexQuery(spec, key_schema) {\n
-  Query.call(this);\n
+  var query_class_dict = {},\n
+    regexp_escape = /[\\-\\[\\]{}()*+?.,\\\\\\^$|#\\s]/g,\n
+    regexp_percent = /%/g,\n
+    regexp_underscore = /_/g,\n
+    regexp_operator = /^(?:AND|OR|NOT)$/i,\n
+    regexp_comparaison = /^(?:!?=|<=?|>=?)$/i;\n
 \n
   /**\n
-   * Logical operator to use to compare object values\n
+   * Convert metadata values to array of strings. ex:\n
    *\n
-   * @attribute operator\n
-   * @type String\n
-   * @default "AND"\n
-   * @optional\n
+   *     "a" -> ["a"],\n
+   *     {"content": "a"} -> ["a"]\n
+   *\n
+   * @param  {Any} value The metadata value\n
+   * @return {Array} The value in string array format\n
    */\n
-  this.operator = spec.operator;\n
+  function metadataValueToStringArray(value) {\n
+    var i, new_value = [];\n
+    if (value === undefined) {\n
+      return undefined;\n
+    }\n
+    if (!Array.isArray(value)) {\n
+      value = [value];\n
+    }\n
+    for (i = 0; i < value.length; i += 1) {\n
+      if (typeof value[i] === \'object\') {\n
+        new_value[i] = value[i].content;\n
+      } else {\n
+        new_value[i] = value[i];\n
+      }\n
+    }\n
+    return new_value;\n
+  }\n
 \n
   /**\n
-   * The sub Query list which are used to query an item.\n
+   * A sort function to sort items by key\n
    *\n
-   * @attribute query_list\n
-   * @type Array\n
-   * @default []\n
-   * @optional\n
+   * @param  {String} key The key to sort on\n
+   * @param  {String} [way="ascending"] \'ascending\' or \'descending\'\n
+   * @return {Function} The sort function\n
    */\n
-  this.query_list = spec.query_list || [];\n
-  /*jslint unparam: true*/\n
-  this.query_list = this.query_list.map(\n
-    // decorate the map to avoid sending the index as key_schema argument\n
-    function (o, i) { return QueryFactory.create(o, key_schema); }\n
-  );\n
-  /*jslint unparam: false*/\n
-\n
-}\n
-inherits(ComplexQuery, Query);\n
-\n
-ComplexQuery.prototype.operator = "AND";\n
-ComplexQuery.prototype.type = "complex";\n
-\n
-/**\n
- * #crossLink "Query/match:method"\n
- */\n
-ComplexQuery.prototype.match = function (item) {\n
-  var operator = this.operator;\n
-  if (!(/^(?:AND|OR|NOT)$/i.test(operator))) {\n
-    operator = "AND";\n
+  function sortFunction(key, way) {\n
+    var result;\n
+    if (way === \'descending\') {\n
+      result = 1;\n
+    } else if (way === \'ascending\') {\n
+      result = -1;\n
+    } else {\n
+      throw new TypeError("Query.sortFunction(): " +\n
+                          "Argument 2 must be \'ascending\' or \'descending\'");\n
+    }\n
+    return function (a, b) {\n
+      // this comparison is 5 times faster than json comparison\n
+      var i, l;\n
+      a = metadataValueToStringArray(a[key]) || [];\n
+      b = metadataValueToStringArray(b[key]) || [];\n
+      l = a.length > b.length ? a.length : b.length;\n
+      for (i = 0; i < l; i += 1) {\n
+        if (a[i] === undefined) {\n
+          return result;\n
+        }\n
+        if (b[i] === undefined) {\n
+          return -result;\n
+        }\n
+        if (a[i] > b[i]) {\n
+          return -result;\n
+        }\n
+        if (a[i] < b[i]) {\n
+          return result;\n
+        }\n
+      }\n
+      return 0;\n
+    };\n
   }\n
-  return this[operator.toUpperCase()](item);\n
-};\n
 \n
-/**\n
- * #crossLink "Query/toString:method"\n
- */\n
-ComplexQuery.prototype.toString = function () {\n
-  var str_list = [], this_operator = this.operator;\n
-  if (this.operator === "NOT") {\n
-    str_list.push("NOT (");\n
-    str_list.push(this.query_list[0].toString());\n
-    str_list.push(")");\n
-    return str_list.join(" ");\n
+  /**\n
+   * Sort a list of items, according to keys and directions.\n
+   *\n
+   * @param  {Array} sort_on_option List of couples [key, direction]\n
+   * @param  {Array} list The item list to sort\n
+   * @return {Array} The filtered list\n
+   */\n
+  function sortOn(sort_on_option, list) {\n
+    var sort_index;\n
+    if (!Array.isArray(sort_on_option)) {\n
+      throw new TypeError("jioquery.sortOn(): " +\n
+                          "Argument 1 is not of type \'array\'");\n
+    }\n
+    for (sort_index = sort_on_option.length - 1; sort_index >= 0;\n
+         sort_index -= 1) {\n
+      list.sort(sortFunction(\n
+        sort_on_option[sort_index][0],\n
+        sort_on_option[sort_index][1]\n
+      ));\n
+    }\n
+    return list;\n
   }\n
-  this.query_list.forEach(function (query) {\n
-    str_list.push("(");\n
-    str_list.push(query.toString());\n
-    str_list.push(")");\n
-    str_list.push(this_operator);\n
-  });\n
-  str_list.length -= 1;\n
-  return str_list.join(" ");\n
-};\n
 \n
-/**\n
- * #crossLink "Query/serialized:method"\n
- */\n
-ComplexQuery.prototype.serialized = function () {\n
-  var s = {\n
-    "type": "complex",\n
-    "operator": this.operator,\n
-    "query_list": []\n
+  /**\n
+   * Limit a list of items, according to index and length.\n
+   *\n
+   * @param  {Array} limit_option A couple [from, length]\n
+   * @param  {Array} list The item list to limit\n
+   * @return {Array} The filtered list\n
+   */\n
+  function limit(limit_option, list) {\n
+    if (!Array.isArray(limit_option)) {\n
+      throw new TypeError("jioquery.limit(): " +\n
+                          "Argument 1 is not of type \'array\'");\n
+    }\n
+    if (!Array.isArray(list)) {\n
+      throw new TypeError("jioquery.limit(): " +\n
+                          "Argument 2 is not of type \'array\'");\n
+    }\n
+    list.splice(0, limit_option[0]);\n
+    if (limit_option[1]) {\n
+      list.splice(limit_option[1]);\n
+    }\n
+    return list;\n
+  }\n
+\n
+  /**\n
+   * Filter a list of items, modifying them to select only wanted keys.\n
+   *\n
+   * @param  {Array} select_option Key list to keep\n
+   * @param  {Array} list The item list to filter\n
+   * @return {Array} The filtered list\n
+   */\n
+  function select(select_option, list) {\n
+    var i, j, new_item;\n
+    if (!Array.isArray(select_option)) {\n
+      throw new TypeError("jioquery.select(): " +\n
+                          "Argument 1 is not of type Array");\n
+    }\n
+    if (!Array.isArray(list)) {\n
+      throw new TypeError("jioquery.select(): " +\n
+                          "Argument 2 is not of type Array");\n
+    }\n
+    for (i = 0; i < list.length; i += 1) {\n
+      new_item = {};\n
+      for (j = 0; j < select_option.length; j += 1) {\n
+        if (list[i].hasOwnProperty([select_option[j]])) {\n
+          new_item[select_option[j]] = list[i][select_option[j]];\n
+        }\n
+      }\n
+      for (j in new_item) {\n
+        if (new_item.hasOwnProperty(j)) {\n
+          list[i] = new_item;\n
+          break;\n
+        }\n
+      }\n
+    }\n
+    return list;\n
+  }\n
+\n
+  /**\n
+   * The query to use to filter a list of objects.\n
+   * This is an abstract class.\n
+   *\n
+   * @class Query\n
+   * @constructor\n
+   */\n
+  function Query() {\n
+\n
+    /**\n
+     * Called before parsing the query. Must be overridden!\n
+     *\n
+     * @method onParseStart\n
+     * @param  {Object} object The object shared in the parse process\n
+     * @param  {Object} option Some option gave in parse()\n
+     */\n
+  //   this.onParseStart = emptyFunction;\n
+\n
+    /**\n
+     * Called when parsing a simple query. Must be overridden!\n
+     *\n
+     * @method onParseSimpleQuery\n
+     * @param  {Object} object The object shared in the parse process\n
+     * @param  {Object} option Some option gave in parse()\n
+     */\n
+  //   this.onParseSimpleQuery = emptyFunction;\n
+\n
+    /**\n
+     * Called when parsing a complex query. Must be overridden!\n
+     *\n
+     * @method onParseComplexQuery\n
+     * @param  {Object} object The object shared in the parse process\n
+     * @param  {Object} option Some option gave in parse()\n
+     */\n
+  //   this.onParseComplexQuery = emptyFunction;\n
+\n
+    /**\n
+     * Called after parsing the query. Must be overridden!\n
+     *\n
+     * @method onParseEnd\n
+     * @param  {Object} object The object shared in the parse process\n
+     * @param  {Object} option Some option gave in parse()\n
+     */\n
+  //   this.onParseEnd = emptyFunction;\n
+\n
+    return;\n
+  }\n
+\n
+  /**\n
+   * Filter the item list with matching item only\n
+   *\n
+   * @method exec\n
+   * @param  {Array} item_list The list of object\n
+   * @param  {Object} [option] Some operation option\n
+   * @param  {Array} [option.select_list] A object keys to retrieve\n
+   * @param  {Array} [option.sort_on] Couples of object keys and "ascending"\n
+   *                 or "descending"\n
+   * @param  {Array} [option.limit] Couple of integer, first is an index and\n
+   *                 second is the length.\n
+   */\n
+  Query.prototype.exec = function (item_list, option) {\n
+    if (!Array.isArray(item_list)) {\n
+      throw new TypeError("Query().exec(): Argument 1 is not of type \'array\'");\n
+    }\n
+    if (option === undefined) {\n
+      option = {};\n
+    }\n
+    if (typeof option !== \'object\') {\n
+      throw new TypeError("Query().exec(): " +\n
+                          "Optional argument 2 is not of type \'object\'");\n
+    }\n
+    var context = this,\n
+      i;\n
+    for (i = item_list.length - 1; i >= 0; i -= 1) {\n
+      if (!context.match(item_list[i])) {\n
+        item_list.splice(i, 1);\n
+      }\n
+    }\n
+\n
+    if (option.sort_on) {\n
+      sortOn(option.sort_on, item_list);\n
+    }\n
+\n
+    if (option.limit) {\n
+      limit(option.limit, item_list);\n
+    }\n
+\n
+    select(option.select_list || [], item_list);\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return item_list;\n
+      });\n
   };\n
-  this.query_list.forEach(function (query) {\n
-    s.query_list.push(\n
-      typeof query.toJSON === "function" ? query.toJSON() : query\n
-    );\n
-  });\n
-  return s;\n
-};\n
-ComplexQuery.prototype.toJSON = ComplexQuery.prototype.serialized;\n
 \n
-/**\n
- * Comparison operator, test if all sub queries match the\n
- * item value\n
- *\n
- * @method AND\n
- * @param  {Object} item The item to match\n
- * @return {Boolean} true if all match, false otherwise\n
- */\n
-ComplexQuery.prototype.AND = function (item) {\n
-  var queue = new RSVP.Queue(),\n
-    context = this,\n
-    i = 0;\n
+  /**\n
+   * Test if an item matches this query\n
+   *\n
+   * @method match\n
+   * @param  {Object} item The object to test\n
+   * @return {Boolean} true if match, false otherwise\n
+   */\n
+  Query.prototype.match = function () {\n
+    return true;\n
+  };\n
 \n
-  function executeNextIfNotFalse(result) {\n
-    if (result === false) {\n
-      // No need to evaluate the other elements, as one is false\n
-      return result;\n
+  /**\n
+   * Browse the Query in deep calling parser method in each step.\n
+   *\n
+   * `onParseStart` is called first, on end `onParseEnd` is called.\n
+   * It starts from the simple queries at the bottom of the tree calling the\n
+   * parser method `onParseSimpleQuery`, and go up calling the\n
+   * `onParseComplexQuery` method.\n
+   *\n
+   * @method parse\n
+   * @param  {Object} option Any options you want (except \'parsed\')\n
+   * @return {Any} The parse result\n
+   */\n
+  Query.prototype.parse = function (option) {\n
+    var that = this,\n
+      object;\n
+    /**\n
+     * The recursive parser.\n
+     *\n
+     * @param  {Object} object The object shared in the parse process\n
+     * @param  {Object} options Some options usable in the parseMethods\n
+     * @return {Any} The parser result\n
+     */\n
+    function recParse(object, option) {\n
+      var query = object.parsed,\n
+        queue = new RSVP.Queue(),\n
+        i;\n
+\n
+      function enqueue(j) {\n
+        queue\n
+          .push(function () {\n
+            object.parsed = query.query_list[j];\n
+            return recParse(object, option);\n
+          })\n
+          .push(function () {\n
+            query.query_list[j] = object.parsed;\n
+          });\n
+      }\n
+\n
+      if (query.type === "complex") {\n
+\n
+\n
+        for (i = 0; i < query.query_list.length; i += 1) {\n
+          enqueue(i);\n
+        }\n
+\n
+        return queue\n
+          .push(function () {\n
+            object.parsed = query;\n
+            return that.onParseComplexQuery(object, option);\n
+          });\n
+\n
+      }\n
+      if (query.type === "simple") {\n
+        return that.onParseSimpleQuery(object, option);\n
+      }\n
     }\n
-    if (context.query_list.length === i) {\n
-      // No new element to loop on\n
-      return true;\n
-    }\n
-    queue\n
+    object = {\n
+      parsed: JSON.parse(JSON.stringify(that.serialized()))\n
+    };\n
+    return new RSVP.Queue()\n
       .push(function () {\n
-        var sub_result = context.query_list[i].match(item);\n
-        i += 1;\n
-        return sub_result;\n
+        return that.onParseStart(object, option);\n
       })\n
-      .push(executeNextIfNotFalse);\n
+      .push(function () {\n
+        return recParse(object, option);\n
+      })\n
+      .push(function () {\n
+        return that.onParseEnd(object, option);\n
+      })\n
+      .push(function () {\n
+        return object.parsed;\n
+      });\n
+\n
+  };\n
+\n
+  /**\n
+   * Convert this query to a parsable string.\n
+   *\n
+   * @method toString\n
+   * @return {String} The string version of this query\n
+   */\n
+  Query.prototype.toString = function () {\n
+    return "";\n
+  };\n
+\n
+  /**\n
+   * Convert this query to an jsonable object in order to be remake thanks to\n
+   * QueryFactory class.\n
+   *\n
+   * @method serialized\n
+   * @return {Object} The jsonable object\n
+   */\n
+  Query.prototype.serialized = function () {\n
+    return undefined;\n
+  };\n
+\n
+  /**\n
+   * Provides static methods to create Query object\n
+   *\n
+   * @class QueryFactory\n
+   */\n
+  function QueryFactory() {\n
+    return;\n
   }\n
 \n
-  executeNextIfNotFalse(true);\n
-  return queue;\n
-};\n
-\n
-/**\n
- * Comparison operator, test if one of the sub queries matches the\n
- * item value\n
- *\n
- * @method OR\n
- * @param  {Object} item The item to match\n
- * @return {Boolean} true if one match, false otherwise\n
- */\n
-ComplexQuery.prototype.OR =  function (item) {\n
-  var queue = new RSVP.Queue(),\n
-    context = this,\n
-    i = 0;\n
-\n
-  function executeNextIfNotTrue(result) {\n
-    if (result === true) {\n
-      // No need to evaluate the other elements, as one is true\n
-      return result;\n
-    }\n
-    if (context.query_list.length === i) {\n
-      // No new element to loop on\n
-      return false;\n
-    }\n
-    queue\n
-      .push(function () {\n
-        var sub_result = context.query_list[i].match(item);\n
-        i += 1;\n
-        return sub_result;\n
-      })\n
-      .push(executeNextIfNotTrue);\n
+  /**\n
+   * Escapes regexp special chars from a string.\n
+   *\n
+   * @param  {String} string The string to escape\n
+   * @return {String} The escaped string\n
+   */\n
+  function stringEscapeRegexpCharacters(string) {\n
+    return string.replace(regexp_escape, "\\\\$&");\n
   }\n
 \n
-  executeNextIfNotTrue(false);\n
-  return queue;\n
-};\n
-\n
-/**\n
- * Comparison operator, test if the sub query does not match the\n
- * item value\n
- *\n
- * @method NOT\n
- * @param  {Object} item The item to match\n
- * @return {Boolean} true if one match, false otherwise\n
- */\n
-ComplexQuery.prototype.NOT = function (item) {\n
-  return new RSVP.Queue()\n
-    .push(function () {\n
-      return this.query_list[0].match(item);\n
-    })\n
-    .push(function (answer) {\n
-      return !answer;\n
+  /**\n
+   * Inherits the prototype methods from one constructor into another. The\n
+   * prototype of `constructor` will be set to a new object created from\n
+   * `superConstructor`.\n
+   *\n
+   * @param  {Function} constructor The constructor which inherits the super one\n
+   * @param  {Function} superConstructor The super constructor\n
+   */\n
+  function inherits(constructor, superConstructor) {\n
+    constructor.super_ = superConstructor;\n
+    constructor.prototype = Object.create(superConstructor.prototype, {\n
+      "constructor": {\n
+        "configurable": true,\n
+        "enumerable": false,\n
+        "writable": true,\n
+        "value": constructor\n
+      }\n
     });\n
-};\n
-\n
-query_class_dict.complex = ComplexQuery;\n
-\n
-window.ComplexQuery = ComplexQuery;\n
-;/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
-/*global window, ComplexQuery, SimpleQuery, Query, parseStringToObject,\n
-  query_class_dict */\n
-\n
-/**\n
- * Provides static methods to create Query object\n
- *\n
- * @class QueryFactory\n
- */\n
-function QueryFactory() {\n
-  return;\n
-}\n
-\n
-/**\n
- * Creates Query object from a search text string or a serialized version\n
- * of a Query.\n
- *\n
- * @method create\n
- * @static\n
- * @param  {Object,String} object The search text or the serialized version\n
- *         of a Query\n
- * @return {Query} A Query object\n
- */\n
-QueryFactory.create = function (object, key_schema) {\n
-  if (object === "") {\n
-    return new Query();\n
   }\n
-  if (typeof object === "string") {\n
-    object = parseStringToObject(object);\n
-  }\n
-  if (typeof (object || {}).type === "string" &&\n
-      query_class_dict[object.type]) {\n
-    return new query_class_dict[object.type](object, key_schema);\n
-  }\n
-  throw new TypeError("QueryFactory.create(): " +\n
-                      "Argument 1 is not a search text or a parsable object");\n
-};\n
 \n
-window.QueryFactory = QueryFactory;\n
-;/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
-/*global Query, exports */\n
+  /**\n
+   * Convert a search text to a regexp.\n
+   *\n
+   * @param  {String} string The string to convert\n
+   * @param  {Boolean} [use_wildcard_character=true] Use wildcard "%" and "_"\n
+   * @return {RegExp} The search text regexp\n
+   */\n
+  function searchTextToRegExp(string, use_wildcard_characters) {\n
+    if (typeof string !== \'string\') {\n
+      throw new TypeError("jioquery.searchTextToRegExp(): " +\n
+                          "Argument 1 is not of type \'string\'");\n
+    }\n
+    if (use_wildcard_characters === false) {\n
+      return new RegExp("^" + stringEscapeRegexpCharacters(string) + "$");\n
+    }\n
+    return new RegExp("^" + stringEscapeRegexpCharacters(string)\n
+      .replace(regexp_percent, \'.*\')\n
+      .replace(regexp_underscore, \'.\') + "$");\n
+  }\n
 \n
-function objectToSearchText(query) {\n
-  var str_list = [];\n
-  if (query.type === "complex") {\n
-    str_list.push("(");\n
-    (query.query_list || []).forEach(function (sub_query) {\n
-      str_list.push(objectToSearchText(sub_query));\n
-      str_list.push(query.operator);\n
+  /**\n
+   * The ComplexQuery inherits from Query, and compares one or several metadata\n
+   * values.\n
+   *\n
+   * @class ComplexQuery\n
+   * @extends Query\n
+   * @param  {Object} [spec={}] The specifications\n
+   * @param  {String} [spec.operator="AND"] The compare method to use\n
+   * @param  {String} spec.key The metadata key\n
+   * @param  {String} spec.value The value of the metadata to compare\n
+   */\n
+  function ComplexQuery(spec, key_schema) {\n
+    Query.call(this);\n
+\n
+    /**\n
+     * Logical operator to use to compare object values\n
+     *\n
+     * @attribute operator\n
+     * @type String\n
+     * @default "AND"\n
+     * @optional\n
+     */\n
+    this.operator = spec.operator;\n
+\n
+    /**\n
+     * The sub Query list which are used to query an item.\n
+     *\n
+     * @attribute query_list\n
+     * @type Array\n
+     * @default []\n
+     * @optional\n
+     */\n
+    this.query_list = spec.query_list || [];\n
+    this.query_list = this.query_list.map(\n
+      // decorate the map to avoid sending the index as key_schema argument\n
+      function (o) { return QueryFactory.create(o, key_schema); }\n
+    );\n
+\n
+  }\n
+  inherits(ComplexQuery, Query);\n
+\n
+  ComplexQuery.prototype.operator = "AND";\n
+  ComplexQuery.prototype.type = "complex";\n
+\n
+  /**\n
+   * #crossLink "Query/match:method"\n
+   */\n
+  ComplexQuery.prototype.match = function (item) {\n
+    var operator = this.operator;\n
+    if (!(regexp_operator.test(operator))) {\n
+      operator = "AND";\n
+    }\n
+    return this[operator.toUpperCase()](item);\n
+  };\n
+\n
+  /**\n
+   * #crossLink "Query/toString:method"\n
+   */\n
+  ComplexQuery.prototype.toString = function () {\n
+    var str_list = [], this_operator = this.operator;\n
+    if (this.operator === "NOT") {\n
+      str_list.push("NOT (");\n
+      str_list.push(this.query_list[0].toString());\n
+      str_list.push(")");\n
+      return str_list.join(" ");\n
+    }\n
+    this.query_list.forEach(function (query) {\n
+      str_list.push("(");\n
+      str_list.push(query.toString());\n
+      str_list.push(")");\n
+      str_list.push(this_operator);\n
     });\n
     str_list.length -= 1;\n
-    str_list.push(")");\n
     return str_list.join(" ");\n
-  }\n
-  if (query.type === "simple") {\n
-    return (query.key ? query.key + ": " : "") +\n
-      (query.operator || "") + \' "\' + query.value + \'"\';\n
-  }\n
-  throw new TypeError("This object is not a query");\n
-}\n
-Query.objectToSearchText = objectToSearchText;\n
-;/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
-/*global Query, inherits, query_class_dict, window,\n
-  searchTextToRegExp, RSVP */\n
+  };\n
 \n
-var checkKeySchema = function (key_schema) {\n
-  var prop;\n
+  /**\n
+   * #crossLink "Query/serialized:method"\n
+   */\n
+  ComplexQuery.prototype.serialized = function () {\n
+    var s = {\n
+      "type": "complex",\n
+      "operator": this.operator,\n
+      "query_list": []\n
+    };\n
+    this.query_list.forEach(function (query) {\n
+      s.query_list.push(\n
+        typeof query.toJSON === "function" ? query.toJSON() : query\n
+      );\n
+    });\n
+    return s;\n
+  };\n
+  ComplexQuery.prototype.toJSON = ComplexQuery.prototype.serialized;\n
 \n
-  if (key_schema !== undefined) {\n
-    if (typeof key_schema !== \'object\') {\n
-      throw new TypeError("SimpleQuery().create(): " +\n
-                          "key_schema is not of type \'object\'");\n
+  /**\n
+   * Comparison operator, test if all sub queries match the\n
+   * item value\n
+   *\n
+   * @method AND\n
+   * @param  {Object} item The item to match\n
+   * @return {Boolean} true if all match, false otherwise\n
+   */\n
+  ComplexQuery.prototype.AND = function (item) {\n
+    var result = true,\n
+      i = 0;\n
+\n
+    while (result && (i !== this.query_list.length)) {\n
+      result = this.query_list[i].match(item);\n
+      i += 1;\n
     }\n
-    // key_set is mandatory\n
-    if (key_schema.key_set === undefined) {\n
-      throw new TypeError("SimpleQuery().create(): " +\n
-                          "key_schema has no \'key_set\' property");\n
+    return result;\n
+\n
+  };\n
+\n
+  /**\n
+   * Comparison operator, test if one of the sub queries matches the\n
+   * item value\n
+   *\n
+   * @method OR\n
+   * @param  {Object} item The item to match\n
+   * @return {Boolean} true if one match, false otherwise\n
+   */\n
+  ComplexQuery.prototype.OR = function (item) {\n
+    var result = false,\n
+      i = 0;\n
+\n
+    while ((!result) && (i !== this.query_list.length)) {\n
+      result = this.query_list[i].match(item);\n
+      i += 1;\n
     }\n
-    for (prop in key_schema) {\n
-      if (key_schema.hasOwnProperty(prop)) {\n
-        switch (prop) {\n
-        case \'key_set\':\n
-        case \'cast_lookup\':\n
-        case \'match_lookup\':\n
-          break;\n
-        default:\n
-          throw new TypeError("SimpleQuery().create(): " +\n
-                             "key_schema has unknown property \'" + prop + "\'");\n
+\n
+    return result;\n
+  };\n
+\n
+  /**\n
+   * Comparison operator, test if the sub query does not match the\n
+   * item value\n
+   *\n
+   * @method NOT\n
+   * @param  {Object} item The item to match\n
+   * @return {Boolean} true if one match, false otherwise\n
+   */\n
+  ComplexQuery.prototype.NOT = function (item) {\n
+    return !this.query_list[0].match(item);\n
+  };\n
+\n
+  /**\n
+   * Creates Query object from a search text string or a serialized version\n
+   * of a Query.\n
+   *\n
+   * @method create\n
+   * @static\n
+   * @param  {Object,String} object The search text or the serialized version\n
+   *         of a Query\n
+   * @return {Query} A Query object\n
+   */\n
+  QueryFactory.create = function (object, key_schema) {\n
+    if (object === "") {\n
+      return new Query();\n
+    }\n
+    if (typeof object === "string") {\n
+      object = parseStringToObject(object);\n
+    }\n
+    if (typeof (object || {}).type === "string" &&\n
+        query_class_dict[object.type]) {\n
+      return new query_class_dict[object.type](object, key_schema);\n
+    }\n
+    throw new TypeError("QueryFactory.create(): " +\n
+                        "Argument 1 is not a search text or a parsable object");\n
+  };\n
+\n
+  function objectToSearchText(query) {\n
+    var str_list = [];\n
+    if (query.type === "complex") {\n
+      str_list.push("(");\n
+      (query.query_list || []).forEach(function (sub_query) {\n
+        str_list.push(objectToSearchText(sub_query));\n
+        str_list.push(query.operator);\n
+      });\n
+      str_list.length -= 1;\n
+      str_list.push(")");\n
+      return str_list.join(" ");\n
+    }\n
+    if (query.type === "simple") {\n
+      return (query.key ? query.key + ": " : "") +\n
+        (query.operator || "") + \' "\' + query.value + \'"\';\n
+    }\n
+    throw new TypeError("This object is not a query");\n
+  }\n
+\n
+  function checkKeySchema(key_schema) {\n
+    var prop;\n
+\n
+    if (key_schema !== undefined) {\n
+      if (typeof key_schema !== \'object\') {\n
+        throw new TypeError("SimpleQuery().create(): " +\n
+                            "key_schema is not of type \'object\'");\n
+      }\n
+      // key_set is mandatory\n
+      if (key_schema.key_set === undefined) {\n
+        throw new TypeError("SimpleQuery().create(): " +\n
+                            "key_schema has no \'key_set\' property");\n
+      }\n
+      for (prop in key_schema) {\n
+        if (key_schema.hasOwnProperty(prop)) {\n
+          switch (prop) {\n
+          case \'key_set\':\n
+          case \'cast_lookup\':\n
+          case \'match_lookup\':\n
+            break;\n
+          default:\n
+            throw new TypeError("SimpleQuery().create(): " +\n
+                               "key_schema has unknown property \'" + prop + "\'");\n
+          }\n
         }\n
       }\n
     }\n
   }\n
-};\n
-\n
-\n
-/**\n
- * The SimpleQuery inherits from Query, and compares one metadata value\n
- *\n
- * @class SimpleQuery\n
- * @extends Query\n
- * @param  {Object} [spec={}] The specifications\n
- * @param  {String} [spec.operator="="] The compare method to use\n
- * @param  {String} spec.key The metadata key\n
- * @param  {String} spec.value The value of the metadata to compare\n
- */\n
-function SimpleQuery(spec, key_schema) {\n
-  Query.call(this);\n
-\n
-  checkKeySchema(key_schema);\n
-\n
-  this._key_schema = key_schema || {};\n
 \n
   /**\n
-   * Operator to use to compare object values\n
+   * The SimpleQuery inherits from Query, and compares one metadata value\n
    *\n
-   * @attribute operator\n
-   * @type String\n
-   * @optional\n
+   * @class SimpleQuery\n
+   * @extends Query\n
+   * @param  {Object} [spec={}] The specifications\n
+   * @param  {String} [spec.operator="="] The compare method to use\n
+   * @param  {String} spec.key The metadata key\n
+   * @param  {String} spec.value The value of the metadata to compare\n
    */\n
-  this.operator = spec.operator;\n
+  function SimpleQuery(spec, key_schema) {\n
+    Query.call(this);\n
 \n
-  /**\n
-   * Key of the object which refers to the value to compare\n
-   *\n
-   * @attribute key\n
-   * @type String\n
-   */\n
-  this.key = spec.key;\n
+    checkKeySchema(key_schema);\n
 \n
-  /**\n
-   * Value is used to do the comparison with the object value\n
-   *\n
-   * @attribute value\n
-   * @type String\n
-   */\n
-  this.value = spec.value;\n
+    this._key_schema = key_schema || {};\n
 \n
-}\n
-inherits(SimpleQuery, Query);\n
+    /**\n
+     * Operator to use to compare object values\n
+     *\n
+     * @attribute operator\n
+     * @type String\n
+     * @optional\n
+     */\n
+    this.operator = spec.operator;\n
 \n
-SimpleQuery.prototype.type = "simple";\n
+    /**\n
+     * Key of the object which refers to the value to compare\n
+     *\n
+     * @attribute key\n
+     * @type String\n
+     */\n
+    this.key = spec.key;\n
 \n
-var checkKey = function (key) {\n
-  var prop;\n
+    /**\n
+     * Value is used to do the comparison with the object value\n
+     *\n
+     * @attribute value\n
+     * @type String\n
+     */\n
+    this.value = spec.value;\n
 \n
-  if (key.read_from === undefined) {\n
-    throw new TypeError("Custom key is missing the read_from property");\n
   }\n
+  inherits(SimpleQuery, Query);\n
 \n
-  for (prop in key) {\n
-    if (key.hasOwnProperty(prop)) {\n
-      switch (prop) {\n
-      case \'read_from\':\n
-      case \'cast_to\':\n
-      case \'equal_match\':\n
-        break;\n
-      default:\n
-        throw new TypeError("Custom key has unknown property \'" +\n
-                            prop + "\'");\n
+  SimpleQuery.prototype.type = "simple";\n
+\n
+  function checkKey(key) {\n
+    var prop;\n
+\n
+    if (key.read_from === undefined) {\n
+      throw new TypeError("Custom key is missing the read_from property");\n
+    }\n
+\n
+    for (prop in key) {\n
+      if (key.hasOwnProperty(prop)) {\n
+        switch (prop) {\n
+        case \'read_from\':\n
+        case \'cast_to\':\n
+        case \'equal_match\':\n
+          break;\n
+        default:\n
+          throw new TypeError("Custom key has unknown property \'" +\n
+                              prop + "\'");\n
+        }\n
       }\n
     }\n
   }\n
-};\n
 \n
+  /**\n
+   * #crossLink "Query/match:method"\n
+   */\n
+  SimpleQuery.prototype.match = function (item) {\n
+    var object_value = null,\n
+      equal_match = null,\n
+      cast_to = null,\n
+      matchMethod = null,\n
+      operator = this.operator,\n
+      value = null,\n
+      key = this.key;\n
 \n
-/**\n
- * #crossLink "Query/match:method"\n
- */\n
-SimpleQuery.prototype.match = function (item) {\n
-  var object_value = null,\n
-    equal_match = null,\n
-    cast_to = null,\n
-    matchMethod = null,\n
-    operator = this.operator,\n
-    value = null,\n
-    key = this.key;\n
+    if (!(regexp_comparaison.test(operator))) {\n
+      // `operator` is not correct, we have to change it to "like" or "="\n
+      if (regexp_percent.test(this.value)) {\n
+        // `value` contains a non escaped `%`\n
+        operator = "like";\n
+      } else {\n
+        // `value` does not contain non escaped `%`\n
+        operator = "=";\n
+      }\n
+    }\n
 \n
-  /*jslint regexp: true */\n
-  if (!(/^(?:!?=|<=?|>=?)$/i.test(operator))) {\n
-    // `operator` is not correct, we have to change it to "like" or "="\n
-    if (/%/.test(this.value)) {\n
-      // `value` contains a non escaped `%`\n
-      operator = "like";\n
+    matchMethod = this[operator];\n
+\n
+    if (this._key_schema.key_set && this._key_schema.key_set[key] !== undefined) {\n
+      key = this._key_schema.key_set[key];\n
+    }\n
+\n
+    if (typeof key === \'object\') {\n
+      checkKey(key);\n
+      object_value = item[key.read_from];\n
+\n
+      equal_match = key.equal_match;\n
+\n
+      // equal_match can be a string\n
+      if (typeof equal_match === \'string\') {\n
+        // XXX raise error if equal_match not in match_lookup\n
+        equal_match = this._key_schema.match_lookup[equal_match];\n
+      }\n
+\n
+      // equal_match overrides the default \'=\' operator\n
+      if (equal_match !== undefined) {\n
+        matchMethod = (operator === "=" || operator === "like" ?\n
+                       equal_match : matchMethod);\n
+      }\n
+\n
+      value = this.value;\n
+      cast_to = key.cast_to;\n
+      if (cast_to) {\n
+        // cast_to can be a string\n
+        if (typeof cast_to === \'string\') {\n
+          // XXX raise error if cast_to not in cast_lookup\n
+          cast_to = this._key_schema.cast_lookup[cast_to];\n
+        }\n
+\n
+        try {\n
+          value = cast_to(value);\n
+        } catch (e) {\n
+          value = undefined;\n
+        }\n
+\n
+        try {\n
+          object_value = cast_to(object_value);\n
+        } catch (e) {\n
+          object_value = undefined;\n
+        }\n
+      }\n
     } else {\n
-      // `value` does not contain non escaped `%`\n
-      operator = "=";\n
+      object_value = item[key];\n
+      value = this.value;\n
     }\n
-  }\n
-\n
-  matchMethod = this[operator];\n
-\n
-  if (this._key_schema.key_set && this._key_schema.key_set[key] !== undefined) {\n
-    key = this._key_schema.key_set[key];\n
-  }\n
-\n
-  if (typeof key === \'object\') {\n
-    checkKey(key);\n
-    object_value = item[key.read_from];\n
-\n
-    equal_match = key.equal_match;\n
-\n
-    // equal_match can be a string\n
-    if (typeof equal_match === \'string\') {\n
-      // XXX raise error if equal_match not in match_lookup\n
-      equal_match = this._key_schema.match_lookup[equal_match];\n
+    if (object_value === undefined || value === undefined) {\n
+      return false;\n
     }\n
-\n
-    // equal_match overrides the default \'=\' operator\n
-    if (equal_match !== undefined) {\n
-      matchMethod = (operator === "=" || operator === "like" ?\n
-                     equal_match : matchMethod);\n
-    }\n
-\n
-    value = this.value;\n
-    cast_to = key.cast_to;\n
-    if (cast_to) {\n
-      // cast_to can be a string\n
-      if (typeof cast_to === \'string\') {\n
-        // XXX raise error if cast_to not in cast_lookup\n
-        cast_to = this._key_schema.cast_lookup[cast_to];\n
-      }\n
-\n
-      try {\n
-        value = cast_to(value);\n
-      } catch (e) {\n
-        value = undefined;\n
-      }\n
-\n
-      try {\n
-        object_value = cast_to(object_value);\n
-      } catch (e) {\n
-        object_value = undefined;\n
-      }\n
-    }\n
-  } else {\n
-    object_value = item[key];\n
-    value = this.value;\n
-  }\n
-  if (object_value === undefined || value === undefined) {\n
-    return RSVP.resolve(false);\n
-  }\n
-  return matchMethod(object_value, value);\n
-};\n
-\n
-/**\n
- * #crossLink "Query/toString:method"\n
- */\n
-SimpleQuery.prototype.toString = function () {\n
-  return (this.key ? this.key + ":" : "") +\n
-    (this.operator ? " " + this.operator : "") + \' "\' + this.value + \'"\';\n
-};\n
-\n
-/**\n
- * #crossLink "Query/serialized:method"\n
- */\n
-SimpleQuery.prototype.serialized = function () {\n
-  var object = {\n
-    "type": "simple",\n
-    "key": this.key,\n
-    "value": this.value\n
+    return matchMethod(object_value, value);\n
   };\n
-  if (this.operator !== undefined) {\n
-    object.operator = this.operator;\n
-  }\n
-  return object;\n
-};\n
-SimpleQuery.prototype.toJSON = SimpleQuery.prototype.serialized;\n
 \n
-/**\n
- * Comparison operator, test if this query value matches the item value\n
- *\n
- * @method =\n
- * @param  {String} object_value The value to compare\n
- * @param  {String} comparison_value The comparison value\n
- * @return {Boolean} true if match, false otherwise\n
- */\n
-SimpleQuery.prototype["="] = function (object_value, comparison_value) {\n
-  var value, i;\n
-  if (!Array.isArray(object_value)) {\n
-    object_value = [object_value];\n
-  }\n
-  for (i = 0; i < object_value.length; i += 1) {\n
-    value = object_value[i];\n
-    if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
-      value = value.content;\n
-    }\n
-    if (typeof value.cmp === "function") {\n
-      return RSVP.resolve(value.cmp(comparison_value) === 0);\n
-    }\n
-    if (\n
-      searchTextToRegExp(comparison_value.toString(), false).\n
-        test(value.toString())\n
-    ) {\n
-      return RSVP.resolve(true);\n
-    }\n
-  }\n
-  return RSVP.resolve(false);\n
-};\n
-\n
-/**\n
- * Comparison operator, test if this query value matches the item value\n
- *\n
- * @method like\n
- * @param  {String} object_value The value to compare\n
- * @param  {String} comparison_value The comparison value\n
- * @return {Boolean} true if match, false otherwise\n
- */\n
-SimpleQuery.prototype.like = function (object_value, comparison_value) {\n
-  var value, i;\n
-  if (!Array.isArray(object_value)) {\n
-    object_value = [object_value];\n
-  }\n
-  for (i = 0; i < object_value.length; i += 1) {\n
-    value = object_value[i];\n
-    if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
-      value = value.content;\n
-    }\n
-    if (typeof value.cmp === "function") {\n
-      return RSVP.resolve(value.cmp(comparison_value) === 0);\n
-    }\n
-    if (\n
-      searchTextToRegExp(comparison_value.toString()).test(value.toString())\n
-    ) {\n
-      return RSVP.resolve(true);\n
-    }\n
-  }\n
-  return RSVP.resolve(false);\n
-};\n
-\n
-/**\n
- * Comparison operator, test if this query value does not match the item value\n
- *\n
- * @method !=\n
- * @param  {String} object_value The value to compare\n
- * @param  {String} comparison_value The comparison value\n
- * @return {Boolean} true if not match, false otherwise\n
- */\n
-SimpleQuery.prototype["!="] = function (object_value, comparison_value) {\n
-  var value, i;\n
-  if (!Array.isArray(object_value)) {\n
-    object_value = [object_value];\n
-  }\n
-  for (i = 0; i < object_value.length; i += 1) {\n
-    value = object_value[i];\n
-    if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
-      value = value.content;\n
-    }\n
-    if (typeof value.cmp === "function") {\n
-      return RSVP.resolve(value.cmp(comparison_value) !== 0);\n
-    }\n
-    if (\n
-      searchTextToRegExp(comparison_value.toString(), false).\n
-        test(value.toString())\n
-    ) {\n
-      return RSVP.resolve(false);\n
-    }\n
-  }\n
-  return RSVP.resolve(true);\n
-};\n
-\n
-/**\n
- * Comparison operator, test if this query value is lower than the item value\n
- *\n
- * @method <\n
- * @param  {Number, String} object_value The value to compare\n
- * @param  {Number, String} comparison_value The comparison value\n
- * @return {Boolean} true if lower, false otherwise\n
- */\n
-SimpleQuery.prototype["<"] = function (object_value, comparison_value) {\n
-  var value;\n
-  if (!Array.isArray(object_value)) {\n
-    object_value = [object_value];\n
-  }\n
-  value = object_value[0];\n
-  if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
-    value = value.content;\n
-  }\n
-  if (typeof value.cmp === "function") {\n
-    return RSVP.resolve(value.cmp(comparison_value) < 0);\n
-  }\n
-  return RSVP.resolve(value < comparison_value);\n
-};\n
-\n
-/**\n
- * Comparison operator, test if this query value is equal or lower than the\n
- * item value\n
- *\n
- * @method <=\n
- * @param  {Number, String} object_value The value to compare\n
- * @param  {Number, String} comparison_value The comparison value\n
- * @return {Boolean} true if equal or lower, false otherwise\n
- */\n
-SimpleQuery.prototype["<="] = function (object_value, comparison_value) {\n
-  var value;\n
-  if (!Array.isArray(object_value)) {\n
-    object_value = [object_value];\n
-  }\n
-  value = object_value[0];\n
-  if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
-    value = value.content;\n
-  }\n
-  if (typeof value.cmp === "function") {\n
-    return RSVP.resolve(value.cmp(comparison_value) <= 0);\n
-  }\n
-  return RSVP.resolve(value <= comparison_value);\n
-};\n
-\n
-/**\n
- * Comparison operator, test if this query value is greater than the item\n
- * value\n
- *\n
- * @method >\n
- * @param  {Number, String} object_value The value to compare\n
- * @param  {Number, String} comparison_value The comparison value\n
- * @return {Boolean} true if greater, false otherwise\n
- */\n
-SimpleQuery.prototype[">"] = function (object_value, comparison_value) {\n
-  var value;\n
-  if (!Array.isArray(object_value)) {\n
-    object_value = [object_value];\n
-  }\n
-  value = object_value[0];\n
-  if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
-    value = value.content;\n
-  }\n
-  if (typeof value.cmp === "function") {\n
-    return RSVP.resolve(value.cmp(comparison_value) > 0);\n
-  }\n
-  return RSVP.resolve(value > comparison_value);\n
-};\n
-\n
-/**\n
- * Comparison operator, test if this query value is equal or greater than the\n
- * item value\n
- *\n
- * @method >=\n
- * @param  {Number, String} object_value The value to compare\n
- * @param  {Number, String} comparison_value The comparison value\n
- * @return {Boolean} true if equal or greater, false otherwise\n
- */\n
-SimpleQuery.prototype[">="] = function (object_value, comparison_value) {\n
-  var value;\n
-  if (!Array.isArray(object_value)) {\n
-    object_value = [object_value];\n
-  }\n
-  value = object_value[0];\n
-  if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
-    value = value.content;\n
-  }\n
-  if (typeof value.cmp === "function") {\n
-    return RSVP.resolve(value.cmp(comparison_value) >= 0);\n
-  }\n
-  return RSVP.resolve(value >= comparison_value);\n
-};\n
-\n
-query_class_dict.simple = SimpleQuery;\n
-\n
-window.SimpleQuery = SimpleQuery;\n
-;/*jslint indent: 2, maxlen: 80, sloppy: true, nomen: true */\n
-/*global Query, RSVP, deepClone */\n
-\n
-/**\n
- * Escapes regexp special chars from a string.\n
- *\n
- * @param  {String} string The string to escape\n
- * @return {String} The escaped string\n
- */\n
-function stringEscapeRegexpCharacters(string) {\n
-  if (typeof string === "string") {\n
-    return string.replace(/([\\\\\\.\\$\\[\\]\\(\\)\\{\\}\\^\\?\\*\\+\\-])/g, "\\\\$1");\n
-  }\n
-  throw new TypeError("Query.stringEscapeRegexpCharacters(): " +\n
-                      "Argument no 1 is not of type \'string\'");\n
-}\n
-\n
-Query.stringEscapeRegexpCharacters = stringEscapeRegexpCharacters;\n
-\n
-/**\n
- * Convert metadata values to array of strings. ex:\n
- *\n
- *     "a" -> ["a"],\n
- *     {"content": "a"} -> ["a"]\n
- *\n
- * @param  {Any} value The metadata value\n
- * @return {Array} The value in string array format\n
- */\n
-function metadataValueToStringArray(value) {\n
-  var i, new_value = [];\n
-  if (value === undefined) {\n
-    return undefined;\n
-  }\n
-  if (!Array.isArray(value)) {\n
-    value = [value];\n
-  }\n
-  for (i = 0; i < value.length; i += 1) {\n
-    if (typeof value[i] === \'object\') {\n
-      new_value[i] = value[i].content;\n
-    } else {\n
-      new_value[i] = value[i];\n
-    }\n
-  }\n
-  return new_value;\n
-}\n
-\n
-/**\n
- * A sort function to sort items by key\n
- *\n
- * @param  {String} key The key to sort on\n
- * @param  {String} [way="ascending"] \'ascending\' or \'descending\'\n
- * @return {Function} The sort function\n
- */\n
-function sortFunction(key, way) {\n
-  var result;\n
-  if (way === \'descending\') {\n
-    result = 1;\n
-  } else if (way === \'ascending\') {\n
-    result = -1;\n
-  } else {\n
-    throw new TypeError("Query.sortFunction(): " +\n
-                        "Argument 2 must be \'ascending\' or \'descending\'");\n
-  }\n
-  return function (a, b) {\n
-    // this comparison is 5 times faster than json comparison\n
-    var i, l;\n
-    a = metadataValueToStringArray(a[key]) || [];\n
-    b = metadataValueToStringArray(b[key]) || [];\n
-    l = a.length > b.length ? a.length : b.length;\n
-    for (i = 0; i < l; i += 1) {\n
-      if (a[i] === undefined) {\n
-        return result;\n
-      }\n
-      if (b[i] === undefined) {\n
-        return -result;\n
-      }\n
-      if (a[i] > b[i]) {\n
-        return -result;\n
-      }\n
-      if (a[i] < b[i]) {\n
-        return result;\n
-      }\n
-    }\n
-    return 0;\n
+  /**\n
+   * #crossLink "Query/toString:method"\n
+   */\n
+  SimpleQuery.prototype.toString = function () {\n
+    return (this.key ? this.key + ":" : "") +\n
+      (this.operator ? " " + this.operator : "") + \' "\' + this.value + \'"\';\n
   };\n
-}\n
 \n
-/**\n
- * Inherits the prototype methods from one constructor into another. The\n
- * prototype of `constructor` will be set to a new object created from\n
- * `superConstructor`.\n
- *\n
- * @param  {Function} constructor The constructor which inherits the super one\n
- * @param  {Function} superConstructor The super constructor\n
- */\n
-function inherits(constructor, superConstructor) {\n
-  constructor.super_ = superConstructor;\n
-  constructor.prototype = Object.create(superConstructor.prototype, {\n
-    "constructor": {\n
-      "configurable": true,\n
-      "enumerable": false,\n
-      "writable": true,\n
-      "value": constructor\n
+  /**\n
+   * #crossLink "Query/serialized:method"\n
+   */\n
+  SimpleQuery.prototype.serialized = function () {\n
+    var object = {\n
+      "type": "simple",\n
+      "key": this.key,\n
+      "value": this.value\n
+    };\n
+    if (this.operator !== undefined) {\n
+      object.operator = this.operator;\n
     }\n
-  });\n
-}\n
+    return object;\n
+  };\n
+  SimpleQuery.prototype.toJSON = SimpleQuery.prototype.serialized;\n
 \n
-/**\n
- * Does nothing\n
- */\n
-function emptyFunction() {\n
-  return;\n
-}\n
-\n
-/**\n
- * Filter a list of items, modifying them to select only wanted keys. If\n
- * `clone` is true, then the method will act on a cloned list.\n
- *\n
- * @param  {Array} select_option Key list to keep\n
- * @param  {Array} list The item list to filter\n
- * @param  {Boolean} [clone=false] If true, modifies a clone of the list\n
- * @return {Array} The filtered list\n
- */\n
-function select(select_option, list, clone) {\n
-  var i, j, new_item;\n
-  if (!Array.isArray(select_option)) {\n
-    throw new TypeError("jioquery.select(): " +\n
-                        "Argument 1 is not of type Array");\n
-  }\n
-  if (!Array.isArray(list)) {\n
-    throw new TypeError("jioquery.select(): " +\n
-                        "Argument 2 is not of type Array");\n
-  }\n
-  if (clone === true) {\n
-    list = deepClone(list);\n
-  }\n
-  for (i = 0; i < list.length; i += 1) {\n
-    new_item = {};\n
-    for (j = 0; j < select_option.length; j += 1) {\n
-      if (list[i].hasOwnProperty([select_option[j]])) {\n
-        new_item[select_option[j]] = list[i][select_option[j]];\n
+  /**\n
+   * Comparison operator, test if this query value matches the item value\n
+   *\n
+   * @method =\n
+   * @param  {String} object_value The value to compare\n
+   * @param  {String} comparison_value The comparison value\n
+   * @return {Boolean} true if match, false otherwise\n
+   */\n
+  SimpleQuery.prototype["="] = function (object_value, comparison_value) {\n
+    var value, i;\n
+    if (!Array.isArray(object_value)) {\n
+      object_value = [object_value];\n
+    }\n
+    for (i = 0; i < object_value.length; i += 1) {\n
+      value = object_value[i];\n
+      if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+        value = value.content;\n
+      }\n
+      if (typeof value.cmp === "function") {\n
+        return (value.cmp(comparison_value) === 0);\n
+      }\n
+      if (comparison_value.toString() === value.toString()) {\n
+        return true;\n
       }\n
     }\n
-    for (j in new_item) {\n
-      if (new_item.hasOwnProperty(j)) {\n
-        list[i] = new_item;\n
-        break;\n
+    return false;\n
+  };\n
+\n
+  /**\n
+   * Comparison operator, test if this query value matches the item value\n
+   *\n
+   * @method like\n
+   * @param  {String} object_value The value to compare\n
+   * @param  {String} comparison_value The comparison value\n
+   * @return {Boolean} true if match, false otherwise\n
+   */\n
+  SimpleQuery.prototype.like = function (object_value, comparison_value) {\n
+    var value, i;\n
+    if (!Array.isArray(object_value)) {\n
+      object_value = [object_value];\n
+    }\n
+    for (i = 0; i < object_value.length; i += 1) {\n
+      value = object_value[i];\n
+      if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+        value = value.content;\n
+      }\n
+      if (typeof value.cmp === "function") {\n
+        return (value.cmp(comparison_value) === 0);\n
+      }\n
+      if (\n
+        searchTextToRegExp(comparison_value.toString()).test(value.toString())\n
+      ) {\n
+        return true;\n
       }\n
     }\n
-  }\n
-  return list;\n
-}\n
+    return false;\n
+  };\n
 \n
-Query.select = select;\n
+  /**\n
+   * Comparison operator, test if this query value does not match the item value\n
+   *\n
+   * @method !=\n
+   * @param  {String} object_value The value to compare\n
+   * @param  {String} comparison_value The comparison value\n
+   * @return {Boolean} true if not match, false otherwise\n
+   */\n
+  SimpleQuery.prototype["!="] = function (object_value, comparison_value) {\n
+    var value, i;\n
+    if (!Array.isArray(object_value)) {\n
+      object_value = [object_value];\n
+    }\n
+    for (i = 0; i < object_value.length; i += 1) {\n
+      value = object_value[i];\n
+      if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+        value = value.content;\n
+      }\n
+      if (typeof value.cmp === "function") {\n
+        return (value.cmp(comparison_value) !== 0);\n
+      }\n
+      if (comparison_value.toString() === value.toString()) {\n
+        return false;\n
+      }\n
+    }\n
+    return true;\n
+  };\n
 \n
-/**\n
- * Sort a list of items, according to keys and directions. If `clone` is true,\n
- * then the method will act on a cloned list.\n
- *\n
- * @param  {Array} sort_on_option List of couples [key, direction]\n
- * @param  {Array} list The item list to sort\n
- * @param  {Boolean} [clone=false] If true, modifies a clone of the list\n
- * @return {Array} The filtered list\n
- */\n
-function sortOn(sort_on_option, list, clone) {\n
-  var sort_index;\n
-  if (!Array.isArray(sort_on_option)) {\n
-    throw new TypeError("jioquery.sortOn(): " +\n
-                        "Argument 1 is not of type \'array\'");\n
-  }\n
-  if (clone) {\n
-    list = deepClone(list);\n
-  }\n
-  for (sort_index = sort_on_option.length - 1; sort_index >= 0;\n
-       sort_index -= 1) {\n
-    list.sort(sortFunction(\n
-      sort_on_option[sort_index][0],\n
-      sort_on_option[sort_index][1]\n
-    ));\n
-  }\n
-  return list;\n
-}\n
+  /**\n
+   * Comparison operator, test if this query value is lower than the item value\n
+   *\n
+   * @method <\n
+   * @param  {Number, String} object_value The value to compare\n
+   * @param  {Number, String} comparison_value The comparison value\n
+   * @return {Boolean} true if lower, false otherwise\n
+   */\n
+  SimpleQuery.prototype["<"] = function (object_value, comparison_value) {\n
+    var value;\n
+    if (!Array.isArray(object_value)) {\n
+      object_value = [object_value];\n
+    }\n
+    value = object_value[0];\n
+    if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+      value = value.content;\n
+    }\n
+    if (typeof value.cmp === "function") {\n
+      return (value.cmp(comparison_value) < 0);\n
+    }\n
+    return (value < comparison_value);\n
+  };\n
 \n
-Query.sortOn = sortOn;\n
+  /**\n
+   * Comparison operator, test if this query value is equal or lower than the\n
+   * item value\n
+   *\n
+   * @method <=\n
+   * @param  {Number, String} object_value The value to compare\n
+   * @param  {Number, String} comparison_value The comparison value\n
+   * @return {Boolean} true if equal or lower, false otherwise\n
+   */\n
+  SimpleQuery.prototype["<="] = function (object_value, comparison_value) {\n
+    var value;\n
+    if (!Array.isArray(object_value)) {\n
+      object_value = [object_value];\n
+    }\n
+    value = object_value[0];\n
+    if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+      value = value.content;\n
+    }\n
+    if (typeof value.cmp === "function") {\n
+      return (value.cmp(comparison_value) <= 0);\n
+    }\n
+    return (value <= comparison_value);\n
+  };\n
 \n
-/**\n
- * Limit a list of items, according to index and length. If `clone` is true,\n
- * then the method will act on a cloned list.\n
- *\n
- * @param  {Array} limit_option A couple [from, length]\n
- * @param  {Array} list The item list to limit\n
- * @param  {Boolean} [clone=false] If true, modifies a clone of the list\n
- * @return {Array} The filtered list\n
- */\n
-function limit(limit_option, list, clone) {\n
-  if (!Array.isArray(limit_option)) {\n
-    throw new TypeError("jioquery.limit(): " +\n
-                        "Argument 1 is not of type \'array\'");\n
-  }\n
-  if (!Array.isArray(list)) {\n
-    throw new TypeError("jioquery.limit(): " +\n
-                        "Argument 2 is not of type \'array\'");\n
-  }\n
-  if (clone) {\n
-    list = deepClone(list);\n
-  }\n
-  list.splice(0, limit_option[0]);\n
-  if (limit_option[1]) {\n
-    list.splice(limit_option[1]);\n
-  }\n
-  return list;\n
-}\n
+  /**\n
+   * Comparison operator, test if this query value is greater than the item\n
+   * value\n
+   *\n
+   * @method >\n
+   * @param  {Number, String} object_value The value to compare\n
+   * @param  {Number, String} comparison_value The comparison value\n
+   * @return {Boolean} true if greater, false otherwise\n
+   */\n
+  SimpleQuery.prototype[">"] = function (object_value, comparison_value) {\n
+    var value;\n
+    if (!Array.isArray(object_value)) {\n
+      object_value = [object_value];\n
+    }\n
+    value = object_value[0];\n
+    if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+      value = value.content;\n
+    }\n
+    if (typeof value.cmp === "function") {\n
+      return (value.cmp(comparison_value) > 0);\n
+    }\n
+    return (value > comparison_value);\n
+  };\n
 \n
-Query.limit = limit;\n
+  /**\n
+   * Comparison operator, test if this query value is equal or greater than the\n
+   * item value\n
+   *\n
+   * @method >=\n
+   * @param  {Number, String} object_value The value to compare\n
+   * @param  {Number, String} comparison_value The comparison value\n
+   * @return {Boolean} true if equal or greater, false otherwise\n
+   */\n
+  SimpleQuery.prototype[">="] = function (object_value, comparison_value) {\n
+    var value;\n
+    if (!Array.isArray(object_value)) {\n
+      object_value = [object_value];\n
+    }\n
+    value = object_value[0];\n
+    if (typeof value === \'object\' && value.hasOwnProperty(\'content\')) {\n
+      value = value.content;\n
+    }\n
+    if (typeof value.cmp === "function") {\n
+      return (value.cmp(comparison_value) >= 0);\n
+    }\n
+    return (value >= comparison_value);\n
+  };\n
 \n
-/**\n
- * Convert a search text to a regexp.\n
- *\n
- * @param  {String} string The string to convert\n
- * @param  {Boolean} [use_wildcard_character=true] Use wildcard "%" and "_"\n
- * @return {RegExp} The search text regexp\n
- */\n
-function searchTextToRegExp(string, use_wildcard_characters) {\n
-  if (typeof string !== \'string\') {\n
-    throw new TypeError("jioquery.searchTextToRegExp(): " +\n
-                        "Argument 1 is not of type \'string\'");\n
-  }\n
-  if (use_wildcard_characters === false) {\n
-    return new RegExp("^" + stringEscapeRegexpCharacters(string) + "$");\n
-  }\n
-  return new RegExp("^" + stringEscapeRegexpCharacters(string).replace(\n
-    /%/g,\n
-    ".*"\n
-  ).replace(\n
-    /_/g,\n
-    "."\n
-  ) + "$");\n
-}\n
+  query_class_dict.simple = SimpleQuery;\n
+  query_class_dict.complex = ComplexQuery;\n
 \n
-Query.searchTextToRegExp = searchTextToRegExp;\n
+  Query.parseStringToObject = parseStringToObject;\n
+  Query.objectToSearchText = objectToSearchText;\n
+\n
+  window.Query = Query;\n
+  window.SimpleQuery = SimpleQuery;\n
+  window.ComplexQuery = ComplexQuery;\n
+  window.QueryFactory = QueryFactory;\n
+\n
+}(RSVP, window, parseStringToObject));\n
 ;/*global window, moment */\n
 /*jslint nomen: true, maxlen: 200*/\n
 (function (window, moment) {\n
@@ -6058,70 +5949,6 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
     });\n
   }\n
   util.ajax = ajax;\n
-\n
-  /**\n
-   * Clones all native object in deep. Managed types: Object, Array, String,\n
-   * Number, Boolean, Function, null.\n
-   *\n
-   * It can also clone object which are serializable, like Date.\n
-   *\n
-   * To make a class serializable, you need to implement the `toJSON` function\n
-   * which returns a JSON representation of the object. The returned value is\n
-   * used as first parameter of the object constructor.\n
-   *\n
-   * @param  {A} object The object to clone\n
-   * @return {A} The cloned object\n
-   */\n
-  function deepClone(object) {\n
-    var i, cloned;\n
-    if (Array.isArray(object)) {\n
-      cloned = [];\n
-      for (i = 0; i < object.length; i += 1) {\n
-        cloned[i] = deepClone(object[i]);\n
-      }\n
-      return cloned;\n
-    }\n
-    if (object === null) {\n
-      return null;\n
-    }\n
-    if (typeof object === \'object\') {\n
-      if (Object.getPrototypeOf(object) === Object.prototype) {\n
-        cloned = {};\n
-        for (i in object) {\n
-          if (object.hasOwnProperty(i)) {\n
-            cloned[i] = deepClone(object[i]);\n
-          }\n
-        }\n
-        return cloned;\n
-      }\n
-      if (object instanceof Date) {\n
-        // XXX this block is to enable phantomjs and browsers compatibility with\n
-        // Date.prototype.toJSON when it is an invalid date. In phantomjs, it\n
-        // returns `"Invalid Date"` but in browsers it returns `null`. In\n
-        // browsers, giving `null` as parameter to `new Date()` doesn\'t return\n
-        // an invalid date.\n
-\n
-        // Cloning a date with `return new Date(object)` has problems on\n
-        // Firefox.\n
-        // I don\'t know why...  (Tested on Firefox 23)\n
-\n
-        if (isFinite(object.getTime())) {\n
-          return new Date(object.toJSON());\n
-        }\n
-        return new Date("Invalid Date");\n
-      }\n
-      // clone serializable objects\n
-      if (typeof object.toJSON === \'function\') {\n
-        return new (Object.getPrototypeOf(object).constructor)(object.toJSON());\n
-      }\n
-      // cannot clone\n
-      return object;\n
-    }\n
-    return object;\n
-  }\n
-  util.deepClone = deepClone;\n
-\n
-\n
 \n
   function readBlobAsText(blob, encoding) {\n
     var fr = new FileReader();\n
@@ -7634,13 +7461,13 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
         attachments: {}\n
       };\n
     }\n
-    this._database[id].doc = JSON.stringify(metadata);\n
+    this._database[id].doc = metadata;\n
     return id;\n
   };\n
 \n
   MemoryStorage.prototype.get = function (id) {\n
     try {\n
-      return JSON.parse(this._database[id].doc);\n
+      return this._database[id].doc;\n
     } catch (error) {\n
       if (error instanceof TypeError) {\n
         throw new jIO.util.jIOError(\n
@@ -7728,18 +7555,26 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
 \n
   MemoryStorage.prototype.hasCapacity = function (name) {\n
-    return (name === "list");\n
+    return ((name === "list") || (name === "include"));\n
   };\n
 \n
-  MemoryStorage.prototype.buildQuery = function () {\n
+  MemoryStorage.prototype.buildQuery = function (options) {\n
     var rows = [],\n
       i;\n
     for (i in this._database) {\n
       if (this._database.hasOwnProperty(i)) {\n
-        rows.push({\n
-          id: i,\n
-          value: {}\n
-        });\n
+        if (options.include_docs === true) {\n
+          rows.push({\n
+            id: i,\n
+            value: {},\n
+            doc: this._database[i]\n
+          });\n
+        } else {\n
+          rows.push({\n
+            id: i,\n
+            value: {}\n
+          });\n
+        }\n
 \n
       }\n
     }\n
@@ -8731,6 +8566,250 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   jIO.addStorage(\'dav\', DavStorage);\n
 \n
 }(jIO, RSVP, DOMParser, Blob));\n
+;/*\n
+ * Copyright 2015, Nexedi SA\n
+ * Released under the LGPL license.\n
+ * http://www.gnu.org/licenses/lgpl.html\n
+ */\n
+/**\n
+ * JIO Google Drive Storage. Type = "gdrive".\n
+ * Google Drive "database" storage.\n
+ */\n
+/*global jIO, Blob, RSVP, UriTemplate, JSON*/\n
+/*jslint nomen: true*/\n
+\n
+(function (jIO, Blob, RSVP, UriTemplate, JSON) {\n
+  "use strict";\n
+\n
+  var UPLOAD_URL = "https://www.googleapis.com{/upload}/drive/v2/files{/id}" +\n
+      "{?uploadType,access_token}",\n
+    upload_template = UriTemplate.parse(UPLOAD_URL),\n
+    REMOVE_URL = "https://www.googleapis.com/drive/v2/" +\n
+      "files{/id,trash}{?access_token}",\n
+    remove_template = UriTemplate.parse(REMOVE_URL),\n
+    LIST_URL = "https://www.googleapis.com/drive/v2/files" +\n
+      "?prettyPrint=false{&pageToken}&q=trashed=false" +\n
+      "&fields=nextPageToken,items(id){&access_token}",\n
+    list_template = UriTemplate.parse(LIST_URL),\n
+    GET_URL = "https://www.googleapis.com/drive/v2/files{/id}{?alt}",\n
+    get_template = UriTemplate.parse(GET_URL);\n
+\n
+  function handleError(error, id) {\n
+    if (error.target.status === 404) {\n
+      throw new jIO.util.jIOError(\n
+        "Cannot find document: " + id,\n
+        404\n
+      );\n
+    }\n
+    throw error;\n
+  }\n
+\n
+  function listPage(result, token) {\n
+    var i,\n
+      obj;\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.ajax({\n
+          "type": "GET",\n
+          "url": list_template.expand({\n
+            pageToken : (result.nextPageToken || ""),\n
+            access_token: token\n
+          })\n
+        });\n
+      })\n
+      .push(function (data) {\n
+        obj = JSON.parse(data.target.response || data.target.responseText);\n
+        for (i = 0; i < obj.items.length; i += 1) {\n
+          obj.items[i].value = {};\n
+          result.push(obj.items[i]);\n
+        }\n
+        result.nextPageToken = obj.nextPageToken;\n
+        return result;\n
+      }, handleError);\n
+  }\n
+\n
+  function checkName(name) {\n
+    if (name !== "enclosure") {\n
+      throw new jIO.util.jIOError("Only support \'enclosure\' attachment", 400);\n
+    }\n
+  }\n
+\n
+  /**\n
+   * The JIO Google Drive Storage extension\n
+   *\n
+   * @class GdriveStorage\n
+   * @constructor\n
+   */\n
+  function GdriveStorage(spec) {\n
+    if (spec === undefined || spec.access_token === undefined ||\n
+        typeof spec.access_token !== \'string\') {\n
+      throw new TypeError("Access Token must be a string " +\n
+                          "which contains more than one character.");\n
+    }\n
+    if (spec.trashing !== undefined &&\n
+        (spec.trashing !== true && spec.trashing !== false)) {\n
+      throw new TypeError("trashing parameter" +\n
+                          " must be a boolean (true or false)");\n
+    }\n
+    this._trashing = spec.trashing || true;\n
+    this._access_token = spec.access_token;\n
+    return;\n
+  }\n
+\n
+  function recursiveAllDocs(result, accessToken) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return listPage(result, accessToken);\n
+      })\n
+      .push(function () {\n
+        if (result.nextPageToken) {\n
+          return recursiveAllDocs(result, accessToken);\n
+        }\n
+        return result;\n
+      });\n
+  }\n
+\n
+  GdriveStorage.prototype.hasCapacity = function (name) {\n
+    return (name === "list");\n
+  };\n
+\n
+  GdriveStorage.prototype.buildQuery = function () {\n
+    return recursiveAllDocs([], this._access_token);\n
+  };\n
+\n
+  function sendMetaData(id, param, token) {\n
+    var boundary = "-------314159265358979323846";\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.ajax({\n
+          "type": id ? "PUT" : "POST",\n
+          "url": upload_template.expand({\n
+            access_token: token,\n
+            id: id || [],\n
+            upload: id ? [] : "upload",\n
+            uploadType: "multipart"\n
+          }),\n
+          headers: {\n
+            "Content-Type" : \'multipart/related; boundary="\' + boundary + \'"\'\n
+          },\n
+          data: \'--\' + boundary + \'\\n\' +\n
+            \'Content-Type: application/json; charset=UTF-8\\n\\n\' +\n
+            JSON.stringify(param) + \'\\n\\n--\' + boundary + "--"\n
+        });\n
+      })\n
+      .push(function (result) {\n
+        var obj = JSON.parse(result.target.responseText);\n
+\n
+        return obj.id;\n
+      },\n
+            function (error) {handleError(error, id); });\n
+  }\n
+\n
+  GdriveStorage.prototype.put = function (id, param) {\n
+    return sendMetaData(id, param, this._access_token);\n
+  };\n
+\n
+  GdriveStorage.prototype.post = function (param) {\n
+    return sendMetaData(undefined, param, this._access_token);\n
+  };\n
+\n
+  function sendData(id, blob, token) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.ajax({\n
+          "type": "PUT",\n
+          "url": upload_template.expand({\n
+            access_token: token,\n
+            upload: "upload",\n
+            id: id,\n
+            uploadType: "media"\n
+          }),\n
+          data: blob\n
+        });\n
+      })\n
+      .push(function (data) {\n
+        data = JSON.parse(data.target.responseText);\n
+        if (data.mimeType === "application/vnd.google-apps.folder") {\n
+          throw new jIO.util.jIOError("cannot put attachments to folder", 400);\n
+        }\n
+        return data;\n
+      }, function (error) {handleError(error, id); });\n
+  }\n
+\n
+  GdriveStorage.prototype.putAttachment = function (id, name, blob) {\n
+    checkName(name);\n
+    return sendData(id, blob, this._access_token);\n
+  };\n
+\n
+  GdriveStorage.prototype.remove = function (id) {\n
+    var that  = this;\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.ajax({\n
+          type: that._trashing ? "POST" : "DELETE",\n
+          url: remove_template.expand({\n
+            id : id,\n
+            access_token : that._access_token,\n
+            trash : that._trashing ? "trash" : []\n
+          })\n
+        });\n
+      })\n
+      .push(undefined, function (error) {handleError(error, id); });\n
+  };\n
+\n
+  function getData(id, attach, token) {\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return jIO.util.ajax({\n
+          type: "GET",\n
+          dataType: attach ? "blob" : "json",\n
+          url: get_template.expand({\n
+            id: id,\n
+            alt: attach ? "media" : [],\n
+            access_token: token\n
+          }),\n
+          headers: {\n
+            "Authorization" : "Bearer " + token\n
+          }\n
+        });\n
+      })\n
+      .push(function (evt) {\n
+        return evt.target.response ||\n
+          (attach ? new Blob([evt.target.responseText],\n
+                             {"type" :\n
+                              evt.target.responseHeaders["Content-Type"]}) :\n
+              JSON.parse(evt.target.responseText));\n
+      }, function (error) {handleError(error, id); });\n
+  }\n
+\n
+  GdriveStorage.prototype.get = function (id) {\n
+    return getData(id, false, this._access_token);\n
+  };\n
+\n
+  GdriveStorage.prototype.getAttachment = function (id, name) {\n
+    checkName(name);\n
+    return getData(id, true, this._access_token);\n
+  };\n
+\n
+  GdriveStorage.prototype.allAttachments = function (id) {\n
+    var token = this._access_token;\n
+\n
+    return new RSVP.Queue()\n
+      .push(function () {\n
+        return getData(id, false, token);\n
+      })\n
+      .push(function (data) {\n
+        if (data.mimeType === "application/vnd.google-apps.folder") {\n
+          return {};\n
+        }\n
+        return {"enclosure": {}};\n
+      });\n
+  };\n
+\n
+  jIO.addStorage(\'gdrive\', GdriveStorage);\n
+\n
+}(jIO, Blob, RSVP, UriTemplate, JSON));\n
 ;/*jslint nomen: true */\n
 /*global RSVP*/\n
 \n
@@ -8989,10 +9068,10 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 // }\n
 \n
 /*jslint nomen: true, unparam: true */\n
-/*global jIO, UriTemplate, FormData, RSVP, URI, Blob, objectToSearchText,\n
+/*global jIO, UriTemplate, FormData, RSVP, URI, Blob,\n
          SimpleQuery, ComplexQuery*/\n
 \n
-(function (jIO, UriTemplate, FormData, RSVP, URI, Blob, objectToSearchText,\n
+(function (jIO, UriTemplate, FormData, RSVP, URI, Blob,\n
            SimpleQuery, ComplexQuery) {\n
   "use strict";\n
 \n
@@ -9449,14 +9528,14 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                 if (result_list) {\n
                   local_roles = result_list;\n
                   parsed_query.query_list.splice(i, 1);\n
-                  query = objectToSearchText(parsed_query);\n
+                  query = jIO.Query.objectToSearchText(parsed_query);\n
                   i = parsed_query.query_list.length;\n
                 } else {\n
                   result_list = isMultipleLocalRoles(sub_query);\n
                   if (result_list) {\n
                     local_roles = result_list;\n
                     parsed_query.query_list.splice(i, 1);\n
-                    query = objectToSearchText(parsed_query);\n
+                    query = jIO.Query.objectToSearchText(parsed_query);\n
                     i = parsed_query.query_list.length;\n
                   }\n
                 }\n
@@ -9507,7 +9586,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
 \n
   jIO.addStorage("erp5", ERP5Storage);\n
 \n
-}(jIO, UriTemplate, FormData, RSVP, URI, Blob, objectToSearchText,\n
+}(jIO, UriTemplate, FormData, RSVP, URI, Blob,\n
   SimpleQuery, ComplexQuery));\n
 ;/*jslint nomen: true*/\n
 /*global RSVP*/\n
@@ -10651,8 +10730,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
   };\n
 \n
   jIO.addStorage("indexeddb", IndexedDBStorage);\n
-}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange));\n
-
+}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange));
 
 ]]></string> </value>
         </item>
@@ -10789,7 +10867,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.13956.40084.22186</string> </value>
+                <value> <string>947.22494.14742.48810</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -10807,7 +10885,7 @@ Query.searchTextToRegExp = searchTextToRegExp;\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448293989.05</float>
+                        <float>1449226044.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
