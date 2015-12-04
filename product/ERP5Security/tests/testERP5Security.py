@@ -49,7 +49,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base',)
+    return ('erp5_base', 'erp5_administration',)
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
@@ -552,12 +552,9 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       base_cat.newContent(portal_type='Category',
                           id='subcat',
                           codification="%s1" % code)
-    # add another function subcategory.
-    function_category = category_tool['function']
-    if function_category.get('another_subcat', None) is None:
-      function_category.newContent(portal_type='Category',
-                                   id='another_subcat',
-                                   codification='F2')
+      base_cat.newContent(portal_type='Category',
+                          id='another_subcat',
+                          codification="%s2" % code)
     self.defined_category = "group/subcat\n"\
                             "site/subcat\n"\
                             "function/subcat"
@@ -643,6 +640,30 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
     self.assertTrue('Assignor' in user.getRolesInContext(obj))
     self.assertFalse('Assignee' in user.getRolesInContext(obj))
+
+    # check if assignment change is effective immediately
+    self.login()
+    res = self.publish(self.portal.absolute_url_path() + \
+                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
+                       (self.username, self.username))
+    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
+                     ["--> ['F1_G1_S1']"])
+    assignment = self.person.newContent( portal_type='Assignment',
+                                  group='subcat',
+                                  site='subcat',
+                                  function='another_subcat' )
+    assignment.open()
+    res = self.publish(self.portal.absolute_url_path() + \
+                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
+                       (self.username, self.username))
+    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
+                     ["--> ['F1_G1_S1']", "--> ['F2_G1_S1']"])
+    assignment.setGroup('another_subcat')
+    res = self.publish(self.portal.absolute_url_path() + \
+                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
+                       (self.username, self.username))
+    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
+                     ["--> ['F1_G1_S1']", "--> ['F2_G2_S1']"])
     self.abort()
 
   def testLocalRolesGroupId(self):
