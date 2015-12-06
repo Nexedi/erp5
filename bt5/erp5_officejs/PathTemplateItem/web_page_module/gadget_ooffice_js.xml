@@ -282,6 +282,7 @@
           g.props.cfg = {\n
             mode: \'edit\',\n
             lang: \'en\',\n
+            canAutosave: false,\n
             canCoAuthoring: false,\n
             canBackToFolder: true,\n
             canCreateNew: true,\n
