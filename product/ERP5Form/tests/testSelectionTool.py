@@ -74,7 +74,7 @@ class TestSelectionTool(ERP5TypeTestCase):
     self.assertEqual('test_selection', selection.name)
 
   def testGetSelectionParamsFor(self):
-    self.assertEqual({'key':'value'},
+    self.assertEqual({'key':'value', 'ignore_unknown_columns': True},
                       self.portal_selections.getSelectionParamsFor('test_selection'))
 
   def testGetSelectionParamsDictInterface(self):
