@@ -103,7 +103,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -134,7 +136,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Task Distributor</string> </value>
+                    <value> <string>Test Suites</string> </value>
                 </item>
               </dictionary>
             </value>
