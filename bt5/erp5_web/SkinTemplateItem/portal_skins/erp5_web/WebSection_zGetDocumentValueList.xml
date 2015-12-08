@@ -80,7 +80,7 @@ kw</string> </value>
     catalog.*\n
   FROM\n
     (\n
-      SELECT\n
+      SELECT DISTINCT\n
         catalog.uid,\n
         catalog.path,\n
         catalog.int_index,\n

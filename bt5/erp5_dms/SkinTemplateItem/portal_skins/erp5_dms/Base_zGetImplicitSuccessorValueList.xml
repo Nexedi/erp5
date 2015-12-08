@@ -71,7 +71,7 @@ FROM\n
     @current_path:=IF(@current_reference = reference, @current_path, path) AS path,\n
     @current_reference:=reference AS reference\n
   FROM (\n
-    SELECT\n
+    SELECT DISTINCT\n
       reference,\n
       path,\n
       catalog.uid,\n
