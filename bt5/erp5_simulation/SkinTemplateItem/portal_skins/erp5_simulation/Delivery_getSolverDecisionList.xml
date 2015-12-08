@@ -51,6 +51,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>solver_process = context.Delivery_getSolverProcess()\n
+if solver_process is None:\n
+  return []\n
+\n
 # XXX should omit \'solved\' decision?\n
 return solver_process.SolverProcess_getSolverDecisionList()\n
 </string> </value>
