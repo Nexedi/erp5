@@ -130,6 +130,7 @@ total_employee_tax = getMovementTotalPriceFromCategory(\\\n
     include_empty_contribution=False,\n
     excluded_reference_list=[\'ticket_restaurant\',],\n
     contribution_share=\'contribution_share/employee\')\n
+\n
 def getTotalEmployeeTaxId(total_employee_tax):\n
   s = \'\'\n
   if total_employee_tax:\n
@@ -149,6 +150,11 @@ def getTotalEmployerTaxId(total_employer_tax):\n
         quantity_renderer(total_employer_tax*-1))\n
   return s\n
 \n
+year_to_date_total_employer_tax = paysheet.PaySheetTransaction_getYearToDateMovementTotalPriceFromCategory(\\\n
+    no_base_contribution=True,\n
+    include_empty_contribution=False,\n
+    excluded_reference_list=[\'ticket_restaurant\',],\n
+    contribution_share=\'contribution_share/employer\')\n
 \n
 preferred_date_order = portal.portal_preferences\\\n
                        .getPreferredDateOrder() or \'ymd\'\n
@@ -254,6 +260,7 @@ data_dict = {\n
   \'salaire_net_imposable\': getTaxableNetPayId(salaire_net_imposable),\n
   \'total_employee_tax\': getTotalEmployeeTaxId(total_employee_tax),\n
   \'total_employer_tax\': getTotalEmployerTaxId(total_employer_tax),\n
+  \'year_to_date_total_employer_tax\': year_to_date_total_employer_tax,\n
 }\n
 \n
 return unicodeDict(data_dict)\n

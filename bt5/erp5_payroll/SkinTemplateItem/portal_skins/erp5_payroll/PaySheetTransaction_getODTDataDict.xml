@@ -155,7 +155,7 @@ def getSocialOrganisationValue():\n
       # delivery) is took\n
       business_process = business_process_list[0]\n
       business_path_list = business_process.getTradeModelPathValueList(trade_phase=\\\n
-          \'payroll/invoicing/social_security\')\n
+          \'payroll/invoicing/social_security\', context=context)\n
       if len(business_path_list) > 1:\n
         raise NotImplementedError, \'For now, it can not support more \'\\\n
               \'than one business_path with same trade_phase. \'\\\n
