@@ -86,6 +86,14 @@
                           <string>url_string</string>
                           <string>URL</string>
                         </tuple>
+                        <tuple>
+                          <string>supply_computer</string>
+                          <string>Supply</string>
+                        </tuple>
+                        <tuple>
+                          <string>group_reference</string>
+                          <string>Group</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
