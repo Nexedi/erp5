@@ -111,6 +111,8 @@
                     <value>
                       <list>
                         <string>my_bank_account_type</string>
+                        <string>my_iban</string>
+                        <string>my_bic_code</string>
                         <string>my_bank_country_code</string>
                         <string>my_bank_code</string>
                         <string>my_branch</string>
