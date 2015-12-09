@@ -235,3 +235,13 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
 safe_builtins['__import__'] = guarded_import
 
 ModuleSecurityInfo('transaction').declarePublic('doom')
+
+import decimal
+allow_module('decimal')
+ContainerAssertions[decimal.Decimal] = 1
+ContainerAssertions[decimal.Context] = 1
+for member_id in dir(decimal):
+  member = getattr(decimal, member_id)
+  if isinstance(member, type) and issubclass(member, decimal.DecimalException):
+    ContainerAssertions[member] = 1
+del member_id, member
