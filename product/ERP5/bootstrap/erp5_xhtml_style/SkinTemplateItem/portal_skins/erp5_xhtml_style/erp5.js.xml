@@ -319,7 +319,7 @@ var rewriteIndentedSelect = function() {\n
           $(this).html(text.replace(/^(&nbsp;)+/, ""));\n
           $(this).css("paddingLeft", level+"em");\n
         }\n
-        return true;
+        return true;\n
       });\n
     });\n
 };\n
