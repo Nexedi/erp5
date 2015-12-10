@@ -99,7 +99,7 @@ class PasswordTool(BaseTool):
     parameter = urlencode(dict(reset_key=key))
     method = self._getTypeBasedMethod("getSiteUrl")
     if method is not None:
-      base_url = method()
+      base_url = method(site_url)
     else:
       base_url = "%s/portal_password/PasswordTool_viewResetPassword" % (
         site_url,)
@@ -115,7 +115,8 @@ class PasswordTool(BaseTool):
                                notification_message=None, sender=None,
                                store_as_event=False,
                                expiration_date=None,
-                               substitution_method_parameter_dict=None):
+                               substitution_method_parameter_dict=None,
+                               site_url=None):
     """
     Create a random string and expiration date for request
     Parameters:
@@ -137,9 +138,10 @@ class PasswordTool(BaseTool):
     if user_login is None:
       user_login = REQUEST["user_login"]
 
-    site_url = self.getPortalObject().absolute_url()
-    if REQUEST and 'came_from' in REQUEST:
-      site_url = REQUEST.came_from
+    if not site_url:
+      site_url = self.getPortalObject().absolute_url()
+      if REQUEST and 'came_from' in REQUEST:
+        site_url = REQUEST.came_from
 
     msg = None
     # check user exists, and have an email
@@ -191,7 +193,7 @@ class PasswordTool(BaseTool):
       message_text_format = 'text/plain'
     else:
       message_text_format = notification_message.getContentType()
-      subject = notification_message.getTitle()
+      subject = notification_message.asSubjectText(substitution_method_parameter_dict=message_dict)
       if message_text_format == "text/html":
         message = notification_message.asEntireHTML(substitution_method_parameter_dict=message_dict)
       else:
