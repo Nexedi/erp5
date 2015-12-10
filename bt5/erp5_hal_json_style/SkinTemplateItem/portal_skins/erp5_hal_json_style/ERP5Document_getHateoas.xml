@@ -94,7 +94,10 @@ url_template_dict = {\n
   "document_hal": "%(root_url)s/%(script_id)s?mode=traverse" + \\\n
                   "&relative_url=%(relative_url)s",\n
   "jio_get_template": "urn:jio:get:%(relative_url)s",\n
-  "jio_search_template": "urn:jio:allDocs?%(query)s"\n
+  "jio_search_template": "urn:jio:allDocs?%(query)s",\n
+  # XXX Hardcoded sub websection\n
+  "login_template": "%(root_url)s/%(login)s",\n
+  "logout_template": "%(root_url)s/%(logout)s"\n
 }\n
 \n
 default_document_uri_template = url_template_dict["jio_get_template"]\n
@@ -656,6 +659,15 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
   \n
   \n
   if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):\n
+    login_relative_url = site_root.getLayoutProperty("configuration_login", default="")\n
+    if (login_relative_url):\n
+      response.setHeader(\n
+        \'WWW-Authenticate\',\n
+        \'X-Delegate uri="%s"\' % (url_template_dict["login_template"] % {\n
+          "root_url": site_root.absolute_url(),\n
+          "login": login_relative_url\n
+        })\n
+      )\n
     response.setStatus(401)\n
   \n
   elif mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):\n
@@ -880,6 +892,16 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             "script_id": script.id\n
           }\n
         }\n
+      elif relative_url == \'acl_users\':\n
+        logout_relative_url = site_root.getLayoutProperty("configuration_logout", default="")\n
+        if (logout_relative_url):\n
+          result_dict[\'_links\'][\'logout\'] = {\n
+            "href": url_template_dict[\'logout_template\'] % {\n
+              "root_url": site_root.absolute_url(),\n
+              "logout": logout_relative_url,\n
+              "template": True\n
+            }\n
+          }\n
   \n
     # Define document action\n
     if action_dict:\n
