@@ -462,7 +462,8 @@ promiseEventListener */\n
       }\n
       if (field_json.editable !== 1) {\n
         input.setAttribute(\'readonly\', \'readonly\');\n
-        input.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
+        field_gadget.property_dict.wrapper.className += \' ui-state-readonly \'\n
+        // input.setAttribute(\'data-wrapper-class\', \'ui-state-readonly\');\n
         // input.setAttribute(\'disabled\', \'disabled\');\n
       }\n
 \n
@@ -768,7 +769,7 @@ promiseEventListener */\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.22458.4923.43878</string> </value>
+                <value> <string>947.45538.456.57224</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -786,8 +787,8 @@ promiseEventListener */\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448463051.92</float>
-                        <string>UTC</string>
+                        <float>1449761681.44</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>

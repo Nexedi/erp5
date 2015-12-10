@@ -1522,6 +1522,13 @@ html body .ui-select .ui-state-readonly {\n
 html body .ui-state-readonly:after {\n
   content: none;\n
 }\n
+/* skin readonly jump, too */\n
+html body .ui-state-readonly ~ .ui-btn {\n
+  border: 0 none;\n
+  -moz-box-shadow: none;\n
+  -webkit-box-shadow: none;\n
+  box-shadow: none;\n
+}\n
 /*\n
    -------------------------------------------------------------------------\n
    ----------------------------- Checkbox ----------------------------------\n
@@ -5202,7 +5209,7 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.25592.30077.20258</string> </value>
+                <value> <string>947.45547.56510.49527</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -5220,8 +5227,8 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448651090.87</float>
-                        <string>UTC</string>
+                        <float>1449763104.45</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
