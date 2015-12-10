@@ -35,6 +35,7 @@ import subprocess
 import shutil
 import transaction
 from ZPublisher.HTTPResponse import HTTPResponse
+from zExceptions.ExceptionFormatter import format_exception
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
                                                _getConversionServerDict
 
@@ -405,8 +406,30 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
         return True
     return False
 
+  def testCheckZuitePageTemplatesValidHTML(self):
+    # Check the zuite page templates can be rendered, because selenium test
+    # runner does not report error in case there are errors in the page
+    # template.
+    tests_tool = self.portal.portal_tests
+    for page_template_path, page_template in tests_tool.ZopeFind(
+              tests_tool, obj_metatypes=['Page Template'], search_sub=1):
+      try:
+        page_template.pt_render()
+      except (KeyboardInterrupt, SystemExit):
+        raise
+      except:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        self.fail('Rendering of %s failed with error:\n%s' % (
+          page_template_path,
+          ''.join(format_exception(
+            exc_type,
+            exc_value,
+            exc_traceback,
+            as_html=False))))
+
+
   def testFunctionalTestRunner(self):
-    # first of all, abort to get rid of the mysql participation inn this
+    # first of all, abort to get rid of the mysql participation in this
     # transaction
     self.portal._p_jar.sync()
 
