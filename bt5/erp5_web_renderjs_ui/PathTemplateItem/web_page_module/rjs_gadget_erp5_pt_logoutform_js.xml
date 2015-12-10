@@ -99,9 +99,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>/*global window, document, rJS, RSVP, promiseEventListener */\n
-/*jslint indent: 2, maxerr: 3 */\n
-(function (window, document, rJS, RSVP, promiseEventListener) {\n
+            <value> <string>/*global window, rJS, RSVP, promiseEventListener, UriTemplate */\n
+/*jslint indent: 2, maxerr: 3, nomen: true */\n
+(function (window, rJS, RSVP, promiseEventListener, UriTemplate) {\n
   "use strict";\n
 \n
   rJS(window)\n
@@ -124,6 +124,8 @@
     // handle acquisition\n
     /////////////////////////////////////////////////////////////////\n
     .declareAcquiredMethod("redirect", "redirect")\n
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")\n
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")\n
     .declareAcquiredMethod("translateHtml", "translateHtml")\n
 \n
     /////////////////////////////////////////////////////////////////\n
@@ -140,22 +142,41 @@
         });\n
     })\n
     .declareService(function () {\n
-      var form_gadget = this;\n
+      var gadget = this,\n
+        logout_url_template;\n
       // Listen to form submit\n
       return new RSVP.Queue()\n
         .push(function () {\n
           return promiseEventListener(\n
-            form_gadget.props.element.querySelector(\'form\'),\n
+            gadget.props.element.querySelector(\'form\'),\n
             \'submit\',\n
             false\n
           );\n
         })\n
         .push(function () {\n
-          document.cookie = "__ac=" + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;";\n
-          return form_gadget.redirect({command: \'display\', options: {page: \'login\'}});\n
+          return gadget.jio_getAttachment(\n
+            \'acl_users\',\n
+            \'links\'\n
+          );\n
+        })\n
+        .push(function (links) {\n
+          logout_url_template = links._links.logout.href;\n
+          return gadget.getUrlFor({\n
+            command: \'display\',\n
+            absolute_url: true,\n
+            options: {}\n
+          });\n
+        })\n
+        .push(function (came_from) {\n
+          return gadget.redirect({\n
+            command: \'raw\',\n
+            options: {\n
+              url: UriTemplate.parse(logout_url_template).expand({came_from: came_from})\n
+            }\n
+          });\n
         });\n
     });\n
-}(window, document, rJS, RSVP, promiseEventListener));</string> </value>
+}(window, rJS, RSVP, promiseEventListener, UriTemplate));</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -276,7 +297,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -290,7 +311,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.39092.31370.59716</string> </value>
+                <value> <string>947.45416.32910.41454</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -308,8 +329,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445528976.8</float>
-                        <string>GMT</string>
+                        <float>1449754121.57</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

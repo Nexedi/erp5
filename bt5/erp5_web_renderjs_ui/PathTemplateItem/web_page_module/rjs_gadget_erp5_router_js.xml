@@ -109,9 +109,9 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/*global window, rJS, RSVP, loopEventListener, document, jIO, URI */\n
+/*global window, rJS, RSVP, loopEventListener, document, jIO, URI, URL */\n
 /*jslint nomen: true, indent: 2 */\n
-(function (window, rJS, RSVP, loopEventListener, document, jIO, URI) {\n
+(function (window, rJS, RSVP, loopEventListener, document, jIO, URI, URL) {\n
   "use strict";\n
 \n
   // Keep reference of the latest allDocs params which reach to this view\n
@@ -127,6 +127,8 @@
     PREFIX_COMMAND = "!",\n
     // PREFIX_ERROR = "?",\n
     COMMAND_DISPLAY_STATE = "display",\n
+    COMMAND_LOGIN = "login",\n
+    COMMAND_RAW = "raw",\n
     COMMAND_DISPLAY_STORED_STATE = "display_stored_state",\n
     COMMAND_CHANGE_STATE = "change",\n
     COMMAND_STORE_AND_CHANGE_STATE = "store_and_change",\n
@@ -146,6 +148,8 @@
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_NEXT] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_HISTORY_PREVIOUS] = null;\n
   VALID_URL_COMMAND_DICT[COMMAND_PUSH_HISTORY] = null;\n
+  VALID_URL_COMMAND_DICT[COMMAND_LOGIN] = null;\n
+  VALID_URL_COMMAND_DICT[COMMAND_RAW] = null;\n
 \n
 \n
   function endsWith(str, suffix) {\n
@@ -218,6 +222,9 @@
   // Build URL functions\n
   //////////////////////////////////////////////////////////////////\n
   function getCommandUrlFor(gadget, command, options) {\n
+    if (command === COMMAND_RAW) {\n
+      return options.url;\n
+    }\n
     var result = "#" + PREFIX_COMMAND + (command || ""),\n
       prefix = "?",\n
       key,\n
@@ -248,6 +255,10 @@
         }\n
         prefix = "&";\n
       }\n
+    }\n
+    if (command === COMMAND_LOGIN) {\n
+      // Build URL template to allow getting user information\n
+      result += \'{\' + prefix + \'n.me}\';\n
     }\n
     return result;\n
   }\n
@@ -576,6 +587,15 @@
       });\n
   }\n
 \n
+\n
+  function execLoginCommand(gadget, previous_options, next_options) {\n
+    var me = next_options.me;\n
+    return gadget.setSetting(\'me\', me)\n
+      .push(function () {\n
+        return execDisplayCommand(gadget, previous_options);\n
+      });\n
+  }\n
+\n
   //////////////////////////////////////////////////////////////////\n
   // Command URL functions\n
   //////////////////////////////////////////////////////////////////\n
@@ -632,7 +652,7 @@
       );\n
     }\n
 \n
-    command_options.args.jio_key = command_options.path;\n
+    command_options.args.jio_key = command_options.path || undefined;\n
 \n
     // Store current options to handle navigation\n
     gadget.props.options = JSON.parse(JSON.stringify(command_options.args));\n
@@ -705,6 +725,9 @@
     }\n
     if (command_options.path === COMMAND_PUSH_HISTORY) {\n
       return execPushHistoryCommand(gadget, previous_options, next_options);\n
+    }\n
+    if (command_options.path === COMMAND_LOGIN) {\n
+      return execLoginCommand(gadget, previous_options, next_options);\n
     }\n
     throw new Error(\'Unsupported command \' + command_options.path);\n
 \n
@@ -813,22 +836,30 @@
 \n
     .declareMethod(\'getCommandUrlFor\', function (options) {\n
       var command = options.command,\n
+        absolute_url = options.absolute_url,\n
+        hash,\n
         args = options.options,\n
         valid = true,\n
         key;\n
-      // Only authorize \'command\' and \'options\' keys\n
+      // Only authorize \'command\', \'options\', \'absolute_url\' keys\n
       // Drop all other kind of parameters, to detect issue more easily\n
       for (key in options) {\n
         if (options.hasOwnProperty(key)) {\n
-          if ((key !== \'command\') && (key !== \'options\')) {\n
+          if ((key !== \'command\') && (key !== \'options\') && (key !== \'absolute_url\')) {\n
             valid = false;\n
           }\n
         }\n
       }\n
       if (valid && (options.command) && (VALID_URL_COMMAND_DICT.hasOwnProperty(options.command))) {\n
-        return getCommandUrlFor(this, command, args);\n
+        hash = getCommandUrlFor(this, command, args);\n
+      } else {\n
+        hash = getCommandUrlFor(this, \'error\', options);\n
       }\n
-      return getCommandUrlFor(this, \'error\', options);\n
+\n
+      if (absolute_url) {\n
+        hash = new URL(hash, window.location.href).href;\n
+      }\n
+      return hash;\n
     })\n
 \n
     .declareMethod(\'redirect\', function (options) {\n
@@ -869,6 +900,7 @@
     .declareAcquiredMethod(\'renderApplication\', \'renderApplication\')\n
     .declareAcquiredMethod(\'jio_allDocs\', \'jio_allDocs\')\n
     .declareAcquiredMethod(\'jio_getAttachment\', \'jio_getAttachment\')\n
+    .declareAcquiredMethod(\'setSetting\', \'setSetting\')\n
 \n
     .declareService(function () {\n
       var gadget = this;\n
@@ -882,7 +914,7 @@
         });\n
     });\n
 \n
-}(window, rJS, RSVP, loopEventListener, document, jIO, URI));\n
+}(window, rJS, RSVP, loopEventListener, document, jIO, URI, URL));\n
 
 
 ]]></string> </value>
@@ -1014,7 +1046,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.22494.14742.48810</string> </value>
+                <value> <string>947.43761.4655.1297</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1032,7 +1064,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1448465284.7</float>
+                        <float>1449754197.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

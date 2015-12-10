@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+REQUEST = context.REQUEST\n
+RESPONSE = REQUEST.RESPONSE\n
+from ZTUtils import make_query\n
+\n
+portal = context.getPortalObject()\n
+\n
+if (came_from is None):\n
+  came_from = context.getPermanentURL(context)\n
+\n
+portal.portal_skins.updateSkinCookie()\n
+portal.setupCurrentSkin()\n
+\n
+if (portal.portal_membership.isAnonymousUser()):\n
+  RESPONSE.expireCookie(\'__ac\', path=\'/\')\n
+  url = \'%s/login_form?portal_status_message=%s\' % (context.absolute_url(), context.Base_translateString(\'Login and/or password is incorrect.\'))\n
+  url = came_from and \'%s&came_from=%s\' % (url, came_from) or url;\n
+  RESPONSE.redirect(url)\n
+else:\n
+  # XXX Hardcoded behaviour for JS app.\n
+  # Expect came_from to be an URL template\n
+  person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+  if (person is None):\n
+    came_from = came_from.replace(\'{&n.me}\', \'\')\n
+  else:\n
+    came_from = came_from.replace(\'{&n.me}\', \'&%s\' % make_query({\'n.me\': person.getRelativeUrl()}))\n
+  # RESPONSE.redirect(came_from or context.getPermanentURL(context));\n
+  RESPONSE.setHeader(\'Location\', came_from or context.getPermanentURL(context))\n
+  RESPONSE.setStatus(303)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>came_from=None</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_login</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

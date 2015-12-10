@@ -107,13 +107,37 @@
   "use strict";\n
 \n
   function wrapJioCall(gadget, method_name, argument_list) {\n
-    var storage = gadget.state_parameter_dict.jio_storage;\n
+    var storage = gadget.state_parameter_dict.jio_storage,\n
+      regexp = /^X-Delegate uri="(http[s]*:\\/\\/[\\/\\-\\[\\]{}()*+:?.,\\\\\\^$|#\\s\\w%]+)"$/,\n
+      login_page;\n
 \n
     return storage[method_name].apply(storage, argument_list)\n
       .push(undefined, function (error) {\n
         if ((error.target !== undefined) && (error.target.status === 401)) {\n
+          login_page = error.target.getResponseHeader(\'WWW-Authenticate\');\n
+          // Only connect to https to login\n
+          if (regexp.test(login_page)) {\n
+            return gadget.getUrlFor({\n
+              command: \'login\',\n
+              absolute_url: true\n
+            })\n
+              .push(function (came_from) {\n
+                return gadget.redirect({\n
+                  command: \'raw\',\n
+                  options: {\n
+                    url: UriTemplate.parse(regexp.exec(login_page)[1]).expand({came_from: came_from})\n
+                  }\n
+                });\n
+              });\n
+            /*\n
+            window.location = UriTemplate.parse(\n
+              regexp.exec(login_page)[1]\n
+            ).expand({came_from: window.location.href + "{&me}"});\n
+            return RSVP.timeout(5000);\n
+            */\n
           // Redirect to the login view\n
-          return gadget.redirect({command: \'display\', options: {page: \'login\'}});\n
+          }\n
+          // return gadget.redirect({command: \'display\', options: {page: \'login\'}});\n
         }\n
         throw error;\n
       });\n
@@ -163,6 +187,7 @@
 \n
     .declareAcquiredMethod(\'getSetting\', \'getSetting\')\n
     .declareAcquiredMethod(\'redirect\', \'redirect\')\n
+    .declareAcquiredMethod(\'getUrlFor\', \'getUrlFor\')\n
 \n
     .declareMethod(\'createJio\', function () {\n
       var gadget = this;\n
@@ -418,7 +443,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.36789.31946.17646</string> </value>
+                <value> <string>947.45414.13002.10052</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -436,7 +461,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1449236578.55</float>
+                        <float>1449753994.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
